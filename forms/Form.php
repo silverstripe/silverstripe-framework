@@ -1481,7 +1481,7 @@ class Form extends RequestHandler {
 	public function addExtraClass($class) {
 		//split at white space
 		$classes = preg_split('/\s+/', $class);
-		foreach ($classes as $class) {
+		foreach($classes as $class) {
 			//add classes one by one
 			$this->extraClasses[$class] = $class;
 		}

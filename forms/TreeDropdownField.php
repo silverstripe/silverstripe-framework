@@ -93,7 +93,7 @@ class TreeDropdownField extends FormField {
 		$this->keyField     = $keyField;
 		$this->labelField   = $labelField;
 		$this->showSearch	= $showSearch;
-
+		
 		parent::__construct($name, $title);
 	}
 	
@@ -184,8 +184,8 @@ class TreeDropdownField extends FormField {
 			if($this->showSearch){
 				$title = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
 			}else{
-				$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
-			}
+			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+		}
 		}
 
 		// TODO Implement for TreeMultiSelectField
@@ -418,7 +418,7 @@ class TreeDropdownField extends FormField {
 					$wheres[] = "\"Name\" LIKE '%$this->search%'";
 				}
 			} 
-
+		
 			if(!$wheres) {
 				throw new InvalidArgumentException(sprintf(
 					'Cannot query by %s.%s, not a valid database column',
