@@ -73,7 +73,10 @@ class CmsUiContext extends BehatContext
 
 	protected function getCmsTabsElement()
 	{
-		$this->getSession()->wait(5000, "window.jQuery('.cms-content-header-tabs').size() > 0");
+		$this->getSession()->wait(
+			5000, 
+			"window.jQuery && window.jQuery('.cms-content-header-tabs').size() > 0"
+		);
 
 		$page = $this->getSession()->getPage();
 		$cms_content_header_tabs = $page->find('css', '.cms-content-header-tabs');
@@ -86,7 +89,7 @@ class CmsUiContext extends BehatContext
 	{
 		$this->getSession()->wait(
 			5000, 
-			"window.jQuery('.cms-content-toolbar').size() > 0 "
+			"window.jQuery && window.jQuery('.cms-content-toolbar').size() > 0 "
 			. "&& window.jQuery('.cms-content-toolbar').children().size() > 0"
 		);
 
@@ -99,7 +102,10 @@ class CmsUiContext extends BehatContext
 
 	protected function getCmsTreeElement()
 	{
-		$this->getSession()->wait(5000, "window.jQuery('.cms-tree').size() > 0");
+		$this->getSession()->wait(
+			5000, 
+			"window.jQuery && window.jQuery('.cms-tree').size() > 0"
+		);
 
 		$page = $this->getSession()->getPage();
 		$cms_tree_element = $page->find('css', '.cms-tree');
@@ -181,7 +187,10 @@ class CmsUiContext extends BehatContext
 	 */
 	public function iClickTheCmsTab($tab)
 	{
-		$this->getSession()->wait(5000, "window.jQuery('.ui-tabs-nav').size() > 0");
+		$this->getSession()->wait(
+			5000, 
+			"window.jQuery && window.jQuery('.ui-tabs-nav').size() > 0"
+		);
 
 		$page = $this->getSession()->getPage();
 		$tabsets = $page->findAll('css', '.ui-tabs-nav');
@@ -343,7 +352,8 @@ class CmsUiContext extends BehatContext
 			// wait for ajax dropdown to load
 			$this->getSession()->wait(
 				5000,
-				"jQuery('#" . $container->getAttribute('id') . " .treedropdownfield-panel li').length > 0"
+				"window.jQuery && "
+				. "window.jQuery('#" . $container->getAttribute('id') . " .treedropdownfield-panel li').length > 0"
 			); 
 		} else {
 			// wait for dropdown overlay to appear (might be animated)
