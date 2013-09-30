@@ -90,7 +90,7 @@ class MoneyTest extends SapphireTest {
 			"Money field not added to data object properly when read prior to first writing the record."
 		);
 		
-		$objID = $obj->write();
+		$objID = $obj->write()->ID;
 
 		$moneyTest = DataObject::get_by_id('MoneyTest_DataObject',$objID);
 		$this->assertTrue($moneyTest instanceof MoneyTest_DataObject);
