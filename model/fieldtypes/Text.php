@@ -63,14 +63,6 @@ class Text extends StringField {
 	}
 
 	/**
-	 * Return the value of the field with relative links converted to absolute urls.
-	 * @return string
-	 */
-	public function AbsoluteLinks() {
-		return HTTP::absoluteURLs($this->value);
-	}
-
-	/**
 	 * Limit sentences, can be controlled by passing an integer.
 	 *
 	 * @param int $sentCount The amount of sentences you want.
