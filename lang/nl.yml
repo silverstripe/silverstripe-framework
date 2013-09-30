@@ -390,6 +390,7 @@ nl:
     db_NumVisit: 'Aantal bezoeken'
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord Vervaldatum'
+    NoPassword: 'Er is geen wachtwoord voor deze gebruiker.'
   MemberAuthenticator:
     TITLE: 'Email &amp; Wachtwoord'
   MemberDatetimeOptionsetField:
@@ -488,7 +489,8 @@ nl:
     NOTFOUND: 'Geen items gevonden.'
   Security:
     ALREADYLOGGEDIN: 'Je hebt niet de juiste rechten, om deze pagina te kunnen bekijken.  Als je een ander account met de juiste rechten hebt, kun je hier <a href="%s">opnieuw inloggen</a>.'
-    BUTTONSEND: 'Zend mij de link om mijn wachtwoord opnieuw aan te maken'
+    LOSTPASSWORDHEADER: 'Wachtwoord vergeten'
+    BUTTONSEND: 'Nieuw wachtwoord aanmaken'
     CHANGEPASSWORDBELOW: 'U kunt Uw wachtwoord hier beneden veranderen.'
     CHANGEPASSWORDHEADER: 'Verander Uw wachtwoord'
     ENTERNEWPASSWORD: 'Voer een nieuw wachtwoord in.'
@@ -497,7 +499,7 @@ nl:
     LOGIN: 'Meld aan'
     NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer Uw gegevens in en U wordt automatisch doorgestuurd.'
     NOTERESETLINKINVALID: '<p>De link om uw wachtwoord te kunnen wijzigen is niet meer geldig.</p><p>U kunt het <a href="{link1}">opnieuw proberen</a> of uw wachtwoord aanpassen door <a href="{link2}">in te loggen</a>.</p>'
-    NOTERESETPASSWORD: 'Voer Uw emailadres in en we zenden U een link waarmee U Uw wachtwoord opnieuw kunt aanmaken'
+    NOTERESETPASSWORD: 'Voer uw e-mailadres in en we sturen een link waarmee u een nieuw wachtwoord kunt instellen.'
     PASSWORDSENTHEADER: 'Wachtwoord herstel link verzonden naar {email}'
     PASSWORDSENTTEXT: 'Bedankt! Er is een link verstuurt naar {email} om uw wachtwoord te herstellen.'
   SecurityAdmin:
@@ -603,3 +605,11 @@ nl:
     PREVIEW: 'Website voorbeeld'
   GridFieldEditButton_ss:
     EDIT: Bewerken
+  ContentController:
+    NOTLOGGEDIN: 'Niet ingelogd'
+  GridFieldItemEditView:
+    Go_back: 'Ga terug'
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door meer van de volgende karakters te gebruiken: %s'
+    PREVPASSWORD: 'U heeft dit wachtwoord in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'
+    TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal %s karakters hebben'
