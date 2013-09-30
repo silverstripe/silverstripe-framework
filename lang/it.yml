@@ -13,6 +13,7 @@ it:
     SIZE: 'Dimensione'
     TITLE: Titolo
     TYPE: 'Tipo di file'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Scegli file'
     DRAGFILESHERE: 'Trascina file qui'
@@ -20,6 +21,7 @@ it:
     EDITALL: 'Modifica tutti'
     EDITANDORGANIZE: 'Modifica & organizza'
     EDITINFO: 'Modifica file'
+    FILES: Files
     FROMCOMPUTER: 'Scegli file dal tuo computer'
     FROMCOMPUTERINFO: 'Carica dal tuo conputer'
     TOTAL: Totale
@@ -72,7 +74,9 @@ it:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT2: 'Ora puoi utilizzare le seguenti credenziali per accedere:'
+    EMAIL: Email
     HELLO: Ciao
+    PASSWORD: Password
   ComplexTableField:
     CLOSEPOPUP: 'Chiudi Finestra'
     SUCCESSADD2: 'Aggiunto {name}'
@@ -95,12 +99,19 @@ it:
     FOURTH: quarto
     SECOND: secondo
     THIRD: terzo
+  CurrencyField:
+    CURRENCYSYMBOL: $
   Date:
     DAY: giorno
     DAYS: giorni
+    HOUR: ora
     HOURS: ora
+    MIN: minuto
+    MINS: minuti
     MONTH: mese
-    SECS: sec
+    MONTHS: mesi
+    SEC: secondo
+    SECS: secondi
     TIMEDIFFAGO: '{difference} fa'
     YEAR: anno
     YEARS: anni
@@ -145,6 +156,7 @@ it:
     PLURALNAME: File
     PdfType: 'File Adobe Acrobat PDF'
     PngType: 'Immagine PNG - consigliata per utilizzo generico'
+    SINGULARNAME: File
     TOOLARGE: 'La dimensione del file è troppo grande, massimo consentito {size}'
     TOOLARGESHORT: 'La dimensione del file eccede {size}'
     TiffType: 'Immagine TIFF'
@@ -158,6 +170,7 @@ it:
     ATTACHONCESAVED2: 'I file possono essere allegati quando hai salvato per la prima volta.'
     DELETE: 'Elimina {type}'
     DISALLOWEDFILETYPE: 'Non è consentito caricare questo tipo di file'
+    FILE: File
     FROMCOMPUTER: 'Dal tuo computer'
     FROMFILESTORE: 'Dal CMS'
     NOSOURCE: 'Seleziona un file da allegare'
@@ -221,9 +234,12 @@ it:
   GridFieldItemEditView_ss:
     Go_back: 'Torna indietro'
   Group:
+    AddRole: 'Aggiungi un ruolo per questo gruppo'
     Code: 'Codice gruppo'
     DefaultGroupTitleAdministrators: Amministratori
+    DefaultGroupTitleContentAuthors: 'Autori di contenuto'
     Description: Descrizione
+    GroupReminder: 'Se scegli un gruppo genitore, questo gruppo erediterà tutti i suoi ruoli'
     Locked: 'Bloccato?'
     NoRoles: 'Nessun ruolo trovato'
     PLURALNAME: Gruppi
@@ -235,6 +251,7 @@ it:
     many_many_Members: Membri
   GroupImportForm:
     Help1: '<p>Importa gruppi in formato <em>CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
+    Help2: "<div class=\"advanced\">\n<h4>Utilizzo avanzato</h4>\n<ul>\n<li>Colonne consentite: <em>%s</em></li>\n<li>Gruppi esistenti sono individuati tramite il loro valore univoco <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>\n<li>È possibile creare gerarchie tra i gruppi usando la colonna <em>ParentCode</em></li>\n<li>Codici di permessi possono essere assegnati tramite la colonna <em>PermissionCode</em>. Codici di permessi esistenti non verranno cancellati.</li>\n</ul>\n</div>"
     ResultCreated: 'Creati {count} gruppi'
     ResultDeleted: 'Eliminati %d gruppi'
     ResultUpdated: 'Aggiornati %d gruppi'
@@ -256,6 +273,7 @@ it:
     CSSCLASSRIGHT: 'Sulla destra, con il testo inserito attorno.'
     DETAILS: Dettagli
     EMAIL: 'Indirizzo email'
+    FILE: File
     FOLDER: Cartella
     FROMCMS: 'Dal CMS'
     FROMCOMPUTER: 'Dal tuo computer'
@@ -281,11 +299,18 @@ it:
     LINKOPENNEWWIN: 'Apri il link in una nuova finestra?'
     LINKTO: 'Collega a'
     PAGE: Pagina
+    URL: URL
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
     UpdateMEDIA: 'Aggiorna Media'
     BUTTONADDURL: 'Aggiungi url'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Immagine
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe_ss:
     TITLE: 'Iframe per l''inserimento dell''immagine'
   LeftAndMain:
@@ -326,9 +351,11 @@ it:
     DATEFORMAT: 'Formato della data'
     DefaultAdminFirstname: 'Amministratore Predefinito'
     DefaultDateTime: predefinito
+    EMAIL: Email
     EMPTYNEWPASSWORD: 'La nuova password non può essere vuota, riprova'
     ENTEREMAIL: 'Inserisci un indirizzo e-mail per ricevere il link di azzeramento della password'
     ERRORLOCKEDOUT: 'Il tuo account è stato temporaneamente disabilitato perchè ci sono stati troppi tentativi di accesso errati. Riprova tra 20 minuti.'
+    ERRORLOCKEDOUT2: 'Il tuo account è stato temporaneamente disabilitato perchè ci sono stati troppi tentativi di accesso errati. Riprova tra {count} minuti.'
     ERRORNEWPASSWORD: 'Hai inserito la tua nuova password in modo differente, prova di nuovo'
     ERRORPASSWORDNOTMATCH: 'La tua password attuale non corrisponde, per favore prova ancora'
     ERRORWRONGCRED: 'E-mail o password non sembrano essere corretti. Per favore, prova di nuovo.'
@@ -337,6 +364,7 @@ it:
     INVALIDNEWPASSWORD: 'Non possiamo accettare questa password: {password}'
     LOGGEDINAS: 'Sei collegato come {name}.'
     NEWPASSWORD: 'Nuova password'
+    PASSWORD: Password
     PLURALNAME: Utenti
     REMEMBERME: 'Ricordati di me la prossima volta?'
     SINGULARNAME: Utente
@@ -353,7 +381,11 @@ it:
     db_Locale: 'Localizzazione interfaccia'
     db_LockedOutUntil: 'Bloccato fino al'
     db_NumVisit: 'Numero di visite'
+    db_Password: Password
     db_PasswordExpiry: 'Data di scadenza della password'
+    NoPassword: 'Manca la password per questo utente.'
+  MemberAuthenticator:
+    TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) o PM (Post meridiem)'
     Custom: Personalizza
@@ -374,8 +406,10 @@ it:
     TWODIGITMONTH: 'Mese a due cifre (01=Gennaio, ecc.)'
     TWODIGITSECOND: 'Secondi a due cifre (00 a 59)'
     TWODIGITYEAR: 'Anno a due cifre'
+    Toggle: 'Mostra aiuto per la formattazione'
   MemberImportForm:
     Help1: '<p>Importa utenti in <em>formato CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
+    Help2: "<div class=\"advanced\">\n<h4>Utilizzo avanzato</h4>\n<ul>\n<li>Colonne consentite: <em>%s</em></li>\n<li>Utenti esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>\n<li>I gruppi possono essere assegnati attraverso la colonna <em>Groups</em>. I gruppi sono identificati attraverso la loro colonna <em>Code</em>, più gruppi devono essere separati da virgola. L'appartenenza esistente a gruppi non viene cancellata.</li>\n</ul>\n</div>"
     ResultCreated: 'Creati {count} utenti'
     ResultDeleted: 'Eliminati %d utenti'
     ResultNone: 'Nessun cambiamento'
@@ -435,9 +469,11 @@ it:
     SINGULARNAME: Ruolo
     Title: Titolo
   PermissionRoleCode:
+    PLURALNAME: 'Codici di Ruolo'
     SINGULARNAME: 'Codice Ruolo'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ruoli e permessi d''accesso'
+    UserPermissionsIntro: 'Assegnando gruppi a questo utente modificherà i suoi permessi. Vedi la sezione gruppi per dettagli sui permessi dei singoli gruppi.'
   PhoneNumberField:
     VALIDATION: 'Per favore inserisci un numero di telefono valido'
   RelationComplexTableField_ss:
@@ -446,6 +482,7 @@ it:
     NOTFOUND: 'Nessun elemento trovato'
   Security:
     ALREADYLOGGEDIN: 'Non hai accesso a questa pagina. Se hai un altro account che può accederci, puoi autenticarti qui sotto.'
+    LOSTPASSWORDHEADER: 'Password smarrita'
     BUTTONSEND: 'Inviami il link per azzerare la password'
     CHANGEPASSWORDBELOW: 'Puoi cambiare la tua password qui sotto.'
     CHANGEPASSWORDHEADER: 'Cambia la tua password'
@@ -463,10 +500,13 @@ it:
     APPLY_ROLES: 'Applica ruoli ai gruppi'
     APPLY_ROLES_HELP: 'Abilità di modificare i ruoli assegnati a un gruppo. Richiede il permesso "Accesso alla sezione ''Utenti''".'
     EDITPERMISSIONS: 'Modifica i permessi e gli indirizzi IP in ogni gruppo'
+    EDITPERMISSIONS_HELP: 'Capacità di modificare Permessi e Indirizzi IP per un gruppo. Richiede il permesso "Accesso alla sezione ''Sicurezza''"'
     GROUPNAME: 'Nome del gruppo'
     IMPORTGROUPS: 'Importa gruppi'
+    IMPORTUSERS: 'Importa utenti'
     MEMBERS: Utenti
     MENUTITLE: Sicurezza
+    MemberListCaution: 'Attenzione: Gli utenti rimossi da questa lista verranno rimossi anche da tutti i gruppi e dal database'
     NEWGROUP: 'Nuovo gruppo'
     PERMISSIONS: Permessi
     ROLES: Ruoli
@@ -478,7 +518,13 @@ it:
     FileFieldLabel: 'File CSV <small>(Estensioni consentite: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Modifica
+    Auto: Auto
     ChangeViewMode: 'Cambia visualizzazione'
+    Desktop: Desktop
+    EditView: 'Modalità modifica'
+    Mobile: Mobile
+    PreviewView: 'Modalità anteprima'
+    Responsive: Responsivo
     Tablet: Preview mode
     ViewDeviceWidth: 'Seleziona una larghezza di preview'
     Width: larghezza
@@ -532,15 +578,28 @@ it:
     HOTLINKINFO: 'Info: Questa immagine sarà collegata. Assicurati di avere il permesso di farlo.'
     MAXNUMBEROFFILES: 'Numero massimo di {count} file ecceduto.'
     MAXNUMBEROFFILESSHORT: 'Puoi caricare solo {count} file'
+    MAXNUMBEROFFILESONE: 'Puoi caricare solo un file'
     REMOVE: Rimuovi
     REMOVEERROR: 'Errore eliminando il file'
     REMOVEINFO: 'Rimuove il file da qui, ma non lo elimina dal CMS'
     STARTALL: 'Avvia tutti'
     STARTALLINFO: 'Avvia tutti i caricamenti'
     Saved: Salvato
+    CHOOSEANOTHERFILE: 'Scegli un altro file'
+    CHOOSEANOTHERINFO: 'Sostituisci questo file con un altro dal CMS'
+    OVERWRITEWARNING: 'Esiste già un file con lo stesso nome'
+    UPLOADSINTO: 'salva in /{path}'
   Versioned:
     has_many_Versions: Versioni
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Preview del sito'
   GridFieldEditButton_ss:
     EDIT: Modifica
+  ContentController:
+    NOTLOGGEDIN: 'Non autenticato'
+  GridFieldItemEditView:
+    Go_back: 'Torna indietro'
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Perfavore aumenta la sicurezza della password aggiungendo alcuni dei seguenti caratteri: %s'
+    PREVPASSWORD: 'Hai già usato questa password in passato, per favore scegline una nuova'
+    TOOSHORT: 'La password è troppo corta, deve essere lunga %s o più caratteri'
