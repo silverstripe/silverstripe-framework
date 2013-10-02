@@ -32,6 +32,10 @@
 			}
 			&.disabled > a {
 				color: #aaaaaa;
+				&:hover {
+					background: transparent;
+					cursor: default;
+				}
 			}
 			&.edit-disabled > a {
 				color: #aaaaaa;
@@ -438,7 +442,12 @@
 				> a, > a:link{
 					background-color: $color-cms-batchactions-menu-selected-background;
 				}
-			} 
+			}
+			&.disabled {
+				> a > .jstree-checkbox {
+					background-position: -57px -54px;
+				}
+			}
 			&.readonly {
 				color: $color-text-disabled;
 				padding-left: 18px;
