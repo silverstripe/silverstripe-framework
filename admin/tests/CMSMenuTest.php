@@ -1,6 +1,6 @@
 <?php
 /**
- * @package cms
+ * @package framework
  * @subpackage tests
  */
 class CMSMenuTest extends SapphireTest implements TestOnly {
@@ -35,7 +35,21 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 		$this->assertNull($menuItem->controller, 'Link menu item has no controller class');
 		$this->assertEquals($menuItem->priority, -1, 'Link menu item has the correct priority');				
 		CMSMenu::clear_menu();
+	}
+
+	public function testLinkWithExternalAttributes() {
+		CMSMenu::clear_menu();
+
+		CMSMenu::add_link('LinkCode', 'link title', 'http://www.example.com', -2, array(
+			'target' => '_blank'
+		));
 		
+		$menuItems = CMSMenu::get_menu_items();
+		$menuItem = $menuItems['LinkCode'];
+
+		$this->assertEquals('target="_blank"', $menuItem->getAttributesHTML());
+
+		CMSMenu::clear_menu();
 	}
 
 	public function testCmsClassDetection() {
@@ -81,8 +95,15 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class CMSMenuTest_LeftAndMainController extends LeftAndMain implements TestOnly {
+	
 	private static $url_segment = 'CMSMenuTest_LeftAndMainController';
+	
 	private static $menu_title = 'CMSMenuTest_LeftAndMainController';
+	
 	private static $menu_priority = 50;
 }
