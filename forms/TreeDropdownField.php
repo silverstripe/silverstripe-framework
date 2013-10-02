@@ -434,7 +434,7 @@ class TreeDropdownField extends FormField {
 			$sourceObject = $this->sourceObject;
 			$wheres = array();
 			if(singleton($sourceObject)->hasDatabaseField($this->labelField)) {
-				$wheres[] = "\"$searchField\" LIKE '%$this->search%'";
+				$wheres[] = "\"$this->labelField\" LIKE '%$this->search%'";
 			} else {
 				if(singleton($sourceObject)->hasDatabaseField('Title')) {
 					$wheres[] = "\"Title\" LIKE '%$this->search%'";
