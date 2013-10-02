@@ -219,7 +219,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			'Help', 
 			_t('LeftAndMain.HELP', 'Help', 'Menu title'), 
 			$this->config()->help_link,
-			-2
+			-2,
+			array(
+				'target' => '_blank'
+			)
 		);
 
 		// Allow customisation of the access check by a extension
@@ -616,6 +619,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if($menuItems) {
 				foreach($menuItems as $code => $menuItem) {
 					// alternate permission checks (in addition to LeftAndMain->canView())
+
 					if(
 						isset($menuItem->controller) 
 						&& $this->hasMethod('alternateMenuDisplayCheck')
@@ -661,9 +665,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 						$menuIcon = LeftAndMain::menu_icon_for_class($menuItem->controller);
 						if (!empty($menuIcon)) $menuIconStyling .= $menuIcon;
 					}
-					
+
 					$menu->push(new ArrayData(array(
 						"MenuItem" => $menuItem,
+						"AttributesHTML" => $menuItem->getAttributesHTML(),
 						"Title" => Convert::raw2xml($title),
 						"Code" => DBField::create_field('Text', $code),
 						"Link" => $menuItem->url,

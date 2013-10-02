@@ -230,6 +230,13 @@
 				// Ignore external links, fallback to standard link behaviour
 				var isExternal = $.path.isExternal(this.attr('href'));
 				if(e.which > 1 || isExternal) return;
+
+				// if the developer has this to open in a new window, handle 
+				// that
+				if(this.attr('target') == "_blank") {
+					return;
+				}
+				
 				e.preventDefault();
 
 				var item = this.getMenuItem();
