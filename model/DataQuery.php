@@ -256,7 +256,10 @@ class DataQuery {
 		$baseClass = array_shift($tableClasses);
 
 		if($orderby = $query->getOrderBy()) {
+			$newOrderby = array();
 			foreach($orderby as $k => $dir) {
+				$newOrderby[$k] = $dir;
+				
 				// don't touch functions in the ORDER BY or public function calls
 				// selected as fields
 				if(strpos($k, '(') !== false) continue;
@@ -283,10 +286,10 @@ class DataQuery {
 						$qualCol = "\"$parts[0]\"";
 					}
 						
-						// remove original sort
-						unset($orderby[$k]);
-						// add new columns sort
-						$orderby[$qualCol] = $dir;
+					// remove original sort
+					unset($newOrderby[$k]);
+					// add new columns sort
+					$newOrderby[$qualCol] = $dir;
 							
 					// To-do: Remove this if block once SQLQuery::$select has been refactored to store getSelect()
 					// format internally; then this check can be part of selectField()
@@ -305,7 +308,7 @@ class DataQuery {
 				}
 			}
 
-			$query->setOrderBy($orderby);
+			$query->setOrderBy($newOrderby);
 		}
 	}
 
