@@ -426,13 +426,13 @@ class VersionedTest extends SapphireTest {
 
 		$relatedData = new VersionedTest_RelatedWithoutVersion();
 		$relatedData->Name = 'Related Data';
-		$relatedDataId = $relatedData->write();
+		$relatedDataId = $relatedData->write()->ID;
 
 		$testData = new VersionedTest_DataObject();
 		$testData->Title = 'Test';
 		$testData->Content = 'Before Content';
 		$testData->Related()->add($relatedData);
-		$id = $testData->write();
+		$id = $testData->write()->ID;
 
 		SS_Datetime::set_mock_now('2010-01-01 00:00:00');
 		$testData->Content = 'After Content';

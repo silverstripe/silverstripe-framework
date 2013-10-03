@@ -643,6 +643,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * @return string the class name
+	 */
+	public function __toString() {
+		return parent::__toString() . ' #' . $this->ID;
+	}
+
+	/**
 	 * Returns TRUE if all values (other than "ID") are
 	 * considered empty (by weak boolean comparison).
 	 * Only checks for fields listed in {@link custom_database_fields()}
@@ -1296,7 +1303,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($writeComponents) {
 			$this->writeComponents(true);
 		}
-		return $this->record['ID'];
+		return $this;
 	}
 
 	/**
