@@ -18,8 +18,11 @@
 ini_set('mysql.connect_timeout', 5);
 // Don't die half was through installation; that does more harm than good
 ini_set('max_execution_time', 0);
-// Prevent a white-screen-of-death
-ini_set('display_errors', 'on');
+
+// set display_errors php setting to on to force installer to avoid blank screen of death.
+// get the original value so it can be used in PHP requirement checks later in this script.
+$originalDisplayErrorsValue = ini_get('display_errors');
+ini_set('display_errors', '1');
 
 error_reporting(E_ALL | E_STRICT);
 
@@ -469,7 +472,15 @@ class InstallRequirements {
 
 	function suggestPHPSetting($settingName, $settingValues, $testDetails) {
 		$this->testing($testDetails);
-		$val = ini_get($settingName);
+
+		// special case for display_errors, check the original value before
+		// it was changed at the start of this script.
+		if($settingName = 'display_errors') {
+			$val = $originalDisplayErrorsValue;
+		} else {
+			$val = ini_get($settingName);
+		}
+
 		if(!in_array($val, $settingValues) && $val != $settingValues) {
 			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";
 			$this->warning($testDetails);
