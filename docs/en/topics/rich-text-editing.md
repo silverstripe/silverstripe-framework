@@ -145,6 +145,29 @@ on your own editor wrapper. Note that the `[api:HtmlEditorConfig]` is currently 
 so its up to you to either convert existing configuration as applicable,
 or start your own configuration.
 
+### Integrating a Spellchecker for TinyMCE
+
+The TinyMCE editor uses spellchecking integrated into the browser if possible
+([docs](http://www.tinymce.com/wiki.php/Plugin3x:spellchecker)).
+Most modern browsers support it, although Internet Explorer only has limited
+support in IE10. Alternatively, you can use the PSpell PHP module for server side checks.
+Assuming you have the module installed, here's how you enable its use in `mysite/_config.php`:
+
+	:::php
+	HtmlEditorConfig::get('cms')->enablePlugins('spellchecker');
+	HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'spellchecker');
+	HtmlEditorConfig::get('cms')->setOption(
+		'spellchecker_rpc_url', 
+		THIRDPARTY_DIR . '/tinymce-spellchecker/rpc.php'
+	);
+	HtmlEditorConfig::get('cms')->setOption('browser_spellcheck', false);
+
+Now change the default spellchecker in `framework/thirdparty/tinymce-spellchecker/config.php`:
+
+	:::php
+	// ...
+	$config['general.engine'] = 'PSpell';
+
 ## Related
 
  * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
