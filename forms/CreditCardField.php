@@ -16,16 +16,16 @@ class CreditCardField extends TextField {
 		$parts = array_pad($parts, 4, "");
 
 		// TODO Mark as disabled/readonly
-		$field = "<span id=\"{$this->name}_Holder\" class=\"creditCardField\">"
-			. "<input autocomplete=\"off\" name=\"{$this->name}[0]\" value=\"$parts[0]\" maxlength=\"4\""
-			. $this->getTabIndexHTML(0) . " /> - "
-			. "<input autocomplete=\"off\" name=\"{$this->name}[1]\" value=\"$parts[1]\" maxlength=\"4\"" 
-			. $this->getTabIndexHTML(1) . " /> - "
-			. "<input autocomplete=\"off\" name=\"{$this->name}[2]\" value=\"$parts[2]\" maxlength=\"4\"" 
-			. $this->getTabIndexHTML(2) . " /> - "
-			. "<input autocomplete=\"off\" name=\"{$this->name}[3]\" value=\"$parts[3]\" maxlength=\"4\"" 
-			. $this->getTabIndexHTML(3) . " /></span>";
-		return $field;
+		$properties['ValueOne'] = $parts[0];
+		$properties['ValueTwo'] = $parts[1];
+		$properties['ValueThree'] = $parts[2];
+		$properties['ValueFour'] = $parts[3];
+		$properties['TabIndexOne'] = $this->getTabIndexHTML(0);
+		$properties['TabIndexTwo'] = $this->getTabIndexHTML(1);
+		$properties['TabIndexThree'] = $this->getTabIndexHTML(2);
+		$properties['TabIndexFour'] = $this->getTabIndexHTML(3);
+
+		return parent::Field($properties);
 	}
 
 	/**
