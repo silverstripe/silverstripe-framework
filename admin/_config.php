@@ -26,8 +26,7 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 		. "dd[id|class|title|dir],dl[id|class|title|dir],dt[id|class|title|dir],@[id,style,class]",
 	'extended_valid_elements' => "img[class|src|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name"
 		. "|usemap|data*],iframe[src|name|width|height|align|frameborder|marginwidth|marginheight|scrolling],"
-		. "object[width|height|data|type],param[name|value],map[class|name|id],area[shape|coords|href|target|alt]",
-	'spellchecker_rpc_url' => THIRDPARTY_DIR . '/tinymce-spellchecker/rpc.php'
+		. "object[width|height|data|type],param[name|value],map[class|name|id],area[shape|coords|href|target|alt]"
 ));
 
 HtmlEditorConfig::get('cms')->enablePlugins('media', 'fullscreen', 'inlinepopups');
