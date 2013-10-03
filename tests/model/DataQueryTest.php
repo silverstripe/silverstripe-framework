@@ -115,6 +115,15 @@ class DataQueryTest extends SapphireTest {
 
 		$this->assertEquals($dq->sql(), $orgDq->sql());
 	}
+	
+	public function testOrderByMultiple() {
+		$dq = new DataQuery('SQLQueryTest_DO');
+		$dq = $dq->sort('"Name" ASC, MID("Name", 8, 1) DESC');
+		$this->assertContains(
+			'ORDER BY "Name" ASC, "_SortColumn0" DESC',
+			$dq->sql()
+		);
+	}
 }
 
 
