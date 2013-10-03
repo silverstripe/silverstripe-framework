@@ -28,8 +28,8 @@ class i18nTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 		
-		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
-		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
+		$this->alternateBasePath = $this->getCurrentAbsolutePath() . DIRECTORY_SEPARATOR . "_fakewebroot";
+		$this->alternateBaseSavePath = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'i18nTextCollectorTest_webroot';
 		FileSystem::makeFolder($this->alternateBaseSavePath);
 		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
 
@@ -182,13 +182,13 @@ class i18nTest extends SapphireTest {
 		), 'en_US');
 		
 		$viewer = new SSViewer('i18nTestModule');
-		$parsedHtml = $viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue')));
+		$parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
 		$this->assertContains(
-			"Layout Template\n",
+			Convert::nl2os("Layout Template\n"),
 			$parsedHtml
 		);
 		$this->assertContains(
-			"Layout Template no namespace\n",
+			Convert::nl2os("Layout Template no namespace\n"),
 			$parsedHtml
 		);
 		
@@ -206,37 +206,37 @@ class i18nTest extends SapphireTest {
 		), 'de_DE');
 
 		$viewer = new SSViewer('i18nTestModule');
-		$parsedHtml = $viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue')));
+		$parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
 		$this->assertContains(
-			"TRANS Main Template\n",
+			Convert::nl2os("TRANS Main Template\n"),
 			$parsedHtml
 		);
 		$this->assertContains(
-			"TRANS Layout Template\n",
+			Convert::nl2os("TRANS Layout Template\n"),
 			$parsedHtml
 		);
 		$this->assertContains(
-			"TRANS Layout Template no namespace",
+			Convert::nl2os("TRANS Layout Template no namespace\n"),
 			$parsedHtml
 		);
 		$this->assertContains(
-			"TRANS My replacement: TestPropertyValue",
+			Convert::nl2os("TRANS My replacement: TestPropertyValue\n"),
 			$parsedHtml
 		);
 		$this->assertContains(
-			"TRANS Include Entity with Namespace",
+			Convert::nl2os("TRANS Include Entity with Namespace\n"),
 			$parsedHtml
 		);
 		$this->assertContains(
-			"TRANS Include Entity without Namespace",
+			Convert::nl2os("TRANS Include Entity without Namespace\n"),
 			$parsedHtml
 		);
 		$this->assertContains(
-			"TRANS My include replacement: TestPropertyValue",
+			Convert::nl2os("TRANS My include replacement: TestPropertyValue\n"),
 			$parsedHtml
 		);
 		$this->assertContains(
-			"TRANS My include replacement no namespace: TestPropertyValue",
+			Convert::nl2os("TRANS My include replacement no namespace: TestPropertyValue\n"),
 			$parsedHtml
 		);
 		
@@ -335,25 +335,27 @@ class i18nTest extends SapphireTest {
 		),'en_US');
 
 		$viewer = new SSViewer('i18nTestModule');
-		$parsedHtml = $viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue')));
+		$parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
 		$this->assertContains(
-			"Hello Mark welcome. But it is late, bye\n",
+			Convert::nl2os("Hello Mark welcome. But it is late, bye\n"),
 			$parsedHtml, "Testing fallback to the translation default (but using the injection array)"
 		);
 
 		$this->assertContains(
-			"TRANS Hello Paul good you are here. But it is late, see you\n",
+			Convert::nl2os("TRANS Hello Paul good you are here. But it is late, see you\n"),
 			$parsedHtml, "Testing entity, default string and injection array"
 		);
 
 		$this->assertContains(
-			"TRANS Hello Cat meow. But it is late, meow\n",
+			Convert::nl2os("TRANS Hello Cat meow. But it is late, meow\n"),
 			$parsedHtml, "Testing a translation with just entity and injection array"
 		);
 
 		//test injected calls
 		$this->assertContains(
-			"TRANS Hello ".Director::absoluteBaseURL()." ".i18n::get_locale().". But it is late, global calls\n",
+			Convert::nl2os(
+				"TRANS Hello ".Director::absoluteBaseURL()." ".i18n::get_locale().". But it is late, global calls\n"
+			),
 			$parsedHtml,
 			"Testing a translation with just entity and injection array, but with global variables injected in"
 		);
