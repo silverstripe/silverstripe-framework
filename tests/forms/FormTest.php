@@ -453,20 +453,20 @@ class FormTest extends FunctionalTest {
 		$form = $this->getStubForm();
 
 		$form->setAttribute('foo', 'bar');
-		$this->assertContains('foo="bar"', $form->getAttributesHTML());
+		$this->assertContains('foo="bar"', $form->AttributesHTML());
 
 		$form->setAttribute('foo', null);
-		$this->assertNotContains('foo="bar"', $form->getAttributesHTML());
+		$this->assertNotContains('foo="bar"', $form->AttributesHTML());
 
 		$form->setAttribute('foo', true);
-		$this->assertContains('foo="foo"', $form->getAttributesHTML());
+		$this->assertContains('foo="foo"', $form->AttributesHTML());
 
 		$form->setAttribute('one', 1);
 		$form->setAttribute('two', 2);
 		$form->setAttribute('three', 3);
-		$this->assertNotContains('one="1"', $form->getAttributesHTML('one', 'two'));
-		$this->assertNotContains('two="2"', $form->getAttributesHTML('one', 'two'));
-		$this->assertContains('three="3"', $form->getAttributesHTML('one', 'two'));
+		$this->assertNotContains('one="1"', $form->AttributesHTML('one', 'two'));
+		$this->assertNotContains('two="2"', $form->AttributesHTML('one', 'two'));
+		$this->assertContains('three="3"', $form->AttributesHTML('one', 'two'));
 	}
 	
 	protected function getStubForm() {
