@@ -385,7 +385,7 @@ class FormField extends RequestHandler {
 	 * If at least one argument is passed as a string, all arguments act as excludes by name.
 	 * @return string HTML attributes, ready for insertion into an HTML tag
 	 */
-	public function getAttributesHTML($attrs = null) {
+	public function AttributesHTML($attrs = null) {
 		$exclude = (is_string($attrs)) ? func_get_args() : null;
 
 		if(!$attrs || is_string($attrs)) $attrs = $this->getAttributes();
@@ -405,6 +405,13 @@ class FormField extends RequestHandler {
 		}
 
 		return implode(' ', $parts);
+	}
+
+	/**
+	 * @deprecated 3.2 Use AttributesHTML() instead
+	 */
+	public function getAttributesHTML($attrs = null) {
+		return $this->AttributesHTML($attrs);
 	}
 
 	/**
