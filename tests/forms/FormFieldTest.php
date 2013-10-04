@@ -73,35 +73,35 @@ class FormFieldTest extends SapphireTest {
 		$field = new FormField('MyField');
 
 		$field->setAttribute('foo', 'bar');
-		$this->assertContains('foo="bar"', $field->getAttributesHTML());
+		$this->assertContains('foo="bar"', $field->AttributesHTML());
 
 		$field->setAttribute('foo', null);
-		$this->assertNotContains('foo=', $field->getAttributesHTML());
+		$this->assertNotContains('foo=', $field->AttributesHTML());
 
 		$field->setAttribute('foo', '');
-		$this->assertNotContains('foo=', $field->getAttributesHTML());
+		$this->assertNotContains('foo=', $field->AttributesHTML());
 
 		$field->setAttribute('foo', false);
-		$this->assertNotContains('foo=', $field->getAttributesHTML());
+		$this->assertNotContains('foo=', $field->AttributesHTML());
 
 		$field->setAttribute('foo', true);
-		$this->assertContains('foo="foo"', $field->getAttributesHTML());
+		$this->assertContains('foo="foo"', $field->AttributesHTML());
 
 		$field->setAttribute('foo', 'false');
-		$this->assertContains('foo="false"', $field->getAttributesHTML());
+		$this->assertContains('foo="false"', $field->AttributesHTML());
 
 		$field->setAttribute('foo', 'true');
-		$this->assertContains('foo="true"', $field->getAttributesHTML());
+		$this->assertContains('foo="true"', $field->AttributesHTML());
 
 		$field->setAttribute('foo', 0);
-		$this->assertContains('foo="0"', $field->getAttributesHTML());
+		$this->assertContains('foo="0"', $field->AttributesHTML());
 
 		$field->setAttribute('one', 1);
 		$field->setAttribute('two', 2);
 		$field->setAttribute('three', 3);
-		$this->assertNotContains('one="1"', $field->getAttributesHTML('one', 'two'));
-		$this->assertNotContains('two="2"', $field->getAttributesHTML('one', 'two'));
-		$this->assertContains('three="3"', $field->getAttributesHTML('one', 'two'));
+		$this->assertNotContains('one="1"', $field->AttributesHTML('one', 'two'));
+		$this->assertNotContains('two="2"', $field->AttributesHTML('one', 'two'));
+		$this->assertContains('three="3"', $field->AttributesHTML('one', 'two'));
 	}
 
 	public function testEveryFieldTransformsReadonlyAsClone() {
