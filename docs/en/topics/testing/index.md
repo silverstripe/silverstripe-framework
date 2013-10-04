@@ -1,25 +1,32 @@
 # Unit and Integration Testing
 
+For behaviour testing in SilverStripe, check out [SilverStripe Behat Documentation](https://github.com/silverstripe-labs/silverstripe-behat-extension/).
+
+## Introduction
+
 The SilverStripe core contains various features designed to simplify the process of creating and managing automated tests.
 
-If you are familiar with PHP coding but new to unit testing, you should read the [Introduction](/topics/testing) and
-check out Mark's presentation [Getting to Grips with SilverStripe Testing](http://www.slideshare.net/maetl/getting-to-grips-with-silverstripe-testing).
-This section's page [Why Unit Test?](why-should-i-test) will give you the reasons behind why you should be testing your
-code.
-
-You should also read over [the PHPUnit manual](http://www.phpunit.de/manual/current/en/). It provides a lot of
-fundamental concepts that we build on in this documentation.
+SilverStripe uses [PHPUnit](http://www.phpunit.de) for unit tests, and the framework contains features to simplify the
+process of creating and managing tests.
 
 If you're more familiar with unit testing, but want a refresher of some of the concepts and terminology, you can browse
 the [Testing Glossary](glossary). To get started now, follow the installation instructions below, and check
-[Troubleshooting](troubleshooting) in case you run into any problems.
+[Troubleshooting](testing-guide-troubleshooting) in case you run into any problems.
+
+If you are familiar with PHP coding but new to unit testing, you should read the [Introduction](/topics/testing) and
+check out Mark's presentation [Getting to Grips with SilverStripe Testing](http://www.slideshare.net/maetl/getting-to-grips-with-silverstripe-testing).
+
+[Why Unit Test?](why-should-i-test) will give you reasons why you should be testing your code.
+
+You should also read over [the PHPUnit manual](http://www.phpunit.de/manual/current/en/). It provides a lot of
+fundamental concepts that we build on in this documentation.
 
 ## Installation
 
 ### Via Composer
 
 Unit tests are not included in the normal SilverStripe downloads, you are expected to work with local git repositories
-([installation instructions](/topics/installation/composer)).
+([installation instructions](/installation/composer)).
 
 Once you've got the project up and running, check out the additional requirements to run unit tests:
 
@@ -33,7 +40,7 @@ You can either use it through its full path (`vendor/bin/phpunit`), or symlink i
 
 ### Via PEAR
 
-Alternatively, you can check out PHPUnit globally via the PEAR packanage manager
+Alternatively, you can check out PHPUnit globally via the PEAR package manager
 ([instructions](https://github.com/sebastianbergmann/phpunit/)).
 
 	pear config-set auto_discover 1
@@ -43,7 +50,7 @@ Alternatively, you can check out PHPUnit globally via the PEAR packanage manager
 
 ### phpunit.xml
 
-The `phpunit` executable can be configured by commandline arguments or through an XML file. File-based configuration has
+The `phpunit` executable can be configured by command line arguments or through an XML file. File-based configuration has
 the advantage of enforcing certain rules across test executions (e.g. excluding files from code coverage reports), and
 of course this information can be version controlled and shared with other team members.
 
