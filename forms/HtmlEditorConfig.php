@@ -82,6 +82,9 @@ class HtmlEditorConfig {
 		'relative_urls' => true,
 		'verify_html' => true,
 		
+		'remove_script_host' => true,
+		'document_base_url' => '/',
+		
 		'spellchecker_rpc_url' => 'sapphire/thirdparty/tinymce-spellchecker/rpc.php'
 	);
 	
