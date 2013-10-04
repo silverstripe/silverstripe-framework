@@ -260,6 +260,14 @@ This is not the only way to set things up in Composer. For more information on t
 
 ## FAQ
 
+### Error "The requested package silverstripe/framework 1.0.0 could not be found"
+
+Composer needs hints about the base package version, either by using `composer create-project` 
+as described above, or by checking out the `silverstripe-installer` project directly from version control.
+In order to use Composer on archive downloads from silverstripe.org, or other unversioned sources,
+an advanced workaround is to set the `COMPOSER_ROOT_VERSION` before every command 
+([details](http://getcomposer.org/doc/03-cli.md#composer-root-version))
+
 ### How do I convert an existing module to using Composer?
 
 Simply decide on a [unique name and vendor prefix](https://packagist.org/about), 
