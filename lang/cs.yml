@@ -287,8 +287,6 @@ cs:
     FROMWEB: 'Z webu'
     FindInFolder: 'Hledat ve složce'
     IMAGEALT: 'Alternativní text (alt)'
-    IMAGEALTTEXT: 'Alternativní text (alt) - bude ukázán, když obrázek nemúže být zobrazen'
-    IMAGEALTTEXTDESC: 'Zobrazeno na obrazovce, když obrázek nemůže být zobrazen'
     IMAGEDIMENSIONS: Rozměry
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'

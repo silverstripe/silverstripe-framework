@@ -287,8 +287,6 @@ nb:
     FROMWEB: 'Fra internett'
     FindInFolder: 'Finn i mappe'
     IMAGEALT: 'Alternativ tekst (alt)'
-    IMAGEALTTEXT: 'Alternativ tekst (alt) - vist dersom bildet ikke kan vises'
-    IMAGEALTTEXTDESC: 'Blir vist til skjermlesere eller hvis bildet ikke kan vises'
     IMAGEDIMENSIONS: Dimensjoner
     IMAGEHEIGHTPX: Høyde
     IMAGETITLE: 'Titteltekst (tooltip) - for tilleggsinformasjon om bildet'

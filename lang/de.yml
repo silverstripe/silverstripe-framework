@@ -287,8 +287,6 @@ de:
     FROMWEB: 'Aus dem Web'
     FindInFolder: 'In Ordner suchen'
     IMAGEALT: 'Alternativtext (alt)'
-    IMAGEALTTEXT: 'Alternativer Text (alt) - angezeigt, wenn das Bild nicht dargestellt werden kann'
-    IMAGEALTTEXTDESC: 'Wird von Screenreadern vorgelesen oder angezeigt, falls das Bild nicht dargestellt werden kann'
     IMAGEDIMENSIONS: Dimensionen
     IMAGEHEIGHTPX: Höhe (px)
     IMAGETITLE: 'Titeltext (Tooltip) - für zusätzliche Informationen über das Bild'

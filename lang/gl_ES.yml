@@ -162,7 +162,6 @@ gl_ES:
     FOLDER: Cartafol
     FROMCMS: 'Dende o CMS'
     FROMCOMPUTER: 'Dende o teu Computador'
-    IMAGEALTTEXT: 'Texto alternativo (alt) - mostrase se a imaxe non pode visualizarse'
     IMAGEDIMENSIONS: Dimensións
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Texto do título (tooltip) - para información adicional sobre a imaxe'

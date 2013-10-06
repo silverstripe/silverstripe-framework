@@ -287,8 +287,6 @@ nl:
     FROMWEB: 'Vanaf een website'
     FindInFolder: 'Zoek in map'
     IMAGEALT: 'Alternatieve tekst (alt tekst) - wordt getoond als de afbeelding niet kan worden geladen'
-    IMAGEALTTEXT: 'Alternatieve tekst (alt tekst) - wordt getoond als de afbeelding niet kan worden geladen'
-    IMAGEALTTEXTDESC: 'Getoond voor schermlezers of als afbeelding niet kan worden weergegeven'
     IMAGEDIMENSIONS: Dimensies
     IMAGEHEIGHTPX: Hoogte
     IMAGETITLE: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'

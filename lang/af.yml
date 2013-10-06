@@ -231,8 +231,6 @@ af:
     FROMWEB: 'Van die web af'
     FindInFolder: 'Find in dossier'
     IMAGEALT: 'Alternatiewe teks (alt) '
-    IMAGEALTTEXT: 'Alternatiewe teks (alt) - word gewys as prentjie nie beskikbaar is nie'
-    IMAGEALTTEXTDESC: 'Gewys vir skerm lesers of as die beeld nie vertoon kan word nie'
     IMAGEDIMENSIONS: Afmetings
     IMAGEHEIGHTPX: Hoogte
     IMAGETITLE: 'Titel teks (leidraad) - vir addisionele informasie oor die prentjie'
