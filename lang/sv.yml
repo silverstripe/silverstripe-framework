@@ -253,8 +253,6 @@ sv:
     FROMWEB: 'Från webben'
     FindInFolder: 'Hitta i mapp'
     IMAGEALT: 'Alternativ text (alt)'
-    IMAGEALTTEXT: 'Alternativ text (alt) - visas om bilden inte kan visas'
-    IMAGEALTTEXTDESC: 'Visas för skärmläsare eller om bilden inte kan visas'
     IMAGEDIMENSIONS: Dimensioner
     IMAGEHEIGHTPX: Höjd
     IMAGETITLE: 'Titel text (tooltip) - för ytterligare information om bilden'

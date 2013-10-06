@@ -133,7 +133,6 @@ eo:
     EMAIL: 'Retpoŝta adreso'
     FILE: Dosiero
     FOLDER: Dosierujo
-    IMAGEALTTEXT: 'Alternativa teksto (alt) - vidigi ĝin se ne eblas vidigi bildon'
     IMAGEDIMENSIONS: Dimensioj
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Titola teksto (ŝpruchelpilo) - por plua informo pri la bildo'

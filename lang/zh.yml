@@ -1,0 +1,613 @@
+zh:
+  AssetAdmin:
+    ALLOWEDEXTS: '允许的扩展名'
+    NEWFOLDER: 新建文件夹
+    SHOWALLOWEDEXTS: '显示允许的扩展名'
+  AssetTableField:
+    CREATED: '首先上传的'
+    DIM: 尺寸
+    FILENAME: 文件名
+    FOLDER: 文件夹
+    LASTEDIT: '最近更改的'
+    OWNER: 所有人
+    SIZE: '文件尺寸'
+    TITLE: 标题
+    TYPE: '文件类型'
+    URL: 网址
+  AssetUploadField:
+    ChooseFiles: '选择文件'
+    DRAGFILESHERE: '将文件拖放至此'
+    DROPAREA: '放置区域'
+    EDITALL: '编辑全部'
+    EDITANDORGANIZE: '编辑并组织'
+    EDITINFO: '编辑文件'
+    FILES: 文件
+    FROMCOMPUTER: '从您的电脑选择文件'
+    FROMCOMPUTERINFO: '从您的电脑上传'
+    TOTAL: 合计
+    TOUPLOAD: '选择要上传的文件……'
+    UPLOADINPROGRESS: '请稍候……上传正在进行中'
+    UPLOADOR: 或
+  BBCodeParser:
+    ALIGNEMENT: 对齐
+    ALIGNEMENTEXAMPLE: '向右对齐'
+    BOLD: '粗体文字'
+    BOLDEXAMPLE: 粗体
+    CODE: '代码块'
+    CODEDESCRIPTION: '未格式化的代码块'
+    CODEEXAMPLE: '代码块'
+    COLORED: '彩色文字'
+    COLOREDEXAMPLE: '蓝色文字'
+    EMAILLINK: '电子邮件链接'
+    EMAILLINKDESCRIPTION: '创建链接至一个电子邮件地址'
+    IMAGE: 图片
+    IMAGEDESCRIPTION: '在您的帖子中显示图片'
+    ITALIC: '斜体文字'
+    ITALICEXAMPLE: 斜体字
+    LINK: '网站链接'
+    LINKDESCRIPTION: '链接至另一个网站或网址'
+    STRUCK: '剔除的文字'
+    STRUCKEXAMPLE: 剔除
+    UNDERLINE: '带下划线的文字'
+    UNDERLINEEXAMPLE: 带下划线的
+    UNORDERED: '未排序列表'
+    UNORDEREDDESCRIPTION: '未排序列表'
+    UNORDEREDEXAMPLE1: '未排序项目 1'
+  BackLink_Button_ss:
+    Back: 返回
+  BasicAuth:
+    ENTERINFO: '请输入一个用户名和密码。'
+    ERRORNOTADMIN: '那个用户不是一名管理员。'
+    ERRORNOTREC: '那个用户名 / 密码无法被辨认'
+  Boolean:
+    ANY: 任何
+  CMSLoadingScreen_ss:
+    LOADING: 正在载入……
+    REQUIREJS: 'CMS 要求您启用 JavaScript。'
+  CMSMain:
+    ACCESS: '访问 ''{title}'' 部分'
+    ACCESSALLINTERFACES: '对所有 CMS 部分的访问'
+    ACCESSALLINTERFACESHELP: '支配更多的特殊访问设置'
+    SAVE: 保存
+  CMSProfileController:
+    MENUTITLE: '我的个人资料'
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: '您的密码已更改为：'
+    CHANGEPASSWORDTEXT2: '现在，您可以使用下列证书来登录了：'
+    EMAIL: 电子邮件
+    HELLO: 您好
+    PASSWORD: 密码
+  ComplexTableField:
+    CLOSEPOPUP: '关闭弹出窗口'
+    SUCCESSADD2: '已添加的 {name}'
+    SUCCESSEDIT: '已保存 %s %s %s'
+  ComplexTableField_ss:
+    ADDITEM: '添加 %s'
+    NOITEMSFOUND: '没有找到任何项目'
+    SORTASC: '升序排列'
+    SORTDESC: '降序排列'
+  ComplexTableField_popup_ss:
+    NEXT: 下一页
+    PREVIOUS: 前一页
+  ConfirmedPasswordField:
+    ATLEAST: '密码长度必须至少 {min} 个字符。'
+    BETWEEN: '密码长度必须含 {min} 到 {max} 个字符。'
+    MAXIMUM: '密码长度必须至多 {max} 个字符。'
+    SHOWONCLICKTITLE: '更改密码'
+  CreditCardField:
+    FIRST: 第一个
+    FOURTH: 第四个
+    SECOND: 第二个
+    THIRD: 第三个
+  CurrencyField:
+    CURRENCYSYMBOL: 货币字符
+  DataObject:
+    PLURALNAME: '数据对象'
+    SINGULARNAME: '数据对象'
+  Date:
+    DAY: 天
+    DAYS: 天
+    HOUR: 小时
+    HOURS: 小时
+    MIN: 分钟
+    MINS: 分钟
+    MONTH: 月份
+    MONTHS: 月份
+    SEC: 秒
+    SECS: 秒
+    TIMEDIFFAGO: '{difference} 以前'
+    TIMEDIFFIN: '在 {difference} 中'
+    YEAR: 年
+    YEARS: 年
+    LessThanMinuteAgo: '少于一分钟'
+  DateField:
+    NOTSET: '未设置'
+    TODAY: 今天
+    VALIDDATEFORMAT2: '请输入一个有效的日期格式 ({format})'
+    VALIDDATEMAXDATE: '您的日期必须更早或者符合最大允许日期 ({date})'
+    VALIDDATEMINDATE: '您的日期必须更迟或者符合最小允许日期 ({date})'
+  DatetimeField:
+    NOTSET: '未设置'
+  Director:
+    INVALID_REQUEST: '无效请求'
+  DropdownField:
+    CHOOSE: （选择）
+  EmailField:
+    VALIDATION: '请输入一个电子邮件地址'
+  Email_BounceRecord:
+    PLURALNAME: '电子邮件退还记录'
+    SINGULARNAME: '电子邮件退还记录'
+  Enum:
+    ANY: 任何
+  File:
+    AviType: 'AVI 视频文件'
+    Content: 内容
+    CssType: 'CSS 文件'
+    DmgType: '应用磁盘图片'
+    DocType: 'Word 文档'
+    Filename: 文件名
+    GifType: 'GIF 图片 - 适合图表'
+    GzType: 'GZIP 压缩文件'
+    HtlType: 'HTML 文件'
+    HtmlType: 'HTML 文件'
+    INVALIDEXTENSION: '扩展名不允许（有效扩展名： {extensions}）'
+    INVALIDEXTENSIONSHORT: '扩展名不允许'
+    IcoType: '图标图片'
+    JpgType: 'JPEG 图片 - 适合照片'
+    JsType: 'Javascript 文件'
+    Mp3Type: 'MP3 音频文件'
+    MpgType: 'MPEG 视频文件'
+    NOFILESIZE: '文件尺寸为零字节。'
+    NOVALIDUPLOAD: '该文件不是有效上传的'
+    Name: 名称
+    PLURALNAME: 文件
+    PdfType: 'Adobe Acrobat PDF 文件'
+    PngType: 'PNG 图片 - 良好的通用格式'
+    SINGULARNAME: 文件
+    TOOLARGE: '文件尺寸过大，最大允许 {size}'
+    TOOLARGESHORT: '文件尺寸超过了 {size}'
+    TiffType: '标记图片格式'
+    Title: 标题
+    WavType: 'WAV 音频文件'
+    XlsType: 'Excel 表格'
+    ZipType: 'ZIP 压缩文件'
+  FileIFrameField:
+    ATTACH: '附件 {type}'
+    ATTACHONCESAVED: '只有当您第一次保存过记录，{type} 才能被附加。'
+    ATTACHONCESAVED2: '只有当您第一次保存过记录，文件才能被附加。'
+    DELETE: '删除 {type}'
+    DISALLOWEDFILETYPE: '这种文件类型不允许被上传'
+    FILE: 文件
+    FROMCOMPUTER: '从您的电脑'
+    FROMFILESTORE: '从文件商店'
+    NOSOURCE: '请选择一个源文件来附加'
+    REPLACE: '替代 {type}'
+  FileIFrameField_iframe_ss:
+    TITLE: '图片上传框架'
+  Filesystem:
+    SYNCRESULTS: '同步更新完成：{createdcount} 项已创建， {deletedcount} 项已删除'
+  Folder:
+    PLURALNAME: 文件夹
+    SINGULARNAME: 文件夹
+  ForgotPasswordEmail_ss:
+    HELLO: 您好
+    TEXT1: '这是您的'
+    TEXT2: '密码重设链接'
+    TEXT3: 为
+  Form:
+    FIELDISREQUIRED: '{name} 为必填'
+    SubmitBtnLabel: 前往
+    VALIDATIONCREDITNUMBER: '请确保您输入了正确的 {number} 信用卡号码'
+    VALIDATIONNOTUNIQUE: '输入的值不是唯一的'
+    VALIDATIONPASSWORDSDONTMATCH: '密码不匹配'
+    VALIDATIONPASSWORDSNOTEMPTY: '密码不得为空'
+    VALIDATIONSTRONGPASSWORD: '密码必须至少有一个数字和一个字母数字字符'
+    VALIDATOR: 验证器
+    VALIDCURRENCY: '请输入一个有效的货币'
+    CSRF_FAILED_MESSAGE: '似乎出现了技术问题。请点击返回按钮，刷新您的浏览器，然后再试一次。'
+  FormField:
+    NONE: 无
+    Example: '例如 %s'
+  GridAction:
+    DELETE_DESCRIPTION: 删除
+    Delete: 删除
+    UnlinkRelation: 解除链接
+  GridField:
+    Add: '添加 {name}'
+    Filter: 过滤器
+    FilterBy: '过滤条件'
+    Find: 查找
+    LEVELUP: '等级提升'
+    LinkExisting: '链接已存在'
+    NewRecord: '新 %s'
+    NoItemsFound: '没有找到任何项目'
+    PRINTEDAT: '印刷地'
+    PRINTEDBY: '印刷人'
+    PlaceHolder: '查找 {type}'
+    PlaceHolderWithLabels: '通过 {name} 查找 {type}'
+    RelationSearch: '关系搜索'
+    ResetFilter: 重设
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: '没有删除权限'
+    EditPermissionsFailure: '没有解除记录链接的权限'
+  GridFieldDetailForm:
+    CancelBtn: 取消
+    Create: 创建
+    Delete: 删除
+    DeletePermissionsFailure: '没有删除权限'
+    Deleted: '已删除的 %s %s'
+    Save: 保存
+    Saved: '已保存 {name} {link}'
+  GridFieldItemEditView_ss:
+    Go_back: '返回'
+  Group:
+    AddRole: '在这个小组中添加一个角色'
+    Code: '小组代码'
+    DefaultGroupTitleAdministrators: 管理员
+    DefaultGroupTitleContentAuthors: '内容作者'
+    Description: 描述
+    GroupReminder: '如果您选择了某父组，该组别将会承担起所有功能角色'
+    Locked: '锁定？'
+    NoRoles: '没有找到角色'
+    PLURALNAME: 群组
+    Parent: '父组'
+    RolesAddEditLink: '管理角色'
+    SINGULARNAME: 群组
+    Sort: '排序'
+    has_many_Permissions: 权限
+    many_many_Members: 成员
+  GroupImportForm:
+    Help1: '<p>用<em>CSV</em>格式（逗号分隔值）导入一个或多个小组。<small><a href="#" class="toggle-advanced">显示高级用法</a></small></p>'
+    Help2: "<div class=\"advanced\">\n<h4>高级用法</h4>\n<ul>\n<li>允许的列：<em>%s</em></li>\n<li>现存的小组根据其独特的<em>代码</em>值来匹配，并根据导入文件中的任何新值来更新</li>\n<li>小组的层次结构可以通过使用<em>父代码</em>列来创建。</li>\n<li>权限代码可由<em>权限代码</em>列来分配。现存的权限代码并不会被清除。</li>\n</ul>\n</div>"
+    ResultCreated: '创建 {count} 个小组'
+    ResultDeleted: '已删除 %d 小组'
+    ResultUpdated: '已更新 %d 小组'
+  Hierarchy:
+    InfiniteLoopNotAllowed: '"{type}" 层次结构中发现无限循环。请更改父类型来解决此问题'
+  HtmlEditorField:
+    ADDURL: '添加网址'
+    ADJUSTDETAILSDIMENSIONS: '详情 &amp;amp; 体积'
+    ANCHORVALUE: 固定
+    BUTTONINSERT: 插入
+    BUTTONINSERTLINK: '插入链接'
+    BUTTONREMOVELINK: '移除链接'
+    BUTTONUpdate: 更新
+    CAPTIONTEXT: '标题文本'
+    CSSCLASS: '对齐 / 样式'
+    CSSCLASSCENTER: '单独居中'
+    CSSCLASSLEFT: '居左，以文字环绕。'
+    CSSCLASSLEFTALONE: '居左，无其他元素。'
+    CSSCLASSRIGHT: '居右，以文字环绕。'
+    DETAILS: 详情
+    EMAIL: '电子邮件地址'
+    FILE: 文件
+    FOLDER: 文件夹
+    FROMCMS: '从 CMS 处'
+    FROMCOMPUTER: '从您的电脑处'
+    FROMWEB: '从网站上'
+    FindInFolder: '在文件夹中寻找'
+    IMAGEALT: '替代性文本 (alt)'
+    IMAGEDIMENSIONS: 体积
+    IMAGEHEIGHTPX: 高度
+    IMAGETITLE: '标题文字（工具提示）- 关于该图像的更多信息'
+    IMAGETITLETEXT: '标题文字（工具提示）'
+    IMAGETITLETEXTDESC: '要获取关于该图像的更多信息'
+    IMAGEWIDTHPX: 宽度
+    INSERTMEDIA: '插入媒体'
+    LINK: '插入链接'
+    LINKANCHOR: '固定于此页面'
+    LINKDESCR: '链接描述'
+    LINKEMAIL: '电子邮件地址'
+    LINKEXTERNAL: '另一个网站'
+    LINKFILE: '下载文件'
+    LINKINTERNAL: '站内页面'
+    LINKOPENNEWWIN: '在新窗口中打开链接？'
+    LINKTO: '链接到'
+    PAGE: 页面
+    URL: 网址
+    URLNOTANOEMBEDRESOURCE: '''{url}'' 该网址无法转换成媒体来源。'
+    UpdateMEDIA: '更新媒体'
+    BUTTONADDURL: '添加网址'
+  Image:
+    PLURALNAME: 文件
+    SINGULARNAME: 文件
+  ImageField:
+    IMAGE: 图像
+  Image_Cached:
+    PLURALNAME: 文件
+    SINGULARNAME: 文件
+  Image_iframe_ss:
+    TITLE: '图片上传内嵌框架'
+  LeftAndMain:
+    CANT_REORGANISE: '您没有权限更改顶层页面。您的更改没有保存。'
+    DELETED: 已删除。
+    DropdownBatchActionsDefault: 动作
+    HELP: 帮助
+    PAGETYPE: '页面类型'
+    PERMAGAIN: '您已经退出 CMS。如果您想再次登录，请在下面输入用户名和密码。'
+    PERMALREADY: '抱歉，您不能访问 CMS 的这一部分。如果您想以不同的身份登录，请在下面进行操作'
+    PERMDEFAULT: '请选择一种认证方法并输入您的凭据以访问 CMS。'
+    PLEASESAVE: '请保存页面：不能更新该页面因为它还没有被保存。'
+    PreviewButton: 预览
+    REORGANISATIONSUCCESSFUL: '重新组织网站地图已成功'
+    SAVEDUP: 已保存。
+    VersionUnknown: 位置
+    ShowAsList: '以列表方式展示'
+    TooManyPages: '页面数目过多'
+    ValidationError: '验证错误'
+  LeftAndMain_Menu_ss:
+    Hello: 您好
+    LOGOUT: '退出'
+  LoginAttempt:
+    Email: '电子邮件地址'
+    IP: 'IP 地址'
+    PLURALNAME: '登录尝试'
+    SINGULARNAME: '登录尝试'
+    Status: 状态
+  Member:
+    ADDGROUP: '添加组别'
+    BUTTONCHANGEPASSWORD: '更改密码'
+    BUTTONLOGIN: '登录'
+    BUTTONLOGINOTHER: '以不同身份登录'
+    BUTTONLOSTPASSWORD: '我丢失了密码'
+    CANTEDIT: '您没有权限完成这一操作'
+    CONFIRMNEWPASSWORD: '确认新密码'
+    CONFIRMPASSWORD: '确认密码'
+    DATEFORMAT: '日期格式'
+    DefaultAdminFirstname: '默认管理员'
+    DefaultDateTime: 默认
+    EMAIL: 电子邮件
+    EMPTYNEWPASSWORD: '新密码不能为空，请重试'
+    ENTEREMAIL: '请输入电子邮件地址以获取密码重置链接'
+    ERRORLOCKEDOUT: '由于登录失败次数过多，您的账户暂时被冻结。请在 20 分钟后重试。'
+    ERRORLOCKEDOUT2: '由于登录失败次数过多，您的账户暂时被冻结。请在 {count} 分钟后重试。'
+    ERRORNEWPASSWORD: '您输入的新密码不同，请重试'
+    ERRORPASSWORDNOTMATCH: '您的现有密码不匹配，请重试'
+    ERRORWRONGCRED: '电子邮件或密码错误。请重试。'
+    FIRSTNAME: '名字'
+    INTERFACELANG: '界面语言'
+    INVALIDNEWPASSWORD: '我们不能接受该密码：{password}'
+    LOGGEDINAS: '您以 {name} 身份登录。'
+    NEWPASSWORD: '新密码'
+    PASSWORD: 密码
+    PLURALNAME: 成员
+    REMEMBERME: '下次记住我？'
+    SINGULARNAME: 成员
+    SUBJECTPASSWORDCHANGED: '您的密码已更改'
+    SUBJECTPASSWORDRESET: '您的密码重设链接'
+    SURNAME: 姓氏
+    TIMEFORMAT: '时间格式'
+    VALIDATIONMEMBEREXISTS: '带有相同的 %s 的成员已经存在'
+    ValidationIdentifierFailed: '不能用相同的标识符 ({name} = {value})) 重写现有成员 #{id}'
+    WELCOMEBACK: '欢迎回来， {firstname}'
+    YOUROLDPASSWORD: '您的旧密码'
+    belongs_many_many_Groups: 群组
+    db_LastVisited: '上次访问日期'
+    db_Locale: '界面区域设置'
+    db_LockedOutUntil: '保持锁定直到'
+    db_NumVisit: '访问数字'
+    db_Password: 密码
+    db_PasswordExpiry: '密码失效日期'
+    NoPassword: '该成员无密码'
+  MemberAuthenticator:
+    TITLE: '电子邮件和密码'
+  MemberDatetimeOptionsetField:
+    AMORPM: 'AM（上午）或 PM（下午）'
+    Custom: 自定义
+    DATEFORMATBAD: '日期格式无效'
+    DAYNOLEADING: '起首不为零的月份日期'
+    DIGITSDECFRACTIONSECOND: '一个或多个代表秒的小数数字'
+    FOURDIGITYEAR: '四位数年份'
+    FULLNAMEMONTH: '月份全名（例如六月）'
+    HOURNOLEADING: '起首不为零的小时'
+    MINUTENOLEADING: '起首不为零的分钟'
+    MONTHNOLEADING: '起首不为零的月份数字'
+    Preview: 预览
+    SHORTMONTH: '月份简称（例如 Jun）'
+    TOGGLEHELP: '拨动格式帮助开关'
+    TWODIGITDAY: '两位数表示的月份日期'
+    TWODIGITHOUR: '两位数表示的小时（00 到 23）'
+    TWODIGITMINUTE: '两位数表示的分钟（00 到 59）'
+    TWODIGITMONTH: '两位数表示的月份（01=一月，以此类推）'
+    TWODIGITSECOND: '两位数表示的秒（00 到 59）'
+    TWODIGITYEAR: '两位数表示的年份'
+    Toggle: '显示格式帮助'
+  MemberImportForm:
+    Help1: '&lt;p&gt;采用 &lt;em&gt;CSV 格式&lt;/em&gt; 导入用户（逗号分隔值）&lt;small&gt;&lt;a href="#" class="toggle-advanced"&gt;显示高级用法&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;'
+    Help2: "&lt;div class=\"advanced\"&gt;\n &lt;h4&gt;高级用法&lt;/h4&gt;\n &lt;ul&gt;\n &lt;li&gt;允许的栏目：&lt;em&gt;%s&lt;/em&gt;&lt;/li&gt;\n &lt;li&gt;通过独有的 &lt;em&gt;代码&lt;/em&gt; 属性对现有用户进行配对并使用导入文件中任何新的值更新他们。&lt;/li&gt;\n &lt;li&gt;群组可通过 &lt;em&gt;组别&lt;/em&gt; 栏目进行分类。群组通过他们的&lt;em&gt;代码&lt;/em&gt; 属性进行识别，\n多个群组可用逗号隔开。现有的群组分配情况不会被清除。&lt;/li&gt;\n &lt;/ul&gt;\n&lt;/div&gt;"
+    ResultCreated: '已创建 {count} 位成员'
+    ResultDeleted: '已删除 %d 位成员'
+    ResultNone: '无更改'
+    ResultUpdated: '已更新 {count} 个成员'
+  MemberPassword:
+    PLURALNAME: '成员密码'
+    SINGULARNAME: '成员密码'
+  MemberTableField:
+    APPLY_FILTER: '应用过滤器'
+  ModelAdmin:
+    DELETE: 删除
+    DELETEDRECORDS: '已删除 {count} 个记录。'
+    EMPTYBEFOREIMPORT: '替代数据'
+    IMPORT: '从 CSV 中导入'
+    IMPORTEDRECORDS: '已导入 {count} 个记录。'
+    NOCSVFILE: '请浏览并选择要导入的 CSV 文件'
+    NOIMPORT: '没有可导入的项目'
+    RESET: 重设
+    Title: '数据模型'
+    UPDATEDRECORDS: '更新了 {count} 个记录。'
+  ModelAdmin_ImportSpec_ss:
+    IMPORTSPECFIELDS: '数据库栏目'
+    IMPORTSPECLINK: '展示 %s 的详细信息'
+    IMPORTSPECRELATIONS: 关系
+    IMPORTSPECTITLE: '%s 的详细信息'
+  ModelAdmin_Tools_ss:
+    FILTER: 过滤
+    IMPORT: 导入
+  ModelSidebar_ss:
+    IMPORT_TAB_HEADER: 导入
+    SEARCHLISTINGS: 搜索
+  MoneyField:
+    FIELDLABELAMOUNT: 金额
+    FIELDLABELCURRENCY: 货币
+  NullableField:
+    IsNullLabel: '为空'
+  NumericField:
+    VALIDATION: '''{value}'' 不是数字，该区域只接受数字'
+  Pagination:
+    Page: 页面
+    View: 查看
+  Permission:
+    AdminGroup: 管理员
+    CMS_ACCESS_CATEGORY: 'CMS 访问'
+    FULLADMINRIGHTS: '完全管理权'
+    FULLADMINRIGHTS_HELP: '包含并支配其它所有已分配权限'
+    PLURALNAME: 权限
+    SINGULARNAME: 权限
+  PermissionCheckboxSetField:
+    AssignedTo: '已分配至 "{title}"'
+    FromGroup: '从小组 "{title}"继承'
+    FromRole: '从角色 "{title}"继承'
+    FromRoleOnGroup: '从 "%s" 小组的 "%s" 角色继承'
+  PermissionRole:
+    OnlyAdminCanApply: '只有管理员可以应用'
+    PLURALNAME: 角色
+    SINGULARNAME: 角色
+    Title: 标题
+  PermissionRoleCode:
+    PLURALNAME: '权限角色代码'
+    SINGULARNAME: '权限角色代码'
+  Permissions:
+    PERMISSIONS_CATEGORY: '角色及访问权限'
+    UserPermissionsIntro: '把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。'
+  PhoneNumberField:
+    VALIDATION: '请输入一个有效的电话号码'
+  RelationComplexTableField_ss:
+    ADD: 添加
+    CSVEXPORT: '导出到 CSV'
+    NOTFOUND: '没有找到项目'
+  Security:
+    ALREADYLOGGEDIN: '您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。'
+    LOSTPASSWORDHEADER: '忘记密码'
+    BUTTONSEND: '将密码重设链接发送给我'
+    CHANGEPASSWORDBELOW: '您可以在下面更改您的密码。'
+    CHANGEPASSWORDHEADER: '更改您的密码'
+    ENTERNEWPASSWORD: '请输入一个新密码。'
+    ERRORPASSWORDPERMISSION: '您必须登录才能更改您的密码！'
+    LOGGEDOUT: '您已经退出了。如果您希望再次登录，请在下面输入您的证书。'
+    LOGIN: '登录'
+    NOTEPAGESECURED: '该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。'
+    NOTERESETLINKINVALID: '<p>密码重设链接无效或已过期。</p><p>您可以在<a href="{link1}">这里</a> 要求一个新的或在<a href="{link2}">登录</a>后更改您的密码。</p>'
+    NOTERESETPASSWORD: '请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码'
+    PASSWORDSENTHEADER: '密码重设链接已发送至''{email}'''
+    PASSWORDSENTTEXT: '谢谢！复位链接已发送到 ''{email}''，假定此电子邮件地址存在一个帐户。'
+  SecurityAdmin:
+    ACCESS_HELP: '允许查看、添加和编辑用户，以及将权限和角色分配给他们'
+    APPLY_ROLES: '将角色应用至小组'
+    APPLY_ROLES_HELP: '编辑角色的能力已被分配给一个小组。需要“访问‘用户’部分”的权限。'
+    EDITPERMISSIONS: '管理小组的权限'
+    EDITPERMISSIONS_HELP: '一个小组编辑权限和 IP 地址的能力。需要“访问‘安全’部分”的权限。'
+    GROUPNAME: '小组名称'
+    IMPORTGROUPS: '导入小组'
+    IMPORTUSERS: '导入用户'
+    MEMBERS: 成员
+    MENUTITLE: 安全
+    MemberListCaution: '注意：从这个列表中删除成员将会使它们从所有小组和数据库中被删除'
+    NEWGROUP: '新的小组'
+    PERMISSIONS: 权限
+    ROLES: 角色
+    ROLESDESCRIPTION: '角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。'
+    TABROLES: 角色
+    Users: 用户
+  SecurityAdmin_MemberImportForm:
+    BtnImport: '从 CSV 导入'
+    FileFieldLabel: 'CSV 文件 &lt;small&gt;(允许的扩展名：*.csv)&lt;/small&gt;'
+  SilverStripeNavigator:
+    Edit: 编辑
+    Auto: 自动
+    ChangeViewMode: '改变视图模式'
+    Desktop: 桌面
+    DualWindowView: '双窗口'
+    EditView: '编辑模式'
+    Mobile: 移动
+    PreviewState: '预览状态'
+    PreviewView: '预览模式'
+    Responsive: 有响应的
+    SplitView: '分离模式'
+    Tablet: 平板电脑
+    ViewDeviceWidth: '选择预览宽度'
+    Width: 宽度
+  SimpleImageField:
+    NOUPLOAD: '没有已上传的图像'
+  SiteTree:
+    TABMAIN: 主要的
+  TableField:
+    ISREQUIRED: '以 %s ''%s'' 需要'
+  TableField_ss:
+    ADD: '添加新行'
+    ADDITEM: '添加 %s'
+  TableListField:
+    CSVEXPORT: '导出到 CSV'
+    PRINT: 打印
+    Print: 打印
+    SELECT: '选择'
+  TableListField_ss:
+    NOITEMSFOUND: '找不到项目'
+    SORTASC: '升序排列'
+    SORTDESC: '降序排列'
+  TableListField_PageControls_ss:
+    DISPLAYING: 显示
+    OF: 的
+    TO: 至
+    VIEWFIRST: '查看第一个'
+    VIEWLAST: '查看上一个'
+    VIEWNEXT: '查看下一个'
+    VIEWPREVIOUS: '查看前一页'
+  TimeField:
+    VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
+  ToggleField:
+    LESS: 更少
+    MORE: 更多
+  UploadField:
+    ATTACHFILE: '附加单个文件'
+    ATTACHFILES: '附加多个文件'
+    AttachFile: '附加一个或多个文件'
+    DELETE: '从文件中移除'
+    DELETEINFO: '从文件库中永久移除该文件'
+    DOEDIT: 保存
+    DROPFILE: '释放单个文件'
+    DROPFILES: '释放多个文件'
+    Dimensions: 尺寸
+    EDIT: 编辑
+    EDITINFO: '编辑该文件'
+    FIELDNOTSET: '没有找到文件信息'
+    FROMCOMPUTER: '从您的电脑处'
+    FROMCOMPUTERINFO: '从文件中选择'
+    FROMFILES: '从文件中'
+    HOTLINKINFO: '信息：该图像将会被映射。请确保您已获得网站原始制作者的允许。'
+    MAXNUMBEROFFILES: '超过允许的最大 {count} 个文件数目'
+    MAXNUMBEROFFILESSHORT: '只能上传 {count} 个文件'
+    MAXNUMBEROFFILESONE: '只能上传一个文件'
+    REMOVE: 移除
+    REMOVEERROR: '移除文件错误'
+    REMOVEINFO: '从这里移除文件，但是不将其从文件库中删除'
+    STARTALL: '开始所有'
+    STARTALLINFO: '开始上传所有'
+    Saved: 已保存
+    CHOOSEANOTHERFILE: '选择另一文件'
+    CHOOSEANOTHERINFO: '用文件库里的文件替换该文件'
+    OVERWRITEWARNING: '已经存在相同名称的文件'
+    UPLOADSINTO: '保存到 /{path}'
+  Versioned:
+    has_many_Versions: 版本
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: '网站预览'
+  GridFieldEditButton_ss:
+    EDIT: 编辑
+  ContentController:
+    NOTLOGGEDIN: '尚未登录'
+  GridFieldItemEditView:
+    Go_back: '返回'
+  PasswordValidator:
+    LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：%s'
+    PREVPASSWORD: '您已经使用过这个密码，请选用新的密码'
+    TOOSHORT: '密码长度过短，必须为 %s 个字符或更长'

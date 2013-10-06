@@ -232,8 +232,6 @@ sl:
     FROMWEB: 'S spleta'
     FindInFolder: 'Poišči v mapi'
     IMAGEALT: 'Nadomestno besedilo (alt)'
-    IMAGEALTTEXT: 'Nadomestno besedilo (alt) bo izpisano, kadar slike ne bo možno prikazati'
-    IMAGEALTTEXTDESC: 'Prikaz na bralnikih ali če se slika ne more prikazati'
     IMAGEDIMENSIONS: Velikosti
     IMAGEHEIGHTPX: Višina
     IMAGETITLE: 'Naslov (tooltip)  bo izpisan kot dopolnitev k vsebini slike'

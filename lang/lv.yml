@@ -119,7 +119,6 @@ lv:
     EMAIL: 'E-pasta adrese'
     FILE: Fails
     FOLDER: Mape
-    IMAGEALTTEXT: 'Alternatīvais teksts (alt) - būs redzams, kad nebūs iespējams attēlot attēlu'
     IMAGEDIMENSIONS: Izmēri
     IMAGEHEIGHTPX: Augstums
     IMAGETITLE: 'Apraksts (paskaidre)  - papildus informācijai par attēlu'

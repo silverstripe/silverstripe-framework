@@ -132,7 +132,6 @@ es_AR:
     EMAIL: 'Dirección email'
     FILE: Archivo
     FOLDER: Carpeta
-    IMAGEALTTEXT: 'Texto alternativo (alt) - mostrado si no se puede mostrar la imagen'
     IMAGEDIMENSIONS: Dimensiones
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Texto de título (tooltip) - información adicional acerca de la imagen'
