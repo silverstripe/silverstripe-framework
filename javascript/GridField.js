@@ -316,14 +316,12 @@
 					source: function(request, response){
 						var searchField = $(this.element);
 						var form = $(this.element).closest("form");
-						// Due to some very weird behaviout of jquery.metadata, the url have to be double quoted
-						var suggestionUrl = $(searchField).attr('data-search-url').substr(1,$(searchField).attr('data-search-url').length-2);
 						$.ajax({
 							headers: {
 								"X-Pjax" : 'Partial'
 							},
 							type: "GET",
-							url: suggestionUrl,
+							url: $(searchField).data('searchUrl'),
 							data: encodeURIComponent(searchField.attr('name'))+'='+encodeURIComponent(searchField.val()), 
 							success: function(data) {
 								response( $.map(JSON.parse(data), function( name, id ) {

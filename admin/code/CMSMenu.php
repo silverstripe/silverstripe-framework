@@ -1,16 +1,21 @@
 <?php
 /**
- * The object manages the main CMS menu. See {@link LeftAndMain::init()} for example usage.
+ * The object manages the main CMS menu. See {@link LeftAndMain::init()} for 
+ * example usage.
  * 
- * The menu will be automatically populated with menu items for subclasses of {@link LeftAndMain}. 
- * That is, for each class in the CMS that creates an administration panel, a CMS menu item will be created. 
- * The default configuration will also include a 'help' link to the SilverStripe user documentation.
+ * The menu will be automatically populated with menu items for subclasses of 
+ * {@link LeftAndMain}. That is, for each class in the CMS that creates an 
+ * administration panel, a CMS menu item will be created. The default 
+ * configuration will also include a 'help' link to the SilverStripe user 
+ * documentation.
+ *
+ * Additional CMSMenu items can be added through {@link LeftAndMainExtension::init()}
+ * extensions added to {@link LeftAndMain}.
  * 
- * @package cms
- * @subpackage content
+ * @package framework
+ * @subpackage admin
  */
-class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
-{
+class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	
 	/**
 	 * An array of changes to be made to the menu items, in the order that the changes should be
@@ -79,10 +84,12 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	 * @param string $url The url of the link
 	 * @param integer $priority The menu priority (sorting order) of the menu item.  Higher priorities will be further
 	 *                          left.
+	 * @param array $attributes an array of attributes to include on the link.
+	 *
 	 * @return boolean The result of the operation.
 	 */
-	public static function add_link($code, $menuTitle, $url, $priority = -1) {
-		return self::add_menu_item($code, $menuTitle, $url, null, $priority);
+	public static function add_link($code, $menuTitle, $url, $priority = -1, $attributes = null) {
+		return self::add_menu_item($code, $menuTitle, $url, null, $priority, $attributes);
 	}
 	
 	/**
@@ -97,13 +104,17 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	 * @param string $controllerClass The controller class for this menu, used to check permisssions.  
 	 * 					If blank, it's assumed that this is public, and always shown to users who 
 	 * 					have the rights to access some other part of the admin area.
+	 * @param array $attributes an array of attributes to include on the link.
+	 *
 	 * @return boolean Success
 	 */
-	public static function add_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1) {
+	public static function add_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1, $attributes = null) {
 		// If a class is defined, then force the use of that as a code.  This helps prevent menu item duplication
-		if($controllerClass) $code = $controllerClass;
+		if($controllerClass) {
+			$code = $controllerClass;
+		}
 		
-		return self::replace_menu_item($code, $menuTitle, $url, $controllerClass, $priority);
+		return self::replace_menu_item($code, $menuTitle, $url, $controllerClass, $priority, $attributes);
 	}
 	
 	/**
@@ -223,18 +234,26 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	 * @param string $controllerClass The controller class for this menu, used to check permisssions.  
 	 * 					If blank, it's assumed that this is public, and always shown to users who 
 	 * 					have the rights to access some other part of the admin area.
+	 * @param array $attributes an array of attributes to include on the link.
+	 *
 	 * @return boolean Success
 	 */
-	public static function replace_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1) {
+	public static function replace_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1, $attributes = null) {
+		$item = new CMSMenuItem($menuTitle, $url, $controllerClass, $priority);
+
+		if($attributes) {
+			$item->setAttributes($attributes);
+		}
+
 		self::$menu_item_changes[] = array(
 			'type' => 'add',
 			'code' => $code,
-			'item' => new CMSMenuItem($menuTitle, $url, $controllerClass, $priority),
+			'item' => $item,
 		);
 	}
 	
 	/**
-	 * Add a previously built menuitem object to the menu
+	 * Add a previously built menu item object to the menu
 	 */
 	protected static function add_menu_item_obj($code, $cmsMenuItem) {
 		self::$menu_item_changes[] = array(

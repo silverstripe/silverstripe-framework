@@ -479,6 +479,31 @@ class SQLQueryTest extends SapphireTest {
 		$this->assertEquals('Object 2', $records[0]['Name']);
 		$this->assertEquals('2012-05-01 09:00:00', $records['0']['_SortColumn0']);
 	}
+	
+	/**
+	 * Test that multiple order elements are maintained in the given order
+	 */
+	public function testOrderByMultiple() {
+		if(DB::getConn() instanceof MySQLDatabase) {
+			$query = new SQLQuery();
+			$query->setSelect(array('"Name"', '"Meta"'));
+			$query->setFrom('"SQLQueryTest_DO"');
+			$query->setOrderBy(array('MID("Name", 8, 1) DESC', '"Name" ASC'));
+
+			$records = array();
+			foreach($query->execute() as $record) {
+				$records[] = $record;
+			}
+
+			$this->assertCount(2, $records);
+
+			$this->assertEquals('Object 2', $records[0]['Name']);
+			$this->assertEquals('2', $records[0]['_SortColumn0']);
+
+			$this->assertEquals('Object 1', $records[1]['Name']);
+			$this->assertEquals('1', $records[1]['_SortColumn0']);
+		}
+	}
 
 	/**
 	 * Test passing in a LIMIT with OFFSET clause string.

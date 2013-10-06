@@ -747,6 +747,7 @@ form.import-form label.left { width: 250px; }
 .cms .jstree li.jstree-open > ul, .TreeDropdownField .treedropdownfield-panel .jstree li.jstree-open > ul { display: block; }
 .cms .jstree li.jstree-closed > ul, .TreeDropdownField .treedropdownfield-panel .jstree li.jstree-closed > ul { display: none; }
 .cms .jstree li.disabled > a, .TreeDropdownField .treedropdownfield-panel .jstree li.disabled > a { color: #aaaaaa; }
+.cms .jstree li.disabled > a:hover, .TreeDropdownField .treedropdownfield-panel .jstree li.disabled > a:hover { background: transparent; cursor: default; }
 .cms .jstree li.edit-disabled > a, .TreeDropdownField .treedropdownfield-panel .jstree li.edit-disabled > a { color: #aaaaaa; }
 .cms .jstree li > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree li > .jstree-icon { cursor: pointer; }
 .cms .jstree ins, .TreeDropdownField .treedropdownfield-panel .jstree ins { display: inline-block; text-decoration: none; width: 18px; height: 18px; margin: 0 0 0 0; padding: 0; float: left; }
@@ -817,6 +818,7 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree-apple li.Root > a .jstree-icon, .cms-tree.jstree-apple li.Root > a .jstree-icon { background-position: -56px -36px; }
 .tree-holder.jstree-apple li.status-deletedonlive .text, .cms-tree.jstree-apple li.status-deletedonlive .text { text-decoration: line-through; }
 .tree-holder.jstree-apple li.jstree-checked > a, .tree-holder.jstree-apple li.jstree-checked > a:link, .cms-tree.jstree-apple li.jstree-checked > a, .cms-tree.jstree-apple li.jstree-checked > a:link { background-color: #efe999; }
+.tree-holder.jstree-apple li.disabled > a > .jstree-checkbox, .cms-tree.jstree-apple li.disabled > a > .jstree-checkbox { background-position: -57px -54px; }
 .tree-holder.jstree-apple li.readonly, .cms-tree.jstree-apple li.readonly { color: #aaaaaa; padding-left: 18px; }
 .tree-holder.jstree-apple li.readonly a, .tree-holder.jstree-apple li.readonly a:link, .cms-tree.jstree-apple li.readonly a, .cms-tree.jstree-apple li.readonly a:link { margin: 0; padding: 0; }
 .tree-holder.jstree-apple li.readonly .jstree-icon, .cms-tree.jstree-apple li.readonly .jstree-icon { display: none; }

@@ -519,7 +519,7 @@ class SQLQuery {
 	 * @example $sql->orderby("Column", "DESC");
 	 * @example $sql->orderby(array("Column" => "ASC", "ColumnTwo" => "DESC"));
 	 *
-	 * @param string|array $orderby Clauses to add (escaped SQL statements)
+	 * @param string|array $clauses Clauses to add (escaped SQL statements)
 	 * @param string $dir Sort direction, ASC or DESC
 	 *
 	 * @return SQLQuery
@@ -566,21 +566,23 @@ class SQLQuery {
 		// directly in the ORDER BY
 		if($this->orderby) {
 			$i = 0;
+			$orderby = array();
 			foreach($this->orderby as $clause => $dir) {
 
 				// public function calls and multi-word columns like "CASE WHEN ..."
 				if(strpos($clause, '(') !== false || strpos($clause, " ") !== false ) {
-					// remove the old orderby
-					unset($this->orderby[$clause]);
 					
+					// Move the clause to the select fragment, substituting a placeholder column in the sort fragment.
 					$clause = trim($clause);
 					$column = "_SortColumn{$i}";
-
 					$this->selectField($clause, $column);
-					$this->addOrderBy('"' . $column . '"', $dir);
+					$clause = '"' . $column . '"';
 					$i++;
 				}
+				
+				$orderby[$clause] = $dir;
 			}
+			$this->orderby = $orderby;
 		}
 
 		return $this;

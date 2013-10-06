@@ -508,9 +508,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		// TODO Save this item into the given relationship
 
-		$link = '<a href="' . $this->Link('edit') . '">"' 
-			. htmlspecialchars($this->record->Title, ENT_QUOTES) 
-			. '"</a>';
+		// TODO Allow HTML in form messages
+		// $link = '<a href="' . $this->Link('edit') . '">"' 
+		// 	. htmlspecialchars($this->record->Title, ENT_QUOTES) 
+		// 	. '"</a>';
+		$link = '"' . $this->record->Title . '"';
 		$message = _t(
 			'GridFieldDetailForm.Saved', 
 			'Saved {name} {link}',

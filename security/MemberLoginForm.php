@@ -15,6 +15,15 @@ class MemberLoginForm extends LoginForm {
 	protected $authenticator_class = 'MemberAuthenticator';
 	
 	/**
+	 * Since the logout and dologin actions may be conditionally removed, it's necessary to ensure these
+	 * remain valid actions regardless of the member login state.
+	 *
+	 * @var array
+	 * @config 
+	 */
+	private static $allowed_actions = array('dologin', 'logout');
+	
+	/**
 	 * Constructor
 	 *
 	 * @param Controller $controller The parent controller, necessary to

@@ -27,7 +27,7 @@ class CacheTest extends SapphireTest {
 		$cache->save('Good', 'cachekey');
 		$this->assertEquals('Good', $cache->load('cachekey'));
 		
-		sleep(1);
+		sleep(2);
 		
 		$this->assertFalse($cache->load('cachekey'));
 	}
