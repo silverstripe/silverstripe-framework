@@ -25,6 +25,7 @@ ja:
     FROMCOMPUTER: 'お使いのコンピュータからファイルを選択してください'
     FROMCOMPUTERINFO: 'コンピュータからアップロード'
     TOTAL: 合計
+    TOUPLOAD: 'アップロードするファイルを選択する'
     UPLOADINPROGRESS: 'しばらくお待ちください...アップロードは進行中です'
     UPLOADOR: もしくは
   BBCodeParser:
@@ -89,6 +90,8 @@ ja:
     NEXT: 次へ
     PREVIOUS: 前へ
   ConfirmedPasswordField:
+    ATLEAST: 'パスワードは少なくとも {min} 文字の長さが必要です。'
+    BETWEEN: 'パスワードは {min} から {max} までの長さでなければならない。'
     MAXIMUM: 'パスワードは{max} 文字以内でなければなりません。'
     SHOWONCLICKTITLE: 'パスワード変更'
   CreditCardField:
@@ -170,6 +173,7 @@ ja:
     ATTACH: '添付 {type}'
     ATTACHONCESAVED: '一度初めて記録を保存すれば、{type}s は添付可能です。'
     ATTACHONCESAVED2: '一度初めて記録を保存すれば、ファイルが添付可能です。'
+    DELETE: '{type} を削除する'
     DISALLOWEDFILETYPE: 'このファイルの種類はアップロードすることを許可されていません'
     FILE: ファイル
     FROMCOMPUTER: 'コンピューターから'
@@ -245,11 +249,14 @@ ja:
     NoRoles: '役割が見つかりませんでした'
     PLURALNAME: グループ
     Parent: '元グループ'
+    RolesAddEditLink: '役割の管理'
+    SINGULARNAME: グループ
     Sort: '並び順'
     has_many_Permissions: 承認
     many_many_Members: メンバー
   GroupImportForm:
     Help1: '<p><em>CSV</em>フォーマット(カンマ区切り)から一つ以上のグループを取り込みます。<small><a href="#" class="toggle-advanced">高度な利用法について表示</a></small></p>'
+    Help2: "<div class=\"advanced\">\n<h4>Advanced usage</h4>\n<ul>\n<li> 許可された列 : <em>%s</em></li>\n<li> 既存のグループは独自の <em> コード </em>　の数値で照合されて、インポートされたファイル </li> からの数値によりアップデートされます。\n<li> グループの階層は <em> 親コード </em> 列を使って作成することができます。 </li>\n<li> 権限のコードは <em> 権限コード </em> 列によって割り当てることができます。 既存の権限コードはクリアされていません。</li>\n</ul>\n</div>"
     ResultCreated: '{count} グループを作成しました'
     ResultDeleted: '%dグループを削除しました'
     ResultUpdated: '%dグループを更新しました'
@@ -301,6 +308,9 @@ ja:
     URLNOTANOEMBEDRESOURCE: 'URL''{url}''はメディアリソースとして扱うことができませんでした。'
     UpdateMEDIA: 'メディアを更新'
     BUTTONADDURL: 'URLを追加'
+  Image:
+    PLURALNAME: ファイル
+    SINGULARNAME: ファイル
   ImageField:
     IMAGE: 画像
   Image_Cached:
@@ -368,6 +378,7 @@ ja:
     SURNAME: 姓
     TIMEFORMAT: '時間の形式'
     VALIDATIONMEMBEREXISTS: '入力したメールアドレス（%s）は、他のメンバーにすでに使用されています。'
+    ValidationIdentifierFailed: '同一の識別名 ({name} = {value})) を持つ既存のメンバー #{id} を上書きすることはできません'
     WELCOMEBACK: '{firstname}さん、おかえりなさい'
     YOUROLDPASSWORD: '古いパスワード'
     belongs_many_many_Groups: グループ
@@ -403,6 +414,7 @@ ja:
     Toggle: '設定のヘルプを表示'
   MemberImportForm:
     Help1: '<p><em>CSVフォーマット</em>(コンマ区切り)でユーザーを取り込みます。 <small><a href="#" class="toggle-advanced">高度な利用方法を表示</a></small></p>'
+    Help2: "<div class=\"advanced\">\n<h4>高度な使用法</h4>\n<ul>\n<li>許可された列: <em>%s</em></li>\n<li>既存のユーザーは独自の<em>コード</ em>プロパティにより照合されて、インポートしたファイルからの新しい数値でアップデートされます。</li>\n<li>グループは<em>グループの</em>列によって割り当てられることができる。 グループは独自の<em>コード</em> プロパティによって識別され、複数のグループはコンマによって分割することができる。　既存のグループメンバーはクリアされていない。</li>\n</ul>\n</div>"
     ResultCreated: '{count}メンバーを作成しました'
     ResultDeleted: '%d人のメンバーを削除しました'
     ResultNone: '変更なし'
@@ -415,11 +427,13 @@ ja:
   ModelAdmin:
     DELETE: 削除
     DELETEDRECORDS: '{count}レコードを削除しました。'
+    EMPTYBEFOREIMPORT: 'データを置き換える'
     IMPORT: 'CSVからインポート'
     IMPORTEDRECORDS: '{count}レコードを取り込みました。'
     NOCSVFILE: 'インポートするためのCSVファイルを参照してください'
     NOIMPORT: 'インポートするものがありません。'
     RESET: リセット
+    Title: 'データモデル'
     UPDATEDRECORDS: '{count}レコードを更新しました。'
   ModelAdmin_ImportSpec_ss:
     IMPORTSPECFIELDS: 'データベースカラム'
@@ -482,12 +496,19 @@ ja:
     LOGGEDOUT: 'ログアウトしました。再度ログインする場合は証明書キーを入力してください'
     LOGIN: 'ログイン'
     NOTEPAGESECURED: 'このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します'
+    NOTERESETLINKINVALID: '<p>パスワードのリセットリンクは有効でないか期限切れです。</p><p> 新しいパスワードを要求することができます <a href="{link1}"> ここ </a> もしくはパスワードを変更することができます <a href="{link2}"> ログインした後 </a>.</p>'
     NOTERESETPASSWORD: 'メールアドレスを入力してください、パスワードをリセットするURLを送信致します'
+    PASSWORDSENTHEADER: 'パスワードリセットリンクは ''{email}'' に送信されました'
+    PASSWORDSENTTEXT: 'ありがとうございました！　リセットリンクは、''{email}'' に、このアカウントが存在することを前提として送信されました。'
   SecurityAdmin:
     ACCESS_HELP: 'ユーザを閲覧、追加、編集すること、及び、そのユーザに対して権限や役割を割り当てることを許可'
     APPLY_ROLES: '役割をグループへ適用'
+    APPLY_ROLES_HELP: 'グループに割り当てられた役割を編集する機能。　"''ユーザー''のセクションへのアクセス"への権限を必要とします。'
+    EDITPERMISSIONS: 'グループの権限を管理する'
+    EDITPERMISSIONS_HELP: 'グループの権限とIPアドレスを編集する機能。　"''セキュリティ''セクションのアクセス"への権限を必要とします。'
     GROUPNAME: 'グループ名'
     IMPORTGROUPS: 'グループを取り込む'
+    IMPORTUSERS: 'ユーザーのインポート'
     MEMBERS: メンバー
     MENUTITLE: セキュリティ
     MemberListCaution: '注意：このリストからメンバーを削除すると、すべてのグループとデータベースから削除されます'
