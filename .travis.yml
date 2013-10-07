@@ -31,7 +31,7 @@ before_script:
 
 script: 
  - "if [ \"$BEHAT_TEST\" = \"\" ]; then phpunit framework/tests; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ]; then vendor/bin/behat @framework; fi"
+ - "if [ \"$BEHAT_TEST\" = \"1\" ]; then vendor/bin/behat --tags '~@todo&&~@assets' @framework; fi"
 
 after_failure:
  - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sudo cat /var/log/apache2/error.log; fi"
