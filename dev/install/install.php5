@@ -18,8 +18,11 @@
 ini_set('mysql.connect_timeout', 5);
 // Don't die half was through installation; that does more harm than good
 ini_set('max_execution_time', 0);
-// Prevent a white-screen-of-death
-ini_set('display_errors', 'on');
+
+// set display_errors php setting to on to force installer to avoid blank screen of death.
+// get the original value so it can be used in PHP requirement checks later in this script.
+$originalDisplayErrorsValue = ini_get('display_errors');
+ini_set('display_errors', '1');
 
 error_reporting(E_ALL | E_STRICT);
 
@@ -46,31 +49,31 @@ if ($dirsToCheck[0] == $dirsToCheck[1]) {
 	unset($dirsToCheck[1]);
 }
 foreach ($dirsToCheck as $dir) {
-	//check this dir and every parent dir (until we hit the base of the drive)
+//check this dir and every parent dir (until we hit the base of the drive)
 	// or until we hit a dir we can't read
-	do {
+do {
 		//add the trailing slash we need to concatenate properly
 		$dir .= DIRECTORY_SEPARATOR;
 		//if it's readable, go ahead
 		if (@is_readable($dir)) {
-			//if the file exists, then we include it, set relevant vars and break out
-			if (file_exists($dir . $envFile)) {
-				include_once($dir . $envFile);
-				$envFileExists = true;
-				//legacy variable assignment
-				$usingEnv = true;
+	//if the file exists, then we include it, set relevant vars and break out
+	if (file_exists($dir . $envFile)) {
+		include_once($dir . $envFile);
+		$envFileExists = true;
+		//legacy variable assignment
+		$usingEnv = true;
 				//break out of BOTH loops because we found the $envFile
 				break(2);
 			}
 		}
 		else {
 			//break out of the while loop, we can't read the dir
-			break;
-		}
+		break;
+	}
 		//go up a directory
 		$dir = dirname($dir);
 	//here we need to check that the path of the last dir and the next one are
-	// not the same, if they are, we have hit the root of the drive
+// not the same, if they are, we have hit the root of the drive
 	} while (dirname($dir) != $dir);
 }
 
@@ -502,7 +505,14 @@ class InstallRequirements {
 	function suggestPHPSetting($settingName, $settingValues, $testDetails) {
 		$this->testing($testDetails);
 
-		$val = ini_get($settingName);
+		// special case for display_errors, check the original value before
+		// it was changed at the start of this script.
+		if($settingName = 'display_errors') {
+			$val = $originalDisplayErrorsValue;
+		} else {
+			$val = ini_get($settingName);
+		}
+
 		if(!in_array($val, $settingValues) && $val != $settingValues) {
 			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";
 			$this->warning($testDetails);
@@ -986,7 +996,7 @@ class InstallRequirements {
 		foreach($varNames as $varName) {
 			if(!isset($_SERVER[$varName]) || !$_SERVER[$varName])  {
 				$missing[] = '$_SERVER[' . $varName . ']';
-			}
+		}
 		}
 
 		if(!$missing) {
