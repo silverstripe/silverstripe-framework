@@ -112,7 +112,6 @@ lt:
     EMAIL: 'E. pašto adresas'
     FILE: Byla
     FOLDER: Direktorija
-    IMAGEALTTEXT: 'Alternatyvus tekstas (alt) - rodomas kai nepavyksta parodyti paveikslėlio'
     IMAGEDIMENSIONS: Matmenys
     IMAGEHEIGHTPX: Aukštis
     IMAGETITLE: 'Pavadinimo tekstas (pagalbinis tekstas) - papildomai informacijai apie paveikslėlį'

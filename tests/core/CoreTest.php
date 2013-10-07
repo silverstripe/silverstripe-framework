@@ -52,8 +52,8 @@ class CoreTest extends SapphireTest {
 			if(file_exists($path)) {
 				rmdir($path . DIRECTORY_SEPARATOR . $user);
 				rmdir($path);
-			}
 		}
-	}
+		}
+		}
 
 }

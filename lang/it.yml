@@ -280,8 +280,6 @@ it:
     FROMWEB: 'Dal web'
     FindInFolder: 'Trova nella Cartella'
     IMAGEALT: 'Testo alternativo (alt)'
-    IMAGEALTTEXT: 'Testo alternativo (alt) - mostrato se l''immagine non può essere mostrata.'
-    IMAGEALTTEXTDESC: 'Mostrato agli screen reader o se l''immagine non può essere visualizzata'
     IMAGEDIMENSIONS: Dimensioni
     IMAGEHEIGHTPX: Altezza
     IMAGETITLE: 'Titolo (tooltip) - per informazioni aggiuntive sull''immagine.'

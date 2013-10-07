@@ -1347,6 +1347,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @var array
 	 */
 	private static $tinymce_lang = array(
+		'ar_EG' => 'ar',
 		'ca_AD' => 'ca',
 		'ca_ES' => 'ca',
 		'cs_CZ' => 'cs',
@@ -1497,15 +1498,15 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'uk_UA' => 'uk',
 		'vi_VN' => 'vi',
 		'vi_US' => 'vi',
-		'zh_CN' => 'zh_cn',
-		'zh_HK' => 'zh_cn',
-		'zh_MO' => 'zh_cn',
-		'zh_SG' => 'zh_cn',
-		'zh_TW' => 'zh_tw',
-		'zh_ID' => 'zh_cn',
-		'zh_MY' => 'zh_cn',
-		'zh_TH' => 'zh_cn',
-		'zh_US' => 'zn_cn',
+		'zh_CN' => 'zh-cn',
+		'zh_HK' => 'zh-cn',
+		'zh_MO' => 'zh-cn',
+		'zh_SG' => 'zh-cn',
+		'zh_TW' => 'zh-tw',
+		'zh_ID' => 'zh-cn',
+		'zh_MY' => 'zh-cn',
+		'zh_TH' => 'zh-cn',
+		'zh_US' => 'zn-cn',
 
 	);
 	

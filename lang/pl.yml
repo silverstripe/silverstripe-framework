@@ -1,10 +1,13 @@
 pl:
   AssetAdmin:
+    ALLOWEDEXTS: 'Dostępne rozszerzenia'
     NEWFOLDER: NowyFolder
+    SHOWALLOWEDEXTS: 'Pokaż dostępne rozszerzenia'
   AssetTableField:
     CREATED: 'Po raz pierwszy wgrany'
     DIM: Rozmiar
     FILENAME: Nazwa pliku
+    FOLDER: Folder
     LASTEDIT: 'Ostatnio zmieniony'
     OWNER: Właściciel
     SIZE: 'Rozmiar pliku'
@@ -66,9 +69,12 @@ pl:
     ACCESSALLINTERFACES: 'Dostęp do wszystkich sekcji CMSa'
     ACCESSALLINTERFACESHELP: 'Nadpisuje bardziej specyficzne ustawienia dostępu.'
     SAVE: Zapisz
+  CMSProfileController:
+    MENUTITLE: 'Mój profil'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Zmieniłeś hasło na'
     CHANGEPASSWORDTEXT2: 'Teraz możesz używać następujących danych do logowania się:'
+    EMAIL: Email
     HELLO: Cześć
     PASSWORD: Hasło
   ComplexTableField:
@@ -93,12 +99,27 @@ pl:
     FOURTH: czwarty
     SECOND: drugi
     THIRD: trzeci
+  CurrencyField:
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Obiekty danych'
     SINGULARNAME: 'Obiekt danych'
   Date:
+    DAY: dzień
+    DAYS: dni
+    HOUR: godzina
+    HOURS: godziny
+    MIN: minuta
+    MINS: minuty
+    MONTH: miesiąc
+    MONTHS: miesięcy
+    SEC: sekunda
+    SECS: sekund
     TIMEDIFFAGO: '{difference} temu'
     TIMEDIFFIN: 'w {difference}'
+    YEAR: ro
+    YEARS: lat
+    LessThanMinuteAgo: 'mniej niż minuta'
   DateField:
     NOTSET: 'nie ustawiono'
     TODAY: dzisiaj
@@ -118,12 +139,14 @@ pl:
   Enum:
     ANY: Jakikolwiek
   File:
+    AviType: 'AVI plik wideo'
     Content: Zawartość
     CssType: 'Plik CSS'
     DmgType: 'Obraz dysku Apple'
     DocType: 'Dokument Worda'
     Filename: Nazwa pliku
     GifType: 'Obrazek GIF, dobry do diagramów'
+    GzType: 'GZIP skompresowany plik'
     HtlType: 'Plik HTML'
     HtmlType: 'Plik HTML'
     INVALIDEXTENSION: 'Rozszerzenie niedozwolone (dozwolone: {extensions})'
@@ -132,6 +155,7 @@ pl:
     JpgType: 'Obrazek JPEG, dobry do zdjęć'
     JsType: 'Plik JavaScript'
     Mp3Type: 'Plik MP3'
+    MpgType: 'MPEG plik wideo'
     NOFILESIZE: 'Rozmiar pliku to zero bajtów.'
     NOVALIDUPLOAD: 'Plik nie został poprawnie przesłany'
     Name: Nazwa
@@ -143,6 +167,8 @@ pl:
     TOOLARGESHORT: 'Rozmiar pliku przekracza {size}'
     TiffType: 'Plik TIFF'
     Title: Tytuł
+    WavType: 'WAV plik audio'
+    XlsType: 'Arkusz kalkulacyjny Excel'
     ZipType: 'Plik ZIP, skompresowany'
   FileIFrameField:
     ATTACH: 'Dołącz {type}'
@@ -161,12 +187,14 @@ pl:
     SYNCRESULTS: 'Synchronizacja zakończona: stworzono {createdcount} i usunięto {deletedcount} pozycji'
   Folder:
     PLURALNAME: Foldery
+    SINGULARNAME: Folder
   ForgotPasswordEmail_ss:
     HELLO: Cześć
     TEXT1: 'Oto twój'
     TEXT2: 'link zmiany hasła'
     TEXT3: dla
   Form:
+    FIELDISREQUIRED: '{name} jest wymagane'
     SubmitBtnLabel: Przejdź
     VALIDATIONCREDITNUMBER: 'Proszę upewnij się, że wprowadzony numer karty kredytowej {number} jest prawidłowy'
     VALIDATIONNOTUNIQUE: 'Wprowadzona wartość nie jest unikalna'
@@ -175,8 +203,10 @@ pl:
     VALIDATIONSTRONGPASSWORD: 'Hasła muszą mieć przynajmniej jedną cyfrę oraz jeden znak alfanumeryczny.'
     VALIDATOR: Walidator
     VALIDCURRENCY: 'Proszę podaj prawidłową walutę'
+    CSRF_FAILED_MESSAGE: 'Wygląda na to, że wystąpił błąd techniczny. Kliknij przycisk Wstecz, odśwież przeglądarkę i spróbuj ponownie.'
   FormField:
     NONE: brak
+    Example: 'np: % s'
   GridAction:
     DELETE_DESCRIPTION: Usuń
     Delete: Usuń
@@ -198,6 +228,7 @@ pl:
     ResetFilter: Resetuj
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
+    EditPermissionsFailure: 'Nie masz uprawnień, aby odłączyć rekord'
   GridFieldDetailForm:
     CancelBtn: Anuluj
     Create: Stwórz
@@ -215,6 +246,7 @@ pl:
     Description: Opis
     GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, obecna grupa otrzyma wszystkie jej role'
     Locked: 'Zablokowana?'
+    NoRoles: 'Nie znaleziono ról'
     PLURALNAME: Grupy
     Parent: 'Grupa nadrzędna'
     RolesAddEditLink: 'Zarządzaj rolami'
@@ -246,13 +278,12 @@ pl:
     DETAILS: Szczegóły
     EMAIL: 'Adres e-mail'
     FILE: Plik
+    FOLDER: Folder
     FROMCMS: 'Z systemu CMS'
     FROMCOMPUTER: 'Z komputera'
     FROMWEB: 'Z WWW'
     FindInFolder: 'Znajdź w Folderze'
     IMAGEALT: 'Tekst alternatywny (alt)'
-    IMAGEALTTEXT: 'Tekst alternatywny (alt) - pokazywany gdy obrazek nie może być wyświetlony'
-    IMAGEALTTEXTDESC: 'Używane przez czytniki dla niewidomych oraz gdy nie można pobrać obrazu'
     IMAGEDIMENSIONS: Rozmiar
     IMAGEHEIGHTPX: Wysokość (px)
     IMAGETITLE: 'Tytuł (tooltip) - dodatkowe informacje o obrazku'
@@ -270,8 +301,10 @@ pl:
     LINKOPENNEWWIN: 'Otworzyć link w nowym oknie?'
     LINKTO: 'Linkuj do'
     PAGE: Strona
+    URL: Adres URL
     URLNOTANOEMBEDRESOURCE: 'Adres URL ''{url}'' nie mógł zostać przekształcony w zasób medialny'
     UpdateMEDIA: 'Zaktualizuj Media'
+    BUTTONADDURL: 'Dodaj adres url'
   Image:
     PLURALNAME: Pliki
     SINGULARNAME: Plik
@@ -295,6 +328,10 @@ pl:
     PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
+    VersionUnknown: Nieznany
+    ShowAsList: 'pokaż jako listę'
+    TooManyPages: 'Zbyt wiele stron'
+    ValidationError: 'Błąd walidacji'
   LeftAndMain_Menu_ss:
     Hello: Witaj
     LOGOUT: 'Wyloguj się'
@@ -303,12 +340,14 @@ pl:
     IP: 'Adres IP'
     PLURALNAME: 'Próby logowania'
     SINGULARNAME: 'Próba logowania'
+    Status: Status
   Member:
     ADDGROUP: 'Dodaj grupę'
     BUTTONCHANGEPASSWORD: 'Zmień hasło'
     BUTTONLOGIN: 'Zaloguj'
     BUTTONLOGINOTHER: 'Zaloguj jako ktoś inny'
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
+    CANTEDIT: 'Nie masz uprawnień do tego'
     CONFIRMNEWPASSWORD: 'Potwierdź nowe hasło'
     CONFIRMPASSWORD: 'Potwierdź hasło'
     DATEFORMAT: 'Format daty'
@@ -317,7 +356,8 @@ pl:
     EMAIL: E-mail
     EMPTYNEWPASSWORD: 'Nowe hasło nie może być puste, spróbuj ponownie.'
     ENTEREMAIL: 'Wpisz adres e-mail aby otrzymać link do zmiany hasła.'
-    ERRORLOCKEDOUT: 'Twoje konto zostało tymczasowo zablokowane z powodu zbyt wielu błędnych prób logowania. Spróbuj ponownie w ciągu 20 minut.'
+    ERRORLOCKEDOUT: 'Twoje konto zostało tymczasowo zablokowane z powodu zbyt wielu błędnych prób logowania. Spróbuj ponownie za 20 minut.'
+    ERRORLOCKEDOUT2: 'Twoje konto zostało tymczasowo zablokowane z powodu zbyt wielu błędnych prób logowania. Spróbuj ponownie za {count} minut.'
     ERRORNEWPASSWORD: 'Wprowadziłeś niepoprawnie nowe hasło, spróbuj ponownie'
     ERRORPASSWORDNOTMATCH: 'Twoje hasło nie zgadza się, spróbuj ponownie'
     ERRORWRONGCRED: 'E-mail lub hasło są nieprawidłowe. Spróbuj ponownie.'
@@ -367,6 +407,7 @@ pl:
     TWODIGITMONTH: 'Dwucyfrowy miesiąc (01=Styczeń, itd.)'
     TWODIGITSECOND: 'Dwucyfrowa sekunda (od 00 do 59)'
     TWODIGITYEAR: 'Dwucyfrowy rok'
+    Toggle: 'Pokaż pomoc formatowania'
   MemberImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
     ResultCreated: 'Stworzono członków: {count}'
@@ -381,6 +422,7 @@ pl:
   ModelAdmin:
     DELETE: Usuń
     DELETEDRECORDS: 'Usunięto rekordów: {count}'
+    EMPTYBEFOREIMPORT: 'Zastąp dane'
     IMPORT: 'Import z CSV'
     IMPORTEDRECORDS: 'Zaimportowano rekordów: {count}'
     NOCSVFILE: 'Wybierz plik CSV do zaimportowania'
@@ -395,7 +437,9 @@ pl:
     IMPORTSPECTITLE: 'Specyfikacja %s'
   ModelAdmin_Tools_ss:
     FILTER: Filtr
+    IMPORT: Import
   ModelSidebar_ss:
+    IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Znajdź
   MoneyField:
     FIELDLABELAMOUNT: Ilość
@@ -408,6 +452,7 @@ pl:
     Page: Strona
     View: Widok
   Permission:
+    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostęp do CMSa'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
@@ -436,6 +481,7 @@ pl:
     NOTFOUND: 'Nie znaleziono żadnych elementów'
   Security:
     ALREADYLOGGEDIN: 'Nie masz dostępu do tej strony. Jeśli posiadasz inne konto, które umożliwi Ci dostęp do tej strony, możesz się zalogować poniżej'
+    LOSTPASSWORDHEADER: 'Nie pamiętam hasła'
     BUTTONSEND: 'Wyślij mi link do zresetowania hasła'
     CHANGEPASSWORDBELOW: 'Możesz zmienić swoje hasło poniżej'
     CHANGEPASSWORDHEADER: 'Zmień swoje hasło'
@@ -471,6 +517,15 @@ pl:
     FileFieldLabel: 'Plik CSV <small>(Dozwolone rozszerzenia: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edycja
+    Auto: Auto
+    ChangeViewMode: 'Zmień tryb podglądu'
+    Desktop: Pulpit
+    DualWindowView: 'Dzielone okno'
+    EditView: 'Tryb edycji'
+    Mobile: Mobile
+    PreviewView: 'Tryb podglądu'
+    ViewDeviceWidth: 'Wybierz szerokość podglądu'
+    Width: szerokość
   SimpleImageField:
     NOUPLOAD: 'Nie wgrano zdjęć'
   SiteTree:
@@ -521,11 +576,28 @@ pl:
     HOTLINKINFO: 'Informacja: Ten obrazek pochodzi z zewnętrznego serwisu. Upewnij się, że jego twórca pozwala korzystać z niego.'
     MAXNUMBEROFFILES: 'Osiągnięto maksymalną liczbę {count} plików.'
     MAXNUMBEROFFILESSHORT: 'Można wgrać tylko {count} plik(ów/i)'
+    MAXNUMBEROFFILESONE: 'Można wgrać tylko jeden plik'
     REMOVE: Usuń
     REMOVEERROR: 'Błąd podczas usuwania pliku'
     REMOVEINFO: 'Usuń pliki z tego miejsca, ale nie usuwaj ich z magazynu'
     STARTALL: 'Rozpocznij wszystko'
     STARTALLINFO: 'Rozpocznij ładowanie wszystkich'
     Saved: Zapisano
+    CHOOSEANOTHERFILE: 'Wybierz inny plik'
+    CHOOSEANOTHERINFO: 'Zamień ten plik na inny z magazynu'
+    OVERWRITEWARNING: 'Plik z taką nazwą już istnieje'
+    UPLOADSINTO: 'zapisano w /{path}'
   Versioned:
     has_many_Versions: Wersje
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Podgląd strony'
+  GridFieldEditButton_ss:
+    EDIT: Edytuj
+  ContentController:
+    NOTLOGGEDIN: 'Nie zalogowany'
+  GridFieldItemEditView:
+    Go_back: 'Wstecz'
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Proszę zwiększyć siłę hasła, dodając niektóre z następujących znaków: % s'
+    PREVPASSWORD: 'Użyłeś już tego hasła wcześniej, proszę wybrać nowe'
+    TOOSHORT: 'Hasło jest za krótkie, proszę podać %s znaków lub więcej'

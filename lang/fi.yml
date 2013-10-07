@@ -289,8 +289,6 @@ fi:
     FROMWEB: 'Webistä'
     FindInFolder: 'Etsi kansiosta'
     IMAGEALT: 'Vaihtoehtoinen teksti (alt)'
-    IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
-    IMAGEALTTEXTDESC: 'Näytetään ruudunlukuohjelmille tai jos kuvia ei voi näyttää'
     IMAGEDIMENSIONS: Mitat
     IMAGEHEIGHTPX: Korkeus
     IMAGETITLE: 'Otsikko (tooltip) - kuvan lisätietoja varten'
@@ -392,6 +390,7 @@ fi:
     db_NumVisit: 'Vierailujen määrä'
     db_Password: Salasana
     db_PasswordExpiry: 'Salasanan viimeinen päivämäärä'
+    NoPassword: 'Tällä käyttäjällä ei ole salasanaa'
   MemberAuthenticator:
     TITLE: 'Sähköposti &amp; Salasana'
   MemberDatetimeOptionsetField:
@@ -490,6 +489,7 @@ fi:
     NOTFOUND: 'Merkintöjä ei löytynyt'
   Security:
     ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua niillä sisään.'
+    LOSTPASSWORDHEADER: 'Salasana hävinnyt'
     BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'
     CHANGEPASSWORDBELOW: 'Voit vaihtaa salasanaasi alla.'
     CHANGEPASSWORDHEADER: 'Vaihda salasanasi'
@@ -605,3 +605,11 @@ fi:
     PREVIEW: 'Nettisivun esikatselu'
   GridFieldEditButton_ss:
     EDIT: Muokkaa
+  ContentController:
+    NOTLOGGEDIN: 'Ei kirjautuneena'
+  GridFieldItemEditView:
+    Go_back: 'Siirry takaisin'
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Ole hyvä ja tee monimutkaisempi salasana lisäämällä joitakin seuraavista merkeistä: %s'
+    PREVPASSWORD: 'Olet jo käyttänyt tätä salasanaa aikaisemmin, ole hyvä ja valitse uusi'
+    TOOSHORT: 'Salasanan on oltava vähintään %s merkkiä'

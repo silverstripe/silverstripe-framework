@@ -231,8 +231,6 @@ mi:
     FROMWEB: 'Mai i te tukutuku'
     FindInFolder: 'Rapu i te Kōpaki'
     IMAGEALT: 'Tuhinga kē (alt)'
-    IMAGEALTTEXT: 'Tuhinga kē - ka whakaaturia ki te kore e taea te whakaatu atahanga'
-    IMAGEALTTEXTDESC: 'Ka whakaaturia ki ngā pūpānui mata, mēnā rānei kāore e taea te atahanga te whakaatu'
     IMAGEDIMENSIONS: Ngā Rahinga
     IMAGEHEIGHTPX: Teitei
     IMAGETITLE: 'Tuhinga taitara (ākiutauta) - mō ngā mōhiohio tāpiri mō te atahanga'
@@ -253,8 +251,14 @@ mi:
     URL: PRO
     URLNOTANOEMBEDRESOURCE: 'Kāore e taea te huri i te PRO ''{url}'' hei rawa pāpāho.'
     UpdateMEDIA: 'Whakahōu Pāpāho'
+  Image:
+    PLURALNAME: Ngā Kōnae
+    SINGULARNAME: Kōnae
   ImageField:
     IMAGE: Atahanga
+  Image_Cached:
+    PLURALNAME: Ngā Kōnae
+    SINGULARNAME: Kōnae
   Image_iframe_ss:
     TITLE: 'Iframe Tukuatu Atahanga'
   LeftAndMain:
@@ -381,6 +385,8 @@ mi:
     IsNullLabel: 'He Kore Tēnei'
   NumericField:
     VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
+  Pagination:
+    Page: Whārangi
   Permission:
     AdminGroup: Kaiwhakahaere
     CMS_ACCESS_CATEGORY: 'Uru CMS'
@@ -497,3 +503,7 @@ mi:
     Saved: Kua Tiakina
   Versioned:
     has_many_Versions: Ngā Putanga
+  GridFieldEditButton_ss:
+    EDIT: Whakatika
+  GridFieldItemEditView:
+    Go_back: 'Hoki'

@@ -288,8 +288,6 @@ es:
     FROMWEB: 'Desde la web'
     FindInFolder: 'Buscar en carpeta'
     IMAGEALT: 'Texto alternativo (alt)'
-    IMAGEALTTEXT: 'Texto alternativo (alt) - es mostrado si la imagen no puede ser visualizada'
-    IMAGEALTTEXTDESC: 'Mostrar a los lectores de pantalla o si la imagen no se puede visualizar'
     IMAGEDIMENSIONS: Dimensiones
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Texto del título (tooltip) - para obtener más información acerca de la imagen'
@@ -602,3 +600,5 @@ es:
     PREVIEW: 'Previsualización'
   GridFieldEditButton_ss:
     EDIT: Editar
+  GridFieldItemEditView:
+    Go_back: 'Volver'

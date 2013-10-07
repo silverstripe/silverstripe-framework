@@ -187,7 +187,6 @@ es_MX:
     FOLDER: Carpeta
     FROMCMS: 'Desde el CMS'
     FROMCOMPUTER: 'Desde tu computador'
-    IMAGEALTTEXT: 'El texto alternativo (alt) - si no se puede mostrar la imagen'
     IMAGEDIMENSIONS: Dimensiones
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Título del tooltip - para información adicional acerca de la imagen'

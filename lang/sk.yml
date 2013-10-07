@@ -287,8 +287,6 @@ sk:
     FROMWEB: 'Z webu'
     FindInFolder: 'Vyhľadať v priečinku'
     IMAGEALT: 'Atlernatívny text (alt)'
-    IMAGEALTTEXT: 'Atlernatívny text (alt) - vypísaný pokiaľ nemože byť zobrazený obrázok'
-    IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke, keď obrázok nemôže byť zobrazený'
     IMAGEDIMENSIONS: Rozmery
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
