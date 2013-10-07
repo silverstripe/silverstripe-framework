@@ -16,15 +16,26 @@ matrix:
       env: DB=MYSQL CORE_RELEASE=3.1
     - php: 5.5
       env: DB=MYSQL CORE_RELEASE=3.1
+    - php: 5.3
+      env: DB=MYSQL CORE_RELEASE=3.1 BEHAT_TEST=1
 
 before_script:
+ - composer self-update
  - phpenv rehash
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
- - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
+ - "if [ \"$BEHAT_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss; fi"
+ - "if [ \"$BEHAT_TEST\" = \"1\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss --require silverstripe/behat-extension; fi"
  - cd ~/builds/ss
+ - php ~/travis-support/travis_setup_selenium.php  --base-url http://localhost --if-env BEHAT_TEST
+ - php ~/travis-support/travis_setup_apache.php --if-env BEHAT_TEST
 
 script: 
- - phpunit framework/tests
+ - "if [ \"$BEHAT_TEST\" = \"\" ]; then phpunit framework/tests; fi"
+ - "if [ \"$BEHAT_TEST\" = \"1\" ]; then vendor/bin/behat --tags '~@todo&&~@assets' @framework; fi"
+
+after_failure:
+ - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sudo cat /var/log/apache2/error.log; fi"
+ - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sudo cat /var/log/apache2/access.log; fi"
 
 branches:
   except:
@@ -37,3 +48,9 @@ notifications:
   irc:
     channels:
      - "irc.freenode.org#silverstripe"
+
+#  global:
+#   - secure: "AZmjVPtUD8JBA7ag4ULlEwEKXSEZbIUjDHeRBFugaOtdsn5yigGLmwYbzsg2tq7k7UkdbbAlGct0SUbiRJb9F2wPA5+eUd/p49fgDIU6CTSWIlT87H2BwgOrxKwS9sDwxLptPFM6vWQ8JKYSNGmVIepie9kQZbu4L2k5k6B69jQ="
+#   - secure: "f3kKpUn9cS5K+p/E52cMqN18cDApol/43LanDmHO6mo3iRAztk3jZLyfNOUq6JASKMqdh8+9kencRpEoaAYbcQnDPoZsT9POResiJ9/ADKB6RwWy+lcFHUp9E2Zf/x2VRh9FmXEguDhpWzkJqzWYJGCSig1IBp/+TjzKnsjQHIY="
+#
+# - php ~/travis-support/travis_setup_sauceconnect.php --if-env BEHAT_TEST --username ${SAUCE_USERNAME} --access-key ${SAUCE_ACCESS_KEY} --tunnel-identifier ${TRAVIS_JOB_NUMBER} --base-url http://localhost
