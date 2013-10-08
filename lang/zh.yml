@@ -413,8 +413,8 @@ zh:
     TWODIGITYEAR: '两位数表示的年份'
     Toggle: '显示格式帮助'
   MemberImportForm:
-    Help1: '&lt;p&gt;采用 &lt;em&gt;CSV 格式&lt;/em&gt; 导入用户（逗号分隔值）&lt;small&gt;&lt;a href="#" class="toggle-advanced"&gt;显示高级用法&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;'
-    Help2: "&lt;div class=\"advanced\"&gt;\n &lt;h4&gt;高级用法&lt;/h4&gt;\n &lt;ul&gt;\n &lt;li&gt;允许的栏目：&lt;em&gt;%s&lt;/em&gt;&lt;/li&gt;\n &lt;li&gt;通过独有的 &lt;em&gt;代码&lt;/em&gt; 属性对现有用户进行配对并使用导入文件中任何新的值更新他们。&lt;/li&gt;\n &lt;li&gt;群组可通过 &lt;em&gt;组别&lt;/em&gt; 栏目进行分类。群组通过他们的&lt;em&gt;代码&lt;/em&gt; 属性进行识别，\n多个群组可用逗号隔开。现有的群组分配情况不会被清除。&lt;/li&gt;\n &lt;/ul&gt;\n&lt;/div&gt;"
+    Help1: '<p>采用 <em>CSV 格式</em> 导入用户（逗号分隔值）<small><a href="#" class="toggle-advanced">显示高级用法</a></small></p>'
+    Help2: "<div class=\"advanced\">\n <h4>高级用法</h4>\n <ul>\n <li>允许的栏目：<em>%s</em></li>\n <li>通过独有的 <em>代码</em> 属性对现有用户进行配对并使用导入文件中任何新的值更新他们。</li>\n <li>群组可通过 <em>组别</em> 栏目进行分类。群组通过他们的<em>代码</em> 属性进行识别，\n多个群组可用逗号隔开。现有的群组分配情况不会被清除。</li>\n </ul>\n</div>"
     ResultCreated: '已创建 {count} 位成员'
     ResultDeleted: '已删除 %d 位成员'
     ResultNone: '无更改'
@@ -520,7 +520,7 @@ zh:
     Users: 用户
   SecurityAdmin_MemberImportForm:
     BtnImport: '从 CSV 导入'
-    FileFieldLabel: 'CSV 文件 &lt;small&gt;(允许的扩展名：*.csv)&lt;/small&gt;'
+    FileFieldLabel: 'CSV 文件 <small>(允许的扩展名：*.csv)</small>'
   SilverStripeNavigator:
     Edit: 编辑
     Auto: 自动
