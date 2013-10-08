@@ -325,11 +325,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
+				FRAMEWORK_DIR . '/javascript/i18n.js',
 				FRAMEWORK_DIR . '/javascript/TreeDropdownField.js',
 				FRAMEWORK_DIR . '/javascript/DateField.js',
 				FRAMEWORK_DIR . '/javascript/HtmlEditorField.js',
 				FRAMEWORK_DIR . '/javascript/TabSet.js',
-				FRAMEWORK_DIR . '/javascript/i18n.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js',
 				FRAMEWORK_DIR . '/javascript/GridField.js',
 			)

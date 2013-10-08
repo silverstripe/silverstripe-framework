@@ -23,9 +23,9 @@
 		});
 		
 		var strings = {
-			'openlink': 'Open',
-			'fieldTitle': '(Choose)',
-			'searchFieldTitle': '(Choose or Search)'
+			'openlink': ss.i18n._t('TreeDropdownField.OpenLink'),
+			'fieldTitle': '(' + ss.i18n._t('TreeDropdownField.FieldTitle') + ')',
+			'searchFieldTitle': '(' + ss.i18n._t('TreeDropdownField.SearchFieldTitle') + ')'
 		};
 
 		var _clickTestFn = function(e) {
@@ -298,11 +298,7 @@
 		$('.TreeDropdownField.searchable').entwine({
 			onadd: function() {
 				this._super();
-				var title = ss.i18n._t(
-					'DropdownField.ENTERTOSEARCH', 
-					'Press enter to search'
-					);
-
+				var title = ss.i18n._t('TreeDropdownField.ENTERTOSEARCH');
 				this.find('.treedropdownfield-panel').prepend(
 					$('<input type="text" class="search treedropdownfield-search" data-skip-autofocus="true" placeholder="' + title + '" value="" />')
 				);
