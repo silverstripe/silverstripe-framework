@@ -1380,8 +1380,10 @@ class Form extends RequestHandler {
 	}
 
 	public function buttonClicked() {
-		foreach($this->actions as $action) {
-			if($this->buttonClickedFunc == $action->actionName()) return $action;
+		foreach($this->actions->dataFields() as $action) {
+			if($action->hasMethod('actionname') && $this->buttonClickedFunc == $action->actionName()) {
+				return $action;
+			}
 		}
 	}
 

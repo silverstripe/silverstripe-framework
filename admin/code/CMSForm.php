@@ -3,6 +3,23 @@
  * Deals with special form handling in CMS, mainly around {@link PjaxResponseNegotiator}
  */
 class CMSForm extends Form {
+
+	/**
+	 * @var array
+	 */
+	protected $validationExemptActions = array();
+
+	/**
+	 * Always return true if the current form action is exempt from validation
+	 * 
+	 * @return boolean
+	 */
+	public function validate() {
+		return (
+			in_array($this->buttonClicked()->actionName(), $this->getValidationExemptActions())
+			|| parent::validate()
+		);
+	}
 	
 	/**
 	 * Route validation error responses through response negotiator,
@@ -17,6 +34,25 @@ class CMSForm extends Form {
 		} else {
 			return parent::getValidationErrorResponse();
 		}
+	}
+
+	/**
+	 * Set actions that are exempt from validation
+	 * 
+	 * @param array
+	 */
+	public function setValidationExemptActions($actions) {
+		$this->validationExemptActions = $actions;
+		return $this;
+	}
+
+	/**
+	 * Get a list of actions that are exempt from validation
+	 * 
+	 * @return array
+	 */
+	public function getValidationExemptActions() {
+		return $this->validationExemptActions;
 	}
 
 	/**
