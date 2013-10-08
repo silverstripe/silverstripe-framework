@@ -299,7 +299,7 @@ class CmsUiContext extends BehatContext
 		$driver->switchToIFrame('cms-preview-iframe');
 		$this->getSession()->wait(
 			5000, 
-			"!jQuery('iframe[name=cms-preview-iframe]').hasClass('loading')"
+			"window.jQuery && !window.jQuery('iframe[name=cms-preview-iframe]').hasClass('loading')"
 		);
 		$driver->switchToWindow($origWindowName);   
 	}
