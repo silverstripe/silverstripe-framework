@@ -35,6 +35,10 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'UploadField.LOADING': 'Uta ana...',
 		'UploadField.Editing': 'Whakatika ana ...',
 		'UploadField.Uploaded': 'Kua tukuna atu',
-		'UploadField.OVERWRITEWARNING': 'Kei te tīari kē tētahi kōnae me te ingoa ōrite'
+		'UploadField.OVERWRITEWARNING': 'Kei te tīari kē tētahi kōnae me te ingoa ōrite',
+		'TreeDropdownField.ENTERTOSEARCH': 'Pēhi tāuru hei rapu',
+		'TreeDropdownField.OpenLink': 'Whakatuwhera',
+		'TreeDropdownField.FieldTitle': 'Kōwhiri',
+		'TreeDropdownField.SearchFieldTitle': 'Kōwhiri ka Rapu rānei'
 	});
 }
