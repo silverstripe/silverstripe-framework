@@ -513,6 +513,7 @@ body.cms { overflow: hidden; }
 .cms-content-tools .field { /*  Fields are more compressed in the sidebar compared to the main content editing window so the below alters the internal spacing of the fields so we can move that spacing to between the form fields rather than padding */ }
 .cms-content-tools .field label { float: none; width: auto; font-size: 11px; padding: 0 8px 4px 0; }
 .cms-content-tools .field .middleColumn { margin: 0; }
+.cms-content-tools .field .description { margin-left: 0; }
 .cms-content-tools .field input.text, .cms-content-tools .field select, .cms-content-tools .field textarea { padding: 5px; font-size: 11px; }
 .cms-content-tools .field.checkbox { padding: 0 0 8px; }
 .cms-content-tools .field.checkbox input { margin: 2px 0; }
