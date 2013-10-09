@@ -68,6 +68,7 @@ class ShortcodeParser {
 	 *     this will not have been parsed, and can optionally be fed back into the parser.
 	 *   - The {@link ShortcodeParser} instance used to parse the content.
 	 *   - The shortcode tag name that was matched within the parsed content.
+	 *   - An associative array of extra information about the shortcode being parsed.
 	 *
 	 * @param string $shortcode The shortcode tag to map to the callback - normally in lowercase_underscore format.
 	 * @param callback $callback The callback to replace the shortcode with.
@@ -102,9 +103,9 @@ class ShortcodeParser {
 		$this->shortcodes = array();
 	}
 	
-	public function callShortcode($tag, $attributes, $content) {
+	public function callShortcode($tag, $attributes, $content, $extra = array()) {
 		if (!isset($this->shortcodes[$tag])) return false;
-		return call_user_func($this->shortcodes[$tag], $attributes, $content, $this, $tag);
+		return call_user_func($this->shortcodes[$tag], $attributes, $content, $this, $tag, $extra);
 	}
 	
 	// --------------------------------------------------------------------------------------------------------------
@@ -332,11 +333,12 @@ class ShortcodeParser {
 		for($i = 0; $i < $attributes->length; $i++) {
 			$node = $attributes->item($i);
 			$tags = $this->extractTags($node->nodeValue);
+			$extra = array('node' => $node, 'element' => $node->ownerElement);
 
 			if($tags) {
 				$node->nodeValue = $this->replaceTagsWithText($node->nodeValue, $tags,
-					function($idx, $tag) use ($parser){
-					$content = $parser->callShortcode($tag['open'], $tag['attrs'], $tag['content']);
+					function($idx, $tag) use ($parser, $extra){
+					$content = $parser->callShortcode($tag['open'], $tag['attrs'], $tag['content'], $extra);
 
 					if ($content === false) {
 						if(ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
