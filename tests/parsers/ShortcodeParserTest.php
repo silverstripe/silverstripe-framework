@@ -6,6 +6,7 @@
 class ShortcodeParserTest extends SapphireTest {
 	
 	protected $arguments, $contents, $tagName, $parser;
+	protected $extra = array();
 	
 	public function setUp() {
 		ShortcodeParser::get('test')->register('test_shortcode', array($this, 'shortcodeSaver'));
@@ -210,16 +211,25 @@ class ShortcodeParserTest extends SapphireTest {
 		);
 	}
 
+	public function testExtraContext() {
+		$this->parser->parse('<a href="[test_shortcode]">Test</a>');
+
+		$this->assertInstanceOf('DOMNode', $this->extra['node']);
+		$this->assertInstanceOf('DOMElement', $this->extra['element']);
+		$this->assertEquals($this->extra['element']->tagName, 'a');
+	}
+
 	// -----------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * Stores the result of a shortcode parse in object properties for easy testing access.
 	 */
-	public function shortcodeSaver($arguments, $content = null, $parser, $tagName = null) {
+	public function shortcodeSaver($arguments, $content, $parser, $tagName, $extra) {
 		$this->arguments = $arguments;
-		$this->contents  = $content;
-		$this->tagName   = $tagName;
-		
+		$this->contents = $content;
+		$this->tagName = $tagName;
+		$this->extra = $extra;
+
 		return $content;
 	}
 	

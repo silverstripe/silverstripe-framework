@@ -13,14 +13,14 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'UPDATEURL.CONFIRM': 'Kei te hiahia koe kia huri au i te PRO ki:\n\n%s/\n\nPāwhiri Āe kia hurihia te PRO, pāwhiri Whakakore kia waiho:\n\n%s',
 		'UPDATEURL.CONFIRMURLCHANGED':'Kua hurihia te PRO ki \n"%s"',
 		'FILEIFRAMEFIELD.DELETEFILE': 'Muku Kōnae',
-		'FILEIFRAMEFIELD.UNATTACHFILE': 'Wehe Kōnae',
+		'FILEIFRAMEFIELD.UNATTACHFILE': 'Wehetāpiri Kōnae',
 		'FILEIFRAMEFIELD.DELETEIMAGE': 'Muku Atahanga',
 		'FILEIFRAMEFIELD.CONFIRMDELETE': 'Kei te tino hiahia muku i tēnei kōnae?',
 		'LeftAndMain.IncompatBrowserWarning': 'Kāore tō pūtirotiro i te hototahi ki te atanga CMS. Whakamahia Internet Explorer 7+, Google Chrome 10+, Mozilla Firefox 3.5+ rānei.',
 		'GRIDFIELD.ERRORINTRANSACTION': 'Kua puta mai he hapa i te tiki raraunga mai i te tūmau\n Ngāna anō ā muri atu.',
 		'UploadField.ConfirmDelete': 'He tika tonu kia tangohia tēnei kōnae i te pūnahakōnae tūmau?',
 		'UploadField.PHP_MAXFILESIZE': 'Kua hipa te mōrahi_rahikōnae_tukuatu i te kōnae (whakaritenga php.ini)',
-		'UploadField.HTML_MAXFILESIZE': 'Kua hipa te MŌRAHI_RAHI_KŌNAE i te kōnae (whakaritenga puka HTML)',
+		'UploadField.HTML_MAXFILESIZE': 'Kua hipa te mōrahi_rahi_kōnae i te kōnae (whakaritenga puka HTML)',
 		'UploadField.ONLYPARTIALUPLOADED': 'Kua tukuna atu he wāhanga anake o te kōnae',
 		'UploadField.NOFILEUPLOADED': 'Kāore he Kōnae i tukuna atu',
 		'UploadField.NOTMPFOLDER': 'Kua ngaro tētahi kōpaki rangitahi',
@@ -34,6 +34,11 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'UploadField.EMPTYRESULT': 'Otinga tukuatu kōnae piako',
 		'UploadField.LOADING': 'Uta ana...',
 		'UploadField.Editing': 'Whakatika ana ...',
-		'UploadField.Uploaded': 'Kua tukuna atu'
+		'UploadField.Uploaded': 'Kua tukuna atu',
+		'UploadField.OVERWRITEWARNING': 'Kei te tīari kē tētahi kōnae me te ingoa ōrite',
+		'TreeDropdownField.ENTERTOSEARCH': 'Pēhi tāuru hei rapu',
+		'TreeDropdownField.OpenLink': 'Whakatuwhera',
+		'TreeDropdownField.FieldTitle': 'Kōwhiri',
+		'TreeDropdownField.SearchFieldTitle': 'Kōwhiri ka Rapu rānei'
 	});
 }

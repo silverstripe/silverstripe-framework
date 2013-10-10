@@ -64,7 +64,10 @@ These parameters are passed to the callback:
    will not have been parsed, and can optionally be fed back into the parser.
  - The ShortcodeParser instance used to parse the content.
  - The shortcode tag name that was matched within the parsed content.
- 
+ - An associative array of extra information about the shortcode being parsed. For example, if the shortcode is
+   is inside an attribute, the `element` key contains a reference to the parent `DOMElement`, and the `node`
+   key the attribute's `DOMNode`.
+
 ## Example: Google Maps Iframe by Address
 
 To demonstrate how easy it is to build custom shortcodes, we'll build one to display
