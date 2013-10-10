@@ -1018,6 +1018,29 @@ after')
 		});
 	}
 
+	public function testLayoutInCachedBlock() {
+		$self = $this;
+
+		$this->useTestTheme('layoutcachedblocktest', function() use ($self) {
+			$template = new SSViewer(array('LayoutInCachedBlock'));
+			$page = new SSViewerTest_TitleCallCountingPage();
+			$page->ID = 11;
+			$firstResponse = $template->process($page);
+			$self->assertEquals(1, $page->getCount());
+			$self->assertEquals(1, preg_match('/Line 1 - 11/', $firstResponse->forTemplate()));
+			$self->assertEquals(1, preg_match('/Layout line - test page/', $firstResponse->forTemplate()));
+			$self->assertEquals(1, preg_match('/Last line - 11/', $firstResponse->forTemplate()));
+
+			// create a new page to simulate loading a page from the database so that
+			// cached calls aren't still stored, affecting the title call count
+			$page = new SSViewerTest_TitleCallCountingPage();
+			$page->ID = 11;
+			$secondResponse = $template->process($page);
+			$self->assertEquals(0, $page->getCount());
+			$self->assertEquals($firstResponse->forTemplate(), $secondResponse->forTemplate());
+		});
+	}
+
 	/**
 	 * @covers SSViewer::get_themes()
 	 */
@@ -1462,3 +1485,22 @@ class SSViewerTest_LevelTest extends ViewableData implements TestOnly {
 	}
 }
 
+class SSViewerTest_TitleCallCountingPage extends DataObject {
+
+	private $count = 0;
+	private $title = 'test page';
+
+	public function getTitle() {
+		$this->count++;
+		return $this->title;
+	}
+
+	public function resetCount() {
+		$this->count = 0;
+	}
+
+	public function getCount() {
+		return $this->count;
+	}
+
+}
