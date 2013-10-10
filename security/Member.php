@@ -13,8 +13,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'Email' => 'Varchar(256)', // See RFC 5321, Section 4.5.3.1.3.
 		'Password' => 'Varchar(160)',
 		'RememberLoginToken' => 'Varchar(160)', // Note: this currently holds a hash, not a token.
-		'NumVisit' => 'Int',
-		'LastVisited' => 'SS_Datetime',
 		'AutoLoginHash' => 'Varchar(160)',
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
@@ -369,8 +367,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// This lets apache rules detect whether the user has logged in
 		if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0);
 
-		$this->NumVisit++;
-
 		if($remember) {
 			// Store the hash and give the client the cookie with the token.
 			$generator = new RandomGenerator();
@@ -454,8 +450,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$hash = $member->encryptWithUserSettings($token);
 				$member->RememberLoginToken = $hash;
 				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
-
-				$member->NumVisit++;
 				$member->write();
 				
 				// Audit logging hook
@@ -595,8 +589,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		));
 
 		$fields->removeByName('RememberLoginToken');
-		$fields->removeByName('NumVisit');
-		$fields->removeByName('LastVisited');
 		$fields->removeByName('AutoLoginHash');
 		$fields->removeByName('AutoLoginExpired');
 		$fields->removeByName('PasswordEncryption');
@@ -1181,9 +1173,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 		
 		$mainFields->removeByName('Salt');
-		$mainFields->removeByName('NumVisit');
-
-		$mainFields->makeFieldReadonly('LastVisited');
 
 		$fields->removeByName('Subscriptions');
 
@@ -1279,8 +1268,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$labels['Surname'] = _t('Member.SURNAME', 'Surname');
 		$labels['Email'] = _t('Member.EMAIL', 'Email');
 		$labels['Password'] = _t('Member.db_Password', 'Password');
-		$labels['NumVisit'] = _t('Member.db_NumVisit', 'Number of Visits');
-		$labels['LastVisited'] = _t('Member.db_LastVisited', 'Last Visited Date');
 		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
 		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', 'Security related date');
 		$labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');
