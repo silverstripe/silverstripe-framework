@@ -149,17 +149,14 @@ class DropdownField extends FormField {
 	public function Field($properties = array()) {
 		$source = $this->getSource();
 		$options = array();
-		if($source) {
-			// SQLMap needs this to add an empty value to the options
-			if(is_object($source) && $this->getHasEmptyDefault()) {
-				$options[] = new ArrayData(array(
-					'Value' => '',
-					'Title' => $this->emptyString,
-				));
-			}
-
+		if ($this->getHasEmptyDefault()) {
+			$options[] = new ArrayData(array(
+				'Value' => '',
+				'Title' => $this->emptyString,
+			));
+		}
+		if ($source) {
 			foreach($source as $value => $title) {
-				$selected = false;
 				if($value === '' && ($this->value === '' || $this->value === null)) {
 					$selected = true;
 				} else {
@@ -225,11 +222,7 @@ class DropdownField extends FormField {
 	 * @return array
 	 */
 	public function getSource() {
-		if(is_array($this->source) && $this->getHasEmptyDefault()) {
-			return array('' => $this->emptyString) + (array) $this->source;
-		} else {
-			return $this->source;
-		}
+		return $this->source;
 	}
 
 	/**
