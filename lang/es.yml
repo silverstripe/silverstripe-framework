@@ -61,8 +61,6 @@ es:
     ERRORNOTREC: 'Ese nombre de usuario / contraseña no pudo ser reconocido.'
   Boolean:
     ANY: Cualquiera
-    NOANSWER: "No"
-    YESANSWER: "Si"
   CMSLoadingScreen_ss:
     LOADING: Cargando...
     REQUIREJS: 'El CMS requiere que tenga habilitado JavaScript .'
@@ -253,13 +251,14 @@ es:
     NoRoles: 'Sin roles'
     PLURALNAME: Grupos
     Parent: 'Grupo Padre'
+    RolesAddEditLink: 'Gestionar Roles'
     SINGULARNAME: Grupo
     Sort: 'Orden de Clasificación'
     has_many_Permissions: Permisos
     many_many_Members: Miembros
   GroupImportForm:
     Help1: '<p>Importar uno o más grupos en formato <em>CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Uso avanzado</h4>\n<ul>\n<li>Columnas permitidas: <em>%s</em></li>\n<li>Grupos existentes son relacionados por su valor <em>Code</em>, y actualizados con nuevos valores desde el archivo importado</li>\n<li>Jerarquías de grupos pueden ser creadas usando una columna <em>ParentCode</em>.</li>\n<li>Códigos de permiso pueden ser asignados por la columna  <em>PermissionCode</em>. Códigos de permisos existentes no son borrados.</li>\n</ul>\n</div>"
+    Help2: "<div class=\"advanced\">\\n<h4>Uso avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Grupos existentes son relacionados por su valor <em>Code</em>, y actualizados con nuevos valores desde el archivo importado</li>\\n<li>Jerarquías de grupos pueden ser creadas usando una columna <em>ParentCode</em>.</li>\\n<li>Códigos de permiso pueden ser asignados por la columna  <em>PermissionCode</em>. Códigos de permisos existentes no son borrados.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Creados {count} grupos'
     ResultDeleted: 'Se eliminaron %d grupos'
     ResultUpdated: 'Actualizados grupos %d'
@@ -288,6 +287,8 @@ es:
     FROMWEB: 'Desde la web'
     FindInFolder: 'Buscar en carpeta'
     IMAGEALT: 'Texto alternativo (alt)'
+    IMAGEALTTEXT: 'Texto alternativo (alt) - es mostrado si la imagen no puede ser visualizada'
+    IMAGEALTTEXTDESC: 'Texto alternativo (desc) - es mostrado si la imagen no puede ser visualizada o a los lectores de pantalla'
     IMAGEDIMENSIONS: Dimensiones
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Texto del título (tooltip) - para obtener más información acerca de la imagen'
@@ -361,6 +362,7 @@ es:
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor inténtalo de nuevo'
     ENTEREMAIL: 'Por favor, introduce un correo electrónico para obtener un enlace con el que cambiar la contraseña'
     ERRORLOCKEDOUT: 'Su cuenta ha sido inhabilitada temporalmente porque ha habido demasiados intentos fallidos de conectarse. Por favor, intente de nuevo en 20 minutos.'
+    ERRORLOCKEDOUT2: 'Su cuenta ha sido inhabilitada temporalmente porque ha habido demasiados intentos fallidos de conectarse. Por favor, intente de nuevo en 20 minutos.'
     ERRORNEWPASSWORD: 'Ha introducido su nueva contraseña de distinta manera, intente de nuevo'
     ERRORPASSWORDNOTMATCH: 'Su contraseña actual no concuerda, por favor intente de nuevo.'
     ERRORWRONGCRED: 'No parece ser la dirección de e-mail o contraseña correcta. Por favor intente de nuevo.'
@@ -388,6 +390,7 @@ es:
     db_NumVisit: 'Número de Visitas'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha de vencimiento de la contraseña'
+    NoPassword: 'No hay contraseña para este usuario'
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Contraseña'
   MemberDatetimeOptionsetField:
@@ -413,7 +416,7 @@ es:
     Toggle: 'Cambiar'
   MemberImportForm:
     Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Uso avanzado</h4>\n<ul>\n<li>Columnas permitidas: <em>%s</em></li>\n<li>Usuarios existentes son relacionados por su propiedad <em>Code</em>, y actualizados con nuevos valores desde el archivo importado.</li>\n<li>Los grupos pueden ser asignaods por la columna <em>Groups</em>. Los grupos son identificados por su propiedad <em>Code</em>,\nmúltiples grupos pueden ser separados por comas. Los grupos de miembros existentes no son borrados.</li>\n</ul>\n</div>"
+    Help2: "<div class=\"advanced\">\\n<h4>Uso avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Usuarios existentes son relacionados por su propiedad <em>Code</em>, y actualizados con nuevos valores desde el archivo importado.</li>\\n<li>Los grupos pueden ser asignaods por la columna <em>Groups</em>. Los grupos son identificados por su propiedad <em>Code</em>,\\nmúltiples grupos pueden ser separados por comas. Los grupos de miembros existentes no son borrados.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Creados {count} miembros'
     ResultDeleted: 'Se eliminaron %d miembros'
     ResultNone: 'No hay cambios'
@@ -486,6 +489,7 @@ es:
     NOTFOUND: 'Registros no encontrados'
   Security:
     ALREADYLOGGEDIN: 'No tiene acceso a esta página. Si posee otra cuenta con los privilegios para acceder a esta página, puede iniciar sesión a continuación.'
+    LOSTPASSWORDHEADER: 'Contraseña perdida'
     BUTTONSEND: 'Envíenme el enlace para restaurar la contraseña'
     CHANGEPASSWORDBELOW: 'Puede cambiar su contraseña a continuación.'
     CHANGEPASSWORDHEADER: 'Modifique su contraseña'
@@ -501,8 +505,9 @@ es:
   SecurityAdmin:
     ACCESS_HELP: 'Permitir ver, añadir y editar usuarios, así como asignarles permisos y reglas.'
     APPLY_ROLES: 'Aplicar reglas a grupos'
-    APPLY_ROLES_HELP: 'Posibilidad de editar las reglas asignados a un grupo. Requiere el permiso de "acceso a la sección ''Usuarios''" .'
+    APPLY_ROLES_HELP: 'Posibilidad de editar las reglas asignados a un grupo. Requiere el permiso "acceso a la sección Usuarios" .'
     EDITPERMISSIONS: 'Editar permisos y direcciones IP de cada grupo'
+    EDITPERMISSIONS_HELP: 'Permite editar los permisos y direcciones IP de un grupo. Requiere el permiso de "acceso a la sección Seguridad" .'
     GROUPNAME: 'Nombre del grupo'
     IMPORTGROUPS: 'Importar grupos'
     IMPORTUSERS: 'Importar usuarios'
@@ -600,5 +605,11 @@ es:
     PREVIEW: 'Previsualización'
   GridFieldEditButton_ss:
     EDIT: Editar
+  ContentController:
+    NOTLOGGEDIN: 'No estás conectado'
   GridFieldItemEditView:
     Go_back: 'Volver'
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Necesitas aumentar la complejidad de tu contraseña agregando los siguientes caracteres: %s'
+    PREVPASSWORD: 'Ya habías utilizado esa contraseña en el pasado, por favor usa uno nuevo'
+    TOOSHORT: 'Tu contraseña es muy corta'

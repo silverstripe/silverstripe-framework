@@ -16,7 +16,7 @@ nl:
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Selecteer bestanden'
-    DRAGFILESHERE: 'Sleep bestanden hiernaar toe'
+    DRAGFILESHERE: 'Sleep bestanden hier'
     DROPAREA: 'Sleep hier'
     EDITALL: 'Alle bewerken'
     EDITANDORGANIZE: 'Bewerk en beheer'
@@ -61,8 +61,6 @@ nl:
     ERRORNOTREC: 'De gebruikersnaam en/of wachtwoord wordt niet herkend'
   Boolean:
     ANY: Elke
-    NOANSWER: "Nee"
-    YESANSWER: "Ja"
   CMSLoadingScreen_ss:
     LOADING: Laden...
     REQUIREJS: 'Het CMS heeft JavaScript nodig om te werken.'
@@ -268,7 +266,7 @@ nl:
     InfiniteLoopNotAllowed: 'Oneindige lus gevonden in "{type}" hiërarchie. Wijzig de niveau hoger om dit op te lossen'
   HtmlEditorField:
     ADDURL: 'Voeg URL toe'
-    ADJUSTDETAILSDIMENSIONS: 'Details $amp; afmeting'
+    ADJUSTDETAILSDIMENSIONS: 'Details en afmetingen'
     ANCHORVALUE: Anker
     BUTTONINSERT: Invoegen
     BUTTONINSERTLINK: 'Link invoegen'
@@ -289,6 +287,8 @@ nl:
     FROMWEB: 'Vanaf een website'
     FindInFolder: 'Zoek in map'
     IMAGEALT: 'Alternatieve tekst (alt tekst) - wordt getoond als de afbeelding niet kan worden geladen'
+    IMAGEALTTEXT: 'Alternatieve tekst (alt-tekst) - wordt gebruikt als de afbeelding niet geladen kan worden '
+    IMAGEALTTEXTDESC: 'Voor schermlezers of als afbeelding niet weergegeven kan worden '
     IMAGEDIMENSIONS: Dimensies
     IMAGEHEIGHTPX: Hoogte
     IMAGETITLE: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'
@@ -488,7 +488,7 @@ nl:
     CSVEXPORT: 'Exporteren naar CSV'
     NOTFOUND: 'Geen items gevonden.'
   Security:
-    ALREADYLOGGEDIN: 'Je hebt niet de juiste rechten, om deze pagina te kunnen bekijken.  Als je een ander account met de juiste rechten hebt, kun je hier <a href="%s">opnieuw inloggen</a>.'
+    ALREADYLOGGEDIN: 'Je hebt niet de juiste rechten, om deze pagina te kunnen bekijken.  Als je een ander account met de juiste rechten hebt, kun je hier opnieuw inloggen.'
     LOSTPASSWORDHEADER: 'Wachtwoord vergeten'
     BUTTONSEND: 'Nieuw wachtwoord aanmaken'
     CHANGEPASSWORDBELOW: 'U kunt Uw wachtwoord hier beneden veranderen.'
