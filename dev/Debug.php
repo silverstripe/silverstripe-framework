@@ -205,11 +205,16 @@ class Debug {
 	 * @param $message string to output
 	 */
 	public static function log($message) {
-		$file = dirname(__FILE__).'/../../debug.log';
+		if (defined('BASE_PATH')) {
+			$path = BASE_PATH;
+		}
+		else {
+			$path = dirname(__FILE__) . '/../..';
+		}
+		$file = $path . '/debug.log';
 		$now = date('r');
-		$oldcontent = (file_exists($file)) ? file_get_contents($file) : '';
-		$content = $oldcontent . "\n\n== $now ==\n$message\n";
-		file_put_contents($file, $content);
+		$content = "\n\n== $now ==\n$message\n";
+		file_put_contents($file, $content, FILE_APPEND);
 	}
 
 	/**
