@@ -474,6 +474,30 @@ class FormField extends RequestHandler {
 	}
 
 	/**
+	 * @return array An array of properties that represent the FormField instance
+	 */
+	public function toMap() {
+		return array(
+			'class' => $this->class,
+			'Type' => $this->Type(),
+			'Title' => $this->Title(),
+			'Name' => $this->getName(),
+			'Value' => $this->Value(),
+			'dataValue' => $this->dataValue(),
+			'RightTitle' => $this->RightTitle(),
+			'LeftTitle' => $this->LeftTitle(),
+			'Attributes' => $this->getAttributes(),
+			'extraClass' => $this->extraClass(),
+			'isComposite' => $this->isComposite(),
+			'hasData' => $this->hasData(),
+			'isReadonly' => $this->isReadonly(),
+			'isDisabled' => $this->isDisabled(),
+			'Description' => $this->getDescription(),
+			'Required' => $this->Required()
+		);
+	}
+	
+	/**
 	 * Returns a version of a title suitable for insertion into an HTML
 	 * attribute.
 	 *
