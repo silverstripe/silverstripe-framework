@@ -28,9 +28,16 @@ class CMSForm extends Form {
 	protected function getValidationErrorResponse() {
 		$request = $this->getRequest();
 		$negotiator = $this->getResponseNegotiator();
+
 		if($request->isAjax() && $negotiator) {
-			$negotiator->setResponse(new SS_HTTPResponse($this));
-			return $negotiator->respond($request);
+			$this->setupFormErrors();
+			$result = $this->forTemplate();
+
+			return $negotiator->respond($request, array(
+				'CurrentForm' => function() use($result) {
+					return $result;
+				}
+			));
 		} else {
 			return parent::getValidationErrorResponse();
 		}

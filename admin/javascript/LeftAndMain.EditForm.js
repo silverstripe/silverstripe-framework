@@ -93,7 +93,7 @@
 					var firstTabWithErrors = this.find('.message.validation:first').closest('.tab');
 					$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
 					this.redraw();
-					firstTabWithErrors.closest('.cms-tabset').tabs('select', firstTabWithErrors.attr('id'));
+					firstTabWithErrors.closest('.ss-tabset').tabs('select', firstTabWithErrors.attr('id'));
 				}
 			
 				this._super();
