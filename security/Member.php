@@ -229,9 +229,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		$e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
 		if(!$e->check($this->Password, $password, $this->Salt, $this)) {
+			$iidentifierField = 
 			$result->error(_t (
-				'Member.ERRORWRONGCRED',
-				'That doesn\'t seem to be the right e-mail address or password. Please try again.'
+				'Member.ERRORWRONGCREDS',
+				'The provided details don\'t seem to be correct. Please try again.'
 			));
 		}
 
