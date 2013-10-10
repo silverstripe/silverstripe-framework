@@ -17,6 +17,7 @@
  * 
  * @package framework
  * @subpackage fields-gridfield
+ * @property GridState_Data $State The gridstate of this object
  */
 class GridField extends FormField {
 	

@@ -345,6 +345,23 @@ transfered between page requests by being inserted as a hidden field in the form
 
 A GridFieldComponent sets and gets data from the GridState.
 
+Data within this object can be nested, allowing for organisation of information in a logical fashion. Additionally,
+default values can be specified for any data field by invoking that field as a method, passing the default value
+as the first parameter. If no default is specified then a nested `GridState_Data` is returned, which may be chained
+to subsequently nest data values.
+
+Example:
+
+	:::php
+	
+	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
+		// Accesses the GridState, returns a nested GridState_Data, and retrieve a single field with a default of null
+		$objectID = $gridField->State->MyComponent->RecordID(null);
+		if($objectID) $dataList = $dataList->filter('ParentID', $objectID);
+		return $dataList;
+	}
+
+
 ## Permissions
 
 Since GridField is mostly used in the CMS, the controller managing a GridField instance
