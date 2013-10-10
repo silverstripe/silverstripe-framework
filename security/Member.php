@@ -1199,7 +1199,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$fields->removeByName('Groups');
 
 		if(Permission::check('EDIT_PERMISSIONS')) {
-			$groupsMap = Group::get()->map('ID', 'Breadcrumbs')->toArray();
+			$groupsMap = array();
+			foreach(Group::get() as $group) {
+				// Listboxfield values are escaped, use ASCII char instead of &raquo;
+				$groupsMap[$group->ID] = $group->getBreadcrumbs(' > ');
+			}
 			asort($groupsMap);
 			$fields->addFieldToTab('Root.Main',
 				ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())
