@@ -46,8 +46,7 @@
 						.jstree(this.getTreeConfig())
 						.bind('loaded.jstree', function(e, data) {
 							self.setIsLoaded(true);
-							self.updateFromEditForm();
-							self.css('visibility', 'visible');
+
 							// Add ajax settings after init period to avoid unnecessary initial ajax load
 							// of existing tree in DOM - see load_node_html()
 							data.inst._set_settings({'html_data': {'ajax': {
@@ -61,6 +60,9 @@
 									return params;
 								}
 							}}});
+
+							self.updateFromEditForm();
+							self.css('visibility', 'visible');
 							
 							// Only show checkboxes with .multiple class
 							data.inst.hide_checkboxes();
@@ -239,8 +241,8 @@
 			 * Creates a new node from the given HTML.
 			 * Wrapping around jstree API because we want the flexibility to define
 			 * the node's <li> ourselves. Places the node in the tree
-			 * according to data.ParentID
-			 * 
+			 * according to data.ParentID.
+			 *
 			 * Parameters:
 			 *  (String) HTML New node content (<li>)
 			 *  (Object) Map of additional data, e.g. ParentID
@@ -248,7 +250,7 @@
 			 */
 			createNode: function(html, data, callback) {
 				var self = this, 
-					parentNode = data.ParentID ? self.find('li[data-id='+data.ParentID+']') : false,
+					parentNode = data.ParentID ? self.getNodeByID(data.ParentID) : false,
 					newNode = $(html);
 				
 				this.jstree(
@@ -281,9 +283,9 @@
 			updateNode: function(node, html, data) {
 				var self = this, newNode = $(html), origClasses = node.attr('class');
 
-				var nextNode = data.NextID ? this.find('li[data-id='+data.NextID+']') : false;
-				var prevNode = data.PrevID ? this.find('li[data-id='+data.PrevID+']') : false;
-				var parentNode = data.ParentID ? this.find('li[data-id='+data.ParentID+']') : false;
+				var nextNode = data.NextID ? this.getNodeByID(data.NextID) : false;
+				var prevNode = data.PrevID ? this.getNodeByID(data.PrevID) : false;
+				var parentNode = data.ParentID ? this.getNodeByID(data.ParentID) : false;
 
 				// Copy attributes. We can't replace the node completely
 				// without removing or detaching its children nodes.
@@ -346,8 +348,22 @@
 			updateNodesFromServer: function(ids) {
 				if(this.getIsUpdatingTree() || !this.getIsLoaded()) return;
 
-				var self = this, includesNewNode = false;
+				var self = this, i, includesNewNode = false;
 				this.setIsUpdatingTree(true);
+				self.jstree('save_selected');
+
+				var correctStateFn = function(node) {
+					// Duplicates can be caused by the subtree reloading through
+					// a tree "open"/"select" event, while at the same time creating a new node
+					self.getNodeByID(node.data('id')).not(node).remove();
+
+					self.jstree('deselect_all');
+					self.jstree('select_node', node);
+					// Similar to jstree's correct_state, but doesn't remove children
+					var hasChildren = (node.children('ul').length > 0);
+					node.toggleClass('jstree-leaf', !hasChildren);
+					if(!hasChildren) node.removeClass('jstree-closed jstree-open');
+				};
 
 				// TODO 'initially_opened' config doesn't apply here
 				self.jstree('open_node', this.getNodeByID(0));
@@ -367,15 +383,6 @@
 								return;
 							}
 
-							var correctStateFn = function(node) {
-								self.jstree('deselect_all');
-								self.jstree('select_node', node);
-								// Similar to jstree's correct_state, but doesn't remove children
-								var hasChildren = (node.children('ul').length > 0);
-								node.toggleClass('jstree-leaf', !hasChildren);
-								if(!hasChildren) node.removeClass('jstree-closed jstree-open');
-							};
-
 							// Check if node exists, create if necessary
 							if(node.length) {
 								self.updateNode(node, nodeData.html, nodeData);
@@ -384,9 +391,20 @@
 								}, 500);
 							} else {
 								includesNewNode = true;
-								self.createNode(nodeData.html, nodeData, function(newNode) {
-									correctStateFn(newNode);
-								});
+
+								// If the parent node can't be found, it might have not been loaded yet.
+								// This can happen for deep trees which require ajax loading.
+								// Assumes that the new node has been submitted to the server already.
+								if(nodeData.ParentID && !self.find('li[data-id='+nodeData.ParentID+']').length) {
+									self.jstree('load_node', -1, function() {
+										newNode = self.find('li[data-id='+nodeId+']');
+										correctStateFn(newNode);
+									});
+								} else {
+									self.createNode(nodeData.html, nodeData, function(newNode) {
+										correctStateFn(newNode);
+									});
+								}
 							}
 						});
 
@@ -399,7 +417,7 @@
 					complete: function() {
 						self.setIsUpdatingTree(false);
 					}
-				});				
+				});
 			}
 
 		});

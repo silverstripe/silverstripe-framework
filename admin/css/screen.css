@@ -847,6 +847,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-tree.multiple li > a > .jstree-icon { display: none; }
 .cms-tree.multiple li > a > .jstree-icon.jstree-checkbox { display: inline-block; }
 .cms-tree.multiple li#record-0 > a .jstree-checkbox { display: none; }
+.cms-tree.jstree-loading li#record-0 > .jstree-icon { background: url(../images/throbber.gif) top left no-repeat; }
 .cms-tree a.jstree-loading .jstree-icon { background-image: none !important; }
 .cms-tree a.jstree-loading .jstree-pageicon { background: url(../images/throbber.gif) top left no-repeat; }
 
