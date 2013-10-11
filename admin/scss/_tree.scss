@@ -596,6 +596,12 @@ a .jstree-pageicon {
 		}
 	}
 
+	&.jstree-loading {
+		li#record-0 > .jstree-icon {
+			background: url(../images/throbber.gif) top left no-repeat;
+		}
+	}
+
 	// Show the loading indicator on the page icon rather than the default
 	// jstree icon (which is only used for its dragging handles)
 	a.jstree-loading{
