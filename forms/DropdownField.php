@@ -163,8 +163,8 @@ class DropdownField extends FormField {
 				if($value === '' && ($this->value === '' || $this->value === null)) {
 					$selected = true;
 				} else {
-					// check against value, fallback to a type check comparison when !value
-					$selected = ($value) ? $value == $this->value : $value === $this->value;
+					// check against value, fallback to a type check comparison when !value; special case if value = 0 because 0 !== '0'
+					$selected = ($value) ? $value == $this->value : $value === $this->value || ($value === 0 && $this->value === '0');
 					$this->isSelected = $selected;
 				}
 				
