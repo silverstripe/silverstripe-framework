@@ -11,5 +11,6 @@ de:
     WITHNAMESPACE: Include Entity with Namespace (de)
     LAYOUTTEMPLATE: Layout Template (de)
     SPRINTFNAMESPACE: My replacement: %s (de)
+    PRIORITYNOTICE: Low Module Priority (de)
   i18nTestModuleInclude.ss:
     SPRINTFINCLUDENAMESPACE: My include replacement: %s (de)
