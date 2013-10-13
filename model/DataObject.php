@@ -2781,7 +2781,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $containerClass The container class to return the results in.
 	 *
-	 * @return mixed The objects matching the filter, in the class specified by $containerClass
+	 * @return DataList
 	 */
 	public static function get($callerClass = null, $filter = "", $sort = "", $join = "", $limit = null,
 			$containerClass = 'DataList') {
