@@ -683,23 +683,24 @@ class Injector {
 	 *					class name of the object to register)
 	 * 
 	 */
-	public function registerService($service, $replace=null) {
+	public function registerService($service, $replace = null) {
 		$registerAt = get_class($service);
 		if ($replace != null) {
 			$registerAt = $replace;
 		}
 		
+		$this->specs[$registerAt] = array('class' => get_class($service));
 		$this->serviceCache[$registerAt] = $service;
 		$this->inject($service);
 	}
 	
 	/**
 	 * Register a service with an explicit name
+	 * 
+	 * @deprecated since 3.1.1
 	 */
 	public function registerNamedService($name, $service) {
-		$this->specs[$name] = array('class' => get_class($service));
-		$this->serviceCache[$name] = $service;
-		$this->inject($service);
+		return $this->registerService($service, $name);
 	}
 	
 	/**
