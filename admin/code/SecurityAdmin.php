@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Security section of the CMS
- * @package cms
- * @subpackage security
+ *
+ * @package framework
+ * @subpackage admin
  */
 class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
@@ -60,7 +62,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		
 		// TODO Duplicate record fetching (see parent implementation)
 		$record = $this->getRecord($id);
-		if($record && !$record->canView()) return Security::permissionFailure($this);
+
+		if($record && !$record->canView()) {
+			return Security::permissionFailure($this);
+		}
 		
 		$memberList = GridField::create(
 			'Members',

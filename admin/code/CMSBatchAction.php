@@ -10,8 +10,8 @@
  * 	_t('CMSBatchActions.PUBLISHED_PAGES', 'published %d pages')));
  * </code>
  * 
- * @package cms
- * @subpackage batchaction
+ * @package framework
+ * @subpackage admin
  */
 abstract class CMSBatchAction extends Object {
 	

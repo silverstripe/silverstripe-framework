@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plug-ins for additional functionality in your LeftAndMain classes.
  * 

@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Imports {@link Member} records by CSV upload, as defined in
  * {@link MemberCsvBulkLoader}.
  * 
- * @package cms
- * @subpackage batchactions
+ * @package framework
+ * @subpackage admin
  */
 class MemberImportForm extends Form {
 	
