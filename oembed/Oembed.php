@@ -50,6 +50,13 @@ class Oembed {
 	protected static function find_endpoint($url) {
 		foreach(self::get_providers() as $scheme=>$endpoint) {
 			if(self::matches_scheme($url, $scheme)) {
+				$protocol = Director::is_https() ? 'https' : 'http';
+
+				if (is_array($endpoint)) {
+					if (array_key_exists($protocol, $endpoint)) $endpoint = $endpoint[$protocol];
+					else $endpoint = reset($endpoint);
+				}
+
 				return $endpoint;
 			}
 		}
@@ -66,6 +73,7 @@ class Oembed {
 	protected static function matches_scheme($url, $scheme) {
 		$urlInfo = parse_url($url);
 		$schemeInfo = parse_url($scheme);
+
 		foreach($schemeInfo as $k=>$v) {
 			if(!array_key_exists($k, $urlInfo)) {
 				return false;

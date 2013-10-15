@@ -42,7 +42,16 @@ class Director implements TemplateGlobalProvider {
 	 * @var array
 	 */
 	private static $test_servers = array();
-	
+
+	/**
+	 * Setting this explicitly specifies the protocol (http or https) used, overriding
+	 * the normal behaviour of Director::is_https introspecting it from the request
+	 *
+	 * @config
+	 * @var string - "http" or "https" to force the protocol, or false-ish to use default introspection from request
+	 */
+	private static $alternate_protocol;
+
 	/**
 	 * @config
 	 * @var string
@@ -458,6 +467,10 @@ class Director implements TemplateGlobalProvider {
 	 * @return boolean
 	 */
 	public static function is_https() {
+		if ($protocol = Config::inst()->get('Director', 'alternate_protocol')) {
+			return $protocol == 'https';
+		}
+
 		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) { 
 			if(strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') {
 				return true;
