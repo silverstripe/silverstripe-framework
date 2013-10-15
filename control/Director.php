@@ -258,8 +258,18 @@ class Director implements TemplateGlobalProvider {
 
 		$request = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
 		if($headers) foreach($headers as $k => $v) $request->addHeader($k, $v);
+		
+		// Pre-request filtering 
+		// @see issue #2517
+		$model = DataModel::inst();
+		$output = Injector::inst()->get('RequestProcessor')->preRequest($request, $session, $model);
+		if ($output === false) {
+			// @TODO Need to NOT proceed with the request in an elegant manner
+			throw new SS_HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
+		}
+		
 		// TODO: Pass in the DataModel
-		$result = Director::handleRequest($request, $session, DataModel::inst());
+		$result = Director::handleRequest($request, $session, $model);
 
 		// Ensure that the result is an SS_HTTPResponse object
 		if(is_string($result)) {
@@ -270,6 +280,11 @@ class Director implements TemplateGlobalProvider {
 			} else {
 				$result = new SS_HTTPResponse($result);
 			}
+		}
+		
+		$output = Injector::inst()->get('RequestProcessor')->postRequest($request, $result, $model);
+		if ($output === false) {
+			throw new SS_HTTPResponse_Exception("Invalid response");
 		}
 		
 		// Restore the superglobals
