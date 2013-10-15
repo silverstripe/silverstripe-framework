@@ -2479,7 +2479,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 	public static function get_script_direction($locale = null) {
 		require_once 'Zend/Locale/Data.php';
 		if(!$locale) $locale = i18n::get_locale();
-		$dir = Zend_Locale_Data::getList($locale, 'layout');
+		try {
+			$dir = Zend_Locale_Data::getList($locale, 'layout');
+		} catch(Zend_Locale_Exception $e) {
+			$dir = Zend_Locale_Data::getList(i18n::get_lang_from_locale($locale), 'layout');
+		}
 		
 		return ($dir && $dir['characters'] == 'right-to-left') ? 'rtl' : 'ltr';
 	}
