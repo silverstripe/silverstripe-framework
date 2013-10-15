@@ -7,7 +7,7 @@
  * $pwdVal = new PasswordValidator();
  * $pwdValidator->minLength(7);
  * $pwdValidator->checkHistoricalPasswords(6);
- * $pwdValidator->characterStrength('lowercase','uppercase','digits','punctuation');
+ * $pwdValidator->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"));
  * 
  * Member::set_password_validator($pwdValidator);
  * </code>
