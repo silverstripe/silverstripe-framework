@@ -4,6 +4,8 @@ Oembed:
   providers:
     'http://*.youtube.com/watch*':
       'http://www.youtube.com/oembed/'
+    'https://*.youtube.com/watch*':
+      'https://www.youtube.com/oembed/?scheme=https'
     'http://*.flickr.com/*':
       'http://www.flickr.com/services/oembed/'
     'http://*.viddler.com/*':
