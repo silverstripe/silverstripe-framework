@@ -31,9 +31,9 @@ class CMSProfileController extends LeftAndMain {
 		if($form instanceof SS_HTTPResponse) {
 			return $form;
 		}
+
 		$form->Fields()->removeByName('LastVisited');
 		$form->Fields()->push(new HiddenField('ID', null, Member::currentUserID()));
-		$form->setValidator(new Member_Validator());
 		$form->Actions()->push(
 			FormAction::create('save',_t('CMSMain.SAVE', 'Save'))
 				->addExtraClass('ss-ui-button ss-ui-action-constructive')
@@ -44,7 +44,17 @@ class CMSProfileController extends LeftAndMain {
 		$form->Actions()->removeByName('action_delete');
 		$form->setTemplate('Form');
 		$form->setAttribute('data-pjax-fragment', null);
-		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+
+		if($member = Member::currentUser()) {
+			$form->setValidator($member->getValidator());
+		} else {
+			$form->setValidator(Injector::inst()->get('Member')->getValidator());
+		}
+
+		if($form->Fields()->hasTabset()) {
+			$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		}
+
 		$form->addExtraClass('member-profile-form root-form cms-edit-form cms-panel-padded center');
 		
 		return $form;

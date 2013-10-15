@@ -611,8 +611,21 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		return $fields;
 	}
 
+	/**
+	 * Returns the {@link RequiredFields} instance for the Member object. This
+	 * Validator is used when saving a {@link CMSProfileController} or added to
+	 * any form responsible for saving a users data.
+	 *
+	 * To customize the required fields, add a {@link DataExtension} to member
+	 * calling the `updateValidator()` method.
+	 *
+	 * @return Member_Validator
+	 */
 	public function getValidator() {
-		return new Member_Validator();
+		$validator = Injector::inst()->create('Member_Validator');
+		$this->extend('updateValidator', $validator);
+
+		return $validator;
 	}
 
 
@@ -624,6 +637,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public static function currentUser() {
 		$id = Member::currentUserID();
+
 		if($id) {
 			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id", true, 1);
 		}
@@ -1525,18 +1539,21 @@ class Member_GroupSet extends ManyManyList {
 
 /**
  * Class used as template to send an email saying that the password has been
- * changed
+ * changed.
+ *
  * @package framework
  * @subpackage security
  */
 class Member_ChangePasswordEmail extends Email {
+
 	protected $from = '';   // setting a blank from address uses the site's default administrator email
 	protected $subject = '';
 	protected $ss_template = 'ChangePasswordEmail';
 	
 	public function __construct() {
 		parent::__construct();
-	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject');
+
+		$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject');
 	}
 }
 
@@ -1544,6 +1561,7 @@ class Member_ChangePasswordEmail extends Email {
 
 /**
  * Class used as template to send the forgot password email
+ *
  * @package framework
  * @subpackage security
  */
@@ -1554,18 +1572,29 @@ class Member_ForgotPasswordEmail extends Email {
 	
 	public function __construct() {
 		parent::__construct();
-	$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject');
+
+		$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject');
 	}
 }
 
 /**
  * Member Validator
+ *
+ * Custom validation for the Member object can be achieved either through an
+ * {@link DataExtension} on the Member object or, by specifying a subclass of
+ * {@link Member_Validator} through the {@link Injector} API.
+ *
+ * {@see Member::getValidator()}
+ *
  * @package framework
  * @subpackage security
  */
 class Member_Validator extends RequiredFields {
 
-	protected $customRequired = array('FirstName', 'Email'); //, 'Password');
+	protected $customRequired = array(
+		'FirstName',
+		'Email'
+	);
 
 
 	/**
@@ -1573,14 +1602,15 @@ class Member_Validator extends RequiredFields {
 	 */
 	public function __construct() {
 		$required = func_get_args();
+
 		if(isset($required[0]) && is_array($required[0])) {
 			$required = $required[0];
 		}
+
 		$required = array_merge($required, $this->customRequired);
 
 		parent::__construct($required);
 	}
-
 
 	/**
 	 * Check if the submitted member data is valid (server-side)

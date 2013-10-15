@@ -42,9 +42,10 @@ class MemberTest extends FunctionalTest {
 	
 	public function tearDown() {
 		Member::config()->unique_identifier_field = $this->orig['Member_unique_identifier_field'];
-
 		parent::tearDown();
 	}
+
+
 
 	/**
 	 * @expectedException ValidationException
@@ -698,21 +699,110 @@ class MemberTest extends FunctionalTest {
 		);
 	}
 
+
+	public function testCustomMemberValidator() {
+		$member = $this->objFromFixture('Member', 'admin');
+
+		$form = new MemberTest_ValidatorForm();
+		$form->loadDataFrom($member);
+
+		$validator = new Member_Validator();
+		$validator->setForm($form);
+
+		$pass = $validator->php(array(
+			'FirstName' => 'Borris',
+			'Email' => 'borris@silverstripe.com'
+		));
+
+		$fail = $validator->php(array(
+			'Email' => 'borris@silverstripe.com',
+			'Surname' => ''
+		));
+
+		$this->assertTrue($pass, 'Validator requires on FirstName and Email');
+		$this->assertFalse($fail, 'Missing FirstName');
+
+		$ext = new MemberTest_ValidatorExtension();
+		$ext->updateValidator($validator);
+
+		$pass = $validator->php(array(
+			'FirstName' => 'Borris',
+			'Email' => 'borris@silverstripe.com'
+		));
+
+		$fail = $validator->php(array(
+			'Email' => 'borris@silverstripe.com'
+		));
+
+		$this->assertFalse($pass, 'Missing surname');
+		$this->assertFalse($fail, 'Missing surname value');
+
+		$fail = $validator->php(array(
+			'Email' => 'borris@silverstripe.com',
+			'Surname' => 'Silverman'
+		));
+
+		$this->assertTrue($fail, 'Passes with email and surname now (no firstname)');
+	}
+
 }
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class MemberTest_ValidatorForm extends Form implements TestOnly {
+
+	public function __construct() {
+		parent::__construct(Controller::curr(), __CLASS__, new FieldList(
+			new TextField('Email'),
+			new TextField('Surname'),
+			new TextField('ID'),
+			new TextField('FirstName')
+		), new FieldList(
+			new FormAction('someAction')
+		));
+	}
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class MemberTest_ValidatorExtension extends DataExtension implements TestOnly {
+
+	public function updateValidator(&$validator) {
+		$validator->addRequiredField('Surname');
+		$validator->removeRequiredField('FirstName');
+	}
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class MemberTest_ViewingAllowedExtension extends DataExtension implements TestOnly {
 
 	public function canView($member = null) {
 		return true;
 	}
-
 }
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class MemberTest_ViewingDeniedExtension extends DataExtension implements TestOnly {
 
 	public function canView($member = null) {
 		return false;
 	}
-
 }
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class MemberTest_EditingAllowedDeletingDeniedExtension extends DataExtension implements TestOnly {
 
 	public function canView($member = null) {
@@ -729,6 +819,10 @@ class MemberTest_EditingAllowedDeletingDeniedExtension extends DataExtension imp
 
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class MemberTest_PasswordValidator extends PasswordValidator {
 	public function __construct() {
 		parent::__construct();
