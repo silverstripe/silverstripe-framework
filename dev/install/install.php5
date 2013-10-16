@@ -403,9 +403,14 @@ class InstallRequirements {
 		$isIIS = $this->isIIS(7);
 		$webserver = $this->findWebserver();
 
-		$this->requirePHPVersion('5.3.4', '5.3.2', array("PHP Configuration", "PHP5 installed", null, "PHP version " . phpversion()));
+		$this->requirePHPVersion('5.3.4', '5.3.2', array(
+            "PHP Configuration",
+            "PHP5 installed",
+            null,
+            "PHP version " . phpversion()
+        ));
 
-		// Check that we can identify the root folder successfully
+        // Check that we can identify the root folder successfully
 		$this->requireFile(FRAMEWORK_NAME . '/dev/install/config-form.html', array("File permissions",
 			"Does the webserver know where files are stored?",
 			"The webserver isn't letting me identify where files are stored.",
@@ -416,15 +421,27 @@ class InstallRequirements {
 		$this->requireModule(FRAMEWORK_NAME, array("File permissions", FRAMEWORK_NAME . "/ directory exists?"));
 
 		if($isApache) {
-			$this->checkApacheVersion(array("Webserver Configuration", "Webserver is not Apache 1.x", "SilverStripe requires Apache version 2 or greater", $webserver));
+			$this->checkApacheVersion(array(
+                "Webserver Configuration",
+                "Webserver is not Apache 1.x", "SilverStripe requires Apache version 2 or greater",
+                $webserver
+            ));
 			$this->requireWriteable('.htaccess', array("File permissions", "Is the .htaccess file writeable?", null));
 		} elseif($isIIS) {
 			$this->requireWriteable('web.config', array("File permissions", "Is the web.config file writeable?", null));
 		}
 
-		$this->requireWriteable('mysite/_config.php', array("File permissions", "Is the mysite/_config.php file writeable?", null));
+		$this->requireWriteable('mysite/_config.php', array(
+            "File permissions",
+            "Is the mysite/_config.php file writeable?",
+            null
+        ));
 		if (!$this->checkModuleExists('cms')) {
-			$this->requireWriteable('mysite/code/RootURLController.php', array("File permissions", "Is the mysite/code/RootURLController.php file writeable?", null));
+			$this->requireWriteable('mysite/code/RootURLController.php', array(
+                "File permissions",
+                "Is the mysite/code/RootURLController.php file writeable?",
+                null
+            ));
 		}
 		$this->requireWriteable('assets', array("File permissions", "Is the assets/ directory writeable?", null));
 
@@ -432,74 +449,193 @@ class InstallRequirements {
 		$this->requireTempFolder(array('File permissions', 'Is a temporary directory available?', null, $tempFolder));
 		if($tempFolder) {
 			// in addition to the temp folder being available, check it is writable
-			$this->requireWriteable($tempFolder, array("File permissions", sprintf("Is the temporary directory writeable?", $tempFolder), null), true);
+			$this->requireWriteable($tempFolder, array(
+                "File permissions",
+                sprintf("Is the temporary directory writeable?", $tempFolder),
+                null
+            ), true);
 		}
 
 		// Check for web server, unless we're calling the installer from the command-line
 		$this->isRunningWebServer(array("Webserver Configuration", "Server software", "Unknown", $webserver));
 
 		if($isApache) {
-			$this->requireApacheRewriteModule('mod_rewrite', array("Webserver Configuration", "URL rewriting support", "You need mod_rewrite to use friendly URLs with SilverStripe, but it is not enabled."));
+			$this->requireApacheRewriteModule('mod_rewrite', array(
+                "Webserver Configuration",
+                "URL rewriting support",
+                "You need mod_rewrite to use friendly URLs with SilverStripe, but it is not enabled."
+            ));
 		} elseif($isIIS) {
-			$this->requireIISRewriteModule('IIS_UrlRewriteModule', array("Webserver Configuration", "URL rewriting support", "You need to enable the IIS URL Rewrite Module to use friendly URLs with SilverStripe, but it is not installed or enabled. Download it for IIS 7 from http://www.iis.net/expand/URLRewrite"));
+			$this->requireIISRewriteModule('IIS_UrlRewriteModule', array(
+                "Webserver Configuration",
+                "URL rewriting support",
+                "You need to enable the IIS URL Rewrite Module to use friendly URLs with SilverStripe, "
+                . "but it is not installed or enabled. Download it for IIS 7 from http://www.iis.net/expand/URLRewrite"
+            ));
 		} else {
-			$this->warning(array("Webserver Configuration", "URL rewriting support", "I can't tell whether any rewriting module is running.  You may need to configure a rewriting rule yourself."));
+			$this->warning(array(
+                "Webserver Configuration",
+                "URL rewriting support",
+                "I can't tell whether any rewriting module is running.  You may need to configure a rewriting rule yourself."));
 		}
 
-		$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver Configuration", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
+		$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array(
+            "Webserver Configuration",
+            "Recognised webserver",
+            "You seem to be using an unsupported webserver.  "
+            . "The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."
+        ));
 
-		$this->requirePostSupport(array("Webserver Configuration", "POST Support", 'I can\'t find $_POST, make sure POST is enabled.'));
+		$this->requirePostSupport(array(
+            "Webserver Configuration",
+            "POST Support",
+            'I can\'t find $_POST, make sure POST is enabled.'
+        ));
 
 		// Check for GD support
-		if(!$this->requireFunction("imagecreatetruecolor", array("PHP Configuration", "GD2 support", "PHP must have GD version 2."))) {
-			$this->requireFunction("imagecreate", array("PHP Configuration", "GD2 support", "GD support for PHP not included."));
-		}
+		if(!$this->requireFunction("imagecreatetruecolor", array(
+            "PHP Configuration",
+            "GD2 support",
+            "PHP must have GD version 2."
+        ))) {
+			$this->requireFunction("imagecreate", array(
+                "PHP Configuration",
+                "GD2 support",
+                "GD support for PHP not included."
+            ));
+        }
 
-		// Check for XML support
-		$this->requireFunction('xml_set_object', array("PHP Configuration", "XML support", "XML support not included in PHP."));
-		$this->requireClass('DOMDocument', array("PHP Configuration", "DOM/XML support", "DOM/XML support not included in PHP."));
-		$this->requireFunction('simplexml_load_file', array('PHP Configuration', 'SimpleXML support', 'SimpleXML support not included in PHP.'));
+        // Check for XML support
+		$this->requireFunction('xml_set_object', array(
+            "PHP Configuration",
+            "XML support",
+            "XML support not included in PHP."
+        ));
+		$this->requireClass('DOMDocument', array(
+            "PHP Configuration",
+            "DOM/XML support",
+            "DOM/XML support not included in PHP."
+        ));
+		$this->requireFunction('simplexml_load_file', array(
+            'PHP Configuration',
+            'SimpleXML support',
+            'SimpleXML support not included in PHP.'
+        ));
 
 		// Check for token_get_all
-		$this->requireFunction('token_get_all', array("PHP Configuration", "Tokenizer support", "Tokenizer support not included in PHP."));
+		$this->requireFunction('token_get_all', array(
+            "PHP Configuration",
+            "Tokenizer support",
+            "Tokenizer support not included in PHP."
+        ));
 
 		// Check for CType support
-		$this->requireFunction('ctype_digit', array('PHP Configuration', 'CType support', 'CType support not included in PHP.'));
+		$this->requireFunction('ctype_digit', array(
+            'PHP Configuration',
+            'CType support',
+            'CType support not included in PHP.'
+        ));
 
 		// Check for session support
-		$this->requireFunction('session_start', array('PHP Configuration', 'Session support', 'Session support not included in PHP.'));
+		$this->requireFunction('session_start', array(
+            'PHP Configuration',
+            'Session support',
+            'Session support not included in PHP.'
+        ));
 
 		// Check for iconv support
-		$this->requireFunction('iconv', array('PHP Configuration', 'iconv support', 'iconv support not included in PHP.'));
+		$this->requireFunction('iconv', array(
+            'PHP Configuration',
+            'iconv support',
+            'iconv support not included in PHP.'
+        ));
 
 		// Check for hash support
 		$this->requireFunction('hash', array('PHP Configuration', 'hash support', 'hash support not included in PHP.'));
 
 		// Check for mbstring support
-		$this->requireFunction('mb_internal_encoding', array('PHP Configuration', 'mbstring support', 'mbstring support not included in PHP.'));
+		$this->requireFunction('mb_internal_encoding', array(
+            'PHP Configuration',
+            'mbstring support',
+            'mbstring support not included in PHP.'
+        ));
 
 		// Check for Reflection support
-		$this->requireClass('ReflectionClass', array('PHP Configuration', 'Reflection support', 'Reflection support not included in PHP.'));
+		$this->requireClass('ReflectionClass', array(
+            'PHP Configuration',
+            'Reflection support',
+            'Reflection support not included in PHP.'
+        ));
 
 		// Check for Standard PHP Library (SPL) support
-		$this->requireFunction('spl_classes', array('PHP Configuration', 'SPL support', 'Standard PHP Library (SPL) not included in PHP.'));
+		$this->requireFunction('spl_classes', array(
+            'PHP Configuration',
+            'SPL support',
+            'Standard PHP Library (SPL) not included in PHP.'
+        ));
 
-		$this->requireDateTimezone(array('PHP Configuration', 'date.timezone setting and validity', 'date.timezone option in php.ini must be set correctly.', ini_get('date.timezone')));
+		$this->requireDateTimezone(array(
+            'PHP Configuration',
+            'date.timezone setting and validity',
+            'date.timezone option in php.ini must be set correctly.',
+            ini_get('date.timezone')
+        ));
 
-		$this->suggestClass('finfo', array('PHP Configuration', 'fileinfo support', 'fileinfo should be enabled in PHP. SilverStripe uses it for MIME type detection of files. SilverStripe will still operate, but email attachments and sending files to browser (e.g. export data to CSV) may not work correctly without finfo.'));
+		$this->suggestClass('finfo', array(
+            'PHP Configuration',
+            'fileinfo support',
+            'fileinfo should be enabled in PHP. SilverStripe uses it for MIME type detection of files. '
+            . 'SilverStripe will still operate, but email attachments and sending files to browser '
+            . '(e.g. export data to CSV) may not work correctly without finfo.'
+        ));
 
-		$this->suggestFunction('curl_init', array('PHP Configuration', 'curl support', 'curl should be enabled in PHP. SilverStripe uses it for consuming web services via the RestfulService class and many modules rely on it.'));
+		$this->suggestFunction('curl_init', array(
+            'PHP Configuration',
+            'curl support',
+            'curl should be enabled in PHP. SilverStripe uses it for consuming web services'
+            . ' via the RestfulService class and many modules rely on it.'
+        ));
 
-		$this->suggestClass('tidy', array('PHP Configuration', 'tidy support', 'Tidy provides a library of code to clean up your html. SilverStripe will operate fine without tidy but HTMLCleaner will not be effective.'));
+		$this->suggestClass('tidy', array(
+            'PHP Configuration',
+            'tidy support',
+            'Tidy provides a library of code to clean up your html. '
+            . 'SilverStripe will operate fine without tidy but HTMLCleaner will not be effective.'
+        ));
 
-		$this->suggestPHPSetting('asp_tags', array(false), array('PHP Configuration', 'asp_tags option', 'This should be turned off as it can cause issues with SilverStripe'));
-		$this->requirePHPSetting('magic_quotes_gpc', array(false), array('PHP Configuration', 'magic_quotes_gpc option', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
-		$this->suggestPHPSetting('display_errors', array(false), array('PHP Configuration', 'display_errors option', 'Unless you\'re in a development environment, this should be turned off, as it can expose sensitive data to website users.'));
-		// on some weirdly configured webservers arg_separator.output is set to &amp; which will results in links like ?param=value&amp;foo=bar which will not be i
-		$this->suggestPHPSetting('arg_separator.output', array('&', ''), array('PHP Configuration', 'arg_separator.output option', 'This option defines how URL parameters are concatenated. If not set to \'&\' this may cause issues with URL GET parameters'));
+		$this->suggestPHPSetting('asp_tags', array(false), array(
+            'PHP Configuration',
+            'asp_tags option',
+            'This should be turned off as it can cause issues with SilverStripe'
+        ));
+		$this->requirePHPSetting('magic_quotes_gpc', array(false), array(
+            'PHP Configuration',
+            'magic_quotes_gpc option',
+            'This should be turned off, as it can cause issues with cookies. '
+            . 'More specifically, unserializing data stored in cookies.'
+        ));
+		$this->suggestPHPSetting('display_errors', array(false), array(
+            'PHP Configuration',
+            'display_errors option',
+            'Unless you\'re in a development environment, this should be turned off, '
+            . 'as it can expose sensitive data to website users.'
+        ));
+		// on some weirdly configured webservers arg_separator.output is set to &amp;
+        // which will results in links like ?param=value&amp;foo=bar which will not be i
+		$this->suggestPHPSetting('arg_separator.output', array('&', ''), array(
+            'PHP Configuration',
+            'arg_separator.output option',
+            'This option defines how URL parameters are concatenated. '
+            . 'If not set to \'&\' this may cause issues with URL GET parameters'
+        ));
 
 		// Check memory allocation
-		$this->requireMemory(32*1024*1024, 64*1024*1024, array("PHP Configuration", "Memory allocation (PHP config option 'memory_limit')", "SilverStripe needs a minimum of 32M allocated to PHP, but recommends 64M.", ini_get("memory_limit")));
+		$this->requireMemory(32*1024*1024, 64*1024*1024, array(
+            "PHP Configuration",
+            "Memory allocation (PHP config option 'memory_limit')",
+            "SilverStripe needs a minimum of 32M allocated to PHP, but recommends 64M.",
+            ini_get("memory_limit")
+        ));
 
 		return $this->errors;
 	}
@@ -576,7 +712,8 @@ class InstallRequirements {
 			$testDetails[2] .= " You only have " . ini_get("memory_limit") . " allocated";
 			$this->warning($testDetails);
 		} elseif($mem == 0) {
-			$testDetails[2] .= " We can't determine how much memory you have allocated. Install only if you're sure you've allocated at least 20 MB.";
+			$testDetails[2] .= " We can't determine how much memory you have allocated. "
+                . "Install only if you're sure you've allocated at least 20 MB.";
 			$this->warning($testDetails);
 		}
 	}
@@ -614,7 +751,8 @@ class InstallRequirements {
 			$id = strtolower(str_replace(' ', '_', $section));
 			echo "<table id=\"{$id}_results\" class=\"testResults\" width=\"100%\">";
 			foreach($tests as $test => $result) {
-				echo "<tr class=\"$result[0]\"><td>$test</td><td>" . nl2br(htmlentities($result[1], ENT_COMPAT, 'UTF-8')) . "</td></tr>";
+				echo "<tr class=\"$result[0]\"><td>$test</td><td>"
+                    . nl2br(htmlentities($result[1], ENT_COMPAT, 'UTF-8')) . "</td></tr>";
 			}
 			echo "</table>";
 
@@ -636,7 +774,8 @@ class InstallRequirements {
 								break;
 						}
 					}
-					$output .= "<tr class=\"$result[0]\"><td>$test</td><td>" . nl2br(htmlentities($result[1], ENT_COMPAT, 'UTF-8')) . "</td></tr>";
+					$output .= "<tr class=\"$result[0]\"><td>$test</td><td>"
+                        . nl2br(htmlentities($result[1], ENT_COMPAT, 'UTF-8')) . "</td></tr>";
 				}
 				$className = "good";
 				$text = "All Requirements Pass";
@@ -663,7 +802,7 @@ class InstallRequirements {
 
 	function requireFunction($funcName, $testDetails) {
 		$this->testing($testDetails);
-		
+
 		if(!function_exists($funcName)) {
 			$this->error($testDetails);
 		}
@@ -747,7 +886,8 @@ class InstallRequirements {
 			$testDetails[2] .= " Directory '$path' not found. Please make sure you have uploaded the SilverStripe files to your webserver correctly.";
 			$this->error($testDetails);
 		} elseif(!file_exists($path . '/_config.php') && $dirname != 'mysite') {
-			$testDetails[2] .= " Directory '$path' exists, but is missing files. Please make sure you have uploaded the SilverStripe files to your webserver correctly.";
+			$testDetails[2] .= " Directory '$path' exists, but is missing files. Please make sure you have uploaded "
+                . "the SilverStripe files to your webserver correctly.";
 			$this->error($testDetails);
 		}
 	}
@@ -781,7 +921,8 @@ class InstallRequirements {
 				$currentOwnerID = fileowner(file_exists($filename) ? $filename : dirname($filename) );
 				$currentOwner = posix_getpwuid($currentOwnerID);
 
-				$testDetails[2] .= "User '$user[name]' needs to be able to write to this file:\n$filename\n\nThe file is currently owned by '$currentOwner[name]'.  ";
+				$testDetails[2] .= "User '$user[name]' needs to be able to write to this file:\n$filename\n\nThe "
+                    . "file is currently owned by '$currentOwner[name]'.  ";
 
 				if($user['name'] == $currentOwner['name']) {
 					$testDetails[2] .= "We recommend that you make the file writeable.";
@@ -794,10 +935,13 @@ class InstallRequirements {
 						if(in_array($currentOwner['name'], $groupInfo['members'])) $groupList[] = $groupInfo['name'];
 					}
 					if($groupList) {
-						$testDetails[2] .= "	We recommend that you make the file group-writeable and change the group to one of these groups:\n - ". implode("\n - ", $groupList)
+						$testDetails[2] .= "	We recommend that you make the file group-writeable "
+                            . "and change the group to one of these groups:\n - ". implode("\n - ", $groupList)
 							. "\n\nFor example:\nchmod g+w $filename\nchgrp " . $groupList[0] . " $filename";
 					} else {
-						$testDetails[2] .= "  There is no user-group that contains both the web-server user and the owner of this file.  Change the ownership of the file, create a new group, or temporarily make the file writeable by everyone during the install process.";
+						$testDetails[2] .= "  There is no user-group that contains both the web-server user and the "
+                            . "owner of this file.  Change the ownership of the file, create a new group, or "
+                            . "temporarily make the file writeable by everyone during the install process.";
 					}
 				}
 
@@ -995,7 +1139,7 @@ class InstallRequirements {
 	function requireServerVariables($varNames, $testDetails) {
 		$this->testing($testDetails);
 		$missing = array();
-		
+
 		foreach($varNames as $varName) {
 			if(!isset($_SERVER[$varName]) || !$_SERVER[$varName])  {
 				$missing[] = '$_SERVER[' . $varName . ']';
@@ -1102,7 +1246,7 @@ class Installer extends InstallRequirements {
 					<span class="logo"></span>
 					<h1>SilverStripe</h1>
 				</div>
-			</div>	
+			</div>
 		</div>
 
 		<div id="Navigation">&nbsp;</div>
