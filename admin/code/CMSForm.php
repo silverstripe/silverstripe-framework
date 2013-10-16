@@ -15,8 +15,9 @@ class CMSForm extends Form {
 	 * @return boolean
 	 */
 	public function validate() {
+		$buttonClicked = $this->buttonClicked();
 		return (
-			in_array($this->buttonClicked()->actionName(), $this->getValidationExemptActions())
+			($buttonClicked && in_array($buttonClicked->actionName(), $this->getValidationExemptActions()))
 			|| parent::validate()
 		);
 	}
