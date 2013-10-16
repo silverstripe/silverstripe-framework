@@ -495,6 +495,8 @@ class InstallRequirements {
 		$this->suggestPHPSetting('asp_tags', array(false), array('PHP Configuration', 'asp_tags option', 'This should be turned off as it can cause issues with SilverStripe'));
 		$this->requirePHPSetting('magic_quotes_gpc', array(false), array('PHP Configuration', 'magic_quotes_gpc option', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
 		$this->suggestPHPSetting('display_errors', array(false), array('PHP Configuration', 'display_errors option', 'Unless you\'re in a development environment, this should be turned off, as it can expose sensitive data to website users.'));
+		// on some weirdly configured webservers arg_separator.output is set to &amp; which will results in links like ?param=value&amp;foo=bar which will not be i
+		$this->suggestPHPSetting('arg_separator.output', array('&', ''), array('PHP Configuration', 'arg_separator.output option', 'This option defines how URL parameters are concatenated. If not set to \'&\' this may cause issues with URL GET parameters'));
 
 		// Check memory allocation
 		$this->requireMemory(32*1024*1024, 64*1024*1024, array("PHP Configuration", "Memory allocation (PHP config option 'memory_limit')", "SilverStripe needs a minimum of 32M allocated to PHP, but recommends 64M.", ini_get("memory_limit")));
