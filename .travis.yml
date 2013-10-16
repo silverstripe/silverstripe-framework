@@ -9,6 +9,8 @@ env:
     - "ARTIFACTS_S3_BUCKET=silverstripe-travis-artifacts"
     - secure: "DjwZKhY/c0wXppGmd8oEMiTV0ayfOXiCmi9Lg1aXoSXNnj+sjLmhYwhUWjehjR6IX0MRtzJG6v7V5Y+4nSGe+i+XIrBQnhPQ95Jrkm1gKofX2mznWTl9npQElNS1DXi58NLPbiB3qxHWGFBRAWmRQrsAouyZabkPnChnSa9ldOg="
     - secure: "UmbXCNLK0f2Dk+7qX8bOVcgIt4QhRvccoWvMUxaPtIU+95HCbG10eeCxvfOeBax+tHcRXmeCG4vM4tcuT/WoANkAma/VX74DylFjbWhks2tsKOcr2kjTrOwe6Q9CXOBjVAlcx0lnV/a+w83KARjXGnCrIbE7p7r4EDw31rkVufg="
+  matrix:
+    - DB=MYSQL CORE_RELEASE=3.1
 
 matrix:
   include:
@@ -27,9 +29,9 @@ before_script:
  - composer self-update
  - phpenv rehash
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
- - "if [ \"$BEHAT_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target $WEBROOT; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target $WEBROOT --require silverstripe/behat-extension; fi"
- - cd $WEBROOT
+ - "if [ \"$BEHAT_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss; fi"
+ - "if [ \"$BEHAT_TEST\" = \"1\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss --require silverstripe/behat-extension; fi"
+ - cd ~/builds/ss
  - php ~/travis-support/travis_setup_selenium.php --if-env BEHAT_TEST
  - php ~/travis-support/travis_setup_php54_webserver.php --if-env BEHAT_TEST
 
