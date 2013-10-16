@@ -60,6 +60,9 @@
 
 					var url = $(node).find('a:first').attr('href');
 					if(url && url != '#') {
+						// strip possible querystrings from the url to avoid duplicateing document.location.search
+						url = url.split('?')[0];
+						
 						// Deselect all nodes (will be reselected after load according to form state)
 						self.jstree('deselect_all');
 						self.jstree('uncheck_all');
