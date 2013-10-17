@@ -151,9 +151,9 @@
 			
 				if(this.is('.readonly,.disabled')) return;
 
-				var fileInput = this.find('input[type=file]');
+				var fileInput = this.find('.ss-uploadfield-fromcomputer-fileinput');
 				var dropZone = this.find('.ss-uploadfield-dropzone');
-				var config = $.parseJSON(fileInput.data('config').replace(/'/g,'"'));				
+				var config = fileInput.data('config');
 				
 				/* Attach classes to dropzone when element can be dropped*/
 				$(document).unbind('dragover');
@@ -180,8 +180,6 @@
 				$(document).bind('drop dragover', function (e){					
 					e.preventDefault(); 
 				});
-
-
 
 				this.setConfig(config);
 				this.fileupload($.extend(true, 
