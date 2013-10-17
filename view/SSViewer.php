@@ -615,6 +615,11 @@ class SSViewer {
 	protected $includeRequirements = true;
 
 	/**
+	 * @var TemplateParser
+	 */
+	protected $parser;
+
+	/**
 	 * Create a template from a string instead of a .ss file
 	 * 
 	 * @return SSViewer
@@ -691,7 +696,9 @@ class SSViewer {
 	 *  array('MySpecificPage', 'MyPage', 'Page')
 	 *  </code>
 	 */
-	public function __construct($templateList) {
+	public function __construct($templateList, TemplateParser $parser = null) {
+        $this->setParser($parser ?: Injector::inst()->get('SSTemplateParser'));
+
 		// flush template manifest cache if requested
 		if (isset($_GET['flush']) && $_GET['flush'] == 'all') {
 			if(Director::isDev() || Director::is_cli() || Permission::check('ADMIN')) {
@@ -728,7 +735,25 @@ class SSViewer {
 			);
 		}
 	}
-	
+
+	/**
+	 * Set the template parser that will be used in template generation
+	 * @param \TemplateParser $parser
+	 */
+	public function setParser(TemplateParser $parser)
+	{
+		$this->parser = $parser;
+	}
+
+	/**
+	 * Returns the parser that is set for template generation
+	 * @return \TemplateParser
+	 */
+	public function getParser()
+	{
+		return $this->parser;
+	}
+
 	/**
 	 * Returns true if at least one of the listed templates exists.
 	 *
@@ -970,7 +995,7 @@ class SSViewer {
 
 		if(!file_exists($cacheFile) || filemtime($cacheFile) < $lastEdited || isset($_GET['flush'])) {
 			$content = file_get_contents($template);
-			$content = SSViewer::parseTemplateContent($content, $template);
+			$content = $this->parseTemplateContent($content, $template);
 			
 			$fh = fopen($cacheFile,'w');
 			fwrite($fh, $content);
@@ -983,7 +1008,7 @@ class SSViewer {
 		// through $Content and $Layout placeholders.
 		foreach(array('Content', 'Layout') as $subtemplate) {
 			if(isset($this->chosenTemplates[$subtemplate])) {
-				$subtemplateViewer = new SSViewer($this->chosenTemplates[$subtemplate]);
+				$subtemplateViewer = new SSViewer($this->chosenTemplates[$subtemplate], $this->parser);
 				$subtemplateViewer->includeRequirements(false);
 				$subtemplateViewer->setPartialCacheStore($this->getPartialCacheStore());
 
@@ -1028,10 +1053,10 @@ class SSViewer {
 		return $v->process($data, $arguments, $scope);
 	}
 
-	public static function parseTemplateContent($content, $template="") {
-		return SSTemplateParser::compileString(
-			$content, 
-			$template, 
+	public function parseTemplateContent($content, $template="") {
+		return $this->parser->compileString(
+			$content,
+			$template,
 			Director::isDev() && Config::inst()->get('SSViewer', 'source_file_comments')
 		);
 	}
@@ -1079,7 +1104,8 @@ class SSViewer {
 class SSViewer_FromString extends SSViewer {
 	protected $content;
 	
-	public function __construct($content) {
+	public function __construct($content, TemplateParser $parser = null) {
+        $this->setParser($parser ?: Injector::inst()->get('SSTemplateParser'));
 		$this->content = $content;
 	}
 	
@@ -1091,7 +1117,7 @@ class SSViewer_FromString extends SSViewer {
 			$arguments = null;
 		}
 
-		$template = SSViewer::parseTemplateContent($this->content, "string sha1=".sha1($this->content));
+		$template = $this->parseTemplateContent($this->content, "string sha1=".sha1($this->content));
 
 		$tmpFile = tempnam(TEMP_FOLDER,"");
 		$fh = fopen($tmpFile, 'w');
