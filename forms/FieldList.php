@@ -130,7 +130,7 @@ class FieldList extends ArrayList {
 			// Check if a field by the same name exists in this tab
 			if($insertBefore) {
 				$tab->insertBefore($field, $insertBefore);
-			} elseif($tab->fieldByName($field->getName())) {
+			} elseif(($name = $field->getName()) && $tab->fieldByName($name)) {
 				// It exists, so we need to replace the old one
 				$this->replaceField($field->getName(), $field);
 			} else {

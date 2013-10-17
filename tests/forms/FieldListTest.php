@@ -48,6 +48,43 @@ class FieldListTest extends SapphireTest {
 		/* We'll have 3 fields inside the tab */
 		$this->assertEquals(3, $tab->Fields()->Count());
 	}
+	
+	/**
+	 * Test that groups can be added to a fieldlist
+	 */
+	public function testFieldgroup() {
+		$fields = new FieldList();
+		$tab = new Tab('Root');
+		$fields->push($tab);
+		
+		$fields->addFieldsToTab('Root', array(
+			$group1 = new FieldGroup(
+				new TextField('Name'),
+				new EmailField('Email')
+			),
+			$group2 = new FieldGroup(
+				new TextField('Company'),
+				new TextareaField('Address')
+			)
+		));
+		
+		/* Check that the field objects were created */
+		$this->assertNotNull($fields->dataFieldByName('Name'));
+		$this->assertNotNull($fields->dataFieldByName('Email'));
+		$this->assertNotNull($fields->dataFieldByName('Company'));
+		$this->assertNotNull($fields->dataFieldByName('Address'));
+		
+		/* The field objects in the set should be the same as the ones we created */
+		$this->assertSame($fields->dataFieldByName('Name'), $group1->fieldByName('Name'));
+		$this->assertSame($fields->dataFieldByName('Email'), $group1->fieldByName('Email'));
+		$this->assertSame($fields->dataFieldByName('Company'), $group2->fieldByName('Company'));
+		$this->assertSame($fields->dataFieldByName('Address'), $group2->fieldByName('Address'));
+		
+		/* We'll have 2 fields directly inside the tab */
+		$this->assertEquals(2, $tab->Fields()->Count());
+		
+		
+	}
 		
 	/**
 	 * Test removing a single field from a tab in a set.
