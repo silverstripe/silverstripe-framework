@@ -64,14 +64,14 @@ see [Using development versions](#using-development-versions).
 
 Composer isn't only used to download SilverStripe CMS, it can also be used to manage all SilverStripe modules.  Installing a module can be done with the following command:
 
-	composer require silverstripe/forum:*
+	composer require "silverstripe/forum:*"
 
 This will install the forum module in the latest compatible version.
 By default, Composer updates other existing modules (like `framework` and `cms`),
 and installs "dev" dependencies like PHPUnit. In case you don't need those dependencies,
 use the following command instead:
 
-	composer require --no-update silverstripe/forum:*
+	composer require --no-update "silverstripe/forum:*"
 	composer update --no-dev
 
 The `require` command has two parts. First is `silverstripe/forum`. This is the name of the package. 
