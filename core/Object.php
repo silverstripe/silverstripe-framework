@@ -1066,7 +1066,7 @@ abstract class Object {
 		if(!is_array($arguments)) $arguments = array($arguments);
 		
 		if($ID) $cacheName .= '_' . $ID;
-		if(count($arguments)) $cacheName .= '_' . implode('_', $arguments);
+		if(count($arguments)) $cacheName .= '_' . md5(serialize($arguments));
 		
 		if($data = $this->loadCache($cacheName, $lifetime)) {
 			return $data;
@@ -1085,7 +1085,7 @@ abstract class Object {
 		$cacheName = $this->class . '_' . $method;
 		if(!is_array($arguments)) $arguments = array($arguments);
 		if($ID) $cacheName .= '_' . $ID;
-		if(count($arguments)) $cacheName .= '_' . implode('_', $arguments);
+		if(count($arguments)) $cacheName .= '_' . md5(serialize($arguments));
 
 		$file = TEMP_FOLDER . '/' . $this->sanitiseCachename($cacheName);
 		if(file_exists($file)) unlink($file);
