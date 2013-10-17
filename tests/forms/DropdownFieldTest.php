@@ -40,14 +40,52 @@ class DropdownFieldTest extends SapphireTest {
 
 	public function testHasEmptyDefault() {
 		$source = array(1 => 'one');
-		$field = new DropdownField('Field', null, $source);
-		$field->setHasEmptyDefault(true);
+
+		// Test Field With Empty
+		$FieldWithEmpty = new DropdownField('Field', null, $source);
+		$FieldWithEmpty->setHasEmptyDefault(true);
 		$this->assertEquals(
-			$field->getSource(),
+			$FieldWithEmpty->getSource(),
 			array(
-				'' => '',
 				1 => 'one'
 			)
+		);
+
+		$WithEmptyEquals = <<<HTML
+<select name="Field" class="dropdown" id="Field">
+
+	<option value=""></option>
+
+	<option value="1">one</option>
+
+</select>
+
+HTML;
+
+		$this->assertEquals(
+			$FieldWithEmpty->Field()->getValue(),
+			$WithEmptyEquals
+		);
+
+		// Test Field Without Empty
+		$FieldWithoutEmpty = new DropdownField('Field', null, $source);
+		$this->assertEquals(
+			$FieldWithoutEmpty->getSource(),
+			array(
+				1 => 'one'
+			)
+		);
+		$WithoutEmptyEquals = <<<HTML
+<select name="Field" class="dropdown" id="Field">
+
+	<option value="1">one</option>
+
+</select>
+
+HTML;
+		$this->assertEquals(
+			$FieldWithoutEmpty->Field()->getValue(),
+			$WithoutEmptyEquals
 		);
 	}
 
