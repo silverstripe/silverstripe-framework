@@ -125,19 +125,41 @@ class HtmlEditorField extends TextareaField {
 		if($images = $htmlValue->getElementsByTagName('img')) foreach($images as $img) {
 			// strip any ?r=n data from the src attribute
 			$img->setAttribute('src', preg_replace('/([^\?]*)\?r=[0-9]+$/i', '$1', $img->getAttribute('src')));
-
-			// Resample the images if the width & height have changed.
-			if($image = File::find(urldecode(Director::makeRelative($img->getAttribute('src'))))){
-				$width  = $img->getAttribute('width');
-				$height = $img->getAttribute('height');
-
-				if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
-					//Make sure that the resized image actually returns an image:
-					$resized=$image->ResizedImage($width, $height);
-					if($resized) $img->setAttribute('src', $resized->getRelativePath());
+			
+			$width  = $img->getAttribute('width');
+			$height = $img->getAttribute('height');
+			
+			$srcImage = File::find(urldecode($img->getAttribute('src')));
+			$image = File::find(urldecode(Director::makeRelative($img->getAttribute('src'))));
+			
+		
+			// check if either the Image in the src exists or a file with same name exisit;
+			if($srcImage || $image ) {
+				$source = false;
+				//check if the src and file are the same
+				if($srcImage && $image && ($img->getAttribute('src') == $image->Filename)) {
+					
+					if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
+						$resize = $image;
+					}
+				// check if both but do not match 
+				} elseif ($srcImage && $image && ($img->getAttribute('src') != $image->Filename)) {
+					
+					// create aa new image object with the src as the filename to check the size
+					$newImage = new Image();
+					$newImage->Filename = $img->getAttribute('src');
+					
+					//check if the src image matches the requested file size
+					if($width && $height && ($width != $newImage->getWidth() || $height != $newImage->getHeight())) {
+						$resize = $image;
+					}
 				}
+				
+				// if there is a source image resize it and check if it resized image exists
+				if($resize) $resized=$resize->ResizedImage($width, $height);
+				if($resized) $img->setAttribute('src', $resized->getRelativePath());
+				
 			}
-
 			// Add default empty title & alt attributes.
 			if(!$img->getAttribute('alt')) $img->setAttribute('alt', '');
 			if(!$img->getAttribute('title')) $img->setAttribute('title', '');
