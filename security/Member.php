@@ -1412,6 +1412,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			if($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
 				$lockoutMins = self::config()->lock_out_delay_mins;
 				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + $lockoutMins*60);
+				$this->FailedLoginCount = 0;
 				$this->write();
 			}
 		}

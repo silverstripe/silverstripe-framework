@@ -7,7 +7,7 @@ class MemberTest extends FunctionalTest {
 	protected static $fixture_file = 'MemberTest.yml';
 	
 	protected $orig = array();
-	protected $local = null; 
+	protected $local = null;
 	
 	protected $illegalExtensions = array(
 		'Member' => array(
@@ -696,6 +696,52 @@ class MemberTest extends FunctionalTest {
 			$member1->canDelete($member1),
 			'Non-admins can not delete themselves'
 		);
+	}
+
+	public function testFailedLoginCount() {
+		$maxFailedLoginsAllowed = 3;
+		//set up the config variables to enable login lockouts
+		Config::nest();
+		Config::inst()->update('Member', 'lock_out_after_incorrect_logins', $maxFailedLoginsAllowed);
+
+		$member = $this->objFromFixture('Member', 'test');
+		$failedLoginCount = $member->FailedLoginCount;
+
+		for ($i = 1; $i < $maxFailedLoginsAllowed; ++$i) {
+			$member->registerFailedLogin();
+
+			$this->assertEquals(
+				++$failedLoginCount,
+				$member->FailedLoginCount,
+				'Failed to increment $member->FailedLoginCount'
+			);
+
+			$this->assertFalse(
+				$member->isLockedOut(),
+				"Member has been locked out too early"
+			);
+		}
+
+		//fail login until max login attempts is reached
+		$member->FailedLoginCount = 0;
+		for ($i = 0; $i < $maxFailedLoginsAllowed; ++$i) {
+			$member->registerFailedLogin();
+		}
+		//check to see if they've been locked out
+		$this->assertTrue(
+			$member->isLockedOut(),
+			'Member was not locked out when max logins met'
+		);
+
+		//after they're locked out, need to check FailedLoginCount was reset to 0
+		$this->assertEquals(
+			$member->FailedLoginCount,
+			0,
+			'Failed login count was not reset after lockout'
+		);
+
+		//test all done, unnest config
+		Config::unnest();
 	}
 
 }
