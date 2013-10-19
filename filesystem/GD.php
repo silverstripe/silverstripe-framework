@@ -7,12 +7,19 @@
 class GDBackend extends Object implements Image_Backend {
 	protected $gd, $width, $height;
 	protected $quality;
+	protected $interlace;
 	
 	/**
 	 * @config
 	 * @var integer
 	 */
 	private static $default_quality = 75;
+
+	/**
+	 * @config
+	 * @var integer
+	 */
+	private static $image_interlace = 0;
 
 	/**
 	 * Set the default image quality.
@@ -56,6 +63,7 @@ class GDBackend extends Object implements Image_Backend {
 		parent::__construct();
 
 		$this->quality = $this->config()->default_quality;
+		$this->interlace = $this->config()->image_interlace;
 	}
 	
 	public function setImageResource($resource) {
@@ -455,6 +463,9 @@ class GDBackend extends Object implements Image_Backend {
 				case "jpeg": case "jpg": case "jpe": $type = IMAGETYPE_JPEG; break;
 				default: $type = IMAGETYPE_PNG; break;
 			}
+
+			// if $this->interlace != 0, the output image will be interlaced
+			imageinterlace ($this->gd, $this->interlace);
 			
 			// if the extension does not exist, the file will not be created!
 			
