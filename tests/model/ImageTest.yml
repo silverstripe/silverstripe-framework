@@ -16,3 +16,7 @@ Image:
         Title: This is a/an image Title
         Filename: assets/ImageTest/test_image).png
         Parent: =>Folder.folder1
+    deletion_test_image:
+        Title: This is a/an image Title
+        Filename: assets/ImageTest/test_image.png
+        Parent: =>Folder.folder1
