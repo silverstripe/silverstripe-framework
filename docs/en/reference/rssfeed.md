@@ -43,6 +43,7 @@ SilverStripe what values to include in the feed.
 
 	:::php
 	class Page_Controller extends ContentController {
+		private static $allowed_actions = array('rss');
 		public function init() {
 			// linkToFeed will add an appropriate HTML link tag to the website 
 			// <head> tag to notify web browsers that an RSS feed is available 
@@ -80,6 +81,8 @@ updates. Update mysite/code/Page.php to something like this:
 	<?php
 	class Page extends SiteTree {}	
 	class Page_Controller extends ContentController {
+	
+		private static $allowed_actions = array('rss');
 		
 		public function init() {
 			RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");	
@@ -123,6 +126,7 @@ for all the students as we've seen before.
 
 	:::php
 	class Page_Controller extends ContentController {
+		private static $allowed_actions = array('students');
 		public function init() {
 			RSSFeed::linkToFeed($this->Link("students"), "Students feed");
 			parent::init();

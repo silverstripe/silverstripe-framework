@@ -147,17 +147,17 @@ class FormField extends RequestHandler {
 
 		if($content || $tag != 'input') {
 			return "<$tag$preparedAttributes>$content</$tag>";
-		}
+	}
 		else {
 			return "<$tag$preparedAttributes />";
 		}
 	}
 
 	/**
-	 * Create a new field.
+	 * Creates a new field.
 	 *
 	 * @param string $name The internal field name, passed to forms.
-	 * @param string $title The field label.
+	 * @param string $title The human-readable field label.
 	 * @param mixed $value The value of the field.
 	 */
 	public function __construct($name, $title = null, $value = null) {
@@ -194,7 +194,7 @@ class FormField extends RequestHandler {
 	
 	/**
 	 * Returns the HTML ID for the form field holder element.
-	 *
+	 * 
 	 * @return string
 	 */
 	public function HolderID() {
@@ -240,7 +240,7 @@ class FormField extends RequestHandler {
 	
 	/** 
 	 * Returns the field message type, used by form validation.
-	 *
+	 * 
 	 * Arbitrary value which is mostly used for CSS classes in the rendered HTML,
 	 * e.g. "required". Use {@link setError()} to set this property.
 	 * 
@@ -495,7 +495,7 @@ class FormField extends RequestHandler {
 	
 	/**
 	 * Set the field value.
-	 *
+	 * 
 	 * @param mixed $value
 	 *
 	 * @return FormField.
@@ -552,7 +552,7 @@ class FormField extends RequestHandler {
 	 */
 	public function securityTokenEnabled() {
 		$form = $this->getForm();
-
+		
 		if(!$form) {
 			return false;
 		}
@@ -605,7 +605,7 @@ class FormField extends RequestHandler {
 
 	/**
 	 * Set name of template (without path or extension).
-	 *
+	 * 
 	 * Caution: Not consistently implemented in all subclasses, please check
 	 * the {@link Field()} method on the subclass for support.
 	 * 
@@ -838,8 +838,8 @@ class FormField extends RequestHandler {
 		} else {
 			$clone = $this->castedCopy('ReadonlyField');
 			$clone->setReadonly(true);
-		}
-
+	}
+	
 		return $clone;
 	}
 	

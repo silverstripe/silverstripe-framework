@@ -738,7 +738,7 @@ jQuery.noConflict();
 					sessionData = hasSessionStorage ? window.sessionStorage.getItem('tabs-' + url) : null,
 					sessionStates = sessionData ? JSON.parse(sessionData) : false;
 
-				this.find('.cms-tabset').each(function() {
+				this.find('.cms-tabset, .ss-tabset').each(function() {
 					var index, tabset = $(this), tabsetId = tabset.attr('id'), tab,
 						forcedTab = tabset.find('.ss-tabs-force-active');
 

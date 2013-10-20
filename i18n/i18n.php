@@ -2468,6 +2468,25 @@ class i18n extends Object implements TemplateGlobalProvider {
 	public static function set_default_locale($locale) {
 		self::$default_locale = $locale;
 	}
+
+	/**
+	 * Returns the script direction in format compatible with the HTML "dir" attribute.
+	 *
+	 * @see http://www.w3.org/International/tutorials/bidi-xhtml/
+	 * @param String $locale Optional locale incl. region (underscored)
+	 * @return String "rtl" or "ltr"
+	 */
+	public static function get_script_direction($locale = null) {
+		require_once 'Zend/Locale/Data.php';
+		if(!$locale) $locale = i18n::get_locale();
+		try {
+			$dir = Zend_Locale_Data::getList($locale, 'layout');
+		} catch(Zend_Locale_Exception $e) {
+			$dir = Zend_Locale_Data::getList(i18n::get_lang_from_locale($locale), 'layout');
+		}
+		
+		return ($dir && $dir['characters'] == 'right-to-left') ? 'rtl' : 'ltr';
+	}
 	
 	/**
 	 * Includes all available language files for a certain defined locale.
@@ -2506,7 +2525,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 		$sortedModules = array();
 		foreach ($order as $module) {
 			if (isset($modules[$module])) $sortedModules[$module] = $modules[$module];
-			}
+		}
+		$sortedModules = array_reverse($sortedModules, true);
 
 		// Loop in reverse order, meaning the translator with the highest priority goes first
 		$translators = array_reverse(self::get_translators(), true);
@@ -2587,6 +2607,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		return array(
 			'i18nLocale' => 'get_locale',
 			'get_locale',
+			'i18nScriptDirection' => 'get_script_direction',
 		);
 	}
 	

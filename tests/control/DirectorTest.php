@@ -344,6 +344,72 @@ class DirectorTest extends SapphireTest {
 
 		$_SERVER = $origServer;
 	}
+	
+	public function testRequestFilterInDirectorTest() {
+		$filter = new TestRequestFilter;
+		
+		$processor = new RequestProcessor(array($filter));
+		
+		$currentProcessor = Injector::inst()->get('RequestProcessor');
+		
+		Injector::inst()->registerService($processor, 'RequestProcessor');
+		
+		$response = Director::test('some-dummy-url');
+		
+		$this->assertEquals(1, $filter->preCalls);
+		$this->assertEquals(1, $filter->postCalls);
+		
+		$filter->failPost = true;
+		
+		$this->setExpectedException('SS_HTTPResponse_Exception');
+		
+		$response = Director::test('some-dummy-url');
+		
+		$this->assertEquals(2, $filter->preCalls);
+		$this->assertEquals(2, $filter->postCalls);
+		
+		$filter->failPre = true;
+		
+		$response = Director::test('some-dummy-url');
+		
+		$this->assertEquals(3, $filter->preCalls);
+		
+		// preCall 'false' will trigger an exception and prevent post call execution
+		$this->assertEquals(2, $filter->postCalls);
+
+		// swap back otherwise our wrapping test execution request may fail in the post processing later
+		Injector::inst()->registerService($currentProcessor, 'RequestProcessor');
+	}
+}
+
+class TestRequestFilter implements RequestFilter, TestOnly {
+	public $preCalls = 0;
+	public $postCalls = 0;
+	
+	public $failPre = false;
+	public $failPost = false;
+
+	public function preRequest(\SS_HTTPRequest $request, \Session $session, \DataModel $model) {
+		++$this->preCalls;
+		
+		if ($this->failPre) {
+			return false;
+		}
+	}
+
+	public function postRequest(\SS_HTTPRequest $request, \SS_HTTPResponse $response, \DataModel $model) {
+		++$this->postCalls;
+		
+		if ($this->failPost) {
+			return false;
+		}
+	}
+
+	public function reset() {
+		$this->preCalls = 0;
+		$this->postCalls = 0;
+	}
+
 }
 
 class DirectorTestRequest_Controller extends Controller implements TestOnly {

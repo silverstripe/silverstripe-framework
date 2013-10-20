@@ -435,6 +435,9 @@ class i18nTest extends SapphireTest {
 		$this->assertFalse($adapter->isTranslated('i18nTestModule.ENTITY', 'af'), 
 			'Non-existing unloaded entity not available before call'
 		);
+		
+		// set _fakewebroot module priority
+		Config::inst()->update('i18n', 'module_priority', array('subfolder','i18ntestmodule'));
 
 		i18n::include_by_locale('de');
 		
@@ -443,6 +446,11 @@ class i18nTest extends SapphireTest {
 		$this->assertTrue($adapter->isTranslated('i18nTestModule.ENTITY', null, 'de'), 'Includes module files');
 		$this->assertTrue($adapter->isTranslated('i18nTestTheme1.LAYOUTTEMPLATE', null, 'de'), 'Includes theme files');
 		$this->assertTrue($adapter->isTranslated('i18nTestModule.OTHERENTITY', null, 'de'), 'Includes submodule files');
+		
+		// check module priority
+		$this->assertEquals($adapter->translate('i18nTestModule.PRIORITYNOTICE', 'de'), 
+			'High Module Priority (de)'
+		);
 		
 		SS_ClassLoader::instance()->popManifest();
 	}

@@ -375,7 +375,7 @@ Data is defined in the static variable $db on each class, in the format:
 	    "FirstName" => "Varchar",
 	    "Surname" => "Varchar",
 	    "Description" => "Text",
-	    "Status" => "Enum('Active, Injured, Retired')",
+	    "Status" => "Enum(array('Active', 'Injured', 'Retired'))",
 	    "Birthday" => "Date"
 	  );
 	}
@@ -393,7 +393,7 @@ the default behavior by making a function called "get`<fieldname>`" or
 	:::php
 	class Player extends DataObject {
 	  private static $db = array(
-	    "Status" => "Enum('Active, Injured, Retired')"
+	    "Status" => "Enum(array('Active', 'Injured', 'Retired'))"
 	  );
 	
 	  // access through $myPlayer->Status

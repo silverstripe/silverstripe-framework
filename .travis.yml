@@ -4,7 +4,13 @@ php:
   - 5.3
 
 env:
-  - DB=MYSQL CORE_RELEASE=master
+  global:
+    - "ARTIFACTS_AWS_REGION=us-east-1"
+    - "ARTIFACTS_S3_BUCKET=silverstripe-travis-artifacts"
+    - secure: "DjwZKhY/c0wXppGmd8oEMiTV0ayfOXiCmi9Lg1aXoSXNnj+sjLmhYwhUWjehjR6IX0MRtzJG6v7V5Y+4nSGe+i+XIrBQnhPQ95Jrkm1gKofX2mznWTl9npQElNS1DXi58NLPbiB3qxHWGFBRAWmRQrsAouyZabkPnChnSa9ldOg="
+    - secure: "UmbXCNLK0f2Dk+7qX8bOVcgIt4QhRvccoWvMUxaPtIU+95HCbG10eeCxvfOeBax+tHcRXmeCG4vM4tcuT/WoANkAma/VX74DylFjbWhks2tsKOcr2kjTrOwe6Q9CXOBjVAlcx0lnV/a+w83KARjXGnCrIbE7p7r4EDw31rkVufg="
+  matrix:
+    - DB=MYSQL CORE_RELEASE=master
 
 matrix:
   include:
@@ -16,7 +22,7 @@ matrix:
       env: DB=MYSQL CORE_RELEASE=master
     - php: 5.5
       env: DB=MYSQL CORE_RELEASE=master
-    - php: 5.3
+    - php: 5.4
       env: DB=MYSQL CORE_RELEASE=master BEHAT_TEST=1
 
 before_script:
@@ -26,16 +32,15 @@ before_script:
  - "if [ \"$BEHAT_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss --require silverstripe/behat-extension; fi"
  - cd ~/builds/ss
- - php ~/travis-support/travis_setup_selenium.php  --base-url http://localhost --if-env BEHAT_TEST
- - php ~/travis-support/travis_setup_apache.php --if-env BEHAT_TEST
+ - php ~/travis-support/travis_setup_selenium.php --if-env BEHAT_TEST
+ - php ~/travis-support/travis_setup_php54_webserver.php --if-env BEHAT_TEST
 
 script: 
  - "if [ \"$BEHAT_TEST\" = \"\" ]; then phpunit framework/tests; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ]; then vendor/bin/behat --tags '~@todo&&~@assets' @framework; fi"
+ - "if [ \"$BEHAT_TEST\" = \"1\" ]; then vendor/bin/behat @framework; fi"
 
 after_failure:
- - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sudo cat /var/log/apache2/error.log; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sudo cat /var/log/apache2/access.log; fi"
+ - php ~/travis-support/travis_upload_artifacts.php --if-env BEHAT_TEST,ARTIFACTS_AWS_SECRET_ACCESS_KEY --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_S3_BUCKET/
 
 branches:
   except:

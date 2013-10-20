@@ -432,7 +432,7 @@ a [api:PasswordValidator]:
 	$validator = new PasswordValidator();
 	$validator->minLength(7);
 	$validator->checkHistoricalPasswords(6);
-	$validator->characterStrength('lowercase','uppercase','digits','punctuation');
+	$validator->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"));
 	Member::set_password_validator($validator);
 
 In addition, you can tighten password security with the following configuration settings:
