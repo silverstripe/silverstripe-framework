@@ -33,8 +33,9 @@ class GDBackend extends Object implements Image_Backend {
 	 * @return boolean true if the image might fit in memory, false otherwise
 	 */
 	private static function image_fits_available_memory($filename) {
-		$imageInfo = getimagesize($filename);
 		$memory_limit = translate_memstring(ini_get('memory_limit'));
+		if($memory_limit < 0) return true; //no memory_limit == -1
+		$imageInfo = getimagesize($filename);
 		//bytes per channel (round up, default 1) * channels (default 4 rgba).
 		$bytes_per_pixel = (isset($imageInfo['bits']) ? ($imageInfo['bits']+7)/8 : 1)
 			* (isset($imageInfo['channels']) ? $imageInfo['channels'] : 4);
@@ -51,7 +52,7 @@ class GDBackend extends Object implements Image_Backend {
 	public function __construct($filename = null) {
 		// Check for _lock file, if it exists we crashed while opening this file --> do not try again 
 		if(file_exists(self::get_lockfile_name($filename)) || !self::image_fits_available_memory($filename)) return;
-		fclose(fopen(self::get_lockfile_name($filename), 'w')); //create .lock file
+		touch(self::get_lockfile_name($filename));
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
 		increase_time_limit_to(300);
 
