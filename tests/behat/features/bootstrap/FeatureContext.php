@@ -6,6 +6,7 @@ use SilverStripe\BehatExtension\Context\SilverStripeContext,
 	SilverStripe\BehatExtension\Context\BasicContext,
 	SilverStripe\BehatExtension\Context\LoginContext,
 	SilverStripe\BehatExtension\Context\FixtureContext,
+	SilverStripe\BehatExtension\Context\EmailContext,
 	SilverStripe\Framework\Test\Behaviour\CmsFormsContext,
 	SilverStripe\Framework\Test\Behaviour\CmsUiContext;
 
@@ -41,6 +42,7 @@ class FeatureContext extends SilverStripeContext
 		$this->useContext('LoginContext', new LoginContext($parameters));
 		$this->useContext('CmsFormsContext', new CmsFormsContext($parameters));
 		$this->useContext('CmsUiContext', new CmsUiContext($parameters));
+		$this->useContext('EmailContext', new EmailContext($parameters));
 
 		$fixtureContext = new FixtureContext($parameters);
 		$fixtureContext->setFixtureFactory($this->getFixtureFactory());
