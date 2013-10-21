@@ -1543,8 +1543,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		foreach(array_reverse(ClassInfo::ancestry($this)) as $class) {
 			if(array_key_exists($class, $remoteRelations)) return $remoteRelations[$class] . 'ID';
 		}
-		
-		return 'ParentID';
+
+		$message = "No has_one found on class '$remoteClass'";
+		if($type == 'has_many') {
+			// include a hint for missing has_many that is missing a has_one
+			$message .= ", the has_many relation from '$this->class' to '$remoteClass' requires a has_one on '$remoteClass'";
+		}
+		throw new Exception($message);
 	}
 	
 	/**
