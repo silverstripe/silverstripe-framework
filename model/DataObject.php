@@ -1532,8 +1532,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($fieldPos = strpos($remoteClass, '.')) {
 			return substr($remoteClass, $fieldPos + 1) . 'ID';
 		}
-		
-		$remoteRelations = array_flip(Config::inst()->get($remoteClass, 'has_one'));
+
+		$remoteRelations = Config::inst()->get($remoteClass, 'has_one');
+		if(!is_array($remoteRelations)) {
+			$remoteRelations = array();
+		}
+		$remoteRelations = array_flip($remoteRelations);
 		
 		// look for remote has_one joins on this class or any parent classes
 		foreach(array_reverse(ClassInfo::ancestry($this)) as $class) {
