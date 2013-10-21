@@ -136,11 +136,12 @@ class HtmlEditorField extends TextareaField {
 			// check if either the Image in the src exists or a file with same name exisit;
 			if($srcImage || $image ) {
 				$source = false;
+				$resized = false;
 				//check if the src and file are the same
 				if($srcImage && $image && ($img->getAttribute('src') == $image->Filename)) {
 					
 					if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
-						$resize = $image;
+						$source = $image;
 					}
 				// check if both but do not match 
 				} elseif ($srcImage && $image && ($img->getAttribute('src') != $image->Filename)) {
@@ -151,12 +152,12 @@ class HtmlEditorField extends TextareaField {
 					
 					//check if the src image matches the requested file size
 					if($width && $height && ($width != $newImage->getWidth() || $height != $newImage->getHeight())) {
-						$resize = $image;
+						$source = $image;
 					}
 				}
 				
 				// if there is a source image resize it and check if it resized image exists
-				if($resize) $resized=$resize->ResizedImage($width, $height);
+				if($source) $resized=$resize->ResizedImage($width, $height);
 				if($resized) $img->setAttribute('src', $resized->getRelativePath());
 				
 			}
