@@ -551,8 +551,6 @@ class Email extends ViewableData {
 	public static function setAdminEmail($newEmail) {
 		Deprecation::notice('3.2', 'Use the "Email.admin_email" config setting instead');
 		Config::inst()->update('Email', 'admin_email', $newEmail);
-
-		return $this;
 	}
 	
 	/**
