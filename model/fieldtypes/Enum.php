@@ -94,7 +94,7 @@ class Enum extends StringField {
 		if(!$title) $title = $this->name;
 		if(!$name) $name = $this->name;
 
-		$field = new DropdownField($name, $title, $this->enumValues($hasEmpty), $value, $form);
+		$field = new DropdownField($name, $title, $this->enumValues(false), $value, $form);
 		if($hasEmpty) {
 			$field->setEmptyString($emptyString);
 		}
@@ -116,7 +116,7 @@ class Enum extends StringField {
 	 */
 	public function scaffoldSearchField($title = null) {
 		$anyText = _t('Enum.ANY', 'Any');
-		return $this->formField($title, null, false, '', null, "($anyText)");
+		return $this->formField($title, null, true, $anyText, null, "($anyText)");
 	}
 	
 	/**
