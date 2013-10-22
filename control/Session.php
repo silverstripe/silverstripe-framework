@@ -614,6 +614,6 @@ class Session {
 	 */
 	public static function get_timeout() {
 		Deprecation::notice('3.2', 'Use the "Session.timeout" config setting instead');
-		return Config::inst()->update('Session', 'timeout');
+		return Config::inst()->get('Session', 'timeout');
 	}
 }
