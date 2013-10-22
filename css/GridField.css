@@ -30,10 +30,10 @@ Used in side panels and action tabs
 .cms .ss-gridfield .ss-gridfield-buttonrow { font-size: 14.4px; }
 .cms .ss-gridfield .grid-levelup { text-indent: -9999em; margin-bottom: 6px; }
 .cms .ss-gridfield .grid-levelup a.list-parent-link { background: transparent url(../images/gridfield-level-up.png) no-repeat 0 0; display: block; }
-.cms .ss-gridfield .add-existing-autocompleter { width: 500px; }
-.cms .ss-gridfield .add-existing-autocompleter span { display: -moz-inline-stack; display: inline-block; vertical-align: top; *vertical-align: auto; zoom: 1; *display: inline; }
-.cms .ss-gridfield .add-existing-autocompleter input.relation-search { width: 270px; margin-bottom: 12px; }
-.cms .ss-gridfield .grid-csv-button, .cms .ss-gridfield .grid-print-button { font-size: 12px; margin-bottom: 0; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
+.cms .ss-gridfield .add-existing-autocompleter span { float: left; display: -moz-inline-stack; display: inline-block; vertical-align: top; *vertical-align: auto; zoom: 1; *display: inline; }
+.cms .ss-gridfield .add-existing-autocompleter input.relation-search { width: 270px; height: 32px; margin-bottom: 12px; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.cms .ss-gridfield .add-existing-autocompleter button#action_gridfield_relationadd { height: 32px; margin-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-left: none; }
+.cms .ss-gridfield .grid-csv-button, .cms .ss-gridfield .grid-print-button { margin-bottom: 0; font-size: 12px; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
 .cms table.ss-gridfield-table { display: table; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; padding: 0; border-collapse: separate; border-bottom: 0 none; width: 100%; }
 .cms table.ss-gridfield-table thead { color: #323e46; background: transparent; }
 .cms table.ss-gridfield-table thead tr.filter-header .fieldgroup { max-width: 512px; }
