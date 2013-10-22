@@ -236,7 +236,7 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 		
 		$this->addComponent(new GridFieldButtonRow('before'));
 		$this->addComponent(new GridFieldAddNewButton('buttons-before-left'));
-		$this->addComponent(new GridFieldAddExistingAutocompleter('buttons-before-left'));
+		$this->addComponent(new GridFieldAddExistingAutocompleter('buttons-before-right'));
 		$this->addComponent(new GridFieldToolbarHeader());
 		$this->addComponent($sort = new GridFieldSortableHeader());
 		$this->addComponent($filter = new GridFieldFilterHeader());
