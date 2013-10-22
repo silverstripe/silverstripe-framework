@@ -28,7 +28,11 @@ If you're familiar with it, here's the short version of what you need to know. O
 
   * **Squash your commits, so that each commit addresses a single issue.** After you rebase your work on top of the upstream branch, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Issue #100 Description of the issue here." We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
 
-  * **Choose the correct branch**:  Most pull requests should go against the *pre-release branch*, only critical bugfixes  against the *release branch*.  If you're changing an API or introducing a major feature, the pull request should go against `master`. Depending on where in the release process the pre-release branch is. If its in beta, the room for API changes is very small (read more about our [release process](/misc/release-process)).
+  * **Choose the correct branch**:  Most pull requests should go against the *pre-release branch*, only 
+  critical bugfixes  against the *release branch*. A *pre-release branch* is any branch which hasn't
+  received a stable [minor release](/misc/release-process#minor-releases), most commonly the master 
+  branch. If you're changing an API or introducing a major feature, the pull request should go against a *pre-release branch*. If this branch already had a beta release, the room 
+  for API changes is very small (read more about our [release process](/misc/release-process)).
 
 ## Step-by-step: From forking to sending the pull request
 
