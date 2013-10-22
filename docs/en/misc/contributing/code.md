@@ -85,25 +85,6 @@ there are any problems they will follow up with you, so please ensure they have 
 
 ![Workflow diagram](http://www.silverstripe.org/assets/doc-silverstripe-org/collaboration-on-github.png)
 
-### Quickfire Do's and Don't's
-
-If you aren't familiar with git and GitHub, try reading the ["GitHub bootcamp documentation"](http://help.github.com/). 
-We also found the [free online git book](http://progit.org/book/) and the [git crash course](http://gitref.org/) useful.
-If you're familiar with it, here's the short version of what you need to know. Once you fork and download the code:
-
-  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on our [bugtracker](/misc/contributing/issues)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
-
-  * **Do not merge the upstream master** with your development branch; *rebase* your branch on top of the upstream master.
-
-  * **A single development branch should represent changes related to a single issue.** If you decide to work on another issue, create another branch.
-
-  * **Squash your commits, so that each commit addresses a single issue.** After you rebase your work on top of the upstream master, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Issue #100 Description of the issue here." We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
-
-  * **Choose the correct branch**: Assume the current release is 3.0.3, and 3.1.0 is in beta state.
-  Most pull requests should go against the `3.1.x-dev` *pre-release branch*, only critical bugfixes
-  against the `3.0.x-dev` *release branch*. If you're changing an API or introducing a major feature,
-  the pull request should go against `master` (read more about our [release process](/misc/release-process)). Branches are periodically merged "upwards" (3.0 into 3.1, 3.1 into master).
-
 ### Editing files directly on GitHub.com
 
 If you see a typo or another small fix that needs to be made, and you don't have an installation set up for contributions, you can edit files directly in the github.com web interface.  Every file view has an "edit this file" link.
