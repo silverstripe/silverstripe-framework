@@ -23,19 +23,7 @@
  * @subpackage dev
  */
 class Debug {
-	
-	/**
-	 * @config
-	 * @var string Email address to send error notifications
-	 */
-	private static $send_errors_to;
-	
-	/**
-	 * @config
-	 * @var string Email address to send warning notifications
-	 */
-	private static $send_warnings_to;
-	
+		
 	/**
 	 * @config
 	 * @var String indicating the file where errors are logged.
@@ -262,18 +250,6 @@ class Debug {
 		if(error_reporting() == 0) return;
 		ini_set('display_errors', 0);
 
-		if(Config::inst()->get('Debug', 'send_warnings_to')) {
-			return self::emailError(
-				Config::inst()->get('Debug', 'send_warnings_to'), 
-				$errno, 
-				$errstr, 
-				$errfile, 
-				$errline, 
-				$errcontext, 
-				"Warning"
-			);
-		}
-
 		// Send out the error details to the logger for writing
 		SS_Log::log(
 			array(
@@ -286,10 +262,6 @@ class Debug {
 			SS_Log::WARN
 		);
 		
-		if(Config::inst()->get('Debug', 'log_errors_to')) {
-			self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
-		}
-
 		if(Director::isDev()) {
 			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 		} else {
@@ -310,13 +282,6 @@ class Debug {
 	 */
 	public static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		ini_set('display_errors', 0);
-
-		if(Config::inst()->get('Debug', 'send_errors_to')) {
-			self::emailError(
-				Config::inst()->get('Debug', 'send_errors_to'), $errno, 
-				$errstr, $errfile, $errline, $errcontext, "Error"
-			);
-		}
 		
 		// Send out the error details to the logger for writing
 		SS_Log::log(
@@ -329,10 +294,6 @@ class Debug {
 			),
 			SS_Log::ERR
 		);
-		
-		if(Config::inst()->get('Debug', 'log_errors_to')) {
-			self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Error");
-		}
 		
 		if(Director::isDev() || Director::is_cli()) {
 			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
