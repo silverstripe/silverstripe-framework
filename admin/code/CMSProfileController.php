@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @package framework
+ * @subpackage admin
+ */
 class CMSProfileController extends LeftAndMain {
 
 	private static $url_segment = 'myprofile';
@@ -22,8 +27,11 @@ class CMSProfileController extends LeftAndMain {
 		$this->setCurrentPageID(Member::currentUserID());
 
 		$form = parent::getEditForm($id, $fields);
-		if($form instanceof SS_HTTPResponse) return $form;
 		
+		if($form instanceof SS_HTTPResponse) {
+			return $form;
+		}
+
 		$form->Fields()->removeByName('LastVisited');
 		$form->Fields()->push(new HiddenField('ID', null, Member::currentUserID()));
 		$form->Actions()->push(
@@ -32,11 +40,21 @@ class CMSProfileController extends LeftAndMain {
 				->setAttribute('data-icon', 'accept')
 				->setUseButtonTag(true)
 		);
+
 		$form->Actions()->removeByName('action_delete');
-		$form->setValidator(new Member_Validator());
 		$form->setTemplate('Form');
 		$form->setAttribute('data-pjax-fragment', null);
-		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+
+		if($member = Member::currentUser()) {
+			$form->setValidator($member->getValidator());
+		} else {
+			$form->setValidator(Injector::inst()->get('Member')->getValidator());
+		}
+
+		if($form->Fields()->hasTabset()) {
+			$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		}
+
 		$form->addExtraClass('member-profile-form root-form cms-edit-form cms-panel-padded center');
 		
 		return $form;

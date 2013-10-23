@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class CMSProfileControllerTest extends FunctionalTest {
 
 	protected static $fixture_file = 'CMSProfileControllerTest.yml';
@@ -74,6 +79,11 @@ class CMSProfileControllerTest extends FunctionalTest {
 	}
 
 }
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class CMSProfileControllerTestExtension extends DataExtension {
 
 	public function canEdit($member = null) {

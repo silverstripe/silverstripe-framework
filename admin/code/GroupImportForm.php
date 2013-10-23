@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Imports {@link Group} records by CSV upload, as defined in
  * {@link GroupCsvBulkLoader}.
  * 
- * @package cms
- * @subpackage batchactions
+ * @package framework
+ * @subpackage admin
  */
 class GroupImportForm extends Form {
 	

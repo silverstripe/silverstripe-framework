@@ -3,8 +3,8 @@
 /**
  * Special request handler for admin/batchaction
  *  
- * @package cms
- * @subpackage batchaction
+ * @package framework
+ * @subpackage admin
  */
 class CMSBatchActionHandler extends RequestHandler {
 	
