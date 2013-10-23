@@ -16,7 +16,7 @@ as a .tar.gz file.
 2.  Change the site to the theme. You can do this either by:
 	- Altering the `SSViewer.theme` setting in your `[config.yml](/topics/configuration)`
 	- changing the theme in the Site Configuration panel in the CMS
-3. Visit your homepage with ?flush=all appended to the URL. `http://yoursite.com?flush=all`
+3. Visit your homepage with ?flush=all appended to the URL. `http://localhost?flush=all`
 
 ## Developing your own theme
 

@@ -51,7 +51,7 @@ making any code changes to your controller.
 
 <div class="warning" markdown='1'>
 	SilverStripe automatically adds a URL routing entry based on the controller's class name,
-	so a `MyController` class is accessible through `http://yourdomain.com/MyController`.
+	so a `MyController` class is accessible through `http://localhost/MyController`.
 </div>
 
 ## Access Control
@@ -60,7 +60,7 @@ making any code changes to your controller.
 
 All public methods on a controller are accessible by their name through the `$Action`
 part of the URL routing, so a `MyController->mymethod()` is accessible at
-`http://yourdomain.com/MyController/mymethod`. This is not always desireable,
+`http://localhost/MyController/mymethod`. This is not always desireable,
 since methods can return internal information, or change state in a way
 that's not intended to be used through a URL endpoint.
 

@@ -65,7 +65,7 @@ and avoid the change propagating to an older SilverStripe version.
 
 ### How do I change my interface language?
 
-Once you've logged into the CMS, you should see a "profile"-link on the lower right corner (direct link: http://www.site.com/admin/myprofile). You can set the "interface language" from a dropdown which automatically includes all found translations (based on the files in the `/lang` folders).
+Once you've logged into the CMS, you should see the text "Hi <your name>" near the top left, you can click this to edit your profile ([direct link](http://localhost/admin/myprofile/)). You can then set the "interface language" from a dropdown which automatically includes all found translations (based on the files in the `/lang` folders).
 
 ### I've found a piece of untranslatable text
 
