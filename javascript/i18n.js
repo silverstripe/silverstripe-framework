@@ -66,8 +66,11 @@ ss.i18n = {
 		_t: function (entity, fallbackString, priority, context) {
 			this.init();
 
+			var langName = this.getLocale().replace(/_[\w]+/i, '');
 			if (this.lang && this.lang[this.getLocale()] && this.lang[this.getLocale()][entity]) {
 				return this.lang[this.getLocale()][entity];
+			} else if (this.lang && this.lang[langName] && this.lang[langName][entity]) {
+				return this.lang[langName][entity];
 			} else if (this.lang && this.lang[this.defaultLocale] && this.lang[this.defaultLocale][entity]) {
 				return this.lang[this.defaultLocale][entity];
 			} else if(fallbackString) {
