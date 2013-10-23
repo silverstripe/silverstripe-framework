@@ -1000,7 +1000,7 @@ class UploadField extends FileField {
 		
 		$mergedConfig = array_merge($config, $this->ufConfig);
 		return $this->customise(array(
-			'configString' => str_replace('"', "'", Convert::raw2json($mergedConfig)),
+			'configString' => str_replace('"', "&quot;", Convert::raw2json($mergedConfig)),
 			'config' => new ArrayData($mergedConfig),
 			'multiple' => $allowedMaxFileNumber !== 1
 		))->renderWith($this->getTemplates());
