@@ -384,6 +384,7 @@ form.small .field, .field.small {
 		&:active, &:focus, &.ui-state-active, &.ui-state-focus {
 			border: 1px solid darken($color-button-generic, 20%);
 			background-color: lighten($color-button-generic, 10%);
+			outline: none;
 			@include background(
 				linear-gradient(color-stops(
 					lighten($color-button-generic, 20%),
