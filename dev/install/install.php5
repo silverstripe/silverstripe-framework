@@ -475,7 +475,7 @@ class InstallRequirements {
 
 		// special case for display_errors, check the original value before
 		// it was changed at the start of this script.
-		if($settingName = 'display_errors') {
+		if($settingName == 'display_errors') {
 			global $originalDisplayErrorsValue;
 			$val = $originalDisplayErrorsValue;
 		} else {
