@@ -1,0 +1,39 @@
+GridFieldSortableHeaderTest_CheerleaderHat:
+	hat1:
+		Colour: Blue
+	hat2:
+		Colour: Red
+	hat3:
+		Colour: Green
+	hat4:
+		Colour: Pink
+GridFieldSortableHeaderTest_Cheerleader:
+	cheerleader1:
+		Name: Heather
+		Hat: =>GridFieldSortableHeaderTest_CheerleaderHat.hat2
+	cheerleader2:
+		Name: Bob
+		Hat: =>GridFieldSortableHeaderTest_CheerleaderHat.hat4
+	cheerleader3:
+		Name: Jenny
+		Hat: =>GridFieldSortableHeaderTest_CheerleaderHat.hat1
+	cheerleader4:
+		Name: Sam
+		Hat: =>GridFieldSortableHeaderTest_CheerleaderHat.hat3
+GridFieldSortableHeaderTest_Team:
+	team1:
+		Name: Team 1
+		City: Cologne
+		Cheerleader: =>GridFieldSortableHeaderTest_Cheerleader.cheerleader3
+	team2:
+		Name: Team 2
+		City: Wellington
+		Cheerleader: =>GridFieldSortableHeaderTest_Cheerleader.cheerleader2
+	team3:
+		Name: Team 3
+		City: Auckland
+		Cheerleader: =>GridFieldSortableHeaderTest_Cheerleader.cheerleader4
+	team4:
+		Name: Team 4
+		City: Melbourne
+		Cheerleader: =>GridFieldSortableHeaderTest_Cheerleader.cheerleader1
