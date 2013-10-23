@@ -4,7 +4,7 @@
  * @package framework
  * @subpackage security
  */
-class Security extends Controller {
+class Security extends Controller implements TemplateGlobalProvider {
 	
 	private static $allowed_actions = array( 
 		'index', 
@@ -991,9 +991,12 @@ class Security extends Controller {
 
 	/**
 	 * Set a custom log-in URL if you have built your own log-in page.
+	 *
+	 * @deprecated 3.2 Use the "Security.login_url" config setting instead.
 	 */
 	public static function set_login_url($loginUrl) {
-		self::$login_url = $loginUrl;
+		Deprecation::notice('3.2', 'Use the "Security.login_url" config setting instead');
+		return self::config()->update("login_url", $loginUrl);
 	}
 
 	/**
@@ -1001,7 +1004,35 @@ class Security extends Controller {
 	 * Defaults to Security/login but can be re-set with {@link set_login_url()}
 	 */
 	public static function login_url() {
-		return self::$login_url;
+		return self::config()->get("login_url");
+	}
+
+
+	/** @config */
+	private static $logout_url = "Security/logout";
+
+	/**
+	 * Set a custom log-out URL if you have built your own log-out page.
+	 *
+	 * @deprecated 3.2 Use the "Security.logout_url" config setting instead.
+	 */
+	public static function set_logout_url($loginUrl) {
+		Deprecation::notice('3.2', 'Use the "Security.logout_url" config setting instead');
+		return self::config()->update("login_url", $loginUrl);
+	}
+
+	/**
+	 * Get the URL of the log-out page.
+	 */
+	public static function logout_url() {
+		return self::config()->get("logout_url");
+	}	
+
+	public static function get_template_global_variables() {
+		return array(
+			"LoginUrl" => "login_url",
+			"LogoutUrl" => "logout_url",
+		);
 	}
 
 }
