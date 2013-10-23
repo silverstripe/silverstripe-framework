@@ -286,7 +286,7 @@ support in IE10. Alternatively, you can use the PSpell PHP module for server sid
 Assuming you have the module installed, here's how you enable its use in `mysite/_config.php`:
 
 	:::php
-	HtmlEditorConfig::get('cms')->enablePlugins('spellchecker');
+	HtmlEditorConfig::get('cms')->enablePlugins('spellchecker', 'contextmenu');
 	HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'spellchecker');
 	HtmlEditorConfig::get('cms')->setOption(
 		'spellchecker_rpc_url', 
