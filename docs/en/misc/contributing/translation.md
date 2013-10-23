@@ -71,9 +71,6 @@ Once you've logged into the CMS, you should see the text "Hi <your name>" near t
 
 It is entirely possible that we missed certain strings in preparing Silverstripe for translation-support. If you're technically minded, please read [i18n](/topics/i18n) on how to make it translatable. Otherwise just post your findings to the forum.
 
-Note: JavaScript strings can't be translated through the online translation tool at the moment, 
-you'll need to edit the file locally (e.g. cms/javascript/de_DE.js), and submit a patch. 
-
 ### How do I add my own module?
 
 Once you've built a translation-enabled module, you can run the "textcollector" on your local installation for this specific module (see [i18n](/topics/i18n)). This should find all calls to `_t()` in php and template files, and generate a new lang file with the default locale (path: <mymodule>/lang/en.yml). Upload this file to the 

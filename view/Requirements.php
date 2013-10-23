@@ -766,6 +766,7 @@ class Requirements_Backend {
 	 */
 	public function add_i18n_javascript($langDir, $return = false, $langOnly = false) {
 		$files = array();
+		$base = Director::baseFolder() . '/';
 		if(i18n::config()->js_i18n) {
 			// Include i18n.js even if no languages are found.  The fact that
 			// add_i18n_javascript() was called indicates that the methods in
@@ -774,16 +775,21 @@ class Requirements_Backend {
 
 			if(substr($langDir,-1) != '/') $langDir .= '/';
 
-			$files[] = $langDir . i18n::default_locale() . '.js';
-			$files[] = $langDir . i18n::get_locale() . '.js';
-
-			// If both files don't exist, hard fallback to en_US
-			if(!Director::fileExists($files[0]) && !Director::fileExists($files[1])) {
-				$files[] = $langDir . 'en_US.js';
+			$candidates = array(
+				'en.js',
+				'en_US.js',
+				i18n::get_lang_from_locale(i18n::default_locale()) . '.js',
+				i18n::default_locale() . '.js',
+				i18n::get_lang_from_locale(i18n::get_locale()) . '.js',
+				i18n::get_locale() . '.js',
+			);
+			foreach($candidates as $candidate) {
+				if(file_exists($base . DIRECTORY_SEPARATOR . $langDir . $candidate)) {
+					$files[] = $langDir . $candidate;
+				}
 			}
-
-		// Stub i18n implementation for when i18n is disabled.
 		} else {
+			// Stub i18n implementation for when i18n is disabled.
 			if(!$langOnly) $files[] = FRAMEWORK_DIR . '/javascript/i18nx.js';
 		}
 
