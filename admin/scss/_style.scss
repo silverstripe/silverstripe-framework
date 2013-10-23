@@ -426,6 +426,11 @@ body.cms {
 		$color-shadow-light 0 0 1px);
 	height: 28px;
 	background-color: $tab-panel-texture-color;
+
+	.ss-ui-action-destructive {
+		float: right;
+		margin-left: 8px;
+	}
 }
 
 
