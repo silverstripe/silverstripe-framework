@@ -1,0 +1,8 @@
+---
+Name: requestprocessors
+---
+Injector:
+  RequestProcessor:
+    properties:
+      filters:
+        - '%$VersionedRequestFilter'
