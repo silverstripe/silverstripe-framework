@@ -1147,6 +1147,11 @@ class UploadField extends FileField {
 			$fileObject = Object::create($relationClass);
 		}
 
+		// Allow replacing files (rather than renaming a duplicate) when warning about overwrites
+		if($this->getConfig('overwriteWarning')) {
+			$this->upload->setReplaceFile(true);
+		}
+
 		// Get the uploaded file into a new file object.
 		try {
 			$this->upload->loadIntoFile($tmpFile, $fileObject, $this->getFolderName());
