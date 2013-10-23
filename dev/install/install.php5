@@ -4,7 +4,7 @@
  ************************************************************************************
  **                                                                                **
  **  If you can read this text in your browser then you don't have PHP installed.  **
- **  Please install PHP 5.3.2 or higher, preferably PHP 5.3.4+.                    **
+ **  Please install PHP 5.3.3 or higher, preferably PHP 5.3.4+.                    **
  **                                                                                **
  ************************************************************************************
  ************************************************************************************/
@@ -411,7 +411,7 @@ class InstallRequirements {
 		$isIIS = $this->isIIS(7);
 		$webserver = $this->findWebserver();
 
-		$this->requirePHPVersion('5.3.4', '5.3.2', array(
+		$this->requirePHPVersion('5.3.4', '5.3.3', array(
 			"PHP Configuration",
 			"PHP5 installed",
 			null,
