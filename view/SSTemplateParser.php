@@ -65,14 +65,20 @@ class SSTemplateParseException extends Exception {
   * Angle Bracket: angle brackets "<" and ">" are used to eat whitespace between template elements
   * N: eats white space including newlines (using in legacy _t support)
   */
-class SSTemplateParser extends Parser {
+class SSTemplateParser extends Parser implements TemplateParser {
 
 	/**
 	 * @var bool - Set true by SSTemplateParser::compileString if the template should include comments intended
 	 * for debugging (template source, included files, etc)
 	 */
 	protected $includeDebuggingComments = false;
-	
+
+	/**
+	 * Override the Parser constructor to change the requirement of setting a string
+	 */
+	function __construct() {
+	}
+
 	/**
 	 * Override the function that constructs the result arrays to also prepare a 'php' item in the array
 	 */
@@ -1757,7 +1763,7 @@ class SSTemplateParser extends Parser {
 	/* CacheBlockArgument:
    !( "if " | "unless " )
 	( 
-      :DollarMarkedLookup |
+		:DollarMarkedLookup |
 		:QuotedString |
 		:Lookup
 	) */
@@ -4548,7 +4554,8 @@ class SSTemplateParser extends Parser {
 		// non-dynamically calculated
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
-			'href="\' . (Config::inst()->get(\'SSViewer\', \'rewrite_hash_links\') ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
+			'href="\' . (Config::inst()->get(\'SSViewer\', \'rewrite_hash_links\') ?' .
+			' strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
 				\'#',
 			$text
 		);
@@ -4563,29 +4570,28 @@ class SSTemplateParser extends Parser {
 	/**
 	 * Compiles some passed template source code into the php code that will execute as per the template source.
 	 * 
-	 * @static
 	 * @throws SSTemplateParseException
 	 * @param  $string The source of the template
 	 * @param string $templateName The name of the template, normally the filename the template source was loaded from
 	 * @param bool $includeDebuggingComments True is debugging comments should be included in the output
 	 * @return mixed|string The php that, when executed (via include or exec) will behave as per the template source
 	 */
-	static function compileString($string, $templateName = "", $includeDebuggingComments=false) {
+	public function compileString($string, $templateName = "", $includeDebuggingComments=false) {
 		if (!trim($string)) {
 			$code = '';
 		}
 		else {
-			// Construct a parser instance
-			$parser = new SSTemplateParser($string);
-			$parser->includeDebuggingComments = $includeDebuggingComments;
+			parent::__construct($string);
+			
+			$this->includeDebuggingComments = $includeDebuggingComments;
 	
 			// Ignore UTF8 BOM at begining of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
 			// (and other encodings) properly
-			if(substr($string, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $parser->pos = 3;
+			if(substr($string, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $this->pos = 3;
 			
 			// Match the source against the parser
-			$result =  $parser->match_TopTemplate();
-			if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $parser);
+			$result =  $this->match_TopTemplate();
+			if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $this);
 	
 			// Get the result
 			$code = $result['php'];
@@ -4593,7 +4599,7 @@ class SSTemplateParser extends Parser {
 
 		// Include top level debugging comments if desired
 		if($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
-			$code = $parser->includeDebuggingComments($code, $templateName);
+			$code = $this->includeDebuggingComments($code, $templateName);
 		}	
 		
 		return $code;
@@ -4640,7 +4646,7 @@ class SSTemplateParser extends Parser {
 	 * @param  $template - A file path that contains template source code
 	 * @return mixed|string - The php that, when executed (via include or exec) will behave as per the template source
 	 */
-	static function compileFile($template) {
-		return self::compileString(file_get_contents($template), $template);
+	public function compileFile($template) {
+		return $this->compileString(file_get_contents($template), $template);
 	}
 }

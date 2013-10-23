@@ -459,7 +459,8 @@
 				if(this.height() === 0) {
 					text = ss.i18n._t('UploadField.Editing', "Editing ...");
 					this.fitHeight();
-					itemInfo.find('.toggle-details-icon').addClass('opened');					
+					this.addClass('opened');
+					itemInfo.find('.toggle-details-icon').addClass('opened');			
 					status.removeClass('ui-state-success-text').removeClass('ui-state-warning-text');
 					iframe.find('#Form_EditForm_action_doEdit').click(function(){
 						itemInfo.find('label .name').text(iframe.find('#Name input').val());
@@ -470,6 +471,7 @@
 
 				} else {
 					this.animate({height: 0}, 500);					
+					this.removeClass('opened');
 					itemInfo.find('.toggle-details-icon').removeClass('opened');
 					$('div.ss-upload .ss-uploadfield-item-edit-all').removeClass('opened').find('.toggle-details-icon').removeClass('opened');
 					if(!this.hasClass('edited')){
@@ -493,9 +495,11 @@
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform iframe').entwine({
 			onmatch: function() {
+				var form = this.closest('.ss-uploadfield-item-editform');
 				// TODO entwine event binding doesn't work for iframes
 				this.load(function() {
-					$(this).parent().removeClass('loading');	
+					$(this).parent().removeClass('loading');
+					if(form.hasClass('opened')) form.fitHeight();
 				});
 				this._super();
 			},

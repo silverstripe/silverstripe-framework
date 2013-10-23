@@ -181,6 +181,7 @@ class Email extends ViewableData {
 			'filename' => $filename,
 			'mimetype' => $mimetype,
 		);
+		return $this;
 	}
 	
 	public function setBounceHandlerURL($bounceHandlerURL) {
@@ -195,6 +196,7 @@ class Email extends ViewableData {
 		} else {
 			user_error("Could not attach '$absoluteFileName' to email. File does not exist.", E_USER_NOTICE);
 		}
+		return $this;
 	}
 
 	public function Subject() {
@@ -223,26 +225,32 @@ class Email extends ViewableData {
 	
 	public function setSubject($val) {
 		$this->subject = $val; 
+		return $this;
 	}
 	
 	public function setBody($val) {
 		$this->body = $val; 
+		return $this;
 	}
 	
 	public function setTo($val) {
 		$this->to = $val; 
+		return $this;
 	}
 	
 	public function setFrom($val) {
 		$this->from = $val; 
+		return $this;
 	}
 	
 	public function setCc($val) {
 		$this->cc = $val;
+		return $this;
 	}
 	
 	public function setBcc($val) {
 		$this->bcc = $val;
+		return $this;
 	}
 	
 	/**
@@ -251,6 +259,7 @@ class Email extends ViewableData {
 	 */
 	public function replyTo($email) {
 		$this->addCustomHeader('Reply-To', $email); 
+		return $this;
 	}
 	
 	/**
@@ -267,6 +276,7 @@ class Email extends ViewableData {
 			if(isset($this->customHeaders[$headerName])) $this->customHeaders[$headerName] .= ", " . $headerValue;
 			else $this->customHeaders[$headerName] = $headerValue;
 		}
+		return $this;
 	}
 
 	public function BaseURL() {
@@ -295,6 +305,7 @@ class Email extends ViewableData {
 	 */
 	public function setTemplate($template) {
 		$this->ss_template = $template;
+		return $this;
 	}
 	
 	/**
@@ -340,6 +351,8 @@ class Email extends ViewableData {
 			$this->template_data = $this->customise($data);
 		}
 		$this->parseVariables_done = false;
+		
+		return $this;
 	}
 	
 	/**
@@ -375,6 +388,8 @@ class Email extends ViewableData {
 			$this->body = HTTP::absoluteURLs($fullBody);
 		}
 		Config::inst()->update('SSViewer', 'source_file_comments', $origState);
+
+		return $this;
 	}
 	
 	/**

@@ -1,6 +1,11 @@
 <?php
+
 /**
- * Deals with special form handling in CMS, mainly around {@link PjaxResponseNegotiator}
+ * Deals with special form handling in CMS, mainly around
+ * {@link PjaxResponseNegotiator}
+ *
+ * @package framework
+ * @subpackage admin
  */
 class CMSForm extends Form {
 

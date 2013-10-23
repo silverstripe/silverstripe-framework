@@ -1289,21 +1289,7 @@ class Versioned extends DataExtension {
 
 		return $list;
 	}
-	
-	/**
-	 * @param Controller $controller
-	 */
-	public function contentcontrollerInit($controller) {
-		self::choose_site_stage();
-	}
 
-	/**
-	 * @param Controller $controller
-	 */
-	public function modelascontrollerInit($controller) {
-		self::choose_site_stage();
-	}
-	
 	/**
 	 * @param array $labels
 	 */

@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Security section of the CMS
- * @package cms
- * @subpackage security
+ *
+ * @package framework
+ * @subpackage admin
  */
 class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
@@ -60,7 +62,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		
 		// TODO Duplicate record fetching (see parent implementation)
 		$record = $this->getRecord($id);
-		if($record && !$record->canView()) return Security::permissionFailure($this);
+
+		if($record && !$record->canView()) {
+			return Security::permissionFailure($this);
+		}
 		
 		$memberList = GridField::create(
 			'Members',
@@ -70,7 +75,16 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 				->addComponent(new GridFieldButtonRow('after'))
 				->addComponent(new GridFieldExportButton('buttons-after-left'))
 		)->addExtraClass("members_grid");
-		$memberListConfig->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());
+
+		if($record && method_exists($record, 'getValidator')) {
+			$validator = $record->getValidator();
+		} else {
+			$validator = Injector::inst()->get('Member')->getValidator();
+		}
+
+		$memberListConfig
+			->getComponentByType('GridFieldDetailForm')
+			->setValidator($validator);
 
 		$groupList = GridField::create(
 			'Groups',

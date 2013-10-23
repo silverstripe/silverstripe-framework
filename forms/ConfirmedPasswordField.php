@@ -251,8 +251,12 @@ class ConfirmedPasswordField extends FormField {
 		// If $data is a DataObject, don't use the value, since it's a hashed value
 		if ($data && $data instanceof DataObject) $value = '';
 
+		//store this for later
+		$oldValue = $this->value;
+
 		if(is_array($value)) {
-			if($value['_Password'] || (!$value['_Password'] && !$this->canBeEmpty)) {
+			//only set the value if it's valid!
+			if($this->validate(RequiredFields::create())) {
 				$this->value = $value['_Password'];
 			}
 
@@ -266,11 +270,14 @@ class ConfirmedPasswordField extends FormField {
 			}
 		}
 
-		$this->children->fieldByName($this->getName() . '[_Password]')
-			->setValue($this->value);
+		//looking up field by name is expensive, so lets check it needs to change
+		if ($oldValue != $this->value) {
+			$this->children->fieldByName($this->getName() . '[_Password]')
+				->setValue($this->value);
 
-		$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')
-			->setValue($this->value);
+			$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')
+				->setValue($this->value);
+		}
 
 		return $this;
 	}
@@ -359,7 +366,9 @@ class ConfirmedPasswordField extends FormField {
 			}
 			$limitRegex = '/^.' . $limit . '$/';
 			if(!empty($value) && !preg_match($limitRegex,$value)) {
-				$validator->validationError('Password', $errorMsg, 
+				$validator->validationError(
+					$name,
+					$errorMsg,
 					"validation", 
 					false
 				);
@@ -369,7 +378,7 @@ class ConfirmedPasswordField extends FormField {
 		if($this->requireStrongPassword) {
 			if(!preg_match('/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/',$value)) {
 				$validator->validationError(
-					'Password', 
+					$name,
 					_t('Form.VALIDATIONSTRONGPASSWORD',
 						"Passwords must have at least one digit and one alphanumeric character"), 
 					"validation", 

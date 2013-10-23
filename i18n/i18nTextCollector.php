@@ -637,6 +637,13 @@ class i18nTextCollector_Parser extends SSTemplateParser {
 	
 	private static $currentEntity = array();
 
+	public function __construct($string) {
+		$this->string = $string;
+		$this->pos = 0;
+		$this->depth = 0;
+		$this->regexps = array();
+	}
+
 	public function Translate__construct(&$res) {
 		self::$currentEntity = array(null,null,null); //start with empty array
 	}

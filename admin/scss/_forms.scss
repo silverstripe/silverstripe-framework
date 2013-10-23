@@ -434,8 +434,34 @@ form.small .field, .field.small {
 		
 		/* destructive */
 		&.ss-ui-action-destructive {
-			color: $color-button-destructive;
-			background-color: $color-button-generic;
+			color: #fff;
+			text-shadow:none;
+			border-color: $color-button-destructive-border;
+			border-bottom-color: darken($color-button-destructive-border, 10%);			
+			background-color: $color-button-destructive;
+			@include background(
+				linear-gradient(color-stops(
+					scale-color(lighten($color-button-destructive, 10%), $red:50%),
+					$color-button-destructive
+				))
+			);
+			@include text-shadow(darken($color-button-destructive, 3%) 0 -1px -1px);
+	
+			&.ui-state-hover, &:hover {
+				border-color: darken($color-button-destructive-border, 10%);
+				background-color: $color-button-destructive;
+				@include background(
+					linear-gradient(color-stops(
+						scale-color(saturate(lighten($color-button-destructive, 10%), 10%), $red:60%),
+						lighten($color-button-destructive, 5%)
+					))
+				);
+			}
+			
+			&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+				background-color: darken($color-button-destructive, 2%);
+				@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+			}
 		}
 
 		&.ss-ui-button-small {

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package framework
+ * @subpackage admin
+ */
 class AdminRootController extends Controller {
 
 	/**

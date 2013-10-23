@@ -118,14 +118,23 @@ $gf_grid_x:	16px;
 			margin-bottom: 6px;
 		}
 		.add-existing-autocompleter {
-			span {															
+			span {
+				float: left;		
 				@include inline-block(top);
 			}
 			input.relation-search {
-				width: 270px;
+				width: 270px; height: 32px;
 				margin-bottom: $gf_grid_y;
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 0;
 			}
-			width: 500px;
+			button#action_gridfield_relationadd {
+				height: 32px;
+				margin-left: 0; // Webkit needs this
+				border-top-left-radius: 0;
+				border-bottom-left-radius: 0;
+				border-left: none;
+			}
 		}
 		.grid-csv-button, .grid-print-button {
 			margin-bottom: 0;
