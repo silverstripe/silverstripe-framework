@@ -721,6 +721,7 @@ class MemberTest extends FunctionalTest {
 				$member->isLockedOut(),
 				"Member has been locked out too early"
 			);
+		}
 	}
 
 	public function testCustomMemberValidator() {
