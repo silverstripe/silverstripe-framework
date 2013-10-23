@@ -86,8 +86,37 @@
 					.removeClass('ui-icon-triangle-1-s')
 					.addClass('ui-icon-triangle-1-n');
 				
-				if(tree.is(':empty') && !panel.hasClass('loading')) this.loadTree();
+				if(tree.is(':empty') && !panel.hasClass('loading')) {
+					this.loadTree(null, this._riseUp);
+				} else {
+					this._riseUp();
+				}
+
 				this.trigger('panelshow');
+			},
+			_riseUp: function() {
+				var container = this,
+					dropdown = this.getPanel(),
+					toggle = this.find(".treedropdownfield-toggle-panel-link"),
+					offsetTop = toggle.innerHeight(),
+					elHeight,
+					elPos,
+					endOfWindow;
+
+				if (toggle.length > 0) {
+					endOfWindow = ($(window).height() + $(document).scrollTop()) - toggle.innerHeight();
+					elPos = toggle.offset().top;
+					elHeight = dropdown.innerHeight();
+					
+					// If the dropdown is too close to the bottom of the page, position it above the 'trigger'
+					if (elPos + elHeight > endOfWindow && elPos - elHeight > 0) {
+						container.addClass('treedropdownfield-with-rise');
+						offsetTop = -dropdown.outerHeight();
+					} else {
+						container.removeClass('treedropdownfield-with-rise');
+					}
+				}
+				dropdown.css({"top": offsetTop + "px"});
 			},
 			closePanel: function() {
 				jQuery('body').unbind('click', _clickTestFn);
@@ -95,7 +124,7 @@
 				// swap the up arrow with a down arrow
 				var toggle = this.find(".treedropdownfield-toggle-panel-link");
 				toggle.removeClass('treedropdownfield-open-tree');
-				this.removeClass('treedropdownfield-open-tree');
+				this.removeClass('treedropdownfield-open-tree treedropdownfield-with-rise');
 								
 				toggle.find("a")
 					.removeClass('ui-icon-triangle-1-n')
