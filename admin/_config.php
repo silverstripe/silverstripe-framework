@@ -29,6 +29,8 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 		. "object[width|height|data|type],param[name|value],map[class|name|id],area[shape|coords|href|target|alt]"
 ));
 
+HtmlEditorConfig::get('cms')->disablePlugins('contextmenu');
+
 HtmlEditorConfig::get('cms')->enablePlugins('media', 'fullscreen', 'inlinepopups');
 HtmlEditorConfig::get('cms')->enablePlugins(array(
 	'ssbuttons' => sprintf('../../../%s/tinymce_ssbuttons/editor_plugin_src.js', THIRDPARTY_DIR)
