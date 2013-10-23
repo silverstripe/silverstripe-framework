@@ -56,8 +56,8 @@ Redirections](security#redirect_back_to_another_page_after_login) for more infor
 
  | Site URL                                         | | Action                                                            | 
  | --------                                         | | ------                                                            | 
- | http://yoursite.com**/dev/build**                | | Rebuild the entire database and manifest, see below for additional URL Variables                                      | 
- | http://yoursite.com**/admin/pages/publishall/**        | | Publish all pages on the site
+ | http://localhost**/dev/build**                | | Rebuild the entire database and manifest, see below for additional URL Variables                                      | 
+ | http://localhost**/admin/pages/publishall/**        | | Publish all pages on the site
 
 ###  /dev/build
 
