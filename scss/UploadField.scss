@@ -228,3 +228,12 @@
 		}
 	}
 }
+
+.ss-uploadfield-edit-iframe {
+	#ParentID {
+		.treedropdownfield-panel {
+			/* prevents 'Folder' dropdown being too tall and flowing out of view - 80px fits universally & has room for box-shadows */
+			max-height: 80px;
+		}
+	}
+}

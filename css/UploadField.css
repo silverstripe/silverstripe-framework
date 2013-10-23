@@ -44,3 +44,5 @@ Used in side panels and action tabs
 
 .ss-upload .clear { clear: both; }
 .ss-upload .ss-uploadfield-fromcomputer input { /* since we can't really style the file input, we use this hack to make it as big as the button and hide it */ position: absolute; top: 0; right: 0; margin: 0; opacity: 0; filter: alpha(opacity=0); transform: translate(-300px, 0) scale(4); font-size: 23px; direction: ltr; cursor: pointer; height: 30px; line-height: 30px; }
+
+.ss-uploadfield-edit-iframe #ParentID .treedropdownfield-panel { /* prevents the 'Folder' dropdown from being too tall and flowing out of the iframe - 80px works universally */ max-height: 80px; }
