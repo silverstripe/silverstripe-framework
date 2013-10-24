@@ -98,7 +98,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			}
 			if($title && $gridField->getList()->canSortBy($columnField)) {
 				$dir = 'asc';
-				if($state->SortColumn == $columnField && $state->SortDirection == 'asc') {
+				if($state->SortColumn(null) == $columnField && $state->SortDirection('asc') == 'asc') {
 					$dir = 'desc';
 				}
 				
@@ -107,10 +107,10 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 					"sort$dir", array('SortColumn' => $columnField)
 				)->addExtraClass('ss-gridfield-sort');
 
-				if($state->SortColumn == $columnField){
+				if($state->SortColumn(null) == $columnField){
 					$field->addExtraClass('ss-gridfield-sorted');
 
-					if($state->SortDirection == 'asc')
+					if($state->SortDirection('asc') == 'asc')
 						$field->addExtraClass('ss-gridfield-sorted-asc');
 					else
 						$field->addExtraClass('ss-gridfield-sorted-desc');
@@ -165,9 +165,10 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		if(!$this->checkDataType($dataList)) return $dataList;
 
 		$state = $gridField->State->GridFieldSortableHeader;
-		if ($state->SortColumn == "") {
+		$sortColumn = $state->SortColumn();
+		if (empty($sortcolumn)) {
 			return $dataList;
 		}
-		return $dataList->sort($state->SortColumn, $state->SortDirection);
+		return $dataList->sort($sortColumn, $state->SortDirection('asc'));
 	}
 }

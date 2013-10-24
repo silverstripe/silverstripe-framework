@@ -93,20 +93,13 @@ class GridFieldAddExistingAutocompleter
 	 * @return string - HTML
 	 */
 	public function getHTMLFragments($gridField) {
-		$searchState = $gridField->State->GridFieldSearchRelation;
 		$dataClass = $gridField->getList()->dataClass();
 		
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();
 
-		$searchFields = ($this->getSearchFields())
-			? $this->getSearchFields()
-			: $this->scaffoldSearchFields($dataClass);
+		$searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"));
 		
-		$value = $this->findSingleEntry($gridField, $searchFields, $searchState, $dataClass);
-
-		$searchField = new TextField('gridfield_relationsearch',
-			_t('GridField.RelationSearch', "Relation search"), $value);
 		$searchField->setAttribute('data-search-url', Controller::join_links($gridField->Link('search')));
 		$searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
 		$searchField->addExtraClass('relation-search no-change-track');
@@ -120,7 +113,7 @@ class GridFieldAddExistingAutocompleter
 		$addAction->setAttribute('data-icon', 'chain--plus');
 
 		// If an object is not found, disable the action
-		if(!is_int($gridField->State->GridFieldAddRelation)) {
+		if(!is_int($gridField->State->GridFieldAddRelation(null))) {
 			$addAction->setReadonly(true);
 		}
 		
@@ -139,17 +132,16 @@ class GridFieldAddExistingAutocompleter
 	 * @return array
 	 */
 	public function getActions($gridField) {
-		return array('addto', 'find');
+		return array('addto');
 	}
 
 	/**
-	 * Manipulate the state to either add a new relation, or doing a small search
+	 * Manipulate the state to add a new relation
 	 * 
 	 * @param GridField $gridField
-	 * @param string $actionName
-	 * @param string $arguments
-	 * @param string $data
-	 * @return string
+	 * @param string $actionName Action identifier, see {@link getActions()}.
+	 * @param array $arguments Arguments relevant for this 
+	 * @param array $data All form data
 	 */
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		switch($actionName) {
@@ -157,10 +149,6 @@ class GridFieldAddExistingAutocompleter
 				if(isset($data['relationID']) && $data['relationID']){
 					$gridField->State->GridFieldAddRelation = $data['relationID'];
 				}
-				$gridField->State->GridFieldSearchRelation = '';
-				break;
-			case 'find' && isset($data['autosuggest_search']):
-				$gridField->State->GridFieldSearchRelation = $data['autosuggest_search'];
 				break;
 		}
 	}
@@ -173,15 +161,13 @@ class GridFieldAddExistingAutocompleter
 	 * @return SS_List 
 	 */
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
-		if(!$gridField->State->GridFieldAddRelation) {
+		$objectID = $gridField->State->GridFieldAddRelation(null);
+		if(empty($objectID)) {
 			return $dataList;
 		}
-		$objectID = Convert::raw2sql($gridField->State->GridFieldAddRelation);
-		if($objectID) {
-			$object = DataObject::get_by_id($dataList->dataclass(), $objectID);
-			if($object) {
-				$dataList->add($object);
-			}
+		$object = DataObject::get_by_id($dataList->dataclass(), $objectID);
+		if($object) {
+			$dataList->add($object);
 		}
 		$gridField->State->GridFieldAddRelation = null;
 		return $dataList;
@@ -374,34 +360,5 @@ class GridFieldAddExistingAutocompleter
 	 */
 	public function setResultsLimit($limit) {
 		$this->resultsLimit = $limit;
-	}
-
-	/**
-	 * This will provide a StartsWith search that only returns a value if we are
-	 * matching ONE object only. We wouldn't want to attach used any object to
-	 * the list.
-	 * 
-	 * @param GridField $gridField
-	 * @param string $field
-	 * @param string $searchTerm
-	 * @param string $dataclass
-	 * @return string 
-	 */
-	protected function findSingleEntry($gridField, $field, $searchTerm, $dataclass) {
-		$fullList = DataList::create($dataclass);
-		$searchTerm = Convert::raw2sql($searchTerm);
-		if(!$searchTerm) {
-			return;
-		}
-		$existingList = clone $gridField->getList();
-		$searchResults = $fullList->subtract($existingList->limit(0))->filter($field.':StartsWith', $searchTerm);
-		
-		// If more than one, skip
-		if($searchResults->count() != 1) {
-			return '';
-		}
-		
-		$gridField->State->GridFieldAddRelation = $searchResults->first()->ID;
-		return $searchResults->first()->$field;
 	}
 }
