@@ -1077,10 +1077,12 @@ abstract class Object {
 		if($ID) $cacheName .= '_' . $ID;
 		if(count($arguments)) $cacheName .= '_' . md5(serialize($arguments));
 		
-		if($data = $this->loadCache($cacheName, $lifetime)) {
+		$data = $this->loadCache($cacheName, $lifetime);
+
+		if($data !== false) {
 			return $data;
 		}
-		
+
 		$data = call_user_func_array(array($this, $method), $arguments);
 		$this->saveCache($cacheName, $data);
 		
