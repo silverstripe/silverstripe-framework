@@ -20,8 +20,8 @@
 .ss-gridfield-button-filter.ss-ui-button.hover-alike { background-color: #338DC1; background-position: -16px 6px; filter: none; }
 
 .ss-gridfield-button-reset.ss-ui-button { background: #e6e6e6 url(../images/filter-icons.png) no-repeat 8px 5px; filter: none; }
-.ss-gridfield-button-reset.ss-ui-button.filtered:hover { background: #d81b21 url(../images/filter-icons.png) no-repeat 8px -17px; filter: none; }
-.ss-gridfield-button-reset.ss-ui-button.filtered:active { background: #c1181e url(../images/filter-icons.png) no-repeat 9px -16px; filter: none; }
+.ss-gridfield-button-reset.ss-ui-button.filtered:hover { background: red url(../images/filter-icons.png) no-repeat 8px -17px; filter: none; }
+.ss-gridfield-button-reset.ss-ui-button.filtered:active { background: #e60000 url(../images/filter-icons.png) no-repeat 9px -16px; filter: none; }
 
 .cms table.ss-gridfield-table tr td { border-right: 1px solid #9a9a9a; }
 .cms table.ss-gridfield-table tr th { border-right: 1px solid #9a9a9a; }
