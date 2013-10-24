@@ -55,6 +55,9 @@
 			// optional metadata plugin support
 			if ($.meta) options = $.extend({}, options, this.data());
 
+			// Flag indicating this form was dirtied by an external component
+			var dirty = false;
+
 			var onchange = function(e) {
 				var $field = $(e.target);
 				var origVal = $field.data('changetracker.origVal'), newVal;
@@ -76,8 +79,8 @@
 					if($field.is(':radio')) {
 						self.find(':radio[name=' + $field.attr('name') + ']').removeClass(options.changedCssClass);
 					}
-					// Only unset form state if no other fields are changed as well
-					if(!self.getFields().filter('.' + options.changedCssClass).length) {
+					// Only unset form state if no other fields are changed as well and the form isn't explicitly dirty
+					if(!dirty && !self.getFields().filter('.' + options.changedCssClass).length) {
 						self.removeClass(options.changedCssClass);
 					}
 				}
@@ -95,6 +98,11 @@
 				}
 				$(this).data('changetracker.origVal', origVal);
 			});
+			
+			self.bind('dirty.changetracker', function() {
+				dirty = true;
+				self.addClass(options.changedCssClass);
+			});
 
 			this.data('changetracker', true);
 		};
@@ -104,7 +112,8 @@
 				.unbind('.changetracker')
 				.removeClass(options.changedCssClass)
 				.removeData('changetracker.origVal');
-			this.removeData('changetracker');
+			this.unbind('.changetracker')
+				.removeData('changetracker');
 		};
 			
 		/**
@@ -137,13 +146,13 @@
 
 		// Support invoking "public" methods as string arguments
 		if (typeof arguments[0] === 'string') {  
-      var property = arguments[1];  
-      var args = Array.prototype.slice.call(arguments);  
-      args.splice(0, 1);  
-      return this[arguments[0]].apply(this, args);  
-  	} else {
-    	return this.initialize();
-    }
+			var property = arguments[1];  
+			var args = Array.prototype.slice.call(arguments);  
+			args.splice(0, 1);  
+			return this[arguments[0]].apply(this, args);  
+		} else {
+			return this.initialize();
+		}
 		
 	};
 }(jQuery));
