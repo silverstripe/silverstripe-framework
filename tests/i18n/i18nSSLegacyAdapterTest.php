@@ -21,7 +21,7 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		$this->_oldTheme = Config::inst()->get('SSViewer', 'theme');
 		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
 		
-		$classManifest = new SS_ClassManifest($this->alternateBasePath, null, true, true, false);
+		$classManifest = new SS_ClassManifest($this->alternateBasePath, false, true, false);
 		SS_ClassLoader::instance()->pushManifest($classManifest);
 
 		$this->originalLocale = i18n::get_locale();
