@@ -323,10 +323,6 @@ class RequestHandler extends ViewableData {
 	 */
 	public function httpError($errorCode, $errorMessage = null) {
 		$e = new SS_HTTPResponse_Exception($errorMessage, $errorCode);
-
-		// Error responses should always be considered plaintext, for security reasons
-		$e->getResponse()->addHeader('Content-Type', 'text/plain');
-
 		throw $e;
 	}
 
@@ -338,4 +334,4 @@ class RequestHandler extends ViewableData {
 	function getRequest() {
 		return $this->request;
 	}
-	}
+}
