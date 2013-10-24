@@ -277,14 +277,24 @@ class SS_HTTPResponse_Exception extends Exception {
 	protected $response;
 	
 	/**
-	 * @see SS_HTTPResponse::__construct();
+	 * @param String $body Plaintext message (exposed to the user agent)
+	 * @param int $statusCode
+	 * @param String $statusDescription Plaintext HTTP status description
 	 */
 	public function __construct($body = null, $statusCode = null, $statusDescription = null) {
+		// Sanitize body text. Sets plaintext content-type further down,
+		// but further prevent XSS through servers modifying the HTTP response,
+		// as well as user agents doing content sniffing.
+		$body = strip_tags($body);
+
 		if($body instanceof SS_HTTPResponse) {
 			$this->setResponse($body);
 		} else {
 			$this->setResponse(new SS_HTTPResponse($body, $statusCode, $statusDescription));
 		}
+
+		// Error responses should always be considered plaintext, for security reasons
+		$this->getResponse()->addHeader('Content-Type', 'text/plain');
 		
 		parent::__construct($this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
 	}
