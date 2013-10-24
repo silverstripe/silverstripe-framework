@@ -774,16 +774,14 @@ class Requirements_Backend {
 
 			if(substr($langDir,-1) != '/') $langDir .= '/';
 
+			$files[] = $langDir . 'en.js';
+			$files[] = $langDir . 'en_US.js';
+			$files[] = $langDir . i18n::get_lang_from_locale(i18n::default_locale()) . '.js';
 			$files[] = $langDir . i18n::default_locale() . '.js';
+			$files[] = $langDir . i18n::get_lang_from_locale(i18n::get_locale()) . '.js';
 			$files[] = $langDir . i18n::get_locale() . '.js';
-
-			// If both files don't exist, hard fallback to en_US
-			if(!Director::fileExists($files[0]) && !Director::fileExists($files[1])) {
-				$files[] = $langDir . 'en_US.js';
-			}
-
-		// Stub i18n implementation for when i18n is disabled.
 		} else {
+			// Stub i18n implementation for when i18n is disabled.
 			if(!$langOnly) $files[] = FRAMEWORK_DIR . '/javascript/i18nx.js';
 		}
 
