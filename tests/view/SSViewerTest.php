@@ -983,39 +983,12 @@ after')
 		);
 	}
 
-	protected function useTestTheme($theme, $callback) {
-		global $project;
-
-		$themeBaseDir = dirname(__FILE__);
-		$manifest = new SS_TemplateManifest($themeBaseDir, $project, true, true);
-
-		SS_TemplateLoader::instance()->pushManifest($manifest);
-
-		$origTheme = Config::inst()->get('SSViewer', 'theme');
-		Config::inst()->update('SSViewer', 'theme', $theme);
-
-		$e = null;
-
-		try { $callback(); }
-		catch (Exception $e) { /* NOP for now, just save $e */ }
-
-		// Remove all the test themes we created
-		SS_TemplateLoader::instance()->popManifest();
-		Config::inst()->update('SSViewer', 'theme', $origTheme);
-
-		if ($e) throw $e;
-	}
-
 	public function testLayout() {
-		$self = $this;
+		$template = new SSViewer(array('Page'));
+		$this->assertEquals('Foo', $template->process(new ArrayData(array())));
 
-		$this->useTestTheme('layouttest', function() use ($self) {
-			$template = new SSViewer(array('Page'));
-			$self->assertEquals('Foo', $template->process(new ArrayData(array())));
-
-			$template = new SSViewer(array('Shortcodes', 'Page'));
-			$self->assertEquals('[file_link]', $template->process(new ArrayData(array())));
-		});
+		$template = new SSViewer(array('Shortcodes', 'Page'));
+		$this->assertEquals('[file_link]', $template->process(new ArrayData(array())));
 	}
 
 	/**
