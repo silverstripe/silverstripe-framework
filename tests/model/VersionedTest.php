@@ -452,6 +452,17 @@ class VersionedTest extends SapphireTest {
 		);
 	}
 
+	public function testVersionedHandlesRenamedDataObjectFields(){
+		Config::inst()->remove('VersionedTest_RelatedWithoutVersion','db','Name','Varchar');
+		Config::inst()->update('VersionedTest_RelatedWithoutVersion','db',array(
+			"NewField" => "Varchar",
+		));
+		VersionedTest_RelatedWithoutVersion::add_extension("Versioned('Stage', 'Live')");
+		$this->resetDBSchema(true);
+		$testData = new VersionedTest_RelatedWithoutVersion();
+		$testData->NewField = 'Test';
+		$testData->write();
+	}
 }
 
 
