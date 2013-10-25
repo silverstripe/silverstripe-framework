@@ -240,7 +240,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	public function LinkForm() {
-		$siteTree = new TreeDropdownField('internal', _t('HtmlEditorField.PAGE', "Page"),
+		$siteTree = TreeDropdownField::create('internal', _t('HtmlEditorField.PAGE', "Page"),
 			'SiteTree', 'ID', 'MenuTitle', true);
 		// mimic the SiteTree::getMenuTitle(), which is bypassed when the search is performed
 		$siteTree->setSearchFunction(array($this, 'siteTreeSearchCallback'));
@@ -259,7 +259,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					)
 				),
 				$contentComposite = new CompositeField(
-					new OptionsetField(
+					OptionsetField::create(
 						'LinkType',
 						sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.LINKTO', 'Link to')),
 						array(
@@ -271,19 +271,19 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 						),
 						'internal'
 					),
-					new LiteralField('Step2',
+					LiteralField::create('Step2',
 						'<div class="step2">'
 						. sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.DETAILS', 'Details')) . '</div>'
 					),
 					$siteTree,
-					new TextField('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
-					new EmailField('email', _t('HtmlEditorField.EMAIL', 'Email address')),
-					new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'ID', 'Title', true),
-					new TextField('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
-					new TextField('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
-					new CheckboxField('TargetBlank',
+					TextField::create('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
+					EmailField::create('email', _t('HtmlEditorField.EMAIL', 'Email address')),
+					TreeDropdownField::create('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'ID', 'Title', true),
+					TextField::create('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
+					TextField::create('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
+					CheckboxField::create('TargetBlank',
 						_t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?')),
-					new HiddenField('Locale', null, $this->controller->Locale)
+					HiddenField::create('Locale', null, $this->controller->Locale)
 				)
 			),
 			new FieldList(
