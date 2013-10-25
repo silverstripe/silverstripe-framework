@@ -1128,18 +1128,21 @@ class Requirements_Backend {
 	 * @see Requirements::themedCSS()
 	 */
 	public function themedCSS($name, $module = null, $media = null) {
-		$path = SSViewer::get_theme_folder();
-		$abspath = BASE_PATH . DIRECTORY_SEPARATOR . $path;
+		$theme = SSViewer::get_theme_folder();
+		$project = project();
+		$absbase = BASE_PATH . DIRECTORY_SEPARATOR;
+		$abstheme = $absbase . $theme;
+		$absproject = $absbase . $project;
 		$css = "/css/$name.css";
-
-		if ($module && file_exists($abspath.'_'.$module.$css)) {
-			$this->css($path.'_'.$module.$css, $media);
-		}
-		else if (file_exists($abspath.$css)) {
-			$this->css($path.$css, $media);
-		}
-		else if ($module) {
-			$this->css($module.$css, $media);
+		
+		if(file_exists($absproject . $css)) {
+			$this->css($project . $css, $media);
+		} elseif($module && file_exists($abstheme . '_' . $module.$css)) {
+			$this->css($theme . '_' . $module . $css, $media);
+		} elseif(file_exists($abstheme . $css)) {
+			$this->css($theme . $css, $media);
+		} elseif($module) {
+			$this->css($module . $css, $media);
 		}
 	}
 
