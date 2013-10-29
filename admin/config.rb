@@ -18,3 +18,5 @@ relative_assets = true
 line_comments = false
 
 asset_cache_buster :none
+
+Encoding.default_external = "utf-8"
