@@ -11,7 +11,8 @@ class VersionedTest extends SapphireTest {
 	protected $extraDataObjects = array(
 		'VersionedTest_DataObject',
 		'VersionedTest_Subclass',
-		'VersionedTest_RelatedWithoutVersion'
+		'VersionedTest_RelatedWithoutVersion',
+		'VersionedTest_SingleStage'
 	);
 	
 	protected $requiredExtensions = array(
@@ -452,6 +453,46 @@ class VersionedTest extends SapphireTest {
 		);
 	}
 
+	public function testVersionedWithSingleStage() {
+		$tables = DB::tableList();
+		$this->assertContains(
+			'VersionedTest_SingleStage', 
+			array_values($tables), 
+			'Contains base table'
+		);
+		$this->assertContains(
+			'VersionedTest_SingleStage_versions', 
+			array_values($tables), 
+			'Contains versions table'
+		);
+		$this->assertNotContains(
+			'VersionedTest_SingleStage_Live', 
+			array_values($tables), 
+			'Does not contain separate table with _Live suffix'
+		);
+		$this->assertNotContains(
+			'VersionedTest_SingleStage_Stage', 
+			array_values($tables), 
+			'Does not contain separate table with _Stage suffix'
+		);
+
+		Versioned::reading_stage("Stage");
+		$obj = new VersionedTest_SingleStage(array('Name' => 'MyObj'));
+		$obj->write();
+		$this->assertNotNull(
+			VersionedTest_SingleStage::get()->byID($obj->ID),
+			'Writes to and reads from default stage if its set explicitly'
+		);
+		
+		Versioned::reading_stage("Live");
+		$obj = new VersionedTest_SingleStage(array('Name' => 'MyObj'));
+		$obj->write();
+		$this->assertNotNull(
+			VersionedTest_SingleStage::get()->byID($obj->ID),
+			'Writes to and reads from default stage even if a non-matching stage is set'
+		);
+	}
+
 }
 
 
@@ -516,4 +557,14 @@ class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnl
  */
 class VersionedTest_UnversionedWithField extends DataObject implements TestOnly {
 	private static $db = array('Version' => 'Varchar(255)');
+}
+
+class VersionedTest_SingleStage extends DataObject implements TestOnly {
+	private static $db = array(
+		'Name' => 'Varchar'
+	);
+
+	private static $extensions = array(
+		'Versioned("Stage")'
+	);
 }
