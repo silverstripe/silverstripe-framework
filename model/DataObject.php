@@ -639,7 +639,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean true if this object exists
 	 */
 	public function exists() {
-		return ($this->record && $this->record['ID'] > 0);
+		return (isset($this->record['ID']) && $this->record['ID'] > 0);
 	}
 
 	/**
