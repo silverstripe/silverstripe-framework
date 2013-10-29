@@ -9,6 +9,11 @@
 			onadd: function() {
 				// Can't name redraw() as it clashes with other CMS entwine classes
 				this.redrawTabs();
+				if(document.location.hash!='') {
+					//get the index from URL hash
+					tabSelect = document.location.hash.substr(1,document.location.hash.length);
+					this.tabs('select', tabSelect);
+				}
 				this._super();
 			},
 			onremove: function() {
