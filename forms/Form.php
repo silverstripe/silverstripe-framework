@@ -693,7 +693,7 @@ class Form extends RequestHandler {
 
 	public function getAttributes() {
 		$attrs = array(
-			'id' => $this->getTemplateHelper()->generateFormID($this),
+			'id' => $this->FormName(),
 			'action' => $this->FormAction(),
 			'method' => $this->FormMethod(),
 			'enctype' => $this->getEncType(),
