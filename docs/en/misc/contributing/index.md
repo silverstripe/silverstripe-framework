@@ -34,5 +34,6 @@ With great power comes great responsibility, so we have agreed on certain expect
  * Keep the codebase "releasable" at all times (check our [release process](/misc/release-process))
  * API changes and non-trivial features should not be merged into release branches. 
  * API changes on master should not be merged until they have the buy-in of at least two core committers (or better, through the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev))
+ * Be inclusive. Ensure a wide range of SilverStripe developers can obtain an understanding of your code and docs, and you're not the only one who can maintain it.
  * Avoid `git push --force`, and be careful with your git remotes (no accidental pushes)
  * Use your own forks to create feature branches
