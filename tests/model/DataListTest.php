@@ -672,6 +672,24 @@ class DataListTest extends SapphireTest {
 	}
 
 	/**
+	 * $list = $list->filterByCallback(function($item, $list) { return $item->Age == 21; })
+	 */
+	public function testFilterByCallback() {
+		$team1ID = $this->idFromFixture('DataObjectTest_Team', 'team1');
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filterByCallback(function ($item, $list) use ($team1ID) {
+			return $item->TeamID == $team1ID;
+		});
+
+		$result = $list->column('Name');
+		$expected = array_intersect($result, array('Joe', 'Bob'));
+
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals($expected, $result, 'List should only contain comments from Team 1 (Joe and Bob)');
+		$this->assertTrue($list instanceof SS_Filterable, 'The List should be of type SS_Filterable');
+	}
+
+	/**
 	 * $list->exclude('Name', 'bob'); // exclude bob from list
 	 */
 	public function testSimpleExclude() {
