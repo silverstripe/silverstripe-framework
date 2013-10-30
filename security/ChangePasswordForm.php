@@ -81,7 +81,7 @@ class ChangePasswordForm extends Form {
 			// The user is not logged in and no valid auto login hash is available
 			if(!$member) {
 				Session::clear('AutoLoginHash');
-				$this->controller->redirect('loginpage');
+				$this->controller->redirect($this->controller->Link('login'));
 				return;
 			}
 		}
