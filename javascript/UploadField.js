@@ -186,13 +186,10 @@
 					{
 						formData: function(form) {
 							var idVal = $(form).find(':input[name=ID]').val();
-							if(!idVal) {
-								idVal = 0;
-							}
-							return [
-								{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()},
-								{name: 'ID', value: idVal}
-							];
+							var data = [{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()}];
+							if(idVal) data.push({name: 'ID', value: idVal});
+							
+							return data;
 						},
 						errorMessages: {
 							// errorMessages for all error codes suggested from the plugin author, some will be overwritten by the config coming from php
