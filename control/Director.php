@@ -884,21 +884,25 @@ class Director implements TemplateGlobalProvider {
 		Director::$test_servers = $servers;
 	}
 
-	/*
+	/**
 	 * This function will return true if the site is in a live environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
+	 *
+	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
+	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isLive() {
-		return !(Director::isDev() || Director::isTest());
+	public static function isLive($skipDatabase = false) {
+		return !(Director::isDev($skipDatabase) || Director::isTest($skipDatabase));
 	}
 	
 	/**
 	 * This function will return true if the site is in a development environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 * @param $dontTouchDB		If true, the database checks are not performed, which allows certain DB checks
-	 *							to not fail before the DB is ready. If false (default), DB checks are included.
+	 * 
+	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
+	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isDev($dontTouchDB = false) {
+	public static function isDev($skipDatabase = false) {
 		// This variable is used to supress repetitions of the isDev security message below.
 		static $firstTimeCheckingGetVar = true;
 
@@ -908,7 +912,7 @@ class Director implements TemplateGlobalProvider {
 		if(self::$environment_type && self::$environment_type == 'dev') $result = true;
 
 		// Use ?isDev=1 to get development access on the live server
-		if(!$dontTouchDB && !$result && isset($_GET['isDev'])) {
+		if(!$skipDatabase && !$result && isset($_GET['isDev'])) {
 			if(Security::database_is_ready()) {
 				if($firstTimeCheckingGetVar && !Permission::check('ADMIN')){
 					BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
@@ -933,10 +937,13 @@ class Director implements TemplateGlobalProvider {
 	/**
 	 * This function will return true if the site is in a test environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
+	 *
+	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
+	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isTest() {
+	public static function isTest($skipDatabase = false) {
 		// Use ?isTest=1 to get test access on the live server, or explicitly set your environment
-		if(isset($_GET['isTest'])) {
+		if(!$skipDatabase && isset($_GET['isTest'])) {
 			if(Security::database_is_ready()) {
 				BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
 				$_SESSION['isTest'] = $_GET['isTest'];
@@ -944,7 +951,10 @@ class Director implements TemplateGlobalProvider {
 				return true;
 			}
 		}
-		if(self::isDev()) return false;
+		
+		if(self::isDev($skipDatabase)) {
+			return false;
+		}
 		
 		if(self::$environment_type) {
 			return self::$environment_type == 'test';
