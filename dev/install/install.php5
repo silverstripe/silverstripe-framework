@@ -84,6 +84,7 @@ if($envFileExists) {
 	}
 }
 
+require_once FRAMEWORK_NAME . '/core/Constants.php'; // this also includes TempPath.php
 require_once FRAMEWORK_NAME . '/dev/install/DatabaseConfigurationHelper.php';
 require_once FRAMEWORK_NAME . '/dev/install/DatabaseAdapterRegistry.php';
 
@@ -444,7 +445,12 @@ class InstallRequirements {
 		}
 		$this->requireWriteable('assets', array("File permissions", "Is the assets/ directory writeable?", null));
 
-		$tempFolder = $this->getTempFolder();
+		try {
+			$tempFolder = getTempFolder();
+		} catch(Exception $e) {
+			$tempFolder = false;
+		}
+
 		$this->requireTempFolder(array('File permissions', 'Is a temporary directory available?', null, $tempFolder));
 		if($tempFolder) {
 			// in addition to the temp folder being available, check it is writable
@@ -956,32 +962,15 @@ class InstallRequirements {
 		}
 	}
 
-	function getTempFolder() {
-		$sysTmp = sys_get_temp_dir();
-		$worked = true;
-		$ssTmp = "$sysTmp/silverstripe-cache";
-
-		if(!@file_exists($ssTmp)) {
-			$worked = @mkdir($ssTmp);
-		}
-
-		if(!$worked) {
-			$ssTmp = dirname($_SERVER['SCRIPT_FILENAME']) . '/silverstripe-cache';
-			$worked = true;
-			if(!@file_exists($ssTmp)) {
-				$worked = @mkdir($ssTmp);
-			}
-		}
-
-		if($worked) return $ssTmp;
-
-		return false;
-	}
-
 	function requireTempFolder($testDetails) {
 		$this->testing($testDetails);
 
-		$tempFolder = $this->getTempFolder();
+		try {
+			$tempFolder = getTempFolder();
+		} catch(Exception $e) {
+			$tempFolder = false;
+		}
+
 		if(!$tempFolder) {
 			$testDetails[2] = "Permission problem gaining access to a temp directory. " .
 				"Please create a folder named silverstripe-cache in the base directory " .
