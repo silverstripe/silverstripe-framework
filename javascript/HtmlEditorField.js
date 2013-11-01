@@ -1402,16 +1402,5 @@ function sapphiremce_cleanup(type, value) {
 		});
 	}
 
-	// if we are inserting from a popup back into the editor
-	// add the changed class and update the Content value
-	if(type == 'insert_to_editor' && typeof tinyMCE.selectedInstance.editorId !== 'undefined') {
-		var field = jQuery('#' + tinyMCE.selectedInstance.editorId);
-		var original = field.val();
-		if (original != value) {
-			field.val(value).addClass('changed');
-			field.closest('form').addClass('changed');
-		}
-	}
-
 	return value;
 }
