@@ -882,7 +882,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @param string $groupcode
 	 */
 	public function removeFromGroupByCode($groupcode) {
-		$group = DataObject::get_one('Group', "\"Code\" = '" . Convert::raw2sql($groupcode). "'");
+		$group = Group::get()->filter(array('Code' => $groupcode))->first();
 		
 		if($group) {
 			$this->Groups()->remove($group);
