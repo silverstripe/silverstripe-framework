@@ -39,6 +39,7 @@ class HeaderField extends DatalessField {
 	
 	public function setHeadingLevel($level) {
 		$this->headingLevel = $level;
+		return $this;
 	}
 
 	public function getAttributes() {
