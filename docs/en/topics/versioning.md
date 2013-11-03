@@ -156,6 +156,33 @@ The `$Content` variable contain the published content by default,
 and only preview draft content if explicitly requested (e.g. by the "preview" feature in the CMS).
 If you want to force a specific stage, we recommend the `Controller->init()` method for this purpose.
 
+### Controllers
+
+The current stage for each request is determined by `VersionedRequestFilter` before
+any controllers initialize, through `Versioned::choose_site_stage()`. 
+It checks for a `Stage` GET parameter, so you can force
+a draft stage by appending `?stage=Stage` to your request. The setting is "sticky"
+in the PHP session, so any subsequent requests will also be in draft stage.
+
+Important: The `choose_site_stage()` call only deals with setting the default stage,
+and doesn't check if the user is authenticated to view it. As with any other controller logic,
+please use `DataObject->canView()` to determine permissions, and avoid exposing unpublished
+content to your users.
+
+	:::php
+	class MyController extends Controller {
+		private static $allowed_actions = array('showpage');
+		public function showpage($request) {
+			$page = Page::get()->byID($request->param('ID'));
+			if(!$page->canView()) return $this->httpError(401);
+			// continue with authenticated logic...
+		}
+	}
+
+The `ContentController` class responsible for page display already has this built in,
+so your own `canView()` checks are only necessary in controllers extending directly
+from the `Controller` class.
+
 ## Recipes
 
 ### Trapping the publication event
