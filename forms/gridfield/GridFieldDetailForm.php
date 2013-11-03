@@ -418,6 +418,48 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			}
 
 			$form->Backlink = $this->getBackLink();
+			
+			
+			//start big hack
+			$urlArray = array_reverse(explode("/", $toplevelController->request->requestVar("url")));
+			if($urlArray[0] == "new") {
+				foreach($urlArray as $key => $currentItem) {
+					if($currentItem == "ItemEditForm") {
+						if(isset($urlArray[$key + 1])) {
+							$parentRecordID = $urlArray[$key + 1];
+							if($parentRecordID == intval($parentRecordID)) {
+								if($this->record) {
+									if(isset($urlArray[$key - 2])) {
+										$parentFieldName = $urlArray[$key - 2];
+										$parentClassName = $this->record->class;
+										$hasManyFields = Config::inst()->get($parentClassName, 'has_many');
+										if(isset($hasManyFields[$parentFieldName])) {
+											$childClassName = $hasManyFields[$parentFieldName];
+											if(class_exists($childClassName)) {
+												$hasOneArray = Config::inst()->get($childClassName, 'has_one');
+												if(!is_array($hasOneArray)) {
+													$hasOneArray = array();
+												}
+												$hasOneFieldsFlipped = array_flip($hasOneArray);
+												while(!isset($hasOneFieldsFlipped[$parentClassName])) {
+													$parentClassName = get_parent_class($parentClassName);
+													if(!class_exists($parentClassName)) {
+														break;
+													}
+												}
+												$childFieldName = $hasOneFieldsFlipped[$parentClassName]."ID";
+												Config::inst()->update($childClassName, 'defaults', array($childFieldName => $parentRecordID));
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			//END BIG HACK to link child back to parent in "subform"
+			
 		}
 
 		$cb = $this->component->getItemEditFormCallback();
