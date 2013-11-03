@@ -877,6 +877,19 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	}
 	
 	/**
+	 * Removes a member from a group.
+	 *
+	 * @param string $groupcode
+	 */
+	public function removeFromGroupByCode($groupcode) {
+		$group = Group::get()->filter(array('Code' => $groupcode))->first();
+		
+		if($group) {
+			$this->Groups()->remove($group);
+		}
+	}
+	
+	/**
 	 * @param Array $columns Column names on the Member record to show in {@link getTitle()}.
 	 * @param String $sep Separator
 	 */
