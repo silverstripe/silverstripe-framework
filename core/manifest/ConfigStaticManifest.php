@@ -237,7 +237,7 @@ class SS_ConfigStaticManifest_Parser {
 			else if($type == '}') {
 				$depth -= 1;
 				if($depth < $clsdepth) $class = $clsdepth = null;
-				if($depth < 0) user_error("Hmm - depth calc wrong, hit negatives", E_USER_ERROR);
+				if($depth < 0) user_error("Hmm - depth calc wrong, hit negatives, see: ".$this->path, E_USER_ERROR);
 			}
 			else if($type == T_PUBLIC || $type == T_PRIVATE || $type == T_PROTECTED) {
 				$access = $type;
