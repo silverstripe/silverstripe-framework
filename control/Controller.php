@@ -498,6 +498,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		if($this->request) {
 			if($this->request->requestVar('BackURL')) {
 				$url = $this->request->requestVar('BackURL');
+			} else if($this->request->isAjax() && $this->request->getHeader('X-Backurl')) {
+				$url = $this->request->getHeader('X-Backurl');
 			} else if($this->request->getHeader('Referer')) {
 				$url = $this->request->getHeader('Referer');
 			}
