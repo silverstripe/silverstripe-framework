@@ -141,6 +141,13 @@ class HTMLText extends Text {
 		return $this->Summary();
 	}	
 	
+	public function stripExtraPTags(){
+		$value = trim($this->value);
+		$value = preg_replace('/^<p>/i', '', $value);
+		$value = preg_replace('/<\/p>\z/i', '', $value);
+		return $value;
+	}
+
 	public function forTemplate() {
 		if ($this->processShortcodes) {
 			return ShortcodeParser::get_active()->parse($this->value);
