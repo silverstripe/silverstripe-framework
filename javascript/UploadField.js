@@ -50,7 +50,10 @@
 		},
 		_onDone: function (result, textStatus, jqXHR, options) {
 			// Mark form as dirty on completion of successful upload
-			this.element.closest('form').trigger('dirty');
+			if(this.options.changeDetection) {
+				this.element.closest('form').trigger('dirty');
+			}
+
 			$.blueimpUI.fileupload.prototype._onDone.call(this, result, textStatus, jqXHR, options);
 		},
 		_onSend: function (e, data) {
@@ -103,7 +106,9 @@
 			this._adjustMaxNumberOfFiles(0);
 		},
 		attach: function(data) {
-			this.element.closest('form').trigger('dirty');
+			if(this.options.changeDetection) {
+				this.element.closest('form').trigger('dirty');
+			}
 
 			// Handles attachment of already uploaded files, similar to add
 			var self = this,
@@ -338,12 +343,16 @@
 
 		$('div.ss-upload .ss-uploadfield-item-remove:not(.ui-state-disabled), .ss-uploadfield-item-delete:not(.ui-state-disabled)').entwine({
 			onclick: function(e) {
-				var fileupload = this.closest('div.ss-upload').data('fileupload'), 
+				var field = this.closest('div.ss-upload'),
+					config = field.getConfig('changeDetection'),
+					fileupload = field.data('fileupload'), 
 					item = this.closest('.ss-uploadfield-item'), msg = '';
 				
 				if(this.is('.ss-uploadfield-item-delete')) {
 					if(confirm(ss.i18n._t('UploadField.ConfirmDelete'))) {
-						this.closest('form').trigger('dirty');
+						if(config.changeDetection) {
+							this.closest('form').trigger('dirty');
+						}
 						fileupload._trigger('destroy', e, {
 							context: item,
 							url: this.data('href'),
@@ -353,7 +362,9 @@
 					}
 				} else {
 					// Removed files will be applied to object on save
-					this.closest('form').trigger('dirty');
+					if(config.changeDetection) {
+						this.closest('form').trigger('dirty');
+					}
 					fileupload._trigger('destroy', e, {context: item});	
 				}
 				
