@@ -1029,8 +1029,8 @@ class Director implements TemplateGlobalProvider {
 			return false;
 		}
 		
-		if(self::$environment_type) {
-			return self::$environment_type == 'test';
+		if(Config::inst()->get('Director', 'environment_type')) {
+			return Config::inst()->get('Director', 'environment_type') == 'test';
 		}
 		
 		// Check if we are running on one of the test servers
