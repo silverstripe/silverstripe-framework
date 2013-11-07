@@ -119,6 +119,13 @@ class UploadField extends FileField {
 		 */
 		'canPreviewFolder' => true,
 		/**
+		 * Indicate a change event to the containing form if an upload
+		 * or file edit/delete was performed.
+		 *
+		 * @var boolean
+		 */
+		'changeDetection' => true,
+		/**
 		 * Maximum width of the preview thumbnail
 		 * 
 		 * @var integer
