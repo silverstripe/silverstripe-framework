@@ -14,15 +14,6 @@ class CMSProfileController extends LeftAndMain {
 
 	private static $tree_class = 'Member';
 
-	public function getResponseNegotiator() {
-		$neg = parent::getResponseNegotiator();
-		$controller = $this;
-		$neg->setCallback('CurrentForm', function() use(&$controller) {
-			return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
-		});
-		return $neg;
-	}
-
 	public function getEditForm($id = null, $fields = null) {
 		$this->setCurrentPageID(Member::currentUserID());
 
@@ -42,8 +33,6 @@ class CMSProfileController extends LeftAndMain {
 		);
 
 		$form->Actions()->removeByName('action_delete');
-		$form->setTemplate('Form');
-		$form->setAttribute('data-pjax-fragment', null);
 
 		if($member = Member::currentUser()) {
 			$form->setValidator($member->getValidator());
@@ -55,7 +44,7 @@ class CMSProfileController extends LeftAndMain {
 			$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 		}
 
-		$form->addExtraClass('member-profile-form root-form cms-edit-form cms-panel-padded center');
+		$form->addExtraClass('member-profile-form root-form cms-edit-form center');
 		
 		return $form;
 	}
