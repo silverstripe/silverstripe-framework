@@ -17,7 +17,7 @@ templates - one for the home page, and one for the rest of the site.
 
 You need to [download the SilverStripe software](http://www.silverstripe.org/stable-download) and install it to your local machine or to a webserver. 
 
-For more infomation about installing and configuring a webserver read the [Installation instructions and videos](../installation). 
+For more information about installing and configuring a webserver read the [Installation instructions and videos](../installation). 
 
 This tutorial uses the SilverStripe CMS default theme 'Simple' which you will find in the themes folder. We will investigate the existing template files that make up the theme as well as create some new files to build upon the theme.
 
@@ -25,14 +25,14 @@ This tutorial uses the SilverStripe CMS default theme 'Simple' which you will fi
 
 After installation, open up the folder where you installed SilverStripe. 
 
-If you installed on windows with WAMP, it will likely be at *c:\wamp\wwww*. On Mac OS X, using the built in webserver, it will be in your sites directory */Sites/* (with MAMP, it will likely be at */Applications/MAMP/htdocs/*)
+If you installed on windows with WAMP, it will likely be at *c:\wamp\www*. On Mac OS X, using the built in webserver, it will be in your sites directory */Sites/* (with MAMP, it will likely be at */Applications/MAMP/htdocs/*)
 
 Let's have a look at the folder structure.
 
  | Directory | | Description  | 
  | --------- | | -----------  | 
  | assets/   | | Contains images and other files uploaded via the SilverStripe CMS. You can also place your own content inside it, and link to it from within the content area of the CMS. | 
- | cms/      | | Contains all the files that form the CMS area of your site. Its structure is similiar to the mysite/ directory, so if you find something interesting, it should be easy enough to look inside and see how it was built. | 
+ | cms/      | | Contains all the files that form the CMS area of your site. Its structure is similar to the mysite/ directory, so if you find something interesting, it should be easy enough to look inside and see how it was built. | 
  | framework/ | | The framework that builds both your own site and the CMS that powers it. You’ll be utilizing files in this directory often, both directly and indirectly.                                                             | 
  | mysite/   | | Contains all your site's code (mainly PHP).  | 
  | themes/   | | Combines all images, stylesheets, javascript and templates powering your website into a reusable "theme". | 
@@ -52,7 +52,7 @@ should see the CMS interface with a list of the pages currently on your website 
 ![](_images/tutorial1_cms-numbered.jpg)
 
 1.  This menu allows you to move between different sections of the CMS. There are four core sections - "Pages", "Files", "Users" and "Settings". If you have modules installed, they may have their own sections here. In this tutorial we will be focusing on the "Pages" section.
-2.  The breadcrumbs on the left will show you a direct path to the page you are currently looking at. You can use this path to navigate up through a page's heirarchy. On the left there are tabs you may use to flick between different aspects of a page. By default, you should be shown three tabs: "Content", "Settings", and "History". 
+2.  The breadcrumbs on the left will show you a direct path to the page you are currently looking at. You can use this path to navigate up through a page's hierarchy. On the left there are tabs you may use to flick between different aspects of a page. By default, you should be shown three tabs: "Content", "Settings", and "History". 
  * Content - Allows you to set the title, wysiwyg content, URL and Meta data for your page.  
  * Settings - Here you set the type of page behavior, parent page, show in search, show in menu, and who can view or edit the page.  
  * History - This allows you to view previous version of your page, compare, change, and revert to previous version if need be.  
