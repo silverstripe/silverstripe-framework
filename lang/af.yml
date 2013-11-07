@@ -69,18 +69,6 @@ af:
     MENUTITLE: 'My profiel'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'U het die wagwoord vir'
-  ComplexTableField:
-    CLOSEPOPUP: 'Maak wipop toe'
-    SUCCESSADD2: '{name} bygesit'
-    SUCCESSEDIT: 'Gestoor %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Voeg %s  by'
-    NOITEMSFOUND: 'Geen item gevind nie'
-    SORTASC: 'Sorteer in stygende orde'
-    SORTDESC: 'Sorteer in dalende orde'
-  ComplexTableField_popup_ss:
-    NEXT: Volgende
-    PREVIOUS: Vorige
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Verander Wagwoord'
   CreditCardField:
@@ -109,9 +97,6 @@ af:
     CHOOSE: (Kies)
   EmailField:
     VALIDATION: 'Verskaf asseblief  ''n epos adres '
-  Email_BounceRecord:
-    PLURALNAME: 'Epos hop rekords'
-    SINGULARNAME: 'Epos hop rekord'
   Enum:
     ANY: Enige
   File:
@@ -131,19 +116,6 @@ af:
     TOOLARGESHORT: 'Lêer is groter as {size}'
     Title: Titel
     WavType: 'WAV klank lêer'
-  FileIFrameField:
-    ATTACH: 'Heg {type} aan'
-    ATTACHONCESAVED: '{type}e kan aangeheg word sodra jy die rekord vir die eerste keer gestoor het'
-    ATTACHONCESAVED2: 'Lêers kan aangeheg word wanneer jy die rekord vir die eerste keer gestoor het.'
-    DELETE: 'Verwyder {type}'
-    DISALLOWEDFILETYPE: 'Dit word nie toegelaat om hierde lêer tipe op te laai nie'
-    FILE: Lêer
-    FROMCOMPUTER: 'Van jou rekenaar'
-    FROMFILESTORE: 'Vanuit die lêer stoor'
-    NOSOURCE: 'Kies asseblief ''n bron lêer om by te voeg'
-    REPLACE: 'Vervang {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Prentjie oplaaiende ''Iframe'''
   Filesystem:
     SYNCRESULTS: 'Sinchronisasie voltooi:{createdcount} ietems geskep, {deletedcount} ietems verwyder'
   Folder:
@@ -189,8 +161,6 @@ af:
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
     Deleted: 'Verwyderde %s %s'
     Save: Stoor
-  GridFieldItemEditView_ss:
-    Go_back: 'Gaan terug'
   Group:
     Code: 'Groep Kode'
     DefaultGroupTitleAdministrators: Administrateurs
@@ -252,8 +222,6 @@ af:
   Image:
     PLURALNAME: Lêers
     SINGULARNAME: Lêer
-  ImageField:
-    IMAGE: Geen prentjie gelaai nie
   Image_Cached:
     PLURALNAME: Lêers
     SINGULARNAME: Lêer
@@ -292,10 +260,8 @@ af:
     EMAIL: Epos
     EMPTYNEWPASSWORD: 'Die nuwe wagwoord kan nie leeg wees nie. Probeer asseblief weer'
     ENTEREMAIL: 'Verskaf asseblief  ''n epos adres sodat ons vir u ''n wagwoord herstel skakel kan epos'
-    ERRORLOCKEDOUT: 'Jou rekening is tydelik onklaar gemaak weens die feit dat jy te veel keer verkeerdelik probeer inteken het. Probeer asseblief weer in 20 minute.'
     ERRORNEWPASSWORD: 'Jy het jou nuwe wagwoord anders ingetik. Probeer weer'
     ERRORPASSWORDNOTMATCH: 'U huidige wagwoord pas nie, probeer asseblief weer'
-    ERRORWRONGCRED: 'Dit blyk nie of dit die regte e-pos adres of wagwoord is nie. Probeer asseblief weer.'
     FIRSTNAME: 'Voornaam'
     INTERFACELANG: 'Koppelvlak Taal'
     INVALIDNEWPASSWORD: 'Ons kon nie daai wagwoord aanvaar nie ({password})'
@@ -335,7 +301,6 @@ af:
     MONTHNOLEADING: 'Maand syfers sonder aanvangs-zero'
     Preview: Voorskou
     SHORTMONTH: 'Kort naam van die maan (bv Jun)'
-    TOGGLEHELP: 'Skakel formateringshelp aan'
     TWODIGITDAY: 'Twee syfer dag van die maand'
     TWODIGITHOUR: 'Twee syfers van uur (00 tot 23)'
     TWODIGITMINUTE: 'Two syfers van minute (00 tot 59)'
@@ -396,12 +361,8 @@ af:
     PERMISSIONS_CATEGORY: 'Rolle en toegang permissies'
   PhoneNumberField:
     VALIDATION: 'Tik asseblief  ''n geldige telefoon nommer in'
-  RelationComplexTableField_ss:
-    ADD: Voeg by
-    CSVEXPORT: 'Voer uit na CSV'
-    NOTFOUND: 'Geen items gevind nie'
   Security:
-    ALREADYLOGGEDIN: 'U het nie toegang tot hierdie bladsy nie. As u n'' ander rekening het wat toegang tot hierdie bladsy het, kan u weer <a href="%s">inteken</a>.'
+    ALREADYLOGGEDIN: 'U het nie toegang tot hierdie bladsy nie. As u n'' ander rekening het wat toegang tot hierdie bladsy het, kan u weer inteken.'
     BUTTONSEND: 'Stuur vir my die wagwoord herstel skakel'
     CHANGEPASSWORDBELOW: 'Jy kan jou wagwoord onder verander'
     CHANGEPASSWORDHEADER: 'Verander jou wagwoord'
@@ -432,32 +393,13 @@ af:
     FileFieldLabel: 'CSV Lêer <small>(Laat toe uitbreidings: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Verander
-  SimpleImageField:
-    NOUPLOAD: 'Geen foto gelaai nie'
   SiteTree:
     TABMAIN: Hoof
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' word benodig.'
-  TableField_ss:
-    ADD: 'Voeg nuwe ry by'
-    ADDITEM: 'Voeg %s  by'
   TableListField:
     CSVEXPORT: 'Voer uit na CSV lêer'
-    PRINT: Druk
     Print: Druk
-    SELECT: 'Kies'
-  TableListField_ss:
-    NOITEMSFOUND: 'Geen item gevind nie'
-    SORTASC: 'Sorteer in stygende orde'
-    SORTDESC: 'Sorteer in dalende orde'
   TableListField_PageControls_ss:
-    DISPLAYING: Wys huidiglik
     OF: van
-    TO: na
-    VIEWFIRST: 'Wys eerste'
-    VIEWLAST: 'Wys laaste'
-    VIEWNEXT: 'Wys volgende'
-    VIEWPREVIOUS: 'Wys vorige'
   TimeField:
     VALIDATEFORMAT: 'Sleutel asseblief ''n geldige tyd formaat ({format})'
   ToggleField:
@@ -482,10 +424,8 @@ af:
     MAXNUMBEROFFILES: 'Maksimum aantal van {count} lêer(s) oorskry '
     MAXNUMBEROFFILESSHORT: 'Kan net {count} lêer oplaai'
     REMOVE: Verwyder
-    REMOVEERROR: 'Daar het ''n fout onstaan met die verwydering van die lêer'
     REMOVEINFO: 'Verwyder die lêer van hier af maar moet dit nie uit die lêer stoor verwyder nie'
     STARTALL: 'Begin alles'
-    STARTALLINFO: 'Begin op alles op te laai'
     Saved: Gestoor
   Versioned:
     has_many_Versions: Weergawe

@@ -1,6 +1,5 @@
 nb:
   AssetAdmin:
-    ALLOWEDEXTS: 'Lovlige filtyper'
     NEWFOLDER: Ny mappe
     SHOWALLOWEDEXTS: 'Vis lovlige filtyper'
   AssetTableField:
@@ -69,6 +68,8 @@ nb:
     ACCESSALLINTERFACES: 'Adgang til alle seksjoner i publiseringssystemet'
     ACCESSALLINTERFACESHELP: 'Overstyrer mer spesifikke adgangsinnstillinger'
     SAVE: Lagre
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Forhåndsvisning'
   CMSProfileController:
     MENUTITLE: 'Profil'
   ChangePasswordEmail_ss:
@@ -77,23 +78,13 @@ nb:
     EMAIL: Epost
     HELLO: Hei
     PASSWORD: Passord
-  ComplexTableField:
-    CLOSEPOPUP: 'Lukk vindu'
-    SUCCESSADD2: 'La til {name}'
-    SUCCESSEDIT: 'Lagret %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Legg til %s'
-    NOITEMSFOUND: 'Ingen element ble funnet'
-    SORTASC: 'Sorter stigende'
-    SORTDESC: 'Sorter synkende'
-  ComplexTableField_popup_ss:
-    NEXT: Neste
-    PREVIOUS: Forrige
   ConfirmedPasswordField:
     ATLEAST: 'Passordet må inneholde minst {min} skrifttegn'
     BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
     MAXIMUM: 'Passord må inneholde maks {max} skrifttegn'
     SHOWONCLICKTITLE: 'Endre passord'
+  ContentController:
+    NOTLOGGEDIN: 'Ikke innlogget'
   CreditCardField:
     FIRST: første
     FOURTH: fjerde
@@ -109,6 +100,7 @@ nb:
     DAYS: dager
     HOUR: time
     HOURS: timer
+    LessThanMinuteAgo: 'mindre enn ett minutt'
     MIN: minutt
     MINS: minutter
     MONTH: måned
@@ -119,7 +111,6 @@ nb:
     TIMEDIFFIN: 'i {difference}'
     YEAR: år
     YEARS: år
-    LessThanMinuteAgo: 'mindre enn ett minutt'
   DateField:
     NOTSET: 'Ikke satt'
     TODAY: i dag
@@ -134,9 +125,6 @@ nb:
     CHOOSE: (Velg)
   EmailField:
     VALIDATION: 'Vennligst skriv inn en epostadresse'
-  Email_BounceRecord:
-    PLURALNAME: 'Eposter sendt i retur'
-    SINGULARNAME: 'E-post sendt i retur'
   Enum:
     ANY: Noen
   File:
@@ -171,19 +159,6 @@ nb:
     WavType: 'WAV lydfil'
     XlsType: 'Excel regneark'
     ZipType: 'ZIP komprimert fil'
-  FileIFrameField:
-    ATTACH: 'Legg ved {type}'
-    ATTACHONCESAVED: '{type}er kan legges til når du har lagret oppføringen for første gang.'
-    ATTACHONCESAVED2: 'Filer kan legges til så snart du har lagret oppføringen for første gang.'
-    DELETE: 'Slett {type}'
-    DISALLOWEDFILETYPE: 'Det er ikke tillatt å laste opp denne filtypen'
-    FILE: Fil
-    FROMCOMPUTER: 'Fra din PC'
-    FROMFILESTORE: 'Fra filarkivet'
-    NOSOURCE: 'Vennligst legg til en valgt kildefil'
-    REPLACE: 'Erstatt {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Bildeopplastningsramme'
   Filesystem:
     SYNCRESULTS: 'Synkronisering fullført: {createdcount} elementer opprettet, {deletedcount} elementer slettet'
   Folder:
@@ -195,6 +170,7 @@ nb:
     TEXT2: 'lenke for nullstilling av passord'
     TEXT3: for
   Form:
+    CSRF_FAILED_MESSAGE: 'Det ser ut til å ha oppstått et teknisk problem. Vennligst trykk på tilbakeknappen, oppdater nettsiden og prøv på nytt.'
     FIELDISREQUIRED: '{name} er påkrevet'
     SubmitBtnLabel: Utfør
     VALIDATIONCREDITNUMBER: 'Vennligst sjekk at du har skrevet inn {number} korrekt kortnummer'
@@ -204,10 +180,9 @@ nb:
     VALIDATIONSTRONGPASSWORD: 'Passord må inneholde minst ett siffer og en bokstav'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Vennligst skriv inn gyldig valuta'
-    CSRF_FAILED_MESSAGE: 'Det ser ut til å ha oppstått et teknisk problem. Vennligst trykk på tilbakeknappen, oppdater nettsiden og prøv på nytt.'
   FormField:
-    NONE: ingen
     Example: 'F.eks. %s'
+    NONE: ingen
   GridAction:
     DELETE_DESCRIPTION: Slett
     Delete: Slett
@@ -238,7 +213,9 @@ nb:
     Deleted: 'Slettet %s %s'
     Save: Lagre
     Saved: 'Lagret {name} {link}'
-  GridFieldItemEditView_ss:
+  GridFieldEditButton_ss:
+    EDIT: Rediger
+  GridFieldItemEditView:
     Go_back: 'Gå tilbake'
   Group:
     AddRole: 'Legg til en rolle for denne gruppen'
@@ -268,6 +245,7 @@ nb:
     ADDURL: 'Legg til nettadresse'
     ADJUSTDETAILSDIMENSIONS: 'Detaljer og dimensjoner'
     ANCHORVALUE: Lenke
+    BUTTONADDURL: 'Legg til nettadresse'
     BUTTONINSERT: Sett inn
     BUTTONINSERTLINK: 'Sett inn lenke'
     BUTTONREMOVELINK: 'Fjern lenke'
@@ -307,12 +285,9 @@ nb:
     URL: Nettadresse
     URLNOTANOEMBEDRESOURCE: 'Nettadressen ''{url}'' kunne ikke bli omgjort til en medieressurs.'
     UpdateMEDIA: 'Oppdater media'
-    BUTTONADDURL: 'Legg til nettadresse'
   Image:
     PLURALNAME: Filer
     SINGULARNAME: Fil
-  ImageField:
-    IMAGE: Bilde
   Image_Cached:
     PLURALNAME: Filer
     SINGULARNAME: Fil
@@ -331,10 +306,10 @@ nb:
     PreviewButton: Forhåndsvisning
     REORGANISATIONSUCCESSFUL: 'Omorganisering av sidetreet vellykket'
     SAVEDUP: Lagret.
-    VersionUnknown: Ukjent
     ShowAsList: 'vis som liste'
     TooManyPages: 'For mange sider'
     ValidationError: 'Valideringsfeil'
+    VersionUnknown: Ukjent
   LeftAndMain_Menu_ss:
     Hello: Hei
     LOGOUT: 'Logg ut'
@@ -359,16 +334,15 @@ nb:
     EMAIL: Epost
     EMPTYNEWPASSWORD: 'Det nye passordet kan ikke være tomt, vennligst prøv igjen'
     ENTEREMAIL: 'Vennligst skriv en epostadresse så du kan bli tilsendt en lenke til å nullstille passord.'
-    ERRORLOCKEDOUT: 'Din konto har blitt sperret på grunn av for mange forsøk på å logge inn. Vennligst prøv igjen om 20 minutter.'
     ERRORLOCKEDOUT2: 'Din konto har blitt midlertidig sperret på grunn av for mange mislykkede forsøk på å logge inn. Vennligst prøv igjen om {count} minutter.'
     ERRORNEWPASSWORD: 'Du har tastet inn nye passord forskjellig, vennligst prøv igjen.'
     ERRORPASSWORDNOTMATCH: 'Passordene stemmer ikke overens, vennligst prøv igjen.'
-    ERRORWRONGCRED: 'Det ser ikke ut til å være riktig epostadresse eller passord. Vennligst prøv igjen.'
     FIRSTNAME: 'Fornavn'
     INTERFACELANG: 'Språk på grensesnitt'
     INVALIDNEWPASSWORD: 'Vi kunne ikke godkjenne passordet: {password}'
     LOGGEDINAS: 'Du er logget inn som {name}'
     NEWPASSWORD: 'Nytt passord'
+    NoPassword: 'Det finnes ikke noe passord for dette medlemmet.'
     PASSWORD: Passord
     PLURALNAME: Medlemmer
     REMEMBERME: 'Husk meg neste gang?'
@@ -388,7 +362,6 @@ nb:
     db_NumVisit: 'Antall besøk'
     db_Password: Passord
     db_PasswordExpiry: 'Utløpsdato for passord'
-    NoPassword: 'Det finnes ikke noe passord for dette medlemmet.'
   MemberAuthenticator:
     TITLE: 'E-post og passord'
   MemberDatetimeOptionsetField:
@@ -404,7 +377,6 @@ nb:
     MONTHNOLEADING: 'Månedssiffer uten ledende null'
     Preview: Forhåndsvisning
     SHORTMONTH: 'Forkortelse av måned (f.eks. jun)'
-    TOGGLEHELP: 'Vis/skjul formateringshjelp'
     TWODIGITDAY: 'Tosifret månedstall'
     TWODIGITHOUR: 'Tosifret timetall (00 til 23)'
     TWODIGITMINUTE: 'Tosifret minuttstall (00 til 59)'
@@ -436,8 +408,8 @@ nb:
     Title: 'Datamodeller'
     UPDATEDRECORDS: 'Oppdaterte {count} oppføringer.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Databasekolonner'
     IMPORTSPECLINK: 'Vis spesifikasjon for %s'
+    IMPORTSPECFIELDS: 'Databasekolonner'
     IMPORTSPECRELATIONS: Relasjoner
     IMPORTSPECTITLE: 'Spesifikasjon for %s'
   ModelAdmin_Tools_ss:
@@ -456,6 +428,10 @@ nb:
   Pagination:
     Page: Side
     View: Viser
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: %s'
+    PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'
+    TOOSHORT: 'Passordet er for kort, det må være %s eller flere tegn langt'
   Permission:
     AdminGroup: Administratorer
     CMS_ACCESS_CATEGORY: 'Tilgang til publiseringssystem'
@@ -481,13 +457,8 @@ nb:
     UserPermissionsIntro: 'Ved å angi grupper til denne brukeren kan du justere tillatelsene han har. Se gruppeseksjonen for detaljer om tillatelser for individuelle grupper.'
   PhoneNumberField:
     VALIDATION: 'Vennligst skriv inn et gyldig telefonnummer'
-  RelationComplexTableField_ss:
-    ADD: Legg til
-    CSVEXPORT: 'Eksporter til CSV'
-    NOTFOUND: 'Ingen elementer ble funnet'
   Security:
     ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
-    LOSTPASSWORDHEADER: 'Mistet passord'
     BUTTONSEND: 'Send meg en lenke for å nullstille passordet'
     CHANGEPASSWORDBELOW: 'Du kan bytte passord under her.'
     CHANGEPASSWORDHEADER: 'Bytt passord'
@@ -522,11 +493,11 @@ nb:
     BtnImport: 'Importer fra CSV'
     FileFieldLabel: 'CSV-fil <small>(Tillatt filtype: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Rediger
     Auto: Automatisk
     ChangeViewMode: 'Bytt visningsmodus'
     Desktop: Skrivebord
     DualWindowView: 'Delt vindu'
+    Edit: Rediger
     EditView: 'Redigeringsmodus'
     Mobile: Mobil
     PreviewState: 'Forhåndsvisningsstatus'
@@ -536,32 +507,13 @@ nb:
     Tablet: Nettbrett
     ViewDeviceWidth: 'Velg en forhåndsvisningsbredde'
     Width: bredde
-  SimpleImageField:
-    NOUPLOAD: 'Ingen bilder ble lastet opp'
   SiteTree:
     TABMAIN: Hovedinnstillinger
-  TableField:
-    ISREQUIRED: 'I %s er ''%s'' påkrevd'
-  TableField_ss:
-    ADD: 'Legg til en rad'
-    ADDITEM: 'Legg til %s'
   TableListField:
     CSVEXPORT: 'Eksporter til CSV'
-    PRINT: Skriv ut
     Print: Skriv ut
-    SELECT: 'Velg:'
-  TableListField_ss:
-    NOITEMSFOUND: 'Ingen elementer ble funnet'
-    SORTASC: 'Sorter i stigende rekkefølge'
-    SORTDESC: 'Sorter i synkende rekkefølge'
   TableListField_PageControls_ss:
-    DISPLAYING: Viser
     OF: av
-    TO: til
-    VIEWFIRST: 'Se første'
-    VIEWLAST: 'Se siste'
-    VIEWNEXT: 'Se neste'
-    VIEWPREVIOUS: 'Se forrige'
   TimeField:
     VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
   ToggleField:
@@ -571,6 +523,8 @@ nb:
     ATTACHFILE: 'Legg ved en fil'
     ATTACHFILES: 'Legg ved filer'
     AttachFile: 'Legg ved fil(er)'
+    CHOOSEANOTHERFILE: 'Velg en fil til'
+    CHOOSEANOTHERINFO: 'Erstatt denne filen med en annen fra fillageret'
     DELETE: 'Slett fra filer'
     DELETEINFO: 'Slett filen permament fra filarkivet'
     DOEDIT: Lagre
@@ -585,29 +539,13 @@ nb:
     FROMFILES: 'Fra filer'
     HOTLINKINFO: 'Info: Dette bildet vil bli lenket direkte til opprinnelig kilde. Vennligst forsikre deg om at du har tillatelse fra den opprinnelige rettighetshaveren til å gjøre dette.'
     MAXNUMBEROFFILES: 'Maks antall {count} fil(er) overskredet'
-    MAXNUMBEROFFILESSHORT: 'Kan kun laste opp {count} filer'
     MAXNUMBEROFFILESONE: 'Kan bare laste opp én fil'
+    MAXNUMBEROFFILESSHORT: 'Kan kun laste opp {count} filer'
+    OVERWRITEWARNING: 'Fil med samme navn eksisterer allerede'
     REMOVE: Fjern
-    REMOVEERROR: 'Feil ved fjerning av fil'
     REMOVEINFO: 'Fjern filen herfra, men ikke slett den fra filarkivet'
     STARTALL: 'Start alle'
-    STARTALLINFO: 'Start alle opplastinger'
     Saved: Lagret
-    CHOOSEANOTHERFILE: 'Velg en fil til'
-    CHOOSEANOTHERINFO: 'Erstatt denne filen med en annen fra fillageret'
-    OVERWRITEWARNING: 'Fil med samme navn eksisterer allerede'
     UPLOADSINTO: 'lagrer til /{path}'
   Versioned:
     has_many_Versions: Versjoner
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Forhåndsvisning'
-  GridFieldEditButton_ss:
-    EDIT: Rediger
-  ContentController:
-    NOTLOGGEDIN: 'Ikke innlogget'
-  GridFieldItemEditView:
-    Go_back: 'Gå tilbake'
-  PasswordValidator:
-    LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: %s'
-    PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'
-    TOOSHORT: 'Passordet er for kort, det må være %s eller flere tegn langt'

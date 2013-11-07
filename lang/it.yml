@@ -1,6 +1,5 @@
 it:
   AssetAdmin:
-    ALLOWEDEXTS: 'Estensioni consentite'
     NEWFOLDER: NuovaCartella
     SHOWALLOWEDEXTS: 'Mostra le estensioni permesse'
   AssetTableField:
@@ -69,6 +68,8 @@ it:
     ACCESSALLINTERFACES: 'Accesso a tutte le sezioni del CMS'
     ACCESSALLINTERFACESHELP: 'Annulla le impostazioni di accesso più specifiche.'
     SAVE: Salva
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Preview del sito'
   CMSProfileController:
     MENUTITLE: 'Il mio Profilo'
   ChangePasswordEmail_ss:
@@ -77,23 +78,13 @@ it:
     EMAIL: Email
     HELLO: Ciao
     PASSWORD: Password
-  ComplexTableField:
-    CLOSEPOPUP: 'Chiudi Finestra'
-    SUCCESSADD2: 'Aggiunto {name}'
-    SUCCESSEDIT: 'Salvato %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Inserisci %s'
-    NOITEMSFOUND: 'Nessun elemento trovato'
-    SORTASC: 'Ordina in modo ascendente'
-    SORTDESC: 'Ordina in modo discendente'
-  ComplexTableField_popup_ss:
-    NEXT: Seguente
-    PREVIOUS: Precedente
   ConfirmedPasswordField:
     ATLEAST: 'La password deve essere lunga almeno {min} caratteri.'
     BETWEEN: 'La password deve essere lunga da {min} a {max} caratteri.'
     MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
     SHOWONCLICKTITLE: 'Cambia password'
+  ContentController:
+    NOTLOGGEDIN: 'Non autenticato'
   CreditCardField:
     FIRST: primo
     FOURTH: quarto
@@ -106,6 +97,7 @@ it:
     DAYS: giorni
     HOUR: ora
     HOURS: ora
+    LessThanMinuteAgo: 'meno di un minuto'
     MIN: minuto
     MINS: minuti
     MONTH: mese
@@ -115,7 +107,6 @@ it:
     TIMEDIFFAGO: '{difference} fa'
     YEAR: anno
     YEARS: anni
-    LessThanMinuteAgo: 'meno di un minuto'
   DateField:
     NOTSET: 'non impostato'
     TODAY: oggi
@@ -164,19 +155,6 @@ it:
     WavType: 'File audio WAV'
     XlsType: 'Foglio di calcolo Excel'
     ZipType: 'File compresso ZIP'
-  FileIFrameField:
-    ATTACH: 'Allega {type}'
-    ATTACHONCESAVED: '{type} può essere allegato quando hai salvato per la prima volta.'
-    ATTACHONCESAVED2: 'I file possono essere allegati quando hai salvato per la prima volta.'
-    DELETE: 'Elimina {type}'
-    DISALLOWEDFILETYPE: 'Non è consentito caricare questo tipo di file'
-    FILE: File
-    FROMCOMPUTER: 'Dal tuo computer'
-    FROMFILESTORE: 'Dal CMS'
-    NOSOURCE: 'Seleziona un file da allegare'
-    REPLACE: 'Sostituisci {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Iframe per il caricamento dell''immagine'
   Filesystem:
     SYNCRESULTS: 'Sincronizzazione completata: {createdcount} elementi creati, {deletedcount} elementi eliminati'
   Folder:
@@ -188,6 +166,7 @@ it:
     TEXT2: 'Link per l''azzeramento della password'
     TEXT3: per
   Form:
+    CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore clicca sul pulsante "indietro", ricarica la pagina e riprova.'
     FIELDISREQUIRED: '{name} è richiesto'
     SubmitBtnLabel: Vai
     VALIDATIONCREDITNUMBER: 'Assicurati che il numero di carta di credito {number} sia inserito correttamente'
@@ -197,10 +176,9 @@ it:
     VALIDATIONSTRONGPASSWORD: 'Le password devono avere almeno un numero e un carattere alfanumerico.'
     VALIDATOR: Valiidatore
     VALIDCURRENCY: 'Inserisci una valuta valida'
-    CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore clicca sul pulsante "indietro", ricarica la pagina e riprova.'
   FormField:
-    NONE: nessuno
     Example: 'es. %s'
+    NONE: nessuno
   GridAction:
     DELETE_DESCRIPTION: Elimina
     Delete: Elimina
@@ -231,7 +209,9 @@ it:
     Deleted: 'Eliminato %s %s'
     Save: Salva
     Saved: 'Salvato {name} {link}'
-  GridFieldItemEditView_ss:
+  GridFieldEditButton_ss:
+    EDIT: Modifica
+  GridFieldItemEditView:
     Go_back: 'Torna indietro'
   Group:
     AddRole: 'Aggiungi un ruolo per questo gruppo'
@@ -261,6 +241,7 @@ it:
     ADDURL: 'Aggiungi URL'
     ADJUSTDETAILSDIMENSIONS: 'Dettagli e dimensioni'
     ANCHORVALUE: Ancora
+    BUTTONADDURL: 'Aggiungi url'
     BUTTONINSERT: Inserisci
     BUTTONINSERTLINK: 'Inserisci link'
     BUTTONREMOVELINK: 'Rimuovi link'
@@ -300,12 +281,9 @@ it:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
     UpdateMEDIA: 'Aggiorna Media'
-    BUTTONADDURL: 'Aggiungi url'
   Image:
     PLURALNAME: Files
     SINGULARNAME: File
-  ImageField:
-    IMAGE: Immagine
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -324,10 +302,10 @@ it:
     PreviewButton: Anteprima
     REORGANISATIONSUCCESSFUL: 'Albero del sito riorganizzato con successo.'
     SAVEDUP: Salvato.
-    VersionUnknown: sconosciuto
     ShowAsList: 'Mostra come lista'
     TooManyPages: 'Troppe pagine'
     ValidationError: 'Errore di validazione'
+    VersionUnknown: sconosciuto
   LeftAndMain_Menu_ss:
     Hello: Ciao
     LOGOUT: 'Disconnetti'
@@ -352,16 +330,15 @@ it:
     EMAIL: Email
     EMPTYNEWPASSWORD: 'La nuova password non può essere vuota, riprova'
     ENTEREMAIL: 'Inserisci un indirizzo e-mail per ricevere il link di azzeramento della password'
-    ERRORLOCKEDOUT: 'Il tuo account è stato temporaneamente disabilitato perchè ci sono stati troppi tentativi di accesso errati. Riprova tra 20 minuti.'
     ERRORLOCKEDOUT2: 'Il tuo account è stato temporaneamente disabilitato perchè ci sono stati troppi tentativi di accesso errati. Riprova tra {count} minuti.'
     ERRORNEWPASSWORD: 'Hai inserito la tua nuova password in modo differente, prova di nuovo'
     ERRORPASSWORDNOTMATCH: 'La tua password attuale non corrisponde, per favore prova ancora'
-    ERRORWRONGCRED: 'E-mail o password non sembrano essere corretti. Per favore, prova di nuovo.'
     FIRSTNAME: 'Nome'
     INTERFACELANG: 'Lingua dell''interfaccia'
     INVALIDNEWPASSWORD: 'Non possiamo accettare questa password: {password}'
     LOGGEDINAS: 'Sei collegato come {name}.'
     NEWPASSWORD: 'Nuova password'
+    NoPassword: 'Manca la password per questo utente.'
     PASSWORD: Password
     PLURALNAME: Utenti
     REMEMBERME: 'Ricordati di me la prossima volta?'
@@ -381,7 +358,6 @@ it:
     db_NumVisit: 'Numero di visite'
     db_Password: Password
     db_PasswordExpiry: 'Data di scadenza della password'
-    NoPassword: 'Manca la password per questo utente.'
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
@@ -397,7 +373,6 @@ it:
     MONTHNOLEADING: 'Mese senza zero iniziale'
     Preview: Anteprima
     SHORTMONTH: 'Nome corto del mese (es. Giu)'
-    TOGGLEHELP: 'Mostra/Nascondi aiuto formattazione'
     TWODIGITDAY: 'Giorno del mese a due cifre'
     TWODIGITHOUR: 'Ora a due cifre (00 a 23)'
     TWODIGITMINUTE: 'Minuti a due cifre (00 a 59)'
@@ -429,8 +404,8 @@ it:
     Title: 'Modelli di dati'
     UPDATEDRECORDS: 'Aggiornati {count} record.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Colonne database'
     IMPORTSPECLINK: 'Mostra specifiche per %s'
+    IMPORTSPECFIELDS: 'Colonne database'
     IMPORTSPECRELATIONS: Relazioni
     IMPORTSPECTITLE: 'Specifiche per %s'
   ModelAdmin_Tools_ss:
@@ -449,6 +424,10 @@ it:
   Pagination:
     Page: Pagina
     View: Visualizza
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Perfavore aumenta la sicurezza della password aggiungendo alcuni dei seguenti caratteri: %s'
+    PREVPASSWORD: 'Hai già usato questa password in passato, per favore scegline una nuova'
+    TOOSHORT: 'La password è troppo corta, deve essere lunga %s o più caratteri'
   Permission:
     AdminGroup: Amministratore
     CMS_ACCESS_CATEGORY: 'Accesso CMS'
@@ -474,13 +453,8 @@ it:
     UserPermissionsIntro: 'Assegnando gruppi a questo utente modificherà i suoi permessi. Vedi la sezione gruppi per dettagli sui permessi dei singoli gruppi.'
   PhoneNumberField:
     VALIDATION: 'Per favore inserisci un numero di telefono valido'
-  RelationComplexTableField_ss:
-    ADD: Aggiungi
-    CSVEXPORT: 'Esporta come CSV'
-    NOTFOUND: 'Nessun elemento trovato'
   Security:
     ALREADYLOGGEDIN: 'Non hai accesso a questa pagina. Se hai un altro account che può accederci, puoi autenticarti qui sotto.'
-    LOSTPASSWORDHEADER: 'Password smarrita'
     BUTTONSEND: 'Inviami il link per azzerare la password'
     CHANGEPASSWORDBELOW: 'Puoi cambiare la tua password qui sotto.'
     CHANGEPASSWORDHEADER: 'Cambia la tua password'
@@ -515,10 +489,10 @@ it:
     BtnImport: 'Importa da CSV'
     FileFieldLabel: 'File CSV <small>(Estensioni consentite: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Modifica
     Auto: Auto
     ChangeViewMode: 'Cambia visualizzazione'
     Desktop: Desktop
+    Edit: Modifica
     EditView: 'Modalità modifica'
     Mobile: Mobile
     PreviewView: 'Modalità anteprima'
@@ -526,32 +500,13 @@ it:
     Tablet: Preview mode
     ViewDeviceWidth: 'Seleziona una larghezza di preview'
     Width: larghezza
-  SimpleImageField:
-    NOUPLOAD: 'Nessuna immagine caricata'
   SiteTree:
     TABMAIN: Principale
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' è richiesto'
-  TableField_ss:
-    ADD: 'Aggiungi una nuova riga'
-    ADDITEM: 'Aggiungi %s'
   TableListField:
     CSVEXPORT: 'Esporta come CSV'
-    PRINT: Stampa
     Print: Stampa
-    SELECT: 'Seleziona:'
-  TableListField_ss:
-    NOITEMSFOUND: 'Nessun elemento trovato'
-    SORTASC: 'Ordina in modo ascendente'
-    SORTDESC: 'Ordina in modo discendente'
   TableListField_PageControls_ss:
-    DISPLAYING: Visualizzo
     OF: di
-    TO: a
-    VIEWFIRST: 'Visualizza primo'
-    VIEWLAST: 'Visualizza ultimo'
-    VIEWNEXT: 'Visualizza seguente'
-    VIEWPREVIOUS: 'Visualizza precedente'
   TimeField:
     VALIDATEFORMAT: 'Inserisci un formato d''ora valido ({format})'
   ToggleField:
@@ -561,6 +516,8 @@ it:
     ATTACHFILE: 'Allega un file'
     ATTACHFILES: 'Allega file'
     AttachFile: 'Allega file'
+    CHOOSEANOTHERFILE: 'Scegli un altro file'
+    CHOOSEANOTHERINFO: 'Sostituisci questo file con un altro dal CMS'
     DELETE: 'Elimina'
     DELETEINFO: 'Elimina permanentemente questo file dal CMS'
     DOEDIT: Salva
@@ -575,29 +532,13 @@ it:
     FROMFILES: 'Dal CMS'
     HOTLINKINFO: 'Info: Questa immagine sarà collegata. Assicurati di avere il permesso di farlo.'
     MAXNUMBEROFFILES: 'Numero massimo di {count} file ecceduto.'
-    MAXNUMBEROFFILESSHORT: 'Puoi caricare solo {count} file'
     MAXNUMBEROFFILESONE: 'Puoi caricare solo un file'
+    MAXNUMBEROFFILESSHORT: 'Puoi caricare solo {count} file'
+    OVERWRITEWARNING: 'Esiste già un file con lo stesso nome'
     REMOVE: Rimuovi
-    REMOVEERROR: 'Errore eliminando il file'
     REMOVEINFO: 'Rimuove il file da qui, ma non lo elimina dal CMS'
     STARTALL: 'Avvia tutti'
-    STARTALLINFO: 'Avvia tutti i caricamenti'
     Saved: Salvato
-    CHOOSEANOTHERFILE: 'Scegli un altro file'
-    CHOOSEANOTHERINFO: 'Sostituisci questo file con un altro dal CMS'
-    OVERWRITEWARNING: 'Esiste già un file con lo stesso nome'
     UPLOADSINTO: 'salva in /{path}'
   Versioned:
     has_many_Versions: Versioni
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Preview del sito'
-  GridFieldEditButton_ss:
-    EDIT: Modifica
-  ContentController:
-    NOTLOGGEDIN: 'Non autenticato'
-  GridFieldItemEditView:
-    Go_back: 'Torna indietro'
-  PasswordValidator:
-    LOWCHARSTRENGTH: 'Perfavore aumenta la sicurezza della password aggiungendo alcuni dei seguenti caratteri: %s'
-    PREVPASSWORD: 'Hai già usato questa password in passato, per favore scegline una nuova'
-    TOOSHORT: 'La password è troppo corta, deve essere lunga %s o più caratteri'

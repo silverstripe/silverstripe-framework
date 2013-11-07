@@ -45,16 +45,6 @@ pt_BR:
     CHANGEPASSWORDTEXT2: 'Agora, você pode usar as seguintes credenciais para realizar o login:'
     HELLO: Olá
     PASSWORD: Senha
-  ComplexTableField:
-    CLOSEPOPUP: 'Fechar janela'
-    SUCCESSEDIT: '%s %s %s salvo(s)'
-  ComplexTableField_ss:
-    ADDITEM: 'Incluir %s'
-    SORTASC: 'Ordenar ascendente'
-    SORTDESC: 'Ordenar descendente'
-  ComplexTableField_popup_ss:
-    NEXT: Próximo
-    PREVIOUS: Anterior
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Trocar senha'
   CreditCardField:
@@ -146,10 +136,8 @@ pt_BR:
     CONFIRMPASSWORD: 'Confirme Senha'
     EMAIL: E-mail
     ENTEREMAIL: 'Por favor, entre com seu enderenço de e-mail para receber o link de reinicialização de sua senha'
-    ERRORLOCKEDOUT: 'Sua conta foi temporariamente bloqueada por muitas tentativas de acesso. Por favor, tente novamente em 20 minutos.'
     ERRORNEWPASSWORD: 'Você digitou sua nova senha incorretamente, tente novamente'
     ERRORPASSWORDNOTMATCH: 'Sua senha atual não confere, por favor tente novamente'
-    ERRORWRONGCRED: 'Estes não parecem ser o e-mail e senha corretos. Por favor, tente novamente.'
     FIRSTNAME: 'Nome'
     INTERFACELANG: 'Idioma da interface'
     NEWPASSWORD: 'Nova Senha'
@@ -180,8 +168,6 @@ pt_BR:
     FULLADMINRIGHTS: 'Todos os direitos administrativos'
   PhoneNumberField:
     VALIDATION: 'Por favor digite um número de telefone válido'
-  RelationComplexTableField_ss:
-    ADD: Incluir
   Security:
     ALREADYLOGGEDIN: 'Você não tem acesso a esta página. Se você tem outra conta que pode acessar esta página, você pode efetuar o login abaixo.'
     BUTTONSEND: 'Envie-me o link para resetar a senha'
@@ -199,20 +185,10 @@ pt_BR:
     MEMBERS: Membros
     NEWGROUP: 'Novo Grupo'
     PERMISSIONS: Permissões
-  SimpleImageField:
-    NOUPLOAD: 'Não foi feito o upload de nenhuma imagem'
   SiteTree:
     TABMAIN: Principal
-  TableField_ss:
-    ADD: 'Incluir nova linha'
   TableListField:
     CSVEXPORT: 'Exportar para CSV'
-    PRINT: Imprimir
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Ver o Primeiro'
-    VIEWLAST: 'Ver o Ultimo'
-    VIEWNEXT: 'Ver o próximo'
-    VIEWPREVIOUS: 'Ver o anterior'
   ToggleField:
     LESS: menos
     MORE: mais

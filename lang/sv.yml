@@ -73,18 +73,6 @@ sv:
     CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
     HELLO: Hej
     PASSWORD: Lösenord
-  ComplexTableField:
-    CLOSEPOPUP: 'Stäng popup'
-    SUCCESSADD2: 'Lade till {name}'
-    SUCCESSEDIT: 'Sparade %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Lägg till'
-    NOITEMSFOUND: 'Inga rader hittades'
-    SORTASC: 'Sortera stigande'
-    SORTDESC: 'Sortera fallande'
-  ComplexTableField_popup_ss:
-    NEXT: Nästa
-    PREVIOUS: Föregående
   ConfirmedPasswordField:
     ATLEAST: 'Lösenord måste vara minst {min} tecken långa.'
     BETWEEN: 'Lösenord måste vara {min} till {max} tecken långa.'
@@ -115,9 +103,6 @@ sv:
     CHOOSE: (Välj)
   EmailField:
     VALIDATION: 'Var snäll och ange en epostadress'
-  Email_BounceRecord:
-    PLURALNAME: 'Studsade e-brev'
-    SINGULARNAME: 'Studsade e-brev'
   Enum:
     ANY: Vilken som helst
   File:
@@ -152,19 +137,6 @@ sv:
     WavType: 'WAV ljudfil'
     XlsType: 'Excel kalkylblad'
     ZipType: 'ZIP packad fil'
-  FileIFrameField:
-    ATTACH: 'Bifoga {type}'
-    ATTACHONCESAVED: '{type}er kan läggas till efter att du sparat första gången.'
-    ATTACHONCESAVED2: 'Filer kan läggas till efter att du sparat första gången.'
-    DELETE: 'Radera {type}'
-    DISALLOWEDFILETYPE: 'Filtypen är inte tillåten för uppladdning'
-    FILE: Fil
-    FROMCOMPUTER: 'Från din dator'
-    FROMFILESTORE: 'Från filarkivet'
-    NOSOURCE: 'Välj filen du vill bifoga'
-    REPLACE: 'Ersätt {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Iframe för uppladdning av bild'
   Folder:
     PLURALNAME: Mappar
     SINGULARNAME: Mapp
@@ -211,8 +183,6 @@ sv:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     Deleted: 'Raderade %s %s'
     Save: Spara
-  GridFieldItemEditView_ss:
-    Go_back: 'Gå tillbaka'
   Group:
     AddRole: 'Lägg till roll för den här gruppen'
     DefaultGroupTitleContentAuthors: 'Författare'
@@ -275,8 +245,6 @@ sv:
   Image:
     PLURALNAME: Filer
     SINGULARNAME: Fil
-  ImageField:
-    IMAGE: Bild
   Image_Cached:
     PLURALNAME: Filer
     SINGULARNAME: Fil
@@ -319,10 +287,8 @@ sv:
     EMAIL: E-post
     EMPTYNEWPASSWORD: 'Det nya lösenordet kan inte vara tomt, vänligen försök igen'
     ENTEREMAIL: 'Ange en e-postadress för att få en återställningslänk för lösenordet.'
-    ERRORLOCKEDOUT: 'Ditt konto har stängts av tillfället på grund av för många misslyckade inloggningsförsök. Försök igen om 20 minuter.'
     ERRORNEWPASSWORD: 'Du har angett ditt nya lösenord annorlunda, försök igen'
     ERRORPASSWORDNOTMATCH: 'Ditt nuvarande lösenord matchar inte, var god försök igen'
-    ERRORWRONGCRED: 'Antingen e-postadressen eller lösenordet är fel. Försök igen.'
     FIRSTNAME: 'Förnamn'
     INTERFACELANG: 'Gränssnittsspråk'
     INVALIDNEWPASSWORD: 'Vi kunde inte godkänna det lösenordet: {password}'
@@ -362,7 +328,6 @@ sv:
     MONTHNOLEADING: 'Dag i månad utan inledande nolla'
     Preview: Förhandsgranska
     SHORTMONTH: 'Kortnamn för månad (t ex jun)'
-    TOGGLEHELP: 'Växla formatteringshjälp'
     TWODIGITDAY: 'Två siffror för dag i månad'
     TWODIGITHOUR: 'Två siffror för timme (00 till 23)'
     TWODIGITMINUTE: 'Två siffror för minut (00 till 59)'
@@ -392,8 +357,8 @@ sv:
     Title: 'Datamodeller'
     UPDATEDRECORDS: 'Uppdaterade {count} poster.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Databaskolumner'
     IMPORTSPECLINK: 'Visa specifikation för %s'
+    IMPORTSPECFIELDS: 'Databaskolumner'
     IMPORTSPECRELATIONS: Relationer
     IMPORTSPECTITLE: 'Specifikation för %s'
   ModelAdmin_Tools_ss:
@@ -437,10 +402,6 @@ sv:
     UserPermissionsIntro: 'Genom att välja grupper för denna användare så ändras användarens rättigheter. Gå till grupper för att se vilka rättigheter de olika grupperna har.'
   PhoneNumberField:
     VALIDATION: 'Var god ange ett giltigt telefonnummer'
-  RelationComplexTableField_ss:
-    ADD: Lägg till
-    CSVEXPORT: 'Exportera till CSV'
-    NOTFOUND: 'Inga rader hittades'
   Security:
     ALREADYLOGGEDIN: 'Du har inte tillträde till den här sidan. Om du har ett annat konto som har rätt behörighet kan du logga in igen nedan.'
     BUTTONSEND: 'Skicka återställningslänk'
@@ -478,30 +439,11 @@ sv:
     FileFieldLabel: 'CSV-fil <small>(Tillåtna filtyper: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Ändra
-  SimpleImageField:
-    NOUPLOAD: 'Ingen bild uppladdad'
-  TableField:
-    ISREQUIRED: 'För %s är ''%s'' obligatoriskt'
-  TableField_ss:
-    ADD: 'Lägg till ny rad'
-    ADDITEM: 'Lägg till %s'
   TableListField:
     CSVEXPORT: 'Exportera till CSV'
-    PRINT: Skriv ut
     Print: Skriv ut
-    SELECT: 'Välj:'
-  TableListField_ss:
-    NOITEMSFOUND: 'Inga rader hittades'
-    SORTASC: 'Sortera i stigande ordning'
-    SORTDESC: 'Sortera i fallande ordning'
   TableListField_PageControls_ss:
-    DISPLAYING: Visar
     OF: av
-    TO: till
-    VIEWFIRST: 'Visa första'
-    VIEWLAST: 'Visa sista'
-    VIEWNEXT: 'Visa nästa'
-    VIEWPREVIOUS: 'Visa föregående'
   TimeField:
     VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
   ToggleField:
@@ -527,10 +469,8 @@ sv:
     MAXNUMBEROFFILES: 'Max antal ({count}) filer överstiget.'
     MAXNUMBEROFFILESSHORT: 'Kan bara ladda upp {count} files'
     REMOVE: Ta bort
-    REMOVEERROR: 'Fel när filen skulle tas bort'
     REMOVEINFO: 'Ta bort filen härifrån, men radera den inte från filarkivet'
     STARTALL: 'Starta alla'
-    STARTALLINFO: 'Starta all uppladdningar'
     Saved: Sparad
   Versioned:
     has_many_Versions: Versioner

@@ -28,15 +28,6 @@ fo:
     EMAIL: Teldupostur
     HELLO: Hey
     PASSWORD: Loyniorð
-  ComplexTableField:
-    CLOSEPOPUP: 'Lat glugga aftur'
-  ComplexTableField_ss:
-    ADDITEM: 'Stovna %s'
-    SORTASC: 'Raða hækkandi'
-    SORTDESC: 'Raða lækkandi'
-  ComplexTableField_popup_ss:
-    NEXT: Næsta
-    PREVIOUS: Fyrra
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Broyt loyniorð'
   CreditCardField:
@@ -138,8 +129,6 @@ fo:
     IMPORT: 'Innles frá CSV'
   PhoneNumberField:
     VALIDATION: 'Vinarliga inntøppa eitt galdandi telefonnummar'
-  RelationComplexTableField_ss:
-    ADD: Stovna
   Security:
     BUTTONSEND: 'Send mær leinkuna til at nullstilla mítt loyniorð'
     CHANGEPASSWORDBELOW: 'Tú kanst broyta loyniorðið niðanfyri.'
@@ -157,12 +146,6 @@ fo:
     TABMAIN: Alment
   TableListField:
     CSVEXPORT: 'Útles til CSV'
-    PRINT: Prenta
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Vís fyrstu'
-    VIEWLAST: 'Vís seinastu'
-    VIEWNEXT: 'Vís næstu'
-    VIEWPREVIOUS: 'Vís fyrru'
   ToggleField:
     LESS: minni
     MORE: meira

@@ -36,16 +36,6 @@ lt:
     EMAIL: E. paštas
     HELLO: Sveiki
     PASSWORD: Slaptažodis
-  ComplexTableField:
-    CLOSEPOPUP: 'Uždaryti'
-    SUCCESSEDIT: 'Išsaugota %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Pridėti %s'
-    SORTASC: 'Rūšiuoti A-Z'
-    SORTDESC: 'Rūšiuoti Z-A'
-  ComplexTableField_popup_ss:
-    NEXT: Sekantis
-    PREVIOUS: Ankstesnis
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Pakeisti slaptažodį'
   CreditCardField:
@@ -61,9 +51,6 @@ lt:
     TODAY: šiandien
   DropdownField:
     CHOOSE: (Pasirinkti)
-  Email_BounceRecord:
-    PLURALNAME: 'El.Pašto persiuntimų įrašai'
-    SINGULARNAME: 'El.Pašto persiuntimų įrašas'
   Enum:
     ANY: Bet koks
   File:
@@ -75,10 +62,6 @@ lt:
     PLURALNAME: Bylos
     SINGULARNAME: Byla
     Title: Pavadinimas
-  FileIFrameField:
-    FILE: Failas
-    FROMCOMPUTER: 'Iš jūsų kompiuterio'
-    FROMFILESTORE: 'Š failų saugyklos '
   ForgotPasswordEmail_ss:
     HELLO: Sveiki
     TEXT1: 'Štai Jūsų'
@@ -127,8 +110,6 @@ lt:
     LINKTO: 'Nuoroda į'
     PAGE: Puslapis
     URL: URL adresas
-  ImageField:
-    IMAGE: Paveikslėlis
   Image_iframe_ss:
     TITLE: 'Atvaizdo siuntimas iframe'
   LoginAttempt:
@@ -144,10 +125,8 @@ lt:
     CONFIRMPASSWORD: 'Patvirtinkite slaptažodį'
     EMAIL: E. paštas
     ENTEREMAIL: 'Įveskite e. pašto adresą norėdami gauti slaptažodžio atstatymo nuorodą.'
-    ERRORLOCKEDOUT: 'Jūsų paskyra laikinai sustabdyta dėl per didelio bandymų prisijungti skaičiaus. Pabandykite prisijungti vėliau 20 min. laikotarpyje.'
     ERRORNEWPASSWORD: 'Nesutampa naujas slaptažodis, bandykite dar kartą'
     ERRORPASSWORDNOTMATCH: 'Nesutampa Jūsų senas slaptažodis, bandykite dar kartą'
-    ERRORWRONGCRED: 'Neteisingas e. pašto adresas arba slaptažodis. Bandykite dar kartą.'
     FIRSTNAME: 'Vardas'
     INTERFACELANG: 'Kalba'
     NEWPASSWORD: 'Naujas slaptažodis'
@@ -176,10 +155,8 @@ lt:
     FULLADMINRIGHTS: 'Pilnos administravimo teisės'
   PhoneNumberField:
     VALIDATION: 'Įveskite teisingą telefono numerį'
-  RelationComplexTableField_ss:
-    ADD: Pridėti
   Security:
-    ALREADYLOGGEDIN: 'Jūs neturite prieigos prie šio puslapio. Jeigu norite prisijungti kaip kitas vartotojas, <a href="%s">spauskite čia</a>.'
+    ALREADYLOGGEDIN: 'Jūs neturite prieigos prie šio puslapio. Jeigu norite prisijungti kaip kitas vartotojas, spauskite čia.'
     BUTTONSEND: 'Atsiųsti slaptažodžio atstatymo nuorodą'
     CHANGEPASSWORDBELOW: 'Žemiau galite pasikeisti savo slaptažodį.'
     CHANGEPASSWORDHEADER: 'Pasikeiskite savo slaptažodį'
@@ -193,23 +170,10 @@ lt:
     GROUPNAME: 'Grupės pavadinimas'
     MEMBERS: Nariai
     PERMISSIONS: Leidimai
-  SimpleImageField:
-    NOUPLOAD: 'Neįkrauta jokių paveikslėlių'
   SiteTree:
     TABMAIN: Pagrindinis
-  TableField_ss:
-    ADD: 'Pridėti naują eilutę'
   TableListField:
     CSVEXPORT: 'Ekportuoti į CSV'
-    PRINT: Spausdinti
-  TableListField_ss:
-    SORTASC: 'Rūšiuoti didėjimo tvarka'
-    SORTDESC: 'Rūšiuoti mažėjimo tvarka'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Žiūrėti pirmą'
-    VIEWLAST: 'Žiūrėti paskutinį'
-    VIEWNEXT: 'Žiūrėti sekantį'
-    VIEWPREVIOUS: 'Žiūrėti ankstesnį'
   ToggleField:
     LESS: mažiau
     MORE: daugiau

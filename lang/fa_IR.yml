@@ -33,14 +33,6 @@ fa_IR:
     EMAIL: ايميل
     HELLO: درود
     PASSWORD: كلمه عبور
-  ComplexTableField:
-    CLOSEPOPUP: 'بستن چنجره'
-    SUCCESSEDIT: '%s %s %s ذخيره شد'
-  ComplexTableField_ss:
-    ADDITEM: 'افزودن'
-  ComplexTableField_popup_ss:
-    NEXT: بعدی
-    PREVIOUS: قبلی
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'تغيير كلمه عبور'
   CreditCardField:
@@ -62,8 +54,6 @@ fa_IR:
     PLURALNAME: فايل ها
     SINGULARNAME: فايل
     Title: عنوان
-  FileIFrameField:
-    NOSOURCE: 'لطفا محل یک فایل را جهت پیوست انتخاب کنید'
   ForgotPasswordEmail_ss:
     HELLO: درود
     TEXT3: برای
@@ -147,10 +137,8 @@ fa_IR:
     PERMISSIONS_CATEGORY: 'مجوز دسترسی ها و وظایف'
   PhoneNumberField:
     VALIDATION: 'لطفاً شماره تلفن معتبر وارد کنید'
-  RelationComplexTableField_ss:
-    ADD: افزودن
   Security:
-    ALREADYLOGGEDIN: 'شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید <a href="%s">دوباره وارد شوید.</a>.'
+    ALREADYLOGGEDIN: 'شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید دوباره وارد شوید..'
     CHANGEPASSWORDHEADER: 'تغییر گذرواژه'
     ENTERNEWPASSWORD: 'لطفاً گذرواژه جدید را وارد کنید.'
     LOGIN: 'ورود'
@@ -164,19 +152,6 @@ fa_IR:
     BtnImport: 'وارد کردن'
   SiteTree:
     TABMAIN: اصلی
-  TableField_ss:
-    ADD: 'افزودن ردیف تازه'
-  TableListField:
-    PRINT: چاپ
-    SELECT: 'انتخاب'
-  TableListField_ss:
-    SORTASC: 'چینش صعودی'
-    SORTDESC: 'چینش نزولی'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'مشاهده اولی'
-    VIEWLAST: 'مشاهده آخری'
-    VIEWNEXT: 'مشاهده بعدی'
-    VIEWPREVIOUS: 'مشاهده قبلی'
   ToggleField:
     MORE: بیشتر
   Versioned:

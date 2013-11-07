@@ -49,16 +49,6 @@ es_AR:
     CHANGEPASSWORDTEXT2: 'Ahora puedes utilizar las siguientes credenciales para ingresar:'
     HELLO: Hola
     PASSWORD: Contraseña
-  ComplexTableField:
-    CLOSEPOPUP: 'Cerrar Ventana Emergente'
-    SUCCESSEDIT: 'Guardado %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Agregar %s'
-    SORTASC: 'Ordenar ascendente'
-    SORTDESC: 'Ordenar descendente'
-  ComplexTableField_popup_ss:
-    NEXT: Siguiente
-    PREVIOUS: Anterior
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar Contraseña'
   CreditCardField:
@@ -74,9 +64,6 @@ es_AR:
     TODAY: hoy
   DropdownField:
     CHOOSE: (Selecciona)
-  Email_BounceRecord:
-    PLURALNAME: 'Registros de rebotes de email'
-    SINGULARNAME: 'Registro de rebotes de email'
   Enum:
     ANY: Cualquiera
   File:
@@ -88,11 +75,6 @@ es_AR:
     PLURALNAME: Archivos
     SINGULARNAME: Archivo
     Title: Título
-  FileIFrameField:
-    FILE: Archivo
-    FROMCOMPUTER: 'Desde su computadora'
-    FROMFILESTORE: 'Desde el almacén de archivos'
-    NOSOURCE: 'Por favor seleccionar un archivo fuente para adjuntar'
   ForgotPasswordEmail_ss:
     HELLO: Hola
     TEXT1: 'Aquí esta tu'
@@ -146,8 +128,6 @@ es_AR:
     LINKOPENNEWWIN: '¿Abrir enlace en una nueva ventana?'
     LINKTO: 'Enlazar a'
     PAGE: Página
-  ImageField:
-    IMAGE: Imagen
   Image_iframe_ss:
     TITLE: 'Subiendo Imagen Iframe'
   LeftAndMain:
@@ -172,10 +152,8 @@ es_AR:
     EMAIL: Dirección Email
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor inténtelo nuevamente'
     ENTEREMAIL: 'Por favor ingrese una dirección email para obtener un enlace de renovación de la contraseña'
-    ERRORLOCKEDOUT: 'Tu cuenta se ha deshabilitado temporalmente debido a varios intentos de ingresar infructuosos. Por favor intenta de nuevo en 20 minutos.'
     ERRORNEWPASSWORD: 'Ingresó su nueva contraseña en forma diferente, inténtelo otra vez'
     ERRORPASSWORDNOTMATCH: 'Tu contraseña actual no coincide, por favor intenta de nuevo'
-    ERRORWRONGCRED: 'No parece correcta la dirección de email o la contraseña. Por favor intenta de nuevo.'
     FIRSTNAME: 'Primer Nombre'
     INTERFACELANG: 'Idioma de la interfaz'
     NEWPASSWORD: 'Nueva contraseña'
@@ -221,10 +199,8 @@ es_AR:
     PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
   PhoneNumberField:
     VALIDATION: 'Por favor ingresa un número telefónico válido'
-  RelationComplexTableField_ss:
-    ADD: Agregar
   Security:
-    ALREADYLOGGEDIN: 'Ud no tiene acceso a esta página. Si tiene otra cuenta que puede acceder a esa página, entonces puede <a href="%s">iniciar sesión nuevamente</a>.'
+    ALREADYLOGGEDIN: 'Ud no tiene acceso a esta página. Si tiene otra cuenta que puede acceder a esa página, entonces puede iniciar sesión nuevamente.'
     BUTTONSEND: 'Envíame el enlace para restablecer mi contraseña'
     CHANGEPASSWORDBELOW: 'Puedes cambiar tu contraseña abajo.'
     CHANGEPASSWORDHEADER: 'Cambia tu contraseña'
@@ -250,24 +226,10 @@ es_AR:
   SecurityAdmin_MemberImportForm:
     BtnImport: 'importar'
     FileFieldLabel: 'Archivo CSV <small>(extensiones permitidas: *.csv)</small>'
-  SimpleImageField:
-    NOUPLOAD: 'La Imagen No se Cargó'
   SiteTree:
     TABMAIN: Principal
-  TableField_ss:
-    ADD: 'Agregar una nueva fila'
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
-    PRINT: Imprimir
-    SELECT: 'Seleccionar:'
-  TableListField_ss:
-    SORTASC: 'Ordenar en orden ascendente'
-    SORTDESC: 'Ordenar en orden descendente'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Ver primero'
-    VIEWLAST: 'Ver último'
-    VIEWNEXT: 'Ver siguiente'
-    VIEWPREVIOUS: 'Ver previo'
   ToggleField:
     LESS: menos
     MORE: más

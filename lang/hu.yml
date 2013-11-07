@@ -21,15 +21,6 @@ hu:
     CHANGEPASSWORDTEXT1: 'Megváltoztattad a jelszavad erre: '
     CHANGEPASSWORDTEXT2: 'Mostantól a következő adatokat használhatod a bejelentkezéshez:'
     HELLO: Szia!
-  ComplexTableField:
-    CLOSEPOPUP: 'Ablak bezárása'
-  ComplexTableField_ss:
-    ADDITEM: 'Hozzáadás:'
-    SORTASC: 'Rendezés növekvő sorrendben'
-    SORTDESC: 'Rendezés csökkenő sorrendben'
-  ComplexTableField_popup_ss:
-    NEXT: Következő
-    PREVIOUS: Előző
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Jelszó Megváltoztatása'
   DropdownField:
@@ -91,7 +82,6 @@ hu:
     EMAIL: E-mail
     ERRORNEWPASSWORD: 'Rosszul írtad be az új jelszót, próbáld újra'
     ERRORPASSWORDNOTMATCH: 'A jelenlegi jelszó nem jó, próbálja újra'
-    ERRORWRONGCRED: 'Ez nem egy valós e-mail cím, vagy jelszó. Kérem próbálja újra.'
     FIRSTNAME: 'Keresztnév'
     INTERFACELANG: 'Felület nyelve'
     NEWPASSWORD: 'Új jelszó'
@@ -129,15 +119,8 @@ hu:
   SecurityAdmin:
     EDITPERMISSIONS: 'Jogosultságok és IP címek szerkesztése minden csoportban'
     NEWGROUP: 'Új csoport'
-  SimpleImageField:
-    NOUPLOAD: 'Nincs feltöltött kép'
   SiteTree:
     TABMAIN: Fő
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Első mutatása'
-    VIEWLAST: 'Utolsó mutatása'
-    VIEWNEXT: 'Következő mutatása'
-    VIEWPREVIOUS: 'Előző mutatása'
   ToggleField:
     LESS: kevesebb
     MORE: több

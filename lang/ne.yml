@@ -7,13 +7,6 @@ ne:
     CHANGEPASSWORDTEXT1: 'तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो '
     CHANGEPASSWORDTEXT2: 'दिएको विवरण अनुसार भित्र जान सक्नुहुन्छ :'
     HELLO: हाई
-  ComplexTableField_ss:
-    ADDITEM: 'थप्'
-    SORTASC: 'बढ्दो क्रमाङ्कन '
-    SORTDESC: 'घट्दो क्रमाङ्कन '
-  ComplexTableField_popup_ss:
-    NEXT: पछीको
-    PREVIOUS: पहिलाको
   DropdownField:
     CHOOSE: (छान्)
   ForgotPasswordEmail_ss:
@@ -57,7 +50,6 @@ ne:
     EMAIL: इमेल
     ERRORNEWPASSWORD: 'तपाईले तपाईको नयाँ पासओड फरक लेखनुभयो, पुन प्रयास गर्नुहोल'
     ERRORPASSWORDNOTMATCH: 'पासओडहरु मिल्दैन्नन, कृपया पुन प्रयास गर्नुहोल'
-    ERRORWRONGCRED: 'त्यो सहि ईमेल अथवा पासओड जस्तो देखिदैन् ।  कृपया पुन प्रयास गर्नुहोल ।'
     FIRSTNAME: 'पहिलो नाम'
     INTERFACELANG: 'चलाउने भाषा'
     NEWPASSWORD: 'नयाँ पासओड'
@@ -82,8 +74,6 @@ ne:
     LOGGEDOUT: 'तपाईं बहिर निकलिनुभएको छ ।  यदि तपाईं फेरि भित्र जाने हो भन्ने, आफ्नो विवरण तल लेखनुहोस् ।  '
     NOTEPAGESECURED: 'त्यो पजे सुरक्षा छ । तपाईंको विवरण लेखनुहोस् अनी हामि तपाईंलाई भित्र पठाउनेछौ । '
     NOTERESETPASSWORD: 'तपाईंको ईमेल ठेगाना लेखनुहोस् र हामि तपाईंलाई पासओड पुनर्स्थापना लिक पठाउनेछौ '
-  SimpleImageField:
-    NOUPLOAD: 'कुनै पनि तस्बिर उप्लोओद गरिएको छैन '
   SiteTree:
     TABMAIN: मुख्य
   ToggleField:

@@ -5,11 +5,6 @@ pa:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'ਤੁਸੀ ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਿਆ ਖਾਤਰ'
     HELLO: ਹਾਏ
-  ComplexTableField_ss:
-    ADDITEM: 'ਜੋੜ ੋ '
-  ComplexTableField_popup_ss:
-    NEXT: ਅਗਲਾ
-    PREVIOUS: ਪਿਛਲਾ
   DropdownField:
     CHOOSE: ( ਚੁਣੋ )
   ForgotPasswordEmail_ss:
@@ -59,8 +54,6 @@ pa:
     CHANGEPASSWORDHEADER: 'password ਬਦਲੋ '
     ENTERNEWPASSWORD: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਨਵਾਂ password ਪਾਉ।'
     LOGGEDOUT: 'You have been logged out. If you would like to log in again, enter your credentials below.'
-  SimpleImageField:
-    NOUPLOAD: 'ਕੋਈ ਫੋਟੋ ਅੱਪਲੋਡ ਨਹੀ ਹੋਈ'
   SiteTree:
     TABMAIN: "ਮੁੱਖ\t"
   ToggleField:

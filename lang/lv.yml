@@ -38,16 +38,6 @@ lv:
     EMAIL: E-pasts
     HELLO: Sveiki
     PASSWORD: Parole
-  ComplexTableField:
-    CLOSEPOPUP: 'Aizvērt izlēcošo logu'
-    SUCCESSEDIT: 'Saglabāts %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Pievienot %s'
-    SORTASC: 'Kārtot augoši'
-    SORTDESC: 'Kārtot dilstoši'
-  ComplexTableField_popup_ss:
-    NEXT: Nākamais
-    PREVIOUS: Iepriekšējais
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mainīt paroli'
   CreditCardField:
@@ -65,9 +55,6 @@ lv:
     TODAY: šodien
   DropdownField:
     CHOOSE: (Izvēlieties)
-  Email_BounceRecord:
-    PLURALNAME: 'Atgriezti e-pasta ieraksti'
-    SINGULARNAME: 'Atgriezts e-pasta ieraksts'
   Enum:
     ANY: Jebkuru
   File:
@@ -79,11 +66,6 @@ lv:
     PLURALNAME: Faili
     SINGULARNAME: Fails
     Title: Virsraksts
-  FileIFrameField:
-    FILE: Fails
-    FROMCOMPUTER: 'No Jūsu datora'
-    FROMFILESTORE: 'No failu glabātuves'
-    NOSOURCE: 'Lūdzu izvēlieties avota failu, kuru pievienot'
   ForgotPasswordEmail_ss:
     HELLO: Sveiki
     TEXT1: 'Šeit ir Jūsu'
@@ -133,8 +115,6 @@ lv:
     LINKOPENNEWWIN: 'Atvērt saiti jaunā logā?'
     LINKTO: 'Saite uz'
     PAGE: Lapa
-  ImageField:
-    IMAGE: Attēls
   Image_iframe_ss:
     TITLE: 'Attēla augšupielādes iframe bloks'
   LoginAttempt:
@@ -152,10 +132,8 @@ lv:
     EMAIL: E-pasts
     EMPTYNEWPASSWORD: 'Jaunā parole nedrīkst būt tukša, lūdzu mēģiniet vēlreiz'
     ENTEREMAIL: 'Lai iegūtu paroles atiestatīšanas saiti, lūdzu ievadiet e-pasta adresi.'
-    ERRORLOCKEDOUT: 'Jūsu konts ir īslaicīgi atslēgts pārāk liela kļūdainu pieslēgšanās mēģinājumu dēļ. Lūdzu mēģiniet vēlreiz pēc 20 minūtēm.'
     ERRORNEWPASSWORD: 'Jaunā parole ir ievadīta savādāk, lūdzu mēģiniet vēlreiz'
     ERRORPASSWORDNOTMATCH: 'Jūsu pašreizējā parole nesakrīt, lūdzu mēģiniet vēlreiz'
-    ERRORWRONGCRED: 'Ievadītā e-pasta adrese vai parole nav pareiza. Lūdzu mēģiniet vēlreiz.'
     FIRSTNAME: 'Vārds'
     INTERFACELANG: 'Saskarnes Valoda'
     NEWPASSWORD: 'Jaunā parole'
@@ -192,10 +170,8 @@ lv:
     PERMISSIONS_CATEGORY: 'Lomu un piekļuves atļaujas'
   PhoneNumberField:
     VALIDATION: 'Lūdzu ievadiet derīgu tālruņa numuru'
-  RelationComplexTableField_ss:
-    ADD: Pievienot
   Security:
-    ALREADYLOGGEDIN: 'Jums nav piekļuves tiesību šai lapai. Ja jums ir izveidots cits konts ar kuru ir iespējams piekļūt šai lapai, tad jūs varat <a href="%s">atkārtoti pieslēgties</a>. '
+    ALREADYLOGGEDIN: 'Jums nav piekļuves tiesību šai lapai. Ja jums ir izveidots cits konts ar kuru ir iespējams piekļūt šai lapai, tad jūs varat atkārtoti pieslēgties. '
     BUTTONSEND: 'Nosūtīt man paroles atiestatīšanas saiti'
     CHANGEPASSWORDBELOW: 'Jūs varat nomainīt savu paroli zemāk.'
     CHANGEPASSWORDHEADER: 'Mainīt paroli'
@@ -211,24 +187,10 @@ lv:
     PERMISSIONS: Atļaujas
     ROLES: Lomas
     ROLESDESCRIPTION: 'Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē'
-  SimpleImageField:
-    NOUPLOAD: 'Netika augšupielādēts neviens attēls'
   SiteTree:
     TABMAIN: Sākums
-  TableField_ss:
-    ADD: 'PIevienot jaunu rindu'
   TableListField:
     CSVEXPORT: 'Eksportēt uz CSV'
-    PRINT: Drukāt
-    SELECT: 'Izvēlēties:'
-  TableListField_ss:
-    SORTASC: 'Kārtot augošā secībā'
-    SORTDESC: 'Kārtot dilstošā secībā'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Skatīt pirmo'
-    VIEWLAST: 'Skatīt pēdējo'
-    VIEWNEXT: 'Skatīt nākamo'
-    VIEWPREVIOUS: 'Skatīt iepriekšējo'
   ToggleField:
     LESS: mazāk
     MORE: vairāk

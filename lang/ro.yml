@@ -1,25 +1,18 @@
 ro:
   AssetUploadField:
-    ChooseFiles: 'Alegeti fisierele'
+    ChooseFiles: 'Alegeți fișierele'
   BBCodeParser:
     COLORED: 'Text colorat'
     COLOREDEXAMPLE: 'Text albastru'
     UNDERLINEEXAMPLE: Subliniat
   BasicAuth:
-    ENTERINFO: 'Va rugam introduceţi un user si o parolă.'
+    ENTERINFO: 'Vă rugăm introduceţi un utilizator și o parolă.'
     ERRORNOTADMIN: 'Acest utilizator nu este un administrator.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
     HELLO: Salut
-  ComplexTableField_ss:
-    ADDITEM: 'Adaugă'
-    SORTASC: 'Sortează ascendent'
-    SORTDESC: 'Sortează descendent'
-  ComplexTableField_popup_ss:
-    NEXT: Urmatorul
-    PREVIOUS: Anteriorul
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Schimba Parola'
+    SHOWONCLICKTITLE: 'Schimbare Parola'
   CreditCardField:
     FIRST: primul
     FOURTH: al patrulea
@@ -72,8 +65,6 @@ ro:
     LINKOPENNEWWIN: 'Deschideti link intr-o fereastra noua?'
     LINKTO: 'Link la'
     PAGE: Pagina
-  ImageField:
-    IMAGE: Imagine
   LoginAttempt:
     IP: 'Adresa IP'
   Member:
@@ -105,26 +96,16 @@ ro:
     TITLE: 'E-mail si Parolă'
   MemberTableField:
     APPLY_FILTER: 'Aplica filtru'
-  RelationComplexTableField_ss:
-    ADD: Adauga
   Security:
     ERRORPASSWORDPERMISSION: 'Trebuie sa fii autentificat pentru a schimba parola.'
   SecurityAdmin:
     GROUPNAME: 'Numele grupului'
     IMPORTGROUPS: 'Importati grupuri'
     IMPORTUSERS: 'Importa utilizatori'
-  SimpleImageField:
-    NOUPLOAD: 'Nici o imagine incarcata'
   SiteTree:
     TABMAIN: Pincipal
   TableListField:
     CSVEXPORT: 'Exportati ca CSV'
-    SELECT: 'Selecteaza'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Vezi primul'
-    VIEWLAST: 'Vezi ultimul'
-    VIEWNEXT: 'Vezi urmator'
-    VIEWPREVIOUS: 'Vezi anterior'
   ToggleField:
     LESS: 'mai puţin '
     MORE: mai mult

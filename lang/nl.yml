@@ -1,6 +1,5 @@
 nl:
   AssetAdmin:
-    ALLOWEDEXTS: 'Toegestane extensies'
     NEWFOLDER: Nieuwe Map
     SHOWALLOWEDEXTS: 'Toon toegestane extensies'
   AssetTableField:
@@ -16,7 +15,7 @@ nl:
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Selecteer bestanden'
-    DRAGFILESHERE: 'Sleep bestanden hiernaar toe'
+    DRAGFILESHERE: 'Sleep bestanden hier'
     DROPAREA: 'Sleep hier'
     EDITALL: 'Alle bewerken'
     EDITANDORGANIZE: 'Bewerk en beheer'
@@ -69,6 +68,8 @@ nl:
     ACCESSALLINTERFACES: 'Toegang tot alle CMS onderdelen'
     ACCESSALLINTERFACESHELP: 'Overstemt meer specifieke toegangsinstellingen'
     SAVE: Bewaar
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Website voorbeeld'
   CMSProfileController:
     MENUTITLE: 'Mijn Profiel'
   ChangePasswordEmail_ss:
@@ -77,23 +78,13 @@ nl:
     EMAIL: E-mail
     HELLO: Hallo
     PASSWORD: Wachtwoord
-  ComplexTableField:
-    CLOSEPOPUP: 'Sluit Popup'
-    SUCCESSADD2: '{name} toevoegen'
-    SUCCESSEDIT: '%s %s %s opgeslagen'
-  ComplexTableField_ss:
-    ADDITEM: 'Voeg %s toe'
-    NOITEMSFOUND: 'Geen items gevonden.'
-    SORTASC: 'Sorteer oplopend'
-    SORTDESC: 'Sorteer aflopend'
-  ComplexTableField_popup_ss:
-    NEXT: Volgende
-    PREVIOUS: Vorige
   ConfirmedPasswordField:
     ATLEAST: 'Een wachtwoord moet tenminste {min} karakters hebben.'
     BETWEEN: 'Een wachtwoord moet tussen de {min} en {max} karakters hebben'
     MAXIMUM: 'Een wachtwoord mag maximaal {max} karakters hebben.'
     SHOWONCLICKTITLE: 'Verander wachtwoord'
+  ContentController:
+    NOTLOGGEDIN: 'Niet ingelogd'
   CreditCardField:
     FIRST: eerste
     FOURTH: vierde
@@ -109,6 +100,7 @@ nl:
     DAYS: dagen
     HOUR: uur
     HOURS: uren
+    LessThanMinuteAgo: 'minder dan één minuut'
     MIN: minuut
     MINS: minuten
     MONTH: maand
@@ -119,7 +111,6 @@ nl:
     TIMEDIFFIN: '{difference} geleden'
     YEAR: jaar
     YEARS: jaren
-    LessThanMinuteAgo: 'minder dan één minuut'
   DateField:
     NOTSET: 'niet ingesteld'
     TODAY: vandaag
@@ -132,11 +123,9 @@ nl:
     INVALID_REQUEST: 'Fout bij verwerken'
   DropdownField:
     CHOOSE: (Kies)
+    CHOOSESEARCH: '(Kies of zoek)'
   EmailField:
     VALIDATION: 'Gelieve een email adres in te voeren.'
-  Email_BounceRecord:
-    PLURALNAME: 'Onbezorgbare emails'
-    SINGULARNAME: 'Onbezorgbare email'
   Enum:
     ANY: Elke
   File:
@@ -171,19 +160,6 @@ nl:
     WavType: 'WAV audio bestand'
     XlsType: 'Excel document'
     ZipType: 'ZIP bestand'
-  FileIFrameField:
-    ATTACH: 'Toevoegen {type}'
-    ATTACHONCESAVED: '{type}en kunnen worden toegevoegd na het voor het eerst opslaan.'
-    ATTACHONCESAVED2: 'Bestanden kunnen worden toegevoegd na het voor het eerst opslaan.'
-    DELETE: 'Verwijderen {type}'
-    DISALLOWEDFILETYPE: 'Dit type bestand mag niet worden opgeslagen'
-    FILE: Bestand
-    FROMCOMPUTER: 'Vanaf computer'
-    FROMFILESTORE: 'Vanaf de website''s bestandsopslag'
-    NOSOURCE: 'Selecteer een bron bestand om toe te voegen'
-    REPLACE: 'Vervang {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Afbeelding uploaden'
   Filesystem:
     SYNCRESULTS: 'Synchronisatie voltooid: {createdcount} items gemaakt, {deletedcount} items verwijderd'
   Folder:
@@ -195,6 +171,7 @@ nl:
     TEXT2: 'wachtwoord reset link'
     TEXT3: voor
   Form:
+    CSRF_FAILED_MESSAGE: 'Er lijkt een technisch probleem te zijn. Klikt u op de knop terug, vernieuw uw browser, en probeer het opnieuw.'
     FIELDISREQUIRED: '{name} is verplicht'
     SubmitBtnLabel: Gaan
     VALIDATIONCREDITNUMBER: 'Gelieve uw credit card number {number} juist in te vullen'
@@ -204,10 +181,9 @@ nl:
     VALIDATIONSTRONGPASSWORD: 'Wachtwoorden moeten bestaan uit minstens één cijfer en één alfanumeriek karakter.'
     VALIDATOR: Controleur
     VALIDCURRENCY: 'Vul een geldige valuta in'
-    CSRF_FAILED_MESSAGE: 'Er lijkt een technisch probleem te zijn. Klikt u op de knop terug, vernieuw uw browser, en probeer het opnieuw.'
   FormField:
-    NONE: geen
     Example: 'e.g. %s'
+    NONE: geen
   GridAction:
     DELETE_DESCRIPTION: Verwijderen
     Delete: Verwijder
@@ -238,7 +214,9 @@ nl:
     Deleted: '%s %s verwijderd'
     Save: Opslaan
     Saved: '{name} {link} opgeslagen'
-  GridFieldItemEditView_ss:
+  GridFieldEditButton_ss:
+    EDIT: Bewerken
+  GridFieldItemEditView:
     Go_back: 'Ga terug'
   Group:
     AddRole: 'Voeg een rol toe aan deze groep'
@@ -266,8 +244,9 @@ nl:
     InfiniteLoopNotAllowed: 'Oneindige lus gevonden in "{type}" hiërarchie. Wijzig de niveau hoger om dit op te lossen'
   HtmlEditorField:
     ADDURL: 'Voeg URL toe'
-    ADJUSTDETAILSDIMENSIONS: 'Details $amp; afmeting'
+    ADJUSTDETAILSDIMENSIONS: 'Details en afmetingen'
     ANCHORVALUE: Anker
+    BUTTONADDURL: 'Voeg URL toe'
     BUTTONINSERT: Invoegen
     BUTTONINSERTLINK: 'Link invoegen'
     BUTTONREMOVELINK: 'Link verwijderen'
@@ -287,6 +266,8 @@ nl:
     FROMWEB: 'Vanaf een website'
     FindInFolder: 'Zoek in map'
     IMAGEALT: 'Alternatieve tekst (alt tekst) - wordt getoond als de afbeelding niet kan worden geladen'
+    IMAGEALTTEXT: 'Alternatieve tekst (alt-tekst) - wordt gebruikt als de afbeelding niet geladen kan worden '
+    IMAGEALTTEXTDESC: 'Voor schermlezers of als afbeelding niet weergegeven kan worden '
     IMAGEDIMENSIONS: Dimensies
     IMAGEHEIGHTPX: Hoogte
     IMAGETITLE: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'
@@ -307,12 +288,9 @@ nl:
     URL: URL
     URLNOTANOEMBEDRESOURCE: '{url} kon niet worden omgezet in een media-bron.'
     UpdateMEDIA: 'Media bijwerken'
-    BUTTONADDURL: 'Voeg URL toe'
   Image:
     PLURALNAME: Bestanden
     SINGULARNAME: Bestand
-  ImageField:
-    IMAGE: Afbeelding
   Image_Cached:
     PLURALNAME: Bestanden
     SINGULARNAME: Bestand
@@ -331,10 +309,10 @@ nl:
     PreviewButton: Voorbeeld
     REORGANISATIONSUCCESSFUL: 'Menu-indeling is aangepast'
     SAVEDUP: Opgeslagen
-    VersionUnknown: onbekend
     ShowAsList: 'Laat als lijst zien'
     TooManyPages: 'Te veel pagina''s'
     ValidationError: 'Validatiefout'
+    VersionUnknown: onbekend
   LeftAndMain_Menu_ss:
     Hello: Hallo
     LOGOUT: 'Uitloggen'
@@ -359,16 +337,15 @@ nl:
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Het nieuwe wachtwoord mag niet leeg zijn, probeer opnieuw'
     ENTEREMAIL: 'Typ uw e-mailadres om een link te ontvangen waarmee u uw wachtwoord kunt resetten.'
-    ERRORLOCKEDOUT: 'Je account is tijdelijk geblokkeerd wegens te veel mislukte pogingen tot aanmelding. Gelieve het over 20 minuten opnieuw te proberen.'
     ERRORLOCKEDOUT2: 'Uw account is tijdelijk uitgeschakeld als gevolg van te veel mislukte pogingen om in te loggen. Probeer het over {count} minuten aub.'
     ERRORNEWPASSWORD: 'Het nieuwe wachtwoord komt niet overeen met de bevestiging, probeer het nogmaals'
     ERRORPASSWORDNOTMATCH: 'Huidige wachtwoord kom niet overeen, probeer het nogmaals'
-    ERRORWRONGCRED: 'Dat is niet het juiste email adres of wachtwoord. Probeert U het a.u.b. opnieuw.'
     FIRSTNAME: 'Voornaam'
     INTERFACELANG: 'Interface Taal'
     INVALIDNEWPASSWORD: 'Dit is geen goed wachtwoord: {password}'
     LOGGEDINAS: 'Je bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw Wachtwoord'
+    NoPassword: 'Er is geen wachtwoord voor deze gebruiker.'
     PASSWORD: Wachtwoord
     PLURALNAME: Leden
     REMEMBERME: 'Wachtwoord onthouden voor de volgende keer?'
@@ -388,7 +365,6 @@ nl:
     db_NumVisit: 'Aantal bezoeken'
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord Vervaldatum'
-    NoPassword: 'Er is geen wachtwoord voor deze gebruiker.'
   MemberAuthenticator:
     TITLE: 'Email &amp; Wachtwoord'
   MemberDatetimeOptionsetField:
@@ -404,7 +380,6 @@ nl:
     MONTHNOLEADING: 'Dag van de maand zonder voorloop-nul'
     Preview: Voorbeeld
     SHORTMONTH: 'Korte naam van de maand (Bijv. Jun)'
-    TOGGLEHELP: 'Hulp weergeven / verbergen'
     TWODIGITDAY: 'Dag van de maand (met voorloop-nul)'
     TWODIGITHOUR: 'Twee cijfer van het uur (00 tot 23)'
     TWODIGITMINUTE: 'Minuten met voorloop-nul (00 tot 59)'
@@ -436,8 +411,8 @@ nl:
     Title: 'Gegevens modellen'
     UPDATEDRECORDS: '{count} records bijgewerkt'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Database kolommen'
     IMPORTSPECLINK: 'Toon specificaties van %s'
+    IMPORTSPECFIELDS: 'Database kolommen'
     IMPORTSPECRELATIONS: Relaties
     IMPORTSPECTITLE: 'Specificaties van %s'
   ModelAdmin_Tools_ss:
@@ -456,6 +431,10 @@ nl:
   Pagination:
     Page: Pagina
     View: Bekijk
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door meer van de volgende karakters te gebruiken: %s'
+    PREVPASSWORD: 'U heeft dit wachtwoord in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'
+    TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal %s karakters hebben'
   Permission:
     AdminGroup: Beheerder
     CMS_ACCESS_CATEGORY: 'CMS Toegang'
@@ -481,13 +460,8 @@ nl:
     UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen de permissies aanpassen. Zie de sectie groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'
   PhoneNumberField:
     VALIDATION: 'Voer een geldig telefoonnummer in'
-  RelationComplexTableField_ss:
-    ADD: Toevoegen
-    CSVEXPORT: 'Exporteren naar CSV'
-    NOTFOUND: 'Geen items gevonden.'
   Security:
-    ALREADYLOGGEDIN: 'Je hebt niet de juiste rechten, om deze pagina te kunnen bekijken.  Als je een ander account met de juiste rechten hebt, kun je hier <a href="%s">opnieuw inloggen</a>.'
-    LOSTPASSWORDHEADER: 'Wachtwoord vergeten'
+    ALREADYLOGGEDIN: 'Je hebt niet de juiste rechten, om deze pagina te kunnen bekijken.  Als je een ander account met de juiste rechten hebt, kun je hier opnieuw inloggen.'
     BUTTONSEND: 'Nieuw wachtwoord aanmaken'
     CHANGEPASSWORDBELOW: 'U kunt Uw wachtwoord hier beneden veranderen.'
     CHANGEPASSWORDHEADER: 'Verander Uw wachtwoord'
@@ -522,11 +496,11 @@ nl:
     BtnImport: 'Importeer'
     FileFieldLabel: 'CSV Bestand <small>(Toegestane extensies: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Bewerken
     Auto: Automatisch
     ChangeViewMode: 'Wijzig weergavemodus'
     Desktop: Desktop
     DualWindowView: 'Dubbelvenster'
+    Edit: Bewerken
     EditView: 'Bewerkmodus'
     Mobile: Mobiel
     PreviewState: 'Voorbeeldstatus'
@@ -536,32 +510,13 @@ nl:
     Tablet: Tablet
     ViewDeviceWidth: 'Selecteer een voorbeeldbreedte'
     Width: breedte
-  SimpleImageField:
-    NOUPLOAD: 'Geen afbeeldingen ontvangen'
   SiteTree:
     TABMAIN: Hoofdgedeelte
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' is verplicht'
-  TableField_ss:
-    ADD: 'Nieuwe rij toevoegen'
-    ADDITEM: '%s toevoegen'
   TableListField:
     CSVEXPORT: 'Exporteer naar CSV'
-    PRINT: Afdrukken
     Print: Afdrukken
-    SELECT: 'Selecteer:'
-  TableListField_ss:
-    NOITEMSFOUND: 'Geen items gevonden.'
-    SORTASC: 'Sorteer in oplopende volgorde'
-    SORTDESC: 'Sorteer in aflopende volgorde'
   TableListField_PageControls_ss:
-    DISPLAYING: Tonen
     OF: van
-    TO: naar
-    VIEWFIRST: 'Bekijk eerste'
-    VIEWLAST: 'Bekijk laatste'
-    VIEWNEXT: 'Bekijk volgende'
-    VIEWPREVIOUS: 'Bekijk vorige'
   TimeField:
     VALIDATEFORMAT: 'Vul een geldige datumformaat in ({format})'
   ToggleField:
@@ -571,6 +526,8 @@ nl:
     ATTACHFILE: 'Voeg een bestand toe'
     ATTACHFILES: 'Voeg bestanden toe'
     AttachFile: 'Voeg bestand(en) toe'
+    CHOOSEANOTHERFILE: 'Kies een ander bestand'
+    CHOOSEANOTHERINFO: 'Vervang dit bestand met een ander uit de bestandsopslag'
     DELETE: 'Volledig verwijderen'
     DELETEINFO: 'Verwijder dit bestand uit bestandsopslag van de website.'
     DOEDIT: Opslaan
@@ -585,29 +542,13 @@ nl:
     FROMFILES: 'Bestaande bestanden'
     HOTLINKINFO: 'Info: Deze afbeelding wordt hotlinked. Zorg ervoor dat u de machtigingen van de oorspronkelijke site maker om dit te doen.'
     MAXNUMBEROFFILES: 'Maximale aantal van {count} bestand(en) overschreden.'
-    MAXNUMBEROFFILESSHORT: 'Kan alleen {count} bestanden uploaden'
     MAXNUMBEROFFILESONE: 'Kan slechts één bestand uploaden'
+    MAXNUMBEROFFILESSHORT: 'Kan alleen {count} bestanden uploaden'
+    OVERWRITEWARNING: 'Bestand met dezelfde naam bestaat al'
     REMOVE: Verwijder
-    REMOVEERROR: 'Fout bij verwijderen'
     REMOVEINFO: 'Verwijder (ontkoppel) dit bestand, maar behoud het in bestandsopslag van de website.'
     STARTALL: 'Start alle'
-    STARTALLINFO: 'Start alle'
     Saved: Opgeslagen
-    CHOOSEANOTHERFILE: 'Kies een ander bestand'
-    CHOOSEANOTHERINFO: 'Vervang dit bestand met een ander uit de bestandsopslag'
-    OVERWRITEWARNING: 'Bestand met dezelfde naam bestaat al'
     UPLOADSINTO: 'Wordt opgeslagen in /{path}'
   Versioned:
     has_many_Versions: Versies
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Website voorbeeld'
-  GridFieldEditButton_ss:
-    EDIT: Bewerken
-  ContentController:
-    NOTLOGGEDIN: 'Niet ingelogd'
-  GridFieldItemEditView:
-    Go_back: 'Ga terug'
-  PasswordValidator:
-    LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door meer van de volgende karakters te gebruiken: %s'
-    PREVPASSWORD: 'U heeft dit wachtwoord in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'
-    TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal %s karakters hebben'

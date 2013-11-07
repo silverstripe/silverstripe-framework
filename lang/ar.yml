@@ -1,6 +1,5 @@
 ar:
   AssetAdmin:
-    ALLOWEDEXTS: 'الإمتدادات المسوح بها'
     NEWFOLDER: مجلد جديد
     SHOWALLOWEDEXTS: 'عرض الامتدادات المسموح بها'
   AssetTableField:
@@ -69,6 +68,8 @@ ar:
     ACCESSALLINTERFACES: 'الدخول إلى جميع واجهات إدارة المحتوى'
     ACCESSALLINTERFACESHELP: 'ينقض أكثر من توصيف الوصول المحدد'
     SAVE: حفظ
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'استعراض موقع الويب'
   CMSProfileController:
     MENUTITLE: 'ملفي الشخصي'
   ChangePasswordEmail_ss:
@@ -77,23 +78,13 @@ ar:
     EMAIL: البريد الإلكتروني
     HELLO: أهلاً
     PASSWORD: الرقم السري
-  ComplexTableField:
-    CLOSEPOPUP: 'إغلاق النافذة'
-    SUCCESSADD2: 'تم إضافة {اسم}'
-    SUCCESSEDIT: 'حفظ %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'أضف'
-    NOITEMSFOUND: 'لا يوجد عناصر'
-    SORTASC: 'ترتيب تصاعدي'
-    SORTDESC: 'ترتيب تنازلي'
-  ComplexTableField_popup_ss:
-    NEXT: التالي
-    PREVIOUS: السابق
   ConfirmedPasswordField:
     ATLEAST: 'يجب أن تكون كلمات المرور على الأقل {الحد الأدنى} حرفاً.'
     BETWEEN: 'يجب أن تكون كلمات المرور من {الحد الأدنى} إلى {الحد الأقصى} حرفاً.'
     MAXIMUM: 'يجب أن تكون كلمات المرور على الأكثر {الحد الأقصى} حرفاً.'
     SHOWONCLICKTITLE: 'تغيير كلمة المرور'
+  ContentController:
+    NOTLOGGEDIN: 'لم تقم بتسجيل الدخول'
   CreditCardField:
     FIRST: الأول
     FOURTH: الرابع
@@ -107,6 +98,7 @@ ar:
     DAYS: أيام
     HOUR: ساعة
     HOURS: ساعات
+    LessThanMinuteAgo: 'أقل من دقيقة'
     MIN: دقيقة
     MINS: دقائق
     MONTH: شهر
@@ -117,7 +109,6 @@ ar:
     TIMEDIFFIN: 'في {الفرق}'
     YEAR: سنة
     YEARS: سنوات
-    LessThanMinuteAgo: 'أقل من دقيقة'
   DateField:
     NOTSET: 'غير محدد'
     TODAY: اليوم
@@ -130,11 +121,9 @@ ar:
     INVALID_REQUEST: 'طلب غير صحيح'
   DropdownField:
     CHOOSE: (اختر)
+    CHOOSESEARCH: '(اختار أو ابحث)'
   EmailField:
     VALIDATION: 'يرجى إدخال عنوان بريد إلكتروني'
-  Email_BounceRecord:
-    PLURALNAME: 'سجلات البريد الإلكتروني Bounce'
-    SINGULARNAME: 'سجل البريد الإلكتروني Bounce'
   Enum:
     ANY: أي
   File:
@@ -169,19 +158,6 @@ ar:
     WavType: 'ملف صوتي بصيغة WAV'
     XlsType: 'ملف جداول اكسل'
     ZipType: 'ملف مضغوط بصيغة ZIP'
-  FileIFrameField:
-    ATTACH: 'إرفاق {النوع}'
-    ATTACHONCESAVED: '{النوع} يمكن إرفاق الأنواع بمجرد أنك قد قمت بحفظ السجل للمرة الأولى.'
-    ATTACHONCESAVED2: '.يمكن إرفاق الملفات بمجرد انك قد قمت بحفظ السجل للمرة الأولى'
-    DELETE: 'حذف {النوع}'
-    DISALLOWEDFILETYPE: 'لا يسمح لهذا النوع من الملفات أن يتم تحميلها'
-    FILE: ملف
-    FROMCOMPUTER: 'من جهازك الشخصي'
-    FROMFILESTORE: 'من مكتبة الملفات'
-    NOSOURCE: 'الرجاء اختيارمصدر ملف المرفق'
-    REPLACE: 'استبدال {نوع}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'إطار تحميل الصور'
   Filesystem:
     SYNCRESULTS: 'اكتملت المزامنة : {العدد المتكون} العناصر التي تم إنشاؤها، {العدد المحذوف}  العناصر المحذوفة'
   Folder:
@@ -193,6 +169,7 @@ ar:
     TEXT2: 'رابط إعادة تعيين كلمة المرور'
     TEXT3: لـ
   Form:
+    CSRF_FAILED_MESSAGE: 'هناك على ما يبدو مشكلة فنية. الرجاء الضغط على الزر مرة أخرى، و تحديث المتصفح الخاص بك، ثم حاول مرة أخرى.'
     FIELDISREQUIRED: '{الاسم} مطلوب'
     SubmitBtnLabel: اذهب
     VALIDATIONCREDITNUMBER: 'يرجى التأكد من أنك قد قمت بإدخال {رقم} رقم بطاقة الائتمان بشكل صحيح'
@@ -202,10 +179,9 @@ ar:
     VALIDATIONSTRONGPASSWORD: 'كلمات المرور يجب أن تحتوي على رقم و حرف على الأقل'
     VALIDATOR: المحقق
     VALIDCURRENCY: 'يرجى إدخال عملة صحيحة'
-    CSRF_FAILED_MESSAGE: 'هناك على ما يبدو مشكلة فنية. الرجاء الضغط على الزر مرة أخرى، و تحديث المتصفح الخاص بك، ثم حاول مرة أخرى.'
   FormField:
-    NONE: لايوجد
     Example: 'على سبيل المثال %s.'
+    NONE: لايوجد
   GridAction:
     DELETE_DESCRIPTION: حذف
     Delete: حذف
@@ -236,7 +212,9 @@ ar:
     Deleted: '%s %s تم حذفه'
     Save: حفظ
     Saved: 'المحفوظ {اسم} {رابط}'
-  GridFieldItemEditView_ss:
+  GridFieldEditButton_ss:
+    EDIT: تعديل
+  GridFieldItemEditView:
     Go_back: 'العودة'
   Group:
     AddRole: 'إضافة دور لهذه المجموعة'
@@ -245,6 +223,7 @@ ar:
     DefaultGroupTitleContentAuthors: 'مؤلفي المحتوى'
     Description: الوصف
     GroupReminder: 'إذا اخترت مجموعة رئيسية، فإن هذه المجموعة سوف تتخذ جميع أدوارها'
+    HierarchyPermsError: 'لا يمكن تعيين المجموعة الرئيسية "s%" مع سماحيات مميزة (يتطلب دخول عن طريق المشرف)'
     Locked: 'مغلق ؟'
     NoRoles: 'لا يوجد أدوار'
     PLURALNAME: مجموعات
@@ -266,6 +245,7 @@ ar:
     ADDURL: 'أضف رابط الموقع URL'
     ADJUSTDETAILSDIMENSIONS: 'التفاصيل &amp; و الأبعاد'
     ANCHORVALUE: رابط
+    BUTTONADDURL: 'قم بإضافة رابط الموقع url'
     BUTTONINSERT: إدخال
     BUTTONINSERTLINK: 'أدخل رابط'
     BUTTONREMOVELINK: 'إزالة رابط'
@@ -285,6 +265,7 @@ ar:
     FROMWEB: 'من الإنترنت'
     FindInFolder: 'ابحث في المجلد'
     IMAGEALT: 'النص البديل (بديل)'
+    IMAGEALTTEXT: 'النص البديل (ألت) - يظهر إذا كان لا يمكن عرض الصورة'
     IMAGEDIMENSIONS: الأبعاد
     IMAGEHEIGHTPX: الطول
     IMAGETITLE: 'العنوان - لإضافة معلومات إلى الصورة'
@@ -305,12 +286,9 @@ ar:
     URL: رابط
     URLNOTANOEMBEDRESOURCE: 'عنوان الموقع لا يمكن أن يتحول إلى مصدر وسائط. ''{URL}'''
     UpdateMEDIA: 'تحديث الوسائط'
-    BUTTONADDURL: 'قم بإضافة رابط الموقع url'
   Image:
     PLURALNAME: الملفات
     SINGULARNAME: الملف
-  ImageField:
-    IMAGE: الصورة
   Image_Cached:
     PLURALNAME: ملفات
     SINGULARNAME: ملف
@@ -329,10 +307,10 @@ ar:
     PreviewButton: استعراض
     REORGANISATIONSUCCESSFUL: 'تم إعادة تنظيم خريطة الموقع بنجاح'
     SAVEDUP: تم الحفظ.
-    VersionUnknown: غير معروف
     ShowAsList: 'عرض كقائمة'
     TooManyPages: 'صفحات كثيرة جداً'
     ValidationError: 'خطأ في عملية التحقق'
+    VersionUnknown: غير معروف
   LeftAndMain_Menu_ss:
     Hello: مرحباً
     LOGOUT: 'تسجيل الخروج'
@@ -357,16 +335,16 @@ ar:
     EMAIL: البريد الإلكتروني
     EMPTYNEWPASSWORD: 'كلمة المرور الجديدة لا يمكن أن تكون فارغة  ، فضلاً أعد المحاولة '
     ENTEREMAIL: 'فضلاً أدخل عنوان البريد الإلكتروني للحصول على رابط استعادة كلمة المرور'
-    ERRORLOCKEDOUT: 'حسابك تم تعطيله مؤقتاً بسبب تجاوزك العدد المسموح به من المحاولات. فضلاً أعد المحاولة بعد 20 دقيقة'
     ERRORLOCKEDOUT2: 'حسابك قد تم تعطيله مؤقتاً بسبب الكثير من المحاولات الفاشلة في تسجيل الدخول. يرجى المحاولة مرة أخرى في  {عدد} دقيقة.'
     ERRORNEWPASSWORD: 'قمت بإدخال كلمة مرور جديدة مختلفة ، حاول مرة أخرى'
     ERRORPASSWORDNOTMATCH: 'كلمة المرور الحالية غير متطابقة، فضلاً حاول مرة أخرى'
-    ERRORWRONGCRED: 'هناك خطأ في البريد الإلكتروني أو كلمة المرور. فضلاً أعد المحاولة مرة أخرى'
+    ERRORWRONGCRED: 'التفاصيل الموجودة لا تبدو صحيحة. من فضلك أعد المحاولة.'
     FIRSTNAME: 'الاسم الأول'
     INTERFACELANG: 'لغة الواجهة'
     INVALIDNEWPASSWORD: 'لا يمكننا قبول كلمة المرور هذه : {كلمة المرور}'
     LOGGEDINAS: 'أنت مسجل دخولك كـ {اسم}.'
     NEWPASSWORD: 'رقم المرور الجديد'
+    NoPassword: 'لا توجد كلمة مرور بشأن هذا العضو.'
     PASSWORD: رقم المرور
     PLURALNAME: الأعضاء
     REMEMBERME: 'تذكرني في المرة القادمة ؟'
@@ -386,7 +364,6 @@ ar:
     db_NumVisit: 'عدد الزيارات'
     db_Password: الرقم السري
     db_PasswordExpiry: 'تاريخ انتهاء صلاحية كلمة المرور'
-    NoPassword: 'لا توجد كلمة مرور بشأن هذا العضو.'
   MemberAuthenticator:
     TITLE: 'البريد الإلكتروني &amp; كلمة المرور'
   MemberDatetimeOptionsetField:
@@ -402,7 +379,6 @@ ar:
     MONTHNOLEADING: 'أرقام شهر دون أن تصبح بقيمة صفر'
     Preview: معاينة
     SHORTMONTH: 'اسم قصير من الشهر (على سبيل المثال يونيو)'
-    TOGGLEHELP: 'تبديل تعليمات التنسيق'
     TWODIGITDAY: 'رقمين ليوم الشهر'
     TWODIGITHOUR: 'خانتين لأرقام الساعة (00 إلى 23)'
     TWODIGITMINUTE: 'خانتين من الأرقام للدقيقة (00 إلى 59)'
@@ -434,8 +410,8 @@ ar:
     Title: 'نماذج البيانات'
     UPDATEDRECORDS: '{عدد} السجلات التي تم تحديثها'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'أعمدة قاعدة البيانات'
     IMPORTSPECLINK: 'عرض مواصفات لـ%s'
+    IMPORTSPECFIELDS: 'أعمدة قاعدة البيانات'
     IMPORTSPECRELATIONS: علاقات
     IMPORTSPECTITLE: 'مواصفات لـ%s'
   ModelAdmin_Tools_ss:
@@ -454,6 +430,10 @@ ar:
   Pagination:
     Page: صفحة
     View: عرض
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: %s'
+    PREVPASSWORD: 'لقد استخدمت كلمة المرور هذه في الماضي، يرجى اختيار كلمة مرور جديدة'
+    TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على %s أو أكثر من الحروف'
   Permission:
     AdminGroup: الإدارة
     CMS_ACCESS_CATEGORY: 'الوصل لنظام إدارة المحتوى'
@@ -473,19 +453,15 @@ ar:
     Title: عنوان
   PermissionRoleCode:
     PLURALNAME: 'رموز دور الأذن'
+    PermsError: 'لا يمكن تعيين كود "s%" مع سماحيات مميزة (يتطلب دخول اعن طريق المشرف)'
     SINGULARNAME: 'رمز دور الأذن'
   Permissions:
     PERMISSIONS_CATEGORY: 'تصاريح القاعدة والوصول'
     UserPermissionsIntro: 'سوف يتم تعديل التصريحات لدي المجموعات المعينة لهذا المستخدم. راجع قسم المجموعات للإطلاع على تفاصيل التصريحات على مجموعات فردية.'
   PhoneNumberField:
     VALIDATION: 'فضلاً أدخل رقم هاتف صحيح'
-  RelationComplexTableField_ss:
-    ADD: إضافة
-    CSVEXPORT: 'تصدير إلى CSV'
-    NOTFOUND: 'لا يوجد عناصر'
   Security:
     ALREADYLOGGEDIN: 'لاتملك صلاحية الدخول لهذه الصفحة ، إذا كنت تملك حساب آخر فيمكنك تسجيل الدخول'
-    LOSTPASSWORDHEADER: 'كلمة مرور مفقودة'
     BUTTONSEND: 'أرسل لي رابط إعادة تهيئة كلمة المرور'
     CHANGEPASSWORDBELOW: 'يمكنك تغيير كلمة المرور بالأسفل'
     CHANGEPASSWORDHEADER: 'تغيير كلمة المرور'
@@ -520,11 +496,11 @@ ar:
     BtnImport: 'استيراد'
     FileFieldLabel: ' CSV ملف <small>(الامتداد المسموح :*.csv )</small>'
   SilverStripeNavigator:
-    Edit: تعديل
     Auto: تلقائي
     ChangeViewMode: 'قم بتغيير نظام العرض'
     Desktop: سطح المكتب
     DualWindowView: 'نافذة مزدوجة'
+    Edit: تعديل
     EditView: 'وضع التعديل'
     Mobile: الجوال
     PreviewState: 'معاينة الحالة'
@@ -534,32 +510,13 @@ ar:
     Tablet: لوحة
     ViewDeviceWidth: 'اختر عرض المعاينة'
     Width: عرض
-  SimpleImageField:
-    NOUPLOAD: 'لا توجد صور مرفوعة'
   SiteTree:
     TABMAIN: الرئيسة
-  TableField:
-    ISREQUIRED: 'في %s ''%s'' مطلوب'
-  TableField_ss:
-    ADD: 'إضافة صف جديد'
-    ADDITEM: 'إضافة %s'
   TableListField:
     CSVEXPORT: 'تصدير إلى CSV'
-    PRINT: طباعة
     Print: طباعة
-    SELECT: 'اختيار'
-  TableListField_ss:
-    NOITEMSFOUND: 'لا يوجد عناصر'
-    SORTASC: 'فرز في ترتيب تصاعدي'
-    SORTDESC: 'فرز في ترتيب تنازلي'
   TableListField_PageControls_ss:
-    DISPLAYING: جار العرض
     OF: من
-    TO: إلى
-    VIEWFIRST: 'عرض الأول'
-    VIEWLAST: 'عرض الأخير'
-    VIEWNEXT: 'عرض التالي'
-    VIEWPREVIOUS: 'عرض السابق'
   TimeField:
     VALIDATEFORMAT: 'الرجاء إدخال صيغة وقت صحيحة ({صيغة})'
   ToggleField:
@@ -569,6 +526,8 @@ ar:
     ATTACHFILE: 'إرفاق ملف'
     ATTACHFILES: 'إرفاق ملفات'
     AttachFile: 'إرفاق ملف (أو أكثر)'
+    CHOOSEANOTHERFILE: 'اختر ملف آخر'
+    CHOOSEANOTHERINFO: 'استبدل هذا الملف بآخر من المخزون'
     DELETE: 'قم بالحذف من الملفات'
     DELETEINFO: 'حذف هذا الملف بشكل دائم من مخزن الملفات'
     DOEDIT: حفظ
@@ -583,29 +542,13 @@ ar:
     FROMFILES: 'من الملفات'
     HOTLINKINFO: 'معلومات: سيتم نشر هذه الصورة. يرجى التأكد من أن يكون لديك التصاريح من منشئ الموقع الأصلي للقيام بذلك.'
     MAXNUMBEROFFILES: 'الحد الأقصى من {عدد} الملفات قد تم تجاوزه'
-    MAXNUMBEROFFILESSHORT: 'يمكن تحميل {عدد} الملفات فقط'
     MAXNUMBEROFFILESONE: 'يمكن فقط تحميل ملف واحد'
+    MAXNUMBEROFFILESSHORT: 'يمكن تحميل {عدد} الملفات فقط'
+    OVERWRITEWARNING: 'يوجد ملف بنفس الاسم'
     REMOVE: حذف
-    REMOVEERROR: 'حدث خطأ في عملية حذف الملف'
     REMOVEINFO: 'قم بحذف هذا الملف من هنا و لكن لا تقم بحذفه من مخزن الملفات'
     STARTALL: 'ابدأ الكل'
-    STARTALLINFO: 'إبدأ كل التحميلات'
     Saved: تم الحفظ
-    CHOOSEANOTHERFILE: 'اختر ملف آخر'
-    CHOOSEANOTHERINFO: 'استبدل هذا الملف بآخر من المخزون'
-    OVERWRITEWARNING: 'يوجد ملف بنفس الاسم'
     UPLOADSINTO: 'يحفظ في /{path}'
   Versioned:
     has_many_Versions: الإصدارات
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: 'استعراض موقع الويب'
-  GridFieldEditButton_ss:
-    EDIT: تعديل
-  ContentController:
-    NOTLOGGEDIN: 'لم تقم بتسجيل الدخول'
-  GridFieldItemEditView:
-    Go_back: 'العودة'
-  PasswordValidator:
-    LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: %s'
-    PREVPASSWORD: 'لقد استخدمت كلمة المرور هذه في الماضي، يرجى اختيار كلمة مرور جديدة'
-    TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على %s أو أكثر من الحروف'

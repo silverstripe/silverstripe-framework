@@ -1,6 +1,5 @@
 sl:
   AssetAdmin:
-    ALLOWEDEXTS: 'Podaljševanje je dovoljeno.'
     NEWFOLDER: Nova mapa
   AssetTableField:
     CREATED: 'Naloženo na začetku'
@@ -73,18 +72,6 @@ sl:
     EMAIL: E-naslov
     HELLO: Pozdravljeni,
     PASSWORD: Geslo
-  ComplexTableField:
-    CLOSEPOPUP: 'Zapri okno'
-    SUCCESSADD2: 'Dodano {name}'
-    SUCCESSEDIT: 'Shranjeno: %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Dodaj %s'
-    NOITEMSFOUND: 'Ni najdenih predmetov.'
-    SORTASC: 'Razvrsti naraščajoče'
-    SORTDESC: 'Razvrsti padajoče'
-  ComplexTableField_popup_ss:
-    NEXT: Naprej
-    PREVIOUS: Nazaj
   ConfirmedPasswordField:
     ATLEAST: 'Geslo mora vsebovati vsaj {min} znakov.'
     BETWEEN: 'Geslo mora biti dolgo od {min} do {max} znakov.'
@@ -110,9 +97,6 @@ sl:
     CHOOSE: (Izberi)
   EmailField:
     VALIDATION: 'Prosim, vpišite e-naslov.'
-  Email_BounceRecord:
-    PLURALNAME: 'Seznam zavrnjenih e-sporočil'
-    SINGULARNAME: 'Zavrnjeno e-sporočilo'
   Enum:
     ANY: Katerikoli
   File:
@@ -144,15 +128,6 @@ sl:
     WavType: 'WAV avdio datoteka'
     XlsType: 'Excel preglednica'
     ZipType: 'ZIP stisnjena datoteka'
-  FileIFrameField:
-    ATTACH: 'Pripni {type}'
-    DELETE: 'Izbriši {type}'
-    DISALLOWEDFILETYPE: 'Datoteke v tem formatu ni mogoče naložiti'
-    FILE: Datoteka
-    FROMCOMPUTER: 'Z vašega računalnika'
-    FROMFILESTORE: 'Iz knjižnice datotek'
-    NOSOURCE: 'Izberite datoteko, ki jo boste pripeli.'
-    REPLACE: 'Nadomesti {type}'
   Folder:
     PLURALNAME: Mape
     SINGULARNAME: Mapa
@@ -191,8 +166,6 @@ sl:
     Delete: Izbriši
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
     Save: Shrani
-  GridFieldItemEditView_ss:
-    Go_back: 'Nazaj'
   Group:
     Code: 'Koda skupine'
     DefaultGroupTitleAdministrators: Administratorji
@@ -251,8 +224,6 @@ sl:
   Image:
     PLURALNAME: Datoteke
     SINGULARNAME: Datoteka
-  ImageField:
-    IMAGE: Slika
   Image_Cached:
     PLURALNAME: Datoteke
     SINGULARNAME: Datoteka
@@ -293,10 +264,8 @@ sl:
     EMAIL: E-naslov
     EMPTYNEWPASSWORD: 'Polje za vpis novega gesla ne sme ostati prazno. Poskusite ponovno.'
     ENTEREMAIL: 'Vpišite e-naslov, na katerega vam bomo nato poslali povezavo za ponastavitev gesla.'
-    ERRORLOCKEDOUT: 'Zaradi številnih neuspelih poskusov prijave, smo vaš račun začasno zaklenili. S pravo kombinacijo uporabniškega imena in gesla se boste vanj lahko ponovno prijavili čez 20 minut.'
     ERRORNEWPASSWORD: 'Novo geslo ste drugače zapisali - poskusite ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vpisani novi gesli se ne ujemata. Poskusite ponovno.'
-    ERRORWRONGCRED: 'Izgleda, kakor da se uporabniško ime in geslo ne ujemata. Poskusite se ponovno prijaviti.'
     FIRSTNAME: 'Ime'
     INTERFACELANG: 'Jezik'
     INVALIDNEWPASSWORD: 'Tega gesla ne moremo sprejeti: {password}'
@@ -386,12 +355,8 @@ sl:
     PERMISSIONS_CATEGORY: 'Vloge in dovoljenja za dostop'
   PhoneNumberField:
     VALIDATION: 'Vpišite veljavno telefonsko številko'
-  RelationComplexTableField_ss:
-    ADD: Dodaj
-    CSVEXPORT: 'Izvozi kot CSV-datoteko'
-    NOTFOUND: 'Ni najdenih predmetov.'
   Security:
-    ALREADYLOGGEDIN: 'Nimate dovoljenja za dostop do te strani. Če imate uporabniško ime z večimi pravicami, se lahko <a href="%s">ponovno prijavite</a>.'
+    ALREADYLOGGEDIN: 'Nimate dovoljenja za dostop do te strani. Če imate uporabniško ime z večimi pravicami, se lahko ponovno prijavite.'
     BUTTONSEND: 'Pošlji povezavo za ponastavitev gesla'
     CHANGEPASSWORDBELOW: 'Spodaj lahko spremenite svoje geslo.'
     CHANGEPASSWORDHEADER: 'Spremenite geslo'
@@ -424,29 +389,13 @@ sl:
     FileFieldLabel: 'CSV-datoteka <small>(Samo končnica: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Uredi
-  SimpleImageField:
-    NOUPLOAD: 'Slika ni naložena'
   SiteTree:
     TABMAIN: Domov
-  TableField_ss:
-    ADD: 'Dodaj vrstico'
   TableListField:
     CSVEXPORT: 'Izvozi kot CSV-datoteko'
-    PRINT: Natisni
     Print: Natisni
-    SELECT: 'Izberi:'
-  TableListField_ss:
-    NOITEMSFOUND: 'Ni najdenih predmetov.'
-    SORTASC: 'Razvrsti naraščajoče'
-    SORTDESC: 'Razvrsti padajoče'
   TableListField_PageControls_ss:
-    DISPLAYING: Prikaz
     OF: od
-    TO: za
-    VIEWFIRST: 'Na začetek'
-    VIEWLAST: 'Na konec'
-    VIEWNEXT: 'Naslednja'
-    VIEWPREVIOUS: 'Prejšnja'
   TimeField:
     VALIDATEFORMAT: 'Prosim, vnesite čas v ustrezni obliki ({format})'
   ToggleField:
@@ -469,7 +418,6 @@ sl:
     MAXNUMBEROFFILES: 'Doseženo je največje možno število datotek: {count}'
     MAXNUMBEROFFILESSHORT: 'Naložite lahko največ {count} datotek'
     REMOVE: Odstrani
-    REMOVEERROR: 'Napaka pri brisanju datoteke'
     REMOVEINFO: 'Odstrani datoteko, vendar je ne izbriši iz knjižnjice datotek'
     Saved: Shranjeno
   Versioned:

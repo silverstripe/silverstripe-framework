@@ -14,8 +14,6 @@ da:
   CMSMain:
     ACCESSALLINTERFACES: 'Adgang til alle CMS grænseflader'
     SAVE: Gem
-  ComplexTableField:
-    CLOSEPOPUP: 'Luk popup'
   LeftAndMain:
     HELP: Hjælp
     PAGETYPE: 'Sidetype:'
@@ -31,8 +29,3 @@ da:
   SecurityAdmin:
     EDITPERMISSIONS: 'Rediger tilladelser og IP-adresser for hver gruppe'
     NEWGROUP: 'Ny gruppe'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Vis f&oslash;rste'
-    VIEWLAST: 'Vis Sidste'
-    VIEWNEXT: 'Vis n&aelig;ste'
-    VIEWPREVIOUS: 'Vis forrige'

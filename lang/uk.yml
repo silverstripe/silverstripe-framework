@@ -21,15 +21,6 @@ uk:
     CHANGEPASSWORDTEXT2: 'Тепер Ви можете використовувати наступні дані для входу:'
     HELLO: Привіт
     PASSWORD: Пароль
-  ComplexTableField:
-    CLOSEPOPUP: 'Закрити Popup'
-  ComplexTableField_ss:
-    ADDITEM: 'Додати'
-    SORTASC: 'За зростанням'
-    SORTDESC: 'За спаданням'
-  ComplexTableField_popup_ss:
-    NEXT: Наступна
-    PREVIOUS: Попередня
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Змінити пароль'
   CreditCardField:
@@ -51,10 +42,6 @@ uk:
     NOVALIDUPLOAD: 'Цей файл не може бути завантаженим'
     PLURALNAME: Файли
     SINGULARNAME: Файл
-  FileIFrameField:
-    FILE: Файл
-    FROMCOMPUTER: 'З Вашого комп’ютера'
-    FROMFILESTORE: 'З сервера'
   ForgotPasswordEmail_ss:
     HELLO: Привіт
   Form:
@@ -95,8 +82,6 @@ uk:
     LINKOPENNEWWIN: 'Відчиняти посилання у новому вікні?'
     LINKTO: 'Посилатися на'
     PAGE: Сторінка
-  ImageField:
-    IMAGE: Зображення
   Image_iframe_ss:
     TITLE: 'АйФрейм завантаження зображення'
   LeftAndMain:
@@ -117,10 +102,8 @@ uk:
     EMAIL: Е-пошта
     EMPTYNEWPASSWORD: 'Новий пароль не може бути порожнім, будь-ласка, спробуйте ще раз'
     ENTEREMAIL: 'Введіть, будь-ласка, електронну адресу щоб отримати посилання для відновлення паролю.'
-    ERRORLOCKEDOUT: 'Ваш екаунт тимчасово заблоковано, тому що було багато невдалих спроб входу. Будь ласка спробуйте знову через 20 хвилин.'
     ERRORNEWPASSWORD: 'Ви ввели новий пароль із відмінностями, спробуйте знову'
     ERRORPASSWORDNOTMATCH: 'Ваш теперішній пароль не збігається, будь ласка, повторіть'
-    ERRORWRONGCRED: 'Здається, що це невірна адреса е-пошти чи пароль. Спробуйте повторно.'
     FIRSTNAME: 'Ім''я'
     INTERFACELANG: 'Мова Інтерфейсу'
     NEWPASSWORD: 'Новий пароль'
@@ -166,14 +149,10 @@ uk:
     MEMBERS: Члени
     NEWGROUP: 'Нова Група'
     PERMISSIONS: Дозволи
-  SimpleImageField:
-    NOUPLOAD: 'Не завантажено жодного зображення'
   SiteTree:
     TABMAIN: Головна
   TableListField:
     CSVEXPORT: 'Експортувати в CSV'
-    PRINT: Друкувати
-    SELECT: 'Вибрати:'
   ToggleField:
     LESS: менше
     MORE: більше
@@ -184,6 +163,5 @@ uk:
     DOEDIT: Зберегти
     EDITINFO: 'Редагувати цей файл'
     FROMFILES: 'З файлів'
-    REMOVEERROR: 'Помилка видалення файла'
   Versioned:
     has_many_Versions: Версіїї

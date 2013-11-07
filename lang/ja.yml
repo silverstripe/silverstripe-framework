@@ -1,6 +1,5 @@
 ja:
   AssetAdmin:
-    ALLOWEDEXTS: '拡張可'
     NEWFOLDER: 新しいフォルダ
     SHOWALLOWEDEXTS: '許可された拡張子を表示'
   AssetTableField:
@@ -69,6 +68,8 @@ ja:
     ACCESSALLINTERFACES: 'すべてのCMSのセクションへアクセス'
     ACCESSALLINTERFACESHELP: 'より細かいアクセス設定を無効にする。'
     SAVE: 保存
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'ウェブサイトのプレビュー'
   CMSProfileController:
     MENUTITLE: 'マイプロフィール'
   ChangePasswordEmail_ss:
@@ -77,23 +78,13 @@ ja:
     EMAIL: メールアドレス
     HELLO: こんにちわ！
     PASSWORD: パスワード
-  ComplexTableField:
-    CLOSEPOPUP: 'ポップアップを閉じる'
-    SUCCESSADD2: '{name}を追加しました'
-    SUCCESSEDIT: '更新日時 %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: '%sを追加する'
-    NOITEMSFOUND: '項目が見つかりませんでした'
-    SORTASC: '昇順'
-    SORTDESC: 'ソート（下順）'
-  ComplexTableField_popup_ss:
-    NEXT: 次へ
-    PREVIOUS: 前へ
   ConfirmedPasswordField:
     ATLEAST: 'パスワードは少なくとも {min} 文字の長さが必要です。'
     BETWEEN: 'パスワードは {min} から {max} までの長さでなければならない。'
     MAXIMUM: 'パスワードは{max} 文字以内でなければなりません。'
     SHOWONCLICKTITLE: 'パスワード変更'
+  ContentController:
+    NOTLOGGEDIN: 'ログインしていません'
   CreditCardField:
     FIRST: 一番目
     FOURTH: 四番目
@@ -107,6 +98,7 @@ ja:
     DAYS: 日
     HOUR: 時間
     HOURS: 時間
+    LessThanMinuteAgo: '１分以下'
     MIN: 分
     MINS: 分
     MONTH: 月
@@ -117,7 +109,6 @@ ja:
     TIMEDIFFIN: '{difference}以内'
     YEAR: 年
     YEARS: 年
-    LessThanMinuteAgo: '一分以内'
   DateField:
     NOTSET: 'セットされていません'
     TODAY: 今日
@@ -132,13 +123,10 @@ ja:
     CHOOSE: (選択)
   EmailField:
     VALIDATION: 'メールアドレスを入力してください'
-  Email_BounceRecord:
-    PLURALNAME: 'Eメール 反応記録'
-    SINGULARNAME: 'Eメール 反応記録'
   Enum:
     ANY: 何でも
   File:
-    AviType: 'AVI ビデオファイル'
+    AviType: 'AVI 動画ファイル'
     Content: 内容
     CssType: 'CSSファイル'
     DmgType: 'Apple ディスクイメージ'
@@ -169,19 +157,6 @@ ja:
     WavType: 'WAV オーディオファイル'
     XlsType: 'エクセルのスプレッドシート'
     ZipType: 'ZIP 圧縮ファイル'
-  FileIFrameField:
-    ATTACH: '添付 {type}'
-    ATTACHONCESAVED: '一度初めて記録を保存すれば、{type}s は添付可能です。'
-    ATTACHONCESAVED2: '一度初めて記録を保存すれば、ファイルが添付可能です。'
-    DELETE: '{type} を削除する'
-    DISALLOWEDFILETYPE: 'このファイルの種類はアップロードすることを許可されていません'
-    FILE: ファイル
-    FROMCOMPUTER: 'コンピューターから'
-    FROMFILESTORE: 'ファイルストレージから'
-    NOSOURCE: '添付するソースファイルを選択してください'
-    REPLACE: '置き換え{type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'イメージアップロード（Iframe）'
   Filesystem:
     SYNCRESULTS: '同期が完了しました: {createdcount}項目が作成され、{deletedcount}項目が削除されました。'
   Folder:
@@ -193,6 +168,7 @@ ja:
     TEXT2: 'パスワードリセットのリンク'
     TEXT3: は
   Form:
+    CSRF_FAILED_MESSAGE: '技術的な問題が生じた可能性があります。 戻るボタンをクリックしてブラウザを更新し、もう一度試してください。'
     FIELDISREQUIRED: '{name} が必要'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'クレジットカード番号 {number} が正しく入力されたかどうか確認してください'
@@ -202,10 +178,9 @@ ja:
     VALIDATIONSTRONGPASSWORD: 'パスワードは少なくとも1桁の数字と1つの英字を含んでいる必要があります'
     VALIDATOR: 検証
     VALIDCURRENCY: '有効な通貨を入力してください'
-    CSRF_FAILED_MESSAGE: '技術的な問題が生じた可能性があります。 戻るボタンをクリックしてブラウザを更新し、もう一度試してください。'
   FormField:
-    NONE: 何もありません
     Example: '例 %s'
+    NONE: 何もありません
   GridAction:
     DELETE_DESCRIPTION: 削除
     Delete: 削除
@@ -236,7 +211,9 @@ ja:
     Deleted: '削除済み %s %s'
     Save: 保存
     Saved: '保存 {name} {link}'
-  GridFieldItemEditView_ss:
+  GridFieldEditButton_ss:
+    EDIT: 編集
+  GridFieldItemEditView:
     Go_back: '戻る'
   Group:
     AddRole: 'このグループに役割を追加'
@@ -266,6 +243,7 @@ ja:
     ADDURL: 'URLを追加'
     ADJUSTDETAILSDIMENSIONS: '詳細 &amp; 大きさ'
     ANCHORVALUE: アンカー
+    BUTTONADDURL: 'URLを追加'
     BUTTONINSERT: 追加
     BUTTONINSERTLINK: 'リンクを追加'
     BUTTONREMOVELINK: 'リンクを削除'
@@ -307,12 +285,9 @@ ja:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL''{url}''はメディアリソースとして扱うことができませんでした。'
     UpdateMEDIA: 'メディアを更新'
-    BUTTONADDURL: 'URLを追加'
   Image:
     PLURALNAME: ファイル
     SINGULARNAME: ファイル
-  ImageField:
-    IMAGE: 画像
   Image_Cached:
     PLURALNAME: ファイル
     SINGULARNAME: ファイル
@@ -331,10 +306,10 @@ ja:
     PreviewButton: プレビュー
     REORGANISATIONSUCCESSFUL: 'サイトツリーの再編集に成功しました。'
     SAVEDUP: 保存済み
-    VersionUnknown: 不明
     ShowAsList: 'リストとして表示する'
     TooManyPages: 'あまりにも多くのページ'
     ValidationError: '確認エラー'
+    VersionUnknown: 不明
   LeftAndMain_Menu_ss:
     Hello: こんにちは！
     LOGOUT: 'ログアウト'
@@ -359,16 +334,15 @@ ja:
     EMAIL: メールアドレス
     EMPTYNEWPASSWORD: 'パスワードが空です。もう一度入力して下さい。'
     ENTEREMAIL: 'パスワードをリセットするためにメールアドレスを入力してください。'
-    ERRORLOCKEDOUT: 'あなたのアカウントは何度もログインに失敗したため一時的に利用できなくなっています。20分後に試してください。'
     ERRORLOCKEDOUT2: '複数回ログインに失敗したため、あなたのアカウントは一時的に使用不可能になっています。　{count} 分後に再びログインしてください。'
     ERRORNEWPASSWORD: '入力されたパスワードが一致しません。再度お試しください'
     ERRORPASSWORDNOTMATCH: '登録されているパスワードと一致しません、もう一度入力し直してください'
-    ERRORWRONGCRED: 'メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください'
     FIRSTNAME: '名'
     INTERFACELANG: '画面言語'
     INVALIDNEWPASSWORD: '次のパスワードは受け付けることができません: {password}'
     LOGGEDINAS: '{name}としてログインしています。'
     NEWPASSWORD: '新しいパスワード'
+    NoPassword: 'このメンバーにはパスワードはありません。'
     PASSWORD: パスワード
     PLURALNAME: メンバー
     REMEMBERME: 'パスワードを記憶？'
@@ -388,7 +362,6 @@ ja:
     db_NumVisit: '訪問者数'
     db_Password: パスワード
     db_PasswordExpiry: 'パスワードの有効期限'
-    NoPassword: 'このメンバーにはパスワードはありません。'
   MemberAuthenticator:
     TITLE: 'メールアドレスとパスワード'
   MemberDatetimeOptionsetField:
@@ -404,7 +377,6 @@ ja:
     MONTHNOLEADING: '先行ゼロなしの月の桁'
     Preview: プレビュー
     SHORTMONTH: '月の短い名前（例えば6月）'
-    TOGGLEHELP: 'フォーマットに関するヘルプの表示・非表示'
     TWODIGITDAY: '月の2桁の日'
     TWODIGITHOUR: '時間の2桁（00~23）'
     TWODIGITMINUTE: '分の2桁（00〜59）'
@@ -436,8 +408,8 @@ ja:
     Title: 'データモデル'
     UPDATEDRECORDS: '{count}レコードを更新しました。'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'データベースカラム'
     IMPORTSPECLINK: '%s の仕様を表示する'
+    IMPORTSPECFIELDS: 'データベースカラム'
     IMPORTSPECRELATIONS: 関連
     IMPORTSPECTITLE: '%s の仕様'
   ModelAdmin_Tools_ss:
@@ -456,20 +428,24 @@ ja:
   Pagination:
     Page: ページ
     View: 閲覧
+  PasswordValidator:
+    LOWCHARSTRENGTH: '次の文字のいくつかを追加してパスワードを強化してください: %s'
+    PREVPASSWORD: 'このパスワードは過去に使用されています、新しいパスワードを選択してください'
+    TOOSHORT: 'パスワードが短すぎます、%文字以上でなければなりません'
   Permission:
     AdminGroup: 管理者
     CMS_ACCESS_CATEGORY: 'CMSアクセス'
     FULLADMINRIGHTS: '完全な管理権'
-    FULLADMINRIGHTS_HELP: '暗黙に定義または他のすべての割り当てられた許可を無効にする。'
-    PLURALNAME: 許可
-    SINGULARNAME: 許可
+    FULLADMINRIGHTS_HELP: '暗黙的に定義または他のすべての割り当てられた権限を無効にする。'
+    PLURALNAME: 権限
+    SINGULARNAME: 権限
   PermissionCheckboxSetField:
     AssignedTo: '"{title}" に割り当てられた'
     FromGroup: 'グループ"{title}"から継承'
     FromRole: '役割"{title}"から継承'
     FromRoleOnGroup: 'グループ "%s" のロール "%s"から継承'
   PermissionRole:
-    OnlyAdminCanApply: '運営スタッフのみ対応可'
+    OnlyAdminCanApply: '管理者のみ適用可能'
     PLURALNAME: 役割
     SINGULARNAME: 役割
     Title: タイトル
@@ -481,13 +457,8 @@ ja:
     UserPermissionsIntro: 'このユーザーにグループを割り当てると、彼らが持っている権限を調整します。個々のグループの権限の詳細については、グループセクションを参照してください。'
   PhoneNumberField:
     VALIDATION: '電話番号を入力してください'
-  RelationComplexTableField_ss:
-    ADD: 追加
-    CSVEXPORT: 'CSVへ書き出し'
-    NOTFOUND: '項目が見つかりませんでした'
   Security:
-    ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら <a href="%s">再ログイン</a>を行ってください。'
-    LOSTPASSWORDHEADER: 'パスワードの損失'
+    ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら 再ログインを行ってください。'
     BUTTONSEND: 'パスワードリセットのリンクを送信してください'
     CHANGEPASSWORDBELOW: '以下のパスワードを変更できます'
     CHANGEPASSWORDHEADER: 'パスワードを変更しました'
@@ -522,11 +493,11 @@ ja:
     BtnImport: 'CSVから取り込み'
     FileFieldLabel: 'CSVファイル <small>(利用可能な拡張子: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: 編集
     Auto: 自動
     ChangeViewMode: '閲覧モードの変更'
     Desktop: デスクトップ
     DualWindowView: '二重ウィンドウ'
+    Edit: 編集
     EditView: '編集モード'
     Mobile: モバイル
     PreviewState: 'プレビューの状態'
@@ -536,32 +507,13 @@ ja:
     Tablet: タブレット
     ViewDeviceWidth: 'プレビューの幅を選択する'
     Width: 幅
-  SimpleImageField:
-    NOUPLOAD: '何も画像がアップロードされていません'
   SiteTree:
     TABMAIN: メイン
-  TableField:
-    ISREQUIRED: '%s では ''%s'' が必要です'
-  TableField_ss:
-    ADD: '新しい行を追加'
-    ADDITEM: '%sを追加'
   TableListField:
     CSVEXPORT: 'CSVにエクスポート'
-    PRINT: 印刷
     Print: 印刷
-    SELECT: '選択：'
-  TableListField_ss:
-    NOITEMSFOUND: '項目が見つかりませんでした'
-    SORTASC: '昇順で並べ替え'
-    SORTDESC: '降順で並べ替え'
   TableListField_PageControls_ss:
-    DISPLAYING: 表示されている
     OF: の
-    TO: へ
-    VIEWFIRST: '一番目を表示'
-    VIEWLAST: '最新を表示'
-    VIEWNEXT: '次を表示'
-    VIEWPREVIOUS: '前回を表示'
   TimeField:
     VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
   ToggleField:
@@ -571,6 +523,8 @@ ja:
     ATTACHFILE: 'ファイルを添付'
     ATTACHFILES: 'ファイルを添付'
     AttachFile: 'ファイルを添付'
+    CHOOSEANOTHERFILE: '別のファイルを選択する'
+    CHOOSEANOTHERINFO: 'このファイルをファイルストアの別のファイルと交換する'
     DELETE: 'ファイルから削除する'
     DELETEINFO: 'ファイルストレージから永久にこのファイルは削除されました'
     DOEDIT: 保存
@@ -585,29 +539,13 @@ ja:
     FROMFILES: 'ファイルから'
     HOTLINKINFO: '情報：この画像はホットリンクされます。 元のサイトの作成者からあなたがそうする権限を持っていることを確認してください。'
     MAXNUMBEROFFILES: '最大数の{count}ファイルを超えました。'
-    MAXNUMBEROFFILESSHORT: '{count}ファイルしかアップロードすることができません'
     MAXNUMBEROFFILESONE: '一つのファイルのみアップロードすることができます'
+    MAXNUMBEROFFILESSHORT: '{count}ファイルしかアップロードすることができません'
+    OVERWRITEWARNING: 'すでに存在しているファイルと同じ名前のファイルを作成する'
     REMOVE: 削除
-    REMOVEERROR: 'ファイルの削除におけるエラー'
     REMOVEINFO: 'ここからこのファイルを削除。ただし、ファイルのストレージからこのファイルの削除はしない。'
     STARTALL: 'すべて開始'
-    STARTALLINFO: 'すべてのアップロードを開始'
     Saved: 保存しました
-    CHOOSEANOTHERFILE: '別のファイルを選択する'
-    CHOOSEANOTHERINFO: 'このファイルをファイルストアの別のファイルと交換する'
-    OVERWRITEWARNING: 'すでに存在しているファイルと同じ名前のファイルを作成する'
     UPLOADSINTO: '/{path} にセーブする'
   Versioned:
     has_many_Versions: バージョン
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: 'ウェブサイトのプレビュー'
-  GridFieldEditButton_ss:
-    EDIT: 編集
-  ContentController:
-    NOTLOGGEDIN: 'ログインしていません'
-  GridFieldItemEditView:
-    Go_back: '戻る'
-  PasswordValidator:
-    LOWCHARSTRENGTH: '次の文字のいくつかを追加してパスワードを強化してください: %s'
-    PREVPASSWORD: 'このパスワードは過去に使用されています、新しいパスワードを選択してください'
-    TOOSHORT: 'パスワードが短すぎます、%文字以上でなければなりません'

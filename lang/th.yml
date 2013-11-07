@@ -54,18 +54,6 @@ th:
     EMAIL: อีเมล
     HELLO: สวัสดี
     PASSWORD: รหัสผ่าน
-  ComplexTableField:
-    CLOSEPOPUP: 'ปิดหน้าต่างป๊อปอัพ'
-    SUCCESSADD2: 'เพิ่มแล้ว {name}'
-    SUCCESSEDIT: 'บันทึกแล้ว %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'เพิ่ม %s'
-    NOITEMSFOUND: 'ไม่พบรายการที่ต้องการ'
-    SORTASC: 'จัดเรียงจากน้อยมามาก'
-    SORTDESC: 'จัดเรียงจากมากไปน้อย'
-  ComplexTableField_popup_ss:
-    NEXT: ถัดไป
-    PREVIOUS: ก่อนหน้า
   ConfirmedPasswordField:
     BETWEEN: 'รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร'
     SHOWONCLICKTITLE: 'เปลี่ยนรหัสผ่าน'
@@ -115,14 +103,6 @@ th:
     WavType: 'ไฟล์เสียง WAV'
     XlsType: 'สเปรดชีท Excel'
     ZipType: 'ไฟล์บีบอัดข้อมูล ZIP'
-  FileIFrameField:
-    ATTACH: 'แนบ {type}'
-    DELETE: 'ลบ {type}'
-    FILE: ไฟล์
-    FROMCOMPUTER: 'จากเครื่องคอมพิวเตอร์ของคุณ'
-    FROMFILESTORE: 'จากพื้นที่จัดเก็บไฟล์'
-    NOSOURCE: 'กรุณาเลือกไฟล์แหล่งข้อมูลที่ต้องการแนบไฟล์'
-    REPLACE: 'แทนที่ {type}'
   Folder:
     PLURALNAME: โฟลเดอร์
     SINGULARNAME: โฟลเดอร์
@@ -162,8 +142,6 @@ th:
     Delete: ลบ
     Deleted: 'ลบ %s %s แล้ว'
     Save: บันทึก
-  GridFieldItemEditView_ss:
-    Go_back: 'กลับไป'
   Group:
     AddRole: 'เพิ่มบทบาทให้กับกลุ่มนี้'
     Code: 'รหัสกลุ่ม'
@@ -219,8 +197,6 @@ th:
   Image:
     PLURALNAME: ไฟล์
     SINGULARNAME: ไฟล์
-  ImageField:
-    IMAGE: รูปภาพ
   Image_Cached:
     PLURALNAME: ไฟล์
     SINGULARNAME: ไฟล์
@@ -320,10 +296,6 @@ th:
     Title: หัวเรื่อง
   PhoneNumberField:
     VALIDATION: 'กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง'
-  RelationComplexTableField_ss:
-    ADD: เพิ่ม
-    CSVEXPORT: 'ส่งออกเป็นไฟล์ CSV'
-    NOTFOUND: 'ไม่พบรายการที่ต้องการ'
   Security:
     ALREADYLOGGEDIN: 'คุณไม่จำเป็นต้องเข้ามาที่หน้าเว็บนี้. หากคุณมีบัญชีอื่นๆที่สามารถเข้าถึงหน้าเว็บนี้ได้อยู่แล้ว คุณสามารถ <a href="%s">เข้าสู่ระบบอีกครั้ง</a>'
     BUTTONSEND: 'ส่งลิงค์รีเซ็ตรหัสผ่านให้กับฉัน'
@@ -348,30 +320,13 @@ th:
     BtnImport: 'นำเข้า'
   SilverStripeNavigator:
     Edit: แก้ไข
-  SimpleImageField:
-    NOUPLOAD: 'ยังไม่มีรูปภาพที่ถูกอัพโหลด'
   SiteTree:
     TABMAIN: หลัก
-  TableField_ss:
-    ADD: 'เพิ่มแถวใหม่'
-    ADDITEM: 'เพิ่ม %s'
   TableListField:
     CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
-    PRINT: สั่งพิมพ์
     Print: พิมพ์
-    SELECT: 'เลือก'
-  TableListField_ss:
-    NOITEMSFOUND: 'ไม่พบรายการที่ต้องการ'
-    SORTASC: 'จัดเรียงลำดับจากน้อยมามาก'
-    SORTDESC: 'จัดเรียงลำดับจากมากมาน้อย'
   TableListField_PageControls_ss:
-    DISPLAYING: แสดง
     OF: จาก
-    TO: ถึง
-    VIEWFIRST: 'ดูหน้าแรก'
-    VIEWLAST: 'เปิดดูหน้าสุดท้าย'
-    VIEWNEXT: 'เปิดดูหน้าเว็บถัดไป'
-    VIEWPREVIOUS: 'เปิดดูหน้าเว็บก่อนหน้า'
   ToggleField:
     MORE: เพิ่มเติม
   UploadField:
@@ -391,10 +346,8 @@ th:
     FROMCOMPUTERINFO: 'เลือกจากไฟล์'
     FROMFILES: 'จากไฟล์'
     REMOVE: ลบออก
-    REMOVEERROR: 'พบข้อผิดพลาดในระหว่างการลบไฟล์'
     REMOVEINFO: 'ลบไฟล์นี้จากที่นี่ แต่ไม่ต้องลบไฟล์ดังกล่าวจากพื้นที่จัดเก็บไฟล์'
     STARTALL: 'เริ่มทั้งหมด'
-    STARTALLINFO: 'เริ่มการอัพโหลดทั้งหมด'
     Saved: บันทึกแล้ว
   Versioned:
     has_many_Versions: เวอร์ชั่น

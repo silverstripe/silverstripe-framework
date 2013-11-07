@@ -1,6 +1,5 @@
 fr:
   AssetAdmin:
-    ALLOWEDEXTS: 'Extensions autorisées'
     NEWFOLDER: Nouveau dossier
     SHOWALLOWEDEXTS: 'Montrer les extensions autorisées'
   AssetTableField:
@@ -69,6 +68,8 @@ fr:
     ACCESSALLINTERFACES: 'Accès à toutes les sections du CMS'
     ACCESSALLINTERFACESHELP: 'Prioritaire sur les droits plus spécifiques d''accès.'
     SAVE: Enregistrer
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Aperçu du site'
   CMSProfileController:
     MENUTITLE: 'Mon profil'
   ChangePasswordEmail_ss:
@@ -77,23 +78,13 @@ fr:
     EMAIL: Email
     HELLO: Salut
     PASSWORD: Mot de passe
-  ComplexTableField:
-    CLOSEPOPUP: 'Ferme Popup'
-    SUCCESSADD2: '{name} ajouté'
-    SUCCESSEDIT: 'Sauvegardé %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Ajoute %s'
-    NOITEMSFOUND: 'Aucun élément n’a été trouvé'
-    SORTASC: 'Tri croissant'
-    SORTDESC: 'Tri décroissant'
-  ComplexTableField_popup_ss:
-    NEXT: Suivant
-    PREVIOUS: Précédent
   ConfirmedPasswordField:
     ATLEAST: 'Le mot de passe doit comporter au moins {min} caractères.'
     BETWEEN: 'Le mot de passe doit comporter entre {min} et {max} caractères.'
     MAXIMUM: 'Le mot de passe ne doit comporter plus de {max} caractères.'
     SHOWONCLICKTITLE: 'Changer le mot de passe'
+  ContentController:
+    NOTLOGGEDIN: 'Hors-ligne'
   CreditCardField:
     FIRST: premier
     FOURTH: quatrième
@@ -109,6 +100,7 @@ fr:
     DAYS: jours
     HOUR: heure
     HOURS: heures
+    LessThanMinuteAgo: 'moins d''une minute'
     MIN: min
     MINS: mins
     MONTH: mois
@@ -119,7 +111,6 @@ fr:
     TIMEDIFFIN: 'Dans {difference}'
     YEAR: année
     YEARS: années
-    LessThanMinuteAgo: 'moins d''une minute'
   DateField:
     NOTSET: 'non renseigné'
     TODAY: aujourd'hui
@@ -134,9 +125,6 @@ fr:
     CHOOSE: (Choisir)
   EmailField:
     VALIDATION: 'Saisissez une adresse de courrier électronique'
-  Email_BounceRecord:
-    PLURALNAME: 'Enregistrements des Emails rejetés'
-    SINGULARNAME: 'Enregistrement de Email rejeté'
   Enum:
     ANY: Tous
   File:
@@ -171,19 +159,6 @@ fr:
     WavType: 'Fichier audio WAV'
     XlsType: 'Feuille de calcul Excel'
     ZipType: 'Fichier compressé ZIP'
-  FileIFrameField:
-    ATTACH: 'Attacher {type}'
-    ATTACHONCESAVED: 'Des {type} pourront être attachés après un premier enregistrement.'
-    ATTACHONCESAVED2: 'Des fichiers pourront être attachés après un premier enregistrement.'
-    DELETE: 'Supprimer {type}'
-    DISALLOWEDFILETYPE: 'Ce type de fichier n’est pas autorisé'
-    FILE: Fichier
-    FROMCOMPUTER: 'Depuis votre ordinateur'
-    FROMFILESTORE: 'Depuis les archives'
-    NOSOURCE: 'Choisir un fichier à joindre'
-    REPLACE: 'Remplacer {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Iframe de chargement d’images'
   Filesystem:
     SYNCRESULTS: 'Synchronisation terminée&nbsp;: {createdcount} éléments créés, {deletedcount} éléments supprimés '
   Folder:
@@ -195,6 +170,7 @@ fr:
     TEXT2: 'lien de réinitialisation de mot de passe'
     TEXT3: pour
   Form:
+    CSRF_FAILED_MESSAGE: 'Il semble qu''il y ait eu un problème technique. Veuillez cliquez sur le bouton Retour, raffraîchir votre navigateur, et essayer à nouveau'
     FIELDISREQUIRED: '{name} requis'
     SubmitBtnLabel: Envoyer
     VALIDATIONCREDITNUMBER: 'Vérifiez que vous avez bien saisi votre numéro de carte bleue {number}.'
@@ -204,10 +180,9 @@ fr:
     VALIDATIONSTRONGPASSWORD: 'Le mot de passe doit comporter au moins un chiffre et un caractère alphanumérique'
     VALIDATOR: Validateur
     VALIDCURRENCY: 'Saisissez une monnaie valide'
-    CSRF_FAILED_MESSAGE: 'Il semble qu''il y ait eu un problème technique. Veuillez cliquez sur le bouton Retour, raffraîchir votre navigateur, et essayer à nouveau'
   FormField:
-    NONE: aucun
     Example: 'par exemple %s'
+    NONE: aucun
   GridAction:
     DELETE_DESCRIPTION: Supprime
     Delete: Supprimer
@@ -238,8 +213,10 @@ fr:
     Deleted: '%s %s supprimés'
     Save: Enregistrer
     Saved: '{name} {link} sauvegardé'
-  GridFieldItemEditView_ss:
-    Go_back: 'Revenir en arrière'
+  GridFieldEditButton_ss:
+    EDIT: Editer
+  GridFieldItemEditView:
+    Go_back: 'Retour'
   Group:
     AddRole: 'Ajouter un rôle pour ce groupe'
     Code: 'Code de groupe'
@@ -268,6 +245,7 @@ fr:
     ADDURL: 'Ajouter URL'
     ADJUSTDETAILSDIMENSIONS: 'Détails &amp; dimensions'
     ANCHORVALUE: Ancre
+    BUTTONADDURL: 'Ajouter une URL'
     BUTTONINSERT: Insérer
     BUTTONINSERTLINK: 'Insérer un lien'
     BUTTONREMOVELINK: 'Supprimer le lien'
@@ -307,12 +285,9 @@ fr:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'L’URL {url} n’a pas pu être utilisée comme ressource média.'
     UpdateMEDIA: 'Mettre à jour le support audiovisuel'
-    BUTTONADDURL: 'Ajouter une URL'
   Image:
     PLURALNAME: Fichiers
     SINGULARNAME: Fichier
-  ImageField:
-    IMAGE: Image
   Image_Cached:
     PLURALNAME: Fichiers
     SINGULARNAME: Fichier
@@ -331,10 +306,10 @@ fr:
     PreviewButton: Aperçu
     REORGANISATIONSUCCESSFUL: 'L’arbre du site a été bien réorganisé.'
     SAVEDUP: Enregistré.
-    VersionUnknown: inconnu
     ShowAsList: 'lister'
     TooManyPages: 'Trop de pages'
     ValidationError: 'Erreur de validation'
+    VersionUnknown: inconnu
   LeftAndMain_Menu_ss:
     Hello: Bonjour
     LOGOUT: 'Déconnexion'
@@ -359,16 +334,15 @@ fr:
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Le champs nouveau mot de passe ne peut être vide, essayez de nouveau'
     ENTEREMAIL: 'Veuillez écrire une adresse email  pour obtenir le lien de réinitialisation du mot de passe.'
-    ERRORLOCKEDOUT: 'Votre compte a été désactivé temporairement à cause de multiples tentatives de connexions. Veuillez réessayer dans 20 minutes.'
     ERRORLOCKEDOUT2: 'Votre compte a été temporairement désactivé à cause de trop nombreux échecs d''identification. Veuillez réessayer dans {count} minutes.'
     ERRORNEWPASSWORD: 'Vous avez entré votre nouveau mot de passe différemment, réessayez'
     ERRORPASSWORDNOTMATCH: 'Votre actuel mot de passe ne correspond pas, essayez encore s''il vous plaît'
-    ERRORWRONGCRED: 'Il semble que ce ne soit pas le bon email ou mot de passe. Essayez encore s''il vous plaît.'
     FIRSTNAME: 'Prénom'
     INTERFACELANG: 'Langue de l''interface'
     INVALIDNEWPASSWORD: 'Nous ne pouvons pas accepter le mot de passe {password}'
     LOGGEDINAS: 'Vous êtes connecté comme {name}.'
     NEWPASSWORD: 'Nouveau mot de passe'
+    NoPassword: 'Ce membre n''a pas de mot de passe'
     PASSWORD: Mot de passe
     PLURALNAME: Membres
     REMEMBERME: 'Se souvenir de moi la prochaine fois ?'
@@ -388,7 +362,6 @@ fr:
     db_NumVisit: 'Nombre de visite'
     db_Password: Mot de passe
     db_PasswordExpiry: 'Date d''expiration du mot de passe'
-    NoPassword: 'Ce membre n''a pas de mot de passe'
   MemberAuthenticator:
     TITLE: 'Email &amp; Mot de passe'
   MemberDatetimeOptionsetField:
@@ -404,7 +377,6 @@ fr:
     MONTHNOLEADING: 'Le chiffre du mois sans zéro initial'
     Preview: Aperçu
     SHORTMONTH: 'Le nom abrégé du mois (p. ex. : jan.)'
-    TOGGLEHELP: 'Afficher l’aide de mise en forme'
     TWODIGITDAY: 'Le jour du mois sur deux chiffres'
     TWODIGITHOUR: 'L’heure sur deux chiffres (de 00 à 23)'
     TWODIGITMINUTE: 'La minute sur deux chiffres (de 00 à 59)'
@@ -436,8 +408,8 @@ fr:
     Title: 'Modèles de données'
     UPDATEDRECORDS: '{count} enregistrements mis à jour.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Colonnes de la base de données'
     IMPORTSPECLINK: 'Afficher la spécification de %s'
+    IMPORTSPECFIELDS: 'Colonnes de la base de données'
     IMPORTSPECRELATIONS: Relations
     IMPORTSPECTITLE: 'Spécification de %s'
   ModelAdmin_Tools_ss:
@@ -456,6 +428,10 @@ fr:
   Pagination:
     Page: Page
     View: Afficher
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Veuillez augmenter la force de votre mot de passe en ajoutant certains caractères suivants : %s'
+    PREVPASSWORD: 'Vous avez déjà utilisé ce mot de passe par le passé, veuillez en choisir un autre'
+    TOOSHORT: 'Le mot de passe est trop court, il doit contenir au moins %s caractères'
   Permission:
     AdminGroup: Administrateur
     CMS_ACCESS_CATEGORY: 'Accès au CMS'
@@ -481,13 +457,8 @@ fr:
     UserPermissionsIntro: 'Assigner des groupes à cet utilisateur modifiera les autorisations dont il dispose. Consultez la section « Groupes » pour plus de détails sur les autorisations associées à chaque groupe.'
   PhoneNumberField:
     VALIDATION: 'Entrer un numéro de téléphone valide'
-  RelationComplexTableField_ss:
-    ADD: Ajouter
-    CSVEXPORT: 'Exporter en CSV'
-    NOTFOUND: 'Aucun élément n’a été trouvé'
   Security:
     ALREADYLOGGEDIN: 'Vous n''avez pas accès à cette page. Si vous avez un autre identifiant pouvant accéder à cette page, vous pouvez l''utiliser ci-dessous.'
-    LOSTPASSWORDHEADER: 'Mot de passe oublié'
     BUTTONSEND: 'Envoyer moi le lien pour modifier le mot de passe'
     CHANGEPASSWORDBELOW: 'Vous pouvez modifier votre mot de passe ci-dessous.'
     CHANGEPASSWORDHEADER: 'Modifier votre mot de passe'
@@ -522,11 +493,11 @@ fr:
     BtnImport: 'Importer'
     FileFieldLabel: 'Fichier CSV <small>(extension autorisée&nbsp;: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Tout modifier
     Auto: Auto
     ChangeViewMode: 'Changer de mode de vue'
     Desktop: Bureau
     DualWindowView: 'Double fenêtre'
+    Edit: Tout modifier
     EditView: 'Editer le mode'
     Mobile: Mobile
     PreviewState: 'Aperçu'
@@ -536,32 +507,13 @@ fr:
     Tablet: Tablette
     ViewDeviceWidth: 'Sélectionnez une largeur d''aperçu'
     Width: largeur
-  SimpleImageField:
-    NOUPLOAD: 'Aucune image chargée'
   SiteTree:
     TABMAIN: Principal
-  TableField:
-    ISREQUIRED: 'Dans %s « %s » est requis'
-  TableField_ss:
-    ADD: 'Ajouter une nouvelle ligne'
-    ADDITEM: 'Ajouter %s'
   TableListField:
     CSVEXPORT: 'Exporter vers un fichier CSV'
-    PRINT: Imprimer
     Print: Imprimer
-    SELECT: 'Sélectionner&nbsp;:'
-  TableListField_ss:
-    NOITEMSFOUND: 'Aucun élément n’a été trouvé'
-    SORTASC: 'Classer en ordre croissant'
-    SORTDESC: 'Classer en ordre décroissant'
   TableListField_PageControls_ss:
-    DISPLAYING: Affichage de
     OF: de
-    TO: à
-    VIEWFIRST: 'Voir premier'
-    VIEWLAST: 'Voir dernier'
-    VIEWNEXT: 'Voir suivant'
-    VIEWPREVIOUS: 'Voir précédent'
   TimeField:
     VALIDATEFORMAT: 'Saisissez l’heure au format valide ({format})'
   ToggleField:
@@ -571,6 +523,8 @@ fr:
     ATTACHFILE: 'Joindre un fichier'
     ATTACHFILES: 'Joindre des fichiers'
     AttachFile: 'Joindre un ou plusieurs fichiers'
+    CHOOSEANOTHERFILE: 'Choisissez un autre fichier'
+    CHOOSEANOTHERINFO: 'Remplacer ce fichier par un autre depuis les archives'
     DELETE: 'Supprimer des fichiers'
     DELETEINFO: 'Effacer définitivement ce fichier des archives'
     DOEDIT: Enregistrer
@@ -585,29 +539,13 @@ fr:
     FROMFILES: 'Depuis les fichiers'
     HOTLINKINFO: 'Note : Cette image sera liée par un « hotlink », assurez-vous d’avoir l’autorisation des ayant-droits du site web d’origine.'
     MAXNUMBEROFFILES: 'Le nombre maximal de {count} fichiers a été dépassé.'
-    MAXNUMBEROFFILESSHORT: 'On ne peut pas télécharger plus de {count} fichiers'
     MAXNUMBEROFFILESONE: 'Vous ne pouvez pas uploader plus d''un fichier'
+    MAXNUMBEROFFILESSHORT: 'On ne peut pas télécharger plus de {count} fichiers'
+    OVERWRITEWARNING: 'Un fichier avec le même nom existe déjà'
     REMOVE: Supprimer
-    REMOVEERROR: 'Le fichier n’a pas pu être supprimé'
     REMOVEINFO: 'Supprimer ce fichier ici sans l’effacer des archives'
     STARTALL: 'Démarrer tout'
-    STARTALLINFO: 'Démarrer tous les téléchargements'
     Saved: Enregistré
-    CHOOSEANOTHERFILE: 'Choisissez un autre fichier'
-    CHOOSEANOTHERINFO: 'Remplacer ce fichier par un autre depuis les archives'
-    OVERWRITEWARNING: 'Un fichier avec le même nom existe déjà'
     UPLOADSINTO: 'sauvegarder dans /{path}'
   Versioned:
     has_many_Versions: Versions
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Aperçu du site'
-  GridFieldEditButton_ss:
-    EDIT: Editer
-  ContentController:
-    NOTLOGGEDIN: 'Hors-ligne'
-  GridFieldItemEditView:
-    Go_back: 'Retour'
-  PasswordValidator:
-    LOWCHARSTRENGTH: 'Veuillez augmenter la force de votre mot de passe en ajoutant certains caractères suivants : %s'
-    PREVPASSWORD: 'Vous avez déjà utilisé ce mot de passe par le passé, veuillez en choisir un autre'
-    TOOSHORT: 'Le mot de passe est trop court, il doit contenir au moins %s caractères'

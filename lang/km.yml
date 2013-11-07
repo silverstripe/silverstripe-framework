@@ -1,8 +1,6 @@
 km:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'អ្នកបានផ្លាស់ប្តូរពាក្យសំងាត់សំរាប់'
-  ComplexTableField_ss:
-    ADDITEM: 'បញ្ចូល %s'
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'ផ្លាស់ប្តូរពាក្យសំងាត់'
   DataObject:
@@ -31,6 +29,6 @@ km:
   NullableField:
     IsNullLabel: 'ទទេ'
   Security:
-    ALREADYLOGGEDIN: 'អ្នកមិនអាចមើលទំព័រនេះបានទេ។ សូមប្រើប្រាស់ព័ត៌មានសំរាប់ថ្មី មួយទៀតសំរាប់ចូលមើល។ សូមចូលតាម <a href="%s">'
+    ALREADYLOGGEDIN: 'អ្នកមិនអាចមើលទំព័រនេះបានទេ។ សូមប្រើប្រាស់ព័ត៌មានសំរាប់ថ្មី មួយទៀតសំរាប់ចូលមើល។ សូមចូលតាម'
   Versioned:
     has_many_Versions: ជំនាន់

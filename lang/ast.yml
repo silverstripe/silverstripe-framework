@@ -1,8 +1,6 @@
 ast:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Camudasti la contraseña pa'
-  ComplexTableField_ss:
-    ADDITEM: 'Amestar %s'
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Camudar contraseña'
   DataObject:
@@ -13,9 +11,6 @@ ast:
     TODAY: hoi
   DropdownField:
     CHOOSE: (Escoyer)
-  Email_BounceRecord:
-    PLURALNAME: 'Rexistros de rebote de corréu'
-    SINGULARNAME: 'Rexistru de rebote de corréu'
   File:
     PLURALNAME: Ficheros
     SINGULARNAME: Ficheru
@@ -43,6 +38,6 @@ ast:
   PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredáu del rol "%s" nel grupu "%s"'
   Security:
-    ALREADYLOGGEDIN: 'Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, puedes <a href="%s">volver conectate</a>.'
+    ALREADYLOGGEDIN: 'Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, puedes volver conectate.'
   Versioned:
     has_many_Versions: Versiones

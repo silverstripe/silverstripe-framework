@@ -1,6 +1,5 @@
 ru:
   AssetAdmin:
-    ALLOWEDEXTS: 'Допустимые расширения'
     NEWFOLDER: Новая папка
     SHOWALLOWEDEXTS: 'Показать допустимые расширения'
   AssetTableField:
@@ -68,6 +67,8 @@ ru:
     ACCESSALLINTERFACES: 'Доступ ко всему интерфейсу CMS'
     ACCESSALLINTERFACESHELP: 'Отменяет индивидуальные настройки прав доступа.'
     SAVE: Сохранить
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Предварительный просмотр сайта'
   CMSProfileController:
     MENUTITLE: 'Мой профиль'
   ChangePasswordEmail_ss:
@@ -75,18 +76,6 @@ ru:
     CHANGEPASSWORDTEXT2: 'Для того, чтобы войти, используйте сейчас следующие учетные данные:'
     HELLO: Здравствуйте
     PASSWORD: Пароль
-  ComplexTableField:
-    CLOSEPOPUP: 'Закрыть всплывающее окно'
-    SUCCESSADD2: '{name} добавлено'
-    SUCCESSEDIT: 'Сохранено %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Добавить %s'
-    NOITEMSFOUND: 'Элементов не найдено'
-    SORTASC: 'Сортировать по возрастанию'
-    SORTDESC: 'Сортировать по убыванию'
-  ComplexTableField_popup_ss:
-    NEXT: Следующ.
-    PREVIOUS: Предыдущ.
   ConfirmedPasswordField:
     ATLEAST: 'Пароль должен быть не короче {min} символов.'
     BETWEEN: 'Пароль должен иметь длину от {min} до {max} символов.'
@@ -105,6 +94,7 @@ ru:
     DAYS: дн.
     HOUR: ч
     HOURS: ч.
+    LessThanMinuteAgo: 'меньше минуты'
     MIN: мин
     MINS: мин
     MONTH: мес.
@@ -115,7 +105,6 @@ ru:
     TIMEDIFFIN: 'через {difference}'
     YEAR: год
     YEARS: г.
-    LessThanMinuteAgo: 'меньше минуты'
   DateField:
     NOTSET: 'не установлено'
     TODAY: сегодня
@@ -130,9 +119,6 @@ ru:
     CHOOSE: (Выберите)
   EmailField:
     VALIDATION: 'Пожалуйста, задайте адрес email.'
-  Email_BounceRecord:
-    PLURALNAME: 'Записи о недоставленных сообщениях'
-    SINGULARNAME: 'Запись о недоставленном сообщении'
   Enum:
     ANY: Любой
   File:
@@ -167,19 +153,6 @@ ru:
     WavType: 'Аудиофайл WAV'
     XlsType: 'Таблица Excel'
     ZipType: 'Архив ZIP'
-  FileIFrameField:
-    ATTACH: 'Прикрепить {type}'
-    ATTACHONCESAVED: 'Вы сможете прикрепить {type}s после первого сохранения записи.'
-    ATTACHONCESAVED2: 'Вы сможете прикрепитьфайлы после первого сохранения записи.'
-    DELETE: 'Удалить {type}'
-    DISALLOWEDFILETYPE: 'Загрузка этого типа файла не допускается'
-    FILE: Файл
-    FROMCOMPUTER: 'С диска'
-    FROMFILESTORE: 'С сервера'
-    NOSOURCE: 'Пожалуйста, выберите файл, который нужно прикрепить'
-    REPLACE: 'Заменить {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Iframe загрузки изображений'
   Filesystem:
     SYNCRESULTS: 'Синхронизация завершена: {createdcount} элементов создано, {deletedcount} элементов удалено'
   Folder:
@@ -191,6 +164,7 @@ ru:
     TEXT2: 'ссылка переустановки пароля'
     TEXT3: для
   Form:
+    CSRF_FAILED_MESSAGE: 'Произошла техническая ошибка. Нажмите кнопку "Назад", обновите страницу в браузере и повторите попытку.'
     SubmitBtnLabel: Выбрать
     VALIDATIONCREDITNUMBER: 'Пожалуйста, убедитесь, что номер кредитной карты {number} задан правильно'
     VALIDATIONNOTUNIQUE: 'Введенное значение не уникально'
@@ -199,10 +173,9 @@ ru:
     VALIDATIONSTRONGPASSWORD: 'Пароль должен содержать как минимум одну цифру и один буквенно-цифровой символ.'
     VALIDATOR: Валидатор
     VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
-    CSRF_FAILED_MESSAGE: 'Произошла техническая ошибка. Нажмите кнопку "Назад", обновите страницу в браузере и повторите попытку.'
   FormField:
-    NONE: не выбрано
     Example: 'например, %s'
+    NONE: не выбрано
   GridAction:
     DELETE_DESCRIPTION: Удалить
     Delete: Удалить
@@ -231,8 +204,8 @@ ru:
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено %s %s'
     Save: Сохранить
-  GridFieldItemEditView_ss:
-    Go_back: 'Назад'
+  GridFieldEditButton_ss:
+    EDIT: Редактировать
   Group:
     AddRole: 'Добавить роль для этой группы'
     Code: 'Код группы'
@@ -261,6 +234,7 @@ ru:
     ADDURL: 'Добавить URL'
     ADJUSTDETAILSDIMENSIONS: 'Дополнительные сведения и размеры'
     ANCHORVALUE: Якорь
+    BUTTONADDURL: 'Добавить URL'
     BUTTONINSERT: Вставить
     BUTTONINSERTLINK: 'Вставить ссылку'
     BUTTONREMOVELINK: 'Удалить ссылку'
@@ -299,12 +273,9 @@ ru:
     PAGE: Страница
     URLNOTANOEMBEDRESOURCE: 'Не удалось преобразовать ссылку ''{url}'' в медиа-ресурс.'
     UpdateMEDIA: 'Обновить медиафайл'
-    BUTTONADDURL: 'Добавить URL'
   Image:
     PLURALNAME: Файлы
     SINGULARNAME: Файл
-  ImageField:
-    IMAGE: Изображение
   Image_Cached:
     PLURALNAME: Файлы
     SINGULARNAME: Файл
@@ -321,9 +292,9 @@ ru:
     PLEASESAVE: 'Пожалуйста, сохраните страницу: ее нельзя обновить, т.к. она еще не была сохранена.'
     REORGANISATIONSUCCESSFUL: 'Древесная структура сайта успешно реорганизована.'
     SAVEDUP: Сохранено.
-    VersionUnknown: Неизвестно
     ShowAsList: 'в виде списка'
     ValidationError: 'Ошибка проверки'
+    VersionUnknown: Неизвестно
   LeftAndMain_Menu_ss:
     Hello: Здравствуйте
     LOGOUT: 'Выход'
@@ -347,10 +318,8 @@ ru:
     DefaultDateTime: по умолч.
     EMPTYNEWPASSWORD: 'Поле нового пароля не может быть пустым; пожалуйста, повторите попытку'
     ENTEREMAIL: 'Введите email, чтобы получить ссылку на сброс пароля.'
-    ERRORLOCKEDOUT: 'Ваша учетная запись временно заблокирована из-за слишком большого количества неудачных попыток авторизации. Пожалуйста, попытайтесь снова через 20 минут.'
     ERRORNEWPASSWORD: 'Вы ввели Ваш новый пароль по-разному, попробуйте снова'
     ERRORPASSWORDNOTMATCH: 'Введенный пароль неверен, попробуйте снова'
-    ERRORWRONGCRED: 'Вероятно адрес email или пароль введены неверно. Попробуйте снова.'
     FIRSTNAME: 'Имя'
     INTERFACELANG: 'Язык интерфейса'
     INVALIDNEWPASSWORD: 'Недопустимый пароль: {password}'
@@ -390,7 +359,6 @@ ru:
     MONTHNOLEADING: 'Месяц без ведущего нуля'
     Preview: Просмотр
     SHORTMONTH: 'Сокращенное название месяца (Июн)'
-    TOGGLEHELP: 'Включить подсказки форматирования'
     TWODIGITDAY: 'Число месяца: двумя цифрами'
     TWODIGITHOUR: 'Часы: двумя цифрами (00 - 23)'
     TWODIGITMINUTE: 'Минуты: двумя цифрами (00 - 59)'
@@ -422,8 +390,8 @@ ru:
     Title: 'Модели данных'
     UPDATEDRECORDS: 'Обновлено {count} записей.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Колонки таблицы базы данных'
     IMPORTSPECLINK: 'Показать спецификацию для %s'
+    IMPORTSPECFIELDS: 'Колонки таблицы базы данных'
     IMPORTSPECRELATIONS: Отношения
     IMPORTSPECTITLE: 'Спецификация для %s'
   ModelAdmin_Tools_ss:
@@ -467,10 +435,6 @@ ru:
     UserPermissionsIntro: 'При включении этого пользователя в определенную группу его права доступа будут изменены соответствующим образом. Более подробные сведения о правах доступа для отдельных групп содержатся в разделе "Группы".'
   PhoneNumberField:
     VALIDATION: 'Пожалуйста, введите верный номер телефона'
-  RelationComplexTableField_ss:
-    ADD: Добавить
-    CSVEXPORT: 'Экспорт в CSV'
-    NOTFOUND: 'Элементов не найдено'
   Security:
     ALREADYLOGGEDIN: 'У Вас нет доступа к этой странице. Если у вас имеется другая учетная запись, имеющая доступ к этой странице, введите ее данные ниже.'
     BUTTONSEND: 'Отправить мне ссылку переустановки пароля'
@@ -507,43 +471,24 @@ ru:
     BtnImport: 'Импорт из CSV'
     FileFieldLabel: 'Файл CSV <small>(допустимые расширения: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Редактировать
     Auto: Автоматический
     ChangeViewMode: 'Сменить режим просмотра'
     Desktop: Настольный ПК
     DualWindowView: 'Режим двух окон'
+    Edit: Редактировать
     EditView: 'Режим редакт.'
     Mobile: Мобильный
     PreviewView: 'Режим предварительного просмотра'
     Responsive: Адаптивный
     Tablet: Планшет
     Width: ширина
-  SimpleImageField:
-    NOUPLOAD: 'Не загружено ни одного изображения'
   SiteTree:
     TABMAIN: Основное
-  TableField:
-    ISREQUIRED: 'В %s поле ''%s'' является обязательным'
-  TableField_ss:
-    ADD: 'Добавить новый ряд'
-    ADDITEM: 'Добавить %s'
   TableListField:
     CSVEXPORT: 'Экспорт в CSV'
-    PRINT: Печать
     Print: Печать
-    SELECT: 'Выбрать:'
-  TableListField_ss:
-    NOITEMSFOUND: 'Элементов не найдено'
-    SORTASC: 'По возрастанию'
-    SORTDESC: 'По убыванию'
   TableListField_PageControls_ss:
-    DISPLAYING: Отображение
     OF: из
-    TO: по
-    VIEWFIRST: 'Первый'
-    VIEWLAST: 'Последний'
-    VIEWNEXT: 'Следующий'
-    VIEWPREVIOUS: 'Предыдущий'
   TimeField:
     VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени {format})'
   ToggleField:
@@ -567,18 +512,12 @@ ru:
     FROMFILES: 'Из файлов'
     HOTLINKINFO: 'Внимание: это изображение будет вставлено через хотлинк. Пожалуйста, не забывайте, что на это у вас должно быть разрешение владельца исходного ресурса.'
     MAXNUMBEROFFILES: 'Превышено максимальное количество файлов ({count}).'
-    MAXNUMBEROFFILESSHORT: 'Можно загрузить не более {count} файлов'
     MAXNUMBEROFFILESONE: 'Можно загрузить только один файл'
+    MAXNUMBEROFFILESSHORT: 'Можно загрузить не более {count} файлов'
+    OVERWRITEWARNING: 'Файл с таким именем уже существует'
     REMOVE: Удалить
-    REMOVEERROR: 'Ошибка при удалении файла'
     REMOVEINFO: 'Удалить файл отсюда, но не удалять с сервера'
     STARTALL: 'Стартовать все'
-    STARTALLINFO: 'Стартовать все загрузки'
     Saved: Сохранено
-    OVERWRITEWARNING: 'Файл с таким именем уже существует'
   Versioned:
     has_many_Versions: Версии
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Предварительный просмотр сайта'
-  GridFieldEditButton_ss:
-    EDIT: Редактировать

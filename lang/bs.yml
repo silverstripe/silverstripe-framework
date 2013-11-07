@@ -45,13 +45,6 @@ bs:
     CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
     CHANGEPASSWORDTEXT2: 'Možete koristiti slijedeće podatke za prijavu:'
     HELLO: Pozdrav
-  ComplexTableField_ss:
-    ADDITEM: 'Dodaj %S'
-    SORTASC: 'Uzlazno raszvrstavanje'
-    SORTDESC: 'Silazno razvrstavanje'
-  ComplexTableField_popup_ss:
-    NEXT: Slijedeći
-    PREVIOUS: Prethodni
   CreditCardField:
     FIRST: prvo
     FOURTH: četvrto
@@ -120,10 +113,8 @@ bs:
     CONFIRMNEWPASSWORD: 'Potvrdite novu šifru'
     CONFIRMPASSWORD: 'Potvrdite šifru'
     EMAIL: E-mail
-    ERRORLOCKEDOUT: 'Vaš korisnički račun je trenutno isključen zbog velikog broja grešaka prilikom prijave na stranicu. Molimo, pokušajte ponovo za 20 minuta.'
     ERRORNEWPASSWORD: 'Pogrešno ste upisali novu šifru, pokušajte ponovo'
     ERRORPASSWORDNOTMATCH: 'Vaša trenutna šifra se ne slaže, molimo pokušajte ponovo'
-    ERRORWRONGCRED: 'Pogrešna e-mail adresa ili šifra. Molimo, pokušajte ponovo.'
     FIRSTNAME: 'Ime'
     INTERFACELANG: 'Jezik sučelja'
     NEWPASSWORD: 'Nova šifra'
@@ -140,8 +131,6 @@ bs:
     FULLADMINRIGHTS: 'Puna administrativna ovlaštenja'
   PhoneNumberField:
     VALIDATION: 'Molimo, unesite ispravan broj telefona'
-  RelationComplexTableField_ss:
-    ADD: Dodaj
   Security:
     ALREADYLOGGEDIN: 'Ne možete pristupiti ovoj stranici. Ukoliko imate drugi korisnički račun koji može pristupiti ovoj stranici, prijavite si ispod.'
     BUTTONSEND: 'Pošalji mi link za ponovno podešavanje šifre'
@@ -159,15 +148,10 @@ bs:
     MEMBERS: Članovi
     NEWGROUP: 'Nova grupa'
     PERMISSIONS: Ovlaštenja
-  SimpleImageField:
-    NOUPLOAD: 'Nijedna slika nije postavljena'
   SiteTree:
     TABMAIN: Glavno
-  TableField_ss:
-    ADD: 'Dodaj novi red'
   TableListField:
     CSVEXPORT: 'Izvezi u CSV'
-    PRINT: Štampaj
   ToggleField:
     LESS: manje
     MORE: više

@@ -20,13 +20,6 @@ zh_CN:
     CHANGEPASSWORDTEXT1: '您已更改了登陆%s的密码'
     CHANGEPASSWORDTEXT2: '您现在可以用下列权限信息进行登路：'
     HELLO: 嗨
-  ComplexTableField_ss:
-    ADDITEM: '新加'
-    SORTASC: '正序排列'
-    SORTDESC: '倒序排列'
-  ComplexTableField_popup_ss:
-    NEXT: 下一页
-    PREVIOUS: 上一页
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: '更改密码'
   DataObject:
@@ -91,7 +84,6 @@ zh_CN:
     EMAIL: 电子邮件
     ERRORNEWPASSWORD: '您输入了一个不同的新密码，请重新输入'
     ERRORPASSWORDNOTMATCH: '您当前的密码不正确，请再次输入'
-    ERRORWRONGCRED: '电邮地址或密码似乎不对。请重新输入。'
     FIRSTNAME: '名'
     INTERFACELANG: '界面语言'
     NEWPASSWORD: '新密码'
@@ -125,8 +117,6 @@ zh_CN:
     NOTERESETPASSWORD: '输入您的电邮地址，我们会给您发送一个您可重设密码的链接'
   SecurityAdmin:
     NEWGROUP: '新建会员组'
-  SimpleImageField:
-    NOUPLOAD: '没有上传的图像'
   SiteTree:
     TABMAIN: 主要部分
   ToggleField:

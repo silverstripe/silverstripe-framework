@@ -37,16 +37,6 @@ az:
     EMAIL: E-poçt
     HELLO: Salam
     PASSWORD: Parol
-  ComplexTableField:
-    CLOSEPOPUP: 'Bağla'
-    SUCCESSEDIT: '%s %s %s yadda saxlanıldı'
-  ComplexTableField_ss:
-    ADDITEM: '%s əlavə et'
-    SORTASC: 'Artma ilə sırala'
-    SORTDESC: 'Azalma ilə sırala'
-  ComplexTableField_popup_ss:
-    NEXT: Sonrakı
-    PREVIOUS: Əvvəlki
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Parolu dəyiş'
   CreditCardField:
@@ -73,11 +63,6 @@ az:
     PLURALNAME: Fayllar
     SINGULARNAME: Fayl
     Title: Başlıq
-  FileIFrameField:
-    FILE: Fayl
-    FROMCOMPUTER: 'Kompüterinizdən'
-    FROMFILESTORE: 'Fayllar siyahısından'
-    NOSOURCE: 'Xahiş edirik əlavə etmək üçün source faylı seçin'
   ForgotPasswordEmail_ss:
     HELLO: Salam
     TEXT1: 'Burada sizin'
@@ -124,8 +109,6 @@ az:
     LINKOPENNEWWIN: 'Link yeni pəncərədə açılsın?'
     LINKTO: 'Linki qoy'
     PAGE: Səhifə
-  ImageField:
-    IMAGE: Şəkil
   LoginAttempt:
     Email: 'E-poçt'
     IP: 'İP ünvan'
@@ -140,10 +123,8 @@ az:
     EMAIL: E-poçt
     EMPTYNEWPASSWORD: 'Yeni şifrə boş ola bilməz, təkrar edin. '
     ENTEREMAIL: 'Parolu sıfırlama linkini əldə etmək üçün e-poçtunuzu daxil edin.'
-    ERRORLOCKEDOUT: 'Sizin profil, çoxlu uğursuz daxil olma cəhdləri səbəbindən,  müvəqqəti olaraq bloklanıb. 20 dəqiqədən sonra yoxlayın'
     ERRORNEWPASSWORD: 'Yeni parolunuzu başqa cür daxil etdiniz, bir daha cəhd edin'
     ERRORPASSWORDNOTMATCH: 'Parol uyğun gəlmir, yenidən cəhd edin'
-    ERRORWRONGCRED: 'E-poçt və ya parol düzgün deyil. Bir daha cəhd edin.'
     FIRSTNAME: 'Ad'
     INTERFACELANG: 'İnterfeys dili'
     NEWPASSWORD: 'Yeni parol'
@@ -179,10 +160,8 @@ az:
     PERMISSIONS_CATEGORY: 'İcazələr'
   PhoneNumberField:
     VALIDATION: 'Düzgün telefon nömrəsi daxil et.'
-  RelationComplexTableField_ss:
-    ADD: Əlavə et
   Security:
-    ALREADYLOGGEDIN: 'Sizin bu səhifəyə icazəniz yoxdur. Əgər bu səhifəyə icazəsi olan başqa profiliniz varsa hesabınıza <a href="%s">daxil olun'
+    ALREADYLOGGEDIN: 'Sizin bu səhifəyə icazəniz yoxdur. Əgər bu səhifəyə icazəsi olan başqa profiliniz varsa hesabınıza daxil olun'
     BUTTONSEND: 'Parolu sıfırlama linkini göndər'
     CHANGEPASSWORDBELOW: 'Şifrəni burda deyişə bilərsiniz. '
     CHANGEPASSWORDHEADER: 'Parolu dəyiş'
@@ -197,24 +176,10 @@ az:
     MEMBERS: Üzvlər
     PERMISSIONS: Səlahiyyətlər
     ROLES: Rollar
-  SimpleImageField:
-    NOUPLOAD: 'Şəkil yüklənməmişdir'
   SiteTree:
     TABMAIN: Əsas
-  TableField_ss:
-    ADD: 'Yeni sətir əlavə et'
   TableListField:
     CSVEXPORT: 'CSV-yə ixrac et'
-    PRINT: Çap et
-    SELECT: 'Seç:'
-  TableListField_ss:
-    SORTASC: 'Artma sırası ilə sırala'
-    SORTDESC: 'Azalma sırası ilə sırala'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Birinciyə bax'
-    VIEWLAST: 'Axırıncı baxılmış'
-    VIEWNEXT: 'Növbəti'
-    VIEWPREVIOUS: 'Əvvəlkinə bax'
   ToggleField:
     LESS: daha az
     MORE: daha çox

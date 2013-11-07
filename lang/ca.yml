@@ -46,16 +46,6 @@ ca:
     EMAIL: Correu electrònic
     HELLO: Hola
     PASSWORD: Contrasenya
-  ComplexTableField:
-    CLOSEPOPUP: 'Tanca la finestra'
-    SUCCESSEDIT: 'S''ha desat %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Afegir %s'
-    SORTASC: 'Ordena ascendentment'
-    SORTDESC: 'Ordena descendentment'
-  ComplexTableField_popup_ss:
-    NEXT: Següent
-    PREVIOUS: Anterior
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Canvia la contrasenya'
   CreditCardField:
@@ -147,10 +137,8 @@ ca:
     CONFIRMPASSWORD: 'Confirmeu la contrasenya'
     EMAIL: Correu electrònic
     ENTEREMAIL: 'Si us plau, introduïu una adreça de correu per a obtenir un enllaç de reinici de contrasenya.'
-    ERRORLOCKEDOUT: 'El vostre compte ha estat temporalment deshabilitat degut a massa intents fallats d''entrar. Si us plau, torneu-ho a provar en 20 minuts.'
     ERRORNEWPASSWORD: 'Heu introduït la vostra nova contrasenya de forma diferent, proveu-ho de nou'
     ERRORPASSWORDNOTMATCH: 'La vostra contrasenya actual no concorda, si us plau intenteu-ho de nou'
-    ERRORWRONGCRED: 'Aquests no semblen un correu electrònic o contrasenya correctes. Si us plau, torneu-ho a provar.'
     FIRSTNAME: 'Nom'
     INTERFACELANG: 'Interfície de llengua'
     NEWPASSWORD: 'Nova contrasenya'
@@ -181,8 +169,6 @@ ca:
     FULLADMINRIGHTS: 'Drets administratius totals'
   PhoneNumberField:
     VALIDATION: 'Si us plau, introduïu un número de telèfon vàlid'
-  RelationComplexTableField_ss:
-    ADD: Afegeix
   Security:
     ALREADYLOGGEDIN: 'No teniu accés a aquesta pàgina. Si teniu un altre compte que pot accedir a aquesta pàgina, podeu entrar-hi a sota.'
     BUTTONSEND: 'Envia''m l''enllaç per reiniciar la contrasenya'
@@ -200,20 +186,10 @@ ca:
     MEMBERS: Membres
     NEWGROUP: 'Nou grup'
     PERMISSIONS: Permisos
-  SimpleImageField:
-    NOUPLOAD: 'No heu carregat cap imatge'
   SiteTree:
     TABMAIN: Principal
-  TableField_ss:
-    ADD: 'Afegeix una nova fila'
   TableListField:
     CSVEXPORT: 'Exporta a CSV'
-    PRINT: Imprimeix
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Veure el primer'
-    VIEWLAST: 'Veure el darrer'
-    VIEWNEXT: 'Veure el següent'
-    VIEWPREVIOUS: 'Veure l''anterior'
   ToggleField:
     LESS: menys
     MORE: més
