@@ -419,6 +419,24 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 			$form->Backlink = $this->getBackLink();
 		}
+		if(!$this->record->exists()) {
+			$list = $this->gridField->getList();
+			if($list && $list->class == "HasManyList") {
+				$foreignKey = $list->getForeignKey();
+				$dataClass = $list->dataClass();
+				$dataQuery = $list->dataQuery();
+				if($dataQuery) {
+					$queryParams = $dataQuery->getQueryParams();
+					$foreignID = isset($queryParams["Foreign.ID"]) ? $queryParams["Foreign.ID"] : 0;
+					if($foreignID) {
+						$tab = $form->Fields()->findOrMakeTab('Root.Main');
+						$field = $tab->fieldByName($foreignKey);
+						$field->setValue($foreignID);
+						$tab->replaceField($field->Name,  $field->performDisabledTransformation());
+					}
+				}
+			}
+		}
 
 		$cb = $this->component->getItemEditFormCallback();
 		if($cb) $cb($form, $this);
