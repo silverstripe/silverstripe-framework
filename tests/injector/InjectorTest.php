@@ -455,6 +455,32 @@ class InjectorTest extends SapphireTest {
 		$this->assertEquals('OriginalRequirementsBackend', get_class($requirements->backend));
 	}
 
+	/**
+	 * Tests that object creation with a custom factory service operates as
+	 * expected.
+	 */
+	public function testCustomFactory() {
+		$injector = new Injector();
+		$service = new TestObject();
+
+		$injector->load(array(
+			'TestService' => array(
+				'factory' => 'TestFactory',
+				'constructor' => array('parameter')
+			)
+		));
+
+		$factory = $this->getMock('InjectorFactory');
+		$factory->expects($this->once())
+			->method('create')
+			->with($this->equalTo('TestService'), $this->equalTo(array('parameter')))
+			->will($this->returnValue($service));
+
+		$injector->registerService($factory, 'TestFactory');
+
+		$this->assertEquals($service, $injector->get('TestService'));
+	}
+
 	public function testInheritedConfig() {
 		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
 		Config::inst()->update('Injector', 'MyParentClass', array('properties' => array('one' => 'the one')));

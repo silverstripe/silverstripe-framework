@@ -1,9 +1,10 @@
 <?php
 
-require_once dirname(__FILE__) . '/InjectionCreator.php';
-require_once dirname(__FILE__) . '/SilverStripeInjectionCreator.php';
-require_once dirname(__FILE__) . '/ServiceConfigurationLocator.php';
-require_once dirname(__FILE__) . '/SilverStripeServiceConfigurationLocator.php';
+require_once __DIR__ . '/InjectorFactory.php';
+require_once __DIR__ . '/InjectionCreator.php';
+require_once __DIR__ . '/SilverStripeInjectionCreator.php';
+require_once __DIR__ . '/ServiceConfigurationLocator.php';
+require_once __DIR__ . '/SilverStripeServiceConfigurationLocator.php';
 
 /**
  * A simple injection manager that manages creating objects and injecting
@@ -70,7 +71,7 @@ require_once dirname(__FILE__) . '/SilverStripeServiceConfigurationLocator.php';
  *			'type'			=> 'singleton|prototype'		// if you want prototype object generation, set it as the
  *			                                                // type
  *															// By default, singleton is assumed
- *
+ *			'factory'		=> 'FactoryService'				// A service to use for creating new instances.
  *			'construct'		=> array(						// properties to set at construction
  *				'scalar',									
  *				'%$BeanId',
@@ -121,6 +122,13 @@ require_once dirname(__FILE__) . '/SilverStripeServiceConfigurationLocator.php';
 class Injector {
 
 	/**
+	 * The default object factory class.
+	 *
+	 * @var string
+	 */
+	const DEFAULT_FACTORY = 'InjectionCreator';
+
+	/**
 	 * Local store of all services
 	 *
 	 * @var array
@@ -161,16 +169,18 @@ class Injector {
 	 * @var boolean
 	 */
 	private $autoScanProperties = false;
-	
+
 	/**
-	 * The object used to create new class instances
-	 * 
-	 * Use a custom class here to change the way classes are created to use
-	 * a custom creation method. By default the InjectionCreator class is used,
-	 * which simply creates a new class via 'new', however this could be overridden
-	 * to use, for example, SilverStripe's Object::create() method.
+	 * The default factory used to create new instances.
 	 *
-	 * @var InjectionCreator
+	 * The {@link InjectionCreator} is used by default, which simply directly
+	 * creates objects. This can be changed to use a different default creation
+	 * method if desired.
+	 *
+	 * Each individual component can also specify a custom factory to use by
+	 * using the `factory` parameter.
+	 *
+	 * @var InjectorFactory
 	 */
 	protected $objectCreator;
 
@@ -183,16 +193,16 @@ class Injector {
 	public function __construct($config = null) {
 		$this->injectMap = array();
 		$this->serviceCache = array(
-			'Injector'		=> $this,
+			'Injector'		=> $this
 		);
 		$this->specs = array(
 			'Injector'		=> array('class' => 'Injector')
 		);
-		
+
 		$this->autoProperties = array();
 		
 
-		$creatorClass = isset($config['creator']) ? $config['creator'] : 'InjectionCreator';
+		$creatorClass = isset($config['creator']) ? $config['creator'] : self::DEFAULT_FACTORY;
 		$locatorClass = isset($config['locator']) ? $config['locator'] : 'ServiceConfigurationLocator';
 		
 		$this->objectCreator = new $creatorClass;
@@ -228,17 +238,16 @@ class Injector {
 	}
 	
 	/**
-	 * Sets the object to use for creating new objects
+	 * Sets the default factory to use for creating new objects.
 	 *
-	 * @param InjectionCreator $obj 
+	 * @param InjectorFactory $obj
 	 */
-	public function setObjectCreator($obj) {
+	public function setObjectCreator(InjectorFactory $obj) {
 		$this->objectCreator = $obj;
 	}
 	
 	/**
-	 * Accessor (for testing purposes)
-	 * @return InjectionCreator
+	 * @return InjectorFactory
 	 */
 	public function getObjectCreator() {
 		return $this->objectCreator;
@@ -488,8 +497,10 @@ class Injector {
 			$constructorParams = $spec['constructor'];
 		}
 
-		$object = $this->objectCreator->create($class, $constructorParams);
-		
+		/** @var InjectorFactory $factory */
+		$factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();
+		$object = $factory->create($class, $constructorParams);
+
 		// figure out if we have a specific id set or not. In some cases, we might be instantiating objects
 		// that we don't manage directly; we don't want to store these in the service cache below
 		if (!$id) {
@@ -676,7 +687,7 @@ class Injector {
 	 * Register a service object with an optional name to register it as the
 	 * service for
 	 * 
-	 * @param stdClass $service
+	 * @param object $service
 	 *					The object to register
 	 * @param string $replace
 	 *					The name of the object to replace (if different to the 
@@ -705,10 +716,9 @@ class Injector {
 	
 	/**
 	 * Removes a named object from the cached list of objects managed
-	 * by the inject
+	 * by the injector.
 	 * 
-	 * @param type $name 
-	 *				The name to unregister
+	 * @param string $name The component name to un-register.
 	 */
 	public function unregisterNamedObject($name) {
 		unset($this->serviceCache[$name]);

@@ -5,7 +5,7 @@
  * @subpackage injector
  */
 
-class SilverStripeInjectionCreator {
+class SilverStripeInjectionCreator implements InjectorFactory {
 	/**
 	 *
 	 * @param string $object

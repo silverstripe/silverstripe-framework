@@ -168,6 +168,21 @@ would
 * Create a MySQLDatabase class, passing dbusername and dbpassword as the 
   parameters to the constructor
 
+### Service Factories
+
+For services which require non-trivial construction, it is necessary to use
+a factory object to create new instances of the service. To do this, you must
+create a factory class, which should implement [api:InjectorFactory].
+
+When creating the service definition, you then specify a `factory` key with
+the service definition. When the service is created, the injector will get an
+instance of the factory service class, and then use it to create the new service.
+
+```yaml
+Injector:
+  Service:
+    factory: ServiceFactory
+```
 
 ### What are Services?
 
