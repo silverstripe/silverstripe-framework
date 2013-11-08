@@ -230,7 +230,7 @@ class GridFieldAddExistingAutocompleter
 
 		$json = array();
 		foreach($results as $result) {
-			$json[$result->ID] = SSViewer::fromString($this->resultsFormat)->process($result);
+			$json[$result->ID] = html_entity_decode(SSViewer::fromString($this->resultsFormat)->process($result));
 		}
 		return Convert::array2json($json);
 	}
