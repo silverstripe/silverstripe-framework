@@ -27,6 +27,7 @@ class DevelopmentAdmin extends Controller {
 		'reset', 
 		'viewcode',
 		'generatesecuretoken',
+		'buildDefaults',
 	);
 	
 	public function init() {
