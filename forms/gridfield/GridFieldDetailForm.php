@@ -383,11 +383,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		);
 
 		$list = $this->gridField->getList();
-		if($list && $list instanceOf HasManyList) {
-			$foreignKey = $list->getForeignKey();
-			$foreignID = $list->getForeignID();
-			$fields->makeFieldReadonly($foreignKey);
-			$this->record->$foreignKey = $foreignID;
+		if($list && $list instanceof HasManyList) {
+			$fields->makeFieldReadonly($list->getForeignKey());
+			$this->record->$foreignKey = $list->getForeignID();
 		}
 
 		$form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
