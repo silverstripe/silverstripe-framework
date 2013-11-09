@@ -381,7 +381,15 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$actions,
 			$this->component->getValidator()
 		);
-		
+
+		$list = $this->gridField->getList();
+		if($list && $list instanceOf HasManyList) {
+			$foreignKey = $list->getForeignKey();
+			$foreignID = $list->getForeignID();
+			$fields->makeFieldReadonly($foreignKey);
+			$this->record->$foreignKey = $foreignID;
+		}
+
 		$form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
 
 		if($this->record->ID && !$canEdit) {
@@ -419,21 +427,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 			$form->Backlink = $this->getBackLink();
 		}
-		$list = $this->gridField->getList();
-		if($list && $list instanceOf HasManyList) {
-			$foreignKey = $list->getForeignKey();
-			$dataClass = $list->dataClass();
-			$dataQuery = $list->dataQuery();
-			$foreignID = $list->getForeignID();
-			$fields = $form->Fields();
-			$field = $fields->dataFieldByName($foreignKey);
-			if($field) {
-				$field->setValue($foreignID);
-				$fields->replaceField($field->Name,  $field->performDisabledTransformation());
-			}
-			$this->record->$foreignKey = $foreignID;
-		}
-
 
 		$cb = $this->component->getItemEditFormCallback();
 		if($cb) $cb($form, $this);
