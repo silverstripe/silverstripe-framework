@@ -16,9 +16,8 @@ class HasManyList extends RelationList {
 	 * {@link DataList} methods.  Addition arguments are used to support {@@link add()}
 	 * and {@link remove()} methods.
 	 * 
-	 * @param $dataClass The class of the DataObjects that this will list.
-	 * @param $relationFilters A map of key => value filters that define which records
-	 * in the $dataClass table actually belong to this relationship.
+	 * @param string $dataClass The class of the DataObjects that this will list.
+	 * @param string $foreignKey The name of the foreign key field to set the ID filter against.
 	 */
 	public function __construct($dataClass, $foreignKey) {
 		parent::__construct($dataClass);
@@ -96,6 +95,7 @@ class HasManyList extends RelationList {
 	/**
 	 * Remove an item from this relation.
 	 * Doesn't actually remove the item, it just clears the foreign key value.
+	 * 
 	 * @param $item The DataObject to be removed
 	 * @todo Maybe we should delete the object instead? 
 	 */
@@ -105,10 +105,17 @@ class HasManyList extends RelationList {
 				E_USER_ERROR);
 		}
 
-		$fk = $this->foreignKey;
-		$item->$fk = null;
+		// Don't remove item which doesn't belong to this list
+		$foreignID = $this->getForeignID();
+		$foreignKey = $this->getForeignKey();
 
-		$item->write();
+		if(	empty($foreignID)
+			|| (is_array($foreignID) && in_array($item->$foreignKey, $foreignID))
+			|| $foreignID == $item->$foreignKey
+		) {
+			$item->$foreignKey = null;
+			$item->write();
+		}
+
 	}
-	
 }

@@ -16,6 +16,8 @@ class SS_Backtrace {
 		'mysql_connect',
 		'mssql_connect',
 		'pg_connect',
+		array('mysqli', 'mysqli'),
+		array('mysqli', 'select_db'),
 		array('DB', 'connect'),
 		array('Security', 'check_default_admin'),
 		array('Security', 'encrypt_password'),

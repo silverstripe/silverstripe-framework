@@ -42,16 +42,6 @@ pt:
     CHANGEPASSWORDTEXT2: 'Pode utilizar agora as seguintes credenciais para se autenticar:'
     HELLO: Olá
     PASSWORD: Palavra-chave
-  ComplexTableField:
-    CLOSEPOPUP: 'Fechar Janela'
-    SUCCESSEDIT: 'Guardado  %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Adicionar %s'
-    SORTASC: 'Ordenar ascendente'
-    SORTDESC: 'Ordenar descendente'
-  ComplexTableField_popup_ss:
-    NEXT: Próximo
-    PREVIOUS: Anterior
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mudar password'
   CreditCardField:
@@ -80,10 +70,6 @@ pt:
     SINGULARNAME: Ficheiro
     Title: Título
     ZipType: 'Ficheiro compactado (ZIP)'
-  FileIFrameField:
-    FILE: Ficheiro
-    FROMCOMPUTER: 'Do computador'
-    FROMFILESTORE: 'Do Sistema de Ficheiros'
   ForgotPasswordEmail_ss:
     HELLO: Olá
     TEXT1: 'Este é o seu'
@@ -111,8 +97,6 @@ pt:
     DeletePermissionsFailure: 'Não tem permissões para apagar'
   GridFieldDetailForm:
     CancelBtn: Cancelar
-  GridFieldItemEditView_ss:
-    Go_back: 'Voltar'
   Group:
     Code: 'Grupo de código'
     DefaultGroupTitleAdministrators: Administradores
@@ -155,8 +139,6 @@ pt:
     LINKOPENNEWWIN: 'Abrir link noutra janela?'
     LINKTO: 'Link para'
     PAGE: Página
-  ImageField:
-    IMAGE: Imagem
   Image_iframe_ss:
     TITLE: 'Iframe de envio de Imagem'
   LeftAndMain:
@@ -178,10 +160,8 @@ pt:
     DefaultAdminFirstname: 'Administrador por Omissão'
     EMPTYNEWPASSWORD: 'A password não pode ser vazia, tente novamente.'
     ENTEREMAIL: 'Por favor introduza um endereço de email para obter uma ligação para o reinício da palavra-chave. '
-    ERRORLOCKEDOUT: 'A sua conta foi desactivada temporariamente devido ao número excessivo de tentativas falhadas. Volte a tentar daqui a 20 minutos.'
     ERRORNEWPASSWORD: 'As passwords novas não coincidem, por favor tente novamente'
     ERRORPASSWORDNOTMATCH: 'A sua password actual está errada, por favor tente novamente'
-    ERRORWRONGCRED: 'Não aparenta ser o seu email correcto ou password. Por favor tente novamente.'
     FIRSTNAME: 'Primeiro nome'
     INTERFACELANG: 'Linguagem do Interface'
     NEWPASSWORD: 'Nova Password'
@@ -222,8 +202,6 @@ pt:
     PERMISSIONS_CATEGORY: 'Regras e permissões de acesso'
   PhoneNumberField:
     VALIDATION: 'Por favor insira um número de telefone válido'
-  RelationComplexTableField_ss:
-    ADD: Adicionar
   Security:
     ALREADYLOGGEDIN: 'Não tem acesso a esta página. Se tem outras credenciais que lhe permitem aceder a esta página, pode-se autenticar abaixo.'
     BUTTONSEND: 'Enviar o link para recuperar a password'
@@ -244,24 +222,10 @@ pt:
     PERMISSIONS: Permissões
     ROLES: Regras
     Users: Utilizadores
-  SimpleImageField:
-    NOUPLOAD: 'Nenhuma imagem enviada'
   SiteTree:
     TABMAIN: Principal
-  TableField_ss:
-    ADD: 'Adicionar nova linha'
   TableListField:
     CSVEXPORT: 'Exportar para CSV'
-    PRINT: Imprimir
-    SELECT: 'Escolha:'
-  TableListField_ss:
-    SORTASC: 'Ordenar por ordem crescente'
-    SORTDESC: 'Ordenar por ordem decrescente'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Ver o primeiro'
-    VIEWLAST: 'Ver o último'
-    VIEWNEXT: 'Ver o próximo'
-    VIEWPREVIOUS: 'Ver o anterior'
   ToggleField:
     LESS: menos
     MORE: mais
@@ -274,7 +238,6 @@ pt:
     FIELDNOTSET: 'Informação do ficheiro não encontrada'
     FROMCOMPUTER: 'Do computador'
     FROMFILES: 'De ficheiros'
-    REMOVEERROR: 'Erro ao mover o ficheiro'
     REMOVEINFO: 'Remover este ficheiro daqui, mas não apaga do sistema'
     STARTALL: 'Iniciar todos'
     Saved: Guardado

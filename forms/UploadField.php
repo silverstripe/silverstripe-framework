@@ -119,6 +119,13 @@ class UploadField extends FileField {
 		 */
 		'canPreviewFolder' => true,
 		/**
+		 * Indicate a change event to the containing form if an upload
+		 * or file edit/delete was performed.
+		 *
+		 * @var boolean
+		 */
+		'changeDetection' => true,
+		/**
 		 * Maximum width of the preview thumbnail
 		 * 
 		 * @var integer
@@ -1000,7 +1007,7 @@ class UploadField extends FileField {
 		
 		$mergedConfig = array_merge($config, $this->ufConfig);
 		return $this->customise(array(
-			'configString' => str_replace('"', "'", Convert::raw2json($mergedConfig)),
+			'configString' => str_replace('"', "&quot;", Convert::raw2json($mergedConfig)),
 			'config' => new ArrayData($mergedConfig),
 			'multiple' => $allowedMaxFileNumber !== 1
 		))->renderWith($this->getTemplates());
@@ -1145,6 +1152,11 @@ class UploadField extends FileField {
 		if ($relationClass = $this->getRelationAutosetClass(null)) {
 			// Create new object explicitly. Otherwise rely on Upload::load to choose the class.
 			$fileObject = Object::create($relationClass);
+		}
+
+		// Allow replacing files (rather than renaming a duplicate) when warning about overwrites
+		if($this->getConfig('overwriteWarning')) {
+			$this->upload->setReplaceFile(true);
 		}
 
 		// Get the uploaded file into a new file object.

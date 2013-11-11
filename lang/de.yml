@@ -1,6 +1,5 @@
 de:
   AssetAdmin:
-    ALLOWEDEXTS: 'Erlaubte Dateinamenserweiterungen'
     NEWFOLDER: Neuer Ordner
     SHOWALLOWEDEXTS: 'Erlaubte Dateitypen anzeigen'
   AssetTableField:
@@ -71,6 +70,8 @@ de:
     ACCESSALLINTERFACES: 'Zugriff auf alle Bereiche des CMS'
     ACCESSALLINTERFACESHELP: 'Hebt alle bereichspezifischen Berechtigungen auf.'
     SAVE: Speichern
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Vorschau der Webseite'
   CMSProfileController:
     MENUTITLE: 'Mein Profil'
   ChangePasswordEmail_ss:
@@ -79,23 +80,13 @@ de:
     EMAIL: E-Mail
     HELLO: Hallo
     PASSWORD: Passwort
-  ComplexTableField:
-    CLOSEPOPUP: 'Popup schließen'
-    SUCCESSADD2: '{name} hinzugefügt'
-    SUCCESSEDIT: 'Gespeichert %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: '%s hinzufügen'
-    NOITEMSFOUND: 'Keine Elemente gefunden'
-    SORTASC: 'Aufsteigend sortieren'
-    SORTDESC: 'Absteigend sortieren'
-  ComplexTableField_popup_ss:
-    NEXT: nächste
-    PREVIOUS: vorherige
   ConfirmedPasswordField:
     ATLEAST: 'Passwörter müssen mindestens {min} Zeichen lang sein.'
     BETWEEN: 'Passwörter müssen mindestens {min} bis maximal {max} Zeichen lang sein.'
     MAXIMUM: 'Passwörter dürfen maxinal {max} Zeichen lang sein.'
     SHOWONCLICKTITLE: 'Passwort ändern'
+  ContentController:
+    NOTLOGGEDIN: 'Nicht eingeloggt'
   CreditCardField:
     FIRST: Zuerst
     FOURTH: vierte
@@ -111,6 +102,7 @@ de:
     DAYS: Tage
     HOUR: Stunde
     HOURS: Stunden
+    LessThanMinuteAgo: 'weniger als eine Minute'
     MIN: Minute
     MINS: Minuten
     MONTH: Monat
@@ -121,7 +113,6 @@ de:
     TIMEDIFFIN: 'in {difference}'
     YEAR: Jahr
     YEARS: Jahre
-    LessThanMinuteAgo: 'weniger als eine Minute'
   DateField:
     NOTSET: 'nicht gesetzt'
     TODAY: heute
@@ -134,11 +125,9 @@ de:
     INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
     CHOOSE: (Auswahl)
+    CHOOSESEARCH: '(Auswählen oder Suchen)'
   EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'
-  Email_BounceRecord:
-    PLURALNAME: 'E-Mail Rückläufer'
-    SINGULARNAME: 'E-Mail Rückläufer'
   Enum:
     ANY: alle
   File:
@@ -173,19 +162,6 @@ de:
     WavType: 'WAV Audiodatei'
     XlsType: 'Exceltabelle'
     ZipType: 'ZIP komprimierte Datei'
-  FileIFrameField:
-    ATTACH: '{type} anhängen'
-    ATTACHONCESAVED: '{type}s können angehängt werden, sobald das Dokument zum ersten Mal gespeichert wurde.'
-    ATTACHONCESAVED2: 'Dateien können angehängt werden, sobald das Dokument zum ersten Mal gespeichert wurde.'
-    DELETE: 'Lösche {type}'
-    DISALLOWEDFILETYPE: 'Der Upload dieses Dateityps ist nicht erlaubt'
-    FILE: Datei
-    FROMCOMPUTER: 'Von Ihrem Computer'
-    FROMFILESTORE: 'Aus dem Datei-Storage'
-    NOSOURCE: 'Bitte wählen Sie eine Datei aus'
-    REPLACE: '{type} ersetzen'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Iframe Bilder hochladen'
   Filesystem:
     SYNCRESULTS: 'Synchronisation beendet: {createdcount} Objekte erstellt, {deletedcount} Objekte gelöscht'
   Folder:
@@ -197,6 +173,7 @@ de:
     TEXT2: 'Link zum Zurücksetzen des Passworts'
     TEXT3: für
   Form:
+    CSRF_FAILED_MESSAGE: 'Es gab ein technisches Problem. Bitte versuchen Sie es erneut, nachdem sie die vorherige Seite neu geladen haben.'
     FIELDISREQUIRED: '{name} muss ausgefüllt werden'
     SubmitBtnLabel: Los
     VALIDATIONCREDITNUMBER: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer ({number}) korrekt eingegeben haben'
@@ -206,10 +183,9 @@ de:
     VALIDATIONSTRONGPASSWORD: 'Passwörter müssen mindestens eine Zahl und ein alphanumerisches Zeichen enthalten'
     VALIDATOR: Prüfer
     VALIDCURRENCY: 'Bitte geben Sie einen korrekten Betrag ein'
-    CSRF_FAILED_MESSAGE: 'Es gab ein technisches Problem. Bitte versuchen Sie es erneut, nachdem sie die vorherige Seite neu geladen haben.'
   FormField:
-    NONE: keine
     Example: 'z.B. %s'
+    NONE: keine
   GridAction:
     DELETE_DESCRIPTION: Löschen
     Delete: Löschen
@@ -240,7 +216,9 @@ de:
     Deleted: 'Gelöscht %s %s'
     Save: Speichern
     Saved: '{name} {link} gespeichert'
-  GridFieldItemEditView_ss:
+  GridFieldEditButton_ss:
+    EDIT: Bearbeiten
+  GridFieldItemEditView:
     Go_back: 'Zurück'
   Group:
     AddRole: 'Rolle zur Gruppe hinzufügen'
@@ -270,6 +248,7 @@ de:
     ADDURL: 'URL hinzufügen'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; Dimensionen'
     ANCHORVALUE: Anker
+    BUTTONADDURL: 'URL hinzufügen'
     BUTTONINSERT: Einfügen
     BUTTONINSERTLINK: 'Verweis einfügen'
     BUTTONREMOVELINK: 'Verweise entfernen'
@@ -289,6 +268,8 @@ de:
     FROMWEB: 'Aus dem Web'
     FindInFolder: 'In Ordner suchen'
     IMAGEALT: 'Alternativtext (alt)'
+    IMAGEALTTEXT: 'Alternativtext (alt) - erscheint, falls das Bild nicht angezeigt werden kann.'
+    IMAGEALTTEXTDESC: 'Wird von Screenreadern vorgelesen oder angezeigt, falls das Bild nicht angezeigt werden kann.'
     IMAGEDIMENSIONS: Dimensionen
     IMAGEHEIGHTPX: Höhe (px)
     IMAGETITLE: 'Titeltext (Tooltip) - für zusätzliche Informationen über das Bild'
@@ -309,12 +290,9 @@ de:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
     UpdateMEDIA: 'Medienobjekt aktualisieren'
-    BUTTONADDURL: 'URL hinzufügen'
   Image:
     PLURALNAME: Dateien
     SINGULARNAME: Datei
-  ImageField:
-    IMAGE: Bild
   Image_Cached:
     PLURALNAME: Dateien
     SINGULARNAME: Datei
@@ -333,10 +311,10 @@ de:
     PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: 'Der Seitenbaum wurde erfolgreich sortiert.'
     SAVEDUP: Gespeichert.
-    VersionUnknown: Unbekannt
     ShowAsList: 'als Liste zeigen'
     TooManyPages: 'Zu viele Seiten'
     ValidationError: 'Eingabefehler'
+    VersionUnknown: Unbekannt
   LeftAndMain_Menu_ss:
     Hello: Hallo
     LOGOUT: 'Abmelden'
@@ -361,16 +339,16 @@ de:
     EMAIL: E-Mail
     EMPTYNEWPASSWORD: 'Das neue Passwort darf nicht leer sein. Bitte versuchen Sie es erneut.'
     ENTEREMAIL: 'Bitte geben Sie eine E-Mail-Adresse ein, um einen Link zum Zurücksetzen des Passworts zu erhalten.'
-    ERRORLOCKEDOUT: 'Ihr Zugang wurde auf Grund von einer unzulässig hohen Anzahl von falschen Zugangsversuchen gesperrt. Bitte versuchen Sie es in 20 Minuten noch einmal.'
     ERRORLOCKEDOUT2: 'Ihr Zugang wurde auf Grund von einer unzulässig hohen Anzahl von falschen Zugangsversuchen gesperrt. Bitte versuchen Sie es in {count} Minuten noch einmal.'
     ERRORNEWPASSWORD: 'Sie haben Ihr neues Passwort unterschiedlich eingegeben, bitte versuchen Sie es erneut.'
     ERRORPASSWORDNOTMATCH: 'Das Passwort stimmt nicht mit dem hinterlegten Passwort überein, bitte versuchen Sie es noch einmal'
-    ERRORWRONGCRED: 'Das Passwort oder die E-Mail-Adresse scheinen nicht richtig zu sein. Bitte versuchen Sie es erneut.'
+    ERRORWRONGCRED: 'Ihre Eingaben scheinen nicht richtig zu sein. Bitte versuchen Sie es erneut.'
     FIRSTNAME: 'Vorname'
     INTERFACELANG: 'CMS-Sprache'
     INVALIDNEWPASSWORD: 'Das Passwort konnte nicht akzeptiert werden: {password}'
     LOGGEDINAS: 'Sie sind als {name} eingeloggt.'
     NEWPASSWORD: 'Neues Passwort'
+    NoPassword: 'Dieser Benutzer hat kein Passwort.'
     PASSWORD: Passwort
     PLURALNAME: Benutzer
     REMEMBERME: 'Für das nächste Mal merken?'
@@ -390,7 +368,6 @@ de:
     db_NumVisit: 'Anzahl der Besuche'
     db_Password: Passwort
     db_PasswordExpiry: 'Ablaufdatum des Passworts'
-    NoPassword: 'Dieser Benutzer hat kein Passwort.'
   MemberAuthenticator:
     TITLE: 'E-Mail &amp; Passwort'
   MemberDatetimeOptionsetField:
@@ -406,7 +383,6 @@ de:
     MONTHNOLEADING: 'Monat ohne führende Null'
     Preview: Vorschau
     SHORTMONTH: 'Kurzname des Monats (z.B. Jun)'
-    TOGGLEHELP: 'Hilfe zur Formatierung ein-/ausschalten'
     TWODIGITDAY: 'Tag des Monats mit führender Null'
     TWODIGITHOUR: 'Stunde mit führenden Nullen'
     TWODIGITMINUTE: 'Minute mit führenden Nullen'
@@ -438,8 +414,8 @@ de:
     Title: 'Datenmodelle'
     UPDATEDRECORDS: '{count} Einträge wurden aktualisiert'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Datenbankspalten'
     IMPORTSPECLINK: 'Beschreibung von %s anzeigen'
+    IMPORTSPECFIELDS: 'Datenbankspalten'
     IMPORTSPECRELATIONS: Relationen
     IMPORTSPECTITLE: 'Beschreibung von %s'
   ModelAdmin_Tools_ss:
@@ -458,6 +434,10 @@ de:
   Pagination:
     Page: Seite
     View: Anzeigen
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Bitte erhöhen Sie die Sicherheit des Passworts, indem Sie auch einige der folgenden Zeichen verwenden: %s'
+    PREVPASSWORD: 'Sie haben dieses Passwort schon einmal verwendet. Bitte wählen Sie ein neues Passwort'
+    TOOSHORT: 'Das Passwort ist zu kurz, es muss mindestens %s Zeichen lang sein'
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Zugriff'
@@ -483,13 +463,8 @@ de:
     UserPermissionsIntro: 'Durch das Hinzufügen von Benutzern zu Gruppen, werden dessen Rechte angepasst. Mehr Informationen über die Berechtigungen der einzelnen Gruppen erhältst Du im Abschnitt Gruppen.'
   PhoneNumberField:
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
-  RelationComplexTableField_ss:
-    ADD: Hinzufügen
-    CSVEXPORT: 'Als CSV exportieren'
-    NOTFOUND: 'Keine Elemente gefunden'
   Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
-    LOSTPASSWORDHEADER: 'Passwort vergessen'
     BUTTONSEND: 'Senden Sie mir den Link zur Passwortrücksetzung'
     CHANGEPASSWORDBELOW: 'Sie können Ihr Passwort unten ändern.'
     CHANGEPASSWORDHEADER: 'Passwort ändern'
@@ -524,11 +499,11 @@ de:
     BtnImport: 'Import'
     FileFieldLabel: 'CSV Datei <small>(Erlaubte Dateierweiterung: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Bearbeiten
     Auto: Automatisch
     ChangeViewMode: 'Ansicht ändern'
     Desktop: Desktop
     DualWindowView: 'Zwei Fenster'
+    Edit: Bearbeiten
     EditView: 'Bearbeitungsmodus'
     Mobile: Mobil
     PreviewState: 'Vorschau Status'
@@ -538,32 +513,13 @@ de:
     Tablet: Tablett
     ViewDeviceWidth: 'Breite der Vorschau auswählen'
     Width: Breite
-  SimpleImageField:
-    NOUPLOAD: 'Es wurde kein Bild hochgeladen'
   SiteTree:
     TABMAIN: Hauptteil
-  TableField:
-    ISREQUIRED: 'In %s wird ''%s'' benötigt'
-  TableField_ss:
-    ADD: 'Eine neue Zeile hinzufügen'
-    ADDITEM: '%s hinzufügen'
   TableListField:
     CSVEXPORT: 'Als CSV-Datei exportieren'
-    PRINT: drucken
     Print: Drucken
-    SELECT: 'Auswählen:'
-  TableListField_ss:
-    NOITEMSFOUND: 'Keine Elemente gefunden'
-    SORTASC: 'Aufsteigend sortieren'
-    SORTDESC: 'Absteigend sortieren'
   TableListField_PageControls_ss:
-    DISPLAYING: Zeige
     OF: von
-    TO: bis
-    VIEWFIRST: 'Ersten anzeigen'
-    VIEWLAST: 'Letzten anzeigen'
-    VIEWNEXT: 'Nächsten anzeigen'
-    VIEWPREVIOUS: 'Vorherigen anzeigen'
   TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
   ToggleField:
@@ -573,6 +529,8 @@ de:
     ATTACHFILE: 'Datei anhängen'
     ATTACHFILES: 'Dateien anhängen'
     AttachFile: 'Datei(en) anhängen'
+    CHOOSEANOTHERFILE: 'Andere Datei auswählen'
+    CHOOSEANOTHERINFO: 'Diese Datei mit einer Datei vom Server ersetzen'
     DELETE: 'Aus Dateien löschen'
     DELETEINFO: 'Diese Datei am Server löschen'
     DOEDIT: Speichern
@@ -587,29 +545,13 @@ de:
     FROMFILES: 'Aus Dateien'
     HOTLINKINFO: 'Info: Dieses Bild wird verknüpft. Bitte vergewissere dich die Erlaubnis des Inhabers der Ursprungsseite zu haben.'
     MAXNUMBEROFFILES: 'Maximale Anzahl an {count}  Datei(en) überschritten'
-    MAXNUMBEROFFILESSHORT: 'SIe können maximal {count} Datei(en) hochladen'
     MAXNUMBEROFFILESONE: 'SIe können maximal eine Datei hochladen'
+    MAXNUMBEROFFILESSHORT: 'SIe können maximal {count} Datei(en) hochladen'
+    OVERWRITEWARNING: 'Eine Datei mit dem selben Namen existiert bereits'
     REMOVE: Entfernen
-    REMOVEERROR: 'Fehler beim Entfernen der Datei'
     REMOVEINFO: 'Diese Datei entfernen aber nicht am Server löschen'
     STARTALL: 'Alle starten'
-    STARTALLINFO: 'Alle Uploads starten'
     Saved: Gespeichert
-    CHOOSEANOTHERFILE: 'Andere Datei auswählen'
-    CHOOSEANOTHERINFO: 'Diese Datei mit einer Datei vom Server ersetzen'
-    OVERWRITEWARNING: 'Eine Datei mit dem selben Namen existiert bereits'
     UPLOADSINTO: 'speichert nach /{path}'
   Versioned:
     has_many_Versions: Versionen
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Vorschau der Webseite'
-  GridFieldEditButton_ss:
-    EDIT: Bearbeiten
-  ContentController:
-    NOTLOGGEDIN: 'Nicht eingeloggt'
-  GridFieldItemEditView:
-    Go_back: 'Zurück'
-  PasswordValidator:
-    LOWCHARSTRENGTH: 'Bitte erhöhen Sie die Sicherheit des Passworts, indem Sie auch einige der folgenden Zeichen verwenden: %s'
-    PREVPASSWORD: 'Sie haben dieses Passwort schon einmal verwendet. Bitte wählen Sie ein neues Passwort'
-    TOOSHORT: 'Das Passwort ist zu kurz, es muss mindestens %s Zeichen lang sein'

@@ -49,16 +49,6 @@ eo:
     EMAIL: Retpoŝto
     HELLO: Saluton
     PASSWORD: Pasvorto
-  ComplexTableField:
-    CLOSEPOPUP: 'Fermi Ŝprucfenestron'
-    SUCCESSEDIT: 'Konservita %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Almeti je %s'
-    SORTASC: 'Ordigi kreske'
-    SORTDESC: 'Ordigi malkreske'
-  ComplexTableField_popup_ss:
-    NEXT: Sekva
-    PREVIOUS: Antaŭa
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Ŝangi Pasvorton'
   CreditCardField:
@@ -74,9 +64,6 @@ eo:
     TODAY: hodiaŭ
   DropdownField:
     CHOOSE: (Elekti)
-  Email_BounceRecord:
-    PLURALNAME: 'Registroj de neliveritaj mesaĝoj'
-    SINGULARNAME: 'Registro de neliverita mesaĝo'
   Enum:
     ANY: Ajna
   File:
@@ -88,11 +75,6 @@ eo:
     PLURALNAME: Dosieroj
     SINGULARNAME: Dosiero
     Title: Titolo
-  FileIFrameField:
-    FILE: Dosiero
-    FROMCOMPUTER: 'El via komputilo'
-    FROMFILESTORE: 'El la dosiera konservejo'
-    NOSOURCE: 'Bonvolu elekti fontan dosieron por alkroĉi'
   ForgotPasswordEmail_ss:
     HELLO: Saluton
     TEXT1: 'Jen via'
@@ -147,8 +129,6 @@ eo:
     LINKOPENNEWWIN: 'Malfermi ligilon en nova fenestro?'
     LINKTO: 'Ligilo al'
     PAGE: Paĝo
-  ImageField:
-    IMAGE: Bildo
   Image_iframe_ss:
     TITLE: 'Iframe por alŝuti bildon'
   LeftAndMain:
@@ -172,10 +152,8 @@ eo:
     DefaultAdminFirstname: 'Defaŭlta Administranto'
     EMAIL: Retpoŝto
     ENTEREMAIL: 'Bonvolu enigi retadreson por atingi ligilon por reagordi pasvorton.'
-    ERRORLOCKEDOUT: 'Provizore malvalidigis vian konton ĉar okazis tro da provoj ensaluti. Bonvole provu denove post 20 minutoj.'
     ERRORNEWPASSWORD: 'Via ricev enirita vian novan pasvorton malsame, prov denove'
     ERRORPASSWORDNOTMATCH: 'Via aktuala pasvorto ne matĉo, bonvolu prov denove'
-    ERRORWRONGCRED: 'Tiu ŝajne ne estas la ĝusta retpoŝta adreso aŭ pasvorto. Bonvolu provi denove.'
     FIRSTNAME: 'Antaŭnomo'
     INTERFACELANG: 'Interfaca Lingvo'
     NEWPASSWORD: 'Novan pasvorton'
@@ -222,10 +200,8 @@ eo:
     PERMISSIONS_CATEGORY: 'Roloj kaj aliraj permesoj'
   PhoneNumberField:
     VALIDATION: 'Bonvolu enigi validan telefonnumeron'
-  RelationComplexTableField_ss:
-    ADD: Enmeti
   Security:
-    ALREADYLOGGEDIN: 'Vi ne rajtas aliri ĉi tiun paĝon. Se vi havas alian konton kiu rajtas aliri tiun paĝon, vi povas <a href="%s">ensaluti denove</a>.'
+    ALREADYLOGGEDIN: 'Vi ne rajtas aliri ĉi tiun paĝon. Se vi havas alian konton kiu rajtas aliri tiun paĝon, vi povas ensaluti denove.'
     BUTTONSEND: 'Sendu al mi la ligilon reagordi pasvorton'
     CHANGEPASSWORDBELOW: 'Vi povas ŝanĝi vian pasvorton malsupre.'
     CHANGEPASSWORDHEADER: 'Ŝanĝi vian pasvorton'
@@ -252,23 +228,10 @@ eo:
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Importi'
     FileFieldLabel: 'CSV-dosiero <small>(Permesitaj sufiksoj: *.csv)</small>'
-  SimpleImageField:
-    NOUPLOAD: 'Neniu Bildo Alŝutita'
   SiteTree:
     TABMAIN: Ĉefaj
-  TableField_ss:
-    ADD: 'Enmeti novan vicon'
   TableListField:
     CSVEXPORT: 'Eksporti al CSV'
-    PRINT: Presi
-  TableListField_ss:
-    SORTASC: 'Ordigi kreskante'
-    SORTDESC: 'Ordigi malkreskante'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Vidigi unuan'
-    VIEWLAST: 'Vidigi lastan'
-    VIEWNEXT: 'Vidigi sekvan'
-    VIEWPREVIOUS: 'Vidigi antaŭan'
   ToggleField:
     LESS: malpli
     MORE: pli

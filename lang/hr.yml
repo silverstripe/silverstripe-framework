@@ -20,13 +20,6 @@ hr:
     CHANGEPASSWORDTEXT1: 'Promjenili ste lozinku za '
     CHANGEPASSWORDTEXT2: 'Za prijavu koristite slijedeće podatke'
     HELLO: Pozdrav
-  ComplexTableField_ss:
-    ADDITEM: 'Dodaj'
-    SORTASC: 'Sortiraj (ascending)'
-    SORTDESC: 'Sortiraj (descending)'
-  ComplexTableField_popup_ss:
-    NEXT: Slijedeći
-    PREVIOUS: Prethodni
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Promjeni Lozinku'
   DataObject:
@@ -92,7 +85,6 @@ hr:
     CONFIRMPASSWORD: 'Potvrdi lozinku'
     ERRORNEWPASSWORD: 'Pogrečno ste upisali novu lozinku, pokušajte ponovno'
     ERRORPASSWORDNOTMATCH: 'Vaša trenutna lozinka se ne podudara, probajte ponovno'
-    ERRORWRONGCRED: 'Pogrešan Email ili lozinka. Pokušajte ponovno'
     FIRSTNAME: 'Ime'
     INTERFACELANG: 'Jezik sučelja'
     NEWPASSWORD: 'Nova lozinka'
@@ -112,8 +104,6 @@ hr:
     TITLE: 'E-mail &amp; Lozinka'
   PhoneNumberField:
     VALIDATION: 'Molim unesite ispravan telefonski broj'
-  RelationComplexTableField_ss:
-    ADD: Dodaj
   Security:
     ALREADYLOGGEDIN: 'Nemate pristup na ovu stranicu. Imate li drugi korisnički račun, koristite njega'
     BUTTONSEND: 'Pošalji mi link za reset lozinke'
@@ -127,17 +117,8 @@ hr:
     NOTERESETPASSWORD: 'Upišite vaš e-mail i polati ćemo Vam link na kojem možete dobiti novu lozinku'
   SecurityAdmin:
     NEWGROUP: 'Nova Grupa'
-  SimpleImageField:
-    NOUPLOAD: 'Nema uploadanih slika'
   SiteTree:
     TABMAIN: '''Main'''
-  TableField_ss:
-    ADD: 'Dodaj novi redak'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Pogledaj prvi'
-    VIEWLAST: 'Pogledaj zadnji'
-    VIEWNEXT: 'Pogledaj slijedeći'
-    VIEWPREVIOUS: 'Pogledaj prethodni'
   ToggleField:
     LESS: manje
     MORE: više

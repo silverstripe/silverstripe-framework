@@ -18,13 +18,6 @@ ms:
     CHANGEPASSWORDTEXT2: 'Sila gunakan maklumat di bawah untuk mendaftar masuk:'
     EMAIL: Emel
     PASSWORD: Kata Laluan
-  ComplexTableField_ss:
-    ADDITEM: 'Tambah'
-    SORTASC: 'Susun secara menaik'
-    SORTDESC: 'Susun secara menurun'
-  ComplexTableField_popup_ss:
-    NEXT: Berikut
-    PREVIOUS: Dahulu
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Tukar Kata Aluan'
   DataObject:
@@ -82,10 +75,8 @@ ms:
     CONFIRMPASSWORD: 'Sahkan Kata Lalaun'
     EMAIL: Emel
     ENTEREMAIL: 'Sila masukkan alamat emel untuk mendapatkan pautan menganjak kata lalaun'
-    ERRORLOCKEDOUT: 'Akaun anda sedang digantung sementara kerana terlalu banyak cubaan daftar masuk yang gagal. Sila cuba lagi selepas 20 minit.'
     ERRORNEWPASSWORD: 'Kata Lalaun baru yang dimasukkan tidak sepadan, sila cuba semula'
     ERRORPASSWORDNOTMATCH: 'Kata lalaun semasa tidak sepadan, sila cuba semula'
-    ERRORWRONGCRED: 'Alamat email atau kataluan yang dimasukkan tidak tepat. Sila cuba lagi.'
     FIRSTNAME: 'Nama'
     INTERFACELANG: 'Bahasa antaramuka'
     NEWPASSWORD: 'Katalaluan Baru'
@@ -108,8 +99,6 @@ ms:
     FULLADMINRIGHTS: 'Hak mutlah pentadbiran'
   PhoneNumberField:
     VALIDATION: 'Sila isikan nombor telefon yang sah'
-  RelationComplexTableField_ss:
-    ADD: Tambah
   Security:
     ALREADYLOGGEDIN: 'Anda tidak mempunyai kebenaran untuk mencapai mukasurat ini. Jika anda mempunyai akaun lain dengan kebenaran yang deperlukan, sila daftar masuk di bawah.'
     BUTTONSEND: 'Hantar pautan penukaran katalaluan kepada saya'
@@ -120,15 +109,8 @@ ms:
     LOGGEDOUT: 'Anda telah mendaftar keluar. Untuk mendaftar masuk semula, masukkan maklumat yang diperlukan di bawah.'
     NOTEPAGESECURED: 'Halaman ini adalah halaman berkeselamatan tinggi. Masukkan maklumat yang deperlukan sebelum meneruskan capaian. '
     NOTERESETPASSWORD: 'Masukkan alamat emel dan kami akan hantar pautan untuk menukar kata laluan anda.'
-  SimpleImageField:
-    NOUPLOAD: 'Tiada imej dimuat naikkan'
   SiteTree:
     TABMAIN: Utama
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Lihat pertama'
-    VIEWLAST: 'Lihat terakhir'
-    VIEWNEXT: 'Lihat berikut'
-    VIEWPREVIOUS: 'Lihat dahulu'
   ToggleField:
     LESS: kurang
     MORE: lebih

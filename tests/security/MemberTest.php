@@ -378,6 +378,34 @@ class MemberTest extends FunctionalTest {
 		
 	}
 	
+	public function testRemoveFromGroupByCode() {
+		$grouplessMember = $this->objFromFixture('Member', 'grouplessmember');
+		$memberlessGroup = $this->objFromFixture('Group','memberlessgroup');
+		
+		$this->assertFalse($grouplessMember->Groups()->exists());
+		$this->assertFalse($memberlessGroup->Members()->exists());
+		
+		$grouplessMember->addToGroupByCode('memberless');
+		
+		$this->assertEquals($memberlessGroup->Members()->Count(), 1);
+		$this->assertEquals($grouplessMember->Groups()->Count(), 1);
+		
+		$grouplessMember->addToGroupByCode('somegroupthatwouldneverexist', 'New Group');
+		$this->assertEquals($grouplessMember->Groups()->Count(), 2);
+		
+		$group = DataObject::get_one('Group', "\"Code\" = 'somegroupthatwouldneverexist'");
+		$this->assertNotNull($group);
+		$this->assertEquals($group->Code, 'somegroupthatwouldneverexist');
+		$this->assertEquals($group->Title, 'New Group');
+		
+		$grouplessMember->removeFromGroupByCode('memberless');
+		$this->assertEquals($memberlessGroup->Members()->Count(), 0);
+		$this->assertEquals($grouplessMember->Groups()->Count(), 1);
+		
+		$grouplessMember->removeFromGroupByCode('somegroupthatwouldneverexist');
+		$this->assertEquals($grouplessMember->Groups()->Count(), 0);
+	}
+	
 	public function testInGroup() {
 		$staffmember = $this->objFromFixture('Member', 'staffmember');
 		$managementmember = $this->objFromFixture('Member', 'managementmember');

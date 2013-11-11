@@ -36,16 +36,6 @@ is:
     EMAIL: Tölvupóstur
     HELLO: Hæ
     PASSWORD: Lykilorð
-  ComplexTableField:
-    CLOSEPOPUP: 'Loka glugga'
-    SUCCESSEDIT: 'Vitað %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Bæta við %s.'
-    SORTASC: 'Raða í hækkandi röð'
-    SORTDESC: 'Raða í lækkandi röð'
-  ComplexTableField_popup_ss:
-    NEXT: Næsta
-    PREVIOUS: Fyrri
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Breyta lykliorði'
   CreditCardField:
@@ -74,10 +64,6 @@ is:
     PLURALNAME: Skrár
     SINGULARNAME: Skrá
     Title: Titill
-  FileIFrameField:
-    FILE: Skrá
-    FROMCOMPUTER: 'Frá tölvunni þinni'
-    FROMFILESTORE: 'Frá skrárgeymslu'
   ForgotPasswordEmail_ss:
     HELLO: Hæ
     TEXT1: 'Hérna er þitt'
@@ -124,8 +110,6 @@ is:
     LINKTO: 'Hlekkur í'
     PAGE: Síða
     URL: Veffang (URL)
-  ImageField:
-    IMAGE: Mynd
   LoginAttempt:
     Email: 'Tölvupóstfang'
     IP: 'IP tala'
@@ -140,10 +124,8 @@ is:
     EMAIL: Tölvupóstur
     EMPTYNEWPASSWORD: 'Nýja lykilorðið má ekki vera autt, vinsamlegast reyndu aftur'
     ENTEREMAIL: 'Vinsamlegast sláðu inn tölvupóstfang til að fá sendan hlekk til að endursetja lykilorðið'
-    ERRORLOCKEDOUT: 'Notenda aðgangurinn þinn hefur verið gerður óvirkur tímabundið vegna of marga misheppnaða tilrauna til að skrá sig inn. Vinsamlegast reyndu aftur eftir 20 mínútur.'
     ERRORNEWPASSWORD: 'Þú hefur slegið inn nýja lykilorðið þitt öðruvísi, prófaðu aftur'
     ERRORPASSWORDNOTMATCH: 'Núverandi lykilorðið þitt passar ekki, vinsamlegast prófaðu aftur'
-    ERRORWRONGCRED: 'Þetta er ekki rétt tölvupóstfang eða lykilorð. Vinsamlegast reyndu aftur.'
     FIRSTNAME: 'Fornafn'
     INTERFACELANG: 'Tungumál viðmóts'
     NEWPASSWORD: 'Nýtt lykilorð'
@@ -173,8 +155,6 @@ is:
     FULLADMINRIGHTS: 'Full stjórnanda réttindi'
   PhoneNumberField:
     VALIDATION: 'Vinsamlegast sláðu inn gilt símanúmer'
-  RelationComplexTableField_ss:
-    ADD: Bæta við
   Security:
     ALREADYLOGGEDIN: 'Þú hefur ekki aðgang að þessari síðu. Ef þú hefur annan reikning sem hefur aðgang að þessari síðu, þá getur þú innskráð þig fyrir neðan.'
     BUTTONSEND: 'Sendu mér hlekk til að endursetja lykilorðið'
@@ -191,21 +171,10 @@ is:
     MEMBERS: Félagar
     PERMISSIONS: Leyfi
     ROLES: Hlutverk
-  SimpleImageField:
-    NOUPLOAD: 'Engin mynd sótt'
   SiteTree:
     TABMAIN: Aðal
-  TableField_ss:
-    ADD: 'Bæta við nýrri röð'
   TableListField:
     CSVEXPORT: 'Flytja út í CSV'
-    PRINT: Prenta
-    SELECT: 'Veldu:'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Sýna first'
-    VIEWLAST: 'Sýna síðast'
-    VIEWNEXT: 'Sýna næsta'
-    VIEWPREVIOUS: 'Sýna fyrri'
   ToggleField:
     LESS: minna
     MORE: meira

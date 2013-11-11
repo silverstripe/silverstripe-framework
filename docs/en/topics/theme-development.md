@@ -109,7 +109,7 @@ the YAML config, for example in `mysite/_config/config.yml`.
 	  theme: 'mythemename'
 
 
-Go to yoursite.com/?flush=1 and check it out. You should be using your new theme! Not really that awesome or amazing is
+Go to http://localhost?flush=1 and check it out. You should be using your new theme! Not really that awesome or amazing is
 it? Next we need to add some CSS Magic!
 
 See [Templates](/reference/themes) for more information about templates.

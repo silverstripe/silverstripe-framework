@@ -66,17 +66,6 @@ bg:
     CHANGEPASSWORDTEXT2: 'Вече можете да ползвате следните данни за вход:'
     HELLO: Здравей!
     PASSWORD: Парола
-  ComplexTableField:
-    CLOSEPOPUP: 'Затвори прозореца'
-    SUCCESSADD2: 'Беше добавен {name}'
-    SUCCESSEDIT: 'Съхранено %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Добави %s'
-    SORTASC: 'Възходящ'
-    SORTDESC: 'Низходящ'
-  ComplexTableField_popup_ss:
-    NEXT: Следващо
-    PREVIOUS: Предишно
   ConfirmedPasswordField:
     ATLEAST: 'Паролата трябва да е дълга мин. {min} символа.'
     BETWEEN: 'Паролата трябва да е дълга от {min} до {max} символа.'
@@ -105,9 +94,6 @@ bg:
     CHOOSE: (Избери)
   EmailField:
     VALIDATION: 'Моля, въведете имейл адрес'
-  Email_BounceRecord:
-    PLURALNAME: 'Изпращане на отпадналите записи'
-    SINGULARNAME: 'Изпращане на отпаднал запис'
   Enum:
     ANY: Някой
   File:
@@ -123,19 +109,6 @@ bg:
     TOOLARGE: 'Много голям файл, разрешено е до {size}'
     TOOLARGESHORT: 'Големината на файла надхвърля {size}'
     Title: Заглавие
-  FileIFrameField:
-    ATTACH: 'Прикачи {type}'
-    ATTACHONCESAVED: '{type} може да бъде прикачен след като записът се съхрани за първи път.'
-    ATTACHONCESAVED2: 'Файлове могат да бъдат прикачвани след като записът се съхрани за първи път.'
-    DELETE: 'Изтрий {type}'
-    DISALLOWEDFILETYPE: 'Не може да бъде качен файл от този тип'
-    FILE: Файл
-    FROMCOMPUTER: 'От компютъра'
-    FROMFILESTORE: 'От Файлове и Изображения'
-    NOSOURCE: 'Избери файл за прикачване'
-    REPLACE: 'Замести {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Iframe за качване на изображение'
   Filesystem:
     SYNCRESULTS: 'Синхронизацията завърши: бяха създадени {createdcount} елемента, бяха изтрити {deletedcount} елемента'
   ForgotPasswordEmail_ss:
@@ -179,8 +152,6 @@ bg:
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     Deleted: 'Изтрити %s %s'
     Save: Запис
-  GridFieldItemEditView_ss:
-    Go_back: 'Обратно'
   Group:
     AddRole: 'Добавяне на роля към групата'
     Code: 'Код на група'
@@ -238,8 +209,6 @@ bg:
     PAGE: Страница
     URLNOTANOEMBEDRESOURCE: 'URL адресът ''{url}'' не може да бъде превърнат в медиен ресурс.'
     UpdateMEDIA: 'Актуализация на медиа'
-  ImageField:
-    IMAGE: Изображение
   Image_iframe_ss:
     TITLE: 'Iframe за качване на изображение'
   LeftAndMain:
@@ -276,10 +245,8 @@ bg:
     EMAIL: Еmail
     EMPTYNEWPASSWORD: 'Не е въведена нова парола'
     ENTEREMAIL: 'Въведете email, на който ще изпратим връзка за анулиране на парола.'
-    ERRORLOCKEDOUT: 'Вашият акаунт беше временно забранен, защото имаше много неуспешни опити за влизане. Моля, опитайте отново след 20 минути.'
     ERRORNEWPASSWORD: 'Въвели сте новата парола различно, моля опитайте пак'
     ERRORPASSWORDNOTMATCH: 'Вашата текуща парола не съвпада, моля опитайте пак'
-    ERRORWRONGCRED: 'Това не изглежда да е правилен email адрес или парола. Моля опитайте отново.'
     FIRSTNAME: 'Име'
     INTERFACELANG: 'Език'
     INVALIDNEWPASSWORD: 'Не може да бъде приета паролата: {password}'
@@ -317,7 +284,6 @@ bg:
     MONTHNOLEADING: 'Месец без водеща нула'
     Preview: Преглед
     SHORTMONTH: 'Кратко изписване на месеца (напр. Яну)'
-    TOGGLEHELP: 'Помощ за форматирането'
     TWODIGITDAY: 'Двуцифрен ден от месеца'
     TWODIGITHOUR: 'Час с водеща нула (00 до 23)'
     TWODIGITMINUTE: 'Минути с водеща нула (00 до 59)'
@@ -365,8 +331,6 @@ bg:
     PERMISSIONS_CATEGORY: 'Роли и разрешения за достъп'
   PhoneNumberField:
     VALIDATION: 'Моля, въведете валиден телефонен номер'
-  RelationComplexTableField_ss:
-    ADD: Добави
   Security:
     ALREADYLOGGEDIN: 'Вие нямате достъп до тази страница. Ако имате друг акаунт, с който може да влезете в тази страница, въведете го по-долу.'
     BUTTONSEND: 'Пратете ми линка за промяна на паролата'
@@ -403,26 +367,10 @@ bg:
     FileFieldLabel: 'CSV файл <small>(разширение: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Редакция
-  SimpleImageField:
-    NOUPLOAD: 'Няма качени изображения'
   SiteTree:
     TABMAIN: Главно
-  TableField:
-    ISREQUIRED: 'В %s е необходимо ''%s'''
-  TableField_ss:
-    ADD: 'Добави нов ред'
   TableListField:
     CSVEXPORT: 'Експортирай на CSV'
-    PRINT: Принтирай
-    SELECT: 'Избери:'
-  TableListField_ss:
-    SORTASC: 'Сортирай възходящо'
-    SORTDESC: 'Сортирай низходящо'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Преглед на първото'
-    VIEWLAST: 'Преглед на последното'
-    VIEWNEXT: 'Преглед на следващото'
-    VIEWPREVIOUS: 'Преглед на предишното'
   TimeField:
     VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
   ToggleField:
@@ -444,7 +392,6 @@ bg:
     MAXNUMBEROFFILES: 'Максималния брой файлове ({count}) е надхвърлен.'
     MAXNUMBEROFFILESSHORT: 'Максималният брой файлове за качване е {count}'
     REMOVE: Премахни
-    REMOVEERROR: 'Грешка при премахване на файл'
     REMOVEINFO: 'Премахни файла без да го изтриваш'
     STARTALL: 'Старт на всички'
     Saved: Записано

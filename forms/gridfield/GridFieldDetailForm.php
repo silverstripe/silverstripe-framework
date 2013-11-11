@@ -170,7 +170,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 		} else if(ClassInfo::exists(get_class($this) . "_ItemRequest")) {
 			return get_class($this) . "_ItemRequest";
 		} else {
-			return 'GridFieldItemRequest_ItemRequest';
+			return 'GridFieldDetailForm_ItemRequest';
 		}
 	}
 
@@ -349,8 +349,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			if($canDelete) {
 				$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
 					->setUseButtonTag(true)
-					->addExtraClass('ss-ui-action-destructive action-delete')
-					->setAttribute('data-icon', 'delete'));
+					->addExtraClass('ss-ui-action-destructive action-delete'));
 			}
 
 		}else{ // adding new record

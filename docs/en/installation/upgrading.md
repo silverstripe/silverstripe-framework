@@ -15,7 +15,7 @@ See our [upgrade notes and changelogs](/changelogs) for release-specific informa
 *  Identify system folders in your webroot (`cms`, `framework`, `sapphire` and any additional modules). 
 *  Delete existing system folders (or move them outside of your webroot)
 *  Extract and replace system folders from your download (Deleting instead of "copying over" existing folders ensures that files removed from the new SilverStripe release are not persisting in your installation)
-*  Visit http://yoursite.com/dev/build/?flush=1 to rebuild the website database
+*  Visit http://localhost/dev/build/?flush=1 to rebuild the website database
 *  Check if you need to adapt your code to changed PHP APIs
 *  Check if you have overwritten any core templates or styles which might need an update
 *  See [common-problems](common-problems) for a list of likely mistakes that could happen during an upgrade.

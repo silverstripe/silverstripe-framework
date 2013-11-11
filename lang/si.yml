@@ -26,13 +26,6 @@ si:
     CHANGEPASSWORDTEXT1: 'අලුත් මුර පදය'
     CHANGEPASSWORDTEXT2: 'ප්රවිශ්ට වීමට පහත දත්ත යොදාගන්න'
     HELLO: කොහොමද
-  ComplexTableField_ss:
-    ADDITEM: 'එකතු කරන්න'
-    SORTASC: 'ආරෝහන පිළිවෙලට'
-    SORTDESC: 'ආවරෝහන පිළිවෙලට'
-  ComplexTableField_popup_ss:
-    NEXT: පසු
-    PREVIOUS: පෙර
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'මුර පදය වෙනස් කිරීම'
   CreditCardField:
@@ -100,7 +93,6 @@ si:
     EMAIL: 'ඊමේල් '
     ERRORNEWPASSWORD: 'අලුත් මුරපදය වෙනස් වී ඇත, උත්සාහ කරන්න'
     ERRORPASSWORDNOTMATCH: 'ඔෙබ පිවිසුමි වචනය ෙනාගැලෙපේ, කරැණාකර නැවත උත්සාහ කරන්න'
-    ERRORWRONGCRED: 'ඵය නිවැරදි ඊමේල් ලිපිනය හෝ මුරපදය නොවේ. උත්සාහ කරන්න'
     FIRSTNAME: 'මුල් නම'
     INTERFACELANG: 'භාෂා'
     NEWPASSWORD: 'අලුත් මුර පදයක්'
@@ -120,8 +112,6 @@ si:
     TITLE: 'ඊමේල් හා මුර පදය'
   PhoneNumberField:
     VALIDATION: 'නිවැරදි දුරකතන අ0කයක් යොදන්න'
-  RelationComplexTableField_ss:
-    ADD: එකතු කරන්න
   Security:
     ALREADYLOGGEDIN: 'මෙම පිටුවට ඇතුල්වීමට ඹබට අවසර නැත, වෙනත් නමකින් ඇතුල් වීමට පහතින් නම හා මුරපදය යොදන්න'
     BUTTONSEND: 'මුරපදය වෙනස් කරන ලිපිනය ඵවන්න'
@@ -133,19 +123,8 @@ si:
     NOTERESETPASSWORD: 'ඹබට ප්රතිස්තාපනය කල හැකි ලිංක් ඵක ඵවීමට ඹබගේ ඊමේල් ලිපිනය යොදන්න'
   SecurityAdmin:
     NEWGROUP: 'අලුත් කන්ඩාමක්'
-  SimpleImageField:
-    NOUPLOAD: 'පි0තුර අප්ලෝඩ් කර නැත'
   SiteTree:
     TABMAIN: ප්‍රදාන
-  TableField_ss:
-    ADD: 'නව පෙළක් එකතුකරන්න'
-  TableListField:
-    PRINT: මුද්රණය කරන්න
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'පළමු එක පෙන්වන්න'
-    VIEWLAST: 'අවසානය පෙන්වන්න'
-    VIEWNEXT: 'ඊළඟ එක පෙන්වන්න'
-    VIEWPREVIOUS: 'පෙර පෙන්වන්න'
   ToggleField:
     LESS: අඩු
     MORE: වැඩි

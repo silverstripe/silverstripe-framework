@@ -42,7 +42,7 @@ class Director implements TemplateGlobalProvider {
 	 * @var array
 	 */
 	private static $test_servers = array();
-
+	
 	/**
 	 * Setting this explicitly specifies the protocol (http or https) used, overriding
 	 * the normal behaviour of Director::is_https introspecting it from the request
@@ -51,13 +51,13 @@ class Director implements TemplateGlobalProvider {
 	 * @var string - "http" or "https" to force the protocol, or false-ish to use default introspection from request
 	 */
 	private static $alternate_protocol;
-
+	
 	/**
 	 * @config
 	 * @var string
 	 */
 	private static $alternate_base_url;
-	
+
 	/**
 	 * @config
 	 * @var string
@@ -68,7 +68,7 @@ class Director implements TemplateGlobalProvider {
 	 * Add URL matching rules to the Director.
 	 * 
 	 * The director is responsible for turning URLs into Controller objects.
-	 *
+	 * 
 	 * @deprecated 3.2 Use the "Director.rules" config setting instead
 	 * @param $priority The priority of the rules; higher values will get your rule checked first.  We recommend
 	 *                  priority 100 for your site's rules.  The built-in rules are priority 10, standard modules are
@@ -165,13 +165,13 @@ class Director implements TemplateGlobalProvider {
 					DataModel::inst()
 				);
 			} else {
-				$response = new SS_HTTPResponse();
+			$response = new SS_HTTPResponse();
 				$response->redirect($url);
-				$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
+			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
 
-				if ($res !== false) {
-					$response->output();
-				}
+			if ($res !== false) {
+				$response->output();
+			}
 			}
 		// Handle a controller
 		} else if($result) {
@@ -185,7 +185,7 @@ class Director implements TemplateGlobalProvider {
 			
 			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
 			if ($res !== false) {
-				$response->output();
+					$response->output();
 			} else {
 				// @TODO Proper response here.
 				throw new SS_HTTPResponse_Exception("Invalid response");
@@ -279,7 +279,7 @@ class Director implements TemplateGlobalProvider {
 		
 		// TODO: Pass in the DataModel
 		$result = Director::handleRequest($request, $session, $model);
-
+		
 		// Ensure that the result is an SS_HTTPResponse object
 		if(is_string($result)) {
 			if(substr($result,0,9) == 'redirect:') {
@@ -309,7 +309,7 @@ class Director implements TemplateGlobalProvider {
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
 		Versioned::reading_stage($oldStage);
-
+		
 		Config::unnest();
 		
 		return $result;
@@ -368,7 +368,7 @@ class Director implements TemplateGlobalProvider {
 				}
 			}
 		}
-
+	
 		// No URL rules matched, so return a 404 error.
 		return new SS_HTTPResponse('No URL rule was matched', 404);
 	}
@@ -459,7 +459,7 @@ class Director implements TemplateGlobalProvider {
 	 */
 	public static function protocol() {
 		return (self::is_https()) ? 'https://' : 'http://';
-	}
+		}
 
 	/**
 	 * Return whether the site is running as under HTTPS.
@@ -469,17 +469,17 @@ class Director implements TemplateGlobalProvider {
 	public static function is_https() {
 		if ($protocol = Config::inst()->get('Director', 'alternate_protocol')) {
 			return $protocol == 'https';
-		}
+	}
 
 		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) { 
 			if(strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') {
 				return true;
-			}
-		}
-
+	}
+	}
+	
 		if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
 			return true;
-		}
+	}
 		else if(isset($_SERVER['SSL'])) {
 			return true;
 		}
@@ -507,12 +507,12 @@ class Director implements TemplateGlobalProvider {
 				$baseURL = '/';
 			} else {
 				$baseURL = $base . '/';
-			}
+		}
 			
 			if(defined('BASE_SCRIPT_URL')) {
 				return $baseURL . BASE_SCRIPT_URL;
-			}
-
+	}
+	
 			return $baseURL;
 		}
 	}
@@ -920,7 +920,7 @@ class Director implements TemplateGlobalProvider {
 	 * 
 	 * Once the environment type is set, it can be checked with {@link Director::isDev()}, {@link Director::isTest()},
 	 * and {@link Director::isLive()}.
-	 *
+	 * 
 	 * @deprecated 3.2 Use the "Director.environment_type" config setting instead
 	 * @param $et string The environment type: dev, test, or live.
 	 */
@@ -953,19 +953,23 @@ class Director implements TemplateGlobalProvider {
 
 	/*
 	 * This function will return true if the site is in a live environment.
-	 * For information about environment types, see {@link Director::$environment_type}.
+	 * For information about environment types, see {@link Director::set_environment_type()}.
+	 *
+	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
+	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isLive() {
-		return !(Director::isDev() || Director::isTest());
+	public static function isLive($skipDatabase = false) {
+		return !(Director::isDev($skipDatabase) || Director::isTest($skipDatabase));
 	}
 	
 	/**
 	 * This function will return true if the site is in a development environment.
-	 * For information about environment types, see {@link Director::$environment_type}.
-	 * @param $dontTouchDB		If true, the database checks are not performed, which allows certain DB checks
-	 *							to not fail before the DB is ready. If false (default), DB checks are included.
+	 * For information about environment types, see {@link Director::set_environment_type()}.
+	 * 
+	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
+	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isDev($dontTouchDB = false) {
+	public static function isDev($skipDatabase = false) {
 		// This variable is used to supress repetitions of the isDev security message below.
 		static $firstTimeCheckingGetVar = true;
 
@@ -981,7 +985,7 @@ class Director implements TemplateGlobalProvider {
 		}
 
 		// Use ?isDev=1 to get development access on the live server
-		if(!$dontTouchDB && !$result && isset($_GET['isDev'])) {
+		if(!$skipDatabase && !$result && isset($_GET['isDev'])) {
 			if(Security::database_is_ready()) {
 				if($firstTimeCheckingGetVar && !Permission::check('ADMIN')){
 					BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
@@ -1005,11 +1009,14 @@ class Director implements TemplateGlobalProvider {
 	
 	/**
 	 * This function will return true if the site is in a test environment.
-	 * For information about environment types, see {@link Director::$environment_type}.
+	 * For information about environment types, see {@link Director::set_environment_type()}.
+	 *
+	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
+	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isTest() {
+	public static function isTest($skipDatabase = false) {
 		// Use ?isTest=1 to get test access on the live server, or explicitly set your environment
-		if(isset($_GET['isTest'])) {
+		if(!$skipDatabase && isset($_GET['isTest'])) {
 			if(Security::database_is_ready()) {
 				BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
 				$_SESSION['isTest'] = $_GET['isTest'];
@@ -1017,7 +1024,10 @@ class Director implements TemplateGlobalProvider {
 				return true;
 			}
 		}
-		if(self::isDev()) return false;
+		
+		if(self::isDev($skipDatabase)) {
+			return false;
+		}
 		
 		if(Config::inst()->get('Director', 'environment_type')) {
 			return Config::inst()->get('Director', 'environment_type') == 'test';

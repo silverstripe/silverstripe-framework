@@ -27,6 +27,7 @@ class DevelopmentAdmin extends Controller {
 		'reset', 
 		'viewcode',
 		'generatesecuretoken',
+		'buildDefaults',
 	);
 	
 	public function init() {
@@ -72,6 +73,10 @@ class DevelopmentAdmin extends Controller {
 			}
 		}
 		
+		// Backwards compat: Default to "draft" stage, which is important
+		// for tasks like dev/build which call DataObject->requireDefaultRecords(),
+		// but also for other administrative tasks which have assumptions about the default stage.
+		Versioned::reading_stage('Stage');
 	}
 	
 	public function index() {

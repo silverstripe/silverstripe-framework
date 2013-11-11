@@ -79,7 +79,7 @@ left-join for robustness; if there is no matching record in Page, we can return 
 
 SilverStripe has a powerful tool for automatically building database schemas.  We've designed it so that you should never have to build them manually.
 
-To access it, visit http://<mysite>/dev/build?flush=1.  This script will analyze the existing schema, compare it to what's required by your data classes, and alter the schema as required.  
+To access it, visit http://localhost/dev/build?flush=1.  This script will analyze the existing schema, compare it to what's required by your data classes, and alter the schema as required.  
 
 Put the ?flush=1 on the end if you've added PHP files, so that the rest of the system will find these new classes.
 

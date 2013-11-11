@@ -22,15 +22,6 @@ he_IL:
     CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
     CHANGEPASSWORDTEXT2: 'כעת אתה יכול להשתמש בפרטים הבאים בכדי להתחבר:'
     HELLO: היי
-  ComplexTableField:
-    CLOSEPOPUP: 'סגור חלון'
-  ComplexTableField_ss:
-    ADDITEM: 'הוסף'
-    SORTASC: 'סדר בסדר עולה'
-    SORTDESC: 'סדר בסדר יורד'
-  ComplexTableField_popup_ss:
-    NEXT: הבא
-    PREVIOUS: הקודם
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'שינוי סיסמה'
   DataObject:
@@ -87,7 +78,6 @@ he_IL:
     EMAIL: דואר אלקטרוני
     ERRORNEWPASSWORD: 'הסיסמא החדשה שלך שגויה, נסה שנית.'
     ERRORPASSWORDNOTMATCH: 'הסיסמא הנוכחית שלך לא תואמת, נא נסה שנית'
-    ERRORWRONGCRED: 'שגיאה בכתובת הדואר או הסיסמא.נא  נסה שנית.'
     FIRSTNAME: 'שם פרטי'
     INTERFACELANG: 'שפת ממשק'
     NEWPASSWORD: 'סיסמא חדשה'
@@ -125,13 +115,6 @@ he_IL:
   SecurityAdmin:
     EDITPERMISSIONS: 'ערוך הרשאות וכתובות IP לכל קבוצה'
     NEWGROUP: 'קבוצה חדשה'
-  SimpleImageField:
-    NOUPLOAD: 'לא הועלתה תמונה'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'הצג ראשון'
-    VIEWLAST: 'הצג אחרון'
-    VIEWNEXT: 'הצג את הבא'
-    VIEWPREVIOUS: 'הצג את הקודם'
   ToggleField:
     LESS: פחות
     MORE: עוד

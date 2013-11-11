@@ -129,7 +129,7 @@ class Deprecation {
 	 */
 	public static function notice($atVersion, $string = '', $scope = Deprecation::SCOPE_METHOD) {
 		// Never raise deprecation notices in a live environment
-		if(Director::isLive()) return;
+		if(Director::isLive(true)) return;
 
 		$checkVersion = self::$version;
 		// Getting a backtrace is slow, so we only do it if we need it

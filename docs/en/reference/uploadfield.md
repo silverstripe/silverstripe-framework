@@ -193,6 +193,19 @@ selected files that you can then upload manually one by one:
 	:::php
 	$uploadField->setAutoUpload(false);
 
+### Change Detection
+
+The CMS interface will automatically notify the form containing
+an UploadField instance of changes, such as a new upload,
+or the removal of an existing upload (through a `dirty` event).
+The UI can then choose an appropriate response (e.g. highlighting the "save" button). 
+If the UploadField doesn't save into a relation, there's
+technically no saveable change (the upload has already happened),
+which is why this feature can be disabled on demand.
+
+	:::php
+	$uploadField->setConfig('changeDetection', false);
+
 ### Build a simple gallery
 
 A gallery most times needs more then simple images. You might want to add a 

@@ -616,7 +616,11 @@ class Versioned extends DataExtension {
 			}
 			
 			// If we're editing Live, then use (table)_Live instead of (table)
-			if(Versioned::current_stage() && Versioned::current_stage() != $this->defaultStage) {
+			if(
+				Versioned::current_stage() 
+				&& Versioned::current_stage() != $this->defaultStage
+				&& in_array(Versioned::current_stage(), $this->stages)
+			) {
 				// If the record has already been inserted in the (table), get rid of it. 
 				if($manipulation[$table]['command']=='insert') {
 					DB::query("DELETE FROM \"{$table}\" WHERE \"ID\"='$id'");

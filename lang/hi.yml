@@ -38,9 +38,6 @@ hi:
     ERRORNOTADMIN: 'वह उपयोगकर्ता एक व्यवस्थापक नहीं है.'
   CMSProfileController:
     MENUTITLE: 'मेरी प्रोफाइल '
-  ComplexTableField_popup_ss:
-    NEXT: अगला
-    PREVIOUS: पिछला
   ConfirmedPasswordField:
     ATLEAST: 'पासवर्डों को कम से कम {min} अक्षर लंबा होना चाहिए.'
     SHOWONCLICKTITLE: 'पासवर्ड बदलें'

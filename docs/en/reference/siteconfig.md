@@ -58,7 +58,7 @@ Then activate your extension in your `[config.yml](/topics/configuration)` file.
 
 This tells SilverStripe to add the CustomSiteConfig extension to the `[api:SiteConfig]` class. 
 
-After adding those two pieces of code, rebuild your database by visiting http://yoursite.com/dev/build and then reload
+After adding those two pieces of code, rebuild your database by visiting http://localhost/dev/build and then reload
 the admin interface. You may need to reload it with a ?flush=1 on the end.
 
 You can define as many extensions for `[api:SiteConfig]` as you need. For example if you are developing a module you can define

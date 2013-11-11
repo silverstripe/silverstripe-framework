@@ -34,16 +34,6 @@ id:
     CHANGEPASSWORDTEXT1: 'Anda merubah password anda untuk'
     CHANGEPASSWORDTEXT2: 'Anda dapat menggunakan surat kepercayaan berikut untuk masuk:'
     HELLO: Hai
-  ComplexTableField:
-    CLOSEPOPUP: 'Tutup popup'
-    SUCCESSEDIT: 'Telah menyimpan %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Tambahkan %s'
-    SORTASC: 'Urut ascending'
-    SORTDESC: 'Urut descending'
-  ComplexTableField_popup_ss:
-    NEXT: Selanjutnya
-    PREVIOUS: Sebelumnya
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Ganti Kata Sandi'
   CreditCardField:
@@ -124,10 +114,8 @@ id:
     CONFIRMPASSWORD: 'Membenarkan Password'
     EMAIL: E-mail
     ENTEREMAIL: 'Mohon masukkan alamat email anda untuk mendapatkan link reset kata sandi anda.'
-    ERRORLOCKEDOUT: 'Account anda telah dimatikan untuk sementara karena terlalu banyak percobaan log in yang gagal. Mohon dicoba lagi dalam 20 menit.'
     ERRORNEWPASSWORD: 'Anda memasukkan password baru secara berbeda, coba lagi'
     ERRORPASSWORDNOTMATCH: 'Password Anda tidak cocok, coba lagi'
-    ERRORWRONGCRED: 'Ini tidak terlihat seperti alamat email atau password yang benar. Coba lagi.'
     FIRSTNAME: 'Nama Depan'
     INTERFACELANG: 'Bahasa Interface'
     NEWPASSWORD: 'Password Baru'
@@ -153,8 +141,6 @@ id:
     FULLADMINRIGHTS: 'Hak-hak administratif yang penuh'
   PhoneNumberField:
     VALIDATION: 'Harap masukkan nomor telepon yang valid'
-  RelationComplexTableField_ss:
-    ADD: Tambah
   Security:
     ALREADYLOGGEDIN: 'Anda tidak memiliki akses ke halaman ini. Jika anda memiliki keanggotaan yang dapat mengakses halaman ini, anda dapat masuk di bawah ini.'
     BUTTONSEND: 'Kirimi saya link untuk mengeset ulang password '
@@ -169,21 +155,10 @@ id:
     GROUPNAME: 'Nama grup'
     MEMBERS: Anggota-anggota
     PERMISSIONS: Ijin-ijin
-  SimpleImageField:
-    NOUPLOAD: 'Tidak Ada Gambar yang Di-upload'
   SiteTree:
     TABMAIN: Utama
-  TableField_ss:
-    ADD: 'Tambah sebuah baris'
   TableListField:
     CSVEXPORT: 'Ekspor ke CSV'
-    PRINT: Cetak
-    SELECT: 'Pilih:'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Tampil pertama'
-    VIEWLAST: 'Tampil terakhir'
-    VIEWNEXT: 'Tampil berikutnya'
-    VIEWPREVIOUS: 'Tampil sebelumnya'
   ToggleField:
     LESS: kurang
     MORE: lebih

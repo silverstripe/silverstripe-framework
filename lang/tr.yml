@@ -56,16 +56,6 @@ tr:
     EMAIL: E-Posta
     HELLO: Merhaba
     PASSWORD: Parola
-  ComplexTableField:
-    CLOSEPOPUP: 'Açılır Pancereyi Kapat'
-    SUCCESSEDIT: 'Kaydedildi %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: '%s ekle'
-    SORTASC: 'Sırala (artan)'
-    SORTDESC: 'Sırala (azalan)'
-  ComplexTableField_popup_ss:
-    NEXT: Sonraki
-    PREVIOUS: Önceki
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Parola Değiştir'
   CreditCardField:
@@ -83,9 +73,6 @@ tr:
     TODAY: bugün
   DropdownField:
     CHOOSE: (Seçiniz)
-  Email_BounceRecord:
-    PLURALNAME: 'Eposta Geri-dönüş Kayıtları'
-    SINGULARNAME: 'Eposta Geri-dönüş Kaydı'
   File:
     Content: İçerik
     Filename: Dosya adı
@@ -168,10 +155,8 @@ tr:
     DefaultDateTime: varsayılan
     EMAIL: Eposta
     ENTEREMAIL: 'Lütfen parola belirleme linki almak için eposta adresi giriniz.'
-    ERRORLOCKEDOUT: 'Çok miktarda başarısız oturum açma denemesinde bulunduğunuzdan dolayı hesabınız geçici olarak kullanım dışı bırakılmıştır. Lütfen 20 dakika bekleyip tekrar deneyiniz.'
     ERRORNEWPASSWORD: 'Yeni şifrenizin tekrarını farklı girdiniz, tekrar deneyin'
     ERRORPASSWORDNOTMATCH: 'Şu anki şifreniz doğru girilmedi, lütfen tekrar deneyin'
-    ERRORWRONGCRED: 'Eposta adresi veya şifre hatalı. Lütfen tekrar deneyin.'
     FIRSTNAME: 'Ad'
     INTERFACELANG: 'Arayüz Dili'
     NEWPASSWORD: 'Yeni Şifre'
@@ -210,8 +195,6 @@ tr:
     PERMISSIONS_CATEGORY: 'Roller ve giriş izinleri'
   PhoneNumberField:
     VALIDATION: 'Lütfen geçerli bir telefon numarası giriniz'
-  RelationComplexTableField_ss:
-    ADD: Ekle
   Security:
     ALREADYLOGGEDIN: 'Bu sayfaya erişim hakkınız yoktur. Eğer o sayfaya erişim hakkı olan başka bir hesabınız varsa, aşağıdaki formu kullanarak giriş yapınız.'
     BUTTONSEND: 'Gönder'
@@ -232,24 +215,10 @@ tr:
     TABROLES: Roller
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Aktar'
-  SimpleImageField:
-    NOUPLOAD: 'Henüz Resim Yüklenmemiş'
   SiteTree:
     TABMAIN: Ana (Esas)
-  TableField_ss:
-    ADD: 'Yeni bir satır ekle'
   TableListField:
     CSVEXPORT: 'CSV olarak kaydet'
-    PRINT: Yazdır
-    SELECT: 'Seç'
-  TableListField_ss:
-    SORTASC: 'Artan olarak sırala'
-    SORTDESC: 'Azalan olarak sırala'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'İlkini görüntüle'
-    VIEWLAST: 'Sonuncuyu görüntüle'
-    VIEWNEXT: 'Sonrakini görüntüle'
-    VIEWPREVIOUS: 'Öncekini görüntüle'
   ToggleField:
     LESS: daha az
     MORE: daha fazla

@@ -41,13 +41,6 @@ sr:
     CHANGEPASSWORDTEXT1: 'Променили сте своју лозинку за '
     CHANGEPASSWORDTEXT2: 'Сада можете да користите следеће податке за пријављивање:'
     HELLO: Здраво
-  ComplexTableField_ss:
-    ADDITEM: 'Додај '
-    SORTASC: 'Сортирај у растућем поретку'
-    SORTDESC: 'Сортирају у опадајућем поретку'
-  ComplexTableField_popup_ss:
-    NEXT: Следеће
-    PREVIOUS: Претходно
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Promeni Lozinku'
   CreditCardField:
@@ -118,7 +111,6 @@ sr:
     EMAIL: Е-пошта
     ERRORNEWPASSWORD: 'Нова лозинка коју сте унели се не поклапа. Покушајте поново.'
     ERRORPASSWORDNOTMATCH: 'Ваша тренутна лозинка се не поклапа. Покушајте поново.'
-    ERRORWRONGCRED: 'Ово не изгледа као исправна адреса е-поште или лозинка.'
     FIRSTNAME: 'Име'
     INTERFACELANG: 'Језик интерфејса'
     NEWPASSWORD: 'Нова лозинка'
@@ -138,8 +130,6 @@ sr:
     TITLE: 'Пошаљи лозинку'
   PhoneNumberField:
     VALIDATION: 'Унесите исправан број телефона'
-  RelationComplexTableField_ss:
-    ADD: Додај
   Security:
     ALREADYLOGGEDIN: 'Немате дозволу за приступ овој страни. Уколико имате други налог којим можете да приступите овој страни, пријавите се.'
     BUTTONSEND: 'Пошаљи ми линк за ресетовање лозинке'
@@ -153,18 +143,10 @@ sr:
     NOTERESETPASSWORD: 'Унесите своју адресу е-поште и ми ћемо вам послати линк помоћу којег можете да промените своју лозинку'
   SecurityAdmin:
     NEWGROUP: 'Нова група'
-  SimpleImageField:
-    NOUPLOAD: 'Ниједна слика није достављена'
   SiteTree:
     TABMAIN: Главно
-  TableField_ss:
-    ADD: 'Додај нов ред'
   TableListField:
     CSVEXPORT: 'Извези у CSV'
-    PRINT: Штампај
-  TableListField_PageControls_ss:
-    VIEWNEXT: 'Погледај следеће'
-    VIEWPREVIOUS: 'Погледај претходно'
   ToggleField:
     LESS: мање
     MORE: више

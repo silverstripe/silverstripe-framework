@@ -53,16 +53,6 @@ gl_ES:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
     CHANGEPASSWORDTEXT2: 'Podes empregar agora as seguintes credenciais para iniciar sesión:'
-  ComplexTableField:
-    CLOSEPOPUP: 'Pechar Ventá Emerxente'
-    SUCCESSEDIT: 'Gardado %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'engadir'
-    SORTASC: 'Orde ascendente'
-    SORTDESC: 'Orde descendente'
-  ComplexTableField_popup_ss:
-    NEXT: Seguinte
-    PREVIOUS: Anterior
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mudar Contrasinal'
   CreditCardField:
@@ -79,9 +69,6 @@ gl_ES:
     NOTSET: 'sen establecer'
   DropdownField:
     CHOOSE: (Escoller)
-  Email_BounceRecord:
-    PLURALNAME: 'Rexistro de Correos Rexeitados'
-    SINGULARNAME: 'Rexistro de Correo Rexeitado'
   Enum:
     ANY: Ningún
   File:
@@ -93,14 +80,6 @@ gl_ES:
     PLURALNAME: Ficheiros
     SINGULARNAME: Ficheiro
     Title: Título
-  FileIFrameField:
-    DISALLOWEDFILETYPE: 'Este tipo de ficheiro non está permitido para ser subido'
-    FILE: Ficheiro
-    FROMCOMPUTER: 'Dende o teu Computador'
-    FROMFILESTORE: 'Dende o Almacén de Ficheiros'
-    NOSOURCE: 'Por favor selecciona un ficheiro fonte para anexar'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Iframe subindo imaxe'
   ForgotPasswordEmail_ss:
     HELLO: Ola
     TEXT1: 'Estás aquí'
@@ -128,8 +107,6 @@ gl_ES:
     ResetFilter: Reiniciar
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Non eliminar permisos'
-  GridFieldItemEditView_ss:
-    Go_back: 'Ir atrás'
   Group:
     AddRole: 'Engadir un role para este grupo'
     Code: 'Código de Grupo'
@@ -176,8 +153,6 @@ gl_ES:
     LINKOPENNEWWIN: 'Abrir ligazón en nova ventá?'
     LINKTO: 'Ligar a'
     PAGE: Páxina
-  ImageField:
-    IMAGE: Imaxe
   Image_iframe_ss:
     TITLE: 'Iframe subindo imaxe'
   LeftAndMain:
@@ -205,10 +180,8 @@ gl_ES:
     EMAIL: Correo-e
     EMPTYNEWPASSWORD: 'O novo contrasinal non pode ser baleiro, por favor téntao de novo'
     ENTEREMAIL: 'Por favor insire un enderezo de correo-e para conseguir unha ligazón de reinicio.'
-    ERRORLOCKEDOUT: 'A túa conta foi temporalmente deshabilitada porque houbo demasiadas tentativas de inicio de sesión. Téntao de novo en 20 minutos.'
     ERRORNEWPASSWORD: 'Inseriches a nova contrasinal doutra maneira, téntao de novo'
     ERRORPASSWORDNOTMATCH: 'O teu contrasinal actual non emparella, por favor téntao de novo'
-    ERRORWRONGCRED: 'Ese non parece ser un enderezo de correo-e ou contrasinal. Téntao de novo.'
     FIRSTNAME: 'Nome'
     INTERFACELANG: 'Idioma da Interface'
     NEWPASSWORD: 'Novo Contrasinal'
@@ -243,7 +216,6 @@ gl_ES:
     MONTHNOLEADING: 'Díxito do mes sen ceros a esquerda'
     Preview: Previsualizar
     SHORTMONTH: 'Nome curto do mes (p.e. Xuñ)'
-    TOGGLEHELP: 'Mudar o formato de axuda'
     TWODIGITDAY: 'Dous díxitos día do mes'
     TWODIGITHOUR: 'Dous díxitos para a hora (00 ata 23)'
     TWODIGITMINUTE: 'Dous díxitos minuto (00 ata 59)'
@@ -278,8 +250,6 @@ gl_ES:
     PERMISSIONS_CATEGORY: 'Roles e permisos de acceso'
   PhoneNumberField:
     VALIDATION: 'Por favor insire un número de teléfono válido'
-  RelationComplexTableField_ss:
-    ADD: Engadir
   Security:
     ALREADYLOGGEDIN: 'Non tes acceso a esta páxina. Se tes outra conta que pode acceder a páxina, podes iniciar sesión a continuación.'
     BUTTONSEND: 'Enviarme a ligazón de restablecemento do contrasinal'
@@ -308,24 +278,10 @@ gl_ES:
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Importar dende CSV'
     FileFieldLabel: 'Ficheiro CSV <small>(Extensións permitidas: *.csv)</small>'
-  SimpleImageField:
-    NOUPLOAD: 'Ningunha Imaxe Subida'
   SiteTree:
     TABMAIN: Principal
-  TableField_ss:
-    ADD: 'Engadir unha nova fila'
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
-    PRINT: Imprimir
-    SELECT: 'Seleccionar:'
-  TableListField_ss:
-    SORTASC: 'Ordear ascendentemente'
-    SORTDESC: 'Ordear descendentemente'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Ver primeiro'
-    VIEWLAST: 'Ver último'
-    VIEWNEXT: 'Ver seguinte'
-    VIEWPREVIOUS: 'Ver anterior'
   ToggleField:
     LESS: menos
     MORE: máis
@@ -341,7 +297,6 @@ gl_ES:
     FIELDNOTSET: 'Ficheiro de información non atopado'
     FROMCOMPUTER: 'Dende o teu Computador'
     FROMFILES: 'Dende ficheiros'
-    REMOVEERROR: 'Erro eliminando o ficheiro'
     REMOVEINFO: 'Eliminar este ficheiro daquí, pero non eliminalo do almacén de ficheiros'
     STARTALL: 'Comezar todo'
     Saved: Gardado

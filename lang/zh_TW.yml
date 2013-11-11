@@ -20,13 +20,6 @@ zh_TW:
     CHANGEPASSWORDTEXT1: '您為這個帳戶改密碼：'
     CHANGEPASSWORDTEXT2: '您可以用下列的帳號密碼登入：'
     HELLO: 您好
-  ComplexTableField_ss:
-    ADDITEM: '新增'
-    SORTASC: '向上排序'
-    SORTDESC: '向下排序'
-  ComplexTableField_popup_ss:
-    NEXT: 下一個
-    PREVIOUS: 上一個
   DropdownField:
     CHOOSE: (選擇)
   ForgotPasswordEmail_ss:
@@ -77,7 +70,6 @@ zh_TW:
     EMAIL: 電子郵件
     ERRORNEWPASSWORD: '新密碼不相配，請再試一次。'
     ERRORPASSWORDNOTMATCH: '舊密碼不對，請再試一次。'
-    ERRORWRONGCRED: '密碼或電子郵件地址錯誤。請再是一次。'
     FIRSTNAME: '名'
     INTERFACELANG: '介面語言'
     NEWPASSWORD: '新密碼'
@@ -104,8 +96,6 @@ zh_TW:
     NOTERESETPASSWORD: '請輸入您的電子郵件。我們將寄給你重設密媽的網址。'
   SecurityAdmin:
     NEWGROUP: '新增群組'
-  SimpleImageField:
-    NOUPLOAD: '沒有上傳圖片'
   SiteTree:
     TABMAIN: 主要
   ToggleField:

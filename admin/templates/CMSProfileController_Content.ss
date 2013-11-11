@@ -1,4 +1,4 @@
-<div id="settings-controller-cms-content" class="cms-content center cms-tabset $BaseCSSClasses" data-layout-type="border" data-pjax-fragment="Content CurrentForm">
+<div id="settings-controller-cms-content" class="cms-content center cms-tabset $BaseCSSClasses" data-layout-type="border" data-pjax-fragment="Content">
 
 	<div class="cms-content-header north">
 		<% with $EditForm %>
@@ -21,10 +21,6 @@
 		<% end_with %>
 	</div>
 
-	<div class="cms-content-fields center ui-widget-content" data-layout-type="border">
-
-		$EditForm
-
-	</div>
+	$EditForm
 
 </div>

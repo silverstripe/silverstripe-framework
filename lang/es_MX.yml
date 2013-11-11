@@ -65,16 +65,6 @@ es_MX:
     EMAIL: Correo Electrónico
     HELLO: Hey
     PASSWORD: Contraseña
-  ComplexTableField:
-    CLOSEPOPUP: 'Cerrar Mensaje Emergente'
-    SUCCESSEDIT: 'Se guardaron %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Agregar %s'
-    SORTASC: 'Orden ascendente'
-    SORTDESC: 'Orden descendente'
-  ComplexTableField_popup_ss:
-    NEXT: Siguiente
-    PREVIOUS: Anterior
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar contraseña'
   CreditCardField:
@@ -98,9 +88,6 @@ es_MX:
     INVALID_REQUEST: 'Solicitud no válida'
   DropdownField:
     CHOOSE: (Seleccione)
-  Email_BounceRecord:
-    PLURALNAME: 'Registros de correos electrónicos devueltos'
-    SINGULARNAME: 'Correo electrónico devuelto'
   Enum:
     ANY: Cualquiera
   File:
@@ -112,14 +99,6 @@ es_MX:
     PLURALNAME: Archivos
     SINGULARNAME: Archivo
     Title: Título
-  FileIFrameField:
-    DISALLOWEDFILETYPE: 'Este tipo de archivo no se puede subir'
-    FILE: Archivo
-    FROMCOMPUTER: 'Desde su Ordenador'
-    FROMFILESTORE: 'Desde el almacén de archivos'
-    NOSOURCE: 'Por favor, seleccione un archivo fuente para adjuntarlo'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Subidor de imágenes por iFrame'
   ForgotPasswordEmail_ss:
     HELLO: Hey
     TEXT1: 'Estás aquí'
@@ -152,8 +131,6 @@ es_MX:
     ResetFilter: Resetear
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No borrar permisos'
-  GridFieldItemEditView_ss:
-    Go_back: 'Volver'
   Group:
     Code: 'Código del grupo'
     DefaultGroupTitleAdministrators: Administradores
@@ -201,8 +178,6 @@ es_MX:
     LINKOPENNEWWIN: '¿Abrir enlace en una nueva ventana?'
     LINKTO: 'Enlazar a'
     PAGE: Página
-  ImageField:
-    IMAGE: Imagen
   Image_iframe_ss:
     TITLE: 'Subiendo Imagen Iframe'
   LeftAndMain:
@@ -230,10 +205,8 @@ es_MX:
     EMAIL: Correo electrónico
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor, inténtelo de nuevo'
     ENTEREMAIL: 'Por favor ingresa una dirección de correo electrónico para conseguir una contraseña y reiniciar el enlace.'
-    ERRORLOCKEDOUT: 'Tu cuenta se ha deshabilitado temporalmente debido a varios intentos de ingresar infructuosos. Por favor inténtalo de nuevo en 20 minutos.'
     ERRORNEWPASSWORD: 'Usted ha ingresado su nueva contraseña diferentemente, intenta de nuevo'
     ERRORPASSWORDNOTMATCH: 'Tu contraseña actual no encaja, por favor inténtalo de nuevo'
-    ERRORWRONGCRED: 'No parece correcta la dirección de correo-e o la contraseña. Por favor inténtalo de nuevo.'
     FIRSTNAME: 'Primer Nombre'
     INTERFACELANG: 'Lenguaje de la interfaz'
     INVALIDNEWPASSWORD: 'No podemos acceptar see pasword: {password}'
@@ -272,7 +245,6 @@ es_MX:
     MONTHNOLEADING: 'Dígito del mes  sin cero'
     Preview: Previo
     SHORTMONTH: 'Nombre corto del mes (ej: Jun)'
-    TOGGLEHELP: 'Mostrar la ayuda de formato'
     TWODIGITDAY: 'Dia del mes de dos dígitos'
     TWODIGITHOUR: 'Dos dígitos de la hora (00 a 23)'
     TWODIGITMINUTE: 'Dos dígitos de los minutos (00 a 59)'
@@ -313,10 +285,8 @@ es_MX:
     PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
   PhoneNumberField:
     VALIDATION: 'Por favor ingresa un número telefónico válido'
-  RelationComplexTableField_ss:
-    ADD: Agregar
   Security:
-    ALREADYLOGGEDIN: 'Usted no tiene acceso a esta página. Si tiene otra cuenta que pueda tener acceso a ésta página, puede <a href="%s">abrir una sesión abajo</a>.'
+    ALREADYLOGGEDIN: 'Usted no tiene acceso a esta página. Si tiene otra cuenta que pueda tener acceso a ésta página, puede abrir una sesión abajo.'
     BUTTONSEND: 'Envíame enlace para restablecer contraseña'
     CHANGEPASSWORDBELOW: 'Puedes cambiar tu contraseña abajo.'
     CHANGEPASSWORDHEADER: 'Cambia tu contraseña'
@@ -339,24 +309,10 @@ es_MX:
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Importar'
     FileFieldLabel: 'Archivo CSV <small>(Extensiones permitidas: *.csv)'
-  SimpleImageField:
-    NOUPLOAD: 'No subió la Imagen'
   SiteTree:
     TABMAIN: Principal
-  TableField_ss:
-    ADD: 'Agregar un nuevo renglón'
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
-    PRINT: Imprimir
-    SELECT: 'Seleccione:'
-  TableListField_ss:
-    SORTASC: 'Organizar en orden ascendente'
-    SORTDESC: 'Organizar en orden descendente'
-  TableListField_PageControls_ss:
-    VIEWFIRST: 'Ver primero'
-    VIEWLAST: 'Ver último'
-    VIEWNEXT: 'Ver siguiente'
-    VIEWPREVIOUS: 'Ver anterior'
   TimeField:
     VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
   ToggleField:
@@ -378,7 +334,6 @@ es_MX:
     MAXNUMBEROFFILES: 'Máximo número {count} de archivos sobrepasado'
     MAXNUMBEROFFILESSHORT: 'Solo puedes subir {count} archivos'
     REMOVE: Remover
-    REMOVEERROR: 'Error removiendo archivo'
     REMOVEINFO: 'Remover este archivo de aquí, pero no borrarlo del almacén de archivos'
     STARTALL: 'Comenzar todas'
     Saved: Guardado

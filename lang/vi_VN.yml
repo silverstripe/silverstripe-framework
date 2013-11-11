@@ -3,8 +3,6 @@ vi_VN:
     SAVE: Lưu
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Bạn có thể thay đổi mật khẩu tại'
-  ComplexTableField_ss:
-    ADDITEM: 'Thêm'
   DateField:
     TODAY: hôm nay
   DropdownField:

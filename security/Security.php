@@ -637,9 +637,8 @@ class Security extends Controller {
 				'Form' => $this->ChangePasswordForm()));
 
 		} else {
-			// show an error message if the auto login token is invalid and the
-			// user is not logged in
-			if(!isset($_REQUEST['t']) || !$member) {
+			// Show friendly message if it seems like the user arrived here via password reset feature.
+			if(isset($_REQUEST['m']) || isset($_REQUEST['t'])) {
 				$customisedController = $controller->customise(
 					array('Content' =>
 						_t(
