@@ -61,15 +61,15 @@ For example, if we have a menu, we want that menu to update whenever _any_ page 
 otherwise. By using aggregates, we can do that like this:
 
 	:::ss
-	<% cached 'navigation', List(SiteTree).max(LastEdited), List(SiteTree).Count() %>
+	<% cached 'navigation', List(SiteTree).max(LastEdited), List(SiteTree).count() %>
 
 If we have a block that shows a list of categories, we can make sure the cache updates every time a category is added or
 edited
 
 	:::ss
-	<% cached 'categorylist', List(Category).max(LastEdited), List(Category).Count() %>
+	<% cached 'categorylist', List(Category).max(LastEdited), List(Category).count() %>
 
-Note the use of both .max(LastEdited) and .Count() - this takes care of both the case where an object has been edited 
+Note the use of both .max(LastEdited) and .count() - this takes care of both the case where an object has been edited 
 since the cache was last built, and also when an object has been deleted/un-linked since the cache was last built.
 
 We can also calculate aggregates on relationships. A block that shows the current member's favourites needs to update
