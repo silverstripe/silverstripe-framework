@@ -116,7 +116,7 @@ class Enum extends StringField {
 	 */
 	public function scaffoldSearchField($title = null) {
 		$anyText = _t('Enum.ANY', 'Any');
-		return $this->formField($title, null, false, '', null, "($anyText)");
+		return $this->formField($title, null, true, '', null, "($anyText)");
 	}
 	
 	/**
