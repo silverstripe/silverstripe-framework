@@ -381,7 +381,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$actions,
 			$this->component->getValidator()
 		);
-		
+
+		$list = $this->gridField->getList();
+		if($list && $list instanceof HasManyList) {
+			$fields->makeFieldReadonly($list->getForeignKey());
+			$this->record->$foreignKey = $list->getForeignID();
+		}
+
 		$form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
 
 		if($this->record->ID && !$canEdit) {
