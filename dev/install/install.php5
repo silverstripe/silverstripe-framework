@@ -362,15 +362,14 @@ class InstallRequirements {
 	}
 
 	/**
-	 * Check if the web server is IIS.
+	 * Check if the web server is IIS and version greater than the given version.
 	 * @return boolean
 	 */
-	function isIIS($version = 7) {
-		if(strpos($this->findWebserver(), 'IIS/' . $version) !== false) {
-			return true;
-		} else {
+	function isIIS($fromVersion = 7) {
+		if(strpos($this->findWebserver(), 'IIS/') === false) {
 			return false;
 		}
+		return substr(strstr($this->findWebserver(), '/'), -3, 1) >= $fromVersion;
 	}
 
 	function isApache() {
@@ -400,7 +399,7 @@ class InstallRequirements {
 	function check() {
 		$this->errors = null;
 		$isApache = $this->isApache();
-		$isIIS = $this->isIIS(7);
+		$isIIS = $this->isIIS();
 		$webserver = $this->findWebserver();
 
 		$this->requirePHPVersion('5.3.4', '5.3.2', array(
