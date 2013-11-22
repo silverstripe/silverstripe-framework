@@ -92,7 +92,7 @@ class CmsFormsContext extends BehatContext {
 		$element = $page->findField($locator);
 		assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
 
-		$actual = $element->getHTML();
+		$actual = $element->getAttribute('value');
 		$regex = '/'.preg_quote($html, '/').'/ui';
 		if (!preg_match($regex, $actual)) {
 			$message = sprintf(
