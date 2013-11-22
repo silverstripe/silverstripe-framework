@@ -399,7 +399,18 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$actions,
 			$this->component->getValidator()
 		);
-		
+
+		//lock-in parent ID for HasMany List.  
+		//We do this before the loading of the data into the form
+		//so that the user can see the parent has been set.
+		$list = $this->gridField->getList();
+		if($list && $list instanceof HasManyList) {
+			$foreignKey = $list->getForeignKey();
+			$fields->makeFieldReadonly($foreignKey);
+			$this->record->$foreignKey = $list->getForeignID();
+		}
+
+
 		$form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
 
 		if($this->record->ID && !$canEdit) {
