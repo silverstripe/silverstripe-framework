@@ -218,6 +218,21 @@
 		});
 
 		/**
+		 * If we've a history state to go back to, go back, otherwise fall back to
+		 * submitting the form with the 'doCancel' action.
+		 */
+		$('.cms-edit-form .Actions input.action[type=submit].ss-ui-action-cancel, .cms-edit-form .Actions button.action.ss-ui-action-cancel').entwine({
+			onclick: function(e) {
+				if (History.getStateByIndex(1)) {
+					History.back();
+				} else {
+					this.parents('form').trigger('submit', [this]);
+				}
+				e.preventDefault();
+			}
+		});
+
+		/**
 		 * Hide tabs when only one is available.
 		 * Special case is actiontabs - tabs between buttons, where we want to have
 		 * extra options hidden within a tab (even if only one) by default.
