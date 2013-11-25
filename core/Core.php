@@ -82,6 +82,11 @@ function sapphire_autoload($className) {
 
 spl_autoload_register('sapphire_autoload');
 
+// Fall back to Composer's autoloader (e.g. for PHPUnit), if composer is used
+if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
+	require_once BASE_PATH . '/vendor/autoload.php';
+}
+
 require_once("core/ManifestBuilder.php");
 require_once("core/ClassInfo.php");
 require_once('core/Object.php');
