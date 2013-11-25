@@ -13,6 +13,31 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 		'GridFieldSortableHeaderTest_Cheerleader',
 		'GridFieldSortableHeaderTest_CheerleaderHat'
 	);
+	
+	/**
+	 * Tests that the appropriate sortable headers are generated
+	 */
+	public function testRenderHeaders() {
+		
+		// Generate sortable header and extract HTML
+		$list = new DataList('GridFieldSortableHeaderTest_Team');
+		$config = new GridFieldConfig_RecordEditor();
+		$form = new Form(Controller::curr(), 'Form', new FieldList(), new FieldList());
+		$gridField = new GridField('testfield', 'testfield', $list, $config);
+		$gridField->setForm($form);
+		$compontent = $gridField->getConfig()->getComponentByType('GridFieldSortableHeader');
+		$htmlFragment = $compontent->getHTMLFragments($gridField);
+		
+		// Check that the output shows name and hat as sortable fields, but not city
+		$this->assertContains('<span class="non-sortable">City</span>', $htmlFragment['header']);
+		$this->assertContains('value="Name" class="action ss-gridfield-sort" id="action_SetOrderName"', $htmlFragment['header']);
+		$this->assertContains('value="Cheerleader Hat" class="action ss-gridfield-sort" id="action_SetOrderCheerleader-Hat-Colour"', $htmlFragment['header']);
+		
+		// Check inverse of above
+		$this->assertNotContains('value="City" class="action ss-gridfield-sort" id="action_SetOrderCity"', $htmlFragment['header']);
+		$this->assertNotContains('<span class="non-sortable">Name</span>', $htmlFragment['header']);
+		$this->assertNotContains('<span class="non-sortable">Cheerleader Hat</span>', $htmlFragment['header']);
+	}
 
 	public function testGetManipulatedData() {
 		$list = new DataList('GridFieldSortableHeaderTest_Team');
@@ -77,6 +102,12 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 }
 
 class GridFieldSortableHeaderTest_Team extends DataObject implements TestOnly {
+	
+	private static $summary_fields = array(
+		'Name' => 'Name',
+		'City.Initial' => 'City',
+		'Cheerleader.Hat.Colour' => 'Cheerleader Hat'
+	);
 
 	private static $db = array(
 		'Name' => 'Varchar',
