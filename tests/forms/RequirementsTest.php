@@ -357,36 +357,46 @@ class RequirementsTest extends SapphireTest {
 		// Test matching with HTML5 <header> tags as well
 		$template = '<html><head></head><body><header>My header</header><p>Body<script></script></p></body></html>';
 
-		// Test if the script is before the first <script> tag, not before the body.
+		// The expected outputs
+		$JsInHead = "<html><head><script type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\"></script>\n</head><body><header>My header</header><p>Body<script></script></p></body></html>";
+		$JsInBody = "<html><head></head><body><header>My header</header><p>Body<script type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\"></script><script></script></p></body></html>";
+		$JsAtEnd  = "<html><head></head><body><header>My header</header><p>Body<script></script></p><script type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\"></script></body></html>";
+
+		
+		// Test if the script is before the head tag, not before the body.
+		// Expected: $JsInHead
 		$backend->set_write_js_to_body(false);
 		$backend->set_force_js_to_bottom(false);
 		$html = $backend->includeInHTML(false, $template);
-		$this->assertNotContains('</script></body>', $html);
-		$this->assertNotContains('</script><script', $html);
-		$this->assertContains('<head><script', $html);
+		$this->assertNotEquals($JsInBody, $html);
+		$this->assertNotEquals($JsAtEnd, $html);
+		$this->assertEquals($JsInHead, $html);
 
 		// Test if the script is before the first <script> tag, not before the body.
+		// Expected: $JsInBody
 		$backend->set_write_js_to_body(true);
 		$backend->set_force_js_to_bottom(false);
 		$html = $backend->includeInHTML(false, $template);
-		$this->assertNotContains('</script></body>', $html);
-		$this->assertContains('</script><script', $html);
+		$this->assertNotEquals($JsAtEnd, $html);
+		$this->assertEquals($JsInBody, $html);
 
 		// Test if the script is placed just before the closing bodytag, with write-to-body false.
+		// Expected: $JsAtEnd
 		$backend->set_write_js_to_body(false);
 		$backend->set_force_js_to_bottom(true);
 		$html = $backend->includeInHTML(false, $template);
-		$this->assertNotContains('<head><script', $html);
-		$this->assertNotContains('</script><script', $html);
-		$this->assertContains('</script></body>', $html);
-
+		$this->assertNotEquals($JsInHead, $html);
+		$this->assertNotEquals($JsInBody, $html);
+		$this->assertEquals($JsAtEnd, $html);
+		
 		// Test if the script is placed just before the closing bodytag, with write-to-body true.
+		// Expected: $JsAtEnd
 		$backend->set_write_js_to_body(true);
 		$backend->set_force_js_to_bottom(true);
 		$html = $backend->includeInHTML(false, $template);
-		$this->assertNotContains('<head><script', $html);
-		$this->assertNotContains('</script><script', $html);
-		$this->assertContains('</script></body>', $html);
+		$this->assertNotEquals($JsInHead, $html);
+		$this->assertNotEquals($JsInBody, $html);
+		$this->assertEquals($JsAtEnd, $html);
 	}
 
 	public function testSuffix() {

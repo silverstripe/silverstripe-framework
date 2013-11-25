@@ -733,8 +733,8 @@ class Requirements_Backend {
 				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
 
 				// We put script tags into the body, for performance.
-				// If your template already has script tags in the body, then we put our script
-				// tags just before those. Otherwise, we put it at the bottom.
+				// We forcefully put it at the bottom instead of before
+				// the first script-tag occurence
 				$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
 				
 				// Put CSS at the bottom of the head
