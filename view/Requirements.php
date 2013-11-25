@@ -308,6 +308,17 @@ class Requirements {
 		self::backend()->set_write_js_to_body($var);
 	}
 
+	/**
+	 * Set the javascript to be forced to end of the HTML, or use the default.
+	 * Useful if you use inline <script> tags, that don't need the javascripts
+	 * included via Requirements::require();
+	 *
+	 * @param boolean $var If true, force the javascripts to be included at the bottom.
+	 */
+	public static function set_force_js_to_bottom($var) {
+		self::backend()->force_js_to_bottom = $var;
+	}
+
 	public static function debug() {
 		return self::backend()->debug();
 	}
@@ -436,7 +447,15 @@ class Requirements_Backend {
 	 * @var boolean
 	 */
 	public $write_js_to_body = true;
-
+	
+	/**
+	 * Force the javascripts to the bottom of the page, even if there's a
+	 * <script> tag in the body already
+	 *  
+	 * @var boolean
+	 */
+	public $force_js_to_bottom = false;
+	
 	public function set_combined_files_enabled($enable) {
 		$this->combined_files_enabled = (bool) $enable;
 	}
@@ -711,7 +730,7 @@ class Requirements_Backend {
 				$p2 = stripos($content, '<body');
 				$p1 = stripos($content, '<script', $p2);
 
-				if($p1 !== false) {
+				if($p1 !== false && !$this->force_js_to_bottom) {
 					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
 				} else {
 					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
