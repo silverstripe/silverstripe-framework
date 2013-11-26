@@ -113,6 +113,17 @@ You can also clear specific Requirements:
 Caution: Depending on where you call this command, a Requirement might be *re-included* afterwards.
 
 
+## Blocking
+
+You may want to prevent default included thirdparty javascripts from being loaded on your website. For example jQuery.js, 
+which is included with the DateField, might break your custom jQuery scripting.
+Adding the following to your page, will prevent jQuery from being loaded twice.
+
+	:::php
+	Requirements::block(THIRDPARTY_DIR . '/jquery/jquery.js');
+
+It's not adviced to do this in your _config file, because this would most probably break the CMS.
+
 
 ## Inclusion Order
 
