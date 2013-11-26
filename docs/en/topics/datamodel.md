@@ -762,6 +762,11 @@ Example: Validate postcodes based on the selected country
 		}
 	}
 
+<div class="hint" markdown='1'>
+**Tip:** If you decide to add unique or other indexes to your model via
+`static $indexes`, see [DataObject](/reference/dataobject) for details.
+</div>
+
 ## Maps
 
 A map is an array where the array indexes contain data as well as the values.

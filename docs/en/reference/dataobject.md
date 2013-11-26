@@ -250,6 +250,35 @@ The CMS default sections as well as custom interfaces like
 `[ModelAdmin](/reference/modeladmin)` or `[GridField](/reference/gridfield)`
 already enforce these permissions.
 
+## Indexes
+
+It is sometimes desirable to add indexes to your data model, whether to
+optimize queries or add a uniqueness constraint to a field. This is done
+through the `DataObject::$indexes` map, which maps index names to descriptor
+arrays that represent each index.
+
+The general pattern for the descriptor arrays is
+
+	:::php
+	array('type' => 'index|unique|fulltext', 'value' => '"FieldA","FieldB"')
+
+You can also express the descriptor as a string.
+
+	:::php
+	'unique ("Name")'
+
+
+Note that some databases support more keywords for 'type' than shown above.
+
+Example: a unique index on a field
+
+	:::php
+	private static $db = array('SEOName' => 'Varchar(255)',);
+	private static $indexes = array(
+		'Name_IDX' => array('type' => 'unique', 'value' => '"Name"'),
+		'OtherField_IDX' => 'unique ("OtherField")',
+	);
+
 ## API Documentation
 
 `[api:DataObject]`
