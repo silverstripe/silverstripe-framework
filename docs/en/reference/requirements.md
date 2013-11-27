@@ -117,7 +117,7 @@ Caution: Depending on where you call this command, a Requirement might be *re-in
 
 You may want to prevent default included thirdparty javascripts from being loaded on your website. For example jQuery.js, 
 which is included with the DateField, might break your custom jQuery scripting.
-Adding the following to your page, will prevent jQuery from being loaded twice.
+Adding the following to your Page.php, will prevent the thirdparty jQuery from being loaded multiple times on the frontend.
 
 	:::php
 	Requirements::block(THIRDPARTY_DIR . '/jquery/jquery.js');
