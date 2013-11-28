@@ -115,14 +115,20 @@ Caution: Depending on where you call this command, a Requirement might be *re-in
 
 ## Blocking
 
-You may want to prevent default included thirdparty javascripts from being loaded on your website. For example jQuery.js, 
+You might want to prevent default included thirdparty javascript, CSS from being loaded on your website. For example jQuery.js, 
 which is included with the DateField, might break your custom jQuery scripting.
-Adding the following to your Page.php, will prevent the thirdparty jQuery from being loaded multiple times on the frontend.
+Adding the following to your Page.php, will block the jquery.js from the thirdparty directory, from being loaded multiple times on the frontend.
 
 	:::php
 	Requirements::block(THIRDPARTY_DIR . '/jquery/jquery.js');
+	
+Blocking works for any file included by a Silverstripe object. CSS-files, for example, can be blocked with
 
-It's not adviced to do this in your _config file, because this would most probably break the CMS.
+	:::php
+	Requirements::block('/location/of/silverstripe/css/Form.css');
+
+
+It is not advised to do this in your _config file, because this would most probably break the CMS.
 
 
 ## Inclusion Order
