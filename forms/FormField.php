@@ -583,7 +583,7 @@ class FormField extends RequestHandler {
 	 */
 	public function Field($properties = array()) {
 		$obj = ($properties) ? $this->customise($properties) : $this;
-
+		$this->extend('onBeforeRender', $this);
 		return $obj->renderWith($this->getTemplates());
 	}
 
