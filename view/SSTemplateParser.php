@@ -20,6 +20,9 @@ else {
  * This is the exception raised when failing to parse a template. Note that we don't currently do any static analysis,
  * so we can't know if the template will run, just if it's malformed. It also won't catch mistakes that still look
  * valid.
+ *
+ * @package framework
+ * @subpackage view
  */
 class SSTemplateParseException extends Exception {
 	
@@ -35,36 +38,39 @@ class SSTemplateParseException extends Exception {
 }
 
 /**
-  * This is the parser for the SilverStripe template language. It gets called on a string and uses a php-peg parser
-  * to match that string against the language structure, building up the PHP code to execute that structure as it
-  * parses
-  * 
-  * The $result array that is built up as part of the parsing (see thirdparty/php-peg/README.md for more on how
-  * parsers build results) has one special member, 'php', which contains the php equivalent of that part of the
-  * template tree.
-  * 
-  * Some match rules generate alternate php, or other variations, so check the per-match documentation too.
-  * 
-  * Terms used:
-  * 
-  * Marked: A string or lookup in the template that has been explictly marked as such - lookups by prepending with
-  * "$" (like $Foo.Bar), strings by wrapping with single or double quotes ('Foo' or "Foo")
-  * 
-  * Bare: The opposite of marked. An argument that has to has it's type inferred by usage and 2.4 defaults.
-  * 
-  * Example of using a bare argument for a loop block: <% loop Foo %>
-  * 
-  * Block: One of two SS template structures. The special characters "<%" and "%>" are used to wrap the opening and
-  * (required or forbidden depending on which block exactly) closing block marks.
-  * 
-  * Open Block: An SS template block that doesn't wrap any content or have a closing end tag (in fact, a closing end
-  * tag is forbidden)
-  * 
-  * Closed Block: An SS template block that wraps content, and requires a counterpart <% end_blockname %> tag
-  * 
-  * Angle Bracket: angle brackets "<" and ">" are used to eat whitespace between template elements
-  * N: eats white space including newlines (using in legacy _t support)
-  */
+ * This is the parser for the SilverStripe template language. It gets called on a string and uses a php-peg parser
+ * to match that string against the language structure, building up the PHP code to execute that structure as it
+ * parses
+ *
+ * The $result array that is built up as part of the parsing (see thirdparty/php-peg/README.md for more on how
+ * parsers build results) has one special member, 'php', which contains the php equivalent of that part of the
+ * template tree.
+ *
+ * Some match rules generate alternate php, or other variations, so check the per-match documentation too.
+ *
+ * Terms used:
+ *
+ * Marked: A string or lookup in the template that has been explictly marked as such - lookups by prepending with
+ * "$" (like $Foo.Bar), strings by wrapping with single or double quotes ('Foo' or "Foo")
+ *
+ * Bare: The opposite of marked. An argument that has to has it's type inferred by usage and 2.4 defaults.
+ *
+ * Example of using a bare argument for a loop block: <% loop Foo %>
+ *
+ * Block: One of two SS template structures. The special characters "<%" and "%>" are used to wrap the opening and
+ * (required or forbidden depending on which block exactly) closing block marks.
+ *
+ * Open Block: An SS template block that doesn't wrap any content or have a closing end tag (in fact, a closing end
+ * tag is forbidden)
+ *
+ * Closed Block: An SS template block that wraps content, and requires a counterpart <% end_blockname %> tag
+ *
+ * Angle Bracket: angle brackets "<" and ">" are used to eat whitespace between template elements
+ * N: eats white space including newlines (using in legacy _t support)
+ *
+ * @package framework
+ * @subpackage view
+ */
 class SSTemplateParser extends Parser {
 
 	/**

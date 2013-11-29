@@ -6,7 +6,6 @@ require_once 'Zend/Translate/Adapter.php';
  * @package framework
  * @subpackage i18n
  */
-
 class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslateAdapterInterface {
 	
 	/**
@@ -65,6 +64,10 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 	
 }
 
+/**
+ * @package framework
+ * @subpackage i18n
+ */
 class i18nSSLegacyAdapter_Iterator extends RecursiveIteratorIterator {
 
 	protected $keyStack = array();

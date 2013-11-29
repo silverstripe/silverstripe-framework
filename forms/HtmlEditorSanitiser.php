@@ -7,7 +7,8 @@
  * See www.tinymce.com/wiki.php/configuration:valid_elements for details on the spec of TinyMCE's
  * whitelist configuration
  *
- * Class HtmlEditorSanitiser
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 class HtmlEditorSanitiser {
 

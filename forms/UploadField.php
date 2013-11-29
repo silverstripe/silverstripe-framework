@@ -22,8 +22,8 @@
  * </code>
  * 
  * @author Zauberfisch
- * @package framework
- * @subpackage forms
+ * @package forms
+ * @subpackages fields-files
  */
 class UploadField extends FileField {
 
@@ -1311,8 +1311,8 @@ class UploadField extends FileField {
  * RequestHandler for actions (edit, remove, delete) on a single item (File) of the UploadField
  * 
  * @author Zauberfisch
- * @package framework
- * @subpackage forms
+ * @package forms
+ * @subpackages fields-files
  */
 class UploadField_ItemHandler extends RequestHandler {
 
@@ -1472,6 +1472,9 @@ class UploadField_ItemHandler extends RequestHandler {
 
 /**
  * File selection popup for attaching existing files.
+ *
+ * @package forms
+ * @subpackages fields-files
  */
 class UploadField_SelectHandler extends RequestHandler {
 

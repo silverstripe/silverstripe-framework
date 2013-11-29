@@ -476,6 +476,9 @@ class i18nTextCollector extends Object {
 /**
  * Allows serialization of entity definitions collected through {@link i18nTextCollector}
  * into a persistent format, usually on the filesystem.
+ *
+ * @package framework
+ * @subpackage i18n
  */
 interface i18nTextCollector_Writer {
 	/**
@@ -492,6 +495,9 @@ interface i18nTextCollector_Writer {
 
 /**
  * Legacy writer for 2.x style persistence.
+ *
+ * @package framework
+ * @subpackage i18n
  */
 class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
 
@@ -570,6 +576,9 @@ class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
 
 /**
  * Writes files compatible with {@link i18nRailsYamlAdapter}.
+ *
+ * @package framework
+ * @subpackage i18n
  */
 class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 
@@ -624,6 +633,9 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 
 /**
  * Parser that scans through a template and extracts the parameters to the _t and <%t calls
+ *
+ * @package framework
+ * @subpackage i18n
  */
 class i18nTextCollector_Parser extends SSTemplateParser {
 

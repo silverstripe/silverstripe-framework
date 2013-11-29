@@ -4,7 +4,7 @@
  * disabled by default and intended for use in readonly {@link GridField}
  * instances.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldViewButton implements GridField_ColumnProvider {

@@ -15,7 +15,7 @@
  * For easier setup, have a look at a sample configuration in 
  * {@link GridFieldConfig_RelationEditor}.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldAddExistingAutocompleter 

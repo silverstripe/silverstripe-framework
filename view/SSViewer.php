@@ -18,7 +18,9 @@
  * We also keep the index of the current starting point for lookups. A lookup is a sequence of obj calls -
  * when in a loop or with tag the end result becomes the new scope, but for injections, we throw away the lookup
  * and revert back to the original scope once we've got the value we're after
- * 
+ *
+ * @package framework
+ * @subpackage view
  */
 class SSViewer_Scope {
 	
@@ -182,6 +184,13 @@ class SSViewer_Scope {
 	}
 }
 
+/**
+ * Defines an extra set of basic methods that can be used in templates
+ * that are not defined on sub-classes of {@link ViewableData}.
+ *
+ * @package framework
+ * @subpackage view
+ */
 class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider {
 
 	protected $iteratorPos;
@@ -345,6 +354,9 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider {
  * (like $FirstLast etc).
  * 
  * It's separate from SSViewer_Scope to keep that fairly complex code as clean as possible.
+ *
+ * @package framework
+ * @subpackage view
  */
 class SSViewer_DataPresenter extends SSViewer_Scope {
 	

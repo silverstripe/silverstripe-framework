@@ -475,7 +475,10 @@ class GDBackend extends Object implements Image_Backend {
 }
 
 /**
- * Backwards compatibility
+ * This class is maintained for backwards-compatibility only. Please use the {@link GDBackend} class instead.
+ *
+ * @package framework
+ * @subpackage filesystem
  */
 class GD extends GDBackend {
 

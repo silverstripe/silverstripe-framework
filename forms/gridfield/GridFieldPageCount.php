@@ -6,7 +6,7 @@
  * 
  * Depends on {@link GridFieldPaginator} being added to the {@link GridField}.
  * 
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldPageCount implements GridField_HTMLProvider {
