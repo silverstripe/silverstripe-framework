@@ -100,23 +100,27 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 
 			$allowSort = ($title && $list->canSortBy($columnField));
 
-			if(strpos($columnField, '.') !== false) {
+			if(!$allowSort && strpos($columnField, '.') !== false) {
 				// we have a relation column with dot notation
+				// @see DataObject::relField for approximation
 				$parts = explode('.', $columnField);
-
 				$tmpItem = singleton($list->dataClass());
 				for($idx = 0; $idx < sizeof($parts); $idx++) {
 					$methodName = $parts[$idx];
-					if($tmpItem instanceof DataObject && $tmpItem->hasField($methodName)) {
-						// If we've found a field, we can sort on it
-						$allowSort = true;
-					} else if ($tmpItem instanceof SS_List) {
+					if($tmpItem instanceof SS_List) {
 						// It's impossible to sort on a HasManyList/ManyManyList
-						throw new Exception(__CLASS__ . ' is unable to sort on has_many/many_many relations,'
-							. ' please only specify has_one relations');
-					} else {
-						// Else, the part is a relation name, so get the object/list from it
+						break;
+					} elseif($tmpItem->hasMethod($methodName)) {
+						// The part is a relation name, so get the object/list from it
 						$tmpItem = $tmpItem->$methodName();
+					} elseif($tmpItem instanceof DataObject && $tmpItem->hasField($methodName)) {
+						// Else, if we've found a field at the end of the chain, we can sort on it.
+						// If a method is applied further to this field (E.g. 'Cost.Currency') then don't try to sort.
+						$allowSort = $idx === sizeof($parts) - 1;
+						break;
+					} else {
+						// If neither method nor field, then unable to sort
+						break;
 					}
 				}
 			}
