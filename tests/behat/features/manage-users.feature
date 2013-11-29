@@ -5,9 +5,9 @@ Feature: Manage users
   So that I can control access to the CMS
 
   Background:
-    Given a "member" "Admin" belonging to "Admin Group" with "Email"="admin@test.com"
+    Given a "member" "ADMIN" belonging to "ADMIN Group" with "Email"="admin@test.com"
     And a "member" "Staff" belonging to "Staff Group" with "Email"="staffmember@test.com"
-    And the "group" "Admin Group" has permissions "Full administrative rights"
+    And the "group" "ADMIN group" has permissions "Full administrative rights"
     And I am logged in with "ADMIN" permissions
     And I go to "/admin/security"
 
@@ -19,7 +19,7 @@ Feature: Manage users
   Scenario: I can list all users in a specific group
     When I click the "Groups" CMS tab
     # TODO Please check how performant this is
-    And I click "Admin Group" in the "#Root_Groups" element
+    And I click "ADMIN group" in the "#Root_Groups" element
     Then I should see "admin@test.com" in the "#Root_Members" element
     And I should not see "staffmember@test.com" in the "#Root_Members" element
 
@@ -39,13 +39,13 @@ Feature: Manage users
   Scenario: I can edit an existing user and add him to an existing group
     When I click the "Users" CMS tab
     And I click "staffmember@test.com" in the "#Root_Users" element
-    And I select "Admin Group" from "Groups"
+    And I select "ADMIN group" from "Groups"
     And I press the "Save" button
     Then I should see a "Saved Member" message
 
     When I go to "admin/security"
     And I click the "Groups" CMS tab
-    And I click "Admin Group" in the "#Root_Groups" element
+    And I click "ADMIN group" in the "#Root_Groups" element
     Then I should see "staffmember@test.com"
 
   Scenario: I can delete an existing user
