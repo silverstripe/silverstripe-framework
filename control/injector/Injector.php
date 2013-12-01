@@ -201,8 +201,6 @@ class Injector {
 		if ($config) {
 			$this->load($config);
 		}
-		
-		self::$instance = $this;
 	}
 
 	/**
