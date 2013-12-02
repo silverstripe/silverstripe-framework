@@ -3,14 +3,13 @@
 namespace SilverStripe\Framework\Test\Behaviour;
 
 use Behat\Behat\Context\ClosuredContextInterface,
-	Behat\Behat\Context\TranslatedContextInterface,
-	Behat\Behat\Context\BehatContext,
-	Behat\Behat\Context\Step,
-	Behat\Behat\Exception\PendingException,
-	Behat\Mink\Exception\ElementHtmlException,
-	Behat\Gherkin\Node\PyStringNode,
-	Behat\Gherkin\Node\TableNode;
-
+    Behat\Behat\Context\TranslatedContextInterface,
+    Behat\Behat\Context\BehatContext,
+    Behat\Behat\Context\Step,
+    Behat\Behat\Exception\PendingException,
+    Behat\Mink\Exception\ElementHtmlException,
+    Behat\Gherkin\Node\PyStringNode,
+    Behat\Gherkin\Node\TableNode;
 use Symfony\Component\DomCrawler\Crawler;
 
 // PHPUnit
@@ -23,50 +22,45 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
  * Context used to define steps related to forms inside CMS.
  */
 class CmsFormsContext extends BehatContext {
-	protected $context;
 
-	/**
-	 * Initializes context.
-	 * Every scenario gets it's own context object.
-	 *
-	 * @param   array   $parameters     context parameters (set them up through behat.yml)
-	 */
-	public function __construct(array $parameters) {
-		// Initialize your context here
-		$this->context = $parameters;
-	}
+    protected $context;
 
-	/**
-	 * Get Mink session from MinkContext
-	 */
-	public function getSession($name = null) {
-		return $this->getMainContext()->getSession($name);
-	}
+    /**
+     * Initializes context.
+     * Every scenario gets it's own context object.
+     *
+     * @param   array   $parameters     context parameters (set them up through behat.yml)
+     */
+    public function __construct(array $parameters) {
+        // Initialize your context here
+        $this->context = $parameters;
+    }
 
+    /**
+     * Get Mink session from MinkContext
+     */
+    public function getSession($name = null) {
+        return $this->getMainContext()->getSession($name);
+    }
+	
 	/**
-	 * @Then /^I should see an edit page form$/
-	 */
-	public function stepIShouldSeeAnEditPageForm() {
+	* Checks whether the currently logged in user is able to
+	* see and edit a page in the CMS.
+	* 
+	* @Then /^I should( not? |\s*)see an edit page form$/
+	*/
+	public function stepIShouldSeeAnEditPageForm($negative) {
 		$page = $this->getSession()->getPage();
-
 		$form = $page->find('css', '#Form_EditForm');
-		assertNotNull($form, 'I should see an edit page form');
-	}
-
-	/**
-	 * @When /^I fill in the "(?P<field>([^"]*))" HTML field with "(?P<value>([^"]*))"$/
-	 * @When /^I fill in "(?P<value>([^"]*))" for the "(?P<field>([^"]*))" HTML field$/
-	 */
-	public function stepIFillInTheHtmlFieldWith($field, $value) {
-		$page = $this->getSession()->getPage();
-		$inputField = $page->findField($field);
-		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
-
-		$this->getSession()->evaluateScript(sprintf(
-			"jQuery('#%s').entwine('ss').getEditor().setContent('%s')",
-			$inputField->getAttribute('id'),
-			addcslashes($value, "'")
-		));
+		assertNotNull($form, "Edit form does not exist");
+		$readonly = $form->findById("URLSegment")->getAttribute("class");
+		
+		//If field is readonly then assert true
+		if (preg_match("/not/", $negative)) {
+			assertTrue(strpos($readonly, "field readonly text") !== true, $readonly);	  
+		}else{
+			assertFalse(strpos($readonly, "field readonly text") !== false, $readonly);
+		}		
 	}
 
 	/**
@@ -178,33 +172,35 @@ jQuery(doc).find('body *').each(function() {
 	}
 });
 JS;
-		$this->getSession()->evaluateScript($js);
-	}	
+        $this->getSession()->evaluateScript($js);
+    }
 
-	/**
-	 * @Given /^I should see a "([^"]*)" button$/
-	 */
-	public function iShouldSeeAButton($text) {
-		$page = $this->getSession()->getPage();
-		$els = $page->findAll('named', array('link_or_button', "'$text'"));
-		$matchedEl = null;
-		foreach($els as $el) {
-			if($el->isVisible()) $matchedEl = $el;
-		}
-		assertNotNull($matchedEl, sprintf('%s button not found', $text));
-	}
+    /**
+     * @Given /^I should see a "([^"]*)" button$/
+     */
+    public function iShouldSeeAButton($text) {
+        $page = $this->getSession()->getPage();
+        $els = $page->findAll('named', array('link_or_button', "'$text'"));
+        $matchedEl = null;
+        foreach ($els as $el) {
+            if ($el->isVisible())
+                $matchedEl = $el;
+        }
+        assertNotNull($matchedEl, sprintf('%s button not found', $text));
+    }
 
-	/**
-	 * @Given /^I should not see a "([^"]*)" button$/
-	 */
-	public function iShouldNotSeeAButton($text) {
-		$page = $this->getSession()->getPage();
-		$els = $page->findAll('named', array('link_or_button', "'$text'"));
-		$matchedEl = null;
-		foreach($els as $el) {
-			if($el->isVisible()) $matchedEl = $el;
-		}
-		assertNull($matchedEl, sprintf('%s button found', $text));
-	}
+    /**
+     * @Given /^I should not see a "([^"]*)" button$/
+     */
+    public function iShouldNotSeeAButton($text) {
+        $page = $this->getSession()->getPage();
+        $els = $page->findAll('named', array('link_or_button', "'$text'"));
+        $matchedEl = null;
+        foreach ($els as $el) {
+            if ($el->isVisible())
+                $matchedEl = $el;
+        }
+        assertNull($matchedEl, sprintf('%s button found', $text));
+    }
 
 }
