@@ -44,13 +44,17 @@ class CmsFormsContext extends BehatContext {
 	}
 
 	/**
-	 * @Then /^I should see an edit page form$/
+	 * @Then /^I should( not? |\s*)see an edit page form$/
 	 */
-	public function stepIShouldSeeAnEditPageForm() {
+	public function stepIShouldSeeAnEditPageForm($negative) {
 		$page = $this->getSession()->getPage();
 
 		$form = $page->find('css', '#Form_EditForm');
-		assertNotNull($form, 'I should see an edit page form');
+		if(trim($negative)) {
+			assertNull($form, 'I should not see an edit page form');
+		} else {
+			assertNotNull($form, 'I should see an edit page form');	
+		}
 	}
 
 	/**
@@ -182,29 +186,42 @@ JS;
 	}	
 
 	/**
-	 * @Given /^I should see a "([^"]*)" button$/
+	 * Example: I should see a "Submit" button
+	 * Example: I should not see a "Delete" button
+	 * 
+	 * @Given /^I should( not? |\s*)see a "([^"]*)" button$/
 	 */
-	public function iShouldSeeAButton($text) {
+	public function iShouldSeeAButton($negative, $text) {
 		$page = $this->getSession()->getPage();
 		$els = $page->findAll('named', array('link_or_button', "'$text'"));
 		$matchedEl = null;
 		foreach($els as $el) {
 			if($el->isVisible()) $matchedEl = $el;
 		}
-		assertNotNull($matchedEl, sprintf('%s button not found', $text));
+
+		if(trim($negative)) {
+			assertNull($matchedEl, sprintf('%s button found', $text));	
+		} else {
+			assertNotNull($matchedEl, sprintf('%s button not found', $text));
+		}
 	}
 
 	/**
-	 * @Given /^I should not see a "([^"]*)" button$/
+	 * @Given /^I should( not? |\s*)see a "([^"]*)" field$/
 	 */
-	public function iShouldNotSeeAButton($text) {
+	public function iShouldSeeAField($negative, $text) {
 		$page = $this->getSession()->getPage();
-		$els = $page->findAll('named', array('link_or_button', "'$text'"));
+		$els = $page->findAll('named', array('field', "'$text'"));
 		$matchedEl = null;
 		foreach($els as $el) {
 			if($el->isVisible()) $matchedEl = $el;
 		}
-		assertNull($matchedEl, sprintf('%s button found', $text));
+
+		if(trim($negative)) {
+			assertNull($matchedEl);
+		} else {
+			assertNotNull($matchedEl);
+		}
 	}
 
 }
