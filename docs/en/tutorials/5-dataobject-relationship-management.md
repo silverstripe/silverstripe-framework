@@ -304,7 +304,7 @@ a named list of object.
 								<% end_loop %>
 							</td>    
 							<td>
-								<% loop $Mentor %>
+								<% loop $Mentors %>
 									$Name<% if $Last !=1 %>,<% end_if %>
 								<% end_loop %>
 							</td>
