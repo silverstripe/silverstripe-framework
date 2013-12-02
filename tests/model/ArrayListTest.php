@@ -438,6 +438,32 @@ class ArrayListTest extends SapphireTest {
 		$this->assertEquals(3, $list->count());
 		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Steve and Clair');
 	}
+
+	/**
+	 * $list = $list->filterByCallback(function($item, $list) { return $item->Age == 21; })
+	 */
+	public function testFilterByCallback() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve', 'ID' => 1, 'Age' => 21),
+			array('Name' => 'Bob', 'ID' => 2, 'Age' => 18),
+			array('Name' => 'Clair', 'ID' => 2, 'Age' => 21),
+			array('Name' => 'Oscar', 'ID' => 2, 'Age' => 52),
+			array('Name' => 'Mike', 'ID' => 3, 'Age' => 43)
+		));
+
+		$list = $list->filterByCallback(function ($item, $list) {
+			return $item->Age == 21;
+		});
+
+		$expected = array(
+			new ArrayData(array('Name' => 'Steve', 'ID' => 1, 'Age' => 21)),
+			new ArrayData(array('Name' => 'Clair', 'ID' => 2, 'Age' => 21)),
+		);
+
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Clair');
+		$this->assertTrue($list instanceof SS_Filterable, 'The List should be of type SS_Filterable');
+	}
 	
 	/**
 	 * $list->exclude('Name', 'bob'); // exclude bob from list

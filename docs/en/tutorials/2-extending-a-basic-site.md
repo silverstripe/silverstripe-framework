@@ -385,10 +385,15 @@ The controller for a page is only created when page is actually visited, while t
 
 ## Creating a RSS feed
 
-An RSS feed is something that no news section should be without. SilverStripe makes it easy to create RSS feeds by providing an `[api:RSSFeed]` class to do all the hard work for us. Create the following function in the
-*ArticleHolder_Controller*:
+An RSS feed is something that no news section should be without. SilverStripe makes it easy to create RSS feeds by providing an `[api:RSSFeed]` class to do all the hard work for us. Add the following in the *ArticleHolder_Controller* class:
+
+**mysite/code/ArticlePage.php**
 
 	:::php
+	private static $allowed_actions = array( 
+		'rss' 
+	);
+
 	public function rss() {
 		$rss = new RSSFeed($this->Children(), $this->Link(), "The coolest news around");
 		return $rss->outputToBrowser();
@@ -402,6 +407,8 @@ Depending on your browser, you should see something like the picture below. If y
 ![](_images/tutorial2_rss-feed.jpg)
 
 Now all we need is to let the user know that our RSS feed exists. Add this function to *ArticleHolder_Controller*:
+
+**mysite/code/ArticlePage.php**
 
 	:::php
 	public function init() {

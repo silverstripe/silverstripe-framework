@@ -112,6 +112,24 @@ You can also clear specific Requirements:
 
 Caution: Depending on where you call this command, a Requirement might be *re-included* afterwards.
 
+## Blocking
+
+Requirements can also be explicitly blocked from inclusion,
+which is useful to avoid conflicting JavaScript logic or CSS rules.
+These blocking rules are independent of where the `block()` call is made:
+It applies both for already included requirements, and ones
+included after the `block()` call.
+
+One common example is to block the core `jquery.js` include
+added by various form fields and core controllers,
+and use a newer version in a custom location.
+
+	:::php
+	Requirements::block(THIRDPARTY_DIR . '/jquery/jquery.js');
+
+Caution: The CMS also uses the `Requirements` system, and its operation can be 
+affected by `block()` calls. Avoid this by limiting the scope of 
+your blocking operations, e.g. in `init()` of your controller.
 
 
 ## Inclusion Order

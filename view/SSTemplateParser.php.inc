@@ -95,9 +95,33 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	protected $includeDebuggingComments = false;
 
 	/**
-	 * Override the Parser constructor to change the requirement of setting a string
+	 * Stores the user-supplied closed block extension rules in the form:
+	 * array(
+	 *   'name' => function (&$res) {}
+	 * )
+	 * See SSTemplateParser::ClosedBlock_Handle_Loop for an example of what the callable should look like
+	 * @var array
 	 */
-	function __construct() {
+	protected $closedBlocks = array();
+
+	/**
+	 * Stores the user-supplied open block extension rules in the form:
+	 * array(
+	 *   'name' => function (&$res) {}
+	 * )
+	 * See SSTemplateParser::OpenBlock_Handle_Base_tag for an example of what the callable should look like
+	 * @var array
+	 */
+	protected $openBlocks = array();
+
+	/**
+	 * Allow the injection of new closed & open block callables
+	 * @param array $closedBlocks
+	 * @param array $openBlocks
+	 */
+	public function __construct($closedBlocks = array(), $openBlocks = array()) {
+		$this->setClosedBlocks($closedBlocks);
+		$this->setOpenBlocks($openBlocks);
 	}
 
 	/**
@@ -107,6 +131,84 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		$res = parent::construct($matchrule, $name, $arguments);
 		if (!isset($res['php'])) $res['php'] = '';
 		return $res;
+	}
+
+	/**
+	 * Set the closed blocks that the template parser should use
+	 * 
+	 * This method will delete any existing closed blocks, please use addClosedBlock if you don't
+	 * want to overwrite
+	 * @param array $closedBlocks
+	 * @throws InvalidArgumentException
+	 */
+	public function setClosedBlocks($closedBlocks) {
+		$this->closedBlocks = array();
+		foreach ((array) $closedBlocks as $name => $callable) {
+			$this->addClosedBlock($name, $callable);
+		}
+	}
+
+	/**
+	 * Set the open blocks that the template parser should use
+	 *
+	 * This method will delete any existing open blocks, please use addOpenBlock if you don't
+	 * want to overwrite
+	 * @param array $openBlocks
+	 * @throws InvalidArgumentException
+	 */
+	public function setOpenBlocks($openBlocks) {
+		$this->openBlocks = array();
+		foreach ((array) $openBlocks as $name => $callable) {
+			$this->addOpenBlock($name, $callable);
+		}
+	}
+
+	/**
+	 * Add a closed block callable to allow <% name %><% end_name %> syntax
+	 * @param string $name The name of the token to be used in the syntax <% name %><% end_name %>
+	 * @param callable $callable The function that modifies the generation of template code
+	 * @throws InvalidArgumentException
+	 */
+	public function addClosedBlock($name, $callable) {
+		$this->validateExtensionBlock($name, $callable, 'Closed block');
+		$this->closedBlocks[$name] = $callable;
+	}
+
+	/**
+	 * Add a closed block callable to allow <% name %> syntax
+	 * @param string $name The name of the token to be used in the syntax <% name %>
+	 * @param callable $callable The function that modifies the generation of template code
+	 * @throws InvalidArgumentException
+	 */
+	public function addOpenBlock($name, $callable) {
+		$this->validateExtensionBlock($name, $callable, 'Open block');
+		$this->openBlocks[$name] = $callable;
+	}
+
+	/**
+	 * Ensures that the arguments to addOpenBlock and addClosedBlock are valid
+	 * @param $name
+	 * @param $callable
+	 * @param $type
+	 * @throws InvalidArgumentException
+	 */
+	protected function validateExtensionBlock($name, $callable, $type) {
+		if (!is_string($name)) {
+			throw new InvalidArgumentException(
+				sprintf(
+					"Name argument for %s must be a string",
+					$type
+				)
+			);
+		} elseif (!is_callable($callable)) {
+			throw new InvalidArgumentException(
+				sprintf(
+					"Callable %s argument named '%s' is not callable",
+					$type,
+					$name
+				)
+			);
+		}
 	}
 	
 	/*!* SSTemplateParser
@@ -766,15 +868,18 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res['ArgumentCount'] = count($res['Arguments']);
 		}
 	}
-	
+
 	function ClosedBlock__finalise(&$res) {
 		$blockname = $res['BlockName']['text'];
-		
+
 		$method = 'ClosedBlock_Handle_'.$blockname;
-		if (method_exists($this, $method)) $res['php'] = $this->$method($res);
-		else {
+		if (method_exists($this, $method)) {
+			$res['php'] = $this->$method($res);
+		} else if (isset($this->closedBlocks[$blockname])) {
+			$res['php'] = call_user_func($this->closedBlocks[$blockname], $res);
+		} else {
 			throw new SSTemplateParseException('Unknown closed block "'.$blockname.'" encountered. Perhaps you are ' .
-				'not supposed to close this block, or have mis-spelled it?', $this);
+			'not supposed to close this block, or have mis-spelled it?', $this);
 		}
 	}
 
@@ -856,15 +961,18 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res['ArgumentCount'] = count($res['Arguments']);
 		}
 	}
-	
+
 	function OpenBlock__finalise(&$res) {
 		$blockname = $res['BlockName']['text'];
-	
+
 		$method = 'OpenBlock_Handle_'.$blockname;
-		if (method_exists($this, $method)) $res['php'] = $this->$method($res);
-		else {
+		if (method_exists($this, $method)) {
+			$res['php'] = $this->$method($res);
+		} elseif (isset($this->openBlocks[$blockname])) {
+			$res['php'] = call_user_func($this->openBlocks[$blockname], $res);
+		} else {
 			throw new SSTemplateParseException('Unknown open block "'.$blockname.'" encountered. Perhaps you missed ' .
-				' the closing tag or have mis-spelled it?', $this);
+			' the closing tag or have mis-spelled it?', $this);
 		}
 	}
 

@@ -210,6 +210,25 @@ You can also combine both conjunctive ("AND") and disjunctive ("OR") statements.
 			'Age' => 17,
 		));
 	// WHERE ("LastName" = 'Minnée' AND ("FirstName" = 'Sam' OR "Age" = '17'))
+	
+### Filter with PHP / filterByCallback
+
+It is also possible to filter by a PHP callback, however this will force the 
+data model to fetch all records and loop them in PHP, thus `filter()` or `filterAny()` 
+are to be preferred over `filterByCallback()`.    
+Please note that because `filterByCallback()` has to run in PHP, it will always return 
+an `ArrayList` (even if called on a `DataList`, this however might change in future).    
+The first parameter to the callback is the item, the second parameter is the list itself.    
+The callback will run once for each record, if the callback returns true, this record
+will be added to the list of returned items.    
+The below example will get all Members that have an expired or not encrypted password.
+
+	:::php
+	$membersWithBadPassword = Member::get()->filterByCallback(function($item, $list) {
+	    if ($item->isPasswordExpired() || $item->PasswordEncryption = 'none') {
+	        return true;
+	    }
+	});
 
 ### Exclude
 

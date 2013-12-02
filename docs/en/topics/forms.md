@@ -95,7 +95,7 @@ Creating a form is a matter of defining a method to represent that form. This
 method should return a form object. The constructor takes the following
 arguments:
 
-*  `$controller`: This must be and instance of the controller that contains the form, often `$this`.
+*  `$controller`: This must be an instance of the controller that contains the form, often `$this`.
 *  `$name`: This must be the name of the method on that controller that is called to return the form.  The first two
 fields allow the form object to be re-created after submission.  **It's vital that they are properly set - if you ever
 have problems with form action handler not working, check that these values are correct.**

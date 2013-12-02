@@ -413,7 +413,7 @@ you need to serve directly.
 
 See [Apache](/installation/webserver) and [Nginx](/installation/nginx) installation documentation for details 
 specific to your web server
-See [Apache](/installation/webserver) and [Nginx](/installation/nginx) installation documentation for details  specific to your web server
+
 
 ## Passwords
 

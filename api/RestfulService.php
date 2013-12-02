@@ -1,17 +1,21 @@
 <?php
 /**
  * RestfulService class allows you to consume various RESTful APIs.
+ *
  * Through this you could connect and aggregate data of various web services.
- * For more info visit wiki documentation - http://doc.silverstripe.org/doku.php?id=restfulservice  
+ *
+ * @see http://doc.silverstripe.org/framework/en/reference/restfulservice
  * 
  * @package framework
  * @subpackage integration
  */
 class RestfulService extends ViewableData {
+
 	protected $baseURL;
 	protected $queryString;
 	protected $errorTag;
 	protected $checkErrors;
+	protected $connectTimeout = 5;
 	protected $cache_expire;
 	protected $authUsername, $authPassword;
 	protected $customHeaders = array();
@@ -213,7 +217,6 @@ class RestfulService extends ViewableData {
 	 */
 	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
 		$ch        = curl_init();
-		$timeout   = 5;
 		$sapphireInfo = new SapphireInfo(); 
 		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
 		$curlOptions = $curlOptions + (array)$this->config()->default_curl_options;
@@ -221,7 +224,7 @@ class RestfulService extends ViewableData {
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->getConnectTimeout());
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 
@@ -553,6 +556,31 @@ class RestfulService extends ViewableData {
 		
 		return $output;
 	}
+
+	/**
+	 * Set the connection timeout for the curl request in seconds.
+	 *
+	 * @see http://curl.haxx.se/libcurl/c/curl_easy_setopt.html#CURLOPTCONNECTTIMEOUT
+	 *
+	 * @param int
+	 *
+	 * @return RestfulService
+	 */
+	public function setConnectTimeout($timeout) {
+		$this->connectTimeout = $timeout;
+
+		return $this;
+	}
+
+	/**
+	 * Return the connection timeout value.
+	 *
+	 * @return int
+	 */
+	public function getConnectTimeout() {
+		return $this->connectTimeout;
+	}
+
 }
 
 /**

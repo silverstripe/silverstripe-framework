@@ -22,8 +22,7 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
  *
  * Context used to define steps related to forms inside CMS.
  */
-class CmsFormsContext extends BehatContext
-{
+class CmsFormsContext extends BehatContext {
 	protected $context;
 
 	/**
@@ -32,8 +31,7 @@ class CmsFormsContext extends BehatContext
 	 *
 	 * @param   array   $parameters     context parameters (set them up through behat.yml)
 	 */
-	public function __construct(array $parameters)
-	{
+	public function __construct(array $parameters) {
 		// Initialize your context here
 		$this->context = $parameters;
 	}
@@ -41,28 +39,29 @@ class CmsFormsContext extends BehatContext
 	/**
 	 * Get Mink session from MinkContext
 	 */
-	public function getSession($name = null)
-	{
+	public function getSession($name = null) {
 		return $this->getMainContext()->getSession($name);
 	}
 
 	/**
-	 * @Then /^I should see an edit page form$/
+	 * @Then /^I should( not? |\s*)see an edit page form$/
 	 */
-	public function stepIShouldSeeAnEditPageForm()
-	{
+	public function stepIShouldSeeAnEditPageForm($negative) {
 		$page = $this->getSession()->getPage();
 
 		$form = $page->find('css', '#Form_EditForm');
-		assertNotNull($form, 'I should see an edit page form');
+		if(trim($negative)) {
+			assertNull($form, 'I should not see an edit page form');
+		} else {
+			assertNotNull($form, 'I should see an edit page form');	
+		}
 	}
 
 	/**
 	 * @When /^I fill in the "(?P<field>([^"]*))" HTML field with "(?P<value>([^"]*))"$/
 	 * @When /^I fill in "(?P<value>([^"]*))" for the "(?P<field>([^"]*))" HTML field$/
 	 */
-	public function stepIFillInTheHtmlFieldWith($field, $value)
-	{
+	public function stepIFillInTheHtmlFieldWith($field, $value) {
 		$page = $this->getSession()->getPage();
 		$inputField = $page->findField($field);
 		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
@@ -77,8 +76,7 @@ class CmsFormsContext extends BehatContext
 	/**
 	 * @When /^I append "(?P<value>([^"]*))" to the "(?P<field>([^"]*))" HTML field$/
 	 */
-	public function stepIAppendTotheHtmlField($field, $value)
-	{
+	public function stepIAppendTotheHtmlField($field, $value) {
 		$page = $this->getSession()->getPage();
 		$inputField = $page->findField($field);
 		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
@@ -93,13 +91,12 @@ class CmsFormsContext extends BehatContext
 	/**
 	 * @Then /^the "(?P<locator>([^"]*))" HTML field should contain "(?P<html>.*)"$/
 	 */
-	public function theHtmlFieldShouldContain($locator, $html)
-	{
+	public function theHtmlFieldShouldContain($locator, $html) {
 		$page = $this->getSession()->getPage();
 		$element = $page->findField($locator);
 		assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
 
-		$actual = $element->getAttribute('value');
+		$actual = $element->getValue();
 		$regex = '/'.preg_quote($html, '/').'/ui';
 		if (!preg_match($regex, $actual)) {
 			$message = sprintf(
@@ -160,8 +157,7 @@ class CmsFormsContext extends BehatContext
 	 * 
 	 * @When /^I select "(?P<text>([^"]*))" in the "(?P<field>([^"]*))" HTML field$/
 	 */
-	public function stepIHighlightTextInHtmlField($text, $field)
-	{
+	public function stepIHighlightTextInHtmlField($text, $field) {
 		$page = $this->getSession()->getPage();
 		$inputField = $page->findField($field);
 		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
@@ -190,31 +186,42 @@ JS;
 	}	
 
 	/**
-	 * @Given /^I should see a "([^"]*)" button$/
+	 * Example: I should see a "Submit" button
+	 * Example: I should not see a "Delete" button
+	 * 
+	 * @Given /^I should( not? |\s*)see a "([^"]*)" button$/
 	 */
-	public function iShouldSeeAButton($text)
-	{
+	public function iShouldSeeAButton($negative, $text) {
 		$page = $this->getSession()->getPage();
 		$els = $page->findAll('named', array('link_or_button', "'$text'"));
 		$matchedEl = null;
 		foreach($els as $el) {
 			if($el->isVisible()) $matchedEl = $el;
 		}
-		assertNotNull($matchedEl, sprintf('%s button not found', $text));
+
+		if(trim($negative)) {
+			assertNull($matchedEl, sprintf('%s button found', $text));	
+		} else {
+			assertNotNull($matchedEl, sprintf('%s button not found', $text));
+		}
 	}
 
 	/**
-	 * @Given /^I should not see a "([^"]*)" button$/
+	 * @Given /^I should( not? |\s*)see a "([^"]*)" field$/
 	 */
-	public function iShouldNotSeeAButton($text)
-	{
+	public function iShouldSeeAField($negative, $text) {
 		$page = $this->getSession()->getPage();
-		$els = $page->findAll('named', array('link_or_button', "'$text'"));
+		$els = $page->findAll('named', array('field', "'$text'"));
 		$matchedEl = null;
 		foreach($els as $el) {
 			if($el->isVisible()) $matchedEl = $el;
 		}
-		assertNull($matchedEl, sprintf('%s button found', $text));
+
+		if(trim($negative)) {
+			assertNull($matchedEl);
+		} else {
+			assertNotNull($matchedEl);
+		}
 	}
 
 }

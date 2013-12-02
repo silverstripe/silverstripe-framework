@@ -30,7 +30,7 @@ interface SS_Filterable {
 	 *          // aziz with the age 21 or 43 and bob with the Age 21 or 43
 	 */
 	public function filter();
-	
+
 	/**
 	 * Return a new instance of this list that excludes any items with these charactaristics
 	 *
@@ -43,5 +43,14 @@ interface SS_Filterable {
 	 *          // bob age 21 or 43, phil age 21 or 43 would be excluded
 	 */
 	public function exclude();
-	
+
+	/**
+	 * Return a new instance of this list that excludes any items with these charactaristics
+	 * Filter this List by a callback function. The function will be passed each record of the List in turn,
+	 * and must return true for the record to be included. Returns the filtered list.
+	 *
+	 * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
+	 * @return SS_Filterable
+	 */
+	public function filterByCallback($callback);
 }
