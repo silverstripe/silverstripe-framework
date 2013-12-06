@@ -18,7 +18,7 @@ class MultiEnum extends Enum {
 		// Validate and assign the default
 		$this->default = null;
 		if($default) {
-			$defaults = preg_split('/ *, */',trim($default));
+			$defaults = preg_split('/ *, */',trim(trim($default, ',')));
 			foreach($defaults as $thisDefault) {
 				if(!in_array($thisDefault, $this->enum)) {
 					user_error("Enum::__construct() The default value '$thisDefault' does not match "
