@@ -102,8 +102,8 @@ in order to read page limit information. It is also passed the current
 		if($records) {
 			$records = new PaginatedList($records, $this->request);
 			$records->setPageStart($start);
-			$records->setPageSize($limit);
-			$records->setTotalSize($query->unlimitedRowCount());
+			$records->setPageLength($limit);
+			$records->setTotalItems($query->unlimitedRowCount());
 		}
 		
 		return $records;
