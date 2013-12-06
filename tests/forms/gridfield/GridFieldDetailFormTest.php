@@ -238,8 +238,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$response = $this->get($addLink);
 		$parser = new CSSContentParser($response->getBody());
-		$title = $parser->getBySelector('#GroupID span');
-		$id = $parser->getBySelector('#GroupID input');
+		$title = $parser->getBySelector('#Form_ItemEditForm_GroupID_Holder span');
+		$id = $parser->getBySelector('#Form_ItemEditForm_GroupID_Holder input');
 
 		$this->assertEquals($group->Name, (string) $title[0]);
 		$this->assertEquals($group->ID, (string) $id[0]['value']);

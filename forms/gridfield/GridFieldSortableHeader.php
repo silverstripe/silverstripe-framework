@@ -203,7 +203,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 
 		$state = $gridField->State->GridFieldSortableHeader;
 		$sortColumn = $state->SortColumn();
-		if (empty($sortcolumn)) {
+		if (empty($sortColumn)) {
 			return $dataList;
 		}
 
