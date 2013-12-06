@@ -202,8 +202,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		if(!$this->checkDataType($dataList)) return $dataList;
 
 		$state = $gridField->State->GridFieldSortableHeader;
-		$sortColumn = $state->SortColumn();
-		if (empty($sortColumn)) {
+		if ($state->SortColumn == "") {
 			return $dataList;
 		}
 
