@@ -316,7 +316,7 @@ class Requirements {
 	 * @param boolean $var If true, force the javascripts to be included at the bottom.
 	 */
 	public static function set_force_js_to_bottom($var) {
-		self::backend()->force_js_to_bottom = $var;
+		self::backend()->set_force_js_to_bottom($var);
 	}
 
 	public static function debug() {
@@ -454,7 +454,7 @@ class Requirements_Backend {
 	 *  
 	 * @var boolean
 	 */
-	public $force_js_to_bottom = false;
+	protected $force_js_to_bottom = false;
 	
 	public function set_combined_files_enabled($enable) {
 		$this->combined_files_enabled = (bool) $enable;
@@ -505,6 +505,14 @@ class Requirements_Backend {
 	 */
 	public function set_write_js_to_body($var) {
 		$this->write_js_to_body = $var;
+	}
+	/**
+	 * Forces the javascript to the end of the body, just before the closing body-tag.
+	 *
+	 * @param boolean
+	 */
+	public function set_force_js_to_bottom($var) {
+		$this->force_js_to_bottom = $var;
 	}
 	/**
 	 * Register the given javascript file as required.
@@ -720,7 +728,18 @@ class Requirements_Backend {
 				$requirements .= "$customHeadTag\n";
 			}
 
-			if($this->write_js_to_body) {
+			if ($this->force_js_to_bottom) {
+				// Remove all newlines from code to preserve layout
+				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
+
+				// We put script tags into the body, for performance.
+				// If your template already has script tags in the body, then we put our script
+				// tags just before those. Otherwise, we put it at the bottom.
+				$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
+				
+				// Put CSS at the bottom of the head
+				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);				
+			} elseif($this->write_js_to_body) {
 				// Remove all newlines from code to preserve layout
 				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
 
@@ -730,7 +749,7 @@ class Requirements_Backend {
 				$p2 = stripos($content, '<body');
 				$p1 = stripos($content, '<script', $p2);
 
-				if($p1 !== false && !$this->force_js_to_bottom) {
+				if($p1 !== false) {
 					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
 				} else {
 					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);

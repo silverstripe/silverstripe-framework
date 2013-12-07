@@ -350,6 +350,45 @@ class RequirementsTest extends SapphireTest {
 		$this->assertContains('</script></body>', $html);
 	}
 
+	public function testForceJsToBottom() {
+		$backend = new Requirements_Backend();
+		$backend->javascript('http://www.mydomain.com/test.js');
+
+		// Test matching with HTML5 <header> tags as well
+		$template = '<html><head></head><body><header>My header</header><p>Body<script></script></p></body></html>';
+
+		// Test if the script is before the first <script> tag, not before the body.
+		$backend->set_write_js_to_body(false);
+		$backend->set_force_js_to_bottom(false);
+		$html = $backend->includeInHTML(false, $template);
+		$this->assertNotContains('</script></body>', $html);
+		$this->assertNotContains('</script><script', $html);
+		$this->assertContains('<head><script', $html);
+
+		// Test if the script is before the first <script> tag, not before the body.
+		$backend->set_write_js_to_body(true);
+		$backend->set_force_js_to_bottom(false);
+		$html = $backend->includeInHTML(false, $template);
+		$this->assertNotContains('</script></body>', $html);
+		$this->assertContains('</script><script', $html);
+
+		// Test if the script is placed just before the closing bodytag, with write-to-body false.
+		$backend->set_write_js_to_body(false);
+		$backend->set_force_js_to_bottom(true);
+		$html = $backend->includeInHTML(false, $template);
+		$this->assertNotContains('<head><script', $html);
+		$this->assertNotContains('</script><script', $html);
+		$this->assertContains('</script></body>', $html);
+
+		// Test if the script is placed just before the closing bodytag, with write-to-body true.
+		$backend->set_write_js_to_body(true);
+		$backend->set_force_js_to_bottom(true);
+		$html = $backend->includeInHTML(false, $template);
+		$this->assertNotContains('<head><script', $html);
+		$this->assertNotContains('</script><script', $html);
+		$this->assertContains('</script></body>', $html);
+	}
+
 	public function testSuffix() {
 		$template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
 		$basePath = $this->getCurrentRelativePath();
