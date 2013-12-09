@@ -132,7 +132,7 @@ $chain
 		// Then if a flush was requested, redirect to it
 		if ($token->parameterProvided() && !$token->tokenProvided()) {
 			// First, check if we're in dev mode, or the database doesn't have any security data
-			$canFlush = Director::isDev() || !Security::database_is_ready();
+			$canFlush = Director::isDev(true) || !Security::database_is_ready();
 
 			// Otherwise, we start up the session if needed, then check for admin
 			if (!$canFlush) {
