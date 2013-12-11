@@ -24,4 +24,14 @@ class OptionsetFieldTest extends SapphireTest {
 			''
 		);
 	}
+
+	public function testReadonlyField() {
+		$sourceArray = array(0 => 'No', 1 => 'Yes');
+		$field = new OptionsetField('FeelingOk', 'are you feeling ok?', $sourceArray, 1);
+		$field->setEmptyString('(Select one)');
+		$field->setValue(1);
+		$readonlyField = $field->performReadonlyTransformation();
+		preg_match('/Yes/', $field->Field(), $matches);
+		$this->assertEquals($matches[0], 'Yes');
+	}
 }
