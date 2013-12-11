@@ -1125,7 +1125,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if (!$valid->valid()) {
 				$writeException = new ValidationException(
 					$valid,
-					"Validation error writing a $this->class object: " . $valid->message() . ".  Object not written.",
+					$valid->message(),
 					E_USER_WARNING
 				);
 			}
