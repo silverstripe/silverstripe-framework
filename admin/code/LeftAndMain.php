@@ -698,17 +698,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 
 	/**
-	 * Return a list of appropriate templates for this class, with the given suffix
+	 * Return a list of appropriate templates for this class, with the given suffix using 
+	 * {@link SSViewer::get_templates_by_class()}
+	 *
+	 * @return array
 	 */
 	public function getTemplatesWithSuffix($suffix) {
-		$templates = array();
-		$classes = array_reverse(ClassInfo::ancestry($this->class));
-		foreach($classes as $class) {
-			$template = $class . $suffix;
-			if(SSViewer::hasTemplate($template)) $templates[] = $template;
-			if($class == 'LeftAndMain') break;
-		}
-		return $templates;
+		return SSViewer::get_templates_by_class(get_class($this), $suffix, 'LeftAndMain');
 	}
 
 	public function Content() {
