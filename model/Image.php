@@ -458,7 +458,7 @@ class Image extends File {
 		
 		$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
 		
-		$backend = Injector::inst()->createWithArgs(self::$backend, array(
+		$backend = Injector::inst()->createWithArgs($this->config()->backend, array(
 			Director::baseFolder()."/" . $this->Filename
 		));
 		
