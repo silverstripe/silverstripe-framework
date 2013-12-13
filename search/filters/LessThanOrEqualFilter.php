@@ -1,21 +1,21 @@
 <?php
 /**
- * Selects numerical/date content greater than the input
+ * Selects numerical/date content less than or equal to the input
  *
  * Can be used by SearchContext and DataList->filter, eg;
- * Model::get()->filter("Field1:GreaterThan", $value);
+ * Model::get()->filter("Field1:LessThanOrEqual", $value);
  *
  * @package framework
  * @subpackage search
  */
-class GreaterThanFilter extends ComparisonFilter {
+class LessThanOrEqualFilter extends ComparisonFilter {
 
 	protected function getOperator() {
-		return ">";
+		return "<=";
 	}
 
 	protected function getInverseOperator() {
-		return "<=";
+		return ">";
 	}
 
 }
