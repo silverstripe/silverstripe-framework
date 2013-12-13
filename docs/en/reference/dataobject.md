@@ -250,6 +250,53 @@ The CMS default sections as well as custom interfaces like
 `[ModelAdmin](/reference/modeladmin)` or `[GridField](/reference/gridfield)`
 already enforce these permissions.
 
+## Indexes
+
+It is sometimes desirable to add indexes to your data model, whether to
+optimize queries or add a uniqueness constraint to a field. This is done
+through the `DataObject::$indexes` map, which maps index names to descriptor
+arrays that represent each index. There's several supported notations:
+
+	:::php
+	# Simple
+	private static $indexes = array(
+		'<column-name>' => true
+	);
+
+	# Advanced
+	private static $indexes = array(
+		'<index-name>' => array('type' => '<type>', 'value' => '"<column-name>"')
+	);
+
+	# SQL
+	private static $indexes = array(
+		'<index-name>' => 'unique("<column-name>")'
+	);
+	
+The `<index-name>` can be an an arbitrary identifier in order to allow for more than one
+index on a specific database column.
+The "advanced" notation supports more `<type>` notations.
+These vary between database drivers, but all of them support the following:
+
+ * `index`: Standard index
+ * `unique`: Index plus uniqueness constraint on the value
+ * `fulltext`: Fulltext content index
+
+In order to use more database specific or complex index notations,
+we also support raw SQL for as a value in the `$indexes` definition.
+Keep in mind this will likely make your code less portable between databases.
+
+Example: A combined index on a two fields.
+
+	:::php
+	private static $db = array(
+		'MyField' => 'Varchar',
+		'MyOtherField' => 'Varchar',
+	);
+	private static $indexes = array(
+		'MyIndexName' => array('type' => 'index', 'value' => '"MyField","MyOtherField"'),
+	);
+
 ## API Documentation
 
 `[api:DataObject]`
