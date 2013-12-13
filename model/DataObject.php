@@ -3273,7 +3273,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 				foreach($types as $type => $attrs) {
 					foreach($attrs as $name => $spec) {
-						// var_dump("{$ancestorClass}.{$type}_{$name}");
 						$autoLabels[$name] = _t("{$ancestorClass}.{$type}_{$name}",FormField::name_to_label($name));
 					}
 				}

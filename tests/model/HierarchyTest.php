@@ -289,8 +289,6 @@ class HierarchyTest extends SapphireTest {
 		$root->setMarkingFilterFunction(function($record) use($obj2, $obj2a, $obj2aa) {
 			// Results need to include parent hierarchy, even if we just want to
 			// match the innermost node.
-			// var_dump($record->Title);
-			// var_dump(in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID)));
 			return in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID));
 		});
 		$root->markPartialTree($nodeCountThreshold);
