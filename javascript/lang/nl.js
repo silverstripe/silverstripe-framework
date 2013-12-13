@@ -37,7 +37,12 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 	"UploadField.EMPTYRESULT": "Leeg bestand geupload",
 	"UploadField.LOADING": "Laden ...",
 	"UploadField.Editing": "Bijwerken ...",
-	"UploadField.Uploaded": "Geupload"
+	"UploadField.Uploaded": "Geupload",
+	"UploadField.OVERWRITEWARNING": "Er bestaat al een bestand met deze naam",
+        "TreeDropdownField.ENTERTOSEARCH": "Druk op enter om te zoeken",
+        "TreeDropdownField.OpenLink": "Openen",
+        "TreeDropdownField.FieldTitle": "Kiezen",
+        "TreeDropdownField.SearchFieldTitle": "Kies of zoeken"
 }
 );
 }
