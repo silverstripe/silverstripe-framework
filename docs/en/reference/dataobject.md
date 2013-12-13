@@ -255,28 +255,43 @@ already enforce these permissions.
 It is sometimes desirable to add indexes to your data model, whether to
 optimize queries or add a uniqueness constraint to a field. This is done
 through the `DataObject::$indexes` map, which maps index names to descriptor
-arrays that represent each index.
-
-The general pattern for the descriptor arrays is
+arrays that represent each index. There's several supported notations:
 
 	:::php
-	array('type' => 'index|unique|fulltext', 'value' => '"FieldA","FieldB"')
-
-You can also express the descriptor as a string.
-
-	:::php
-	'unique ("Name")'
-
-
-Note that some databases support more keywords for 'type' than shown above.
-
-Example: a unique index on a field
-
-	:::php
-	private static $db = array('SEOName' => 'Varchar(255)',);
+	# Simple
 	private static $indexes = array(
-		'Name_IDX' => array('type' => 'unique', 'value' => '"Name"'),
-		'OtherField_IDX' => 'unique ("OtherField")',
+		'<column-name>' => true
+	);
+
+	# Advanced
+	private static $indexes = array(
+		'<index-name>' => array('type' => '<type>', 'value' => '"<column-name>"')
+	);
+
+	# SQL
+	private static $indexes = array(
+		'<index-name>' => 'unique("<column-name>")'
+	);
+	
+The "advanced" notation varies between database drivers, but all of them support the following keys:
+
+ * `index`: Standard index
+ * `unique`: Index plus uniqueness constraint on the value
+ * `fulltext`: Fulltext content index
+
+In order to use more database specific or complex index notations,
+we also support raw SQL for as a value in the `$indexes` definition.
+Keep in mind this will likely make your code less portable between databases.
+
+Example: A combined index on a two fields.
+
+	:::php
+	private static $db = array(
+		'MyField' => 'Varchar',
+		'MyOtherField' => 'Varchar',
+	);
+	private static $indexes = array(
+		'MyIndexName' => array('type' => 'index', 'value' => '"MyField","MyOtherField"'),
 	);
 
 ## API Documentation
