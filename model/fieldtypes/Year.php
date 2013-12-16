@@ -39,7 +39,7 @@ class Year extends DBField {
 		if (!$end) $end = 1900;
 		$years = array();
 		for($i=$start;$i>=$end;$i--) {
-			$years[] = $i;
+			$years[$i] = $i;
 		}
 		return $years;
 	}
