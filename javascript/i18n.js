@@ -67,12 +67,16 @@ ss.i18n = {
 			this.init();
 
 			var langName = this.getLocale().replace(/_[\w]+/i, '');
+			var defaultlangName = this.defaultLocale.replace(/_[\w]+/i, '');
+			
 			if (this.lang && this.lang[this.getLocale()] && this.lang[this.getLocale()][entity]) {
 				return this.lang[this.getLocale()][entity];
 			} else if (this.lang && this.lang[langName] && this.lang[langName][entity]) {
 				return this.lang[langName][entity];
 			} else if (this.lang && this.lang[this.defaultLocale] && this.lang[this.defaultLocale][entity]) {
 				return this.lang[this.defaultLocale][entity];
+			} else if (this.lang && this.lang[defaultlangName] && this.lang[defaultlangName][entity]) {
+				return this.lang[defaultlangName][entity]; 
 			} else if(fallbackString) {
 				return fallbackString;
 			} else {

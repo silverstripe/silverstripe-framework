@@ -22,8 +22,7 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
  *
  * Context used to define steps related to SilverStripe CMS UI like Tree or Panel.
  */
-class CmsUiContext extends BehatContext
-{
+class CmsUiContext extends BehatContext {
 	protected $context;
 
 	/**
@@ -32,8 +31,7 @@ class CmsUiContext extends BehatContext
 	 *
 	 * @param   array   $parameters     context parameters (set them up through behat.yml)
 	 */
-	public function __construct(array $parameters)
-	{
+	public function __construct(array $parameters) {
 		// Initialize your context here
 		$this->context = $parameters;
 	}
@@ -41,16 +39,14 @@ class CmsUiContext extends BehatContext
 	/**
 	 * Get Mink session from MinkContext
 	 */
-	public function getSession($name = null)
-	{
+	public function getSession($name = null) {
 		return $this->getMainContext()->getSession($name);
 	}
 
 	/**
 	 * @Then /^I should see the CMS$/
 	 */
-	public function iShouldSeeTheCms()
-	{
+	public function iShouldSeeTheCms() {
 		$page = $this->getSession()->getPage();
 		$cms_element = $page->find('css', '.cms');
 		assertNotNull($cms_element, 'CMS not found');
@@ -59,21 +55,18 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @Then /^I should see a "([^"]*)" notice$/
 	 */
-	public function iShouldSeeANotice($notice)
-	{
+	public function iShouldSeeANotice($notice) {
 		$this->getMainContext()->assertElementContains('.notice-wrap', $notice);
 	}
 
 	/**
 	 * @Then /^I should see a "([^"]*)" message$/
 	 */
-	public function iShouldSeeAMessage($message)
-	{
+	public function iShouldSeeAMessage($message) {
 		$this->getMainContext()->assertElementContains('.message', $message);
 	}
 
-	protected function getCmsTabsElement()
-	{
+	protected function getCmsTabsElement() {
 		$this->getSession()->wait(
 			5000, 
 			"window.jQuery && window.jQuery('.cms-content-header-tabs').size() > 0"
@@ -86,8 +79,7 @@ class CmsUiContext extends BehatContext
 		return $cms_content_header_tabs;
 	}
 
-	protected function getCmsContentToolbarElement()
-	{
+	protected function getCmsContentToolbarElement() {
 		$this->getSession()->wait(
 			5000, 
 			"window.jQuery && window.jQuery('.cms-content-toolbar').size() > 0 "
@@ -101,8 +93,7 @@ class CmsUiContext extends BehatContext
 		return $cms_content_toolbar_element;
 	}
 
-	protected function getCmsTreeElement()
-	{
+	protected function getCmsTreeElement() {
 		$this->getSession()->wait(
 			5000, 
 			"window.jQuery && window.jQuery('.cms-tree').size() > 0"
@@ -115,8 +106,7 @@ class CmsUiContext extends BehatContext
 		return $cms_tree_element;
 	}
 
-	protected function getGridfieldTable($title)
-	{
+	protected function getGridfieldTable($title) {
 		$page = $this->getSession()->getPage();
 		$table_elements = $page->findAll('css', '.ss-gridfield-table');
 		assertNotNull($table_elements, 'Table elements not found');
@@ -137,8 +127,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @Given /^I should see a "([^"]*)" button in CMS Content Toolbar$/
 	 */
-	public function iShouldSeeAButtonInCmsContentToolbar($text)
-	{
+	public function iShouldSeeAButtonInCmsContentToolbar($text) {
 		$cms_content_toolbar_element = $this->getCmsContentToolbarElement();
 
 		$element = $cms_content_toolbar_element->find('named', array('link_or_button', "'$text'"));
@@ -148,8 +137,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @When /^I should see "([^"]*)" in the tree$/
 	 */
-	public function stepIShouldSeeInCmsTree($text)
-	{
+	public function stepIShouldSeeInCmsTree($text) {
 		$cms_tree_element = $this->getCmsTreeElement();
 
 		$element = $cms_tree_element->find('named', array('content', "'$text'"));
@@ -159,8 +147,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @When /^I should not see "([^"]*)" in the tree$/
 	 */
-	public function stepIShouldNotSeeInCmsTree($text)
-	{
+	public function stepIShouldNotSeeInCmsTree($text) {
 		$cms_tree_element = $this->getCmsTreeElement();
 
 		$element = $cms_tree_element->find('named', array('content', "'$text'"));
@@ -170,8 +157,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @When /^I click on "([^"]*)" in the tree$/
 	 */
-	public function stepIClickOnElementInTheTree($text)
-	{
+	public function stepIClickOnElementInTheTree($text) {
 		$treeEl = $this->getCmsTreeElement();
 		$treeNode = $treeEl->findLink($text);
 		assertNotNull($treeNode, sprintf('%s not found', $text));
@@ -181,8 +167,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @When /^I expand the "([^"]*)" CMS Panel$/
 	 */
-	public function iExpandTheCmsPanel()
-	{
+	public function iExpandTheCmsPanel() {
 		// TODO Make dynamic, currently hardcoded to first panel
 		$page = $this->getSession()->getPage();
 
@@ -197,8 +182,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @When /^I click the "([^"]*)" CMS tab$/
 	 */
-	public function iClickTheCmsTab($tab)
-	{
+	public function iClickTheCmsTab($tab) {
 		$this->getSession()->wait(
 			5000, 
 			"window.jQuery && window.jQuery('.ui-tabs-nav').size() > 0"
@@ -221,8 +205,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @Then /^the "([^"]*)" table should contain "([^"]*)"$/
 	 */
-	public function theTableShouldContain($table, $text)
-	{
+	public function theTableShouldContain($table, $text) {
 		$table_element = $this->getGridfieldTable($table);
 
 		$element = $table_element->find('named', array('content', "'$text'"));
@@ -232,8 +215,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @Then /^the "([^"]*)" table should not contain "([^"]*)"$/
 	 */
-	public function theTableShouldNotContain($table, $text)
-	{
+	public function theTableShouldNotContain($table, $text) {
 		$table_element = $this->getGridfieldTable($table);
 
 		$element = $table_element->find('named', array('content', "'$text'"));
@@ -243,8 +225,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @Given /^I click on "([^"]*)" in the "([^"]*)" table$/
 	 */
-	public function iClickOnInTheTable($text, $table)
-	{
+	public function iClickOnInTheTable($text, $table) {
 		$table_element = $this->getGridfieldTable($table);
 
 		$element = $table_element->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
@@ -255,16 +236,14 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @Then /^I can see the preview panel$/
 	 */
-	public function iCanSeeThePreviewPanel()
-	{
+	public function iCanSeeThePreviewPanel() {
 		$this->getMainContext()->assertElementOnPage('.cms-preview');
 	}
 
 	/**
 	 * @Given /^the preview contains "([^"]*)"$/
 	 */
-	public function thePreviewContains($content)
-	{
+	public function thePreviewContains($content) {
 		$driver = $this->getSession()->getDriver();
 		// TODO Remove once we have native support in Mink and php-webdriver,
 		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
@@ -278,8 +257,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @Given /^I set the CMS mode to "([^"]*)"$/
 	 */
-	public function iSetTheCmsToMode($mode)
-	{
+	public function iSetTheCmsToMode($mode) {
 		return array(
 			new Step\When(sprintf('I fill in the "Change view mode" dropdown with "%s"', $mode)),
 			new Step\When('I wait for 1 second') // wait for CMS layout to redraw
@@ -289,8 +267,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @Given /^I wait for the preview to load$/
 	 */
-	public function iWaitForThePreviewToLoad() 
-	{
+	public function iWaitForThePreviewToLoad()  {
 		$driver = $this->getSession()->getDriver();
 		// TODO Remove once we have native support in Mink and php-webdriver,
 		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
@@ -307,8 +284,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @Given /^I switch the preview to "([^"]*)"$/
 	 */
-	public function iSwitchThePreviewToMode($mode) 
-	{
+	public function iSwitchThePreviewToMode($mode)  {
 		$controls = $this->getSession()->getPage()->find('css', '.cms-preview-controls');
 		assertNotNull($controls, 'Preview controls not found');
 
@@ -326,8 +302,7 @@ class CmsUiContext extends BehatContext
 	/**
 	 * @Given /^the preview does not contain "([^"]*)"$/
 	 */
-	public function thePreviewDoesNotContain($content)
-	{
+	public function thePreviewDoesNotContain($content) {
 		$driver = $this->getSession()->getDriver();
 		// TODO Remove once we have native support in Mink and php-webdriver,
 		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
@@ -344,8 +319,7 @@ class CmsUiContext extends BehatContext
 	 * @When /^(?:|I )fill in the "(?P<field>(?:[^"]|\\")*)" dropdown with "(?P<value>(?:[^"]|\\")*)"$/
 	 * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for the "(?P<field>(?:[^"]|\\")*)" dropdown$/
 	 */
-	public function theIFillInTheDropdownWith($field, $value)
-	{
+	public function theIFillInTheDropdownWith($field, $value) {
 		$field = $this->fixStepArgument($field);
 		$value = $this->fixStepArgument($value);
 
@@ -447,8 +421,7 @@ class CmsUiContext extends BehatContext
 	 *
 	 * @return string
 	 */
-	protected function fixStepArgument($argument)
-	{
+	protected function fixStepArgument($argument) {
 		return str_replace('\\"', '"', $argument);
 	}
 
@@ -461,11 +434,10 @@ class CmsUiContext extends BehatContext
 	 */
 	protected function findParentByClass(NodeElement $el, $class) {
 		$container = $el->getParent();
-		while($container && $container->getTagName() != 'body'
-		) {
+		while($container && $container->getTagName() != 'body') {
 			if($container->isVisible() && in_array($class, explode(' ', $container->getAttribute('class')))) {
 				return $container;
-}
+			}
 			$container = $container->getParent();
 		}
 

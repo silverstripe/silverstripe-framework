@@ -147,6 +147,29 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 		return call_user_func_array(array($this->list, 'filter'), $args);
 	}
 
+	/**
+	 * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a
+	 * future implementation.
+	 * @see SS_Filterable::filterByCallback()
+	 *
+	 * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
+	 * @param callable $callback
+	 * @return ArrayList (this may change in future implementations)
+	 */
+	public function filterByCallback($callback) {
+		if(!is_callable($callback)) {
+			throw new LogicException(sprintf(
+				"SS_Filterable::filterByCallback() passed callback must be callable, '%s' given",
+				gettype($callback)
+			));
+		}
+		$output = ArrayList::create();
+		foreach($this->list as $item) {
+			if(call_user_func($callback, $item, $this->list)) $output->push($item);
+		}
+		return $output;
+	}
+
 	public function limit($limit, $offset = 0) {
 		return $this->list->limit($limit, $offset);
 	}

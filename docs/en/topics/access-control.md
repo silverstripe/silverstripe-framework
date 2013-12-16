@@ -9,9 +9,9 @@ There are a number of ways to restrict access in SilverStripe.  In the security 
 that have access to certain parts.  The options can be found on the [permissions](/reference/permission) documentation. 
 
 Once you have groups, you can set access for each page for a particular groups.  This can be:
-- anyone
-- any person who is logged in
-- a specific group
+* anyone;
+* any person who is logged in;
+* a specific group.
 
 It is unclear how this works for data-objects that are not pages.
 
@@ -20,15 +20,15 @@ It is unclear how this works for data-objects that are not pages.
 In the security tab you can make groups for security.  The way this was intended was as follows (this may be a counter
 intuitive):
 
-* employees
-	* marketing
-		* marketing executive
+	* employees
+		* marketing
+			* marketing executive
 
 Thus, the further up the hierarchy you go the MORE privileges you can get.  Similarly, you could have:
 
-* members
-	* coordinators
-		* admins
+	* members
+		* coordinators
+			* admins
 
 Where members have some privileges, coordinators slightly more and administrators the most; having each group inheriting
 privileges from its parent group.     
@@ -36,7 +36,7 @@ privileges from its parent group.
 ## Permission checking is at class level
 
 SilverStripe provides a security mechanism via the *Permission::check* method (see `[api:LeftAndMain]` for examples on how
-the admin screens work)
+the admin screens work).
 
 (next step -- go from *Permission::checkMember*...)
 

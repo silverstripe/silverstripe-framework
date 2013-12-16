@@ -284,9 +284,10 @@ jQuery.noConflict();
 			 *  - {Object} data Any additional data passed through to History.pushState()
 			 *  - {boolean} forceReload Forces the replacement of the current history state, even if the URL is the same, i.e. allows reloading.
 			 */
-			loadPanel: function(url, title, data, forceReload) {
+			loadPanel: function(url, title, data, forceReload, forceReferer) {
 				if(!data) data = {};
 				if(!title) title = "";
+				if (!forceReferer) forceReferer = History.getState().url;
 
 				// Check change tracking (can't use events as we need a way to cancel the current state change)
 				var contentEls = this._findFragments(data.pjax ? data.pjax.split(',') : ['Content']);
@@ -306,6 +307,7 @@ jQuery.noConflict();
 				this.saveTabState();
 				
 				if(window.History.enabled) {
+					$.extend(data, {__forceReferer: forceReferer});
 					// Active menu item is set based on X-Controller ajax header,
 					// which matches one class on the menu
 					if(forceReload) {
@@ -457,7 +459,13 @@ jQuery.noConflict();
 				// The actually returned view isn't always decided upon when the request
 				// is fired, so the server might decide to change it based on its own logic.
 				headers['X-Pjax'] = fragments;
-
+		
+				// Set 'fake' referer - we call pushState() before making the AJAX request, so we have to
+				// set our own referer here
+				if (typeof state.data.__forceReferer !== 'undefined') {
+					headers['X-Backurl'] = state.data.__forceReferer;
+				}
+				
 				contentEls.addClass('loading');
 				var xhr = $.ajax({
 					headers: headers,

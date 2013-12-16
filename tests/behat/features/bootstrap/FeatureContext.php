@@ -20,8 +20,7 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
  * Context automatically loaded by Behat.
  * Uses subcontexts to extend functionality.
  */
-class FeatureContext extends SilverStripeContext
-{
+class FeatureContext extends SilverStripeContext {
 	
 	/**
 	 * @var FixtureFactory
@@ -34,8 +33,7 @@ class FeatureContext extends SilverStripeContext
 	 *
 	 * @param array $parameters context parameters (set them up through behat.yml)
 	 */
-	public function __construct(array $parameters)
-	{
+	public function __construct(array $parameters) {
 		parent::__construct($parameters);
 
 		$this->useContext('BasicContext', new BasicContext($parameters));
@@ -57,8 +55,7 @@ class FeatureContext extends SilverStripeContext
 		$factory->define('Member', $blueprint);
 	}
 
-	public function setMinkParameters(array $parameters)
-	{
+	public function setMinkParameters(array $parameters) {
 		parent::setMinkParameters($parameters);
 		
 		if(isset($parameters['files_path'])) {

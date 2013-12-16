@@ -42,7 +42,7 @@ This is explained in a more in-depth topic at [Page Type Templates](/topics/page
 ## Adding Database Fields
 
 Adding database fields is a simple process. You define them in an array of the static variable `$db`, this array is
-added on the object class. For example, Page or StaffPage. Every time you run db/build to recompile the manifest, it
+	added on the object class. For example, Page or StaffPage. Every time you run dev/build to recompile the manifest, it
 checks if any new entries are added to the `$db` array and adds any fields to the database that are missing.
 
 For example, you may want an additional field on a `StaffPage` class which extends `Page`, called `Author`. `Author` is a

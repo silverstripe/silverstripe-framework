@@ -39,7 +39,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	
 	/**
 	 * The DataModel from which this DataList comes.
-	 * 
+	 *
 	 * @var DataModel
 	 */
 	protected $model;
@@ -406,20 +406,24 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
-	 * Filter this DataList by a callback function.
-	 * The function will be passed each record of the DataList in turn, and must return true for the record to be
-	 * included. Returns the filtered list.
-	 * 
+	 * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a
+	 * future implementation.
+	 * @see SS_Filterable::filterByCallback()
+	 *
+	 * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
+	 * @param callable $callback
 	 * @return ArrayList (this may change in future implementations)
 	 */
 	public function filterByCallback($callback) {
 		if(!is_callable($callback)) {
-			throw new LogicException("DataList::filterByCallback() must be passed something callable.");
+			throw new LogicException(sprintf(
+				"SS_Filterable::filterByCallback() passed callback must be callable, '%s' given",
+				gettype($callback)
+			));
 		}
-		
-		$output = new ArrayList();
+		$output = ArrayList::create();
 		foreach($this as $item) {
-			if($callback($item)) $output->push($item);
+			if(call_user_func($callback, $item, $this)) $output->push($item);
 		}
 		return $output;
 	}

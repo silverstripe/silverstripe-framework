@@ -220,6 +220,31 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$form = $request->ItemEditForm();
 		$this->assertNotNull($form->Fields()->fieldByName('Callback'));
 	}
+
+	/**
+	 * Tests that a has-many detail form is pre-populated with the parent ID.
+	 */
+	public function testHasManyFormPrePopulated() {
+		$group = $this->objFromFixture(
+			'GridFieldDetailFormTest_PeopleGroup', 'group'
+		);
+
+		$this->logInWithPermission('ADMIN');
+
+		$response = $this->get('GridFieldDetailFormTest_Controller');
+		$parser = new CSSContentParser($response->getBody());
+		$addLink = $parser->getBySelector('.ss-gridfield .new-link');
+		$addLink = (string) $addLink[0]['href'];
+
+		$response = $this->get($addLink);
+		$parser = new CSSContentParser($response->getBody());
+		$title = $parser->getBySelector('#Form_ItemEditForm_GroupID_Holder span');
+		$id = $parser->getBySelector('#Form_ItemEditForm_GroupID_Holder input');
+
+		$this->assertEquals($group->Name, (string) $title[0]);
+		$this->assertEquals($group->ID, (string) $id[0]['value']);
+	}
+
 }
 
 class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {

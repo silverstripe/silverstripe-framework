@@ -77,6 +77,17 @@ class DatetimeField extends FormField {
 
 		return $this;
 	}
+
+	public function setName($name) {
+		parent::setName($name);
+
+		$this->dateField->setName($name . '[date]');
+		$this->timeField->setName($name . '[time]');
+		$this->timezoneField->setName($name . '[timezone]');
+
+		return $this;
+	}
+
 	
 	public function FieldHolder($properties = array()) {
 		$config = array(

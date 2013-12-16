@@ -6,7 +6,7 @@ Feature: Log in
 
   Scenario: Bad login
     Given I log in with "bad@example.com" and "badpassword"
-    Then I will see a bad log-in message
+    Then I will see a "bad" log-in message
 
   Scenario: Valid login
     Given I am logged in with "ADMIN" permissions

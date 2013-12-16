@@ -477,6 +477,27 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	}
 
 	/**
+	 * @see SS_Filterable::filterByCallback()
+	 *
+	 * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
+	 * @param callable $callback
+	 * @return ArrayList
+	 */
+	public function filterByCallback($callback) {
+		if(!is_callable($callback)) {
+			throw new LogicException(sprintf(
+				"SS_Filterable::filterByCallback() passed callback must be callable, '%s' given",
+				gettype($callback)
+			));
+		}
+		$output = ArrayList::create();
+		foreach($this as $item) {
+			if(call_user_func($callback, $item, $this)) $output->push($item);
+		}
+		return $output;
+	}
+
+	/**
 	 * Exclude the list to not contain items with these charactaristics
 	 *
 	 * @return ArrayList

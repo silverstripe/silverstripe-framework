@@ -1299,6 +1299,38 @@ after')
 			$this->assertEquals($expected, trim($this->render($template, $data)));
 		}
 	}
+
+	public function testClosedBlockExtension() {
+		$count = 0;
+		$parser = new SSTemplateParser();
+		$parser->addClosedBlock(
+			'test',
+			function (&$res) use (&$count) {
+				$count++;
+			}
+		);
+
+		$template = new SSViewer_FromString("<% test %><% end_test %>", $parser);
+		$template->process(new SSViewerTestFixture());
+
+		$this->assertEquals(1, $count);
+	}
+
+	public function testOpenBlockExtension() {
+		$count = 0;
+		$parser = new SSTemplateParser();
+		$parser->addOpenBlock(
+			'test',
+			function (&$res) use (&$count) {
+				$count++;
+			}
+		);
+
+		$template = new SSViewer_FromString("<% test %>", $parser);
+		$template->process(new SSViewerTestFixture());
+
+		$this->assertEquals(1, $count);
+	}
 }
 
 /**
