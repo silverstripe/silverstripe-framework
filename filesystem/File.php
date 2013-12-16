@@ -890,7 +890,9 @@ class File extends DataObject {
 		// We aren't validating for an existing "Filename" on the filesystem.
 		// A record should still be saveable even if the underlying record has been removed.
 		
-		return new ValidationResult(true);
+		$result = new ValidationResult(true);
+		$this->extend('validate', $result);
+		return $result;
 	}
 	
 	/**
