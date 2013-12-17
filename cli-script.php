@@ -13,7 +13,7 @@
 /**
  * Ensure that people can't access this from a web-server
  */
-if(isset($_SERVER['HTTP_HOST'])) {
+if(php_sapi_name() != "cli") {
 	echo "cli-script.php can't be run from a web request, you have to run it on the command-line.";
 	die();
 }
