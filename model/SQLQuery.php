@@ -494,11 +494,11 @@ class SQLQuery {
 	/**
 	 * Set ORDER BY clause either as SQL snippet or in array format.
 	 *
-	 * @example $sql->orderby("Column");
-	 * @example $sql->orderby("Column DESC");
-	 * @example $sql->orderby("Column DESC, ColumnTwo ASC");
-	 * @example $sql->orderby("Column", "DESC");
-	 * @example $sql->orderby(array("Column" => "ASC", "ColumnTwo" => "DESC"));
+	 * @example $sql->setOrderBy("Column");
+	 * @example $sql->setOrderBy("Column DESC");
+	 * @example $sql->setOrderBy("Column DESC, ColumnTwo ASC");
+	 * @example $sql->setOrderBy("Column", "DESC");
+	 * @example $sql->setOrderBy(array("Column" => "ASC", "ColumnTwo" => "DESC"));
 	 *
 	 * @param string|array $orderby Clauses to add (escaped SQL statement)
 	 * @param string $dir Sort direction, ASC or DESC
@@ -513,11 +513,11 @@ class SQLQuery {
 	/**
 	 * Add ORDER BY clause either as SQL snippet or in array format.
 	 *
-	 * @example $sql->orderby("Column");
-	 * @example $sql->orderby("Column DESC");
-	 * @example $sql->orderby("Column DESC, ColumnTwo ASC");
-	 * @example $sql->orderby("Column", "DESC");
-	 * @example $sql->orderby(array("Column" => "ASC", "ColumnTwo" => "DESC"));
+	 * @example $sql->addOrderBy("Column");
+	 * @example $sql->addOrderBy("Column DESC");
+	 * @example $sql->addOrderBy("Column DESC, ColumnTwo ASC");
+	 * @example $sql->addOrderBy("Column", "DESC");
+	 * @example $sql->addOrderBy(array("Column" => "ASC", "ColumnTwo" => "DESC"));
 	 *
 	 * @param string|array $clauses Clauses to add (escaped SQL statements)
 	 * @param string $dir Sort direction, ASC or DESC
