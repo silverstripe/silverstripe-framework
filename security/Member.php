@@ -364,6 +364,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @param bool $remember If set to TRUE, the member will be logged in automatically the next time.
 	 */
 	public function logIn($remember = false) {
+		$this->extend('beforeMemberLoggedIn');
+
 		self::session_regenerate_id();
 
 		Session::set("loggedInAs", $this->ID);
@@ -469,6 +471,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Logs this member out.
 	 */
 	public function logOut() {
+		$this->extend('beforeMemberLoggedOut');
+
 		Session::clear("loggedInAs");
 		if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, null, 0);
 
