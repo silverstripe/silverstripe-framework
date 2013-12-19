@@ -1226,7 +1226,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					'src' : this.find('.thumbnail-preview').attr('src'),
 					'width' : width ? parseInt(width, 10) : null,
 					'height' : height ? parseInt(height, 10) : null,
-					'class' : this.find(':input[name=CSSClass]').val()
+					'class' : this.find(':input[name=CSSClass]').val(),
+					'alt' : this.find(':input[name=AltText]').val(),
+					'title' : this.find(':input[name=Title]').val()
 				};
 			},
 			getExtraData: function() {
@@ -1260,6 +1262,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				return $('<div />').append(el).html(); // Little hack to get outerHTML string
 			},
 			updateFromNode: function(node) {
+				this.find(':input[name=AltText]').val(node.attr('alt'));
+				this.find(':input[name=Title]').val(node.attr('title'));
 				this.find(':input[name=Width]').val(node.width());
 				this.find(':input[name=Height]').val(node.height());
 				this.find(':input[name=Title]').val(node.attr('title'));
