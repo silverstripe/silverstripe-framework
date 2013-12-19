@@ -308,6 +308,17 @@ class Requirements {
 		self::backend()->set_write_js_to_body($var);
 	}
 
+	/**
+	 * Set the javascript to be forced to end of the HTML, or use the default.
+	 * Useful if you use inline <script> tags, that don't need the javascripts
+	 * included via Requirements::require();
+	 *
+	 * @param boolean $var If true, force the javascripts to be included at the bottom.
+	 */
+	public static function set_force_js_to_bottom($var) {
+		self::backend()->set_force_js_to_bottom($var);
+	}
+
 	public static function debug() {
 		return self::backend()->debug();
 	}
@@ -436,7 +447,15 @@ class Requirements_Backend {
 	 * @var boolean
 	 */
 	public $write_js_to_body = true;
-
+	
+	/**
+	 * Force the javascripts to the bottom of the page, even if there's a
+	 * <script> tag in the body already
+	 *  
+	 * @var boolean
+	 */
+	protected $force_js_to_bottom = false;
+	
 	public function set_combined_files_enabled($enable) {
 		$this->combined_files_enabled = (bool) $enable;
 	}
@@ -486,6 +505,14 @@ class Requirements_Backend {
 	 */
 	public function set_write_js_to_body($var) {
 		$this->write_js_to_body = $var;
+	}
+	/**
+	 * Forces the javascript to the end of the body, just before the closing body-tag.
+	 *
+	 * @param boolean
+	 */
+	public function set_force_js_to_bottom($var) {
+		$this->force_js_to_bottom = $var;
 	}
 	/**
 	 * Register the given javascript file as required.
@@ -701,7 +728,18 @@ class Requirements_Backend {
 				$requirements .= "$customHeadTag\n";
 			}
 
-			if($this->write_js_to_body) {
+			if ($this->force_js_to_bottom) {
+				// Remove all newlines from code to preserve layout
+				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
+
+				// We put script tags into the body, for performance.
+				// We forcefully put it at the bottom instead of before
+				// the first script-tag occurence
+				$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
+				
+				// Put CSS at the bottom of the head
+				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);				
+			} elseif($this->write_js_to_body) {
 				// Remove all newlines from code to preserve layout
 				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
 
@@ -1128,18 +1166,21 @@ class Requirements_Backend {
 	 * @see Requirements::themedCSS()
 	 */
 	public function themedCSS($name, $module = null, $media = null) {
-		$path = SSViewer::get_theme_folder();
-		$abspath = BASE_PATH . DIRECTORY_SEPARATOR . $path;
+		$theme = SSViewer::get_theme_folder();
+		$project = project();
+		$absbase = BASE_PATH . DIRECTORY_SEPARATOR;
+		$abstheme = $absbase . $theme;
+		$absproject = $absbase . $project;
 		$css = "/css/$name.css";
-
-		if ($module && file_exists($abspath.'_'.$module.$css)) {
-			$this->css($path.'_'.$module.$css, $media);
-		}
-		else if (file_exists($abspath.$css)) {
-			$this->css($path.$css, $media);
-		}
-		else if ($module) {
-			$this->css($module.$css, $media);
+		
+		if(file_exists($absproject . $css)) {
+			$this->css($project . $css, $media);
+		} elseif($module && file_exists($abstheme . '_' . $module.$css)) {
+			$this->css($theme . '_' . $module . $css, $media);
+		} elseif(file_exists($abstheme . $css)) {
+			$this->css($theme . $css, $media);
+		} elseif($module) {
+			$this->css($module . $css, $media);
 		}
 	}
 

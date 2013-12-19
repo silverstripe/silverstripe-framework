@@ -273,7 +273,10 @@ arrays that represent each index. There's several supported notations:
 		'<index-name>' => 'unique("<column-name>")'
 	);
 	
-The "advanced" notation varies between database drivers, but all of them support the following keys:
+The `<index-name>` can be an an arbitrary identifier in order to allow for more than one
+index on a specific database column.
+The "advanced" notation supports more `<type>` notations.
+These vary between database drivers, but all of them support the following:
 
  * `index`: Standard index
  * `unique`: Index plus uniqueness constraint on the value

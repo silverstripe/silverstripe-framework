@@ -320,8 +320,6 @@ en:
     ValidationError: 'Validation error'
     VersionUnknown: Unknown
   LeftAndMain_Menu_ss:
-    LOGOUT: 'Log out'
-  LeftAndMain_Menu_ss:
     Hello: Hi
     LOGOUT: 'Log out'
   LoginAttempt:
@@ -348,7 +346,7 @@ en:
     ERRORLOCKEDOUT2: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in {count} minutes.'
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
-    ERRORWRONGCRED: 'The provided details don''t seem to be correct. Please try again.'
+    ERRORWRONGCREDS: 'The provided details don''t seem to be correct. Please try again.'
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
@@ -420,8 +418,8 @@ en:
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
     IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools_ss:
@@ -479,6 +477,7 @@ en:
     ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
     LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
     LOGIN: 'Log in'
+    LOSTPASSWORDHEADER: 'Lost Password'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'

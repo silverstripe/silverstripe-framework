@@ -526,7 +526,7 @@ class Security extends Controller {
 	public function passwordsent($request) {
 		if(class_exists('SiteTree')) {
 			$tmpPage = new Page();
-			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
+			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
 			$tmpPage->URLSegment = 'Security';
 			// Disable ID-based caching  of the log-in page by making it a random number
 			$tmpPage->ID = -1 * rand(1,10000000);

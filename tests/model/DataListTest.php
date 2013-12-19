@@ -445,17 +445,35 @@ class DataListTest extends SapphireTest {
 		$list = DataObjectTest_TeamComment::get();
 		$list = $list->filter('TeamID:GreaterThan', $this->idFromFixture('DataObjectTest_Team', 'team1'));
 		$this->assertEquals(1, $list->count());
-		$this->assertEquals('Phil', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Phil', $list->first()->Name, 'First comment should be from Phil');
 	}
 
-	// public function testSimpleFilterLessThanFilter() {
-	// 	$list = DataObjectTest_TeamComment::get();
-	// 	$list = $list->filter('TeamID:LessThan', 
-	// 	$this->idFromFixture('DataObjectTest_TeamComment', 'comment2'))->sort('Name');
-	// 	$this->assertEquals(2, $list->count());
-	// 	$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
-	// 	$this->assertEquals('Joe', $list->Last()->Name, 'Last comment should be from Joe');
-	// }
+	public function testSimpleFilterGreaterThanOrEqualFilter() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filter('TeamID:GreaterThanOrEqual',
+			$this->idFromFixture('DataObjectTest_Team', 'team1'))->sort("ID");
+		$this->assertEquals(3, $list->count());
+		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Joe');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+
+	public function testSimpleFilterLessThanFilter() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filter('TeamID:LessThan',
+			$this->idFromFixture('DataObjectTest_Team', 'team2'))->sort('Name');
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Joe', $list->Last()->Name, 'Last comment should be from Joe');
+	}
+
+	public function testSimpleFilterLessThanOrEqualFilter() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filter('TeamID:LessThanOrEqual',
+			$this->idFromFixture('DataObjectTest_Team', 'team1'))->sort('ID');
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Joe');
+		$this->assertEquals('Bob', $list->Last()->Name, 'Last comment should be from Bob');
+	}
 
 	public function testSimplePartialMatchFilter() {
 		$list = DataObjectTest_TeamComment::get();

@@ -256,6 +256,19 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			overflow: hidden;
 			clear: both;
 
+			&.loading {
+				width: 100%;
+				height: 22px;
+				padding: 15px 0;
+				background: url(../admin/images/spinner.gif) no-repeat 50% 50%;
+
+				iframe {
+					/* Old IE needs this or it'll give the iframe a white background, covering the spinner */
+					padding-top: 0; margin-top: 37px;
+					border: none;
+				}
+			}
+
 			iframe {
 				width: 100%;
 			}

@@ -687,6 +687,32 @@ class SSViewer {
 		Deprecation::notice('3.2', 'Use the "SSViewer.theme" and "SSViewer.theme_enabled" config settings instead');
 		return Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null;
 	}
+
+	/**
+	 * Traverses the given the given class context looking for templates with the relevant name.
+	 *
+	 * @param $className string - valid class name
+	 * @param $suffix string
+	 * @param $baseClass string
+	 *
+	 * @return array
+	 */
+	public static function get_templates_by_class($className, $suffix = '', $baseClass = null) {
+		// Figure out the class name from the supplied context.
+		if(!is_string($className) || !class_exists($className)) {
+			throw new InvalidArgumentException('SSViewer::get_templates_by_class() expects a valid class name as ' . 
+				'its first parameter.');
+			return array();
+		}
+		$templates = array();
+		$classes = array_reverse(ClassInfo::ancestry($className));
+		foreach($classes as $class) {
+			$template = $class . $suffix;
+			if(SSViewer::hasTemplate($template)) $templates[] = $template;
+			if($baseClass && $class == $baseClass) break;
+		}
+		return $templates;
+	}
 	
 	/**
 	 * @param string|array $templateList If passed as a string with .ss extension, used as the "main" template.

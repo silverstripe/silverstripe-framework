@@ -1145,7 +1145,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if (!$valid->valid()) {
 				$writeException = new ValidationException(
 					$valid,
-					"Validation error writing a $this->class object: " . $valid->message() . ".  Object not written.",
+					$valid->message(),
 					E_USER_WARNING
 				);
 			}
@@ -1548,6 +1548,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(!$remoteClass) {
 			throw new Exception("Unknown $type component '$component' on class '$this->class'");
 		}
+		if(!ClassInfo::exists(strtok($remoteClass, '.'))) {
+			throw new Exception(
+				"Class '$remoteClass' not found, but used in $type component '$component' on class '$this->class'"
+			);
+		}
 		
 		if($fieldPos = strpos($remoteClass, '.')) {
 			return substr($remoteClass, $fieldPos + 1) . 'ID';
@@ -1566,8 +1571,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$message = "No has_one found on class '$remoteClass'";
 		if($type == 'has_many') {
-			// include a hint for missing has_many that is missing a has_one
-			$message .= ", the has_many relation from '$this->class' to '$remoteClass' requires a has_one on '$remoteClass'";
+			// include a hint for has_many that is missing a has_one
+			$message .= ", the has_many relation from '$this->class' to '$remoteClass'";
+			$message .= " requires a has_one on '$remoteClass'";
 		}
 		throw new Exception($message);
 	}
@@ -3293,7 +3299,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 				foreach($types as $type => $attrs) {
 					foreach($attrs as $name => $spec) {
-						// var_dump("{$ancestorClass}.{$type}_{$name}");
 						$autoLabels[$name] = _t("{$ancestorClass}.{$type}_{$name}",FormField::name_to_label($name));
 					}
 				}

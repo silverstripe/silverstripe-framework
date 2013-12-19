@@ -27,7 +27,7 @@ window.tmpl.cache['ss-uploadfield-downloadtemplate'] = tmpl(
 				'{% } %}' + 
 			'</div>' +
 			'{% if (!file.error) { %}' +
-				'<div class="ss-uploadfield-item-editform loading"><iframe frameborder="0" src="{%=file.edit_url%}"></iframe></div>' + 
+				'<div class="ss-uploadfield-item-editform"><iframe frameborder="0" data-src="{%=file.edit_url%}" src="about:blank"></iframe></div>' + 
 			'{% } %}' + 
 		'</li>' + 
 	'{% } %}'

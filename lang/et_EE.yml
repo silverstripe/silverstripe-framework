@@ -1,6 +1,5 @@
 et_EE:
   AssetAdmin:
-    ALLOWEDEXTS: 'Lubatud laiendid'
     NEWFOLDER: Uus kaust
   AssetTableField:
     CREATED: 'Esmakordselt üles laaditud'
@@ -75,18 +74,6 @@ et_EE:
     EMAIL: E-post
     HELLO: Tere
     PASSWORD: Parool
-  ComplexTableField:
-    CLOSEPOPUP: 'Sulge hüpikaken'
-    SUCCESSADD2: '{name} on lisatud'
-    SUCCESSEDIT: 'Salvestatud %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Lisa %s'
-    NOITEMSFOUND: 'Üksusi ei leitud'
-    SORTASC: 'Sorteeri kasvavalt'
-    SORTDESC: 'Sorteeri kahanevalt'
-  ComplexTableField_popup_ss:
-    NEXT: Eelmine
-    PREVIOUS: Järgmine
   ConfirmedPasswordField:
     ATLEAST: 'Parool peab olema vähemalt {min} märki pikk.'
     BETWEEN: 'Parooli pikkus peab olema vahemikus {min}–{max} märki.'
@@ -105,6 +92,7 @@ et_EE:
     DAYS: päevad
     HOUR: tund
     HOURS: tundi
+    LessThanMinuteAgo: 'vähem kui minut'
     MIN: minut
     MINS: minutit
     MONTH: kuu
@@ -114,7 +102,6 @@ et_EE:
     TIMEDIFFAGO: 'tagasi'
     YEAR: aasta
     YEARS: aastat
-    LessThanMinuteAgo: 'vähem kui minut'
   DateField:
     NOTSET: 'Pole seadistatud'
     TODAY: Täna
@@ -129,9 +116,6 @@ et_EE:
     CHOOSE: (Vali)
   EmailField:
     VALIDATION: 'Sisestage e-posti aadress'
-  Email_BounceRecord:
-    PLURALNAME: 'Tagastatud e-posti kirjed'
-    SINGULARNAME: 'Tagastatud e-posti kirje'
   Enum:
     ANY: Kõik
   File:
@@ -164,18 +148,6 @@ et_EE:
     WavType: 'WAV-helifail'
     XlsType: 'Exceli arvutustabel'
     ZipType: 'Tihendatud ZIP-fail'
-  FileIFrameField:
-    ATTACH: 'Manusta {type}'
-    ATTACHONCESAVED2: 'Faile saab manustada pärast seda, kui olete kirje salvestanud.'
-    DELETE: 'Kustuta {type}'
-    DISALLOWEDFILETYPE: 'Seda failitüüpi ei ole lubatud üles laadida'
-    FILE: Fail
-    FROMCOMPUTER: 'Teie arvutist'
-    FROMFILESTORE: 'Failihoidlast'
-    NOSOURCE: 'Valige manustamiseks lähtefail'
-    REPLACE: 'Asenda {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Kujutise üleslaadimise IFrame'
   Filesystem:
     SYNCRESULTS: 'Sünkroonimine on lõpetatud: {createdcount} loodud üksust, {deletedcount} kustutatud üksust'
   Folder:
@@ -223,8 +195,8 @@ et_EE:
     Deleted: '%s %s on kustutatud'
     Save: Salvesta
     Saved: 'Salvestatud {name} {link}'
-  GridFieldItemEditView_ss:
-    Go_back: 'Mine tagasi'
+  GridFieldEditButton_ss:
+    EDIT: Redigeeri
   Group:
     AddRole: 'Lisa selle grupi jaoks rolle'
     Code: 'Grupi kood'
@@ -250,6 +222,7 @@ et_EE:
     ADDURL: 'Lisa URL'
     ADJUSTDETAILSDIMENSIONS: 'Üksikasjad ja mõõtmed'
     ANCHORVALUE: Link
+    BUTTONADDURL: 'Lisa url'
     BUTTONINSERT: Sisesta
     BUTTONINSERTLINK: 'Sisesta link'
     BUTTONREMOVELINK: 'Eemalda link'
@@ -289,12 +262,9 @@ et_EE:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL-i ''{url}'' ei saanud muuta meediumiressursiks.'
     UpdateMEDIA: 'Uuenda meediumi'
-    BUTTONADDURL: 'Lisa url'
   Image:
     PLURALNAME: Failid
     SINGULARNAME: Fail
-  ImageField:
-    IMAGE: Kujutis
   Image_Cached:
     PLURALNAME: Failid
     SINGULARNAME: Fail
@@ -313,9 +283,9 @@ et_EE:
     PreviewButton: Eelvaade
     REORGANISATIONSUCCESSFUL: 'Saidipuu korraldati edukalt ümber.'
     SAVEDUP: Salvestatud.
-    VersionUnknown: Teadmata
     ShowAsList: 'kuva nimekirjana'
     TooManyPages: 'Liiga palju lehekülgi'
+    VersionUnknown: Teadmata
   LeftAndMain_Menu_ss:
     Hello: Tere!
     LOGOUT: 'Logi välja'
@@ -340,10 +310,8 @@ et_EE:
     EMAIL: E-post
     EMPTYNEWPASSWORD: 'Uue parooli väli ei saa olla tühi. Proovige uuesti'
     ENTEREMAIL: 'Palun sisesta email, et saada paooli tühistamise link'
-    ERRORLOCKEDOUT: 'Konto on liiga paljude ebaõnnestunud sisselogimiskatsete tõttu ajutiselt blokeeritud. Palun oota 20 minutit ja proovi siis uuesti.'
     ERRORNEWPASSWORD: 'Te sisestasite oma parooli erinevalt, proovige uuesti'
     ERRORPASSWORDNOTMATCH: 'Sisestatud paroolid ei kattu, palun proovi uuesti'
-    ERRORWRONGCRED: 'Tundub, et e-posti aadress või parool on vale. Palun proovi uuesti.'
     FIRSTNAME: 'Eesnimi'
     INTERFACELANG: 'Kasutajaliidese keel'
     LOGGEDINAS: 'Olete logitud sisse kui {name}.'
@@ -410,8 +378,8 @@ et_EE:
     Title: 'Andmemudelid'
     UPDATEDRECORDS: '{count} kirjet on uuendatud.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Andmebaasi tulbad'
     IMPORTSPECLINK: 'Kuva üksuse %s spetsifikatsioonid'
+    IMPORTSPECFIELDS: 'Andmebaasi tulbad'
     IMPORTSPECRELATIONS: Seosed
     IMPORTSPECTITLE: 'Üksuse %s spetsifikatsioonid'
   ModelAdmin_Tools_ss:
@@ -451,12 +419,8 @@ et_EE:
     UserPermissionsIntro: 'Sellele kasutajale gruppide määramine kohandab tema õiguseid. Vaadake gruppide jaotist, et näha üksikasju iga grupi õiguste kohta.'
   PhoneNumberField:
     VALIDATION: 'Sisestage kehtiv telefoninumber'
-  RelationComplexTableField_ss:
-    ADD: Lisa
-    CSVEXPORT: 'Ekspordi CSV-vormingusse'
-    NOTFOUND: 'Üksusi ei leitud'
   Security:
-    ALREADYLOGGEDIN: 'Sul puudub õigus sellele lehele pääsemiseks. Kui sul on teine konto, millega siia sisse logida, võid <a href="%s">uuesti sisse logida</a>.'
+    ALREADYLOGGEDIN: 'Sul puudub õigus sellele lehele pääsemiseks. Kui sul on teine konto, millega siia sisse logida, võid uuesti sisse logida.'
     BUTTONSEND: 'Saada parooli tühistamise link'
     CHANGEPASSWORDBELOW: 'Saad muuta oma parooli allpool.'
     CHANGEPASSWORDHEADER: 'Muuda oma parool'
@@ -491,37 +455,21 @@ et_EE:
     BtnImport: 'Impordi CSV-failist'
     FileFieldLabel: 'CSV-fail <small>(lubatud laiendid: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Muuda
     Auto: Automaatne
     ChangeViewMode: 'Muuda kuvarežiimi'
+    Edit: Muuda
     Mobile: Mobiilne
     Responsive: Kohanduv
     Tablet: Tahvel
     ViewDeviceWidth: 'Vali eelvaate laiius'
     Width: laiius
-  SimpleImageField:
-    NOUPLOAD: 'Pilte pole üles laaditud'
   SiteTree:
     TABMAIN: Avaleht
-  TableField_ss:
-    ADD: 'Lisa uus rida'
-    ADDITEM: 'Lisa %s'
   TableListField:
     CSVEXPORT: 'Ekspordi CSV-vormingusse'
-    PRINT: Prindi
     Print: Prindi
-    SELECT: 'Vali:'
-  TableListField_ss:
-    NOITEMSFOUND: 'Üksusi ei leitud'
-    SORTASC: 'Sordi kasvavas järjekorras'
-    SORTDESC: 'Sordi kahanevas järjekorras'
   TableListField_PageControls_ss:
-    DISPLAYING: Kuvatakse
     OF: /
-    VIEWFIRST: 'Vaata esimest'
-    VIEWLAST: 'Vaata viimast'
-    VIEWNEXT: 'Vaata järgmist'
-    VIEWPREVIOUS: 'Vaata eelmist'
   TimeField:
     VALIDATEFORMAT: 'Sisestage sobivas vormingus kellaaeg ({format})'
   ToggleField:
@@ -546,12 +494,8 @@ et_EE:
     MAXNUMBEROFFILES: 'Maksimaalne failide arv {count} on ületatud.'
     MAXNUMBEROFFILESSHORT: 'Üles saab laadida ainult {count} faili'
     REMOVE: Eemalda
-    REMOVEERROR: 'Viga faili eemaldamisel'
     REMOVEINFO: 'Eemalda see fail siit, kuid ära kustuta seda failihoidlast'
     STARTALL: 'Alusta kõiki'
-    STARTALLINFO: 'Alusta kõiki üleslaadimisi'
     Saved: Salvestatud
   Versioned:
     has_many_Versions: Versioon
-  GridFieldEditButton_ss:
-    EDIT: Redigeeri

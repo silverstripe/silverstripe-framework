@@ -1,6 +1,5 @@
 zh:
   AssetAdmin:
-    ALLOWEDEXTS: '允许的扩展名'
     NEWFOLDER: 新建文件夹
     SHOWALLOWEDEXTS: '显示允许的扩展名'
   AssetTableField:
@@ -69,6 +68,8 @@ zh:
     ACCESSALLINTERFACES: '对所有 CMS 部分的访问'
     ACCESSALLINTERFACESHELP: '支配更多的特殊访问设置'
     SAVE: 保存
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: '网站预览'
   CMSProfileController:
     MENUTITLE: '我的个人资料'
   ChangePasswordEmail_ss:
@@ -77,23 +78,13 @@ zh:
     EMAIL: 电子邮件
     HELLO: 您好
     PASSWORD: 密码
-  ComplexTableField:
-    CLOSEPOPUP: '关闭弹出窗口'
-    SUCCESSADD2: '已添加的 {name}'
-    SUCCESSEDIT: '已保存 %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: '添加 %s'
-    NOITEMSFOUND: '没有找到任何项目'
-    SORTASC: '升序排列'
-    SORTDESC: '降序排列'
-  ComplexTableField_popup_ss:
-    NEXT: 下一页
-    PREVIOUS: 前一页
   ConfirmedPasswordField:
     ATLEAST: '密码长度必须至少 {min} 个字符。'
     BETWEEN: '密码长度必须含 {min} 到 {max} 个字符。'
     MAXIMUM: '密码长度必须至多 {max} 个字符。'
     SHOWONCLICKTITLE: '更改密码'
+  ContentController:
+    NOTLOGGEDIN: '尚未登录'
   CreditCardField:
     FIRST: 第一个
     FOURTH: 第四个
@@ -109,6 +100,7 @@ zh:
     DAYS: 天
     HOUR: 小时
     HOURS: 小时
+    LessThanMinuteAgo: '少于一分钟'
     MIN: 分钟
     MINS: 分钟
     MONTH: 月份
@@ -119,7 +111,6 @@ zh:
     TIMEDIFFIN: '在 {difference} 中'
     YEAR: 年
     YEARS: 年
-    LessThanMinuteAgo: '少于一分钟'
   DateField:
     NOTSET: '未设置'
     TODAY: 今天
@@ -132,11 +123,9 @@ zh:
     INVALID_REQUEST: '无效请求'
   DropdownField:
     CHOOSE: （选择）
+    CHOOSESEARCH: '（选择或搜索）'
   EmailField:
     VALIDATION: '请输入一个电子邮件地址'
-  Email_BounceRecord:
-    PLURALNAME: '电子邮件退还记录'
-    SINGULARNAME: '电子邮件退还记录'
   Enum:
     ANY: 任何
   File:
@@ -171,19 +160,6 @@ zh:
     WavType: 'WAV 音频文件'
     XlsType: 'Excel 表格'
     ZipType: 'ZIP 压缩文件'
-  FileIFrameField:
-    ATTACH: '附件 {type}'
-    ATTACHONCESAVED: '只有当您第一次保存过记录，{type} 才能被附加。'
-    ATTACHONCESAVED2: '只有当您第一次保存过记录，文件才能被附加。'
-    DELETE: '删除 {type}'
-    DISALLOWEDFILETYPE: '这种文件类型不允许被上传'
-    FILE: 文件
-    FROMCOMPUTER: '从您的电脑'
-    FROMFILESTORE: '从文件商店'
-    NOSOURCE: '请选择一个源文件来附加'
-    REPLACE: '替代 {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: '图片上传框架'
   Filesystem:
     SYNCRESULTS: '同步更新完成：{createdcount} 项已创建， {deletedcount} 项已删除'
   Folder:
@@ -195,6 +171,7 @@ zh:
     TEXT2: '密码重设链接'
     TEXT3: 为
   Form:
+    CSRF_FAILED_MESSAGE: '似乎出现了技术问题。请点击返回按钮，刷新您的浏览器，然后再试一次。'
     FIELDISREQUIRED: '{name} 为必填'
     SubmitBtnLabel: 前往
     VALIDATIONCREDITNUMBER: '请确保您输入了正确的 {number} 信用卡号码'
@@ -204,10 +181,9 @@ zh:
     VALIDATIONSTRONGPASSWORD: '密码必须至少有一个数字和一个字母数字字符'
     VALIDATOR: 验证器
     VALIDCURRENCY: '请输入一个有效的货币'
-    CSRF_FAILED_MESSAGE: '似乎出现了技术问题。请点击返回按钮，刷新您的浏览器，然后再试一次。'
   FormField:
-    NONE: 无
     Example: '例如 %s'
+    NONE: 无
   GridAction:
     DELETE_DESCRIPTION: 删除
     Delete: 删除
@@ -238,7 +214,9 @@ zh:
     Deleted: '已删除的 %s %s'
     Save: 保存
     Saved: '已保存 {name} {link}'
-  GridFieldItemEditView_ss:
+  GridFieldEditButton_ss:
+    EDIT: 编辑
+  GridFieldItemEditView:
     Go_back: '返回'
   Group:
     AddRole: '在这个小组中添加一个角色'
@@ -247,6 +225,7 @@ zh:
     DefaultGroupTitleContentAuthors: '内容作者'
     Description: 描述
     GroupReminder: '如果您选择了某父组，该组别将会承担起所有功能角色'
+    HierarchyPermsError: '无法为父组 "%s" 分配特权权限（要求具备 ADMIN 访问）'
     Locked: '锁定？'
     NoRoles: '没有找到角色'
     PLURALNAME: 群组
@@ -268,6 +247,7 @@ zh:
     ADDURL: '添加网址'
     ADJUSTDETAILSDIMENSIONS: '详情 &amp;amp; 体积'
     ANCHORVALUE: 固定
+    BUTTONADDURL: '添加网址'
     BUTTONINSERT: 插入
     BUTTONINSERTLINK: '插入链接'
     BUTTONREMOVELINK: '移除链接'
@@ -287,6 +267,8 @@ zh:
     FROMWEB: '从网站上'
     FindInFolder: '在文件夹中寻找'
     IMAGEALT: '替代性文本 (alt)'
+    IMAGEALTTEXT: '替代文字 (alt) - 用于图像无法显示时'
+    IMAGEALTTEXTDESC: '向显示屏读者显示，或者用于图像无法显示时'
     IMAGEDIMENSIONS: 体积
     IMAGEHEIGHTPX: 高度
     IMAGETITLE: '标题文字（工具提示）- 关于该图像的更多信息'
@@ -307,12 +289,9 @@ zh:
     URL: 网址
     URLNOTANOEMBEDRESOURCE: '''{url}'' 该网址无法转换成媒体来源。'
     UpdateMEDIA: '更新媒体'
-    BUTTONADDURL: '添加网址'
   Image:
     PLURALNAME: 文件
     SINGULARNAME: 文件
-  ImageField:
-    IMAGE: 图像
   Image_Cached:
     PLURALNAME: 文件
     SINGULARNAME: 文件
@@ -331,10 +310,10 @@ zh:
     PreviewButton: 预览
     REORGANISATIONSUCCESSFUL: '重新组织网站地图已成功'
     SAVEDUP: 已保存。
-    VersionUnknown: 位置
     ShowAsList: '以列表方式展示'
     TooManyPages: '页面数目过多'
     ValidationError: '验证错误'
+    VersionUnknown: 位置
   LeftAndMain_Menu_ss:
     Hello: 您好
     LOGOUT: '退出'
@@ -359,16 +338,16 @@ zh:
     EMAIL: 电子邮件
     EMPTYNEWPASSWORD: '新密码不能为空，请重试'
     ENTEREMAIL: '请输入电子邮件地址以获取密码重置链接'
-    ERRORLOCKEDOUT: '由于登录失败次数过多，您的账户暂时被冻结。请在 20 分钟后重试。'
     ERRORLOCKEDOUT2: '由于登录失败次数过多，您的账户暂时被冻结。请在 {count} 分钟后重试。'
     ERRORNEWPASSWORD: '您输入的新密码不同，请重试'
     ERRORPASSWORDNOTMATCH: '您的现有密码不匹配，请重试'
-    ERRORWRONGCRED: '电子邮件或密码错误。请重试。'
+    ERRORWRONGCRED: '所提供的资料似乎是不正确的。请再试一次。'
     FIRSTNAME: '名字'
     INTERFACELANG: '界面语言'
     INVALIDNEWPASSWORD: '我们不能接受该密码：{password}'
     LOGGEDINAS: '您以 {name} 身份登录。'
     NEWPASSWORD: '新密码'
+    NoPassword: '该成员无密码'
     PASSWORD: 密码
     PLURALNAME: 成员
     REMEMBERME: '下次记住我？'
@@ -388,7 +367,6 @@ zh:
     db_NumVisit: '访问数字'
     db_Password: 密码
     db_PasswordExpiry: '密码失效日期'
-    NoPassword: '该成员无密码'
   MemberAuthenticator:
     TITLE: '电子邮件和密码'
   MemberDatetimeOptionsetField:
@@ -404,7 +382,6 @@ zh:
     MONTHNOLEADING: '起首不为零的月份数字'
     Preview: 预览
     SHORTMONTH: '月份简称（例如 Jun）'
-    TOGGLEHELP: '拨动格式帮助开关'
     TWODIGITDAY: '两位数表示的月份日期'
     TWODIGITHOUR: '两位数表示的小时（00 到 23）'
     TWODIGITMINUTE: '两位数表示的分钟（00 到 59）'
@@ -436,8 +413,8 @@ zh:
     Title: '数据模型'
     UPDATEDRECORDS: '更新了 {count} 个记录。'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: '数据库栏目'
     IMPORTSPECLINK: '展示 %s 的详细信息'
+    IMPORTSPECFIELDS: '数据库栏目'
     IMPORTSPECRELATIONS: 关系
     IMPORTSPECTITLE: '%s 的详细信息'
   ModelAdmin_Tools_ss:
@@ -456,6 +433,10 @@ zh:
   Pagination:
     Page: 页面
     View: 查看
+  PasswordValidator:
+    LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：%s'
+    PREVPASSWORD: '您已经使用过这个密码，请选用新的密码'
+    TOOSHORT: '密码长度过短，必须为 %s 个字符或更长'
   Permission:
     AdminGroup: 管理员
     CMS_ACCESS_CATEGORY: 'CMS 访问'
@@ -475,19 +456,15 @@ zh:
     Title: 标题
   PermissionRoleCode:
     PLURALNAME: '权限角色代码'
+    PermsError: '无法为代码 "%s"分配特权权限（要求具备 ADMIN 访问）'
     SINGULARNAME: '权限角色代码'
   Permissions:
     PERMISSIONS_CATEGORY: '角色及访问权限'
     UserPermissionsIntro: '把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。'
   PhoneNumberField:
     VALIDATION: '请输入一个有效的电话号码'
-  RelationComplexTableField_ss:
-    ADD: 添加
-    CSVEXPORT: '导出到 CSV'
-    NOTFOUND: '没有找到项目'
   Security:
     ALREADYLOGGEDIN: '您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。'
-    LOSTPASSWORDHEADER: '忘记密码'
     BUTTONSEND: '将密码重设链接发送给我'
     CHANGEPASSWORDBELOW: '您可以在下面更改您的密码。'
     CHANGEPASSWORDHEADER: '更改您的密码'
@@ -522,11 +499,11 @@ zh:
     BtnImport: '从 CSV 导入'
     FileFieldLabel: 'CSV 文件 <small>(允许的扩展名：*.csv)</small>'
   SilverStripeNavigator:
-    Edit: 编辑
     Auto: 自动
     ChangeViewMode: '改变视图模式'
     Desktop: 桌面
     DualWindowView: '双窗口'
+    Edit: 编辑
     EditView: '编辑模式'
     Mobile: 移动
     PreviewState: '预览状态'
@@ -536,32 +513,13 @@ zh:
     Tablet: 平板电脑
     ViewDeviceWidth: '选择预览宽度'
     Width: 宽度
-  SimpleImageField:
-    NOUPLOAD: '没有已上传的图像'
   SiteTree:
     TABMAIN: 主要的
-  TableField:
-    ISREQUIRED: '以 %s ''%s'' 需要'
-  TableField_ss:
-    ADD: '添加新行'
-    ADDITEM: '添加 %s'
   TableListField:
     CSVEXPORT: '导出到 CSV'
-    PRINT: 打印
     Print: 打印
-    SELECT: '选择'
-  TableListField_ss:
-    NOITEMSFOUND: '找不到项目'
-    SORTASC: '升序排列'
-    SORTDESC: '降序排列'
   TableListField_PageControls_ss:
-    DISPLAYING: 显示
     OF: 的
-    TO: 至
-    VIEWFIRST: '查看第一个'
-    VIEWLAST: '查看上一个'
-    VIEWNEXT: '查看下一个'
-    VIEWPREVIOUS: '查看前一页'
   TimeField:
     VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
   ToggleField:
@@ -571,6 +529,8 @@ zh:
     ATTACHFILE: '附加单个文件'
     ATTACHFILES: '附加多个文件'
     AttachFile: '附加一个或多个文件'
+    CHOOSEANOTHERFILE: '选择另一文件'
+    CHOOSEANOTHERINFO: '用文件库里的文件替换该文件'
     DELETE: '从文件中移除'
     DELETEINFO: '从文件库中永久移除该文件'
     DOEDIT: 保存
@@ -585,29 +545,13 @@ zh:
     FROMFILES: '从文件中'
     HOTLINKINFO: '信息：该图像将会被映射。请确保您已获得网站原始制作者的允许。'
     MAXNUMBEROFFILES: '超过允许的最大 {count} 个文件数目'
-    MAXNUMBEROFFILESSHORT: '只能上传 {count} 个文件'
     MAXNUMBEROFFILESONE: '只能上传一个文件'
+    MAXNUMBEROFFILESSHORT: '只能上传 {count} 个文件'
+    OVERWRITEWARNING: '已经存在相同名称的文件'
     REMOVE: 移除
-    REMOVEERROR: '移除文件错误'
     REMOVEINFO: '从这里移除文件，但是不将其从文件库中删除'
     STARTALL: '开始所有'
-    STARTALLINFO: '开始上传所有'
     Saved: 已保存
-    CHOOSEANOTHERFILE: '选择另一文件'
-    CHOOSEANOTHERINFO: '用文件库里的文件替换该文件'
-    OVERWRITEWARNING: '已经存在相同名称的文件'
     UPLOADSINTO: '保存到 /{path}'
   Versioned:
     has_many_Versions: 版本
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: '网站预览'
-  GridFieldEditButton_ss:
-    EDIT: 编辑
-  ContentController:
-    NOTLOGGEDIN: '尚未登录'
-  GridFieldItemEditView:
-    Go_back: '返回'
-  PasswordValidator:
-    LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：%s'
-    PREVPASSWORD: '您已经使用过这个密码，请选用新的密码'
-    TOOSHORT: '密码长度过短，必须为 %s 个字符或更长'

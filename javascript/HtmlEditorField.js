@@ -1328,14 +1328,20 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			onclick: function(e) {
 				var editForm = this.getEditForm();
-	
-				editForm.parent('.ss-uploadfield-item').removeClass('ui-state-warning');
+		
+				// Make sure we're in an HtmlEditorField here, or fall-back to _super(). HtmlEditorField with 
+				// AssetUploadField doesn't use iframes, so needs its own toggleEditForm() logic
+				if (this.closest('.ss-uploadfield-item').hasClass('ss-htmleditorfield-file')) {
+					editForm.parent('ss-uploadfield-item').removeClass('ui-state-warning');
 
-				editForm.toggleEditForm();
+					editForm.toggleEditForm();
 
-				e.preventDefault(); // Avoid a form submit
+					e.preventDefault(); // Avoid a form submit
 
-				return false; // Avoid duplication from button
+					return false; // Avoid duplication from button
+				}
+
+				this._super(e);
 			}
 		});
 

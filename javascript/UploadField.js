@@ -396,11 +396,50 @@
 		});
 		$( 'div.ss-upload:not(.disabled):not(.readonly) .ss-uploadfield-item-edit').entwine({
 			onclick: function(e) {
-				var editform = this.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform');
-				var itemInfo = editform.prev('.ss-uploadfield-item-info');
-				var disabled;
-				var iframe = editform.find('iframe');
+				var self = this,
+					editform = self.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform'),
+					itemInfo = editform.prev('.ss-uploadfield-item-info'),
+					iframe = editform.find('iframe');
 
+				// Ignore clicks while the iframe is loading
+				if (iframe.parent().hasClass('loading')) {
+					e.preventDefault();
+					return false;
+				}
+
+				if (iframe.attr('src') == 'about:blank') {
+					// Lazy-load the iframe on editform toggle
+					iframe.attr('src', iframe.data('src'));
+
+					// Add loading class, disable buttons while loading is in progress
+					// (_prepareIframe() handles re-enabling them when appropriate)
+					iframe.parent().addClass('loading');
+					disabled=this.siblings();
+					disabled.addClass('ui-state-disabled');
+					disabled.attr('disabled', 'disabled');
+
+					iframe.on('load', function() {
+						iframe.parent().removeClass('loading');
+
+						// This ensures we only call _prepareIframe() on load once - otherwise it'll
+						// be superfluously called after clicking 'save' in the editform
+						if (iframe.data('src')) {
+							self._prepareIframe(iframe, editform, itemInfo);
+							iframe.data('src', '');
+						}
+
+						if (editform.hasClass('opened')) editform.fitHeight();
+					});
+				} else {
+					self._prepareIframe(iframe, editform, itemInfo);
+				}
+
+				e.preventDefault(); // Avoid a form submit
+				return false;
+			},
+			_prepareIframe: function(iframe, editform, itemInfo) {
+				var disabled;
+				
 				// Mark the row as changed if any of its form fields are edited
 				iframe.contents().ready(function() {
 					// Need to use the iframe's own jQuery, as custom event triggers
@@ -431,8 +470,6 @@
 						disabled.removeAttr('disabled');
 					}
 				}
-				e.preventDefault(); // Avoid a form submit
-				return false;
 			}
 		});
 
@@ -453,7 +490,7 @@
 				if(!$.browser.msie && $.browser.version.slice(0,3) != "8.0"){					
 					iframe.contents().find('body').css({'height':(h-padding)});	
 				}				
-
+				
 				// Set iframe to match its contents height
 				iframe.height(h);
 
@@ -505,20 +542,6 @@
 					saved.removeClass('good').hide();
 				}
 				status.attr('title',text).text(text);	
-			}
-		});
-		$('div.ss-upload .ss-uploadfield-item-editform iframe').entwine({
-			onmatch: function() {
-				var form = this.closest('.ss-uploadfield-item-editform');
-				// TODO entwine event binding doesn't work for iframes
-				this.load(function() {
-					$(this).parent().removeClass('loading');
-					if(form.hasClass('opened')) form.fitHeight();
-				});
-				this._super();
-			},
-			onunmatch: function() {
-				this._super();
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-fromfiles').entwine({

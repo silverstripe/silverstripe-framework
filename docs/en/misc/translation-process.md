@@ -73,11 +73,49 @@ We're merging back translations into all supported release branches as well as t
 The following script should be applied to the oldest release branch, and then merged forward into newer branches:
 	
 	tx pull
-	# Manually review changes through git diff
+	# Manually review changes through git diff, then commit
 	git add lang/*
 	git commit -m "Updated translations"
 
-You can download your work right from Transifex in order to speed up the process for your desired language.
+Note: You can download your work right from Transifex in order to speed up the process for your desired language.
+
+## JavaScript Translations
+
+SilverStripe also supports translating strings in JavaScript (see [i18n](/topics/i18n)),
+but there's a conversion step involved in order to get those translations syncing with Transifex.
+Our translation files stored in `mymodule/javascript/lang/*.js` call `ss.i18n.addDictionary()` to add files.
+
+	ss.i18n.addDictionary('de', {"MyNamespace.MyKey": "My Translation"});
+
+But Transifex only accepts structured formats like JSON.
+
+	{"MyNamespace.MyKey": "My Translation"}
+
+First of all, you need to create those source files in JSON, and store them in `mymodule/javascript/lang/src/*.js`. In your `.tx/config` you can configure this path as a separate master location.
+
+	[main]
+	host = https://www.transifex.com
+
+	[silverstripe-mymodule.master]
+	file_filter = lang/<lang>.yml
+	source_file = lang/en.yml
+	source_lang = en
+	type = YML
+
+	[silverstripe-mymodule.master-js]
+	file_filter = javascript/lang/src/<lang>.js
+	source_file = javascript/lang/src/en.js
+	source_lang = en
+	type = KEYVALUEJSON
+
+Now you can upload the source files via a normal `tx push`. Once translations come in,
+you need to convert the source files back into the JS files SilverStripe can actually read.
+This requires an installation of our [buildtools](https://github.com/silverstripe/silverstripe-buildtools).
+
+	tx pull
+	(cd .. && phing -Dmodule=mymodule translation-generate-javascript-for-module)
+	git add javascript/lang/*
+	git commit -m "Updated javascript translations"
 
 # Related
 

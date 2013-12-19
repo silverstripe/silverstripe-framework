@@ -14,7 +14,7 @@ nl:
     TYPE: 'Type'
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Selecteer bestanden'
+    ChooseFiles: 'Selecteer bestand'
     DRAGFILESHERE: 'Sleep bestanden hier'
     DROPAREA: 'Sleep hier'
     EDITALL: 'Alle bewerken'
@@ -225,6 +225,7 @@ nl:
     DefaultGroupTitleContentAuthors: 'Inhoud Auteurs'
     Description: 'Omschrijving '
     GroupReminder: 'Als je de bovenliggende groep selecteert, neemt deze groep alle rollen over'
+    HierarchyPermsError: 'U moet (ADMIN) rechten hebben om de bovenliggende groep "%s" toe te kennen'
     Locked: 'Gesloten?'
     NoRoles: 'Geen rollen gevonden'
     PLURALNAME: Groepen
@@ -340,6 +341,7 @@ nl:
     ERRORLOCKEDOUT2: 'Uw account is tijdelijk uitgeschakeld als gevolg van te veel mislukte pogingen om in te loggen. Probeer het over {count} minuten aub.'
     ERRORNEWPASSWORD: 'Het nieuwe wachtwoord komt niet overeen met de bevestiging, probeer het nogmaals'
     ERRORPASSWORDNOTMATCH: 'Huidige wachtwoord kom niet overeen, probeer het nogmaals'
+    ERRORWRONGCRED: 'De ingevulde gegevens lijken niet correct. Probeer het nog een keer.'
     FIRSTNAME: 'Voornaam'
     INTERFACELANG: 'Interface Taal'
     INVALIDNEWPASSWORD: 'Dit is geen goed wachtwoord: {password}'
@@ -454,6 +456,7 @@ nl:
     Title: Titel
   PermissionRoleCode:
     PLURALNAME: 'Machtigingen rol codes'
+    PermsError: 'U moet (ADMIN) rechten hebben om de code "%s" toe te kennen'
     SINGULARNAME: 'Machtigingen rol code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen en toegangsrechten'
@@ -489,7 +492,7 @@ nl:
     NEWGROUP: 'Nieuwe Groep'
     PERMISSIONS: Rechten
     ROLES: Rollen
-    ROLESDESCRIPTION: 'In deze sectie kan je rollen toevoegen aan deze groep. Rollen zijn logische groeperingen van rechten die in het Rollen tapblad gewijzigd kunnen worden.'
+    ROLESDESCRIPTION: 'In deze sectie kan je rollen toevoegen aan deze groep. Rollen zijn logische groeperingen van rechten die in het Rollen tabblad gewijzigd kunnen worden.'
     TABROLES: Rollen
     Users: Gebruikers
   SecurityAdmin_MemberImportForm:

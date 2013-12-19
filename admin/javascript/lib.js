@@ -160,11 +160,32 @@
 			},
 
 			//Add search (aka query) params to the specified url.
+			// 2013-12-06 ischommer: Customized to merge with existing keys
 			addSearchParams: function( url, params ) {
 				var u = path.parseUrl( url ),
-					p = ( typeof params === "object" ) ? $.param( params ) : params,
-					s = u.search || "?";
-				return u.hrefNoSearch + s + ( s.charAt( s.length - 1 ) !== "?" ? "&" : "" ) + p + ( u.hash || "" );
+					params = ( typeof params === "string" ) ? path.convertSearchToArray( params ) : params,
+					newParams = $.extend( path.convertSearchToArray( u.search ), params );
+				return u.hrefNoSearch + '?' + $.param( newParams ) + ( u.hash || "" );
+			},
+
+			// 2013-12-06 ischommer: Added to allow merge with existing keys
+			getSearchParams: function(url) {
+				var u = path.parseUrl( url );
+				return path.convertSearchToArray( u.search );
+			},
+
+			// Converts query strings (foo=bar&baz=bla) to a hash.
+			// TODO Handle repeating elements (e.g. arr[]=one&arr[]=two)
+			// 2013-12-06 ischommer: Added to allow merge with existing keys
+			convertSearchToArray: function(search) {
+				var params = {}, 
+					search = search.replace( /^\?/, '' ),
+					parts = search ? search.split( '&' ) : [], i, tmp;
+				for(i=0; i < parts.length; i++) {
+					tmp = parts[i].split( '=' );
+					params[tmp[0]] = tmp[1];
+				}
+				return params;
 			},
 
 			convertUrlToDataUrl: function( absUrl ) {
