@@ -10,7 +10,7 @@ class CMSFormTest extends FunctionalTest {
 		$response = $this->get('CMSFormTest_Controller');
 
 		$response = $this->submitForm(
-			'Form_Form',
+			'CMSForm_Form',
 			'action_doSubmit',
 			array(
 				'Email' => 'test@test.com'
@@ -19,7 +19,7 @@ class CMSFormTest extends FunctionalTest {
 			
 		// Firstly, assert that required fields still work when not using an exempt action
 		$this->assertPartialMatchBySelector(
-			'#SomeRequiredField span.required',
+			'#CMSForm_Form_SomeRequiredField_Holder span.required',
 			array(
 				'"Some Required Field" is required'
 			),
@@ -28,7 +28,7 @@ class CMSFormTest extends FunctionalTest {
 
 		// Re-submit the form using validation-exempt button
 		$response = $this->submitForm(
-			'Form_Form',
+			'CMSForm_Form',
 			'action_doSubmitValidationExempt',
 			array(
 				'Email' => 'test@test.com'
@@ -36,12 +36,12 @@ class CMSFormTest extends FunctionalTest {
 		);
 
 		// The required message should be empty if validation was skipped
-		$items = $this->cssParser()->getBySelector('#SomeRequiredField span.required');
+		$items = $this->cssParser()->getBySelector('#CMSForm_Form_SomeRequiredField_Holder span.required');
 		$this->assertEmpty($items);
 
 		// And the session message should show up is submitted successfully
 		$this->assertPartialMatchBySelector(
-			'#Form_Form_error',
+			'#CMSForm_Form_error',
 			array(
 				'Validation skipped'
 			),

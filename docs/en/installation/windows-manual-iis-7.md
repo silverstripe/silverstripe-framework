@@ -27,7 +27,7 @@ We'll also install SQL Server 2008 R2, and support for connecting to it in PHP.
 
   * Internet Information Services (IIS) 7.x
   * SQL Server 2008 R2
-  * PHP 5.4 (PHP 5.3.2+ also works, but we'll install with the latest PHP stable)
+  * PHP 5.4 (PHP 5.3.3+ also works, but we'll install with the latest PHP stable)
   * SilverStripe 3
   * [Microsoft URL Rewrite Module 2.0](http://www.iis.net/download/URLRewrite)
   * [IIS 7 Administration Pack](http://www.iis.net/download/AdministrationPack) (ONLY required for Windows Vista or Server 2008)

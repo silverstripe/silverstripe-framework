@@ -10,20 +10,20 @@ env:
     - secure: "DjwZKhY/c0wXppGmd8oEMiTV0ayfOXiCmi9Lg1aXoSXNnj+sjLmhYwhUWjehjR6IX0MRtzJG6v7V5Y+4nSGe+i+XIrBQnhPQ95Jrkm1gKofX2mznWTl9npQElNS1DXi58NLPbiB3qxHWGFBRAWmRQrsAouyZabkPnChnSa9ldOg="
     - secure: "UmbXCNLK0f2Dk+7qX8bOVcgIt4QhRvccoWvMUxaPtIU+95HCbG10eeCxvfOeBax+tHcRXmeCG4vM4tcuT/WoANkAma/VX74DylFjbWhks2tsKOcr2kjTrOwe6Q9CXOBjVAlcx0lnV/a+w83KARjXGnCrIbE7p7r4EDw31rkVufg="
   matrix:
-    - DB=MYSQL CORE_RELEASE=3.1
+    - DB=MYSQL CORE_RELEASE=master
 
 matrix:
   include:
     - php: 5.3
-      env: DB=PGSQL CORE_RELEASE=3.1
+      env: DB=PGSQL CORE_RELEASE=master
     - php: 5.3
-      env: DB=SQLITE CORE_RELEASE=3.1
+      env: DB=SQLITE CORE_RELEASE=master
     - php: 5.4
-      env: DB=MYSQL CORE_RELEASE=3.1
+      env: DB=MYSQL CORE_RELEASE=master
     - php: 5.5
-      env: DB=MYSQL CORE_RELEASE=3.1
+      env: DB=MYSQL CORE_RELEASE=master
     - php: 5.4
-      env: DB=MYSQL CORE_RELEASE=3.1 BEHAT_TEST=1
+      env: DB=MYSQL CORE_RELEASE=master BEHAT_TEST=1
 
 before_script:
  - composer self-update

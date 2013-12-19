@@ -43,22 +43,49 @@ class Convert {
 	}
 
 	/**
-	 * Convert a value to be suitable for an HTML attribute.
-	 * 
-	 * This is useful for converting human readable values into
-	 * a value suitable for an ID or NAME attribute.
+	 * Convert a value to be suitable for an HTML ID attribute. Replaces non
+	 * supported characters with a space.
 	 * 
 	 * @see http://www.w3.org/TR/REC-html40/types.html#type-cdata
-	 * @uses Convert::raw2att()
+	 *
 	 * @param array|string $val String to escape, or array of strings
+	 *
 	 * @return array|string
 	 */
 	public static function raw2htmlname($val) {
 		if(is_array($val)) {
-			foreach($val as $k => $v) $val[$k] = self::raw2htmlname($v);
+			foreach($val as $k => $v) {
+				$val[$k] = self::raw2htmlname($v);
+			}
+
 			return $val;
 		} else {
-			return preg_replace('/[^a-zA-Z0-9\-_:.]+/','', $val);
+			return self::raw2att($val);
+		}
+	}
+
+	/**
+	 * Convert a value to be suitable for an HTML ID attribute. Replaces non
+	 * supported characters with an underscore.
+	 *
+	 * @see http://www.w3.org/TR/REC-html40/types.html#type-cdata
+	 *
+	 * @param array|string $val String to escape, or array of strings
+	 *
+	 * @return array|string
+	 */
+	public static function raw2htmlid($val) {
+		if(is_array($val)) {
+			foreach($val as $k => $v) {
+				$val[$k] = self::raw2htmlid($v);
+			}
+
+			return $val;
+		} else {
+			return trim(preg_replace(
+				'/_+/', '_', preg_replace('/[^a-zA-Z0-9\-_:.]+/','_', $val)),
+				'_'
+			);
 		}
 	}
 	

@@ -16,7 +16,7 @@
  * @subpackage security
  */
 class PasswordValidator extends Object {
-	
+
 	private static $character_strength_tests = array(
 		'lowercase' => '/[a-z]/',
 		'uppercase' => '/[A-Z]/',
@@ -31,6 +31,7 @@ class PasswordValidator extends Object {
 	 */
 	public function minLength($minLength) {
 		$this->minLength = $minLength;
+		return $this;
 	}
 	
 	/**
@@ -44,6 +45,7 @@ class PasswordValidator extends Object {
 	public function characterStrength($minScore, $testNames) {
 		$this->minScore = $minScore;
 		$this->testNames = $testNames;
+		return $this;
 	}
 	
 	/**
@@ -51,6 +53,7 @@ class PasswordValidator extends Object {
 	 */
 	public function checkHistoricalPasswords($count) {
 		$this->historicalPasswordCount = $count;
+		return $this;
 	}
 	
 	/**
@@ -59,7 +62,7 @@ class PasswordValidator extends Object {
 	 * @return ValidationResult
 	 */
 	public function validate($password, $member) {
-		$valid = new ValidationResult();
+		$valid = ValidationResult::create();
 
 		if($this->minLength) {
 			if(strlen($password) < $this->minLength) {

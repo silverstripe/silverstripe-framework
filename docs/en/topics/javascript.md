@@ -289,14 +289,12 @@ request](http://docs.jquery.com/Frequently_Asked_Questions#Why_do_my_events_stop
 ### Assume Element Collections
 
 jQuery is based around collections of DOM elements, the library functions typically handle multiple elements (where it
-makes sense). Encapsulate your code by nesting your jQuery commands inside a `jQuery().each()` call.
-
-Example: ComplexTableField implements a paginated table with a pop-up for displaying 
+makes sense). Encapsulate your code by nesting your jQuery commands inside a `jQuery().each()` call. Example:
 
 	:::js
-	$('div.ComplexTableField').each(function() {
-	  // This is the over code for the tr elements inside a ComplexTableField.
-	  $(this).find('tr').hover(
+	$('.MyCustomField').each(function() {
+	  // This is the over code for the elements inside a MyCustomField.
+	  $(this).hover(
 	    // ...
 	  );
 	});
@@ -408,7 +406,7 @@ HTML
 
 	:::ss
 	<form action"#">
-	  <div class="autocomplete {url:'MyController/autocomplete'}">
+	  <div class="autocomplete {url:'my-controller-route/autocomplete'}">
 	    <input type="text" name="title" />
 	    <div class="results" style="display: none;">
 	  </div>

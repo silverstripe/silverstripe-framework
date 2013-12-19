@@ -203,6 +203,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Hierarchy::reset();
 		if(Controller::has_curr()) Controller::curr()->setSession(new Session(array()));
 		Security::$database_is_ready = null;
+
+		// Add controller-name auto-routing
+		Config::inst()->update('Director', 'rules', array(
+			'$Controller//$Action/$ID/$OtherID' => '*'
+		));
 		
 		$fixtureFile = static::get_fixture_file();
 

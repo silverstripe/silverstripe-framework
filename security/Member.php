@@ -13,8 +13,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'Email' => 'Varchar(256)', // See RFC 5321, Section 4.5.3.1.3.
 		'Password' => 'Varchar(160)',
 		'RememberLoginToken' => 'Varchar(160)', // Note: this currently holds a hash, not a token.
-		'NumVisit' => 'Int',
-		'LastVisited' => 'SS_Datetime',
 		'AutoLoginHash' => 'Varchar(160)',
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
@@ -229,7 +227,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		$e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
 		if(!$e->check($this->Password, $password, $this->Salt, $this)) {
-			$iidentifierField = 
 			$result->error(_t (
 				'Member.ERRORWRONGCRED',
 				'The provided details don\'t seem to be correct. Please try again.'
@@ -248,7 +245,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @return ValidationResult
 	 */
 	public function canLogIn() {
-		$result = new ValidationResult();
+		$result = ValidationResult::create();
 
 		if($this->isLockedOut()) {
 			$result->error(
@@ -372,8 +369,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// This lets apache rules detect whether the user has logged in
 		if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0);
 
-		$this->NumVisit++;
-
 		if($remember) {
 			// Store the hash and give the client the cookie with the token.
 			$generator = new RandomGenerator();
@@ -457,8 +452,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$hash = $member->encryptWithUserSettings($token);
 				$member->RememberLoginToken = $hash;
 				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
-
-				$member->NumVisit++;
 				$member->write();
 				
 				// Audit logging hook
@@ -600,8 +593,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		));
 
 		$fields->removeByName('RememberLoginToken');
-		$fields->removeByName('NumVisit');
-		$fields->removeByName('LastVisited');
 		$fields->removeByName('AutoLoginHash');
 		$fields->removeByName('AutoLoginExpired');
 		$fields->removeByName('PasswordEncryption');
@@ -645,13 +636,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if($id) {
 			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id", true, 1);
 		}
-	}
-	
-	/**
-	 * Returns true if the current member is a repeat visitor who has logged in more than once.
-	 */
-	public static function is_repeat_member() {
-		return Cookie::get("PastMember") ? true : false;
 	}
 
 	/**
@@ -719,7 +703,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				)
 			);
 			if($existingRecord) {
-				throw new ValidationException(new ValidationResult(false, _t(
+				throw new ValidationException(ValidationResult::create(false, _t(
 					'Member.ValidationIdentifierFailed', 
 					'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))', 
 					'Values in brackets show "fieldname = value", usually denoting an existing email address',
@@ -1220,9 +1204,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 		
 		$mainFields->removeByName('Salt');
-		$mainFields->removeByName('NumVisit');
-
-		$mainFields->makeFieldReadonly('LastVisited');
 
 		$fields->removeByName('Subscriptions');
 
@@ -1318,8 +1299,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$labels['Surname'] = _t('Member.SURNAME', 'Surname');
 		$labels['Email'] = _t('Member.EMAIL', 'Email');
 		$labels['Password'] = _t('Member.db_Password', 'Password');
-		$labels['NumVisit'] = _t('Member.db_NumVisit', 'Number of Visits');
-		$labels['LastVisited'] = _t('Member.db_LastVisited', 'Last Visited Date');
 		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
 		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', 'Security related date');
 		$labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');
@@ -1459,14 +1438,15 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if(self::config()->lock_out_after_incorrect_logins) {
 			// Keep a tally of the number of failed log-ins so that we can lock people out
 			$this->FailedLoginCount = $this->FailedLoginCount + 1;
-			$this->write();
 	
 			if($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
 				$lockoutMins = self::config()->lock_out_delay_mins;
 				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + $lockoutMins*60);
-				$this->write();
+				$this->FailedLoginCount = 0;
 			}
 		}
+		$this->extend('registerFailedLogin');
+		$this->write();
 	}
 	
 	/**
@@ -1499,8 +1479,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		return array(
 			'CurrentMember' => 'currentUser',
 			'currentUser',
-			'PastMember' => 'is_repeat_member',
-			'IsRepeatMember' => 'is_repeat_member',
 		);
 	}
 }

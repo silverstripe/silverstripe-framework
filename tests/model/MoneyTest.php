@@ -310,15 +310,24 @@ class MoneyTest extends SapphireTest {
 
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class MoneyTest_DataObject extends DataObject implements TestOnly {
 	private static $db = array(
 		'MyMoney' => 'Money', 
 		//'MyOtherMoney' => 'Money', 
 	);
-
 }
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class MoneyTest_SubClass extends MoneyTest_DataObject implements TestOnly {
-	static $db = array(
+
+	private static $db = array(
 		'MyOtherMoney' => 'Money', 
 	);
 

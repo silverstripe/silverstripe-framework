@@ -71,16 +71,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	public function init() {
 		if($this->basicAuthEnabled) BasicAuth::protect_site_if_necessary();
 
-		// Directly access the session variable just in case the Group or Member tables don't yet exist
-		if(Session::get('loggedInAs') && Security::database_is_ready()) {
-			$member = Member::currentUser();
-			if($member) {
-				if(!headers_sent()) Cookie::set("PastMember", true, 90, null, null, false, true);
-				DB::query("UPDATE \"Member\" SET \"LastVisited\" = " . DB::getConn()->now()
-					. " WHERE \"ID\" = $member->ID", null);
-			}
-		}
-		
 		// This is used to test that subordinate controllers are actually calling parent::init() - a common bug
 		$this->baseInitCalled = true;
 	}

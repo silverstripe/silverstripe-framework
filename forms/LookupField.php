@@ -71,9 +71,12 @@ class LookupField extends DropdownField {
 			$inputValue = '';
 		}
 
-		return "<span class=\"readonly\" id=\"" . $this->id() .
-			"\">$attrValue</span><input type=\"hidden\" name=\"" . $this->name .
-			"\" value=\"" . $inputValue . "\" />";
+		$properties = array_merge($properties, array(
+			'AttrValue' => $attrValue,
+			'InputValue' => $inputValue
+		));
+
+		return parent::Field($properties);
 	}
 	
 	/**
@@ -90,15 +93,6 @@ class LookupField extends DropdownField {
 	 */
 	public function Type() {
 		return "lookup readonly";
-	}
-	
-	/**
-	 * Override parent behavior by not merging arrays.
-	 *
-	 * @return array
-	 */
-	public function getSource() {
-		return $this->source;
 	}
 }
 

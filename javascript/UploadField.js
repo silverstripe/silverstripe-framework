@@ -501,8 +501,11 @@
 			},
 			toggleEditForm: function() {
 				var itemInfo = this.prev('.ss-uploadfield-item-info'), status = itemInfo.find('.ss-uploadfield-item-status');
-				var iframe = this.find('iframe').contents(), saved=iframe.find('#Form_EditForm_error');
-				var text="";
+
+				var iframe = this.find('iframe').contents(),
+					saved = iframe.find('#Form_EditForm_error');
+
+				var text = "";
 
 				if(this.height() === 0) {
 					text = ss.i18n._t('UploadField.Editing', "Editing ...");

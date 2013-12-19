@@ -1,10 +1,14 @@
 <?php
+
 /**
  * Test various functions on the {@link Convert} class.
+ *
  * @package framework
  * @subpackage tests
  */
 class ConvertTest extends SapphireTest {
+
+	protected $usesDatabase = false;
 
 	/**
 	 * Tests {@link Convert::raw2att()}
@@ -81,9 +85,18 @@ class ConvertTest extends SapphireTest {
 			'Newlines are retained. They should not be replaced with <br /> as it is not XML valid');
 	}
 	
-	public function testRaw2HtmlName() {
+	/**
+	 * Tests {@link Convert::raw2htmlid()}
+	 */
+	public function testRaw2HtmlID() {
 		$val1 = 'test test 123';
-		$this->assertEquals('testtest123', Convert::raw2htmlname($val1));
+		$this->assertEquals('test_test_123', Convert::raw2htmlid($val1));
+
+		$val1 = 'test[test][123]';
+		$this->assertEquals('test_test_123', Convert::raw2htmlid($val1));
+
+		$val1 = '[test[[test]][123]]';
+		$this->assertEquals('test_test_123', Convert::raw2htmlid($val1));
 	}
 	
 	/**

@@ -392,6 +392,8 @@ class SecurityTest extends FunctionalTest {
 	public function testDatabaseIsReadyWithInsufficientMemberColumns() {
 		$old = Security::$force_database_is_ready;
 		Security::$force_database_is_ready = null;
+		Security::$database_is_ready = false;
+		DataObject::clear_classname_spec_cache();
 		
 		// Assumption: The database has been built correctly by the test runner,
 		// and has all columns present in the ORM
