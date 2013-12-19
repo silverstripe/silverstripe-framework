@@ -22,5 +22,5 @@ en_GB:
   Member:
     ERRORNEWPASSWORD: 'Your have entered your new password differently, try again'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page. If you have another account that can access that page, you can <a href="%s">log in again</a>.'
+    ALREADYLOGGEDIN: 'You don''t have access to this page. If you have another account that can access that page, you can log in again.'
     LOGGEDOUT: 'You have been logged out. If you would like to log in again, enter your credentials below.'

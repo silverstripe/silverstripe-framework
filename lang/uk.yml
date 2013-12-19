@@ -10,18 +10,52 @@ uk:
     SIZE: 'Розмір'
     TITLE: Назва
     TYPE: 'Тип'
+  AssetUploadField:
+    ChooseFiles: 'Виберіть файли'
+    DRAGFILESHERE: 'Перемістіть файли сюди'
+    DROPAREA: 'Місце для перенесення файлів'
+    EDITALL: 'Редагувати все'
+    EDITANDORGANIZE: 'Редагувати та впорядковувати'
+    EDITINFO: 'Редагувати файли'
+    FILES: Файли
+    FROMCOMPUTER: 'Виберіть файли з вашого комп’ютера'
+    FROMCOMPUTERINFO: 'Завантажте з вашого комп’ютера'
+    TOTAL: Підсумок
+    TOUPLOAD: 'Виберіть файли для завантаження...'
+    UPLOADINPROGRESS: 'Зачекайте, будь ласка, виконується завантаження'
+    UPLOADOR: АБО
+  BBCodeParser:
+    ALIGNEMENT: Вирівнювання
+    ALIGNEMENTEXAMPLE: 'вирівнювання справа'
+    BOLD: 'Жирний текст'
+    BOLDEXAMPLE: Жирний
+    CODE: 'Блок Коду'
+    CODEDESCRIPTION: 'Неформатований блок коду'
+    CODEEXAMPLE: 'Блок коду'
+    COLORED: 'Кольоровий текст'
+    COLOREDEXAMPLE: 'синій текст'
+    IMAGE: Зображення
+    UNORDERED: 'Невпорядкований список'
+    UNORDEREDDESCRIPTION: 'Невпорядкований список'
+  BackLink_Button_ss:
+    Back: Назад
   BasicAuth:
     ENTERINFO: 'Будь ласка, введіть ім''я користувача та пароль.'
     ERRORNOTADMIN: 'Цей користувач не є адміністратором.'
     ERRORNOTREC: 'Таке ім''я користувача / пароль не існує'
   CMSMain:
     SAVE: Зберегти
+  CMSProfileController:
+    MENUTITLE: 'Мій профіль'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
     CHANGEPASSWORDTEXT2: 'Тепер Ви можете використовувати наступні дані для входу:'
     HELLO: Привіт
     PASSWORD: Пароль
   ConfirmedPasswordField:
+    ATLEAST: 'Пароль повинен містити що найменше {min} символів.'
+    BETWEEN: 'Пароль повинен містити від {min} до {max} символів.'
+    MAXIMUM: 'Пароль повинен містити не більше ніж {max} символів.'
     SHOWONCLICKTITLE: 'Змінити пароль'
   CreditCardField:
     FIRST: перший
@@ -48,6 +82,18 @@ uk:
     VALIDATIONNOTUNIQUE: 'Введене значання не унікальне'
     VALIDATIONPASSWORDSDONTMATCH: 'Паролі не збігаються'
     VALIDATIONPASSWORDSNOTEMPTY: 'Паролі не можуть бути порожніми'
+  GridField:
+    Add: 'Додати {name}'
+    Filter: Фільтр
+    FilterBy: 'Фільтр по'
+    Find: Пошук
+    LEVELUP: 'Рівень вижче'
+  GridFieldDetailForm:
+    CancelBtn: Відмінити
+    Create: Створити
+    Delete: Видалити
+    Save: Зберегти
+    Saved: 'Збережено {name} {link}'
   Group:
     AddRole: 'Додати роль до цієї групи'
     Code: 'Код групи'
@@ -82,6 +128,12 @@ uk:
     LINKOPENNEWWIN: 'Відчиняти посилання у новому вікні?'
     LINKTO: 'Посилатися на'
     PAGE: Сторінка
+  Image:
+    PLURALNAME: Файли
+    SINGULARNAME: Файл
+  Image_Cached:
+    PLURALNAME: Файли
+    SINGULARNAME: Файл
   Image_iframe_ss:
     TITLE: 'АйФрейм завантаження зображення'
   LeftAndMain:
@@ -91,6 +143,9 @@ uk:
     PERMALREADY: 'Вибачте, та Ви не маєте доступу до цієї чатини системи. Якщо Ви хочете ідентифікуватися як хтось інший, зробіть це нижче '
     PERMDEFAULT: 'Будь ласка, оберіть метод ідентифікації та введіть дані доступу до системи.'
     PLEASESAVE: 'Будь ласка, збережіть сторінку: Ця сторінка не може бути оновлена, бо вона ще не була збережена.'
+  LeftAndMain_Menu_ss:
+    Hello: Привіт
+    LOGOUT: 'Вилогуватися'
   Member:
     BUTTONCHANGEPASSWORD: 'Змінити пароль'
     BUTTONLOGIN: 'Увійти'
@@ -124,13 +179,24 @@ uk:
     db_PasswordExpiry: 'Дата закінчення терміну дії пароля'
   MemberAuthenticator:
     TITLE: 'Е-пошта та Пароль'
+  MemberPassword:
+    PLURALNAME: 'Паролі користувача'
+    SINGULARNAME: 'Пароль користувача'
   ModelAdmin:
     IMPORT: 'Імпортувати з CSV'
   MoneyField:
     FIELDLABELAMOUNT: Кількість
     FIELDLABELCURRENCY: Валюта
+  Pagination:
+    Page: Сторінка
+  Permission:
+    SINGULARNAME: Право доступу
   PermissionCheckboxSetField:
     FromRoleOnGroup: 'Успадкований з ролі "%s" на групу "%s"'
+  PermissionRole:
+    PLURALNAME: Ролі
+    SINGULARNAME: Роль
+    Title: Назва
   PhoneNumberField:
     VALIDATION: 'Будь ласка, введіть дійсний номер телефону'
   Security:
@@ -141,6 +207,7 @@ uk:
     ENTERNEWPASSWORD: 'Ви можете змінити пароль нижче.'
     ERRORPASSWORDPERMISSION: 'Ви повинні увійти до системи для зміни паролю!'
     LOGGEDOUT: 'Ви вийшли з системи. Якщо Ви хочете знову увійти, то введіть дані нижче.'
+    LOGIN: 'Увійти'
     NOTEPAGESECURED: 'Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі.'
     NOTERESETPASSWORD: 'Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю'
   SecurityAdmin:

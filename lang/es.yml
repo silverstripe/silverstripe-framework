@@ -1,6 +1,5 @@
 es:
   AssetAdmin:
-    ALLOWEDEXTS: 'Extensiones permitidas'
     NEWFOLDER: NuevaCarpeta
     SHOWALLOWEDEXTS: 'Mostrar extensiones permitidas'
   AssetTableField:
@@ -69,6 +68,8 @@ es:
     ACCESSALLINTERFACES: 'Acceder a todas las interfaces del CMS'
     ACCESSALLINTERFACESHELP: 'Anula configuraciones de acceso más específicas.'
     SAVE: Guardar
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Previsualización'
   CMSProfileController:
     MENUTITLE: 'Mi Perfil'
   ChangePasswordEmail_ss:
@@ -77,23 +78,13 @@ es:
     EMAIL: Correo electrónico
     HELLO: Hola
     PASSWORD: Contraseña
-  ComplexTableField:
-    CLOSEPOPUP: 'Cerrar Popup'
-    SUCCESSADD2: 'Añadido {name}'
-    SUCCESSEDIT: 'Guardado %s %s %s'
-  ComplexTableField_ss:
-    ADDITEM: 'Agregar %s'
-    NOITEMSFOUND: 'Registros no encontrados'
-    SORTASC: 'Orden Ascendente'
-    SORTDESC: 'Orden Descendente'
-  ComplexTableField_popup_ss:
-    NEXT: Siguiente
-    PREVIOUS: Anterior
   ConfirmedPasswordField:
     ATLEAST: 'Las constraseñas deben tener al menos {min} caracteres de longitud.'
     BETWEEN: 'Las contraseñas deben tener desde {min} a {max} caracteres de longitud.'
     MAXIMUM: 'Las contraseñas deben tener como máximo {max} caracteres de longitud.'
     SHOWONCLICKTITLE: 'Cambiar contraseña'
+  ContentController:
+    NOTLOGGEDIN: 'No estás conectado'
   CreditCardField:
     FIRST: primero
     FOURTH: cuarto
@@ -109,6 +100,7 @@ es:
     DAYS: Días
     HOUR: Hora
     HOURS: Horas
+    LessThanMinuteAgo: 'Hace menos de un minuto'
     MIN: Min
     MINS: Mins
     MONTH: Mes
@@ -119,7 +111,6 @@ es:
     TIMEDIFFIN: 'en {difference}'
     YEAR: Año
     YEARS: Años
-    LessThanMinuteAgo: 'Hace menos de un minuto'
   DateField:
     NOTSET: 'sin establecer'
     TODAY: hoy
@@ -132,11 +123,9 @@ es:
     INVALID_REQUEST: 'Solicitud no válida'
   DropdownField:
     CHOOSE: (Elegir)
+    CHOOSESEARCH: '(Seleccionar o Buscar)'
   EmailField:
     VALIDATION: 'Introduzca una dirección de correo electrónico'
-  Email_BounceRecord:
-    PLURALNAME: 'Plural'
-    SINGULARNAME: 'Singular'
   Enum:
     ANY: Cualquiera
   File:
@@ -171,19 +160,6 @@ es:
     WavType: 'Archivo de audio WAV'
     XlsType: 'Hoja de cálculo Excel'
     ZipType: 'Archivo comprimido ZIP'
-  FileIFrameField:
-    ATTACH: 'Adjunte {type}'
-    ATTACHONCESAVED: '{type}s puede ser adjuntado una vez hayas guardado el registro por primera vez.'
-    ATTACHONCESAVED2: 'Se pueden adjuntar archivos una vez se haya guardado el registro por primera vez.'
-    DELETE: 'Borrar {type}'
-    DISALLOWEDFILETYPE: 'No se permite cargar este tipo de archivo'
-    FILE: Archivo
-    FROMCOMPUTER: 'Desde tu ordenador'
-    FROMFILESTORE: 'Desde el Almacén de archivos'
-    NOSOURCE: 'Por favor, seleccione un archivo de origen para adjuntar'
-    REPLACE: 'Reemplace {type}'
-  FileIFrameField_iframe_ss:
-    TITLE: 'Imagen para cargar Iframe'
   Filesystem:
     SYNCRESULTS: 'Sincronización completada: {createdcount} registros creados, {deletedcount} registros borrados'
   Folder:
@@ -195,6 +171,7 @@ es:
     TEXT2: 'enlace para restablecer contraseña'
     TEXT3: para
   Form:
+    CSRF_FAILED_MESSAGE: 'Se detectó exploit malicioso en el formulario'
     FIELDISREQUIRED: 'Se requiere este campo'
     SubmitBtnLabel: Ir
     VALIDATIONCREDITNUMBER: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente {number}'
@@ -204,10 +181,9 @@ es:
     VALIDATIONSTRONGPASSWORD: 'Las contraseñas deben tener al menos un dígito y un carácter alfanumérico'
     VALIDATOR: Validador
     VALIDCURRENCY: 'Por favor, introduzca una moneda válida.'
-    CSRF_FAILED_MESSAGE: 'Se detectó exploit malicioso en el formulario'
   FormField:
-    NONE: ninguna
     Example: 'Ejemplo'
+    NONE: ninguna
   GridAction:
     DELETE_DESCRIPTION: Borrar
     Delete: Borrar
@@ -238,7 +214,9 @@ es:
     Deleted: 'Borrado %s %s'
     Save: Guardar
     Saved: 'Guardado'
-  GridFieldItemEditView_ss:
+  GridFieldEditButton_ss:
+    EDIT: Editar
+  GridFieldItemEditView:
     Go_back: 'Volver'
   Group:
     AddRole: 'Agregar rol'
@@ -247,17 +225,19 @@ es:
     DefaultGroupTitleContentAuthors: 'Editores'
     Description: Descripción
     GroupReminder: 'Recordatorio'
+    HierarchyPermsError: 'No se puede asignar permisos privilegiados al grupo "% s"  (requiere acceso de administrador)'
     Locked: '¿Bloqueado?'
     NoRoles: 'Sin roles'
     PLURALNAME: Grupos
     Parent: 'Grupo Padre'
+    RolesAddEditLink: 'Gestionar Roles'
     SINGULARNAME: Grupo
     Sort: 'Orden de Clasificación'
     has_many_Permissions: Permisos
     many_many_Members: Miembros
   GroupImportForm:
     Help1: '<p>Importar uno o más grupos en formato <em>CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Uso avanzado</h4>\n<ul>\n<li>Columnas permitidas: <em>%s</em></li>\n<li>Grupos existentes son relacionados por su valor <em>Code</em>, y actualizados con nuevos valores desde el archivo importado</li>\n<li>Jerarquías de grupos pueden ser creadas usando una columna <em>ParentCode</em>.</li>\n<li>Códigos de permiso pueden ser asignados por la columna  <em>PermissionCode</em>. Códigos de permisos existentes no son borrados.</li>\n</ul>\n</div>"
+    Help2: "<div class=\"advanced\">\\n<h4>Uso avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Grupos existentes son relacionados por su valor <em>Code</em>, y actualizados con nuevos valores desde el archivo importado</li>\\n<li>Jerarquías de grupos pueden ser creadas usando una columna <em>ParentCode</em>.</li>\\n<li>Códigos de permiso pueden ser asignados por la columna  <em>PermissionCode</em>. Códigos de permisos existentes no son borrados.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Creados {count} grupos'
     ResultDeleted: 'Se eliminaron %d grupos'
     ResultUpdated: 'Actualizados grupos %d'
@@ -267,6 +247,7 @@ es:
     ADDURL: 'Añadir URL'
     ADJUSTDETAILSDIMENSIONS: 'Detalles &amp; dimensiones'
     ANCHORVALUE: Ancla
+    BUTTONADDURL: 'Agregar URL'
     BUTTONINSERT: Insertar
     BUTTONINSERTLINK: 'Insertar enlace'
     BUTTONREMOVELINK: 'Eliminar enlace'
@@ -286,6 +267,8 @@ es:
     FROMWEB: 'Desde la web'
     FindInFolder: 'Buscar en carpeta'
     IMAGEALT: 'Texto alternativo (alt)'
+    IMAGEALTTEXT: 'Texto alternativo (alt) - es mostrado si la imagen no puede ser visualizada'
+    IMAGEALTTEXTDESC: 'Texto alternativo (desc) - es mostrado si la imagen no puede ser visualizada o a los lectores de pantalla'
     IMAGEDIMENSIONS: Dimensiones
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Texto del título (tooltip) - para obtener más información acerca de la imagen'
@@ -306,12 +289,9 @@ es:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ''no se puede convertir en un recurso multimedia.'
     UpdateMEDIA: 'Actualizar Media'
-    BUTTONADDURL: 'Agregar URL'
   Image:
     PLURALNAME: Archivos
     SINGULARNAME: Archivo
-  ImageField:
-    IMAGE: Imagen
   Image_Cached:
     PLURALNAME: Archivos
     SINGULARNAME: Archivo
@@ -330,10 +310,10 @@ es:
     PreviewButton: Vista previa
     REORGANISATIONSUCCESSFUL: 'Reorganizado el árbol del sitio con éxito.'
     SAVEDUP: Guardado
-    VersionUnknown: Versión desconocida
     ShowAsList: 'Mostrar como lista'
     TooManyPages: 'Muchas páginas'
     ValidationError: 'Error de validación'
+    VersionUnknown: Versión desconocida
   LeftAndMain_Menu_ss:
     Hello: Hola
     LOGOUT: 'Finalizar la sesión'
@@ -358,15 +338,16 @@ es:
     EMAIL: E-mail
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor inténtalo de nuevo'
     ENTEREMAIL: 'Por favor, introduce un correo electrónico para obtener un enlace con el que cambiar la contraseña'
-    ERRORLOCKEDOUT: 'Su cuenta ha sido inhabilitada temporalmente porque ha habido demasiados intentos fallidos de conectarse. Por favor, intente de nuevo en 20 minutos.'
+    ERRORLOCKEDOUT2: 'Su cuenta ha sido inhabilitada temporalmente porque ha habido demasiados intentos fallidos de conectarse. Por favor, intente de nuevo en 20 minutos.'
     ERRORNEWPASSWORD: 'Ha introducido su nueva contraseña de distinta manera, intente de nuevo'
     ERRORPASSWORDNOTMATCH: 'Su contraseña actual no concuerda, por favor intente de nuevo.'
-    ERRORWRONGCRED: 'No parece ser la dirección de e-mail o contraseña correcta. Por favor intente de nuevo.'
+    ERRORWRONGCRED: 'Los detalles provistos no parecen estar correctos. Por favor intentar nuevamente.'
     FIRSTNAME: 'Nombre(s)'
     INTERFACELANG: 'Lenguaje de la Interfaz'
     INVALIDNEWPASSWORD: 'No podemos aceptar este password: {password}'
     LOGGEDINAS: 'Estás conectado como {name}.'
     NEWPASSWORD: 'Nueva Contraseña'
+    NoPassword: 'No hay contraseña para este usuario'
     PASSWORD: Contraseña
     PLURALNAME: Miembros
     REMEMBERME: '¿Recordarme la próxima vez?'
@@ -401,7 +382,6 @@ es:
     MONTHNOLEADING: 'Dígitos mes sin cero inicial'
     Preview: Vista previa
     SHORTMONTH: 'Nombre abreviado del mes (por ejemplo, Jun)'
-    TOGGLEHELP: 'Cambia el formato de ayuda'
     TWODIGITDAY: 'Día de dos dígitos del mes'
     TWODIGITHOUR: 'Dos dígitos de hora (00 a 23)'
     TWODIGITMINUTE: 'Dos dígitos en minutos (00 a 59)'
@@ -411,7 +391,7 @@ es:
     Toggle: 'Cambiar'
   MemberImportForm:
     Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Uso avanzado</h4>\n<ul>\n<li>Columnas permitidas: <em>%s</em></li>\n<li>Usuarios existentes son relacionados por su propiedad <em>Code</em>, y actualizados con nuevos valores desde el archivo importado.</li>\n<li>Los grupos pueden ser asignaods por la columna <em>Groups</em>. Los grupos son identificados por su propiedad <em>Code</em>,\nmúltiples grupos pueden ser separados por comas. Los grupos de miembros existentes no son borrados.</li>\n</ul>\n</div>"
+    Help2: "<div class=\"advanced\">\\n<h4>Uso avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Usuarios existentes son relacionados por su propiedad <em>Code</em>, y actualizados con nuevos valores desde el archivo importado.</li>\\n<li>Los grupos pueden ser asignaods por la columna <em>Groups</em>. Los grupos son identificados por su propiedad <em>Code</em>,\\nmúltiples grupos pueden ser separados por comas. Los grupos de miembros existentes no son borrados.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Creados {count} miembros'
     ResultDeleted: 'Se eliminaron %d miembros'
     ResultNone: 'No hay cambios'
@@ -433,8 +413,8 @@ es:
     Title: 'Modelos de datos'
     UPDATEDRECORDS: 'Actualizados {count} registros.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Columnas de la base de datos'
     IMPORTSPECLINK: 'Mostrar especificación para %s'
+    IMPORTSPECFIELDS: 'Columnas de la base de datos'
     IMPORTSPECRELATIONS: Relaciones
     IMPORTSPECTITLE: 'Especificación para %s'
   ModelAdmin_Tools_ss:
@@ -453,6 +433,10 @@ es:
   Pagination:
     Page: Página
     View: Vista
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Necesitas aumentar la complejidad de tu contraseña agregando los siguientes caracteres: %s'
+    PREVPASSWORD: 'Ya habías utilizado esa contraseña en el pasado, por favor usa uno nuevo'
+    TOOSHORT: 'Tu contraseña es muy corta'
   Permission:
     AdminGroup: Administrador
     CMS_ACCESS_CATEGORY: 'Acceso al CMS'
@@ -472,16 +456,13 @@ es:
     Title: Título
   PermissionRoleCode:
     PLURALNAME: 'Códigos de las reglas de permisos'
+    PermsError: 'No se puede asignar permisos privilegiados al código "% s"  (requiere acceso de administrador)'
     SINGULARNAME: 'Códigos de las regla de permisos'
   Permissions:
     PERMISSIONS_CATEGORY: 'Reglas y permisos de acceso'
     UserPermissionsIntro: 'Asignar grupos a este usuario ajustará los permisos que tienen. Vea la sección de grupos para obtener información sobre permisos en grupos individuales.'
   PhoneNumberField:
     VALIDATION: 'Por favor introduzca un número de teléfono válido'
-  RelationComplexTableField_ss:
-    ADD: Añadir
-    CSVEXPORT: 'Exportar a CSV'
-    NOTFOUND: 'Registros no encontrados'
   Security:
     ALREADYLOGGEDIN: 'No tiene acceso a esta página. Si posee otra cuenta con los privilegios para acceder a esta página, puede iniciar sesión a continuación.'
     BUTTONSEND: 'Envíenme el enlace para restaurar la contraseña'
@@ -499,8 +480,9 @@ es:
   SecurityAdmin:
     ACCESS_HELP: 'Permitir ver, añadir y editar usuarios, así como asignarles permisos y reglas.'
     APPLY_ROLES: 'Aplicar reglas a grupos'
-    APPLY_ROLES_HELP: 'Posibilidad de editar las reglas asignados a un grupo. Requiere el permiso de "acceso a la sección ''Usuarios''" .'
+    APPLY_ROLES_HELP: 'Posibilidad de editar las reglas asignados a un grupo. Requiere el permiso "acceso a la sección Usuarios" .'
     EDITPERMISSIONS: 'Editar permisos y direcciones IP de cada grupo'
+    EDITPERMISSIONS_HELP: 'Permite editar los permisos y direcciones IP de un grupo. Requiere el permiso de "acceso a la sección Seguridad" .'
     GROUPNAME: 'Nombre del grupo'
     IMPORTGROUPS: 'Importar grupos'
     IMPORTUSERS: 'Importar usuarios'
@@ -517,11 +499,11 @@ es:
     BtnImport: 'Importar desde CSV'
     FileFieldLabel: 'Archivo CSV <small>(Permitidas extensiones: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Editar
     Auto: Automático
     ChangeViewMode: 'Cambiar el modo de visualización'
     Desktop: Escritorio
     DualWindowView: 'Modo visualización de 2 ventanas'
+    Edit: Editar
     EditView: 'Vista de edición'
     Mobile: Móbil
     PreviewState: 'Estado previsualización'
@@ -531,32 +513,13 @@ es:
     Tablet: Tablet
     ViewDeviceWidth: 'Ver al ancho'
     Width: Ancho
-  SimpleImageField:
-    NOUPLOAD: 'No se han agregado imágenes'
   SiteTree:
     TABMAIN: Principal
-  TableField:
-    ISREQUIRED: 'En %s ''%s'' es requerido'
-  TableField_ss:
-    ADD: 'Añadir una nueva línea'
-    ADDITEM: 'Añadir %s'
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
-    PRINT: Imprimir
     Print: Imprimir
-    SELECT: 'Seleccionar'
-  TableListField_ss:
-    NOITEMSFOUND: 'Registros no encontrados'
-    SORTASC: 'Clasificar en orden ascendente'
-    SORTDESC: 'Clasificar en orden descendente'
   TableListField_PageControls_ss:
-    DISPLAYING: Mostrando
     OF: de
-    TO: a
-    VIEWFIRST: 'Ver primero'
-    VIEWLAST: 'Ver último'
-    VIEWNEXT: 'Ver siguiente'
-    VIEWPREVIOUS: 'Ver anterior'
   TimeField:
     VALIDATEFORMAT: 'Por favor, introduzca un formato de tiempo válido ({format})'
   ToggleField:
@@ -566,6 +529,8 @@ es:
     ATTACHFILE: 'Adjuntar un archivo'
     ATTACHFILES: 'Adjuntar ficheros'
     AttachFile: 'Adjuntar archivo(s)'
+    CHOOSEANOTHERFILE: 'Seleccionar otro archivo'
+    CHOOSEANOTHERINFO: 'Seleccionar otra información'
     DELETE: 'Borrar desde archivos'
     DELETEINFO: 'Borrar permanentemente este archivo del almacén de archivos'
     DOEDIT: Guardar
@@ -580,23 +545,13 @@ es:
     FROMFILES: 'Desde archivos'
     HOTLINKINFO: 'Información: Esta imagen será hotlinked. Asegúrese de que tiene los permisos del sitio original del creador para hacerlo.'
     MAXNUMBEROFFILES: 'El número máximo de {count} archivo(s) ha sido excedido.'
-    MAXNUMBEROFFILESSHORT: 'Sólo puede cargar {count} archivos'
     MAXNUMBEROFFILESONE: 'El máximo número de archivos es 1'
+    MAXNUMBEROFFILESSHORT: 'Sólo puede cargar {count} archivos'
+    OVERWRITEWARNING: 'Deseas sobreescribir el archivo?'
     REMOVE: Eliminar
-    REMOVEERROR: 'Error borrando el fichero'
     REMOVEINFO: 'Eliminar este archivo de este lugar, pero no eliminarlo del almacén de archivos'
     STARTALL: 'Iniciar todos'
-    STARTALLINFO: 'Iniciar todas las subidas de archivos'
     Saved: Guardado
-    CHOOSEANOTHERFILE: 'Seleccionar otro archivo'
-    CHOOSEANOTHERINFO: 'Seleccionar otra información'
-    OVERWRITEWARNING: 'Deseas sobreescribir el archivo?'
     UPLOADSINTO: 'Subir sobre'
   Versioned:
     has_many_Versions: Versiones
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Previsualización'
-  GridFieldEditButton_ss:
-    EDIT: Editar
-  GridFieldItemEditView:
-    Go_back: 'Volver'
