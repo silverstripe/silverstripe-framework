@@ -173,6 +173,7 @@ ru:
     VALIDATIONSTRONGPASSWORD: 'Пароль должен содержать как минимум одну цифру и один буквенно-цифровой символ.'
     VALIDATOR: Валидатор
     VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
+    FIELDISREQUIRED: 'Пожалуйста, заполните поле {name}'
   FormField:
     Example: 'например, %s'
     NONE: не выбрано
