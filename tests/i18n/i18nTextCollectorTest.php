@@ -25,7 +25,7 @@ class i18nTextCollectorTest extends SapphireTest {
 		
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
-		FileSystem::makeFolder($this->alternateBaseSavePath);
+		Filesystem::makeFolder($this->alternateBaseSavePath);
 
 		// Push a class and template loader running from the fake webroot onto
 		// the stack.
