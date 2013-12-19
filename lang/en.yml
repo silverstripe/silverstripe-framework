@@ -346,7 +346,7 @@ en:
     ERRORLOCKEDOUT2: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in {count} minutes.'
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
-    ERRORWRONGCREDS: 'The provided details don''t seem to be correct. Please try again.'
+    ERRORWRONGCRED: 'The provided details don''t seem to be correct. Please try again.'
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'

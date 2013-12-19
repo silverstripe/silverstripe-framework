@@ -174,7 +174,9 @@ keys is a list of reference paths to other value sections. A basic example:
 	:::yml
 	---
 	Name: adminroutes
-	After: 'framework/routes#rootroutes', 'framework/routes#coreroutes'
+	After:
+  	  - '#rootroutes'
+  	  - '#coreroutes'
 	---
 	Director:
 	  rules:
@@ -198,6 +200,8 @@ A more complex example, taken from framework/_config/routes.yml:
 	Before: '*'
 	After:
 	  - '#rootroutes'
+	  - '#coreroutes'
+	  - '#modelascontrollerroutes'
 	---
 	Director:
 	  rules:
