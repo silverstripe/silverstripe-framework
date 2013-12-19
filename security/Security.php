@@ -549,7 +549,7 @@ class Security extends Controller {
 	public function passwordsent($request) {
 		if(class_exists('SiteTree')) {
 			$tmpPage = new Page();
-			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
+			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
 			$tmpPage->URLSegment = 'Security';
 			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 			$controller = Page_Controller::create($tmpPage);
