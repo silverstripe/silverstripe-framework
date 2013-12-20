@@ -414,7 +414,7 @@ class SecurityTest extends FunctionalTest {
 	 * Helper method for the tests above
 	 */
 	public function doTestLoginForm($email, $password, $backURL = 'test/link') {
-		$this->get('Security/logout');
+		$this->get(Config::inst()->get('Security', 'logout_url'));
 		$this->session()->inst_set('BackURL', $backURL);
 		$this->get(Config::inst()->get('Security', 'login_url'));
 		

@@ -8,7 +8,7 @@
 		</div>
 	
 		<div class="cms-login-status">
-			<a href="Security/logout" class="logout-link" title="<% _t('LeftAndMain_Menu_ss.LOGOUT','Log out') %>"><% _t('LeftAndMain_Menu_ss.LOGOUT','Log out') %></a>
+			<a href="$LogoutURL" class="logout-link" title="<% _t('LeftAndMain_Menu_ss.LOGOUT','Log out') %>"><% _t('LeftAndMain_Menu_ss.LOGOUT','Log out') %></a>
 			<% with $CurrentMember %>
 				<span>
 					<% _t('LeftAndMain_Menu_ss.Hello','Hi') %>
