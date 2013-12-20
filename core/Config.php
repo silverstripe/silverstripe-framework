@@ -250,7 +250,7 @@ class Config {
 	 * leak through to other instances.
 	 */
 	public function __construct() {
-		$this->cache = new Config_LRU();
+		$this->cache = new Config_MemCache();
 	}
 
 	public function __clone() {
@@ -681,6 +681,7 @@ class Config {
 /**
  * @package framework
  * @subpackage core
+ * @deprecated 3.2
  */
 class Config_LRU {
 	const SIZE = 1000;
@@ -692,6 +693,7 @@ class Config_LRU {
 	protected $c = 0;
 
 	public function __construct() {
+		Deprecation::notice('3.2', 'Please use Config_MemCache instead', Deprecation::SCOPE_CLASS);
 		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
 			// SplFixedArray causes seg faults before PHP 5.3.7
 			$this->cache = array();
@@ -783,6 +785,69 @@ class Config_LRU {
 		else {
 			for ($i = 0; $i < self::SIZE; $i++) $this->cache[$i]->key = null;
 			$this->indexing = array();
+		}
+	}
+}
+
+/**
+ * @package framework
+ * @subpackage core
+ */
+class Config_MemCache {
+	protected $cache;
+
+	protected $i = 0;
+	protected $c = 0;
+	protected $tags = array();
+
+	public function __construct() {
+		$this->cache = array();
+	}
+
+	public function set($key, $val, $tags = array()) {
+		foreach($tags as $t) {
+			if(!isset($this->tags[$t])) {
+				$this->tags[$t] = array();
+			}
+			$this->tags[$t][$key] = true;
+		}
+
+		$this->cache[$key] = array($val, $tags);
+	}
+
+	private $hit = 0;
+	private $miss = 0;
+
+	public function stats() {
+		return $this->miss ? ($this->hit / $this->miss) : 0;
+	}
+
+	public function get($key) {
+		if(isset($this->cache[$key])) {
+			++$this->hit;
+			return $this->cache[$key][0];
+		}
+
+		++$this->miss;
+		return false;
+	}
+
+	public function clean($tag = null) {
+		if($tag) {
+			if(isset($this->tags[$tag])) {
+				foreach($this->tags[$tag] as $k => $dud) {
+					// Remove the key from everywhere else it is tagged
+					$ts = $this->cache[$k][1];
+					foreach($ts as $t) {
+						unset($this->tags[$t][$k]);
+					}
+					unset($this->cache[$k]);
+				}
+				unset($this->tags[$tag]);
+			}
+		} else {
+			$this->cache = array();
+			$this->tags = array();
 		}
 	}
 }
