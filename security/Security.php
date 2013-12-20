@@ -4,7 +4,7 @@
  * @package framework
  * @subpackage security
  */
-class Security extends Controller {
+class Security extends Controller implements TemplateGlobalProvider {
 	
 	private static $allowed_actions = array( 
 		'index', 
@@ -96,7 +96,25 @@ class Security extends Controller {
 	 * @var String
 	 */
 	private static $token;
-	
+
+	/**
+	 * The default login URL
+	 *
+	 * @config
+	 *
+	 * @var string
+	 */
+	private static $login_url = "Security/login";
+
+	/**
+	 * The default logout URL
+	 *
+	 * @config
+	 *
+	 * @var string
+	 */
+	private static $logout_url = "Security/logout";
+
 	/**
 	 * Get location of word list file
 	 *
@@ -989,22 +1007,52 @@ class Security extends Controller {
 		return self::$ignore_disallowed_actions;
 	}
 
-	/** @config */
-	private static $login_url = "Security/login";
 
 	/**
 	 * Set a custom log-in URL if you have built your own log-in page.
+	 *
+	 * @deprecated 3.2 Use the "Security.login_url" config setting instead.
 	 */
 	public static function set_login_url($loginUrl) {
-		self::$login_url = $loginUrl;
+		Deprecation::notice('3.2', 'Use the "Security.login_url" config setting instead');
+		self::config()->update("login_url", $loginUrl);
 	}
+
 
 	/**
 	 * Get the URL of the log-in page.
-	 * Defaults to Security/login but can be re-set with {@link set_login_url()}
+	 * 
+	 * To update the login url use the "Security.login_url" config setting.
+	 *
+	 * @return string
 	 */
 	public static function login_url() {
-		return self::$login_url;
+		return self::config()->login_url;
+	}
+
+
+	/**
+	 * Get the URL of the logout page.
+	 * 
+	 * To update the logout url use the "Security.logout_url" config setting.
+	 *
+	 * @return string
+	 */
+	public static function logout_url() {
+		return self::config()->logout_url;
+	}
+
+
+	/**
+	 * Defines global accesible templates variables.
+	 *
+	 * @return array
+	 */
+	public static function get_template_global_variables() {
+		return array(
+			"LoginURL" => "login_url",
+			"LogoutURL" => "logout_url",
+		);
 	}
 
 }
