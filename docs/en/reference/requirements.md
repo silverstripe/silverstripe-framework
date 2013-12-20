@@ -141,13 +141,13 @@ inheritance and overlays - please be careful when messing with the order of Requ
 
 ### Javascript placement
 
-By default, SilverStripe includes all Javascript files at the bottom of the page body, unless there's another script already loaded, then, it's prepended to the first `<script>` tag. If this causes problems for you,
+By default, SilverStripe includes all Javascript files at the bottom of the page body, unless there's another script already loaded, then, it's inserted before the first `<script>` tag. If this causes problems for you,
 for example if you're using animation that ends up showing everything until the bottom of the page loads, or shows
-buttons before pushing them will actually work, you can change this behaviour though.
+buttons that rely on Javascript to work, you can change this behaviour. See below.
 
-With the `Requirements.write_js_to_body`, you can configure if the javascripts are written to the head (false) or body (true).
+With the `Requirements.write_js_to_body`, you can configure if Javascript requirements are written to the head (false) or body (true).
 
-With the `Requirements.force_js_to_bottom`, you can enforce Silverstripe to write the javascript to the bottom of the page body, despite there being an earlier script tag. For example, when you have asynchronous scripts for Twitter earlier in your body (and stop speedtests from explaining about "scripts above the fold")
+With the `Requirements.force_js_to_bottom`, you can force Silverstripe to write the Javascript to the bottom of the page body, even if there is an earlier script tag. For example, when you have asynchronous scripts for Twitter earlier in your body (and stop speedtests from explaining about "scripts above the fold")
 
 ## CMS Requirements
 
