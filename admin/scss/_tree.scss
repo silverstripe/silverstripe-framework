@@ -5,7 +5,6 @@
  * The styles are usually added through jstree.js on DOM load, 
  * but we need it earlier in order to correctly display the uninitialized tree.
  */
-
 .cms, .TreeDropdownField .treedropdownfield-panel {
 	.jstree {
 		> ul > li {
@@ -98,23 +97,23 @@
 				border-right-color: transparent !important;
 			}
 		}
-		%no-margin-padding{
-			margin: 0 !important;
-			padding: 0 !important;
-		}
+
 		.jstree-wholerow {
 			position: relative;
 			z-index: 0;
 			height: 0;
-			@extend %no-margin-padding;
+			margin: 0 !important;
+			padding: 0 !important;
 			background: transparent !important;
 			ul,li {
-				@extend %no-margin-padding;
+				margin: 0 !important;
+				padding: 0 !important;
 				background: transparent !important;
 				width: 100%;
 			}
 			a, a:hover{
-				@extend %no-margin-padding;
+				margin: 0 !important;
+				padding: 0 !important;
 				text-indent: -9999px !important;
 				width: 100%;
 				border-right-width: 0px !important;
@@ -195,7 +194,7 @@
 		}
 	} 
 
-	%jstree-marker-shared{
+	#jstree-marker {
 		padding: 0;
 		margin: 0;
 		overflow: hidden;
@@ -203,9 +202,6 @@
 		top: -30px;
 		background-repeat: no-repeat;
 		display: none;
-	}
-	#jstree-marker {
-		@extend %jstree-marker-shared;
 		line-height: 10px;
 		font-size: 12px;		
 		height: 12px;		
@@ -216,7 +212,13 @@
 		color: black;		
 	}
 	#jstree-marker-line {
-		@extend %jstree-marker-shared;
+		padding: 0;
+		margin: 0;
+		overflow: hidden;
+		position: absolute;
+		top: -30px;
+		background-repeat: no-repeat;
+		display: none;
 		line-height: 0%;
 		font-size: 1px;		
 		height: 1px;
@@ -518,23 +520,25 @@
 			color:  #7E7470;
 			border: 1px solid #C9B800;
 			background-color: #FFF0BC;
-			%pseudo-comment-shared{
+
+			&:before {
 				content:"";
 			    position:absolute;
 			    border-style:solid;
-			    /* reduce the damage in FF3.0 */
 			    display:block; 
-			    width:0;				
-			}
-			&:before {
-				@extend %pseudo-comment-shared;
+			    width:0;
 			    bottom:-4px; /* value = - border-top-width - border-bottom-width */
 			    left:3px; /* controls horizontal position */
 			    border-width:4px 4px 0;			    
 			    border-color:#C9B800 transparent;			  
 			}
 			&:after {
-				@extend %pseudo-comment-shared;
+				content:"";
+			    position:absolute;
+			    border-style:solid;
+			    /* reduce the damage in FF3.0 */
+			    display:block;
+			    width:0;
 			    bottom:-3px; /* value = - border-top-width - border-bottom-width */
 			    left:4px; /* value = (:before left) + (:before border-left) - (:after border-left) */
 			    border-width:3px 3px 0;			    
