@@ -9,14 +9,14 @@
  * <b>Usage</b>
  * 
  * <code>
- * new FieldGroup(
- * 	new FieldGroup(
- * 		new HeaderField('FieldGroup 1'),
- * 		new TextField('Firstname')
+ * FieldGroup::create(
+ * 	FieldGroup::create(
+ * 		HeaderField::create('FieldGroup 1'),
+ * 		TextField::create('Firstname')
  * 	),
- * 	new FieldGroup(
- * 		new HeaderField('FieldGroup 2'),
- * 		new TextField('Surname')
+ * 	FieldGroup::create(
+ * 		HeaderField::create('FieldGroup 2'),
+ * 		TextField::create('Surname')
  * 	)
  * )
  * </code>
@@ -28,10 +28,10 @@
  * 	$fields = parent::getCMSFields();
  * 	
  * 	$fields->addFieldToTab(
- * 		'Root.Content', 
- * 		new FieldGroup(
- * 			new TimeField("StartTime","What's the start time?"),
- * 			new TimeField("EndTime","What's the end time?")
+ * 		'Root.Main', 
+ * 		FieldGroup::create(
+ * 			TimeField::create("StartTime","What's the start time?"),
+ * 			TimeField::create("EndTime","What's the end time?")
  * 		),
  * 		'Content'
  * 	);	
@@ -39,6 +39,17 @@
  * 	return $fields;
  * 		
  * }
+ * </code>
+ *
+ * <b>Setting a title to a FieldGroup</b>
+ * 
+ * <code>
+ * $fields->addFieldToTab("Root.Main",
+ * 		FieldGroup::create(
+ * 			TimeField::create('StartTime','What's the start time?'),
+ * 			TimeField::create('EndTime', 'What's the end time?')
+ * 		)->setTitle('Time')
+ * );
  * </code>
  * 
  * @package forms
