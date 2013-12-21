@@ -380,6 +380,7 @@ To avoid repetition, we've written some helpers for various use cases:
 
  * Load into a PJAX panel: `<a href="..." class="cms-panel-link" data-pjax-target="Content">`
  * Load URL as an iframe into a popup/dialog: `<a href="..." class="ss-ui-dialog-link">`
+ * GridField click to redirect to external link: `<a href="..." class="cms-panel-link action external-link">
 
 ## Buttons
 

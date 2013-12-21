@@ -842,6 +842,12 @@ jQuery.noConflict();
 		 */
 		$('.cms .cms-panel-link').entwine({
 			onclick: function(e) {
+				if($(this).hasClass('external-link')) {
+					e.stopPropagation();
+
+					return;
+				}
+
 				var href = this.attr('href'), 
 					url = (href && !href.match(/^#/)) ? href : this.data('href'),
 					data = {pjax: this.data('pjaxTarget')};
