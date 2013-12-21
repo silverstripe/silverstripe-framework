@@ -125,8 +125,14 @@ body.cms {
 		float:left;
 		padding-top: 6px;
 
-		& > * {
+		& * {
 			display: inline-block; // align back button and breadcrumbs
+		}
+
+		.section-icon {
+			opacity: 0.2;
+			padding-right: 4px;
+			background-repeat: no-repeat;
 		}
 	}
 	

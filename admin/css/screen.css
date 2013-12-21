@@ -372,7 +372,8 @@ body.cms { overflow: hidden; }
 .cms-content-header h2 { font-size: 14px; font-weight: bold; margin: 0; margin-bottom: 8px; }
 .cms-content-header h2 * { vertical-align: middle; }
 .cms-content-header .cms-content-header-info { float: left; padding-top: 6px; }
-.cms-content-header .cms-content-header-info > * { display: inline-block; }
+.cms-content-header .cms-content-header-info * { display: inline-block; }
+.cms-content-header .cms-content-header-info .section-icon { opacity: 0.2; padding-right: 4px; background-repeat: no-repeat; }
 .cms-content-header .ss-ui-button { line-height: 24px; }
 .cms-content-header .ss-ui-button .ui-button-text { line-height: 1.4; }
 
