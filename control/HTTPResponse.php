@@ -281,6 +281,8 @@ class SS_HTTPResponse_Exception extends Exception {
 	 */
 	public function __construct($body = null, $statusCode = null, $statusDescription = null) {
 		if($body instanceof SS_HTTPResponse) {
+			if($statusCode) $body->setStatusCode($statusCode);
+			if($statusDescription) $body->setStatusDescription($statusDescription);
 			$this->setResponse($body);
 		} else {
 			$this->setResponse(new SS_HTTPResponse($body, $statusCode, $statusDescription));

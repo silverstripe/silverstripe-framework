@@ -299,6 +299,37 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals($headers, Director::extract_request_headers($request));
 	}
 
+	function testIsSSL() {
+		// X-Forwarded-Protocol can be set by proxies such as Nginx
+		unset($_SERVER['HTTPS']);
+		$_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'https';
+		$this->assertTrue(Director::is_ssl());
+
+		$_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'HTTPS';
+		$this->assertTrue(Director::is_ssl());
+
+		$_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'http';
+		$this->assertFalse(Director::is_ssl());
+
+		unset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']);
+		$this->assertFalse(Director::is_ssl());
+
+		// HTTPS is set by Apache & IIS when running in SSL mode
+		$_SERVER['HTTPS'] = "OFF";
+		$this->assertFalse(Director::is_ssl());
+
+		$_SERVER['HTTPS'] = "off";
+		$this->assertFalse(Director::is_ssl());
+
+		$_SERVER['HTTPS'] = "on";
+		$this->assertTrue(Director::is_ssl());
+
+		unset($_SERVER['HTTPS']);
+		$_SERVER['SSL'] = "on";
+		$this->assertTrue(Director::is_ssl());
+
+	}
+
 }
 
 class DirectorTestRequest_Controller extends Controller implements TestOnly {

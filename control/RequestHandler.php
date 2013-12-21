@@ -364,10 +364,18 @@ class RequestHandler extends ViewableData {
 	 * @uses SS_HTTPResponse_Exception
 	 */
 	public function httpError($errorCode, $errorMessage = null) {
+		if($errorCode == 404) {
+			$this->extend('onBeforeHTTPError404', $this->request);
+		}
+		$this->extend('onBeforeHTTPError', $errorCode, $this->request);
+
 		$e = new SS_HTTPResponse_Exception($errorMessage, $errorCode);
 
 		// Error responses should always be considered plaintext, for security reasons
-		$e->getResponse()->addHeader('Content-Type', 'text/plain');
+		// This only happens if errorMessage is passed as a string
+		if(is_string($errorMessage)) {
+			$e->getResponse()->addHeader('Content-Type', 'text/plain');
+		}
 
 		throw $e;
 	}

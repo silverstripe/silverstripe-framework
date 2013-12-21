@@ -409,12 +409,18 @@ class Director implements TemplateGlobalProvider {
 	 *
 	 * @return String
 	 */
-	public static function protocol() {
-		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])&&strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])=='https') {
-			return "https://";
-		}
-		return (isset($_SERVER['SSL']) || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) 
-			? 'https://' : 'http://';
+	static function protocol() {
+		return self::is_ssl() ? 'https://' : 'http://';
+	}
+
+	/**
+	 * Returns true if the site is being accessed via SSL.
+	 */
+	static function is_ssl() {
+		if(isset($_SERVER['SSL'])) return true;
+		if(isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off') return true;
+		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') return true;
+		return false;
 	}
 
 	/**
@@ -686,6 +692,8 @@ class Director implements TemplateGlobalProvider {
 		return Director::protocol() . $login .  $_SERVER['HTTP_HOST'] . Director::baseURL();
 	}
 
+	protected static $ssl_is_required = false;
+
 	/**
 	 * Force the site to run on SSL.
 	 * 
@@ -730,10 +738,11 @@ class Director implements TemplateGlobalProvider {
 			$matched = true;
 		}
 
-		if($matched && (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') 
-				&& !(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) 
-				&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https')) {
+		if($matched) {
+			self::$ssl_is_required = true;
+		}
 
+		if($matched && !self::is_ssl()) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			// This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
@@ -746,6 +755,22 @@ class Director implements TemplateGlobalProvider {
 			}
 		} else {
 			return false;
+		}
+	}
+
+	/**
+	 * Redirect from HTTPS to HTTP, unless Director::forceSSL() has been called.
+	 * @param $returnOnly Return a redirection URL rather than actually forcing the redirect
+	 */
+	static function force_non_ssl_unless_required($returnOnly = false) {
+		if(!self::$ssl_is_required && self::is_ssl()) {
+			$destURL = str_replace('https:', 'http:', Director::absoluteURL($_SERVER['REQUEST_URI']));
+			if($returnOnly) {
+				return $destURL;
+			} else {
+				if(!headers_sent()) header("Location: $destURL");
+				die("<h1>Your browser is not accepting header redirects</h1><p>Please <a href=\"$destURL\">click here</a>");
+			}
 		}
 	}
 
