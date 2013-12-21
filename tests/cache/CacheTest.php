@@ -27,7 +27,14 @@ class CacheTest extends SapphireTest {
 		$cache->save('Good', 'cachekey');
 		$this->assertEquals('Good', $cache->load('cachekey'));
 		
-		sleep(2);
+		// As per documentation, sleep may not sleep for the amount of time you tell it to sleep for
+		// This loop can make sure it *does* sleep for that long
+		$endtime = time() + 2;
+		while (time() < $endtime) {
+			// Sleep for another 2 seconds!
+			// This may end up sleeping for 4 seconds, but it's awwwwwwwright.
+			sleep(2);
+		}
 		
 		$this->assertFalse($cache->load('cachekey'));
 	}
