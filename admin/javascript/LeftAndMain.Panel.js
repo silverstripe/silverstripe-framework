@@ -108,7 +108,7 @@
 			}
 		});
 
-		$('.cms-panel.collapsed').entwine({
+		$('.cms-panel.collapsed .cms-panel-toggle').entwine({
 			onclick: function(e) {
 				this.expandPanel();
 				e.preventDefault();
