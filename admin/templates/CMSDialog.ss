@@ -6,7 +6,7 @@
 <title>$Title</title>
 </head>
 
-<body class="cms cms-dialog $BaseCSSClasses" lang="$Locale.RFC1766">
+<body class="cms cms-dialog<% if $BaseCSSClasses %> $BaseCSSClasses<% end_if %>">
 	<div class="cms-dialog-content">
 		$Content
 		$Form
