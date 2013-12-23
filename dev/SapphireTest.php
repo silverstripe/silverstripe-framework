@@ -883,6 +883,37 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Cache for logInWithPermission()
 	 */
 	protected $cache_generatedMembers = array();
+
+
+	/**
+	 * Test against a theme.
+	 *
+	 * @param $themeBaseDir string - themes directory
+	 * @param $theme string - theme name
+	 * @param $callback Closure
+	 */
+	protected function useTestTheme($themeBaseDir, $theme, $callback) {
+		global $project;
+
+		$manifest = new SS_TemplateManifest($themeBaseDir, $project, true, true);
+
+		SS_TemplateLoader::instance()->pushManifest($manifest);
+
+		$origTheme = Config::inst()->get('SSViewer', 'theme');
+		Config::inst()->update('SSViewer', 'theme', $theme);
+
+		$e = null;
+
+		try { $callback(); }
+		catch (Exception $e) { /* NOP for now, just save $e */ }
+
+		// Remove all the test themes we created
+		SS_TemplateLoader::instance()->popManifest();
+		Config::inst()->update('SSViewer', 'theme', $origTheme);
+
+		if ($e) throw $e;
+	}
+
 }
 
 
