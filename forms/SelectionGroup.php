@@ -29,13 +29,19 @@ class SelectionGroup extends CompositeField {
 	/**
 	 * Create a new selection group.
 	 * 
-	 * @param name The field name of the selection group.
-	 * @param items The list of {@link SelectionGroup_Item}
+	 * @param string $name The field name of the selection group.
+	 * @param array $items The list of {@link SelectionGroup_Item}
+	 * @param mixed $value
 	 */
-	public function __construct($name, $items) {
+	public function __construct($name, $items, $value = null) {
 		$this->name = $name;
 		
+		if($value !== null) {
+			$this->setValue($value);
+		}
+
 		$selectionItems = array();
+
 		foreach($items as $key => $item) {
 			if($item instanceof SelectionGroup_Item) {
 				$selectionItems[] = $item;

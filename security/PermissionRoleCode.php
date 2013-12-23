@@ -14,7 +14,7 @@ class PermissionRoleCode extends DataObject {
 		"Role" => "PermissionRole",
 	);
 
-	protected function validate() {
+	public function validate() {
 		$result = parent::validate();
 
 		// Check that new code doesn't increase privileges, unless an admin is editing.

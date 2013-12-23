@@ -367,6 +367,7 @@ es:
     db_NumVisit: 'Número de Visitas'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha de vencimiento de la contraseña'
+    NoPassword: 'No hay contraseña para este usuario'
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Contraseña'
   MemberDatetimeOptionsetField:
@@ -465,6 +466,7 @@ es:
     VALIDATION: 'Por favor introduzca un número de teléfono válido'
   Security:
     ALREADYLOGGEDIN: 'No tiene acceso a esta página. Si posee otra cuenta con los privilegios para acceder a esta página, puede iniciar sesión a continuación.'
+    LOSTPASSWORDHEADER: 'Contraseña perdida'
     BUTTONSEND: 'Envíenme el enlace para restaurar la contraseña'
     CHANGEPASSWORDBELOW: 'Puede cambiar su contraseña a continuación.'
     CHANGEPASSWORDHEADER: 'Modifique su contraseña'

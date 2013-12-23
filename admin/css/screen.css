@@ -1048,8 +1048,8 @@ visible. Added and removed with js in TabSet.js  */ /***************************
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel.first { left: 0; width: 203px; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .ui-icon { padding-right: 0; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .tab-nav-link, .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .ss-ui-button { font-size: 12px; }
-.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #PageType ul { padding: 0; }
-.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #PageType ul li { padding: 4px 5px; }
+.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #Form_AddForm_PageType_Holder ul { padding: 0; }
+.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #Form_AddForm_PageType_Holder ul li { padding: 4px 5px; }
 .cms .ss-ui-action-tabset.tabset-open ul.ui-tabs-nav, .cms .ss-ui-action-tabset.tabset-open ul.ui-tabs-nav li.first { -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; }
 .cms .ss-ui-action-tabset.tabset-open-last ul.ui-tabs-nav li.last { -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; }
 .cms .ss-ui-action-tabset .batch-check, .cms .ss-ui-action-tabset .ui-icon { display: inline-block; float: left; margin-left: -2px; padding-right: 6px; }

@@ -1,29 +1,12 @@
 <?php
 /**
- * Generates a three-pane UI for editing model classes,
- * with an automatically generated search panel, tabular results
- * and edit forms.
- * Relies on data such as {@link DataObject::$db} and {@DataObject::getCMSFields()}
+ * Generates a three-pane UI for editing model classes, with an
+ * automatically generated search panel, tabular results and edit forms.
+ *
+ * Relies on data such as {@link DataObject::$db} and {@link DataObject::getCMSFields()}
  * to scaffold interfaces "out of the box", while at the same time providing
  * flexibility to customize the default output.
- * 
- * Add a route
- * <code>
- * Director::config()->rules = array(array('admin/mymodel/$Class/$Action/$ID' => 'MyModelAdmin'));
- * </code>
  *
- * @todo saving logic (should mostly use Form->saveInto() and iterate over relations)
- * @todo ajax form loading and saving
- * @todo ajax result display
- * @todo relation formfield scaffolding (one tab per relation) - relations don't have DBField sublclasses, we do
- * 	we define the scaffold defaults. can be ComplexTableField instances for a start. 
- * @todo has_many/many_many relation autocomplete field (HasManyComplexTableField doesn't work well with larger
- *       datasets)
- * 
- * Long term TODOs:
- * @todo Hook into RESTful interface on DataObjects (yet to be developed)
- * @todo Permission control via datamodel and Form class
- * 
  * @uses SearchContext
  * 
  * @package framework

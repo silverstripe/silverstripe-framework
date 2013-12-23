@@ -224,7 +224,7 @@ class Mailer extends Object {
 		$to = $this->validEmailAddr($to);
 		
 		// Try it without the -f option if it fails
-		if(!($result = @mail($to, $subject, $fullBody, $headers, escapeshellarg("-f$bounceAddress")))) {
+		if(!$bounceAddress || !($result = @mail($to, $subject, $fullBody, $headers, escapeshellarg("-f$bounceAddress")))) {
 			$result = mail($to, $subject, $fullBody, $headers);
 		}
 		

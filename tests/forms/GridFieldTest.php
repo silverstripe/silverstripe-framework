@@ -106,6 +106,30 @@ class GridFieldTest extends SapphireTest {
 		$this->assertTrue($obj->getState() instanceof GridState_Data);
 		$this->assertTrue($obj->getState(false) instanceof GridState);
 	}
+	
+	/**
+	 * Tests usage of nested GridState values
+	 * 
+	 * @covers GridState_Data::__get
+	 * @covers GridState_Data::__call
+	 * @covers GridState_Data::getData
+	 */
+	public function testGetStateData() {
+		$obj = new GridField('testfield', 'testfield');
+		
+		// Check value persistance
+		$this->assertEquals(15, $obj->State->NoValue(15));
+		$this->assertEquals(15, $obj->State->NoValue(-1));
+		$obj->State->NoValue = 10;
+		$this->assertEquals(10, $obj->State->NoValue);
+		$this->assertEquals(10, $obj->State->NoValue(20));
+		
+		// Check nested values
+		$this->assertInstanceOf('GridState_Data', $obj->State->Nested);
+		$this->assertInstanceOf('GridState_Data', $obj->State->Nested->DeeperNested());
+		$this->assertEquals(3, $obj->State->Nested->DataValue(3));
+		$this->assertEquals(10, $obj->State->Nested->DeeperNested->DataValue(10));
+	}
 
 	/**
 	 * @covers GridField::getColumns

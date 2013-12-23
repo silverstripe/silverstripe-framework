@@ -161,6 +161,14 @@ class ConfirmedPasswordField extends FormField {
 	}
 	
 	/**
+	 * Returns the children of this field for use in templating.
+	 * @return FieldList
+	 */
+	public function getChildren() {
+		return $this->children;
+	}
+	
+	/**
 	 * Can be empty is a flag that turns on / off empty field checking.
 	 *
 	 * For example, set this to false (the default) when creating a user account,

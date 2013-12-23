@@ -12,12 +12,69 @@ class VersionedTest extends SapphireTest {
 		'VersionedTest_DataObject',
 		'VersionedTest_Subclass',
 		'VersionedTest_RelatedWithoutVersion',
-		'VersionedTest_SingleStage'
+		'VersionedTest_SingleStage',
+		'VersionedTest_WithIndexes',
 	);
 	
 	protected $requiredExtensions = array(
-		"VersionedTest_DataObject" => array('Versioned')
+		"VersionedTest_DataObject" => array('Versioned'),
+		"VersionedTest_WithIndexes" => array('Versioned'),
 	);
+
+	public function testUniqueIndexes() {
+		$table_expectations = array(
+			'VersionedTest_WithIndexes' =>
+			array('value' => 1, 'message' => 'Unique indexes are unique in main table'),
+			'VersionedTest_WithIndexes_versions' =>
+			array('value' => 0, 'message' => 'Unique indexes are no longer unique in _versions table'),
+			'VersionedTest_WithIndexes_Live' =>
+			array('value' => 0, 'message' => 'Unique indexes are no longer unique in _Live table'),
+		);
+
+		// Check for presence of all unique indexes
+		$db = DB::getConn();
+		$db_class = get_class($db);
+		$tables = array_keys($table_expectations);
+		switch ($db_class) {
+			case 'MySQLDatabase':
+				$our_indexes = array('UniqA_idx', 'UniqS_idx');
+				foreach ($tables as $t) {
+					$indexes = array_keys($db->indexList($t));
+					sort($indexes);
+					$this->assertEquals(
+							array_values($our_indexes), array_values(array_intersect($indexes, $our_indexes)),
+							"$t has both indexes");
+				}
+				break;
+			case 'SQLite3Database':
+				$our_indexes = array('"UniqA"', '"UniqS"');
+				foreach ($tables as $t) {
+					$indexes = array_values($db->indexList($t));
+					sort($indexes);
+					$this->assertEquals(array_values($our_indexes),
+							array_values(array_intersect(array_values($indexes), $our_indexes)), "$t has both indexes");
+				}
+				break;
+			default:
+				$this->markTestSkipped("Test for DBMS $db_class not implemented; skipped.");
+				break;
+		}
+
+		// Check unique -> non-unique conversion
+		foreach ($table_expectations as $table_name => $expectation) {
+			$indexes = $db->indexList($table_name);
+
+			foreach ($indexes as $idx_name => $idx_value) {
+				if (in_array($idx_name, $our_indexes)) {
+					$match_value = preg_match('/unique/', $idx_value);
+					if (false === $match_value) {
+						user_error('preg_match failure');
+					}
+					$this->assertEquals($match_value, $expectation['value'], $expectation['message']);
+				}
+			}
+		}
+	}
 
 	public function testDeletingOrphanedVersions() {
 		$obj = new VersionedTest_Subclass();
@@ -517,6 +574,22 @@ class VersionedTest_DataObject extends DataObject implements TestOnly {
 
 	private static $many_many = array(
 		'Related' => 'VersionedTest_RelatedWithoutVersion'
+	);
+
+}
+
+class VersionedTest_WithIndexes extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'UniqA' => 'Int',
+		'UniqS' => 'Int',
+	);
+	private static $extensions = array(
+		"Versioned('Stage', 'Live')"
+	);
+	private static $indexes = array(
+		'UniqS_idx' => 'unique ("UniqS")',
+		'UniqA_idx' => array('type' => 'unique', 'name' => 'UniqA_idx', 'value' => '"UniqA"',),
 	);
 
 }

@@ -983,33 +983,10 @@ after')
 		);
 	}
 
-	protected function useTestTheme($theme, $callback) {
-		global $project;
-
-		$themeBaseDir = dirname(__FILE__);
-		$manifest = new SS_TemplateManifest($themeBaseDir, $project, true, true);
-
-		SS_TemplateLoader::instance()->pushManifest($manifest);
-
-		$origTheme = Config::inst()->get('SSViewer', 'theme');
-		Config::inst()->update('SSViewer', 'theme', $theme);
-
-		$e = null;
-
-		try { $callback(); }
-		catch (Exception $e) { /* NOP for now, just save $e */ }
-
-		// Remove all the test themes we created
-		SS_TemplateLoader::instance()->popManifest();
-		Config::inst()->update('SSViewer', 'theme', $origTheme);
-
-		if ($e) throw $e;
-	}
-
 	public function testLayout() {
 		$self = $this;
 
-		$this->useTestTheme('layouttest', function() use ($self) {
+		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
 			$template = new SSViewer(array('Page'));
 			$self->assertEquals('Foo', $template->process(new ArrayData(array())));
 
@@ -1023,7 +1000,7 @@ after')
 	 */
 	public function testGetTemplatesByClass() {
 		$self = $this;
-		$this->useTestTheme('layouttest', function() use ($self) {
+		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
 			// Test passing a string
 			$templates = SSViewer::get_templates_by_class('SSViewerTest_Controller', '', 'Controller');
 			$self->assertCount(2, $templates);

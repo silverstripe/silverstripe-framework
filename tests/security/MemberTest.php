@@ -727,6 +727,30 @@ class MemberTest extends FunctionalTest {
 		);
 	}
 
+	public function testFailedLoginCount() {
+		$maxFailedLoginsAllowed = 3;
+		//set up the config variables to enable login lockouts
+		Config::nest();
+		Config::inst()->update('Member', 'lock_out_after_incorrect_logins', $maxFailedLoginsAllowed);
+
+		$member = $this->objFromFixture('Member', 'test');
+		$failedLoginCount = $member->FailedLoginCount;
+
+		for ($i = 1; $i < $maxFailedLoginsAllowed; ++$i) {
+			$member->registerFailedLogin();
+
+			$this->assertEquals(
+				++$failedLoginCount,
+				$member->FailedLoginCount,
+				'Failed to increment $member->FailedLoginCount'
+			);
+
+			$this->assertFalse(
+				$member->isLockedOut(),
+				"Member has been locked out too early"
+			);
+		}
+	}
 
 	public function testCustomMemberValidator() {
 		$member = $this->objFromFixture('Member', 'admin');

@@ -132,6 +132,10 @@ In the event of a confirmed vulnerability in SilverStripe core, we will take the
 
 *  Acknowledge to the reporter that we’ve received the report and that a fix is forthcoming. We’ll give a rough
 timeline and ask the reporter to keep the issue confidential until we announce it.
+*  Assign a unique identifier to the issue in the format `SS-<year>-<count>`, 
+   where `<count>` is a padded three digit number counting issues for the year. 
+   Example: `SS-2013-001` would be the first of the year `2013`.
+   Additionally, [CVE](http://cve.mitre.org) numbers are accepted.
 *  Halt all other development as long as is needed to develop a fix, including patches against the current and one
 previous major release (if applicable).
 *  We will inform you about resolution and [announce](http://groups.google.com/group/silverstripe-announce) a 
