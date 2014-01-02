@@ -15,6 +15,11 @@ class GDTest extends SapphireTest {
 		'png32' => 'test_png32.png'
 	);
 	
+	public function tearDown() {
+		$cache = SS_Cache::factory('GDBackend_Manipulations');
+		$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+	}
+	
 	/**
 	 * Loads all images into an associative array of GD objects.
 	 * Optionally applies an operation to each GD
@@ -135,4 +140,76 @@ class GDTest extends SapphireTest {
 		$samplesPNG32 = $this->sampleAreas($images['png32']);
 		$this->assertGreyscale($samplesPNG32, 8);
 	}
+
+	/**
+	 * Tests that GD doesn't attempt to load images when they're deemed unavailable
+	 * @return void
+	 */
+	public function testImageSkippedWhenUnavailable() {
+		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
+		$gd = new GDBackend_ImageUnavailable($fullPath);
+
+		/* Ensure no image resource is created if the image is unavailable */
+		$this->assertNull($gd->getImageResource());
+	}
+
+	/**
+	 * Tests the integrity of the manipulation cache when an error occurs
+	 * @return void
+	 */
+	public function testCacheIntegrity() {
+		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
+
+		try {
+			$gdFailure = new GDBackend_Failure($fullPath, array('SetWidth', 123));
+			$this->fail('GDBackend_Failure should throw an exception when setting image resource');
+		} catch (GDBackend_Failure_Exception $e) {
+			$cache = SS_Cache::factory('GDBackend_Manipulations');
+			$key = md5(implode('_', array($fullPath, filemtime($fullPath))));
+
+			$data = unserialize($cache->load($key));
+
+			$this->assertArrayHasKey('SetWidth|123', $data);
+			$this->assertTrue($data['SetWidth|123']);
+		}
+	}
+
+	/**
+	 * Test that GD::failedResample() returns true for the current image
+	 * manipulation only if it previously failed
+	 * @return void
+	 */
+	public function testFailedResample() {
+		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
+
+		try {
+			$gdFailure = new GDBackend_Failure($fullPath, array('SetWidth-failed', 123));
+			$this->fail('GDBackend_Failure should throw an exception when setting image resource');
+		} catch (GDBackend_Failure_Exception $e) {
+			$gd = new GDBackend($fullPath, array('SetWidth', 123));
+			$this->assertTrue($gd->failedResample($fullPath, 'SetWidth-failed|123'));
+			$this->assertFalse($gd->failedResample($fullPath, 'SetWidth-not-failed|123'));
+		}
+	}
+
+}
+
+class GDBackend_ImageUnavailable extends GDBackend implements TestOnly {
+
+	public function imageAvailable($filename, $manipulation) {
+		return false;
+	}
+
+}
+
+class GDBackend_Failure extends GDBackend implements TestOnly {
+
+	public function setImageResource($resource) {
+		throw new GDBackend_Failure_Exception('GD failed to load image');
+	}
+
+}
+
+class GDBackend_Failure_Exception extends Exception {
+
 }
