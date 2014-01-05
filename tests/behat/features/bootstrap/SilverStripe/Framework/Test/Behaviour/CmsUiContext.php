@@ -114,11 +114,20 @@ class CmsUiContext extends BehatContext {
 		$table_element = null;
 		foreach ($table_elements as $table) {
 			$table_title_element = $table->find('css', '.title');
-			if ($table_title_element->getText() === $title) {
+			if ($table_title_element && $table_title_element->getText() === $title) {
 				$table_element = $table;
 				break;
 			}
 		}
+
+		// Some {@link GridField} tables don't have a visible title, so look for a fieldset with data-name instead
+		if(!$table_element) {
+			$fieldset = $page->findAll('xpath', "//fieldset[@data-name='$title']");
+			if(is_array($fieldset) && isset($fieldset[0])) {
+				$table_element = $fieldset[0]->find('css', '.ss-gridfield-table');
+			}
+		}
+
 		assertNotNull($table_element, sprintf('Table `%s` not found', $title));
 
 		return $table_element;
