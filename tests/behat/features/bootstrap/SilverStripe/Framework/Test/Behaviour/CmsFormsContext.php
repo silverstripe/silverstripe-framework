@@ -89,20 +89,32 @@ class CmsFormsContext extends BehatContext {
 	}
 
 	/**
-	 * @Then /^the "(?P<locator>([^"]*))" HTML field should contain "(?P<html>.*)"$/
+	 * @Then /^the "(?P<locator>([^"]*))" HTML field should(?P<negative> not? |\s*)contain "(?P<html>.*)"$/
 	 */
-	public function theHtmlFieldShouldContain($locator, $html) {
+	public function theHtmlFieldShouldContain($locator, $negative, $html) {
 		$page = $this->getSession()->getPage();
 		$element = $page->findField($locator);
 		assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
 
 		$actual = $element->getValue();
 		$regex = '/'.preg_quote($html, '/').'/ui';
-		if (!preg_match($regex, $actual)) {
+		$failed = false;
+
+		if(trim($negative)) {
+			if (preg_match($regex, $actual)) {
+				$failed = true;
+			}
+		} else {
+			if (!preg_match($regex, $actual)) {
+				$failed = true;
+			}
+		}
+
+		if($failed) {
 			$message = sprintf(
-				'The string "%s" was not found in the HTML of the element matching %s "%s". Actual content: "%s"', 
-				$html, 
-				'named', 
+				'The string "%s" should%sbe found in the HTML of the element matching name "%s". Actual content: "%s"',
+				$html,
+				$negative,
 				$locator,
 				$actual
 			);
