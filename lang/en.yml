@@ -497,6 +497,7 @@ en:
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'New Group'
     PERMISSIONS: Permissions
+    REMOVING_OWN_ADMIN: 'Warning you are removing ADMIN permissions from your own member profile'
     ROLES: Roles
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roles

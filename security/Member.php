@@ -1262,6 +1262,25 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$fields->findOrMakeTab('Root.Permissions', singleton('Permission')->i18n_plural_name());
 				$fields->addFieldToTab('Root.Permissions', $permissionsField);
 			}
+
+			// warn a admin user to if they are removing their own admin permission
+			if ($this->ID == Member::CurrentUserID()) {
+				$adminGroups = Permission::get_groups_by_permission('ADMIN');
+				
+				foreach ($adminGroups as $group) {
+					if ($this->inGroup($group->ID, true)) {
+						$adminPermissions = (isset($adminPermissions)) ? 
+							$adminPermission = ',' . $group->ID : $group->ID;
+					}
+				}
+				if (isset($adminPermissions)) {
+					$fields->push(
+						new HiddenField(
+							'removeAdminWarning', 'removeAdminWarning', $adminPermissions
+						)
+					);
+				}
+			}
 		}
 
 		$permissionsTab = $fields->fieldByName("Root")->fieldByName('Permissions');
