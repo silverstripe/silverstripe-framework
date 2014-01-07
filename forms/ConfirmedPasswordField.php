@@ -53,6 +53,13 @@ class ConfirmedPasswordField extends FormField {
 	 * @param boolean $showOnClick
 	 */
 	protected $showOnClick = false;
+
+
+	/**
+	 * A place to temporarly store the confirm password value
+	 * @var string
+	 */
+	protected $confirmValue;
 	
 	/**
 	 * Title for the link that triggers the visibility of password fields.
@@ -247,10 +254,8 @@ class ConfirmedPasswordField extends FormField {
 		$oldValue = $this->value;
 
 		if(is_array($value)) {
-			//only set the value if it's valid!
-			if($this->validate(RequiredFields::create())) {
-				$this->value = $value['_Password'];
-			}
+			$this->value = $value['_Password'];
+			$this->confirmValue = $value['_ConfirmPassword'];
 
 			if($this->showOnClick && isset($value['_PasswordFieldVisible'])) {
 				$this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]')
@@ -272,6 +277,20 @@ class ConfirmedPasswordField extends FormField {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Update the names of the child fields when updating name of field.
+	 * 
+	 * @param string $name new name to give to the field.
+	 */
+	public function setName($name) {
+		$this->children->fieldByName($this->getName() . '[_Password]')
+				->setName($name . '[_Password]');
+		$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')
+				->setName($name . '[_ConfirmPassword]');
+
+		return parent::setName($name);
 	}
 
 	/**
@@ -301,9 +320,9 @@ class ConfirmedPasswordField extends FormField {
 		
 		$passwordField = $this->children->fieldByName($name.'[_Password]');
 		$passwordConfirmField = $this->children->fieldByName($name.'[_ConfirmPassword]');
-		$passwordField->setValue($_POST[$name]['_Password']);
-		$passwordConfirmField->setValue($_POST[$name]['_ConfirmPassword']);
-		
+		$passwordField->setValue($this->value);
+		$passwordConfirmField->setValue($this->confirmValue);
+
 		$value = $passwordField->Value();
 		
 		// both password-fields should be the same

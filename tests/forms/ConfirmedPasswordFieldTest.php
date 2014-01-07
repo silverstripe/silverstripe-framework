@@ -4,6 +4,7 @@
  * @subpackage tests
  */
 class ConfirmedPasswordFieldTest extends SapphireTest {
+
 	public function testSetValue() {
 		$field = new ConfirmedPasswordField('Test', 'Testing', 'valueA');
 		$this->assertEquals('valueA', $field->Value());
@@ -52,4 +53,23 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 		$this->assertNotContains("showOnClick", $fieldHTML,
 			"Test class for hiding/showing the form contents is set");
 	}
+
+	public function testValidation() {
+		$field = new ConfirmedPasswordField('Test', 'Testing', array(
+			"_Password" => "abc123",
+			"_ConfirmPassword" => "abc123"
+		));
+		$validator = new RequiredFields();
+		$form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
+		$this->assertTrue($field->validate($validator));
+		$field->setName("TestNew"); //try changing name of field
+		$this->assertTrue($field->validate($validator));
+		//non-matching password should make the field invalid
+		$field->setValue(array(
+			"_Password" => "abc123",
+			"_ConfirmPassword" => "123abc"
+		));
+		$this->assertFalse($field->validate($validator));
+	}
+
 }
