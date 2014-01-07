@@ -401,6 +401,18 @@ class FieldListTest extends SapphireTest {
 		
 		/* The position of the Title field is at number 3 */
 		$this->assertEquals('Title', $fields[2]->getName());
+
+		/* Test arguments are accepted in either order */
+		$fields->insertBefore('FirstName', new TextField('Surname'));
+
+		/* The field we just added actually exists in the set */
+		$this->assertNotNull($fields->dataFieldByName('Surname'));
+
+		/* We now have 5 fields in the set */
+		$this->assertEquals(5, $fields->Count());
+
+		/* The position of the Surname field is at number 4 */
+		$this->assertEquals('Surname', $fields[3]->getName());
 	}
 
 	public function testInsertBeforeMultipleFields() {
@@ -451,6 +463,18 @@ class FieldListTest extends SapphireTest {
 		
 		/* The position of the Title field should be at number 2 */
 		$this->assertEquals('Title', $fields[1]->getName());
+
+		/* Test arguments are accepted in either order */
+		$fields->insertAfter('FirstName', new TextField('Surname'));
+
+		/* The field we just added actually exists in the set */
+		$this->assertNotNull($fields->dataFieldByName('Surname'));
+
+		/* We now have 5 fields in the set */
+		$this->assertEquals(5, $fields->Count());
+
+		/* The position of the Surname field is at number 5 */
+		$this->assertEquals('Surname', $fields[4]->getName());
 	}
 
 	public function testrootFieldList() {
