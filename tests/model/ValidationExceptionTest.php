@@ -27,8 +27,8 @@ class ValidationExceptionTest extends SapphireTest
 	 */
 	public function testCreateFromComplexValidationResult() {
 		$result = new ValidationResult();
-		$result->error('Invalid type');
-		$result->error('Out of kiwis');
+		$result->error('Invalid type')
+				->error('Out of kiwis');
 		$exception = new ValidationException($result);
 		
 		$this->assertEquals(0, $exception->getCode());
@@ -71,8 +71,8 @@ class ValidationExceptionTest extends SapphireTest
 	 */
 	public function testCreateWithComplexValidationResultAndMessage() {
 		$result = new ValidationResult();
-		$result->error('A spork is not a knife');
-		$result->error('A knife is not a back scratcher');
+		$result->error('A spork is not a knife')
+				->error('A knife is not a back scratcher');
 		$exception = new ValidationException($result, 'An error has occurred', E_USER_WARNING);
 		
 		$this->assertEquals(E_USER_WARNING, $exception->getCode());
@@ -81,4 +81,28 @@ class ValidationExceptionTest extends SapphireTest
 		$this->assertEquals('A spork is not a knife; A knife is not a back scratcher',
 			$exception->getResult()->message());
 	}
+
+	/**
+	 * Test combining validation results together
+	 */
+	public function testCombineResults(){
+		$result = new ValidationResult();
+		$anotherresult = new ValidationResult();
+		$yetanotherresult = new ValidationResult();
+		$anotherresult->error("Eat with your mouth closed", "EATING101");
+		$yetanotherresult->error("You didn't wash your hands", "BECLEAN");
+
+		$this->assertTrue($result->valid());
+		$this->assertFalse($anotherresult->valid());
+		$this->assertFalse($yetanotherresult->valid());
+
+		$result->combineAnd($anotherresult)
+				->combineAnd($yetanotherresult);
+		$this->assertFalse($result->valid());
+		$this->assertEquals(array(
+			"EATING101" => "Eat with your mouth closed",
+			"BECLEAN" => "You didn't wash your hands"
+		),$result->messageList());
+	}
+
 }
