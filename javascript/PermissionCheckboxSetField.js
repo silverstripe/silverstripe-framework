@@ -72,15 +72,15 @@
 				var checkboxes = this.getCheckboxesExceptThisOne();
 				if($(this).is(':checked')) {
 					checkboxes.each(function() {
-						$(this).data('PermissionCheckboxSetField.oldChecked', $(this).attr('checked'));
-						$(this).data('PermissionCheckboxSetField.oldDisabled', $(this).attr('disabled'));
-						$(this).attr('disabled', 'disabled');
-						$(this).attr('checked', 'checked');
+						$(this).data('PermissionCheckboxSetField.oldChecked', $(this).is(':checked'));
+						$(this).data('PermissionCheckboxSetField.oldDisabled', $(this).is(':disabled'));
+						$(this).prop('disabled', 'disabled');
+						$(this).prop('checked', 'checked');
 					});
 				} else {
 					checkboxes.each(function() {
-						$(this).attr('checked', $(this).data('PermissionCheckboxSetField.oldChecked') === 'checked');
-						$(this).attr('disabled', $(this).data('PermissionCheckboxSetField.oldDisabled') === 'disabled');
+						$(this).prop('checked', $(this).data('PermissionCheckboxSetField.oldChecked'));
+						$(this).prop('disabled', $(this).data('PermissionCheckboxSetField.oldDisabled'));
 					});
 				}
 			}

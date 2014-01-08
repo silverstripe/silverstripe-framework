@@ -60,15 +60,15 @@
 				
 				if(this.is(':checked')) {
 					checkboxes.each(function() {
-						$(this).data('SecurityAdmin.oldChecked', $(this).attr('checked'));
-						$(this).data('SecurityAdmin.oldDisabled', $(this).attr('disabled'));
-						$(this).attr('disabled', 'disabled');
-						$(this).attr('checked', 'checked');
+						$(this).data('SecurityAdmin.oldChecked', $(this).is(':checked'));
+						$(this).data('SecurityAdmin.oldDisabled', $(this).is(':disabled'));
+						$(this).prop('disabled', true);
+						$(this).prop('checked', true);
 					});
 				} else {
 					checkboxes.each(function() {
-						$(this).attr('checked', $(this).data('SecurityAdmin.oldChecked') === 'checked');
-						$(this).attr('disabled', $(this).data('SecurityAdmin.oldDisabled') === 'disabled');
+						$(this).prop('checked', $(this).data('SecurityAdmin.oldChecked'));
+						$(this).prop('disabled', $(this).data('SecurityAdmin.oldDisabled'));
 					});
 				}
 			}
