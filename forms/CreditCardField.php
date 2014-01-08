@@ -9,21 +9,32 @@
  * @subpackage fields-formattedinput
  */
 class CreditCardField extends TextField {
+
+	/**
+	 * Add default attributes for use on all inputs.
+	 *
+	 * @return array List of attributes
+	 */
+	public function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				'autocomplete' => 'off',
+				'maxlength' => 4,
+				'size' => 4
+			)
+		);
+	}
 	
 	public function Field($properties = array()) {
 		$parts = $this->value;
 		if(!is_array($parts)) $parts = explode("\n", chunk_split($parts,4,"\n"));
 		$parts = array_pad($parts, 4, "");
 
-		// TODO Mark as disabled/readonly
 		$properties['ValueOne'] = $parts[0];
 		$properties['ValueTwo'] = $parts[1];
 		$properties['ValueThree'] = $parts[2];
 		$properties['ValueFour'] = $parts[3];
-		$properties['TabIndexOne'] = $this->getTabIndexHTML(0);
-		$properties['TabIndexTwo'] = $this->getTabIndexHTML(1);
-		$properties['TabIndexThree'] = $this->getTabIndexHTML(2);
-		$properties['TabIndexFour'] = $this->getTabIndexHTML(3);
 
 		return parent::Field($properties);
 	}
@@ -34,14 +45,14 @@ class CreditCardField extends TextField {
 	 * @param int $increment Increase current tabindex by this value
 	 * @return string
 	 */
-	protected function getTabIndexHTML($increment = 0) {
+	public function getTabIndexHTML($increment = 0) {
 		// we can't add a tabindex if there hasn't been one set yet.
 		if($this->getAttribute('tabindex') === null) return false;
 
 		$tabIndex = (int)$this->getAttribute('tabindex') + (int)$increment;
 		return (is_numeric($tabIndex)) ? ' tabindex = "' . $tabIndex . '"' : '';
 	}
-	
+
 	public function dataValue() {
 		if(is_array($this->value)) return implode("", $this->value);
 		else return $this->value;

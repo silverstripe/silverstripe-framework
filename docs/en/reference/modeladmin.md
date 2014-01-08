@@ -38,7 +38,7 @@ We'll name it `MyAdmin`, but the class name can be anything you want.
 	class MyAdmin extends ModelAdmin {
 	  private static $managed_models = array('Product','Category'); // Can manage multiple models
 	  private static $url_segment = 'products'; // Linked as /admin/products/
-	  private $menu_title = 'My Product Admin';
+	  private static $menu_title = 'My Product Admin';
 	}
 
 This will automatically add a new menu entry to the CMS, and you're ready to go!

@@ -13,7 +13,7 @@ class ErrorControlChainTest_Chain extends ErrorControlChain {
 		return parent::translateMemstring($memstring);
 	}
 
-	function executeInSubprocess() {
+	function executeInSubprocess($includeStderr = false) {
 		// Get the path to the ErrorControlChain class
 		$classpath = SS_ClassLoader::instance()->getItemPath('ErrorControlChain');
 		$suppression = $this->suppression ? 'true' : 'false';
@@ -47,10 +47,14 @@ require_once '$classpath';
 		// Now stick it in a temporary file & run it
 		$codepath = TEMP_FOLDER.'/ErrorControlChainTest_'.sha1($src).'.php';
 
-		$null = is_writeable('/dev/null') ? '/dev/null' : 'NUL';
+		if($includeStderr) {
+			$null = '&1';
+		} else {
+			$null = is_writeable('/dev/null') ? '/dev/null' : 'NUL';
+		}
 
 		file_put_contents($codepath, $src);
-		exec("php $codepath 2> $null", $stdout, $errcode);
+		exec("php $codepath 2>$null", $stdout, $errcode);
 		unlink($codepath);
 
 		return array(implode("\n", $stdout), $errcode);
@@ -185,9 +189,10 @@ class ErrorControlChainTest extends SapphireTest {
 			->then(function($chain){
 				Foo::bar(); // Non-existant class causes fatal error
 			})
-			->executeInSubprocess();
+			->executeInSubprocess(true);
 
-		$this->assertContains("Fatal error: Class 'Foo' not found", $out);
+		$this->assertContains('Fatal error', $out);
+		$this->assertContains('Foo', $out);
 
 		// Turning off suppression during execution
 
@@ -198,9 +203,10 @@ class ErrorControlChainTest extends SapphireTest {
 				$chain->setSuppression(false);
 				Foo::bar(); // Non-existent class causes fatal error
 			})
-			->executeInSubprocess();
+			->executeInSubprocess(true);
 
-		$this->assertContains("Fatal error: Class 'Foo' not found", $out);
+		$this->assertContains('Fatal error', $out);
+		$this->assertContains('Foo', $out);
 	}
 
 	function testDoesntAffectNonFatalErrors() {

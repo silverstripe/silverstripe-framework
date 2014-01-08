@@ -842,6 +842,12 @@ jQuery.noConflict();
 		 */
 		$('.cms .cms-panel-link').entwine({
 			onclick: function(e) {
+				if($(this).hasClass('external-link')) {
+					e.stopPropagation();
+
+					return;
+				}
+
 				var href = this.attr('href'), 
 					url = (href && !href.match(/^#/)) ? href : this.data('href'),
 					data = {pjax: this.data('pjaxTarget')};
@@ -1007,7 +1013,7 @@ jQuery.noConflict();
 		 * we can fix the height cropping.
 		 */
 		
-		$('.cms .field.dropdown select, .cms .field select[multiple]').entwine({
+		$('.cms .field.dropdown select, .cms .field select[multiple], .fieldholder-small select.dropdown').entwine({
 			onmatch: function() {
 				if(this.is('.no-chzn')) {
 					this._super();

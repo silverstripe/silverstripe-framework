@@ -16,7 +16,7 @@ Here is an example of a test which extends SapphireTest:
 	class SiteTreeTest extends SapphireTest {
 
 		// Define the fixture file to use for this test class
-		private static $fixture_file = 'SiteTreeTest.yml';
+		protected static $fixture_file = 'SiteTreeTest.yml';
 
 		/**
 		 * Test generation of the URLSegment values.

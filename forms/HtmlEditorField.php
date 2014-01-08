@@ -594,13 +594,13 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$urlField->dontEscape = true;
 
 		if($file->Type == 'photo') {
-			$filePreview->FieldList()->insertBefore(new TextField(
+			$fields->insertBefore(new TextField(
 				'AltText', 
 				_t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image can\'t be displayed'), 
 				$file->Title, 
 				80
 			), 'CaptionText');
-			$filePreview->FieldList()->insertBefore(new TextField(
+			$fields->insertBefore(new TextField(
 				'Title', 
 				_t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')
 			), 'CaptionText');
