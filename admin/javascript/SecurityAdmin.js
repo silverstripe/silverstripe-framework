@@ -67,8 +67,8 @@
 					});
 				} else {
 					checkboxes.each(function() {
-						$(this).attr('checked', $(this).data('SecurityAdmin.oldChecked'));
-						$(this).attr('disabled', $(this).data('SecurityAdmin.oldDisabled'));
+						$(this).attr('checked', $(this).data('SecurityAdmin.oldChecked') === 'checked');
+						$(this).attr('disabled', $(this).data('SecurityAdmin.oldDisabled') === 'disabled');
 					});
 				}
 			}
