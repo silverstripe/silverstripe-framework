@@ -64,4 +64,4 @@ Report security issues to [security@silverstripe.com](mailto:security@silverstri
 *  [silverstripe.org/forums](http://silverstripe.org/forums): Forums on silverstripe.org
 *  [silverstripe-dev](http://groups.google.com/group/silverstripe-dev): Core development mailinglist
 *  [silverstripe-documentation](http://groups.google.com/group/silverstripe-documentation): Documentation team mailing list
-* [silverstripe-documentation](http://groups.google.com/group/silverstripe-translators): Translation team mailing list
+* [silverstripe-translators](http://groups.google.com/group/silverstripe-translators): Translation team mailing list
