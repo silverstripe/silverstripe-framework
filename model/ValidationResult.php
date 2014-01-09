@@ -32,6 +32,7 @@ class ValidationResult extends Object {
 	 * Record an error against this validation result,
 	 * @param $message The validation error message
 	 * @param $code An optional error code string, that can be accessed with {@link $this->codeList()}.
+	 * @return ValidationResult this
 	 */
 	public function error($message, $code = null) {
 		$this->isValid = false;
@@ -47,10 +48,13 @@ class ValidationResult extends Object {
 		} else {
 			$this->errorList[] = $message;
 		}
+
+		return $this;
 	}
 	
 	/**
 	 * Returns true if the result is valid.
+	 * @return boolean
 	 */
 	public function valid() {
 		return $this->isValid;
@@ -58,6 +62,7 @@ class ValidationResult extends Object {
 	
 	/**
 	 * Get an array of errors
+	 * @return array
 	 */
 	public function messageList() {
 		return $this->errorList;
@@ -65,6 +70,7 @@ class ValidationResult extends Object {
 
 	/**
 	 * Get an array of error codes
+	 * @return array
 	 */
 	public function codeList() {
 		$codeList = array();
@@ -74,6 +80,7 @@ class ValidationResult extends Object {
 	
 	/**
 	 * Get the error message as a string.
+	 * @return string
 	 */
 	public function message() {
 		return implode("; ", $this->errorList);
@@ -81,6 +88,7 @@ class ValidationResult extends Object {
 	
 	/**
 	 * Get a starred list of all messages
+	 * @return string
 	 */
 	public function starredList() {
 		return " * " . implode("\n * ", $this->errorList);
@@ -90,10 +98,15 @@ class ValidationResult extends Object {
 	 * Combine this Validation Result with the ValidationResult given in other.
 	 * It will be valid if both this and the other result are valid.
 	 * This object will be modified to contain the new validation information.
+	 *
+	 * @param ValidationResult the validation result object to combine
+	 * @return ValidationResult this
 	 */
 	public function combineAnd(ValidationResult $other) {
 		$this->isValid = $this->isValid && $other->valid();
 		$this->errorList = array_merge($this->errorList, $other->messageList());
+
+		return $this;
 	}
 	
 	
