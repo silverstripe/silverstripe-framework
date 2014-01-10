@@ -131,8 +131,8 @@ class MoneyField extends FormField {
 	public function setReadonly($bool) {
 		parent::setReadonly($bool);
 		
-		$this->fieldAmount->setReadonly($bool);
-		$this->fieldCurrency->setReadonly($bool);
+		$this->fieldAmount = $this->fieldAmount->performReadonlyTransformation();
+        $this->fieldCurrency = $this->fieldCurrency->performReadonlyTransformation();
 
 		return $this;
 	}
