@@ -90,6 +90,12 @@ class GridFieldDetailForm implements GridField_URLHandler {
 		$handler = Object::create($class, $gridField, $this, $record, $controller, $this->name);
 		$handler->setTemplate($this->template);
 
+		// if no validator has been set on the GridField and the record has a
+		// CMS validator, use that.
+		if(!$this->getValidator() && method_exists($record, 'getCMSValidator')) {
+			$this->setValidator($record->getCMSValidator());
+		}
+
 		return $handler->handleRequest($request, DataModel::inst());
 	}
 
