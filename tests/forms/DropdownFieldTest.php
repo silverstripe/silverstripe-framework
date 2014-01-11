@@ -79,7 +79,52 @@ class DropdownFieldTest extends SapphireTest {
 			)
 		);
 	}
-	
+
+	public function testStringZeroValueSelectedOptionBehaviour() {
+		$field = new DropdownField('Field', null, array(
+			'-1' => 'some negative',
+			'0' => 'none',
+			'1' => 'one',
+			'2+' => 'two or more'
+		), '0');
+
+		$selectedOptions = $this->findSelectedOptionElements($field->Field());
+		$this->assertEquals((string) $selectedOptions[0], 'none', 'The selected option is "none"');
+
+		$field = new DropdownField('Field', null, array(
+			'-1' => 'some negative',
+			'0' => 'none',
+			'1' => 'one',
+			'2+' => 'two or more'
+		), 0);
+
+		$selectedOptions = $this->findSelectedOptionElements($field->Field());
+		$this->assertEquals((string) $selectedOptions[0], 'none', 'The selected option is "none"');
+	}
+
+	public function testStringOneValueSelectedOptionBehaviour() {
+		$field = new DropdownField('Field', null, array(
+			'-1' => 'some negative',
+			'0' => 'none',
+			'1' => 'one',
+			'2+' => 'two or more'
+		), '1');
+
+
+		$selectedOptions = $this->findSelectedOptionElements($field->Field());
+		$this->assertEquals((string) $selectedOptions[0], 'one', 'The selected option is "one"');
+
+		$field = new DropdownField('Field', null, array(
+			'-1' => 'some negative',
+			'0' => 'none',
+			'1' => 'one',
+			'2+' => 'two or more'
+		), 1);
+
+		$selectedOptions = $this->findSelectedOptionElements($field->Field());
+		$this->assertEquals((string) $selectedOptions[0], 'one', 'The selected option is "one"');
+	}
+
 	public function testNumberOfSelectOptionsAvailable() {
 		/* Create a field with a blank value */
 		$field = $this->createDropdownField('(Any)');
