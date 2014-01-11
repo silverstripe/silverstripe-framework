@@ -326,7 +326,7 @@ abstract class SS_Database {
 			$this->transCreateTable($table, $options, $extensions);
 			$this->alterationMessage("Table $table: created","created");
 		} else {
-			if(Config::inst()->get('Database', 'check_and_repair_on_build')) {
+			if(Config::inst()->get('SS_Database', 'check_and_repair_on_build')) {
 				$this->checkAndRepairTable($table, $options);
 			} 
 			
