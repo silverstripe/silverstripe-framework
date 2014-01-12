@@ -596,9 +596,14 @@ class File extends DataObject {
 			$base = pathinfo($name, PATHINFO_BASENAME);
 			$ext = self::get_file_extension($name);
 			$suffix = 1;
-			while(DataObject::get_one("File", "\"Name\" = '" . Convert::raw2sql($name) 
-					. "' AND \"ParentID\" = " . (int)$this->ParentID)) {
 
+			while(File::get()->filter(array(
+					'Name' => $name, 
+					'ParentID' => (int) $this->ParentID
+				))->exclude(array(
+					'ID' => $this->ID
+				))->first()
+			) {
 				$suffix++;
 				$name = "$base-$suffix$ext";
 			}
