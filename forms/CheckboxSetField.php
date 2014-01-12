@@ -90,8 +90,13 @@ class CheckboxSetField extends OptionsetField {
 			if($values instanceof SS_List || is_array($values)) {
 				$items = $values;
 			} else {
-				$items = explode(',', $values);
-				$items = str_replace('{comma}', ',', $items);
+				if($values === null) {
+					$items = array();
+				}
+				else {
+					$items = explode(',', $values);
+					$items = str_replace('{comma}', ',', $items);
+				}
 			}
 		}
 			

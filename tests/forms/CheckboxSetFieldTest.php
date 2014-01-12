@@ -1,9 +1,11 @@
 <?php
+
 /**
  * @package framework
  * @subpackage tests
  */
 class CheckboxSetFieldTest extends SapphireTest {
+	
 	protected static $fixture_file = 'CheckboxSetFieldTest.yml';
 
 	protected $extraDataObjects = array(
@@ -144,7 +146,13 @@ class CheckboxSetFieldTest extends SapphireTest {
 
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
+
 class CheckboxSetFieldTest_Article extends DataObject implements TestOnly {
+
 	private static $db = array(
 		"Content" => "Text",
 	);
@@ -155,7 +163,12 @@ class CheckboxSetFieldTest_Article extends DataObject implements TestOnly {
 	
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class CheckboxSetFieldTest_Tag extends DataObject implements TestOnly {
+	
 	private static $belongs_many_many = array(
 		'Articles' => 'CheckboxSetFieldTest_Article'
 	);
