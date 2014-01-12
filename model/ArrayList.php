@@ -281,9 +281,14 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 */
 	public function map($keyfield = 'ID', $titlefield = 'Title') {
 		$map = array();
+
 		foreach ($this->items as $item) {
-			$map[$this->extractValue($item, $keyfield)] = $this->extractValue($item, $titlefield);
+			$map[$this->extractValue($item, $keyfield)] = $this->extractValue(
+				$item, 
+				$titlefield
+			);
 		}
+
 		return $map;
 	}
 
@@ -296,7 +301,9 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 */
 	public function find($key, $value) {
 		foreach ($this->items as $item) {
-			if ($this->extractValue($item, $key) == $value) return $item;
+			if ($this->extractValue($item, $key) == $value) {
+				return $item;
+			}
 		}
 	}
 
@@ -308,9 +315,11 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 */
 	public function column($colName = 'ID') {
 		$result = array();
+
 		foreach ($this->items as $item) {
 			$result[] = $this->extractValue($item, $colName);
 		}
+
 		return $result;
 	}
 
@@ -410,9 +419,11 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 */
 	public function canFilterBy($by) {
 		$firstRecord = $this->first();
+
 		if ($firstRecord === false) {
 			return false;
 		}
+
 		return array_key_exists($by, $firstRecord);
 	}
 
@@ -470,9 +481,11 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	
 	public function byID($id) {
 		$firstElement = $this->filter("ID", $id)->first();
+
 		if ($firstElement === false) {
 			return null;
 		}
+
 		return $firstElement;
 	}
 
@@ -490,10 +503,13 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 				gettype($callback)
 			));
 		}
+
 		$output = ArrayList::create();
+
 		foreach($this as $item) {
 			if(call_user_func($callback, $item, $this)) $output->push($item);
 		}
+
 		return $output;
 	}
 
@@ -588,7 +604,11 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @param mixed $value
 	 */
 	public function offsetSet($offset, $value) {
-		$this->items[$offset] = $value;
+		if($offset == null) {
+			$this->items[] = $value;
+		} else {
+			$this->items[$offset] = $value;
+		}
 	}
 
 	/**
