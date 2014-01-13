@@ -192,8 +192,8 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Phil', $next->Name);
 		
 		// Get the previous comment, should be Bob. Alphabetically, it's Bob, Joe, Phil.
-		$next = $comments->getPrev('Name');
-		$this->assertEquals('Bob', $next->Name);
+		$prev = $comments->getPrev('Name');
+		$this->assertEquals('Bob', $prev->Name);
 	}
 
 	public function testGetSubclassFields() {
