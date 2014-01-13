@@ -112,11 +112,10 @@ The base_tag variable is replaced with the HTML [base element](http://www.w3.org
 ensures the browser knows where to locate your site's images and css files.
 
 	:::ss
-	$MetaTitle
 	$Title
 	$SiteConfig.Title
 
-These three variables are found within the html `<title>` tag, and are replaced by the text set in the "Meta Title", "Page Name", or "Settings -> Site Title" fields in the CMS.
+These two variables are found within the html `<title>` tag, and are replaced by the "Page Name" and "Settings -> Site Title" fields in the CMS.
 	
 	:::ss
 	$MetaTags 
