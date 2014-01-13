@@ -39,8 +39,6 @@
 		 */
 		$('#Permissions .checkbox[value=ADMIN]').entwine({
 			onmatch: function() {
-				this.toggleCheckboxes();
-
 				this._super();
 			},
 			onunmatch: function() {
