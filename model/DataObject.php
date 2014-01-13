@@ -2831,6 +2831,26 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
+	 * Returns the next DataObject of the current Object. Default sorted and filtered on ID.
+	 * @param string $filter The column-identifier on which the filter should be applied.
+	 * @return DataObject Next DataObject of type $filter.
+	 */
+	public function getNext($filter = 'ID') {
+		$return = DataObject::get_one($this->ClassName, "`".$filter."`" . ' > ' . "'".$this->{$filter}."'", false, $filter . ' ASC');
+		return $return;
+	}
+	
+	/**
+	 * Returns the previous DataObject of the current Object. Default sorted and filtered on ID.
+	 * @param string $filter The column-identifier on which the filter should be applied.
+	 * @return DataObject Previous DataObject of type $filter.
+	 */
+	public function getPrev($filter = 'ID') {
+		$return = DataObject::get_one($this->ClassName, "`".$filter."`" . ' < ' . "'".$this->{$filter}."'", false, $filter . ' DESC');
+		return $return;
+	}
+	
+	/**
 	 * @deprecated 3.1 Use DataList::create and DataList to do your querying
 	 */
 	public function Aggregate($class = null) {
