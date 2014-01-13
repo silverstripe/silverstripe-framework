@@ -190,6 +190,11 @@ class DataObjectTest extends SapphireTest {
 		// Get the next comment, should be Phil. Alphabetically, it's Bob, Joe, Phil.
 		$next = $comments->getNext('Name');
 		$this->assertEquals('Phil', $next->Name);
+	}
+	
+	public function testGetPrev() {
+		// First, get the record
+		$comments = DataObject::get_one('DataObjectTest_TeamComment', "Name = 'Joe'");
 		
 		// Get the previous comment, should be Bob. Alphabetically, it's Bob, Joe, Phil.
 		$prev = $comments->getPrev('Name');
