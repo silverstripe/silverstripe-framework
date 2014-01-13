@@ -182,6 +182,19 @@ class DataObjectTest extends SapphireTest {
 		$subteam1 = DataObject::get_one('dataobjecttest_subteam', "\"Title\" = 'Subteam 1'", true);
 		$this->assertEquals($subteam1->Title, "Subteam 1");
 	}
+	
+	public function testGetNext() {
+		// First, get the record
+		$comments = DataObject::get_one('DataObjectTest_TeamComment', "Name = 'Joe'");
+		
+		// Get the next comment, should be Phil. Alphabetically, it's Bob, Joe, Phil.
+		$next = $comments->getNext('Name');
+		$this->assertEquals('Phil', $next->Name);
+		
+		// Get the previous comment, should be Bob. Alphabetically, it's Bob, Joe, Phil.
+		$next = $comments->getNext('Name');
+		$this->assertEquals('Bob', $next->Name);
+	}
 
 	public function testGetSubclassFields() {
 		/* Test that fields / has_one relations from the parent table and the subclass tables are extracted */
