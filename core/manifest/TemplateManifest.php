@@ -110,17 +110,23 @@ class SS_TemplateManifest {
 	 * @return array
 	 */
 	public function getCandidateTemplate($name, $theme = null) {
+		$found = array();
 		$candidates = $this->getTemplate($name);
-
-		if ($this->project && isset($candidates[$this->project])) {
-			$found = $candidates[$this->project];
-		} else if ($theme && isset($candidates['themes'][$theme])) {
+		
+		// theme overrides modules
+		if ($theme && isset($candidates['themes'][$theme])) {
 			$found = array_merge($candidates, $candidates['themes'][$theme]);
-		} else {
-			$found = $candidates;
 		}
-		if(isset($found['themes'])) unset($found['themes']);
-
+		// project overrides theme
+		if ($this->project && isset($candidates[$this->project])) {
+			$found = array_merge($found, $candidates[$this->project]);
+		}
+		
+		$found = ($found) ? $found : $candidates;
+		
+		if (isset($found['themes'])) unset($found['themes']);
+		if (isset($found[$this->project])) unset($found[$this->project]);
+		
 		return $found;
 	}
 
