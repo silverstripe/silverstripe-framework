@@ -928,6 +928,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$data = array();
 		$ids = explode(',', $request->getVar('ids'));
 		foreach($ids as $id) {
+			if($id === "") continue; // $id may be a blank string, which is invalid and should be skipped over
+
 			$record = $this->getRecord($id);
 			$recordController = ($this->stat('tree_class') == 'SiteTree') 
 				?  singleton('CMSPageEditController') 
