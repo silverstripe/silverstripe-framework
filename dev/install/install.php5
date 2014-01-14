@@ -48,7 +48,7 @@ $dirsToCheck = array(
 if($dirsToCheck[0] == $dirsToCheck[1]) {
 	unset($dirsToCheck[1]);
 }
-foreach($dirsToCheck as $dir) {
+foreach($dirsToCheck as $dir) {
 //check this dir and every parent dir (until we hit the base of the drive)
 	// or until we hit a dir we can't read
 	do {
@@ -1048,12 +1048,16 @@ class InstallRequirements {
 			$helperPath = $adapters[$databaseClass]['helperPath'];
 			$class = str_replace('.php', '', basename($helperPath));
 		}
-		return (class_exists($class)) ? new $class() : new MySQLDatabaseConfigurationHelper();
+		return (class_exists($class)) ? new $class() : false;
 	}
 
 	function requireDatabaseFunctions($databaseConfig, $testDetails) {
 		$this->testing($testDetails);
 		$helper = $this->getDatabaseConfigurationHelper($databaseConfig['type']);
+		if (!$helper) {
+			$this->error("Couldn't load database helper code for ". $databaseConfig['type']);
+			return false;
+		}
 		$result = $helper->requireDatabaseFunctions($databaseConfig);
 		if($result) {
 			return true;
