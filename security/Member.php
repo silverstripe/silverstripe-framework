@@ -178,8 +178,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			// persistent logins in the database. See Security::setDefaultAdmin().
 			$admin = Member::create();
 			$admin->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
-			$admin->write();
-			$admin->Groups()->add($adminGroup);
+			$admin->write()->Groups()->add($adminGroup);
 		}
 	}
 
@@ -391,11 +390,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if(array_key_exists('LockedOutUntil', DB::fieldList('Member'))) {
 			$this->LockedOutUntil = null;
 		}
-
-		$this->write();
 		
 		// Audit logging hook
-		$this->extend('memberLoggedIn');
+		$this->write()->extend('memberLoggedIn');
 	}
 
 	/**
@@ -452,10 +449,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$hash = $member->encryptWithUserSettings($token);
 				$member->RememberLoginToken = $hash;
 				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
-				$member->write();
 				
 				// Audit logging hook
-				$member->extend('memberAutoLoggedIn');
+				$member->write()->extend('memberAutoLoggedIn');
 			}
 		}
 	}
@@ -480,11 +476,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// Switch back to live in order to avoid infinite loops when 
 		// redirecting to the login screen (if this login screen is versioned)
 		Session::clear('readingMode');
-
-		$this->write();
 		
 		// Audit logging hook
-		$this->extend('memberLoggedOut');
+		$this->write()->extend('memberLoggedOut');
 	}
 
 	/**
@@ -858,9 +852,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$group = new Group();
 			$group->Code = $groupcode;
 			$group->Title = $title;
-			$group->write();
 			
-			$this->Groups()->add($group);
+			$this->Groups()->add($group->write());
 		}
 	}
 	

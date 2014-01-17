@@ -128,8 +128,7 @@ class CsvBulkLoader extends BulkLoader {
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
 				//write if we are not previewing
 				if (!$preview) {
-					$obj->write();
-					$obj->flushCache(); // avoid relation caching confusion
+					$obj->write()->flushCache(); // avoid relation caching confusion
 				}
 				
 			} elseif(strpos($fieldName, '.') !== false) {
@@ -142,8 +141,7 @@ class CsvBulkLoader extends BulkLoader {
 
 				//write if we are not previewing
 				if (!$preview) {
-					$obj->write();
-					$obj->flushCache(); // avoid relation caching confusion
+					$obj->write()->flushCache(); // avoid relation caching confusion
 				}
 			}
 		}
@@ -171,7 +169,7 @@ class CsvBulkLoader extends BulkLoader {
 		}
 
 		// write record
-		$id = ($preview) ? 0 : $obj->write();
+		$id = ($preview) ? 0 : $obj->write()->ID;
 		
 		// @todo better message support
 		$message = '';

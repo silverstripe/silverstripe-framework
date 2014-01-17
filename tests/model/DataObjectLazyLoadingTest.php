@@ -304,7 +304,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$obj1 = new VersionedLazySub_DataObject();
 		$obj1->PageName = "old-value";
 		$obj1->ExtraField = "old-value";
-		$obj1ID = $obj1->write();
+		$obj1ID = $obj1->write()->ID;
 		$obj1->publish('Stage', 'Live');
 
 		$obj1 = VersionedLazySub_DataObject::get()->byID($obj1ID);

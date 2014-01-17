@@ -347,8 +347,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 				}
 		}
 
-		$perm->write();
-		return $perm;
+		return $perm->write();
 	}
 
 
@@ -381,8 +380,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 				}
 		}
 
-		$perm->write();
-		return $perm;
+		return $perm->write();
 	}
 
 	/**

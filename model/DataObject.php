@@ -483,8 +483,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		$clone->invokeWithExtensions('onBeforeDuplicate', $this, $doWrite);
 		if($doWrite) {
-			$clone->write();
-			$this->duplicateManyManyRelations($this, $clone);
+			$this->duplicateManyManyRelations($this, $clone->write());
 		}
 		$clone->invokeWithExtensions('onAfterDuplicate', $this, $doWrite);
 		
@@ -660,6 +659,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function exists() {
 		return (isset($this->record['ID']) && $this->record['ID'] > 0);
+	}
+
+	/**
+	 * @return string the class name
+	 */
+	public function __toString() {
+		return parent::__toString() . ' #' . $this->ID;
+	}
+
+	/**
+	 * @return string the class name
+	 */
+	public function __toString() {
+		return parent::__toString() . ' #' . $this->ID;
 	}
 
 	/**
@@ -1316,7 +1329,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($writeComponents) {
 			$this->writeComponents(true);
 		}
-		return $this->record['ID'];
+		return $this;
 	}
 
 	/**
@@ -3149,8 +3162,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(!$hasData) {
 				$className = $this->class;
 				foreach($defaultRecords as $record) {
-					$obj = $this->model->$className->newObject($record);
-					$obj->write();
+					$obj = $this->model->$className->newObject($record)->write();
 				}
 				DB::alteration_message("Added default records to $className table","created");
 			}

@@ -667,7 +667,7 @@ class Versioned extends DataExtension {
 	 * Perform a write without affecting the version table.
 	 * On objects without versioning.
 	 *
-	 * @return int The ID of the record
+	 * @return DataObject The dataobject that has been written
 	 */
 	public function writeWithoutVersion() {
 		$this->_nextWriteWithoutVersion = true;

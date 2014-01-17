@@ -506,8 +506,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		try {
 			$form->saveInto($this->record);
-			$this->record->write();
-			$list->add($this->record, $extraData);
+			$list->add($this->record->write(), $extraData);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
 			$responseNegotiator = new PjaxResponseNegotiator(array(
