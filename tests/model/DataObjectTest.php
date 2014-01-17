@@ -51,8 +51,7 @@ class DataObjectTest extends SapphireTest {
 
 		// Change the class
 		$obj->ClassName = 'OtherSubclassWithSameField';
-		$obj->write();
-		$obj->flushCache();
+		$obj->write()->flushCache();
 
 		// Re-fetch from the database and confirm that the data is sourced from
 		// OtherSubclassWithSameField.SubclassDatabaseField
@@ -64,8 +63,7 @@ class DataObjectTest extends SapphireTest {
 		$obj->write();
 
 		$obj->ClassName = 'DataObjectTest_SubTeam';
-		$obj->write();
-		$obj->flushCache();
+		$obj->write()->flushCache();
 
 		// If we restore the class, the old value has been lying dormant and will be available again.
 		// NOTE: This behaviour is volatile; we may change this in the future to clear fields that

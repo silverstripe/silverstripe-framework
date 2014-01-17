@@ -483,8 +483,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		$clone->invokeWithExtensions('onBeforeDuplicate', $this, $doWrite);
 		if($doWrite) {
-			$clone->write();
-			$this->duplicateManyManyRelations($this, $clone);
+			$this->duplicateManyManyRelations($this, $clone->write());
 		}
 		$clone->invokeWithExtensions('onAfterDuplicate', $this, $doWrite);
 		
@@ -3163,8 +3162,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(!$hasData) {
 				$className = $this->class;
 				foreach($defaultRecords as $record) {
-					$obj = $this->model->$className->newObject($record);
-					$obj->write();
+					$obj = $this->model->$className->newObject($record)->write();
 				}
 				DB::alteration_message("Added default records to $className table","created");
 			}

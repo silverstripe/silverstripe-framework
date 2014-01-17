@@ -985,8 +985,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		
 		// save form data into record
 		$form->saveInto($record, true);
-		$record->write();
-		$this->extend('onAfterSave', $record);
+		$this->extend('onAfterSave', $record->write());
 		$this->setCurrentPageID($record->ID);
 		
 		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));

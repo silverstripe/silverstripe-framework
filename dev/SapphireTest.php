@@ -860,8 +860,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 			$permission = Injector::inst()->create('Permission');
 			$permission->Code = $permCode;
-			$permission->write();
-			$group->Permissions()->add($permission);
+			$group->Permissions()->add($permission->write());
 			
 			$member = DataObject::get_one('Member', sprintf('"Email" = \'%s\'', "$permCode@example.org"));
 			if(!$member) $member = Injector::inst()->create('Member');
@@ -869,8 +868,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$member->FirstName = $permCode;
 			$member->Surname = "User";
 			$member->Email = "$permCode@example.org";
-			$member->write();
-			$group->Members()->add($member);
+			$group->Members()->add($member->write());
 			
 			$this->cache_generatedMembers[$permCode] = $member;
 		}
