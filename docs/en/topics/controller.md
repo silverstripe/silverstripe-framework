@@ -54,6 +54,17 @@ making any code changes to your controller.
 	so a `MyController` class is accessible through `http://localhost/MyController`.
 </div>
 
+## Framework without the CMS Module and Link()
+
+The Link() method is applicable if you are using the Framework without the CMS Module.  If you are not using the CMS module, you may find it useful to have a method Link() on your Controller to return the URLSegment matching your custom route.
+
+  :::php
+  class FastFood_Controller extends Controller {
+    public function Link() {
+            return 'fastfood';
+        }
+      }
+      
 ## Access Control
 
 ### Through $allowed_actions
