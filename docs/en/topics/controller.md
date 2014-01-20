@@ -54,6 +54,17 @@ making any code changes to your controller.
 	so a `MyController` class is accessible through `http://yourdomain.com/MyController`.
 </div>
 
+## Link
+
+Return the link for this Controller.  Should return a value that makes sense with your custom route.
+
+    :::php
+    class FastFood_Controller extends Controller {
+        public function Link() {
+            return 'fastfood';
+        }
+    }
+
 ## Access Control
 
 ### Through $allowed_actions
