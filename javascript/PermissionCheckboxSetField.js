@@ -10,8 +10,6 @@
 		$('.permissioncheckboxset .valADMIN input').entwine({
 			onmatch: function() {
 				this._super();
-
-				this.toggleCheckboxes();
 			},
 			onunmatch: function() {
 				this._super();
@@ -55,20 +53,17 @@
 				}).find('.checkbox').not(this);
 			},
 			onmatch: function() {
-				var checkboxes = this.getCheckboxesExceptThisOne();
-				if($(this).is(':checked')) {
-					checkboxes.each(function() {
-						$(this).attr('disabled', 'disabled');
-						$(this).attr('checked', 'checked');
-					});
-				}
-				
+				this.toggleCheckboxes();
+
 				this._super();
 			},
 			onunmatch: function() {
 				this._super();
 			},
 			onclick: function(e) {
+				this.toggleCheckboxes();
+			},
+			toggleCheckboxes: function() {
 				var checkboxes = this.getCheckboxesExceptThisOne();
 				if($(this).is(':checked')) {
 					checkboxes.each(function() {
