@@ -120,6 +120,8 @@ class MoneyField extends FormField {
 	 */
 	public function performReadonlyTransformation() {
 		$clone = clone $this;
+		$clone->fieldAmount = $clone->fieldAmount->performReadonlyTransformation();
+		$clone->fieldCurrency = $clone->fieldCurrency->performReadonlyTransformation();
 		$clone->setReadonly(true);
 		return $clone;
 	}
