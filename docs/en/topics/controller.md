@@ -54,16 +54,24 @@ making any code changes to your controller.
 	so a `MyController` class is accessible through `http://localhost/MyController`.
 </div>
 
-## Link
+## Linking to a controller
 
-Return the link for this Controller.  Should return a value that makes sense with your custom route.
+Each controller has a built-in `Link()` method,
+which can be used to avoid hardcoding your routing in views etc.
+The method should return a value that makes sense with your custom route (see above):
 
     :::php
+    <?php
     class FastFood_Controller extends Controller {
-        public function Link() {
-            return 'fastfood';
+        public function Link($action = null) {
+            return Controller::join_links('fastfood', $action);
         }
     }
+
+The [api:Controller::join_links()] invocation is optional, but makes `Link()` more flexible
+by allowing an `$action` argument, and concatenates the path segments with slashes. 
+The action should map to a method on your controller. `join_links()` also supports
+
 
 ## Access Control
 
