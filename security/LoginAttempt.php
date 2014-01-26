@@ -11,6 +11,14 @@
  * 
  * @package framework
  * @subpackage security
+ *
+ * @property string Email Email address used for login attempt
+ * @property string Status Status of the login attempt, either 'Success' or 'Failure'
+ * @property string IP IP address of user attempting to login
+ *
+ * @property int MemberID ID of the Member, only if Member with Email exists
+ *
+ * @method Member Member() Member object of the user trying to log in, only if Member with Email exists
  */
 class LoginAttempt extends DataObject {
 	

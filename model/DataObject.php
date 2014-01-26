@@ -65,6 +65,11 @@
  * 
  * @package framework
  * @subpackage model
+ *
+ * @property integer ID ID of the DataObject, 0 if the DataObject doesn't exist in database.
+ * @property string ClassName Class name of the DataObject
+ * @property string LastEdited Date and time of DataObject's last modification.
+ * @property string Created Date and time of DataObject creation.
  */
 class DataObject extends ViewableData implements DataObjectInterface, i18nEntityProvider {
 	

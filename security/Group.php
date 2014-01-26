@@ -4,6 +4,20 @@
  * 
  * @package framework
  * @subpackage security
+ *
+ * @property string Title Name of the group
+ * @property string Description Description of the group
+ * @property string Code Group code
+ * @property string Locked Boolean indicating whether group is locked in security panel
+ * @property int Sort
+ * @property string HtmlEditorConfig
+ *
+ * @property int ParentID ID of parent group
+ *
+ * @method Group Parent() Return parent group
+ * @method HasManyList Permissions() List of group permissions
+ * @method HasManyList Groups() List of child groups
+ * @method ManyManyList Roles() List of PermissionRoles
  */
 class Group extends DataObject {
 	
