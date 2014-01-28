@@ -10,7 +10,7 @@ jQuery(function($){
 		nextText: 'Neste&raquo;',
 		currentText: 'I dag',
         monthNames: ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'],
-        monthNamesShort: ['jan.','feb.','mar.','apr.','mai','juni','juli','aug.','sep.','okt.','nov.','des.'],
+        monthNamesShort: ['jan.','feb.','mars','apr.','mai','juni','juli','aug.','sep.','okt.','nov.','des.'],
 		dayNames: ['søndag','mandag','tirsdag','onsdag','torsdag','fredag','lørdag'],
 		dayNamesShort: ['søn','man','tir','ons','tor','fre','lør'],
 		dayNamesMin: ['Sø','Ma','Ti','On','To','Fr','Lø'],
