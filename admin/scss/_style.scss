@@ -188,59 +188,63 @@ body.cms {
 	}
 
 		.ui-tabs-nav {
-		float: right;
-		margin: $grid-x*2 0 -1px 0;
-		padding: 0 $grid-x*1.5 0 0;
-		border-bottom: none;
+			float: right;
+			margin: $grid-x*2 0 -1px 0;
+			padding: 0 $grid-x*1.5 0 0;
+			border-bottom: none;
 
-		~ .ui-tabs-panel {
-			border-top:1px solid $color-button-generic-border;
-			clear: both;
-		}
-		
+			~ .ui-tabs-panel {
+				border-top:1px solid $color-button-generic-border;
+				clear: both;
+			}
+			
 			li {
-			top: 0;
-			float: left;
-			border-bottom: 0 !important;
+				top: 0;
+				float: left;
+				border-bottom: 0 !important;
 			
 				a {
 					@include inline-block;
 					float: none;
 					font-weight: bold;
-				color: $color-text;
-				line-height: $grid-y * 4;
-				padding: 0 $grid-x*2 0;
-		}
+					color: $color-text;
+					line-height: $grid-y * 4;
+					padding: 0 $grid-x*2 0;
+				}
 
-			&:last-child {
-				// correctly right-align last tab
-				margin-right: 0;
-}
+				&:last-child {
+					// correctly right-align last tab
+					margin-right: 0;
+				}
+
+				&.ui-tabs-active {
+					margin-bottom: 0;
+				}
 			}
 
 		.ui-state-default {
 			border:1px solid $color-button-generic-border;
-			background:darken($color-widget-bg, 10%);
+			background: darken($color-widget-bg, 10%);
 
 			a {
 				color: lighten($color-text, 10%);
 				text-shadow: lighten($color-tab, 5%) 0 1px 0;
-	}
-}
+			}
+		}
 
 		.ui-state-active {
-			padding-bottom:1px;
-			border:1px solid $color-button-generic-border;
-			background-color: $tab-panel-texture-color;
+			padding-bottom: 1px;
+			border: 1px solid $color-button-generic-border;
+			background-color: darken($tab-panel-texture-color, 2%);
 
 			a {
 				color: $color-text;
+			}
 		}
-	}
 		
 		&.ui-state-active {
 			border-color: $color-medium-separator;
-	}
+		}
 
 		li.cms-tabset-icon {
 			text-indent:-9999em;
@@ -249,7 +253,7 @@ body.cms {
 				display: block;
 				padding-left: 40px; // icon width
 				padding-right: 0;
-		}
+			}
 
 			&.list a {background: sprite($sprites64, tab-list) no-repeat;}
 			&.tree a {background: sprite($sprites64, tab-tree) no-repeat;}
@@ -262,8 +266,8 @@ body.cms {
 			&.gallery.ui-state-active a {background: sprite($sprites64, tab-gallery-hover) no-repeat;}
 			&.edit.ui-state-active a {background: sprite($sprites64, tab-edit-hover) no-repeat;}
 			&.search.ui-state-active a {background: sprite($sprites64, tab-search-hover) no-repeat;}
+		}
 	}
-}
 		
 	.cms-panel-padded {
 		.ui-tabs-panel {
@@ -1096,7 +1100,7 @@ form.member-profile-form {
 		// can trigger longer pages and the extra scroll bar doesn't fire our sizing bar
 		overflow-y: auto;
 		overflow-x: auto;
-		background:darken($tab-panel-texture-color,2%);	
+		background: darken($tab-panel-texture-color, 2%);	
 		width:100%;
 		#Root_Main {
 			.confirmedpassword {
