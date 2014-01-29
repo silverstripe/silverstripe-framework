@@ -606,6 +606,27 @@ JS;
 			$childData
 		);
 
+		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+		$closeLink = Session::get("FormInfo.{$form->Name()}.closeLink");
+		if (!empty($closeLink)) {
+			$link = sprintf(
+				'<p><a href="%s" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></p>',
+				$referrer,
+				_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
+			);
+			$form->Fields()->insertBefore(new LiteralField('CloseLink', $link),$fields->First()->Name());
+			Session::clear("FormInfo.{$form->Name()}.closeLink");
+		}
+		$editLink = Session::get("FormInfo.{$form->Name()}.editLink");
+		if (!empty($editLink)) {
+			$link = sprintf(
+				"<p><a href='$editLink'>%s</a></p>",
+				_t('ComplexTableField.EDIT', 'Edit')
+			);
+			$form->Fields()->insertBefore(new LiteralField('EditLink', $link),$fields->First()->Name());
+			Session::clear("FormInfo.{$form->Name()}.editLink");
+		}
+
 		$form->loadDataFrom($childData);
 
 		return $form;
@@ -661,23 +682,15 @@ JS;
 			$componentSet = $parentRecord ? $parentRecord->getComponents($relationName) : null;
 			if($componentSet) $componentSet->add($childData);
 		}
-		
-		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
-		
-		$closeLink = sprintf(
-			'<small><a href="%s" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
-			$referrer,
-			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
-		);
-		
+
 		$editLink = Controller::join_links($this->Link(), 'item/' . $childData->ID . '/edit');
 		
 		$message = sprintf(
-			_t('ComplexTableField.SUCCESSADD', 'Added %s %s %s'),
-			$childData->singular_name(),
-			'<a href="' . $editLink . '">' . $childData->Title . '</a>',
-			$closeLink
+			_t('ComplexTableField.SUCCESSADDXSS', 'Added %s'),
+			$childData->singular_name()
 		);
+		Session::set("FormInfo.{$form->Name()}.editLink", $editLink);
+		Session::set("FormInfo.{$form->Name()}.closeLink", 1);
 		
 		$form->sessionMessage($message, 'good');
 
@@ -801,6 +814,26 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 			$readonly,
 			$childData
 		);
+		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+		$closeLink = Session::get("FormInfo.{$form->Name()}.closeLink");
+		if (!empty($closeLink)) {
+			$link = sprintf(
+				'<p><a href="%s" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></p>',
+				$referrer,
+				_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
+			);
+			$form->Fields()->insertBefore(new LiteralField('CloseLink', $link),$fields->First()->Name());
+			Session::clear("FormInfo.{$form->Name()}.closeLink");
+		}
+		$editLink = Session::get("FormInfo.{$form->Name()}.editLink");
+		if (!empty($editLink)) {
+			$link = sprintf(
+				"<p><a href='$editLink'>%s</a></p>",
+				_t('ComplexTableField.EDIT', 'Edit')
+			);
+			$form->Fields()->insertBefore(new LiteralField('EditLink', $link),$fields->First()->Name());
+			Session::clear("FormInfo.{$form->Name()}.editLink");
+		}
 	
 		$form->loadDataFrom($childData);
 		if ($readonly) $form->makeReadonly();
@@ -837,19 +870,13 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 			$componentSet->add($dataObject);
 		}
 		
-		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
-		
-		$closeLink = sprintf(
-			'<small><a href="%s" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
-			$referrer,
-			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
-		);
 		$message = sprintf(
-			_t('ComplexTableField.SUCCESSEDIT', 'Saved %s %s %s'),
-			$dataObject->singular_name(),
-			'<a href="' . $this->Link() . '">"' . htmlspecialchars($dataObject->Title, ENT_QUOTES) . '"</a>',
-			$closeLink
+			_t('ComplexTableField.SUCCESSEDITXSS', 'Saved %s'),
+			$dataObject->singular_name()
 		);
+		$editLink = Controller::join_links($this->Link(), $childData->ID . 'edit');
+		Session::set("FormInfo.{$form->Name()}.editLink", $editLink);
+		Session::set("FormInfo.{$form->Name()}.closeLink", 1);
 		
 		$form->sessionMessage($message, 'good');
 

@@ -72,8 +72,11 @@ $lang['en_US']['ChangePasswordEmail.ss']['PASSWORD'] = 'Password';
 $lang['en_US']['CheckboxField']['NO'] = 'No';
 $lang['en_US']['CheckboxField']['YES'] = 'Yes';
 $lang['en_US']['ComplexTableField']['CLOSEPOPUP'] = 'Close Popup';
+$lang['en_GB']['ComplexTableField']['SUCCESSADDXSS'] = 'Added %s';
 $lang['en_US']['ComplexTableField']['SUCCESSADD'] = 'Added %s %s %s';
+$lang['en_US']['ComplexTableField']['SUCCESSEDITXSS'] = 'Saved %s';
 $lang['en_US']['ComplexTableField']['SUCCESSEDIT'] = 'Saved %s %s %s';
+$lang['en_US']['ComplexTableField']['EDIT'] = 'Edit';
 $lang['en_US']['ComplexTableField.ss']['ADDITEM'] = array(
 	'Add %s',
 	PR_MEDIUM,
