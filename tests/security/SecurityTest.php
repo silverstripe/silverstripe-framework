@@ -260,7 +260,7 @@ class SecurityTest extends FunctionalTest {
 			/* THE FIRST 4 TIMES, THE MEMBER SHOULDN'T BE LOCKED OUT */
 			if($i < 5) {
 				$this->assertNull($member->LockedOutUntil);
-				$this->assertContains($this->loginErrorMessage(), _t('Member.ERRORWRONGCRED'));
+				$this->assertContains($this->loginErrorMessage(), Convert::raw2xml(_t('Member.ERRORWRONGCRED')));
 			}
 			
 			/* AFTER THAT THE USER IS LOCKED OUT FOR 15 MINUTES */
@@ -301,7 +301,7 @@ class SecurityTest extends FunctionalTest {
 		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
 		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
 		$this->assertNull($this->session()->inst_get('loggedInAs'));
-		$this->assertTrue(false !== stripos($this->loginErrorMessage(), _t('Member.ERRORWRONGCRED')));
+		$this->assertContains($this->loginErrorMessage(), Convert::raw2xml(_t('Member.ERRORWRONGCRED')));
 		
 		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
 		$this->assertEquals($this->session()->inst_get('loggedInAs'), $member->ID);

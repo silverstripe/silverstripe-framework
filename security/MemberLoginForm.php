@@ -105,7 +105,6 @@ JS
 	 * Get message from session
 	 */
 	protected function getMessageFromSession() {
-		parent::getMessageFromSession();
 		if(($member = Member::currentUser()) && !Session::get('MemberLoginForm.force_message')) {
 			$this->message = _t(
 				'Member.LOGGEDINAS', 
@@ -114,6 +113,10 @@ JS
 			);
 		}
 		Session::set('MemberLoginForm.force_message', false);
+
+		parent::getMessageFromSession();
+
+		return $this->message;
 	}
 
 

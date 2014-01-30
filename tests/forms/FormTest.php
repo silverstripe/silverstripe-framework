@@ -395,6 +395,52 @@ class FormTest extends FunctionalTest {
 		$this->assertNotContains('two="2"', $form->getAttributesHTML('one', 'two'));
 		$this->assertContains('three="3"', $form->getAttributesHTML('one', 'two'));
 	}
+
+	function testMessageEscapeHtml() {
+		$form = $this->getStubForm();
+		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->sessionMessage('<em>Escaped HTML</em>', 'good', true);
+		$parser = new CSSContentParser($form->forTemplate());
+		$messageEls = $parser->getBySelector('.message');
+		$this->assertContains(
+			'&lt;em&gt;Escaped HTML&lt;/em&gt;',
+			$messageEls[0]->asXML()
+		);
+
+		$form = $this->getStubForm();
+		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->sessionMessage('<em>Unescaped HTML</em>', 'good', false);
+		$parser = new CSSContentParser($form->forTemplate());
+		$messageEls = $parser->getBySelector('.message');
+		$this->assertContains(
+			'<em>Unescaped HTML</em>',
+			$messageEls[0]->asXML()
+		);
+	}
+
+	function testFieldMessageEscapeHtml() {
+		$form = $this->getStubForm();
+		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->addErrorMessage('key1', '<em>Escaped HTML</em>', 'good', true);
+		$form->setupFormErrors();
+		$parser = new CSSContentParser($form->forTemplate());
+		$messageEls = $parser->getBySelector('#key1 .message');
+		$this->assertContains(
+			'&lt;em&gt;Escaped HTML&lt;/em&gt;',
+			$messageEls[0]->asXML()
+		);
+
+		$form = $this->getStubForm();
+		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->addErrorMessage('key1', '<em>Unescaped HTML</em>', 'good', false);
+		$form->setupFormErrors();
+		$parser = new CSSContentParser($form->forTemplate());
+		$messageEls = $parser->getBySelector('#key1 .message');
+		$this->assertContains(
+			'<em>Unescaped HTML</em>',
+			$messageEls[0]->asXML()
+		);
+	}
 	
 	protected function getStubForm() {
 		return new Form(
