@@ -102,6 +102,32 @@ class i18nTest extends SapphireTest {
 		$this->assertTrue(isset($translations['de_DE']), 'Checking for de_DE translation');
 	}
 	
+	public function testGetClosestTranslation() {
+		
+		// Validate necessary assumptions for this test
+		$translations = i18n::get_existing_translations();
+		$this->assertTrue(isset($translations['en_US']));
+		$this->assertTrue(isset($translations['en_GB']));
+		$this->assertTrue(isset($translations['es_ES']));
+		$this->assertTrue(isset($translations['es_AR']));
+		$this->assertFalse(isset($translations['en_ZZ']));
+		$this->assertFalse(isset($translations['es_ZZ']));
+		$this->assertFalse(isset($translations['zz_ZZ']));
+		
+		// Test indeterminate locales
+		$this->assertEmpty(i18n::get_closest_translation('zz_ZZ'));
+		
+		// Test english fallback
+		$this->assertEquals('en_US', i18n::get_closest_translation('en_US'));
+		$this->assertEquals('en_GB', i18n::get_closest_translation('en_GB'));
+		$this->assertEquals('en_US', i18n::get_closest_translation('en_ZZ'));
+		
+		// Test spanish fallbacks
+		$this->assertEquals('es_AR', i18n::get_closest_translation('es_AR'));
+		$this->assertEquals('es_ES', i18n::get_closest_translation('es_ES'));
+		$this->assertEquals('es_ES', i18n::get_closest_translation('es_XX'));
+	}
+	
 	public function testDataObjectFieldLabels() {
 		$oldLocale = i18n::get_locale();
 		i18n::set_locale('de_DE');

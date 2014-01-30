@@ -158,7 +158,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function populateDefaults() {
 		parent::populateDefaults();
-		$this->Locale = i18n::get_locale();
+		$this->Locale = i18n::get_closest_translation(i18n::get_locale());
 	}
 	
 	public function requireDefaultRecords() {
