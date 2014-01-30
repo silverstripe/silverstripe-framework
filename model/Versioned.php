@@ -1322,6 +1322,22 @@ class Versioned extends DataExtension {
 	public function cacheKeyComponent() {
 		return 'versionedmode-'.self::get_reading_mode();
 	}
+
+	/**
+	 * Returns an array of possible stages.
+	 *
+	 * @return array
+	 */
+	public function getVersionedStages() {
+		return $this->stages;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDefaultStage() {
+		return $this->defaultStage;
+	}
 }
 
 /**
