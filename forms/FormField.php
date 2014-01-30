@@ -93,10 +93,6 @@ class FormField extends RequestHandler {
 	 */
 	protected $attributes = array();
 
-	private static $casting = array(
-		'Message' => 'Text'
-	);
-
 	/**
 	 * Takes a fieldname and converts camelcase to spaced
 	 * words. Also resolves combined fieldnames with dot syntax
@@ -474,9 +470,12 @@ class FormField extends RequestHandler {
 	
 	/**
 	 * Sets the error message to be displayed on the form field
-	 * Set by php validation of the form
+	 * Set by php validation of the form.
+	 *
+	 * @param string $message Message to show to the user. Allows HTML content,
+	 *                        which means you need to use Convert::raw2xml() for any user supplied data.
 	 */
-	public function setError($message, $messageType) {
+	public function setError($message, $messageType){
 		$this->message = $message; 
 		$this->messageType = $messageType; 
 		

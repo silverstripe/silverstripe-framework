@@ -155,10 +155,6 @@ class Form extends RequestHandler {
 		'forTemplate',
 	);
 
-	private static $casting = array(
-		'Message' => 'Text'
-	);
-
 	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
@@ -508,10 +504,10 @@ class Form extends RequestHandler {
 	 * Add a plain text error message to a field on this form.  It will be saved into the session
 	 * and used the next time this form is displayed.
 	 */
-	public function addErrorMessage($fieldName, $message, $messageType) {
+	public function addErrorMessage($fieldName, $message, $messageType, $escapeHtml = true) {
 		Session::add_to_array("FormInfo.{$this->FormName()}.errors",  array(
 			'fieldName' => $fieldName,
-			'message' => $message,
+			'message' => $escapeHtml ? Convert::raw2xml($message) : $message,
 			'messageType' => $messageType,
 		));
 	}
@@ -1030,9 +1026,12 @@ class Form extends RequestHandler {
 	 * 
 	 * @param message the text of the message
 	 * @param type Should be set to good, bad, or warning.
+	 * @param boolean $escapeHtml Automatically sanitize the message. Set to FALSE if the message contains HTML.
+	 *                            In that case, you might want to use {@link Convert::raw2xml()} to escape any
+	 *                            user supplied data in the message.
 	 */
-	public function setMessage($message, $type) {
-		$this->message = $message;
+	public function setMessage($message, $type, $escapeHtml = true) {
+		$this->message = ($escapeHtml) ? Convert::raw2xml($message) : $message;
 		$this->messageType = $type;
 		return $this;
 	}
@@ -1042,14 +1041,23 @@ class Form extends RequestHandler {
 	 * 
 	 * @param message the text of the message
 	 * @param type Should be set to good, bad, or warning.
+	 * @param boolean $escapeHtml Automatically sanitize the message. Set to FALSE if the message contains HTML.
+	 *                            In that case, you might want to use {@link Convert::raw2xml()} to escape any
+	 *                            user supplied data in the message.
 	 */
-	public function sessionMessage($message, $type) {
-		Session::set("FormInfo.{$this->FormName()}.formError.message", $message);
+	public function sessionMessage($message, $type, $escapeHtml = true) {
+		Session::set(
+			"FormInfo.{$this->FormName()}.formError.message", 
+			$escapeHtml ? Convert::raw2xml($message) : $message
+		);
 		Session::set("FormInfo.{$this->FormName()}.formError.type", $type);
 	}
 
-	public static function messageForForm( $formName, $message, $type ) {
-		Session::set("FormInfo.{$formName}.formError.message", $message);
+	public static function messageForForm( $formName, $message, $type, $escapeHtml = true) {
+		Session::set(
+			"FormInfo.{$this->FormName()}.formError.message", 
+			$escapeHtml ? Convert::raw2xml($message) : $message
+		);
 		Session::set("FormInfo.{$formName}.formError.type", $type);
 	}
 
