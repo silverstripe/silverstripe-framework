@@ -290,7 +290,7 @@ start with S, who has logged in  since 1/1/2011.
 
 	:::php
 	$members = Member::get()->filter(array(
-		'FirstName:StartsWith:Not' => 'S'
+		'FirstName:StartsWith:not' => 'S'
 		'LastVisited:GreaterThan' => '2011-01-01'
 	));
 
