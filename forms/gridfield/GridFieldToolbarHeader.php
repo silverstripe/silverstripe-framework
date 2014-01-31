@@ -6,7 +6,7 @@
  *
  * The header serves to display the name of the data the GridField is showing.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldToolbarHeader implements GridField_HTMLProvider {

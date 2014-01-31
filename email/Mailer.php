@@ -437,6 +437,8 @@ class Mailer extends Object {
 }
 
 /**
+ * @package framework
+ * @subpackage email
  * @deprecated 3.1
  */
 function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false,
@@ -449,6 +451,8 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 }
 
 /**
+ * @package framework
+ * @subpackage email
  * @deprecated 3.1
  */
 function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false) {
@@ -459,6 +463,8 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 }
 
 /**
+ * @package framework
+ * @subpackage email
  * @deprecated 3.1
  */
 function encodeMultipart($parts, $contentType, $headers = false) {
@@ -469,6 +475,8 @@ function encodeMultipart($parts, $contentType, $headers = false) {
 }
 
 /**
+ * @package framework
+ * @subpackage email
  * @deprecated 3.1
  */
 function wrapImagesInline($htmlContent) {
@@ -479,6 +487,8 @@ function wrapImagesInline($htmlContent) {
 }
 
 /**
+ * @package framework
+ * @subpackage email
  * @deprecated 3.1
  */
 function wrapImagesInline_rewriter($url) {
@@ -490,6 +500,8 @@ function wrapImagesInline_rewriter($url) {
 }
 
 /**
+ * @package framework
+ * @subpackage email
  * @deprecated 3.1
  */
 function processHeaders($headers, $body = false) {
@@ -500,6 +512,8 @@ function processHeaders($headers, $body = false) {
 }
 
 /**
+ * @package framework
+ * @subpackage email
  * @deprecated 3.1
  */
 function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {
@@ -510,6 +524,8 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 }
 
 /**
+ * @package framework
+ * @subpackage email
  * @deprecated 3.1
  */
 function QuotedPrintable_encode($quotprint) {
@@ -520,6 +536,8 @@ function QuotedPrintable_encode($quotprint) {
 }
 
 /**
+ * @package framework
+ * @subpackage email
  * @deprecated 3.1
  */
 function validEmailAddr($emailAddress) {

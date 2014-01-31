@@ -12,7 +12,7 @@
  * The purpose of this class is to have a footer that can round off 
  * {@link GridField} without having to use pagination.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldFooter implements GridField_HTMLProvider {

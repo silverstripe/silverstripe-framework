@@ -2,7 +2,7 @@
 /**
  * @see GridField
  * 
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldDataColumns implements GridField_ColumnProvider {

@@ -4,7 +4,7 @@
  * hierarchical data. Requires the managed record to have a "getParent()" 
  * method or has_one relationship called "Parent".
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldLevelup extends Object implements GridField_HTMLProvider {

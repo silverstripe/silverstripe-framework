@@ -6,7 +6,7 @@
  * Only returns a button if {@link DataObject->canCreate()} for this record 
  * returns true.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldAddNewButton implements GridField_HTMLProvider {
