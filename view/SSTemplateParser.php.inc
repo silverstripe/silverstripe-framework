@@ -41,6 +41,9 @@ else {
  * This is the exception raised when failing to parse a template. Note that we don't currently do any static analysis,
  * so we can't know if the template will run, just if it's malformed. It also won't catch mistakes that still look
  * valid.
+ *
+ * @package framework
+ * @subpackage view
  */
 class SSTemplateParseException extends Exception {
 	
@@ -85,6 +88,9 @@ class SSTemplateParseException extends Exception {
   * 
   * Angle Bracket: angle brackets "<" and ">" are used to eat whitespace between template elements
   * N: eats white space including newlines (using in legacy _t support)
+  *
+  * @package framework
+  * @subpackage view
   */
 class SSTemplateParser extends Parser implements TemplateParser {
 

@@ -13,7 +13,7 @@
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldDetailForm implements GridField_URLHandler {
@@ -196,7 +196,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 }
 
 /**
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldDetailForm_ItemRequest extends RequestHandler {

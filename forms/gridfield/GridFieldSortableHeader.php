@@ -6,7 +6,7 @@
  * 
  * @see GridField
  * 
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {

@@ -10,7 +10,7 @@
  * The default routing applies to the {@link GridFieldDetailForm} component, 
  * which has to be added separately to the {@link GridField} configuration.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldEditButton implements GridField_ColumnProvider {

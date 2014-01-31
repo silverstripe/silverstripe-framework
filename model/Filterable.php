@@ -7,6 +7,8 @@
  * applied, rather than applying the filter in place
  *
  * @see SS_List, SS_Sortable, SS_Limitable
+ * @package framework
+ * @subpackage model
  */
 interface SS_Filterable {
 

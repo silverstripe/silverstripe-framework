@@ -3,6 +3,9 @@
 /**
  * A Directed Acyclic Graph - used for doing topological sorts on dependencies, such as the before/after conditions
  * in config yaml fragments
+ *
+ * @package framework
+ * @subpackage manifest
  */
 class SS_DAG implements IteratorAggregate {
 	/**
@@ -88,10 +91,20 @@ class SS_DAG implements IteratorAggregate {
 	}
 }
 
+/**
+ * Exception thrown when the {@link SS_DAG} class is unable to resolve sorting the DAG due to cyclic dependencies.
+ *
+ * @package framework
+ * @subpackage manifest
+ */
 class SS_DAG_CyclicException extends Exception {
 
 	public $dag;
 
+	/**
+	 * @param string $message The Exception message
+	 * @param SS_DAG $dag The remainder of the Directed Acyclic Graph (DAG) after the last successful sort
+	 */
 	public function __construct($message, $dag) {
 		$this->dag = $dag;
 		parent::__construct($message);
@@ -99,6 +112,10 @@ class SS_DAG_CyclicException extends Exception {
 
 }
 
+/**
+ * @package framework
+ * @subpackage manifest
+ */
 class SS_DAG_Iterator implements Iterator {
 
 	protected $data;

@@ -3,7 +3,7 @@
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {

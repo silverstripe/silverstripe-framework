@@ -3,7 +3,7 @@
 /**
  * Base interface for all components that can be added to GridField.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 interface GridFieldComponent {	
@@ -13,7 +13,7 @@ interface GridFieldComponent {
  * A GridField manipulator that provides HTML for the header/footer rows, or f
  * or before/after the template.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 interface GridField_HTMLProvider extends GridFieldComponent {
@@ -43,7 +43,7 @@ interface GridField_HTMLProvider extends GridFieldComponent {
  *
  * Used once per record/row.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 interface GridField_ColumnProvider extends GridFieldComponent {
@@ -110,7 +110,7 @@ interface GridField_ColumnProvider extends GridFieldComponent {
  *
  * @see {@link GridField_FormAction}.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 interface GridField_ActionProvider extends GridFieldComponent {
@@ -151,7 +151,7 @@ interface GridField_ActionProvider extends GridFieldComponent {
  * Generally, the data manipulator will make use of to {@link GridState} 
  * variables to decide how to modify the {@link DataList}.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 interface GridField_DataManipulator extends GridFieldComponent {
@@ -177,7 +177,7 @@ interface GridField_DataManipulator extends GridFieldComponent {
  * For example a URL that will return JSON-formatted data for a javascript 
  * grid control.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 interface GridField_URLHandler extends GridFieldComponent {
@@ -196,7 +196,7 @@ interface GridField_URLHandler extends GridFieldComponent {
  * A component which is used to handle when a {@link GridField} is saved into 
  * a record.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 interface GridField_SaveHandler extends GridFieldComponent {

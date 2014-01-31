@@ -2,6 +2,9 @@
 /**
  * Returns the temporary folder path that silverstripe should use for its cache files.
  *
+ * @package framework
+ * @subpackage core
+ *
  * @param $base The base path to use for determining the temporary path
  * @return string Path to temp
  */
@@ -20,6 +23,9 @@ function getTempFolder($base = null) {
 
 /**
  * Returns as best a representation of the current username as we can glean.
+ *
+ * @package framework
+ * @subpackage core
  */
 function getTempFolderUsername() {
 	$user = getenv('APACHE_RUN_USER');
@@ -38,6 +44,9 @@ function getTempFolderUsername() {
  * Return the parent folder of the temp folder.
  * The temp folder will be a subfolder of this, named by username.
  * This structure prevents permission problems.
+ *
+ * @package framework
+ * @subpackage core
  */
 function getTempParentFolder($base = null) {
 	if(!$base && defined('BASE_PATH')) $base = BASE_PATH;

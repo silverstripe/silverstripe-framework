@@ -3,7 +3,7 @@
 /**
  * Adds an "Export list" button to the bottom of a {@link GridField}.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 

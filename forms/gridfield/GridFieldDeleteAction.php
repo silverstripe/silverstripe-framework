@@ -15,7 +15,7 @@
  * $action = new GridFieldDeleteAction(true); 
  * </code>
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider {
