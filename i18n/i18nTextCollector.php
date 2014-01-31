@@ -193,6 +193,7 @@ class i18nTextCollector extends Object {
 
 	public function write($module, $entities) {
 		$this->getWriter()->write($entities, $this->defaultLocale, $this->baseSavePath . '/' . $module);
+		return $this;
 	}
 	
 	/**
