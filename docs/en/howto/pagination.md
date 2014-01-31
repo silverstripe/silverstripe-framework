@@ -76,6 +76,20 @@ page. In this situation the automatic limiting done by `[api:PaginatedList]`
 will break the pagination. You can disable automatic limiting using the
 `[api:PaginatedList->setLimitItems()]` method when using custom lists.
 
+## Setting the limit of items to be displayed on a page ##
+
+To set the limit of items displayed in a paginated page use the `[api:PaginatedList->setPageLength()]` method. e.g:
+
+	:::php
+	/**
+	 * Returns a paginated list of all pages in the site, and limits the items displayed to 4 per page.
+	 */
+	public function PaginatedPagesLimit() {
+		$paginatedItems = new PaginatedList(Page::get(), $this->request);
+		$paginatedItems->setPageLength(4);
+		return $pagination;
+	}
+
 ## Related
 
  * [Howto: "Grouping Lists"](/howto/grouping-dataobjectsets)
