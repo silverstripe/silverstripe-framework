@@ -12,6 +12,12 @@
  * 
  * @package framework
  * @subpackage security
+ *
+ * @property string Title
+ * @property string OnlyAdminCanApply
+ *
+ * @method HasManyList Codes() List of PermissionRoleCode objects
+ * @method ManyManyList Groups() List of Group objects
  */
 class PermissionRole extends DataObject {
 	private static $db = array(
