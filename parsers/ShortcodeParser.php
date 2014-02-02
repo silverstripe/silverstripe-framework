@@ -5,7 +5,7 @@
  * within a HTMLText or HTMLVarchar field when rendered into a template. The API is inspired by and very similar to the
  * [Wordpress implementation](http://codex.wordpress.org/Shortcode_API) of shortcodes.
  * 
- * @see http://doc.silverstripe.org/framework/en/topics/shortcodes
+ * @see http://doc.silverstripe.org/framework/en/reference/shortcodes
  * @package framework
  * @subpackage misc
  */
