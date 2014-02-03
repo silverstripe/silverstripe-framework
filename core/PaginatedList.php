@@ -353,7 +353,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * @return bool
 	 */
 	public function NotLastPage() {
-		return $this->CurrentPage() != $this->TotalPages();
+		return $this->CurrentPage() < $this->TotalPages();
 	}
 
 	/**
