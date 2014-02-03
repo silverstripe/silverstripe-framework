@@ -93,7 +93,9 @@ provide an extension to [SiteConfig](/reference/siteconfig).
 If you wish to submit your module to our public directory, you take
 responsibility for a certain level of code quality, adherence to conventions,
 writing documentation, and releasing updates. See
-[contributing](/misc/contributing).
+[contributing](/misc/contributing). All modules should be published
+on [addons.silverstripe.org](http://addons.silverstripe.org) to make them
+discoverable by others.
 
 ### Composer and Packagist
 
@@ -109,60 +111,67 @@ A basic usage of a module for 3.1 that requires the CMS would look similar to
 this:
 
 	{
-		"name": "yourname/silverstripe-modulename",
-		"description": "..",
-		"type": "silverstripe-module",
-		"keywords": ["silverstripe", ".."],
-		"license": "BSD-3-Clause",
-		"authors": [{
-			"name": "Your Name",
-			"email": "Your Email"
-		}],
-		"require": {
-			"silverstripe/framework": ">=3.1.x-dev,<4.0"
-		}
+	  "name": "your-vendor-name/module-name",
+	  "description": "One-liner describing your module",
+	  "type": "silverstripe-module",
+	  "homepage": "http://github.com/your-vendor-name/module-name",
+	  "keywords": ["silverstripe", "some-tag", "some-other-tag"],
+	  "license": "BSD-3-Clause",
+	  "authors": [
+	    {"name": "Your Name","email": "your@email.com"}
+	  ],
+	  "support": {
+	    "issues": "http://github.com/your-vendor-name/module-name/issues"
+	  },
+	  "require": {
+	    "silverstripe/cms": "~3.1",
+	    "silverstripe/framework": "~3.1"
+	  },
+	  "extra": {
+	    "installer-name": "elastica",
+	    "screenshots": [
+	      "relative/path/screenshot1.png",
+	      "http://myhost.com/screenshot2.png"
+	    ]
+	  }
 	}
 
 
 Once your module is released, submit it to [Packagist](https://packagist.org/)
-to have the module accessible to developers.
+to have the module accessible to developers. It'll automatically get picked
+up by [addons.silverstripe.org](http://addons.silverstripe.org/).
 
 ### Versioning
 
 Over time you may have to release new versions of your module to continue to
-work with newer versions of SilverStripe. By using composer, this is made easy
+work with newer versions of SilverStripe. By using Composer, this is made easy
 for developers by allowing them to specify what version they want to use. Each
 version of your module should be a separate branch in your version control and
 each branch should have a `composer.json` file explicitly defining what versions
 of SilverStripe you support.
 
-<div class="notice" markdown='1'>
-The convention to follow for support is the `master` or `trunk` branch of your
-code should always be the one to work with the `master` branch of SilverStripe.
-Other branches should be created as needed for other SilverStripe versions you
-want to support.
-</div>
+Say you have a module which supports SilverStripe 3.0.
+A new release of this module takes advantage of new features
+in SilverStripe 3.1. In this case, you would create a new branch
+for the 3.0 compatible codebase of your module.
+This allows you to continue fixing bugs on this older release branch.
 
-For example, if you release a module for 3.0 which works well but doesn't work
-in 3.1.0 you should provide a separate `branch` of the module for 3.0 support.
+As a convention, the `master` or `trunk` branch of your
+module should always work with the `master` branch of SilverStripe.
+Other branches should be created on your module as needed if they're
+required to support specific SilverStripe releases.
 
-	// for module that supports 3.0.1. (git branch 1.0)
-	"require": {
-		"silverstripe/framework": "3.0.*",
-	}
+You can have an overlap in supported versions,
+e.g two branches in your module both support SilverStripe 3.1.
+In this case, you should explain the differences in your `README.md` file.
 
-	// for branch of the module that only supports 3.1 (git branch master)
-	"require": {
-		"silverstripe/framework": ">=3.1.*",
-	}
+Here's some common values for your `require` section
+(see [getcomposer.org](http://getcomposer.org/doc/01-basic-usage.md#package-versions) for details):
 
-You can have an overlap in supported versions (e.g two branches for 3.1) but you
-should explain the differences in your `README.md` file.
-
-If you want to change the minimum supported version of your module, make sure
-you create a new branch which continues to support the minimum version as it
-stands before you update the main branch.
-
+ * `3.0.*`: Version `3.0`, including `3.0.1`, `3.0.2` etc, excluding `3.1`
+ * `~3.0`: Version `3.0` or higher, including `3.0.1` and `3.1` etc, excluding `4.0`
+ * `~3.0,<3.2`: Version `3.0` or higher, up until `3.2`, which is excluded
+ * `~3.0,>3.0.4`: Version `3.0` or higher, starting with `3.0.4`
 
 ## Reference
 
