@@ -91,6 +91,7 @@ Injector::inst($default_options);
 $flush = (isset($_GET['flush']) || isset($_REQUEST['url']) && (
 	$_REQUEST['url'] == 'dev/build' || $_REQUEST['url'] == BASE_URL . '/dev/build'
 ));
+global $manifest;
 $manifest = new SS_ClassManifest(BASE_PATH, false, $flush);
 
 // Register SilverStripe's class map autoload
