@@ -9,6 +9,7 @@
  * optionally catch attempts to modify the config statics (otherwise the modification will appear
  * to work, but won't actually have any effect - the equvilent of failing silently)
  *
+ * @package framework
  * @subpackage manifest
  */
 class SS_ConfigStaticManifest {
@@ -150,6 +151,9 @@ class SS_ConfigStaticManifest {
  * We can't do this using TokenisedRegularExpression because we need to keep track of state
  * as we process the token list (when we enter and leave a namespace or class, when we see
  * an access level keyword, etc)
+ *
+ * @package framework
+ * @subpackage manifest
  */
 class SS_ConfigStaticManifest_Parser {
 

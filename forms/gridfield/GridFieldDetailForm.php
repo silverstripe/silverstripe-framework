@@ -13,7 +13,7 @@
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldDetailForm implements GridField_URLHandler {
@@ -89,6 +89,12 @@ class GridFieldDetailForm implements GridField_URLHandler {
 
 		$handler = Object::create($class, $gridField, $this, $record, $controller, $this->name);
 		$handler->setTemplate($this->template);
+
+		// if no validator has been set on the GridField and the record has a
+		// CMS validator, use that.
+		if(!$this->getValidator() && method_exists($record, 'getCMSValidator')) {
+			$this->setValidator($record->getCMSValidator());
+		}
 
 		return $handler->handleRequest($request, DataModel::inst());
 	}
@@ -190,7 +196,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 }
 
 /**
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldDetailForm_ItemRequest extends RequestHandler {

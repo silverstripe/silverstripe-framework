@@ -5,6 +5,20 @@
  */
 class ArrayListTest extends SapphireTest {
 
+	public function testPushOperator() {
+		$list = new ArrayList(array(
+			array('Num' => 1)
+		));
+
+		$list[] = array('Num' => 2);
+		$this->assertEquals(2, count($list));
+		$this->assertEquals(array('Num' => 2), $list->last());
+
+		$list[] = array('Num' => 3);
+		$this->assertEquals(3, count($list));
+		$this->assertEquals(array('Num' => 3), $list->last());
+	}
+
 	public function testArrayAccessExists() {
 		$list = new ArrayList(array(
 			$one = new DataObject(array('Title' => 'one')),

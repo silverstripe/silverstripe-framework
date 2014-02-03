@@ -459,7 +459,7 @@ class Director implements TemplateGlobalProvider {
 	 */
 	public static function protocol() {
 		return (self::is_https()) ? 'https://' : 'http://';
-		}
+	}
 
 	/**
 	 * Return whether the site is running as under HTTPS.
@@ -469,18 +469,23 @@ class Director implements TemplateGlobalProvider {
 	public static function is_https() {
 		if ($protocol = Config::inst()->get('Director', 'alternate_protocol')) {
 			return $protocol == 'https';
-	}
+		}
 
 		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) { 
 			if(strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') {
 				return true;
-	}
-	}
+			}
+		}
+
+		if(isset($_SERVER['X-Forwarded-Proto'])) {
+			if(strtolower($_SERVER['X-Forwarded-Proto']) == "https") {
+				return true;
+			}
+		}
 	
 		if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
 			return true;
-	}
-		else if(isset($_SERVER['SSL'])) {
+		} else if(isset($_SERVER['SSL'])) {
 			return true;
 		}
 
@@ -507,11 +512,11 @@ class Director implements TemplateGlobalProvider {
 				$baseURL = '/';
 			} else {
 				$baseURL = $base . '/';
-		}
+			}
 			
 			if(defined('BASE_SCRIPT_URL')) {
 				return $baseURL . BASE_SCRIPT_URL;
-	}
+			}
 	
 			return $baseURL;
 		}

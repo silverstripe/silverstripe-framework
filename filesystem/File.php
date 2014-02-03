@@ -61,6 +61,18 @@
  * 
  * @package framework
  * @subpackage filesystem
+ *
+ * @property string Name Basename of the file
+ * @property string Title Title of the file
+ * @property string Filename Filename including path
+ * @property string Content
+ * @property string ShowInSearch Boolean that indicates if file is shown in search. Doesn't apply to Folder
+ *
+ * @property int ParentID ID of parent File/Folder
+ * @property int OwnerID ID of Member who owns the file
+ *
+ * @method File Parent() Returns parent File
+ * @method Member Owner() Returns Member object of file owner.
  */
 class File extends DataObject {
 
@@ -596,9 +608,14 @@ class File extends DataObject {
 			$base = pathinfo($name, PATHINFO_BASENAME);
 			$ext = self::get_file_extension($name);
 			$suffix = 1;
-			while(DataObject::get_one("File", "\"Name\" = '" . Convert::raw2sql($name) 
-					. "' AND \"ParentID\" = " . (int)$this->ParentID)) {
 
+			while(File::get()->filter(array(
+					'Name' => $name, 
+					'ParentID' => (int) $this->ParentID
+				))->exclude(array(
+					'ID' => $this->ID
+				))->first()
+			) {
 				$suffix++;
 				$name = "$base-$suffix$ext";
 			}

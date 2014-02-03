@@ -164,9 +164,24 @@ class DropdownField extends FormField {
 
 		if ($source) {
 			foreach($source as $value => $title) {
-				// check against value, fallback to a type check comparison when !value
-				$selected = ($value) ? ($value == $this->value) : ($value === $this->value);
-				$disabled = (in_array($value, $this->disabledItems, true)) ? 'disabled' : false;
+				$selected = false;
+				if($value === '' && ($this->value === '' || $this->value === null)) {
+					$selected = true;
+				} else {
+					// check against value, fallback to a type check comparison when !value
+					if($value) {
+						$selected = ($value == $this->value);
+					} else {
+						$selected = ($value === $this->value) || (((string) $value) === ((string) $this->value));
+					}
+
+					$this->isSelected = $selected;
+				}
+				
+				$disabled = false;
+				if(in_array($value, $this->disabledItems) && $title != $this->emptyString ){
+					$disabled = 'disabled';
+				}
 
 				$options[] = new ArrayData(array(
 					'Title' => $title,

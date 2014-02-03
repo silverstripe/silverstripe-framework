@@ -1,7 +1,10 @@
 <?php
-
-// Bind TeamCity test listener. Echos messages to stdout that TeamCity interprets into the test results
-
+/**
+ * Bind TeamCity test listener. Echos messages to stdout that TeamCity interprets into the test results
+ *
+ * @package framework
+ * @subpackage testing
+ */
 class TeamCityListener implements PHPUnit_Framework_TestListener {
 	
 	private function escape($str) {

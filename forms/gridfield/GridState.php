@@ -7,7 +7,7 @@
  * 
  * @see GridField
  * 
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridState extends HiddenField {
@@ -121,7 +121,7 @@ class GridState extends HiddenField {
  *
  * @see GridState
  * 
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridState_Data {
@@ -192,7 +192,7 @@ class GridState_Data {
 /**
  * @see GridState
  * 
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridState_Component implements GridField_HTMLProvider {

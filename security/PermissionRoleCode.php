@@ -4,6 +4,12 @@
  * 
  * @package framework
  * @subpackage security
+ *
+ * @property string Code
+ *
+ * @property int RoleID
+ *
+ * @method PermissionRole Role()
  */
 class PermissionRoleCode extends DataObject {
 	private static $db = array(

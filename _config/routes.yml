@@ -15,9 +15,6 @@ After:
 Director:
   rules:
     'Security//$Action/$ID/$OtherID': 'Security'
-    'api/v1/live': 'VersionedRestfulServer'
-    'api/v1': 'RestfulServer'
-    'soap/v1': 'SOAPModelAccess'
     'dev': 'DevelopmentAdmin'
     'interactive': 'SapphireREPL'
     'InstallerTest//$Action/$ID/$OtherID': 'InstallerTest'

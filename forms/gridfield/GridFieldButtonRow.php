@@ -8,7 +8,7 @@
  * This row provides two new HTML fragment spaces: 'toolbar-header-left' and 
  * 'toolbar-header-right'.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldButtonRow implements GridField_HTMLProvider {

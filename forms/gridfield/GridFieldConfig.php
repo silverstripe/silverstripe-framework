@@ -16,7 +16,7 @@
  * - {@link GridFieldConfig_RecordEditor}
  * - {@link GridFieldConfig_RelationEditor}
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldConfig extends Object {
@@ -129,7 +129,7 @@ class GridFieldConfig extends Object {
  * A simple readonly, paginated view of records, with sortable and searchable 
  * headers.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldConfig_Base extends GridFieldConfig {
@@ -157,7 +157,7 @@ class GridFieldConfig_Base extends GridFieldConfig {
 /**
  * Allows viewing readonly details of individual records.
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldConfig_RecordViewer extends GridFieldConfig_Base {
@@ -174,7 +174,10 @@ class GridFieldConfig_RecordViewer extends GridFieldConfig_Base {
 }
 
 /**
- * @package framework
+ * Allows editing of records contained within the GridField, instead of only allowing the ability to view records in
+ * the GridField.
+ *
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldConfig_RecordEditor extends GridFieldConfig {
@@ -223,7 +226,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
  * 	->setSearchFields('MyField');
  * </code>
  *
- * @package framework
+ * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldConfig_RelationEditor extends GridFieldConfig {

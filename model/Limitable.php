@@ -7,6 +7,8 @@
  * applied, rather than applying the limit in place
  *
  * @see SS_List, SS_Sortable, SS_Filterable
+ * @package framework
+ * @subpackage model
  */
 interface SS_Limitable {
 

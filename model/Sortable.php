@@ -7,6 +7,8 @@
  * applied, rather than applying the sort in place
  *
  * @see SS_List, SS_Filterable, SS_Limitable
+ * @package framework
+ * @subpackage model
  */
 interface SS_Sortable {
 

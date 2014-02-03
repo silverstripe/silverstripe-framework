@@ -317,11 +317,11 @@ fieldset.switch-states.size_2 input:checked:nth-of-type(2) ~ .slide-button { lef
 fieldset.switch-states.size_2 input:checked:nth-of-type(3) ~ .slide-button { left: 100%; }
 fieldset.switch-states.size_2 input:checked:nth-of-type(4) ~ .slide-button { left: 150%; }
 fieldset.switch-states.size_2 input:checked:nth-of-type(5) ~ .slide-button { left: 200%; }
-fieldset.switch-states.size_3 label, fieldset.switch-states.size_3 .slide-button { width: 33.333%; }
-fieldset.switch-states.size_3 input:checked:nth-of-type(2) ~ .slide-button { left: 33.333%; }
-fieldset.switch-states.size_3 input:checked:nth-of-type(3) ~ .slide-button { left: 66.667%; }
+fieldset.switch-states.size_3 label, fieldset.switch-states.size_3 .slide-button { width: 33.33333%; }
+fieldset.switch-states.size_3 input:checked:nth-of-type(2) ~ .slide-button { left: 33.33333%; }
+fieldset.switch-states.size_3 input:checked:nth-of-type(3) ~ .slide-button { left: 66.66667%; }
 fieldset.switch-states.size_3 input:checked:nth-of-type(4) ~ .slide-button { left: 100%; }
-fieldset.switch-states.size_3 input:checked:nth-of-type(5) ~ .slide-button { left: 133.333%; }
+fieldset.switch-states.size_3 input:checked:nth-of-type(5) ~ .slide-button { left: 133.33333%; }
 fieldset.switch-states.size_4 label, fieldset.switch-states.size_4 .slide-button { width: 25%; }
 fieldset.switch-states.size_4 input:checked:nth-of-type(2) ~ .slide-button { left: 25%; }
 fieldset.switch-states.size_4 input:checked:nth-of-type(3) ~ .slide-button { left: 50%; }
@@ -393,9 +393,10 @@ body.cms { overflow: hidden; }
 .ui-tabs .ui-tabs-nav li { top: 0; float: left; border-bottom: 0 !important; }
 .ui-tabs .ui-tabs-nav li a { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; float: none; font-weight: bold; color: #444444; line-height: 32px; padding: 0 16px 0; }
 .ui-tabs .ui-tabs-nav li:last-child { margin-right: 0; }
+.ui-tabs .ui-tabs-nav li.ui-tabs-active { margin-bottom: 0; }
 .ui-tabs .ui-tabs-nav .ui-state-default { border: 1px solid #c0c0c2; background: #ced7dc; }
 .ui-tabs .ui-tabs-nav .ui-state-default a { color: #5e5e5e; text-shadow: #e6e6e6 0 1px 0; }
-.ui-tabs .ui-tabs-nav .ui-state-active { padding-bottom: 1px; border: 1px solid #c0c0c2; background-color: #eceff1; }
+.ui-tabs .ui-tabs-nav .ui-state-active { padding-bottom: 1px; border: 1px solid #c0c0c2; background-color: #e6eaed; }
 .ui-tabs .ui-tabs-nav .ui-state-active a { color: #444444; }
 .ui-tabs .ui-tabs-nav.ui-state-active { border-color: gray; }
 .ui-tabs .ui-tabs-nav li.cms-tabset-icon { text-indent: -9999em; }
@@ -724,7 +725,7 @@ form.import-form label.left { width: 250px; }
 /** -------------------------------------------- Page Edit Controller -------------------------------------------- */
 /*.cms-container {
 	.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
-		/* Fix pixel gap between nav tree and main page header */
+		// Fix pixel gap between nav tree and main page header
 	 	margin-left: -1px; // Removed to close gap far right of right tabs?
 	}
 }*/

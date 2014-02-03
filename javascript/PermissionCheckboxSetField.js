@@ -10,8 +10,6 @@
 		$('.permissioncheckboxset .valADMIN input').entwine({
 			onmatch: function() {
 				this._super();
-
-				this.toggleCheckboxes();
 			},
 			onunmatch: function() {
 				this._super();
@@ -55,30 +53,29 @@
 				}).find('.checkbox').not(this);
 			},
 			onmatch: function() {
-				var checkboxes = this.getCheckboxesExceptThisOne();
-				if($(this).is(':checked')) {
-					checkboxes.each(function() {
-						$(this).attr('disabled', 'disabled');
-						$(this).attr('checked', 'checked');
-					});
-				}
-				
+				this.toggleCheckboxes();
+
 				this._super();
 			},
 			onunmatch: function() {
 				this._super();
 			},
 			onclick: function(e) {
+				this.toggleCheckboxes();
+			},
+			toggleCheckboxes: function() {
 				var checkboxes = this.getCheckboxesExceptThisOne();
 				if($(this).is(':checked')) {
 					checkboxes.each(function() {
-						$(this).attr('disabled', 'disabled');
-						$(this).attr('checked', 'checked');
+						$(this).data('PermissionCheckboxSetField.oldChecked', $(this).is(':checked'));
+						$(this).data('PermissionCheckboxSetField.oldDisabled', $(this).is(':disabled'));
+						$(this).prop('disabled', 'disabled');
+						$(this).prop('checked', 'checked');
 					});
 				} else {
 					checkboxes.each(function() {
-						$(this).prop('checked', false);
-						$(this).prop('disabled', false);
+						$(this).prop('checked', $(this).data('PermissionCheckboxSetField.oldChecked'));
+						$(this).prop('disabled', $(this).data('PermissionCheckboxSetField.oldDisabled'));
 					});
 				}
 			}

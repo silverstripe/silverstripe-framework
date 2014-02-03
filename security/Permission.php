@@ -3,6 +3,14 @@
  * Represents a permission assigned to a group.
  * @package framework
  * @subpackage security
+ *
+ * @property string Code
+ * @property int Arg
+ * @property int Type
+ *
+ * @property int GroupID
+ *
+ * @method Group Group()
  */
 class Permission extends DataObject implements TemplateGlobalProvider {
 

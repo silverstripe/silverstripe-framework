@@ -169,7 +169,7 @@ class Session {
 	 */
 	public static function set_cookie_domain($domain) {
 		Deprecation::notice('3.2', 'Use the "Session.cookie_domain" config setting instead');
-		Config::inst()->update('Session', 'cookie_domain', $age);
+		Config::inst()->update('Session', 'cookie_domain', $domain);
 	}
 
 	/**

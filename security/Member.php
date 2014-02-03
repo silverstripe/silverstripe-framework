@@ -4,6 +4,24 @@
  *
  * @package framework
  * @subpackage security
+ *
+ * @property string FirstName
+ * @property string Surname
+ * @property string Email
+ * @property string Password
+ * @property string RememberLoginHash
+ * @property int NumVisit
+ * @property string LastVisited Date and time of last visit
+ * @property string AutoLoginHash
+ * @property string AutoLoginExpired
+ * @property string PasswordEncryption
+ * @property string Salt
+ * @property string PasswordExpiry
+ * @property string LockedOutUntil
+ * @property string Locale
+ * @property int FailedLoginCount
+ * @property string DateFormat
+ * @property string TimeFormat
  */
 class Member extends DataObject implements TemplateGlobalProvider {
 
@@ -627,14 +645,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	/**
 	 * Returns the current logged in user
 	 *
-	 * @return bool|Member Returns the member object of the current logged in
-	 *                     user or FALSE.
+	 * @return Member|null
 	 */
 	public static function currentUser() {
 		$id = Member::currentUserID();
 
 		if($id) {
-			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id", true, 1);
+			return Member::get()->byId($id);
 		}
 	}
 
