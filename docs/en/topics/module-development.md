@@ -128,7 +128,7 @@ this:
 	    "silverstripe/framework": "~3.1"
 	  },
 	  "extra": {
-	    "installer-name": "elastica",
+	    "installer-name": "module-name",
 	    "screenshots": [
 	      "relative/path/screenshot1.png",
 	      "http://myhost.com/screenshot2.png"
