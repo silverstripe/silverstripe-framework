@@ -153,7 +153,7 @@ class GridState_Data {
 	 * @return mixed The value associated with this key, or the value specified by $default if not set
 	 */
 	public function getData($name, $default = null) {
-		if(empty($this->data[$name])) {
+		if(!isset($this->data[$name])) {
 			$this->data[$name] = $default;
 		} else if(is_array($this->data[$name])) {
 			$this->data[$name] = new GridState_Data($this->data[$name]);
@@ -168,6 +168,10 @@ class GridState_Data {
 	
 	public function __isset($name) {
 		return isset($this->data[$name]);
+	}
+	
+	public function __unset($name) {
+		unset($this->data[$name]);
 	}
 
 	public function __toString() {
