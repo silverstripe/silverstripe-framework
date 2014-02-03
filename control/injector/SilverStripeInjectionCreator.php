@@ -1,22 +1,18 @@
 <?php
 
+use SilverStripe\Framework\Injector\Factory;
+
 /**
  * @package framework
  * @subpackage injector
  */
+class SilverStripeInjectionCreator implements Factory {
 
-class SilverStripeInjectionCreator {
-	/**
-	 *
-	 * @param string $object
-	 *					A string representation of the class to create
-	 * @param array $params
-	 *					An array of parameters to be passed to the constructor
-	 */
-	public function create($class, $params = array()) {
+	public function create($class, array $params = array()) {
 		$class = Object::getCustomClass($class);
 		$reflector = new ReflectionClass($class);
-		
-		return $reflector->newInstanceArgs($params);
+
+		return $params ? $reflector->newInstanceArgs($params) : $reflector->newInstance();
 	}
+
 }

@@ -541,6 +541,28 @@ class InjectorTest extends SapphireTest {
 		$this->assertEquals($item->property, 'othervalue');
 	}
 
+	/**
+	 * Tests creating a service with a custom factory.
+	 */
+	public function testCustomFactory() {
+		$injector = new Injector(array(
+			'service' => array('factory' => 'factory', 'constructor' => array(1, 2, 3))
+		));
+
+		$factory = $this->getMock('SilverStripe\\Framework\\Injector\\Factory');
+		$factory
+			->expects($this->once())
+			->method('create')
+			->with($this->equalTo('service'), $this->equalTo(array(1, 2, 3)))
+			->will($this->returnCallback(function($args) {
+				return new TestObject();
+			}));
+
+		$injector->registerService($factory, 'factory');
+
+		$this->assertInstanceOf('TestObject', $injector->get('service'));
+	}
+
 }
 
 class InjectorTestConfigLocator extends SilverStripeServiceConfigurationLocator implements TestOnly {
@@ -667,7 +689,7 @@ class SSObjectCreator extends InjectionCreator {
 		$this->injector = $injector;
 	}
 
-	public function create($class, $params = array()) {
+	public function create($class, array $params = array()) {
 		if (strpos($class, '(') === false) {
 			return parent::create($class, $params);
 		} else {
