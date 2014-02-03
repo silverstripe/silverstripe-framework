@@ -8,16 +8,17 @@ example "framework" and "cms". These two modules are the core functionality and
 templates for any initial installation.
 
 If you want to add generic functionality that isn't specific to your
-project, like a forum, an ecommerce package or a blog you can do it like this;
+project, like a forum, an ecommerce package or a blog you can do it like this:
 
-1.  Create another directory at the root level (same level as "framework" and
-"cms")
-2.  You must create a _config.php inside your module directory, or else
-SilverStripe will not include it
-3.  Inside your module directory, follow our [directory structure guidelines](/topics/directory-structure#module_structure)
+1.  Create another directory at the root level (same level as "framework"
+    and "cms"). This will contain all your module files.
+2.  The module directory must contain a `_config` sub-directory, or a
+    `_config.php` file to be recognised.
+3.  Inside your module directory, follow our
+    [directory structure guidelines](/topics/directory-structure#module_structure)
 
-As long as your module has a `_config.php` file inside it, SilverStripe will
-automatically include any PHP classes from that module.
+Once this is done, SilverStripe will automatically include any PHP classes and
+templates from within your module.
 
 ## Tips
 
