@@ -550,7 +550,7 @@ abstract class Object {
 		Config::inst()->update($class, 'extensions', array($extension));
 		Config::inst()->extraConfigSourcesChanged($class);
 
-		Injector::inst()->unregisterAllObjects();
+		Injector::inst()->unregisterNamedObject($class);
 
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {
