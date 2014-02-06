@@ -408,7 +408,7 @@ Depending on your browser, you should see something like the picture below. If y
 
 Now all we need is to let the user know that our RSS feed exists. Add this function to *ArticleHolder_Controller*:
 
-**mysite/code/ArticlePage.php**
+**mysite/code/ArticleHolder.php**
 
 	:::php
 	public function init() {
