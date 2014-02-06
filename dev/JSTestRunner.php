@@ -6,27 +6,33 @@
  * 
  * To create your own tests, please use this template:
  * <code>
- * <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
- * <html>
- * <head>
- * <script src="http://code.jquery.com/jquery-latest.js"></script>
- * <link rel="stylesheet" href="http://dev.jquery.com/view/trunk/qunit/testsuite.css" type="text/css" media="screen" />
- * <script>
- * 	$(document).ready(function(){
- * 		test("test my feature", function() {
- * 			ok('mytest');
- * 		});
- * 	});
- * </script>
- * </head>
- * <body>
- * <script type="text/javascript" src="http://jqueryjs.googlecode.com/svn/trunk/qunit/testrunner.js"></script>
- *  <h1>My Test Name</h1>
- *  <h2 id="banner"></h2>
- *  <h2 id="userAgent"></h2>
- *  <ol id="tests"></ol>
- *  <div id="main"></div>
- * </body>
+ * <!DOCTYPE html>
+ * <html id="html">
+ * 	<head>
+ * 		<title>jQuery - Validation Test Suite</title>
+ * 		<link rel="Stylesheet" media="screen" 
+ * 			href="thirdparty/jquery-validate/test/qunit/qunit.css" />
+ * 		<script type="text/javascript" 
+ * 			src="thirdparty/jquery-validate/lib/jquery.js"></script>
+ * 		<script type="text/javascript"
+ * 			src="thirdparty/jquery-validate/test/qunit/qunit.js"></script>
+ * 		<script>
+ * 			$(document).ready(function(){
+ * 				test("test my feature", function() {
+ * 					ok('mytest');
+ * 				});
+ * 			});
+ * 		</script>
+ * 	</head>
+ * 	<body id="body">
+ * 		<h1 id="qunit-header">
+ * 			<a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">
+ * 				jQuery Validation Plugin</a> Test Suite</h1>
+ * 		<h2 id="qunit-banner"></h2>
+ * 		<div id="qunit-testrunner-toolbar"></div>
+ * 		<h2 id="qunit-userAgent"></h2>
+ * 		<ol id="qunit-tests"></ol>
+ * 	</body>
  * </html>
  * </code>
  * 
