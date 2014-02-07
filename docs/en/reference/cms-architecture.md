@@ -30,7 +30,7 @@ and the [Compass framework](http://compass-style.org/), which helps
 us maintain expressive and concise style declarations. The files are located in `framework/admin/scss`
 (and if you have the `cms` module installed, in `cms/scss`), and are compiled to a `css` folder on the
 same directory path. Changes to the SCSS files can be automatically converted by installing
-the ["compass" module](http://www.silverstripe.org/compass-module/) for SilverStripe, 
+the ["compass" module](https://github.com/silverstripe-labs/silverstripe-compass) for SilverStripe, 
 although [installing the compass framework](http://compass-style.org/install/) directly works as well.
 Each file describes its purpose at the top of the declarations. Note that you can write
 plain CSS without SCSS for your custom CMS interfaces as well, we just mandate SCSS for core usage.

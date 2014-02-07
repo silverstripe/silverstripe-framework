@@ -11,7 +11,7 @@ class MemberAuthenticator extends Authenticator {
 	/**
 	 * @var Array Contains encryption algorithm identifiers.
 	 *  If set, will migrate to new precision-safe password hashing
-	 *  upon login. See http://open.silverstripe.org/ticket/3004.
+	 *  upon login. See http://open.silverstripe.org/ticket/3004
 	 */
 	private static $migrate_legacy_hashes = array(
 		'md5' => 'md5_v2.4', 

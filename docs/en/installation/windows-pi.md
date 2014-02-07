@@ -5,7 +5,7 @@
 ## Installing SilverStripe
 
 *  Download and run Microsoft Web Platform Installer (WebPI):
-[![](http://www.silverstripe.org/assets/downloads/webpi/wpiBadgeGreen.jpg)](http://www.microsoft.com/web/gallery/install.aspx?appsxml=www.microsoft.com%2fweb%2fwebpi%2f2.0%2fWebApplicationList.xml&amp;appid=105)
+[![](http://www.silverstripe.org/assets/downloads/webpi/wpiBadgeGreen.png)](http://www.microsoft.com/web/gallery/install.aspx?appsxml=www.microsoft.com%2fweb%2fwebpi%2f2.0%2fWebApplicationList.xml&amp;appid=105)
 
 *  In WebPI, select 'SilverStripe' from the 'Content Management System' link
 *  Select install. It will install dependancies like MySQL and PHP if you don't have these installed already.
