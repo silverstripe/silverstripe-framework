@@ -22,6 +22,11 @@ class GDBackend extends Object implements Image_Backend {
 	private static $image_interlace = 0;
 
 	/**
+	* @var boolean
+	*/
+	protected static $correctly_pad_default = false;
+
+	/**
 	 * Set the default image quality.
 	 *
 	 * @deprecated 3.2 Use the "GDBackend.default_quality" config setting instead
@@ -32,6 +37,16 @@ class GDBackend extends Object implements Image_Backend {
 		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
 			config::inst()->update('GDBackend', 'default_quality', (int) $quality);
 		}
+	}
+
+	/**
+	 * Manually overide 'always pad' images -instead of steteching them
+	 * _config.php
+	 * GDBackend::set_always_pad_correctly(true);
+	 * @param boolean $code
+	 */
+	static function set_always_pad_correctly($bool=true) {
+		self::$correctly_pad_default = $bool;
 	}
 
 	public function __construct($filename = null) {
@@ -356,9 +371,13 @@ class GDBackend extends Object implements Image_Backend {
 	 * @param width
 	 * @param height
 	 * @param backgroundColour
+	 * @param boolean strechImage
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
+	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $stretch=null) {
 		if(!$this->gd) return;
+
+		$stretch = ($stretch===null) ? self::$correctly_pad_default : (bool) $stretch;
+
 		$width = round($width);
 		$height = round($height);
 		
@@ -381,9 +400,11 @@ class GDBackend extends Object implements Image_Backend {
 			// We can't divide by zero theres something wrong.
 			
 			$srcAR = $this->width / $this->height;
+
+			$noresample = false;
 		
 			// Destination narrower than the source
-			if($destAR > $srcAR) {
+			if($destAR > $srcAR && ($stretch!=true || $this->width > $width)) {
 				$destY = 0;
 				$destHeight = $height;
 				
@@ -391,17 +412,29 @@ class GDBackend extends Object implements Image_Backend {
 				$destX = round( ($width - $destWidth) / 2 );
 			
 			// Destination shorter than the source
-			} else {
+			} elseif($this->width > $width || $stretch!=true){
 				$destX = 0;
 				$destWidth = $width;
 				
 				$destHeight = round( $width / $srcAR );
 				$destY = round( ($height - $destHeight) / 2 );
+
+			// Destination shorter and narrower than the source
+			} else {
+				$noresample = true;
+				$destX = round( ($width-$this->width) / 2 );
+				$destY = round( ($height-$this->height) / 2);
 			}
-			
-			imagecopyresampled($newGD, $this->gd,
-				$destX, $destY, 0, 0,
-				$destWidth, $destHeight, $this->width, $this->height);
+
+			if($noresample){
+				imagecopy($newGD, $this->gd,
+					$destX, $destY, 0, 0,
+					$this->width, $this->height);
+			} else {
+				imagecopyresampled($newGD, $this->gd,
+					$destX, $destY, 0, 0,
+					$destWidth, $destHeight, $this->width, $this->height);
+			}
 		}
 		$output = clone $this;
 		$output->setImageResource($newGD);
