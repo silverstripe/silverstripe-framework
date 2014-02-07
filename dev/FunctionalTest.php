@@ -48,6 +48,11 @@ class FunctionalTest extends SapphireTest {
 	 * However, this will let you inspect the intermediary headers
 	 */
 	protected $autoFollowRedirection = true;
+
+	/**
+	 * @var String
+	 */
+	protected $originalTheme = null;
 	
 	/**
 	 * Returns the {@link Session} object for this test
@@ -64,7 +69,10 @@ class FunctionalTest extends SapphireTest {
 		$this->mainSession = new TestSession();
 
 		// Disable theme, if necessary
-		if(static::get_disable_themes()) Config::inst()->update('SSViewer', 'theme', null);
+		if(static::get_disable_themes()) {
+			$this->originalTheme = Config::inst()->get('SSViewer', 'theme');
+			Config::inst()->update('SSViewer', 'theme', null);
+		}
 		
 		// Switch to draft site, if necessary
 		if(static::get_use_draft_site()) {
@@ -83,6 +91,10 @@ class FunctionalTest extends SapphireTest {
 		
 		parent::tearDown();
 		unset($this->mainSession);
+
+		if(static::get_disable_themes()) {
+			Config::inst()->update('SSViewer', 'theme', $this->originalTheme);
+		}
 	}
 
 	/**
