@@ -125,6 +125,22 @@ class CmsUiContext extends BehatContext {
 	}
 
 	/**
+	 * Finds the first visible GridField table.
+	 */
+	protected function getFirstGridFieldTable() {
+		$page = $this->getSession()->getPage();
+		$tableElements = $page->findAll('css', '.ss-gridfield-table');
+		assertNotNull($tableElements, 'Table elements not found');
+
+		// Return first found table.
+		foreach($tableElements as $table) {
+			if($table->isVisible()) return $table;
+		}
+
+		assertNotNull(null, 'First visible table element not found');
+	}
+
+	/**
 	 * @Given /^I should see a "([^"]*)" button in CMS Content Toolbar$/
 	 */
 	public function iShouldSeeAButtonInCmsContentToolbar($text) {
@@ -227,6 +243,20 @@ class CmsUiContext extends BehatContext {
 	 */
 	public function iClickOnInTheTable($text, $table) {
 		$table_element = $this->getGridfieldTable($table);
+
+		$element = $table_element->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
+		assertNotNull($element, sprintf('Element containing `%s` not found', $text));
+		$element->click();
+	}
+
+	/**
+	 * Clicks on a row in the first found visible GridField table.
+	 * Example: I click on "New Zealand" in the table
+	 *
+	 * @Given /^I click on "([^"]*)" in the table$/
+	 */
+	public function iClickOnInTheFirstTable($text) {
+		$table_element = $this->getFirstGridFieldTable();
 
 		$element = $table_element->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
 		assertNotNull($element, sprintf('Element containing `%s` not found', $text));
