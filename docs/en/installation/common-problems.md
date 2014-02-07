@@ -74,3 +74,38 @@ needs to create/have write-access to:
  * The mysite folder (to create _config.php)
  * After the install, the assets directory is the only directory that needs write access.
  * Image thumbnails will not show in the CMS if permission is not given 
+
+## I have whitespace before my HTML output, triggering quirks mode or preventing cookies from being set
+
+SilverStripe only uses class declarations in PHP files, and doesn't output any content
+directly outside of these declarations. It's easy to accidentally add whitespace
+or any other characters before the `<?php` opening bracket at the start of the document,
+or after the `?>` closing braket at the end of the document.
+
+Since we're dealing with hundreds of included files, identifying these mistakes manually can be tiresome.
+The best way to detect whitespace is to look through your version control system for any uncommitted changes. 
+If that doesn't work out, here's a little script to run checks in all relevant PHP files.
+Save it as `check.php` into your webroot, and run it as `php check.php` (or open it in your browser).
+After using the script (and fixing errors afterwards), please remember to remove it again.
+
+```php
+<?php
+// Check for whitespace around PHP brackets which show in output,
+// and hence can break HTML rendering and HTTP operations.
+$path = dirname(__FILE__);
+$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
+$matched = false;
+foreach($files as $name => $file){
+	if($file->getExtension() != 'php') continue;
+	if(preg_match('/thirdparty|vendor/',$file->getPathname())) continue;
+    $content = file_get_contents($file->getPathname());
+    if(preg_match('/^[[:blank:]]+<\?' . 'php/', $content)) {
+		echo sprintf("%s: Space before opening bracket\n", $file->getPathname());
+		$matched = true;
+	}
+    if(preg_match('/^\?' . '>\n?[[:blank:]]+/m', $content)) {
+    	echo sprintf("%s: Space after closing bracket\n", $file->getPathname());
+    	$matched = true;
+    }
+}
+```

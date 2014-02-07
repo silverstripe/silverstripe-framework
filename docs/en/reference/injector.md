@@ -76,8 +76,7 @@ The subsequent call returns the SAME object as the first call.
 
 In this case, on creation of the MyController object, the injector will 
 automatically instantiate the PermissionService object and set it as
-the **permissions** property. 
-
+the **permissions** property.
 
 ## Configuring objects managed by the dependency injector
 
@@ -89,6 +88,31 @@ Configuration can be specified for two areas of dependency management
 
 * Defining dependency overrides for individual classes
 * Injector managed 'services' 
+
+### Factories
+
+Some services require non-trivial construction which means they must be created by a factory class. To do this, create
+a factory class which implements the `[api:SilverStripe\Framework\Injector\Factory]` interface. You can then specify
+the `factory` key in the service definition, and the factory service will be used.
+
+An example using the `MyFactory` service to create instances of the `MyService` service is shown below:
+
+	:::yml
+	Injector:
+	  MyService:
+	    factory: MyFactory
+	  MyFactory:
+	    class: MyFactoryImplementation
+
+	:::php
+	class MyFactoryImplementation implements SilverStripe\Framework\Injector\Factory {
+		public function create($service, array $params = array()) {
+			return new MyServiceImplementation();
+		}
+	}
+
+	// Will use MyFactoryImplementation::create() to create the service instance.
+	$instance = Injector::inst()->get('MyService');
 
 ### Dependency overrides
 

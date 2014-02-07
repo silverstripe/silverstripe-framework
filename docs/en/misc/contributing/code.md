@@ -21,7 +21,7 @@ We also found the [free online git book](http://progit.org/book/) and the [git c
 If you're familiar with it, here's the short version of what you need to know. Once you fork and download the code:
 
   *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on our [bugtracker](/misc/contributing/issues)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
-
+x
   * **Do not merge the upstream master** with your development branch; *rebase* your branch on top of the upstream branch you branched off.
 
   * **A single development branch should represent changes related to a single issue.** If you decide to work on another issue, create another branch.
@@ -89,6 +89,25 @@ there are any problems they will follow up with you, so please ensure they have 
 
 ![Workflow diagram](http://www.silverstripe.org/assets/doc-silverstripe-org/collaboration-on-github.png)
 
+### Quickfire Do's and Don't's
+
+If you aren't familiar with git and GitHub, try reading the ["GitHub bootcamp documentation"](http://help.github.com/). 
+We also found the [free online git book](http://git-scm.com/book/) and the [git crash course](http://gitref.org/) useful.
+If you're familiar with it, here's the short version of what you need to know. Once you fork and download the code:
+
+  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on our [bugtracker](/misc/contributing/issues)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
+
+  * **Do not merge the upstream master** with your development branch; *rebase* your branch on top of the upstream master.
+
+  * **A single development branch should represent changes related to a single issue.** If you decide to work on another issue, create another branch.
+
+  * **Squash your commits, so that each commit addresses a single issue.** After you rebase your work on top of the upstream master, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Issue #100 Description of the issue here." We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
+
+  * **Choose the correct branch**: Assume the current release is 3.0.3, and 3.1.0 is in beta state.
+  Most pull requests should go against the `3.1.x-dev` *pre-release branch*, only critical bugfixes
+  against the `3.0.x-dev` *release branch*. If you're changing an API or introducing a major feature,
+  the pull request should go against `master` (read more about our [release process](/misc/release-process)). Branches are periodically merged "upwards" (3.0 into 3.1, 3.1 into master).
+
 ### Editing files directly on GitHub.com
 
 If you see a typo or another small fix that needs to be made, and you don't have an installation set up for contributions, you can edit files directly in the github.com web interface.  Every file view has an "edit this file" link.
@@ -109,7 +128,7 @@ step.
 *  It's better to submit multiple patches with separate bits of functionality than a big patch containing lots of
 changes
 *  Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
-[API documentation](http://api.silverstripe.org/trunk) for good examples.
+[API documentation](http://api.silverstripe.org/3.1/) for good examples.
 * Also check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * We will attribute the change to you whereever possible (git does this automatically for pull requests)
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
@@ -272,7 +291,7 @@ It's as if you had just started your branch. One immediate advantage you get is 
 
 So when you're ready to send the new plugin upstream, you do one last rebase, test, and then merge (which is really no merge at all) and send out your pull request. Then in most cases, we have a simple fast-forward on our end (or at worst a very small rebase or merge) and over time that adds up to a simpler tree.
 
-More info on the ["Rebasing" chapter on progit.org](http://progit.org/book/ch3-6.html) and the [git rebase man page](http://www.kernel.org/pub/software/scm/git/docs/git-rebase.html).
+More info on the ["Rebasing" chapter on git-scm.com](http://git-scm.com/book/ch3-6.html) and the [git rebase man page](http://www.kernel.org/pub/software/scm/git/docs/git-rebase.html).
 
 ## License
 

@@ -127,7 +127,7 @@ abstract class Object {
 	 *
 	 * @param string $class the class name
 	 * @param mixed $arguments,... arguments to pass to the constructor
-	 * @return Object
+	 * @return static
 	 */
 	public static function create() {
 		$args = func_get_args();
@@ -279,7 +279,7 @@ abstract class Object {
 	 *
 	 * @param string $class the class name
 	 * @param mixed $arguments,... arguments to pass to the constructor
-	 * @return Object
+	 * @return static
 	 */
 	public static function strong_create() {
 		$args  = func_get_args();
@@ -550,7 +550,7 @@ abstract class Object {
 		Config::inst()->update($class, 'extensions', array($extension));
 		Config::inst()->extraConfigSourcesChanged($class);
 
-		Injector::inst()->unregisterAllObjects();
+		Injector::inst()->unregisterNamedObject($class);
 
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {

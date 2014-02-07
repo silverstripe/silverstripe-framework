@@ -2209,6 +2209,24 @@ class i18n extends Object implements TemplateGlobalProvider {
 	}
 	
 	/**
+	 * Matches a given locale with the closest translation available in the system
+	 * 
+	 * @param string $locale locale code
+	 * @return string Locale of closest available translation, if available
+	 */
+	public static function get_closest_translation($locale) {
+		
+		// Check if exact match
+		$pool = self::get_existing_translations();
+		if(isset($pool[$locale])) return $locale;
+		
+		// Fallback to best locale for common language
+		$lang = self::get_lang_from_locale($locale);
+		$candidate = self::get_locale_from_lang($lang);
+		if(isset($pool[$candidate])) return $candidate;
+	}
+	
+	/**
 	 * Searches the root-directory for module-directories
 	 * (identified by having a _config.php on their first directory-level).
 	 * Finds locales by filename convention ("<locale>.<extension>", e.g. "de_AT.yml").
