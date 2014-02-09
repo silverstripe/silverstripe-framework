@@ -973,7 +973,7 @@ class MySQLDatabase extends SS_Database {
 	 * This will return text which has been escaped in a database-friendly manner.
 	 */
 	public function addslashes($value){
-		return $this->dbConn->real_escape_string($value);
+		return $this->dbConn->real_escape_string((string)$value);
 	}
 
 	/*
