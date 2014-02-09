@@ -413,7 +413,7 @@ class GDBackend extends Object implements Image_Backend {
 				$destX = round( ($width - $destWidth) / 2 );
 			
 			// Destination shorter than the source
-			} elseif($this->width > $width || $stretch!=true){
+			} elseif($this->width > $width || $stretch!=true) {
 				$destX = 0;
 				$destWidth = $width;
 				
@@ -427,7 +427,7 @@ class GDBackend extends Object implements Image_Backend {
 				$destY = round( ($height-$this->height) / 2);
 			}
 
-			if($noresample){
+			if($noresample) {
 				imagecopy($newGD, $this->gd,
 					$destX, $destY, 0, 0,
 					$this->width, $this->height);
