@@ -369,7 +369,8 @@ class Image extends File {
 	 * @param boolean $stretchImage Override default stretch setting
 	 * @return Image_Backend
 	 */
-	public function generatePaddedImage(Image_Backend $backend, $width, $height, $backgroundColor='FFFFFF', $stretchImage=null) {
+	public function generatePaddedImage(Image_Backend $backend, $width, $height, $backgroundColor = 'FFFFFF',
+										$stretchImage = null) {
 		return $backend->paddedResize($width, $height, $backgroundColor, $stretchImage);
 	}
 	
