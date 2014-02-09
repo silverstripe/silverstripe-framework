@@ -24,7 +24,7 @@ class GDBackend extends Object implements Image_Backend {
 	/**
 	* @var boolean
 	*/
-	protected static $correctly_pad_default = false;
+	private static $stretch_on_padded_resize = false;
 
 	/**
 	 * Set the default image quality.
@@ -40,13 +40,12 @@ class GDBackend extends Object implements Image_Backend {
 	}
 
 	/**
-	 * Manually overide 'always pad' images -instead of steteching them
-	 * _config.php
-	 * GDBackend::set_always_pad_correctly(true);
+	 * Manually overide 'always pad' images -instead of stretching them
+	 *
 	 * @param boolean $code
 	 */
-	static function set_always_pad_correctly($bool=true) {
-		self::$correctly_pad_default = $bool;
+	static function set_stretch_on_padded_resize($bool=true) {
+		self::$stretch_on_padded_resize = $bool;
 	}
 
 	public function __construct($filename = null) {
@@ -373,10 +372,10 @@ class GDBackend extends Object implements Image_Backend {
 	 * @param backgroundColour
 	 * @param boolean strechImage
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $stretch=null) {
+	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $strechImage=null) {
 		if(!$this->gd) return;
 
-		$stretch = ($stretch===null) ? self::$correctly_pad_default : (bool) $stretch;
+		$stretch = ($strechImage===null) ? self::$stretch_on_padded_resize : (bool) $strechImage;
 
 		$width = round($width);
 		$height = round($height);
