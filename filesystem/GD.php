@@ -369,10 +369,10 @@ class GDBackend extends Object implements Image_Backend {
 	/**
 	 * Resize to fit fully within the given box, without resizing.  Extra space left around
 	 * the image will be padded with the background color.
-	 * @param width
-	 * @param height
-	 * @param backgroundColour
-	 * @param boolean strechImage
+	 * @param integer $width
+	 * @param integer $height
+	 * @param hex $backgroundColour
+	 * @param boolean $strechImage Override default stretch setting
 	 */
 	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $strechImage=null) {
 		if(!$this->gd) return;
