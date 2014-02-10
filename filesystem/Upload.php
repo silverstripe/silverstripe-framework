@@ -129,17 +129,12 @@ class Upload extends Controller {
 		$base = Director::baseFolder();
 		$parentFolder = Folder::find_or_make($folderPath);
 
-		// Create a folder for uploading.
-		if(!file_exists(ASSETS_PATH . "/" . $folderPath)){
-			Filesystem::makeFolder(ASSETS_PATH . "/" . $folderPath);
-		}
-
 		// Generate default filename
 		$nameFilter = FileNameFilter::create();
 		$file = $nameFilter->filter($tmpFile['name']);
 		$fileName = basename($file);
 
-		$relativeFilePath = ASSETS_DIR . "/" . $folderPath . "/$fileName";
+		$relativeFilePath = $parentFolder->getRelativePath() . "/$fileName";
 		
 		// Create a new file record (or try to retrieve an existing one)
 		if(!$this->file) {
