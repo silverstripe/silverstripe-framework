@@ -22,8 +22,9 @@ class GDBackend extends Object implements Image_Backend {
 	private static $image_interlace = 0;
 
 	/**
-	* @var boolean
-	*/
+	 * @config
+	 * @var boolean Always pad images on both x/y dimensions if the source image is too small
+	 */
 	private static $stretch_on_padded_resize = false;
 
 	/**
