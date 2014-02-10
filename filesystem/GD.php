@@ -395,7 +395,7 @@ class GDBackend extends Object implements Image_Backend {
 			$noresample = false;
 		
 			// Destination narrower than the source
-			if($destAR > $srcAR && ($stretch!=true || $this->width > $width)) {
+			if($destAR > $srcAR && ($stretch != true || $this->width > $width)) {
 				$destY = 0;
 				$destHeight = $height;
 				
@@ -403,7 +403,7 @@ class GDBackend extends Object implements Image_Backend {
 				$destX = round( ($width - $destWidth) / 2 );
 			
 			// Destination shorter than the source
-			} elseif($this->width > $width || $stretch!=true) {
+			} elseif($this->width > $width || $stretch != true) {
 				$destX = 0;
 				$destWidth = $width;
 				
