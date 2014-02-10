@@ -39,17 +39,6 @@ class GDBackend extends Object implements Image_Backend {
 		}
 	}
 
-	/**
-	 * Manually overide 'always pad' images -instead of stretching them
-	 *
-	 * @deprecated 3.2 Use the "GDBackend.stretch_on_padded_resize" config setting instead
-	 * @param boolean $code
-	 */
-	static function set_stretch_on_padded_resize($bool=true) {
-		Deprecation::notice('3.2', 'Use the "GDBackend.set_stretch_on_padded_resize" config setting instead');
-		self::$stretch_on_padded_resize = $bool;
-	}
-
 	public function __construct($filename = null) {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
 		increase_time_limit_to(300);
