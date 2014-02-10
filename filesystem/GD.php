@@ -362,12 +362,12 @@ class GDBackend extends Object implements Image_Backend {
 	 * @param integer $width
 	 * @param integer $height
 	 * @param hex $backgroundColour
-	 * @param boolean $strechImage Override default stretch setting
+	 * @param boolean $stretchImage Override default stretch setting
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $strechImage=null) {
+	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $stretchImage=null) {
 		if(!$this->gd) return;
 
-		$stretch = ($strechImage===null) ? self::$stretch_on_padded_resize : (bool) $strechImage;
+		$stretch = ($stretchImage===null) ? self::$stretch_on_padded_resize : (bool) $stretchImage;
 
 		$width = round($width);
 		$height = round($height);
