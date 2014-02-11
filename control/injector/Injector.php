@@ -418,7 +418,7 @@ class Injector {
 			// and reload the object; existing bindings don't get
 			// updated though! (for now...) 
 			if (isset($this->serviceCache[$id])) {
-				$this->instantiate($spec, $id);
+				$this->instantiate(array('class'=>$id), $id);
 			}
 		}
 	}

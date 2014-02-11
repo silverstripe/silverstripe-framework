@@ -9,7 +9,7 @@
  * @todo Add support for deep chaining of relation properties (e.g. Player.Team.Stats.GoalCount)
  * @todo Character conversion
  * 
- * @see http://rfc.net/rfc4180.html
+ * @see http://tools.ietf.org/html/rfc4180
  * @package framework
  * @subpackage bulkloading
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)

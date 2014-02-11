@@ -6,7 +6,7 @@
  * Uses the fgetcsv() function to process CSV input. Accepts a file-handler as 
  * input.
  * 
- * @see http://rfc.net/rfc4180.html
+ * @see http://tools.ietf.org/html/rfc4180
  *
  * @package framework
  * @subpackage bulkloading

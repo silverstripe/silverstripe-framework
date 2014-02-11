@@ -957,8 +957,8 @@ class UploadField extends FileField {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/i18n.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
 
 		Requirements::combine_files('uploadfield.js', array(
 			// @todo jquery templates is a project no longer maintained and should be retired at some point.

@@ -320,7 +320,22 @@ class FormTest extends FunctionalTest {
 			)
 		);
 		$this->assertEquals(400, $response->getStatusCode(), 'Submission fails without security token');
-		
+
+		$response = $this->get('FormTest_ControllerWithSecurityToken');
+		$response = $this->post(
+			'FormTest_ControllerWithSecurityToken/Form',
+			array(
+				'Email' => 'test@test.com',
+				'action_doSubmit' => 1,
+				'SecurityID' => -1
+			)
+		);
+		$this->assertEquals(200, $response->getStatusCode(), 'Submission reloads form if security token invalid');
+
+		$matched = $this->cssParser()->getBySelector('#Form_Form_Email');
+		$attrs = $matched[0]->attributes();
+		$this->assertEquals('test@test.com', (string)$attrs['value'], 'Submitted data is preserved');
+
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
 		$tokenEls = $this->cssParser()->getBySelector('#Form_Form_SecurityID');
 		$this->assertEquals(
