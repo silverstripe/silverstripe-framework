@@ -320,17 +320,13 @@ class MemberTest extends FunctionalTest {
 	}
 	
 	public function testMemberWithNoDateFormatFallsbackToGlobalLocaleDefaultFormat() {
+		Config::inst()->update('i18n', 'date_format', 'yyyy-MM-dd');
+		Config::inst()->update('i18n', 'time_format', 'H:mm');
 		$member = $this->objFromFixture('Member', 'noformatmember');
-		$this->assertEquals('MMM d, y', $member->DateFormat);
-		$this->assertEquals('h:mm:ss a', $member->TimeFormat);
+		$this->assertEquals('yyyy-MM-dd', $member->DateFormat);
+		$this->assertEquals('H:mm', $member->TimeFormat);
 	}
-	
-	public function testMemberWithNoDateFormatFallsbackToTheirLocaleDefaultFormat() {
-		$member = $this->objFromFixture('Member', 'delocalemember');
-		$this->assertEquals('dd.MM.yyyy', $member->DateFormat);
-		$this->assertEquals('HH:mm:ss', $member->TimeFormat);
-	}
-	
+		
 	public function testInGroups() {
 		$staffmember = $this->objFromFixture('Member', 'staffmember');
 		$managementmember = $this->objFromFixture('Member', 'managementmember');

@@ -58,7 +58,7 @@ class TimeField extends TextField {
 		$this->config = $this->config()->default_config;
 		
 		if(!$this->getConfig('timeformat')) {
-			$this->setConfig('timeformat', i18n::get_time_format());
+			$this->setConfig('timeformat', Config::inst()->get('i18n', 'time_format'));
 		}
 		
 		parent::__construct($name,$title,$value);

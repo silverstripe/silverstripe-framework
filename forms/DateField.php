@@ -97,7 +97,7 @@ class DateField extends TextField {
 		
 		$this->config = $this->config()->default_config;
 		if(!$this->getConfig('dateformat')) {
-			$this->setConfig('dateformat', i18n::get_date_format());
+			$this->setConfig('dateformat', Config::inst()->get('i18n', 'date_format'));
 		}
 		
 		foreach ($this->config()->default_config AS $defaultK => $defaultV) {

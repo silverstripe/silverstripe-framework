@@ -65,36 +65,6 @@ class i18nTest extends SapphireTest {
 		parent::tearDown();
 	}
 	
-	public function testDateFormatFromLocale() {
-		i18n::set_locale('en_US');
-		$this->assertEquals('MMM d, y', i18n::get_date_format());
-		i18n::set_locale('en_NZ');
-		$this->assertEquals('d/MM/yyyy', i18n::get_date_format());
-		i18n::set_locale('en_US');
-	}
-	
-	public function testTimeFormatFromLocale() {
-		i18n::set_locale('en_US');
-		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
-		i18n::set_locale('de_DE');
-		$this->assertEquals('HH:mm:ss', i18n::get_time_format());
-		i18n::set_locale('en_US');
-	}
-	
-	public function testDateFormatCustom() {
-		i18n::set_locale('en_US');
-		$this->assertEquals('MMM d, y', i18n::get_date_format());
-		i18n::config()->date_format = 'd/MM/yyyy';
-		$this->assertEquals('d/MM/yyyy', i18n::get_date_format());
-	}
-	
-	public function testTimeFormatCustom() {
-		i18n::set_locale('en_US');
-		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
-		i18n::config()->time_format = 'HH:mm:ss';
-		$this->assertEquals('HH:mm:ss', i18n::get_time_format());
-	}
-	
 	public function testGetExistingTranslations() {
 		$translations = i18n::get_existing_translations();
 		$this->assertTrue(isset($translations['en_US']), 'Checking for en translation');
