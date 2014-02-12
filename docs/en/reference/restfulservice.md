@@ -150,18 +150,19 @@ Put something like this code in mysite/code/Page.php inside class Page_Controlle
 	:::php
 		// Accepts an RSS feed URL and outputs a list of links from it
 		public function RestfulLinks($url){
-			$delicious = new RestfulService($url);
-			
-			$conn = $delicious->connect();
-			$result = $delicious->getValues($conn, "item");
+			$service 	= new RestfulService($url);
+			$request 	= $service->request();
+			$body 		= $request->getBody();
+			$items 		= $service->getValues($body,"channel","item");	
+		
 			$output = '';
-			foreach ($result as $key => $value) {
+			foreach($items as $item) {
 				// Fix quote encoding
-				$description = str_replace('&amp;quot;', '&quot;', $value->description);
-				$output .=  '<li><a href="'.$value->link.'">'.$value->title.'</a><br />'.$description.'</li>';
+				$description = str_replace('&amp;quot;', '&quot;', $item->description);
+				$output .=  "<li><a href=\"{$item->link}\">{$item->title}</a><br />{$description}</li>";
 			}
 			return $output;
-		}
+		} 
 
 
 Put something like this code in `themes/<your-theme>/templates/Layout/HomePage.ss`:
