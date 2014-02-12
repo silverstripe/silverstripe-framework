@@ -138,6 +138,7 @@ timeline and ask the reporter to keep the issue confidential until we announce i
    Additionally, [CVE](http://cve.mitre.org) numbers are accepted.
 *  Halt all other development as long as is needed to develop a fix, including patches against the current and one
 previous major release (if applicable).
+* Pre-announce the upcoming security release to a private mailing list of important stakeholders (see below).
 *  We will inform you about resolution and [announce](http://groups.google.com/group/silverstripe-announce) a 
 [new release](http://silverstripe.org/security-releases/) publically.
 
@@ -155,3 +156,19 @@ Each [security release](http://www.silverstripe.org/security-releases/) includes
 | **Important** | Important releases should be evaluated immediately. These issues allow an attacker to compromise a site's data and should be fixed within days. *Example: SQL injection.* |
 | **Moderate**  | Releases of moderate severity should be applied as soon as possible. They allow the unauthorized editing or creation of content. *Examples: Cross Site Scripting (XSS) in template helpers.* |
 | **Low**       | Low risk releases fix information disclosure and read-only privilege escalation vulnerabilities. These updates should also be applied as soon as possible, but with an impact-dependent priority. *Example: Exposure of the core version number, Cross Site Scripting (XSS) limited to the admin interface.* |
+
+### Pre-announce Mailinglist
+
+In addition to our public disclosure process, we maintain a private mailinglist
+where upcoming security releases will be pre-announced. Members in this list will receive a security 
+pre-announcement as soon as it has been sufficiently researched,
+alongside a timeline for the upcoming release. This will happen a few days before 
+the announcement goes public alongside new release, and most likely before a patch has been developed.
+
+Since we’ll distribute sensitive info on unpatched vulnerabilities in this list,
+the selection criteria for joining naturally has to be strict.
+Applicants should provide references within the community,
+as well as a demonstrated need for this level of information (e.g. a large website with sensitive customer data).
+You don’t need to be a client of SilverStripe Ltd to get on board, 
+but we will need to perform some low-touch background checks to ensure identity.
+Please contact security@silverstripe.org for details.
