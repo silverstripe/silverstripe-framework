@@ -184,17 +184,24 @@ var editor = jQuery('#$inputFieldId').entwine('ss').getEditor(),
 	sel = editor.getInstance().selection,
 	rng = document.createRange(),
 	matched = false;
+
 jQuery(doc).find('body *').each(function() {
-	if(!matched && this.firstChild && this.firstChild.nodeValue && this.firstChild.nodeValue.match('$text')) {
-		rng.setStart(this.firstChild, this.firstChild.nodeValue.indexOf('$text'));
-		rng.setEnd(this.firstChild, this.firstChild.nodeValue.indexOf('$text') + '$text'.length);
-		sel.setRng(rng);
-		editor.getInstance().nodeChanged();
-		matched = true;
+	if(!matched) {
+		for(var i=0;i<this.childNodes.length;i++) {
+			if(!matched && this.childNodes[i].nodeValue && this.childNodes[i].nodeValue.match('$text')) {
+				rng.setStart(this.childNodes[i], this.childNodes[i].nodeValue.indexOf('$text'));
+				rng.setEnd(this.childNodes[i], this.childNodes[i].nodeValue.indexOf('$text') + '$text'.length);
+				sel.setRng(rng);
+				editor.getInstance().nodeChanged();
+				matched = true;
+				break;
+			}
+		}
 	}
 });
 JS;
-		$this->getSession()->evaluateScript($js);
+
+		$this->getSession()->executeScript($js);
 	}	
 
 	/**
