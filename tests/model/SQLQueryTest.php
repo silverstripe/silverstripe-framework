@@ -293,7 +293,6 @@ class SQLQueryTest extends SapphireTest {
 		);
 	}
 	
-
 	public function testSetWhereAny() {
 		$query = new SQLQuery();
 		$query->setFrom('MyTable');
@@ -303,17 +302,18 @@ class SQLQueryTest extends SapphireTest {
 	}
 	
 	public function testSelectFirst() {
-		
 		// Test first from sequence
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');
 		$query->setOrderBy('"Name"');
 		$result = $query->firstRow()->execute();
 		
-		$this->assertCount(1, $result);
+		$count = 0;
 		foreach($result as $row) {
 			$this->assertEquals('Object 1', $row['Name']);
+			$count++;
 		}
+		$this->assertEquals(1, $count);
 		
 		// Test first from empty sequence
 		$query = new SQLQuery();
@@ -321,51 +321,66 @@ class SQLQueryTest extends SapphireTest {
 		$query->setOrderBy('"Name"');
 		$query->setWhere(array("\"Name\" = 'Nonexistent Object'"));
 		$result = $query->firstRow()->execute();
-		$this->assertCount(0, $result);
-		
+
+		$count = 0;
+		foreach($query->lastRow()->execute() as $row) {
+			$count++;
+		}
+		$this->assertEquals(0, $count);
+
 		// Test that given the last item, the 'first' in this list matches the last
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');
 		$query->setOrderBy('"Name"');
 		$query->setLimit(1, 1);
 		$result = $query->firstRow()->execute();
-		$this->assertCount(1, $result);
+
+		$count = 0;
 		foreach($result as $row) {
 			$this->assertEquals('Object 2', $row['Name']);
+			$count++;
 		}
+		$this->assertEquals(1, $count);
 	}
 	
 	public function testSelectLast() {
-		
 		// Test last in sequence
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');
 		$query->setOrderBy('"Name"');
-		$result = $query->lastRow()->execute();
-		
-		$this->assertCount(1, $result);
-		foreach($result as $row) {
+
+		$count = 0;
+		foreach($query->lastRow()->execute() as $row) {
 			$this->assertEquals('Object 2', $row['Name']);
+			$count++;
 		}
-		
+		$this->assertEquals(1, $count);
+
 		// Test last from empty sequence
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');
 		$query->setOrderBy('"Name"');
 		$query->setWhere(array("\"Name\" = 'Nonexistent Object'"));
-		$result = $query->lastRow()->execute();
-		$this->assertCount(0, $result);
+
+		$count = 0;
+		foreach($query->lastRow()->execute() as $row) {
+			$count++;
+		}
+		$this->assertEquals(0, $count);
+
 		
 		// Test that given the first item, the 'last' in this list matches the first
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');
 		$query->setOrderBy('"Name"');
 		$query->setLimit(1);
-		$result = $query->lastRow()->execute();
-		$this->assertCount(1, $result);
-		foreach($result as $row) {
+
+		$count = 0;
+		foreach($query->lastRow()->execute() as $row) {
 			$this->assertEquals('Object 1', $row['Name']);
+			$count++;
 		}
+		$this->assertEquals(1, $count);
 	}
 
 	/**
