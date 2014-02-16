@@ -176,7 +176,7 @@ en:
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    CSRF_FAILED_MESSAGE: "There seems to have been a technical problem. Please click the back button, \n					refresh your browser, and try again."
     FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
@@ -186,6 +186,7 @@ en:
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
+    CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
   FormField:
     Example: 'e.g. %s'
     NONE: none
