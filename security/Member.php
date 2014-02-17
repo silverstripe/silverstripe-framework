@@ -1203,50 +1203,58 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function getCMSFields() {
 		require_once('Zend/Date.php');
-		
-		$fields = parent::getCMSFields();
 
-		$mainFields = $fields->fieldByName("Root")->fieldByName("Main")->Children;
 
-		$password = new ConfirmedPasswordField(
-			'Password', 
-			null, 
-			null, 
-			null, 
+		//build basic tabset
+		$fields = new FieldList(
+			$root = new TabSet(
+				'Root',
+				$mainTab = new Tab(
+					'Main',
+					singleton('Member')->i18n_singular_name()
+				),
+				$permissionsTab = new Tab(
+					'Permissions',
+					singleton('Permission')->i18n_plural_name()
+				),
+				$settingsTab = new Tab(
+					'LocaleSettings',
+					_t('Member.db_Locale', "Interface Locale", 'Language and formatting settings for member')
+				)
+			)
+		);
+
+
+		//add main fields including password
+		$passwordField = new ConfirmedPasswordField(
+			'Password',
+			null,
+			null,
+			null,
 			true // showOnClick
 		);
-		$password->setCanBeEmpty(true);
-		if(!$this->ID) $password->showOnClick = false;
-		$mainFields->replaceField('Password', $password);
-
-		$mainFields->replaceField('Locale', new DropdownField(
-			"Locale", 
-			_t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'), 
-			i18n::get_existing_translations()
-		));
-
-		$mainFields->removeByName('RememberLoginToken');
-		$mainFields->removeByName('AutoLoginHash');
-		$mainFields->removeByName('AutoLoginExpired');
-		$mainFields->removeByName('PasswordEncryption');
-		$mainFields->removeByName('PasswordExpiry');
-		$mainFields->removeByName('LockedOutUntil');
-		
-		if(!self::config()->lock_out_after_incorrect_logins) {
-			$mainFields->removeByName('FailedLoginCount');
+		$passwordField->setCanBeEmpty(true);
+		if(!$this->ID) {
+			$passwordField->showOnClick = false;
 		}
-		
-		$mainFields->removeByName('Salt');
-		$mainFields->removeByName('NumVisit');
+		$fields->addFieldsToTab(
+			"Root.Main",
+			array(
+				new TextField("FirstName", _t('Member.FIRSTNAME', "First Name", 'First Name of Member') ),
+				new TextField("Surname", _t('Member.SURNAME', "Surname", 'Surname of Member')),
+				new EmailField("Email", _t('Member.EMAIL', "Email", 'Email of Member')),
+				$passwordField
+			)
+		);
 
-		$mainFields->makeFieldReadonly('LastVisited');
 
-		$fields->removeByName('Subscriptions');
-
+		// add permission fields
+		if(self::config()->lock_out_after_incorrect_logins) {
+			$fields->addFieldToTab('Root.Permissions', new NumericField('FailedLoginCount'));
+			$fields->addFieldToTab('Root.Permissions', new ReadonlyField('MaximumCount', "Maximum failures: ".self::config()->lock_out_after_incorrect_logins));
+		}
 		// Groups relation will get us into logical conflicts because
 		// Members are displayed within  group edit form in SecurityAdmin
-		$fields->removeByName('Groups');
-
 		if(Permission::check('EDIT_PERMISSIONS')) {
 			$groupsMap = array();
 			foreach(Group::get() as $group) {
@@ -1254,16 +1262,16 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$groupsMap[$group->ID] = $group->getBreadcrumbs(' > ');
 			}
 			asort($groupsMap);
-			$fields->addFieldToTab('Root.Main',
+			$fields->addFieldToTab(
+				'Root.Permissions',
 				ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())
 					->setMultiple(true)
 					->setSource($groupsMap)
 					->setAttribute(
-						'data-placeholder', 
+						'data-placeholder',
 						_t('Member.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
 					)
 			);
-
 			// Add permission field (readonly to avoid complicated group assignment logic).
 			// This should only be available for existing records, as new records start
 			// with no permissions until they have a group assignment anyway.
@@ -1276,50 +1284,59 @@ class Member extends DataObject implements TemplateGlobalProvider {
 					// we don't want parent relationships, they're automatically resolved in the field
 					$this->getManyManyComponents('Groups')
 				);
-				$fields->findOrMakeTab('Root.Permissions', singleton('Permission')->i18n_plural_name());
 				$fields->addFieldToTab('Root.Permissions', $permissionsField);
 			}
 		}
+		$permissionsTab->addExtraClass('readonly');
 
-		$permissionsTab = $fields->fieldByName("Root")->fieldByName('Permissions');
-		if($permissionsTab) $permissionsTab->addExtraClass('readonly');
-		
-		$defaultDateFormat = Zend_Locale_Format::getDateFormat(new Zend_Locale($this->Locale));
+
+		//add local settings fields
+		$localeField = new DropdownField(
+			"Locale",
+			_t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'),
+			i18n::get_existing_translations()
+		);
+		$localDateFormat = Zend_Locale_Data::getContent(new Zend_Locale($this->Locale), 'date', 'short');
+		// Ensure short dates always use four digit dates to avoid confusion
+		$localDateFormat = preg_replace('/(^|[^y])yy($|[^y])/', '$1yyyy$2', $localDateFormat);
 		$dateFormatMap = array(
-			'MMM d, yyyy' => Zend_Date::now()->toString('MMM d, yyyy'),
+			$this->DateFormat => Zend_Date::now()->toString($this->DateFormat),
+			$localDateFormat => Zend_Date::now()->toString($localDateFormat),
 			'yyyy/MM/dd' => Zend_Date::now()->toString('yyyy/MM/dd'),
 			'MM/dd/yyyy' => Zend_Date::now()->toString('MM/dd/yyyy'),
 			'dd/MM/yyyy' => Zend_Date::now()->toString('dd/MM/yyyy'),
 		);
-		$dateFormatMap[$defaultDateFormat] = Zend_Date::now()->toString($defaultDateFormat)
-			. sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
-		$mainFields->push(
-			$dateFormatField = new MemberDatetimeOptionsetField(
-				'DateFormat',
-				$this->fieldLabel('DateFormat'),
-				$dateFormatMap
-			)
+		$dateFormatField = new MemberDatetimeOptionsetField(
+			'DateFormat',
+			$this->fieldLabel('DateFormat'),
+			$dateFormatMap
 		);
 		$dateFormatField->setValue($this->DateFormat);
-		
-		$defaultTimeFormat = Zend_Locale_Format::getTimeFormat(new Zend_Locale($this->Locale));
+		//time
+		$localTimeFormat = Zend_Locale_Format::getTimeFormat(new Zend_Locale($this->Locale));
 		$timeFormatMap = array(
+			$this->TimeFormat => Zend_Date::now()->toString($this->TimeFormat),
+			$localTimeFormat => Zend_Date::now()->toString($localTimeFormat),
 			'h:mm a' => Zend_Date::now()->toString('h:mm a'),
 			'H:mm' => Zend_Date::now()->toString('H:mm'),
 		);
-		$timeFormatMap[$defaultTimeFormat] = Zend_Date::now()->toString($defaultTimeFormat)
-			. sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
-		$mainFields->push(
-			$timeFormatField = new MemberDatetimeOptionsetField(
-				'TimeFormat',
-				$this->fieldLabel('TimeFormat'),
-				$timeFormatMap
-			)
+		$timeFormatField = new MemberDatetimeOptionsetField(
+			'TimeFormat',
+			$this->fieldLabel('TimeFormat'),
+			$timeFormatMap
 		);
 		$timeFormatField->setValue($this->TimeFormat);
+		$fields->addFieldsToTab(
+			'Root.LocaleSettings',
+			array(
+				$localeField,
+				$dateFormatField,
+				$timeFormatField
+			)
+		);
 
+		//add hook
 		$this->extend('updateCMSFields', $fields);
-		
 		return $fields;
 	}
 	
