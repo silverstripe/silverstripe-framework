@@ -60,6 +60,13 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	private $objCache = array();
 	
+	/**
+	 * Avoid $objCache usage (useful when storing objects in Session)
+	 * 
+	 * @var boolean 
+	 */
+	protected $cached = true;
+	
 	// -----------------------------------------------------------------------------------------------------------------
 	
 	/**
@@ -354,7 +361,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		if(!$cacheName) $cacheName = $arguments ? $fieldName . implode(',', $arguments) : $fieldName;
 		
-		if(!isset($this->objCache[$cacheName])) {
+		if(!isset($this->objCache[$cacheName]) || !$this->cached) {
 			// HACK: Don't call the deprecated FormField::Name() method
 			$methodIsAllowed = true;
 			if($this instanceof FormField && $fieldName == 'Name') $methodIsAllowed = false;

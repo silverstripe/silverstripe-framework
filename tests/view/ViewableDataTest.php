@@ -156,6 +156,25 @@ class ViewableDataTest extends SapphireTest {
 
 		$this->assertEquals($uncastedData, $castedData->getValue(), 'Casted and uncasted strings are not equal.');
 	}
+	
+	public function testCaching() {
+		$objCached = new ViewableDataTest_Cached();
+		$objNotCached = new ViewableDataTest_NotCached();
+		
+		$objCached->Test = 'AAA';
+		$objNotCached->Test = 'AAA';
+		
+		$this->assertEquals('AAA', $objCached->obj('Test', null, true, true));
+		$this->assertEquals('AAA', $objNotCached->obj('Test', null, true, true));
+		
+		$objCached->Test = 'BBB';
+		$objNotCached->Test = 'BBB';
+		
+		// Cached data must be always the same
+		$this->assertEquals('AAA', $objCached->obj('Test', null, true, true));
+		$this->assertEquals('BBB', $objNotCached->obj('Test', null, true, true));
+	}
+	
 }
 
 /**#@+
@@ -251,6 +270,16 @@ class ViewableDataTest_NoCastingInformation extends ViewableData {
 	public function noCastingInformation() {
 		return "No casting information";
 	}
+}
+	
+class ViewableDataTest_Cached extends ViewableData {
+	public $Test;
+	protected $cached = true;
+}
+
+class ViewableDataTest_NotCached extends ViewableData {
+	public $Test;
+	protected $cached = false;
 }
 
 /**#@-*/
