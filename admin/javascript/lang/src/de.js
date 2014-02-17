@@ -1,10 +1,10 @@
 {
-    "ModelAdmin.SAVED": "Gespeichert",
     "LeftAndMain.CONFIRMUNSAVED": "Sind Sie sicher, dass Sie die Seite verlassen möchten?\n\nWARNUNG: Ihre Änderungen werden nicht gespeichert.\n\nDrücken Sie \"OK\" um fortzufahren, oder \"Abbrechen\" um auf dieser Seite zu bleiben.",
-    "ModelAdmin.VALIDATIONERROR": "Validationsfehler",
-    "ModelAdmin.DELETED": "Gelöscht",
+    "LeftAndMain.CONFIRMUNSAVEDSHORT": "WARNUNG: Ihre Änderungen wurden nicht gespeichert.",
     "SecurityAdmin.BATCHACTIONSDELETECONFIRM": "Möchten Sie wirklich %s Gruppen löschen?",
+    "ModelAdmin.SAVED": "Gespeichert",
     "ModelAdmin.REALLYDELETE": "Wirklich löschen?",
-    "LeftAndMain.PAGEWASDELETED": "Diese Seite wurde gelöscht.",
-    "LeftAndMain.CONFIRMUNSAVEDSHORT": "WARNUNG: Ihre Änderungen wurden nicht gespeichert."
+    "ModelAdmin.DELETED": "Gelöscht",
+    "ModelAdmin.VALIDATIONERROR": "Validationsfehler",
+    "LeftAndMain.PAGEWASDELETED": "Diese Seite wurde gelöscht."
 }

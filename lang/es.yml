@@ -171,7 +171,6 @@ es:
     TEXT2: 'enlace para restablecer contraseña'
     TEXT3: para
   Form:
-    CSRF_FAILED_MESSAGE: 'Se detectó exploit malicioso en el formulario'
     FIELDISREQUIRED: 'Se requiere este campo'
     SubmitBtnLabel: Ir
     VALIDATIONCREDITNUMBER: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente {number}'
@@ -413,8 +412,8 @@ es:
     Title: 'Modelos de datos'
     UPDATEDRECORDS: 'Actualizados {count} registros.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Mostrar especificación para %s'
     IMPORTSPECFIELDS: 'Columnas de la base de datos'
+    IMPORTSPECLINK: 'Mostrar especificación para %s'
     IMPORTSPECRELATIONS: Relaciones
     IMPORTSPECTITLE: 'Especificación para %s'
   ModelAdmin_Tools_ss:

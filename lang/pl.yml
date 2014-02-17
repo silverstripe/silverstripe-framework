@@ -123,6 +123,7 @@ pl:
     INVALID_REQUEST: 'Nieprawidłowe żądanie'
   DropdownField:
     CHOOSE: (wybierz)
+    CHOOSESEARCH: '(Wybierz lub szukaj)'
   EmailField:
     VALIDATION: 'Proszę podaj adres e-mail'
   Enum:
@@ -170,7 +171,6 @@ pl:
     TEXT2: 'link zmiany hasła'
     TEXT3: dla
   Form:
-    CSRF_FAILED_MESSAGE: 'Wygląda na to, że wystąpił błąd techniczny. Kliknij przycisk Wstecz, odśwież przeglądarkę i spróbuj ponownie.'
     FIELDISREQUIRED: '{name} jest wymagane'
     SubmitBtnLabel: Przejdź
     VALIDATIONCREDITNUMBER: 'Proszę upewnij się, że wprowadzony numer karty kredytowej {number} jest prawidłowy'
@@ -224,6 +224,7 @@ pl:
     DefaultGroupTitleContentAuthors: 'Autor treści'
     Description: Opis
     GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, obecna grupa otrzyma wszystkie jej role'
+    HierarchyPermsError: 'Nie można przyporządkować uprzywilejowanej grupy "%s" (wymagane uprawnienie ADMIN)'
     Locked: 'Zablokowana?'
     NoRoles: 'Nie znaleziono ról'
     PLURALNAME: Grupy
@@ -232,9 +233,10 @@ pl:
     SINGULARNAME: Grupa
     Sort: 'Kolejność Sortowania'
     has_many_Permissions: Zezwolenia
-    many_many_Members: Członkowie
+    many_many_Members: Użytkownicy
   GroupImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
+    Help2: "<div class=\"advanced\">\n⇥<h4>Użycie zaawansowane</h4>\n⇥<ul>\n⇥<li>Rozpoznawane pola: <em>%s</em></li>\n⇥<li>Istniejące grupy zostaną uaktualnione nowymi wartościami z importowanego pliku. Dopasowanie nastąpi poprzez porównanie z unikalną wartością w polu <em>Code</em>.</li>\n⇥<li>Grupy hierarchiczne mogą zostać utworzone przy pomocy pola <em>ParentCode</em>.</li>\n⇥<li>Kody zezwoleń mogą zostać dodane przy użyciu pola <em>PermissionCode</em>. Istniejące zezwolenia nie zostaną usunięte.</li>\n⇥</ul>\n</div>"
     ResultCreated: 'Stworzono grup: {count}'
     ResultDeleted: 'Usunięto grup: %d'
     ResultUpdated: 'Zaktualizowano grup: %d'
@@ -265,6 +267,7 @@ pl:
     FindInFolder: 'Znajdź w Folderze'
     IMAGEALT: 'Tekst alternatywny (alt)'
     IMAGEALTTEXT: 'Alternatywny tekst (alt) - pokazuje się gdy zdjęcie nie może się wyświetlić'
+    IMAGEALTTEXTDESC: 'Używane przez czytniki ekranu lub gdy obraz nie może zostać wyświetlony'
     IMAGEDIMENSIONS: Rozmiar
     IMAGEHEIGHTPX: Wysokość (px)
     IMAGETITLE: 'Tytuł (tooltip) - dodatkowe informacje o obrazku'
@@ -337,21 +340,23 @@ pl:
     ERRORLOCKEDOUT2: 'Twoje konto zostało tymczasowo zablokowane z powodu zbyt wielu błędnych prób logowania. Spróbuj ponownie za {count} minut.'
     ERRORNEWPASSWORD: 'Wprowadziłeś niepoprawnie nowe hasło, spróbuj ponownie'
     ERRORPASSWORDNOTMATCH: 'Twoje hasło nie zgadza się, spróbuj ponownie'
+    ERRORWRONGCRED: 'Podane dane są niepoprawne. Proszę spróbować ponownie.'
     FIRSTNAME: 'Imię'
     INTERFACELANG: 'Język interfejsu'
     INVALIDNEWPASSWORD: 'Nie możesz użyć takiego hasła: {password}'
     LOGGEDINAS: 'Zostałeś zalogowany jako {name}.'
     NEWPASSWORD: 'Nowe hasło'
+    NoPassword: 'Hasło nie zostało skonfigurowane dla tego użytkownika.'
     PASSWORD: Hasło
     PLURALNAME: Użytkownicy
     REMEMBERME: 'Zapamiętaj mnie?'
-    SINGULARNAME: Członek
+    SINGULARNAME: Użytkownik
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
     SUBJECTPASSWORDRESET: 'Twój link do zmiany hasła'
     SURNAME: Nazwisko
     TIMEFORMAT: 'Format czasu'
     VALIDATIONMEMBEREXISTS: 'Użytkownik z tym adresem już istnieje'
-    ValidationIdentifierFailed: 'Nie można nadpisać istniejącego członka #{id} identycznym identyfikatorem ({name} = {value})'
+    ValidationIdentifierFailed: 'Nie można nadpisać istniejącego użytkownika #{id} o identycznym identyfikatorze ({name} = {value})'
     WELCOMEBACK: 'Witaj ponownie, {firstname}'
     YOUROLDPASSWORD: 'Twoje stare hasło'
     belongs_many_many_Groups: Grupy
@@ -385,10 +390,11 @@ pl:
     Toggle: 'Pokaż pomoc formatowania'
   MemberImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
-    ResultCreated: 'Stworzono członków: {count}'
+    Help2: "<div class=\"advanced\">\n⇥<h4>Użycie zaawansowane</h4>\n⇥<ul>\n⇥<li>Rozpoznawane pola: <em>%s</em></li>\n⇥<li>Istniejący użytkownicy zostaną uaktualnieni nowymi wartościami z importowanego pliku. Dopasowanie nastąpi poprzez porównanie z unikalną wartością w polu <em>Code</em>.</li>\n⇥<li>Grupy mogą zostać przydzielone przy użyciu pola <em>Groups</em>. Do grup należy odnieść się poprzez ich własność <em>Code</em>. Jeśli dodawanych jest wiele grup, należy je oddzielić przecinkiem. Istniejące przynależności do grup nie zostaną usunięte.</li>\n⇥</ul>\n</div>"
+    ResultCreated: 'Utworzono {count} użytkowników'
     ResultDeleted: 'Usunięto %d użytkowników'
     ResultNone: 'Bez zmian'
-    ResultUpdated: 'Zaktualizowano członków: {count}'
+    ResultUpdated: 'Zaktualizowano {count} użytkowników'
   MemberPassword:
     PLURALNAME: 'Hasła użytkownika'
     SINGULARNAME: 'Hasło użytkownika'
@@ -406,8 +412,8 @@ pl:
     Title: 'Modele danych'
     UPDATEDRECORDS: 'Zaktualizowano {count} rekordów.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Pokaż specyfikację %s'
     IMPORTSPECFIELDS: 'Kolumny bazy danych'
+    IMPORTSPECLINK: 'Pokaż specyfikację %s'
     IMPORTSPECRELATIONS: Relacje
     IMPORTSPECTITLE: 'Specyfikacja %s'
   ModelAdmin_Tools_ss:
@@ -449,9 +455,11 @@ pl:
     Title: Tytuł
   PermissionRoleCode:
     PLURALNAME: 'Kod roli uprawnień'
+    PermsError: 'Nie można przyporządkować uprzywilejowanego uprawnienia "%s" (wymagane uprawnienie ADMIN)'
     SINGULARNAME: 'Kod roli uprawnienia'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role i uprawnienia dostępu'
+    UserPermissionsIntro: 'Przydzielenie grup temu użytkownikowi spowoduje zmianę jego uprawnień. Odwołaj się do sekcji Grupy aby dowiedzieć się więcej o uprawnieniach grupowych.'
   PhoneNumberField:
     VALIDATION: 'Wprowadź poprawny numer telefonu'
   Security:
@@ -497,6 +505,7 @@ pl:
     Edit: Edycja
     EditView: 'Tryb edycji'
     Mobile: Mobile
+    PreviewState: 'Tryb podlądu'
     PreviewView: 'Tryb podglądu'
     Responsive: Responsive
     SplitView: 'Dzielony ekran'

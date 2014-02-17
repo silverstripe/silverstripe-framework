@@ -1,17 +1,54 @@
 ro:
   AssetUploadField:
     ChooseFiles: 'Alegeți fișierele'
+    DRAGFILESHERE: 'Glisați fișierele aici'
+    DROPAREA: 'Plasați aici'
+    EDITALL: 'Editați tot'
+    EDITANDORGANIZE: 'Editați și organizați'
+    EDITINFO: 'Editați fișiere'
+    FILES: Fișiere
+    FROMCOMPUTER: 'Alegeți fișierele din calculator'
+    FROMCOMPUTERINFO: 'Încărcați din calculator'
+    TOTAL: Total
+    TOUPLOAD: 'Alegeți fișierele de încărcat...'
+    UPLOADINPROGRESS: 'Vă rugăm să așteptați ... transfer în curs'
+    UPLOADOR: SAU
   BBCodeParser:
+    ALIGNEMENT: Aliniament
+    ALIGNEMENTEXAMPLE: 'aliniere la dreapta'
+    BOLD: 'Text îngroșat'
+    BOLDEXAMPLE: Îngroșat
+    CODE: 'Paragraf cod sursă'
+    CODEDESCRIPTION: 'Paragraf neformatat cu cod sursă'
+    CODEEXAMPLE: 'Paragraf cod sursă'
     COLORED: 'Text colorat'
     COLOREDEXAMPLE: 'Text albastru'
+    EMAILLINK: 'Link E-mail'
+    IMAGE: Imagine
+    IMAGEDESCRIPTION: 'Afișare imagine în articol'
+    ITALIC: 'Text cursiv'
+    ITALICEXAMPLE: cursiv
+    LINK: 'Link site web'
+    LINKDESCRIPTION: 'Link către un alt site sau URL'
+    UNDERLINE: 'Text subliniat'
     UNDERLINEEXAMPLE: Subliniat
+    UNORDERED: 'Listă neordonată'
+    UNORDEREDDESCRIPTION: 'Listă neordonată'
+  BackLink_Button_ss:
+    Back: Înapoi
   BasicAuth:
     ENTERINFO: 'Vă rugăm introduceţi un utilizator și o parolă.'
     ERRORNOTADMIN: 'Acest utilizator nu este un administrator.'
+    ERRORNOTREC: 'Numele utilizator sau parola este nerecunoscută'
+  CMSProfileController:
+    MENUTITLE: 'Profilul meu'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
     HELLO: Salut
   ConfirmedPasswordField:
+    ATLEAST: 'Parola trebuie să conțină cel puțin {min} caractere.'
+    BETWEEN: 'Parola trebuie să conțină între {min} și {max} caractere.'
+    MAXIMUM: 'Parola trebuie să conțină cel mult {max} caractere.'
     SHOWONCLICKTITLE: 'Schimbare Parola'
   CreditCardField:
     FIRST: primul
@@ -21,6 +58,8 @@ ro:
   DataObject:
     PLURALNAME: 'Obiecte Data'
     SINGULARNAME: 'Obiect Data'
+  DateField:
+    TODAY: astăzi
   DropdownField:
     CHOOSE: (Alege)
   Enum:

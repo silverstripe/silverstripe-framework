@@ -171,7 +171,6 @@ de:
     TEXT2: 'Link zum Zurücksetzen des Passworts'
     TEXT3: für
   Form:
-    CSRF_FAILED_MESSAGE: 'Es gab ein technisches Problem. Bitte versuchen Sie es erneut, nachdem sie die vorherige Seite neu geladen haben.'
     FIELDISREQUIRED: '{name} muss ausgefüllt werden'
     SubmitBtnLabel: Los
     VALIDATIONCREDITNUMBER: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer ({number}) korrekt eingegeben haben'
@@ -225,6 +224,7 @@ de:
     DefaultGroupTitleContentAuthors: 'Inhaltsautoren'
     Description: Beschreibung
     GroupReminder: 'Diese Gruppe übernimmt automatisch die Rollen der Elterngruppe'
+    HierarchyPermsError: 'Kann Berechtigungen der Eltern-Gruppe "%s" nicht hinzufügen (erfordert ADMIN Rechte)'
     Locked: 'Gesperrt?'
     NoRoles: 'Keine Rollen gefunden'
     PLURALNAME: Gruppen
@@ -412,8 +412,8 @@ de:
     Title: 'Datenmodelle'
     UPDATEDRECORDS: '{count} Einträge wurden aktualisiert'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Beschreibung von %s anzeigen'
     IMPORTSPECFIELDS: 'Datenbankspalten'
+    IMPORTSPECLINK: 'Beschreibung von %s anzeigen'
     IMPORTSPECRELATIONS: Relationen
     IMPORTSPECTITLE: 'Beschreibung von %s'
   ModelAdmin_Tools_ss:
@@ -455,6 +455,7 @@ de:
     Title: Titel
   PermissionRoleCode:
     PLURALNAME: 'Berechtigungsrollencodes'
+    PermsError: 'Kann Berechtigungen dem Code "%s" nicht hinzufügen (erfordert ADMIN Rechte)'
     SINGULARNAME: 'Berechtigungsrollencode'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'

@@ -170,7 +170,6 @@ nb:
     TEXT2: 'lenke for nullstilling av passord'
     TEXT3: for
   Form:
-    CSRF_FAILED_MESSAGE: 'Det ser ut til å ha oppstått et teknisk problem. Vennligst trykk på tilbakeknappen, oppdater nettsiden og prøv på nytt.'
     FIELDISREQUIRED: '{name} er påkrevet'
     SubmitBtnLabel: Utfør
     VALIDATIONCREDITNUMBER: 'Vennligst sjekk at du har skrevet inn {number} korrekt kortnummer'
@@ -408,8 +407,8 @@ nb:
     Title: 'Datamodeller'
     UPDATEDRECORDS: 'Oppdaterte {count} oppføringer.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Vis spesifikasjon for %s'
     IMPORTSPECFIELDS: 'Databasekolonner'
+    IMPORTSPECLINK: 'Vis spesifikasjon for %s'
     IMPORTSPECRELATIONS: Relasjoner
     IMPORTSPECTITLE: 'Spesifikasjon for %s'
   ModelAdmin_Tools_ss:

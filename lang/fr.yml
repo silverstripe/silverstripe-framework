@@ -170,7 +170,6 @@ fr:
     TEXT2: 'lien de réinitialisation de mot de passe'
     TEXT3: pour
   Form:
-    CSRF_FAILED_MESSAGE: 'Il semble qu''il y ait eu un problème technique. Veuillez cliquez sur le bouton Retour, raffraîchir votre navigateur, et essayer à nouveau'
     FIELDISREQUIRED: '{name} requis'
     SubmitBtnLabel: Envoyer
     VALIDATIONCREDITNUMBER: 'Vérifiez que vous avez bien saisi votre numéro de carte bleue {number}.'
@@ -408,8 +407,8 @@ fr:
     Title: 'Modèles de données'
     UPDATEDRECORDS: '{count} enregistrements mis à jour.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Afficher la spécification de %s'
     IMPORTSPECFIELDS: 'Colonnes de la base de données'
+    IMPORTSPECLINK: 'Afficher la spécification de %s'
     IMPORTSPECRELATIONS: Relations
     IMPORTSPECTITLE: 'Spécification de %s'
   ModelAdmin_Tools_ss:

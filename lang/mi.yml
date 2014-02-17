@@ -170,7 +170,6 @@ mi:
     TEXT2: 'hono tautuhi kupuhipa anō'
     TEXT3: mā
   Form:
-    CSRF_FAILED_MESSAGE: 'Te āhua nei kua puta he raru hangarau. Pāwhiria te pātene hoki, ka tāmata anō i tō pūtirotiro, ka ngana anō.'
     FIELDISREQUIRED: 'Ka hiahiatia te {name}'
     SubmitBtnLabel: Haere
     VALIDATIONCREDITNUMBER: 'Tirohia kua tika tō tāuru i te tau kāri nama {number}'
@@ -410,8 +409,8 @@ mi:
     Title: 'Ngā Tauira Raraunga'
     UPDATEDRECORDS: 'I whakahōutia e {count} ngā pūkete.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Whakaatu Whakapūtātanga mō %s'
     IMPORTSPECFIELDS: 'Ngā tīwae pātengi raraunga'
+    IMPORTSPECLINK: 'Whakaatu Whakapūtātanga mō %s'
     IMPORTSPECRELATIONS: Ngā Pānga
     IMPORTSPECTITLE: 'Whakapūtātanga mō %s'
   ModelAdmin_Tools_ss:

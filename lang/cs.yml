@@ -171,7 +171,7 @@ cs:
     TEXT2: 'odkaz na reset hesla'
     TEXT3: pro
   Form:
-    CSRF_FAILED_MESSAGE: 'Vypadá to, že to musí být technický problém. Kliněte prosím na tlačítko zpět, obnovte váš prohlížeč a zkuste opět.'
+    CSRF_FAILED_MESSAGE: "Zdá se, že nastal technický problém. Prosím, klikněte na tlačítko zpět, \n\t\t\t\t\taktualizujte prohlížeč a zkuste to znovu."
     FIELDISREQUIRED: '{name} je požadováno'
     SubmitBtnLabel: Jdi
     VALIDATIONCREDITNUMBER: 'Prosím ujistěte se, že jste zadal/a {number} číslo kreditní karty správně'
@@ -181,6 +181,7 @@ cs:
     VALIDATIONSTRONGPASSWORD: 'Hesla musí obsahovat alespoň jednu číslici a jedno písmeno.'
     VALIDATOR: Validátor
     VALIDCURRENCY: 'Prosím zadejte platnou měnu'
+    CSRF_EXPIRED_MESSAGE: 'Čas Vašeho sezení vypršel. Prosím znovu odešlete formulář.'
   FormField:
     Example: 'např. %s'
     NONE: žádný
@@ -413,8 +414,8 @@ cs:
     Title: 'Datové modely'
     UPDATEDRECORDS: 'Aktualizováno {count} záznamů.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Ukázat specifikaci pro %s'
     IMPORTSPECFIELDS: 'Sloupce databáze'
+    IMPORTSPECLINK: 'Ukázat specifikaci pro %s'
     IMPORTSPECRELATIONS: Relace
     IMPORTSPECTITLE: 'Specifikace pro %s'
   ModelAdmin_Tools_ss:
@@ -472,6 +473,7 @@ cs:
     ERRORPASSWORDPERMISSION: 'Pro změnu hesla musíte být přihlášení!'
     LOGGEDOUT: 'Byli jste odhlášeni. Pokud se chcete znovu přihlásit, vložte své přihlašovací údaje.'
     LOGIN: 'Přihlásit'
+    LOSTPASSWORDHEADER: 'Zapomenuté heslo'
     NOTEPAGESECURED: 'Tato stránka je zabezpečená. Vložte své přihlašovací údaje a my Vám zároveň pošleme práva.'
     NOTERESETLINKINVALID: '<p>Odkaz na resetování hesla není platný nebo je prošlý.</p><p>Můžete požádat o nový <a href="{link1}">zde</a> nebo změňte své heslo až <a href="{link2}">se přihlásíte</a>.</p>'
     NOTERESETPASSWORD: 'Zadejte svou e-mailovou adresu a bude vám zaslán nulovací odkaz pro Vaše heslo'

@@ -357,8 +357,8 @@ sv:
     Title: 'Datamodeller'
     UPDATEDRECORDS: 'Uppdaterade {count} poster.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Visa specifikation för %s'
     IMPORTSPECFIELDS: 'Databaskolumner'
+    IMPORTSPECLINK: 'Visa specifikation för %s'
     IMPORTSPECRELATIONS: Relationer
     IMPORTSPECTITLE: 'Specifikation för %s'
   ModelAdmin_Tools_ss:
