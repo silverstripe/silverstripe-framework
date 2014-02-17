@@ -459,7 +459,8 @@ class Image extends File {
 		$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
 		
 		$backend = Injector::inst()->createWithArgs(self::$backend, array(
-			Director::baseFolder()."/" . $this->Filename
+			Director::baseFolder()."/" . $this->Filename,
+			$args
 		));
 		
 		if($backend->hasImageResource()) {
@@ -642,9 +643,12 @@ class Image extends File {
 	}
 	
 	protected function onBeforeDelete() {
-		parent::onBeforeDelete(); 
+		$backend = Injector::inst()->create(self::$backend);
+		$backend->onBeforeDelete($this);
 
 		$this->deleteFormattedImages();
+
+		parent::onBeforeDelete();
 	}
 }
 

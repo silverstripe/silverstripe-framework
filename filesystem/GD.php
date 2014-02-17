@@ -8,6 +8,8 @@ class GDBackend extends Object implements Image_Backend {
 	protected $gd, $width, $height;
 	protected $quality;
 	protected $interlace;
+	protected $lockFile;
+	protected $cache, $cacheKey, $manipulation;
 	
 	/**
 	 * @config
@@ -34,29 +36,42 @@ class GDBackend extends Object implements Image_Backend {
 		}
 	}
 
-	public function __construct($filename = null) {
+	public function __construct($filename = null, $args = array()) {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
 		increase_time_limit_to(300);
 
+		$this->cache = SS_Cache::factory('GDBackend_Manipulations');
+
 		if($filename) {
-			// We use getimagesize instead of extension checking, because sometimes extensions are wrong.
-			list($width, $height, $type, $attr) = getimagesize($filename);
-			switch($type) {
-				case 1:
-					if(function_exists('imagecreatefromgif'))
-						$this->setImageResource(imagecreatefromgif($filename));
-					break;
-				case 2:
-					if(function_exists('imagecreatefromjpeg'))
-						$this->setImageResource(imagecreatefromjpeg($filename));
-					break;
-				case 3:
-					if(function_exists('imagecreatefrompng')) {
-						$img = imagecreatefrompng($filename);
-						imagesavealpha($img, true); // save alphablending setting (important)
-						$this->setImageResource($img);
-					}
-					break;
+			$this->cacheKey = md5(implode('_', array($filename, filemtime($filename))));
+			$this->manipulation = implode('|', $args);
+
+			$cacheData = unserialize($this->cache->load($this->cacheKey));
+			$cacheData = ($cacheData !== false) ? $cacheData : array();
+
+			if ($this->imageAvailable($filename, $this->manipulation)) {
+				$cacheData[$this->manipulation] = true;
+				$this->cache->save(serialize($cacheData), $this->cacheKey);
+
+				// We use getimagesize instead of extension checking, because sometimes extensions are wrong.
+				list($width, $height, $type, $attr) = getimagesize($filename);
+				switch($type) {
+					case 1:
+						if(function_exists('imagecreatefromgif'))
+							$this->setImageResource(imagecreatefromgif($filename));
+						break;
+					case 2:
+						if(function_exists('imagecreatefromjpeg'))
+							$this->setImageResource(imagecreatefromjpeg($filename));
+						break;
+					case 3:
+						if(function_exists('imagecreatefrompng')) {
+							$img = imagecreatefrompng($filename);
+							imagesavealpha($img, true); // save alphablending setting (important)
+							$this->setImageResource($img);
+						}
+						break;
+				}
 			}
 		}
 		
@@ -64,6 +79,14 @@ class GDBackend extends Object implements Image_Backend {
 
 		$this->quality = $this->config()->default_quality;
 		$this->interlace = $this->config()->image_interlace;
+	}
+
+	public function __destruct() {
+		if ($this->hasImageResource()) { 
+			$cacheData = unserialize($this->cache->load($this->cacheKey));
+			unset($cacheData[$this->manipulation]);
+			$this->cache->save(serialize($cacheData), $this->cacheKey);
+		}
 	}
 	
 	public function setImageResource($resource) {
@@ -84,6 +107,67 @@ class GDBackend extends Object implements Image_Backend {
 	public function getGD() {
 		Deprecation::notice('3.1', 'GD::getImageResource instead');
 		return $this->getImageResource();
+	}
+
+	/**
+	 * @param string $filename
+	 * @return boolean
+	 */
+	public function imageAvailable($filename, $manipulation) {
+		return ($this->checkAvailableMemory($filename) && ! $this->failedResample($filename, $manipulation));
+	}
+
+	/**
+	 * Check if we've got enough memory available for resampling this image. This check is rough,
+	 * so it will not catch all images that are too large - it also won't work accurately on large,
+	 * animated GIFs as bits per pixel can't be calculated for an animated GIF with a global color
+	 * table.
+	 * 
+	 * @param string $filename
+	 * @return boolean
+	 */
+	public function checkAvailableMemory($filename) {
+		$limit = translate_memstring(ini_get('memory_limit'));
+
+		if ($limit < 0) return true; // memory_limit == -1
+
+		$imageInfo = getimagesize($filename);
+
+		// bits per channel (rounded up, default to 1)
+		$bits = isset($imageInfo['bits']) ? ($imageInfo['bits'] + 7) / 8 : 1;
+
+		// channels (default 4 rgba)
+		$channels = isset($imageInfo['channels']) ? $imageInfo['channels'] : 4;
+
+		$bytesPerPixel = $bits * $channels;
+
+		// width * height * bytes per pixel
+		$memoryRequired = $imageInfo[0] * $imageInfo[1] * $bytesPerPixel;
+
+		return $memoryRequired + memory_get_usage() < $limit;
+	}
+
+	/**
+	 * Check if this image has previously crashed GD when attempting to open it - if it's opened
+	 * successfully, the 'lock' file is deleted.
+	 * 
+	 * @param string $filename
+	 * @return boolean
+	 */
+	public function failedResample($filename, $manipulation) {
+		$cacheData = unserialize($this->cache->load($this->cacheKey));
+		return ($cacheData && array_key_exists($manipulation, $cacheData));
+	}
+
+	/**
+	 * Get the 'lock' file name, e.g. .lock.my-image.jpg
+	 * 
+	 * @param string $filename
+	 * @return boolean
+	 */
+	public function getLockfileName($filename) {
+		$pathInfo = pathinfo($filename);
+		return $pathInfo['dirname'] . '/.lock.' . $pathInfo['filename'] . '.' . $pathInfo['extension'];
 	}
 
 	/**
@@ -480,6 +564,18 @@ class GDBackend extends Object implements Image_Backend {
 					imagepng($this->gd, $filename); break;
 			}
 			if(file_exists($filename)) @chmod($filename,0664);
+		}
+	}
+
+	public function onBeforeDelete($frontend) {
+		$file = Director::baseFolder() . "/" . $frontend->Filename;
+
+		if (file_exists($file)) {
+			$key = md5(implode('_', array($file, filemtime($file))));
+
+			if (unserialize($this->cache->load($key))) {
+				$this->cache->remove($key);
+			}
 		}
 	}
 	

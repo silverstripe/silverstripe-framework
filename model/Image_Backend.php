@@ -110,4 +110,21 @@ interface Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function croppedResize($width, $height);
+
+	/**
+	 * imageAvailable
+	 * 
+	 * @param string $filename
+	 * @return boolean
+	 */
+	public function imageAvailable($filename, $manipulation);
+
+	/**
+	 * onBeforeDelete
+	 * 
+	 * @param Image $frontend
+	 * @return void
+	 */
+	public function onBeforeDelete($frontend);
+
 }
