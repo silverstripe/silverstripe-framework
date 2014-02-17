@@ -1009,11 +1009,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function getDateFormat() {
 		if($this->getField('DateFormat')) {
 			return $this->getField('DateFormat');
-		} elseif($this->getField('Locale')) {
-			require_once 'Zend/Date.php';
-			return Zend_Locale_Format::getDateFormat($this->Locale);
 		} else {
-			return i18n::get_date_format();
+			return Config::inst()->get('i18n', 'date_format');
 		}
 	}
 
@@ -1027,11 +1024,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function getTimeFormat() {
 		if($this->getField('TimeFormat')) {
 			return $this->getField('TimeFormat');
-		} elseif($this->getField('Locale')) {
-			require_once 'Zend/Date.php';
-			return Zend_Locale_Format::getTimeFormat($this->Locale);
 		} else {
-			return i18n::get_time_format();
+			return Config::inst()->get('i18n', 'time_format');
 		}
 	}
 
@@ -1265,15 +1259,16 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$permissionsTab = $fields->fieldByName("Root")->fieldByName('Permissions');
 		if($permissionsTab) $permissionsTab->addExtraClass('readonly');
 		
-		$defaultDateFormat = Zend_Locale_Format::getDateFormat(new Zend_Locale($this->Locale));
+		$localDateFormat = Zend_Locale_Data::getContent(new Zend_Locale($this->Locale), 'date', 'short');
+		// Ensure short dates always use four digit dates to avoid confusion
+		$localDateFormat = preg_replace('/(^|[^y])yy($|[^y])/', '$1yyyy$2', $localDateFormat);
 		$dateFormatMap = array(
-			'MMM d, yyyy' => Zend_Date::now()->toString('MMM d, yyyy'),
+			$this->DateFormat => Zend_Date::now()->toString($this->DateFormat),
+			$localDateFormat => Zend_Date::now()->toString($localDateFormat),
 			'yyyy/MM/dd' => Zend_Date::now()->toString('yyyy/MM/dd'),
 			'MM/dd/yyyy' => Zend_Date::now()->toString('MM/dd/yyyy'),
 			'dd/MM/yyyy' => Zend_Date::now()->toString('dd/MM/yyyy'),
 		);
-		$dateFormatMap[$defaultDateFormat] = Zend_Date::now()->toString($defaultDateFormat)
-			. sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
 		$mainFields->push(
 			$dateFormatField = new MemberDatetimeOptionsetField(
 				'DateFormat',
@@ -1283,13 +1278,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		);
 		$dateFormatField->setValue($this->DateFormat);
 		
-		$defaultTimeFormat = Zend_Locale_Format::getTimeFormat(new Zend_Locale($this->Locale));
+		$localTimeFormat = Zend_Locale_Format::getTimeFormat(new Zend_Locale($this->Locale));
 		$timeFormatMap = array(
+			$this->TimeFormat => Zend_Date::now()->toString($this->TimeFormat), 
+			$localTimeFormat => Zend_Date::now()->toString($localTimeFormat),
 			'h:mm a' => Zend_Date::now()->toString('h:mm a'),
 			'H:mm' => Zend_Date::now()->toString('H:mm'),
 		);
-		$timeFormatMap[$defaultTimeFormat] = Zend_Date::now()->toString($defaultTimeFormat)
-			. sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
 		$mainFields->push(
 			$timeFormatField = new MemberDatetimeOptionsetField(
 				'TimeFormat',
