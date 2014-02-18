@@ -439,8 +439,6 @@
 							self._prepareIframe(iframe, editform, itemInfo);
 							iframe.data('src', '');
 						}
-
-						if (editform.hasClass('opened')) editform.fitHeight();
 					});
 				} else {
 					self._prepareIframe(iframe, editform, itemInfo);
