@@ -171,7 +171,7 @@ nl:
     TEXT2: 'wachtwoord reset link'
     TEXT3: voor
   Form:
-    CSRF_FAILED_MESSAGE: 'Er lijkt een technisch probleem te zijn. Klikt u op de knop terug, vernieuw uw browser, en probeer het opnieuw.'
+    CSRF_FAILED_MESSAGE: "Er lijkt een technisch probleem te zijn. Klikt u op de knop terug, vernieuw uw browser, en probeer het opnieuw."
     FIELDISREQUIRED: '{name} is verplicht'
     SubmitBtnLabel: Gaan
     VALIDATIONCREDITNUMBER: 'Gelieve uw credit card number {number} juist in te vullen'
@@ -181,6 +181,7 @@ nl:
     VALIDATIONSTRONGPASSWORD: 'Wachtwoorden moeten bestaan uit minstens één cijfer en één alfanumeriek karakter.'
     VALIDATOR: Controleur
     VALIDCURRENCY: 'Vul een geldige valuta in'
+    CSRF_EXPIRED_MESSAGE: 'Uw sessie is verlopen. Verzend het formulier opnieuw.'
   FormField:
     Example: 'e.g. %s'
     NONE: geen
@@ -266,13 +267,13 @@ nl:
     FROMCOMPUTER: 'Vanaf computer'
     FROMWEB: 'Vanaf een website'
     FindInFolder: 'Zoek in map'
-    IMAGEALT: 'Alternatieve tekst (alt tekst) - wordt getoond als de afbeelding niet kan worden geladen'
+    IMAGEALT: 'Alternatieve tekst (alt tekst)'
     IMAGEALTTEXT: 'Alternatieve tekst (alt-tekst) - wordt gebruikt als de afbeelding niet geladen kan worden '
     IMAGEALTTEXTDESC: 'Voor schermlezers of als afbeelding niet weergegeven kan worden '
     IMAGEDIMENSIONS: Dimensies
     IMAGEHEIGHTPX: Hoogte
     IMAGETITLE: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'
-    IMAGETITLETEXT: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'
+    IMAGETITLETEXT: 'Titel tekst (tooltip)'
     IMAGETITLETEXTDESC: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'
     IMAGEWIDTHPX: Breedte
     INSERTMEDIA: 'Invoegen'
@@ -413,8 +414,8 @@ nl:
     Title: 'Gegevens modellen'
     UPDATEDRECORDS: '{count} records bijgewerkt'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Toon specificaties van %s'
     IMPORTSPECFIELDS: 'Database kolommen'
+    IMPORTSPECLINK: 'Toon specificaties van %s'
     IMPORTSPECRELATIONS: Relaties
     IMPORTSPECTITLE: 'Specificaties van %s'
   ModelAdmin_Tools_ss:
@@ -472,6 +473,7 @@ nl:
     ERRORPASSWORDPERMISSION: 'U moet ingelogd zijn om Uw wachtwoord te kunnen veranderen!'
     LOGGEDOUT: 'U bent uitgelogd.  Als U weer wilt inloggen kunt U Uw gegevens hier beneden invoeren.'
     LOGIN: 'Meld aan'
+    LOSTPASSWORDHEADER: 'Wachtwoord vergeten'
     NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer Uw gegevens in en U wordt automatisch doorgestuurd.'
     NOTERESETLINKINVALID: '<p>De link om uw wachtwoord te kunnen wijzigen is niet meer geldig.</p><p>U kunt het <a href="{link1}">opnieuw proberen</a> of uw wachtwoord aanpassen door <a href="{link2}">in te loggen</a>.</p>'
     NOTERESETPASSWORD: 'Voer uw e-mailadres in en we sturen een link waarmee u een nieuw wachtwoord kunt instellen.'

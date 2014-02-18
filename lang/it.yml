@@ -166,7 +166,6 @@ it:
     TEXT2: 'Link per l''azzeramento della password'
     TEXT3: per
   Form:
-    CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore clicca sul pulsante "indietro", ricarica la pagina e riprova.'
     FIELDISREQUIRED: '{name} è richiesto'
     SubmitBtnLabel: Vai
     VALIDATIONCREDITNUMBER: 'Assicurati che il numero di carta di credito {number} sia inserito correttamente'
@@ -404,8 +403,8 @@ it:
     Title: 'Modelli di dati'
     UPDATEDRECORDS: 'Aggiornati {count} record.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Mostra specifiche per %s'
     IMPORTSPECFIELDS: 'Colonne database'
+    IMPORTSPECLINK: 'Mostra specifiche per %s'
     IMPORTSPECRELATIONS: Relazioni
     IMPORTSPECTITLE: 'Specifiche per %s'
   ModelAdmin_Tools_ss:

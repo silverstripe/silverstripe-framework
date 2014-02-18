@@ -3199,16 +3199,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$fields = $this->stat('searchable_fields');
 		$labels = $this->fieldLabels();
 		
-		// fallback to summary fields
-		if(!$fields) {
+		// fallback to summary fields (unless empty array is explicitly specified)
+		if( ! $fields && ! is_array($fields)) {
 			$summaryFields = array_keys($this->summaryFields());
 			$fields = array();
 
-			// remove the custom getters as the search should not include.
+			// remove the custom getters as the search should not include them
 			if($summaryFields) {
 				foreach($summaryFields as $key => $name) {
-					if($this->hasDatabaseField($name) || $this->relObject($name)) {
+					$spec = $name;
+
+					// Extract field name in case this is a method called on a field (e.g. "Date.Nice")
+					if(($fieldPos = strpos($name, '.')) !== false) {
+						$name = substr($name, 0, $fieldPos);
+					}
+
+					if($this->hasDatabaseField($name)) {
 						$fields[] = $name;
+					} elseif($this->relObject($spec)) {
+						$fields[] = $spec;
 					}
 				}
 			}

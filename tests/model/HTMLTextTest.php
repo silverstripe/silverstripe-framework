@@ -176,4 +176,14 @@ class HTMLTextTest extends SapphireTest {
 		$h->setValue("<p>test</p>");
 		$this->assertTrue($h->exists());
 	}
+
+	function testWhitelist() {
+		$textObj = new HTMLText('Test', 'meta,link');
+
+		$this->assertEquals(
+			$textObj->prepValueForDB('<meta content="Keep"><link href="Also Keep">'),
+			$textObj->prepValueForDB('<meta content="Keep"><p>Remove</p><link href="Also Keep" />'),
+			'Removes any elements not in whitelist'
+		);
+	}
 }

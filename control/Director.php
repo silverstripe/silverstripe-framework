@@ -247,7 +247,13 @@ class Director implements TemplateGlobalProvider {
 		// Handle absolute URLs
 		if (@parse_url($url, PHP_URL_HOST) != '') {
 			$bits = parse_url($url);
-			$_SERVER['HTTP_HOST'] = $bits['host'];
+			// If a port is mentioned in the absolute URL, be sure to add that into the 
+			// HTTP host
+			if(isset($bits['port'])) {
+				$_SERVER['HTTP_HOST'] = $bits['host'].':'.$bits['port'];
+			} else {
+				$_SERVER['HTTP_HOST'] = $bits['host'];
+			}
 			$url = Director::makeRelative($url);
 		}
 

@@ -378,8 +378,8 @@ et_EE:
     Title: 'Andmemudelid'
     UPDATEDRECORDS: '{count} kirjet on uuendatud.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Kuva üksuse %s spetsifikatsioonid'
     IMPORTSPECFIELDS: 'Andmebaasi tulbad'
+    IMPORTSPECLINK: 'Kuva üksuse %s spetsifikatsioonid'
     IMPORTSPECRELATIONS: Seosed
     IMPORTSPECTITLE: 'Üksuse %s spetsifikatsioonid'
   ModelAdmin_Tools_ss:

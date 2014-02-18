@@ -173,7 +173,7 @@ fi:
     TEXT2: 'salasanan tyhjäys -linkki'
     TEXT3: henkilölle
   Form:
-    CSRF_FAILED_MESSAGE: 'Tekninen ongelma. Ole hyvä ja napsauta takaisin linkkiä, päivitä selainikkunasi ja kokeile uudelleen.'
+    CSRF_FAILED_MESSAGE: "On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu painamalla F5-näppäintä ja yritä uudelleen."
     FIELDISREQUIRED: '{name} on pakollinen'
     SubmitBtnLabel: Siirrä
     VALIDATIONCREDITNUMBER: 'Tarkista, ovatko antamasi luottokortin numerot ({number}) oikein'
@@ -183,6 +183,7 @@ fi:
     VALIDATIONSTRONGPASSWORD: 'Salasanassa on oltava vähintään yksi numero ja yksi kirjain'
     VALIDATOR: Tarkistin
     VALIDCURRENCY: 'Ole hyvä ja valitse voimassa oleva valuutta'
+    CSRF_EXPIRED_MESSAGE: 'Istuntosi on umpeutunut. Lähetä lomake uudelleen.'
   FormField:
     Example: 'esim. %s'
     NONE: Ei yhtään
@@ -415,8 +416,8 @@ fi:
     Title: 'Datamallit'
     UPDATEDRECORDS: 'Päivitettiin {count} tietuetta'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Näytä erittely kohteelle %s'
     IMPORTSPECFIELDS: 'Tietokannan sarakkeet'
+    IMPORTSPECLINK: 'Näytä erittely kohteelle %s'
     IMPORTSPECRELATIONS: Yhteydet
     IMPORTSPECTITLE: 'Erittely kohteelle %s'
   ModelAdmin_Tools_ss:
@@ -474,6 +475,7 @@ fi:
     ERRORPASSWORDPERMISSION: 'Sinun täytyy olla kirjautuneena sisään, jotta voit vaihtaa salasanasi.'
     LOGGEDOUT: 'Kirjauduit ulos. Jos haluat kirjautua sisään, syötä tietosi alle.'
     LOGIN: 'Kirjaudu sisään'
+    LOSTPASSWORDHEADER: 'Unohtunut Salasana'
     NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle ja annamme sinulle oikeat oikeudet.'
     NOTERESETLINKINVALID: '<p>Salasanan nollauslinkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href="{link1}">napsauttamalla tästä</a> tai vaihtaa salasanasi <a href="{link2}">kirjautumisen jälkeen</a>.</p>'
     NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'

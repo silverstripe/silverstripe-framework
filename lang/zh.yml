@@ -171,7 +171,6 @@ zh:
     TEXT2: '密码重设链接'
     TEXT3: 为
   Form:
-    CSRF_FAILED_MESSAGE: '似乎出现了技术问题。请点击返回按钮，刷新您的浏览器，然后再试一次。'
     FIELDISREQUIRED: '{name} 为必填'
     SubmitBtnLabel: 前往
     VALIDATIONCREDITNUMBER: '请确保您输入了正确的 {number} 信用卡号码'
@@ -413,8 +412,8 @@ zh:
     Title: '数据模型'
     UPDATEDRECORDS: '更新了 {count} 个记录。'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: '展示 %s 的详细信息'
     IMPORTSPECFIELDS: '数据库栏目'
+    IMPORTSPECLINK: '展示 %s 的详细信息'
     IMPORTSPECRELATIONS: 关系
     IMPORTSPECTITLE: '%s 的详细信息'
   ModelAdmin_Tools_ss:

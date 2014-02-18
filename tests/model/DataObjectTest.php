@@ -645,6 +645,43 @@ class DataObjectTest extends SapphireTest {
 			'databaseFields() on subclass contains only fields defined on instance'
 		);
 	}
+
+	public function testSearchableFields() {
+		$player = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$fields = $player->searchableFields();
+		$this->assertArrayHasKey(
+			'IsRetired',
+			$fields,
+			'Fields defined by $searchable_fields static are correctly detected'
+		);
+		$this->assertArrayHasKey(
+			'ShirtNumber',
+			$fields,
+			'Fields defined by $searchable_fields static are correctly detected'
+		);
+
+		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$fields = $team->searchableFields();	
+		$this->assertArrayHasKey(
+			'Title',
+			$fields,
+			'Fields can be inherited from the $summary_fields static, including methods called on fields'
+		);
+		$this->assertArrayHasKey(
+			'Captain.ShirtNumber',
+			$fields,
+			'Fields on related objects can be inherited from the $summary_fields static'
+		);
+		$this->assertArrayHasKey(
+			'Captain.FavouriteTeam.Title',
+			$fields,
+			'Fields on related objects can be inherited from the $summary_fields static'
+		);
+
+		$testObj = new DataObjectTest_Fixture();
+		$fields = $testObj->searchableFields();
+		$this->assertEmpty($fields);
+	}
 	
 	public function testDataObjectUpdate() {
 		/* update() calls can use the dot syntax to reference has_one relations and other methods that return
@@ -1191,6 +1228,11 @@ class DataObjectTest_Player extends Member implements TestOnly {
 	private static $belongs_many_many = array(
 		'Teams' => 'DataObjectTest_Team'
 	);
+
+	private static $searchable_fields = array(
+		'IsRetired',
+		'ShirtNumber'
+	);
 }
 
 class DataObjectTest_Team extends DataObject implements TestOnly {
@@ -1218,6 +1260,12 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 		'Players' => array(
 			'Position' => 'Varchar(100)'
 		)
+	);
+
+	private static $summary_fields = array(
+		'Title.UpperCase' => 'Title',
+		'Captain.ShirtNumber' => 'Captain\'s shirt number',
+		'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team'
 	);
 
 	private static $default_sort = '"Title"';
@@ -1250,6 +1298,13 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 	private static $defaults = array(
 		'MyFieldWithDefault' => 'Default Value',
 	);
+
+	private static $summary_fields = array(
+		'Data' => 'Data',
+		'DateField.Nice' => 'Date'
+	);
+
+	private static $searchable_fields = array();
 
 	public function populateDefaults() {
 		parent::populateDefaults();
