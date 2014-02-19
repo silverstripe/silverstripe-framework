@@ -16,7 +16,7 @@
 (function($){
 
 	var decodePath = function(str) {
-		return str.replace(/%2C/g,',').replace(/\&amp;/g, '&').trim();
+		return str.replace(/%2C/g,',').replace(/\&amp;/g, '&').replace(/^\s+|\s+$/g, '');
 	};
 
 	$.extend({
