@@ -57,20 +57,23 @@ class Folder extends File {
 
 		$parentID = 0;
 		$item = null;
+		$filter = FileNameFilter::create();
 		foreach($parts as $part) {
 			if(!$part) continue; // happens for paths with a trailing slash
-			$item = DataObject::get_one(
-				"Folder", 
-				sprintf(
-					"\"Name\" = '%s' AND \"ParentID\" = %d",
-					Convert::raw2sql($part), 
-					(int)$parentID
-				)
-			);
+			
+			// Ensure search includes folders with illegal characters removed, but
+			// err in favour of matching existing folders if $folderPath
+			// includes illegal characters itself.
+			$partSafe = $filter->filter($part);
+			$item = Folder::get()->filter(array(
+				'ParentID' => $parentID,
+				'Name' => array($partSafe, $part)
+			))->first();
+			
 			if(!$item) {
 				$item = new Folder();
 				$item->ParentID = $parentID;
-				$item->Name = $part;
+				$item->Name = $partSafe;
 				$item->Title = $part;
 				$item->write();
 			}
@@ -460,7 +463,7 @@ class Folder extends File {
 	 * Get the children of this folder that are also folders.
 	 */
 	public function ChildFolders() {
-		return DataObject::get("Folder", "\"ParentID\" = " . (int)$this->ID);
+		return Folder::get()->filter('ParentID', $this->ID);
 	}
 	
 	/**
