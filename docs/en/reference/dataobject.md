@@ -208,7 +208,7 @@ Non-textual elements (such as images and their manipulations) can also be used i
 	    'HeroImage' => 'Image'
 	  );
 	  private static $summary_fields = array(
-	    'Name' => 'Name,
+	    'Name' => 'Name',
 	    'HeroImage.CMSThumbnail' => 'Hero Image'
 	  );
 	}
