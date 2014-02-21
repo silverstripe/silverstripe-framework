@@ -110,5 +110,4 @@ The information documented in this page is reflected in a few places in the code
     * augmentWrite() is responsible for altering the normal database writing operation to handle versions.
     * augmentQuery() is responsible for altering the normal data selection queries to support versions.
     * augmentDatabase() is responsible for specifying the altered database schema to support versions.
-*  `[api:MySQLDatabase]`: getNextID() is used when creating new objects; it also handles the mechanics of
-updating the database to have the required schema.
+*  `[api:MySQLDatabase]`: handles the mechanics of updating the database to have the required schema.
