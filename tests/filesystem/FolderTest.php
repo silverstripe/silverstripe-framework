@@ -338,4 +338,21 @@ class FolderTest extends SapphireTest {
 		))->count());
 	}
 	
+	public function testIllegalFilenames() {
+		
+		// Test that generating a filename with invalid characters generates a correctly named folder.
+		$folder = Folder::find_or_make('/FolderTest/EN_US Lang');
+		$this->assertEquals(ASSETS_DIR.'/FolderTest/EN-US-Lang/', $folder->getRelativePath());
+		
+		// Test repeatitions of folder
+		$folder2 = Folder::find_or_make('/FolderTest/EN_US Lang');
+		$this->assertEquals($folder->ID, $folder2->ID);
+		
+		$folder3 = Folder::find_or_make('/FolderTest/EN--US_L!ang');
+		$this->assertEquals($folder->ID, $folder3->ID);
+		
+		$folder4 = Folder::find_or_make('/FolderTest/EN-US-Lang');
+		$this->assertEquals($folder->ID, $folder4->ID);
+	}
+	
 }
