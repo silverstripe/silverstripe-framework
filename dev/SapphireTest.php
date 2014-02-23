@@ -388,11 +388,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		return $id;
 	}
-	
+
 	/**
 	 * Return all of the IDs in the fixture of a particular class name.
 	 * Will collate all IDs form all fixtures if multiple fixtures are provided.
-	 * 
+	 *
 	 * @param string $className
 	 * @return A map of fixture-identifier => object-id
 	 */
@@ -402,9 +402,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Get an object from the fixture.
-	 * 
-	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
-	 * @param $identifier The identifier string, as provided in your fixture file
+	 *
+	 * @param string $className The data class, as specified in your fixture file. Parent classes won't work
+	 * @param string $identifier The identifier string, as provided in your fixture file
+	 *
+	 * @return DataObject
 	 */
 	protected function objFromFixture($className, $identifier) {
 		$obj = $this->getFixtureFactory()->get($className, $identifier);
