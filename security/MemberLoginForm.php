@@ -267,6 +267,12 @@ JS
 		$SQL_email = $SQL_data['Email'];
 		$member = DataObject::get_one('Member', "\"Email\" = '{$SQL_email}'");
 
+		// Allow vetoing forgot password requests
+		$results = $this->extend('forgotPassword', $member);
+		if($results && is_array($results) && min($results) === false) {
+			return $this->controller->redirect('Security/lostpassword');
+		}
+
 		if($member) {
 			$token = $member->generateAutologinTokenAndStoreHash();
 
