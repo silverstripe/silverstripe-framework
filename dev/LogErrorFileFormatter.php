@@ -15,7 +15,7 @@ class SS_LogErrorFileFormatter implements Zend_Log_Formatter_Interface {
 		$errfile = $event['message']['errfile'];
 		$errline = $event['message']['errline'];
 		$errcontext = $event['message']['errcontext'];
-		
+
 		switch($event['priorityName']) {
 			case 'ERR':
 				$errtype = 'Error';
@@ -26,6 +26,8 @@ class SS_LogErrorFileFormatter implements Zend_Log_Formatter_Interface {
 			case 'NOTICE':
 				$errtype = 'Notice';
 				break;
+			default:
+				$errtype = $event['priorityName'];
 		}
 
 		$urlSuffix = '';
