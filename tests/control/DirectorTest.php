@@ -344,6 +344,23 @@ class DirectorTest extends SapphireTest {
 
 		$_SERVER = $origServer;
 	}
+
+	public function testTestIgnoresHashes() {
+		//test that hashes are ignored
+		$url = "DirectorTestRequest_Controller/returnGetValue?somekey=key";
+		$hash = "#test";
+		$response = Director::test($url . $hash, null, null, null, null, null, null, $request);
+		$this->assertFalse($response->isError());
+		$this->assertEquals('key', $response->getBody());
+		$this->assertEquals($request->getURL(true), $url);
+
+		//test encoded hashes are accepted
+		$url = "DirectorTestRequest_Controller/returnGetValue?somekey=test%23key";
+		$response = Director::test($url, null, null, null, null, null, null, $request);
+		$this->assertFalse($response->isError());
+		$this->assertEquals('test#key', $response->getBody());
+		$this->assertEquals($request->getURL(true), $url);
+	}
 	
 	public function testRequestFilterInDirectorTest() {
 		$filter = new TestRequestFilter;
