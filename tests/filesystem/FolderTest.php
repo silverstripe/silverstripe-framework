@@ -54,6 +54,15 @@ class FolderTest extends SapphireTest {
 		$this->assertEquals(ASSETS_DIR . $path,$folder->getRelativePath(),
 			'A folder named "assets/" within "assets/" is allowed'
 		);
+		
+		$path = '/'; // relative to "assets/" folder, should produce "assets/"
+		$folder = Folder::find_or_make($path);
+		$this->assertEquals(ASSETS_DIR . $path,$folder->getRelativePath(),
+			'The folder "assets/"'
+		);
+		$this->assertEquals(ASSETS_PATH . $path,$folder->getFullPath(),
+			'The folder "assets/"'
+		);
 	}
 	
 	/**
