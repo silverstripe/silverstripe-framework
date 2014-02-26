@@ -643,6 +643,45 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertNotContains($fileSubfolder->ID, $itemIDs, 'Does not contain file in subfolder');
 	}
 
+	/**
+	 * Tests that UploadField::fileexist works
+	 */
+	public function testFileExists() {
+		$this->loginWithPermission('ADMIN');
+
+		// Check that fileexist works on subfolders
+		$nonFile = uniqid().'.txt';
+		$responseEmpty = $this->mockFileExists('NoRelationField', $nonFile);
+		$responseEmptyData = json_decode($responseEmpty->getBody());
+		$this->assertFalse($responseEmpty->isError());
+		$this->assertFalse($responseEmptyData->exists);
+
+		// Check that filexists works on root folder
+		$responseRoot = $this->mockFileExists('RootFolderTest', $nonFile);
+		$responseRootData = json_decode($responseRoot->getBody());
+		$this->assertFalse($responseRoot->isError());
+		$this->assertFalse($responseRootData->exists);
+
+		// Check that uploaded files can be detected in the root
+		$tmpFileName = 'testUploadBasic.txt';
+		$response = $this->mockFileUpload('RootFolderTest', $tmpFileName);
+		$this->assertFalse($response->isError());
+		$this->assertFileExists(ASSETS_PATH . "/$tmpFileName");
+		$responseExists = $this->mockFileExists('RootFolderTest', $tmpFileName);
+		$responseExistsData = json_decode($responseExists->getBody());
+		$this->assertFalse($responseExists->isError());
+		$this->assertTrue($responseExistsData->exists);
+
+		// Check that uploaded files can be detected
+		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
+		$this->assertFalse($response->isError());
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
+		$responseExists = $this->mockFileExists('NoRelationField', $tmpFileName);
+		$responseExistsData = json_decode($responseExists->getBody());
+		$this->assertFalse($responseExists->isError());
+		$this->assertTrue($responseExistsData->exists);
+	}
+
 	protected function getMockForm() {
 		return new Form(new Controller(), 'Form', new FieldList(), new FieldList());
 	}
@@ -717,6 +756,12 @@ class UploadFieldTest extends FunctionalTest {
 		);
 	}
 	
+	protected function mockFileExists($fileField, $fileName) {
+		return $this->get(
+			"UploadFieldTest_Controller/Form/field/{$fileField}/fileexists?filename=".urlencode($fileName)
+		);
+	}
+	
 	/**
 	 * Simulates a physical file deletion
 	 * 
@@ -773,7 +818,14 @@ class UploadFieldTest extends FunctionalTest {
 		}
 
 		// Remove left over folders and any files that may exist
-		if(file_exists('../assets/UploadFieldTest')) Filesystem::removeFolder('../assets/UploadFieldTest');
+		if(file_exists(ASSETS_PATH.'/UploadFieldTest')) {
+			Filesystem::removeFolder(ASSETS_PATH.'/UploadFieldTest');
+		}
+		
+		// Remove file uploaded to root folder
+		if(file_exists(ASSETS_PATH.'/testUploadBasic.txt')) {
+			unlink(ASSETS_PATH.'/testUploadBasic.txt');
+		}
 	}
 
 }
@@ -859,6 +911,9 @@ class UploadFieldTestForm extends Form implements TestOnly {
 		if(empty($controller)) {
 			$controller = new UploadFieldTest_Controller();
 		}
+		
+		$fieldRootFolder = UploadField::create('RootFolderTest')
+			->setFolderName('/');
 
 		$fieldNoRelation = UploadField::create('NoRelationField')
 			->setFolderName('UploadFieldTest');
@@ -911,6 +966,7 @@ class UploadFieldTestForm extends Form implements TestOnly {
 		$fieldAllowedExtensions->getValidator()->setAllowedExtensions(array('txt'));
 
 		$fields = new FieldList(
+			$fieldRootFolder,
 			$fieldNoRelation,
 			$fieldHasOne,
 			$fieldHasOneMaxOne,
