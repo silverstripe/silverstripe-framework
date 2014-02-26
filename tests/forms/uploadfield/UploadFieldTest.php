@@ -13,7 +13,7 @@ class UploadFieldTest extends FunctionalTest {
 	protected $requiredExtensions = array(
 		'File' => array('UploadFieldTest_FileExtension')
 	);
-
+	
 	/**
 	 * Test that files can be uploaded against an object with no relation
 	 */
@@ -26,6 +26,22 @@ class UploadFieldTest extends FunctionalTest {
 		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
+		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
+	}
+	
+	/**
+	 * Test that files can be uploaded into the assets folder
+	 */
+	public function testUploadNoRelationAssetsFolder() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+
+		$tmpFileName = 'testUploadBasic.txt';
+		$response = $this->mockFileUpload('NoRelationAssetsFolderField', $tmpFileName);
+		$this->assertFalse($response->isError());
+		$this->assertFileExists(ASSETS_PATH . "/$tmpFileName");
 		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 	}
@@ -863,6 +879,9 @@ class UploadFieldTestForm extends Form implements TestOnly {
 		$fieldNoRelation = UploadField::create('NoRelationField')
 			->setFolderName('UploadFieldTest');
 		
+		$fieldNoRelationAssetsFolder = UploadField::create('NoRelationAssetsFolderField')
+			->setFolderName('/');
+		
 		$fieldHasOne = UploadField::create('HasOneFile')
 			->setFolderName('UploadFieldTest');
 
@@ -912,6 +931,7 @@ class UploadFieldTestForm extends Form implements TestOnly {
 
 		$fields = new FieldList(
 			$fieldNoRelation,
+			$fieldNoRelationAssetsFolder,
 			$fieldHasOne,
 			$fieldHasOneMaxOne,
 			$fieldHasOneMaxTwo,
