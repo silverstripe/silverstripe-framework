@@ -82,6 +82,15 @@ class Folder extends File {
 			}
 			$parentID = $item->ID;
 		}
+		
+		// Fallback to the assets/ folder
+		if(!$item) {
+			$item = new Folder();
+			$item->ParentID = null;
+			$item->Name = 'assets';
+			$item->Title = null;
+			$item->Filename = null;
+		}
 
 		return $item;
 	}
