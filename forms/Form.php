@@ -1016,12 +1016,17 @@ class Form extends RequestHandler {
 		return $this->messageType;
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function getMessageFromSession() {
 		if($this->message || $this->messageType) {
 			return $this->message;
-		}else{
+		} else {
 			$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
 			$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
+
+			return $this->message;
 		}
 	}
 
