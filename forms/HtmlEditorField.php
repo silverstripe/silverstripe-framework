@@ -278,7 +278,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					$siteTree,
 					new TextField('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
 					new EmailField('email', _t('HtmlEditorField.EMAIL', 'Email address')),
-					new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'ID', 'Title', true),
+					$fileField = new UploadField('file', _t('HtmlEditorField.FILE', 'File')),
 					new TextField('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
 					new TextField('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
 					new CheckboxField('TargetBlank',
@@ -300,7 +300,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 		$headerWrap->addExtraClass('CompositeField composite cms-content-header nolabel ');		
 		$contentComposite->addExtraClass('ss-insert-link content');
-		
+		$fileField->setAllowedMaxFileNumber(1);
+
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
 		$form->addExtraClass('htmleditorfield-form htmleditorfield-linkform cms-dialog-content');

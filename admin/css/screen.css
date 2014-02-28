@@ -671,6 +671,7 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .htmleditorfield-dialog .CompositeField .text select { margin: 5px 0 0 0; }
 
 .htmleditorfield-linkform .step2 { margin-bottom: 16px; }
+.htmleditorfield-linkform .ss-uploadfield .middleColumn { width: auto; }
 
 .htmleditorfield-mediaform .ss-gridfield .gridfield-button-delete { display: none; }
 .htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tbody td:first-child { padding: 0; text-align: center; }

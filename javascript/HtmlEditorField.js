@@ -479,6 +479,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			fromDialog: {
 				onssdialogopen: function(){
 					var ed = this.getEditor();
+
 					ed.onopen();
 
 					this.setSelection(ed.getSelectedNode());
@@ -488,8 +489,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 					this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:enabled').eq(0).focus();
 
-					this.updateFromEditor();
 					this.redraw();
+					this.updateFromEditor();
 				},
 
 				onssdialogclose: function(){
@@ -563,6 +564,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				this.addAnchorSelector();
 
+				this.resetFileField();
+
 				// Toggle field visibility depending on the link type.
 				this.find('div.content .field').hide();
 				this.find('.field#LinkType').show();
@@ -593,7 +596,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						break;
 					
 					case 'file':
-						href = '[file_link,id=' + this.find(':input[name=file]').val() + ']';
+						href = '[file_link,id=' + this.find('.ss-uploadfield .ss-uploadfield-item').attr('data-fileid') + ']';
 						target = '_blank';
 						break;
 					
@@ -620,13 +623,24 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.modifySelection(function(ed){
 					ed.insertLink(this.getLinkAttributes());
 				});
-				this.updateFromEditor();
 			},
 			removeLink: function() {
 				this.modifySelection(function(ed){
 					ed.removeLink();
 				});
+
+				this.resetFileField();
 				this.close();
+			},
+			resetFileField: function() {
+				// If there's an attached item, remove it
+				var fileField = this.find('#file'),
+					fileUpload = fileField.data('fileupload'),
+					currentItem = fileField.find('.ss-uploadfield-item[data-fileid]');
+
+				if(currentItem.length) {
+					fileUpload._trigger('destroy', null, {context: currentItem});
+				}
 			},
 
 			/**
@@ -763,7 +777,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			 */
 			updateFromEditor: function() {
 				var htmlTagPattern = /<\S[^><]*>/g, fieldName, data = this.getCurrentLink();
-
+				
 				if(data) {
 					for(fieldName in data) {
 						var el = this.find(':input[name=' + fieldName + ']'), selected = data[fieldName];
@@ -775,6 +789,18 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 							el.prop('checked', selected).change();
 						} else if(el.is(':radio')) {
 							el.val([selected]).change();
+						} else if(fieldName == 'file') {
+							// Can't rely on fieldName, as UploadFields have different naming convention
+							el = $('#' + fieldName);
+
+							// We have to wait for the UploadField to initialise
+							(function attach(el, selected) {
+								if( ! el.getConfig()) {
+									setTimeout(function(){ attach(el, selected); }, 50);
+								} else {
+									el.attachFiles([selected]);
+								}
+							})(el, selected);
 						} else {
 							el.val(selected).change();
 						}
