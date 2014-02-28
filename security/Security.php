@@ -634,6 +634,11 @@ class Security extends Controller implements TemplateGlobalProvider {
 		if(isset($_REQUEST['t']) && $member && $member->validateAutoLoginToken($_REQUEST['t'])) {
 			// On first valid password reset request redirect to the same URL without hash to avoid referrer leakage.
 
+			// if there is a current member, they should be logged out
+			if ($curMember = Member::currentUser()) {
+				$curMember->logOut();
+			}
+			
 			// Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
 			Session::set('AutoLoginHash', $member->encryptWithUserSettings($_REQUEST['t']));
 			
