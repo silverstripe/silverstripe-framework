@@ -97,7 +97,7 @@ plus some `width` and `height` arguments. We'll add defaults to those in our sho
 
 The hard bits are taken care of (parsing out the shortcodes), everything we need to do is a bit of string replacement.
 CMS users still need to remember the specific syntax, but these shortcodes can form the basis
-for more advanced editing interfaces (with visual placeholders). See the built-in `[embed]` shortcode as an example
+for more advanced editing interfaces (with visual placeholders). See the built-in `embed` shortcode as an example
 for coupling shortcodes with a form to create and edit placeholders.
 
 ## Built-in Shortcodes
