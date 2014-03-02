@@ -77,4 +77,9 @@ class URLSegmentFilterTest extends SapphireTest {
 		$this->assertEquals('url-contains-dot', $filter->filter('url-contains.dot'));
 	}
 
+	public function testRemoveLeadingDashes() {
+		$filter = new URLSegmentFilter();
+		$this->assertEquals('url-has-leading-dashes', $filter->filter('---url-has-leading-dashes'));
+	}
+
 }
