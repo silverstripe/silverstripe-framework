@@ -159,13 +159,21 @@ class SQLQuery {
 	 * @return SQLQuery
 	 */
 	public function setSelect($fields) {
-		$this->select = array();
 		if (func_num_args() > 1) {
 			$fields = func_get_args();
 		} else if(!is_array($fields)) {
 			$fields = array($fields);
 		}
-		return $this->addSelect($fields);
+		
+		foreach($fields as $idx => $field) {
+			if(preg_match('/^(.*) +AS +"?([^"]*)"?/i', $field, $matches)) {
+				$this->selectField($matches[1], $matches[2]);
+			} else {
+				$this->selectField($field, is_numeric($idx) ? null : $idx);
+			}
+		}
+		
+		return $this;
 	}
 
 	/**
