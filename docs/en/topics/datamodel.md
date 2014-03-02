@@ -720,7 +720,7 @@ an object, not for displaying the objects contained in the relation.
 ## Validation and Constraints
 
 Traditionally, validation in SilverStripe has been mostly handled on the
-controller through [form validation](/topics/form-validation).
+controller through [form validation](/topics/forms#form-validation).
 
 While this is a useful approach, it can lead to data inconsistencies if the
 record is modified outside of the controller and form context.
