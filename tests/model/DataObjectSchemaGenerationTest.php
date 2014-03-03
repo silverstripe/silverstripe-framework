@@ -124,6 +124,57 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Restore old indexes
 		Config::unnest();
 	}
+	
+	/**
+	 * Tests the generation of the ClassName spec and ensure it's not unnecessarily influenced
+	 * by the order of classnames of existing records
+	 */
+	public function testClassNameSpecGeneration() {
+		
+		// Test with blank entries
+		DataObject::clear_classname_spec_cache();
+		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		$this->assertEquals(
+			"Enum('DataObjectSchemaGenerationTest_DO, DataObjectSchemaGenerationTest_IndexDO')",
+			$fields['ClassName']
+		);
+		
+		// Test with instance of subclass
+		$item1 = new DataObjectSchemaGenerationTest_IndexDO();
+		$item1->write();
+		DataObject::clear_classname_spec_cache();
+		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		$this->assertEquals(
+			"Enum('DataObjectSchemaGenerationTest_DO, DataObjectSchemaGenerationTest_IndexDO')",
+			$fields['ClassName']
+		);
+		$item1->delete();
+		
+		// Test with instance of main class
+		$item2 = new DataObjectSchemaGenerationTest_DO();
+		$item2->write();
+		DataObject::clear_classname_spec_cache();
+		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		$this->assertEquals(
+			"Enum('DataObjectSchemaGenerationTest_DO, DataObjectSchemaGenerationTest_IndexDO')",
+			$fields['ClassName']
+		);
+		$item2->delete();
+		
+		// Test with instances of both classes
+		$item1 = new DataObjectSchemaGenerationTest_IndexDO();
+		$item1->write();
+		$item2 = new DataObjectSchemaGenerationTest_DO();
+		$item2->write();
+		DataObject::clear_classname_spec_cache();
+		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		$this->assertEquals(
+			"Enum('DataObjectSchemaGenerationTest_DO, DataObjectSchemaGenerationTest_IndexDO')",
+			$fields['ClassName']
+		);
+		$item1->delete();
+		$item2->delete();
+	}
 }
 
 class DataObjectSchemaGenerationTest_DO extends DataObject implements TestOnly {
