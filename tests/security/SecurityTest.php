@@ -213,6 +213,9 @@ class SecurityTest extends FunctionalTest {
 	
 	public function testChangePasswordFromLostPassword() {
 		$admin = $this->objFromFixture('Member', 'test');
+		$admin->FailedLoginCount = 99;
+		$admin->LockedOutUntil = SS_Datetime::now()->Format('Y-m-d H:i:s');
+		$admin->write();
 
 		$this->assertNull($admin->AutoLoginHash, 'Hash is empty before lost password');
 		
@@ -243,6 +246,10 @@ class SecurityTest extends FunctionalTest {
 		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , 'changedPassword');
 		$this->assertEquals(302, $goodResponse->getStatusCode());
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
+
+		$admin = DataObject::get_by_id('Member', $admin->ID, false);
+		$this->assertNull($admin->LockedOutUntil);
+		$this->assertEquals(0, $admin->FailedLoginCount);
 	}
 		
 	public function testRepeatedLoginAttemptsLockingPeopleOut() {
