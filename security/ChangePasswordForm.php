@@ -104,6 +104,11 @@ class ChangePasswordForm extends Form {
 				
 				// TODO Add confirmation message to login redirect
 				Session::clear('AutoLoginHash');
+
+				// Clear locked out status
+				$member->LockedOutUntil = null;
+				$member->FailedLoginCount = null;
+				$member->write();
 				
 				if (isset($_REQUEST['BackURL']) 
 					&& $_REQUEST['BackURL'] 
