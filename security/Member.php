@@ -1294,7 +1294,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		);
 		$timeFormatField->setValue($this->TimeFormat);
 
-		$this->extend('updateCMSFields', $fields);
+		$this->extend('updateMemberCMSFields', $fields);
 		
 		return $fields;
 	}
