@@ -139,14 +139,19 @@ class Upload extends Controller {
 		// Create a new file record (or try to retrieve an existing one)
 		if(!$this->file) {
 			$fileClass = File::get_class_for_file_extension(pathinfo($tmpFile['name'], PATHINFO_EXTENSION));
-			if($this->replaceFile) {
-				$this->file = File::get()
-					->filter(array(
-						'Name' => $fileName,
-						'ParentID' => $parentFolder ? $parentFolder->ID : 0
-					))->First();
+			$this->file = new $fileClass();
+		}
+		if(!$this->file->ID && $this->replaceFile) {
+			$fileClass = $this->file->class;
+			$file = File::get()
+				->filter(array(
+					'ClassName' => $fileClass,
+					'Name' => $fileName,
+					'ParentID' => $parentFolder ? $parentFolder->ID : 0
+				))->First();
+			if($file) {
+				$this->file = $file;
 			}
-			if(!$this->file) $this->file = new $fileClass();
 		}
 		
 		// if filename already exists, version the filename (e.g. test.gif to test1.gif)
