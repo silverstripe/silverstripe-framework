@@ -73,10 +73,14 @@ class SS_HTMLValue extends ViewableData {
 		// This behaviour is apparently XML spec, but we don't want this because it messes up the HTML
 		$content = str_replace(chr(13), '', $content);
 
-		return @$this->getDocument()->loadHTML(
+		$errorState = libxml_use_internal_errors(true);
+		$result = $this->getDocument()->loadHTML(
 			'<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head>' .
 			"<body>$content</body></html>"
 		);
+		libxml_clear_errors();
+		libxml_use_internal_errors($errorState);
+		return $result;
 	}
 
 	/**

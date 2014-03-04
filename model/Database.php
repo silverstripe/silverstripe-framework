@@ -214,14 +214,16 @@ abstract class SS_Database {
 		foreach($this->schemaUpdateTransaction as $tableName => $changes) {
 			switch($changes['command']) {
 				case 'create':
-				$this->createTable($tableName, $changes['newFields'], $changes['newIndexes'], $changes['options'],
-					@$changes['advancedOptions']);
+					$this->createTable($tableName, $changes['newFields'], $changes['newIndexes'], $changes['options'],
+						isset($changes['advancedOptions']) ? $changes['advancedOptions'] : null
+					);
 					break;
 				
 				case 'alter':
 					$this->alterTable($tableName, $changes['newFields'], $changes['newIndexes'],
-					$changes['alteredFields'], $changes['alteredIndexes'], $changes['alteredOptions'],
-					@$changes['advancedOptions']);
+						$changes['alteredFields'], $changes['alteredIndexes'], $changes['alteredOptions'],
+						isset($changes['advancedOptions']) ? $changes['advancedOptions'] : null
+					);
 					break;
 			}
 		}
