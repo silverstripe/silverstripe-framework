@@ -533,6 +533,42 @@ class VersionedTest extends SapphireTest {
 		
 		Versioned::set_reading_mode($originalMode);
 	}
+	
+	/**
+	 * Tests that reading mode persists between requests
+	 */
+	public function testReadingPersistent() {
+		$session = new Session(array());
+		
+		// Set to stage
+		Director::test('/?stage=Stage', null, $session);
+		$this->assertEquals(
+			'Stage.Stage',
+			$session->inst_get('readingMode'),
+			'Check querystring changes reading mode to Stage'
+		);
+		Director::test('/', null, $session);
+		$this->assertEquals(
+			'Stage.Stage',
+			$session->inst_get('readingMode'),
+			'Check that subsequent requests in the same session remain in Stage mode'
+		);
+		
+		// Test live persists
+		Director::test('/?stage=Live', null, $session);
+		$this->assertEquals(
+			'Stage.Live',
+			$session->inst_get('readingMode'),
+			'Check querystring changes reading mode to Live'
+		);
+		Director::test('/', null, $session);
+		$this->assertEquals(
+			'Stage.Live',
+			$session->inst_get('readingMode'),
+			'Check that subsequent requests in the same session remain in Live mode'
+		);
+		
+	}
 
 }
 
