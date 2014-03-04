@@ -154,8 +154,7 @@ class UploadField extends FileField {
 		/**
 		 * Show a warning when overwriting a file.
 		 * This requires Upload->replaceFile config to be set to true, otherwise
-		 * files will be renamed instead of overwritten (although the warning will
-		 * still be displayed)
+		 * files will be renamed instead of overwritten.
 		 * 
 		 * @see Upload
 		 * @var boolean
@@ -998,11 +997,12 @@ class UploadField extends FileField {
 			}
 		}
 
-		//get all the existing files in the current folder
-		if ($this->getOverwriteWarning()) {
-			//add overwrite warning error message to the config object sent to Javascript
+		// add overwrite warning error message to the config object sent to Javascript
+		if ($this->getUpload()->getReplaceFile() && $this->getOverwriteWarning()) {
 			$config['errorMessages']['overwriteWarning'] =
 				_t('UploadField.OVERWRITEWARNING', 'File with the same name already exists');
+		} else {
+			$this->setOverwriteWarning(false);
 		}
 		
 		$mergedConfig = array_merge($config, $this->ufConfig);
@@ -1152,11 +1152,6 @@ class UploadField extends FileField {
 		if ($relationClass = $this->getRelationAutosetClass(null)) {
 			// Create new object explicitly. Otherwise rely on Upload::load to choose the class.
 			$fileObject = Object::create($relationClass);
-		}
-
-		// Allow replacing files (rather than renaming a duplicate) when warning about overwrites
-		if($this->getConfig('overwriteWarning')) {
-			$this->upload->setReplaceFile(true);
 		}
 
 		// Get the uploaded file into a new file object.

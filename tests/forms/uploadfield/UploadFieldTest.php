@@ -642,6 +642,41 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertContains($file4->ID, $itemIDs, 'Contains file in assigned folder');
 		$this->assertNotContains($fileSubfolder->ID, $itemIDs, 'Does not contain file in subfolder');
 	}
+	
+	/**
+	 * Test that UploadField:overwriteWarning cannot overwrite Upload:replaceFile
+	 */
+	public function testConfigOverwriteWarningCannotRelaceFiles() {
+		$this->loginWithPermission('ADMIN');
+
+		$tmpFileName = 'testUploadBasic.txt';
+		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
+		$this->assertFalse($response->isError());
+		$responseData = Convert::json2array($response->getBody());
+		$this->assertFileExists(ASSETS_PATH . '/UploadFieldTest/' . $responseData[0]['name']);
+		$uploadedFile = DataObject::get_by_id('File', (int) $responseData[0]['id']);
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
+
+		Upload::config()->replaceFile = false;
+		UploadField::config()->defaultConfig = array_merge(
+				UploadField::config()->defaultConfig, array('overwriteWarning' => true)
+		);
+
+		$tmpFileName = 'testUploadBasic.txt';
+		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
+		$this->assertFalse($response->isError());
+		$responseData = Convert::json2array($response->getBody());
+		$this->assertFileExists(ASSETS_PATH . '/UploadFieldTest/' . $responseData[0]['name']);
+		$uploadedFile2 = DataObject::get_by_id('File', (int) $responseData[0]['id']);
+		$this->assertTrue(is_object($uploadedFile2), 'The file object is created');
+		$this->assertTrue(
+				$uploadedFile->Filename !== $uploadedFile2->Filename, 'Filename is not the same'
+		);
+		$this->assertGreaterThan(
+				$uploadedFile->ID, $uploadedFile2->ID, 'File database record is not the same'
+		);
+		$uploadedFile2->delete();
+	}
 
 	protected function getMockForm() {
 		return new Form(new Controller(), 'Form', new FieldList(), new FieldList());
