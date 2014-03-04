@@ -20,7 +20,7 @@ directory (usually `mysite/templates/`), it'll take priority over the built-in
 one. 
 
 One thing to remember when overriding a template with a custom one, such as in a module, priority is determined
-by a breadth-first search, so any template on a deeper level of the file heirarchy will take
+by a breadth-first search, so any template on a deeper level of the file hierarchy will take
 priority (ie. when overriding LeftAndmain_Menu.ss, `framework/admin/templates/Includes/LeftAndMain_Menu.ss`
 will display over `mysite/templates/includes/LeftAndMain_Menu.ss` as the former is at a deeper
 level).
