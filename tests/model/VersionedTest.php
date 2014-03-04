@@ -492,6 +492,47 @@ class VersionedTest extends SapphireTest {
 			'Writes to and reads from default stage even if a non-matching stage is set'
 		);
 	}
+	
+	/**
+	 * Test that publishing processes respects lazy loaded fields
+	 */
+	public function testLazyLoadFields() {
+		$originalMode = Versioned::get_reading_mode();
+		
+		// Generate staging record and retrieve it from stage in live mode
+		Versioned::reading_stage('Stage');
+		$obj = new VersionedTest_Subclass();
+		$obj->Name = 'bob';
+		$obj->ExtraField = 'Field Value';
+		$obj->write();
+		$objID = $obj->ID;
+		$filter = sprintf('"VersionedTest_DataObject"."ID" = \'%d\'', Convert::raw2sql($objID));
+		Versioned::reading_stage('Live');
+		
+		// Check fields are unloaded prior to access
+		$objLazy = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', $filter, false);
+		$lazyFields = $objLazy->getQueriedDatabaseFields();
+		$this->assertTrue(isset($lazyFields['ExtraField_Lazy']));
+		$this->assertEquals('VersionedTest_Subclass', $lazyFields['ExtraField_Lazy']);
+		
+		// Check lazy loading works when viewing a Stage object in Live mode
+		$this->assertEquals('Field Value', $objLazy->ExtraField);
+		
+		// Test that writeToStage respects lazy loaded fields
+		$objLazy = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', $filter, false);
+		$objLazy->writeToStage('Live');
+		$objLive = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Live', $filter, false);
+		$liveLazyFields = $objLive->getQueriedDatabaseFields();
+		
+		// Check fields are unloaded prior to access
+		$this->assertTrue(isset($liveLazyFields['ExtraField_Lazy']));
+		$this->assertEquals('VersionedTest_Subclass', $liveLazyFields['ExtraField_Lazy']);
+		
+		// Check that live record has original value
+		$this->assertEquals('Field Value', $objLive->ExtraField);
+		
+		Versioned::set_reading_mode($originalMode);
+	}
 
 }
 

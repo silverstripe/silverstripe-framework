@@ -2166,6 +2166,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		$dataQuery = new DataQuery($tableClass);
+		
+		// Reset query parameter context to that of this DataObject
+		if($params = $this->getSourceQueryParams()) {
+			foreach($params as $key => $value) $dataQuery->setQueryParam($key, $value);
+		}
 
 		// TableField sets the record ID to "new" on new row data, so don't try doing anything in that case
 		if(!is_numeric($this->record['ID'])) return false;
