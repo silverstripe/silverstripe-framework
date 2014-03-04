@@ -26,8 +26,8 @@ class BasicAuthTest extends FunctionalTest {
 	}
 
 	public function testBasicAuthEnabledWithoutLogin() {
-		$origUser = @$_SERVER['PHP_AUTH_USER'];
-		$origPw = @$_SERVER['PHP_AUTH_PW'];
+		$origUser = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
+		$origPw = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
 		
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
@@ -40,8 +40,8 @@ class BasicAuthTest extends FunctionalTest {
 	}
 	
 	public function testBasicAuthDoesntCallActionOrFurtherInitOnAuthFailure() {
-		$origUser = @$_SERVER['PHP_AUTH_USER'];
-		$origPw = @$_SERVER['PHP_AUTH_PW'];
+		$origUser = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
+		$origPw = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
 		
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
@@ -60,8 +60,8 @@ class BasicAuthTest extends FunctionalTest {
 	}
 
 	public function testBasicAuthEnabledWithPermission() {
-		$origUser = @$_SERVER['PHP_AUTH_USER'];
-		$origPw = @$_SERVER['PHP_AUTH_PW'];
+		$origUser = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
+		$origPw = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
 		
 		$_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'wrongpassword';
@@ -83,8 +83,8 @@ class BasicAuthTest extends FunctionalTest {
 	}
 	
 	public function testBasicAuthEnabledWithoutPermission() {
-		$origUser = @$_SERVER['PHP_AUTH_USER'];
-		$origPw = @$_SERVER['PHP_AUTH_PW'];
+		$origUser = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
+		$origPw = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
 		
 		$_SERVER['PHP_AUTH_USER'] = 'user-without-groups@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'wrongpassword';

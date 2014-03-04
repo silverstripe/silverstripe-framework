@@ -683,7 +683,7 @@ class Form extends RequestHandler {
 	 * @return String
 	 */
 	public function getAttribute($name) {
-		return @$this->attributes[$name];
+		if(isset($this->attributes[$name])) return $this->attributes[$name];
 	}
 
 	public function getAttributes() {

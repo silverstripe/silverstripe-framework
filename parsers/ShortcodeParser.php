@@ -229,8 +229,8 @@ class ShortcodeParser {
 					'text' => $match[0][0],
 					's' => $match[0][1],
 					'e' => $match[0][1] + strlen($match[0][0]),
-					'open' =>  @$match['open'][0],
-					'close' => @$match['close'][0],
+					'open' =>  isset($match['open'][0]) ? $match['open'][0] : null,
+					'close' => isset($match['close'][0]) ? $match['close'][0] : null,
 					'attrs' => $attrs,
 					'content' => '',
 					'escaped' => !empty($match['oesc'][0]) || !empty($match['cesc1'][0]) || !empty($match['cesc2'][0])

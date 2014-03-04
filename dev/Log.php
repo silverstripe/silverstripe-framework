@@ -167,8 +167,8 @@ class SS_Log {
 			$message = array(
 				'errno' => '',
 				'errstr' => $message,
-				'errfile' => @$lastTrace['file'],
-				'errline' => @$lastTrace['line'],
+				'errfile' => isset($lastTrace['file']) ? $lastTrace['file'] : null,
+				'errline' => isset($lastTrace['line']) ? $lastTrace['line'] : null,
 				'errcontext' => $trace
 			);
 		}
