@@ -41,8 +41,8 @@ class URLSegmentFilterTest extends SapphireTest {
 	public function testReplacesCommonNonAsciiCharacters() {
 		$f = new URLSegmentFilter();
 		$this->assertEquals(
-			urlencode('aa1-'),
-			$f->filter('Aa1~!@#$%^*()_`-=;\':"[]\{}|,./<>?')
+			urlencode('aa1-a'),
+			$f->filter('Aa1~!@#$%^*()_`-=;\':"[]\{}|,./<>?a')
 		);
 	}
 
@@ -80,6 +80,11 @@ class URLSegmentFilterTest extends SapphireTest {
 	public function testRemoveLeadingDashes() {
 		$filter = new URLSegmentFilter();
 		$this->assertEquals('url-has-leading-dashes', $filter->filter('---url-has-leading-dashes'));
+	}
+
+	public function testReplacesTrailingDashes() {
+		$filter = new URLSegmentFilter();
+		$this->assertEquals('url-has-trailing-dashes', $filter->filter('url-has-trailing-dashes--'));
 	}
 
 }
