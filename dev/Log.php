@@ -94,7 +94,7 @@ class SS_Log {
 			// Add default context (shouldn't change until the actual log event happens)
 			foreach(static::$log_globals as $globalName => $keys) {
 				foreach($keys as $key) {
-					$val = @$GLOBALS[$globalName][$key];
+					$val = isset($GLOBALS[$globalName][$key]) ? $GLOBALS[$globalName][$key] : null;
 					static::$logger->setEventItem(sprintf('$%s[\'%s\']', $globalName, $key), $val);
 				}
 			}
@@ -167,8 +167,8 @@ class SS_Log {
 			$message = array(
 				'errno' => '',
 				'errstr' => $message,
-				'errfile' => @$lastTrace['file'],
-				'errline' => @$lastTrace['line'],
+				'errfile' => isset($lastTrace['file']) ? $lastTrace['file'] : null,
+				'errline' => isset($lastTrace['line']) ? $lastTrace['line'] : null,
 				'errcontext' => $trace
 			);
 		}

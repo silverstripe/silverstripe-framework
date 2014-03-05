@@ -419,7 +419,12 @@ class Debug {
 		$reporter = self::create_debug_view();
 		
 		// Coupling alert: This relies on knowledge of how the director gets its URL, it could be improved.
-		$httpRequest = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : @$_REQUEST['url'];
+		$httpRequest = null;
+		if(isset($_SERVER['REQUEST_URI'])) {
+			$httpRequest = $_SERVER['REQUEST_URI'];
+		} elseif(isset($_REQUEST['url'])) {
+			$httpRequest = $_REQUEST['url'];
+		}
 		if(isset($_SERVER['REQUEST_METHOD'])) $httpRequest = $_SERVER['REQUEST_METHOD'] . ' ' . $httpRequest;
 
 		$reporter->writeHeader($httpRequest);

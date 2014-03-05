@@ -208,9 +208,8 @@ class Director implements TemplateGlobalProvider {
 		Requirements::set_backend(new Requirements_Backend());
 
 		// Handle absolute URLs
-		if (@parse_url($url, PHP_URL_HOST) != '') {
-			$bits = parse_url($url);
-			$_SERVER['HTTP_HOST'] = $bits['host'];
+		if ($host = parse_url($url, PHP_URL_HOST)) {
+			$_SERVER['HTTP_HOST'] = $host;
 			$url = Director::makeRelative($url);
 		}
 
