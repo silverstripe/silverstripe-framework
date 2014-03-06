@@ -1,4 +1,5 @@
-name: uploadfield
+---
+Name: uploadfield
 ---
 UploadField:
   defaultConfig:
@@ -11,4 +12,8 @@ UploadField:
     previewMaxHeight: 60
     uploadTemplateName: 'ss-uploadfield-uploadtemplate'
     downloadTemplateName: 'ss-uploadfield-downloadtemplate'
-    overwriteWarning: true # Warning before overwriting existing file (only relevant when Upload: replaceFile is true)
+    # Warning before overwriting existing file. Behaviour depends on replaceFile.
+    overwriteWarning: true
+    # replaceFile determines if uploads replace existing files of the same name.
+    # if false an auto-rename is performed instead.
+    replaceFile: true
