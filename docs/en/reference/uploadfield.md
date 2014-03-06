@@ -146,6 +146,19 @@ to known file categories.
 	// 'doc','docx','txt','rtf','xls','xlsx','pages', 'ppt','pptx','pps','csv', 'html','htm','xhtml', 'xml','pdf'
 	$uploadField->setAllowedFileCategories('image', 'doc');
 
+### Customise file-exists behaviour
+
+When uploading files that may already exist there are two behaviours that must be configured.
+These are `overwriteWarning`, which determines whether a user should be prompted if
+any file exists, and `replaceFile`, which determines whether a file should be replaced or 
+automatically renamed. These both default to true, but can be customised if necessary (especially
+if used on the frontend).
+
+	:::php
+	// Disable notifications, and prevent file-overwriting
+	$uploadField
+		->setOverwriteWarning(false) // Don't notify or prompt user
+		->setReplaceFile(false); // Never replace files, only rename
 
 ### Limit the maximum file size
 
@@ -289,7 +302,10 @@ editform, or 'fileEditValidator' to determine the validator (eg RequiredFields).
    (of a method on File to provide a actions) for the EditForm (Example: 'getCMSActions')
  - `setFileEditValidator`: (string) Validator (eg RequiredFields) or string $name 
    (of a method on File to provide a Validator) for the EditForm (Example: 'getCMSValidator')
- - `setOverwriteWarning`: (boolean) Show a warning when overwriting a file.
+ - `setOverwriteWarning`: (boolean) Show a warning when overwriting a file. The warning message will
+   depend on the value of `replaceFile`.
+ - `setReplaceFile`: (boolean) Determine if existing files should be replaced. If false a rename
+    is performed instead.
  - `setPreviewMaxWidth`: (int)
  - `setPreviewMaxHeight`: (int)
  - `setTemplateFileButtons`: (string) Template name to use for the file buttons
@@ -313,16 +329,21 @@ Certain default values for the above can be configured using the YAML config sys
 		previewMaxHeight: 60
 		uploadTemplateName: 'ss-uploadfield-uploadtemplate'
 		downloadTemplateName: 'ss-uploadfield-downloadtemplate'
-		overwriteWarning: true # Warning before overwriting existing file (only relevant when Upload: replaceFile is true)
+		# Warning before overwriting existing file. Behaviour depends on replaceFile
+		overwriteWarning: true
+		# replaceFile determines if uploads replace existing files of the same name.
+		# if false an auto-rename is performed instead.
+		replaceFile: true
 
 The above settings can also be set on a per-instance basis by using `setConfig` with the appropriate key.
 
-You can also configure the underlying `[api:Upload]` class, by using the YAML config system.
+You can also configure the underlying `[api:Upload]` class, by using the YAML config system. Note that
+the value of `UploadField.replaceFile` will override the value of `Upload.replaceFile` when an
+`[api:UploadField]` is used.
 
 	:::yaml
 	Upload:
-	  # Globally disables automatic renaming of files and displays a warning before overwriting an existing file
-	  replaceFile: true
+	  replaceFile: false # Same as above, but only affects Upload when used as stand-alone field
 	  uploads_folder: 'Uploads'
   
 ## Using the UploadField in a frontend form
@@ -346,6 +367,8 @@ gallery the below code could be used:
 				new TextField('Title', 'Title', null, 255),
 				$field = new UploadField('Images', 'Upload Images')
 			); 
+			$field->setOverwriteWarning(false); // Don't use front-end file exists notifications
+			$field->setReplaceFile(false); // Prevent users replacing each others' files
 			$field->setCanAttachExisting(false); // Block access to Silverstripe assets library
 			$field->setCanPreviewFolder(false); // Don't show target filesystem folder on upload field
 			$field->relationAutoSetting = false; // Prevents the form thinking the GalleryPage is the underlying object

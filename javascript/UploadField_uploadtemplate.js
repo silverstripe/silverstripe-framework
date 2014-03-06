@@ -24,7 +24,10 @@ window.tmpl.cache['ss-uploadfield-uploadtemplate'] = tmpl(
 						'<button class="icon icon-16" data-icon="minus-circle" title="' + ss.i18n._t('UploadField.CANCELREMOVE', 'Cancel/Remove') + '">' + ss.i18n._t('UploadField.CANCELREMOVE', 'Cancel/Remove') + '</button>' +
 					'</div>' +
 					'<div class="ss-uploadfield-item-overwrite hide ">'+
-						'<button data-icon="drive-upload" class="ss-uploadfield-item-overwrite-warning" title="' + ss.i18n._t('UploadField.OVERWRITE', 'Overwrite') + '">' + ss.i18n._t('UploadField.OVERWRITE', 'Overwrite') + '</button>' +
+						'<button data-icon="drive-upload" class="ss-uploadfield-item-warning" title="' + ss.i18n._t('UploadField.OVERWRITE', 'Overwrite') + '">' + ss.i18n._t('UploadField.OVERWRITE', 'Overwrite') + '</button>' +
+					'</div>' +
+					'<div class="ss-uploadfield-item-rename hide ">'+
+						'<button data-icon="drive-upload" class="ss-uploadfield-item-warning" title="' + ss.i18n._t('UploadField.AUTORENAME', 'Auto-Rename') + '">' + ss.i18n._t('UploadField.AUTORENAME', 'Auto-Rename') + '</button>' +
 					'</div>' +
 				'</div>' +
 			'</div>' +

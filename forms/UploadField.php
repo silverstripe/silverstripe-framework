@@ -205,6 +205,9 @@ class UploadField extends FileField {
 		$this->ufConfig = array_merge($this->ufConfig, self::config()->defaultConfig);
 
 		parent::__construct($name, $title);
+		
+		// UploadField.replaceFile overrides Upload.replaceFile
+		$this->setReplaceFile($this->getConfig('replaceFile'));
 
 		if($items) $this->setItems($items);
 
@@ -894,6 +897,29 @@ class UploadField extends FileField {
 		$this->fileEditValidator = $fileEditValidator;
 		return $this;
 	}
+	
+	/**
+	 * Determine if an uploaded file will replace an existing record. If set to false duplicate
+	 * filenames will result in a rename
+	 * 
+	 * @return bool
+	 */
+	public function getReplaceFile() {
+		return $this->upload->getReplaceFile();
+	}
+	
+	/**
+	 * Dictates whether uploaded files should replace existing records. If set to false duplicate
+	 * filenames will result in a rename.
+	 * 
+	 * @param bool $replace
+	 * @return self Self reference
+	 */
+	public function setReplaceFile($replace) {
+		$this->setConfig('replaceFile', $replace);
+		$this->upload->setReplaceFile($replace);
+		return $this;
+	}
 
 	/**
 	 * @param File $file
@@ -1009,7 +1035,8 @@ class UploadField extends FileField {
 		return $this->customise(array(
 			'configString' => str_replace('"', "&quot;", Convert::raw2json($mergedConfig)),
 			'config' => new ArrayData($mergedConfig),
-			'multiple' => $allowedMaxFileNumber !== 1
+			'multiple' => $allowedMaxFileNumber !== 1,
+			'replaceFile' => $this->getReplaceFile() // Synchronise config with Upload object
 		))->renderWith($this->getTemplates());
 	}
 
@@ -1152,11 +1179,6 @@ class UploadField extends FileField {
 		if ($relationClass = $this->getRelationAutosetClass(null)) {
 			// Create new object explicitly. Otherwise rely on Upload::load to choose the class.
 			$fileObject = Object::create($relationClass);
-		}
-
-		// Allow replacing files (rather than renaming a duplicate) when warning about overwrites
-		if($this->getConfig('overwriteWarning')) {
-			$this->upload->setReplaceFile(true);
 		}
 
 		// Get the uploaded file into a new file object.
