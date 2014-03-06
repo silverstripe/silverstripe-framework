@@ -659,7 +659,8 @@ body.cms {
 	}
 
 	/* smaller treedropdown */
-	.chzn-container-single .chzn-single  {
+	.chzn-container-single .chzn-single,
+	.select2-container-single .select2-choice {
 		height: 26px;
 		line-height: 26px;
 		padding-left:25px;
@@ -940,10 +941,12 @@ body.cms {
 		display: none;
 	}
 
-	.chzn-container-single {
+	.chzn-container-single,
+	.select2-container-single {
 		display: block;
 
-		.chzn-single {
+		.chzn-single,
+		.select2-single {
 			border-radius: 0;
 			@include background-image(linear-gradient(top, #fff, #D9D9D9));
 
@@ -957,7 +960,8 @@ body.cms {
 	.cms-batch-actions {
 		.dropdown {
 			margin: 0;
-			.chzn-single {
+			.chzn-single,
+			.select2-single {
 				padding-left: 8px; /* use default size without icon */
 			}
 		}

@@ -221,9 +221,13 @@ form.small .field, .field.small {
 	}
 	
 	/* chzn override */
-	.chzn-container {
+	.chzn-container,
+	.select2-container {
 		max-width: 416px;
-		.chzn-results {
+		width: 100%;
+
+		.chzn-results,
+		.select2-results {
 			
 			li {
 				font-size: 11px;
@@ -232,13 +236,16 @@ form.small .field, .field.small {
 			}
 		}
 	}
-	.chzn-container-active {
-		.chzn-single {
+	.chzn-container-active,
+	.select2-container-active {
+		.chzn-single,
+		.select2-single {
 	  		border: 1px solid lighten($color-medium-separator, 10%);
 		}
 	}
 	
-	.chzn-container-single .chzn-single  {
+	.chzn-container-single .chzn-single,
+	.select2-container-single .select2-choice {
 		height: 26px;
 		line-height: 26px; /* not relative, as then we'd had to redo most of chzn */
 		font-size: $font-base-size;
@@ -250,15 +257,19 @@ form.small .field, .field.small {
 			text-decoration: none;
 		}
 	
-		div {
+		div,
+		.select2-arrow {
 			width: 24px;
+			border: none;
 	
 			b {
 				background-position: 4px 0px;
+				background-color: #ffffff;
 			}
 		}
 	}
-	.chzn-choices {
+	.chzn-choices,
+	.select2-choices {
 		@include border-radius(3px);
 	}
 	
