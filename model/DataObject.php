@@ -2564,10 +2564,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * 
 	 * @param String $methodName Method on the same object, e.g. {@link canEdit()}
 	 * @param Member|int $member
+	 *
 	 * @return boolean|null
 	 */
-	public function extendedCan($methodName, $member) {
-		$results = $this->extend($methodName, $member);
+	public function extendedCan($methodName, $member /*, polymorphic */) {
+		$args = func_get_args();
+
+		$results = call_user_func_array(array(
+			$this, 'extend'), func_get_args()
+		);
+
 		if($results && is_array($results)) {
 			// Remove NULLs
 			$results = array_filter($results, function($v) {return !is_null($v);});

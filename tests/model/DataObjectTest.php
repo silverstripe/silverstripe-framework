@@ -16,7 +16,8 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment'
+		'DataObjectTest_TeamComment',
+		'DataObjectTest_ExtendedCan'
 	);
 
 	public function testBaseFieldsExcludedFromDb() {
@@ -1213,6 +1214,16 @@ class DataObjectTest extends SapphireTest {
 		
 	}
 
+
+	public function testExtendedCanArguments() {
+		$obj = new DataObjectTest_ExtendedCan();
+		
+		// does not call extension
+		$this->assertFalse($obj->canDoSomething(null, null, null));
+		$this->assertTrue($obj->canDoSomething(null, 'Foo', null));
+		$this->assertFalse($obj->canDoSomething(null, null, 'Bar'));
+	}
+
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
@@ -1406,5 +1417,37 @@ class DataObjectTest_TeamComment extends DataObject {
 
 }
 
+
 DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class DataObjectTest_ExtendedCan extends DataObject implements TestOnly {
+
+	public function canDoSomething($member, $arg1, $arg2) {
+		$extended = $this->extendedCan('canDoSomething', $member, $arg1, $arg2);
+		if($extended !== null) return $extended;
+
+		return false;
+	}
+
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class DataObjectTest_ExtendedCanExtension extends DataExtension implements TestOnly {
+
+	public function canDoSomething($member, $arg1, $arg2) {
+	 	if($arg1 == 'Foo') {
+	 		return true;
+	 	} else if($arg2 == 'Bar') {
+	 		return false;
+	 	}
+	}
+}
+
+DataObjectTest_ExtendedCan::add_extension('DataObjectTest_ExtendedCanExtension');
