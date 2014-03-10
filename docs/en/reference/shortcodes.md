@@ -100,6 +100,7 @@ CMS users still need to remember the specific syntax, but these shortcodes can f
 for more advanced editing interfaces (with visual placeholders). See the built-in `embed` shortcode as an example
 for coupling shortcodes with a form to create and edit placeholders.
 
+
 ## Built-in Shortcodes
 
 SilverStripe comes with several shortcode parsers already.
