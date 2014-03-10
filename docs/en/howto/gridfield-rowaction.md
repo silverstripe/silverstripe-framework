@@ -83,10 +83,17 @@ a new instance of the class to the [api:GridFieldConfig] object. The `GridField`
 manipulating the `GridFieldConfig` instance if required.
 
 	:::php
+	// option 1: creating a new GirdField with the CustomAction
 	$config = GridFieldConfig::create();
 	$config->addComponent(new GridFieldCustomAction());
 
 	$gridField = new GridField('Teams', 'Teams', $this->Teams(), $config);
+	
+	// option 2: adding the CustomAction to an exisitng GridField
+	$gridField->getConfig()->addComponent(new GridFieldCustomAction());
+	
+For documentation on adding a Component to a `GridField` created by `ModelAdmin` 
+please view the [ModelAdmin Reference](/reference/modeladmin#gridfield-customization) section `GridField Customization`
 
 Now let's go back and dive through the `GridFieldCustomAction` class in more
 detail.
