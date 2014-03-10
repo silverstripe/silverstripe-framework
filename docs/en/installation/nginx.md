@@ -1,6 +1,6 @@
 # Nginx
 
-These instructions are also covered in less detail on the
+These instructions are also covered on the
 [Nginx Wiki](http://wiki.nginx.org/SilverStripe).
 
 The prerequisite is that you have already installed Nginx and you are
@@ -11,92 +11,79 @@ configuration settings:
 
 	server {
 		listen 80;
-		
-		# SSL configuration (optional, but recommended for security)
-		include ssl
-		
-		root /var/www/example.com;
-		index index.php index.html index.htm;
-		
-		server_name example.com;
-		
-		include silverstripe3;
-		include htaccess;
-	}
-
-Here is the include file `silverstripe3`:
-
-	location / {
-		try_files $uri @silverstripe;
-	}
-	 
-	location @silverstripe {
-		include fastcgi_params;
-		
-		# Defend against arbitrary PHP code execution
-		# NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
-		# More info:
-		# https://nealpoole.com/blog/2011/04/setting-up-php-fastcgi-and-nginx-dont-trust-the-tutorials-check-your-configuration/
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
-		
-		fastcgi_param SCRIPT_FILENAME $document_root/framework/main.php;
-		fastcgi_param SCRIPT_NAME /framework/main.php;
-		fastcgi_param QUERY_STRING url=$uri&$args;
-		
-		fastcgi_pass unix:/var/run/php5-fpm.sock;
-		fastcgi_index index.php;
-		fastcgi_buffer_size 32k;
-		fastcgi_buffers 4 32k;
-		fastcgi_busy_buffers_size 64k;
-	}
-
-
-Here is the include file `htaccess`:
-
-	# Don't serve up any .htaccess files
-	location ~ /\.ht {
-		deny all;
-	}
+		root /path/to/ss/folder;
 	
-	# Deny access to silverstripe-cache
-	location ~ ^/silverstripe-cache {
-		deny all;
-	}
+		server_name site.com www.site.com;
 	
-	# Don't execute scripts in the assets
-	location ^~ /assets/ {
-		try_files $uri $uri/ =404;
-	}
+		location / {
+			try_files $uri /framework/main.php?url=$uri&$query_string;
+		}
 	
-	# Block access to yaml files
-	location ~ \.yml$ {
-		deny all;
-	}
+		error_page 404 /assets/error-404.html;
+		error_page 500 /assets/error-500.html;
 	
-	# cms & framework .htaccess rules
-	location ~ ^/(cms|framework|mysite)/.*\.(php|php[345]|phtml|inc)$ {
-		deny all;
-	}
-	location ~ ^/(cms|framework)/silverstripe_version$ {
-		deny all;
-	}
-	location ~ ^/framework/.*(main|static-main|rpc|tiny_mce_gzip)\.php$ {
-		allow all;
+		location ^~ /assets/ {
+			sendfile on;
+			try_files $uri =404;
+		}
+	
+		location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {
+			fastcgi_keep_conn on;
+			fastcgi_pass   127.0.0.1:9000;
+			fastcgi_index  index.php;
+			fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			include        fastcgi_params;
+		}
+	
+		location ~ /(mysite|framework|cms)/.*\.(php|php3|php4|php5|phtml|inc)$ {
+			deny all;
+		}
+	
+		location ~ /\.. {
+			deny all;
+		}
+	
+		location ~ \.ss$ {
+			satisfy any;
+			allow 127.0.0.1;
+			deny all;
+		}
+	
+		location ~ web\.config$ {
+			deny all;
+		}
+	
+		location ~ \.ya?ml$ {
+			deny all;
+		}
+	
+		location ^~ /vendor/ {
+			deny all;
+		}
+	
+		location ~* /silverstripe-cache/ {
+			deny all;
+		}
+	
+		location ~* composer\.(json|lock)$ {
+			deny all;
+		}
+	
+		location ~* /(cms|framework)/silverstripe_version$ {
+			deny all;
+		}
+	
+		location ~ \.php$ {
+	                fastcgi_keep_conn on;
+	                fastcgi_pass   127.0.0.1:9000;
+	                fastcgi_index  index.php;
+	                fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	                include        fastcgi_params;
+		}
 	}
 
-Here is the optional include file `ssl`:
-
-	listen 443 ssl;
-	ssl_certificate server.crt;
-	ssl_certificate_key server.key;
-	ssl_session_timeout 5m;
-	ssl_protocols SSLv3 TLSv1;
-	ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
-
-The above configuration sets up a virtual host `example.com` with
-rewrite rules suited for SilverStripe. The location block named
-`@silverstripe` passes all php scripts to the FastCGI-wrapper via a Unix
-socket. This example is from a site running Ubuntu with the php5-fpm
-package.
+The above configuration sets up a virtual host `site.com` with
+rewrite rules suited for SilverStripe. The location block for php files
+passes all php scripts to the FastCGI-wrapper via a TCP socket.
 
 Now you can proceed with the SilverStripe installation normally.
