@@ -160,6 +160,8 @@ For example, we might want to have a checkbox which limits search results to exp
 			return $list;
 		}
 	}
+	
+### GridField Customization	
 
 To alter how the results are displayed (via `[api:GridField]`), you can also overload the `getEditForm()` method. For example, to add a new component.
 
