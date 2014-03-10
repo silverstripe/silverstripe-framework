@@ -1105,6 +1105,7 @@ class Form extends RequestHandler {
 
 			return $this->message;
 		}
+	}
 
 	/**
 	 * Set a status message for the form.

@@ -10,8 +10,6 @@
  * @property string Email
  * @property string Password
  * @property string RememberLoginHash
- * @property int NumVisit
- * @property string LastVisited Date and time of last visit
  * @property string AutoLoginHash
  * @property string AutoLoginExpired
  * @property string PasswordEncryption
@@ -1215,11 +1213,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			}
 			
 			$mainFields->removeByName('Salt');
-			$mainFields->removeByName('NumVisit');
-
-			$mainFields->makeFieldReadonly('LastVisited');
-
-			$fields->removeByName('Subscriptions');
 
 			// Groups relation will get us into logical conflicts because
 			// Members are displayed within  group edit form in SecurityAdmin
