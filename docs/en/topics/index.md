@@ -16,18 +16,19 @@ It is where most documentation should live, and is the natural "second step" aft
  * [Environment management](environment-management): Sharing configuration details (e.g. database login, passwords) with multiple websites via a `_ss_environment.php` file
  * [Error Handling](error-handling): Error messages and filesystem logs
  * [Files and Images](files): File and Image management in the database and how to manipulate images
- * [Form Validation](form-validation): Built-in validation on form fields, and how to extend it
- * [Forms](forms): Create your own form, add fields and create your own form template using the existing `Form` class
+ * [Forms & form validation](forms): Create your own form, add fields and create your own form template using the existing `Form` class
  * [Internationalization (i18n)](i18n): Displaying templates and PHP code in different languages using i18n
  * [Javascript](javascript): Best practices for developing with JavaScript in SilverStripe
  * [Module Development](module-development): Creating a module (also known as "extension" or "plugin") to contain reusable functionality
  * [Modules](modules): Introduction, how to download and install a module (e.g. with blog or forum functionality)
+ * [Page Type Templates](page-type-templates): How to build templates for all your different page types
  * [Page Types](page-types): What is a "page type" and how do you create one?
+ * [Rich Text Editing](rich-text-editing): How to use and configure SilverStripes built in HTML Editor
  * [Search](search): Searching for properties in the database as well as other documents
  * [Security](security): How to develop secure SilverStripe applications with good code examples
- * [Shortcodes](shortcodes): Use simple placeholders for powerful content replacements like multimedia embeds
  * [Templates](templates): SilverStripe template syntax: Variables, loops, includes and much more
  * [Testing](testing): Functional and Unit Testing with PHPUnit and SilverStripe's testing framework
- * [Developing Themes](theme-development): Package templates, images and CSS to a reusable theme
- * [Widgets](widgets): Small feature blocks which can be placed on a page by the CMS editor, also outlines how to create and add widgets
+ * [Theme Development](theme-development): Package templates, images and CSS to a reusable theme
+ * [Using Themes](themes): How to download and install themes
  * [Versioning](versioning): Extension for SiteTree and other classes to store old versions and provide "staging"
+ * [Widgets](widgets): Small feature blocks which can be placed on a page by the CMS editor, also outlines how to create and add widgets

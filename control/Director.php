@@ -245,7 +245,7 @@ class Director implements TemplateGlobalProvider {
 		Requirements::set_backend(new Requirements_Backend());
 
 		// Handle absolute URLs
-		if (@parse_url($url, PHP_URL_HOST) != '') {
+		if (parse_url($url, PHP_URL_HOST)) {
 			$bits = parse_url($url);
 			// If a port is mentioned in the absolute URL, be sure to add that into the 
 			// HTTP host

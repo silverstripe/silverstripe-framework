@@ -1297,11 +1297,15 @@ class UploadField extends FileField {
 		$nameFilter = FileNameFilter::create();
 		$filteredFile = basename($nameFilter->filter($originalFile));
 		
+		// Resolve expected folder name
+		$folderName = $this->getFolderName();
+		$folder = Folder::find_or_make($folderName);
+		$parentPath = BASE_PATH."/".$folder->getFilename();
+		
 		// check if either file exists
-		$folder = $this->getFolderName();
 		$exists = false;
 		foreach(array($originalFile, $filteredFile) as $file) {
-			if(file_exists(ASSETS_PATH."/$folder/$file")) {
+			if(file_exists($parentPath.$file)) {
 				$exists = true;
 				break;
 			}

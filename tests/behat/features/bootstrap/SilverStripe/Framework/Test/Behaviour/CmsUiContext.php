@@ -184,15 +184,15 @@ class CmsUiContext extends BehatContext {
 	 * @When /^I expand the "([^"]*)" CMS Panel$/
 	 */
 	public function iExpandTheCmsPanel() {
-		// TODO Make dynamic, currently hardcoded to first panel
+		//Tries to find the first visiable toggle in the page
 		$page = $this->getSession()->getPage();
-
-		$panel_toggle_element = $page->find('css', '.cms-content > .cms-panel > .cms-panel-toggle > .toggle-expand');
-		assertNotNull($panel_toggle_element, 'Panel toggle not found');
-
-		if ($panel_toggle_element->isVisible()) {
-			$panel_toggle_element->click();
-		}
+		$toggle_elements = $page->findAll('css', '.toggle-expand');
+		assertNotNull($toggle_elements, 'Panel toggle not found');	
+		foreach($toggle_elements as $toggle){
+			if($toggle->isVisible()){
+				$toggle->click();
+			}
+		}		
 	}
 
 	/**

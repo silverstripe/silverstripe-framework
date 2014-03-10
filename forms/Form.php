@@ -698,7 +698,7 @@ class Form extends RequestHandler {
 	 * @return String
 	 */
 	public function getAttribute($name) {
-		return @$this->attributes[$name];
+		if(isset($this->attributes[$name])) return $this->attributes[$name];
 	}
 
 	public function getAttributes() {
@@ -1093,13 +1093,17 @@ class Form extends RequestHandler {
 		return $this->messageType;
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function getMessageFromSession() {
 		if($this->message || $this->messageType) {
 			return $this->message;
-		}
-		
+		} else {
 			$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
 			$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
+
+			return $this->message;
 		}
 
 	/**

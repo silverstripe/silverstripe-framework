@@ -41,7 +41,7 @@ Composer updates regularly, so you should run this command fairly often. These i
 
 ## Create a new site
 
-Composer can create a new site for you, using the installer as a template:
+Composer can create a new site for you, using the installer as a template (by default composer will download the latest stable version):
 
 	composer create-project silverstripe/installer ./my/website/folder
 
@@ -50,8 +50,7 @@ For example, on OS X, you might use a subdirectory of `~/Sites`.
 As long as your web server is up and running, this will get all the code that you need. 
 Now visit the site in your web browser, and the installation process will be completed.
 
-By default composer will download the latest stable version. You can also specify
-a version to download that version explicitly, i.e. this will download the older `3.0.3` release:
+You can also specify a version to download that version explicitly, i.e. this will download the older `3.0.3` release:
 
 	composer create-project silverstripe/installer ./my/website/folder 3.0.3
 	
@@ -116,7 +115,7 @@ So you want to contribute to SilverStripe? Fantastic! You can do this with compo
 You have to tell composer three things in order to be able to do this:
 
   - Keep the full git repository information
-  - Include dependancies marked as "developer" requirements
+  - Include dependencies marked as "developer" requirements
   - Use the development version, not the latest stable version
 
 The first two steps are done as part of the initial create project using additional arguments.
@@ -233,7 +232,7 @@ For more information, read the ["Repositories" chapter of the Composer documenta
 
 ### Forks and branch names
 
-Generally, you should keep using the same pattern of branch names as the main repositories does. If your version is a fork of 3.0, then call the branch `3.0`, not `3.0-myproj` or `myproj`. Otherwise, the depenency resolution gets confused.
+Generally, you should keep using the same pattern of branch names as the main repositories does. If your version is a fork of 3.0, then call the branch `3.0`, not `3.0-myproj` or `myproj`. Otherwise, the dependency resolution gets confused.
 
 Sometimes, however, this isn't feasible.  For example, you might have a number of project forks stored in a single repository, such as your personal github fork of a project.  Or you might be testing/developing a feature branch.  Or it might just be confusing to other team members to call the branch of your modified version `3.0`.
 

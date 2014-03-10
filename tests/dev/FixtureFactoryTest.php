@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package framework
  * @subpackage tests
@@ -151,19 +152,37 @@ class FixtureFactoryTest extends SapphireTest {
 
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FixtureFactoryTest_DataObject extends DataObject implements TestOnly {
+	
 	private static $db = array(
 		"Name" => "Varchar"
 	);
+	
 	private static $many_many = array(
 		"ManyMany" => "FixtureFactoryTest_DataObjectRelation"
 	);
+
+	private static $many_many_extraFields = array(
+		"ManyMany" => array(
+			"Label" => "Varchar"
+		)
+	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FixtureFactoryTest_DataObjectRelation extends DataObject implements TestOnly {
+	
 	private static $db = array(
 		"Name" => "Varchar"
 	);
+	
 	private static $belongs_many_many = array(
 		"TestParent" => "FixtureFactoryTest_DataObject"
 	); 

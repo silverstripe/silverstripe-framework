@@ -342,7 +342,6 @@ class SQLQueryTest extends SapphireTest {
 		);
 	}
 	
-
 	public function testSetWhereAny() {
 		$query = new SQLQuery();
 		$query->setFrom('MyTable');
@@ -352,7 +351,6 @@ class SQLQueryTest extends SapphireTest {
 	}
 	
 	public function testSelectFirst() {
-		
 		// Test first from sequence
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');
@@ -398,7 +396,6 @@ class SQLQueryTest extends SapphireTest {
 	}
 	
 	public function testSelectLast() {
-		
 		// Test last in sequence
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');

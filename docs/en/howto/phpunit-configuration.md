@@ -71,7 +71,7 @@ Example `mysite/_config.php`:
 	// Customized configuration for running with different database settings.
 	// Ensure this code comes after ConfigureFromEnv.php
 	if(Director::isDev()) {
-		if($db = @$_GET['db']) {
+		if(isset($_GET['db']) && ($db = $_GET['db'])) {
 			global $databaseConfig;
 			if($db == 'sqlite3') $databaseConfig['type'] = 'SQLite3Database';
 		}
