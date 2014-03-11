@@ -110,6 +110,15 @@ For output of an image tag with the image automatically resized to 80px width, y
 For usage on a website form, see `[api:FileField]`.
 If you want to upload images within the CMS, see `[api:UploadField]`.
 
+### Image Quality
+
+To adjust the quality of the generated images when they are resized add the following line to your mysite/_config.php file:
+
+	:::php
+	GD::set_default_quality(80);
+
+The default value is 75.
+
 ### Clearing Thumbnail Cache
 
 Images are (like all other Files) synchronized with the SilverStripe database.
