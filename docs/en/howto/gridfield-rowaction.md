@@ -83,7 +83,7 @@ a new instance of the class to the [api:GridFieldConfig] object. The `GridField`
 manipulating the `GridFieldConfig` instance if required.
 
 	:::php
-	// option 1: creating a new GirdField with the CustomAction
+	// option 1: creating a new GridField with the CustomAction
 	$config = GridFieldConfig::create();
 	$config->addComponent(new GridFieldCustomAction());
 
