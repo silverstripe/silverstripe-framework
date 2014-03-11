@@ -152,6 +152,29 @@ class Date extends DBField {
 		}
 	}
 	
+	/**
+	 * Return a date and time formatted as per a CMS user's settings.
+	 * 
+	 * @param Member $member
+	 * @return boolean | string A time and date pair formatted as per user-defined settings.
+	 */
+	public function FormatFromSettings($member = null) {
+		require_once 'Zend/Date.php';	
+		
+		if(!$member) {
+			if(!Member::currentUserID()) {
+				return false;
+			}
+			$member = Member::currentUser();
+		}
+		
+		$formatD = $member->getDateFormat($member->Locale);
+		$formatT = $member->getTimeFormat($member->Locale);
+		
+		$zendDate = new Zend_Date($this->value);
+		return $zendDate->toString($formatD).' '.$zendDate->toString($formatT);
+	}		
+	
 	/*
 	 * Return a string in the form "12 - 16 Sept" or "12 Aug - 16 Sept"
 	 * @param Date $otherDateObj Another date object specifying the end of the range

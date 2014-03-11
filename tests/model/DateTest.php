@@ -200,6 +200,6 @@ class DateTest extends SapphireTest {
 		);
 
 		SS_Datetime::clear_mock_now();
-	}
+	}	
 
 }
