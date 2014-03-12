@@ -181,7 +181,7 @@ class RestfulService extends ViewableData {
 		} else {
 			$response = $this->curlRequest($url, $method, $data, $headers, $curlOptions);
 			
-			if(!$response->isError()) {
+			if($this->cache_expire > 0 && !$response->isError()) {
 				// Serialise response object and write to cache
 				$store = serialize($response);
 				file_put_contents($cache_path, $store);
