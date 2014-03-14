@@ -76,7 +76,7 @@
  * <h2>Using APC as a store</h2>
  * 
  * <code>
- * SS_Cache::add_backend('two-level', 'TwoLevels', array(
+ * SS_Cache::add_backend('two-level', 'Two-Levels', array(
  * 	'slow_backend' => 'File',
  * 	'fast_backend' => 'Apc',
  * 	'slow_backend_options' => array(
