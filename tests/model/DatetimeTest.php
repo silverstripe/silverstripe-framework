@@ -148,5 +148,34 @@ class SS_DatetimeTest extends SapphireTest {
 
 		SS_Datetime::clear_mock_now();
 	}
+	
+	public function testFormatFromSettings() {	
+		
+		$memberID = $this->logInWithPermission();
+		$member = DataObject::get_by_id('Member', $memberID);
+		$member->DateFormat = 'dd/MM/YYYY';
+		$member->TimeFormat = 'hh:mm:ss';
+		$member->write();
+		
+		// Convert <from> => <to>
+		$fixtures = array(
+			'2000-12-31 10:11:01' => '31/12/2000 10:11:01',
+			'2000-12-31 1:11:01' => '31/12/2000 01:11:01',
+			'2000-12-31' => '31/12/2000 12:00:00',
+			'10:11:01' => date('d/m/Y').' 10:11:01'
+		);
+		
+		// Pass $member
+		foreach($fixtures as $from => $to) {
+			$date = DBField::create_field('Datetime', $from);
+			$this->assertEquals($to, $date->FormatFromSettings($member));
+		}
+		
+		// Don't pass $member
+		foreach($fixtures as $from => $to) {
+			$date = DBField::create_field('Datetime', $from);
+			$this->assertEquals($to, $date->FormatFromSettings());
+		}
+	}	
 
 }
