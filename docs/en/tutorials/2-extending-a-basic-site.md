@@ -200,10 +200,12 @@ the date field will have the date format defined by your locale.
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
-		$fields->addFieldToTab('Root.Main', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
+		$dateField = new DateField('Date', 'Article Date (for example: 20/12/2010)');
 		$dateField->setConfig('showcalendar', true);
+		$dateField->setConfig('dateformat', 'dd/MM/YYYY');
+        	
 		$fields->addFieldToTab('Root.Main', $dateField, 'Content');
-		$fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
+		$fields->addFieldToTab('Root.Main', new TextField('Author', 'Author Name'), 'Content');
 
 		return $fields;
 	}
@@ -211,7 +213,7 @@ the date field will have the date format defined by your locale.
 Let's walk through these changes.
 
 	:::php
-	$fields->addFieldToTab('Root.Main', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
+	$dateField = new DateField('Date', 'Article Date (for example: 20/12/2010)');
 
 *$dateField* is declared in order to change the configuration of the DateField.
 
@@ -226,7 +228,7 @@ By enabling *showCalendar* you show a calendar overlay when clicking on the fiel
 *dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.  See the `[api:DateField]` documentation for more configuration options.
 
 	:::php
-	$fields->addFieldToTab('Root.Main', new TextField('Author','Author Name'), 'Content');
+	$fields->addFieldToTab('Root.Main', new TextField('Author', 'Author Name'), 'Content');
 
 By default the field name *'Date'* or *'Author'* is shown as the title, however this might not be that helpful so to change the title, add the new title as the second argument.
 
@@ -335,18 +337,22 @@ Now let's make a purely cosmetic change that nevertheless helps to make the info
 Add the following field to the *ArticleHolder* and *ArticlePage* classes:
 
 	:::php
-	private static $icon = "framework/docs/en/tutorials/_images/treeicons/news-file.gif";
+	private static $icon = "cms/images/treeicons/news-file.gif";
 
 
 And this one to the *HomePage* class:
 
 	:::php
-	private static $icon = "framework/docs/en/tutorials/_images/treeicons/home-file.gif";
+	private static $icon = "cms/images/treeicons/home-file.png";
 
 
-This will change the icons for the pages in the CMS.  
+This will change the icons for the pages in the CMS. 
 
 ![](_images/tutorial2_icons2.jpg)
+
+<div class="hint" markdown="1">
+Note: The `news-file` icon may not exist in a default SilverStripe install. Try adding your own image, or choosing a different one from the `tree-icons` collection.
+</div>
 
 ## Showing the latest news on the homepage
 
