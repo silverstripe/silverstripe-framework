@@ -4,6 +4,9 @@
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method
  * (GET/POST/PUT/DELETE). This is used by {@link RequestHandler} objects to decide what to do.
  * 
+ * Caution: objects of this class are immutable, e.g. echo $request['a']; works as expected, 
+ * but $request['a'] = '1'; has no effect.
+ * 
  * The intention is that a single SS_HTTPRequest object can be passed from one object to another, each object calling
  * match() to get the information that they need out of the URL.  This is generally handled by 
  * {@link RequestHandler::handleRequest()}.
