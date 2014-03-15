@@ -237,7 +237,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$db = DB::getConn();
 				if($db->hasField($class, 'ClassName')) {
 					$existing = $db->query("SELECT DISTINCT \"ClassName\" FROM \"$class\"")->column();
-					$classNames = array_unique(array_merge($existing, $classNames));
+					$classNames = array_unique(array_merge($classNames, $existing));
 				}
 
 				self::$classname_spec_cache[$class] = "Enum('" . implode(', ', $classNames) . "')";
