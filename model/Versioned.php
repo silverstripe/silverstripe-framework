@@ -182,13 +182,13 @@ class Versioned extends DataExtension {
 	 * @todo Should this all go into VersionedDataQuery?
 	 */
 	public function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
-		$baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
-		
-		switch($dataQuery->getQueryParam('Versioned.mode')) {
-		// Noop
-		case '':
-			break;
+		if(!$dataQuery || !$dataQuery->getQueryParam('Versioned.mode')) {
+			return;
+		}
 
+		$baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
+
+		switch($dataQuery->getQueryParam('Versioned.mode')) {
 		// Reading a specific data from the archive
 		case 'archive':
 			$date = $dataQuery->getQueryParam('Versioned.date');
