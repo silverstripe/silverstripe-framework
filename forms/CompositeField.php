@@ -73,6 +73,15 @@ class CompositeField extends FormField {
 		$this->id = $id;
 		return $this;
 	}
+	
+	/**
+	 * Returns the ID for the template as set using setID()
+	 * Does not prepend Form ID as that does not seem to be the current behavior for fields in SS 3.1
+	 */
+	public function ID() {
+		$id = preg_replace('/(^-)|(-$)/', '', preg_replace('/[^A-Za-z0-9_-]+/', '-', $this->id));
+		return $id;
+  	}
 
 	/**
 	 * Accessor method for $this->children
