@@ -1235,7 +1235,6 @@ class UploadField extends FileField {
 		// Format response with json
 		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
 		$response->addHeader('Content-Type', 'text/plain');
-		if(!empty($return['error'])) $response->setStatusCode(403);
 		return $response;
 	}
 
