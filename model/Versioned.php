@@ -1184,6 +1184,7 @@ class Versioned extends DataExtension {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::reading_stage($stage);
 
+		$this->owner->forceChange();
 		$result = $this->owner->write(false, $forceInsert);
 		Versioned::set_reading_mode($oldMode);
 
