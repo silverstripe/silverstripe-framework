@@ -1259,7 +1259,7 @@ class UploadField extends FileField {
 		// Format response with json
 		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
 		$response->addHeader('Content-Type', 'text/plain');
-		if(!empty($return['error'])) $response->setStatusCode(403);
+		if (!empty($return['error'])) $response->setStatusCode(403);
 		return $response;
 	}
 
@@ -1300,7 +1300,9 @@ class UploadField extends FileField {
 		// Resolve expected folder name
 		$folderName = $this->getFolderName();
 		$folder = Folder::find_or_make($folderName);
-		$parentPath = BASE_PATH."/".$folder->getFilename();
+		$parentPath = $folder
+			? BASE_PATH."/".$folder->getFilename()
+			: ASSETS_PATH."/";
 		
 		// check if either file exists
 		$exists = false;

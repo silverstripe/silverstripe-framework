@@ -134,7 +134,9 @@ class Upload extends Controller {
 		$file = $nameFilter->filter($tmpFile['name']);
 		$fileName = basename($file);
 
-		$relativeFilePath = $parentFolder ? $parentFolder->getRelativePath() . "$fileName" : $fileName;		
+		$relativeFilePath = $parentFolder
+			? $parentFolder->getRelativePath() . "$fileName" 
+			: ASSETS_DIR . "/" . $fileName;
 		
 		// Create a new file record (or try to retrieve an existing one)
 		if(!$this->file) {
