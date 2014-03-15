@@ -172,3 +172,14 @@ as well as a demonstrated need for this level of information (e.g. a large websi
 You don’t need to be a client of SilverStripe Ltd to get on board, 
 but we will need to perform some low-touch background checks to ensure identity.
 Please contact security@silverstripe.org for details.
+
+## Quality Assurance and Testing
+
+The quality of our software is important to us, and we continously test it for regressions
+through a broad suite of unit and integration tests. Most of these run on 
+[Travis CI](http://travis-ci.com), and results are publicly available
+for the [framework](https://travis-ci.org/silverstripe/silverstripe-framework) and
+[cms](https://travis-ci.org/silverstripe/silverstripe-cms) modules.
+In addition, some build configurations (e.g. running on Windows) are tested
+through a [TeamCity](http://www.jetbrains.com/teamcity/) instance hosted at
+[teamcity.silverstripe.com](http://teamcity.silverstripe.com) (click "Login as guest").
