@@ -594,16 +594,16 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$urlField->dontEscape = true;
 
 		if($file->Type == 'photo') {
-			$fields->insertBefore(new TextField(
+			$fields->insertBefore('CaptionText', new TextField(
 				'AltText', 
 				_t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image can\'t be displayed'), 
 				$file->Title, 
 				80
-			), 'CaptionText');
-			$fields->insertBefore(new TextField(
+			));
+			$fields->insertBefore('CaptionText', new TextField(
 				'Title', 
 				_t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')
-			), 'CaptionText');
+			));
 		}
 
 		$this->extend('updateFieldsForOembed', $fields, $url, $file);

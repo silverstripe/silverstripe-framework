@@ -151,14 +151,14 @@ class TabSet extends CompositeField {
 	 * @param FormField $item The form field to insert
 	 * @param string $name Name of the field to insert before
 	 */
-	public function insertBefore($field, $insertBefore) {
-		parent::insertBefore($field, $insertBefore);
+	public function insertBefore($insertBefore, $field) {
+		parent::insertBefore($insertBefore, $field);
 		if($field instanceof Tab) $field->setTabSet($this);
 		$this->sequentialSet = null;
 	}
 	
-	public function insertAfter($field, $insertAfter) {
-		parent::insertAfter($field, $insertAfter);
+	public function insertAfter($insertAfter, $field) {
+		parent::insertAfter($insertAfter, $field);
 		if($field instanceof Tab) $field->setTabSet($this);
 		$this->sequentialSet = null;
 	}

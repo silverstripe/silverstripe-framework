@@ -106,7 +106,7 @@ class FieldList extends ArrayList {
 		$tab = $this->findOrMakeTab($tabName);
 
 		// Add the field to the end of this set
-		if($insertBefore) $tab->insertBefore($field, $insertBefore);
+		if($insertBefore) $tab->insertBefore($insertBefore, $field);
 		else $tab->push($field);
 	}
 	
@@ -129,7 +129,7 @@ class FieldList extends ArrayList {
 		foreach($fields as $field) {
 			// Check if a field by the same name exists in this tab
 			if($insertBefore) {
-				$tab->insertBefore($field, $insertBefore);
+				$tab->insertBefore($insertBefore, $field);
 			} elseif(($name = $field->getName()) && $tab->fieldByName($name)) {
 				// It exists, so we need to replace the old one
 				$this->replaceField($field->getName(), $field);
@@ -354,10 +354,14 @@ class FieldList extends ArrayList {
 	/**
 	 * Inserts a field before a particular field in a FieldList.
 	 *
-	 * @param FormField $item The form field to insert
 	 * @param string $name Name of the field to insert before
+	 * @param FormField $item The form field to insert
 	 */
-	public function insertBefore($item, $name) {
+	public function insertBefore($name, $item) {
+		// Backwards compatibility for order of arguments
+		if($name instanceof FormField) {
+			list($item, $name) = array($name, $item);
+		}
 		$this->onBeforeInsert($item);
 		$item->setContainerFieldList($this);
 		
@@ -367,7 +371,7 @@ class FieldList extends ArrayList {
 				array_splice($this->items, $i, 0, array($item));
 				return $item;
 			} elseif($child->isComposite()) {
-				$ret = $child->insertBefore($item, $name);
+				$ret = $child->insertBefore($name, $item);
 				if($ret) return $ret;
 			}
 			$i++;
@@ -379,10 +383,14 @@ class FieldList extends ArrayList {
 	/**
 	 * Inserts a field after a particular field in a FieldList.
 	 *
-	 * @param FormField $item The form field to insert
 	 * @param string $name Name of the field to insert after
+	 * @param FormField $item The form field to insert
 	 */
-	public function insertAfter($item, $name) {
+	public function insertAfter($name, $item) {
+		// Backwards compatibility for order of arguments
+		if($name instanceof FormField) {
+			list($item, $name) = array($name, $item);
+		}
 		$this->onBeforeInsert($item);
 		$item->setContainerFieldList($this);
 		
@@ -392,7 +400,7 @@ class FieldList extends ArrayList {
 				array_splice($this->items, $i+1, 0, array($item));
 				return $item;
 			} elseif($child->isComposite()) {
-				$ret = $child->insertAfter($item, $name);
+				$ret = $child->insertAfter($name, $item);
 				if($ret) return $ret;
 			}
 			$i++;
