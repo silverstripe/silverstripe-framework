@@ -7,6 +7,7 @@
 class DataObjectLazyLoadingTest extends SapphireTest {
 
 	protected static $fixture_file = array(
+		'DataObjectLazyLoadingTest.yml',
 		'DataObjectTest.yml',
 		'VersionedTest.yml'
 	);
@@ -23,7 +24,10 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		'DataObjectTest_Player',
 		'DataObjectTest_TeamComment',
 		'VersionedTest_DataObject',
-		'VersionedTest_Subclass'
+		'VersionedTest_Subclass',
+		'LazySortTest_BaseDataObject',
+		'LazySortTest_ExtendedDataObject',
+		'LazySortTest_RelatedDataObject',
 	);
 
 	public function testQueriedColumnsID() {
@@ -390,6 +394,12 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		);
 	}
 
+	public function testSortOnManyManyRelationWithExtendedObject() {
+		$obj = LazySortTest_RelatedDataObject::get()->First();
+		$set = $obj->RelatedExtendedObjects()->getIDList();
+		$this->assertTrue(is_array($set));
+	}
+
 }
 
 
@@ -409,5 +419,33 @@ class VersionedLazySub_DataObject extends VersionedLazy_DataObject {
 	);
 	private static $extensions = array(
 		"Versioned('Stage', 'Live')"
+	);
+}
+
+class LazySortTest_BaseDataObject extends DataObject implements TestOnly {
+	private static $db = array(
+		'Title' => 'Varchar(255)'
+	);
+}
+
+class LazySortTest_ExtendedDataObject extends LazySortTest_BaseDataObject {
+	private static $db = array(
+		'SortMe' => 'Int'
+	);
+
+	private static $default_sort = '"SortMe" DESC';
+
+	private static $belongs_many_many = array(
+		'RelatedObjects' => 'LazySortTest_RelatedDataObject'
+	);
+}
+
+class LazySortTest_RelatedDataObject extends DataObject implements TestOnly {
+	private static $db = array(
+		'Title' => 'Varchar(255)'
+	);
+
+	private static $many_many = array(
+		'RelatedExtendedObjects' => 'LazySortTest_ExtendedDataObject'
 	);
 }
