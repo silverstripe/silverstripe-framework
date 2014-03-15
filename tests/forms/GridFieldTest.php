@@ -123,6 +123,27 @@ class GridFieldTest extends SapphireTest {
 		$obj->State->NoValue = 10;
 		$this->assertEquals(10, $obj->State->NoValue);
 		$this->assertEquals(10, $obj->State->NoValue(20));
+
+		//Show that values returned by the assignment function don't
+		// actually return the value stored
+		$this->assertEquals(0, $obj->State->Falsey0(0)); // expect 0 back
+		$this->assertEquals(0, $obj->State->Falsey0(10)); // expect 0 back
+		$this->assertEquals(0, $obj->State->Falsey0); //expect 0 back
+		$obj->State->Falsey0 = 0; //manually assign 0
+		$this->assertEquals(0, $obj->State->Falsey0); //expect 0 back
+
+		//repeat for other falsey values
+		$this->assertEquals(array(), $obj->State->Falsey1(array()));
+		$this->assertEquals(array(), $obj->State->Falsey1(array('test')));
+		$this->assertEquals(array(), $obj->State->Falsey1);
+		$obj->State->Falsey1 = array(); //manually assign 0
+		$this->assertEquals(array(), $obj->State->Falsey1); //expect 0 back
+
+		$this->assertFalse($obj->State->Falsey2(false));
+		$this->assertFalse($obj->State->Falsey2(true));
+		$this->assertFalse($obj->State->Falsey2);
+		$obj->State->Falsey2 = false;
+		$this->assertFalse($obj->State->Falsey2);
 		
 		// Test that values can be set, unset, and inspected
 		$this->assertFalse(isset($obj->State->NotSet));
