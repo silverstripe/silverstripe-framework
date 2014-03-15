@@ -57,7 +57,16 @@ class DebugView extends Object {
 		E_STRICT => array(
 			'title' => 'Strict Notice',
 			'class' => 'notice'
+		),
+		E_RECOVERABLE_ERROR => array(
+			'title' => 'Recoverable Error',
+			'class' => 'warning'
 		)
+	);
+
+	protected static $unknown_error = array(
+		'title' => 'Unknown Error',
+		'class' => 'error'
 	);
 
 	/**
@@ -133,7 +142,7 @@ class DebugView extends Object {
 	 * Write information about the error to the screen
 	 */
 	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
-		$errorType = self::$error_types[$errno];
+		$errorType = isset(self::$error_types[$errno]) ? self::$error_types[$errno] : self::$unknown_error;
 		$httpRequestEnt = htmlentities($httpRequest, ENT_COMPAT, 'UTF-8');
 		echo '<div class="info ' . $errorType['class'] . '">';
 		echo "<h1>[" . $errorType['title'] . '] ' . strip_tags($errstr) . "</h1>";
