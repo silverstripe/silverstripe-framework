@@ -92,6 +92,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		foreach($columns as $columnField) {
 			$currentColumn++;
 			$metadata = $gridField->getColumnMetadata($columnField);
+			$fieldName = str_replace('.', '-', $columnField);
 			$title = $metadata['title'];
 
 			if(isset($this->fieldSorting[$columnField]) && $this->fieldSorting[$columnField]) {
@@ -132,7 +133,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 				}
 				
 				$field = Object::create(
-					'GridField_FormAction', $gridField, 'SetOrder'.$columnField, $title, 
+					'GridField_FormAction', $gridField, 'SetOrder'.$fieldName, $title, 
 					"sort$dir", array('SortColumn' => $columnField)
 				)->addExtraClass('ss-gridfield-sort');
 
@@ -148,10 +149,10 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 				if($currentColumn == count($columns)
 						&& $gridField->getConfig()->getComponentByType('GridFieldFilterHeader')){
 
-					$field = new LiteralField($columnField,
+					$field = new LiteralField($fieldName,
 						'<button name="showFilter" class="ss-gridfield-button-filter trigger"></button>');
 				} else {
-					$field = new LiteralField($columnField, '<span class="non-sortable">' . $title . '</span>');
+					$field = new LiteralField($fieldName, '<span class="non-sortable">' . $title . '</span>');
 				}
 			}
 			$forTemplate->Fields->push($field);
