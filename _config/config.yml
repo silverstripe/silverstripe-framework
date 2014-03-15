@@ -6,3 +6,6 @@ Upload:
   replaceFile: false
 MySQLDatabase:
   connection_charset: utf8
+File:
+  # Always append a cache buster parameter based on modification time
+  appendmtime: true

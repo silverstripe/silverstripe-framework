@@ -188,9 +188,17 @@ class FileTest extends SapphireTest {
 	}
 	
 	public function testLinkAndRelativeLink() {
+		$appendmtime = Config::inst()->get('File', 'appendmtime');
+		Config::inst()->update('File','appendmtime', false);
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals(ASSETS_DIR . '/FileTest.txt', $file->RelativeLink());
 		$this->assertEquals(Director::baseURL() . ASSETS_DIR . '/FileTest.txt', $file->Link());
+		
+		Config::inst()->update('File','appendmtime', true);
+		$path = BASE_PATH . '/' . $file->Filename;
+		$this->assertEquals(ASSETS_DIR . '/FileTest.txt?m='.filemtime($path), $file->RelativeLink());
+		$this->assertEquals(Director::baseURL() . ASSETS_DIR . '/FileTest.txt?m='.filemtime($path), $file->Link());
+		Config::inst()->update('File','appendmtime', $appendmtime);
 	}
 	
 	public function testGetRelativePath() {
@@ -214,12 +222,28 @@ class FileTest extends SapphireTest {
 	
 	public function testGetURL() {
 		$rootfile = $this->objFromFixture('File', 'asdf');
+		
+		$appendmtime = Config::inst()->get('File', 'appendmtime');
+		Config::inst()->update('File','appendmtime', false);		
 		$this->assertEquals(Director::baseURL() . $rootfile->getFilename(), $rootfile->getURL());
+		
+		Config::inst()->update('File','appendmtime', true);
+		$path = BASE_PATH . '/' . $rootfile->Filename;
+		$this->assertEquals(Director::baseURL() . $rootfile->getFilename().'?m='.filemtime($path), $rootfile->getURL());
+		Config::inst()->update('File','appendmtime', $appendmtime);
 	}
 	
 	public function testGetAbsoluteURL() {
 		$rootfile = $this->objFromFixture('File', 'asdf');
+		
+		$appendmtime = Config::inst()->get('File', 'appendmtime');
+		Config::inst()->update('File','appendmtime', false);	
 		$this->assertEquals(Director::absoluteBaseURL() . $rootfile->getFilename(), $rootfile->getAbsoluteURL());
+		
+		Config::inst()->update('File','appendmtime', true);
+		$path = BASE_PATH . '/' . $rootfile->Filename;
+		$this->assertEquals(Director::absoluteBaseURL() . $rootfile->getFilename().'?m='.filemtime($path), $rootfile->getAbsoluteURL());
+		Config::inst()->update('File','appendmtime', $appendmtime);
 	}
 	
 	public function testNameAndTitleGeneration() {
