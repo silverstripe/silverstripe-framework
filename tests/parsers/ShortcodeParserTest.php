@@ -89,6 +89,18 @@ class ShortcodeParserTest extends SapphireTest {
 		}
 	}
 	
+	public function testOneFalseishArgumentWhereIsZero() {
+		$tests = array (
+			'[test_shortcode foo="0"]', "[test_shortcode foo='0']",
+			'[test_shortcode foo=0]'
+		);
+		
+		foreach($tests as $test) {
+			$this->parser->parse($test);
+			$this->assertEquals(array('foo' => 0), $this->arguments, $test);
+		}
+	}
+	
 	public function testMultipleArguments() {
 		$this->parser->parse('[test_shortcode foo = "bar",bar=\'foo\', baz="buz"]');
 		

@@ -219,9 +219,9 @@ class ShortcodeParser {
 					preg_match_all(self::attrrx(), $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
 
 					foreach ($attrmatches as $attr) {
-						list($whole, $name, $value) = array_values(array_filter($attr));
+						list($whole, $name, $value) = array_values(array_filter($attr, 'strlen'));
 						$attrs[$name] = $value;
-				}
+					}
 				}
 				
 				// And store the indexes, tag details, etc
