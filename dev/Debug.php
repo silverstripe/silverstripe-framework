@@ -527,7 +527,7 @@ function exceptionHandler($exception) {
 /**
  * Generic callback to catch standard PHP runtime errors thrown by the interpreter
  * or manually triggered with the user_error function.
- * Caution: The error levels default to E_ALL is the site is in dev-mode (set in main.php).
+ * Caution: The error levels default to E_ALL if the site is in dev-mode (set in main.php).
  * 
  * @ignore 
  * @param int $errno
@@ -540,6 +540,7 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 		case E_ERROR:
 		case E_CORE_ERROR:
 		case E_USER_ERROR:
+		case E_RECOVERABLE_ERROR:
 			return Debug::fatalHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
 
 		case E_WARNING:
