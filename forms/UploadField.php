@@ -1276,7 +1276,9 @@ class UploadField extends FileField {
 		// Resolve expected folder name
 		$folderName = $this->getFolderName();
 		$folder = Folder::find_or_make($folderName);
-		$parentPath = BASE_PATH."/".$folder->getFilename();
+		$parentPath = $folder
+			? BASE_PATH."/".$folder->getFilename()
+			: ASSETS_PATH."/";
 		
 		// check if either file exists
 		$exists = false;
