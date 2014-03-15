@@ -351,7 +351,7 @@ This will change the icons for the pages in the CMS.
 ![](_images/tutorial2_icons2.jpg)
 
 <div class="hint" markdown="1">
-Note: The `news-file` icon may not exist in a default SilverStripe install. Try adding your own image, or choosing a different one from the `tree-icons` collection.
+Note: The `news-file` icon may not exist in a default SilverStripe installation. Try adding your own image or choosing a different one from the `treeicons` collection.
 </div>
 
 ## Showing the latest news on the homepage
