@@ -315,8 +315,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 
 			redraw: function() {
-				// Using a global config (generated through HTMLEditorConfig PHP logic)
-				var config = ssTinyMceConfig, self = this, ed = this.getEditor();
+				// Using textarea config ID from global config object (generated through HTMLEditorConfig PHP logic)
+				var config = ssTinyMceConfig[this.data('config')], self = this, ed = this.getEditor();
 
 				ed.init(config);
 

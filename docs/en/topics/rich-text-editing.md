@@ -23,6 +23,34 @@ functionality. It is usually added through the `[api:DataObject->getCMSFields()]
 		}
 	}
 
+### Specify which configuration to use
+
+By default, a config named 'cms' is used in any new `[api:HTMLEditorField]`.
+
+If you have created your own `[api:HtmlEditorConfig]` and would like to use it,
+you can call `HtmlEditorConfig::set_active('myConfig')` and all subsequently created `[api:HTMLEditorField]`
+will use the configuration with the name 'myConfig'.
+
+You can also specify which `[api:HtmlEditorConfig]` to use on a per field basis via the construct argument.
+This is particularly useful if you need different configurations for multiple `[api:HTMLEditorField]` on the same page or form.
+
+	:::php
+	class MyObject extends DataObject {
+		private static $db = array(
+			'Content' => 'HTMLText',
+			'OtherContent' => 'HTMLText'
+		);
+		
+		public function getCMSFields() {
+			return new FieldList(array(
+				new HTMLEditorField('Content'),
+				new HTMLEditorField('OtherContent', 'Other content', $this->OtherContent, 'myConfig')
+			));
+		}
+	}
+
+In the above example, the 'Content' field will use the default 'cms' config while 'OtherContent' will be using 'myConfig'.
+
 ## Configuration
 
 To keep the JavaScript editor configuration manageable and extensible,
@@ -30,8 +58,6 @@ we've wrapped it in a PHP class called `[api:HtmlEditorConfig]`.
 The class comes with its own defaults, which are extended through [configuration files](/topics/configuration)
 in the framework (and the `cms` module in case you've got that installed).
 There can be multiple configs, which should always be created / accessed using `[api:HtmlEditorConfig::get]`.
-You can then set  the currently active config using `set_active()`.
-By default, a config named 'cms' is used in any field created throughout the CMS interface.
 
 <div class="notice" markdown='1'>
 Caveat: currently the order in which the `_config.php` files are executed depends on the module directory

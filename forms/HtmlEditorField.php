@@ -27,41 +27,22 @@ class HtmlEditorField extends TextareaField {
 	private static $sanitise_server_side = false;
 
 	protected $rows = 30;
+
+	protected $editorConfig = null;
 	
 	/**
-	 * Includes the JavaScript neccesary for this field to work using the {@link Requirements} system.
-	 */
-	public static function include_js() {
-		require_once 'tinymce/tiny_mce_gzip.php';
-
-		$configObj = HtmlEditorConfig::get_active();
-
-		if(Config::inst()->get('HtmlEditorField', 'use_gzip')) {
-			$internalPlugins = array();
-			foreach($configObj->getPlugins() as $plugin => $path) if(!$path) $internalPlugins[] = $plugin;
-			$tag = TinyMCE_Compressor::renderTag(array(
-				'url' => THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
-				'plugins' => implode(',', $internalPlugins),
-				'themes' => 'advanced',
-				'languages' => $configObj->getOption('language')
-			), true);
-			preg_match('/src="([^"]*)"/', $tag, $matches);
-			Requirements::javascript(html_entity_decode($matches[1]));
-
-		} else {
-			Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
-		} 
-
-		Requirements::customScript($configObj->generateJS(), 'htmlEditorConfig');
-	}
-	
-	/**
+	 * Creates a new HTMLEditorField.
 	 * @see TextareaField::__construct()
-	 */
-	public function __construct($name, $title = null, $value = '') {
+	 *
+	 * @param string $name The internal field name, passed to forms.
+	 * @param string $title The human-readable field label.
+	 * @param mixed $value The value of the field.
+	 * @param string $config HTMLEditorConfig identifier to be used. Default to the active one.
+	 */	
+	public function __construct($name, $title = null, $value = '', $config = null) {
 		parent::__construct($name, $title, $value);
 		
-		self::include_js();
+		$this->editorConfig = $config ? $config : HtmlEditorConfig::get_active_identifier();
 	}
 	
 	/**
@@ -102,6 +83,7 @@ class HtmlEditorField extends TextareaField {
 				'tinymce' => 'true',
 				'style'   => 'width: 97%; height: ' . ($this->rows * 16) . 'px', // prevents horizontal scrollbars
 				'value' => null,
+				'data-config' => $this->editorConfig
 			)
 		);
 	}
@@ -208,6 +190,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js');
+
+		HtmlEditorConfig::require_js();
 		Requirements::javascript(FRAMEWORK_DIR ."/javascript/HtmlEditorField.js");
 
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');

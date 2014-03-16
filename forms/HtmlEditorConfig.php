@@ -38,13 +38,22 @@ class HtmlEditorConfig {
 	public static function set_active($identifier = null) {
 		self::$current = $identifier;
 	}
+
+	/**
+	 * Get the currently active configuration identifier
+	 * @return String - the active configuration identifier
+	 */
+	public static function get_active_identifier() {
+		$identifier = self::$current ? self::$current : 'default';
+		return $identifier;
+	}	
 	
 	/**
 	 * Get the currently active configuration object
 	 * @return HtmlEditorConfig - the active configuration object
 	 */
 	public static function get_active() {
-		$identifier = self::$current ? self::$current : 'default';
+		$identifier = self::get_active_identifier();
 		return self::get($identifier);
 	}
 	
@@ -289,38 +298,82 @@ class HtmlEditorConfig {
 	}
 	
 	/**
-	 * Generate the javascript that will set tinyMCE's configuration to that of the current settings of this object
-	 * @return string - the javascript
+	 * Generate the JavaScript that will set TinyMCE's configuration:
+	 * - Parse all configurations into JSON objects to be used in JavaScript
+	 * - Includes TinyMCE and configurations using the {@link Requirements} system
 	 */
-	public function generateJS() {
-		$config = $this->settings;
-		
-		// plugins
+	public static function require_js() {
+		require_once 'tinymce/tiny_mce_gzip.php';
+		$useGzip = Config::inst()->get('HtmlEditorField', 'use_gzip');
+
+		$configs = array();
+		$externalPlugins = array();
 		$internalPlugins = array();
-		$externalPluginsJS = '';
-		foreach($this->plugins as $plugin => $path) {
-			if(!$path) {
-				$internalPlugins[] = $plugin;
-			} else {
-				$internalPlugins[] = '-' . $plugin;
-				$externalPluginsJS .= sprintf(
-					'tinymce.PluginManager.load("%s", "%s");' . "\n",
-					$plugin,
-					$path
-				);
+		$languages = array();
+
+		foreach (self::$configs as $configID => $config) {
+			$settings = $config->settings;
+		
+			// parse plugins
+			$configPlugins = array();
+			foreach($config->plugins as $plugin => $path) {
+				if(!$path) {
+					$configPlugins[] = $plugin;
+					$internalPlugins[] = $plugin;
+				} else {
+					$configPlugins[] = '-' . $plugin;
+					if ( !array_key_exists($plugin, $externalPlugins) )
+					{
+						$externalPlugins[$plugin] = sprintf(
+							'tinymce.PluginManager.load("%s", "%s");',
+							$plugin,
+							$path
+						);
+					}
+				}
 			}
+
+			// save config plugins settings
+			$settings['plugins'] = implode(',', $configPlugins);
+			
+			// buttons
+			foreach ($config->buttons as $i=>$buttons) {
+				$settings['theme_advanced_buttons'.$i] = implode(',', $buttons);
+			}
+
+			// languages
+			$languages[] = $config->getOption('language');
+
+			// save this config settings
+			$configs[$configID] = $settings;
 		}
-		$config['plugins'] = implode(',', $internalPlugins);
-		
-		foreach ($this->buttons as $i=>$buttons) {
-			$config['theme_advanced_buttons'.$i] = implode(',', $buttons);
+
+		// tinyMCE JS requirement
+		if ( $useGzip )
+		{
+			$tag = TinyMCE_Compressor::renderTag(array(
+				'url' => THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
+				'plugins' => implode(',', $internalPlugins),
+				'themes' => 'advanced',
+				'languages' => implode(",", array_filter($languages))
+			), true);
+			preg_match('/src="([^"]*)"/', $tag, $matches);
+			Requirements::javascript(html_entity_decode($matches[1]));
 		}
-		
-		return "
+		else{
+			Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
+		}
+
+		// prepare external plugins js string
+		$externalPlugins = array_values($externalPlugins);
+		$externalPlugins = implode("\n	", $externalPlugins);
+
+		// tinyMCE config object and external plugings
+		$configsJS = "
 if((typeof tinyMCE != 'undefined')) {
-	$externalPluginsJS
-	var ssTinyMceConfig = " . Convert::raw2json($config) . ";
-}
-";
+	$externalPlugins
+	var ssTinyMceConfig = " . Convert::raw2json($configs) . ";
+}";
+		Requirements::customScript($configsJS, 'htmlEditorConfig');
 	}
 }
