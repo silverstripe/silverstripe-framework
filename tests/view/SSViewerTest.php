@@ -4,6 +4,7 @@ class SSViewerTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
+		Config::inst()->update('SSViewer_FromString', 'cache_template', false);
 	}
 	
 	/**
@@ -84,8 +85,8 @@ class SSViewerTest extends SapphireTest {
 	/**
 	 * Small helper to render templates from strings
 	 */
-	public function render($templateString, $data = null) {
-		$t = SSViewer::fromString($templateString);
+	public function render($templateString, $data = null, $cacheTemplate = false) {
+		$t = SSViewer::fromString($templateString, $cacheTemplate);
 		if(!$data) $data = new SSViewerTestFixture();
 		return $t->process($data);
 	}
@@ -1339,6 +1340,34 @@ after')
 		$template->process(new SSViewerTestFixture());
 
 		$this->assertEquals(1, $count);
+	}
+
+	/**
+	 * Tests if caching for SSViewer_FromString is working
+	 */
+	public function testFromStringCaching() {
+		$content = 'Test content';
+		$cacheFile = TEMP_FOLDER . '/.cache.' . sha1($content);
+		if (file_exists($cacheFile)) {
+			unlink($cacheFile);
+		}
+
+		// Test global behaviors
+		$this->render($content, null, null);
+		$this->assertFalse(file_exists($cacheFile), 'Cache file was created when caching was off');
+
+		Config::inst()->update('SSViewer_FromString', 'cache_template', true);
+		$this->render($content, null, null);
+		$this->assertTrue(file_exists($cacheFile), 'Cache file wasn\'t created when it was meant to');
+		unlink($cacheFile);
+
+		// Test instance behaviors
+		$this->render($content, null, false);
+		$this->assertFalse(file_exists($cacheFile), 'Cache file was created when caching was off');
+
+		$this->render($content, null, true);
+		$this->assertTrue(file_exists($cacheFile), 'Cache file wasn\'t created when it was meant to');
+		unlink($cacheFile);
 	}
 }
 
