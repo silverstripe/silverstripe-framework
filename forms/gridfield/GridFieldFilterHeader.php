@@ -87,12 +87,12 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
 		if(!$this->checkDataType($dataList)) return $dataList;
 		
-		$state = $gridField->State->GridFieldFilterHeader;
-		if(!isset($state->Columns)) {
+		$columns = $gridField->State->GridFieldFilterHeader->Columns(null);
+		if(empty($columns)) {
 			return $dataList;
-		} 
+		}
 		
-		$filterArguments = $state->Columns->toArray();
+		$filterArguments = $columns->toArray();
 		$dataListClone = clone($dataList);
 		foreach($filterArguments as $columnName => $value ) {
 			if($dataList->canFilterBy($columnName) && $value) {

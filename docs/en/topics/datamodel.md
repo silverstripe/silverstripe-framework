@@ -290,7 +290,7 @@ start with S, who has logged in  since 1/1/2011.
 
 	:::php
 	$members = Member::get()->filter(array(
-		'FirstName:StartsWith:not' => 'S'
+		'FirstName:StartsWith:Not' => 'S'
 		'LastVisited:GreaterThan' => '2011-01-01'
 	));
 
@@ -761,6 +761,11 @@ Example: Validate postcodes based on the selected country
 			return $result;
 		}
 	}
+
+<div class="hint" markdown='1'>
+**Tip:** If you decide to add unique or other indexes to your model via
+`static $indexes`, see [DataObject](/reference/dataobject) for details.
+</div>
 
 ## Maps
 

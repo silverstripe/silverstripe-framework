@@ -128,7 +128,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 
 			if($allowSort) {
 				$dir = 'asc';
-				if($state->SortColumn == $columnField && $state->SortDirection == 'asc') {
+				if($state->SortColumn(null) == $columnField && $state->SortDirection('asc') == 'asc') {
 					$dir = 'desc';
 				}
 				
@@ -137,10 +137,10 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 					"sort$dir", array('SortColumn' => $columnField)
 				)->addExtraClass('ss-gridfield-sort');
 
-				if($state->SortColumn == $columnField){
+				if($state->SortColumn(null) == $columnField){
 					$field->addExtraClass('ss-gridfield-sorted');
 
-					if($state->SortDirection == 'asc')
+					if($state->SortDirection('asc') == 'asc')
 						$field->addExtraClass('ss-gridfield-sorted-asc');
 					else
 						$field->addExtraClass('ss-gridfield-sorted-desc');
@@ -245,6 +245,6 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		$pieces = explode('.', $column);
 		$column = '"' . implode('"."', $pieces) . '"';
 		
-		return $dataList->sort($column, $state->SortDirection);
+		return $dataList->sort($column, $state->SortDirection('asc'));
 	}
 }

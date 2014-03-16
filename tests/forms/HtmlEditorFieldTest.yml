@@ -5,8 +5,8 @@ File:
 
 Image:
   example_image:
-    Name: example.jpg
-    Filename: folder/subfolder/example.jpg
+    Name: HTMLEditorFieldTest_example.jpg
+    Filename: tests/forms/images/HTMLEditorFieldTest_example.jpg
 
 HtmlEditorFieldTest_Object:
   home:

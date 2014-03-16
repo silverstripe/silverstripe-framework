@@ -56,6 +56,8 @@ et_EE:
     ERRORNOTREC: 'See kasutajanimi / parool ei ole tunnustatud'
   Boolean:
     ANY: Kõik
+    NOANSWER: "Ei"
+    YESANSWER: "Jah"
   CMSLoadingScreen_ss:
     LOADING: Laadimine...
     REQUIREJS: 'Sisuhaldussüsteem nõuab, et JavaScript oleks lubatud.'

@@ -3,8 +3,7 @@
 Reference articles complement our auto-generated [API docs](http://api.silverstripe.org) in providing deeper introduction into a specific API. 
 
 * [BBCode](bbcode): Extensible shortcode syntax
-* [CMS Architecture](cms-architecture): A quick run down to get you started with creating your own data management interface
-* [ComplexTableField](complextablefield): Manage records and their relations inside the CMS
+* [CMS Architecture](cms-architecture): A quick run down to get you started with creating your own data management interface.
 * [GridField](grid-field): The GridField is a flexible form field for creating tables of data.
 * [Database Structure](database-structure): Conventions and best practices for database tables and fields
 * [DataExtension](dataextension): A "mixin" system allowing to extend core classes

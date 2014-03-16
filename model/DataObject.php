@@ -114,7 +114,27 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @var array
 	 */
 	protected $record;
-
+	
+	/**
+	 * Represents a field that hasn't changed (before === after, thus before == after)
+	 */
+	const CHANGE_NONE = 0;
+	
+	/**
+	 * Represents a field that has changed type, although not the loosely defined value.
+	 * (before !== after && before == after)
+	 * E.g. change 1 to true or "true" to true, but not true to 0.
+	 * Value changes are by nature also considered strict changes.
+	 */
+	const CHANGE_STRICT = 1;
+	
+	/**
+	 * Represents a field that has changed the loosely defined value
+	 * (before != after, thus, before !== after))
+	 * E.g. change false to true, but not false to 0
+	 */
+	const CHANGE_VALUE = 2;
+	
 	/**
 	 * An array indexed by fieldname, true if the field has been changed.
 	 * Use {@link getChangedFields()} and {@link isChanged()} to inspect
@@ -976,7 +996,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			array_keys($this->inheritedDatabaseFields())));
 		
 		foreach($fieldNames as $fieldName) {
-			if(!isset($this->changed[$fieldName])) $this->changed[$fieldName] = 1;
+			if(!isset($this->changed[$fieldName])) $this->changed[$fieldName] = self::CHANGE_STRICT;
 			// Populate the null values in record so that they actually get written
 			if(!isset($this->record[$fieldName])) $this->record[$fieldName] = null;
 		}
@@ -1000,8 +1020,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * 
 	 * @return A {@link ValidationResult} object
 	 */
-	protected function validate() {
-		$result = new ValidationResult();
+	public function validate() {
+		$result = ValidationResult::create();
 		$this->extend('validate', $result);
 		return $result;
 	}
@@ -1157,7 +1177,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// Update the changed array with references to changed obj-fields
 			foreach($this->record as $k => $v) {
 				if(is_object($v) && method_exists($v, 'isChanged') && $v->isChanged()) {
-					$this->changed[$k] = true;
+					$this->changed[$k] = self::CHANGE_VALUE;
 				}
 			}
 
@@ -1166,7 +1186,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 			$this->changed = array();
 			foreach($this->record as $k => $v) {
-				$this->changed[$k] = 2;
+				$this->changed[$k] = self::CHANGE_VALUE;
 			}
 			
 			$firstWrite = true;
@@ -1201,7 +1221,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 					DB::query("INSERT INTO \"{$baseTable}\" (\"Created\") VALUES (" . DB::getConn()->now() . ")");
 					$this->record['ID'] = DB::getGeneratedID($baseTable);
-					$this->changed['ID'] = 2;
+					$this->changed['ID'] = self::CHANGE_VALUE;
 
 					$isNewRecord = true;
 				}
@@ -2225,28 +2245,28 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Return the fields that have changed.
 	 * 
 	 * The change level affects what the functions defines as "changed":
-	 * - Level 1 will return strict changes, even !== ones.
-	 * - Level 2 is more lenient, it will only return real data changes, for example a change from 0 to null
-	 * would not be included.
+	 * - Level CHANGE_STRICT (integer 1) will return strict changes, even !== ones.
+	 * - Level CHANGE_VALUE (integer 2) is more lenient, it will only return real data changes,
+	 *   for example a change from 0 to null would not be included.
 	 *
 	 * Example return:
 	 * <code>
 	 * array(
-	 *   'Title' = array('before' => 'Home', 'after' => 'Home-Changed', 'level' => 2)
+	 *   'Title' = array('before' => 'Home', 'after' => 'Home-Changed', 'level' => DataObject::CHANGE_VALUE)
 	 * )
 	 * </code>
 	 *
 	 * @param boolean $databaseFieldsOnly Get only database fields that have changed
-	 * @param int $changeLevel The strictness of what is defined as change
+	 * @param int $changeLevel The strictness of what is defined as change. Defaults to strict
 	 * @return array
 	 */
-	public function getChangedFields($databaseFieldsOnly = false, $changeLevel = 1) {
+	public function getChangedFields($databaseFieldsOnly = false, $changeLevel = self::CHANGE_STRICT) {
 		$changedFields = array();
 		
 		// Update the changed array with references to changed obj-fields
 		foreach($this->record as $k => $v) {
 			if(is_object($v) && method_exists($v, 'isChanged') && $v->isChanged()) {
-				$this->changed[$k] = 2;
+				$this->changed[$k] = self::CHANGE_VALUE;
 			}
 		}
 		
@@ -2262,7 +2282,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		// Filter the list to those of a certain change level
-		if($changeLevel > 1) {
+		if($changeLevel > self::CHANGE_STRICT) {
 			if($fields) foreach($fields as $name => $level) {
 				if($level < $changeLevel) {
 					unset($fields[$name]);
@@ -2289,7 +2309,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param int $changeLevel See {@link getChangedFields()}
 	 * @return boolean
 	 */
-	public function isChanged($fieldName = null, $changeLevel = 1) {
+	public function isChanged($fieldName = null, $changeLevel = self::CHANGE_STRICT) {
 		$changed = $this->getChangedFields(false, $changeLevel);
 		if(!isset($fieldName)) {
 			return !empty($changed);
@@ -2331,13 +2351,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				// TODO Add check for php-level defaults which are not set in the db
 				// TODO Add check for hidden input-fields (readonly) which are not set in the db
 				// At the very least, the type has changed
-				$this->changed[$fieldName] = 1;
+				$this->changed[$fieldName] = self::CHANGE_STRICT;
 				
 				if((!isset($this->record[$fieldName]) && $val) || (isset($this->record[$fieldName])
 						&& $this->record[$fieldName] != $val)) {
 
 					// Value has changed as well, not just the type
-					$this->changed[$fieldName] = 2;
+					$this->changed[$fieldName] = self::CHANGE_VALUE;
 				}
 
 				// If we've just lazy-loaded the column, then we need to populate the $original array by

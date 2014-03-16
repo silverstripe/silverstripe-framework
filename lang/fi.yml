@@ -60,6 +60,8 @@ fi:
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   Boolean:
     ANY: Yhtään
+    NOANSWER: "Ei"
+    YESANSWER: "Kyllä"
   CMSLoadingScreen_ss:
     LOADING: Ladataan...
     REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaSkriptit päällä.'

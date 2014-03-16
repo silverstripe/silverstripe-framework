@@ -9,23 +9,39 @@ Executes a SilverStripe command"
 	exit 1
 fi
 
-# Set $framework and $base
+# find the silverstripe installation
 sakedir=`dirname $0`
-if [ -f $sakedir/cli-script.php ]; then
-	framework=$sakedir
+if [ -f "$sakedir/cli-script.php" ]; then
+	framework="$sakedir"
 	base=`dirname $sakedir`
-elif [ -d ./framework ]; then
-	framework=./framework
-	base=.
-elif [ -d ./sapphire ]; then
-	framework=./sapphire
-	base=.
 elif [ -f ./cli-script.php ]; then
 	framework=.
 	base=..
 else
-	echo "Can't find ./framework/cli-script.php or ./cli-script.php"
-	exit 1
+	# look up the tree for the first parent folder that has a framework
+	# installation
+	slashes=${PWD//[^\/]/}
+	directory="$PWD"
+	base=.
+	for (( n=${#slashes}; n>0; --n )) do
+		if [ -d "$directory/framework" ]; then
+			framework="$directory/framework"
+
+			break
+		elif [ -d "$directory/sapphire" ]; then
+			framework="$directory/sapphire"
+
+			break
+		fi
+
+		directory=`dirname $directory`
+		base="$base."
+	done
+
+	if [ ! -f "$framework/cli-script.php" ]; then
+		echo "Can't find cli-script.php in $framework"
+		exit 1
+	fi
 fi
 
 # Find the PHP binary
@@ -45,6 +61,7 @@ fi
 
 if [ "$1" = "installsake" ]; then
 	echo "Installing sake to /usr/bin..."
+	rm -rf /usr/bin/sake
 	cp $0 /usr/bin
 	exit 0
 fi

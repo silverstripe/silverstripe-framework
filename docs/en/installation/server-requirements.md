@@ -8,7 +8,7 @@ Our web-based [PHP installer](/installation) can check if you meet the requireme
 
 ## Web server software requirements
 
- * PHP 5.3.2+
+ * PHP 5.3.3+
  * We recommend using a PHP accelerator or opcode cache, such as [xcache](http://xcache.lighttpd.net/) or [WinCache](http://www.iis.net/download/wincacheforphp).
  * Allocate at least 48MB of memory to each PHP process. (SilverStripe can be resource hungry for some intensive operations.)
  * Required modules: dom, gd2, fileinfo, hash, iconv, mbstring, mysqli (or other database driver), session, simplexml, tokenizer, xml.

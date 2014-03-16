@@ -19,28 +19,19 @@
  * @package forms
  * @subpackage fields-gridfield
  */
-class GridFieldConfig {
+class GridFieldConfig extends Object {
 
 	/**
 	 * @var ArrayList
 	 */
 	protected $components = null;
 	
-	/**
-	 * @param mixed $arguments,... arguments to pass to the constructor
-	 * @return GridFieldConfig
-	 */
-	public static function create() {
-		return call_user_func_array('Object::create', array_merge(
-			array(get_called_class()), 
-			func_get_args()
-		));
-	}
 	
 	/**
 	 * 
 	 */
 	public function __construct() {
+		parent::__construct();
 		$this->components = new ArrayList();
 	}
 	
@@ -147,6 +138,7 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {
+		parent::__construct();
 		$this->addComponent(new GridFieldToolbarHeader());
 		$this->addComponent($sort = new GridFieldSortableHeader());
 		$this->addComponent($filter = new GridFieldFilterHeader());
@@ -157,6 +149,8 @@ class GridFieldConfig_Base extends GridFieldConfig {
 		$sort->setThrowExceptionOnBadDataType(false);
 		$filter->setThrowExceptionOnBadDataType(false);
 		$pagination->setThrowExceptionOnBadDataType(false);
+
+		$this->extend('updateConfig');
 	}
 }
 
@@ -173,6 +167,8 @@ class GridFieldConfig_RecordViewer extends GridFieldConfig_Base {
 
 		$this->addComponent(new GridFieldViewButton());
 		$this->addComponent(new GridFieldDetailForm());
+
+		$this->extend('updateConfig');
 	}
 
 }
@@ -190,6 +186,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {
+		parent::__construct();
 		
 		$this->addComponent(new GridFieldButtonRow('before'));
 		$this->addComponent(new GridFieldAddNewButton('buttons-before-left'));
@@ -206,6 +203,8 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 		$sort->setThrowExceptionOnBadDataType(false);
 		$filter->setThrowExceptionOnBadDataType(false);
 		$pagination->setThrowExceptionOnBadDataType(false);
+
+		$this->extend('updateConfig');
 	}
 }
 
@@ -236,6 +235,7 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {
+		parent::__construct();
 		
 		$this->addComponent(new GridFieldButtonRow('before'));
 		$this->addComponent(new GridFieldAddNewButton('buttons-before-left'));
@@ -253,5 +253,7 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 		$sort->setThrowExceptionOnBadDataType(false);
 		$filter->setThrowExceptionOnBadDataType(false);
 		$pagination->setThrowExceptionOnBadDataType(false);
+
+		$this->extend('updateConfig');
 	}
 }

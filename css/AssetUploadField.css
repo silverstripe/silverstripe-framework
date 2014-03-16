@@ -17,8 +17,6 @@ Used in side panels and action tabs
 
 .backlink { padding-left: 12px; }
 
-#Form_EditorToolbarMediaForm .ui-tabs-panel { padding-left: 0px; }
-
 body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fieldset { padding: 16px; overflow: auto; background: #E2E2E2; }
 body.cms.ss-uploadfield-edit-iframe span.readonly, .composite.ss-assetuploadfield .details fieldset span.readonly { font-style: italic; color: #777777; text-shadow: 0px 1px 0px #fff; }
 body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-assetuploadfield .details fieldset .fieldholder-small label { margin-left: 0; }

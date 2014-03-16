@@ -16,8 +16,13 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.2",
+		"php": ">=5.3.3",
 		"composer/installers": "*"
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "3.2.x-dev"
+		}
 	},
 	"autoload": {
 		"classmap": ["tests/behat/features/bootstrap"]	

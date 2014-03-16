@@ -164,6 +164,15 @@ class UploadField extends FileField {
 	);
 
 	/**
+	 * @var String Folder to display in "Select files" list.
+	 * Defaults to listing all files regardless of folder. 
+	 * The folder path should be relative to the webroot.
+	 * See {@link FileField->folderName} to set the upload target instead.
+	 * @example admin/folder/subfolder
+	 */
+	protected $displayFolderName;
+
+	/**
 	 * FieldList $fields or string $name (of a method on File to provide a fields) for the EditForm
 	 * @example 'getCMSFields'
 	 * 
@@ -299,6 +308,21 @@ class UploadField extends FileField {
 	 */
 	public function setOverwriteWarning($overwriteWarning) {
 		return $this->setConfig('overwriteWarning', $overwriteWarning);
+	}
+
+	/**
+	 * @param String
+	 */
+	public function setDisplayFolderName($name) {
+		$this->displayFolderName = $name;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getDisplayFolderName() {
+		return $this->displayFolderName;
 	}
 
 	/**
@@ -1546,8 +1570,8 @@ class UploadField_SelectHandler extends RequestHandler {
 	public function Form() {
 		// Find out the requested folder ID.
 		$folderID = $this->parent->getRequest()->requestVar('ParentID');
-		if (!isset($folderID)) {
-			$folder = Folder::find_or_make($this->folderName);
+		if ($folderID === null && $this->parent->getDisplayFolderName()) {
+			$folder = Folder::find_or_make($this->parent->getDisplayFolderName());
 			$folderID = $folder ? $folder->ID : 0;
 		}
 
@@ -1580,19 +1604,19 @@ class UploadField_SelectHandler extends RequestHandler {
 		$config = GridFieldConfig::create();
 		$config->addComponent(new GridFieldSortableHeader());
 		$config->addComponent(new GridFieldFilterHeader());
-		$config->addComponent($columns = new GridFieldDataColumns());
-		$columns->setDisplayFields(array(
-			'StripThumbnail' => '',
-			'Name' => 'Name',
-			'Title' => 'Title'
+		$config->addComponent($colsComponent = new GridFieldDataColumns());
+		$colsComponent->setDisplayFields(array(
+			'Title' => singleton('File')->fieldLabel('Name'),
+			'Filename' => singleton('File')->fieldLabel('Filename'),
+			'Size' => singleton('File')->fieldLabel('Size')
 		));
-		$config->addComponent(new GridFieldPaginator(8));
 
 		// If relation is to be autoset, we need to make sure we only list compatible objects.
 		$baseClass = $this->parent->getRelationAutosetClass();
 
 		// Create the data source for the list of files within the current directory.
-		$files = DataList::create($baseClass)->filter('ParentID', $folderID);
+		$files = DataList::create($baseClass);
+		if($folderID) $files = $files->filter('ParentID', $folderID);
 
 		$fileField = new GridField('Files', false, $files, $config);
 		$fileField->setAttribute('data-selectable', true);

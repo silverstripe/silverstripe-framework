@@ -244,6 +244,10 @@ class Director implements TemplateGlobalProvider {
 		Config::inst()->update('Cookie', 'report_errors', false);
 		Requirements::set_backend(new Requirements_Backend());
 
+		if (strpos($url, '#') !== false) {
+			$url = substr($url, 0, strpos($url, '#'));
+		}
+
 		// Handle absolute URLs
 		if (parse_url($url, PHP_URL_HOST)) {
 			$bits = parse_url($url);

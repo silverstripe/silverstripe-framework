@@ -163,24 +163,28 @@ class FieldListTest extends SapphireTest {
 		/* We have no fields in the tab now */
 		$this->assertEquals(0, $tab->Fields()->Count());
 	}
-	
-	/**
-	 * Test removing a field from a set by it's name.
-	 */
+
 	public function testRemoveFieldByName() {
 		$fields = new FieldList();
-		
-		/* First of all, we add a field into our FieldList object */
 		$fields->push(new TextField('Name', 'Your name'));
 		
-		/* We have 1 field in our set now */
 		$this->assertEquals(1, $fields->Count());
-		
-		/* Then, we call up removeByName() to take it out again */
 		$fields->removeByName('Name');
-		
-		/* We have 0 fields in our set now, as we've just removed the one we added */
 		$this->assertEquals(0, $fields->Count());
+
+		$fields->push(new TextField('Name[Field]', 'Your name'));
+		$this->assertEquals(1, $fields->Count());
+		$fields->removeByName('Name[Field]');
+		$this->assertEquals(0, $fields->Count());
+	}
+
+	public function testDataFieldByName() {
+		$fields = new FieldList();
+		$fields->push($basic = new TextField('Name', 'Your name'));
+		$fields->push($brack = new TextField('Name[Field]', 'Your name'));
+
+		$this->assertEquals($basic, $fields->dataFieldByName('Name'));
+		$this->assertEquals($brack, $fields->dataFieldByName('Name[Field]'));
 	}
 	
 	/**
@@ -214,14 +218,19 @@ class FieldListTest extends SapphireTest {
 		/* A field gets added to the set */
 		$fields->addFieldToTab('Root', new TextField('Country'));
 
-		/* We have the same object as the one we pushed */
 		$this->assertSame($fields->dataFieldByName('Country'), $tab->fieldByName('Country'));
 		
-		/* The field called Country is replaced by the field called Email */
 		$fields->replaceField('Country', new EmailField('Email'));
-		
-		/* We have 1 field inside our tab */
-		$this->assertEquals(1, $tab->Fields()->Count());		
+		$this->assertEquals(1, $tab->Fields()->Count());
+
+		$fields = new FieldList();
+		$fields->push(new TextField('Name', 'Your name'));
+		$brack = new TextField('Name[Field]', 'Your name');
+
+		$fields->replaceField('Name', $brack);
+		$this->assertEquals(1, $fields->Count());
+
+		$this->assertEquals('Name[Field]', $fields->first()->getName());
 	}
 	
 	public function testRenameField() {
@@ -392,6 +401,18 @@ class FieldListTest extends SapphireTest {
 		
 		/* The position of the Title field is at number 3 */
 		$this->assertEquals('Title', $fields[2]->getName());
+
+		/* Test arguments are accepted in either order */
+		$fields->insertBefore('FirstName', new TextField('Surname'));
+
+		/* The field we just added actually exists in the set */
+		$this->assertNotNull($fields->dataFieldByName('Surname'));
+
+		/* We now have 5 fields in the set */
+		$this->assertEquals(5, $fields->Count());
+
+		/* The position of the Surname field is at number 4 */
+		$this->assertEquals('Surname', $fields[3]->getName());
 	}
 
 	public function testInsertBeforeMultipleFields() {
@@ -442,6 +463,18 @@ class FieldListTest extends SapphireTest {
 		
 		/* The position of the Title field should be at number 2 */
 		$this->assertEquals('Title', $fields[1]->getName());
+
+		/* Test arguments are accepted in either order */
+		$fields->insertAfter('FirstName', new TextField('Surname'));
+
+		/* The field we just added actually exists in the set */
+		$this->assertNotNull($fields->dataFieldByName('Surname'));
+
+		/* We now have 5 fields in the set */
+		$this->assertEquals(5, $fields->Count());
+
+		/* The position of the Surname field is at number 5 */
+		$this->assertEquals('Surname', $fields[4]->getName());
 	}
 
 	public function testrootFieldList() {

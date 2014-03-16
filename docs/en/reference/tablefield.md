@@ -63,12 +63,6 @@ Due to the nested nature of this fields dataset, you can't set any required colu
 Note: You still have to attach some form of `[api:Validator]` to the form to trigger any validation on this field.
 
 
-### Nested Table Fields
-
-When you have `[api:TableField]` inside a `[api:ComplexTableField]`, the parent ID may not be known in your
-getCMSFields() method.  In these cases, you can set a value to '$RecordID' in your `[api:TableField]` extra data, and this
-will be populated with the newly created record id upon save.
-
 ## Known Issues
 
 *  A `[api:TableField]` doesn't reload any submitted form-data if the saving is interrupted by a failed validation. After

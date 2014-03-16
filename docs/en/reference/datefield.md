@@ -37,6 +37,12 @@ You can define a custom dateformat for your Datefield based on [Zend_Date consta
 	// will display a date in the following format: 31-06-2012
 	DateField::create('MyDate')->setConfig('dateformat', 'dd-MM-yyyy'); 
  
+Caution: If you're using natural language date formats like abbreviated month names
+alongside the "showcalendar" option, you'll need to ensure the formats
+between the calendar widget and the SilverStripe validation are consistent.
+As an example for the 'de' locale, check `framework/thirdparty/jquery-ui/datepicker/i18n/jquery.ui.datepicker-de.js` 
+and compare it to `framework/thirdparty/Zend/Locale/Data/de.xml`
+(see `<calendar type="gregorian">` in the XML data).
 
 ## Min and Max Dates
 

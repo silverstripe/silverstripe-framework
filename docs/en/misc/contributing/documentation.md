@@ -41,7 +41,7 @@ getting out of date.
 SilverStripe project that uses the ["docsviewer" module](https://github.com/silverstripe/silverstripe-docsviewer)
 to convert Markdown formatted files into searchable HTML pages with index lists.
 Its contents are fetched from different releases automatically every couple of minutes.
-*  Developer API Docuumentation: [api.silverstripe.org](http://api.silverstripe.org) - powered by a customized
+*  Developer API Documentation: [api.silverstripe.org](http://api.silverstripe.org) - powered by a customized
 [phpDocumentor](http://www.phpdoc.org/) template, and is regenerated automatically every night.
 
 ## Source Control

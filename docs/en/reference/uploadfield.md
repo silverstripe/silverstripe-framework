@@ -226,10 +226,11 @@ like this:
 		);
 	}
 
-Now register the DataExtension for the Image class in your _config.php:
+Now register the DataExtension for the Image class in your _config/config.yml:
 
-	:::php
-	Image::add_extension('GalleryImage');
+	Image:
+	  extensions:
+	    - GalleryImage
 
 <div class="notice" markdown='1'>
 Note: Although you can subclass the Image class instead of using a DataExtension,

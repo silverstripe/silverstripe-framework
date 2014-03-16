@@ -411,12 +411,7 @@ class Versioned extends DataExtension {
 					// Extra tables for _Live, etc.
 					// Change unique indexes to 'index'.  Versioned tables may run into unique indexing difficulties
 					// otherwise.
-					foreach($indexes as $key=>$index){
-						if(is_array($index) && $index['type']=='unique'){
-							$indexes[$key]['type']='index';
-						}
-					}
-					
+					$indexes = $this->uniqueToIndex($indexes);
 					if($stage != $this->defaultStage) {
 						DB::requireTable("{$table}_$stage", $fields, $indexes, false, $options);
 					}
@@ -454,12 +449,7 @@ class Versioned extends DataExtension {
 					);
 				
 					//Unique indexes will not work on versioned tables, so we'll convert them to standard indexes:
-					foreach($indexes as $key=>$index){
-						if(is_array($index) && strtolower($index['type'])=='unique'){
-							$indexes[$key]['type']='index';
-						}
-					}
-					
+					$indexes = $this->uniqueToIndex($indexes);
 					$versionIndexes = array_merge(
 						array(
 							'RecordID_Version' => array('type' => 'unique', 'value' => '"RecordID","Version"'),
@@ -531,6 +521,35 @@ class Versioned extends DataExtension {
 		}
 	}
 	
+	/**
+	 * Helper for augmentDatabase() to find unique indexes and convert them to non-unique
+	 * 
+	 * @param array $indexes The indexes to convert
+	 * @return array $indexes
+	 */
+	private function uniqueToIndex($indexes) {
+		$unique_regex = '/unique/i';
+		$results = array();
+		foreach ($indexes as $key => $index) {
+			$results[$key] = $index;
+
+			// support string descriptors
+			if (is_string($index)) {
+				if (preg_match($unique_regex, $index)) {
+					$results[$key] = preg_replace($unique_regex, 'index', $index);
+				}
+			}
+
+			// canonical, array-based descriptors
+			elseif (is_array($index)) {
+				if (strtolower($index['type']) == 'unique') {
+					$results[$key]['type'] = 'index';
+				}
+			}
+		}
+		return $results;
+	}
+
 	/**
 	 * Augment a write-record request.
 	 *
