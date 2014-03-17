@@ -152,6 +152,28 @@ class Date extends DBField {
 		}
 	}
 	
+	/**
+	 * Return a date formatted as per a CMS user's settings.
+	 * 
+	 * @param Member $member
+	 * @return boolean | string A date formatted as per user-defined settings.
+	 */
+	public function FormatFromSettings($member = null) {
+		require_once 'Zend/Date.php';	
+		
+		if(!$member) {
+			if(!Member::currentUserID()) {
+				return false;
+			}
+			$member = Member::currentUser();
+		}
+		
+		$formatD = $member->getDateFormat();
+		$zendDate = new Zend_Date($this->getValue());
+		
+		return $zendDate->toString($formatD);
+	}		
+	
 	/*
 	 * Return a string in the form "12 - 16 Sept" or "12 Aug - 16 Sept"
 	 * @param Date $otherDateObj Another date object specifying the end of the range

@@ -92,6 +92,29 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	public function Time24() {
 		if($this->value) return $this->Format('H:i');
 	}
+	
+	/**
+	 * Return a date and time formatted as per a CMS user's settings.
+	 * 
+	 * @param Member $member
+	 * @return boolean | string A time and date pair formatted as per user-defined settings.
+	 */
+	public function FormatFromSettings($member = null) {
+		require_once 'Zend/Date.php';	
+		
+		if(!$member) {
+			if(!Member::currentUserID()) {
+				return false;
+			}
+			$member = Member::currentUser();
+		}
+		
+		$formatD = $member->getDateFormat();
+		$formatT = $member->getTimeFormat();
+		
+		$zendDate = new Zend_Date($this->getValue());
+		return $zendDate->toString($formatD).' '.$zendDate->toString($formatT);
+	}	
 
 	public function requireField() {
 		$parts=Array('datatype'=>'datetime', 'arrayValue'=>$this->arrayValue);
