@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package framework
  * @subpackage tests
@@ -11,6 +12,14 @@ class FormTest extends FunctionalTest {
 		'FormTest_Player',
 		'FormTest_Team',
 	);
+
+	public function setUp() {
+		parent::setUp();
+
+		Config::inst()->update('Director', 'rules', array(
+			'FormTest_Controller' => 'FormTest_Controller'
+		));
+	}
 	
 	public function testLoadDataFromRequest() {
 		$form = new Form(
@@ -79,7 +88,7 @@ class FormTest extends FunctionalTest {
 	
 	public function testLoadDataFromObject() {
 		$form = new Form(
-			new Controller(),
+		new Controller(),
 			'Form',
 			new FieldList(
 				new HeaderField('MyPlayerHeader','My Player'),
@@ -202,19 +211,19 @@ class FormTest extends FunctionalTest {
 		
 		$form = $this->getStubForm();
 		$form->setFormMethod('PUT');
-		$this->assertEquals($form->Fields()->dataFieldByName('_method')->Value(), 'put',
+		$this->assertEquals($form->Fields()->dataFieldByName('_method')->Value(), 'PUT',
 			'PUT override in forms has PUT in hiddenfield'
 		);
-		$this->assertEquals($form->FormMethod(), 'post',
+		$this->assertEquals($form->FormMethod(), 'POST',
 			'PUT override in forms has POST in <form> tag'
 		);
 		
 		$form = $this->getStubForm();
 		$form->setFormMethod('DELETE');
-		$this->assertEquals($form->Fields()->dataFieldByName('_method')->Value(), 'delete',
+		$this->assertEquals($form->Fields()->dataFieldByName('_method')->Value(), 'DELETE',
 			'PUT override in forms has PUT in hiddenfield'
 		);
-		$this->assertEquals($form->FormMethod(), 'post',
+		$this->assertEquals($form->FormMethod(), 'POST',
 			'PUT override in forms has POST in <form> tag'
 		);
 	}
@@ -229,21 +238,21 @@ class FormTest extends FunctionalTest {
 				// leaving out "Required" field
 			)
 		);
+
 		$this->assertPartialMatchBySelector(
-			'#Email span.message',
+			'#Form_Form_Email_Holder span.message',
 			array(
 				'Please enter an email address'
 			),
 			'Formfield validation shows note on field if invalid'
 		);
 		$this->assertPartialMatchBySelector(
-			'#SomeRequiredField span.required',
+			'#Form_Form_SomeRequiredField_Holder span.required',
 			array(
 				'"Some Required Field" is required'
 			),
 			'Required fields show a notification on field when left blank'
 		);
-		
 	}
 	
 	public function testSessionSuccessMessage() {
@@ -495,6 +504,10 @@ class FormTest extends FunctionalTest {
 	
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_Player extends DataObject implements TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
@@ -516,6 +529,10 @@ class FormTest_Player extends DataObject implements TestOnly {
 	
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_Team extends DataObject implements TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
@@ -527,6 +544,10 @@ class FormTest_Team extends DataObject implements TestOnly {
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_Controller extends Controller implements TestOnly {
 
 	private static $allowed_actions = array('Form');
@@ -575,6 +596,10 @@ class FormTest_Controller extends Controller implements TestOnly {
 
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_ControllerWithSecurityToken extends Controller implements TestOnly {
 	
 	private static $allowed_actions = array('Form');

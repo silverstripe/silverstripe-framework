@@ -25,45 +25,52 @@ class DropdownFieldTest extends SapphireTest {
 		$this->assertEquals($matches[0], 'Yes');
 	}
 
-	public function testEmptyStringAsLiteralConstructorArgument() {
-		$source = array(1 => 'one');
-		$field = new DropdownField('Field', null, $source);
-		$field->setEmptyString('select...');
-		$this->assertEquals(
-			$field->getSource(),
-			array(
-				'' => 'select...',
-				1 => 'one'
-			)
-		);
-	}
-
 	public function testHasEmptyDefault() {
 		$source = array(1 => 'one');
+
+		// Test getSource with empty
 		$field = new DropdownField('Field', null, $source);
 		$field->setHasEmptyDefault(true);
-		$this->assertEquals(
-			$field->getSource(),
-			array(
-				'' => '',
-				1 => 'one'
-			)
-		);
-	}
 
-	public function testEmptyDefaultStringThroughSetter() {
-		$source = array(1=>'one');
-		$field = new DropdownField('Field', null, $source);
-		$field->setEmptyString('select...');
 		$this->assertEquals(
 			$field->getSource(),
 			array(
-				'' => 'select...',
 				1 => 'one'
 			)
 		);
-		$this->assertTrue(
-			$field->getHasEmptyDefault()
+
+		// Test that an empty option comes through in the markup however
+		$options = $this->findOptionElements($field->Field());
+
+		$this->assertEquals(
+			2,
+			count($options),
+			'Two options exist in the markup, one for the source, one for empty'
+		);
+
+		// the default value should be first
+		$first = array_shift($options);
+		$attrs = $first->attributes();
+
+		$this->assertNotEquals(
+			1,
+			$attrs['value'],
+			'First value is the not value (not the source value)'
+		);
+
+		// Test Field Without Empty
+		$FieldWithoutEmpty = new DropdownField('Field', null, $source);
+		$this->assertEquals(
+			$FieldWithoutEmpty->getSource(),
+			array(
+				1 => 'one'
+			)
+		);
+
+		$this->assertEquals(
+			1,
+			count($options),
+			'As hasEmptyDefault is not provided, then no default option.'
 		);
 	}
 
@@ -74,9 +81,16 @@ class DropdownFieldTest extends SapphireTest {
 		$this->assertEquals(
 			$field->getSource(),
 			array(
-				'' => 'select...',
 				0 => 'zero'
 			)
+		);
+
+		$options = $this->findOptionElements($field->Field());
+
+		$this->assertEquals(
+			2,
+			count($options),
+			'Two options exist in the markup, one for the source, one for empty'
 		);
 	}
 
@@ -226,7 +240,10 @@ class DropdownFieldTest extends SapphireTest {
 		);
 		
 		$field = new DropdownField('Field', null, $source, $value);
-		if($emptyString !== null) $field->setEmptyString($emptyString);
+
+		if($emptyString !== null) {
+			$field->setEmptyString($emptyString);
+		}
 
 		return $field;
 	}

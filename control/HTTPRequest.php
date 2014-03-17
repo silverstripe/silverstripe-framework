@@ -380,7 +380,9 @@ class SS_HTTPRequest implements ArrayAccess {
 	public function offsetUnset($offset) {}
 	
 	/**
-	 * Construct an SS_HTTPResponse that will deliver a file to the client
+	 * Construct an SS_HTTPResponse that will deliver a file to the client.
+	 * Caution: Since it requires $fileData to be passed as binary data (no stream support),
+	 * it's only advisable to send small files through this method.
 	 *
 	 * @static
 	 * @param $fileData

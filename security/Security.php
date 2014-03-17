@@ -4,7 +4,7 @@
  * @package framework
  * @subpackage security
  */
-class Security extends Controller {
+class Security extends Controller implements TemplateGlobalProvider {
 	
 	private static $allowed_actions = array( 
 		'index', 
@@ -96,7 +96,25 @@ class Security extends Controller {
 	 * @var String
 	 */
 	private static $token;
-	
+
+	/**
+	 * The default login URL
+	 *
+	 * @config
+	 *
+	 * @var string
+	 */
+	private static $login_url = "Security/login";
+
+	/**
+	 * The default logout URL
+	 *
+	 * @config
+	 *
+	 * @var string
+	 */
+	private static $logout_url = "Security/logout";
+
 	/**
 	 * Get location of word list file
 	 *
@@ -368,6 +386,9 @@ class Security extends Controller {
 	/**
 	 * Show the "login" page
 	 *
+	 * For multiple authenticators, Security_MultiAuthenticatorLogin is used.
+	 * See getTemplate and getIncludeTemplate for how to override template logic
+	 *
 	 * @return string Returns the "login" page as HTML code.
 	 */
 	public function login() {
@@ -381,11 +402,6 @@ class Security extends Controller {
 				if($result instanceof SS_HTTPResponse) return $result;
 			}
 		}
-		
-		$customCSS = project() . '/css/tabs.css';
-		if(Director::fileExists($customCSS)) {
-			Requirements::css($customCSS);
-		}
 
 		if(class_exists('SiteTree')) {
 			$tmpPage = new Page();
@@ -397,7 +413,8 @@ class Security extends Controller {
 			$controller = Page_Controller::create($tmpPage);
 			$controller->setDataModel($this->model);
 			$controller->init();
-		} else {
+		}
+		else {
 			$controller = $this;
 		}
 
@@ -406,71 +423,48 @@ class Security extends Controller {
 
 		$content = '';
 		$forms = $this->GetLoginForms();
-		if(!count($forms)) {
+		$formCount = count($forms);
+
+		if(!$formCount) {
 			user_error('No login-forms found, please use Authenticator::register_authenticator() to add one',
 				E_USER_ERROR);
 		}
-		
-		// only display tabs when more than one authenticator is provided
-		// to save bandwidth and reduce the amount of custom styling needed 
-		if(count($forms) > 1) {
-			// Needed because the <base href=".."> in the template makes problems
-			// with the tabstrip library otherwise
-			$link_base = Director::absoluteURL($this->Link("login"));
-			
-			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
-			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-			
-			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-			
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-			
-			Requirements::css(FRAMEWORK_DIR . '/css/Security_login.css');
-			
-			Requirements::javascript(FRAMEWORK_DIR . '/javascript/TabSet.js');
-			
-			$content = '<div id="Form_EditForm">';
-			$content .= '<div class="ss-tabset">';
-			$content .= '<ul>';
-			$content_forms = '';
 
-			foreach($forms as $form) {
-				$content .= "<li><a href=\"#{$form->FormName()}_tab\">"
-					. $form->getAuthenticator()->get_name()
-					. "</a></li>\n";
-
-				$content_forms .= '<div class="tab" id="' . $form->FormName() . '_tab">'
-					. $form->forTemplate() . "</div>\n";
-			}
-
-			$content .= "</ul>\n" . $content_forms . "\n</div>\n</div>\n";
-		} else {
-			$content .= $forms[0]->forTemplate();
+		// Handle any for messages from validation, etc.
+		$message = Session::get('Security.Message.message');
+		$messageType = '';
+		if(!empty($message)) {
+			$messageType = Session::get('Security.Message.type');
 		}
-		
-		if(strlen($message = Session::get('Security.Message.message')) > 0) {
-			$message_type = Session::get('Security.Message.type');
-			if($message_type == 'bad') {
-				$message = "<p class=\"message $message_type\">$message</p>";
-			} else {
-				$message = "<p>$message</p>";
-			}
 
-			$customisedController = $controller->customise(array(
-				"Content" => $message,
-				"Form" => $content,
-			));
-		} else {
-			$customisedController = $controller->customise(array(
-				"Form" => $content,
-			));
-		}
-		
+		// We've displayed the message in the form output, so reset it for the next run.
 		Session::clear('Security.Message');
 
-		// custom processing
+		// If many login forms, display all to let user to choose.
+		if($formCount > 1) {
+			$viewData = new ArrayData(array(
+				'Forms' => new ArrayList($forms),
+			));
+
+			$content = $viewData->renderWith(
+				$this->getIncludeTemplate('MultiAuthenticatorLogin')
+			);
+		}
+		// Display the form
+		else {
+			$content = $forms[0]->forTemplate();
+		}
+
+		// Finally, customise the controller to add any form messages and the form.
+		$customisedController = $controller->customise(array(
+			"Message" => $message,
+			"MessageType" => $messageType,
+			"Form" => $content,
+		));
+
+		// Return the customised controller
 		return $customisedController->renderWith(
-			array('Security_login', 'Security', $this->stat('template_main'), 'BlankPage')
+			$this->getTemplate('login')
 		);
 	}
 	
@@ -489,7 +483,8 @@ class Security extends Controller {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
 			$tmpPage->URLSegment = 'Security';
-			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			// Disable ID-based caching  of the log-in page by making it a random number
+			$tmpPage->ID = -1 * rand(1,10000000);
 			$controller = Page_Controller::create($tmpPage);
 			$controller->init();
 		} else {
@@ -512,7 +507,7 @@ class Security extends Controller {
 		
 		//Controller::$currentController = $controller;
 		return $customisedController->renderWith(
-			array('Security_lostpassword', 'Security', $this->stat('template_main'), 'BlankPage')
+			$this->getTemplate('lostpassword')
 		);
 	}
 
@@ -551,7 +546,8 @@ class Security extends Controller {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
 			$tmpPage->URLSegment = 'Security';
-			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			// Disable ID-based caching  of the log-in page by making it a random number
+			$tmpPage->ID = -1 * rand(1,10000000);
 			$controller = Page_Controller::create($tmpPage);
 			$controller->init();
 		} else {
@@ -578,7 +574,7 @@ class Security extends Controller {
 		
 		//Controller::$currentController = $controller;
 		return $customisedController->renderWith(
-			array('Security_passwordsent', 'Security', $this->stat('template_main'), 'BlankPage')
+			$this->getTemplate('passwordsent')
 		);
 	}
 
@@ -617,7 +613,8 @@ class Security extends Controller {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
 			$tmpPage->URLSegment = 'Security';
-			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			// Disable ID-based caching  of the log-in page by making it a random number
+			$tmpPage->ID = -1 * rand(1,10000000);
 			$controller = Page_Controller::create($tmpPage);
 			$controller->init();
 		} else {
@@ -637,6 +634,11 @@ class Security extends Controller {
 		if(isset($_REQUEST['t']) && $member && $member->validateAutoLoginToken($_REQUEST['t'])) {
 			// On first valid password reset request redirect to the same URL without hash to avoid referrer leakage.
 
+			// if there is a current member, they should be logged out
+			if ($curMember = Member::currentUser()) {
+				$curMember->logOut();
+			}
+			
 			// Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
 			Session::set('AutoLoginHash', $member->encryptWithUserSettings($_REQUEST['t']));
 			
@@ -681,7 +683,7 @@ class Security extends Controller {
 		}
 
 		return $customisedController->renderWith(
-			array('Security_changepassword', 'Security', $this->stat('template_main'), 'BlankPage')
+			$this->getTemplate('changepassword')
 		);
 	}
 	
@@ -692,6 +694,31 @@ class Security extends Controller {
 	 */
 	public function ChangePasswordForm() {
 		return Object::create('ChangePasswordForm', $this, 'ChangePasswordForm');
+	}
+
+	/**
+	 * Gets the template for a particular action for use in rendering
+	 * For use in any subclass
+	 *
+	 * @return string|array Returns the template(s) for rendering
+	 */
+	public function getTemplate($action) {
+		return array(
+			'Security_' . $action,
+			'Security',
+			$this->stat('template_main'),
+			'BlankPage'
+		);
+	}
+
+	/**
+	 * Gets the template for an include used for security.
+	 * For use in any subclass.
+	 *
+	 * @return string|array Returns the template(s) for rendering
+	 */
+	public function getIncludeTemplate($name) {
+		return 'Security_' . $name;
 	}
 
 	/**
@@ -985,22 +1012,52 @@ class Security extends Controller {
 		return self::$ignore_disallowed_actions;
 	}
 
-	/** @config */
-	private static $login_url = "Security/login";
 
 	/**
 	 * Set a custom log-in URL if you have built your own log-in page.
+	 *
+	 * @deprecated 3.2 Use the "Security.login_url" config setting instead.
 	 */
 	public static function set_login_url($loginUrl) {
-		self::$login_url = $loginUrl;
+		Deprecation::notice('3.2', 'Use the "Security.login_url" config setting instead');
+		self::config()->update("login_url", $loginUrl);
 	}
+
 
 	/**
 	 * Get the URL of the log-in page.
-	 * Defaults to Security/login but can be re-set with {@link set_login_url()}
+	 * 
+	 * To update the login url use the "Security.login_url" config setting.
+	 *
+	 * @return string
 	 */
 	public static function login_url() {
-		return self::$login_url;
+		return self::config()->login_url;
+	}
+
+
+	/**
+	 * Get the URL of the logout page.
+	 * 
+	 * To update the logout url use the "Security.logout_url" config setting.
+	 *
+	 * @return string
+	 */
+	public static function logout_url() {
+		return self::config()->logout_url;
+	}
+
+
+	/**
+	 * Defines global accesible templates variables.
+	 *
+	 * @return array
+	 */
+	public static function get_template_global_variables() {
+		return array(
+			"LoginURL" => "login_url",
+			"LogoutURL" => "logout_url",
+		);
 	}
 
 }

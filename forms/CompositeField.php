@@ -215,14 +215,14 @@ class CompositeField extends FormField {
 	/**
 	 * @uses FieldList->insertBefore()
 	 */
-	public function insertBefore($field, $insertBefore) {
-		$ret = $this->children->insertBefore($field, $insertBefore);
+	public function insertBefore($insertBefore, $field) {
+		$ret = $this->children->insertBefore($insertBefore, $field);
 		$this->sequentialSet = null;
 		return $ret;
 	}
 
-	public function insertAfter($field, $insertAfter) {
-		$ret = $this->children->insertAfter($field, $insertAfter);
+	public function insertAfter($insertAfter, $field) {
+		$ret = $this->children->insertAfter($insertAfter, $field);
 		$this->sequentialSet = null;
 		return $ret;
 	}

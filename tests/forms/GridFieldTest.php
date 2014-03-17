@@ -106,6 +106,51 @@ class GridFieldTest extends SapphireTest {
 		$this->assertTrue($obj->getState() instanceof GridState_Data);
 		$this->assertTrue($obj->getState(false) instanceof GridState);
 	}
+	
+	/**
+	 * Tests usage of nested GridState values
+	 * 
+	 * @covers GridState_Data::__get
+	 * @covers GridState_Data::__call
+	 * @covers GridState_Data::getData
+	 */
+	public function testGetStateData() {
+		$obj = new GridField('testfield', 'testfield');
+		
+		// Check value persistance
+		$this->assertEquals(15, $obj->State->NoValue(15));
+		$this->assertEquals(15, $obj->State->NoValue(-1));
+		$obj->State->NoValue = 10;
+		$this->assertEquals(10, $obj->State->NoValue);
+		$this->assertEquals(10, $obj->State->NoValue(20));
+		
+		// Test that values can be set, unset, and inspected
+		$this->assertFalse(isset($obj->State->NotSet));
+		$obj->State->NotSet = false;
+		$this->assertTrue(isset($obj->State->NotSet));
+		unset($obj->State->NotSet);
+		$this->assertFalse(isset($obj->State->NotSet));
+
+		// Test that false evaluating values are storable
+		$this->assertEquals(0, $obj->State->Falsey0(0)); // expect 0 back
+		$this->assertEquals(0, $obj->State->Falsey0(10)); // expect 0 back
+		$this->assertEquals(0, $obj->State->Falsey0); //expect 0 back
+		$obj->State->Falsey0 = 0; //manually assign 0
+		$this->assertEquals(0, $obj->State->Falsey0); //expect 0 back
+
+		// Test that false is storable
+		$this->assertFalse($obj->State->Falsey2(false));
+		$this->assertFalse($obj->State->Falsey2(true));
+		$this->assertFalse($obj->State->Falsey2);
+		$obj->State->Falsey2 = false;
+		$this->assertFalse($obj->State->Falsey2);
+		
+		// Check nested values
+		$this->assertInstanceOf('GridState_Data', $obj->State->Nested);
+		$this->assertInstanceOf('GridState_Data', $obj->State->Nested->DeeperNested());
+		$this->assertEquals(3, $obj->State->Nested->DataValue(3));
+		$this->assertEquals(10, $obj->State->Nested->DeeperNested->DataValue(10));
+	}
 
 	/**
 	 * @covers GridField::getColumns

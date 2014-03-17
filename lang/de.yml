@@ -60,6 +60,8 @@ de:
     ERRORNOTREC: 'Dieser/s  Nutzername/Passwort wurde nicht erkannt'
   Boolean:
     ANY: alle
+    NOANSWER: "Nein"
+    YESANSWER: "Ja"
   CMSLoadingScreen_ss:
     LOADING: Lade Daten ...
     REQUIREJS: 'Für die Benutzung des CMS wird JavaScript benötigt.'

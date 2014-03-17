@@ -23,7 +23,7 @@ class CompositeFieldTest extends SapphireTest {
 		$this->assertEquals(0, $compositeInner->fieldPosition('C1'));
 		$this->assertEquals(1, $compositeInner->fieldPosition('C2'));
 		
-		$compositeOuter->insertBefore(new TextField('AB'), 'B');
+		$compositeOuter->insertBefore('B', new TextField('AB'));
 		$this->assertEquals(0, $compositeOuter->fieldPosition('A'));
 		$this->assertEquals(1, $compositeOuter->fieldPosition('AB'));
 		$this->assertEquals(2, $compositeOuter->fieldPosition('B'));

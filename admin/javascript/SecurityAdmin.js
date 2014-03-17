@@ -37,7 +37,7 @@
 		 * As they're disabled, any changes won't be submitted (which is intended behaviour),
 		 * checking all boxes is purely presentational.
 		 */
-		$('#Permissions .checkbox[value=ADMIN]').entwine({
+		$('.permissioncheckboxset .checkbox[value=ADMIN]').entwine({
 			onmatch: function() {
 				this.toggleCheckboxes();
 
@@ -56,7 +56,8 @@
 			 * Function: toggleCheckboxes
 			 */
 			toggleCheckboxes: function() {
-				var self = this, checkboxes = this.parents('.field:eq(0)').find('.checkbox').not(this);
+				var self = this,
+					checkboxes = this.parents('.field:eq(0)').find('.checkbox').not(this);
 				
 				if(this.is(':checked')) {
 					checkboxes.each(function() {
@@ -70,6 +71,28 @@
 						$(this).prop('checked', $(this).data('SecurityAdmin.oldChecked'));
 						$(this).prop('disabled', $(this).data('SecurityAdmin.oldDisabled'));
 					});
+				}
+			}
+		});
+		$("[name='DirectGroups[]']").entwine({
+			onchange: function(event) {
+				// warn any admin users if they are trying to remove their own admin permissions
+				if ($("[name='removeAdminWarning']").length == 0) {
+					return;
+				}
+				var adminGroupIDs = $("[name='removeAdminWarning']").val().split(',');
+				var adminCount = 0;
+				$("[id$='DirectGroups'] option:selected'").each(function() {
+					if (jQuery.inArray($(this).val(), adminGroupIDs) != -1) {
+						// increment if a selected group is a admin group
+						adminCount++;
+					}
+				});
+				// show warning if adminCount does not equal the number of admin groups member started with
+				if (adminCount != adminGroupIDs.length) {
+					// only want to show the popup once so remove the hidden field
+					$("[name='removeAdminWarning']").remove();
+					alert(ss.i18n._t('SecurityAdmin.REMOVING_OWN_ADMIN','Warning you are removing ADMIN permissions from your own member profile'));
 				}
 			}
 		});

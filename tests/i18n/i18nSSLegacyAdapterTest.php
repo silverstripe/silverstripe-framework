@@ -11,7 +11,7 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
-		FileSystem::makeFolder($this->alternateBaseSavePath);
+		Filesystem::makeFolder($this->alternateBaseSavePath);
 		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
 
 		// Push a template loader running from the fake webroot onto the stack.

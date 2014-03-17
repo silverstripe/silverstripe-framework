@@ -84,7 +84,7 @@
 class DropdownField extends FormField {
 
 	/**
-	 * @var boolean $source Associative or numeric array of all dropdown items,
+	 * @var Array $source Associative or numeric array of all dropdown items,
 	 * with array key as the submitted field value, and the array value as a
 	 * natural language description shown in the interface element.
 	 */
@@ -149,15 +149,20 @@ class DropdownField extends FormField {
 	public function Field($properties = array()) {
 		$source = $this->getSource();
 		$options = array();
-		if($source) {
-			// SQLMap needs this to add an empty value to the options
-			if(is_object($source) && $this->emptyString) {
-				$options[] = new ArrayData(array(
-					'Value' => '',
-					'Title' => $this->emptyString,
-				));
-			}
 
+		if ($this->getHasEmptyDefault()) {
+			$selected = ($this->value === '' || $this->value === null);
+			$disabled = (in_array('', $this->disabledItems, true)) ? 'disabled' : false;
+
+			$options[] = new ArrayData(array(
+				'Value' => '',
+				'Title' => $this->getEmptyString(),
+				'Selected' => $selected,
+				'Disabled' => $disabled
+			));
+		}
+
+		if ($source) {
 			foreach($source as $value => $title) {
 				$selected = false;
 				if($value === '' && ($this->value === '' || $this->value === null)) {
@@ -187,33 +192,42 @@ class DropdownField extends FormField {
 			}
 		}
 
-		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
+		$properties = array_merge($properties, array(
+			'Options' => new ArrayList($options)
+		));
 
 		return parent::Field($properties);
 	}
 	
 	/**
-	 * Mark certain elements as disabled,
-	 * regardless of the {@link setDisabled()} settings.
+	 * Mark certain elements as disabled, regardless of the 
+	 * {@link setDisabled()} settings.
 	 * 
 	 * @param array $items Collection of array keys, as defined in the $source array
 	 */
-	public function setDisabledItems($items){
+	public function setDisabledItems($items) {
 		$this->disabledItems = $items;
+
 		return $this;
 	}
 	
 	/**
-	 * @return Array
+	 * @return array
 	 */
-	public function getDisabledItems(){
+	public function getDisabledItems() {
 		return $this->disabledItems;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array('type' => null, 'value' => null)
+			array(
+				'type' => null, 
+				'value' => null
+			)
 		);
 	}
 
@@ -230,11 +244,7 @@ class DropdownField extends FormField {
 	 * @return array
 	 */
 	public function getSource() {
-		if(is_array($this->source) && $this->getHasEmptyDefault()) {
-			return array('' => $this->emptyString) + (array) $this->source;
-		} else {
-			return $this->source;
-		}
+		return $this->source;
 	}
 
 	/**
@@ -242,6 +252,7 @@ class DropdownField extends FormField {
 	 */
 	public function setSource($source) {
 		$this->source = $source;
+
 		return $this;
 	}
 	
@@ -250,6 +261,7 @@ class DropdownField extends FormField {
 	 */
 	public function setHasEmptyDefault($bool) {
 		$this->hasEmptyDefault = $bool;
+
 		return $this;
 	}
 	
@@ -262,14 +274,16 @@ class DropdownField extends FormField {
 
 	/**
 	 * Set the default selection label, e.g. "select...".
-	 * Defaults to an empty string. Automatically sets
-	 * {@link $hasEmptyDefault} to true.
+	 * 
+	 * Defaults to an empty string. Automatically sets {@link $hasEmptyDefault} 
+	 * to true.
 	 *
 	 * @param string $str
 	 */
 	public function setEmptyString($str) {
 		$this->setHasEmptyDefault(true);
 		$this->emptyString = $str;
+
 		return $this;
 	}
 
@@ -280,6 +294,9 @@ class DropdownField extends FormField {
 		return $this->emptyString;
 	}
 
+	/**
+	 * @return LookupField
+	 */
 	public function performReadonlyTransformation() {
 		$field = $this->castedCopy('LookupField');
 		$field->setSource($this->getSource());

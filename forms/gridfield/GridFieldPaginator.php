@@ -110,7 +110,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		$state = $gridField->State->GridFieldPaginator;
 		
 		// Force the state to the initial page if none is set
-		if(empty($state->currentPage)) $state->currentPage = 1;
+		$state->currentPage(1);
 		
 		return $state;
 	}

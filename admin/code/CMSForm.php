@@ -86,9 +86,4 @@ class CMSForm extends Form {
 		return $this->responseNegotiator;
 	}
 
-	public function FormName() {
-		if($this->htmlID) return $this->htmlID;
-		else return 'Form_' . str_replace(array('.', '/'), '', $this->name);
-	}
-
 }

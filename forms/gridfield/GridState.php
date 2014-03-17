@@ -59,7 +59,7 @@ class GridState extends HiddenField {
 	}
 	
 	/**
-	 * @var GridState_Data
+	 * @return GridState_Data
 	 */
 	public function getData() {
 		if(!$this->data) {
@@ -136,8 +136,25 @@ class GridState_Data {
 	}
 	
 	public function __get($name) {
+		return $this->getData($name, new GridState_Data());
+	}
+	
+	public function __call($name, $arguments) {
+		// Assume first parameter is default value
+		$default = empty($arguments) ? new GridState_Data() : $arguments[0];
+		return $this->getData($name, $default);
+	}
+	
+	/**
+	 * Retrieve the value for the given key
+	 * 
+	 * @param string $name The name of the value to retrieve
+	 * @param mixed $default Default value to assign if not set
+	 * @return mixed The value associated with this key, or the value specified by $default if not set
+	 */
+	public function getData($name, $default = null) {
 		if(!isset($this->data[$name])) {
-			$this->data[$name] = new GridState_Data();
+			$this->data[$name] = $default;
 		} else if(is_array($this->data[$name])) {
 			$this->data[$name] = new GridState_Data($this->data[$name]);
 		}
@@ -151,6 +168,10 @@ class GridState_Data {
 	
 	public function __isset($name) {
 		return isset($this->data[$name]);
+	}
+	
+	public function __unset($name) {
+		unset($this->data[$name]);
 	}
 
 	public function __toString() {

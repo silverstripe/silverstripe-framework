@@ -1,4 +1,4 @@
-<div id="TreeDropdownField_$ID"
+<div id="$HolderID"
      class="TreeDropdownField single<% if extraClass %> $extraClass<% end_if %><% if ShowSearch %> searchable<% end_if %>"
      data-url-tree="$Link(tree)"
      data-title="$TitleURLEncoded"

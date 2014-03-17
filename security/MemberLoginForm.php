@@ -294,12 +294,12 @@ JS
 			));
 			$e->setTo($member->Email);
 			$e->send();
-
+		
 			$this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
 		} elseif($data['Email']) {
-			// Avoid information disclosure by displaying the same status,
-			// regardless wether the email address actually exists
-			$this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
+		// Avoid information disclosure by displaying the same status,
+		// regardless wether the email address actually exists
+			$this->controller->redirect('Security/passwordsent/' . rawurlencode($data['Email']));
 		} else {
 			$this->sessionMessage(
 				_t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
@@ -307,7 +307,7 @@ JS
 			);
 			
 			$this->controller->redirect('Security/lostpassword');
-		}
+	}
 	}
 
 }

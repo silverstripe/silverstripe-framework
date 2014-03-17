@@ -54,3 +54,8 @@ Feature: Manage users
     And I press the "Delete" button, confirming the dialog
     Then I should see "admin@test.com"
     And I should not see "staffmember@test.com"
+
+  Scenario: I receive a warning when trying to remove my own admin permissions
+    When I click the "Users" CMS tab
+    And I click "ADMIN@example.org" in the "#Root_Users" element
+    And I click on the element with css selector ".search-choice-close", confirming the dialog

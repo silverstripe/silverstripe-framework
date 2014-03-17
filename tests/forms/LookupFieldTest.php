@@ -13,9 +13,10 @@ class LookupFieldTest extends SapphireTest {
 		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
 		$f = new LookupField('test', 'test', $source);
 		$f->setValue(null);
+
 		$this->assertEquals(
 			'<span class="readonly" id="test"><i>(none)</i></span><input type="hidden" name="test" value="" />', 
-			$f->Field()
+			$f->Field()->getValue()
 		);
 	}
 
@@ -25,7 +26,7 @@ class LookupFieldTest extends SapphireTest {
 		$f->setValue(1);
 		$this->assertEquals(
 			'<span class="readonly" id="test">one</span><input type="hidden" name="test" value="1" />', 
-			$f->Field()
+			$f->Field()->getValue()
 		);
 	}
 	
@@ -36,7 +37,7 @@ class LookupFieldTest extends SapphireTest {
 		$f->dontEscape = true; // simulates CMSMain->compareversions()
 		$this->assertEquals(
 			'<span class="readonly" id="test"><ins>w00t</ins></span><input type="hidden" name="test" value="" />', 
-			$f->Field()
+			$f->Field()->getValue()
 		);
 	}
 
@@ -47,7 +48,7 @@ class LookupFieldTest extends SapphireTest {
 		$f->setValue(array('one','two'));
 		$this->assertEquals('<span class="readonly" id="test">one val, two val</span>'
 			. '<input type="hidden" name="test" value="one, two" />', 
-			$f->Field()
+			$f->Field()->getValue()
 		);
 	}
 	
@@ -58,7 +59,7 @@ class LookupFieldTest extends SapphireTest {
 		$f->setValue(array(1,2));
 		$this->assertEquals(
 			'<span class="readonly" id="test">one, two</span><input type="hidden" name="test" value="1, 2" />', 
-			$f->Field()
+			$f->Field()->getValue()
 		);
 	}
 	
@@ -78,7 +79,7 @@ class LookupFieldTest extends SapphireTest {
 				$member1->ID,
 				$member2->ID
 			),
-			$f->Field()
+			$f->Field()->getValue()
 		);
 	}
 
@@ -100,7 +101,7 @@ class LookupFieldTest extends SapphireTest {
 
 		$this->assertEquals(
 			'<span class="readonly" id="test">Carrots</span><input type="hidden" name="test" value="3" />', 
-			$f->Field()
+			$f->Field()->getValue()
 		);
 
 		$f->setValue(array(
@@ -109,7 +110,7 @@ class LookupFieldTest extends SapphireTest {
 
 		$this->assertEquals(
 			'<span class="readonly" id="test">Carrots, Vegan</span><input type="hidden" name="test" value="3, 9" />', 
-			$f->Field()
+			$f->Field()->getValue()
 		);
 	}
 }
