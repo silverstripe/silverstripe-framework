@@ -1253,6 +1253,25 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				}
 			}
 
+			// warn a admin user to if they are removing their own admin permission
+			if ($self->ID == Member::CurrentUserID()) {
+				$adminGroups = Permission::get_groups_by_permission('ADMIN');
+				
+				foreach ($adminGroups as $group) {
+					if ($self->inGroup($group->ID, true)) {
+						$adminPermissions = (isset($adminPermissions)) ? 
+							$adminPermission = ',' . $group->ID : $group->ID;
+					}
+				}
+				if (isset($adminPermissions)) {
+					$fields->push(
+						new HiddenField(
+							'removeAdminWarning', 'removeAdminWarning', $adminPermissions
+						)
+					);
+				}
+			}
+
 			$permissionsTab = $fields->fieldByName("Root")->fieldByName('Permissions');
 			if($permissionsTab) $permissionsTab->addExtraClass('readonly');
 			

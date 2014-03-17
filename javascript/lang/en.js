@@ -42,7 +42,8 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 	"TreeDropdownField.ENTERTOSEARCH": "Press enter to search",
 	"TreeDropdownField.OpenLink": "Open",
 	"TreeDropdownField.FieldTitle": "Choose",
-	"TreeDropdownField.SearchFieldTitle": "Choose or Search"
+	"TreeDropdownField.SearchFieldTitle": "Choose or Search",
+    	"SecurityAdmin.REMOVING_OWN_ADMIN": "Warning you are removing ADMIN permissions from your own member profile"
 }
 );
 }
