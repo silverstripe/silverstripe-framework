@@ -74,6 +74,28 @@
 				}
 			}
 		});
+		$("[name='DirectGroups[]']").entwine({
+			onchange: function(event) {
+				// warn any admin users if they are trying to remove their own admin permissions
+				if ($("[name='removeAdminWarning']").length == 0) {
+					return;
+				}
+				var adminGroupIDs = $("[name='removeAdminWarning']").val().split(',');
+				var adminCount = 0;
+				$("[id$='DirectGroups'] option:selected'").each(function() {
+					if (jQuery.inArray($(this).val(), adminGroupIDs) != -1) {
+						// increment if a selected group is a admin group
+						adminCount++;
+					}
+				});
+				// show warning if adminCount does not equal the number of admin groups member started with
+				if (adminCount != adminGroupIDs.length) {
+					// only want to show the popup once so remove the hidden field
+					$("[name='removeAdminWarning']").remove();
+					alert(ss.i18n._t('SecurityAdmin.REMOVING_OWN_ADMIN','Warning you are removing ADMIN permissions from your own member profile'));
+				}
+			}
+		});
 	});
 	
 }(jQuery));
