@@ -313,7 +313,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Add has_one relationships
 		$hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED);
 		if($hasOne) foreach(array_keys($hasOne) as $field) {
-			$fields[$field . 'ID'] = 'ForeignKey';
+			
+			// Check if this is a polymorphic relation, in which case the relation
+			// is a composite field
+			if($hasOne[$field] === 'DataObject') {
+				$relationField = DBField::create_field('PolymorphicForeignKey', null, $field);
+				$relationField->setTable($class);
+				if($compositeFields = $relationField->compositeDatabaseFields()) {
+					foreach($compositeFields as $compositeName => $spec) {
+						$fields["{$field}{$compositeName}"] = $spec;
+					}
+				}
+			} else {
+				$fields[$field . 'ID'] = 'ForeignKey';
+			}
 		}
 
 		$output = (array) $fields;
@@ -1412,7 +1425,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Return a component object from a one to one relationship, as a DataObject.
-	 * If no component is available, an 'empty component' will be returned.
+	 * If no component is available, an 'empty component' will be returned for
+	 * non-polymorphic relations, or for polymorphic relations with a class set.
 	 *
 	 * @param string $componentName Name of the component
 	 *
@@ -1427,24 +1441,40 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$joinField = $componentName . 'ID';
 			$joinID    = $this->getField($joinField);
 			
+			// Extract class name for polymorphic relations
+			if($class === 'DataObject') {
+				$class = $this->getField($componentName . 'Class');
+				if(empty($class)) return null;
+			}
+			
 			if($joinID) {
 				$component = $this->model->$class->byID($joinID);
 			}
 
-			if(!isset($component) || !$component) {
+			if(empty($component)) {
 				$component = $this->model->$class->newObject();
 			}
 		} elseif($class = $this->belongs_to($componentName)) {
-			$joinField = $this->getRemoteJoinField($componentName, 'belongs_to');
+			
+			$joinField = $this->getRemoteJoinField($componentName, 'belongs_to', $polymorphic);
 			$joinID    = $this->ID;
 			
 			if($joinID) {
-				$component = DataObject::get_one($class, "\"$joinField\" = $joinID");
+				$filter = $polymorphic
+					?  "\"{$joinField}ID\" = '".Convert::raw2sql($joinID)."' AND 
+						\"{$joinField}Class\" = '".Convert::raw2sql($this->class)."'"
+					:  "\"{$joinField}\" = '".Convert::raw2sql($joinID)."'";
+				$component = DataObject::get_one($class, $filter);
 			}
 			
-			if(!isset($component) || !$component) {
+			if(empty($component)) {
 				$component = $this->model->$class->newObject();
-				$component->$joinField = $this->ID;
+				if($polymorphic) {
+					$component->{$joinField.'ID'} = $this->ID;
+					$component->{$joinField.'Class'} = $this->class;
+				} else {
+					$component->$joinField = $this->ID;
+				}
 			}
 		} else {
 			throw new Exception("DataObject->getComponent(): Could not find component '$componentName'.");
@@ -1489,15 +1519,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $this->unsavedRelations[$componentName];
 		}
 
-		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
-		
-		$result = HasManyList::create($componentClass, $joinField);
+		// Determine type and nature of foreign relation
+		$joinField = $this->getRemoteJoinField($componentName, 'has_many', $polymorphic);		
+		if($polymorphic) {
+			$result = PolymorphicHasManyList::create($componentClass, $joinField, $this->class);
+		} else {
+			$result = HasManyList::create($componentClass, $joinField);
+		}
+
 		if($this->model) $result->setDataModel($this->model);
-		$result = $result->forForeignID($this->ID);
 
-		$result = $result->where($filter)->limit($limit)->sort($sort);
-
-		return $result;
+		return $result
+			->forForeignID($this->ID)
+			->where($filter)
+			->limit($limit)
+			->sort($sort);
 	}
 
 	/**
@@ -1540,17 +1576,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Tries to find the database key on another object that is used to store a relationship to this class. If no join
-	 * field can be found it defaults to 'ParentID'.
+	 * Tries to find the database key on another object that is used to store a
+	 * relationship to this class. If no join field can be found it defaults to 'ParentID'.
+	 * 
+	 * If the remote field is polymorphic then $polymorphic is set to true, and the return value
+	 * is in the form 'Relation' instead of 'RelationID', referencing the composite DBField.
 	 *
-	 * @param string $component
+	 * @param string $component Name of the relation on the current object pointing to the
+	 * remote object.
 	 * @param string $type the join type - either 'has_many' or 'belongs_to'
+	 * @param boolean $polymorphic Flag set to true if the remote join field is polymorphic.
 	 * @return string
 	 */
-	public function getRemoteJoinField($component, $type = 'has_many') {
-		$remoteClass = $this->$type($component, false);
+	public function getRemoteJoinField($component, $type = 'has_many', &$polymorphic = false) {
 		
-		if(!$remoteClass) {
+		// Extract relation from current object
+		$remoteClass = $this->$type($component, false);
+		if(empty($remoteClass)) {
 			throw new Exception("Unknown $type component '$component' on class '$this->class'");
 		}
 		if(!ClassInfo::exists(strtok($remoteClass, '.'))) {
@@ -1559,28 +1601,56 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			);
 		}
 		
-		if($fieldPos = strpos($remoteClass, '.')) {
-			return substr($remoteClass, $fieldPos + 1) . 'ID';
+		// If presented with an explicit field name (using dot notation) then extract field name
+		$remoteField = null;
+		if(strpos($remoteClass, '.') !== false) {
+			list($remoteClass, $remoteField) = explode('.', $remoteClass);
 		}
-
-		$remoteRelations = Config::inst()->get($remoteClass, 'has_one');
-		if(!is_array($remoteRelations)) {
-			$remoteRelations = array();
-		}
-		$remoteRelations = array_flip($remoteRelations);
 		
-		// look for remote has_one joins on this class or any parent classes
-		foreach(array_reverse(ClassInfo::ancestry($this)) as $class) {
-			if(array_key_exists($class, $remoteRelations)) return $remoteRelations[$class] . 'ID';
+		// Reference remote has_one to check against
+		$remoteRelations = Config::inst()->get($remoteClass, 'has_one');
+		
+		// Without an explicit field name, attempt to match the first remote field
+		// with the same type as the current class
+		if(empty($remoteField)) {
+			// look for remote has_one joins on this class or any parent classes
+			$remoteRelationsMap = array_flip($remoteRelations);
+			foreach(array_reverse(ClassInfo::ancestry($this)) as $class) {
+				if(array_key_exists($class, $remoteRelationsMap)) {
+					$remoteField = $remoteRelationsMap[$class];
+					break;
+				}
+			}
+		}
+		
+		// In case of an indeterminate remote field show an error
+		if(empty($remoteField)) {
+			$polymorphic = false;
+			$message = "No has_one found on class '$remoteClass'";
+			if($type == 'has_many') {
+				// include a hint for has_many that is missing a has_one
+				$message .= ", the has_many relation from '$this->class' to '$remoteClass'";
+				$message .= " requires a has_one on '$remoteClass'";
+			}
+			throw new Exception($message);
+		}
+		
+		// If given an explicit field name ensure the related class specifies this
+		if(empty($remoteRelations[$remoteField])) {
+			throw new Exception("Missing expected has_one named '$remoteField' 
+				on class '$remoteClass' referenced by $type named '$component'
+				on class {$this->class}"
+			);
 		}
 
-		$message = "No has_one found on class '$remoteClass'";
-		if($type == 'has_many') {
-			// include a hint for has_many that is missing a has_one
-			$message .= ", the has_many relation from '$this->class' to '$remoteClass'";
-			$message .= " requires a has_one on '$remoteClass'";
+		// Inspect resulting found relation
+		if($remoteRelations[$remoteField] === 'DataObject') {
+			$polymorphic = true;
+			return $remoteField; // Composite polymorphic field does not include 'ID' suffix
+		} else {
+			$polymorphic = false;
+			return $remoteField . 'ID';
 		}
-		throw new Exception($message);
 	}
 	
 	/**
@@ -1602,20 +1672,24 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $this->unsavedRelations[$componentName];
 		}
 		
-		$result = ManyManyList::create($componentClass, $table, $componentField, $parentField,
-			$this->many_many_extraFields($componentName));
+		$result = ManyManyList::create(
+			$componentClass, $table, $componentField, $parentField,
+			$this->many_many_extraFields($componentName)
+		);
 		if($this->model) $result->setDataModel($this->model);
 
 		// If this is called on a singleton, then we return an 'orphaned relation' that can have the
 		// foreignID set elsewhere.
-		$result = $result->forForeignID($this->ID);
-			
-		return $result->where($filter)->sort($sort)->limit($limit);
+		return $result
+			->forForeignID($this->ID)
+			->where($filter)
+			->sort($sort)
+			->limit($limit);
 	}
 	
 	/**
-	 * Return the class of a one-to-one component.  If $component is null, return all of the one-to-one components and
-	 * their classes.
+	 * Return the class of a one-to-one component. If $component is null, return all of the one-to-one components and
+	 * their classes. If the selected has_one is a polymorphic field then 'DataObject' will be returned for the type.
 	 *
 	 * @param string $component Name of component
 	 *
@@ -2463,9 +2537,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			
 			// all has_one relations on this specific class,
 			// add foreign key
+						
 			$hasOne = Config::inst()->get($this->class, 'has_one', Config::UNINHERITED);
 			if($hasOne) foreach($hasOne as $fieldName => $fieldSchema) {
-				$fieldMap[$fieldName . 'ID'] = "ForeignKey";
+				if($fieldSchema === 'DataObject') {
+					// For polymorphic has_one relation break into individual subfields
+					$fieldMap[$fieldName . 'ID'] = "Int";
+					$fieldMap[$fieldName . 'Class'] = "Enum";
+					$fieldMap[$fieldName] = "PolymorphicForeignKey";
+				} else {
+					$fieldMap[$fieldName . 'ID'] = "ForeignKey";
+				}
 			}
 
 			// set cached fieldmap
@@ -2704,6 +2786,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} else if(preg_match('/ID$/', $fieldName) && $this->has_one(substr($fieldName,0,-2))) {
 			$val = $this->$fieldName;
 			return DBField::create_field('ForeignKey', $val, $fieldName, $this);
+			
+		// has_one for polymorphic relations do not end in ID
+		} else if($this->has_one($fieldName)) {
+			$val = $this->$fieldName;
+			return DBField::create_field('PolymorphicForeignKey', $val, $fieldName, $this);
+
 		}
 	}
 

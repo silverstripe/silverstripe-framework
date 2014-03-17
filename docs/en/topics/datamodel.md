@@ -533,6 +533,46 @@ relationship to link to its parent element in the tree:
 	  );
 	}
 
+A has_one can also be polymorphic, which allows any type of object to be associated.
+This is useful where there could be many use cases for a particular data structure.
+
+An additional column is created called "`<relationship-name>`Class", which along
+with the ID column identifies the object.
+
+To specify that a has_one relation is polymorphic set the type to 'DataObject'.
+Ideally, the associated has_many (or belongs_to) should be specified with dot notation.
+
+	::php
+
+	class Player extends DataObject {
+		private static $has_many = array(
+			"Fans" => "Fan.FanOf"
+		);
+	}
+
+	class Team extends DataObject {
+		private static $has_many = array(
+			"Fans" => "Fan.FanOf"
+		);
+	}
+
+	// Type of object returned by $fan->FanOf() will vary
+	class Fan extends DataObject {
+
+		// Generates columns FanOfID and FanOfClass
+		private static $has_one = array(
+			"FanOf" => "DataObject"
+		);
+	}
+
+<div class="warning" markdown='1'>
+Note: The use of polymorphic relationships can affect query performance, especially
+on joins, and also increases the complexity of the database and necessary user code.
+They should be used sparingly, and only where additional complexity would otherwise
+be necessary. E.g. Additional parent classes for each respective relationship, or
+duplication of code.
+</div>
+
 ### has_many
 
 Defines 1-to-many joins. A database-column named ""`<relationship-name>`ID""

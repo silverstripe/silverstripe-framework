@@ -103,6 +103,33 @@ class UnsavedRelationListTest extends SapphireTest {
 			array('Name' => 'C')
 		), $object->Children());
 	}
+	
+	public function testHasManyPolymorphic() {
+		$object = new UnsavedRelationListTest_DataObject;
+
+		$children = $object->RelatedObjects();
+		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'A')));
+		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'B')));
+		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'C')));
+
+		$children = $object->RelatedObjects();
+
+		$this->assertDOSEquals(array(
+			array('Name' => 'A'),
+			array('Name' => 'B'),
+			array('Name' => 'C')
+		), $children);
+
+		$object->write();
+
+		$this->assertNotEquals($children, $object->RelatedObjects());
+
+		$this->assertDOSEquals(array(
+			array('Name' => 'A'),
+			array('Name' => 'B'),
+			array('Name' => 'C')
+		), $object->RelatedObjects());
+	}
 
 	public function testManyManyNew() {
 		$object = new UnsavedRelationListTest_DataObject;
@@ -192,10 +219,12 @@ class UnsavedRelationListTest_DataObject extends DataObject implements TestOnly 
 
 	private static $has_one = array(
 		'Parent' => 'UnsavedRelationListTest_DataObject',
+		'RelatedObject' => 'DataObject'
 	);
 
 	private static $has_many = array(
-		'Children' => 'UnsavedRelationListTest_DataObject',
+		'Children' => 'UnsavedRelationListTest_DataObject.Parent',
+		'RelatedObjects' => 'UnsavedRelationListTest_DataObject.RelatedObject'
 	);
 
 	private static $many_many = array(

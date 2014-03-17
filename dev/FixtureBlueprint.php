@@ -171,12 +171,15 @@ class FixtureBlueprint {
 							$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
 						}
 					}
-				} elseif($obj->has_one($fieldName)) {
-					// Sets has_one with relation name
-					$obj->{$fieldName . 'ID'} = $this->parseValue($fieldVal, $fixtures);
-				} elseif($obj->has_one(preg_replace('/ID$/', '', $fieldName))) {
-					// Sets has_one with database field
-					$obj->$fieldName = $this->parseValue($fieldVal, $fixtures);
+				} else {
+					$hasOneField = preg_replace('/ID$/', '', $fieldName);
+					if($className = $obj->has_one($hasOneField)) {
+						$obj->{$hasOneField.'ID'} = $this->parseValue($fieldVal, $fixtures, $fieldClass);
+						// Inject class for polymorphic relation
+						if($className === 'DataObject') {
+							$obj->{$hasOneField.'Class'} = $fieldClass;
+						}
+					}
 				}
 			}
 			$obj->write();
@@ -261,11 +264,13 @@ class FixtureBlueprint {
 	 * Parse a value from a fixture file.  If it starts with => 
 	 * it will get an ID from the fixture dictionary
 	 *
-	 * @param String $fieldVal
-	 * @param  Array $fixtures See {@link createObject()}
-	 * @return String Fixture database ID, or the original value
+	 * @param string $fieldVal
+	 * @param array $fixtures See {@link createObject()}
+	 * @param string $class If the value parsed is a class relation, this parameter
+	 * will be given the value of that class's name
+	 * @return string Fixture database ID, or the original value
 	 */
-	protected function parseValue($value, $fixtures = null) {
+	protected function parseValue($value, $fixtures = null, &$class = null) {
 		if(substr($value,0,2) == '=>') {
 			// Parse a dictionary reference - used to set foreign keys
 			list($class, $identifier) = explode('.', substr($value,2), 2);
