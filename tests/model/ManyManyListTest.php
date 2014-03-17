@@ -98,6 +98,38 @@ class ManyManyListTest extends SapphireTest {
 			$newPlayer->Teams()->sort('Title')->column('ID')
 		);
 	}
+	
+	public function testSortingByExtrafields() {
+
+		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+
+		$player1 = new DataObjectTest_Player();
+		$player1->Name = 'First';
+		$player1->write();
+		$team1->Players()->add($player1, array('Position' => 'Defender'));
+
+		$player2 = new DataObjectTest_Player();
+		$player1->Name = 'Second';
+		$player2->write();
+		$team1->Players()->add($player2, array('Position' => 'Goalkeeper'));
+
+		$player3 = new DataObjectTest_Player();
+		$player1->Name = 'Third';
+		$player3->write();
+		$team1->Players()->add($player3, array('Position' => 'Attacker'));
+
+		$first = $team1->Players()->First();		
+		$pos1 = $first->Position;
+		$id1 = $first->ID;
+		$name1 = $first->Name;
+
+		$sortedFirst = $team1->Players()->sort('Position', 'ASC')->First();	
+		$pos2 = $sortedFirst->Position;
+		$id2 = $sortedFirst->ID;
+		$name2 = $sortedFirst->Name;
+		
+		$this->assertEquals('Attacker', $pos2);
+	}
 
 	public function testAddingExistingDoesntRemoveExtraFields() {
 		$player = new DataObjectTest_Player();
