@@ -1199,7 +1199,7 @@ class Versioned extends DataExtension {
 	 */
 	public function doRollbackTo($version) {
 		$this->owner->extend('onBeforeRollback', $version);
-		$this->publish($version, "Stage", true);
+		$this->publish($version, "Stage", false);
 
 		$this->owner->writeWithoutVersion();
 
