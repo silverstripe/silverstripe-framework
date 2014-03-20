@@ -2,8 +2,7 @@
 
 ## Introduction
 
-`[api:RestfulService]` enables connecting to remote web services which supports REST interface and consume those web services
-(for example [Flickr](http://www.flickr.com/services/api/), [Youtube](http://code.google.com/apis/youtube/overview.html), Amazon and etc). `[api:RestfulService]` can parse the XML response (sorry no JSON support)
+`[api:RestfulService]` uses the php curl library, enabling connections to remote web services which support a REST interface and consuming those web services. (Examples: [Flickr](http://www.flickr.com/services/api/), [Youtube](http://code.google.com/apis/youtube/overview.html), Amazon and etc). `[api:RestfulService]` can parse the XML response (sorry no JSON support)
 returned from the web service. Further it supports caching of the response, and you can customize the cache interval. 
 
 To gain the functionality you can either create a new `[api:RestfulService]` object or create a class extending the
