@@ -133,7 +133,8 @@ class ChangePasswordForm extends Form {
 						"We couldn't accept that password: {password}",
 						array('password' => nl2br("\n".$isValid->starredList()))
 					), 
-					"bad"
+					"bad",
+					false
 				);
 
 				// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
