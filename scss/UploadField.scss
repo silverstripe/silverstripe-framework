@@ -284,4 +284,8 @@
 			line-height: 30px;
 		}
 	}
+	.loader {
+		height: 94px; // Approxmiately matches the height of the field once a file is attached, avoids a 'jump' in size
+		background: transparent url(../admin/images/spinner.gif) no-repeat 50% 50%;
+	}
 }
