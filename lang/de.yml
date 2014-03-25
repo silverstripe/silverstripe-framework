@@ -464,6 +464,7 @@ de:
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
+    LOSTPASSWORDHEADER: 'Passwort vergessen'
     BUTTONSEND: 'Senden Sie mir den Link zur Passwortrücksetzung'
     CHANGEPASSWORDBELOW: 'Sie können Ihr Passwort unten ändern.'
     CHANGEPASSWORDHEADER: 'Passwort ändern'
