@@ -228,6 +228,7 @@ class DataObjectTest extends SapphireTest {
 		
 		// Check entity with polymorphic has-one
 		$fan1 = $this->objFromFixture("DataObjectTest_Fan", "fan1");
+		$this->assertTrue((bool)$fan1->hasValue('Favourite'));
 		
 		// There will be fields named (relname)ID and (relname)Class for polymorphic
 		// entities
@@ -238,6 +239,13 @@ class DataObjectTest extends SapphireTest {
 		$favourite = $fan1->Favourite();
 		$this->assertEquals($team1ID, $favourite->ID);
 		$this->assertInstanceOf('DataObjectTest_Team', $favourite);
+		
+		// check behaviour of dbObject with polymorphic relations
+		$favouriteDBObject = $fan1->dbObject('Favourite');
+		$favouriteValue = $favouriteDBObject->getValue();
+		$this->assertInstanceOf('PolymorphicForeignKey', $favouriteDBObject);
+		$this->assertEquals($favourite->ID, $favouriteValue->ID);
+		$this->assertEquals($favourite->ClassName, $favouriteValue->ClassName);
 	}
 	
 	/**
@@ -388,10 +396,17 @@ class DataObjectTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$fan1 = $this->objFromFixture('DataObjectTest_Fan', 'fan1');
+		
+		// Test relation probing
+		$this->assertFalse((bool)$team1->hasValue('Captain', null, false));
+		$this->assertFalse((bool)$team1->hasValue('CaptainID', null, false));
 
 		// Add a captain to team 1
 		$team1->setField('CaptainID', $player1->ID);
 		$team1->write();
+		
+		$this->assertTrue((bool)$team1->hasValue('Captain', null, false));
+		$this->assertTrue((bool)$team1->hasValue('CaptainID', null, false));
 
 		$this->assertEquals($player1->ID, $team1->Captain()->ID,
 			'The captain exists for team 1');

@@ -2788,8 +2788,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return DBField::create_field('ForeignKey', $val, $fieldName, $this);
 			
 		// has_one for polymorphic relations do not end in ID
-		} else if($this->has_one($fieldName)) {
-			$val = $this->$fieldName;
+		} else if(($type = $this->has_one($fieldName)) && ($type === 'DataObject')) {
+			$val = $this->$fieldName();
 			return DBField::create_field('PolymorphicForeignKey', $val, $fieldName, $this);
 
 		}
@@ -3784,8 +3784,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function hasValue($field, $arguments = null, $cache = true) {
-		$obj = $this->dbObject($field);
-		if($obj) {
+		// has_one fields should not use dbObject to check if a value is given
+		if(!$this->has_one($field) && ($obj = $this->dbObject($field))) {
 			return $obj->exists();
 		} else {
 			return parent::hasValue($field, $arguments, $cache);
