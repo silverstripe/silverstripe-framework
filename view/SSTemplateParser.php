@@ -646,7 +646,8 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* Translate: "<%t" < Entity < (Default:QuotedString)? < (!("is" "=") < "is" < Context:QuotedString)? < (InjectionVariables)? > "%>" */
+	/* Translate: "<%t" < Entity < (Default:QuotedString)? < (!("is" "=") < "is" < Context:QuotedString)? <
+	(InjectionVariables)? > "%>" */
 	protected $match_Translate_typestack = array('Translate');
 	function match_Translate ($stack = array()) {
 		$matchrule = "Translate"; $result = $this->construct($matchrule, $matchrule, null);
@@ -1671,7 +1672,7 @@ class SSTemplateParser extends Parser {
 	function Require_Call(&$res, $sub) {
 		$res['php'] = "Requirements::".$sub['Method']['text'].'('.$sub['CallArguments']['php'].');';
 	}
-   
+
 	
 	/* CacheBlockArgument:
    !( "if " | "unless " )
@@ -2743,10 +2744,25 @@ class SSTemplateParser extends Parser {
 	function CacheBlock_CacheBlockTemplate(&$res, $sub){
 		// Get the block counter
 		$block = ++$res['subblocks'];
-		// Build the key for this block from the passed cache key, the block index, and the sha hash of the template
-		// itself
-		$key = "'" . sha1($sub['php']) . (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") . 
-			".'_$block'";
+		// Build the key for this block from the global key (evaluated in a closure within the template),
+		// the passed cache key, the block index, and the sha hash of the template.
+		$res['php'] .= '$keyExpression = function() use ($scope, $cache) {' . PHP_EOL;
+		$res['php'] .= '$val = \'\';' . PHP_EOL;
+		if($globalKey = Config::inst()->get('SSViewer', 'global_key')) {
+			// Embed the code necessary to evaluate the globalKey directly into the template,
+			// so that SSTemplateParser only needs to be called during template regeneration.
+			// Warning: If the global key is changed, it's necessary to flush the template cache.
+			$parser = new SSTemplateParser($globalKey);
+			$result = $parser->match_Template();
+			if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $parser);
+			$res['php'] .= $result['php'] . PHP_EOL;
+		}
+		$res['php'] .= 'return $val;' . PHP_EOL;
+		$res['php'] .= '};' . PHP_EOL;
+		$key = 'sha1($keyExpression())' // Global key
+			. '.\'_' . sha1($sub['php']) // sha of template
+			. (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") // Passed key
+			. ".'_$block'"; // block index
 		// Get any condition
 		$condition = isset($res['condition']) ? $res['condition'] : '';
 		
@@ -2914,7 +2930,7 @@ class SSTemplateParser extends Parser {
 	function OldTTag_OldTPart(&$res, $sub) {
 		$res['php'] = $sub['php'];
 	}
-	 	  
+
 	/* OldSprintfTag: "<%" < "sprintf" < "(" < OldTPart < "," < CallArguments > ")" > "%>"  */
 	protected $match_OldSprintfTag_typestack = array('OldSprintfTag');
 	function match_OldSprintfTag ($stack = array()) {
@@ -3642,7 +3658,8 @@ class SSTemplateParser extends Parser {
 		$method = 'OpenBlock_Handle_'.$blockname;
 		if (method_exists($this, $method)) $res['php'] = $this->$method($res);
 		else {
-			throw new SSTemplateParseException('Unknown open block "'.$blockname.'" encountered. Perhaps you missed the closing tag or have mis-spelled it?', $this);
+			throw new SSTemplateParseException('Unknown open block "'.$blockname.'" encountered. Perhaps you missed ' .
+				' the closing tag or have mis-spelled it?', $this);
 		}
 	}
 
@@ -3711,7 +3728,8 @@ class SSTemplateParser extends Parser {
 
 	function MismatchedEndBlock__finalise(&$res) {
 		$blockname = $res['Word']['text'];
-		throw new SSTemplateParseException('Unexpected close tag end_'.$blockname.' encountered. Perhaps you have mis-nested blocks, or have mis-spelled a tag?', $this);
+		throw new SSTemplateParseException('Unexpected close tag end_' . $blockname . 
+			' encountered. Perhaps you have mis-nested blocks, or have mis-spelled a tag?', $this);
 	}
 
 	/* MalformedOpenTag: '<%' < !NotBlockTag Tag:Word  !( ( [ :BlockArguments ] )? > '%>' ) */
@@ -3796,7 +3814,8 @@ class SSTemplateParser extends Parser {
 
 	function MalformedOpenTag__finalise(&$res) {
 		$tag = $res['Tag']['text'];
-		throw new SSTemplateParseException("Malformed opening block tag $tag. Perhaps you have tried to use operators?", $this);
+		throw new SSTemplateParseException("Malformed opening block tag $tag. Perhaps you have tried to use operators?"
+			, $this);
 	}
 	
 	/* MalformedCloseTag: '<%' < Tag:('end_' :Word ) !( > '%>' ) */
@@ -3860,7 +3879,8 @@ class SSTemplateParser extends Parser {
 
 	function MalformedCloseTag__finalise(&$res) {
 		$tag = $res['Tag']['text'];
-		throw new SSTemplateParseException("Malformed closing block tag $tag. Perhaps you have tried to pass an argument to one?", $this);
+		throw new SSTemplateParseException("Malformed closing block tag $tag. Perhaps you have tried to pass an " .
+			"argument to one?", $this);
 	}
 	
 	/* MalformedBlock: MalformedOpenTag | MalformedCloseTag */
@@ -4448,10 +4468,12 @@ class SSTemplateParser extends Parser {
 		$text = stripslashes($text);
 		$text = addcslashes($text, '\'\\');
 
-		// TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this non-dynamically calculated
+		// TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this
+		// non-dynamically calculated
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
-			'href="\' . (SSViewer::$options[\'rewriteHashlinks\'] ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . \'#',
+			'href="\' . (SSViewer::$options[\'rewriteHashlinks\'] ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
+				\'#',
 			$text
 		);
 
@@ -4467,10 +4489,10 @@ class SSTemplateParser extends Parser {
 	 * 
 	 * @static
 	 * @throws SSTemplateParseException
-	 * @param  $string - The source of the template
-	 * @param string $templateName - The name of the template, normally the filename the template source was loaded from
-	 * @param bool $includeDebuggingComments - True is debugging comments should be included in the output
-	 * @return mixed|string - The php that, when executed (via include or exec) will behave as per the template source
+	 * @param  $string The source of the template
+	 * @param string $templateName The name of the template, normally the filename the template source was loaded from
+	 * @param bool $includeDebuggingComments True is debugging comments should be included in the output
+	 * @return mixed|string The php that, when executed (via include or exec) will behave as per the template source
 	 */
 	static function compileString($string, $templateName = "", $includeDebuggingComments=false) {
 		if (!trim($string)) {
@@ -4481,7 +4503,8 @@ class SSTemplateParser extends Parser {
 			$parser = new SSTemplateParser($string);
 			$parser->includeDebuggingComments = $includeDebuggingComments;
 	
-			// Ignore UTF8 BOM at begining of string. TODO: Confirm this is needed, make sure SSViewer handles UTF (and other encodings) properly
+			// Ignore UTF8 BOM at begining of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
+			// (and other encodings) properly
 			if(substr($string, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $parser->pos = 3;
 			
 			// Match the source against the parser
@@ -4494,12 +4517,14 @@ class SSTemplateParser extends Parser {
 		
 		// Include top level debugging comments if desired
 		if($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
-			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
+			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE 
+			// glitches
 			if(stripos($code, "<html") !== false) {
 				$code = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $templateName -->", $code);
 				$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->\\1", $code);
 			} else {
-				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName . ' -->\';' . "\n", $code);
+				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
+					' -->\';' . "\n", $code);
 				$code .= "\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
 			}
 		}	
