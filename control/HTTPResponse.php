@@ -213,7 +213,7 @@ class SS_HTTPResponse {
 		}
 
 		if(in_array($this->statusCode, self::$redirect_codes) && headers_sent($file, $line)) {
-			$url = $this->headers['Location'];
+			$url = Convert::raw2htmlatt($this->headers['Location']);
 			echo
 			"<p>Redirecting to <a href=\"$url\" title=\"Click this link if your browser does not redirect you\">"
 				. "$url... (output started on $file, line $line)</a></p>
