@@ -24,10 +24,6 @@ class Folder extends File {
 	private static $plural_name = "Folders";
 
 	private static $default_sort = "\"Name\"";
-
-	private static $casting = array (
-		'TreeTitle' => 'HTMLText'
-	);
 	
 	/**
 	 * 
