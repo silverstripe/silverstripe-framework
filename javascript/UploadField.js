@@ -295,18 +295,30 @@
 				dialog.ssdialog('open');
 			},
 			attachFiles: function(ids, uploadedFileId) {
-				var self = this, config = this.getConfig();
-				$.post(
-					config['urlAttach'], 
-					{'ids': ids},
-					function(data, status, xhr) {
+				var self = this,
+					config = this.getConfig(),
+					indicator = $('<div class="loader" />'),
+					target = (uploadedFileId) ? this.find(".ss-uploadfield-item[data-fileid='"+uploadedFileId+"']") : this.find('.ss-uploadfield-addfile');
+
+				target.children().hide();
+				target.append(indicator);
+
+				$.ajax({
+					type: "POST",
+					url: config['urlAttach'],
+					data: {'ids': ids},
+					complete: function(xhr, status) {
+						target.children().show();
+						indicator.remove();
+					},
+					success: function(data, status, xhr) {
 						self.fileupload('attach', {
 							files: data,
 							options: self.fileupload('option'),
 							replaceFileID: uploadedFileId
 						});
 					}
-				);
+				});
 			}
 		});
 		$('div.ss-upload *').entwine({

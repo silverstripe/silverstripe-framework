@@ -28,7 +28,7 @@ This is a highlevel overview of available `[api:FormField]` subclasses. An autom
  * `[api:DatetimeField]`: Combined date- and time field.
  * `[api:EmailField]`: Text input field with validation for correct email format according to RFC 2822.
  * `[api:GroupedDropdownField]`: Grouped dropdown, using <optgroup> tags.
- * `[api:HTMLEditorField].
+ * `[api:HtmlEditorField]`.
  * `[api:MoneyField]`: A form field that can save into a `[api:Money]` database field.
  * `[api:NumericField]`: Text input field with validation for numeric values.
  * `[api:OptionsetField]`: Set of radio buttons designed to emulate a dropdown.

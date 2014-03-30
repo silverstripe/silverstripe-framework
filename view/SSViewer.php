@@ -48,7 +48,6 @@ class SSViewer_Scope {
 	
 	private $localIndex;
 
-
 	public function __construct($item, $inheritedScope = null) {
 		$this->item = $item;
 		$this->localIndex = 0;
@@ -631,6 +630,14 @@ class SSViewer {
 	 */
 	protected $parser;
 
+	/*
+	 * Default prepended cache key for partial caching
+	 * 
+	 * @var string
+	 * @config
+	 */
+	private static $global_key = '$CurrentReadingMode, $CurrentUser.ID';
+
 	/**
 	 * Create a template from a string instead of a .ss file
 	 *
@@ -1096,12 +1103,34 @@ class SSViewer {
 	/**
 	 * Execute the given template, passing it the given data.
 	 * Used by the <% include %> template tag to process templates.
+	 * 
+	 * @param string $template Template name
+	 * @param mixed $data Data context
+	 * @param array $arguments Additional arguments
+	 * @return string Evaluated result
 	 */
 	public static function execute_template($template, $data, $arguments = null, $scope = null) {
 		$v = new SSViewer($template);
 		$v->includeRequirements(false);
 
 		return $v->process($data, $arguments, $scope);
+	}
+	
+	/**
+	 * Execute the evaluated string, passing it the given data.
+	 * Used by partial caching to evaluate custom cache keys expressed using
+	 * template expressions
+	 * 
+	 * @param string $content Input string
+	 * @param mixed $data Data context
+	 * @param array $arguments Additional arguments
+	 * @return string Evaluated result
+	 */
+	public static function execute_string($content, $data, $arguments = null) {
+		$v = SSViewer::fromString($content);
+		$v->includeRequirements(false);
+		
+		return $v->process($data, $arguments);
 	}
 
 	public function parseTemplateContent($content, $template="") {

@@ -160,16 +160,39 @@ For example, we might want to have a checkbox which limits search results to exp
 			return $list;
 		}
 	}
+	
+### GridField Customization	
 
 To alter how the results are displayed (via `[api:GridField]`), you can also overload the `getEditForm()` method. For example, to add a new component.
 
 	:::php
 	class MyAdmin extends ModelAdmin {
+		private static $managed_models = array('Product','Category');
 		// ...
 		public function getEditForm($id = null, $fields = null) {
 			$form = parent::getEditForm($id, $fields);
-			$gridField = $form->Fields()->fieldByName($this->sanitiseClassName($this->modelClass));
+			// $gridFieldName is generated from the ModelClass, eg if the Class 'Product'
+			// is managed by this ModelAdmin, the GridField for it will also be named 'Product'
+			$gridFieldName = $this->sanitiseClassName($this->modelClass);
+			$gridField = $form->Fields()->fieldByName($gridFieldName);
 			$gridField->getConfig()->addComponent(new GridFieldFilterHeader());
+			return $form;
+		}
+	}
+	
+The above example will add the component to all `GridField`s (of all managed models). Alternatively we can also add it to only one specific `GridField`:
+
+	:::php
+	class MyAdmin extends ModelAdmin {
+		private static $managed_models = array('Product','Category');
+		// ...
+		public function getEditForm($id = null, $fields = null) {
+			$form = parent::getEditForm($id, $fields);
+			$gridFieldName = 'Product';
+			$gridField = $form->Fields()->fieldByName($gridFieldName);
+			if ($gridField) {
+				$gridField->getConfig()->addComponent(new GridFieldFilterHeader());
+			}
 			return $form;
 		}
 	}

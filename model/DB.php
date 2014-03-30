@@ -147,12 +147,18 @@ class DB {
 
 	/**
 	 * Connect to a database.
-	 * Given the database configuration, this method will create the correct subclass of SS_Database,
-	 * and set it as the global connection.
+	 *
+	 * Given the database configuration, this method will create the correct 
+	 * subclass of {@link SS_Database}.
+	 *
 	 * @param array $database A map of options. The 'type' is the name of the subclass of SS_Database to use. For the
 	 *                        rest of the options, see the specific class.
+	 * @param string $name identifier for the connection
+	 *
+	 * @return SS_Database
 	 */
-	public static function connect($databaseConfig) {
+	public static function connect($databaseConfig, $label = 'default') {
+		
 		// This is used by the "testsession" module to test up a test session using an alternative name
 		if($name = self::get_alternative_database_name()) {
 			$databaseConfig['database'] = $name;
@@ -167,7 +173,9 @@ class DB {
 		$dbClass = $databaseConfig['type'];
 		$conn = new $dbClass($databaseConfig);
 
-		self::setConn($conn);
+		self::setConn($conn, $label);
+
+		return $conn;
 	}
 	
 	/**

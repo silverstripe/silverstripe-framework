@@ -8,8 +8,7 @@
  * @package framework
  * @subpackage model
  */
-class Versioned extends DataExtension {
-
+class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * An array of possible stages.
 	 * @var array
@@ -1357,6 +1356,12 @@ class Versioned extends DataExtension {
 	 */
 	public function getDefaultStage() {
 		return $this->defaultStage;
+	}
+
+	public static function get_template_global_variables() {
+		return array(
+			'CurrentReadingMode' => 'get_reading_mode'
+		);
 	}
 }
 

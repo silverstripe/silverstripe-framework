@@ -67,7 +67,7 @@ class MySQLDatabase extends SS_Database {
 		} else {
 			$this->dbConn = new MySQLi($parameters['server'], $parameters['username'], $parameters['password']);
 		}
-		
+
 		if($this->dbConn->connect_error) {
 			$this->databaseError("Couldn't connect to MySQL database | " . $this->dbConn->connect_error);
 		}
@@ -83,6 +83,12 @@ class MySQLDatabase extends SS_Database {
 
 		if(isset($parameters['timezone'])) {
 			$this->query(sprintf("SET SESSION time_zone = '%s'", $parameters['timezone']));
+		}
+	}
+
+	public function __destruct() {
+		if($this->dbConn) {
+			mysqli_close($this->dbConn);
 		}
 	}
 

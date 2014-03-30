@@ -67,7 +67,7 @@ class SSTemplateParseException extends Exception {
   * 
   * Angle Bracket: angle brackets "<" and ">" are used to eat whitespace between template elements
   * N: eats white space including newlines (using in legacy _t support)
-  * 
+  *
   * @package framework
   * @subpackage view
   */
@@ -2938,10 +2938,25 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	function CacheBlock_CacheBlockTemplate(&$res, $sub){
 		// Get the block counter
 		$block = ++$res['subblocks'];
-		// Build the key for this block from the passed cache key, the block index, and the sha hash of the template
-		// itself
-		$key = "'" . sha1($sub['php']) . (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") . 
-			".'_$block'";
+		// Build the key for this block from the global key (evaluated in a closure within the template),
+		// the passed cache key, the block index, and the sha hash of the template.
+		$res['php'] .= '$keyExpression = function() use ($scope, $cache) {' . PHP_EOL;
+		$res['php'] .= '$val = \'\';' . PHP_EOL;
+		if($globalKey = Config::inst()->get('SSViewer', 'global_key')) {
+			// Embed the code necessary to evaluate the globalKey directly into the template,
+			// so that SSTemplateParser only needs to be called during template regeneration.
+			// Warning: If the global key is changed, it's necessary to flush the template cache.
+			$parser = new SSTemplateParser($globalKey);
+			$result = $parser->match_Template();
+			if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $parser);
+			$res['php'] .= $result['php'] . PHP_EOL;
+		}
+		$res['php'] .= 'return $val;' . PHP_EOL;
+		$res['php'] .= '};' . PHP_EOL;
+		$key = 'sha1($keyExpression())' // Global key
+			. '.\'_' . sha1($sub['php']) // sha of template
+			. (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") // Passed key
+			. ".'_$block'"; // block index
 		// Get any condition
 		$condition = isset($res['condition']) ? $res['condition'] : '';
 		

@@ -107,6 +107,10 @@ class File extends DataObject {
 	private static $extensions = array(
 		"Hierarchy",
 	);
+
+	private static $casting = array (
+		'TreeTitle' => 'HTMLText'
+	);
 	
 	/**
 	 * @config

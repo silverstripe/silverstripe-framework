@@ -234,12 +234,14 @@ class SS_HTTPResponse {
 		}
 
 		if(in_array($this->statusCode, self::$redirect_codes) && headers_sent($file, $line)) {
-			$url = $this->headers['Location'];
+			$url = (string)$this->headers['Location'];
+			$urlATT = Convert::raw2htmlatt($url);
+			$urlJS = Convert::raw2js($url);
 			echo
-			"<p>Redirecting to <a href=\"$url\" title=\"Click this link if your browser does not redirect you\">"
-				. "$url... (output started on $file, line $line)</a></p>
-			<meta http-equiv=\"refresh\" content=\"1; url=$url\" />
-			<script type=\"text/javascript\">setTimeout('window.location.href = \"$url\"', 50);</script>";
+			"<p>Redirecting to <a href=\"$urlATT\" title=\"Click this link if your browser does not redirect you\">"
+				. "$urlATT... (output started on $file, line $line)</a></p>
+			<meta http-equiv=\"refresh\" content=\"1; url=$urlATT\" />
+			<script type=\"text/javascript\">setTimeout(function(){ window.location.href = \"$urlJS\"; }, 50);</script>";
 		} else {
 			$line = $file = null;
 			if(!headers_sent($file, $line)) {
