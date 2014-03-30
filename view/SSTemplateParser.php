@@ -2946,10 +2946,10 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			// Embed the code necessary to evaluate the globalKey directly into the template,
 			// so that SSTemplateParser only needs to be called during template regeneration.
 			// Warning: If the global key is changed, it's necessary to flush the template cache.
-			$parser = new SSTemplateParser($globalKey);
-			$result = $parser->match_Template();
+			$parser = Injector::inst()->get('SSTemplateParser', false);
+			$result = $parser->compileString($globalKey, '', false, false);
 			if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $parser);
-			$res['php'] .= $result['php'] . PHP_EOL;
+			$res['php'] .= $result . PHP_EOL;
 		}
 		$res['php'] .= 'return $val;' . PHP_EOL;
 		$res['php'] .= '};' . PHP_EOL;
@@ -4703,9 +4703,10 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	 * @param  $string The source of the template
 	 * @param string $templateName The name of the template, normally the filename the template source was loaded from
 	 * @param bool $includeDebuggingComments True is debugging comments should be included in the output
+	 * @param bool $topTemplate True if this is a top template, false if it's just a template
 	 * @return mixed|string The php that, when executed (via include or exec) will behave as per the template source
 	 */
-	public function compileString($string, $templateName = "", $includeDebuggingComments=false) {
+	public function compileString($string, $templateName = "", $includeDebuggingComments=false, $topTemplate = true) {
 		if (!trim($string)) {
 			$code = '';
 		}
@@ -4719,7 +4720,11 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			if(substr($string, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $this->pos = 3;
 			
 			// Match the source against the parser
-			$result =  $this->match_TopTemplate();
+			if ($topTemplate) {
+				$result = $this->match_TopTemplate();
+			} else {
+				$result = $this->match_Template();
+			}
 			if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $this);
 	
 			// Get the result

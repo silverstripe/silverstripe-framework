@@ -24,7 +24,7 @@ class SSViewerCacheBlockTest_VersionedModel extends DataObject implements TestOn
 	
 	protected $entropy = 'default';
 	
-	public static $extensions = array(
+	private static $extensions = array(
 		"Versioned('Stage', 'Live')"
 	);
 	
