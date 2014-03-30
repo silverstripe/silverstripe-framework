@@ -215,18 +215,22 @@ class ImageTest extends SapphireTest {
 		// Encoding of the arguments is duplicated from cacheFilename
 		$argumentString = base64_encode(json_encode(array(600,600,'0F0F0F')));
 		$this->assertNotNull($imageThird);
-		$this->assertContains($argumentString, $imageThird->getFullPath(), 'Image contains background color for padded resizement');
+		$this->assertContains($argumentString, $imageThird->getFullPath(),
+			'Image contains background color for padded resizement');
 	
 		$imageThirdPath = $imageThird->getFullPath();
 		$filesInFolder = $folder->find(dirname($imageThirdPath));
-		$this->assertEquals(3, count($filesInFolder), 'Image folder contains only the expected number of images before regeneration');
+		$this->assertEquals(3, count($filesInFolder),
+			'Image folder contains only the expected number of images before regeneration');
 	
 		$hash = md5_file($imageThirdPath);
-		$this->assertEquals(3, $image->regenerateFormattedImages(), 'Cached images were regenerated in the right number');
+		$this->assertEquals(3, $image->regenerateFormattedImages(),
+			'Cached images were regenerated in the right number');
 		$this->assertEquals($hash, md5_file($imageThirdPath), 'Regeneration of third image is correct');
 	
 		/* Check that no other images exist, to ensure that the regeneration did not create other images */
-		$this->assertEquals($filesInFolder, $folder->find(dirname($imageThirdPath)), 'Image folder contains only the expected image files after regeneration');
+		$this->assertEquals($filesInFolder, $folder->find(dirname($imageThirdPath)),
+			'Image folder contains only the expected image files after regeneration');
 	}
 	
 	public function testRegenerateImages() {
@@ -235,7 +239,8 @@ class ImageTest extends SapphireTest {
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
 		$this->assertEquals(1, $image->regenerateFormattedImages(), 'Cached images were regenerated correct');
-		$this->assertEquals($image_generated->getWidth(), 200, 'Resized image has correct width after regeneration call');
+		$this->assertEquals($image_generated->getWidth(), 200,
+			'Resized image has correct width after regeneration call');
 		$this->assertTrue(file_exists($p), 'Resized image exists after regeneration call');
 	}
 	
@@ -254,7 +259,8 @@ class ImageTest extends SapphireTest {
 		rename($p, $newPath);
 		$this->assertFalse(file_exists($p), 'Resized image does not exist after movement call under old name');
 		$this->assertTrue(file_exists($newPath), 'Resized image exists after movement call under new name');
-		$this->assertEquals(1, $image->regenerateFormattedImages(), 'Cached images were regenerated in the right number');
+		$this->assertEquals(1, $image->regenerateFormattedImages(),
+			'Cached images were regenerated in the right number');
 	
 		$image_generated_2 = new Image_Cached($newRelative);
 		$this->assertEquals(300, $image_generated_2->getWidth(), 'Cached image was regenerated with correct width');

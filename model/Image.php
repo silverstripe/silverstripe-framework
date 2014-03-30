@@ -446,7 +446,8 @@ class Image extends File {
 		$filename = $format . "-" . $this->Name;
 		$patterns = $this->getFilenamePatterns($this->Name);
 		if (!preg_match($patterns['FullPattern'], $filename)) {
-			throw new InvalidArgumentException('Filename ' . $filename . ' that should be used to cache a resized image is invalid');
+			throw new InvalidArgumentException('Filename ' . $filename
+				. ' that should be used to cache a resized image is invalid');
 		}
 		
 		return $folder . "_resampled/" . $filename;
@@ -564,7 +565,8 @@ class Image extends File {
 		$generateFuncs = implode('|', $generateFuncs);	
 		$base64Match = "[a-zA-Z0-9\/\r\n+]*={0,2}";	
 		return array(
-				'FullPattern' => "/^((?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-)+" . preg_quote($filename) . "$/i",
+				'FullPattern' => "/^((?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-)+"
+									. preg_quote($filename) . "$/i",
 				'GeneratorPattern' => "/(?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-/i"
 		);
 	}

@@ -11,16 +11,16 @@ class RequestHandlingTest extends FunctionalTest {
 		parent::setUp();
 
 		Config::inst()->update('Director', 'rules', array(
-			// If we don't request any variables, then the whole URL will get shifted off.  This is fine, but it means that the
-			// controller will have to parse the Action from the URL itself.
+			// If we don't request any variables, then the whole URL will get shifted off.
+			// This is fine, but it means that the controller will have to parse the Action from the URL itself.
 			'testGoodBase1' => "RequestHandlingTest_Controller",
 
-			// The double-slash indicates how much of the URL should be shifted off the stack.  This is important for dealing
-			// with nested request handlers appropriately.
+			// The double-slash indicates how much of the URL should be shifted off the stack.
+			// This is important for dealing with nested request handlers appropriately.
 			'testGoodBase2//$Action/$ID/$OtherID' => "RequestHandlingTest_Controller",
 
-			// By default, the entire URL will be shifted off.  This creates a bit of backward-incompatability, but makes the
-			// URL rules much more explicit.
+			// By default, the entire URL will be shifted off. This creates a bit of 
+			// backward-incompatability, but makes the URL rules much more explicit.
 			'testBadBase/$Action/$ID/$OtherID' => "RequestHandlingTest_Controller",
 			
 			// Rules with an extension always default to the index() action
