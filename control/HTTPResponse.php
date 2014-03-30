@@ -241,7 +241,9 @@ class SS_HTTPResponse {
 			"<p>Redirecting to <a href=\"$urlATT\" title=\"Click this link if your browser does not redirect you\">"
 				. "$urlATT... (output started on $file, line $line)</a></p>
 			<meta http-equiv=\"refresh\" content=\"1; url=$urlATT\" />
-			<script type=\"text/javascript\">setTimeout(function(){ window.location.href = \"$urlJS\"; }, 50);</script>";
+			<script type=\"text/javascript\">setTimeout(function(){
+				window.location.href = \"$urlJS\";
+			}, 50);</script>";
 		} else {
 			$line = $file = null;
 			if(!headers_sent($file, $line)) {

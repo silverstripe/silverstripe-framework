@@ -471,8 +471,10 @@ abstract class Object {
 
 	/**
 	 * Return TRUE if a class has a specified extension.
-	 * This supports backwards-compatible format (static Object::has_extension($requiredExtension)) and new format ($object->has_extension($class, $requiredExtension))
-	 * @param string $classOrExtension if 1 argument supplied, the class name of the extension to check for; if 2 supplied, the class name to test
+	 * This supports backwards-compatible format (static Object::has_extension($requiredExtension))
+	 * and new format ($object->has_extension($class, $requiredExtension))
+	 * @param string $classOrExtension if 1 argument supplied, the class name of the extension to
+	 *                                 check for; if 2 supplied, the class name to test
 	 * @param string $requiredExtension used only if 2 arguments supplied 
 	 */
 	public static function has_extension($classOrExtension, $requiredExtension = null) {

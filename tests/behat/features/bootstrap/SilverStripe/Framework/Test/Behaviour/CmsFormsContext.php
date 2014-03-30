@@ -131,7 +131,8 @@ class CmsFormsContext extends BehatContext {
 	 *
 	 * @todo Use an actual DOM parser for more accurate assertions
 	 * 
-	 * @Given /^"(?P<text>([^"]*))" in the "(?P<field>([^"]*))" HTML field should(?P<negate>(?: not)?) be (?P<formatting>(.*))$/
+	 * @Given /^"(?P<text>([^"]*))" in the "(?P<field>([^"]*))" HTML field
+	 * should(?P<negate>(?: not)?) be (?P<formatting>(.*))$/
 	 */
 	public function stepContentInHtmlFieldShouldHaveFormatting($text, $field, $negate, $formatting) {
 		$page = $this->getSession()->getPage();

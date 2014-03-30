@@ -108,7 +108,8 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 *
 	 * @return boolean Success
 	 */
-	public static function add_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1, $attributes = null) {
+	public static function add_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1,
+											$attributes = null) {
 		// If a class is defined, then force the use of that as a code.  This helps prevent menu item duplication
 		if($controllerClass) {
 			$code = $controllerClass;
@@ -238,7 +239,8 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 *
 	 * @return boolean Success
 	 */
-	public static function replace_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1, $attributes = null) {
+	public static function replace_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1,
+												$attributes = null) {
 		$item = new CMSMenuItem($menuTitle, $url, $controllerClass, $priority);
 
 		if($attributes) {
