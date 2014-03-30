@@ -122,6 +122,7 @@ class CmsFormsContext extends BehatContext {
 		}
 	}
 
+	// @codingStandardsIgnoreStart
 	/**
 	 * Checks formatting in the HTML field, by analyzing the HTML node surrounding
 	 * the text for certain properties.
@@ -162,6 +163,7 @@ class CmsFormsContext extends BehatContext {
 			call_user_func($assertFn, 'text-align: right;', $matchedNode->getAttribute('style'));	
 		}
 	}
+	// @codingStandardsIgnoreEnd
 
 	/**
 	 * Selects the first textual match in the HTML editor. Does not support

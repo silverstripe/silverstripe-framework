@@ -30,11 +30,15 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 		
 		// Check that the output shows name and hat as sortable fields, but not city
 		$this->assertContains('<span class="non-sortable">City</span>', $htmlFragment['header']);
-		$this->assertContains('value="Name" class="action ss-gridfield-sort" id="action_SetOrderName"', $htmlFragment['header']);
-		$this->assertContains('value="Cheerleader Hat" class="action ss-gridfield-sort" id="action_SetOrderCheerleader-Hat-Colour"', $htmlFragment['header']);
+		$this->assertContains('value="Name" class="action ss-gridfield-sort" id="action_SetOrderName"',
+			$htmlFragment['header']);
+		$this->assertContains(
+			'value="Cheerleader Hat" class="action ss-gridfield-sort" id="action_SetOrderCheerleader-Hat-Colour"',
+			$htmlFragment['header']);
 		
 		// Check inverse of above
-		$this->assertNotContains('value="City" class="action ss-gridfield-sort" id="action_SetOrderCity"', $htmlFragment['header']);
+		$this->assertNotContains('value="City" class="action ss-gridfield-sort" id="action_SetOrderCity"',
+			$htmlFragment['header']);
 		$this->assertNotContains('<span class="non-sortable">Name</span>', $htmlFragment['header']);
 		$this->assertNotContains('<span class="non-sortable">Cheerleader Hat</span>', $htmlFragment['header']);
 	}

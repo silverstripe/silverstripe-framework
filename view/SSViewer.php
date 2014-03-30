@@ -742,7 +742,7 @@ class SSViewer {
 	 *  </code>
 	 */
 	public function __construct($templateList, TemplateParser $parser = null) {
-        $this->setParser($parser ?: Injector::inst()->get('SSTemplateParser'));
+		$this->setParser($parser ?: Injector::inst()->get('SSTemplateParser'));
 
 		// flush template manifest cache if requested
 		if (isset($_GET['flush']) && $_GET['flush'] == 'all') {
@@ -1172,7 +1172,7 @@ class SSViewer_FromString extends SSViewer {
 	protected $content;
 	
 	public function __construct($content, TemplateParser $parser = null) {
-        $this->setParser($parser ?: Injector::inst()->get('SSTemplateParser'));
+		$this->setParser($parser ?: Injector::inst()->get('SSTemplateParser'));
 		$this->content = $content;
 	}
 	
