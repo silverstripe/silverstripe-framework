@@ -265,7 +265,7 @@ arrays that represent each index. There's several supported notations:
 
 	# Advanced
 	private static $indexes = array(
-		'<index-name>' => array('type' => '<type>', 'value' => '"<column-name>"')
+		'<index-name>' => array('type' => '<type>', 'value' => '<column-name>')
 	);
 
 	# SQL
