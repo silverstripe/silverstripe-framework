@@ -162,11 +162,12 @@ class SS_DatetimeTest extends SapphireTest {
 			'2000-12-31 1:11:01' => '31/12/2000 01:11:01',
 			'12/12/2000 1:11:01' => '12/12/2000 01:11:01',
 			'2000-12-31' => '31/12/2000 12:00:00',
+			'2014-04-01 10:11:01' => '01/04/2014 10:11:01',
 			'10:11:01' => date('d/m/Y').' 10:11:01'
 		);
 	
 		foreach($fixtures as $from => $to) {
-			$date = DBField::create_field('Datetime', $from);
+			$date = DBField::create_field('SS_Datetime', $from);
 			// With member
 			$this->assertEquals($to, $date->FormatFromSettings($member));
 			// Without member
