@@ -26,7 +26,6 @@ It is where most documentation should live, and is the natural "second step" aft
  * [Rich Text Editing](rich-text-editing): How to use and configure SilverStripes built in HTML Editor
  * [Search](search): Searching for properties in the database as well as other documents
  * [Security](security): How to develop secure SilverStripe applications with good code examples
- * [Templates](templates): SilverStripe template syntax: Variables, loops, includes and much more
  * [Testing](testing): Functional and Unit Testing with PHPUnit and SilverStripe's testing framework
  * [Theme Development](theme-development): Package templates, images and CSS to a reusable theme
  * [Using Themes](themes): How to download and install themes
