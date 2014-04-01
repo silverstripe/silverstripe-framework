@@ -8,7 +8,7 @@ class GDBackend extends Object implements Image_Backend {
 	protected $gd, $width, $height;
 	protected $quality;
 	protected $interlace;
-    protected $padded_resize;
+	protected $padded_resize;
 	
 	/**
 	 * @config
