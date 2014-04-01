@@ -8,6 +8,7 @@ class GDBackend extends Object implements Image_Backend {
 	protected $gd, $width, $height;
 	protected $quality;
 	protected $interlace;
+    protected $padded_resize;
 	
 	/**
 	 * @config
@@ -70,7 +71,7 @@ class GDBackend extends Object implements Image_Backend {
 
 		$this->quality = $this->config()->default_quality;
 		$this->interlace = $this->config()->image_interlace;
-		$this->stretch_on_padded_resize = $this->config()->stretch_on_padded_resize;
+		$this->padded_resize = $this->config()->stretch_on_padded_resize;
 	}
 	
 	public function setImageResource($resource) {
@@ -368,7 +369,7 @@ class GDBackend extends Object implements Image_Backend {
 	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $stretchImage=null) {
 		if(!$this->gd) return;
 
-		$stretch = ($stretchImage===null) ? $this->stretch_on_padded_resize : (bool) $stretchImage;
+		$stretch = ($stretchImage===null) ? $this->padded_resize : (bool) $stretchImage;
 
 		$width = round($width);
 		$height = round($height);
