@@ -169,7 +169,7 @@ class Date extends DBField {
 		}
 		
 		$formatD = $member->getDateFormat();
-		$zendDate = new Zend_Date($this->getValue());
+		$zendDate = new Zend_Date($this->getValue(), 'y-MM-dd');
 		
 		return $zendDate->toString($formatD);
 	}		
