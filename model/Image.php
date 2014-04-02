@@ -640,6 +640,11 @@ class Image extends File {
 			return self::ORIENTATION_SQUARE;
 		}
 	}
+
+	public function onAfterUpload() {
+		$this->deleteFormattedImages();
+		parent::onAfterUpload();
+	}
 	
 	protected function onBeforeDelete() {
 		parent::onBeforeDelete(); 
