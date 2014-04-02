@@ -1061,7 +1061,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$this->response->setStatusCode(
 				500,
 				_t('LeftAndMain.PLEASESAVE',
-					"Please Save Page: This page could not be upated because it hasn't been saved yet."
+					"Please Save Page: This page could not be updated because it hasn't been saved yet."
 				)
 			);
 			return;
