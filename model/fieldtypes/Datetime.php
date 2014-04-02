@@ -112,7 +112,7 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 		$formatD = $member->getDateFormat();
 		$formatT = $member->getTimeFormat();
 		
-		$zendDate = new Zend_Date($this->getValue());
+		$zendDate = new Zend_Date($this->getValue(), 'y-MM-dd HH:mm:ss');
 		return $zendDate->toString($formatD).' '.$zendDate->toString($formatT);
 	}	
 

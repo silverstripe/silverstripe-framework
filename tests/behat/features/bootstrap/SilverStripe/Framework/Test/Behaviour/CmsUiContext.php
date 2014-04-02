@@ -353,6 +353,42 @@ class CmsUiContext extends BehatContext {
 	}
 
 	/**
+	 * When I follow "my link" in preview
+	 *
+	 * @When /^(?:|I )follow "(?P<link>(?:[^"]|\\")*)" in preview$/
+	 */
+	public function clickLinkInPreview($link) {
+		$driver = $this->getSession()->getDriver();
+		// TODO Remove once we have native support in Mink and php-webdriver,
+		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
+		$origWindowName = $driver->getWebDriverSession()->window_handle();
+		$driver->switchToIFrame('cms-preview-iframe');
+
+		$link = $this->fixStepArgument($link);
+		$this->getSession()->getPage()->clickLink($link);
+
+		$driver->switchToWindow($origWindowName);
+	}
+
+	/**
+	 * When I press "submit" in preview
+	 *
+	 * @When /^(?:|I )press "(?P<button>(?:[^"]|\\")*)" in preview$/
+	 */
+	public function pressButtonInPreview($button) {
+		$driver = $this->getSession()->getDriver();
+		// TODO Remove once we have native support in Mink and php-webdriver,
+		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
+		$origWindowName = $driver->getWebDriverSession()->window_handle();
+		$driver->switchToIFrame('cms-preview-iframe');
+
+		$button = $this->fixStepArgument($button);
+		$this->getSession()->getPage()->pressButton($button);
+
+		$driver->switchToWindow($origWindowName);
+	}
+
+	/**
 	 * Workaround for chosen.js dropdowns or tree dropdowns which hide the original dropdown field.
 	 * 
 	 * @When /^(?:|I )fill in the "(?P<field>(?:[^"]|\\")*)" dropdown with "(?P<value>(?:[^"]|\\")*)"$/

@@ -4,13 +4,13 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 	if(typeof(console) != 'undefined') console.error('Class ss.i18n not defined');
 } else {
 	ss.i18n.addDictionary('cs', {
-    "ModelAdmin.SAVED": "Uloženo",
     "LeftAndMain.CONFIRMUNSAVED": "Určitě chcete opustit navigaci z této stránky?\n\nUPOZORNĚNÍ: Vaše změny nebyly uloženy.\n\nStlačte OK pro pokračovat, nebo Cancel, zůstanete na této stránce.",
-    "ModelAdmin.VALIDATIONERROR": "Chyba platnosti",
-    "ModelAdmin.DELETED": "Smazáno",
+    "LeftAndMain.CONFIRMUNSAVEDSHORT": "UPOZORNĚNÍ: Vaše změny nebyly uloženy.",
     "SecurityAdmin.BATCHACTIONSDELETECONFIRM": "Skutečně chcete smazat %s skupiny?",
+    "ModelAdmin.SAVED": "Uloženo",
     "ModelAdmin.REALLYDELETE": "Skutečně chcete smazat?",
-    "LeftAndMain.PAGEWASDELETED": "Tato stránka byla smazána. Pro editaci stránky, vyberte ji vlevo.",
-    "LeftAndMain.CONFIRMUNSAVEDSHORT": "UPOZORNĚNÍ: Vaše změny nebyly uloženy."
+    "ModelAdmin.DELETED": "Smazáno",
+    "ModelAdmin.VALIDATIONERROR": "Chyba platnosti",
+    "LeftAndMain.PAGEWASDELETED": "Tato stránka byla smazána. Pro editaci stránky, vyberte ji vlevo."
 });
 }
