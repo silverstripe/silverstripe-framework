@@ -150,6 +150,16 @@ class ObjectTest extends SapphireTest {
 		$this->assertTrue($obj3_2 instanceof ObjectTest_CreateTest3);
 	}
 
+	/**
+	 * Tests {@link Object::singleton()}
+	 */
+	public function testSingleton() {
+		$inst = Controller::singleton();
+		$this->assertInstanceOf('Controller', $inst);
+		$inst2 = Controller::singleton();
+		$this->assertSame($inst2, $inst);
+	}
+
 	public function testGetExtensions() {
 		$this->assertEquals(
 			Object::get_extensions('ObjectTest_ExtensionTest'),

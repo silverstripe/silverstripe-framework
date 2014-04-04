@@ -142,6 +142,27 @@ abstract class Object {
 		return Injector::inst()->createWithArgs($class, $args);
 	}
 
+	/**
+	 * Creates a class instance by the "singleton" design pattern.
+	 * It will always return the same instance for this class,
+	 * which can be used for performance reasons and as a simple
+	 * way to access instance methods which don't rely on instance
+	 * data (e.g. the custom SilverStripe static handling).
+	 *
+	 * @param string $className Optional classname (if called on Object directly)
+	 * @return static The singleton instance
+	 */
+	public static function singleton() {
+		$args = func_get_args();
+
+		// Singleton to create should be the calling class if not Object,
+		// otherwise the first parameter
+		$class = get_called_class();
+		if($class === 'Object') $class = array_shift($args);
+
+		return Injector::inst()->get($class);
+	}
+
 	private static $_cache_inst_args = array();
 
 	/**
