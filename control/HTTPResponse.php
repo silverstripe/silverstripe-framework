@@ -213,7 +213,7 @@ class SS_HTTPResponse {
 		}
 
 		if(in_array($this->statusCode, self::$redirect_codes) && headers_sent($file, $line)) {
-			$url = (string)$this->headers['Location'];
+			$url = Director::absoluteURL($this->headers['Location'], true);
 			$urlATT = Convert::raw2htmlatt($url);
 			$urlJS = Convert::raw2js($url);
 			echo

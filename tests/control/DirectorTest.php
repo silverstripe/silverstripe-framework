@@ -29,6 +29,9 @@ class DirectorTest extends SapphireTest {
 	public function tearDown() {
 		// TODO Remove director rule, currently API doesnt allow this
 		
+		// Remove base URL override (setting to false reverts to default behaviour)
+		Director::setBaseURL(false);
+		
 		// Reinstate the original REQUEST_URI after it was modified by some tests
 		$_SERVER['REQUEST_URI'] = self::$originalRequestURI;
 		
@@ -53,6 +56,40 @@ class DirectorTest extends SapphireTest {
 		);
 		
 		unlink($tempFilePath);
+	}
+	
+	public function testAbsoluteURL() {
+		
+		$rootURL = Director::protocolAndHost();
+		$_SERVER['REQUEST_URI'] = "$rootURL/mysite/sub-page/";
+		Director::setBaseURL('/mysite/');
+		
+		// Test already absolute url
+		$this->assertEquals($rootURL, Director::absoluteURL($rootURL));
+		$this->assertEquals($rootURL, Director::absoluteURL($rootURL, true));
+		$this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com'));
+		$this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com', true));
+		$this->assertEquals("$rootURL/test", Director::absoluteURL("$rootURL/test"));
+		$this->assertEquals("$rootURL/test", Director::absoluteURL("$rootURL/test", true));
+		
+		// Test relative to base
+		$this->assertEquals("$rootURL/mysite/test", Director::absoluteURL("test", true));
+		$this->assertEquals("$rootURL/mysite/test/url", Director::absoluteURL("test/url", true));
+		$this->assertEquals("$rootURL/root", Director::absoluteURL("/root", true));
+		$this->assertEquals("$rootURL/root/url", Director::absoluteURL("/root/url", true));
+		
+		// Test relative to requested page
+		$this->assertEquals("$rootURL/mysite/sub-page/test", Director::absoluteURL("test"));
+		// Legacy behaviour resolves this to $rootURL/mysite/test/url
+		//$this->assertEquals("$rootURL/mysite/sub-page/test/url", Director::absoluteURL("test/url"));
+		$this->assertEquals("$rootURL/root", Director::absoluteURL("/root"));
+		$this->assertEquals("$rootURL/root/url", Director::absoluteURL("/root/url"));
+		
+		// Test that javascript links are not left intact
+		$this->assertStringStartsNotWith('javascript', Director::absoluteURL('javascript:alert("attack")'));
+		$this->assertStringStartsNotWith('alert', Director::absoluteURL('javascript:alert("attack")'));
+		$this->assertStringStartsNotWith('javascript', Director::absoluteURL('alert("attack")'));
+		$this->assertStringStartsNotWith('alert', Director::absoluteURL('alert("attack")'));
 	}
 
 	public function testAlternativeBaseURL() {
