@@ -25,13 +25,31 @@ Servers - this is so our changes to the php.ini take effect.
 
 ## Installing SilverStripe
 
+###Composer
+Composer (PHP's package manager) is the prefered way to install SilverStripe and ensure you get the correct set of files for your project.
+
+Composer uses your MAMP PHP executible to run and also requires Git (so it can automatically download the required files from GitHub).
+
+Process to install is as follows:
+
+ 1. Install [git for mac](http://git-scm.com/download/mac).
+ 2. Install composer using the instructions at https://gist.github.com/kkirsche/5710272
+ 3. Run the following command to get a fresh copy of SilverStripe via composer:
+  
+        composer create-project silverstripe/installer /Applications/MAMP/htdocs/silverstripe/
+
+ 4. You can now [use composer]() to manage future SilverStripe updates and adding modules with a few easy commands.
+
+###Package Download
+
 [Download](http://silverstripe.org/download) the latest SilverStripe installer package. Copy the tar.gz file to the 'Document Root' for MAMP - By Default its `/Applications/MAMP/htdocs`.
 Don't know what your Document Root is? Open MAMP Click `Preferences -> Apache`. 
 
 Extract the tar.gz file to a folder, e.g. `silverstripe/` (you always move the tar.gz file first and not the other way
 around as SilverStripe uses a '.htaccess' file which is hidden from OSX so if you move SilverStripe the .htaccess file
-won't come along. 
+won't come along.
 
-Open your web browser and go to `http://localhost:8888/silverstripe/`. Enter your database details - by default with MAMP its user `root` and password  `root` and select your account details. Click "Check Details".
+###Run the installation wizard
+Once you have a copy of the required code (by either of the above methods), open your web browser and go to `http://localhost:8888/silverstripe/`. Enter your database details - by default with MAMP its user `root` and password  `root` and select your account details. Click "Check Details".
 
 Once everything is sorted hit "Install!" and Voila,  you have SilverStripe installed 
