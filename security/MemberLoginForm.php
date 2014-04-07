@@ -106,13 +106,13 @@ class MemberLoginForm extends LoginForm {
 		$this->setValidator(new RequiredFields('Email', 'Password'));
 
 		// Focus on the email input when the page is loaded
-		Requirements::customScript(<<<JS
+		$js = <<<JS
 			(function() {
 				var el = document.getElementById("MemberLoginForm_LoginForm_Email");
-				if(el && el.focus) el.focus();
+				if(el && el.focus && (!jQuery || jQuery(el).is(':visible'))) el.focus();
 			})();
-JS
-		);
+JS;
+		Requirements::customScript($js, 'MemberLoginFormFieldFocus');
 	}
 
 	/**
