@@ -80,9 +80,16 @@ class MemberLoginForm extends LoginForm {
 					new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this),
 					// Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
 					// 'Email' value, below:
-					new TextField("Email", $label, Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
+					$emailField = new TextField("Email", $label, null, null, $this),
 					new PasswordField("Password", _t('Member.PASSWORD', 'Password'))
 				);
+				if(Security::config()->remember_username) {
+					$emailField->setValue(Session::get('SessionForms.MemberLoginForm.Email'));
+				} else {
+					// Some browsers won't respect this attribute unless it's added to the form
+					$this->setAttribute('autocomplete', 'off');
+					$emailField->setAttribute('autocomplete', 'off');
+				}
 				if(Security::config()->autologin_enabled) {
 					$fields->push(new CheckboxField(
 						"Remember", 
