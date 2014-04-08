@@ -26,9 +26,9 @@ Servers - this is so our changes to the php.ini take effect.
 ## Installing SilverStripe
 
 ###Composer
-Composer (PHP's package manager) is the prefered way to install SilverStripe and ensure you get the correct set of files for your project.
+[Composer (a dependancy manager for PHP)](http://getcomposer.org) is the prefered way to install SilverStripe and ensure you get the correct set of files for your project.
 
-Composer uses your MAMP PHP executible to run and also requires Git (so it can automatically download the required files from GitHub).
+Composer uses your MAMP PHP executible to run and also requires [git](http://git-scm.com) (so it can automatically download the required files from GitHub).
 
 Process to install is as follows:
 
@@ -38,7 +38,7 @@ Process to install is as follows:
   
         composer create-project silverstripe/installer /Applications/MAMP/htdocs/silverstripe/
 
- 4. You can now [use composer]() to manage future SilverStripe updates and adding modules with a few easy commands.
+ 4. You can now [use composer](http://doc.silverstripe.org/framework/en/installation/composer) to manage future SilverStripe updates and adding modules with a few easy commands.
 
 ###Package Download
 
