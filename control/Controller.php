@@ -154,7 +154,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 					Debug::message("Request handler $body->class object to $this->class controller;"
 						. "rendering with template returned by $body->class::getViewer()");
 				}
-				$body = $body->getViewer($request->latestParam('Action'))->process($body);
+				$body = $body->getViewer($this->getAction())->process($body);
 			}
 			
 			$this->response->setBody($body);
