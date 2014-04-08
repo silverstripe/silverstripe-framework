@@ -35,6 +35,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 			'"DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
 			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName", "DataObjectTest_Team"."Title" '.
 			'FROM "DataObjectTest_Team" ' .
+			'LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" ' .
 			'WHERE ("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').'))' .
 			' ORDER BY "DataObjectTest_Team"."Title" ASC';
 		$this->assertEquals($expected, $playerList->sql());
@@ -62,7 +63,8 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."Created", ' .
 			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_Team"."Title", "DataObjectTest_Team"."ID", ' .
 			'CASE WHEN "DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" WHERE ' .
+			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" ' . 
+			'LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" WHERE ' .
 			'("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').')) ' .
 			'ORDER BY "DataObjectTest_Team"."Title" ASC';
 		$this->assertEquals($expected, $playerList->sql());
