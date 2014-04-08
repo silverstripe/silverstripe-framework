@@ -107,6 +107,10 @@ class File extends DataObject {
 	private static $extensions = array(
 		"Hierarchy",
 	);
+
+	private static $casting = array (
+		'TreeTitle' => 'HTMLText'
+	);
 	
 	/**
 	 * @config
@@ -732,7 +736,7 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Does not change the filesystem itself, please use {@link write()} for this.
+	 * Caution: this does not change the location of the file on the filesystem.
 	 */
 	public function setFilename($val) {
 		$this->setField('Filename', $val);

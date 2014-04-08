@@ -23,6 +23,13 @@ Used in side panels and action tabs
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status.ui-state-error-text { color: red; font-weight: bold; width: 150px; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status.ui-state-warning-text { color: #b7a403; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status.ui-state-success-text { color: #1f9433; }
+.ss-uploadfield .ss-uploadfield-item.ui-state-error .ss-uploadfield-item-preview { width: auto; height: auto; margin-right: 15px; }
+.ss-uploadfield .ss-uploadfield-item.ui-state-error .ss-uploadfield-item-info { margin-left: 0; }
+.ss-uploadfield .ss-uploadfield-item.ui-state-error .ss-uploadfield-item-info .ss-uploadfield-item-name { float: left; width: 70%; height: auto; }
+.ss-uploadfield .ss-uploadfield-item.ui-state-error .ss-uploadfield-item-info .ss-uploadfield-item-name .name { float: left; width: 100%; margin-bottom: 5px; }
+.ss-uploadfield .ss-uploadfield-item.ui-state-error .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status { float: left; width: 100%; padding: 0; text-align: left; }
+.ss-uploadfield .ss-uploadfield-item.ui-state-error .ss-uploadfield-item-info .ss-uploadfield-item-actions { float: right; width: 5%; min-height: 0; margin: 0; }
+.ss-uploadfield .ss-uploadfield-item.ui-state-error .ss-uploadfield-item-info .ss-uploadfield-item-actions .ss-uploadfield-item-cancel { position: relative; top: auto; }
 .ss-uploadfield .ss-ui-button { display: block; float: left; margin: 0 10px 6px 0; }
 .ss-uploadfield .ss-ui-button.ss-uploadfield-fromcomputer { position: relative; overflow: hidden; }
 .ss-uploadfield .ss-uploadfield-files { margin: 0; padding: 0; overflow: auto; position: relative; }
@@ -46,3 +53,4 @@ Used in side panels and action tabs
 
 .ss-upload .clear { clear: both; }
 .ss-upload .ss-uploadfield-fromcomputer input { /* since we can't really style the file input, we use this hack to make it as big as the button and hide it */ position: absolute; top: 0; right: 0; margin: 0; opacity: 0; filter: alpha(opacity=0); transform: translate(-300px, 0) scale(4); font-size: 23px; direction: ltr; cursor: pointer; height: 30px; line-height: 30px; }
+.ss-upload .loader { height: 94px; background: transparent url(../admin/images/spinner.gif) no-repeat 50% 50%; }

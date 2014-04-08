@@ -23,6 +23,9 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 				$errorType = 'Notice';
 				$colour = 'grey';
 				break;
+			default:
+				$errorType = $event['priorityName'];
+				$colour = 'grey';
 		}
 
 		if(!is_array($event['message'])) {
@@ -63,8 +66,8 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 		$relfile = Director::makeRelative($errfile);
 		if($relfile && $relfile[0] == '/') $relfile = substr($relfile, 1);
 		
-		$host = @$_SERVER['HTTP_HOST'];
-		$uri = @$_SERVER['REQUEST_URI'];
+		$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;
+		$uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
 
 		$subject = "[$errorType] in $relfile:{$errline} (http://{$host}{$uri})";
 

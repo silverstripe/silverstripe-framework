@@ -43,19 +43,24 @@ class Aggregate extends ViewableData {
 	protected static function cache() {
 		return self::$cache ? self::$cache : (self::$cache = SS_Cache::factory('aggregate'));
 	}
-	
-	/** Clear the aggregate cache for a given type, or pass nothing to clear all aggregate caches */
+
+	/** 
+	 * Clear the aggregate cache for a given type, or pass nothing to clear all aggregate caches.
+	 * {@link $class} is just effective if the cache backend supports tags.
+	 */
 	public static function flushCache($class=null) {
 		$cache = self::cache();
-		
-		if (!$class || $class == 'DataObject') {
+		$capabilities = $cache->getBackend()->getCapabilities();
+		if($capabilities['tags'] && (!$class || $class == 'DataObject')) {
 			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('aggregate'));
-		} else {
+		} elseif($capabilities['tags']) {
 			$tags = ClassInfo::ancestry($class);
 			foreach($tags as &$tag) {
 				$tag = preg_replace('/[^a-zA-Z0-9_]/', '_', $tag);
 			}
 			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, $tags);
+		} else {
+			$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 		}
 	}
 	

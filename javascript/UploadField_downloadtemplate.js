@@ -1,9 +1,11 @@
 window.tmpl.cache['ss-uploadfield-downloadtemplate'] = tmpl(
 	'{% for (var i=0, files=o.files, l=files.length, file=files[0]; i<l; file=files[++i]) { %}' +
 		'<li class="ss-uploadfield-item template-download{% if (file.error) { %} ui-state-error{% } %}" data-fileid="{%=file.id%}">' + 
-			'<div class="ss-uploadfield-item-preview preview"><span>' +
-				'<img src="{%=file.thumbnail_url%}" alt="" />' +
-			'</span></div>' +
+			'{% if (file.thumbnail_url) { %}' +
+				'<div class="ss-uploadfield-item-preview preview"><span>' +
+					'<img src="{%=file.thumbnail_url%}" alt="" />' +
+				'</span></div>' +
+			'{% } %}' +
 			'<div class="ss-uploadfield-item-info">' +
 				'{% if (!file.error) { %}' +
 					'<input type="hidden" name="{%=file.fieldname%}[Files][]" value="{%=file.id%}" />' + 

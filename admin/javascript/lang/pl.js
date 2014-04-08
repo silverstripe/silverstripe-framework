@@ -4,13 +4,13 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 	if(typeof(console) != 'undefined') console.error('Class ss.i18n not defined');
 } else {
 	ss.i18n.addDictionary('pl', {
+    "LeftAndMain.CONFIRMUNSAVED": "Czy na pewno chcesz kontynuować nawigację poza tą stronę?\n\nUWAGA: Twoje zmiany nie zostały zapisane.\n\nWciśnij OK aby kontynuować, wciśnij Anuluj aby pozostać na tej stronie.",
+    "LeftAndMain.CONFIRMUNSAVEDSHORT": "UWAGA: Twoje zmiany nie zostały zapisane.",
+    "SecurityAdmin.BATCHACTIONSDELETECONFIRM": "Czy na pewno chcesz usunąć %s grup?",
     "ModelAdmin.SAVED": "Zapisano",
-    "LeftAndMain.CONFIRMUNSAVED": "Are you sure you want to navigate away from this page?\n\nWARNING: Your changes have not been saved.\n\nPress OK to continue, or Cancel to stay on the current page.",
-    "ModelAdmin.VALIDATIONERROR": "Validation Error",
+    "ModelAdmin.REALLYDELETE": "Na pewno usunąć?",
     "ModelAdmin.DELETED": "Usunięto",
-    "SecurityAdmin.BATCHACTIONSDELETECONFIRM": "Do you really want to delete %s groups?",
-    "ModelAdmin.REALLYDELETE": "Napewno usunąć?",
-    "LeftAndMain.PAGEWASDELETED": "Ta strona została usunięta.",
-    "LeftAndMain.CONFIRMUNSAVEDSHORT": "WARNING: Your changes have not been saved."
+    "ModelAdmin.VALIDATIONERROR": "Niepoprawne dane",
+    "LeftAndMain.PAGEWASDELETED": "Ta strona została usunięta. Wybierz stronę z listy aby rozpocząć edycję."
 });
 }

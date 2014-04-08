@@ -62,10 +62,10 @@ class HtmlEditorSanitiser {
 		foreach(explode(',', $validElements) as $validElement) {
 			if(preg_match($elementRuleRegExp, $validElement, $matches)) {
 
-				$prefix = @$matches[1];
-				$elementName = @$matches[2];
-				$outputName = @$matches[3];
-				$attrData = @$matches[4];
+				$prefix = isset($matches[1]) ? $matches[1] : null;
+				$elementName = isset($matches[2]) ? $matches[2] : null;
+				$outputName = isset($matches[3]) ? $matches[3] : null;
+				$attrData = isset($matches[4]) ? $matches[4] : null;
 
 				// Create the new element
 				$element = new stdClass();
@@ -91,10 +91,10 @@ class HtmlEditorSanitiser {
 						if(preg_match($attrRuleRegExp, $attr, $matches)) {
 							$attr = new stdClass();
 
-							$attrType = @$matches[1];
-							$attrName = str_replace('::', ':', @$matches[2]);
-							$prefix = @$matches[3];
-							$value = @$matches[4];
+							$attrType = isset($matches[1]) ? $matches[1] : null;
+							$attrName = isset($matches[2]) ? str_replace('::', ':', $matches[2]) : null;
+							$prefix = isset($matches[3]) ? $matches[3] : null;
+							$value = isset($matches[4]) ? $matches[4] : null;
 
 							// Required
 							if($attrType === '!') {

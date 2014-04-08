@@ -24,10 +24,6 @@ class Folder extends File {
 	private static $plural_name = "Folders";
 
 	private static $default_sort = "\"Name\"";
-
-	private static $casting = array (
-		'TreeTitle' => 'HTMLText'
-	);
 	
 	/**
 	 * 
@@ -40,11 +36,13 @@ class Folder extends File {
 
 	/**
 	 * Find the given folder or create it both as {@link Folder} database records
-	 * and on the filesystem. If necessary, creates parent folders as well.
+	 * and on the filesystem. If necessary, creates parent folders as well. If it's
+	 * unable to find or make the folder, it will return null (as /assets is unable
+	 * to be represented by a Folder DataObject)
 	 * 
 	 * @param $folderPath string Absolute or relative path to the file.
 	 *  If path is relative, its interpreted relative to the "assets/" directory.
-	 * @return Folder
+	 * @return Folder|null
 	 */
 	public static function find_or_make($folderPath) {
 		// Create assets directory, if it is missing

@@ -613,6 +613,22 @@ class MemberTest extends FunctionalTest {
 			'Adding new admin group relation is allowed for admin members'
 		);
 	}
+
+	/**
+	 * Test that extensions using updateCMSFields() are applied correctly
+	 */
+	public function testUpdateCMSFields() {
+		Member::add_extension('MemberTest_FieldsExtension');
+
+		$member = singleton('Member');
+		$fields = $member->getCMSFields();
+
+		$this->assertNotNull($fields->dataFieldByName('Email'), 'Scaffolded fields are retained');
+		$this->assertNull($fields->dataFieldByName('Salt'), 'Field modifications run correctly');
+		$this->assertNotNull($fields->dataFieldByName('TestMemberField'), 'Extension is applied correctly');
+
+		Member::remove_extension('MemberTest_FieldsExtension');
+	}
 	
 	/**
 	 * Test that all members are returned
@@ -825,6 +841,18 @@ class MemberTest_ViewingDeniedExtension extends DataExtension implements TestOnl
 	public function canView($member = null) {
 		return false;
 	}
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class MemberTest_FieldsExtension extends DataExtension implements TestOnly {
+
+	public function updateCMSFields(FieldList $fields) {
+		$fields->addFieldToTab('Root.Main', new TextField('TestMemberField', 'Test'));
+	}
+
 }
 
 /**

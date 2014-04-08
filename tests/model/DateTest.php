@@ -201,5 +201,28 @@ class DateTest extends SapphireTest {
 
 		SS_Datetime::clear_mock_now();
 	}
+	
+	public function testFormatFromSettings() {	
+		
+		$memberID = $this->logInWithPermission();
+		$member = DataObject::get_by_id('Member', $memberID);
+		$member->DateFormat = 'dd/MM/YYYY';
+		$member->write();
+		
+		$fixtures = array(
+			'2000-12-31' => '31/12/2000',
+			'31-12-2000' => '31/12/2000',
+			'31/12/2000' => '31/12/2000',
+			'2014-04-01' => '01/04/2014'
+		);
+		
+		foreach($fixtures as $from => $to) {
+			$date = DBField::create_field('Date', $from);
+			// With member
+			$this->assertEquals($to, $date->FormatFromSettings($member));
+			// Without member
+			$this->assertEquals($to, $date->FormatFromSettings());
+		}
+	}	
 
 }

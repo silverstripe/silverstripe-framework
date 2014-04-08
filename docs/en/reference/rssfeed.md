@@ -21,7 +21,7 @@ define an AbsoluteLink() method.
 	RSSFeed::linkToFeed($link, $title)
 
 This line should go in your `[api:Controller]` subclass in the action you want 
-to include the HTML link. 
+to include the HTML link. Not all arguments are required, see `[api:RSSFeed]` and example below.  Last Modified Time is expected in seconds like time().
 
 	:::php
 	$feed = new RSSFeed(
@@ -31,7 +31,9 @@ to include the HTML link.
 		$description, 
 		$titleField, 
 		$descriptionField, 
-		$authorField
+		$authorField,
+		$lastModifiedTime,
+		$etag
 	);
 
 Creates a new `[api:RSSFeed]` instance to be returned. The arguments notify 

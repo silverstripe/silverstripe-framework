@@ -85,6 +85,52 @@
 				}
 			}			
 		}
+
+		//Upload/Validation error
+		&.ui-state-error
+		{
+			.ss-uploadfield-item-preview {
+				width: auto;
+				height: auto;
+				margin-right: 15px;
+			}
+
+			.ss-uploadfield-item-info {
+				margin-left: 0;
+
+				.ss-uploadfield-item-name {
+					float: left;
+					width: 70%;
+					height: auto;
+
+					.name
+					{
+						float: left;
+						width: 100%;
+						margin-bottom: 5px;
+					}
+
+					.ss-uploadfield-item-status {
+						float: left;
+						width: 100%;
+						padding: 0;
+						text-align: left;
+					}
+				}
+
+				.ss-uploadfield-item-actions {
+					float: right;
+					width: 5%;
+					min-height: 0;
+					margin: 0;
+
+					.ss-uploadfield-item-cancel {
+						position: relative;
+						top: auto;
+					}			
+				}
+			}			
+		}
 	}
 	.ss-ui-button {
 		display: block;
@@ -237,5 +283,9 @@
 			height: 30px;
 			line-height: 30px;
 		}
+	}
+	.loader {
+		height: 94px; // Approxmiately matches the height of the field once a file is attached, avoids a 'jump' in size
+		background: transparent url(../admin/images/spinner.gif) no-repeat 50% 50%;
 	}
 }

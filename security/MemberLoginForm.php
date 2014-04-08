@@ -1,6 +1,14 @@
 <?php
 /**
- * Log-in form for the "member" authentication method
+ * Log-in form for the "member" authentication method.
+ *
+ * Available extension points:
+ * - "authenticationFailed": Called when login was not successful. 
+ *    Arguments: $data containing the form submission
+ * - "forgotPassword": Called before forgot password logic kicks in, 
+ *    allowing extensions to "veto" execution by returning FALSE. 
+ *    Arguments: $member containing the detected Member record
+ * 
  * @package framework
  * @subpackage security
  */
@@ -256,9 +264,12 @@ JS;
 
 
 	/**
-	 * Forgot password form handler method
-	 *
-	 * This method is called when the user clicks on "I've lost my password"
+	 * Forgot password form handler method.
+	 * Called when the user clicks on "I've lost my password".
+	 * Extensions can use the 'forgotPassword' method to veto executing
+	 * the logic, by returning FALSE. In this case, the user will be redirected back
+	 * to the form without further action. It is recommended to set a message
+	 * in the form detailing why the action was denied.
 	 *
 	 * @param array $data Submitted data
 	 */
@@ -269,7 +280,7 @@ JS;
 
 		// Allow vetoing forgot password requests
 		$results = $this->extend('forgotPassword', $member);
-		if($results && is_array($results) && min($results) === false) {
+		if($results && is_array($results) && in_array(false, $results, true)) {
 			return $this->controller->redirect('Security/lostpassword');
 		}
 

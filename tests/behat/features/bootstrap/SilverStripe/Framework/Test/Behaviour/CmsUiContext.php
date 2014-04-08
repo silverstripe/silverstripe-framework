@@ -114,11 +114,20 @@ class CmsUiContext extends BehatContext {
 		$table_element = null;
 		foreach ($table_elements as $table) {
 			$table_title_element = $table->find('css', '.title');
-			if ($table_title_element->getText() === $title) {
+			if ($table_title_element && $table_title_element->getText() === $title) {
 				$table_element = $table;
 				break;
 			}
 		}
+
+		// Some {@link GridField} tables don't have a visible title, so look for a fieldset with data-name instead
+		if(!$table_element) {
+			$fieldset = $page->findAll('xpath', "//fieldset[@data-name='$title']");
+			if(is_array($fieldset) && isset($fieldset[0])) {
+				$table_element = $fieldset[0]->find('css', '.ss-gridfield-table');
+			}
+		}
+
 		assertNotNull($table_element, sprintf('Table `%s` not found', $title));
 
 		return $table_element;
@@ -340,6 +349,42 @@ class CmsUiContext extends BehatContext {
 		
 		$driver->switchToIFrame('cms-preview-iframe');
 		$this->getMainContext()->assertPageNotContainsText($content);
+		$driver->switchToWindow($origWindowName);
+	}
+
+	/**
+	 * When I follow "my link" in preview
+	 *
+	 * @When /^(?:|I )follow "(?P<link>(?:[^"]|\\")*)" in preview$/
+	 */
+	public function clickLinkInPreview($link) {
+		$driver = $this->getSession()->getDriver();
+		// TODO Remove once we have native support in Mink and php-webdriver,
+		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
+		$origWindowName = $driver->getWebDriverSession()->window_handle();
+		$driver->switchToIFrame('cms-preview-iframe');
+
+		$link = $this->fixStepArgument($link);
+		$this->getSession()->getPage()->clickLink($link);
+
+		$driver->switchToWindow($origWindowName);
+	}
+
+	/**
+	 * When I press "submit" in preview
+	 *
+	 * @When /^(?:|I )press "(?P<button>(?:[^"]|\\")*)" in preview$/
+	 */
+	public function pressButtonInPreview($button) {
+		$driver = $this->getSession()->getDriver();
+		// TODO Remove once we have native support in Mink and php-webdriver,
+		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
+		$origWindowName = $driver->getWebDriverSession()->window_handle();
+		$driver->switchToIFrame('cms-preview-iframe');
+
+		$button = $this->fixStepArgument($button);
+		$this->getSession()->getPage()->pressButton($button);
+
 		$driver->switchToWindow($origWindowName);
 	}
 

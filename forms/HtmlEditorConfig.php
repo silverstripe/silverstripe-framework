@@ -69,7 +69,7 @@ class HtmlEditorConfig {
 	protected $settings = array(
 		'friendly_name' => '(Please set a friendly name for this config)',
 		'priority' => 0,
-		'mode' => "specific_textareas",
+		'mode' => "none", // initialized through HtmlEditorField.js redraw() logic
 		'editor_selector' => "htmleditor",
 		'width' => "100%",
 		'auto_resize' => false,

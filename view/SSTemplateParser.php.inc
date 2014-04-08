@@ -673,10 +673,25 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	function CacheBlock_CacheBlockTemplate(&$res, $sub){
 		// Get the block counter
 		$block = ++$res['subblocks'];
-		// Build the key for this block from the passed cache key, the block index, and the sha hash of the template
-		// itself
-		$key = "'" . sha1($sub['php']) . (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") . 
-			".'_$block'";
+		// Build the key for this block from the global key (evaluated in a closure within the template),
+		// the passed cache key, the block index, and the sha hash of the template.
+		$res['php'] .= '$keyExpression = function() use ($scope, $cache) {' . PHP_EOL;
+		$res['php'] .= '$val = \'\';' . PHP_EOL;
+		if($globalKey = Config::inst()->get('SSViewer', 'global_key')) {
+			// Embed the code necessary to evaluate the globalKey directly into the template,
+			// so that SSTemplateParser only needs to be called during template regeneration.
+			// Warning: If the global key is changed, it's necessary to flush the template cache.
+			$parser = Injector::inst()->get('SSTemplateParser', false);
+			$result = $parser->compileString($globalKey, '', false, false);
+			if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $parser);
+			$res['php'] .= $result . PHP_EOL;
+		}
+		$res['php'] .= 'return $val;' . PHP_EOL;
+		$res['php'] .= '};' . PHP_EOL;
+		$key = 'sha1($keyExpression())' // Global key
+			. '.\'_' . sha1($sub['php']) // sha of template
+			. (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") // Passed key
+			. ".'_$block'"; // block index
 		// Get any condition
 		$condition = isset($res['condition']) ? $res['condition'] : '';
 		
@@ -1142,9 +1157,10 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	 * @param  $string The source of the template
 	 * @param string $templateName The name of the template, normally the filename the template source was loaded from
 	 * @param bool $includeDebuggingComments True is debugging comments should be included in the output
+	 * @param bool $topTemplate True if this is a top template, false if it's just a template
 	 * @return mixed|string The php that, when executed (via include or exec) will behave as per the template source
 	 */
-	public function compileString($string, $templateName = "", $includeDebuggingComments=false) {
+	public function compileString($string, $templateName = "", $includeDebuggingComments=false, $topTemplate = true) {
 		if (!trim($string)) {
 			$code = '';
 		}
@@ -1158,7 +1174,11 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			if(substr($string, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $this->pos = 3;
 			
 			// Match the source against the parser
-			$result =  $this->match_TopTemplate();
+			if ($topTemplate) {
+				$result = $this->match_TopTemplate();
+			} else {
+				$result = $this->match_Template();
+			}
 			if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $this);
 	
 			// Get the result

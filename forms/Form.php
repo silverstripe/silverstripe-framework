@@ -679,7 +679,7 @@ class Form extends RequestHandler {
 	 * @return String
 	 */
 	public function getAttribute($name) {
-		return @$this->attributes[$name];
+		if(isset($this->attributes[$name])) return $this->attributes[$name];
 	}
 
 	public function getAttributes() {
@@ -1012,12 +1012,17 @@ class Form extends RequestHandler {
 		return $this->messageType;
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function getMessageFromSession() {
 		if($this->message || $this->messageType) {
 			return $this->message;
-		}else{
+		} else {
 			$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
 			$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
+
+			return $this->message;
 		}
 	}
 
@@ -1369,7 +1374,7 @@ class Form extends RequestHandler {
 			. " value=\"" . $this->FormAction() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_name\" value=\"" . $this->FormName() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_method\" value=\"" . $this->FormMethod() . "\" />\n";
-		$content .= "<input type=\"hidden\" name=\"_form_enctype\" value=\"" . $this->FormEncType() . "\" />\n";
+		$content .= "<input type=\"hidden\" name=\"_form_enctype\" value=\"" . $this->getEncType() . "\" />\n";
 
 		return $content;
 	}

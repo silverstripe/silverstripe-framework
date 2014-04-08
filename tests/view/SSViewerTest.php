@@ -85,9 +85,8 @@ class SSViewerTest extends SapphireTest {
 	 * Small helper to render templates from strings
 	 */
 	public function render($templateString, $data = null) {
-		$t = SSViewer::fromString($templateString);
 		if(!$data) $data = new SSViewerTestFixture();
-		return $t->process($data);
+		return SSViewer::execute_string($templateString, $data);
 	}
 	
 	public function testRequirements() {
