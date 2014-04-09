@@ -303,7 +303,8 @@ class FolderTest extends SapphireTest {
 			'.git',
 			'web.config',
 			'.DS_Store',
-			'_my_synced_file.txt'
+			'_my_synced_file.txt',
+			'invalid_extension.xyz123'
 		);
 
 		$folders = array(
@@ -325,7 +326,7 @@ class FolderTest extends SapphireTest {
 		$folder = Folder::find_or_make('/FolderTest/sync');
 		$result = $folder->syncChildren();
 
-		$this->assertEquals(10, $result['skipped']);
+		$this->assertEquals(11, $result['skipped']);
 		$this->assertEquals(2, $result['added']);
 
 		// folder with a path of _test should exist
@@ -335,6 +336,10 @@ class FolderTest extends SapphireTest {
 
 		$this->assertEquals(1, File::get()->filter(array(
 			'Name' => '_my_synced_file.txt'
+		))->count());
+
+		$this->assertEquals(0, File::get()->filter(array(
+			'Name' => 'invalid_extension.xyz123'
 		))->count());
 	}
 	

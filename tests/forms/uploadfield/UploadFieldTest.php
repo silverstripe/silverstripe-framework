@@ -161,6 +161,8 @@ class UploadFieldTest extends FunctionalTest {
 	public function testAllowedExtensions() {
 		$this->loginWithPermission('ADMIN');
 
+		// Test invalid file
+		// Relies on Upload_Validator failing to allow this extension
 		$invalidFile = 'invalid.php';
 		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($invalidFile));
 		$response = $this->post(
@@ -170,6 +172,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertTrue($response->isError());
 		$this->assertContains('Extension is not allowed', $response->getBody());
 
+		// Test valid file
 		$validFile = 'valid.txt';
 		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($validFile));
 		$response = $this->post(
@@ -178,6 +181,17 @@ class UploadFieldTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 		$this->assertNotContains('Extension is not allowed', $response->getBody());
+		
+		// Test that setAllowedExtensions rejects extensions explicitly denied by File.allowed_extensions
+		// Relies on File::validate failing to allow this extension
+		$invalidFile = 'invalid.php';
+		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($invalidFile));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/InvalidAllowedExtensionsField/upload',
+			array('InvalidAllowedExtensionsField' => $this->getUploadFile($invalidFile))
+		);
+		$this->assertTrue($response->isError());
+		$this->assertContains('Extension is not allowed', $response->getBody());
 	}
 
 	/**
@@ -1005,6 +1019,9 @@ class UploadFieldTestForm extends Form implements TestOnly {
 		$fieldAllowedExtensions = new UploadField('AllowedExtensionsField');
 		$fieldAllowedExtensions->getValidator()->setAllowedExtensions(array('txt'));
 
+		$fieldInvalidAllowedExtensions = new UploadField('InvalidAllowedExtensionsField');
+		$fieldInvalidAllowedExtensions->getValidator()->setAllowedExtensions(array('txt', 'php'));
+
 		$fields = new FieldList(
 			$fieldRootFolder,
 			$fieldNoRelation,
@@ -1022,7 +1039,8 @@ class UploadFieldTestForm extends Form implements TestOnly {
 			$fieldSubfolder,
 			$fieldCanUploadFalse,
 			$fieldCanAttachExisting,
-			$fieldAllowedExtensions
+			$fieldAllowedExtensions,
+			$fieldInvalidAllowedExtensions
 		);
 		$actions = new FieldList(
 			new FormAction('submit')

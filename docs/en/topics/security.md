@@ -417,6 +417,34 @@ you need to serve directly.
 See [Apache](/installation/webserver) and [Nginx](/installation/nginx) installation documentation for details 
 specific to your web server
 
+### User uploaded files
+
+Certain file types are by default excluded from user upload. html, xhtml, htm, and xml files may have embedded,
+or contain links to, external resources or scripts that may hijack browser sessions and impersonate that user.
+Even if the uploader of this content may be a trusted user, there is no safeguard against these users being
+deceived by the content source.
+
+Flash files (swf) are also prone to a variety of security vulnerabilities of their own, and thus by default are
+disabled from file upload. As a standard practice, any users wishing to allow flash upload to their sites should
+take the following precautions:
+
+ * Only allow flash uploads from trusted sources, preferably those with available source.
+ * Make use of the [AllowScriptAccess](http://helpx.adobe.com/flash/kb/control-access-scripts-host-web.html)
+   parameter to ensure that any embedded Flash file is isolated from its environments scripts. In an ideal
+   situation, all flash content would be served from another domain, and this value is set to "sameDomain". If this
+   is not feasible, this should be set to "never". For trusted flash files you may set this to "sameDomain" without
+   an isolated domain name, but do so at your own risk.
+ * Take note of any regional cookie legislation that may affect your users. See
+   [Cookie Law and Flash Cookies](http://eucookiedirective.com/cookie-law-and-flash-cookies/).
+
+See [the Adobe Flash security page](http://www.adobe.com/devnet/flashplayer/security.html) for more information.
+
+ADMIN privileged users may be allowed to override the above upload restrictions if the
+`File.apply_restrictions_to_admin` config is set to false. By default this is true, which enforces these
+restrictions globally.
+
+Additionally, if certain file uploads should be made available to non-privileged users, you can add them to the
+list of allowed extensions by adding these to the `File.allowed_extensions` config.
 
 ## Passwords
 
