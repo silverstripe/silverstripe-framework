@@ -90,4 +90,4 @@ You can access the following controller-method with /team/signup
 
 ## SSViewer template rendering
 
-See [templates](/topics/templates) for information on the SSViewer template system.
+See [templates](/reference/templates) for information on the SSViewer template system.
