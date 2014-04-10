@@ -105,7 +105,13 @@ class SS_DatetimeTest extends SapphireTest {
 		);
 
 		$this->assertEquals(
-			'1 year ago',
+			'1 year ago', 
+			DBField::create_field('SS_Datetime', '1999-12-30 12:00:12')->Ago(true, 1),
+			'Approximate past match in singular, significance=1'
+		);
+
+		$this->assertEquals(
+			'12 months ago', 
 			DBField::create_field('SS_Datetime', '1999-12-30 12:00:12')->Ago(),
 			'Approximate past match in singular'
 		);
@@ -127,6 +133,36 @@ class SS_DatetimeTest extends SapphireTest {
 			DBField::create_field('SS_Datetime', '2000-12-31 11:59:01')->Ago(false),
 			'Approximate past match on seconds with $includeSeconds=false'
 		);
+		
+		$this->assertEquals(
+			'1 min ago',
+			DBField::create_field('SS_Datetime', '2000-12-31 11:58:50')->Ago(false),
+			'Test between 1 and 2 minutes with includeSeconds=false'
+		);
+		
+		$this->assertEquals(
+			'70 secs ago',
+			DBField::create_field('SS_Datetime', '2000-12-31 11:58:50')->Ago(true),
+			'Test between 1 and 2 minutes with includeSeconds=true'
+		);
+
+		$this->assertEquals(
+			'4 mins ago', 
+			DBField::create_field('SS_Datetime', '2000-12-31 11:55:50')->Ago(),
+			'Past match on minutes'
+		);
+
+		$this->assertEquals(
+			'1 hour ago', 
+			DBField::create_field('SS_Datetime', '2000-12-31 10:50:58')->Ago(true, 1),
+			'Past match on hours, significance=1'
+		);
+
+		$this->assertEquals(
+			'3 hours ago', 
+			DBField::create_field('SS_Datetime', '2000-12-31 08:50:58')->Ago(),
+			'Past match on hours'
+		);
 
 		SS_Datetime::clear_mock_now();
 	}
@@ -141,7 +177,13 @@ class SS_DatetimeTest extends SapphireTest {
 		);
 
 		$this->assertEquals(
-			'in 1 hour',
+			'in 1 hour', 
+			DBField::create_field('SS_Datetime', '2000-12-31 1:01:05')->Ago(true, 1),
+			'Approximate past match on minutes, significance=1'
+		);
+
+		$this->assertEquals(
+			'in 61 mins', 
 			DBField::create_field('SS_Datetime', '2000-12-31 1:01:05')->Ago(),
 			'Approximate past match on minutes'
 		);

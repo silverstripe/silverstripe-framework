@@ -221,9 +221,10 @@ class Date extends DBField {
 	 * Returns the number of seconds/minutes/hours/days or months since the timestamp.
 	 *
 	 * @param boolean $includeSeconds Show seconds, or just round to "less than a minute".
+	 * @param int $significance Minimum significant value of X for "X units ago" to display
 	 * @return  String
 	 */
-	public function Ago($includeSeconds = true) {
+	public function Ago($includeSeconds = true, $significance = 2) {
 		if($this->value) {
 			$time = SS_Datetime::now()->Format('U');
 			if(strtotime($this->value) == $time || $time > strtotime($this->value)) {
@@ -231,14 +232,14 @@ class Date extends DBField {
 					'Date.TIMEDIFFAGO',
 					"{difference} ago",
 					'Natural language time difference, e.g. 2 hours ago',
-					array('difference' => $this->TimeDiff($includeSeconds))
+					array('difference' => $this->TimeDiff($includeSeconds, $significance))
 				);
 			} else {
 				return _t(
 					'Date.TIMEDIFFIN',
 					"in {difference}",
 					'Natural language time difference, e.g. in 2 hours',
-					array('difference' => $this->TimeDiff($includeSeconds))
+					array('difference' => $this->TimeDiff($includeSeconds, $significance))
 				);
 			}
 		}
@@ -246,79 +247,68 @@ class Date extends DBField {
 
 	/**
 	 * @param boolean $includeSeconds Show seconds, or just round to "less than a minute".
-	 * @return  String
+	 * @param int $significance Minimum significant value of X for "X units ago" to display
+	 * @return string
 	 */
-	public function TimeDiff($includeSeconds = true) {
+	public function TimeDiff($includeSeconds = true, $significance = 2) {
 		if(!$this->value) return false;
 
 		$time = SS_Datetime::now()->Format('U');
 		$ago = abs($time - strtotime($this->value));
-
-		if($ago < 60 && $includeSeconds) {
-			$span = $ago;
-			$result = ($span != 1) ? "{$span} "._t("Date.SECS", "secs") : "{$span} "._t("Date.SEC", "sec");
-		} elseif($ago < 60) {
-			$result = _t('Date.LessThanMinuteAgo', 'less than a minute');
-		} elseif($ago < 3600) {
-			$span = round($ago/60);
-			$result = ($span != 1) ? "{$span} "._t("Date.MINS", "mins") : "{$span} "._t("Date.MIN", "min");
-		} elseif($ago < 86400) {
-			$span = round($ago/3600);
-			$result = ($span != 1) ? "{$span} "._t("Date.HOURS", "hours") : "{$span} "._t("Date.HOUR", "hour");
-		} elseif($ago < 86400*30) {
-			$span = round($ago/86400);
-			$result = ($span != 1) ? "{$span} "._t("Date.DAYS", "days") : "{$span} "._t("Date.DAY", "day");
-		} elseif($ago < 86400*365) {
-			$span = round($ago/86400/30);
-			$result = ($span != 1) ? "{$span} "._t("Date.MONTHS", "months") : "{$span} "._t("Date.MONTH", "month");
-		} elseif($ago > 86400*365) {
-			$span = round($ago/86400/365);
-			$result = ($span != 1) ? "{$span} "._t("Date.YEARS", "years") : "{$span} "._t("Date.YEAR", "year");
+		if($ago < 60 && !$includeSeconds) {
+			return _t('Date.LessThanMinuteAgo', 'less than a minute');
+		} elseif($ago < $significance * 60 && $includeSeconds) {
+			return $this->TimeDiffIn('seconds');
+		} elseif($ago < $significance * 3600) {
+			return $this->TimeDiffIn('minutes');
+		} elseif($ago < $significance * 86400) {
+			return $this->TimeDiffIn('hours');
+		} elseif($ago < $significance * 86400 * 30) {
+			return $this->TimeDiffIn('days');
+		} elseif($ago < $significance * 86400 * 365) {
+			return $this->TimeDiffIn('months');
+		} else {
+			return $this->TimeDiffIn('years');
 		}
-
-		// Replace duplicate spaces, backwards compat with existing translations
-		$result = preg_replace('/\s+/', ' ', $result);
-
-		return $result;
 	}
 
 	/**
 	 * Gets the time difference, but always returns it in a certain format
-	 * @param string $format The format, could be one of these:
+	 * 
+	 * @param string $format The format, could be one of these: 
 	 * 'seconds', 'minutes', 'hours', 'days', 'months', 'years'.
-	 *
-	 * @return string
+	 * @return string The resulting formatted period
 	 */
 	public function TimeDiffIn($format) {
-		if($this->value) {
-			$ago = abs(time() - strtotime($this->value));
+		if(!$this->value) return false;
 
-			switch($format) {
-				case "seconds":
-					$span = $ago;
-					return ($span != 1) ? "{$span} seconds" : "{$span} second";
-				break;
-				case "minutes":
-					$span = round($ago/60);
-					return ($span != 1) ? "{$span} minutes" : "{$span} minute";
-				break;
-				case "hours":
-					$span = round($ago/3600);
-					return ($span != 1) ? "{$span} hours" : "{$span} hour";
-				break;
-				case "days":
-					$span = round($ago/86400);
-					return ($span != 1) ? "{$span} days" : "{$span} day";
-				break;
-				case "months":
-					$span = round($ago/86400/30);
-					return ($span != 1) ? "{$span} months" : "{$span} month";
-				break;
-				case "years":
-					$span = round($ago/86400/365);
-					return ($span != 1) ? "{$span} years" : "{$span} year";
-				break;
-			}
+		$time = SS_Datetime::now()->Format('U');
+		$ago = abs($time - strtotime($this->value));
+			
+		switch($format) {
+			case "seconds":
+				$span = $ago;
+				return ($span != 1) ? "{$span} "._t("Date.SECS", "secs") : "{$span} "._t("Date.SEC", "sec");
+				
+			case "minutes":
+				$span = round($ago/60);
+				return ($span != 1) ? "{$span} "._t("Date.MINS", "mins") : "{$span} "._t("Date.MIN", "min");
+				
+			case "hours":
+				$span = round($ago/3600);
+				return ($span != 1) ? "{$span} "._t("Date.HOURS", "hours") : "{$span} "._t("Date.HOUR", "hour");
+				
+			case "days":
+				$span = round($ago/86400);
+				return ($span != 1) ? "{$span} "._t("Date.DAYS", "days") : "{$span} "._t("Date.DAY", "day");
+				
+			case "months":
+				$span = round($ago/86400/30);
+				return ($span != 1) ? "{$span} "._t("Date.MONTHS", "months") : "{$span} "._t("Date.MONTH", "month");
+				
+			case "years":
+				$span = round($ago/86400/365);
+				return ($span != 1) ? "{$span} "._t("Date.YEARS", "years") : "{$span} "._t("Date.YEAR", "year");
 		}
 	}
 
