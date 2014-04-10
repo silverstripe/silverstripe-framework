@@ -57,6 +57,7 @@ class ChangePasswordForm extends Form {
 	 * Change the password
 	 *
 	 * @param array $data The user submitted data
+	 * @return SS_HTTPResponse
 	 */
 	public function doChangePassword(array $data) {
 		if($member = Member::currentUser()) {
@@ -68,8 +69,7 @@ class ChangePasswordForm extends Form {
 					"bad"
 				);
 				// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
-				$this->controller->redirect($this->controller->Link('changepassword'));
-				return;
+				return $this->controller->redirect($this->controller->Link('changepassword'));
 			}
 		}
 
@@ -81,8 +81,7 @@ class ChangePasswordForm extends Form {
 			// The user is not logged in and no valid auto login hash is available
 			if(!$member) {
 				Session::clear('AutoLoginHash');
-				$this->controller->redirect($this->controller->Link('login'));
-				return;
+				return $this->controller->redirect($this->controller->Link('login'));
 			}
 		}
 
@@ -94,8 +93,7 @@ class ChangePasswordForm extends Form {
 				"bad");
 
 			// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
-			$this->controller->redirect($this->controller->Link('changepassword'));
-			return;
+			return $this->controller->redirect($this->controller->Link('changepassword'));
 		}
 		else if($data['NewPassword1'] == $data['NewPassword2']) {
 			$isValid = $member->changePassword($data['NewPassword1']);
@@ -115,7 +113,7 @@ class ChangePasswordForm extends Form {
 					// absolute redirection URLs may cause spoofing 
 					&& Director::is_site_url($_REQUEST['BackURL'])
 				) {
-					$this->controller->redirect($_REQUEST['BackURL']);
+					return $this->controller->redirect($_REQUEST['BackURL']);
 				}
 				else {
 					// Redirect to default location - the login form saying "You are logged in as..."
@@ -123,7 +121,7 @@ class ChangePasswordForm extends Form {
 						'BackURL',
 						Director::absoluteBaseURL(), $this->controller->Link('login')
 					);
-					$this->controller->redirect($redirectURL);
+					return $this->controller->redirect($redirectURL);
 				}
 			} else {
 				$this->clearMessage();
@@ -137,7 +135,7 @@ class ChangePasswordForm extends Form {
 				);
 
 				// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
-				$this->controller->redirect($this->controller->Link('changepassword'));
+				return $this->controller->redirect($this->controller->Link('changepassword'));
 			}
 
 		} else {
@@ -147,7 +145,7 @@ class ChangePasswordForm extends Form {
 				"bad");
 
 			// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
-			$this->controller->redirect($this->controller->Link('changepassword'));
+			return $this->controller->redirect($this->controller->Link('changepassword'));
 		}
 	}
 
