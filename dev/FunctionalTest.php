@@ -39,6 +39,8 @@ class FunctionalTest extends SapphireTest {
 	
 	/**
 	 * CSSContentParser for the most recently requested page.
+	 * 
+	 * @var CSSContentParser
 	 */
 	protected $cssParser = null;
 	
@@ -176,6 +178,8 @@ class FunctionalTest extends SapphireTest {
 	
 	/**
 	 * Return a CSSContentParser for the most recent content.
+	 * 
+	 * @return CSSContentParser
 	 */
 	public function cssParser() {
 		if(!$this->cssParser) $this->cssParser = new CSSContentParser($this->mainSession->lastContent());
