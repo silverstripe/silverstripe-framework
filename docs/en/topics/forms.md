@@ -12,7 +12,7 @@ individually have separate concerns.
 * Controller—Takes care of assembling the form and receiving data from it.
 * Form—Holds sets of fields, actions and validators.
 * FormField —Fields that receive data or displays them, e.g input fields.
-* FormActions—Often submit buttons that executes actions.
+* FormActions—Offers submit buttons that executes actions.
 * Validators—Validate the whole form.
 
 Depending on your needs you can customize and override any of the above classes;
