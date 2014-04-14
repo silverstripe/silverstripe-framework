@@ -763,8 +763,11 @@ abstract class SS_Database {
 
 		foreach($select as $alias => $field) {
 			// Don't include redundant aliases.
-			if($alias === $field || preg_match('/"' . preg_quote($alias) . '"$/', $field)) $clauses[] = $field;
-			else $clauses[] = "$field AS \"$alias\"";
+			if ($alias == $field) {
+				$clauses[] = $field;
+			} else {
+				$clauses[] = "$field AS \"$alias\"";
+			}
 		}
 
 		$text = 'SELECT ';
