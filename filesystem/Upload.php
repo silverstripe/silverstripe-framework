@@ -186,6 +186,7 @@ class Upload extends Controller {
 			// This is to prevent it from trying to rename the file
 			$this->file->Name = basename($relativeFilePath);
 			$this->file->write();
+			$this->file->onAfterUpload();
 			$this->extend('onAfterLoad', $this->file);   //to allow extensions to e.g. create a version after an upload
 			return true;
 		} else {
