@@ -143,7 +143,7 @@ class MySQLDatabase extends SS_Database {
 
 		if(isset($_REQUEST['showqueries']) && Director::isDev(true)) {
 			$endtime = round(microtime(true) - $starttime,4);
-			Debug::message("\n$sql\n{$endtime}ms\n", false);
+			Debug::message("\n$sql\n{$endtime}s\n", false);
 		}
 
 		if(!$handle && $errorLevel) {
