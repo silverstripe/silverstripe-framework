@@ -60,7 +60,7 @@
 			//check the array of existing files to see if we are trying to upload a file that already exists
 			var that = this;
 			var config = this.options;
-			if (config.overwriteWarning) {
+			if (config.overwriteWarning && config.replaceFile) {
 				$.get(
 					config['urlFileExists'],
 					{'filename': data.files[0].name},
