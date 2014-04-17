@@ -13,7 +13,7 @@ before_script:
  - cd ~/builds/ss
 
 script: 
- - phpunit sapphire/tests
+ - vendor/bin/phpunit sapphire/tests
 
 branches:
   except:

@@ -18,5 +18,8 @@
 	"require": {
 		"php": ">=5.2.4",
 		"composer/installers": "*"
+	},
+	"require-dev": {
+		"phpunit/PHPUnit": "~3.7"
 	}
 }
