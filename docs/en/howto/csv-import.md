@@ -191,7 +191,6 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 	   }
 	   public static function getTeamByTitle(&$obj, $val, $record) {
 	      return FootballTeam::get()->filter('Title', $val)->First();
-	      );
 	   }
 	}
 	?>
