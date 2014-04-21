@@ -57,7 +57,7 @@ class JSONDataFormatter extends DataFormatter {
 			// Field filtering
 			if($fields && !in_array($fieldName, $fields)) continue;
 
-			$fieldValue = $obj->obj($fieldName)->forTemplate();
+			$fieldValue = $obj->obj($fieldName)->RAW();
 			$serobj->$fieldName = $fieldValue;
 		}
 
