@@ -133,7 +133,9 @@ class SecurityTest extends FunctionalTest {
 		$this->session()->inst_set('SessionForms.MemberLoginForm.Email', 'myuser@silverstripe.com');
 		Security::config()->remember_username = false;
 		$this->get(Config::inst()->get('Security', 'login_url'));
-		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm #Email input.text');
+		$items = $this
+			->cssParser()
+			->getBySelector('#MemberLoginForm_LoginForm #MemberLoginForm_LoginForm_Email');
 		$this->assertEquals(1, count($items));
 		$this->assertEmpty((string)$items[0]->attributes()->value);
 		$this->assertEquals('off', (string)$items[0]->attributes()->autocomplete);
@@ -145,7 +147,9 @@ class SecurityTest extends FunctionalTest {
 		$this->session()->inst_set('SessionForms.MemberLoginForm.Email', 'myuser@silverstripe.com');
 		Security::config()->remember_username = true;
 		$this->get(Config::inst()->get('Security', 'login_url'));
-		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm #Email input.text');
+		$items = $this
+			->cssParser()
+			->getBySelector('#MemberLoginForm_LoginForm #MemberLoginForm_LoginForm_Email');
 		$this->assertEquals(1, count($items));
 		$this->assertEquals('myuser@silverstripe.com', (string)$items[0]->attributes()->value);
 		$this->assertNotEquals('off', (string)$items[0]->attributes()->autocomplete);

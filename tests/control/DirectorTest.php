@@ -42,7 +42,7 @@ class DirectorTest extends SapphireTest {
 		// TODO Remove director rule, currently API doesnt allow this
 		
 		// Remove base URL override (setting to false reverts to default behaviour)
-		Director::setBaseURL(false);
+		Config::inst()->update('Director', 'alternate_base_url', false);
 		
 		// Reinstate the original REQUEST_URI after it was modified by some tests
 		$_SERVER['REQUEST_URI'] = self::$originalRequestURI;
@@ -80,7 +80,7 @@ class DirectorTest extends SapphireTest {
 		
 		$rootURL = Director::protocolAndHost();
 		$_SERVER['REQUEST_URI'] = "$rootURL/mysite/sub-page/";
-		Director::setBaseURL('/mysite/');
+		Config::inst()->update('Director', 'alternate_base_url', '/mysite/');
 		
 		// Test already absolute url
 		$this->assertEquals($rootURL, Director::absoluteURL($rootURL));

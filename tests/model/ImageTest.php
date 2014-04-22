@@ -11,15 +11,14 @@ class ImageTest extends SapphireTest {
 	protected $origBackend;
 	
 	public function setUp() {
-		if(get_class($this) == "ImageTest")
-			$this->skipTest = true;
+		if(get_class($this) == "ImageTest") $this->skipTest = true;
 	
 		parent::setUp();
 		
+		$this->origBackend = Image::get_backend();
+		
 		if($this->skipTest)
 			return;
-		
-		$this->origBackend = Image::get_backend();
 	
 		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
 
@@ -34,7 +33,7 @@ class ImageTest extends SapphireTest {
 	}
 	
 	public function tearDown() {
-		Image::set_backend($this->origBackend);
+		if($this->origBackend) Image::set_backend($this->origBackend);
 	
 		/* Remove the test files that we've created */
 		$fileIDs = $this->allFixtureIDs('Image');
