@@ -48,7 +48,7 @@ $dirsToCheck = array(
 if($dirsToCheck[0] == $dirsToCheck[1]) {
 	unset($dirsToCheck[1]);
 }
-foreach($dirsToCheck as $dir) {
+foreach($dirsToCheck as $dir) {
 //check this dir and every parent dir (until we hit the base of the drive)
 	// or until we hit a dir we can't read
 	do {

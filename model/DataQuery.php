@@ -422,7 +422,7 @@ class DataQuery {
 	}
 	
 	/**
-	 * Set the GROUP BY clause of this query.
+	 * Append a GROUP BY clause to this query.
 	 * 
 	 * @param String $groupby Escaped SQL statement
 	 */
@@ -432,7 +432,7 @@ class DataQuery {
 	}
 	
 	/**
-	 * Set the HAVING clause of this query.
+	 * Append a HAVING clause to this query.
 	 * 
 	 * @param String $having Escaped SQL statement
 	 */
@@ -464,7 +464,7 @@ class DataQuery {
 	}
 
 	/**
-	 * Set the WHERE clause of this query.
+	 * Append a WHERE clause to this query.
 	 * There are two different ways of doing this:
 	 *
 	 * <code>
@@ -485,7 +485,7 @@ class DataQuery {
 	}
 
 	/**
-	 * Set a WHERE with OR.
+	 * Append a WHERE with OR.
 	 * 
 	 * @example $dataQuery->whereAny(array("\"Monkey\" = 'Chimp'", "\"Color\" = 'Brown'"));
 	 * @see where()

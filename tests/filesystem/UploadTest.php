@@ -465,6 +465,48 @@ class UploadTest extends SapphireTest {
 		$file3->delete();
 	}
 
+	public function testDeleteResampledImagesOnUpload() {
+		$tmpFileName = 'UploadTest-testUpload.jpg';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+
+		$uploadImage = function() use ($tmpFileName, $tmpFilePath) {
+			copy(__DIR__ . '/gdtest/test_jpg.jpg', $tmpFilePath);
+
+			// emulates the $_FILES array
+			$tmpFile = array(
+				'name' => $tmpFileName,
+				'type' => 'text/plaintext',
+				'size' => filesize($tmpFilePath),
+				'tmp_name' => $tmpFilePath,
+				'extension' => 'jpg',
+				'error' => UPLOAD_ERR_OK,
+			);
+
+			$v = new UploadTest_Validator();
+
+			// test upload into default folder
+			$u = new Upload();
+			$u->setReplaceFile(true);
+			$u->setValidator($v);
+			$u->load($tmpFile);
+			return $u->getFile();
+		};
+
+		// Image upload and generate a resampled image
+		$image = $uploadImage();
+		$resampled = $image->ResizedImage(123, 456);
+		$resampledPath = $resampled->getFullPath();
+		$this->assertTrue(file_exists($resampledPath));
+
+		// Re-upload the image, overwriting the original
+		// Resampled images should removed when their parent file is overwritten
+		$image = $uploadImage();
+		$this->assertFalse(file_exists($resampledPath));
+
+		unlink($tmpFilePath);
+		$image->delete();
+	}
+
 }
 class UploadTest_Validator extends Upload_Validator implements TestOnly {
 

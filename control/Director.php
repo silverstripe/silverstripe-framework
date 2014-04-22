@@ -413,7 +413,12 @@ class Director implements TemplateGlobalProvider {
 
 	/**
 	 * Turns the given URL into an absolute URL.
-	 * @todo Document how relativeToSiteBase works
+	 * By default non-site root relative urls will be evaluated relative to the current request.
+	 * 
+	 * @param string $url URL To transform to absolute
+	 * @param bool $relativeToSiteBase Flag indicating if non-site root relative urls should be
+	 * evaluated relative to the site BaseURL instead of the current url.
+	 * @return string The fully qualified URL
 	 */
 	public static function absoluteURL($url, $relativeToSiteBase = false) {
 		if(!isset($_SERVER['REQUEST_URI'])) return false;
