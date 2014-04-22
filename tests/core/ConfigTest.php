@@ -75,6 +75,28 @@ class ConfigStaticTest_Combined3 extends ConfigStaticTest_Combined2 {
 }
 
 class ConfigTest extends SapphireTest {
+	
+	public function testNest() {
+		
+		// Check basic config
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'foo'));
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'bar'));
+		
+		// Test nest copies data
+		Config::nest();
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'foo'));
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'bar'));
+		
+		// Test nested data can be updated
+		Config::inst()->update('ConfigTest_DefinesFooAndBar', 'foo', 4);
+		$this->assertEquals(4, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'foo'));
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'bar'));
+		
+		// Test unnest restores data
+		Config::unnest();
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'foo'));
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'bar'));
+	}
 
 	public function testUpdateStatic() {
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_First', 'first', Config::FIRST_SET),

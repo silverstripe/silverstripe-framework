@@ -12,6 +12,24 @@ define('TEST_SERVICES', dirname(__FILE__) . '/testservices');
  */
 class InjectorTest extends SapphireTest {
 	
+	protected $nestingLevel = 0;
+	
+	public function setUp() {
+		parent::setUp();
+		
+		$this->nestingLevel = 0;
+	}
+	
+	public function tearDown() {
+		
+		while($this->nestingLevel > 0) {
+			$this->nestingLevel--;
+			Config::unnest();
+		}
+		
+		parent::tearDown();
+	}
+	
 	public function testCorrectlyInitialised() {
 		$injector = Injector::inst();
 		$this->assertTrue($injector->getConfigLocator() instanceof SilverStripeServiceConfigurationLocator,
@@ -561,6 +579,64 @@ class InjectorTest extends SapphireTest {
 		$injector->registerService($factory, 'factory');
 
 		$this->assertInstanceOf('TestObject', $injector->get('service'));
+	}
+	
+	/**
+	 * Test nesting of injector
+	 */
+	public function testNest() {
+		
+		// Outer nest to avoid interference with other 
+		Injector::nest();
+		$this->nestingLevel++;
+		
+		// Test services
+		$config = array(
+			'NewRequirementsBackend',
+		);
+		Injector::inst()->load($config);
+		$si = Injector::inst()->get('TestStaticInjections');
+		$this->assertInstanceOf('TestStaticInjections', $si);
+		$this->assertInstanceOf('NewRequirementsBackend', $si->backend);
+		$this->assertInstanceOf('MyParentClass', Injector::inst()->get('MyParentClass'));
+		$this->assertInstanceOf('MyChildClass', Injector::inst()->get('MyChildClass'));
+		
+		// Test that nested injector values can be overridden
+		Injector::nest();
+		$this->nestingLevel++;
+		Injector::inst()->unregisterAllObjects();
+		$newsi = Injector::inst()->get('TestStaticInjections');
+		$newsi->backend = new OriginalRequirementsBackend();
+		Injector::inst()->registerService($newsi, 'TestStaticInjections');
+		Injector::inst()->registerService(new MyChildClass(), 'MyParentClass');
+		
+		// Check that these overridden values are retrievable
+		$si = Injector::inst()->get('TestStaticInjections');
+		$this->assertInstanceOf('TestStaticInjections', $si);
+		$this->assertInstanceOf('OriginalRequirementsBackend', $si->backend);
+		$this->assertInstanceOf('MyParentClass', Injector::inst()->get('MyParentClass'));
+		$this->assertInstanceOf('MyParentClass', Injector::inst()->get('MyChildClass'));
+		
+		// Test that unnesting restores expected behaviour
+		Injector::unnest();
+		$this->nestingLevel--;
+		$si = Injector::inst()->get('TestStaticInjections');
+		$this->assertInstanceOf('TestStaticInjections', $si);
+		$this->assertInstanceOf('NewRequirementsBackend', $si->backend);
+		$this->assertInstanceOf('MyParentClass', Injector::inst()->get('MyParentClass'));
+		$this->assertInstanceOf('MyChildClass', Injector::inst()->get('MyChildClass'));
+		
+		// Test reset of cache
+		Injector::inst()->unregisterAllObjects();
+		$si = Injector::inst()->get('TestStaticInjections');
+		$this->assertInstanceOf('TestStaticInjections', $si);
+		$this->assertInstanceOf('NewRequirementsBackend', $si->backend);
+		$this->assertInstanceOf('MyParentClass', Injector::inst()->get('MyParentClass'));
+		$this->assertInstanceOf('MyChildClass', Injector::inst()->get('MyChildClass'));
+		
+		// Return to nestingLevel 0
+		Injector::unnest();
+		$this->nestingLevel--;
 	}
 
 }
