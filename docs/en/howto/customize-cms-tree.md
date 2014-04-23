@@ -67,8 +67,8 @@ __Example: using a subclass__
 			// return either true or false
 		}
 		
-		public function getStatusFlags(){
-			$flags = parent::getStatusFlags();
+		public function getStatusFlags($cached = true) {
+			$flags = parent::getStatusFlags($cached);
 			$flags['scheduledtopublish'] = "Scheduled To Publish";
 			return $flags;
 		}
