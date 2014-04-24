@@ -267,7 +267,10 @@ class Oembed_Result extends ViewableData {
 		if(!$data) {
 			// if the response is no valid JSON we might have received a binary stream to an image
 			$data = array();
-			$image = @imagecreatefromstring($body);
+			if (!function_exists('imagecreatefromstring')) {
+				throw new LogicException('imagecreatefromstring function does not exist - Please make sure GD is installed');
+			}
+			$image = imagecreatefromstring($body);
 			if($image !== FALSE) {
 				preg_match("/^(http:\/\/)?([^\/]+)/i", $this->url, $matches);
 				$protocoll = $matches[1];
