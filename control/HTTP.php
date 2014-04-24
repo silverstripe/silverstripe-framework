@@ -307,6 +307,8 @@ class HTTP {
 	 *                            deprecated; in these cases, the headers are output directly.
 	 */
 	public static function add_cache_headers($body = null) {
+		$cacheAge = self::$cache_age;
+		
 		// Validate argument
 		if($body && !($body instanceof SS_HTTPResponse)) {
 			user_error("HTTP::add_cache_headers() must be passed an SS_HTTPResponse object", E_USER_WARNING);
@@ -315,7 +317,7 @@ class HTTP {
 
 		// Development sites have frequently changing templates; this can get stuffed up by the code
 		// below.
-		if(Director::isDev()) return;
+		if(Director::isDev()) $cacheAge = 0;
 		
 		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
 		// us trying.
@@ -326,16 +328,16 @@ class HTTP {
 		if(function_exists('apache_request_headers')) {
 			$requestHeaders = apache_request_headers();
 			if(isset($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With']=='XMLHttpRequest') {
-				self::$cache_age = 0;
+				$cacheAge = 0;
 			}
 			// bdc: now we must check for DUMB IE6:
 			if(isset($requestHeaders['x-requested-with']) && $requestHeaders['x-requested-with']=='XMLHttpRequest') {
-				self::$cache_age = 0;
+				$cacheAge = 0;
 			}
 		}
 
-		if(self::$cache_age > 0) {
-			$responseHeaders["Cache-Control"] = "max-age=" . self::$cache_age . ", must-revalidate, no-transform";
+		if($cacheAge > 0) {
+			$responseHeaders["Cache-Control"] = "max-age={$cacheAge}, must-revalidate, no-transform";
 			$responseHeaders["Pragma"] = "";
 
 			// To do: User-Agent should only be added in situations where you *are* actually
@@ -365,7 +367,7 @@ class HTTP {
 			}
 		}
 
-		if(self::$modification_date && self::$cache_age > 0) {
+		if(self::$modification_date && $cacheAge > 0) {
 			$responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
 
 			// Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
@@ -401,7 +403,7 @@ class HTTP {
 				}
 			}
 
-			$expires = time() + self::$cache_age;
+			$expires = time() + $cacheAge;
 			$responseHeaders["Expires"] = self::gmt_date($expires);
 		}
 
