@@ -310,7 +310,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
 	 *
-	 * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
+	 * @param string|array Key and Value pairs, the array values are automatically sanitised for the DB quesry
 	 * @return DataList
 	 */
 	public function filter() {
