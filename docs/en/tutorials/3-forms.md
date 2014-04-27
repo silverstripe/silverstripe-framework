@@ -158,7 +158,7 @@ Add the following code to the existing `form.css` file:
 		}
 
 
-All going according to plan, if you visit [http://localhost/your_site_name/home?flush=1](http://localhost/your_site_name/home?flush=1) it should look something like this:
+All going according to plan, if you visit [http://localhost/your_site_name/home/?flush=1](http://localhost/your_site_name/home/?flush=1) it should look something like this:
 
 ![](_images/tutorial3_pollform.jpg)
 
