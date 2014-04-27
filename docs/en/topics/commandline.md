@@ -66,6 +66,8 @@ You can add multiple file to url mapping definitions.  The most specific mapping
 Using this example, /Users/sminnee/Sites/mysite/ would be accessed at http://mysite.localhost/, and
 /Users/sminnee/Sites/othersite/ would be accessed at http://localhost/othersite/
 
+Make sure that you remove the entire silverstripe cache like rm -rf silverstripecache - flush=all doenst help!
+
 ## Usage
 
 Sake will either run `./framework/cli-script.php` or `./cli-script.php`, depending on what's available.
