@@ -15,12 +15,12 @@ RestfulService (see [flickrservice](http://silverstripe.org/flickr-module/) and
 ### Creating a new RestfulObject
 
 	:::php
-	 //example for using RestfulService to connect and retrive latest twitter status of an user.
+	//example for using RestfulService to connect and retrive latest twitter status of an user.
 	$twitter = new RestfulService("http://twitter.com/statuses/user_timeline/user.xml", $cache_expiry );
-			$params = array('count' => 1);
-			$twitter->setQueryString($params);
-			$conn = $twitter->connect();
-			$msgs = $twitter->getValues($conn, "status");
+	$params = array('count' => 1);
+	$twitter->setQueryString($params);
+	$conn = $twitter->request();
+	$msgs = $twitter->getValues($conn, "status");
 
 
 ### Extending to a new class
@@ -45,12 +45,12 @@ RestfulService (see [flickrservice](http://silverstripe.org/flickr-module/) and
 	$service->httpHeader('Accept: application/xml');
 	$service->httpHeader('Content-Type: application/xml');
 	
-	$peopleXML = $service->connect('/people');
+	$peopleXML = $service->request('/people');
 	$people = $service->getValues($peopleXML, 'user');
 	
 	// ...
 	
-	$taskXML = $service->connect('/tasks');
+	$taskXML = $service->request('/tasks');
 	$tasks = $service->getValues($taskXML, 'task');
 
 
@@ -71,12 +71,12 @@ You can traverse throught document tree to get the values or attribute of a part
 for example you can traverse 
 
 	:::xml
-	  <entries>
+	<entries>
 	     <entry id='12'>Sally</entry>
 	     <entry id='15'>Ted</entry>
 	     <entry id='30'>Matt</entry>
 	     <entry id='22'>John</entry>
-	  <entries>
+	</entries>
 
 to extract the id attributes of the entries use:
 
@@ -96,14 +96,14 @@ If you don't know the exact position of dom tree where the node will appear you 
 node.Recommended for retrieving values of namespaced nodes.
 
 	:::xml
-	  <media:guide>
+	<media:guide>
 	     <media:entry id="2030">video</media:entry>
-	  </media:guide>
+	</media:guide>
 
 to get the value of entry node with the namespace media, use:
 
 	:::php
-	  $this->searchValue($response, "//media:guide/media:entry")
+	$this->searchValue($response, "//media:guide/media:entry")
 
 
 
@@ -116,25 +116,25 @@ If the web service returned an error (for example, API key not available or inad
 could delgate the error handling to it's descendant class. To handle the errors define a function called errorCatch
 
 	:::php
-	  // This will raise Youtube API specific error messages (if any).
-		public function errorCatch($response){
-			$err_msg = $response;
-		 	if(strpos($err_msg, '<') === false) {
-		 		user_error("YouTube Service Error : $err_msg", E_USER_ERROR);
-		 	}
-		 	
-		 	return $response;
-		}
+	// This will raise Youtube API specific error messages (if any).
+	public function errorCatch($response){
+		$err_msg = $response;
+	 	if(strpos($err_msg, '<') === false) {
+	 		user_error("YouTube Service Error : $err_msg", E_USER_ERROR);
+	 	}
+	 	
+	 	return $response;
+	}
 
 
 
 If you want to bypass error handling on your sub-classes you could define that in the constructor.
 
 	:::php
-	  public function __construct($expiry=NULL){
-			parent::__construct('http://www.flickr.com/services/rest/', $expiry);
-			$this->checkErrors = false; //Set checkErrors to false to bypass error checking
-		}
+	public function __construct($expiry=NULL){
+		parent::__construct('http://www.flickr.com/services/rest/', $expiry);
+		$this->checkErrors = false; //Set checkErrors to false to bypass error checking
+	}
 
 
 ## Other Uses
@@ -147,21 +147,21 @@ such as del.icio.us
 Put something like this code in mysite/code/Page.php inside class Page_Controller
 
 	:::php
-		// Accepts an RSS feed URL and outputs a list of links from it
-		public function RestfulLinks($url){
-			$service 	= new RestfulService($url);
-			$request 	= $service->request();
-			$body 		= $request->getBody();
-			$items 		= $service->getValues($body,"channel","item");	
-		
-			$output = '';
-			foreach($items as $item) {
-				// Fix quote encoding
-				$description = str_replace('&amp;quot;', '&quot;', $item->description);
-				$output .=  "<li><a href=\"{$item->link}\">{$item->title}</a><br />{$description}</li>";
-			}
-			return $output;
-		} 
+	// Accepts an RSS feed URL and outputs a list of links from it
+	public function RestfulLinks($url){
+		$service 	= new RestfulService($url);
+		$request 	= $service->request();
+		$body 		= $request->getBody();
+		$items 		= $service->getValues($body,"channel","item");	
+	
+		$output = '';
+		foreach($items as $item) {
+			// Fix quote encoding
+			$description = str_replace('&amp;quot;', '&quot;', $item->description);
+			$output .=  "<li><a href=\"{$item->link}\">{$item->title}</a><br />{$description}</li>";
+		}
+		return $output;
+	} 
 
 
 Put something like this code in `themes/<your-theme>/templates/Layout/HomePage.ss`:
