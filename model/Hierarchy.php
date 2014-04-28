@@ -611,9 +611,14 @@ class Hierarchy extends DataExtension {
 	 */
 	public function stageChildren($showAll = false) {
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$hidden = array();
+		if ($baseClass::config()->get('hideFromHierarchy')) {
+			$hidden = $baseClass::config()->get('hideFromHierarchy');
+		}
 		$staged = $baseClass::get()
 			->filter('ParentID', (int)$this->owner->ID)
-			->exclude('ID', (int)$this->owner->ID);
+			->exclude('ID', (int)$this->owner->ID)
+			->exclude('ClassName', $hidden);
 		if (!$showAll && $this->owner->db('ShowInMenus')) {
 			$staged = $staged->filter('ShowInMenus', 1);
 		}
@@ -635,9 +640,16 @@ class Hierarchy extends DataExtension {
 		}
 
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+
+		$hidden = array();
+		if ($baseClass::config()->get('hideFromHierarchy')) {
+			$hidden = $baseClass::config()->get('hideFromHierarchy');
+		}
+
 		$children = $baseClass::get()
 			->filter('ParentID', (int)$this->owner->ID)
 			->exclude('ID', (int)$this->owner->ID)
+			->exclude('ClassName', $hidden)
 			->setDataQueryParam(array(
 				'Versioned.mode' => $onlyDeletedFromStage ? 'stage_unique' : 'stage',
 				'Versioned.stage' => 'Live'
