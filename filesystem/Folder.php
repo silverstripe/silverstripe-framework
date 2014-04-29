@@ -144,27 +144,33 @@ class Folder extends File {
 
 		if(file_exists($baseDir)) {
 			$actualChildren = scandir($baseDir);
-			$ignoreRules = Config::inst()->get('Filesystem', 'sync_blacklisted_patterns');
+			$ignoreRules = Filesystem::config()->sync_blacklisted_patterns;
+			$allowedExtensions = File::config()->allowed_extensions;
+			$checkExtensions = $this->config()->apply_restrictions_to_admin || !Permission::check('ADMIN');
 
 			foreach($actualChildren as $actualChild) {
-				if($ignoreRules) {
-					$skip = false;
-
-					foreach($ignoreRules as $rule) {
-						if(preg_match($rule, $actualChild)) {
-							$skip = true;
-
-							break;
-						}
-					}
-
-					if($skip) {
-						$skipped++;
-
-						continue;
+				$skip = false;
+				
+				// Check ignore patterns
+				if($ignoreRules) foreach($ignoreRules as $rule) {
+					if(preg_match($rule, $actualChild)) {
+						$skip = true;
+						break;
 					}
 				}
+				
+				// Check allowed extensions, unless admin users are allowed to bypass these exclusions
+				if($checkExtensions
+					&& ($extension = self::get_file_extension($actualChild))
+					&& !in_array(strtolower($extension), $allowedExtensions)
+				) {
+					$skip = true;
+				}
 
+				if($skip) {
+					$skipped++;
+					continue;
+				}
 
 				// A record with a bad class type doesn't deserve to exist. It must be purged!
 				if(isset($hasDbChild[$actualChild])) {
@@ -175,7 +181,6 @@ class Folder extends File {
 						unset($hasDbChild[$actualChild]);						
 					}
 				}
-				
 				
 				if(isset($hasDbChild[$actualChild])) {
 					$child = $hasDbChild[$actualChild];

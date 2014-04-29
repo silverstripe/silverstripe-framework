@@ -143,9 +143,15 @@ to known file categories.
 	:::php
 	// This will limit files to the following extensions:
 	// "bmp" ,"gif" ,"jpg" ,"jpeg" ,"pcx" ,"tif" ,"png" ,"alpha","als" ,"cel" ,"icon" ,"ico" ,"ps"
-	// 'doc','docx','txt','rtf','xls','xlsx','pages', 'ppt','pptx','pps','csv', 'html','htm','xhtml', 'xml','pdf'
+	// 'doc','docx','txt','rtf','xls','xlsx','pages', 'ppt','pptx','pps','csv','pdf'
 	$uploadField->setAllowedFileCategories('image', 'doc');
 
+<div class="notice" markdown='1'>
+Note: File types such as SWF, XML and HTML are excluded by default from uploading as these types are common
+security attack risks. If necessary, these types may be allowed as uploads (at your own risk) by adding each
+extension to the `File.allowed_extensions` config or setting `File.apply_restrictions_to_admin` to false.
+See [the security topic](/topics/security#user-uploaded-files) for more information.
+</div>
 
 ### Limit the maximum file size
 
