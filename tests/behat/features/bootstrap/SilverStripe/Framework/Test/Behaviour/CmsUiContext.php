@@ -180,13 +180,65 @@ class CmsUiContext extends BehatContext {
 	}
 
 	/**
-	 * @When /^I click on "([^"]*)" in the tree$/
+	 * Applies a specific action to an element
+	 * 
+	 * @param NodeElement $element Element to act on
+	 * @param string $action Action, which may be one of 'hover', 'double click', 'right click', or 'left click'
+	 * The default 'click' behaves the same as left click
 	 */
-	public function stepIClickOnElementInTheTree($text) {
+	protected function interactWithElement($element, $action = 'click') {
+		switch($action) {
+			case 'hover':
+				$element->mouseOver();
+				break;
+			case 'double click':
+				$element->doubleClick();
+				break;
+			case 'right click':
+				$element->rightClick();
+				break;
+			case 'left click':
+			case 'click':
+			default:
+				$element->click();
+				break;
+		}
+
+	}
+
+	/**
+	 * @When /^I (?P<method>(?:(?:double |right |left |)click)|hover) on "(?P<link>[^"]*)" in the context menu/
+	 */
+	public function stepIClickOnElementInTheContextMenu($method, $link) {
+		$context = $this->getMainContext();
+		// Wait until context menu has appeared
+		$this->getSession()->wait(
+			1000,
+			"window.jQuery && window.jQuery('.jstree-apple-context').size() > 0"
+		);
+		$regionObj = $context->getRegionObj('.jstree-apple-context');
+		assertNotNull($regionObj, "Context menu could not be found");
+
+		$linkObj = $regionObj->findLink($link);
+		if (empty($linkObj)) {
+			throw new \Exception(sprintf(
+				'The link "%s" was not found in the context menu on the page %s',
+				$link,
+				$this->getSession()->getCurrentUrl()
+			));
+		}
+
+		$this->interactWithElement($linkObj, $method);
+	}
+
+	/**
+	 * @When /^I (?P<method>(?:(?:double |right |left |)click)|hover) on "(?P<text>[^"]*)" in the tree$/
+	 */
+	public function stepIClickOnElementInTheTree($method, $text) {
 		$treeEl = $this->getCmsTreeElement();
 		$treeNode = $treeEl->findLink($text);
 		assertNotNull($treeNode, sprintf('%s not found', $text));
-		$treeNode->click();
+		$this->interactWithElement($treeNode, $method);
 	}
 
 	/**
