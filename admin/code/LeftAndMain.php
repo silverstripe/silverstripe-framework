@@ -581,6 +581,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					'Content' => function() use(&$controller) {
 						return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
 					},
+					'Toolbar' => function() use(&$controller) {
+						return $controller->EditorToolbar()->forTemplate();
+					},
 					'Breadcrumbs' => function() use (&$controller) {
 						return $controller->renderWith('CMSBreadcrumbs');
 					},

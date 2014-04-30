@@ -384,20 +384,31 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var self = this, url = $('#cms-editor-dialogs').data('url' + capitalize(type) + 'form'),
 					dialog = $('.htmleditorfield-' + type + 'dialog');
 
-				if(dialog.length) {
+				// If we're re-opening a dialog that we've already loaded
+				if(dialog.length && dialog.data('url') == url) {
 					dialog.getForm().setElement(this);
 					dialog.open();
 				} else {
-					// Show a placeholder for instant feedback. Will be replaced with actual
-					// form dialog once its loaded.
-					dialog = $('<div class="htmleditorfield-dialog htmleditorfield-' + type + 'dialog loading">');
-					$('body').append(dialog);
+					// If there's a dialog present, but not the one we want, reset it and open it as 'loading'
+					if(dialog.length) {
+						dialog.getForm().setElement(this);
+						dialog.html('');
+						dialog.addClass('loading');
+						dialog.open();
+					// Otherwise construct a new dialog
+					} else {
+						// Show a placeholder for instant feedback. Will be replaced with actual form dialog once its loaded.
+						dialog = $('<div class="htmleditorfield-dialog htmleditorfield-' + type + 'dialog loading">');
+						$('body').append(dialog);
+					}
+
 					$.ajax({
 						url: url,
 						complete: function() {
 							dialog.removeClass('loading');
 						},
 						success: function(html) {
+							dialog.data('url', url);
 							dialog.html(html);
 							dialog.getForm().setElement(self);
 							dialog.trigger('ssdialogopen');

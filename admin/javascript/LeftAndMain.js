@@ -307,7 +307,7 @@ jQuery.noConflict();
 				this.saveTabState();
 				
 				if(window.History.enabled) {
-					$.extend(data, {__forceReferer: forceReferer});
+					$.extend(data, {__forceReferer: forceReferer, pjax: 'Content,Toolbar'});
 					// Active menu item is set based on X-Controller ajax header,
 					// which matches one class on the menu
 					if(forceReload) {
