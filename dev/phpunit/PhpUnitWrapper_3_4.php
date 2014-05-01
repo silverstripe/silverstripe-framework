@@ -46,10 +46,10 @@ class PhpUnitWrapper_3_4 extends PhpUnitWrapper {
 	}
 
 	/**
-	 * Overwrites aferRunTests. Creates coverage report and clover report 
+	 * Overwrites afterRunTests. Creates coverage report and clover report
 	 * if required.
 	 */
-	protected function aferRunTests() {
+	protected function afterRunTests() {
 
 		if($this->getCoverageStatus()) {
 

@@ -19,6 +19,9 @@
 		"php": ">=5.3.3",
 		"composer/installers": "*"
 	},
+	"require-dev": {
+		"phpunit/PHPUnit": "~3.7"
+	},
 	"extra": {
 		"branch-alias": {
 			"dev-master": "3.2.x-dev"
