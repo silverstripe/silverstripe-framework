@@ -27,10 +27,12 @@ class TestRunner extends Controller {
 	private static $url_handlers = array(
 		'' => 'browse',
 		'coverage/module/$ModuleName' => 'coverageModule',
+		'coverage/suite/$SuiteName!' => 'coverageSuite',
 		'coverage/$TestCase!' => 'coverageOnly',
 		'coverage' => 'coverageAll',
 		'cleanupdb' => 'cleanupdb',
 		'module/$ModuleName' => 'module',
+		'suite/$SuiteName!' => 'suite',
 		'all' => 'all',
 		'build' => 'build',
 		'$TestCase' => 'only'
@@ -42,9 +44,11 @@ class TestRunner extends Controller {
 		'coverage',
 		'coverageAll',
 		'coverageModule',
+		'coverageSuite',
 		'coverageOnly',
 		'cleanupdb',
 		'module',
+		'suite',
 		'all',
 		'build',
 		'only'
@@ -252,19 +256,93 @@ class TestRunner extends Controller {
 		$ignored = array('functionaltest', 'phpsyntaxtest');
 
 		foreach($moduleNames as $moduleName) {
-			$classesForModule = ClassInfo::classes_for_folder($moduleName);
-			
-			if($classesForModule) {
-				foreach($classesForModule as $className) {
-					if(class_exists($className) && is_subclass_of($className, 'SapphireTest')) {
-						if(!in_array($className, $ignored))
-							$classNames[] = $className;
-					}
+			$classNames = array_merge(
+				$classNames,
+				$this->getTestsInDirectory($moduleName, $ignored)
+			);
+		}
+
+		$this->runTests($classNames, $coverage);
+	}
+
+	/**
+	 * Find all test classes in a directory and return an array of them.
+	 * @param string $directory To search in
+	 * @param array $ignore Ignore these test classes if they are found.
+	 * @return array
+	 */
+	protected function getTestsInDirectory($directory, $ignore = array()) {
+		$classes = ClassInfo::classes_for_folder($directory);
+		return $this->filterTestClasses($classes, $ignore);
+	}
+
+	/**
+	 * Find all test classes in a file and return an array of them.
+	 * @param string $file To search in
+	 * @param array $ignore Ignore these test classes if they are found.
+	 * @return array
+	 */
+	protected function getTestsInFile($file, $ignore = array()) {
+		$classes = ClassInfo::classes_for_file($file);
+		return $this->filterTestClasses($classes, $ignore);
+	}
+
+	/**
+	 * @param array $classes to search in
+	 * @param array $ignore Ignore these test classes if they are found.
+	 */
+	protected function filterTestClasses($classes, $ignore) {
+		$testClasses = array();
+		if($classes) {
+			foreach($classes as $className) {
+				if(
+					class_exists($className) &&
+					is_subclass_of($className, 'SapphireTest') &&
+					!in_array($className, $ignore)
+				) {
+					$testClasses[] = $className;
 				}
+			}
+		}
+		return $testClasses;
+	}
+
+	/**
+	 * Run tests for a test suite defined in phpunit.xml
+	 */
+	public function suite($request, $coverage = false) {
+		self::use_test_manifest();
+		$suite = $request->param('SuiteName');
+		$xmlFile = BASE_PATH.'/phpunit.xml';
+		if(!is_readable($xmlFile)) {
+			user_error("TestRunner::suite(): $xmlFile is not readable", E_USER_ERROR);
+		}
+		$xml = simplexml_load_file($xmlFile);
+		$suite = $xml->xpath("//phpunit/testsuite[@name='$suite']");
+		if(empty($suite)) {
+			user_error("TestRunner::suite(): couldn't find the $suite testsuite in phpunit.xml");
+		}
+		$suite = array_shift($suite);
+		$classNames = array();
+		if(isset($suite->directory)) {
+			foreach($suite->directory as $directory) {
+				$classNames = array_merge($classNames, $this->getTestsInDirectory($directory));
+			}
+		}
+		if(isset($suite->file)) {
+			foreach($suite->file as $file) {
+				$classNames = array_merge($classNames, $this->getTestsInFile($file));
 			}
 		}
 
 		$this->runTests($classNames, $coverage);
+	}
+
+	/**
+	 * Give us some sweet code coverage reports for a particular suite.
+	 */
+	public function coverageSuite($request) {
+		return $this->suite($request, true);
 	}
 
 	/**
