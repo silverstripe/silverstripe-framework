@@ -138,14 +138,22 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 	public static function inst() {
 		
 		if (self::$phpunit_wrapper == null) {
-			if (fileExistsInIncludePath("/PHPUnit/Autoload.php")) {
+			// Loaded via autoloader, composer or other generic
+			if (class_exists('PHPUnit_Runner_Version')) {
+				self::$phpunit_wrapper = new PhpUnitWrapper_Generic();
+			}
+			// 3.5 detection
+			else if (fileExistsInIncludePath("/PHPUnit/Autoload.php")) {
 				self::$phpunit_wrapper = new PhpUnitWrapper_3_5();
-			} else 
-			if (fileExistsInIncludePath("/PHPUnit/Framework.php")) {
+			}
+			// 3.4 detection
+			else if (fileExistsInIncludePath("/PHPUnit/Framework.php")) {
 				self::$phpunit_wrapper = new PhpUnitWrapper_3_4();
-			} else {
+			}
+			// No version found - will lead to an error
+			else {
 				self::$phpunit_wrapper = new PhpUnitWrapper();
-			} 
+			}
 			self::$phpunit_wrapper->init();
 
 		}		
@@ -209,7 +217,7 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 
 		$this->beforeRunTests();
 		$this->getSuite()->run($this->getFrameworkTestResults());
-		$this->aferRunTests();
+		$this->afterRunTests();
 	}
 
 	/**

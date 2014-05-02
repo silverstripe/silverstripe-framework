@@ -9,7 +9,9 @@
  */
 class PhpUnitWrapper_3_4 extends PhpUnitWrapper {
 
-	protected $version = 'PhpUnit V3.4';
+	public function getVersion() {
+		return 'PhpUnit V3.4';
+	}
 
 	/** 
 	 * Initialise the wrapper class.
@@ -46,10 +48,10 @@ class PhpUnitWrapper_3_4 extends PhpUnitWrapper {
 	}
 
 	/**
-	 * Overwrites aferRunTests. Creates coverage report and clover report 
+	 * Overwrites afterRunTests. Creates coverage report and clover report
 	 * if required.
 	 */
-	protected function aferRunTests() {
+	protected function afterRunTests() {
 
 		if($this->getCoverageStatus()) {
 
