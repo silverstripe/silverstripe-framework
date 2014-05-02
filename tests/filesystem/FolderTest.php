@@ -293,5 +293,20 @@ class FolderTest extends SapphireTest {
 		
 		parent::tearDown();
 	}
-	
+
+	public function testTitleTiedToName() {
+		$newFolder = new Folder();
+
+		$newFolder->Name = 'TestNameCopiedToTitle';
+		$this->assertEquals($newFolder->Name, $newFolder->Title);
+
+		$newFolder->Title = 'TestTitleCopiedToName';
+		$this->assertEquals($newFolder->Name, $newFolder->Title);
+
+		$newFolder->Name = 'TestNameWithIllegalCharactersCopiedToTitle <!BANG!>';
+		$this->assertEquals($newFolder->Name, $newFolder->Title);
+
+		$newFolder->Title = 'TestTitleWithIllegalCharactersCopiedToName <!BANG!>';
+		$this->assertEquals($newFolder->Name, $newFolder->Title);
+	}
 }
