@@ -162,8 +162,8 @@ class DB {
 			Cookie::set("alternativeDatabaseName", base64_encode($encrypted), 0, null, null, false, true);
 			Cookie::set("alternativeDatabaseNameIv", base64_encode($iv), 0, null, null, false, true);
 		} else {
-			Cookie::set("alternativeDatabaseName", null, 0, null, null, false, true);
-			Cookie::set("alternativeDatabaseNameIv", null, 0, null, null, false, true);
+			Cookie::force_expiry("alternativeDatabaseName", null, null, false, true);
+			Cookie::force_expiry("alternativeDatabaseNameIv", null, null, false, true);
 		}
 	}
 

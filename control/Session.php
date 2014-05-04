@@ -609,6 +609,7 @@ class Session {
 	 */
 	public static function destroy($removeCookie = true) {
 		self::current_session()->inst_destroy($removeCookie);
+					Cookie::force_expiry(session_name(), $path, null, $secure, true);
 	}
 
 	/**
