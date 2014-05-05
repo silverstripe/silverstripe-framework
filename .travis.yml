@@ -24,7 +24,7 @@ before_script:
  - cd ~/builds/ss
 
 script: 
- - phpunit framework/tests
+ - vendor/bin/phpunit framework/tests
 
 branches:
   except:
