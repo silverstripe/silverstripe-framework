@@ -20,7 +20,7 @@ class PhpUnitWrapper_Generic extends PhpUnitWrapper {
 	protected static $test_name = 'SapphireTest';
 
 	public static function get_test_name() {
-		return static::$test_name;
+		return self::$test_name;
 	}
 	
 	/**
