@@ -715,9 +715,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$className = $this->stat('tree_class');
 		if($className && $id instanceof $className) {
 			return $id;
-		} else if($id == 'root') {
+		} else if($className && $id == 'root') {
 			return singleton($className);
-		} else if(is_numeric($id)) {
+		} else if($className && is_numeric($id)) {
 			return DataObject::get_by_id($className, $id);
 		} else {
 			return false;

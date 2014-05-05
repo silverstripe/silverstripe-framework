@@ -359,5 +359,20 @@ class FolderTest extends SapphireTest {
 		$folder4 = Folder::find_or_make('/FolderTest/EN-US-Lang');
 		$this->assertEquals($folder->ID, $folder4->ID);
 	}
-	
+
+	public function testTitleTiedToName() {
+		$newFolder = new Folder();
+
+		$newFolder->Name = 'TestNameCopiedToTitle';
+		$this->assertEquals($newFolder->Name, $newFolder->Title);
+
+		$newFolder->Title = 'TestTitleCopiedToName';
+		$this->assertEquals($newFolder->Name, $newFolder->Title);
+
+		$newFolder->Name = 'TestNameWithIllegalCharactersCopiedToTitle <!BANG!>';
+		$this->assertEquals($newFolder->Name, $newFolder->Title);
+
+		$newFolder->Title = 'TestTitleWithIllegalCharactersCopiedToName <!BANG!>';
+		$this->assertEquals($newFolder->Name, $newFolder->Title);
+	}
 }

@@ -275,12 +275,12 @@ class Hierarchy extends DataExtension {
 		if($children) {
 			foreach($children as $child) {
 				$markingMatches = $this->markingFilterMatches($child);
-				// Filtered results should always show opened, since actual matches
-				// might be hidden by non-matching parent nodes.
-				if($this->markingFilter && $markingMatches) {
-					$child->markOpened();
-				}
-				if(!$this->markingFilter || $markingMatches) {
+				if($markingMatches) {
+					// Filtered results should always show opened, since actual matches
+					// might be hidden by non-matching parent nodes.
+					if($this->markingFilter) {
+						$child->markOpened();
+					}
 					if($child->$numChildrenMethod()) {
 						$child->markUnexpanded();
 					} else {
@@ -310,18 +310,24 @@ class Hierarchy extends DataExtension {
 	}
 	
 	/**
-	 * Return CSS classes of 'unexpanded', 'closed', both, or neither, depending on
-	 * the marking of this DataObject.
+	 * Return CSS classes of 'unexpanded', 'closed', both, or neither, as well as a
+	 * 'jstree-*' state depending on the marking of this DataObject.
+	 * 
+	 * @return string
 	 */
 	public function markingClasses() {
 		$classes = '';
 		if(!$this->isExpanded()) {
-			$classes .= " unexpanded jstree-closed";
+			$classes .= " unexpanded";
 		}
-		if($this->isTreeOpened()) {
-			if($this->numChildren() > 0) $classes .= " jstree-open";
+		
+		// Set jstree open state, or mark it as a leaf (closed) if there are no children
+		if(!$this->numChildren()) {
+			$classes .= " jstree-leaf closed";
+		} elseif($this->isTreeOpened()) {
+			$classes .= " jstree-open";
 		} else {
-			$classes .= " closed";
+			$classes .= " jstree-closed closed";
 		}
 		return $classes;
 	}
