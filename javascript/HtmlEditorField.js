@@ -1400,8 +1400,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
  */
 function sapphiremce_cleanup(type, value) {
 	if(type == 'get_from_editor') {
-		// replace indented text with a <blockquote>
-		value = value.replace(/<p [^>]*margin-left[^>]*>([^\n|\n\015|\015\n]*)<\/p>/ig,"<blockquote><p>$1</p></blockquote>");
 	
 		// replace VML pixel image references with image tags - experimental
 		value = value.replace(/<[a-z0-9]+:imagedata[^>]+src="?([^> "]+)"?[^>]*>/ig,"<img src=\"$1\">");
