@@ -200,4 +200,70 @@ DOC;
 
 		$this->assertEquals($expectedValue, $statics['config\staticmanifest\NamespaceTest']['db']['value']);
 	}
+
+	public function testParsingMultyStringClass() {
+		static $tokens = array(
+			array(T_OPEN_TAG, "<?php\n", 1),
+			array(T_WHITESPACE, "\n", 2),
+			array(T_CLASS, 'class', 3),
+			array(T_WHITESPACE, ' ', 3),
+			':',
+			array(T_STRING, 'ss', 3),
+			':',
+			array(T_STRING, 'test2', 3),
+			array(T_WHITESPACE, ' ', 3),
+			array(T_EXTENDS, 'extends', 3),
+			array(T_WHITESPACE, ' ', 3),
+			':',
+			array(T_STRING, 'ss', 3),
+			':',
+			array(T_STRING, 'test', 3),
+			array(T_WHITESPACE, ' ', 3),
+			array(T_IMPLEMENTS, 'implements', 3),
+			array(T_WHITESPACE, ' ', 3),
+			array(T_STRING, 'TestOnly', 3),
+			array(T_WHITESPACE, ' ', 3),
+			'{',
+			array(T_WHITESPACE, "\n\t", 3),
+			array(T_PRIVATE, 'private', 4),
+			array(T_WHITESPACE, ' ', 4),
+			array(T_STATIC, 'static', 4),
+			array(T_WHITESPACE, ' ', 4),
+			array(T_VARIABLE, '$test', 4),
+			array(T_WHITESPACE, ' ', 4),
+			'=',
+			array(T_WHITESPACE, ' ', 4),
+			array(T_ARRAY, 'array', 4),
+			'(',
+			array(T_LNUMBER, '3', 4),
+			')',
+			';',
+			array(T_WHITESPACE, "\n", 4),
+			'}',
+			array(T_WHITESPACE, "\n", 5),
+		);
+
+		$parser = new ConfigStaticManifestTest_Parser($tokens);
+		$parser->parse();
+
+		$statics = $parser->getStatics();
+
+		$expected = array(
+			'test' => array(
+				'access' => T_PRIVATE,
+				'value' => array(3)
+			)
+		);
+
+		$this->assertEquals($expected, $statics[':ss:test2']);
+	}
+}
+
+class ConfigStaticManifestTest_Parser extends SS_ConfigStaticManifest_Parser implements TestOnly {
+	public function __construct($tokens) {
+		$this->path = __FILE__;
+		$this->tokens = $tokens;
+		$this->length = count($this->tokens);
+		$this->pos = 0;
+	}
 }
