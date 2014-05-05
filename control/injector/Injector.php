@@ -211,6 +211,13 @@ class Injector {
 	}
 
 	/**
+	 * The injector instance this one was copied from when Injector::nest() was called.
+	 * 
+	 * @var Injector
+	 */
+	protected $nestedFrom = null;
+
+	/**
 	 * If a user wants to use the injector as a static reference
 	 *
 	 * @param array $config
@@ -227,9 +234,38 @@ class Injector {
 	 * Sets the default global injector instance.
 	 *
 	 * @param Injector $instance
+	 * @return Injector Reference to new active Injector instance
 	 */
 	public static function set_inst(Injector $instance) {
-		self::$instance = $instance;
+		return self::$instance = $instance;
+	}
+	
+	/**
+	 * Make the newly active {@link Injector} be a copy of the current active 
+	 * {@link Injector} instance.
+	 *
+	 * You can then make changes to the injector with methods such as
+	 * {@link Injector::inst()->registerService()} which will be discarded
+	 * upon a subsequent call to {@link Injector::unnest()}
+	 * 
+	 * @return Injector Reference to new active Injector instance
+	 */
+	public static function nest() {
+		$current = self::$instance;
+
+		$new = clone $current;
+		$new->nestedFrom = $current;
+		return self::set_inst($new);
+	}
+
+	/**
+	 * Change the active Injector back to the Injector instance the current active 
+	 * Injector object was copied from.
+	 * 
+	 * @return Injector Reference to restored active Injector instance
+	 */
+	public static function unnest() {
+		return self::set_inst(self::$instance->nestedFrom);
 	}
 
 	/**
