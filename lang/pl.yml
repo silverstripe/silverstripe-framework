@@ -305,7 +305,6 @@ pl:
     PERMAGAIN: 'Zostałeś wylogowany z CMSa. Jeśli chcesz zalogować się ponownie, wpisz login i hasło poniżej.'
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
-    PLEASESAVE: 'Proszę zapisać stronę. Ta strona nie mogła zostać uaktualniona, ponieważ nie została jeszcze zapisana.'
     PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.

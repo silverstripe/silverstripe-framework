@@ -305,7 +305,6 @@ zh:
     PERMAGAIN: '您已经退出 CMS。如果您想再次登录，请在下面输入用户名和密码。'
     PERMALREADY: '抱歉，您不能访问 CMS 的这一部分。如果您想以不同的身份登录，请在下面进行操作'
     PERMDEFAULT: '请选择一种认证方法并输入您的凭据以访问 CMS。'
-    PLEASESAVE: '请保存页面：不能更新该页面因为它还没有被保存。'
     PreviewButton: 预览
     REORGANISATIONSUCCESSFUL: '重新组织网站地图已成功'
     SAVEDUP: 已保存。

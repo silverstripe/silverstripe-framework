@@ -259,7 +259,6 @@ sv:
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
     PERMALREADY: 'Tyvärr så har du inte tillträde till den delen av CMSet. Om du vill logga in med en annan användare kan du göra det nedan'
     PERMDEFAULT: 'Var god välj en inloggningsmetod och fyll i dina uppgifter för att logga in i CMSet.'
-    PLEASESAVE: 'Var god spara sidan. Den kan inte uppdateras för att den har inte sparats ännu.'
     PreviewButton: Förhandsgranska
     REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
     SAVEDUP: Sparad.

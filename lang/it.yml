@@ -297,7 +297,6 @@ it:
     PERMAGAIN: 'Sei stato disconnesso dal CMS. Se desideri autenticarti nuovamente, inserisci qui sotto nome utente e password.'
     PERMALREADY: 'Siamo spiacenti, ma non puoi accedere a questa sezione del CMS. Se desideri autenticarti come qualcun altro, fallo qui sotto.'
     PERMDEFAULT: 'Inserisci il tuo indirizzo email e password per accedere al CMS.'
-    PLEASESAVE: 'Per favore salva la pagina: La stessa potrebbe non venire aggiornata se non si provvede quanto prima a salvarla.'
     PreviewButton: Anteprima
     REORGANISATIONSUCCESSFUL: 'Albero del sito riorganizzato con successo.'
     SAVEDUP: Salvato.
