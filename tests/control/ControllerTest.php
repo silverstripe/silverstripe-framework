@@ -373,6 +373,27 @@ class ControllerTest extends FunctionalTest {
 			"Doesn't redirect on external URLs"
 		);
 	}
+
+	public function testSubActions() {
+		/* If a controller action returns another controller, ensure that the $action variable is correctly forwarded */
+		$response = $this->get("ControllerTest_ContainerController/subcontroller/subaction");
+		$this->assertEquals('subaction', $response->getBody());
+
+		$request = new SS_HTTPRequest(
+			'GET',
+			'ControllerTest_ContainerController/subcontroller/substring/subvieweraction'
+		);
+		/* Shift to emulate the director selecting the controller */
+		$request->shift();
+		/* Handle the request to create conditions where improperly passing the action to the viewer might fail */
+		$controller = new ControllerTest_ContainerController();
+		try {
+			$controller->handleRequest($request, DataModel::inst());
+		}
+		catch(ControllerTest_SubController_Exception $e) {
+			$this->fail($e->getMessage());
+		}
+	}
 }
 
 /**
@@ -498,5 +519,52 @@ class ControllerTest_HasAction extends Controller {
 class ControllerTest_HasAction_Unsecured extends ControllerTest_HasAction implements TestOnly {
 	
 	public function defined_action() {  }
-	
+
+}
+
+class ControllerTest_ContainerController extends Controller implements TestOnly {
+
+	private static $allowed_actions = array(
+		'subcontroller',
+	);
+
+	public function subcontroller() {
+		return new ControllerTest_SubController();
+	}
+
+}
+
+class ControllerTest_SubController extends Controller implements TestOnly {
+
+	private static $allowed_actions = array(
+		'subaction',
+		'subvieweraction',
+	);
+
+	private static $url_handlers = array(
+		'substring/subvieweraction' => 'subvieweraction',
+	);
+
+	public function subaction() {
+		return $this->getAction();
+	}
+
+	/* This is messy, but Controller->handleRequest is a hard to test method which warrants such measures... */
+	public function getViewer($action) {
+		if(empty($action)) {
+			throw new ControllerTest_SubController_Exception("Null action passed, getViewer will break");
+		}
+		return parent::getViewer($action);
+	}
+
+	public function subvieweraction() {
+		return $this->customise(array(
+			'Thoughts' => 'Hope this works',
+		));
+	}
+
+}
+
+class ControllerTest_SubController_Exception extends Exception {
+
 }
