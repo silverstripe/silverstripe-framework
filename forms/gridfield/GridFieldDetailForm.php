@@ -193,6 +193,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	public function getItemEditFormCallback() {
 		return $this->itemEditFormCallback;
 	}
+
 }
 
 /**
@@ -625,6 +626,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 */
 	public function getGridField() {
 		return $this->gridField;
+	}
+
+	/**
+	 * @return DataObject
+	 */
+	public function getRecord() {
+		return $this->record;
 	}
 
 	/**
