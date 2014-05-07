@@ -158,7 +158,7 @@ Here is an example to increase the HTTP Timeout globally. Insert this in your `_
 ```php
 Config::inst()->update('RestfulService', 'default_curl_options', array(
 	CURLOPT_DNS_CACHE_TIMEOUT => 3600,
-    CURLOPT_CONNECTTIMEOUT => 10,
+	CURLOPT_CONNECTTIMEOUT => 10,
 ));
 ```
 
