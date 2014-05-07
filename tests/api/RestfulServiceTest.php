@@ -24,7 +24,68 @@ class RestfulServiceTest extends SapphireTest {
 		if ($this->member_unique_identifier_field) { 
 			Member::config()->unique_identifier_field = $this->member_unique_identifier_field; 
 		}
-	} 
+	}
+
+	/**
+	 * Check we can put slashes anywhere and it works
+	 */
+	public function testGetAbsoluteURLSlashes() {
+		$urls = array(
+			'/url/',
+			'url',
+			'/url',
+			'url/',
+		);
+		$restWithoutSlash = new RestfulService('http://example.com');
+		$restWithSlash = new RestfulService('http://example.com/');
+		foreach ($urls as $url) {
+			$url = ltrim($url, '/');
+			$this->assertEquals("http://example.com/$url", $restWithoutSlash->getAbsoluteRequestURL($url));
+			$this->assertEquals("http://example.com/$url", $restWithSlash->getAbsoluteRequestURL($url));
+			$this->assertEquals($restWithoutSlash->getAbsoluteRequestURL($url), $restWithSlash->getAbsoluteRequestURL($url));
+		}
+	}
+
+	/**
+	 * Check we can add query strings all over the shop and it's ok
+	 */
+	public function testGetAbsoluteURLQueries() {
+		$restWithoutSlash = new RestfulService('http://example.com?b=query2');
+		$restWithSlash = new RestfulService('http://example.com/?b=query2');
+		$restWithQuery = new RestfulService('http://example.com/?b=query2');
+		$restWithQuery->setQueryString(array(
+			'c' => 'query3',
+		));
+		$this->assertEquals('http://example.com/url?b=query2&a=query1', $restWithoutSlash->getAbsoluteRequestURL('url?a=query1'));
+		$this->assertEquals('http://example.com/url?b=query2&a=query1', $restWithSlash->getAbsoluteRequestURL('url?a=query1'));
+		$this->assertEquals('http://example.com/url?b=query2&a=query1&c=query3', $restWithQuery->getAbsoluteRequestURL('url?a=query1'));
+
+		$this->assertEquals('http://example.com/url?b=query2', $restWithoutSlash->getAbsoluteRequestURL('url'));
+		$this->assertEquals('http://example.com/url?b=query2', $restWithSlash->getAbsoluteRequestURL('url'));
+		$this->assertEquals('http://example.com/url?b=query2&c=query3', $restWithQuery->getAbsoluteRequestURL('url'));
+
+		$restWithoutSlash = new RestfulService('http://example.com');
+		$restWithSlash = new RestfulService('http://example.com/');
+		$restWithQuery = new RestfulService('http://example.com/');
+		$restWithQuery->setQueryString(array(
+			'c' => 'query3',
+		));
+		$this->assertEquals('http://example.com/url?a=query1', $restWithoutSlash->getAbsoluteRequestURL('url?a=query1'));
+		$this->assertEquals('http://example.com/url?a=query1', $restWithSlash->getAbsoluteRequestURL('url?a=query1'));
+		$this->assertEquals('http://example.com/url?a=query1&c=query3', $restWithQuery->getAbsoluteRequestURL('url?a=query1'));
+
+		$this->assertEquals('http://example.com/url', $restWithoutSlash->getAbsoluteRequestURL('url'));
+		$this->assertEquals('http://example.com/url', $restWithSlash->getAbsoluteRequestURL('url'));
+		$this->assertEquals('http://example.com/url?c=query3', $restWithQuery->getAbsoluteRequestURL('url'));
+	}
+
+	/**
+	 * Check spaces are encoded
+	 */
+	public function testGetAbsoluteURLWithSpaces() {
+		$rest = new RestfulService('http://example.com');
+		$this->assertEquals('http://example.com/query%20with%20spaces', $rest->getAbsoluteRequestURL('query with spaces'));
+	}
 
 	public function testSpecialCharacters() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());

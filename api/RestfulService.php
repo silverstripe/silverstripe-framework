@@ -131,7 +131,8 @@ class RestfulService extends ViewableData {
 	}
 	
 	protected function constructURL(){
-		return "$this->baseURL" . ($this->queryString ? "?$this->queryString" : "");
+		Deprecation::notice('3.2', 'constructURL is deprecated, please use `getAbsoluteRequestURL` instead');
+		return Controller::join_links($this->baseURL, '?' . $this->queryString);
 	}
 		
 	/**
@@ -377,15 +378,8 @@ class RestfulService extends ViewableData {
 	 * Returns a full request url
 	 * @param string 
 	 */ 
-	public function getAbsoluteRequestURL($subURL) {
-		$url = $this->baseURL . $subURL; // Url for the request
-		if($this->queryString) {
-			if(strpos($url, '?') !== false) {
-				$url .= '&' . $this->queryString;
-			} else {
-				$url .= '?' . $this->queryString;
-			}
-		}
+	public function getAbsoluteRequestURL($subURL = '') {
+		$url = Controller::join_links($this->baseURL, $subURL, '?' . $this->queryString);
 		
 		return str_replace(' ', '%20', $url); // Encode spaces
 	}
