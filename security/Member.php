@@ -394,7 +394,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			Cookie::set('alc_enc', $this->ID . ':' . $token, 90, null, null, null, true);
 		} else {
 			$this->RememberLoginToken = null;
-			Cookie::set('alc_enc', null);
 			Cookie::force_expiry('alc_enc');
 		}
 		
@@ -490,7 +489,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$this->extend('memberLoggedOut');
 
 		$this->RememberLoginToken = null;
-		Cookie::set('alc_enc', null); // // Clear the Remember Me cookie
 		Cookie::force_expiry('alc_enc');
 
 		// Switch back to live in order to avoid infinite loops when 

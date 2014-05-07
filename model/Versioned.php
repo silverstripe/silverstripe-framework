@@ -980,15 +980,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if(!headers_sent() && !Director::is_cli()) {
 			if(Versioned::current_stage() == 'Live') {
 				// clear the cookie if it's set
-				if(!empty($_COOKIE['bypassStaticCache'])) {
-					Cookie::set('bypassStaticCache', null, 0, null, null, false, true /* httponly */);
-					unset($_COOKIE['bypassStaticCache']);
+				if(Cookie::get('bypassStaticCache')) {
+					Cookie::force_expiry('bypassStaticCache', null, null, false, true /* httponly */);
 				}
 			} else {
 				// set the cookie if it's cleared
-				if(empty($_COOKIE['bypassStaticCache'])) {
+				if(!Cookie::get('bypassStaticCache')) {
 					Cookie::set('bypassStaticCache', '1', 0, null, null, false, true /* httponly */);
-					$_COOKIE['bypassStaticCache'] = 1;
 				}
 			}
 		}
