@@ -14,38 +14,19 @@ class Cookie {
 	private static $report_errors = true;
 
 	/**
-	 * @var Cookie_Backend the backend object for setting / getting cookies
-	 */
-	private static $inst = null;
-
-	/**
 	 * Fetch the current instance of the cookie backend
 	 *
 	 * @return Cookie_Backend The cookie backend
 	 */
 	public static function get_inst() {
-		//if we don't have a backend, create one
-		if(is_null(self::$inst)) {
-			self::set_inst(Injector::inst()->create('CookieJar', $_COOKIE));
+		//if we don't have a CookieJar service yet, register it
+		if(!Injector::inst()->hasService('Cookie_Backend')) {
+			Injector::inst()->registerService(
+				Injector::inst()->create('CookieJar', $_COOKIE),
+				'Cookie_Backend'
+			);
 		}
-		return self::$inst;
-	}
-
-	/**
-	 * Clear the cookie backend, this is useful for testing and if you need to
-	 * change the backend partway through execution
-	 */
-	public static function clear_inst() {
-		self::$inst = null;
-	}
-
-	/**
-	 * Set the cookie backend
-	 *
-	 * @param Cookie_Backend The cookie backend to use
-	 */
-	public static function set_inst(Cookie_Backend $inst) {
-		self::$inst = $inst;
+		return Injector::inst()->get('Cookie_Backend');
 	}
 
 	/**

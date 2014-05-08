@@ -74,8 +74,8 @@ class CookieJar implements Cookie_Backend {
 		}
 		//set the path up
 		$path = $path ? $path : Director::baseURL();
-		//set the cookie using PHP
-		$this->setCookieWithPHP($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+		//send the cookie
+		$this->outputCookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
 		//keep our variables in check
 		if ($clear) {
 			unset ($this->new[$name], $this->current[$name]);
@@ -140,7 +140,7 @@ class CookieJar implements Cookie_Backend {
 	 *
 	 * @return boolean If the cookie was set or not; doesn't mean it's accepted by the browser
 	 */
-	protected function setCookieWithPHP(
+	protected function outputCookie(
 		$name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false
 	) {
 		// if headers aren't sent, we can set the cookie
