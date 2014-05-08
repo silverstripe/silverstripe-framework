@@ -87,7 +87,7 @@ To set the limit of items displayed in a paginated page use the `[api:PaginatedL
 	public function PaginatedPagesLimit() {
 		$paginatedItems = new PaginatedList(Page::get(), $this->request);
 		$paginatedItems->setPageLength(4);
-		return $pagination;
+		return $paginatedItems;
 	}
 
 ## Related
