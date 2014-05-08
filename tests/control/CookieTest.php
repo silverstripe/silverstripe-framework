@@ -6,14 +6,24 @@ class CookieTest extends SapphireTest {
 
 	public function setUpOnce() {
 		//store the cookie_backend so we can restore it after the tests
-		$this->cookieInst = Cookie::get_inst();
+		$this->cookieService = Injector::inst()->get('CookieJar');
 		parent::setUpOnce();
 	}
 
 	public function tearDownOnce() {
 		parent::tearDownOnce();
 		//restore the cookie_backend
-		Cookie::set_inst($this->cookieInst);
+		Injector::inst()->registerService($this->cookieService, 'CookieJar');
+	}
+
+	public function setUp() {
+		parent::setUp();
+		Injector::inst()->registerService(new CookieJar($_COOKIE), 'Cookie_Backend');
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+		Injector::inst()->unregisterNamedObject('Cookie_Backend');
 	}
 
 	/**
@@ -30,7 +40,7 @@ class CookieTest extends SapphireTest {
 			'cookie3' => 'test',
 		);
 
-		Cookie::clear_inst();
+		Injector::inst()->unregisterNamedObject('Cookie_Backend');
 
 		$this->assertEquals($_COOKIE['cookie1'], Cookie::get('cookie1'));
 		$this->assertEquals($_COOKIE['cookie2'], Cookie::get('cookie2'));
@@ -71,7 +81,7 @@ class CookieTest extends SapphireTest {
 
 		$this->assertEquals('testvalue', Cookie::get('test'));
 
-		Cookie::clear_inst();
+		Injector::inst()->registerService(new CookieJar(array()), 'Cookie_Backend');
 
 		$this->assertEmpty(Cookie::get('test'));
 
@@ -84,7 +94,7 @@ class CookieTest extends SapphireTest {
 
 		$inst = new CookieJar(array('test' => 'testvalue'));
 
-		Cookie::set_inst($inst);
+		Injector::inst()->registerService($inst, 'Cookie_Backend');
 
 		$this->assertEquals($inst, Cookie::get_inst());
 

@@ -276,7 +276,7 @@ class Director implements TemplateGlobalProvider {
 		$_POST = (array)$postVars; 
 		$_SESSION = $session ? $session->inst_getAll() : array();
 		$_COOKIE = $cookies->getAll(false);
-		Cookie::set_inst($cookies);
+		Injector::inst()->registerService($cookies, 'CookieJar');
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
 		$request = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
@@ -318,7 +318,7 @@ class Director implements TemplateGlobalProvider {
 		$_COOKIE = $existingCookies;
 		$_SERVER = $existingServer;
 
-		Cookie::set_inst($existingCookieJar);
+		Injector::inst()->registerService($existingCookieJar, 'CookieJar');
 
 		Requirements::set_backend($existingRequirementsBackend);
 
