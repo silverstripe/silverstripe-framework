@@ -33,7 +33,8 @@ The `CookieJar` keeps track of cookies that have been set by the current process
 from the browser.
 
 By default the `Cookie` class will load the `$_COOKIE` superglobal into the `Cookie_Backend`. If you want to change
-the initial state of the `Cookie_Backend` you can load your own backend into the `Cookie::$inst`.
+the initial state of the `Cookie_Backend` you can load your own backend into the `CookieJar` service registered with
+the `Injector`.
 
 eg:
 
@@ -44,9 +45,40 @@ $myCookies = array(
 
 $newBackend = new CookieJar($myCookies);
 
-Cookie::set_inst($myCookies);
+Injector::inst()->registerService($newBackend, 'CookieJar');
 
 Cookie::get('cookie1'); //will return 'value1'
+```
+
+### Resetting the Cookie_Backend state
+
+Assuming that your appliation hasn't messed around with the `$_COOKIE` superglobal, you can reset the state of your
+`Cookie_Backend` by simply unregistering the `CookieJar` service with `Injector`. Next time you access `Cookie` it'll
+create a new service for you using the `$_COOKIE` superglobal
+
+eg:
+
+```php
+
+Injector::inst()->unregisterNamedObject('CookieJar');
+
+Cookie::get('cookiename'); //will return $_COOKIE['cookiename'] if set
+
+```
+
+Alternatively, if you know that the superglobal has been changed (or you aren't sure it hasn't) you can attempt to use
+the current `CookieJar` service to tell you what it was like when it was registered.
+
+eg:
+
+```php
+
+//store the cookies that were loaded into the `CookieJar`
+$recievedCookie = Cookie::get_inst()->getAll(false);
+
+//set a new `CookieJar`
+Injector::inst()->registerService(new CookieJar($recievedCookie), 'CookieJar');
+
 ```
 
 
