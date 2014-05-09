@@ -20,7 +20,7 @@
 		"composer/installers": "*"
 	},
 	"require-dev": {
-		"phpunit/PHPUnit": "~3.7@stable"
+		"phpunit/PHPUnit": "4.*@stable"
 	},
 	"autoload": {
 		"classmap": ["tests/behat/features/bootstrap"]	
