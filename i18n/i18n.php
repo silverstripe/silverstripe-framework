@@ -2514,8 +2514,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function include_by_locale($locale, $clean = false) {
 		if($clean) {
-			$cache = Zend_Translate::getCache();
-			if($cache) $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+			Zend_Translate::clearCache();
 		}
 		
 		// Get list of module => path pairs, and then just the names
