@@ -1,6 +1,6 @@
 <?php
 
-class ConfigTest_DefinesFoo extends Object {
+class ConfigTest_DefinesFoo extends Object implements TestOnly {
 	protected static $foo = 1;
 }
 
@@ -13,11 +13,11 @@ class ConfigTest_DefinesFooAndBar extends ConfigTest_DefinesFoo {
 	public static $bar = 3;
 }
 
-class ConfigTest_DefinesFooDoesntExtendObject {
+class ConfigTest_DefinesFooDoesntExtendObject implements TestOnly {
 	protected static $foo = 4;
 }
 
-class ConfigStaticTest_First extends Config {
+class ConfigStaticTest_First extends Config implements TestOnly {
 	/** @config */
 	private static $first  = array('test_1');
 	/** @config */
@@ -57,7 +57,7 @@ class ConfigStaticTest_Fourth extends ConfigStaticTest_Third {
 	public static $fourth = array('test_4');
 }
 
-class ConfigStaticTest_Combined1 extends Config {
+class ConfigStaticTest_Combined1 extends Config implements TestOnly {
 	/** @config */
 	private static $first  = array('test_1');
 	/** @config */
@@ -74,28 +74,35 @@ class ConfigStaticTest_Combined3 extends ConfigStaticTest_Combined2 {
 	private static $second = array('test_3');
 }
 
+class ConfigTest_TestNest extends Object implements TestOnly {
+	/** @config */
+	private static $foo = 3;
+	/** @config */
+	private static $bar = 5;
+}
+
 class ConfigTest extends SapphireTest {
 	
 	public function testNest() {
 		
 		// Check basic config
-		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'foo'));
-		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'bar'));
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_TestNest', 'foo'));
+		$this->assertEquals(5, Config::inst()->get('ConfigTest_TestNest', 'bar'));
 		
 		// Test nest copies data
 		Config::nest();
-		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'foo'));
-		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'bar'));
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_TestNest', 'foo'));
+		$this->assertEquals(5, Config::inst()->get('ConfigTest_TestNest', 'bar'));
 		
 		// Test nested data can be updated
-		Config::inst()->update('ConfigTest_DefinesFooAndBar', 'foo', 4);
-		$this->assertEquals(4, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'foo'));
-		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'bar'));
+		Config::inst()->update('ConfigTest_TestNest', 'foo', 4);
+		$this->assertEquals(4, Config::inst()->get('ConfigTest_TestNest', 'foo'));
+		$this->assertEquals(5, Config::inst()->get('ConfigTest_TestNest', 'bar'));
 		
 		// Test unnest restores data
 		Config::unnest();
-		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'foo'));
-		$this->assertEquals(3, Config::inst()->get('ConfigTest_DefinesFooAndBar', 'bar'));
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_TestNest', 'foo'));
+		$this->assertEquals(5, Config::inst()->get('ConfigTest_TestNest', 'bar'));
 	}
 
 	public function testUpdateStatic() {
@@ -292,7 +299,7 @@ class ConfigTest extends SapphireTest {
 	}
 }
 
-class ConfigTest_Config_LRU extends Config_LRU {
+class ConfigTest_Config_LRU extends Config_LRU implements TestOnly {
 
 	public $cache;
 	public $indexing;
