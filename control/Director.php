@@ -165,13 +165,13 @@ class Director implements TemplateGlobalProvider {
 					DataModel::inst()
 				);
 			} else {
-			$response = new SS_HTTPResponse();
+				$response = new SS_HTTPResponse();
 				$response->redirect($url);
-			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
+				$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
 
-			if ($res !== false) {
-				$response->output();
-			}
+				if ($res !== false) {
+					$response->output();
+				}
 			}
 		// Handle a controller
 		} else if($result) {

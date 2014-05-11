@@ -149,11 +149,13 @@ class DataQuery {
 		}
 
 		$query = clone $this->query;
+		$ancestorTables = ClassInfo::ancestry($this->dataClass, true);
 
-		// Generate the list of tables to iterate over and the list of columns required by any existing where clauses.
-		// This second step is skipped if we're fetching the whole dataobject as any required columns will get selected
-		// regardless.
+		// Generate the list of tables to iterate over and the list of columns required
+		// by any existing where clauses. This second step is skipped if we're fetching
+		// the whole dataobject as any required columns will get selected regardless.
 		if($queriedColumns) {
+			// Specifying certain columns allows joining of child tables
 			$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
 
 			foreach ($query->getWhere() as $where) {
@@ -163,8 +165,9 @@ class DataQuery {
 					if (!in_array($matches[1], $queriedColumns)) $queriedColumns[] = $matches[1];
 				}
 			}
+		} else {
+			$tableClasses = $ancestorTables;
 		}
-		else $tableClasses = ClassInfo::ancestry($this->dataClass, true);
 
 		$tableNames = array_keys($tableClasses);
 		$baseClass = $tableNames[0];
@@ -172,30 +175,26 @@ class DataQuery {
 		// Iterate over the tables and check what we need to select from them. If any selects are made (or the table is
 		// required for a select)
 		foreach($tableClasses as $tableClass) {
-			$joinTable = false;
 
-			// If queriedColumns is set, then check if any of the fields are in this table.
+			// Determine explicit columns to select
+			$selectColumns = null;
 			if ($queriedColumns) {
+				// Restrict queried columns to that on the selected table
 				$tableFields = DataObject::database_fields($tableClass);
-				$selectColumns = array();
-				// Look through columns specifically requested in query (or where clause)
-				foreach ($queriedColumns as $queriedColumn) {
-					if (array_key_exists($queriedColumn, $tableFields)) {
-						$selectColumns[] = $queriedColumn;
-					}
-				}
-
+				$selectColumns = array_intersect($queriedColumns, array_keys($tableFields));
+			}
+			
+			// If this is a subclass without any explicitly requested columns, omit this from the query
+			if(!in_array($tableClass, $ancestorTables) && empty($selectColumns)) continue;
+			
+			// Select necessary columns (unless an explicitly empty array)
+			if($selectColumns !== array()) {
 				$this->selectColumnsFromTable($query, $tableClass, $selectColumns);
-				if ($selectColumns && $tableClass != $baseClass) {
-					$joinTable = true;
-				}
-			} else {
-				$this->selectColumnsFromTable($query, $tableClass);
-				if ($tableClass != $baseClass) $joinTable = true;
 			}
 
-			if ($joinTable) {
-				$query->addLeftJoin($tableClass, "\"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"", $tableClass, 10) ;
+			// Join if not the base table
+			if($tableClass !== $baseClass) {
+				$query->addLeftJoin($tableClass, "\"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"", $tableClass, 10);
 			}
 		}
 		
@@ -687,7 +686,8 @@ class DataQuery {
 	/**
 	 * Query the given field column from the database and return as an array.
 	 * 
-	 * @param String $field See {@link expressionForField()}.
+	 * @param string $field See {@link expressionForField()}.
+	 * @return array List of column values for the specified column
 	 */
 	public function column($field = 'ID') {
 		$fieldExpression = $this->expressionForField($field);
