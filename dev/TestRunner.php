@@ -365,6 +365,5 @@ class TestRunner extends Controller {
 	
 	public function tearDown() {
 		SapphireTest::kill_temp_db();
-		DB::set_alternative_database_name(null);
 	}
 }
