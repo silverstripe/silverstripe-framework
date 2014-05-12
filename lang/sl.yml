@@ -238,6 +238,7 @@ sl:
     PERMAGAIN: 'Odjavili ste se iz CMS-vmesnika. Če se želite ponovno prijaviti, vpišite uporabniško ime in geslo.'
     PERMALREADY: 'Do tega dela CMS-vmesnika nimate dostopa. Če se želite vpisati z drugim uporabniškim imenom, lahko to storite spodaj'
     PERMDEFAULT: 'Izberite način avtentikacije in vpišite svoje podatke za dostop do CMS-vmesnika.'
+    PLEASESAVE: 'Shranite stran: te strani ne morete posodobiti, ker še ni bila shranjena.'
     PreviewButton: Predogled
     REORGANISATIONSUCCESSFUL: 'Struktura spletnega mesta je bila uspešno spremenjena.'
     SAVEDUP: Shranjeno.
