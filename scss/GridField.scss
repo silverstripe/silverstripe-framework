@@ -156,6 +156,7 @@ $gf_grid_x:	16px;
 			tr.filter-header {
 				.fieldgroup {
 					max-width:$gf_grid_x*32; //max width 512px
+					min-width:12px;
 					.fieldgroup-field {
 						padding:0;
 					}

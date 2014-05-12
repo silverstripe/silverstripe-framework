@@ -45,7 +45,14 @@
 							content = '<span class="non-sortable"></span>';
 							self.addClass('show-filter').find('.filter-header').show();														
 						}else{
-							content = '<button name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
+							/*
+							 * Only show the filter magnifying glass UI widget if:
+							 * 1). The GridFieldFilterHeader component is in use.
+							 * 2). An actions column exists, over-which the widget can be placed.
+							 */
+							var hasActionCol = ((self.find('.col-buttons') + self.find('.col-Actions')) >0);
+							var showFilterUI = (self.find('.ss-gridfield-button-filter') && hasActionCol);
+							if(showFilterUI) content = '<button name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
 							self.removeClass('show-filter').find('.filter-header').hide();	
 						}
 

@@ -76,4 +76,58 @@ class FeatureContext extends SilverStripeContext {
 	public function setFixtureFactory(FixtureFactory $factory) {
 		$this->fixtureFactory = $factory;
 	}
+	
+	/**
+	 * @Then /^I should( not? |\s*)see pages as a Grid$/
+	 */
+	public function stepIShouldSeePagesAsAGridfield($negative) {
+		$page = $this->getSession()->getPage();
+		$grid = $page->getFirstGridFieldTable();
+		
+		if(trim($negative)) {
+			assertNull($grid, 'I should not see pages as a Gridfield');
+		} else {
+			assertNotNull($grid, 'I should see pages as a Gridfield');	
+		}
+	}
+	
+	/**
+	 * @Given /^I should( not? |\s*)see pages as a bullet list$/
+	 */
+	public function stepIShouldSeePagesAsABulletList($negative) {
+		$page = $this->getSession()->getPage();
+		$ele = $page->find('css', '.cms');
+		
+		if(trim($negative)) {
+			assertNull($ele, 'I should not see pages as a bullet list');
+		} else {
+			assertNotNull($ele, 'I should see pages as a bullet list');	
+		}
+	}
+	
+	/**
+	 * @And /^The Filter Header component is present$/
+	 */
+	public function stepTheFilterHeaderComponentIsPresent($negative) {
+		$page = $this->getSession()->getPage();
+		$grid = $page->getFirstGridFieldTable();
+		$ele = $grid->find('xpath', "//tr[contains(@class, 'filter-header')]");
+		
+		if(trim($negative)) {
+			assertNull($ele, 'The Filter Header component is not present');
+		} else {
+			assertNotNull($ele, 'The Filter Header component is present');	
+		}
+	}
+	
+	/**
+	 * @Then /^I should see the spyglass icon$/
+	 */
+	public function IShouldSeeTheSpyglassIcon($negative) {
+		if(trim($negative)) {
+			$this->getMainContext()->assertElementNotOnPage('.ss-gridfield-button-filter');
+		} else {
+			$this->getMainContext()->assertElementOnPage('.ss-gridfield-button-filter');
+		}		
+	}	
 }
