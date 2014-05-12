@@ -307,7 +307,7 @@ cs:
     PERMAGAIN: 'Byli jste odhlášeni z CMS. Pokud se chcete znovu přihlásit, zadejte níže své uživatelské jméno a heslo.'
     PERMALREADY: 'Je nám líto, ale nemůžete vstoupit do této části CMS. Pokud se chcete přihlásit jako někdo jiný, udělejte tak níže'
     PERMDEFAULT: 'Pro přístup do CMS zadejte Vaši e-mailovou adresu a heslo.'
-    PLEASESAVE: 'Prosím uložte stránku: Tato stránka nemohla být aktualizována, protože ještě nebyla uložena.'
+    PLEASESAVE: 'Uložte stránku, prosím. Tato stránka nemůže být aktualizována, protože ještě nebyla uložena.'
     PreviewButton: Náhled
     REORGANISATIONSUCCESSFUL: 'Strom webu reorganizován úspěšně.'
     SAVEDUP: Uloženo.

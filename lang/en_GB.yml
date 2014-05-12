@@ -18,7 +18,6 @@ en_GB:
     PAGETYPE: 'Page type:'
     PERMAGAIN: 'You have been logged out of the CMS. If you would like to log in again, enter a username and password below.'
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS. If you want to log in as someone else, do so below'
-    PLEASESAVE: 'Please Save Page: This page could not be updated because it hasn''t been saved yet.'
   Member:
     ERRORNEWPASSWORD: 'Your have entered your new password differently, try again'
   Security:

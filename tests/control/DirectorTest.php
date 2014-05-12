@@ -13,6 +13,9 @@ class DirectorTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
+		
+		// Required for testRequestFilterInDirectorTest
+		Injector::nest();
 
 		// Hold the original request URI once so it doesn't get overwritten
 		if(!self::$originalRequestURI) {
@@ -42,7 +45,7 @@ class DirectorTest extends SapphireTest {
 		// TODO Remove director rule, currently API doesnt allow this
 		
 		// Remove base URL override (setting to false reverts to default behaviour)
-		Director::setBaseURL(false);
+		Config::inst()->update('Director', 'alternate_base_url', false);
 		
 		// Reinstate the original REQUEST_URI after it was modified by some tests
 		$_SERVER['REQUEST_URI'] = self::$originalRequestURI;
@@ -52,6 +55,8 @@ class DirectorTest extends SapphireTest {
 				$_SERVER[$header] = $value;
 			}
 		}
+		
+		Injector::unnest();
 
 		parent::tearDown();
 	}
@@ -80,7 +85,7 @@ class DirectorTest extends SapphireTest {
 		
 		$rootURL = Director::protocolAndHost();
 		$_SERVER['REQUEST_URI'] = "$rootURL/mysite/sub-page/";
-		Director::setBaseURL('/mysite/');
+		Config::inst()->update('Director', 'alternate_base_url', '/mysite/');
 		
 		// Test already absolute url
 		$this->assertEquals($rootURL, Director::absoluteURL($rootURL));
@@ -387,8 +392,6 @@ class DirectorTest extends SapphireTest {
 		
 		$processor = new RequestProcessor(array($filter));
 		
-		$currentProcessor = Injector::inst()->get('RequestProcessor');
-		
 		Injector::inst()->registerService($processor, 'RequestProcessor');
 		
 		$response = Director::test('some-dummy-url');
@@ -413,9 +416,6 @@ class DirectorTest extends SapphireTest {
 		
 		// preCall 'false' will trigger an exception and prevent post call execution
 		$this->assertEquals(2, $filter->postCalls);
-
-		// swap back otherwise our wrapping test execution request may fail in the post processing later
-		Injector::inst()->registerService($currentProcessor, 'RequestProcessor');
 	}
 }
 

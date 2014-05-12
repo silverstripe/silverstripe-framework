@@ -26,6 +26,9 @@ matrix:
       env: DB=MYSQL CORE_RELEASE=3.1
     - php: 5.4
       env: DB=MYSQL CORE_RELEASE=3.1 BEHAT_TEST=1
+  allow_failures:
+    - php: 5.6
+      env: DB=MYSQL CORE_RELEASE=3.1
 
 before_script:
  - composer self-update
@@ -38,7 +41,7 @@ before_script:
  - php ~/travis-support/travis_setup_php54_webserver.php --if-env BEHAT_TEST
 
 script: 
- - "if [ \"$BEHAT_TEST\" = \"\" ]; then phpunit framework/tests; fi"
+ - "if [ \"$BEHAT_TEST\" = \"\" ]; then vendor/bin/phpunit framework/tests; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ]; then vendor/bin/behat @framework; fi"
 
 after_failure:

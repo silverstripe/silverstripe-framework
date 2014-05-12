@@ -935,20 +935,24 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * If neither of these are set, it checks the session, otherwise the stage 
 	 * is set to 'Live'.
+	 * 
+	 * @param Session $session Optional session within which to store the resulting stage
 	 */
-	public static function choose_site_stage() {
+	public static function choose_site_stage($session = null) {
+		if(!$session) $session = Session::current_session();
+		
 		if(isset($_GET['stage'])) {
 			$stage = ucfirst(strtolower($_GET['stage']));
 			
 			if(!in_array($stage, array('Stage', 'Live'))) $stage = 'Live';
 
-			Session::set('readingMode', 'Stage.' . $stage);
+			$session->inst_set('readingMode', 'Stage.' . $stage);
 		}
 		if(isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
-			Session::set('readingMode', 'Archive.' . $_GET['archiveDate']);
+			$session->inst_set('readingMode', 'Archive.' . $_GET['archiveDate']);
 		}
 		
-		if($mode = Session::get('readingMode')) {
+		if($mode = $session->inst_get('readingMode')) {
 			Versioned::set_reading_mode($mode);
 		} else {
 			Versioned::reading_stage("Live");

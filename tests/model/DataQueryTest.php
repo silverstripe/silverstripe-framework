@@ -1,11 +1,15 @@
 <?php
 
 class DataQueryTest extends SapphireTest {
+	
+	protected static $fixture_file = 'DataQueryTest.yml';
 
 	protected $extraDataObjects = array(
 		'DataQueryTest_A',
 		'DataQueryTest_B',
+		'DataQueryTest_C',
 		'DataQueryTest_D',
+		'DataQueryTest_E',
 	);
 
 	/**
@@ -124,6 +128,12 @@ class DataQueryTest extends SapphireTest {
 			$dq->sql()
 		);
 	}
+	
+	public function testDefaultSort() {
+		$query = new DataQuery('DataQueryTest_E');
+		$result = $query->column('Title');
+		$this->assertEquals(array('First', 'Second', 'Last'), $result);
+	}
 }
 
 
@@ -148,6 +158,10 @@ class DataQueryTest_B extends DataQueryTest_A {
 }
 
 class DataQueryTest_C extends DataObject implements TestOnly {
+	
+	private static $db = array(
+		'Title' => 'Varchar'
+	);
 
 	private static $has_one = array(
 		'TestA' => 'DataQueryTest_A',
@@ -170,4 +184,13 @@ class DataQueryTest_D extends DataObject implements TestOnly {
 	private static $has_one = array(
 		'Relation' => 'DataQueryTest_B',
 	);
+}
+
+class DataQueryTest_E extends DataQueryTest_C implements TestOnly {
+	
+	private static $db = array(
+		'SortOrder' => 'Int'
+	);
+	
+	private static $default_sort = '"DataQueryTest_E"."SortOrder" ASC';
 }

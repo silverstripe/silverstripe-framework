@@ -352,13 +352,16 @@ class Folder extends File {
 	 * Note that this is not appropriate for files, because someone might want to create a human-readable name
 	 * of a file that is different from its name on disk. But folders should always match their name on disk. */
 	public function setTitle($title) {
-		$this->setField('Title',$title);
-		parent::setName($title); //set the name and filename to match the title
+		$this->setName($title);
+	}
+
+	public function getTitle() {
+		return $this->Name;
 	}
 
 	public function setName($name) {
-		$this->setField('Title',$name);
 		parent::setName($name);
+		$this->setField('Title', $this->Name);
 	}
 
 	public function setFilename($filename) {
