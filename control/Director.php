@@ -240,15 +240,13 @@ class Director implements TemplateGlobalProvider {
 		$existingCookies = isset($_COOKIE) ? $_COOKIE : array();
 		$existingServer	= isset($_SERVER) ? $_SERVER : array();
 
-		$existingRequirementsBackend = Requirements::backend();
-
 		Config::inst()->update('Cookie', 'report_errors', false);
-		Requirements::set_backend(new Requirements_Backend());
+		Injector::inst()->unregisterNamedObject('Requirements_Backend');
 
 		// Set callback to invoke prior to return
 		$onCleanup = function() use(
 			$existingRequestVars, $existingGetVars, $existingPostVars, $existingSessionVars,
-			$existingCookies, $existingServer, $existingRequirementsBackend, $oldStage
+			$existingCookies, $existingServer, $oldStage
 		) {
 			// Restore the superglobals
 			$_REQUEST = $existingRequestVars;
@@ -258,13 +256,11 @@ class Director implements TemplateGlobalProvider {
 			$_COOKIE = $existingCookies;
 			$_SERVER = $existingServer;
 
-			Requirements::set_backend($existingRequirementsBackend);
-
 			// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 			// Really, it's some inappropriate coupling and should be resolved by making less use of statics
 			Versioned::reading_stage($oldStage);
 
-			Injector::unnest(); // Restore old CookieJar, etc
+			Injector::unnest(); // Restore old CookieJar, RequirementsHandler etc
 			Config::unnest();
 		};
 

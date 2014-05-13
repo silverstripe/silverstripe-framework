@@ -97,25 +97,24 @@ class SSViewerTest extends SapphireTest {
 	}
 
 	public function testRequirements() {
-		$requirements = $this->getMock("Requirements_Backend", array("javascript", "css"));
+		$requirements = $this->getMock("RequirementsHandler", array("javascript", "css"));
 		$jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 		$cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 
 		$requirements->expects($this->once())->method('javascript')->with($jsFile);
 		$requirements->expects($this->once())->method('css')->with($cssFile);
 
-		Requirements::set_backend($requirements);
-
+		Injector::inst()->registerService($requirements, 'Requirements_Backend');
+		
 		$template = $this->render("<% require javascript($jsFile) %>
 		<% require css($cssFile) %>");
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
 	}
 	
-	public function testRequirementsCombine(){
-		$oldBackend = Requirements::backend();
-		$testBackend = new Requirements_Backend();
-		Requirements::set_backend($testBackend);
-		$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
+	public function testRequirementsCombine() {
+		$backend = new RequirementsHandler();
+		Injector::inst()->registerService($backend, 'Requirements_Backend');
+		$combinedTestFilePath = BASE_PATH . '/' . $backend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
 
 		$jsFile = FRAMEWORK_DIR . '/tests/view/themes/javascript/bad.js';
 		$jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
@@ -123,41 +122,35 @@ class SSViewerTest extends SapphireTest {
 		require_once('thirdparty/jsmin/jsmin.php');
 		
 		// first make sure that our test js file causes an exception to be thrown
-		try{
+		try {
 			$content = JSMin::minify($content);
-			Requirements::set_backend($oldBackend);
 			$this->fail('JSMin did not throw exception on minify bad file: ');
-		}catch(Exception $e){
+		} catch(Exception $e) {
 			// exception thrown... good
 		}
 
 		// secondly, make sure that requirements combine throws the correct warning, and only that warning
 		@unlink($combinedTestFilePath);
-		try{
+		try {
 			Requirements::process_combined_files();
-		}catch(PHPUnit_Framework_Error_Warning $e){
-			if(strstr($e->getMessage(), 'Failed to minify') === false){
-				Requirements::set_backend($oldBackend);
-				$this->fail('Requirements::process_combined_files raised a warning, which is good, but this is not the expected warning ("Failed to minify..."): '.$e);
+		} catch(PHPUnit_Framework_Error_Warning $e) {
+			if(strstr($e->getMessage(), 'Failed to minify') === false) {
+				$this->fail('Requirements::process_combined_files raised a warning, which is good, 
+					but this is not the expected warning ("Failed to minify..."): ' . $e);
 			}
-		}catch(Exception $e){
-			Requirements::set_backend($oldBackend);
-			$this->fail('Requirements::process_combined_files did not catch exception caused by minifying bad js file: '.$e);
+		} catch(Exception $e) {
+			$this->fail('Requirements::process_combined_files did not catch exception caused by 
+				minifying bad js file: ' . $e);
 		}
 		
 		// and make sure the combined content matches the input content, i.e. no loss of functionality
-		if(!file_exists($combinedTestFilePath)){
-			Requirements::set_backend($oldBackend);
-			$this->fail('No combined file was created at expected path: '.$combinedTestFilePath);
+		if(!file_exists($combinedTestFilePath)) {
+			$this->fail('No combined file was created at expected path: ' . $combinedTestFilePath);
 		}
+		
 		$combinedTestFileContents = file_get_contents($combinedTestFilePath);
 		$this->assertContains($jsFileContents, $combinedTestFileContents);
-
-		// reset
-		Requirements::set_backend($oldBackend);
 	}
-	
-
 
 	public function testComments() {
 		$output = $this->render(<<<SS
@@ -1317,17 +1310,16 @@ after')
 		$template = new SSViewer(array('SSViewerTestProcess'));
 		$basePath = dirname($this->getCurrentRelativePath()) . '/forms';
 
-		$backend = new Requirements_Backend;
-		$backend->set_combined_files_enabled(false);
-		$backend->combine_files(
+		Config::nest();
+		Config::inst()->update('Requirements', 'combined_files_enabled', false);
+
+		Requirements::combine_files(
 			'RequirementsTest_ab.css',
 			array(
 				$basePath . '/RequirementsTest_a.css',
 				$basePath . '/RequirementsTest_b.css'
 			)
 		);
-
-		Requirements::set_backend($backend);
 
 		$this->assertEquals(1, substr_count($template->process(array()), "a.css"));
 		$this->assertEquals(1, substr_count($template->process(array()), "b.css"));
@@ -1336,21 +1328,25 @@ after')
 		$template->includeRequirements(false);
 		$this->assertEquals(0, substr_count($template->process(array()), "a.css"));
 		$this->assertEquals(0, substr_count($template->process(array()), "b.css"));
+
+		Config::unnest();
 	}
 
 	public function testRequireCallInTemplateInclude() {
 		//TODO undo skip test on the event that templates ever obtain the ability to reference MODULE_DIR (or something to that effect)
 		if(FRAMEWORK_DIR === 'framework') {
 			$template = new SSViewer(array('SSViewerTestProcess'));
-
-			Requirements::set_suffix_requirements(false);
+		
+			Config::nest();
+			Config::inst()->update('Requirements', 'suffix_requirements', false);
 
 			$this->assertEquals(1, substr_count(
 				$template->process(array()),
 				"tests/forms/RequirementsTest_a.js"
 			));
-		}
-		else {
+
+			Config::unnest();
+		} else {
 			$this->markTestSkipped('Requirement will always fail if the framework dir is not '.
 				'named \'framework\', since templates require hard coded paths');
 		}

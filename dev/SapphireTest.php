@@ -160,6 +160,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $model;
 
 	public function setUp() {
+		Injector::nest();
+		Config::nest();
+
 		// We cannot run the tests on this abstract class.
 		if(get_class($this) == "SapphireTest") $this->skipTest = true;
 		
@@ -481,7 +484,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		// Restore requirements
 		if($this->originalRequirements) {
-			Requirements::set_backend($this->originalRequirements);	
+			Injector::inst()->registerService($this->originalRequirements, 'Requirements_Backend');
 		}
 
 		// Mark test as no longer being run - we use originalIsRunningTest to allow for nested SapphireTest calls
@@ -499,6 +502,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$controller->response->setStatusCode(200);
 			$controller->response->removeHeader('Location');
 		}
+
+		Injector::unnest();
+		Config::unnest();
 	}
 
 	public static function assertContains(

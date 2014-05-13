@@ -426,7 +426,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					$config = array();
 				}
 
-				Requirements::themedCSS($file, isset($config['media']) ? $config['media'] : null);
+				Requirements::themed_css($file, isset($config['media']) ? $config['media'] : null);
 			}
 		}
 
@@ -679,7 +679,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					)));
 				}
 			}
-			if ($menuIconStyling) Requirements::customCSS($menuIconStyling);
+			if ($menuIconStyling) Requirements::custom_css($menuIconStyling);
 
 			$this->_cache_MainMenu = $menu;
 		}

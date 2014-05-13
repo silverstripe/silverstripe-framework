@@ -1053,7 +1053,7 @@ class SSViewer implements Flushable {
 	 * replacing the special "$Content" and "$Layout" placeholders with their 
 	 * respective subtemplates.
 	 *
-	 * The method injects extra HTML in the header via {@link Requirements::includeInHTML()}.
+	 * The method injects extra HTML in the header via {@link Requirements::include_in_html()}.
 	 * 
 	 * Note: You can call this method indirectly by {@link ViewableData->renderWith()}.
 	 * 
@@ -1104,7 +1104,7 @@ class SSViewer implements Flushable {
 		$output = $this->includeGeneratedTemplate($cacheFile, $item, $arguments, $underlay, $inheritedScope);
 		
 		if($this->includeRequirements) {
-			$output = Requirements::includeInHTML($template, $output);
+			$output = Requirements::include_in_html($template, $output);
 		}
 		
 		array_pop(SSViewer::$topLevel);
