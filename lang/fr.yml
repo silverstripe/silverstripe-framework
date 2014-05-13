@@ -170,6 +170,7 @@ fr:
     TEXT2: 'lien de réinitialisation de mot de passe'
     TEXT3: pour
   Form:
+    CSRF_FAILED_MESSAGE: "Il semble qu'il y ait eu un problème technique. Veuillez cliquez sur le bouton Retour, raffraîchir votre navigateur, et essayer à nouveau"
     FIELDISREQUIRED: '{name} requis'
     SubmitBtnLabel: Envoyer
     VALIDATIONCREDITNUMBER: 'Vérifiez que vous avez bien saisi votre numéro de carte bleue {number}.'
@@ -264,6 +265,8 @@ fr:
     FROMWEB: 'Du web'
     FindInFolder: 'Trouver dans un dossier'
     IMAGEALT: 'Texte alternatif (alt)'
+    IMAGEALTTEXT: 'Texte alternatif (alt) - s''affiche si l''image ne peut être affichée.'
+    IMAGEALTTEXTDESC: 'Proposé aux lecteurs d’écran ou si l’image ne peut pas être affichée'
     IMAGEDIMENSIONS: Dimensions
     IMAGEHEIGHTPX: Hauteur
     IMAGETITLE: 'Texte du titre (tooltip) - informations à propos de l''image'
@@ -301,6 +304,7 @@ fr:
     PERMAGAIN: 'Vous avez été déconnecté du CMS. Si vous voulez vous reconnecter, entrez un nom d''utilisateur et un mot de passe ci-dessous.'
     PERMALREADY: 'Désolé, mais vous ne pouvez pas accéder à cette partie du CMS. Si vous voulez changer d''identité, faites le ci-dessous'
     PERMDEFAULT: 'Saisissez votre adresse de courriel et votre mot de passe pour accéder au CMS.'
+    PLEASESAVE: 'Enregistrez la page s’il vous plaît&nbsp;: elle ne pouvait pas être mise à jour car elle n’avait pas encore été sauvegardée.'
     PreviewButton: Aperçu
     REORGANISATIONSUCCESSFUL: 'L’arbre du site a été bien réorganisé.'
     SAVEDUP: Enregistré.
@@ -335,6 +339,7 @@ fr:
     ERRORLOCKEDOUT2: 'Votre compte a été temporairement désactivé à cause de trop nombreux échecs d''identification. Veuillez réessayer dans {count} minutes.'
     ERRORNEWPASSWORD: 'Vous avez entré votre nouveau mot de passe différemment, réessayez'
     ERRORPASSWORDNOTMATCH: 'Votre actuel mot de passe ne correspond pas, essayez encore s''il vous plaît'
+    ERRORWRONGCRED: 'Il semble que ce ne soit pas le bon email ou mot de passe. Essayez encore s''il vous plaît.'
     FIRSTNAME: 'Prénom'
     INTERFACELANG: 'Langue de l''interface'
     INVALIDNEWPASSWORD: 'Nous ne pouvons pas accepter le mot de passe {password}'

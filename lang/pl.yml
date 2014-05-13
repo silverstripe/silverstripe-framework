@@ -171,6 +171,7 @@ pl:
     TEXT2: 'link zmiany hasła'
     TEXT3: dla
   Form:
+    CSRF_FAILED_MESSAGE: "Wygląda na to, że wystąpił błąd techniczny. Kliknij przycisk Wstecz, odśwież przeglądarkę i spróbuj ponownie."
     FIELDISREQUIRED: '{name} jest wymagane'
     SubmitBtnLabel: Przejdź
     VALIDATIONCREDITNUMBER: 'Proszę upewnij się, że wprowadzony numer karty kredytowej {number} jest prawidłowy'
@@ -305,6 +306,7 @@ pl:
     PERMAGAIN: 'Zostałeś wylogowany z CMSa. Jeśli chcesz zalogować się ponownie, wpisz login i hasło poniżej.'
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
+    PLEASESAVE: 'Proszę zapisać stronę. Ta strona nie mogła zostać uaktualniona, ponieważ nie została jeszcze zapisana.'
     PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
@@ -470,6 +472,7 @@ pl:
     ERRORPASSWORDPERMISSION: 'Musisz być zalogowany aby zmienić hasło'
     LOGGEDOUT: 'Zostałeś wylogowany. Jeśli chcesz się zalogować ponownie wpisz dane poniżej'
     LOGIN: 'Logowanie'
+    LOSTPASSWORDHEADER: 'Nie pamiętam hasła'
     NOTEPAGESECURED: 'Ta strona jest zabezpieczona. Wpisz swoje dane a my wyślemy Ci potwierdzenie niebawem'
     NOTERESETLINKINVALID: '<p>Link resetujący hasło wygasł lub jest nieprawidłowy.</p><p>Możesz poprosić o nowy <a href="{link1}">tutaj</a> lub zmień swoje hasło po <a href="{link2}">zalogowaniu się</a>.</p>'
     NOTERESETPASSWORD: 'Wpisz adres e-mail, na który mamy wysłać link gdzie możesz zresetować swoje hasło'

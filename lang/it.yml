@@ -166,6 +166,7 @@ it:
     TEXT2: 'Link per l''azzeramento della password'
     TEXT3: per
   Form:
+    CSRF_FAILED_MESSAGE: "Sembra che ci sia stato un problema tecnico. Per favore clicca sul pulsante \"indietro\", ricarica la pagina e riprova."
     FIELDISREQUIRED: '{name} è richiesto'
     SubmitBtnLabel: Vai
     VALIDATIONCREDITNUMBER: 'Assicurati che il numero di carta di credito {number} sia inserito correttamente'
@@ -260,6 +261,8 @@ it:
     FROMWEB: 'Dal web'
     FindInFolder: 'Trova nella Cartella'
     IMAGEALT: 'Testo alternativo (alt)'
+    IMAGEALTTEXT: 'Testo alternativo (alt) - mostrato se l''immagine non può essere mostrata.'
+    IMAGEALTTEXTDESC: 'Mostrato agli screen reader o se l''immagine non può essere visualizzata'
     IMAGEDIMENSIONS: Dimensioni
     IMAGEHEIGHTPX: Altezza
     IMAGETITLE: 'Titolo (tooltip) - per informazioni aggiuntive sull''immagine.'
@@ -297,6 +300,7 @@ it:
     PERMAGAIN: 'Sei stato disconnesso dal CMS. Se desideri autenticarti nuovamente, inserisci qui sotto nome utente e password.'
     PERMALREADY: 'Siamo spiacenti, ma non puoi accedere a questa sezione del CMS. Se desideri autenticarti come qualcun altro, fallo qui sotto.'
     PERMDEFAULT: 'Inserisci il tuo indirizzo email e password per accedere al CMS.'
+    PLEASESAVE: 'Per favore salva la pagina: La stessa potrebbe non venire aggiornata se non si provvede quanto prima a salvarla.'
     PreviewButton: Anteprima
     REORGANISATIONSUCCESSFUL: 'Albero del sito riorganizzato con successo.'
     SAVEDUP: Salvato.
