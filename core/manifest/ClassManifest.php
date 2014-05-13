@@ -38,30 +38,6 @@ class SS_ClassManifest {
 		return new TokenisedRegularExpression(array(
 			0 => T_CLASS,
 			1 => T_WHITESPACE,
-			2 => array(T_STRING, 'can_jump_to' => array(7, 14), 'save_to' => 'className'),
-			3 => T_WHITESPACE,
-			4 => T_EXTENDS,
-			5 => T_WHITESPACE,
-			6 => array(T_STRING, 'save_to' => 'extends[]', 'can_jump_to' => 14),
-			7 => T_WHITESPACE,
-			8 => T_IMPLEMENTS,
-			9 => T_WHITESPACE,
-			10 => array(T_STRING, 'can_jump_to' => 14, 'save_to' => 'interfaces[]'),
-			11 => array(T_WHITESPACE, 'optional' => true),
-			12 => array(',', 'can_jump_to' => 10, 'save_to' => 'interfaces[]'),
-			13 => array(T_WHITESPACE, 'can_jump_to' => 10),
-			14 => array(T_WHITESPACE, 'optional' => true),
-			15 => '{',
-		));
-	}
-
-	/**
-	 * @return TokenisedRegularExpression
-	 */
-	public static function get_namespaced_class_parser() {
-		return new TokenisedRegularExpression(array(
-			0 => T_CLASS,
-			1 => T_WHITESPACE,
 			2 => array(T_STRING, 'can_jump_to' => array(8, 16), 'save_to' => 'className'),
 			3 => T_WHITESPACE,
 			4 => T_EXTENDS,
@@ -366,7 +342,7 @@ class SS_ClassManifest {
 		if (!$classes) {
 			$tokens     = token_get_all($file);
 			
-			$classes = self::get_namespaced_class_parser()->findAll($tokens);
+			$classes = self::get_class_parser()->findAll($tokens);
 			$namespace = self::get_namespace_parser()->findAll($tokens);
 			if($namespace) {
 				$namespace = implode('', $namespace[0]['namespaceName']) . '\\';
