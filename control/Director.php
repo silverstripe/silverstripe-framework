@@ -143,11 +143,15 @@ class Director implements TemplateGlobalProvider {
 			$session->inst_start();
 		}
 
-		$output = Injector::inst()->get('RequestProcessor')->preRequest($req, $session, $model);
-		
-		if ($output === false) {
-			// @TODO Need to NOT proceed with the request in an elegant manner
-			throw new SS_HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
+		$filterResponse = Injector::inst()->get('RequestProcessor')->preRequest($req, $session, $model);
+		if ($filterResponse && $filterResponse!==true) {
+			if (!$filterResponse instanceof SS_HTTPResponse) {
+				throw new SS_HTTPResponse_Exception('RequestFilters have to return null, true or SS_HTTPResponse.');
+			}
+
+			// Response has been overriden in the preRequest filter.
+			$filterResponse->output();
+			return;
 		}
 
 		$result = Director::handleRequest($req, $session, $model);
@@ -155,46 +159,55 @@ class Director implements TemplateGlobalProvider {
 		// Save session data. Note that inst_save() will start/resume the session if required.
 		$session->inst_save();
 
-		// Return code for a redirection request
+		// Handle situations where controller response is not SS_HTTPResponse.
+		$response = null;
 		if(is_string($result) && substr($result,0,9) == 'redirect:') {
+
 			$url = substr($result, 9);
 
 			if(Director::is_cli()) {
 				// on cli, follow SilverStripe redirects automatically
 				return Director::direct(
-					str_replace(Director::absoluteBaseURL(), '', $url), 
+					str_replace(Director::absoluteBaseURL(), '', $url),
 					DataModel::inst()
 				);
 			} else {
 				$response = new SS_HTTPResponse();
 				$response->redirect($url);
-				$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
-
-				if ($res !== false) {
-					$response->output();
-				}
 			}
-		// Handle a controller
+
 		} else if($result) {
+			// Handle a controller
+
 			if($result instanceof SS_HTTPResponse) {
 				$response = $result;
-				
 			} else {
 				$response = new SS_HTTPResponse();
 				$response->setBody($result);
 			}
-			
-			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
-			if ($res !== false) {
-					$response->output();
-			} else {
-				// @TODO Proper response here.
-				throw new SS_HTTPResponse_Exception("Invalid response");
-			}
-			
 
-			//$controllerObj->getSession()->inst_save();
 		}
+
+		if ($response) {
+
+			$filterResponse = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
+			if ($filterResponse && $filterResponse!==true) {
+				if (!$filterResponse instanceof SS_HTTPResponse) {
+					throw new SS_HTTPResponse_Exception('RequestFilters have to return null, true or SS_HTTPResponse.');
+				}
+
+				// Response has been overriden in the postRequest filter.
+				$filterResponse->output();
+				return;
+			}
+
+			$response->output();
+
+			// TODO: what is this?
+			//$controllerObj->getSession()->inst_save();
+
+		}
+
 	}
 	
 	/**

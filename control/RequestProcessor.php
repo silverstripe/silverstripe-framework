@@ -28,21 +28,42 @@ class RequestProcessor implements RequestFilter {
 		$this->filters = $filters;
 	}
 
+	/**
+	 * Dynamically add a filter with the highest priority.
+	 *
+	 * @param RequestFilter $filter
+	 */
+	public function unshiftFilter($filter) {
+		array_unshift($this->filters, $filter);
+	}
+
+	/**
+	 * Dynamically add a filter with the lowest priority.
+	 *
+	 * @param RequestFilter $filter
+	 */
+	public function pushFilter($filter) {
+		array_push($this->filters, $filter);
+	}
+
 	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
 		foreach ($this->filters as $filter) {
-			$res = $filter->preRequest($request, $session, $model);
-			if ($res === false) {
-				return false;
-			}
+			$result = $filter->preRequest($request, $session, $model);
+			if ($result!==true) return $result;
 		}
+
+		return true;
 	}
 
 	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
-		foreach ($this->filters as $filter) {
-			$res = $filter->postRequest($request, $response, $model);
-			if ($res === false) {
-				return false;
-			}
+		// The highest priority filter should apply last.
+		$filters = array_reverse($this->filters);
+
+		foreach ($filters as $filter) {
+			$result = $filter->postRequest($request, $response, $model);
+			if ($result!==true) return $result;
 		}
+
+		return true;
 	}
 }

@@ -18,7 +18,7 @@ interface RequestFilter {
 	 * @param SS_HTTPRequest $request Request container object
 	 * @param Session $session Request session
 	 * @param DataModel $model Current DataModel
-	 * @return boolean Whether to continue processing other filters. Null or true will continue processing (optional)
+	 * @return null|true|SS_HTTPResponse null/true to continue processing, SS_HTTPResponse to terminate and output.
 	 */
 	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model);
 
@@ -28,7 +28,7 @@ interface RequestFilter {
 	 * @param SS_HTTPRequest $request Request container object
 	 * @param SS_HTTPResponse $response Response output object
 	 * @param DataModel $model Current DataModel
-	 * @return boolean Whether to continue processing other filters. Null or true will continue processing (optional)
+	 * @return null|true|SS_HTTPResponse null/true to continue processing, SS_HTTPResponse to terminate and output.
 	 */
 	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model);
 }
