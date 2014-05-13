@@ -12,6 +12,7 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
  * [3.1.4](3.1.4) - 8 April 2014
  * [3.1.0](3.1.0) - 1 October 2013
 
+ * [3.0.11](3.0.11) - 13 May 2014
  * [3.0.10](3.0.10) - 8 April 2014
  * [3.0.5](3.0.5) - 20 February 2013
  * [3.0.4](3.0.4) - 19 February 2013
@@ -79,6 +80,8 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
  * [3.1.5-rc1](rc/3.1.5-rc1) - 7 May 2014
  * [3.1.4-rc1](rc/3.1.4-rc1) - 1 April 2014
+
+ * [3.0.11-rc1](rc/3.0.11-rc1) - 7 May 2014
  * [3.0.10-rc1](rc/3.0.10-rc1) - 1 April 2014
  * [3.0.6-rc1](rc/3.0.6-rc1) - 2013-08-08
  * [3.0.3-rc1](rc/3.0.3-rc1) - 6 November 2012
