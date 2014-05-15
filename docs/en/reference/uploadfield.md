@@ -341,6 +341,7 @@ gallery the below code could be used:
 	// In GalleryPage.php
 	class GalleryPage extends Page {}
 	class GalleryPage_Controller extends Page_Controller {
+		private static $allowed_actions = array('Form');
 		public function Form() {
 			$fields = new FieldList(
 				new TextField('Title', 'Title', null, 255),
