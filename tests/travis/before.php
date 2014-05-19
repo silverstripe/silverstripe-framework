@@ -57,7 +57,8 @@ $composer = json_encode(array(
 		'silverstripe/framework' => $version,
 		'silverstripe/cms' => $version,
 		'silverstripe/postgresql' => '*',
-		'silverstripe/sqlite3' => '*'
+		'silverstripe/sqlite3' => '*',
+		'phpunit/phpunit' => '~3.7'
 	),
 	'minimum-stability' => 'dev'
 ));
