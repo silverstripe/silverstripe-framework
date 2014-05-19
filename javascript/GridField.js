@@ -22,6 +22,11 @@
 				if(window.location.search) {
 					ajaxOpts.data = window.location.search.replace(/^\?/, '') + '&' + $.param(ajaxOpts.data);
 				}
+				
+				// IE9 and lower do not support html5 history, so they use hash-based history.
+				if(window.location.hash){
+					ajaxOpts.data = window.location.hash.substring(window.location.hash.indexOf('?') + 1) + '&' + $.param(ajaxOpts.data);
+				}
 
 				form.addClass('loading');
 
