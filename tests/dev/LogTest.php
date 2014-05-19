@@ -1,4 +1,7 @@
 <?php
+
+require_once 'Zend/Log/Writer/Abstract.php';
+
 /**
  * @package sapphire
  * @subpackage tests
