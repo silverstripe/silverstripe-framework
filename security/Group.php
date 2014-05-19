@@ -318,6 +318,33 @@ class Group extends DataObject {
 	public function setCode($val){
 		$this->setField("Code",SiteTree::generateURLSegment($val));
 	}
+
+	public function validate() {
+		$result = parent::validate();
+
+		// Check if the new group hierarchy would add certain "privileged permissions",
+		// and require an admin to perform this change in case it does. 
+		// This prevents "sub-admin" users with group editing permissions to increase their privileges.
+		if($this->ParentID && !Permission::check('ADMIN')) {
+			$ancestorIds = $this->Parent()->collateAncestorIDs();
+			$inheritedPermissions = DataObject::get(
+				'Permission',
+				sprintf('"GroupID" IN (%s)', implode(',', array_map('intval', $ancestorIds)))
+			);
+			$inheritedCodes = $inheritedPermissions ? $inheritedPermissions->column('Code') : array();
+			if(array_intersect($inheritedCodes, Permission::$privileged_permissions)) {
+				$result->error(sprintf(
+					_t(
+						'Group.HierarchyPermsError',
+						'Can\'t assign parent group "%s" with privileged permissions (requires ADMIN access)'
+					),
+					$this->Parent()->Title
+				));
+			}
+		}
+
+		return $result;
+	}
 	
 	function onBeforeWrite() {
 		parent::onBeforeWrite();

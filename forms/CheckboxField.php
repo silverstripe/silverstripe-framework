@@ -47,7 +47,7 @@ class CheckboxField extends FormField {
 		} else {
 			extract($this->getXMLValues(array( 'Name', 'Field', 'Title', 'Message', 'MessageType' )),
 				EXTR_SKIP);
-			$messageBlock = isset($Message) ? "<span class=\"message $MessageType\">$Message</span>" : '';
+			$messageBlock = empty($Message) ? '' : "<span class=\"message $MessageType\">$Message</span>";
 			$Type = $this->XML_val('Type');
 			$extraClass = $this->XML_val('extraClass'); 
 			return <<<HTML

@@ -72,6 +72,10 @@ class FormField extends RequestHandler {
 	 * @var Custom Validation Message for the Field
 	 */
 	protected $customValidationMessage = "";
+
+	public static $casting = array(
+		'Message' => 'Text'
+	);
 	
 	/**
 	 * Create a new field.

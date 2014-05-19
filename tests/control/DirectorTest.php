@@ -104,7 +104,9 @@ class DirectorTest extends SapphireTest {
 		$this->assertTrue(Director::is_absolute_url('/////test.com'));
 		$this->assertTrue(Director::is_absolute_url('  ///test.com'));
 		$this->assertTrue(Director::is_absolute_url('http:test.com'));
-		$this->assertTrue(Director::is_absolute_url('//http://test.com'));
+		if(version_compare(phpversion(), '5.3.0', '>=')) {
+			$this->assertTrue(Director::is_absolute_url('//http://test.com'));
+		}
 	}
 	
 	public function testIsRelativeUrl() {
@@ -143,7 +145,9 @@ class DirectorTest extends SapphireTest {
 		$this->assertTrue(Director::is_site_url(Director::absoluteBaseURL()));
 		$this->assertFalse(Director::is_site_url("http://test.com?url=" . Director::absoluteBaseURL()));
 		$this->assertFalse(Director::is_site_url("http://test.com?url=" . urlencode(Director::absoluteBaseURL())));
-		$this->assertFalse(Director::is_site_url("//test.com?url=" . Director::absoluteBaseURL()));
+		if(version_compare(phpversion(), '5.3.0', '>=')) {
+			$this->assertFalse(Director::is_site_url("//test.com?url=" . Director::absoluteBaseURL()));	
+		}
 	}
 	
 	public function testResetGlobalsAfterTestRequest() {

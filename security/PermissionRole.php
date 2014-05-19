@@ -62,4 +62,16 @@ class PermissionRole extends DataObject {
 			$code->delete();
 		}
 	}
+
+	public function canCreate($member = null) {
+		return Permission::check('APPLY_ROLES', 'any', $member);
+	}
+
+	public function canEdit($member = null) {
+		return Permission::check('APPLY_ROLES', 'any', $member);
+	}
+
+	public function canDelete($member = null) {
+		return Permission::check('APPLY_ROLES', 'any', $member);
+	}
 }

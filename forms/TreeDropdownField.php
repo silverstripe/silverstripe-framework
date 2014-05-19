@@ -233,8 +233,14 @@ class TreeDropdownField extends FormField {
 			}
 		}
 		
+		if($obj->escapeTypeForField($this->labelField) == 'xml') {
+			$labelFieldEval = '$child->' . $this->labelField;
+		} else {
+			$labelFieldEval = 'Convert::raw2xml($child->' . $this->labelField . ')';
+		}
+		
 		$eval = '"<li id=\"selector-' . $this->Name() . '-{$child->' . $this->keyField . '}\" class=\"$child->class"' .
-				' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
+				' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . ' . $labelFieldEval . ' . "</a>"';
 		
 		if($isSubTree) {
 			return substr(trim($obj->getChildrenAsUL('', $eval, null, true)), 4, -5);
