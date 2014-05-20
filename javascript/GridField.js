@@ -24,7 +24,7 @@
 				}
 				
 				// IE9 and lower do not support html5 history, so they use hash-based history.
-				if(window.location.hash){
+				if(window.location.hash && !(window.history && window.history.pushState)){
 					ajaxOpts.data = window.location.hash.substring(window.location.hash.indexOf('?') + 1) + '&' + $.param(ajaxOpts.data);
 				}
 
