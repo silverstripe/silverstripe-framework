@@ -23,9 +23,12 @@
 					ajaxOpts.data = window.location.search.replace(/^\?/, '') + '&' + $.param(ajaxOpts.data);
 				}
 				
-				// IE9 and lower do not support html5 history, so they use hash-based history.
-				if(window.location.hash && !(window.history && window.history.pushState)){
-					ajaxOpts.data = window.location.hash.substring(window.location.hash.indexOf('?') + 1) + '&' + $.param(ajaxOpts.data);
+				// For browsers which do not support history.pushState like IE9, ss framework uses hash to track 
+				// the current location for PJAX, so for them we pass the query string stored in the hash instead
+				if(!window.history || !window.history.pushState){
+					if(window.location.hash && window.location.hash.indexOf('?') != -1){
+						ajaxOpts.data = window.location.hash.substring(window.location.hash.indexOf('?') + 1) + '&' + $.param(ajaxOpts.data);
+					}
 				}
 
 				form.addClass('loading');
