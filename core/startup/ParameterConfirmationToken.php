@@ -76,11 +76,30 @@ class ParameterConfirmationToken {
 	protected function currentAbsoluteURL() {
 		global $url;
 
-		// Are we http or https?
+		// Are we http or https? Replicates Director::is_https() without its dependencies/
 		$proto = 'http';
-
-		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) {
-			if(strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') $proto = 'https';
+		if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) { 
+			// Convention for (non-standard) proxy signaling a HTTPS forward,
+			// see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+			if(strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') {
+				$proto = 'https';
+			}
+		} else if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) { 
+			// Less conventional proxy header
+			if(strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') {
+				$proto = 'https';
+			}
+		} else if(isset($_SERVER['HTTP_FRONT_END_HTTPS'])) { 
+			// Microsoft proxy convention: https://support.microsoft.com/?kbID=307347
+			if(strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) == 'on') {
+				$proto = 'https';
+			}
+		} else if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
+			$proto = 'https';
+		} else if(isset($_SERVER['SSL'])) {
+			$proto = 'https';
+		} else {
+			$proto = 'https';
 		}
 
 		if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) $proto = 'https';

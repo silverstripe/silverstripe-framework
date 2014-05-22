@@ -328,6 +328,21 @@ class DirectorTest extends SapphireTest {
 		$_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'ftp';
 		$this->assertFalse(Director::is_https());
 
+		$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+		$this->assertTrue(Director::is_https());
+
+		$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
+		$this->assertFalse(Director::is_https());
+
+		$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'ftp';
+		$this->assertFalse(Director::is_https());
+
+		$_SERVER['HTTP_FRONT_END_HTTPS'] = 'On';
+		$this->assertTrue(Director::is_https());
+
+		$_SERVER['HTTP_FRONT_END_HTTPS'] = 'Off';
+		$this->assertFalse(Director::is_https());
+
 		// https via HTTPS
 		$_SERVER['HTTPS'] = 'true';
 		$this->assertTrue(Director::is_https());

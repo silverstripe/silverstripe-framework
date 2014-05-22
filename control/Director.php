@@ -473,29 +473,34 @@ class Director implements TemplateGlobalProvider {
 	 * @return boolean
 	 */
 	public static function is_https() {
+		$return = false;
 		if ($protocol = Config::inst()->get('Director', 'alternate_protocol')) {
-			return $protocol == 'https';
-		}
-
-		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) { 
+			$return = ($protocol == 'https');
+		} else if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) { 
+			// Convention for (non-standard) proxy signaling a HTTPS forward,
+			// see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+			if(strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') {
+				$return = true;
+			}
+		} else if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) { 
+			// Less conventional proxy header
 			if(strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') {
-				return true;
+				$return = true;
 			}
-		}
-
-		if(isset($_SERVER['X-Forwarded-Proto'])) {
-			if(strtolower($_SERVER['X-Forwarded-Proto']) == "https") {
-				return true;
+		} else if(isset($_SERVER['HTTP_FRONT_END_HTTPS'])) { 
+			// Microsoft proxy convention: https://support.microsoft.com/?kbID=307347
+			if(strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) == 'on') {
+				$return = true;
 			}
-		}
-	
-		if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
-			return true;
+		} else if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
+			$return = true;
 		} else if(isset($_SERVER['SSL'])) {
-			return true;
+			$return = true;
+		} else {
+			$return = false;
 		}
 
-		return false;
+		return $return;
 	}
 
 	/**
