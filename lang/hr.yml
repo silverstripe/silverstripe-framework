@@ -75,6 +75,7 @@ hr:
     PERMAGAIN: 'Odjavili ste se sa CMS-a. Želite li se ponovno prijaviti, upišite korisničko ime i lozinku'
     PERMALREADY: 'Nažalost, ne možete pristupiti tom dijelu CMS-a. Želite li se prijaviti kao netko drugi, učinite to ispod'
     PERMDEFAULT: 'Odaberite metodu autorizacije te upišite svoje podatke za pristup CMS-u.'
+    PLEASESAVE: 'Molim spremite stranicu: Nemože biti ažurirano dok nije spremljeno.'
   Member:
     BUTTONCHANGEPASSWORD: 'Promjeni lozinku'
     BUTTONLOGIN: 'Prijavi'

@@ -307,6 +307,7 @@ fi:
     PERMAGAIN: 'Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla.'
     PERMALREADY: 'Paihoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alla.'
     PERMDEFAULT: 'Valitse tunnistustapa ja syötä tunnistetietosi CMS:ään.'
+    PLEASESAVE: 'Ole hyvä ja tallenna sivu: tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu.'
     PreviewButton: Esikatselu
     REORGANISATIONSUCCESSFUL: 'Hakemistopuu järjestettiin uudelleen onnistuneesti.'
     SAVEDUP: Tallennettu.

@@ -168,6 +168,7 @@ ja:
     TEXT2: 'パスワードリセットのリンク'
     TEXT3: は
   Form:
+    CSRF_FAILED_MESSAGE: "技術的な問題が生じた可能性があります。 戻るボタンをクリックしてブラウザを更新し、もう一度試してください。"
     FIELDISREQUIRED: '{name} が必要'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'クレジットカード番号 {number} が正しく入力されたかどうか確認してください'
@@ -301,6 +302,7 @@ ja:
     PERMAGAIN: 'ログアウトしました。再度ログインする場合は下にユーザー名とパスワードを入力してください。'
     PERMALREADY: '申し訳ございません。ご指定になられたCMSの箇所にはアクセスいただけません。別ユーザーとしてログインをされたい場合は、下記より行えます。'
     PERMDEFAULT: '認証方法を選択し、CMSにアクセスするために利用する認証情報を入力してください。'
+    PLEASESAVE: '保存してください: 保存してないため更新できません。'
     PreviewButton: プレビュー
     REORGANISATIONSUCCESSFUL: 'サイトツリーの再編集に成功しました。'
     SAVEDUP: 保存済み
@@ -335,6 +337,7 @@ ja:
     ERRORLOCKEDOUT2: '複数回ログインに失敗したため、あなたのアカウントは一時的に使用不可能になっています。　{count} 分後に再びログインしてください。'
     ERRORNEWPASSWORD: '入力されたパスワードが一致しません。再度お試しください'
     ERRORPASSWORDNOTMATCH: '登録されているパスワードと一致しません、もう一度入力し直してください'
+    ERRORWRONGCRED: 'メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください'
     FIRSTNAME: '名'
     INTERFACELANG: '画面言語'
     INVALIDNEWPASSWORD: '次のパスワードは受け付けることができません: {password}'

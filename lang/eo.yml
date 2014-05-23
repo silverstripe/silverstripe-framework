@@ -137,6 +137,7 @@ eo:
     PERMAGAIN: 'Vin adiaŭis la CMS. Se vi volas denove saluti, enigu salutnomon kaj pasvorton malsupre.'
     PERMALREADY: 'Bedaŭrinde vi ne povas aliri tiun parton de la CMS. Se vi volas saluti kiel iu alia, tiel faru sube'
     PERMDEFAULT: 'Enigi vian retadreson kaj pasvorton por aliri al la CMS.'
+    PLEASESAVE: 'Bonvolu konservi paĝon: Ne eblis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ ne estas konservita.'
   LoginAttempt:
     Email: 'Retadreso'
     IP: 'IP-Adreso'
