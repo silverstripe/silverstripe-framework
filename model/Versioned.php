@@ -939,23 +939,28 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param Session $session Optional session within which to store the resulting stage
 	 */
 	public static function choose_site_stage($session = null) {
-		if(!$session) $session = Session::current_session();
+		// Default to Live
+		$mode = 'Stage.Live';
 		
+		// Get reading mode
 		if(isset($_GET['stage'])) {
 			$stage = ucfirst(strtolower($_GET['stage']));
-			
 			if(!in_array($stage, array('Stage', 'Live'))) $stage = 'Live';
-
-			$session->inst_set('readingMode', 'Stage.' . $stage);
-		}
-		if(isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
-			$session->inst_set('readingMode', 'Archive.' . $_GET['archiveDate']);
+			$mode = 'Stage.' . $stage;
+		} elseif (isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
+			$mode = 'Archive.' . $_GET['archiveDate'];
+		} elseif($session) {
+			$mode = $session->inst_get('readingMode') ?: $mode;
+		} else {
+			$mode = Session::get('readingMode') ?: $mode;
 		}
 		
-		if($mode = $session->inst_get('readingMode')) {
-			Versioned::set_reading_mode($mode);
+		// Save reading mode
+		Versioned::set_reading_mode($mode);
+		if($session) {
+			$session->inst_set('readingMode', $mode);
 		} else {
-			Versioned::reading_stage("Live");
+			Session::set('readingMode', $mode);
 		}
 
 		if(!headers_sent() && !Director::is_cli()) {
