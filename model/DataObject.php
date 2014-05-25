@@ -3357,7 +3357,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Localize fields (if possible)
 		foreach($this->fieldLabels(false) as $name => $label) {
-			if(isset($fields[$name])) $fields[$name] = $label;
+			if(isset($fields[$name])) {
+				if (is_array($fields[$name])) {
+					$fields[$name]['title'] = $label;
+				} else {
+					$fields[$name] = $label;
+				}
+			}
 		}
 		
 		return $fields;
