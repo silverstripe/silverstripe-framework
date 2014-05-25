@@ -166,11 +166,16 @@ abstract class SearchFilter extends Object {
 			return $this->name;
 		}
 		
-		// This code finds the table where the field named $this->name lives
-		// Todo: move to somewhere more appropriate, such as DataMapper, the
-		// magical class-to-be?
-		$candidateClass = $this->model;
+		// Ensure that we're dealing with a DataObject.
+		if(!is_string($this->model) 
+			|| !class_exists($this->model) 
+			|| !is_a(singleton($this->model), "DataObject")
+		) {
+			throw new Exception("Model supplied to " . get_class($this) . " should be an instance of DataObject.");
+			return;
+		}
 
+		$candidateClass = $this->model;
 		while($candidateClass != 'DataObject') {
 			if(DataObject::has_own_table($candidateClass) 
 					&& singleton($candidateClass)->hasOwnTableDatabaseField($this->name)) {
@@ -187,7 +192,7 @@ abstract class SearchFilter extends Object {
 			return '"' . implode('"."', $parts) . '"';
 		}
 		
-		return "\"$candidateClass\".\"$this->name\"";
+		return "\"{$candidateClass}\".\"{$this->name}\"";
 	}
 	
 	/**
