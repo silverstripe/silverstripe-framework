@@ -166,6 +166,11 @@ abstract class SearchFilter extends Object {
 			return $this->name;
 		}
 		
+		// Ensure that we're dealing with a DataObject.
+		if (!is_subclass_of($this->model, 'DataObject')) {
+			throw new Exception("Model supplied to " . get_class($this) . " should be an instance of DataObject.");
+		}
+
 		$candidateClass = ClassInfo::table_for_object_field(
 			$this->model, 
 			$this->name
@@ -178,7 +183,7 @@ abstract class SearchFilter extends Object {
 			return '"' . implode('"."', $parts) . '"';
 		}
 		
-		return "\"$candidateClass\".\"$this->name\"";
+		return "\"{$candidateClass}\".\"{$this->name}\"";
 	}
 	
 	/**

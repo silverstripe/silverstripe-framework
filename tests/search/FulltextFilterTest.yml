@@ -1,0 +1,16 @@
+FulltextDataObject:
+  object1:
+    ColumnA: 'SilverStripe'
+    CluumnB: <p>Some content about SilverStripe.</p>
+    ColumnC: 'SilverStripe'
+    ColumnD: '<p>Some content about SilverStripe.</p>
+  object2:
+    ColumnA: 'Test Row'
+    ColumnB: '<p>Some information about this test row.</p>'
+    ColumnC: 'Test Row'
+    ColumnD: '<p>Some information about this test row.</p>'
+  object3:
+    ColumnA: 'Fulltext Search'
+    ColumnB: '<p>Testing fulltext search.</p>'
+    ColumnC: 'Fulltext Search
+    ColumnD: '<p>Testing fulltext search.</p>'
