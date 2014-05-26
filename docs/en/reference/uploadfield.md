@@ -165,6 +165,26 @@ NOTE: this only sets the configuration for your UploadField, this does NOT chang
 	$size = $sizeMB * 1024 * 1024; // 2 MB in bytes
 	$this->getValidator()->setAllowedMaxFileSize($size);
 
+### Overwrite warning
+
+In order to display a warning before overwriting an existing file, `Upload:replaceFile` must be set to true.
+
+Via config:
+
+	:::yaml
+	Upload:
+	  # Replace an existing file rather than renaming the new one.
+	  replaceFile: true
+	UploadField:
+	  # Warning before overwriting existing file (only relevant when Upload: replaceFile is true)
+	  overwriteWarning: true
+
+Or per instance:
+
+	:::php
+	$uploadField->getUpload()->setReplaceFile(true);
+	$uploadField->setOverwriteWarning(true);
+
 ### Preview dimensions
 
 Set the dimensions of the image preview. By default the max width is set to 80 
