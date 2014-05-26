@@ -1002,7 +1002,9 @@ class InstallRequirements {
 			return true;
 		} elseif(isset($_SERVER['HTTP_MOD_REWRITE']) && $_SERVER['HTTP_MOD_REWRITE'] == 'On') {
 			return true;
-		} else {
+		} elseif(isset($_SERVER['REDIRECT_HTTP_MOD_REWRITE']) && $_SERVER['REDIRECT_HTTP_MOD_REWRITE'] == 'On') {
+        	   return true;
+        	} else {
 			return false;
 		}
 	}
