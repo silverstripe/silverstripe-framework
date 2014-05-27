@@ -101,23 +101,19 @@ class Text extends StringField {
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
 	 */
 	public function FirstSentence() {
-		$data = Convert::xml2raw( $this->value );
-		if( !$data ) return "";
+		$paragraph = Convert::xml2raw( $this->value );
+		if( !$paragraph ) return "";
 
-		$words = preg_split('/\s+/', $data);
-		$sentence = false;
+		$words = preg_split('/\s+/', $paragraph);
 		foreach ($words as $i => $word) {
 			if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
-				$sentence = implode(' ', array_slice($words, 0, $i+1));
-				break;
+				return implode(' ', array_slice($words, 0, $i+1));
 			}
 		}
 
-		if($sentence) {
-			return $sentence;
-		} else {
-			return $this->Summary(20);
-		}
+		/* If we didn't find a sentence ending, use the summary. We re-call rather than using paragraph so that
+		 * Summary will limit the result this time */
+		return $this->Summary(20);
 	}
 
 	/**
