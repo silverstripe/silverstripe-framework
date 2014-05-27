@@ -611,7 +611,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		)));
 
 		$this->AutoLoginHash = $hash;
-		$this->AutoLoginExpired = date('Y-m-d', time() + (86400 * $lifetime));
+		$this->AutoLoginExpired = date('Y-m-d H:i:s', time() + (86400 * $lifetime));
 
 		$this->write();
 
