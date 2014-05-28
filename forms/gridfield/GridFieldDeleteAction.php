@@ -151,10 +151,11 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 
 				$item->delete();
 			} else {
-				if(!$item->canEdit()) {
-				throw new ValidationException(
-					_t('GridFieldAction_Delete.EditPermissionsFailure',"No permission to unlink record"),0);
-			}
+				$list = $gridField->getList();
+				if ((is_a($list, 'ManyManyList') && !$item->canView()) || (!is_a($list, 'ManyManyList') && !$item->canEdit()))  {
+					throw new ValidationException(
+						_t('GridFieldAction_Delete.EditPermissionsFailure',"No permission to unlink record"),0);
+				}
 
 				$gridField->getList()->remove($item);
 			}
