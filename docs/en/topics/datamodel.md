@@ -615,7 +615,7 @@ This functionality is provided by the `SS_Map` class, which can be used to build
 	$map = new SS_Map($members, 'ID', 'FirstName');
 
 Note: You can also retrieve a single property from all contained records
-through `[api:SS_List->column()]`.
+through [SS_List->column()](api:SS_List#_column).
 
 ## Data Handling
 
