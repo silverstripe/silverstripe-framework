@@ -260,7 +260,7 @@
 					
 						// status message (decode into UTF-8, HTTP headers don't allow multibyte)
 						var msg = xmlhttp.getResponseHeader('X-Status');
-						if(msg) statusMessage(decodeURIComponent(msg), (status == 'success') ? 'good' : 'bad');
+						if(msg) ss.notice.message(decodeURIComponent(msg), {type: (status == 'success') ? 'good' : 'bad'});
 					},
 					success: function(data, status) {
 						var id, node;

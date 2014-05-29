@@ -459,12 +459,16 @@ body.cms { overflow: hidden; }
 .cms-content-actions, .cms-preview-controls { margin: 0; padding: 12px 12px; z-index: 0; border-top: 1px solid #cacacc; -webkit-box-shadow: 1px 0 0 #eceff1, rgba(248, 248, 248, 0.9) 0 1px 0px inset, rgba(201, 205, 206, 0.8) 0 0 1px; -moz-box-shadow: 1px 0 0 #eceff1, rgba(248, 248, 248, 0.9) 0 1px 0px inset, rgba(201, 205, 206, 0.8) 0 0 1px; box-shadow: 1px 0 0 #eceff1, rgba(248, 248, 248, 0.9) 0 1px 0px inset, rgba(201, 205, 206, 0.8) 0 0 1px; height: 28px; background-color: #eceff1; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
-.message { display: block; clear: both; margin: 0 0 8px; padding: 10px 12px; font-weight: normal; border: 1px #ccc solid; background: #fff; background: rgba(255, 255, 255, 0.5); text-shadow: none; -webkit-border-radius: 3px 3px 3px 3px; -moz-border-radius: 3px 3px 3px 3px; -ms-border-radius: 3px 3px 3px 3px; -o-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; }
-.message.notice { background-color: #f0f8fc; border-color: #93cde8; }
-.message.warning { background-color: #fefbde; border-color: #e9d104; }
-.message.error, .message.bad, .message.required, .message.validation { background-color: #fae8e9; border-color: #e68288; }
-.message.good { background-color: #eaf6e4; border-color: #72c34b; }
+.message { position: relative; display: block; clear: both; margin: 0 0 8px; padding: 10px 12px; font-weight: normal; border: 1px #ccc solid; background: #fff; background: rgba(255, 255, 255, 0.5); text-shadow: none; -webkit-border-radius: 3px 3px 3px 3px; -moz-border-radius: 3px 3px 3px 3px; -ms-border-radius: 3px 3px 3px 3px; -o-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; }
+.message.notice, .message.notice .error-details { background-color: #f0f8fc; border-color: #93cde8; }
+.message.warning, .message.warning .error-details { background-color: #fefbde; border-color: #e9d104; }
+.message.error, .message.bad, .message.required, .message.validation, .message.error .error-details, .message.bad .error-details, .message.required .error-details, .message.validation .error-details { background-color: #fae8e9; border-color: #e68288; }
+.message.good, .message.good .error-details { background-color: #eaf6e4; border-color: #72c34b; }
 .message p { margin: 0; }
+.message strong { text-transform: uppercase; }
+.message .error-details { position: absolute; bottom: -8px; right: 5px; padding: 0px 3px; font-size: .7em; text-transform: uppercase; border: 1px #ccc solid; background: #fff; background: rgba(255, 255, 255, 0.5); -webkit-border-radius: 3px 3px 3px 3px; -moz-border-radius: 3px 3px 3px 3px; -ms-border-radius: 3px 3px 3px 3px; -o-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; cursor: pointer; }
+.message .error-details:hover { font-weight: bold; }
+.message .error-details .content { display: none; }
 
 .cms-edit-form .message { margin: 16px; }
 .cms-edit-form .ui-tabs-panel .message { margin: 16px 0; }

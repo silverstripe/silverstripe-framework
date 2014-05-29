@@ -1462,7 +1462,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		$form->saveInto($item);
 		$item->write();
 
-		$form->sessionMessage(_t('UploadField.Saved', 'Saved'), 'good');
+		$form->sessionMessage(_t('UploadField.Saved', 'Saved'), 'good static');
 
 		return $this->edit($request);
 	}

@@ -86,6 +86,9 @@
 				
 				// Show validation errors if necessary
 				if(this.hasClass('validationerror')) {
+					// TODO validation shouldnt need a special case
+					ss.notice.error(ss.i18n._t('ModelAdmin.VALIDATIONERROR', 'Validation Error'));
+
 					// Ensure the first validation error is visible
 					var tabError = this.find('.message.validation, .message.required').first().closest('.tab');
 					$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
