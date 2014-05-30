@@ -277,7 +277,7 @@ each class that it is extended by.
 	class CustomerWorkflow extends DataExtension {
 	
 		public function IsMarkedForDeletion() {
-			return ($this->owner->Account()->IsMarkedForDeletion == 1) ? true : false;
+			return (bool) $this->owner->Account()->IsMarkedForDeletion;
 		}
 	}
 
