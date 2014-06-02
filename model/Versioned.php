@@ -167,8 +167,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			$dataQuery->setQueryParam('Versioned.mode', 'archive');
 			$dataQuery->setQueryParam('Versioned.date', $parts[1]);
 
-		} else if($parts[0] == 'Stage' && $parts[1] != $this->defaultStage 
-				&& array_search($parts[1],$this->stages) !== false) {
+		} else if($parts[0] == 'Stage' && array_search($parts[1],$this->stages) !== false) {
 
 			$dataQuery->setQueryParam('Versioned.mode', 'stage');
 			$dataQuery->setQueryParam('Versioned.stage', $parts[1]);
