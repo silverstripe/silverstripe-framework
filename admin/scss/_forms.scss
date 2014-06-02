@@ -223,6 +223,7 @@ form.small .field, .field.small {
 	/* chzn override */
 	.chzn-container {
 		max-width: 512px;
+		display: block;
 		.chzn-results {
 			
 			li {
@@ -239,8 +240,8 @@ form.small .field, .field.small {
 	}
 	
 	.chzn-container-single .chzn-single  {
-		height: 26px;
-		line-height: 26px; /* not relative, as then we'd had to redo most of chzn */
+		height: 30px;
+		line-height: 30px; /* not relative, as then we'd had to redo most of chzn */
 		font-size: $font-base-size;
 		
 		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
@@ -254,12 +255,22 @@ form.small .field, .field.small {
 			width: 24px;
 	
 			b {
-				background-position: 4px 0px;
+				background-position: 4px 3px;
 			}
 		}
 	}
 	.chzn-choices {
 		@include border-radius(3px);
+
+		.search-choice {
+			line-height: 16px;
+			.search-choice-close {
+				top: 5px;
+			}
+		}
+		.search-field input {
+			height: 18px;
+		}
 	}
 	
 	/* Date Fields */
