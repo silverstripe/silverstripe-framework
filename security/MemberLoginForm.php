@@ -128,14 +128,20 @@ JS;
 	 */
 	protected function getMessageFromSession() {
 		parent::getMessageFromSession();
-		if(($member = Member::currentUser()) && !Session::get('MemberLoginForm.force_message')) {
+
+		$forceMessage = Session::get('MemberLoginForm.force_message');
+		if(($member = Member::currentUser()) && !$forceMessage) {
 			$this->message = _t(
 				'Member.LOGGEDINAS', 
 				"You're logged in as {name}.", 
 				array('name' => $member->{$this->loggedInAsField})
 			);
 		}
-		Session::set('MemberLoginForm.force_message', false);
+
+		// Reset forced message
+		if($forceMessage) {
+			Session::set('MemberLoginForm.force_message', false);
+		}
 	}
 
 
