@@ -262,6 +262,10 @@ form.small .field, .field.small {
 			@include border-bottom-right-radius(0);
 		}
 
+		abbr {
+			top: 9px;
+		}
+
 		div {
 			width: 24px;
 	
