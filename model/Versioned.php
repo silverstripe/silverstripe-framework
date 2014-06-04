@@ -120,7 +120,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * 
 	 * This can also be manipulated by updating the current loaded config
 	 * 
-	 *  Config::inst()->update('Versioned', 'versionableExtensions', array('Extension1' => 'suffix1', 'Extension2' => array('suffix2', 'suffix3')));
+	 *  Config::inst()->update('Versioned', 'versionableExtensions',
+	 *  array('Extension1' => 'suffix1', 'Extension2' => array('suffix2', 'suffix3')));
 	 * 
 	 * Make sure your extension has a static $enabled-property that determines if it is
 	 * processed by Versioned.
