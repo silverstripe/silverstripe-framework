@@ -118,6 +118,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * 		'Extension2' => array('suffix2', 'suffix3'),
 	 * 	);
 	 * 
+	 * This can also be manipulated by updating the current loaded config
+	 * 
+	 *  Config::inst()->update('Versioned', 'versionableExtensions',
+	 *  array('Extension1' => 'suffix1', 'Extension2' => array('suffix2', 'suffix3')));
+	 * 
 	 * Make sure your extension has a static $enabled-property that determines if it is
 	 * processed by Versioned.
 	 *
@@ -374,11 +379,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		// Build a list of suffixes whose tables need versioning
 		$allSuffixes = array();
-		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
-			if ($this->owner->hasExtension($versionableExtension)) {
-				$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
-				foreach ((array)$suffixes as $suffix) {
-					$allSuffixes[$suffix] = $versionableExtension;
+		$versionableExtensions = Config::inst()->get('Versioned', 'versionableExtensions');
+		if(count($versionableExtensions)){
+			foreach ($versionableExtensions as $versionableExtension => $suffixes) {
+				if ($this->owner->hasExtension($versionableExtension)) {
+					$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
+					foreach ((array)$suffixes as $suffix) {
+						$allSuffixes[$suffix] = $versionableExtension;
+					}
 				}
 			}
 		}
@@ -710,12 +718,17 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public function extendWithSuffix($table) {
-		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
-			if ($this->owner->hasExtension($versionableExtension)) {
-				$ext = $this->owner->getExtensionInstance($versionableExtension);
-				$ext->setOwner($this->owner);
-				$table = $ext->extendWithSuffix($table);
-				$ext->clearOwner();
+
+		$versionableExtensions = Config::inst()->get('Versioned', 'versionableExtensions');
+		
+		if(count($versionableExtensions)){
+			foreach ($versionableExtensions as $versionableExtension => $suffixes) {
+				if ($this->owner->hasExtension($versionableExtension)) {
+					$ext = $this->owner->getExtensionInstance($versionableExtension);
+					$ext->setOwner($this->owner);
+					$table = $ext->extendWithSuffix($table);
+					$ext->clearOwner();
+				}
 			}
 		}
 
