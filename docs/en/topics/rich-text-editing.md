@@ -239,7 +239,7 @@ Note: The dropdown is only available if more than one config exists.
 Each interface can have multiple fields of this type, each with their own toolbar to set formatting
 and insert HTML elements. They do share one common set of dialogs for inserting links and other media though,
 encapsulated in the `[api:HtmlEditorField_Toolbar]` class.
-In the CMS, those dialogs are automatically instanciated, but in your own interfaces outside
+In the CMS, those dialogs are automatically instantiated, but in your own interfaces outside
 of the CMS you have to take care of instanciation yourself:
 
 	:::php
@@ -266,6 +266,61 @@ so this is considered advanced usage of the field.
 	HtmlEditorConfig::get('cms')->disablePlugins('ssbuttons');
 	HtmlEditorConfig::get('cms')->removeButtons('sslink', 'ssmedia');
 	HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'link', 'media');
+
+#### Minimal example of front-end rich text editing
+
+Because there are non-obvious set-up tasks that must be done to get TinyMCE
+to start up outside the CMS, a minimal example is presented here. This
+example takes the approach of doing as much as possible in the
+`Page_Controller` class. Unlike the sample code above, this example does
+not use `mysite/_config.php`.
+
+To achieve this in production requires attention to details, such as
+ensuring that jQuery loads before your custom scripts. If you use the
+default theme that ships with SilverStripe, you will have to remove the
+scripts from the bottom of `themes/simple/templates/Page.ss` to make this
+example work. You will also have to provide CSS to properly style the
+editor toolbar.
+
+##### Page_Controller
+
+	:::php
+	class Page_Controller extends ContentController {
+		private static $allowed_actions = array ('Form',);
+		
+		public function init() {
+			parent::init();
+			// Enable front-end rich-text editing
+			$hc = HtmlEditorConfig::get('cms');
+			$hc->disablePlugins('ssbuttons');
+			$hc->removeButtons('sslink', 'ssmedia');
+			$hc->addButtonsToLine(2, 'link', 'media');
+			Requirements::javascript('framework/thirdparty/jquery/jquery.js');
+			Requirements::javascript('mysite/javascript/frontendrte.js');
+		}
+	
+		public function Form() {
+			return new Form($this, 'Form', new FieldList(new HtmlEditorField('Content')),
+					new FieldList(new FormAction('doProcessForm')));
+		}
+	
+		public function doProcessForm($data, Form $form) {
+			// do something
+		}
+	
+		public function EditorToolbar() {
+			return HtmlEditorField_Toolbar::create($this, "EditorToolbar");
+		}
+	}
+
+##### mysite/javascript/frontendrte.js
+
+	:::javascript
+	jQuery(function() {
+		ssTinyMceConfig.mode = 'specific_textareas';
+		ssTinyMceConfig.editor_selector = 'htmleditor';
+		tinyMCE.init(ssTinyMceConfig);
+	});
 
 ### Developing a wrapper to use a different WYSIWYG editors with HTMLEditorField
 
