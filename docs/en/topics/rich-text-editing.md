@@ -280,7 +280,9 @@ ensuring that jQuery loads before your custom scripts. If you use the
 default theme that ships with SilverStripe, you will have to remove the
 scripts from the bottom of `themes/simple/templates/Page.ss` to make this
 example work. You will also have to provide CSS to properly style the
-editor toolbar.
+editor toolbar (see screenshot).
+
+![Screen shot of rich text editor in simple theme.](_images/rte-simple.png)
 
 ##### Page_Controller
 
