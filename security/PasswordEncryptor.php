@@ -71,11 +71,9 @@ abstract class PasswordEncryptor {
 	 * 
 	 * @uses RandomGenerator
 	 * 
-	 * @param String $password Cleartext password
-	 * @param Member $member (Optional)
 	 * @return String Maximum of 50 characters
 	 */
-	public function salt($password, $member = null) {
+	public function salt() {
 		$generator = new RandomGenerator();
 		return substr($generator->randomToken('sha1'), 0, 50);
 	}
