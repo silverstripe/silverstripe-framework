@@ -957,10 +957,15 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		
 		// Save reading mode
 		Versioned::set_reading_mode($mode);
-		if($session) {
-			$session->inst_set('readingMode', $mode);
-		} else {
-			Session::set('readingMode', $mode);
+
+		// Avoid session if not necessary for performance reasons, and so that transperent caches
+		// can do their job (they usually default to not caching if a session cookie is detected).
+		if ($mode!='Stage.Live') {
+			if($session && $session->inst_changedData()) {
+				$session->inst_set('readingMode', $mode);
+			} else {
+				Session::set('readingMode', $mode);
+			}
 		}
 
 		if(!headers_sent() && !Director::is_cli()) {
