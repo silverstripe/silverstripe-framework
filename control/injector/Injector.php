@@ -654,10 +654,10 @@ class Injector {
 		// If the type defines some injections, set them here
 		if ($injections && count($injections)) {
 			foreach ($injections as $property => $value) {
-				// we're checking isset in case it already has a property at this name
+				// we're checking empty in case it already has a property at this name
 				// this doesn't catch privately set things, but they will only be set by a setter method, 
 				// which should be responsible for preventing further setting if it doesn't want it. 
-				if (!isset($object->$property)) {
+				if (empty($object->$property)) {
 					$value = $this->convertServiceProperty($value);
 					$this->setObjectProperty($object, $property, $value);
 				}
