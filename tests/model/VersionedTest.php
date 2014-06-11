@@ -567,6 +567,13 @@ class VersionedTest extends SapphireTest {
 			'Check that subsequent requests in the same session remain in Live mode'
 		);
 		
+		// Test that session doesn't redundantly store the default stage if it doesn't need to
+		$session2 = new Session(array());
+		Director::test('/', null, $session2);
+		$this->assertEmpty($session2->inst_changedData());
+		Director::test('/?stage=Live', null, $session2);
+		$this->assertEmpty($session2->inst_changedData());
+		
 		// Test choose_site_stage
 		Session::set('readingMode', 'Stage.Stage');
 		Versioned::choose_site_stage();
