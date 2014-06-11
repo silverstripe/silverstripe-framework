@@ -320,22 +320,31 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @param string|array|SSViewer $template the template to render into
 	 * @param array $customFields fields to customise() the object with before rendering
+	 * @param boolean $enableTheme - makes sure that the site's theme is used, 
+	 *   even if is turned off (e.g. when editing in the CMS)
 	 * @return HTMLText
 	 */
-	public function renderWith($template, $customFields = null) {
+	public function renderWith($template, $customFields = null, $enableTheme = false) {
 		if(!is_object($template)) {
 			$template = new SSViewer($template);
 		}
-		
+		if($enableTheme) {
+			$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled', true);
+			if(!$isThemeEnabled) {
+				Config::inst()->update('SSViewer', 'theme_enabled', true);
+			}
+		}
 		$data = ($this->customisedObject) ? $this->customisedObject : $this;
-		
 		if($customFields instanceof ViewableData) {
 			$data = $data->customise($customFields);
 		}
 		if($template instanceof SSViewer) {
-			return $template->process($data, is_array($customFields) ? $customFields : null);
+			$outcome = $template->process($data, is_array($customFields) ? $customFields : null);
+			if($enableTheme && !$isThemeEnabled) {			
+					Config::inst()->update('SSViewer', 'theme_enabled', false);
+			}
+			return $outcome;
 		}
-		
 		throw new UnexpectedValueException (
 			"ViewableData::renderWith(): unexpected $template->class object, expected an SSViewer instance"
 		);
