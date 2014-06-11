@@ -288,10 +288,11 @@ editor toolbar (see screenshot).
 
 	:::php
 	class Page_Controller extends ContentController {
-		private static $allowed_actions = array ('Form',);
-		
-		public function init() {
-			parent::init();
+		private static $allowed_actions = array (
+			'Form',
+		);
+	
+		public function Form() {
 			// Enable front-end rich-text editing
 			$hc = HtmlEditorConfig::get('cms');
 			$hc->disablePlugins('ssbuttons');
@@ -299,17 +300,14 @@ editor toolbar (see screenshot).
 			$hc->addButtonsToLine(2, 'link', 'media');
 			Requirements::javascript('framework/thirdparty/jquery/jquery.js');
 			Requirements::javascript('mysite/javascript/frontendrte.js');
-		}
-	
-		public function Form() {
-			return new Form($this, 'Form', new FieldList(new HtmlEditorField('Content')),
-					new FieldList(new FormAction('doProcessForm')));
+			return Form::create($this, 'Form', FieldList::create(new HtmlEditorField('Content')),
+					FieldList::create(FormAction::create('doProcessForm')));
 		}
 	
 		public function doProcessForm($data, Form $form) {
 			// do something
 		}
-	
+
 		public function EditorToolbar() {
 			return HtmlEditorField_Toolbar::create($this, "EditorToolbar");
 		}
