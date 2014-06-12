@@ -60,7 +60,7 @@ class Money extends DBField implements CompositeDBField {
 	 */
 	private static $composite_db = array(
 		"Currency" => "Varchar(3)",
-		"Amount" => 'Decimal(19,4)'
+		"Amount" => 'Decimal(19,8)'
 	);
 	
 	public function __construct($name = null) {
