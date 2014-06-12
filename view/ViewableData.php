@@ -320,15 +320,15 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @param string|array|SSViewer $template the template to render into
 	 * @param array $customFields fields to customise() the object with before rendering
-	 * @param boolean $enableTheme - makes sure that the site's theme is used, 
+	 * @param boolean $forceTheme - makes sure that the site's theme is used, 
 	 *   even if is turned off (e.g. when editing in the CMS)
 	 * @return HTMLText
 	 */
-	public function renderWith($template, $customFields = null, $enableTheme = false) {
+	public function renderWith($template, $customFields = null, $forceTheme = false) {
 		if(!is_object($template)) {
 			$template = new SSViewer($template);
 		}
-		if($enableTheme) {
+		if($forceTheme) {
 			$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled', true);
 			if(!$isThemeEnabled) {
 				Config::inst()->update('SSViewer', 'theme_enabled', true);
@@ -340,7 +340,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		}
 		if($template instanceof SSViewer) {
 			$outcome = $template->process($data, is_array($customFields) ? $customFields : null);
-			if($enableTheme && !$isThemeEnabled) {			
+			if($forceTheme && !$isThemeEnabled) {			
 					Config::inst()->update('SSViewer', 'theme_enabled', false);
 			}
 			return $outcome;
