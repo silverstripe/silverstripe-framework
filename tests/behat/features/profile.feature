@@ -30,7 +30,7 @@ Feature: Manage my own settings
 		Then I should see the CMS
 
 	Scenario: I can change the interface language
-		Given I fill in the "Interface Language" dropdown with "German (Germany)"
+		And I select "German (Germany)" from "Interface Language"
 		And I press the "Save" button
 		Then I should see "Sprache"
 
