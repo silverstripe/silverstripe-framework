@@ -48,16 +48,19 @@
 						// multiple relationships via keyboard.
 						if(focusedElName) self.find(':input[name="' + focusedElName + '"]').focus();
 
-						var content;
-						if(ajaxOpts.data[0].filter=="show"){	
-							content = '<span class="non-sortable"></span>';
-							self.addClass('show-filter').find('.filter-header').show();														
-						}else{
-							content = '<button name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
-							self.removeClass('show-filter').find('.filter-header').hide();	
-						}
+						// Update filter 
+						if(self.find('.filter-header').length) {
+							var content;
+							if(ajaxOpts.data[0].filter=="show") {
+								content = '<span class="non-sortable"></span>';
+								self.addClass('show-filter').find('.filter-header').show();														
+							} else {
+								content = '<button name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
+								self.removeClass('show-filter').find('.filter-header').hide();	
+							}
 
-						self.find('.sortable-header th:last').html(content);
+							self.find('.sortable-header th:last').html(content);
+						}
 
 						form.removeClass('loading');
 						if(successCallback) successCallback.apply(this, arguments);

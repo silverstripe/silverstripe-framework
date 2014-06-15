@@ -28,6 +28,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	protected $liveStage;
 	
 	/**
+	 * The default reading mode
+	 */
+	const DEFAULT_MODE = 'Stage.Live';
+	
+	/**
 	 * A version that a DataObject should be when it is 'migrating',
 	 * that is, when it is in the process of moving from one stage to another.
 	 * @var string
@@ -943,6 +948,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		
 	//-----------------------------------------------------------------------------------------------//
 	
+	
 	/**
 	 * Choose the stage the site is currently on.
 	 *
@@ -958,23 +964,36 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param Session $session Optional session within which to store the resulting stage
 	 */
 	public static function choose_site_stage($session = null) {
-		if(!$session) $session = Session::current_session();
+		// Check any pre-existing session mode
+		$preexistingMode = $session
+			? $session->inst_get('readingMode')
+			: Session::get('readingMode');
 		
+		// Determine the reading mode
 		if(isset($_GET['stage'])) {
 			$stage = ucfirst(strtolower($_GET['stage']));
-			
 			if(!in_array($stage, array('Stage', 'Live'))) $stage = 'Live';
-
-			$session->inst_set('readingMode', 'Stage.' . $stage);
-		}
-		if(isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
-			$session->inst_set('readingMode', 'Archive.' . $_GET['archiveDate']);
+			$mode = 'Stage.' . $stage;
+		} elseif (isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
+			$mode = 'Archive.' . $_GET['archiveDate'];
+		} elseif($preexistingMode) {
+			$mode = $preexistingMode;
+		} else {
+			$mode = self::DEFAULT_MODE;
 		}
 		
-		if($mode = $session->inst_get('readingMode')) {
-			Versioned::set_reading_mode($mode);
-		} else {
-			Versioned::reading_stage("Live");
+		// Save reading mode
+		Versioned::set_reading_mode($mode);
+		
+		// Try not to store the mode in the session if not needed
+		if(($preexistingMode && $preexistingMode !== $mode)
+			|| (!$preexistingMode && $mode !== self::DEFAULT_MODE)
+		) {
+			if($session) {
+				$session->inst_set('readingMode', $mode);
+			} else {
+				Session::set('readingMode', $mode);
+			}
 		}
 
 		if(!headers_sent() && !Director::is_cli()) {

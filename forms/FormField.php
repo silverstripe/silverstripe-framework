@@ -957,6 +957,15 @@ class FormField extends RequestHandler {
 		return $this;
 	}
 
+	/**
+	 * Get the FieldList that contains this field.
+	 *
+	 * @return FieldList
+	 */
+	public function getContainerFieldList() {
+		return $this->containerFieldList;
+	}
+
 	public function rootFieldList() {
 		if(is_object($this->containerFieldList)) return $this->containerFieldList->rootFieldList();
 		else user_error("rootFieldList() called on $this->class object without a containerFieldList", E_USER_ERROR);

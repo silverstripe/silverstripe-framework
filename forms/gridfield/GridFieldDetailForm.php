@@ -77,7 +77,10 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 * @return GridFieldDetailForm_ItemRequest 
 	 */
 	public function handleItem($gridField, $request) {
-		$controller = $gridField->getForm()->Controller();
+		// Our getController could either give us a true Controller, if this is the top-level GridField.
+		// It could also give us a RequestHandler in the form of GridFieldDetailForm_ItemRequest if this is a
+		// nested GridField.
+		$requestHandler = $gridField->getForm()->getController();
 
 		if(is_numeric($request->param('ID'))) {
 			$record = $gridField->getList()->byId($request->param("ID"));
@@ -87,7 +90,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 
 		$class = $this->getItemRequestClass();
 
-		$handler = Object::create($class, $gridField, $this, $record, $controller, $this->name);
+		$handler = Object::create($class, $gridField, $this, $record, $requestHandler, $this->name);
 		$handler->setTemplate($this->template);
 
 		// if no validator has been set on the GridField and the record has a
@@ -227,8 +230,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	protected $record;
 
 	/**
+	 * This represents the current parent RequestHandler (which does not necessarily need to be a Controller).
+	 * It allows us to traverse the RequestHandler chain upwards to reach the Controller stack.
 	 *
-	 * @var Controller
+	 * @var RequestHandler
 	 */
 	protected $popupController;
 	
@@ -247,20 +252,20 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		'$Action!' => '$Action',
 		'' => 'edit',
 	);
-	
+
 	/**
 	 *
 	 * @param GridFIeld $gridField
 	 * @param GridField_URLHandler $component
 	 * @param DataObject $record
-	 * @param Controller $popupController
-	 * @param string $popupFormName 
+	 * @param RequestHandler $requestHandler
+	 * @param string $popupFormName
 	 */
-	public function __construct($gridField, $component, $record, $popupController, $popupFormName) {
+	public function __construct($gridField, $component, $record, $requestHandler, $popupFormName) {
 		$this->gridField = $gridField;
 		$this->component = $component;
 		$this->record = $record;
-		$this->popupController = $popupController;
+		$this->popupController = $requestHandler;
 		$this->popupFormName = $popupFormName;
 		parent::__construct();
 	}
@@ -327,7 +332,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$list = $this->gridField->getList();
 
 		if (empty($this->record)) {
-			$controller = Controller::curr();
+			$controller = $this->getToplevelController();
 			$noActionURL = $controller->removeAction($_REQUEST['url']);
 			$controller->getResponse()->removeHeader('Location');   //clear the existing redirect
 			return $controller->redirect($noActionURL, 302);
@@ -339,7 +344,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$canCreate = $this->record->canCreate();
 
 		if(!$canView) {
-			$controller = Controller::curr();
+			$controller = $this->getToplevelController();
 			// TODO More friendly error
 			return $controller->httpError(403);
 		}
@@ -399,6 +404,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			}
 		}
 
+		// Caution: API violation. Form expects a Controller, but we are giving it a RequestHandler instead.
+		// Thanks to this however, we are able to nest GridFields, and also access the initial Controller by
+		// dereferencing GridFieldDetailForm_ItemRequest->getController() multiple times. See getToplevelController
+		// below.
 		$form = new Form(
 			$this,
 			'ItemEditForm',
@@ -452,10 +461,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	}
 
 	/**
-	 * Traverse up nested requests until we reach the first that's not a GridFieldDetailForm_ItemRequest.
-	 * The opposite of {@link Controller::curr()}, required because
-	 * Controller::$controller_stack is not directly accessible.
-	 * 
+	 * Traverse the nested RequestHandlers until we reach something that's not GridFieldDetailForm_ItemRequest.
+	 * This allows us to access the Controller responsible for invoking the top-level GridField.
+	 * This should be equivalent to getting the controller off the top of the controller stack via Controller::curr(),
+	 * but allows us to avoid accessing the global state.
+	 *
+	 * GridFieldDetailForm_ItemRequests are RequestHandlers, and as such they are not part of the controller stack.
+	 *
 	 * @return Controller
 	 */
 	protected function getToplevelController() {
@@ -487,7 +499,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 	public function doSave($data, $form) {
 		$new_record = $this->record->ID == 0;
-		$controller = Controller::curr();
+		$controller = $this->getToplevelController();
 		$list = $this->gridField->getList();
 		
 		if($list instanceof ManyManyList) {
@@ -550,11 +562,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$form->sessionMessage($message, 'good');
 
 		if($new_record) {
-			return Controller::curr()->redirect($this->Link());
+			return $controller->redirect($this->Link());
 		} elseif($this->gridField->getList()->byId($this->record->ID)) {
 			// Return new view, as we can't do a "virtual redirect" via the CMS Ajax
 			// to the same URL (it assumes that its content is already current, and doesn't reload)
-			return $this->edit(Controller::curr()->getRequest());
+			return $this->edit($controller->getRequest());
 		} else {
 			// Changes to the record properties might've excluded the record from
 			// a filtered list, so return back to the main view if it can't be found
@@ -575,7 +587,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$this->record->delete();
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Controller::curr()->redirectBack();
+			return $this->getToplevelController()->redirectBack();
 		}
 
 		$message = sprintf(
@@ -593,7 +605,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		}
 
 		//when an item is deleted, redirect to the parent controller
-		$controller = Controller::curr();
+		$controller = $this->getToplevelController();
 		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
 
 		return $controller->redirect($this->getBacklink(), 302); //redirect back to admin section

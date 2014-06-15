@@ -132,7 +132,7 @@ For example, we might want to exclude all products without prices in our sample 
 			$list = parent::getList();
 			// Always limit by model class, in case you're managing multiple
 			if($this->modelClass == 'Product') {
-				$list->exclude('Price', '0');
+				$list = $list->exclude('Price', '0');
 			}
 			return $list;
 		}
@@ -155,7 +155,7 @@ For example, we might want to have a checkbox which limits search results to exp
 			$list = parent::getList();
 			$params = $this->request->requestVar('q'); // use this to access search parameters
 			if($this->modelClass == 'Product' && isset($params['ExpensiveOnly']) && $params['ExpensiveOnly']) {
-				$list->exclude('Price:LessThan', '100');
+				$list = $list->exclude('Price:LessThan', '100');
 			}
 			return $list;
 		}

@@ -107,7 +107,7 @@ So, your deployment process, as it relates to Composer, should be as follows:
  * Run `composer update` on your development version before you start whatever testing you have planned.  Perform all the necessary testing.
  * Check `composer.lock` into your repository.
  * Deploy your project code base, using the deployment tool of your choice.
- * Run `composer install` on your production version.
+ * Run `composer install --no-dev -o` on your production version.
 
 # Dev Environments for Contributing Code {#contributing}
 

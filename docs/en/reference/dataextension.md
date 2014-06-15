@@ -73,7 +73,7 @@ property on the class.
 	:::php
 	<?php
 
-	class CustomMember extends Member {
+	class MyMemberExtension extends DataExtension {
 
 		public function alterFoo($foo) {
 			// outputs the original class
@@ -101,7 +101,7 @@ variables to update:
 	:::php
 	<?php
 
-	class CustomMember extends DataExtension {
+	class MyMemberExtension extends DataExtension {
 
 		private static $db = array(
 			'Position' => 'Varchar',
@@ -121,7 +121,7 @@ CMS fields for an object in an extension:
 	:::php
 	<?php
 
-	class CustomMember extends DataExtension {
+	class MyMemberExtension extends DataExtension {
 
 		private static $db = array(
 			'Position' => 'Varchar',
@@ -277,7 +277,7 @@ each class that it is extended by.
 	class CustomerWorkflow extends DataExtension {
 	
 		public function IsMarkedForDeletion() {
-			return ($this->owner->Account()->IsMarkedForDeletion == 1) ? true : false;
+			return (bool) $this->owner->Account()->IsMarkedForDeletion;
 		}
 	}
 

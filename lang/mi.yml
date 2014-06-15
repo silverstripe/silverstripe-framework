@@ -170,6 +170,7 @@ mi:
     TEXT2: 'hono tautuhi kupuhipa anō'
     TEXT3: mā
   Form:
+    CSRF_FAILED_MESSAGE: "Te āhua nei kua puta he raru hangarau. Pāwhiria te pātene hoki, ka tāmata anō i tō pūtirotiro, ka ngana anō."
     FIELDISREQUIRED: 'Ka hiahiatia te {name}'
     SubmitBtnLabel: Haere
     VALIDATIONCREDITNUMBER: 'Tirohia kua tika tō tāuru i te tau kāri nama {number}'
@@ -303,6 +304,7 @@ mi:
     PERMAGAIN: 'Kua takiputaina atu koe i te CMS. Ki te pīrangi koe ki te takiuru atu anō, tāurutia tētahi ingoa kaiwhakamahi me te kupuhipa i raro.'
     PERMALREADY: 'Aroha mai, kāore e taea te whakauru i tērā wāhanga o te CMS. Ki te pīrangi koe ki te takiuru atu mā tētahi atu ingoa, whakamahia ki raro nei.'
     PERMDEFAULT: 'Whiriwhiria tētahi aratuka motuhēhēnga me te tāuru i ō taipitopito tuakiri ki te uru ki te CMS.'
+    PLEASESAVE: 'Tiaki Whārangi: Kāore i taea tēnei whārangi te whakahōu nā te mea kāore anō kia tiakina.'
     PreviewButton: Arokite
     REORGANISATIONSUCCESSFUL: 'Kua momoho te whakaraupapa anō i te rākau pae'
     SAVEDUP: Kua Tiakina
@@ -337,6 +339,7 @@ mi:
     ERRORLOCKEDOUT2: 'Kua monokia rangitahitia tō pūkete nā te nui rawa o ngā ngana takiuru kua rahua. Ngana anō ā muri i te {count} meneti.'
     ERRORNEWPASSWORD: 'Kua rerekē tō tāuru kupuhipa, whakamātau anō'
     ERRORPASSWORDNOTMATCH: 'Kāore i te ōrite tō kupuhipa o nāianei, ngana anō'
+    ERRORWRONGCRED: 'Te āhua nei ehara i te wāhitau īmerā tika, i te kuphipa tika rānei. Ngana anō'
     FIRSTNAME: 'Ingoa Tuatahi'
     INTERFACELANG: 'Reo Atanga'
     INVALIDNEWPASSWORD: 'Kāore i taea te whakaae ki taua kupuhipa: {password}'
@@ -466,6 +469,7 @@ mi:
     ERRORPASSWORDPERMISSION: 'Me takiuru koe i mua i te huri i tō kupuhipa!'
     LOGGEDOUT: 'Kua takiputaina atu koe. Ki te pīrangi koe ki te takiuru atu anō, tāurutia ō taipitopito tuakiri ki raro. '
     LOGIN: 'Takiuru'
+    LOSTPASSWORDHEADER: 'Kupuhipa Ngaro'
     NOTEPAGESECURED: 'Kua ngita tēnā whārangi. Tāurua ō taipitoptio tuakiri ki raro, ā, mā mātou koe e tuku kia haere tonu.'
     NOTERESETLINKINVALID: '<p>He muhu, kua mōnehu rānei te hono tautuhi kupuhipa anō.</p><p>Ka taea te tono i te mea hōu<a href="{link1}">i konei</a> ka huri rānei i tō kupuhipa ā muri i tō<a href="{link2}">takiuru</a>.</p>'
     NOTERESETPASSWORD: 'Tāurua tō wāhitau īmēra, mā mātou e tuku tētahi hono ki a koe e taea ai te tautuhi anō i tō kupuhipa'

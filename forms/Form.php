@@ -1338,7 +1338,7 @@ class Form extends RequestHandler {
 		$dataFields = $this->fields->saveableFields();
 		$lastField = null;
 		if($dataFields) foreach($dataFields as $field) {
-			// Skip fields that have been exlcuded
+			// Skip fields that have been excluded
 			if($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList)) continue;
 
 

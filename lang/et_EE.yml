@@ -242,6 +242,7 @@ et_EE:
     FROMWEB: 'Veebist'
     FindInFolder: 'Otsi kaustast'
     IMAGEALT: 'Asetekst (alt)'
+    IMAGEALTTEXT: 'Asetekst (alt) – kuvatakse, kui kujutist ei ole võimalik kuvada'
     IMAGEDIMENSIONS: Mõõtmed
     IMAGEHEIGHTPX: Laius
     IMAGETITLE: 'Pealkirja tekst (kohtspikker) – lisateabeks kujutise kohta'
@@ -279,6 +280,7 @@ et_EE:
     PERMAGAIN: 'Oled Sisuhaldusest välja logitud. Kui soovite uuesti sisse logida sisestage kasutajanimi ja parool.'
     PERMALREADY: 'Vabandust, aga sul pole lubatud sisuhaldussüsteemi selle osa juurde pääseda. Kui soovid kellegi teisena sisse logida, tee seda allpool.'
     PERMDEFAULT: 'Sisesta oma e-posti aadress ja parool sisuhaldussüsteemi ligipääsemiseks.'
+    PLEASESAVE: 'Palun Salvesta Lehekülg: Antud lehekülge ei uuendatud, kuna seda ei ole veel salvestatud.'
     PreviewButton: Eelvaade
     REORGANISATIONSUCCESSFUL: 'Saidipuu korraldati edukalt ümber.'
     SAVEDUP: Salvestatud.

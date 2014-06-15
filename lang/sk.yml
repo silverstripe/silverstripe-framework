@@ -490,7 +490,7 @@ sk:
     IMPORTUSERS: 'Importovať požívateľov'
     MEMBERS: Členovia
     MENUTITLE: Bezpečnosť
-    MemberListCaution: 'Upozornenie: Odstánenie členov z tohto zoznamu ich odstráni zo všetkých skupín a databázy.'
+    MemberListCaution: 'Upozornenie: Odstránenie členov z tohto zoznamu ich odstráni zo všetkých skupín a databázy.'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Právomoci
     ROLES: Úlohy

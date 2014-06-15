@@ -225,6 +225,7 @@ nb:
     DefaultGroupTitleContentAuthors: 'Innholdsforfattere'
     Description: Beskrivelse
     GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
+    HierarchyPermsError: 'Kan ikke angi overordnet gruppe "%s" med administratorrettigheter (krever ADMIN-tilgang)'
     Locked: 'Låst?'
     NoRoles: 'Ingen roller funnet'
     PLURALNAME: Grupper
@@ -340,6 +341,7 @@ nb:
     ERRORLOCKEDOUT2: 'Din konto har blitt midlertidig sperret på grunn av for mange mislykkede forsøk på å logge inn. Vennligst prøv igjen om {count} minutter.'
     ERRORNEWPASSWORD: 'Du har tastet inn nye passord forskjellig, vennligst prøv igjen.'
     ERRORPASSWORDNOTMATCH: 'Passordene stemmer ikke overens, vennligst prøv igjen.'
+    ERRORWRONGCRED: 'Det ser ikke ut til å være riktig epostadresse eller passord. Vennligst prøv igjen.'
     FIRSTNAME: 'Fornavn'
     INTERFACELANG: 'Språk på grensesnitt'
     INVALIDNEWPASSWORD: 'Vi kunne ikke godkjenne passordet: {password}'
@@ -454,6 +456,7 @@ nb:
     Title: Tittel
   PermissionRoleCode:
     PLURALNAME: 'Koder for tillatelser'
+    PermsError: 'Kan ikke angi kode "%s" med administratorrettigheter (krever ADMIN-tilgang)'
     SINGULARNAME: 'Tillatelseskode'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rolle- og tilgangstillatelser'

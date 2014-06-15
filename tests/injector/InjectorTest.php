@@ -457,6 +457,18 @@ class InjectorTest extends SapphireTest {
 		$si = $injector->get('TestStaticInjections');
 		$this->assertEquals('NewRequirementsBackend', get_class($si->backend));
 	}
+	
+	public function testSetterInjections() {
+		$injector = new Injector();
+		$config = array(
+			'NewRequirementsBackend',
+		);
+
+		$injector->load($config);
+
+		$si = $injector->get('TestSetterInjections');
+		$this->assertEquals('NewRequirementsBackend', get_class($si->getBackend()));
+	}
 
 	public function testCustomObjectCreator() {
 		$injector = new Injector();
@@ -750,6 +762,28 @@ class TestStaticInjections implements TestOnly {
 		'backend' => '%$NewRequirementsBackend'
 	);
 
+}
+
+/**
+ * Make sure DI works with ViewableData's implementation of __isset
+ */
+class TestSetterInjections extends ViewableData implements TestOnly {
+	
+	protected $backend;
+	
+	/** @config */
+	private static $dependencies = array(
+		'backend' => '%$NewRequirementsBackend'
+	);
+	
+	public function getBackend() {
+		return $this->backend;
+	}
+	
+	public function setBackend($backend) {
+		$this->backend = $backend;
+	}
+	
 }
 
 /**

@@ -38,7 +38,7 @@
  *   'Country',
  *   array(
  *     'NZ' => 'New Zealand',
- *     'US' => 'United States'
+ *     'US' => 'United States',
  *     'GEM'=> 'Germany'
  *   )
  * );
