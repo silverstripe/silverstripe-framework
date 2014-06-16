@@ -391,14 +391,15 @@ class SS_ClassManifest {
 				$extends = substr($extends, 1);
 			}
 
-			if (array_key_exists($name, $this->classes)) {
+			$lowercaseName = strtolower($name);
+			if (array_key_exists($lowercaseName, $this->classes)) {
 				throw new Exception(sprintf(
 					'There are two files containing the "%s" class: "%s" and "%s"',
-					$name, $this->classes[$name], $pathname
+					$name, $this->classes[$lowercaseName], $pathname
 				));
 			}
 
-			$this->classes[strtolower($name)] = $pathname;
+			$this->classes[$lowercaseName] = $pathname;
 
 			if ($extends) {
 				$extends = strtolower($extends);
