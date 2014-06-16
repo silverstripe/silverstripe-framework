@@ -126,4 +126,14 @@ class ClassManifestTest extends SapphireTest {
 	public function testManifestExcludeFilesPrefixedWithUnderscore() {
 		$this->assertNotContains('ignore', array_keys($this->manifest->getClasses()));
 	}
+
+	/**
+	 * Assert that ClassManifest throws an exception when it encounters two files
+	 * which contain classes with the same name
+	 * @expectedException Exception
+	 */
+	public function testManifestWarnsAboutDuplicateClasses() {
+		$dummy = new SS_ClassManifest(dirname(__FILE__) . '/fixtures/classmanifest_duplicates', false, true, false);
+	}
+
 }
