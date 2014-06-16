@@ -127,14 +127,15 @@ JS;
 	 * Get message from session
 	 */
 	protected function getMessageFromSession() {
-		parent::getMessageFromSession();
-
 		$forceMessage = Session::get('MemberLoginForm.force_message');
 		if(($member = Member::currentUser()) && !$forceMessage) {
-			$this->message = _t(
-				'Member.LOGGEDINAS', 
-				"You're logged in as {name}.", 
-				array('name' => $member->{$this->loggedInAsField})
+			$this->sessionMessage(
+				_t(
+					'Member.LOGGEDINAS', 
+					"You're logged in as {name}.", 
+					array('name' => $member->{$this->loggedInAsField})
+				),
+				'notice'
 			);
 		}
 
@@ -142,6 +143,10 @@ JS;
 		if($forceMessage) {
 			Session::set('MemberLoginForm.force_message', false);
 		}
+
+		parent::getMessageFromSession();
+
+		return $this->message;
 	}
 
 
