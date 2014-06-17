@@ -106,49 +106,6 @@ class CmsUiContext extends BehatContext {
 		return $cms_tree_element;
 	}
 
-	protected function getGridfieldTable($title) {
-		$page = $this->getSession()->getPage();
-		$table_elements = $page->findAll('css', '.ss-gridfield-table');
-		assertNotNull($table_elements, 'Table elements not found');
-
-		$table_element = null;
-		foreach ($table_elements as $table) {
-			$table_title_element = $table->find('css', '.title');
-			if ($table_title_element && $table_title_element->getText() === $title) {
-				$table_element = $table;
-				break;
-			}
-		}
-
-		// Some {@link GridField} tables don't have a visible title, so look for a fieldset with data-name instead
-		if(!$table_element) {
-			$fieldset = $page->findAll('xpath', "//fieldset[@data-name='$title']");
-			if(is_array($fieldset) && isset($fieldset[0])) {
-				$table_element = $fieldset[0]->find('css', '.ss-gridfield-table');
-			}
-		}
-
-		assertNotNull($table_element, sprintf('Table `%s` not found', $title));
-
-		return $table_element;
-	}
-
-	/**
-	 * Finds the first visible GridField table.
-	 */
-	protected function getFirstGridFieldTable() {
-		$page = $this->getSession()->getPage();
-		$tableElements = $page->findAll('css', '.ss-gridfield-table');
-		assertNotNull($tableElements, 'Table elements not found');
-
-		// Return first found table.
-		foreach($tableElements as $table) {
-			if($table->isVisible()) return $table;
-		}
-
-		assertNotNull(null, 'First visible table element not found');
-	}
-
 	/**
 	 * @Given /^I should see a "([^"]*)" button in CMS Content Toolbar$/
 	 */
@@ -277,51 +234,6 @@ class CmsUiContext extends BehatContext {
 		assertNotNull($tab_element, sprintf('%s tab not found', $tab));
 
 		$tab_element->click();
-	}
-
-	/**
-	 * @Then /^the "([^"]*)" table should contain "([^"]*)"$/
-	 */
-	public function theTableShouldContain($table, $text) {
-		$table_element = $this->getGridfieldTable($table);
-
-		$element = $table_element->find('named', array('content', "'$text'"));
-		assertNotNull($element, sprintf('Element containing `%s` not found in `%s` table', $text, $table));
-	}
-
-	/**
-	 * @Then /^the "([^"]*)" table should not contain "([^"]*)"$/
-	 */
-	public function theTableShouldNotContain($table, $text) {
-		$table_element = $this->getGridfieldTable($table);
-
-		$element = $table_element->find('named', array('content', "'$text'"));
-		assertNull($element, sprintf('Element containing `%s` not found in `%s` table', $text, $table));
-	}
-
-	/**
-	 * @Given /^I click on "([^"]*)" in the "([^"]*)" table$/
-	 */
-	public function iClickOnInTheTable($text, $table) {
-		$table_element = $this->getGridfieldTable($table);
-
-		$element = $table_element->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
-		assertNotNull($element, sprintf('Element containing `%s` not found', $text));
-		$element->click();
-	}
-
-	/**
-	 * Clicks on a row in the first found visible GridField table.
-	 * Example: I click on "New Zealand" in the table
-	 *
-	 * @Given /^I click on "([^"]*)" in the table$/
-	 */
-	public function iClickOnInTheFirstTable($text) {
-		$table_element = $this->getFirstGridFieldTable();
-
-		$element = $table_element->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
-		assertNotNull($element, sprintf('Element containing `%s` not found', $text));
-		$element->click();
 	}
 
 	/**
