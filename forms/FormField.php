@@ -372,6 +372,7 @@ class FormField extends RequestHandler {
 			'class' => $this->extraClass(),
 			'id' => $this->ID(),
 			'disabled' => $this->isDisabled(),
+			'readonly' => $this->isReadonly()
 		);
 		
 		if ($this->Required()) {
