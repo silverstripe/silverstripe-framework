@@ -507,8 +507,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$needle,
 		$haystack,
 		$message = '',
-		$ignoreCase = FALSE,
-		$checkForObjectIdentity = TRUE
+		$ignoreCase = false,
+		$checkForObjectIdentity = true,
+		$checkForNonObjectIdentity = false
 	) {
 		if ($haystack instanceof DBField) $haystack = (string)$haystack;
 		parent::assertContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity);
@@ -518,8 +519,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$needle,
 		$haystack,
 		$message = '',
-		$ignoreCase = FALSE,
-		$checkForObjectIdentity = TRUE
+		$ignoreCase = false,
+		$checkForObjectIdentity = true,
+		$checkForNonObjectIdentity = false
 	) {
 		if ($haystack instanceof DBField) $haystack = (string)$haystack;
 		parent::assertNotContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity);
