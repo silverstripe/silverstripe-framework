@@ -6,6 +6,7 @@
 <body>
 
 <div class="body">
+	<!-- This is an email -->
 	$Body
 </div>
 
