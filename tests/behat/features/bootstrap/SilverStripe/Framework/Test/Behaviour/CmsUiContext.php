@@ -162,6 +162,23 @@ class CmsUiContext extends BehatContext {
 	}
 
 	/**
+	 * @When /^I expand "([^"]*)" in the tree$/
+	 */
+	public function iExpandInTheTree($nodeText) {
+		//Tries to find the first visiable matched Node in the page
+		$page = $this->getSession()->getPage();
+		$nodeFound = false;
+		$treeEl = $this->getCmsTreeElement();
+		$treeNode = $treeEl->findLink($nodeText);
+		assertNotNull($treeNode, sprintf('%s link not found', $nodeText));
+		$nodeIcon = $treeNode->getParent()->find('css', '.jstree-icon');
+		if($nodeIcon->isVisible()){
+			$nodeIcon->click();
+			$nodeFound = true;
+		}
+		assertTrue($nodeFound, "CMS node '$nodeText' not found");
+	}
+	/**
 	 * @When /^I click the "([^"]*)" CMS tab$/
 	 */
 	public function iClickTheCmsTab($tab) {
