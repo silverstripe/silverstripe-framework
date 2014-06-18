@@ -201,7 +201,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		DataObject::reset();
 		if(class_exists('SiteTree')) SiteTree::reset();
 		Hierarchy::reset();
-		if(Controller::has_curr()) Controller::curr()->setSession(new Session(array()));
+		if(Controller::has_curr()) Controller::curr()->setSession(Injector::inst()->create('Session', array()));
 		Security::$database_is_ready = null;
 		
 		$fixtureFile = static::get_fixture_file();

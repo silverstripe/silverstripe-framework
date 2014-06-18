@@ -47,7 +47,7 @@ class SessionTest extends SapphireTest {
 	}
 
 	public function testSettingExistingDoesntClear() {
-		$s = new Session(array('something' => array('does' => 'exist')));
+		$s = Injector::inst()->create('Session', array('something' => array('does' => 'exist')));
 
 		$s->inst_set('something.does', 'exist');
 		$result = $s->inst_changedData();
@@ -59,7 +59,7 @@ class SessionTest extends SapphireTest {
 	 * Check that changedData isn't populated with junk when clearing non-existent entries.
 	 */
 	public function testClearElementThatDoesntExist() {
-		$s = new Session(array('something' => array('does' => 'exist')));
+		$s = Injector::inst()->create('Session', array('something' => array('does' => 'exist')));
 
 		$s->inst_clear('something.doesnt.exist');
 		$result = $s->inst_changedData();
@@ -77,7 +77,7 @@ class SessionTest extends SapphireTest {
 	 * Check that changedData is populated with clearing data.
 	 */
 	public function testClearElementThatDoesExist() {
-		$s = new Session(array('something' => array('does' => 'exist')));
+		$s = Injector::inst()->create('Session', array('something' => array('does' => 'exist')));
 
 		$s->inst_clear('something.does');
 		$result = $s->inst_changedData();
@@ -97,7 +97,7 @@ class SessionTest extends SapphireTest {
 		$_SERVER['HTTP_USER_AGENT'] = 'Test Agent';
 
 		// Generate our session
-		$s = new Session(array());
+		$s = Injector::inst()->create('Session', array());
 		$s->inst_set('val', 123);
 		$s->inst_finalize();
 
@@ -105,7 +105,7 @@ class SessionTest extends SapphireTest {
 		$_SERVER['HTTP_USER_AGENT'] = 'Fake Agent';
 		
 		// Verify the new session reset our values
-		$s2 = new Session($s);
+		$s2 = Injector::inst()->create('Session', $s);
 		$this->assertNotEquals($s2->inst_get('val'), 123);
 	}
 }

@@ -537,7 +537,7 @@ class VersionedTest extends SapphireTest {
 	 * Tests that reading mode persists between requests
 	 */
 	public function testReadingPersistent() {
-		$session = new Session(array());
+		$session = Injector::inst()->create('Session', array());
 		
 		// Set to stage
 		Director::test('/?stage=Stage', null, $session);
@@ -568,7 +568,7 @@ class VersionedTest extends SapphireTest {
 		);
 		
 		// Test that session doesn't redundantly store the default stage if it doesn't need to
-		$session2 = new Session(array());
+		$session2 = Injector::inst()->create('Session', array());
 		Director::test('/', null, $session2);
 		$this->assertEmpty($session2->inst_changedData());
 		Director::test('/?stage=Live', null, $session2);

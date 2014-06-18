@@ -362,7 +362,7 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = array()) {
 		
 		if(!$this->session) {
-			$this->session = new Session(array());
+			$this->session = Injector::inst()->create('Session', array());
 		}
 		
 		$url = $this->baseURL . $subURL; // Url for the request

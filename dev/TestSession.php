@@ -23,7 +23,7 @@ class TestSession {
 	private $lastUrl;
 
 	public function __construct() {
-		$this->session = new Session(array());
+		$this->session = Injector::inst()->create('Session', array());
 		$this->controller = new Controller();
 		$this->controller->setSession($this->session);
 		$this->controller->pushCurrent();
