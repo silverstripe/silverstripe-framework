@@ -230,6 +230,11 @@ The below example will get all Members that have an expired or not encrypted pas
 	    }
 	});
 
+<div class="notice" markdown='1'>
+If you are running SilverStripe 3.1.2, be aware that you need to omit the $list argument in the above example.
+This issue is fixed in SilverStripe 3.1.5.
+</div>
+
 ### Exclude
 
 The `exclude()` method is the opposite to the filter in that it removes entries
