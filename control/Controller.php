@@ -439,7 +439,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			if(isset(self::$controller_stack[1])) {
 				$this->session = self::$controller_stack[1]->getSession();
 			} else {
-				$this->session = new Session(null);
+				$this->session = Injector::inst()->create('Session', array());
 			}
 		}
 	}
