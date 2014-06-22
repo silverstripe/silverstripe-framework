@@ -230,7 +230,7 @@ You can then click on any element in the CMS to see which entwine methods are bo
 ### Keep things simple
 
 Resist the temptation to build "cathedrals" of complex interrelated components.  In general, you can get a lot done in
-jQuery with a few lines of code.  Your jQuery code will normally end up as a series of event handlers applied with `jQuery.live()` or jQuery.entwine, rather than a complex object graph.
+jQuery with a few lines of code.  Your jQuery code will normally end up as a series of event handlers applied with `jQuery.on()` or jQuery.entwine, rather than a complex object graph.
 
 ### Don't claim global properties
 
@@ -265,20 +265,20 @@ Ready](http://docs.jquery.com/How_jQuery_Works#Launching_Code_on_Document_Ready)
 ### Bind events "live"
 
 jQuery supports automatically reapplying event handlers when new DOM elements get inserted, mostly through Ajax calls.
-This "live binding" saves you from reapplying this step manually.
+This "binding" saves you from reapplying this step manually.
 
-Caution: Only applies to certain events, see the [jQuery.live() documentation](http://docs.jquery.com/Events/live).
+Caution: Only applies to certain events, see the [jQuery.on() documentation](http://api.jquery.com/on/).
 
 Example: Add a 'loading' classname to all pressed buttons
 
 	:::js
 	// manual binding, only applies to existing elements
-	$('input[[type=submit]]').bind('click', function() {
+	$('input[[type=submit]]').on('click', function() {
 	  $(this).addClass('loading');
 	});
 	
-	// live binding, applies to any inserted elements as well
-	$('input[[type=submit]]').live(function() {
+	// binding, applies to any inserted elements as well
+	$('input[[type=submit]]').on(function() {
 	  $(this).addClass('loading');
 	});
 
@@ -419,7 +419,7 @@ HTML
 JavaScript:
 
 	:::js
-	$('.autocomplete input').live('change', function() {
+	$('.autocomplete input').on('change', function() {
 	  var resultsEl = $(this).siblings('.results');
 	  resultsEl.load(
 	    // get form action, using the jQuery.metadata plugin
