@@ -692,7 +692,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'mt' => array('Maltese', 'Malti'),
 		'mr' => array('Marathi', '&#2350;&#2352;&#2366;&#2336;&#2368;'),
 		'ne' => array('Nepali', '&#2344;&#2375;&#2346;&#2366;&#2354;&#2368;'),
-		'no' => array('Norwegian', 'Norsk'),
+		'nb' => array('Norwegian', 'Norsk'),
 		'om' => array('Oromo', 'Afaan Oromo'),
 		'fa' => array('Persian', '&#1601;&#1575;&#1585;&#1587;&#1609;'),
 		'pl' => array('Polish', 'polski'),
