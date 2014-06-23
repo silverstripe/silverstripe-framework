@@ -854,7 +854,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'name' => 'Nepali', 
 			'native' => '&#2344;&#2375;&#2346;&#2366;&#2354;&#2368;'
 		),
-		'no' => array(
+		'nb' => array(
 			'name' => 'Norwegian', 
 			'native' => 'Norsk'
 		),
