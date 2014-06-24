@@ -83,6 +83,10 @@ class ManyManyList extends RelationList {
 	/**
 	 * Add an item to this many_many relationship
 	 * Does so by adding an entry to the joinTable.
+	 *
+	 * Allow Extensions to manipulate the database-write.
+	 * @uses DataExtension->augmentWrite()
+	 *
 	 * @param $extraFields A map of additional columns to insert into the joinTable
 	 */
 	public function add($item, $extraFields = null) {
@@ -129,6 +133,8 @@ class ManyManyList extends RelationList {
 			$manipulation[$this->joinTable]['fields'][$this->localKey] = $itemID;
 			$manipulation[$this->joinTable]['fields'][$this->foreignKey] = $foreignID;
 
+			$this->extend('augmentWrite', $manipulation);
+			
 			DB::manipulate($manipulation);
 		}
 	}
