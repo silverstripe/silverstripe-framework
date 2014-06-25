@@ -24,7 +24,7 @@ class.
 			new RequiredFields(array('MyRequiredField'))
 		);
 		// Optional: Add a CSS class for custom styling
-		$form->dataFieldByName('MyRequiredField)->addExtraClass('required');
+		$form->dataFieldByName('MyRequiredField')->addExtraClass('required');
 		return $form;
 	}
 
