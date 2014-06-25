@@ -151,8 +151,8 @@ to known file categories.
 	:::yaml
 	File: 
 	  allowed_extensions: 
-	    - new_ext 
-	    - other_ext
+	    - 7zip 
+	    - xzip
 
 <div class="notice" markdown='1'>
 Note: File types such as SWF, XML and HTML are excluded by default from uploading as these types are common
