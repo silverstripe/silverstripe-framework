@@ -146,6 +146,14 @@ to known file categories.
 	// 'doc','docx','txt','rtf','xls','xlsx','pages', 'ppt','pptx','pps','csv','pdf'
 	$uploadField->setAllowedFileCategories('image', 'doc');
 
+`AllowedExtensions` can also be set globally via the [YAML configuration](/topics/configuration#setting-configuration-via-yaml-files), for example you may add the following into your mysite/_config/config.yml:
+
+	:::yaml
+	File: 
+	  allowed_extensions: 
+	    - 7zip 
+	    - xzip
+
 <div class="notice" markdown='1'>
 Note: File types such as SWF, XML and HTML are excluded by default from uploading as these types are common
 security attack risks. If necessary, these types may be allowed as uploads (at your own risk) by adding each
