@@ -343,9 +343,12 @@ Create a new file *HomePage.php* in *mysite/code*. Copy the following code into 
 
 Every page type also has a database table corresponding to it. 
 
-| Note 
-| ----
-| <p>Every time the database is modified, it needs to be rebuilt. This can be performed by going to [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build) (replace *localhost/your_site_name* with your own domain name if applicable). <br /><br />It may take a moment, so be patient. This adds tables and fields needed by your site, and modifies any structures that have changed. **It does this non-destructively - it will never delete your data.**</p>
+>	**Note**
+>
+>	Every time the database is modified, it needs to be rebuilt. This can be performed by going to [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build) (replace *localhost/your_site_name* with your own domain name if applicable).
+>
+>	It may take a moment, so be patient. This adds tables and fields needed by your site, and modifies any structures that have changed. **It does this non-destructively - it will never delete your data.**
+
 
 As we have just created a new page type, SilverStripe will add this to the list of page types in the database.
 
@@ -367,9 +370,9 @@ It always tries to use the most specific template in an inheritance chain.
 
 To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*.
 
-| Note 
-| ----
-| Changes to a template layout will not take effect until the page cache is flushed (Querystring *?flush=1*), 
+>	**Note**
+>
+>	Changes to a template layout will not take effect until the page cache is flushed (Querystring parameter `flush=1`)
 
 Once flushed, SilverStripe should be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
 
