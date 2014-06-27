@@ -337,8 +337,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		if (Director::isDev()) Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/leaktools.js');
 
-		HTMLEditorField::include_js();
-
 		$leftAndMainIncludes = array_unique(array_merge(
 			array(
 				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',

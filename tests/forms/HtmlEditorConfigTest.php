@@ -66,13 +66,27 @@ class HtmlEditorConfigTest extends SapphireTest {
 		$this->assertNotContains('plugin1', array_keys($plugins));
 		$this->assertNotContains('plugin2', array_keys($plugins));
 	}
-	
-	public function testGenerateJSWritesPlugins() {
-		$c = new HtmlEditorConfig();
-		$c->enablePlugins(array('plugin1'));
+
+	public function testRequireJSIncludesAllExternalPlugins() {
+		$c = HtmlEditorConfig::get('config');
+		$c->enablePlugins(array('plugin1' => '/mypath/plugin1'));
 		$c->enablePlugins(array('plugin2' => '/mypath/plugin2'));
 
-		$this->assertContains('plugin1', $c->generateJS());
-		$this->assertContains('tinymce.PluginManager.load("plugin2", "/mypath/plugin2");', $c->generateJS());
+		HtmlEditorConfig::require_js();
+		$js = Requirements::get_custom_scripts();
+
+		$this->assertContains('tinymce.PluginManager.load("plugin1", "/mypath/plugin1");', $js);
+		$this->assertContains('tinymce.PluginManager.load("plugin2", "/mypath/plugin2");', $js);
+	}
+
+	public function testRequireJSIncludesAllConfigs() {
+		$c = HtmlEditorConfig::get('configA');
+		$c = HtmlEditorConfig::get('configB');
+
+		HtmlEditorConfig::require_js();
+		$js = Requirements::get_custom_scripts();
+
+		$this->assertContains('"configA":{', $js);
+		$this->assertContains('"configB":{', $js);
 	}
 }
