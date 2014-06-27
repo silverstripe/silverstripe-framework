@@ -1,21 +1,48 @@
 <?php
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class ManyManyListTest extends SapphireTest {
 	
-	// Borrow the model from DataObjectTest
 	protected static $fixture_file = 'DataObjectTest.yml';
 
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
 		'DataObjectTest_Player',
+		'ManyManyListTest_ExtraFields'
 	);
-	
+
+
+	public function testAddCompositedExtraFields() {
+		$obj = new ManyManyListTest_ExtraFields();
+		$obj->write();
+
+		$money = new Money();
+		$money->setAmount(100);
+		$money->setCurrency('USD');
+
+		// the actual test is that this does not generate an error in the sql.
+		$obj->Clients()->add($obj, array(
+			'Worth' => $money,
+			'Reference' => 'Foo'
+		));
+
+		$check = $obj->Clients()->First();
+
+		$this->assertEquals('Foo', $check->Reference, 'Basic scalar fields should exist');
+		$this->assertInstanceOf('Money', $check->Worth, 'Composite fields should exist on the record');
+		$this->assertEquals(100, $check->Worth->getAmount());
+	}
+
 	public function testCreateList() {
 		$list = ManyManyList::create('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID',
 			'DataObjectTest_PlayerID');
 		$this->assertEquals(2, $list->count());
 	}
+
 
 	public function testRelationshipEmptyOnNewRecords() {
 		// Relies on the fact that (unrelated) teams exist in the fixture file already
@@ -208,6 +235,57 @@ class ManyManyListTest extends SapphireTest {
 
 		$this->assertNotNull(DataObjectTest_Player::get()->byID($a->ID));
 		$this->assertNotNull(DataObjectTest_Player::get()->byID($b->ID));
+	}	
+
+	public function testAppendExtraFieldsToQuery() {
+		$list = new ManyManyList(
+			'ManyManyListTest_ExtraFields', 
+			'ManyManyListTest_ExtraFields_Clients', 
+			'ManyManyListTest_ExtraFieldsID', 
+			'ChildID', array(
+				'Worth' => 'Money',
+				'Reference' => 'Varchar'
+			)
+		);
+
+		// ensure that ManyManyListTest_ExtraFields_Clients.ValueCurrency is
+		// selected.
+		$db = DB::getConn();
+		$expected = 'SELECT DISTINCT "ManyManyListTest_ExtraFields_Clients"."WorthCurrency",'
+			.' "ManyManyListTest_ExtraFields_Clients"."WorthAmount", "ManyManyListTest_ExtraFields_Clients"."Reference",'
+			.' "ManyManyListTest_ExtraFields"."ClassName", "ManyManyListTest_ExtraFields"."Created",'
+			.' "ManyManyListTest_ExtraFields"."LastEdited", "ManyManyListTest_ExtraFields"."ID",'
+			.' CASE WHEN "ManyManyListTest_ExtraFields"."ClassName" IS NOT NULL THEN'
+			.' "ManyManyListTest_ExtraFields"."ClassName" ELSE '. $db->prepStringForDB('ManyManyListTest_ExtraFields') 
+			.' END AS "RecordClassName" FROM "ManyManyListTest_ExtraFields" INNER JOIN'
+			.' "ManyManyListTest_ExtraFields_Clients" ON'
+			.' "ManyManyListTest_ExtraFields_Clients"."ManyManyListTest_ExtraFieldsID" ='
+			.' "ManyManyListTest_ExtraFields"."ID"';
+
+		$this->assertEquals($expected, $list->sql());
 	}
 
+
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class ManyManyListTest_ExtraFields extends DataObject implements TestOnly {
+
+	private static $many_many = array(
+		'Clients' => 'ManyManyListTest_ExtraFields'
+	);
+
+	private static $belongs_many_many = array(
+		'WorksWith' => 'ManyManyListTest_ExtraFields'
+	);
+
+	private static $many_many_extraFields = array(
+		'Clients' => array(
+			'Reference' => 'Varchar',
+			'Worth' => 'Money'
+		)
+	);
 }
