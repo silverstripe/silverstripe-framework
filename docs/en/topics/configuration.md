@@ -123,6 +123,16 @@ This also works statically:
 
 	MyClass::config()->my_property; // getter
 	MyClass::config()->my_property = 2; // setter
+	
+### Config and PHP Namespaces
+
+When using namespaces, it is important to use double back-slashes and no leading ones.
+
+	:::php
+	Config::inst()->get('namespace\\class', 'my_property');
+	Config::inst()->update('namespace\\class', 'my_other_property', 2);
+
+
 
 ## Setting configuration via YAML files
 
