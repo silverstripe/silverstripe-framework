@@ -505,8 +505,13 @@ template will cast the value according to the $casting-definition.
 
 ## Relations
 
-Relations are built through static array definitions on a class, in the format
-`<relationship-name> => <classname>`.
+Relations are built through static array definitions on a class, in the format:
+
+	`'<relationship-name>' => '<classname>'`
+	// or when using php namespaces: 
+	// `'<relationship-name>' => '<namespace>\\<classname>'`
+	
+See the section about PHP Namespaces below for an namespace example.
 
 ### has_one
 
@@ -717,6 +722,25 @@ As these lists are not backed by the database, most of the filtering methods on
 `UnsavedRelationList` should only be used for setting a relation before saving
 an object, not for displaying the objects contained in the relation.
 
+### Relations and PHP Namespaces
+
+When using namespaces, it is important to use double back-slashes and no leading ones.
+It is also important to always specify the namespace, even if both classes are in the same namespace.
+
+	namespace Company;
+	
+	class Employee extends \Dataobject {
+		private static $has_one = array(
+			'Assignment' => 'Company\\Job',
+		);
+	}
+	
+	class Job extends \DataObject {
+		private static $has_many = array(
+			'Employees' => 'Company\\Employee.Assignment',
+		);
+	}
+	
 ## Validation and Constraints
 
 Traditionally, validation in SilverStripe has been mostly handled on the
