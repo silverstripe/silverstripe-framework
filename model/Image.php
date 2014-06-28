@@ -65,6 +65,12 @@ class Image extends File {
 	 * @var int The height of an image preview in the Asset section.
 	 */
 	private static $asset_preview_height = 200;
+
+	/**
+	 * @config
+	 * @var bool Force all images to resample in all cases
+	 */
+	private static $force_resample = false;
 	
 	public static function set_backend($backend) {
 		self::$backend = $backend;
@@ -214,10 +220,10 @@ class Image extends File {
 		$heightRatio = $height / $this->height;
 		if( $widthRatio < $heightRatio ) {
 			// Target is higher aspect ratio than image, so check width
-			if($this->isWidth($width)) return $this;
+			if($this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')) return $this;
 		} else {
 			// Target is wider aspect ratio than image, so check height
-			if($this->isHeight($height)) return $this;
+			if($this->isHeight($height) && !Config::inst()->get('Image', 'force_resample')) return $this;
 		}
 		
 		// Item must be regenerated
@@ -244,7 +250,7 @@ class Image extends File {
 	 * @return Image
 	 */
 	public function SetWidth($width) {
-		return $this->isWidth($width) 
+		return $this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')
 			? $this
 			: $this->getFormattedImage('SetWidth', $width);
 	}
@@ -267,7 +273,7 @@ class Image extends File {
 	 * @return Image
 	 */
 	public function SetHeight($height) {
-		return $this->isHeight($height)
+		return $this->isHeight($height) && !Config::inst()->get('Image', 'force_resample')
 			? $this 
 			: $this->getFormattedImage('SetHeight', $height);
 	}
@@ -292,7 +298,7 @@ class Image extends File {
 	 * @return Image
 	 */
 	public function SetSize($width, $height) {
-		return $this->isSize($width, $height)
+		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
 			? $this 
 			: $this->getFormattedImage('SetSize', $width, $height);
 	}
@@ -354,7 +360,7 @@ class Image extends File {
 	 * @return Image
 	 */
 	public function PaddedImage($width, $height, $backgroundColor='FFFFFF') {
-		return $this->isSize($width, $height)
+		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
 			? $this 
 			: $this->getFormattedImage('PaddedImage', $width, $height, $backgroundColor);
 	}
@@ -490,7 +496,7 @@ class Image extends File {
 	 * @return Image
 	 */
 	public function ResizedImage($width, $height) {
-		return $this->isSize($width, $height)
+		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
 			? $this 
 			: $this->getFormattedImage('ResizedImage', $width, $height);
 	}
@@ -522,7 +528,7 @@ class Image extends File {
 	 * @return Image
 	 */
 	public function CroppedImage($width, $height) {
-		return $this->isSize($width, $height)
+		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
 			? $this 
 			: $this->getFormattedImage('CroppedImage', $width, $height);
 	}
