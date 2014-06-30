@@ -20,7 +20,7 @@ If a variable returns a string, that string will be inserted into the template. 
 the system will attempt to render the object through its forTemplate() method. If the `forTemplate()` method has not been
 defined, the system will return an error.
 
-Note you also cannot past a variable into a variable, so using `$Property($Value)` within your template will not work
+Note you also cannot pass a variable into a variable, so using `$Property($Value)` within your template will not work
 
 ###  Includes
 
