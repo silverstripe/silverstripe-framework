@@ -576,7 +576,7 @@ class Image extends File {
 		}
 		// All generate functions may appear any number of times in the image cache name.
 		$generateFuncs = implode('|', $generateFuncs);
-		$pattern = "/^(({$generateFuncs})\d+\-)+" . preg_quote($this->Name) . "$/i";
+		$pattern = "/^(({$generateFuncs})\d*\-)+" . preg_quote($this->Name) . "$/i";
 
 		foreach($cachedFiles as $cfile) {
 			if(preg_match($pattern, $cfile)) {
