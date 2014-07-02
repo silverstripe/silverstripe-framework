@@ -260,6 +260,7 @@ class CompositeField extends FormField {
 		$clone = clone $this;
 		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) $child = $child->transform(new ReadonlyTransformation());
+			if(!$child) continue; // transform can make child null
 			$newChildren->push($child, $idx);
 		}
 
