@@ -1,47 +1,47 @@
 DataObjectTest_Team:
-	team1:
-		Title: Team 1
-	team2:
-		Title: Team 2
-	team3:
-		Title: Team 3
+  team1:
+    Title: Team 1
+  team2:
+    Title: Team 2
+  team3:
+    Title: Team 3
 DataObjectTest_Player:
-	captain1:
-		FirstName: Captain
-		ShirtNumber: 007
-		FavouriteTeam: =>DataObjectTest_Team.team1
-		Teams: =>DataObjectTest_Team.team1
-		IsRetired: 1
-	captain2:
-		FirstName: Captain 2
-		Teams: =>DataObjectTest_Team.team2
-	player1:
-		FirstName: Player 1
-	player2:
-		FirstName: Player 2
-		Teams: =>DataObjectTest_Team.team1,=>DataObjectTest_Team.team2
+  captain1:
+    FirstName: Captain
+    ShirtNumber: 007
+    FavouriteTeam: =>DataObjectTest_Team.team1
+    Teams: =>DataObjectTest_Team.team1
+    IsRetired: 1
+  captain2:
+    FirstName: Captain 2
+    Teams: =>DataObjectTest_Team.team2
+  player1:
+    FirstName: Player 1
+  player2:
+    FirstName: Player 2
+    Teams: =>DataObjectTest_Team.team1,=>DataObjectTest_Team.team2
 DataObjectTest_SubTeam:
-	subteam1:
-		Title: Subteam 1
-		SubclassDatabaseField: Subclassed 1
-		ExtendedDatabaseField: Extended 1
-		ParentTeam: =>DataObjectTest_Team.team1
-	subteam2_with_player_relation:
-		Title: Subteam 2
-		SubclassDatabaseField: Subclassed 2
-		ExtendedHasOneRelationship: =>DataObjectTest_Player.player1
-	subteam3_with_empty_fields:
-		Title: Subteam 3
+  subteam1:
+    Title: Subteam 1
+    SubclassDatabaseField: Subclassed 1
+    ExtendedDatabaseField: Extended 1
+    ParentTeam: =>DataObjectTest_Team.team1
+  subteam2_with_player_relation:
+    Title: Subteam 2
+    SubclassDatabaseField: Subclassed 2
+    ExtendedHasOneRelationship: =>DataObjectTest_Player.player1
+  subteam3_with_empty_fields:
+    Title: Subteam 3
 DataObjectTest_TeamComment:
-	comment1:
-		Name: Joe
-		Comment: This is a team comment by Joe
-		Team: =>DataObjectTest_Team.team1
-	comment2:
-		Name: Bob
-		Comment: This is a team comment by Bob
-		Team: =>DataObjectTest_Team.team1
-	comment3:
-		Name: Phil
-		Comment: Phil is a unique guy, and comments on team2
-		Team: =>DataObjectTest_Team.team2
+  comment1:
+    Name: Joe
+    Comment: This is a team comment by Joe
+    Team: =>DataObjectTest_Team.team1
+  comment2:
+    Name: Bob
+    Comment: This is a team comment by Bob
+    Team: =>DataObjectTest_Team.team1
+  comment3:
+    Name: Phil
+    Comment: Phil is a unique guy, and comments on team2
+    Team: =>DataObjectTest_Team.team2
