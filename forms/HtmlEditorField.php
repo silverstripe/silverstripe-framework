@@ -90,9 +90,8 @@ class HtmlEditorField extends TextareaField {
 		}
 
 		$properties['Value'] = htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8');
-		$obj = $this->customise($properties);
 
-		return $obj->renderWith($this->getTemplates());
+		return parent::Field($properties);
 	}
 
 	public function getAttributes() {
