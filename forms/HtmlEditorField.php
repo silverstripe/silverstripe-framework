@@ -91,7 +91,7 @@ class HtmlEditorField extends TextareaField {
 
 		$properties['Value'] = htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8');
 		$obj = $this->customise($properties);
-
+		$this->extend('onBeforeRender', $this);
 		return $obj->renderWith($this->getTemplates());
 	}
 
