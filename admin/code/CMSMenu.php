@@ -57,8 +57,8 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 * Return a CMSMenuItem to add the given controller to the CMSMenu
 	 */
 	protected static function menuitem_for_controller($controllerClass) {
-		$urlBase      = Config::inst()->get($controllerClass, 'url_base', Config::FIRST_SET);
-		$urlSegment   = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);
+		$urlBase = AdminRootController::admin_url();
+		$urlSegment = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);
 		$menuPriority = Config::inst()->get($controllerClass, 'menu_priority', Config::FIRST_SET);
 
 		// Don't add menu items defined the old way

@@ -15,6 +15,42 @@ with some special conventions.
 For a more practical-oriented approach to CMS customizations, refer to the
 [Howto: Extend the CMS Interface](../how_tos/extend_cms_interface) which builds
 
+## The Admin URL
+
+The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting your own [Director routing rule](director#routing-rules) to the `[api:AdminRootController]` and clear the old rule like in the example below.
+
+	:::yml
+	---
+	Name: myadmin
+	After:
+		- '#adminroutes'
+	---
+	Director:
+		rule:
+			'admin': ''
+			'newAdmin': 'AdminRootController'
+	---
+
+When extending the CMS or creating modules, you can take advantage of various functions that will return the configured admin URL (by default 'admin/' is returned):
+
+In PHP you should use:
+
+	:::php
+	AdminRootController::admin_url()
+
+When writing templates use:
+
+	:::ss
+	$AdminURL
+
+And in JavaScript, this is avaible through the `ss` namespace
+
+	:::js
+	ss.config.adminURL
+
+### Multiple Admin URL and overrides
+
+You can also create your own classes that extend the `[api:AdminRootController]` to create multiple or custom admin areas, with a `Director.rules` for each one.
 
 ## Markup and Style Conventions
 
@@ -257,7 +293,7 @@ in a single Ajax request.
 	<% include CMSBreadcrumbs %>
 	<div>Static content (not affected by update)</div>
 	<% include MyRecordInfo %>
-	<a href="admin/myadmin" class="cms-panel-link" data-pjax-target="MyRecordInfo,Breadcrumbs">
+	<a href="{$AdminURL}myadmin" class="cms-panel-link" data-pjax-target="MyRecordInfo,Breadcrumbs">
 		Update record info
 	</a>
 
@@ -285,7 +321,7 @@ On the client, you can set your preference through the `data-pjax-target` attrib
 on links or through the `X-Pjax` header. For firing off an Ajax request that is
 tracked in the browser history, use the `pjax` attribute on the state data.
 
-	$('.cms-container').loadPanel('admin/pages', null, {pjax: 'Content'});
+	$('.cms-container').loadPanel(ss.config.adminURL+'pages', null, {pjax: 'Content'});
 
 ## Loading lightweight PJAX fragments
 
@@ -301,16 +337,16 @@ unrelated to the main flow.
 In this case you can use the `loadFragment` call supplied by `LeftAndMain.js`. You can trigger as many of these in
 parallel as you want. This will not disturb the main navigation.
 
-		$('.cms-container').loadFragment('admin/foobar/', 'Fragment1');
-		$('.cms-container').loadFragment('admin/foobar/', 'Fragment2');
-		$('.cms-container').loadFragment('admin/foobar/', 'Fragment3');
+		$('.cms-container').loadFragment(ss.config.adminURL+'foobar/', 'Fragment1');
+		$('.cms-container').loadFragment(ss.config.adminURL+'foobar/', 'Fragment2');
+		$('.cms-container').loadFragment(ss.config.adminURL+'foobar/', 'Fragment3');
 
 The ongoing requests are tracked by the PJAX fragment name (Fragment1, 2, and 3 above) - resubmission will
 result in the prior request for this fragment to be aborted. Other parallel requests will continue undisturbed.
 
 You can also load multiple fragments in one request, as long as they are to the same controller (i.e. URL):
 
-		$('.cms-container').loadFragment('admin/foobar/', 'Fragment2,Fragment3');
+		$('.cms-container').loadFragment(ss.config.adminURL+'foobar/', 'Fragment2,Fragment3');
 
 This counts as a separate request type from the perspective of the request tracking, so will not abort the singular
 `Fragment2` nor `Fragment3`.
@@ -331,7 +367,7 @@ You can hook up a response handler that obtains all the details of the XHR reque
 Alternatively you can use the jQuery deferred API:
 
 		$('.cms-container')
-			.loadFragment('admin/foobar/', 'Fragment1')
+			.loadFragment(ss.config.adminURL+'foobar/', 'Fragment1')
 			.success(function(data, status, xhr) {
 				// Say 'success'!
 				alert(status);
@@ -519,19 +555,19 @@ and load the HTML content into the main view. Example:
 	<div id="my-tab-id" class="cms-tabset" data-ignore-tab-state="true">
 		<ul>
 			<li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
-				<a href="admin/mytabs/tab1" class="cms-panel-link">
+				<a href="{$AdminURL}mytabs/tab1" class="cms-panel-link">
 					Tab1
 				</a>
 			</li>
 			<li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
-				<a href="admin/mytabs/tab2" class="cms-panel-link">
+				<a href="{$AdminURL}mytabs/tab2" class="cms-panel-link">
 					Tab2
 				</a>
 			</li>
 		</ul>
 	</div>
 
-The URL endpoints `admin/mytabs/tab1` and `admin/mytabs/tab2`
+The URL endpoints `{$AdminURL}mytabs/tab1` and `{$AdminURL}mytabs/tab2`
 should return HTML fragments suitable for inserting into the content area,
 through the `PjaxResponseNegotiator` class (see above).
 

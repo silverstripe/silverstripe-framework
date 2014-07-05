@@ -351,12 +351,14 @@ class Director implements TemplateGlobalProvider {
 		if(isset($_REQUEST['debug'])) Debug::show($rules);
 
 		foreach($rules as $pattern => $controllerOptions) {
-			if(is_string($controllerOptions)) {
+			if(is_string($controllerOptions) && $controllerOptions) {
 				if(substr($controllerOptions,0,2) == '->') {
 					$controllerOptions = array('Redirect' => substr($controllerOptions,2));
 				} else {
 					$controllerOptions = array('Controller' => $controllerOptions);
 				}
+			} else {
+				continue;
 			}
 
 			if(($arguments = $request->match($pattern, true)) !== false) {

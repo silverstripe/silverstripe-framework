@@ -333,7 +333,7 @@
 			/**
 			 * Publish selected pages action
 			 */
-			$('#Form_BatchActionsForm').register('admin/batchactions/publish', function(ids) {
+			$('#Form_BatchActionsForm').register(ss.config.adminURL+'batchactions/publish', function(ids) {
 				var confirmed = confirm(
 					"You have " + ids.length + " pages selected.\n\n"
 					+ "Do your really want to publish?"
@@ -344,7 +344,7 @@
 			/**
 			 * Unpublish selected pages action
 			 */
-			$('#Form_BatchActionsForm').register('admin/batchactions/unpublish', function(ids) {
+			$('#Form_BatchActionsForm').register(ss.config.adminURL+'batchactions/unpublish', function(ids) {
 				var confirmed = confirm(
 					"You have " + ids.length + " pages selected.\n\n"
 					+ "Do your really want to unpublish?"
@@ -355,7 +355,7 @@
 			/**
 			 * Delete selected pages action
 			 */
-			$('#Form_BatchActionsForm').register('admin/batchactions/delete', function(ids) {
+			$('#Form_BatchActionsForm').register(ss.config.adminURL+'batchactions/delete', function(ids) {
 				var confirmed = confirm(
 					"You have " + ids.length + " pages selected.\n\n"
 					+ "Do your really want to delete?"
@@ -366,7 +366,7 @@
 			/**
 			 * Delete selected pages from live action 
 			 */
-			$('#Form_BatchActionsForm').register('admin/batchactions/deletefromlive', function(ids) {
+			$('#Form_BatchActionsForm').register(ss.config.adminURL+'batchactions/deletefromlive', function(ids) {
 				var confirmed = confirm(
 					"You have " + ids.length + " pages selected.\n\n"
 					+ "Do your really want to delete these pages from live?"

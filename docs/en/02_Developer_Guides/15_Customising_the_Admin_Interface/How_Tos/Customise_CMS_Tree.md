@@ -26,7 +26,7 @@ code like this:
 		...
 		<li id="record-15" class="class-Page closed jstree-leaf jstree-unchecked" data-id="15">
 		<ins class="jstree-icon">&nbsp;</ins>
-			<a class="" title="Page type: Page" href="admin/page/edit/show/15">
+			<a class="" title="Page type: Page" href="{$AdminURL}page/edit/show/15">
 				<ins class="jstree-checkbox">&nbsp;</ins>
 				<ins class="jstree-icon">&nbsp;</ins>
 				<span class="text">

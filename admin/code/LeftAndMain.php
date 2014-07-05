@@ -12,16 +12,6 @@
 class LeftAndMain extends Controller implements PermissionProvider {
 
 	/**
-	 * The 'base' url for CMS administration areas.
-	 * Note that if this is changed, many javascript
-	 * behaviours need to be updated with the correct url
-	 *
-	 * @config
-	 * @var string $url_base
-	 */
-	private static $url_base = "admin";
-
-	/**
 	 * The current url segment attached to the LeftAndMain instance
 	 *
 	 * @config
@@ -340,6 +330,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if (Director::isDev()) Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/leaktools.js');
 
 		HTMLEditorField::include_js();
+		AdminRootController::include_js();
 
 		$leftAndMainIncludes = array_unique(array_merge(
 			array(
@@ -527,7 +518,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		};
 
 		$link = Controller::join_links(
-			$this->stat('url_base', true),
+			AdminRootController::admin_url(),
 			$segment,
 			'/', // trailing slash needed if $action is null!
 			"$action"
@@ -642,7 +633,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 						// default menu is the one with a blank {@link url_segment}
 						} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
-							if($this->Link() == $this->stat('url_base').'/') {
+							if($this->Link() == AdminRootController::admin_url()) {
 								$linkingmode = "current";
 							}
 

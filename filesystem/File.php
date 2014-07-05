@@ -748,7 +748,7 @@ class File extends DataObject {
 	 * @todo Coupling with cms module, remove this method.
 	 */
 	public function DeleteLink() {
-		return Director::absoluteBaseURL()."admin/assets/removefile/".$this->ID;
+		return Director::absoluteBaseURL().AdminRootController::admin_url()."assets/removefile/".$this->ID;
 	}
 
 	public function getFilename() {
