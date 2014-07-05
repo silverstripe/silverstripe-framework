@@ -15,6 +15,12 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	private static $default_quality = 75;
 	
 	/**
+	 * @config
+	 * @var boolean Always pad images on both x/y dimensions if the source image is too small
+	 */
+	private static $stretch_on_padded_resize = false;
+
+	/**
 	 * __construct
 	 *
 	 * @param string $filename = null
@@ -184,7 +190,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @param int $height
 	 * @return Image_Backend
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "#FFFFFF00") {
+	public function paddedResize($width, $height, $backgroundColor = "#FFFFFF00", $stretchImage=null) {
 		if(!$this->valid()) return;
 		
 		$width = round($width);
@@ -195,6 +201,8 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		if ($width == $geometry["width"] && $height == $geometry["height"]) {
 			return $this;
 		}
+
+		$stretch = ($stretchImage===null) ? $this->stretch_on_padded_resize : (bool) $stretchImage;
 		
 		$new = clone $this;
 		$new->setBackgroundColor($backgroundColor);
@@ -206,7 +214,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 			$srcAR = $geometry["width"] / $geometry["height"];
 		
 			// Destination narrower than the source
-			if($destAR > $srcAR) {
+			if($destAR > $srcAR && ($stretch != true || $this->width > $width)) {
 				$destY = 0;
 				$destHeight = $height;
 				
@@ -214,15 +222,22 @@ class ImagickBackend extends Imagick implements Image_Backend {
 				$destX = round( ($width - $destWidth) / 2 );
 			
 			// Destination shorter than the source
-			} else {
+			} elseif($this->width > $width || $stretch != true) {
 				$destX = 0;
 				$destWidth = $width;
 				
 				$destHeight = round( $width / $srcAR );
 				$destY = round( ($height - $destHeight) / 2 );
+			} else {
+				$noresample = true;
+				$new->setGravity(imagick::GRAVITY_CENTER);
 			}
-		
-			$new->extentImage($width, $height, $destX, $destY);
+
+			if($noresample) {
+				$new->resizeImage($width, $height, self::FILTER_LANCZOS, 1, false);
+			}else{
+				$new->extentImage($width, $height, $destX, $destY);
+			}
 		}
 		
 		return $new;

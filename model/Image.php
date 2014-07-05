@@ -351,12 +351,13 @@ class Image extends File {
 	 * 
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
+	 * @param boolean $stretchImage Override default stretch setting
 	 * @return Image
 	 */
-	public function PaddedImage($width, $height, $backgroundColor='FFFFFF') {
+	public function PaddedImage($width, $height, $backgroundColor='FFFFFF', $stretchImage=null) {
 		return $this->isSize($width, $height)
 			? $this 
-			: $this->getFormattedImage('PaddedImage', $width, $height, $backgroundColor);
+			: $this->getFormattedImage('PaddedImage', $width, $height, $backgroundColor, $stretchImage);
 	}
 	
 	/**
@@ -365,10 +366,13 @@ class Image extends File {
 	 * @param Image_Backend $backend
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
+	 * @param boolean $stretchImage Override default stretch setting
 	 * @return Image_Backend
 	 */
-	public function generatePaddedImage(Image_Backend $backend, $width, $height, $backgroundColor='FFFFFF') {
-		return $backend->paddedResize($width, $height, $backgroundColor);
+	public function generatePaddedImage(Image_Backend $backend, $width, $height,
+		$backgroundColor = 'FFFFFF', $stretchImage = null
+	) {
+		return $backend->paddedResize($width, $height, $backgroundColor, $stretchImage);
 	}
 	
 	/**

@@ -8,6 +8,7 @@ class GDBackend extends Object implements Image_Backend {
 	protected $gd, $width, $height;
 	protected $quality;
 	protected $interlace;
+	protected $padded_resize;
 	
 	/**
 	 * @config
@@ -20,6 +21,12 @@ class GDBackend extends Object implements Image_Backend {
 	 * @var integer
 	 */
 	private static $image_interlace = 0;
+
+	/**
+	 * @config
+	 * @var boolean Always pad images on both x/y dimensions if the source image is too small
+	 */
+	private static $stretch_on_padded_resize = false;
 
 	/**
 	 * Set the default image quality.
@@ -64,6 +71,7 @@ class GDBackend extends Object implements Image_Backend {
 
 		$this->quality = $this->config()->default_quality;
 		$this->interlace = $this->config()->image_interlace;
+		$this->padded_resize = $this->config()->stretch_on_padded_resize;
 	}
 	
 	public function setImageResource($resource) {
@@ -353,12 +361,16 @@ class GDBackend extends Object implements Image_Backend {
 	/**
 	 * Resize to fit fully within the given box, without resizing.  Extra space left around
 	 * the image will be padded with the background color.
-	 * @param width
-	 * @param height
-	 * @param backgroundColour
+	 * @param integer $width
+	 * @param integer $height
+	 * @param hex $backgroundColour
+	 * @param boolean $stretchImage Override default stretch setting
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
+	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $stretchImage=null) {
 		if(!$this->gd) return;
+
+		$stretch = ($stretchImage===null) ? $this->padded_resize : (bool) $stretchImage;
+
 		$width = round($width);
 		$height = round($height);
 		
@@ -381,9 +393,11 @@ class GDBackend extends Object implements Image_Backend {
 			// We can't divide by zero theres something wrong.
 			
 			$srcAR = $this->width / $this->height;
+
+			$noresample = false;
 		
 			// Destination narrower than the source
-			if($destAR > $srcAR) {
+			if($destAR > $srcAR && ($stretch != true || $this->width > $width)) {
 				$destY = 0;
 				$destHeight = $height;
 				
@@ -391,17 +405,29 @@ class GDBackend extends Object implements Image_Backend {
 				$destX = round( ($width - $destWidth) / 2 );
 			
 			// Destination shorter than the source
-			} else {
+			} elseif($this->width > $width || $stretch != true) {
 				$destX = 0;
 				$destWidth = $width;
 				
 				$destHeight = round( $width / $srcAR );
 				$destY = round( ($height - $destHeight) / 2 );
+
+			// Destination shorter and narrower than the source
+			} else {
+				$noresample = true;
+				$destX = round( ($width-$this->width) / 2 );
+				$destY = round( ($height-$this->height) / 2);
 			}
-			
-			imagecopyresampled($newGD, $this->gd,
-				$destX, $destY, 0, 0,
-				$destWidth, $destHeight, $this->width, $this->height);
+
+			if($noresample) {
+				imagecopy($newGD, $this->gd,
+					$destX, $destY, 0, 0,
+					$this->width, $this->height);
+			} else {
+				imagecopyresampled($newGD, $this->gd,
+					$destX, $destY, 0, 0,
+					$destWidth, $destHeight, $this->width, $this->height);
+			}
 		}
 		$output = clone $this;
 		$output->setImageResource($newGD);
