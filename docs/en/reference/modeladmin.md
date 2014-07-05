@@ -79,7 +79,7 @@ a search form, as well as get the searched results. Every DataObject can have it
 based on the fields which should be searchable. The class makes a guess at how those fields
 should be searched, e.g. showing a checkbox for any boolean fields in your `$db` definition.
 
-To remove, add or modify searchable fields, define a new `[api:DataObject::$summary_fields]`
+To remove, add or modify searchable fields, define a new `[api:DataObject::$searchable_fields]`
 static on your model class (see [SearchContext](/reference/searchcontext) docs for details). 
 
 	:::php
