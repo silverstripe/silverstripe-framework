@@ -429,5 +429,48 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$this->assertFalse($page->canEdit($user), 'Website user can\'t edit a page when set to inherit from the SiteConfig, and SiteConfig has canEdit set to OnlyTheseUsers');
 	}
 	
+	function testInfiniteRecursionBug() {
+                // Create three SiteTree objects
+
+		$page1 = new SiteTree();
+		$page1->ID = mt_rand();
+		$page1->ParentID = 0;
+		$page1->write();
+		$page1->publish("Stage", "Live");
+
+		$page2 = new SiteTree();
+		$page2->ID = mt_rand();
+		$page2->ParentID = $page1->ID;
+		$page2->write();
+		$page2->publish("Stage", "Live");
+
+		$page3 = new SiteTree();
+		$page3->ID = mt_rand();
+		$page3->ParentID = $page2->ID;
+		$page3->write();
+		$page3->publish("Stage", "Live");
+
+		// Current Heirachechy
+		// Page 1 -> Page 2 -> Page 3
+
+		// Now lets re-arrange the state of staging to cause the loop
+		$page3->ParentID = $page1->ID;
+		$page3->write();
+
+		// Note that we write page3 before page2, otherwise we would cause a 'normal' infinite loop
+		$page2->ParentID = $page3->ID;
+		$page2->write();
+
+		// New Heirachy (of staging)
+		// Page1 -> Page 3 -> Page 2
+
+		// Now, if we can check the permission of page3 and page2, the bug is fixed
+		$user = $this->objFromFixture('Member', 'websiteuser');
+		$this->session()->inst_set('loggedInAs', $user->ID);
+		
+		$this->assertTrue($page3->canView($user));
+		$this->assertTrue($page2->canView($user));
+
+	}
 }
 ?>
