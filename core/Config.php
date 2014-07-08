@@ -349,10 +349,7 @@ class Config {
 	 */
 	public static function merge_array_low_into_high(&$dest, $src) {
 		foreach ($src as $k => $v) {
-			if (!$v) {
-				continue;
-			}
-			else if (is_int($k)) {
+			if (is_int($k)) {
 				$dest[] = $v;
 			}
 			else if (isset($dest[$k])) {
