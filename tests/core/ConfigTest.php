@@ -208,7 +208,19 @@ class ConfigTest extends SapphireTest {
 			array('test_3', 'test_1'));
 	}
 
-	public function testMerges() {
+	public function testIntegerMerges() {
+		$result = array();
+		Config::merge_array_low_into_high($result, array('A' => 1, 'B' => 2));
+		$this->assertEquals($result, array('A' => 1, 'B' => 2));
+
+		$result = array('A' => array('Foo' => 1));
+		Config::merge_array_low_into_high($result, array('A' => array('Foo' => 0)));
+		$this->assertEquals($result, array('A' => array('Foo' => 1)));
+
+		$result = array('A' => array('Foo' => 1));
+		Config::merge_array_high_into_low($result, array('A' => array('Foo' => 0)));
+		$this->assertEquals($result, array('A' => array('Foo' => 0)));
+
 		$result = array('A' => 1, 'B' => 2, 'C' => 3);
 		Config::merge_array_low_into_high($result, array('C' => 4, 'D' => 5));
 		$this->assertEquals($result, array('A' => 1, 'B' => 2, 'C' => 3, 'D' => 5));
@@ -234,6 +246,108 @@ class ConfigTest extends SapphireTest {
 		Config::merge_array_high_into_low($result, array('C' => array('Bar' => 3, 'Baz' => 4)));
 		$this->assertEquals($result,
 			array('A' => 1, 'B' => 2, 'C' => array('Foo' => 1, 'Bar' => 3, 'Baz' => 4), 'D' => 3));
+	}
+
+	public function testBooleanMerges() {
+		$result = array();
+		Config::merge_array_low_into_high($result, array('C' => true, 'D' => false));
+		$this->assertEquals($result, array('C' => true, 'D' => false));
+
+		$result = array('A' => true, 'C' => false);
+		Config::merge_array_low_into_high($result, array('C' => true, 'D' => false));
+		$this->assertEquals($result, array('A' => true, 'C' => false, 'D' => false));
+
+		$result = array('A' => true, 'C' => false);
+		Config::merge_array_high_into_low($result, array('A' => false, 'C' => true, 'D' => false));
+		$this->assertEquals($result, array('A' => false, 'C' => true, 'D' => false));
+
+		$result = array('A' => array());
+		Config::merge_array_low_into_high($result, array('A' => array('Foo' => false)));
+		$this->assertEquals($result, array('A' => array('Foo' => false)));
+
+		$result = array('A' => array('Foo' => false));
+		Config::merge_array_low_into_high($result, array('A' => array('Foo' => true)));
+		$this->assertEquals($result, array('A' => array('Foo' => false)));
+
+		$result = array('A' => array('Foo' => false));
+		Config::merge_array_high_into_low($result, array('A' => array('Foo' => true)));
+		$this->assertEquals($result, array('A' => array('Foo' => true)));
+	}
+
+	public function testStringMerges() {
+		$result = array();
+		Config::merge_array_low_into_high($result, array('A' => 'test'));
+		$this->assertEquals($result, array('A' => 'test'));
+
+		$result = array('A' => array('Foo' => 'test'));
+		Config::merge_array_low_into_high($result, array('A' => array('Foo' => '')));
+		$this->assertEquals($result, array('A' => array('Foo' => 'test')));
+
+		$result = array('A' => array('Foo' => 'test'));
+		Config::merge_array_high_into_low($result, array('A' => array('Foo' => '')));
+		$this->assertEquals($result, array('A' => array('Foo' => '')));
+
+		$result = array('A' => 'test', 'B' => 'test2');
+		Config::merge_array_low_into_high($result, array('B' => 'test3', 'C' => 'test4'));
+		$this->assertEquals($result, array('A' => 'test', 'B' => 'test2', 'C' => 'test4'));
+
+		$result = array('A' => 'test', 'B' => 'test2');
+		Config::merge_array_high_into_low($result, array('A' => 'test2', 'B' => 'test3', 'C' => 'test4'));
+		$this->assertEquals($result, array('A' => 'test2', 'B' => 'test3', 'C' => 'test4'));
+
+		$result = array('A' => array('test1', 'test2', 'test3'));
+		Config::merge_array_low_into_high($result, array('A' => array('test4', 'test5', 'test6')));
+		$this->assertEquals($result, array('A' => array('test1', 'test2', 'test3', 'test4', 'test5', 'test6')));
+
+		$result = array('A' => array('test1', 'test2', 'test3'));
+		Config::merge_array_high_into_low($result, array('A' => array('test4', 'test5', 'test6')));
+		$this->assertEquals($result, array('A' => array('test4', 'test5', 'test6', 'test1', 'test2', 'test3')));
+
+		$result = array('A' => array());
+		Config::merge_array_low_into_high($result, array('A' => array('Foo' => 'test')));
+		$this->assertEquals($result, array('A' => array('Foo' => 'test')));
+
+		$result = array('A' => array('Foo' => 'test'));
+		Config::merge_array_low_into_high($result, array('A' => array('Foo' => 'test2')));
+		$this->assertEquals($result, array('A' => array('Foo' => 'test')));
+
+		$result = array('A' => array('Foo' => 'test'));
+		Config::merge_array_high_into_low($result, array('A' => array('Foo' => 'test2')));
+		$this->assertEquals($result, array('A' => array('Foo' => 'test2')));
+	}
+
+	public function testFloatMerges() {
+		$result = array();
+		Config::merge_array_low_into_high($result, array('A' => 1.2345));
+		$this->assertEquals($result, array('A' => 1.2345));
+
+		$result = array('A' => 1.2345, 'B' => 2.345);
+		Config::merge_array_low_into_high($result, array('B' => 1.3456, 'C' => 2.456));
+		$this->assertEquals($result, array('A' => 1.2345, 'B' => 2.345, 'C' => 2.456));
+
+		$result = array('A' => 1.2345, 'B' => 2.345);
+		Config::merge_array_high_into_low($result, array('A' => 2.456, 'B' => 3.456, 'C' => 4.567));
+		$this->assertEquals($result, array('A' => 2.456, 'B' => 3.456, 'C' => 4.567));
+
+		$result = array('A' => array(1.234, 2.345, 3.456));
+		Config::merge_array_low_into_high($result, array('A' => array(4.567, 5.678, 6.789)));
+		$this->assertEquals($result, array('A' => array(1.234, 2.345, 3.456, 4.567, 5.678, 6.789)));
+
+		$result = array('A' => array(1.234, 2.345, 3.456));
+		Config::merge_array_high_into_low($result, array('A' => array(4.567, 5.678, 6.789)));
+		$this->assertEquals($result, array('A' => array(4.567, 5.678, 6.789, 1.234, 2.345, 3.456)));
+
+		$result = array('A' => array());
+		Config::merge_array_low_into_high($result, array('A' => array('Foo' => 1.234)));
+		$this->assertEquals($result, array('A' => array('Foo' => 1.234)));
+
+		$result = array('A' => array('Foo' => 1.234));
+		Config::merge_array_low_into_high($result, array('A' => array('Foo' => 2.345)));
+		$this->assertEquals($result, array('A' => array('Foo' => 1.234)));
+
+		$result = array('A' => array('Foo' => 1.234));
+		Config::merge_array_high_into_low($result, array('A' => array('Foo' => 2.345)));
+		$this->assertEquals($result, array('A' => array('Foo' => 2.345)));
 	}
 
 	public function testStaticLookup() {
