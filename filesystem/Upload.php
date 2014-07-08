@@ -295,6 +295,15 @@ class Upload extends Controller {
 class Upload_Validator {
 
 	/**
+	 * Contains a list of the max file sizes shared by
+	 * all upload fields. This is then duplicated into the
+	 * "allowedMaxFileSize" instance property on construct.
+	 *
+	 * @var array
+	 */
+	private static $defaultMaxFileSize = array();
+	
+	/**
 	 * Information about the temporary file produced
 	 * by the PHP-runtime.
 	 *
@@ -324,6 +333,12 @@ class Upload_Validator {
 	 */
 	public $allowedExtensions = array();
 
+	public function __construct()
+	{
+		$fileSize = Config::inst()->get('Upload_Validator', 'defaultMaxFileSize');
+		$this->setAllowedMaxFileSize($fileSize);
+	}
+	
 	/**
 	 * Return all errors that occurred while validating
 	 * the temporary file.
@@ -350,8 +365,15 @@ class Upload_Validator {
 	 */
 	public function getAllowedMaxFileSize($ext = null) {
 		$ext = strtolower($ext);
-		if(isset($ext) && isset($this->allowedMaxFileSize[$ext])) {
-			return $this->allowedMaxFileSize[$ext];   
+		if(isset($ext)) {
+			if (isset($this->allowedMaxFileSize[$ext])) {
+				return $this->allowedMaxFileSize[$ext];
+			}
+			
+			$category = File::get_app_category($ext);
+			if ($category && isset($this->allowedMaxFileSize['[' . $category . ']'])) {
+				return $this->allowedMaxFileSize['[' . $category . ']'];
+			}
 		} else {
 			return (isset($this->allowedMaxFileSize['*'])) ? $this->allowedMaxFileSize['*'] : false;
 		}
@@ -364,7 +386,7 @@ class Upload_Validator {
 	 * 
 	 * Example: 
 	 * <code>
-	 * array('*' => 200, 'jpg' => 1000)
+	 * array('*' => 200, 'jpg' => 1000, '[doc]' => '5m')
 	 * </code>
 	 *
 	 * @param array|int $rules
@@ -373,7 +395,22 @@ class Upload_Validator {
 		if(is_array($rules) && count($rules)) {
 			// make sure all extensions are lowercase
 			$rules = array_change_key_case($rules, CASE_LOWER);
-			$this->allowedMaxFileSize = $rules;
+			$finalRules = array();
+			$tmpSize = 0;
+			
+			foreach ($rules as $rule => $value) {
+				if (is_string($value)) {
+					$tmpSize = File::ini2bytes($value);
+				} else {
+					$tmpSize = $value;
+				}
+				
+				$finalRules[$rule] = (int)$tmpSize;
+			}
+			
+			$this->allowedMaxFileSize = $finalRules;
+		} elseif(is_string($rules)) {
+			$this->allowedMaxFileSize['*'] = File::ini2bytes($rules);
 		} elseif((int) $rules > 0) {
 			$this->allowedMaxFileSize['*'] = (int)$rules;
 		}
