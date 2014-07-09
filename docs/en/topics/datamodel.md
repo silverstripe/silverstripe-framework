@@ -316,7 +316,7 @@ that does not exist in a Group.
 
 You can limit the amount of records returned in a DataList by using the
 `limit()` method.
-	
+
 	:::php
 	// Returning the first 5 members, sorted alphabetically by Surname
 	$members = Member::get()->sort('Surname')->limit(5);
