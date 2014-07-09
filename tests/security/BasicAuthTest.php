@@ -16,6 +16,7 @@ class BasicAuthTest extends FunctionalTest {
 		// Fixtures assume Email is the field used to identify the log in identity
 		self::$original_unique_identifier_field = Member::config()->unique_identifier_field;
 		Member::config()->unique_identifier_field = 'Email';
+		Security::$force_database_is_ready = true; // Prevents Member test subclasses breaking ready test
 	}
 
 	public function tearDown() {
@@ -23,6 +24,7 @@ class BasicAuthTest extends FunctionalTest {
 		
 		BasicAuth::protect_entire_site(false);
 		Member::config()->unique_identifier_field = self::$original_unique_identifier_field;
+		Security::$force_database_is_ready = null;
 	}
 
 	public function testBasicAuthEnabledWithoutLogin() {

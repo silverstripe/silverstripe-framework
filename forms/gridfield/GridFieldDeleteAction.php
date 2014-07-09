@@ -42,7 +42,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	/**
 	 * Add a column 'Delete'
 	 * 
-	 * @param type $gridField
+	 * @param GridField $gridField
 	 * @param array $columns 
 	 */
 	public function augmentColumns($gridField, &$columns) {
@@ -79,8 +79,8 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	/**
 	 * Which columns are handled by this component
 	 * 
-	 * @param type $gridField
-	 * @return type 
+	 * @param GridField $gridField
+	 * @return array
 	 */
 	public function getColumnsHandled($gridField) {
 		return array('Actions');

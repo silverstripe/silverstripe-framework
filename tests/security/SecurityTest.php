@@ -399,16 +399,22 @@ class SecurityTest extends FunctionalTest {
 		
 		/* UNSUCCESSFUL ATTEMPTS WITH WRONG PASSWORD FOR EXISTING USER ARE LOGGED */
 		$this->doTestLoginForm('sam@silverstripe.com', 'wrongpassword');
-		$attempt = DataObject::get_one('LoginAttempt', "\"Email\" = 'sam@silverstripe.com'");
+		$attempt = DataObject::get_one('LoginAttempt', array(
+			'"LoginAttempt"."Email"' => 'sam@silverstripe.com'
+		));
 		$this->assertTrue(is_object($attempt));
-		$member = DataObject::get_one('Member', "\"Email\" = 'sam@silverstripe.com'");
+		$member = DataObject::get_one('Member', array(
+			'"Member"."Email"' => 'sam@silverstripe.com'
+		));
 		$this->assertEquals($attempt->Status, 'Failure');
 		$this->assertEquals($attempt->Email, 'sam@silverstripe.com');
 		$this->assertEquals($attempt->Member(), $member);
 		
 		/* UNSUCCESSFUL ATTEMPTS WITH NONEXISTING USER ARE LOGGED */
 		$this->doTestLoginForm('wronguser@silverstripe.com', 'wrongpassword');
-		$attempt = DataObject::get_one('LoginAttempt', "\"Email\" = 'wronguser@silverstripe.com'");
+		$attempt = DataObject::get_one('LoginAttempt', array(
+			'"LoginAttempt"."Email"' => 'wronguser@silverstripe.com'
+		));
 		$this->assertTrue(is_object($attempt));
 		$this->assertEquals($attempt->Status, 'Failure');
 		$this->assertEquals($attempt->Email, 'wronguser@silverstripe.com');
@@ -422,8 +428,12 @@ class SecurityTest extends FunctionalTest {
 		
 		/* SUCCESSFUL ATTEMPTS ARE LOGGED */
 		$this->doTestLoginForm('sam@silverstripe.com', '1nitialPassword');
-		$attempt = DataObject::get_one('LoginAttempt', "\"Email\" = 'sam@silverstripe.com'");
-		$member = DataObject::get_one('Member', "\"Email\" = 'sam@silverstripe.com'");
+		$attempt = DataObject::get_one('LoginAttempt', array(
+			'"LoginAttempt"."Email"' => 'sam@silverstripe.com'
+		));
+		$member = DataObject::get_one('Member', array(
+			'"Member"."Email"' => 'sam@silverstripe.com'
+		));
 		$this->assertTrue(is_object($attempt));
 		$this->assertEquals($attempt->Status, 'Success');
 		$this->assertEquals($attempt->Email, 'sam@silverstripe.com');
@@ -438,7 +448,7 @@ class SecurityTest extends FunctionalTest {
 		
 		// Assumption: The database has been built correctly by the test runner,
 		// and has all columns present in the ORM
-		DB::getConn()->renameField('Member', 'Email', 'Email_renamed');
+		DB::get_schema()->renameField('Member', 'Email', 'Email_renamed');
 		
 		// Email column is now missing, which means we're not ready to do permission checks
 		$this->assertFalse(Security::database_is_ready());

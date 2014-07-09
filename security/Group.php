@@ -57,11 +57,10 @@ class Group extends DataObject {
 	public function getAllChildren() {
 		$doSet = new ArrayList();
 
-		if ($children = DataObject::get('Group', '"ParentID" = '.$this->ID)) {
-			foreach($children as $child) {
-				$doSet->push($child);
-				$doSet->merge($child->getAllChildren());
-			}
+		$children = DataObject::get('Group')->filter("ParentID", $this->ID);
+		foreach($children as $child) {
+			$doSet->push($child);
+			$doSet->merge($child->getAllChildren());
 		}
 		
 		return $doSet;
@@ -183,9 +182,10 @@ class Group extends DataObject {
 			);
 			
 			// Add roles (and disable all checkboxes for inherited roles)
-			$allRoles = Permission::check('ADMIN')
-				? DataObject::get('PermissionRole') 
-				: DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
+			$allRoles = PermissionRole::get();
+			if(Permission::check('ADMIN')) {
+				$allRoles = $allRoles->filter("OnlyAdminCanApply", 0);
+			}
 			if($this->ID) {
 				$groupRoles = $this->Roles();
 				$inheritedRoles = new ArrayList();
@@ -298,11 +298,10 @@ class Group extends DataObject {
 		
 		while($chunkToAdd) {
 			$familyIDs = array_merge($familyIDs,$chunkToAdd);
-			$idList = implode(',', $chunkToAdd);
 			
 			// Get the children of *all* the groups identified in the previous chunk.
-			// This minimises the number of SQL queries necessary			
-			$chunkToAdd = Group::get()->where("\"ParentID\" IN ($idList)")->column('ID');
+			// This minimises the number of SQL queries necessary
+			$chunkToAdd = Group::get()->filter("ParentID", $chunkToAdd)->column('ID');
 		}
 		
 		return $familyIDs;
@@ -331,11 +330,10 @@ class Group extends DataObject {
 	 * Override this so groups are ordered in the CMS
 	 */
 	public function stageChildren() {
-		return DataObject::get(
-			'Group',
-			"\"Group\".\"ParentID\" = " . (int)$this->ID . " AND \"Group\".\"ID\" != " . (int)$this->ID,
-			'"Sort"'
-		);
+		return Group::get()
+			->filter("ParentID", $this->ID)
+			->exclude("ID", $this->ID)
+			->sort('"Sort"');
 	}
 	
 	public function getTreeTitle() {

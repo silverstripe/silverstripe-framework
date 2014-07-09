@@ -23,7 +23,7 @@ class Boolean extends DBField {
 			'arrayValue'=>$this->arrayValue
 		);
 		$values=Array('type'=>'boolean', 'parts'=>$parts);
-		DB::requireField($this->tableName, $this->name, $values);
+		DB::require_field($this->tableName, $this->name, $values);
 	}
 	
 	public function Nice() {
@@ -62,26 +62,27 @@ class Boolean extends DBField {
 		return $field;
 	}
 
-	/**
-	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
-	 * If necessary, this should include quotes.
-	 */
-	public function prepValueForDB($value) {
-		if(strpos($value, '[')!==false)
-			return Convert::raw2sql($value);
-		else {
-			if($value && strtolower($value) != 'f') {
-				return "'1'";
-			} else {
-				return "'0'";
-			}
-		}
+	public function nullValue() {
+		return 0;
 	}
 
-	public function nullValue() {
-		return "'0'";
+	public function prepValueForDB($value) {
+		if(is_bool($value)) {
+			return $value ? 1 : 0;
+		} else if(empty($value)) {
+			return 0;
+		} else if(is_string($value)){
+			switch(strtolower($value)) {
+				case 'false':
+				case 'f':
+					return 0;
+				case 'true':
+				case 't':
+					return 1;
+			}
+		}
+		return $value ? 1 : 0;
 	}
-	
 }
 
 

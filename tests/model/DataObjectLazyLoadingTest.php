@@ -27,63 +27,62 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 	);
 
 	public function testQueriedColumnsID() {
-		$db = DB::getConn();
+		$db = DB::get_conn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('ID'));
-		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."Created", ' .
-			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_Team"."ID", CASE WHEN '.
+		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
+			'"DataObjectTest_Team"."Created", "DataObjectTest_Team"."ID", CASE WHEN '.
 			'"DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName", "DataObjectTest_Team"."Title" '.
+			$db->quoteString('DataObjectTest_Team').' END AS "RecordClassName", "DataObjectTest_Team"."Title" '.
 			'FROM "DataObjectTest_Team" ' .
 			'LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" ' .
-			'WHERE ("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').'))' .
+			'WHERE ("DataObjectTest_Team"."ClassName" IN (?))' .
 			' ORDER BY "DataObjectTest_Team"."Title" ASC';
-		$this->assertEquals($expected, $playerList->sql());
+		$this->assertSQLEquals($expected, $playerList->sql($parameters));
 	}
 
 	public function testQueriedColumnsFromBaseTableAndSubTable() {
-		$db = DB::getConn();
+		$db = DB::get_conn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('Title', 'SubclassDatabaseField'));
-		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."Created", ' .
-			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_Team"."Title", ' .
+		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
+			'"DataObjectTest_Team"."Created", "DataObjectTest_Team"."Title", ' .
 			'"DataObjectTest_SubTeam"."SubclassDatabaseField", "DataObjectTest_Team"."ID", CASE WHEN ' .
 			'"DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" ' .
+			$db->quoteString('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" ' .
 			'LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" WHERE ' .
-			'("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').')) ' .
+			'("DataObjectTest_Team"."ClassName" IN (?)) ' .
 			'ORDER BY "DataObjectTest_Team"."Title" ASC';
-		$this->assertEquals($expected, $playerList->sql());
+		$this->assertSQLEquals($expected, $playerList->sql($parameters));
 	}
 
 	public function testQueriedColumnsFromBaseTable() {
-		$db = DB::getConn();
+		$db = DB::get_conn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('Title'));
-		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."Created", ' .
-			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_Team"."Title", "DataObjectTest_Team"."ID", ' .
+		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
+			'"DataObjectTest_Team"."Created", "DataObjectTest_Team"."Title", "DataObjectTest_Team"."ID", ' .
 			'CASE WHEN "DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" ' . 
+			$db->quoteString('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" ' .
 			'LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" WHERE ' .
-			'("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').')) ' .
+			'("DataObjectTest_Team"."ClassName" IN (?)) ' .
 			'ORDER BY "DataObjectTest_Team"."Title" ASC';
-		$this->assertEquals($expected, $playerList->sql());
+		$this->assertSQLEquals($expected, $playerList->sql($parameters));
 	}
 
 	public function testQueriedColumnsFromSubTable() {
-		$db = DB::getConn();
+		$db = DB::get_conn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('SubclassDatabaseField'));
-		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."Created", ' .
-			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_SubTeam"."SubclassDatabaseField", ' .
+		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
+			'"DataObjectTest_Team"."Created", "DataObjectTest_SubTeam"."SubclassDatabaseField", ' .
 			'"DataObjectTest_Team"."ID", CASE WHEN "DataObjectTest_Team"."ClassName" IS NOT NULL THEN ' .
-			'"DataObjectTest_Team"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_Team').' END ' .
+			'"DataObjectTest_Team"."ClassName" ELSE '.$db->quoteString('DataObjectTest_Team').' END ' .
 			'AS "RecordClassName", "DataObjectTest_Team"."Title" ' .
 			'FROM "DataObjectTest_Team" LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = ' .
-			'"DataObjectTest_Team"."ID" WHERE ("DataObjectTest_Team"."ClassName" IN (' . 
-			$db->prepStringForDB('DataObjectTest_SubTeam').')) ' . 
+			'"DataObjectTest_Team"."ID" WHERE ("DataObjectTest_Team"."ClassName" IN (?)) ' . 
 			'ORDER BY "DataObjectTest_Team"."Title" ASC';
-		$this->assertEquals($expected, $playerList->sql());
+		$this->assertSQLEquals($expected, $playerList->sql($parameters));
 	}
 
 	public function testNoSpecificColumnNamesBaseDataObjectQuery() {
@@ -91,15 +90,23 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$playerList = new DataList('DataObjectTest_Team');
 		// Shouldn't be a left join in here.
 		$this->assertEquals(0, 
-			preg_match('/SELECT DISTINCT "DataObjectTest_Team"."ID" .* LEFT JOIN .* FROM "DataObjectTest_Team"/',
-			$playerList->sql()));
+			preg_match(
+				$this->normaliseSQL(
+					'/SELECT DISTINCT "DataObjectTest_Team"."ID" .* LEFT JOIN .* FROM "DataObjectTest_Team"/'
+				),
+				$this->normaliseSQL($playerList->sql($parameters))
+			)
+		);
 	}
 
 	public function testNoSpecificColumnNamesSubclassDataObjectQuery() {
 		// This queries all columns from base table and subtable
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		// Should be a left join.
-		$this->assertEquals(1, preg_match('/SELECT DISTINCT .* LEFT JOIN .* /', $playerList->sql()));
+		$this->assertEquals(1, preg_match(
+			$this->normaliseSQL('/SELECT DISTINCT .* LEFT JOIN .* /'),
+			$this->normaliseSQL($playerList->sql($parameters))
+		));
 	}
 
 	public function testLazyLoadedFieldsHasField() {

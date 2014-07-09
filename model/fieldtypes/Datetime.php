@@ -119,7 +119,7 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	public function requireField() {
 		$parts=Array('datatype'=>'datetime', 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'SS_Datetime', 'parts'=>$parts);
-		DB::requireField($this->tableName, $this->name, $values);
+		DB::require_field($this->tableName, $this->name, $values);
 	}
 
 	/**

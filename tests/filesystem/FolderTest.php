@@ -39,7 +39,9 @@ class FolderTest extends SapphireTest {
 		);
 
 		$this->assertTrue(file_exists(ASSETS_PATH . $path), 'File');
-		$parentFolder = DataObject::get_one('Folder', '"Name" = \'FolderTest\'');
+		$parentFolder = DataObject::get_one('Folder', array(
+			'"File"."Name"' => 'FolderTest'
+		));
 		$this->assertNotNull($parentFolder);
 		$this->assertEquals($parentFolder->ID, $folder->ParentID);
 		
@@ -149,7 +151,9 @@ class FolderTest extends SapphireTest {
 	 */
 	public function testRenameFolderAndCheckTheFile() {
 		// ID is prefixed in case Folder is subclassed by project/other module.
-		$folder1 = DataObject::get_one('Folder', '"File"."ID"='.$this->idFromFixture('Folder', 'folder1'));
+		$folder1 = DataObject::get_one('Folder', array(
+			'"File"."ID"' => $this->idFromFixture('Folder', 'folder1')
+		));
 		
 		$folder1->Name = 'FileTest-folder1-changed';
 		$folder1->write();

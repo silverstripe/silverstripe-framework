@@ -662,7 +662,7 @@ class GridField extends FormField {
 	 * @param string $actionName
 	 * @param mixed $args
 	 * @param arrray $data - send data from a form
-	 * @return type
+	 * @return mixed
 	 * @throws InvalidArgumentException
 	 */
 	public function handleAlterAction($actionName, $args, $data) {
@@ -798,10 +798,10 @@ class GridField_FormAction extends FormAction {
 
 	/**
 	 * @param GridField $gridField
-	 * @param type $name
-	 * @param type $label
-	 * @param type $actionName
-	 * @param type $args 
+	 * @param string $name
+	 * @param string $label
+	 * @param string $actionName
+	 * @param array $args 
 	 */
 	public function __construct(GridField $gridField, $name, $title, $actionName, $args) {
 		$this->gridField = $gridField;

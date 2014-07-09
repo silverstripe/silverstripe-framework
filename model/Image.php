@@ -253,7 +253,7 @@ class Image extends File {
 	 * Resize this Image by width, keeping aspect ratio. Use in templates with $SetWidth.
 	 * 
 	 * @param Image_Backend $backend
-	 * @param type $width The width to set
+	 * @param int $width The width to set
 	 * @return Image_Backend
 	 */
 	public function generateSetWidth(Image_Backend $backend, $width) {

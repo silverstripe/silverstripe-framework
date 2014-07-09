@@ -12,17 +12,17 @@ class DatabaseTest extends SapphireTest {
 	protected $usesDatabase = true;
 
 	public function testDontRequireField() {
-		$conn = DB::getConn();
+		$schema = DB::get_schema();
 		$this->assertArrayHasKey(
 			'MyField',
-			$conn->fieldList('DatabaseTest_MyObject')
+			$schema->fieldList('DatabaseTest_MyObject')
 		);
 
-		$conn->dontRequireField('DatabaseTest_MyObject', 'MyField');
+		$schema->dontRequireField('DatabaseTest_MyObject', 'MyField');
 
 		$this->assertArrayHasKey(
 			'_obsolete_MyField',
-			$conn->fieldList('DatabaseTest_MyObject'),
+			$schema->fieldList('DatabaseTest_MyObject'),
 			'Field is renamed to _obsolete_<fieldname> through dontRequireField()'
 		);
 
@@ -30,20 +30,20 @@ class DatabaseTest extends SapphireTest {
 	}
 
 	public function testRenameField() {
-		$conn = DB::getConn();
+		$schema = DB::get_schema();
 
-		$conn->clearCachedFieldlist();
+		$schema->clearCachedFieldlist();
 
-		$conn->renameField('DatabaseTest_MyObject', 'MyField', 'MyRenamedField');
+		$schema->renameField('DatabaseTest_MyObject', 'MyField', 'MyRenamedField');
 
 		$this->assertArrayHasKey(
 			'MyRenamedField',
-			$conn->fieldList('DatabaseTest_MyObject'),
+			$schema->fieldList('DatabaseTest_MyObject'),
 			'New fieldname is set through renameField()'
 		);
 		$this->assertArrayNotHasKey(
 			'MyField',
-			$conn->fieldList('DatabaseTest_MyObject'),
+			$schema->fieldList('DatabaseTest_MyObject'),
 			'Old fieldname isnt preserved through renameField()'
 		);
 
@@ -51,7 +51,7 @@ class DatabaseTest extends SapphireTest {
 	}
 
 	public function testMySQLCreateTableOptions() {
-		if(!(DB::getConn() instanceof MySQLDatabase)) {
+		if(!(DB::get_conn() instanceof MySQLDatabase)) {
 			$this->markTestSkipped('MySQL only');
 		}
 
@@ -66,44 +66,49 @@ class DatabaseTest extends SapphireTest {
 	}
 
 	function testIsSchemaUpdating() {
-		$db = DB::getConn();
+		$schema = DB::get_schema();
 
-		$this->assertFalse($db->isSchemaUpdating(), 'Before the transaction the flag is false.');
+		$this->assertFalse($schema->isSchemaUpdating(), 'Before the transaction the flag is false.');
 
-		$db->beginSchemaUpdate();
-		$this->assertTrue($db->isSchemaUpdating(), 'During the transaction the flag is true.');
+		// Test complete schema update
+		$test = $this;
+		$schema->schemaUpdate(function() use ($test, $schema) {
+			$test->assertTrue($schema->isSchemaUpdating(), 'During the transaction the flag is true.');
+		});
+		$this->assertFalse($schema->isSchemaUpdating(), 'After the transaction the flag is false.');
 
-		$db->endSchemaUpdate();
-		$this->assertFalse($db->isSchemaUpdating(), 'After the transaction the flag is false.');
-
-		$db->beginSchemaUpdate();
-		$db->cancelSchemaUpdate();
-		$this->assertFalse($db->doesSchemaNeedUpdating(), 'After cancelling the transaction the flag is false');
+		// Test cancelled schema update
+		$schema->schemaUpdate(function() use ($test, $schema) {
+			$schema->cancelSchemaUpdate();
+			$test->assertFalse($schema->doesSchemaNeedUpdating(), 'After cancelling the transaction the flag is false');
+		});
 	}
 
 	public function testSchemaUpdateChecking() {
-		$db = DB::getConn();
+		$schema = DB::get_schema();
 
 		// Initially, no schema changes necessary
-		$db->beginSchemaUpdate();
-		$this->assertFalse($db->doesSchemaNeedUpdating());
+		$test = $this;
+		$schema->schemaUpdate(function() use ($test, $schema) {
+			$test->assertFalse($schema->doesSchemaNeedUpdating());
 
-		// If we make a change, then the schema will need updating
-		$db->transCreateTable("TestTable");
-		$this->assertTrue($db->doesSchemaNeedUpdating());
+			// If we make a change, then the schema will need updating
+			$schema->transCreateTable("TestTable");
+			$test->assertTrue($schema->doesSchemaNeedUpdating());
 
-		// If we make cancel the change, then schema updates are no longer necessary
-		$db->cancelSchemaUpdate();
-		$this->assertFalse($db->doesSchemaNeedUpdating());
+			// If we make cancel the change, then schema updates are no longer necessary
+			$schema->cancelSchemaUpdate();
+			$test->assertFalse($schema->doesSchemaNeedUpdating());
+		});
 	}
 
 	public function testHasTable() {
-		$this->assertTrue(DB::getConn()->hasTable('DatabaseTest_MyObject'));
-		$this->assertFalse(DB::getConn()->hasTable('asdfasdfasdf'));
+		$this->assertTrue(DB::get_schema()->hasTable('DatabaseTest_MyObject'));
+		$this->assertFalse(DB::get_schema()->hasTable('asdfasdfasdf'));
 	}
 	
 	public function testGetAndReleaseLock() {
-		$db = DB::getConn();
+		$db = DB::get_conn();
 		
 		if(!$db->supportsLocks()) {
 			return $this->markTestSkipped('Tested database doesn\'t support application locks');
@@ -129,7 +134,7 @@ class DatabaseTest extends SapphireTest {
 	}
 	
 	public function testCanLock() {
-		$db = DB::getConn();
+		$db = DB::get_conn();
 		
 		if(!$db->supportsLocks()) {
 			return $this->markTestSkipped('Database doesn\'t support locks');
@@ -150,7 +155,7 @@ class DatabaseTest extends SapphireTest {
 
 class DatabaseTest_MyObject extends DataObject implements TestOnly {
 
-	private static $create_table_options = array('MySQLDatabase' => 'ENGINE=InnoDB');
+	private static $create_table_options = array(MySQLSchemaManager::ID => 'ENGINE=InnoDB');
 
 	private static $db = array(
 		'MyField' => 'Varchar'

@@ -195,7 +195,7 @@ class File extends DataObject {
 
 		if (!$record) {
 			if(class_exists('ErrorPage')) {
-				$record = DataObject::get_one('ErrorPage', '"ErrorCode" = \'404\'');
+				$record = ErrorPage::get()->filter("ErrorCode", 404)->first();
 			}
 
 			if (!$record) return; // There were no suitable matches at all.
@@ -237,8 +237,10 @@ class File extends DataObject {
 		$item = null;
 		foreach($parts as $part) {
 			if($part == ASSETS_DIR && !$parentID) continue;
-			$SQL_part = Convert::raw2sql($part);
-			$item = DataObject::get_one("File", "\"Name\" = '$SQL_part' AND \"ParentID\" = $parentID");
+			$item = File::get()->filter(array(
+				'Name' => $part, 
+				'ParentID' => $parentID
+			))->first();
 			if(!$item) break;
 			$parentID = $item->ID;
 		}
@@ -472,7 +474,9 @@ class File extends DataObject {
 	 * Delete the database record (recursively for folders) without touching the filesystem
 	 */
 	public function deleteDatabaseOnly() {
-		if(is_numeric($this->ID)) DB::query("DELETE FROM \"File\" WHERE \"ID\" = $this->ID");
+		if(is_numeric($this->ID)) {
+			DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', array($this->ID));
+		}
 	}
 
 	/**

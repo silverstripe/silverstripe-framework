@@ -63,7 +63,9 @@ class LeftAndMainTest extends FunctionalTest {
 		$this->loginWithPermission('ADMIN');
 		
 		// forcing sorting for non-MySQL		
-		$rootPages = DataObject::get('LeftAndMainTest_Object', '"ParentID" = 0', '"ID"');
+		$rootPages = LeftAndMainTest_Object::get()
+			->filter("ParentID", 0)
+			->sort('"ID"');
 		$siblingIDs = $rootPages->column('ID');
 		$page1 = $rootPages->offsetGet(0);
 		$page2 = $rootPages->offsetGet(1);
@@ -167,9 +169,11 @@ class LeftAndMainTest extends FunctionalTest {
 		// restricted cms user
 		$this->session()->inst_set('loggedInAs', $securityonlyuser->ID);
 		$menuItems = singleton('LeftAndMain')->MainMenu(false);
+		$menuItems = array_map($allValsFn, $menuItems->column('Code'));
+		sort($menuItems);
 		$this->assertEquals(
-			array_map($allValsFn, $menuItems->column('Code')),
-			array('SecurityAdmin','Help'),
+			$menuItems,
+			array('Help', 'SecurityAdmin'),
 			'Groups with limited access can only access the interfaces they have permissions for'
 		);
 		

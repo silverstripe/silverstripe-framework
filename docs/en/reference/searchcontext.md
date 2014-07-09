@@ -6,7 +6,7 @@ Manages searching of properties on one or more `[api:DataObject]` types, based o
 `[api:SearchContext]` is intentionally decoupled from any controller-logic,
 it just receives a set of search parameters and an object class it acts on.
 
-The default output of a `[api:SearchContext]` is either a `[api:SQLQuery]` object for further refinement, or a
+The default output of a `[api:SearchContext]` is either a `[api:SQLSelect]` object for further refinement, or a
 `[api:DataObject]` instance.
 
 In case you need multiple contexts, consider namespacing your request parameters by using `FieldList->namespace()` on
@@ -86,7 +86,7 @@ method, we're building our own `getCustomSearchContext()` variant.
 ### Pagination
 
 For pagination records on multiple pages, you need to wrap the results in a
-`PaginatedList` object. This object is also passed the generated `SQLQuery`
+`PaginatedList` object. This object is also passed the generated `SQLSelect`
 in order to read page limit information. It is also passed the current
 `SS_HTTPRequest` object so it can read the current page from a GET var.
 

@@ -28,19 +28,13 @@
 class FulltextFilter extends SearchFilter {
 
 	protected function applyOne(DataQuery $query) {
-		return $query->where(sprintf(
-			"MATCH (%s) AGAINST ('%s')",
-			$this->getDbName(),
-			Convert::raw2sql($this->getValue())
-		));
+		$predicate = sprintf("MATCH (%s) AGAINST (?)", $this->getDbName());
+		return $query->where(array($predicate => $this->getValue()));
 	}
 
 	protected function excludeOne(DataQuery $query) {
-		return $query->where(sprintf(
-			"NOT MATCH (%s) AGAINST ('%s')",
-			$this->getDbName(),
-			Convert::raw2sql($this->getValue())
-		));
+		$predicate = sprintf("NOT MATCH (%s) AGAINST (?)", $this->getDbName());
+		return $query->where(array($predicate => $this->getValue()));
 	}
 
 	public function isEmpty() {

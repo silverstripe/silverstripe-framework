@@ -28,10 +28,9 @@ class GroupCsvBulkLoader extends CsvBulkLoader {
 		// are imported to avoid missing "early" references to parents
 		// which are imported later on in the CSV file.
 		if(isset($record['ParentCode']) && $record['ParentCode']) {
-			$parentGroup = DataObject::get_one(
-				'Group',
-				sprintf('"Code" = \'%s\'', Convert::raw2sql($record['ParentCode']))
-			);
+			$parentGroup = DataObject::get_one('Group', array(
+				'"Group"."Code"' => $record['ParentCode']
+			));
 			if($parentGroup) {
 				$group->ParentID = $parentGroup->ID;
 				$group->write();
@@ -42,14 +41,10 @@ class GroupCsvBulkLoader extends CsvBulkLoader {
 		// existing permissions arent cleared.
 		if(isset($record['PermissionCodes']) && $record['PermissionCodes']) {
 			foreach(explode(',', $record['PermissionCodes']) as $code) {
-				$p = DataObject::get_one(
-					'Permission',
-					sprintf(
-						'"Code" = \'%s\' AND "GroupID" = %d', 
-						Convert::raw2sql($code),
-						$group->ID
-					)
-				);
+				$p = DataObject::get_one('Permission', array(
+					'"Permission"."Code"' => $code,
+					'"Permission"."GroupID"' => $group->ID
+				));
 				if(!$p) {
 					$p = new Permission(array('Code' => $code));
 					$p->write();

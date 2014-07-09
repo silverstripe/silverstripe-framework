@@ -112,7 +112,7 @@ class DataDifferencerTest_HasOneRelationObject extends DataObject implements Tes
 class DataDifferencerTest_MockImage extends Image implements TestOnly {
 	public function generateFormattedImage($format, $arg1 = null, $arg2 = null) {
 		$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
-		$gd = new GD(Director::baseFolder()."/" . $this->Filename);
+		$gd = new GDBackend(Director::baseFolder()."/" . $this->Filename);
 		// Skip aktual generation
 		return $gd;
 	}

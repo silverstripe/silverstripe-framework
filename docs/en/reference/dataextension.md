@@ -225,9 +225,8 @@ The other queries that you will want to customise are the selection queries,
 called by get & get_one.  For example, the Versioned object has code to redirect 
 every request to ClassName_live, if you are browsing the live site.
 
-To do this, define the **augmentSQL(SQLQuery &$query)** method. Again, the 
-`$query` object is passed by reference and can be modified as needed by your 
-method. Instead of a manipulation array, we have a `[api:SQLQuery]` object.
+To do this, define the **augmentSQL(SQLSelect $query)** method.  Again, the $query object is passed by reference and can
+be modified as needed by your method.  Instead of a manipulation array, we have a `[api:SQLSelect]` object.
 
 ### Additional methods
 

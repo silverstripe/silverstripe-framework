@@ -40,9 +40,9 @@ abstract class DataExtension extends Extension {
 	/**
 	 * Edit the given query object to support queries for this extension
 	 *
-	 * @param SQLQuery $query Query to augment.
+	 * @param SQLSelect $query Query to augment.
 	 */
-	public function augmentSQL(SQLQuery &$query) {
+	public function augmentSQL(SQLSelect $query) {
 	}
 
 	/**
@@ -57,7 +57,7 @@ abstract class DataExtension extends Extension {
 	/**
 	 * Augment a write-record request.
 	 *
-	 * @param SQLQuery $manipulation Query to augment.
+	 * @param array $manipulation Array of operations to augment.
 	 */
 	public function augmentWrite(&$manipulation) {
 	}
@@ -180,4 +180,3 @@ abstract class DataExtension extends Extension {
 	}
 
 }
-

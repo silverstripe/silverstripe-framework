@@ -275,8 +275,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Returns a map of this list
 	 *
-	 * @param type $keyfield - the 'key' field of the result array
-	 * @param type $titlefield - the value field of the result array
+	 * @param string $keyfield - the 'key' field of the result array
+	 * @param string $titlefield - the value field of the result array
 	 * @return array 
 	 */
 	public function map($keyfield = 'ID', $titlefield = 'Title') {
@@ -295,9 +295,9 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Find the first item of this list where the given key = value
 	 *
-	 * @param type $key
-	 * @param type $value
-	 * @return type 
+	 * @param string $key
+	 * @param string $value
+	 * @return mixed
 	 */
 	public function find($key, $value) {
 		foreach ($this->items as $item) {

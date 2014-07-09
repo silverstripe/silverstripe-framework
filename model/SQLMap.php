@@ -9,16 +9,17 @@
 class SQLMap extends Object implements IteratorAggregate {
 	/**
 	 * The query used to generate the map.
-	 * @var SQLQuery
+	 * @var SQLSelect
 	 */
 	protected $query;
 	protected $keyField, $titleField;
 	
 	/**
 	 * Construct a SQLMap.
-	 * @param SQLQuery $query The query to generate this map. THis isn't executed until it's needed.
+	 * 
+	 * @param SQLSelect $query The query to generate this map. THis isn't executed until it's needed.
 	 */
-	public function __construct(SQLQuery $query, $keyField = "ID", $titleField = "Title") {
+	public function __construct(SQLSelect $query, $keyField = "ID", $titleField = "Title") {
 		Deprecation::notice('3.0', 'Use SS_Map or DataList::map() instead.', Deprecation::SCOPE_CLASS);
 		
 		if(!$query) {
@@ -40,10 +41,12 @@ class SQLMap extends Object implements IteratorAggregate {
 	public function getItem($id) {
 		if($id) {
 			$baseTable = reset($this->query->from);
-			$where = "$baseTable.\"ID\" = $id";
-			$this->query->where[sha1($where)] = $where;
+			$oldWhere = $this->query->getWhere();
+			$this->query->where(array(
+				"\"$baseTable\".\"ID\" = ?" => $id
+			));
 			$record = $this->query->execute()->first();
-			unset($this->query->where[sha1($where)]);
+			$this->query->setWhere($oldWhere);
 			if($record) {
 				$className = $record['ClassName'];
 				$obj = new $className($record);

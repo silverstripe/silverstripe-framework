@@ -167,9 +167,9 @@ class PolymorphicForeignKey extends ForeignKey implements CompositeDBField {
 			$classNames = ClassInfo::subclassesFor('DataObject');
 			unset($classNames['DataObject']);
 
-			$db = DB::getConn();
-			if($db->hasField($this->tableName, "{$this->name}Class")) {
-				$existing = $db->query("SELECT DISTINCT \"{$this->name}Class\" FROM \"{$this->tableName}\"")->column();
+			$schema = DB::get_schema();
+			if($schema->hasField($this->tableName, "{$this->name}Class")) {
+				$existing = DB::query("SELECT DISTINCT \"{$this->name}Class\" FROM \"{$this->tableName}\"")->column();
 				$classNames = array_unique(array_merge($classNames, $existing));
 			}
 

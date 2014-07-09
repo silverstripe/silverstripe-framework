@@ -133,13 +133,12 @@
 												if(isset($details['fields'])) foreach($details['fields'] as $fieldName => $fieldSpec) {
 													$fieldTitle = $fieldSpec['title'];
 													$fieldType = ($fieldName == 'password') ? 'password' : 'text';
-
 													// values
 													$defaultValue = (isset($fieldSpec['default'])) ? $fieldSpec['default'] : null;
 													if($usingEnv && isset($fieldSpec['envVar']) && defined($fieldSpec['envVar'])) {
 														$value = constant($fieldSpec['envVar']);
 													} else {
-														$value = (isset($databaseConfig[$fieldName])) ? $databaseConfig[$fieldName] : $defaultValue;
+														$value = (isset($databaseConfig[$fieldName]) && $databaseConfig['type'] == $class) ? $databaseConfig[$fieldName] : $defaultValue;
 													}
 													
 													// attributes

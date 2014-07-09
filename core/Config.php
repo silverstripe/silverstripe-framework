@@ -636,12 +636,12 @@ class Config {
 	 * every other source is filtered on request, so no amount of changes to parent's configuration etc can override a
 	 * remove call.
 	 *
-	 * @param $class string - The class to remove a configuration value from
-	 * @param $name string - The configuration name
-	 * @param $key any - An optional key to filter against.
+	 * @param string $class The class to remove a configuration value from
+	 * @param string $name The configuration name
+	 * @param mixed $key An optional key to filter against.
 	 *   If referenced config value is an array, only members of that array that match this key will be removed
 	 *   Must also match value if provided to be removed
-	 * @param $value any - And optional value to filter against.
+	 * @param mixed $value And optional value to filter against.
 	 *   If referenced config value is an array, only members of that array that match this value will be removed
 	 *   If referenced config value is not an array, value will be removed only if it matches this argument
 	 *   Must also match key if provided and referenced config value is an array to be removed

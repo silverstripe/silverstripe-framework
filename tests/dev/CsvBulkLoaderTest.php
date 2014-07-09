@@ -30,7 +30,9 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
 		
 		// Test that columns were correctly imported
-		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", "\"FirstName\" = 'John'");
+		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", array(
+			'"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
+		));
 		$this->assertNotNull($obj);
 		$this->assertEquals("He's a good guy", $obj->Biography);
 		$this->assertEquals("1988-01-31", $obj->Birthday);
@@ -81,13 +83,17 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
 		
 		// Test that columns were correctly imported
-		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", "\"FirstName\" = 'John'");
+		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", array(
+			'"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
+		));
 		$this->assertNotNull($obj);
 		$this->assertEquals("He's a good guy", $obj->Biography);
 		$this->assertEquals("1988-01-31", $obj->Birthday);
 		$this->assertEquals("1", $obj->IsRegistered);
 		
-		$obj2 = DataObject::get_one('CsvBulkLoaderTest_Player', "\"FirstName\" = 'Jane'");
+		$obj2 = DataObject::get_one("CsvBulkLoaderTest_Player", array(
+			'"CsvBulkLoaderTest_Player"."FirstName"' => 'Jane'
+		));
 		$this->assertNotNull($obj2);
 		$this->assertEquals('0', $obj2->IsRegistered);
 		
@@ -131,7 +137,9 @@ class CsvBulkLoaderTest extends SapphireTest {
 		
 		// Test of creating relation
 		$testContract = DataObject::get_one('CsvBulkLoaderTest_PlayerContract');
-		$testPlayer = Dataobject::get_one("CsvBulkLoaderTest_Player", "\"FirstName\" = 'John'");
+		$testPlayer = DataObject::get_one("CsvBulkLoaderTest_Player", array(
+			'"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
+		));
 		$this->assertEquals($testPlayer->ContractID, $testContract->ID, 'Creating new has_one relation works');
 		
 		// Test nested setting of relation properties
@@ -262,8 +270,9 @@ class CsvBulkLoaderTest_Player extends DataObject implements TestOnly {
 	);
 	
 	public function getTeamByTitle($title) {
-		$SQL_title = Convert::raw2sql($title);
-		return DataObject::get_one('CsvBulkLoaderTest_Team', "\"Title\" = '{$SQL_title}'");
+		return DataObject::get_one("CsvBulkLoaderTest_Team", array(
+			'"CsvBulkLoaderTest_Team"."Title"' => $title
+		));
 	}
 	
 	/**

@@ -20,10 +20,6 @@ class Int extends DBField {
 		return number_format($this->value);
 	}
 
-	public function nullValue() {
-		return "0";
-	}
-
 	public function requireField() {
 		$parts=Array(
 			'datatype'=>'int',
@@ -33,7 +29,7 @@ class Int extends DBField {
 			'arrayValue'=>$this->arrayValue);
 		
 		$values=Array('type'=>'int', 'parts'=>$parts);
-		DB::requireField($this->tableName, $this->name, $values);
+		DB::require_field($this->tableName, $this->name, $values);
 	}
 
 	public function Times() {
@@ -51,22 +47,19 @@ class Int extends DBField {
 	public function scaffoldFormField($title = null, $params = null) {
 		return new NumericField($this->name, $title);
 	}
+
+	public function nullValue() {
+		return 0;
+	}
 	
-	/**
-	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
-	 * If necessary, this should include quotes.
-	 */
 	public function prepValueForDB($value) {
 		if($value === true) {
 			return 1;
-		} if(!$value || !is_numeric($value)) {
-			if(strpos($value, '[')===false)
-				return '0';
-			else
-				return Convert::raw2sql($value);
-		} else {
-			return Convert::raw2sql($value);
+		} elseif(empty($value) || !is_numeric($value)) {
+			return 0;
 		}
+		
+		return $value;
 	}
 	
 }

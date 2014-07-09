@@ -50,7 +50,7 @@ class Text extends StringField {
 			'parts' => $parts
 		);
 
-		DB::requireField($this->tableName, $this->name, $values, $this->default);
+		DB::require_field($this->tableName, $this->name, $values, $this->default);
 	}
 	
 	/**

@@ -72,8 +72,8 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	
 	/**
 	 *
-	 * @param type $gridField
-	 * @param type $request
+	 * @param GridField $gridField
+	 * @param SS_HTTPRequest $request
 	 * @return GridFieldDetailForm_ItemRequest 
 	 */
 	public function handleItem($gridField, $request) {

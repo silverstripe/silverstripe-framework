@@ -38,7 +38,7 @@ class Hierarchy extends DataExtension {
 	 */
 	private static $node_threshold_leaf = 250;
 	
-	public function augmentSQL(SQLQuery &$query) {
+	public function augmentSQL(SQLSelect $query) {
 	}
 
 	public function augmentDatabase() {
@@ -658,12 +658,14 @@ class Hierarchy extends DataExtension {
 	 * Get the parent of this class.
 	 * @return DataObject
 	 */
-	public function getParent($filter = '') {
+	public function getParent($filter = null) {
 		if($p = $this->owner->__get("ParentID")) {
 			$tableClasses = ClassInfo::dataClassesFor($this->owner->class);
 			$baseClass = array_shift($tableClasses);
-			$filter .= ($filter) ? " AND " : ""."\"$baseClass\".\"ID\" = $p";
-			return DataObject::get_one($this->owner->class, $filter);
+			return DataObject::get_one($this->owner->class, array(
+				array("\"$baseClass\".\"ID\"" => $p),
+				$filter
+			));
 		}
 	}
 	
@@ -777,4 +779,3 @@ class Hierarchy extends DataExtension {
 	}
 
 }
-

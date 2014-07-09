@@ -25,7 +25,7 @@ class GDTest extends SapphireTest {
 		$gds = array();
 		foreach(self::$filenames as $type => $file) {
 			$fullPath = realpath(dirname(__FILE__) . '/gdtest/' . $file);
-			$gd = new GD($fullPath);
+			$gd = new GDBackend($fullPath);
 			if($callback) {
 				$gd = $callback($gd);
 			}
@@ -36,13 +36,13 @@ class GDTest extends SapphireTest {
 	
 	/**
 	 * Takes samples from the given GD at 5 pixel increments
-	 * @param GD $gd The source image
+	 * @param GDBackend $gd The source image
 	 * @param integer $horizontal Number of samples to take horizontally
 	 * @param integer $vertical Number of samples to take vertically
 	 * @return array List of colours for each sample, each given as an associative
 	 * array with red, blue, green, and alpha components
 	 */
-	protected function sampleAreas(GD $gd, $horizontal = 4, $vertical = 4) {
+	protected function sampleAreas(GDBackend $gd, $horizontal = 4, $vertical = 4) {
 		$samples = array();
 		for($y = 0; $y < $vertical; $y++) {
 			for($x = 0; $x < $horizontal; $x++) {
@@ -115,7 +115,7 @@ class GDTest extends SapphireTest {
 	function testGreyscale() {
 		
 		// Apply greyscaling to each image
-		$images = $this->applyToEachImage(function(GD $gd) {
+		$images = $this->applyToEachImage(function(GDBackend $gd) {
 			return $gd->greyscale();
 		});
 		

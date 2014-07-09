@@ -76,7 +76,7 @@ class Money extends DBField implements CompositeDBField {
 	public function requireField() {
 		$fields = $this->compositeDatabaseFields();
 		if($fields) foreach($fields as $name => $type){
-			DB::requireField($this->tableName, $this->name.$name, $type);
+			DB::require_field($this->tableName, $this->name.$name, $type);
 		}
 	}
 

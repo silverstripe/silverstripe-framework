@@ -38,8 +38,12 @@ class DataExtensionTest extends SapphireTest {
 		unset($contact);
 		unset($object);
 		
-		$contact = DataObject::get_one("DataExtensionTest_Member", "\"Website\"='http://www.example.com'");
-		$object = DataObject::get_one('DataExtensionTest_RelatedObject', "\"ContactID\" = {$contactID}");
+		$contact = DataObject::get_one("DataExtensionTest_Member", array(
+			'"DataExtensionTest_Member"."Website"' => 'http://www.example.com'
+		));
+		$object = DataObject::get_one('DataExtensionTest_RelatedObject', array(
+			'"DataExtensionTest_RelatedObject"."ContactID"' => $contactID
+		));
 
 		$this->assertNotNull($object, 'Related object not null');
 		$this->assertInstanceOf('DataExtensionTest_Member', $object->Contact(),
@@ -93,7 +97,9 @@ class DataExtensionTest extends SapphireTest {
 		unset($player);
 
 		// Pull the record out of the DB and examine the extended fields
-		$player = DataObject::get_one('DataExtensionTest_Player', "\"Name\" = 'Joe'");
+		$player = DataObject::get_one('DataExtensionTest_Player', array(
+			'"DataExtensionTest_Player"."Name"' => 'Joe'
+		));
 		$this->assertEquals($player->DateBirth, '1990-05-10');
 		$this->assertEquals($player->Address, '123 somewhere street');
 		$this->assertEquals($player->Status, 'Goalie');

@@ -162,10 +162,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * Amend freshly created DataQuery objects with versioned-specific 
 	 * information.
 	 *
-	 * @param SQLQuery
+	 * @param SQLSelect
 	 * @param DataQuery
 	 */
-	public function augmentDataQueryCreation(SQLQuery &$query, DataQuery &$dataQuery) {
+	public function augmentDataQueryCreation(SQLSelect &$query, DataQuery &$dataQuery) {
 		$parts = explode('.', Versioned::get_reading_mode());
 
 		if($parts[0] == 'Archive') {
@@ -182,22 +182,22 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Augment the the SQLQuery that is created by the DataQuery
+	 * Augment the the SQLSelect that is created by the DataQuery
 	 * @todo Should this all go into VersionedDataQuery?
 	 */
-	public function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
+	public function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null) {
 		if(!$dataQuery || !$dataQuery->getQueryParam('Versioned.mode')) {
 			return;
 		}
 
 		$baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
-
+		
 		switch($dataQuery->getQueryParam('Versioned.mode')) {
 		// Reading a specific data from the archive
 		case 'archive':
 			$date = $dataQuery->getQueryParam('Versioned.date');
 			foreach($query->getFrom() as $table => $dummy) {
-				if(!DB::getConn()->hasTable($table . '_versions')) {
+				if(!DB::get_schema()->hasTable($table . '_versions')) {
 					continue;
 				}
 
@@ -216,19 +216,19 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				}
 			}
 			// Link to the version archived on that date
-			$safeDate = Convert::raw2sql($date);
-			$query->addWhere(
-					"\"{$baseTable}_versions\".\"Version\" IN 
-					(SELECT LatestVersion FROM 
-						(SELECT 
-							\"{$baseTable}_versions\".\"RecordID\", 
-							MAX(\"{$baseTable}_versions\".\"Version\") AS LatestVersion
-							FROM \"{$baseTable}_versions\"
-							WHERE \"{$baseTable}_versions\".\"LastEdited\" <= '$safeDate'
-							GROUP BY \"{$baseTable}_versions\".\"RecordID\"
-						) AS \"{$baseTable}_versions_latest\"
-						WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
-					)");
+			$query->addWhere(array(
+				"\"{$baseTable}_versions\".\"Version\" IN 
+				(SELECT LatestVersion FROM 
+					(SELECT 
+						\"{$baseTable}_versions\".\"RecordID\", 
+						MAX(\"{$baseTable}_versions\".\"Version\") AS LatestVersion
+						FROM \"{$baseTable}_versions\"
+						WHERE \"{$baseTable}_versions\".\"LastEdited\" <= ?
+						GROUP BY \"{$baseTable}_versions\".\"RecordID\"
+					) AS \"{$baseTable}_versions_latest\"
+					WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
+				)" => $date
+			));
 			break;
 		
 		// Reading a specific stage (Stage or Live)
@@ -329,11 +329,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * For lazy loaded fields requiring extra sql manipulation, ie versioning.
 	 *
-	 * @param SQLQuery $query
+	 * @param SQLSelect $query
 	 * @param DataQuery $dataQuery
 	 * @param DataObject $dataObject
 	 */
-	public function augmentLoadLazyFields(SQLQuery &$query, DataQuery &$dataQuery = null, $dataObject) {
+	public function augmentLoadLazyFields(SQLSelect &$query, DataQuery &$dataQuery = null, $dataObject) {
 		// The VersionedMode local variable ensures that this decorator only applies to 
 		// queries that have originated from the Versioned object, and have the Versioned 
 		// metadata set on the query object. This prevents regular queries from 
@@ -362,7 +362,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public static function on_db_reset() {
 		// Drop all temporary tables
-		$db = DB::getConn();
+		$db = DB::get_conn();
 		foreach(self::$archive_tables as $tableName) {
 			if(method_exists($db, 'dropTable')) $db->dropTable($tableName);
 			else $db->query("DROP TABLE \"$tableName\"");
@@ -417,7 +417,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					// otherwise.
 					$indexes = $this->uniqueToIndex($indexes);
 					if($stage != $this->defaultStage) {
-						DB::requireTable("{$table}_$stage", $fields, $indexes, false, $options);
+						DB::require_table("{$table}_$stage", $fields, $indexes, false, $options);
 					}
 	
 					// Version fields on each root table (including Stage)
@@ -464,7 +464,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					);
 				}
 				
-				if(DB::getConn()->hasTable("{$table}_versions")) {
+				if(DB::get_schema()->hasTable("{$table}_versions")) {
 					// Fix data that lacks the uniqueness constraint (since this was added later and
 					// bugs meant that the constraint was validated)
 					$duplications = DB::query("SELECT MIN(\"ID\") AS \"ID\", \"RecordID\", \"Version\" 
@@ -474,8 +474,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					foreach($duplications as $dup) {
 						DB::alteration_message("Removing {$table}_versions duplicate data for "
 							."{$dup['RecordID']}/{$dup['Version']}" ,"deleted");
-						DB::query("DELETE FROM \"{$table}_versions\" WHERE \"RecordID\" = {$dup['RecordID']}
-							AND \"Version\" = {$dup['Version']} AND \"ID\" != {$dup['ID']}");
+						DB::prepared_query(
+							"DELETE FROM \"{$table}_versions\" WHERE \"RecordID\" = ?
+							AND \"Version\" = ? AND \"ID\" != ?",
+							array($dup['RecordID'], $dup['Version'], $dup['ID'])
+						);
 					}
 					
 					// Remove junk which has no data in parent classes. Only needs to run the following
@@ -496,7 +499,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 							if($count > 0) {
 								DB::alteration_message("Removing orphaned versioned records", "deleted");
 								
-								$effectedIDs = DB::query("
+								$affectedIDs = DB::query("
 									SELECT \"{$table}_versions\".\"ID\" FROM \"{$table}_versions\"
 									LEFT JOIN \"{$child}_versions\" 
 										ON \"{$child}_versions\".\"RecordID\" = \"{$table}_versions\".\"RecordID\"
@@ -504,10 +507,12 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 									WHERE \"{$child}_versions\".\"ID\" IS NULL
 								")->column();
 
-								if(is_array($effectedIDs)) {
-									foreach($effectedIDs as $key => $value) {
-										DB::query("DELETE FROM \"{$table}_versions\""
-											. " WHERE \"{$table}_versions\".\"ID\" = '$value'");
+								if(is_array($affectedIDs)) {
+									foreach($affectedIDs as $key => $value) {
+										DB::prepared_query(
+											"DELETE FROM \"{$table}_versions\" WHERE \"ID\" = ?",
+											array($value)
+										);
 									}
 								}
 							}
@@ -515,11 +520,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					}
 				}
 
-				DB::requireTable("{$table}_versions", $versionFields, $versionIndexes, true, $options);
+				DB::require_table("{$table}_versions", $versionFields, $versionIndexes, true, $options);
 			} else {
-				DB::dontRequireTable("{$table}_versions");
+				DB::dont_require_table("{$table}_versions");
 				foreach($this->stages as $stage) {
-					if($stage != $this->defaultStage) DB::dontrequireTable("{$table}_$stage");
+					if($stage != $this->defaultStage) DB::dont_require_table("{$table}_$stage");
 				}
 			}
 		}
@@ -554,11 +559,6 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		return $results;
 	}
 
-	/**
-	 * Augment a write-record request.
-	 *
-	 * @param SQLQuery $manipulation Query to augment.
-	 */
 	public function augmentWrite(&$manipulation) {
 		$tables = array_keys($manipulation);
 		$version_table = array();
@@ -590,10 +590,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			// Otherwise, we're just copying a version to another table
 			if(!isset($manipulation[$table]['fields']['Version'])) {
 				// Add any extra, unchanged fields to the version record.
-				$data = DB::query("SELECT * FROM \"$table\" WHERE \"ID\" = $id")->record();
+				$data = DB::prepared_query("SELECT * FROM \"$table\" WHERE \"ID\" = ?", array($id))->record();
 				if($data) foreach($data as $k => $v) {
 					if (!isset($newManipulation['fields'][$k])) {
-						$newManipulation['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+						$newManipulation['fields'][$k] = $v;
 					}
 				}
 
@@ -606,8 +606,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				else unset($nextVersion);
 
 				if($rid && !isset($nextVersion)) {
-					$nextVersion = DB::query("SELECT MAX(\"Version\") + 1 FROM \"{$baseDataClass}_versions\""
-						. " WHERE \"RecordID\" = $rid")->value();
+					$nextVersion = DB::prepared_query("SELECT MAX(\"Version\") + 1
+						FROM \"{$baseDataClass}_versions\" WHERE \"RecordID\" = ?",
+						array($rid)
+					)->value();
 				}
 				
 				$newManipulation['fields']['Version'] = $nextVersion ? $nextVersion : 1;
@@ -646,7 +648,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			) {
 				// If the record has already been inserted in the (table), get rid of it. 
 				if($manipulation[$table]['command']=='insert') {
-					DB::query("DELETE FROM \"{$table}\" WHERE \"ID\"='$id'");
+					DB::prepared_query(
+						"DELETE FROM \"{$table}\" WHERE \"ID\" = ?",
+						array($id)
+					);
 				}
 				
 				$newTable = $table . '_' . Versioned::current_stage();
@@ -758,9 +763,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		
 		$table2 = $table1 . "_$this->liveStage";
 
-		return DB::query("SELECT \"$table1\".\"Version\" = \"$table2\".\"Version\" FROM \"$table1\""
-			. " INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\""
-			. " WHERE \"$table1\".\"ID\" = ".  $this->owner->ID)->value();
+		return DB::prepared_query("SELECT \"$table1\".\"Version\" = \"$table2\".\"Version\" FROM \"$table1\"
+			 INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\"
+			 WHERE \"$table1\".\"ID\" = ?",
+			array($this->owner->ID)
+		)->value();
 	}
 	
 	/**
@@ -796,13 +803,16 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			}
 			
 			// Mark this version as having been published at some stage
-			DB::query("UPDATE \"{$extTable}_versions\" SET \"WasPublished\" = '1', \"PublisherID\" = $publisherID"
-				. " WHERE \"RecordID\" = $from->ID AND \"Version\" = $from->Version");
+			DB::prepared_query("UPDATE \"{$extTable}_versions\"
+				SET \"WasPublished\" = ?, \"PublisherID\" = ?
+				WHERE \"RecordID\" = ? AND \"Version\" = ?",
+				array(1, $publisherID, $from->ID, $from->Version)
+			);
 
 			$oldMode = Versioned::get_reading_mode();
 			Versioned::reading_stage($toStage);
 
-			$conn = DB::getConn();
+			$conn = DB::get_conn();
 			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, true);
 			$from->write();
 			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, false);
@@ -844,9 +854,12 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		// will be false.
 
 		// TODO: DB Abstraction: if statement here:
-		$stagesAreEqual = DB::query("SELECT CASE WHEN \"$table1\".\"Version\"=\"$table2\".\"Version\""
-			. " THEN 1 ELSE 0 END FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\""
-			. " AND \"$table1\".\"ID\" = {$this->owner->ID}")->value();
+		$stagesAreEqual = DB::prepared_query(
+			"SELECT CASE WHEN \"$table1\".\"Version\"=\"$table2\".\"Version\" THEN 1 ELSE 0 END
+			 FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\"
+			 AND \"$table1\".\"ID\" = ?",
+			array($this->owner->ID)
+		)->value();
 
 		return !$stagesAreEqual;
 	}
@@ -898,7 +911,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 		}
 		
-		$query->addWhere("\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'");
+		$query->addWhere(array(
+			"\"{$baseTable}_versions\".\"RecordID\" = ?" => $this->owner->ID
+		));
 		$query->setOrderBy(($sort) ? $sort 
 			: "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC");
 
@@ -1120,7 +1135,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		// get version as performance-optimized SQL query (gets called for each page in the sitetree)
-		$version = DB::query("SELECT \"Version\" FROM \"$stageTable\" WHERE \"ID\" = $id")->value();
+		$version = DB::prepared_query(
+			"SELECT \"Version\" FROM \"$stageTable\" WHERE \"ID\" = ?",
+			array($id)
+		)->value();
 		
 		// cache value (if required)
 		if($cache) {
@@ -1152,7 +1170,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			return;
 		}
 		$filter = "";
-
+		$parameters = array();
 		if($idList) {
 			// Validate the ID list
 			foreach($idList as $id) {
@@ -1161,14 +1179,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					E_USER_ERROR);
 				}
 			}
-
-			$filter = "WHERE \"ID\" IN(" .implode(", ", $idList) . ")";
+			$filter = 'WHERE "ID" IN ('.DB::placeholders($idList).')';
+			$parameters = $idList;
 		}
 		
 		$baseClass = ClassInfo::baseDataClass($class);
 		$stageTable = ($stage == 'Stage') ? $baseClass : "{$baseClass}_{$stage}";
 
-		$versions = DB::query("SELECT \"ID\", \"Version\" FROM \"$stageTable\" $filter")->map();
+		$versions = DB::prepared_query("SELECT \"ID\", \"Version\" FROM \"$stageTable\" $filter", $parameters)->map();
 
 		foreach($versions as $id => $version) {
 			self::$cache_versionnumber[$baseClass][$stage][$id] = $version;
@@ -1186,7 +1204,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param int $limit A limit on the number of records returned from the database.
 	 * @param string $containerClass The container class for the result set (default is DataList)
 	 *
-	 * @return SS_List
+	 * @return DataList A modified DataList designated to the specified stage
 	 */
 	public static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '',
 			$containerClass = 'DataList') {

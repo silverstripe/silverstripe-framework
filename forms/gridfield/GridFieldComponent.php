@@ -55,6 +55,7 @@ interface GridField_ColumnProvider extends GridFieldComponent {
 	 * @see {@link GridFieldDataColumns}.
 	 * 
 	 * @param GridField $gridField
+	 * @param arary $columns List of columns
 	 * @param array - List reference of all column names.
 	 */
 	public function augmentColumns($gridField, &$columns);

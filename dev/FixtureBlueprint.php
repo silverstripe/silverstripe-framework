@@ -86,7 +86,7 @@ class FixtureBlueprint {
 				$obj->ID = $data['ID'];
 				
 				// The database needs to allow inserting values into the foreign key column (ID in our case)
-				$conn = DB::getConn();
+				$conn = DB::get_conn();
 				if(method_exists($conn, 'allowPrimaryKeyEditing')) {
 					$conn->allowPrimaryKeyEditing(ClassInfo::baseDataClass($class), true);
 				}
@@ -187,12 +187,12 @@ class FixtureBlueprint {
 			// If LastEdited was set in the fixture, set it here
 			if($data && array_key_exists('LastEdited', $data)) {
 				$edited = $this->parseValue($data['LastEdited'], $fixtures);
-				DB::manipulate(array(
-					$class => array(
-						"command" => "update", "id" => $obj->id,
-						"fields" => array("LastEdited" => "'".$edited."'")
-					)
-				));
+				$update = new SQLUpdate(
+					$class,
+					array('"LastEdited"' => $edited),
+					array('"ID"' => $obj->id)
+				);
+				$update->execute();
 			}	
 		} catch(Exception $e) {
 			Config::inst()->update('DataObject', 'validation_enabled', $validationenabled);

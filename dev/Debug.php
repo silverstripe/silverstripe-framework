@@ -326,11 +326,10 @@ class Debug {
 		}
 
 		if(!headers_sent()) {
-			$currController = Controller::has_curr() ? Controller::curr() : null;
 			// Ensure the error message complies with the HTTP 1.1 spec
 			$msg = strip_tags(str_replace(array("\n", "\r"), '', $friendlyErrorMessage));
-			if($currController) {
-				$response = $currController->getResponse();
+			if(Controller::has_curr()) {
+				$response = Controller::curr()->getResponse();
 				$response->setStatusCode($statusCode, $msg);
 			} else {
 				header($_SERVER['SERVER_PROTOCOL'] . " $statusCode $msg");
@@ -466,24 +465,22 @@ class Debug {
 			// being called again.
 			// This basically calls Permission::checkMember($_SESSION['loggedInAs'], 'ADMIN');
 			
+			// @TODO - Rewrite safely using DataList::filter
 			$memberID = $_SESSION['loggedInAs'];
-			
-			$groups = DB::query("SELECT \"GroupID\" from \"Group_Members\" WHERE \"MemberID\" = " . $memberID);
-			$groupCSV = implode($groups->column(), ',');
-			
-			$permission = DB::query("
-				SELECT \"ID\"
-				FROM \"Permission\"
-				WHERE (
-					\"Code\" = 'ADMIN'
-					AND \"Type\" = " . Permission::GRANT_PERMISSION . "
-					AND \"GroupID\" IN ($groupCSV)
+			$permission = DB::prepared_query('
+				SELECT "ID" FROM "Permission"
+				INNER JOIN "Group_Members" ON "Permission"."GroupID" = "Group_Members"."GroupID"
+				WHERE "Permission"."Code" = ? 
+				AND "Permission"."Type" = ? 
+				AND "Group_Members"."MemberID" = ?',
+				array(
+					'ADMIN', // Code
+					Permission::GRANT_PERMISSION, // Type
+					$memberID // MemberID
 				)
-			")->value();
+			)->value();
 			
-			if($permission) {
-				return;
-			}
+			if($permission) return;
 		}
 		
 		// This basically does the same as

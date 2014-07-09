@@ -8,14 +8,57 @@ See our "[Release Process](/misc/release-process#security-releases) on how to re
 ## SQL Injection
 
 The [coding-conventions](/misc/coding-conventions) help guard against SQL injection attacks but still require developer
-diligence: ensure that any variable you insert into a filter / sort / join clause has been escaped.
+diligence: ensure that any variable you insert into a filter / sort / join clause is either parameterised, or has been
+escaped.
 
 See [http://shiflett.org/articles/sql-injection](http://shiflett.org/articles/sql-injection).
 
+### Parameterised queries
+
+Parameterised queries, or prepared statements, allow the logic around the query and its structure to be separated from
+the parameters passed in to be executed. Many DB adaptors support these as standard including [PDO](http://php.net/manual/en/pdo.prepare.php),
+[MySQL](http://php.net/manual/en/mysqli.prepare.php), [SQL Server](http://php.net/manual/en/function.sqlsrv-prepare.php),
+[SQLite](http://php.net/manual/en/sqlite3.prepare.php), and [PostgreSQL](http://php.net/manual/en/function.pg-prepare.php).
+
+The use of parameterised queries whenever possible will safeguard your code in most cases, but care
+must still be taken when working with literal values or table/column identifiers that may 
+come from user input.
+
+Example:
+	
+	:::php
+	$records = DB::preparedQuery('SELECT * FROM "MyClass" WHERE "ID" = ?', array(3));
+	$records = MyClass::get()->where(array('"ID" = ?' => 3));
+	$records = MyClass::get()->where(array('"ID"' => 3));
+	$records = DataObject::get_by_id('MyClass', 3);
+	$records = DataObject::get_one('MyClass', array('"ID" = ?' => 3));
+	$records = MyClass::get()->byID(3);
+	$records = SQLSelect::create()->addWhere(array('"ID"' => 3))->execute();
+
+Parameterised updates and inserts are also supported, but the syntax is a little different
+
+	:::php
+	SQLInsert::create('"MyClass"')
+		->assign('"Name"', 'Daniel')
+		->addAssignments(array(
+			'"Position"' => 'Accountant',
+			'"Age"' => array(
+				'GREATEST(0,?,?)' => array(24, 28)
+			)
+		))
+		->assignSQL('"Created"', 'NOW()')
+		->execute();
+	DB::preparedQuery(
+		'INSERT INTO "MyClass" ("Name", "Position", "Age", "Created") VALUES(?, ?, GREATEST(0,?,?), NOW())'
+		array('Daniel', 'Accountant', 24, 28)
+	);
+
+
 ### Automatic escaping
 
-SilverStripe automatically escapes data in SQL statements wherever possible,
-through database-specific methods (see `[api:Database->addslashes()]`).
+SilverStripe internally will use parameterised queries in SQL statements wherever possible.
+
+If necessary Silverstripe performs any required escaping through database-specific methods (see `[api:Database->addslashes()]`).
 For `[api:MySQLDatabase]`, this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
 
 *  Most `[api:DataList]` accessors (see escaping note in method documentation)
@@ -29,7 +72,8 @@ For `[api:MySQLDatabase]`, this will be `[mysql_real_escape_string()](http://de3
 *  FormField->saveInto()
 *  DBField->saveInto()
 
-Data is escaped when saving back to the database, not when writing to object-properties.
+Data is not escaped when writing to object-properties, as inserts and updates are normally
+handled via prepared statements.
 
 Example:
 	
@@ -38,23 +82,25 @@ Example:
 	$members = Member::get()->filter('Name', $_GET['name']); 
 	// automatically escaped/quoted
 	$members = Member::get()->filter(array('Name' => $_GET['name'])); 
-	// needs to be escaped/quoted manually
-	$members = Member::get()->where(sprintf('"Name" = \'%s\'', Convert::raw2sql($_GET['name']))); 
+	// parameterised condition
+	$members = Member::get()->where(array('"Name" = ?' => $_GET['name'])); 
+	// needs to be escaped and quoted manually (note raw2sql called with the $quote parameter set to true)
+	$members = Member::get()->where(sprintf('"Name" = %s', Convert::raw2sql($_GET['name'], true))); 
 
 <div class="warning" markdown='1'>
-It is NOT good practice to "be sure" and convert the data passed to the functions below manually. This might
+It is NOT good practice to "be sure" and convert the data passed to the functions above manually. This might
 result in *double escaping* and alters the actually saved data (e.g. by adding slashes to your content).
 </div>
 
 ### Manual escaping
 
-As a rule of thumb, whenever you're creating raw queries (or just chunks of SQL), you need to take care of escaping
-yourself. See [coding-conventions](/misc/coding-conventions) and [datamodel](/topics/datamodel) for ways to cast and convert
-your data.
+As a rule of thumb, whenever you're creating SQL queries (or just chunks of SQL) you should use parameterisation,
+but there may be cases where you need to take care of escaping yourself. See [coding-conventions](/misc/coding-conventions)
+and [datamodel](/topics/datamodel) for ways to parameterise, cast, and convert your data.
 
-*  `SQLQuery`
-*  `DataObject::buildSQL()`
+*  `SQLSelect`
 *  `DB::query()`
+*  `DB::preparedQuery()`
 *  `Director::urlParams()`
 *  `Controller->requestParams`, `Controller->urlParams`
 *  `SS_HTTPRequest` data
@@ -64,11 +110,12 @@ Example:
 
 	:::php
 	class MyForm extends Form {
-	  public function save($RAW_data, $form) {
-	    $SQL_data = Convert::raw2sql($RAW_data); // works recursively on an array
-	    $objs = Player::get()->where("Name = '{$SQL_data[name]}'");
-	    // ...
-	  }
+		public function save($RAW_data, $form) {
+			// Pass true as the second parameter of raw2sql to quote the value safely
+			$SQL_data = Convert::raw2sql($RAW_data, true); // works recursively on an array
+			$objs = Player::get()->where("Name = " . $SQL_data['name']);
+			// ...
+		}
 	}
 
 
@@ -79,32 +126,34 @@ Example:
 
 	:::php
 	class MyController extends Controller {
-	  private static $allowed_actions = array('myurlaction');
-	  public function myurlaction($RAW_urlParams) {
-	    $SQL_urlParams = Convert::raw2sql($RAW_urlParams); // works recursively on an array
-	    $objs = Player::get()->where("Name = '{$SQL_data[OtherID]}'");
-	    // ...
-	  }
+		private static $allowed_actions = array('myurlaction');
+		public function myurlaction($RAW_urlParams) {
+			// Pass true as the second parameter of raw2sql to quote the value safely
+			$SQL_urlParams = Convert::raw2sql($RAW_urlParams, true); // works recursively on an array
+			$objs = Player::get()->where("Name = " . $SQL_data['OtherID']);
+			// ...
+		}
 	}
 
 
-As a rule of thumb, you should escape your data **as close to querying as possible**.
-This means if you've got a chain of functions passing data through, escaping should happen at the end of the chain.
+As a rule of thumb, you should escape your data **as close to querying as possible**
+(or preferably, use parameterised queries). This means if you've got a chain of functions
+passing data through, escaping should happen at the end of the chain.
 
 	:::php
 	class MyController extends Controller {
-	  /**
-	   * @param array $RAW_data All names in an indexed array (not SQL-safe)
-	   */
-	  public function saveAllNames($RAW_data) {
-	    // $SQL_data = Convert::raw2sql($RAW_data); // premature escaping
-	    foreach($RAW_data as $item) $this->saveName($item);
-	  }
-	
-	  public function saveName($RAW_name) {
-	    $SQL_name = Convert::raw2sql($RAW_name);
-	    DB::query("UPDATE Player SET Name = '{$SQL_name}'");
-	  }
+		/**
+		 * @param array $RAW_data All names in an indexed array (not SQL-safe)
+		 */
+		public function saveAllNames($RAW_data) {
+			// $SQL_data = Convert::raw2sql($RAW_data); // premature escaping
+			foreach($RAW_data as $item) $this->saveName($item);
+		}
+
+		public function saveName($RAW_name) {
+			$SQL_name = Convert::raw2sql($RAW_name, true);
+			DB::query("UPDATE Player SET Name = {$SQL_name}");
+		}
 	}
 
 This might not be applicable in all cases - especially if you are building an API thats likely to be customized. If
@@ -171,10 +220,10 @@ PHP:
 
 	:::php
 	class MyObject extends DataObject {
-	  private static $db = array(
-	    'MyEscapedValue' => 'Text', // Example value: <b>not bold</b>
-	    'MyUnescapedValue' => 'HTMLText' // Example value: <b>bold</b>
-	  );
+		private static $db = array(
+			'MyEscapedValue' => 'Text', // Example value: <b>not bold</b>
+			'MyUnescapedValue' => 'HTMLText' // Example value: <b>bold</b>
+		);
 	}
 
 
@@ -182,8 +231,8 @@ Template:
 
 	:::php
 	<ul>
-	  <li>$MyEscapedValue</li> // output: &lt;b&gt;not bold&lt;b&gt;
-	  <li>$MyUnescapedValue</li> // output: <b>bold</b>
+		<li>$MyEscapedValue</li> // output: &lt;b&gt;not bold&lt;b&gt;
+		<li>$MyUnescapedValue</li> // output: <b>bold</b>
 	</ul>
 
 
@@ -199,11 +248,11 @@ Template (see above):
 
 	:::php
 	<ul>
-	  // output: <a href="#" title="foo &amp; &#quot;bar&quot;">foo &amp; "bar"</a>
-	  <li><a href="#" title="$Title.ATT">$Title</a></li>
-	  <li>$MyEscapedValue</li> // output: &lt;b&gt;not bold&lt;b&gt;
-	  <li>$MyUnescapedValue</li> // output: <b>bold</b>
-	  <li>$MyUnescapedValue.XML</li> // output: &lt;b&gt;bold&lt;b&gt;
+		// output: <a href="#" title="foo &amp; &#quot;bar&quot;">foo &amp; "bar"</a>
+		<li><a href="#" title="$Title.ATT">$Title</a></li>
+		<li>$MyEscapedValue</li> // output: &lt;b&gt;not bold&lt;b&gt;
+		<li>$MyUnescapedValue</li> // output: <b>bold</b>
+		<li>$MyUnescapedValue.XML</li> // output: &lt;b&gt;bold&lt;b&gt;
 	</ul>
 
 
@@ -217,7 +266,7 @@ PHP:
 	:::php
 	class MyObject extends DataObject {
 		public $Title = '<b>not bold</b>'; // will be escaped due to Text casting
-	     
+		
 		$casting = array(
 			"Title" => "Text", // forcing a casting
 			'TitleWithHTMLSuffix' => 'HTMLText' // optional, as HTMLText is the default casting
@@ -234,9 +283,9 @@ Template:
 
 	:::php
 	<ul>
-	  <li>$Title</li> // output: &lt;b&gt;not bold&lt;b&gt;
-	  <li>$Title.RAW</li> // output: <b>not bold</b>
-	  <li>$TitleWithHTMLSuffix</li> // output: <b>not bold</b>: <small>(...)</small>
+		<li>$Title</li> // output: &lt;b&gt;not bold&lt;b&gt;
+		<li>$Title.RAW</li> // output: <b>not bold</b>
+		<li>$TitleWithHTMLSuffix</li> // output: <b>not bold</b>: <small>(...)</small>
 	</ul>
 
 
@@ -349,17 +398,17 @@ Below is an example with different ways you would use this casting technique:
 	:::php
 	public function CaseStudies() {
 	
-	   // cast an ID from URL parameters e.g. (mysite.com/home/action/ID)
-	   $anotherID = (int)Director::urlParam['ID'];
-	
-	   // perform a calculation, the prerequisite being $anotherID must be an integer
-	   $calc = $anotherID + (5 - 2) / 2;
-	
-	   // cast the 'category' GET variable as an integer
-	   $categoryID = (int)$_GET['category'];
-	
-	   // perform a byID(), which ensures the ID is an integer before querying
-	   return CaseStudy::get()->byID($categoryID);
+		// cast an ID from URL parameters e.g. (mysite.com/home/action/ID)
+		$anotherID = (int)Director::urlParam['ID'];
+
+		// perform a calculation, the prerequisite being $anotherID must be an integer
+		$calc = $anotherID + (5 - 2) / 2;
+
+		// cast the 'category' GET variable as an integer
+		$categoryID = (int)$_GET['category'];
+
+		// perform a byID(), which ensures the ID is an integer before querying
+		return CaseStudy::get()->byID($categoryID);
 	}
 
 
@@ -390,11 +439,10 @@ disallow certain filetypes.
 Example configuration for Apache2:
 
 	<VirtualHost *:80>
-	  ...
-	  <LocationMatch assets/>
-	    php_flag engine off
-	    Options -ExecCGI -Includes -Indexes
-	  </LocationMatch>
+		<LocationMatch assets/>
+			php_flag engine off
+			Options -ExecCGI -Includes -Indexes
+		</LocationMatch>
 	</VirtualHost>
 
 
@@ -490,7 +538,6 @@ controller's `init()` method:
 	class MyController extends Controller {
 		public function init() {
 			parent::init();
-
 			$this->response->addHeader('X-Frame-Options', 'SAMEORIGIN');
 		}
 	}
