@@ -105,7 +105,18 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
 		if($this->removeRelation) {
-			if(!$record->canEdit()) return;
+			// check if we can write to the parent, that means we'll be able
+			// to unlink the relation from that. canEdit() on the actual
+			// record is only really for editing the record directly, not
+			// unlinking it from the parent record's relationship.
+			// If there is no parent, it will fallback to checking canEdit()
+			// on the record.
+			$parent = $gridField->getForm()->getRecord();
+			if($parent) {
+				if(!$parent->canEdit()) return;
+			} else {
+				if(!$record->canEdit()) return;
+			}
 
 			$field = GridField_FormAction::create($gridField, 'UnlinkRelation'.$record->ID, false,
 					"unlinkrelation", array('RecordID' => $record->ID))
@@ -149,10 +160,24 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 
 				$item->delete();
 			} else {
-				if(!$item->canEdit()) {
-				throw new ValidationException(
-					_t('GridFieldAction_Delete.EditPermissionsFailure',"No permission to unlink record"),0);
-			}
+				// check if we can write to the parent, that means we'll be able
+				// to unlink the relation from that. canEdit() on the actual
+				// record is only really for editing the record directly, not
+				// unlinking it from the parent record's relationship.
+				// If there is no parent, it will fallback to checking canEdit()
+				// on the record.
+				$parent = $gridField->getForm()->getRecord();
+				$canRemove = false;
+				if($parent) {
+					$canRemove = $parent->canEdit();
+				} else {
+					$canRemove = $record->canEdit();
+				}
+
+				if(!$canRemove) {
+					throw new ValidationException(
+						_t('GridFieldAction_Delete.EditPermissionsFailure',"No permission to unlink record"),0);
+				}
 
 				$gridField->getList()->remove($item);
 			}
