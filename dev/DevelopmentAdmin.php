@@ -1,10 +1,12 @@
 <?php
 
 /**
- * Base class for URL access to development tools. Currently supports the
- * ; and TaskRunner.
+ * Base class for development tools.
  *
  * @todo documentation for how to add new unit tests and tasks
+ * @todo do we need buildDefaults and generatesecuretoken? if so, register in the list
+ * @todo cleanup errors() it's not even an allowed action, so can go
+ * @todo cleanup index() html building
  * @package framework
  * @subpackage dev
  */
@@ -13,22 +15,52 @@ class DevelopmentAdmin extends Controller {
 	private static $url_handlers = array(
 		'' => 'index',
 		'build/defaults' => 'buildDefaults',
-		'$Action' => '$Action',
-		'$Action//$Action/$ID' => 'handleAction',
+		'generatesecuretoken' => 'generatesecuretoken',
+		'$Action' => 'runRegisteredAction',
 	);
 	
 	private static $allowed_actions = array( 
 		'index', 
-		'tests', 
-		'jstests', 
-		'tasks', 
-		'viewmodel', 
-		'build', 
-		'reset', 
-		'viewcode',
-		'generatesecuretoken',
 		'buildDefaults',
+		'runRegisteredAction',
+		'generatesecuretoken',
 	);
+	
+	protected static $registeredActions = array(
+		array(
+			'url' 			=> 'build',
+			'description' 	=> 'Build/rebuild this environment. Call this whenever you have updated your project sources',
+			'controller' 	=> 'DevBuildController',
+		),
+		array(
+			'url' 			=> 'tests',
+			'description' 	=> 'See a list of unit tests to run',
+			'controller' 	=> 'TestRunner',
+		),
+		array(
+			'url' 			=> 'tests/all',
+			'description' 	=> 'Run all tests',
+			'controller' 	=> 'TestRunner',
+		),
+		array(
+			'url' 			=> 'jstests',
+			'description' 	=> 'See a list of JavaScript tests to run',
+			'controller' 	=> 'JSTestRunner',
+		),
+		array(
+			'url' 			=> 'jstests/all',
+			'description' 	=> 'Run all JavaScript tests',
+			'controller' 	=> 'JSTestRunner',
+		),
+		array(
+			'url' 			=> 'tasks',
+			'description' 	=> 'See a list of build tasks to run',
+			'controller' 	=> 'TaskRunner',
+		),
+	);
+	
+	
+	
 	
 	public function init() {
 		parent::init();
@@ -80,20 +112,8 @@ class DevelopmentAdmin extends Controller {
 	}
 	
 	public function index() {
-		$actions = array(
-			"build" => "Build/rebuild this environment.  Call this whenever you have updated your project sources",
-			"tests" => "See a list of unit tests to run",
-			"tests/all" => "Run all tests",
-			"jstests" => "See a list of JavaScript tests to run",
-			"jstests/all" => "Run all JavaScript tests",
-			"tasks" => "See a list of build tasks to run"
-		);
-		
 		// Web mode
 		if(!Director::is_cli()) {
-			// This action is sake-only right now.
-			unset($actions["modules/add"]);
-			
 			$renderer = DebugView::create();
 			$renderer->writeHeader();
 			$renderer->writeInfo("SilverStripe Development Tools", Director::absoluteBaseURL());
@@ -101,7 +121,7 @@ class DevelopmentAdmin extends Controller {
 
 			echo '<div class="options"><ul>';
 			$evenOdd = "odd";
-			foreach($actions as $action => $description) {
+			foreach(self::getActionsAndDescriptions() as $action => $description) {
 				echo "<li class=\"$evenOdd\"><a href=\"{$base}dev/$action\"><b>/dev/$action:</b>"
 					. " $description</a></li>\n";
 				$evenOdd = ($evenOdd == "odd") ? "even" : "odd";
@@ -113,42 +133,59 @@ class DevelopmentAdmin extends Controller {
 		} else {
 			echo "SILVERSTRIPE DEVELOPMENT TOOLS\n--------------------------\n\n";
 			echo "You can execute any of the following commands:\n\n";
-			foreach($actions as $action => $description) {
+			foreach(self::getActionsAndDescriptions() as $action => $description) {
 				echo "  sake dev/$action: $description\n";
 			}
 			echo "\n\n";
 		}
 	}
 	
-	public function tests($request) {
-		return TestRunner::create();
-	}
-	
-	public function jstests($request) {
-		return JSTestRunner::create();
-	}
-	
-	public function tasks() {
-		return TaskRunner::create();
-	}
-	
-	public function build($request) {
-		if(Director::is_cli()) {
-			$da = DatabaseAdmin::create();
-			return $da->handleRequest($request, $this->model);
-		} else {
-			$renderer = DebugView::create();
-			$renderer->writeHeader();
-			$renderer->writeInfo("Environment Builder", Director::absoluteBaseURL());
-			echo "<div class=\"build\">";
+	public function runRegisteredAction(SS_HTTPRequest $request){
+		$requestUrl = $request->getURL(); 
+		
+		$tried = array();
+		foreach(self::$registeredActions as $registeredAction){
+			$actionUrl = 'dev/'.$registeredAction['url'];
 			
-			$da = DatabaseAdmin::create();
-			return $da->handleRequest($request, $this->model);
-
-			echo "</div>";
-			$renderer->writeFooter();
+			if(strpos($requestUrl, $actionUrl) === 0){
+				$controllerClass = $registeredAction['controller'];
+				return $controllerClass::create();
+			}
+			$tried[] = $actionUrl;
 		}
+		
+		die('No matching dev action found for: '.$requestUrl.', all registered actions: '.join(', ', $tried));
 	}
+	
+	/**
+	 * @param Controller $controller
+	 * @param string $url e.g. 'tests' or 'tests/all';
+	 * @param string $description e.g. 'View tests' or 'Run all tests'
+	 */
+	public static function registerAction(Controller $controller, $url, $description){
+		self::$registeredActions[] = array(
+				'controller' 	=> $controller,
+				'url' 			=> $url,
+				'description' 	=> $description,
+		);
+	}
+	
+	protected static function getActionsAndDescriptions(){
+		$r = array();
+		foreach(self::$registeredActions as $registeredAction){
+			$r[$registeredAction['url']] = $registeredAction['description'];
+		}
+		return $r;
+	}
+	
+
+
+	
+	
+	
+	/*
+	 * Unregistered (hidden) actions
+	 */
 
 	/**
 	 * Build the default data, calling requireDefaultRecords on all
@@ -195,4 +232,5 @@ TXT;
 	public function errors() {
 		$this->redirect("Debug_");
 	}
+	
 }
