@@ -93,6 +93,31 @@ class UploadTest extends SapphireTest {
 		$result = $u1->load($tmpFile);
 		
 		$this->assertFalse($result, 'Load failed because size was too big');
+		
+		
+		// check max file size set by app category
+		$tmpFileName = 'UploadTest-testUpload.jpg';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		file_put_contents($tmpFilePath, $tmpFileContent . $tmpFileContent);
+		
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'image/jpeg',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'jpg',
+			'error' => UPLOAD_ERR_OK,
+		);
+		
+		$v->setAllowedMaxFileSize(array('[image]' => '40k'));
+		$u1->setValidator($v);
+		$result = $u1->load($tmpFile);
+		$this->assertTrue($result, 'Load passed because file size was under limit');
+		
+		$v->setAllowedMaxFileSize(array('[image]' => '1k'));
+		$u1->setValidator($v);
+		$result = $u1->load($tmpFile);
+		$this->assertFalse($result, 'Load failed because size was too big');
 	}
 
 	public function testAllowedSizeOnFileWithNoExtension() {
