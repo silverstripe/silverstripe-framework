@@ -11,7 +11,7 @@
 Used in side panels and action tabs
 */
 .ss-uploadfield .clear { clear: both; }
-.ss-uploadfield .middleColumn { width: 510px; padding: 0; background: #fff; border: 1px solid #b3b3b3; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }
+.ss-uploadfield .middleColumn .ss-uploadfield-filearea { width: 510px; padding: 0; background: #fff; border: 1px solid #b3b3b3; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }
 .ss-uploadfield .ss-uploadfield-item { margin: 0; padding: 15px; overflow: auto; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview { height: 60px; line-height: 60px; width: 80px; text-align: center; font-weight: bold; float: left; overflow: hidden; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview.ss-uploadfield-dropzone { -webkit-box-shadow: gray 0 0 4px 0 inset; -moz-box-shadow: gray 0 0 4px 0 inset; box-shadow: gray 0 0 4px 0 inset; border: 2px dashed gray; background: #d0d3d5; display: none; margin-right: 15px; }
@@ -54,3 +54,4 @@ Used in side panels and action tabs
 .ss-upload .clear { clear: both; }
 .ss-upload .ss-uploadfield-fromcomputer input { /* since we can't really style the file input, we use this hack to make it as big as the button and hide it */ position: absolute; top: 0; right: 0; margin: 0; opacity: 0; filter: alpha(opacity=0); transform: translate(-300px, 0) scale(4); font-size: 23px; direction: ltr; cursor: pointer; height: 30px; line-height: 30px; }
 .ss-upload .loader { height: 94px; background: transparent url(../admin/images/spinner.gif) no-repeat 50% 50%; }
+.ss-upload.selectupload .FolderSelector label { font-style: italic; }

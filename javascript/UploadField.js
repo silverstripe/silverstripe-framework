@@ -61,9 +61,12 @@
 			var that = this;
 			var config = this.options;
 			if (config.overwriteWarning) {
+				var request = {'filename': data.files[0].name};
+				var folder = that.element.find(".FolderSelector input");
+				if(folder.length) request[folder.attr('name')] = folder.val();
 				$.get(
 					config['urlFileExists'],
-					{'filename': data.files[0].name},
+					request,
 					function(response, status, xhr) {
 						if(response.exists) {
 							//display the dialogs with the question to overwrite or not
@@ -191,14 +194,17 @@
 				$(document).bind('drop dragover', function (e){					
 					e.preventDefault(); 
 				});
-
+				
+				var self = this;
 				this.setConfig(config);
 				this.fileupload($.extend(true, 
 					{
 						formData: function(form) {
 							var idVal = $(form).find(':input[name=ID]').val();
+							var folder = self.find(".FolderSelector input");
 							var data = [{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()}];
 							if(idVal) data.push({name: 'ID', value: idVal});
+							if(folder.length) data.push({name: folder.attr('name'), value: folder.val()});
 							
 							return data;
 						},
@@ -219,22 +225,22 @@
 							emptyResult: ss.i18n._t('UploadField.EMPTYRESULT')
 						},
 						send: function(e, data) {
-								if (data.context && data.dataType && data.dataType.substr(0, 6) === 'iframe') {
-										// Iframe Transport does not support progress events.
-										// In lack of an indeterminate progress bar, we set
-										// the progress to 100%, showing the full animated bar:
-										data.total = 1;
-										data.loaded = 1;
-										$(this).data('fileupload').options.progress(e, data);
-								}
+							if (data.context && data.dataType && data.dataType.substr(0, 6) === 'iframe') {
+								// Iframe Transport does not support progress events.
+								// In lack of an indeterminate progress bar, we set
+								// the progress to 100%, showing the full animated bar:
+								data.total = 1;
+								data.loaded = 1;
+								$(this).data('fileupload').options.progress(e, data);
+							}
 						},
 						progress: function(e, data) {
-									if (data.context) {
-										var value = parseInt(data.loaded / data.total * 100, 10) + '%';
-										data.context.find('.ss-uploadfield-item-status').html((data.total == 1)?ss.i18n._t('UploadField.LOADING'):value);
-										data.context.find('.ss-uploadfield-item-progressbarvalue').css('width', value);
-									}
+							if (data.context) {
+								var value = parseInt(data.loaded / data.total * 100, 10) + '%';
+								data.context.find('.ss-uploadfield-item-status').html((data.total == 1)?ss.i18n._t('UploadField.LOADING'):value);
+								data.context.find('.ss-uploadfield-item-progressbarvalue').css('width', value);
 							}
+						}
 					}, 
 					config, 
 					{
