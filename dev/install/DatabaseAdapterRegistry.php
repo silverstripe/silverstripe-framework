@@ -129,7 +129,7 @@ class DatabaseAdapterRegistry {
 	 *
 	 * @return array
 	 */
-	public function get_default_fields() {
+	public static function get_default_fields() {
 		return self::$default_fields;
 	}
 
