@@ -10,7 +10,7 @@
 		clear: both;
 	}
 
-	.middleColumn {
+	.middleColumn .ss-uploadfield-filearea {
 		// TODO .middleColumn styling should probably be theme specific (eg cms ui will look different than blackcandy)
 		// so we should move this style into the cms and black candy files
 		width: 510px;
@@ -287,5 +287,9 @@
 	.loader {
 		height: 94px; // Approxmiately matches the height of the field once a file is attached, avoids a 'jump' in size
 		background: transparent url(../admin/images/spinner.gif) no-repeat 50% 50%;
+	}
+
+	&.selectupload .FolderSelector label {
+		font-style: italic;
 	}
 }
