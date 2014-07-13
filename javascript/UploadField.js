@@ -328,11 +328,11 @@
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-files .ss-uploadfield-item').entwine({
-			onmatch: function() {
+			onadd: function() {
 				this._super();
 				this.closest('.ss-upload').find('.ss-uploadfield-addfile').addClass('borderTop');
 			},
-			onunmatch: function() {
+			onremove: function() {
 				$('.ss-uploadfield-files:not(:has(.ss-uploadfield-item))').closest('.ss-upload').find('.ss-uploadfield-addfile').removeClass('borderTop');
 				this._super();
 			}
@@ -365,19 +365,25 @@
 						if(config.changeDetection) {
 							this.closest('form').trigger('dirty');
 						}
-						fileupload._trigger('destroy', e, {
-							context: item,
-							url: this.data('href'),
-							type: 'get',
-							dataType: fileupload.options.dataType
-						});	
+
+						if (fileupload) {
+							fileupload._trigger('destroy', e, {
+								context: item,
+								url: this.data('href'),
+								type: 'get',
+								dataType: fileupload.options.dataType
+							});
+						}
 					}
 				} else {
 					// Removed files will be applied to object on save
 					if(config.changeDetection) {
 						this.closest('form').trigger('dirty');
 					}
-					fileupload._trigger('destroy', e, {context: item});	
+
+					if (fileupload) {
+						fileupload._trigger('destroy', e, {context: item});
+					}
 				}
 				
 				e.preventDefault(); // Avoid a form submit

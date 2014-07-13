@@ -948,8 +948,8 @@ jQuery.noConflict();
 						setTimeout(function() {
 							form.clickedButton = null;
 						}, 10);
-						}
-					});
+					}
+				});
 
 				this.redraw();
 				this._super();

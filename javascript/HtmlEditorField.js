@@ -959,6 +959,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 		$('form.htmleditorfield-form.htmleditorfield-mediaform input.remoteurl').entwine({
 			onadd: function() {
+				this._super();
 				this.validate();
 			},
 

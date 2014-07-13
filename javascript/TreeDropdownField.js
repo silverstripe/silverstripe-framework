@@ -423,11 +423,13 @@
 
 		$('.TreeDropdownField input[type=hidden]').entwine({
 			onadd: function() {
+				this._super();
 				this.bind('change.TreeDropdownField', function() {
 					$(this).getField().updateTitle();
 				});
 			},
 			onremove: function() {
+				this._super();
 				this.unbind('.TreeDropdownField');
 			}
 		});
