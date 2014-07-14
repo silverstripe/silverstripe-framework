@@ -91,9 +91,9 @@ class FixtureFactory {
 	public function createRaw($table, $identifier, $data) {
 		$fields = array();
 		foreach($data as $fieldName => $fieldVal) {
-			$fields["\"$fieldName\""] = $this->parseValue($fieldVal);
+			$fields["\"{$fieldName}\""] = $this->parseValue($fieldVal);
 		}
-		$insert = new SQLInsert($table, $fields);
+		$insert = new SQLInsert("\"{$table}\"", $fields);
 		$insert->execute();
 		$id = DB::get_generated_id($table);
 		$this->fixtures[$table][$identifier] = $id;

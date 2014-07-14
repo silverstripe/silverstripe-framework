@@ -63,6 +63,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 *
 	 * @param array $select An array of SELECT fields.
 	 * @param array|string $from An array of FROM clauses. The first one should be just the table name.
+	 * Each should be ANSI quoted.
 	 * @param array $where An array of WHERE clauses.
 	 * @param array $orderby An array ORDER BY clause.
 	 * @param array $groupby An array of GROUP BY clauses.
@@ -80,6 +81,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 *
 	 * @param array $select An array of SELECT fields.
 	 * @param array|string $from An array of FROM clauses. The first one should be just the table name.
+	 * Each should be ANSI quoted.
 	 * @param array $where An array of WHERE clauses.
 	 * @param array $orderby An array ORDER BY clause.
 	 * @param array $groupby An array of GROUP BY clauses.

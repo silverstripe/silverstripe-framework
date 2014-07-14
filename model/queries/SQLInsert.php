@@ -26,7 +26,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	/**
 	 * Construct a new SQLInsert object
 	 *
-	 * @param string $into Table name to insert into
+	 * @param string $into Table name to insert into (ANSI quoted)
 	 * @param array $assignments List of column assignments
 	 * @return static
 	 */
@@ -37,7 +37,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	/**
 	 * Construct a new SQLInsert object
 	 *
-	 * @param string $into Table name to insert into
+	 * @param string $into Table name to insert into (ANSI quoted)
 	 * @param array $assignments List of column assignments
 	 */
 	function __construct($into = null, $assignments = array()) {
@@ -50,7 +50,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	/**
 	 * Sets the table name to insert into
 	 *
-	 * @param string $into Single table name
+	 * @param string $into Single table name (ANSI quoted)
 	 * @return self The self reference to this query
 	 */
 	public function setInto($into) {

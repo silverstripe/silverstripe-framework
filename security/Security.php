@@ -937,6 +937,9 @@ class Security extends Controller implements TemplateGlobalProvider {
 		$requiredTables[] = 'Permission';
 		
 		foreach($requiredTables as $table) {
+			// Skip test classes, as not all test classes are scaffolded at once
+			if(is_subclass_of($table, 'TestOnly')) continue;
+
 			// if any of the tables aren't created in the database
 			if(!ClassInfo::hasTable($table)) return false;
 

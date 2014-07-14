@@ -253,8 +253,8 @@ class ManyManyListTest extends SapphireTest {
 		$db = DB::getConn();
 		$expected = 'SELECT DISTINCT "ManyManyListTest_ExtraFields_Clients"."WorthCurrency",'
 			.' "ManyManyListTest_ExtraFields_Clients"."WorthAmount", "ManyManyListTest_ExtraFields_Clients"."Reference",'
-			.' "ManyManyListTest_ExtraFields"."ClassName", "ManyManyListTest_ExtraFields"."Created",'
-			.' "ManyManyListTest_ExtraFields"."LastEdited", "ManyManyListTest_ExtraFields"."ID",'
+			.' "ManyManyListTest_ExtraFields"."ClassName", "ManyManyListTest_ExtraFields"."LastEdited",'
+			.' "ManyManyListTest_ExtraFields"."Created", "ManyManyListTest_ExtraFields"."ID",'
 			.' CASE WHEN "ManyManyListTest_ExtraFields"."ClassName" IS NOT NULL THEN'
 			.' "ManyManyListTest_ExtraFields"."ClassName" ELSE '. $db->prepStringForDB('ManyManyListTest_ExtraFields')
 			.' END AS "RecordClassName" FROM "ManyManyListTest_ExtraFields" INNER JOIN'
@@ -262,7 +262,7 @@ class ManyManyListTest extends SapphireTest {
 			.' "ManyManyListTest_ExtraFields_Clients"."ManyManyListTest_ExtraFieldsID" ='
 			.' "ManyManyListTest_ExtraFields"."ID"';
 
-		$this->assertEquals($expected, $list->sql());
+		$this->assertSQLEquals($expected, $list->sql($parameters));
 	}
 
 

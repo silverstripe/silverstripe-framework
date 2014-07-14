@@ -23,6 +23,7 @@ class SQLDelete extends SQLConditionalExpression {
 	 * Construct a new SQLDelete.
 	 *
 	 * @param array|string $from An array of Tables (FROM clauses). The first one should be just the table name.
+	 * Each should be ANSI quoted.
 	 * @param array $where An array of WHERE clauses.
 	 * @param array|string $delete The table(s) to delete, if multiple tables are queried from
 	 * @return self Self reference
@@ -35,6 +36,7 @@ class SQLDelete extends SQLConditionalExpression {
 	 * Construct a new SQLDelete.
 	 *
 	 * @param array|string $from An array of Tables (FROM clauses). The first one should be just the table name.
+	 * Each should be ANSI quoted.
 	 * @param array $where An array of WHERE clauses.
 	 * @param array|string $delete The table(s) to delete, if multiple tables are queried from
 	 */

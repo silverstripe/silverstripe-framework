@@ -130,16 +130,17 @@ abstract class DBSchemaManager {
 
 			// End schema update
 			foreach ($this->schemaUpdateTransaction as $tableName => $changes) {
+				$advancedOptions = isset($changes['advancedOptions']) ? $changes['advancedOptions'] : null;
 				switch ($changes['command']) {
 					case 'create':
 						$this->createTable($tableName, $changes['newFields'], $changes['newIndexes'],
-										$changes['options'], @$changes['advancedOptions']);
+										$changes['options'], $advancedOptions);
 						break;
 
 					case 'alter':
 						$this->alterTable($tableName, $changes['newFields'], $changes['newIndexes'],
 										$changes['alteredFields'], $changes['alteredIndexes'],
-										$changes['alteredOptions'], @$changes['advancedOptions']);
+										$changes['alteredOptions'], $advancedOptions);
 						break;
 				}
 			}

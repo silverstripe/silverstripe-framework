@@ -54,10 +54,10 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	/**
 	 * Sets the list of tables to query from or update
 	 *
-	 * @example $query->setFrom("MyTable"); // SELECT * FROM MyTable
+	 * @example $query->setFrom('"MyTable"'); // SELECT * FROM "MyTable"
 	 *
-	 * @param string|array $from Escaped SQL statement, usually an unquoted table name
-	 * @return SQLSelect
+	 * @param string|array $from Single, or list of, ANSI quoted table names
+	 * @return self
 	 */
 	public function setFrom($from) {
 		$this->from = array();
@@ -75,9 +75,9 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	/**
 	 * Add a table to include in the query or update
 	 *
-	 * @example $query->addFrom("MyTable"); // UPDATE MyTable
+	 * @example $query->addFrom('"MyTable"'); // SELECT * FROM "MyTable"
 	 *
-	 * @param string|array $from Escaped SQL statement, usually an unquoted table name
+	 * @param string|array $from Single, or list of, ANSI quoted table names
 	 * @return self Self reference
 	 */
 	public function addFrom($from) {
@@ -189,7 +189,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	/**
 	 * Add an additional filter (part of the ON clause) on a join.
 	 *
-	 * @param string $table Table to join on from the original join
+	 * @param string $table Table to join on from the original join (unquoted)
 	 * @param string $filter The "ON" SQL fragment (escaped)
 	 * @return self Self reference
 	 */
@@ -201,7 +201,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	/**
 	 * Set the filter (part of the ON clause) on a join.
 	 *
-	 * @param string $table Table to join on from the original join
+	 * @param string $table Table to join on from the original join (unquoted)
 	 * @param string $filter The "ON" SQL fragment (escaped)
 	 * @return self Self reference
 	 */
@@ -213,6 +213,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	/**
 	 * Returns true if we are already joining to the given table alias
 	 * 
+	 * @param string $tableAlias Table name
 	 * @return boolean
 	 */
 	public function isJoinedTo($tableAlias) {
