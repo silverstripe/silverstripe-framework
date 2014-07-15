@@ -24,7 +24,7 @@ class Hierarchy extends DataExtension {
 	 * This isn't a hard limit. Example: On a value of 10, with 20 root nodes, each having
 	 * 30 children, the actual node count will be 50 (all root nodes plus first expanded child).
 	 */
-	private static $node_threshold_total = 50;
+	private static $node_threshold_total = 30;
 
 	/**
 	 * @config
@@ -139,9 +139,7 @@ class Hierarchy extends DataExtension {
 			foreach($children as $child) {
 				if(!$limitToMarked || $child->isMarked()) {
 					$foundAChild = true;
-					$output .= (is_callable($titleEval)) ? $titleEval($child) : eval("return $titleEval;");
-					$output .= "\n";
-
+					
 					$numChildren = $child->$numChildrenMethod();
 					if(
 						// Always traverse into opened nodes (they might be exposed as parents of search results)
@@ -153,16 +151,23 @@ class Hierarchy extends DataExtension {
 						// Additionally check if node count requirements are met
 						$nodeCountWarning = $nodeCountCallback ? $nodeCountCallback($child, $numChildren) : null;
 						if($nodeCountWarning) {
-							$output .= $nodeCountWarning;
+							$outputBuffer = $nodeCountWarning;
 							$child->markClosed();
 						} else {
-							$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked,
-								$childrenMethod,	$numChildrenMethod, false, $nodeCountThreshold);
-					} 
+							$outputBuffer = $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked,
+											$childrenMethod, $numChildrenMethod, false, $nodeCountThreshold);
+						}
+						
 					} elseif($child->isTreeOpened()) {
 						// Since we're not loading children, don't mark it as open either
 						$child->markClosed();
 					}
+					// Now that we know if this node has children and it's open/closed status we can call it's title
+					// function, which will return the <li> with any needed CSS classes set
+					$output .= (is_callable($titleEval)) ? $titleEval($child) : eval("return $titleEval;");
+					$output .= "\n";
+					if(isset($outputBuffer)) $output .= $outputBuffer;
+					$outputBuffer = ''; //empty the buffer otherwise it gets attached to all parent nodes
 					$output .= "</li>\n";
 				}
 			}
@@ -779,3 +784,4 @@ class Hierarchy extends DataExtension {
 	}
 
 }
+
