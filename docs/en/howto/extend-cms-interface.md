@@ -60,7 +60,7 @@ Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requiremen
 	:::yml
 	LeftAndMain:
 	  extra_requirements_css:
-	    - mysite/css/BookmarkedPages.css:
+	    - mysite/css/BookmarkedPages.css
 
 ## Create a "bookmark" flag on pages ##
 
