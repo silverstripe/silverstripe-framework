@@ -210,7 +210,7 @@ class Director implements TemplateGlobalProvider {
 	 *                           GET otherwise. Overwritten by $postVars['_method'] if present.
 	 * @param string $body The HTTP body
 	 * @param array $headers HTTP headers with key-value pairs
-	 * @param array $cookies to populate $_COOKIE
+	 * @param Cookie_Backend $cookies to populate $_COOKIE
 	 * @param HTTP_Request $request The {@see HTTP_Request} object generated as a part of this request
 	 * @return SS_HTTPResponse
 	 * 
@@ -230,6 +230,7 @@ class Director implements TemplateGlobalProvider {
 		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
 		
 		if(!$session) $session = new Session(null);
+		if(!$cookies) $cookies = new CookieJar(null);
 
 		// Back up the current values of the superglobals
 		$existingRequestVars = isset($_REQUEST) ? $_REQUEST : array();
@@ -239,6 +240,8 @@ class Director implements TemplateGlobalProvider {
 		$existingCookies = isset($_COOKIE) ? $_COOKIE : array();
 		$existingServer	= isset($_SERVER) ? $_SERVER : array();
 		
+		$existingCookieJar = Cookie::get_inst();
+
 		$existingRequirementsBackend = Requirements::backend();
 
 		Config::inst()->update('Cookie', 'report_errors', false);
@@ -272,7 +275,8 @@ class Director implements TemplateGlobalProvider {
 		$_GET = (array)$getVars; 
 		$_POST = (array)$postVars; 
 		$_SESSION = $session ? $session->inst_getAll() : array();
-		$_COOKIE = (array) $cookies;
+		$_COOKIE = $cookies->getAll(false);
+		Injector::inst()->registerService($cookies, 'CookieJar');
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
 		$request = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
@@ -310,9 +314,11 @@ class Director implements TemplateGlobalProvider {
 		$_REQUEST = $existingRequestVars; 
 		$_GET = $existingGetVars; 
 		$_POST = $existingPostVars; 
-		$_SESSION = $existingSessionVars;   
+		$_SESSION = $existingSessionVars;
 		$_COOKIE = $existingCookies;
 		$_SERVER = $existingServer;
+
+		Injector::inst()->registerService($existingCookieJar, 'CookieJar');
 
 		Requirements::set_backend($existingRequirementsBackend);
 

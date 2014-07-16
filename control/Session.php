@@ -580,13 +580,11 @@ class Session {
 				$secure = Config::inst()->get('Session', 'cookie_secure');
 				
 				if($domain) {
-					Cookie::set(session_name(), '', null, $path, $domain, $secure, true);
+					Cookie::force_expiry(session_name(), $path, $domain, $secure, true);
 				}
 				else {
-					Cookie::set(session_name(), '', null, $path, null, $secure, true);
+					Cookie::force_expiry(session_name(), $path, null, $secure, true);
 				}
-				
-				unset($_COOKIE[session_name()]);
 			}
 
 			session_destroy();

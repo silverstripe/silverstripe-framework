@@ -226,8 +226,10 @@ class DirectorTest extends SapphireTest {
 		$_POST = array('somekey' => 'postvalue');
 		$_COOKIE = array('somekey' => 'cookievalue');
 
+		$cookies = new CookieJar(array('somekey' => 'sometestcookievalue'));
+
 		$getresponse = Director::test('errorpage?somekey=sometestgetvalue', array('somekey' => 'sometestpostvalue'),
-			null, null, null, null, array('somekey' => 'sometestcookievalue'));
+			null, null, null, null, $cookies);
 
 		$this->assertEquals('getvalue', $_GET['somekey'],
 			'$_GET reset to original value after Director::test()');
@@ -243,7 +245,16 @@ class DirectorTest extends SapphireTest {
 			foreach(array('return%sValue', 'returnRequestValue', 'returnCookieValue') as $testfunction) {
 				$url = 'DirectorTestRequest_Controller/' . sprintf($testfunction, ucfirst($method))
 					. '?' . http_build_query($fixture);
-				$getresponse = Director::test($url, $fixture, null, strtoupper($method), null, null, $fixture);
+
+				$getresponse = Director::test(
+					$url,
+					$fixture,
+					null,
+					strtoupper($method),
+					null,
+					null,
+					new CookieJar($fixture)
+				);
 
 				$this->assertInstanceOf('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
 				$this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $testfunction);
