@@ -450,7 +450,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		$title = $this->Title();
-		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
+        $class = $this->class;
+
+        // Handle namespacing in menu
+        // Replace backslashes with hyphens
+        if (strpos($class, '\\') !== false) {
+            $class = str_replace('\\', '-', $class);
+        }
+
+        if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $class);
 		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', urlencode($title));
 
 		// Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
@@ -554,6 +562,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$icon = Config::inst()->get($class, 'menu_icon', Config::FIRST_SET);
 		if (!empty($icon)) {
 			$class = strtolower($class);
+
+            // Handle namespaced classes
+            // Replaces the backslash with a hyphen for
+            // valid CSS class
+            if (strpos($class, '\\') !== false) {
+                $class = str_replace('\\', '-', $class);
+            }
+
 			return ".icon.icon-16.icon-{$class} { background: url('{$icon}'); } ";
 		}
 		return '';
@@ -665,6 +681,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 						$menuIcon = LeftAndMain::menu_icon_for_class($menuItem->controller);
 						if (!empty($menuIcon)) $menuIconStyling .= $menuIcon;
 					}
+
+                    // Handle namespaced controllers
+                    // Removes the invalid backslash from the ID attr,
+                    // and replaces it with a hyphen
+                    if (strpos($code, '\\') !== false) {
+                        $code = str_replace('\\', '-', $code);
+                    }
 
 					$menu->push(new ArrayData(array(
 						"MenuItem" => $menuItem,
