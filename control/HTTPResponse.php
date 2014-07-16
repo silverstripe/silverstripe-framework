@@ -66,12 +66,12 @@ class SS_HTTPResponse {
 	);
 	
 	/**
-	 * @var Int
+	 * @var int
 	 */
 	protected $statusCode = 200;
 	
 	/**
-	 * @var String
+	 * @var string
 	 */
 	protected $statusDescription = "OK";
 	
@@ -93,9 +93,9 @@ class SS_HTTPResponse {
 	/**
 	 * Create a new HTTP response
 	 * 
-	 * @param $body The body of the response
-	 * @param $statusCode The numeric status code - 200, 404, etc
-	 * @param $statusDescription The text to be given alongside the status code. 
+	 * @param string $body The body of the response
+	 * @param int $statusCode The numeric status code - 200, 404, etc
+	 * @param string $statusDescription The text to be given alongside the status code. 
 	 *  See {@link setStatusCode()} for more information.
 	 */
 	public function __construct($body = null, $statusCode = null, $statusDescription = null) {
@@ -104,12 +104,12 @@ class SS_HTTPResponse {
 	}
 	
 	/**
-	 * @param String $code
-	 * @param String $description Optional. See {@link setStatusDescription()}.
+	 * @param string $code
+	 * @param string $description Optional. See {@link setStatusDescription()}.
 	 *  No newlines are allowed in the description.
 	 *  If omitted, will default to the standard HTTP description
 	 *  for the given $code value (see {@link $status_codes}).
-	 * @return SS_HTTPRequest $this
+	 * @return static
 	 */
 	public function setStatusCode($code, $description = null) {
 		if(isset(self::$status_codes[$code])) $this->statusCode = $code;
@@ -123,9 +123,9 @@ class SS_HTTPResponse {
 	/**
 	 * The text to be given alongside the status code ("reason phrase").
 	 * Caution: Will be overwritten by {@link setStatusCode()}.
-	 * 
-	 * @param String $description 
-	 * @return SS_HTTPRequest $this
+	 *
+	 * @param string $description 
+	 * @return static
 	 */
 	public function setStatusDescription($description) {
 		$this->statusDescription = $description;
@@ -133,7 +133,7 @@ class SS_HTTPResponse {
 	}
 	
 	/**
-	 * @return Int
+	 * @return int
 	 */
 	public function getStatusCode() {
 		return $this->statusCode;
@@ -157,10 +157,11 @@ class SS_HTTPResponse {
 	
 	/**
 	 * @param string $body
-	 * @return SS_HTTPRequest $this
+	 * @return static
 	 */
 	public function setBody($body) {
-		$this->body = $body ? (string)$body : $body; // Don't type-cast false-ish values, eg null is null not ''
+		$this->body = $body ? (string)$body : null; // Don't type-cast false-ish values, eg null is null not ''
+		return $this;
 	}
 	
 	/**
@@ -175,7 +176,7 @@ class SS_HTTPResponse {
 	 * 
 	 * @param string $header Example: "Content-Type"
 	 * @param string $value Example: "text/xml" 
-	 * @return SS_HTTPRequest $this
+	 * @return static
 	 */
 	public function addHeader($header, $value) {
 		$this->headers[$header] = $value;
@@ -189,10 +190,11 @@ class SS_HTTPResponse {
 	 * @returns null|string
 	 */
 	public function getHeader($header) {
-		if(isset($this->headers[$header]))
-			return $this->headers[$header];			
-			return null;
+		if(isset($this->headers[$header])) {
+			return $this->headers[$header];
 		}
+		return null;
+	}
 	
 	/**
 	 * @return array
@@ -206,7 +208,7 @@ class SS_HTTPResponse {
 	 * e.g. "Content-Type".
 	 *
 	 * @param string $header
-	 * @return SS_HTTPRequest $this
+	 * @return static
 	 */
 	public function removeHeader($header) {
 		if(isset($this->headers[$header])) unset($this->headers[$header]);
@@ -216,7 +218,7 @@ class SS_HTTPResponse {
 	/**
 	 * @param string $dest
 	 * @param int $code
-	 * @return SS_HTTPRequest $this
+	 * @return static
 	 */
 	public function redirect($dest, $code=302) {
 		if(!in_array($code, self::$redirect_codes)) $code = 302;
@@ -302,12 +304,19 @@ class SS_HTTPResponse {
  */
 class SS_HTTPResponse_Exception extends Exception {
 	
+	/**
+	 * @var SS_HTTPResponse
+	 */
 	protected $response;
 	
 	/**
-	 * @param  string|SS_HTTPResponse body Either the plaintext content of the error message, or an SS_HTTPResponse
-	 *                                     object representing it.  In either case, the $statusCode and
-	 *                                     $statusDescription will be the HTTP status of the resulting response.
+	 * Body can either the plaintext content of the error message, or an SS_HTTPResponse
+	 * object representing it.  In either case, the $statusCode and
+	 * $statusDescription will be the HTTP status of the resulting response.
+	 * 
+	 * @param  string|SS_HTTPResponse body 
+	 * @param int $statusCode
+	 * @param string $statusDescription
 	 * @see SS_HTTPResponse::__construct();
 	 */
 	public function __construct($body = null, $statusCode = null, $statusDescription = null) {
