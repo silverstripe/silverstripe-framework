@@ -296,10 +296,11 @@ class Debug {
 		);
 		
 		if(Director::isDev() || Director::is_cli()) {
-			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
+			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		} else {
-			return self::friendlyError();
+			self::friendlyError();
 		}
+		return false;
 	}
 	
 	/**
