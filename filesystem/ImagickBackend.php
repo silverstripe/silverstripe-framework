@@ -97,6 +97,16 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	}
 
 	/**
+	 * @todo Implement memory checking for Imagick? See {@link GD}
+	 * 
+	 * @param string $filename
+	 * @return boolean
+	 */
+	public function imageAvailable($filename) {
+		return true;
+	}
+
+	/**
 	 * resize
 	 *
 	 * @param int $width
@@ -263,6 +273,14 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		}
 		$new->ThumbnailImage($width,$height,true);
 		return $new;
+	}
+
+	/**
+	 * @param Image $frontend
+	 * @return void
+	 */
+	public function onBeforeDelete($frontend) {
+		// Not in use
 	}
 }
 }
