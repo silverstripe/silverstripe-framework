@@ -12,6 +12,14 @@
  * @subpackage dev
  */
 class DebugView extends Object {
+	
+	/**
+	 * Column size to wrap long strings to
+	 *
+	 * @var int
+	 * @config
+	 */
+	private static $columns = 100;
 
 	protected static $error_types = array(
 		E_USER_ERROR => array(
@@ -189,5 +197,32 @@ class DebugView extends Object {
 	public function writeParagraph($text) {
 		echo '<p class="info">' . $text . '</p>';
 	}
+	
+	/**
+	 * Formats the caller of a method
+	 * 
+	 * @param array $caller
+	 * @return string
+	 */
+	protected function formatCaller($caller) {
+		$return = basename($caller['file']) . ":" . $caller['line'];
+		if(!empty($caller['class']) && !empty($caller['function'])) {
+			$return .= " - {$caller['class']}::{$caller['function']}()";
+		}
+		return $return;
+	}
+	
+	/**
+	 * Outputs a variable in a user presentable way
+	 * 
+	 * @param object $val
+	 * @param array $caller Caller information
+	 */
+	public function writeVariable($val, $caller) {
+		echo '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
+		echo "<span style=\"font-size: 12px;color:#666;\">" . $this->formatCaller($caller). " - </span>\n";
+		if (is_string($val)) print_r(wordwrap($val, self::config()->columns));
+		else print_r($val);
+		echo '</pre>';
+	}
 }
-

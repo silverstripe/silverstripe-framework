@@ -10,6 +10,10 @@ class DirectorTest extends SapphireTest {
 	protected static $originalRequestURI;
 
 	protected $originalProtocolHeaders = array();
+	
+	protected $originalGet = array();
+	
+	protected $originalSession = array();
 
 	public function setUp() {
 		parent::setUp();
@@ -21,6 +25,9 @@ class DirectorTest extends SapphireTest {
 		if(!self::$originalRequestURI) {
 			self::$originalRequestURI = $_SERVER['REQUEST_URI'];
 		}
+		
+		$this->originalGet = $_GET;
+		$this->originalSession = $_SESSION;
 		
 		Config::inst()->update('Director', 'rules', array(
 			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller',
@@ -46,6 +53,9 @@ class DirectorTest extends SapphireTest {
 		
 		// Remove base URL override (setting to false reverts to default behaviour)
 		Config::inst()->update('Director', 'alternate_base_url', false);
+		
+		$_GET = $this->originalGet;
+		$_SESSION = $this->originalSession;
 		
 		// Reinstate the original REQUEST_URI after it was modified by some tests
 		$_SERVER['REQUEST_URI'] = self::$originalRequestURI;
@@ -219,6 +229,41 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse(Director::is_site_url("http://test.com?url=" . Director::absoluteBaseURL()));
 		$this->assertFalse(Director::is_site_url("http://test.com?url=" . urlencode(Director::absoluteBaseURL())));
 		$this->assertFalse(Director::is_site_url("//test.com?url=" . Director::absoluteBaseURL()));
+	}
+	
+	/**
+	 * Tests isDev, isTest, isLive set from querystring
+	 */
+	public function testQueryIsEnvironment() {
+		// Reset
+		unset($_SESSION['isDev']);
+		unset($_SESSION['isLive']);
+		unset($_GET['isTest']);
+		unset($_GET['isDev']);
+		
+		// Test isDev=1
+		$_GET['isDev'] = '1';
+		$this->assertTrue(Director::isDev());
+		$this->assertFalse(Director::isTest());
+		$this->assertFalse(Director::isLive());
+		
+		// Test persistence
+		unset($_GET['isDev']);
+		$this->assertTrue(Director::isDev());
+		$this->assertFalse(Director::isTest());
+		$this->assertFalse(Director::isLive());
+		
+		// Test change to isTest
+		$_GET['isTest'] = '1';
+		$this->assertFalse(Director::isDev());
+		$this->assertTrue(Director::isTest());
+		$this->assertFalse(Director::isLive());
+		
+		// Test persistence
+		unset($_GET['isTest']);
+		$this->assertFalse(Director::isDev());
+		$this->assertTrue(Director::isTest());
+		$this->assertFalse(Director::isLive());
 	}
 	
 	public function testResetGlobalsAfterTestRequest() {

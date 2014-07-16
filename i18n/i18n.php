@@ -702,7 +702,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'native' => 'Hrvatski'
 		),
 		'zh' => array(
-			'name' => 'Chinese','中国的'
+			'name' => 'Chinese',
+			'native' => '&#20013;&#22269;&#30340;'
 		),
 		'cs' => array(
 			'name' => 'Czech', 
@@ -852,7 +853,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'name' => 'Nepali', 
 			'native' => '&#2344;&#2375;&#2346;&#2366;&#2354;&#2368;'
 		),
-		'no' => array(
+		'nb' => array(
 			'name' => 'Norwegian', 
 			'native' => 'Norsk'
 		),

@@ -641,9 +641,9 @@ default if it exists and there is no action in the url parameters.
 		}
 	}
 
-## Fragment Link rewriting
+## Anchor Link rewriting
 
-Fragment links are links with a "#" in them.  A frequent use-case is to use fragment links to point to different
+Anchor links are links with a "#" in them.  A frequent use-case is to use anchor links to point to different
 sections of the current page.  For example, we might have this in our template.
 
 For, example, we might have this on http://www.example.com/my-long-page/
@@ -659,8 +659,8 @@ So far, so obvious.  However, things get tricky because of we have set our `<bas
 site.  So, when you click the first link you will be sent to http://www.example.com/#section1 instead of
 http://www.example.com/my-long-page/#section1
 
-In order to prevent this situation, the SSViewer template renderer will automatically rewrite any fragment link that
-doesn't specify a URL before the fragment, prefixing the URL of the current page.  For our example above, the following
+In order to prevent this situation, the SSViewer template renderer will automatically rewrite any anchor link that
+doesn't specify a URL before the anchor, prefixing the URL of the current page.  For our example above, the following
 would be created:
 
 	:::ss
@@ -670,8 +670,8 @@ would be created:
 	</ul>
 
 
-There are cases where this can be unhelpful.  HTML fragments created from Ajax responses are the most common.  In these
-situations, you can disable fragment link rewriting by setting the
+There are cases where this can be unhelpful.  HTML anchors created from Ajax responses are the most common.  In these
+situations, you can disable anchor link rewriting by setting the
 `SSViewer.rewrite_hash_links` configuration value to `false`.
 
 ### More Advanced Controls

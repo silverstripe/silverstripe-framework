@@ -135,12 +135,13 @@ class Director implements TemplateGlobalProvider {
 			$req->addHeader($header, $value);
 		}
 
+		// Initiate an empty session - doesn't initialize an actual PHP session until saved (see below)
+		$session = Injector::inst()->create('Session', isset($_SESSION) ? $_SESSION : array());
+
 		// Only resume a session if its not started already, and a session identifier exists
 		if(!isset($_SESSION) && Session::request_contains_session_id()) {
-			Session::start();
+			$session->inst_start();
 		}
-		// Initiate an empty session - doesn't initialize an actual PHP session until saved (see belwo)
-		$session = new Session(isset($_SESSION) ? $_SESSION : null);
 
 		$output = Injector::inst()->get('RequestProcessor')->preRequest($req, $session, $model);
 		
@@ -151,7 +152,7 @@ class Director implements TemplateGlobalProvider {
 
 		$result = Director::handleRequest($req, $session, $model);
 
-		// Save session data (and start/resume it if required)
+		// Save session data. Note that inst_save() will start/resume the session if required.
 		$session->inst_save();
 
 		// Return code for a redirection request
@@ -229,7 +230,7 @@ class Director implements TemplateGlobalProvider {
 		
 		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
 		
-		if(!$session) $session = new Session(null);
+		if(!$session) $session = Injector::inst()->create('Session', array());
 
 		// Back up the current values of the superglobals
 		$existingRequestVars = isset($_REQUEST) ? $_REQUEST : array();
@@ -982,29 +983,21 @@ class Director implements TemplateGlobalProvider {
 	/*
 	 * This function will return true if the site is in a live environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 *
-	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
-	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isLive($skipDatabase = false) {
-		return !(Director::isDev($skipDatabase) || Director::isTest($skipDatabase));
+	public static function isLive() {
+		return !(Director::isDev() || Director::isTest());
 	}
 	
 	/**
 	 * This function will return true if the site is in a development environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 * 
-	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
-	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isDev($skipDatabase = false) {
-		// This variable is used to supress repetitions of the isDev security message below.
-		static $firstTimeCheckingGetVar = true;
-
-		$result = false;
-
-		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) $result = true;
-		if(Config::inst()->get('Director', 'environment_type') == 'dev') $result = true;
+	public static function isDev() {
+		// Check session
+		if($env = self::session_environment()) return $env === 'dev';
+		
+		// Check config
+		if(Config::inst()->get('Director', 'environment_type') === 'dev') return true;
 
 		// Check if we are running on one of the test servers
 		$devServers = (array)Config::inst()->get('Director', 'dev_servers');
@@ -1012,54 +1005,22 @@ class Director implements TemplateGlobalProvider {
 			return true;
 		}
 
-		// Use ?isDev=1 to get development access on the live server
-		if(!$skipDatabase && !$result && isset($_GET['isDev'])) {
-			if(Security::database_is_ready()) {
-				if($firstTimeCheckingGetVar && !Permission::check('ADMIN')){
-					BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
-				}
-				$_SESSION['isDev'] = $_GET['isDev'];
-				$firstTimeCheckingGetVar = false;
-				$result = $_GET['isDev'];
-			} else {
-				if($firstTimeCheckingGetVar && DB::connection_attempted()) {
-					echo "<p style=\"padding: 3px; margin: 3px; background-color: orange; 
-						color: white; font-weight: bold\">Sorry, you can't use ?isDev=1 until your
-						Member and Group tables database are available.  Perhaps your database
-						connection is failing?</p>";
-					$firstTimeCheckingGetVar = false;
-				}
-			}
-		}
-
-		return $result;
+		return false;
 	}
 	
 	/**
 	 * This function will return true if the site is in a test environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 *
-	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
-	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isTest($skipDatabase = false) {
-		// Use ?isTest=1 to get test access on the live server, or explicitly set your environment
-		if(!$skipDatabase && isset($_GET['isTest'])) {
-			if(Security::database_is_ready()) {
-				BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
-				$_SESSION['isTest'] = $_GET['isTest'];
-			} else {
-				return true;
-			}
-		}
+	public static function isTest() {
+		// In case of isDev and isTest both being set, dev has higher priority
+		if(self::isDev()) return false;
 		
-		if(self::isDev($skipDatabase)) {
-			return false;
-		}
+		// Check saved session
+		if($env = self::session_environment()) return $env === 'test';
 		
-		if(Config::inst()->get('Director', 'environment_type')) {
-			return Config::inst()->get('Director', 'environment_type') == 'test';
-		}
+		// Check config
+		if(Config::inst()->get('Director', 'environment_type') === 'test') return true;
 		
 		// Check if we are running on one of the test servers
 		$testServers = (array)Config::inst()->get('Director', 'test_servers');
@@ -1068,6 +1029,36 @@ class Director implements TemplateGlobalProvider {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Check or update any temporary environment specified in the session
+	 * 
+	 * @return string 'test', 'dev', or null
+	 */
+	protected static function session_environment() {
+		// Set session from querystring
+		if(isset($_GET['isDev'])) {
+			if(isset($_SESSION)) {
+				unset($_SESSION['isTest']); // In case we are changing from test mode
+				$_SESSION['isDev'] = $_GET['isDev'];
+			}
+			return 'dev';
+		} elseif(isset($_GET['isTest'])) {
+			if(isset($_SESSION)) {
+				unset($_SESSION['isDev']); // In case we are changing from dev mode
+				$_SESSION['isTest'] = $_GET['isTest'];
+			}
+			return 'test';
+		}
+		// Check session
+		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) {
+			return 'dev';
+		} elseif(isset($_SESSION['isTest']) && $_SESSION['isTest']) {
+			return 'test';
+		} else {
+			return null;
+		}
 	}
 
 	/**

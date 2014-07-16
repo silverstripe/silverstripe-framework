@@ -5,7 +5,7 @@ class FakeController extends Controller {
 	public function __construct() {
 		parent::__construct();
 
-		$session = new Session(isset($_SESSION) ? $_SESSION : null);
+		$session = Injector::inst()->create('Session', isset($_SESSION) ? $_SESSION : array());
 		$this->setSession($session);
 		
 		$this->pushCurrent();

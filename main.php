@@ -110,18 +110,13 @@ if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url 
 require_once('core/startup/ErrorControlChain.php');
 require_once('core/startup/ParameterConfirmationToken.php');
 
+// Prepare tokens and execute chain
+$reloadToken = ParameterConfirmationToken::prepare_tokens(array('isTest', 'isDev', 'flush'));
 $chain = new ErrorControlChain();
-$token = new ParameterConfirmationToken('flush');
-
 $chain
-	->then(function($chain) use ($token){
-		// First, if $_GET['flush'] was set, but no valid token, suppress the flush
-		if (isset($_GET['flush']) && !$token->tokenProvided()) {
-			unset($_GET['flush']);
-		}
-		else {
-			$chain->setSuppression(false);
-		}
+	->then(function($chain) use ($reloadToken) {
+		// If no redirection is necessary then we can disable error supression
+		if (!$reloadToken) $chain->setSuppression(false);
 
 		// Load in core
 		require_once('core/Core.php');
@@ -130,38 +125,30 @@ $chain
 		require_once('model/DB.php');
 		global $databaseConfig;
 		if ($databaseConfig) DB::connect($databaseConfig);
-
-		// Then if a flush was requested, redirect to it
-		if ($token->parameterProvided() && !$token->tokenProvided()) {
-			// First, check if we're in dev mode, or the database doesn't have any security data
-			$canFlush = Director::isDev(true) || !Security::database_is_ready();
-
-			// Otherwise, we start up the session if needed, then check for admin
-			if (!$canFlush) {
-				if(!isset($_SESSION) && Session::request_contains_session_id()) {
-					Session::start();
-				}
-
-				if (Permission::check('ADMIN')) {
-					$canFlush = true;
-				}
-				else {
-					$loginPage = Director::absoluteURL(Config::inst()->get('Security', 'login_url'));
-					$loginPage .= "?BackURL=" . urlencode($_SERVER['REQUEST_URI']);
-
-					header('location: '.$loginPage, true, 302);
-					die;
-				}
-			}
-
-			// And if we can flush, reload with an authority token
-			if ($canFlush) $token->reloadWithToken();
+		
+		// Check if a token is requesting a redirect
+		if (!$reloadToken) return;
+		
+		// Otherwise, we start up the session if needed
+		if(!isset($_SESSION) && Session::request_contains_session_id()) {
+			Session::start();
 		}
+		
+		// Next, check if we're in dev mode, or the database doesn't have any security data, or we are admin
+		if (Director::isDev() || !Security::database_is_ready() || Permission::check('ADMIN')) {
+			return $reloadToken->reloadWithToken();
+		}
+
+		// Fail and redirect the user to the login page
+		$loginPage = Director::absoluteURL(Config::inst()->get('Security', 'login_url'));
+		$loginPage .= "?BackURL=" . urlencode($_SERVER['REQUEST_URI']);
+		header('location: '.$loginPage, true, 302);
+		die;
 	})
-	// Finally if a flush was requested but there was an error while figuring out if it's allowed, do it anyway
-	->thenIfErrored(function() use ($token){
-		if ($token->parameterProvided() && !$token->tokenProvided()) {
-			$token->reloadWithToken();
+	// Finally if a token was requested but there was an error while figuring out if it's allowed, do it anyway
+	->thenIfErrored(function() use ($reloadToken){
+		if ($reloadToken) {
+			$reloadToken->reloadWithToken();
 		}
 	})
 	->execute();
