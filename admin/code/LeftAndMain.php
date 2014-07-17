@@ -267,8 +267,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(empty($_REQUEST['executeForm']) && !$this->request->isAjax()) $this->extend('accessedCMS');
 		
 		// Set the members html editor config
-		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
-		
+		if(Member::currentUser()) {
+			HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
+		}
+
 		// Set default values in the config if missing.  These things can't be defined in the config
 		// file because insufficient information exists when that is being processed
 		$htmlEditorConfig = HtmlEditorConfig::get_active();
