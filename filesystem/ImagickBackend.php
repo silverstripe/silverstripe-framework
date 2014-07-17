@@ -184,7 +184,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @param int $height
 	 * @return Image_Backend
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "#FFFFFF00") {
+	public function paddedResize($width, $height, $backgroundColor = "#FFFFFF") {
 		if(!$this->valid()) return;
 		
 		$width = round($width);
@@ -194,6 +194,10 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		// Check that a resize is actually necessary.
 		if ($width == $geometry["width"] && $height == $geometry["height"]) {
 			return $this;
+		}
+		
+		if( strpos('#', $backgroundColor) === false ) {
+			$backgroundColor = '#'.$backgroundColor;
 		}
 		
 		$new = clone $this;
@@ -247,9 +251,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 			return $this;
 		}
 		
-		if(!$backgroundColor){
-			$backgroundColor = new ImagickPixel('transparent');
-		}
+		$backgroundColor = new ImagickPixel('transparent');
 		
 		$new = clone $this;
 		$new->setBackgroundColor($backgroundColor);
