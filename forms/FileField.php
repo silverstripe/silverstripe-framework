@@ -206,4 +206,60 @@ class FileField extends FormField {
 		return $this;
 	}
 
+	/**
+	 * Limit allowed file extensions. Empty by default, allowing all extensions.
+	 * To allow files without an extension, use an empty string.
+	 * See {@link File::$allowed_extensions} to get a good standard set of
+	 * extensions that are typically not harmful in a webserver context.
+	 * See {@link setAllowedMaxFileSize()} to limit file size by extension.
+	 * 
+	 * @param array $rules List of extensions
+	 * @return $this
+	 */
+	public function setAllowedExtensions($rules) {
+		$this->getValidator()->setAllowedExtensions($rules);
+		return $this;
+	}
+
+	/**
+	 * Limit allowed file extensions by specifying categories of file types.
+	 * These may be 'image', 'audio', 'mov', 'zip', 'flash', or 'doc'
+	 * See {@link File::$allowed_extensions} for details of allowed extensions
+	 * for each of these categories
+	 * 
+	 * @param string $category Category name
+	 * @param string,... $categories Additional category names
+	 * @return $this
+	 */
+	public function setAllowedFileCategories($category) {
+		$extensions = array();
+		$knownCategories = File::config()->app_categories;
+		
+		// Parse arguments
+		$categories = func_get_args();
+		if(func_num_args() === 1 && is_array(reset($categories))) {
+			$categories = reset($categories);
+		}
+		
+		// Merge all categories into list of extensions
+		foreach(array_filter($categories) as $category) {
+			if(isset($knownCategories[$category])) {
+				$extensions = array_merge($extensions, $knownCategories[$category]);
+			} else {
+				user_error("Unknown file category: $category", E_USER_ERROR);
+			}
+		}
+		return $this->setAllowedExtensions($extensions);
+	}
+
+	/**
+	 * Returns list of extensions allowed by this field, or an empty array
+	 * if there is no restriction
+	 * 
+	 * @return array
+	 */
+	public function getAllowedExtensions() {
+		return $this->getValidator()->getAllowedExtensions();
+	}
+
 }
