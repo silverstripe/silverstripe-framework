@@ -11,6 +11,8 @@
 		 */
 		$(".cms .field.cms-description-tooltip").entwine({
 			onmatch: function() {
+				this._super();
+
 				var descriptionEl = this.find('.description'), inputEl, tooltipEl;
 				if(descriptionEl.length) {
 					this
@@ -19,8 +21,8 @@
 						.tooltip({content: descriptionEl.html()});
 					descriptionEl.remove();
 				}
-			}
-					});
+			},
+		});
 
 		$(".cms .field.cms-description-tooltip :input").entwine({
 			onfocusin: function(e) {
