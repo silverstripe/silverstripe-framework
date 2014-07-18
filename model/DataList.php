@@ -591,10 +591,13 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return an array of the actual items that this DataList contains at this stage.
 	 * This is when the query is actually executed.
 	 *
+	 * @uses DataExtension->augmentSQL()
+	 *
 	 * @return array
 	 */
 	public function toArray() {
 		$query = $this->dataQuery->query();
+		$this->extend('augmentSQL',$query, $this->dataQuery);
 		$rows = $query->execute();
 		$results = array();
 		
@@ -745,21 +748,30 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Returns the first item in this DataList
 	 * 
+	 * @uses DataExtension->augmentSQL()
+	 *
 	 * @return DataObject
 	 */
 	public function first() {
-		foreach($this->dataQuery->firstRow()->execute() as $row) {
+		$query = $this->dataQuery->firstRow();
+		$this->extend('augmentSQL',$query, $this->dataQuery);
+	
+		foreach($query->execute() as $row) {
 			return $this->createDataObject($row);
 		}
 	}
 
 	/**
 	 * Returns the last item in this DataList
+	 * 
+	 * @uses DataExtension->augmentSQL()
 	 *
 	 *  @return DataObject
 	 */
 	public function last() {
-		foreach($this->dataQuery->lastRow()->execute() as $row) {
+		$query = $this->dataQuery->lastRow();
+		$this->extend('augmentSQL',$query, $this->dataQuery);
+		foreach($query->execute() as $row) {
 			return $this->createDataObject($row);
 		}
 	}
