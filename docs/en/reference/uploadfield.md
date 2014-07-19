@@ -143,9 +143,23 @@ to known file categories.
 	:::php
 	// This will limit files to the following extensions:
 	// "bmp" ,"gif" ,"jpg" ,"jpeg" ,"pcx" ,"tif" ,"png" ,"alpha","als" ,"cel" ,"icon" ,"ico" ,"ps"
-	// 'doc','docx','txt','rtf','xls','xlsx','pages', 'ppt','pptx','pps','csv', 'html','htm','xhtml', 'xml','pdf'
+	// 'doc','docx','txt','rtf','xls','xlsx','pages', 'ppt','pptx','pps','csv','pdf'
 	$uploadField->setAllowedFileCategories('image', 'doc');
 
+`AllowedExtensions` can also be set globally via the [YAML configuration](/topics/configuration#setting-configuration-via-yaml-files), for example you may add the following into your mysite/_config/config.yml:
+
+	:::yaml
+	File: 
+	  allowed_extensions: 
+	    - 7zip 
+	    - xzip
+
+<div class="notice" markdown='1'>
+Note: File types such as SWF, XML and HTML are excluded by default from uploading as these types are common
+security attack risks. If necessary, these types may be allowed as uploads (at your own risk) by adding each
+extension to the `File.allowed_extensions` config or setting `File.apply_restrictions_to_admin` to false.
+See [the security topic](/topics/security#user-uploaded-files) for more information.
+</div>
 
 ### Limit the maximum file size
 
@@ -158,6 +172,26 @@ NOTE: this only sets the configuration for your UploadField, this does NOT chang
 	$sizeMB = 2; // 2 MB
 	$size = $sizeMB * 1024 * 1024; // 2 MB in bytes
 	$this->getValidator()->setAllowedMaxFileSize($size);
+
+### Overwrite warning
+
+In order to display a warning before overwriting an existing file, `Upload:replaceFile` must be set to true.
+
+Via config:
+
+	:::yaml
+	Upload:
+	  # Replace an existing file rather than renaming the new one.
+	  replaceFile: true
+	UploadField:
+	  # Warning before overwriting existing file (only relevant when Upload: replaceFile is true)
+	  overwriteWarning: true
+
+Or per instance:
+
+	:::php
+	$uploadField->getUpload()->setReplaceFile(true);
+	$uploadField->setOverwriteWarning(true);
 
 ### Preview dimensions
 
@@ -226,10 +260,11 @@ like this:
 		);
 	}
 
-Now register the DataExtension for the Image class in your _config.php:
+Now register the DataExtension for the Image class in your _config/config.yml:
 
-	:::php
-	Image::add_extension('GalleryImage');
+	Image:
+	  extensions:
+	    - GalleryImage
 
 <div class="notice" markdown='1'>
 Note: Although you can subclass the Image class instead of using a DataExtension,
