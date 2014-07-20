@@ -146,6 +146,13 @@ to known file categories.
 	// 'doc','docx','txt','rtf','xls','xlsx','pages', 'ppt','pptx','pps','csv', 'html','htm','xhtml', 'xml','pdf'
 	$uploadField->setAllowedFileCategories('image', 'doc');
 
+`AllowedExtensions` can also be set globally via the [YAML configuration](/topics/configuration#setting-configuration-via-yaml-files), for example you may add the following into your mysite/_config/config.yml:
+
+	:::yaml
+	File: 
+	  allowed_extensions: 
+	    - 7zip 
+	    - xzip
 
 ### Limit the maximum file size
 
