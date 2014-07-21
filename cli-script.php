@@ -25,6 +25,19 @@ $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 chdir(dirname($_SERVER['SCRIPT_FILENAME']));
 
 /**
+ * A list of allowed CLI options and their appropriate callback
+ * eg:
+ *  framework/sake home --evnironment-file=/path/to/file/_ss_environment.php
+ */
+$cliOptions = array(
+	'environment-file' => function($value) {
+		if (!defined('SS_ENVIRONMENT_FILE')) {
+			define('SS_ENVIRONMENT_FILE', $value);
+		}
+	},
+);
+
+/**
  * Process arguments and load them into the $_GET and $_REQUEST arrays
  * For example,
  * sake my/url somearg otherarg key=val --otherkey=val third=val&fourth=val
@@ -43,10 +56,16 @@ if(isset($_SERVER['argv'][2])) {
 	foreach($args as $arg) {
 		if(strpos($arg,'=') == false) {
 			$_GET['args'][] = $arg;
-		} else {
-			$newItems = array();
-			parse_str( (substr($arg,0,2) == '--') ? substr($arg,2) : $arg, $newItems );
-			$_GET = array_merge($_GET, $newItems);
+		}
+		elseif (substr($arg, 0, 2) == '--') {
+			list($option, $value)= explode('=', substr($arg, 2), 2);
+			if (isset($cliOptions[$option])) {
+				$cliOptions[$option]($value);
+			}
+			else {
+				echo "Uknown option '$option' passed to sake\n";
+				exit(1);
+			}
 		}
 	}
 	$_REQUEST = array_merge($_REQUEST, $_GET);
