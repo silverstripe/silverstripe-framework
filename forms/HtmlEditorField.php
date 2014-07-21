@@ -310,6 +310,17 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 
 	/**
+	 * Get the folder ID to filter files by for the "from cms" tab
+	 *
+	 * @return int
+	 */
+	protected function getAttachParentID() {
+		$parentID = $this->controller->getRequest()->requestVar('ParentID');
+		$this->extend('updateAttachParentID', $parentID);
+		return $parentID;
+	}
+
+	/**
 	 * Return a {@link Form} instance allowing a user to
 	 * add images and flash objects to the TinyMCE content editor.
 	 *  
@@ -318,7 +329,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	public function MediaForm() {
 		// TODO Handle through GridState within field - currently this state set too late to be useful here (during
 		// request handling)
-		$parentID = $this->controller->getRequest()->requestVar('ParentID');
+		$parentID = $this->getAttachParentID();
 
 		$fileFieldConfig = GridFieldConfig::create()->addComponents(
 			new GridFieldFilterHeader(),
@@ -346,7 +357,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fromCMS = new CompositeField(
 			new LiteralField('headerSelect', 
 				'<h4>'.sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.FindInFolder', 'Find in Folder')).'</h4>'),
-			$select = TreeDropdownField::create('ParentID', "", 'Folder')->addExtraClass('noborder'),	
+			$select = TreeDropdownField::create('ParentID', "", 'Folder')
+				->addExtraClass('noborder')
+				->setValue($parentID),
 			$fileField
 		);
 		
