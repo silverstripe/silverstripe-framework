@@ -42,6 +42,11 @@ class CheckboxSetField extends OptionsetField {
 	 * @var array
 	 */
 	protected $defaultItems = array();
+
+	/**
+	 * @var boolean
+	 */
+	protected $includeOptionValueInName = true;
 	
 	/**
 	 * @todo Explain different source data that can be used with this field,
@@ -126,7 +131,7 @@ class CheckboxSetField extends OptionsetField {
 				$options[] = new ArrayData(array(
 					'ID' => $itemID,
 					'Class' => $extraClass,
-					'Name' => "{$this->name}[{$value}]",
+					'Name' => ($this->includeOptionValueInName) ? "{$this->name}[{$value}]" : "{$this->name}[]",
 					'Value' => $value,
 					'Title' => $title,
 					'isChecked' => in_array($value, $items) || in_array($value, $this->defaultItems),
@@ -138,6 +143,20 @@ class CheckboxSetField extends OptionsetField {
 		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 
 		return $this->customise($properties)->renderWith($this->getTemplates());
+	}
+
+	/**
+	 * Sets whether to include the value in each individual option (i.e 
+	 * (Field[option name]) or just Field[] syntax.
+	 *
+	 * @param boolean $bool
+	 *
+	 * @return CheckboxSetField
+	 */
+	public function setIncludeOptionValueInName($bool = true) {
+		$this->includeValueInName = $bool;
+
+		return $this;
 	}
 	
 	/**
