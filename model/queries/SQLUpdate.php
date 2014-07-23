@@ -19,7 +19,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression {
 	/**
 	 * Construct a new SQLUpdate object
 	 *
-	 * @param string $table Table name to update
+	 * @param string $table Table name to update (ANSI quoted)
 	 * @param array $assignment List of column assignments
 	 * @param array $where List of where clauses
 	 * @return static
@@ -31,7 +31,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression {
 	/**
 	 * Construct a new SQLUpdate object
 	 *
-	 * @param string $table Table name to update
+	 * @param string $table Table name to update (ANSI quoted)
 	 * @param array $assignment List of column assignments
 	 * @param array $where List of where clauses
 	 */

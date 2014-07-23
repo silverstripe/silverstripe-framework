@@ -1497,15 +1497,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
  */
 class Member_GroupSet extends ManyManyList {
 	
-	public function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
-		
-		// Bypass the many-many constructor
-		DataList::__construct($dataClass);
-
-		$this->joinTable = $joinTable;
-		$this->localKey = $localKey;
-		$this->foreignKey = $foreignKey;
-		$this->extraFields = $extraFields;
+	protected function linkJoinTable() {
+		// Do not join the table directly
+		if($this->extraFields) {
+			user_error('Member_GroupSet does not support many_many_extraFields', E_USER_ERROR);
+		}
 	}
 	
 	/**

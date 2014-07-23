@@ -2,7 +2,7 @@
 
 /**
  * Represents a request processer that delegates pre and post request handling to nested request filters
- * 
+ *
  * @package framework
  * @subpackage control
  */
@@ -21,7 +21,7 @@ class RequestProcessor implements RequestFilter {
 
 	/**
 	 * Assign a list of request filters
-	 * 
+	 *
 	 * @param array $filters
 	 */
 	public function setFilters($filters) {
