@@ -1001,7 +1001,55 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				. "with callback '$batchCallback'", E_USER_WARNING);
 		}
 	}
-	
+
+	/**
+	 * A wrapper method to batch_permission_check_stage, which checks can_edit permissions on a single
+	 * stage.
+	 *
+	 * Caches based on $typeField data. To invalidate the cache, use {@link SiteTree::reset()}
+	 * or set the $useCached property to FALSE.
+	 *
+	 * @param Array $ids Of {@link SiteTree} IDs
+	 * @param Int $memberID Member ID
+	 * @param String $typeField A property on the data record, e.g. "CanEditType".
+	 * @param String $groupJoinTable A many-many table name on this record, e.g. "SiteTree_EditorGroups"
+	 * @param String $siteConfigMethod Method to call on {@link SiteConfig} for toplevel items, e.g. "canEdit"
+	 * @param String $globalPermission If the member doesn't have this permission code, don't bother iterating deeper.
+	 * @param Boolean $useCached
+	 * @return Array An map of {@link SiteTree} ID keys, to boolean values
+	 */
+	static function batch_permission_check($ids, $memberID, $typeField, $groupJoinTable, $siteConfigMethod, $globalPermission = 'CMS_ACCESS_CMSMain', $useCached = true) {
+		// Sanatise the IDs
+		$ids = array_filter($ids, 'is_numeric');
+
+		// By default, no permission
+		$result = array_fill_keys($ids, false);
+
+		$cacheKey = "canEdit-$memberID";
+		if ($useCached && isset(self::$cache_permissions[$cacheKey])) {
+			// Before we start, we'll check the cache
+
+			$cachedValues = array_intersect_key(self::$cache_permissions[$cacheKey], $result);
+			$uncachedValues = array_diff_key($result, self::$cache_permissions[$cacheKey]);
+			if ($uncachedValues) {
+				$cachedValues = self::batch_permission_check(array_keys($uncachedValues), $memberID, $typeField, $groupJoinTable, $siteConfigMethod, $globalPermission, false) + $cachedValues;
+			}
+			return $cachedValues;
+		}
+
+		// First lets check the stage version, then the live
+		$results = self::batch_permission_check_stage($ids, $memberID, $typeField, $groupJoinTable, $siteConfigMethod, $globalPermission, 'Stage');
+		$results += self::batch_permission_check_stage($ids, $memberID, $typeField, $groupJoinTable, $siteConfigMethod, $globalPermission, 'Live');
+
+		if ($useCached) {
+			// Create an array if one doesn't already exist
+			if (empty(self::$cache_permissions[$cacheKey])) self::$cache_permissions[$cacheKey] = array();
+			// Store the cache results
+			self::$cache_permissions[$cacheKey] = $results + self::$cache_permissions[$cacheKey];
+		}
+		return $results;
+	}
+
 	/**
 	 * This method is NOT a full replacement for the individual can*() methods, e.g. {@link canEdit()}.
 	 * Rather than checking (potentially slow) PHP logic, it relies on the database group associations,
@@ -1017,33 +1065,16 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @param String $groupJoinTable A many-many table name on this record, e.g. "SiteTree_EditorGroups"
 	 * @param String $siteConfigMethod Method to call on {@link SiteConfig} for toplevel items, e.g. "canEdit"
 	 * @param String $globalPermission If the member doesn't have this permission code, don't bother iterating deeper.
-	 * @param Boolean $useCached
+	 * @param String $stage Either Stage or Live, determines which stage to check permissions for
 	 * @return Array An map of {@link SiteTree} ID keys, to boolean values
 	 */
-	static function batch_permission_check($ids, $memberID, $typeField, $groupJoinTable, $siteConfigMethod, $globalPermission = 'CMS_ACCESS_CMSMain', $useCached = true) {
+	static function batch_permission_check_stage($ids, $memberID, $typeField, $groupJoinTable, $siteConfigMethod, $globalPermission = 'CMS_ACCESS_CMSMain', $stage = 'Stage') {
 		// Sanitise the IDs
 		$ids = array_filter($ids, 'is_numeric');
 		
-		// This is the name used on the permission cache
-		// converts something like 'CanEditType' to 'edit'.
-		$cacheKey = strtolower(substr($typeField, 3, -4)) . "-$memberID";
-
 		// Default result: nothing editable
 		$result = array_fill_keys($ids, false);
 		if($ids) {
-
-			// Look in the cache for values
-			if($useCached && isset(self::$cache_permissions[$cacheKey])) {
-				$cachedValues = array_intersect_key(self::$cache_permissions[$cacheKey], $result);
-			
-				// If we can't find everything in the cache, then look up the remainder separately
-				$uncachedValues = array_diff_key($result, self::$cache_permissions[$cacheKey]);
-				if($uncachedValues) {
-					$cachedValues = self::batch_permission_check(array_keys($uncachedValues), $memberID, $typeField, $groupJoinTable, $siteConfigMethod, $globalPermission, false) + $cachedValues;
-				}
-				return $cachedValues;
-			}
-		
 			// If a member doesn't have a certain permission then they can't edit anything
 			if(!$memberID || ($globalPermission && !Permission::checkMember($memberID, $globalPermission))) {
 				return $result;
@@ -1051,87 +1082,80 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 			$SQL_idList = implode($ids, ", ");
 
-			// if page can't be viewed, don't grant edit permissions
-			// to do - implement can_view_multiple(), so this can be enabled
-			//$ids = array_keys(array_filter(self::can_view_multiple($ids, $memberID)));
-		
 			// Get the groups that the given member belongs to
 			$groupIDs = DataObject::get_by_id('Member', $memberID)->Groups()->column("ID");
 			$SQL_groupList = implode(", ", $groupIDs);
 			if (!$SQL_groupList) $SQL_groupList = '0';
 			
-			$combinedStageResult = array();
+			switch ($stage) {
+				case 'Live':
+					$table = 'SiteTree_Live';
+					break;
+				default:
+					user_error('Invalid stage passed to batch_permission_check_stage()', E_USER_WARNING);
+				case 'Stage':
+					$table = 'SiteTree';
+			}
 
-			foreach(array('Stage', 'Live') as $stage) {
-				// Start by filling the array with the pages that actually exist
-				$table = ($stage=='Stage') ? "SiteTree" : "SiteTree_$stage";
-				
-				$result = array_fill_keys(
-					($ids) ? DB::query("SELECT \"ID\" FROM \"$table\" WHERE \"ID\" IN (".implode(", ", $ids).")")->column() : array(), 
-					false
-				);
-				
-				// Get the uninherited permissions
-				$uninheritedPermissions = Versioned::get_by_stage("SiteTree", $stage, "(\"$typeField\" = 'LoggedInUsers' OR
-					(\"$typeField\" = 'OnlyTheseUsers' AND \"$groupJoinTable\".\"SiteTreeID\" IS NOT NULL))
-					AND \"SiteTree\".\"ID\" IN ($SQL_idList)",
-					"",
-					"LEFT JOIN \"$groupJoinTable\" 
-					ON \"$groupJoinTable\".\"SiteTreeID\" = \"SiteTree\".\"ID\"
-					AND \"$groupJoinTable\".\"GroupID\" IN ($SQL_groupList)");
-				
-				if($uninheritedPermissions) {
-					// Set all the relevant items in $result to true
-					$result = array_fill_keys($uninheritedPermissions->column('ID'), true) + $result;
-				}
+			// Start by filling the array with the pages that actually exist
+			$result = array_fill_keys(
+				($ids) ? DB::query("SELECT \"ID\" FROM \"$table\" WHERE \"ID\" IN (".implode(", ", $ids).")")->column() : array(), 
+				false
+			);
+			
+			// Get the uninherited permissions
+			$uninheritedPermissions = Versioned::get_by_stage("SiteTree", $stage, "(\"$typeField\" = 'LoggedInUsers' OR
+				(\"$typeField\" = 'OnlyTheseUsers' AND \"$groupJoinTable\".\"SiteTreeID\" IS NOT NULL))
+				AND \"SiteTree\".\"ID\" IN ($SQL_idList)",
+				"",
+				"LEFT JOIN \"$groupJoinTable\" 
+				ON \"$groupJoinTable\".\"SiteTreeID\" = \"SiteTree\".\"ID\"
+				AND \"$groupJoinTable\".\"GroupID\" IN ($SQL_groupList)");
+			
+			if($uninheritedPermissions) {
+				// Set all the relevant items in $result to true
+				$result = array_fill_keys($uninheritedPermissions->column('ID'), true) + $result;
+			}
 
-				// Get permissions that are inherited
-				$potentiallyInherited = Versioned::get_by_stage("SiteTree", $stage, "\"$typeField\" = 'Inherit'
-					AND \"SiteTree\".\"ID\" IN ($SQL_idList)");
+			// Get permissions that are inherited
+			$potentiallyInherited = Versioned::get_by_stage("SiteTree", $stage, "\"$typeField\" = 'Inherit'
+				AND \"SiteTree\".\"ID\" IN ($SQL_idList)");
 
-				if($potentiallyInherited) {
-					// Group $potentiallyInherited by ParentID; we'll look at the permission of all those
-					// parents and then see which ones the user has permission on
-					$groupedByParent = array();
-					foreach($potentiallyInherited as $item) {
-						if($item->ParentID) {
-							if(!isset($groupedByParent[$item->ParentID])) $groupedByParent[$item->ParentID] = array();
-							$groupedByParent[$item->ParentID][] = $item->ID;
-						} else {
-							// Might return different site config based on record context, e.g. when subsites module is used
-							$siteConfig = $item->getSiteConfig();
-							$result[$item->ID] = $siteConfig->{$siteConfigMethod}($memberID);
-						}
-					}
-
-					if($groupedByParent) {
-						$actuallyInherited = self::batch_permission_check(array_keys($groupedByParent), $memberID, $typeField, $groupJoinTable, $siteConfigMethod);
-						if($actuallyInherited) {
-							$parentIDs = array_keys(array_filter($actuallyInherited));
-							foreach($parentIDs as $parentID) {
-								// Set all the relevant items in $result to true
-								$result = array_fill_keys($groupedByParent[$parentID], true) + $result;
-							}
-						}
+			if($potentiallyInherited) {
+				// Group $potentiallyInherited by ParentID; we'll look at the permission of all those
+				// parents and then see which ones the user has permission on
+				$groupedByParent = array();
+				foreach($potentiallyInherited as $item) {
+					if($item->ParentID) {
+						if(!isset($groupedByParent[$item->ParentID])) $groupedByParent[$item->ParentID] = array();
+						$groupedByParent[$item->ParentID][] = $item->ID;
+					} else {
+						// Might return different site config based on record context, e.g. when subsites module is used
+						$siteConfig = $item->getSiteConfig();
+						$result[$item->ID] = $siteConfig->{$siteConfigMethod}($memberID);
 					}
 				}
-				
-				$combinedStageResult = $combinedStageResult + $result;
-				
+
+				if($groupedByParent) {
+					$actuallyInherited = self::batch_permission_check_stage(array_keys($groupedByParent), $memberID, $typeField, $groupJoinTable, $siteConfigMethod, null, $stage);
+					if($actuallyInherited) {
+						$parentIDs = array_keys(array_filter($actuallyInherited));
+						foreach($parentIDs as $parentID) {
+							// Set all the relevant items in $result to true
+							$result = array_fill_keys($groupedByParent[$parentID], true) + $result;
+						}
+					}
+				}
 			}
 		}
 
-		if(isset($combinedStageResult)) {
-			// Cache the results
- 			if(empty(self::$cache_permissions[$cacheKey])) self::$cache_permissions[$cacheKey] = array();
- 			self::$cache_permissions[$cacheKey] = $combinedStageResult + self::$cache_permissions[$cacheKey];
- 
-			return $combinedStageResult;
+		if (isset($result)) {
+			return $result;
 		} else {
 			return array();
 		}
 	}
-	
+		
 	/**
 	 * Get the 'can edit' information for a number of SiteTree pages.
 	 * 
