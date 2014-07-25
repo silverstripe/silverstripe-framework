@@ -6,79 +6,52 @@
  * @subpackage model
  */
 class MySQLiConnector extends DBConnector {
-	
+
 	/**
 	 * Connection to the MySQL database
-	 * 
+	 *
 	 * @var MySQLi
 	 */
 	protected $dbConn = null;
 
 	/**
 	 * Name of the currently selected database
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $databaseName = null;
 
 	/**
 	 * The most recent statement returned from MySQLiConnector->preparedQuery
-	 * 
+	 *
 	 * @var mysqli_stmt
 	 */
 	protected $lastStatement = null;
-	
+
 	/**
 	 * Store the most recent statement for later use
-	 * 
+	 *
 	 * @param mysqli_stmt $statement
 	 */
 	public function setLastStatement($statement) {
 		$this->lastStatement = $statement;
 	}
-	
+
 	/**
-	 * List of prepared statements, cached by SQL string
+	 * Retrieve a prepared statement for a given SQL string
 	 *
-	 * @var array
-	 */
-	protected $cachedStatements = array();
-	
-	/**
-	 * Flush all prepared statements
-	 */
-	public function flushStatements() {
-		$this->cachedStatements = array();
-	}
-	
-	/**
-	 * Retrieve a prepared statement for a given SQL string, or return an already prepared version if
-	 * one exists for the given query
-	 * 
 	 * @param string $sql
 	 * @param boolean &$success
 	 * @return mysqli_stmt
 	 */
-	public function getOrPrepareStatement($sql, &$success) {
-		// Check for cached statement
-		if(!empty($this->cachedStatements[$sql])) {
-			$success = true;
-			return $this->cachedStatements[$sql];
-		}
-		
+	public function prepareStatement($sql, &$success) {
 		// Prepare statement with arguments
 		$statement = $this->dbConn->stmt_init();
-		if($success = $statement->prepare($sql)) {
-			// Only cache prepared statement on success
-			$this->cachedStatements[$sql] = $statement;
-		}
-		
+		$success = $statement->prepare($sql);
 		return $statement;
 	}
 
 	public function connect($parameters, $selectDB = false) {
-		$this->flushStatements();
-		
 		// Normally $selectDB is set to false by the MySQLDatabase controller, as per convention
 		$selectedDB = ($selectDB && !empty($parameters['database'])) ? $parameters['database'] : null;
 
@@ -109,7 +82,7 @@ class MySQLiConnector extends DBConnector {
 				: 'utf8';
 		if (!empty($charset)) $this->dbConn->set_charset($charset);
 	}
-	
+
 	public function __destruct() {
 		if ($this->dbConn) {
 			mysqli_close($this->dbConn);
@@ -129,7 +102,7 @@ class MySQLiConnector extends DBConnector {
 	public function getVersion() {
 		return $this->dbConn->server_info;
 	}
-	
+
 	protected function benchmarkQuery($sql, $callback) {
 		// Clear the last statement
 		$this->setLastStatement(null);
@@ -156,10 +129,10 @@ class MySQLiConnector extends DBConnector {
 			return new MySQLQuery($this, $handle);
 		}
 	}
-	
+
 	/**
 	 * Prepares the list of parameters in preparation for passing to mysqli_stmt_bind_param
-	 * 
+	 *
 	 * @param array $parameters List of parameters
 	 * @param array &$blobs Out parameter for list of blobs to bind separately
 	 * @return array List of parameters appropriate for mysqli_stmt_bind_param function
@@ -215,10 +188,10 @@ class MySQLiConnector extends DBConnector {
 		}
 		return array_merge(array($types), $values);
 	}
-	
+
 	/**
 	 * Binds a list of parameters to a statement
-	 * 
+	 *
 	 * @param mysqli_stmt $statement MySQLi statement
 	 * @param array $parameters List of parameters to pass to bind_param
 	 */
@@ -233,7 +206,7 @@ class MySQLiConnector extends DBConnector {
 		}
 		call_user_func_array( array($statement, 'bind_param'), $boundNames);
 	}
-	
+
 	public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR) {
 		// Shortcut to basic query when not given parameters
 		if(empty($parameters)) return $this->query($sql, $errorLevel);
@@ -243,26 +216,26 @@ class MySQLiConnector extends DBConnector {
 
 		// Type check, identify, and prepare parameters for passing to the statement bind function
 		$parsedParameters = $this->parsePreparedParameters($parameters, $blobs);
-		
+
 		// Benchmark query
 		$self = $this;
 		$lastStatement = $this->benchmarkQuery($sql, function($sql) use($parsedParameters, $blobs, $self) {
-			
-			$statement = $self->getOrPrepareStatement($sql, $success);
+
+			$statement = $self->prepareStatement($sql, $success);
 			if(!$success) return $statement;
-			
+
 			$self->bindParameters($statement, $parsedParameters);
-			
+
 			// Bind any blobs given
 			foreach($blobs as $blob) {
 				$statement->send_long_data($blob['index'], $blob['value']);
 			}
-			
+
 			// Safely execute the statement
 			$statement->execute();
 			return $statement;
 		});
-		
+
 		// check result
 		$this->setLastStatement($lastStatement);
 		if (!$lastStatement || $lastStatement->error) {
@@ -270,7 +243,7 @@ class MySQLiConnector extends DBConnector {
 			$this->databaseError($this->getLastError(), $errorLevel, $sql, $values);
 			return null;
 		}
-		
+
 		// May not return result for non-select statements
 		if($result = $lastStatement->get_result()) {
 			return new MySQLQuery($this, $result, $lastStatement);
