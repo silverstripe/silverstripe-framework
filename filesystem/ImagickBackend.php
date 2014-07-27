@@ -247,12 +247,8 @@ class ImagickBackend extends Imagick implements Image_Backend {
 			return $this;
 		}
 		
-		if(!$backgroundColor){
-			$backgroundColor = new ImagickPixel('transparent');
-		}
-		
 		$new = clone $this;
-		$new->setBackgroundColor($backgroundColor);
+		$new->setBackgroundColor(new ImagickPixel('transparent'));
 		
 		if(($geo['width']/$width) < ($geo['height']/$height)){
 			$new->cropImage($geo['width'], floor($height*$geo['width']/$width),
