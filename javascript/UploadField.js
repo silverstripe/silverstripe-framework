@@ -94,7 +94,11 @@
 		},
 		_onAlways: function (jqXHRorResult, textStatus, jqXHRorError, options) {
 			$.blueimpUI.fileupload.prototype._onAlways.call(this, jqXHRorResult, textStatus, jqXHRorError, options);
-			if (this._active === 0) {
+
+			if(typeof(jqXHRorError) === 'string') {
+				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.UploadField.UPLOADFAIL', 'Sorry your upload failed'));
+				$('.fileOverview .uploadStatus').addClass("bad").removeClass("good").removeClass("notice");
+			} else if (jqXHRorError.status === 200) {
 				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.FILEUPLOADCOMPLETED', 'File upload completed!'));//.hide();
 				$('.ss-uploadfield-item-edit-all').show();
 				$('.fileOverview .uploadStatus').addClass("good").removeClass("notice").removeClass("bad");
