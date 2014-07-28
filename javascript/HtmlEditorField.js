@@ -92,7 +92,12 @@ ss.editorWrappers.tinyMCE = (function() {
 				var interval;
 				jQuery(ed.getBody()).on('focus', function() {
 					interval = setInterval(function() {
-						ed.save();
+						// Update underlying element as necessary
+						var element = jQuery(ed.getElement());
+						if(ed.isDirty()) {
+							// Set content without triggering editor content cleanup
+							element.val(ed.getContent({format : 'raw', no_events : 1}));
+						}
 					}, 5000);
 				});
 				jQuery(ed.getBody()).on('blur', function() {
