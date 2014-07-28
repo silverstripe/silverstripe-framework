@@ -214,6 +214,58 @@ class CmsUiContext extends BehatContext {
 	}
 
 	/**
+	 * @When /^I (expand|collapse) "([^"]*)" in the tree$/
+	 */
+	public function iExpandInTheTree($action, $nodeText) {
+		//Tries to find the first visiable matched Node in the page
+		$page = $this->getSession()->getPage();
+		$treeEl = $this->getCmsTreeElement();
+		$treeNode = $treeEl->findLink($nodeText);
+		assertNotNull($treeNode, sprintf('%s link not found', $nodeText));
+		$cssIcon = $treeNode->getParent()->getAttribute("class");
+		if($action == "expand") {
+			//ensure it is collapsed
+			if(false === strpos($cssIcon, 'jstree-open')) {
+				$nodeIcon = $treeNode->getParent()->find('css', '.jstree-icon');
+				assertTrue($nodeIcon->isVisible(), "CMS node '$nodeText' not found");
+				$nodeIcon->click();
+			}
+		} else {
+			//ensure it is expanded
+			if(false === strpos($cssIcon, 'jstree-closed')) {
+				$nodeIcon = $treeNode->getParent()->find('css', '.jstree-icon');
+				assertTrue($nodeIcon->isVisible(), "CMS node '$nodeText' not found");
+				$nodeIcon->click();
+			}
+		}
+	}
+
+	/**
+	 * @When /^I should (not |)see a "([^"]*)" CMS tab$/
+	 */
+	public function iShouldSeeACmsTab($negate, $tab) {
+		$this->getSession()->wait(
+			5000, 
+			"window.jQuery && window.jQuery('.ui-tabs-nav').size() > 0"
+		);
+
+		$page = $this->getSession()->getPage();
+		$tabsets = $page->findAll('css', '.ui-tabs-nav');
+		assertNotNull($tabsets, 'CMS tabs not found');
+
+		$tab_element = null;
+		foreach($tabsets as $tabset) {
+			$tab_element = $tabset->find('named', array('link_or_button', "'$tab'"));
+			if($tab_element) break;
+		}
+		if($negate) {
+			assertNull($tab_element, sprintf('%s tab found', $tab));
+		} else {
+			assertNotNull($tab_element, sprintf('%s tab not found', $tab));
+		}
+	}
+
+	/**
 	 * @When /^I click the "([^"]*)" CMS tab$/
 	 */
 	public function iClickTheCmsTab($tab) {
