@@ -21,7 +21,7 @@ select 'Restart all services'. This is used to ease the transition between a Win
 install where database case-sensitivity is important.
 
 ## Install SilverStripe
-### Composer
+### Composer <a name="#composerinstall"> </a>
 Composer is becoming our preferred way to manager installation and future dependancy management of SilverStripe modules. Getting started with Composer requires:
 1. PHP installed on your local environment (which in this context is part of WAMP).
 2. The Composer application itself (there is a Windows installer which will ask you to point it to PHP, in this case it should be at C:/wamp/bin/php/phpX.X.X/php.exe). 
