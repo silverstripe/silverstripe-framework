@@ -89,20 +89,22 @@ ss.editorWrappers.tinyMCE = (function() {
 				// after an (undetected) inline change. This "blur" causes onChange
 				// to trigger, which will change the button markup to show "alternative" styles,
 				// effectively cancelling the original click event.
-				var interval;
-				jQuery(ed.getBody()).on('focus', function() {
-					interval = setInterval(function() {
-						// Update underlying element as necessary
-						var element = jQuery(ed.getElement());
-						if(ed.isDirty()) {
-							// Set content without triggering editor content cleanup
-							element.val(ed.getContent({format : 'raw', no_events : 1}));
-						}
-					}, 5000);
-				});
-				jQuery(ed.getBody()).on('blur', function() {
-					clearInterval(interval);
-				});
+				if(ed.settings.update_interval) {
+					var interval;
+					jQuery(ed.getBody()).on('focus', function() {
+						interval = setInterval(function() {
+							// Update underlying element as necessary
+							var element = jQuery(ed.getElement());
+							if(ed.isDirty()) {
+								// Set content without triggering editor content cleanup
+								element.val(ed.getContent({format : 'raw', no_events : 1}));
+							}
+						}, ed.settings.update_interval);
+					});
+					jQuery(ed.getBody()).on('blur', function() {
+						clearInterval(interval);
+					});
+				}
 			});
 			this.instance.onChange.add(function(ed, l) {
 				// Update underlying textarea on every change, so external handlers
