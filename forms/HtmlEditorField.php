@@ -190,7 +190,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	private static $allowed_actions = array(
 		'LinkForm',
 		'MediaForm',
-		'viewfile'
+		'viewfile',
+		'getanchors'
 	);
 
 	/**
@@ -516,6 +517,41 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		return $fileWrapper->customise(array(
 			'Fields' => $fields,
 		))->renderWith($this->templateViewFile);
+	}
+
+	/**
+	 * Find all anchors available on the given page.
+	 *
+	 * @return array
+	 */
+	public function getanchors() {
+		$id = (int)$this->request->getVar('PageID');
+		$anchors = array();
+
+		if (($page = Page::get()->byID($id)) && !empty($page)) {
+			if (!$page->canView()) {
+				throw new SS_HTTPResponse_Exception(
+					_t(
+						'HtmlEditorField.ANCHORSCANNOTACCESSPAGE',
+						'You are not permitted to access the content of the target page.'
+					),
+					403
+				);
+			}
+
+			// Similar to the regex found in HtmlEditorField.js / getAnchors method.
+			if (preg_match_all("/name=\"([^\"]+?)\"|name='([^']+?)'/im", $page->Content, $matches)) {
+				$anchors = $matches[1];
+			}
+
+		} else {
+			throw new SS_HTTPResponse_Exception(
+				_t('HtmlEditorField.ANCHORSPAGENOTFOUND', 'Target page not found.'),
+				404
+			);
+		}
+
+		return json_encode($anchors);
 	}
 
 	/**
