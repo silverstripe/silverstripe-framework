@@ -96,6 +96,9 @@ class DirectorTest extends SapphireTest {
 		$rootURL = Director::protocolAndHost();
 		$_SERVER['REQUEST_URI'] = "$rootURL/mysite/sub-page/";
 		Config::inst()->update('Director', 'alternate_base_url', '/mysite/');
+
+		//test empty URL
+		$this->assertEquals($rootURL, Director::absoluteURL(''));
 		
 		// Test already absolute url
 		$this->assertEquals($rootURL, Director::absoluteURL($rootURL));
@@ -137,6 +140,7 @@ class DirectorTest extends SapphireTest {
 		Config::inst()->update('Director', 'alternate_base_url', 'http://www.example.org/');
 		$this->assertEquals('http://www.example.org/', Director::baseURL());
 		$this->assertEquals('http://www.example.org/', Director::absoluteBaseURL());
+		$this->assertEquals('http://www.example.org/', Director::absoluteURL(''));
 		$this->assertEquals('http://www.example.org/subfolder/test', Director::absoluteURL('subfolder/test'));
 
 		// Setting it to false restores functionality
