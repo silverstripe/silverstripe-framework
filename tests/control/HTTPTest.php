@@ -161,12 +161,6 @@ class HTTPTest extends SapphireTest {
 	public function testAbsoluteURLsAttributes() {
 		$this->withBaseURL('http://www.silverstripe.org/', function($test){
 			
-			//empty links
-			$test->assertEquals(
-				'<a href="http://www.silverstripe.org/">test</a>',
-				HTTP::absoluteURLs('<a href="">test</a>')
-			);
-
 			// links
 			$test->assertEquals(
 				'<a href=\'http://www.silverstripe.org/blog/\'>SS Blog</a>',
