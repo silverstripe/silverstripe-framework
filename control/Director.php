@@ -425,7 +425,7 @@ class Director implements TemplateGlobalProvider {
 		}
 
 		if(substr($url,0,4) != "http") {
-			if(strpos($url, '/') !== 0) $url = Director::baseURL()  . $url;
+			if($url[0] != "/") $url = Director::baseURL()  . $url;
 			// Sometimes baseURL() can return a full URL instead of just a path
 			if(substr($url,0,4) != "http") $url = self::protocolAndHost() . $url;
 		}
