@@ -13,5 +13,5 @@
 		<% end_if %>
 	<% end_loop %>
 
-	<% if $Description %><span class="description">$Description</span><% end_if %>
+	<% if $Description %><span class="description">$Description.XML</span><% end_if %>
 </$Tag>
