@@ -27,10 +27,6 @@ class PDOQuery extends SS_Query {
 		$statement->closeCursor();
 	}
 
-	public function __destruct() {
-		$this->statement->closeCursor();
-	}
-
 	public function seek($row) {
 		$this->rowNum = $row - 1;
 		return $this->nextRecord();

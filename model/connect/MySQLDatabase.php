@@ -9,10 +9,10 @@
  * @subpackage model
  */
 class MySQLDatabase extends SS_Database {
-	
+
 	/**
 	 * Default connection charset (may be overridden in $databaseConfig)
-	 * 
+	 *
 	 * @config
 	 * @var String
 	 */
@@ -23,9 +23,9 @@ class MySQLDatabase extends SS_Database {
 		if(empty($parameters['driver'])) {
 			$parameters['driver'] = $this->getDatabaseServer();
 		}
-		
+
 		// Set charset
-		if( empty($parameters['charset']) 
+		if( empty($parameters['charset'])
 			&& ($charset = Config::inst()->get('MySQLDatabase', 'connection_charset'))
 		) {
 			$parameters['charset'] = $charset;
@@ -42,13 +42,13 @@ class MySQLDatabase extends SS_Database {
 		}
 
 		// SS_Database subclass maintains responsibility for selecting database
-		// once connected in order to correctly handle schema queries about 
+		// once connected in order to correctly handle schema queries about
 		// existence of database, error handling at the correct level, etc
 		if (!empty($parameters['database'])) {
 			$this->selectDatabase($parameters['database'], false, false);
 		}
 	}
-	
+
 	/**
 	 * Sets the character set for the MySQL database connection.
 	 *
@@ -68,7 +68,7 @@ class MySQLDatabase extends SS_Database {
 
 	/**
 	 * Sets the SQL mode
-	 * 
+	 *
 	 * @param string $mode Connection mode
 	 */
 	public function setSQLMode($mode) {
@@ -78,7 +78,7 @@ class MySQLDatabase extends SS_Database {
 
 	/**
 	 * Sets the system timezone for the database connection
-	 * 
+	 *
 	 * @param string $timezone
 	 */
 	public function selectTimezone($timezone) {
@@ -112,7 +112,6 @@ class MySQLDatabase extends SS_Database {
 		if (!class_exists('File'))
 				throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
 
-		$fileFilter = '';
 		$keywords = $this->escapeString($keywords);
 		$htmlEntityKeywords = htmlentities($keywords, ENT_NOQUOTES, 'UTF-8');
 
@@ -131,7 +130,7 @@ class MySQLDatabase extends SS_Database {
 		// Always ensure that only pages with ShowInSearch = 1 can be searched
 		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
 
-		// File.ShowInSearch was added later, keep the database driver backwards compatible 
+		// File.ShowInSearch was added later, keep the database driver backwards compatible
 		// by checking for its existence first
 		$fields = $this->fieldList('File');
 		if (array_key_exists('ShowInSearch', $fields))
@@ -201,7 +200,7 @@ class MySQLDatabase extends SS_Database {
 
 			$querySQLs[] = $query->sql($parameters);
 			$queryParameters = array_merge($queryParameters, $parameters);
-			
+
 			$totalCount += $query->unlimitedRowCount();
 		}
 		$fullQuery = implode(" UNION ", $querySQLs) . " ORDER BY $sortBy LIMIT $limit";
@@ -233,30 +232,30 @@ class MySQLDatabase extends SS_Database {
 	public function transactionStart($transactionMode = false, $sessionCharacteristics = false) {
 		// This sets the isolation level for the NEXT transaction, not the current one.
 		if ($transactionMode) {
-			$this->query('SET TRANSACTION ' . $transactionMode . ';');
+			$this->query('SET TRANSACTION ' . $transactionMode);
 		}
 
-		$this->query('START TRANSACTION;');
+		$this->query('START TRANSACTION');
 
 		if ($sessionCharacteristics) {
-			$this->query('SET SESSION TRANSACTION ' . $sessionCharacteristics . ';');
+			$this->query('SET SESSION TRANSACTION ' . $sessionCharacteristics);
 		}
 	}
 
 	public function transactionSavepoint($savepoint) {
-		$this->query("SAVEPOINT $savepoint;");
+		$this->query("SAVEPOINT $savepoint");
 	}
 
 	public function transactionRollback($savepoint = false) {
 		if ($savepoint) {
-			$this->query('ROLLBACK TO ' . $savepoint . ';');
+			$this->query('ROLLBACK TO ' . $savepoint);
 		} else {
 			$this->query('ROLLBACK');
 		}
 	}
 
 	public function transactionEnd($chain = false) {
-		$this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN;');
+		$this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN');
 	}
 
 	public function comparisonClause($field, $value, $exact = false, $negate = false, $caseSensitive = null,
