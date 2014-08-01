@@ -711,7 +711,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						break;
 				}
 
-				return dfdAnchors;
+				return dfdAnchors.promise();
 			},
 
 			/**
