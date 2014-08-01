@@ -511,7 +511,11 @@ class TestRequestFilter implements RequestFilter, TestOnly {
 		}
 	}
 
-	public function postRequest(\SS_HTTPRequest $request, \SS_HTTPResponse $response, \DataModel $model) {
+	public function postShorted(\SS_HTTPRequest $req, \SS_HTTPResponse &$earlyRes, \Session $session, \DataModel $model) {
+		// No-op
+	}
+
+	public function postRequest(\SS_HTTPRequest $req, \SS_HTTPResponse &$res, \Session $session, \DataModel $model) {
 		++$this->postCalls;
 		
 		if ($this->failPost) {

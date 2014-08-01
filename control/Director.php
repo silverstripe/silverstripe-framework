@@ -86,19 +86,22 @@ class Director implements TemplateGlobalProvider {
 
 	/**
 	 * Process the given URL, creating the appropriate controller and executing it.
-	 * 
+	 *
 	 * Request processing is handled as follows:
-	 *  - Director::direct() creates a new SS_HTTPResponse object and passes this to Director::handleRequest().
+	 *  - Director::direct() applies the inward filter pipeline via RequestProcessor. If one the filters shorts, it
+	 *    applies the filters in reverse from that point and outputs the response without further processing.
 	 *  - Director::handleRequest($request) checks each of the Director rules and identifies a controller to handle
 	 *    this request.
 	 *  - Controller::handleRequest($request) is then called.  This will find a rule to handle the URL, and call the
 	 *    rule handling method.
 	 *  - RequestHandler::handleRequest($request) is recursively called whenever a rule handling method returns a
 	 *    RequestHandler object.
+	 *  - Once the processing bubbles back up to Director::direct(), the outward filter pipeline is applied via
+	 *    RequestProcessor giving filters a chance to adjust the response.
 	 *
 	 * In addition to request processing, Director will manage the session, and perform the output of the actual
 	 * response to the browser.
-	 * 
+	 *
 	 * @param $url String, the URL the user is visiting, without the querystring.
 	 * @uses handleRequest() rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
@@ -119,20 +122,20 @@ class Director implements TemplateGlobalProvider {
 				}
 			}
 		}
-		
-		$req = new SS_HTTPRequest(
+
+		$request = new SS_HTTPRequest(
 			(isset($_SERVER['X-HTTP-Method-Override']))
-				? $_SERVER['X-HTTP-Method-Override'] 
+				? $_SERVER['X-HTTP-Method-Override']
 				: $_SERVER['REQUEST_METHOD'],
-			$url, 
-			$_GET, 
+			$url,
+			$_GET,
 			ArrayLib::array_merge_recursive((array)$_POST, (array)$_FILES),
 			@file_get_contents('php://input')
 		);
 
 		$headers = self::extract_request_headers($_SERVER);
 		foreach ($headers as $header => $value) {
-			$req->addHeader($header, $value);
+			$request->addHeader($header, $value);
 		}
 
 		// Initiate an empty session - doesn't initialize an actual PHP session until saved (see below)
@@ -143,29 +146,28 @@ class Director implements TemplateGlobalProvider {
 			$session->inst_start();
 		}
 
-		$filterResponse = Injector::inst()->get('RequestProcessor')->preRequest($req, $session, $model);
-		if ($filterResponse && $filterResponse!==true) {
-			if (!$filterResponse instanceof SS_HTTPResponse) {
-				throw new SS_HTTPResponse_Exception('RequestFilters have to return null, true or SS_HTTPResponse.');
-			}
+		// Apply the inward pipeline.
+		$earlyResponse = Injector::inst()
+			->get('RequestProcessor')
+			->preRequestPipeline($request, $session, $model);
 
-			// Response has been overriden in the preRequest filter.
-			$filterResponse->output();
+		if ($earlyResponse instanceof SS_HTTPResponse) {
+			// Allow the inward pipeline to override controller chain. The pipeline has fully shorted by now, which
+			// includes invoking the already-applied filters in the reverse order.
+			$session->inst_save();
+			$earlyResponse->output();
 			return;
 		}
 
-		$result = Director::handleRequest($req, $session, $model);
+		$result = Director::handleRequest($request, $session, $model);
 
-		// Save session data. Note that inst_save() will start/resume the session if required.
-		$session->inst_save();
-
-		// Handle situations where controller response is not SS_HTTPResponse.
+		// Handle situations where controller response is not SS_HTTPResponse and therefore we need to build one.
 		$response = null;
 		if(is_string($result) && substr($result,0,9) == 'redirect:') {
-
 			$url = substr($result, 9);
 
 			if(Director::is_cli()) {
+				$session->inst_save();
 				// on cli, follow SilverStripe redirects automatically
 				return Director::direct(
 					str_replace(Director::absoluteBaseURL(), '', $url),
@@ -177,8 +179,6 @@ class Director implements TemplateGlobalProvider {
 			}
 
 		} else if($result) {
-			// Handle a controller
-
 			if($result instanceof SS_HTTPResponse) {
 				$response = $result;
 			} else {
@@ -188,26 +188,16 @@ class Director implements TemplateGlobalProvider {
 
 		}
 
-		if ($response) {
+		// $response must now be a valid SS_HTTPResponse object.
 
-			$filterResponse = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
-			if ($filterResponse && $filterResponse!==true) {
-				if (!$filterResponse instanceof SS_HTTPResponse) {
-					throw new SS_HTTPResponse_Exception('RequestFilters have to return null, true or SS_HTTPResponse.');
-				}
+		// Apply the outward pipeline. Note that $response is mutable (passed as reference).
+		Injector::inst()->get('RequestProcessor')->postRequestPipeline($request, $response, $session, $model);
 
-				// Response has been overriden in the postRequest filter.
-				$filterResponse->output();
-				return;
-			}
+		// Save session data. Note that inst_save() will start/resume the session if required.
+		$session->inst_save();
 
-			$response->output();
-
-			// TODO: what is this?
-			//$controllerObj->getSession()->inst_save();
-
-		}
-
+		// The final output.
+		$response->output();
 	}
 	
 	/**
