@@ -1,1 +1,1 @@
-<label id="$ID" class="$extraClass">$Title</label>
+<label id="$ID" class="$extraClass">$Title.XML</label>

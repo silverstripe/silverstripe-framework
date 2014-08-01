@@ -1,1 +1,1 @@
-<h$HeadingLevel $AttributesHTML>$Title</h$HeadingLevel>
+<h$HeadingLevel $AttributesHTML>$Title.XML</h$HeadingLevel>
