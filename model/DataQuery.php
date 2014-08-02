@@ -72,6 +72,12 @@ class DataQuery {
 		return $this->getFinalisedQuery();
 	}
 	
+	/**
+	 * Returns a copy of the current SQLQuery object (non-finalised).
+	 */
+	public function partialQuery() {
+		return clone $this->query;
+	}
 	
 	/**
 	 * Remove a filter from the query

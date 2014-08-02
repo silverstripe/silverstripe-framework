@@ -868,6 +868,37 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 	
 	/**
+	 * Return the first DataObject matching the current query.
+	 * All calls to one() are cached (by DataObject::get_one())
+	 *
+	 * Intended to be called as ClassName::get()->one(); with one or more filter()'s and sort()'s in the middle.
+	 * Uses and is intended as a more modern DataObject::get_one('ClassName');
+	 *
+	 * @param boolean $cache Use caching
+	 * @return DataObject The first item matching the current query.
+	 */
+	public function one($cache = true) {
+		$query = $this->dataQuery->partialQuery();
+		
+		if ($query->getLimit()) {
+			user_error("DataList::one() is intended to only have WHERE and ORDER BY clauses.", E_USER_ERROR);
+		}
+		
+		$db = DB::getConn();
+		$where = ($query->getWhere()) ? $db->sqlWhereToString($query->getWhere(), $query->getConnective()) : '';
+		if ($where != '') {
+			$where = trim(preg_replace('/WHERE/', '', $where, 1));
+		}
+		
+		$orderBy = ($query->getOrderBy()) ? $db->sqlOrderByToString($query->getOrderBy()) : '';
+		if ($orderBy != '') {
+			$orderBy = trim(preg_replace('/ORDER BY/', '', $orderBy, 1));
+		}
+
+		return DataObject::get_one($this->dataClass, $where, $cache, $orderBy);
+	}
+	
+	/**
 	 * Returns an array of a single field value for all items in the list.
 	 *
 	 * @param string $colName
