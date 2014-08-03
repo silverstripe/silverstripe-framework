@@ -208,7 +208,17 @@ class DropdownFieldTest extends SapphireTest {
 		$disabledOptions = $this->findDisabledOptionElements($field->Field());
 		$this->assertEquals(count($disabledOptions), 0, 'There are no disabled options');
 	}
-	
+
+	public function testEscapedOptions() {
+		$field = new DropdownField('Content', 'Content', array(
+			'Test' => 'Test',
+			'Another<weirdvalue>' => 'Another',
+		));
+
+		$html = $field->Field();
+		$this->assertContains('value="Another&lt;weirdvalue&gt;', $html, 'Option value is escaped');
+	}
+
 	/**
 	 * Create a test dropdown field, with the option to
 	 * set what source and blank value it should contain

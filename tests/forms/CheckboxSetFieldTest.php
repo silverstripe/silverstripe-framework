@@ -144,6 +144,17 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$this->assertEquals('Test,Another', $dbValue);
 	}
 
+	public function testEscapedOptions() {
+		$field = new CheckboxSetField('Content', 'Content', array(
+			'Test' => 'Test',
+			'Another<weirdvalue>' => 'Another',
+		));
+
+		$html = $field->Field();
+		$this->assertContains('Content[Another&lt;weirdvalue&gt;]', $html, 'Option name is escaped');
+		$this->assertContains('value="Another&lt;weirdvalue&gt;', $html, 'Option value is escaped');
+	}
+
 }
 
 /**
