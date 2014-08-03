@@ -34,4 +34,15 @@ class OptionsetFieldTest extends SapphireTest {
 		preg_match('/Yes/', $field->Field(), $matches);
 		$this->assertEquals($matches[0], 'Yes');
 	}
+
+	public function testEscapedOptions() {
+		$field = new OptionsetField('Content', 'Content', array(
+			'Test' => 'Test',
+			'Another<weirdvalue>' => 'Another',
+		));
+
+		$html = $field->Field();
+		$this->assertContains('value="Another&lt;weirdvalue&gt;', $html, 'Option value is escaped');
+	}
+
 }
