@@ -34,4 +34,13 @@ class NumericFieldTest extends SapphireTest {
 		$field->setValue('12.00');
 		$this->assertFalse($field->validate($validator));
 	}
+
+	public function testNumberTypeOnInputHtml() {
+		$field = new NumericField('Number');
+
+		$html = $field->Field();
+		$this->assertContains('type="number"', $html, 'number type set');
+		$this->assertContains('step="any"', $html, 'step value set to any');
+	}
+
 }
