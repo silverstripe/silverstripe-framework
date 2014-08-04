@@ -159,8 +159,8 @@ class RestfulServiceTest extends SapphireTest {
 			$fullUrl,
 			'GET',
 			null,
-			array(),
-			array(),
+			$connection->getHeaders(),
+			RestfulService::config()->default_curl_options,
 			$basicAuthStringMethod->invoke($connection)
 		)));
 

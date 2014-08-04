@@ -1,25 +1,37 @@
 <?php
 /**
  * RestfulService class allows you to consume various RESTful APIs.
- *
  * Through this you could connect and aggregate data of various web services.
- *
- * @see http://doc.silverstripe.org/framework/en/reference/restfulservice
+ * For more info visit wiki documentation - http://doc.silverstripe.org/doku.php?id=restfulservice  
  * 
  * @package framework
  * @subpackage integration
  */
 class RestfulService extends ViewableData {
-
 	protected $baseURL;
 	protected $queryString;
 	protected $errorTag;
 	protected $checkErrors;
-	protected $connectTimeout = 5;
 	protected $cache_expire;
 	protected $authUsername, $authPassword;
 	protected $customHeaders = array();
 	protected $proxy;
+
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $default_headers = array();
+
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $cachable_methods = array(
+		'GET',
+		'HEAD',
+		'OPTIONS'
+	);
 
 	/**
 	 * @config
@@ -31,7 +43,9 @@ class RestfulService extends ViewableData {
 	 * @config
 	 * @var array
 	 */
-	private static $default_curl_options = array();
+	private static $default_curl_options = array(
+		CURLOPT_CONNECTTIMEOUT => 5
+	);
 
 	/**
 	 * set a curl option that will be applied to all requests as default
@@ -90,15 +104,21 @@ class RestfulService extends ViewableData {
 		$this->baseURL = $base;
 		$this->cache_expire = $expiry;
 		parent::__construct();
-		$this->proxy = $this->config()->default_proxy;
+		$this->customHeaders = (array)$this->customHeaders + (array)$this->config()->default_headers;
+		$this->customHeaders = $this->config()->default_headers;
+		//set the user agent if it's not already there
+		if (!isset($this->customHeaders['User-Agent'])) {
+			$sapphireInfo = new SapphireInfo();
+			$this->customHeaders['User-Agent'] = 'SilverStripe/' . $sapphireInfo->Version();
+		}
 	}
 	
 	/**
  	* Sets the Query string parameters to send a request.
  	* @param array $params An array passed with necessary parameters. 
  	*/
-	public function setQueryString($params=NULL){
-		$this->queryString = http_build_query($params,'','&');
+	public function setQueryString($params = null){
+		$this->queryString = http_build_query($params, '', '&');
 	}
 
 	/**
@@ -129,13 +149,68 @@ class RestfulService extends ViewableData {
 	
 	/**
 	 * Set a custom HTTP header
+	 * @deprecated
 	 */
 	public function httpHeader($header) {
-		$this->customHeaders[] = $header;
+		Deprecation::notice('3.2', 'Use "addHeader" instead');
+		//check there is a colon in the header definition
+		if (strpos($header, ':') !== false) {
+			//explode at colon and assign into the header and value
+			list($key, $value) = explode(':', $header, 2);
+			//set the header using the addHeader function
+			$this->addHeader($key, $value);
+		}
+		else {
+			//Their header didn't have a colon, so this is unexpected
+			throw new LogicException("Header doesn't contain a colon");
+		}
+		return $this;
+	}
+
+	/**
+	 * Add a HTTP header to the request, replacing any header of the same name.
+	 *
+	 * @param string $header Example: "Content-Type"
+	 * @param string $value Example: "text/xml"
+	 */
+	public function addHeader($header, $value) {
+		$this->customHeaders[$header] = $value;
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getHeaders() {
+		return $this->customHeaders;
+	}
+
+	/**
+	 * Get an existing HTTP header
+	 *
+	 * @param string $header
+	 * @return mixed
+	 */
+	public function getHeader($header) {
+		return (isset($this->customHeaders[$header])) ? $this->customHeaders[$header] : null;
+	}
+
+	/**
+	 * Remove an existing HTTP header by its name,
+	 * e.g. "Content-Type".
+	 *
+	 * @param string $header
+	 * @return SS_HTTPRequest $this
+	 */
+	public function removeHeader($header) {
+		if (isset($this->customHeaders[$header])) {
+			unset($this->customHeaders[$header]);
+		}
+		return $this;
 	}
 	
 	protected function constructURL(){
-		return "$this->baseURL" . ($this->queryString ? "?$this->queryString" : "");
+		return $this->baseURL . ($this->queryString ? '?' . $this->queryString : '');
 	}
 		
 	/**
@@ -153,25 +228,38 @@ class RestfulService extends ViewableData {
 	 *                                   be 500
 	 */
 	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = array()) {
-		
+		//normalise varliables here
 		$url = $this->getAbsoluteRequestURL($subURL); 
 		$method = strtoupper($method);
+		$headers = array_merge((array)$this->customHeaders, (array)$headers);
+		$curlOptions = $curlOptions + (array)$this->config()->default_curl_options;
+		$cacheExpire = $this->cache_expire;
+		$canCache = in_array($method, $this->config()->cachable_methods);
 		
-		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
+		if (!in_array($method, array('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'))) {
+			throw new InvalidArgumentException('Invalid method "' . var_export($method, true) . '" passed to request');
+		}
 		
-		$cache_path = $this->getCachePath(array(
-			$url,
-			$method,
-			$data,
-			array_merge((array)$this->customHeaders, (array)$headers),
-			$curlOptions + (array)$this->config()->default_curl_options,
-			$this->getBasicAuthString()
-		));
+		//if we can cache, calculate the cache path
+		if ($canCache) {
+			$cache_path = $this->getCachePath(array(
+				$url,
+				$method,
+				$data,
+				$headers,
+				$curlOptions,
+				$this->getBasicAuthString()
+			));
+		}
+		// otherwise set the cache expiry to 0
+		else {
+			$cacheExpire = 0;
+		}
 		
 		// Check for unexpired cached feed (unless flush is set)
 		//assume any cache_expire that is 0 or less means that we dont want to
 		// cache
-		if($this->cache_expire > 0 && !isset($_GET['flush'])
+		if ($canCache && $this->cache_expire > 0 && !isset($_GET['flush'])
 				&& @file_exists($cache_path)
 				&& @filemtime($cache_path) + $this->cache_expire > time()) {
 			
@@ -181,7 +269,7 @@ class RestfulService extends ViewableData {
 		} else {
 			$response = $this->curlRequest($url, $method, $data, $headers, $curlOptions);
 			
-			if(!$response->isError()) {
+			if ($canCache && !$response->isError()) {
 				// Serialise response object and write to cache
 				$store = serialize($response);
 				file_put_contents($cache_path, $store);
@@ -189,7 +277,7 @@ class RestfulService extends ViewableData {
 			else {
 				// In case of curl or/and http indicate error, populate response's cachedBody property 
 				// with cached response body with the cache file exists 
-				if (@file_exists($cache_path)) {
+				if ($canCache && @file_exists($cache_path)) {
 					$store = file_get_contents($cache_path);
 					$cachedResponse = unserialize($store);
 					
@@ -216,63 +304,51 @@ class RestfulService extends ViewableData {
 	 * @return RestfulService_Response
 	 */
 	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
-		$ch        = curl_init();
-		$sapphireInfo = new SapphireInfo(); 
-		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
-		$curlOptions = $curlOptions + (array)$this->config()->default_curl_options;
+		$ch = curl_init();
 
+		//set the URL of the request
 		curl_setopt($ch, CURLOPT_URL, $url);
+		//return the response rather than echo it
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->getConnectTimeout());
+		//follow redirects - this can't be done if open_basedir is in effect
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+		//set the request method
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+		//include headers in the response
+		curl_setopt($ch, CURLOPT_HEADER, true);
 
-
-		// Write headers to a temporary file
-		$headerfd = tmpfile();
-		curl_setopt($ch, CURLOPT_WRITEHEADER, $headerfd);
-
-		// Add headers
-		if($this->customHeaders) {
-			$headers = array_merge((array)$this->customHeaders, (array)$headers);
+		//set headers if we have them
+		if ($headers) {
+			$headersToSend = array();
+			foreach ($headers as $header => $value) {
+				$headersToSend[] = $header . ': ' . $value;
+			}
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headersToSend);
 		}
 
-		if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
 		// Add authentication
-		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, $this->getBasicAuthString());
+		if ($this->authUsername) {
+			curl_setopt($ch, CURLOPT_USERPWD, $this->getBasicAuthString());
+		}
 
-		// Add fields to POST and PUT requests
-		if($method == 'POST') {
+		// if $data is supplied, we assume it's a body for the request NO MATTER WHAT
+		if (!empty($data)) {
 			curl_setopt($ch, CURLOPT_POST, 1);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		} elseif($method == 'PUT') {
-			$put = fopen("php://temp", 'r+');				
-			fwrite($put, $data);
-			fseek($put, 0); 
-
-			curl_setopt($ch, CURLOPT_PUT, 1);
-			curl_setopt($ch, CURLOPT_INFILE, $put);
-			curl_setopt($ch, CURLOPT_INFILESIZE, strlen($data)); 
 		}
 
 		// Apply proxy settings
-		if(is_array($this->proxy)) {
+		if (is_array($this->proxy)) {
 			curl_setopt_array($ch, $this->proxy);
 		}
 
 		// Set any custom options passed to the request() function
+		//this will override anything we've set above if it's duplicated
 		curl_setopt_array($ch, $curlOptions);
 
 		// Run request
-		$body = curl_exec($ch);
-
-		rewind($headerfd);
-		$headers = stream_get_contents($headerfd);
-		fclose($headerfd);
-
-		$response = $this->extractResponse($ch, $headers, $body);
+		$rawResponse = curl_exec($ch);
+		$response = $this->extractResponse($ch, $rawResponse);
 		curl_close($ch);
 
 		return $response;
@@ -326,19 +402,22 @@ class RestfulService extends ViewableData {
 	 *
 	 * @return RestfulService_Response The response object
 	 */
-	protected function extractResponse($ch, $rawHeaders, $rawBody) {
+	protected function extractResponse($ch, $rawResponse) {
 		//get the status code
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		//get a curl error if there is one
 		$curlError = curl_error($ch);
 		//normalise the status code
 		if(curl_error($ch) !== '' || $statusCode == 0) $statusCode = 500;
+		//calculate the length of the header and extract it
+		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		$rawHeaders = substr($rawResponse, 0, $headerLength);
+		//extract the body
+		$body = substr($rawResponse, $headerLength);
 		//parse the headers
-		$parts = array_filter(explode("\r\n\r\n", $rawHeaders));
-		$lastHeaders = array_pop($parts);
-		$headers = $this->parseRawHeaders($lastHeaders);
+		$headers = $this->parseRawHeaders($rawHeaders);
 		//return the response object
-		return new RestfulService_Response($rawBody, $statusCode, $headers);
+		return new RestfulService_Response($body, $statusCode, $headers);
 	}
 
 	/**
@@ -355,14 +434,14 @@ class RestfulService extends ViewableData {
 	protected function parseRawHeaders($rawHeaders) {
 		$headers = array();
 		$fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $rawHeaders));
-		foreach( $fields as $field ) {
-			if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
+		foreach ($fields as $field) {
+			if (preg_match('/([^:]+): (.+)/m', $field, $match)) {
 				$match[1] = preg_replace_callback(
 					'/(?<=^|[\x09\x20\x2D])./',
 					create_function('$matches', 'return strtoupper($matches[0]);'),
 					trim($match[1])
 				);
-				if( isset($headers[$match[1]]) ) {
+				if (isset($headers[$match[1]])) {
 					if (!is_array($headers[$match[1]])) {
 						$headers[$match[1]] = array($headers[$match[1]]);
 					}
@@ -389,7 +468,6 @@ class RestfulService extends ViewableData {
 				$url .= '?' . $this->queryString;
 			}
 		}
-		
 		return str_replace(' ', '%20', $url); // Encode spaces
 	}
 	
@@ -401,21 +479,22 @@ class RestfulService extends ViewableData {
  	* @param string $collection The name of parent node which wraps the elements, if available
  	* @param string $element The element we need to extract the attributes.
  	*/
-	
-	public function getAttributes($xml, $collection=NULL, $element=NULL){
+	public function getAttributes($xml, $collection = null, $element = null){
 		$xml = new SimpleXMLElement($xml);
 		$output = new ArrayList();
 		
-		if($collection)
+		if ($collection) {
 			$childElements = $xml->{$collection};
-		if($element)
+		}
+		if ($element) {
 			$childElements = $xml->{$collection}->{$element};
-		
-		if($childElements){
-			foreach($childElements as $child){
+		}
+
+		if ($childElements) {
+			foreach ($childElements as $child) {
 				$data = array();
-				foreach($child->attributes() as $key => $value){
-					$data["$key"] = Convert::raw2xml($value);
+				foreach ($child->attributes() as $key => $value) {
+					$data[$key] = Convert::raw2xml($value);
 				}
 				$output->push(new ArrayData($data));
 			}
@@ -431,18 +510,20 @@ class RestfulService extends ViewableData {
  	* @param string $element The element we need to extract the attribute
  	* @param string $attr The name of the attribute
  	*/
-	
-	public function getAttribute($xml, $collection=NULL, $element=NULL, $attr){
+	public function getAttribute($xml, $collection = null, $element = null, $attr){
 		$xml = new SimpleXMLElement($xml);
 		$attr_value = "";
 	
-		if($collection)
+		if ($collection) {
 			$childElements = $xml->{$collection};
-		if($element)
+		}
+		if ($element) {
 			$childElements = $xml->{$collection}->{$element};
-	
-		if($childElements)
+		}
+
+		if ($childElements) {
 			$attr_value = (string) $childElements[$attr];
+		}
 	
 		return Convert::raw2xml($attr_value);
 		
@@ -456,39 +537,39 @@ class RestfulService extends ViewableData {
  	* @param string $collection The name of parent node which wraps the elements, if available
  	* @param string $element The element we need to extract the node values.
  	*/
-	
-	public function getValues($xml, $collection=NULL, $element=NULL){
+	public function getValues($xml, $collection = null, $element = null){
 		$xml = new SimpleXMLElement($xml);
 		$output = new ArrayList();
-		
-			$childElements = $xml;
-		if($collection)
+		$childElements = $xml;
+
+		if ($collection) {
 			$childElements = $xml->{$collection};
-		if($element)
+		}
+		if ($element) {
 			$childElements = $xml->{$collection}->{$element};
-		
-		if($childElements){
-			foreach($childElements as $child){
+		}
+
+		if ($childElements) {
+			foreach ($childElements as $child) {
 				$data = array();
-				$this->getRecurseValues($child,$data);			
+				$this->getRecurseValues($child, $data);
 				$output->push(new ArrayData($data));
 			}
 		}
 		return $output;
 	}
 	
-	protected function getRecurseValues($xml,&$data,$parent=""){
+	protected function getRecurseValues($xml, &$data, $parent = ""){
 		$conv_value = "";
 		$child_count = 0;
-		foreach($xml as $key=>$value)
-		{
+		foreach($xml as $key => $value) {
 			$child_count++;    
 			$k = ($parent == "") ? (string)$key : $parent . "_" . (string)$key;
-			if($this->getRecurseValues($value,$data,$k) == 0){  // no childern, aka "leaf node"
+			if ($this->getRecurseValues($value, $data, $k) == 0) {  // no childern, aka "leaf node"
 				$conv_value = Convert::raw2xml($value);
 			}  
 			//Review the fix for similar node names overriding it's predecessor
-			if(array_key_exists($k, $data) == true) {	
+			if (array_key_exists($k, $data) == true) {
 				$data[$k] = $data[$k] . ",". $conv_value;		
 			}
 			else {
@@ -507,17 +588,19 @@ class RestfulService extends ViewableData {
  	* @param string $collection The name of parent node which wraps the elements, if available
  	* @param string $element The element we need to extract the node value.
  	*/
-	
-	public function getValue($xml, $collection=NULL, $element=NULL){
+	public function getValue($xml, $collection = null, $element = null){
 		$xml = new SimpleXMLElement($xml);
 		
-		if($collection)
+		if ($collection) {
 			$childElements = $xml->{$collection};
-		if($element)
+		}
+		if ($element) {
 			$childElements = $xml->{$collection}->{$element};
-		
-		if($childElements)
+		}
+
+		if ($childElements) {
 			return Convert::raw2xml($childElements);
+		}
 	}
 	
 	/**
@@ -525,12 +608,13 @@ class RestfulService extends ViewableData {
  	* @param string $xml source xml to parse, this could be the original response received.
  	* @param string $node Node to search for
  	*/
-	public function searchValue($xml, $node=NULL){
+	public function searchValue($xml, $node = null){
 		$xml = new SimpleXMLElement($xml);
 		$childElements = $xml->xpath($node);
 		
-		if($childElements)
+		if ($childElements) {
 			return Convert::raw2xml($childElements[0]);
+		}
 	}
 	
 	/**
@@ -538,49 +622,24 @@ class RestfulService extends ViewableData {
  	* @param string $xml the source xml to parse, this could be the original response received.
  	* @param string $node Node to search for
  	*/
-	public function searchAttributes($xml, $node=NULL){
+	public function searchAttributes($xml, $node = null){
 		$xml = new SimpleXMLElement($xml);
 		$output = new ArrayList();
 	
 		$childElements = $xml->xpath($node);
 		
-		if($childElements)
-		foreach($childElements as $child){
-		$data = array();
-			foreach($child->attributes() as $key => $value){
-				$data["$key"] = Convert::raw2xml($value);
+		if ($childElements) {
+			foreach ($childElements as $child) {
+				$data = array();
+				foreach ($child->attributes() as $key => $value) {
+					$data["$key"] = Convert::raw2xml($value);
+				}
+				$output->push(new ArrayData($data));
 			}
-			
-			$output->push(new ArrayData($data));
 		}
 		
 		return $output;
 	}
-
-	/**
-	 * Set the connection timeout for the curl request in seconds.
-	 *
-	 * @see http://curl.haxx.se/libcurl/c/curl_easy_setopt.html#CURLOPTCONNECTTIMEOUT
-	 *
-	 * @param int
-	 *
-	 * @return RestfulService
-	 */
-	public function setConnectTimeout($timeout) {
-		$this->connectTimeout = $timeout;
-
-		return $this;
-	}
-
-	/**
-	 * Return the connection timeout value.
-	 *
-	 * @return int
-	 */
-	public function getConnectTimeout() {
-		return $this->connectTimeout;
-	}
-
 }
 
 /**
@@ -597,8 +656,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 	protected $cachedResponse = false;
 	
 	public function __construct($body, $statusCode = 200, $headers = null) {
-		$this->setbody($body);
-		$this->setStatusCode($statusCode);
+		parent::__construct($body, $statusCode);
 		$this->headers = $headers;
 	}
 	
