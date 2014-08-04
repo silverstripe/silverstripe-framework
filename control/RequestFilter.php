@@ -19,30 +19,40 @@ interface RequestFilter {
 	/**
 	 * Filter executed before a request processes.
 	 *
-	 * @param SS_HTTPRequest $req Request container object
+	 * @param SS_HTTPRequest $request Request container object
 	 * @param Session $session Request session
 	 * @param DataModel $model Current DataModel
 	 * @return null|SS_HTTPResponse Return a response object to short-circuit. Null to continue.
 	 */
-	public function preRequest(SS_HTTPRequest $req, Session $session, DataModel $model);
+	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model);
 
 	/**
 	 * Filter executed after a shorted request.
 	 *
-	 * @param SS_HTTPRequest $req Request container object
-	 * @param SS_HTTPResponse $earlyRes Response output object that resulted from shorted inward pipeline (mutable)
+	 * @param SS_HTTPRequest $request Request container object
+	 * @param SS_HTTPResponse &$earlyResponse Response output object that resulted from shorted inward pipeline
 	 * @param Session $session Request session
 	 * @param DataModel $model Current DataModel
 	 */
-	public function postShorted(SS_HTTPRequest $req, SS_HTTPResponse &$earlyRes, Session $session, DataModel $model);
+	public function postShorted(
+		SS_HTTPRequest $request,
+		SS_HTTPResponse &$earlyResponse,
+		Session $session,
+		DataModel $model
+	);
 
 	/**
 	 * Filter executed after a successful request. This is not executed during a short-circuit.
 	 *
-	 * @param SS_HTTPRequest $req Request container object
-	 * @param SS_HTTPResponse $res Response output object (mutable)
+	 * @param SS_HTTPRequest $request Request container object
+	 * @param SS_HTTPResponse &$response Response output object
 	 * @param Session $session Request session
 	 * @param DataModel $model Current DataModel
 	 */
-	public function postRequest(SS_HTTPRequest $req, SS_HTTPResponse &$res, Session $session, DataModel $model);
+	public function postRequest(
+		SS_HTTPRequest $request,
+		SS_HTTPResponse &$response,
+		Session $session,
+		DataModel $model
+	);
 }

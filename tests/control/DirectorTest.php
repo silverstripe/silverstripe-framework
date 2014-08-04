@@ -503,7 +503,7 @@ class TestRequestFilter implements RequestFilter, TestOnly {
 	public $failPre = false;
 	public $failPost = false;
 
-	public function preRequest(\SS_HTTPRequest $request, \Session $session, \DataModel $model) {
+	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
 		++$this->preCalls;
 		
 		if ($this->failPre) {
@@ -511,11 +511,21 @@ class TestRequestFilter implements RequestFilter, TestOnly {
 		}
 	}
 
-	public function postShorted(\SS_HTTPRequest $req, \SS_HTTPResponse &$earlyRes, \Session $session, \DataModel $model) {
+	public function postShorted(
+		SS_HTTPRequest $request,
+		SS_HTTPResponse &$earlyResponse,
+		Session $session,
+		DataModel $model
+	) {
 		// No-op
 	}
 
-	public function postRequest(\SS_HTTPRequest $req, \SS_HTTPResponse &$res, \Session $session, \DataModel $model) {
+	public function postRequest(
+		SS_HTTPRequest $request,
+		SS_HTTPResponse &$response,
+		Session $session,
+		DataModel $model
+	) {
 		++$this->postCalls;
 		
 		if ($this->failPost) {

@@ -73,16 +73,16 @@ class RequestProcessor {
 	/**
 	 * Apply the inward pipeline.
 	 *
-	 * @param SS_HTTPRequest $req Request container object
+	 * @param SS_HTTPRequest $request Request container object
 	 * @param Session $session Request session
 	 * @param DataModel $model Current DataModel
 	 * @return null|SS_HTTPResponse Returns a response object to signify a short-circuit.
 	 */
-	public function preRequestPipeline(SS_HTTPRequest $req, Session $session, DataModel $model) {
+	public function preRequestPipeline(SS_HTTPRequest $request, Session $session, DataModel $model) {
 		$earlyResponse = null;
 
 		foreach ($this->filters as $filter) {
-			$earlyResponse = $filter->preRequest($req, $session, $model);
+			$earlyResponse = $filter->preRequest($request, $session, $model);
 			if ($earlyResponse) {
 				$this->shortedFilter = $filter;
 				break;
@@ -96,7 +96,7 @@ class RequestProcessor {
 		if ($earlyResponse) {
 			$filters = array_reverse($this->executedFilters);
 			foreach ($filters as $filter) {
-				$filter->postShorted($req, $earlyResponse, $session, $model);
+				$filter->postShorted($request, $earlyResponse, $session, $model);
 			}
 			return $earlyResponse;
 		}
@@ -107,14 +107,14 @@ class RequestProcessor {
 	/**
 	 * Apply the outward pipeline (for successful requests with real responses).
 	 *
-	 * @param SS_HTTPRequest $req Request container object
-	 * @param SS_HTTPResponse $res Response output object (mutable)
+	 * @param SS_HTTPRequest $request Request container object
+	 * @param SS_HTTPResponse $response Response output object (mutable)
 	 * @param Session $session Request session
 	 * @param DataModel $model Current DataModel
 	 */
 	public function postRequestPipeline(
-		SS_HTTPRequest $req,
-		SS_HTTPResponse &$res,
+		SS_HTTPRequest $request,
+		SS_HTTPResponse &$response,
 		Session $session,
 		DataModel $model
 	) {
@@ -122,7 +122,7 @@ class RequestProcessor {
 		$filters = array_reverse($this->executedFilters);
 
 		foreach ($filters as $filter) {
-			$filter->postRequest($req, $res, $session, $model);
+			$filter->postRequest($request, $response, $session, $model);
 		}
 	}
 }
