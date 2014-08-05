@@ -1,15 +1,18 @@
 sl:
   AssetAdmin:
     NEWFOLDER: Nova mapa
+    SHOWALLOWEDEXTS: 'Pokaži dovoljene razširitve'
   AssetTableField:
     CREATED: 'Naloženo na začetku'
     DIM: Dimenzije
     FILENAME: Ime datoteke
+    FOLDER: Mapa
     LASTEDIT: 'Zadnje naloženo'
     OWNER: Lastnik
-    SIZE: 'Velikost'
+    SIZE: 'Velikost datoteke'
     TITLE: Naslov
     TYPE: 'Tip'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Izberite datoteke'
     DRAGFILESHERE: 'Potegnite datoteke na to mesto '
@@ -64,6 +67,8 @@ sl:
     ACCESSALLINTERFACES: 'Dostop do vseh sklopov CMS'
     ACCESSALLINTERFACESHELP: 'Omogoča bolj specifične nastavitve za možnosti dostop.'
     SAVE: Shrani
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Predogled spletne strani'
   CMSProfileController:
     MENUTITLE: 'Moj profil'
   ChangePasswordEmail_ss:
@@ -77,6 +82,8 @@ sl:
     BETWEEN: 'Geslo mora biti dolgo od {min} do {max} znakov.'
     MAXIMUM: 'Geslo je lahko dolgo največ {max} znakov.'
     SHOWONCLICKTITLE: 'Spremeni geslo'
+  ContentController:
+    NOTLOGGEDIN: 'Neprijavljen'
   CreditCardField:
     FIRST: prvič
     FOURTH: četrtič
@@ -85,16 +92,35 @@ sl:
   DataObject:
     PLURALNAME: 'Podatkovni objekti'
     SINGULARNAME: 'Podatkovni objekt'
+  Date:
+    DAY: dan
+    DAYS: dnevi
+    HOUR: ura
+    HOURS: ure
+    LessThanMinuteAgo: 'manj kot minuta'
+    MIN: minuta
+    MINS: inute
+    MONTH: mesec
+    MONTHS: meseci
+    SEC: sekunda
+    SECS: sekunde
+    TIMEDIFFAGO: 'pred {difference}'
+    TIMEDIFFIN: 'v {difference}'
+    YEAR: leto
+    YEARS: leta
   DateField:
     NOTSET: 'ni nastavljeno'
     TODAY: danes
     VALIDDATEFORMAT2: 'Prosim, vnesite ustrezno obliko datuma ({format})'
+    VALIDDATEMAXDATE: 'Datum mora biti starejši ali enak največjemu dovoljenemu datumu ({date})'
+    VALIDDATEMINDATE: 'Datum mora biti novejši ali enak najmanjšemu dovoljenemu datumu ({date})'
   DatetimeField:
     NOTSET: 'Ni nastavljeno'
   Director:
     INVALID_REQUEST: 'Napačna zahteva'
   DropdownField:
     CHOOSE: (Izberi)
+    CHOOSESEARCH: '(Izberi ali išči)'
   EmailField:
     VALIDATION: 'Prosim, vpišite e-naslov.'
   Enum:
@@ -106,6 +132,7 @@ sl:
     DocType: 'Word datoteka'
     Filename: Ime datoteke
     GifType: 'GIF slika - primerna za diagrame'
+    GzType: 'GZIP stisnjena datoteka'
     HtlType: 'HTML datoteka'
     HtmlType: 'HTML datoteka'
     INVALIDEXTENSION: 'Podaljševanje ni dovoljeno (dovoljeno: {extensions})'
@@ -128,6 +155,8 @@ sl:
     WavType: 'WAV avdio datoteka'
     XlsType: 'Excel preglednica'
     ZipType: 'ZIP stisnjena datoteka'
+  Filesystem:
+    SYNCRESULTS: 'Sinhronizacija končana: {createdcount} ustvarjenih elementov, {deletedcount} izbrisanih elementov'
   Folder:
     PLURALNAME: Mape
     SINGULARNAME: Mapa
@@ -137,6 +166,8 @@ sl:
     TEXT2: 'povezava za ponastavitev gesla'
     TEXT3: za
   Form:
+    CSRF_FAILED_MESSAGE: "Verjetno je prišlo do tehničnih napak. Kliknite \"the back button\", osvežite brskalnik in poskusite ponovno."
+    FIELDISREQUIRED: '{name} je potrebno'
     SubmitBtnLabel: Naprej
     VALIDATIONCREDITNUMBER: 'Prosim, preverite, da ste vnesli številko kreditne kartice {number} pravilno.'
     VALIDATIONNOTUNIQUE: 'Vpisana vrednost ni unikatna'
@@ -145,7 +176,9 @@ sl:
     VALIDATIONSTRONGPASSWORD: 'Geslo naj vsebuje vsaj eno črko in vsaj eno številko.'
     VALIDATOR: Preverjanje
     VALIDCURRENCY: 'Prosim, vnesite pravo valuto.'
+    CSRF_EXPIRED_MESSAGE: 'Vaša seja je potekla. Prosimo ponovno oddajte obrazec '
   FormField:
+    Example: 'npr. %s'
     NONE: brez
   GridAction:
     DELETE_DESCRIPTION: Izbriši
@@ -153,10 +186,17 @@ sl:
     UnlinkRelation: Odstrani povezavo
   GridField:
     Add: 'Dodaj {name}'
+    Filter: Filter
+    FilterBy: 'Filtriraj po'
     Find: Poišči
     LinkExisting: 'Poveži na'
+    NewRecord: 'Novih %s'
+    NoItemsFound: 'Ni rezultatov'
+    PRINTEDAT: 'Tiskano pri'
+    PRINTEDBY: 'Natisnil'
     PlaceHolder: 'Poišči {type} '
     PlaceHolderWithLabels: 'Poišči {type} glede na {name}'
+    RelationSearch: 'Povezano iskanje'
     ResetFilter: Ponastavi
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
@@ -165,13 +205,22 @@ sl:
     Create: Ustvari
     Delete: Izbriši
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
+    Deleted: 'Izbrisanih %s %s'
     Save: Shrani
+    Saved: 'Shranjeno {name} {link}'
+  GridFieldEditButton_ss:
+    EDIT: Uredi
+  GridFieldItemEditView:
+    Go_back: 'Nazaj'
   Group:
+    AddRole: 'Skupinam pripiši vloge'
     Code: 'Koda skupine'
     DefaultGroupTitleAdministrators: Administratorji
     DefaultGroupTitleContentAuthors: 'Avtorji vsebine'
     Description: Opis
+    GroupReminder: 'Če izberete nadrejeno skupino, bo ta skupina prevzela vse njene vloge'
     Locked: 'Zaklenjeno za urejanje?'
+    NoRoles: 'Ni najdenih vlog'
     PLURALNAME: Skupine
     Parent: 'Nadrejena skupina'
     RolesAddEditLink: 'Dodaj in uredi vloge'
@@ -187,6 +236,7 @@ sl:
   HtmlEditorField:
     ADDURL: 'Dodaj URL'
     ANCHORVALUE: Sidro
+    BUTTONADDURL: 'Dodaj url'
     BUTTONINSERT: Vstavi
     BUTTONINSERTLINK: 'Vstavi povezavo'
     BUTTONREMOVELINK: 'Odstrani povezavo'
@@ -211,6 +261,7 @@ sl:
     IMAGETITLETEXT: 'Naslov (tooltip)'
     IMAGETITLETEXTDESC: 'Za dodatne informacije o sliki'
     IMAGEWIDTHPX: Širina
+    INSERTMEDIA: 'Vstavi multimedijsko datoteko'
     LINK: 'Povezava'
     LINKANCHOR: 'Sidro na tej strani'
     LINKDESCR: 'Opis povezave'
@@ -221,6 +272,8 @@ sl:
     LINKOPENNEWWIN: 'Naj se povezava odpira v novem oknu?'
     LINKTO: 'Poveži na'
     PAGE: Stran
+    URL: URL
+    UpdateMEDIA: 'Posodobi multimedijsko datoteko'
   Image:
     PLURALNAME: Datoteke
     SINGULARNAME: Datoteka
@@ -242,6 +295,10 @@ sl:
     PreviewButton: Predogled
     REORGANISATIONSUCCESSFUL: 'Struktura spletnega mesta je bila uspešno spremenjena.'
     SAVEDUP: Shranjeno.
+    ShowAsList: 'pokaži kot seznam'
+    TooManyPages: 'Preveč strani'
+    ValidationError: 'Napaka pri potrjevanju'
+    VersionUnknown: Neznano
   LeftAndMain_Menu_ss:
     Hello: Pozdravljeni,
     LOGOUT: 'Odjava'
@@ -260,17 +317,21 @@ sl:
     CANTEDIT: 'Nimate dovoljenja za to dejanje'
     CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
     CONFIRMPASSWORD: 'Potrdi geslo'
+    DATEFORMAT: 'Format datuma'
     DefaultAdminFirstname: 'Privzeti administrator'
+    DefaultDateTime: privzeto
     EMAIL: E-naslov
     EMPTYNEWPASSWORD: 'Polje za vpis novega gesla ne sme ostati prazno. Poskusite ponovno.'
     ENTEREMAIL: 'Vpišite e-naslov, na katerega vam bomo nato poslali povezavo za ponastavitev gesla.'
     ERRORNEWPASSWORD: 'Novo geslo ste drugače zapisali - poskusite ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vpisani novi gesli se ne ujemata. Poskusite ponovno.'
+    ERRORWRONGCRED: 'Izgleda, da podani podatki niso točni. Poskusite ponovno'
     FIRSTNAME: 'Ime'
     INTERFACELANG: 'Jezik'
     INVALIDNEWPASSWORD: 'Tega gesla ne moremo sprejeti: {password}'
     LOGGEDINAS: 'Vpisan(a) si kot: {name}.'
     NEWPASSWORD: 'Novo geslo'
+    NoPassword: 'Za tega člana ni gesla'
     PASSWORD: Geslo
     PLURALNAME: Uporabniki
     REMEMBERME: 'Zapomni si me do prihodnjič'
@@ -278,6 +339,7 @@ sl:
     SUBJECTPASSWORDCHANGED: 'Geslo je bilo spremenjeno'
     SUBJECTPASSWORDRESET: 'Povezava za resetiranje vašega gesla'
     SURNAME: Priimek
+    TIMEFORMAT: 'Format časovnega zapisa'
     VALIDATIONMEMBEREXISTS: 'Uporabnik s tem %s že obstaja'
     WELCOMEBACK: 'Ponovno pozdravljeni, {firstname}'
     YOUROLDPASSWORD: 'Staro geslo'
@@ -318,12 +380,25 @@ sl:
   MemberPassword:
     PLURALNAME: 'Gesla uporabnika'
     SINGULARNAME: 'Geslo uporabnika'
+  MemberTableField:
+    APPLY_FILTER: 'Uporabi filter'
   ModelAdmin:
     DELETE: Izbriši
+    DELETEDRECORDS: 'Izbrisanih je {count} zapisov.'
+    EMPTYBEFOREIMPORT: 'Nadomesti podatke'
     IMPORT: 'Uvozi CSV-datoteko'
+    IMPORTEDRECORDS: 'Uvoženih je {count} zapisov.'
     NOCSVFILE: 'Poiščite CSV-datoteko za uvoz'
     NOIMPORT: 'Ne najdem ničesar za uvoz'
+    RESET: Ponastavi
+    Title: 'Podatkovni modeli'
+    UPDATEDRECORDS: 'Posodobi {count} zapisov.'
+  ModelAdmin_ImportSpec_ss:
+    IMPORTSPECFIELDS: 'Stolpci podatkovne baze'
+    IMPORTSPECLINK: 'Pokaži specifikacije za %s'
+    IMPORTSPECTITLE: 'Specifikacije za %s'
   ModelAdmin_Tools_ss:
+    FILTER: Filtriraj
     IMPORT: Uvozi
   ModelSidebar_ss:
     IMPORT_TAB_HEADER: Uvozi
@@ -339,6 +414,7 @@ sl:
     Page: Stran
     View: Poglej
   Permission:
+    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostop do CMS-vmesnika'
     FULLADMINRIGHTS: 'Popolne administratorske pravice'
     FULLADMINRIGHTS_HELP: 'Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji.'
@@ -364,6 +440,7 @@ sl:
     ERRORPASSWORDPERMISSION: 'Da bi lahko zamenjali geslo, se morate prijaviti.'
     LOGGEDOUT: 'Vaša prijava je bila prekinjena. Če se želite ponovno prijaviti, vpišite svoje podatke.'
     LOGIN: 'Prijava'
+    LOSTPASSWORDHEADER: 'Izgubljeno geslo'
     NOTEPAGESECURED: 'Stran je zaščitena. Da bi lahko nadaljevali, vpišite svoje podatke.'
     NOTERESETLINKINVALID: '<p>Povezava za ponastavitev gesla je napačna ali pa je njena veljavnost potekla.</p><p><a href="{link1}">Tukaj</a> lahko zaprosite za novo povezavo or pa zamenjate geslo, ko  <a href="{link2}">se prijavite v sistem</a>.</p>'
     NOTERESETPASSWORD: 'Vpišite e-naslov, na katerega vam bomo poslali povezavo za ponastavitev gesla'
@@ -376,6 +453,8 @@ sl:
     EDITPERMISSIONS: 'Upravljanje dovoljenj za skupine'
     EDITPERMISSIONS_HELP: 'Možnost upravljanja z dovoljenji in IP-naslovi skupin. Potrebujete dovoljenje za dostop do sklopa "Varnost".'
     GROUPNAME: 'Ime skupine'
+    IMPORTGROUPS: 'Uvozi skupine'
+    IMPORTUSERS: 'Uvozi uporabnike'
     MEMBERS: Člani
     MENUTITLE: Varnost
     MemberListCaution: 'Pozor! Če boste odstranili uporabnike s tega seznama, jih boste hkrati odstranili iz vseh drugih skupin in izbrisali iz podatkovne zbirke.'
@@ -384,11 +463,22 @@ sl:
     ROLES: Vloge
     ROLESDESCRIPTION: 'Tukaj lahko skupini dodajate vloge. Vloge so logični sklopi dovoljenj, ki jih urejate v zavihku "Vloge".'
     TABROLES: Vloge
+    Users: Uporabniki
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Uvozi'
     FileFieldLabel: 'CSV-datoteka <small>(Samo končnica: *.csv)</small>'
   SilverStripeNavigator:
+    Auto: Samodejno
+    ChangeViewMode: 'Spremeni pogled'
+    Desktop: Namizje
     Edit: Uredi
+    EditView: 'Način za urejanje'
+    PreviewState: 'Stanje predogleda'
+    PreviewView: 'Način za predogled'
+    Responsive: Odziven
+    SplitView: 'Razdeljeni način'
+    ViewDeviceWidth: 'Izberi širino predogleda'
+    Width: širina
   SiteTree:
     TABMAIN: Domov
   TableListField:
@@ -402,7 +492,10 @@ sl:
     LESS: manj
     MORE: več
   UploadField:
+    ATTACHFILE: 'Pripni datoteko'
     ATTACHFILES: 'Pripni datoteke'
+    AttachFile: 'Pripni datoteko (ali več njih)'
+    CHOOSEANOTHERFILE: 'Izberi še eno datoteko'
     DELETE: 'Izbriši iz zbirke naloženih datotek'
     DELETEINFO: 'Dokončno izbriši datoteko iz knjižnjice datotek'
     DOEDIT: Shrani
@@ -414,11 +507,16 @@ sl:
     FIELDNOTSET: 'Pred uvozom počisti bazo podatkov'
     FROMCOMPUTER: 'Z vašega računalnika'
     FROMCOMPUTERINFO: 'Izberite iz zbirke naloženih datotek'
+    FROMFILES: 'Iz datotek'
     HOTLINKINFO: 'Info: Ta slika bo dostopna prek povezave. Prosim, preverite, da imate dovoljenje avtorja za tako uporabo.'
     MAXNUMBEROFFILES: 'Doseženo je največje možno število datotek: {count}'
+    MAXNUMBEROFFILESONE: 'Naložite lahko samo eno datoteko'
     MAXNUMBEROFFILESSHORT: 'Naložite lahko največ {count} datotek'
+    OVERWRITEWARNING: 'Datoteka z enakim imenom že obstaja'
     REMOVE: Odstrani
     REMOVEINFO: 'Odstrani datoteko, vendar je ne izbriši iz knjižnjice datotek'
+    STARTALL: 'Zaženi vse'
     Saved: Shranjeno
+    UPLOADSINTO: 'shrani v /{path}'
   Versioned:
     has_many_Versions: Verzije
