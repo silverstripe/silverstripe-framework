@@ -136,7 +136,7 @@ class DataQueryTest extends SapphireTest {
 		$this->assertEquals(array('First', 'Second', 'Last'), $result);
 	}
 	
-	public function testComparisonClaseInt() {
+	public function testComparisonClauseInt() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"sortorder\") VALUES (2)");
 		$query = new DataQuery('DataQueryTest_F');
 		$query->where(DB::getConn()->comparisonClause('sortorder', '2'));
@@ -144,7 +144,7 @@ class DataQueryTest extends SapphireTest {
 		$this->resetDBSchema(true);
 	}
 	
-	public function testComparisonClaseDateFull() {
+	public function testComparisonClauseDateFull() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"mydate\") VALUES ('1988-03-04 06:30')");
 		$query = new DataQuery('DataQueryTest_F');
 		$query->where(DB::getConn()->comparisonClause('mydate', '1988-03-04%'));
@@ -152,7 +152,7 @@ class DataQueryTest extends SapphireTest {
 		$this->resetDBSchema(true);
 	}
 	
-	public function testComparisonClaseDateStartsWith() {
+	public function testComparisonClauseDateStartsWith() {
 		$result = DB::query("INSERT INTO \"DataQueryTest_F\" (\"mydate\") VALUES ('1988-03-04 06:30')");
 		$query = new DataQuery('DataQueryTest_F');
 		$query->where(DB::getConn()->comparisonClause('mydate', '1988%'));
@@ -160,7 +160,7 @@ class DataQueryTest extends SapphireTest {
 		$this->resetDBSchema(true);
 	}
 	
-	public function testComparisonClaseDateStartsPartial() {
+	public function testComparisonClauseDateStartsPartial() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"mydate\") VALUES ('1988-03-04 06:30')");
 		$query = new DataQuery('DataQueryTest_F');
 		$query->where(DB::getConn()->comparisonClause('mydate', '%03-04%'));
@@ -168,7 +168,7 @@ class DataQueryTest extends SapphireTest {
 		$this->resetDBSchema(true);
 	}
 	
-	public function testComparisonClaseTextCaseInsensitive() {
+	public function testComparisonClauseTextCaseInsensitive() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"mystring\") VALUES ('HelloWorld')");
 		$query = new DataQuery('DataQueryTest_F');
 		$query->where(DB::getConn()->comparisonClause('mystring', 'helloworld'));
@@ -176,7 +176,7 @@ class DataQueryTest extends SapphireTest {
 		$this->resetDBSchema(true);
 	}
 	
-	public function testComparisonClaseTextCaseSensitive() {
+	public function testComparisonClauseTextCaseSensitive() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"mystring\") VALUES ('HelloWorld')");
 		$query = new DataQuery('DataQueryTest_F');
 		$query->where(DB::getConn()->comparisonClause('mystring', 'HelloWorld', false, false, true));
