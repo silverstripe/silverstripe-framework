@@ -16,7 +16,15 @@ class RestfulService extends ViewableData {
 	protected $errorTag;
 	protected $checkErrors;
 	protected $connectTimeout = 5;
+
+	/**
+	* @var int
+	* Number of seconds before the cached response is seen as stalled
+	* If 0, cache doesn't expire 
+	* If negative, response is not cached.
+	*/
 	protected $cache_expire;
+	
 	protected $authUsername, $authPassword;
 	protected $customHeaders = array();
 	protected $proxy;
@@ -159,7 +167,7 @@ class RestfulService extends ViewableData {
 		
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
 		
-		$cache_path = $this->getCachePath(array(
+		$cacheKey = 'response_'.$this->generateCacheKey(array(
 			$url,
 			$method,
 			$data,
@@ -167,37 +175,18 @@ class RestfulService extends ViewableData {
 			$curlOptions + (array)$this->config()->default_curl_options,
 			$this->getBasicAuthString()
 		));
-		
-		// Check for unexpired cached feed (unless flush is set)
-		//assume any cache_expire that is 0 or less means that we dont want to
-		// cache
-		if($this->cache_expire > 0 && !isset($_GET['flush'])
-				&& @file_exists($cache_path)
-				&& @filemtime($cache_path) + $this->cache_expire > time()) {
-			
-			$store = file_get_contents($cache_path);
-			$response = unserialize($store);
-			
-		} else {
+		$cache = SS_Cache::factory(__CLASS__, 'Output', array(
+			'lifetime'=>$this->cache_expire,
+			'automatic_serialization'=> true
+		));
+		if (!$response = $cache->load($cacheKey) || isset($_GET['flush'])){
 			$response = $this->curlRequest($url, $method, $data, $headers, $curlOptions);
 			
-			if(!$response->isError()) {
-				// Serialise response object and write to cache
-				$store = serialize($response);
-				file_put_contents($cache_path, $store);
+			if(!$response->isError() && ($this->cache_expire >= 0)) {
+				$cache->save($response, $cacheKey);
 			}
 			else {
-				// In case of curl or/and http indicate error, populate response's cachedBody property 
-				// with cached response body with the cache file exists 
-				if (@file_exists($cache_path)) {
-					$store = file_get_contents($cache_path);
-					$cachedResponse = unserialize($store);
-					
-					$response->setCachedResponse($cachedResponse);
-				}
-				else {
-					$response->setCachedResponse(false);
-				}
+				$response->setCachedResponse(false);
 			}
 		}
 
@@ -283,7 +272,6 @@ class RestfulService extends ViewableData {
 	 * class but also allows tests to pull it out when generating the expected
 	 * cache keys
 	 *
-	 * @see {self::getCachePath()}
 	 * @see {RestfulServiceTest::createFakeCachedResponse()}
 	 *
 	 * @return string The auth string to be base64 encoded
@@ -301,21 +289,6 @@ class RestfulService extends ViewableData {
 	 */
 	protected function generateCacheKey($cacheData) {
 		return md5(var_export($cacheData, true));
-	}
-
-	/**
-	 * Generate the cache path
-	 *
-	 * This is mainly so that the cache path can be generated in a consistent
-	 * way in tests without having to hard code the cachekey generate function
-	 * in tests
-	 *
-	 * @param mixed $cacheData The cache seed {@see self::generateCacheKey}
-	 *
-	 * @return string The path to the cache file
-	 */
-	protected function getCachePath($cacheData) {
-		return TEMP_FOLDER . "/xmlresponse_" . $this->generateCacheKey($cacheData);
 	}
 
 	/**
