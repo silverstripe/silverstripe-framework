@@ -962,13 +962,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param $callback Closure
 	 */
 	protected function useTestTheme($themeBaseDir, $theme, $callback) {
+		Config::nest();
 		global $project;
 
 		$manifest = new SS_TemplateManifest($themeBaseDir, $project, true, true);
 
 		SS_TemplateLoader::instance()->pushManifest($manifest);
 
-		$origTheme = Config::inst()->get('SSViewer', 'theme');
 		Config::inst()->update('SSViewer', 'theme', $theme);
 
 		$e = null;
@@ -978,7 +978,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// Remove all the test themes we created
 		SS_TemplateLoader::instance()->popManifest();
-		Config::inst()->update('SSViewer', 'theme', $origTheme);
+		
+		Config::unnest();
 
 		if ($e) throw $e;
 	}
