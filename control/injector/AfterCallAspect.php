@@ -22,6 +22,8 @@ interface AfterCallAspect {
 	 *				The name of the method being called
 	 * @param string $args
 	 *				The arguments that were passed to the method call
+	 * @param mixed $result
+	 *				The result of calling the method on the real object
 	 */
-	public function afterCall($proxied, $method, $args);
+	public function afterCall($proxied, $method, $args, $result);
 }
