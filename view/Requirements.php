@@ -699,6 +699,9 @@ class Requirements_Backend {
 				if($path) {
 					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
 				}
+				else {
+					error_log("Invalid path for Javascript file to include: $file");
+				}
 			}
 
 			// add all inline javascript *after* including external files which
@@ -718,6 +721,10 @@ class Requirements_Backend {
 						? " media=\"{$params['media']}\"" : "";
 					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
 				}
+				else {
+					error_log("Invalid path for CSS file to include: $file");
+				}
+			}				
 			}
 
 			foreach(array_diff_key($this->customCSS, $this->blocked) as $css) {
