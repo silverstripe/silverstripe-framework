@@ -869,6 +869,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				true, 
 				$childrenMethod,
 				$numChildrenMethod,
+				true,
 				$nodeCountThreshold,
 				$nodeCountCallback
 			);
