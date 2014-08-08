@@ -140,7 +140,7 @@ to make it easier for CMS authors to identify pages of this type,
 when navigating the tree or adding a new page:
 
 	:::php
-	class StaggPage extends Page {
+	class StaffPage extends Page {
 		private static $singular_name = 'Staff Directory';
 		private static $plural_name = 'Staff Directories';
 		private static $description = 'Two-column layout with a list of staff members';
