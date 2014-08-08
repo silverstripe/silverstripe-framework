@@ -2,6 +2,10 @@ language: php
 
 php:
   - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
 
 env:
   global:
@@ -13,6 +17,8 @@ env:
     - DB=MYSQL CORE_RELEASE=3.1
 
 matrix:
+  allow_failures:
+    - php: hhvm
   include:
     - php: 5.3
       env: DB=PGSQL CORE_RELEASE=3.1
@@ -26,6 +32,7 @@ matrix:
       env: DB=MYSQL CORE_RELEASE=3.1
     - php: 5.4
       env: DB=MYSQL CORE_RELEASE=3.1 BEHAT_TEST=1
+
 before_script:
  - composer self-update
  - phpenv rehash
