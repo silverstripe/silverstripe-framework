@@ -585,11 +585,14 @@ jQuery.noConflict();
 
 				var newFragments = {}, newContentEls;
 				// If content type is text/json (ignoring charset and other parameters)
-				if(xhr.getResponseHeader('Content-Type').match(/^text\/json[ \t]*;?/i)) {
+				if(xhr.getResponseHeader('Content-Type').match(/^((text)|(application))\/json[ \t]*;?/i)) {
 					newFragments = data;
 				} else {
+					
 					// Fall back to replacing the content fragment if HTML is returned
-					$data = $(data);
+					var fragment = document.createDocumentFragment();
+					jQuery.clean( [ data ], document, fragment, [] );
+					$data = $(jQuery.merge( [], fragment.childNodes ));
 
 					// Try and guess the fragment if none is provided
 					// TODO: data-pjax-fragment might actually give us the fragment. For now we just check most common case
