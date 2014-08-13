@@ -280,8 +280,9 @@ abstract class SQLConditionalExpression extends SQLExpression {
 					$filter = "(" . implode(") AND (", $join['filter']) . ")";
 				}
 
+				$table = strpos(strtoupper($join['table']), 'SELECT') ? $join['table'] : "\"" . $join['table'] . "\"";
 				$aliasClause = ($alias != $join['table']) ? " AS \"$alias\"" : "";
-				$joins[$alias] = strtoupper($join['type']) . ' JOIN "' . $join['table'] . "\"$aliasClause ON $filter";
+				$joins[$alias] = strtoupper($join['type']) . " JOIN " . $table . "$aliasClause ON $filter";
 			}
 		}
 		

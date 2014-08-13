@@ -353,6 +353,27 @@ class SQLQueryTest extends SapphireTest {
 		);
 	}
 	
+	public function testJoinSubSelect() {
+
+		$query = new SQLQuery();
+		$query->setFrom('MyTable');
+		$query->addInnerJoin('(SELECT * FROM MyOtherTable)', 
+			'Mot.MyTableID = MyTable.ID', 'Mot');
+		$query->addLeftJoin('(SELECT MyLastTable.MyOtherTableID, COUNT(1) as MyLastTableCount FROM MyLastTable '
+			. 'GROUP BY MyOtherTableID)', 
+			'Mlt.MyOtherTableID = Mot.ID', 'Mlt');
+		$query->setOrderBy('COALESCE(Mlt.MyLastTableCount, 0) DESC');
+
+		$this->assertSQLEquals('SELECT *, COALESCE(Mlt.MyLastTableCount, 0) AS "_SortColumn0" FROM MyTable '.
+			'INNER JOIN (SELECT * FROM MyOtherTable) AS "Mot" ON Mot.MyTableID = MyTable.ID ' .
+			'LEFT JOIN (SELECT MyLastTable.MyOtherTableID, COUNT(1) as MyLastTableCount FROM MyLastTable '
+			. 'GROUP BY MyOtherTableID) AS "Mlt" ON Mlt.MyOtherTableID = Mot.ID ' .
+			'ORDER BY "_SortColumn0" DESC',
+			$query->sql($parameters)
+		);
+
+	}
+	
 	public function testSetWhereAny() {
 		$query = new SQLSelect();
 		$query->setFrom('MyTable');

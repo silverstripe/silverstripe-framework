@@ -173,7 +173,11 @@
 			},
 			setValue: function(val) {
 				this.data('metadata', $.extend(this.data('metadata'), {id: val}));
-				this.find(':input:hidden').val(val).trigger('change');
+				this.find(':input:hidden').val(val)
+					// Trigger synthetic event so subscribers can workaround the IE8 problem with 'change' events
+					// not propagating on hidden inputs. 'change' is still triggered for backwards compatiblity.
+					.trigger('valueupdated')
+					.trigger('change');
 			},
 			getValue: function() {
 				return this.find(':input:hidden').val();
@@ -423,11 +427,13 @@
 
 		$('.TreeDropdownField input[type=hidden]').entwine({
 			onadd: function() {
+				this._super();
 				this.bind('change.TreeDropdownField', function() {
 					$(this).getField().updateTitle();
 				});
 			},
 			onremove: function() {
+				this._super();
 				this.unbind('.TreeDropdownField');
 			}
 		});

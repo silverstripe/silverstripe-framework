@@ -74,7 +74,7 @@ class Upload extends Controller {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->validator = new Upload_Validator();
+		$this->validator = Injector::inst()->create('Upload_Validator');
 		$this->replaceFile = self::config()->replaceFile;
 	}
 	

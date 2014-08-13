@@ -200,6 +200,52 @@ class LeftAndMainTest extends FunctionalTest {
 		
 		$this->session()->inst_set('loggedInAs', null);
 	}
+
+	/**
+	 * Test {@see LeftAndMain::updatetreenodes}
+	 */
+	public function testUpdateTreeNodes() {
+		$page1 = $this->objFromFixture('LeftAndMainTest_Object', 'page1');
+		$page2 = $this->objFromFixture('LeftAndMainTest_Object', 'page2');
+		$page3 = $this->objFromFixture('LeftAndMainTest_Object', 'page3');
+		$page31 = $this->objFromFixture('LeftAndMainTest_Object', 'page31');
+		$page32 = $this->objFromFixture('LeftAndMainTest_Object', 'page32');
+		$this->logInWithPermission('ADMIN');
+
+		// Check page
+		$result = $this->get('LeftAndMainTest_Controller/updatetreenodes?ids='.$page1->ID);
+		$this->assertEquals(200, $result->getStatusCode());
+		$this->assertEquals('text/json', $result->getHeader('Content-Type'));
+		$data = json_decode($result->getBody(), true);
+		$pageData = $data[$page1->ID];
+		$this->assertEquals(0, $pageData['ParentID']);
+		$this->assertEquals($page2->ID, $pageData['NextID']);
+		$this->assertEmpty($pageData['PrevID']);
+
+		// check subpage
+		$result = $this->get('LeftAndMainTest_Controller/updatetreenodes?ids='.$page31->ID);
+		$this->assertEquals(200, $result->getStatusCode());
+		$this->assertEquals('text/json', $result->getHeader('Content-Type'));
+		$data = json_decode($result->getBody(), true);
+		$pageData = $data[$page31->ID];
+		$this->assertEquals($page3->ID, $pageData['ParentID']);
+		$this->assertEquals($page32->ID, $pageData['NextID']);
+		$this->assertEmpty($pageData['PrevID']);
+
+		// Multiple pages
+		$result = $this->get('LeftAndMainTest_Controller/updatetreenodes?ids='.$page1->ID.','.$page2->ID);
+		$this->assertEquals(200, $result->getStatusCode());
+		$this->assertEquals('text/json', $result->getHeader('Content-Type'));
+		$data = json_decode($result->getBody(), true);
+		$this->assertEquals(2, count($data));
+
+		// Invalid IDs
+		$result = $this->get('LeftAndMainTest_Controller/updatetreenodes?ids=-3');
+		$this->assertEquals(200, $result->getStatusCode());
+		$this->assertEquals('text/json', $result->getHeader('Content-Type'));
+		$data = json_decode($result->getBody(), true);
+		$this->assertEquals(0, count($data));
+	}
 }
 
 /**
@@ -228,4 +274,6 @@ class LeftAndMainTest_Object extends DataObject implements TestOnly {
 		'Hierarchy'
 	);
 	
+	public function CMSTreeClasses() {}
+
 }

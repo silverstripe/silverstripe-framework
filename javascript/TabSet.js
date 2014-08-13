@@ -12,7 +12,7 @@
 				this._super();
 			},
 			onremove: function() {
-				if(this.data('uiTabs')) this.tabs('destroy');
+				if(this.data('tabs')) this.tabs('destroy');
 				this._super();
 			},
 			redrawTabs: function() {
@@ -32,7 +32,7 @@
 					if(!matches) return;
 					$(this).attr('href', document.location.href.replace(/#.*/, '') + matches[0]);
 				});
-			}			
+			}
 		});
 	});
 })(jQuery);

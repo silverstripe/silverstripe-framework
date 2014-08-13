@@ -115,7 +115,8 @@ class Hierarchy extends DataExtension {
 		if($limitToMarked && $rootCall) {
 			$this->markingFinished($numChildrenMethod);
 		}
-		
+
+
 		if($nodeCountCallback) {
 			$nodeCountWarning = $nodeCountCallback($this->owner, $this->owner->$numChildrenMethod());	
 			if($nodeCountWarning) return $nodeCountWarning;
@@ -130,6 +131,7 @@ class Hierarchy extends DataExtension {
 		}
 
 		if($children) {
+
 			if($attributes) {
 				$attributes = " $attributes";
 			}
@@ -139,10 +141,15 @@ class Hierarchy extends DataExtension {
 			foreach($children as $child) {
 				if(!$limitToMarked || $child->isMarked()) {
 					$foundAChild = true;
-					$output .= (is_callable($titleEval)) ? $titleEval($child) : eval("return $titleEval;");
+					if(is_callable($titleEval)) {
+						$output .= $titleEval($child, $numChildrenMethod);
+					} else {
+						$output .= eval("return $titleEval;");
+					}
 					$output .= "\n";
 
 					$numChildren = $child->$numChildrenMethod();
+
 					if(
 						// Always traverse into opened nodes (they might be exposed as parents of search results)
 						$child->isExpanded()
@@ -158,7 +165,7 @@ class Hierarchy extends DataExtension {
 						} else {
 							$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked,
 								$childrenMethod,	$numChildrenMethod, false, $nodeCountThreshold);
-					} 
+						}
 					} elseif($child->isTreeOpened()) {
 						// Since we're not loading children, don't mark it as open either
 						$child->markClosed();
@@ -256,7 +263,7 @@ class Hierarchy extends DataExtension {
 			return call_user_func($func, $node);
 		}
 	}
-	
+
 	/**
 	 * Mark all children of the given node that match the marking filter.
 	 * @param DataObject $node Parent node.
@@ -276,11 +283,6 @@ class Hierarchy extends DataExtension {
 			foreach($children as $child) {
 				$markingMatches = $this->markingFilterMatches($child);
 				if($markingMatches) {
-					// Filtered results should always show opened, since actual matches
-					// might be hidden by non-matching parent nodes.
-					if($this->markingFilter) {
-						$child->markOpened();
-					}
 					if($child->$numChildrenMethod()) {
 						$child->markUnexpanded();
 					} else {
@@ -315,14 +317,14 @@ class Hierarchy extends DataExtension {
 	 * 
 	 * @return string
 	 */
-	public function markingClasses() {
+	public function markingClasses($numChildrenMethod="numChildren") {
 		$classes = '';
 		if(!$this->isExpanded()) {
 			$classes .= " unexpanded";
 		}
 		
 		// Set jstree open state, or mark it as a leaf (closed) if there are no children
-		if(!$this->numChildren()) {
+		if(!$this->$numChildrenMethod()) {
 			$classes .= " jstree-leaf closed";
 		} elseif($this->isTreeOpened()) {
 			$classes .= " jstree-open";

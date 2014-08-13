@@ -204,9 +204,6 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 				text-shadow: 0px 1px 0px rgba(#fff, 0.5);
 				
 				&.ui-state-error-text {
-					max-width:70%;
-					position:absolute;
-					right:5px;
 					text-shadow: 0px 1px 0px rgba(#fff, 0.6);
 					color: darken($color-button-destructive, 10%);
 				}

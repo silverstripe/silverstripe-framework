@@ -96,7 +96,7 @@ class DirectorTest extends SapphireTest {
 		$rootURL = Director::protocolAndHost();
 		$_SERVER['REQUEST_URI'] = "$rootURL/mysite/sub-page/";
 		Config::inst()->update('Director', 'alternate_base_url', '/mysite/');
-		
+
 		// Test already absolute url
 		$this->assertEquals($rootURL, Director::absoluteURL($rootURL));
 		$this->assertEquals($rootURL, Director::absoluteURL($rootURL, true));
