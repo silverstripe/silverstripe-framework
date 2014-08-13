@@ -165,7 +165,7 @@ class HTMLText extends Text {
 		/* Then look for the first sentence ending. We could probably use a nice regex, but for now this will do */
 		$words = preg_split('/\s+/', $paragraph);
 		foreach ($words as $i => $word) {
-			if (preg_match('/\.$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
+			if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
 				return implode(' ', array_slice($words, 0, $i+1));
 			}
 		}

@@ -81,7 +81,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private static $singular_name = null;
 
 	/**
-	 * Human-readable pluaral name
+	 * Human-readable plural name
 	 * @var string
 	 * @config
 	 */

@@ -73,11 +73,11 @@ class Image extends File {
 	private static $force_resample = false;
 	
 	public static function set_backend($backend) {
-		self::$backend = $backend;
+		self::config()->backend = $backend;
 	}
 	
 	public static function get_backend() {
-		return self::$backend;
+		return self::config()->backend;
 	}
 	
 	/**
@@ -471,7 +471,7 @@ class Image extends File {
 		
 		$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
 		
-		$backend = Injector::inst()->createWithArgs(self::$backend, array(
+		$backend = Injector::inst()->createWithArgs(self::config()->backend, array(
 			Director::baseFolder()."/" . $this->Filename,
 			$args
 		));

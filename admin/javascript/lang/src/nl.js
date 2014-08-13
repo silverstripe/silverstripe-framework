@@ -5,6 +5,6 @@
     "ModelAdmin.SAVED": "Opgeslagen",
     "ModelAdmin.REALLYDELETE": "Weet u zeker dat u wilt verwijderen?",
     "ModelAdmin.DELETED": "Verwijderd",
-    "ModelAdmin.VALIDATIONERROR": "Validatie fout",
-    "LeftAndMain.PAGEWASDELETED": "Deze pagina is verwijderd. Om een pagina aan te passen, selecteer pagina aan de linkerkant."
+    "ModelAdmin.VALIDATIONERROR": "Validatiefout",
+    "LeftAndMain.PAGEWASDELETED": "Deze pagina is verwijderd. Om een pagina aan te passen, selecteer deze aan de linkerkant."
 }

@@ -517,7 +517,8 @@
 		});
 
 		$('.cms-edit-form').entwine({
-			onadd: function() {	
+			onadd: function() {
+				this._super();
 				$('.cms-preview')._initialiseFromContent();
 			}
 		});

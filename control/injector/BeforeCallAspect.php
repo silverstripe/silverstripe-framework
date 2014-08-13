@@ -20,6 +20,9 @@ interface BeforeCallAspect {
 	 *				The name of the method being called
 	 * @param string $args
 	 *				The arguments that were passed to the method call
+	 * @param mixed $alternateReturn
+	 *				An alternative return value that should be passed 
+	 *				to the caller. Only has effect of beforeCall returns false
 	 */
-	public function beforeCall($proxied, $method, $args);
+	public function beforeCall($proxied, $method, $args, &$alternateReturn);
 }

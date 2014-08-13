@@ -234,9 +234,9 @@ class DB {
 
 		$dbClass = $databaseConfig['type'];
 
-		// Using Injector->get allows us to use registered configurations
+		// Using Injector->create allows us to use registered configurations
 		// which may or may not map to explicit objects
-		$conn = Injector::inst()->get($dbClass);
+		$conn = Injector::inst()->create($dbClass);
 		$conn->connect($databaseConfig);
 
 		self::set_conn($conn, $label);
