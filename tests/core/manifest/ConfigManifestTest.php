@@ -15,7 +15,7 @@ class ConfigManifestTest extends SapphireTest {
 	 */
 	protected function getConfigFixtureValue($name) {
 		$manifest = new SS_ConfigManifest(dirname(__FILE__).'/fixtures/configmanifest', true, true);
-		return $manifest->get('ConfigManifestTest', $name);
+		return $manifest->get('configmanifesttest', $name);
 	}
 
 	/**

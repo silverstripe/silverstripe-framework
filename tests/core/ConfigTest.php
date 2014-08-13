@@ -250,6 +250,23 @@ class ConfigTest extends SapphireTest {
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'bar'), null);
 	}
 
+	public function testCaseInsensitive() {
+		// Class is case-insensitive
+		$this->assertEquals(Object::static_lookup('configtest_DEFINESFOO', 'foo'), 1);
+
+		$this->assertEquals(3, Config::inst()->get('ConfigTest_TESTNEST', 'foo'));
+
+		Config::inst()->remove('ConfigStaticTest_THIRD', 'second');
+		$this->assertEquals(array(), Config::inst()->get('ConfigSTATICTest_Third', 'second'));
+
+		Config::inst()->update('ConfigStaticTest_FIRST', 'int', 42);
+		$this->assertEquals(42, Config::inst()->get('ConfigSTATICTest_First', 'int'));
+
+		// Variable name is not
+		$this->assertEquals(Object::static_lookup('configtest_DEFINESFOO', 'FOO'), null);
+
+	}
+
 	public function testFragmentOrder() {
 		$this->markTestIncomplete();
 	}

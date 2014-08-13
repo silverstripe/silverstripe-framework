@@ -462,10 +462,16 @@ class Config {
 	protected $extraConfigSources = array();
 
 	public function extraConfigSourcesChanged($class) {
+		$class = strtolower($class);
+
 		unset($this->extraConfigSources[$class]);
 		$this->cache->clean("__{$class}");
 	}
 
+	/**
+	 * @param $class lowercase class name
+	 * @param $name case-sensitive parameter name
+	 */
 	protected function getUncached($class, $name, $sourceOptions, &$result, $suppress, &$tags) {
 		$tags[] = "__{$class}";
 		$tags[] = "__{$class}__{$name}";
@@ -506,7 +512,11 @@ class Config {
 		if (($sourceOptions & self::EXCLUDE_EXTRA_SOURCES) != self::EXCLUDE_EXTRA_SOURCES) {
 			// If we don't have a fresh list of extra sources, get it from the class itself
 			if (!array_key_exists($class, $this->extraConfigSources)) {
-				$this->extraConfigSources[$class] = Object::get_extra_config_sources($class);
+				if(is_subclass_of($class,'Object') || $class == 'object') {
+					$this->extraConfigSources[$class] = $class::get_extra_config_sources();
+				} else {
+					$this->extraConfigSources[$class] = array();
+				}
 			}
 
 			// Update $sources with any extra sources
@@ -522,7 +532,7 @@ class Config {
 			}
 			else {
 				foreach ($this->staticManifests as $i => $statics) {
-					$value = $statics->get($staticSource, $name, $nothing);
+					$value = $statics->get(strtolower($staticSource), $name, $nothing);
 					if ($value !== $nothing) break;
 				}
 			}
@@ -539,7 +549,7 @@ class Config {
 			(($sourceOptions & self::FIRST_SET) != self::FIRST_SET || $result === null)
 		) {
 			$parent = get_parent_class($class);
-			if ($parent) $this->getUncached($parent, $name, $sourceOptions, $result, $suppress, $tags);
+			if ($parent) $this->getUncached(strtolower($parent), $name, $sourceOptions, $result, $suppress, $tags);
 		}
 
 		return $result;
@@ -552,8 +562,8 @@ class Config {
 	 * todo: Currently this is done every time. This function is an inner loop function, so we really need to be
 	 * caching heavily here.
 	 *
-	 * @param $class string - The name of the class to get the value for
-	 * @param $name string - The property to get the value for
+	 * @param $class string - The name of the class to get the value for; case-insensitive
+	 * @param $name string - The property to get the value for; case-sensitive
 	 * @param int $sourceOptions Bitmask which can be set to some combintain of Config::UNINHERITED,
 	 *                           Config::FIRST_SET, and Config::EXCLUDE_EXTENSIONS.
 	 *
@@ -573,6 +583,8 @@ class Config {
 	 *                      sequential array or scalar depending on value (see class docblock)
 	 */
 	public function get($class, $name, $sourceOptions = 0, &$result = null, $suppress = null) {
+		$class = strtolower($class);
+
 		// Have we got a cached value? Use it if so
 		$key = $class.$name.$sourceOptions;
 
@@ -592,8 +604,8 @@ class Config {
 	 * Configuration is modify only. The value passed is merged into the existing configuration. If you want to
 	 * replace the current array value, you'll need to call remove first.
 	 *
-	 * @param $class string - The class to update a configuration value for
-	 * @param $name string - The configuration property name to update
+	 * @param $class string - The class to update a configuration value for; case-insensitive
+	 * @param $name string - The configuration property name to update; case-sensitive
 	 * @param $value any - The value to update with
 	 *
 	 * Arrays are recursively merged into current configuration as "latest" - for associative arrays the passed value
@@ -603,6 +615,8 @@ class Config {
 	 * You will get an error if you try and override array values with non-array values or vice-versa
 	 */
 	public function update($class, $name, $val) {
+		$class = strtolower($class);
+
 		if(is_null($val)) {
 			$this->remove($class, $name);
 		} else {
@@ -636,8 +650,8 @@ class Config {
 	 * every other source is filtered on request, so no amount of changes to parent's configuration etc can override a
 	 * remove call.
 	 *
-	 * @param $class string - The class to remove a configuration value from
-	 * @param $name string - The configuration name
+	 * @param $class string - The class to remove a configuration value from; case-insensitive
+	 * @param $name string - The configuration name; case-sensitive
 	 * @param $key any - An optional key to filter against.
 	 *   If referenced config value is an array, only members of that array that match this key will be removed
 	 *   Must also match value if provided to be removed
@@ -649,6 +663,8 @@ class Config {
 	 * Matching is always by "==", not by "==="
 	 */
 	public function remove($class, $name /*,$key = null*/ /*,$value = null*/) {
+		$class = strtolower($class);
+
 		$argc = func_num_args();
 		$key = $argc > 2 ? func_get_arg(2) : self::anything();
 		$value = $argc > 3 ? func_get_arg(3) : self::anything();

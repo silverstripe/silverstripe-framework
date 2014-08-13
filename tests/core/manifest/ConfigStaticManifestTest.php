@@ -106,7 +106,7 @@ DOC;
 		foreach($levels as $var => $level) {
 			$this->assertEquals(
 				$level,
-				$statics[__CLASS__][$var]['access'],
+				$statics[strtolower(__CLASS__)][$var]['access'],
 				'Variable '.$var.' has '.($level ? token_name($level) : 'no').' access level'
 			);
 		}
@@ -139,7 +139,7 @@ DOC;
 
 				$this->assertEquals(
 					self::$$var,
-					$statics[__CLASS__][$var]['value'],
+					$statics[strtolower(__CLASS__)][$var]['value'],
 					'Variable '.$var.' value is extracted properly'
 				);
 			}
@@ -149,21 +149,21 @@ DOC;
 	public function testIgnoreComments() {
 		$statics = $this->parseSelf()->getStatics();
 
-		$this->assertEquals(self::$commented_int, $statics[__CLASS__]['commented_int']['value']);
-		$this->assertEquals(self::$commented_string, $statics[__CLASS__]['commented_string']['value']);
+		$this->assertEquals(self::$commented_int, $statics[strtolower(__CLASS__)]['commented_int']['value']);
+		$this->assertEquals(self::$commented_string, $statics[strtolower(__CLASS__)]['commented_string']['value']);
 
-		$this->assertEquals(self::$docblocked_int, $statics[__CLASS__]['docblocked_int']['value']);
-		$this->assertEquals(self::$docblocked_string, $statics[__CLASS__]['docblocked_string']['value']);
+		$this->assertEquals(self::$docblocked_int, $statics[strtolower(__CLASS__)]['docblocked_int']['value']);
+		$this->assertEquals(self::$docblocked_string, $statics[strtolower(__CLASS__)]['docblocked_string']['value']);
 	}
 
 	public function testIgnoresMethodStatics() {
 		$statics = $this->parseSelf()->getStatics();
-		$this->assertNull(@$statics[__CLASS__]['method_static']);
+		$this->assertNull(@$statics[strtolower(__CLASS__)]['method_static']);
 	}
 
 	public function testIgnoresStaticMethods() {
 		$statics = $this->parseSelf()->getStatics();
-		$this->assertNull(@$statics[__CLASS__]['static_method']);
+		$this->assertNull(@$statics[strtolower(__CLASS__)]['static_method']);
 	}
 
 	public function testParsingShortArray() {
@@ -183,7 +183,7 @@ DOC;
 			'Description' => 'Text',
 		);
 
-		$this->assertEquals($expectedValue, $statics['ConfigStaticManifestTestMyObject']['db']['value']);
+		$this->assertEquals($expectedValue, $statics['configstaticmanifesttestmyobject']['db']['value']);
 	}
 
 	public function testParsingNamespacesclass() {
@@ -198,7 +198,7 @@ DOC;
 			'Description' => 'Text',
 		);
 
-		$this->assertEquals($expectedValue, $statics['config\staticmanifest\NamespaceTest']['db']['value']);
+		$this->assertEquals($expectedValue, $statics['config\staticmanifest\namespacetest']['db']['value']);
 	}
 
 	public function testParsingMultyStringClass() {

@@ -21,10 +21,15 @@ class SS_ConfigStaticManifest {
 	protected $key;
 
 	protected $index;
+
+	/**
+	 * Stores the values of statics as a nested map of classname -> keyname -> data
+	 * classnames are lowercase; keynames are case-sensitive
+	 */
 	protected $statics;
 
 	static protected $initial_classes = array(
-		'Object', 'ViewableData', 'Injector', 'Director'
+		'object', 'viewabledata', 'injector', 'director'
 	);
 
 	/**
@@ -57,6 +62,14 @@ class SS_ConfigStaticManifest {
 		}
 	}
 
+	/**
+	 * Gets the config value for the given class and config property name as specified by the relevant static
+	 *
+	 * @param string $class - The class to get the config property value for; lowercase
+	 * @param string $name - The config property to get the value for; case sensitive
+	 * @param any $default - What to return if no value was contained in any YAML file for the passed $class and $name
+	 * @return any - The configuration value defined in the static
+	 */
 	public function get($class, $name, $default) {
 		if (!isset($this->statics[$class])) {
 			if (isset($this->index[$class])) {
@@ -136,6 +149,8 @@ class SS_ConfigStaticManifest {
 		$parser->parse();
 
 		$this->index = array_merge($this->index, $parser->getInfo());
+
+		// Turn keys to lowercase so that classes are case-insensitive
 		$this->statics = array_merge($this->statics, $parser->getStatics());
 	}
 
@@ -298,6 +313,8 @@ class SS_ConfigStaticManifest_Parser {
 	 * being declared in a comma seperated list
 	 */
 	function parseStatic($access, $class) {
+		$class = strtolower($class);
+
 		$variable = null;
 		$value = '';
 
