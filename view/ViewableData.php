@@ -209,6 +209,13 @@ class ViewableData extends Object implements IteratorAggregate {
 	}
 	
 	/**
+	 * @return ViewableData
+	 */
+	public function getCustomisedObj() {
+		return $this->customisedObject;
+	}
+
+	/**
 	 * @param ViewableData $object
 	 */
 	public function setCustomisedObj(ViewableData $object) {
