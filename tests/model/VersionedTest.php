@@ -573,7 +573,28 @@ class VersionedTest extends SapphireTest {
 		
 		Versioned::set_reading_mode($originalMode);
 	}
-	
+
+	public function testLazyLoadFieldsRetreival() {
+		// Set reading mode to Stage
+		Versioned::reading_stage('Stage');
+
+		// Create object only in reading stage
+		$original = new VersionedTest_Subclass();
+		$original->ExtraField = 'Foo';
+		$original->write();
+
+		// Query for object using base class
+		$query = VersionedTest_DataObject::get()->filter('ID', $original->ID);
+
+		// Set reading mode to Live
+		Versioned::reading_stage('Live');
+
+		$fetched = $query->first();
+		$this->assertTrue($fetched instanceof VersionedTest_Subclass);
+		$this->assertEquals($original->ID, $fetched->ID); // Eager loaded
+		$this->assertEquals($original->ExtraField, $fetched->ExtraField); // Lazy loaded
+	}
+
 	/**
 	 * Tests that reading mode persists between requests
 	 */
