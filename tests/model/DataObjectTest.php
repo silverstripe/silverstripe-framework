@@ -682,7 +682,24 @@ class DataObjectTest extends SapphireTest {
 		$fields = $testObj->searchableFields();
 		$this->assertEmpty($fields);
 	}
-	
+
+	public function testSummaryFieldsCustomLabels() {
+		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$summaryFields = $team->summaryFields();
+
+		$this->assertEquals(
+			'Custom Title',
+			$summaryFields['Title'],
+			'Custom title is preserved'
+		);
+
+		$this->assertEquals(
+			'Captain\'s shirt number',
+			$summaryFields['Captain.ShirtNumber'],
+			'Custom title on relation is preserved'
+		);
+	}
+
 	public function testDataObjectUpdate() {
 		/* update() calls can use the dot syntax to reference has_one relations and other methods that return
 		 * objects */
@@ -1263,6 +1280,7 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 	);
 
 	private static $summary_fields = array(
+		'Title' => 'Custom Title',
 		'Title.UpperCase' => 'Title',
 		'Captain.ShirtNumber' => 'Captain\'s shirt number',
 		'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team'
