@@ -144,6 +144,8 @@ class Mailer extends Object {
 				"</HTML>";
 		}
 
+		$this->extend('preflightHTML', $htmlContent);
+
 		$headers["Content-Transfer-Encoding"] = "quoted-printable";
 		$htmlPart = $this->processHeaders($headers, wordwrap($this->QuotedPrintable_encode($htmlContent),75));
 	

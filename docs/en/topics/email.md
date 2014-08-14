@@ -25,6 +25,30 @@ by stripping HTML markup, or transforming it where possible
 
 The default HTML template is located in `framework/templates/email/GenericEmail.ss`.
 
+#### Preflight HTML hook
+
+Typically with HTML emails there is a need to run a "preflight" script, this can be a CSS inliner or other similar manipulation
+to the html content.
+
+To make use of the preflight hook you can add a data extension to the Mailer and add a `preflightHTML` function. Notice the html
+is passed by reference.
+
+```php
+
+class PreflightMailer extends Extension {
+
+	/**
+	 * Remove all tab chars from the HTML
+	 */
+	public function preflightHTML(&$html) {
+		//manipulate html
+		$html = str_replace("\t", '', $html);
+	}
+
+}
+
+```
+
 ### Sending Plaintext only
 
 	:::php
