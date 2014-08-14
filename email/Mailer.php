@@ -85,22 +85,7 @@ class Mailer extends Object {
 		
 		$headers = array_merge((array)$headers, (array)$customheaders);
 
-		// the carbon copy header has to be 'Cc', not 'CC' or 'cc' -- ensure this.
-		if (isset($headers['CC'])) { $headers['Cc'] = $headers['CC']; unset($headers['CC']); }
-		if (isset($headers['cc'])) { $headers['Cc'] = $headers['cc']; unset($headers['cc']); }
-			
-		// Send the email
-		$headers = $this->processHeaders($headers);
-		$to = $this->validEmailAddr($to);
-
-		// Try it without the -f option if it fails
-		if(!$result = @mail($to, $subject, $fullBody, $headers, "-f$bounceAddress"))
-			$result = mail($to, $subject, $fullBody, $headers);
-		
-		if($result)
-			return array($to,$subject,$fullBody,$headers);
-			
-		return false;
+		return $this->sendRaw($to, $subject, $fullBody, $headers, $bounceAddress);
 	}
 	
 	/**
@@ -159,6 +144,8 @@ class Mailer extends Object {
 				"</HTML>";
 		}
 
+		$this->extend('preflightHTML', $htmlContent);
+
 		$headers["Content-Transfer-Encoding"] = "quoted-printable";
 		$htmlPart = $this->processHeaders($headers, wordwrap($this->QuotedPrintable_encode($htmlContent),75));
 	
@@ -171,7 +158,7 @@ class Mailer extends Object {
 		if($attachedFiles && is_array($attachedFiles)) {
 			
 			// The first part is the message itself
-				$fullMessage = $this->processHeaders($messageHeaders, $messageBody);
+			$fullMessage = $this->processHeaders($messageHeaders, $messageBody);
 			$messageParts = array($fullMessage);
 
 			// Include any specified attachments as additional parts
@@ -210,32 +197,21 @@ class Mailer extends Object {
 		if (!isset($customheaders["X-Priority"])) $headers["X-Priority"]	= 3;
 		
 		$headers = array_merge((array)$headers, (array)$customheaders);
+		
+		return $this->sendRaw($to, $subject, $fullBody, $headers, $bounceAddress);
+	}
 
-		// the carbon copy header has to be 'Cc', not 'CC' or 'cc' -- ensure this.
-		if (isset($headers['CC'])) { $headers['Cc'] = $headers['CC']; unset($headers['CC']); }
-		if (isset($headers['cc'])) { $headers['Cc'] = $headers['cc']; unset($headers['cc']); }
-		
-		// the carbon copy header has to be 'Bcc', not 'BCC' or 'bcc' -- ensure this.
-		if (isset($headers['BCC'])) {$headers['Bcc']=$headers['BCC']; unset($headers['BCC']); }
-		if (isset($headers['bcc'])) {$headers['Bcc']=$headers['bcc']; unset($headers['bcc']); }
-		
-		// Send the email
-		$headers = $this->processHeaders($headers);
+	protected function sendRaw($to, $subject, $fullBody, $headers, $bounceAddress)  {
 		$to = $this->validEmailAddr($to);
-		
-		// Try it without the -f option if it fails
-		if(!$bounceAddress ||
-			!($result = @mail($to, $subject, $fullBody, $headers, escapeshellarg("-f$bounceAddress")))) {
+		$headers = $this->processHeaders($headers);
+		$bounceAddress = $this->validEmailAddr($bounceAddress);
+		if (!$bounceAddress || !$result = mail($to, $subject, $fullBody, $headers, escapeshellarg("-f$bounceAddress"))) {
 			$result = mail($to, $subject, $fullBody, $headers);
 		}
-		
 		return $result;
 	}
 
-		/**
-		 * @todo Make visibility protected in 3.2
-	 */
-	function encodeMultipart($parts, $contentType, $headers = false) {
+	protected function encodeMultipart($parts, $contentType, $headers = false) {
 		$separator = "----=_NextPart_" . preg_replace('/[^0-9]/', '', rand() * 10000000000);
 
 		$headers["MIME-Version"] = "1.0";
@@ -259,10 +235,7 @@ class Mailer extends Object {
 		return array($body, $headers);
 	}
 
-		/**
-		 * @todo Make visibility protected in 3.2
-	 */
-	function processHeaders($headers, $body = false) {
+	protected function processHeaders($headers, $body = false) {
 		$res = '';
 		if(is_array($headers)) {
 			while(list($k, $v) = each($headers)) {
@@ -313,10 +286,8 @@ class Mailer extends Object {
 	 *     'mimetype' => 'image/gif',
 	 *     'contentLocation' => Director::absoluteBaseURL() . "/themes/mytheme/images/header.gif"
 	 *   );
-	 * 
-	 * @todo Make visibility protected in 3.2
 	 */
-	function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {
+	protected function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {
 		if(!$file) {
 			user_error("encodeFileForEmail: not passed a filename and/or data", E_USER_WARNING);
 			return;
@@ -363,10 +334,7 @@ class Mailer extends Object {
 		return $headers . $file['contents'];
 	}
 
-	/**
-	 * @todo Make visibility protected in 3.2
-	 */
-	function QuotedPrintable_encode($quotprint) {
+	protected function QuotedPrintable_encode($quotprint) {
 		$quotprint = (string)str_replace('\r\n',chr(13).chr(10),$quotprint);
 		$quotprint = (string)str_replace('\n',  chr(13).chr(10),$quotprint);
 		$quotprint = (string)preg_replace_callback("~([\x01-\x1F\x3D\x7F-\xFF])~", function($matches) {
@@ -380,10 +348,7 @@ class Mailer extends Object {
 		return (string) $quotprint;
 	}
 
-	/**
-	 * @todo Make visibility protected in 3.2
-	 */
-	function validEmailAddr($emailAddress) {
+	protected function validEmailAddr($emailAddress) {
 		$emailAddress = trim($emailAddress);
 		$angBrack = strpos($emailAddress, '<');
 		
@@ -402,7 +367,7 @@ class Mailer extends Object {
 	 * Return a multipart/related e-mail chunk for the given HTML message and its linked images
 	 * Decodes absolute URLs, accessing the appropriate local images
 	 */
-	function wrapImagesInline($htmlContent) {
+	protected function wrapImagesInline($htmlContent) {
 		global $_INLINED_IMAGES;
 		$_INLINED_IMAGES = null;
 		
@@ -411,20 +376,20 @@ class Mailer extends Object {
 		// Make the HTML part
 		$headers["Content-Type"] = "text/html; charset=utf-8";
 		$headers["Content-Transfer-Encoding"] = "quoted-printable";
-		$multiparts[] = processHeaders($headers, QuotedPrintable_encode($replacedContent));
+		$multiparts[] = $this->processHeaders($headers, QuotedPrintable_encode($replacedContent));
 		
 		// Make all the image parts		
 		global $_INLINED_IMAGES;
 		foreach($_INLINED_IMAGES as $url => $cid) {
-			$multiparts[] = encodeFileForEmail($url, false, "inline", "Content-ID: <$cid>\n");		
+			$multiparts[] = $this->encodeFileForEmail($url, false, "inline", "Content-ID: <$cid>\n");
 		}
 
 		// Merge together in a multipart
-		list($body, $headers) = encodeMultipart($multiparts, "multipart/related");
-		return processHeaders($headers, $body);
+		list($body, $headers) = $this->encodeMultipart($multiparts, "multipart/related");
+		return $this->processHeaders($headers, $body);
 	}
 
-	function wrapImagesInline_rewriter($url) {
+	protected function wrapImagesInline_rewriter($url) {
 		$url = relativiseURL($url);
 		
 		global $_INLINED_IMAGES;
@@ -435,115 +400,4 @@ class Mailer extends Object {
 		return "cid:" . $_INLINED_IMAGES[$url];
 		
 	}
-}
-
-/**
- * @package framework
- * @subpackage email
- * @deprecated 3.1
- */
-function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false,
-	$plainContent = false) {
-
-	Deprecation::notice('3.1', 'Use Email->sendHTML() instead');
-	
-	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->sendHTML($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false);
-}
-
-/**
- * @package framework
- * @subpackage email
- * @deprecated 3.1
- */
-function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false) {
-	Deprecation::notice('3.1', 'Use Email->sendPlain() instead');
-
-	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->sendPlain($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false);
-}
-
-/**
- * @package framework
- * @subpackage email
- * @deprecated 3.1
- */
-function encodeMultipart($parts, $contentType, $headers = false) {
-	Deprecation::notice('3.1', 'Use Email->$this->encodeMultipart() instead');
-
-	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->encodeMultipart($parts, $contentType, $headers = false);
-}
-
-/**
- * @package framework
- * @subpackage email
- * @deprecated 3.1
- */
-function wrapImagesInline($htmlContent) {
-	Deprecation::notice('3.1', 'Functionality removed from core');
-
-	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->wrapImagesInline($htmlContent);
-}
-
-/**
- * @package framework
- * @subpackage email
- * @deprecated 3.1
- */
-function wrapImagesInline_rewriter($url) {
-	Deprecation::notice('3.1', 'Functionality removed from core');
-
-	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->wrapImagesInline_rewriter($url);
-	
-}
-
-/**
- * @package framework
- * @subpackage email
- * @deprecated 3.1
- */
-function processHeaders($headers, $body = false) {
-	Deprecation::notice('3.1', 'Set headers through Email->addCustomHeader()');
-
-	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->processHeaders($headers, $url);
-}
-
-/**
- * @package framework
- * @subpackage email
- * @deprecated 3.1
- */
-function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {
-	Deprecation::notice('3.1', 'Please add files through Email->attachFile()');
-
-	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->encodeFileForEmail($file, $destFileName, $disposition, $extraHeaders);	
-}
-
-/**
- * @package framework
- * @subpackage email
- * @deprecated 3.1
- */
-function QuotedPrintable_encode($quotprint) {
-	Deprecation::notice('3.1', 'No longer available, handled internally');
-
-	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->QuotedPrintable_encode($quotprint);	
-}
-
-/**
- * @package framework
- * @subpackage email
- * @deprecated 3.1
- */
-function validEmailAddr($emailAddress) {
-	Deprecation::notice('3.1', 'Use Email->validEmailAddr() instead');
-
-	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->validEmailAddr($emailAddress);	
 }
