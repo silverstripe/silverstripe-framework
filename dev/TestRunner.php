@@ -314,7 +314,7 @@ class TestRunner extends Controller {
 		if (count($classList) > 1) {
 			self::$default_reporter->writeInfo("All Tests", "Running test cases: ",implode(", ", $classList));
 		} elseif (count($classList) == 1) {
-			self::$default_reporter->writeInfo($classList[0], '');
+			self::$default_reporter->writeInfo(reset($classList), '');
 		} else {
 			// border case: no tests are available.
 			self::$default_reporter->writeInfo('', '');
