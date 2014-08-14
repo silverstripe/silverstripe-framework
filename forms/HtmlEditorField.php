@@ -64,36 +64,6 @@ class HtmlEditorField extends TextareaField {
 		self::include_js();
 	}
 
-	/**
-	 * @return string
-	 */
-	public function Field($properties = array()) {
-		// mark up broken links
-		$value = Injector::inst()->create('HTMLValue', $this->value);
-
-		if($links = $value->getElementsByTagName('a')) foreach($links as $link) {
-			$matches = array();
-
-			if(preg_match('/\[sitetree_link(?:\s*|%20|,)?id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
-				if(!DataObject::get_by_id('SiteTree', $matches[1])) {
-					$class = $link->getAttribute('class');
-					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
-				}
-			}
-
-			if(preg_match('/\[file_link(?:\s*|%20|,)?id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
-				if(!DataObject::get_by_id('File', $matches[1])) {
-					$class = $link->getAttribute('class');
-					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
-				}
-			}
-		}
-
-		$properties['Value'] = htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8');
-
-		return parent::Field($properties);
-	}
-
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
