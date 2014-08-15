@@ -16,7 +16,7 @@ class CMSFormTest extends FunctionalTest {
 				'Email' => 'test@test.com'
 			)
 		);
-			
+
 		// Firstly, assert that required fields still work when not using an exempt action
 		$this->assertPartialMatchBySelector(
 			'#CMSForm_Form_SomeRequiredField_Holder span.required',
@@ -79,12 +79,12 @@ class CMSFormTest_Controller extends Controller implements TestOnly {
 	);
 
 	protected $template = 'BlankPage';
-	
+
 	public function Link($action = null) {
 		return Controller::join_links('CMSFormTest_Controller', $this->request->latestParam('Action'),
 			$this->request->latestParam('ID'), $action);
 	}
-	
+
 	public function Form() {
 		$form = new CMSForm(
 			$this,
@@ -106,10 +106,10 @@ class CMSFormTest_Controller extends Controller implements TestOnly {
 		$form->setValidationExemptActions(array('doSubmitValidationExempt'));
 		$form->setResponseNegotiator('foo'); // We aren't testing AJAX responses, so just set anything
 		$form->disableSecurityToken(); // Disable CSRF protection for easier form submission handling
-		
+
 		return $form;
 	}
-	
+
 	public function doSubmit($data, $form, $request) {
 		$form->sessionMessage('Test save was successful', 'good');
 		return $this->redirectBack();

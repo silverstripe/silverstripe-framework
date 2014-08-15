@@ -8,25 +8,25 @@
  * an explanation will be printed out.
  *
  * To run this action, the user needs to have administrator rights!
- * 
+ *
  * @package framework
  * @subpackage tasks
  */
 class EncryptAllPasswordsTask extends BuildTask {
 	protected $title = 'Encrypt all passwords tasks';
-	
+
 	protected $description = 'Convert all plaintext passwords on the Member table to the default encryption/hashing
 		algorithm. Note: This mainly applies to passwords in SilverStripe 2.1 or earlier, passwords in newer versions
 		are hashed by default.';
-	
+
 	public function init() {
 		parent::init();
-		
+
 		if(!Permission::check('ADMIN')) {
 			return Security::permissionFailure($this);
 		}
 	}
-	
+
 	public function run($request) {
 		$algo = Security::config()->password_encryption_algorithm;
 		if($algo == 'none') {
@@ -59,11 +59,11 @@ class EncryptAllPasswordsTask extends BuildTask {
 			$member->PasswordEncryption = $algo;
 			$member->forceChange();
 			$member->write();
-			
+
 			$this->debugMessage(sprintf('Encrypted credentials for member #%d;', $member->ID));
 		}
 	}
-	
+
 	/**
 	 * @todo This should really be taken care of by TestRunner
 	 */

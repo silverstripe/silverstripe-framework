@@ -14,9 +14,9 @@ class InjectionCreator implements Factory {
 		$reflector = new ReflectionClass($class);
 
 		if (count($params)) {
-			return $reflector->newInstanceArgs($params); 
+			return $reflector->newInstanceArgs($params);
 		}
-		
+
 		return $reflector->newInstance();
 	}
 

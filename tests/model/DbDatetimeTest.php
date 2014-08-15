@@ -3,7 +3,7 @@
 class DbDatetimeTest extends FunctionalTest {
 
 	protected static $fixture_file = 'DbDatetimeTest.yml';
-	
+
 	protected $extraDataObjects = array('DbDatetimeTest_Team');
 
 	protected $offset;
@@ -16,14 +16,14 @@ class DbDatetimeTest extends FunctionalTest {
 	 */
 	private function matchesRoughly($date1, $date2, $comment = '', $offset) {
 		$allowedDifference = 5 + abs($offset); // seconds
-		
+
 		$time1 = is_numeric($date1) ? $date1 : strtotime($date1);
 		$time2 = is_numeric($date2) ? $date2 : strtotime($date2);
-		
+
 		$this->assertTrue(abs($time1-$time2)<$allowedDifference,
 			$comment . " (times differ by " . abs($time1-$time2) . " seconds)");
 	}
-	
+
 	private function getDbNow() {
 		$query = 'SELECT ' . $this->adapter->formattedDatetimeClause('now', '%U');
 		return DB::query($query)->value();
@@ -82,7 +82,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->matchesRoughly($result, strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created),
 			'fixture ->Created as timestamp', $offset);
 	}
-	
+
 	public function testDbDatetimeInterval() {
 		$offset = $this->checkPreconditions();
 
@@ -106,7 +106,7 @@ class DbDatetimeTest extends FunctionalTest {
 				date('Y-m-d H:i:s', strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created) - 900),
 				'15 Minutes before creating fixture', $offset);
 	}
-	
+
 	public function testDbDatetimeDifference() {
 		$offset = $this->checkPreconditions();
 
@@ -135,7 +135,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->matchesRoughly($result, strtotime($lastedited) - strtotime($created),
 			'age of HomePage record in seconds since unix epoc', $offset);
 	}
-	
+
 }
 
 class DbDateTimeTest_Team extends DataObject implements TestOnly {

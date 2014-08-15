@@ -3,12 +3,12 @@
 /**
  * Abstract base class for an object representing an SQL query.
  * The various parts of the SQL query can be manipulated individually.
- * 
+ *
  * @package framework
  * @subpackage model
  */
 abstract class SQLExpression {
-	
+
 	/**
 	 * Keep an internal register of find/replace pairs to execute when it's time to actually get the
 	 * query SQL.
@@ -22,7 +22,7 @@ abstract class SQLExpression {
 	 * @var array
 	 */
 	protected $replacementsNew = array();
-	
+
 	/**
 	 * @deprecated since version 3.2
 	 */
@@ -39,13 +39,13 @@ abstract class SQLExpression {
 		return $this->$field = $value;
 	}
 
-	
-	
+
+
 	/**
 	 * Swap some text in the SQL query with another.
-	 * 
+	 *
 	 * Note that values in parameters will not be replaced
-	 * 
+	 *
 	 * @param string $old The old text (escaped)
 	 * @param string $new The new text (escaped)
 	 */
@@ -53,12 +53,12 @@ abstract class SQLExpression {
 		$this->replacementsOld[] = $old;
 		$this->replacementsNew[] = $new;
 	}
-	
+
 	/**
 	 * Return the generated SQL string for this query
-	 * 
+	 *
 	 * @todo Is it ok for this to consider parameters? Test cases here!
-	 * 
+	 *
 	 * @return string
 	 */
 	public function __toString() {
@@ -72,10 +72,10 @@ abstract class SQLExpression {
 			return "<sql query>";
 		}
 	}
-	
+
 	/**
 	 * Swap the use of one table with another.
-	 * 
+	 *
 	 * @param string $old Name of the old table (unquoted, escaped)
 	 * @param string $new Name of the new table (unquoted, escaped)
 	 */
@@ -84,17 +84,17 @@ abstract class SQLExpression {
 		$this->replaceText("\"$old\"", "\"$new\"");
 		$this->replaceText(Convert::symbol2sql($old), Convert::symbol2sql($new));
 	}
-	
+
 	/**
 	 * Determine if this query is empty, and thus cannot be executed
-	 * 
+	 *
 	 * @return bool Flag indicating that this query is empty
 	 */
 	abstract public function isEmpty();
-	
+
 	/**
 	 * Generate the SQL statement for this query.
-	 * 
+	 *
 	 * @param array $parameters Out variable for parameters required for this query
 	 * @return string The completed SQL query
 	 */
@@ -105,22 +105,22 @@ abstract class SQLExpression {
 				'SQLExpression::sql() now may produce parameters which are necessary to execute this query'
 			);
 		}
-		
+
 		// Build each component as needed
 		$sql = DB::build_sql($this, $parameters);
-		
+
 		if(empty($sql)) return null;
-		
+
 		if($this->replacementsOld) {
 			$sql = str_replace($this->replacementsOld, $this->replacementsNew, $sql);
 		}
-		
+
 		return $sql;
 	}
-	
+
 	/**
 	 * Execute this query.
-	 * 
+	 *
 	 * @return SS_Query
 	 */
 	public function execute() {
@@ -131,7 +131,7 @@ abstract class SQLExpression {
 	/**
 	 * Copies the query parameters contained in this object to another
 	 * SQLExpression
-	 * 
+	 *
 	 * @param SQLExpression $expression The object to copy properties to
 	 */
 	protected function copyTo(SQLExpression $object) {

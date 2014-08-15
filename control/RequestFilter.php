@@ -11,10 +11,10 @@
  * @subpackage control
  */
 interface RequestFilter {
-	
+
 	/**
 	 * Filter executed before a request processes
-	 * 
+	 *
 	 * @param SS_HTTPRequest $request Request container object
 	 * @param Session $session Request session
 	 * @param DataModel $model Current DataModel
@@ -24,7 +24,7 @@ interface RequestFilter {
 
 	/**
 	 * Filter executed AFTER a request
-	 * 
+	 *
 	 * @param SS_HTTPRequest $request Request container object
 	 * @param SS_HTTPResponse $response Response output object
 	 * @param DataModel $model Current DataModel

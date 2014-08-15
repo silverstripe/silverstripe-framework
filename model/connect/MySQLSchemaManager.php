@@ -2,14 +2,14 @@
 
 /**
  * Represents schema management object for MySQL
- * 
+ *
  * @package framework
  * @subpackage model
  */
 class MySQLSchemaManager extends DBSchemaManager {
-	
+
 	/**
-	 * Identifier for this schema, used for configuring schema-specific table 
+	 * Identifier for this schema, used for configuring schema-specific table
 	 * creation options
 	 */
 	const ID = 'MySQL';
@@ -142,19 +142,19 @@ class MySQLSchemaManager extends DBSchemaManager {
 			$this->alterationMessage('CHECK TABLE command disabled for PDO in native mode', 'notice');
 			return true;
 		}
-		
+
 		// Perform check
 		if (!$this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
 			if ($this->runTableCheckCommand("CHECK TABLE \"" . strtolower($tableName) . "\"")) {
 				$this->alterationMessage(
-					"Table $tableName: renamed from lowercase", 
+					"Table $tableName: renamed from lowercase",
 					"repaired"
 				);
 				return $this->renameTable(strtolower($tableName), $tableName);
 			}
 
 			$this->alterationMessage(
-				"Table $tableName: repaired", 
+				"Table $tableName: repaired",
 				"repaired"
 			);
 			return $this->runTableCheckCommand("REPAIR TABLE \"$tableName\" USE_FRM");
@@ -276,7 +276,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 
 	/**
 	 * Generate SQL suitable for creating this index
-	 * 
+	 *
 	 * @param string $indexName
 	 * @param string|array $indexSpec See {@link requireTable()} for details
 	 * @return string MySQL compatible ALTER TABLE syntax
@@ -295,7 +295,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 		$this->query("ALTER TABLE \"$tableName\" DROP INDEX \"$indexName\"");
 		$this->query("ALTER TABLE \"$tableName\" ADD {$indexSpec['type']} \"$indexName\" {$indexSpec['value']}");
 	}
-	
+
 	protected function indexKey($table, $index, $spec) {
 		// MySQL simply uses the same index name as SilverStripe does internally
 		return $index;
@@ -449,7 +449,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=>
 		// 'utf8_general_ci', 'default'=>$this->default);
-		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set 
+		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set
 		//utf8 collate utf8_general_ci default '{$this->default}'");
 		$valuesString = implode(",", Convert::raw2sql($values['enums'], true));
 		return "set($valuesString) character set utf8 collate utf8_general_ci" . $this->defaultClause($values);
@@ -541,7 +541,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 
 	/*
 	 * Return the MySQL-proprietary 'Year' datatype
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -552,10 +552,10 @@ class MySQLSchemaManager extends DBSchemaManager {
 	public function IdColumn($asDbValue = false, $hasAutoIncPK = true) {
 		return 'int(11) not null auto_increment';
 	}
-	
+
 	/**
 	 * Parses and escapes the default values for a specification
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string Default clause
 	 */

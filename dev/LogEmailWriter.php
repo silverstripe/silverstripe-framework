@@ -3,9 +3,9 @@ require_once 'Zend/Log/Writer/Abstract.php';
 
 /**
  * Sends an error message to an email.
- * 
+ *
  * @see SS_Log for more information on using writers.
- * 
+ *
  * @package framework
  * @subpackage dev
  */
@@ -25,7 +25,7 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		$this->emailAddress = $emailAddress;
 		$this->customSmtpServer = $customSmtpServer;
 	}
-	
+
 	public static function factory($emailAddress, $customSmtpServer = false) {
 		return new SS_LogEmailWriter($emailAddress, $customSmtpServer);
 	}
@@ -84,7 +84,7 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 				$subject,
 				$data,
 				"Content-type: text/html\nFrom: " . $from
-			);			
+			);
 		}
 
 		// reset the SMTP server to the original

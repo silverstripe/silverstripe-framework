@@ -2,19 +2,19 @@
 
 class HTTPRequestTest extends SapphireTest {
 	protected static $fixture_file = null;
-	
+
 	public function testMatch() {
 		$request = new SS_HTTPRequest("GET", "admin/crm/add");
-		
+
 		/* When a rule matches, but has no variables, array("_matched" => true) is returned. */
 		$this->assertEquals(array("_matched" => true), $request->match('admin/crm', true));
-		
+
 		/* Becasue we shifted admin/crm off the stack, just "add" should be remaining */
 		$this->assertEquals("add", $request->remaining());
-		
+
 		$this->assertEquals(array("_matched" => true), $request->match('add', true));
 	}
-	
+
 	public function testHttpMethodOverrides() {
 		$request = new SS_HTTPRequest(
 			'GET',
@@ -43,7 +43,7 @@ class HTTPRequestTest extends SapphireTest {
 			$request->isGET(),
 			'GET with invalid POST method override'
 		);
-		
+
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
@@ -54,7 +54,7 @@ class HTTPRequestTest extends SapphireTest {
 			$request->isDELETE(),
 			'POST with valid method override to DELETE'
 		);
-		
+
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
@@ -65,7 +65,7 @@ class HTTPRequestTest extends SapphireTest {
 			$request->isPUT(),
 			'POST with valid method override to PUT'
 		);
-		
+
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
@@ -76,7 +76,7 @@ class HTTPRequestTest extends SapphireTest {
 			$request->isHEAD(),
 			'POST with valid method override to HEAD '
 		);
-		
+
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
@@ -87,7 +87,7 @@ class HTTPRequestTest extends SapphireTest {
 			$request->isHEAD(),
 			'POST with valid method override to HEAD'
 		);
-		
+
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
@@ -98,7 +98,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with invalid method override by GET parameters to HEAD'
 		);
 	}
-	
+
 	public function testRequestVars() {
 		$getVars = array(
 			'first' => 'a',
@@ -125,7 +125,7 @@ class HTTPRequestTest extends SapphireTest {
 			$request->requestVars(),
 			'GET parameters should supplement POST parameters'
 		);
-		
+
 		$getVars = array(
 			'first' => 'a',
 			'second' => 'b',
@@ -150,7 +150,7 @@ class HTTPRequestTest extends SapphireTest {
 			$request->requestVars(),
 			'POST parameters should override GET parameters'
 		);
-		
+
 		$getVars = array(
 			'first' => array(
 				'first' => 'a',
@@ -189,7 +189,7 @@ class HTTPRequestTest extends SapphireTest {
 			$request->requestVars(),
 			'Nested POST parameters should override GET parameters'
 		);
-		
+
 		$getVars = array(
 			'first' => array(
 				'first' => 'a',

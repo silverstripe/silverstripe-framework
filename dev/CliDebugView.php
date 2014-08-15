@@ -2,10 +2,10 @@
 /**
  * A basic HTML wrapper for stylish rendering of a developement info view.
  * Used to output error messages, and test results.
- * 
+ *
  * @package framework
  * @subpackage dev
- * 
+ *
  * @todo Perhaps DebugView should be an interface / ABC, implemented by HTMLDebugView and CliDebugView?
  */
 
@@ -16,12 +16,12 @@ class CliDebugView extends DebugView {
 	 */
 	public function writeHeader($httpRequest = null) {
 	}
-	
+
 	/**
 	 * Render HTML footer for development views
 	 */
 	public function writeFooter() {
-	}	
+	}
 
 	/**
 	 * Write information about the error to the screen
@@ -45,7 +45,7 @@ class CliDebugView extends DebugView {
 		}
 		echo "\n";
 	}
-	
+
 	/**
 	 * Write a backtrace
 	 */
@@ -56,7 +56,7 @@ class CliDebugView extends DebugView {
 
 	/**
 	 * Render the information header for the view
-	 * 
+	 *
 	 * @param string $title
 	 * @param string $title
 	 */
@@ -66,7 +66,7 @@ class CliDebugView extends DebugView {
 		echo str_repeat('-',min(self::config()->columns,max(strlen($title),strlen($subtitle)))) . "\n";
 		echo wordwrap($description,self::config()->columns) . "\n\n";
 	}
-	
+
 	public function writeVariable($val, $caller) {
 		echo PHP_EOL;
 		echo SS_Cli::text(str_repeat('=', self::config()->columns), 'green');

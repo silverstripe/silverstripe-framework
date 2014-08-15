@@ -13,10 +13,10 @@ class NullHTTPRequestTest extends SapphireTest {
 		$this->assertFalse($r->isDELETE());
 		$this->assertFalse($r->isHEAD());
 	}
-	
+
 	public function testGetURL() {
 		$r = new NullHTTPRequest();
 		$this->assertEquals('', $r->getURL());
 	}
-	
+
 }

@@ -4,25 +4,25 @@
  * @package framework
  * @subpackage Testing
  */
-class ValidationExceptionTest extends SapphireTest 
+class ValidationExceptionTest extends SapphireTest
 {
 	/**
 	 * Test that ValidationResult object can correctly populate a ValidationException
 	 */
 	public function testCreateFromValidationResult() {
-		
+
 		$result = new ValidationResult(false, 'Not a valid result');
 		$exception = new ValidationException($result);
-		
+
 		$this->assertEquals(0, $exception->getCode());
 		$this->assertEquals('Not a valid result', $exception->getMessage());
 		$this->assertEquals(false, $exception->getResult()->valid());
 		$this->assertEquals('Not a valid result', $exception->getResult()->message());
-		
+
 	}
-	
+
 	/**
-	 * Test that ValidationResult object with multiple errors can correctly 
+	 * Test that ValidationResult object with multiple errors can correctly
 	 * populate a ValidationException
 	 */
 	public function testCreateFromComplexValidationResult() {
@@ -30,26 +30,26 @@ class ValidationExceptionTest extends SapphireTest
 		$result->error('Invalid type')
 				->error('Out of kiwis');
 		$exception = new ValidationException($result);
-		
+
 		$this->assertEquals(0, $exception->getCode());
 		$this->assertEquals('Invalid type; Out of kiwis', $exception->getMessage());
 		$this->assertEquals(false, $exception->getResult()->valid());
 		$this->assertEquals('Invalid type; Out of kiwis', $exception->getResult()->message());
 	}
-	
+
 	/**
 	 * Test that a ValidationException created with no contained ValidationResult
 	 * will correctly populate itself with an inferred version
 	 */
 	public function testCreateFromMessage() {
 		$exception = new ValidationException('Error inferred from message', E_USER_ERROR);
-		
+
 		$this->assertEquals(E_USER_ERROR, $exception->getCode());
 		$this->assertEquals('Error inferred from message', $exception->getMessage());
 		$this->assertEquals(false, $exception->getResult()->valid());
 		$this->assertEquals('Error inferred from message', $exception->getResult()->message());
 	}
-	
+
 	/**
 	 * Test that ValidationException can be created with both a ValidationResult
 	 * and a custom message
@@ -57,14 +57,14 @@ class ValidationExceptionTest extends SapphireTest
 	public function testCreateWithValidationResultAndMessage() {
 		$result = new ValidationResult(false, 'Incorrect placement of cutlery');
 		$exception = new ValidationException($result, 'An error has occurred', E_USER_WARNING);
-		
+
 		$this->assertEquals(E_USER_WARNING, $exception->getCode());
 		$this->assertEquals('An error has occurred', $exception->getMessage());
 		$this->assertEquals(false, $exception->getResult()->valid());
 		$this->assertEquals('Incorrect placement of cutlery', $exception->getResult()->message());
 	}
-	
-	
+
+
 	/**
 	 * Test that ValidationException can be created with both a ValidationResult
 	 * and a custom message
@@ -74,7 +74,7 @@ class ValidationExceptionTest extends SapphireTest
 		$result->error('A spork is not a knife')
 				->error('A knife is not a back scratcher');
 		$exception = new ValidationException($result, 'An error has occurred', E_USER_WARNING);
-		
+
 		$this->assertEquals(E_USER_WARNING, $exception->getCode());
 		$this->assertEquals('An error has occurred', $exception->getMessage());
 		$this->assertEquals(false, $exception->getResult()->valid());

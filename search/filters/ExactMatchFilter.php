@@ -9,7 +9,7 @@
  *
  * @todo case sensitivity switch
  * @todo documentation
- * 
+ *
  * @package framework
  * @subpackage search
  */
@@ -129,7 +129,7 @@ class ExactMatchFilter extends SearchFilter {
 			return $query->where(array($predicate => $values));
 		}
 	}
-	
+
 	public function isEmpty() {
 		return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
 	}

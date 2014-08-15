@@ -38,7 +38,7 @@ class Cookie {
 	 * @param boolean $secure See http://php.net/set_session
 	 * @param boolean $httpOnly See http://php.net/set_session
 	 */
-	public static function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, 
+	public static function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false,
 		$httpOnly = false
 	) {
 		return self::get_inst()->inst_set($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
@@ -103,7 +103,7 @@ class Cookie {
 	 * @param boolean $secure See http://php.net/set_session
 	 * @param boolean $httpOnly See http://php.net/set_session
 	 */
-	protected function inst_set($name, $value, $expiry = 90, $path = null, 
+	protected function inst_set($name, $value, $expiry = 90, $path = null,
 		$domain = null, $secure = false, $httpOnly = false
 	) {
 		if(!headers_sent($file, $line)) {

@@ -4,7 +4,7 @@
  * A DataList that represents a relation.
  *
  * Adds the notion of a foreign ID that can be optionally set.
- * 
+ *
  * @package framework
  * @subpackage model
  */
@@ -15,7 +15,7 @@ abstract class RelationList extends DataList {
 	}
 
 	/**
-	 * Returns a copy of this list with the ManyMany relationship linked to 
+	 * Returns a copy of this list with the ManyMany relationship linked to
 	 * the given foreign ID.
 	 *
 	 * @param int|array $id An ID or an array of IDs.
@@ -47,10 +47,10 @@ abstract class RelationList extends DataList {
 	}
 
 	/**
-	 * Returns a where clause that filters the members of this relationship to 
+	 * Returns a where clause that filters the members of this relationship to
 	 * just the related items.
 	 *
-	 * 
+	 *
 	 * @param array|integer $id (optional) An ID or an array of IDs - if not provided, will use the current ids as
 	 * per getForeignID
 	 * @return array Condition In array(SQL => parameters format)

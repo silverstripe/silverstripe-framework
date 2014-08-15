@@ -6,28 +6,28 @@
 class GroupTest extends FunctionalTest {
 
 	protected static $fixture_file = 'GroupTest.yml';
-	
+
 	public function testGroupCodeDefaultsToTitle() {
 		$g1 = new Group();
 		$g1->Title = "My Title";
 		$g1->write();
 		$this->assertEquals('my-title', $g1->Code, 'Custom title gets converted to code if none exists already');
-		
+
 		$g2 = new Group();
 		$g2->Title = "My Title";
 		$g2->Code = "my-code";
 		$g2->write();
 		$this->assertEquals('my-code', $g2->Code, 'Custom attributes are not overwritten by Title field');
-		
+
 		$g3 = new Group();
 		$g3->Title = _t('SecurityAdmin.NEWGROUP',"New Group");
 		$g3->write();
 		$this->assertNull($g3->Code, 'Default title doesnt trigger attribute setting');
 	}
-	
+
 	public function testMemberGroupRelationForm() {
 		Session::set('loggedInAs', $this->idFromFixture('GroupTest_Member', 'admin'));
-		
+
 		$adminGroup = $this->objFromFixture('Group', 'admingroup');
 		$parentGroup = $this->objFromFixture('Group', 'parentgroup');
 		$childGroup = $this->objFromFixture('Group', 'childgroup');
@@ -49,7 +49,7 @@ class GroupTest extends FunctionalTest {
 		);
 		$this->assertContains($adminGroup->ID, $updatedGroups->column('ID'));
 		$this->assertContains($parentGroup->ID, $updatedGroups->column('ID'));
-		
+
 		// Test unsetting relationship
 		$form->loadDataFrom($member);
 		$checkboxSetField = $form->Fields()->fieldByName('Groups');
@@ -68,25 +68,25 @@ class GroupTest extends FunctionalTest {
 		// Test adding child group
 
 	}
-	
+
 	public function testCollateAncestorIDs() {
 		$parentGroup = $this->objFromFixture('Group', 'parentgroup');
 		$childGroup = $this->objFromFixture('Group', 'childgroup');
 		$orphanGroup = new Group();
 		$orphanGroup->ParentID = 99999;
 		$orphanGroup->write();
-		
+
 		$this->assertEquals(1, count($parentGroup->collateAncestorIDs()),
 			'Root node only contains itself'
 		);
 		$this->assertContains($parentGroup->ID, $parentGroup->collateAncestorIDs());
-		
+
 		$this->assertEquals(2, count($childGroup->collateAncestorIDs()),
 			'Contains parent nodes, with child node first'
 		);
 		$this->assertContains($parentGroup->ID, $childGroup->collateAncestorIDs());
 		$this->assertContains($childGroup->ID, $childGroup->collateAncestorIDs());
-		
+
 		$this->assertEquals(1, count($orphanGroup->collateAncestorIDs()),
 			'Orphaned nodes dont contain invalid parent IDs'
 		);

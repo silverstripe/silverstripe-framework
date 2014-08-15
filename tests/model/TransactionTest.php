@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class TransactionTest extends SapphireTest {
-	
+
 	protected $extraDataObjects = array(
 		'TransactionTest_Object'
 	);

@@ -47,19 +47,19 @@ class MultiEnum extends Enum {
 		DB::require_field($this->tableName, $this->name, $values);
 
 	}
-	
-	
+
+
 	/**
-	 * Return a {@link CheckboxSetField} suitable for editing this field 
+	 * Return a {@link CheckboxSetField} suitable for editing this field
 	 */
 	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null,
 			$emptyString = null) {
-		
+
 		if(!$title) $title = $this->name;
 		if(!$name) $name = $this->name;
 
 		$field = new CheckboxSetField($name, $title, $this->enumValues($hasEmpty), $value, $form);
-			
+
 		return $field;
 	}
 }

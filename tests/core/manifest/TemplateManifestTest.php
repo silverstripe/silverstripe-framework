@@ -73,7 +73,7 @@ class TemplateManifestTest extends SapphireTest {
 		ksort($expectTests);
 		ksort($manifest);
 		ksort($manifestTests);
-		
+
 		$this->assertEquals(
 			$expect, $manifest,
 			'All templates are correctly loaded in the manifest.'
@@ -110,7 +110,7 @@ class TemplateManifestTest extends SapphireTest {
 		$this->assertEquals(array(
 			'main' => "{$this->base}/module/templates/CustomTemplate.ss",
 			'myproject' => array(
-				'main' => "{$this->base}/myproject/templates/CustomTemplate.ss"		
+				'main' => "{$this->base}/myproject/templates/CustomTemplate.ss"
 		)), $this->manifestTests->getTemplate('CustomTemplate'));
 	}
 

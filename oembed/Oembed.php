@@ -2,11 +2,11 @@
 /**
  * Format of the Oembed config. Autodiscover allows discovery of all URLs.
  *
- * Endpoint set to true means autodiscovery for this specific provider is 
+ * Endpoint set to true means autodiscovery for this specific provider is
  * allowed (even if autodiscovery in general has been disabled).
  *
  * <code>
- * 
+ *
  * name: Oembed
  * ---
  * Oembed:
@@ -62,7 +62,7 @@ class Oembed {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks the URL if it matches against the scheme (pattern).
 	 *
@@ -126,7 +126,7 @@ class Oembed {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Takes the human-readable URL of an embeddable resource and converts it into an
 	 * Oembed_Result descriptor (which contains a full Oembed resource URL).
@@ -152,7 +152,7 @@ class Oembed {
 			// Build the url manually - we gave all needed information.
 			$oembedUrl = Controller::join_links($endpoint, '?format=json&url=' . rawurlencode($url));
 		}
-		
+
 		// If autodescovery failed the resource might be a direct link to a file
 		if(!$oembedUrl) {
 			if(File::get_app_category(File::get_file_extension($url)) == "image") {
@@ -178,7 +178,7 @@ class Oembed {
 		// No matching Oembed resource found.
 		return false;
 	}
-	
+
 	public static function handle_shortcode($arguments, $url, $parser, $shortcode) {
 		if(isset($arguments['type'])) {
 			$type = $arguments['type'];
@@ -225,11 +225,11 @@ class Oembed_Result extends ViewableData {
 	 * Class to be injected into the resulting HTML element.
 	 */
 	protected $extraClass;
-	
+
 	private static $casting = array(
 		'html' => 'HTMLText',
 	);
-	
+
 	public function __construct($url, $origin = false, $type = false, array $options = array()) {
 		$this->url = $url;
 		$this->origin = $origin;
@@ -238,14 +238,14 @@ class Oembed_Result extends ViewableData {
 		if(isset($options['class'])) {
 			$this->extraClass = $options['class'];
 		}
-		
+
 		parent::__construct();
 	}
 
 	public function getOembedURL() {
 		return $this->url;
 	}
-	
+
 	/**
 	 * Fetches the JSON data from the Oembed URL (cached).
 	 * Only sets the internal variable.
@@ -297,7 +297,7 @@ class Oembed_Result extends ViewableData {
 
 		$this->data = $data;
 	}
-	
+
 	/**
 	 * Wrap the check for looking into Oembed JSON within $this->data.
 	 */
@@ -305,7 +305,7 @@ class Oembed_Result extends ViewableData {
 		$this->loadData();
 		return array_key_exists(strtolower($field), $this->data);
 	}
-	
+
 	/**
 	 * Wrap the field calls to fetch data from Oembed JSON (within $this->data)
 	 */
@@ -315,7 +315,7 @@ class Oembed_Result extends ViewableData {
 			return $this->data[$field];
 		}
 	}
-	
+
 	public function forTemplate() {
 		$this->loadData();
 		switch($this->Type) {
@@ -335,7 +335,7 @@ class Oembed_Result extends ViewableData {
 			break;
 		}
 	}
-	
+
 	public function exists() {
 		$this->loadData();
 		return count($this->data) > 0;

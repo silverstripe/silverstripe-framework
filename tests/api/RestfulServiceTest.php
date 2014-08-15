@@ -5,24 +5,24 @@
  * @subpackage tests
  */
 class RestfulServiceTest extends SapphireTest {
-	
-	protected $member_unique_identifier_field = ''; 
-	
+
+	protected $member_unique_identifier_field = '';
+
 	public function setUp() {
 		// backup the project unique identifier field
 		$this->member_unique_identifier_field = Member::config()->unique_identifier_field;
 
 		Member::config()->unique_identifier_field = 'Email';
 
-		parent::setUp(); 
-	} 
+		parent::setUp();
+	}
 
 	public function tearDown() {
-		parent::tearDown(); 
+		parent::tearDown();
 
-		// set old Member::config()->unique_identifier_field value 
-		if ($this->member_unique_identifier_field) { 
-			Member::config()->unique_identifier_field = $this->member_unique_identifier_field; 
+		// set old Member::config()->unique_identifier_field value
+		if ($this->member_unique_identifier_field) {
+			Member::config()->unique_identifier_field = $this->member_unique_identifier_field;
 		}
 	}
 
@@ -102,7 +102,7 @@ class RestfulServiceTest extends SapphireTest {
 			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $responseBody);
 		}
 	}
-	
+
 	public function testGetDataWithSetQueryString() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
@@ -117,7 +117,7 @@ class RestfulServiceTest extends SapphireTest {
 			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $responseBody);
 		}
 	}
-	
+
 	public function testGetDataWithUrlParameters() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
@@ -132,7 +132,7 @@ class RestfulServiceTest extends SapphireTest {
 			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $responseBody);
 		}
 	}
-	
+
 	public function testPostData() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
 		$params = array(
@@ -152,11 +152,11 @@ class RestfulServiceTest extends SapphireTest {
 		$responseBody = $service->request('RestfulServiceTest_Controller/', 'PUT', $data)->getBody();
 		$this->assertContains("<body>$data</body>", $responseBody);
 	}
-	
+
 	public function testConnectionDoesntCacheWithDifferentUrl() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
-		
+
 		// First run
 		$params = array(
 			'test1a' => 'first run',
@@ -164,7 +164,7 @@ class RestfulServiceTest extends SapphireTest {
 		$service->setQueryString($params);
 		$responseBody = $service->request($url)->getBody();
 		$this->assertContains("<request_item name=\"test1a\">first run</request_item>", $responseBody);
-		
+
 		// Second run
 		$params = array(
 			'test1a' => 'second run',
@@ -175,14 +175,14 @@ class RestfulServiceTest extends SapphireTest {
 	}
 
 	/**
-	 * @expectedException PHPUnit_Framework_Error 
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function testIncorrectData() {
 		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
 		$test1 = $connection->request('RestfulServiceTest_Controller/invalid');
 		$test1->xpath("\\fail");
 	}
-	
+
 	public function testHttpErrorWithoutCache() {
 		$connection = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
 		$response = $connection->request('RestfulServiceTest_Controller/httpErrorWithoutCache');
@@ -190,20 +190,20 @@ class RestfulServiceTest extends SapphireTest {
 		$this->assertEquals(400, $response->getStatusCode());
 		$this->assertFalse($response->getCachedBody());
 		$this->assertContains("<error>HTTP Error</error>", $response->getBody());
-		
+
 	}
-	
+
 	public function testHttpErrorWithCache() {
 		$subUrl = 'RestfulServiceTest_Controller/httpErrorWithCache';
 		$connection = new RestfulServiceTest_MockErrorService(Director::absoluteBaseURL(), 0);
-		$this->createFakeCachedResponse($connection, $subUrl); 
+		$this->createFakeCachedResponse($connection, $subUrl);
 		$response = $connection->request($subUrl);
 		$this->assertEquals(400, $response->getStatusCode());
 		$this->assertEquals("Cache response body",$response->getCachedBody());
 		$this->assertContains("<error>HTTP Error</error>", $response->getBody());
-		
+
 	}
-	
+
 	/**
 	 * Simulate cached response file for testing error requests that are supposed to have cache files
 	 *
@@ -355,7 +355,7 @@ class RestfulServiceTest_Controller extends Controller implements TestOnly {
 			$post .= "\t\t<post_item name=\"$key\">$value</post_item>\n";
 		}
 		$body = $this->request->getBody();
-		
+
 		$out = <<<XML
 <?xml version="1.0"?>
 <test>
@@ -367,10 +367,10 @@ class RestfulServiceTest_Controller extends Controller implements TestOnly {
 XML;
 		$this->response->setBody($out);
 		$this->response->addHeader('Content-type', 'text/xml');
-		
+
 		return $this->response;
 	}
-	
+
 	public function invalid() {
 		$out = <<<XML
 <?xml version="1.0"?>
@@ -379,9 +379,9 @@ XML;
 </test>
 XML;
 		header('Content-type: text/xml');
-		echo $out;		
+		echo $out;
 	}
-	
+
 	public function httpErrorWithoutCache() {
 		$out = <<<XML
 <?xml version="1.0"?>
@@ -389,14 +389,14 @@ XML;
 	<error>HTTP Error</error>
 </test>
 XML;
-		
+
 		$this->response->setBody($out);
-		$this->response->setStatusCode(400); 
+		$this->response->setStatusCode(400);
 		$this->response->addHeader('Content-type', 'text/xml');
 
 		return $this->response;
 	}
-	
+
 	/**
 	 * The body of this method is the same as self::httpErrorWithoutCache()
 	 * but we need it for caching since caching using request url to determine path to cache file
@@ -409,23 +409,23 @@ XML;
 /**
  * Mock implementation of {@link RestfulService}, which uses {@link Director::test()}
  * instead of direct curl system calls.
- * 
+ *
  * @todo Less overloading of request()
  * @todo Currently only works with relative (internal) URLs
- * 
+ *
  * @package framework
  * @subpackage tests
  */
 class RestfulServiceTest_MockRestfulService extends RestfulService {
-	
+
 	public $session = null;
-	
+
 	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = array()) {
-		
+
 		if(!$this->session) {
 			$this->session = Injector::inst()->create('Session', array());
 		}
-		
+
 		$url = $this->baseURL . $subURL; // Url for the request
 
 		if($this->queryString) {
@@ -436,19 +436,19 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 			}
 		}
 		$url = str_replace(' ', '%20', $url); // Encode spaces
-	
+
 		// Custom for mock implementation: Director::test() doesn't cope with absolute URLs
 		$url = Director::makeRelative($url);
-		
+
 		$method = strtoupper($method);
-		
+
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
-		
+
 		// Add headers
 		if($this->customHeaders) {
 			$headers = array_merge((array)$this->customHeaders, (array)$headers);
 		}
-	
+
 		// Add authentication
 		if($this->authUsername) {
 			$headers[] = "Authorization: Basic " . base64_encode(
@@ -459,14 +459,14 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 		// Custom for mock implementation: Use Director::test()
 		$body = null;
 		$postVars = null;
-		
+
 		if($method!='POST') $body = $data;
 		else $postVars = $data;
-		
+
 		$responseFromDirector = Director::test($url, $postVars, $this->session, $method, $body, $headers);
-		
+
 		$response = new RestfulService_Response(
-			$responseFromDirector->getBody(), 
+			$responseFromDirector->getBody(),
 			$responseFromDirector->getStatusCode()
 		);
 

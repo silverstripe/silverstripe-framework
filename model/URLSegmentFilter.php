@@ -8,20 +8,20 @@
  * Filter certain characters from "URL segments" (also called "slugs"), for nicer (more SEO-friendly) URLs.
  * Uses {@link SS_Transliterator} to convert non-ASCII characters to meaningful ASCII representations.
  * Use {@link $default_allow_multibyte} to allow a broader range of characters without transliteration.
- * 
+ *
  * Caution: Should not be used on full URIs with domains or query parameters.
  * In order to retain forward slashes in a path, each individual segment needs to be filtered individually.
- * 
+ *
  * See {@link FileNameFilter} for similar implementation for filesystem-based URLs.
  */
 class URLSegmentFilter extends Object {
-	
+
 	/**
 	 * @config
 	 * @var Boolean
 	 */
 	private static $default_use_transliterator = true;
-	
+
 	/**
 	 * @config
 	 * @var Array See {@link setReplacements()}.
@@ -36,7 +36,7 @@ class URLSegmentFilter extends Object {
 		'/^[\-]+/u' => '', // Remove all leading dashes
 		'/[\-]+$/u' => '' // Remove all trailing dashes
 	);
-	
+
 	/**
 	 * Doesn't try to replace or transliterate non-ASCII filters.
 	 * Useful for character sets that have little overlap with ASCII (e.g. far eastern),
@@ -47,15 +47,15 @@ class URLSegmentFilter extends Object {
 	 * @var boolean
 	 */
 	private static $default_allow_multibyte = false;
-	
+
 	/**
 	 * @var Array See {@link setReplacements()}
 	 */
 	public $replacements = array();
-	
+
 	/**
-	 * Note: Depending on the applied replacement rules, this method might result in an empty string. 
-	 * 
+	 * Note: Depending on the applied replacement rules, this method might result in an empty string.
+	 *
 	 * @param String URL path (without domain or query parameters), in utf8 encoding
 	 * @return String A filtered path compatible with RFC 3986
 	 */
@@ -65,15 +65,15 @@ class URLSegmentFilter extends Object {
 			$transliterator = $this->getTransliterator();
 			if($transliterator) $name = $transliterator->toASCII($name);
 		}
-		
+
 		$name = mb_strtolower($name);
 		$replacements = $this->getReplacements();
-		
+
 		// Unset automated removal of non-ASCII characters, and don't try to transliterate
 		if($this->getAllowMultibyte() && isset($replacements['/[^A-Za-z0-9\-]+/u'])) {
 			unset($replacements['/[^A-Za-z0-9\-]+/u']);
 		}
-		
+
 		foreach($replacements as $regex => $replace) {
 			$name = preg_replace($regex, $replace, $name);
 		}
@@ -81,58 +81,58 @@ class URLSegmentFilter extends Object {
 		// Multibyte URLs require percent encoding to comply to RFC 3986.
 		// Without this setting, the "remove non-ASCII chars" regex takes care of that.
 		if($this->getAllowMultibyte()) $name = rawurlencode($name);
-		
+
 		return $name;
 	}
-	
+
 	/**
 	 * @param Array Map of find/replace used for preg_replace().
 	 */
 	public function setReplacements($r) {
 		$this->replacements = $r;
 	}
-	
+
 	/**
 	 * @return Array
 	 */
 	public function getReplacements() {
 		return ($this->replacements) ? $this->replacements : (array)$this->config()->default_replacements;
 	}
-		
+
 	/**
 	 * @var SS_Transliterator
 	 */
 	protected $transliterator;
-	
+
 	/**
 	 * @return SS_Transliterator|NULL
 	 */
 	public function getTransliterator() {
 		if($this->transliterator === null && $this->config()->default_use_transliterator) {
 			$this->transliterator = SS_Transliterator::create();
-		} 
+		}
 		return $this->transliterator;
 	}
-	
+
 	/**
 	 * @param SS_Transliterator|FALSE
 	 */
 	public function setTransliterator($t) {
 		$this->transliterator = $t;
 	}
-	
+
 	/**
 	 * @var boolean
 	 */
 	protected $allowMultibyte;
-	
+
 	/**
 	 * @param boolean
 	 */
 	public function setAllowMultibyte($bool) {
 		$this->allowMultibyte = $bool;
 	}
-	
+
 	/**
 	 * @return boolean
 	 */

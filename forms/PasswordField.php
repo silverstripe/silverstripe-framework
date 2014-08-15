@@ -48,7 +48,7 @@ class PasswordField extends TextField {
 	public function performReadonlyTransformation() {
 		$field = $this->castedCopy('ReadonlyField');
 		$field->setValue('*****');
-		
+
 		return $field;
 	}
 

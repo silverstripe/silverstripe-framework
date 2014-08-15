@@ -1,7 +1,7 @@
 <?php
 
 class DataQueryTest extends SapphireTest {
-	
+
 	protected static $fixture_file = 'DataQueryTest.yml';
 
 	protected $extraDataObjects = array(
@@ -59,7 +59,7 @@ class DataQueryTest extends SapphireTest {
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
 		$this->assertSQLContains(
-			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR (DataQueryTest_A.Name = 'Bob'))", 
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR (DataQueryTest_A.Name = 'Bob'))",
 			$dq->sql($parameters)
 		);
 	}
@@ -73,7 +73,7 @@ class DataQueryTest extends SapphireTest {
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
 		$this->assertSQLContains(
-			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') AND (DataQueryTest_A.Name = 'Bob'))", 
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') AND (DataQueryTest_A.Name = 'Bob'))",
 			$dq->sql($parameters)
 		);
 	}
@@ -94,7 +94,7 @@ class DataQueryTest extends SapphireTest {
 
 		$this->assertSQLContains(
 			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR ((DataQueryTest_A.Age = 18) "
-				. "AND (DataQueryTest_A.Age = 50)) OR (DataQueryTest_A.Name = 'Bob'))", 
+				. "AND (DataQueryTest_A.Age = 50)) OR (DataQueryTest_A.Name = 'Bob'))",
 			$dq->sql($parameters)
 		);
 	}
@@ -123,7 +123,7 @@ class DataQueryTest extends SapphireTest {
 
 		$this->assertSQLEquals($dq->sql($parameters), $orgDq->sql($parameters));
 	}
-	
+
 	public function testOrderByMultiple() {
 		$dq = new DataQuery('SQLQueryTest_DO');
 		$dq = $dq->sort('"Name" ASC, MID("Name", 8, 1) DESC');
@@ -132,7 +132,7 @@ class DataQueryTest extends SapphireTest {
 			$dq->sql($parameters)
 		);
 	}
-	
+
 	public function testDefaultSort() {
 		$query = new DataQuery('DataQueryTest_E');
 		$result = $query->column('Title');
@@ -162,7 +162,7 @@ class DataQueryTest_B extends DataQueryTest_A {
 }
 
 class DataQueryTest_C extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		'Title' => 'Varchar'
 	);
@@ -191,10 +191,10 @@ class DataQueryTest_D extends DataObject implements TestOnly {
 }
 
 class DataQueryTest_E extends DataQueryTest_C implements TestOnly {
-	
+
 	private static $db = array(
 		'SortOrder' => 'Int'
 	);
-	
+
 	private static $default_sort = '"DataQueryTest_E"."SortOrder" ASC';
 }

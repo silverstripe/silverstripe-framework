@@ -169,11 +169,11 @@ class Deprecation {
 			$string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
 
 			if($caller) {
-				user_error($caller.' is deprecated.'.($string ? ' '.$string : ''), $level);	
+				user_error($caller.' is deprecated.'.($string ? ' '.$string : ''), $level);
 			} else {
-				user_error($string, $level);	
+				user_error($string, $level);
 			}
-			
+
 		}
 	}
 

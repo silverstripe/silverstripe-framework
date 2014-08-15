@@ -1,7 +1,7 @@
 <?php
 
 class SearchContextTest extends SapphireTest {
-	
+
 	protected static $fixture_file = 'SearchContextTest.yml';
 
 	protected $extraDataObjects = array(
@@ -19,31 +19,31 @@ class SearchContextTest extends SapphireTest {
 		$context = $person->getDefaultSearchContext();
 		$results = $context->getResults(array('Name'=>''));
 		$this->assertEquals(5, $results->Count());
-		
+
 		$results = $context->getResults(array('EyeColor'=>'green'));
 		$this->assertEquals(2, $results->Count());
-		
+
 		$results = $context->getResults(array('EyeColor'=>'green', 'HairColor'=>'black'));
 		$this->assertEquals(1, $results->Count());
 	}
-	
+
 	public function testSummaryIncludesDefaultFieldsIfNotDefined() {
 		$person = singleton('SearchContextTest_Person');
 		$this->assertContains('Name', $person->summaryFields());
-		
+
 		$book = singleton('SearchContextTest_Book');
 		$this->assertContains('Title', $book->summaryFields());
 	}
-	
+
 	public function testAccessDefinedSummaryFields() {
 		$company = singleton('SearchContextTest_Company');
 		$this->assertContains('Industry', $company->summaryFields());
 	}
-	
+
 	public function testPartialMatchUsedByDefaultWhenNotExplicitlySet() {
 		$person = singleton('SearchContextTest_Person');
 		$context = $person->getDefaultSearchContext();
-		
+
 		$this->assertEquals(
 			array(
 				"Name" => new PartialMatchFilter("Name"),
@@ -53,11 +53,11 @@ class SearchContextTest extends SapphireTest {
 			$context->getFilters()
 		);
 	}
-	
+
 	public function testDefaultFiltersDefinedWhenNotSetInDataObject() {
 		$book = singleton('SearchContextTest_Book');
 		$context = $book->getDefaultSearchContext();
-		
+
 		$this->assertEquals(
 			array(
 				"Title" => new PartialMatchFilter("Title")
@@ -65,7 +65,7 @@ class SearchContextTest extends SapphireTest {
 			$context->getFilters()
 		);
 	}
-	
+
 	public function testUserDefinedFiltersAppearInSearchContext() {
 		$company = singleton('SearchContextTest_Company');
 		$context = $company->getDefaultSearchContext();
@@ -79,7 +79,7 @@ class SearchContextTest extends SapphireTest {
 			$context->getFilters()
 		);
 	}
-	
+
 	public function testUserDefinedFieldsAppearInSearchContext() {
 		$company = singleton('SearchContextTest_Company');
 		$context = $company->getDefaultSearchContext();
@@ -93,31 +93,31 @@ class SearchContextTest extends SapphireTest {
 			$context->getFields()
 		);
 	}
-	
+
 	public function testRelationshipObjectsLinkedInSearch() {
 		$action3 = $this->objFromFixture('SearchContextTest_Action', 'action3');
-		
+
 		$project = singleton('SearchContextTest_Project');
 		$context = $project->getDefaultSearchContext();
-		
+
 		$params = array("Name"=>"Blog Website", "Actions__SolutionArea"=>"technical");
-		
+
 		$results = $context->getResults($params);
-		
+
 		$this->assertEquals(1, $results->Count());
-		
+
 		$project = $results->First();
-		
+
 		$this->assertInstanceOf('SearchContextTest_Project', $project);
 		$this->assertEquals("Blog Website", $project->Name);
 		$this->assertEquals(2, $project->Actions()->Count());
-		
+
 		$this->assertEquals(
-			"Get RSS feeds working", 
+			"Get RSS feeds working",
 			$project->Actions()->find('ID', $action3->ID)->Description
 		);
 	}
-	
+
 	public function testCanGenerateQueryUsingAllFilterTypes() {
 		$all = singleton("SearchContextTest_AllFilterTypes");
 		$context = $all->getDefaultSearchContext();
@@ -160,45 +160,45 @@ class SearchContextTest extends SapphireTest {
 	}
 
 
-	
+
 }
 
 class SearchContextTest_Person extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		"Name" => "Varchar",
 		"Email" => "Varchar",
 		"HairColor" => "Varchar",
 		"EyeColor" => "Varchar"
 	);
-	
+
 	private static $searchable_fields = array(
 		"Name", "HairColor", "EyeColor"
 	);
-	
+
 }
 
 class SearchContextTest_Book extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		"Title" => "Varchar",
 		"Summary" => "Varchar"
 	);
-	
+
 }
 
 class SearchContextTest_Company extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		"Name" => "Varchar",
 		"Industry" => "Varchar",
 		"AnnualProfit" => "Int"
 	);
-	
+
 	private static $summary_fields = array(
 		"Industry"
 	);
-	
+
 	private static $searchable_fields = array(
 		"Name" => "PartialMatchFilter",
 		"Industry" => array(
@@ -210,58 +210,58 @@ class SearchContextTest_Company extends DataObject implements TestOnly {
 			'title' => 'The Almighty Annual Profit'
 		)
 	);
-	
+
 }
 
 class SearchContextTest_Project extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		"Name" => "Varchar"
 	);
-	
+
 	private static $has_one = array(
-		"Deadline" => "SearchContextTest_Deadline"	
+		"Deadline" => "SearchContextTest_Deadline"
 	);
-	
+
 	private static $has_many = array(
 		"Actions" => "SearchContextTest_Action"
 	);
-	
+
 	private static $searchable_fields = array(
 		"Name" => "PartialMatchFilter",
 		"Actions.SolutionArea" => "ExactMatchFilter",
 		"Actions.Description" => "PartialMatchFilter"
 	);
-	
+
 }
 
 class SearchContextTest_Deadline extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		"CompletionDate" => "SS_Datetime"
 	);
-	
+
 	private static $has_one = array(
-		"Project" => "SearchContextTest_Project"	
+		"Project" => "SearchContextTest_Project"
 	);
-	
+
 }
 
 class SearchContextTest_Action extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		"Description" => "Text",
 		"SolutionArea" => "Varchar"
 	);
-	
+
 	private static $has_one = array(
 		"Project" => "SearchContextTest_Project"
 	);
-	
+
 }
 
 class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		"ExactMatch" => "Varchar",
 		"PartialMatch" => "Varchar",
@@ -270,9 +270,9 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 		"StartsWith" => "Varchar",
 		"EndsWith" => "Varchar",
 		"HiddenValue" => "Varchar",
-		'FulltextField' => 'Text', 
+		'FulltextField' => 'Text',
 	);
-	
+
 	private static $searchable_fields = array(
 		"ExactMatch" => "ExactMatchFilter",
 		"PartialMatch" => "PartialMatchFilter",
@@ -281,7 +281,7 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 		"EndsWith" => "EndsWithFilter",
 		"FulltextField" => "FulltextFilter",
 	);
-	
+
 }
 
 

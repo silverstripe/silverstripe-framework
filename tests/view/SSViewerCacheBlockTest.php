@@ -2,11 +2,11 @@
 
 // Not actually a data object, we just want a ViewableData object that's just for us
 class SSViewerCacheBlockTest_Model extends DataObject implements TestOnly {
-	
+
 	public function Test($arg = null) {
 		return $this;
 	}
-	
+
 	public function Foo() {
 		return 'Bar';
 	}
@@ -21,45 +21,45 @@ class SSViewerCacheBlockTest_Model extends DataObject implements TestOnly {
 }
 
 class SSViewerCacheBlockTest_VersionedModel extends DataObject implements TestOnly {
-	
+
 	protected $entropy = 'default';
-	
+
 	private static $extensions = array(
 		"Versioned('Stage', 'Live')"
 	);
-	
+
 	public function setEntropy($entropy) {
 		$this->entropy = $entropy;
 	}
-	
+
 	public function Inspect() {
 		return $this->entropy . ' ' . Versioned::get_reading_mode();
 	}
 }
 
 class SSViewerCacheBlockTest extends SapphireTest {
-	
+
 	protected $extraDataObjects = array(
 		'SSViewerCacheBlockTest_Model',
 		'SSViewerCacheBlockTest_VersionedModel'
 	);
-	
+
 	protected $data = null;
-	
+
 	protected function _reset($cacheOn = true) {
 		$this->data = new SSViewerCacheBlockTest_Model();
-		
+
 		SS_Cache::factory('cacheblock')->clean();
 		SS_Cache::set_cache_lifetime('cacheblock', $cacheOn ? 600 : -1);
 	}
-	
+
 	protected function _runtemplate($template, $data = null) {
 		if ($data === null) $data = $this->data;
 		if (is_array($data)) $data = $this->data->customise($data);
-		
+
 		return SSViewer::execute_string($template, $data);
 	}
-	
+
 	public function testParsing() {
 
 		// ** Trivial checks **
@@ -85,7 +85,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		// Make sure a moderately complicated cacheblock parses
 		$this->_reset();
 		$this->assertEquals($this->_runtemplate('<% cached \'block\', Foo, "jumping" %>Yay<% end_cached %>'), 'Yay');
-		
+
 		// Make sure a complicated cacheblock parses
 		$this->_reset();
 		$this->assertEquals($this->_runtemplate(
@@ -113,21 +113,21 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	public function testBlocksCache() {
 		// First, run twice without caching, to prove we get two different values
 		$this->_reset(false);
-				
+
 		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
 		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 2)), '2');
-		
+
 		// Then twice with caching, should get same result each time
 		$this->_reset(true);
-				
+
 		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
 		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 2)), '1');
 	}
-	
+
 	public function testVersionedCache() {
-				
+
 		$origStage = Versioned::current_stage();
-		
+
 		// Run without caching in stage to prove data is uncached
 		$this->_reset(false);
 		Versioned::reading_stage("Stage");
@@ -143,7 +143,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 			'first Stage.Stage',
 			SSViewer::execute_string('<% cached %>$Inspect<% end_cached %>', $data)
 		);
-		
+
 		// Run without caching in live to prove data is uncached
 		$this->_reset(false);
 		Versioned::reading_stage("Live");
@@ -159,7 +159,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 			'first Stage.Live',
 			$this->_runtemplate('<% cached %>$Inspect<% end_cached %>', $data)
 		);
-		
+
 		// Then with caching, initially in draft, and then in live, to prove that
 		// changing the versioned reading mode doesn't cache between modes, but it does
 		// within them
@@ -177,7 +177,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 			'default Stage.Stage', // entropy should be ignored due to caching
 			$this->_runtemplate('<% cached %>$Inspect<% end_cached %>', $data)
 		);
-		
+
 		Versioned::reading_stage('Live');
 		$data = new SSViewerCacheBlockTest_VersionedModel();
 		$data->setEntropy('first');
@@ -191,7 +191,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 			'first Stage.Live', // entropy should be ignored due to caching
 			$this->_runtemplate('<% cached %>$Inspect<% end_cached %>', $data)
 		);
-		
+
 		Versioned::reading_stage($origStage);
 	}
 
@@ -278,19 +278,19 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		$template = '<% cached Foo %> $Fooa <% cached Bar %>$Bara<% end_cached %> $Foob <% end_cached %>';
 
 		// Do it the first time to load the cache
-		$this->assertEquals($this->_runtemplate($template, 
+		$this->assertEquals($this->_runtemplate($template,
 			array('Foo' => 1, 'Fooa' => 1, 'Foob' => 3, 'Bar' => 1, 'Bara' => 2)), ' 1 2 3 ');
 
 		// Do it again, the input values are ignored as the cache is hit for both elements
-		$this->assertEquals($this->_runtemplate($template, 
+		$this->assertEquals($this->_runtemplate($template,
 			array('Foo' => 1, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 1, 'Bara' => 9)), ' 1 2 3 ');
 
 		// Do it again with a new key for Bar, Bara is picked up, Fooa and Foob are not
-		$this->assertEquals($this->_runtemplate($template, 
+		$this->assertEquals($this->_runtemplate($template,
 			array('Foo' => 1, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 9)), ' 1 9 3 ');
 
 		// Do it again with a new key for Foo, Fooa and Foob are picked up, Bara are not
-		$this->assertEquals($this->_runtemplate($template, 
+		$this->assertEquals($this->_runtemplate($template,
 			array('Foo' => 2, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 1)), ' 9 9 9 ');
 	}
 
@@ -298,7 +298,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		$this->_reset(true);
 		$this->assertNotNull($this->_runtemplate('<% cached %><% with Foo %>$Bar<% end_with %><% end_cached %>'));
 	}
-	
+
 	/**
      * @expectedException SSTemplateParseException
      */

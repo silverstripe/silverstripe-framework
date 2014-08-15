@@ -3,7 +3,7 @@
 
 /**
  * Tests for {@see SQLInsert}
- * 
+ *
  * @package framework
  * @subpackage tests
  */
@@ -12,12 +12,12 @@ class SQLInsertTest extends SapphireTest {
 	protected $extraDataObjects = array(
 		'SQLInsertTestBase'
 	);
-	
+
 	public function testEmptyQueryReturnsNothing() {
 		$query = new SQLInsert();
 		$this->assertSQLEquals('', $query->sql($parameters));
 	}
-	
+
 	public function testBasicInsert() {
 		$query = SQLInsert::create()
 				->setInto('"SQLInsertTestBase"')
@@ -36,7 +36,7 @@ class SQLInsertTest extends SapphireTest {
 		$this->assertEquals(array('My Object', 1, 10, 'No description'), $parameters);
 		$query->execute();
 		$this->assertEquals(1, DB::affected_rows());
-		
+
 		// Check inserted object is correct
 		$firstObject = DataObject::get_one('SQLInsertTestBase', array('"Title"' => 'My Object'), false);
 		$this->assertNotEmpty($firstObject);
@@ -45,7 +45,7 @@ class SQLInsertTest extends SapphireTest {
 		$this->assertEquals($firstObject->Age, 10);
 		$this->assertEquals($firstObject->Description, 'No description');
 	}
-	
+
 	public function testMultipleRowInsert() {
 		$query = SQLInsert::create('"SQLInsertTestBase"');
 		$query->addRow(array(
@@ -68,14 +68,14 @@ class SQLInsertTest extends SapphireTest {
 		$this->assertEquals(array('First Object', 10, 'First the worst', 'Second object', 12, null), $parameters);
 		$query->execute();
 		$this->assertEquals(2, DB::affected_rows());
-		
+
 		// Check inserted objects are correct
 		$firstObject = DataObject::get_one('SQLInsertTestBase', array('"Title"' => 'First Object'), false);
 		$this->assertNotEmpty($firstObject);
 		$this->assertEquals($firstObject->Title, 'First Object');
 		$this->assertEquals($firstObject->Age, 10);
 		$this->assertEquals($firstObject->Description, 'First the worst');
-		
+
 		$secondObject = DataObject::get_one('SQLInsertTestBase', array('"Title"' => 'Second object'), false);
 		$this->assertNotEmpty($secondObject);
 		$this->assertEquals($secondObject->Title, 'Second object');

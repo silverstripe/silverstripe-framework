@@ -13,7 +13,7 @@ abstract class HTMLCleaner extends Object {
 	 * @var array
 	 */
 	protected $defaultConfig = array();
-	
+
 	/**
 	 * @var $config Array configuration variables for HTMLCleaners that support configuration (like Tidy)
 	 */
@@ -26,14 +26,14 @@ abstract class HTMLCleaner extends Object {
 		if ($config) $this->config = array_merge($this->defaultConfig, $config);
 		else $this->config = $this->defaultConfig;
 	}
-	
+
 	/**
 	 * @param Array
 	 */
 	public function setConfig($config) {
 		$this->config = $config;
 	}
-	
+
 	/**
 	 * @return Array
 	 */
@@ -43,7 +43,7 @@ abstract class HTMLCleaner extends Object {
 
 	/**
 	 * Passed a string, return HTML that has been tidied.
-	 * 
+	 *
 	 * @param String HTML
 	 * @return String HTML, tidied
 	 */
@@ -51,7 +51,7 @@ abstract class HTMLCleaner extends Object {
 
 	/**
 	 * Experimental inst class to create a default html cleaner class
-	 * 
+	 *
 	 * @return PurifierHTMLCleaner|TidyHTMLCleaner
 	 */
 	public static function inst() {
@@ -66,7 +66,7 @@ abstract class HTMLCleaner extends Object {
  * http://htmlpurifier.org/
  */
 class PurifierHTMLCleaner extends HTMLCleaner {
-	
+
 	public function cleanHTML($content) {
 		$html = new HTMLPurifier();
 		$doc = Injector::inst()->create('HTMLValue', $html->purify($content));
@@ -93,7 +93,7 @@ class TidyHTMLCleaner extends HTMLCleaner {
 	public function cleanHTML($content) {
 		$tidy = new tidy();
 		$output = $tidy->repairString($content, $this->config);
-		
+
 		// Clean leading/trailing whitespace
 		return preg_replace('/(^\s+)|(\s+$)/', '', $output);
 	}

@@ -2,14 +2,14 @@
 /**
  * @package framework
  * @subpackage tests
- * 
+ *
  * @todo Test that order of combine_files() is correct
  * @todo Figure out how to clear the modified state of Requirements class - might affect other tests.
  */
 class RequirementsTest extends SapphireTest {
-	
+
 	static $html_template = '<html><head></head><body></body></html>';
-	
+
 	static $old_requirements = null;
 
 	public function testExternalUrls() {
@@ -22,38 +22,38 @@ class RequirementsTest extends SapphireTest {
 		$backend->css('http://www.mydomain.com/test.css');
 		$backend->css('https://www.mysecuredomain.com/test.css');
 		$backend->css('//scheme-relative.example.com/test.css');
-		
+
 		$html = $backend->includeInHTML(false, self::$html_template);
-		
+
 		$this->assertTrue(
 			(strpos($html, 'http://www.mydomain.com/test.js') !== false),
 			'Load external javascript URL'
 		);
 		$this->assertTrue(
-			(strpos($html, 'https://www.mysecuredomain.com/test.js') !== false), 
+			(strpos($html, 'https://www.mysecuredomain.com/test.js') !== false),
 			'Load external secure javascript URL'
 		);
 		$this->assertTrue(
-			(strpos($html, '//scheme-relative.example.com/test.js') !== false), 
+			(strpos($html, '//scheme-relative.example.com/test.js') !== false),
 			'Load external scheme-relative javascript URL'
 		);
 		$this->assertTrue(
-			(strpos($html, 'http://www.mydomain.com/test.css') !== false), 
+			(strpos($html, 'http://www.mydomain.com/test.css') !== false),
 			'Load external CSS URL'
 		);
 		$this->assertTrue(
-			(strpos($html, 'https://www.mysecuredomain.com/test.css') !== false), 
+			(strpos($html, 'https://www.mysecuredomain.com/test.css') !== false),
 			'Load external secure CSS URL'
 		);
 		$this->assertTrue(
-			(strpos($html, '//scheme-relative.example.com/test.css') !== false), 
+			(strpos($html, '//scheme-relative.example.com/test.css') !== false),
 			'Load scheme-relative CSS URL'
 		);
 	}
 
 	protected function setupCombinedRequirements($backend) {
 		$basePath = $this->getCurrentRelativePath();
-		
+
 		$backend->clear();
 		$backend->setCombinedFilesFolder('assets');
 
@@ -75,17 +75,17 @@ class RequirementsTest extends SapphireTest {
 			)
 		);
 	}
-	
+
 	protected function setupCombinedNonrequiredRequirements($backend) {
 			$basePath = $this->getCurrentRelativePath();
-		
+
 			$backend->clear();
 			$backend->setCombinedFilesFolder('assets');
-	
+
 			// clearing all previously generated requirements (just in case)
 			$backend->clear_combined_files();
 			$backend->delete_combined_files('RequirementsTest_bc.js');
-	
+
 			// require files as combined includes
 			$backend->combine_files(
 				'RequirementsTest_bc.js',
@@ -102,7 +102,7 @@ class RequirementsTest extends SapphireTest {
 		$backend->setCombinedFilesFolder('assets');
 
 		$this->setupCombinedRequirements($backend);
-		
+
 		$combinedFilePath = Director::baseFolder() . '/assets/' . 'RequirementsTest_bc.js';
 
 		$html = $backend->includeInHTML(false, self::$html_template);
@@ -110,11 +110,11 @@ class RequirementsTest extends SapphireTest {
 		/* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
 		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_bc\.js/', $html),
 			'combined javascript file is included in html header');
-		
+
 		/* COMBINED JAVASCRIPT FILE EXISTS */
 		$this->assertTrue(file_exists($combinedFilePath),
 			'combined javascript file exists');
-		
+
 		/* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
 		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
 			'combined javascript has correct content');
@@ -126,20 +126,20 @@ class RequirementsTest extends SapphireTest {
 			'combined files are not included twice');
 		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_c\.js/', $html),
 			'combined files are not included twice');
-		
+
 		/* NORMAL REQUIREMENTS ARE STILL INCLUDED */
 		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js/', $html),
 			'normal requirements are still included');
 
 		$backend->delete_combined_files('RequirementsTest_bc.js');
-		
+
 		// Then do it again, this time not requiring the files beforehand
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
 		$backend->setCombinedFilesFolder('assets');
 
 		$this->setupCombinedNonrequiredRequirements($backend);
-		
+
 		$combinedFilePath = Director::baseFolder() . '/assets/' . 'RequirementsTest_bc.js';
 
 		$html = $backend->includeInHTML(false, self::$html_template);
@@ -147,17 +147,17 @@ class RequirementsTest extends SapphireTest {
 		/* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
 		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_bc\.js/', $html),
 			'combined javascript file is included in html header');
-		
+
 		/* COMBINED JAVASCRIPT FILE EXISTS */
 		$this->assertTrue(file_exists($combinedFilePath),
 			'combined javascript file exists');
-		
+
 		/* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
 		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
 			'combined javascript has correct content');
 		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('c')") !== false),
 			'combined javascript has correct content');
-		
+
 		/* COMBINED FILES ARE NOT INCLUDED TWICE */
 		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_b\.js/', $html),
 			'combined files are not included twice');
@@ -166,7 +166,7 @@ class RequirementsTest extends SapphireTest {
 
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 	}
-	
+
 	public function testCombinedCss() {
 		$basePath = $this->getCurrentRelativePath();
 		$backend = new Requirements_Backend;
@@ -192,7 +192,7 @@ class RequirementsTest extends SapphireTest {
 
 	public function testBlockedCombinedJavascript() {
 		$basePath = $this->getCurrentRelativePath();
-		
+
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
 		$backend->setCombinedFilesFolder('assets');
@@ -219,7 +219,7 @@ class RequirementsTest extends SapphireTest {
 		$this->assertFalse((strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
 			'blocked uncombined files are not included');
 		$backend->unblock('RequirementsTest_b.js');
-		
+
 		/* A SINGLE FILE CAN'T BE INCLUDED IN TWO COMBINED FILES */
 		$this->setupCombinedRequirements($backend);
 		clearstatcache(); // needed to get accurate file_exists() results
@@ -239,13 +239,13 @@ class RequirementsTest extends SapphireTest {
 			array('RequirementsTest_bc.js'),
 			"A single file can't be included in two combined files"
 		);
-		
+
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 	}
-	
+
 	public function testArgsInUrls() {
 		$basePath = $this->getCurrentRelativePath();
-		
+
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
 
@@ -258,29 +258,29 @@ class RequirementsTest extends SapphireTest {
 		/* Javascript has correct path */
 		$this->assertTrue(
 			(bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/',$html),
-			'javascript has correct path'); 
+			'javascript has correct path');
 
 		/* CSS has correct path */
 		$this->assertTrue(
 			(bool)preg_match('/href=".*\/RequirementsTest_a\.css\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/',$html),
 			'css has correct path');
 	}
-	
+
 	public function testRequirementsBackend() {
 		$basePath = $this->getCurrentRelativePath();
-		
+
 		$backend = new Requirements_Backend();
 		$backend->javascript($basePath . '/a.js');
-		
+
 		$this->assertTrue(count($backend->get_javascript()) == 1,
 			"There should be only 1 file included in required javascript.");
 		$this->assertTrue(in_array($basePath . '/a.js', $backend->get_javascript()),
 			"a.js should be included in required javascript.");
-		
+
 		$backend->javascript($basePath . '/b.js');
 		$this->assertTrue(count($backend->get_javascript()) == 2,
 			"There should be 2 files included in required javascript.");
-		
+
 		$backend->block($basePath . '/a.js');
 		$this->assertTrue(count($backend->get_javascript()) == 1,
 			"There should be only 1 file included in required javascript.");
@@ -288,13 +288,13 @@ class RequirementsTest extends SapphireTest {
 			"a.js should not be included in required javascript after it has been blocked.");
 		$this->assertTrue(in_array($basePath . '/b.js', $backend->get_javascript()),
 			"b.js should be included in required javascript.");
-		
+
 		$backend->css($basePath . '/a.css');
 		$this->assertTrue(count($backend->get_css()) == 1,
 			"There should be only 1 file included in required css.");
 		$this->assertArrayHasKey($basePath . '/a.css', $backend->get_css(),
 			"a.css should be in required css.");
-		
+
 		$backend->block($basePath . '/a.css');
 		$this->assertTrue(count($backend->get_css()) == 0,
 			"There should be nothing in required css after file has been blocked.");
@@ -339,7 +339,7 @@ class RequirementsTest extends SapphireTest {
 
 		// Test matching with HTML5 <header> tags as well
 		$template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
-		
+
 		$backend->set_write_js_to_body(false);
 		$html = $backend->includeInHTML(false, $template);
 		$this->assertContains('<head><script', $html);
@@ -365,7 +365,7 @@ class RequirementsTest extends SapphireTest {
 		$JsAtEnd  = "<html><head></head><body><header>My header</header><p>Body<script></script></p><script "
 			. "type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\"></script></body></html>";
 
-		
+
 		// Test if the script is before the head tag, not before the body.
 		// Expected: $JsInHead
 		$backend->set_write_js_to_body(false);
@@ -391,7 +391,7 @@ class RequirementsTest extends SapphireTest {
 		$this->assertNotEquals($JsInHead, $html);
 		$this->assertNotEquals($JsInBody, $html);
 		$this->assertEquals($JsAtEnd, $html);
-		
+
 		// Test if the script is placed just before the closing bodytag, with write-to-body true.
 		// Expected: $JsAtEnd
 		$backend->set_write_js_to_body(true);

@@ -85,13 +85,13 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @var string
 	 */
 	private static $date_format = 'yyyy-MM-dd';
-	
+
 	/**
 	 * @config
 	 * @var string
 	 */
 	private static $time_format = 'H:mm';
-	
+
 	/**
 	 * @var array Array of priority keys to instances of Zend_Translate, mapped by name.
 	 */

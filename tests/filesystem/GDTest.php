@@ -7,19 +7,19 @@
  * @subpackage tests
  */
 class GDTest extends SapphireTest {
-	
+
 	public static $filenames = array(
 		'gif' => 'test_gif.gif',
 		'jpg' => 'test_jpg.jpg',
 		'png8' => 'test_png8.png',
 		'png32' => 'test_png32.png'
 	);
-	
+
 	public function tearDown() {
 		$cache = SS_Cache::factory('GDBackend_Manipulations');
 		$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 	}
-	
+
 	/**
 	 * Loads all images into an associative array of GD objects.
 	 * Optionally applies an operation to each GD
@@ -38,7 +38,7 @@ class GDTest extends SapphireTest {
 		}
 		return $gds;
 	}
-	
+
 	/**
 	 * Takes samples from the given GD at 5 pixel increments
 	 * @param GDBackend $gd The source image
@@ -57,7 +57,7 @@ class GDTest extends SapphireTest {
 		}
 		return $samples;
 	}
-	
+
 	/**
 	 * Asserts that two colour channels are equivalent within a given tolerance range
 	 * @param integer $expected
@@ -66,11 +66,11 @@ class GDTest extends SapphireTest {
 	 */
 	protected function assertColourEquals($expected, $actual, $tolerance = 0) {
 		$match =
-			($expected + $tolerance >= $actual) && 
-			($expected - $tolerance <= $actual);	
+			($expected + $tolerance >= $actual) &&
+			($expected - $tolerance <= $actual);
 		$this->assertTrue($match);
 	}
-	
+
 	/**
 	 * Asserts that all samples given correctly correspond to a greyscale version
 	 * of the test image pattern
@@ -80,22 +80,22 @@ class GDTest extends SapphireTest {
 	 * @param int $tolerance Reasonable tolerance level for colour comparison
 	 */
 	protected function assertGreyscale($samples, $alphaBits = 0, $tolerance = 0) {
-		
+
 		// Check that all colour samples match
 		foreach($samples as $sample) {
 			$matches =
-				($sample['red'] === $sample['green']) && 
+				($sample['red'] === $sample['green']) &&
 				($sample['blue'] === $sample['green']);
 			$this->assertTrue($matches, 'Assert colour is greyscale');
 			if(!$matches) return;
 		}
-		
+
 		// check various sample points
 		$this->assertColourEquals(96, $samples[0]['red'], $tolerance);
 		$this->assertColourEquals(91, $samples[2]['red'], $tolerance);
 		$this->assertColourEquals(0, $samples[8]['red'], $tolerance);
 		$this->assertColourEquals(127, $samples[9]['red'], $tolerance);
-		
+
 		// check alpha of various points
 		switch($alphaBits) {
 			case 0:
@@ -111,31 +111,31 @@ class GDTest extends SapphireTest {
 				$this->assertColourEquals(127, $samples[12]['alpha'], $tolerance);
 				break;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Tests that images are correctly transformed to greyscale
 	 */
 	function testGreyscale() {
-		
+
 		// Apply greyscaling to each image
 		$images = $this->applyToEachImage(function(GDBackend $gd) {
 			return $gd->greyscale();
 		});
-		
+
 		// Test GIF (256 colour, transparency)
 		$samplesGIF = $this->sampleAreas($images['gif']);
 		$this->assertGreyscale($samplesGIF, 1);
-				
+
 		// Test JPG
 		$samplesJPG = $this->sampleAreas($images['jpg']);
 		$this->assertGreyscale($samplesJPG, 0, 4);
-		
+
 		// Test PNG 8 (indexed with alpha transparency)
 		$samplesPNG8 = $this->sampleAreas($images['png8']);
 		$this->assertGreyscale($samplesPNG8, 8, 4);
-		
+
 		// Test PNG 32 (full alpha transparency)
 		$samplesPNG32 = $this->sampleAreas($images['png32']);
 		$this->assertGreyscale($samplesPNG32, 8);

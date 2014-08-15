@@ -6,19 +6,19 @@ class SSViewerTest extends SapphireTest {
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
 		Config::inst()->update('SSViewer_FromString', 'cache_template', false);
 	}
-	
+
 	/**
 	 * Tests for {@link Config::inst()->get('SSViewer', 'theme')} for different behaviour
 	 * of user defined themes via {@link SiteConfig} and default theme
 	 * when no user themes are defined.
 	 */
 	public function testCurrentTheme() {
-		//TODO: SiteConfig moved to CMS 
+		//TODO: SiteConfig moved to CMS
 		Config::inst()->update('SSViewer', 'theme', 'mytheme');
 		$this->assertEquals('mytheme', Config::inst()->get('SSViewer', 'theme'),
 			'Current theme is the default - user has not defined one');
 	}
-	
+
 	/**
 	 * Test that a template without a <head> tag still renders.
 	 */
@@ -26,7 +26,7 @@ class SSViewerTest extends SapphireTest {
 		$data = new ArrayData(array(
 			'Var' => 'var value'
 		));
-		
+
 		$result = $data->renderWith("SSViewerTestPartialTemplate");
 		$this->assertEquals('Test partial template: var value', trim(preg_replace("/<!--.*-->/U",'',$result)));
 	}
@@ -81,7 +81,7 @@ class SSViewerTest extends SapphireTest {
 			);
 		}
 	}
-	
+
 	/**
 	 * Small helper to render templates from strings
 	 */
@@ -90,17 +90,17 @@ class SSViewerTest extends SapphireTest {
 		if(!$data) $data = new SSViewerTestFixture();
 		return $t->process($data);
 	}
-	
+
 	public function testRequirements() {
 		$requirements = $this->getMock("Requirements_Backend", array("javascript", "css"));
 		$jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 		$cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
-		
+
 		$requirements->expects($this->once())->method('javascript')->with($jsFile);
 		$requirements->expects($this->once())->method('css')->with($cssFile);
-		
+
 		Requirements::set_backend($requirements);
-		
+
 		$template = $this->render("<% require javascript($jsFile) %>
 		<% require css($cssFile) %>");
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
@@ -113,7 +113,7 @@ This is my template<%-- this is a comment --%>This is some content<%-- this is a
 	line comment --%>
 Some more content
 Mixing content and <%-- multi
-	line comment --%> Final final 
+	line comment --%> Final final
 content
 SS
 );
@@ -121,32 +121,32 @@ SS
 This is my templateThis is some contentFinal content
 
 Some more content
-Mixing content and  Final final 
+Mixing content and  Final final
 content
 SS;
-		
+
 		$this->assertEquals($shouldbe, $output);
 	}
-	
+
 	public function testBasicText() {
 		$this->assertEquals('"', $this->render('"'), 'Double-quotes are left alone');
 		$this->assertEquals("'", $this->render("'"), 'Single-quotes are left alone');
 		$this->assertEquals('A', $this->render('\\A'), 'Escaped characters are unescaped');
 		$this->assertEquals('\\A', $this->render('\\\\A'), 'Escaped back-slashed are correctly unescaped');
 	}
-	
+
 	public function testBasicInjection() {
 		$this->assertEquals('[out:Test]', $this->render('$Test'), 'Basic stand-alone injection');
 		$this->assertEquals('[out:Test]', $this->render('{$Test}'), 'Basic stand-alone wrapped injection');
 		$this->assertEquals('A[out:Test]!', $this->render('A$Test!'), 'Basic surrounded injection');
 		$this->assertEquals('A[out:Test]B', $this->render('A{$Test}B'), 'Basic surrounded wrapped injection');
-		
+
 		$this->assertEquals('A$B', $this->render('A\\$B'), 'No injection as $ escaped');
 		$this->assertEquals('A$ B', $this->render('A$ B'), 'No injection as $ not followed by word character');
 		$this->assertEquals('A{$ B', $this->render('A{$ B'), 'No injection as {$ not followed by word character');
-		
+
 		$this->assertEquals('{$Test}', $this->render('{\\$Test}'), 'Escapes can be used to avoid injection');
-		$this->assertEquals('{\\[out:Test]}', $this->render('{\\\\$Test}'), 
+		$this->assertEquals('{\\[out:Test]}', $this->render('{\\\\$Test}'),
 			'Escapes before injections are correctly unescaped');
 	}
 
@@ -292,7 +292,7 @@ SS;
 			. '<% end_if %><% end_loop %><% end_with %>',$data);
 		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop in current scope works");
 	}
-	
+
 	public function testObjectDotArguments() {
 		$this->assertEquals(
 			'[out:TestObject.methodWithOneArgument(one)]
@@ -336,7 +336,7 @@ SS;
 				{$Foo}.Suffix')
 		);
 	}
-	
+
 	public function testLoopWhitespace() {
 		$this->assertEquals(
 			'before[out:SingleItem.Test]after
@@ -452,7 +452,7 @@ after')
 			$this->render('A<% if not IsSet %>B<% end_if %>C'));
 		$this->assertEquals('ABC',
 			$this->render('A<% if not NotSet %>B<% end_if %>C'));
-		
+
 		// Or
 		$this->assertEquals('ABD',
 			$this->render('A<% if IsSet || NotSet %>B<% else_if A %>C<% end_if %>D'));
@@ -464,7 +464,7 @@ after')
 			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet || NotSet %>C<% end_if %>D'));
 		$this->assertEquals('AD',
 			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet2 || NotSet3 %>C<% end_if %>D'));
-		
+
 		// Negated Or
 		$this->assertEquals('ACD',
 			$this->render('A<% if not IsSet || AlsoNotSet %>B<% else_if A %>C<% end_if %>D'));
@@ -514,9 +514,9 @@ after')
 		// empty else_if and else tags, if this would not be supported,
 		// the output would stop after A, thereby failing the assert
 		$this->assertEquals('AD', $this->render('A<% if IsSet %><% else %><% end_if %>D'));
-		$this->assertEquals('AD', 
+		$this->assertEquals('AD',
 			$this->render('A<% if NotSet %><% else_if IsSet %><% else %><% end_if %>D'));
-		$this->assertEquals('AD', 
+		$this->assertEquals('AD',
 			$this->render('A<% if NotSet %><% else_if AlsoNotSet %><% else %><% end_if %>D'));
 
 		// Bare words with ending space
@@ -526,7 +526,7 @@ after')
 		// Else
 		$this->assertEquals('ADE',
 			$this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% else %>D<% end_if %>E'));
-		
+
 		// Empty if with else
 		$this->assertEquals('ABC',
 			$this->render('A<% if NotSet %><% else %>B<% end_if %>C'));
@@ -542,7 +542,7 @@ after')
 				<body><p>test</p><body>
 			</html>';
 		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $this->render($tmpl1));
-			
+
 		// HTML4 and 5 will only have it for IE
 		$tmpl2 = '<!DOCTYPE html>
 			<html>
@@ -551,8 +551,8 @@ after')
 			</html>';
 		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
 			$this->render($tmpl2));
-			
-			
+
+
 		$tmpl3 = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 			<html>
 				<head><% base_tag %></head>
@@ -563,7 +563,7 @@ after')
 
 		// Check that the content negotiator converts to the equally legal formats
 		$negotiator = new ContentNegotiator();
-		
+
 		$response = new SS_HTTPResponse($this->render($tmpl1));
 		$negotiator->html($response);
 		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
@@ -619,7 +619,7 @@ after')
 		$this->assertEqualIgnoringWhitespace('A B', $res, 'Objects can be passed as named arguments');
 	}
 
-	
+
 	public function testRecursiveInclude() {
 		$view = new SSViewer(array('SSViewerTestRecursiveInclude'));
 
@@ -637,14 +637,14 @@ after')
 				new ArrayData(array( 'Title' => 'A3', )),
 			)),
 		));
-		
+
 		$result = $view->process($data);
 		// We don't care about whitespace
 		$rationalisedResult = trim(preg_replace('/\s+/', ' ', $result));
-		
+
 		$this->assertEquals('A A1 A1 i A1 ii A2 A3', $rationalisedResult);
 	}
-	
+
 	public function assertEqualIgnoringWhitespace($a, $b) {
 		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b));
 	}
@@ -707,7 +707,7 @@ after')
 			$t = SSViewer::fromString('$UncastedValue.XML')->process($vd)
 		);
 	}
-	
+
 	public function testSSViewerBasicIteratorSupport() {
 		$data = new ArrayData(array(
 			'Set' => new ArrayList(array(
@@ -735,7 +735,7 @@ after')
 		//test Last
 		$result = $this->render('<% loop Set %><% if Last %>$Number<% end_if %><% end_loop %>',$data);
 		$this->assertEquals("10",$result,"Only the last number is rendered");
-				
+
 		//test Even
 		$result = $this->render('<% loop Set %><% if Even() %>$Number<% end_if %><% end_loop %>',$data);
 		$this->assertEquals("246810",$result,"Even numbers rendered in order");
@@ -834,11 +834,11 @@ after')
 				))
 			))
 		));
-		
+
 		// Basic functionality
 		$this->assertEquals('BarFoo',
 			$this->render('<% with Foo %><% with Bar %>{$Name}{$Up.Name}<% end_with %><% end_with %>', $data));
-		
+
 		// Two level with block, up refers to internally referenced Bar
 		$this->assertEquals('BarFoo',
 			$this->render('<% with Foo.Bar %>{$Name}{$Up.Name}<% end_with %>', $data));
@@ -846,7 +846,7 @@ after')
 		// Stepping up & back down the scope tree
 		$this->assertEquals('BazBarQux',
 			$this->render('<% with Foo.Bar.Baz %>{$Name}{$Up.Name}{$Up.Qux.Name}<% end_with %>', $data));
-		
+
 		// Using $Up in a with block
 		$this->assertEquals('BazBarQux',
 			$this->render('<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}{$Qux.Name}<% end_with %>'
@@ -857,21 +857,21 @@ after')
 			$this->render('<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}<% with Qux %>{$Name}<% end_with %>'
 				. '{$Name}<% end_with %>{$Name}<% end_with %>', $data));
 
-		// Using $Up.Up, where first $Up points to a previous scope entered using $Up, thereby skipping up to Foo 
+		// Using $Up.Up, where first $Up points to a previous scope entered using $Up, thereby skipping up to Foo
 		$this->assertEquals('Foo',
 			$this->render('<% with Foo.Bar.Baz %><% with Up %><% with Qux %>{$Up.Up.Name}<% end_with %><% end_with %>'
 				. '<% end_with %>', $data));
-		
-		// Using $Up.Up, where first $Up points to an Up used in a local scope lookup, should still skip to Foo 
+
+		// Using $Up.Up, where first $Up points to an Up used in a local scope lookup, should still skip to Foo
 		$this->assertEquals('Foo',
 			$this->render('<% with Foo.Bar.Baz.Up.Qux %>{$Up.Up.Name}<% end_with %>', $data));
 	}
-	
+
 	/**
 	 * Test $Up works when the scope $Up refers to was entered with a "loop" block
 	 */
 	public function testUpInLoop(){
-		
+
 		// Data to run the loop tests on - one sequence of three items, each with a subitem
 		$data = new ArrayData(array(
 			'Name' => 'Top',
@@ -918,12 +918,12 @@ after')
 						<% loop $Up %>$Name<% end_loop %>
 						$Name
 					<% end_with %>
-					$Name 
-				<% end_loop %>', 
+					$Name
+				<% end_loop %>',
 				$data
 			)
 		);
-		
+
 		// Make sure inside a loop, looping over $Up uses a separate iterator,
 		// and doesn't interfere with the original iterator or local lookups
 		$this->assertEqualIgnoringWhitespace(
@@ -942,12 +942,12 @@ after')
 			)
 		);
 	}
-	
+
 	/**
 	 * Test that nested loops restore the loop variables correctly when pushing and popping states
 	 */
 	public function testNestedLoops(){
-		
+
 		// Data to run the loop tests on - one sequence of three items, one with child elements
 		// (of a different size to the main sequence)
 		$data = new ArrayData(array(
@@ -1061,14 +1061,14 @@ after')
 	}
 
 	public function testRewriteHashlinks() {
-		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links'); 
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', true); 
-		
+		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links');
+		Config::inst()->update('SSViewer', 'rewrite_hash_links', true);
+
 		// Emulate SSViewer::process()
 		$base = Convert::raw2att($_SERVER['REQUEST_URI']);
-		
+
 		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinks_' . sha1(rand()) . '.ss';
-		
+
 		// Note: SSViewer_FromString doesn't rewrite hash links.
 		file_put_contents($tmplFile, '<!DOCTYPE html>
 			<html>
@@ -1090,18 +1090,18 @@ after')
 			'<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
 			$result
 		);
-		
+
 		unlink($tmplFile);
 
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig); 
+		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig);
 	}
-	
+
 	public function testRewriteHashlinksInPhpMode() {
-		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links'); 
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', 'php'); 
-		
+		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links');
+		Config::inst()->update('SSViewer', 'rewrite_hash_links', 'php');
+
 		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinksInPhpMode_' . sha1(rand()) . '.ss';
-		
+
 		// Note: SSViewer_FromString doesn't rewrite hash links.
 		file_put_contents($tmplFile, '<!DOCTYPE html>
 			<html>
@@ -1124,12 +1124,12 @@ after')
 		// 	'<a class="inline" href="<?php echo str_replace(',
 		// 	$result
 		// );
-		
+
 		unlink($tmplFile);
 
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig); 
+		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig);
 	}
-	
+
 	public function testRenderWithSourceFileComments() {
 		$origEnv = Config::inst()->get('Director', 'environment_type');
 		Config::inst()->update('Director', 'environment_type', 'dev');
@@ -1262,11 +1262,11 @@ after')
 
 	public function testRequireCallInTemplateInclude() {
 		$template = new SSViewer(array('SSViewerTestProcess'));
-		
+
 		Requirements::set_suffix_requirements(false);
 
 		$this->assertEquals(1, substr_count(
-			$template->process(array()), 
+			$template->process(array()),
 			"tests/forms/RequirementsTest_a.js"
 		));
 	}
@@ -1381,7 +1381,7 @@ class SSViewerTestFixture extends ViewableData {
 		$this->name = $name;
 		parent::__construct();
 	}
-	
+
 
 	private function argedName($fieldName, $arguments) {
 		$childName = $this->name ? "$this->name.$fieldName" : $fieldName;
@@ -1404,7 +1404,7 @@ class SSViewerTestFixture extends ViewableData {
 			return new SSViewerTestFixture($childName);
 		}
 	}
-	
+
 
 	public function XML_val($fieldName, $arguments = null, $cache = false) {
 		if(preg_match('/NotSet/i', $fieldName)) {
@@ -1431,7 +1431,7 @@ class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 	public function methodWithOneArgument($arg1) {
 		return "arg1:{$arg1}";
 	}
-	
+
 	public function methodWithTwoArguments($arg1, $arg2) {
 		return "arg1:{$arg1},arg2:{$arg2}";
 	}
@@ -1439,7 +1439,7 @@ class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 
 
 class SSViewerTest_Controller extends Controller {
-	
+
 }
 
 class SSViewerTest_Object extends DataObject {

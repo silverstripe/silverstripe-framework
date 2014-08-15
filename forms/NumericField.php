@@ -3,7 +3,7 @@
 /**
  * Text input field with validation for numeric values. Supports validating
  * the numeric value as to the {@link i18n::get_locale()} value.
- * 
+ *
  * @package forms
  * @subpackage fields-formattedinput
  */
@@ -24,11 +24,11 @@ class NumericField extends TextField {
 		if(!$this->value && !$validator->fieldIsRequired($this->name)) {
 			return true;
 		}
-		
+
 		require_once THIRDPARTY_PATH."/Zend/Locale/Format.php";
 
 		$valid = Zend_Locale_Format::isNumber(
-			trim($this->value), 
+			trim($this->value),
 			array('locale' => i18n::get_locale())
 		);
 
@@ -44,10 +44,10 @@ class NumericField extends TextField {
 
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	public function dataValue() {
 		return (is_numeric($this->value)) ? $this->value : 0;
 	}

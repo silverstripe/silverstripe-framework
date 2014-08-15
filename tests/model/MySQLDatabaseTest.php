@@ -8,7 +8,7 @@ class MySQLDatabaseTest extends SapphireTest {
 	protected $extraDataObjects = array(
 		'MySQLDatabaseTest_DO',
 	);
-	
+
 	public function setUp() {
 		if(DB::get_conn() instanceof MySQLDatabase) {
 			MySQLDatabaseTest_DO::config()->db = array(
@@ -20,7 +20,7 @@ class MySQLDatabaseTest extends SapphireTest {
 		$this->markTestSkipped('This test requires the Config API to be immutable');
 		parent::setUp();
 	}
-		
+
 	/**
 	 * Check that once a schema has been generated, then it doesn't need any more updating
 	 */
@@ -30,7 +30,7 @@ class MySQLDatabaseTest extends SapphireTest {
 			$schema = DB::get_schema();
 			$test = $this;
 			DB::quiet();
-		
+
 			// Verify that it doesn't need to be recreated
 			$schema->schemaUpdate(function() use ($test, $schema) {
 				$obj = new MySQLDatabaseTest_DO();

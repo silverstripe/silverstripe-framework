@@ -3,11 +3,11 @@
 class HierarchyTest extends SapphireTest {
 
 	protected static $fixture_file = 'HierarchyTest.yml';
-	
+
 	protected $requiredExtensions = array(
 		'HierarchyTest_Object' => array('Hierarchy', 'Versioned')
 	);
-	
+
 	protected $extraDataObjects = array(
 		'HierarchyTest_Object'
 	);
@@ -39,35 +39,35 @@ class HierarchyTest extends SapphireTest {
 		$this->objFromFixture('HierarchyTest_Object', 'obj2b')->delete();
 		$this->objFromFixture('HierarchyTest_Object', 'obj3a')->delete();
 		$this->objFromFixture('HierarchyTest_Object', 'obj3')->delete();
-	
+
 		// Check that obj1-3 appear at the top level of the AllHistoricalChildren tree
-		$this->assertEquals(array("Obj 1", "Obj 2", "Obj 3"), 
+		$this->assertEquals(array("Obj 1", "Obj 2", "Obj 3"),
 			singleton('HierarchyTest_Object')->AllHistoricalChildren()->column('Title'));
-	
+
 		// Check numHistoricalChildren
 		$this->assertEquals(3, singleton('HierarchyTest_Object')->numHistoricalChildren());
 
 		// Check that both obj 2 children are returned
 		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$this->assertEquals(array("Obj 2a", "Obj 2b"), 
+		$this->assertEquals(array("Obj 2a", "Obj 2b"),
 			$obj2->AllHistoricalChildren()->column('Title'));
 
 		// Check numHistoricalChildren
 		$this->assertEquals(2, $obj2->numHistoricalChildren());
 
-			
+
 		// Obj 3 has been deleted; let's bring it back from the grave
 		$obj3 = Versioned::get_including_deleted("HierarchyTest_Object", "\"Title\" = 'Obj 3'")->First();
-	
+
 		// Check that both obj 3 children are returned
-		$this->assertEquals(array("Obj 3a", "Obj 3b", "Obj 3c"), 
+		$this->assertEquals(array("Obj 3a", "Obj 3b", "Obj 3c"),
 			$obj3->AllHistoricalChildren()->column('Title'));
-			
+
 		// Check numHistoricalChildren
 		$this->assertEquals(3, $obj3->numHistoricalChildren());
-		
+
 	}
-	
+
 	/**
 	 * Test that you can call Hierarchy::markExpanded/Unexpanded/Open() on a obj, and that
 	 * calling Hierarchy::isMarked() on a different instance of that object will return true.
@@ -78,7 +78,7 @@ class HierarchyTest extends SapphireTest {
 		$this->objFromFixture('HierarchyTest_Object', 'obj2a')->markExpanded();
 		$this->objFromFixture('HierarchyTest_Object', 'obj2b')->markExpanded();
 		$this->objFromFixture('HierarchyTest_Object', 'obj3')->markUnexpanded();
-		
+
 		// Query some objs in a different context and check their m
 		$objs = DataObject::get("HierarchyTest_Object", '', '"ID" ASC');
 		$marked = $expanded = array();
@@ -86,11 +86,11 @@ class HierarchyTest extends SapphireTest {
 			if($obj->isMarked()) $marked[] = $obj->Title;
 			if($obj->isExpanded()) $expanded[] = $obj->Title;
 		}
-		
+
 		$this->assertEquals(array('Obj 2', 'Obj 3', 'Obj 2a', 'Obj 2b'), $marked);
 		$this->assertEquals(array('Obj 2', 'Obj 2a', 'Obj 2b'), $expanded);
 	}
-	
+
 	public function testNumChildren() {
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj1')->numChildren(), 0);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2')->numChildren(), 2);
@@ -99,7 +99,7 @@ class HierarchyTest extends SapphireTest {
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2b')->numChildren(), 0);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3a')->numChildren(), 2);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3b')->numChildren(), 0);
-		
+
 		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
 		$this->assertEquals($obj1->numChildren(), 0);
 		$obj1Child1 = new HierarchyTest_Object();
@@ -123,16 +123,16 @@ class HierarchyTest extends SapphireTest {
 		$obj2b = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
 		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
 		$obj2ab = $this->objFromFixture('HierarchyTest_Object', 'obj2ab');
-		
+
 		$obj2IdList = $obj2->getDescendantIDList();
 		$obj2aIdList = $obj2a->getDescendantIDList();
-		
+
 		$this->assertContains($obj2a->ID, $obj2IdList);
 		$this->assertContains($obj2b->ID, $obj2IdList);
 		$this->assertContains($obj2aa->ID, $obj2IdList);
 		$this->assertContains($obj2ab->ID, $obj2IdList);
 		$this->assertEquals(4, count($obj2IdList));
-		
+
 		$this->assertContains($obj2aa->ID, $obj2aIdList);
 		$this->assertContains($obj2ab->ID, $obj2aIdList);
 		$this->assertEquals(2, count($obj2aIdList));
@@ -153,7 +153,7 @@ class HierarchyTest extends SapphireTest {
 		$obj2->publish("Stage", "Live");
 		$obj2a->publish("Stage", "Live");
 		$obj2b->publish("Stage", "Live");
-		
+
 		// Then delete 2a from stage and move 2b to a sub-node of 1.
 		$obj2a->delete();
 		$obj2b->ParentID = $obj1->ID;
@@ -161,10 +161,10 @@ class HierarchyTest extends SapphireTest {
 
 		// Get live children, excluding pages that have been moved on the stage site
 		$children = $obj2->liveChildren(true, true)->column("Title");
-		
+
 		// 2a has been deleted from stage and should be shown
 		$this->assertContains("Obj 2a", $children);
-		
+
 		// 2b has merely been moved to a different parent and so shouldn't be shown
 		$this->assertNotContains("Obj 2b", $children);
 	}
@@ -191,12 +191,12 @@ class HierarchyTest extends SapphireTest {
 		$root = new HierarchyTest_Object();
 		$root->markPartialTree($nodeCountThreshold);
 		$html = $root->getChildrenAsUL(
-			"", 
-			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
-			null, 
-			false, 
-			"AllChildrenIncludingDeleted", 
-			"numChildren", 
+			"",
+			'"<li id=\"" . $child->ID . "\">" . $child->Title',
+			null,
+			false,
+			"AllChildrenIncludingDeleted",
+			"numChildren",
 			true,  // rootCall
 			$nodeCountThreshold
 		);
@@ -222,13 +222,13 @@ class HierarchyTest extends SapphireTest {
 		$root = new HierarchyTest_Object();
 		$root->markPartialTree($nodeCountThreshold);
 		$html = $root->getChildrenAsUL(
-			"", 
-			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
-			null, 
-			false, 
-			"AllChildrenIncludingDeleted", 
-			"numChildren", 
-			true, 
+			"",
+			'"<li id=\"" . $child->ID . "\">" . $child->Title',
+			null,
+			false,
+			"AllChildrenIncludingDeleted",
+			"numChildren",
+			true,
 			$nodeCountThreshold
 		);
 		$this->assertTreeContains($html, array($obj1),
@@ -252,18 +252,18 @@ class HierarchyTest extends SapphireTest {
 
 		$root = new HierarchyTest_Object();
 		$root->markPartialTree($nodeCountThreshold);
-		
+
 		// Mark certain node which should be included regardless of minNodeCount restrictions
 		$root->markToExpose($obj2aa);
-		
+
 		$html = $root->getChildrenAsUL(
-			"", 
-			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
-			null, 
-			false, 
-			"AllChildrenIncludingDeleted", 
-			"numChildren", 
-			true, 
+			"",
+			'"<li id=\"" . $child->ID . "\">" . $child->Title',
+			null,
+			false,
+			"AllChildrenIncludingDeleted",
+			"numChildren",
+			true,
 			$nodeCountThreshold
 		);
 		$this->assertTreeContains($html, array($obj2),
@@ -284,7 +284,7 @@ class HierarchyTest extends SapphireTest {
 		$nodeCountThreshold = 3;
 
 		$root = new HierarchyTest_Object();
-		
+
 		// Includes nodes by filter regardless of minNodeCount restrictions
 		$root->setMarkingFilterFunction(function($record) use($obj2, $obj2a, $obj2aa) {
 			// Results need to include parent hierarchy, even if we just want to
@@ -294,13 +294,13 @@ class HierarchyTest extends SapphireTest {
 		$root->markPartialTree($nodeCountThreshold);
 
 		$html = $root->getChildrenAsUL(
-			"", 
-			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
-			null, 
+			"",
+			'"<li id=\"" . $child->ID . "\">" . $child->Title',
+			null,
 			true, // limit to marked
-			"AllChildrenIncludingDeleted", 
-			"numChildren", 
-			true, 
+			"AllChildrenIncludingDeleted",
+			"numChildren",
+			true,
 			$nodeCountThreshold
 		);
 		$this->assertTreeNotContains($html, array($obj1),
@@ -321,7 +321,7 @@ class HierarchyTest extends SapphireTest {
 		$nodeCountThreshold = 3;
 
 		$root = new HierarchyTest_Object();
-		
+
 		// Includes nodes by filter regardless of minNodeCount restrictions
 		$root->setMarkingFilterFunction(function($record) use($obj2, $obj2a, $obj2aa) {
 			// Results need to include parent hierarchy, even if we just want to
@@ -331,13 +331,13 @@ class HierarchyTest extends SapphireTest {
 		$root->markPartialTree($nodeCountThreshold);
 
 		$html = $root->getChildrenAsUL(
-			"", 
-			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
-			null, 
+			"",
+			'"<li id=\"" . $child->ID . "\">" . $child->Title',
+			null,
 			true, // limit to marked
-			"AllChildrenIncludingDeleted", 
-			"numChildren", 
-			true, 
+			"AllChildrenIncludingDeleted",
+			"numChildren",
+			true,
 			$nodeCountThreshold
 		);
 		$this->assertTreeNotContains($html, array($obj1),
@@ -364,16 +364,16 @@ class HierarchyTest extends SapphireTest {
 			if($parent->ID && $numChildren > 2) {
 				return '<span class="exceeded">Exceeded!</span>';
 			}
-		};	
+		};
 
 		$html = $root->getChildrenAsUL(
-			"", 
-			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
-			null, 
+			"",
+			'"<li id=\"" . $child->ID . "\">" . $child->Title',
+			null,
 			true, // limit to marked
-			"AllChildrenIncludingDeleted", 
-			"numChildren", 
-			true, 
+			"AllChildrenIncludingDeleted",
+			"numChildren",
+			true,
 			$nodeCountThreshold,
 			$nodeCountCallback
 		);
@@ -505,7 +505,7 @@ class HierarchyTest extends SapphireTest {
 		$xpath = '/';
 		foreach($nodes as $node) $xpath .= '/ul/li[@id="' . $node->ID . '"]';
 		$match = $parser->getByXpath($xpath);
-		self::assertThat((bool)$match, self::isFalse(), $message);	
+		self::assertThat((bool)$match, self::isFalse(), $message);
 	}
 
 	/**
@@ -533,7 +533,7 @@ class HierarchyTest_Object extends DataObject implements TestOnly {
 	private static $db = array(
 		'Title' => 'Varchar'
 	);
-	
+
 	private static $extensions = array(
 		'Hierarchy',
 		"Versioned('Stage', 'Live')",

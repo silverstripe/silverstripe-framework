@@ -2,7 +2,7 @@
 
 /**
  * This class is the base class of any SilverStripe object that can be used to handle HTTP requests.
- * 
+ *
  * Any RequestHandler object can be made responsible for handling its own segment of the URL namespace.
  * The {@link Director} begins the URL parsing process; it will parse the beginning of the URL to identify which
  * controller is being used.  It will then call {@link handleRequest()} on that Controller, passing it the parameters
@@ -14,7 +14,7 @@
  * search form that contains a {@link TreeMultiSelectField} named "Groups".  We want to use ajax to load segments of
  * this tree as they are needed rather than downloading the tree right at the beginning.  We could use this URL to get
  * the tree segment that appears underneath
- * 
+ *
  * Group #36: "admin/crm/SearchForm/field/Groups/treesegment/36"
  *  - Director will determine that admin/crm is controlled by a new ModelAdmin object, and pass control to that.
  *    Matching Director Rule: "admin/crm" => "ModelAdmin" (defined in mysite/_config.php)
@@ -29,23 +29,23 @@
  *    Matching $url_handlers: "$Action/$ID" => "handleItem" (defined in TreeMultiSelectField class)
  *
  * {@link RequestHandler::handleRequest()} is where this behaviour is implemented.
- * 
+ *
  * @package framework
  * @subpackage control
  */
 class RequestHandler extends ViewableData {
-	
+
 	/**
 	 * @var SS_HTTPRequest $request The request object that the controller was called with.
 	 * Set in {@link handleRequest()}. Useful to generate the {}
 	 */
 	protected $request = null;
-	
+
 	/**
 	 * The DataModel for this request
 	 */
 	protected $model = null;
-	
+
 	/**
 	 * This variable records whether RequestHandler::__construct()
 	 * was called or not. Useful for checking if subclasses have
@@ -54,14 +54,14 @@ class RequestHandler extends ViewableData {
 	 * @var boolean
 	 */
 	protected $brokenOnConstruct = true;
-	
+
 	/**
 	 * The default URL handling rules.  This specifies that the next component of the URL corresponds to a method to
 	 * be called on this RequestHandlingData object.
 	 *
 	 * The keys of this array are parse rules.  See {@link SS_HTTPRequest::match()} for a description of the rules
 	 * available.
-	 * 
+	 *
 	 * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then
 	 * the named parameter of the parsed URL wil be used to determine the method name.
 	 * @config
@@ -70,7 +70,7 @@ class RequestHandler extends ViewableData {
 		'$Action' => '$Action',
 	);
 
-	
+
 	/**
 	 * Define a list of action handling methods that are allowed to be called directly by URLs.
 	 * The variable should be an array of action names. This sample shows the different values that it can contain:
@@ -78,16 +78,16 @@ class RequestHandler extends ViewableData {
 	 * <code>
 	 * array(
 	 * 		// someaction can be accessed by anyone, any time
-	 *		'someaction', 
+	 *		'someaction',
 	 *		// So can otheraction
-	 *		'otheraction' => true, 
+	 *		'otheraction' => true,
 	 *		// restrictedaction can only be people with ADMIN privilege
-	 *		'restrictedaction' => 'ADMIN', 
+	 *		'restrictedaction' => 'ADMIN',
 	 *		// complexaction can only be accessed if $this->canComplexAction() returns true
-	 *		'complexaction' '->canComplexAction' 
+	 *		'complexaction' '->canComplexAction'
 	 *	);
 	 * </code>
-	 * 
+	 *
 	 * Form getters count as URL actions as well, and should be included in allowed_actions.
 	 * Form actions on the other handed (first argument to {@link FormAction()} should NOT be included,
 	 * these are handled separately through {@link Form->httpSubmission}. You can control access on form actions
@@ -102,46 +102,46 @@ class RequestHandler extends ViewableData {
 	 * @var boolean Enforce presence of $allowed_actions when checking acccess.
 	 * Defaults to TRUE, meaning all URL actions will be denied.
 	 * When set to FALSE, the controller will allow *all* public methods to be called.
-	 * In most cases this isn't desireable, and in fact a security risk, 
+	 * In most cases this isn't desireable, and in fact a security risk,
 	 * since some helper methods can cause side effects which shouldn't be exposed through URLs.
 	 */
 	private static $require_allowed_actions = true;
-	
+
 	public function __construct() {
 		$this->brokenOnConstruct = false;
 
 		// Check necessary to avoid class conflicts before manifest is rebuilt
 		if(class_exists('NullHTTPRequest')) $this->request = new NullHTTPRequest();
-		
+
 		// This will prevent bugs if setDataModel() isn't called.
 		$this->model = DataModel::inst();
-		
+
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Set the DataModel for this request.
 	 */
 	public function setDataModel($model) {
 		$this->model = $model;
 	}
-	
+
 	/**
 	 * Handles URL requests.
 	 *
 	 *  - ViewableData::handleRequest() iterates through each rule in {@link self::$url_handlers}.
 	 *  - If the rule matches, the named method will be called.
-	 *  - If there is still more URL to be processed, then handleRequest() 
+	 *  - If there is still more URL to be processed, then handleRequest()
 	 *    is called on the object that that method returns.
 	 *
-	 * Once all of the URL has been processed, the final result is returned.  
+	 * Once all of the URL has been processed, the final result is returned.
 	 * However, if the final result is an array, this
-	 * array is interpreted as being additional template data to customise the 
+	 * array is interpreted as being additional template data to customise the
 	 * 2nd to last result with, rather than an object
-	 * in its own right.  This is most frequently used when a Controller's 
+	 * in its own right.  This is most frequently used when a Controller's
 	 * action will return an array of data with which to
 	 * customise the controller.
-	 * 
+	 *
 	 * @param $request The {@link SS_HTTPRequest} object that is reponsible for distributing URL parsing
 	 * @uses SS_HTTPRequest
 	 * @uses SS_HTTPRequest->match()
@@ -150,11 +150,11 @@ class RequestHandler extends ViewableData {
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
 		$handlerClass = ($this->class) ? $this->class : get_class($this);
-	
+
 		if($this->brokenOnConstruct) {
 			user_error("parent::__construct() needs to be called on {$handlerClass}::__construct()", E_USER_WARNING);
 		}
-	
+
 		$this->request = $request;
 		$this->setDataModel($model);
 
@@ -217,7 +217,7 @@ class RequestHandler extends ViewableData {
 		// actions which return themselves to avoid infinite loops.
 		$matchedRuleWasEmpty = $request->isEmptyPattern($match['rule']);
 		$resultIsRequestHandler = is_object($result) && $result instanceof RequestHandler;
-		
+
 		if($this !== $result && !$matchedRuleWasEmpty && $resultIsRequestHandler) {
 			$returnValue = $result->handleRequest($request, $model);
 
@@ -292,11 +292,11 @@ class RequestHandler extends ViewableData {
 
 		return $actionRes;
 	}
-	
+
 	/**
 	 * Get a array of allowed actions defined on this controller,
 	 * any parent classes or extensions.
-	 * 
+	 *
 	 * Caution: Since 3.1, allowed_actions definitions only apply
 	 * to methods on the controller they're defined on,
 	 * so it is recommended to use the $class argument
@@ -308,8 +308,8 @@ class RequestHandler extends ViewableData {
 	public function allowedActions($limitToClass = null) {
 		if($limitToClass) {
 			$actions = Config::inst()->get(
-				$limitToClass, 
-				'allowed_actions', 
+				$limitToClass,
+				'allowed_actions',
 				Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
 			);
 		} else {
@@ -319,16 +319,16 @@ class RequestHandler extends ViewableData {
 		if(is_array($actions)) {
 			if(array_key_exists('*', $actions)) {
 				Deprecation::notice(
-					'3.0', 
+					'3.0',
 					'Wildcards (*) are no longer valid in $allowed_actions due their ambiguous '
 					. ' and potentially insecure behaviour. Please define all methods explicitly instead.'
 				);
 			}
 
-			// convert all keys and values to lowercase to 
+			// convert all keys and values to lowercase to
 			// allow for easier comparison, unless it is a permission code
 			$actions = array_change_key_case($actions, CASE_LOWER);
-			
+
 			foreach($actions as $key => $value) {
 				if(is_numeric($key)) $actions[$key] = strtolower($value);
 			}
@@ -338,9 +338,9 @@ class RequestHandler extends ViewableData {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Checks if this request handler has a specific action, 
+	 * Checks if this request handler has a specific action,
 	 * even if the current user cannot access it.
 	 * Includes class ancestry and extensions in the checks.
 	 *
@@ -358,7 +358,7 @@ class RequestHandler extends ViewableData {
 			$m = $r->getMethod($action);
 			if(!$m || !$m->isPublic()) return false;
 		}
-		
+
 		$action  = strtolower($action);
 		$actions = $this->allowedActions();
 
@@ -378,7 +378,7 @@ class RequestHandler extends ViewableData {
 		if(!is_array($actions) || !$actionsWithoutExtra) {
 			if($action != 'init' && $action != 'run' && method_exists($this, $action)) return true;
 		}
-		
+
 		return false;
 	}
 
@@ -394,10 +394,10 @@ class RequestHandler extends ViewableData {
 			if(!method_exists($inst, $action)) continue;
 			$r = new ReflectionClass(get_class($inst));
 			$m = $r->getMethod($actionOrigCasing);
-			return $m->getDeclaringClass()->getName();	
+			return $m->getDeclaringClass()->getName();
 		}
 	}
-	
+
 	/**
 	 * Check that the given action is allowed to be called from a URL.
 	 * It will interrogate {@link self::$allowed_actions} to determine this.
@@ -408,10 +408,10 @@ class RequestHandler extends ViewableData {
 
 		$isAllowed = false;
 		$isDefined = false;
-		
+
 		// Get actions for this specific class (without inheritance)
 		$definingClass = $this->definingClassForAction($actionOrigCasing);
-		$allowedActions = $this->allowedActions($definingClass);	
+		$allowedActions = $this->allowedActions($definingClass);
 
 		// check if specific action is set
 		if(isset($allowedActions[$action])) {
@@ -429,8 +429,8 @@ class RequestHandler extends ViewableData {
 				$isAllowed = Permission::check($test);
 			}
 		} elseif(
-			is_array($allowedActions) 
-			&& (($key = array_search($action, $allowedActions, true)) !== false) 
+			is_array($allowedActions)
+			&& (($key = array_search($action, $allowedActions, true)) !== false)
 			&& is_numeric($key)
 		) {
 			// Allow numeric array notation (search for array value as action instead of key)
@@ -452,7 +452,7 @@ class RequestHandler extends ViewableData {
 
 		return $isAllowed;
 	}
-	
+
 	/**
 	 * Throws a HTTP error response encased in a {@link SS_HTTPResponse_Exception}, which is later caught in
 	 * {@link RequestHandler::handleAction()} and returned to the user.
@@ -474,7 +474,7 @@ class RequestHandler extends ViewableData {
 
 	/**
 	 * Returns the SS_HTTPRequest object that this controller is using.
-	 * Returns a placeholder {@link NullHTTPRequest} object unless 
+	 * Returns a placeholder {@link NullHTTPRequest} object unless
 	 * {@link handleAction()} or {@link handleRequest()} have been called,
 	 * which adds a reference to an actual {@link SS_HTTPRequest} object.
 	 *
@@ -483,11 +483,11 @@ class RequestHandler extends ViewableData {
 	public function getRequest() {
 		return $this->request;
 	}
-	
+
 	/**
 	 * Typically the request is set through {@link handleAction()}
 	 * or {@link handleRequest()}, but in some based we want to set it manually.
-	 * 
+	 *
 	 * @param SS_HTTPRequest
 	 */
 	public function setRequest($request) {

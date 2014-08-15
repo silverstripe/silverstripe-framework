@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Represents a field in a form. 
- *  
+ * Represents a field in a form.
+ *
  * A FieldList contains a number of FormField objects which make up the whole
  * of a form. In addition to single fields, FormField objects can be
  * "composite", for example, the {@link TabSet} field. Composite fields let us
  * define complex forms without having to resort to custom HTML.
- * 
+ *
  * <b>Subclassing</b>
- * 
+ *
  * Define a {@link dataValue()} method that returns a value suitable for
  * inserting into a single database field. For example, you might tidy up the
  * format of a date or currency field. Define {@link saveInto()} to totally
  * customise saving. For example, data might be saved to the filesystem instead
  * of the data record, or saved to a component of the data record instead of
  * the data record itself.
- * 
+ *
  * @package forms
  * @subpackage core
  */
@@ -28,38 +28,38 @@ class FormField extends RequestHandler {
 	protected $form;
 
 	protected $name, $title, $value ,$message, $messageType, $extraClass;
-	
+
 	/**
 	 * @var $description string Adds a "title"-attribute to the markup.
 	 * @todo Implement in all subclasses
 	 */
 	protected $description;
-	
+
 	/**
 	 * @var $extraClasses array Extra CSS-classes for the formfield-container
 	 */
 	protected $extraClasses;
-	
+
 	public $dontEscape;
-	
+
 	/**
 	 * @var $rightTitle string Used in SmallFieldHolder to force a right-aligned label, or in FieldHolder
 	 * to create contextual label.
 	 */
 	protected $rightTitle;
-	
+
 	/**
 	 * @var $leftTitle string Used in SmallFieldHolder() to force a left-aligned label with correct spacing.
 	 * Please use $title for FormFields rendered with FieldHolder().
 	 */
 	protected $leftTitle;
-	
+
 	/**
 	 * Stores a reference to the FieldList that contains this object.
 	 * @var FieldList
 	 */
 	protected $containerFieldList;
-	
+
 	/**
 	 * @var boolean
 	 */
@@ -69,27 +69,27 @@ class FormField extends RequestHandler {
 	 * @var boolean
 	 */
 	protected $disabled = false;
-	
+
 	/**
 	 * @var string custom validation message for the Field
 	 */
 	protected $customValidationMessage = "";
-	
+
 	/**
 	 * Name of the template used to render this form field. If not set, then
-	 * will look up the class ancestry for the first matching template where 
+	 * will look up the class ancestry for the first matching template where
 	 * the template name equals the class name.
 	 *
-	 * To explicitly use a custom template or one named other than the form 
+	 * To explicitly use a custom template or one named other than the form
 	 * field see {@link setTemplate()}, {@link setFieldHolderTemplate()}
 	 *
 	 * @var string
 	 */
-	protected 
+	protected
 		$template,
 		$fieldHolderTemplate,
 		$smallFieldHolderTemplate;
-		
+
 	/**
 	 * @var array All attributes on the form field (not the field holder).
 	 * Partially determined based on other instance properties, please use {@link getAttributes()}.
@@ -121,7 +121,7 @@ class FormField extends RequestHandler {
 		}
 
 		$label = preg_replace("/([a-z]+)([A-Z])/","$1 $2", $label);
-		
+
 		return $label;
 	}
 
@@ -168,7 +168,7 @@ class FormField extends RequestHandler {
 
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Return a link to this field.
 	 *
@@ -179,7 +179,7 @@ class FormField extends RequestHandler {
 	public function Link($action = null) {
 		return Controller::join_links($this->form->FormAction(), 'field/' . $this->name, $action);
 	}
-	
+
 	/**
 	 * Returns the HTML ID of the field - used in the template by label tags.
 	 *
@@ -191,10 +191,10 @@ class FormField extends RequestHandler {
 	public function ID() {
 		return $this->getTemplateHelper()->generateFieldID($this);
 	}
-	
+
 	/**
 	 * Returns the HTML ID for the form field holder element.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function HolderID() {
@@ -220,7 +220,7 @@ class FormField extends RequestHandler {
 
 	/**
 	 * Returns the raw field name.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getName() {
@@ -231,37 +231,37 @@ class FormField extends RequestHandler {
 	 * Returns the field message, used by form validation.
 	 *
 	 * Use {@link setError()} to set this property.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function Message() {
 		return $this->message;
-	} 
-	
-	/** 
+	}
+
+	/**
 	 * Returns the field message type, used by form validation.
-	 * 
+	 *
 	 * Arbitrary value which is mostly used for CSS classes in the rendered HTML,
 	 * e.g. "required". Use {@link setError()} to set this property.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function MessageType() {
 		return $this->messageType;
-	} 
-	
+	}
+
 	/**
 	 * Returns the field value - used by templates.
 	 */
 	public function Value() {
 		return $this->value;
 	}
-	
+
 	/**
 	 * Method to save this form field into the given {@link DataObject}.
 	 *
 	 * By default, makes use of $this->dataValue()
-	 * 
+	 *
 	 * @param DataObjectInterface $record DataObject to save data into
 	 */
 	public function saveInto(DataObjectInterface $record) {
@@ -269,7 +269,7 @@ class FormField extends RequestHandler {
 			$record->setCastedField($this->name, $this->dataValue());
 		}
 	}
-	
+
 	/**
 	 * Returns the field value suitable for insertion into the
 	 * {@link DataObject}.
@@ -279,7 +279,7 @@ class FormField extends RequestHandler {
 	public function dataValue() {
 		return $this->value;
 	}
-	
+
 	/**
 	 * Returns the field label - used by templates.
 	 *
@@ -288,7 +288,7 @@ class FormField extends RequestHandler {
 	public function Title() {
 		return $this->title;
 	}
-	
+
 	/**
 	 * @param string $val
 	 *
@@ -333,7 +333,7 @@ class FormField extends RequestHandler {
 	 * if no title was set on the formfield.
 	 * Uses {@link Message()} and {@link MessageType()} to add validatoin
 	 * error classes which can be used to style the contained tags.
-	 * 
+	 *
 	 * @return string CSS-classnames
 	 */
 	public function extraClass() {
@@ -342,23 +342,23 @@ class FormField extends RequestHandler {
 		$classes[] = $this->Type();
 
 		if($this->extraClasses) $classes = array_merge($classes, array_values($this->extraClasses));
-		
+
 		// Allow customization of label and field tag positioning
 		if(!$this->Title()) $classes[] = "nolabel";
-		
+
 		// Allow custom styling of any element in the container based
 		// on validation errors, e.g. red borders on input tags.
 		// CSS-Class needs to be different from the one rendered
 		// through {@link FieldHolder()}
 		if($this->Message()) $classes[] .= "holder-" . $this->MessageType();
-		
+
 		return implode(' ', $classes);
 	}
-	
+
 	/**
-	 * Add one or more CSS-classes to the formfield-container. Multiple class 
+	 * Add one or more CSS-classes to the formfield-container. Multiple class
 	 * names should be space delimited.
-	 * 
+	 *
 	 * @param string $class
 	 */
 	public function addExtraClass($class) {
@@ -373,7 +373,7 @@ class FormField extends RequestHandler {
 
 	/**
 	 * Remove one or more CSS-classes from the formfield-container.
-	 * 
+	 *
 	 * @param string $class
 	 */
 	public function removeExtraClass($class) {
@@ -382,24 +382,24 @@ class FormField extends RequestHandler {
 		foreach ($classes as $class) {
 			unset($this->extraClasses[$class]);
 		}
-		
+
 		return $this;
 	}
 
 	/**
 	 * Set an HTML attribute on the field element, mostly an <input> tag.
-	 * 
+	 *
 	 * Some attributes are best set through more specialized methods, to avoid interfering with built-in behaviour:
 	 * - 'class': {@link addExtraClass()}
 	 * - 'title': {@link setDescription()}
 	 * - 'value': {@link setValue}
 	 * - 'name': {@link setName}
-	 * 
+	 *
 	 * CAUTION Doesn't work on most fields which are composed of more than one HTML form field:
 	 * AjaxUniqueTextField, CheckboxSetField, CompositeField, ConfirmedPasswordField,
 	 * CountryDropdownField, CreditCardField, CurrencyField, DateField, DatetimeField, FieldGroup, GridField,
 	 * HtmlEditorField, ImageField, ImageFormAction, InlineFormAction, ListBoxField, etc.
-	 * 
+	 *
 	 * @param string
 	 * @param string
 	 */
@@ -411,14 +411,14 @@ class FormField extends RequestHandler {
 	/**
 	 * Get an HTML attribute defined by the field, or added through {@link setAttribute()}.
 	 * Caution: Doesn't work on all fields, see {@link setAttribute()}.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getAttribute($name) {
 		$attrs = $this->getAttributes();
 		if(isset($attrs[$name])) return $attrs[$name];
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -426,13 +426,13 @@ class FormField extends RequestHandler {
 		$attrs = array(
 			'type' => 'text',
 			'name' => $this->getName(),
-			'value' => $this->Value(),			
+			'value' => $this->Value(),
 			'class' => $this->extraClass(),
 			'id' => $this->ID(),
 			'disabled' => $this->isDisabled(),
 			'readonly' => $this->isReadonly()
 		);
-		
+
 		if ($this->Required()) {
 			$attrs['required'] = 'required';
 			$attrs['aria-required'] = 'true';
@@ -457,7 +457,7 @@ class FormField extends RequestHandler {
 		// Remove empty
 		$attrs = array_filter((array)$attrs, function($v) {
 			return ($v || $v === 0 || $v === '0');
-		}); 
+		});
 
 		// Remove excluded
 		if($exclude) {
@@ -493,10 +493,10 @@ class FormField extends RequestHandler {
 	public function attrValue() {
 		return Convert::raw2att($this->value);
 	}
-	
+
 	/**
 	 * Set the field value.
-	 * 
+	 *
 	 * @param mixed $value
 	 *
 	 * @return FormField.
@@ -506,7 +506,7 @@ class FormField extends RequestHandler {
 
 		return $this;
 	}
-	
+
 	/**
 	 * Set the field name
 	 *
@@ -519,7 +519,7 @@ class FormField extends RequestHandler {
 
 		return $this;
 	}
-	
+
 	/**
 	 * Set the container form.
 	 *
@@ -531,20 +531,20 @@ class FormField extends RequestHandler {
 	 * @return FormField
 	 */
 	public function setForm($form) {
-		$this->form = $form; 
+		$this->form = $form;
 
 		return $this;
 	}
-	
+
 	/**
 	 * Get the currently used form.
 	 *
 	 * @return Form
 	 */
 	public function getForm() {
-		return $this->form; 
+		return $this->form;
 	}
-	
+
 	/**
 	 * Return TRUE if security token protection is enabled on the parent
 	 * {@link Form}.
@@ -553,14 +553,14 @@ class FormField extends RequestHandler {
 	 */
 	public function securityTokenEnabled() {
 		$form = $this->getForm();
-		
+
 		if(!$form) {
 			return false;
 		}
-		
+
 		return $form->getSecurityToken()->isEnabled();
 	}
-	
+
 	/**
 	 * Sets the error message to be displayed on the {@link FormField}.
 	 *
@@ -572,27 +572,27 @@ class FormField extends RequestHandler {
 	 * @return FormField
 	 */
 	public function setError($message, $messageType) {
-		$this->message = $message; 
-		$this->messageType = $messageType; 
-		
+		$this->message = $message;
+		$this->messageType = $messageType;
+
 		return $this;
 	}
-	
+
 	/**
 	 * Set the custom error message to show instead of the default
 	 * format of Please Fill In XXX. Different from setError() as
 	 * that appends it to the standard error messaging.
-	 * 
+	 *
 	 * @param string $msg Message for the error
 	 *
 	 * @return FormField
 	 */
 	public function setCustomValidationMessage($msg) {
 		$this->customValidationMessage = $msg;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Get the custom error message for this form field. If a custom
 	 * message has not been defined then just return blank. The default
@@ -606,80 +606,80 @@ class FormField extends RequestHandler {
 
 	/**
 	 * Set name of template (without path or extension).
-	 * 
+	 *
 	 * Caution: Not consistently implemented in all subclasses, please check
 	 * the {@link Field()} method on the subclass for support.
-	 * 
+	 *
 	 * @param string $template
 	 *
 	 * @return FormField
 	 */
 	public function setTemplate($template) {
 		$this->template = $template;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getTemplate() {
 		return $this->template;
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getFieldHolderTemplate() {
 		return $this->fieldHolderTemplate;
 	}
-	
+
 	/**
 	 * Set name of template (without path or extension) for the holder,
 	 * which in turn is responsible for rendering {@link Field()}.
-	 * 
+	 *
 	 * Caution: Not consistently implemented in all subclasses,
 	 * please check the {@link Field()} method on the subclass for support.
-	 * 
+	 *
 	 * @param string $template
 	 *
 	 * @return FormField
 	 */
 	public function setFieldHolderTemplate($template) {
 		$this->fieldHolderTemplate = $template;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getSmallFieldHolderTemplate() {
 		return $this->smallFieldHolderTemplate;
 	}
-	
+
 	/**
 	 * Set name of template (without path or extension) for the small holder,
 	 * which in turn is responsible for rendering {@link Field()}.
-	 * 
+	 *
 	 * Caution: Not consistently implemented in all subclasses,
 	 * please check the {@link Field()} method on the subclass for support.
-	 * 
+	 *
 	 * @param string
 	 */
 	public function setSmallFieldHolderTemplate($template) {
 		$this->smallFieldHolderTemplate = $template;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Returns the form field - used by templates.
 	 * Although FieldHolder is generally what is inserted into templates, all of the field holder
 	 * templates make use of $Field.  It's expected that FieldHolder will give you the "complete"
 	 * representation of the field on the form, whereas Field will give you the core editing widget,
 	 * such as an input tag.
-	 * 
+	 *
 	 * @param array $properties key value pairs of template variables
 	 * @return string
 	 */
@@ -691,11 +691,11 @@ class FormField extends RequestHandler {
 
 	/**
 	 * Returns a "field holder" for this field - used by templates.
-	 * 
+	 *
 	 * Forms are constructed by concatenating a number of these field holders.
 	 * The default field holder is a label and a form field inside a div.
 	 * @see FieldHolder.ss
-	 * 
+	 *
 	 * @param array $properties key value pairs of template variables
 	 * @return string
 	 */
@@ -717,7 +717,7 @@ class FormField extends RequestHandler {
 
 		return $obj->renderWith($this->getSmallFieldHolderTemplates());
 	}
-	
+
 	/**
 	* Returns an array of templates to use for rendering {@link FieldH}
 	 *
@@ -726,7 +726,7 @@ class FormField extends RequestHandler {
 	public function getTemplates() {
 		return $this->_templates($this->getTemplate());
 	}
-	
+
 	/**
 	 * Returns an array of templates to use for rendering {@link FieldHolder}
 	 *
@@ -734,7 +734,7 @@ class FormField extends RequestHandler {
 	 */
 	public function getFieldHolderTemplates() {
 		return $this->_templates(
-			$this->getFieldHolderTemplate(), 
+			$this->getFieldHolderTemplate(),
 			'_holder'
 		);
 	}
@@ -743,38 +743,38 @@ class FormField extends RequestHandler {
 	 * Returns an array of templates to use for rendering {@link SmallFieldHolder}
 	 *
 	 * @return array
-	 */	
+	 */
 	public function getSmallFieldHolderTemplates() {
 		return $this->_templates(
-			$this->getSmallFieldHolderTemplate(), 
+			$this->getSmallFieldHolderTemplate(),
 			'_holder_small'
 		);
 	}
 
 
 	/**
-	 * Generate an array of classname strings to use for rendering this form 
+	 * Generate an array of classname strings to use for rendering this form
 	 * field into HTML
 	 *
 	 * @param string $custom custom template (if set)
 	 * @param string $suffix template suffix
 	 *
-	 * @return array $stack a stack of 
+	 * @return array $stack a stack of
 	 */
 	private function _templates($custom = null, $suffix = null) {
 		$matches = array();
-		
+
 		foreach(array_reverse(ClassInfo::ancestry($this)) as $className) {
 			$matches[] = $className . $suffix;
-			
+
 			if($className == "FormField") break;
 		}
-		
+
 		if($custom) array_unshift($matches, $custom);
-		
+
 		return $matches;
 	}
-	
+
 	/**
 	 * Returns true if this field is a composite field.
 	 * To create composite field types, you should subclass {@link CompositeField}.
@@ -799,7 +799,7 @@ class FormField extends RequestHandler {
 	 * @return boolean
 	 */
 	public function isReadonly() {
-		return $this->readonly; 
+		return $this->readonly;
 	}
 
 	/**
@@ -808,10 +808,10 @@ class FormField extends RequestHandler {
 	 * @param $bool boolean Setting "false" has no effect on the field-state.
 	 */
 	public function setReadonly($bool) {
-		$this->readonly = $bool; 
+		$this->readonly = $bool;
 		return $this;
 	}
-	
+
 	/**
 	 * @return boolean
 	 */
@@ -828,7 +828,7 @@ class FormField extends RequestHandler {
 		$this->disabled = $bool;
 		return $this;
 	}
-	
+
 	/**
 	 * Returns a readonly version of this field
 	 */
@@ -840,10 +840,10 @@ class FormField extends RequestHandler {
 			$clone = $this->castedCopy('ReadonlyField');
 			$clone->setReadonly(true);
 	}
-	
+
 		return $clone;
 	}
-	
+
 	/**
 	 * Return a disabled version of this field.
 	 * Tries to find a class of the class name of this field suffixed with "_Disabled",
@@ -866,23 +866,23 @@ class FormField extends RequestHandler {
 	public function transform(FormTransformation $trans) {
 		return $trans->transform($this);
 	}
-	
+
 	public function hasClass($class){
 		$patten = '/'.strtolower($class).'/i';
 		$subject = strtolower($this->class." ".$this->extraClass());
 		return preg_match($patten, $subject);
 	}
-	
+
 	/**
 	 * Returns the field type - used by templates.
 	 * The field type is the class name with the word Field dropped off the end, all lowercase.
 	 * It's handy for assigning HTML classes. Doesn't signify the <input type> attribute,
 	 * see {link getAttributes()}.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function Type() {
-		return strtolower(preg_replace('/Field$/', '', $this->class));	
+		return strtolower(preg_replace('/Field$/', '', $this->class));
 	}
 
 	/**
@@ -907,9 +907,9 @@ class FormField extends RequestHandler {
 
 	/**
 	 * Describe this field, provide help text for it.
-	 * By default, renders as a <span class="description"> 
+	 * By default, renders as a <span class="description">
 	 * underneath the form field.
-	 * 
+	 *
 	 * @return string Description
 	 */
 	public function setDescription($description) {
@@ -923,12 +923,12 @@ class FormField extends RequestHandler {
 	public function getDescription() {
 		return $this->description;
 	}
-	
+
 	public function debug() {
 		return "$this->class ($this->name: $this->title : <font style='color:red;'>$this->message</font>)"
 			. " = $this->value";
 	}
-	
+
 	/**
 	 * This function is used by the template processor.  If you refer to a field as a $ variable, it
 	 * will return the $Field value.
@@ -936,7 +936,7 @@ class FormField extends RequestHandler {
 	public function forTemplate() {
 		return $this->Field();
 	}
-	
+
 	/**
 	 * @uses Validator->fieldIsRequired()
 	 * @return boolean
@@ -971,7 +971,7 @@ class FormField extends RequestHandler {
 		if(is_object($this->containerFieldList)) return $this->containerFieldList->rootFieldList();
 		else user_error("rootFieldList() called on $this->class object without a containerFieldList", E_USER_ERROR);
 	}
-	
+
 	/**
 	 * Returns another instance of this field, but "cast" to a different class.
 	 * The logic tries to retain all of the instance properties,
@@ -983,8 +983,8 @@ class FormField extends RequestHandler {
 	 * or casting to a {@link ReadonlyField}.
 	 *
 	 * Does not copy custom field templates, since they probably won't apply to
-	 * the new instance. 
-	 * 
+	 * the new instance.
+	 *
 	 * @param  String $classOrCopy Class name for copy, or existing copy instance to update
 	 * @return FormField
 	 */
@@ -998,7 +998,7 @@ class FormField extends RequestHandler {
 			->setRightTitle($this->RightTitle())
 			->addExtraClass($this->extraClass())
 			->setDescription($this->getDescription());
-			
+
 		// Only include built-in attributes, ignore anything
 		// set through getAttributes(), since those might change important characteristics
 		// of the field, e.g. its "type" attribute.
@@ -1009,5 +1009,5 @@ class FormField extends RequestHandler {
 
 		return $field;
 	}
-	
+
 }

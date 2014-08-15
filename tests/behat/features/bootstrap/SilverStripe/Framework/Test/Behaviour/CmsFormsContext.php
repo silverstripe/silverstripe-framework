@@ -53,7 +53,7 @@ class CmsFormsContext extends BehatContext {
 		if(trim($negative)) {
 			assertNull($form, 'I should not see an edit page form');
 		} else {
-			assertNotNull($form, 'I should see an edit page form');	
+			assertNotNull($form, 'I should see an edit page form');
 		}
 	}
 
@@ -126,12 +126,12 @@ class CmsFormsContext extends BehatContext {
 	/**
 	 * Checks formatting in the HTML field, by analyzing the HTML node surrounding
 	 * the text for certain properties.
-	 * 
+	 *
 	 * Example: Given "my text" in the "Content" HTML field should be right aligned
 	 * Example: Given "my text" in the "Content" HTML field should not be bold
 	 *
 	 * @todo Use an actual DOM parser for more accurate assertions
-	 * 
+	 *
 	 * @Given /^"(?P<text>([^"]*))" in the "(?P<field>([^"]*))" HTML field should(?P<negate>(?: not)?) be (?P<formatting>(.*))$/
 	 */
 	public function stepContentInHtmlFieldShouldHaveFormatting($text, $field, $negate, $formatting) {
@@ -157,10 +157,10 @@ class CmsFormsContext extends BehatContext {
 			call_user_func($assertFn, 'strong', $matchedNode->nodeName);
 		} else if($formatting == 'left aligned') {
 			if($matchedNode->getAttribute('style')) {
-				call_user_func($assertFn, 'text-align: left;', $matchedNode->getAttribute('style'));	
+				call_user_func($assertFn, 'text-align: left;', $matchedNode->getAttribute('style'));
 			}
 		} else if($formatting == 'right aligned') {
-			call_user_func($assertFn, 'text-align: right;', $matchedNode->getAttribute('style'));	
+			call_user_func($assertFn, 'text-align: right;', $matchedNode->getAttribute('style'));
 		}
 	}
 	// @codingStandardsIgnoreEnd
@@ -168,7 +168,7 @@ class CmsFormsContext extends BehatContext {
 	/**
 	 * Selects the first textual match in the HTML editor. Does not support
 	 * selection across DOM node boundaries.
-	 * 
+	 *
 	 * @When /^I select "(?P<text>([^"]*))" in the "(?P<field>([^"]*))" HTML field$/
 	 */
 	public function stepIHighlightTextInHtmlField($text, $field) {
@@ -181,7 +181,7 @@ class CmsFormsContext extends BehatContext {
 		$js = <<<JS
 // TODO <IE9 support
 // TODO Allow text matches across nodes
-var editor = jQuery('#$inputFieldId').entwine('ss').getEditor(), 
+var editor = jQuery('#$inputFieldId').entwine('ss').getEditor(),
 	doc = editor.getDOM().doc,
 	sel = editor.getInstance().selection,
 	rng = document.createRange(),
@@ -204,12 +204,12 @@ jQuery(doc).find('body *').each(function() {
 JS;
 
 		$this->getSession()->executeScript($js);
-	}	
+	}
 
 	/**
 	 * Example: I should see a "Submit" button
 	 * Example: I should not see a "Delete" button
-	 * 
+	 *
 	 * @Given /^I should( not? |\s*)see a "([^"]*)" button$/
 	 */
 	public function iShouldSeeAButton($negative, $text) {
@@ -221,7 +221,7 @@ JS;
 		}
 
 		if(trim($negative)) {
-			assertNull($matchedEl, sprintf('%s button found', $text));	
+			assertNull($matchedEl, sprintf('%s button found', $text));
 		} else {
 			assertNotNull($matchedEl, sprintf('%s button not found', $text));
 		}

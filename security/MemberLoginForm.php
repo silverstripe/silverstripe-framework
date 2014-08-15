@@ -293,11 +293,11 @@ JS;
 				_t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
 				'bad'
 			);
-			
+
 			$this->controller->redirect('Security/lostpassword');
 			return;
 		}
-		
+
 		// Find existing member
 		$member = Member::get()->filter("Email", $data['Email'])->first();
 
@@ -306,7 +306,7 @@ JS;
 		if($results && is_array($results) && in_array(false, $results, true)) {
 			return $this->controller->redirect('Security/lostpassword');
 		}
-		
+
 		if($member) {
 			$token = $member->generateAutologinTokenAndStoreHash();
 
@@ -317,7 +317,7 @@ JS;
 			));
 			$e->setTo($member->Email);
 			$e->send();
-		
+
 			$this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
 		} elseif($data['Email']) {
 			// Avoid information disclosure by displaying the same status,

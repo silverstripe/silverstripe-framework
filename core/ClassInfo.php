@@ -31,7 +31,7 @@ class ClassInfo {
 	 * @var Array Cache for {@link ancestry()}.
 	 */
 	private static $_cache_ancestry = array();
-	
+
 	/**
 	 * @todo Move this to SS_Database or DB
 	 */
@@ -42,17 +42,17 @@ class ClassInfo {
 		}
 		return !empty(self::$_cache_all_tables[strtolower($class)]);
 	}
-	
+
 	public static function reset_db_cache() {
 		self::$_cache_all_tables = null;
 		self::$_cache_ancestry = array();
 	}
-	
+
 	/**
 	 * Returns the manifest of all classes which are present in the database.
-	 * 
+	 *
 	 * @param string $class Class name to check enum values for ClassName field
-	 * @param boolean $includeUnbacked Flag indicating whether or not to include 
+	 * @param boolean $includeUnbacked Flag indicating whether or not to include
 	 * types that don't exist as implemented classes. By default these are excluded.
 	 * @return array List of subclasses
 	 */
@@ -65,7 +65,7 @@ class ClassInfo {
 	/**
 	 * Returns an array of the current class and all its ancestors and children
 	 * which require a DB table.
-	 * 
+	 *
 	 * @param string|object $class
 	 * @todo Move this into data object
 	 * @return array
@@ -116,7 +116,7 @@ class ClassInfo {
 	 * Returns a list of classes that inherit from the given class.
 	 * The resulting array includes the base class passed
 	 * through the $class parameter as the first array value.
-	 * 
+	 *
 	 * Example usage:
 	 * <code>
 	 * ClassInfo::subclassesFor('BaseClass');
@@ -126,7 +126,7 @@ class ClassInfo {
 	 * 	'GrandChildClass' => 'GrandChildClass'
 	 * )
 	 * </code>
-	 * 
+	 *
 	 * @param mixed $class string of the classname or instance of the class
 	 * @return array Names of all subclasses as an associative array.
 	 */
@@ -161,7 +161,7 @@ class ClassInfo {
 					$ancestry[$parent] = $parent;
 				}
 			} while ($parent = get_parent_class($parent));
-			self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry);	
+			self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry);
 		}
 
 		return self::$_cache_ancestry[$cacheKey];
@@ -185,10 +185,10 @@ class ClassInfo {
 	/**
 	 * Get all classes contained in a file.
 	 * @uses ManifestBuilder
-	 * 
+	 *
 	 * @todo Doesn't return additional classes that only begin
 	 *  with the filename, and have additional naming separated through underscores.
-	 * 
+	 *
 	 * @param string $filePath Path to a PHP file (absolute or relative to webroot)
 	 * @return array
 	 */
@@ -200,16 +200,16 @@ class ClassInfo {
 		foreach($manifest as $class => $compareFilePath) {
 			if($absFilePath == $compareFilePath) $matchedClasses[] = $class;
 		}
-		
+
 		return $matchedClasses;
 	}
-	
+
 	/**
 	 * Returns all classes contained in a certain folder.
 	 *
 	 * @todo Doesn't return additional classes that only begin
 	 *  with the filename, and have additional naming separated through underscores.
-	 * 
+	 *
 	 * @param string $folderPath Relative or absolute folder path
 	 * @return array Array of class names
 	 */
@@ -243,6 +243,6 @@ class ClassInfo {
 
 		return self::$method_from_cache[$class][$method] == $compclass;
 	}
-	
+
 }
 

@@ -7,12 +7,12 @@
 /**
  * Matches textual content with a substring match from the beginning
  * of the string.
- * 
+ *
  * <code>
  *  "abcdefg" => "defg" # false
  *  "abcdefg" => "abcd" # true
  * </code>
- * 
+ *
  * @package framework
  * @subpackage search
  */

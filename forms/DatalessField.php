@@ -2,20 +2,20 @@
 /**
  * Abstract class for all fields without data.
  * Labels, headings and the like should extend from this.
- * 
+ *
  * @package forms
  * @subpackage fields-dataless
  */
 class DatalessField extends FormField {
-	
+
 	/**
 	 * @var bool $allowHTML
 	 */
 	protected $allowHTML;
-	
+
 	/**
 	 * function that returns whether this field contains data.
-	 * Always returns false. 
+	 * Always returns false.
 	 */
 	public function hasData() { return false; }
 
@@ -27,7 +27,7 @@ class DatalessField extends FormField {
 			)
 		);
 	}
-	
+
 	/**
 	 * Returns the field's representation in the form.
 	 * For dataless fields, this defaults to $Field.
@@ -52,7 +52,7 @@ class DatalessField extends FormField {
 		$clone->setReadonly(true);
 		return $clone;
 	}
-	
+
 	/**
 	 * @param bool $bool
 	 */
@@ -60,7 +60,7 @@ class DatalessField extends FormField {
 		$this->allowHTML = $bool;
 		return $this;
 	}
-	
+
 	/**
 	 * @return bool
 	 */

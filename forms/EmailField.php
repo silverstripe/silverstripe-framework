@@ -2,7 +2,7 @@
 /**
  * Text input field with validation for correct email format
  * according to RFC 2822.
- * 
+ *
  * @package forms
  * @subpackage fields-formattedinput
  */
@@ -23,10 +23,10 @@ class EmailField extends TextField {
 
 	/**
 	 * Validates for RFC 2822 compliant email adresses.
-	 * 
+	 *
 	 * @see http://www.regular-expressions.info/email.html
 	 * @see http://www.ietf.org/rfc/rfc2822.txt
-	 * 
+	 *
 	 * @param Validator $validator
 	 * @return String
 	 */

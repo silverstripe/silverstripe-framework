@@ -10,18 +10,18 @@ class NamespacedClass extends \DataObject implements \TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
 	);
-	
+
 	private static $has_many = array(
 		'Relations' => 'DataObjectTest\RelationClass'
 	);
 }
 
 class RelationClass extends \DataObject implements \TestOnly {
-	
+
 	private static $db = array(
 		'Title' => 'Varchar'
 	);
-	
+
 	private static $has_one = array(
 		'Parent' => 'DataObject'
 	);

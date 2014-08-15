@@ -39,7 +39,7 @@ abstract class StringField extends DBField {
 
 		parent::__construct($name);
 	}
-	
+
 	/**
 	 * Update the optional parameters for this field.
 	 * @param $options array of options
@@ -56,7 +56,7 @@ abstract class StringField extends DBField {
 			$this->nullifyEmpty = $options["nullifyEmpty"] ? true : false;
 		}
 	}
-	
+
 	/**
 	 * Set whether this field stores empty strings rather than converting
 	 * them to null.
@@ -103,7 +103,7 @@ abstract class StringField extends DBField {
 	public function forTemplate() {
 		return nl2br($this->XML());
 	}
-	
+
 	/**
 	 * Limit this field's content by a number of characters.
 	 * This makes use of strip_tags() to avoid malforming the
@@ -182,8 +182,8 @@ abstract class StringField extends DBField {
 
 	/**
 	 * Converts the current value for this StringField to uppercase.
-	 * @return string 
-	 */ 
+	 * @return string
+	 */
 	public function UpperCase() {
 		return mb_strtoupper($this->value);
 	}

@@ -99,7 +99,7 @@ class RequiredFields extends Validator {
 				}
 
 				$error = true;
-				
+
 				// submitted data for file upload fields come back as an array
 				$value = isset($data[$fieldName]) ? $data[$fieldName] : null;
 
@@ -116,7 +116,7 @@ class RequiredFields extends Validator {
 
 				if($formField && $error) {
 					$errorMessage = _t(
-						'Form.FIELDISREQUIRED', 
+						'Form.FIELDISREQUIRED',
 						'{name} is required',
 						array(
 							'name' => strip_tags(

@@ -13,24 +13,24 @@
  * @subpackage model
  */
 abstract class SS_Query implements Iterator {
-	
+
 	/**
 	 * The current record in the interator.
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $currentRecord = null;
 
 	/**
 	 * The number of the current row in the interator.
-	 * 
+	 *
 	 * @var int
 	 */
 	protected $rowNum = -1;
 
 	/**
 	 * Flag to keep track of whether iteration has begun, to prevent unnecessary seeks
-	 * 
+	 *
 	 * @var bool
 	 */
 	protected $queryHasBegun = false;
@@ -59,7 +59,7 @@ abstract class SS_Query implements Iterator {
 	/**
 	 * Return an array containing all values in the leftmost column, where the keys are the
 	 * same as the values.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function keyedColumn() {
@@ -73,7 +73,7 @@ abstract class SS_Query implements Iterator {
 
 	/**
 	 * Return a map from the first column to the second column.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function map() {
@@ -88,7 +88,7 @@ abstract class SS_Query implements Iterator {
 
 	/**
 	 * Returns the next record in the iterator.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function record() {
@@ -97,7 +97,7 @@ abstract class SS_Query implements Iterator {
 
 	/**
 	 * Returns the first column of the first record.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function value() {
@@ -107,7 +107,7 @@ abstract class SS_Query implements Iterator {
 
 	/**
 	 * Return an HTML table containing the full result-set
-	 * 
+	 *
 	 * @return string
 	 */
 	public function table() {
@@ -140,7 +140,7 @@ abstract class SS_Query implements Iterator {
 	/**
 	 * Iterator function implementation. Rewind the iterator to the first item and return it.
 	 * Makes use of {@link seek()} and {@link numRecords()}, takes care of the plumbing.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function rewind() {
@@ -152,7 +152,7 @@ abstract class SS_Query implements Iterator {
 
 	/**
 	 * Iterator function implementation. Return the current item of the iterator.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function current() {
@@ -165,7 +165,7 @@ abstract class SS_Query implements Iterator {
 
 	/**
 	 * Iterator function implementation. Return the first item of this iterator.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function first() {
@@ -175,7 +175,7 @@ abstract class SS_Query implements Iterator {
 
 	/**
 	 * Iterator function implementation. Return the row number of the current item.
-	 * 
+	 *
 	 * @return int
 	 */
 	public function key() {
@@ -185,7 +185,7 @@ abstract class SS_Query implements Iterator {
 	/**
 	 * Iterator function implementation. Return the next record in the iterator.
 	 * Makes use of {@link nextRecord()}, takes care of the plumbing.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function next() {
@@ -197,7 +197,7 @@ abstract class SS_Query implements Iterator {
 
 	/**
 	 * Iterator function implementation. Check if the iterator is pointing to a valid item.
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function valid() {
@@ -207,21 +207,21 @@ abstract class SS_Query implements Iterator {
 
 	/**
 	 * Return the next record in the query result.
-	 * 
+	 *
 	 * @return array
 	 */
 	abstract public function nextRecord();
 
 	/**
 	 * Return the total number of items in the query result.
-	 * 
+	 *
 	 * @return int
 	 */
 	abstract public function numRecords();
 
 	/**
 	 * Go to a specific row number in the query result and return the record.
-	 * 
+	 *
 	 * @param int $rowNum Row number to go to.
 	 * @return array
 	 */

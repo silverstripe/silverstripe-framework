@@ -1,7 +1,7 @@
 <?php
 /**
  * Represents a signed 32 bit integer field.
- * 
+ *
  * @package framework
  * @subpackage model
  */
@@ -9,7 +9,7 @@ class Int extends DBField {
 
 	public function __construct($name = null, $defaultVal = 0) {
 		$this->defaultVal = is_int($defaultVal) ? $defaultVal : 0;
-		
+
 		parent::__construct($name);
 	}
 
@@ -27,7 +27,7 @@ class Int extends DBField {
 			'null'=>'not null',
 			'default'=>$this->defaultVal,
 			'arrayValue'=>$this->arrayValue);
-		
+
 		$values=Array('type'=>'int', 'parts'=>$parts);
 		DB::require_field($this->tableName, $this->name, $values);
 	}
@@ -43,7 +43,7 @@ class Int extends DBField {
 	public function Nice() {
 		return sprintf( '%d', $this->value );
 	}
-	
+
 	public function scaffoldFormField($title = null, $params = null) {
 		return new NumericField($this->name, $title);
 	}
@@ -51,16 +51,16 @@ class Int extends DBField {
 	public function nullValue() {
 		return 0;
 	}
-	
+
 	public function prepValueForDB($value) {
 		if($value === true) {
 			return 1;
 		} elseif(empty($value) || !is_numeric($value)) {
 			return 0;
 		}
-		
+
 		return $value;
 	}
-	
+
 }
 
