@@ -374,7 +374,8 @@ jQuery.noConflict();
 				// Artificial HTTP referer, IE doesn't submit them via ajax. 
 				// Also rewrites anchors to their page counterparts, which is important
 				// as automatic browser ajax response redirects seem to discard the hash/fragment.
-				formData.push({name: 'BackURL', value:History.getPageUrl()});
+				// TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
+				formData.push({name: 'BackURL', value:History.getPageUrl().replace(/\/$/, '')});
 
 				// Save tab selections so we can restore them later
 				this.saveTabState();
