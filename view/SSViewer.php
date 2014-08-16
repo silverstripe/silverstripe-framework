@@ -555,7 +555,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
  * <b>Caching</b>
  *
  * Compiled templates are cached via {@link SS_Cache}, usually on the filesystem.  
- * If you put ?flush=all on your URL, it will force the template to be recompiled.  
+ * If you put ?flush=1 on your URL, it will force the template to be recompiled.
  *
  * @see http://doc.silverstripe.org/themes
  * @see http://doc.silverstripe.org/themes:developing
@@ -563,7 +563,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
  * @package framework
  * @subpackage view
  */
-class SSViewer {
+class SSViewer implements Flushable {
 	
 	/**
 	 * @config
@@ -637,6 +637,13 @@ class SSViewer {
 	 * @config
 	 */
 	private static $global_key = '$CurrentReadingMode, $CurrentUser.ID';
+
+	/**
+	 * Triggered early in the request when someone requests a flush.
+	 */
+	public static function flush() {
+		self::flush_template_cache();
+	}
 
 	/**
 	 * Create a template from a string instead of a .ss file
@@ -744,18 +751,6 @@ class SSViewer {
 	public function __construct($templateList, TemplateParser $parser = null) {
 		$this->setParser($parser ?: Injector::inst()->get('SSTemplateParser'));
 
-		// flush template manifest cache if requested
-		if (isset($_GET['flush']) && $_GET['flush'] == 'all') {
-			if(Director::isDev() || Director::is_cli() || Permission::check('ADMIN')) {
-				self::flush_template_cache();
-			} else {
-				if(!Security::ignore_disallowed_actions()) {
-					return Security::permissionFailure(null, 'Please log in as an administrator to flush ' .
-						'the template cache.');
-				}
-			}
-		}
-		
 		if(!is_array($templateList) && substr((string) $templateList,-3) == '.ss') {
 			$this->chosenTemplates['main'] = $templateList;
 		} else {
@@ -927,7 +922,7 @@ class SSViewer {
 		if (!self::$flushed) {
 			$dir = dir(TEMP_FOLDER);
 			while (false !== ($file = $dir->read())) {
-				if (strstr($file, '.cache')) { unlink(TEMP_FOLDER.'/'.$file); }
+				if (strstr($file, '.cache')) unlink(TEMP_FOLDER . '/' . $file);
 			}
 			self::$flushed = true;
 		}
@@ -1038,7 +1033,7 @@ class SSViewer {
 			. str_replace(array('\\','/',':'), '.', Director::makeRelative(realpath($template)));
 		$lastEdited = filemtime($template);
 
-		if(!file_exists($cacheFile) || filemtime($cacheFile) < $lastEdited || isset($_GET['flush'])) {
+		if(!file_exists($cacheFile) || filemtime($cacheFile) < $lastEdited) {
 			$content = file_get_contents($template);
 			$content = $this->parseTemplateContent($content, $template);
 			

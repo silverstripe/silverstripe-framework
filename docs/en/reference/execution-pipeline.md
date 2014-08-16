@@ -91,3 +91,12 @@ You can access the following controller-method with /team/signup
 ## SSViewer template rendering
 
 See [templates](/reference/templates) for information on the SSViewer template system.
+
+## Flush requests
+
+If `?flush=1` is requested in the URL, e.g. http://mysite.com?flush=1, this will trigger a call to `flush()` on
+any classes that implement the `Flushable` interface.
+
+See [reference documentation on Flushable](/reference/flushable) for more details.
+
+

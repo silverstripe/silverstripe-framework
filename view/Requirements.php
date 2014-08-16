@@ -7,7 +7,14 @@
  * @package framework
  * @subpackage view
  */
-class Requirements {
+class Requirements implements Flushable {
+
+	/**
+	 * Triggered early in the request when someone requests a flush.
+	 */
+	public static function flush() {
+		self::delete_all_combined_files();
+	}
 
 	/**
 	 * Enable combining of css/javascript files.
@@ -272,6 +279,13 @@ class Requirements {
 		return self::backend()->delete_combined_files($combinedFileName);
 	}
 
+	/**
+	 * Deletes all generated combined files in the configured combined files directory,
+	 * but doesn't delete the directory itself.
+	 */
+	public static function delete_all_combined_files() {
+		return self::backend()->delete_all_combined_files();
+	}
 
 	/**
 	 * Re-sets the combined files definition. See {@link Requirements_Backend::clear_combined_files()}
@@ -455,7 +469,7 @@ class Requirements_Backend {
 	 * @var boolean
 	 */
 	protected $force_js_to_bottom = false;
-	
+
 	public function set_combined_files_enabled($enable) {
 		$this->combined_files_enabled = (bool) $enable;
 	}
@@ -1005,6 +1019,20 @@ class Requirements_Backend {
 		}
 	}
 
+	/**
+	 * Deletes all generated combined files in the configured combined files directory,
+	 * but doesn't delete the directory itself.
+	 */
+	public function delete_all_combined_files() {
+		$combinedFolder = $this->getCombinedFilesFolder();
+		if(!$combinedFolder) return false;
+
+		$path = Director::baseFolder() . '/' . $combinedFolder;
+		if(file_exists($path)) {
+			Filesystem::removeFolder($path, true);
+		}
+	}
+
 	public function clear_combined_files() {
 		$this->combine_files = array();
 	}
@@ -1085,7 +1113,7 @@ class Requirements_Backend {
 			}
 
 			// Determine if we need to build the combined include
-			if(file_exists($combinedFilePath) && !isset($_GET['flush'])) {
+			if(file_exists($combinedFilePath)) {
 				// file exists, check modification date of every contained file
 				$srcLastMod = 0;
 				foreach($fileList as $file) {

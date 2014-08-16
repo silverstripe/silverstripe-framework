@@ -49,7 +49,7 @@ class TestRunner extends Controller {
 		'build',
 		'only'
 	);
-	
+
 	/**
 	 * @var Array Blacklist certain directories for the coverage report.
 	 * Filepaths are relative to the webroot, without leading slash.
@@ -62,7 +62,7 @@ class TestRunner extends Controller {
 		'*/tests',
 		'*/lang',
 	);
-	
+
 	/**
 	 * Override the default reporter with a custom configured subclass.
 	 *
@@ -78,21 +78,26 @@ class TestRunner extends Controller {
 	 * top of the loader stacks.
 	 */
 	public static function use_test_manifest() {
+		$flush = true;
+		if(isset($_GET['flush']) && $_GET['flush'] === '0') {
+			$flush = false;
+		}
+
 		$classManifest = new SS_ClassManifest(
-			BASE_PATH, true, isset($_GET['flush'])
+			BASE_PATH, true, $flush
 		);
-		
+
 		SS_ClassLoader::instance()->pushManifest($classManifest, false);
 		SapphireTest::set_test_class_manifest($classManifest);
 
 		SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
-			BASE_PATH, project(), true, isset($_GET['flush'])
+			BASE_PATH, project(), true, $flush
 		));
 
 		Config::inst()->pushConfigStaticManifest(new SS_ConfigStaticManifest(
-			BASE_PATH, true, isset($_GET['flush'])
+			BASE_PATH, true, $flush
 		));
-		
+
 		// Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
 		// (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
 		DataObject::clear_classname_spec_cache();
@@ -108,14 +113,6 @@ class TestRunner extends Controller {
 		
 		if(!PhpUnitWrapper::has_php_unit()) {
 			die("Please install PHPUnit using pear");
-		}
-
-		if(!isset($_GET['flush']) || !$_GET['flush']) {
-			Debug::message(
-				"WARNING: Manifest not flushed. " .
-				"Add flush=1 as an argument to discover new classes or files.\n",
-				false
-			);
 		}
 	}
 	

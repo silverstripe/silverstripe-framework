@@ -76,17 +76,31 @@ Example `mysite/_config.php`:
 			if($db == 'sqlite3') $databaseConfig['type'] = 'SQLite3Database';
 		}
 	}
-	
+
 You can either use the database on a single invocation:
 
 	phpunit framework/tests "" db=sqlite3
-	
+
 or through a `<php>` flag in your `phpunit.xml` (see [Appenix C: "Setting PHP INI settings"](http://www.phpunit.de/manual/current/en/appendixes.configuration.html)):
 
 	<phpunit>
 		<!-- ... -->
 		<php>
-			<var name="db" value="sqlite3"/>
+			<get name="db" value="sqlite3"/>
+		</php>
+	</phpunit>
+
+Note that on every test run, the manifest is flushed to avoid any bugs where a test doesn't clean up after
+itself properly. You can override that behaviour by passing `flush=0` to the test command:
+
+	phpunit framework/tests flush=0
+
+Alternatively, you can set the var in your `phpunit.xml` file:
+
+	<phpunit>
+		<!-- ... -->
+		<php>
+			<get name="flush" value="0"/>
 		</php>
 	</phpunit>
 
