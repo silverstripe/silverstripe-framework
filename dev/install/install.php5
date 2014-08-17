@@ -1528,7 +1528,7 @@ ErrorDocument 500 /assets/error-500.html
 	
 	RewriteCond %{REQUEST_URI} ^(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule .* $modulePath/main.php?url=%1&%{QUERY_STRING} [L]
+	RewriteRule .* $modulePath/main.php?url=%1 [QSA]
 </IfModule>
 TEXT;
 
