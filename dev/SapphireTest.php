@@ -157,14 +157,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		return static::$fixture_file;
 	}
 
-	/**
-	 * @var array $fixtures Array of {@link YamlFixture} instances
-	 * @deprecated 3.1 Use $fixtureFactory instad
-	 */
-	protected $fixtures = array(); 
-	
 	protected $model;
-	
+
 	public function setUp() {
 		// We cannot run the tests on this abstract class.
 		if(get_class($this) == "SapphireTest") $this->skipTest = true;
@@ -445,7 +439,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * {@link loadFixture()} 
 	 */
 	public function clearFixtures() {
-		$this->fixtures = array();
 		$this->getFixtureFactory()->clear();
 	}
 	

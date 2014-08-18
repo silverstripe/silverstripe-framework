@@ -45,7 +45,6 @@ doesn't necessarily have any visible styling.
  * `[api:TabSet]`: Collection of fields which is rendered as separate tabs. Can be nested.
  * `[api:Tab]`: A single tab inside a `TabSet`.
  * `[api:ToggleCompositeField]`: Allows visibility of a group of fields to be toggled.
- * `[api:ToggleField]`: ReadonlyField with added toggle-capabilities - will preview the first sentence of the contained text-value, and show the full content by a javascript-switch.
 
 ## Files
 
