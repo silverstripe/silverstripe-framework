@@ -18,7 +18,7 @@ env:
 
 matrix:
   allow_failures:
-    - php: hhvm
+    - php: hhvm-nightly
   include:
     - php: 5.3
       env: DB=PGSQL CORE_RELEASE=3.1
