@@ -5,7 +5,7 @@
  * @subpackage tests
  */
 class NumericFieldTest extends SapphireTest {
-	
+
 	protected $usesDatabase = false;
 
 	public function testValidator() {

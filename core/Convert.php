@@ -3,28 +3,28 @@
  * Library of conversion functions, implemented as static methods.
  *
  * The methods are all of the form (format)2(format), where the format is one of
- * 
+ *
  *  raw: A UTF8 string
  *  attr: A UTF8 string suitable for inclusion in an HTML attribute
  *  js: A UTF8 string suitable for inclusion in a double-quoted javascript string.
- * 
+ *
  *  array: A PHP associative array
  *  json: JavaScript object notation
  *
  *  html: HTML source suitable for use in a page or email
  *  text: Plain-text content, suitable for display to a user as-is, or insertion in a plaintext email.
- * 
+ *
  * Objects of type {@link ViewableData} can have an "escaping type",
- * which determines if they are automatically escaped before output by {@link SSViewer}. 
- * 
+ * which determines if they are automatically escaped before output by {@link SSViewer}.
+ *
  * @package framework
  * @subpackage misc
  */
 class Convert {
-	
+
 	/**
 	 * Convert a value to be suitable for an XML attribute.
-	 * 
+	 *
 	 * @param array|string $val String to escape, or array of strings
 	 * @return array|string
 	 */
@@ -34,7 +34,7 @@ class Convert {
 
 	/**
 	 * Convert a value to be suitable for an HTML attribute.
-	 * 
+	 *
 	 * @param string|array $val String to escape, or array of strings
 	 * @return array|string
 	 */
@@ -45,7 +45,7 @@ class Convert {
 	/**
 	 * Convert a value to be suitable for an HTML ID attribute. Replaces non
 	 * supported characters with a space.
-	 * 
+	 *
 	 * @see http://www.w3.org/TR/REC-html40/types.html#type-cdata
 	 *
 	 * @param array|string $val String to escape, or array of strings
@@ -88,10 +88,10 @@ class Convert {
 			);
 		}
 	}
-	
+
 	/**
 	 * Ensure that text is properly escaped for XML.
-	 * 
+	 *
 	 * @see http://www.w3.org/TR/REC-xml/#dt-escape
 	 * @param array|string $val String to escape, or array of strings
 	 * @return array|string
@@ -104,7 +104,7 @@ class Convert {
 			return htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
 		}
 	}
-	
+
 	/**
 	 * Ensure that text is properly escaped for Javascript.
 	 *
@@ -149,10 +149,10 @@ class Convert {
 	/**
 	 * Safely encodes a value (or list of values) using the current database's
 	 * safe string encoding method
-	 * 
+	 *
 	 * @param mixed|array $val Input value, or list of values as an array
 	 * @param boolean $quoted Flag indicating whether the value should be safely
-	 * quoted, instead of only being escaped. By default this function will 
+	 * quoted, instead of only being escaped. By default this function will
 	 * only escape the string (false).
 	 * @return string|array Safely encoded value in the same format as the input
 	 */
@@ -170,12 +170,12 @@ class Convert {
 			}
 		}
 	}
-	
+
 	/**
 	 * Safely encodes a SQL symbolic identifier (or list of identifiers), such as a database,
 	 * table, or column name. Supports encoding of multi identfiers separated by
 	 * a delimiter (e.g. ".")
-	 * 
+	 *
 	 * @param string|array $identifier The identifier to escape. E.g. 'SiteTree.Title'
 	 * @param string $separator The string that delimits subsequent identifiers
 	 * @return string|array The escaped identifier. E.g. '"SiteTree"."Title"'
@@ -219,7 +219,7 @@ class Convert {
 
 	/**
 	 * Convert a JSON string into an array.
-	 * 
+	 *
 	 * @uses json2obj
 	 * @param string $val JSON string to convert
 	 * @return array|boolean
@@ -227,7 +227,7 @@ class Convert {
 	public static function json2array($val) {
 		return json_decode($val, true);
 	}
-	
+
 	/**
 	 * Converts an XML string to a PHP array
 	 *
@@ -242,11 +242,11 @@ class Convert {
 	}
 
 	/**
-	 * Convert a XML string to a PHP array recursively. Do not 
+	 * Convert a XML string to a PHP array recursively. Do not
 	 * call this function directly, Please use {@link Convert::xml2array()}
-	 * 
+	 *
 	 * @param SimpleXMLElement
-	 * 
+	 *
 	 * @return mixed
 	 */
 	protected static function recursiveXMLToArray($xml) {
@@ -266,10 +266,10 @@ class Convert {
 			if(isset($a)) $r['@'] = $a; // Attributes
 			return $r;
 		}
-		
+
 		return (string) $xml;
 	}
-	
+
 	/**
 	 * Create a link if the string is a valid URL
 	 *
@@ -282,13 +282,13 @@ class Convert {
 		else
 			return $string;
 	}
-	
+
 	/**
 	 * Simple conversion of HTML to plaintext.
-	 * 
+	 *
 	 * @param $data string
 	 * @param $preserveLinks boolean
-	 * @param $wordwrap array 
+	 * @param $wordwrap array
 	 */
 	public static function html2raw($data, $preserveLinks = false, $wordWrap = 60, $config = null) {
 		$defaultConfig = array(
@@ -309,7 +309,7 @@ class Convert {
 		if($config['ReplaceBoldAsterisk']) {
 			$data = preg_replace('%<(strong|b)( [^>]*)?>|</(strong|b)>%i','*',$data);
 		}
-		
+
 		// Expand hyperlinks
 		if(!$preserveLinks && !$config['PreserveLinks']) {
 			$data = preg_replace_callback('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/i', function($matches) {
@@ -319,18 +319,18 @@ class Convert {
 				return Convert::html2raw($matches[2]) . "[$matches[1]]";
 			}, $data);
 		}
-	
+
 		// Replace images with their alt tags
 		if($config['ReplaceImagesWithAlt']) {
 			$data = preg_replace('/<img[^>]*alt *= *"([^"]*)"[^>]*>/i', ' \\1 ', $data);
 			$data = preg_replace('/<img[^>]*alt *= *([^ ]*)[^>]*>/i', ' \\1 ', $data);
 		}
-	
+
 		// Compress whitespace
 		if($config['CompressWhitespace']) {
 			$data = preg_replace("/\s+/", " ", $data);
 		}
-		
+
 		// Parse newline tags
 		$data = preg_replace("/\s*<[Hh][1-6]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
 		$data = preg_replace("/\s*<[Pp]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
@@ -341,13 +341,13 @@ class Convert {
 		$data = preg_replace("/<[Tt][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
 		$data = preg_replace("/<\/[Tt][Dd]([^A-Za-z0-9>][^>]*)?> */", "    ", $data);
 		$data = preg_replace('/<\/p>/i', "\n\n", $data );
-	
+
 		// Replace HTML entities
 		//$data = preg_replace("/&#([0-9]+);/e", 'chr(\1)', $data);
 		//$data = str_replace(array("&lt;","&gt;","&amp;","&nbsp;"), array("<", ">", "&", " "), $data);
 		$data = html_entity_decode($data, ENT_COMPAT , 'UTF-8');
 		// Remove all tags (but optionally keep links)
-		
+
 		// strip_tags seemed to be restricting the length of the output
 		// arbitrarily. This essentially does the same thing.
 		if(!$preserveLinks && !$config['PreserveLinks']) {
@@ -364,7 +364,7 @@ class Convert {
 	 * Does nearly the same as rawurlencode().
 	 * Please only encode the values, not the whole url, e.g.
 	 * "mailto:test@test.com?subject=" . Convert::raw2mailto($subject)
-	 * 
+	 *
 	 * @param $data string
 	 * @return string
 	 * @see http://www.ietf.org/rfc/rfc1738.txt
@@ -376,22 +376,22 @@ class Convert {
 			$data
 		);
 	}
-	
+
 	/**
 	 * Convert a string (normally a title) to a string suitable for using in
 	 * urls and other html attributes. Uses {@link URLSegmentFilter}.
 	 *
-	 * @param string 
+	 * @param string
 	 * @return string
 	 */
 	public static function raw2url($title) {
 		$f = URLSegmentFilter::create();
 		return $f->filter($title);
 	}
-	
+
 	/**
 	 * Normalises newline sequences to conform to (an) OS specific format.
-	 * 
+	 *
 	 * @param string $data Text containing potentially mixed formats of newline
 	 * sequences including \r, \r\n, \n, or unicode newline characters
 	 * @param string $nl The newline sequence to normalise to. Defaults to that

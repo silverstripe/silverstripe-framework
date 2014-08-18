@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Provides view and edit forms at GridField-specific URLs. 
+ * Provides view and edit forms at GridField-specific URLs.
  *
  * These can be placed into pop-ups by an appropriate front-end.
  *
  * Usually added to a {@link GridField} alongside of a
- * {@link GridFieldEditButton} which takes care of linking the 
+ * {@link GridFieldEditButton} which takes care of linking the
  * individual rows to their edit view.
- * 
+ *
  * The URLs provided will be off the following form:
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
@@ -55,7 +55,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 			'autocomplete' => 'handleAutocomplete',
 		);
 	}
-	
+
 	/**
 	 * Create a popup component. The two arguments will specify how the popup form's HTML and
 	 * behaviour is created.  The given controller will be customised, putting the edit form into the
@@ -63,18 +63,18 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 *
 	 * The arguments are experimental API's to support partial content to be passed back to whatever
 	 * controller who wants to display the getCMSFields
-	 * 
+	 *
 	 * @param string $name The name of the edit form to place into the pop-up form
 	 */
 	public function __construct($name = 'DetailForm') {
 		$this->name = $name;
 	}
-	
+
 	/**
 	 *
 	 * @param GridField $gridField
 	 * @param SS_HTTPRequest $request
-	 * @return GridFieldDetailForm_ItemRequest 
+	 * @return GridFieldDetailForm_ItemRequest
 	 */
 	public function handleItem($gridField, $request) {
 		// Our getController could either give us a true Controller, if this is the top-level GridField.
@@ -85,7 +85,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 		if(is_numeric($request->param('ID'))) {
 			$record = $gridField->getList()->byId($request->param("ID"));
 		} else {
-			$record = Object::create($gridField->getModelClass());	
+			$record = Object::create($gridField->getModelClass());
 		}
 
 		$class = $this->getItemRequestClass();
@@ -210,19 +210,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		'view',
 		'ItemEditForm'
 	);
-	
+
 	/**
 	 *
-	 * @var GridField 
+	 * @var GridField
 	 */
 	protected $gridField;
-	
+
 	/**
 	 *
 	 * @var GridField_URLHandler
 	 */
 	protected $component;
-	
+
 	/**
 	 *
 	 * @var DataObject
@@ -236,13 +236,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 * @var RequestHandler
 	 */
 	protected $popupController;
-	
+
 	/**
 	 *
 	 * @var string
 	 */
 	protected $popupFormName;
-	
+
 	/**
 	 * @var String
 	 */
@@ -308,25 +308,25 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		))->renderWith($this->template);
 
 		if($request->isAjax()) {
-			return $return;	
+			return $return;
 		} else {
 			// If not requested by ajax, we need to render it within the controller context+template
 			return $controller->customise(array(
 				// TODO CMS coupling
 				'Content' => $return,
-			));	
+			));
 		}
 	}
 
 	/**
 	 * Builds an item edit form.  The arguments to getCMSFields() are the popupController and
 	 * popupFormName, however this is an experimental API and may change.
-	 * 
+	 *
 	 * @todo In the future, we will probably need to come up with a tigher object representing a partially
 	 * complete controller with gaps for extra functionality.  This, for example, would be a better way
 	 * of letting Security/login put its log-in form inside a UI specified elsewhere.
-	 * 
-	 * @return Form 
+	 *
+	 * @return Form
 	 */
 	public function ItemEditForm() {
 		$list = $this->gridField->getList();
@@ -370,7 +370,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 				->setUseButtonTag(true)
 				->addExtraClass('ss-ui-action-constructive')
 				->setAttribute('data-icon', 'add'));
-				
+
 			// Add a Cancel link which is a button-like link and link back to one level up.
 			$curmbs = $this->Breadcrumbs();
 			if($curmbs && $curmbs->count()>=2){
@@ -415,7 +415,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$actions,
 			$this->component->getValidator()
 		);
-		
+
 		$form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
 
 		if($this->record->ID && !$canEdit) {
@@ -436,11 +436,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$extraData = $list->getExtraData('', $this->record->ID);
 			$form->loadDataFrom(array('ManyMany' => $extraData));
 		}
-		
+
 		// TODO Coupling with CMS
 		$toplevelController = $this->getToplevelController();
 		if($toplevelController && $toplevelController instanceof LeftAndMain) {
-			// Always show with base template (full width, no other panels), 
+			// Always show with base template (full width, no other panels),
 			// regardless of overloaded CMS controller templates.
 			// TODO Allow customization, e.g. to display an edit form alongside a search form from the CMS controller
 			$form->setTemplate('LeftAndMain_EditForm');
@@ -477,7 +477,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		}
 		return $c;
 	}
-	
+
 	protected function getBackLink(){
 		// TODO Coupling with CMS
 		$backlink = '';
@@ -488,20 +488,20 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			} elseif($this->popupController->hasMethod('Breadcrumbs')) {
 				$parents = $this->popupController->Breadcrumbs(false)->items;
 				$backlink = array_pop($parents)->Link;
-			} 
+			}
 		}
 		if(!$backlink) $backlink = $toplevelController->Link();
-		
+
 		return $backlink;
 	}
 
-	
+
 
 	public function doSave($data, $form) {
 		$new_record = $this->record->ID == 0;
 		$controller = $this->getToplevelController();
 		$list = $this->gridField->getList();
-		
+
 		if($list instanceof ManyManyList) {
 			// Data is escaped in ManyManyList->add()
 			$extraData = (isset($data['ManyMany'])) ? $data['ManyMany'] : null;
@@ -512,7 +512,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		if(!$this->record->canEdit()) {
 			return $controller->httpError(403);
 		}
-		
+
 		if (isset($data['ClassName']) && $data['ClassName'] != $this->record->ClassName) {
 			$newClassName = $data['ClassName'];
 			// The records originally saved attribute was overwritten by $form->saveInto($record) before.
@@ -546,19 +546,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		// TODO Save this item into the given relationship
 
 		// TODO Allow HTML in form messages
-		// $link = '<a href="' . $this->Link('edit') . '">"' 
-		// 	. htmlspecialchars($this->record->Title, ENT_QUOTES) 
+		// $link = '<a href="' . $this->Link('edit') . '">"'
+		// 	. htmlspecialchars($this->record->Title, ENT_QUOTES)
 		// 	. '"</a>';
 		$link = '"' . $this->record->Title . '"';
 		$message = _t(
-			'GridFieldDetailForm.Saved', 
+			'GridFieldDetailForm.Saved',
 			'Saved {name} {link}',
 			array(
 				'name' => $this->record->i18n_singular_name(),
 				'link' => $link
 			)
 		);
-		
+
 		$form->sessionMessage($message, 'good');
 
 		if($new_record) {
@@ -571,8 +571,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// Changes to the record properties might've excluded the record from
 			// a filtered list, so return back to the main view if it can't be found
 			$noActionURL = $controller->removeAction($data['url']);
-			$controller->getRequest()->addHeader('X-Pjax', 'Content'); 
-			return $controller->redirect($noActionURL, 302); 
+			$controller->getRequest()->addHeader('X-Pjax', 'Content');
+			return $controller->redirect($noActionURL, 302);
 		}
 	}
 
@@ -595,7 +595,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$this->record->i18n_singular_name(),
 			htmlspecialchars($title, ENT_QUOTES)
 		);
-		
+
 		$toplevelController = $this->getToplevelController();
 		if($toplevelController && $toplevelController instanceof LeftAndMain) {
 			$backForm = $toplevelController->getEditForm();
@@ -651,8 +651,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 * CMS-specific functionality: Passes through navigation breadcrumbs
 	 * to the template, and includes the currently edited record (if any).
 	 * see {@link LeftAndMain->Breadcrumbs()} for details.
-	 * 
-	 * @param boolean $unlinked 
+	 *
+	 * @param boolean $unlinked
 	 * @return ArrayData
 	 */
 	public function Breadcrumbs($unlinked = false) {
@@ -663,14 +663,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$items->push(new ArrayData(array(
 				'Title' => $this->record->Title,
 				'Link' => $this->Link()
-			)));	
+			)));
 		} else {
 			$items->push(new ArrayData(array(
 				'Title' => sprintf(_t('GridField.NewRecord', 'New %s'), $this->record->i18n_singular_name()),
 				'Link' => false
-			)));	
+			)));
 		}
-		
+
 		return $items;
 	}
 }

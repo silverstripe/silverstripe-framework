@@ -6,43 +6,43 @@
  * @subpackage tests
  */
 class HTTPTest extends SapphireTest {
-	
+
 	/**
 	 * Tests {@link HTTP::getLinksIn()}
 	 */
 	public function testGetLinksIn() {
 		$content = '
 			<h2><a href="/">My Cool Site</a></h2>
-			
+
 			<p>
 				A boy went <a href="home/">home</a> to see his <span><a href="mother/">mother</a></span>. This
 				involved a short <a href="$Journey">journey</a>, as well as some <a href="space travel">space travel</a>
 				and <a href=unquoted>unquoted</a> events, as well as a <a href=\'single quote\'>single quote</a> from
 				his <a href="/father">father</a>.
 			</p>
-			
+
 			<p>
 				There were also some elements with extra <a class=attribute href=\'attributes\'>attributes</a> which
 				played a part in his <a href=journey"extra id="JourneyLink">journey</a>. HE ALSO DISCOVERED THE
 				<A HREF="CAPS LOCK">KEY</a>. Later he got his <a href="quotes \'mixed\' up">mixed up</a>.
 			</p>
 		';
-		
+
 		$expected = array (
 			'/', 'home/', 'mother/', '$Journey', 'space travel', 'unquoted', 'single quote', '/father', 'attributes',
 			'journey', 'CAPS LOCK', 'quotes \'mixed\' up'
 		);
-		
+
 		$result = HTTP::getLinksIn($content);
-		
+
 		// Results don't neccesarily come out in the order they are in the $content param.
 		sort($result);
 		sort($expected);
-		
+
 		$this->assertTrue(is_array($result));
 		$this->assertEquals($expected, $result, 'Test that all links within the content are found.');
 	}
-	
+
 	/**
 	 * Tests {@link HTTP::setGetVar()}
 	 */
@@ -59,10 +59,10 @@ class HTTPTest extends SapphireTest {
 		$_SERVER['REQUEST_URI'] = $origURI;
 
 		$this->assertEquals(
-			'relative/url?foo=bar', 
+			'relative/url?foo=bar',
 			HTTP::setGetVar('foo', 'bar', 'relative/url'),
 			'Relative URL without existing query params');
-		
+
 		$this->assertEquals(
 			'relative/url?baz=buz&amp;foo=bar',
 			HTTP::setGetVar('foo', 'bar', '/relative/url?baz=buz'),
@@ -86,7 +86,7 @@ class HTTPTest extends SapphireTest {
 			HTTP::setGetVar('foo[test]', 'two', 'http://test.com/?foo[test]=one'),
 			'Absolute URL and PHP array query string notation'
 		);
-	
+
 		$urls = array(
 			'http://www.test.com:8080',
 			'http://test.com:3000/',
@@ -96,7 +96,7 @@ class HTTPTest extends SapphireTest {
 			'http://baz:foo@test.com:8080',
 			'http://baz@test.com:8080'
 		);
-		
+
 		foreach($urls as $testURL) {
 			$this->assertEquals(
 				$testURL .'?foo=bar',
@@ -105,10 +105,10 @@ class HTTPTest extends SapphireTest {
 			);
 		}
 	}
-	
+
 	/**
 	 * Test that the the get_mime_type() works correctly
-	 * 
+	 *
 	 */
 	public function testGetMimeType() {
 		$this->assertEquals('text/plain', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.csv'));
@@ -120,13 +120,13 @@ class HTTPTest extends SapphireTest {
 			HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.psd'));
 		$this->assertEquals('audio/x-wav', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.wav'));
 	}
-	
+
 	/**
 	 * Test that absoluteURLs correctly transforms urls within CSS to absolute
 	 */
 	public function testAbsoluteURLsCSS() {
 		$this->withBaseURL('http://www.silverstripe.org/', function($test){
-			
+
 			// background-image
 			// Note that using /./ in urls is absolutely acceptable
 			$test->assertEquals(
@@ -134,19 +134,19 @@ class HTTPTest extends SapphireTest {
 				'Content</div>',
 				HTTP::absoluteURLs('<div style="background-image: url(\'./images/mybackground.gif\');">Content</div>')
 			);
-			
+
 			// background
 			$test->assertEquals(
 				'<div style="background: url(\'http://www.silverstripe.org/images/mybackground.gif\');">Content</div>',
 				HTTP::absoluteURLs('<div style="background: url(\'images/mybackground.gif\');">Content</div>')
 			);
-			
+
 			// list-style-image
 			$test->assertEquals(
 				'<div style=\'background: url(http://www.silverstripe.org/list.png);\'>Content</div>',
 				HTTP::absoluteURLs('<div style=\'background: url(list.png);\'>Content</div>')
 			);
-			
+
 			// list-style
 			$test->assertEquals(
 				'<div style=\'background: url("http://www.silverstripe.org/./assets/list.png");\'>Content</div>',
@@ -154,19 +154,19 @@ class HTTPTest extends SapphireTest {
 			);
 		});
 	}
-	
+
 	/**
 	 * Test that absoluteURLs correctly transforms urls within html attributes to absolute
 	 */
 	public function testAbsoluteURLsAttributes() {
 		$this->withBaseURL('http://www.silverstripe.org/', function($test){
-			
+
 			// links
 			$test->assertEquals(
 				'<a href=\'http://www.silverstripe.org/blog/\'>SS Blog</a>',
 				HTTP::absoluteURLs('<a href=\'/blog/\'>SS Blog</a>')
 			);
-			
+
 			// background
 			// Note that using /./ in urls is absolutely acceptable
 			$test->assertEquals(
@@ -174,7 +174,7 @@ class HTTPTest extends SapphireTest {
 				'SS Blog</div>',
 				HTTP::absoluteURLs('<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>')
 			);
-			
+
 			//check dot segments
 			// Assumption: dots are not removed
 				//if they were, the url should be: http://www.silverstripe.org/abc
@@ -188,7 +188,7 @@ class HTTPTest extends SapphireTest {
 				'<img src=\'http://www.silverstripe.org/themes/silverstripe/images/logo-org.png\' />',
 				HTTP::absoluteURLs('<img src=\'themes/silverstripe/images/logo-org.png\' />')
 			);
-			
+
 			// link
 			$test->assertEquals(
 				'<link href=http://www.silverstripe.org/base.css />',
@@ -196,7 +196,7 @@ class HTTPTest extends SapphireTest {
 			);
 		});
 	}
-	
+
 	/**
 	 * 	Make sure URI schemes are not rewritten
 	 */
@@ -224,10 +224,10 @@ class HTTPTest extends SapphireTest {
 				'<a href="callto:12345678" />',
 				HTTP::absoluteURLs('<a href="callto:12345678" />'),
 				'Call to links are not rewritten'
-			);	
+			);
 		});
 	}
-	
+
 	/**
 	 * Run a test while mocking the base url with the provided value
 	 * @param string $url The base URL to use for this test

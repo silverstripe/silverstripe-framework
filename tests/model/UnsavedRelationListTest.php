@@ -103,7 +103,7 @@ class UnsavedRelationListTest extends SapphireTest {
 			array('Name' => 'C')
 		), $object->Children());
 	}
-	
+
 	public function testHasManyPolymorphic() {
 		$object = new UnsavedRelationListTest_DataObject;
 

@@ -1,29 +1,29 @@
 <?php
 /**
- * This class is is responsible for adding objects to another object's has_many 
- * and many_many relation, as defined by the {@link RelationList} passed to the 
+ * This class is is responsible for adding objects to another object's has_many
+ * and many_many relation, as defined by the {@link RelationList} passed to the
  * {@link GridField} constructor.
  *
- * Objects can be searched through an input field (partially matching one or 
+ * Objects can be searched through an input field (partially matching one or
  * more fields).
  *
  * Selecting from the results will add the object to the relation.
  *
- * Often used alongside {@link GridFieldDeleteAction} for detaching existing 
+ * Often used alongside {@link GridFieldDeleteAction} for detaching existing
  * records from a relationship.
  *
- * For easier setup, have a look at a sample configuration in 
+ * For easier setup, have a look at a sample configuration in
  * {@link GridFieldConfig_RelationEditor}.
  *
  * @package forms
  * @subpackage fields-gridfield
  */
-class GridFieldAddExistingAutocompleter 
+class GridFieldAddExistingAutocompleter
 	implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
-	
+
 	/**
 	 * Which template to use for rendering
-	 * 
+	 *
 	 * @var string $itemClass
 	 */
 	protected $itemClass = 'GridFieldAddExistingAutocompleter';
@@ -43,11 +43,11 @@ class GridFieldAddExistingAutocompleter
 	 * By default, they're searched with a {@link StartsWithFilter}.
 	 * To define custom filters, use the same notation as {@link DataList->filter()},
 	 * e.g. "Name:EndsWith".
-	 * 
+	 *
 	 * If multiple fields are provided, the filtering is performed non-exclusive.
 	 * If no fields are provided, tries to auto-detect fields from
 	 * {@link DataObject->searchableFields()}.
-	 * 
+	 *
 	 * The fields support "dot-notation" for relationships, e.g.
 	 * a entry called "Team.Name" will search through the names of
 	 * a "Team" relationship.
@@ -86,24 +86,24 @@ class GridFieldAddExistingAutocompleter
 		$this->targetFragment = $targetFragment;
 		$this->searchFields = (array)$searchFields;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param GridField $gridField
 	 * @return string - HTML
 	 */
 	public function getHTMLFragments($gridField) {
 		$dataClass = $gridField->getList()->dataClass();
-		
+
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();
 
 		$searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"));
-		
+
 		$searchField->setAttribute('data-search-url', Controller::join_links($gridField->Link('search')));
 		$searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
 		$searchField->addExtraClass('relation-search no-change-track');
-		
+
 		$findAction = new GridField_FormAction($gridField, 'gridfield_relationfind',
 			_t('GridField.Find', "Find"), 'find', 'find');
 		$findAction->setAttribute('data-icon', 'relationfind');
@@ -116,16 +116,16 @@ class GridFieldAddExistingAutocompleter
 		if(!is_int($gridField->State->GridFieldAddRelation(null))) {
 			$addAction->setReadonly(true);
 		}
-		
+
 		$forTemplate->Fields->push($searchField);
 		$forTemplate->Fields->push($findAction);
 		$forTemplate->Fields->push($addAction);
-		
+
 		return array(
 			$this->targetFragment => $forTemplate->renderWith($this->itemClass)
 		);
 	}
-	
+
 	/**
 	 *
 	 * @param GridField $gridField
@@ -137,10 +137,10 @@ class GridFieldAddExistingAutocompleter
 
 	/**
 	 * Manipulate the state to add a new relation
-	 * 
+	 *
 	 * @param GridField $gridField
 	 * @param string $actionName Action identifier, see {@link getActions()}.
-	 * @param array $arguments Arguments relevant for this 
+	 * @param array $arguments Arguments relevant for this
 	 * @param array $data All form data
 	 */
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
@@ -152,13 +152,13 @@ class GridFieldAddExistingAutocompleter
 				break;
 		}
 	}
-	
+
 	/**
 	 * If an object ID is set, add the object to the list
 	 *
 	 * @param GridField $gridField
 	 * @param SS_List $dataList
-	 * @return SS_List 
+	 * @return SS_List
 	 */
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
 		$objectID = $gridField->State->GridFieldAddRelation(null);
@@ -172,7 +172,7 @@ class GridFieldAddExistingAutocompleter
 		$gridField->State->GridFieldAddRelation = null;
 		return $dataList;
 	}
-	
+
 	/**
 	 *
 	 * @param GridField $gridField
@@ -183,17 +183,17 @@ class GridFieldAddExistingAutocompleter
 			'search' => 'doSearch',
 		);
 	}
-	
+
 	/**
 	 * Returns a json array of a search results that can be used by for example Jquery.ui.autosuggestion
 	 *
 	 * @param GridField $gridField
-	 * @param SS_HTTPRequest $request 
+	 * @param SS_HTTPRequest $request
 	 */
 	public function doSearch($gridField, $request) {
 		$dataClass = $gridField->getList()->dataClass();
 		$allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
-		
+
 		$searchFields = ($this->getSearchFields())
 			? $this->getSearchFields()
 			: $this->scaffoldSearchFields($dataClass);
@@ -268,7 +268,7 @@ class GridFieldAddExistingAutocompleter
 	 * Detect searchable fields and searchable relations.
 	 * Falls back to {@link DataObject->summaryFields()} if
 	 * no custom search fields are defined.
-	 * 
+	 *
 	 * @param  String the class name
 	 * @return Array|null names of the searchable fields
 	 */
@@ -324,8 +324,8 @@ class GridFieldAddExistingAutocompleter
 			}
 			if($labels) {
 				return _t(
-					'GridField.PlaceHolderWithLabels', 
-					'Find {type} by {name}',  
+					'GridField.PlaceHolderWithLabels',
+					'Find {type} by {name}',
 					array('type' => singleton($dataClass)->plural_name(), 'name' => implode(', ', $labels))
 				);
 			} else {

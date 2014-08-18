@@ -7,17 +7,17 @@
  * @subpackage model
  */
 class ManyManyList extends RelationList {
-	
+
 	/**
 	 * @var string $joinTable
 	 */
 	protected $joinTable;
-	
+
 	/**
 	 * @var string $localKey
 	 */
 	protected $localKey;
-	
+
 	/**
 	 * @var string $foreignKey
 	 */
@@ -35,20 +35,20 @@ class ManyManyList extends RelationList {
 
 	/**
 	 * Create a new ManyManyList object.
-	 * 
+	 *
 	 * A ManyManyList object represents a list of {@link DataObject} records
 	 * that correspond to a many-many relationship.
-	 * 
+	 *
 	 * Generation of the appropriate record set is left up to the caller, using
 	 * the normal {@link DataList} methods. Addition arguments are used to
 	 * support {@@link add()} and {@link remove()} methods.
-	 * 
+	 *
 	 * @param string $dataClass The class of the DataObjects that this will list.
 	 * @param string $joinTable The name of the table whose entries define the content of this many_many relation.
 	 * @param string $localKey The key in the join table that maps to the dataClass' PK.
 	 * @param string $foreignKey The key in the join table that maps to joined class' PK.
 	 * @param string $extraFields A map of field => fieldtype of extra fields on the join table.
-	 * 
+	 *
 	 * @example new ManyManyList('Group','Group_Members', 'GroupID', 'MemberID');
 	 */
 	public function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
@@ -168,7 +168,7 @@ class ManyManyList extends RelationList {
 			return array($key => $id);
 		}
 	}
-	
+
 	/**
 	 * Return a filter expression for the join table when writing to the join table
 	 *
@@ -187,7 +187,7 @@ class ManyManyList extends RelationList {
 	/**
 	 * Add an item to this many_many relationship
 	 * Does so by adding an entry to the joinTable.
-	 * 
+	 *
 	 * @param mixed $item
 	 * @param array $extraFields A map of additional columns to insert into the joinTable.
 	 * Column names should be ANSI quoted.
@@ -195,7 +195,7 @@ class ManyManyList extends RelationList {
 	public function add($item, $extraFields = array()) {
 		// Ensure nulls or empty strings are correctly treated as empty arrays
 		if(empty($extraFields)) $extraFields = array();
-		
+
 		// Determine ID of new record
 		if(is_numeric($item)) {
 			$itemID = $item;
@@ -227,9 +227,9 @@ class ManyManyList extends RelationList {
 				));
 				$hasExisting = ($query->count() > 0);
 			} else {
-				$hasExisting = false;	
+				$hasExisting = false;
 			}
-			
+
 			$manipulation = array();
 			if($hasExisting) {
 				$manipulation[$this->joinTable]['command'] = 'update';
@@ -284,7 +284,7 @@ class ManyManyList extends RelationList {
 		if(!($item instanceof $this->dataClass)) {
 			throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
 		}
-		
+
 		return $this->removeByID($item->ID);
 	}
 
@@ -306,7 +306,7 @@ class ManyManyList extends RelationList {
 		} else {
 			user_error("Can't call ManyManyList::remove() until a foreign ID is set", E_USER_WARNING);
 		}
-		
+
 		$query->addWhere(array("\"{$this->localKey}\"" => $itemID));
 		$query->execute();
 	}
@@ -349,7 +349,7 @@ class ManyManyList extends RelationList {
 	/**
 	 * Find the extra field data for a single row of the relationship join
 	 * table, given the known child ID.
-	 *	
+	 *
 	 * @param string $componentName The name of the component
 	 * @param int $itemID The ID of the child for the relationship
 	 *
@@ -375,7 +375,7 @@ class ManyManyList extends RelationList {
 				$result[$fieldName] = $query->execute()->value();
 			}
 		}
-		
+
 		return $result;
 	}
 

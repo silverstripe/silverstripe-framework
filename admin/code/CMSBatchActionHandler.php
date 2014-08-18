@@ -2,15 +2,15 @@
 
 /**
  * Special request handler for admin/batchaction
- *  
+ *
  * @package framework
  * @subpackage admin
  */
 class CMSBatchActionHandler extends RequestHandler {
-	
+
 	/** @config */
 	private static $batch_actions = array();
-	
+
 	private static $url_handlers = array(
 		'$BatchAction/applicablepages' => 'handleApplicablePages',
 		'$BatchAction/confirmation' => 'handleConfirmation',
@@ -22,39 +22,39 @@ class CMSBatchActionHandler extends RequestHandler {
 		'handleApplicablePages',
 		'handleConfirmation',
 	);
-	
+
 	protected $parentController;
-	
+
 	/**
 	 * @var String
 	 */
 	protected $urlSegment;
-	
+
 	/**
 	 * @var String $recordClass The classname that should be affected
 	 * by any batch changes. Needs to be set in the actual {@link CMSBatchAction}
 	 * implementations as well.
 	 */
 	protected $recordClass = 'SiteTree';
-	
+
 	/**
 	 * Register a new batch action.  Each batch action needs to be represented by a subclass
 	 * of {@link CMSBatchAction}.
-	 * 
+	 *
 	 * @param $urlSegment The URL Segment of the batch action - the URL used to process this
 	 * action will be admin/batchactions/(urlSegment)
 	 * @param $batchActionClass The name of the CMSBatchAction subclass to register
 	 */
 	public static function register($urlSegment, $batchActionClass, $recordClass = 'SiteTree') {
 		if(is_subclass_of($batchActionClass, 'CMSBatchAction')) {
-			Config::inst()->update('CMSBatchActionHandler', 'batch_actions', 
+			Config::inst()->update('CMSBatchActionHandler', 'batch_actions',
 				array($urlSegment => array('class' => $batchActionClass, 'recordClass' => $recordClass))
 			);
 		} else {
 			user_error("CMSBatchActionHandler::register() - Bad class '$batchActionClass'", E_USER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * @param string $parentController
 	 * @param string $urlSegment
@@ -64,10 +64,10 @@ class CMSBatchActionHandler extends RequestHandler {
 		$this->parentController = $parentController;
 		$this->urlSegment = $urlSegment;
 		if($recordClass) $this->recordClass = $recordClass;
-		
+
 		parent::__construct();
 	}
-	
+
 	public function Link() {
 		return Controller::join_links($this->parentController->Link(), $this->urlSegment);
 	}
@@ -78,30 +78,30 @@ class CMSBatchActionHandler extends RequestHandler {
 			$this->parentController->redirectBack();
 			return;
 		}
-		
+
 		// Protect against CSRF on destructive action
 		if(!SecurityToken::inst()->checkRequest($request)) return $this->httpError(400);
 
 		$actions = $this->batchActions();
 		$actionClass = $actions[$request->param('BatchAction')]['class'];
 		$actionHandler = new $actionClass();
-		
+
 		// Sanitise ID list and query the database for apges
 		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
 		foreach($ids as $k => $v) if(!is_numeric($v)) unset($ids[$k]);
-		
+
 		if($ids) {
 			if(class_exists('Translatable') && SiteTree::has_extension('Translatable')) {
 				Translatable::disable_locale_filter();
 			}
-			
+
 			$recordClass = $this->recordClass;
 			$pages = DataObject::get($recordClass)->byIDs($ids);
-			
+
 			if(class_exists('Translatable') && SiteTree::has_extension('Translatable')) {
 				Translatable::enable_locale_filter();
 			}
-			
+
 			$record_class = $this->recordClass;
 			if($record_class::has_extension('Versioned')) {
 				// If we didn't query all the pages, then find the rest on the live site
@@ -124,9 +124,9 @@ class CMSBatchActionHandler extends RequestHandler {
 		} else {
 			$pages = new ArrayList();
 		}
-		
+
 		return $actionHandler->run($pages);
-	} 
+	}
 
 	public function handleApplicablePages($request) {
 		// Find the action handler
@@ -138,18 +138,18 @@ class CMSBatchActionHandler extends RequestHandler {
 		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
 		foreach($ids as $k => $id) $ids[$k] = (int)$id;
 		$ids = array_filter($ids);
-		
+
 		if($actionHandler->hasMethod('applicablePages')) {
 			$applicableIDs = $actionHandler->applicablePages($ids);
 		} else {
 			$applicableIDs = $ids;
 		}
-		
+
 		$response = new SS_HTTPResponse(json_encode($applicableIDs));
 		$response->addHeader("Content-type", "application/json");
 		return $response;
 	}
-	
+
 	public function handleConfirmation($request) {
 		// Find the action handler
 		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
@@ -160,17 +160,17 @@ class CMSBatchActionHandler extends RequestHandler {
 		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
 		foreach($ids as $k => $id) $ids[$k] = (int)$id;
 		$ids = array_filter($ids);
-		
+
 		if($actionHandler->hasMethod('confirmationDialog')) {
 			$response = new SS_HTTPResponse(json_encode($actionHandler->confirmationDialog($ids)));
 		} else {
 			$response = new SS_HTTPResponse(json_encode(array('alert' => false)));
 		}
-		
+
 		$response->addHeader("Content-type", "application/json");
 		return $response;
 	}
-	
+
 	/**
 	 * Return a SS_List of ArrayData objects containing the following pieces of info
 	 * about each batch action:
@@ -180,7 +180,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	public function batchActionList() {
 		$actions = $this->batchActions();
 		$actionList = new ArrayList();
-		
+
 		foreach($actions as $urlSegment => $action) {
 			$actionClass = $action['class'];
 			$actionObj = new $actionClass();
@@ -192,14 +192,14 @@ class CMSBatchActionHandler extends RequestHandler {
 				$actionList->push($actionDef);
 			}
 		}
-		
+
 		return $actionList;
 	}
-	
+
 	/**
 	 * Get all registered actions through the static defaults set by {@link register()}.
 	 * Filters for the currently set {@link recordClass}.
-	 * 
+	 *
 	 * @return array See {@link register()} for the returned format.
 	 */
 	public function batchActions() {
@@ -207,7 +207,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		if($actions) foreach($actions as $action) {
 			if($action['recordClass'] != $this->recordClass) unset($action);
 		}
-		
+
 		return $actions;
 	}
 

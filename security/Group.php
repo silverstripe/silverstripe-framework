@@ -1,7 +1,7 @@
 <?php
 /**
  * A security group.
- * 
+ *
  * @package framework
  * @subpackage security
  *
@@ -20,7 +20,7 @@
  * @method ManyManyList Roles() List of PermissionRoles
  */
 class Group extends DataObject {
-	
+
 	private static $db = array(
 		"Title" => "Varchar(255)",
 		"Description" => "Text",
@@ -29,31 +29,31 @@ class Group extends DataObject {
 		"Sort" => "Int",
 		"HtmlEditorConfig" => "Text"
 	);
-	
+
 	private static $has_one = array(
 		"Parent" => "Group",
 	);
-	
+
 	private static $has_many = array(
 		"Permissions" => "Permission",
 		"Groups" => "Group"
 	);
-	
+
 	private static $many_many = array(
 		"Members" => "Member",
 		"Roles" => "PermissionRole",
 	);
-	
+
 	private static $extensions = array(
 		"Hierarchy",
 	);
-	
+
 	public function populateDefaults() {
 		parent::populateDefaults();
-		
+
 		if(!$this->Title) $this->Title = _t('SecurityAdmin.NEWGROUP',"New Group");
 	}
-	
+
 	public function getAllChildren() {
 		$doSet = new ArrayList();
 
@@ -62,10 +62,10 @@ class Group extends DataObject {
 			$doSet->push($child);
 			$doSet->merge($child->getAllChildren());
 		}
-		
+
 		return $doSet;
 	}
-	
+
 	/**
 	 * Caution: Only call on instances, not through a singleton.
 	 * The "root group" fields will be created through {@link SecurityAdmin->EditForm()}.
@@ -79,8 +79,8 @@ class Group extends DataObject {
 			new TabSet("Root",
 				new Tab('Members', _t('SecurityAdmin.MEMBERS', 'Members'),
 					new TextField("Title", $this->fieldLabel('Title')),
-					$parentidfield = DropdownField::create(						'ParentID', 
-						$this->fieldLabel('Parent'), 
+					$parentidfield = DropdownField::create(						'ParentID',
+						$this->fieldLabel('Parent'),
 						Group::get()->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
 					)->setEmptyString(' '),
 					new TextareaField('Description', $this->fieldLabel('Description'))
@@ -97,7 +97,7 @@ class Group extends DataObject {
 				)
 			)
 		);
-		
+
 		$parentidfield->setDescription(
 			_t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles')
 		);
@@ -138,7 +138,7 @@ class Group extends DataObject {
 			//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
 			$fields->addFieldToTab('Root.Members', $memberList);
 		}
-		
+
 		// Only add a dropdown for HTML editor configurations if more than one is available.
 		// Otherwise Member->getHtmlEditorConfigForCMS() will default to the 'cms' configuration.
 		$editorConfigMap = HtmlEditorConfig::get_available_configs_map();
@@ -159,17 +159,17 @@ class Group extends DataObject {
 
 		// Only show the "Roles" tab if permissions are granted to edit them,
 		// and at least one role exists
-		if(Permission::check('APPLY_ROLES') && DataObject::get('PermissionRole')) { 
+		if(Permission::check('APPLY_ROLES') && DataObject::get('PermissionRole')) {
 			$fields->findOrMakeTab('Root.Roles', _t('SecurityAdmin.ROLES', 'Roles'));
-			$fields->addFieldToTab('Root.Roles', 
-				new LiteralField( 
-					"",  
-					"<p>" .  
+			$fields->addFieldToTab('Root.Roles',
+				new LiteralField(
+					"",
+					"<p>" .
 					_t(
-						'SecurityAdmin.ROLESDESCRIPTION', 
+						'SecurityAdmin.ROLESDESCRIPTION',
 						"Roles are predefined sets of permissions, and can be assigned to groups.<br />"
 						. "They are inherited from parent groups if required."
-					) . '<br />' . 
+					) . '<br />' .
 					sprintf(
 						'<a href="%s" class="add-role">%s</a>',
 						singleton('SecurityAdmin')->Link('show/root#Root_Roles'),
@@ -177,10 +177,10 @@ class Group extends DataObject {
 						// but tabstrip.js doesn't display tabs when directly adressed through a URL pragma
 						_t('Group.RolesAddEditLink', 'Manage roles')
 					) .
-					"</p>" 
-				) 
+					"</p>"
+				)
 			);
-			
+
 			// Add roles (and disable all checkboxes for inherited roles)
 			$allRoles = PermissionRole::get();
 			if(Permission::check('ADMIN')) {
@@ -205,24 +205,24 @@ class Group extends DataObject {
 					->setMultiple(true)
 					->setDefaultItems($groupRoleIDs)
 					->setAttribute('data-placeholder', _t('Group.AddRole', 'Add a role for this group'))
-					->setDisabledItems($inheritedRoleIDs);	
+					->setDisabledItems($inheritedRoleIDs);
 			if(!$allRoles->Count()) {
 				$rolesField->setAttribute('data-placeholder', _t('Group.NoRoles', 'No roles found'));
 			}
 			$fields->addFieldToTab('Root.Roles', $rolesField);
-		} 
-		
+		}
+
 		$fields->push($idField = new HiddenField("ID"));
-		
+
 		$this->extend('updateCMSFields', $fields);
-		
+
 		return $fields;
 	}
-	
+
 	/**
 	 *
 	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
-	 * 
+	 *
 	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
@@ -236,15 +236,15 @@ class Group extends DataObject {
 			$labels['Permissions'] = _t('Group.has_many_Permissions', 'Permissions', 'One group has many permissions');
 			$labels['Members'] = _t('Group.many_many_Members', 'Members', 'One group has many members');
 		}
-		
+
 		return $labels;
 	}
-	
+
 	/**
 	 * Get many-many relation to {@link Member},
 	 * including all members which are "inherited" from children groups of this record.
 	 * See {@link DirectMembers()} for retrieving members without any inheritance.
-	 * 
+	 *
 	 * @param String $filter
 	 * @param  String $sort
 	 * @param  String $join Deprecated, use leftJoin($table, $joinClause) instead
@@ -279,14 +279,14 @@ class Group extends DataObject {
 
 		return $result;
 	}
-	
+
 	/**
 	 * Return only the members directly added to this group
 	 */
 	public function DirectMembers() {
 		return $this->getManyManyComponents('Members');
 	}
-		
+
 	/**
 	 * Return a set of this record's "family" of IDs - the IDs of
 	 * this record and all its descendants.
@@ -295,18 +295,18 @@ class Group extends DataObject {
 	public function collateFamilyIDs() {
 		$familyIDs = array();
 		$chunkToAdd = array($this->ID);
-		
+
 		while($chunkToAdd) {
 			$familyIDs = array_merge($familyIDs,$chunkToAdd);
-			
+
 			// Get the children of *all* the groups identified in the previous chunk.
 			// This minimises the number of SQL queries necessary
 			$chunkToAdd = Group::get()->filter("ParentID", $chunkToAdd)->column('ID');
 		}
-		
+
 		return $familyIDs;
 	}
-	
+
 	/**
 	 * Returns an array of the IDs of this group and all its parents
 	 */
@@ -318,14 +318,14 @@ class Group extends DataObject {
 		}
 		return $items;
 	}
-	
+
 	/**
 	 * This isn't a decendant of SiteTree, but needs this in case
 	 * the group is "reorganised";
 	 */
 	public function cmsCleanup_parentChanged() {
 	}
-	
+
 	/**
 	 * Override this so groups are ordered in the CMS
 	 */
@@ -335,15 +335,15 @@ class Group extends DataObject {
 			->exclude("ID", $this->ID)
 			->sort('"Sort"');
 	}
-	
+
 	public function getTreeTitle() {
 		if($this->hasMethod('alternateTreeTitle')) return $this->alternateTreeTitle();
 		else return htmlspecialchars($this->Title, ENT_QUOTES);
 	}
-	
+
 	/**
 	 * Overloaded to ensure the code is always descent.
-	 * 
+	 *
 	 * @param string
 	 */
 	public function setCode($val){
@@ -354,7 +354,7 @@ class Group extends DataObject {
 		$result = parent::validate();
 
 		// Check if the new group hierarchy would add certain "privileged permissions",
-		// and require an admin to perform this change in case it does. 
+		// and require an admin to perform this change in case it does.
 		// This prevents "sub-admin" users with group editing permissions to increase their privileges.
 		if($this->Parent()->exists() && !Permission::check('ADMIN')) {
 			$inheritedCodes = Permission::get()
@@ -374,10 +374,10 @@ class Group extends DataObject {
 
 		return $result;
 	}
-	
+
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
-		
+
 		// Only set code property when the group has a custom title, and no code exists.
 		// The "Code" attribute is usually treated as a more permanent identifier than database IDs
 		// in custom application logic, so can't be changed after its first set.
@@ -403,17 +403,17 @@ class Group extends DataObject {
 	/**
 	 * Checks for permission-code CMS_ACCESS_SecurityAdmin.
 	 * If the group has ADMIN permissions, it requires the user to have ADMIN permissions as well.
-	 * 
+	 *
 	 * @param $member Member
 	 * @return boolean
 	 */
 	public function canEdit($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-		
+
 		// extended access checks
 		$results = $this->extend('canEdit', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
-		
+
 		if(
 			// either we have an ADMIN
 			(bool)Permission::checkMember($member, "ADMIN")
@@ -421,7 +421,7 @@ class Group extends DataObject {
 				// or a privileged CMS user and a group without ADMIN permissions.
 				// without this check, a user would be able to add himself to an administrators group
 				// with just access to the "Security" admin interface
-				Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin") && 
+				Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin") &&
 				!Permission::get()->filter(array('GroupID' => $this->ID, 'Code' => 'ADMIN'))->exists()
 			)
 		) {
@@ -430,33 +430,33 @@ class Group extends DataObject {
 
 		return false;
 	}
-	
+
 	/**
 	 * Checks for permission-code CMS_ACCESS_SecurityAdmin.
-	 * 
+	 *
 	 * @param $member Member
 	 * @return boolean
 	 */
 	public function canView($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-		
+
 		// extended access checks
 		$results = $this->extend('canView', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
-		
+
 		// user needs access to CMS_ACCESS_SecurityAdmin
 		if(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin")) return true;
-		
+
 		return false;
 	}
-	
+
 	public function canDelete($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-		
+
 		// extended access checks
 		$results = $this->extend('canDelete', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
-		
+
 		return $this->canEdit($member);
 	}
 
@@ -469,16 +469,16 @@ class Group extends DataObject {
 		$extInstance->setOwner($this);
 		$children = $extInstance->AllChildrenIncludingDeleted();
 		$extInstance->clearOwner();
-		
+
 		$filteredChildren = new ArrayList();
-		
+
 		if($children) foreach($children as $child) {
 			if($child->canView()) $filteredChildren->push($child);
 		}
-		
+
 		return $filteredChildren;
 	}
-	
+
 	/**
 	 * Add default records to database.
 	 *
@@ -487,7 +487,7 @@ class Group extends DataObject {
 	 */
 	public function requireDefaultRecords() {
 		parent::requireDefaultRecords();
-		
+
 		// Add default author group if no other group exists
 		$allGroups = DataObject::get('Group');
 		if(!$allGroups->count()) {
@@ -501,7 +501,7 @@ class Group extends DataObject {
 			Permission::grant($authorGroup->ID, 'CMS_ACCESS_ReportAdmin');
 			Permission::grant($authorGroup->ID, 'SITETREE_REORGANISE');
 		}
-	
+
 		// Add default admin group if none with permission code ADMIN exists
 		$adminGroups = Permission::get_groups_by_permission('ADMIN');
 		if(!$adminGroups->count()) {
@@ -511,9 +511,9 @@ class Group extends DataObject {
 			$adminGroup->Sort = 0;
 			$adminGroup->write();
 			Permission::grant($adminGroup->ID, 'ADMIN');
-		}		
-		
+		}
+
 		// Members are populated through Member->requireDefaultRecords()
 	}
-	
+
 }

@@ -15,7 +15,7 @@ class BehatFixtureFactory extends \FixtureFactory {
 					$data[$fieldName] = $identifier;
 					break;
 				}
-			}	
+			}
 		}
 
 		return parent::createObject($name, $identifier, $data);

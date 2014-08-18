@@ -8,16 +8,16 @@
  * curl -d "Name=This is a new record" http://host/api/v1/(DataObject)
  * curl -X PUT -d "Name=This is an updated record" http://host/api/v1/(DataObject)/1
  * </code>
- * 
+ *
  * @todo Format response form encoded as well - currently uses XMLDataFormatter
- * 
+ *
  * @author Cam Spiers <camspiers at gmail dot com>
- * 
+ *
  * @package framework
  * @subpackage formatters
  */
 class FormEncodedDataFormatter extends XMLDataFormatter {
-	
+
 	public function supportedExtensions() {
 		return array(
 		);
@@ -28,7 +28,7 @@ class FormEncodedDataFormatter extends XMLDataFormatter {
 			'application/x-www-form-urlencoded'
 		);
 	}
-	
+
 	public function convertStringToArray($strData) {
 		$postArray = array();
 		parse_str($strData, $postArray);
@@ -36,5 +36,5 @@ class FormEncodedDataFormatter extends XMLDataFormatter {
 		//TODO: It would be nice to implement this function in Convert.php
 		//return Convert::querystr2array($strData);
 	}
-	
+
 }

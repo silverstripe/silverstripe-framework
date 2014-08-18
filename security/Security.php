@@ -5,15 +5,15 @@
  * @subpackage security
  */
 class Security extends Controller implements TemplateGlobalProvider {
-	
-	private static $allowed_actions = array( 
-		'index', 
-		'login', 
-		'logout', 
-		'basicauthlogin', 
-		'lostpassword', 
-		'passwordsent', 
-		'changepassword', 
+
+	private static $allowed_actions = array(
+		'index',
+		'login',
+		'logout',
+		'basicauthlogin',
+		'lostpassword',
+		'passwordsent',
+		'changepassword',
 		'ping',
 		'LoginForm',
 		'ChangePasswordForm',
@@ -22,7 +22,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 	/**
 	 * Default user name. Only used in dev-mode by {@link setDefaultAdmin()}
-	 * 
+	 *
 	 * @var string
 	 * @see setDefaultAdmin()
 	 */
@@ -30,7 +30,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 	/**
 	 * Default password. Only used in dev-mode by {@link setDefaultAdmin()}
-	 * 
+	 *
 	 * @var string
 	 * @see setDefaultAdmin()
 	 */
@@ -55,23 +55,23 @@ class Security extends Controller implements TemplateGlobalProvider {
 	private static $password_encryption_algorithm = 'blowfish';
 
 	/**
-	 * Showing "Remember me"-checkbox 
-	 * on loginform, and saving encrypted credentials to a cookie. 
+	 * Showing "Remember me"-checkbox
+	 * on loginform, and saving encrypted credentials to a cookie.
  	 *
  	 * @config
-	 * @var bool 
-	 */ 
+	 * @var bool
+	 */
 	private static $autologin_enabled = true;
-	
+
 	/**
 	 * Determine if login username may be remembered between login sessions
 	 * If set to false this will disable autocomplete and prevent username persisting in the session
-	 * 
+	 *
 	 * @config
 	 * @var bool
 	 */
 	private static $remember_username = true;
-	
+
 	/**
 	 * Location of word list to use for generating passwords
 	 *
@@ -79,9 +79,9 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @var string
 	 */
 	protected static $word_list = './wordlist.txt';
-	
+
 	private static $template = 'BlankPage';
-	
+
 	/**
 	 * Template thats used to render the pages.
 	 *
@@ -89,7 +89,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @config
 	 */
 	private static $template_main = 'Page';
-	
+
 	/**
 	 * Default message set used in permission failures.
 	 *
@@ -133,7 +133,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		Deprecation::notice('3.2', 'Use the "Security.word_list" config setting instead');
 		return self::config()->word_list;
 	}
-	
+
 	/**
 	 * Enable or disable recording of login attempts
 	 * through the {@link LoginRecord} object.
@@ -142,13 +142,13 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @var boolean $login_recording
 	 */
 	private static $login_recording = false;
-	
+
 	/**
 	 * @var boolean If set to TRUE or FALSE, {@link database_is_ready()}
 	 * will always return FALSE. Used for unit testing.
 	 */
 	static $force_database_is_ready = null;
-	
+
 	/**
 	 * When the database has once been verified as ready, it will not do the
 	 * checks again.
@@ -167,7 +167,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		Deprecation::notice('3.2', 'Use the "Security.word_list" config setting instead');
 		self::config()->word_list = $wordListFile;
 	}
-	
+
 	/**
 	 * Set the default message set used in permissions failures.
 	 *
@@ -209,9 +209,9 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 */
 	public static function permissionFailure($controller = null, $messageSet = null) {
 		self::set_ignore_disallowed_actions(true);
-		
+
 		if(!$controller) $controller = Controller::curr();
-		
+
 		if(Director::is_ajax()) {
 			$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
 			$response->setStatusCode(403);
@@ -228,15 +228,15 @@ class Security extends Controller implements TemplateGlobalProvider {
 				} else {
 					$messageSet = array(
 						'default' => _t(
-							'Security.NOTEPAGESECURED', 
+							'Security.NOTEPAGESECURED',
 							"That page is secured. Enter your credentials below and we will send "
 								. "you right along."
 						),
 						'alreadyLoggedIn' => _t(
-							'Security.ALREADYLOGGEDIN', 
+							'Security.ALREADYLOGGEDIN',
 							"You don't have access to this page.  If you have another account that "
 								. "can access that page, you can log in again below.",
-							
+
 							"%s will be replaced with a link to log in."
 						),
 						'logInAgain' => _t(
@@ -328,7 +328,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 				return call_user_func(array($authenticator, 'get_login_form'), $this);
 			}
 		}
-		
+
 		user_error('Passed invalid authentication method', E_USER_ERROR);
 	}
 
@@ -476,12 +476,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 			$this->getTemplate('login')
 		);
 	}
-	
+
 	public function basicauthlogin() {
 		$member = BasicAuth::requireLogin("SilverStripe login", 'ADMIN');
 		$member->LogIn();
 	}
-	
+
 	/**
 	 * Show the "lost password" page
 	 *
@@ -504,16 +504,16 @@ class Security extends Controller implements TemplateGlobalProvider {
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
 		$customisedController = $controller->customise(array(
-			'Content' => 
-				'<p>' . 
+			'Content' =>
+				'<p>' .
 				_t(
-					'Security.NOTERESETPASSWORD', 
+					'Security.NOTERESETPASSWORD',
 					'Enter your e-mail address and we will send you a link with which you can reset your password'
-				) . 
+				) .
 				'</p>',
 			'Form' => $this->LostPasswordForm(),
 		));
-		
+
 		//Controller::$currentController = $controller;
 		return $customisedController->renderWith(
 			$this->getTemplate('lostpassword')
@@ -547,7 +547,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * Show the "password sent" page, after a user has requested
 	 * to reset their password.
 	 *
-	 * @param SS_HTTPRequest $request The SS_HTTPRequest for this action. 
+	 * @param SS_HTTPRequest $request The SS_HTTPRequest for this action.
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
@@ -573,14 +573,14 @@ class Security extends Controller implements TemplateGlobalProvider {
 				array('email' => $email)),
 			'Content' =>
 				"<p>"
-				. _t('Security.PASSWORDSENTTEXT', 
+				. _t('Security.PASSWORDSENTTEXT',
 					"Thank you! A reset link has been sent to '{email}', provided an account exists for this email"
-					. " address.", 
+					. " address.",
 					array('email' => $email))
 				. "</p>",
 			'Email' => $email
 		));
-		
+
 		//Controller::$currentController = $controller;
 		return $customisedController->renderWith(
 			$this->getTemplate('passwordsent')
@@ -604,7 +604,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		$selfController = new $selfControllerClass();
 		return $selfController->Link('changepassword') . "?m={$member->ID}&t=$autologinToken";
 	}
-	
+
 	/**
 	 * Show the "change password" page.
 	 * This page can either be called directly by logged-in users
@@ -612,7 +612,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * or through a link emailed through {@link lostpassword()}.
 	 * In this case no old password is required, authentication is ensured
 	 * through the Member.AutoLoginHash property.
-	 * 
+	 *
 	 * @see ChangePasswordForm
 	 *
 	 * @return string Returns the "change password" page as HTML code.
@@ -647,16 +647,16 @@ class Security extends Controller implements TemplateGlobalProvider {
 			if ($curMember = Member::currentUser()) {
 				$curMember->logOut();
 			}
-			
+
 			// Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
 			Session::set('AutoLoginHash', $member->encryptWithUserSettings($_REQUEST['t']));
-			
+
 			return $this->redirect($this->Link('changepassword'));
 		} elseif(Session::get('AutoLoginHash')) {
 			// Subsequent request after the "first load with hash" (see previous if clause).
 			$customisedController = $controller->customise(array(
 				'Content' =>
-					'<p>' . 
+					'<p>' .
 					_t('Security.ENTERNEWPASSWORD', 'Please enter a new password.') .
 					'</p>',
 				'Form' => $this->ChangePasswordForm(),
@@ -664,7 +664,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		} elseif(Member::currentUser()) {
 			// Logged in user requested a password change form.
 			$customisedController = $controller->customise(array(
-				'Content' => '<p>' 
+				'Content' => '<p>'
 					. _t('Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>',
 				'Form' => $this->ChangePasswordForm()));
 
@@ -695,7 +695,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 			$this->getTemplate('changepassword')
 		);
 	}
-	
+
 	/**
 	 * Factory method for the lost password form
 	 *
@@ -732,16 +732,16 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 	/**
 	 * Return an existing member with administrator privileges, or create one of necessary.
-	 * 
+	 *
 	 * Will create a default 'Administrators' group if no group is found
 	 * with an ADMIN permission. Will create a new 'Admin' member with administrative permissions
-	 * if no existing Member with these permissions is found. 
-	 * 
+	 * if no existing Member with these permissions is found.
+	 *
 	 * Important: Any newly created administrator accounts will NOT have valid
 	 * login credentials (Email/Password properties), which means they can't be used for login
 	 * purposes outside of any default credentials set through {@link Security::setDefaultAdmin()}.
-	 * 
-	 * @return Member 
+	 *
+	 * @return Member
 	 */
 	public static function findAnAdministrator() {
 		// coupling to subsites module
@@ -759,11 +759,11 @@ class Security extends Controller implements TemplateGlobalProvider {
 			->sort('"Group"."ID"')
 			->innerJoin("Permission", '"Group"."ID" = "Permission"."GroupID"')
 			->First();
-		
+
 		if(is_callable('Subsite::changeSubsite')) {
 			Subsite::changeSubsite($origSubsite);
 		}
-		
+
 		if ($adminGroup) {
 			$member = $adminGroup->Members()->First();
 		}
@@ -771,7 +771,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		if(!$adminGroup) {
 			singleton('Group')->requireDefaultRecords();
 		}
-		
+
 		if(!$member) {
 			singleton('Member')->requireDefaultRecords();
 			$member = Permission::get_members_by_permission('ADMIN')->First();
@@ -783,7 +783,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 	/**
 	 * Set a default admin in dev-mode
-	 * 
+	 *
 	 * This will set a static default-admin which is not existing
 	 * as a database-record. By this workaround we can test pages in dev-mode
 	 * with a unified login. Submitted login-credentials are first checked
@@ -801,13 +801,13 @@ class Security extends Controller implements TemplateGlobalProvider {
 		self::$default_username = $username;
 		self::$default_password = $password;
 	}
-	
+
 	/**
 	 * Checks if the passed credentials are matching the default-admin.
 	 * Compares cleartext-password set through Security::setDefaultAdmin().
-	 * 
+	 *
 	 * @param string $username
-	 * @param string $password 
+	 * @param string $password
 	 * @return bool
 	 */
 	public static function check_default_admin($username, $password) {
@@ -817,12 +817,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 			&& self::has_default_admin()
 		);
 	}
-	
+
 	/**
 	 * Check that the default admin account has been set.
 	 */
 	public static function has_default_admin() {
-		return !empty(self::$default_username) && !empty(self::$default_password);		
+		return !empty(self::$default_username) && !empty(self::$default_password);
 	}
 
 	/**
@@ -863,10 +863,10 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 */
 	public static function set_password_encryption_algorithm($algorithm) {
 		Deprecation::notice('3.2', 'Use the "Security.password_encryption_algorithm" config setting instead');
-		
+
 		self::config()->password_encryption_algorithm = $algorithm;
 	}
-	
+
 	/**
 	 * @deprecated 3.2 Use the "Security.password_encryption_algorithm" config setting instead
 	 * @return String
@@ -893,8 +893,8 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 *  password and the used salt in the form:
 	 * <code>
 	 * 	array(
-	 * 	'password' => string, 
-	 * 	'salt' => string, 
+	 * 	'password' => string,
+	 * 	'salt' => string,
 	 * 	'algorithm' => string,
 	 * 	'encryptor' => PasswordEncryptor instance
 	 * 	)
@@ -906,12 +906,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 	public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null) {
 		// Fall back to the default encryption algorithm
 		if(!$algorithm) $algorithm = self::config()->password_encryption_algorithm;
-		
+
 		$e = PasswordEncryptor::create_for_algorithm($algorithm);
 
 		// New salts will only need to be generated if the password is hashed for the first time
 		$salt = ($salt) ? $salt : $e->salt($password);
-		
+
 		return array(
 			'password' => $e->encrypt($password, $salt, $member),
 			'salt' => $salt,
@@ -919,11 +919,11 @@ class Security extends Controller implements TemplateGlobalProvider {
 			'encryptor' => $e
 		);
 	}
-	
+
 	/**
 	 * Checks the database is in a state to perform security checks.
 	 * See {@link DatabaseAdmin->init()} for more information.
-	 * 
+	 *
 	 * @return bool
 	 */
 	public static function database_is_ready() {
@@ -931,11 +931,11 @@ class Security extends Controller implements TemplateGlobalProvider {
 		if(self::$force_database_is_ready !== NULL) return self::$force_database_is_ready;
 
 		if(self::$database_is_ready) return self::$database_is_ready;
-		
+
 		$requiredTables = ClassInfo::dataClassesFor('Member');
 		$requiredTables[] = 'Group';
 		$requiredTables[] = 'Permission';
-		
+
 		foreach($requiredTables as $table) {
 			// Skip test classes, as not all test classes are scaffolded at once
 			if(is_subclass_of($table, 'TestOnly')) continue;
@@ -946,21 +946,21 @@ class Security extends Controller implements TemplateGlobalProvider {
 			// HACK: DataExtensions aren't applied until a class is instantiated for
 			// the first time, so create an instance here.
 			singleton($table);
-		
+
 			// if any of the tables don't have all fields mapped as table columns
 			$dbFields = DB::field_list($table);
 			if(!$dbFields) return false;
-			
+
 			$objFields = DataObject::database_fields($table, false);
 			$missingFields = array_diff_key($objFields, $dbFields);
-			
+
 			if($missingFields) return false;
 		}
 		self::$database_is_ready = true;
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Enable or disable recording of login attempts
 	 * through the {@link LoginRecord} object.
@@ -972,7 +972,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		Deprecation::notice('3.2', 'Use the "Security.login_recording" config setting instead');
 		self::$login_recording = (bool)$bool;
 	}
-	
+
 	/**
 	 * @deprecated 3.2 Use the "Security.login_recording" config setting instead
 	 * @return boolean
@@ -981,7 +981,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		Deprecation::notice('3.2', 'Use the "Security.login_recording" config setting instead');
 		return self::$login_recording;
 	}
-	
+
 	/**
 	 * @config
 	 * @var string Set the default login dest
@@ -990,7 +990,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * By default, this is set to the homepage.
 	 */
 	private static $default_login_dest = "";
-	
+
 	/**
 	 * @deprecated 3.2 Use the "Security.default_login_dest" config setting instead
 	 */
@@ -1010,7 +1010,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	}
 
 	protected static $ignore_disallowed_actions = false;
-	
+
 	/**
 	 * Set to true to ignore access to disallowed actions, rather than returning permission failure
 	 * Note that this is just a flag that other code needs to check with Security::ignore_disallowed_actions()
@@ -1038,7 +1038,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 	/**
 	 * Get the URL of the log-in page.
-	 * 
+	 *
 	 * To update the login url use the "Security.login_url" config setting.
 	 *
 	 * @return string
@@ -1050,7 +1050,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 	/**
 	 * Get the URL of the logout page.
-	 * 
+	 *
 	 * To update the logout url use the "Security.logout_url" config setting.
 	 *
 	 * @return string

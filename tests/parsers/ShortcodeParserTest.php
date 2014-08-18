@@ -4,17 +4,17 @@
  * @subpackage tests
  */
 class ShortcodeParserTest extends SapphireTest {
-	
+
 	protected $arguments, $contents, $tagName, $parser;
 	protected $extra = array();
-	
+
 	public function setUp() {
 		ShortcodeParser::get('test')->register('test_shortcode', array($this, 'shortcodeSaver'));
 		$this->parser = ShortcodeParser::get('test');
-		
+
 		parent::setUp();
 	}
-	
+
 	/**
 	 * Tests that valid short codes that have not been registered are not replaced.
 	 */
@@ -37,7 +37,7 @@ class ShortcodeParserTest extends SapphireTest {
 			'<strong class="warning">[not_shortcode]</strong>',
 			$this->parser->parse('[not_shortcode]')
 		);
-		
+
 		ShortcodeParser::$error_behavior = ShortcodeParser::LEAVE;
 
 		$this->assertEquals('[not_shortcode]',
@@ -56,66 +56,66 @@ class ShortcodeParserTest extends SapphireTest {
 			$this->parser->parse('<img class="[not_shortcode]">')
 		);
 	}
-	
+
 	public function testSimpleTag() {
 		$tests = array(
-			'[test_shortcode]', 
+			'[test_shortcode]',
 			'[test_shortcode ]', '[test_shortcode,]', '[test_shortcode, ]'.
 			'[test_shortcode/]', '[test_shortcode /]', '[test_shortcode,/]', '[test_shortcode, /]'
 		);
-		
+
 		foreach($tests as $test) {
 			$this->parser->parse($test);
-			
+
 			$this->assertEquals(array(), $this->arguments, $test);
 			$this->assertEquals('', $this->contents, $test);
 			$this->assertEquals('test_shortcode', $this->tagName, $test);
 		}
 	}
-	
+
 	public function testOneArgument() {
 		$tests = array (
 			'[test_shortcode foo="bar"]', '[test_shortcode,foo="bar"]',
 			"[test_shortcode foo='bar']", "[test_shortcode,foo='bar']",
 			'[test_shortcode  foo  =  "bar"  /]', '[test_shortcode,  foo  =  "bar"  /]'
 		);
-		
+
 		foreach($tests as $test) {
 			$this->parser->parse($test);
-			
+
 			$this->assertEquals(array('foo' => 'bar'), $this->arguments, $test);
 			$this->assertEquals('', $this->contents, $test);
 			$this->assertEquals('test_shortcode', $this->tagName, $test);
 		}
 	}
-	
+
 	public function testMultipleArguments() {
 		$this->parser->parse('[test_shortcode foo = "bar",bar=\'foo\', baz="buz"]');
-		
+
 		$this->assertEquals(array('foo' => 'bar', 'bar' => 'foo', 'baz' => 'buz'), $this->arguments);
 		$this->assertEquals('', $this->contents);
 		$this->assertEquals('test_shortcode', $this->tagName);
 	}
-	
+
 	public function testEnclosing() {
 		$this->parser->parse('[test_shortcode]foo[/test_shortcode]');
-		
+
 		$this->assertEquals(array(), $this->arguments);
 		$this->assertEquals('foo', $this->contents);
 		$this->assertEquals('test_shortcode', $this->tagName);
 	}
-	
+
 	public function testEnclosingWithArguments() {
 		$this->parser->parse('[test_shortcode,foo = "bar",bar=\'foo\',baz="buz"]foo[/test_shortcode]');
-		
+
 		$this->assertEquals(array('foo' => 'bar', 'bar' => 'foo', 'baz' => 'buz'), $this->arguments);
 		$this->assertEquals('foo', $this->contents);
 		$this->assertEquals('test_shortcode', $this->tagName);
 	}
-	
+
 	public function testShortcodeEscaping() {
 		$this->assertEquals(
-			'[test_shortcode]', 
+			'[test_shortcode]',
 			$this->parser->parse('[[test_shortcode]]')
 		);
 
@@ -123,12 +123,12 @@ class ShortcodeParserTest extends SapphireTest {
 			'[test_shortcode /]',
 			$this->parser->parse('[[test_shortcode /]]')
 		);
-		
+
 		$this->assertEquals(
 			'[test_shortcode]content[/test_shortcode]',
 			$this->parser->parse('[[test_shortcode]content[/test_shortcode]]'
 		));
-		
+
 		$this->assertEquals(
 			'[test_shortcode]content',
 			$this->parser->parse('[[test_shortcode]][test_shortcode]content[/test_shortcode]')
@@ -138,12 +138,12 @@ class ShortcodeParserTest extends SapphireTest {
 			'[test_shortcode]content[/test_shortcode]content2',
 			$this->parser->parse('[[test_shortcode]content[/test_shortcode]][test_shortcode]content2[/test_shortcode]'
 		));
-		
+
 		$this->assertEquals(
 			'[[Doesnt strip double [ character if not a shortcode',
 			$this->parser->parse('[[Doesnt strip double [ character if not a [test_shortcode]shortcode[/test_shortcode]'
 		));
-		
+
 		$this->assertEquals(
 			'[[Doesnt shortcode get confused by double ]] characters',
 			$this->parser->parse(
@@ -155,7 +155,7 @@ class ShortcodeParserTest extends SapphireTest {
 		$this->assertEquals('', $this->parser->parse('[test_shortcode,foo=bar!,baz = buz123]'));
 		$this->assertEquals(array('foo' => 'bar!', 'baz' => 'buz123'), $this->arguments);
 	}
-	
+
 	public function testSpacesForDelimiter() {
 		$this->assertEquals('', $this->parser->parse('[test_shortcode foo=bar! baz = buz123]'));
 		$this->assertEquals(array('foo' => 'bar!', 'baz' => 'buz123'), $this->arguments);
@@ -167,22 +167,22 @@ class ShortcodeParserTest extends SapphireTest {
 			$this->parser->parse('[test_shortcode,id="1"/]more[test_shortcode,id="2"]content[/test_shortcode]'),
 			'Assert that self-closing tags are respected during parsing.'
 		);
-		
+
 		$this->assertEquals(2, $this->arguments['id']);
 	}
 
 	public function testConsecutiveTags() {
 		$this->assertEquals('', $this->parser->parse('[test_shortcode][test_shortcode]'));
 	}
-	
+
 	protected function assertEqualsIgnoringWhitespace($a, $b, $message = null) {
 		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b), $message);
 	}
-	
+
 	public function testtExtract() {
 		// Left extracts to before the current block
 		$this->assertEqualsIgnoringWhitespace(
-			'Code<div>FooBar</div>', 
+			'Code<div>FooBar</div>',
 			$this->parser->parse('<div>Foo[test_shortcode class=left]Code[/test_shortcode]Bar</div>')
 		);
 
@@ -194,16 +194,16 @@ class ShortcodeParserTest extends SapphireTest {
 
 		// Center splits the current block
 		$this->assertEqualsIgnoringWhitespace(
-			'<div>Foo</div>Code<div>Bar</div>', 
+			'<div>Foo</div>Code<div>Bar</div>',
 			$this->parser->parse('<div>Foo[test_shortcode class=center]Code[/test_shortcode]Bar</div>')
 		);
 
 		// Even if the immediate parent isn't a the current block
 		$this->assertEqualsIgnoringWhitespace(
-			'<div>Foo<b>Bar</b></div>Code<div><b>Baz</b>Qux</div>', 
+			'<div>Foo<b>Bar</b></div>Code<div><b>Baz</b>Qux</div>',
 			$this->parser->parse('<div>Foo<b>Bar[test_shortcode class=center]Code[/test_shortcode]Baz</b>Qux</div>')
 		);
-		
+
 		// No class means don't extract
 		$this->assertEqualsIgnoringWhitespace(
 			'<div>FooCodeBar</div>',
@@ -220,7 +220,7 @@ class ShortcodeParserTest extends SapphireTest {
 	}
 
 	// -----------------------------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * Stores the result of a shortcode parse in object properties for easy testing access.
 	 */
@@ -232,5 +232,5 @@ class ShortcodeParserTest extends SapphireTest {
 
 		return $content;
 	}
-	
+
 }

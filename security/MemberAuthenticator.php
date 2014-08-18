@@ -12,11 +12,11 @@ class MemberAuthenticator extends Authenticator {
 	 * Contains encryption algorithm identifiers.
 	 * If set, will migrate to new precision-safe password hashing
 	 * upon login. See http://open.silverstripe.org/ticket/3004
-	 * 
+	 *
 	 * @var array
 	 */
 	private static $migrate_legacy_hashes = array(
-		'md5' => 'md5_v2.4', 
+		'md5' => 'md5_v2.4',
 		'sha1' => 'sha1_v2.4'
 	);
 
@@ -31,10 +31,10 @@ class MemberAuthenticator extends Authenticator {
 	 *                     the member object
 	 * @see Security::setDefaultAdmin()
 	 */
-	public static function authenticate($RAW_data, Form $form = null) {		
+	public static function authenticate($RAW_data, Form $form = null) {
 		// Check for email
 		if(empty($RAW_data['Email'])) return false;
-		
+
 		$userEmail = $RAW_data['Email'];
 		if(is_array($userEmail)) {
 			user_error("Bad email passed to MemberAuthenticator::authenticate()", E_USER_WARNING);
@@ -58,12 +58,12 @@ class MemberAuthenticator extends Authenticator {
 				$result = new ValidationResult(false, _t('Member.ERRORWRONGCRED'));
 			}
 
-			if($member && !$result->valid()) { 
+			if($member && !$result->valid()) {
 				$member->registerFailedLogin();
 				$member = false;
 			}
 		}
-		
+
 		// Optionally record every login attempt as a {@link LoginAttempt} object
 		/**
 		 * TODO We could handle this with an extension
@@ -74,7 +74,7 @@ class MemberAuthenticator extends Authenticator {
 				// successful login (member is existing with matching password)
 				$attempt->MemberID = $member->ID;
 				$attempt->Status = 'Success';
-				
+
 				// Audit logging hook
 				$member->extend('authenticated');
 			} else {
@@ -84,22 +84,22 @@ class MemberAuthenticator extends Authenticator {
 				));
 				if($existingMember) {
 					$attempt->MemberID = $existingMember->ID;
-					
+
 					// Audit logging hook
 					$existingMember->extend('authenticationFailed');
 				} else {
-					
+
 					// Audit logging hook
 					singleton('Member')->extend('authenticationFailedUnknownUser', $RAW_data);
 				}
 				$attempt->Status = 'Failure';
 			}
-			
+
 			$attempt->Email = $userEmail;
 			$attempt->IP = Controller::curr()->getRequest()->getIP();
 			$attempt->write();
 		}
-		
+
 		// Legacy migration to precision-safe password hashes.
 		// A login-event with cleartext passwords is the only time
 		// when we can rehash passwords to a different hashing algorithm,

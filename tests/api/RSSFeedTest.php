@@ -77,7 +77,7 @@ class RSSFeedTest_ItemA extends ViewableData {
 		'Content' => 'Text',
 		'AltContent' => 'Text',
 	);
-	
+
 	public function getTitle() {
 		return "ItemA";
 	}
@@ -89,7 +89,7 @@ class RSSFeedTest_ItemA extends ViewableData {
 	public function getAltContent() {
 		return "ItemA AltContent";
 	}
-	
+
 	public function Link($action = null) {
 		return Controller::join_links("item-a/", $action);
 	}

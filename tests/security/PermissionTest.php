@@ -7,29 +7,29 @@
 class PermissionTest extends SapphireTest {
 
 	protected static $fixture_file = 'PermissionTest.yml';
-	
+
 	public function testGetCodesGrouped() {
 		$codes = Permission::get_codes();
 		$this->assertArrayNotHasKey('SITETREE_VIEW_ALL', $codes);
 	}
-	
+
 	public function testGetCodesUngrouped() {
 		$codes = Permission::get_codes(null, false);
 		$this->assertArrayHasKey('SITETREE_VIEW_ALL', $codes);
 	}
-		
+
 	public function testDirectlyAppliedPermissions() {
 		$member = $this->objFromFixture('Member', 'author');
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_VIEW_ALL"));
 	}
-	
+
 	public function testPermissionAreInheritedFromOneRole() {
 		$member = $this->objFromFixture('Member', 'author');
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 		$this->assertFalse(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 	}
-	
+
 	public function testPermissionAreInheritedFromMultipleRoles() {
 		$member = $this->objFromFixture('Member', 'access');
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
@@ -55,20 +55,20 @@ class PermissionTest extends SapphireTest {
 		$this->assertEquals(3, count($permissions));
 		$this->assertFalse(in_array('CMS_ACCESS_MyAdmin', $permissions));
 	}
-	
+
 	public function testRolesAndPermissionsFromParentGroupsAreInherited() {
 		$member = $this->objFromFixture('Member', 'globalauthor');
-		
+
 		// Check that permissions applied to the group are there
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_EDIT_ALL"));
-		
+
 		// Check that roles from parent groups are there
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
-	
+
 		// Check that permissions from parent groups are there
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_VIEW_ALL"));
-		
+
 		// Check that a random permission that shouldn't be there isn't
 		$this->assertFalse(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 	}
@@ -81,22 +81,22 @@ class PermissionTest extends SapphireTest {
 
 		$result = Permission::get_members_by_permission(array('CMS_ACCESS_SecurityAdmin'));
 		$resultIDs = $result ? $result->column() : array();
-		
+
 		$this->assertContains($accessMember->ID, $resultIDs,
 			'Member is found via a permission attached to a role');
 		$this->assertNotContains($accessAuthor->ID, $resultIDs);
 	}
 
-	
+
 	public function testHiddenPermissions(){
 		$permissionCheckboxSet = new PermissionCheckboxSetField('Permissions','Permissions','Permission','GroupID');
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
-		
+
 		Config::inst()->update('Permission', 'hidden_permissions', array('CMS_ACCESS_LeftAndMain'));
 
 		$this->assertNotContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 
-		Config::inst()->remove('Permission', 'hidden_permissions');		
+		Config::inst()->remove('Permission', 'hidden_permissions');
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 	}
 }

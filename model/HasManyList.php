@@ -9,13 +9,13 @@
 class HasManyList extends RelationList {
 
 	protected $foreignKey;
-	
+
 	/**
 	 * Create a new HasManyList object.
 	 * Generation of the appropriate record set is left up to the caller, using the normal
 	 * {@link DataList} methods.  Addition arguments are used to support {@@link add()}
 	 * and {@link remove()} methods.
-	 * 
+	 *
 	 * @param string $dataClass The class of the DataObjects that this will list.
 	 * @param string $foreignKey The name of the foreign key field to set the ID filter against.
 	 */
@@ -51,7 +51,7 @@ class HasManyList extends RelationList {
 	 *
 	 * It does so by setting the relationFilters.
 	 *
-	 * @param $item The DataObject to be added, or its ID 
+	 * @param $item The DataObject to be added, or its ID
 	 */
 	public function add($item) {
 		if(is_numeric($item)) {
@@ -90,13 +90,13 @@ class HasManyList extends RelationList {
 
 		return $this->remove($item);
 	}
-	
+
 	/**
 	 * Remove an item from this relation.
 	 * Doesn't actually remove the item, it just clears the foreign key value.
-	 * 
+	 *
 	 * @param $item The DataObject to be removed
-	 * @todo Maybe we should delete the object instead? 
+	 * @todo Maybe we should delete the object instead?
 	 */
 	public function remove($item) {
 		if(!($item instanceof $this->dataClass)) {

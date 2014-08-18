@@ -24,25 +24,25 @@ if (version_compare(phpversion(), '5.3.3', '<')) {
  * Main file that handles every page request.
  *
  * The main.php does a number of set-up activities for the request.
- * 
- *  - Includes the first one of the following files that it finds: (root)/_ss_environment.php, 
+ *
+ *  - Includes the first one of the following files that it finds: (root)/_ss_environment.php,
  *    (root)/../_ss_environment.php, or (root)/../../_ss_environment.php
  *  - Gets an up-to-date manifest from {@link ManifestBuilder}
  *  - Sets up error handlers with {@link Debug::loadErrorHandlers()}
- *  - Calls {@link DB::connect()}, passing it the global variable $databaseConfig that should 
+ *  - Calls {@link DB::connect()}, passing it the global variable $databaseConfig that should
  *    be defined in an _config.php
  *  - Sets up the default director rules using {@link Director::$rules}
- * 
- * After that, it calls {@link Director::direct()}, which is responsible for doing most of the 
+ *
+ * After that, it calls {@link Director::direct()}, which is responsible for doing most of the
  * real work.
  *
  * CONFIGURING THE WEBSERVER
  *
  * To use SilverStripe, every request that doesn't point directly to a file should be rewritten to
- * framework/main.php?url=(url).  For example, http://www.example.com/about-us/rss would be rewritten 
+ * framework/main.php?url=(url).  For example, http://www.example.com/about-us/rss would be rewritten
  * to http://www.example.com/framework/main.php?url=about-us/rss
  *
- * It's important that requests that point directly to a file aren't rewritten; otherwise, visitors 
+ * It's important that requests that point directly to a file aren't rewritten; otherwise, visitors
  * won't be able to download any CSS, JS, image files, or other downloads.
  *
  * On Apache, RewriteEngine can be used to do this.
@@ -125,15 +125,15 @@ $chain
 		require_once('model/DB.php');
 		global $databaseConfig;
 		if ($databaseConfig) DB::connect($databaseConfig);
-		
+
 		// Check if a token is requesting a redirect
 		if (!$reloadToken) return;
-		
+
 		// Otherwise, we start up the session if needed
 		if(!isset($_SESSION) && Session::request_contains_session_id()) {
 			Session::start();
 		}
-		
+
 		// Next, check if we're in dev mode, or the database doesn't have any security data, or we are admin
 		if (Director::isDev() || !Security::database_is_ready() || Permission::check('ADMIN')) {
 			return $reloadToken->reloadWithToken();

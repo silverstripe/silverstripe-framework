@@ -4,19 +4,19 @@
  * @subpackage tests
  */
 class ComponentSetTest extends SapphireTest {
-	
+
 	protected static $fixture_file = 'ComponentSetTest.yml';
-	
+
 	protected $extraDataObjects = array(
 		'ComponentSetTest_Player',
 		'ComponentSetTest_Team'
 	);
-	
+
 	public function testSetByIDListManyMany() {
 		$team1 = $this->objFromFixture('ComponentSetTest_Team', 'team1');
 		$player1_team1 = $this->objFromFixture('ComponentSetTest_Player', 'player1_team1');
 		$player2 = $this->objFromFixture('ComponentSetTest_Player', 'player2');
-		
+
 		$team1->Players()->setByIdList(array(
 			$player1_team1->ID,
 			$player2->ID
@@ -32,7 +32,7 @@ class ComponentSetTest extends SapphireTest {
 			$team1->Players()->column('ID'),
 			'Can retain existing entry'
 		);
-		
+
 		$team1->Players()->setByIdList(array(
 			$player1_team1->ID
 		));
@@ -47,7 +47,7 @@ class ComponentSetTest extends SapphireTest {
 			$team1->Players()->column('ID'),
 			'Can retain existing entry'
 		);
-		
+
 		$team1->Players()->setByIdList(array());
 		$team1->flushCache();
 		$this->assertEquals(0, $team1->Players()->Count(),
@@ -65,7 +65,7 @@ class ComponentSetTest_Player extends Member implements TestOnly {
 class ComponentSetTest_Team extends DataObject implements TestOnly {
 
 	private static $db = array(
-		'Title' => 'Varchar', 
+		'Title' => 'Varchar',
 	);
 
 	private static $many_many = array(

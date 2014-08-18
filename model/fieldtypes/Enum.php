@@ -3,36 +3,36 @@
  * Class Enum represents an enumeration of a set of strings.
  *
  * See {@link DropdownField} for a {@link FormField} to select enum values.
- * 
+ *
  * @package framework
  * @subpackage model
  */
 class Enum extends StringField {
-	
+
 	protected $enum, $default;
-	
+
 	private static $default_search_filter_class = 'ExactMatchFilter';
-	
+
 	/**
 	 * Create a new Enum field.
-	 * 
-	 * Example usage in {@link DataObject::$db} with comma-separated string 
+	 *
+	 * Example usage in {@link DataObject::$db} with comma-separated string
 	 * notation ('Val1' is default)
 	 *
 	 * <code>
 	 *  "MyField" => "Enum('Val1, Val2, Val3', 'Val1')"
 	 * </code>
-	 * 
-	 * Example usage in in {@link DataObject::$db} with array notation 
+	 *
+	 * Example usage in in {@link DataObject::$db} with array notation
 	 * ('Val1' is default)
 	 *
 	 * <code>
 	 * "MyField" => "Enum(array('Val1', 'Val2', 'Val3'), 'Val1')"
 	 * </code>
-	 * 
-	 * @param enum: A string containing a comma separated list of options or an 
+	 *
+	 * @param enum: A string containing a comma separated list of options or an
 	 *				array of Vals.
-	 * @param string The default option, which is either NULL or one of the 
+	 * @param string The default option, which is either NULL or one of the
 	 *				 items in the enumeration.
 	 */
 	public function __construct($name = null, $enum = NULL, $default = NULL) {
@@ -42,8 +42,8 @@ class Enum extends StringField {
 			}
 
 			$this->enum = $enum;
-			
-			// If there's a default, then 		
+
+			// If there's a default, then
 			if($default) {
 				if(in_array($default, $enum)) {
 					$this->default = $default;
@@ -51,7 +51,7 @@ class Enum extends StringField {
 					user_error("Enum::__construct() The default value '$default' does not match any item in the"
 						. " enumeration", E_USER_ERROR);
 				}
-				
+
 			// By default, set the default value to the first item
 			} else {
 				$this->default = reset($enum);
@@ -60,29 +60,29 @@ class Enum extends StringField {
 
 		parent::__construct($name);
 	}
-	
+
 	/**
 	 * @return void
 	 */
 	public function requireField() {
 		$parts = array(
-			'datatype' => 'enum', 
-			'enums' => $this->enum, 
-			'character set' => 'utf8', 
-			'collate' => 'utf8_general_ci', 
-			'default' => $this->default, 
-			'table' => $this->tableName, 
+			'datatype' => 'enum',
+			'enums' => $this->enum,
+			'character set' => 'utf8',
+			'collate' => 'utf8_general_ci',
+			'default' => $this->default,
+			'table' => $this->tableName,
 			'arrayValue' => $this->arrayValue
 		);
-		
+
 		$values = array(
-			'type' => 'enum', 
+			'type' => 'enum',
 			'parts' => $parts
 		);
 
 		DB::require_field($this->tableName, $this->name, $values);
 	}
-	
+
 	/**
 	 * Return a dropdown field suitable for editing this field.
 	 *
@@ -118,9 +118,9 @@ class Enum extends StringField {
 		$anyText = _t('Enum.ANY', 'Any');
 		return $this->formField($title, null, true, $anyText, null, "($anyText)");
 	}
-	
+
 	/**
-	 * Returns the values of this enum as an array, suitable for insertion into 
+	 * Returns the values of this enum as an array, suitable for insertion into
 	 * a {@link DropdownField}
 	 *
 	 * @param boolean
@@ -128,8 +128,8 @@ class Enum extends StringField {
 	 * @return array
 	 */
 	public function enumValues($hasEmpty = false) {
-		return ($hasEmpty) 
-			? array_merge(array('' => ''), ArrayLib::valuekey($this->enum)) 
+		return ($hasEmpty)
+			? array_merge(array('' => ''), ArrayLib::valuekey($this->enum))
 			: ArrayLib::valuekey($this->enum);
 	}
 }

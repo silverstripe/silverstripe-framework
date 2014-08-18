@@ -9,44 +9,44 @@
  * @subpackage dev
  */
 class DevelopmentAdmin extends Controller {
-	
+
 	private static $url_handlers = array(
 		'' => 'index',
 		'build/defaults' => 'buildDefaults',
 		'$Action' => '$Action',
 		'$Action//$Action/$ID' => 'handleAction',
 	);
-	
-	private static $allowed_actions = array( 
-		'index', 
-		'tests', 
-		'jstests', 
-		'tasks', 
-		'viewmodel', 
-		'build', 
-		'reset', 
+
+	private static $allowed_actions = array(
+		'index',
+		'tests',
+		'jstests',
+		'tasks',
+		'viewmodel',
+		'build',
+		'reset',
 		'viewcode',
 		'generatesecuretoken',
 		'buildDefaults',
 	);
-	
+
 	public function init() {
 		parent::init();
-		
+
 		// Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)
 		$requestedDevBuild = (stripos($this->request->getURL(), 'dev/build') === 0);
-		
+
 		// We allow access to this controller regardless of live-status or ADMIN permission only
 		// if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
 		$canAccess = (
-			$requestedDevBuild 
-			|| Director::isDev() 
-			|| Director::is_cli() 
+			$requestedDevBuild
+			|| Director::isDev()
+			|| Director::is_cli()
 			// Its important that we don't run this check if dev/build was requested
 			|| Permission::check("ADMIN")
 		);
 		if(!$canAccess) return Security::permissionFailure($this);
-		
+
 		// check for valid url mapping
 		// lacking this information can cause really nasty bugs,
 		// e.g. when running Director::test() from a FunctionalTest instance
@@ -72,13 +72,13 @@ class DevelopmentAdmin extends Controller {
 					'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.org wiki'."\n";
 			}
 		}
-		
+
 		// Backwards compat: Default to "draft" stage, which is important
 		// for tasks like dev/build which call DataObject->requireDefaultRecords(),
 		// but also for other administrative tasks which have assumptions about the default stage.
 		Versioned::reading_stage('Stage');
 	}
-	
+
 	public function index() {
 		$actions = array(
 			"build" => "Build/rebuild this environment.  Call this whenever you have updated your project sources",
@@ -88,12 +88,12 @@ class DevelopmentAdmin extends Controller {
 			"jstests/all" => "Run all JavaScript tests",
 			"tasks" => "See a list of build tasks to run"
 		);
-		
+
 		// Web mode
 		if(!Director::is_cli()) {
 			// This action is sake-only right now.
 			unset($actions["modules/add"]);
-			
+
 			$renderer = DebugView::create();
 			$renderer->writeHeader();
 			$renderer->writeInfo("SilverStripe Development Tools", Director::absoluteBaseURL());
@@ -108,7 +108,7 @@ class DevelopmentAdmin extends Controller {
 			}
 
 			$renderer->writeFooter();
-		
+
 		// CLI mode
 		} else {
 			echo "SILVERSTRIPE DEVELOPMENT TOOLS\n--------------------------\n\n";
@@ -119,19 +119,19 @@ class DevelopmentAdmin extends Controller {
 			echo "\n\n";
 		}
 	}
-	
+
 	public function tests($request) {
 		return TestRunner::create();
 	}
-	
+
 	public function jstests($request) {
 		return JSTestRunner::create();
 	}
-	
+
 	public function tasks() {
 		return TaskRunner::create();
 	}
-	
+
 	public function build($request) {
 		if(Director::is_cli()) {
 			$da = DatabaseAdmin::create();
@@ -141,7 +141,7 @@ class DevelopmentAdmin extends Controller {
 			$renderer->writeHeader();
 			$renderer->writeInfo("Environment Builder", Director::absoluteBaseURL());
 			echo "<div class=\"build\">";
-			
+
 			$da = DatabaseAdmin::create();
 			return $da->handleRequest($request, $this->model);
 
@@ -186,7 +186,7 @@ Generated new token. Please add the following code to your YAML configuration:
 
 Security:
   token: $token
-				
+
 TXT;
 		$response = new SS_HTTPResponse($body);
 		return $response->addHeader('Content-Type', 'text/plain');

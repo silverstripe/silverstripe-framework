@@ -3,7 +3,7 @@ require_once 'Zend/Log/Formatter/Interface.php';
 
 /**
  * Formats SS error emails with a basic layout.
- * 
+ *
  * @package framework
  * @subpackage dev
  */
@@ -58,14 +58,14 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 				$data .= sprintf(
 					"<tr><td><strong>%s</strong></td><td><pre>%s</pre></td></tr>\n", $k, $v);
 			}
-			$data .= "</table>\n";			
+			$data .= "</table>\n";
 		}
 
 		$data .= "</div>\n";
 
 		$relfile = Director::makeRelative($errfile);
 		if($relfile && $relfile[0] == '/') $relfile = substr($relfile, 1);
-		
+
 		$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;
 		$uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
 

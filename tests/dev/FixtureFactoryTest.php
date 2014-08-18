@@ -29,7 +29,7 @@ class FixtureFactoryTest extends SapphireTest {
 		$obj->write();
 		$factory->setId('FixtureFactoryTest_DataObject', 'one', $obj->ID);
 		$this->assertEquals(
-			$obj->ID, 
+			$obj->ID,
 			$factory->getId('FixtureFactoryTest_DataObject', 'one')
 		);
 	}
@@ -38,7 +38,7 @@ class FixtureFactoryTest extends SapphireTest {
 		$factory = new FixtureFactory();
 		$obj = $factory->createObject('FixtureFactoryTest_DataObject', 'one');
 		$this->assertEquals(
-			$obj->ID, 
+			$obj->ID,
 			$factory->getId('FixtureFactoryTest_DataObject', 'one')
 		);
 	}
@@ -47,7 +47,7 @@ class FixtureFactoryTest extends SapphireTest {
 		$factory = new FixtureFactory();
 		$obj = $factory->createObject('FixtureFactoryTest_DataObject', 'one');
 		$this->assertEquals(
-			array('one' => $obj->ID), 
+			array('one' => $obj->ID),
 			$factory->getIds('FixtureFactoryTest_DataObject')
 		);
 	}
@@ -87,18 +87,18 @@ class FixtureFactoryTest extends SapphireTest {
 	public function testDefineMultipleBlueprintsForClass() {
 		$factory = new FixtureFactory();
 		$factory->define(
-			'FixtureFactoryTest_DataObject', 
+			'FixtureFactoryTest_DataObject',
 			new FixtureBlueprint('FixtureFactoryTest_DataObject')
 		);
 		$factory->define(
-			'FixtureFactoryTest_DataObjectWithDefaults', 
+			'FixtureFactoryTest_DataObjectWithDefaults',
 			new FixtureBlueprint(
 				'FixtureFactoryTest_DataObjectWithDefaults',
 				'FixtureFactoryTest_DataObject',
-				array('Name' => 'Default')	
+				array('Name' => 'Default')
 			)
 		);
-		
+
 		$obj = $factory->createObject('FixtureFactoryTest_DataObject', 'one');
 		$this->assertNull($obj->Name);
 
@@ -122,7 +122,7 @@ class FixtureFactoryTest extends SapphireTest {
 		$obj2 = $factory->createObject('FixtureFactoryTest_DataObject', 'two');
 
 		$factory->clear();
-		
+
 		$this->assertFalse($factory->getId('FixtureFactoryTest_DataObject', 'one'));
 		$this->assertNull(FixtureFactoryTest_DataObject::get()->byId($obj1Id));
 		$this->assertFalse($factory->getId('FixtureFactoryTest_DataObject', 'two'));
@@ -135,7 +135,7 @@ class FixtureFactoryTest extends SapphireTest {
 		$relation1 = $factory->createObject('FixtureFactoryTest_DataObjectRelation', 'relation-one');
 
 		$factory->clear('FixtureFactoryTest_DataObject');
-		
+
 		$this->assertFalse(
 			$factory->getId('FixtureFactoryTest_DataObject', 'one')
 		);
@@ -157,11 +157,11 @@ class FixtureFactoryTest extends SapphireTest {
  * @subpackage tests
  */
 class FixtureFactoryTest_DataObject extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		"Name" => "Varchar"
 	);
-	
+
 	private static $many_many = array(
 		"ManyMany" => "FixtureFactoryTest_DataObjectRelation"
 	);
@@ -178,12 +178,12 @@ class FixtureFactoryTest_DataObject extends DataObject implements TestOnly {
  * @subpackage tests
  */
 class FixtureFactoryTest_DataObjectRelation extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		"Name" => "Varchar"
 	);
-	
+
 	private static $belongs_many_many = array(
 		"TestParent" => "FixtureFactoryTest_DataObject"
-	); 
+	);
 }

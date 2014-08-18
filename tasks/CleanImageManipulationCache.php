@@ -8,12 +8,12 @@
  * @subpackage filesystem
  */
 class CleanImageManipulationCache extends BuildTask {
-	
+
 	protected $title = 'Clean Image Manipulation Cache';
-	
+
 	protected $description = 'Clean the failed image manipulation cache. Use this to allow SilverStripe to attempt
 		to resample images that have previously failed to resample (for example if memory limits were exceeded).';
-	
+
 	/**
 	 * Check that the user has appropriate permissions to execute this task
 	 */
@@ -21,10 +21,10 @@ class CleanImageManipulationCache extends BuildTask {
 		if(!Director::is_cli() && !Director::isDev() && !Permission::check('ADMIN')) {
 			return Security::permissionFailure();
 		}
-		
+
 		parent::init();
 	}
-	
+
 	/**
 	 * Clear out the image manipulation cache
 	 * @param SS_HTTPRequest $request
@@ -33,7 +33,7 @@ class CleanImageManipulationCache extends BuildTask {
 		$failedManipulations = 0;
 		$processedImages = 0;
 		$images = DataObject::get('Image');
-		
+
 		if($images && Image::get_backend() == "GDBackend") {
 			$cache = SS_Cache::factory('GDBackend_Manipulations');
 
@@ -51,9 +51,9 @@ class CleanImageManipulationCache extends BuildTask {
 				}
 			}
 		}
-		
-		echo "Cleared $failedManipulations failed manipulations from 
+
+		echo "Cleared $failedManipulations failed manipulations from
 			$processedImages Image objects stored in the Database.";
 	}
-	
+
 }

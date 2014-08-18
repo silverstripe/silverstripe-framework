@@ -1,15 +1,15 @@
 <?php
 /**
- * Encapsulates a collection of components following the 
- * {@link GridFieldComponent} interface. While the {@link GridField} itself 
- * has some configuration in the form of setters, most of the details are 
+ * Encapsulates a collection of components following the
+ * {@link GridFieldComponent} interface. While the {@link GridField} itself
+ * has some configuration in the form of setters, most of the details are
  * dealt with through components.
- * 
+ *
  * For example, you would add a {@link GridFieldPaginator} component to enable
- * pagination on the listed records, and configure it through 
+ * pagination on the listed records, and configure it through
  * {@link GridFieldPaginator->setItemsPerPage()}.
- * 
- * In order to reduce the amount of custom code required, the framework 
+ *
+ * In order to reduce the amount of custom code required, the framework
  * provides some default configurations for common use cases:
  *
  * - {@link GridFieldConfig_Base} (added by default to GridField)
@@ -25,18 +25,18 @@ class GridFieldConfig extends Object {
 	 * @var ArrayList
 	 */
 	protected $components = null;
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 */
 	public function __construct() {
 		parent::__construct();
 		$this->components = new ArrayList();
 	}
-	
+
 	/**
-	 * @param GridFieldComponent $component 
+	 * @param GridFieldComponent $component
 	 * @param string $insertBefore The class of the component to insert this one before
 	 */
 	public function addComponent(GridFieldComponent $component, $insertBefore = null) {
@@ -66,16 +66,16 @@ class GridFieldConfig extends Object {
 		foreach($components as $component) $this->addComponent($component);
 		return $this;
 	}
-	
+
 	/**
-	 * @param GridFieldComponent $component 
+	 * @param GridFieldComponent $component
 	 * @return GridFieldConfig $this
 	 */
 	public function removeComponent(GridFieldComponent $component) {
 		$this->getComponents()->remove($component);
-		return $this;	
+		return $this;
 	}
-	
+
 	/**
 	 * @param String Class name or interface
 	 * @return GridFieldConfig $this
@@ -87,7 +87,7 @@ class GridFieldConfig extends Object {
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * @return ArrayList Of GridFieldComponent
 	 */
@@ -100,7 +100,7 @@ class GridFieldConfig extends Object {
 
 	/**
 	 * Returns all components extending a certain class, or implementing a certain interface.
-	 * 
+	 *
 	 * @param String Class name or interface
 	 * @return ArrayList Of GridFieldComponent
 	 */
@@ -114,7 +114,7 @@ class GridFieldConfig extends Object {
 
 	/**
 	 * Returns the first available component with the given class or interface.
-	 * 
+	 *
 	 * @param String ClassName
 	 * @return GridFieldComponent
 	 */
@@ -126,7 +126,7 @@ class GridFieldConfig extends Object {
 }
 
 /**
- * A simple readonly, paginated view of records, with sortable and searchable 
+ * A simple readonly, paginated view of records, with sortable and searchable
  * headers.
  *
  * @package forms
@@ -187,7 +187,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 	 */
 	public function __construct($itemsPerPage=null) {
 		parent::__construct();
-		
+
 		$this->addComponent(new GridFieldButtonRow('before'));
 		$this->addComponent(new GridFieldAddNewButton('buttons-before-left'));
 		$this->addComponent(new GridFieldToolbarHeader());
@@ -210,14 +210,14 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 
 
 /**
- * Similar to {@link GridFieldConfig_RecordEditor}, but adds features to work 
- * on has-many or many-many relationships. 
+ * Similar to {@link GridFieldConfig_RecordEditor}, but adds features to work
+ * on has-many or many-many relationships.
  *
- * Allows to search for existing records to add to the relationship, detach 
- * listed records from the relationship (rather than removing them from the 
+ * Allows to search for existing records to add to the relationship, detach
+ * listed records from the relationship (rather than removing them from the
  * database), and automatically add newly created records to it.
- * 
- * To further configure the field, use {@link getComponentByType()}, for 
+ *
+ * To further configure the field, use {@link getComponentByType()}, for
  * example to change the field to search.
  *
  * <code>
@@ -230,13 +230,13 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
  * @subpackage fields-gridfield
  */
 class GridFieldConfig_RelationEditor extends GridFieldConfig {
-	
+
 	/**
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {
 		parent::__construct();
-		
+
 		$this->addComponent(new GridFieldButtonRow('before'));
 		$this->addComponent(new GridFieldAddNewButton('buttons-before-left'));
 		$this->addComponent(new GridFieldAddExistingAutocompleter('buttons-before-right'));

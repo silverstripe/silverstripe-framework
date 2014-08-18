@@ -1,6 +1,6 @@
 <?php
 /**
- * @package framework 
+ * @package framework
  * @subpackage forms
  */
 class MemberDatetimeOptionsetFieldTest extends SapphireTest {

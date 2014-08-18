@@ -2,29 +2,29 @@
 
 /**
  * A result-set from a MySQL database (using MySQLiConnector)
- * 
+ *
  * @package framework
  * @subpackage model
  */
 class MySQLQuery extends SS_Query {
-	
+
 	/**
 	 * The MySQLiConnector object that created this result set.
-	 * 
+	 *
 	 * @var MySQLiConnector
 	 */
 	protected $database;
 
 	/**
 	 * The internal MySQL handle that points to the result set.
-	 * 
+	 *
 	 * @var mysqli_result
 	 */
 	protected $handle;
-	
+
 	/**
 	 * The related mysqli statement object if generated using a prepared query
-	 * 
+	 *
 	 * @var mysqli_stmt
 	 */
 	protected $statement;

@@ -20,17 +20,17 @@ class PartialMatchFilter extends SearchFilter {
 
 		parent::setModifiers($modifiers);
 	}
-	
+
 	/**
 	 * Apply the match filter to the given variable value
-	 * 
+	 *
 	 * @param string $value The raw value
 	 * @return string
 	 */
 	protected function getMatchPattern($value) {
 		return "%$value%";
 	}
-	
+
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		$comparisonClause = DB::get_conn()->comparisonClause(
@@ -98,7 +98,7 @@ class PartialMatchFilter extends SearchFilter {
 		$predicate = implode(' AND ', array_fill(0, $count, $comparisonClause));
 		return $query->where(array($predicate => $parameters));
 	}
-	
+
 	public function isEmpty() {
 		return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
 	}

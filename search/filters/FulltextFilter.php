@@ -15,7 +15,7 @@
  *
  * To enable full-text matching on fields, you also need to add an index to the
  * database table, using the {$indexes} hash in your DataObject subclass:
- * 
+ *
  * <code>
  *   static $indexes = array(
  *      'SearchFields' => 'fulltext(Name, Title, Description)'

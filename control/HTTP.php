@@ -3,7 +3,7 @@
 /**
  * A class with HTTP-related helpers.
  * Like Debug, this is more a bundle of methods than a class ;-)
- * 
+ *
  * @package framework
  * @subpackage misc
  */
@@ -25,7 +25,7 @@ class HTTP {
 	protected static $etag = null;
 
 	/**
-	 * Turns a local system filename into a URL by comparing it to the script 
+	 * Turns a local system filename into a URL by comparing it to the script
 	 * filename.
 	 *
 	 * @param string
@@ -42,17 +42,17 @@ class HTTP {
 		}
 
 		$urlBase = substr(
-			$_SERVER['PHP_SELF'], 
-			0, 
+			$_SERVER['PHP_SELF'],
+			0,
 			-(strlen($_SERVER['SCRIPT_FILENAME']) - $commonLength)
 		);
-		
+
 		$url = $urlBase . substr($filename, $commonLength);
 		$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? "https" : "http";
 
 		// Count the number of extra folders the script is in.
 		// $prefix = str_repeat("../", substr_count(substr($_SERVER[SCRIPT_FILENAME],$commonBaseLength)));
-	
+
 		return "$protocol://". $_SERVER['HTTP_HOST'] . $url;
 	}
 
@@ -80,19 +80,19 @@ class HTTP {
 	 * <li><code>'myRewriter($URL)'</code></li>
 	 * <li><code>'(substr($URL,0,1)=="/") ? "../" . substr($URL,1) : $URL'</code></li>
 	 * </ul>
-	 * 
+	 *
 	 * As of 3.2 $code should be a callable which takes a single parameter and returns
 	 * the rewritten URL. e.g.
-	 * 
+	 *
 	 * <code>
-	 * function($url) { 
+	 * function($url) {
 	 *		return Director::absoluteURL($url, true);
 	 * }
 	 * </code>
-	 * 
+	 *
 	 * @param string $content The HTML to search for links to rewrite
 	 * @param string|callable $code Either a string that can evaluate to an expression
-	 * to rewrite links (depreciated), or a callable that takes a single 
+	 * to rewrite links (depreciated), or a callable that takes a single
 	 * parameter and returns the rewritten URL
 	 * @return The content with all links rewritten as per the logic specified in $code
 	 */
@@ -100,7 +100,7 @@ class HTTP {
 		if(!is_callable($code)) {
 			Deprecation::notice(3.1, 'HTTP::urlRewriter expects a callable as the second parameter');
 		}
-		
+
 		// Replace attributes
 		$attribs = array("src","background","a" => "href","link" => "href", "base" => "href");
 		foreach($attribs as $tag => $attrib) {
@@ -147,12 +147,12 @@ class HTTP {
 	 * Uses parse_url() to dissect the URL, and http_build_query() to reconstruct it
 	 * with the additional parameter. Converts any '&' (ampersand)
 	 * URL parameter separators to the more XHTML compliant '&amp;'.
-	 * 
+	 *
 	 * CAUTION: If the URL is determined to be relative,
 	 * it is prepended with Director::absoluteBaseURL().
 	 * This method will always return an absolute URL because
 	 * Director::makeRelative() can lead to inconsistent results.
-	 * 
+	 *
 	 * @param String $varname
 	 * @param String $varvalue
 	 * @param String $currentURL Relative or absolute URL (Optional).
@@ -179,7 +179,7 @@ class HTTP {
 		$params = array();
 		if(isset($parts['query'])) parse_str($parts['query'], $params);
 		$params[$varname] = $varvalue;
-		
+
 		// Generate URI segments and formatting
 		$scheme = (isset($parts['scheme'])) ? $parts['scheme'] : 'http';
 		$user = (isset($parts['user']) && $parts['user'] != '')  ? $parts['user'] : '';
@@ -188,22 +188,22 @@ class HTTP {
 			// format in either user:pass@host.com or user@host.com
 			$user .= (isset($parts['pass']) && $parts['pass'] != '') ? ':' . $parts['pass'] . '@' : '@';
 		}
-		
+
 		$host = (isset($parts['host'])) ? $parts['host'] : '';
 		$port = (isset($parts['port']) && $parts['port'] != '') ? ':'.$parts['port'] : '';
 		$path = (isset($parts['path']) && $parts['path'] != '') ? $parts['path'] : '';
-		
+
 		// handle URL params which are existing / new
 		$params = ($params) ?  '?' . http_build_query($params, null, $separator) : '';
-		
+
 		// keep fragments (anchors) intact.
 		$fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ?  '#'.$parts['fragment'] : '';
-		
-		// Recompile URI segments	
+
+		// Recompile URI segments
 		$newUri =  $scheme . '://' . $user . $host . $port . $path . $params . $fragment;
 
 		if($isRelative) return Director::makeRelative($newUri);
-		
+
 		return $newUri;
 	}
 
@@ -211,7 +211,7 @@ class HTTP {
 		$url = self::setGetVar($varname, $varvalue, $currentURL);
 		return Convert::xml2raw($url);
 	}
-	
+
 	/**
 	 * Search for all tags with a specific attribute, then return the value of that attribute in a flat array.
 	 *
@@ -221,31 +221,31 @@ class HTTP {
 	 */
 	public static function findByTagAndAttribute($content, $attributes) {
 		$regexes = array();
-		
+
 		foreach($attributes as $tag => $attribute) {
 			$regexes[] = "/<{$tag} [^>]*$attribute *= *([\"'])(.*?)\\1[^>]*>/i";
 			$regexes[] = "/<{$tag} [^>]*$attribute *= *([^ \"'>]+)/i";
 		}
-		
+
 		$result = array();
-		
+
 		if($regexes) foreach($regexes as $regex) {
 			if(preg_match_all($regex, $content, $matches)) {
 				$result = array_merge_recursive($result, (isset($matches[2]) ? $matches[2] : $matches[1]));
 			}
 		}
-		
+
 		return count($result) ? $result : null;
 	}
-	
+
 	public static function getLinksIn($content) {
 		return self::findByTagAndAttribute($content, array("a" => "href"));
 	}
-	
+
 	public static function getImagesIn($content) {
 		return self::findByTagAndAttribute($content, array("img" => "src"));
 	}
-	
+
 	/**
 	 * Get the MIME type based on a file's extension.
 	 *
@@ -308,7 +308,7 @@ class HTTP {
 	 */
 	public static function add_cache_headers($body = null) {
 		$cacheAge = self::$cache_age;
-		
+
 		// Validate argument
 		if($body && !($body instanceof SS_HTTPResponse)) {
 			user_error("HTTP::add_cache_headers() must be passed an SS_HTTPResponse object", E_USER_WARNING);
@@ -318,7 +318,7 @@ class HTTP {
 		// Development sites have frequently changing templates; this can get stuffed up by the code
 		// below.
 		if(Director::isDev()) $cacheAge = 0;
-		
+
 		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
 		// us trying.
 		if(headers_sent() && !$body) return;
@@ -371,10 +371,10 @@ class HTTP {
 			$responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
 
 			// Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
-			// which means that if you log out, you get redirected back to a page which Chrome then checks against 
+			// which means that if you log out, you get redirected back to a page which Chrome then checks against
 			// last-modified (which passes, getting a 304)
 			// when it shouldn't be trying to use that page at all because it's the "logged in" version.
-			// By also using and etag that includes both the modification date and all the varies 
+			// By also using and etag that includes both the modification date and all the varies
 			// values which we also check against we can catch this and not return a 304
 			$etagParts = array(self::$modification_date, serialize($_COOKIE));
 			$etagParts[] = Director::is_https() ? 'https' : 'http';
@@ -410,7 +410,7 @@ class HTTP {
 		if(self::$etag) {
 			$responseHeaders['ETag'] = self::$etag;
 		}
-		
+
 		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
 		foreach($responseHeaders as $k => $v) {
 			if($body) $body->addHeader($k, $v);
@@ -427,8 +427,8 @@ class HTTP {
 	public static function gmt_date($timestamp) {
 		return gmdate('D, d M Y H:i:s', $timestamp) . ' GMT';
 	}
-	
-	/* 
+
+	/*
 	 * Return static variable cache_age in second
 	 */
 	public static function get_cache_age() {

@@ -5,7 +5,7 @@
  * @subpackage tests
  */
 class ManyManyListTest extends SapphireTest {
-	
+
 	protected static $fixture_file = 'DataObjectTest.yml';
 
 	protected $extraDataObjects = array(
@@ -49,7 +49,7 @@ class ManyManyListTest extends SapphireTest {
 		$newPlayer = new DataObjectTest_Player(); // many_many Teams
 		$this->assertEquals(array(), $newPlayer->Teams()->column('ID'));
 	}
-	
+
 	public function testAddingSingleDataObjectByReference() {
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
@@ -74,7 +74,7 @@ class ManyManyListTest extends SapphireTest {
 		$this->assertEquals($player1->Teams()->column('ID'),$compareTeams->column('ID'),
 			"Removing single record as DataObject from many_many");
 	}
-	
+
 	public function testAddingSingleDataObjectByID() {
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
@@ -86,7 +86,7 @@ class ManyManyListTest extends SapphireTest {
 		$this->assertEquals($player1->Teams()->column('ID'), $compareTeams->column('ID'),
 			"Adding single record as ID to many_many");
 	}
-	
+
 	public function testRemoveByID() {
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
@@ -98,7 +98,7 @@ class ManyManyListTest extends SapphireTest {
 		$this->assertEquals($player1->Teams()->column('ID'), $compareTeams->column('ID'),
 			"Removing single record as ID from many_many");
 	}
-	
+
 	public function testSetByIdList() {
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
@@ -137,21 +137,21 @@ class ManyManyListTest extends SapphireTest {
 			$team1->Players()->getExtraData('Teams', $player->ID),
 			'Writes extrafields'
 		);
-		
+
 		$team1->Players()->add($player);
 		$this->assertEquals(
 			array('Position' => 'Captain'),
 			$team1->Players()->getExtraData('Teams', $player->ID),
 			'Retains extrafields on subsequent adds with NULL fields'
 		);
-		
+
 		$team1->Players()->add($player, array('Position' => 'Defense'));
 		$this->assertEquals(
 			array('Position' => 'Defense'),
 			$team1->Players()->getExtraData('Teams', $player->ID),
 			'Updates extrafields on subsequent adds with fields'
 		);
-		
+
 		$team1->Players()->add($player, array('Position' => null));
 		$this->assertEquals(
 			array('Position' => null),
@@ -159,7 +159,7 @@ class ManyManyListTest extends SapphireTest {
 			'Allows clearing of extrafields on subsequent adds'
 		);
 	}
-	
+
 	public function testSubtractOnAManyManyList() {
 		$allList = ManyManyList::create('DataObjectTest_Player', 'DataObjectTest_Team_Players',
 			'DataObjectTest_PlayerID', 'DataObjectTest_TeamID');
@@ -168,12 +168,12 @@ class ManyManyListTest extends SapphireTest {
 
 		$teamOneID = $this->idFromFixture('DataObjectTest_Team', 'team1');
 		$teamTwoID = $this->idFromFixture('DataObjectTest_Team', 'team2');
-		
+
 		// Captain 1 belongs to one team; team1
 		$captain1 = $this->objFromFixture('DataObjectTest_Player', 'captain1');
 		$this->assertEquals(array($teamOneID),$captain1->Teams()->column("ID"),
 			'Precondition; player2 belongs to team1');
-		
+
 		// Player 2 belongs to both teams: team1, team2
 		$player2 = $this->objFromFixture('DataObjectTest_Player', 'player2');
 		$this->assertEquals(array($teamOneID,$teamTwoID), $player2->Teams()->sort('Title')->column('ID'),
@@ -181,7 +181,7 @@ class ManyManyListTest extends SapphireTest {
 
 		// We want to find the teams for player2 where the captain does not belong to
 		$teamsWithoutTheCaptain = $player2->Teams()->subtract($captain1->Teams());
-		
+
 		// Assertions
 		$this->assertEquals(1,$teamsWithoutTheCaptain->count(),
 			'The ManyManyList should onlu contain one team');

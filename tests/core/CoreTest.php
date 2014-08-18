@@ -2,7 +2,7 @@
 /**
  * Tests for the core of SilverStripe, such as how the temporary
  * directory is determined throughout the framework.
- * 
+ *
  * @package framework
  * @subpackage tests
  */
@@ -29,7 +29,7 @@ class CoreTest extends SapphireTest {
 				getTempFolder('C:\\inetpub\\wwwroot\\silverstripe-test-project'));
 
 			// A typical Mac OS X location for where sites are stored
-			$this->assertEquals(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 
+			$this->assertEquals(sys_get_temp_dir() . DIRECTORY_SEPARATOR .
 				'silverstripe-cache-Users-joebloggs-Sites-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
 				getTempFolder('/Users/joebloggs/Sites/silverstripe-test-project'));
 

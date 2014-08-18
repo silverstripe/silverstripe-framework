@@ -1,18 +1,18 @@
 <?php
 /**
  * Represents a boolean field.
- * 
+ *
  * @package framework
  * @subpackage model
  */
 class Boolean extends DBField {
-	
+
 	public function __construct($name = null, $defaultVal = 0) {
 		$this->defaultVal = ($defaultVal) ? 1 : 0;
-		
+
 		parent::__construct($name);
 	}
-	
+
 	public function requireField() {
 		$parts=Array(
 			'datatype'=>'tinyint',
@@ -25,11 +25,11 @@ class Boolean extends DBField {
 		$values=Array('type'=>'boolean', 'parts'=>$parts);
 		DB::require_field($this->tableName, $this->name, $values);
 	}
-	
+
 	public function Nice() {
 		return ($this->value) ? _t('Boolean.YESANSWER', 'Yes') : _t('Boolean.NOANSWER', 'No');
 	}
-	
+
 	public function NiceAsBoolean() {
 		return ($this->value) ? 'true' : 'false';
 	}
@@ -49,14 +49,14 @@ class Boolean extends DBField {
 	public function scaffoldFormField($title = null, $params = null) {
 		return new CheckboxField($this->name, $title);
 	}
-	
+
 	public function scaffoldSearchField($title = null) {
 		$anyText = _t('Boolean.ANY', 'Any');
 		$source = array(
 			1 => _t('Boolean.YESANSWER', 'Yes'),
 			0 => _t('Boolean.NOANSWER', 'No')
 		);
-		
+
 		$field = new DropdownField($this->name, $title, $source);
 		$field->setEmptyString("($anyText)");
 		return $field;

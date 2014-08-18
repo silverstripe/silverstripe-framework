@@ -136,7 +136,7 @@ class SS_TemplateManifest {
 	public function getCandidateTemplate($name, $theme = null) {
 		$found = array();
 		$candidates = $this->getTemplate($name);
-		
+
 		// theme overrides modules
 		if ($theme && isset($candidates['themes'][$theme])) {
 			$found = array_merge($candidates, $candidates['themes'][$theme]);
@@ -145,12 +145,12 @@ class SS_TemplateManifest {
 		if ($this->project && isset($candidates[$this->project])) {
 			$found = array_merge($found, $candidates[$this->project]);
 		}
-		
+
 		$found = ($found) ? $found : $candidates;
-		
+
 		if (isset($found['themes'])) unset($found['themes']);
 		if (isset($found[$this->project])) unset($found[$this->project]);
-		
+
 		return $found;
 	}
 
@@ -186,7 +186,7 @@ class SS_TemplateManifest {
 			$theme = substr($pathname, $start);
 			$theme = substr($theme, 0, strpos($theme, '/'));
 			$theme = strtok($theme, '_');
-		} else if($this->project && (strpos($pathname, $this->base . '/' . $this->project .'/') === 0)) { 
+		} else if($this->project && (strpos($pathname, $this->base . '/' . $this->project .'/') === 0)) {
 			$projectFile = true;
 		}
 

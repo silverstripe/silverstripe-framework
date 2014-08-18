@@ -7,14 +7,14 @@
 class LeftAndMainTest extends FunctionalTest {
 
 	protected static $fixture_file = 'LeftAndMainTest.yml';
-	
+
 	protected $extraDataObjects = array('LeftAndMainTest_Object');
-	
+
 	protected $backupCss, $backupJs, $backupCombined;
 
 	public function setUp() {
 		parent::setUp();
-		
+
 		// @todo fix controller stack problems and re-activate
 		//$this->autoFollowRedirection = false;
 		CMSMenu::populate_menu();
@@ -42,7 +42,7 @@ class LeftAndMainTest extends FunctionalTest {
 
 		Requirements::set_combined_files_enabled($this->backupCombined);
 	}
-	
+
 
 	public function testExtraCssAndJavascript() {
 		$admin = $this->objFromFixture('Member', 'admin');
@@ -61,8 +61,8 @@ class LeftAndMainTest extends FunctionalTest {
 	 */
 	public function testSaveTreeNodeSorting() {
 		$this->loginWithPermission('ADMIN');
-		
-		// forcing sorting for non-MySQL		
+
+		// forcing sorting for non-MySQL
 		$rootPages = LeftAndMainTest_Object::get()
 			->filter("ParentID", 0)
 			->sort('"ID"');
@@ -70,7 +70,7 @@ class LeftAndMainTest extends FunctionalTest {
 		$page1 = $rootPages->offsetGet(0);
 		$page2 = $rootPages->offsetGet(1);
 		$page3 = $rootPages->offsetGet(2);
-		
+
 		// Move page2 before page1
 		$siblingIDs[0] = $page2->ID;
 		$siblingIDs[1] = $page1->ID;
@@ -85,12 +85,12 @@ class LeftAndMainTest extends FunctionalTest {
 		$page1 = DataObject::get_by_id('LeftAndMainTest_Object', $page1->ID, false);
 		$page2 = DataObject::get_by_id('LeftAndMainTest_Object', $page2->ID, false);
 		$page3 = DataObject::get_by_id('LeftAndMainTest_Object', $page3->ID, false);
-		
+
 		$this->assertEquals(2, $page1->Sort, 'Page1 is sorted after Page2');
 		$this->assertEquals(1, $page2->Sort, 'Page2 is sorted before Page1');
 		$this->assertEquals(3, $page3->Sort, 'Sort order for other pages is unaffected');
 	}
-	
+
 	public function testSaveTreeNodeParentID() {
 		$this->loginWithPermission('ADMIN');
 
@@ -122,23 +122,23 @@ class LeftAndMainTest extends FunctionalTest {
 		$this->assertEquals(2, $page2->Sort, 'Moved page is correctly sorted');
 		$this->assertEquals(3, $page32->Sort, 'Children pages after insertion are resorted');
 	}
-	
+
 	/**
 	 * Check that all subclasses of leftandmain can be accessed
 	 */
 	public function testLeftAndMainSubclasses() {
 		$adminuser = $this->objFromFixture('Member','admin');
 		$this->session()->inst_set('loggedInAs', $adminuser->ID);
-		
+
 		$menuItems = singleton('LeftAndMain')->MainMenu();
 		foreach($menuItems as $menuItem) {
 			$link = $menuItem->Link;
-			
+
 			// don't test external links
 			if(preg_match('/^https?:\/\//',$link)) continue;
 
 			$response = $this->get($link);
-			
+
 			$this->assertInstanceOf('SS_HTTPResponse', $response, "$link should return a response object");
 			$this->assertEquals(200, $response->getStatusCode(), "$link should return 200 status code");
 			// Check that a HTML page has been returned
@@ -146,7 +146,7 @@ class LeftAndMainTest extends FunctionalTest {
 			$this->assertRegExp('/<head[^>]*>/i', $response->getBody(), "$link should contain <head> tag");
 			$this->assertRegExp('/<body[^>]*>/i', $response->getBody(), "$link should contain <body> tag");
 		}
-		
+
 		$this->session()->inst_set('loggedInAs', null);
 
 	}
@@ -156,7 +156,7 @@ class LeftAndMainTest extends FunctionalTest {
 		$securityonlyuser = $this->objFromFixture('Member', 'securityonlyuser');
 		$allcmssectionsuser = $this->objFromFixture('Member', 'allcmssectionsuser');
 		$allValsFn = create_function('$obj', 'return $obj->getValue();');
-		
+
 		// anonymous user
 		$this->session()->inst_set('loggedInAs', null);
 		$menuItems = singleton('LeftAndMain')->MainMenu(false);
@@ -165,7 +165,7 @@ class LeftAndMainTest extends FunctionalTest {
 			array(),
 			'Without valid login, members cant access any menu entries'
 		);
-		
+
 		// restricted cms user
 		$this->session()->inst_set('loggedInAs', $securityonlyuser->ID);
 		$menuItems = singleton('LeftAndMain')->MainMenu(false);
@@ -176,19 +176,19 @@ class LeftAndMainTest extends FunctionalTest {
 			array('Help', 'SecurityAdmin'),
 			'Groups with limited access can only access the interfaces they have permissions for'
 		);
-		
+
 		// all cms sections user
 		$this->session()->inst_set('loggedInAs', $allcmssectionsuser->ID);
 		$menuItems = singleton('LeftAndMain')->MainMenu(false);
-		$this->assertContains('SecurityAdmin', 
+		$this->assertContains('SecurityAdmin',
 			array_map($allValsFn, $menuItems->column('Code')),
 			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
 		);
-		$this->assertContains('Help', 
+		$this->assertContains('Help',
 			array_map($allValsFn, $menuItems->column('Code')),
 			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
 		);
-		
+
 		// admin
 		$this->session()->inst_set('loggedInAs', $adminuser->ID);
 		$menuItems = singleton('LeftAndMain')->MainMenu(false);
@@ -197,7 +197,7 @@ class LeftAndMainTest extends FunctionalTest {
 			array_map($allValsFn, $menuItems->column('Code')),
 			'Administrators can access Security Admin'
 		);
-		
+
 		$this->session()->inst_set('loggedInAs', null);
 	}
 
@@ -254,7 +254,7 @@ class LeftAndMainTest extends FunctionalTest {
  */
 class LeftAndMainTest_Controller extends LeftAndMain implements TestOnly {
 	protected $template = 'BlankPage';
-	
+
 	private static $tree_class = 'LeftAndMainTest_Object';
 }
 
@@ -263,17 +263,17 @@ class LeftAndMainTest_Controller extends LeftAndMain implements TestOnly {
  * @subpackage tests
  */
 class LeftAndMainTest_Object extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		'Title' => 'Varchar',
 		'URLSegment' => 'Varchar',
 		'Sort' => 'Int',
 	);
-	
+
 	private static $extensions = array(
 		'Hierarchy'
 	);
-	
+
 	public function CMSTreeClasses() {}
 
 }

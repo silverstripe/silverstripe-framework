@@ -2,13 +2,13 @@
 
 /**
  * This class represents a validator for member passwords.
- * 
+ *
  * <code>
  * $pwdVal = new PasswordValidator();
  * $pwdValidator->minLength(7);
  * $pwdValidator->checkHistoricalPasswords(6);
  * $pwdValidator->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"));
- * 
+ *
  * Member::set_password_validator($pwdValidator);
  * </code>
  *
@@ -23,7 +23,7 @@ class PasswordValidator extends Object {
 		'digits' => '/[0-9]/',
 		'punctuation' => '/[^A-Za-z0-9]/',
 	);
-	
+
 	protected $minLength, $minScore, $testNames, $historicalPasswordCount;
 
 	/**
@@ -33,12 +33,12 @@ class PasswordValidator extends Object {
 		$this->minLength = $minLength;
 		return $this;
 	}
-	
+
 	/**
 	 * Check the character strength of the password.
 	 *
 	 * Eg: $this->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"))
-	 * 
+	 *
 	 * @param $minScore The minimum number of character tests that must pass
 	 * @param $testNames The names of the tests to perform
 	 */
@@ -47,7 +47,7 @@ class PasswordValidator extends Object {
 		$this->testNames = $testNames;
 		return $this;
 	}
-	
+
 	/**
 	 * Check a number of previous passwords that the user has used, and don't let them change to that.
 	 */
@@ -55,7 +55,7 @@ class PasswordValidator extends Object {
 		$this->historicalPasswordCount = $count;
 		return $this;
 	}
-	
+
 	/**
 	 * @param String $password
 	 * @param Member $member
@@ -126,8 +126,8 @@ class PasswordValidator extends Object {
 				}
 			}
 		}
-		
+
 		return $valid;
 	}
-	
+
 }

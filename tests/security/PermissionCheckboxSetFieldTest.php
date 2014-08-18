@@ -5,7 +5,7 @@
  */
 class PermissionCheckboxSetFieldTest extends SapphireTest {
 	protected static $fixture_file = 'PermissionCheckboxSetFieldTest.yml';
-	
+
 	public function testHiddenPermissions() {
 		$f = new PermissionCheckboxSetField(
 			'Permissions',
@@ -23,11 +23,11 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$this->assertContains('ADMIN', $f->Field());
 		$this->assertNotContains('NON-ADMIN', $f->Field());
 	}
-	
+
 	public function testSaveInto() {
 		$group = $this->objFromFixture('Group', 'group');  // tested group
 		$untouchable = $this->objFromFixture('Group', 'untouchable');  // group that should not change
-		
+
 		$field = new PermissionCheckboxSetField(
 			'Permissions',
 			'Permissions',
@@ -38,7 +38,7 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 
 		// get the number of permissions before we start
 		$baseCount = DataObject::get('Permission')->Count();
-		
+
 		// there are currently no permissions, save empty checkbox
 		$field->saveInto($group);
 		$group->flushCache();
@@ -50,7 +50,7 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 			'The other group has ADMIN permission');
 
 		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount, 'There are no orphaned permissions');
-				
+
 		// add some permissions
 		$field->setValue(array(
 			'ADMIN'=>true,
@@ -74,7 +74,7 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 
 		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount+2,
 			'There are no orphaned permissions');
-		
+
 		// remove permission
 		$field->setValue(array(
 			'ADMIN'=>true,

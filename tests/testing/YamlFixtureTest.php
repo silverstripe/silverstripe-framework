@@ -6,14 +6,14 @@ class YamlFixtureTest extends SapphireTest {
 		'YamlFixtureTest_DataObject',
 		'YamlFixtureTest_DataObjectRelation',
 	);
-	
+
 	public function testAbsoluteFixturePath() {
 		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
 		$obj = Injector::inst()->create('YamlFixture', $absPath);
 		$this->assertEquals($absPath, $obj->getFixtureFile());
 		$this->assertNull($obj->getFixtureString());
 	}
-	
+
 	public function testRelativeFixturePath() {
 		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
 		$obj = Injector::inst()->create('YamlFixture', $relPath);
@@ -28,7 +28,7 @@ class YamlFixtureTest extends SapphireTest {
 		$this->assertEquals($string, $obj->getFixtureString());
 		$this->assertNull($obj->getFixtureFile());
 	}
-	
+
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
@@ -36,7 +36,7 @@ class YamlFixtureTest extends SapphireTest {
 		$invalidPath = FRAMEWORK_DIR . '/tests/testing/invalid.yml';
 		$obj = Injector::inst()->create('YamlFixture', $invalidPath);
 	}
-	
+
 	public function testSQLInsert() {
 		$factory = new FixtureFactory();
 		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
@@ -49,7 +49,7 @@ class YamlFixtureTest extends SapphireTest {
 			$factory->getId("YamlFixtureTest_DataObject", "testobject1")
 		);
 		$this->assertTrue(
-			$object1->ManyMany()->Count() == 2, 
+			$object1->ManyMany()->Count() == 2,
 			"Should be two items in this relationship"
 		);
 		$this->assertGreaterThan(0, $factory->getId("YamlFixtureTest_DataObject", "testobject2"));
@@ -58,7 +58,7 @@ class YamlFixtureTest extends SapphireTest {
 			$factory->getId("YamlFixtureTest_DataObject", "testobject2")
 		);
 		$this->assertTrue(
-			$object2->ManyMany()->Count() == 1, 
+			$object2->ManyMany()->Count() == 1,
 			"Should be one item in this relationship"
 		);
 	}
@@ -89,5 +89,5 @@ class YamlFixtureTest_DataObjectRelation extends DataObject implements TestOnly 
 	);
 	private static $belongs_many_many = array(
 		"TestParent" => "YamlFixtureTest_DataObject"
-	); 
+	);
 }

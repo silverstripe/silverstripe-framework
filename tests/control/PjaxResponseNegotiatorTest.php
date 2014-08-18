@@ -1,6 +1,6 @@
 <?php
 class PjaxResponseNegotiatorTest extends SapphireTest {
-	
+
 	public function testDefaultCallbacks() {
 		$negotiator = new PjaxResponseNegotiator(array(
 			'default' => function() {return 'default response';},

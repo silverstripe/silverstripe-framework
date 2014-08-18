@@ -22,11 +22,11 @@ class ClassInfoTest extends SapphireTest {
 			'ClassInfo::subclassesFor() returns only direct subclasses and doesnt include base class'
 		);
 	}
-	
+
 	public function testClassesForFolder() {
 		//$baseFolder = Director::baseFolder() . '/' . FRAMEWORK_DIR . '/tests/_ClassInfoTest';
 		//$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
-		
+
 		$classes = ClassInfo::classes_for_folder(FRAMEWORK_DIR . '/tests');
 		$this->assertContains(
 			'classinfotest',
@@ -95,15 +95,15 @@ class ClassInfoTest extends SapphireTest {
 }
 
 class ClassInfoTest_BaseClass extends DataObject {
-	
+
 }
 
 class ClassInfoTest_ChildClass extends ClassInfoTest_BaseClass {
-	
+
 }
 
 class ClassInfoTest_GrandChildClass extends ClassInfoTest_ChildClass {
-	
+
 }
 
 class ClassInfoTest_BaseDataClass extends DataObject {

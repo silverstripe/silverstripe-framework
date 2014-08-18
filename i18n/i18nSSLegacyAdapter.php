@@ -7,7 +7,7 @@ require_once 'Zend/Translate/Adapter.php';
  * @subpackage i18n
  */
 class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslateAdapterInterface {
-	
+
 	/**
 	 * Generates the adapter
 	 *
@@ -17,7 +17,7 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 		$this->_options['keyDelimiter'] = ".";
 		parent::__construct($options);
 	}
-	
+
 	protected function _loadTranslationData($data, $locale, array $options = array()) {
 		$options = array_merge($this->_options, $options);
 
@@ -28,10 +28,10 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 		if(is_array($data)) return array($locale => $data);
 
 		$this->_filename = $data;
-		
+
 		// Ignore files with other extensions
 		if(pathinfo($this->_filename, PATHINFO_EXTENSION) != 'php') return;
-		
+
 		if (!is_readable($this->_filename)) {
 			require_once 'Zend/Translate/Exception.php';
 			throw new Zend_Translate_Exception('Error opening translation file \'' . $this->_filename . '\'.');
@@ -41,7 +41,7 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 		if(!isset($lang['en_US'])) $lang['en_US'] = array();
 		// TODO Diff locale array to avoid re-parsing all previous translations whenever a new module is included.
 		require_once($this->_filename);
-		
+
 		$flattened = array();
 		if($lang[$locale]) {
 			$iterator = new i18nSSLegacyAdapter_Iterator(new RecursiveArrayIterator($lang[$locale]));
@@ -57,11 +57,11 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 	public function toString() {
 		return "i18nSSLegacy";
 	}
-	
+
 	public function getFilenameForLocale($locale) {
 		return "{$locale}.php";
 	}
-	
+
 }
 
 /**

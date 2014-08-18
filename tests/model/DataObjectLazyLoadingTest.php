@@ -80,7 +80,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 			'"DataObjectTest_Team"."ClassName" ELSE '.$db->quoteString('DataObjectTest_Team').' END ' .
 			'AS "RecordClassName", "DataObjectTest_Team"."Title" ' .
 			'FROM "DataObjectTest_Team" LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = ' .
-			'"DataObjectTest_Team"."ID" WHERE ("DataObjectTest_Team"."ClassName" IN (?)) ' . 
+			'"DataObjectTest_Team"."ID" WHERE ("DataObjectTest_Team"."ClassName" IN (?)) ' .
 			'ORDER BY "DataObjectTest_Team"."Title" ASC';
 		$this->assertSQLEquals($expected, $playerList->sql($parameters));
 	}
@@ -89,7 +89,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		// This queries all columns from base table
 		$playerList = new DataList('DataObjectTest_Team');
 		// Shouldn't be a left join in here.
-		$this->assertEquals(0, 
+		$this->assertEquals(0,
 			preg_match(
 				$this->normaliseSQL(
 					'/SELECT DISTINCT "DataObjectTest_Team"."ID" .* LEFT JOIN .* FROM "DataObjectTest_Team"/'
@@ -277,11 +277,11 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$obj1->write();
 		$version2 = $obj1->Version;
 
-		
+
 		$reloaded = Versioned::get_version('VersionedTest_Subclass', $obj1->ID, $version1);
 		$this->assertEquals($reloaded->Name, 'test');
 		$this->assertEquals($reloaded->ExtraField, 'foo');
-		
+
 		$reloaded = Versioned::get_version('VersionedTest_Subclass', $obj1->ID, $version2);
 		$this->assertEquals($reloaded->Name, 'test2');
 		$this->assertEquals($reloaded->ExtraField, 'baz');
@@ -299,7 +299,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertEquals($allVersions->Last()->Version, $version2);
 		$this->assertEquals($allVersions->Last()->Name, 'test2');
 		$this->assertEquals($allVersions->Last()->ExtraField, 'baz');
-		
+
 		$obj1->delete();
 	}
 

@@ -17,12 +17,12 @@ class ConvertTest extends SapphireTest {
 		$val1 = '<input type="text">';
 		$this->assertEquals('&lt;input type=&quot;text&quot;&gt;', Convert::raw2att($val1),
 			'Special characters are escaped');
-		
+
 		$val2 = 'This is some normal text.';
 		$this->assertEquals('This is some normal text.', Convert::raw2att($val2),
 			'Normal text is not escaped');
 	}
-	
+
 	/**
 	 * Tests {@link Convert::raw2htmlatt()}
 	 */
@@ -30,44 +30,44 @@ class ConvertTest extends SapphireTest {
 		$val1 = '<input type="text">';
 		$this->assertEquals('&lt;input type=&quot;text&quot;&gt;', Convert::raw2htmlatt($val1),
 			'Special characters are escaped');
-		
+
 		$val2 = 'This is some normal text.';
 		$this->assertEquals('This is some normal text.', Convert::raw2htmlatt($val2),
 			'Normal text is not escaped');
 	}
-	
+
 	public function testHtml2raw() {
-		$val1 = 'This has a <strong>strong tag</strong>.'; 
+		$val1 = 'This has a <strong>strong tag</strong>.';
 		$this->assertEquals('This has a *strong tag*.', Convert::xml2raw($val1),
 			'Strong tags are replaced with asterisks');
-		
-		$val1 = 'This has a <b class="test" style="font-weight: bold">b tag with attributes</b>.'; 
+
+		$val1 = 'This has a <b class="test" style="font-weight: bold">b tag with attributes</b>.';
 		$this->assertEquals('This has a *b tag with attributes*.', Convert::xml2raw($val1),
 			'B tags with attributes are replaced with asterisks');
-		
-		$val2 = 'This has a <strong class="test" style="font-weight: bold">strong tag with attributes</STRONG>.'; 
+
+		$val2 = 'This has a <strong class="test" style="font-weight: bold">strong tag with attributes</STRONG>.';
 		$this->assertEquals('This has a *strong tag with attributes*.', Convert::xml2raw($val2),
 			'Strong tags with attributes are replaced with asterisks');
-		
+
 		$val3 = '<script type="text/javascript">Some really nasty javascript here</script>';
 		$this->assertEquals('', Convert::xml2raw($val3),
 			'Script tags are completely removed');
-		
+
 		$val4 = '<style type="text/css">Some really nasty CSS here</style>';
 		$this->assertEquals('', Convert::xml2raw($val4),
 			'Style tags are completely removed');
-		
+
 		$val5 = '<script type="text/javascript">Some really nasty
 		multiline javascript here</script>';
 		$this->assertEquals('', Convert::xml2raw($val5),
 			'Multiline script tags are completely removed');
-		
+
 		$val6 = '<style type="text/css">Some really nasty
 		multiline CSS here</style>';
 		$this->assertEquals('', Convert::xml2raw($val6),
 			'Multiline style tags are completely removed');
 	}
-	
+
 	/**
 	 * Tests {@link Convert::raw2xml()}
 	 */
@@ -75,7 +75,7 @@ class ConvertTest extends SapphireTest {
 		$val1 = '<input type="text">';
 		$this->assertEquals('&lt;input type=&quot;text&quot;&gt;', Convert::raw2xml($val1),
 			'Special characters are escaped');
-		
+
 		$val2 = 'This is some normal text.';
 		$this->assertEquals('This is some normal text.', Convert::raw2xml($val2),
 			'Normal text is not escaped');
@@ -84,7 +84,7 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals("This is test\nNow on a new line.", Convert::raw2xml($val3),
 			'Newlines are retained. They should not be replaced with <br /> as it is not XML valid');
 	}
-	
+
 	/**
 	 * Tests {@link Convert::raw2htmlid()}
 	 */
@@ -98,14 +98,14 @@ class ConvertTest extends SapphireTest {
 		$val1 = '[test[[test]][123]]';
 		$this->assertEquals('test_test_123', Convert::raw2htmlid($val1));
 	}
-	
+
 	/**
 	 * Tests {@link Convert::xml2raw()}
 	 */
 	public function testXml2Raw() {
 		$val1 = '&lt;input type=&quot;text&quot;&gt;';
 		$this->assertEquals('<input type="text">', Convert::xml2raw($val1), 'Special characters are escaped');
-		
+
 		$val2 = 'This is some normal text.';
 		$this->assertEquals('This is some normal text.', Convert::xml2raw($val2), 'Normal text is not escaped');
 	}
@@ -139,7 +139,7 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals('Jones', $obj->Tom);
 		$this->assertEquals('Structure', $obj->My->Complicated);
 	}
-	
+
 	/**
 	 * @todo test toASCII()
 	 */
@@ -152,44 +152,44 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals('foos-bar-2', Convert::raw2url('foo\'s [bar] (2)'));
 		Config::inst()->update('URLSegmentFilter', 'default_allow_multibyte', $orig);
 	}
-	
+
 	/**
 	 * Helper function for comparing characters with significant whitespaces
 	 * @param string $expected
-	 * @param string $actual 
+	 * @param string $actual
 	 */
 	protected function assertEqualsQuoted($expected, $actual) {
 		$message = sprintf(
-			"Expected \"%s\" but given \"%s\"", 
-			addcslashes($expected, "\r\n"), 
+			"Expected \"%s\" but given \"%s\"",
+			addcslashes($expected, "\r\n"),
 			addcslashes($actual, "\r\n")
 		);
 		$this->assertEquals($expected, $actual, $message);
 	}
-	
+
 	public function testNL2OS() {
-		
+
 		foreach(array("\r\n", "\r", "\n") as $nl) {
-			
+
 			// Base case: no action
 			$this->assertEqualsQuoted(
 				"Base case",
 				Convert::nl2os("Base case", $nl)
 			);
-			
+
 			// Mixed formats
 			$this->assertEqualsQuoted(
 				"Test{$nl}Text{$nl}Is{$nl}{$nl}Here{$nl}.",
 				Convert::nl2os("Test\rText\r\nIs\n\rHere\r\n.", $nl)
 			);
-			
+
 			// Test that multiple runs are non-destructive
 			$expected = "Test{$nl}Text{$nl}Is{$nl}{$nl}Here{$nl}.";
 			$this->assertEqualsQuoted(
 				$expected,
 				Convert::nl2os($expected, $nl)
 			);
-			
+
 			// Check repeated sequence behaves correctly
 			$expected = "{$nl}{$nl}{$nl}{$nl}{$nl}{$nl}{$nl}{$nl}";
 			$input = "\r\r\n\r\r\n\n\n\n\r";
@@ -199,7 +199,7 @@ class ConvertTest extends SapphireTest {
 			);
 		}
 	}
-	
+
 	public function testRaw2JS() {
 		// Test attempt to break out of string
 		$this->assertEquals(
@@ -225,9 +225,9 @@ class ConvertTest extends SapphireTest {
 			Convert::raw2js('\\">Click here')
 		);
 	}
-	
+
 	public function testRaw2JSON() {
-		
+
 		// Test object
 		$input = new stdClass();
 		$input->Title = 'My Object';
@@ -236,14 +236,14 @@ class ConvertTest extends SapphireTest {
 			'{"Title":"My Object","Content":"<p>Data<\/p>"}',
 			Convert::raw2json($input)
 		);
-		
+
 		// Array
 		$array = array('One' => 'Apple', 'Two' => 'Banana');
 		$this->assertEquals(
 			'{"One":"Apple","Two":"Banana"}',
 			Convert::raw2json($array)
 		);
-		
+
 		// String value with already encoded data. Result should be quoted.
 		$value = '{"Left": "Value"}';
 		$this->assertEquals(

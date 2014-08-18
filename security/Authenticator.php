@@ -17,11 +17,11 @@ abstract class Authenticator extends Object {
 	 * @var array
 	 */
 	private static $authenticators = array('MemberAuthenticator');
-	
+
 	/**
 	 * Used to influence the order of authenticators on the login-screen
 	 * (default shows first).
-	 * 
+	 *
 	 * @var string
 	 */
 	private static $default_authenticator = 'MemberAuthenticator';
@@ -61,7 +61,7 @@ abstract class Authenticator extends Object {
 	}
 
 	public static function register($authenticator) {
-	self::register_authenticator($authenticator);	
+	self::register_authenticator($authenticator);
 	}
 
 
@@ -95,11 +95,11 @@ abstract class Authenticator extends Object {
 
 		return true;
 	}
-	
+
 	public static function unregister($authenticator) {
 		self::unregister_authenticator($authenticator);
 	}
-	
+
 	/**
 	 * Remove a previously registered authenticator
 	 *
@@ -142,7 +142,7 @@ abstract class Authenticator extends Object {
 
 		return self::$authenticators;
 	}
-	
+
 	/**
 	 * Set a default authenticator (shows first in tabs)
 	 *
@@ -150,10 +150,10 @@ abstract class Authenticator extends Object {
 	 */
 	public static function set_default_authenticator($authenticator) {
 		self::$default_authenticator = $authenticator;
-		
-		
+
+
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -176,7 +176,7 @@ abstract class Authenticator extends Object {
 	protected static function on_register() {
 		return true;
 	}
-	
+
 	/**
 	 * Callback function that is called when an authenticator is removed.
 	 *

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * 
+ *
  * Tests for DBField objects.
  * @package framework
  * @subpackage tests
  *
  */
 class DBFieldTest extends SapphireTest {
-	
+
 	/**
 	 * Test the nullValue() method on DBField.
 	 */
@@ -17,7 +17,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals(0, singleton('Float')->nullValue());
 		$this->assertEquals(0, singleton('Double')->nullValue());
 	}
-	
+
 	/**
 	 * Test the prepValueForDB() method on DBField.
 	 */
@@ -44,7 +44,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals(0, singleton('Int')->prepValueForDB(false));
 		$this->assertEquals(0, singleton('Int')->prepValueForDB(''));
 		$this->assertEquals('0', singleton('Int')->prepValueForDB('0'));
-		
+
 		/* Integer behaviour, asserting we have 1 */
 		$this->assertEquals(1, singleton('Int')->prepValueForDB(true));
 		$this->assertEquals(1, singleton('Int')->prepValueForDB(1));
@@ -70,7 +70,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals(false, singleton('Boolean')->prepValueForDB('f'));
 		$this->assertEquals(false, singleton('Boolean')->prepValueForDB(''));
 		$this->assertEquals(false, singleton('Boolean')->prepValueForDB('0'));
-		
+
 		/* Boolean behaviour, asserting we have 1 */
 		$this->assertEquals(true, singleton('Boolean')->prepValueForDB(true));
 		$this->assertEquals(true, singleton('Boolean')->prepValueForDB('true'));
@@ -109,7 +109,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertSame('test', $varcharField->prepValueForDB('test'));
 		$this->assertSame(123, $varcharField->prepValueForDB(123));
 		unset($varcharField);
-		
+
 		/* Text behaviour */
 		$this->assertEquals(0, singleton('Text')->prepValueForDB(0));
 		$this->assertEquals(null, singleton('Text')->prepValueForDB(null));
@@ -139,7 +139,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertSame('test', $textField->prepValueForDB('test'));
 		$this->assertSame(123, $textField->prepValueForDB(123));
 		unset($textField);
-		
+
 		/* Time behaviour */
 		$time = singleton('Time');
 		$time->setValue('00:01am');
@@ -161,7 +161,7 @@ class DBFieldTest extends SapphireTest {
 		$time->setValue('00:00:00');
 		$this->assertEquals("00:00:00", $time->getValue());
 	}
-	
+
 	public function testExists() {
 		$varcharField = new Varchar("testfield");
 		$this->assertTrue($varcharField->getNullifyEmpty());
@@ -171,7 +171,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertFalse($varcharField->exists());
 		$varcharField->setValue(null);
 		$this->assertFalse($varcharField->exists());
-		
+
 		$varcharField = new Varchar("testfield", 50, array('nullifyEmpty'=>false));
 		$this->assertFalse($varcharField->getNullifyEmpty());
 		$varcharField->setValue('abc');
@@ -189,7 +189,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertFalse($textField->exists());
 		$textField->setValue(null);
 		$this->assertFalse($textField->exists());
-		
+
 		$textField = new Text("testfield", array('nullifyEmpty'=>false));
 		$this->assertFalse($textField->getNullifyEmpty());
 		$textField->setValue('abc');
@@ -199,12 +199,12 @@ class DBFieldTest extends SapphireTest {
 		$textField->setValue(null);
 		$this->assertFalse($textField->exists());
 	}
-	
+
 	public function testStringFieldsWithMultibyteData() {
 		$plainFields = array('Varchar', 'Text');
 		$htmlFields = array('HTMLVarchar', 'HTMLText');
 		$allFields = array_merge($plainFields, $htmlFields);
-		
+
 		$value = 'üåäöÜÅÄÖ';
 		foreach ($allFields as $stringField) {
 			$stringField = DBField::create_field($stringField, $value);
@@ -213,17 +213,17 @@ class DBFieldTest extends SapphireTest {
 				$this->assertEquals($expected, $stringField->LimitCharacters($i));
 			}
 		}
-		
+
 		$value = '<p>üåäö&amp;ÜÅÄÖ</p>';
 		foreach ($htmlFields as $stringField) {
 			$stringField = DBField::create_field($stringField, $value);
 			$this->assertEquals('üåäö&amp;ÜÅÄ...', $stringField->LimitCharacters(8));
 		}
-		
+
 		$this->assertEquals('ÅÄÖ', DBField::create_field('Text', 'åäö')->UpperCase());
 		$this->assertEquals('åäö', DBField::create_field('Text', 'ÅÄÖ')->LowerCase());
 	}
-	
+
 }
 
 

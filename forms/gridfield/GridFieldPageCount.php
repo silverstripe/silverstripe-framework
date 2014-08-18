@@ -3,9 +3,9 @@
 /**
  * GridFieldPage displays a simple current page count summary.
  * E.g. "View 1 - 15 of 32"
- * 
+ *
  * Depends on {@link GridFieldPaginator} being added to the {@link GridField}.
- * 
+ *
  * @package forms
  * @subpackage fields-gridfield
  */
@@ -17,7 +17,7 @@ class GridFieldPageCount implements GridField_HTMLProvider {
 
 	/**
 	 * Which template to use for rendering
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $itemClass = 'GridFieldPageCount';
@@ -28,7 +28,7 @@ class GridFieldPageCount implements GridField_HTMLProvider {
 	public function __construct($targetFragment = 'before') {
 		$this->targetFragment = $targetFragment;
 	}
-	
+
 	/**
 	 * Flag indicating whether or not this control should throw an error if a
 	 * {@link GridFieldPaginator} is not present on the same {@link GridField}
@@ -37,23 +37,23 @@ class GridFieldPageCount implements GridField_HTMLProvider {
 	 * @var boolean
 	 */
 	private static $require_paginator = true;
-	
+
 	/**
 	 * Retrieves an instance of a GridFieldPaginator attached to the same control
 	 * @param GridField $gridField The parent gridfield
 	 * @return GridFieldPaginator The attached GridFieldPaginator, if found.
-	 * @throws LogicException 
+	 * @throws LogicException
 	 */
 	protected function getPaginator($gridField) {
 		$paginator = $gridField->getConfig()->getComponentByType('GridFieldPaginator');
-		
+
 		if(!$paginator && Config::inst()->get('GridFieldPageCount', 'require_paginator')) {
 			throw new LogicException(
 				get_class($this) . " relies on a GridFieldPaginator to be added " .
 				"to the same GridField, but none are present."
 			);
 		}
-		
+
 		return $paginator;
 	}
 

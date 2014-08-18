@@ -7,12 +7,12 @@
  * @subpackage misc
  */
 class ArrayLib {
-	
+
 	/**
 	 * Inverses the first and second level keys of an associative
 	 * array, keying the result by the second level, and combines
 	 * all first level entries within them.
-	 * 
+	 *
 	 * Before:
 	 * <example>
 	 * array(
@@ -26,7 +26,7 @@ class ArrayLib {
 	 * 	)
 	 * )
 	 * </example>
-	 * 
+	 *
 	 * After:
 	 * <example>
 	 * array(
@@ -40,7 +40,7 @@ class ArrayLib {
 	 * 	),
 	 * )
 	 * </example>
-	 * 
+	 *
 	 * @param array $arr
 	 * @return array
 	 */
@@ -50,26 +50,26 @@ class ArrayLib {
 		}
 
 		$result = array();
-		
+
 		foreach($arr as $columnName => $column) {
 			foreach($column as $rowName => $cell) {
 				$result[$rowName][$columnName] = $cell;
 			}
 		}
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * Return an array where the keys are all equal to the values.
-	 * 
+	 *
 	 * @param $arr array
 	 * @return array
 	 */
 	public static function valuekey($arr) {
 		return array_combine($arr, $arr);
 	}
-	
+
 	/**
 	 * @todo Improve documentation
 	 */
@@ -89,11 +89,11 @@ class ArrayLib {
 
 		return $lst;
 	}
-	
+
 	/**
-	 * Filter an array by keys (useful for only allowing certain form-input to 
+	 * Filter an array by keys (useful for only allowing certain form-input to
 	 * be saved).
-	 * 
+	 *
 	 * @param $arr array
 	 * @param $keys array
 	 *
@@ -108,9 +108,9 @@ class ArrayLib {
 
 		return $arr;
 	}
-	
+
 	/**
-	 * Determines if an array is associative by checking for existing keys via 
+	 * Determines if an array is associative by checking for existing keys via
 	 * array_key_exists().
 	 *
 	 * @see http://nz.php.net/manual/en/function.is-array.php#76188
@@ -136,7 +136,7 @@ class ArrayLib {
 	/**
 	 * Recursively searches an array $haystack for the value(s) $needle.
 	 *
-	 * Assumes that all values in $needle (if $needle is an array) are at 
+	 * Assumes that all values in $needle (if $needle is an array) are at
 	 * the SAME level, not spread across multiple dimensions of the $haystack.
 	 *
 	 * @param mixed $needle
@@ -147,7 +147,7 @@ class ArrayLib {
 	 */
 	public static function in_array_recursive($needle, $haystack, $strict = false) {
 		if(!is_array($haystack)) {
-			return false; 
+			return false;
 		}
 
 		if(in_array($needle, $haystack, $strict)) {
@@ -155,20 +155,20 @@ class ArrayLib {
 		} else {
 			foreach($haystack as $obj) {
 				if(self::in_array_recursive($needle, $obj, $strict)) {
-					return true; 
+					return true;
 				}
 			}
 		}
-		
-		return false; 
+
+		return false;
 	}
-	
+
 	/**
 	 * Recursively merges two or more arrays.
 	 *
-	 * Behaves similar to array_merge_recursive(), however it only merges 
-	 * values when both are arrays rather than creating a new array with 
-	 * both values, as the PHP version does. The same behaviour also occurs 
+	 * Behaves similar to array_merge_recursive(), however it only merges
+	 * values when both are arrays rather than creating a new array with
+	 * both values, as the PHP version does. The same behaviour also occurs
 	 * with numeric keys, to match that of what PHP does to generate $_REQUEST.
 	 *
 	 * @param array $array
@@ -178,14 +178,14 @@ class ArrayLib {
 	public static function array_merge_recursive($array) {
 		$arrays = func_get_args();
 		$merged = array();
-		
+
 		if(count($arrays) == 1) {
 			return $array;
 		}
 
 		while ($arrays) {
 			$array = array_shift($arrays);
-			
+
 			if (!is_array($array)) {
 				trigger_error('ArrayLib::array_merge_recursive() encountered a non array argument', E_USER_WARNING);
 				return;
@@ -194,7 +194,7 @@ class ArrayLib {
 			if (!$array) {
 				continue;
 			}
-			
+
 			foreach ($array as $key => $value) {
 				if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key])) {
 					$merged[$key] = ArrayLib::array_merge_recursive($merged[$key], $value);
@@ -207,15 +207,15 @@ class ArrayLib {
 		return $merged;
 	}
 
-	/** 
+	/**
 	 * Takes an multi dimension array and returns the flattened version.
 	 *
 	 * @param array $array
 	 * @param boolean $preserveKeys
 	 *
 	 * @return array
-	 */ 
-	public static function flatten($array, $preserveKeys = true, &$out = array()) { 
+	 */
+	public static function flatten($array, $preserveKeys = true, &$out = array()) {
 		foreach($array as $key => $child) {
 			if(is_array($child)) {
 				$out = self::flatten($child, $preserveKeys, $out);
@@ -229,4 +229,4 @@ class ArrayLib {
 		return $out;
 	}
 }
-	
+

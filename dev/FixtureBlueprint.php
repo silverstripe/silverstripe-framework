@@ -4,7 +4,7 @@
  *
  * Relies on a {@link FixtureFactory} to manage database relationships between instances,
  * and manage the mappings between fixture identifiers and their database IDs.
- * 
+ *
  * @package framework
  * @subpackage core
  */
@@ -45,7 +45,7 @@ class FixtureBlueprint {
 	 */
 	public function __construct($name, $class = null, $defaults = array()) {
 		if(!$class) $class = $name;
-		
+
 		if(!is_subclass_of($class, 'DataObject')) {
 			throw new InvalidArgumentException(sprintf(
 				'Class "%s" is not a valid subclass of DataObject',
@@ -57,7 +57,7 @@ class FixtureBlueprint {
 		$this->class = $class;
 		$this->defaults = $defaults;
 	}
-	
+
 	/**
 	 * @param String $identifier Unique identifier for this fixture type
 	 * @param Array $data Map of property names to their values.
@@ -78,13 +78,13 @@ class FixtureBlueprint {
 		try {
 			$class = $this->class;
 			$obj = DataModel::inst()->$class->newObject();
-			
+
 			// If an ID is explicitly passed, then we'll sort out the initial write straight away
 			// This is just in case field setters triggered by the population code in the next block
 			// Call $this->write().  (For example, in FileTest)
 			if(isset($data['ID'])) {
 				$obj->ID = $data['ID'];
-				
+
 				// The database needs to allow inserting values into the foreign key column (ID in our case)
 				$conn = DB::get_conn();
 				if(method_exists($conn, 'allowPrimaryKeyEditing')) {
@@ -106,7 +106,7 @@ class FixtureBlueprint {
 					$obj->$fieldName = $fieldVal;
 				}
 			}
-			
+
 			// Populate overrides
 			if($data) foreach($data as $fieldName => $fieldVal) {
 				// Defer relationship processing
@@ -124,7 +124,7 @@ class FixtureBlueprint {
 				$fixtures[$class] = array();
 			}
 			$fixtures[$class][$identifier] = $obj->ID;
-					
+
 			// Populate all relations
 			if($data) foreach($data as $fieldName => $fieldVal) {
 				if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
@@ -134,7 +134,7 @@ class FixtureBlueprint {
 
 					if(is_array($fieldVal)) {
 						// handle lists of many_many relations. Each item can
-						// specify the many_many_extraFields against each 
+						// specify the many_many_extraFields against each
 						// related item.
 						foreach($fieldVal as $relVal) {
 							$item = key($relVal);
@@ -193,7 +193,7 @@ class FixtureBlueprint {
 					array('"ID"' => $obj->id)
 				);
 				$update->execute();
-			}	
+			}
 		} catch(Exception $e) {
 			Config::inst()->update('DataObject', 'validation_enabled', $validationenabled);
 			throw $e;
@@ -230,8 +230,8 @@ class FixtureBlueprint {
 
 	/**
 	 * See class documentation.
-	 * 
-	 * @param String $type 
+	 *
+	 * @param String $type
 	 * @param callable $callback
 	 */
 	public function addCallback($type, $callback) {
@@ -244,7 +244,7 @@ class FixtureBlueprint {
 	}
 
 	/**
-	 * @param String $type 
+	 * @param String $type
 	 * @param callable $callback
 	 */
 	public function removeCallback($type, $callback) {
@@ -261,7 +261,7 @@ class FixtureBlueprint {
 	}
 
 	/**
-	 * Parse a value from a fixture file.  If it starts with => 
+	 * Parse a value from a fixture file.  If it starts with =>
 	 * it will get an ID from the fixture dictionary
 	 *
 	 * @param string $fieldVal

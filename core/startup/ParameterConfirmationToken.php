@@ -54,10 +54,10 @@ class ParameterConfirmationToken {
 		// If a token was provided, but isn't valid, ignore it
 		if ($this->token && (!$this->checkToken($this->token))) $this->token = null;
 	}
-	
+
 	/**
 	 * Get the name of this token
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getName() {
@@ -66,7 +66,7 @@ class ParameterConfirmationToken {
 
 	/**
 	 * Is the parameter requested?
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function parameterProvided() {
@@ -75,22 +75,22 @@ class ParameterConfirmationToken {
 
 	/**
 	 * Is the necessary token provided for this parameter?
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function tokenProvided() {
 		return $this->token !== null;
 	}
-	
+
 	/**
 	 * Is this parameter requested without a valid token?
-	 * 
+	 *
 	 * @return bool True if the parameter is given without a valid token
 	 */
 	public function reloadRequired() {
 		return $this->parameterProvided() && !$this->tokenProvided();
 	}
-	
+
 	/**
 	 * Suppress the current parameter by unsetting it from $_GET
 	 */
@@ -116,20 +116,20 @@ class ParameterConfirmationToken {
 		if(
 			isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
 			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'
-		) { 
+		) {
 			// Convention for (non-standard) proxy signaling a HTTPS forward,
 			// see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
 			$proto = 'https';
 		} else if(
 			isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
 			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https'
-		) { 
+		) {
 			// Less conventional proxy header
 			$proto = 'https';
 		} else if(
 			isset($_SERVER['HTTP_FRONT_END_HTTPS'])
 			&& strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) == 'on'
-		) { 
+		) {
 			// Microsoft proxy convention: https://support.microsoft.com/?kbID=307347
 			$proto = 'https';
 		} else if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
@@ -174,11 +174,11 @@ You are being redirected. If you are not redirected soon, <a href='$location'>cl
 		else header('location: '.$location, true, 302);
 		die;
 	}
-	
+
 	/**
-	 * Given a list of token names, suppress all tokens that have not been validated, and 
+	 * Given a list of token names, suppress all tokens that have not been validated, and
 	 * return the non-validated token with the highest priority
-	 * 
+	 *
 	 * @param type $keys List of token keys in ascending priority (low to high)
 	 * @return ParameterConfirmationToken The token container for the unvalidated $key given with the highest priority
 	 */

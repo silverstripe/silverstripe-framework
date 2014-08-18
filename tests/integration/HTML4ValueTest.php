@@ -14,7 +14,7 @@ class SS_HTML4ValueTest extends SapphireTest {
 			'<html><html><body><falsetag "attribute=""attribute""">' => '<falsetag></falsetag>',
 			'<body<body<body>/bodu>/body>'                           => '/bodu&gt;/body&gt;'
 		);
-		
+
 		foreach($invalid as $input => $expected) {
 			$value->setContent($input);
 			$this->assertEquals($expected, $value->getContent(), 'Invalid HTML can be saved');
@@ -36,7 +36,7 @@ class SS_HTML4ValueTest extends SapphireTest {
 			'<html><div><a href="test-link"></a></a></html_>',
 			'""\'\'\'"""\'""<<<>/</<htmlbody><a href="test-link"<<>'
 		);
-		
+
 		foreach($invalid as $input) {
 			$value->setContent($input);
 			$this->assertEquals(
@@ -46,7 +46,7 @@ class SS_HTML4ValueTest extends SapphireTest {
 			);
 		}
 	}
-	
+
 	public function testMixedNewlines() {
 		$value = new SS_HTML4Value();
 
