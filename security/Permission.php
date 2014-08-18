@@ -554,11 +554,11 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 			return $a['sort'] < $b['sort'] ? -1 : 1;
 		}
 	}
-	
+
 	/**
 	 * add a permission represented by the $code to the {@link slef::$hidden_permissions} list
 	 *
-	 * @deprecated 3.1 Use "Permission.hidden_permissions" config setting instead
+	 * @deprecated 3.2 Use "Permission.hidden_permissions" config setting instead
 	 * @param $code string - the permissions code
 	 * @return void
 	 */
@@ -571,7 +571,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	/**
 	 * remove a permission represented by the $code from the {@link slef::$hidden_permissions} list
 	 *
-	 * @deprecated 3.1 Use "Permission.hidden_permissions" config setting instead
+	 * @deprecated 3.2 Use "Permission.hidden_permissions" config setting instead
 	 * @param $code string - the permissions code
 	 * @return void
 	 */

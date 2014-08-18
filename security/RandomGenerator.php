@@ -74,15 +74,4 @@ class RandomGenerator {
 		return hash($algorithm, $this->generateEntropy());
 	}
 
-	/**
-	 * @deprecated 3.1
-	 */
-	public function generateHash($algorithm = 'whirlpool') {
-		Deprecation::notice('3.1',
-			'RandomGenerator::generateHash is deprecated because of a confusing name that hints the output is secure, '.
-			'while in fact it is just a random string. Use RandomGenerator::randomToken instead.',
-			Deprecation::SCOPE_METHOD);
-
-		return $this->randomToken($algorithm);
-	}
 }

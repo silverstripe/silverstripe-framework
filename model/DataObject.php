@@ -1603,14 +1603,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 3.1 Use getComponents to get a filtered DataList for an object's relation
-	 */
-	public function getComponentsQuery($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
-		Deprecation::notice('3.1', "Use getComponents to get a filtered DataList for an object's relation");
-		return $this->getComponents($componentName, $filter, $sort, $join, $limit);
-	}
-
-	/**
 	 * Find the foreign class of a relation on this DataObject, regardless of the relation type.
 	 *
 	 * @param $relationName Relation name.
@@ -2995,36 +2987,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 3.1 Use DataList::create and DataList to do your querying
-	 */
-	public function Aggregate($class = null) {
-		Deprecation::notice('3.1', 'Call aggregate methods on a DataList directly instead. In templates'
-			. ' an example of the new syntax is &lt% cached List(Member).max(LastEdited) %&gt instead'
-			. ' (check partial-caching.md documentation for more details.)');
-
-		if($class) {
-			$list = new DataList($class);
-			$list->setDataModel(DataModel::inst());
-		} else if(isset($this)) {
-			$list = new DataList(get_class($this));
-			$list->setDataModel($this->model);
-		} else {
-			throw new \InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed"
-				. " a classname");
-		}
-		return $list;
-	}
-
-	/**
-	 * @deprecated 3.1 Use DataList::create and DataList to do your querying
-	 */
-	public function RelationshipAggregate($relationship) {
-		Deprecation::notice('3.1', 'Call aggregate methods on a relationship directly instead.');
-
-		return $this->$relationship();
-	}
-
-	/**
 	 * Return the first item matching the given query.
 	 * All calls to get_one() are cached.
 	 *
@@ -3072,8 +3034,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject $this
 	 */
 	public function flushCache($persistent = true) {
-		if($persistent) Aggregate::flushCache($this->class);
-
 		if($this->class == 'DataObject') {
 			DataObject::$_cache_get_one = array();
 			return $this;
