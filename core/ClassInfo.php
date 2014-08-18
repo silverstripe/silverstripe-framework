@@ -1,13 +1,17 @@
 <?php
+
 /**
  * Provides introspection information about the class tree.
- * It's a cached wrapper around the built-in class functions.  SilverStripe uses class introspection heavily
- * and without the caching it creates an unfortunate performance hit.
+ *
+ * It's a cached wrapper around the built-in class functions.  SilverStripe uses 
+ * class introspection heavily and without the caching it creates an unfortunate 
+ * performance hit.
  *
  * @package framework
  * @subpackage core
  */
 class ClassInfo {
+
 	/**
 	 * Wrapper for classes getter.
 	 */
@@ -245,5 +249,42 @@ class ClassInfo {
 		return self::$method_from_cache[$class][$method] == $compclass;
 	}
 	
+
+	/**
+	 * Returns the table name in the class hierarchy which contains a given 
+	 * field column for a {@link DataObject}. If the field does not exist, this
+	 * will return null.
+	 *
+	 * @param string $candidateClass
+	 * @param string $fieldName
+	 *
+	 * @return string
+	 */
+	public static function table_for_object_field($candidateClass, $fieldName) {
+		if(!$candidateClass || !$fieldName) {
+			return null;
+		}
+
+		$exists = class_exists($candidateClass);
+
+		while($candidateClass && $candidateClass != 'DataObject' && $exists) {
+			if(DataObject::has_own_table($candidateClass)) {
+				$inst = singleton($candidateClass);
+				
+				if($inst->hasOwnTableDatabaseField($fieldName)) {
+					break;
+				}
+			}
+
+			$candidateClass = get_parent_class($candidateClass);
+			$exists = class_exists($candidateClass);
+		}
+
+		if(!$candidateClass || !$exists) {
+			return null;
+		}
+
+		return $candidateClass;
+	}
 }
 
