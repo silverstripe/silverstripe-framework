@@ -268,4 +268,66 @@ class ImageTest extends SapphireTest {
 		$secondImagePath = $secondImage->getRelativePath();
 		$this->assertEquals($secondImagePath, $secondImage->Filename);
 	}
+
+	/**
+	 * Test all generate methods
+	 */
+	public function testGenerateMethods() {
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$generateMethods = $this->getGenerateMethods();
+
+		// test each generate method
+		foreach ($generateMethods as $method) {
+			$generatedImage = $image->$method(333, 333, 'FFFFFF');
+			$this->assertFileExists(
+				$generatedImage->getFullPath(),
+				'Formatted ' . $method . ' image exists'
+			);
+		}
+	}
+
+	/**
+	 * Test deleteFormattedImages() against all generate methods
+	 */
+	public function testDeleteFormattedImages() {
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$generateMethods = $this->getGenerateMethods();
+
+		// get paths for each generate method
+		$paths = array();
+		foreach ($generateMethods as $method) {
+			$generatedImage = $image->$method(333, 333, 'FFFFFF');
+			$paths[$method] = $generatedImage->getFullPath();
+		}
+
+		// delete formatted images
+		$image->deleteFormattedImages();
+
+		// test that all formatted images are deleted
+		foreach ($paths as $method => $path) {
+			$this->assertFalse(
+				file_exists($path),
+				'Formatted ' . $method . ' image does not exist'
+			);
+		}
+	}
+
+	/**
+	 * @param bool $custom include methods added dynamically at runtime
+	 * @return array
+	 */
+	protected function getGenerateMethods($custom = true) {
+		$generateMethods = array();
+		$methodNames = Image::create()->allMethodNames($custom);
+
+		foreach ($methodNames as $methodName) {
+			if (substr($methodName, 0, 8) == 'generate' && $methodName != 'generateformattedimage') {
+				$format = substr($methodName, 8);
+				$generateMethods[] = $format;
+			}
+		}
+
+		return $generateMethods;
+	}
+
 }
