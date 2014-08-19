@@ -23,9 +23,8 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	public function __construct($filename = null) {
 		if(is_string($filename)) {
 			parent::__construct($filename);
-		} else {
-			self::setImageCompressionQuality($this->config()->default_quality);
 		}
+		$this->setQuality(Config::inst()->get('ImagickBackend','default_quality'));
 	}
 
 	/**
@@ -184,46 +183,12 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @param int $height
 	 * @return Image_Backend
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "#FFFFFF00") {
-		if(!$this->valid()) return;
-		
-		$width = round($width);
-		$height = round($height);
-		$geometry = $this->getImageGeometry();
-		
-		// Check that a resize is actually necessary.
-		if ($width == $geometry["width"] && $height == $geometry["height"]) {
-			return $this;
-		}
-		
-		$new = clone $this;
-		$new->setBackgroundColor($backgroundColor);
-		
-		$destAR = $width / $height;
-		if ($geometry["width"] > 0 && $geometry["height"] > 0) {
-			// We can't divide by zero theres something wrong.
-			
-			$srcAR = $geometry["width"] / $geometry["height"];
-		
-			// Destination narrower than the source
-			if($destAR > $srcAR) {
-				$destY = 0;
-				$destHeight = $height;
-				
-				$destWidth = round( $height * $srcAR );
-				$destX = round( ($width - $destWidth) / 2 );
-			
-			// Destination shorter than the source
-			} else {
-				$destX = 0;
-				$destWidth = $width;
-				
-				$destHeight = round( $width / $srcAR );
-				$destY = round( ($height - $destHeight) / 2 );
-			}
-		
-			$new->extentImage($width, $height, $destX, $destY);
-		}
+	public function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
+		$new = $this->resizeRatio($width, $height);
+		$new->setImageBackgroundColor("#".$backgroundColor);
+		$w = $new->getImageWidth();
+		$h = $new->getImageHeight();
+		$new->extentImage($width,$height,($w-$width)/2,($h-$height)/2);
 		
 		return $new;
 	}
