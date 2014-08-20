@@ -391,7 +391,7 @@ class Session {
 	}
 
 	public function inst_destroy($removeCookie = true) {
-		if(session_id()) {
+		if(session_id() && !headers_sent()) {
 			if($removeCookie) {
 				$path = Config::inst()->get('Session', 'cookie_path');
 				if(!$path) $path = Director::baseURL();
@@ -407,7 +407,15 @@ class Session {
 				unset($_COOKIE[session_name()]);
 			}
 
-			session_destroy();
+			// In case a session_write_close deactivates a session without removing the session_id
+			if(function_exists('session_status')) {
+				if(session_status() !== PHP_SESSION_ACTIVE) session_start();
+				session_destroy();
+			} else if (!@session_destroy()) {
+				// PHP 5.3 fallback
+				session_start();
+				session_destroy();
+			}
 
 			// Clean up the superglobal - session_destroy does not do it.
 			// http://nz1.php.net/manual/en/function.session-destroy.php
