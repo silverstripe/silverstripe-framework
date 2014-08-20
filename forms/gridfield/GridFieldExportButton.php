@@ -145,7 +145,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 				}
 
 				$value = str_replace(array("\r", "\n"), "\n", $value);
-				$columnData[] = '"' . str_replace('"', '\"', $value) . '"';
+				$columnData[] = '"' . str_replace('"', '""', $value) . '"';
 			}
 			$fileData .= implode($separator, $columnData);
 			$fileData .= "\n";
