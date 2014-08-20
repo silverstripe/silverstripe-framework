@@ -451,7 +451,6 @@ class SS_ClassManifest {
 	 * @return array
 	 */
 	protected function coalesceDescendants($class) {
-		$result = array();
 		$lClass = strtolower($class);
 
 		if (array_key_exists($lClass, $this->children)) {

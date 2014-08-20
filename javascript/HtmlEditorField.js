@@ -917,7 +917,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
 				this.find('.overview .action-delete')[updateExisting ? 'hide' : 'show']();
 			},
-			onsubmit: function() {				
+			onsubmit: function() {
 				this.modifySelection(function(ed){
 					this.find('.ss-htmleditorfield-file').each(function() {
 						$(this).insertHTML(ed);
@@ -929,7 +929,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.getDialog().close();
 				return false;
 			},
-			updateFromEditor: function() {			
+			updateFromEditor: function() {
 				var self = this, node = this.getSelection();
 
 				// TODO Depends on managed mime type
@@ -942,7 +942,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				}
 				this.redraw();
 			},
-			redraw: function(updateExisting) {
+			redraw: function() {
 				this._super();
 			
 				var node = this.getSelection(),
@@ -1436,20 +1436,20 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		$('div.ss-assetuploadfield .ss-uploadfield-item-editform').entwine({
 			toggleEditForm: function(bool) {
 				var itemInfo = this.prev('.ss-uploadfield-item-info'), status = itemInfo.find('.ss-uploadfield-item-status');
-				var text="";
+				var text = "";
 
-				if(bool === true || (bool !== false && this.height() === 0)) {
+				if (bool === true || (bool !== false && this.height() === 0)) {
 					text = ss.i18n._t('UploadField.Editing', "Editing ...");
 					this.height('auto');
-					itemInfo.find('.toggle-details-icon').addClass('opened');					
+					itemInfo.find('.toggle-details-icon').addClass('opened');
 					status.removeClass('ui-state-success-text').removeClass('ui-state-warning-text');
 				} else {
-					this.height(0);					
+					this.height(0);
 					itemInfo.find('.toggle-details-icon').removeClass('opened');
-					if(!this.hasClass('edited')){
+					if (!this.hasClass('edited')) {
 						text = ss.i18n._t('UploadField.NOCHANGES', 'No Changes');
 						status.addClass('ui-state-success-text');
-					}else{						
+					} else {
 						text = ss.i18n._t('UploadField.CHANGESSAVED', 'Changes Made');
 						this.removeClass('edited');
 						status.addClass('ui-state-success-text');	
@@ -1501,7 +1501,7 @@ function sapphiremce_cleanup(type, value) {
 		value = value.replace(/ >/ig, ">"); 
 	
 		// remove everything that's in a closing tag
-		value = value.replace(/<(\/[A-Za-z0-9]+)[ \f\r\t\n]+[^>]*>/ig,"<$1>");		
+		value = value.replace(/<(\/[A-Za-z0-9]+)[ \f\r\t\n]+[^>]*>/ig,"<$1>");
 	}
 
 	if(type == 'get_from_editor_dom') {
