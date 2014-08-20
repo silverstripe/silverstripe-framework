@@ -377,7 +377,8 @@ class DataQuery {
 	 * automatically so must not contain double quotes.
 	 */
 	public function max($field) {
-		return $this->aggregate("MAX(\"$field\")");
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate("MAX(\"$baseClass\".\"$field\")");
 	}
 
 	/**
@@ -387,7 +388,8 @@ class DataQuery {
 	 * automatically so must not contain double quotes.
 	 */
 	public function min($field) {
-		return $this->aggregate("MIN(\"$field\")");
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate("MIN(\"$baseClass\".\"$field\")");
 	}
 
 	/**
@@ -397,7 +399,8 @@ class DataQuery {
 	 * automatically so must not contain double quotes.
 	 */
 	public function avg($field) {
-		return $this->aggregate("AVG(\"$field\")");
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate("AVG(\"$baseClass\".\"$field\")");
 	}
 
 	/**
@@ -407,7 +410,8 @@ class DataQuery {
 	 * automatically so must not contain double quotes.
 	 */
 	public function sum($field) {
-		return $this->aggregate("SUM(\"$field\")");
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate("SUM(\"$baseClass\".\"$field\")");
 	}
 
 	/**
