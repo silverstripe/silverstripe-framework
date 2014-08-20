@@ -4,5 +4,4 @@ GridFieldExportButtonTest_Team:
         City: City
     test-team-2:
         Name: Test2
-        City: City2
-
+        City: 'Quoted "City" 2'
