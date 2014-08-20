@@ -1785,16 +1785,26 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$manyMany = $SNG_class->stat('belongs_many_many');
 				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
 				if($candidate) {
+                    list($candidate,$varName) = explode('.',$candidate);
+                    
 					$SNG_candidate = singleton($candidate);
 					$candidateManyMany = $SNG_candidate->stat('many_many');
 					
-					// Find the relation given the class
-					if($candidateManyMany) foreach($candidateManyMany as $relation => $relatedClass) {
-						if($relatedClass == $class) {
-							$relationName = $relation;
-						}
-					}
-					
+                    if( empty($varName) ) {
+                        // Find the relation given the class
+                        if($candidateManyMany) foreach($candidateManyMany as $relation => $relatedClass) {
+                            if($relatedClass == $class) {
+                                $relationName = $relation;
+                            }
+                        }
+                    } else {
+                        $relationName = $varName;
+                    }
+                    
+                    if( !isset($relationName) ) {
+                        user_error("Inverse component of $candidate not found ({$this->class})", E_USER_ERROR);
+                    }
+	
 					$extraFields = $SNG_candidate->stat('many_many_extraFields');
 					if(isset($extraFields[$relationName])) {
 						return $extraFields[$relationName];
@@ -1852,6 +1862,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
 				$candidate = (isset($belongsManyMany[$component])) ? $belongsManyMany[$component] : null;
 				if($candidate) {
+                    
+                    list($candidate,$varName) = explode('.',$candidate);
+                    
 					$childField = $candidate . "ID";
 
 					// We need to find the inverse component name
@@ -1860,14 +1873,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						user_error("Inverse component of $candidate not found ({$this->class})", E_USER_ERROR);
 					}
 
-					foreach($otherManyMany as $inverseComponentName => $candidateClass) {
-						if($candidateClass == $class || is_subclass_of($class, $candidateClass)) {
-							$parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
+                    if( empty($varName) ) {
+                        foreach($otherManyMany as $inverseComponentName => $candidateClass) {
+                            if($candidateClass == $class || is_subclass_of($class, $candidateClass)) {
+                                $parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
 
-							return array($class, $candidate, $parentField, $childField,
-								"{$candidate}_$inverseComponentName");
-						}
-					}
+                                return array($class, $candidate, $parentField, $childField,
+                                    "{$candidate}_$inverseComponentName");
+                            }
+                        }
+                    } else {
+                        if( isset($otherManyMany[$varName]) ) {
+                            $candidateClass = $otherManyMany[$varName];
+                            $parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
+                            return array($class, $candidate, $parentField, $childField,
+                                    "{$candidate}_$varName");
+                        }
+                    }
 					user_error("Orphaned \$belongs_many_many value for $this->class.$component", E_USER_ERROR);
 				}
 			} else {
@@ -3333,7 +3355,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return array
 	 */
-	public function summaryFields() {
+	public function summaryFields(){
 		$fields = $this->stat('summary_fields');
 
 		// if fields were passed in numeric array,
@@ -3357,13 +3379,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Localize fields (if possible)
 		foreach($this->fieldLabels(false) as $name => $label) {
-			// only attempt to localize if the label definition is the same as the field name.
-			// this will preserve any custom labels set in the summary_fields configuration
-			if(isset($fields[$name]) && $name === $fields[$name]) {
-				$fields[$name] = $label;
-			}
+			if(isset($fields[$name])) $fields[$name] = $label;
 		}
-
+		
 		return $fields;
 	}
 
