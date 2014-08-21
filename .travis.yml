@@ -5,7 +5,6 @@ php:
   - 5.4
   - 5.5
   - 5.6
-  - hhvm-nightly
 
 env:
   global:
@@ -32,6 +31,11 @@ matrix:
       env: DB=MYSQL CORE_RELEASE=3.1
     - php: 5.4
       env: DB=MYSQL CORE_RELEASE=3.1 BEHAT_TEST=1
+    - php: hhvm-nightly
+      env: DB=MYSQL CORE_RELEASE=3.1
+      before_install:
+        - sudo apt-get update -qq
+        - sudo apt-get install -y tidy
 
 before_script:
  - composer self-update
