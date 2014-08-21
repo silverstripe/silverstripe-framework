@@ -98,6 +98,13 @@ this is reasonably quick, but still requires access to slow disk I/O.
 The `Zend_Cache` API supports various caching backends ([list](http://framework.zend.com/manual/1.12/en/zend.cache.backends.html))
 which can provide better performance, including APC, Xcache, ZendServer, Memcached and SQLite.
 
+## Cleaning caches on flush=1 requests
+
+If `?flush=1` is requested in the URL, e.g. http://mysite.com?flush=1, this will trigger a call to `flush()` on
+any classes that implement the `Flushable` interface. Using this, you can trigger your caches to clean.
+
+See [reference documentation on Flushable](/reference/flushable) for implementation details.
+
 ### Memcached
 
 This backends stores cache records into a [memcached](http://www.danga.com/memcached/) 
