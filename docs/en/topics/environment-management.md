@@ -105,7 +105,7 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 
 | Name  | Description |
 | ----  | ----------- |
-| `TEMP_FOLDER` | Absolute file path to store temporary files such as cached templates or the class manifest. Needs to be writeable by the webserver user. Defaults to *sys_get_temp_dir()*, and falls back to *silverstripe-cache* in the webroot. See *getTempFolder()* in *framework/core/Core.php* |
+| `TEMP_FOLDER` | Absolute file path to store temporary files such as cached templates or the class manifest. Needs to be writeable by the webserver user. Defaults to *silverstripe-cache* in the webroot, and falls back to *sys_get_temp_dir()*. See *getTempFolder()* in *framework/core/TempPath.php* |
 | `SS_DATABASE_CLASS` | The database class to use, MySQLDatabase, MSSQLDatabase, etc. defaults to MySQLDatabase|
 | `SS_DATABASE_SERVER`| The database server to use, defaulting to localhost|
 | `SS_DATABASE_USERNAME`| The database username (mandatory)|
