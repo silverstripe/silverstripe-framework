@@ -1864,9 +1864,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
 				$candidate = (isset($belongsManyMany[$component])) ? $belongsManyMany[$component] : null;
 				if($candidate) {
-                    
+
 					list($candidate,$varName) = explode('.',$candidate);
-                    
+
 					$childField = $candidate . "ID";
 
 					// We need to find the inverse component name
@@ -1880,7 +1880,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 							if($candidateClass == $class || is_subclass_of($class, $candidateClass)) {
 								$parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
 
-								return array($class, $candidate, $parentField, $childField,"{$candidate}_$inverseComponentName");
+								return array($class, $candidate, $parentField,
+								$childField,"{$candidate}_$inverseComponentName");
 							}
 						}
 					} else {
