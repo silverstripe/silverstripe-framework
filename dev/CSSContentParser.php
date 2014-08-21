@@ -8,7 +8,7 @@
  * It was built to facilitate testing using PHPUnit and contains a number of assert methods that will throw PHPUnit
  * assertion exception when applicable.
  * 
- * Tries to use the PHP Tidy extension (http://php.net/tidy),
+ * Tries to use the PHP tidy extension (http://php.net/tidy),
  * and falls back to the "tidy" CLI tool. If none of those exists,
  * the string is parsed directly without sanitization.
  * 
@@ -23,8 +23,8 @@ class CSSContentParser extends Object {
 	
 	public function __construct($content) {
 		if(extension_loaded('tidy')) {
-			// using the tiny php extension
-			$tidy = new Tidy();
+			// using the tidy php extension
+			$tidy = new tidy();
 			$tidy->parseString(
 				$content, 
 				array(
