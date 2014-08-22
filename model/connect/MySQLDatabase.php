@@ -50,23 +50,6 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/**
-	 * Sets the character set for the MySQL database connection.
-	 *
-	 * The character set connection should be set to 'utf8' for SilverStripe version 2.4.0 and
-	 * later.
-	 *
-	 * However, sites created before version 2.4.0 should leave this unset or data that isn't 7-bit
-	 * safe will be corrupted.  As such, the installer comes with this set in mysite/_config.php by
-	 * default in versions 2.4.0 and later.
-	 *
-	 * @deprecated 3.2 Use "MySQLDatabase.connection_charset" config setting instead
-	 */
-	public static function set_connection_charset($charset = 'utf8') {
-		Deprecation::notice('3.1', 'Use "MySQLDatabase.connection_charset" config setting instead');
-		Config::inst()->update('MySQLDatabase', 'connection_charset', $charset);
-	}
-
-	/**
 	 * Sets the SQL mode
 	 *
 	 * @param string $mode Connection mode

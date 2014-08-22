@@ -65,14 +65,6 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	}
 
 	/**
-	 * @deprecated since version 3.0
-	 */
-	public function from($from) {
-		Deprecation::notice('3.0', 'Please use setFrom() or addFrom() instead!');
-		return $this->setFrom($from);
-	}
-
-	/**
 	 * Add a table to include in the query or update
 	 *
 	 * @example $query->addFrom('"MyTable"'); // SELECT * FROM "MyTable"
@@ -148,14 +140,6 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	}
 
 	/**
-	 * @deprecated since version 3.0
-	 */
-	public function leftjoin($table, $onPredicate, $tableAlias = null, $order = 20) {
-		Deprecation::notice('3.0', 'Please use addLeftJoin() instead!');
-		$this->addLeftJoin($table, $onPredicate, $tableAlias);
-	}
-
-	/**
 	 * Add an INNER JOIN criteria
 	 *
 	 * @param string $table Unquoted table name
@@ -176,14 +160,6 @@ abstract class SQLConditionalExpression extends SQLExpression {
 			'order' => $order
 		);
 		return $this;
-	}
-
-	/**
-	 * @deprecated since version 3.0
-	 */
-	public function innerjoin($table, $onPredicate, $tableAlias = null, $order = 20) {
-		Deprecation::notice('3.0', 'Please use addInnerJoin() instead!');
-		return $this->addInnerJoin($table, $onPredicate, $tableAlias, $order);
 	}
 
 	/**
@@ -472,22 +448,6 @@ abstract class SQLConditionalExpression extends SQLExpression {
 		$this->where = array_merge($this->where, $where);
 
 		return $this;
-	}
-
-	/**
-	 * @deprecated since version 3.0
-	 */
-	public function where($where) {
-		Deprecation::notice('3.0', 'Please use setWhere() or addWhere() instead!');
-		return $this->setWhere($where);
-	}
-
-	/**
-	 * @deprecated since version 3.0
-	 */
-	public function whereAny($where) {
-		Deprecation::notice('3.0', 'Please use setWhereAny() or setWhereAny() instead!');
-		return $this->setWhereAny($where);
 	}
 
 	/**

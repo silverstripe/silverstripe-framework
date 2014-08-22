@@ -148,23 +148,10 @@ class SQLSelect extends SQLConditionalExpression {
 		}
 
 		foreach($fields as $idx => $field) {
-			if(preg_match('/^(.*) +AS +"?([^"]*)"?/i', $field, $matches)) {
-				Deprecation::notice("3.0", "Use selectField() to specify column aliases");
-				$this->selectField($matches[1], $matches[2]);
-			} else {
-				$this->selectField($field, is_numeric($idx) ? null : $idx);
-			}
+			$this->selectField($field, is_numeric($idx) ? null : $idx);
 		}
 
 		return $this;
-	}
-
-	/**
-	 * @deprecated since version 3.0
-	 */
-	public function select($fields) {
-		Deprecation::notice('3.0', 'Please use setSelect() or addSelect() instead!');
-		$this->setSelect($fields);
 	}
 
 	/**
@@ -264,14 +251,6 @@ class SQLSelect extends SQLConditionalExpression {
 	}
 
 	/**
-	 * @deprecated since version 3.0
-	 */
-	public function limit($limit, $offset = 0) {
-		Deprecation::notice('3.0', 'Please use setLimit() instead!');
-		return $this->setLimit($limit, $offset);
-	}
-
-	/**
 	 * Set ORDER BY clause either as SQL snippet or in array format.
 	 *
 	 * @example $sql->setOrderBy("Column");
@@ -362,14 +341,6 @@ class SQLSelect extends SQLConditionalExpression {
 		}
 
 		return $this;
-	}
-
-	/**
-	 * @deprecated since version 3.0
-	 */
-	public function orderby($clauses = null, $direction = null) {
-		Deprecation::notice('3.0', 'Please use setOrderBy() instead!');
-		return $this->setOrderBy($clauses, $direction);
 	}
 
 	/**
@@ -467,14 +438,6 @@ class SQLSelect extends SQLConditionalExpression {
 	}
 
 	/**
-	 * @deprecated since version 3.0
-	 */
-	public function groupby($where) {
-		Deprecation::notice('3.0', 'Please use setGroupBy() or addHaving() instead!');
-		return $this->setGroupBy($where);
-	}
-
-	/**
 	 * Set a HAVING clause.
 	 *
 	 * @see SQLSelect::addWhere() for syntax examples
@@ -505,14 +468,6 @@ class SQLSelect extends SQLConditionalExpression {
 		$this->having = array_merge($this->having, $having);
 
 		return $this;
-	}
-
-	/**
-	 * @deprecated since version 3.0
-	 */
-	public function having($having) {
-		Deprecation::notice('3.0', 'Please use setHaving() or addHaving() instead!');
-		return $this->setHaving($having);
 	}
 
 	/**

@@ -482,11 +482,6 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			throw new InvalidArgumentException("Bad field expression $field");
 		}
 
-		if (!$this->inAlterDataQueryCall) {
-			Deprecation::notice('3.1',
-				'getRelationName is mutating, and must be called inside an alterDataQuery block');
-		}
-
 		if(strpos($field,'.') === false) {
 			return '"'.$field.'"';
 		}
@@ -810,18 +805,6 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	public function exists() {
 		return $this->count() > 0;
-	}
-
-	/**
-	 * Get a sub-range of this dataobjectset as an array
-	 *
-	 * @param int $offset
-	 * @param int $length
-	 * @return DataList
-	 */
-	public function getRange($offset, $length) {
-		Deprecation::notice("3.0", 'Use limit($length, $offset) instead.  Note the new argument order.');
-		return $this->limit($length, $offset);
 	}
 
 	/**

@@ -7,23 +7,6 @@
  */
 abstract class DataExtension extends Extension {
 
-	public static function get_extra_config($class, $extension, $args) {
-		if(method_exists($extension, 'extraDBFields')) {
-			$extraStaticsMethod = 'extraDBFields';
-		} else {
-			$extraStaticsMethod = 'extraStatics';
-		}
-
-		$statics = Injector::inst()->get($extension, true, $args)->$extraStaticsMethod($class, $extension);
-
-		if ($statics) {
-			Deprecation::notice('3.1.0',
-				"$extraStaticsMethod deprecated. Just define statics on your extension, or use get_extra_config",
-				Deprecation::SCOPE_GLOBAL);
-			return $statics;
-		}
-	}
-
 	public static function unload_extra_statics($class, $extension) {
 		throw new Exception('unload_extra_statics gone');
 	}

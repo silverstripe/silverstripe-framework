@@ -59,17 +59,6 @@ class Cookie {
 	 * @param string
 	 * @param string
 	 */
-	public static function forceExpiry($name, $path = null, $domain = null) {
-		Deprecation::notice('3.1', 'Use Cookie::force_expiry instead.');
-
-		return self::force_expiry($name, $path, $domain);
-	}
-
-	/**
-	 * @param string
-	 * @param string
-	 * @param string
-	 */
 	public static function force_expiry($name, $path = null, $domain = null) {
 		return self::get_inst()->inst_force_expiry($name, $path, $domain);
 	}

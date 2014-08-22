@@ -75,10 +75,6 @@ class Director implements TemplateGlobalProvider {
 	 *                  priority 50.
 	 */
 	public static function addRules($priority, $rules) {
-		if ($priority != 100) {
-			Deprecation::notice('3.0', 'Priority argument is now ignored - use the default of 100. You should really'
-				. ' be setting routes via _config yaml fragments though.', Deprecation::SCOPE_GLOBAL);
-		}
 		Deprecation::notice('3.2', 'Use the "Director.rules" config setting instead');
 
 		Config::inst()->update('Director', 'rules', $rules);
