@@ -111,6 +111,30 @@ class FunctionalTest extends SapphireTest {
 	}
 
 	/**
+	 * Run a test while mocking the base url with the provided value
+	 * @param string $url The base URL to use for this test
+	 * @param callable $callback The test to run
+	 */
+	protected function withBaseURL($url, $callback) {
+		$oldBase = Config::inst()->get('Director', 'alternate_base_url');
+		Config::inst()->update('Director', 'alternate_base_url', $url);
+		$callback($this);
+		Config::inst()->update('Director', 'alternate_base_url', $oldBase);
+	}
+
+	/**
+	 * Run a test while mocking the base folder with the provided value
+	 * @param string $folder The base folder to use for this test
+	 * @param callable $callback The test to run
+	 */
+	protected function withBaseFolder($folder, $callback) {
+		$oldFolder = Config::inst()->get('Director', 'alternate_base_folder');
+		Config::inst()->update('Director', 'alternate_base_folder', $folder);
+		$callback($this);
+		Config::inst()->update('Director', 'alternate_base_folder', $oldFolder);
+	}
+
+	/**
 	 * Submit a get request
 	 * @uses Director::test()
 	 *
