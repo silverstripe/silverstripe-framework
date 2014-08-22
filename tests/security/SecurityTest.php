@@ -299,7 +299,7 @@ class SecurityTest extends FunctionalTest {
 					$member->LockedOutUntil,
 					'User does not have a lockout time set if under threshold for failed attempts'
 				);
-				$this->assertContains($this->loginErrorMessage(), _t('Member.ERRORWRONGCRED'));
+				$this->assertContains($this->loginErrorMessage(), Convert::raw2xml(_t('Member.ERRORWRONGCRED')));
 			} else {
 				// Fuzzy matching for time to avoid side effects from slow running tests
 				$this->assertGreaterThan(
@@ -337,7 +337,7 @@ class SecurityTest extends FunctionalTest {
 			$member->ID,
 			'After lockout expires, the user can login again'
 		);
-		
+
 		// Log the user out
 		$this->session()->inst_set('loggedInAs', null);
 
@@ -346,11 +346,12 @@ class SecurityTest extends FunctionalTest {
 			$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
 		}
 		$this->assertNull($this->session()->inst_get('loggedInAs'));
-		$this->assertTrue(
-			false !== stripos($this->loginErrorMessage(), _t('Member.ERRORWRONGCRED')),
+		$this->assertContains(
+			$this->loginErrorMessage(),
+			Convert::raw2xml(_t('Member.ERRORWRONGCRED')),
 			'The user can retry with a wrong password after the lockout expires'
 		);
-		
+
 		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
 		$this->assertEquals(
 			$this->session()->inst_get('loggedInAs'), 
