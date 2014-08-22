@@ -72,10 +72,6 @@ class FormField extends RequestHandler {
 	 * @var Custom Validation Message for the Field
 	 */
 	protected $customValidationMessage = "";
-
-	public static $casting = array(
-		'Message' => 'Text'
-	);
 	
 	/**
 	 * Create a new field.
@@ -330,9 +326,12 @@ class FormField extends RequestHandler {
 	
 	/**
 	 * Sets the error message to be displayed on the form field
-	 * Set by php validation of the form
+	 * Set by php validation of the form.
+	 *
+	 * @param string $message Message to show to the user. Allows HTML content,
+	 *                        which means you need to use Convert::raw2xml() for any user supplied data.
 	 */
-	function setError($message,$messageType){
+	function setError($message, $messageType){
 		$this->message = $message; 
 		$this->messageType = $messageType; 
 	}

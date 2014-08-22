@@ -642,7 +642,7 @@ JS;
 		try {
 			$childData->write();
 		} catch(ValidationException $e) {
-			$form->sessionMessage($e->getResult()->message(), 'bad');
+			$form->sessionMessage($e->getResult()->message(), 'bad', false);
 			return Director::redirectBack();
 		}
 
@@ -670,16 +670,16 @@ JS;
 			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
 		);
 		
-		$editLink = Controller::join_links($this->Link(), 'item/' . $childData->ID . '/edit');
+		$editLink = Controller::join_links($this->Link(), 'item/' . (int)$childData->ID . '/edit');
 		
 		$message = sprintf(
 			_t('ComplexTableField.SUCCESSADD', 'Added %s %s %s'),
 			$childData->singular_name(),
-			'<a href="' . $editLink . '">' . $childData->Title . '</a>',
+			'<a href="' . $editLink . '">' . Convert::raw2xml($childData->Title) . '</a>',
 			$closeLink
 		);
 		
-		$form->sessionMessage($message, 'good');
+		$form->sessionMessage($message, 'good', false);
 
 		Director::redirectBack();
 	}
@@ -851,7 +851,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 			$closeLink
 		);
 		
-		$form->sessionMessage($message, 'good');
+		$form->sessionMessage($message, 'good', false);
 
 		Director::redirectBack();
 	}
