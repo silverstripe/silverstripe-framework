@@ -106,11 +106,17 @@ JS
 	 * Get message from session
 	 */
 	protected function getMessageFromSession() {
-		parent::getMessageFromSession();
 		if(($member = Member::currentUser()) && !Session::get('MemberLoginForm.force_message')) {
-			$this->message = sprintf(_t('Member.LOGGEDINAS', "You're logged in as %s."), $member->{$this->loggedInAsField});
+			$this->sessionMessage(
+				sprintf(_t('Member.LOGGEDINAS', "You're logged in as %s."), $member->{$this->loggedInAsField}),
+				'notice'
+			);
 		}
 		Session::set('MemberLoginForm.force_message', false);
+
+		parent::getMessageFromSession();
+
+		return $this->message;
 	}
 
 

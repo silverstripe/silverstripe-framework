@@ -137,10 +137,6 @@ class Form extends RequestHandler {
 	 */
 	protected $extraClasses = array();
 
-	public static $casting = array(
-		'Message' => 'Text'
-	);
-
 	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
@@ -393,10 +389,10 @@ class Form extends RequestHandler {
 	 * Add an error message to a field on this form.  It will be saved into the session
 	 * and used the next time this form is displayed.
 	 */
-	function addErrorMessage($fieldName, $message, $messageType) {
+	function addErrorMessage($fieldName, $message, $messageType, $escapeHtml = true) {
 		Session::add_to_array("FormInfo.{$this->FormName()}.errors",  array(
 			'fieldName' => $fieldName,
-			'message' => $message,
+			'message' => $escapeHtml ? Convert::raw2xml($message) : $message,
 			'messageType' => $messageType,
 		));
 	}
@@ -799,6 +795,7 @@ class Form extends RequestHandler {
 		$this->getMessageFromSession();
 		$message = $this->message;
 		$this->clearMessage();
+
 		return $message;
 	}
 	
@@ -816,7 +813,6 @@ class Form extends RequestHandler {
 		}else{
 			$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
 			$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
-
 			Session::clear("FormInfo.{$this->FormName()}");
 		}
 	}
@@ -826,9 +822,12 @@ class Form extends RequestHandler {
 	 * 
 	 * @param message the text of the message
 	 * @param type Should be set to good, bad, or warning.
+	 * @param boolean $escapeHtml Automatically sanitize the message. Set to FALSE if the message contains HTML.
+	 *                            In that case, you might want to use {@link Convert::raw2xml()} to escape any
+	 *                            user supplied data in the message.
 	 */
-	function setMessage($message, $type) {
-		$this->message = $message;
+	function setMessage($message, $type, $escapeHtml = true) {
+		$this->message = ($escapeHtml) ? Convert::raw2xml($message) : $message;
 		$this->messageType = $type;
 	}
 
@@ -837,14 +836,23 @@ class Form extends RequestHandler {
 	 * 
 	 * @param message the text of the message
 	 * @param type Should be set to good, bad, or warning.
+	 * @param boolean $escapeHtml Automatically sanitize the message. Set to FALSE if the message contains HTML.
+	 *                            In that case, you might want to use {@link Convert::raw2xml()} to escape any
+	 *                            user supplied data in the message.
 	 */
-	function sessionMessage($message, $type) {
-		Session::set("FormInfo.{$this->FormName()}.formError.message", $message);
+	function sessionMessage($message, $type, $escapeHtml = true) {
+		Session::set(
+			"FormInfo.{$this->FormName()}.formError.message", 
+			$escapeHtml ? Convert::raw2xml($message) : $message
+		);
 		Session::set("FormInfo.{$this->FormName()}.formError.type", $type);
 	}
 
-	static function messageForForm( $formName, $message, $type ) {
-		Session::set("FormInfo.{$formName}.formError.message", $message);
+	static function messageForForm( $formName, $message, $type, $escapeHtml = true) {
+		Session::set(
+			"FormInfo.{$formName}.formError.message", 
+			$escapeHtml ? Convert::raw2xml($message) : $message
+		);
 		Session::set("FormInfo.{$formName}.formError.type", $type);
 	}
 
