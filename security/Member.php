@@ -135,7 +135,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * the user is blocked from further attempts for the timespan 
 	 * defined in {@link $lock_out_delay_mins}. 
 	 */
-	private static $lock_out_after_incorrect_logins = null;
+	private static $lock_out_after_incorrect_logins = 10;
 
 	/**
 	 * @config
