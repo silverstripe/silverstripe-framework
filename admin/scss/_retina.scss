@@ -1,0 +1,231 @@
+/**
+ * This file defines graphics to use on high-DPI screens in the CMS
+ *
+ * @package framework
+ * @subpackage admin
+ */
+
+@mixin retina-sprite($sprite, $icon) {
+	// We need to calculate this manually, as Compass sprites don't deal with retina images
+	$ypos: round(nth(sprite-position($sprite, $icon), 2) / 2);
+	background-image: sprite-url($sprite);
+	background-position: 0 $ypos;
+	background-size: ceil(image-width(sprite-path($sprite)) / 2) auto;
+}
+
+@mixin icons-retina($sprite) {
+	background-image: sprite-url($sprite);
+	background-size: ceil(image-width(sprite-path($sprite)) / 2) auto;
+	
+	&.icon-assetadmin {
+		background-position: 0 round(nth(sprite-position($sprite, "picture"), 2) / 2);
+	}
+	&.icon-cmsmain {
+		background-position: 0 round(nth(sprite-position($sprite, "pencil"), 2) / 2);
+	}
+	&.icon-cmspagescontroller {
+		background-position: 0 round(nth(sprite-position($sprite, "network"), 2) / 2);
+	}
+	&.icon-cmssettingscontroller {
+		background-position: 0 round(nth(sprite-position($sprite, "gears"), 2) / 2);
+	}
+	&.icon-securityadmin {
+		background-position: 0 round(nth(sprite-position($sprite, "community"), 2) / 2);
+	}
+	&.icon-reportadmin {
+		background-position: 0 round(nth(sprite-position($sprite, "pie-chart"), 2) / 2);
+	}
+	&.icon-commentadmin {
+		background-position: 0 round(nth(sprite-position($sprite, "blog"), 2) / 2);
+	}
+	&.icon-help {
+		background-position: 0 round(nth(sprite-position($sprite, "information"), 2) / 2);
+	}
+}
+
+/** ----------------------------------------------------
+ * "@2x" media query
+ * ---------------------------------------------------- */
+
+@media
+	only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (   min--moz-device-pixel-ratio: 2),
+	only screen and (     -o-min-device-pixel-ratio: 2/1),
+	only screen and (        min-device-pixel-ratio: 2),
+	only screen and (                min-resolution: 192dpi),
+	only screen and (                min-resolution: 2dppx) {
+
+	/* Loading spinner */
+	.cms-content-loading-spinner {
+		background-image: url(../images/spinner@2x.gif);
+		background-size: 43px 22px;
+	}
+
+	.ui-dialog {
+		.ui-dialog-content {
+			&.loading {
+				background-image: url(../images/spinner@2x.gif);
+				background-size: 43px 22px;
+			}
+		}
+
+		&.loading {
+			background-image: url(../images/spinner@2x.gif);
+			background-size: 43px 22px;
+		}
+	}
+
+	/* Default CMS logo */
+	.cms-logo {
+		a {
+			background-image: $application-logo-small-2x;
+			background-size: 22px 22px;
+		}
+	}
+
+	/* Logout button */
+	.cms-login-status {
+		.logout-link {
+			@include retina-sprite($sprites32-2x, logout);
+		}
+	}
+
+	.cms-content-controls {
+		.icon-auto:before {
+			@include retina-sprite($sprites32-2x, preview_auto);	
+		}
+		.icon-desktop:before {
+			@include retina-sprite($sprites32-2x, preview_desktop);
+		}
+		.icon-tablet:before {
+			@include retina-sprite($sprites32-2x, preview_tablet);
+		}
+		.icon-mobile:before {
+			@include retina-sprite($sprites32-2x, preview_mobile);
+		}
+		.icon-split:before {
+			@include retina-sprite($sprites32-2x, preview_split);
+		}
+		.icon-edit:before {
+			@include retina-sprite($sprites32-2x, preview_edit);
+		}
+		.icon-preview:before {
+			@include retina-sprite($sprites32-2x, preview_preview);
+		}
+	}
+
+	.cms {	
+		.ss-ui-action-tabset {
+			&.action-menus.ss-tabset {				
+				ul.ui-tabs-nav {
+					li {
+						a {
+							&:after {
+								@include retina-sprite($sprites32-2x, arrow_down_lighter);
+							}
+
+							&:hover:after {
+								@include retina-sprite($sprites32-2x, arrow_down_darker);
+							}
+						}
+
+						&.ui-state-active a {
+							&:after {
+								@include retina-sprite($sprites32-2x, arrow_up_lighter);
+							}
+
+							&:hover:after {
+								@include retina-sprite($sprites32-2x, arrow_up_darker);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/* CMS menu */
+	.cms-menu-list {
+		li {
+			a {
+				.toggle-children {
+					.toggle-children-icon {
+						@include retina-sprite($sprites32-2x, menu-arrow-deselected-down);
+					}
+					
+					&.opened {
+						.toggle-children-icon {
+							@include retina-sprite($sprites32-2x, menu-arrow-deselected-up);
+						}
+					}
+				}
+			}
+
+			&.current {
+				a {
+					.toggle-children {
+						.toggle-children-icon {
+							@include retina-sprite($sprites32-2x, menu-arrow-down);
+						}
+						
+						&.opened {
+							.toggle-children-icon {
+								@include retina-sprite($sprites32-2x, menu-arrow-up);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/* Sitetree */
+	.tree-holder, .cms-tree {
+		&.jstree-apple {
+			ins {
+				background-image: url(../images/sitetree_ss_default_icons@2x.png);
+				background-size: 108px 72px;
+			}
+		}
+	}
+
+	/* UI widget "close" button */
+	.ui-widget-header {
+		a.ui-state-hover {
+			.ui-icon-closethick {
+				@include retina-sprite($sprites32-2x, dialog-close-over);
+			}
+		}
+		
+		.ui-icon-closethick {
+			@include retina-sprite($sprites32-2x, dialog-close);
+		}
+	}
+
+	/* Tab icons */
+	.ui-tabs {
+		.ui-tabs-nav {
+			li.cms-tabset-icon {
+				&.list a { @include retina-sprite($sprites64-2x, tab-list); }
+				&.tree a { @include retina-sprite($sprites64-2x, tab-tree); }
+				&.edit a { @include retina-sprite($sprites64-2x, tab-edit); }
+
+				&.list.ui-state-active a { @include retina-sprite($sprites64-2x, tab-list-hover); }
+				&.tree.ui-state-active a { @include retina-sprite($sprites64-2x, tab-tree-hover); }
+				&.edit.ui-state-active a { @include retina-sprite($sprites64-2x, tab-edit-hover); }
+			}
+		}
+	}
+
+	/* Menu icon classes */
+	.icon {
+		&.icon-24 {
+			@include icons-retina($icon24-2x);
+		}
+		
+		&.icon-16 {
+			@include icons-retina($icon16-2x);
+		}
+	}
+
+}

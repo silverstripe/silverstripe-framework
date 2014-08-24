@@ -10,11 +10,15 @@
 }
 
 $icon24: sprite-map("menu-icons/24x24/*.png");
+$icon24-2x: sprite-map("menu-icons/24x24-2x/*.png");
 $icon16: sprite-map("menu-icons/16x16/*.png");
+$icon16-2x: sprite-map("menu-icons/16x16-2x/*.png");
 
 $btn-icon: sprite-map("btn-icon/*.png", $spacing: 10px);
 $sprites32: sprite-map("sprites-32x32/*.png", $spacing: 10px);
+$sprites32-2x: sprite-map("sprites-32x32-2x/*.png", $spacing: 20px);
 $sprites64: sprite-map("sprites-64x64/*.png", $spacing: 10px);
+$sprites64-2x: sprite-map("sprites-64x64-2x/*.png", $spacing: 20px);
 
 @mixin icons($sprite) {
 	background: $sprite;
