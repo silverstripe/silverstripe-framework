@@ -94,19 +94,17 @@ After you have edited the file, GitHub will offer to create a pull request for y
 
 *  Adhere to our [coding conventions](/misc/coding-conventions)
 *  If your patch is extensive, discuss it first on the [silverstripe-dev google group](https://groups.google.com/group/silverstripe-dev) (ideally before doing any serious coding)
-*  When working on existing tickets, assign them to you and provide status updates through ticket comments
-*  Check your patches against the latest "trunk" or "master", as well as the latest release. 
-Please not that the latest stable release will often not be sufficient! (of all modules)
-*  Provide complete [unit test coverage](/topics/testing) - depending on the complexity of your work, this is a required
-step.
-*  Do not set milestones. If you think your patch should be looked at with priority, mark it as "critical".
+*  When working on existing tickets, provide status updates through ticket comments
+*  Check your patches against the "master" branch, as well as the latest release branch
+*  Write [unit tests](/topics/testing)
+*  Write [Behat integration tests](https://github.com/silverstripe-labs/silverstripe-behat-extension) for any interface changes
 *  Describe specifics on how to test the effects of the patch
 *  It's better to submit multiple patches with separate bits of functionality than a big patch containing lots of
 changes
+*  Only submit a pull request for work you expect to be ready to merge. Work in progress is best discussed in an issue, or on your own repository fork.
 *  Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
 [API documentation](http://api.silverstripe.org/3.1/) for good examples.
-* Also check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
-* We will attribute the change to you whereever possible (git does this automatically for pull requests)
+* Check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
 * When working with the CMS, please read the ["CMS Architecture Guide"](/reference/cms-architecture) first
 
@@ -133,7 +131,7 @@ Same goes for version control plumbing like merges, file renames or reverts.
 Further guidelines:
 
 * Each commit should form a logical unit - if you fix two unrelated bugs, commit each one separately
-* If you are fixing a ticket from our [bugtracker](http://open.silverstripe.com), please append `(fixes #<ticketnumber>)`
+* If you are fixing a issue from our bugtracker ([cms](http://github.com/silverstripe/silverstripe-framework) and [framework](http://github.com/silverstripe/silverstripe-framework)), please append `(fixes #<ticketnumber>)`
 * If your change is related to another commit, reference it with its abbreviated commit hash. 
 * Mention important changed classes and methods in the commit summary.
 
