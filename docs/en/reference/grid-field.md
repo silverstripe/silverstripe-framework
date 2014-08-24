@@ -50,7 +50,7 @@ Here is an example where we display a basic gridfield with the default settings:
 		}
 		
 		public function AllPages() {
-			$gridField = new GridField('pages', 'All pages', SiteTree::get()); 
+			$gridField = new GridField('pages', 'All pages', SiteTree::get(), new GridFieldConfig_Base()); 
 			return new Form($this, "AllPages", new FieldList($gridField), new FieldList());
 		}
 	}
