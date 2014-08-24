@@ -1132,7 +1132,13 @@ class Requirements_Backend {
 			$combinedData = "";
 			foreach(array_diff($fileList, $this->blocked) as $file) {
 				$fileContent = file_get_contents($base . $file);
-				$fileContent = $this->minifyFile($file, $fileContent);
+				
+				try{
+					$fileContent = $this->minifyFile($file, $fileContent);
+				}catch(Exception $e){
+					// failed to minify, use unminified
+					user_error('Failed to minify '.$file.', exception: '.$e->getMessage(), E_USER_WARNING);
+				}
 
 				if ($this->write_header_comment) {
 					// write a header comment for each file for easier identification and debugging
