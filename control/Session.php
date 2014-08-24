@@ -376,10 +376,8 @@ class Session {
 			// seperate (less secure) session for non-HTTPS requests
 			if($secure) session_name('SECSESSID');
 
-			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
-			// There's nothing we can do about this, because it's an operating system function!
 			if($sid) session_id($sid);
-			@session_start();
+			session_start();
 
 			$this->data = isset($_SESSION) ? $_SESSION : array();
 		}

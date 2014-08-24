@@ -87,7 +87,28 @@ class TextTest extends SapphireTest {
 			$this->assertEquals($expectedValue, $textObj->LimitSentences(2));
 		}
 	}
-	
+
+	public function testFirstSentance() {
+		$cases = array(
+			'' => '',
+			'First sentence.' => 'First sentence.',
+			'First sentence. Second sentence' => 'First sentence.',
+			'First sentence? Second sentence' => 'First sentence?',
+			'First sentence! Second sentence' => 'First sentence!',
+			'<p>First sentence.</p>' => 'First sentence.',
+			'<p>First sentence. Second sentence. Third sentence</p>' => 'First sentence.',
+			'<p>First sentence. <em>Second sentence</em>. Third sentence</p>' => 'First sentence.',
+			'<p>First sentence. <em class="dummyClass">Second sentence</em>. Third sentence</p>'
+				=> 'First sentence.'
+		);
+
+		foreach($cases as $originalValue => $expectedValue) {
+			$textObj = new Text('Test');
+			$textObj->setValue($originalValue);
+			$this->assertEquals($expectedValue, $textObj->FirstSentence());
+		}
+	}
+
 	/**
 	 * Test {@link Text->BigSummary()}
 	 */

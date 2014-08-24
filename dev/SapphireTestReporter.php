@@ -299,7 +299,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 			$this->endCurrentTestSuite();
 		}
 	}
-	
+
 	/**
 	 * Risky test.
 	 *

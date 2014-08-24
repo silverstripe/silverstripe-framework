@@ -5,7 +5,7 @@
  * @package framework
  * @subpackage tests
  */
-class HTTPTest extends SapphireTest {
+class HTTPTest extends FunctionalTest {
 	
 	/**
 	 * Tests {@link HTTP::getLinksIn()}
@@ -227,16 +227,5 @@ class HTTPTest extends SapphireTest {
 			);	
 		});
 	}
-	
-	/**
-	 * Run a test while mocking the base url with the provided value
-	 * @param string $url The base URL to use for this test
-	 * @param callable $callback The test to run
-	 */
-	protected function withBaseURL($url, $callback) {
-		$oldBase = Config::inst()->get('Director', 'alternate_base_url');
-		Config::inst()->update('Director', 'alternate_base_url', $url);
-		$callback($this);
-		Config::inst()->update('Director', 'alternate_base_url', $oldBase);
-	}
+
 }

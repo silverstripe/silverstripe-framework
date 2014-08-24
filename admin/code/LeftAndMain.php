@@ -942,6 +942,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if($id === "") continue; // $id may be a blank string, which is invalid and should be skipped over
 
 			$record = $this->getRecord($id);
+			if(!$record) continue; // In case a page is no longer available
 			$recordController = ($this->stat('tree_class') == 'SiteTree') 
 				?  singleton('CMSPageEditController') 
 				: $this;

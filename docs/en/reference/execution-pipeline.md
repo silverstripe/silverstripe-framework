@@ -9,7 +9,7 @@ This page documents all the steps from an URL request to the delivered page.
 Silverstripe uses **[mod_rewrite](http://httpd.apache.org/docs/2.0/mod/mod_rewrite.html)** to deal with page requests.
 So instead of having your normal everyday `index.php` file which tells all, you need to look elsewhere. 
 
-The basic .htaccess file after installing SilverStripe look like this:
+The basic .htaccess file after installing SilverStripe looks like this:
 
 	<file>
 	### SILVERSTRIPE START ###
@@ -23,11 +23,13 @@ The basic .htaccess file after installing SilverStripe look like this:
 	<IfModule mod_rewrite.c>
 	RewriteEngine On
 
-	RewriteCond %{REQUEST_URI} !(\.gif$)|(\.jpg$)|(\.png$)|(\.css$)|(\.js$)
+	RewriteRule ^vendor(/|$) - [F,L,NC]
+	RewriteRule silverstripe-cache(/|$) - [F,L,NC]
+	RewriteRule composer\.(json|lock) - [F,L,NC]
 
 	RewriteCond %{REQUEST_URI} ^(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule .* framework/main.php?url=%1&%{QUERY_STRING} [L]
+	RewriteRule .* framework/main.php?url=%1 [QSA]
 	</IfModule>
 	### SILVERSTRIPE END ###
 	</file>
@@ -91,3 +93,12 @@ You can access the following controller-method with /team/signup
 ## SSViewer template rendering
 
 See [templates](/reference/templates) for information on the SSViewer template system.
+
+## Flush requests
+
+If `?flush=1` is requested in the URL, e.g. http://mysite.com?flush=1, this will trigger a call to `flush()` on
+any classes that implement the `Flushable` interface.
+
+See [reference documentation on Flushable](/reference/flushable) for more details.
+
+

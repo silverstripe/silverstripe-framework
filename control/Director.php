@@ -255,8 +255,11 @@ class Director implements TemplateGlobalProvider {
 			} else {
 				$_SERVER['HTTP_HOST'] = $bits['host'];
 			}
-			$url = Director::makeRelative($url);
 		}
+
+		// Ensure URL is properly made relative.
+		// Example: url passed is "/ss31/my-page" (prefixed with BASE_URL), this should be changed to "my-page"
+		$url = self::makeRelative($url);
 
 		$urlWithQuerystring = $url;
 		if(strpos($url, '?') !== false) {

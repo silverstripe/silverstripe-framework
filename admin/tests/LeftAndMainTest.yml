@@ -1,65 +1,94 @@
 LeftAndMainTest_Object:
    page1:
       Title: Page 1
+      Sort: 1
    page2:
       Title: Page 2
+      Sort: 2
    page3:
       Title: Page 3
+      Sort: 3
    page31:
       Title: Page 3.1
       Parent: =>LeftAndMainTest_Object.page3
+      Sort: 1
    page32:
       Title: Page 3.2
       Parent: =>LeftAndMainTest_Object.page3
+      Sort: 2
    page4:
       Title: Page 4
+      Sort: 4
    page5:
       Title: Page 5
+      Sort: 5
    page6:
       Title: Page 6
+      Sort: 6
    page7:
       Title: Page 7
+      Sort: 7
    page8:
       Title: Page 8
+      Sort: 8
    page9:
       Title: Page 9
+      Sort: 9
    page10:
       Title: Page 10
+      Sort: 10
    page11:
       Title: Page 11
+      Sort: 11
    page12:
       Title: Page 12
+      Sort: 12
    page13:
       Title: Page 13
+      Sort: 13
    page14:
       Title: Page 14
+      Sort: 14
    page15:
       Title: Page 15
+      Sort: 15
    page16:
       Title: Page 16
+      Sort: 16
    page17:
       Title: Page 17
+      Sort: 17
    page18:
       Title: Page 18
+      Sort: 18
    page19:
       Title: Page 19
+      Sort: 19
    page20:
       Title: Page 20
+      Sort: 20
    page21:
       Title: Page 21
+      Sort: 21
    page22:
       Title: Page 22
+      Sort: 22
    page23:
       Title: Page 23
+      Sort: 23
    page24:
       Title: Page 24
+      Sort: 24
    page25:
       Title: Page 25
+      Sort: 25
    page26:
       Title: Page 26
+      Sort: 26
    home:
       Title: Home
       URLSegment: home
+      Sort: 0
 Group:
    admin:
       Title: Administrators

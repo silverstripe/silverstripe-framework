@@ -1001,7 +1001,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return A {@link ValidationResult} object
 	 */
 	protected function validate() {
-		$result = new ValidationResult();
+		$result = ValidationResult::create();
 		$this->extend('validate', $result);
 		return $result;
 	}
@@ -3333,7 +3333,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return array
 	 */
-	public function summaryFields(){
+	public function summaryFields() {
 		$fields = $this->stat('summary_fields');
 
 		// if fields were passed in numeric array,
@@ -3357,9 +3357,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Localize fields (if possible)
 		foreach($this->fieldLabels(false) as $name => $label) {
-			if(isset($fields[$name])) $fields[$name] = $label;
+			// only attempt to localize if the label definition is the same as the field name.
+			// this will preserve any custom labels set in the summary_fields configuration
+			if(isset($fields[$name]) && $name === $fields[$name]) {
+				$fields[$name] = $label;
+			}
 		}
-		
+
 		return $fields;
 	}
 

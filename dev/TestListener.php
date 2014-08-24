@@ -37,7 +37,7 @@ class SS_TestListener implements PHPUnit_Framework_TestListener {
 		
 		$this->class->tearDownOnce();
 	}
-	
+
 	/**
 	 * Risky test.
 	 *

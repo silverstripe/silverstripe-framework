@@ -6,7 +6,7 @@
  * @package framework
  * @subpackage filesystem
  */
-class Image extends File {
+class Image extends File implements Flushable {
 	
 	const ORIENTATION_SQUARE = 0;
 	const ORIENTATION_PORTRAIT = 1;
@@ -71,11 +71,24 @@ class Image extends File {
 	 * @var bool Force all images to resample in all cases
 	 */
 	private static $force_resample = false;
-	
+
+	/**
+	 * @config
+	 * @var bool Regenerates images if set to true. This is set by {@link flush()}
+	 */
+	private static $flush = false;
+
+	/**
+	 * Triggered early in the request when someone requests a flush.
+	 */
+	public static function flush() {
+		self::$flush = true;
+	}
+
 	public static function set_backend($backend) {
 		self::config()->backend = $backend;
 	}
-	
+
 	public static function get_backend() {
 		return self::config()->backend;
 	}
@@ -424,7 +437,7 @@ class Image extends File {
 		if($this->ID && $this->Filename && Director::fileExists($this->Filename)) {
 			$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
 			
-			if(!file_exists(Director::baseFolder()."/".$cacheFile) || isset($_GET['flush'])) {
+			if(!file_exists(Director::baseFolder()."/".$cacheFile) || self::$flush) {
 				call_user_func_array(array($this, "generateFormattedImage"), $args);
 			}
 			
@@ -582,7 +595,7 @@ class Image extends File {
 		}
 		// All generate functions may appear any number of times in the image cache name.
 		$generateFuncs = implode('|', $generateFuncs);
-		$pattern = "/^(({$generateFuncs})\d+\-)+" . preg_quote($this->Name) . "$/i";
+		$pattern = "/^(({$generateFuncs}).*\-)+" . preg_quote($this->Name) . "$/i";
 
 		foreach($cachedFiles as $cfile) {
 			if(preg_match($pattern, $cfile)) {
