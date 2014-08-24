@@ -103,6 +103,57 @@ class SSViewerTest extends SapphireTest {
 		<% require css($cssFile) %>");
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
 	}
+	
+	public function testRequirementsCombine(){
+		$oldBackend = Requirements::backend();
+		$testBackend = new Requirements_Backend();
+		Requirements::set_backend($testBackend);
+		$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
+
+		$jsFile = FRAMEWORK_DIR . '/tests/view/themes/javascript/bad.js';
+		$jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
+		Requirements::combine_files('testRequirementsCombine.js', array($jsFile));
+		require_once('thirdparty/jsmin/jsmin.php');
+
+		// first make sure that our test js file causes an exception to be thrown
+		try{
+			$content = JSMin::minify($content);
+			$this->fail('JSMin did not throw exception on minify bad file: ');
+			Requirements::set_backend($oldBackend);
+			return;
+		}catch(Exception $e){
+			// exception thrown... good
+		}
+
+		// secondly, make sure that requirements combine can handle this and continue safely
+		@unlink($combinedTestFilePath);
+		try{
+			/*
+			 * Use @ (ignore warning) because a warning would cause php unit to throw an exception and therefore change the execution
+			 * process and mess up the next test.
+			 */ 
+			@Requirements::process_combined_files();
+		}catch(Exception $e){
+			$this->fail('Requirements::process_combined_files did not catch exception caused by minifying bad js file: '.$e);
+			Requirements::set_backend($oldBackend);
+			return;
+		}
+
+		// and make sure the combined content matches the input content, i.e. no loss of functionality
+		if(!file_exists($combinedTestFilePath)){
+			$this->fail('No combined file was created at expected path: '.$combinedTestFilePath);
+			Requirements::set_backend($oldBackend);
+			return;
+		}
+		$combinedTestFileContents = file_get_contents($combinedTestFilePath);
+		$this->assertContains($jsFileContents, $combinedTestFileContents);
+		
+
+		// reset
+		Requirements::set_backend($oldBackend);
+	}
+	
+
 
 	public function testComments() {
 		$output = $this->render(<<<SS
