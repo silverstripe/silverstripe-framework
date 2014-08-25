@@ -86,18 +86,8 @@ class GDBackend extends Object implements Image_Backend {
 		$this->height = imagesy($resource);
 	}
 
-	public function setGD($gd) {
-		Deprecation::notice('3.1', 'Use GD::setImageResource instead');
-		return $this->setImageResource($gd);
-	}
-
 	public function getImageResource() {
 		return $this->gd;
-	}
-
-	public function getGD() {
-		Deprecation::notice('3.1', 'GD::getImageResource instead');
-		return $this->getImageResource();
 	}
 
 	/**
@@ -226,13 +216,6 @@ class GDBackend extends Object implements Image_Backend {
 	public function hasImageResource() {
 		return $this->gd ? true : false;
 	}
-
-	public function hasGD() {
-		Deprecation::notice('3.1', 'GD::hasImageResource instead',
-			Deprecation::SCOPE_CLASS);
-		return $this->hasImageResource();
-	}
-
 
 	/**
 	 * Resize an image, skewing it as necessary.

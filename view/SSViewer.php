@@ -1032,13 +1032,6 @@ class SSViewer {
 	public function process($item, $arguments = null, $inheritedScope = null) {
 		SSViewer::$topLevel[] = $item;
 
-		if ($arguments && $arguments instanceof Zend_Cache_Core) {
-			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, ' .
-				'the second argument to process is now an array of variables.');
-			$this->setPartialCacheStore($arguments);
-			$arguments = null;
-		}
-
 		if(isset($this->chosenTemplates['main'])) {
 			$template = $this->chosenTemplates['main'];
 		} else {
@@ -1208,13 +1201,6 @@ class SSViewer_FromString extends SSViewer {
 	}
 
 	public function process($item, $arguments = null, $scope = null) {
-		if ($arguments && $arguments instanceof Zend_Cache_Core) {
-			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, ' .
-				'the second argument to process is now an array of variables.');
-			$this->setPartialCacheStore($arguments);
-			$arguments = null;
-		}
-
 		$hash = sha1($this->content);
 		$cacheFile = TEMP_FOLDER . "/.cache.$hash";
 
