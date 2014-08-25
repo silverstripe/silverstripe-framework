@@ -116,10 +116,8 @@ class MemberAuthenticator extends Authenticator {
 			$member->write();
 		}
 
-		if($member) {
-			Session::clear('BackURL');
-		} else {
-			if($form && $result) $form->sessionMessage($result->message(), 'bad');
+		if(!$member && $form && $result) {
+			$form->sessionMessage($result->message(), 'bad');
 		}
 
 		return $member;
