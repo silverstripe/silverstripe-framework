@@ -374,7 +374,8 @@ jQuery.noConflict();
 				// Artificial HTTP referer, IE doesn't submit them via ajax. 
 				// Also rewrites anchors to their page counterparts, which is important
 				// as automatic browser ajax response redirects seem to discard the hash/fragment.
-				formData.push({name: 'BackURL', value:History.getPageUrl()});
+				// TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
+				formData.push({name: 'BackURL', value:History.getPageUrl().replace(/\/$/, '')});
 
 				// Save tab selections so we can restore them later
 				this.saveTabState();
@@ -585,11 +586,14 @@ jQuery.noConflict();
 
 				var newFragments = {}, newContentEls;
 				// If content type is text/json (ignoring charset and other parameters)
-				if(xhr.getResponseHeader('Content-Type').match(/^text\/json[ \t]*;?/i)) {
+				if(xhr.getResponseHeader('Content-Type').match(/^((text)|(application))\/json[ \t]*;?/i)) {
 					newFragments = data;
 				} else {
+					
 					// Fall back to replacing the content fragment if HTML is returned
-					$data = $(data);
+					var fragment = document.createDocumentFragment();
+					jQuery.clean( [ data ], document, fragment, [] );
+					$data = $(jQuery.merge( [], fragment.childNodes ));
 
 					// Try and guess the fragment if none is provided
 					// TODO: data-pjax-fragment might actually give us the fragment. For now we just check most common case
@@ -948,8 +952,8 @@ jQuery.noConflict();
 						setTimeout(function() {
 							form.clickedButton = null;
 						}, 10);
-						}
-					});
+					}
+				});
 
 				this.redraw();
 				this._super();

@@ -9,7 +9,7 @@ It uses the framework's knowledge about the model to provide sensible defaults,
 allowing you to get started in a couple of lines of code,
 while still providing a solid base for customization.
 
-The interface is mainly powered by the `[GridField](/reference/grid-field)` class,
+The interface is mainly powered by the [GridField](/reference/grid-field) class,
 which can also be used in other CMS areas (e.g. to manage a relation on a `SiteTree`
 record in the standard CMS interface).
 
@@ -17,7 +17,7 @@ record in the standard CMS interface).
 
 Let's assume we want to manage a simple product listing as a sample data model:
 A product can have a name, price, and a category.
-
+	
 	:::php
 	class Product extends DataObject {
 	   private static $db = array('Name' => 'Varchar', 'ProductCode' => 'Varchar', 'Price' => 'Currency');
@@ -74,13 +74,13 @@ less restrictive checks make sense, e.g. checking for general CMS access rights.
 
 ## Search Fields
 
-ModelAdmin uses the `[SearchContext](/reference/searchcontext)` class to provide
+ModelAdmin uses the [SearchContext](/reference/searchcontext) class to provide
 a search form, as well as get the searched results. Every DataObject can have its own context,
 based on the fields which should be searchable. The class makes a guess at how those fields
 should be searched, e.g. showing a checkbox for any boolean fields in your `$db` definition.
 
-To remove, add or modify searchable fields, define a new `[$searchable_fields](api:DataObject::$searchable_fields)`
-static on your model class (see `[SearchContext](/reference/searchcontext)` docs for details). 
+To remove, add or modify searchable fields, define a new `[api:DataObject::$searchable_fields]`
+static on your model class (see [SearchContext](/reference/searchcontext) docs for details). 
 
 	:::php
 	class Product extends DataObject {
@@ -93,11 +93,11 @@ static on your model class (see `[SearchContext](/reference/searchcontext)` docs
 	}
 
 For a more sophisticated customization, for example configuring the form fields
-for the search form, override `[api:DataObject->getCustomSearchContext()]` on your model class.
+for the search form, override `DataObject->getCustomSearchContext()` on your model class.
 
 ## Result Columns
 
-The results are shown in a tabular listing, powered by the `[GridField](/reference/grid-field)`,
+The results are shown in a tabular listing, powered by the [GridField](/reference/grid-field),
 more specifically the `[api:GridFieldDataColumns]` component.
 It looks for a `[api:DataObject::$summary_fields]` static on your model class,
 where you can add or remove columns. To change the title, use `[api:DataObject::$field_labels]`.
@@ -132,7 +132,7 @@ For example, we might want to exclude all products without prices in our sample 
 			$list = parent::getList();
 			// Always limit by model class, in case you're managing multiple
 			if($this->modelClass == 'Product') {
-				$list->exclude('Price', '0');
+				$list = $list->exclude('Price', '0');
 			}
 			return $list;
 		}
@@ -155,7 +155,7 @@ For example, we might want to have a checkbox which limits search results to exp
 			$list = parent::getList();
 			$params = $this->request->requestVar('q'); // use this to access search parameters
 			if($this->modelClass == 'Product' && isset($params['ExpensiveOnly']) && $params['ExpensiveOnly']) {
-				$list->exclude('Price:LessThan', '100');
+				$list = $list->exclude('Price:LessThan', '100');
 			}
 			return $list;
 		}
@@ -203,10 +203,10 @@ Has-one relationships are simply implemented as a `[api:DropdownField]` by defau
 Consider replacing it with a more powerful interface in case you have many records
 (through customizing `[api:DataObject->getCMSFields]`).
 
-Has-many and many-many relationships are usually handled via the `[GridField](/reference/grid-field)` class,
+Has-many and many-many relationships are usually handled via the [GridField](/reference/grid-field) class,
 more specifically the `[api:GridFieldAddExistingAutocompleter]` and `[api:GridFieldRelationDelete]` components.
 They provide a list/detail interface within a single record edited in your ModelAdmin.
-The `[GridField](/reference/grid-field)` docs also explain how to manage 
+The [GridField](/reference/grid-field) docs also explain how to manage 
 extra relation fields on join tables through its detail forms.
 The autocompleter can also search attributes on relations,
 based on the search fields defined through `[api:DataObject::searchableFields()]`.
@@ -287,7 +287,7 @@ Interfaces like `ModelAdmin` can be customized in many ways:
  * HTML markup through templates
 
 In general, use your `ModelAdmin->init()` method to add additional requirements
-through the `[Requirements](/reference/requirements)` API.
+through the [Requirements](/reference/requirements) API.
 For an introduction how to customize the CMS templates, see our [CMS Architecture Guide](/reference/cms-architecture).
 
 ## Related

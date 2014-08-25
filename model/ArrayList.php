@@ -346,8 +346,46 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	}
 	
 	/**
+	 * Parses a specified column into a sort field and direction
+	 * 
+	 * @param type $column String to parse containing the column name
+	 * @param type $direction Optional Additional argument which may contain the direction
+	 * @return array Sort specification in the form array("Column", SORT_ASC).
+	 */
+	protected function parseSortColumn($column, $direction = null) {
+		// Substitute the direction for the column if column is a numeric index
+		if($direction && (empty($column) || is_numeric($column))) {
+			$column = $direction;
+			$direction = null;
+		}
+		
+		// Parse column specification, considering possible ansi sql quoting
+		if(preg_match('/^"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i', $column, $match)) {
+			$column = $match['column'];
+			if(empty($direction) && !empty($match['direction'])) {
+				$direction = $match['direction'];
+			}
+		} else {
+			throw new InvalidArgumentException("Invalid sort() column");
+		}
+		
+		// Parse sort direction specification
+		if(empty($direction) || preg_match('/^asc(ending)?$/i', $direction)) {
+			$direction = SORT_ASC;
+		} elseif(preg_match('/^desc(ending)?$/i', $direction)) {
+			$direction = SORT_DESC;
+		} else {
+			throw new InvalidArgumentException("Invalid sort() direction");
+		}
+		
+		return array($column, $direction);
+	}
+	
+	/**
 	 * Sorts this list by one or more fields. You can either pass in a single
 	 * field name and direction, or a map of field names to sort directions.
+	 * 
+	 * Note that columns may be double quoted as per ANSI sql standard
 	 *
 	 * @return DataList
 	 * @see SS_List::sort()
@@ -368,18 +406,17 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		
 		// One argument and it's a string
 		if(count($args)==1 && is_string($args[0])){
-			$column = $args[0];
-			if(strpos($column, ' ') !== false) {
-				throw new InvalidArgumentException("You can't pass SQL fragments to sort()");
-			}
-			$columnsToSort[$column] = SORT_ASC;
+			list($column, $direction) = $this->parseSortColumn($args[0]);
+			$columnsToSort[$column] = $direction;
 
-		} else if(count($args)==2){
-			$columnsToSort[$args[0]]=(strtolower($args[1])=='desc')?SORT_DESC:SORT_ASC;
+		} else if(count($args)==2) {
+			list($column, $direction) = $this->parseSortColumn($args[0], $args[1]);
+			$columnsToSort[$column] = $direction;
 
 		} else if(is_array($args[0])) {
-			foreach($args[0] as $column => $sort_order){
-				$columnsToSort[$column] = (strtolower($sort_order)=='desc')?SORT_DESC:SORT_ASC;
+			foreach($args[0] as $key => $value) {
+				list($column, $direction) = $this->parseSortColumn($key, $value);
+				$columnsToSort[$column] = $direction;
 			}
 		} else {
 			throw new InvalidArgumentException("Bad arguments passed to sort()");

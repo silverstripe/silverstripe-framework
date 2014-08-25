@@ -139,20 +139,19 @@ class Session {
 	/**
 	 * Start PHP session, then create a new Session object with the given start data.
 	 *
-	 * @param $data Can be an array of data (such as $_SESSION) or another Session object to clone.
+	 * @param $data array|Session Can be an array of data (such as $_SESSION) or another Session object to clone.
 	 */
 	public function __construct($data) {
 		if($data instanceof Session) $data = $data->inst_getAll();
 
 		$this->data = $data;
-		
+
 		if (isset($this->data['HTTP_USER_AGENT'])) {
 			if ($this->data['HTTP_USER_AGENT'] != $this->userAgent()) {
 				// Funny business detected!
 				$this->inst_clearAll();
-				
-				Session::destroy();
-				Session::start();
+				$this->inst_destroy();
+				$this->inst_start();
 			}
 		}
 	}
@@ -347,8 +346,75 @@ class Session {
 		if(Controller::has_curr()) {
 			return Controller::curr()->getSession();
 		} else {
-			if(!self::$default_session) self::$default_session = new Session(isset($_SESSION) ? $_SESSION : array());
+			if(!self::$default_session) {
+				self::$default_session = Injector::inst()->create('Session', isset($_SESSION) ? $_SESSION : array());
+			}
+
 			return self::$default_session;
+		}
+	}
+
+	public function inst_start($sid = null) {
+		$path = Config::inst()->get('Session', 'cookie_path');
+		if(!$path) $path = Director::baseURL();
+		$domain = Config::inst()->get('Session', 'cookie_domain');
+		$secure = Director::is_https() && Config::inst()->get('Session', 'cookie_secure');
+		$session_path = Config::inst()->get('Session', 'session_store_path');
+		$timeout = Config::inst()->get('Session', 'timeout');
+
+		if(!session_id() && !headers_sent()) {
+			if($domain) {
+				session_set_cookie_params($timeout, $path, $domain, $secure, true);
+			} else {
+				session_set_cookie_params($timeout, $path, null, $secure, true);
+			}
+
+			// Allow storing the session in a non standard location
+			if($session_path) session_save_path($session_path);
+
+			// If we want a secure cookie for HTTPS, use a seperate session name. This lets us have a
+			// seperate (less secure) session for non-HTTPS requests
+			if($secure) session_name('SECSESSID');
+
+			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
+			// There's nothing we can do about this, because it's an operating system function!
+			if($sid) session_id($sid);
+			@session_start();
+
+			$this->data = isset($_SESSION) ? $_SESSION : array();
+		}
+
+		// Modify the timeout behaviour so it's the *inactive* time before the session expires.
+		// By default it's the total session lifetime
+		if($timeout && !headers_sent()) {
+			Cookie::set(session_name(), session_id(), $timeout/86400, $path, $domain ? $domain
+				: null, $secure, true);
+		}
+	}
+
+	public function inst_destroy($removeCookie = true) {
+		if(session_id()) {
+			if($removeCookie) {
+				$path = Config::inst()->get('Session', 'cookie_path');
+				if(!$path) $path = Director::baseURL();
+				$domain = Config::inst()->get('Session', 'cookie_domain');
+				$secure = Config::inst()->get('Session', 'cookie_secure');
+
+				if($domain) {
+					Cookie::set(session_name(), '', null, $path, $domain, $secure, true);
+				} else {
+					Cookie::set(session_name(), '', null, $path, null, $secure, true);
+				}
+
+				unset($_COOKIE[session_name()]);
+			}
+
+			session_destroy();
+
+			// Clean up the superglobal - session_destroy does not do it.
+			// http://nz1.php.net/manual/en/function.session-destroy.php
+			unset($_SESSION);
+			$this->data = array();
 		}
 	}
 
@@ -472,7 +538,11 @@ class Session {
 	public function inst_save() {
 		if($this->changedData) {
 			$this->inst_finalize();
-			if(!isset($_SESSION)) Session::start();
+
+			if(!isset($_SESSION)) {
+				$this->inst_start();
+			}
+
 			$this->recursivelyApply($this->changedData, $_SESSION);
 		}
 	}
@@ -529,41 +599,7 @@ class Session {
 	 * @param string $sid Start the session with a specific ID
 	 */
 	public static function start($sid = null) {
-		$path = Config::inst()->get('Session', 'cookie_path');
-		if(!$path) $path = Director::baseURL();
-		$domain = Config::inst()->get('Session', 'cookie_domain');
-		$secure = Director::is_https() && Config::inst()->get('Session', 'cookie_secure');
-		$session_path = Config::inst()->get('Session', 'session_store_path');
-		$timeout = Config::inst()->get('Session', 'timeout');
-
-		if(!session_id() && !headers_sent()) {
-			if($domain) {
-				session_set_cookie_params($timeout, $path, $domain,
-					$secure /* secure */, true /* httponly */);
-			} else {
-				session_set_cookie_params($timeout, $path, null,
-					$secure /* secure */, true /* httponly */);
-			}
-
-			// Allow storing the session in a non standard location
-			if($session_path) session_save_path($session_path);
-
-			// If we want a secure cookie for HTTPS, use a seperate session name. This lets us have a
-			// seperate (less secure) session for non-HTTPS requests
-			if($secure) session_name('SECSESSID');
-
-			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
-			// There's nothing we can do about this, because it's an operating system function!
-			if($sid) session_id($sid);
-			@session_start();
-		}
-
-		// Modify the timeout behaviour so it's the *inactive* time before the session expires.
-		// By default it's the total session lifetime
-		if($timeout && !headers_sent()) {
-			Cookie::set(session_name(), session_id(), $timeout/86400, $path, $domain ? $domain
-				: null, $secure, true);
-		}
+		self::current_session()->inst_start($sid);
 	}
 
 	/**
@@ -572,29 +608,7 @@ class Session {
 	 * @param bool $removeCookie If set to TRUE, removes the user's cookie, FALSE does not remove
 	 */
 	public static function destroy($removeCookie = true) {
-		if(session_id()) {
-			if($removeCookie) {
-				$path = Config::inst()->get('Session', 'cookie_path');
-				if(!$path) $path = Director::baseURL();
-				$domain = Config::inst()->get('Session', 'cookie_domain');
-				$secure = Config::inst()->get('Session', 'cookie_secure');
-				
-				if($domain) {
-					Cookie::set(session_name(), '', null, $path, $domain, $secure, true);
-				}
-				else {
-					Cookie::set(session_name(), '', null, $path, null, $secure, true);
-				}
-				
-				unset($_COOKIE[session_name()]);
-			}
-
-			session_destroy();
-
-			// Clean up the superglobal - session_destroy does not do it.
-			// http://nz1.php.net/manual/en/function.session-destroy.php
-			unset($_SESSION);
-		}
+		self::current_session()->inst_destroy($removeCookie);
 	}
 	
 	/**

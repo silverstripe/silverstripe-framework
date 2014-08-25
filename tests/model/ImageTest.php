@@ -109,7 +109,7 @@ class ImageTest extends SapphireTest {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$this->assertTrue($image->isSize(300, 300));
 		
-		// Set width to 50 pixels
+		// Set width to 300 pixels
 		$imageSetWidth = $image->SetWidth(300);
 		$this->assertEquals($imageSetWidth->getWidth(), 300);
 		$this->assertEquals($image->Filename, $imageSetWidth->Filename);
@@ -149,6 +149,61 @@ class ImageTest extends SapphireTest {
 		$imageSetRatioSize = $image->SetRatioSize(300, 300);
 		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
 		$this->assertEquals($image->Filename, $imageSetRatioSize->Filename);
+	}
+
+	/**
+	 * Tests that image manipulations that do not affect the resulting dimensions
+	 * of the output image resample the file when force_resample is set to true.
+	 */
+	public function testForceResample() {
+
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->isSize(300, 300));
+
+		$origForceResample = Config::inst()->get('Image', 'force_resample');
+		Config::inst()->update('Image', 'force_resample', true);
+
+		// Set width to 300 pixels
+		$imageSetWidth = $image->SetWidth(300);
+		$this->assertEquals($imageSetWidth->getWidth(), 300);
+		$this->assertNotEquals($image->Filename, $imageSetWidth->Filename);
+
+		// Set height to 300 pixels
+		$imageSetHeight = $image->SetHeight(300);
+		$this->assertEquals($imageSetHeight->getHeight(), 300);
+		$this->assertNotEquals($image->Filename, $imageSetHeight->Filename);
+
+		// Crop image to 300 x 300
+		$imageCropped = $image->CroppedImage(300, 300);
+		$this->assertTrue($imageCropped->isSize(300, 300));
+		$this->assertNotEquals($image->Filename, $imageCropped->Filename);
+
+		// Resize (padded) to 300 x 300
+		$imageSized = $image->SetSize(300, 300);
+		$this->assertTrue($imageSized->isSize(300, 300));
+		$this->assertNotEquals($image->Filename, $imageSized->Filename);
+
+		// Padded image 300 x 300 (same as above)
+		$imagePadded = $image->PaddedImage(300, 300);
+		$this->assertTrue($imagePadded->isSize(300, 300));
+		$this->assertNotEquals($image->Filename, $imagePadded->Filename);
+
+		// Resized (stretched) to 300 x 300
+		$imageStretched = $image->ResizedImage(300, 300);
+		$this->assertTrue($imageStretched->isSize(300, 300));
+		$this->assertNotEquals($image->Filename, $imageStretched->Filename);
+
+		// SetRatioSize (various options)
+		$imageSetRatioSize = $image->SetRatioSize(300, 600);
+		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
+		$this->assertNotEquals($image->Filename, $imageSetRatioSize->Filename);
+		$imageSetRatioSize = $image->SetRatioSize(600, 300);
+		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
+		$this->assertNotEquals($image->Filename, $imageSetRatioSize->Filename);
+		$imageSetRatioSize = $image->SetRatioSize(300, 300);
+		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
+		$this->assertNotEquals($image->Filename, $imageSetRatioSize->Filename);
+		Config::inst()->update('Image', 'force_resample', $origForceResample);
 	}
 	
 	public function testImageResize() {

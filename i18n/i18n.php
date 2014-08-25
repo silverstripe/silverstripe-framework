@@ -5,18 +5,18 @@ require_once 'i18nSSLegacyAdapter.php';
 
 /**
  * Base-class for storage and retrieval of translated entities.
- * 
+ *
  * Please see the 'translatable' module for managing translations of database-content.
- * 
+ *
  * <b>Usage</b>
- * 
+ *
  * PHP:
  * <code>
  * _t('MyNamespace.MYENTITY', 'My default natural language value');
  * _t('MyNamespace.MYENTITY', 'My default natural language value', 'My explanatory context');
  * sprintf(_t('MyNamespace.MYENTITY', 'Counting %s things'), 42);
  * </code>
- * 
+ *
  * Templates:
  * <code>
  * <% _t('MyNamespace.MYENTITY', 'My default natural language value') %>
@@ -27,33 +27,33 @@ require_once 'i18nSSLegacyAdapter.php';
  * <code>
  * ss.i18n._t('MyEntity.MyNamespace','My default natural language value');
  * </code>
- * 
+ *
  * File-based i18n-translations always have a "locale" (e.g. 'en_US').
  * Common language names (e.g. 'en') are mainly used in the 'translatable' module
  * database-entities.
- * 
+ *
  * <b>Text Collection</b>
- * 
+ *
  * Features a "textcollector-mode" that parses all files with a certain extension
  * (currently *.php and *.ss) for new translatable strings. Textcollector will write
  * updated string-tables to their respective folders inside the module, and automatically
  * namespace entities to the classes/templates they are found in (e.g. $lang['en_US']['AssetAdmin']['UPLOADFILES']).
- * 
+ *
  * Caution: Does not apply any character-set conversion, it is assumed that all content
  * is stored and represented in UTF-8 (Unicode). Please make sure your files are created with the correct
  * character-set, and your HTML-templates render UTF-8.
- * 
+ *
  * Caution: The language file has to be stored in the same module path as the "filename namespaces"
  * on the entities. So an entity stored in $lang['en_US']['AssetAdmin']['DETAILSTAB'] has to
  * in the language file cms/lang/en_US.php, as the referenced file (AssetAdmin.php) is stored
  * in the "cms" module.
- * 
+ *
  * <b>Locales</b>
  *
- * For the i18n class, a "locale" consists of a language code plus a region code separated by an underscore, 
+ * For the i18n class, a "locale" consists of a language code plus a region code separated by an underscore,
  * for example "de_AT" for German language ("de") in the region Austria ("AT").
  * See http://www.w3.org/International/articles/language-tags/ for a detailed description.
- * 
+ *
  * @see http://doc.silverstripe.org/i18n
  * @see http://www.w3.org/TR/i18n-html-tech-lang
  *
@@ -62,41 +62,41 @@ require_once 'i18nSSLegacyAdapter.php';
  * @subpackage misc
  */
 class i18n extends Object implements TemplateGlobalProvider {
-	
+
 	/**
 	 * This static variable is used to store the current defined locale.
 	 */
 	protected static $current_locale = '';
-	
+
 	/**
 	 * @config
 	 * @var string
 	 */
 	private static $default_locale = 'en_US';
-	
+
 	/**
 	 * @config
 	 * @var boolean
 	 */
 	private static $js_i18n = true;
-	
+
 	/**
 	 * @config
 	 * @var string
 	 */
 	private static $date_format;
-	
+
 	/**
 	 * @config
 	 * @var string
 	 */
 	private static $time_format;
-	
+
 	/**
 	 * @var array Array of priority keys to instances of Zend_Translate, mapped by name.
 	 */
 	protected static $translators;
-		
+
 	/**
 	 * Use javascript i18n through the ss.i18n class (enabled by default).
 	 * If set to TRUE, includes javascript requirements for the base library
@@ -108,8 +108,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 *
 	 * Caution: This flag gets overwritten in {@link LeftAndMain::init()} to enforce javascript
 	 * i18n for the CMS interfaces.
-	 * 
-	 * @see Requirements::process_i18n_javascript() 
+	 *
+	 * @see Requirements::process_i18n_javascript()
 	 *
 	 * @deprecated 3.2 Use the "i18n.js_i18n" config setting instead
 	 * @param bool $bool
@@ -118,7 +118,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		Deprecation::notice('3.2', 'Use the "i18n.js_i18n" config setting instead');
 		Config::inst()->update('i18n', 'js_i18n', $bool);
 	}
-	
+
 	/**
 	 * @deprecated 3.2 Use the "i18n.js_i18n" config setting instead
 	 * @return bool
@@ -127,7 +127,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		Deprecation::notice('3.2', 'Use the "i18n.js_i18n" config setting instead');
 		return Config::inst()->get('i18n', 'js_i18n');
 	}
-	
+
 	/**
 	 * @deprecated 3.2 Use the "i18n.date_format" config setting instead
 	 * @param string ISO date format
@@ -136,7 +136,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		Deprecation::notice('3.2', 'Use the "i18n.date_format" config setting instead');
 		Config::inst()->update('i18n', 'date_format', $format);
 	}
-	
+
 	/**
 	 * @return string ISO date format
 	 */
@@ -145,7 +145,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		$dateFormat = Config::inst()->get('i18n', 'date_format');
 		return ($dateFormat) ? $dateFormat : Zend_Locale_Format::getDateFormat(self::get_locale());
 	}
-	
+
 	/**
 	 * @deprecated 3.2 Use the "i18n.time_format" config setting instead
 	 * @param string ISO time format
@@ -154,7 +154,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		Deprecation::notice('3.2', 'Use the "i18n.time_format" config setting instead');
 		Config::inst()->update('i18n', 'time_format', $format);
 	}
-	
+
 	/**
 	 * @return string ISO time format
 	 */
@@ -163,7 +163,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		$timeFormat = Config::inst()->get('i18n', 'time_format');
 		return ($timeFormat) ? $timeFormat : Zend_Locale_Format::getTimeFormat(self::get_locale());
 	}
-	
+
 	/**
 	 * An exhaustive list of possible locales (code => language and country)
 	 *
@@ -171,487 +171,487 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @var array
 	 */
 	private static $all_locales = array (
-			'aa_DJ' => 'Afar (Djibouti)',
-			'ab_GE' => 'Abkhazian (Georgia)',
-			'abr_GH' => 'Abron (Ghana)',
-			'ace_ID' => 'Achinese (Indonesia)',
-			'ady_RU' => 'Adyghe (Russia)',
-			'af_ZA' => 'Afrikaans (South Africa)',
-			'ak_GH' => 'Akan (Ghana)',
-			'am_ET' => 'Amharic (Ethiopia)',
-			'ar_AE' => 'Arabic (United Arab Emirates)',
-			'ar_BH' => 'Arabic (Bahrain)',
-			'ar_DZ' => 'Arabic (Algeria)',
-			'ar_EG' => 'Arabic (Egypt)',
-			'ar_EH' => 'Arabic (Western Sahara)',
-			'ar_IQ' => 'Arabic (Iraq)',
-			'ar_JO' => 'Arabic (Jordan)',
-			'ar_KW' => 'Arabic (Kuwait)',
-			'ar_LB' => 'Arabic (Lebanon)',
-			'ar_LY' => 'Arabic (Libya)',
-			'ar_MA' => 'Arabic (Morocco)',
-			'ar_MR' => 'Arabic (Mauritania)',
-			'ar_OM' => 'Arabic (Oman)',
-			'ar_PS' => 'Arabic (Palestinian Territory)',
-			'ar_QA' => 'Arabic (Qatar)',
-			'ar_SA' => 'Arabic (Saudi Arabia)',
-			'ar_SD' => 'Arabic (Sudan)',
-			'ar_SY' => 'Arabic (Syria)',
-			'ar_TD' => 'Arabic (Chad)',
-			'ar_TN' => 'Arabic (Tunisia)',
-			'ar_YE' => 'Arabic (Yemen)',
-			'as_IN' => 'Assamese (India)',
-			'ast_ES' => 'Asturian (Spain)',
-			'auv_FR' => 'Auvergnat (France)',
-			'av_RU' => 'Avaric (Russia)',
-			'awa_IN' => 'Awadhi (India)',
-			'ay_BO' => 'Aymara (Bolivia)',
-			'ay_PE' => 'Aymara (Peru)',
-			'az_AZ' => 'Azerbaijani (Azerbaijan)',
-			'az_IR' => 'Azerbaijani (Iran)',
-			'ba_RU' => 'Bashkir (Russia)',
-			'ban_ID' => 'Balinese (Indonesia)',
-			'bcc_PK' => 'Balochi, Southern (Pakistan)',
-			'bcl_PH' => 'Bicolano, Central (Philippines)',
-			'be_BY' => 'Belarusian (Belarus)',
-			'bew_ID' => 'Betawi (Indonesia)',
-			'bg_BG' => 'Bulgarian (Bulgaria)',
-			'bgc_IN' => 'Haryanvi (India)',
-			'bgn_PK' => 'Balochi, Western (Pakistan)',
-			'bgp_PK' => 'Balochi, Easter (Pakistan)',
-			'bhb_IN' => 'Bhili (India)',
-			'bhi_IN' => 'Bhilali (India)',
-			'bhk_PH' => 'Bicolano, Albay (Philippines)',
-			'bho_IN' => 'Bhojpuri (India)',
-			'bho_MU' => 'Bhojpuri (Mauritius)',
-			'bho_NP' => 'Bhojpuri (Nepal)',
-			'bi_VU' => 'Bislama (Vanuatu)',
-			'bjj_IN' => 'Kanauji (India)',
-			'bjn_ID' => 'Banjar (Indonesia)',
-			'bm_ML' => 'Bambara (Mali)',
-			'bn_BD' => 'Bengali (Bangladesh)',
-			'bn_IN' => 'Bengali (India)',
-			'bo_CN' => 'Tibetan (China)',
-			'bqi_IR' => 'Bakhtiari (Iran)',
-			'brh_PK' => 'Brahui (Pakistan)',
-			'bs_BA' => 'Bosnian (Bosnia and Herzegovina)',
-			'btk_ID' => 'Batak (Indonesia)',
-			'buc_YT' => 'Bushi (Mayotte)',
-			'bug_ID' => 'Buginese (Indonesia)',
-			'ca_AD' => 'Catalan (Andorra)',
-			'ca_ES' => 'Catalan (Spain)',
-			'ce_RU' => 'Chechen (Russia)',
-			'ceb_PH' => 'Cebuano (Philippines)',
-			'cgg_UG' => 'Chiga (Uganda)',
-			'ch_GU' => 'Chamorro (Guam)',
-			'chk_FM' => 'Chuukese (Micronesia)',
-			'crk_CA' => 'Cree, Plains (Canada)',
-			'cs_CZ' => 'Czech (Czech Republic)',
-			'cwd_CA' => 'Cree, Woods (Canada)',
-			'cy_GB' => 'Welsh (United Kingdom)',
-			'da_DK' => 'Danish (Denmark)',
-			'da_GL' => 'Danish (Greenland)',
-			'dcc_IN' => 'Deccan (India)',
-			'de_AT' => 'German (Austria)',
-			'de_BE' => 'German (Belgium)',
-			'de_CH' => 'German (Switzerland)',
-			'de_DE' => 'German (Germany)',
-			'de_LI' => 'German (Liechtenstein)',
-			'de_LU' => 'German (Luxembourg)',
-			'dgo_IN' => 'Dogri (India)',
-			'dhd_IN' => 'Dhundari (India)',
-			'diq_TR' => 'Dimli (Turkey)',
-			'dje_NE' => 'Zarma (Niger)',
-			'dv_MV' => 'Divehi (Maldives)',
-			'dz_BT' => 'Dzongkha (Bhutan)',
-			'ee_GH' => 'Ewe (Ghana)',
-			'el_CY' => 'Greek (Cyprus)',
-			'el_GR' => 'Greek (Greece)',
-			'en_AS' => 'English (American Samoa)',
-			'en_AU' => 'English (Australia)',
-			'en_BM' => 'English (Bermuda)',
-			'en_BS' => 'English (Bahamas)',
-			'en_CA' => 'English (Canada)',
-			'en_DE' => 'English (Germany)',
-			'en_ES' => 'English (Spain)',
-			'en_FR' => 'English (France)',
-			'en_GB' => 'English (United Kingdom)',
-			'en_HK' => 'English (Hong Kong SAR China)',
-			'en_IE' => 'English (Ireland)',
-			'en_IN' => 'English (India)',
-			'en_IT' => 'English (Italy)',
-			'en_JM' => 'English (Jamaica)',
-			'en_KE' => 'English (Kenya)',
-			'en_LR' => 'English (Liberia)',
-			'en_MM' => 'English (Myanmar)',
-			'en_MW' => 'English (Malawi)',
-			'en_MY' => 'English (Malaysia)',
-			'en_NL' => 'English (Netherlands)',
-			'en_NZ' => 'English (New Zealand)',
-			'en_PH' => 'English (Philippines)',
-			'en_SG' => 'English (Singapore)',
-			'en_TT' => 'English (Trinidad and Tobago)',
-			'en_US' => 'English (United States)',
-			'en_ZA' => 'English (South Africa)',
-			'eo_XX' => 'Esperanto',
-			'es_419' => 'Spanish (Latin America)',
-			'es_AR' => 'Spanish (Argentina)',
-			'es_BO' => 'Spanish (Bolivia)',
-			'es_CL' => 'Spanish (Chile)',
-			'es_CO' => 'Spanish (Colombia)',
-			'es_CR' => 'Spanish (Costa Rica)',
-			'es_CU' => 'Spanish (Cuba)',
-			'es_DO' => 'Spanish (Dominican Republic)',
-			'es_EC' => 'Spanish (Ecuador)',
-			'es_ES' => 'Spanish (Spain)',
-			'es_GQ' => 'Spanish (Equatorial Guinea)',
-			'es_GT' => 'Spanish (Guatemala)',
-			'es_HN' => 'Spanish (Honduras)',
-			'es_MX' => 'Spanish (Mexico)',
-			'es_NI' => 'Spanish (Nicaragua)',
-			'es_PA' => 'Spanish (Panama)',
-			'es_PE' => 'Spanish (Peru)',
-			'es_PH' => 'Spanish (Philippines)',
-			'es_PR' => 'Spanish (Puerto Rico)',
-			'es_PY' => 'Spanish (Paraguay)',
-			'es_SV' => 'Spanish (El Salvador)',
-			'es_US' => 'Spanish (United States)',
-			'es_UY' => 'Spanish (Uruguay)',
-			'es_VE' => 'Spanish (Venezuela)',
-			'et_EE' => 'Estonian (Estonia)',
-			'eu_ES' => 'Basque (Spain)',
-			'fa_AF' => 'Persian (Afghanistan)',
-			'fa_IR' => 'Persian (Iran)',
-			'fa_PK' => 'Persian (Pakistan)',
-			'fan_GQ' => 'Fang (Equatorial Guinea)',
-			'fi_FI' => 'Finnish (Finland)',
-			'fi_SE' => 'Finnish (Sweden)',
-			'fil_PH' => 'Filipino (Philippines)',
-			'fj_FJ' => 'Fijian (Fiji)',
-			'fo_FO' => 'Faroese (Faroe Islands)',
-			'fon_BJ' => 'Fon (Benin)',
-			'fr_002' => 'French (Africa)',
-			'fr_BE' => 'French (Belgium)',
-			'fr_CA' => 'French (Canada)',
-			'fr_CH' => 'French (Switzerland)',
-			'fr_DZ' => 'French (Algeria)',
-			'fr_FR' => 'French (France)',
-			'fr_GF' => 'French (French Guiana)',
-			'fr_GP' => 'French (Guadeloupe)',
-			'fr_HT' => 'French (Haiti)',
-			'fr_KM' => 'French (Comoros)',
-			'fr_MA' => 'French (Morocco)',
-			'fr_MQ' => 'French (Martinique)',
-			'fr_MU' => 'French (Mauritius)',
-			'fr_NC' => 'French (New Caledonia)',
-			'fr_PF' => 'French (French Polynesia)',
-			'fr_PM' => 'French (Saint Pierre and Miquelon)',
-			'fr_RE' => 'French (Reunion)',
-			'fr_SC' => 'French (Seychelles)',
-			'fr_SN' => 'French (Senegal)',
-			'fr_US' => 'French (United States)',
-			'fuv_NG' => 'Fulfulde (Nigeria)',
-			'ga_GB' => 'Irish (United Kingdom)',
-			'ga_IE' => 'Irish (Ireland)',
-			'gaa_GH' => 'Ga (Ghana)',
-			'gbm_IN' => 'Garhwali (India)',
-			'gcr_GF' => 'Guianese Creole French (French Guiana)',
-			'gd_GB' => 'Scottish Gaelic (United Kingdom)',
-			'gil_KI' => 'Gilbertese (Kiribati)',
-			'gl_ES' => 'Galician (Spain)',
-			'glk_IR' => 'Gilaki (Iran)',
-			'gn_PY' => 'Guarani (Paraguay)',
-			'gno_IN' => 'Gondi, Northern (India)',
-			'gsw_CH' => 'Swiss German (Switzerland)',
-			'gsw_LI' => 'Swiss German (Liechtenstein)',
-			'gu_IN' => 'Gujarati (India)',
-			'guz_KE' => 'Gusii (Kenya)',
-			'ha_NE' => 'Hausa (Niger)',
-			'ha_NG' => 'Hausa (Nigeria)',
-			'haw_US' => 'Hawaiian (United States)',
-			'haz_AF' => 'Hazaragi (Afghanistan)',
-			'he_IL' => 'Hebrew (Israel)',
-			'hi_IN' => 'Hindi (India)',
-			'hil_PH' => 'Hiligaynon (Philippines)',
-			'hne_IN' => 'Chhattisgarhi (India)',
-			'hno_PK' => 'Hindko, Northern (Pakistan)',
-			'hoc_IN' => 'Ho (India)',
-			'hr_AT' => 'Croatian (Austria)',
-			'hr_BA' => 'Croatian (Bosnia and Herzegovina)',
-			'hr_HR' => 'Croatian (Croatia)',
-			'ht_HT' => 'Haitian (Haiti)',
-			'hu_AT' => 'Hungarian (Austria)',
-			'hu_HU' => 'Hungarian (Hungary)',
-			'hu_RO' => 'Hungarian (Romania)',
-			'hu_RS' => 'Hungarian (Serbia)',
-			'hy_AM' => 'Armenian (Armenia)',
-			'id_ID' => 'Indonesian (Indonesia)',
-			'ig_NG' => 'Igbo (Nigeria)',
-			'ilo_PH' => 'Iloko (Philippines)',
-			'inh_RU' => 'Ingush (Russia)',
-			'is_IS' => 'Icelandic (Iceland)',
-			'it_CH' => 'Italian (Switzerland)',
-			'it_FR' => 'Italian (France)',
-			'it_HR' => 'Italian (Croatia)',
-			'it_IT' => 'Italian (Italy)',
-			'it_SM' => 'Italian (San Marino)',
-			'it_US' => 'Italian (United States)',
-			'iu_CA' => 'Inuktitut (Canada)',
-			'ja_JP' => 'Japanese (Japan)',
-			'jv_ID' => 'Javanese (Indonesia)',
-			'ka_GE' => 'Georgian (Georgia)',
-			'kam_KE' => 'Kamba (Kenya)',
-			'kbd_RU' => 'Kabardian (Russia)',
-			'kfy_IN' => 'Kumauni (India)',
-			'kha_IN' => 'Khasi (India)',
-			'khn_IN' => 'Khandesi (India)',
-			'ki_KE' => 'Kikuyu (Kenya)',
-			'kj_NA' => 'Kuanyama (Namibia)',
-			'kk_CN' => 'Kazakh (China)',
-			'kk_KZ' => 'Kazakh (Kazakhstan)',
-			'kl_DK' => 'Kalaallisut (Denmark)',
-			'kl_GL' => 'Kalaallisut (Greenland)',
-			'kln_KE' => 'Kalenjin (Kenya)',
-			'km_KH' => 'Khmer (Cambodia)',
-			'kn_IN' => 'Kannada (India)',
-			'ko_KR' => 'Korean (Korea)',
-			'koi_RU' => 'Komi-Permyak (Russia)',
-			'kok_IN' => 'Konkani (India)',
-			'kos_FM' => 'Kosraean (Micronesia)',
-			'kpv_RU' => 'Komi-Zyrian (Russia)',
-			'krc_RU' => 'Karachay-Balkar (Russia)',
-			'kru_IN' => 'Kurukh (India)',
-			'ks_IN' => 'Kashmiri (India)',
-			'ku_IQ' => 'Kurdish (Iraq)',
-			'ku_IR' => 'Kurdish (Iran)',
-			'ku_SY' => 'Kurdish (Syria)',
-			'ku_TR' => 'Kurdish (Turkey)',
-			'kum_RU' => 'Kumyk (Russia)',
-			'kxm_TH' => 'Khmer, Northern (Thailand)',
-			'ky_KG' => 'Kirghiz (Kyrgyzstan)',
-			'la_VA' => 'Latin (Vatican)',
-			'lah_PK' => 'Lahnda (Pakistan)',
-			'lb_LU' => 'Luxembourgish (Luxembourg)',
-			'lbe_RU' => 'Lak (Russia)',
-			'lc_XX' => 'LOLCAT',
-			'lez_RU' => 'Lezghian (Russia)',
-			'lg_UG' => 'Ganda (Uganda)',
-			'lij_IT' => 'Ligurian (Italy)',
-			'lij_MC' => 'Ligurian (Monaco)',
-			'ljp_ID' => 'Lampung (Indonesia)',
-			'lmn_IN' => 'Lambadi (India)',
-			'ln_CD' => 'Lingala (Congo - Kinshasa)',
-			'ln_CG' => 'Lingala (Congo - Brazzaville)',
-			'lo_LA' => 'Lao (Laos)',
-			'lrc_IR' => 'Luri, Northern (Iran)',
-			'lt_LT' => 'Lithuanian (Lithuania)',
-			'luo_KE' => 'Luo (Kenya)',
-			'luy_KE' => 'Luyia (Kenya)',
-			'lv_LV' => 'Latvian (Latvia)',
-			'mad_ID' => 'Madurese (Indonesia)',
-			'mai_IN' => 'Maithili (India)',
-			'mai_NP' => 'Maithili (Nepal)',
-			'mak_ID' => 'Makasar (Indonesia)',
-			'mdf_RU' => 'Moksha (Russia)',
-			'mdh_PH' => 'Maguindanao (Philippines)',
-			'mer_KE' => 'Meru (Kenya)',
-			'mfa_TH' => 'Malay, Pattani (Thailand)',
-			'mfe_MU' => 'Morisyen (Mauritius)',
-			'mg_MG' => 'Malagasy (Madagascar)',
-			'mh_MH' => 'Marshallese (Marshall Islands)',
-			'mi_NZ' => 'Māori (New Zealand)',
-			'min_ID' => 'Minangkabau (Indonesia)',
-			'mk_MK' => 'Macedonian (Macedonia)',
-			'ml_IN' => 'Malayalam (India)',
-			'mn_CN' => 'Mongolian (China)',
-			'mn_MN' => 'Mongolian (Mongolia)',
-			'mni_IN' => 'Manipuri (India)',
-			'mr_IN' => 'Marathi (India)',
-			'ms_BN' => 'Malay (Brunei)',
-			'ms_CC' => 'Malay (Cocos Islands)',
-			'ms_ID' => 'Malay (Indonesia)',
-			'ms_MY' => 'Malay (Malaysia)',
-			'ms_SG' => 'Malay (Singapore)',
-			'mt_MT' => 'Maltese (Malta)',
-			'mtr_IN' => 'Mewari (India)',
-			'mup_IN' => 'Malvi (India)',
-			'muw_IN' => 'Mundari (India)',
-			'my_MM' => 'Burmese (Myanmar)',
-			'myv_RU' => 'Erzya (Russia)',
-			'na_NR' => 'Nauru (Nauru)',
-			'nb_NO' => 'Norwegian Bokmal (Norway)',
-			'nb_SJ' => 'Norwegian Bokmal (Svalbard and Jan Mayen)',
-			'nd_ZW' => 'North Ndebele (Zimbabwe)',
-			'ndc_MZ' => 'Ndau (Mozambique)',
-			'ne_IN' => 'Nepali (India)',
-			'ne_NP' => 'Nepali (Nepal)',
-			'ng_NA' => 'Ndonga (Namibia)',
-			'ngl_MZ' => 'Lomwe (Mozambique)',
-			'niu_NU' => 'Niuean (Niue)',
-			'nl_AN' => 'Dutch (Netherlands Antilles)',
-			'nl_AW' => 'Dutch (Aruba)',
-			'nl_BE' => 'Dutch (Belgium)',
-			'nl_NL' => 'Dutch (Netherlands)',
-			'nl_SR' => 'Dutch (Suriname)',
-			'nn_NO' => 'Norwegian Nynorsk (Norway)',
-			'nb_NO' => 'Norwegian',
-			'nod_TH' => 'Thai, Northern (Thailand)',
-			'noe_IN' => 'Nimadi (India)',
-			'nso_ZA' => 'Northern Sotho (South Africa)',
-			'ny_MW' => 'Nyanja (Malawi)',
-			'ny_ZM' => 'Nyanja (Zambia)',
-			'nyn_UG' => 'Nyankole (Uganda)',
-			'om_ET' => 'Oromo (Ethiopia)',
-			'or_IN' => 'Oriya (India)',
-			'pa_IN' => 'Punjabi (India)',
-			'pag_PH' => 'Pangasinan (Philippines)',
-			'pap_AN' => 'Papiamento (Netherlands Antilles)',
-			'pap_AW' => 'Papiamento (Aruba)',
-			'pau_PW' => 'Palauan (Palau)',
-			'pl_PL' => 'Polish (Poland)',
-			'pl_UA' => 'Polish (Ukraine)',
-			'pon_FM' => 'Pohnpeian (Micronesia)',
-			'ps_AF' => 'Pashto (Afghanistan)',
-			'ps_PK' => 'Pashto (Pakistan)',
-			'pt_AO' => 'Portuguese (Angola)',
-			'pt_BR' => 'Portuguese (Brazil)',
-			'pt_CV' => 'Portuguese (Cape Verde)',
-			'pt_GW' => 'Portuguese (Guinea-Bissau)',
-			'pt_MZ' => 'Portuguese (Mozambique)',
-			'pt_PT' => 'Portuguese (Portugal)',
-			'pt_ST' => 'Portuguese (Sao Tome and Principe)',
-			'pt_TL' => 'Portuguese (East Timor)',
-			'qu_BO' => 'Quechua (Bolivia)',
-			'qu_PE' => 'Quechua (Peru)',
-			'rcf_RE' => 'R�union Creole French (Reunion)',
-			'rej_ID' => 'Rejang (Indonesia)',
-			'rif_MA' => 'Tarifit (Morocco)',
-			'rjb_IN' => 'Rajbanshi (India)',
-			'rm_CH' => 'Rhaeto-Romance (Switzerland)',
-			'rmt_IR' => 'Domari (Iran)',
-			'rn_BI' => 'Rundi (Burundi)',
-			'ro_MD' => 'Romanian (Moldova)',
-			'ro_RO' => 'Romanian (Romania)',
-			'ro_RS' => 'Romanian (Serbia)',
-			'ru_BY' => 'Russian (Belarus)',
-			'ru_KG' => 'Russian (Kyrgyzstan)',
-			'ru_KZ' => 'Russian (Kazakhstan)',
-			'ru_RU' => 'Russian (Russia)',
-			'ru_SJ' => 'Russian (Svalbard and Jan Mayen)',
-			'ru_UA' => 'Russian (Ukraine)',
-			'rw_RW' => 'Kinyarwanda (Rwanda)',
-			'sa_IN' => 'Sanskrit (India)',
-			'sah_RU' => 'Yakut (Russia)',
-			'sas_ID' => 'Sasak (Indonesia)',
-			'sat_IN' => 'Santali (India)',
-			'sck_IN' => 'Sadri (India)',
-			'sco_GB' => 'Scots (United Kingdom)',
-			'sco_SCO' => 'Scots',
-			'sd_IN' => 'Sindhi (India)',
-			'sd_PK' => 'Sindhi (Pakistan)',
-			'se_NO' => 'Northern Sami (Norway)',
-			'sg_CF' => 'Sango (Central African Republic)',
-			'si_LK' => 'Sinhalese (Sri Lanka)',
-			'sid_ET' => 'Sidamo (Ethiopia)',
-			'sk_RS' => 'Slovak (Serbia)',
-			'sk_SK' => 'Slovak (Slovakia)',
-			'sl_AT' => 'Slovenian (Austria)',
-			'sl_SI' => 'Slovenian (Slovenia)',
-			'sm_AS' => 'Samoan (American Samoa)',
-			'sm_WS' => 'Samoan (Samoa)',
-			'sn_ZW' => 'Shona (Zimbabwe)',
-			'so_DJ' => 'Somali (Djibouti)',
-			'so_ET' => 'Somali (Ethiopia)',
-			'so_SO' => 'Somali (Somalia)',
-			'sou_TH' => 'Thai, Southern (Thailand)',
-			'sq_AL' => 'Albanian (Albania)',
-			'sr_BA' => 'Serbian (Bosnia and Herzegovina)',
-			'sr_ME' => 'Serbian (Montenegro)',
-			'sr_RS' => 'Serbian (Serbia)',
-			'ss_SZ' => 'Swati (Swaziland)',
-			'ss_ZA' => 'Swati (South Africa)',
-			'st_LS' => 'Southern Sotho (Lesotho)',
-			'st_ZA' => 'Southern Sotho (South Africa)',
-			'su_ID' => 'Sundanese (Indonesia)',
-			'sv_AX' => 'Swedish (Aland Islands)',
-			'sv_FI' => 'Swedish (Finland)',
-			'sv_SE' => 'Swedish (Sweden)',
-			'sw_KE' => 'Swahili (Kenya)',
-			'sw_SO' => 'Swahili (Somalia)',
-			'sw_TZ' => 'Swahili (Tanzania)',
-			'sw_UG' => 'Swahili (Uganda)',
-			'swb_KM' => 'Comorian (Comoros)',
-			'swb_YT' => 'Comorian (Mayotte)',
-			'swv_IN' => 'Shekhawati (India)',
-			'ta_IN' => 'Tamil (India)',
-			'ta_LK' => 'Tamil (Sri Lanka)',
-			'ta_MY' => 'Tamil (Malaysia)',
-			'ta_SG' => 'Tamil (Singapore)',
-			'tcy_IN' => 'Tulu (India)',
-			'te_IN' => 'Telugu (India)',
-			'tet_TL' => 'Tetum (East Timor)',
-			'tg_TJ' => 'Tajik (Tajikistan)',
-			'th_TH' => 'Thai (Thailand)',
-			'ti_ER' => 'Tigrinya (Eritrea)',
-			'ti_ET' => 'Tigrinya (Ethiopia)',
-			'tk_IR' => 'Turkmen (Iran)',
-			'tk_TM' => 'Turkmen (Turkmenistan)',
-			'tkl_TK' => 'Tokelau (Tokelau)',
-			'tl_PH' => 'Tagalog (Philippines)',
-			'tl_US' => 'Tagalog (United States)',
-			'tn_BW' => 'Tswana (Botswana)',
-			'tn_ZA' => 'Tswana (South Africa)',
-			'to_TO' => 'Tonga (Tonga)',
-			'tr_CY' => 'Turkish (Cyprus)',
-			'tr_DE' => 'Turkish (Germany)',
-			'tr_MK' => 'Turkish (Macedonia)',
-			'tr_TR' => 'Turkish (Turkey)',
-			'ts_MZ' => 'Tsonga (Mozambique)',
-			'ts_ZA' => 'Tsonga (South Africa)',
-			'tsg_PH' => 'Tausug (Philippines)',
-			'tt_RU' => 'Tatar (Russia)',
-			'tts_TH' => 'Thai, Northeastern (Thailand)',
-			'tvl_TV' => 'Tuvalu (Tuvalu)',
-			'tw_GH' => 'Twi (Ghana)',
-			'ty_PF' => 'Tahitian (French Polynesia)',
-			'tyv_RU' => 'Tuvinian (Russia)',
-			'tzm_MA' => 'Tamazight, Central Atlas (Morocco)',
-			'udm_RU' => 'Udmurt (Russia)',
-			'ug_CN' => 'Uighur (China)',
-			'uk_UA' => 'Ukrainian (Ukraine)',
-			'uli_FM' => 'Ulithian (Micronesia)',
-			'ur_IN' => 'Urdu (India)',
-			'ur_PK' => 'Urdu (Pakistan)',
-			'uz_AF' => 'Uzbek (Afghanistan)',
-			'uz_UZ' => 'Uzbek (Uzbekistan)',
-			've_ZA' => 'Venda (South Africa)',
-			'vi_US' => 'Vietnamese (United States)',
-			'vi_VN' => 'Vietnamese (Vietnam)',
-			'vmw_MZ' => 'Waddar (Mozambique)',
-			'wal_ET' => 'Walamo (Ethiopia)',
-			'war_PH' => 'Waray (Philippines)',
-			'wbq_IN' => 'Waddar (India)',
-			'wbr_IN' => 'Wagdi (India)',
-			'wo_MR' => 'Wolof (Mauritania)',
-			'wo_SN' => 'Wolof (Senegal)',
-			'wtm_IN' => 'Mewati (India)',
-			'xh_ZA' => 'Xhosa (South Africa)',
-			'xnr_IN' => 'Kangri (India)',
-			'xog_UG' => 'Soga (Uganda)',
-			'yap_FM' => 'Yapese (Micronesia)',
-			'yo_NG' => 'Yoruba (Nigeria)',
-			'za_CN' => 'Zhuang (China)',
-			'zh_CN' => 'Chinese (China)',
-			'zh_HK' => 'Chinese (Hong Kong SAR China)',
-			'zh_MO' => 'Chinese (Macao SAR China)',
-			'zh_SG' => 'Chinese (Singapore)',
-			'zh_TW' => 'Chinese (Taiwan)',
-			'zh_US' => 'Chinese (United States)',
-			'zh_cmn' => 'Chinese (Mandarin)',
-			'zh_yue' => 'Chinese (Cantonese)',
-			'zu_ZA' => 'Zulu (South Africa)'
+		'aa_DJ' => 'Afar (Djibouti)',
+		'ab_GE' => 'Abkhazian (Georgia)',
+		'abr_GH' => 'Abron (Ghana)',
+		'ace_ID' => 'Achinese (Indonesia)',
+		'ady_RU' => 'Adyghe (Russia)',
+		'af_ZA' => 'Afrikaans (South Africa)',
+		'ak_GH' => 'Akan (Ghana)',
+		'am_ET' => 'Amharic (Ethiopia)',
+		'ar_AE' => 'Arabic (United Arab Emirates)',
+		'ar_BH' => 'Arabic (Bahrain)',
+		'ar_DZ' => 'Arabic (Algeria)',
+		'ar_EG' => 'Arabic (Egypt)',
+		'ar_EH' => 'Arabic (Western Sahara)',
+		'ar_IQ' => 'Arabic (Iraq)',
+		'ar_JO' => 'Arabic (Jordan)',
+		'ar_KW' => 'Arabic (Kuwait)',
+		'ar_LB' => 'Arabic (Lebanon)',
+		'ar_LY' => 'Arabic (Libya)',
+		'ar_MA' => 'Arabic (Morocco)',
+		'ar_MR' => 'Arabic (Mauritania)',
+		'ar_OM' => 'Arabic (Oman)',
+		'ar_PS' => 'Arabic (Palestinian Territory)',
+		'ar_QA' => 'Arabic (Qatar)',
+		'ar_SA' => 'Arabic (Saudi Arabia)',
+		'ar_SD' => 'Arabic (Sudan)',
+		'ar_SY' => 'Arabic (Syria)',
+		'ar_TD' => 'Arabic (Chad)',
+		'ar_TN' => 'Arabic (Tunisia)',
+		'ar_YE' => 'Arabic (Yemen)',
+		'as_IN' => 'Assamese (India)',
+		'ast_ES' => 'Asturian (Spain)',
+		'auv_FR' => 'Auvergnat (France)',
+		'av_RU' => 'Avaric (Russia)',
+		'awa_IN' => 'Awadhi (India)',
+		'ay_BO' => 'Aymara (Bolivia)',
+		'ay_PE' => 'Aymara (Peru)',
+		'az_AZ' => 'Azerbaijani (Azerbaijan)',
+		'az_IR' => 'Azerbaijani (Iran)',
+		'ba_RU' => 'Bashkir (Russia)',
+		'ban_ID' => 'Balinese (Indonesia)',
+		'bcc_PK' => 'Balochi, Southern (Pakistan)',
+		'bcl_PH' => 'Bicolano, Central (Philippines)',
+		'be_BY' => 'Belarusian (Belarus)',
+		'bew_ID' => 'Betawi (Indonesia)',
+		'bg_BG' => 'Bulgarian (Bulgaria)',
+		'bgc_IN' => 'Haryanvi (India)',
+		'bgn_PK' => 'Balochi, Western (Pakistan)',
+		'bgp_PK' => 'Balochi, Easter (Pakistan)',
+		'bhb_IN' => 'Bhili (India)',
+		'bhi_IN' => 'Bhilali (India)',
+		'bhk_PH' => 'Bicolano, Albay (Philippines)',
+		'bho_IN' => 'Bhojpuri (India)',
+		'bho_MU' => 'Bhojpuri (Mauritius)',
+		'bho_NP' => 'Bhojpuri (Nepal)',
+		'bi_VU' => 'Bislama (Vanuatu)',
+		'bjj_IN' => 'Kanauji (India)',
+		'bjn_ID' => 'Banjar (Indonesia)',
+		'bm_ML' => 'Bambara (Mali)',
+		'bn_BD' => 'Bengali (Bangladesh)',
+		'bn_IN' => 'Bengali (India)',
+		'bo_CN' => 'Tibetan (China)',
+		'bqi_IR' => 'Bakhtiari (Iran)',
+		'brh_PK' => 'Brahui (Pakistan)',
+		'bs_BA' => 'Bosnian (Bosnia and Herzegovina)',
+		'btk_ID' => 'Batak (Indonesia)',
+		'buc_YT' => 'Bushi (Mayotte)',
+		'bug_ID' => 'Buginese (Indonesia)',
+		'ca_AD' => 'Catalan (Andorra)',
+		'ca_ES' => 'Catalan (Spain)',
+		'ce_RU' => 'Chechen (Russia)',
+		'ceb_PH' => 'Cebuano (Philippines)',
+		'cgg_UG' => 'Chiga (Uganda)',
+		'ch_GU' => 'Chamorro (Guam)',
+		'chk_FM' => 'Chuukese (Micronesia)',
+		'crk_CA' => 'Cree, Plains (Canada)',
+		'cs_CZ' => 'Czech (Czech Republic)',
+		'cwd_CA' => 'Cree, Woods (Canada)',
+		'cy_GB' => 'Welsh (United Kingdom)',
+		'da_DK' => 'Danish (Denmark)',
+		'da_GL' => 'Danish (Greenland)',
+		'dcc_IN' => 'Deccan (India)',
+		'de_AT' => 'German (Austria)',
+		'de_BE' => 'German (Belgium)',
+		'de_CH' => 'German (Switzerland)',
+		'de_DE' => 'German (Germany)',
+		'de_LI' => 'German (Liechtenstein)',
+		'de_LU' => 'German (Luxembourg)',
+		'dgo_IN' => 'Dogri (India)',
+		'dhd_IN' => 'Dhundari (India)',
+		'diq_TR' => 'Dimli (Turkey)',
+		'dje_NE' => 'Zarma (Niger)',
+		'dv_MV' => 'Divehi (Maldives)',
+		'dz_BT' => 'Dzongkha (Bhutan)',
+		'ee_GH' => 'Ewe (Ghana)',
+		'el_CY' => 'Greek (Cyprus)',
+		'el_GR' => 'Greek (Greece)',
+		'en_AS' => 'English (American Samoa)',
+		'en_AU' => 'English (Australia)',
+		'en_BM' => 'English (Bermuda)',
+		'en_BS' => 'English (Bahamas)',
+		'en_CA' => 'English (Canada)',
+		'en_DE' => 'English (Germany)',
+		'en_ES' => 'English (Spain)',
+		'en_FR' => 'English (France)',
+		'en_GB' => 'English (United Kingdom)',
+		'en_HK' => 'English (Hong Kong SAR China)',
+		'en_IE' => 'English (Ireland)',
+		'en_IN' => 'English (India)',
+		'en_IT' => 'English (Italy)',
+		'en_JM' => 'English (Jamaica)',
+		'en_KE' => 'English (Kenya)',
+		'en_LR' => 'English (Liberia)',
+		'en_MM' => 'English (Myanmar)',
+		'en_MW' => 'English (Malawi)',
+		'en_MY' => 'English (Malaysia)',
+		'en_NL' => 'English (Netherlands)',
+		'en_NZ' => 'English (New Zealand)',
+		'en_PH' => 'English (Philippines)',
+		'en_SG' => 'English (Singapore)',
+		'en_TT' => 'English (Trinidad and Tobago)',
+		'en_US' => 'English (United States)',
+		'en_ZA' => 'English (South Africa)',
+		'eo_XX' => 'Esperanto',
+		'es_419' => 'Spanish (Latin America)',
+		'es_AR' => 'Spanish (Argentina)',
+		'es_BO' => 'Spanish (Bolivia)',
+		'es_CL' => 'Spanish (Chile)',
+		'es_CO' => 'Spanish (Colombia)',
+		'es_CR' => 'Spanish (Costa Rica)',
+		'es_CU' => 'Spanish (Cuba)',
+		'es_DO' => 'Spanish (Dominican Republic)',
+		'es_EC' => 'Spanish (Ecuador)',
+		'es_ES' => 'Spanish (Spain)',
+		'es_GQ' => 'Spanish (Equatorial Guinea)',
+		'es_GT' => 'Spanish (Guatemala)',
+		'es_HN' => 'Spanish (Honduras)',
+		'es_MX' => 'Spanish (Mexico)',
+		'es_NI' => 'Spanish (Nicaragua)',
+		'es_PA' => 'Spanish (Panama)',
+		'es_PE' => 'Spanish (Peru)',
+		'es_PH' => 'Spanish (Philippines)',
+		'es_PR' => 'Spanish (Puerto Rico)',
+		'es_PY' => 'Spanish (Paraguay)',
+		'es_SV' => 'Spanish (El Salvador)',
+		'es_US' => 'Spanish (United States)',
+		'es_UY' => 'Spanish (Uruguay)',
+		'es_VE' => 'Spanish (Venezuela)',
+		'et_EE' => 'Estonian (Estonia)',
+		'eu_ES' => 'Basque (Spain)',
+		'fa_AF' => 'Persian (Afghanistan)',
+		'fa_IR' => 'Persian (Iran)',
+		'fa_PK' => 'Persian (Pakistan)',
+		'fan_GQ' => 'Fang (Equatorial Guinea)',
+		'fi_FI' => 'Finnish (Finland)',
+		'fi_SE' => 'Finnish (Sweden)',
+		'fil_PH' => 'Filipino (Philippines)',
+		'fj_FJ' => 'Fijian (Fiji)',
+		'fo_FO' => 'Faroese (Faroe Islands)',
+		'fon_BJ' => 'Fon (Benin)',
+		'fr_002' => 'French (Africa)',
+		'fr_BE' => 'French (Belgium)',
+		'fr_CA' => 'French (Canada)',
+		'fr_CH' => 'French (Switzerland)',
+		'fr_DZ' => 'French (Algeria)',
+		'fr_FR' => 'French (France)',
+		'fr_GF' => 'French (French Guiana)',
+		'fr_GP' => 'French (Guadeloupe)',
+		'fr_HT' => 'French (Haiti)',
+		'fr_KM' => 'French (Comoros)',
+		'fr_MA' => 'French (Morocco)',
+		'fr_MQ' => 'French (Martinique)',
+		'fr_MU' => 'French (Mauritius)',
+		'fr_NC' => 'French (New Caledonia)',
+		'fr_PF' => 'French (French Polynesia)',
+		'fr_PM' => 'French (Saint Pierre and Miquelon)',
+		'fr_RE' => 'French (Reunion)',
+		'fr_SC' => 'French (Seychelles)',
+		'fr_SN' => 'French (Senegal)',
+		'fr_US' => 'French (United States)',
+		'fuv_NG' => 'Fulfulde (Nigeria)',
+		'ga_GB' => 'Irish (United Kingdom)',
+		'ga_IE' => 'Irish (Ireland)',
+		'gaa_GH' => 'Ga (Ghana)',
+		'gbm_IN' => 'Garhwali (India)',
+		'gcr_GF' => 'Guianese Creole French (French Guiana)',
+		'gd_GB' => 'Scottish Gaelic (United Kingdom)',
+		'gil_KI' => 'Gilbertese (Kiribati)',
+		'gl_ES' => 'Galician (Spain)',
+		'glk_IR' => 'Gilaki (Iran)',
+		'gn_PY' => 'Guarani (Paraguay)',
+		'gno_IN' => 'Gondi, Northern (India)',
+		'gsw_CH' => 'Swiss German (Switzerland)',
+		'gsw_LI' => 'Swiss German (Liechtenstein)',
+		'gu_IN' => 'Gujarati (India)',
+		'guz_KE' => 'Gusii (Kenya)',
+		'ha_NE' => 'Hausa (Niger)',
+		'ha_NG' => 'Hausa (Nigeria)',
+		'haw_US' => 'Hawaiian (United States)',
+		'haz_AF' => 'Hazaragi (Afghanistan)',
+		'he_IL' => 'Hebrew (Israel)',
+		'hi_IN' => 'Hindi (India)',
+		'hil_PH' => 'Hiligaynon (Philippines)',
+		'hne_IN' => 'Chhattisgarhi (India)',
+		'hno_PK' => 'Hindko, Northern (Pakistan)',
+		'hoc_IN' => 'Ho (India)',
+		'hr_AT' => 'Croatian (Austria)',
+		'hr_BA' => 'Croatian (Bosnia and Herzegovina)',
+		'hr_HR' => 'Croatian (Croatia)',
+		'ht_HT' => 'Haitian (Haiti)',
+		'hu_AT' => 'Hungarian (Austria)',
+		'hu_HU' => 'Hungarian (Hungary)',
+		'hu_RO' => 'Hungarian (Romania)',
+		'hu_RS' => 'Hungarian (Serbia)',
+		'hy_AM' => 'Armenian (Armenia)',
+		'id_ID' => 'Indonesian (Indonesia)',
+		'ig_NG' => 'Igbo (Nigeria)',
+		'ilo_PH' => 'Iloko (Philippines)',
+		'inh_RU' => 'Ingush (Russia)',
+		'is_IS' => 'Icelandic (Iceland)',
+		'it_CH' => 'Italian (Switzerland)',
+		'it_FR' => 'Italian (France)',
+		'it_HR' => 'Italian (Croatia)',
+		'it_IT' => 'Italian (Italy)',
+		'it_SM' => 'Italian (San Marino)',
+		'it_US' => 'Italian (United States)',
+		'iu_CA' => 'Inuktitut (Canada)',
+		'ja_JP' => 'Japanese (Japan)',
+		'jv_ID' => 'Javanese (Indonesia)',
+		'ka_GE' => 'Georgian (Georgia)',
+		'kam_KE' => 'Kamba (Kenya)',
+		'kbd_RU' => 'Kabardian (Russia)',
+		'kfy_IN' => 'Kumauni (India)',
+		'kha_IN' => 'Khasi (India)',
+		'khn_IN' => 'Khandesi (India)',
+		'ki_KE' => 'Kikuyu (Kenya)',
+		'kj_NA' => 'Kuanyama (Namibia)',
+		'kk_CN' => 'Kazakh (China)',
+		'kk_KZ' => 'Kazakh (Kazakhstan)',
+		'kl_DK' => 'Kalaallisut (Denmark)',
+		'kl_GL' => 'Kalaallisut (Greenland)',
+		'kln_KE' => 'Kalenjin (Kenya)',
+		'km_KH' => 'Khmer (Cambodia)',
+		'kn_IN' => 'Kannada (India)',
+		'ko_KR' => 'Korean (Korea)',
+		'koi_RU' => 'Komi-Permyak (Russia)',
+		'kok_IN' => 'Konkani (India)',
+		'kos_FM' => 'Kosraean (Micronesia)',
+		'kpv_RU' => 'Komi-Zyrian (Russia)',
+		'krc_RU' => 'Karachay-Balkar (Russia)',
+		'kru_IN' => 'Kurukh (India)',
+		'ks_IN' => 'Kashmiri (India)',
+		'ku_IQ' => 'Kurdish (Iraq)',
+		'ku_IR' => 'Kurdish (Iran)',
+		'ku_SY' => 'Kurdish (Syria)',
+		'ku_TR' => 'Kurdish (Turkey)',
+		'kum_RU' => 'Kumyk (Russia)',
+		'kxm_TH' => 'Khmer, Northern (Thailand)',
+		'ky_KG' => 'Kirghiz (Kyrgyzstan)',
+		'la_VA' => 'Latin (Vatican)',
+		'lah_PK' => 'Lahnda (Pakistan)',
+		'lb_LU' => 'Luxembourgish (Luxembourg)',
+		'lbe_RU' => 'Lak (Russia)',
+		'lc_XX' => 'LOLCAT',
+		'lez_RU' => 'Lezghian (Russia)',
+		'lg_UG' => 'Ganda (Uganda)',
+		'lij_IT' => 'Ligurian (Italy)',
+		'lij_MC' => 'Ligurian (Monaco)',
+		'ljp_ID' => 'Lampung (Indonesia)',
+		'lmn_IN' => 'Lambadi (India)',
+		'ln_CD' => 'Lingala (Congo - Kinshasa)',
+		'ln_CG' => 'Lingala (Congo - Brazzaville)',
+		'lo_LA' => 'Lao (Laos)',
+		'lrc_IR' => 'Luri, Northern (Iran)',
+		'lt_LT' => 'Lithuanian (Lithuania)',
+		'luo_KE' => 'Luo (Kenya)',
+		'luy_KE' => 'Luyia (Kenya)',
+		'lv_LV' => 'Latvian (Latvia)',
+		'mad_ID' => 'Madurese (Indonesia)',
+		'mai_IN' => 'Maithili (India)',
+		'mai_NP' => 'Maithili (Nepal)',
+		'mak_ID' => 'Makasar (Indonesia)',
+		'mdf_RU' => 'Moksha (Russia)',
+		'mdh_PH' => 'Maguindanao (Philippines)',
+		'mer_KE' => 'Meru (Kenya)',
+		'mfa_TH' => 'Malay, Pattani (Thailand)',
+		'mfe_MU' => 'Morisyen (Mauritius)',
+		'mg_MG' => 'Malagasy (Madagascar)',
+		'mh_MH' => 'Marshallese (Marshall Islands)',
+		'mi_NZ' => 'te reo Māori (New Zealand)',
+		'min_ID' => 'Minangkabau (Indonesia)',
+		'mk_MK' => 'Macedonian (Macedonia)',
+		'ml_IN' => 'Malayalam (India)',
+		'mn_CN' => 'Mongolian (China)',
+		'mn_MN' => 'Mongolian (Mongolia)',
+		'mni_IN' => 'Manipuri (India)',
+		'mr_IN' => 'Marathi (India)',
+		'ms_BN' => 'Malay (Brunei)',
+		'ms_CC' => 'Malay (Cocos Islands)',
+		'ms_ID' => 'Malay (Indonesia)',
+		'ms_MY' => 'Malay (Malaysia)',
+		'ms_SG' => 'Malay (Singapore)',
+		'mt_MT' => 'Maltese (Malta)',
+		'mtr_IN' => 'Mewari (India)',
+		'mup_IN' => 'Malvi (India)',
+		'muw_IN' => 'Mundari (India)',
+		'my_MM' => 'Burmese (Myanmar)',
+		'myv_RU' => 'Erzya (Russia)',
+		'na_NR' => 'Nauru (Nauru)',
+		'nb_NO' => 'Norwegian Bokmal (Norway)',
+		'nb_SJ' => 'Norwegian Bokmal (Svalbard and Jan Mayen)',
+		'nd_ZW' => 'North Ndebele (Zimbabwe)',
+		'ndc_MZ' => 'Ndau (Mozambique)',
+		'ne_IN' => 'Nepali (India)',
+		'ne_NP' => 'Nepali (Nepal)',
+		'ng_NA' => 'Ndonga (Namibia)',
+		'ngl_MZ' => 'Lomwe (Mozambique)',
+		'niu_NU' => 'Niuean (Niue)',
+		'nl_AN' => 'Dutch (Netherlands Antilles)',
+		'nl_AW' => 'Dutch (Aruba)',
+		'nl_BE' => 'Dutch (Belgium)',
+		'nl_NL' => 'Dutch (Netherlands)',
+		'nl_SR' => 'Dutch (Suriname)',
+		'nn_NO' => 'Norwegian Nynorsk (Norway)',
+		'nb_NO' => 'Norwegian',
+		'nod_TH' => 'Thai, Northern (Thailand)',
+		'noe_IN' => 'Nimadi (India)',
+		'nso_ZA' => 'Northern Sotho (South Africa)',
+		'ny_MW' => 'Nyanja (Malawi)',
+		'ny_ZM' => 'Nyanja (Zambia)',
+		'nyn_UG' => 'Nyankole (Uganda)',
+		'om_ET' => 'Oromo (Ethiopia)',
+		'or_IN' => 'Oriya (India)',
+		'pa_IN' => 'Punjabi (India)',
+		'pag_PH' => 'Pangasinan (Philippines)',
+		'pap_AN' => 'Papiamento (Netherlands Antilles)',
+		'pap_AW' => 'Papiamento (Aruba)',
+		'pau_PW' => 'Palauan (Palau)',
+		'pl_PL' => 'Polish (Poland)',
+		'pl_UA' => 'Polish (Ukraine)',
+		'pon_FM' => 'Pohnpeian (Micronesia)',
+		'ps_AF' => 'Pashto (Afghanistan)',
+		'ps_PK' => 'Pashto (Pakistan)',
+		'pt_AO' => 'Portuguese (Angola)',
+		'pt_BR' => 'Portuguese (Brazil)',
+		'pt_CV' => 'Portuguese (Cape Verde)',
+		'pt_GW' => 'Portuguese (Guinea-Bissau)',
+		'pt_MZ' => 'Portuguese (Mozambique)',
+		'pt_PT' => 'Portuguese (Portugal)',
+		'pt_ST' => 'Portuguese (Sao Tome and Principe)',
+		'pt_TL' => 'Portuguese (East Timor)',
+		'qu_BO' => 'Quechua (Bolivia)',
+		'qu_PE' => 'Quechua (Peru)',
+		'rcf_RE' => 'R�union Creole French (Reunion)',
+		'rej_ID' => 'Rejang (Indonesia)',
+		'rif_MA' => 'Tarifit (Morocco)',
+		'rjb_IN' => 'Rajbanshi (India)',
+		'rm_CH' => 'Rhaeto-Romance (Switzerland)',
+		'rmt_IR' => 'Domari (Iran)',
+		'rn_BI' => 'Rundi (Burundi)',
+		'ro_MD' => 'Romanian (Moldova)',
+		'ro_RO' => 'Romanian (Romania)',
+		'ro_RS' => 'Romanian (Serbia)',
+		'ru_BY' => 'Russian (Belarus)',
+		'ru_KG' => 'Russian (Kyrgyzstan)',
+		'ru_KZ' => 'Russian (Kazakhstan)',
+		'ru_RU' => 'Russian (Russia)',
+		'ru_SJ' => 'Russian (Svalbard and Jan Mayen)',
+		'ru_UA' => 'Russian (Ukraine)',
+		'rw_RW' => 'Kinyarwanda (Rwanda)',
+		'sa_IN' => 'Sanskrit (India)',
+		'sah_RU' => 'Yakut (Russia)',
+		'sas_ID' => 'Sasak (Indonesia)',
+		'sat_IN' => 'Santali (India)',
+		'sck_IN' => 'Sadri (India)',
+		'sco_GB' => 'Scots (United Kingdom)',
+		'sco_SCO' => 'Scots',
+		'sd_IN' => 'Sindhi (India)',
+		'sd_PK' => 'Sindhi (Pakistan)',
+		'se_NO' => 'Northern Sami (Norway)',
+		'sg_CF' => 'Sango (Central African Republic)',
+		'si_LK' => 'Sinhalese (Sri Lanka)',
+		'sid_ET' => 'Sidamo (Ethiopia)',
+		'sk_RS' => 'Slovak (Serbia)',
+		'sk_SK' => 'Slovak (Slovakia)',
+		'sl_AT' => 'Slovenian (Austria)',
+		'sl_SI' => 'Slovenian (Slovenia)',
+		'sm_AS' => 'Samoan (American Samoa)',
+		'sm_WS' => 'Samoan (Samoa)',
+		'sn_ZW' => 'Shona (Zimbabwe)',
+		'so_DJ' => 'Somali (Djibouti)',
+		'so_ET' => 'Somali (Ethiopia)',
+		'so_SO' => 'Somali (Somalia)',
+		'sou_TH' => 'Thai, Southern (Thailand)',
+		'sq_AL' => 'Albanian (Albania)',
+		'sr_BA' => 'Serbian (Bosnia and Herzegovina)',
+		'sr_ME' => 'Serbian (Montenegro)',
+		'sr_RS' => 'Serbian (Serbia)',
+		'ss_SZ' => 'Swati (Swaziland)',
+		'ss_ZA' => 'Swati (South Africa)',
+		'st_LS' => 'Southern Sotho (Lesotho)',
+		'st_ZA' => 'Southern Sotho (South Africa)',
+		'su_ID' => 'Sundanese (Indonesia)',
+		'sv_AX' => 'Swedish (Aland Islands)',
+		'sv_FI' => 'Swedish (Finland)',
+		'sv_SE' => 'Swedish (Sweden)',
+		'sw_KE' => 'Swahili (Kenya)',
+		'sw_SO' => 'Swahili (Somalia)',
+		'sw_TZ' => 'Swahili (Tanzania)',
+		'sw_UG' => 'Swahili (Uganda)',
+		'swb_KM' => 'Comorian (Comoros)',
+		'swb_YT' => 'Comorian (Mayotte)',
+		'swv_IN' => 'Shekhawati (India)',
+		'ta_IN' => 'Tamil (India)',
+		'ta_LK' => 'Tamil (Sri Lanka)',
+		'ta_MY' => 'Tamil (Malaysia)',
+		'ta_SG' => 'Tamil (Singapore)',
+		'tcy_IN' => 'Tulu (India)',
+		'te_IN' => 'Telugu (India)',
+		'tet_TL' => 'Tetum (East Timor)',
+		'tg_TJ' => 'Tajik (Tajikistan)',
+		'th_TH' => 'Thai (Thailand)',
+		'ti_ER' => 'Tigrinya (Eritrea)',
+		'ti_ET' => 'Tigrinya (Ethiopia)',
+		'tk_IR' => 'Turkmen (Iran)',
+		'tk_TM' => 'Turkmen (Turkmenistan)',
+		'tkl_TK' => 'Tokelau (Tokelau)',
+		'tl_PH' => 'Tagalog (Philippines)',
+		'tl_US' => 'Tagalog (United States)',
+		'tn_BW' => 'Tswana (Botswana)',
+		'tn_ZA' => 'Tswana (South Africa)',
+		'to_TO' => 'Tonga (Tonga)',
+		'tr_CY' => 'Turkish (Cyprus)',
+		'tr_DE' => 'Turkish (Germany)',
+		'tr_MK' => 'Turkish (Macedonia)',
+		'tr_TR' => 'Turkish (Turkey)',
+		'ts_MZ' => 'Tsonga (Mozambique)',
+		'ts_ZA' => 'Tsonga (South Africa)',
+		'tsg_PH' => 'Tausug (Philippines)',
+		'tt_RU' => 'Tatar (Russia)',
+		'tts_TH' => 'Thai, Northeastern (Thailand)',
+		'tvl_TV' => 'Tuvalu (Tuvalu)',
+		'tw_GH' => 'Twi (Ghana)',
+		'ty_PF' => 'Tahitian (French Polynesia)',
+		'tyv_RU' => 'Tuvinian (Russia)',
+		'tzm_MA' => 'Tamazight, Central Atlas (Morocco)',
+		'udm_RU' => 'Udmurt (Russia)',
+		'ug_CN' => 'Uighur (China)',
+		'uk_UA' => 'Ukrainian (Ukraine)',
+		'uli_FM' => 'Ulithian (Micronesia)',
+		'ur_IN' => 'Urdu (India)',
+		'ur_PK' => 'Urdu (Pakistan)',
+		'uz_AF' => 'Uzbek (Afghanistan)',
+		'uz_UZ' => 'Uzbek (Uzbekistan)',
+		've_ZA' => 'Venda (South Africa)',
+		'vi_US' => 'Vietnamese (United States)',
+		'vi_VN' => 'Vietnamese (Vietnam)',
+		'vmw_MZ' => 'Waddar (Mozambique)',
+		'wal_ET' => 'Walamo (Ethiopia)',
+		'war_PH' => 'Waray (Philippines)',
+		'wbq_IN' => 'Waddar (India)',
+		'wbr_IN' => 'Wagdi (India)',
+		'wo_MR' => 'Wolof (Mauritania)',
+		'wo_SN' => 'Wolof (Senegal)',
+		'wtm_IN' => 'Mewati (India)',
+		'xh_ZA' => 'Xhosa (South Africa)',
+		'xnr_IN' => 'Kangri (India)',
+		'xog_UG' => 'Soga (Uganda)',
+		'yap_FM' => 'Yapese (Micronesia)',
+		'yo_NG' => 'Yoruba (Nigeria)',
+		'za_CN' => 'Zhuang (China)',
+		'zh_CN' => 'Chinese (China)',
+		'zh_HK' => 'Chinese (Hong Kong SAR China)',
+		'zh_MO' => 'Chinese (Macao SAR China)',
+		'zh_SG' => 'Chinese (Singapore)',
+		'zh_TW' => 'Chinese (Taiwan)',
+		'zh_US' => 'Chinese (United States)',
+		'zh_cmn' => 'Chinese (Mandarin)',
+		'zh_yue' => 'Chinese (Cantonese)',
+		'zu_ZA' => 'Zulu (South Africa)'
 	);
-	
+
 	/**
 	 * @config
 	 * @var array $common_languages A list of commonly used languages, in the form
@@ -659,19 +659,19 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	private static $common_languages = array(
 		'af' => array(
-			'name' => 'Afrikaans', 
+			'name' => 'Afrikaans',
 			'native' => 'Afrikaans'
 		),
 		'sq' => array(
-			'name' => 'Albanian', 
+			'name' => 'Albanian',
 			'native' => 'shqip'
 		),
 		'ar' => array(
-			'name' => 'Arabic', 
+			'name' => 'Arabic',
 			'native' => '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'
 		),
 		'eu' => array(
-			'name' => 'Basque', 
+			'name' => 'Basque',
 			'native' => 'euskera'
 		),
 		'be' => array(
@@ -680,326 +680,327 @@ class i18n extends Object implements TemplateGlobalProvider {
 				'&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'
 		),
 		'bn' => array(
-			'name' => 'Bengali', 
+			'name' => 'Bengali',
 			'native' => '&#2476;&#2494;&#2434;&#2482;&#2494;'
 		),
 		'bg' => array(
-			'name' => 'Bulgarian', 
+			'name' => 'Bulgarian',
 			'native' => '&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'
 		),
 		'ca' => array(
-			'name' => 'Catalan', 
+			'name' => 'Catalan',
 			'native' => 'catal&agrave;'
 		),
 		'zh_yue' => array(
-			'name' => 'Chinese (Cantonese)', 
+			'name' => 'Chinese (Cantonese)',
 			'native' => '&#24291;&#26481;&#35441; [&#24191;&#19996;&#35805;]'
 		),
 		'zh_cmn' => array(
-			'name' => 'Chinese (Mandarin)', 
+			'name' => 'Chinese (Mandarin)',
 			'native' => '&#26222;&#36890;&#35441; [&#26222;&#36890;&#35805;]'
 		),
 		'hr' => array(
-			'name' => 'Croatian', 
+			'name' => 'Croatian',
 			'native' => 'Hrvatski'
 		),
 		'zh' => array(
-			'name' => 'Chinese','中国的'
+			'name' => 'Chinese',
+			'native' => '&#20013;&#22269;&#30340;'
 		),
 		'cs' => array(
-			'name' => 'Czech', 
+			'name' => 'Czech',
 			'native' => '&#x010D;e&#353;tina'
 		),
 		'cy' => array(
-			'name' => 'Welsh', 
+			'name' => 'Welsh',
 			'native' => 'Welsh/Cymraeg'
 		),
 		'da' => array(
-			'name' => 'Danish', 
+			'name' => 'Danish',
 			'native' => 'dansk'
 		),
 		'nl' => array(
-			'name' => 'Dutch',  
+			'name' => 'Dutch',
 			'native' => 'Nederlands'
 		),
 		'en' => array(
-			'name' => 'English', 
+			'name' => 'English',
 			'native' => 'English'
 		),
 		'eo' => array(
-			'name' => 'Esperanto', 
+			'name' => 'Esperanto',
 			'native' => 'Esperanto'
 		),
 		'et' => array(
-			'name' => 'Estonian', 
+			'name' => 'Estonian',
 			'native' => 'eesti keel'
 		),
 		'fo' => array(
-			'name' => 'Faroese', 
+			'name' => 'Faroese',
 			'native' => 'F&oslash;royska'
 		),
 		'fi' => array(
-			'name' => 'Finnish', 
+			'name' => 'Finnish',
 			'native' => 'suomi'
 		),
 		'fr' => array(
-			'name' => 'French', 
+			'name' => 'French',
 			'native' => 'fran&ccedil;ais'
 		),
 		'gd' => array(
-			'name' => 'Gaelic', 
+			'name' => 'Gaelic',
 			'native' => 'Gaeilge'
 		),
 		'gl' => array(
-			'name' => 'Galician', 
+			'name' => 'Galician',
 			'native' => 'Galego'
 		),
 		'de' => array(
-			'name' => 'German', 
+			'name' => 'German',
 			'native' => 'Deutsch'
 		),
 		'el' => array(
-			'name' => 'Greek', 
+			'name' => 'Greek',
 			'native' => '&#949;&#955;&#955;&#951;&#957;&#953;&#954;&#940;'
 		),
 		'gu' => array(
-			'name' => 'Gujarati', 
+			'name' => 'Gujarati',
 			'native' => '&#2711;&#2753;&#2716;&#2736;&#2750;&#2724;&#2752;'
 		),
 		'ha' => array(
-			'name' => 'Hausa', 
+			'name' => 'Hausa',
 			'native' => '&#1581;&#1614;&#1608;&#1618;&#1587;&#1614;'
 		),
 		'he' => array(
-			'name' => 'Hebrew', 
+			'name' => 'Hebrew',
 			'native' => '&#1506;&#1489;&#1512;&#1497;&#1514;'
 		),
 		'hi' => array(
-			'name' => 'Hindi', 
+			'name' => 'Hindi',
 			'native' => '&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;'
 		),
 		'hu' => array(
-			'name' => 'Hungarian', 
+			'name' => 'Hungarian',
 			'native' => 'magyar'
 		),
 		'is' => array(
-			'name' => 'Icelandic', 
+			'name' => 'Icelandic',
 			'native' => '&Iacute;slenska'
 		),
 		'io' => array(
-			'name' => 'Ido', 
+			'name' => 'Ido',
 			'native' => 'Ido'
 		),
 		'id' => array(
-			'name' => 'Indonesian', 
+			'name' => 'Indonesian',
 			'native' => 'Bahasa Indonesia'
 		),
 		'ga' => array(
-			'name' => 'Irish', 
+			'name' => 'Irish',
 			'native' => 'Irish'
 		),
 		'it' => array(
-			'name' => 'Italian', 
+			'name' => 'Italian',
 			'native' => 'italiano'
 		),
 		'ja' => array(
-			'name' => 'Japanese', 
+			'name' => 'Japanese',
 			'native' => '&#26085;&#26412;&#35486;'
 		),
 		'jv' => array(
-			'name' => 'Javanese', 
+			'name' => 'Javanese',
 			'native' => 'basa Jawa'
 		),
 		'ko' => array(
-			'name' => 'Korean', 
+			'name' => 'Korean',
 			'native' => '&#54620;&#44397;&#50612; [&#38867;&#22283;&#35486;]'
 		),
 		'ku' => array(
-			'name' => 'Kurdish', 
+			'name' => 'Kurdish',
 			'native' => 'Kurd&iacute;'
 		),
 		'lv' => array(
-			'name' => 'Latvian', 
+			'name' => 'Latvian',
 			'native' => 'latvie&#353;u'
 		),
 		'lt' => array(
-			'name' => 'Lithuanian', 
+			'name' => 'Lithuanian',
 			'native' => 'lietuvi&#353;kai'
 		),
 		'lmo' => array(
-			'name' => 'Lombard', 
+			'name' => 'Lombard',
 			'native' => 'Lombardo'
 		),
 		'mk' => array(
-			'name' => 'Macedonian', 
+			'name' => 'Macedonian',
 			'native' => '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'
 		),
 		'mi' => array(
-			'name' => 'Māori',
-			'native' => 'Māori'
+			'name' => 'te reo Māori',
+			'native' => 'te reo Māori'
 		),
 		'ms' => array(
-			'name' => 'Malay', 
+			'name' => 'Malay',
 			'native' => 'Bahasa melayu'
 		),
 		'mt' => array(
-			'name' => 'Maltese', 
+			'name' => 'Maltese',
 			'native' => 'Malti'
 		),
 		'mr' => array(
-			'name' => 'Marathi', 
+			'name' => 'Marathi',
 			'native' => '&#2350;&#2352;&#2366;&#2336;&#2368;'
 		),
 		'ne' => array(
-			'name' => 'Nepali', 
+			'name' => 'Nepali',
 			'native' => '&#2344;&#2375;&#2346;&#2366;&#2354;&#2368;'
 		),
-		'no' => array(
-			'name' => 'Norwegian', 
+		'nb' => array(
+			'name' => 'Norwegian',
 			'native' => 'Norsk'
 		),
 		'om' => array(
-			'name' => 'Oromo', 
+			'name' => 'Oromo',
 			'native' => 'Afaan Oromo'
 		),
 		'fa' => array(
-			'name' => 'Persian', 
+			'name' => 'Persian',
 			'native' => '&#1601;&#1575;&#1585;&#1587;&#1609;'
 		),
 		'pl' => array(
-			'name' => 'Polish', 
+			'name' => 'Polish',
 			'native' => 'polski'
 		),
 		'pt_PT' => array(
-			'name' => 'Portuguese (Portugal)', 
+			'name' => 'Portuguese (Portugal)',
 			'native' => 'portugu&ecirc;s (Portugal)'
 		),
 		'pt_BR' => array(
-			'name' => 'Portuguese (Brazil)', 
+			'name' => 'Portuguese (Brazil)',
 			'native' => 'portugu&ecirc;s (Brazil)'
 		),
 		'pa' => array(
-			'name' => 'Punjabi', 
+			'name' => 'Punjabi',
 			'native' => '&#2602;&#2672;&#2588;&#2622;&#2604;&#2624;'
 		),
 		'qu' => array(
-			'name' => 'Quechua', 
+			'name' => 'Quechua',
 			'native' => 'Quechua'
 		),
 		'rm' => array(
-			'name' => 'Romansh', 
+			'name' => 'Romansh',
 			'native' => 'rumantsch'
 		),
 		'ro' => array(
-			'name' => 'Romanian', 
+			'name' => 'Romanian',
 			'native' => 'rom&acirc;n'
 		),
 		'ru' => array(
-			'name' => 'Russian', 
+			'name' => 'Russian',
 			'native' => '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;'
 		),
 		'sco' => array(
-			'name' => 'Scots', 
+			'name' => 'Scots',
 			'native' => 'Scoats leid, Lallans'
 		),
 		'sr' => array(
-			'name' => 'Serbian', 
+			'name' => 'Serbian',
 			'native' => '&#1089;&#1088;&#1087;&#1089;&#1082;&#1080;'
 		),
 		'sk' => array(
-			'name' => 'Slovak', 
+			'name' => 'Slovak',
 			'native' => 'sloven&#269;ina'
 		),
 		'sl' => array(
-			'name' => 'Slovenian', 
+			'name' => 'Slovenian',
 			'native' => 'sloven&#353;&#269;ina'
 		),
 		'es' => array(
-			'name' => 'Spanish', 
+			'name' => 'Spanish',
 			'native' => 'espa&ntilde;ol'
 		),
 		'sv' => array(
-			'name' => 'Swedish', 
+			'name' => 'Swedish',
 			'native' => 'Svenska'
 		),
 		'tl' => array(
-			'name' => 'Tagalog', 
+			'name' => 'Tagalog',
 			'native' => 'Tagalog'
 		),
 		'ta' => array(
-			'name' => 'Tamil', 
+			'name' => 'Tamil',
 			'native' => '&#2980;&#2990;&#3007;&#2996;&#3021;'
 		),
 		'te' => array(
-			'name' => 'Telugu', 
+			'name' => 'Telugu',
 			'native' => '&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;'
 		),
 		'to' => array(
-			'name' => 'Tonga', 
+			'name' => 'Tonga',
 			'native' => 'chiTonga'
 		),
 		'ts' => array(
-			'name' => 'Tsonga', 
+			'name' => 'Tsonga',
 			'native' => 'xiTshonga'
 		),
 		'tn' => array(
-			'name' => 'Tswana', 
+			'name' => 'Tswana',
 			'native' => 'seTswana'
 		),
 		'tr' => array(
-			'name' => 'Turkish', 
+			'name' => 'Turkish',
 			'native' => 'T&uuml;rk&ccedil;e'
 		),
 		'tk' => array(
-			'name' => 'Turkmen', 
+			'name' => 'Turkmen',
 			'native' => '&#1090;&#1199;&#1088;&#1082;m&#1077;&#1085;&#1095;&#1077;'
 		),
 		'tw' => array(
-			'name' => 'Twi', 
+			'name' => 'Twi',
 			'native' => 'twi'
 		),
 		'uk' => array(
-			'name' => 'Ukrainian', 
+			'name' => 'Ukrainian',
 			'native' => '&#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072;'
 		),
 		'ur' => array(
-			'name' => 'Urdu', 
+			'name' => 'Urdu',
 			'native' => '&#1575;&#1585;&#1583;&#1608;'
 		),
 		'uz' => array(
-			'name' => 'Uzbek', 
+			'name' => 'Uzbek',
 			'native' => '&#1118;&#1079;&#1073;&#1077;&#1082;'
 		),
 		've' => array(
-			'name' => 'Venda', 
+			'name' => 'Venda',
 			'native' => 'tshiVen&#x1E13;a'
 		),
 		'vi' => array(
-			'name' => 'Vietnamese', 
+			'name' => 'Vietnamese',
 			'native' => 'ti&#7871;ng vi&#7879;t'
 		),
 		'wa' => array(
-			'name' => 'Walloon', 
+			'name' => 'Walloon',
 			'native' => 'walon'
 		),
 		'wo' => array(
-			'name' => 'Wolof', 
+			'name' => 'Wolof',
 			'native' => 'Wollof'
 		),
 		'xh' => array(
-			'name' => 'Xhosa', 
+			'name' => 'Xhosa',
 			'native' => 'isiXhosa'
 		),
 		'yi' => array(
-			'name' => 'Yiddish', 
+			'name' => 'Yiddish',
 			'native' => '&#1522;&#1460;&#1491;&#1497;&#1513;'
 		),
 		'zu' => array(
-			'name' => 'Zulu', 
+			'name' => 'Zulu',
 			'native' => 'isiZulu'
 		)
 	);
-	
+
 	/**
 	 * @config
 	 * @var array $common_locales
@@ -1185,8 +1186,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'native' => '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'
 		),
 		'mi_NZ' => array(
-			'name' => 'Māori',
-			'native' => 'Māori'
+			'name' => 'te reo Māori',
+			'native' => 'te reo Māori'
 		),
 		'ms_MY' => array(
 			'name' => 'Malay',
@@ -1341,7 +1342,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'native' => 'isiZulu'
 		),
 	);
-	
+
 	/**
 	 * @config
 	 * @var array
@@ -1509,7 +1510,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'zh_US' => 'zn-cn',
 
 	);
-	
+
 	/**
 	 * @config
 	 * @var array $likely_subtags Provides you "likely locales"
@@ -1979,7 +1980,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'zh_TW' => 'zh_TW',
 		'zu' => 'zu_ZA',
 	);
-	
+
 	/**
 	 * This is the main translator function. Returns the string defined by $class and $entity according to the
 	 * currently set locale.
@@ -2059,7 +2060,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		if($injectionArray) {
 			$regex = '/\{[\w\d]*\}/i';
 			if(!preg_match($regex, $returnValue)) {
-				// Legacy mode: If no injection placeholders are found, 
+				// Legacy mode: If no injection placeholders are found,
 				// replace sprintf placeholders in fixed order.
 				// Fail silently in case the translation is outdated
 				preg_match_all('/%[s,d]/', $returnValue, $returnValueArgs);
@@ -2068,13 +2069,13 @@ class i18n extends Object implements TemplateGlobalProvider {
 						$injectionArray[] = '';
 					}
 				}
-				$replaced = vsprintf($returnValue, array_values($injectionArray));	
+				$replaced = vsprintf($returnValue, array_values($injectionArray));
 				if($replaced) $returnValue = $replaced;
 			} else if(!ArrayLib::is_associative($injectionArray)) {
 				// Legacy mode: If injection placeholders are found,
 				// but parameters are passed without names, replace them in fixed order.
 				$returnValue = preg_replace_callback(
-					$regex, 
+					$regex,
 					function($matches) use(&$injectionArray) {
 						return $injectionArray ? array_shift($injectionArray) : '';
 					},
@@ -2124,10 +2125,10 @@ class i18n extends Object implements TemplateGlobalProvider {
 			i18n::include_by_locale('en', isset($_GET['flush']));
 			i18n::include_by_locale('en_US', isset($_GET['flush']));
 		}
-		
+
 		return self::$translators;
 	}
-	
+
 	/**
 	 * @param String
 	 * @return Zend_Translate
@@ -2138,7 +2139,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param Zend_Translate Needs to implement {@link i18nTranslateAdapterInterface}
 	 * @param String If left blank will override the default translator.
@@ -2153,14 +2154,14 @@ class i18n extends Object implements TemplateGlobalProvider {
 		// Add our new translator
 		if(!isset(self::$translators[$priority])) self::$translators[$priority] = array();
 		self::$translators[$priority][$name] = $translator;
-		
+
 		// Resort array, ensuring highest priority comes first
 		krsort(self::$translators);
-	
+
 		i18n::include_by_locale('en_US');
 		i18n::include_by_locale('en');
 	}
-	
+
 	/**
 	 * @param String
 	 */
@@ -2183,7 +2184,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		}
 		return $languages;
 	}
-	
+
 	/**
 	 * Get a list of commonly used locales
 	 *
@@ -2197,7 +2198,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		}
 		return $languages;
 	}
-	
+
 	/**
 	 * Get a list of locales (code => language and country)
 	 *
@@ -2207,41 +2208,41 @@ class i18n extends Object implements TemplateGlobalProvider {
 		Deprecation::notice('3.2', 'Use the "i18n.all_locales" config setting instead');
 		return (array)Config::inst()->get('i18n', 'all_locales');
 	}
-	
+
 	/**
 	 * Matches a given locale with the closest translation available in the system
-	 * 
+	 *
 	 * @param string $locale locale code
 	 * @return string Locale of closest available translation, if available
 	 */
 	public static function get_closest_translation($locale) {
-		
+
 		// Check if exact match
 		$pool = self::get_existing_translations();
 		if(isset($pool[$locale])) return $locale;
-		
+
 		// Fallback to best locale for common language
 		$lang = self::get_lang_from_locale($locale);
 		$candidate = self::get_locale_from_lang($lang);
 		if(isset($pool[$candidate])) return $candidate;
 	}
-	
+
 	/**
 	 * Searches the root-directory for module-directories
 	 * (identified by having a _config.php on their first directory-level).
 	 * Finds locales by filename convention ("<locale>.<extension>", e.g. "de_AT.yml").
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function get_existing_translations() {
 		$locales = array();
-		
+
 		// TODO Inspect themes
 		$modules = SS_ClassLoader::instance()->getManifest()->getModules();
-		
+
 		foreach($modules as $module) {
 			if(!file_exists("{$module}/lang/")) continue;
-			
+
 			$allLocales = Config::inst()->get('i18n', 'all_locales');
 			$moduleLocales = scandir("{$module}/lang/");
 			foreach($moduleLocales as $moduleLocale) {
@@ -2254,7 +2255,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 					// if the locale doesn't exist in Zend's CLDR data
 					$fullLocale = self::get_locale_from_lang($locale);
 					if(isset($allLocales[$fullLocale])) {
-						$locales[$fullLocale] = $allLocales[$fullLocale];	
+						$locales[$fullLocale] = $allLocales[$fullLocale];
 					}
 				}
 			}
@@ -2262,13 +2263,13 @@ class i18n extends Object implements TemplateGlobalProvider {
 
 		// sort by title (not locale)
 		asort($locales);
-		
+
 		return $locales;
 	}
-	
+
 	/**
 	 * Get a name from a language code (two characters, e.g. "en").
-	 * 
+	 *
 	 * @see get_locale_name()
 	 *
 	 * @param mixed $code Language code
@@ -2283,10 +2284,10 @@ class i18n extends Object implements TemplateGlobalProvider {
 			return (isset($langs[$code]['name'])) ? $langs[$code]['name'] : false;
 		}
 	}
-	
+
 	/**
 	 * Get a name from a locale code (xx_YY).
-	 * 
+	 *
 	 * @see get_language_name()
 	 *
 	 * @param mixed $code locale code
@@ -2296,7 +2297,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		$langs = self::config()->all_locales;
 		return isset($langs[$code]) ? $langs[$code] : false;
 	}
-	
+
 	/**
 	 * Get a code from an English language name
 	 *
@@ -2307,10 +2308,10 @@ class i18n extends Object implements TemplateGlobalProvider {
 		$code = array_search($name,self::get_common_languages());
 		return ($code ? $code : $name);
 	}
-	
+
 	/**
 	 * Get the current tinyMCE language
-	 * 
+	 *
 	 * @return Language
 	 */
 	public static function get_tinymce_lang() {
@@ -2318,28 +2319,28 @@ class i18n extends Object implements TemplateGlobalProvider {
 		if(isset($lang[self::get_locale()])) {
 			return $lang[self::get_locale()];
 		}
-		
+
 		return 'en';
 	}
-	
+
 	/**
 	 * Searches the root-directory for module-directories
 	 * (identified by having a _config.php on their first directory-level
 	 * and a language-file with the default locale in the /lang-subdirectory).
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function get_translatable_modules() {
 		$translatableModules = array();
-		
+
 		$baseDir = Director::baseFolder();
 		$modules = scandir($baseDir);
 		foreach($modules as $module) {
 			$moduleDir = $baseDir . DIRECTORY_SEPARATOR . $module;
 			if(
-				is_dir($moduleDir) 
+				is_dir($moduleDir)
 				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "_config.php")
-				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR 
+				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR
 					. self::$default_locale . ".php")
 			) {
 				$translatableModules[] = $module;
@@ -2347,18 +2348,18 @@ class i18n extends Object implements TemplateGlobalProvider {
 		}
 		return $translatableModules;
 	}
-	
+
 	/**
 	 * Returns the "short" language name from a locale,
-	 * e.g. "en_US" would return "en". 
-	 * 
+	 * e.g. "en_US" would return "en".
+	 *
 	 * @param string $locale E.g. "en_US"
 	 * @return string Short language code, e.g. "en"
 	 */
 	public static function get_lang_from_locale($locale) {
 		return preg_replace('/(_|-).*/', '', $locale);
 	}
-	
+
 	/**
 	 * Provides you "likely locales"
 	 * for a given "short" language code. This is a guess,
@@ -2366,7 +2367,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * could also mean "en_UK". Based on the Unicode CLDR
 	 * project.
 	 * @see http://www.unicode.org/cldr/data/charts/supplemental/likely_subtags.html
-	 * 
+	 *
 	 * @param string $lang Short language code, e.g. "en"
 	 * @return string Long locale, e.g. "en_US"
 	 */
@@ -2380,24 +2381,24 @@ class i18n extends Object implements TemplateGlobalProvider {
 			return $lang . '_' . strtoupper($lang);
 		}
 	}
-	
+
 	/**
 	 * Gets a RFC 1766 compatible language code,
 	 * e.g. "en-US".
 	 *
 	 * @see http://www.ietf.org/rfc/rfc1766.txt
 	 * @see http://tools.ietf.org/html/rfc2616#section-3.10
-	 * 
+	 *
 	 * @param string $locale
 	 * @return string
 	 */
 	public static function convert_rfc1766($locale) {
 		return str_replace('_','-', $locale);
 	}
-	
+
 	/**
 	 * Given a PHP class name, finds the module where it's located.
-	 * 
+	 *
 	 * @param  string $name
 	 * @return string
 	 */
@@ -2408,7 +2409,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		if (!$path) {
 			return false;
 		}
-		
+
 		$path = Director::makeRelative($path);
 		$path = str_replace('\\', '/', $path);
 
@@ -2419,15 +2420,15 @@ class i18n extends Object implements TemplateGlobalProvider {
 	/**
 	 * Validates a "long" locale format (e.g. "en_US")
 	 * by checking it against {@link $all_locales}.
-	 * 
+	 *
 	 * To add a locale to {@link $all_locales}, use the following example
 	 * in your mysite/_config.php:
 	 * <code>
 	 * i18n::$allowed_locales['xx_XX'] = '<Language name>';
 	 * </code>
-	 * 
+	 *
 	 * Note: Does not check for {@link $allowed_locales}.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public static function validate_locale($locale) {
@@ -2437,12 +2438,12 @@ class i18n extends Object implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Set the current locale, used as the default for 
+	 * Set the current locale, used as the default for
 	 * any localized classes, such as {@link FormField} or {@link DBField}
 	 * instances. Locales can also be persisted in {@link Member->Locale},
 	 * for example in the {@link CMSMain} interface the Member locale
 	 * overrules the global locale value set here.
-	 * 
+	 *
 	 * @param string $locale Locale to be set. See
 	 *                       http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list
 	 *                       of possible locales.
@@ -2454,33 +2455,33 @@ class i18n extends Object implements TemplateGlobalProvider {
 	/**
 	 * Get the current locale.
 	 * Used by {@link Member::populateDefaults()}
-	 * 
+	 *
 	 * @return string Current locale in the system
 	 */
 	public static function get_locale() {
 		return (!empty(self::$current_locale)) ? self::$current_locale : self::$default_locale;
 	}
-		
+
 	/**
 	 * This is the "fallback locale", in case resources with the "current locale"
 	 * (set through {@link set_locale()}) can't be found.
-	 * 
+	 *
 	 * If you just want to globally read/write a different locale (e.g. in a CMS interface),
 	 * please use {@link get_locale()} and {@link set_locale()} instead.
-	 * 
+	 *
 	 * For example, {@link Requirements::add_i18n_javascript()} and {@link i18n::include_by_class()}
 	 * use this "fallback locale" value to include fallback language files.
-	 * 
+	 *
 	 * @return String
 	 */
 	public static function default_locale() {
 		return self::$default_locale;
 	}
-	
+
 	/**
 	 * See {@link default_locale()} for usage.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param String $locale
 	 */
 	public static function set_default_locale($locale) {
@@ -2502,10 +2503,10 @@ class i18n extends Object implements TemplateGlobalProvider {
 		} catch(Zend_Locale_Exception $e) {
 			$dir = Zend_Locale_Data::getList(i18n::get_lang_from_locale($locale), 'layout');
 		}
-		
+
 		return ($dir && $dir['characters'] == 'right-to-left') ? 'rtl' : 'ltr';
 	}
-	
+
 	/**
 	 * Includes all available language files for a certain defined locale.
 	 *
@@ -2514,10 +2515,9 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function include_by_locale($locale, $clean = false) {
 		if($clean) {
-			$cache = Zend_Translate::getCache();
-			if($cache) $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+			Zend_Translate::clearCache();
 		}
-		
+
 		// Get list of module => path pairs, and then just the names
 		$modules = SS_ClassLoader::instance()->getManifest()->getModules();
 		$moduleNames = array_keys($modules);
@@ -2581,13 +2581,13 @@ class i18n extends Object implements TemplateGlobalProvider {
 						}
 					}
 				}
-				
+
 				// Add empty translations to ensure the locales are "registered" with isAvailable(),
 				// and the next invocation of include_by_locale() doesn't cause a new reparse.
 				$adapter->addTranslation(
 					array(
 						// Cached by content hash, so needs to be locale dependent
-						'content' => array($locale => $locale), 
+						'content' => array($locale => $locale),
 						'locale' => $locale,
 						'usetranslateadapter' => true
 					)
@@ -2600,12 +2600,12 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * Given a class name (a "locale namespace"), will search for its module and, if available,
 	 * will load the resources for the currently defined locale.
 	 * If not available, the original English resource will be loaded instead (to avoid blanks)
-	 * 
+	 *
 	 * @param string $class Resources for this class will be included, according to the set locale.
 	 */
 	public static function include_by_class($class) {
 		$module = self::get_owner_module($class);
-		
+
 		$translators = array_reverse(self::get_translators(), true);
 		foreach($translators as $priority => $translators) {
 			foreach($translators as $name => $translator) {
@@ -2628,5 +2628,5 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'i18nScriptDirection' => 'get_script_direction',
 		);
 	}
-	
+
 }

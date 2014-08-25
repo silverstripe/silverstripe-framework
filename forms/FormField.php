@@ -372,6 +372,7 @@ class FormField extends RequestHandler {
 			'class' => $this->extraClass(),
 			'id' => $this->ID(),
 			'disabled' => $this->isDisabled(),
+			'readonly' => $this->isReadonly()
 		);
 		
 		if ($this->Required()) {
@@ -849,6 +850,15 @@ class FormField extends RequestHandler {
 	public function setContainerFieldList($list) {
 		$this->containerFieldList = $list;
 		return $this;
+	}
+
+	/**
+	 * Get the FieldList that contains this field.
+	 *
+	 * @return FieldList
+	 */
+	public function getContainerFieldList() {
+		return $this->containerFieldList;
 	}
 
 	public function rootFieldList() {

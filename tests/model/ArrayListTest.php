@@ -250,11 +250,35 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John')
 		));
 
-		$list = $list->sort('Name');
-		$this->assertEquals($list->toArray(), array(
+		// Unquoted name
+		$list1 = $list->sort('Name');
+		$this->assertEquals($list1->toArray(), array(
 			(object) array('Name' => 'Bob'),
 			array('Name' => 'John'),
 			array('Name' => 'Steve')
+		));
+
+		// Quoted name name
+		$list2 = $list->sort('"Name"');
+		$this->assertEquals($list2->toArray(), array(
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John'),
+			array('Name' => 'Steve')
+		));
+
+		// Array (non-associative)
+		$list3 = $list->sort(array('"Name"'));
+		$this->assertEquals($list3->toArray(), array(
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John'),
+			array('Name' => 'Steve')
+		));
+		
+		// Check original list isn't altered
+		$this->assertEquals($list->toArray(), array(
+			array('Name' => 'Steve'),
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John')
 		));
 	}
 	
@@ -265,11 +289,43 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John')
 		));
 
-		$list = $list->sort('Name','asc');
-		$this->assertEquals($list->toArray(), array(
+		// Sort two arguments
+		$list1 = $list->sort('Name','ASC');
+		$this->assertEquals($list1->toArray(), array(
 			(object) array('Name' => 'Bob'),
 			array('Name' => 'John'),
 			array('Name' => 'Steve')
+		));
+
+		// Sort single string
+		$list2 = $list->sort('Name asc');
+		$this->assertEquals($list2->toArray(), array(
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John'),
+			array('Name' => 'Steve')
+		));
+		
+		// Sort quoted string
+		$list3 = $list->sort('"Name" ASCENDING');
+		$this->assertEquals($list3->toArray(), array(
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John'),
+			array('Name' => 'Steve')
+		));
+
+		// Sort array specifier
+		$list4 = $list->sort(array('Name' => 'ascending'));
+		$this->assertEquals($list4->toArray(), array(
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John'),
+			array('Name' => 'Steve')
+		));
+		
+		// Check original list isn't altered
+		$this->assertEquals($list->toArray(), array(
+			array('Name' => 'Steve'),
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John')
 		));
 	}
 	
@@ -280,11 +336,43 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John')
 		));
 
-		$list = $list->sort('Name', 'DESC');
-		$this->assertEquals($list->toArray(), array(
+		// Sort two arguments
+		$list1 = $list->sort('Name', 'DESC');
+		$this->assertEquals($list1->toArray(), array(
 			array('Name' => 'Steve'),
 			array('Name' => 'John'),
 			(object) array('Name' => 'Bob')
+		));
+
+		// Sort single string
+		$list2 = $list->sort('Name desc');
+		$this->assertEquals($list2->toArray(), array(
+			array('Name' => 'Steve'),
+			array('Name' => 'John'),
+			(object) array('Name' => 'Bob')
+		));
+		
+		// Sort quoted string
+		$list3 = $list->sort('"Name" DESCENDING');
+		$this->assertEquals($list3->toArray(), array(
+			array('Name' => 'Steve'),
+			array('Name' => 'John'),
+			(object) array('Name' => 'Bob')
+		));
+
+		// Sort array specifier
+		$list4 = $list->sort(array('Name' => 'descending'));
+		$this->assertEquals($list4->toArray(), array(
+			array('Name' => 'Steve'),
+			array('Name' => 'John'),
+			(object) array('Name' => 'Bob')
+		));
+		
+		// Check original list isn't altered
+		$this->assertEquals($list->toArray(), array(
+			array('Name' => 'Steve'),
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John')
 		));
 	}
 	

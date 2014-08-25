@@ -439,7 +439,6 @@ class VersionedTest extends SapphireTest {
 		$testData->Content = 'After Content';
 		$testData->write();
 
-		$_GET['archiveDate'] = '2009-01-01 19:00:00';
 		Versioned::reading_archived_date('2009-01-01 19:00:00');
 
 		$fetchedData = VersionedTest_DataObject::get()->byId($id);
@@ -538,7 +537,7 @@ class VersionedTest extends SapphireTest {
 	 * Tests that reading mode persists between requests
 	 */
 	public function testReadingPersistent() {
-		$session = new Session(array());
+		$session = Injector::inst()->create('Session', array());
 		
 		// Set to stage
 		Director::test('/?stage=Stage', null, $session);
@@ -568,6 +567,23 @@ class VersionedTest extends SapphireTest {
 			'Check that subsequent requests in the same session remain in Live mode'
 		);
 		
+		// Test that session doesn't redundantly store the default stage if it doesn't need to
+		$session2 = Injector::inst()->create('Session', array());
+		Director::test('/', null, $session2);
+		$this->assertEmpty($session2->inst_changedData());
+		Director::test('/?stage=Live', null, $session2);
+		$this->assertEmpty($session2->inst_changedData());
+		
+		// Test choose_site_stage
+		Session::set('readingMode', 'Stage.Stage');
+		Versioned::choose_site_stage();
+		$this->assertEquals('Stage.Stage', Versioned::get_reading_mode());
+		Session::set('readingMode', 'Archive.2014-01-01');
+		Versioned::choose_site_stage();
+		$this->assertEquals('Archive.2014-01-01', Versioned::get_reading_mode());
+		Session::clear('readingMode');
+		Versioned::choose_site_stage();
+		$this->assertEquals('Stage.Live', Versioned::get_reading_mode());
 	}
 
 }

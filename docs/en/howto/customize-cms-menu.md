@@ -7,11 +7,11 @@ SilverStripe will automatically create a new `[api:CMSMenuItem]` for it
 
 The most popular extension of LeftAndMain is a `[api:ModelAdmin]` class, so 
 for a more detailed introduction to creating new `ModelAdmin` interfaces, read
-the [ModelAdmin referencee](../reference/modeladmin).
+the [ModelAdmin reference](../reference/modeladmin).
 
 In this document we'll take the `ProductAdmin` class used in the 
-[ModelAdmin referencee](../reference/modeladmin#setup) and so how we can change 
-the menu behaviour by using the static `$menu_title` and `$menu_icon` statics to 
+[ModelAdmin reference](../reference/modeladmin#setup) and so how we can change 
+the menu behaviour by using the `$menu_title` and `$menu_icon` statics to 
 provide a custom title and icon.
 
 ### Defining a Custom Icon
@@ -48,7 +48,7 @@ For more information on language and translations, please refer to the
 ## Adding an external link to the menu
 
 On top of your administration windows, the menu can also have external links 
-(e.g to external reference). In this example, we're going to add a link to 
+(e.g. to external reference). In this example, we're going to add a link to 
 Google to the menu.
 
 First, we need to define a `[api:LeftAndMainExtension]` which will contain our
@@ -85,7 +85,7 @@ button configuration.
 
 To have the link appear, make sure you add the extension to the `LeftAndMain` 
 class. For more information about configuring extensions see the 
-[DataExtension referencee](../reference/dataextension).
+[DataExtension reference](../reference/dataextension).
 
 	:::php
 	LeftAndMain::add_extension('CustomLeftAndMain')

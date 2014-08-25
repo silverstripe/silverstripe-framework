@@ -18,7 +18,7 @@ URLs.  Here is an example from the subsites module:
 		 * Return a session that has a user logged in as an administrator
 		 */
 		public function adminLoggedInSession() {
-			return new Session(array(
+			return Injector::inst()->create('Session', array(
 				'loggedInAs' => $this->idFromFixture('Member', 'admin')
 			));
 		}

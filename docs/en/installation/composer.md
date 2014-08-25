@@ -39,6 +39,9 @@ If you already have composer installed you can update it by running:
 	
 Composer updates regularly, so you should run this command fairly often. These instructions assume you are running the latest version.
 
+## Installing Composer on Windows WAMP
+For those that use WAMP as a development environment, [detailed information is available on installing using Composer.](/windows-wamp#install-wamp) 
+
 ## Create a new site
 
 Composer can create a new site for you, using the installer as a template (by default composer will download the latest stable version):
@@ -107,7 +110,7 @@ So, your deployment process, as it relates to Composer, should be as follows:
  * Run `composer update` on your development version before you start whatever testing you have planned.  Perform all the necessary testing.
  * Check `composer.lock` into your repository.
  * Deploy your project code base, using the deployment tool of your choice.
- * Run `composer install` on your production version.
+ * Run `composer install --no-dev -o` on your production version.
 
 # Dev Environments for Contributing Code {#contributing}
 

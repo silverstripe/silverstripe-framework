@@ -94,7 +94,11 @@
 		},
 		_onAlways: function (jqXHRorResult, textStatus, jqXHRorError, options) {
 			$.blueimpUI.fileupload.prototype._onAlways.call(this, jqXHRorResult, textStatus, jqXHRorError, options);
-			if (this._active === 0) {
+
+			if(typeof(jqXHRorError) === 'string') {
+				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.UploadField.UPLOADFAIL', 'Sorry your upload failed'));
+				$('.fileOverview .uploadStatus').addClass("bad").removeClass("good").removeClass("notice");
+			} else if (jqXHRorError.status === 200) {
 				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.FILEUPLOADCOMPLETED', 'File upload completed!'));//.hide();
 				$('.ss-uploadfield-item-edit-all').show();
 				$('.fileOverview .uploadStatus').addClass("good").removeClass("notice").removeClass("bad");
@@ -328,11 +332,11 @@
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-files .ss-uploadfield-item').entwine({
-			onmatch: function() {
+			onadd: function() {
 				this._super();
 				this.closest('.ss-upload').find('.ss-uploadfield-addfile').addClass('borderTop');
 			},
-			onunmatch: function() {
+			onremove: function() {
 				$('.ss-uploadfield-files:not(:has(.ss-uploadfield-item))').closest('.ss-upload').find('.ss-uploadfield-addfile').removeClass('borderTop');
 				this._super();
 			}
@@ -365,19 +369,25 @@
 						if(config.changeDetection) {
 							this.closest('form').trigger('dirty');
 						}
-						fileupload._trigger('destroy', e, {
-							context: item,
-							url: this.data('href'),
-							type: 'get',
-							dataType: fileupload.options.dataType
-						});	
+
+						if (fileupload) {
+							fileupload._trigger('destroy', e, {
+								context: item,
+								url: this.data('href'),
+								type: 'get',
+								dataType: fileupload.options.dataType
+							});
+						}
 					}
 				} else {
 					// Removed files will be applied to object on save
 					if(config.changeDetection) {
 						this.closest('form').trigger('dirty');
 					}
-					fileupload._trigger('destroy', e, {context: item});	
+
+					if (fileupload) {
+						fileupload._trigger('destroy', e, {context: item});
+					}
 				}
 				
 				e.preventDefault(); // Avoid a form submit

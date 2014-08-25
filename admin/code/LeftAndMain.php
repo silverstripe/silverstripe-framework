@@ -267,8 +267,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(empty($_REQUEST['executeForm']) && !$this->request->isAjax()) $this->extend('accessedCMS');
 		
 		// Set the members html editor config
-		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
-		
+		if(Member::currentUser()) {
+			HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
+		}
+
 		// Set default values in the config if missing.  These things can't be defined in the config
 		// file because insufficient information exists when that is being processed
 		$htmlEditorConfig = HtmlEditorConfig::get_active();
@@ -797,7 +799,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			? $filter->getChildrenMethod() 
 			: 'AllChildrenIncludingDeleted';
 
-		if(!$numChildrenMethod) $numChildrenMethod = 'numChildren';
+		if(!$numChildrenMethod) {
+			$numChildrenMethod = 'numChildren';
+			if($filter && $filter->getNumChildrenMethod()) {
+				$numChildrenMethod = $filter->getNumChildrenMethod();
+			}
+		}
 		if(!$filterFunction) $filterFunction = ($filter) ? array($filter, 'isPageIncluded') : null;
 
 		// Get the tree root
@@ -810,7 +817,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$obj->markPartialTree($nodeCountThreshold, $this, $childrenMethod, $numChildrenMethod);
 		
 		// Ensure current page is exposed
-		if($p = $this->currentPage()) $obj->markToExpose($p);
+		// This call flushes the Hierarchy::$marked cache when the current node is deleted
+		// @see CMSMain::getRecord()
+		// This will make it impossible to show children under a deleted parent page
+		// if($p = $this->currentPage()) $obj->markToExpose($p);
 		
 		// NOTE: SiteTree/CMSMain coupling :-(
 		if(class_exists('SiteTree')) {
@@ -821,9 +831,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
 		$controller = $this;
 		$recordController = ($this->stat('tree_class') == 'SiteTree') ?  singleton('CMSPageEditController') : $this;
-		$titleFn = function(&$child) use(&$controller, &$recordController) {
+		$titleFn = function(&$child, $numChildrenMethod) use(&$controller, &$recordController) {
 			$link = Controller::join_links($recordController->Link("show"), $child->ID);
-			return LeftAndMain_TreeNode::create($child, $link, $controller->isCurrentPage($child))->forTemplate();
+			$node = LeftAndMain_TreeNode::create($child, $link, $controller->isCurrentPage($child), $numChildrenMethod);
+			return $node->forTemplate();
 		};
 		
 		// Limit the amount of nodes shown for performance reasons.
@@ -931,6 +942,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if($id === "") continue; // $id may be a blank string, which is invalid and should be skipped over
 
 			$record = $this->getRecord($id);
+			if(!$record) continue; // In case a page is no longer available
 			$recordController = ($this->stat('tree_class') == 'SiteTree') 
 				?  singleton('CMSPageEditController') 
 				: $this;
@@ -1864,10 +1876,22 @@ class LeftAndMain_TreeNode extends ViewableData {
 	 */
 	protected $isCurrent;
 
-	public function __construct($obj, $link = null, $isCurrent = false) {
+	/**
+	 * @var string
+	 */
+	protected $numChildrenMethod;
+
+	/**
+	 * @param $obj
+	 * @param null $link
+	 * @param bool $isCurrent
+	 * @param $numChildrenMethod
+	 */
+	public function __construct($obj, $link = null, $isCurrent = false, $numChildrenMethod='numChildren') {
 		$this->obj = $obj;
 		$this->link = $link;
 		$this->isCurrent = $isCurrent;
+		$this->numChildrenMethod = $numChildrenMethod;
 	}
 
 	/**
@@ -1888,7 +1912,7 @@ class LeftAndMain_TreeNode extends ViewableData {
 	}
 
 	public function getClasses() {
-		$classes = $this->obj->CMSTreeClasses();
+		$classes = $this->obj->CMSTreeClasses($this->numChildrenMethod);
 		if($this->isCurrent) $classes .= " current";
 		$flags = $this->obj->hasMethod('getStatusFlags') ? $this->obj->getStatusFlags() : false;
 		if ($flags) {

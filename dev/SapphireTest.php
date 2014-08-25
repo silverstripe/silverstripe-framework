@@ -201,7 +201,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		DataObject::reset();
 		if(class_exists('SiteTree')) SiteTree::reset();
 		Hierarchy::reset();
-		if(Controller::has_curr()) Controller::curr()->setSession(new Session(array()));
+		if(Controller::has_curr()) Controller::curr()->setSession(Injector::inst()->create('Session', array()));
 		Security::$database_is_ready = null;
 		
 		$fixtureFile = static::get_fixture_file();
@@ -508,10 +508,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$haystack,
 		$message = '',
 		$ignoreCase = FALSE,
-		$checkForObjectIdentity = TRUE
+		$checkForObjectIdentity = TRUE,
+		$checkForNonObjectIdentity = false
 	) {
 		if ($haystack instanceof DBField) $haystack = (string)$haystack;
-		parent::assertContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity);
+		parent::assertContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity, $checkForNonObjectIdentity);
 	}
 
 	public static function assertNotContains(
@@ -519,10 +520,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$haystack,
 		$message = '',
 		$ignoreCase = FALSE,
-		$checkForObjectIdentity = TRUE
+		$checkForObjectIdentity = TRUE,
+		$checkForNonObjectIdentity = false
 	) {
 		if ($haystack instanceof DBField) $haystack = (string)$haystack;
-		parent::assertNotContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity);
+		parent::assertNotContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity, $checkForNonObjectIdentity);
 	}
 
 	/**

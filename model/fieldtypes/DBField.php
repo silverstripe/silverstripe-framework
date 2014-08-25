@@ -1,14 +1,19 @@
 <?php
 /**
  * Single field in the database.
+ *
  * Every field from the database is represented as a sub-class of DBField.
  * 
  * <b>Multi-value DBField objects</b>
  * 
- * Sometimes you will want to make DBField classes that don't have a 1-1 match to database fields.  To do this, there
- * are a number of fields for you to overload.
- *  - Overload {@link writeToManipulation} to add the appropriate references to the INSERT or UPDATE command
- *  - Overload {@link addToQuery} to add the appropriate items to a SELECT query's field list
+ * Sometimes you will want to make DBField classes that don't have a 1-1 match
+ * to database fields.  To do this, there are a number of fields for you to
+ * overload:
+ *
+ *  - Overload {@link writeToManipulation} to add the appropriate references to
+ *		the INSERT or UPDATE command
+ *  - Overload {@link addToQuery} to add the appropriate items to a SELECT
+ *		query's field list
  *  - Add appropriate accessor methods 
  * 
  * <b>Subclass Example</b>
@@ -68,29 +73,42 @@ abstract class DBField extends ViewableData {
 	
 	/**
 	 * Create a DBField object that's not bound to any particular field.
+	 *
 	 * Useful for accessing the classes behaviour for other parts of your code.
 	 */
 	public static function create_field($className, $value, $name = null, $object = null) {
 		$dbField = Object::create($className, $name, $object);
 		$dbField->setValue($value, null, false);
+
 		return $dbField;
 	}
 	
 	/**
 	 * Set the name of this field.
-	 * The name should never be altered, but it if was never given a name in the first place you can set a name.
+	 *
+	 * The name should never be altered, but it if was never given a name in
+	 * the first place you can set a name.
+	 *
 	 * If you try an alter the name a warning will be thrown. 
+	 *
+	 * @param string $name
+	 *
+	 * @return DBField
 	 */
 	public function setName($name) {
-		if($this->name) {
+		if($this->name && $this->name !== $name) {
 			user_error("DBField::setName() shouldn't be called once a DBField already has a name."
 				. "It's partially immutable - it shouldn't be altered after it's given a value.", E_USER_WARNING);
 		}
+
 		$this->name = $name;
+
+		return $this;
 	}
 	
 	/**
 	 * Returns the name of this field.
+	 *
 	 * @return string
 	 */
 	public function getName() {
@@ -99,6 +117,7 @@ abstract class DBField extends ViewableData {
 	
 	/**
 	 * Returns the value of this field.
+	 *
 	 * @return mixed
 	 */
 	public function getValue() {
@@ -107,8 +126,8 @@ abstract class DBField extends ViewableData {
 	
 	/**
 	 * Set the value on the field.
-	 * Optionally takes the whole record as an argument,
-	 * to pick other values.
+	 *
+	 * Optionally takes the whole record as an argument, to pick other values.
 	 *
 	 * @param mixed $value
 	 * @param array $record
@@ -119,9 +138,8 @@ abstract class DBField extends ViewableData {
 	
 	
 	/**
-	 * Determines if the field has a value which
-	 * is not considered to be 'null' in
-	 * a database context.
+	 * Determines if the field has a value which is not considered to be 'null'
+	 * in a database context.
 	 * 
 	 * @return boolean
 	 */
@@ -130,9 +148,8 @@ abstract class DBField extends ViewableData {
 	}
 	
 	/**
-	 * Return an encoding of the given value suitable
-	 * for inclusion in a SQL statement. If necessary,
-	 * this should include quotes.
+	 * Return an encoding of the given value suitable for inclusion in a SQL
+	 * statement. If necessary, this should include quotes.
 	 * 
 	 * @param $value mixed The value to check
 	 * @return string The encoded value

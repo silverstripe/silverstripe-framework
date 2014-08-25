@@ -104,6 +104,22 @@ class FormFieldTest extends SapphireTest {
 		$this->assertContains('three="3"', $field->getAttributesHTML('one', 'two'));
 	}
 
+	public function testReadonly() {
+		$field = new FormField('MyField');
+		$field->setReadonly(true);
+		$this->assertContains('readonly="readonly"', $field->getAttributesHTML());
+		$field->setReadonly(false);
+		$this->assertNotContains('readonly="readonly"', $field->getAttributesHTML());
+	}
+
+	public function testDisabled() {
+		$field = new FormField('MyField');
+		$field->setDisabled(true);
+		$this->assertContains('disabled="disabled"', $field->getAttributesHTML());
+		$field->setDisabled(false);
+		$this->assertNotContains('disabled="disabled"', $field->getAttributesHTML());
+	}
+
 	public function testEveryFieldTransformsReadonlyAsClone() {
 		$fieldClasses = ClassInfo::subclassesFor('FormField');
 		foreach($fieldClasses as $fieldClass) {

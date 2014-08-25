@@ -71,6 +71,11 @@ class Debug {
 
 	}
 
+	/**
+	 * Returns the caller for a specific method
+	 * 
+	 * @return array
+	 */
 	public static function caller() {
 		$bt = debug_backtrace();
 		$caller = $bt[2];
@@ -102,12 +107,7 @@ class Debug {
 	 * @param mixed $val
 	 */
 	public static function dump($val) {
-		echo '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
-		$caller = Debug::caller();
-		echo "<span style=\"font-size: 12px;color:#666;\">" . basename($caller['file']) . ":$caller[line] - </span>\n";
-		if (is_string($val)) print_r(wordwrap($val, 100));
-		else print_r($val);
-		echo '</pre>';
+		self::create_debug_view()->writeVariable($val, self::caller());
 	}
 
 	/**
@@ -296,10 +296,11 @@ class Debug {
 		);
 		
 		if(Director::isDev() || Director::is_cli()) {
-			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
+			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		} else {
-			return self::friendlyError();
+			self::friendlyError();
 		}
+		return false;
 	}
 	
 	/**
@@ -366,13 +367,17 @@ class Debug {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Create an instance of an appropriate DebugView object.
+	 * 
+	 * @return DebugView
 	 */
 	public static function create_debug_view() {
-		if(Director::is_cli() || Director::is_ajax()) return new CliDebugView();
-		else return new DebugView();
+		$service = Director::is_cli() || Director::is_ajax()
+			? 'CliDebugView'
+			: 'DebugView';
+		return Injector::inst()->get($service);
 	}
 
 	/**

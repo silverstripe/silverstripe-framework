@@ -339,7 +339,7 @@ class GridField extends FormField {
 		if($total > 0) {
 			$rows = array();
 			foreach($list as $idx => $record) {
-				if(!$record->canView()) {
+				if($record->hasMethod('canView') && !$record->canView()) {
 					continue;
 				}
 				$rowContent = '';

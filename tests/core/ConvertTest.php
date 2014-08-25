@@ -186,4 +186,56 @@ class ConvertTest extends SapphireTest {
 			);
 		}
 	}
+	
+	public function testRaw2JS() {
+		// Test attempt to break out of string
+		$this->assertEquals(
+			'\\"; window.location=\\"http://www.google.com',
+			Convert::raw2js('"; window.location="http://www.google.com')
+		);
+		$this->assertEquals(
+			'\\\'; window.location=\\\'http://www.google.com',
+			Convert::raw2js('\'; window.location=\'http://www.google.com')
+		);
+		// Test attempt to close script tag
+		$this->assertEquals(
+			'\\"; \\x3c/script\\x3e\\x3ch1\\x3eHa \\x26amp; Ha\\x3c/h1\\x3e\\x3cscript\\x3e',
+			Convert::raw2js('"; </script><h1>Ha &amp; Ha</h1><script>')
+		);
+		// Test newlines are properly escaped
+		$this->assertEquals(
+			'New\\nLine\\rReturn', Convert::raw2js("New\nLine\rReturn")
+		);
+		// Check escape of slashes
+		$this->assertEquals(
+			'\\\\\\"\\x3eClick here',
+			Convert::raw2js('\\">Click here')
+		);
+	}
+	
+	public function testRaw2JSON() {
+		
+		// Test object
+		$input = new stdClass();
+		$input->Title = 'My Object';
+		$input->Content = '<p>Data</p>';
+		$this->assertEquals(
+			'{"Title":"My Object","Content":"<p>Data<\/p>"}',
+			Convert::raw2json($input)
+		);
+		
+		// Array
+		$array = array('One' => 'Apple', 'Two' => 'Banana');
+		$this->assertEquals(
+			'{"One":"Apple","Two":"Banana"}',
+			Convert::raw2json($array)
+		);
+		
+		// String value with already encoded data. Result should be quoted.
+		$value = '{"Left": "Value"}';
+		$this->assertEquals(
+			'"{\\"Left\\": \\"Value\\"}"',
+			Convert::raw2json($value)
+		);
+	}
 }
