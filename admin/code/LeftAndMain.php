@@ -436,6 +436,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// The user's theme shouldn't affect the CMS, if, for example, they have 
 		// replaced TableListField.ss or Form.ss.
 		Config::inst()->update('SSViewer', 'theme_enabled', false);
+
+		//set the reading mode for the admin to stage
+		Versioned::set_reading_mode('Stage');
 	}
 	
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
