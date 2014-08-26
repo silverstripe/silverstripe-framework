@@ -16,7 +16,7 @@ class CSVListExporter implements SS_ListExporter{
 		$this->list = $list;
 	}
 
-	public function setHasHeader(bool $hasheader) {
+	public function setHasHeader(boolean $hasheader) {
 		$this->csvHasHeader = $hasheader;
 		return $this;
 	}
