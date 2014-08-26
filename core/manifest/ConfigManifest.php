@@ -111,11 +111,9 @@ class SS_ConfigManifest {
 	 * Provides a hook for mock unit tests despite no DI
 	 * @return Zend_Cache_Frontend
 	 */
-	protected function getCache()
-	{
+	protected function getCache() {
 		return SS_Cache::factory('SS_Configuration', 'Core', array(
-			'automatic_serialization' => true,
-			'lifetime' => null
+			'automatic_serialization' => true
 		));
 	}
 
