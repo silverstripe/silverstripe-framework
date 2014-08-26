@@ -26,7 +26,7 @@ This example uses `[api:SS_Cache]` in some custom code, and the same cache is cl
 	
 		public function MyCachedContent() {
 			$cache = SS_Cache::factory('mycache')
-			$something = $cache->get('mykey');
+			$something = $cache->load('mykey');
 			if(!$something) {
 				$something = 'value to be cached';
 				$cache->save($something);
