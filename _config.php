@@ -47,5 +47,8 @@ SS_Cache::pick_backend('aggregatestore', 'aggregate', 1000);
 // If you don't want to see deprecation errors for the new APIs, change this to 3.0.0-dev.
 Deprecation::notification_version('3.1.0');
 
+SS_Cache::set_cache_lifetime('SS_Configuration', null);
+SS_Cache::set_cache_lifetime('i18n', null);
+
 // TODO Remove once new ManifestBuilder with submodule support is in place
 require_once('admin/_config.php');
