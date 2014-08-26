@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Interface for conferting SS_List into various formats
+ * Interface for converting SS_List into various formats
  * 
  * @package exporters
  */
