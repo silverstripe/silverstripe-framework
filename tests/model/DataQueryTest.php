@@ -12,6 +12,27 @@ class DataQueryTest extends SapphireTest {
 		'DataQueryTest_E',
 	);
 
+
+	public function testSortByJoinedFieldRetainsSourceInformation() {
+		$bar = new DataQueryTest_C();
+		$bar->Title = "Bar";
+		$bar->write();
+
+		$foo = new DataQueryTest_B();
+		$foo->Title = "Foo";
+		$foo->TestC = $bar->ID;
+		$foo->write();
+
+		$query = new DataQuery('DataQueryTest_B');
+		$result = $query->leftJoin(
+			'DataQueryTest_C',
+			"\"DataQueryTest_B\".\"TestCID\" = \"DataQueryTest_B\".\"ID\""
+		)->sort('"DataQueryTest_B"."Title"', 'ASC');
+
+		$result = $result->execute()->record();
+		$this->assertEquals('Foo', $result['Title']);
+	}
+
 	/**
 	 * Test the leftJoin() and innerJoin method of the DataQuery object
 	 */
@@ -138,6 +159,7 @@ class DataQueryTest extends SapphireTest {
 
 
 class DataQueryTest_A extends DataObject implements TestOnly {
+
 	private static $db = array(
 		'Name' => 'Varchar',
 	);
@@ -147,7 +169,8 @@ class DataQueryTest_A extends DataObject implements TestOnly {
 	);
 }
 
-class DataQueryTest_B extends DataQueryTest_A {
+class DataQueryTest_B extends DataObject implements TestOnly {
+
 	private static $db = array(
 		'Title' => 'Varchar',
 	);
