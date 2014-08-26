@@ -116,7 +116,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 			}
 		}
 		
-		$writer = new CSVListExporter($items);
+		$writer = Injector::inst()->create('CSVListExporter', $items);
 		$writer->setHasHeader($this->csvHasHeader)
 				->setSeperator($this->csvSeparator)
 				->setColumns($csvColumns)
