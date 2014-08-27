@@ -2021,7 +2021,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 		for($i = 0; $i < $argNum; $i++) {
 			if (is_array($argList[$i])) {   //we have reached the injectionArray
 				// merge with the default injections with $argList as highest priotity
-				$injectionArray = array_merge($injectionArray ,$argList[$i]); //any array in the args will be the injection array
+				// any array in the args will be the injection array
+				$injectionArray = array_merge($injectionArray ,$argList[$i]);
 			}
 		}
 
