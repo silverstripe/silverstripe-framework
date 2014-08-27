@@ -405,7 +405,6 @@ class RequirementsTest extends SapphireTest {
 	public function testSuffix() {
 		$template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
 		$basePath = $this->getCurrentRelativePath();
-		$basePath = 'framework' . substr($basePath, strlen(FRAMEWORK_DIR));
 
 		$backend = new Requirements_Backend;
 
