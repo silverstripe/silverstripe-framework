@@ -28,8 +28,8 @@ class GridFieldExportButtonTest extends SapphireTest {
 
 		$this->assertEquals(
 			'"My Name"'."\n".
-			'"Test"'."\n".
-			'"Test2"'."\n",
+			'Test'."\n".
+			'Test2'."\n",
 			$button->generateExportFileData($this->gridField)
 		);
 	}
@@ -44,9 +44,9 @@ class GridFieldExportButtonTest extends SapphireTest {
 		));
 
 		$this->assertEquals(
-			'"Name","City"'."\n".
-			'"Test","City city"'."\n".
-			'"Test2","Quoted ""City"" 2 city"'."\n",
+			'Name,City'."\n".
+			'Test,"City city"'."\n".
+			'Test2,"Quoted ""City"" 2 city"'."\n",
 			$button->generateExportFileData($this->gridField)
 		);
 	}
@@ -59,9 +59,9 @@ class GridFieldExportButtonTest extends SapphireTest {
 		));
 
 		$this->assertEquals(
-			'"Name","strtolower"'."\n".
-			'"Test","City"'."\n".
-			'"Test2","Quoted ""City"" 2"'."\n",
+			'Name,strtolower'."\n".
+			'Test,City'."\n".
+			'Test2,"Quoted ""City"" 2"'."\n",
 			$button->generateExportFileData($this->gridField)
 		);
 	}
@@ -75,8 +75,8 @@ class GridFieldExportButtonTest extends SapphireTest {
 		$button->setCsvHasHeader(false);
 
 		$this->assertEquals(
-			'"Test","City"'."\n".
-			'"Test2","Quoted ""City"" 2"'."\n",
+			'Test,City'."\n".
+			'Test2,"Quoted ""City"" 2"'."\n",
 			$button->generateExportFileData($this->gridField)
 		);
 	}
