@@ -98,6 +98,12 @@ class i18n extends Object implements TemplateGlobalProvider {
 	protected static $translators;
 
 	/**
+	 * @config
+	 * @var array
+	 */
+	private static $default_injection_variables = array();
+
+	/**
 	 * Use javascript i18n through the ss.i18n class (enabled by default).
 	 * If set to TRUE, includes javascript requirements for the base library
 	 * (framework/javascript/i18n.js) and all necessary lang files (e.g. framework/lang/de_DE.js)
@@ -2009,10 +2015,12 @@ class i18n extends Object implements TemplateGlobalProvider {
 		$argList = func_get_args();
 		$argNum = func_num_args();
 		//_t($entity, $string = "", $context (optional), $injectionArray (optional))
-		$injectionArray = null;
+		$injectionArray = self::config()->default_injection_variables;
 		for($i = 0; $i < $argNum; $i++) {
 			if (is_array($argList[$i])) {   //we have reached the injectionArray
-				$injectionArray = $argList[$i]; //any array in the args will be the injection array
+				// merge with the default injections with $argList as highest priotity
+				//any array in the args will be the injection array
+				$injectionArray = array_merge($injectionArray ,$argList[$i]);
 			}
 		}
 
@@ -2055,7 +2063,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			}
 
 		// inject the variables from injectionArray (if present)
-		if($injectionArray) {
+		if(count($injectionArray)) {
 			$regex = '/\{[\w\d]*\}/i';
 			if(!preg_match($regex, $returnValue)) {
 				// Legacy mode: If no injection placeholders are found,
