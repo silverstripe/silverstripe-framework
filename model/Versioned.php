@@ -559,26 +559,91 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		return $results;
 	}
 
+	/**
+	 * Generates a ($table)_version DB manipulation and injects it into the current $manipulation
+	 *
+	 * @param array $manipulation Source manipulation data
+	 * @param string $table Name of table
+	 * @param int $recordID ID of record to version
+	 */
+	protected function augmentWriteVersioned(&$manipulation, $table, $recordID) {
+		$baseDataClass = ClassInfo::baseDataClass($table);
+		
+		// Set up a new entry in (table)_versions
+		$newManipulation = array(
+			"command" => "insert",
+			"fields" => isset($manipulation[$table]['fields']) ? $manipulation[$table]['fields'] : null
+		);
+
+		// Add any extra, unchanged fields to the version record.
+		$data = DB::prepared_query("SELECT * FROM \"$table\" WHERE \"ID\" = ?", array($recordID))->record();
+		if($data) foreach($data as $k => $v) {
+			if (!isset($newManipulation['fields'][$k])) {
+				$newManipulation['fields'][$k] = $v;
+			}
+		}
+
+		// Ensure that the ID is instead written to the RecordID field
+		$newManipulation['fields']['RecordID'] = $recordID;
+		unset($newManipulation['fields']['ID']);
+
+		// Generate next version ID to use
+		$nextVersion = 0;
+		if($recordID) {
+			$nextVersion = DB::prepared_query("SELECT MAX(\"Version\") + 1
+				FROM \"{$baseDataClass}_versions\" WHERE \"RecordID\" = ?",
+				array($recordID)
+			)->value();
+		}
+		$nextVersion = $nextVersion ?: 1;
+
+		// Add the version number to this data
+		$manipulation[$table]['fields']['Version'] = $nextVersion;
+		$newManipulation['fields']['Version'] = $nextVersion;
+
+		// Write AuthorID for baseclass
+		if($table === $baseDataClass) {
+			$userID = (Member::currentUser()) ? Member::currentUser()->ID : 0;
+			$newManipulation['fields']['AuthorID'] = $userID;
+		}
+		$manipulation["{$table}_versions"] = $newManipulation;
+	}
+
+	/**
+	 * Rewrite the given manipulation to update the selected (non-default) stage
+	 *
+	 * @param array $manipulation Source manipulation data
+	 * @param string $table Name of table
+	 * @param int $recordID ID of record to version
+	 */
+	protected function augmentWriteStaged(&$manipulation, $table, $recordID) {
+		// If the record has already been inserted in the (table), get rid of it.
+		if($manipulation[$table]['command'] == 'insert') {
+			DB::prepared_query(
+				"DELETE FROM \"{$table}\" WHERE \"ID\" = ?",
+				array($recordID)
+			);
+		}
+
+		$newTable = $table . '_' . Versioned::current_stage();
+		$manipulation[$newTable] = $manipulation[$table];
+		unset($manipulation[$table]);
+	}
+
+
 	public function augmentWrite(&$manipulation) {
 		$tables = array_keys($manipulation);
-		$version_table = array();
 		foreach($tables as $table) {
-			$baseDataClass = ClassInfo::baseDataClass($table);
-
-			$isRootClass = ($table == $baseDataClass);
 
 			// Make sure that the augmented write is being applied to a table that can be versioned
 			if( !$this->canBeVersioned($table) ) {
 				unset($manipulation[$table]);
 				continue;
 			}
-			$rid = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];;
-			if(!$rid) user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
-
-			$newManipulation = array(
-				"command" => "insert",
-				"fields" => isset($manipulation[$table]['fields']) ? $manipulation[$table]['fields'] : null
-			);
+			
+			// Get ID field
+			$id = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];
+			if(!$id) user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
 
 			if($this->migratingVersion) {
 				$manipulation[$table]['fields']['Version'] = $this->migratingVersion;
@@ -587,40 +652,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			// If we haven't got a version #, then we're creating a new version.
 			// Otherwise, we're just copying a version to another table
 			if(empty($manipulation[$table]['fields']['Version'])) {
-				// Add any extra, unchanged fields to the version record.
-				$data = DB::prepared_query("SELECT * FROM \"$table\" WHERE \"ID\" = ?", array($rid))->record();
-				if($data) foreach($data as $k => $v) {
-					if (!isset($newManipulation['fields'][$k])) {
-						$newManipulation['fields'][$k] = $v;
-					}
-				}
-
-				// Set up a new entry in (table)_versions
-				$newManipulation['fields']['RecordID'] = $rid;
-				unset($newManipulation['fields']['ID']);
-
-				// Create a new version #
-				$nextVersion = 0;
-				if($rid) {
-					$nextVersion = DB::prepared_query("SELECT MAX(\"Version\") + 1
-						FROM \"{$baseDataClass}_versions\" WHERE \"RecordID\" = ?",
-						array($rid)
-					)->value();
-				}
-				$nextVersion = $nextVersion ?: 1;
-
-				// Add the version number to this data
-				$newManipulation['fields']['Version'] = $nextVersion;
-
-				if($isRootClass) {
-					$userID = (Member::currentUser()) ? Member::currentUser()->ID : 0;
-					$newManipulation['fields']['AuthorID'] = $userID;
-				}
-
-
-
-				$manipulation["{$table}_versions"] = $newManipulation;
-				$manipulation[$table]['fields']['Version'] = $nextVersion;
+				$this->augmentWriteVersioned($manipulation, $table, $id);
 			}
 
 			// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
@@ -628,6 +660,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				unset($manipulation[$table]['fields']['Version']);
 			}
 
+			// For base classes of versioned data objects
 			if(!$this->hasVersionField($table)) unset($manipulation[$table]['fields']['Version']);
 
 			// Grab a version number - it should be the same across all tables.
@@ -641,17 +674,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				&& Versioned::current_stage() != $this->defaultStage
 				&& in_array(Versioned::current_stage(), $this->stages)
 			) {
-				// If the record has already been inserted in the (table), get rid of it.
-				if($manipulation[$table]['command']=='insert') {
-					DB::prepared_query(
-						"DELETE FROM \"{$table}\" WHERE \"ID\" = ?",
-						array($rid)
-					);
-				}
-
-				$newTable = $table . '_' . Versioned::current_stage();
-				$manipulation[$newTable] = $manipulation[$table];
-				unset($manipulation[$table]);
+				$this->augmentWriteStaged($manipulation, $table, $id);
 			}
 		}
 
