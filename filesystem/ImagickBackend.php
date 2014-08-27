@@ -6,8 +6,10 @@
  */
 
 if(class_exists('Imagick')) {
-class ImagickBackend extends Imagick implements Image_Backend {
+class ImagickBackend implements Image_Backend {
 	
+	protected $im;
+
 	/**
 	 * @config
 	 * @var int
@@ -21,10 +23,13 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return void
 	 */
 	public function __construct($filename = null) {
-		if(is_string($filename)) {
-			parent::__construct($filename);
+		try{
+			$this->im = new Imagick($filename);
+			$this->setQuality(Config::inst()->get('ImagickBackend','default_quality'));
+		}catch(ImagickException $e){
+			//fail gracefully
+			$this->im = null;
 		}
-		$this->setQuality(Config::inst()->get('ImagickBackend','default_quality'));
 	}
 
 	/**
@@ -35,8 +40,8 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 */
 	public function writeTo($path) {
 		Filesystem::makeFolder(dirname($path));
-		if(is_dir(dirname($path)))
-			self::writeImage($path);
+		if($this->im && is_dir(dirname($path)))
+			$this->im->writeImage($path);
 	}
 	
 	/**
@@ -60,7 +65,8 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return void
 	 */
 	public function setQuality($quality) {
-		self::setImageCompressionQuality($quality);
+		if(!$this->im) return;
+		$this->im->setImageCompressionQuality($quality);
 	}
 	
 	/**
@@ -72,7 +78,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return void
 	 */
 	public function setImageResource($resource) {
-		trigger_error("Imagick::setImageResource is not supported", E_USER_ERROR);
+		$this->im = $resource;
 	}
 	
 	/**
@@ -83,7 +89,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return mixed
 	 */
 	public function getImageResource() {
-		return $this;
+		return $this->im;
 	}
 	
 	/**
@@ -92,7 +98,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return boolean
 	 */
 	public function hasImageResource() {
-		return true; // $this is the resource, necessarily
+		return $this->im ? true : false;
 	}
 
 	/**
@@ -103,26 +109,28 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function resize($width, $height) {
-		if(!$this->valid()) return;
+		if(!$this->im) return;
 	
 		$width = round($width);
 		$height = round($height);
 		
-		$geometry = $this->getImageGeometry();
+		$geometry = $this->im->getImageGeometry();
 		
 		// Check that a resize is actually necessary.
 		if ($width == $geometry["width"] && $height == $geometry["height"]) {
-			return $this;
+			$new = $this;
 		}
-		
 		if(!$width && !$height) user_error("No dimensions given", E_USER_ERROR);
 		if(!$width) user_error("Width not given", E_USER_ERROR);
 		if(!$height) user_error("Height not given", E_USER_ERROR);
 		
-		$new = clone $this;
-		$new->resizeImage($width, $height, self::FILTER_LANCZOS, 1);
+		$new = clone $this->im;
+		$new->resizeImage($width, $height, Imagick::FILTER_LANCZOS, 1);
+
+		$output = clone $this;
+		$output->setImageResource($new);
 		
-		return $new;
+		return $output;
 	}
 	
 	/**
@@ -133,9 +141,9 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function resizeRatio($maxWidth, $maxHeight, $useAsMinimum = false) {
-		if(!$this->valid()) return;
+		if(!$this->im) return;
 		
-		$geometry = $this->getImageGeometry();
+		$geometry = $this->im->getImageGeometry();
 	
 		$widthRatio = $maxWidth / $geometry["width"];
 		$heightRatio = $maxHeight / $geometry["height"];
@@ -153,9 +161,9 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function resizeByWidth($width) {
-		if(!$this->valid()) return;
+		if(!$this->im) return;
 		
-		$geometry = $this->getImageGeometry();
+		$geometry = $this->im->getImageGeometry();
 		
 		$heightScale = $width / $geometry["width"];
 		return $this->resize( $width, $heightScale * $geometry["height"] );
@@ -168,9 +176,9 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function resizeByHeight($height) {
-		if(!$this->valid()) return;
+		if(!$this->im) return;
 		
-		$geometry = $this->getImageGeometry();
+		$geometry = $this->im->getImageGeometry();
 		
 		$scale = $height / $geometry["height"];
 		return $this->resize( $scale * $geometry["width"], $height );
@@ -184,13 +192,17 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
-		$new = $this->resizeRatio($width, $height);
+		if(!$this->im) return;
+		$new = $this->resizeRatio($width, $height)->getImageResource();
 		$new->setImageBackgroundColor("#".$backgroundColor);
 		$w = $new->getImageWidth();
 		$h = $new->getImageHeight();
 		$new->extentImage($width,$height,($w-$width)/2,($h-$height)/2);
 		
-		return $new;
+		$output = clone $this;
+		$output->setImageResource($new);
+		
+		return $output;
 	}
 	
 	/**
@@ -201,18 +213,18 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function croppedResize($width, $height) {
-		if(!$this->valid()) return;
+		if(!$this->im) return;
 		
 		$width = round($width);
 		$height = round($height);
-		$geo = $this->getImageGeometry();
+		$geo = $this->im->getImageGeometry();
 		
 		// Check that a resize is actually necessary.
 		if ($width == $geo["width"] && $height == $geo["height"]) {
 			return $this;
 		}
 		
-		$new = clone $this;
+		$new = clone $this->im;
 		$new->setBackgroundColor(new ImagickPixel('transparent'));
 		
 		if(($geo['width']/$width) < ($geo['height']/$height)){
@@ -223,7 +235,11 @@ class ImagickBackend extends Imagick implements Image_Backend {
 				(($geo['width']-($width*$geo['height']/$height))/2), 0);
 		}
 		$new->ThumbnailImage($width,$height,true);
-		return $new;
+
+		$output = clone $this;
+		$output->setImageResource($new);
+		
+		return $output;
 	}
 }
 }

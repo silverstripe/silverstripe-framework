@@ -311,6 +311,42 @@ class ImageTest extends SapphireTest {
 			);
 		}
 	}
+	
+	/**
+	 * Test manipulation of images that are corrupted for whatever reason,
+	 * and can't be manipulated by back-ends.
+	 */
+	public function testCorruptImageManipulation() {
+		$origForceResample = Config::inst()->get('Image', 'force_resample');
+		Config::inst()->update('Image', 'force_resample', true);
+
+		$filename  = BASE_PATH."/assets/ImageTest/test_image.png";
+		file_put_contents($filename, "corruptimagedatahere");
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+
+		$this->assertTrue(file_exists($image->getFullPath()));
+
+		// Test normal resize
+		$resized = $image->SetSize(150, 100);
+		$this->assertNull($resized->getWidth());
+		
+		// Test cropped resize
+		$cropped = $image->CroppedImage(100, 200);
+		$this->assertNull($cropped->getWidth());
+		
+		// Test padded resize
+		$padded = $image->PaddedImage(200, 100);
+		$this->assertNull($padded->getWidth());
+		
+		// Test SetRatioSize
+		$ratio = $image->SetRatioSize(80, 160); //returns null if no width/height
+		$this->assertNull($ratio);
+
+		if(file_exists($filename)) {
+			unlink($filename);
+		}
+		Config::inst()->update('Image', 'force_resample', $origForceResample);
+	}
 
 	/**
 	 * @param bool $custom include methods added dynamically at runtime
