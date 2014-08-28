@@ -53,7 +53,7 @@ can be expected to be closed as soon as they're reviewed.
 </div>
 
 In order to gain interest and feedback in your feature, we encourage you to present
-it to the community through the [forums](http://silverstripe.org/forums), [core mailinglist](http://groups.google.com/group/silverstripe-dev) or on [IRC](http://silverstripe.org/irc).
+it to the community through the [forums](http://silverstripe.org/forums), [core mailinglist](http://groups.google.com/group/silverstripe-dev), on [IRC](http://silverstripe.org/irc) or [user voice](http://silverstripe.uservoice.com).
 
 ## Reporting Security Issues
 
