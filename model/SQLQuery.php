@@ -999,8 +999,8 @@ class SQLQuery {
 		if($column == null) {
 			if($this->groupby) {
 				$countQuery = new SQLQuery();
-				$countQuery->select("count(*)");
-				$countQuery->from = array('(' . $clone->sql() . ') all_distinct');
+				$countQuery->setSelect("count(*)");
+				$countQuery->setFrom('(' . $clone->sql() . ') all_distinct');
 
 				return $countQuery->execute()->value();
 
