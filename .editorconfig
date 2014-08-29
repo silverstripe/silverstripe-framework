@@ -5,3 +5,8 @@ insert_final_newline = true
 indent_style = tab
 charset = utf-8
 trim_trailing_whitespace = true
+
+# indentation for YAML config files
+[_config/*.yml]
+indent_style = space
+indent_size = 2
