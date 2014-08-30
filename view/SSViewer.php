@@ -910,7 +910,7 @@ class SSViewer {
 				$subtemplateViewer->includeRequirements(false);
 				$subtemplateViewer->setPartialCacheStore($this->getPartialCacheStore());
 
-				$underlay[$subtemplate] = $subtemplateViewer->process($item, $arguments);
+				$arguments[$subtemplate] = $subtemplateViewer->process($item, $arguments);
 			}
 		}
 
