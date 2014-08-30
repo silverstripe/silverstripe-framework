@@ -256,24 +256,24 @@ class Date extends DBField {
 		
 		if($ago < 60 && $includeSeconds) {
 			$span = $ago;
-			$result = ($span != 1) ? "{$span} "._t("Date.SECS", "secs") : "{$span} "._t("Date.SEC", "sec");
+			$result = ($span != 1) ? "{$span} "._t("Date.SECSAGO", "secs") : "{$span} "._t("Date.SECAGO", "sec");
 		} elseif($ago < 60) {
 			$result = _t('Date.LessThanMinuteAgo', 'less than a minute');
 		} elseif($ago < 3600) {
 			$span = round($ago/60);
-			$result = ($span != 1) ? "{$span} "._t("Date.MINS", "mins") : "{$span} "._t("Date.MIN", "min");
+			$result = ($span != 1) ? "{$span} "._t("Date.MINSAGO", "mins") : "{$span} "._t("Date.MINAGO", "min");
 		} elseif($ago < 86400) {
 			$span = round($ago/3600);
-			$result = ($span != 1) ? "{$span} "._t("Date.HOURS", "hours") : "{$span} "._t("Date.HOUR", "hour");
+			$result = ($span != 1) ? "{$span} "._t("Date.HOURSAGO", "hours") : "{$span} "._t("Date.HOURAGO", "hour");
 		} elseif($ago < 86400*30) {
 			$span = round($ago/86400);
-			$result = ($span != 1) ? "{$span} "._t("Date.DAYS", "days") : "{$span} "._t("Date.DAY", "day");
+			$result = ($span != 1) ? "{$span} "._t("Date.DAYSAGO", "days") : "{$span} "._t("Date.DAYAGO", "day");
 		} elseif($ago < 86400*365) {
 			$span = round($ago/86400/30);
-			$result = ($span != 1) ? "{$span} "._t("Date.MONTHS", "months") : "{$span} "._t("Date.MONTH", "month");
+			$result = ($span != 1) ? "{$span} "._t("Date.MONTHSAGO", "months") : "{$span} "._t("Date.MONTHAGO", "month");
 		} elseif($ago > 86400*365) {
 			$span = round($ago/86400/365);
-			$result = ($span != 1) ? "{$span} "._t("Date.YEARS", "years") : "{$span} "._t("Date.YEAR", "year");
+			$result = ($span != 1) ? "{$span} "._t("Date.YEARSAGO", "years") : "{$span} "._t("Date.YEARAGO", "year");
 		}
 		
 		// Replace duplicate spaces, backwards compat with existing translations
