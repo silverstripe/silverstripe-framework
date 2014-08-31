@@ -675,8 +675,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @return string Returns a random password.
 	 */
 	public static function create_new_password() {
-		if(file_exists(Security::get_word_list())) {
-			$words = file(Security::get_word_list());
+		$words = Config::inst()->get('Security', 'word_list');
+
+		if($words && file_exists($words)) {
+			$words = file($words);
 
 			list($usec, $sec) = explode(' ', microtime());
 			srand($sec + ((float) $usec * 100000));

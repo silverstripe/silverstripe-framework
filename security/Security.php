@@ -78,8 +78,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @config
 	 * @var string
 	 */
-	protected static $word_list = './wordlist.txt';
+	private static $word_list = './wordlist.txt';
 
+	/**
+	 * @config
+	 * @var string
+	 */
 	private static $template = 'BlankPage';
 
 	/**
