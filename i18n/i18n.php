@@ -93,6 +93,12 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	private static $time_format;
 
 	/**
+	 * @config
+	 * @var array
+	 */
+	private static $default_injection_variables = array();
+
+	/**
 	 * @var array Array of priority keys to instances of Zend_Translate, mapped by name.
 	 */
 	protected static $translators;
@@ -2026,10 +2032,11 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 		$argList = func_get_args();
 		$argNum = func_num_args();
 		//_t($entity, $string = "", $context (optional), $injectionArray (optional))
-		$injectionArray = null;
+		$injectionArray = self::config()->default_injection_variables;
 		for($i = 0; $i < $argNum; $i++) {
 			if (is_array($argList[$i])) {   //we have reached the injectionArray
-				$injectionArray = $argList[$i]; //any array in the args will be the injection array
+				// merge with the default injections with $argList as highest priotity
+				$injectionArray = array_merge($injectionArray ,$argList[$i]); //any array in the args will be the injection array
 			}
 		}
 
@@ -2072,7 +2079,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 			}
 
 		// inject the variables from injectionArray (if present)
-		if($injectionArray) {
+		if(count($injectionArray)) {
 			$regex = '/\{[\w\d]*\}/i';
 			if(!preg_match($regex, $returnValue)) {
 				// Legacy mode: If no injection placeholders are found,

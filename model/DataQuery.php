@@ -349,7 +349,8 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	public function max($field) {
-		return $this->aggregate(sprintf('MAX("%s")', Convert::raw2sql($field)));
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate(sprintf('MAX("%s"."%s")', $baseClass, Convert::raw2sql($field)));
 	}
 
 	/**
@@ -358,7 +359,8 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	public function min($field) {
-		return $this->aggregate(sprintf('MIN("%s")', Convert::raw2sql($field)));
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate(sprintf('MIN("%s"."%s")', $baseClass, Convert::raw2sql($field)));
 	}
 	
 	/**
@@ -367,7 +369,8 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	public function avg($field) {
-		return $this->aggregate(sprintf('AVG("%s")', Convert::raw2sql($field)));
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate(sprintf('AVG("%s"."%s")', $baseClass, Convert::raw2sql($field)));
 	}
 
 	/**
@@ -376,7 +379,8 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	public function sum($field) {
-		return $this->aggregate(sprintf('SUM("%s")', Convert::raw2sql($field)));
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate(sprintf('SUM("%s"."%s")', $baseClass, Convert::raw2sql($field)));
 	}
 	
 	/**

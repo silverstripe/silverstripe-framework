@@ -71,7 +71,7 @@ class MySQLDatabase extends SS_Database {
 		if($this->dbConn->connect_error) {
 			$this->databaseError("Couldn't connect to MySQL database | " . $this->dbConn->connect_error);
 		}
-		
+
 		$this->query("SET sql_mode = 'ANSI'");
 
 		if(Config::inst()->get('MySQLDatabase', 'connection_charset')) {
@@ -234,7 +234,7 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null) {
 		$fieldSchemas = $indexSchemas = "";
-		
+
 		if(!empty($options[get_class($this)])) {
 			$addOptions = $options[get_class($this)];
 		} elseif(!empty($options[get_parent_class($this)])) {
@@ -242,7 +242,7 @@ class MySQLDatabase extends SS_Database {
 		} else {
 			$addOptions = "ENGINE=InnoDB";
 		}
-		
+
 		if(!isset($fields['ID'])) $fields['ID'] = "int(11) not null auto_increment";
 		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
 		if($indexes) foreach($indexes as $k => $v) $indexSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
@@ -255,7 +255,7 @@ class MySQLDatabase extends SS_Database {
 				$indexSchemas
 				primary key (ID)
 			) {$addOptions}");
-		
+
 		return $table;
 	}
 
@@ -288,12 +288,12 @@ class MySQLDatabase extends SS_Database {
 			$alterList[] .= "DROP INDEX \"$k\"";
 			$alterList[] .= "ADD ". $this->getIndexSqlDefinition($k, $v);
 		}
-		
+
 		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
 			if(!isset($this->indexList[$tableName])) {
 				$this->indexList[$tableName] = $this->indexList($tableName);
 			}
-			
+
 			$skip = false;
 			foreach($this->indexList[$tableName] as $index) {
 				if(strpos($index, 'fulltext ') === 0) {
@@ -319,12 +319,12 @@ class MySQLDatabase extends SS_Database {
 		$alterations = implode(",\n", $alterList);
 		$this->query("ALTER TABLE \"$tableName\" $alterations");
 	}
-	
+
 	public function isView($tableName) {
 		$info = $this->query("SHOW /*!50002 FULL*/ TABLES LIKE '$tableName'")->record();
 		return $info && strtoupper($info['Table_type']) == 'VIEW';
 	}
-	
+
 	public function renameTable($oldTableName, $newTableName) {
 		$this->query("ALTER TABLE \"$oldTableName\" RENAME \"$newTableName\"");
 	}
@@ -683,10 +683,10 @@ class MySQLDatabase extends SS_Database {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=>
 		// 'utf8_general_ci', 'default'=>$this->default);
-		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set 
+		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set
 		//utf8 collate utf8_general_ci default '{$this->default}'");
 		$default = empty($values['default']) ? '' : " default '$values[default]'";
-		return 'set(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci' 
+		return 'set(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci'
 			. $default;
 	}
 
@@ -717,6 +717,22 @@ class MySQLDatabase extends SS_Database {
 		//DB::requireField($this->tableName, $this->name, "int(11) not null default '{$this->defaultVal}'");
 
 		return 'int(11) not null default ' . (int)$values['default'];
+	}
+
+	/**
+	 * Return a bigint type-formatted string
+	 *
+	 * @param array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function bigint($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'bigint', 'precision'=>20, 'null'=>'not null', 'default'=>$this->defaultVal,
+		//             'arrayValue'=>$this->arrayValue);
+		//$values=Array('type'=>'bigint', 'parts'=>$parts);
+		//DB::requireField($this->tableName, $this->name, $values);
+
+		return 'bigint(20) not null default ' . (int)$values['default'];
 	}
 
 	/**
@@ -838,7 +854,7 @@ class MySQLDatabase extends SS_Database {
 
 		if(!class_exists('SiteTree')) throw new Exception('MySQLDatabase->searchEngine() requires "SiteTree" class');
 		if(!class_exists('File')) throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
-		
+
 		$fileFilter = '';
 		$keywords = Convert::raw2sql($keywords);
 		$htmlEntityKeywords = htmlentities($keywords, ENT_NOQUOTES, 'UTF-8');
@@ -856,8 +872,8 @@ class MySQLDatabase extends SS_Database {
 
 		// Always ensure that only pages with ShowInSearch = 1 can be searched
 		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
-		
-		// File.ShowInSearch was added later, keep the database driver backwards compatible 
+
+		// File.ShowInSearch was added later, keep the database driver backwards compatible
 		// by checking for its existence first
 		$fields = $this->fieldList('File');
 		if(array_key_exists('ShowInSearch', $fields)) $extraFilters['File'] .= " AND ShowInSearch <> 0";
@@ -920,7 +936,7 @@ class MySQLDatabase extends SS_Database {
 			$query->setFrom(array(str_replace(array('"','`'), '', $baseClasses[$class]) => $baseClasses[$class]));
 			$query->setSelect($select[$class]);
 			$query->setOrderBy(array());
-			
+
 			$querySQLs[] = $query->sql();
 			$totalCount += $query->unlimitedRowCount();
 		}
@@ -1076,7 +1092,7 @@ class MySQLDatabase extends SS_Database {
 
 	/**
 	 * Generate a WHERE clause for text matching.
-	 * 
+	 *
 	 * @param String $field Quoted field name
 	 * @param String $value Escaped search. Can include percentage wildcards.
 	 * @param boolean $exact Exact matches or wildcard support.
@@ -1092,7 +1108,7 @@ class MySQLDatabase extends SS_Database {
 			$comp = ($caseSensitive) ? 'LIKE BINARY' : 'LIKE';
 			if($negate) $comp = 'NOT ' . $comp;
 		}
-		
+
 		return sprintf("%s %s '%s'", $field, $comp, $value);
 	}
 
@@ -1125,11 +1141,11 @@ class MySQLDatabase extends SS_Database {
 		}
 
 		if($format == '%U') return "UNIX_TIMESTAMP($date)";
-		
+
 		return "DATE_FORMAT($date, '$format')";
-		
+
 	}
-	
+
 	/**
 	 * function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime addition
@@ -1187,30 +1203,30 @@ class MySQLDatabase extends SS_Database {
 
 		return "UNIX_TIMESTAMP($date1) - UNIX_TIMESTAMP($date2)";
 	}
-	
+
 	public function supportsLocks() {
 		return true;
 	}
-	
+
 	public function canLock($name) {
 		$id = $this->getLockIdentifier($name);
 		return (bool)DB::query(sprintf("SELECT IS_FREE_LOCK('%s')", $id))->value();
 	}
-	
+
 	public function getLock($name, $timeout = 5) {
 		$id = $this->getLockIdentifier($name);
-		
+
 		// MySQL auto-releases existing locks on subsequent GET_LOCK() calls,
 		// in contrast to PostgreSQL and SQL Server who stack the locks.
-		
+
 		return (bool)DB::query(sprintf("SELECT GET_LOCK('%s', %d)", $id, $timeout))->value();
 	}
-	
+
 	public function releaseLock($name) {
 		$id = $this->getLockIdentifier($name);
 		return (bool)DB::query(sprintf("SELECT RELEASE_LOCK('%s')", $id))->value();
 	}
-	
+
 	protected function getLockIdentifier($name) {
 		// Prefix with database name
 		return Convert::raw2sql($this->database . '_' . Convert::raw2sql($name));
