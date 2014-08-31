@@ -1263,12 +1263,31 @@ after')
 	public function testRequireCallInTemplateInclude() {
 		$template = new SSViewer(array('SSViewerTestProcess'));
 
+		$originalBackend = Requirements::backend();
 		Requirements::set_suffix_requirements(false);
 
-		$this->assertEquals(1, substr_count(
-			$template->process(array()),
-			"tests/forms/RequirementsTest_a.js"
-		));
+		// JavaScript requirement in SSViewerTestProcessHead.ss has a hard-coded path
+		// to 'framework', so this assertion will fail if framework has been renamed
+		if(FRAMEWORK_DIR === 'framework') {
+			$this->assertEquals(1, substr_count(
+				$template->process(array()),
+				"tests/forms/RequirementsTest_a.js"
+			));
+		} else {
+			$mockBackend = $this->getMock(
+				'Requirements_Backend',
+				array('javascript')
+			);
+
+			// Expect that Requirements_Backend::javascript() is called with correct file
+			$mockBackend->expects($this->once())
+				->method('javascript')
+				->with('framework/tests/forms/RequirementsTest_a.js');
+
+			Requirements::set_backend($mockBackend);
+			$template->process(array());
+			Requirements::set_backend($originalBackend);
+		}
 	}
 
 	public function testCallsWithArguments() {
