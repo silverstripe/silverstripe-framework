@@ -99,29 +99,41 @@ class FileField extends FormField {
 	}
 
 	public function saveInto(DataObjectInterface $record) {
-		if(!isset($_FILES[$this->name])) return false;
-		$fileClass = File::get_class_for_file_extension(pathinfo($_FILES[$this->name]['name'], PATHINFO_EXTENSION));
+		if(!isset($_FILES[$this->name])) {
+			return false;
+		}
+
+		$fileClass = File::get_class_for_file_extension(
+			pathinfo($_FILES[$this->name]['name'], PATHINFO_EXTENSION)
+		);
 
 		if($this->relationAutoSetting) {
 			// assume that the file is connected via a has-one
 			$hasOnes = $record->has_one($this->name);
 			// try to create a file matching the relation
 			$file = (is_string($hasOnes)) ? Object::create($hasOnes) : new $fileClass();
+		} else if($record instanceof File) {
+			$file = $record;
 		} else {
 			$file = new $fileClass();
 		}
 
 		$this->upload->loadIntoFile($_FILES[$this->name], $file, $this->getFolderName());
-		if($this->upload->isError()) return false;
 
-		$file = $this->upload->getFile();
+		if($this->upload->isError()) {
+			return false;
+		}
 
 		if($this->relationAutoSetting) {
-			if(!$hasOnes) return false;
+			if(!$hasOnes) {
+				return false;
+			}
 
-			// save to record
+			$file = $this->upload->getFile();
+
 			$record->{$this->name . 'ID'} = $file->ID;
 		}
+
 		return $this;
 	}
 
