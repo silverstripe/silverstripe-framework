@@ -553,11 +553,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				unset($manipulation[$table]);
 				continue;
 			}
-			$id = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];;
-			if(!$id) user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
+			$rid = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];;
+			if(!$rid) user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
 			
-			$rid = isset($manipulation[$table]['RecordID']) ? $manipulation[$table]['RecordID'] : $id;
-
 			$newManipulation = array(
 				"command" => "insert",
 				"fields" => isset($manipulation[$table]['fields']) ? $manipulation[$table]['fields'] : null
@@ -569,9 +567,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 			// If we haven't got a version #, then we're creating a new version.
 			// Otherwise, we're just copying a version to another table
-			if(!isset($manipulation[$table]['fields']['Version'])) {
+			if(empty($manipulation[$table]['fields']['Version'])) {
 				// Add any extra, unchanged fields to the version record.
-				$data = DB::query("SELECT * FROM \"$table\" WHERE \"ID\" = $id")->record();
+				$data = DB::query("SELECT * FROM \"$table\" WHERE \"ID\" = $rid")->record();
 				if($data) foreach($data as $k => $v) {
 					if (!isset($newManipulation['fields'][$k])) {
 						$newManipulation['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
@@ -583,15 +581,15 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				unset($newManipulation['fields']['ID']);
 
 				// Create a new version #
-				if (isset($version_table[$table])) $nextVersion = $version_table[$table];
-				else unset($nextVersion);
-
-				if($rid && !isset($nextVersion)) {
+				$nextVersion = 0;
+				if($rid) {
 					$nextVersion = DB::query("SELECT MAX(\"Version\") + 1 FROM \"{$baseDataClass}_versions\""
 						. " WHERE \"RecordID\" = $rid")->value();
 				}
+				$nextVersion = $nextVersion ?: 1;
 				
-				$newManipulation['fields']['Version'] = $nextVersion ? $nextVersion : 1;
+				// Add the version number to this data
+				$newManipulation['fields']['Version'] = $nextVersion;
 				
 				if($isRootClass) {
 					$userID = (Member::currentUser()) ? Member::currentUser()->ID : 0;
@@ -601,10 +599,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 
 				$manipulation["{$table}_versions"] = $newManipulation;
-
-				// Add the version number to this data
-				$manipulation[$table]['fields']['Version'] = $newManipulation['fields']['Version'];
-				$version_table[$table] = $nextVersion;
+				$manipulation[$table]['fields']['Version'] = $nextVersion;
 			}
 			
 			// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
@@ -627,7 +622,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			) {
 				// If the record has already been inserted in the (table), get rid of it. 
 				if($manipulation[$table]['command']=='insert') {
-					DB::query("DELETE FROM \"{$table}\" WHERE \"ID\"='$id'");
+					DB::query("DELETE FROM \"{$table}\" WHERE \"ID\"='$rid'");
 				}
 				
 				$newTable = $table . '_' . Versioned::current_stage();
