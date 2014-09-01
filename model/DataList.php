@@ -212,6 +212,16 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
+	 * Return a new DataList instance with the query selecting as distinct.
+	 * @param bool $value
+	 */
+	public function distinct($value) {
+		return $this->alterDataQuery(function($query) use ($value){
+			$query->distinct($value);
+		});
+	}
+
+	/**
 	 * Return a new DataList instance with the records returned in this query
 	 * restricted by a limit clause.
 	 * 

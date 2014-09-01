@@ -135,7 +135,7 @@ class DataListTest extends SapphireTest {
 	public function testSql() {
 		$db = DB::getConn();
 		$list = DataObjectTest_TeamComment::get();
-		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created",'
+		$expected = 'SELECT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created",'
 			. ' "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name",'
 			. ' "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID",'
 			. ' "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
