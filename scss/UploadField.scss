@@ -293,3 +293,35 @@
 		background: transparent url(../admin/images/spinner.gif) no-repeat 50% 50%;
 	}
 }
+
+/** ----------------------------------------------------
+ * "@2x" media query
+ * ---------------------------------------------------- */
+
+@media
+	only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (   min--moz-device-pixel-ratio: 2),
+	only screen and (     -o-min-device-pixel-ratio: 2/1),
+	only screen and (        min-device-pixel-ratio: 2),
+	only screen and (                min-resolution: 192dpi),
+	only screen and (                min-resolution: 2dppx) {
+
+	.ss-uploadfield {
+		.ss-uploadfield-files {
+			.ss-uploadfield-item-editform {
+				&.loading {
+					background-image: url(../admin/images/spinner@2x.gif);
+					background-size: 43px 22px;
+				}
+			}
+		}
+	}
+
+	.ss-upload {
+		.loader {
+			background-image: url(../admin/images/spinner@2x.gif);
+			background-size: 43px 22px;
+		}
+	}
+
+}

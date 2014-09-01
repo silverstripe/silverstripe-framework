@@ -1129,3 +1129,62 @@ green tick icon as a background this is created using compass generated classes 
 
 .cms .cms-content .SecurityAdmin .cms-content-fields { overflow-y: auto; }
 .cms .cms-content .SecurityAdmin .cms-content-fields .aligned-right-label { margin-left: 184px; padding: 8px 0; }
+
+/** ----------------------------- Retina graphics ----------------------------- */
+/** This file defines graphics to use on high-DPI screens in the CMS  @package framework @subpackage admin */
+/** ---------------------------------------------------- "@2x" media query ---------------------------------------------------- */
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) { /* Loading spinner */
+  .cms-content-loading-spinner { background-image: url(../images/spinner@2x.gif); background-size: 43px 22px; }
+  .ui-dialog .ui-dialog-content.loading { background-image: url(../images/spinner@2x.gif); background-size: 43px 22px; }
+  .ui-dialog.loading { background-image: url(../images/spinner@2x.gif); background-size: 43px 22px; }
+  /* Default CMS logo */
+  .cms-logo a { background-image: url("../images/logo_small@2x.png"); background-size: 22px 22px; }
+  /* Logout button */
+  .cms-login-status .logout-link { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -161px; background-size: 30px auto; }
+  .cms-content-controls .icon-auto:before { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -134px; background-size: 30px auto; }
+  .cms-content-controls .icon-desktop:before { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -241px; background-size: 30px auto; }
+  .cms-content-controls .icon-tablet:before { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -268px; background-size: 30px auto; }
+  .cms-content-controls .icon-mobile:before { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -214px; background-size: 30px auto; }
+  .cms-content-controls .icon-split:before { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -187px; background-size: 30px auto; }
+  .cms-content-controls .icon-edit:before { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -107px; background-size: 30px auto; }
+  .cms-content-controls .icon-preview:before { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -80px; background-size: 30px auto; }
+  .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li a:after { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -327px; background-size: 30px auto; }
+  .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li a:hover:after { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -353px; background-size: 30px auto; }
+  .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li.ui-state-active a:after { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -411px; background-size: 30px auto; }
+  .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li.ui-state-active a:hover:after { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -437px; background-size: 30px auto; }
+  /* CMS menu */
+  .cms-menu-list li a .toggle-children .toggle-children-icon { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -395px; background-size: 30px auto; }
+  .cms-menu-list li a .toggle-children.opened .toggle-children-icon { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -379px; background-size: 30px auto; }
+  .cms-menu-list li.current a .toggle-children .toggle-children-icon { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -295px; background-size: 30px auto; }
+  .cms-menu-list li.current a .toggle-children.opened .toggle-children-icon { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -311px; background-size: 30px auto; }
+  /* Sitetree */
+  .tree-holder.jstree-apple ins, .cms-tree.jstree-apple ins { background-image: url(../images/sitetree_ss_default_icons@2x.png); background-size: 108px 72px; }
+  /* UI widget "close" button */
+  .ui-widget-header a.ui-state-hover .ui-icon-closethick { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 0; background-size: 30px auto; }
+  .ui-widget-header .ui-icon-closethick { background-image: url('../images/sprites-32x32-2x-sd9f6129848.png'); background-position: 0 -40px; background-size: 30px auto; }
+  /* Tab icons */
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.list a { background-image: url('../images/sprites-64x64-2x-s0fe1d92f9d.png'); background-position: 0 -250px; background-size: 40px auto; }
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.tree a { background-image: url('../images/sprites-64x64-2x-s0fe1d92f9d.png'); background-position: 0 -100px; background-size: 40px auto; }
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.edit a { background-image: url('../images/sprites-64x64-2x-s0fe1d92f9d.png'); background-position: 0 0; background-size: 40px auto; }
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.list.ui-state-active a { background-image: url('../images/sprites-64x64-2x-s0fe1d92f9d.png'); background-position: 0 -200px; background-size: 40px auto; }
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.tree.ui-state-active a { background-image: url('../images/sprites-64x64-2x-s0fe1d92f9d.png'); background-position: 0 -150px; background-size: 40px auto; }
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.edit.ui-state-active a { background-image: url('../images/sprites-64x64-2x-s0fe1d92f9d.png'); background-position: 0 -50px; background-size: 40px auto; }
+  /* Menu icon classes */
+  .icon.icon-24 { background-image: url('../images/menu-icons/24x24-2x-s7169efa003.png'); background-size: 24px auto; }
+  .icon.icon-24.icon-assetadmin { background-position: 0 -144px; }
+  .icon.icon-24.icon-cmsmain { background-position: 0 -120px; }
+  .icon.icon-24.icon-cmspagescontroller { background-position: 0 -168px; }
+  .icon.icon-24.icon-cmssettingscontroller { background-position: 0 0; }
+  .icon.icon-24.icon-securityadmin { background-position: 0 -24px; }
+  .icon.icon-24.icon-reportadmin { background-position: 0 -96px; }
+  .icon.icon-24.icon-commentadmin { background-position: 0 -240px; }
+  .icon.icon-24.icon-help { background-position: 0 -72px; }
+  .icon.icon-16 { background-image: url('../images/menu-icons/16x16-2x-s9b8c49312e.png'); background-size: 16px auto; }
+  .icon.icon-16.icon-assetadmin { background-position: 0 -80px; }
+  .icon.icon-16.icon-cmsmain { background-position: 0 -112px; }
+  .icon.icon-16.icon-cmspagescontroller { background-position: 0 -96px; }
+  .icon.icon-16.icon-cmssettingscontroller { background-position: 0 0; }
+  .icon.icon-16.icon-securityadmin { background-position: 0 -16px; }
+  .icon.icon-16.icon-reportadmin { background-position: 0 -48px; }
+  .icon.icon-16.icon-commentadmin { background-position: 0 -160px; }
+  .icon.icon-16.icon-help { background-position: 0 -64px; } }

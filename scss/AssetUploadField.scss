@@ -367,3 +367,28 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 	}
 }
 
+/** ----------------------------------------------------
+ * "@2x" media query
+ * ---------------------------------------------------- */
+
+@media
+	only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (   min--moz-device-pixel-ratio: 2),
+	only screen and (     -o-min-device-pixel-ratio: 2/1),
+	only screen and (        min-device-pixel-ratio: 2),
+	only screen and (                min-resolution: 192dpi),
+	only screen and (                min-resolution: 2dppx) {
+
+	/* Loading spinner */
+	.ss-assetuploadfield {
+		.ss-uploadfield-files {
+			.ss-uploadfield-item-editform {
+				&.loading {
+					background-image: url(../admin/images/spinner@2x.gif);
+					background-size: 43px 22px;
+				}
+			}
+		}
+	}
+
+}
