@@ -1261,14 +1261,21 @@ after')
 	}
 
 	public function testRequireCallInTemplateInclude() {
-		$template = new SSViewer(array('SSViewerTestProcess'));
+		//TODO undo skip test on the event that templates ever obtain the ability to reference MODULE_DIR (or something to that effect)
+		if(FRAMEWORK_DIR === 'framework') {
+			$template = new SSViewer(array('SSViewerTestProcess'));
 
-		Requirements::set_suffix_requirements(false);
+			Requirements::set_suffix_requirements(false);
 
-		$this->assertEquals(1, substr_count(
-			$template->process(array()),
-			"tests/forms/RequirementsTest_a.js"
-		));
+			$this->assertEquals(1, substr_count(
+				$template->process(array()),
+				"tests/forms/RequirementsTest_a.js"
+			));
+		}
+		else {
+			$this->markTestSkipped('Requirement will always fail if the framework dir is not '.
+				'named \'framework\', since templates require hard coded paths');
+		}
 	}
 
 	public function testCallsWithArguments() {
