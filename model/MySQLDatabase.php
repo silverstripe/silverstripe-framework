@@ -396,7 +396,7 @@ class MySQLDatabase extends SS_Database {
 	private static $_cache_collation_info = array();
 
 	public function fieldList($table) {
-		$fields = DB::query("SHOW FULL FIELDS IN \"$table\"");
+		$fields = $this->query("SHOW FULL FIELDS IN \"$table\"");
 		foreach($fields as $field) {
 
 			// ensure that '' is converted to \' in field specification (mostly for the benefit of ENUM values)
@@ -409,7 +409,7 @@ class MySQLDatabase extends SS_Database {
 				// Cache collation info to cut down on database traffic
 				if(!isset(self::$_cache_collation_info[$field['Collation']])) {
 					self::$_cache_collation_info[$field['Collation']]
-						= DB::query("SHOW COLLATION LIKE '$field[Collation]'")->record();
+						= $this->query("SHOW COLLATION LIKE '$field[Collation]'")->record();
 				}
 				$collInfo = self::$_cache_collation_info[$field['Collation']];
 				$fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
@@ -537,7 +537,7 @@ class MySQLDatabase extends SS_Database {
 	 * @return array
 	 */
 	public function indexList($table) {
-		$indexes = DB::query("SHOW INDEXES IN \"$table\"");
+		$indexes = $this->query("SHOW INDEXES IN \"$table\"");
 		$groupedIndexes = array();
 		$indexList = array();
 
@@ -817,7 +817,7 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function enumValuesForField($tableName, $fieldName) {
 		// Get the enum of all page types from the SiteTree table
-		$classnameinfo = DB::query("DESCRIBE \"$tableName\" \"$fieldName\"")->first();
+		$classnameinfo = $this->query("DESCRIBE \"$tableName\" \"$fieldName\"")->first();
 		preg_match_all("/'[^,]+'/", $classnameinfo["Type"], $matches);
 
 		$classes = array();
@@ -927,7 +927,7 @@ class MySQLDatabase extends SS_Database {
 		$fullQuery = implode(" UNION ", $querySQLs) . " ORDER BY $sortBy LIMIT $limit";
 
 		// Get records
-		$records = DB::query($fullQuery);
+		$records = $this->query($fullQuery);
 
 		$objects = array();
 
@@ -1194,7 +1194,7 @@ class MySQLDatabase extends SS_Database {
 	
 	public function canLock($name) {
 		$id = $this->getLockIdentifier($name);
-		return (bool)DB::query(sprintf("SELECT IS_FREE_LOCK('%s')", $id))->value();
+		return (bool)$this->query(sprintf("SELECT IS_FREE_LOCK('%s')", $id))->value();
 	}
 	
 	public function getLock($name, $timeout = 5) {
@@ -1203,12 +1203,12 @@ class MySQLDatabase extends SS_Database {
 		// MySQL auto-releases existing locks on subsequent GET_LOCK() calls,
 		// in contrast to PostgreSQL and SQL Server who stack the locks.
 		
-		return (bool)DB::query(sprintf("SELECT GET_LOCK('%s', %d)", $id, $timeout))->value();
+		return (bool)$this->query(sprintf("SELECT GET_LOCK('%s', %d)", $id, $timeout))->value();
 	}
 	
 	public function releaseLock($name) {
 		$id = $this->getLockIdentifier($name);
-		return (bool)DB::query(sprintf("SELECT RELEASE_LOCK('%s')", $id))->value();
+		return (bool)$this->query(sprintf("SELECT RELEASE_LOCK('%s')", $id))->value();
 	}
 	
 	protected function getLockIdentifier($name) {
