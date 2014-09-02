@@ -10,6 +10,7 @@ class DataQueryTest extends SapphireTest {
 		'DataQueryTest_C',
 		'DataQueryTest_D',
 		'DataQueryTest_E',
+		'DataQueryTest_F',
 	);
 
 
@@ -155,6 +156,58 @@ class DataQueryTest extends SapphireTest {
 		$result = $query->column('Title');
 		$this->assertEquals(array('First', 'Second', 'Last'), $result);
 	}
+	
+	public function testComparisonClauseInt() {
+		DB::query("INSERT INTO \"DataQueryTest_F\" (\"sortorder\") VALUES (2)");
+		$query = new DataQuery('DataQueryTest_F');
+		$query->where(DB::getConn()->comparisonClause('sortorder', '2'));
+		$this->assertGreaterThan(0, $query->count(), "Couldn't find SortOrder");
+		$this->resetDBSchema(true);
+	}
+	
+	public function testComparisonClauseDateFull() {
+		DB::query("INSERT INTO \"DataQueryTest_F\" (\"mydate\") VALUES ('1988-03-04 06:30')");
+		$query = new DataQuery('DataQueryTest_F');
+		$query->where(DB::getConn()->comparisonClause('mydate', '1988-03-04%'));
+		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
+		$this->resetDBSchema(true);
+	}
+	
+	public function testComparisonClauseDateStartsWith() {
+		$result = DB::query("INSERT INTO \"DataQueryTest_F\" (\"mydate\") VALUES ('1988-03-04 06:30')");
+		$query = new DataQuery('DataQueryTest_F');
+		$query->where(DB::getConn()->comparisonClause('mydate', '1988%'));
+		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
+		$this->resetDBSchema(true);
+	}
+	
+	public function testComparisonClauseDateStartsPartial() {
+		DB::query("INSERT INTO \"DataQueryTest_F\" (\"mydate\") VALUES ('1988-03-04 06:30')");
+		$query = new DataQuery('DataQueryTest_F');
+		$query->where(DB::getConn()->comparisonClause('mydate', '%03-04%'));
+		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
+		$this->resetDBSchema(true);
+	}
+	
+	public function testComparisonClauseTextCaseInsensitive() {
+		DB::query("INSERT INTO \"DataQueryTest_F\" (\"mystring\") VALUES ('HelloWorld')");
+		$query = new DataQuery('DataQueryTest_F');
+		$query->where(DB::getConn()->comparisonClause('mystring', 'helloworld'));
+		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyString");
+		$this->resetDBSchema(true);
+	}
+	
+	public function testComparisonClauseTextCaseSensitive() {
+		DB::query("INSERT INTO \"DataQueryTest_F\" (\"mystring\") VALUES ('HelloWorld')");
+		$query = new DataQuery('DataQueryTest_F');
+		$query->where(DB::getConn()->comparisonClause('mystring', 'HelloWorld', false, false, true));
+		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyString");
+		
+		$query2 = new DataQuery('DataQueryTest_F');
+		$query2->where(DB::getConn()->comparisonClause('mystring', 'helloworld', false, false, true));
+		$this->assertEquals(0, $query2->count(), "Found mystring. Shouldn't be able too.");
+		$this->resetDBSchema(true);
+	}
 }
 
 
@@ -216,4 +269,15 @@ class DataQueryTest_E extends DataQueryTest_C implements TestOnly {
 	);
 	
 	private static $default_sort = '"DataQueryTest_E"."SortOrder" ASC';
+}
+
+class DataQueryTest_F extends DataObject implements TestOnly {
+	
+	// note lower case table names. To avoid using quoteColumnSpecString 
+	// for postgresql
+	private static $db = array(
+		'sortorder' => 'Int',
+		'mydate' => 'SS_Datetime',
+		'mystring' => 'Text'
+	);
 }
