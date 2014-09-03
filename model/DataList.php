@@ -310,7 +310,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
 	 *
-	 * @param string|array Key and Value pairs, the array values are automatically sanitised for the DB quesry
+	 * @param string|array Key and Value pairs, the array values are automatically sanitised for the DB query
 	 * @return DataList
 	 */
 	public function filter() {
