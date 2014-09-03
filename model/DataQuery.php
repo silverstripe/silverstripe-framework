@@ -121,8 +121,7 @@ class DataQuery {
 
 		// Build our intial query
 		$this->query = new SQLQuery(array());
-		$this->query->setDistinct(true);
-		
+
 		if($sort = singleton($this->dataClass)->stat('default_sort')) {
 			$this->sort($sort);
 		}
@@ -537,7 +536,18 @@ class DataQuery {
 		$this->query->reverseOrderBy();
 		return $this;
 	}
-	
+
+
+	/**
+	 * Set whether the query should add DISTINCT or not.
+	 * @param bool $value
+	 * @return DataQuery
+	 */
+	public function distinct($value) {
+		$this->query->setDistinct($value);
+		return $this;
+	}
+
 	/**
 	 * Set the limit of this query.
 	 * 
@@ -558,6 +568,7 @@ class DataQuery {
 	 */
 	public function innerJoin($table, $onClause, $alias = null) {
 		if($table) {
+			$this->query->setDistinct(true);
 			$this->query->addInnerJoin($table, $onClause, $alias);
 		}
 		return $this;
@@ -572,6 +583,7 @@ class DataQuery {
 	 */
 	public function leftJoin($table, $onClause, $alias = null) {
 		if($table) {
+			$this->query->setDistinct(true);
 			$this->query->addLeftJoin($table, $onClause, $alias);
 		}
 		return $this;
