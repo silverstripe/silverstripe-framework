@@ -705,8 +705,6 @@ width independently.
 *  Break down your templates into groups of includes.  Site integrators would then have the power to override individual
 includes, rather than entire templates.
 
-For more information about templates go to the [Advanced Templates](/reference/advanced-templates) page.
-
 ## Related
 
  * [Built in page controls](/reference/built-in-page-controls)
