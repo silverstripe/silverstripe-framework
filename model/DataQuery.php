@@ -550,6 +550,17 @@ class DataQuery {
 	}
 
 	/**
+	 * Set whether this query should be distinct or not.
+	 *
+	 * @param bool $value
+	 * @return DataQuery
+	 */
+	public function distinct($value) {
+		$this->query->setDistinct($value);
+		return $this;
+	}
+
+	/**
 	 * Add an INNER JOIN clause to this query.
 	 * 
 	 * @param String $table The unquoted table name to join to.
