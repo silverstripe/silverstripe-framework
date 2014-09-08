@@ -260,7 +260,7 @@ class PhpUnitWrapper_Exception extends Exception {}
 //
 if(!PhpUnitWrapper::has_php_unit()) {
 	/**
-	 * PHPUnit is a testing framework that can be installed using PEAR.
+	 * PHPUnit is a testing framework that can be installed using Composer.
 	 * It's not bundled with SilverStripe, you will need to install it yourself.
 	 * 
 	 * @package framework
