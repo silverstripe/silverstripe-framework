@@ -105,6 +105,7 @@
 
 		$('.ss-gridfield :button[name=showFilter]').entwine({
 			onclick: function(e) {
+				if(e.which !== 1) return;
 				$('.filter-header')
 					.show('slow') // animate visibility
 					.find(':input:first').focus(); // focus first search field
@@ -117,6 +118,7 @@
 
 		$('.ss-gridfield .ss-gridfield-item').entwine({
 			onclick: function(e) {
+				if(e.which !== 1) return;
 				if($(e.target).closest('.action').length) {
 					this._super(e);
 					return false;
@@ -135,6 +137,7 @@
 
 		$('.ss-gridfield .action').entwine({
 			onclick: function(e){
+				if(e.which !== 1) return;
 				var filterState='show'; //filterstate should equal current state.
 				
 				if(this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))){
@@ -149,6 +152,7 @@
 		// Covers both tabular delete button, and the button on the detail form 
 		$('.ss-gridfield .col-buttons .action.gridfield-button-delete, .cms-edit-form .Actions button.action.action-delete').entwine({
 			onclick: function(e){
+				if(e.which !== 1) return;
 				if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
 					e.preventDefault();
 					return false;
@@ -168,6 +172,7 @@
 				this._super();
 			},
 			onclick: function(e){
+				if(e.which !== 1) return;
 				var btn = this.closest(':button'), grid = this.getGridField(),
 					form = this.closest('form'), data = form.find(':input.gridstate').serialize();;
 
@@ -219,6 +224,7 @@
 		 */
 		$('.ss-gridfield .action.no-ajax').entwine({
 			onclick: function(e){
+				if(e.which !== 1) return;
 				var self = this, btn = this.closest(':button'), grid = this.getGridField(), 
 					form = this.closest('form'), data = form.find(':input.gridstate').serialize();
 
@@ -245,7 +251,8 @@
 		});
 
 		$('.ss-gridfield .action-detail').entwine({
-			onclick: function() {
+			onclick: function(e) {
+				if(e.which !== 1) return;
 				this.getGridField().showDetailView($(this).prop('href'));
 				return false;
 			}
