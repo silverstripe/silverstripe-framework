@@ -405,6 +405,14 @@ class FormField extends RequestHandler {
 
 		return implode(' ', $parts);
 	}
+	
+	/**
+	 * Alias of getAttributesHTML() for template use
+	 * @see FormField::getAttributesHTML()
+	 */
+	public function AttributesHTML() {
+		return call_user_func_array(array($this, 'getAttributesHTML'), func_get_args());
+	}
 
 	/**
 	 * Returns a version of a title suitable for insertion into an HTML attribute
