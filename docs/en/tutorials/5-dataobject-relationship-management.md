@@ -249,7 +249,7 @@ by clicking on the **Add Mentor** button.
 
 ![tutorial:tutorial5_module_creation.jpg](_images/tutorial5_module_creation.jpg)
 
-To associate the mentor with a project, select one the the mentors, and click on the projects tab. Add all the projects a mentor is associated with (see the [list](#What_are_we_working_towards?)), by typing the name in "Find Projects by Page name" and clicking the "Link Existing" button.
+To associate the mentor with a project, select one of the mentors, and click on the projects tab. Add all the projects a mentor is associated with (see the [list](#What_are_we_working_towards?)), by typing the name in "Find Projects by Page name" and clicking the "Link Existing" button.
 You will notice that you are able to select the same `Project` for multiple mentors. 
 This is the definition of a **many-to-many** relation.
 
@@ -406,7 +406,7 @@ lightweight `DataObject` classes. The transition between
 the two classes is intentionally fluent in the CMS, you can
 manage them depending on your needs.
 `DataObject` gives you a no-frills solution to data storage,
-but `Page` allows for built-in WYSIWIG editing, versioning,
+but `Page` allows for built-in WYSIWYG editing, versioning,
 publication and hierarchical organization.
 
 ## Exercises
