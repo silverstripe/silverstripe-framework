@@ -25,32 +25,12 @@ Unit tests are not included in the normal SilverStripe downloads so you need to 
 
 ## Install with Composer
 
-Once you've got your project up and running, add PHPUnit to your composer.json (in your project root) as a package required for development (note that SilverStripe is not compatible with PHPUnit 4).  Example below:
-	
-	{
-		"name": "silverstripe/installer",
-		"description": "The SilverStripe Framework Installer",
-		"require": {
-			"php": ">=5.3.2",
-			"silverstripe/cms": "~3.1@stable",
-			"silverstripe/framework": "~3.1@stable",
-			"silverstripe-themes/simple": "*"
-		},
-		"require-dev": {
-			"phpunit/PHPUnit": "~3.5@stable"
-		},
-		"config": {
-			"process-timeout": 600	
-		},
-		"minimum-stability": "dev"
-	}
+Once you've got your project up and running, open a terminal and cd to your project root.
 
-In the terminal cd to your project root and install the required components to run unit tests:
+	composer require --dev "phpunit/phpunit:3.7.*@stable"
 
-	composer update --dev
-
-This will install (among other things) the [PHPUnit](http://www.phpunit.de/) dependency, which is the framework we're
-building our unit tests on. Composer installs it alongside the required PHP classes into the `vendor/bin/` directory.
+This will install [PHPUnit](http://www.phpunit.de/) dependency, which is the framework we're
+building our unit tests on.  Composer installs it alongside the required PHP classes into the `vendor/bin/` directory.
 
 Open a browser at `http://localhost/dev/tests` to see a list of available tests.  Run a test to ensure the installation is complete. 
 
