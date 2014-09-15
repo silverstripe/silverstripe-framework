@@ -216,8 +216,9 @@ class DBQueryBuilder {
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string Completed from part of statement
 	 */
-	public function buildFromFragment(SQLExpression $query, array &$parameters) {
-		$from = $query->getJoins();
+	public function buildFromFragment(SQLConditionalExpression $query, array &$parameters) {
+		$from = $query->getJoins($joinParameters);
+		$parameters = array_merge($parameters, $joinParameters);
 		$nl = $this->getSeparator();
 		return  "{$nl}FROM " . implode(' ', $from);
 	}
@@ -229,8 +230,7 @@ class DBQueryBuilder {
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string Completed where condition
 	 */
-	public function buildWhereFragment(SQLExpression $query, array &$parameters) {
-
+	public function buildWhereFragment(SQLConditionalExpression $query, array &$parameters) {
 		// Get parameterised elements
 		$where = $query->getWhereParameterised($whereParameters);
 		if(empty($where)) return '';
