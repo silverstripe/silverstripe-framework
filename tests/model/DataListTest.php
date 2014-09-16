@@ -168,6 +168,36 @@ class DataListTest extends SapphireTest {
 			. '"DataObjectTest_TeamComment"."TeamID"';
 
 		$this->assertSQLEquals($expected, $list->sql($parameters));
+		$this->assertEmpty($parameters);
+	}
+
+	public function testInnerJoinParameterised() {
+		$db = DB::get_conn();
+		
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->innerJoin(
+			'DataObjectTest_Team',
+			'"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID" '
+			. 'AND "DataObjectTest_Team"."Title" LIKE ?',
+			'Team',
+			20,
+			array('Team%')
+		);
+
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
+			. '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
+			. '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
+			. '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
+			. 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
+			. ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
+			. $db->quoteString('DataObjectTest_TeamComment')
+			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN '
+			. '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
+			. '"DataObjectTest_TeamComment"."TeamID" '
+			. 'AND "DataObjectTest_Team"."Title" LIKE ?';
+
+		$this->assertSQLEquals($expected, $list->sql($parameters));
+		$this->assertEquals(array('Team%'), $parameters);
 	}
 
 	public function testLeftJoin() {
@@ -191,6 +221,7 @@ class DataListTest extends SapphireTest {
 			. 'AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
 
 		$this->assertSQLEquals($expected, $list->sql($parameters));
+		$this->assertEmpty($parameters);
 
 		// Test with namespaces (with non-sensical join, but good enough for testing)
 		$list = DataObjectTest_TeamComment::get();
@@ -213,7 +244,37 @@ class DataListTest extends SapphireTest {
 			. 'LEFT JOIN "DataObjectTest\NamespacedClass" ON '
 			. '"DataObjectTest\NamespacedClass"."ID" = "DataObjectTest_TeamComment"."ID"';
 		$this->assertSQLEquals($expected, $list->sql($parameters), 'Retains backslashes in namespaced classes');
+		$this->assertEmpty($parameters);
 
+	}
+
+	public function testLeftJoinParameterised() {
+		$db = DB::get_conn();
+
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->leftJoin(
+			'DataObjectTest_Team',
+			'"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID" '
+			. 'AND "DataObjectTest_Team"."Title" LIKE ?',
+			'Team',
+			20,
+			array('Team%')
+		);
+
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
+			. '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
+			. '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
+			. '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
+			. 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
+			. ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
+			. $db->quoteString('DataObjectTest_TeamComment')
+			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN '
+			. '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
+			. '"DataObjectTest_TeamComment"."TeamID" '
+			. 'AND "DataObjectTest_Team"."Title" LIKE ?';
+
+		$this->assertSQLEquals($expected, $list->sql($parameters));
+		$this->assertEquals(array('Team%'), $parameters);
 	}
 
 	public function testToNestedArray() {

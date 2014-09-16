@@ -10,6 +10,8 @@ class SQLQueryTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
 		'SQLQueryTest_DO',
+		'SQLQueryTestBase',
+		'SQLQueryTestChild'
 	);
 
 	public function testEmptyQueryReturnsNothing() {
@@ -579,6 +581,51 @@ class SQLQueryTest extends SapphireTest {
 		$this->assertEquals(10, $limit['start']);
 	}
 
+	public function testParameterisedInnerJoins() {
+		$query = new SQLSelect();
+		$query->setSelect(array('"SQLQueryTest_DO"."Name"', '"SubSelect"."Count"'));
+		$query->setFrom('"SQLQueryTest_DO"');
+		$query->addInnerJoin(
+			'(SELECT "Title", COUNT(*) AS "Count" FROM "SQLQueryTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
+			'"SQLQueryTest_DO"."Name" = "SubSelect"."Title"',
+			'SubSelect',
+			20,
+			array('%MyName%')
+		);
+		$query->addWhere(array('"SQLQueryTest_DO"."Date" > ?' => '2012-08-08 12:00'));
+
+		$this->assertSQLEquals('SELECT "SQLQueryTest_DO"."Name", "SubSelect"."Count"
+			FROM "SQLQueryTest_DO" INNER JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLQueryTestBase"
+		   GROUP BY "Title" HAVING "Title" NOT LIKE ?) AS "SubSelect" ON "SQLQueryTest_DO"."Name" =
+		   "SubSelect"."Title"
+			WHERE ("SQLQueryTest_DO"."Date" > ?)', $query->sql($parameters)
+		);
+		$this->assertEquals(array('%MyName%', '2012-08-08 12:00'), $parameters);
+		$query->execute();
+	}
+
+	public function testParameterisedLeftJoins() {
+		$query = new SQLSelect();
+		$query->setSelect(array('"SQLQueryTest_DO"."Name"', '"SubSelect"."Count"'));
+		$query->setFrom('"SQLQueryTest_DO"');
+		$query->addLeftJoin(
+			'(SELECT "Title", COUNT(*) AS "Count" FROM "SQLQueryTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
+			'"SQLQueryTest_DO"."Name" = "SubSelect"."Title"',
+			'SubSelect',
+			20,
+			array('%MyName%')
+		);
+		$query->addWhere(array('"SQLQueryTest_DO"."Date" > ?' => '2012-08-08 12:00'));
+
+		$this->assertSQLEquals('SELECT "SQLQueryTest_DO"."Name", "SubSelect"."Count"
+			FROM "SQLQueryTest_DO" LEFT JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLQueryTestBase"
+		   GROUP BY "Title" HAVING "Title" NOT LIKE ?) AS "SubSelect" ON "SQLQueryTest_DO"."Name" =
+		   "SubSelect"."Title"
+			WHERE ("SQLQueryTest_DO"."Date" > ?)', $query->sql($parameters)
+		);
+		$this->assertEquals(array('%MyName%', '2012-08-08 12:00'), $parameters);
+		$query->execute();
+	}
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {

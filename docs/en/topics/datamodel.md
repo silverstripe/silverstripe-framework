@@ -485,6 +485,8 @@ methods have the same arguments:
  * The name of the table to join to
  * The filter clause for the join
  * An optional alias
+ * Priority (to allow you to later sort joins)
+ * An optional list of parameters (in case you wish to use a parameterised subselect).
 
 For example:
 
@@ -495,6 +497,17 @@ For example:
 
 	$members = Member::get()
 		->innerJoin("Group_Members", "\"Rel\".\"MemberID\" = \"Member\".\"ID\"", "Rel");
+
+	// With a subselect
+	$members = Member::get()
+		->innerJoin(
+			'(SELECT "MemberID", COUNT("ID") AS "Count" FROM "Member_Likes" GROUP BY "MemberID" HAVING "Count" >= ?)',
+			'"Likes"."MemberID" = "Member"."ID"',
+			"Likes",
+			20,
+			array($threshold)
+		);
+
 	
 Passing a *$join* statement to DataObject::get will filter results further by
 the JOINs performed against the foreign table. **It will NOT return the

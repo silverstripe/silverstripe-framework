@@ -124,9 +124,10 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 * @param int $order A numerical index to control the order that joins are added to the query; lower order values
 	 *                   will cause the query to appear first. The default is 20, and joins created automatically by the
 	 *                   ORM have a value of 10.
+	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
 	 * @return self Self reference
 	 */
-	public function addLeftJoin($table, $onPredicate, $tableAlias = '', $order = 20) {
+	public function addLeftJoin($table, $onPredicate, $tableAlias = '', $order = 20, $parameters = array()) {
 		if(!$tableAlias) {
 			$tableAlias = $table;
 		}
@@ -134,7 +135,8 @@ abstract class SQLConditionalExpression extends SQLExpression {
 			'type' => 'LEFT',
 			'table' => $table,
 			'filter' => array($onPredicate),
-			'order' => $order
+			'order' => $order,
+			'parameters' => $parameters
 		);
 		return $this;
 	}
@@ -149,15 +151,17 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 * @param int $order A numerical index to control the order that joins are added to the query; lower order
 	 * values will cause the query to appear first. The default is 20, and joins created automatically by the
 	 * ORM have a value of 10.
+	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
 	 * @return self Self reference
 	 */
-	public function addInnerJoin($table, $onPredicate, $tableAlias = null, $order = 20) {
+	public function addInnerJoin($table, $onPredicate, $tableAlias = null, $order = 20, $parameters = array()) {
 		if(!$tableAlias) $tableAlias = $table;
 		$this->from[$tableAlias] = array(
 			'type' => 'INNER',
 			'table' => $table,
 			'filter' => array($onPredicate),
-			'order' => $order
+			'order' => $order,
+			'parameters' => $parameters
 		);
 		return $this;
 	}
@@ -236,10 +240,20 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 *
 	 * @todo This part of the code could be simplified
 	 *
+	 * @param array $parameters Out variable for parameters required for this query
 	 * @return array List of joins as a mapping from array('Alias' => 'Join Expression')
 	 */
-	public function getJoins() {
+	public function getJoins(&$parameters = array()) {
+		if(func_num_args() == 0) {
+			Deprecation::notice(
+				'3.2',
+				'SQLConditionalExpression::getJoins() now may produce parameters which are necessary to
+				execute this query'
+			);
+		}
+		
 		// Sort the joins
+		$parameters = array();
 		$joins = $this->getOrderedJoins($this->from);
 
 		// Build from clauses
@@ -247,18 +261,21 @@ abstract class SQLConditionalExpression extends SQLExpression {
 			// $join can be something like this array structure
 			// array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1",
 			// "Status = 'approved'", 'order' => 20))
-			if(is_array($join)) {
-				if(is_string($join['filter'])) {
-					$filter = $join['filter'];
-				} elseif(sizeof($join['filter']) == 1) {
-					$filter = $join['filter'][0];
-				} else {
-					$filter = "(" . implode(") AND (", $join['filter']) . ")";
-				}
+			if(!is_array($join)) continue;
 
-				$table = strpos(strtoupper($join['table']), 'SELECT') ? $join['table'] : "\"" . $join['table'] . "\"";
-				$aliasClause = ($alias != $join['table']) ? " AS \"$alias\"" : "";
-				$joins[$alias] = strtoupper($join['type']) . " JOIN " . $table . "$aliasClause ON $filter";
+			if(is_string($join['filter'])) {
+				$filter = $join['filter'];
+			} elseif(sizeof($join['filter']) == 1) {
+				$filter = $join['filter'][0];
+			} else {
+				$filter = "(" . implode(") AND (", $join['filter']) . ")";
+			}
+
+			$table = strpos(strtoupper($join['table']), 'SELECT') ? $join['table'] : "\"" . $join['table'] . "\"";
+			$aliasClause = ($alias != $join['table']) ? " AS \"$alias\"" : "";
+			$joins[$alias] = strtoupper($join['type']) . " JOIN " . $table . "$aliasClause ON $filter";
+			if(!empty($join['parameters'])) {
+				$parameters = array_merge($parameters, $join['parameters']);
 			}
 		}
 

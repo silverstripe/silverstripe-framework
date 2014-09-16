@@ -583,10 +583,14 @@ class DataQuery {
 	 * @param String $table The unquoted table name to join to.
 	 * @param String $onClause The filter for the join (escaped SQL statement)
 	 * @param String $alias An optional alias name (unquoted)
+	 * @param int $order A numerical index to control the order that joins are added to the query; lower order values
+	 * will cause the query to appear first. The default is 20, and joins created automatically by the
+	 * ORM have a value of 10.
+	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
 	 */
-	public function innerJoin($table, $onClause, $alias = null) {
+	public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
 		if($table) {
-			$this->query->addInnerJoin($table, $onClause, $alias);
+			$this->query->addInnerJoin($table, $onClause, $alias, $order, $parameters);
 		}
 		return $this;
 	}
@@ -594,13 +598,17 @@ class DataQuery {
 	/**
 	 * Add a LEFT JOIN clause to this query.
 	 *
-	 * @param String $table The unquoted table to join to.
-	 * @param String $onClause The filter for the join (escaped SQL statement).
-	 * @param String $alias An optional alias name (unquoted)
+	 * @param string $table The unquoted table to join to.
+	 * @param string $onClause The filter for the join (escaped SQL statement).
+	 * @param string $alias An optional alias name (unquoted)
+	 * @param int $order A numerical index to control the order that joins are added to the query; lower order values
+	 * will cause the query to appear first. The default is 20, and joins created automatically by the
+	 * ORM have a value of 10.
+	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
 	 */
-	public function leftJoin($table, $onClause, $alias = null) {
+	public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
 		if($table) {
-			$this->query->addLeftJoin($table, $onClause, $alias);
+			$this->query->addLeftJoin($table, $onClause, $alias, $order, $parameters);
 		}
 		return $this;
 	}
