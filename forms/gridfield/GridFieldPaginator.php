@@ -136,8 +136,12 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 
 		$state = $this->getGridPagerState($gridField);
 
-		// Update item count prior to filter. GridFieldPageCount will rely on this value
-		$this->totalItems = $dataList->count();
+		// Update item count prior to filter. Just the count the viewable items.
+		// GridFieldPageCount will rely on this value.
+		$this->totalItems = 0;
+		foreach ($dataList as $item) {
+			if (method_exists($item, 'canView') && $item->canView()) $this->totalItems++;
+		}
 
 		if(!($dataList instanceof SS_Limitable) || ($dataList instanceof UnsavedRelationList)) {
 			return $dataList;
