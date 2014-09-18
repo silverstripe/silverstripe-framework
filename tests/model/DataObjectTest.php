@@ -949,21 +949,40 @@ class DataObjectTest extends SapphireTest {
 	 * Tests that singular_name() generates sensible defaults.
 	 */
 	public function testSingularName() {
-		$assertions = array (
+		$assertions = array(
 			'DataObjectTest_Player'       => 'Data Object Test Player',
 			'DataObjectTest_Team'         => 'Data Object Test Team',
 			'DataObjectTest_Fixture'      => 'Data Object Test Fixture'
 		);
 		
 		foreach($assertions as $class => $expectedSingularName) {
-			$this->assertEquals (
+			$this->assertEquals(
 				$expectedSingularName,
 				singleton($class)->singular_name(),
 				"Assert that the singular_name for '$class' is correct."
 			);
 		}
 	}
-	
+
+	/**
+	 * Tests that plural_name() generates sensible defaults.
+	 */
+	public function testPluralName() {
+		$assertions = array(
+			'DataObjectTest_Player'       => 'Data Object Test Players',
+			'DataObjectTest_Team'         => 'Data Object Test Teams',
+			'DataObjectTest_Fixture'      => 'Data Object Test Fixtures'
+		);
+
+		foreach($assertions as $class => $expectedPluralName) {
+			$this->assertEquals(
+				$expectedPluralName,
+				singleton($class)->plural_name(),
+				"Assert that the plural_name for '$class' is correct."
+			);
+		}
+	}
+
 	public function testHasDatabaseField() {
 		$team = singleton('DataObjectTest_Team');
 		$subteam = singleton('DataObjectTest_SubTeam');

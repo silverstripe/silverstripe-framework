@@ -713,9 +713,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $name;
 		} else {
 			$name = $this->singular_name();
-			if(substr($name,-1) == 'e') $name = substr($name,0,-1);
-			else if(substr($name,-1) == 'y') $name = substr($name,0,-1) . 'ie';
-
+			if(substr($name,-1) == 'y') $name = substr($name,0,-1) . 'ie';
 			return ucfirst($name . 's');
 		}
 	}
