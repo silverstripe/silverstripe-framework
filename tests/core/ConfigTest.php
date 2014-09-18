@@ -208,6 +208,20 @@ class ConfigTest extends SapphireTest {
 			array('test_3', 'test_1'));
 	}
 
+	public function testFalseValueMerges() {
+		$result = array('A' => true, 'B' => true);
+		Config::merge_array_low_into_high($result, array('A' => false, 'B' => true));
+		$this->assertEquals(array('A' => true, 'B' => true), $result);
+
+		$result = array();
+		Config::merge_array_low_into_high($result, array('A' => false));
+		$this->assertEquals(array('A' => false), $result);
+
+		$result = array('A' => array('A' => true));
+		Config::merge_array_low_into_high($result, array('A' => array('A' => false)));
+		$this->assertEquals(array('A' => array('A' => true)), $result);
+	}
+
 	public function testMerges() {
 		$result = array('A' => 1, 'B' => 2, 'C' => 3);
 		Config::merge_array_low_into_high($result, array('C' => 4, 'D' => 5));
