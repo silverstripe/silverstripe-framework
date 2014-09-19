@@ -865,11 +865,12 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		foreach($query->getFrom() as $table => $tableJoin) {
 			if(is_string($tableJoin) && $tableJoin[0] == '"') {
 				$baseTable = str_replace('"','',$tableJoin);
-			} elseif(is_string($tableJoin) && substr($tableJoin,0,5) != 'INNER') {
-				$query->setFrom(array(
-					$table => "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\"=\"{$baseTable}_versions\".\"RecordID\""
-						. " AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\""
-				));
+			} elseif(
+				(is_string($tableJoin) && substr($tableJoin,0,5) != 'INNER')
+				|| (is_array($tableJoin) && $tableJoin['type'] != 'INNER')
+			) {
+				$query->addLeftJoin($table, "\"$table\".\"RecordID\"=\"{$baseTable}_versions\".\"RecordID\""
+					. " AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"" );
 			}
 			$query->renameTable($table, $table . '_versions');
 		}
@@ -882,7 +883,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$query->addWhere("\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'");
 		$query->setOrderBy(($sort) ? $sort 
 			: "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC");
-
+		
 		$records = $query->execute();
 		$versions = new ArrayList();
 
