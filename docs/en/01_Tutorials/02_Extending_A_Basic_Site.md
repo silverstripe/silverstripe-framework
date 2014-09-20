@@ -1,3 +1,5 @@
+summary: Building on tutorial 1, a look at storing data in SilverStripe and creating a latest news feed.
+
 # Tutorial 2 - Extending a basic site
 
 ## Overview
