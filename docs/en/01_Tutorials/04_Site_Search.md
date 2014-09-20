@@ -1,3 +1,5 @@
+summary: Enable website search. How to handle paged result sets and the SearchForm class.
+
 # Tutorial 4 - Site Search
 
 ## Overview
