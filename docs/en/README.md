@@ -57,40 +57,6 @@ and a annotated implementation. An example of a new tutorial would be
 under 'Forms' as while it may have templates and controllers involved, as a user
  'Form' is the action word.
 
+## The plan
 
-## Documentation Tasks
-
-- [x] Create top level and second level folder structure
-- [x] Move existing documentation into the rough IA
-- [ ] Create how-to folders in each learning category to hold how tos, update
-		template to show these on the sidebar
-- [ ] Update image paths
-- [ ] Set language, writing guidelines and recommendations for consistency
-- [ ] Rewrite docs homepage
-- [ ] Docviewer improvements
-- [ ] 'Review' Getting Started section *
-- [ ] Write tutorials for Building a Website Without the CMS
-- [ ] Update tutorials and docs for Building a CMS Website to use a standard 
-		example (to be available on Github as well)
-- [ ] 'Review' Model section
-- [ ] 'Review' Templates section
-- [ ] 'Review' Controllers section
-- [ ] 'Review' Forms section
-- [ ] 'Review' Configuration section
-- [ ] 'Review' Extending section
-- [ ] 'Review' Testing section
-- [ ] 'Review' Debugging section
-- [ ] 'Review' Performance section
-- [ ] 'Review' Security section
-- [ ] 'Review' Modules section
-- [ ] 'Review' Email section
-- [ ] 'Review' Integration & Webservices section
-- [ ] 'Review' Search section
-- [ ] 'Review' i18n section
-- [ ] 'Review' Files section
-- [ ] 'Review' Customing the Admin section
-- [ ] 'Review' Execution pipeline section
-- [ ] 'Review' CLI section
-- [ ] 'Review' Cookies and Sessions section
-- [ ] 'Review' Upgrading
-- [ ] 'Review' Contributing
+See our plan and progress at https://trello.com/b/y32uSVM1/silverstripe-documentation
