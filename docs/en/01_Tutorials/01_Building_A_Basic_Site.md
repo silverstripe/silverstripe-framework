@@ -1,3 +1,5 @@
+summary: An overview of the SilverStripe installation and an introduction to creating a web page.
+
 # Tutorial 1 - Building a Basic Site
 
 ## Overview

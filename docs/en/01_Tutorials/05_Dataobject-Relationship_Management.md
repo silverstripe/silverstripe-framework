@@ -1,3 +1,6 @@
+title: DataObject Relationship Management
+summary: Learn how to create custom DataObjects and how to build interfaces for managing that data.
+
 # Tutorial 5 - Dataobject Relationship Management
 
 ## Overview
