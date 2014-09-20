@@ -270,9 +270,11 @@ class Upload extends Controller {
 	
 	/**
 	 * Clear out all errors (mostly set by {loadUploaded()})
+	 * including the validator's errors
 	 */
 	public function clearErrors() {
 		$this->errors = array();
+		$this->validator->clearErrors();
 	}
 	
 	/**
@@ -340,6 +342,13 @@ class Upload_Validator {
 	 */
 	public function getErrors() {
 		return $this->errors;		
+	}
+
+	/**
+	 * Clear out all errors
+	 */
+	public function clearErrors() {
+		$this->errors = array();
 	}
 
 	/**
