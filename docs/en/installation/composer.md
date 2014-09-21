@@ -40,7 +40,7 @@ If you already have composer installed you can update it by running:
 Composer updates regularly, so you should run this command fairly often. These instructions assume you are running the latest version.
 
 ## Installing Composer on Windows WAMP
-For those that use WAMP as a development environment, [detailed information is available on installing using Composer.](/windows-wamp#install-wamp) 
+For those that use WAMP as a development environment, [detailed information is available on installing using Composer.](/installation/windows-wamp#install-wamp) 
 
 ## Create a new site
 
