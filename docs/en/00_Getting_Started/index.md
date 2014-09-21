@@ -1,15 +1,8 @@
-# Installing SilverStripe
+title: Getting Started
+introduction: SilverStripe is a web application. This means that you will need to have a webserver and database. We will take you through the setup of the server environment as well the application itself.
 
-## Download
 
-SilverStripe is a web application. This means that you will need to have a webserver and database meeting its 
-[requirements](server-requirements). We will take you through the setup of the server environment as well the application itself.
-
-<div markdown='1' style="float: right; margin-left: 20px">
-![](../_images/composer.png)
-</div>
-
-## Getting the code
+## Installing SilverStripe
 
 The best way to get SilverStripe is to [install with Composer](composer). Composer is a package management tool for PHP that
 lets you install and upgrade SilverStripe and its modules.  Although installing Composer is one extra step, it will give you much more flexibility than just downloading the file from silverstripe.org.

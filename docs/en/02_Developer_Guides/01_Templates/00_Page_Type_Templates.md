@@ -1,9 +1,9 @@
 # Building templates for page types
 
-Much of your work building a SilverStripe site will involve the creation of 
-templates for your own page types. SilverStripe has its own template language. 
+Much of your work building a SilverStripe site will involve the creation of
+templates for your own page types. SilverStripe has its own template language.
 Its basic features like variables, blocks and loops are described in our ["templates" reference guide](/reference/templates).
-In this guide, we'll show you specific uses for creating page layouts. 
+In this guide, we'll show you specific uses for creating page layouts.
 This assumes you are familiar with the concept of ["page types"](/topics/page-types).
 
 To get a feel for what those templates look like, let's have a look at an abbreviated example. In your webroot, these templates are usually located in `themes/<your-theme>/templates`.
@@ -24,21 +24,21 @@ Most of the magic happens in `Page.ss` and `Layout/Page.ss`.
 			<header>
 				<h1>Bob's Chicken Shack</h1>
 			</header>
-			
+
 			<navigation>
 				<% if $Menu(1) %>
 				<ul>
-					<% loop $Menu(1) %>	  
+					<% loop $Menu(1) %>
 					<li><a href="$Link" class="$LinkingMode">$MenuTitle</a></li>
 					<% end_loop %>
 				</ul>
 				<% end_if %>
 			</navigation>
-			
+
 			<div class="typography">
 				$Layout
 			</div>
-			
+
 		</div>
 		</body>
 	</html>
@@ -85,7 +85,7 @@ and only preview draft content if explicitly requested (e.g. by the "preview" fe
 `$Menu(1)` is a built-in page control that defines the top-level menu.
 You can also create a sub-menu using `$Menu(2)`, and so forth.
 
-The `<% loop $Menu(1) %>...<% end_loop %>` block defines a repeating element.  
+The `<% loop $Menu(1) %>...<% end_loop %>` block defines a repeating element.
 It will change the "scope" of your template, which means that all of the template variables you use inside it will refer to a menu item.  The template code will be repeated once per menu item, with the scope set to that menu item's page. In this case, a menu item refers to an instance
 of the `Page` class, so you can access all properties defined on there, for example `$Title`.
 
@@ -116,13 +116,13 @@ underneath a "staff" holder on any page, regardless if its on the top level or e
 This will show all children of a page even if the `ShowInMenus` property is set to FALSE.
 
 ### Access to Parent and Level Pages
-	
+
 	:::ss
 	<% with $Level(1) %>
 		$Title
 	<% end_with %>
 
-Will return a page in the current path, at the level specified by the numbers.  
+Will return a page in the current path, at the level specified by the numbers.
 It is based on the current page context, looking back through its parent pages.
 
 For example, imagine you're on the "bob marley" page,
@@ -164,7 +164,7 @@ you can get an absolute one including the domain through [$AbsoluteLink](api:Sit
 
 In addition, each menu item gets some context information relative
 to the page you're currently viewing, contained in the `$LinkingMode` placeholder.
-By setting a HTML class to this value, you can distinguish the styling of 
+By setting a HTML class to this value, you can distinguish the styling of
 the currently selected menu item. It can have the following values:
 
  * `link`: You are neither on this page nor in this section.
@@ -176,7 +176,7 @@ More common uses:
  * `$LinkOrCurrent`: Determines if the item is the current page. Returns "link" or "current" strings.
  * `$LinkOrSection`: Determines if the item is in the current section, so in the path towards the current page. Useful for menus which you only want to show a second level menu when you are on that page or a child of it. Returns "link" or "section" strings.
  * `InSection(page-url)`: This if block will pass if we're currently on the page-url page or one of its children.
- 
+
 Example: Only show the menu item linked if its the current one:
 
 	:::ss
@@ -237,13 +237,13 @@ By default `$MetaTags` renders:
 
 #### URLSegment
 
-This returns the part of the URL of the page you're currently on. 
+This returns the part of the URL of the page you're currently on.
 Shouldn't be used for linking to a page, since the link
 is a composite value based on all parent pages as well (through the `$Link` variable).
 
 ####  ClassName
 
-Returns the class of the underlying `Page` record. 
+Returns the class of the underlying `Page` record.
 This can be handy to add to your `<body>` tag to influence
 CSS styles and JavaScript behaviour based on the page type used:
 
@@ -255,7 +255,7 @@ use the `$CSSClasses` placeholder instead.
 
 #### BaseHref
 
-Returns the base URL for the current site. 
+Returns the base URL for the current site.
 This is used to populate the `<base>` tag by default.
 Can be handy to prefix custom links (not generated through `SiteTree->Link()`),
 to ensure they work correctly when the webroot is hosted in a subfolder

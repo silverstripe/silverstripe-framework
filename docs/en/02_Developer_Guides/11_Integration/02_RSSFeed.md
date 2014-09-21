@@ -2,17 +2,17 @@
 
 ## Introduction
 
-Generating RSS/Atom-feeds is a matter of rendering a `[api:SS_List]` through 
+Generating RSS/Atom-feeds is a matter of rendering a `[api:SS_List]` through
 the `[api:RSSFeed]` class.
 
-The `[api:RSSFeed]` class doesn't limit you to generating article based feeds, 
-it is just as easy to create a feed of your current staff members, comments or 
-any other custom `[api:DataObject]` subclasses you have defined. The only 
-logical limitation here is that every item in the RSS-feed should be accessible 
-through a URL on your website, so its advisable to just create feeds from sub 
-classes of `[api:SiteTree]`. 
+The `[api:RSSFeed]` class doesn't limit you to generating article based feeds,
+it is just as easy to create a feed of your current staff members, comments or
+any other custom `[api:DataObject]` subclasses you have defined. The only
+logical limitation here is that every item in the RSS-feed should be accessible
+through a URL on your website, so its advisable to just create feeds from sub
+classes of `[api:SiteTree]`.
 
-If you wish to generate an RSS feed for `[api:DataObject]` instances, ensure they 
+If you wish to generate an RSS feed for `[api:DataObject]` instances, ensure they
 define an AbsoluteLink() method.
 
 ## Usage
@@ -20,23 +20,23 @@ define an AbsoluteLink() method.
 	:::php
 	RSSFeed::linkToFeed($link, $title)
 
-This line should go in your `[api:Controller]` subclass in the action you want 
+This line should go in your `[api:Controller]` subclass in the action you want
 to include the HTML link. Not all arguments are required, see `[api:RSSFeed]` and example below.  Last Modified Time is expected in seconds like time().
 
 	:::php
 	$feed = new RSSFeed(
-		$list, 
-		$link, 
-		$title, 
-		$description, 
-		$titleField, 
-		$descriptionField, 
+		$list,
+		$link,
+		$title,
+		$description,
+		$titleField,
+		$descriptionField,
 		$authorField,
 		$lastModifiedTime,
 		$etag
 	);
 
-Creates a new `[api:RSSFeed]` instance to be returned. The arguments notify 
+Creates a new `[api:RSSFeed]` instance to be returned. The arguments notify
 SilverStripe what values to include in the feed.
 
 ## Examples
@@ -48,12 +48,12 @@ SilverStripe what values to include in the feed.
 		private static $allowed_actions = array('rss');
 		public function init() {
 			parent::init();
-			// linkToFeed will add an appropriate HTML link tag to the website 
-			// <head> tag to notify web browsers that an RSS feed is available 
-			// for this page. You can include as many feeds on the page as you 
-			// wish as long as each as a different link. For example: 
+			// linkToFeed will add an appropriate HTML link tag to the website
+			// <head> tag to notify web browsers that an RSS feed is available
+			// for this page. You can include as many feeds on the page as you
+			// wish as long as each as a different link. For example:
 			// ('blog/rss', 'staff/rss').
-			// 
+			//
 			// In this example $this->Link("rss") refers to the *rss* function
 			// we define below.
 			RSSFeed::linkToFeed($this->Link("rss"), "RSS feed of this blog");
@@ -76,45 +76,45 @@ SilverStripe what values to include in the feed.
 
 ### Showing the 10 most recently updated pages
 
-You can use `[api:RSSFeed]` to easily create a feed showing your latest Page 
+You can use `[api:RSSFeed]` to easily create a feed showing your latest Page
 updates. Update mysite/code/Page.php to something like this:
 
 	:::php
 	<?php
-	class Page extends SiteTree {}	
+	class Page extends SiteTree {}
 	class Page_Controller extends ContentController {
-	
+
 		private static $allowed_actions = array('rss');
-		
+
 		public function init() {
 			parent::init();
-			RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");	
+			RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");
 		}
-		
+
 		public function rss() {
 			$rss = new RSSFeed($this->LatestUpdates(), $this->Link(), "10 Most Recently Updated Pages", "Shows a list of the 10 most recently updated pages.");
 			return $rss->outputToBrowser();
 		}
-		
+
 		public function LatestUpdates() {
 			return Page::get()->sort("LastEdited", "DESC")->limit(10);
-		} 
+		}
 	}
 
 ### Rendering DataObjects in a RSSFeed
 
-DataObjects can be rendered in the feed as well, however, since they aren't explicitly 
+DataObjects can be rendered in the feed as well, however, since they aren't explicitly
 `[api:SiteTree]` subclasses we need to include a function `AbsoluteLink` to allow the
-RSS feed to link through to the item. 
+RSS feed to link through to the item.
 
 If the items are all displayed on a single page you may simply hard code the link to
 point to a particular page.
 
-Take an example, we want to create an RSS feed of all the Students, a DataObject we 
+Take an example, we want to create an RSS feed of all the Students, a DataObject we
 defined in the [fifth tutorial](/tutorials/5-dataobject-relationship-management).
 
 	:::php
-	<?php 
+	<?php
 	class Student extends DataObject {
 		public function AbsoluteLink() {
 			// see tutorial 5, students are assigned a project, so the 'link'
@@ -132,12 +132,12 @@ for all the students as we've seen before.
 		public function init() {
 			parent::init();
 			RSSFeed::linkToFeed($this->Link("students"), "Students feed");
-		}		
+		}
 		public function students() {
 			$rss = new RSSFeed(
 				$list = $this->getStudents(),
-				$link = $this->Link("students"), 
-				$title = "Students feed" 
+				$link = $this->Link("students"),
+				$title = "Students feed"
 			);
 			return $rss->outputToBrowser();
 		}
@@ -148,7 +148,7 @@ for all the students as we've seen before.
 
 ### Customizing the RSS Feed template
 
-The default template used is framework/templates/RSSFeed.ss and includes 
+The default template used is framework/templates/RSSFeed.ss and includes
 displaying titles and links to the content. If you have a particular need
 for customizing the XML produced (say for additional meta data) use `setTemplate`.
 
@@ -159,8 +159,8 @@ unique template (write your own XML in themes/yourtheme/templates/Students.ss)
 	public function students() {
 		$rss = new RSSFeed(
 			$list = $this->getStudents(),
-			$link = $this->Link("students"), 
-			$title = "Students feed" 
+			$link = $this->Link("students"),
+			$title = "Students feed"
 		);
 		$rss->setTemplate('Students');
 		return $rss->outputToBrowser();

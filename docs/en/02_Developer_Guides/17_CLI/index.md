@@ -1,4 +1,6 @@
-# Commandline Usage via "sake"
+summary: Automate SilverStripe, run cronjobs or sync with other platforms through the sake Command Line Interface.
+
+# Command line usage
 
 ## Introduction
 
@@ -27,7 +29,7 @@ All parameters will be available in `$_GET` within SilverStripe.
 Sake is a simple wrapper around `cli-script.php`. It also tries to detect which `php` executable to use
 if more than one are available.
 
-**If you are using a debian server:** Check you have the php-cli package installed for sake to work. 
+**If you are using a debian server:** Check you have the php-cli package installed for sake to work.
 If you get an error when running the command php -v, then you may not have php-cli installed so sake won't work.
 
 ### Installation
@@ -147,7 +149,7 @@ php-cli /path/to/site_root/framework/cli-script.php dev/tasks/MyTask
 ```
 
 A good approach to setting up and testing your task to run with cron is:
- 
+
  1. Try running the task via the command-line on your server. `/path/to/site_root/framework/sake dev/tasks/MyTask`
  2. Set up a cron job to run the task every minute. `* * * * * /path/to/site_root/framework/sake dev/tasks/MyTask`
  3. Finally, set the task to run when you want it to. `0 2 * * * /path/to/site_root/framework/sake dev/tasks/MyTask` (2am)

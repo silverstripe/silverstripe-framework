@@ -1,7 +1,5 @@
 # Contributing Issues and Opinions
 
-[« Back to Contributing page](../contributing)
-
 ## Reporting Bugs
 
 If you have discovered a bug in SilverStripe, we'd be glad to hear about it -

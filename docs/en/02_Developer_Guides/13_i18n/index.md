@@ -1,3 +1,5 @@
+summary: Display templates and PHP code in different languages based on the preferences of your website users.
+
 # i18n
 
 ## Introduction
@@ -6,7 +8,7 @@ The i18n class (short for "internationalization") in SilverStripe enables you to
 different languages based on your global settings and the preferences of your website users. This process is also known
 as l10n (short for "localization").
 
-For translating any content managed through the CMS or stored in the database, 
+For translating any content managed through the CMS or stored in the database,
 please use the "[translatable](http://github.com/silverstripe/silverstripe-translatable)" module.
 
 This page aims to describe the low-level functionality of the i18n-API. It targets developers who:
@@ -33,7 +35,7 @@ want to set.
 
 	:::php
 	//Example 1: setting the locale
-	i18n::set_locale('de_DE'); //Setting the locale to German (Germany) 
+	i18n::set_locale('de_DE'); //Setting the locale to German (Germany)
 	i18n::set_locale('ca_AD'); //Setting to Catalan (Andorra)
 
 
@@ -53,7 +55,7 @@ To let browsers know which language they're displaying a document in, you can de
 	:::html
 	//'Page.ss' (HTML)
 	<html lang="$ContentLocale">
-	
+
 	//'Page.ss' (XHTML)
 	<html lang="$ContentLocale" xml:lang="$ContentLocale" xmlns="http://www.w3.org/1999/xhtml">
 
@@ -61,7 +63,7 @@ To let browsers know which language they're displaying a document in, you can de
 Setting the '<html>' attribute is the most commonly used technique. There are other ways to specify content languages
 (meta tags, HTTP headers), explained in this [w3.org article](http://www.w3.org/International/tutorials/language-decl/).
 
-You can also set the [script direction](http://www.w3.org/International/questions/qa-scripts), 
+You can also set the [script direction](http://www.w3.org/International/questions/qa-scripts),
 which is determined by the current locale, in order to indicate the preferred flow of characters
 and default alignment of paragraphs and tables to browsers.
 
@@ -70,7 +72,7 @@ and default alignment of paragraphs and tables to browsers.
 
 ### Date and time formats
 
-Formats can be set globally in the i18n class. These settings are currently only picked up by the CMS, you'll need 
+Formats can be set globally in the i18n class. These settings are currently only picked up by the CMS, you'll need
 to write your own logic for any frontend output.
 
 	:::php
@@ -97,7 +99,7 @@ In order to add a value, add the following to your `config.yml`:
 	      native: Kölsch
 
 Similarly, to change an existing language label, you can overwrite one of these keys:
-	
+
 	:::yml
 	i18n:
 	  common_locales:
@@ -106,11 +108,11 @@ Similarly, to change an existing language label, you can overwrite one of these 
 
 ### i18n in URLs
 
-By default, URLs for pages in SilverStripe (the `SiteTree->URLSegment` property) 
-are automatically reduced to the allowed allowed subset of ASCII characters. 
+By default, URLs for pages in SilverStripe (the `SiteTree->URLSegment` property)
+are automatically reduced to the allowed allowed subset of ASCII characters.
 If characters outside this subset are added, they are either removed or (if possible) "transliterated".
 This describes the process of converting from one character set to another
-while keeping characters recognizeable. For example, vowels with french accents 
+while keeping characters recognizeable. For example, vowels with french accents
 are replaced with their base characters, `pâté` becomes `pate`.
 
 In order to allow for so called "multibyte" characters outside of the ASCII subset,
@@ -128,21 +130,21 @@ Date- and time related form fields support i18n ([api:DateField], [api:TimeField
 	$field = new DateField(); // will automatically set date format defaults for 'ca_AD'
 	$field->setLocale('de_DE'); // will not update the date formats
 	$field->setConfig('dateformat', 'dd. MMMM YYYY'); // sets typical 'de_DE' date format, shows as "23. Juni 1982"
-	
+
 Defaults can be applied globally for all field instances through the `DateField.default_config`
-and `TimeField.default_config` [configuration arrays](/topics/configuration). 
+and `TimeField.default_config` [configuration arrays](/topics/configuration).
 If no 'locale' default is set on the field, [api:i18n::get_locale()] will be used.
 
 **Important:** Form fields in the CMS are automatically configured according to the profile settings for the logged-in user (`Member->Locale`, `Member->DateFormat` and `Member->TimeFormat`). This means that in most cases,
 fields created through [api:DataObject::getCMSFields()] will get their i18n settings from a specific member
 
-The [api:DateField] API can be enhanced by JavaScript, and comes with 
+The [api:DateField] API can be enhanced by JavaScript, and comes with
 [jQuery UI datepicker](http://jqueryui.com/demos/datepicker/) capabilities built-in.
 The field tries to translate the date formats and locales into a format compatible with jQuery UI
 (see [api:DateField_View_JQuery::$locale_map_] and [api:DateField_View_JQuery::convert_iso_to_jquery_format()]).
 
 	:::php
-	$field = new DateField(); 
+	$field = new DateField();
 	$field->setLocale('de_AT'); // set Austrian/German locale
 	$field->setConfig('showcalendar', true);
 	$field->setConfig('jslocale', 'de'); // jQuery UI only has a generic German localization
@@ -164,10 +166,10 @@ All strings passed through the `_t()` function will be collected in a separate l
 
 ### The _t() function
 
-The `_t()` function is the main gateway to localized text, and takes four parameters, all but the first being optional. 
+The `_t()` function is the main gateway to localized text, and takes four parameters, all but the first being optional.
 It can be used to translate strings in both PHP files and template files. The usage for each case is described below.
 
- * **$entity:** Unique identifier, composed by a namespace and an entity name, with a dot separating them. Both are arbitrary names, although by convention we use the name of the containing class or template. Use this identifier to reference the same translation elsewhere in your code. 
+ * **$entity:** Unique identifier, composed by a namespace and an entity name, with a dot separating them. Both are arbitrary names, although by convention we use the name of the containing class or template. Use this identifier to reference the same translation elsewhere in your code.
  * **$string:** (optional) The original language string to be translated. Only needs to be declared once, and gets picked up the [text collector](#collecting-text).
  * **$string:** (optional) Natural language comment (particularly short phrases and individual words)
 are very context dependent. This parameter allows the developer to convey this information
@@ -177,13 +179,13 @@ to the translator.
 #### Usage in PHP Files
 
 	:::php
-	
+
 	// Simple string translation
 	_t('LeftAndMain.FILESIMAGES','Files & Images');
-	
+
 	// Using the natural languate comment parameter to supply additional context information to translators
 	_t('LeftAndMain.HELLO','Site content','Menu title');
-	
+
 	// Using injection to add variables into the translated strings.
 	_t('CMSMain.RESTORED',
 		"Restored {value} successfully",
@@ -207,13 +209,13 @@ the PHP version of the function.
 	:::ss
 	// Simple string translation
 	<%t Namespace.Entity "String to translate" %>
-	
+
 	// Using the natural languate comment parameter to supply additional context information to translators
 	<%t SearchResults.NoResult "There are no results matching your query." is "A message displayed to users when the search produces no results." %>
-	
+
 	// Using injection to add variables into the translated strings (note that $Name and $Greeting must be available in the current template scope).
 	<%t Header.Greeting "Hello {name} {greeting}" name=$Name greeting=$Greeting %>
-	
+
 #### Caching in Template Files with locale switching
 
 When caching a `<% loop %>` or `<% with %>` with `<%t params %>`. It is important to add the Locale to the cache key otherwise it won't pick up locale changes.
@@ -256,7 +258,7 @@ By default, the language files are loaded from modules in this order:
 
 This default order is configured in `framework/_config/i18n.yml`.  This file specifies two blocks of module ordering: `basei18n`, listing admin, and framework, and `defaulti18n` listing all other modules.
 
-To create a custom module order, you need to specify a config fragment that inserts itself either after or before those items.  For example, you may have a number of modules that have to come after the framework/admin, but before anyhting else.  To do that, you would use this 
+To create a custom module order, you need to specify a config fragment that inserts itself either after or before those items.  For example, you may have a number of modules that have to come after the framework/admin, but before anyhting else.  To do that, you would use this
 
 	---
 	Name: customi18n
@@ -282,7 +284,7 @@ Each module can have one language table per locale, stored by convention in the 
 The translation is powered by [Zend_Translate](http://framework.zend.com/manual/en/zend.translate.html),
 which supports different translation adapters, dealing with different storage formats.
 
-By default, SilverStripe 3.x uses a YAML format (through the [Zend_Translate_RailsYAML adapter](https://github.com/chillu/zend_translate_railsyaml)). 
+By default, SilverStripe 3.x uses a YAML format (through the [Zend_Translate_RailsYAML adapter](https://github.com/chillu/zend_translate_railsyaml)).
 
 Example: framework/lang/en.yml (extract)
 
@@ -305,7 +307,7 @@ The cache can be cleared through the `?flush=1` query parameter,
 or explicitly through `Zend_Translate::getCache()->clean(Zend_Cache::CLEANING_MODE_ALL)`.
 
 <div class="hint" markdown='1'>
-The format of language definitions has changed significantly in since version 2.x. 
+The format of language definitions has changed significantly in since version 2.x.
 </div>
 
 In order to enable usage of [version 2.x style language definitions](http://doc.silverstripe.org/framework/en/2.4/topics/i18n#language-tables-in-php) in 3.x, you need to register a legacy adapter
@@ -330,10 +332,10 @@ Unlike the PHP logic, these files aren't auto-discovered and have to be included
 
 ### Requirements
 
-Each language has its own language table in a separate file. 
+Each language has its own language table in a separate file.
 To save bandwidth, only two files are actually loaded by
-the browser: The current locale, and the default locale as a fallback. 
-The `Requirements` class has a special method to determine these includes: 
+the browser: The current locale, and the default locale as a fallback.
+The `Requirements` class has a special method to determine these includes:
 Just point it to a directory instead of a file, and the class will figure out the includes.
 
 	:::php
@@ -364,8 +366,8 @@ Example Translation Table (`<my-module-dir>/javascript/lang/de.js`)
 	  'MYMODULE.MYENTITY' : "Artikel wirklich löschen?"
 	});
 
-For most core modules, these files are generated by a 
-[build task](https://github.com/silverstripe/silverstripe-buildtools/blob/master/src/GenerateJavascriptI18nTask.php), 
+For most core modules, these files are generated by a
+[build task](https://github.com/silverstripe/silverstripe-buildtools/blob/master/src/GenerateJavascriptI18nTask.php),
 with the actual source files in a JSON
 format which can be processed more easily by external translation providers (see `javascript/lang/src`).
 
