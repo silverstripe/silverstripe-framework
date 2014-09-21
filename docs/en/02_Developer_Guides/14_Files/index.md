@@ -1,3 +1,5 @@
+summary: Learn how to deal with File and Image records
+
 # Files, Images and Folders
 
 ## Files, Images and Folders as database records

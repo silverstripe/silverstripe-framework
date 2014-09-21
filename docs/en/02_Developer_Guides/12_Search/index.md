@@ -1,3 +1,5 @@
+summary: Provide your users with advanced search functionality.
+
 # Search
 
 ## Searching for Pages (and Files)
@@ -7,7 +9,7 @@ See [Tutorial: Site Search](/tutorials/4-site-search) for details.
 
 ## Searching for DataObjects
 
-The `[api:SearchContext]` class provides a good base implementation that you can hook into your own controllers. 
+The `[api:SearchContext]` class provides a good base implementation that you can hook into your own controllers.
 A working implementation of searchable DataObjects can be seen in the `[ModelAdmin](/reference/modeladmin)` class.
 
 [SearchContext](/reference/searchcontext) goes into more detail about setting up a default search form for `[api:DataObject]`s.

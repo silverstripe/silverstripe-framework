@@ -21,7 +21,7 @@ In your controller (e.g. `mysite/code/Page.php`):
 			// either specify the css file manually
 			Requirements::css("mymodule/css/my.css", "screen,projection");
 			// or mention the css filename and SilverStripe will get the file from the current theme and add it to the template
-			Requirements::themedCSS('print', null,'print'); 
+			Requirements::themedCSS('print', null,'print');
 		}
 	}
 
@@ -51,7 +51,7 @@ An example of a good location to use `class="typography"` is the container eleme
 	   `<div id="LeftContent">`
 	      `<p>`We have a lot of content to go here.`</p>`
 	   `</div>`
-	
+
 	   `<div id="Content" class="typography">`
 	      $Content
 	   `</div>`
@@ -80,7 +80,7 @@ file. Then with this file you can define styles for the CMS or just import the s
 	:::css
 	/* Import the common styles from typography like link colors. */
 	@import 'typography.css';
-	
+
 	/* We want the backend editor to have a bigger font as well though */
 	.typography * { font-size: 200% }
 

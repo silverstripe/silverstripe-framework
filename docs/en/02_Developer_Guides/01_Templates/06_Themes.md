@@ -20,15 +20,15 @@ as a .tar.gz file.
 
 ## Developing your own theme
 
-See [Developing Themes](theme-development) to get an idea of how themes actually work and how you can develop your own. 
+See [Developing Themes](theme-development) to get an idea of how themes actually work and how you can develop your own.
 
 ## Submitting your theme to SilverStripe
 
 If you want to submit your theme to the SilverStripe directory then check
 
-* You should ensure your templates are well structured, modular and commented so it's easy for other people to 
+* You should ensure your templates are well structured, modular and commented so it's easy for other people to
  customise them.
-*  Templates should not contain text inside images and all images provided must be open source and not break any copyright or license laws. 
+*  Templates should not contain text inside images and all images provided must be open source and not break any copyright or license laws.
  This includes any icons your template uses in the frontend or the backend CMS.
 *  A theme does not include any PHP files. Only CSS, HTML, Images and Javascript.
 

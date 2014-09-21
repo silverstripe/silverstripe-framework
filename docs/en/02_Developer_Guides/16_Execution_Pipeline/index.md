@@ -1,13 +1,15 @@
+summary: An overview of the steps involved in delivering a SilverStripe web page.
+
 # Execution Pipeline
 
 ## Introduction
 
-This page documents all the steps from an URL request to the delivered page. 
+This page documents all the steps from an URL request to the delivered page.
 
 ## .htaccess and RewriteRule
 
 Silverstripe uses **[mod_rewrite](http://httpd.apache.org/docs/2.0/mod/mod_rewrite.html)** to deal with page requests.
-So instead of having your normal everyday `index.php` file which tells all, you need to look elsewhere. 
+So instead of having your normal everyday `index.php` file which tells all, you need to look elsewhere.
 
 The basic .htaccess file after installing SilverStripe looks like this:
 
@@ -81,15 +83,15 @@ You can access the following controller-method with /team/signup
 
 	:::php
 	class Team extends DataObject {}
-	
+
 	class Team_Controller extends Controller {
-	
+
 		private static $allowed_actions = array('signup');
-		
+
 		public function signup($id, $otherId) {
 			return $this->renderWith('MyTemplate');
 		}
-		
+
 	}
 
 ## SSViewer template rendering

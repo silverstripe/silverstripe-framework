@@ -1,3 +1,5 @@
+summary: Deploy robust applications by bundling Unit and Behavior tests with your application code and modules.
+
 # Unit and Integration Testing
 
 For behaviour testing in SilverStripe, check out [SilverStripe Behat Documentation](https://github.com/silverstripe-labs/silverstripe-behat-extension/).

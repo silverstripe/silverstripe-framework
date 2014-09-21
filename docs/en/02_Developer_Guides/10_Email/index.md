@@ -1,3 +1,5 @@
+summary: Send HTML and plain text email from your SilverStripe application.
+
 # Email
 
 SilverStripe has emailing functionality using the built-in mail() function in PHP.
@@ -44,16 +46,16 @@ Example:
 	:::php
 	$email = new Email($from, $to, $subject, $body);
 	$email->setTemplate('MyEmail');
-	
+
 	// You can call this multiple times or bundle everything into an array, including DataSetObjects
 	$email->populateTemplate(Member::currentUser());
-	
+
 	$welcomeMsg = 'Thank you for joining on '.date('Y-m-d'.'!');
-	
+
 	$email->populateTemplate(array(
 		'WelcomeMessage' => $welcomeMsg, // Accessible in template via $WelcomeMessage
 	));
-	
+
 	$email->send();
 
 
@@ -96,7 +98,7 @@ systems.
 
 	:::php
 	if(Director::isLive()) Config::inst()->update('Email', 'bcc_all_emails_to', "client@example.com");
-	else Config::inst()->update('Email', 'send_all_emails_to', "developer@example.com"); 
+	else Config::inst()->update('Email', 'send_all_emails_to', "developer@example.com");
 
 
 ### Setting Custom Headers
