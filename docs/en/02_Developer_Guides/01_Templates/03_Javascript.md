@@ -19,7 +19,7 @@ See [requirements](/reference/requirements) documentation.
 ## jQuery, jQuery UI and jQuery.entwine: Our libraries of choice
 
 We predominantly use [jQuery](http://jquery.com) as our abstraction library for DOM related programming, within the
-SilverStripe CMS and certain framework aspects. 
+SilverStripe CMS and certain framework aspects.
 
 For richer interactions such as drag'n'drop, and more complicated interface elements like tabs or accordions,
 SilverStripe CMS uses [jQuery UI](http://ui.jquery.com) on top of jQuery.
@@ -105,16 +105,16 @@ Example: A plugin to highlight a collection of elements with a configurable fore
 	})(jQuery);
 
 
-Usage: 
+Usage:
 
 	:::js
 	(function($) {
 	  // Highlight all buttons with default colours
 	  jQuery(':button').highlight();
-	
+
 	  // Highlight all buttons with green background
 	  jQuery(':button').highlight({background: "green"});
-	  
+
 	  // Set all further highlight() calls to have a green background
 	  $.fn.hilight.defaults.background = "green";
 	})(jQuery);
@@ -140,20 +140,20 @@ Example: Highlighter
 	:::js
 	(function($) {
 	  $.widget("ui.myHighlight", {
-	    getBlink: function () { 
-	      return this._getData('blink'); 
+	    getBlink: function () {
+	      return this._getData('blink');
 	    },
 	    setBlink: function (blink) {
 	      this._setData('blink', blink);
 	      if(blink) this.element.wrapInner('<blink></blink>');
 	      else this.element.html(this.element.children().html());
 	    },
-	    _init: function() { 
+	    _init: function() {
 	      // grab the default value and use it
-	      this.element.css('background',this.options.background); 
-	      this.element.css('color',this.options.foreground); 
+	      this.element.css('background',this.options.background);
+	      this.element.css('color',this.options.foreground);
 	      this.setBlink(this.options.blink);
-	    } 
+	    }
 	  });
 	  // For demonstration purposes, this is also possible with jQuery.css()
 	  $.ui.myHighlight.getter = "getBlink";
@@ -171,16 +171,16 @@ Usage:
 	(function($) {
 	  // call with default options
 	  $(':button').myHighlight();
-	
+
 	  // call with custom options
 	  $(':button').myHighlight({background: "green"});
-	
+
 	  // set defaults for all future instances
 	  $.ui.myHighlight.defaults.background = "green";
-	
+
 	  // Adjust property after initialization
 	  $(':button').myHighlight('setBlink', true);
-	
+
 	  // Get property
 	  $(':button').myHighlight('getBlink');
 	})(jQuery);
@@ -218,10 +218,10 @@ Usage:
 	(function($) {
 	  // call with default options
 	  $(':button').entwine().highlight();
-	  
+
 	  // set options for existing and new instances
 	  $(':button').entwine().setBackground('green');
-	  
+
 	  // get property
 	  $(':button').entwine().getBackground();
 	})(jQuery);
@@ -243,7 +243,7 @@ jQuery with a few lines of code.  Your jQuery code will normally end up as a ser
 
 ### Don't claim global properties
 
-Global properties are evil. They are accessible by other scripts, might be overwritten or misused. A popular case is the `$` shortcut in different libraries: in PrototypeJS it stands for `document.getElementByID()`, in jQuery for `jQuery()`. 
+Global properties are evil. They are accessible by other scripts, might be overwritten or misused. A popular case is the `$` shortcut in different libraries: in PrototypeJS it stands for `document.getElementByID()`, in jQuery for `jQuery()`.
 
 	:::js
 	// you can't rely on '$' being defined outside of the closure
@@ -285,7 +285,7 @@ Example: Add a 'loading' classname to all pressed buttons
 	$('input[[type=submit]]').on('click', function() {
 	  $(this).addClass('loading');
 	});
-	
+
 	// binding, applies to any inserted elements as well
 	$('input[[type=submit]]').on(function() {
 	  $(this).addClass('loading');
@@ -300,7 +300,7 @@ request](http://docs.jquery.com/Frequently_Asked_Questions#Why_do_my_events_stop
 jQuery is based around collections of DOM elements, the library functions typically handle multiple elements (where it
 makes sense). Encapsulate your code by nesting your jQuery commands inside a `jQuery().each()` call.
 
-Example: ComplexTableField implements a paginated table with a pop-up for displaying 
+Example: ComplexTableField implements a paginated table with a pop-up for displaying
 
 	:::js
 	$('div.ComplexTableField').each(function() {
@@ -371,7 +371,7 @@ See [interactive example on jsbin.com](http://jsbin.com/axafa)
 
 Ajax responses will sometimes need to update existing DOM elements, for example refresh a set of search results.
 Returning plain HTML is generally a good default behaviour, as it allows you to keep template rendering in one place (in
-SilverStripe PHP code), and is easy to deal with in JavaScript. 
+SilverStripe PHP code), and is easy to deal with in JavaScript.
 
 If you need to process or inspect returned data, consider extracting it from the loaded HTML instead (through id/class
 attributes, or the jQuery.metadata plugin). For returning status messages, please use the HTTP status-codes.
@@ -400,10 +400,10 @@ PHP:
 	  public function autocomplete($request) {
 	    $results = Page::get()->filter("Title", $request->getVar('title'));
 	    if(!$results) return new HTTPResponse("Not found", 404);
-	    
+
 	    // Use HTTPResponse to pass custom status messages
 	    $this->response->setStatusCode(200, "Found " . $results->Count() . " elements");
-	    
+
 	    // render all results with a custom template
 	    $vd = new ViewableData();
 	    return $vd->customise(array(
@@ -439,8 +439,8 @@ JavaScript:
 	    function(data, status) {
 	      resultsEl.show();
 	      // get all record IDs from the new HTML
-	      var ids = jQuery('.results').find('li').map(function() { 
-	        return $(this).attr('id').replace(/Record\-/,''); 
+	      var ids = jQuery('.results').find('li').map(function() {
+	        return $(this).attr('id').replace(/Record\-/,'');
 	      });
 	    }
 	  );
@@ -475,7 +475,7 @@ Example: Trigger custom 'validationfailed' event on form submission for each emp
 	  });
 	  return false;
 	});
-	
+
 	// listen to custom event on each <input> field
 	$('form :input').bind('validationfailed',function(e) {
 	  // $(this) refers to input field
@@ -525,30 +525,30 @@ Example: jQuery.entwine
 
 	:::js
 	/**
-	
+
 	 * Available Custom Events:
 	 * <ul>
 	 * <li>ajaxsubmit</li>
 	 * <li>validate</li>
 	 * <li>reloadeditform</li>
 	 * </ul>
-	 * 
+	 *
 	 * @class Main LeftAndMain interface with some control panel and an edit form.
 	 * @name ss.LeftAndMain
 	 */
 	$('.LeftAndMain').entwine('ss', function($){
 	  return/** @lends ss.LeftAndMain */ {
 	    /**
-	
+
 	     * Reference to some property
 	     * @type Number
 	     */
 	    MyProperty: 123,
-	      
+
 	    /**
-	
+
 	     * Renders the provided data into an unordered list.
-	     * 
+	     *
 	     * @param {Object} data
 	     * @param {String} status
 	     * @return {String} HTML unordered list
@@ -558,11 +558,11 @@ Example: jQuery.entwine
 	        + /...
 	        + '</ul>';
 	    },
-	    
+
 	    /**
-	
+
 	     * Won't show in documentation, but still worth documenting.
-	     * 
+	     *
 	     * @return {String} Something else.
 	     */
 	    _privateMethod: function() {
@@ -593,14 +593,14 @@ Example: QUnit test (from [jquery.com](http://docs.jquery.com/QUnit#Using_QUnit)
 Example: JSpec Shopping cart test (from [visionmedia.github.com](http://visionmedia.github.com/jspec/))
 
 	describe 'ShoppingCart'
-	  before_each 
+	  before_each
 	    cart = new ShoppingCart
 	  end
 	  describe 'addProduct'
 	    it 'should add a product'
-	      cart.addProduct('cookie') 
-	      cart.addProduct('icecream') 
-	      cart.should.have 2, 'products'   
+	      cart.addProduct('cookie')
+	      cart.addProduct('icecream')
+	      cart.should.have 2, 'products'
 	    end
 	  end
 	end
@@ -632,11 +632,11 @@ Here's an example of hooking the 'PageLoaded' and 'BeforeSave' methods:
 				this.observeMethod('BeforeSave', this.beforeSave);
 				this.pageLoaded(); // call pageload initially too.
 			},
-			
+
 			pageLoaded : function() {
 				alert("You loaded a page");
 			},
-			
+
 			beforeSave: function() {
 				alert("You clicked save");
 			}

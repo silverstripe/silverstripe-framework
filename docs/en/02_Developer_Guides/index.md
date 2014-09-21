@@ -1,8 +1,7 @@
-#Developer Guides
-A collection of more advanced functionality and features contained within the SilverStripe Framework. This covers common use cases, provides code examples and explanations of how you might use parts of the Framework and CMS to suit your projects. 
+title: Developer Guides
+introduction: The following guides take a more detailed look into the core concepts and code examples for building SilverStripe applications.
 
-This is by no means a completely exhaustive list of Classes and Methods but rather more of a descriptive book style format with examples.
+In each guide you'll find reference documentation followed by a collection of short and informal How-to's which contain
+ snippets of code to use in your own projects.
 
-Each key section will also contain a "How To" section into which we accept community contributed code examples and more specific use cases.
-
-TODO - A table of contents including any missing stub pages.
+[CHILDREN]

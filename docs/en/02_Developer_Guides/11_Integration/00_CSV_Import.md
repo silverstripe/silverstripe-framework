@@ -9,7 +9,7 @@ be customized to fit your data.
 
 ## The CsvBulkLoader class
 
-The [api:CsvBulkLoader] class facilitate complex CSV-imports by defining column-mappings and custom converters. 
+The [api:CsvBulkLoader] class facilitate complex CSV-imports by defining column-mappings and custom converters.
 It uses PHP's built-in `fgetcsv()` function to process CSV input, and accepts a file handle as an input.
 
 Feature overview:
@@ -52,7 +52,7 @@ The simplest way to use [api:CsvBulkLoader] is through a [api:ModelAdmin] interf
 	      'Player'
 	   );
 	   private static $model_importers = array(
-	      'Player' => 'PlayerCsvBulkLoader', 
+	      'Player' => 'PlayerCsvBulkLoader',
 	   );
 	   private static $url_segment = 'players';
 	}
@@ -70,13 +70,13 @@ You can have more customized logic and interface feedback through a custom contr
 	class MyController extends Controller {
 
 		private static $allowed_actions = array('Form');
-		
+
 		protected $template = "BlankPage";
-		
+
 		public function Link($action = null) {
 			return Controller::join_links('MyController', $action);
 		}
-		
+
 		public function Form() {
 			$form = new Form(
 				$this,
@@ -91,7 +91,7 @@ You can have more customized logic and interface feedback through a custom contr
 			);
 			return $form;
 		}
-		
+
 		public function doUpload($data, $form) {
 			$loader = new CsvBulkLoader('MyDataObject');
 			$results = $loader->load($_FILES['CsvFile']['tmp_name']);
@@ -101,7 +101,7 @@ You can have more customized logic and interface feedback through a custom contr
 			if($results->DeletedCount()) $messages[] = sprintf('Deleted %d items', $results->DeletedCount());
 			if(!$messages) $messages[] = 'No changes';
 			$form->sessionMessage(implode(', ', $messages), 'good');
-	
+
 			return $this->redirectBack();
 		}
 	}
@@ -128,9 +128,9 @@ Datamodel for Player
 	class Player extends DataObject {
 	   private static $db = array(
 	      'PlayerNumber' => 'Int',
-	      'FirstName' => 'Text', 
-	      'LastName' => 'Text', 
-	      'Birthday' => 'Date', 
+	      'FirstName' => 'Text',
+	      'LastName' => 'Text',
+	      'Birthday' => 'Date',
 	   );
 	   private static $has_one = array(
 	      'Team' => 'FootballTeam'
@@ -145,7 +145,7 @@ Datamodel for FootballTeam:
 	<?php
 	class FootballTeam extends DataObject {
 	   private static $db = array(
-	      'Title' => 'Text', 
+	      'Title' => 'Text',
 	   );
 	   private static $has_many = array(
 	      'Players' => 'Player'

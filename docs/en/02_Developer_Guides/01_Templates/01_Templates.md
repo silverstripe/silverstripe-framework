@@ -21,19 +21,19 @@ Here is a very simple template:
 			<header>
 				<h1>Bob's Chicken Shack</h1>
 			</header>
-			
+
 			<% with $CurrentMember %>
 				<p>Welcome $FirstName $Surname.</p>
 			<% end_with %>
-			
+
 			<% if $Dishes %>
 			<ul>
-				<% loop $Dishes %>	  
+				<% loop $Dishes %>
 					<li>$Title ($Price.Nice)</li>
 				<% end_loop %>
 			</ul>
 			<% end_if %>
-			
+
 			<% include Footer %>
 		</body>
 	</html>
@@ -131,7 +131,7 @@ See [CSS](/topics/css) and [Javascript](/topics/javascript) topics for individua
 
 ## Conditional Logic
 
-You can conditionally include markup in the output. That is, test for something 
+You can conditionally include markup in the output. That is, test for something
 that is true or false, and based on that test, control what gets output.
 
 The simplest if block is to check for the presence of a value.
@@ -141,8 +141,8 @@ The simplest if block is to check for the presence of a value.
 		<p>You are logged in as $CurrentMember.FirstName $CurrentMember.Surname.</p>
 	<% end_if %>
 
-The following compares a page property called `MyDinner` with the value in 
-quotes, `kipper`, which is a **literal**. If true, the text inside the if-block 
+The following compares a page property called `MyDinner` with the value in
+quotes, `kipper`, which is a **literal**. If true, the text inside the if-block
 is output.
 
 	:::ss
@@ -150,12 +150,12 @@ is output.
 		Yummy, kipper for tea.
 	<% end_if %>
 
-Note that inside a tag like this, variables should have a '$' prefix, and 
-literals should have quotes.  SilverStripe 2.4 didn't include the quotes or $ 
-prefix, and while this still works, we recommend the new syntax as it is less 
+Note that inside a tag like this, variables should have a '$' prefix, and
+literals should have quotes.  SilverStripe 2.4 didn't include the quotes or $
+prefix, and while this still works, we recommend the new syntax as it is less
 ambiguous.
 
-This example shows the use of the `else` option. The markup after `else` is 
+This example shows the use of the `else` option. The markup after `else` is
 output if the tested condition is *not* true.
 
 	:::ss
@@ -165,9 +165,9 @@ output if the tested condition is *not* true.
 		I wish I could have kipper :-(
 	<% end_if %>
 
-This example shows the user of `else_if`. There can be any number of `else_if` 
-clauses. The conditions are tested from first to last, until one of them is true, 
-and the markup for that condition is used. If none of the conditions are true, 
+This example shows the user of `else_if`. There can be any number of `else_if`
+clauses. The conditions are tested from first to last, until one of them is true,
+and the markup for that condition is used. If none of the conditions are true,
 the markup in the `else` clause is used, if that clause is present.
 
 	:::ss
@@ -186,7 +186,7 @@ This example shows the use of `not` to negate the test.
 		I'm going out for dinner tonight.
 	<% end_if %>
 
-You can combine two or more conditions with `||` ("or"). The markup is used if 
+You can combine two or more conditions with `||` ("or"). The markup is used if
 *either* of the conditions is true.
 
 	:::ss
@@ -194,7 +194,7 @@ You can combine two or more conditions with `||` ("or"). The markup is used if
 		yummy, fish for tea
 	<% end_if %>
 
-You can combine two or more conditions with `&&` ("and"). The markup is used if 
+You can combine two or more conditions with `&&` ("and"). The markup is used if
 *both* of the conditions are true.
 
 	:::ss
@@ -211,7 +211,7 @@ You can use inequalities like `<`, `<=`, `>`, `>=` to compare numbers.
 
 ## Looping Over Lists
 
-The `<% loop %>...<% end_loop %>` tag is used to **iterate** or loop over a 
+The `<% loop %>...<% end_loop %>` tag is used to **iterate** or loop over a
 collection of items. For example:
 
 	:::ss
@@ -235,7 +235,7 @@ with.
 
 ### Position Indicators
 
-Inside the loop scope, there are many variables at your disposal to determine the 
+Inside the loop scope, there are many variables at your disposal to determine the
 current position in the list and iteration:
 
  * `$Even`, `$Odd`: Returns boolean, handy for zebra striping
@@ -297,8 +297,8 @@ $Modulus and $MultipleOf can help to build column layouts.
 	$Modulus(value, offset) // returns an int
 	$MultipleOf(factor, offset) // returns a boolean.
 
-The following example demonstrates how you can use $Modulus(4) to generate 
-custom column names based on your loop statement. Note that this works for any 
+The following example demonstrates how you can use $Modulus(4) to generate
+custom column names based on your loop statement. Note that this works for any
 control statement (not just children).
 
 	:::ss
@@ -308,10 +308,10 @@ control statement (not just children).
 	</div>
 	<% end_loop %>
 
-Will return you column-3, column-2, column-1, column-0, column-3 etc. You can 
+Will return you column-3, column-2, column-1, column-0, column-3 etc. You can
 use these as styling hooks to float, position as you need.
 
-You can also use $MultipleOf(value, offset) to help build columned layouts. In 
+You can also use $MultipleOf(value, offset) to help build columned layouts. In
 this case we want to add a <br> after every 3th item.
 
 	:::ss
@@ -323,17 +323,17 @@ this case we want to add a <br> after every 3th item.
 
 ## Scope
 
-In the `<% loop %>` section, we saw an example of two **scopes**. Outside the 
-`<% loop %>...<% end_loop %>`, we were in the scope of the page. But inside the 
-loop, we were in the scope of an item in the list. The scope determines where 
-the value comes from when you refer to a variable. Typically the outer scope of 
-a page type's layout template is the page that is currently being rendered. 
+In the `<% loop %>` section, we saw an example of two **scopes**. Outside the
+`<% loop %>...<% end_loop %>`, we were in the scope of the page. But inside the
+loop, we were in the scope of an item in the list. The scope determines where
+the value comes from when you refer to a variable. Typically the outer scope of
+a page type's layout template is the page that is currently being rendered.
 The outer scope of an included template is the scope that it was included into.
 
 ### Up
 
-When we are in a scope, we sometimes want to refer to the scope outside the 
-<% loop %> or <% with %>. We can do that easily by using `$Up`. `$Up` takes 
+When we are in a scope, we sometimes want to refer to the scope outside the
+<% loop %> or <% with %>. We can do that easily by using `$Up`. `$Up` takes
 the scope back to the previous level. Take the following example:
 
 	:::ss
@@ -349,7 +349,7 @@ the scope back to the previous level. Take the following example:
 		<% end_loop %>
 	<% end_loop %>
 
-With a page structure (Blog -> Blog entry -> Child blog entry) the 
+With a page structure (Blog -> Blog entry -> Child blog entry) the
 above will produce:
 
 	:::ss
@@ -364,8 +364,8 @@ above will produce:
 
 ### Top
 
-While `$Up` provides us a way to go up 1 scope, `$Top` is a shortcut to jump to 
-the top most scope of the page. Using the previous example but expanded to 
+While `$Up` provides us a way to go up 1 scope, `$Top` is a shortcut to jump to
+the top most scope of the page. Using the previous example but expanded to
 include `$Top`:
 
 	:::ss
@@ -393,12 +393,12 @@ Will produce
 	Blog
 	--
 	Child blog entry
-	Blog entry	
+	Blog entry
 	Blog
 
 ### With
 
-The `<% with %>...<% end_with %>` tag lets you introduce a new scope. Consider 
+The `<% with %>...<% end_with %>` tag lets you introduce a new scope. Consider
 the following example:
 
 	:::ss
@@ -407,13 +407,13 @@ the following example:
 	<% end_with %>
 
 
-Outside the `<% with %>...<% end_with %>`, we are in the page scope. Inside it, 
-we are in the scope of `$CurrentMember`. We can refer directly to properties and 
-methods of that member. So $FirstName is equivalent to $CurrentMember.FirstName. 
-This keeps the markup clean, and if the scope is a complicated expression we don't 
+Outside the `<% with %>...<% end_with %>`, we are in the page scope. Inside it,
+we are in the scope of `$CurrentMember`. We can refer directly to properties and
+methods of that member. So $FirstName is equivalent to $CurrentMember.FirstName.
+This keeps the markup clean, and if the scope is a complicated expression we don't
 have to repeat it on each reference of a property.
 
-`<% with %>` also lets us use a collection as a scope, so we can access 
+`<% with %>` also lets us use a collection as a scope, so we can access
 properties of the collection itself, instead of iterating over it. For example:
 
 	:::ss
@@ -423,8 +423,8 @@ returns the number of items in the $Children collection.
 
 ## Pagination
 
-Lists can be paginated, and looped over to generate pagination. For this to 
-work,  the list needs to be wrapped in a `[api:PaginatedList]`. The process is 
+Lists can be paginated, and looped over to generate pagination. For this to
+work,  the list needs to be wrapped in a `[api:PaginatedList]`. The process is
 explained in detail on the ["pagination" howto](/howto/pagination).
 
 The list is split up in multiple "pages", each . Note that "page" is this context
@@ -457,7 +457,7 @@ which is of this type. It forces the content into an explicitly escaped format.
 
 Apart from value formatting, there's many methods to transform them as well,
 For example, the built in `$Now` placeholder is an instance of `[api:Date]`,
-and returns the current date in a standard system format. 
+and returns the current date in a standard system format.
 Since its an object, you can use the helper methods to return other formats:
 
 	:::ss
@@ -481,7 +481,7 @@ Pulling apart this example we see:
 
 ## Comments
 
-Using standard HTML comments is supported. These comments will be included in the published site. 
+Using standard HTML comments is supported. These comments will be included in the published site.
 
 	:::ss
 	$EditForm <!-- Some public comment about the form -->
@@ -507,10 +507,10 @@ It renders in the template as `<base href="http://www.mydomain.com" /><!--[if lt
 
 ## CurrentMember
 
-Returns the currently logged in member, if there is one.  
-All of their details or any special Member page controls can be called on this.  
+Returns the currently logged in member, if there is one.
+All of their details or any special Member page controls can be called on this.
 Alternately, you can use `<% if $CurrentMember %>` to detect whether someone has logged
-in. 
+in.
 
 	:::ss
 	<% if $CurrentMember %>
@@ -529,11 +529,11 @@ There are two ways you can extend the template variables you have available. You
 	 return "Hi, this is my site";
 	}
 
-Will give you the ability to call `$MyCustomValue` from anywhere in your template. 
+Will give you the ability to call `$MyCustomValue` from anywhere in your template.
 
 	:::ss
-	I've got one thing to say to you: <i>$MyCustomValue</i>	
-	// output "I've got one thing to say to you: <i>Hi, this is my site</i>" 
+	I've got one thing to say to you: <i>$MyCustomValue</i>
+	// output "I've got one thing to say to you: <i>Hi, this is my site</i>"
 
 Your function could return a single value as above or it could be a subclass of `[api:ArrayData]` for example a
 `[api:DataObject]` with many values then each of these could be accessible via a control loop
@@ -551,7 +551,7 @@ And now you could call these values by using
 	<% with $MyCustomValues %>
 	$Hi , $Name
 	<% end_with %>
-	// output "Kia Ora , John Smith" 
+	// output "Kia Ora , John Smith"
 
 Or by using the dot notation you would have
 
@@ -565,7 +565,7 @@ All functions that provide data to templates must have no side effects, as the v
 
 	:::php
 	private $counter = 0;
-	
+
 	public function Counter() {
 	    $this->counter += 1;
 	    return $this->counter;
@@ -594,9 +594,9 @@ by using the `$Layout` variable so it makes sense to add the .typography style a
 
 ## Calling templates from PHP code
 
-This is all very well and good, but how do the templates actually get called?  
+This is all very well and good, but how do the templates actually get called?
 
-Templates do nothing on their own.  Rather, they are used to render *a particular object*.  All of the `<% if %>`, `<%control %>`, 
+Templates do nothing on their own.  Rather, they are used to render *a particular object*.  All of the `<% if %>`, `<%control %>`,
 and variable codes are methods or parameters that are called *on that object*.  All that is necessary is
 that the object is an instance of `[api:ViewableData]` (or one of its subclasses).
 
@@ -627,11 +627,11 @@ default if it exists and there is no action in the url parameters.
 	class MyPage_Controller extends Page_Controller {
 
 		private static $allowed_actions = array('index');
-	
+
 		public function init(){
-			parent::init();  
+			parent::init();
 		}
-	 
+
 		public function index() {
 			if(Director::is_ajax()) {
 				return $this->renderWith("myAjaxTemplate");

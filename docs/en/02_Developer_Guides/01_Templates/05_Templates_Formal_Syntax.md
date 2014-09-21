@@ -43,7 +43,7 @@ Definition:
     injection := "$" lookup | "{" "$" lookup "}"
 	call := word [ "(" argument { "," argument } ")" ]
 	lookup := call { "." call }*
-	argument := literal | 
+	argument := literal |
 	            lookup |
 	            "$" lookup
 

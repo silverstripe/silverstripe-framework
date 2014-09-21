@@ -3,7 +3,7 @@
 ## Introduction
 
 `[api:RestfulService]` uses the php curl library, enabling connections to remote web services which support a REST interface and consuming those web services. (Examples: [Flickr](http://www.flickr.com/services/api/), [Youtube](http://code.google.com/apis/youtube/overview.html), Amazon and etc). `[api:RestfulService]` can parse the XML response (sorry no JSON support)
-returned from the web service. Further it supports caching of the response, and you can customize the cache interval. 
+returned from the web service. Further it supports caching of the response, and you can customize the cache interval.
 
 To gain the functionality you can either create a new `[api:RestfulService]` object or create a class extending the
 RestfulService (see [flickrservice](http://silverstripe.org/flickr-module/) and
@@ -28,7 +28,7 @@ RestfulService (see [flickrservice](http://silverstripe.org/flickr-module/) and
 	:::php
 	//example for extending RestfulService
 	class FlickrService extends RestfulService {
-		
+
 		public function __construct($expiry=NULL){
 			parent::__construct('http://www.flickr.com/services/rest/', $expiry);
 			$this->checkErrors = true;
@@ -44,12 +44,12 @@ RestfulService (see [flickrservice](http://silverstripe.org/flickr-module/) and
 	$service->basicAuth('username', 'password');
 	$service->httpHeader('Accept: application/xml');
 	$service->httpHeader('Content-Type: application/xml');
-	
+
 	$peopleXML = $service->request('/people');
 	$people = $service->getValues($peopleXML, 'user');
-	
+
 	// ...
-	
+
 	$taskXML = $service->request('/tasks');
 	$tasks = $service->getValues($taskXML, 'task');
 
@@ -57,7 +57,7 @@ RestfulService (see [flickrservice](http://silverstripe.org/flickr-module/) and
 
 ## Features
 
-### Caching 
+### Caching
 
 To set the cache interval you can pass it as the 2nd argument to constructor.
 
@@ -68,7 +68,7 @@ To set the cache interval you can pass it as the 2nd argument to constructor.
 ### Getting Values & Attributes
 
 You can traverse throught document tree to get the values or attribute of a particular node.
-for example you can traverse 
+for example you can traverse
 
 	:::xml
 	<entries>
@@ -84,7 +84,7 @@ to extract the id attributes of the entries use:
 	$this->getAttributes($xml, "entries", "entry") //will return all attributes of each entry node
 
 
-to extract the values (the names) of the entries use: 
+to extract the values (the names) of the entries use:
 
 	:::php
 	$this->getValues($xml, "entries", "entry") //will return all values of each entry node
@@ -119,11 +119,11 @@ could delgate the error handling to it's descendant class. To handle the errors 
 	// This will raise Youtube API specific error messages (if any).
 	public function errorCatch($response){
 		$err_msg = $response;
-	 	if(strpos($err_msg, '<') === false) {
-	 		user_error("YouTube Service Error : $err_msg", E_USER_ERROR);
-	 	}
-	 	
-	 	return $response;
+		if(strpos($err_msg, '<') === false) {
+			user_error("YouTube Service Error : $err_msg", E_USER_ERROR);
+		}
+
+		return $response;
 	}
 
 
@@ -152,8 +152,8 @@ Put something like this code in mysite/code/Page.php inside class Page_Controlle
 		$service 	= new RestfulService($url);
 		$request 	= $service->request();
 		$body 		= $request->getBody();
-		$items 		= $service->getValues($body,"channel","item");	
-	
+		$items 		= $service->getValues($body,"channel","item");
+
 		$output = '';
 		foreach($items as $item) {
 			// Fix quote encoding
@@ -161,7 +161,7 @@ Put something like this code in mysite/code/Page.php inside class Page_Controlle
 			$output .=  "<li><a href=\"{$item->link}\">{$item->title}</a><br />{$description}</li>";
 		}
 		return $output;
-	} 
+	}
 
 
 Put something like this code in `themes/<your-theme>/templates/Layout/HomePage.ss`:
@@ -169,7 +169,7 @@ Put something like this code in `themes/<your-theme>/templates/Layout/HomePage.s
 	:::ss
 	<h3>My Latest Del.icio.us Links</h3>
 	<ul>
-		$RestfulLinks(http://del.icio.us/rss/elijahlofgren) 
+		$RestfulLinks(http://del.icio.us/rss/elijahlofgren)
 	</ul>
 
 

@@ -6,7 +6,7 @@
 you create your own SilverStripe website theme.
 
 Developing your own theme in SilverStripe is a piece of cake thanks to a very straight forward and clean templating
-language.  
+language.
 
 
 ## What is a Theme?
@@ -32,7 +32,7 @@ After you have created the templates folder you need to create 2 more folders wi
 uppercase initial letters). These are 2 different types of templates you will use in your theme - Includes contain
 snippets of HTML that you want to break out and share between templates (for example the Header can be an include,
 Footer, Navigation etc) whereas Layout templates are the base page templates. So you can have several includes in a
-Layout template. 
+Layout template.
 
 ## Getting started - Core Files
 
@@ -64,27 +64,27 @@ our theme in action. The code for mine is below.
 	  $MetaTags(false)
 	  <title>Bob's Chicken Shack | $Title</title>
 	</head>
-	 
+
 	<body>
 	<div id="Container">
 	  <div id="Header">
 	    <h1>Bob's Chicken Shack</h1>
 	  </div>
-	 
+
 	  <div id="Navigation">
 	    <% if $Menu(1) %>
 	    <ul>
-	      <% loop $Menu(1) %>	  
+	      <% loop $Menu(1) %>
 	        <li><a href="$Link" title="Go to the $Title page" class="$LinkingMode">$MenuTitle</a></li>
 	      <% end_loop %>
 	    </ul>
 	   <% end_if %>
 	  </div>
-	 
+
 	  <div id="Layout">
 	    $Layout
 	  </div>
-	 
+
 	  <div id="Footer">
 	    <p>Copyright $Now.Year - Bob's Chicken Shack.</p>
 	  </div>
@@ -117,9 +117,9 @@ See [Templates](/reference/themes) for more information about templates.
 
 ### CSS Files
 
-By standard SilverStripe uses 3 CSS Files for your site - 
+By standard SilverStripe uses 3 CSS Files for your site -
 
-*  **layout.css** contains the layout and design of the site 
+*  **layout.css** contains the layout and design of the site
 *  **typography.css** contains the styling for the text/fonts/links (used in both front and back ends)
 *  **form.css** styling for forms.
 
@@ -149,16 +149,16 @@ Let's have a look at part of a Page.ss for the main layout elements defining a 2
 	 <div id="Header">
 	   <!-- Header -->
 	 </div>
-	
+
 	 <div id="Navigation">
 	   <!-- The Main Site Nav -->
 	 </div>
-	
+
 	 <div id="Layout">
 	   <!-- The whole site content has to sit inside here! Anything you want to sub template (eg each page will be different, needs to be contained in $Layout. This calls the file /Layout/Page.ss or anyother sub page template -->
 	   $Layout
 	 </div>
-	
+
 	 <div id="Footer">
 	 </div>
 	</div>
@@ -184,7 +184,7 @@ Next is a division for the main navigation. This may contain something like:
 	<div id="Navigation">
 	  <% if $Menu(1) %>
 	  <ul>
-	    <% loop $Menu(1) %>	  
+	    <% loop $Menu(1) %>
 	      <li><a href="$Link" title="Go to the $Title page" class="$LinkingMode">$MenuTitle</a></li>
 	    <% end_loop %>
 	 </ul>
@@ -220,10 +220,10 @@ A bunch of resources feel free to use to make your template awesome
 
 *  [http://kuler.adobe.com](http://kuler.adobe.com) - Kuler is a great color scheming tool
 *  [http://blog.html.it/layoutgala/](http://blog.html.it/layoutgala/) - 40 super cool CSS layouts for you to use
-*  [http://designmeltdown.com](http://designmeltdown.com) - Great gallery of websites. Browse through and get inspired. 
-*  [http://validator.w3.org/](http://validator.w3.org/) - Your template must pass 'or get near' validation. 
+*  [http://designmeltdown.com](http://designmeltdown.com) - Great gallery of websites. Browse through and get inspired.
+*  [http://validator.w3.org/](http://validator.w3.org/) - Your template must pass 'or get near' validation.
 *  [http://famfamfam.com/lab/icons/](http://famfamfam.com/lab/icons/) - free, beautiful icons.
-*  [http://cssremix.com](http://cssremix.com) - Another CSS site gallery for inspiration. 
+*  [http://cssremix.com](http://cssremix.com) - Another CSS site gallery for inspiration.
 *  [http://www.maxdesign.com.au/presentation/process/](http://www.maxdesign.com.au/presentation/process/) - a good process for creating a design
 
 ## Reference
@@ -253,7 +253,7 @@ ambiguity for themes.
 ### Subthemes
 
 If you have a theme called mytheme_forum, it is considered to be a 'subtheme' of the mytheme theme. This lets module
-developers release extensions to popular themes that will let their module work with that theme. 
+developers release extensions to popular themes that will let their module work with that theme.
 
 A subtheme overrides the files in the module. So for instance, if you have the forum setup instead of editing the files
 within the forum/ module you would create a themes/yourtheme_forum/ folder.

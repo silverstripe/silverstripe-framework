@@ -1,3 +1,5 @@
+summary: Learn how to identify errors in your application and best practice for logging application errors.
+
 # Debugging
 
 ## Environment Types
@@ -44,7 +46,7 @@ To set your site to test mode set this in your `config.yml` file
 	  environment_type: 'test'
 
 
-A common situation is to enable password protected site viewing on your test site only. 
+A common situation is to enable password protected site viewing on your test site only.
 You can enable that but adding this to your `config.yml` file:
 
 	:::yml
@@ -122,7 +124,7 @@ On live sites, all errors are emailed to the address specified in the `Debug.sen
 
 Since we don't have a decent interactive debugger going, we use the following debugging techniques:
 
-*  Putting *Debug::show()* and *Debug::message()* at key places in the code can help you know what's going on. 
+*  Putting *Debug::show()* and *Debug::message()* at key places in the code can help you know what's going on.
 Sometimes, it helps to put this debugging information into the core modules, although, if possible, try and get what you
 need by using [url querystring variables](/reference/urlvariabletools).
 
@@ -143,7 +145,7 @@ the development effort itself as "test-driven development".
 
 #### Profiling
 
-Profiling is the best way to identify bottle necks and other slow moving parts of your application prime for optimization. SilverStripe 
+Profiling is the best way to identify bottle necks and other slow moving parts of your application prime for optimization. SilverStripe
 does not include any profiling tools out of the box, but we recommend the use of existing tools such as [XHProf](https://github.com/facebook/xhprof/)
 and [XDebug](http://xdebug.org/).
 
