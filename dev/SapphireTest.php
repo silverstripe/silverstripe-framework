@@ -201,7 +201,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		DataObject::reset();
 		if(class_exists('SiteTree')) SiteTree::reset();
 		Hierarchy::reset();
-		if(Controller::has_curr()) Controller::curr()->setSession(new Session(array()));
+		if(Controller::has_curr()) Controller::curr()->setSession(Injector::inst()->create('Session', array()));
 		Security::$database_is_ready = null;
 		
 		$fixtureFile = static::get_fixture_file();
@@ -388,11 +388,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		return $id;
 	}
-	
+
 	/**
 	 * Return all of the IDs in the fixture of a particular class name.
 	 * Will collate all IDs form all fixtures if multiple fixtures are provided.
-	 * 
+	 *
 	 * @param string $className
 	 * @return A map of fixture-identifier => object-id
 	 */
@@ -402,9 +402,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Get an object from the fixture.
-	 * 
-	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
-	 * @param $identifier The identifier string, as provided in your fixture file
+	 *
+	 * @param string $className The data class, as specified in your fixture file. Parent classes won't work
+	 * @param string $identifier The identifier string, as provided in your fixture file
+	 *
+	 * @return DataObject
 	 */
 	protected function objFromFixture($className, $identifier) {
 		$obj = $this->getFixtureFactory()->get($className, $identifier);
@@ -506,10 +508,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$haystack,
 		$message = '',
 		$ignoreCase = FALSE,
-		$checkForObjectIdentity = TRUE
+		$checkForObjectIdentity = TRUE,
+		$checkForNonObjectIdentity = false
 	) {
 		if ($haystack instanceof DBField) $haystack = (string)$haystack;
-		parent::assertContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity);
+		parent::assertContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity, $checkForNonObjectIdentity);
 	}
 
 	public static function assertNotContains(
@@ -517,10 +520,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$haystack,
 		$message = '',
 		$ignoreCase = FALSE,
-		$checkForObjectIdentity = TRUE
+		$checkForObjectIdentity = TRUE,
+		$checkForNonObjectIdentity = false
 	) {
 		if ($haystack instanceof DBField) $haystack = (string)$haystack;
-		parent::assertNotContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity);
+		parent::assertNotContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity, $checkForNonObjectIdentity);
 	}
 
 	/**

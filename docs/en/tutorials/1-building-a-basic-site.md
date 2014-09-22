@@ -45,7 +45,7 @@ When designing your site you should only need to modify the *mysite*, *themes* a
 
 ![](_images/tutorial1_cms-basic.jpg)
 
-The CMS is the area in which you can manage your site content. You can access the cms at http://localhost/your_site_name/admin (or http://yourdomain.com/admin if you are using you own domain name). You
+The CMS is the area in which you can manage your site content. You can access the cms at http://localhost/your_site_name/admin (or http://yourdomain.com/admin if you are using your own domain name). You
 will be presented with a login screen. Login using the details you provided at installation. After logging in you
 should see the CMS interface with a list of the pages currently on your website (the site tree). Here you can add, delete and reorganize pages. If you need to delete, publish, or unpublish a page, first check "multi-selection" at the top. You will then be able to perform actions on any checked files using the "Actions" dropdown. Clicking on a page will open it in the page editing interface pictured below (we've entered some test content).
 
@@ -116,7 +116,7 @@ ensures the browser knows where to locate your site's images and css files.
 	$SiteConfig.Title
 
 These two variables are found within the html `<title>` tag, and are replaced by the "Page Name" and "Settings -> Site Title" fields in the CMS.
-	
+
 	:::ss
 	$MetaTags 
 
@@ -127,7 +127,7 @@ The MetaTags variable will add meta tags, which are used by search engines. You 
 The Layout variable is replaced with the contents of a template file with the same name as the page type we are using. 
 
 Open *themes/simple/templates/Layout/Page.ss*. You will see more HTML and more SilverStripe template replacement tags and variables.
-	
+
 	:::ss
 	$Content
 
@@ -155,7 +155,7 @@ We are now going to look at how the navigation system is implemented in the temp
 Open up *themes/simple/templates/Includes/Navigation.ss*
 
 The Menu for our site is created using a **loop**. Loops allow us to iterate over a data set, and render each item using a sub-template.
-	 
+
 	:::ss 
 	<% loop $Menu(1) %>
 
@@ -278,7 +278,7 @@ Breadcrumbs are only useful on pages that aren't in the top level. We can ensure
 the top level with another if statement.
 
 The *Level* page control allows you to get data from the page's parents, e.g. if you used *Level(1)*, you could use:
-	
+
 	:::ss
 	$Level(1).Title 
 

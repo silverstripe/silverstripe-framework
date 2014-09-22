@@ -210,4 +210,4 @@ blocks and concepts for more complex extensions as well.
  * [Reference: CMS Architecture](../reference/cms-architecture)
  * [Reference: Layout](../reference/layout)
  * [Topics: Rich Text Editing](../topics/rich-text-editing)
- * [CMS Alternating Button](../reference/cms-alternating-button)
+ * [CMS Alternating Button](../howto/cms-alternating-button)

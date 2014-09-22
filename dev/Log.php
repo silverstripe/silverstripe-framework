@@ -49,6 +49,8 @@ class SS_Log {
 	const ERR = Zend_Log::ERR;
 	const WARN = Zend_Log::WARN;
 	const NOTICE = Zend_Log::NOTICE;
+	const INFO = Zend_Log::INFO;
+	const DEBUG = Zend_Log::DEBUG;
 
 	/**
 	 * Logger class to use.
@@ -167,8 +169,8 @@ class SS_Log {
 			$message = array(
 				'errno' => '',
 				'errstr' => $message,
-				'errfile' => @$lastTrace['file'],
-				'errline' => @$lastTrace['line'],
+				'errfile' => isset($lastTrace['file']) ? $lastTrace['file'] : null,
+				'errline' => isset($lastTrace['line']) ? $lastTrace['line'] : null,
 				'errcontext' => $trace
 			);
 		}

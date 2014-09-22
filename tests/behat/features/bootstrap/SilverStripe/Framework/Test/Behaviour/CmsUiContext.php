@@ -106,40 +106,6 @@ class CmsUiContext extends BehatContext {
 		return $cms_tree_element;
 	}
 
-	protected function getGridfieldTable($title) {
-		$page = $this->getSession()->getPage();
-		$table_elements = $page->findAll('css', '.ss-gridfield-table');
-		assertNotNull($table_elements, 'Table elements not found');
-
-		$table_element = null;
-		foreach ($table_elements as $table) {
-			$table_title_element = $table->find('css', '.title');
-			if ($table_title_element->getText() === $title) {
-				$table_element = $table;
-				break;
-			}
-		}
-		assertNotNull($table_element, sprintf('Table `%s` not found', $title));
-
-		return $table_element;
-	}
-
-	/**
-	 * Finds the first visible GridField table.
-	 */
-	protected function getFirstGridFieldTable() {
-		$page = $this->getSession()->getPage();
-		$tableElements = $page->findAll('css', '.ss-gridfield-table');
-		assertNotNull($tableElements, 'Table elements not found');
-
-		// Return first found table.
-		foreach($tableElements as $table) {
-			if($table->isVisible()) return $table;
-		}
-
-		assertNotNull(null, 'First visible table element not found');
-	}
-
 	/**
 	 * @Given /^I should see a "([^"]*)" button in CMS Content Toolbar$/
 	 */
@@ -171,27 +137,131 @@ class CmsUiContext extends BehatContext {
 	}
 
 	/**
-	 * @When /^I click on "([^"]*)" in the tree$/
+	 * Applies a specific action to an element
+	 * 
+	 * @param NodeElement $element Element to act on
+	 * @param string $action Action, which may be one of 'hover', 'double click', 'right click', or 'left click'
+	 * The default 'click' behaves the same as left click
 	 */
-	public function stepIClickOnElementInTheTree($text) {
+	protected function interactWithElement($element, $action = 'click') {
+		switch($action) {
+			case 'hover':
+				$element->mouseOver();
+				break;
+			case 'double click':
+				$element->doubleClick();
+				break;
+			case 'right click':
+				$element->rightClick();
+				break;
+			case 'left click':
+			case 'click':
+			default:
+				$element->click();
+				break;
+		}
+
+	}
+
+	/**
+	 * @When /^I (?P<method>(?:(?:double |right |left |)click)|hover) on "(?P<link>[^"]*)" in the context menu/
+	 */
+	public function stepIClickOnElementInTheContextMenu($method, $link) {
+		$context = $this->getMainContext();
+		// Wait until context menu has appeared
+		$this->getSession()->wait(
+			1000,
+			"window.jQuery && window.jQuery('.jstree-apple-context').size() > 0"
+		);
+		$regionObj = $context->getRegionObj('.jstree-apple-context');
+		assertNotNull($regionObj, "Context menu could not be found");
+
+		$linkObj = $regionObj->findLink($link);
+		if (empty($linkObj)) {
+			throw new \Exception(sprintf(
+				'The link "%s" was not found in the context menu on the page %s',
+				$link,
+				$this->getSession()->getCurrentUrl()
+			));
+		}
+
+		$this->interactWithElement($linkObj, $method);
+	}
+
+	/**
+	 * @When /^I (?P<method>(?:(?:double |right |left |)click)|hover) on "(?P<text>[^"]*)" in the tree$/
+	 */
+	public function stepIClickOnElementInTheTree($method, $text) {
 		$treeEl = $this->getCmsTreeElement();
 		$treeNode = $treeEl->findLink($text);
 		assertNotNull($treeNode, sprintf('%s not found', $text));
-		$treeNode->click();
+		$this->interactWithElement($treeNode, $method);
 	}
 
 	/**
 	 * @When /^I expand the "([^"]*)" CMS Panel$/
 	 */
 	public function iExpandTheCmsPanel() {
-		// TODO Make dynamic, currently hardcoded to first panel
+		//Tries to find the first visiable toggle in the page
 		$page = $this->getSession()->getPage();
+		$toggle_elements = $page->findAll('css', '.toggle-expand');
+		assertNotNull($toggle_elements, 'Panel toggle not found');	
+		foreach($toggle_elements as $toggle){
+			if($toggle->isVisible()){
+				$toggle->click();
+			}
+		}		
+	}
 
-		$panel_toggle_element = $page->find('css', '.cms-content > .cms-panel > .cms-panel-toggle > .toggle-expand');
-		assertNotNull($panel_toggle_element, 'Panel toggle not found');
+	/**
+	 * @When /^I (expand|collapse) "([^"]*)" in the tree$/
+	 */
+	public function iExpandInTheTree($action, $nodeText) {
+		//Tries to find the first visiable matched Node in the page
+		$page = $this->getSession()->getPage();
+		$treeEl = $this->getCmsTreeElement();
+		$treeNode = $treeEl->findLink($nodeText);
+		assertNotNull($treeNode, sprintf('%s link not found', $nodeText));
+		$cssIcon = $treeNode->getParent()->getAttribute("class");
+		if($action == "expand") {
+			//ensure it is collapsed
+			if(false === strpos($cssIcon, 'jstree-open')) {
+				$nodeIcon = $treeNode->getParent()->find('css', '.jstree-icon');
+				assertTrue($nodeIcon->isVisible(), "CMS node '$nodeText' not found");
+				$nodeIcon->click();
+			}
+		} else {
+			//ensure it is expanded
+			if(false === strpos($cssIcon, 'jstree-closed')) {
+				$nodeIcon = $treeNode->getParent()->find('css', '.jstree-icon');
+				assertTrue($nodeIcon->isVisible(), "CMS node '$nodeText' not found");
+				$nodeIcon->click();
+			}
+		}
+	}
 
-		if ($panel_toggle_element->isVisible()) {
-			$panel_toggle_element->click();
+	/**
+	 * @When /^I should (not |)see a "([^"]*)" CMS tab$/
+	 */
+	public function iShouldSeeACmsTab($negate, $tab) {
+		$this->getSession()->wait(
+			5000, 
+			"window.jQuery && window.jQuery('.ui-tabs-nav').size() > 0"
+		);
+
+		$page = $this->getSession()->getPage();
+		$tabsets = $page->findAll('css', '.ui-tabs-nav');
+		assertNotNull($tabsets, 'CMS tabs not found');
+
+		$tab_element = null;
+		foreach($tabsets as $tabset) {
+			$tab_element = $tabset->find('named', array('link_or_button', "'$tab'"));
+			if($tab_element) break;
+		}
+		if($negate) {
+			assertNull($tab_element, sprintf('%s tab found', $tab));
+		} else {
+			assertNotNull($tab_element, sprintf('%s tab not found', $tab));
 		}
 	}
 
@@ -216,51 +286,6 @@ class CmsUiContext extends BehatContext {
 		assertNotNull($tab_element, sprintf('%s tab not found', $tab));
 
 		$tab_element->click();
-	}
-
-	/**
-	 * @Then /^the "([^"]*)" table should contain "([^"]*)"$/
-	 */
-	public function theTableShouldContain($table, $text) {
-		$table_element = $this->getGridfieldTable($table);
-
-		$element = $table_element->find('named', array('content', "'$text'"));
-		assertNotNull($element, sprintf('Element containing `%s` not found in `%s` table', $text, $table));
-	}
-
-	/**
-	 * @Then /^the "([^"]*)" table should not contain "([^"]*)"$/
-	 */
-	public function theTableShouldNotContain($table, $text) {
-		$table_element = $this->getGridfieldTable($table);
-
-		$element = $table_element->find('named', array('content', "'$text'"));
-		assertNull($element, sprintf('Element containing `%s` not found in `%s` table', $text, $table));
-	}
-
-	/**
-	 * @Given /^I click on "([^"]*)" in the "([^"]*)" table$/
-	 */
-	public function iClickOnInTheTable($text, $table) {
-		$table_element = $this->getGridfieldTable($table);
-
-		$element = $table_element->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
-		assertNotNull($element, sprintf('Element containing `%s` not found', $text));
-		$element->click();
-	}
-
-	/**
-	 * Clicks on a row in the first found visible GridField table.
-	 * Example: I click on "New Zealand" in the table
-	 *
-	 * @Given /^I click on "([^"]*)" in the table$/
-	 */
-	public function iClickOnInTheFirstTable($text) {
-		$table_element = $this->getFirstGridFieldTable();
-
-		$element = $table_element->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
-		assertNotNull($element, sprintf('Element containing `%s` not found', $text));
-		$element->click();
 	}
 
 	/**
@@ -340,6 +365,42 @@ class CmsUiContext extends BehatContext {
 		
 		$driver->switchToIFrame('cms-preview-iframe');
 		$this->getMainContext()->assertPageNotContainsText($content);
+		$driver->switchToWindow($origWindowName);
+	}
+
+	/**
+	 * When I follow "my link" in preview
+	 *
+	 * @When /^(?:|I )follow "(?P<link>(?:[^"]|\\")*)" in preview$/
+	 */
+	public function clickLinkInPreview($link) {
+		$driver = $this->getSession()->getDriver();
+		// TODO Remove once we have native support in Mink and php-webdriver,
+		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
+		$origWindowName = $driver->getWebDriverSession()->window_handle();
+		$driver->switchToIFrame('cms-preview-iframe');
+
+		$link = $this->fixStepArgument($link);
+		$this->getSession()->getPage()->clickLink($link);
+
+		$driver->switchToWindow($origWindowName);
+	}
+
+	/**
+	 * When I press "submit" in preview
+	 *
+	 * @When /^(?:|I )press "(?P<button>(?:[^"]|\\")*)" in preview$/
+	 */
+	public function pressButtonInPreview($button) {
+		$driver = $this->getSession()->getDriver();
+		// TODO Remove once we have native support in Mink and php-webdriver,
+		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
+		$origWindowName = $driver->getWebDriverSession()->window_handle();
+		$driver->switchToIFrame('cms-preview-iframe');
+
+		$button = $this->fixStepArgument($button);
+		$this->getSession()->getPage()->pressButton($button);
+
 		$driver->switchToWindow($origWindowName);
 	}
 

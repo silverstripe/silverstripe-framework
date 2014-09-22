@@ -54,34 +54,80 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Returns the date in the raw SQL-format, e.g. “2006-01-18 16:32:04”
+	 * Returns the date and time (in 12-hour format) using the format string 'd/m/Y g:ia' e.g. '31/01/2014 2:23pm'.
+	 * @return string Formatted date and time.
 	 */
 	public function Nice() {
 		if($this->value) return $this->Format('d/m/Y g:ia');
 	}
 
+	/**
+	 * Returns the date and time (in 24-hour format) using the format string 'd/m/Y H:i' e.g. '28/02/2014 13:32'.
+	 * @return string Formatted date and time.
+	 */
 	public function Nice24() {
 		if($this->value) return $this->Format('d/m/Y H:i');
 	}
 
+	/**
+	 * Returns the date using the format string 'd/m/Y' e.g. '28/02/2014'.
+	 * @return string Formatted date.
+	 */
 	public function Date() {
 		if($this->value) return $this->Format('d/m/Y');
 	}
 
+	/**
+	 * Returns the time in 12-hour format using the format string 'g:ia' e.g. '1:32pm'.
+	 * @return string Formatted time.
+	 */
 	public function Time() {
 		if($this->value) return $this->Format('g:ia');
 	}
 
+	/**
+	 * Returns the time in 24-hour format using the format string 'H:i' e.g. '13:32'.
+	 * @return string Formatted time.
+	 */
 	public function Time24() {
 		if($this->value) return $this->Format('H:i');
 	}
+	
+	/**
+	 * Return a date and time formatted as per a CMS user's settings.
+	 * 
+	 * @param Member $member
+	 * @return boolean | string A time and date pair formatted as per user-defined settings.
+	 */
+	public function FormatFromSettings($member = null) {
+		require_once 'Zend/Date.php';	
+		
+		if(!$member) {
+			if(!Member::currentUserID()) {
+				return false;
+			}
+			$member = Member::currentUser();
+		}
+		
+		$formatD = $member->getDateFormat();
+		$formatT = $member->getTimeFormat();
+		
+		$zendDate = new Zend_Date($this->getValue(), 'y-MM-dd HH:mm:ss');
+		return $zendDate->toString($formatD).' '.$zendDate->toString($formatT);
+	}	
 
 	public function requireField() {
 		$parts=Array('datatype'=>'datetime', 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'SS_Datetime', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
-	
+
+	/**
+	 * Returns the url encoded date and time in ISO 6801 format using format
+	 * string 'Y-m-d%20H:i:s' e.g. '2014-02-28%2013:32:22'.
+	 *
+	 * @return string Formatted date and time.
+	 */
 	public function URLDatetime() {
 		if($this->value) return $this->Format('Y-m-d%20H:i:s');
 	}

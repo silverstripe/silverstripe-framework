@@ -42,13 +42,28 @@ class CheckboxSetField extends OptionsetField {
 	 * @var array
 	 */
 	protected $defaultItems = array();
-	
+
 	/**
 	 * @todo Explain different source data that can be used with this field,
 	 * e.g. SQLMap, ArrayList or an array.
 	 */
 	public function Field($properties = array()) {
 		Requirements::css(FRAMEWORK_DIR . '/css/CheckboxSetField.css');
+
+		$properties = array_merge($properties, array(
+			'Options' => $this->getOptions()
+		));
+
+		return $this->customise($properties)->renderWith(
+			$this->getTemplates()
+		);
+	}
+
+	/**
+	 * @return ArrayList
+	 */
+	public function getOptions() {
+		$odd = 0;
 
 		$source = $this->source;
 		$values = $this->value;
@@ -99,47 +114,48 @@ class CheckboxSetField extends OptionsetField {
 				}
 			}
 		}
-			
+
 		if(is_array($source)) {
 			unset($source['']);
 		}
 		
-		$odd = 0;
 		$options = array();
 		
-		if ($source == null) $source = array();
-
-		if($source) {
-			foreach($source as $value => $item) {
-				if($item instanceof DataObject) {
-					$value = $item->ID;
-					$title = $item->Title;
-				} else {
-					$title = $item;
-				}
-
-				$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $value);
-				$odd = ($odd + 1) % 2;
-				$extraClass = $odd ? 'odd' : 'even';
-				$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
-
-				$options[] = new ArrayData(array(
-					'ID' => $itemID,
-					'Class' => $extraClass,
-					'Name' => "{$this->name}[{$value}]",
-					'Value' => $value,
-					'Title' => $title,
-					'isChecked' => in_array($value, $items) || in_array($value, $this->defaultItems),
-					'isDisabled' => $this->disabled || in_array($value, $this->disabledItems)
-				));
-			}
+		if ($source == null) {
+			$source = array();
 		}
 
-		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
+		foreach($source as $value => $item) {
+			if($item instanceof DataObject) {
+				$value = $item->ID;
+				$title = $item->Title;
+			} else {
+				$title = $item;
+			}
 
-		return $this->customise($properties)->renderWith($this->getTemplates());
+			$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $value);
+			$odd = ($odd + 1) % 2;
+			$extraClass = $odd ? 'odd' : 'even';
+			$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
+
+			$options[] = new ArrayData(array(
+				'ID' => $itemID,
+				'Class' => $extraClass,
+				'Name' => "{$this->name}[{$value}]",
+				'Value' => $value,
+				'Title' => $title,
+				'isChecked' => in_array($value, $items) || in_array($value, $this->defaultItems),
+				'isDisabled' => $this->disabled || in_array($value, $this->disabledItems)
+			));
+		}
+
+		$options = new ArrayList($options);
+
+		$this->extend('updateGetOptions', $options);
+
+		return $options;
 	}
-	
+
 	/**
 	 * Default selections, regardless of the {@link setValue()} settings.
 	 * Note: Items marked as disabled through {@link setDisabledItems()} can still be

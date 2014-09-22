@@ -169,7 +169,7 @@ ar:
     TEXT2: 'رابط إعادة تعيين كلمة المرور'
     TEXT3: لـ
   Form:
-    CSRF_FAILED_MESSAGE: 'هناك على ما يبدو مشكلة فنية. الرجاء الضغط على الزر مرة أخرى، و تحديث المتصفح الخاص بك، ثم حاول مرة أخرى.'
+    CSRF_FAILED_MESSAGE: "هناك على ما يبدو مشكلة فنية. الرجاء الضغط على الزر مرة أخرى، و تحديث المتصفح الخاص بك، ثم حاول مرة أخرى."
     FIELDISREQUIRED: '{الاسم} مطلوب'
     SubmitBtnLabel: اذهب
     VALIDATIONCREDITNUMBER: 'يرجى التأكد من أنك قد قمت بإدخال {رقم} رقم بطاقة الائتمان بشكل صحيح'
@@ -266,6 +266,7 @@ ar:
     FindInFolder: 'ابحث في المجلد'
     IMAGEALT: 'النص البديل (بديل)'
     IMAGEALTTEXT: 'النص البديل (ألت) - يظهر إذا كان لا يمكن عرض الصورة'
+    IMAGEALTTEXTDESC: 'تبين قارئي الشاشة أو إذا لم يمكن عرض الصورة'
     IMAGEDIMENSIONS: الأبعاد
     IMAGEHEIGHTPX: الطول
     IMAGETITLE: 'العنوان - لإضافة معلومات إلى الصورة'
@@ -410,8 +411,8 @@ ar:
     Title: 'نماذج البيانات'
     UPDATEDRECORDS: '{عدد} السجلات التي تم تحديثها'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'عرض مواصفات لـ%s'
     IMPORTSPECFIELDS: 'أعمدة قاعدة البيانات'
+    IMPORTSPECLINK: 'عرض مواصفات لـ%s'
     IMPORTSPECRELATIONS: علاقات
     IMPORTSPECTITLE: 'مواصفات لـ%s'
   ModelAdmin_Tools_ss:
@@ -469,6 +470,7 @@ ar:
     ERRORPASSWORDPERMISSION: 'يجب تسجيل الدخول لتتمكن من تغيير كلمة المرور'
     LOGGEDOUT: 'تم تسجيل خروجك بنجاح ، إذا كنت ترغب بالدخول مرة أخرى فتفضل بتعبئة بياناتك بالأسفل'
     LOGIN: 'دخول'
+    LOSTPASSWORDHEADER: 'كلمة مرور مفقودة'
     NOTEPAGESECURED: 'هذه الصفحة محمية بكلمة مرور ، أدخل بيانات دخولك بالأسفل ليتم السماح لك بالوصول للصفحة'
     NOTERESETLINKINVALID: "<p> رابط إعادة تعيين كلمة المرور غير صحيح أو نفذت صلاحيته.</p>\n<p> \nيمكنك طلب رابط جديد <\"{a href=\"{link1\"> هنا </a>\n أو تغيير كلمة المرور الخاصة بك بعد <\"{a href=\"{link2\"> تسجيل دخولك</a>.\n</p>"
     NOTERESETPASSWORD: 'أدخل بريدك الإلكتروني و سيتم إرسال رابط إعادة تهيئة كلمة المرور '

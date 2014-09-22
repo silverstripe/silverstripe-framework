@@ -166,7 +166,7 @@ it:
     TEXT2: 'Link per l''azzeramento della password'
     TEXT3: per
   Form:
-    CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore clicca sul pulsante "indietro", ricarica la pagina e riprova.'
+    CSRF_FAILED_MESSAGE: "Sembra che ci sia stato un problema tecnico. Per favore clicca sul pulsante \"indietro\", ricarica la pagina e riprova."
     FIELDISREQUIRED: '{name} è richiesto'
     SubmitBtnLabel: Vai
     VALIDATIONCREDITNUMBER: 'Assicurati che il numero di carta di credito {number} sia inserito correttamente'
@@ -261,6 +261,8 @@ it:
     FROMWEB: 'Dal web'
     FindInFolder: 'Trova nella Cartella'
     IMAGEALT: 'Testo alternativo (alt)'
+    IMAGEALTTEXT: 'Testo alternativo (alt) - mostrato se l''immagine non può essere mostrata.'
+    IMAGEALTTEXTDESC: 'Mostrato agli screen reader o se l''immagine non può essere visualizzata'
     IMAGEDIMENSIONS: Dimensioni
     IMAGEHEIGHTPX: Altezza
     IMAGETITLE: 'Titolo (tooltip) - per informazioni aggiuntive sull''immagine.'
@@ -404,8 +406,8 @@ it:
     Title: 'Modelli di dati'
     UPDATEDRECORDS: 'Aggiornati {count} record.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Mostra specifiche per %s'
     IMPORTSPECFIELDS: 'Colonne database'
+    IMPORTSPECLINK: 'Mostra specifiche per %s'
     IMPORTSPECRELATIONS: Relazioni
     IMPORTSPECTITLE: 'Specifiche per %s'
   ModelAdmin_Tools_ss:

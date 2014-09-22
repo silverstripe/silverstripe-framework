@@ -171,7 +171,7 @@ zh:
     TEXT2: '密码重设链接'
     TEXT3: 为
   Form:
-    CSRF_FAILED_MESSAGE: '似乎出现了技术问题。请点击返回按钮，刷新您的浏览器，然后再试一次。'
+    CSRF_FAILED_MESSAGE: "似乎出现了技术问题。请点击返回按钮，刷新您的浏览器，然后再试一次。"
     FIELDISREQUIRED: '{name} 为必填'
     SubmitBtnLabel: 前往
     VALIDATIONCREDITNUMBER: '请确保您输入了正确的 {number} 信用卡号码'
@@ -413,8 +413,8 @@ zh:
     Title: '数据模型'
     UPDATEDRECORDS: '更新了 {count} 个记录。'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: '展示 %s 的详细信息'
     IMPORTSPECFIELDS: '数据库栏目'
+    IMPORTSPECLINK: '展示 %s 的详细信息'
     IMPORTSPECRELATIONS: 关系
     IMPORTSPECTITLE: '%s 的详细信息'
   ModelAdmin_Tools_ss:
@@ -472,6 +472,7 @@ zh:
     ERRORPASSWORDPERMISSION: '您必须登录才能更改您的密码！'
     LOGGEDOUT: '您已经退出了。如果您希望再次登录，请在下面输入您的证书。'
     LOGIN: '登录'
+    LOSTPASSWORDHEADER: '忘记密码'
     NOTEPAGESECURED: '该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。'
     NOTERESETLINKINVALID: '<p>密码重设链接无效或已过期。</p><p>您可以在<a href="{link1}">这里</a> 要求一个新的或在<a href="{link2}">登录</a>后更改您的密码。</p>'
     NOTERESETPASSWORD: '请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码'

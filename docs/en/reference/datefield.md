@@ -56,7 +56,7 @@ HTML5 placeholders 'day', 'month' and 'year' are enabled by default.
 
 	:::php
 	DateField::create('MyDate')
-		->setConfig('dmyfields', true);
+		->setConfig('dmyfields', true)
 		->setConfig('dmyseparator', '/') // set the separator
 		->setConfig('dmyplaceholders', 'true'); // enable HTML 5 Placeholders
 

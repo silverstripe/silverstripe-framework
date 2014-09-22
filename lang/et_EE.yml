@@ -240,6 +240,7 @@ et_EE:
     FROMWEB: 'Veebist'
     FindInFolder: 'Otsi kaustast'
     IMAGEALT: 'Asetekst (alt)'
+    IMAGEALTTEXT: 'Asetekst (alt) – kuvatakse, kui kujutist ei ole võimalik kuvada'
     IMAGEDIMENSIONS: Mõõtmed
     IMAGEHEIGHTPX: Laius
     IMAGETITLE: 'Pealkirja tekst (kohtspikker) – lisateabeks kujutise kohta'
@@ -376,8 +377,8 @@ et_EE:
     Title: 'Andmemudelid'
     UPDATEDRECORDS: '{count} kirjet on uuendatud.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Kuva üksuse %s spetsifikatsioonid'
     IMPORTSPECFIELDS: 'Andmebaasi tulbad'
+    IMPORTSPECLINK: 'Kuva üksuse %s spetsifikatsioonid'
     IMPORTSPECRELATIONS: Seosed
     IMPORTSPECTITLE: 'Üksuse %s spetsifikatsioonid'
   ModelAdmin_Tools_ss:

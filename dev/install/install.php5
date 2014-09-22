@@ -386,11 +386,15 @@ class InstallRequirements {
 	 */
 	function findWebserver() {
 		// Try finding from SERVER_SIGNATURE or SERVER_SOFTWARE
-		$webserver = @$_SERVER['SERVER_SIGNATURE'];
-		if(!$webserver) $webserver = @$_SERVER['SERVER_SOFTWARE'];
+		if(!empty($_SERVER['SERVER_SIGNATURE'])) {
+			$webserver = $_SERVER['SERVER_SIGNATURE'];
+		} elseif(!empty($_SERVER['SERVER_SOFTWARE'])) {
+			$webserver = $_SERVER['SERVER_SOFTWARE'];
+		} else {
+			return false;
+		}
 
-		if($webserver) return strip_tags(trim($webserver));
-		else return false;
+		return strip_tags(trim($webserver));
 	}
 
 	/**
@@ -1048,12 +1052,16 @@ class InstallRequirements {
 			$helperPath = $adapters[$databaseClass]['helperPath'];
 			$class = str_replace('.php', '', basename($helperPath));
 		}
-		return (class_exists($class)) ? new $class() : new MySQLDatabaseConfigurationHelper();
+		return (class_exists($class)) ? new $class() : false;
 	}
 
 	function requireDatabaseFunctions($databaseConfig, $testDetails) {
 		$this->testing($testDetails);
 		$helper = $this->getDatabaseConfigurationHelper($databaseConfig['type']);
+		if (!$helper) {
+			$this->error("Couldn't load database helper code for ". $databaseConfig['type']);
+			return false;
+		}
 		$result = $helper->requireDatabaseFunctions($databaseConfig);
 		if($result) {
 			return true;
@@ -1116,7 +1124,7 @@ class InstallRequirements {
 			$this->testing($testDetails);
 			return true;
 		} else {
-			if(!@$result['cannotCreate']) {
+			if(empty($result['cannotCreate'])) {
 				$testDetails[2] .= ". Please create the database manually.";
 			} else {
 				$testDetails[2] .= " (user '$databaseConfig[username]' doesn't have CREATE DATABASE permissions.)";
@@ -1194,7 +1202,7 @@ class InstallRequirements {
 		$section = $testDetails[0];
 		$test = $testDetails[1];
 
-		$this->tests[$section][$test] = array("error", @$testDetails[2]);
+		$this->tests[$section][$test] = array("error", isset($testDetails[2]) ? $testDetails[2] : null);
 		$this->errors[] = $testDetails;
 	}
 
@@ -1202,7 +1210,7 @@ class InstallRequirements {
 		$section = $testDetails[0];
 		$test = $testDetails[1];
 
-		$this->tests[$section][$test] = array("warning", @$testDetails[2]);
+		$this->tests[$section][$test] = array("warning", isset($testDetails[2]) ? $testDetails[2] : null);
 		$this->warnings[] = $testDetails;
 	}
 

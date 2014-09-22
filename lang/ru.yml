@@ -12,6 +12,7 @@ ru:
     SIZE: 'Размер'
     TITLE: Название
     TYPE: 'Тип'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Выберите файлы'
     DRAGFILESHERE: 'Перетащите файлы сюда'
@@ -74,6 +75,7 @@ ru:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Вы изменили свой пароль на'
     CHANGEPASSWORDTEXT2: 'Для того, чтобы войти, используйте сейчас следующие учетные данные:'
+    EMAIL: Email
     HELLO: Здравствуйте
     PASSWORD: Пароль
   ConfirmedPasswordField:
@@ -81,11 +83,15 @@ ru:
     BETWEEN: 'Пароль должен иметь длину от {min} до {max} символов.'
     MAXIMUM: 'Пароль должен быть не длиннее {max} символов.'
     SHOWONCLICKTITLE: 'Изменить пароль'
+  ContentController:
+    NOTLOGGEDIN: 'Не выполнен вход в систему'
   CreditCardField:
     FIRST: первая
     FOURTH: четвертая
     SECOND: вторая
     THIRD: третья
+  CurrencyField:
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Объекты'
     SINGULARNAME: 'Объект'
@@ -117,6 +123,7 @@ ru:
     INVALID_REQUEST: 'Неверный запрос'
   DropdownField:
     CHOOSE: (Выберите)
+    CHOOSESEARCH: '(Выбрать или найти)'
   EmailField:
     VALIDATION: 'Пожалуйста, задайте адрес email.'
   Enum:
@@ -164,7 +171,8 @@ ru:
     TEXT2: 'ссылка переустановки пароля'
     TEXT3: для
   Form:
-    CSRF_FAILED_MESSAGE: 'Произошла техническая ошибка. Нажмите кнопку "Назад", обновите страницу в браузере и повторите попытку.'
+    CSRF_FAILED_MESSAGE: "Произошла техническая ошибка. Нажмите кнопку \"Назад\", обновите страницу в браузере и повторите попытку."
+    FIELDISREQUIRED: 'Поле {$name} является обязательным'
     SubmitBtnLabel: Выбрать
     VALIDATIONCREDITNUMBER: 'Пожалуйста, убедитесь, что номер кредитной карты {number} задан правильно'
     VALIDATIONNOTUNIQUE: 'Введенное значение не уникально'
@@ -173,6 +181,7 @@ ru:
     VALIDATIONSTRONGPASSWORD: 'Пароль должен содержать как минимум одну цифру и один буквенно-цифровой символ.'
     VALIDATOR: Валидатор
     VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
+    CSRF_EXPIRED_MESSAGE: 'Срок действия сеанса истек. Пожалуйста, отправьте данные формы еще раз.'
   FormField:
     Example: 'например, %s'
     NONE: не выбрано
@@ -197,6 +206,7 @@ ru:
     ResetFilter: Сброс
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Нет прав на удаление'
+    EditPermissionsFailure: 'Не достаточно прав для удаления записи'
   GridFieldDetailForm:
     CancelBtn: Отмена
     Create: Создать
@@ -204,8 +214,11 @@ ru:
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено %s %s'
     Save: Сохранить
+    Saved: 'Сохранено: {name} {link}'
   GridFieldEditButton_ss:
     EDIT: Редактировать
+  GridFieldItemEditView:
+    Go_back: 'Назад'
   Group:
     AddRole: 'Добавить роль для этой группы'
     Code: 'Код группы'
@@ -254,6 +267,8 @@ ru:
     FROMWEB: 'Из интернета'
     FindInFolder: 'Найти в папке'
     IMAGEALT: 'Альтернативный текст (alt)'
+    IMAGEALTTEXT: 'Альтернативный текст (alt) - показывается, если изображение недоступно'
+    IMAGEALTTEXTDESC: 'Передается программе чтения экрана или отображается, если изображение недоступно'
     IMAGEDIMENSIONS: Размеры
     IMAGEHEIGHTPX: Высота
     IMAGETITLE: 'Текст (всплывающая подсказка) - для дополнительной информации об изображении'
@@ -271,6 +286,7 @@ ru:
     LINKOPENNEWWIN: 'Открыть ссылку в новом окне?'
     LINKTO: 'Ссылка на'
     PAGE: Страница
+    URL: URL
     URLNOTANOEMBEDRESOURCE: 'Не удалось преобразовать ссылку ''{url}'' в медиа-ресурс.'
     UpdateMEDIA: 'Обновить медиафайл'
   Image:
@@ -283,6 +299,7 @@ ru:
     TITLE: 'Iframe загрузки изображений'
   LeftAndMain:
     CANT_REORGANISE: 'У вас нет права редактировать страницы верхнего уровня. Изменения не были сохранены.'
+    DELETED: Удалено.
     DropdownBatchActionsDefault: Действия
     HELP: Помощь
     PAGETYPE: 'Тип страницы:'
@@ -290,9 +307,11 @@ ru:
     PERMALREADY: 'Извините, у вас нет доступа к этому разделу Системы Управления. Если Вы хотите войти под другой учетной записью, сделайте это ниже'
     PERMDEFAULT: 'Введите ваши адрес электр. почты и пароль для доступа к системе.'
     PLEASESAVE: 'Пожалуйста, сохраните страницу: ее нельзя обновить, т.к. она еще не была сохранена.'
+    PreviewButton: Просмотр
     REORGANISATIONSUCCESSFUL: 'Древесная структура сайта успешно реорганизована.'
     SAVEDUP: Сохранено.
     ShowAsList: 'в виде списка'
+    TooManyPages: 'Слишком много страниц'
     ValidationError: 'Ошибка проверки'
     VersionUnknown: Неизвестно
   LeftAndMain_Menu_ss:
@@ -316,15 +335,19 @@ ru:
     DATEFORMAT: 'Формат даты'
     DefaultAdminFirstname: 'Администратор по умолчанию '
     DefaultDateTime: по умолч.
+    EMAIL: Email
     EMPTYNEWPASSWORD: 'Поле нового пароля не может быть пустым; пожалуйста, повторите попытку'
     ENTEREMAIL: 'Введите email, чтобы получить ссылку на сброс пароля.'
+    ERRORLOCKEDOUT2: 'Ваша учетная запись временно заблокирована из-за слишком большого количества неудачных попыток авторизации. Пожалуйста, попытайтесь снова через {count} минут.'
     ERRORNEWPASSWORD: 'Вы ввели Ваш новый пароль по-разному, попробуйте снова'
     ERRORPASSWORDNOTMATCH: 'Введенный пароль неверен, попробуйте снова'
+    ERRORWRONGCRED: 'Похоже, что указанные данные не верны. Пожалуйста, повторите попытку позже.'
     FIRSTNAME: 'Имя'
     INTERFACELANG: 'Язык интерфейса'
     INVALIDNEWPASSWORD: 'Недопустимый пароль: {password}'
     LOGGEDINAS: 'Вы вошли в систему как {name}.'
     NEWPASSWORD: 'Новый пароль'
+    NoPassword: 'Для этого пользователя не задан пароль.'
     PASSWORD: Пароль
     PLURALNAME: Члены группы
     REMEMBERME: 'Запомнить меня?'
@@ -390,8 +413,8 @@ ru:
     Title: 'Модели данных'
     UPDATEDRECORDS: 'Обновлено {count} записей.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Показать спецификацию для %s'
     IMPORTSPECFIELDS: 'Колонки таблицы базы данных'
+    IMPORTSPECLINK: 'Показать спецификацию для %s'
     IMPORTSPECRELATIONS: Отношения
     IMPORTSPECTITLE: 'Спецификация для %s'
   ModelAdmin_Tools_ss:
@@ -410,6 +433,10 @@ ru:
   Pagination:
     Page: Страница
     View: Просмотр
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Пожалуйста, увеличьте сложность пароля, добавив один из следующих символов: %s'
+    PREVPASSWORD: 'Вы уже использовали этот пароль прежде. Пожалуйста, выберите новый пароль.'
+    TOOSHORT: 'Слишком короткий пароль, минимальная длина - %s символов'
   Permission:
     AdminGroup: Администратор
     CMS_ACCESS_CATEGORY: 'Доступ к CMS'
@@ -444,6 +471,7 @@ ru:
     ERRORPASSWORDPERMISSION: 'Вы должны войти в систему, чтобы изменить Ваш пароль!'
     LOGGEDOUT: 'Вы вышли. Если Вы хотите войти снова, введите ваши учетные данные ниже.'
     LOGIN: 'Вход'
+    LOSTPASSWORDHEADER: 'Восстановление пароля'
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
     NOTERESETLINKINVALID: '<p>Неверная ссылка переустановки пароля или время действия ссылки истекло.</p><p>Вы можете повторно запросить ссылку, щелкнув <a href="{link1}">здесь</a>, или поменять пароль, <a href="{link2}">войдя в систему</a>.</p> '
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
@@ -478,9 +506,12 @@ ru:
     Edit: Редактировать
     EditView: 'Режим редакт.'
     Mobile: Мобильный
-    PreviewView: 'Режим предварительного просмотра'
+    PreviewState: 'Режим предварительного просмотра'
+    PreviewView: 'Предв. просмотр'
     Responsive: Адаптивный
+    SplitView: 'Раздел. экр.'
     Tablet: Планшет
+    ViewDeviceWidth: 'Выбрать ширину области просмотра'
     Width: ширина
   SiteTree:
     TABMAIN: Основное
@@ -498,6 +529,8 @@ ru:
     ATTACHFILE: 'Прикрепить файл'
     ATTACHFILES: 'Прикрепить файлы'
     AttachFile: 'Прикрепить файл(ы)'
+    CHOOSEANOTHERFILE: 'Выбрать другой файл'
+    CHOOSEANOTHERINFO: 'Заменить этот файл другим из хранилища'
     DELETE: 'Удалить из файлов'
     DELETEINFO: 'Окончательно удалить этот файл с сервера'
     DOEDIT: Сохранить

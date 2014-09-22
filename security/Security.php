@@ -64,6 +64,15 @@ class Security extends Controller {
 	private static $autologin_enabled = true;
 	
 	/**
+	 * Determine if login username may be remembered between login sessions
+	 * If set to false this will disable autocomplete and prevent username persisting in the session
+	 * 
+	 * @config
+	 * @var bool
+	 */
+	private static $remember_username = true;
+	
+	/**
 	 * Location of word list to use for generating passwords
 	 *
 	 * @config

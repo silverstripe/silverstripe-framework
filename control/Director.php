@@ -135,12 +135,13 @@ class Director implements TemplateGlobalProvider {
 			$req->addHeader($header, $value);
 		}
 
+		// Initiate an empty session - doesn't initialize an actual PHP session until saved (see below)
+		$session = Injector::inst()->create('Session', isset($_SESSION) ? $_SESSION : array());
+
 		// Only resume a session if its not started already, and a session identifier exists
 		if(!isset($_SESSION) && Session::request_contains_session_id()) {
-			Session::start();
+			$session->inst_start();
 		}
-		// Initiate an empty session - doesn't initialize an actual PHP session until saved (see belwo)
-		$session = new Session(isset($_SESSION) ? $_SESSION : null);
 
 		$output = Injector::inst()->get('RequestProcessor')->preRequest($req, $session, $model);
 		
@@ -151,7 +152,7 @@ class Director implements TemplateGlobalProvider {
 
 		$result = Director::handleRequest($req, $session, $model);
 
-		// Save session data (and start/resume it if required)
+		// Save session data. Note that inst_save() will start/resume the session if required.
 		$session->inst_save();
 
 		// Return code for a redirection request
@@ -165,13 +166,13 @@ class Director implements TemplateGlobalProvider {
 					DataModel::inst()
 				);
 			} else {
-			$response = new SS_HTTPResponse();
+				$response = new SS_HTTPResponse();
 				$response->redirect($url);
-			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
+				$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
 
-			if ($res !== false) {
-				$response->output();
-			}
+				if ($res !== false) {
+					$response->output();
+				}
 			}
 		// Handle a controller
 		} else if($result) {
@@ -229,7 +230,7 @@ class Director implements TemplateGlobalProvider {
 		
 		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
 		
-		if(!$session) $session = new Session(null);
+		if(!$session) $session = Injector::inst()->create('Session', array());
 
 		// Back up the current values of the superglobals
 		$existingRequestVars = isset($_REQUEST) ? $_REQUEST : array();
@@ -245,9 +246,15 @@ class Director implements TemplateGlobalProvider {
 		Requirements::set_backend(new Requirements_Backend());
 
 		// Handle absolute URLs
-		if (@parse_url($url, PHP_URL_HOST) != '') {
+		if (parse_url($url, PHP_URL_HOST)) {
 			$bits = parse_url($url);
-			$_SERVER['HTTP_HOST'] = $bits['host'];
+			// If a port is mentioned in the absolute URL, be sure to add that into the 
+			// HTTP host
+			if(isset($bits['port'])) {
+				$_SERVER['HTTP_HOST'] = $bits['host'].':'.$bits['port'];
+			} else {
+				$_SERVER['HTTP_HOST'] = $bits['host'];
+			}
 			$url = Director::makeRelative($url);
 		}
 
@@ -403,7 +410,12 @@ class Director implements TemplateGlobalProvider {
 
 	/**
 	 * Turns the given URL into an absolute URL.
-	 * @todo Document how relativeToSiteBase works
+	 * By default non-site root relative urls will be evaluated relative to the current request.
+	 * 
+	 * @param string $url URL To transform to absolute
+	 * @param bool $relativeToSiteBase Flag indicating if non-site root relative urls should be
+	 * evaluated relative to the site BaseURL instead of the current url.
+	 * @return string The fully qualified URL
 	 */
 	public static function absoluteURL($url, $relativeToSiteBase = false) {
 		if(!isset($_SERVER['REQUEST_URI'])) return false;
@@ -467,29 +479,37 @@ class Director implements TemplateGlobalProvider {
 	 * @return boolean
 	 */
 	public static function is_https() {
+		$return = false;
 		if ($protocol = Config::inst()->get('Director', 'alternate_protocol')) {
-			return $protocol == 'https';
-		}
-
-		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) { 
-			if(strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') {
-				return true;
-			}
-		}
-
-		if(isset($_SERVER['X-Forwarded-Proto'])) {
-			if(strtolower($_SERVER['X-Forwarded-Proto']) == "https") {
-				return true;
-			}
-		}
-	
-		if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
-			return true;
+			$return = ($protocol == 'https');
+		} else if(
+			isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
+			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'
+		) { 
+			// Convention for (non-standard) proxy signaling a HTTPS forward,
+			// see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+			$return = true;
+		} else if(
+			isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
+			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https'
+		) { 
+			// Less conventional proxy header
+			$return = true;
+		} else if(
+			isset($_SERVER['HTTP_FRONT_END_HTTPS'])
+			&& strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) == 'on'
+		) { 
+			// Microsoft proxy convention: https://support.microsoft.com/?kbID=307347
+			$return = true;
+		} else if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
+			$return = true;
 		} else if(isset($_SERVER['SSL'])) {
-			return true;
+			$return = true;
+		} else {
+			$return = false;
 		}
 
-		return false;
+		return $return;
 	}
 
 	/**
@@ -959,29 +979,21 @@ class Director implements TemplateGlobalProvider {
 	/*
 	 * This function will return true if the site is in a live environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 *
-	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
-	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isLive($skipDatabase = false) {
-		return !(Director::isDev($skipDatabase) || Director::isTest($skipDatabase));
+	public static function isLive() {
+		return !(Director::isDev() || Director::isTest());
 	}
 	
 	/**
 	 * This function will return true if the site is in a development environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 * 
-	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
-	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isDev($skipDatabase = false) {
-		// This variable is used to supress repetitions of the isDev security message below.
-		static $firstTimeCheckingGetVar = true;
-
-		$result = false;
-
-		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) $result = true;
-		if(Config::inst()->get('Director', 'environment_type') == 'dev') $result = true;
+	public static function isDev() {
+		// Check session
+		if($env = self::session_environment()) return $env === 'dev';
+		
+		// Check config
+		if(Config::inst()->get('Director', 'environment_type') === 'dev') return true;
 
 		// Check if we are running on one of the test servers
 		$devServers = (array)Config::inst()->get('Director', 'dev_servers');
@@ -989,54 +1001,22 @@ class Director implements TemplateGlobalProvider {
 			return true;
 		}
 
-		// Use ?isDev=1 to get development access on the live server
-		if(!$skipDatabase && !$result && isset($_GET['isDev'])) {
-			if(Security::database_is_ready()) {
-				if($firstTimeCheckingGetVar && !Permission::check('ADMIN')){
-					BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
-				}
-				$_SESSION['isDev'] = $_GET['isDev'];
-				$firstTimeCheckingGetVar = false;
-				$result = $_GET['isDev'];
-			} else {
-				if($firstTimeCheckingGetVar && DB::connection_attempted()) {
-					echo "<p style=\"padding: 3px; margin: 3px; background-color: orange; 
-						color: white; font-weight: bold\">Sorry, you can't use ?isDev=1 until your
-						Member and Group tables database are available.  Perhaps your database
-						connection is failing?</p>";
-					$firstTimeCheckingGetVar = false;
-				}
-			}
-		}
-
-		return $result;
+		return false;
 	}
 	
 	/**
 	 * This function will return true if the site is in a test environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 *
-	 * @param $skipDatabase Skips database checks for current login permissions if set to TRUE,
-	 * which is useful for checks happening before the database is functional.
 	 */
-	public static function isTest($skipDatabase = false) {
-		// Use ?isTest=1 to get test access on the live server, or explicitly set your environment
-		if(!$skipDatabase && isset($_GET['isTest'])) {
-			if(Security::database_is_ready()) {
-				BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
-				$_SESSION['isTest'] = $_GET['isTest'];
-			} else {
-				return true;
-			}
-		}
+	public static function isTest() {
+		// In case of isDev and isTest both being set, dev has higher priority
+		if(self::isDev()) return false;
 		
-		if(self::isDev($skipDatabase)) {
-			return false;
-		}
+		// Check saved session
+		if($env = self::session_environment()) return $env === 'test';
 		
-		if(Config::inst()->get('Director', 'environment_type')) {
-			return Config::inst()->get('Director', 'environment_type') == 'test';
-		}
+		// Check config
+		if(Config::inst()->get('Director', 'environment_type') === 'test') return true;
 		
 		// Check if we are running on one of the test servers
 		$testServers = (array)Config::inst()->get('Director', 'test_servers');
@@ -1045,6 +1025,36 @@ class Director implements TemplateGlobalProvider {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Check or update any temporary environment specified in the session
+	 * 
+	 * @return string 'test', 'dev', or null
+	 */
+	protected static function session_environment() {
+		// Set session from querystring
+		if(isset($_GET['isDev'])) {
+			if(isset($_SESSION)) {
+				unset($_SESSION['isTest']); // In case we are changing from test mode
+				$_SESSION['isDev'] = $_GET['isDev'];
+			}
+			return 'dev';
+		} elseif(isset($_GET['isTest'])) {
+			if(isset($_SESSION)) {
+				unset($_SESSION['isDev']); // In case we are changing from dev mode
+				$_SESSION['isTest'] = $_GET['isTest'];
+			}
+			return 'test';
+		}
+		// Check session
+		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) {
+			return 'dev';
+		} elseif(isset($_SESSION['isTest']) && $_SESSION['isTest']) {
+			return 'test';
+		} else {
+			return null;
+		}
 	}
 
 	/**

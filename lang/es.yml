@@ -171,7 +171,7 @@ es:
     TEXT2: 'enlace para restablecer contraseña'
     TEXT3: para
   Form:
-    CSRF_FAILED_MESSAGE: 'Se detectó exploit malicioso en el formulario'
+    CSRF_FAILED_MESSAGE: "Parece que hay un problema técnico. Por favor presionar el botón volver \n\n⇥⇥⇥⇥⇥refresca tu navegador e intenta nuevamente"
     FIELDISREQUIRED: 'Se requiere este campo'
     SubmitBtnLabel: Ir
     VALIDATIONCREDITNUMBER: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente {number}'
@@ -181,6 +181,7 @@ es:
     VALIDATIONSTRONGPASSWORD: 'Las contraseñas deben tener al menos un dígito y un carácter alfanumérico'
     VALIDATOR: Validador
     VALIDCURRENCY: 'Por favor, introduzca una moneda válida.'
+    CSRF_EXPIRED_MESSAGE: 'Tu sesión ha expirado. Por favor re envíe el formulario'
   FormField:
     Example: 'Ejemplo'
     NONE: ninguna
@@ -306,7 +307,7 @@ es:
     PERMAGAIN: 'Ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña a continuación.'
     PERMALREADY: 'Lamentablemente no puede acceder a esta parte del CMS. Si quiere entrar como alguien distinto, hágalo a continuación'
     PERMDEFAULT: 'Introduzca su correo electrónico y su contraseña para acceder al CMS.'
-    PLEASESAVE: 'Por favor Guarde la Página: Esta página no se ha podido actualizar porque aún no ha sido salvada.'
+    PLEASESAVE: 'Por favor guardar la página: Esta página no puede ser actualizada porque no ha sido guardada aún.'
     PreviewButton: Vista previa
     REORGANISATIONSUCCESSFUL: 'Reorganizado el árbol del sitio con éxito.'
     SAVEDUP: Guardado
@@ -413,8 +414,8 @@ es:
     Title: 'Modelos de datos'
     UPDATEDRECORDS: 'Actualizados {count} registros.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Mostrar especificación para %s'
     IMPORTSPECFIELDS: 'Columnas de la base de datos'
+    IMPORTSPECLINK: 'Mostrar especificación para %s'
     IMPORTSPECRELATIONS: Relaciones
     IMPORTSPECTITLE: 'Especificación para %s'
   ModelAdmin_Tools_ss:
@@ -472,6 +473,7 @@ es:
     ERRORPASSWORDPERMISSION: 'Debe iniciar una sesión para poder cambiar su contraseña!'
     LOGGEDOUT: 'Ha terminado su sesión. Si desea iniciar sesión nuevamente, introduzca sus datos de acreditación a continuación.'
     LOGIN: 'Entrar'
+    LOSTPASSWORDHEADER: '¿Contraseña Perdida?'
     NOTEPAGESECURED: 'Esa página está protegida. Introduzca sus datos de acreditación a continuación y lo enviaremos a ella en un momento.'
     NOTERESETLINKINVALID: '<p>El enlace para restablecer la contraseña es inválido o ha expirado.</p><p>Usted puede solicitar uno nuevo <a href="{link1}">aqui</a> o cambiar su contraseña después de que se haya <a href="{link2}">conectado</a>.</p>'
     NOTERESETPASSWORD: 'Introduzca su dirección de e-mail, y le enviaremos un enlace, con el cual podrá restaurar su contraseña'

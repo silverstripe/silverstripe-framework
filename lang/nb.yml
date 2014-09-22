@@ -123,6 +123,7 @@ nb:
     INVALID_REQUEST: 'Ugyldig forespørsel'
   DropdownField:
     CHOOSE: (Velg)
+    CHOOSESEARCH: '(Velg eller søk)'
   EmailField:
     VALIDATION: 'Vennligst skriv inn en epostadresse'
   Enum:
@@ -170,7 +171,7 @@ nb:
     TEXT2: 'lenke for nullstilling av passord'
     TEXT3: for
   Form:
-    CSRF_FAILED_MESSAGE: 'Det ser ut til å ha oppstått et teknisk problem. Vennligst trykk på tilbakeknappen, oppdater nettsiden og prøv på nytt.'
+    CSRF_FAILED_MESSAGE: "Det ser ut til å ha oppstått et teknisk problem. Vennligst trykk på tilbakeknappen, oppdater nettsiden og prøv på nytt."
     FIELDISREQUIRED: '{name} er påkrevet'
     SubmitBtnLabel: Utfør
     VALIDATIONCREDITNUMBER: 'Vennligst sjekk at du har skrevet inn {number} korrekt kortnummer'
@@ -193,7 +194,7 @@ nb:
     FilterBy: 'Filtrer på '
     Find: Finn
     LEVELUP: 'Opp ett nivå'
-    LinkExisting: 'Eksisterende lenke'
+    LinkExisting: 'Knytt til eksisterende'
     NewRecord: 'Ny %s'
     NoItemsFound: 'Ingen elementer ble funnet'
     PRINTEDAT: 'Skrevet ut ved'
@@ -224,6 +225,7 @@ nb:
     DefaultGroupTitleContentAuthors: 'Innholdsforfattere'
     Description: Beskrivelse
     GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
+    HierarchyPermsError: 'Kan ikke angi overordnet gruppe "%s" med administratorrettigheter (krever ADMIN-tilgang)'
     Locked: 'Låst?'
     NoRoles: 'Ingen roller funnet'
     PLURALNAME: Grupper
@@ -265,6 +267,8 @@ nb:
     FROMWEB: 'Fra internett'
     FindInFolder: 'Finn i mappe'
     IMAGEALT: 'Alternativ tekst (alt)'
+    IMAGEALTTEXT: 'Alternativ tekst (alt) - blir brukt hvis bildet ikke kan vises'
+    IMAGEALTTEXTDESC: 'Blir vist til skjermlesere eller hvis bildet ikke kan vises'
     IMAGEDIMENSIONS: Dimensjoner
     IMAGEHEIGHTPX: Høyde
     IMAGETITLE: 'Titteltekst (tooltip) - for tilleggsinformasjon om bildet'
@@ -337,6 +341,7 @@ nb:
     ERRORLOCKEDOUT2: 'Din konto har blitt midlertidig sperret på grunn av for mange mislykkede forsøk på å logge inn. Vennligst prøv igjen om {count} minutter.'
     ERRORNEWPASSWORD: 'Du har tastet inn nye passord forskjellig, vennligst prøv igjen.'
     ERRORPASSWORDNOTMATCH: 'Passordene stemmer ikke overens, vennligst prøv igjen.'
+    ERRORWRONGCRED: 'Det ser ikke ut til å være riktig epostadresse eller passord. Vennligst prøv igjen.'
     FIRSTNAME: 'Fornavn'
     INTERFACELANG: 'Språk på grensesnitt'
     INVALIDNEWPASSWORD: 'Vi kunne ikke godkjenne passordet: {password}'
@@ -408,8 +413,8 @@ nb:
     Title: 'Datamodeller'
     UPDATEDRECORDS: 'Oppdaterte {count} oppføringer.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Vis spesifikasjon for %s'
     IMPORTSPECFIELDS: 'Databasekolonner'
+    IMPORTSPECLINK: 'Vis spesifikasjon for %s'
     IMPORTSPECRELATIONS: Relasjoner
     IMPORTSPECTITLE: 'Spesifikasjon for %s'
   ModelAdmin_Tools_ss:
@@ -451,6 +456,7 @@ nb:
     Title: Tittel
   PermissionRoleCode:
     PLURALNAME: 'Koder for tillatelser'
+    PermsError: 'Kan ikke angi kode "%s" med administratorrettigheter (krever ADMIN-tilgang)'
     SINGULARNAME: 'Tillatelseskode'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rolle- og tilgangstillatelser'
@@ -466,6 +472,7 @@ nb:
     ERRORPASSWORDPERMISSION: 'Du må logge inn for å bytte passord.'
     LOGGEDOUT: 'Du har blitt logget ut. Hvis du vil logge inn igjen, så gjør du det under.'
     LOGIN: 'Logg inn'
+    LOSTPASSWORDHEADER: 'Mistet passord'
     NOTEPAGESECURED: 'Den siden er sikret. Skriv inn gyldig innloggingsinfo så kommer du inn.'
     NOTERESETLINKINVALID: '<p>Lenken for å nullstille passordet er ugyldig eller utgått.</p><p>Du kan kreve en ny <a href="{link1}">her</a> eller endre passordet etter at du har <a href="{link2}">logget inn</a>.</p>'
     NOTERESETPASSWORD: 'Skriv inn epostadressen din og vi vil sende deg en lenke som nullstiller passordet.'

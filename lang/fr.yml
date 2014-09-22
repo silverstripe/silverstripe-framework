@@ -170,7 +170,7 @@ fr:
     TEXT2: 'lien de réinitialisation de mot de passe'
     TEXT3: pour
   Form:
-    CSRF_FAILED_MESSAGE: 'Il semble qu''il y ait eu un problème technique. Veuillez cliquez sur le bouton Retour, raffraîchir votre navigateur, et essayer à nouveau'
+    CSRF_FAILED_MESSAGE: "Il semble qu'il y ait eu un problème technique. Veuillez cliquez sur le bouton Retour, raffraîchir votre navigateur, et essayer à nouveau"
     FIELDISREQUIRED: '{name} requis'
     SubmitBtnLabel: Envoyer
     VALIDATIONCREDITNUMBER: 'Vérifiez que vous avez bien saisi votre numéro de carte bleue {number}.'
@@ -265,6 +265,8 @@ fr:
     FROMWEB: 'Du web'
     FindInFolder: 'Trouver dans un dossier'
     IMAGEALT: 'Texte alternatif (alt)'
+    IMAGEALTTEXT: 'Texte alternatif (alt) - s''affiche si l''image ne peut être affichée.'
+    IMAGEALTTEXTDESC: 'Proposé aux lecteurs d’écran ou si l’image ne peut pas être affichée'
     IMAGEDIMENSIONS: Dimensions
     IMAGEHEIGHTPX: Hauteur
     IMAGETITLE: 'Texte du titre (tooltip) - informations à propos de l''image'
@@ -337,6 +339,7 @@ fr:
     ERRORLOCKEDOUT2: 'Votre compte a été temporairement désactivé à cause de trop nombreux échecs d''identification. Veuillez réessayer dans {count} minutes.'
     ERRORNEWPASSWORD: 'Vous avez entré votre nouveau mot de passe différemment, réessayez'
     ERRORPASSWORDNOTMATCH: 'Votre actuel mot de passe ne correspond pas, essayez encore s''il vous plaît'
+    ERRORWRONGCRED: 'Il semble que ce ne soit pas le bon email ou mot de passe. Essayez encore s''il vous plaît.'
     FIRSTNAME: 'Prénom'
     INTERFACELANG: 'Langue de l''interface'
     INVALIDNEWPASSWORD: 'Nous ne pouvons pas accepter le mot de passe {password}'
@@ -408,8 +411,8 @@ fr:
     Title: 'Modèles de données'
     UPDATEDRECORDS: '{count} enregistrements mis à jour.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Afficher la spécification de %s'
     IMPORTSPECFIELDS: 'Colonnes de la base de données'
+    IMPORTSPECLINK: 'Afficher la spécification de %s'
     IMPORTSPECRELATIONS: Relations
     IMPORTSPECTITLE: 'Spécification de %s'
   ModelAdmin_Tools_ss:

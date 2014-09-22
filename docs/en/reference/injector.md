@@ -192,6 +192,30 @@ would
 * Create a MySQLDatabase class, passing dbusername and dbpassword as the 
   parameters to the constructor
 
+### Testing with Injector in a sandbox environment
+
+In situations where injector states must be temporarily overridden, it is possible
+to create nested Injector instances which may be later discarded, reverting the
+application to the original state.
+
+This is useful when writing test cases, as certain services may be necessary to
+override for a single method call.
+
+For instance, a temporary service can be registered and unregistered as below:
+
+	:::php
+	// Setup default service
+	Injector::inst()->registerService(new LiveService(), 'ServiceName');
+
+	// Test substitute service temporarily
+	Injector::nest();
+	Injector::inst()->registerService(new TestingService(), 'ServiceName');
+	$service = Injector::inst()->get('ServiceName');
+	// ... do something with $service
+	Injector::unnest();
+
+	// ... future requests for 'ServiceName' will return the LiveService instance
+
 
 ### What are Services?
 

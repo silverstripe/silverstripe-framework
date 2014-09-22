@@ -316,7 +316,7 @@ that does not exist in a Group.
 
 You can limit the amount of records returned in a DataList by using the
 `limit()` method.
-	
+
 	:::php
 	// Returning the first 5 members, sorted alphabetically by Surname
 	$members = Member::get()->sort('Surname')->limit(5);
@@ -720,7 +720,7 @@ an object, not for displaying the objects contained in the relation.
 ## Validation and Constraints
 
 Traditionally, validation in SilverStripe has been mostly handled on the
-controller through [form validation](/topics/form-validation).
+controller through [form validation](/topics/forms#form-validation).
 
 While this is a useful approach, it can lead to data inconsistencies if the
 record is modified outside of the controller and form context.
@@ -787,7 +787,7 @@ a map around any `SS_List`.
 	$map = new SS_Map($members, 'ID', 'FirstName');
 
 Note: You can also retrieve a single property from all contained records
-through `[api:SS_List->column()]`.
+through [SS_List->column()](api:SS_List#_column).
 
 ## Data Handling
 

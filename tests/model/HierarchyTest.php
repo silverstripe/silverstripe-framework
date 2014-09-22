@@ -392,6 +392,97 @@ class HierarchyTest extends SapphireTest {
 	}
 
 	/**
+	 * This test checks that deleted ('archived') child pages don't set a css class on the parent
+	 * node that makes it look like it has children
+	 */
+	public function testGetChildrenAsULNodeDeletedOnLive() {
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+		$obj2ab = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
+
+		// delete all children under obj2
+		$obj2a->delete();
+		$obj2aa->delete();
+		$obj2ab->delete();
+		// Don't pre-load all children
+		$nodeCountThreshold = 1;
+
+		$childrenMethod = 'AllChildren';
+		$numChildrenMethod = 'numChildren';
+
+		$root = new HierarchyTest_Object();
+		$root->markPartialTree($nodeCountThreshold, null, $childrenMethod, $numChildrenMethod);
+
+		// As in LeftAndMain::getSiteTreeFor() but simpler and more to the point for testing purposes
+		$titleFn = function(&$child, $numChildrenMethod="") {
+			return '<li class="' . $child->markingClasses($numChildrenMethod).
+				'" id="' . $child->ID . '">"' . $child->Title;
+		};
+
+		$html = $root->getChildrenAsUL(
+			"",
+			$titleFn,
+			null,
+			true, // limit to marked
+			$childrenMethod,
+			$numChildrenMethod,
+			true,
+			$nodeCountThreshold
+		);
+
+		// Get the class attribute from the $obj2 node in the sitetree, class 'jstree-leaf' means it's a leaf node
+		$nodeClass = $this->getNodeClassFromTree($html, $obj2);
+		$this->assertEquals('jstree-leaf closed', $nodeClass, 'object2 should not have children in the sitetree');
+	}
+
+	/**
+	 * This test checks that deleted ('archived') child pages _do_ set a css class on the parent
+	 * node that makes it look like it has children when getting all children including deleted
+	 */
+	public function testGetChildrenAsULNodeDeletedOnStage() {
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+		$obj2ab = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
+
+		// delete all children under obj2
+		$obj2a->delete();
+		$obj2aa->delete();
+		$obj2ab->delete();
+		// Don't pre-load all children
+		$nodeCountThreshold = 1;
+
+		$childrenMethod = 'AllChildrenIncludingDeleted';
+		$numChildrenMethod = 'numHistoricalChildren';
+
+		$root = new HierarchyTest_Object();
+		$root->markPartialTree($nodeCountThreshold, null, $childrenMethod, $numChildrenMethod);
+
+		// As in LeftAndMain::getSiteTreeFor() but simpler and more to the point for testing purposes
+		$titleFn = function(&$child, $numChildrenMethod="") {
+			return '<li class="' . $child->markingClasses($numChildrenMethod).
+				'" id="' . $child->ID . '">"' . $child->Title;
+		};
+
+		$html = $root->getChildrenAsUL(
+			"",
+			$titleFn,
+			null,
+			true, // limit to marked
+			$childrenMethod,
+			$numChildrenMethod,
+			true,
+			$nodeCountThreshold
+		);
+
+		// Get the class attribute from the $obj2 node in the sitetree
+		$nodeClass = $this->getNodeClassFromTree($html, $obj2);
+		// Object2 can now be expanded
+		$this->assertEquals('unexpanded jstree-closed closed', $nodeClass, 'obj2 should have children in the sitetree');
+	}
+
+	/**
 	 * @param String $html  [description]
 	 * @param array $nodes Breadcrumb path as array
 	 * @param String $message
@@ -417,6 +508,25 @@ class HierarchyTest extends SapphireTest {
 		self::assertThat((bool)$match, self::isFalse(), $message);	
 	}
 
+	/**
+	 * Get the HTML class attribute from a node in the sitetree
+	 *
+	 * @param $html
+	 * @param $node
+	 * @return string
+	 */
+	protected function getNodeClassFromTree($html, $node) {
+		$parser = new CSSContentParser($html);
+		$xpath = '//ul/li[@id="' . $node->ID . '"]';
+		$object = $parser->getByXpath($xpath);
+
+		foreach($object[0]->attributes() as $key => $attr) {
+			if($key == 'class') {
+				return (string)$attr;
+			}
+		}
+		return '';
+	}
 }
 
 class HierarchyTest_Object extends DataObject implements TestOnly {
@@ -428,4 +538,8 @@ class HierarchyTest_Object extends DataObject implements TestOnly {
 		'Hierarchy',
 		"Versioned('Stage', 'Live')",
 	);
+
+	public function cmstreeclasses() {
+		return $this->markingClasses();
+	}
 }

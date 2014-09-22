@@ -66,7 +66,6 @@ Note how the configuration happens in different entwine namespaces
 				}
 			});
 		});
-	});
 	}(jQuery));
 
 Load the file in the CMS via setting adding 'mysite/javascript/MyLeftAndMain.Preview.js'

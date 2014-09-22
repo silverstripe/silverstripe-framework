@@ -49,9 +49,10 @@ class SS_LogTest extends SapphireTest {
 		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
 		SS_Log::add_writer($testEmailWriter, SS_Log::ERR);
 
-		SS_Log::log('Email test', SS_LOG::ERR, array('my-string' => 'test', 'my-array' => array('one' => 1)));
+		SS_Log::log('Email test', SS_Log::ERR, array('my-string' => 'test', 'my-array' => array('one' => 1)));
 		$this->assertEmailSent('test@test.com');
 		$email = $this->findEmail('test@test.com');
+		$this->assertContains('[Error] Email test', $email['htmlContent']);
 		$parser = new CSSContentParser($email['htmlContent']);
 		$extras = $parser->getBySelector('table.extras');
 		$extraRows = $extras[0]->tr;
@@ -64,7 +65,25 @@ class SS_LogTest extends SapphireTest {
 			'Serializes arrays correctly'
 		);
 	}
-	
+
+	public function testEmailWriterDebugPriority() {
+		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
+		SS_Log::add_writer($testEmailWriter, SS_Log::DEBUG);
+		SS_Log::log('Test something', SS_Log::DEBUG, array('my-string' => 'test', 'my-array' => array('one' => 1)));
+		$this->assertEmailSent('test@test.com');
+		$email = $this->findEmail('test@test.com');
+		$this->assertContains('[DEBUG] Test something', $email['htmlContent']);
+	}
+
+	public function testEmailWriterInfoPriority() {
+		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
+		SS_Log::add_writer($testEmailWriter, SS_Log::INFO);
+		SS_Log::log('Test something', SS_Log::INFO, array('my-string' => 'test', 'my-array' => array('one' => 1)));
+		$this->assertEmailSent('test@test.com');
+		$email = $this->findEmail('test@test.com');
+		$this->assertContains('[INFO] Test something', $email['htmlContent']);
+	}
+
 	protected function exceptionGeneratorThrower() {
 		throw new Exception("thrown from SS_LogTest::testExceptionGeneratorTop");
 	}

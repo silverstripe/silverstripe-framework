@@ -10,14 +10,24 @@ class DirectorTest extends SapphireTest {
 	protected static $originalRequestURI;
 
 	protected $originalProtocolHeaders = array();
+	
+	protected $originalGet = array();
+	
+	protected $originalSession = array();
 
 	public function setUp() {
 		parent::setUp();
+		
+		// Required for testRequestFilterInDirectorTest
+		Injector::nest();
 
 		// Hold the original request URI once so it doesn't get overwritten
 		if(!self::$originalRequestURI) {
 			self::$originalRequestURI = $_SERVER['REQUEST_URI'];
 		}
+		
+		$this->originalGet = $_GET;
+		$this->originalSession = $_SESSION;
 		
 		Config::inst()->update('Director', 'rules', array(
 			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller',
@@ -41,6 +51,12 @@ class DirectorTest extends SapphireTest {
 	public function tearDown() {
 		// TODO Remove director rule, currently API doesnt allow this
 		
+		// Remove base URL override (setting to false reverts to default behaviour)
+		Config::inst()->update('Director', 'alternate_base_url', false);
+		
+		$_GET = $this->originalGet;
+		$_SESSION = $this->originalSession;
+		
 		// Reinstate the original REQUEST_URI after it was modified by some tests
 		$_SERVER['REQUEST_URI'] = self::$originalRequestURI;
 
@@ -49,6 +65,8 @@ class DirectorTest extends SapphireTest {
 				$_SERVER[$header] = $value;
 			}
 		}
+		
+		Injector::unnest();
 
 		parent::tearDown();
 	}
@@ -71,6 +89,40 @@ class DirectorTest extends SapphireTest {
 		);
 		
 		unlink($tempFilePath);
+	}
+	
+	public function testAbsoluteURL() {
+		
+		$rootURL = Director::protocolAndHost();
+		$_SERVER['REQUEST_URI'] = "$rootURL/mysite/sub-page/";
+		Config::inst()->update('Director', 'alternate_base_url', '/mysite/');
+
+		// Test already absolute url
+		$this->assertEquals($rootURL, Director::absoluteURL($rootURL));
+		$this->assertEquals($rootURL, Director::absoluteURL($rootURL, true));
+		$this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com'));
+		$this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com', true));
+		$this->assertEquals("$rootURL/test", Director::absoluteURL("$rootURL/test"));
+		$this->assertEquals("$rootURL/test", Director::absoluteURL("$rootURL/test", true));
+		
+		// Test relative to base
+		$this->assertEquals("$rootURL/mysite/test", Director::absoluteURL("test", true));
+		$this->assertEquals("$rootURL/mysite/test/url", Director::absoluteURL("test/url", true));
+		$this->assertEquals("$rootURL/root", Director::absoluteURL("/root", true));
+		$this->assertEquals("$rootURL/root/url", Director::absoluteURL("/root/url", true));
+		
+		// Test relative to requested page
+		$this->assertEquals("$rootURL/mysite/sub-page/test", Director::absoluteURL("test"));
+		// Legacy behaviour resolves this to $rootURL/mysite/test/url
+		//$this->assertEquals("$rootURL/mysite/sub-page/test/url", Director::absoluteURL("test/url"));
+		$this->assertEquals("$rootURL/root", Director::absoluteURL("/root"));
+		$this->assertEquals("$rootURL/root/url", Director::absoluteURL("/root/url"));
+		
+		// Test that javascript links are not left intact
+		$this->assertStringStartsNotWith('javascript', Director::absoluteURL('javascript:alert("attack")'));
+		$this->assertStringStartsNotWith('alert', Director::absoluteURL('javascript:alert("attack")'));
+		$this->assertStringStartsNotWith('javascript', Director::absoluteURL('alert("attack")'));
+		$this->assertStringStartsNotWith('alert', Director::absoluteURL('alert("attack")'));
 	}
 
 	public function testAlternativeBaseURL() {
@@ -177,6 +229,41 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse(Director::is_site_url("http://test.com?url=" . Director::absoluteBaseURL()));
 		$this->assertFalse(Director::is_site_url("http://test.com?url=" . urlencode(Director::absoluteBaseURL())));
 		$this->assertFalse(Director::is_site_url("//test.com?url=" . Director::absoluteBaseURL()));
+	}
+	
+	/**
+	 * Tests isDev, isTest, isLive set from querystring
+	 */
+	public function testQueryIsEnvironment() {
+		// Reset
+		unset($_SESSION['isDev']);
+		unset($_SESSION['isLive']);
+		unset($_GET['isTest']);
+		unset($_GET['isDev']);
+		
+		// Test isDev=1
+		$_GET['isDev'] = '1';
+		$this->assertTrue(Director::isDev());
+		$this->assertFalse(Director::isTest());
+		$this->assertFalse(Director::isLive());
+		
+		// Test persistence
+		unset($_GET['isDev']);
+		$this->assertTrue(Director::isDev());
+		$this->assertFalse(Director::isTest());
+		$this->assertFalse(Director::isLive());
+		
+		// Test change to isTest
+		$_GET['isTest'] = '1';
+		$this->assertFalse(Director::isDev());
+		$this->assertTrue(Director::isTest());
+		$this->assertFalse(Director::isLive());
+		
+		// Test persistence
+		unset($_GET['isTest']);
+		$this->assertFalse(Director::isDev());
+		$this->assertTrue(Director::isTest());
+		$this->assertFalse(Director::isLive());
 	}
 	
 	public function testResetGlobalsAfterTestRequest() {
@@ -328,6 +415,21 @@ class DirectorTest extends SapphireTest {
 		$_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'ftp';
 		$this->assertFalse(Director::is_https());
 
+		$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+		$this->assertTrue(Director::is_https());
+
+		$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
+		$this->assertFalse(Director::is_https());
+
+		$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'ftp';
+		$this->assertFalse(Director::is_https());
+
+		$_SERVER['HTTP_FRONT_END_HTTPS'] = 'On';
+		$this->assertTrue(Director::is_https());
+
+		$_SERVER['HTTP_FRONT_END_HTTPS'] = 'Off';
+		$this->assertFalse(Director::is_https());
+
 		// https via HTTPS
 		$_SERVER['HTTPS'] = 'true';
 		$this->assertTrue(Director::is_https());
@@ -349,8 +451,6 @@ class DirectorTest extends SapphireTest {
 		$filter = new TestRequestFilter;
 		
 		$processor = new RequestProcessor(array($filter));
-		
-		$currentProcessor = Injector::inst()->get('RequestProcessor');
 		
 		Injector::inst()->registerService($processor, 'RequestProcessor');
 		
@@ -376,9 +476,6 @@ class DirectorTest extends SapphireTest {
 		
 		// preCall 'false' will trigger an exception and prevent post call execution
 		$this->assertEquals(2, $filter->postCalls);
-
-		// swap back otherwise our wrapping test execution request may fail in the post processing later
-		Injector::inst()->registerService($currentProcessor, 'RequestProcessor');
 	}
 }
 

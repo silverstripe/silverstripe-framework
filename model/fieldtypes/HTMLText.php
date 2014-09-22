@@ -34,11 +34,45 @@ class HTMLText extends Text {
 
 	protected $processShortcodes = true;
 
+	protected $whitelist = false;
+
+	public function __construct($name = null, $options = array()) {
+		if(is_string($options)) {
+			$options = array('whitelist' => $options);
+		}
+
+		return parent::__construct($name, $options);
+	}
+
+	/**
+	 * @param array $options
+	 *
+	 * Options accepted in addition to those provided by Text:
+	 *
+	 *   - shortcodes: If true, shortcodes will be turned into the appropriate HTML.
+	 *                 If false, shortcodes will not be processed.
+	 *
+	 *   - whitelist: If provided, a comma-separated list of elements that will be allowed to be stored
+	 *                (be careful on relying on this for XSS protection - some seemingly-safe elements allow
+	 *                attributes that can be exploited, for instance <img onload="exploiting_code();" src="..." />)
+	 *                Text nodes outside of HTML tags are filtered out by default, but may be included by adding
+	 *                the text() directive. E.g. 'link,meta,text()' will allow only <link /> <meta /> and text at
+	 *                the root level.
+	 */
 	public function setOptions(array $options = array()) {
 		parent::setOptions($options);
 
 		if(array_key_exists("shortcodes", $options)) {
 			$this->processShortcodes = !!$options["shortcodes"];
+		}
+
+		if(array_key_exists("whitelist", $options)) {
+			if(is_array($options['whitelist'])) {
+				$this->whitelist = $options['whitelist'];
+			}
+			else {
+				$this->whitelist = preg_split('/,\s*/', $options['whitelist']);
+			}
 		}
 	}
 
@@ -131,7 +165,7 @@ class HTMLText extends Text {
 		/* Then look for the first sentence ending. We could probably use a nice regex, but for now this will do */
 		$words = preg_split('/\s+/', $paragraph);
 		foreach ($words as $i => $word) {
-			if (preg_match('/\.$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
+			if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
 				return implode(' ', array_slice($words, 0, $i+1));
 			}
 		}
@@ -149,7 +183,40 @@ class HTMLText extends Text {
 			return $this->value;
 		}
 	}
+
+	public function prepValueForDB($value) {
+		return parent::prepValueForDB($this->whitelistContent($value));
+	}
 	
+	/**
+	 * Filter the given $value string through the whitelist filter
+	 * 
+	 * @param string $value Input html content
+	 * @return string Value with all non-whitelisted content stripped (if applicable)
+	 */
+	public function whitelistContent($value) {
+		if($this->whitelist) {
+			$dom = Injector::inst()->create('HTMLValue', $value);
+
+			$query = array();
+			$textFilter = ' | //body/text()';
+			foreach ($this->whitelist as $tag) {
+				if($tag === 'text()') {
+					$textFilter = ''; // Disable text filter if allowed
+				} else {
+					$query[] = 'not(self::'.$tag.')';
+				}
+			}
+
+			foreach($dom->query('//body//*['.implode(' and ', $query).']'.$textFilter) as $el) {
+				if ($el->parentNode) $el->parentNode->removeChild($el);
+			}
+
+			$value = $dom->getContent();
+		}
+		return $value;
+	}
+
 	/**
 	 * Returns true if the field has meaningful content.
 	 * Excludes null content like <h1></h1>, <p></p> ,etc

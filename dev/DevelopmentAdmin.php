@@ -181,25 +181,15 @@ class DevelopmentAdmin extends Controller {
 	public function generatesecuretoken() {
 		$generator = Injector::inst()->create('RandomGenerator');
 		$token = $generator->randomToken('sha1');
+		$body = <<<TXT
+Generated new token. Please add the following code to your YAML configuration:
 
-		$path = $this->request->getVar('path');
-		if($path) {
-			if(file_exists(BASE_PATH . '/' . $path)) {
-				echo sprintf(
-					"Configuration file '%s' exists, can't merge. Please choose a new file.\n",
-					BASE_PATH . '/' . $path
-				);
-				exit(1);
-			}
-			$yml = "Security:\n  token: $token";
-			Filesystem::makeFolder(dirname(BASE_PATH . '/' . $path));
-			file_put_contents(BASE_PATH . '/' . $path, $yml);
-			echo "Configured token in $path\n";
-		} else {
-			echo "Generated new token. Please add the following code to your YAML configuration:\n\n";
-			echo "Security:\n";
-			echo "  token: $token\n";
-		}
+Security:
+  token: $token
+				
+TXT;
+		$response = new SS_HTTPResponse($body);
+		return $response->addHeader('Content-Type', 'text/plain');
 	}
 
 	public function errors() {

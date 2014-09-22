@@ -339,7 +339,7 @@ class GridField extends FormField {
 		if($total > 0) {
 			$rows = array();
 			foreach($list as $idx => $record) {
-				if(!$record->canView()) {
+				if($record->hasMethod('canView') && !$record->canView()) {
 					continue;
 				}
 				$rowContent = '';
@@ -615,7 +615,8 @@ class GridField extends FormField {
 	public function gridFieldAlterAction($data, $form, SS_HTTPRequest $request) {
 		$html = '';
 		$data = $request->requestVars();
-		$fieldData = @$data[$this->getName()];
+		$name = $this->getName();
+		$fieldData = isset($data[$name]) ? $data[$name] : null;
 
 		// Update state from client
 		$state = $this->getState(false);

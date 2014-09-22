@@ -342,7 +342,27 @@ class SQLQueryTest extends SapphireTest {
 		);
 	}
 	
+	public function testJoinSubSelect() {
 
+		$query = new SQLQuery();
+		$query->setFrom('MyTable');
+		$query->addInnerJoin('(SELECT * FROM MyOtherTable)', 
+			'Mot.MyTableID = MyTable.ID', 'Mot');
+		$query->addLeftJoin('(SELECT MyLastTable.MyOtherTableID, COUNT(1) as MyLastTableCount FROM MyLastTable '
+			. 'GROUP BY MyOtherTableID)', 
+			'Mlt.MyOtherTableID = Mot.ID', 'Mlt');
+		$query->setOrderBy('COALESCE(Mlt.MyLastTableCount, 0) DESC');
+
+		$this->assertEquals('SELECT *, COALESCE(Mlt.MyLastTableCount, 0) AS "_SortColumn0" FROM MyTable '.
+			'INNER JOIN (SELECT * FROM MyOtherTable) AS "Mot" ON Mot.MyTableID = MyTable.ID ' .
+			'LEFT JOIN (SELECT MyLastTable.MyOtherTableID, COUNT(1) as MyLastTableCount FROM MyLastTable '
+			. 'GROUP BY MyOtherTableID) AS "Mlt" ON Mlt.MyOtherTableID = Mot.ID ' .
+			'ORDER BY "_SortColumn0" DESC',
+			$query->sql()
+		);
+
+	}
+	
 	public function testSetWhereAny() {
 		$query = new SQLQuery();
 		$query->setFrom('MyTable');
@@ -352,25 +372,33 @@ class SQLQueryTest extends SapphireTest {
 	}
 	
 	public function testSelectFirst() {
-		
 		// Test first from sequence
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');
 		$query->setOrderBy('"Name"');
 		$result = $query->firstRow()->execute();
-		
-		$this->assertCount(1, $result);
+
+		$records = array();
 		foreach($result as $row) {
-			$this->assertEquals('Object 1', $row['Name']);
+			$records[] = $row;
 		}
-		
+
+		$this->assertCount(1, $records);
+		$this->assertEquals('Object 1', $records[0]['Name']);
+
 		// Test first from empty sequence
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');
 		$query->setOrderBy('"Name"');
 		$query->setWhere(array("\"Name\" = 'Nonexistent Object'"));
 		$result = $query->firstRow()->execute();
-		$this->assertCount(0, $result);
+
+		$records = array();
+		foreach($result as $row) {
+			$records[] = $row;
+		}
+
+		$this->assertCount(0, $records);
 		
 		// Test that given the last item, the 'first' in this list matches the last
 		$query = new SQLQuery();
@@ -378,24 +406,30 @@ class SQLQueryTest extends SapphireTest {
 		$query->setOrderBy('"Name"');
 		$query->setLimit(1, 1);
 		$result = $query->firstRow()->execute();
-		$this->assertCount(1, $result);
+
+		$records = array();
 		foreach($result as $row) {
-			$this->assertEquals('Object 2', $row['Name']);
+			$records[] = $row;
 		}
+
+		$this->assertCount(1, $records);
+		$this->assertEquals('Object 2', $records[0]['Name']);
 	}
 	
 	public function testSelectLast() {
-		
 		// Test last in sequence
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');
 		$query->setOrderBy('"Name"');
 		$result = $query->lastRow()->execute();
-		
-		$this->assertCount(1, $result);
+
+		$records = array();
 		foreach($result as $row) {
-			$this->assertEquals('Object 2', $row['Name']);
+			$records[] = $row;
 		}
+
+		$this->assertCount(1, $records);
+		$this->assertEquals('Object 2', $records[0]['Name']);
 		
 		// Test last from empty sequence
 		$query = new SQLQuery();
@@ -403,20 +437,30 @@ class SQLQueryTest extends SapphireTest {
 		$query->setOrderBy('"Name"');
 		$query->setWhere(array("\"Name\" = 'Nonexistent Object'"));
 		$result = $query->lastRow()->execute();
-		$this->assertCount(0, $result);
-		
+
+		$records = array();
+		foreach($result as $row) {
+			$records[] = $row;
+		}
+
+		$this->assertCount(0, $records);
+
 		// Test that given the first item, the 'last' in this list matches the first
 		$query = new SQLQuery();
 		$query->setFrom('"SQLQueryTest_DO"');
 		$query->setOrderBy('"Name"');
 		$query->setLimit(1);
 		$result = $query->lastRow()->execute();
-		$this->assertCount(1, $result);
+
+		$records = array();
 		foreach($result as $row) {
-			$this->assertEquals('Object 1', $row['Name']);
+			$records[] = $row;
 		}
+
+		$this->assertCount(1, $records);
+		$this->assertEquals('Object 1', $records[0]['Name']);
 	}
-	
+
 	/**
 	 * Tests aggregate() function
 	 */

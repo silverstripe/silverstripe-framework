@@ -358,9 +358,12 @@ class RequirementsTest extends SapphireTest {
 		$template = '<html><head></head><body><header>My header</header><p>Body<script></script></p></body></html>';
 
 		// The expected outputs
-		$JsInHead = "<html><head><script type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\"></script>\n</head><body><header>My header</header><p>Body<script></script></p></body></html>";
-		$JsInBody = "<html><head></head><body><header>My header</header><p>Body<script type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\"></script><script></script></p></body></html>";
-		$JsAtEnd  = "<html><head></head><body><header>My header</header><p>Body<script></script></p><script type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\"></script></body></html>";
+		$JsInHead = "<html><head><script type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\">"
+			. "</script>\n</head><body><header>My header</header><p>Body<script></script></p></body></html>";
+		$JsInBody = "<html><head></head><body><header>My header</header><p>Body<script type=\"text/javascript\""
+			. " src=\"http://www.mydomain.com/test.js\"></script><script></script></p></body></html>";
+		$JsAtEnd  = "<html><head></head><body><header>My header</header><p>Body<script></script></p><script "
+			. "type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\"></script></body></html>";
 
 		
 		// Test if the script is before the head tag, not before the body.

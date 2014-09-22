@@ -12,6 +12,58 @@ class FixtureBlueprintTest extends SapphireTest {
 		'FixtureFactoryTest_DataObjectRelation'
 	);
 
+	public function testCreateWithRelationshipExtraFields() {
+		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+
+		$relation1 = new FixtureFactoryTest_DataObjectRelation();
+		$relation1->write();
+		$relation2 = new FixtureFactoryTest_DataObjectRelation();
+		$relation2->write();
+
+		// in YAML these look like
+		// RelationName:
+		//   - =>Relational.obj:
+		//     ExtraFieldName: test
+		//   - =>..
+		$obj = $blueprint->createObject(
+			'one',
+			array(
+				'ManyMany' => 
+					array(
+						array(
+							"=>FixtureFactoryTest_DataObjectRelation.relation1" => array(), 
+							"Label" => 'This is a label for relation 1'
+						),
+						array(
+							"=>FixtureFactoryTest_DataObjectRelation.relation2" => array(),
+							"Label" => 'This is a label for relation 2'
+						)
+					)
+			),
+			array(
+				'FixtureFactoryTest_DataObjectRelation' => array(
+					'relation1' => $relation1->ID,
+					'relation2' => $relation2->ID
+				)
+			)
+		);
+
+		$this->assertEquals(2, $obj->ManyMany()->Count());
+		$this->assertNotNull($obj->ManyMany()->find('ID', $relation1->ID));
+		$this->assertNotNull($obj->ManyMany()->find('ID', $relation2->ID));
+
+		$this->assertEquals(
+			array('Label' => 'This is a label for relation 1'),
+			$obj->ManyMany()->getExtraData('ManyMany', $relation1->ID)
+		);
+
+		$this->assertEquals(
+			array('Label' => 'This is a label for relation 2'),
+			$obj->ManyMany()->getExtraData('ManyMany', $relation2->ID)
+		);
+	}
+
+
 	public function testCreateWithoutData() {
 		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
 		$obj = $blueprint->createObject('one');
@@ -27,6 +79,7 @@ class FixtureBlueprintTest extends SapphireTest {
 		$this->assertGreaterThan(0, $obj->ID);
 		$this->assertEquals('My Name', $obj->Name);
 	}
+
 
 	public function testCreateWithRelationship() {
 		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
@@ -127,7 +180,7 @@ class FixtureBlueprintTest extends SapphireTest {
 		$this->assertEquals(99, $obj->ID);
 	}
 
-	function testCallbackOnBeforeCreate() {
+	public function testCallbackOnBeforeCreate() {
 		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
 		$this->_called = 0;
 		$self = $this;
@@ -144,7 +197,7 @@ class FixtureBlueprintTest extends SapphireTest {
 		$this->_called = 0;
 	}
 
-	function testCallbackOnAfterCreate() {
+	public function testCallbackOnAfterCreate() {
 		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
 		$this->_called = 0;
 		$self = $this;
@@ -161,7 +214,7 @@ class FixtureBlueprintTest extends SapphireTest {
 		$this->_called = 0;
 	}
 
-	function testDefineWithDefaultCustomSetters() {
+	public function testDefineWithDefaultCustomSetters() {
 		$blueprint = new FixtureBlueprint(
 			'FixtureFactoryTest_DataObject', 
 			null,

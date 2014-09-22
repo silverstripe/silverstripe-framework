@@ -128,27 +128,48 @@ class FixtureBlueprint {
 			// Populate all relations
 			if($data) foreach($data as $fieldName => $fieldVal) {
 				if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
+					$obj->write();
+
 					$parsedItems = array();
-					$items = preg_split('/ *, */',trim($fieldVal));
-					foreach($items as $item) {
-						// Check for correct format: =><relationname>.<identifier>.
-						// Ignore if the item has already been replaced with a numeric DB identifier
-						if(!is_numeric($item) && !preg_match('/^=>[^\.]+\.[^\.]+/', $item)) {
-							throw new InvalidArgumentException(sprintf(
-								'Invalid format for relation "%s" on class "%s" ("%s")',
-								$fieldName,
-								$class,
-								$item
-							));
+
+					if(is_array($fieldVal)) {
+						// handle lists of many_many relations. Each item can
+						// specify the many_many_extraFields against each 
+						// related item.
+						foreach($fieldVal as $relVal) {
+							$item = key($relVal);
+							$id = $this->parseValue($item, $fixtures);
+							$parsedItems[] = $id;
+
+							array_shift($relVal);
+
+							$obj->getManyManyComponents($fieldName)->add(
+								$id, $relVal
+							);
+						}
+					} else {
+						$items = preg_split('/ *, */',trim($fieldVal));
+
+						foreach($items as $item) {
+							// Check for correct format: =><relationname>.<identifier>.
+							// Ignore if the item has already been replaced with a numeric DB identifier
+							if(!is_numeric($item) && !preg_match('/^=>[^\.]+\.[^\.]+/', $item)) {
+								throw new InvalidArgumentException(sprintf(
+									'Invalid format for relation "%s" on class "%s" ("%s")',
+									$fieldName,
+									$class,
+									$item
+								));
+							}
+
+							$parsedItems[] = $this->parseValue($item, $fixtures);
 						}
 
-						$parsedItems[] = $this->parseValue($item, $fixtures);
-					}
-					$obj->write();
-					if($obj->has_many($fieldName)) {
-						$obj->getComponents($fieldName)->setByIDList($parsedItems);
-					} elseif($obj->many_many($fieldName)) {
-						$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
+						if($obj->has_many($fieldName)) {
+							$obj->getComponents($fieldName)->setByIDList($parsedItems);
+						} elseif($obj->many_many($fieldName)) {
+							$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
+						}
 					}
 				} elseif($obj->has_one($fieldName)) {
 					// Sets has_one with relation name

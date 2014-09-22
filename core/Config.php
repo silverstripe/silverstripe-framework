@@ -201,13 +201,15 @@ class Config {
 	 * A use case for replacing the active configuration set would be for 
 	 * creating an isolated environment for unit tests.
 	 *
-	 * @return Config
+	 * @param Config $instance New instance of Config to assign
+	 * @return Config Reference to new active Config instance
 	 */
 	public static function set_instance($instance) {
 		self::$instance = $instance;
 
 		global $_SINGLETONS;
 		$_SINGLETONS['Config'] = $instance;
+		return $instance;
 	}
 
 	/**
@@ -215,23 +217,27 @@ class Config {
 	 * {@link Config} instance.
 	 *
 	 * You can then make changes to the configuration by calling update and 
-	 * remove on the new value returned by Config::inst(), and then discard 
+	 * remove on the new value returned by {@link Config::inst()}, and then discard 
 	 * those changes later by calling unnest.
+	 * 
+	 * @return Config Reference to new active Config instance
 	 */
 	public static function nest() {
 		$current = self::$instance;
 
 		$new = clone $current;
 		$new->nestedFrom = $current;
-		self::set_instance($new);
+		return self::set_instance($new);
 	}
 
 	/**
 	 * Change the active Config back to the Config instance the current active 
 	 * Config object was copied from.
+	 * 
+	 * @return Config Reference to new active Config instance
 	 */
 	public static function unnest() {
-		self::set_instance(self::$instance->nestedFrom);
+		return self::set_instance(self::$instance->nestedFrom);
 	}
 
 	/**

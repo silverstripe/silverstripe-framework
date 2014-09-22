@@ -300,17 +300,17 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 		}
 	}
 	
-        /**
-         * Risky test.
-         *
-         * @param PHPUnit_Framework_Test $test
-         * @param Exception              $e
-         * @param float                  $time
-         * @since  Method available since Release 3.8.0
-         */
-        public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time) {
-    	        // Stub out to support PHPUnit 3.8
-        }
+	/**
+	 * Risky test.
+	 *
+	 * @param PHPUnit_Framework_Test $test
+	 * @param Exception              $e
+	 * @param float                  $time
+	 * @since  Method available since Release 3.8.0
+	 */
+	public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time) {
+		// Stub out to support PHPUnit 3.8
+	}
 
 	/**
 	 * Trys to get the original exception thrown by the test on failure/error 

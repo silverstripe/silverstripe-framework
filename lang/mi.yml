@@ -170,7 +170,7 @@ mi:
     TEXT2: 'hono tautuhi kupuhipa anō'
     TEXT3: mā
   Form:
-    CSRF_FAILED_MESSAGE: 'Te āhua nei kua puta he raru hangarau. Pāwhiria te pātene hoki, ka tāmata anō i tō pūtirotiro, ka ngana anō.'
+    CSRF_FAILED_MESSAGE: "Te āhua nei kua puta he raru hangarau. Pāwhiria te pātene hoki, ka tāmata anō i tō pūtirotiro, ka ngana anō."
     FIELDISREQUIRED: 'Ka hiahiatia te {name}'
     SubmitBtnLabel: Haere
     VALIDATIONCREDITNUMBER: 'Tirohia kua tika tō tāuru i te tau kāri nama {number}'
@@ -339,6 +339,7 @@ mi:
     ERRORLOCKEDOUT2: 'Kua monokia rangitahitia tō pūkete nā te nui rawa o ngā ngana takiuru kua rahua. Ngana anō ā muri i te {count} meneti.'
     ERRORNEWPASSWORD: 'Kua rerekē tō tāuru kupuhipa, whakamātau anō'
     ERRORPASSWORDNOTMATCH: 'Kāore i te ōrite tō kupuhipa o nāianei, ngana anō'
+    ERRORWRONGCRED: 'Te āhua nei ehara i te wāhitau īmerā tika, i te kuphipa tika rānei. Ngana anō'
     FIRSTNAME: 'Ingoa Tuatahi'
     INTERFACELANG: 'Reo Atanga'
     INVALIDNEWPASSWORD: 'Kāore i taea te whakaae ki taua kupuhipa: {password}'
@@ -410,8 +411,8 @@ mi:
     Title: 'Ngā Tauira Raraunga'
     UPDATEDRECORDS: 'I whakahōutia e {count} ngā pūkete.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Whakaatu Whakapūtātanga mō %s'
     IMPORTSPECFIELDS: 'Ngā tīwae pātengi raraunga'
+    IMPORTSPECLINK: 'Whakaatu Whakapūtātanga mō %s'
     IMPORTSPECRELATIONS: Ngā Pānga
     IMPORTSPECTITLE: 'Whakapūtātanga mō %s'
   ModelAdmin_Tools_ss:
@@ -468,6 +469,7 @@ mi:
     ERRORPASSWORDPERMISSION: 'Me takiuru koe i mua i te huri i tō kupuhipa!'
     LOGGEDOUT: 'Kua takiputaina atu koe. Ki te pīrangi koe ki te takiuru atu anō, tāurutia ō taipitopito tuakiri ki raro. '
     LOGIN: 'Takiuru'
+    LOSTPASSWORDHEADER: 'Kupuhipa Ngaro'
     NOTEPAGESECURED: 'Kua ngita tēnā whārangi. Tāurua ō taipitoptio tuakiri ki raro, ā, mā mātou koe e tuku kia haere tonu.'
     NOTERESETLINKINVALID: '<p>He muhu, kua mōnehu rānei te hono tautuhi kupuhipa anō.</p><p>Ka taea te tono i te mea hōu<a href="{link1}">i konei</a> ka huri rānei i tō kupuhipa ā muri i tō<a href="{link2}">takiuru</a>.</p>'
     NOTERESETPASSWORD: 'Tāurua tō wāhitau īmēra, mā mātou e tuku tētahi hono ki a koe e taea ai te tautuhi anō i tō kupuhipa'

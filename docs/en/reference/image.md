@@ -93,7 +93,7 @@ For output of an image tag with the image automatically resized to 80px width, y
 
 	:::php
 	$Image.SetWidth(80) // returns a image 80px wide, ratio kept the same
-	$Image.SetHeight(80) // returns a image 80px tall, ration kept the same
+	$Image.SetHeight(80) // returns a image 80px tall, ratio kept the same
 	$Image.SetSize(80,80) // returns a 80x80px padded image
 	$Image.SetRatioSize(80,80) // Returns an image scaled proportional, with its greatest diameter scaled to 80px
 	$Image.CroppedImage(80,80) // Returns an 80x80 image cropped from the center.
@@ -109,6 +109,16 @@ For output of an image tag with the image automatically resized to 80px width, y
 
 For usage on a website form, see `[api:FileField]`.
 If you want to upload images within the CMS, see `[api:UploadField]`.
+
+### Image Quality
+
+To adjust the quality of the generated images when they are resized add the following to your mysite/config/config.yml file:
+
+	:::yml
+	GDBackend:
+		default_quality: 90
+
+The default value is 75.
 
 ### Clearing Thumbnail Cache
 

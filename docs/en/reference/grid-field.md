@@ -98,6 +98,24 @@ A config object can be either injected as the fourth argument of the GridField c
 	$gridField = new GridField('pages', 'All pages', SiteTree::get());
 	$gridField->setConfig(GridFieldConfig_Base::create());
 
+By default the `[api:GridFieldConfig_Base]` constructor takes a single parameter to specify the number
+of items displayed on each page.
+
+	:::php
+	// I have lots of items, so increase the page size
+	$myConfig = GridFieldConfig_Base::create(40);
+
+The default page size can also be tweaked via the config. (put in your mysite/_config/config.yml)
+
+	:::yaml
+	// For updating all gridfield defaults system wide
+	GridFieldPaginator:
+		default_items_per_page: 40
+
+Note that for [/reference/modeladmin](ModelAdmin) sections the default 30 number of pages can be
+controlled either by setting the base `ModelAdmin.page_length` config to the desired number, or
+by overriding this value in a custom subclass.
+
 The framework comes shipped with some base GridFieldConfigs:
 
 ### Table listing with GridFieldConfig_Base
@@ -246,6 +264,8 @@ Here is a list of components for generic use:
  - `[api:GridFieldDeleteAction]`
  - `[api:GridFieldViewButton]`
  - `[api:GridFieldEditButton]`
+ - `[api:GridFieldExportButton]`
+ - `[api:GridFieldPrintButton]`
  - `[api:GridFieldPaginator]`
  - `[api:GridFieldDetailForm]`
 

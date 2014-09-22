@@ -89,7 +89,12 @@ class Convert {
 			foreach($val as $k => $v) $val[$k] = self::raw2js($v);
 			return $val;
 		} else {
-			return str_replace(array("\\", '"', "\n", "\r", "'"), array("\\\\", '\"', '\n', '\r', "\\'"), $val);
+			return str_replace(
+				// Intercepts some characters such as <, >, and & which can interfere
+				array("\\", '"', "\n", "\r", "'", "<", ">", "&"),
+				array("\\\\", '\"', '\n', '\r', "\\'", "\\x3c", "\\x3e", "\\x26"),
+				$val
+			);
 		}
 	}
 

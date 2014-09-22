@@ -21,7 +21,7 @@ define an AbsoluteLink() method.
 	RSSFeed::linkToFeed($link, $title)
 
 This line should go in your `[api:Controller]` subclass in the action you want 
-to include the HTML link. 
+to include the HTML link. Not all arguments are required, see `[api:RSSFeed]` and example below.  Last Modified Time is expected in seconds like time().
 
 	:::php
 	$feed = new RSSFeed(
@@ -31,7 +31,9 @@ to include the HTML link.
 		$description, 
 		$titleField, 
 		$descriptionField, 
-		$authorField
+		$authorField,
+		$lastModifiedTime,
+		$etag
 	);
 
 Creates a new `[api:RSSFeed]` instance to be returned. The arguments notify 
@@ -45,6 +47,7 @@ SilverStripe what values to include in the feed.
 	class Page_Controller extends ContentController {
 		private static $allowed_actions = array('rss');
 		public function init() {
+			parent::init();
 			// linkToFeed will add an appropriate HTML link tag to the website 
 			// <head> tag to notify web browsers that an RSS feed is available 
 			// for this page. You can include as many feeds on the page as you 
@@ -54,7 +57,6 @@ SilverStripe what values to include in the feed.
 			// In this example $this->Link("rss") refers to the *rss* function
 			// we define below.
 			RSSFeed::linkToFeed($this->Link("rss"), "RSS feed of this blog");
-			parent::init();
 		}
 		public function rss() {
 			// Creates a new RSS Feed list
@@ -85,8 +87,8 @@ updates. Update mysite/code/Page.php to something like this:
 		private static $allowed_actions = array('rss');
 		
 		public function init() {
-			RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");	
 			parent::init();
+			RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");	
 		}
 		
 		public function rss() {
@@ -128,8 +130,8 @@ for all the students as we've seen before.
 	class Page_Controller extends ContentController {
 		private static $allowed_actions = array('students');
 		public function init() {
-			RSSFeed::linkToFeed($this->Link("students"), "Students feed");
 			parent::init();
+			RSSFeed::linkToFeed($this->Link("students"), "Students feed");
 		}		
 		public function students() {
 			$rss = new RSSFeed(

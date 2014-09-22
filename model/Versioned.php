@@ -8,8 +8,7 @@
  * @package framework
  * @subpackage model
  */
-class Versioned extends DataExtension {
-
+class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * An array of possible stages.
 	 * @var array
@@ -27,6 +26,11 @@ class Versioned extends DataExtension {
 	 * @var string
 	 */
 	protected $liveStage;
+	
+	/**
+	 * The default reading mode
+	 */
+	const DEFAULT_MODE = 'Stage.Live';
 	
 	/**
 	 * A version that a DataObject should be when it is 'migrating',
@@ -182,13 +186,13 @@ class Versioned extends DataExtension {
 	 * @todo Should this all go into VersionedDataQuery?
 	 */
 	public function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
-		$baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
-		
-		switch($dataQuery->getQueryParam('Versioned.mode')) {
-		// Noop
-		case '':
-			break;
+		if(!$dataQuery || !$dataQuery->getQueryParam('Versioned.mode')) {
+			return;
+		}
 
+		$baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
+
+		switch($dataQuery->getQueryParam('Versioned.mode')) {
 		// Reading a specific data from the archive
 		case 'archive':
 			$date = $dataQuery->getQueryParam('Versioned.date');
@@ -925,6 +929,7 @@ class Versioned extends DataExtension {
 		
 	//-----------------------------------------------------------------------------------------------//
 	
+	
 	/**
 	 * Choose the stage the site is currently on.
 	 *
@@ -936,23 +941,40 @@ class Versioned extends DataExtension {
 	 *
 	 * If neither of these are set, it checks the session, otherwise the stage 
 	 * is set to 'Live'.
+	 * 
+	 * @param Session $session Optional session within which to store the resulting stage
 	 */
-	public static function choose_site_stage() {
+	public static function choose_site_stage($session = null) {
+		// Check any pre-existing session mode
+		$preexistingMode = $session
+			? $session->inst_get('readingMode')
+			: Session::get('readingMode');
+		
+		// Determine the reading mode
 		if(isset($_GET['stage'])) {
 			$stage = ucfirst(strtolower($_GET['stage']));
-			
 			if(!in_array($stage, array('Stage', 'Live'))) $stage = 'Live';
-
-			Session::set('readingMode', 'Stage.' . $stage);
-		}
-		if(isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
-			Session::set('readingMode', 'Archive.' . $_GET['archiveDate']);
+			$mode = 'Stage.' . $stage;
+		} elseif (isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
+			$mode = 'Archive.' . $_GET['archiveDate'];
+		} elseif($preexistingMode) {
+			$mode = $preexistingMode;
+		} else {
+			$mode = self::DEFAULT_MODE;
 		}
 		
-		if($mode = Session::get('readingMode')) {
-			Versioned::set_reading_mode($mode);
-		} else {
-			Versioned::reading_stage("Live");
+		// Save reading mode
+		Versioned::set_reading_mode($mode);
+		
+		// Try not to store the mode in the session if not needed
+		if(($preexistingMode && $preexistingMode !== $mode)
+			|| (!$preexistingMode && $mode !== self::DEFAULT_MODE)
+		) {
+			if($session) {
+				$session->inst_set('readingMode', $mode);
+			} else {
+				Session::set('readingMode', $mode);
+			}
 		}
 
 		if(!headers_sent() && !Director::is_cli()) {
@@ -1184,6 +1206,7 @@ class Versioned extends DataExtension {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::reading_stage($stage);
 
+		$this->owner->forceChange();
 		$result = $this->owner->write(false, $forceInsert);
 		Versioned::set_reading_mode($oldMode);
 
@@ -1337,6 +1360,12 @@ class Versioned extends DataExtension {
 	 */
 	public function getDefaultStage() {
 		return $this->defaultStage;
+	}
+
+	public static function get_template_global_variables() {
+		return array(
+			'CurrentReadingMode' => 'get_reading_mode'
+		);
 	}
 }
 

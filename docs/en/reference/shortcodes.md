@@ -85,8 +85,8 @@ plus some `width` and `height` arguments. We'll add defaults to those in our sho
 			urlencode($address),
 			urlencode($address)
 		);
-		$width = (isset($args['width']) && $args['width']) ? $args['width'] : 400;
-		$height = (isset($args['height']) && $args['height']) ? $args['height'] : 300;
+		$width = (isset($arguments['width']) && $arguments['width']) ? $arguments['width'] : 400;
+		$height = (isset($arguments['height']) && $arguments['height']) ? $arguments['height'] : 300;
 		return sprintf(
 			'<iframe width="%d" height="%d" src="%s" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>',
 			$width,
@@ -97,8 +97,9 @@ plus some `width` and `height` arguments. We'll add defaults to those in our sho
 
 The hard bits are taken care of (parsing out the shortcodes), everything we need to do is a bit of string replacement.
 CMS users still need to remember the specific syntax, but these shortcodes can form the basis
-for more advanced editing interfaces (with visual placeholders). See the built-in `[embed]` shortcode as an example
+for more advanced editing interfaces (with visual placeholders). See the built-in `embed` shortcode as an example
 for coupling shortcodes with a form to create and edit placeholders.
+
 
 ## Built-in Shortcodes
 

@@ -69,10 +69,11 @@ class HtmlEditorConfig {
 	protected $settings = array(
 		'friendly_name' => '(Please set a friendly name for this config)',
 		'priority' => 0,
-		'mode' => "specific_textareas",
+		'mode' => "none", // initialized through HtmlEditorField.js redraw() logic
 		'editor_selector' => "htmleditor",
 		'width' => "100%",
 		'auto_resize' => false,
+		'update_interval' => 5000, // Ensure update of this data every 5 seconds to the underlying textarea
 		'theme' => "advanced",
 
 		'theme_advanced_layout_manager' => "SimpleLayout",

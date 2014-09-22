@@ -171,7 +171,7 @@ de:
     TEXT2: 'Link zum Zurücksetzen des Passworts'
     TEXT3: für
   Form:
-    CSRF_FAILED_MESSAGE: 'Es gab ein technisches Problem. Bitte versuchen Sie es erneut, nachdem sie die vorherige Seite neu geladen haben.'
+    CSRF_FAILED_MESSAGE: "Es gab ein technisches Problem. Bitte versuchen Sie es erneut, nachdem sie die vorherige Seite neu geladen haben."
     FIELDISREQUIRED: '{name} muss ausgefüllt werden'
     SubmitBtnLabel: Los
     VALIDATIONCREDITNUMBER: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer ({number}) korrekt eingegeben haben'
@@ -181,6 +181,7 @@ de:
     VALIDATIONSTRONGPASSWORD: 'Passwörter müssen mindestens eine Zahl und ein alphanumerisches Zeichen enthalten'
     VALIDATOR: Prüfer
     VALIDCURRENCY: 'Bitte geben Sie einen korrekten Betrag ein'
+    CSRF_EXPIRED_MESSAGE: 'Ihre Sitzung ist abgelaufen. Bitte schicken Sie das Formular erneut ab.'
   FormField:
     Example: 'z.B. %s'
     NONE: keine
@@ -225,6 +226,7 @@ de:
     DefaultGroupTitleContentAuthors: 'Inhaltsautoren'
     Description: Beschreibung
     GroupReminder: 'Diese Gruppe übernimmt automatisch die Rollen der Elterngruppe'
+    HierarchyPermsError: 'Kann Berechtigungen der Eltern-Gruppe "%s" nicht hinzufügen (erfordert ADMIN Rechte)'
     Locked: 'Gesperrt?'
     NoRoles: 'Keine Rollen gefunden'
     PLURALNAME: Gruppen
@@ -412,8 +414,8 @@ de:
     Title: 'Datenmodelle'
     UPDATEDRECORDS: '{count} Einträge wurden aktualisiert'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Beschreibung von %s anzeigen'
     IMPORTSPECFIELDS: 'Datenbankspalten'
+    IMPORTSPECLINK: 'Beschreibung von %s anzeigen'
     IMPORTSPECRELATIONS: Relationen
     IMPORTSPECTITLE: 'Beschreibung von %s'
   ModelAdmin_Tools_ss:
@@ -455,6 +457,7 @@ de:
     Title: Titel
   PermissionRoleCode:
     PLURALNAME: 'Berechtigungsrollencodes'
+    PermsError: 'Kann Berechtigungen dem Code "%s" nicht hinzufügen (erfordert ADMIN Rechte)'
     SINGULARNAME: 'Berechtigungsrollencode'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
@@ -470,6 +473,7 @@ de:
     ERRORPASSWORDPERMISSION: 'Sie müssen eingeloggt sein, um Ihr Passwort ändern zu können!'
     LOGGEDOUT: 'Sie wurden ausgeloggt. Wenn Sie sich wieder einloggen möchten, geben Sie bitte unten Ihre Zugangsdaten ein.'
     LOGIN: 'Anmelden'
+    LOSTPASSWORDHEADER: 'Passwort vergessen'
     NOTEPAGESECURED: 'Diese Seite ist geschützt. Bitte melden Sie sich an und Sie werden sofort weitergeleitet.'
     NOTERESETLINKINVALID: '<p>Der Link zum Zurücksetzen des Passworts ist entweder nicht korrekt oder abgelaufen</p><p>Sie können <a href="{link1}">einen neuen Link anfordern</a> oder Ihr Passwort nach dem <a href="{link2}">einloggen</a> ändern.</p>'
     NOTERESETPASSWORD: 'Geben Sie Ihre E-Mail-Adresse ein und wir werden Ihnen einen Link zuschicken, mit dem Sie Ihr Passwort zurücksetzen können.'

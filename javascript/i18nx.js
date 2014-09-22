@@ -18,20 +18,33 @@ ss.i18n = {
 		sprintf: function(S) {
 			if (arguments.length == 1) return S;
 
-			var nS = "";
-			var tS = S.split("%s");
-			
-			var args = [];
-			for (var i=1, len = arguments.length; i <len; ++i) {
+			var args  = [],
+					len   = arguments.length,
+					index = 0,
+					regx  = new RegExp('(.?)(%s)', 'g'),
+					result;
+
+			for (var i=1; i<len; ++i) {
 				args.push(arguments[i]);
 			};
 
-			for(var i=0; i<args.length; i++) {
-				if (tS[i].lastIndexOf('%') == tS[i].length-1 && i != args.length-1)
-					tS[i] += "s"+tS.splice(i+1,1)[0];
-				nS += tS[i] + args[i];
-			}
-			return nS + tS[tS.length-1];
+			result = S.replace(regx, function(match, subMatch1, subMatch2, offset, string){
+				if (subMatch1 == '%') return match; // skip %%s
+				return subMatch1 + args[index++];
+			});
+
+			return result;
+		},
+
+		inject: function(S, map) {
+			var regx = new RegExp("\{([A-Za-z0-9_]*)\}", "g"),
+					result;
+
+			result = S.replace(regx, function(match, key, offset, string){
+				return (map[key]) ? map[key] : match;
+			});
+
+			return result;
 		},
 		
 		// stub methods

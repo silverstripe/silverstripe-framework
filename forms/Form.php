@@ -277,10 +277,20 @@ class Form extends RequestHandler {
 	
 		// Protection against CSRF attacks
 		$token = $this->getSecurityToken();
-		if(!$token->checkRequest($request)) {
-			$this->httpError(400, _t("Form.CSRF_FAILED_MESSAGE",
-				"There seems to have been a technical problem. Please click the back button,"
-				. " refresh your browser, and try again."));
+		if( ! $token->checkRequest($request)) {
+			if (empty($vars['SecurityID'])) {
+				$this->httpError(400, _t("Form.CSRF_FAILED_MESSAGE",
+					"There seems to have been a technical problem. Please click the back button, 
+					refresh your browser, and try again."));
+			} else {
+				Session::set("FormInfo.{$this->FormName()}.data", $this->getData());
+				Session::set("FormInfo.{$this->FormName()}.errors", array());
+				$this->sessionMessage(
+					_t("Form.CSRF_EXPIRED_MESSAGE", "Your session has expired. Please re-submit the form."),
+					"warning"
+				);
+				return $this->controller->redirectBack();
+			}
 		}
 		
 		// Determine the action button clicked
@@ -673,7 +683,7 @@ class Form extends RequestHandler {
 	 * @return String
 	 */
 	public function getAttribute($name) {
-		return @$this->attributes[$name];
+		if(isset($this->attributes[$name])) return $this->attributes[$name];
 	}
 
 	public function getAttributes() {
@@ -1006,12 +1016,17 @@ class Form extends RequestHandler {
 		return $this->messageType;
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function getMessageFromSession() {
 		if($this->message || $this->messageType) {
 			return $this->message;
-		}else{
+		} else {
 			$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
 			$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
+
+			return $this->message;
 		}
 	}
 
@@ -1234,7 +1249,7 @@ class Form extends RequestHandler {
 		$dataFields = $this->fields->saveableFields();
 		$lastField = null;
 		if($dataFields) foreach($dataFields as $field) {
-			// Skip fields that have been exlcuded
+			// Skip fields that have been excluded
 			if($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList)) continue;
 
 
@@ -1351,7 +1366,7 @@ class Form extends RequestHandler {
 			. " value=\"" . $this->FormAction() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_name\" value=\"" . $this->FormName() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_method\" value=\"" . $this->FormMethod() . "\" />\n";
-		$content .= "<input type=\"hidden\" name=\"_form_enctype\" value=\"" . $this->FormEncType() . "\" />\n";
+		$content .= "<input type=\"hidden\" name=\"_form_enctype\" value=\"" . $this->getEncType() . "\" />\n";
 
 		return $content;
 	}

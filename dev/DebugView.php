@@ -12,6 +12,14 @@
  * @subpackage dev
  */
 class DebugView extends Object {
+	
+	/**
+	 * Column size to wrap long strings to
+	 *
+	 * @var int
+	 * @config
+	 */
+	private static $columns = 100;
 
 	protected static $error_types = array(
 		E_USER_ERROR => array(
@@ -135,8 +143,13 @@ class DebugView extends Object {
 	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
 		$errorType = self::$error_types[$errno];
 		$httpRequestEnt = htmlentities($httpRequest, ENT_COMPAT, 'UTF-8');
+		if (ini_get('html_errors')) {
+			$errstr = strip_tags($errstr);
+		} else {
+			$errstr = Convert::raw2xml($errstr);
+		}
 		echo '<div class="info ' . $errorType['class'] . '">';
-		echo "<h1>[" . $errorType['title'] . '] ' . strip_tags($errstr) . "</h1>";
+		echo "<h1>[" . $errorType['title'] . '] ' . $errstr . "</h1>";
 		echo "<h3>$httpRequestEnt</h3>";
 		echo "<p>Line <strong>$errline</strong> in <strong>$errfile</strong></p>";
 		echo '</div>';
@@ -175,5 +188,32 @@ class DebugView extends Object {
 	public function writeParagraph($text) {
 		echo '<p class="info">' . $text . '</p>';
 	}
+	
+	/**
+	 * Formats the caller of a method
+	 * 
+	 * @param array $caller
+	 * @return string
+	 */
+	protected function formatCaller($caller) {
+		$return = basename($caller['file']) . ":" . $caller['line'];
+		if(!empty($caller['class']) && !empty($caller['function'])) {
+			$return .= " - {$caller['class']}::{$caller['function']}()";
+		}
+		return $return;
+	}
+	
+	/**
+	 * Outputs a variable in a user presentable way
+	 * 
+	 * @param object $val
+	 * @param array $caller Caller information
+	 */
+	public function writeVariable($val, $caller) {
+		echo '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
+		echo "<span style=\"font-size: 12px;color:#666;\">" . $this->formatCaller($caller). " - </span>\n";
+		if (is_string($val)) print_r(wordwrap($val, self::config()->columns));
+		else print_r($val);
+		echo '</pre>';
+	}
 }
-

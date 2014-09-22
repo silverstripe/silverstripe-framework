@@ -15,6 +15,8 @@ class SecurityTest extends FunctionalTest {
 	protected $priorDefaultAuthenticator = null;
 
 	protected $priorUniqueIdentifierField = null;
+	
+	protected $priorRememberUsername = null;
 
 	public function setUp() {
 		// This test assumes that MemberAuthenticator is present and the default
@@ -29,6 +31,7 @@ class SecurityTest extends FunctionalTest {
 
 		// And that the unique identified field is 'Email'
 		$this->priorUniqueIdentifierField = Member::config()->unique_identifier_field;
+		$this->priorRememberUsername = Security::config()->remember_username;
 		Member::config()->unique_identifier_field = 'Email';
 
 		parent::setUp();
@@ -48,6 +51,7 @@ class SecurityTest extends FunctionalTest {
 
 		// Restore unique identifier field
 		Member::config()->unique_identifier_field = $this->priorUniqueIdentifierField;
+		Security::config()->remember_username = $this->priorRememberUsername;
 		
 		parent::tearDown();
 	}
@@ -122,6 +126,32 @@ class SecurityTest extends FunctionalTest {
 		
 		/* Log the user out */
 		$this->session()->inst_set('loggedInAs', null);
+	}
+	
+	public function testLoginUsernamePersists() {
+		// Test that username does not persist
+		$this->session()->inst_set('SessionForms.MemberLoginForm.Email', 'myuser@silverstripe.com');
+		Security::config()->remember_username = false;
+		$this->get(Config::inst()->get('Security', 'login_url'));
+		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm #Email input.text');
+		$this->assertEquals(1, count($items));
+		$this->assertEmpty((string)$items[0]->attributes()->value);
+		$this->assertEquals('off', (string)$items[0]->attributes()->autocomplete);
+		$form = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm');
+		$this->assertEquals(1, count($form));
+		$this->assertEquals('off', (string)$form[0]->attributes()->autocomplete);
+		
+		// Test that username does persist when necessary
+		$this->session()->inst_set('SessionForms.MemberLoginForm.Email', 'myuser@silverstripe.com');
+		Security::config()->remember_username = true;
+		$this->get(Config::inst()->get('Security', 'login_url'));
+		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm #Email input.text');
+		$this->assertEquals(1, count($items));
+		$this->assertEquals('myuser@silverstripe.com', (string)$items[0]->attributes()->value);
+		$this->assertNotEquals('off', (string)$items[0]->attributes()->autocomplete);
+		$form = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm');
+		$this->assertEquals(1, count($form));
+		$this->assertNotEquals('off', (string)$form[0]->attributes()->autocomplete);
 	}
 	
 	public function testExternalBackUrlRedirectionDisallowed() {
@@ -213,6 +243,9 @@ class SecurityTest extends FunctionalTest {
 	
 	public function testChangePasswordFromLostPassword() {
 		$admin = $this->objFromFixture('Member', 'test');
+		$admin->FailedLoginCount = 99;
+		$admin->LockedOutUntil = SS_Datetime::now()->Format('Y-m-d H:i:s');
+		$admin->write();
 
 		$this->assertNull($admin->AutoLoginHash, 'Hash is empty before lost password');
 		
@@ -243,6 +276,10 @@ class SecurityTest extends FunctionalTest {
 		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , 'changedPassword');
 		$this->assertEquals(302, $goodResponse->getStatusCode());
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
+
+		$admin = DataObject::get_by_id('Member', $admin->ID, false);
+		$this->assertNull($admin->LockedOutUntil);
+		$this->assertEquals(0, $admin->FailedLoginCount);
 	}
 		
 	public function testRepeatedLoginAttemptsLockingPeopleOut() {

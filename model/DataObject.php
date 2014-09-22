@@ -81,7 +81,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private static $singular_name = null;
 	
 	/**
-	 * Human-readable pluaral name
+	 * Human-readable plural name
 	 * @var string
 	 * @config
 	 */
@@ -237,7 +237,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$db = DB::getConn();
 				if($db->hasField($class, 'ClassName')) {
 					$existing = $db->query("SELECT DISTINCT \"ClassName\" FROM \"$class\"")->column();
-					$classNames = array_unique(array_merge($existing, $classNames));
+					$classNames = array_unique(array_merge($classNames, $existing));
 				}
 
 				self::$classname_spec_cache[$class] = "Enum('" . implode(', ', $classNames) . "')";
@@ -2166,6 +2166,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		$dataQuery = new DataQuery($tableClass);
+		
+		// Reset query parameter context to that of this DataObject
+		if($params = $this->getSourceQueryParams()) {
+			foreach($params as $key => $value) $dataQuery->setQueryParam($key, $value);
+		}
 
 		// TableField sets the record ID to "new" on new row data, so don't try doing anything in that case
 		if(!is_numeric($this->record['ID'])) return false;
@@ -3179,16 +3184,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$fields = $this->stat('searchable_fields');
 		$labels = $this->fieldLabels();
 		
-		// fallback to summary fields
-		if(!$fields) {
+		// fallback to summary fields (unless empty array is explicitly specified)
+		if( ! $fields && ! is_array($fields)) {
 			$summaryFields = array_keys($this->summaryFields());
 			$fields = array();
 
-			// remove the custom getters as the search should not include.
+			// remove the custom getters as the search should not include them
 			if($summaryFields) {
 				foreach($summaryFields as $key => $name) {
-					if($this->hasDatabaseField($name) || $this->relObject($name)) {
+					$spec = $name;
+
+					// Extract field name in case this is a method called on a field (e.g. "Date.Nice")
+					if(($fieldPos = strpos($name, '.')) !== false) {
+						$name = substr($name, 0, $fieldPos);
+					}
+
+					if($this->hasDatabaseField($name)) {
 						$fields[] = $name;
+					} elseif($this->relObject($spec)) {
+						$fields[] = $spec;
 					}
 				}
 			}

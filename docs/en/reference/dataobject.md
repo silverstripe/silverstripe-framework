@@ -23,13 +23,13 @@ The resulting `[api:FieldList]` is the centrepiece of many data administration i
 Many customizations of the SilverStripe CMS interface start here,
 by adding, removing or configuring fields.
 
-	Example getCMSFields implementation
+Here is an example getCMSFields implementation:
 
 	:::php
 	class MyDataObject extends DataObject {
-		$db = array(
-			'IsActive' => 'Boolean'
-		);
+	  $db = array(
+	  	'IsActive' => 'Boolean'
+	  );
 	  public function getCMSFields() {
 	    return new FieldList(
 	    	new CheckboxField('IsActive')
@@ -58,13 +58,13 @@ You can then further customize those fields as required.
 	  }
 	}
 
-The `[ModelAdmin](/reference/modeladmin)` class uses this approach to provide
+The [ModelAdmin](/reference/modeladmin) class uses this approach to provide
 data management interfaces with very little custom coding.
 
 You can also alter the fields of built-in and module `DataObject` classes through
-your own `[DataExtension](/reference/dataextension)`, and a call to `[api:DataExtension->updateCMSFields()]`.
+your own [DataExtension](/reference/dataextension), and a call to `DataExtension->updateCMSFields()`.
 `[api::DataObject->beforeUpdateCMSFields()]` can also be used to interact with and add to automatically
-scaffolded fields prior to being passed to extensions (See `[DataExtension](/reference/dataextension)`).
+scaffolded fields prior to being passed to extensions (See [DataExtension](/reference/dataextension)).
 
 ### Searchable Fields
 
@@ -120,7 +120,7 @@ assign an array:
 	}
 
 
-To include relations (''$has_one'', `$has_many` and `$many_many`) in your search, you can use a dot-notation.
+To include relations (`$has_one`, `$has_many` and `$many_many`) in your search, you can use a dot-notation.
 
 	:::php
 	class Team extends DataObject {
@@ -208,7 +208,7 @@ Non-textual elements (such as images and their manipulations) can also be used i
 	    'HeroImage' => 'Image'
 	  );
 	  private static $summary_fields = array(
-	    'Name' => 'Name,
+	    'Name' => 'Name',
 	    'HeroImage.CMSThumbnail' => 'Hero Image'
 	  );
 	}
@@ -247,7 +247,7 @@ Example: Check for CMS access permissions
 **Important**: These checks are not enforced on low-level ORM operations
 such as `write()` or `delete()`, but rather rely on being checked in the invoking code.
 The CMS default sections as well as custom interfaces like
-`[ModelAdmin](/reference/modeladmin)` or `[GridField](/reference/gridfield)`
+[ModelAdmin](/reference/modeladmin) or [GridField](/reference/grid-field)
 already enforce these permissions.
 
 ## Indexes

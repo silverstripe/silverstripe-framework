@@ -148,9 +148,12 @@ most common XSS vectors.
 However some subtle XSS attacks that exploit HTML parsing bugs need heavier filtering. For greater protection
 you can install the [htmlpurifier](https://github.com/silverstripe-labs/silverstripe-htmlpurifier) module which
 will replace the built in sanitiser with one that uses the [HTML Purifier](http://htmlpurifier.org/) library.
-
 In both cases, you must ensure that you have not configured TinyMCE to explicitly allow script elements or other
 javascript-specific attributes.
+
+For `HTMLText` database fields which aren't edited through `HtmlEditorField`, you also
+have the option to explicitly whitelist allowed tags in the field definition, e.g. `"MyField" => "HTMLText('meta','link')"`.
+The `SiteTree.ExtraMeta` property uses this to limit allowed input.
 
 ##### But I also need my editors to provide javascript
 
@@ -442,6 +445,7 @@ In addition, you can tighten password security with the following configuration 
     the user is blocked from further attempts for the timespan defined in `$lock_out_delay_mins`
  * `Member.lock_out_delay_mins`: Minutes of enforced lockout after incorrect password attempts.
  		Only applies if `lock_out_after_incorrect_logins` is greater than 0.
+ * `Security.remember_username`: Set to false to disable autocomplete on login form
 
 ## Clickjacking: Prevent iframe Inclusion
 

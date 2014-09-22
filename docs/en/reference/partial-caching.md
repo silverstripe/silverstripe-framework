@@ -51,6 +51,19 @@ From a block that shows a summary of the page edits if administrator, nothing if
 	<% cached 'loginblock', LastEdited, CurrentMember.isAdmin %>
 
 
+An additional global key is incorporated in the cache lookup. The default value for this is
+`$CurrentReadingMode, $CurrentUser.ID`, which ensures that the current `[api:Versioned]` state and user ID are
+used. This may be configured by changing the config value of `SSViewer.global_key`. It is also necessary
+to flush the template caching when modifying this config, as this key is cached within the template itself.
+
+For example, to ensure that the cache is configured to respect another variable, and if the current logged in
+user does not influence your template content, you can update this key as below;
+
+	:::yaml
+	SSViewer:
+		global_key: '$CurrentReadingMode, $Locale'
+	
+
 ## Aggregates
 
 Often you want to invalidate a cache when any in a set of objects change, or when the objects in a relationship change.

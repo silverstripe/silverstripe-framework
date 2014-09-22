@@ -171,7 +171,7 @@ sk:
     TEXT2: 'odkaz na resetovanie hesla'
     TEXT3: pre
   Form:
-    CSRF_FAILED_MESSAGE: 'Vyzerá to, že to musí být technický problem. Kliknite prosím na tlačítko späť, obnovte váš prehliadač, a skúste opäť.'
+    CSRF_FAILED_MESSAGE: "Zdá sa, že nastal technický problém. Prosím, kliknite na tlačidlo Späť,, \n\t\t\t\t\taktualizujte prehliadač a skúste to znova."
     FIELDISREQUIRED: '{name} je požadované'
     SubmitBtnLabel: Choď
     VALIDATIONCREDITNUMBER: 'Uistite sa, že ste zadali číslo {number} kreditnej karty správne'
@@ -181,6 +181,7 @@ sk:
     VALIDATIONSTRONGPASSWORD: 'Heslá musia obsahovať aspoň jednu číslicu a jedno písmeno'
     VALIDATOR: Validácia
     VALIDCURRENCY: 'Prosím zadajte platnú menu'
+    CSRF_EXPIRED_MESSAGE: 'Čas Vášho sedenia vypršal. Prosím znova odošlite formulár.'
   FormField:
     Example: 'napr. %s'
     NONE: žiadne
@@ -306,7 +307,7 @@ sk:
     PERMAGAIN: 'Boli ste odhlásený'
     PERMALREADY: 'Je mi ľúto, ale nemáte prístup k tejto časti CMS. Ak sa chcete prihlásiť ako niekto iný, urobte tak nižšie'
     PERMDEFAULT: 'Vyberte si prosím metódu autentifikácie a zadajte svoje prístupové údaje k CMS.'
-    PLEASESAVE: 'Prosím uložte stránku: Táto stránka nemôže byť aktualizovaná, lebo ešte nebola uložená.'
+    PLEASESAVE: 'Uložte stránku, prosím. Táto stránka nemôže byť aktualizovaná, pretože eště nebola uložená.'
     PreviewButton: Náhľad
     REORGANISATIONSUCCESSFUL: 'Strom webu bol reorganizovaný úspešne.'
     SAVEDUP: Uložené.
@@ -413,8 +414,8 @@ sk:
     Title: 'Dátové modely'
     UPDATEDRECORDS: 'Aktualizovaných {count} záznamov.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECLINK: 'Zobraziť špecifikáciu pre %s'
     IMPORTSPECFIELDS: 'Stĺpce databázy'
+    IMPORTSPECLINK: 'Zobraziť špecifikáciu pre %s'
     IMPORTSPECRELATIONS: Relácie
     IMPORTSPECTITLE: 'Špecifikácia pre %s'
   ModelAdmin_Tools_ss:
@@ -472,6 +473,7 @@ sk:
     ERRORPASSWORDPERMISSION: 'Pre zmenu hesla musíte byť prihlásený!'
     LOGGEDOUT: 'Boli ste odhlásený. Ak sa chcete znovu prihlásiť, zadajte svoje prihlasovacie údaje.'
     LOGIN: 'Prihlásiť'
+    LOSTPASSWORDHEADER: 'Zabudnuté heslo'
     NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
     NOTERESETLINKINVALID: '<p>Odkaz na resetovanie hesla nie je platný alebo je prošlý.</p><p>Môžte požiadať o nový <a href="{link1}">tu</a> alebo zmeňte svoje heslo až <a href="{link2}">sa prihlásite</a>.</p>'
     NOTERESETPASSWORD: 'Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla'
@@ -488,7 +490,7 @@ sk:
     IMPORTUSERS: 'Importovať požívateľov'
     MEMBERS: Členovia
     MENUTITLE: Bezpečnosť
-    MemberListCaution: 'Upozornenie: Odstánenie členov z tohto zoznamu ich odstráni zo všetkých skupín a databázy.'
+    MemberListCaution: 'Upozornenie: Odstránenie členov z tohto zoznamu ich odstráni zo všetkých skupín a databázy.'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Právomoci
     ROLES: Úlohy
