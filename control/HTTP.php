@@ -325,6 +325,7 @@ class HTTP {
 
 		// Popuplate $responseHeaders with all the headers that we want to build
 		$responseHeaders = array();
+		$cachecontrolheaders = Config::inst()->get('HTTP', 'CacheControl');
 		if(function_exists('apache_request_headers')) {
 			$requestHeaders = apache_request_headers();
 			if(isset($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With']=='XMLHttpRequest') {
@@ -337,7 +338,7 @@ class HTTP {
 		}
 
 		if($cacheAge > 0) {
-			$responseHeaders["Cache-Control"] = "max-age={$cacheAge}, must-revalidate, no-transform";
+			$cachecontrolheaders['max-age'] = $cacheAge;
 			$responseHeaders["Pragma"] = "";
 
 			// To do: User-Agent should only be added in situations where you *are* actually
@@ -360,12 +361,22 @@ class HTTP {
 				// IE6-IE8 have problems saving files when https and no-cache are used
 				// (http://support.microsoft.com/kb/323308)
 				// Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
-				$responseHeaders["Cache-Control"] = "max-age=3, must-revalidate, no-transform";
+				$cachecontrolheaders['max-age'] = 3;
 				$responseHeaders["Pragma"] = "";
 			} else {
-				$responseHeaders["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-transform";
+				$cachecontrolheaders['no-cache'] = true;
 			}
 		}
+		foreach($cachecontrolheaders as $header => $value){
+			if(!$value){
+				unset($cachecontrolheaders[$header]);
+			}elseif(is_bool($value) || $value === "true"){
+				$cachecontrolheaders[$header] = $header;
+			}else{
+				$cachecontrolheaders[$header] = $header."=".$value;
+			}
+		}
+		$responseHeaders['Cache-Control'] = implode(", ", $cachecontrolheaders);
 
 		if(self::$modification_date && $cacheAge > 0) {
 			$responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
