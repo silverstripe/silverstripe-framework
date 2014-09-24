@@ -11,6 +11,7 @@ class VersionedTest extends SapphireTest {
 	protected $extraDataObjects = array(
 		'VersionedTest_DataObject',
 		'VersionedTest_Subclass',
+		'VersionedTest_AnotherSubclass',
 		'VersionedTest_RelatedWithoutVersion',
 		'VersionedTest_SingleStage',
 		'VersionedTest_WithIndexes',
@@ -30,7 +31,7 @@ class VersionedTest extends SapphireTest {
 			'VersionedTest_WithIndexes_Live' =>
 				array('value' => false, 'message' => 'Unique indexes are no longer unique in _Live table'),
 		);
-
+	
 		// Test each table's performance
 		foreach ($tableExpectations as $tableName => $expectation) {
 			$indexes = DB::get_schema()->indexList($tableName);
@@ -51,7 +52,7 @@ class VersionedTest extends SapphireTest {
 				if (in_array($indexSpec['value'], $expectedColumns)) {
 					$isUnique = $indexSpec['type'] === 'unique';
 					$this->assertEquals($isUnique, $expectation['value'], $expectation['message']);
-				}
+}
 			}
 		}
 	}
@@ -627,6 +628,98 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals('Stage.Live', Versioned::get_reading_mode());
 	}
 
+	/**
+	 * Ensures that the latest version of a record is the expected value
+	 *
+	 * @param type $record
+	 * @param type $version
+	 */
+	protected function assertRecordHasLatestVersion($record, $version) {
+		foreach(ClassInfo::ancestry(get_class($record), true) as $table) {
+			$versionForClass = DB::prepared_query(
+				$sql = "SELECT MAX(\"Version\") FROM \"{$table}_versions\" WHERE \"RecordID\" = ?",
+				array($record->ID)
+			)->value();
+			$this->assertEquals($version, $versionForClass, "That the table $table has the latest version $version");
+		}
+	}
+
+	/**
+	 * Tests that multi-table dataobjects are correctly versioned
+	 */
+	public function testWriteToStage() {
+		// Test subclass with versioned extension directly added
+		$record = VersionedTest_Subclass::create();
+		$record->Title = "Test A";
+		$record->ExtraField = "Test A";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->publish("Stage", "Live");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->Title = "Test A2";
+		$record->ExtraField = "Test A2";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 2);
+
+		// Test subclass without changes to base class
+		$record = VersionedTest_Subclass::create();
+		$record->ExtraField = "Test B";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->publish("Stage", "Live");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->ExtraField = "Test B2";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 2);
+
+		// Test subclass without changes to sub class
+		$record = VersionedTest_Subclass::create();
+		$record->Title = "Test C";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->publish("Stage", "Live");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->Title = "Test C2";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 2);
+
+		// Test subclass with versioned extension only added to the base clases
+		$record = VersionedTest_AnotherSubclass::create();
+		$record->Title = "Test A";
+		$record->AnotherField = "Test A";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->publish("Stage", "Live");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->Title = "Test A2";
+		$record->AnotherField = "Test A2";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 2);
+
+
+		// Test subclass without changes to base class
+		$record = VersionedTest_AnotherSubclass::create();
+		$record->AnotherField = "Test B";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->publish("Stage", "Live");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->AnotherField = "Test B2";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 2);
+
+		// Test subclass without changes to sub class
+		$record = VersionedTest_AnotherSubclass::create();
+		$record->Title = "Test C";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->publish("Stage", "Live");
+		$this->assertRecordHasLatestVersion($record, 1);
+		$record->Title = "Test C2";
+		$record->writeToStage("Stage");
+		$this->assertRecordHasLatestVersion($record, 2);
+	}
+
 }
 
 
@@ -698,6 +791,16 @@ class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnl
 
 	private static $extensions = array(
 		"Versioned('Stage', 'Live')"
+	);
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class VersionedTest_AnotherSubclass extends VersionedTest_DataObject implements TestOnly {
+	private static $db = array(
+		"AnotherField" => "Varchar"
 	);
 }
 
