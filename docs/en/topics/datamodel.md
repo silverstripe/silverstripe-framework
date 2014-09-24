@@ -272,8 +272,7 @@ This would be equivalent to a SQL query of
 The where clauses showcased in the previous two sections (filter and exclude)
 specify exact matches by default. However, there are a number of suffixes that
 you can put on field names to change this behavior such as `":StartsWith"`,
-`":EndsWith"`, `":PartialMatch"`, `":GreaterThan"`, `":GreaterThanOrEqual"`, `":LessThan"`, `":LessThanOrEqual"`,
-`":Negation"`.
+`":EndsWith"`, `":PartialMatch"`, `":GreaterThan"`, `":GreaterThanOrEqual"`, `":LessThan"`, `":LessThanOrEqual"`.
 
 Each of these suffixes is represented in the ORM as a subclass of
 `[api:SearchFilter]`. Developers can define their own SearchFilters if needing
