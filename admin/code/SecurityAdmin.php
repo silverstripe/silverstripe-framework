@@ -32,6 +32,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	public function init() {
 		parent::init();
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/SecurityAdmin.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/i18n.js');
 	}
 
 	/**
