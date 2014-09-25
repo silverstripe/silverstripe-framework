@@ -63,6 +63,13 @@
 		padding: 0;
 		height: 28px;
 
+
+		li.icon-split {
+			@media screen and (max-width: 1280px) { //tabletLandscape width: maximum width of desktop + 15px for approx desktop scrollbar
+				display: none;
+			}
+		}
+
 		a.chzn-single {						
 			width: 20px;
 			padding: 6px 5px 5px;

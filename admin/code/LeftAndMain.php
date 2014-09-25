@@ -334,6 +334,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				FRAMEWORK_DIR . '/javascript/TabSet.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js',
 				FRAMEWORK_DIR . '/javascript/GridField.js',
+				THIRDPARTY_DIR . '/respond/src/respond.js',
 			)
 		);
 
