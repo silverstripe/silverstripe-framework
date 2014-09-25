@@ -333,8 +333,7 @@ class Upload_Validator {
 	 */
 	public $allowedExtensions = array();
 
-	public function __construct()
-	{
+	public function __construct() {
 		$fileSize = Config::inst()->get('Upload_Validator', 'defaultMaxFileSize');
 		$this->setAllowedMaxFileSize($fileSize);
 	}
