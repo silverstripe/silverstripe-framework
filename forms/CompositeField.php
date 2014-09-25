@@ -210,6 +210,7 @@ class CompositeField extends FormField {
 	 */
 	public function push(FormField $field) {
 		$this->children->push($field);
+		return $this;
 	}
 	
 	/**
