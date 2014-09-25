@@ -286,11 +286,11 @@ class Convert {
 	/**
 	 * Simple conversion of HTML to plaintext.
 	 *
-	 * @param $data string
-	 * @param $preserveLinks boolean
-	 * @param $wordwrap array
+	 * @param string $data Input data
+	 * @param bool $preserveLinks
+	 * @param int $wordwrap
 	 */
-	public static function html2raw($data, $preserveLinks = false, $wordWrap = 60, $config = null) {
+	public static function html2raw($data, $preserveLinks = false, $wordWrap = 0, $config = null) {
 		$defaultConfig = array(
 			'PreserveLinks' => false,
 			'ReplaceBoldAsterisk' => true,
@@ -343,9 +343,7 @@ class Convert {
 		$data = preg_replace('/<\/p>/i', "\n\n", $data );
 
 		// Replace HTML entities
-		//$data = preg_replace("/&#([0-9]+);/e", 'chr(\1)', $data);
-		//$data = str_replace(array("&lt;","&gt;","&amp;","&nbsp;"), array("<", ">", "&", " "), $data);
-		$data = html_entity_decode($data, ENT_COMPAT , 'UTF-8');
+		$data = html_entity_decode($data, ENT_QUOTES, 'UTF-8');
 		// Remove all tags (but optionally keep links)
 
 		// strip_tags seemed to be restricting the length of the output
@@ -355,7 +353,10 @@ class Convert {
 		} else {
 			$data = strip_tags($data, '<a>');
 		}
-		return trim(wordwrap(trim($data), $wordWrap));
+
+		// Wrap
+		if($wordWrap) $data = wordwrap(trim($data), $wordWrap);
+		return trim($data);
 	}
 
 	/**
