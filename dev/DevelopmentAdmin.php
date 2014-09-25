@@ -1,10 +1,15 @@
 <?php
 
 /**
- * Base class for URL access to development tools. Currently supports the
- * ; and TaskRunner.
+ * Base class for development tools.
+ * 
+ * Configured in framework/_config/dev.yml, with the config key registeredControllers being
+ * used to generate the list of links for /dev.
  *
  * @todo documentation for how to add new unit tests and tasks
+ * @todo do we need buildDefaults and generatesecuretoken? if so, register in the list
+ * @todo cleanup errors() it's not even an allowed action, so can go
+ * @todo cleanup index() html building
  * @package framework
  * @subpackage dev
  */
@@ -13,23 +18,18 @@ class DevelopmentAdmin extends Controller {
 	private static $url_handlers = array(
 		'' => 'index',
 		'build/defaults' => 'buildDefaults',
-		'$Action' => '$Action',
-		'$Action//$Action/$ID' => 'handleAction',
+		'generatesecuretoken' => 'generatesecuretoken',
+		'$Action' => 'runRegisteredController',
 	);
 	
 	private static $allowed_actions = array( 
 		'index', 
-		'tests', 
-		'jstests', 
-		'tasks', 
-		'viewmodel', 
-		'build', 
-		'reset', 
-		'viewcode',
-		'generatesecuretoken',
 		'buildDefaults',
+		'runRegisteredController',
+		'generatesecuretoken',
 	);
 	
+
 	public function init() {
 		parent::init();
 		
@@ -80,20 +80,8 @@ class DevelopmentAdmin extends Controller {
 	}
 	
 	public function index() {
-		$actions = array(
-			"build" => "Build/rebuild this environment.  Call this whenever you have updated your project sources",
-			"tests" => "See a list of unit tests to run",
-			"tests/all" => "Run all tests",
-			"jstests" => "See a list of JavaScript tests to run",
-			"jstests/all" => "Run all JavaScript tests",
-			"tasks" => "See a list of build tasks to run"
-		);
-		
 		// Web mode
 		if(!Director::is_cli()) {
-			// This action is sake-only right now.
-			unset($actions["modules/add"]);
-			
 			$renderer = DebugView::create();
 			$renderer->writeHeader();
 			$renderer->writeInfo("SilverStripe Development Tools", Director::absoluteBaseURL());
@@ -101,7 +89,7 @@ class DevelopmentAdmin extends Controller {
 
 			echo '<div class="options"><ul>';
 			$evenOdd = "odd";
-			foreach($actions as $action => $description) {
+			foreach(self::get_links() as $action => $description) {
 				echo "<li class=\"$evenOdd\"><a href=\"{$base}dev/$action\"><b>/dev/$action:</b>"
 					. " $description</a></li>\n";
 				$evenOdd = ($evenOdd == "odd") ? "even" : "odd";
@@ -113,42 +101,74 @@ class DevelopmentAdmin extends Controller {
 		} else {
 			echo "SILVERSTRIPE DEVELOPMENT TOOLS\n--------------------------\n\n";
 			echo "You can execute any of the following commands:\n\n";
-			foreach($actions as $action => $description) {
+			foreach(self::get_links() as $action => $description) {
 				echo "  sake dev/$action: $description\n";
 			}
 			echo "\n\n";
 		}
 	}
 	
-	public function tests($request) {
-		return TestRunner::create();
-	}
-	
-	public function jstests($request) {
-		return JSTestRunner::create();
-	}
-	
-	public function tasks() {
-		return TaskRunner::create();
-	}
-	
-	public function build($request) {
-		if(Director::is_cli()) {
-			$da = DatabaseAdmin::create();
-			return $da->handleRequest($request, $this->model);
-		} else {
-			$renderer = DebugView::create();
-			$renderer->writeHeader();
-			$renderer->writeInfo("Environment Builder", Director::absoluteBaseURL());
-			echo "<div class=\"build\">";
-			
-			$da = DatabaseAdmin::create();
-			return $da->handleRequest($request, $this->model);
-
-			echo "</div>";
-			$renderer->writeFooter();
+	public function runRegisteredController(SS_HTTPRequest $request){
+		$controllerClass = null;
+		
+		$baseUrlPart = $request->param('Action');
+		$reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+		if(isset($reg[$baseUrlPart])){
+			$controllerClass = $reg[$baseUrlPart]['controller'];
+		}
+		
+		if($controllerClass && class_exists($controllerClass)){
+			return $controllerClass::create();
+		}
+		
+		$msg = 'Error: no controller registered in '.__CLASS__.' for: '.$request->param('Action');
+		if(Director::is_cli()){
+			// in CLI we cant use httpError because of a bug with stuff being in the output already, see DevAdminControllerTest
+			throw new Exception($msg);
+		}else{
+			$this->httpError(500, $msg);
 		}
 	}
+	
+	
+	
+	
+	/*
+	 * Internal methods
+	 */
+	
+	/**
+	 * @return array of url => description
+	 */
+	protected static function get_links(){
+		$links = array();
+		
+		$reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+		foreach($reg as $registeredController){
+			foreach($registeredController['links'] as $url => $desc){
+				$links[$url] = $desc;
+			}
+		}
+		return $links;
+	}
+	
+	protected function getRegisteredController($baseUrlPart){
+		$reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+		
+		if(isset($reg[$baseUrlPart])){
+			$controllerClass = $reg[$baseUrlPart]['controller'];
+			return $controllerClass;
+		}
+		
+		return null;
+	}
+	
+	
+	
+	
+	/*
+	 * Unregistered (hidden) actions
+	 */
 
 	/**
 	 * Build the default data, calling requireDefaultRecords on all
