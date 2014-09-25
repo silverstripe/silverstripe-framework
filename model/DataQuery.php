@@ -376,8 +376,9 @@ class DataQuery {
 	 * @param String $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
 	 */
-	public function max($field) {
-		return $this->aggregate("MAX(\"$field\")");
+	public function max($field, $table = false) {
+		$table = $table ?: ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate("MAX(\"$table\".\"$field\")");
 	}
 
 	/**
@@ -386,8 +387,9 @@ class DataQuery {
 	 * @param String $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
 	 */
-	public function min($field) {
-		return $this->aggregate("MIN(\"$field\")");
+	public function min($field, $table = false) {
+		$table = $table ?: ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate("MIN(\"$table\".\"$field\")");
 	}
 
 	/**
@@ -396,8 +398,9 @@ class DataQuery {
 	 * @param String $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
 	 */
-	public function avg($field) {
-		return $this->aggregate("AVG(\"$field\")");
+	public function avg($field, $table = false) {
+		$table = $table ?: ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate("AVG(\"$table\".\"$field\")");
 	}
 
 	/**
@@ -406,8 +409,9 @@ class DataQuery {
 	 * @param String $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
 	 */
-	public function sum($field) {
-		return $this->aggregate("SUM(\"$field\")");
+	public function sum($field, $table = false) {
+		$table = $table ?: ClassInfo::baseDataClass($this->dataClass);
+		return $this->aggregate("SUM(\"$table\".\"$field\")");
 	}
 
 	/**
