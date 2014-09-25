@@ -17,7 +17,13 @@ guide on [CMS Architecture](../reference/cms-architecture).
 
 If you place a template with an identical name into your application template 
 directory (usually `mysite/templates/`), it'll take priority over the built-in 
-one.
+one. 
+
+One thing to remember when overriding a template with a custom one, such as in a module, priority is determined
+by a breadth-first search, so any template on a deeper level of the file hierarchy will take
+priority (ie. when overriding LeftAndmain_Menu.ss, `framework/admin/templates/Includes/LeftAndMain_Menu.ss`
+will display over `mysite/templates/includes/LeftAndMain_Menu.ss` as the former is at a deeper
+level).
 
 CMS templates are inherited based on their controllers, similar to subclasses of
 the common `Page` object (a new PHP class `MyPage` will look for a `MyPage.ss` template).
