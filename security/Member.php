@@ -1427,6 +1427,32 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		return $this->canEdit($member);
 	}
 
+	/**
+	 * Members can create others if they have access to the security admin.
+	 *
+	 * @param Member $member
+	 * @return boolean
+	 */
+	public function canCreate($member = null) {
+
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+		
+		// extended access checks
+		$results = $this->extend('canView', $member);
+		if($results && is_array($results)) {
+			if(!min($results)) return false;
+			else return true;
+		}
+		
+		if(
+			Permission::checkMember($member, 'ADMIN')
+			|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')
+		) {
+			return true;
+		}
+		
+		return false;
+	}
 
 	/**
 	 * Validate this member object.

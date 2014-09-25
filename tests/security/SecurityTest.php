@@ -489,6 +489,17 @@ class SecurityTest extends FunctionalTest {
 		return $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.formError.message');
 	}	
 	
+	/**
+	 * Members with access to the security admin area can create other members.
+	 */
+	public function testCreateMemberPermissions() {
+		$member = $this->objFromFixture('Member', 'test');
+		$this->session()->inst_set('loggedInAs', $member->ID);
+
+		$this->assertEquals(Permission::checkMember($member, 'ADMIN'), false);
+		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
+		$this->assertTrue($member->canCreate());
+	}
 }
 
 class SecurityTest_SecuredController extends Controller implements TestOnly {
