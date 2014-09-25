@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package framework
  * @subpackage tests
@@ -78,38 +79,136 @@ class ClassInfoTest extends SapphireTest {
 	public function testDataClassesFor() {
 		$expect = array(
 			'ClassInfoTest_BaseDataClass' => 'ClassInfoTest_BaseDataClass',
-			'ClassInfoTest_HasFields'     => 'ClassInfoTest_HasFields'
+			'ClassInfoTest_HasFields'     => 'ClassInfoTest_HasFields',
+			'ClassInfoTest_WithRelation' => 'ClassInfoTest_WithRelation'
 		);
 
 		$classes = array(
 			'ClassInfoTest_BaseDataClass',
 			'ClassInfoTest_NoFields',
-			'ClassInfoTest_HasFields'
+			'ClassInfoTest_HasFields',
 		);
 
-		foreach ($classes as $class) {
-			$this->assertEquals($expect, ClassInfo::dataClassesFor($class));
-		}
+
+		$this->assertEquals($expect, ClassInfo::dataClassesFor($classes[0]));
+		$this->assertEquals($expect, ClassInfo::dataClassesFor($classes[1]));
+	
+		$expect = array(
+			'ClassInfoTest_BaseDataClass' => 'ClassInfoTest_BaseDataClass',
+			'ClassInfoTest_HasFields'     => 'ClassInfoTest_HasFields',
+		);
+
+		$this->assertEquals($expect, ClassInfo::dataClassesFor($classes[2]));
 	}
 
+	public function testTableForObjectField() {
+		$this->assertEquals('ClassInfoTest_WithRelation',
+			ClassInfo::table_for_object_field('ClassInfoTest_WithRelation', 'RelationID')
+		);
+
+		$this->assertEquals('ClassInfoTest_BaseDataClass', 
+			ClassInfo::table_for_object_field('ClassInfoTest_BaseDataClass', 'Title')
+		);
+
+		$this->assertEquals('ClassInfoTest_BaseDataClass', 
+			ClassInfo::table_for_object_field('ClassInfoTest_HasFields', 'Title')
+		);
+
+		$this->assertEquals('ClassInfoTest_BaseDataClass', 
+			ClassInfo::table_for_object_field('ClassInfoTest_NoFields', 'Title')
+		);
+
+		$this->assertEquals('ClassInfoTest_HasFields', 
+			ClassInfo::table_for_object_field('ClassInfoTest_HasFields', 'Description')
+		);
+
+		// existing behaviour fallback to DataObject? Should be null.
+		$this->assertEquals('DataObject',
+			ClassInfo::table_for_object_field('ClassInfoTest_BaseClass', 'Nonexist')
+		);
+
+		$this->assertNull(
+			ClassInfo::table_for_object_field('SomeFakeClassHere', 'Title')
+		);
+
+		$this->assertNull(
+			ClassInfo::table_for_object_field('Object', 'Title')
+		);
+
+		$this->assertNull(
+			ClassInfo::table_for_object_field(null, null)
+		);
+	}
 }
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 
 class ClassInfoTest_BaseClass extends DataObject {
 	
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
+
 class ClassInfoTest_ChildClass extends ClassInfoTest_BaseClass {
 	
 }
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 
 class ClassInfoTest_GrandChildClass extends ClassInfoTest_ChildClass {
 	
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
+
 class ClassInfoTest_BaseDataClass extends DataObject {
-	private static $db = array('Title' => 'Varchar');
+
+	private static $db = array(
+		'Title' => 'Varchar'
+	);
 }
-class ClassInfoTest_NoFields extends ClassInfoTest_BaseDataClass {}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+
+class ClassInfoTest_NoFields extends ClassInfoTest_BaseDataClass {
+
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+
 class ClassInfoTest_HasFields extends ClassInfoTest_NoFields {
-	private static $db = array('Description' => 'Varchar');
+
+	private static $db = array(
+		'Description' => 'Varchar'
+	);
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+
+class ClassInfoTest_WithRelation extends ClassInfoTest_NoFields {
+
+	private static $has_one = array(
+		'Relation' => 'ClassInfoTest_HasFields'
+	);
 }
