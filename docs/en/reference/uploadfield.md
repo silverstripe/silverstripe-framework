@@ -166,9 +166,9 @@ You can also specify a default global max file size setting in your config for d
 	---
 	Upload_Validator:
 	  defaultMaxFileSize:
-		'[image]': '1m'
-		'[doc]': '5m'
-		'jpeg': 2000
+	    '[image]': '1m'
+	    '[doc]': '5m'
+	    'jpeg': 2000
 
 
 ### Preview dimensions
