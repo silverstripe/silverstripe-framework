@@ -38,34 +38,63 @@ class ConvertTest extends SapphireTest {
 
 	public function testHtml2raw() {
 		$val1 = 'This has a <strong>strong tag</strong>.';
-		$this->assertEquals('This has a *strong tag*.', Convert::xml2raw($val1),
+		$this->assertEquals('This has a *strong tag*.', Convert::html2raw($val1),
 			'Strong tags are replaced with asterisks');
 
 		$val1 = 'This has a <b class="test" style="font-weight: bold">b tag with attributes</b>.';
-		$this->assertEquals('This has a *b tag with attributes*.', Convert::xml2raw($val1),
+		$this->assertEquals('This has a *b tag with attributes*.', Convert::html2raw($val1),
 			'B tags with attributes are replaced with asterisks');
 
 		$val2 = 'This has a <strong class="test" style="font-weight: bold">strong tag with attributes</STRONG>.';
-		$this->assertEquals('This has a *strong tag with attributes*.', Convert::xml2raw($val2),
+		$this->assertEquals('This has a *strong tag with attributes*.', Convert::html2raw($val2),
 			'Strong tags with attributes are replaced with asterisks');
 
 		$val3 = '<script type="text/javascript">Some really nasty javascript here</script>';
-		$this->assertEquals('', Convert::xml2raw($val3),
+		$this->assertEquals('', Convert::html2raw($val3),
 			'Script tags are completely removed');
 
 		$val4 = '<style type="text/css">Some really nasty CSS here</style>';
-		$this->assertEquals('', Convert::xml2raw($val4),
+		$this->assertEquals('', Convert::html2raw($val4),
 			'Style tags are completely removed');
 
 		$val5 = '<script type="text/javascript">Some really nasty
 		multiline javascript here</script>';
-		$this->assertEquals('', Convert::xml2raw($val5),
+		$this->assertEquals('', Convert::html2raw($val5),
 			'Multiline script tags are completely removed');
 
 		$val6 = '<style type="text/css">Some really nasty
 		multiline CSS here</style>';
-		$this->assertEquals('', Convert::xml2raw($val6),
+		$this->assertEquals('', Convert::html2raw($val6),
 			'Multiline style tags are completely removed');
+
+		$val7 = '<p>That&#39;s absolutely correct</p>';
+		$this->assertEquals(
+			"That's absolutely correct",
+			Convert::html2raw($val7),
+			"Single quotes are decoded correctly"
+		);
+
+		$val8 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor '.
+				'incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud '.
+				'exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute '.
+				'irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla '.
+				'pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia '.
+				'deserunt mollit anim id est laborum.';
+		$this->assertEquals($val8, Convert::html2raw($val8), 'Test long text is unwrapped');
+		$this->assertEquals(<<<PHP
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+do eiusmod tempor incididunt ut labore et dolore magna
+aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit
+esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+occaecat cupidatat non proident, sunt in culpa qui officia
+deserunt mollit anim id est laborum.
+PHP
+			,
+			Convert::html2raw($val8, false, 60),
+			'Test long text is wrapped'
+		);
 	}
 
 	/**
