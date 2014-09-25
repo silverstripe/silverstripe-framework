@@ -11,7 +11,9 @@
 	}
 
 	/* Styling for icons in controls */
-	.icon-view, .preview-selector.dropdown a.chzn-single {
+	.icon-view, 
+	.preview-selector.dropdown a.chzn-single,
+	.preview-selector.dropdown .select2-single, {
 		white-space: nowrap;
 		&:before {
 			display:inline-block;
@@ -49,7 +51,8 @@
 	.cms-navigator{
 		width: 100%;
 	}
-	.preview-selector.dropdown a.chzn-single{
+	.preview-selector.dropdown a.chzn-single,
+	.preview-selector.dropdown .select2-single {
 		text-indent:-200px;
 	}
 
@@ -63,7 +66,8 @@
 		padding: 0;
 		height: 28px;
 
-		a.chzn-single {						
+		a.chzn-single,
+		.select2-single {						
 			width: 20px;
 			padding: 6px 5px 5px;
 			height: 18px;
@@ -74,11 +78,15 @@
 			@include box-shadow(none);
 			@include border-radius(3px);
 
-			&:hover, &.chzn-single-with-drop  {
+			&:hover, 
+			&.chzn-single-with-drop, 
+			&.select2-single-with-drop  {
 				background-color: darken($color-widget-bg,6%);
 				@include box-shadow(0 0 3px rgba(0, 0, 0, 0.05) inset, 0 1px 0 $box-shadow-shine);
 			}
-			&.chzn-single-with-drop {
+
+			&.chzn-single-with-drop, 
+			&.select2-single-with-drop {
 				@include border-radius(0 0 3px 3px);
 			}
 			div {
@@ -86,99 +94,31 @@
 			}
 		}
 
-		&.open .chzn-drop{
+		&.open .chzn-drop,
+		&.open .select2-drop {
 			position:absolute;
 			left: auto !important; //over-ride chosen inline styles
 			right: 0;
 		}
 
-		.chzn-drop{
+		.chzn-drop,
+		.select2-drop {
 			@include border-radius(3px 3px 0 3px);
 			@include box-shadow(0 0 3px rgba(0, 0, 0, 0.1));
-			.chzn-results {
+			.chzn-results,
+			.select2-results {
 				width: 135px;
 				.result-selected {
 					background: $color-widget-bg;
 				}
 			}
 		}			
-		.chzn-container {
+		.chzn-container,
+		.select2-container {
 			width: auto !important; //over-ride chosen inline styles for preview selector
-			
-			&.chzn-with-rise {
-				.chzn-drop {	
-					padding: 0;
-					border-bottom: 1px solid #aaa;
-					margin-top: -5px;
-					width: auto !important; //over-ride chosen inline width (doesn't take image into account)
-					
-					.chzn-search {
-						display: none;
-					}
-
-					ul{
-						padding:0;
-						margin:0;
-
-						li{
-							font-size: 12px;
-							line-height: 16px;
-							padding: 7px 16px 7px 6px;
-							color: $color-text-blue-link;
-							border-bottom: 1px solid #DDD;
-							background-color: #FFF;
-
-							&:before{
-								margin-right: 2px;
-							}
-							&.description {
-								padding-top: 5px;
-								padding-bottom: 5px;
-								&:before{
-									margin-top: 5px;
-								}
-							}
-							&.highlighted, &:hover, &:focus {
-								color: $color-text-blue-link;
-								filter: none;
-								background: lighten($color-widget-bg,2%);
-								text-decoration: none;
-							}
-							&.first {
-								@include border-radius(3px 3px 0 0);
-							}
-							&.last {
-								border-bottom: none;
-								@include border-radius(0 0 0 3px);
-							}
-							&.restricted { /* disable option (eg.split mode for smaller screen sizes) */
-								color: #CCC;
-								background-color: #EEE;
-								pointer-events: none;
-								/*text-decoration: line-through;*/
-								&:before {
-									opacity: 0.2;
-								}
-							}
-
-							/* Description styling */
-							span { 
-								display:block;
-								color: lighten($color-text-dark, 30%);
-								font-size:0.85em;
-								line-height:1.1em;
-								padding-left:23px;
-							}
-							.icon-view {
-								margin-right: 4px;
-							}
-							
-						}			
-					}
-				}
-			}			
 		}
-		.chzn-drop ul.chzn-results li.result-selected {
+		.chzn-drop ul.chzn-results li.result-selected,
+		.select2-drop ul.select2-results li.result-selected {
 			background: darken($color-widget-bg, 2%);
 			color: $color-text;
 			&.highlighted, &:hover, &:focus {
@@ -196,12 +136,14 @@
 
 		&.dropdown{
 			max-width:150px;
-			a.chzn-single{
+			a.chzn-single,
+			.select2-single {
 				span{
 					margin:0;
 				}
 			}
-			.chzn-container{
+			.chzn-container,
+			.select2-container {
 				max-width:150px;
 			}
 		}

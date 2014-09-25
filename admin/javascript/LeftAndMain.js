@@ -36,29 +36,42 @@ jQuery.noConflict();
 			spinner.css('top', top + offset);
 			spinner.show();
 		};
-		
-		// apply an select element only when it is ready, ie. when it is rendered into a template
-		// with css applied and got a width value.
+
+
 		var applyChosen = function(el) {
+			transformSelectFields(el);
+		};
+
+
+		var transformSelectFields = function(el) {
 			if(el.is(':visible')) {
-				el.addClass('has-chzn').chosen({
-					allow_single_deselect: true,
-					disable_search_threshold: 20
+
+				// el.addClass('has-chzn').chosen({
+				// 	allow_single_deselect: true,
+				// 	disable_search_threshold: 20
+				// });
+				var isSingle = (el.find("option").length < 20 && !el.attr("multiple"));
+				console.log(isSingle);
+				el.addClass('transformed has-chzn').select2({
+					minimumResultsForSearch: 20,
+					containerCssClass: isSingle ? 'select2-container-single' : '',
+					dropdownCssClass: isSingle ? 'select2-single' : ''
 				});
 
-				var title = el.prop('title');
+				// var title = el.prop('title');
 
-				if(title) {
-					el.siblings('.chzn-container').prop('title', title);
-				}
+				// if(title) {
+				// 	el.siblings('.chzn-container').prop('title', title);
+				// }
 			} else {
 				setTimeout(function() {
 					// Make sure it's visible before applying the ui
 					el.show();
-					applyChosen(el); }, 
+					transformSelectFields(el); }, 
 				500);
 			}
-		};
+		}
+
 
 		/**
 		 * Compare URLs, but normalize trailing slashes in 
@@ -1018,7 +1031,7 @@ jQuery.noConflict();
 		
 		$('.cms .field.dropdown select, .cms .field select[multiple], .fieldholder-small select.dropdown').entwine({
 			onmatch: function() {
-				if(this.is('.no-chzn')) {
+				if(this.is('.transformed')) {
 					this._super();
 					return;
 				}
@@ -1027,11 +1040,11 @@ jQuery.noConflict();
 				if(!this.data('placeholder')) this.data('placeholder', ' ');
 
 				// We could've gotten stale classes and DOM elements from deferred cache.
-				this.removeClass('has-chzn chzn-done');
-				this.siblings('.chzn-container').remove();
+				this.removeClass('transformed');
+				this.siblings('.select2-container').remove();
 
 				// Apply Chosen
-				applyChosen(this);
+				transformSelectFields(this);
 				
 				this._super();
 			},

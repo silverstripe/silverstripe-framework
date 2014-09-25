@@ -240,9 +240,11 @@ Used in side panels and action tabs
 	.cms-content-fields{
 		overflow:visible;
 	}
-	.chzn-container-single{
+	.chzn-container-single,
+	.select2-container { 
 		width:100% !important;
-		.chzn-single{
+		.chzn-single,
+		.select2-choice {
 			padding: 0 0 0 5px;
 			float:none;					
 		}
