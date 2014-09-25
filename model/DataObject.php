@@ -1859,7 +1859,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					}
 
 					foreach($otherManyMany as $inverseComponentName => $candidateClass) {
-						if($candidateClass == $class || is_subclass_of($class, $candidateClass)) {
+						if($candidateClass == $class || is_subclass_of($candidateClass, $class)) {
 							$parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
 
 							return array($class, $candidate, $parentField, $childField,

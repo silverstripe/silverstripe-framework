@@ -16,8 +16,23 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment'
+		'DataObjectTest_TeamComment',
+		'DataObjectTest_Page',
+		'DataObjectTest_Tag',
+		'DataObjectTest_SpecificTag'
+
 	);
+
+	public function testManyManyReturnsSubclass() {
+		$specificTag = new DataObjectTest_SpecificTag();
+		$page = new DataObjectTest_Page();
+		$page->write();
+		$specificTag->Pages()->add($page);
+		$specificTag->write();
+
+		$this->assertTrue($specificTag instanceof DataObjectTest_SpecificTag);
+		$this->assertTrue($specificTag->Pages()->count() == 1);
+	}
 
 	public function testBaseFieldsExcludedFromDb() {
 		$obj = new DataObjectTest_ValidatedObject();
@@ -1270,6 +1285,32 @@ class DataObjectTest_Player extends Member implements TestOnly {
 		'ShirtNumber'
 	);
 }
+
+/**
+ * Class DataObjectTest_Page
+ * Used in {@link DataObjectTest::testManyManyReturnsSubclass()}
+ */
+class DataObjectTest_Page extends DataObject implements TestOnly {
+	private static $many_many = array(
+		'SpecificTags' => 'DataObjectTest_SpecificTag'
+	);
+}
+
+/**
+ * Class DataObjectTest_Tag
+ * Used in {@link DataObjectTest::testManyManyReturnsSubclass()}
+ */
+class DataObjectTest_Tag extends DataObject implements TestOnly {
+	private static $belongs_many_many = array(
+		'Pages' => 'DataObjectTest_Page'
+	);
+}
+
+/**
+ * Class DataObjectTest_SpecificTag
+ * Used in {@link DataObjectTest::testManyManyReturnsSubclass()}
+ */
+class DataObjectTest_SpecificTag extends DataObjectTest_Tag implements TestOnly {}
 
 class DataObjectTest_Team extends DataObject implements TestOnly {
 
