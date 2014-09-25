@@ -25,6 +25,40 @@ You can do so by adding this static variable to your class definition:
 		'MySQLDatabase' => 'ENGINE=MyISAM'
 	);
 
+### Fulltext Filter
+SilverStripe provides a `[api:FulltextFiler]` which you can use to perform custom fulltext searches on `[api:DataList]`'s.
+
+Example DataObject:
+
+	:::php
+	class SearchableDataObject extends DataObject {
+		
+		private static $db = array(
+			"Title" => "Varchar(255)",
+			"Content" => "HTMLText",
+		);
+
+		private static $indexes = array(
+			'SearchFields' => array(
+				'type' => 'fulltext',
+				'name' => 'SearchFields',
+				'value' => '"Title", "Content"',
+			)
+		);
+
+		private static $create_table_options = array(
+			'MySQLDatabase' => 'ENGINE=MyISAM'
+		);
+
+	}
+
+Performing the search:
+
+	:::php
+	SearchableDataObject::get()->filter('SearchFields:fulltext', 'search term');
+
+
+
 ## Searching for Documents
 
 SilverStripe does not have a built-in method to search through file content (e.g. in PDF or DOC format).
