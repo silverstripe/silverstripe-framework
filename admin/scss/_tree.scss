@@ -43,6 +43,15 @@
 			& > .jstree-icon {
 				cursor: pointer;
 			}
+			&.status-modified > a {
+				color: #FF8000 !important;
+			}
+			&.status-addedtodraft > a {
+				color: #238C00 !important;
+			}
+			&.status-deletedonlive > a {
+				color: #cc0000 !important;
+			}
 		}
 		ins {
 			display: inline-block;
