@@ -261,7 +261,7 @@ class UnsavedRelationList extends ArrayList {
 	 */
 	public function column($colName = 'ID') {
 		$list = new ArrayList($this->toArray());
-		return $list->column('ID');
+		return $list->column($colName);
 	}
 
 	/**
