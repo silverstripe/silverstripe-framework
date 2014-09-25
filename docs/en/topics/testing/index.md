@@ -143,4 +143,4 @@ Executing tests from the command line is recommended, since it most closely refl
 test runs in any automated testing environments. If for some reason you don't have
 access to the command line, you can also run tests through the browser.
 
-	http://localhost/dev/tests
+	http://localhost/your_site_dir_name/dev/tests
