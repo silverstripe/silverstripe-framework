@@ -982,6 +982,46 @@ after')
 		);
 	}
 
+	public function testComplexUpInLoops() {
+		$data = new ArrayData(array(
+			'Foo' => new ArrayList(array(
+				new ArrayData(array(
+					'Name' => '1'
+				)),
+				new ArrayData(array(
+					'Name' => '2',
+				)),
+				new ArrayData(array(
+					'Name' => '3'
+				))
+			)),
+			'Bar' => new ArrayList(array(
+				new ArrayData(array(
+					'Name' => 'A'
+				)),
+				new ArrayData(array(
+					'Name' => 'B'
+				)),
+				new ArrayData(array(
+					'Name' => 'C'
+				))
+			))
+		));		
+		
+		// Test accessing Up in a loop initialized with Up.
+		$this->assertEqualIgnoringWhitespace(
+			'1 A1 B1 C1 2 A2 B2 C2 3 A3 B3 C3',
+			$this->render(
+				'<% loop $Foo %>
+					$Name
+					<% loop $Up.Bar %>
+						{$Name}{$Up.Name}
+					<% end_loop %>
+				<% end_loop %>',
+				$data
+			)
+		);
+	}	
 	protected function useTestTheme($theme, $callback) {
 		global $project;
 
