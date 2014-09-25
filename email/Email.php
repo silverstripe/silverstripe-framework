@@ -62,17 +62,11 @@ class Email extends ViewableData {
 	protected $bcc;
 
 	/**
-	 * @param Mailer $mailer Instance of a {@link Mailer} class.
-	 */
-	protected static $mailer;
-
-	/**
-	 * This can be used to provide a mailer class other than the default, e.g. for testing.
-	 *
-	 * @param Mailer $mailer
+	 * @deprecated since version 3.3
 	 */
 	public static function set_mailer(Mailer $mailer) {
-		self::$mailer = $mailer;
+		Deprecation::notice('3.3.0', 'Use Injector to override the Mailer service');
+		Injector::inst()->registerService($mailer, 'Mailer');
 	}
 
 	/**
@@ -81,8 +75,7 @@ class Email extends ViewableData {
 	 * @return Mailer
 	 */
 	public static function mailer() {
-		if(!self::$mailer) self::$mailer = new Mailer();
-		return self::$mailer;
+		return Injector::inst()->get('Mailer');
 	}
 
 	/**

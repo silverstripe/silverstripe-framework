@@ -116,6 +116,14 @@ See [Wikipedia E-mail Message header](http://en.wikipedia.org/wiki/E-mail#Messag
 
 The [newsletter module](http://silverstripe.org/newsletter-module) provides a UI and logic to send batch emails.
 
+### Setting bounce handler
+
+A bounce handler email can be specified one of a few ways:
+
+* Via config by setting the `Mailer.default_bounce_email` config to the desired email address.
+* Via _ss_environment.php by setting the `BOUNCE_EMAIL` definition.
+* Via PHP by calling `Email::mailer()->setBounceEmail('bounce@mycompany.com');`
+
 ## API Documentation
 
 `[api:Email]`
