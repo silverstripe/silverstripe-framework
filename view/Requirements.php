@@ -867,7 +867,7 @@ class Requirements_Backend {
 			$mtimesuffix = "";
 			$suffix = '';
 			if($this->suffix_requirements) {
-				$mtimesuffix = "?m=" . filemtime($filePath);
+				$mtimesuffix = "?m=" . $this->calculateFileChecksum($filePath);
 				$suffix = '&';
 			}
 			if(strpos($fileOrUrl, '?') !== false) {
@@ -883,6 +883,23 @@ class Requirements_Backend {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Returns a string value that represents a unique version number that can be appended
+	 * to the URL for a static asset (i.e. CSS/JS file) so that it can be used for cache-busting
+	 * query parameters.
+	 *
+	 * Default implementation simply uses filemtime($filePath), but custom implementations may
+	 * desire to use something more elaborate such as an MD5 checksum, especially when serving
+	 * files across SS clusters that may not have exactly the same mtime for a given resource
+	 * (which can happen very easily with created resources like minified files).
+	 *
+	 * @param $filePath path to the file that needs a checksum generated
+	 * @return string checksum of some sort in accord with requirements in above doc
+	 */
+	protected function calculateFileChecksum($filePath) {
+		return filemtime($filePath);
 	}
 
 	/**
