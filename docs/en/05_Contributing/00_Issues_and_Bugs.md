@@ -1,3 +1,6 @@
+title: Bug Reports
+summary: Report bugs or problems with SilverStripe, feature requests or other issues.
+
 # Contributing Issues and Opinions
 
 ## Reporting Bugs
@@ -29,26 +32,31 @@ If the issue does look like a new bug:
  * Describe your environment as detailed as possible: SilverStripe version, Browser, PHP version, Operating System, any installed SilverStripe modules.
  * *(optional)* [Submit a pull request](/misc/contributing/code) which fixes the issue.
 
-Lastly, don't get your hopes up too high. Unless your issue is a blocker affecting a large
-number of users, don't expect SilverStripe developers to jump onto it right way.
-Your issue is a starting point where others with the same problem can collaborate
-with you to develop a fix. 
+Lastly, don't get your hopes up too high. Unless your issue is a blocker 
+affecting a large number of users, don't expect SilverStripe developers to jump 
+onto it right way. Your issue is a starting point where others with the same 
+problem can collaborate with you to develop a fix. 
 
 ## Feature Requests
 
 <div class="warning" markdown='1'>
-Please don't file "feature requests" as issues. If there's a new feature you'd like to see
-in SilverStripe, you either need to write it yourself (and [submit a pull request](/misc/contributing/code))
-or convince somebody else to write it for you. Any "wishlist" type issues without code attached
-can be expected to be closed as soon as they're reviewed.
+Please don't file "feature requests" as Github issues. If there's a new feature 
+you'd like to see in SilverStripe, you either need to write it yourself (and 
+[submit a pull request](/misc/contributing/code)) or convince somebody else to 
+write it for you. Any "wishlist" type issues without code attached can be 
+expected to be closed as soon as they're reviewed.
 </div>
 
-In order to gain interest and feedback in your feature, we encourage you to present
-it to the community through the [forums](http://silverstripe.org/forums), [core mailinglist](http://groups.google.com/group/silverstripe-dev) or on [IRC](http://silverstripe.org/irc).
+In order to gain interest and feedback in your feature, we encourage you to 
+present it to the community through the [forums](http://silverstripe.org/forums), 
+[core mailinglist](http://groups.google.com/group/silverstripe-dev) or on 
+[IRC](http://silverstripe.org/irc).
 
 ## Reporting Security Issues
 
-Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). See our "[Release Process](release-process)" documentation for more info, and read our guide on [how to write secure code](/topics/security).
+Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). 
+See our "[Release Process](release-process)" documentation for more info, and 
+read our guide on [how to write secure code](/topics/security).
 
 ## Sharing your Opinion
 

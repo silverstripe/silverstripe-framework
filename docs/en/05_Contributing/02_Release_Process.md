@@ -1,3 +1,5 @@
+summary: Describes the process followed for "core" releases.
+
 # Release Process
 
 Describes the process followed for "core" releases (mainly the `framework` and `cms` modules).
@@ -68,7 +70,7 @@ new minor release. These changes can be performed in a single minor release with
 ### Micro releases
 
 Micro releases are issued about every two months for the latest release, typically for security reasons.
-You can safely upgrade to those releases (after reading the [upgrading](/installation/upgrading) guidelines).
+You can safely upgrade to those releases (after reading the [upgrading](/upgrading/) guidelines).
 For example, *2.3.6* was released in February 2010, followed by *2.3.7* in March 2010.
 
 ### Supported versions
@@ -100,8 +102,9 @@ How to deprecate an API:
 *  Deprecations should just be committed to pre-release branches, ideally before they enter the "beta" phase.
    If deprecations are introduced after this point, their target version needs to be increased by one.
 *  Make sure that the old deprecated function works by calling the new function - don't have duplicated code!
-*  The commit message should contain an `API` prefix (see ["commit message format"](/misc/contributing/code#commit-messages))
-*  Deprecated APIs can be removed after developers had a chance to react to the changes. As a rule of thumb, leave the code with the deprecation warning in for at least three micro releases. Only remove code in a minor or major release. 
+*  The commit message should contain an `API` prefix (see ["commit message format"](code#commit-messages))
+*  Deprecated APIs can be removed after developers had a chance to react to the changes. As a rule of thumb, leave the 
+code with the deprecation warning in for at least three micro releases. Only remove code in a minor or major release. 
 
 Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::is_dev()`:
 
@@ -124,9 +127,9 @@ released version (e.g. 3.1.1), the target version becomes 3.2 instead.
 ### Reporting an issue
 
 Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). 
-Please don't file security issues in our [bugtracker](/misc/contributing/issues). 
+Please don't file security issues in our [bugtracker](issues_and_bugs). 
 
-### Acknowledgement and disclosure
+### Acknowledgment and disclosure
 
 In the event of a confirmed vulnerability in SilverStripe core, we will take the following actions:
 
@@ -143,7 +146,8 @@ webserver access logs (if a hack is suspected), any other services and web packa
 
 ### Severity rating
 
-Each [security release](http://www.silverstripe.org/security-releases/) includes an overall severity rating and one for each vulnerability. The rating indicates how important an update is:
+Each [security release](http://www.silverstripe.org/security-releases/) includes an overall severity rating and one for 
+each vulnerability. The rating indicates how important an update is:
 
 | Severity      | Description |
 |---------------|-------------|
