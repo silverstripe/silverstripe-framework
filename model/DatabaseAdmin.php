@@ -190,8 +190,8 @@ class DatabaseAdmin extends Controller {
 
 		// Build the database.  Most of the hard work is handled by DataObject
 		if(defined('DEV_BUILD_ONLY') && DEV_BUILD_ONLY != ''){
-        	$devBuildOnly = array_map('trim', explode(',', DEV_BUILD_ONLY));
-        	$dataClasses = array();
+        		$devBuildOnly = array_map('trim', explode(',', DEV_BUILD_ONLY));
+        		$dataClasses = array();
 			foreach($devBuildOnly as $class){
             			if(is_subclass_of($class, 'DataObject')) $dataClasses[$class] = $class;
         		}
