@@ -1136,8 +1136,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		// TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this
 		// non-dynamically calculated
 		$text = preg_replace(
-			'/href\s*\=\s*\"\#/', 
-			'href="\' . (Config::inst()->get(\'SSViewer\', \'rewrite_hash_links\') ?' .
+			'/(<a[^>]+href *= *)"#/i',
+			'\\1"\' . (Config::inst()->get(\'SSViewer\', \'rewrite_hash_links\') ?' .
 			' strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
 				\'#',
 			$text
