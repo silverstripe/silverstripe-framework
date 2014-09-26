@@ -17,9 +17,25 @@
 class ErrorControlChain {
 	public static $fatal_errors = null; // Initialised after class definition
 
+	/**
+	 * Is there an error?
+	 *
+	 * @var bool
+	 */
 	protected $error = false;
+
+	/**
+	 * List of steps
+	 *
+	 * @var array
+	 */
 	protected $steps = array();
 
+	/**
+	 * True if errors should be hidden
+	 *
+	 * @var bool
+	 */
 	protected $suppression = true;
 
 	/** We can't unregister_shutdown_function, so this acts as a flag to enable handling */
@@ -28,6 +44,18 @@ class ErrorControlChain {
 	/** We overload display_errors to hide errors during execution, so we need to remember the original to restore to */
 	protected $originalDisplayErrors = null;
 
+	/**
+	 * Any exceptions passed through the chain
+	 *
+	 * @var Exception
+	 */
+	protected $lastException = null;
+
+	/**
+	 * Determine if an error has been found
+	 *
+	 * @return bool
+	 */
 	public function hasErrored() {
 		return $this->error;
 	}
@@ -57,19 +85,43 @@ class ErrorControlChain {
 		return $this;
 	}
 
+	/**
+	 * Request that the callback is invoked if not errored
+	 *
+	 * @param callable $callback
+	 * @return $this
+	 */
 	public function thenWhileGood($callback) {
 		return $this->then($callback, false);
 	}
 
+	/**
+	 * Request that the callback is invoked on error
+	 *
+	 * @param callable $callback
+	 * @return $this
+	 */
 	public function thenIfErrored($callback) {
 		return $this->then($callback, true);
 	}
 
+	/**
+	 * Request that the callback is invoked always
+	 *
+	 * @param callable $callback
+	 * @return $this
+	 */
 	public function thenAlways($callback) {
 		return $this->then($callback, null);
 	}
 
+	/**
+	 * Return true if the last error was fatal
+	 *
+	 * @return boolean
+	 */
 	protected function lastErrorWasFatal() {
+		if($this->lastException) return true;
 		$error = error_get_last();
 		return $error && ($error['type'] & self::$fatal_errors) != 0;
 	}
@@ -122,7 +174,12 @@ class ErrorControlChain {
 			$step = array_shift($this->steps);
 
 			if ($step['onErrorState'] === null || $step['onErrorState'] === $this->error) {
-				call_user_func($step['callback'], $this);
+				try {
+					call_user_func($step['callback'], $this);
+				} catch (Exception $ex) {
+					$this->lastException = $ex;
+					throw $ex;
+				}
 			}
 
 			$this->step();
