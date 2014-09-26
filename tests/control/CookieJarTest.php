@@ -27,7 +27,7 @@ class CookieJarTest extends SapphireTest {
 		$this->assertEquals($defaultCookies, $cookieJar->getAll(false));
 
 		//make sure there are no "phantom" cookies
-		$this->assertEquals($defaultCookies, $cookieJar->getAll(false));
+		$this->assertEquals($defaultCookies, $cookieJar->getAll(true));
 
 		//check an empty array is accepted
 		$cookieJar = new CookieJar(array());

@@ -741,20 +741,12 @@ class Injector {
 	}
 
 	/**
-	 * Remove a service that has been registered
-	 *
-	 * @param string $service The service to clear
-	 */
-	public function clearService($service) {
-		unset($this->specs[$service], $this->serviceCache[$service]);
-	}
-	/**
 	 * Register a service with an explicit name
 	 *
 	 * @deprecated since 3.1.1
 	 */
 	public function registerNamedService($name, $service) {
-		Deprecation::notice('3.2', 'registerNamedService is deprecated, use registerService instead');
+		Deprecation::notice('3.1.1', 'registerNamedService is deprecated, use registerService instead');
 		return $this->registerService($service, $name);
 	}
 

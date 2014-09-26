@@ -207,17 +207,18 @@ class Director implements TemplateGlobalProvider {
 	 *                           GET otherwise. Overwritten by $postVars['_method'] if present.
 	 * @param string $body The HTTP body
 	 * @param array $headers HTTP headers with key-value pairs
-	 * @param Cookie_Backend $cookies to populate $_COOKIE
+	 * @param array|Cookie_Backend $cookies to populate $_COOKIE
 	 * @param HTTP_Request $request The {@see HTTP_Request} object generated as a part of this request
 	 * @return SS_HTTPResponse
 	 *
 	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	public static function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null,
-			$headers = null, $cookies = null, &$request = null) {
+	public static function test($url, $postVars = null, $session = array(), $httpMethod = null, $body = null,
+			$headers = array(), $cookies = array(), &$request = null) {
 
 		Config::nest();
+		Injector::nest();
 
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
@@ -227,7 +228,9 @@ class Director implements TemplateGlobalProvider {
 		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
 
 		if(!$session) $session = Injector::inst()->create('Session', array());
-		if(!$cookies) $cookies = new CookieJar(null);
+		$cookieJar = $cookies instanceof Cookie_Backend
+			? $cookies
+			: Injector::inst()->createWithArgs('Cookie_Backend', array($cookies ?: array()));
 
 		// Back up the current values of the superglobals
 		$existingRequestVars = isset($_REQUEST) ? $_REQUEST : array();
@@ -236,12 +239,34 @@ class Director implements TemplateGlobalProvider {
 		$existingSessionVars = isset($_SESSION) ? $_SESSION : array();
 		$existingCookies = isset($_COOKIE) ? $_COOKIE : array();
 		$existingServer	= isset($_SERVER) ? $_SERVER : array();
-		$existingCookieJar = Cookie::get_inst();
 
 		$existingRequirementsBackend = Requirements::backend();
 
 		Config::inst()->update('Cookie', 'report_errors', false);
 		Requirements::set_backend(new Requirements_Backend());
+
+		// Set callback to invoke prior to return
+		$onCleanup = function() use(
+			$existingRequestVars, $existingGetVars, $existingPostVars, $existingSessionVars,
+			$existingCookies, $existingServer, $existingRequirementsBackend, $oldStage
+		) {
+			// Restore the superglobals
+			$_REQUEST = $existingRequestVars;
+			$_GET = $existingGetVars;
+			$_POST = $existingPostVars;
+			$_SESSION = $existingSessionVars;
+			$_COOKIE = $existingCookies;
+			$_SERVER = $existingServer;
+
+			Requirements::set_backend($existingRequirementsBackend);
+
+			// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
+			// Really, it's some inappropriate coupling and should be resolved by making less use of statics
+			Versioned::reading_stage($oldStage);
+
+			Injector::unnest(); // Restore old CookieJar, etc
+			Config::unnest();
+		};
 
 		if (strpos($url, '#') !== false) {
 			$url = substr($url, 0, strpos($url, '#'));
@@ -271,8 +296,8 @@ class Director implements TemplateGlobalProvider {
 		$_GET = (array)$getVars;
 		$_POST = (array)$postVars;
 		$_SESSION = $session ? $session->inst_getAll() : array();
-		$_COOKIE = $cookies->getAll(false);
-		Injector::inst()->registerService($cookies, 'CookieJar');
+		$_COOKIE = $cookieJar->getAll(false);
+		Injector::inst()->registerService($cookieJar, 'Cookie_Backend');
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
 		$request = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
@@ -283,7 +308,7 @@ class Director implements TemplateGlobalProvider {
 		$model = DataModel::inst();
 		$output = Injector::inst()->get('RequestProcessor')->preRequest($request, $session, $model);
 		if ($output === false) {
-			// @TODO Need to NOT proceed with the request in an elegant manner
+			$onCleanup();
 			throw new SS_HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
 		}
 
@@ -303,27 +328,12 @@ class Director implements TemplateGlobalProvider {
 
 		$output = Injector::inst()->get('RequestProcessor')->postRequest($request, $result, $model);
 		if ($output === false) {
+			$onCleanup();
 			throw new SS_HTTPResponse_Exception("Invalid response");
 		}
 
-		// Restore the superglobals
-		$_REQUEST = $existingRequestVars;
-		$_GET = $existingGetVars;
-		$_POST = $existingPostVars;
-		$_SESSION = $existingSessionVars;
-		$_COOKIE = $existingCookies;
-		$_SERVER = $existingServer;
-
-		Injector::inst()->registerService($existingCookieJar, 'CookieJar');
-
-		Requirements::set_backend($existingRequirementsBackend);
-
-		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
-		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
-		Versioned::reading_stage($oldStage);
-
-		Config::unnest();
-
+		// Return valid response
+		$onCleanup();
 		return $result;
 	}
 

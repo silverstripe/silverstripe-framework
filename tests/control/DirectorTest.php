@@ -240,6 +240,7 @@ class DirectorTest extends SapphireTest {
 		unset($_SESSION['isLive']);
 		unset($_GET['isTest']);
 		unset($_GET['isDev']);
+		$_SESSION = $_SESSION ?: array();
 
 		// Test isDev=1
 		$_GET['isDev'] = '1';
@@ -271,7 +272,10 @@ class DirectorTest extends SapphireTest {
 		$_POST = array('somekey' => 'postvalue');
 		$_COOKIE = array('somekey' => 'cookievalue');
 
-		$cookies = new CookieJar(array('somekey' => 'sometestcookievalue'));
+		$cookies = Injector::inst()->createWithArgs(
+			'Cookie_Backend',
+			array(array('somekey' => 'sometestcookievalue'))
+		);
 
 		$getresponse = Director::test('errorpage?somekey=sometestgetvalue', array('somekey' => 'sometestpostvalue'),
 			null, null, null, null, $cookies);
@@ -298,7 +302,7 @@ class DirectorTest extends SapphireTest {
 					strtoupper($method),
 					null,
 					null,
-					new CookieJar($fixture)
+					Injector::inst()->createWithArgs('Cookie_Backend', array($fixture))
 				);
 
 				$this->assertInstanceOf('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');

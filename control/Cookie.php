@@ -19,13 +19,6 @@ class Cookie {
 	 * @return Cookie_Backend The cookie backend
 	 */
 	public static function get_inst() {
-		//if we don't have a CookieJar service yet, register it
-		if(!Injector::inst()->hasService('Cookie_Backend')) {
-			Injector::inst()->registerService(
-				Injector::inst()->create('CookieJar', $_COOKIE),
-				'Cookie_Backend'
-			);
-		}
 		return Injector::inst()->get('Cookie_Backend');
 	}
 
@@ -47,13 +40,25 @@ class Cookie {
 	}
 
 	/**
-	 * Get a cookie variable.
+	 * Get the cookie value by name
 	 *
-	 * @param string
-	 * @return mixed
+	 * @param string $name The name of the cookie to get
+	 * @param boolean $includeUnsent Include cookies we've yet to send when fetching values
+	 *
+	 * @return string|null The cookie value or null if unset
 	 */
-	public static function get($name) {
-		return self::get_inst()->get($name);
+	public static function get($name, $includeUnsent = true) {
+		return self::get_inst()->get($name, $includeUnsent);
+	}
+
+	/**
+	 * Get all the cookies
+	 *
+	 * @param boolean $includeUnsent Include cookies we've yet to send
+	 * @return array All the cookies
+	 */
+	public static function get_all($includeUnsent = true) {
+		return self::get_inst()->getAll($includeUnsent);
 	}
 
 	/**
@@ -61,25 +66,7 @@ class Cookie {
 	 * @param string
 	 * @param string
 	 */
-	public static function force_expiry($name, $path = null, $domain = null, $secure = false, $httpOnly = false) {
+	public static function force_expiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true) {
 		return self::get_inst()->forceExpiry($name, $path, $domain, $secure, $httpOnly);
-	}
-
-	/**
-	 * @deprecated 3.2 Use the "Cookie.report_errors" config setting instead
-	 * @param bool
-	 */
-	protected function set_report_errors($reportErrors) {
-		Deprecation::notice('3.2', 'Use the "Cookie.report_errors" config setting instead');
-		Config::inst()->update('Cookie', 'report_errors', $reportErrors);
-	}
-
-	/**
-	 * @deprecated 3.2 Use the "Cookie.report_errors" config setting instead
-	 * @return bool
-	 */
-	protected function report_errors() {
-		Deprecation::notice('3.2', 'Use the "Cookie.report_errors" config setting instead');
-		return Config::inst()->get('Cookie', 'report_errors');
 	}
 }

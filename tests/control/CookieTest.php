@@ -4,25 +4,16 @@ class CookieTest extends SapphireTest {
 
 	private $cookieInst;
 
-	public function setUpOnce() {
-		parent::setUpOnce();
-		Injector::nest();
-	}
-
-	public function tearDownOnce() {
-		parent::tearDownOnce();
-		//restore the cookie_backend
-		Injector::unnest();
-	}
-
 	public function setUp() {
 		parent::setUp();
+		Injector::nest();
 		Injector::inst()->registerService(new CookieJar($_COOKIE), 'Cookie_Backend');
 	}
 
 	public function tearDown() {
+		//restore the cookie_backend
+		Injector::unnest();
 		parent::tearDown();
-		Injector::inst()->unregisterNamedObject('Cookie_Backend');
 	}
 
 	/**
@@ -99,6 +90,99 @@ class CookieTest extends SapphireTest {
 
 		$this->assertEquals('testvalue', Cookie::get('test'));
 
+	}
+
+	/**
+	 * Test that we can set and get cookies
+	 */
+	public function testSetAndGet() {
+		$this->assertEmpty(Cookie::get('testCookie'));
+
+		//set a test cookie
+		Cookie::set('testCookie', 'testVal');
+
+		//make sure it was set
+		$this->assertEquals('testVal', Cookie::get('testCookie'));
+
+		//make sure we can distinguise it from ones that were "existing"
+		$this->assertEmpty(Cookie::get('testCookie', false));
+	}
+
+	/**
+	 * Test that we can distinguish between vars that were loaded on instantiation
+	 * and those added later
+	 */
+	public function testExistingVersusNew() {
+		//load with a cookie
+		$cookieJar = new CookieJar(array(
+			'cookieExisting' => 'i woz here',
+		));
+		Injector::inst()->registerService($cookieJar, 'Cookie_Backend');
+
+		//set a new cookie
+		Cookie::set('cookieNew', 'i am new');
+
+		//check we can fetch new and old cookie values
+		$this->assertEquals('i woz here', Cookie::get('cookieExisting'));
+		$this->assertEquals('i woz here', Cookie::get('cookieExisting', false));
+		$this->assertEquals('i am new', Cookie::get('cookieNew'));
+		//there should be no original value for the new cookie
+		$this->assertEmpty(Cookie::get('cookieNew', false));
+
+		//change the existing cookie, can we fetch the new and old value
+		Cookie::set('cookieExisting', 'i woz changed');
+
+		$this->assertEquals('i woz changed', Cookie::get('cookieExisting'));
+		$this->assertEquals('i woz here', Cookie::get('cookieExisting', false));
+
+		//check we can get all cookies
+		$this->assertEquals(array(
+			'cookieExisting' => 'i woz changed',
+			'cookieNew' => 'i am new',
+		), Cookie::get_all());
+
+		//check we can get all original cookies
+		$this->assertEquals(array(
+			'cookieExisting' => 'i woz here',
+		), Cookie::get_all(false));
+	}
+
+	/**
+	 * Check we can remove cookies and we can access their original values
+	 */
+	public function testForceExpiry() {
+		//load an existing cookie
+		$cookieJar = new CookieJar(array(
+			'cookieExisting' => 'i woz here',
+		));
+		Injector::inst()->registerService($cookieJar, 'Cookie_Backend');
+
+		//make sure it's available
+		$this->assertEquals('i woz here', Cookie::get('cookieExisting'));
+
+		//remove the cookie
+		Cookie::force_expiry('cookieExisting');
+
+		//check it's gone
+		$this->assertEmpty(Cookie::get('cookieExisting'));
+
+		//check we can get it's original value
+		$this->assertEquals('i woz here', Cookie::get('cookieExisting', false));
+
+
+		//check we can add a new cookie and remove it and it doesn't leave any phantom values
+		Cookie::set('newCookie', 'i am new');
+
+		//check it's set by not recieved
+		$this->assertEquals('i am new', Cookie::get('newCookie'));
+		$this->assertEmpty(Cookie::get('newCookie', false));
+
+		//remove it
+		Cookie::force_expiry('newCookie');
+
+		//check it's neither set nor reveived
+		$this->assertEmpty(Cookie::get('newCookie'));
+		$this->assertEmpty(Cookie::get('newCookie', false));
 	}
 
 }

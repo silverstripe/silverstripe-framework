@@ -42,10 +42,13 @@ class CookieJar implements Cookie_Backend {
 	 * "existing" array. This allows us to distinguish between cookies we recieved
 	 * or we set ourselves (and didn't get from the browser)
 	 *
-	 * @param array $cookies The existing cookies to load into the cookie jar
+	 * @param array $cookies The existing cookies to load into the cookie jar.
+	 * Omit this to default to $_COOKIE
 	 */
-	public function __construct(array $cookies = null) {
-		$this->current = $this->existing = !empty($cookies) ? $cookies : $this->existing;
+	public function __construct($cookies = array()) {
+		$this->current = $this->existing = func_num_args()
+			? ($cookies ?: array()) // Convert empty values to blank arrays
+			: $_COOKIE;
 	}
 
 	/**
@@ -105,7 +108,6 @@ class CookieJar implements Cookie_Backend {
 	 * Get all the cookies
 	 *
 	 * @param boolean $includeUnsent Include cookies we've yet to send
-	 *
 	 * @return array All the cookies
 	 */
 	public function getAll($includeUnsent = true) {
@@ -121,8 +123,8 @@ class CookieJar implements Cookie_Backend {
 	 * @param boolean $secure Can the cookie only be sent over SSL?
 	 * @param boolean $httpOnly Prevent the cookie being accessible by JS
 	 */
-	public function forceExpiry($name, $path = null, $domain = null, $secure = false, $httpOnly = false) {
-		$this->set($name, false,-1, $path, $domain, $secure, $httpOnly);
+	public function forceExpiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true) {
+		$this->set($name, false, -1, $path, $domain, $secure, $httpOnly);
 	}
 
 	/**
@@ -137,11 +139,10 @@ class CookieJar implements Cookie_Backend {
 	 * @param string $domain The domain to make the cookie available on
 	 * @param boolean $secure Can the cookie only be sent over SSL?
 	 * @param boolean $httpOnly Prevent the cookie being accessible by JS
-	 *
 	 * @return boolean If the cookie was set or not; doesn't mean it's accepted by the browser
 	 */
 	protected function outputCookie(
-		$name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false
+		$name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = true
 	) {
 		// if headers aren't sent, we can set the cookie
 		if(!headers_sent($file, $line)) {
