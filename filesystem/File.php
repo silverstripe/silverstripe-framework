@@ -248,12 +248,31 @@ class File extends DataObject {
 		return $item;
 	}
 
+	/**
+	 * Just an alias function to keep a consistent API with SiteTree
+	 *
+	 * @return string The link to the file
+	 */
 	public function Link() {
-		return Director::baseURL() . $this->RelativeLink();
+		return $this->getURL();
 	}
 
+	/**
+	 * Just an alias function to keep a consistent API with SiteTree
+	 *
+	 * @return string The relative link to the file
+	 */
 	public function RelativeLink() {
-		return $this->Filename;
+		return $this->getFilename();
+	}
+
+	/**
+	 * Just an alias function to keep a consistent API with SiteTree
+	 *
+	 * @return string The absolute link to the file
+	 */
+	public function AbsoluteLink() {
+		return $this->getAbsoluteURL();
 	}
 
 	/**
@@ -671,7 +690,7 @@ class File extends DataObject {
 	 * @return string
 	 */
 	public function getAbsoluteURL() {
-		return Director::absoluteBaseURL() . $this->getFilename();
+		return Director::absoluteURL($this->getURL());
 	}
 
 	/**
@@ -681,7 +700,7 @@ class File extends DataObject {
 	 * @return string
 	 */
 	public function getURL() {
-		return Director::baseURL() . $this->getFilename();
+		return Controller::join_links(Director::baseURL(), $this->getFilename());
 	}
 
 	/**
