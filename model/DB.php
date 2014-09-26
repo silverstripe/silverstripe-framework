@@ -384,7 +384,8 @@ class DB {
 
 	/**
 	 * Returns a list of all tables in the database.
-	 * The table names will be in lower case.
+	 * Keys are table names in lower case, values are table names in case that
+	 * database expects.
 	 * @return array
 	 */
 	public static function tableList() {

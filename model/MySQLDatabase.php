@@ -164,7 +164,9 @@ class MySQLDatabase extends SS_Database {
 		$this->query("CREATE DATABASE \"$this->database\" DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci");
 		$this->query("USE \"$this->database\"");
 
-		$this->tableList = $this->fieldList = $this->indexList = null;
+		$this->clearTableList();
+		$this->fieldList = null;
+		$this->indexList = null;
 
 		$this->active = $this->dbConn->select_db($this->database);
 		return $this->active;
@@ -199,7 +201,9 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function selectDatabase($dbname) {
 		$this->database = $dbname;
-		$this->tableList = $this->fieldList = $this->indexList = null;
+		$this->clearTableList();
+		$this->fieldList = null;
+		$this->indexList = null;
 		$this->active = false;
 		if($this->databaseExists($this->database)) {
 			$this->active = $this->dbConn->select_db($this->database);
@@ -255,6 +259,8 @@ class MySQLDatabase extends SS_Database {
 				$indexSchemas
 				primary key (ID)
 			) {$addOptions}");
+			
+		$this->clearTableList();
 		
 		return $table;
 	}
@@ -569,11 +575,12 @@ class MySQLDatabase extends SS_Database {
 
 	/**
 	 * Returns a list of all the tables in the database.
+	 * 
 	 * @return array
 	 */
 	public function tableList() {
 		$tables = array();
-		foreach($this->query("SHOW TABLES") as $record) {
+		foreach ($this->query($this->allTablesSQL()) as $record) {
 			$table = reset($record);
 			$tables[strtolower($table)] = $table;
 		}
@@ -804,11 +811,17 @@ class MySQLDatabase extends SS_Database {
 
 	/**
 	 * Returns true if the given table is exists in the current database
-	 * NOTE: Experimental; introduced for db-abstraction and may changed before 2.4 is released.
+	 * 
+	 * @param string $tableName Table name
+	 * @return boolean
 	 */
-	public function hasTable($table) {
-		$SQL_table = Convert::raw2sql($table);
-		return (bool)($this->query("SHOW TABLES LIKE '$SQL_table'")->value());
+	public function hasTable($tableName) {
+		// Cache the list of all table names to reduce on DB traffic
+		if (empty($this->tableList)) {
+			$this->tableList = $this->tableList();
+		}
+
+		return isset($this->tableList[strtolower($tableName)]);
 	}
 
 	/**

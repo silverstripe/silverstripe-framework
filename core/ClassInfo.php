@@ -27,37 +27,27 @@ class ClassInfo {
 	}
 
 	/**
-	 * Cache for {@link hasTable()}
-	 */
-	private static $_cache_all_tables = null;
-
-	/**
 	 * @var Array Cache for {@link ancestry()}.
 	 */
 	private static $_cache_ancestry = array();
-	
+
 	/**
-	 * @todo Move this to SS_Database or DB
+	 * @param string $class Class name
+	 * @return boolean
 	 */
 	public static function hasTable($class) {
 		if(DB::isActive()) {
-			// Cache the list of all table names to reduce on DB traffic
-			if(empty(self::$_cache_all_tables)) {
-				self::$_cache_all_tables = array();
-				$tables = DB::query(DB::getConn()->allTablesSQL())->column();
-				foreach($tables as $table) self::$_cache_all_tables[strtolower($table)] = true;
-			}
-			return isset(self::$_cache_all_tables[strtolower($class)]);
+			return DB::getConn()->hasTable($class);
 		} else {
 			return false;
 		}
 	}
-	
+
 	public static function reset_db_cache() {
-		self::$_cache_all_tables = null;
+		DB::getConn()->clearTableList();
 		self::$_cache_ancestry = array();
 	}
-	
+
 	/**
 	 * Returns the manifest of all classes which are present in the database.
 	 * @param string $class Class name to check enum values for ClassName field
