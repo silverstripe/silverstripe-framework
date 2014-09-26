@@ -189,8 +189,27 @@ class DatabaseAdmin extends Controller {
 		}
 
 		// Build the database.  Most of the hard work is handled by DataObject
-		$dataClasses = ClassInfo::subclassesFor('DataObject');
-		array_shift($dataClasses);
+		if(defined('DEV_BUILD_ONLY') && DEV_BUILD_ONLY != ''){
+        	$devBuildOnly = array_map('trim', explode(',', DEV_BUILD_ONLY));
+        	$dataClasses = array();
+			foreach($devBuildOnly as $class){
+            			if(is_subclass_of($class, 'DataObject')) $dataClasses[$class] = $class;
+        		}
+	    	} else {
+	        	$dataClasses = ClassInfo::subclassesFor('DataObject');
+	    	}
+		if(defined('DEV_BUILD_EXCLUDE') && DEV_BUILD_EXCLUDE != ''){
+        		$devBuildExclude = array_map('trim', explode(',', DEV_BUILD_EXCLUDE));
+        		foreach($dataClasses as $class){
+	            		if(in_array($class, $devBuildExclude)) unset($dataClasses[$class]);
+	        	}
+	    	}
+	    	if(!is_array($dataClasses) || count($dataClasses) < 1){
+		    	user_error("\n<p><b>No Classes specified for build. Please check your DEV_BUILD_ONLY or DEV_BUILD_EXCLUDE constants</b></p>\n\n",
+		    	  E_USER_ERROR);
+		    	return false;
+		}
+		if(isset($dataClasses["DataObject"])) unset($dataClasses["DataObject"]);
 
 		if(!$quiet) {
 			if(Director::is_cli()) echo "\nCREATING DATABASE TABLES\n\n";
