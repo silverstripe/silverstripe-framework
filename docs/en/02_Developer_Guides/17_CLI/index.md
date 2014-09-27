@@ -1,36 +1,33 @@
-summary: Automate SilverStripe, run cronjobs or sync with other platforms through the sake Command Line Interface.
+summary: Automate SilverStripe, run Cron Jobs or sync with other platforms through the Command Line Interface.
 
-# Command line usage
+# Command Line
 
-## Introduction
+SilverStripe can call [controllers](../controllers) through a command line interface (CLI) just as easily as through a 
+web browser. This can be used to automate tasks with cron jobs, run unit tests, or anything else that needs to interface
+over the command line.
 
-SilverStripe can call controllers through commandline `php` just as easily as through a web browser.
-This can be handy to automate tasks with cron jobs, run unit tests and maintenance tasks,
-and a whole bunch of other scripted goodness.
-
-The main entry point for any commandline execution is `cli-script.php`. For example, to run a database rebuild
-from the commandline, use this command:
-
+The main entry point for any command line execution is `cli-script.php`. For example, to run a database rebuild
+from the command line, use this command:
+	
+	:::bash
 	cd your-webroot/
 	php framework/cli-script.php dev/build
 
-Make sure that your commandline php version uses the same configuration as your webserver (run `php -i` to find out more).
+<div class="notice">
+Your command line php version is likely to use a different configuration as your webserver (run `php -i` to find out 
+more). This can be a good thing, your CLI can be configured to use higher memory limits than you would want your website
+to have.
+</div>
 
-## GET parameters as arguments
+## Sake: SilverStripe Make
 
-You can add parameters to the command by using normal form encoding.
-All parameters will be available in `$_GET` within SilverStripe.
+Sake is a simple wrapper around `cli-script.php`. It also tries to detect which `php` executable to use if more than one 
+are available.
 
-	cd your-webroot/
-	php framework/cli-script.php myurl myparam=1 myotherparam=2
-
-## SAKE: SilverStripe make
-
-Sake is a simple wrapper around `cli-script.php`. It also tries to detect which `php` executable to use
-if more than one are available.
-
-**If you are using a debian server:** Check you have the php-cli package installed for sake to work.
-If you get an error when running the command php -v, then you may not have php-cli installed so sake won't work.
+<div class="info" markdown='1'>
+If you are using a debian server: Check you have the php-cli package installed for sake to work. If you get an error 
+when running the command php -v, then you may not have php-cli installed so sake won't work.
+</div>
 
 ### Installation
 
@@ -39,66 +36,65 @@ You can copy the `sake` file into `/usr/bin/sake` for easier access (this is opt
 	cd your-webroot/
 	sudo ./framework/sake installsake
 
-Note: This currently only works on unix-like systems, not on Windows.
+<div class="warning">
+This currently only works on UNIX-like systems, not on Windows.
+</div>
 
-## Configuration
+### Configuration
 
-Sometimes SilverStripe needs to know the URL of your site, for example, when sending an email.  When you're visiting
-your site in a web browser this is easy to work out, but if you're executing scripts on the command-line, it has no way
-of knowing.
+Sometimes SilverStripe needs to know the URL of your site, for example, when sending an email or generating static 
+files. When you're visiting your site in a web browser this is easy to work out, but if you're executing scripts on the 
+command line, it has no way of knowing.
 
-To work this out, you should add lines of this form to your [_ss_environment.php](/topics/environment-management) file.
+To work this out, you should add lines of this form to your [_ss_environment.php](/getting_started/environment_management) 
+file.
 
 	:::php
 	global $_FILE_TO_URL_MAPPING;
+
 	$_FILE_TO_URL_MAPPING['/Users/sminnee/Sites'] = 'http://localhost';
 
+The above statement tells SilverStripe that anything executed under the `/Users/sminnee/Sites` directly will have the
+base URL `http://localhost`.
 
-What the line says is that any Folder under /Users/sminnee/Sites/ can be accessed in a web browser from
-http://localhost.  For example, /Users/sminnee/Sites/mysite will be available at http://localhost/mysite.
-
-You can add multiple file to url mapping definitions.  The most specific mapping will be used. For example:
+You can add multiple file to url mapping definitions. The most specific mapping will be used. For example:
 
 	:::php
 	global $_FILE_TO_URL_MAPPING;
+
 	$_FILE_TO_URL_MAPPING['/Users/sminnee/Sites'] = 'http://localhost';
 	$_FILE_TO_URL_MAPPING['/Users/sminnee/Sites/mysite'] = 'http://mysite.localhost';
 
+### Usage
 
-Using this example, /Users/sminnee/Sites/mysite/ would be accessed at http://mysite.localhost/, and
-/Users/sminnee/Sites/othersite/ would be accessed at http://localhost/othersite/
-
-## Usage
-
-Sake will either run `./framework/cli-script.php` or `./cli-script.php`, depending on what's available.
-
-It's particularly useful for running build tasks...
-
+Sake is particularly useful for running build tasks
+	
+	:::bash
 	cd /your/site/folder
 	sake dev/build "flush=1"
 	sake dev/tests/all
 
-
 It can also be handy if you have a long running script.
-
+	
+	:::bash
 	cd /your/site/folder
 	sake dev/tasks/MyReallyLongTask
-
 
 ### Running processes
 
 You can use sake to make daemon processes for your application.
 
-Step 1: Make a task or controller class that runs a loop.  Because SilverStripe has memory leaks, you should make the PHP
-process exit when it hits some reasonable memory limit.  Sake will automatically restart your process whenever it exits.
+Step 1: Make a task or controller class that runs a loop. To avoid memory leaks, you should make the PHP process exit 
+when it hits some reasonable memory limit. Sake will automatically restart your process whenever it exits.
 
-The other thing you should do is include some appropriate sleep()s so that your process doesn't hog the system.  The
-best thing to do is to have a short sleep when the process is in the middle of doing things, and a long sleep when
-doesn't have anything to do.
+Step 2: Include some appropriate sleep()s so that your process doesn't hog the system.  The best thing to do is to have 
+a short sleep when the process is in the middle of doing things, and a long sleep when doesn't have anything to do.
 
 This code provides a good template:
 
 	:::php
+	<?php
+
 	class MyProcess extends Controller {
 
 		private static $allowed_actions = array(
@@ -119,37 +115,36 @@ This code provides a good template:
 		}
 	}
 
-Step 2: Install the "daemon" command-line tool on your server.
+Step 3: Install the "daemon" command-line tool on your server.
 
-Step 3: Use sake to start and stop your process
+Step 4: Use sake to start and stop your process
 
+	:::bash
 	sake -start MyProcess
 	sake -stop MyProcess
 
+<div class="notice">
+Sake stores Pid and log files in the site root directory.
+</div>
 
-Note that sake processes are currently a little brittle, in that the pid and log
-files are placed in the site root directory, rather than somewhere sensible like
-/var/log or /var/run.
+## GET parameters as arguments
 
-### Running Regular Tasks With Cron
+You can add parameters to the command by using normal form encoding. All parameters will be available in `$_GET` within 
+SilverStripe. Using the `cli-script.php` directly:
 
-On a unix machine, you can typically run a scheduled task with a [cron job](http://en.wikipedia.org/wiki/Cron),
-using one of the following command-line calls:
+	:::bash
+	cd your-webroot/
+	php framework/cli-script.php myurl myparam=1 myotherparam=2
 
-```
-/path/to/site_root/framework/sake dev/tasks/MyTask
-php /path/to/site_root/framework/cli-script.php dev/tasks/MyTask
-```
+Or if you're using `sake`
 
-If you find that your cron job appears to be retrieving the login screen, then you may need to use `php-cli`
-instead. This is typical of a cPanel-based setup.
+	:::bash
+	sake myurl "myparam=1&myotherparam=2"
 
-```
-php-cli /path/to/site_root/framework/cli-script.php dev/tasks/MyTask
-```
+## Running Regular Tasks With Cron
 
-A good approach to setting up and testing your task to run with cron is:
+On a UNIX machine, you can typically run a scheduled task with a [cron job](http://en.wikipedia.org/wiki/Cron). You can
+execute any `BuildTask` in SilverStripe as a cron job using `Sake`.
 
- 1. Try running the task via the command-line on your server. `/path/to/site_root/framework/sake dev/tasks/MyTask`
- 2. Set up a cron job to run the task every minute. `* * * * * /path/to/site_root/framework/sake dev/tasks/MyTask`
- 3. Finally, set the task to run when you want it to. `0 2 * * * /path/to/site_root/framework/sake dev/tasks/MyTask` (2am)
+	:::bash
+	* * * * * /your/site/folder/sake dev/tasks/MyTask
