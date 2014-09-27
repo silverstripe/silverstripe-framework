@@ -21,6 +21,7 @@ abstract class StringField extends DBField {
 		'LimitWordCountXML' => 'HTMLText',
 		"LowerCase" => "Text",
 		"UpperCase" => "Text",
+		'NoHTML' => 'Text',
 	);
 
 	/**
