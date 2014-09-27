@@ -30,7 +30,6 @@ class Text extends StringField {
 		'EscapeXML' => 'Text',
 		'LimitWordCount' => 'Text',
 		'LimitWordCountXML' => 'HTMLText',
-		'NoHTML' => 'Text',
 	);
 	
 	/**
