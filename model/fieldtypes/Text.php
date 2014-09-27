@@ -52,15 +52,6 @@ class Text extends StringField {
 
 		DB::requireField($this->tableName, $this->name, $values, $this->default);
 	}
-	
-	/**
-	 * Return the value of the field stripped of html tags.
-	 *
-	 * @return string
-	 */
-	public function NoHTML() {
-		return strip_tags($this->value);
-	}
 
 	/**
 	 * Return the value of the field with relative links converted to absolute urls.
