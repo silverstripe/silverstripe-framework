@@ -1,28 +1,22 @@
+title: i18n
 summary: Display templates and PHP code in different languages based on the preferences of your website users.
 
 # i18n
-
-## Introduction
 
 The i18n class (short for "internationalization") in SilverStripe enables you to display templates and PHP code in
 different languages based on your global settings and the preferences of your website users. This process is also known
 as l10n (short for "localization").
 
-For translating any content managed through the CMS or stored in the database,
-please use the "[translatable](http://github.com/silverstripe/silverstripe-translatable)" module.
+For translating any content managed through the CMS or stored in the database, please use the 
+[translatable](http://github.com/silverstripe/silverstripe-translatable) module.
 
-This page aims to describe the low-level functionality of the i18n-API. It targets developers who:
+This page aims to describe the low-level functionality of the i18n API. It targets developers who:
 
-*  are involved in creating templates in different languages
-*  want to build their own modules with i18n capabilities
-*  want to make their PHP-code (e.g. form labels) i18n-ready
-
-Please note that this project scope currently **doesn't include full support for format conversion in dates or
-currencies**. Check our [roadmap](http://open.silverstripe.com/roadmap).
-
+*  Are involved in creating templates in different languages.
+*  Want to build their own modules with i18n capabilities.
+*  Want to make their PHP-code (e.g. form labels) i18n-ready
 
 ## Usage
-
 
 ### Enabling i18n
 
@@ -30,19 +24,18 @@ The i18n class is enabled by default.
 
 ### Setting the locale
 
-To set the locale you just need to call `[api:i18n::set_locale()]` passing, as a parameter, the name of the locale that you
-want to set.
+To set the locale you just need to call `[api:i18n::set_locale()]` passing, as a parameter, the name of the locale that 
+you want to set.
 
 	:::php
-	//Example 1: setting the locale
-	i18n::set_locale('de_DE'); //Setting the locale to German (Germany)
-	i18n::set_locale('ca_AD'); //Setting to Catalan (Andorra)
+	// mysite/_config.php
+	i18n::set_locale('de_DE'); // Setting the locale to German (Germany)
+	i18n::set_locale('ca_AD'); // Setting to Catalan (Andorra)
 
 
 Once we set a locale, all the calls to the translator function will return strings according to the set locale value, if
-these translations are available. See
-[unicode.org](http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html) for a complete listing of
-available locales.
+these translations are available. See [unicode.org](http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html) 
+for a complete listing of available locales.
 
 ### Getting the locale
 
@@ -60,7 +53,7 @@ To let browsers know which language they're displaying a document in, you can de
 	<html lang="$ContentLocale" xml:lang="$ContentLocale" xmlns="http://www.w3.org/1999/xhtml">
 
 
-Setting the '<html>' attribute is the most commonly used technique. There are other ways to specify content languages
+Setting the `<html>` attribute is the most commonly used technique. There are other ways to specify content languages
 (meta tags, HTTP headers), explained in this [w3.org article](http://www.w3.org/International/tutorials/language-decl/).
 
 You can also set the [script direction](http://www.w3.org/International/questions/qa-scripts),
@@ -218,9 +211,10 @@ the PHP version of the function.
 
 #### Caching in Template Files with locale switching
 
-When caching a `<% loop %>` or `<% with %>` with `<%t params %>`. It is important to add the Locale to the cache key otherwise it won't pick up locale changes.
+When caching a `<% loop %>` or `<% with %>` with `<%t params %>`. It is important to add the Locale to the cache key 
+otherwise it won't pick up locale changes.
 
-	::::ss
+	:::ss
 	<% cached 'MyIdentifier', $CurrentLocale %>
 		<% loop $Students %>
 			$Name
@@ -229,15 +223,12 @@ When caching a `<% loop %>` or `<% with %>` with `<%t params %>`. It is importan
 
 ## Collecting text
 
-To collect all the text in code and template files we have just to visit:
-
-`http://localhost/dev/tasks/i18nTextCollectorTask`
+To collect all the text in code and template files we have just to visit: `http://localhost/dev/tasks/i18nTextCollectorTask`
 
 Text collector will then read the files, build the master string table for each module where it finds calls to the
 underscore function, and tell you about the created files and any possible entity redeclaration.
 
-If you want to run the text collector for just one module you can use the 'module' parameter:
-
+If you want to run the text collector for just one module you can use the 'module' parameter: 
 `http://localhost/dev/tasks/i18nTextCollectorTask/?module=cms`
 
 <div class="hint" markdown='1'>
