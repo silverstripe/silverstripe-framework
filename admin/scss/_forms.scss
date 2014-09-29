@@ -222,7 +222,8 @@ form.small .field, .field.small {
 	
 	/* chzn override */
 	.chzn-container {
-		max-width: 416px;
+		max-width: 512px;
+		display: block;
 		.chzn-results {
 			
 			li {
@@ -231,6 +232,10 @@ form.small .field, .field.small {
 				padding: $grid-y / 2 $grid-x / 2;
 			}
 		}
+		.chzn-drop {
+			border-color: #9a9a9a;
+			@include box-shadow(0 2px 4px rgba(0,0,0,0.15));
+		}
 	}
 	.chzn-container-active {
 		.chzn-single {
@@ -238,28 +243,49 @@ form.small .field, .field.small {
 		}
 	}
 	
-	.chzn-container-single .chzn-single  {
-		height: 26px;
-		line-height: 26px; /* not relative, as then we'd had to redo most of chzn */
+	.chzn-container-single .chzn-single {
+		@include border-radius(4px);
+		@include box-shadow(none);
+		height: 30px;
+		line-height: 30px; /* not relative, as then we'd had to redo most of chzn */
 		font-size: $font-base-size;
-		
-		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
+
+		@include background-image(linear-gradient(#eaeaea, #fff 10%));
 		
 		
 		&:hover, &:focus, &:active {
 			text-decoration: none;
 		}
 	
+		&.chzn-single-with-drop {
+			@include border-bottom-left-radius(0);
+			@include border-bottom-right-radius(0);
+		}
+
+		abbr {
+			top: 9px;
+		}
+
 		div {
 			width: 24px;
 	
 			b {
-				background-position: 4px 0px;
+				background-position: 4px 3px;
 			}
 		}
 	}
 	.chzn-choices {
-		@include border-radius(3px);
+		@include border-radius(4px);
+
+		.search-choice {
+			line-height: 16px;
+			.search-choice-close {
+				top: 5px;
+			}
+		}
+		.search-field input {
+			height: 18px;
+		}
 	}
 	
 	/* Date Fields */
