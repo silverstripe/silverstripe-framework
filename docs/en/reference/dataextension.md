@@ -184,7 +184,7 @@ initialization. The code needs to assign a value if not specified in
 	function __construct() {
 		$self = $this;
 
-		$this->beforeExtending('populateDefaults', function() uses ($self) {
+		$this->beforeExtending('populateDefaults', function() use ($self) {
 			if(empty($self->MyField)) {
 				$self->MyField = 'Value we want as a default if not specified in $defaults, but set before extensions';
 			}
