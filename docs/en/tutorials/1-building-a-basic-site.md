@@ -335,10 +335,12 @@ Create a new file *HomePage.php* in *mysite/code*. Copy the following code into 
 
 	:::php
 	<?php
-	class HomePage extends Page {
-	}
-	class HomePage_Controller extends Page_Controller {
-	}
+		class HomePage extends Page {
+		}
+		
+		class HomePage_Controller extends Page_Controller {
+		}
+	?>
 
 
 Every page type also has a database table corresponding to it. Every time we modify the database, we need to rebuild it.
