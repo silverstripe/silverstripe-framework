@@ -26,6 +26,40 @@ jQuery.noConflict();
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	$.entwine('ss', function($) {
+	
+		/*
+		 * Handle messages sent via nested iframes
+		 * Messages should be raised via postMessage with an object with the 'type' parameter given.
+		 * An optional 'target' and 'data' parameter can also be specified. If no target is specified
+		 * events will be sent to the window instead.
+		 * type should be one of:
+		 *  - 'event' - Will trigger the given event (specified by 'event') on the target
+		 *  - 'callback' - Will call the given method (specified by 'callback') on the target
+		 */ 
+		$(window).on("message", function(e) {
+			var target,
+				event = e.originalEvent,
+				data = JSON.parse(event.data);
+			
+			// Reject messages outside of the same origin
+			if($.path.parseUrl(window.location.href).domain !== $.path.parseUrl(event.origin).domain) return;
+			
+			// Get target of this action
+			target = typeof(data.target) === 'undefined'
+				? $(window)
+				: $(data.target);
+			
+			// Determine action
+			switch(data.type) {
+				case 'event':
+					target.trigger(data.event, data.data);
+					break;
+				case 'callback':
+					target[data.callback].call(target, data.data);
+					break;
+			}
+		});
+	
 		/**
 		 * Position the loading spinner animation below the ss logo
 		 */ 
@@ -82,21 +116,38 @@ jQuery.noConflict();
 		$(document).ajaxComplete(function(e, xhr, settings) {
 			// Simulates a redirect on an ajax response.
 			if(window.History.enabled) {
-				var url = xhr.getResponseHeader('X-ControllerURL'), 
+				var url = xhr.getResponseHeader('X-ControllerURL'),
 					// TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
 					origUrl = History.getPageUrl().replace(/\/$/, ''),
-					opts, requestHeaders = settings.headers;
+					destUrl = settings.url,
+					opts;
 
-				if(url !== null && !isSameUrl(origUrl, url)) {
-					opts = {pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']};
+				// Only redirect if controller url differs to the requested or current one
+				if(url !== null &&
+					(!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))
+				) {
+					opts = {
+						// Ensure that redirections are followed through by history API by handing it a unique ID
+						id: (new Date()).getTime() + String(Math.random()).replace(/\D/g,''),
+						pjax: xhr.getResponseHeader('X-Pjax')
+							? xhr.getResponseHeader('X-Pjax')
+							: settings.headers['X-Pjax']
+					};
 					window.History.pushState(opts, '', url);
 				}
 			}
 
 			// Handle custom status message headers
 			var msg = (xhr.getResponseHeader('X-Status')) ? xhr.getResponseHeader('X-Status') : xhr.statusText,
+				reathenticate = xhr.getResponseHeader('X-Reauthenticate'),
 				msgType = (xhr.status < 200 || xhr.status > 399) ? 'bad' : 'good',
 				ignoredMessages = ['OK'];
+				
+			// Enable reauthenticate dialog if requested
+			if(reathenticate) {
+				$('.cms-container').showLoginDialog();
+				return;
+			}
 
 			// Show message (but ignore aborted requests)
 			if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages)) {
@@ -805,6 +856,80 @@ jQuery.noConflict();
 					.replace(/\?.*/, '')
 					.replace(/#.*/, '')
 					.replace($('base').attr('href'), '');
+			},
+			
+			showLoginDialog: function() {
+				var tempid = $('body').data('member-tempid'),
+					dialog = $('.leftandmain-logindialog'),
+					url = 'CMSSecurity/login';
+
+				// Force regeneration of any existing dialog
+				if(dialog.length) dialog.remove();
+				
+				// Join url params
+				url = $.path.addSearchParams(url, {
+					'tempid': tempid,
+					'BackURL': window.location.href
+				});
+				
+				// Show a placeholder for instant feedback. Will be replaced with actual
+				// form dialog once its loaded.
+				dialog = $('<div class="leftandmain-logindialog"></div>');
+				dialog.attr('id', new Date().getTime());
+				dialog.data('url', url);
+				$('body').append(dialog);
+			}
+		});
+		
+		// Login dialog page
+		$('.leftandmain-logindialog').entwine({
+			onmatch: function() {
+				this._super();
+				
+				// Create jQuery dialog
+				this.ssdialog({
+					iframeUrl: this.data('url'),
+					dialogClass: "leftandmain-logindialog-dialog",
+					autoOpen: true,
+					minWidth: 500,
+					maxWidth: 500,
+					minHeight: 370,
+					maxHeight: 400,
+					closeOnEscape: false,
+					open: function() {
+						$('.ui-widget-overlay').addClass('leftandmain-logindialog-overlay');
+					},
+					close: function() {
+						$('.ui-widget-overlay').removeClass('leftandmain-logindialog-overlay');
+					} 
+				});
+			},
+			onunmatch: function() {
+				this._super();
+			},
+			open: function() {
+				this.ssdialog('open');
+			},
+			close: function() {
+				this.ssdialog('close');
+			},
+			toggle: function(bool) {
+				if(this.is(':visible')) this.close();
+				else this.open();
+			},
+			/**
+			 * Callback activated by CMSSecurity_success.ss
+			 */
+			reauthenticate: function(data) {
+				// Replace all SecurityID fields with the given value
+				if(typeof(data.SecurityID) !== 'undefined') {
+					$(':input[name=SecurityID]').val(data.SecurityID);
+				}
+				// Update TempID for current user
+				if(typeof(data.TempID) !== 'undefined') {
+					$('body').data('member-tempid', data.TempID);
+				}
+				this.close();
 			}
 		});
 		

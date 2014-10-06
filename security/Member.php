@@ -5,23 +5,25 @@
  * @package framework
  * @subpackage security
  *
- * @property string FirstName
- * @property string Surname
- * @property string Email
- * @property string Password
- * @property string RememberLoginHash
- * @property int NumVisit
- * @property string LastVisited Date and time of last visit
- * @property string AutoLoginHash
- * @property string AutoLoginExpired
- * @property string PasswordEncryption
- * @property string Salt
- * @property string PasswordExpiry
- * @property string LockedOutUntil
- * @property string Locale
- * @property int FailedLoginCount
- * @property string DateFormat
- * @property string TimeFormat
+ * @property string $FirstName
+ * @property string $Surname
+ * @property string $Email
+ * @property string $Password
+ * @property string $RememberLoginToken
+ * @property string $TempIDHash
+ * @property string $TempIDExpired
+ * @property int $NumVisit
+ * @property string $LastVisited Date and time of last visit
+ * @property string $AutoLoginHash
+ * @property string $AutoLoginExpired
+ * @property string $PasswordEncryption
+ * @property string $Salt
+ * @property string $PasswordExpiry
+ * @property string $LockedOutUntil
+ * @property string $Locale
+ * @property int $FailedLoginCount
+ * @property string $DateFormat
+ * @property string $TimeFormat
  */
 class Member extends DataObject implements TemplateGlobalProvider {
 
@@ -29,11 +31,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar',
 		'Email' => 'Varchar(256)', // See RFC 5321, Section 4.5.3.1.3.
+		'TempIDHash' => 'Varchar(160)', // Temporary id used for cms re-authentication
+		'TempIDExpired' => 'SS_Datetime', // Expiry of temp login
 		'Password' => 'Varchar(160)',
 		'RememberLoginToken' => 'Varchar(160)', // Note: this currently holds a hash, not a token.
 		'NumVisit' => 'Int',
 		'LastVisited' => 'SS_Datetime',
-		'AutoLoginHash' => 'Varchar(160)',
+		'AutoLoginHash' => 'Varchar(160)', // Used to auto-login the user on password reset
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
 		// not an actual encryption algorithm.
@@ -99,6 +103,25 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'Surname' => 'Last Name',
 		'Email' => 'Email',
 	);
+
+	/**
+	 * Internal-use only fields
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $hidden_fields = array(
+		'RememberLoginToken',
+		'AutoLoginHash',
+		'AutoLoginExpired',
+		'PasswordEncryption',
+		'PasswordExpiry',
+		'LockedOutUntil',
+		'TempIDHash',
+		'TempIDExpired',
+		'Salt',
+		'NumVisit'
+	);
 	
 	/**
 	 * @config
@@ -163,6 +186,23 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	private static $session_regenerate_id = true;
 
+
+	/**
+	 * Default lifetime of temporary ids.
+	 *
+	 * This is the period within which a user can be re-authenticated within the CMS by entering only their password
+	 * and without losing their workspace.
+	 *
+	 * Any session expiration outside of this time will require them to login from the frontend using their full
+	 * username and password.
+	 *
+	 * Defaults to 72 hours. Set to zero to disable expiration.
+	 *
+	 * @config
+	 * @var int Lifetime in seconds
+	 */
+	private static $temp_id_lifetime = 259200;
+
 	/**
 	 * @deprecated 3.2 Use the "Member.session_regenerate_id" config setting instead
 	 */
@@ -182,25 +222,42 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 		// Default groups should've been built by Group->requireDefaultRecords() already
+		static::default_admin();
+	}
+
+	/**
+	 * Get the default admin record if it exists, or creates it otherwise if enabled
+	 *
+	 * @return Member
+	 */
+	public static function default_admin() {
+		// Check if set
+		if(!Security::has_default_admin()) return null;
 		
 		// Find or create ADMIN group
+		singleton('Group')->requireDefaultRecords();
 		$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
-		if(!$adminGroup) {
-			singleton('Group')->requireDefaultRecords();
-			$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
-		}
-		
-		// Add a default administrator to the first ADMIN group found (most likely the default
-		// group created through Group->requireDefaultRecords()).
-		$admins = Permission::get_members_by_permission('ADMIN')->First();
-		if(!$admins) {
-			// Leave 'Email' and 'Password' are not set to avoid creating
+
+		// Find member
+		$admin = Member::get()
+			->filter('Email', Security::default_admin_username())
+			->first();
+		if(!$admin) {
+			// 'Password' is not set to avoid creating
 			// persistent logins in the database. See Security::setDefaultAdmin().
+			// Set 'Email' to identify this as the default admin
 			$admin = Member::create();
 			$admin->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
+			$admin->Email = Security::default_admin_username();
 			$admin->write();
+		}
+
+		// Ensure this user is in the admin group
+		if(!$admin->inGroup($adminGroup)) {
 			$admin->Groups()->add($adminGroup);
 		}
+
+		return $admin;
 	}
 
 	/**
@@ -415,10 +472,27 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$this->LockedOutUntil = null;
 		}
 
+		$this->regenerateTempID();
+
 		$this->write();
 		
 		// Audit logging hook
 		$this->extend('memberLoggedIn');
+	}
+
+	/**
+	 * Trigger regeneration of TempID.
+	 *
+	 * This should be performed any time the user presents their normal identification (normally Email)
+	 * and is successfully authenticated.
+	 */
+	public function regenerateTempID() {
+		$generator = new RandomGenerator();
+		$this->TempIDHash = $generator->randomToken('sha1');
+		$this->TempIDExpired = self::config()->temp_id_lifetime
+			? date('Y-m-d H:i:s', strtotime(SS_Datetime::now()->getValue()) + self::config()->temp_id_lifetime)
+			: null;
+		$this->write();
 	}
 
 	/**
@@ -577,6 +651,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Return the member for the auto login hash
 	 *
 	 * @param bool $login Should the member be logged in?
+	 * @return Member
 	 */
 	public static function member_from_autologinhash($RAW_hash, $login = false) {
 		$SQL_hash = Convert::raw2sql($RAW_hash);
@@ -590,6 +665,24 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$member->logIn();
 
 		return $member;
+	}
+
+	/**
+	 * Find a member record with the given TempIDHash value
+	 *
+	 * @param string $tempid
+	 * @return Member
+	 */
+	public static function member_from_tempid($tempid) {
+		$members = Member::get()
+			->filter('TempIDHash', $tempid);
+
+		// Exclude expired
+		if(static::config()->temp_id_lifetime) {
+			$members = $members->filter('TempIDExpired:GreaterThan', SS_Datetime::now()->getValue());
+		}
+
+		return $members->first();
 	}
 
 	/**
@@ -617,17 +710,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			i18n::get_existing_translations()
 		));
 
-		$fields->removeByName('RememberLoginToken');
-		$fields->removeByName('NumVisit');
-		$fields->removeByName('LastVisited');
-		$fields->removeByName('AutoLoginHash');
-		$fields->removeByName('AutoLoginExpired');
-		$fields->removeByName('PasswordEncryption');
-		$fields->removeByName('Salt');
-		$fields->removeByName('PasswordExpiry');
+		$fields->removeByName(static::config()->hidden_fields);
 		$fields->removeByName('FailedLoginCount');
-		$fields->removeByName('LastViewed');
-		$fields->removeByName('LockedOutUntil');
+
 
 		$this->extend('updateMemberFormFields', $fields);
 		return $fields;
@@ -1224,20 +1309,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				_t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'), 
 				i18n::get_existing_translations()
 			));
-
-			$mainFields->removeByName('RememberLoginToken');
-			$mainFields->removeByName('AutoLoginHash');
-			$mainFields->removeByName('AutoLoginExpired');
-			$mainFields->removeByName('PasswordEncryption');
-			$mainFields->removeByName('PasswordExpiry');
-			$mainFields->removeByName('LockedOutUntil');
+			$mainFields->removeByName($self->config()->hidden_fields);
 			
 			if( ! $self->config()->lock_out_after_incorrect_logins) {
 				$mainFields->removeByName('FailedLoginCount');
 			}
-			
-			$mainFields->removeByName('Salt');
-			$mainFields->removeByName('NumVisit');
 
 			$mainFields->makeFieldReadonly('LastVisited');
 

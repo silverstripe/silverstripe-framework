@@ -1,0 +1,63 @@
+.cms-security {
+		
+	h1 {
+		margin: 45px 40px 5px 25px;
+		font-size: 1.9em;
+		line-height: 1.2;
+		font-weight: bold;
+	}
+	
+	.Content {
+		margin: 0 50px 0 25px;
+	}
+	
+	.Form {
+		margin: 0 25px;
+		
+		.field {
+			border: 0 none;
+			@include box-shadow(none);
+			margin: 0;
+			padding: 0;
+			
+			label.left {
+				float: none;
+				width: auto;
+			}
+			.middleColumn {
+				margin: 0;
+			}
+		}
+		
+		#Password {
+			width: 300px;
+			float: left;
+		}
+		
+		#ForgotPassword {
+			float: left;
+			padding: 40px 0 0 10px;
+		}
+		
+		#Remember {
+			clear: both;
+		}
+		
+		.Actions {
+			padding: 20px 0 0 0;
+			
+			#doLogout {
+				line-height: 28px;
+				margin: 0 0 0 10px;
+			}
+		}
+	}
+}
+
+.leftandmain-logindialog-dialog .ui-dialog-titlebar-close {
+	display: none;
+}
+
+.leftandmain-logindialog-overlay {
+	opacity: 0.8;
+}

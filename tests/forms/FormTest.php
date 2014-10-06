@@ -299,6 +299,7 @@ class FormTest extends FunctionalTest {
 	
 	public function testDisableSecurityTokenAcceptsSubmissionWithoutToken() {
 		SecurityToken::enable();
+		$expectedToken = SecurityToken::inst()->getValue();
 		
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
 		// can't use submitForm() as it'll automatically insert SecurityID into the POST data
@@ -312,16 +313,30 @@ class FormTest extends FunctionalTest {
 		);
 		$this->assertEquals(400, $response->getStatusCode(), 'Submission fails without security token');
 
+		// Generate a new token which doesn't match the current one
+		$generator = new RandomGenerator();
+		$invalidToken = $generator->randomToken('sha1');
+		$this->assertNotEquals($invalidToken, $expectedToken);
+
+		// Test token with request
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
 		$response = $this->post(
 			'FormTest_ControllerWithSecurityToken/Form',
 			array(
 				'Email' => 'test@test.com',
 				'action_doSubmit' => 1,
-				'SecurityID' => -1
+				'SecurityID' => $invalidToken
 			)
 		);
 		$this->assertEquals(200, $response->getStatusCode(), 'Submission reloads form if security token invalid');
+		$this->assertTrue(
+			stripos($response->getBody(), 'name="SecurityID" value="'.$expectedToken.'"') !== false,
+			'Submission reloads with correct security token after failure'
+		);
+		$this->assertTrue(
+			stripos($response->getBody(), 'name="SecurityID" value="'.$invalidToken.'"') === false,
+			'Submission reloads without incorrect security token after failure'
+		);
 
 		$matched = $this->cssParser()->getBySelector('#Form_Form_Email');
 		$attrs = $matched[0]->attributes();

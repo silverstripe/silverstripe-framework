@@ -1,5 +1,8 @@
 <?php
 class SecurityDefaultAdminTest extends SapphireTest {
+
+	protected $defaultUsername = null;
+	protected $defaultPassword = null;
 	
 	public function setUp() {
 		parent::setUp();
@@ -8,18 +11,19 @@ class SecurityDefaultAdminTest extends SapphireTest {
 		// and avoid sideeffects from other tests
 		if(!self::using_temp_db()) self::create_temp_db();
 		self::empty_temp_db();
+
+		$this->defaultUsername = Security::default_admin_username();
+		$this->defaultPassword = Security::default_admin_password();
+		Security::clear_default_admin();
+		Security::setDefaultAdmin('admin', 'password');
+	}
+
+	public function tearDown() {
+		Security::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
+		parent::tearDown();
 	}
 	
 	public function testCheckDefaultAdmin() {
-		if(Security::has_default_admin()) {
-			$this->markTestSkipped(
-				'Default admin present. There\'s no way to inspect default admin state, ' .
-				'so we don\'t override existing settings'
-			);
-		}
-		
-		Security::setDefaultAdmin('admin', 'password');
-		
 		$this->assertTrue(Security::has_default_admin());
 		$this->assertTrue(
 			Security::check_default_admin('admin', 'password'),
@@ -33,8 +37,6 @@ class SecurityDefaultAdminTest extends SapphireTest {
 			Security::check_default_admin('admin', 'wrongpassword'),
 			'Fails with incorrect password'
 		);
-		
-		Security::setDefaultAdmin(null, null);
 	}
 	
 	public function testFindAnAdministratorCreatesNewUser() {
@@ -45,8 +47,21 @@ class SecurityDefaultAdminTest extends SapphireTest {
 		
 		$this->assertInstanceOf('Member', $admin);
 		$this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
-		$this->assertNull($admin->Email);
+		$this->assertEquals($admin->Email, Security::default_admin_username());
 		$this->assertNull($admin->Password);
+	}
+
+	public function testDefaultAdmin() {
+		$adminMembers = Permission::get_members_by_permission('ADMIN');
+		$this->assertEquals(0, $adminMembers->count());
+		
+		$admin = Member::default_admin();
+		
+		$this->assertInstanceOf('Member', $admin);
+		$this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
+		$this->assertEquals($admin->Email, Security::default_admin_username());
+		$this->assertNull($admin->Password);
+
 	}
 	
 }
