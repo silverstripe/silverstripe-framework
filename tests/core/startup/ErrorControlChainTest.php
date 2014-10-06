@@ -140,6 +140,21 @@ class ErrorControlChainTest extends SapphireTest {
 			->executeInSubprocess();
 
 		$this->assertEquals('Done', $out);
+
+		// Exceptions
+
+		$chain = new ErrorControlChainTest_Chain();
+
+		list($out, $code) = $chain
+			->then(function(){
+				throw new Exception("bob");
+			})
+			->thenIfErrored(function(){
+				echo "Done";
+			})
+			->executeInSubprocess();
+
+		$this->assertEquals('Done', $out);
 	}
 
 	function testExceptionSuppression() {
