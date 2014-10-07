@@ -572,6 +572,16 @@ class SSViewer implements Flushable {
 	private static $source_file_comments = false;
 
 	/**
+	 * @ignore
+	 */
+	private static $template_cache_flushed = false;
+
+	/**
+	 * @ignore
+	 */
+	private static $cacheblock_cache_flushed = false;
+
+	/**
 	 * Set whether HTML comments indicating the source .SS file used to render this page should be
 	 * included in the output.  This is enabled by default
 	 *
@@ -643,6 +653,7 @@ class SSViewer implements Flushable {
 	 */
 	public static function flush() {
 		self::flush_template_cache();
+		self::flush_cacheblock_cache();
 	}
 
 	/**
@@ -907,11 +918,6 @@ class SSViewer implements Flushable {
 			return $founds[0];
 		}
 	}
-
-	/**
-	 * @ignore
-	 */
-	static private $flushed = false;
 	
 	/**
 	 * Clears all parsed template files in the cache folder.
@@ -919,12 +925,26 @@ class SSViewer implements Flushable {
 	 * Can only be called once per request (there may be multiple SSViewer instances).
 	 */
 	public static function flush_template_cache() {
-		if (!self::$flushed) {
+		if (!self::$template_cache_flushed) {
 			$dir = dir(TEMP_FOLDER);
 			while (false !== ($file = $dir->read())) {
 				if (strstr($file, '.cache')) unlink(TEMP_FOLDER . '/' . $file);
 			}
-			self::$flushed = true;
+			self::$template_cache_flushed = true;
+		}
+	}
+
+	/**
+	 * Clears all partial cache blocks.
+	 *
+	 * Can only be called once per request (there may be multiple SSViewer instances).
+	 */
+	public static function flush_cacheblock_cache() {
+		if (!self::$cacheblock_cache_flushed) {
+			$cache = SS_Cache::factory('cacheblock');
+			$tags = $cache->getTags();
+			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $tags);
+			self::$cacheblock_cache_flushed = true;
 		}
 	}
 
