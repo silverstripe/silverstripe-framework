@@ -395,18 +395,11 @@ class Session {
 	public function inst_destroy($removeCookie = true) {
 		if(session_id()) {
 			if($removeCookie) {
-				$path = Config::inst()->get('Session', 'cookie_path');
-				if(!$path) $path = Director::baseURL();
+				$path = Config::inst()->get('Session', 'cookie_path') ?: Director::baseURL();
 				$domain = Config::inst()->get('Session', 'cookie_domain');
 				$secure = Config::inst()->get('Session', 'cookie_secure');
 
-				if($domain) {
-					Cookie::set(session_name(), '', null, $path, $domain, $secure, true);
-				} else {
-					Cookie::set(session_name(), '', null, $path, null, $secure, true);
-				}
-
-				unset($_COOKIE[session_name()]);
+				Cookie::force_expiry(session_name(), $path, $domain, $secure, true);
 			}
 
 			session_destroy();

@@ -558,7 +558,7 @@ class InjectorTest extends SapphireTest {
 		$injector = new Injector();
 		$service  = new stdClass();
 
-		$injector->registerNamedService('NamedService', $service);
+		$injector->registerService($service, 'NamedService');
 		$this->assertEquals($service, $injector->get('NamedService'));
 	}
 
