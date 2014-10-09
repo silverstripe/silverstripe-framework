@@ -17,7 +17,7 @@ env:
 
 matrix:
   allow_failures:
-    - php: hhvm-nightly
+    - php: hhvm
   include:
     - php: 5.5
       env: DB=MYSQL
@@ -27,7 +27,7 @@ matrix:
       env: DB=MYSQL BEHAT_TEST=1
     - php: 5.3
       env: DB=MYSQL
-    - php: hhvm-nightly
+    - php: hhvm
       env: DB=MYSQL
       before_install:
         - sudo apt-get update -qq
