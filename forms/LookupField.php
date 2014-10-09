@@ -67,7 +67,7 @@ class LookupField extends DropdownField {
 
 			$inputValue = implode(', ', array_values($values)); 
 		} else {
-			$attrValue = "<i>(none)</i>";
+			$attrValue = '<i>('._t('FormField.NONE', 'none').')</i>';
 			$inputValue = '';
 		}
 
