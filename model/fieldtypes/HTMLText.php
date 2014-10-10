@@ -91,48 +91,22 @@ class HTMLText extends Text {
 	 * @see framework/core/model/fieldtypes/Text#Summary($maxWords)
 	 */
 	public function Summary($maxWords = 50, $flex = 15, $add = '...') {
-		$str = false;
-
-		/* First we need the text of the first paragraph, without tags. Try using SimpleXML first */
-		if (class_exists('SimpleXMLElement')) {
-			$doc = new DOMDocument();
-			
-			// Catch warnings thrown by loadHTML and turn them into a failure boolean rather than a SilverStripe error
-			set_error_handler(create_function('$no, $str', 'throw new Exception("HTML Parse Error: ".$str);'), E_ALL);
-			//  Nonbreaking spaces get converted into weird characters, so strip them
-			$value = str_replace('&nbsp;', ' ', $this->value);
-			try {
-				$res = $doc->loadHTML('<meta content="text/html; charset=utf-8" http-equiv="Content-type"/>' . $value);
-			}
-			catch (Exception $e) { $res = false; }
-			restore_error_handler();
-			
-			if ($res) {
-				$xml = simplexml_import_dom($doc);
-				$res = $xml->xpath('//p');
-				if (!empty($res)) $str = strip_tags($res[0]->asXML());
-			}
-		}
-		
-		/* If that failed, most likely the passed HTML is broken. use a simple regex + a custom more brutal strip_tags.
+		/* use a simple regex + a custom more brutal strip_tags.
 		 * We don't use strip_tags because that does very badly on broken HTML */
-		if (!$str) {
-			/* See if we can pull a paragraph out*/
 
-			// Strip out any images in case there's one at the beginning. Not doing this will return a blank paragraph
-			$str = preg_replace('{^\s*(<.+?>)*<img[^>]*>}', '', $this->value);
-			if (preg_match('{<p(\s[^<>]*)?>(.*[A-Za-z]+.*)</p>}', $str, $matches)) $str = $matches[2];
+		// Strip out any images in case there's one at the beginning. Not doing this will return a blank paragraph
+		$str = preg_replace('{^\s*(<.+?>)*<img[^>]*>}', '', $this->value);
+		if (preg_match('{<p(\s[^<>]*)?>(.*[A-Za-z]+.*)</p>}', $str, $matches)) $str = $matches[2];
 
-			/* If _that_ failed, just use the whole text */
-			if (!$str) $str = $this->value;
-			
-			/* Now pull out all the html-alike stuff */
-			/* Take out anything that is obviously a tag */
-			$str = preg_replace('{</?[a-zA-Z]+[^<>]*>}', '', $str); 
-			/* Strip out any left over looking bits. Textual < or > should already be encoded to &lt; or &gt; */
-			$str = preg_replace('{</|<|>}', '', $str); 
-		}
-		
+		/* If _that_ failed, just use the whole text */
+		if (!$str) $str = $this->value;
+
+		/* Now pull out all the html-alike stuff */
+		/* Take out anything that is obviously a tag */
+		$str = preg_replace('{</?[a-zA-Z]+[^<>]*>}', '', $str);
+		/* Strip out any left over looking bits. Textual < or > should already be encoded to &lt; or &gt; */
+		$str = preg_replace('{</|<|>}', '', $str);
+
 		/* Now split into words. If we are under the maxWords limit, just return the whole string (re-implode for
 		 * whitespace normalization) */
 		$words = preg_split('/\s+/', $str);
