@@ -101,7 +101,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 * Triggered early in the request when someone requests a flush.
 	 */
 	public static function flush() {
-		self::get_cache()->clean(Zend_Cache::CLEANING_MODE_ALL);
+		self::get_cache()->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('Zend_Translate'));
 	}
 
 	/**

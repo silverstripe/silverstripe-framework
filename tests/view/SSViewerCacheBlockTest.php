@@ -123,6 +123,18 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
 		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 2)), '1');
 	}
+
+	/**
+	 * Test that the cacheblocks invalidate when a flush occurs.
+	 */
+	public function testBlocksInvalidateOnFlush() {
+		Director::test('/');
+		$this->_reset(true);
+		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
+
+		Director::test('/?flush=1');
+		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 2)), '2');
+	}
 	
 	public function testVersionedCache() {
 				
