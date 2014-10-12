@@ -407,14 +407,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		// Thanks to this however, we are able to nest GridFields, and also access the initial Controller by
 		// dereferencing GridFieldDetailForm_ItemRequest->getController() multiple times. See getToplevelController
 		// below.
-		$form = new Form(
+		$form = new GridFieldItemEditForm(
 			$this,
 			'ItemEditForm',
 			$fields,
 			$actions,
 			$this->component->getValidator()
 		);
-		
+
 		$form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
 
 		if($this->record->ID && !$canEdit) {
@@ -490,8 +490,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			} 
 		}
 		if(!$backlink) $backlink = $toplevelController->Link();
-		
-		return $backlink;
+		//Persist the state of the model admin filter by adding the 'q' get variables if present.
+		$filterVars = $toplevelController->getRequest()->getVar('q');
+		return $backlink . (!empty($filterVars) && !strpos($backlink, '?') ? '?' . http_build_query(array('q' => $filterVars)) : '');
 	}
 
 	
