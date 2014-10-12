@@ -709,7 +709,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return int
 	 */
 	public function count() {
-		return $this->dataQuery->count();
+		return (int)$this->dataQuery->count();
 	}
 	
 	/**
