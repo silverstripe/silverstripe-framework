@@ -1,20 +1,10 @@
-# JavaScript
+title: Javascript Development
+summary: Advanced documentation about writing and customizing javascript within SilverStripe.
 
-**Important: Parts of this guide apply to the SilverStripe 2.4 release, particularly around the jQuery.entwine
-library.**
+# Javascript Development
 
-This page describes best practices for developing with JavaScript in SilverStripe. This includes work in the CMS
-interface, form widgets and custom project code. It is geared towards our "library of choice", jQuery, but most
-practices can be applied to other libraries as well.
-
-## File Inclusion
-
-SilverStripe-driven code should use the `[api:Requirements]` class to manage clientside dependencies like CSS and JavaScript
-files, rather than including `<script>` and `<link>` tags in your templates. This has the advantage that a registry
-of requirements can be built up from different places outside of the main controller, for example included `[api:FormField]`
-instances.
-
-See [requirements](/reference/requirements) documentation.
+The following document is an advanced guide on building rich javascript interactions within the SilverStripe CMS and
+a list of our best practices for contributing and modifying the core javascript framework.
 
 ## jQuery, jQuery UI and jQuery.entwine: Our libraries of choice
 
@@ -27,21 +17,13 @@ SilverStripe CMS uses [jQuery UI](http://ui.jquery.com) on top of jQuery.
 For any custom code developed with jQuery, you have four choices to structure it: Custom jQuery Code, a jQuery Plugin, a
 jQuery UI Widget, or a `jQuery.entwine` behaviour. We'll detail below where each solution is appropriate.
 
-<div class="hint" markdown='1'>
-**Important**: Historically we have been using [PrototypeJS](http://prototypejs.com), which is now discouraged. SilverStripe as a framework doesn't impose a choice of library. It
-tries to generate meaningful markup which you can alter with other JavaScript libraries as well. Only the CMS itself and
-certain form widgets require jQuery to function correctly. You can also use jQuery in parallel with other libraries, see
-[here](http://docs.jquery.com/Using_jQuery_with_Other_Libraries).
-</div>
+## Custom jQuery Code
 
-### Custom jQuery Code
-
-jQuery allows you to write complex behaviour in a couple of lines of JavaScript. Smaller features which aren't likely to
+jQuery allows you to write complex behavior in a couple of lines of JavaScript. Smaller features which aren't likely to
 be reused can be custom code without further encapsulation. For example, a button rollover effect doesn't require a full
 plugin. See "[How jQuery Works](http://docs.jquery.com/How_jQuery_Works)" for a good introduction.
 
-You should write all your custom jQuery code in a closure. This will prevent jQuery from conflicting from any prototype
-code or any other framework code.
+You should write all your custom jQuery code in a closure. 
 
 	:::javascript
 	(function($) {
@@ -50,18 +32,10 @@ code or any other framework code.
 		})
 	})(jQuery);
 
-### Custom jQuery/JavaScript in the CMS
+## jQuery Plugins
 
-To call additional Javascript or jQuery files in to the CMS, edit your mysite/config/config.yml file as follows:
-
-	:::javascript
-	LeftAndMain: 
-	   extra_requirements_javascript:
-	      - '/path/to/file.js'
-	      
-### jQuery Plugins
-
-A jQuery Plugin is essentially a method call which can act on a collection of DOM elements. It is contained within the `jQuery.fn` namespace, and attaches itself automatically to all jQuery collections. The basics for are outlined in the
+A jQuery Plugin is essentially a method call which can act on a collection of DOM elements. It is contained within the 
+`jQuery.fn` namespace, and attaches itself automatically to all jQuery collections. The basics for are outlined in the
 official [jQuery Plugin Authoring](http://docs.jquery.com/Plugins/Authoring) documentation.
 
 There a certain [documented patterns](http://www.learningjquery.com/2007/10/a-plugin-development-pattern) for plugin
@@ -120,7 +94,7 @@ Usage:
 	})(jQuery);
 
 
-### jQuery UI Widgets
+## jQuery UI Widgets
 
 UI Widgets are jQuery Plugins with a bit more structure, targeted towards interactive elements. They require jQuery and
 the core libraries in jQuery UI, so are generally more heavyweight if jQuery UI isn't already used elsewhere.
@@ -186,7 +160,7 @@ Usage:
 	})(jQuery);
 
 
-### entwine: Defining Behaviour and Public APIs
+### jQuery.Entwine
 
 jQuery.entwine is a third-party plugin, from its documentation:
 "A basic desire for jQuery programming is some sort of OO or other organisational method for code. For your
@@ -605,55 +579,7 @@ Example: JSpec Shopping cart test (from [visionmedia.github.com](http://visionme
 	  end
 	end
 
-### Javascript in the CMS	{#javascript-cms}
-
-The CMS has a number of Observer-pattern hooks you can access: (The elements which are notified are listed in brackets.)
-
-  * Close -- when 'folder' in SiteTree is closed. (form?)
-  * BeforeSave -- after user clicks 'Save', before AJAX save-request (#Form_EditForm)
-  * PageLoaded -- after new SiteTree page is loaded. (#Form_EditForm)
-  * PageSaved -- after AJAX save-request is successful (#Form_EditForm)
-  * SelectionChanged -- when new item is chosen from SiteTree (.cms-tree)
-
-Here's an example of hooking the 'PageLoaded' and 'BeforeSave' methods:
-
-	:::javascript
-	/*
-	* Observe the SiteTree 'PageLoaded' event, called whenever a SiteTree page is
-	* opened or reloaded in the CMS.
-	*
-	* Also observe 'BeforeSave' which is called when the Save button is pressed,
-	* before the AJAX call to save the page is sent.
-	*/
-	Behaviour.register({
-		'#Form_EditForm' : {
-			initialize : function() {
-				this.observeMethod('PageLoaded', this.pageLoaded);
-				this.observeMethod('BeforeSave', this.beforeSave);
-				this.pageLoaded(); // call pageload initially too.
-			},
-
-			pageLoaded : function() {
-				alert("You loaded a page");
-			},
-
-			beforeSave: function() {
-				alert("You clicked save");
-			}
-		} // #Form_EditForm
-	});
-
-
-See ['onload' javascript in the CMS](/reference/leftandmain#onload-javascript)
-
-
-### Break the rules!
-
-The guidelines are not intended to be hard and fast rules; they cover the most common cases but not everything. Don't be
-afraid to experiment with using other approaches.
-
 ## Related
 
-* [css](css)
 * [Unobtrusive Javascript](http://www.onlinetools.org/articles/unobtrusivejavascript/chapter1.html)
 * [Quirksmode: In-depth Javascript Resources](http://www.quirksmode.org/resources.html)
