@@ -681,6 +681,27 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(array_intersect($values, array('Joe', 'Bob')), $values);
 	}
 
+	public function testFilterOnImplicitJoin() {
+		// Many to many
+		$list = DataObjectTest_Team::get()
+			->filter('Players.FirstName', array('Captain', 'Captain 2'));
+
+		$this->assertEquals(2, $list->count());
+
+		// Has many
+		$list = DataObjectTest_Team::get()
+			->filter('Comments.Name', array('Joe', 'Phil'));
+
+		$this->assertEquals(2, $list->count());
+
+		// Has one
+		$list = DataObjectTest_Player::get()
+			->filter('FavouriteTeam.Title', 'Team 1');
+
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('007', $list->first()->ShirtNumber);
+	}
+
 	public function testFilterAndExcludeById() {
 		$id = $this->idFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$list = DataObjectTest_SubTeam::get()->filter('ID', $id);
