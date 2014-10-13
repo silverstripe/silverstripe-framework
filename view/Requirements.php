@@ -758,12 +758,22 @@ class Requirements_Backend {
 				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
 
 				// We put script tags into the body, for performance.
-				// If your template already has script tags in the body, then we put our script
+				// If your template already has script tags in the body, then we try to put our script
 				// tags just before those. Otherwise, we put it at the bottom.
 				$p2 = stripos($content, '<body');
 				$p1 = stripos($content, '<script', $p2);
+				
+				$commentTags = array();
+				$canWriteToBody = ($p1 !== false)
+					&&
+					//check that the script tag is not inside a html comment tag
+					!(
+						preg_match('/.*(?|(?<tag><!--)|(?<tag>-->))/U', $content, $commentTags, 0, $p1)
+						&& 
+						$commentTags['tag'] == '-->'
+					);
 
-				if($p1 !== false) {
+				if($canWriteToBody) {
 					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
 				} else {
 					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
