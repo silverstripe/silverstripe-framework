@@ -324,8 +324,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 * @todo In the future, we will probably need to come up with a tigher object representing a partially
 	 * complete controller with gaps for extra functionality.  This, for example, would be a better way
 	 * of letting Security/login put its log-in form inside a UI specified elsewhere.
-	 * 
-	 * @return Form 
+	 *
+	 * @return GridFieldItemEditForm
 	 */
 	public function ItemEditForm() {
 		$list = $this->gridField->getList();
@@ -407,7 +407,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		// Thanks to this however, we are able to nest GridFields, and also access the initial Controller by
 		// dereferencing GridFieldDetailForm_ItemRequest->getController() multiple times. See getToplevelController
 		// below.
-		$form = new Form(
+		$form = new GridFieldItemEditForm(
 			$this,
 			'ItemEditForm',
 			$fields,
@@ -490,8 +490,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			} 
 		}
 		if(!$backlink) $backlink = $toplevelController->Link();
-		
-		return $backlink;
+		//Persist the state of the model admin/page list view filter by adding the 'q' get variables if present.
+		$filterVars = $toplevelController->getRequest()->getVar('q');
+		return $backlink .
+		(!empty($filterVars) && !strpos($backlink, '?')
+			? '?' . http_build_query(array('q' => $filterVars))
+			: ''
+		);
 	}
 
 	

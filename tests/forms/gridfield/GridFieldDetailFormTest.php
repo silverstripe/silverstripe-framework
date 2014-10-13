@@ -27,7 +27,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		$addform = $parser->getBySelector('#Form_ItemEditForm');
+		$addform = $parser->getBySelector('#GridFieldItemEditForm_ItemEditForm');
 		$addformurl = (string) $addform[0]['action'];
 
 		$response = $this->post(
@@ -74,7 +74,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		$addform = $parser->getBySelector('#Form_ItemEditForm');
+		$addform = $parser->getBySelector('#GridFieldItemEditForm_ItemEditForm');
 		$addformurl = (string) $addform[0]['action'];
 
 		$response = $this->post(
@@ -106,8 +106,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$response = $this->get($viewLink);
 		$parser   = new CSSContentParser($response->getBody());
 
-		$firstName = $parser->getBySelector('#Form_ItemEditForm_FirstName');
-		$surname   = $parser->getBySelector('#Form_ItemEditForm_Surname');
+		$firstName = $parser->getBySelector('#GridFieldItemEditForm_ItemEditForm_FirstName');
+		$surname   = $parser->getBySelector('#GridFieldItemEditForm_ItemEditForm_Surname');
 
 		$this->assertFalse($response->isError());
 		$this->assertEquals('Jane', (string) $firstName[0]);
@@ -133,7 +133,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		$editform = $parser->getBySelector('#Form_ItemEditForm');
+		$editform = $parser->getBySelector('#GridFieldItemEditForm_ItemEditForm');
 		$editformurl = (string) $editform[0]['action'];
 		
 		$response = $this->post(
@@ -168,10 +168,12 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$response = $this->get($editlink);
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
-		$editform = $parser->getBySelector('#Form_ItemEditForm');
+		$editform = $parser->getBySelector('#GridFieldItemEditForm_ItemEditForm');
 		$editformurl = (string) $editform[0]['action'];
 
-		$manyManyField = $parser->getByXpath('//*[@id="Form_ItemEditForm"]//input[@name="ManyMany[IsPublished]"]');
+		$manyManyField = $parser->getByXpath(
+			'//*[@id="GridFieldItemEditForm_ItemEditForm"]//input[@name="ManyMany[IsPublished]"]'
+		);
 		$this->assertTrue((bool)$manyManyField);
 		
 		$response = $this->post(
@@ -215,7 +217,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$response = $this->get((string)$groupEditLink[0]['href']);
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
-		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]' .
+		$personEditLink = $parser->getByXpath('//fieldset[@id="GridFieldItemEditForm_ItemEditForm_People"]' .
 			'//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
 		$this->assertEquals(
 			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
@@ -227,7 +229,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$response = $this->get((string)$personEditLink[0]['href']);
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
-		$categoryEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_Categories"]'
+		$categoryEditLink = $parser->getByXpath('//fieldset[@id="GridFieldItemEditForm_ItemEditForm_Categories"]'
 			. '//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');	
 		$this->assertEquals(
 			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
