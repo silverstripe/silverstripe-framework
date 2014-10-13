@@ -1,7 +1,12 @@
 summary: This guide covers user authentication, the permission system and how to secure your code against malicious behaviors
 
-[CHILDREN]
+# Security and User Authentication
 
-## How-to
+This guide covers using and extending the user authentication in SilverStripe, permissions, user groups and roles, and 
+how to secure your code against malicious behaviors of both your users and hackers.
 
-[CHILDREN How_To]
+[CHILDREN Exclude=How_to]
+
+## How to's
+
+[CHILDREN Folder=How_To]
