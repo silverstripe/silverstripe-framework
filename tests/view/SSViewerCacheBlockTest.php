@@ -128,18 +128,18 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	 * Test that the cacheblocks invalidate when a flush occurs.
 	 */
 	public function testBlocksInvalidateOnFlush() {
-		// Enable caching
+		Director::test('/?flush=1');
 		$this->_reset(true);
 
-		// This property must be false, or the flush won't occur. This can be affected by other tests
-		// if they trigger a flush via Flushable
-		$reflectionProp = new ReflectionProperty('SSViewer', 'cacheblock_cache_flushed');
-		$reflectionProp->setAccessible(true);
-		$reflectionProp->setValue(false);
-
+		// Generate cached value for foo = 1
 		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
 
-		SSViewer::flush_cacheblock_cache();
+		// Test without flush
+		Director::test('/');
+		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 3)), '1');
+
+		// Test with flush
+		Director::test('/?flush=1');
 		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 2)), '2');
 	}
 	
