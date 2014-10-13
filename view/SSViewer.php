@@ -652,8 +652,8 @@ class SSViewer implements Flushable {
 	 * Triggered early in the request when someone requests a flush.
 	 */
 	public static function flush() {
-		self::flush_template_cache();
-		self::flush_cacheblock_cache();
+		self::flush_template_cache(true);
+		self::flush_cacheblock_cache(true);
 	}
 
 	/**
@@ -923,9 +923,12 @@ class SSViewer implements Flushable {
 	 * Clears all parsed template files in the cache folder.
 	 *
 	 * Can only be called once per request (there may be multiple SSViewer instances).
+	 *
+	 * @param bool $force Set this to true to force a re-flush. If left to false, flushing
+	 * may only be performed once a request.
 	 */
-	public static function flush_template_cache() {
-		if (!self::$template_cache_flushed) {
+	public static function flush_template_cache($force = false) {
+		if (!self::$template_cache_flushed || $force) {
 			$dir = dir(TEMP_FOLDER);
 			while (false !== ($file = $dir->read())) {
 				if (strstr($file, '.cache')) unlink(TEMP_FOLDER . '/' . $file);
@@ -938,9 +941,12 @@ class SSViewer implements Flushable {
 	 * Clears all partial cache blocks.
 	 *
 	 * Can only be called once per request (there may be multiple SSViewer instances).
+	 *
+	 * @param bool $force Set this to true to force a re-flush. If left to false, flushing
+	 * may only be performed once a request.
 	 */
-	public static function flush_cacheblock_cache() {
-		if (!self::$cacheblock_cache_flushed) {
+	public static function flush_cacheblock_cache($force = false) {
+		if (!self::$cacheblock_cache_flushed || $force) {
 			$cache = SS_Cache::factory('cacheblock');
 			$tags = $cache->getTags();
 			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $tags);
