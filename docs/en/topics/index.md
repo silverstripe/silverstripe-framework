@@ -3,7 +3,8 @@
 This section provides an overview on how things fit together, the "conceptual glue" between APIs and features.
 It is where most documentation should live, and is the natural "second step" after finishing the tutorials.
 
- * [Access Control and Page Security](access-control): Restricting access and setting up permissions on your website
+ * [Access Control and Page Security](access-control): Restricting access and setting up permissions on your website.
+ * [Authentication](authentication): Overview of the default member authentication system.
  * [Caching](caching): Explains built-in caches for classes, config and templates. How to use your own caches.
  * [Command line Usage](commandline): Calling controllers via the command line interface using `sake`
  * [Configuration](configuration): Influence behaviour through PHP and YAML configuration

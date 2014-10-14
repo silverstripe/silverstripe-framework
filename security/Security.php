@@ -6,14 +6,14 @@
  */
 class Security extends Controller {
 	
-	private static $allowed_actions = array( 
-		'index', 
-		'login', 
-		'logout', 
-		'basicauthlogin', 
-		'lostpassword', 
-		'passwordsent', 
-		'changepassword', 
+	private static $allowed_actions = array(
+		'index',
+		'login',
+		'logout',
+		'basicauthlogin',
+		'lostpassword',
+		'passwordsent',
+		'changepassword',
 		'ping',
 		'LoginForm',
 		'ChangePasswordForm',
@@ -200,6 +200,10 @@ class Security extends Controller {
 			if(!Member::currentUser()) {
 				$response->setBody(_t('ContentController.NOTLOGGEDIN','Not logged in'));
 				$response->setStatusDescription(_t('ContentController.NOTLOGGEDIN','Not logged in'));
+				// Tell the CMS to allow re-aunthentication
+				if(CMSSecurity::enabled()) {
+					$response->addHeader('X-Reauthenticate', '1');
+				}
 			}
 			return $response;
 		} else {
@@ -294,26 +298,32 @@ class Security extends Controller {
 	}
 
 	/**
-	 * Get the login form to process according to the submitted data
+	 * Get the selected authenticator for this request
+	 *
+	 * @return string Class name of Authenticator
 	 */
-	public function LoginForm() {
-		if(isset($this->requestParams['AuthenticationMethod'])) {
-			$authenticator = trim($_REQUEST['AuthenticationMethod']);
-
+	protected function getAuthenticator() {
+		$authenticator = $this->request->requestVar('AuthenticationMethod');
+		if($authenticator) {
 			$authenticators = Authenticator::get_authenticators();
 			if(in_array($authenticator, $authenticators)) {
-				return call_user_func(array($authenticator, 'get_login_form'), $this);
+				return $authenticator;
 			}
+		} else {
+			return Authenticator::get_default_authenticator();
 		}
-		else {
-			if($authenticator = Authenticator::get_default_authenticator()) {
-				return call_user_func(array($authenticator, 'get_login_form'), $this);
-			}
-		}
-		
-		user_error('Passed invalid authentication method', E_USER_ERROR);
 	}
 
+	/**
+	 * Get the login form to process according to the submitted data
+	 *
+	 * @return Form
+	 */
+	public function LoginForm() {
+		$authenticator = $this->getAuthenticator();
+		if($authenticator) return $authenticator::get_login_form($this);
+		throw new Exception('Passed invalid authentication method');
+	}
 
 	/**
 	 * Get the login forms for all available authentication methods
@@ -323,15 +333,12 @@ class Security extends Controller {
 	 *
 	 * @todo Check how to activate/deactivate authentication methods
 	 */
-	public function GetLoginForms()
-	{
+	public function GetLoginForms() {
 		$forms = array();
 
 		$authenticators = Authenticator::get_authenticators();
 		foreach($authenticators as $authenticator) {
-			array_push($forms,
-						call_user_func(array($authenticator, 'get_login_form'),
-																$this));
+			$forms[] = $authenticator::get_login_form($this);
 		}
 
 		return $forms;
@@ -345,7 +352,7 @@ class Security extends Controller {
 	 * @return string Returns the link to the given action
 	 */
 	public function Link($action = null) {
-		return "Security/$action";
+		return Controller::join_links(Director::baseURL(), "Security", $action);
 	}
 
 	/**
@@ -373,6 +380,107 @@ class Security extends Controller {
 		}
 	}
 
+	/**
+	 * Perform pre-login checking and prepare a response if available prior to login
+	 *
+	 * @return SS_HTTPResponse Substitute response object if the login process should be curcumvented.
+	 * Returns null if should proceed as normal.
+	 */
+	protected function preLogin() {
+		// Event handler for pre-login, with an option to let it break you out of the login form
+		$eventResults = $this->extend('onBeforeSecurityLogin');
+		// If there was a redirection, return
+		if($this->redirectedTo()) return $this->response;
+		// If there was an SS_HTTPResponse object returned, then return that
+		if($eventResults) {
+			foreach($eventResults as $result) {
+				if($result instanceof SS_HTTPResponse) return $result;
+			}
+		}
+	}
+
+	/**
+	 * Prepare the controller for handling the response to this request
+	 *
+	 * @param string $title Title to use
+	 * @return Controller
+	 */
+	protected function getResponseController($title) {
+		if(!class_exists('SiteTree')) return $this;
+
+		// Use sitetree pages to render the security page
+		$tmpPage = new Page();
+		$tmpPage->Title = $title;
+		$tmpPage->URLSegment = "Security";
+		// Disable ID-based caching  of the log-in page by making it a random number
+		$tmpPage->ID = -1 * rand(1,10000000);
+
+		$controller = Page_Controller::create($tmpPage);
+		$controller->setDataModel($this->model);
+		$controller->init();
+		return $controller;
+	}
+
+	/**
+	 * Determine the list of templates to use for rendering the given action
+	 *
+	 * @param string $action
+	 * @return array Template list
+	 */
+	protected function getTemplatesFor($action) {
+		return array("Security_{$action}", 'Security', $this->stat('template_main'), 'BlankPage');
+	}
+
+	/**
+	 * Combine the given forms into a formset with a tabbed interface
+	 *
+	 * @param array $forms List of LoginForm instances
+	 * @return string
+	 */
+	protected function generateLoginFormSet($forms) {
+		// Include resources
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/Security_login.css');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TabSet.js');
+		
+		$content = '<div id="Form_EditForm">';
+		$content .= '<div class="ss-tabset">';
+		$content .= '<ul>';
+		$contentForms = '';
+
+		foreach($forms as $form) {
+			$content .= "<li><a href=\"#{$form->FormName()}_tab\">"
+				. $form->getAuthenticator()->get_name()
+				. "</a></li>\n";
+
+			$contentForms .= '<div class="tab" id="' . $form->FormName() . '_tab">'
+				. $form->forTemplate() . "</div>\n";
+		}
+
+		$content .= "</ul>\n" . $contentForms . "\n</div>\n</div>\n";
+		return $content;
+	}
+
+	/**
+	 * Get the HTML Content for the $Content area during login
+	 *
+	 * @return string Message in HTML format
+	 */
+	protected function getLoginMessage() {
+		$message = Session::get('Security.Message.message');
+		if(empty($message)) return null;
+
+		$messageType = Session::get('Security.Message.type');
+		if($messageType === 'bad') {
+			return "<p class=\"message $messageType\">$message</p>";
+		} else {
+			return "<p>$message</p>";
+		}
+	}
+
 
 	/**
 	 * Show the "login" page
@@ -380,91 +488,36 @@ class Security extends Controller {
 	 * @return string Returns the "login" page as HTML code.
 	 */
 	public function login() {
-		// Event handler for pre-login, with an option to let it break you out of the login form
-		$eventResults = $this->extend('onBeforeSecurityLogin');
-		// If there was a redirection, return
-		if($this->redirectedTo()) return;
-		// If there was an SS_HTTPResponse object returned, then return that
-		else if($eventResults) {
-			foreach($eventResults as $result) {
-				if($result instanceof SS_HTTPResponse) return $result;
-			}
-		}
-		
+		// Check pre-login process
+		if($response = $this->preLogin()) return $response;
+
+		// Legacy: Allow projects to use custom mysite/css/tabs.css here
 		$customCSS = project() . '/css/tabs.css';
 		if(Director::fileExists($customCSS)) {
 			Requirements::css($customCSS);
 		}
 
-		if(class_exists('SiteTree')) {
-			$tmpPage = new Page();
-			$tmpPage->Title = _t('Security.LOGIN', 'Log in');
-			$tmpPage->URLSegment = "Security";
-			// Disable ID-based caching  of the log-in page by making it a random number
-			$tmpPage->ID = -1 * rand(1,10000000);
+		// Get response handler
+		$controller = $this->getResponseController(_t('Security.LOGIN', 'Log in'));
 
-			$controller = Page_Controller::create($tmpPage);
-			$controller->setDataModel($this->model);
-			$controller->init();
-		} else {
-			$controller = $this;
-		}
-
-		// if the controller calls Director::redirect(), this will break early
-		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
-
-		$content = '';
 		$forms = $this->GetLoginForms();
 		if(!count($forms)) {
 			user_error('No login-forms found, please use Authenticator::register_authenticator() to add one',
 				E_USER_ERROR);
 		}
+
+		// if the controller calls Director::redirect(), this will break early
+		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 		
 		// only display tabs when more than one authenticator is provided
 		// to save bandwidth and reduce the amount of custom styling needed 
 		if(count($forms) > 1) {
-			// Needed because the <base href=".."> in the template makes problems
-			// with the tabstrip library otherwise
-			$link_base = Director::absoluteURL($this->Link("login"));
-			
-			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
-			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-			
-			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-			
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-			
-			Requirements::css(FRAMEWORK_DIR . '/css/Security_login.css');
-			
-			Requirements::javascript(FRAMEWORK_DIR . '/javascript/TabSet.js');
-			
-			$content = '<div id="Form_EditForm">';
-			$content .= '<div class="ss-tabset">';
-			$content .= '<ul>';
-			$content_forms = '';
-
-			foreach($forms as $form) {
-				$content .= "<li><a href=\"#{$form->FormName()}_tab\">"
-					. $form->getAuthenticator()->get_name()
-					. "</a></li>\n";
-
-				$content_forms .= '<div class="tab" id="' . $form->FormName() . '_tab">'
-					. $form->forTemplate() . "</div>\n";
-			}
-
-			$content .= "</ul>\n" . $content_forms . "\n</div>\n</div>\n";
+			$content = $this->generateLoginFormSet($forms);
 		} else {
-			$content .= $forms[0]->forTemplate();
+			$content = $forms[0]->forTemplate();
 		}
 		
-		if(strlen($message = Session::get('Security.Message.message')) > 0) {
-			$message_type = Session::get('Security.Message.type');
-			if($message_type == 'bad') {
-				$message = "<p class=\"message $message_type\">$message</p>";
-			} else {
-				$message = "<p>$message</p>";
-			}
-
+		if($message = $this->getLoginMessage()) {
 			$customisedController = $controller->customise(array(
 				"Content" => $message,
 				"Form" => $content,
@@ -478,9 +531,7 @@ class Security extends Controller {
 		Session::clear('Security.Message');
 
 		// custom processing
-		return $customisedController->renderWith(
-			array('Security_login', 'Security', $this->stat('template_main'), 'BlankPage')
-		);
+		return $customisedController->renderWith($this->getTemplatesFor('login'));
 	}
 	
 	public function basicauthlogin() {
@@ -494,16 +545,7 @@ class Security extends Controller {
 	 * @return string Returns the "lost password" page as HTML code.
 	 */
 	public function lostpassword() {
-		if(class_exists('SiteTree')) {
-			$tmpPage = new Page();
-			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
-			$tmpPage->URLSegment = 'Security';
-			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
-			$controller = Page_Controller::create($tmpPage);
-			$controller->init();
-		} else {
-			$controller = $this;
-		}
+		$controller = $this->getResponseController(_t('Security.LOSTPASSWORDHEADER', 'Lost Password'));
 
 		// if the controller calls Director::redirect(), this will break early
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
@@ -520,9 +562,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(
-			array('Security_lostpassword', 'Security', $this->stat('template_main'), 'BlankPage')
-		);
+		return $customisedController->renderWith($this->getTemplatesFor('lostpassword'));
 	}
 
 
@@ -556,16 +596,7 @@ class Security extends Controller {
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
-		if(class_exists('SiteTree')) {
-			$tmpPage = new Page();
-			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
-			$tmpPage->URLSegment = 'Security';
-			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
-			$controller = Page_Controller::create($tmpPage);
-			$controller->init();
-		} else {
-			$controller = $this;
-		}
+		$controller = $this->getResponseController(_t('Security.LOSTPASSWORDHEADER', 'Lost Password'));
 
 		// if the controller calls Director::redirect(), this will break early
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
@@ -586,9 +617,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(
-			array('Security_passwordsent', 'Security', $this->stat('template_main'), 'BlankPage')
-		);
+		return $customisedController->renderWith($this->getTemplatesFor('passwordsent'));
 	}
 
 
@@ -622,16 +651,7 @@ class Security extends Controller {
 	 * @return string Returns the "change password" page as HTML code.
 	 */
 	public function changepassword() {
-		if(class_exists('SiteTree')) {
-			$tmpPage = new Page();
-			$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
-			$tmpPage->URLSegment = 'Security';
-			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
-			$controller = Page_Controller::create($tmpPage);
-			$controller->init();
-		} else {
-			$controller = $this;
-		}
+		$controller = $this->getResponseController(_t('Security.CHANGEPASSWORDHEADER', 'Change your password'));
 
 		// if the controller calls Director::redirect(), this will break early
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
@@ -689,9 +709,7 @@ class Security extends Controller {
 			}
 		}
 
-		return $customisedController->renderWith(
-			array('Security_changepassword', 'Security', $this->stat('template_main'), 'BlankPage')
-		);
+		return $customisedController->renderWith($this->getTemplatesFor('changepassword'));
 	}
 	
 	/**
@@ -750,7 +768,19 @@ class Security extends Controller {
 			$member = Permission::get_members_by_permission('ADMIN')->First();
 		}
 
+		if(!$member) {
+			$member = Member::default_admin();
+		}
+
 		return $member;
+	}
+
+	/**
+	 * Flush the default admin credentials
+	 */
+	public static function clear_default_admin() {
+		self::$default_username = null;
+		self::$default_password = null;
 	}
 
 
@@ -796,6 +826,24 @@ class Security extends Controller {
 	 */
 	public static function has_default_admin() {
 		return !empty(self::$default_username) && !empty(self::$default_password);		
+	}
+
+	/**
+	 * Get default admin username
+	 *
+	 * @return string
+	 */
+	public static function default_admin_username() {
+		return self::$default_username;
+	}
+
+	/**
+	 * Get default admin password
+	 *
+	 * @return string
+	 */
+	public static function default_admin_password() {
+		return self::$default_password;
 	}
 
 	/**
