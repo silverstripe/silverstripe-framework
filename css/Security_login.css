@@ -1,4 +1,4 @@
-#Remember { margin: 0.5em 0 0.5em 11em; }
+#Remember { margin: 0.5em 0 0.5em 11em !important; }
 
 p#Remember label { display: inline-block; margin: 0; }
 
