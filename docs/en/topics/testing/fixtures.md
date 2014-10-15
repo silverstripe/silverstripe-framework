@@ -162,7 +162,7 @@ team.
 		private static $many_many_extraFields = array(
 			"Players" => array(
 				"Role" => "Varchar"
-			);
+			)
 		);	
 	}
 
