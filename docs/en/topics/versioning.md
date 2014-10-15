@@ -196,6 +196,5 @@ whenever a blog entry has been published.
 	  // ...
 	  public function onAfterPublish() {
 	    mail("sam@silverstripe.com", "Blog published", "The blog has been published");
-	    parent::onAfterPublish();
 	  }
 	}
