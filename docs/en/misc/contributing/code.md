@@ -14,26 +14,6 @@ Note: By supplying code to the SilverStripe core team in patches, tickets and pu
 We ask for this so that the ownership in the license is clear and unambiguous, and so that community involvement doesn't stop us from being able to continue supporting these projects.  By releasing this code under a permissive license, this copyright assignment won't prevent you from using the code in any way you see fit.
 </div>
 
-## Quickfire Do's and Don't's
-
-If you aren't familiar with git and GitHub, try reading the ["GitHub bootcamp documentation"](http://help.github.com/). 
-We also found the [free online git book](http://progit.org/book/) and the [git crash course](http://gitref.org/) useful.
-If you're familiar with it, here's the short version of what you need to know. Once you fork and download the code:
-
-  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on our [bugtracker](/misc/contributing/issues)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
-x
-  * **Do not merge the upstream master** with your development branch; *rebase* your branch on top of the upstream branch you branched off.
-
-  * **A single development branch should represent changes related to a single issue.** If you decide to work on another issue, create another branch.
-
-  * **Squash your commits, so that each commit addresses a single issue.** After you rebase your work on top of the upstream branch, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Issue #100 Description of the issue here." We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
-
-  * **Choose the correct branch**:  Most pull requests should go against the *pre-release branch*, only 
-  critical bugfixes  against the *release branch*. A *pre-release branch* is any branch which hasn't
-  received a stable [minor release](/misc/release-process#minor-releases), most commonly the master 
-  branch. If you're changing an API or introducing a major feature, the pull request should go against a *pre-release branch*. If this branch already had a beta release, the room 
-  for API changes is very small (read more about our [release process](/misc/release-process)).
-
 ## Step-by-step: From forking to sending the pull request
 
 _**NOTE:** The commands on this page assume that you are branching from `3.1`, at the time of writing this is the pre-release branch._
