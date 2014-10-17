@@ -1,37 +1,38 @@
-# SiteConfig: Global database content
+title: SiteConfig
+summary: Content author configuration through the SiteConfig module.
 
-## Introduction
+# SiteConfig
 
-The `[api:SiteConfig]` panel provides a generic interface for managing site wide settings or
-functionality which is used throughout the site. Out of the box it provides 2 fields 'Site Name' and 'Site Tagline'.
+The `SiteConfig` module provides a generic interface for managing site wide settings or functionality which is used 
+throughout the site. Out of the box this includes selecting the current site theme, site name and site wide access.
 
-## Accessing `[api:SiteConfig]` Options
+## Accessing variables
 
-You can access `[api:SiteConfig]` options from any SS template by using the function $SiteConfig.FieldName
+`SiteConfig` options can be accessed from any template by using the $SiteConfig variable.
 
 	:::ss
 	$SiteConfig.Title 
 	$SiteConfig.Tagline
 	
-	// or 
-	
 	<% with $SiteConfig %>
-	$Title $AnotherField
-	<% end_with %>
+		$Title $AnotherField
+	<% end_loop %>
 
-
-Or if you want to access variables in the PHP you can do
+To access variables in the PHP:
 
 	:::php
 	$config = SiteConfig::current_site_config(); 
-	$config->Title
+	
+	echo $config->Title;
+
+	// returns "Website Name"
 
 
-## Extending `[api:SiteConfig]`
+## Extending SiteConfig
 
-To extend the options available in the panel you can define your own fields via an Extension.
+To extend the options available in the panel, define your own fields via a [api:DataExtension].
 
-Create a mysite/code/CustomSiteConfig.php file.
+**mysite/code/extensions/CustomSiteConfig.php**
 
 	:::php
 	<?php
@@ -43,26 +44,29 @@ Create a mysite/code/CustomSiteConfig.php file.
 		);
 	
 		public function updateCMSFields(FieldList $fields) {
-			$fields->addFieldToTab("Root.Main", new HTMLEditorField("FooterContent", "Footer Content"));
+			$fields->addFieldToTab("Root.Main", 
+				new HTMLEditorField("FooterContent", "Footer Content")
+			);
 		}
 	}
 
+Then activate the extension.
 
-Then activate your extension in your [config.yml](/topics/configuration) file.
+**mysite/_config/app.yml**
 
 	:::yml
 	SiteConfig:
 	  extensions:
 	    - CustomSiteConfig
 
+<div class="notice" markdown="1">
+After adding the class and the YAML change, make sure to rebuild your database by visiting http://yoursite.com/dev/build.
+You may also need to reload the screen with a `flush=1` i.e http://yoursite.com/admin/settings?flush=1.
+</div>
 
-This tells SilverStripe to add the CustomSiteConfig extension to the `[api:SiteConfig]` class. 
-
-After adding those two pieces of code, rebuild your database by visiting http://localhost/dev/build and then reload
-the admin interface. You may need to reload it with a ?flush=1 on the end.
-
-You can define as many extensions for `[api:SiteConfig]` as you need. For example if you are developing a module you can define
-your own global settings for the dashboard.
+You can define as many extensions for `SiteConfig` as you need. For example, if you're developing a module and what to
+provide the users a place to configure settings then the `SiteConfig` panel is the place to go it.
 
 ## API Documentation
-`[api:SiteConfig]`
+
+* `[api:SiteConfig]`
