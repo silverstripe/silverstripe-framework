@@ -5,4 +5,4 @@ summary: Understand the ways to modify the built-in functionality through Extens
 
 ## How-to
 
-[CHILDREN How_To]
+[CHILDREN Folder=How_To]
