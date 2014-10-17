@@ -111,24 +111,44 @@ abstract class StringField extends DBField {
 	 *
 	 * @param int $limit Number of characters to limit by
 	 * @param string $add Ellipsis to add to the end of truncated string
+	 * @param string $completeWord Truncate the string to the last complete 
+	 * word. This will strip all HTML tags in the string if any.
 	 * @return string
 	 */
-	public function LimitCharacters($limit = 20, $add = '...') {
-		$value = trim($this->value);
+	public function LimitCharacters($limit = 20, $add = '...', $completeWord = false) {
+		$value = $completeWord ? Convert::xml2raw(trim($this->value)) : trim($this->value);
+
+		$exceedsLimit = mb_strlen($value) > $limit;
 
 		if($this->stat('escape_type') == 'xml') {
 			$value = strip_tags($value);
 			$value = html_entity_decode($value, ENT_COMPAT, 'UTF-8');
-			$value = (mb_strlen($value) > $limit) ? mb_substr($value, 0, $limit) . $add : $value;
+
+			$exceedsLimit = mb_strlen($value) > $limit;
+
+			// If string exceeds character limit, substring to character limit
+			// Add ellipsis if not limiting to last complete word
+			if($exceedsLimit) {
+				$value = $completeWord ? mb_substr($value, 0, $limit) : mb_substr($value, 0, $limit) . $add;
+			}
+
 			// Avoid encoding all multibyte characters as HTML entities by using htmlspecialchars().
 			$value = htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
 		} else {
-			$value = (mb_strlen($value) > $limit) ? mb_substr($value, 0, $limit) . $add : $value;
+			// If string exceeds character limit, substring to character limit
+			// Add ellipsis if not limiting to last complete word
+			if($exceedsLimit) {
+				$value = $completeWord ? mb_substr($value, 0, $limit) : mb_substr($value, 0, $limit) . $add;
+			}
+		}
+
+		// Find last complete word, trim whitespace/punctuation and add ellipsis
+		if($completeWord && $exceedsLimit) {
+			$value = rtrim(mb_substr($value, 0, mb_strrpos($value, " ")), "/[\.,-\/#!$%\^&\*;:{}=\-_`~()]\s") . $add;
 		}
 
 		return $value;
 	}
-
 
 	/**
 	 * Limit this field's content by a number of words.

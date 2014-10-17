@@ -9,18 +9,39 @@ class TextTest extends SapphireTest {
 	 * Test {@link Text->LimitCharacters()}
 	 */
 	public function testLimitCharacters() {
-		$cases = array(
+		$cases1 = array(
 			'The little brown fox jumped over the lazy cow.' => 'The little brown fox...',
 			'<p>This is some text in a paragraph.</p>' => '<p>This is some text...'
 		);
 		
-		foreach($cases as $originalValue => $expectedValue) {
+		foreach($cases1 as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
 			$textObj->setValue($originalValue);
 			$this->assertEquals($expectedValue, $textObj->LimitCharacters());
 		}
+
+		$cases2 = array(
+			/* Standard words limited, ellipsis added if truncated */
+			'Lorem ipsum dolor sit amet' => 'Lorem ipsum dolor sit...',
+
+			/* Complete words less than the character limit don't get truncated, ellipsis not added */
+			'Lorem ipsum' => 'Lorem ipsum',
+			'Lorem' => 'Lorem',
+			'' => '',	// No words produces nothing!
+
+			/* HTML tags get stripped out, leaving the raw text */
+			'<p>Lorem ipsum dolor sit amet</p>' => 'Lorem ipsum dolor sit...',
+			'<p><span>Lorem ipsum dolor sit amet</span></p>' => 'Lorem ipsum dolor sit...',
+			'<p>Lorem ipsum</p>' => 'Lorem ipsum'
+		);
+
+		foreach($cases2 as $originalValue => $expectedValue) {
+			$textObj = new Text('Test');
+			$textObj->setValue($originalValue);
+			$this->assertEquals($expectedValue, $textObj->LimitCharacters(24, '...', true));
+		}
 	}
-	
+
 	/**
 	 * Test {@link Text->LimitWordCount()}
 	 */
