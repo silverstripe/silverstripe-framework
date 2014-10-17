@@ -22,6 +22,35 @@ class TextTest extends SapphireTest {
 	}
 
 	/**
+	 * Test {@link Text->LimitCharactersToClosestWord()}
+	 */
+	public function testLimitCharactersToClosestWord() {
+		$cases = array(
+			/* Standard words limited, ellipsis added if truncated */
+			'Lorem ipsum dolor sit amet' => 'Lorem ipsum dolor sit...',
+
+			/* Complete words less than the character limit don't get truncated, ellipsis not added */
+			'Lorem ipsum' => 'Lorem ipsum',
+			'Lorem' => 'Lorem',
+			'' => '',	// No words produces nothing!
+
+			/* HTML tags get stripped out, leaving the raw text */
+			'<p>Lorem ipsum dolor sit amet</p>' => 'Lorem ipsum dolor sit...',
+			'<p><span>Lorem ipsum dolor sit amet</span></p>' => 'Lorem ipsum dolor sit...',
+			'<p>Lorem ipsum</p>' => 'Lorem ipsum',
+
+			/* HTML entities are treated as a single character */
+			'Lorem &amp; ipsum dolor sit amet' => 'Lorem &amp; ipsum dolor...'
+		);
+
+		foreach($cases as $originalValue => $expectedValue) {
+			$textObj = new Text('Test');
+			$textObj->setValue($originalValue);
+			$this->assertEquals($expectedValue, $textObj->LimitCharactersToClosestWord(24));
+		}
+	}
+
+	/**
 	 * Test {@link Text->LimitWordCount()}
 	 */
 	public function testLimitWordCount() {
