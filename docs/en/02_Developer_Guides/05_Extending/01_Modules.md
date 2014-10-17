@@ -103,6 +103,16 @@ Git and Subversion provide their own facilities for managing dependent repositor
 This is essentially a variation of the "Archive Download" approach,
 and comes with the same caveats.
 
+
+## Configuration as a module marker
+
+Configuration files also have a secondary sub-role. Modules are identified by the `[api:ManifestBuilder]` by the
+presence of a `_config/` directory (or a `_config.php` file) as a top level item in the module directory.
+
+Although your module may choose not to set any configuration, it must still have a _config directory to be recognised
+as a module by the `[api:ManifestBuilder]`, which is required for features such as autoloading of classes and template
+detection to work.
+
 ## Related
 
 * [Modules Development](/topics/module-development)
