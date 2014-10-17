@@ -45,6 +45,11 @@
  * Email:
  *  - SS_SEND_ALL_EMAILS_TO: If you set this define, all emails will be redirected to this address.
  *  - SS_SEND_ALL_EMAILS_FROM: If you set this define, all emails will be send from this address.
+ *
+ * Error Logging:
+ *  - SS_ERROR_LOG: A path (from the web-root) where the error log file should go. For example, 'silverstripe.log' will
+ *    create a file in the web-root called silverstripe.log, where-as '../../ss-errors.log' will create a file
+ *    called ss-errors.log two directories up from the web-root.
  * 
  * @package framework
  * @subpackage core
