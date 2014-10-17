@@ -1,63 +1,48 @@
+title: Partial Caching
+summary: Cache SilverStripe templates to reduce database queries.
+
 # Partial Caching
 
-## Introduction
-
-Partial caching is a feature that allows the caching of just a portion of a page.
-
-As opposed to static publishing, which avoids the SilverStripe controller layer on cached pages, partial caching allows
-caching for pages that contain a mix of moderately static & user specific data, and still provide full access control
-and permission enforcement.
-
-The trade-off is that it does not provide as much performance improvement as static publishing, although for data heavy
-pages the speed increases can be significant.
-
-## Basics
-
-The way you mark a section of the template as being cached is to wrap that section in a cached tag, like so:
+Partial caching is a feature that allows the caching of just a portion of a page. 
 
 	:::ss
-	<% cached %>
+	<% cached 'CacheKey' %>
 	$DataTable
 	...
 	<% end_cached %>
 
 
-Each cache block has a cache key - an unlimited number of comma separated variables (in the same form as `if` and
-`loop`/`with` tag variables) and quoted strings.
-
-Every time the cache key returns a different result, the contents of the block are recalculated. If the cache key is the
-same as a previous render, the cached value stored last time is used.
+Each cache block has a cache key. A cache key is an unlimited number of comma separated variables and quoted strings. 
+Every time the cache key returns a different result, the contents of the block are recalculated. If the cache key is 
+the same as a previous render, the cached value stored last time is used.
 
 Since the above example contains just one argument as the cache key, a string (which will be the same every render) it
-will invalidate the cache after the TTL has expired (default 10 minutes)
+will invalidate the cache after a given amount of time has expired (default 10 minutes).
 
 Here are some more complex examples:
 
-From a block that updates every time the Page subclass it's the template for updates
-
 	:::ss
-	<% cached 'database', LastEdited %>
-
-
-From a block that shows a login block if not logged in, or a homepage link if logged in, depending on the current member
-
-	:::ss
+	<% cached 'database', LastEdited %> 
+		<!-- that updates every time the record changes. -->
+	<% end_cached %>
+	
 	<% cached 'loginblock', CurrentMember.ID %>
+		<!-- cached unique to the user. i.e for user 2, they will see a different cache to user 1 -->
+	<% end_cached %>
 
-
-From a block that shows a summary of the page edits if administrator, nothing if not
-
-	:::ss
 	<% cached 'loginblock', LastEdited, CurrentMember.isAdmin %>
+		<!-- recached when block object changes, and if the user is admin -->
+	<% end_cached %>
 
-
-An additional global key is incorporated in the cache lookup. The default value for this is
-`$CurrentReadingMode, $CurrentUser.ID`, which ensures that the current `[api:Versioned]` state and user ID are
-used. This may be configured by changing the config value of `SSViewer.global_key`. It is also necessary
-to flush the template caching when modifying this config, as this key is cached within the template itself.
+An additional global key is incorporated in the cache lookup. The default value for this is 
+`$CurrentReadingMode, $CurrentUser.ID`. This ensures that the current `[api:Versioned]` state and user ID are used. 
+This may be configured by changing the config value of `SSViewer.global_key`. It is also necessary to flush the 
+template caching when modifying this config, as this key is cached within the template itself.
 
 For example, to ensure that the cache is configured to respect another variable, and if the current logged in
 user does not influence your template content, you can update this key as below;
+
+**mysite/_config/app.yml**
 
 	:::yaml
 	SSViewer:
@@ -66,39 +51,45 @@ user does not influence your template content, you can update this key as below;
 
 ## Aggregates
 
-Often you want to invalidate a cache when any in a set of objects change, or when the objects in a relationship change.
-To help do this, SilverStripe introduces the concept of Aggregates. These calculate and return SQL aggregates
-on sets of `[api:DataObject]`s - the most useful for us being the Max aggregate.
+Often you want to invalidate a cache when any object in a set of objects change, or when the objects in a relationship 
+change. To do this, SilverStripe introduces the concept of Aggregates. These calculate and return SQL aggregates
+on sets of [api:DataObject]s - the most useful for us being the `Max` aggregate.
 
 For example, if we have a menu, we want that menu to update whenever _any_ page is edited, but would like to cache it
-otherwise. By using aggregates, we can do that like this:
+otherwise. By using aggregates, we do that like this:
 
 	:::ss
 	<% cached 'navigation', List(SiteTree).max(LastEdited), List(SiteTree).count() %>
 
-If we have a block that shows a list of categories, we can make sure the cache updates every time a category is added or
-edited
+The cache for this will update whenever a page is added, removed or edited.
+
+If we have a block that shows a list of categories, we can make sure the cache updates every time a category is added 
+or edited
 
 	:::ss
 	<% cached 'categorylist', List(Category).max(LastEdited), List(Category).count() %>
 
-Note the use of both .max(LastEdited) and .count() - this takes care of both the case where an object has been edited 
-since the cache was last built, and also when an object has been deleted/un-linked since the cache was last built.
+<div class="notice" markdown="1">
+Note the use of both `.max(LastEdited)` and `.count()` - this takes care of both the case where an object has been 
+edited since the cache was last built, and also when an object has been deleted since the cache was last built.
+</div>
 
-We can also calculate aggregates on relationships. A block that shows the current member's favourites needs to update
-whenever the relationship Member::$has_many = array('Favourites' => Favourite') changes.
+We can also calculate aggregates on relationships. A block that shows the current member's favorites needs to update
+whenever the relationship `Member::$has_many = array('Favourites' => Favourite')` changes.
 
 	:::ss
 	<% cached 'favourites', CurrentMember.ID, CurrentMember.Favourites.max(LastEdited) %>
 
 ## Cache key calculated in controller
 
-That last example is a bit large, and is complicating our template up with icky logic. Better would be to extract that
-logic into the controller
+In the previous example the cache key is getting a bit large, and is complicating our template up. Better would be to 
+extract that logic into the controller.
 
 	:::php
+
 	public function FavouriteCacheKey() {
 	    $member = Member::currentUser();
+	
 	    return implode('_', array(
 	        'favourites',
 	        $member->ID,
@@ -106,8 +97,7 @@ logic into the controller
 	    ));
 	}
 
-
-and then using that function in the cache key
+Then using that function in the cache key:
 
 	:::ss
 	<% cached FavouriteCacheKey %>
@@ -159,29 +149,28 @@ heavy load:
 	<% cached 'blogstatistics', Blog.ID if HighLoad %>
 
 
-By adding a HighLoad function to your page controller, you could enable or disable caching dynamically.
+By adding a `HighLoad` function to your `Page_Controller`, you could enable or disable caching dynamically.
 
 To cache the contents of a page for all anonymous users, but dynamically calculate the contents for logged in members,
-you could use something like:
+ use something like:
 
 	:::ss
 	<% cached unless CurrentUser %>
 
+## Uncached
 
-As a shortcut, the template tag 'uncached' can be used - it is the exact equivilent of a cached block with an if
-condition that always returns false. The key and conditionals in an uncached tag are ignored, so you can easily
-temporarily disable a particular cache block by changing just the tag, leaving the key and conditional intact.
+Yhe template tag 'uncached' can be used - it is the exact equivalent of a cached block with an if condition that always 
+returns false. The key and conditionals in an uncached tag are ignored, so you can easily temporarily disable a 
+particular cache block by changing just the tag, leaving the key and conditional intact.
 
 	:::ss
 	<% uncached %>
 
 
-## Nested cacheblocks
+## Nested cache blocks
 
-You can also nest independent cache blocks (with one important rule, discussed later).
-
-Any nested cache blocks are calculated independently from their containing block, regardless of the cached state of that
-container.
+You can also nest independent cache blocks  Any nested cache blocks are calculated independently from their containing 
+block, regardless of the cached state of that container.
 
 This allows you to wrap an entire page in a cache block on the page's LastEdited value, but still keep a member-specific
 portion dynamic, without having to include any member info in the page's cache key.
@@ -217,11 +206,10 @@ could also write the last example as:
 	  $ASlowCalculation
 	<% end_cached %>
 
-
-## The important rule
-
+<div class="warning" markdown="1">
 Currently cached blocks can not be contained within if or loop blocks. The template engine will throw an error
 letting you know if you've done this. You can often get around this using aggregates.
+</div>
 
 Failing example:
 
@@ -235,8 +223,6 @@ Failing example:
 	  <% end_loop %>
 	
 	<% end_cached %>
-
-
 
 Can be re-written as:
 
