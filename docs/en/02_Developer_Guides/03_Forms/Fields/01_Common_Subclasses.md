@@ -1,6 +1,10 @@
+title: Common FormField Types
+summary: A table containing a list of the common FormField subclasses.
+
 # Form Field Types
 
-This is a highlevel overview of available `[api:FormField]` subclasses. An automatically generated list is available through our [API]
+This is a highlevel overview of available `[api:FormField]` subclasses. An automatically generated list is available 
+on the SilverStripe API documentation.
 
 ## Basic
 
@@ -28,7 +32,7 @@ This is a highlevel overview of available `[api:FormField]` subclasses. An autom
  * `[api:DatetimeField]`: Combined date- and time field.
  * `[api:EmailField]`: Text input field with validation for correct email format according to RFC 2822.
  * `[api:GroupedDropdownField]`: Grouped dropdown, using <optgroup> tags.
- * `[api:HtmlEditorField]`.
+ * `[api:HtmlEditorField]`: A WYSIWYG editor interface.
  * `[api:MoneyField]`: A form field that can save into a `[api:Money]` database field.
  * `[api:NumericField]`: Text input field with validation for numeric values.
  * `[api:OptionsetField]`: Set of radio buttons designed to emulate a dropdown.
@@ -67,6 +71,6 @@ doesn't necessarily have any visible styling.
  * `[api:DatalessField]` - Base class for fields which add some HTML to the form but don't submit any data or
 save it to the database
  * `[api:HeaderField]`: Renders a simple HTML header element.
- * `[api:HiddenField]`.
+ * `[api:HiddenField]` - Renders a hidden input field.
  * `[api:LabelField]`: Simple label tag. This can be used to add extra text in your forms.
  * `[api:LiteralField]`: Renders arbitrary HTML into a form.
