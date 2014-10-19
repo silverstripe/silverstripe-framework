@@ -1,3 +1,6 @@
+title: UploadField
+summary: How to use the UploadField class for uploading assets.
+
 # UploadField
 
 ## Introduction
