@@ -1,6 +1,9 @@
+title: Authentication
+summary: Explains SilverStripe's Authentication options and custom authenticators. 
+
 # Authentication
 
-By default, silverstripe provides a `[api:MemberAuthenticator]` class which hooks into its own internal
+By default, SilverStripe provides a `[api:MemberAuthenticator]` class which hooks into its own internal
 authentication system.
 
 The main login system uses these controllers to handle the various security requests:
@@ -39,7 +42,7 @@ following base classes:
 
 ## Default Admin
 
-When a new silverstripe site is created for the first time, it may be necessary to create a default admin to provide
+When a new SilverStripe site is created for the first time, it may be necessary to create a default admin to provide
 CMS access for the first time. SilverStripe provides a default admin configuration system, which allows a username
 and password to be configured for a single special user outside of the normal membership system.
 
