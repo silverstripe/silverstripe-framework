@@ -1,4 +1,7 @@
-# nginx and HHVM
+title: Nginx and HHVM
+summary: Setting up Nginx and HHVM on Debian/Ubuntu using packages.
+
+# Nginx and HHVM
 
 [HHVM](http://hhvm.com/) is a faster alternative to PHP, in that it runs in a virtual machine
 and uses just-in-time (JIT) compilation to achieve better performance over standard PHP.
