@@ -173,6 +173,8 @@ class Upload extends Controller {
 			}
 			while(file_exists("$base/$relativeFilePath")) {
 				$i = isset($i) ? ($i+1) : 2;
+				$oldFilePath = $relativeFilePath;
+
 				$pattern = '/([0-9]+$)/';
 				if(preg_match($pattern, $fileTitle)) {
 					$fileTitle = preg_replace($pattern, $i, $fileTitle);
@@ -180,6 +182,7 @@ class Upload extends Controller {
 					$fileTitle .= $i;
 				}
 				$relativeFilePath = $relativeFolderPath . $fileTitle . $fileSuffix;
+
 				if($oldFilePath == $relativeFilePath && $i > 2) {
 					user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
 				}
