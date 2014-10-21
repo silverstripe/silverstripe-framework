@@ -560,6 +560,70 @@ class UploadTest extends SapphireTest {
 		$image->delete();
 	}
 
+	public function testFileVersioningWithAnExistingFile() {
+		$upload = function($tmpFileName) {
+			// create tmp file
+			$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+			$tmpFileContent = '';
+			for ($i = 0; $i < 10000; $i++) {
+				$tmpFileContent .= '0';
+			}
+			file_put_contents($tmpFilePath, $tmpFileContent);
+
+			// emulates the $_FILES array
+			$tmpFile = array(
+				'name' => $tmpFileName,
+				'type' => 'text/plaintext',
+				'size' => filesize($tmpFilePath),
+				'tmp_name' => $tmpFilePath,
+				'extension' => 'jpg',
+				'error' => UPLOAD_ERR_OK,
+			);
+
+			$v = new UploadTest_Validator();
+
+			// test upload into default folder
+			$u = new Upload();
+			$u->setReplaceFile(false);
+			$u->setValidator($v);
+			$u->load($tmpFile);
+			return $u->getFile();
+		};
+
+		$file1 = $upload('UploadTest-testUpload.jpg');
+		$this->assertEquals(
+			'UploadTest-testUpload.jpg',
+			$file1->Name,
+			'File does not receive new name'
+		);
+
+		$file2 = $upload('UploadTest-testUpload.jpg');
+		$this->assertEquals(
+			'UploadTest-testUpload2.jpg',
+			$file2->Name,
+			'File does receive new name'
+		);
+
+		$file3 = $upload('UploadTest-testUpload.jpg');
+		$this->assertEquals(
+			'UploadTest-testUpload3.jpg',
+			$file3->Name,
+			'File does receive new name'
+		);
+
+		$file4 = $upload('UploadTest-testUpload3.jpg');
+		$this->assertEquals(
+			'UploadTest-testUpload4.jpg',
+			$file4->Name,
+			'File does receive new name'
+		);
+
+		$file1->delete();
+		$file2->delete();
+		$file3->delete();
+		$file4->delete();
+	}
+
 }
 class UploadTest_Validator extends Upload_Validator implements TestOnly {
 
