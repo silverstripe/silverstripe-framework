@@ -1427,11 +1427,11 @@ body.cms-dialog {
 
 			input.remoteurl {
 				padding-left: 40px;
+				max-width: 350px;
 			}
 		}
 		button.add-url{
-			margin-top:5px;
-			padding-top:15px;
+			margin-top:20px;
 			@include clearfix;
 			border:none;
 			background:none;
@@ -1443,9 +1443,7 @@ body.cms-dialog {
 			}
 			.ui-button-text{
 				margin-left:10px;
-				margin-top:-5px;
-				line-height:20px;
-				float:left;
+				padding-top:10px;
 			}
 			&:hover, &:active{
 				border:none;
