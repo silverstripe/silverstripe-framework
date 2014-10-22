@@ -1,78 +1,89 @@
+title: Rich-Text Editing (WYSIWYG)
+
 # Rich-Text Editing (WYSIWYG)
 
-## Introduction
+Editing and formatting content is the bread and butter of every content management system, which is why SilverStripe 
+has a tight integration with our preferred editor library, [TinyMCE](http://tinymce.com).
 
-Editing and formatting content is the bread and butter of every content management system,
-which is why SilverStripe has a tight integration with our preferred editor library, [TinyMCE](http://tinymce.com).
-On top of the base functionality, we use our own insertion dialogs to ensure
-you can effectively select and upload files. In addition to the markup managed by TinyMCE,
-we use [shortcodes](/reference/shortcodes) to store information about inserted
-images or media elements.
-
-## Usage
+On top of the base functionality, we use our own insertion dialogs to ensure you can effectively select and upload 
+files. In addition to the markup managed by TinyMCE, we use [shortcodes](../../extending/shortcodes) to store 
+information about inserted images or media elements.
 
 The framework comes with a `[api:HTMLEditorField]` form field class which encapsulates most of the required
 functionality. It is usually added through the `[api:DataObject->getCMSFields()]` method:
 
+**mysite/code/MyObject.php**
+
 	:::php
+	<?php
+
 	class MyObject extends DataObject {
-		private static $db = array('Content' => 'HTMLText');
+		
+		private static $db = array(
+			'Content' => 'HTMLText'
+		);
 		
 		public function getCMSFields() {
-			return new FieldList(new HTMLEditorField('Content'));
+			return new FieldList(
+				new HTMLEditorField('Content')
+			);
 		}
 	}
 
 ## Configuration
 
-To keep the JavaScript editor configuration manageable and extensible,
-we've wrapped it in a PHP class called `[api:HtmlEditorConfig]`.
-The class comes with its own defaults, which are extended through [configuration files](/topics/configuration)
+To keep the JavaScript editor configuration manageable and extensible, we've wrapped it in a PHP class called 
+`[api:HtmlEditorConfig]`. The class comes with its own defaults, which are extended through the [Configuration API](../../configuration)
 in the framework (and the `cms` module in case you've got that installed).
-There can be multiple configs, which should always be created / accessed using `[api:HtmlEditorConfig::get]`.
-You can then set  the currently active config using `set_active()`.
+
+There can be multiple configs, which should always be created / accessed using `[api:HtmlEditorConfig::get]`. You can 
+then set the currently active config using `set_active()`.
+
+<div class="info" markdown="1">
 By default, a config named 'cms' is used in any field created throughout the CMS interface.
-
-<div class="notice" markdown='1'>
-Caveat: currently the order in which the `_config.php` files are executed depends on the module directory
-names. Execution order is alphabetical, so if you set a TinyMCE option in the `aardvark/_config.php`, this
-will be overriden in `framework/admin/_config.php` and your modification will disappear.
-
-This is a general problem with `_config.php` files - it may be fixed in the future by making it possible to
-configure the TinyMCE with the new [configuration system](../topics/configuration).
 </div>
 
-### Adding and removing capabilities
+<div class="notice" markdown='1'>
+Currently the order in which the `_config.php` files are executed depends on the module directory names. Execution 
+order is alphabetical, so if you set a TinyMCE option in the `aardvark/_config.php`, this will be overridden in 
+`framework/admin/_config.php` and your modification will disappear.
+</div>
+
+## Adding and removing capabilities
 
 In its simplest form, the configuration of the editor includes adding and removing buttons and plugins.
 
 You can add plugins to the editor using the Framework's `[api:HtmlEditorConfig::enablePlugins]` method. This will
 transparently generate the relevant underlying TinyMCE code.
 
+**mysite/_config.php**
 	:::php
-	// File: mysite/_config.php
 	HtmlEditorConfig::get('cms')->enablePlugins('media');
 
-Note: this utilises the TinyMCE's `PluginManager::load` function under the hood (check the
-[TinyMCE documentation on plugin
-loading](http://www.tinymce.com/wiki.php/API3:method.tinymce.AddOnManager.load) for details).
+<div class="notice" markdown="1">
+This utilities the TinyMCE's `PluginManager::load` function under the hood (check the 
+[TinyMCE documentation on plugin loading](http://www.tinymce.com/wiki.php/API3:method.tinymce.AddOnManager.load) for 
+details).
+</div>
 
 Plugins and advanced themes can provide additional buttons that can be added (or removed) through the
 configuration. Here is an example of adding a `ssmacron` button after the `charmap` button:
 
+**mysite/_config.php**
 	:::php
-	// File: mysite/_config.php
 	HtmlEditorConfig::get('cms')->insertButtonsAfter('charmap', 'ssmacron');
 
 Buttons can also be removed:
 
+**mysite/_config.php**
 	:::php
-	// File: mysite/_config.php
 	HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
 
-Note: internally `[api:HtmlEditorConfig]` uses the TinyMCE's `theme_advanced_buttons` option to configure these. See
-the [TinyMCE documentation of this option](http://www.tinymce.com/wiki.php/Configuration:theme_advanced_buttons_1_n)
+<div class="notice" markdown="1">
+Internally `[api:HtmlEditorConfig]` uses the TinyMCE's `theme_advanced_buttons` option to configure these. See the 
+[TinyMCE documentation of this option](http://www.tinymce.com/wiki.php/Configuration:theme_advanced_buttons_1_n)
 for more details.
+</div>
 
 ### Setting options
 
@@ -83,6 +94,7 @@ One example of the usage of this capability is to redefine the TinyMCE's [whitel
 tags](http://www.tinymce.com/wiki.php/Configuration:extended_valid_elements) - the tags that will not be stripped
 from the HTML source by the editor.
 
+**mysite/_config.php**
 	:::php
 	// Add start and type attributes for <ol>, add <object> and <embed> with all attributes.
 	HtmlEditorConfig::get('cms')->setOption(
@@ -97,17 +109,19 @@ from the HTML source by the editor.
 		'ol[start|type]'
 	);
 
-Note: the default setting for the CMS's `extended_valid_elements` we are overriding here can be found in
+<div class="notice" markdown="1">
+The default setting for the CMS's `extended_valid_elements` we are overriding here can be found in 
 `framework/admin/_config.php`.
+</div>
 
-### Writing custom plugins
+## Writing custom plugins
 
-It is also possible to add custom buttons to TinyMCE. A simple example of this is SilverStripe's `ssmacron`
-plugin. The source can be found in the Framework's `thirdparty/tinymce_ssmacron` directory.
+It is also possible to add custom buttons to TinyMCE. A simple example of this is SilverStripe's `ssmacron` plugin. The 
+source can be found in the Framework's `thirdparty/tinymce_ssmacron` directory.
 
-Here is how we can create a project-specific plugin. Create a `mysite/javascript/myplugin` directory,
-add the plugin button icon - here `myplugin.png` - and the source code - here `editor_plugin.js`. Here is a very
-simple example of a plugin that adds a button to the editor:
+Here is how we can create a project-specific plugin. Create a `mysite/javascript/myplugin` directory, add the plugin 
+button icon - here `myplugin.png` - and the source code - here `editor_plugin.js`. Here is a very simple example of a 
+plugin that adds a button to the editor:
 
 	:::js
 	(function() {
@@ -140,8 +154,9 @@ simple example of a plugin that adds a button to the editor:
 		tinymce.PluginManager.add('myplugin', tinymce.plugins.myplugin);
 	})();
 
-You can then enable this plugin through the `[api:HtmlEditorConfig::enablePlugins]`:
+You can then enable this plugin through the [api:HtmlEditorConfig::enablePlugins]:
 
+**mysite/_config.php**
 	:::php
 	HtmlEditorConfig::get('cms')->enablePlugins(array('myplugin' => '../../../mysite/javascript/myplugin/editor_plugin.js'));
 
@@ -150,50 +165,49 @@ documentation, or browse through plugins that come with the Framework at `thirdp
 
 ## Image and Media Insertion
 
-The `[api:HtmlEditorField]` API also handles inserting images and media
-files into the managed HTML content. It can be used both for referencing
-files on the webserver filesystem (through the `[api:File]` and `[api:Image]` APIs),
-as well as hotlinking files from the web. 
+The `[api:HtmlEditorField]` API also handles inserting images and media files into the managed HTML content. It can be 
+used both for referencing files on the webserver filesystem (through the `[api:File]` and `[api:Image]` APIs), as well 
+as hotlinking files from the web. 
 
-We use [shortcodes](/reference/shortcodes) to store information about inserted images or media elements.
-The `[api:ShortcodeParser]` API post-processes the HTML content on rendering,
-and replaces the shortcodes accordingly. It also takes care of care of placing the
-shortcode replacements relative to its surrounding markup (e.g. left/right alignment).
+We use [shortcodes](../../configuration/shortcodes) to store information about inserted images or media elements. The 
+[api:ShortcodeParser] API post-processes the HTML content on rendering, and replaces the shortcodes accordingly. It also 
+takes care of care of placing the shortcode replacements relative to its surrounding markup (e.g. left/right alignment).
 
 ## oEmbed: Embedding media through external services
 
-The ["oEmbed" standard](http://www.oembed.com/) is implemented by many media services
-around the web, allowing easy representation of files just by referencing a website URL.
-For example, a content author can insert a playable youtube video just by knowing
-its URL, as opposed to dealing with manual HTML code.
+The ["oEmbed" standard](http://www.oembed.com/) is implemented by many media services around the web, allowing easy 
+representation of files just by referencing a website URL. For example, a content author can insert a playable youtube 
+video just by knowing its URL, as opposed to dealing with manual HTML code.
 
-oEmbed powers the "Insert from web" feature available through `[api:HtmlEditorField]`.
-Internally, it makes HTTP queries to a list of external services
-if it finds a matching URL. These services are described in the `Oembed.providers` configuration.
-Since these requests are performed on page rendering, they typically have a long cache time (multiple days). To refresh
-a cache, append `?flush=1` to a URL.
+oEmbed powers the "Insert from web" feature available through `[api:HtmlEditorField]`. Internally, it makes HTTP 
+queries to a list of external services if it finds a matching URL. These services are described in the 
+`Oembed.providers` configuration. Since these requests are performed on page rendering, they typically have a long 
+cache time (multiple days). 
+
+<div class="info" markdown="1">
+To refresh a oEmbed cache, append `?flush=1` to a URL.
+</div>
 
 To disable oEmbed usage, set the `Oembed.enabled` configuration property to "false".
 
 ### Doctypes
 
-Since TinyMCE generates markup, it needs to know which doctype your documents
-will be rendered in. You can set this through the [element_format](http://www.tinymce.com/wiki.php/Configuration:element_format) configuration variable. It defaults to the stricter 'xhtml'
-setting, for example rendering self closing tags like `<br/>` instead of `<br>`.
+Since TinyMCE generates markup, it needs to know which doctype your documents will be rendered in. You can set this 
+through the [element_format](http://www.tinymce.com/wiki.php/Configuration:element_format) configuration variable. It 
+defaults to the stricter 'xhtml' setting, for example rendering self closing tags like `<br/>` instead of `<br>`.
+
 In case you want to adhere to HTML4 instead, use the following configuration:
 
 	:::php
 	HtmlEditorConfig::get('cms')->setOption('element_format', 'html');
 
-By default, TinyMCE and SilverStripe will generate valid HTML5 markup,
-but it will strip out HTML5 tags like `<article>` or `<figure>`.
-If you plan to use those, add them to the [valid_elements](http://www.tinymce.com/wiki.php/Configuration:valid_elements)
-configuration setting.
+By default, TinyMCE and SilverStripe will generate valid HTML5 markup, but it will strip out HTML5 tags like 
+`<article>` or `<figure>`. If you plan to use those, add them to the 
+[valid_elements](http://www.tinymce.com/wiki.php/Configuration:valid_elements) configuration setting.
 
-Also, the `[api:SS_HTMLValue]` API underpinning the HTML processing parses the markup
-into a temporary object tree which can be traversed and modified before saving.
-The built-in parser only supports HTML4 and XHTML syntax. In order to successfully
-process HTML5 tags, please use the
+Also, the `[api:SS_HTMLValue]` API underpinning the HTML processing parses the markup into a temporary object tree 
+which can be traversed and modified before saving. The built-in parser only supports HTML4 and XHTML syntax. In order 
+to successfully process HTML5 tags, please use the 
 ['silverstripe/html5' module](https://github.com/silverstripe/silverstripe-html5).
 
 ## Recipes
@@ -299,7 +313,3 @@ Now change the default spellchecker in `framework/thirdparty/tinymce-spellchecke
 	:::php
 	// ...
 	$config['general.engine'] = 'PSpell';
-
-## Related
-
- * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
