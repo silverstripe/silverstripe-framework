@@ -621,6 +621,12 @@ class UploadFieldTest extends FunctionalTest {
 			(bool)$parser->getBySelector('#CanAttachExistingFalseField .ss-uploadfield-fromfiles'),
 			'Removes "From files" button'
 		);
+
+		// Test requests to select files have the correct given permission
+		$response2 = $this->get('UploadFieldTest_Controller/Form/field/CanAttachExistingFalseField/select');
+		$this->assertEquals(403, $response2->getStatusCode());
+		$response3 = $this->get('UploadFieldTest_Controller/Form/field/HasOneFile/select');
+		$this->assertEquals(200, $response3->getStatusCode());
 	}
 
 	public function testSelect() {
