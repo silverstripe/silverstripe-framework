@@ -21,6 +21,11 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	protected $csvSeparator = ",";
 
 	/**
+	 * @var string
+	 */
+	protected $csvEnclosure = '"';
+
+	/**
 	 * @var boolean
 	 */
 	protected $csvHasHeader = true;
@@ -98,11 +103,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 * @return array
 	 */
 	public function generateExportFileData($gridField) {
-		$separator = $this->csvSeparator;
 		$csvColumns = ($this->exportColumns)
 			? $this->exportColumns
 			: singleton($gridField->getModelClass())->summaryFields();
-		$fileData = '';
+		$fileData = array();
 		$columnData = array();
 		$fieldItems = new ArrayList();
 
@@ -114,11 +118,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 			foreach($csvColumns as $columnSource => $columnHeader) {
 				$headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
 			}
-
-			$fileData .= "\"" . implode("\"{$separator}\"", array_values($headers)) . "\"";
-			$fileData .= "\n";
+			
+			$fileData[] = $headers;
 		}
-
+		
 		$items = $gridField->getManipulatedList();
 
 		// @todo should GridFieldComponents change behaviour based on whether others are available in the config?
@@ -143,17 +146,23 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 				} else {
 					$value = $gridField->getDataFieldValue($item, $columnSource);
 				}
-
-				$value = str_replace(array("\r", "\n"), "\n", $value);
-				$columnData[] = '"' . str_replace('"', '\"', $value) . '"';
+				
+				$columnData[] = $value;
 			}
-			$fileData .= implode($separator, $columnData);
-			$fileData .= "\n";
+			
+			$fileData[] = $columnData;
 
 			$item->destroy();
 		}
-
-		return $fileData;
+		
+		
+		ob_start();
+		$fp = fopen('php://output', 'w');
+		foreach($fileData as $line) {
+			fputcsv($fp, $line, $this->csvSeparator, $this->csvEnclosure);
+		}
+		fclose($fp);
+		return ob_get_clean();
 	}
 
 	/**
