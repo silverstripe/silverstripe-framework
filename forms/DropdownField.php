@@ -13,7 +13,7 @@
  * 
  * 	public function getCMSFields() {
  * 		$fields = parent::getCMSFields();
- * 		$field = new DropdownField('GalleryID', 'Gallery', Gallery::get()->map('ID', 'Title'));
+ * 		$field = DropdownField::create('GalleryID', 'Gallery', Gallery::get()->map('ID', 'Title'));
  * 		$field->setEmptyString('(Select one)');
  * 		$fields->addFieldToTab('Root.Content', $field, 'Content');
  * </code>
