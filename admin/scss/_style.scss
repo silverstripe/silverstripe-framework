@@ -964,14 +964,36 @@ body.cms {
 		.Actions .ss-ui-button {
 			padding-top: 4px;
 			padding-bottom: 4px;
+			padding-left: 25px;
 			height: 28px;
-			margin-left: -1px;
 			border-top-left-radius: 0;
 			border-bottom-left-radius: 0;
+			@include background(url(../images/btn-icon/navigation.png), linear-gradient(top, #fff, #D9D9D9));
+ 			background-repeat: no-repeat;
+  			background-position: 10% 50%;
+  			border-left: 0;
 
 			&.ui-state-disabled {
+				@include background(url(../images/btn-icon/navigation_disabled.png), linear-gradient(top, #fff, #D9D9D9));
+ 				background-repeat: no-repeat;
+  				background-position: 10% 50%;
 				opacity: 1;
 				color: #ccc;
+
+			}
+
+			&.ui-state-focus {
+				@include background(url(../images/throbber.gif), linear-gradient(top, #fff, #D9D9D9));
+ 				background-repeat: no-repeat;
+  				background-position: 10% 50%;
+
+			}
+
+			&.ui-state-active {
+				@include background(url(../images/throbber.gif), linear-gradient(top, #fff, #D9D9D9));
+ 				background-repeat: no-repeat;
+  				background-position: 10% 50%;
+
 			}
 		}
 	}

@@ -316,7 +316,7 @@
 			onchange: function(e) {
 				var form = $(e.target.form), btn = form.find(':submit');
 				if($(e.target).val() == -1) {
-					btn.attr('disabled', 'disabled').button('refresh');
+					btn.attr('disabled', 'disabled').button('refresh').removeClass('ui-state-focus');
 				} else {
 					btn.removeAttr('disabled').button('refresh');
 					// form.submit();
