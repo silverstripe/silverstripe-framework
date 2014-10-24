@@ -66,7 +66,7 @@
  * to specifically remove it. To clear a value you can either delete 1 session value by the name that you saved it
  * 
  * <code>
- * Session::clear('MyValue'); // myvalue is no longer 6.
+ * Session::clear('MyValue'); // MyValue is no longer 6.
  * </code>
  * 
  * Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data
