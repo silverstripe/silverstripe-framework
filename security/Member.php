@@ -463,9 +463,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 		
 		// Clear the incorrect log-in count
-		if(self::config()->lock_out_after_incorrect_logins) {
-			$this->FailedLoginCount = 0;
-		}
+		$this->registerSuccessfulLogin();
 		
 		// Don't set column if its not built yet (the login might be precursor to a /dev/build...)
 		if(array_key_exists('LockedOutUntil', DB::fieldList('Member'))) {
@@ -1558,6 +1556,17 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + $lockoutMins*60);
 				$this->write();
 			}
+		}
+	}
+
+	/**
+	 * Tell this member that a successful login has been made
+	 */
+	public function registerSuccessfulLogin() {
+		if(self::config()->lock_out_after_incorrect_logins) {
+			// Forgive all past login failures
+			$this->FailedLoginCount = 0;
+			$this->write();
 		}
 	}
 	
