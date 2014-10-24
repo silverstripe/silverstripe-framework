@@ -233,6 +233,25 @@ class ObjectTest extends SapphireTest {
 			ObjectTest_ExtensionTest::has_extension('ObjectTest_ExtendTest3'),
 			"Extensions are detected with static has_extension() when added through add_extension()"
 		);
+		// ObjectTest_ExtendTest4 is added manually
+		ObjectTest_ExtensionTest3::add_extension('ObjectTest_ExtendTest4("Param")');
+		// test against ObjectTest_ExtendTest3, not ObjectTest_ExtendTest3
+		$this->assertTrue(
+			ObjectTest_ExtensionTest3::has_extension('ObjectTest_ExtendTest4'),
+			"Extensions are detected with static has_extension() when added through add_extension()"
+		);
+		// test against ObjectTest_ExtendTest3, not ObjectTest_ExtendTest4 to test if it picks up
+		// the sub classes of ObjectTest_ExtendTest3
+		$this->assertTrue(
+			ObjectTest_ExtensionTest3::has_extension('ObjectTest_ExtendTest3'),
+			"Sub-Extensions are detected with static has_extension() when added through add_extension()"
+		);
+		// strictly test against ObjectTest_ExtendTest3, not ObjectTest_ExtendTest4 to test if it picks up
+		// the sub classes of ObjectTest_ExtendTest3
+		$this->assertFalse(
+			ObjectTest_ExtensionTest3::has_extension('ObjectTest_ExtendTest3', null, true),
+			"Sub-Extensions are detected with static has_extension() when added through add_extension()"
+		);
 		// a singleton() wouldn't work as its already initialized
 		$objectTest_ExtensionTest = new ObjectTest_ExtensionTest();
 		$this->assertTrue(
@@ -518,6 +537,10 @@ class ObjectTest_ExtensionTest2 extends Object {
 	private static $extensions = array('ObjectTest_Extension');
 }
 
+
+class ObjectTest_ExtensionTest3 extends Object {
+}
+
 class ObjectTest_ExtensionRemoveTest extends Object {
 	
 	private static $extensions = array (
@@ -561,6 +584,10 @@ class ObjectTest_ExtendTest2 extends Extension {
 
 class ObjectTest_ExtendTest3 extends Extension {
 	public function extendableMethod($argument = null) { return "ExtendTest3($argument)"; }
+}
+
+class ObjectTest_ExtendTest4 extends ObjectTest_ExtendTest3 {
+	public function extendableMethod($argument = null) { return "ExtendTest4($argument)"; }
 }
 
 /**#@-*/

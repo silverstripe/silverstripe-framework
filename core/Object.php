@@ -475,9 +475,10 @@ abstract class Object {
 	 * and new format ($object->has_extension($class, $requiredExtension))
 	 * @param string $classOrExtension if 1 argument supplied, the class name of the extension to
 	 *                                 check for; if 2 supplied, the class name to test
-	 * @param string $requiredExtension used only if 2 arguments supplied 
+	 * @param string $requiredExtension used only if 2 arguments supplied
+	 * @param boolean $strict if the extension has to match the required extension and not be a subclass
 	 */
-	public static function has_extension($classOrExtension, $requiredExtension = null) {
+	public static function has_extension($classOrExtension, $requiredExtension = null, $strict = false) {
 		//BC support
 		if(func_num_args() > 1){
 			$class = $classOrExtension;
@@ -495,6 +496,7 @@ abstract class Object {
 			$left = strtolower(Extension::get_classname_without_arguments($extension));
 			$right = strtolower(Extension::get_classname_without_arguments($requiredExtension));
 			if($left == $right) return true;
+			if (!$strict && is_subclass_of($left, $right)) return true;
 		}
 		
 		return false;
