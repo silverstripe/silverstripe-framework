@@ -159,14 +159,14 @@ class Text extends StringField {
 	* Performs the same function as the big summary, but doesn't trim new paragraphs off data.
 	* Caution: Not XML/HTML-safe - does not respect closing tags.
 	*/
-	public function BigSummary($maxWords = 50, $plain = 1) {
-		$result = "";
-		
+	public function BigSummary($maxWords = 50, $plain = true) {
+		$result = '';
+
 		// get first sentence?
 		// this needs to be more robust
-		if($plain) $data = Convert::xml2raw($this->value, true);
-		
-		if(!$data) return "";
+		$data = $plain ? Convert::xml2raw($this->value, true) : $this->value;
+
+		if(!$data) return '';
 			
 		$sentences = explode('.', $data);	
 		$count = count(explode(' ', $sentences[0]));
