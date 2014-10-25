@@ -189,8 +189,7 @@ class ConfigTest extends SapphireTest {
 		// But it won't affect subclasses - this is *uninherited* static
 		$this->assertNotContains('test_2b',
 			Config::inst()->get('ConfigStaticTest_Third', 'first', Config::UNINHERITED));
-		$this->assertNotContains('test_2b',
-			Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
+		$this->assertNull(Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
 
 		// Subclasses that don't have the static explicitly defined should allow definition, also
 		// This also checks that set can be called after the first uninherited get()
