@@ -1089,6 +1089,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function handleSelect(SS_HTTPRequest $request) {
+		if(!$this->canAttachExisting()) return $this->httpError(403);
 		return UploadField_SelectHandler::create($this, $this->getFolderName());
 	}
 	
