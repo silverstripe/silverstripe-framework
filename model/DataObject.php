@@ -3293,6 +3293,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$types['has_one'] = (array)singleton($ancestorClass)->uninherited('has_one', true);
 					$types['has_many'] = (array)singleton($ancestorClass)->uninherited('has_many', true);
 					$types['many_many'] = (array)singleton($ancestorClass)->uninherited('many_many', true);
+					$types['belongs_many_many'] = (array)singleton($ancestorClass)->uninherited('belongs_many_many', true);
 				}
 				foreach($types as $type => $attrs) {
 					foreach($attrs as $name => $spec) {
