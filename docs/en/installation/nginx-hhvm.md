@@ -4,35 +4,41 @@
 and uses just-in-time (JIT) compilation to achieve better performance over standard PHP.
 
 Installation on Debian or Ubuntu is relatively straightforward, in that HHVM already provide
-packages available to use:
+packages available to use.
 
-Debian 7 (wheezy):
+Install apt sources on Debian 7 (wheezy):
 
 	wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -
 	echo deb http://dl.hhvm.com/debian wheezy main | sudo tee /etc/apt/sources.list.d/hhvm.list
-	sudo apt-get update
-	sudo apt-get install hhvm	
 
-Ubuntu 14.04 (trusty):
+Install apt sources on Ubuntu 14.04 (trusty):
 
 	wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -
 	echo deb http://dl.hhvm.com/ubuntu trusty main | sudo tee /etc/apt/sources.list.d/hhvm.list
-	sudo apt-get update
-	sudo apt-get install hhvm
 
-Please see [Prebuilt Packages for HHVM on HHVM wiki](https://github.com/facebook/hhvm/wiki/Prebuilt%20Packages%20for%20HHVM) for more ways to install.
+Now install the required packages:
+
+	sudo apt-get update
+	sudo apt-get install hhvm libgmp-dev libmemcached-dev
+
+Start HHVM automatically on boot:
+
+	sudo update-rc.d hhvm defaults
+
+Please see [Prebuilt Packages for HHVM on HHVM wiki](https://github.com/facebook/hhvm/wiki/Prebuilt%20Packages%20for%20HHVM) for more
+installation options.
 
 Assuming you already have nginx installed, you can then run a script to enable support for
 nginx and/or apache2 depending on whether they are installed or not:
 
-	/usr/share/hhvm/install_fastcgi.sh
+	sudo /usr/share/hhvm/install_fastcgi.sh
 
 For nginx, this will place a file at `/etc/nginx/hhvm.conf` which you can use to include in
-your nginx server definitions to provide support for php requests.
+your nginx server definitions to provide support for PHP requests.
 
-In order to get SilverStripe working, you need to create a custom configuration file.
+In order to get SilverStripe working, you need to add some custom nginx configuration.
 
-In your `/etc/nginx/silverstripe.conf`, add this configuration:
+Create `/etc/nginx/silverstripe.conf` and add this configuration:
 
 	fastcgi_buffer_size 32k;
 	fastcgi_busy_buffers_size 64k;
@@ -46,7 +52,6 @@ In your `/etc/nginx/silverstripe.conf`, add this configuration:
 	error_page 500 /assets/error-500.html;
 	
 	location ^~ /assets/ {
-		sendfile on;
 		try_files $uri =404;
 	}
 	location ~ /(mysite|framework|cms)/.*\.(php|php3|php4|php5|phtml|inc)$ {
