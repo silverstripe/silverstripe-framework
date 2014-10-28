@@ -32,11 +32,11 @@ An example of a `SearchFilter` in use:
 Developers can define their own [api:SearchFilter] if needing to extend the ORM filter and exclude behaviors.
 
 These suffixes can also take modifiers themselves. The modifiers currently supported are `":not"`, `":nocase"` and 
-`":case"`. These negate the filter, make it case-insensitive and make it case-sensitive respectively. The default
+`":case"`. These negate the filter, make it case-insensitive and make it case-sensitive, respectively. The default
 comparison uses the database's default. For MySQL and MSSQL, this is case-insensitive. For PostgreSQL, this is 
 case-sensitive.
 
-The following is a query which will return everyone whose first name starts with S either lower or uppercase
+The following is a query which will return everyone whose first name starts with "S", either lowercase or uppercase:
 
 	:::php
 	$players = Player::get()->filter(array(
