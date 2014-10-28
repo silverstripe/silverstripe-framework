@@ -155,8 +155,22 @@ if(!isset($_SERVER['HTTP_HOST'])) {
  * Define system paths
  */
 if(!defined('BASE_PATH')) {
-	// Assuming that this file is framework/core/Core.php we can then determine the base path
-	$candidateBasePath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
+	if(isset($_SERVER['DOCUMENT_ROOT']) && !empty($_SERVER['DOCUMENT_ROOT'])){
+		$doc_root = rtrim($_SERVER['DOCUMENT_ROOT'],DIRECTORY_SEPARATOR);
+		$file_dir = rtrim(dirname(__FILE__), DIRECTORY_SEPARATOR);
+		
+		if(strpos($file_dir,$doc_root)){
+			// if sub-folder
+			$candidateBasePath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
+		}else{
+			// linked file
+			$candidateBasePath = $doc_root;
+		}
+	} else {
+		// Assuming that this file is framework/core/Core.php we can then determine the base path
+		$candidateBasePath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
+	}	
+	
 	// We can't have an empty BASE_PATH.  Making it / means that double-slashes occur in places but that's benign.
 	// This likely only happens on chrooted environemnts
 	if($candidateBasePath == '') $candidateBasePath = DIRECTORY_SEPARATOR;
