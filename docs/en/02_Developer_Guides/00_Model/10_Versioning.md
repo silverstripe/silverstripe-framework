@@ -3,7 +3,7 @@ summary: Add versioning to your database content through the Versioned extension
 
 # Versioning
 
-Database content in SilverStripe can be "staged" before its publication, as well as tracking all changes through the 
+Database content in SilverStripe can be "staged" before its publication, as well as track all changes through the 
 lifetime of a database record.
 
 It is most commonly applied to pages in the CMS (the `SiteTree` class). Draft content edited in the CMS can be different 
@@ -148,8 +148,16 @@ helpers.
 ### Templates Variables
 
 In templates, you don't need to worry about this distinction. The `$Content` variable contain the published content by 
-default, and only preview draft content if explicitly requested (e.g. by the "preview" feature in the CMS). If you want 
-to force a specific stage, we recommend the `Controller->init()` method for this purpose.
+default, and only preview draft content if explicitly requested (e.g. by the "preview" feature in the CMS, or by adding ?stage=Stage to the URL). If you want 
+to force a specific stage, we recommend the `Controller->init()` method for this purpose, for example:
+
+**mysite/code/MyController.php**
+	:::php
+	public function init() {
+		parent::init();
+		Versioned::set_reading_mode('Stage.Stage');
+	}
+
 
 ### Controllers
 

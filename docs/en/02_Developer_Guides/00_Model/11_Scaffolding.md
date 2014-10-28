@@ -1,5 +1,5 @@
 title: Building Model and Search Interfaces around Scaffolding
-summary: Model Driven approach to defining your application UI.
+summary: A Model-driven approach to defining your application UI.
 
 # Scaffolding
 
@@ -24,13 +24,33 @@ An example is `DataObject`, SilverStripe will automatically create your CMS inte
 		);
 
 		public function getCMSFields() {
-			// parent::getCMSFields() does all the hard work and creates the fields for title, isactive and content.
+			// parent::getCMSFields() does all the hard work and creates the fields for Title, IsActive and Content.
 			$fields = parent::getCMSFields();
 			$fields->fieldByName('IsActive')->setTitle('Is active?');
 			
 			return $fields;
 		}
 	}
+
+To fully customize your form fields, start with an empty FieldList.
+
+	:::php
+	<?php
+
+		public function getCMSFields() {
+			$fields = FieldList::create(
+				TabSet::create("Root",
+					CheckboxSetField::create('IsActive','Is active?'),
+					TextField::create('Title'),
+					TextareaField::create('Content')
+						->setRows(5)
+				)
+			);
+			
+			return $fields;
+		}
+
+
 
 You can also alter the fields of built-in and module `DataObject` classes through your own 
 [DataExtension](../extensions), and a call to `DataExtension->updateCMSFields`.
@@ -125,7 +145,7 @@ To include relations (`$has_one`, `$has_many` and `$many_many`) in your search, 
 
 ### Summary Fields
 
-Summary fields can be used to show a quick overview of the data for a specific [api:DataObject] record. Most common use 
+Summary fields can be used to show a quick overview of the data for a specific [api:DataObject] record. The most common use 
 is their display as table columns, e.g. in the search results of a `[api:ModelAdmin]` CMS interface.
 
 	:::php
