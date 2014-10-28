@@ -1,5 +1,5 @@
 title: Data Types, Overloading and Casting
-summary: Documentation on how data is stored going in, coming out of the ORM and how to modify it.
+summary: Learn how how data is stored going in and coming out of the ORM and how to modify it.
 
 # Data Types and Casting
 
@@ -7,7 +7,7 @@ Each model in a SilverStripe [api:DataObject] will handle data at some point. Th
 the ones defined in a `$db` array or simply a method that returns data for the template. 
 
 A Data Type is represented in SilverStripe by a [api:DBField] subclass. The class is responsible for telling the ORM 
-about how to store it's data in the database and how to format the information coming out of the database.
+about how to store its data in the database and how to format the information coming out of the database, i.e. on a template.
 
 In the `Player` example, we have four database columns each with a different data type (Int, Varchar).
 

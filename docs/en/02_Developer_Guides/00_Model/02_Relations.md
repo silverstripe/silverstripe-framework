@@ -1,5 +1,5 @@
 title: Relations between Records
-summary: Relate models together using the ORM.
+summary: Relate models together using the ORM using has_one, has_many, and many_many.
 
 # Relations between Records
 
@@ -39,6 +39,8 @@ A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in
 This defines a relationship called `Team` which links to a `Team` class. The `ORM` handles navigating the relationship
 and provides a short syntax for accessing the related object.
 
+At the database level, the `has_one` creates a `TeamID` field on `Player`. A `has_many` field does not impose any database changes. It merely injects a new method into the class to access the related records (in this case, `Players()`)
+
 	:::php
 	$player = Player::get()->byId(1);
 
@@ -59,8 +61,7 @@ The relationship can also be navigated in [templates](../templates).
 
 ## has_many
 
-Defines 1-to-many joins. A database-column named ""`<relationship-name>`ID"" will to be created in the child-class. As
-you can see from the previous example, `$has_many` goes hand in hand with `$has_one`.
+Defines 1-to-many joins. As you can see from the previous example, `$has_many` goes hand in hand with `$has_one`.
 
 <div class="alert" markdown='1'>
 Please specify a $has_one-relationship on the related child-class as well, in order to have the necessary accessors
@@ -184,7 +185,7 @@ available on both ends.
 	  );
 	}
 
-Much like the `has_one` relationship, `mant_many` can be navigated through the `ORM` as well. The only difference being
+Much like the `has_one` relationship, `many_many` can be navigated through the `ORM` as well. The only difference being
 you will get an instance of [api:ManyManyList] rather than the object.
 
 	:::php
@@ -202,6 +203,11 @@ The relationship can also be navigated in [templates](../templates).
 			Supports $Title
 		<% end_if %>
 	<% end_with %>
+
+## many_many or belongs_many_many?
+
+If you're unsure about whether an object should take on `many_many` or `belongs_many_many`, the best way to think about it is that the object where the relationship will be edited (i.e. via checkboxes) should contain the `many_many`. For instance, in a `many_many` of Product => Categories, the `Product` should contain the `many_many`, because it is much more likely that the user will select Categories for a Product than vice-versa.
+
 
 ## Adding relations
 

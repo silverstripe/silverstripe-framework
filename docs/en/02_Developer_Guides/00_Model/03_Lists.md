@@ -1,5 +1,5 @@
 title: Managing Lists
-summary: Learn how to manipulate SS_List objects.
+summary: The SS_List interface allows you to iterate through and manipulate a list of objects.
 
 # Managing Lists
 
@@ -9,7 +9,7 @@ modify.
 
 ## Iterating over the list.
 
-[api:SS_List] implements `IteratorAggregate` allowing you to loop over the instance.
+[api:SS_List] implements `IteratorAggregate`, allowing you to loop over the instance.
 
 	:::php
 	$members = Member::get();

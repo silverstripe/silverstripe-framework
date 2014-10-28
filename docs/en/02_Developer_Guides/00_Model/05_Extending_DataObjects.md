@@ -12,7 +12,7 @@ data records.
 
 ## onBeforeWrite
 
-You can customize saving-behaviour for each DataObject, e.g. for adding workflow or data customization. The function is 
+You can customize saving-behavior for each DataObject, e.g. for adding workflow or data customization. The function is 
 triggered when calling *write()* to save the object to the database. This includes saving a page in the CMS or altering 
 a `ModelAdmin` record.
 
