@@ -175,18 +175,20 @@ class GDBackend extends Object implements Image_Backend {
 	 */
 	public function resize($width, $height) {
 		if(!$this->gd) return;
+		
+		if($width < 0 || $height < 0) throw new InvalidArgumentException("Image resizing dimensions cannot be negative");
+		if(!$width && !$height) throw new InvalidArgumentException("No dimensions given when resizing image");
+		if(!$width) throw new InvalidArgumentException("Width not given when resizing image");
+		if(!$height) throw new InvalidArgumentException("Height not given when resizing image");
 
-		$width = round($width);
-		$height = round($height);
+		//use whole numbers, ensuring that size is at least 1x1
+		$width = max(1, round($width));
+		$height = max(1, round($height));
 		
 		// Check that a resize is actually necessary.
 		if ($width == $this->width && $height == $this->height) {
 			return $this;
 		}
-		
-		if(!$width && !$height) user_error("No dimensions given", E_USER_ERROR);
-		if(!$width) user_error("Width not given", E_USER_ERROR);
-		if(!$height) user_error("Height not given", E_USER_ERROR);
 
 		$newGD = imagecreatetruecolor($width, $height);
 		
