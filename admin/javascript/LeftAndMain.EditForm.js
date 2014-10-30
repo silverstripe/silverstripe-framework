@@ -44,7 +44,12 @@
 			 * (Object)
 			 */
 			ChangeTrackerOptions: {
-				ignoreFieldSelector: '.no-change-track, .ss-upload :input, .cms-navigator :input'
+				ignoreFieldSelector: '.no-change-track, .ss-upload :input, .cms-navigator :input',
+				customChangeEvents: {
+					// Use the "input" event so both keyboard and right-click paste inputs are captured
+					'input[type=text]': 'input.changetracker change.changetracker',
+					'textarea': 'input.changetracker change.changetracker'
+				}
 			},
 
 			/**
