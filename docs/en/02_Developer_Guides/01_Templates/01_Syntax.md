@@ -42,7 +42,7 @@ An example of a SilverStripe template is below:
 
 <div class="note">
 Templates can be used for more than HTML output. You can use them to output your data as JSON, XML, CSV or any other 
-text based format.
+text-based format.
 </div>
 
 ## Variables
@@ -92,6 +92,10 @@ Variables can come from your database fields, or custom methods you define on yo
 	:::html
 	<p>You are coming from $UsersIpAddress.</p>
 
+<div class="node" markdown="1">
+	Method names that begin with `get` will automatically be resolved when their prefix is excluded. For example, the above method call `$UsersIpAddress` would also invoke a method named `getUsersIpAddress()`.
+</div>
+
 The variable's that can be used in a template vary based on the object currently in [scope](#scope). Scope defines what
 object the methods get called on. For the standard `Page.ss` template the scope is the current [api:Page_Controller] 
 class. This object gives you access to all the database fields on [api:Page_Controller], its corresponding [api:Page]
@@ -116,7 +120,7 @@ The simplest conditional block is to check for the presence of a value (does not
 		<p>You are logged in as $CurrentMember.FirstName $CurrentMember.Surname.</p>
 	<% end_if %>
 
-A conditional can also check for a value other than falsey.
+A conditional can also check for a value other than falsy.
 
 	:::ss
 	<% if $MyDinner == "kipper" %>
@@ -445,18 +449,20 @@ The `<% with %>` tag lets you change into a new scope. Consider the following ex
 
 	:::ss
 	<% with $CurrentMember %>
-		Hello $FirstName, welcome back. Your current balance is $Balance.
+		Hello, $FirstName, welcome back. Your current balance is $Balance.
 	<% end_with %>
 
+This is functionalty the same as the following:
+
+	:::ss
+	Hello, $CurrentMember.FirstName, welcome back. Yout current balance is $CurrentMember.Balance
+
+Notice that the first example is much tidier, as it removes the repeated use of the `$CurrentMember` accessor.
 
 Outside the `<% with %>.`, we are in the page scope. Inside it, we are in the scope of `$CurrentMember` object. We can 
 refer directly to properties and methods of the [api:Member] object. `$FirstName` inside the scope is equivalent to 
 `$CurrentMember.FirstName`.
 
-<div class="info" markdown="1">
-Why would you use `with`? This keeps the markup clean, and if the scope is a complicated expression we don't
-have to repeat it on each reference of a property.
-</div>
 
 
 ## Comments

@@ -1,5 +1,5 @@
 title: Common Variables
-summary: Some of the common variables and methods your templates can use.
+summary: Some of the common variables and methods your templates can use, including Menu, SiteConfig, and more.
 
 # Common Variables
 
@@ -155,7 +155,7 @@ link.
 	:::ss
 	$LinkingMode
 
-When looping over a list of `SiteTree` instances through a `<% loop Menu %>` or `<% loop Children %>`, `$LinkingMode`
+When looping over a list of `SiteTree` instances through a `<% loop $Menu %>` or `<% loop $Children %>`, `$LinkingMode`
 will return context about the page relative to the currently viewed page. It can have the following values:
 
  * `link`: You are neither on this page nor in this section.
@@ -177,10 +177,10 @@ For instance, to only show the menu item linked if it's the current one:
  * `$LinkOrSection`: Determines if the item is in the current section, so in the path towards the current page. Useful 
  for menus which you only want to show a second level menu when you are on that page or a child of it. Returns "link" 
  or "section" strings.
- * `InSection(page-url)`: This if block will pass if we're currently on the page-url page or one of its children.
+ * `$InSection(page-url)`: This if block will pass if we're currently on the page-url page or one of its children.
 
 	:::ss
-	<% if InSection(about-us) %>
+	<% if $InSection(about-us) %>
 		<p>You are viewing the about us section</p>
 	<% end_if %>
 
@@ -239,7 +239,7 @@ pages underneath a "staff" holder on any page, regardless if its on the top leve
 ### AllChildren
 
 Content authors have the ability to hide pages from menus by un-selecting the `ShowInMenus` checkbox within the CMS. 
-This option will be honored by `<% loop Children %>` and `<% loop Menu %>` however if you want to ignore the user
+This option will be honored by `<% loop $Children %>` and `<% loop $Menu %>` however if you want to ignore the user
 preference, `AllChildren` does not filter by `ShowInMenus`.
 
 	:::ss
@@ -364,7 +364,7 @@ page. The  previous example could be rewritten to use the following syntax.
 Breadcrumbs are the path of pages which need to be taken to reach the current page, and can be a great navigation aid 
 for website users.
 
-While you can achieve breadcrumbs through the `<% Level(<level>) %>` control manually, there's a nicer shortcut: The 
+While you can achieve breadcrumbs through the `$Level(<level>)` control manually, there's a nicer shortcut: The 
 `$Breadcrumbs` variable.
 
 	:::ss
@@ -380,7 +380,7 @@ By default, it uses the template defined in `cms/templates/BreadcrumbsTemplate.s
 	<% end_if %>
 
 <div class="info" markdown="1">
-To customize the markup that the `$Breadcrumbs` generates. Copy `cms/templates/BreadcrumbsTemplate.ss` to 
+To customize the markup that the `$Breadcrumbs` generates, copy `cms/templates/BreadcrumbsTemplate.ss` to 
 `mysite/templates/BreadcrumbsTemplate.ss`, modify the newly copied template and flush your SilverStripe cache.
 </div>
 
