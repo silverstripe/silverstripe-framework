@@ -64,6 +64,8 @@ JavaScript in a separate file and instead load, via search and replace, several 
 
 	Requirements::javascriptTemplate("cms/javascript/editor.template.js", $vars);
 
+In this example, `editor.template.js` is expected to contain a replaceable variable expressed as `$EditorCSS`.
+
 ### Custom Inline CSS or Javascript
 
 You can also quote custom script directly. This may seem a bit ugly, but is useful when you need to transfer some kind
@@ -103,7 +105,7 @@ To make debugging easier in your local environment, combined files is disabled w
 mode.
 </div>
 
-By default it stores the generated file in the assets/ folder but you can configure this by pointing the 
+By default it stores the generated file in the assets/ folder, but you can configure this by pointing the 
 `Requirements.combined_files_folder` configuration setting to a specific folder.
 
 **mysite/_config/app.yml**
@@ -136,7 +138,7 @@ the third paramter of the `combine_files` function:
 Clears all defined requirements. You can also clear specific requirements.
 
 	:::php
-	Requirements::clear('jsparty/prototype.js');
+	Requirements::clear(THIRDPARTY_DIR.'/prototype.js');
 
 <div class="alert" markdown="1">
 Depending on where you call this command, a Requirement might be *re-included* afterwards.
