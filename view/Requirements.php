@@ -768,9 +768,9 @@ class Requirements_Backend {
 					&&
 					//check that the script tag is not inside a html comment tag
 					!(
-						preg_match('/.*(?|(?<tag><!--)|(?<tag>-->))/U', $content, $commentTags, 0, $p1)
+						preg_match('/.*(?|(<!--)|(-->))/U', $content, $commentTags, 0, $p1)
 						&& 
-						$commentTags['tag'] == '-->'
+						$commentTags[1] == '-->'
 					);
 
 				if($canWriteToBody) {
