@@ -5,6 +5,10 @@
  */
 class FormFieldTest extends SapphireTest {
 
+	protected $requiredExtensions = array(
+		'FormField' => array('FormFieldTest_Extension')
+	);
+
 	public function testAddExtraClass() {
 		$field = new FormField('MyField');
 		$field->addExtraClass('class1');
@@ -185,6 +189,19 @@ class FormFieldTest extends SapphireTest {
 				"FormField class {$fieldClass} returns a valid cloned disabled representation"
 			);
 		}
+	}
+
+	public function testUpdateAttributes() {
+		$field = new FormField('MyField');
+		$this->assertArrayHasKey('extended', $field->getAttributes());
+	}
+
+}
+
+class FormFieldTest_Extension extends Extension implements TestOnly {
+
+	public function updateAttributes(&$attrs) {
+		$attrs['extended'] = true;
 	}
 
 }
