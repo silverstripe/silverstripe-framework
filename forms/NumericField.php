@@ -44,4 +44,27 @@ class NumericField extends TextField {
 	public function dataValue() {
 		return (is_numeric($this->value)) ? $this->value : 0;
 	}
+	
+	/**
+     * Returns a readonly version of this field
+     */
+    public function performReadonlyTransformation() {
+        $field = new NumericField_Readonly($this->name, $this->title, $this->value);
+        $field->setForm($this->form);
+        return $field;
+    }
+    
+}
+
+class NumericField_Readonly extends ReadonlyField{
+
+    public function performReadonlyTransformation() {
+        return clone $this;
+    }
+
+    public function Value() {
+        return Convert::raw2xml($this->value ?
+            "$this->value" : "0");
+    }
+
 }
