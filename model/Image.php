@@ -732,7 +732,7 @@ class Image extends File {
 	}
 
 	protected function onBeforeDelete() {
-		$backend = Injector::inst()->create(self::$backend);
+		$backend = Injector::inst()->create(self::get_backend());
 		$backend->onBeforeDelete($this);
 
 		$this->deleteFormattedImages();
