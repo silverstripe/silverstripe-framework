@@ -150,6 +150,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 */
 	public function add($item) {
 		$this->push($item);
+		return $this;
 	}
 
 	/**

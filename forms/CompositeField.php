@@ -207,9 +207,11 @@ class CompositeField extends FormField {
 	 * Add a new child field to the end of the set.
 	 *
 	 * @param FormField
+	 * @return self 
 	 */
 	public function push(FormField $field) {
 		$this->children->push($field);
+		return $this;
 	}
 
 	/**
