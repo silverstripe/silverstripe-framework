@@ -129,6 +129,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @var array
 	 */
 	protected static $versionableExtensions = array('Translatable' => 'lang');
+	
+	/**
+	 * Used to define the persistence of the site stage.
+	 * Defaults to true.
+	 *
+	 * @var boolean
+	 */
+	private static $persistent_site_stage = true;
 
 	/**
 	 * Reset static configuration variables to their default values.
@@ -945,10 +953,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param Session $session Optional session within which to store the resulting stage
 	 */
 	public static function choose_site_stage($session = null) {
-		// Check any pre-existing session mode
-		$preexistingMode = $session
-			? $session->inst_get('readingMode')
-			: Session::get('readingMode');
+		
+		$preexistingMode = null;
+		if (Config::inst()->get('Versioned', 'persistent_site_stage')) {
+			// Check any pre-existing session mode
+			$preexistingMode = $session
+				? $session->inst_get('readingMode')
+				: Session::get('readingMode');
+		}		
 		
 		// Determine the reading mode
 		if(isset($_GET['stage'])) {
