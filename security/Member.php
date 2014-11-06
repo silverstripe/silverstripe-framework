@@ -1519,7 +1519,7 @@ class Member_GroupSet extends ManyManyList {
 
 		// Find directly applied groups
 		$manyManyFilter = parent::foreignIDFilter($id);
-		$query = new SQLSelect('"Group_Members"."GroupID"', '"Group_Members"', $manyManyFilter);
+		$query = new SQLQuery('"Group_Members"."GroupID"', '"Group_Members"', $manyManyFilter);
 		$groupIDs = $query->execute()->column();
 
 		// Get all ancestors, iteratively merging these into the master set

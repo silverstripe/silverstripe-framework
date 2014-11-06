@@ -31,7 +31,7 @@ class DBQueryBuilder {
 		// Ignore null queries
 		if($query->isEmpty()) return null;
 
-		if($query instanceof SQLSelect) {
+		if($query instanceof SQLQuery) {
 			$sql = $this->buildSelectQuery($query, $parameters);
 		} elseif($query instanceof SQLDelete) {
 			$sql = $this->buildDeleteQuery($query, $parameters);
@@ -46,13 +46,13 @@ class DBQueryBuilder {
 	}
 
 	/**
-	 * Builds a query from a SQLSelect expression
+	 * Builds a query from a SQLQuery expression
 	 *
-	 * @param SQLSelect $query The expression object to build from
+	 * @param SQLQuery $query The expression object to build from
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string Completed SQL string
 	 */
-	protected function buildSelectQuery(SQLSelect $query, array &$parameters) {
+	protected function buildSelectQuery(SQLQuery $query, array &$parameters) {
 		$sql  = $this->buildSelectFragment($query, $parameters);
 		$sql .= $this->buildFromFragment($query, $parameters);
 		$sql .= $this->buildWhereFragment($query, $parameters);
@@ -140,11 +140,11 @@ class DBQueryBuilder {
 	/**
 	 * Returns the SELECT clauses ready for inserting into a query.
 	 *
-	 * @param SQLSelect $query The expression object to build from
+	 * @param SQLQuery $query The expression object to build from
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string Completed select part of statement
 	 */
-	protected function buildSelectFragment(SQLSelect $query, array &$parameters) {
+	protected function buildSelectFragment(SQLQuery $query, array &$parameters) {
 		$distinct = $query->getDistinct();
 		$select = $query->getSelect();
 		$clauses = array();
@@ -245,11 +245,11 @@ class DBQueryBuilder {
 	/**
 	 * Returns the ORDER BY clauses ready for inserting into a query.
 	 *
-	 * @param SQLSelect $query The expression object to build from
+	 * @param SQLQuery $query The expression object to build from
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string Completed order by part of statement
 	 */
-	public function buildOrderByFragment(SQLSelect $query, array &$parameters) {
+	public function buildOrderByFragment(SQLQuery $query, array &$parameters) {
 		$orderBy = $query->getOrderBy();
 		if(empty($orderBy)) return '';
 
@@ -266,11 +266,11 @@ class DBQueryBuilder {
 	/**
 	 * Returns the GROUP BY clauses ready for inserting into a query.
 	 *
-	 * @param SQLSelect $query The expression object to build from
+	 * @param SQLQuery $query The expression object to build from
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string Completed group part of statement
 	 */
-	public function buildGroupByFragment(SQLSelect $query, array &$parameters) {
+	public function buildGroupByFragment(SQLQuery $query, array &$parameters) {
 		$groupBy = $query->getGroupBy();
 		if(empty($groupBy)) return '';
 
@@ -281,11 +281,11 @@ class DBQueryBuilder {
 	/**
 	 * Returns the HAVING clauses ready for inserting into a query.
 	 *
-	 * @param SQLSelect $query The expression object to build from
+	 * @param SQLQuery $query The expression object to build from
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string
 	 */
-	public function buildHavingFragment(SQLSelect $query, array &$parameters) {
+	public function buildHavingFragment(SQLQuery $query, array &$parameters) {
 		$having = $query->getHavingParameterised($havingParameters);
 		if(empty($having)) return '';
 
@@ -299,11 +299,11 @@ class DBQueryBuilder {
 	/**
 	 * Return the LIMIT clause ready for inserting into a query.
 	 *
-	 * @param SQLSelect $query The expression object to build from
+	 * @param SQLQuery $query The expression object to build from
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string The finalised limit SQL fragment
 	 */
-	public function buildLimitFragment(SQLSelect $query, array &$parameters) {
+	public function buildLimitFragment(SQLQuery $query, array &$parameters) {
 		$nl = $this->getSeparator();
 
 		// Ensure limit is given

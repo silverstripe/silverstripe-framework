@@ -162,10 +162,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * Amend freshly created DataQuery objects with versioned-specific
 	 * information.
 	 *
-	 * @param SQLSelect
+	 * @param SQLQuery
 	 * @param DataQuery
 	 */
-	public function augmentDataQueryCreation(SQLSelect &$query, DataQuery &$dataQuery) {
+	public function augmentDataQueryCreation(SQLQuery &$query, DataQuery &$dataQuery) {
 		$parts = explode('.', Versioned::get_reading_mode());
 
 		if($parts[0] == 'Archive') {
@@ -182,10 +182,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Augment the the SQLSelect that is created by the DataQuery
+	 * Augment the the SQLQuery that is created by the DataQuery
 	 * @todo Should this all go into VersionedDataQuery?
 	 */
-	public function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null) {
+	public function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
 		if(!$dataQuery || !$dataQuery->getQueryParam('Versioned.mode')) {
 			return;
 		}
@@ -329,11 +329,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * For lazy loaded fields requiring extra sql manipulation, ie versioning.
 	 *
-	 * @param SQLSelect $query
+	 * @param SQLQuery $query
 	 * @param DataQuery $dataQuery
 	 * @param DataObject $dataObject
 	 */
-	public function augmentLoadLazyFields(SQLSelect &$query, DataQuery &$dataQuery = null, $dataObject) {
+	public function augmentLoadLazyFields(SQLQuery &$query, DataQuery &$dataQuery = null, $dataObject) {
 		// The VersionedMode local variable ensures that this decorator only applies to
 		// queries that have originated from the Versioned object, and have the Versioned
 		// metadata set on the query object. This prevents regular queries from

@@ -220,7 +220,7 @@ class ManyManyList extends RelationList {
 				// With the current query, simply add the foreign and local conditions
 				// The query can be a bit odd, especially if custom relation classes
 				// don't join expected tables (@see Member_GroupSet for example).
-				$query = new SQLSelect("*", "\"{$this->joinTable}\"");
+				$query = new SQLQuery("*", "\"{$this->joinTable}\"");
 				$query->addWhere($foreignFilter);
 				$query->addWhere(array(
 					"\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
@@ -365,7 +365,7 @@ class ManyManyList extends RelationList {
 		// @todo Optimize into a single query instead of one per extra field
 		if($this->extraFields) {
 			foreach($this->extraFields as $fieldName => $dbFieldSpec) {
-				$query = new SQLSelect("\"{$fieldName}\"", "\"{$this->joinTable}\"");
+				$query = new SQLQuery("\"{$fieldName}\"", "\"{$this->joinTable}\"");
 				if($filter = $this->foreignIDWriteFilter($this->getForeignID())) {
 					$query->setWhere($filter);
 				} else {

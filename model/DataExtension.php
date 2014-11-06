@@ -23,9 +23,9 @@ abstract class DataExtension extends Extension {
 	/**
 	 * Edit the given query object to support queries for this extension
 	 *
-	 * @param SQLSelect $query Query to augment.
+	 * @param SQLQuery $query Query to augment.
 	 */
-	public function augmentSQL(SQLSelect $query) {
+	public function augmentSQL(SQLQuery &$query) {
 	}
 
 	/**
