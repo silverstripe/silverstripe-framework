@@ -33,5 +33,8 @@ class NumericFieldTest extends SapphireTest {
 
 		$field->setValue('12.00');
 		$this->assertFalse($field->validate($validator));
+		
+		$field->setValue(0);
+		$this->assertRegExp("#<span[^>]+>\s*0\s*<\/span>#", "".$field->performReadonlyTransformation()->Field()."");
 	}
 }

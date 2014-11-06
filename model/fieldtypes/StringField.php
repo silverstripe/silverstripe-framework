@@ -21,6 +21,7 @@ abstract class StringField extends DBField {
 		'LimitWordCountXML' => 'HTMLText',
 		"LowerCase" => "Text",
 		"UpperCase" => "Text",
+		'NoHTML' => 'Text',
 	);
 
 	/**
@@ -186,5 +187,14 @@ abstract class StringField extends DBField {
 	 */ 
 	public function UpperCase() {
 		return mb_strtoupper($this->value);
+	}
+	
+	/**
+	 * Return the value of the field stripped of html tags.
+	 *
+	 * @return string
+	 */
+	public function NoHTML() {
+		return strip_tags($this->value);
 	}
 }
