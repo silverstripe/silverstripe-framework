@@ -165,6 +165,8 @@ It checks for a `Stage` GET parameter, so you can force
 a draft stage by appending `?stage=Stage` to your request. The setting is "sticky"
 in the PHP session, so any subsequent requests will also be in draft stage.
 
+It can be useful to add the variable `$SilverStripeNavigator` somewhere into the template, since it allows you to put a mini "admin" bar on the page which isn't visible to non editors. It shows the current stage and provides a convenient CMS link and version changing link.
+
 Important: The `choose_site_stage()` call only deals with setting the default stage,
 and doesn't check if the user is authenticated to view it. As with any other controller logic,
 please use `DataObject->canView()` to determine permissions, and avoid exposing unpublished
