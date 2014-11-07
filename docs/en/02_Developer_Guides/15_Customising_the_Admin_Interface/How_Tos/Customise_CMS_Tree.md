@@ -39,11 +39,11 @@ code like this:
 		...
 	</ul>
 	...
-	
+
 By applying the proper style sheet, the snippet html above could produce the look of:
 ![Page Node Screenshot](../_images/tree_node.png "Page Node")
 
-SiteTree is a `[api:DataObject]` which is versioned by `[api:Versioned]` extension. 
+SiteTree is a `[api:DataObject]` which is versioned by `[api:Versioned]` extension.
 Each node can optionally have publication status flags, e.g. "Removed from draft".
 Each flag has a unique identifier, which is also used as a CSS class for easier styling.
 
@@ -66,7 +66,7 @@ __Example: using a subclass__
 		public function getScheduledToPublish(){
 			// return either true or false
 		}
-		
+
 		public function getStatusFlags($cached = true) {
 			$flags = parent::getStatusFlags($cached);
 			$flags['scheduledtopublish'] = "Scheduled To Publish";
