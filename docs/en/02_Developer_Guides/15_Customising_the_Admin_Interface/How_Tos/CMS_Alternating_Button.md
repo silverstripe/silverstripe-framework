@@ -59,7 +59,7 @@ Here we initialise the button based on the backend check, and assume that the bu
 		}
 		// ...
 	}
- 
+
 ## Frontend support ##
 
 As with the *Save* and *Save & publish* buttons, you might want to add some scripted reactions to user actions on the
@@ -116,7 +116,7 @@ extras.
 
 Continuing our example let's add a "constructive" style to our *Clean-up* button. First you need to be able to add
 custom JS code into the CMS. You can do this by adding a new source file, here
-`mysite/javascript/CMSMain.CustomActionsExtension.js`, and requiring it 
+`mysite/javascript/CMSMain.CustomActionsExtension.js`, and requiring it
 through a YAML configuration value: `LeftAndMain.extra_requirements_javascript`.
 Set it to 'mysite/javascript/CMSMain.CustomActionsExtension.js'.
 

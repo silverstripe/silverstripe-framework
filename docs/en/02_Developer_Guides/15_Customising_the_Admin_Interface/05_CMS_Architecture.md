@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A lot can be achieved in SilverStripe by adding properties and form fields 
+A lot can be achieved in SilverStripe by adding properties and form fields
 to your own page types (via `[api:SiteTree->getCMSFields()]`), as well as creating
 your own data management interfaces through `[api:ModelAdmin]`. But sometimes
 you'll want to go deeper and tailor the underlying interface to your needs as well.
@@ -22,7 +22,7 @@ While SilverStripe is intended to work with JavaScript only,
 we're following the principles of "[Progressive Enhancement](http://en.wikipedia.org/wiki/Progressive_enhancement)"
 where feasible, relying on a comparatively light layer of JavaScript to enhance
 forms and markup generated on the server. This allows seamless customization of
-aspects like form fields. We're explaining this philosophy in more detail 
+aspects like form fields. We're explaining this philosophy in more detail
 on our [blog](http://www.silverstripe.org/the-3-0-ui-a-better-framework-for-your-ideas/)).
 
 All CSS in the CMS UI is written in the [SCSS language extensions](http://sass-lang.com/)
@@ -30,7 +30,7 @@ and the [Compass framework](http://compass-style.org/), which helps
 us maintain expressive and concise style declarations. The files are located in `framework/admin/scss`
 (and if you have the `cms` module installed, in `cms/scss`), and are compiled to a `css` folder on the
 same directory path. Changes to the SCSS files can be automatically converted by installing
-the ["compass" module](https://github.com/silverstripe-labs/silverstripe-compass) for SilverStripe, 
+the ["compass" module](https://github.com/silverstripe-labs/silverstripe-compass) for SilverStripe,
 although [installing the compass framework](http://compass-style.org/install/) directly works as well.
 Each file describes its purpose at the top of the declarations. Note that you can write
 plain CSS without SCSS for your custom CMS interfaces as well, we just mandate SCSS for core usage.
@@ -44,7 +44,7 @@ As there's a whole lot of CSS driving the CMS, we have certain best practives ar
    (which might change later on). A more structural name could be `cms-menu` (or `cms-tools-menu` for a more specific version)
  * Class naming: Use the `cms-` class prefix for major components in the cms interface,
    and the `ss-ui-` prefix for extensions to jQuery UI. Don't use the `ui-` class prefix, its reserved for jQuery UI built-in styles.
- * Use jQuery UI's built-in styles where possible, e.g. `ui-widget` for a generic container, or `ui-state-highlight` 
+ * Use jQuery UI's built-in styles where possible, e.g. `ui-widget` for a generic container, or `ui-state-highlight`
    to highlight a specific component. See the [jQuery UI Theming API](http://jqueryui.com/docs/Theming/API) for a full list.
 
 See our [system requirements](../installation/server-requirements) for a list of supported browsers.
@@ -67,7 +67,7 @@ We can use this to create a different base template with `LeftAndMain.ss`
 (which corresponds to the `LeftAndMain` PHP controller class).
 In case you want to retain the main CMS structure (which is recommended),
 just create your own "Content" template (e.g. `MyCMSController_Content.ss`),
-which is in charge of rendering the main content area apart from the CMS menu. 
+which is in charge of rendering the main content area apart from the CMS menu.
 
 Depending on the complexity of your layout, you'll also need to overload the
 "EditForm" template (e.g. `MyCMSController_EditForm.ss`), e.g. to implement
@@ -77,9 +77,9 @@ This requires manual assignment of the template to your form instance, see `[api
 Often its useful to have a "tools" panel in between the menu and your content,
 usually occupied by a search form or navigational helper.
 In this case, you can either overload the full base template as described above.
-To avoid duplicating all this template code, you can also use the special `[api:LeftAndMain->Tools()]` and 
+To avoid duplicating all this template code, you can also use the special `[api:LeftAndMain->Tools()]` and
 `[api:LeftAndMain->EditFormTools()]` methods available in `LeftAndMain`.
-These placeholders are populated by auto-detected templates, 
+These placeholders are populated by auto-detected templates,
 with the naming convention of "<controller classname>_Tools.ss" and "<controller classname>_EditFormTools.ss".
 So to add or "subclass" a tools panel, simply create this file and it's automatically picked up.
 
@@ -101,7 +101,7 @@ e.g. after saving a record (which requires a form refresh), or switching the sec
 Depending on where in the DOM hierarchy you want to use a form,
 custom templates and additional CSS classes might be required for correct operation.
 For example, the "EditForm" has specific view and logic JavaScript behaviour
-which can be enabled via adding the "cms-edit-form" class. 
+which can be enabled via adding the "cms-edit-form" class.
 In order to set the correct layout classes, we also need a custom template.
 To obey the inheritance chain, we use `$this->getTemplatesWithSuffix('_EditForm')` for
 selecting the most specific template (so `MyAdmin_EditForm.ss`, if it exists).
@@ -115,7 +115,7 @@ Basic example form in a CMS controller subclass:
 	class MyAdmin extends LeftAndMain {
 		function getEditForm() {
 			return CMSForm::create(
-				$this, 
+				$this,
 				'EditForm',
 				new FieldSet(
 					TabSet::create(
@@ -139,14 +139,14 @@ Basic example form in a CMS controller subclass:
 		}
 	}
 
-Note: Usually you don't need to worry about these settings, 
+Note: Usually you don't need to worry about these settings,
 and will simply call `parent::getEditForm()` to modify an existing,
 correctly configured form.
 
 ## JavaScript through jQuery.entwine
 
 [jQuery.entwine](https://github.com/hafriedlander/jquery.entwine) is a thirdparty library
-which allows us to attach behaviour to DOM elements in a flexible and structured mannger. 
+which allows us to attach behaviour to DOM elements in a flexible and structured mannger.
 It replaces the `behaviour.js` library used in previous versions of the CMS interface.
 See [Topics: JavaScript](../topics/javascript) for more information on how to use it.
 In the CMS interface, all entwine rules should be placed in the "ss" entwine namespace.
@@ -154,13 +154,13 @@ If you want to call methods defined within these rules outside of entwine logic,
 you have to use this namespace, e.g. `$('.cms-menu').entwine('ss').collapse()`.
 
 Note that only functionality that is custom to the CMS application needs to be built
-in jQuery.entwine, we're trying to reuse library code wherever possible. 
+in jQuery.entwine, we're trying to reuse library code wherever possible.
 The most prominent example of this is the usage of [jQuery UI](http://jqueryui.com) for
 dialogs and buttons.
 
 The CMS includes the jQuery.entwine inspector. Press Ctrl+` ("backtick") to bring down the inspector.
 You can then click on any element in the CMS to see which entwine methods are bound to
-any particular element. 
+any particular element.
 
 ## JavaScript and CSS dependencies via Requirements and Ajax
 
@@ -181,23 +181,23 @@ so don't place a rule applying to all form buttons inside `ModelAdmin.js`.
 
 The CMS relies heavily on Ajax-loading of interfaces, so each interface and the JavaScript
 driving it have to assume its underlying DOM structure is appended via an Ajax callback
-rather than being available when the browser window first loads. 
+rather than being available when the browser window first loads.
 jQuery.entwine is effectively an advanced version of [jQuery.live](http://api.jquery.com/live/)
 and [jQuery.delegate](http://api.jquery.com/delegate/), so takes care of dynamic event binding.
 
 Most interfaces will require their own JavaScript and CSS files, so the Ajax loading has
-to ensure they're loaded unless already present. A custom-built library called 
+to ensure they're loaded unless already present. A custom-built library called
 `jQuery.ondemand` (located in `framework/thirdparty`) takes care of this transparently -
 so as a developer just declare your dependencies through the `[api:Requirements]` API.
 
-## Ajax Loading and Browser History 
+## Ajax Loading and Browser History
 
 SilverStripe uses the HTML5 browser history to modify the URL without a complete window refresh,
-and load its UI via Ajax by hooking into browser navigation events (through the 
+and load its UI via Ajax by hooking into browser navigation events (through the
 [history.js](https://github.com/balupton/History.js/) wrapper library).
 This technique has an impact on how any Ajax load needs to happen:
-In order to support browser history (and change the URL state), 
-a CMS developer needs to fire a navigation event rather than invoking the Ajax call directly. 
+In order to support browser history (and change the URL state),
+a CMS developer needs to fire a navigation event rather than invoking the Ajax call directly.
 
 The main point of contact here is `$('.cms-container').loadPanel(<url>, <title>, <data>)`
 in `LeftAndMain.js`. The `data` object can contain additional state which is required
@@ -352,7 +352,7 @@ Note: To avoid double processing, the first response body is usually empty.
 
 By loading mostly HTML responses, we don't have an easy way to communicate
 information which can't be directly contained in the produced HTML.
-For example, the currently used controller class might've changed due to a "redirect", 
+For example, the currently used controller class might've changed due to a "redirect",
 which affects the currently active menu entry. We're using HTTP response headers to contain this data
 without affecting the response body.
 
@@ -388,7 +388,7 @@ SilverStripe automatically applies a [jQuery UI button style](http://jqueryui.co
 to all elements with the class `.ss-ui-button`. We've extended the jQuery UI widget a bit
 to support defining icons via HTML5 data attributes (see `ssui.core.js`).
 These icon identifiers relate to icon files in `framework/admin/images/btn-icons`,
-and are sprited into a single file through SCSS and the Compass framework 
+and are sprited into a single file through SCSS and the Compass framework
 (see [tutorial](http://compass-style.org/help/tutorials/spriting/)).
 Compass also creates the correct CSS classes to show those sprites via background images
 (see `framework/admin/scss/_sprites.scss`).
@@ -435,7 +435,7 @@ by the [jstree](http://jstree.com) library. It is configured through
 HTML5 metadata generated on its container (see the `data-hints` attribute).
 For more information, see the [Howto: Customize the CMS tree](../howto/customize-cms-tree).
 
-Note that a similar tree logic is also used for the 
+Note that a similar tree logic is also used for the
 form fields to select one or more entries from those hierarchies
 (`[api:TreeDropdownField]` and `[api:TreeMultiselectField]`).
 
@@ -487,7 +487,7 @@ Form template with custom tab navigation (trimmed down):
 				<% loop Fields %>$FieldHolder<% end_loop %>
 			</fieldset>
 		</div>
-		
+
 	</form>
 
 Tabset template without tab navigation (e.g. `CMSTabset.ss`)

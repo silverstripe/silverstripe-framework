@@ -14,7 +14,7 @@ at the last position within the field, and expects unescaped HTML content.
 		->setDescription('More <strong>detailed</strong> help');
 
 To show the help text as a tooltip instead of inline,
-add a `.cms-description-tooltip` class. 
+add a `.cms-description-tooltip` class.
 
 	:::php
 	TextField::create('MyText', 'My Text Label')

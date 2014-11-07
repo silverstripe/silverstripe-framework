@@ -23,7 +23,7 @@ jQuery allows you to write complex behavior in a couple of lines of JavaScript. 
 be reused can be custom code without further encapsulation. For example, a button rollover effect doesn't require a full
 plugin. See "[How jQuery Works](http://docs.jquery.com/How_jQuery_Works)" for a good introduction.
 
-You should write all your custom jQuery code in a closure. 
+You should write all your custom jQuery code in a closure.
 
 	:::javascript
 	(function($) {
@@ -34,7 +34,7 @@ You should write all your custom jQuery code in a closure.
 
 ## jQuery Plugins
 
-A jQuery Plugin is essentially a method call which can act on a collection of DOM elements. It is contained within the 
+A jQuery Plugin is essentially a method call which can act on a collection of DOM elements. It is contained within the
 `jQuery.fn` namespace, and attaches itself automatically to all jQuery collections. The basics for are outlined in the
 official [jQuery Plugin Authoring](http://docs.jquery.com/Plugins/Authoring) documentation.
 
