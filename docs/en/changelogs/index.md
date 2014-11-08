@@ -80,6 +80,8 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
 ## Alpha/beta/release candidate
 
+ * [3.1.7-rc1](rc/3.1.7-rc1) - 8 November 2014
+
  * [3.1.6-rc3](rc/3.1.6-rc3) - 18 August 2014
  * [3.1.6-rc2](rc/3.1.6-rc2) - 12 August 2014
  * [3.1.6-rc1](rc/3.1.6-rc1) - 5 August 2014
