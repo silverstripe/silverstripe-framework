@@ -687,36 +687,29 @@ input.radio {
 
 /***************************************************************
 * On/Off Switch. 
-* Supports switching between up to 5 values (used for Draft/Published)
 * Example html set-up:
-*	<fieldset class="switch-states size_2"> 			
-*		<div class="switch">				
-*			<input id="Draft" class="first" name="view" type="radio" checked>
-*			<label for="Draft">Draft</label>	
-*			<input id="Published" class="last" name="view" type="radio">
-*			<label for="Published">Published</label>						
-*			<span class="slide-button"></span>	
+*	<fieldset class="switch-states">
+*		<div class="switch">
+*			<a href="my-page/?stage=Draft" class="first active"><span>Draft</span></a>
+*			<a href="my-page/?stage=Live" class="last"><span>Live</span></a>
 *		</div>			
 *	</fieldset>
 ****************************************************************/
-fieldset.switch-states{	
+.switch-states{	
 	padding:0 20px 0 0;	
 	margin-right: 5px;
 
 	.switch{
 		@include box-shadow(inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1));
 		@include border-radius(3px);
-		-webkit-animation: bugfix infinite 1s; //Bugfix for older Webkit, including mobile Webkit.
 		background:lighten(#2d3035,69%); 
-		display: block;				
+		display: block;
 		height: 25px;
 		margin-top:3px;
-		padding:0 10px;	
-		position: relative;			
 		width:100%;
 		z-index:5;
-		
-		label{
+
+		a {
 			@include hide-text-overflow;
 			@include text-shadow(0 1px 0 rgba(255,255,255,0.5));	
 			color:lighten($color-text-dark,40%);
@@ -725,88 +718,39 @@ fieldset.switch-states{
 			float:left;
 			font-weight:bold;
 			height: 100%;
-			line-height: 25px;		
-			position:relative;
-			z-index:2;	
-			/* Make text unselectable in browsers that support that */
-			-webkit-touch-callout: none;
-			-webkit-user-select: none;
-			-khtml-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;			
+			line-height: 25px;
+			z-index:2;
+
 			&:hover{
 				color:lighten($color-text-dark, 30%);	
-				color:rgba($color-text-dark,0.7);								
-			}	
-			span{
+				color:rgba($color-text-dark,0.7);
+			}
+
+			span {
 				@include box-sizing('border-box');
 				@include hide-text-overflow;
 				display:inline-block;
 				padding:0 10px;
+				@include text-shadow(0 1px 0 rgba(255,255,255,0.5));	
+				color:lighten($color-text-dark,40%);
+				color:rgba($color-text-dark,0.5);
 			}
-		}
-		input {
-			opacity: 0;
-			filter: alpha(opacity = 0);
-			visibility:none;	
-			position: absolute;			
-			&:checked + label {
-				@include transition(all 0.3s ease-out 0s); 	
-				color: #fff;
-				text-shadow: 0 -1px 0 darken($color-menu-button,10%);
-			}
-		}
-		.slide-button{
-			@include background-image(linear-gradient(
-				#2b9c32,
-				#64ab36
-			));		
-			@include border-radius(3px);
-			@include box-shadow(inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2));
-			@include text-shadow(0 1px 0 rgba(255,255,255,0.5));
-			@include transition(all 0.3s ease-out 0s); 	
-			background-color: #2b9c32; 
-			display:block;
-			height: 100%;
-			left:0;
-			padding: 0;
-			position: absolute;
-			top: 0;	
-			z-index: 1;	
-		}
-	}
 
-	/*	
-		Produce css for up to 5 states.
+			&.active {
+				@include background-image(linear-gradient(
+					#2b9c32,
+					#64ab36
+				));		
+				@include border-radius(3px);
+				@include box-shadow(inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2));
+				@include text-shadow(0 1px 0 rgba(255,255,255,0.5));
+				background-color: #2b9c32; 
 
-		Note: with a little adjustment the switch can take more than 5 items, 
-		but a dropdown would probably be more appropriate
-	*/
-	@for $i from 1 through 5 {
-		&.size_#{$i} {
-			label, .slide-button { 
-				width:  100% / $i;				
-			}	  			
-			@if $i == 1{
-				label span{
-					padding-right:0; //even up the padding for a single item
+				span {
+					color: #fff;
+					text-shadow: 0 -1px 0 darken($color-menu-button,10%);
 				}
 			}
-			input:checked:nth-of-type(2) ~ .slide-button {	
-				left: 100% / $i;
-			}
-			input:checked:nth-of-type(3) ~ .slide-button {	
-				left: (100% / $i) * 2;
-			}
-			input:checked:nth-of-type(4) ~ .slide-button {	
-				left: (100% / $i) * 3;
-			}
-			input:checked:nth-of-type(5) ~ .slide-button {	
-				left: (100% / $i) * 4;
-			}
-		} 
-	}		
-} 
-//old web-kit browser fix	
-@-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }
+		}
+	}
+}

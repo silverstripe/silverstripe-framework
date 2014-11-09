@@ -281,60 +281,21 @@ input.radio { margin-left: 0; }
 
 /***************************************************************
 * On/Off Switch. 
-* Supports switching between up to 5 values (used for Draft/Published)
 * Example html set-up:
-*	<fieldset class="switch-states size_2"> 			
-*		<div class="switch">				
-*			<input id="Draft" class="first" name="view" type="radio" checked>
-*			<label for="Draft">Draft</label>	
-*			<input id="Published" class="last" name="view" type="radio">
-*			<label for="Published">Published</label>						
-*			<span class="slide-button"></span>	
+*	<fieldset class="switch-states">
+*		<div class="switch">
+*			<a href="my-page/?stage=Draft" class="first active"><span>Draft</span></a>
+*			<a href="my-page/?stage=Live" class="last"><span>Live</span></a>
 *		</div>			
 *	</fieldset>
 ****************************************************************/
-fieldset.switch-states { padding: 0 20px 0 0; margin-right: 5px; 	/*	
-		Produce css for up to 5 states.
-
-		Note: with a little adjustment the switch can take more than 5 items, 
-		but a dropdown would probably be more appropriate
-	*/ }
-fieldset.switch-states .switch { -webkit-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1); -moz-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; -webkit-animation: bugfix infinite 1s; background: #dee0e3; display: block; height: 25px; margin-top: 3px; padding: 0 10px; position: relative; width: 100%; z-index: 5; }
-fieldset.switch-states .switch label { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); color: #858585; color: rgba(31, 31, 31, 0.5); cursor: pointer; float: left; font-weight: bold; height: 100%; line-height: 25px; position: relative; z-index: 2; /* Make text unselectable in browsers that support that */ -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-fieldset.switch-states .switch label:hover { color: #6c6c6c; color: rgba(31, 31, 31, 0.7); }
-fieldset.switch-states .switch label span { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; display: inline-block; padding: 0 10px; }
-fieldset.switch-states .switch input { opacity: 0; filter: alpha(opacity=0); visibility: none; position: absolute; }
-fieldset.switch-states .switch input:checked + label { -moz-transition: all 0.3s ease-out 0s; -webkit-transition: all 0.3s ease-out 0s; -o-transition: all 0.3s ease-out 0s; transition: all 0.3s ease-out 0s; color: #fff; text-shadow: 0 -1px 0 #287099; }
-fieldset.switch-states .switch .slide-button { background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJiOWMzMiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY0YWIzNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #2b9c32), color-stop(100%, #64ab36)); background-image: -webkit-linear-gradient(#2b9c32, #64ab36); background-image: -moz-linear-gradient(#2b9c32, #64ab36); background-image: -o-linear-gradient(#2b9c32, #64ab36); background-image: linear-gradient(#2b9c32, #64ab36); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); -moz-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); -moz-transition: all 0.3s ease-out 0s; -webkit-transition: all 0.3s ease-out 0s; -o-transition: all 0.3s ease-out 0s; transition: all 0.3s ease-out 0s; background-color: #2b9c32; display: block; height: 100%; left: 0; padding: 0; position: absolute; top: 0; z-index: 1; }
-fieldset.switch-states.size_1 label, fieldset.switch-states.size_1 .slide-button { width: 100%; }
-fieldset.switch-states.size_1 label span { padding-right: 0; }
-fieldset.switch-states.size_1 input:checked:nth-of-type(2) ~ .slide-button { left: 100%; }
-fieldset.switch-states.size_1 input:checked:nth-of-type(3) ~ .slide-button { left: 200%; }
-fieldset.switch-states.size_1 input:checked:nth-of-type(4) ~ .slide-button { left: 300%; }
-fieldset.switch-states.size_1 input:checked:nth-of-type(5) ~ .slide-button { left: 400%; }
-fieldset.switch-states.size_2 label, fieldset.switch-states.size_2 .slide-button { width: 50%; }
-fieldset.switch-states.size_2 input:checked:nth-of-type(2) ~ .slide-button { left: 50%; }
-fieldset.switch-states.size_2 input:checked:nth-of-type(3) ~ .slide-button { left: 100%; }
-fieldset.switch-states.size_2 input:checked:nth-of-type(4) ~ .slide-button { left: 150%; }
-fieldset.switch-states.size_2 input:checked:nth-of-type(5) ~ .slide-button { left: 200%; }
-fieldset.switch-states.size_3 label, fieldset.switch-states.size_3 .slide-button { width: 33.33333%; }
-fieldset.switch-states.size_3 input:checked:nth-of-type(2) ~ .slide-button { left: 33.33333%; }
-fieldset.switch-states.size_3 input:checked:nth-of-type(3) ~ .slide-button { left: 66.66667%; }
-fieldset.switch-states.size_3 input:checked:nth-of-type(4) ~ .slide-button { left: 100%; }
-fieldset.switch-states.size_3 input:checked:nth-of-type(5) ~ .slide-button { left: 133.33333%; }
-fieldset.switch-states.size_4 label, fieldset.switch-states.size_4 .slide-button { width: 25%; }
-fieldset.switch-states.size_4 input:checked:nth-of-type(2) ~ .slide-button { left: 25%; }
-fieldset.switch-states.size_4 input:checked:nth-of-type(3) ~ .slide-button { left: 50%; }
-fieldset.switch-states.size_4 input:checked:nth-of-type(4) ~ .slide-button { left: 75%; }
-fieldset.switch-states.size_4 input:checked:nth-of-type(5) ~ .slide-button { left: 100%; }
-fieldset.switch-states.size_5 label, fieldset.switch-states.size_5 .slide-button { width: 20%; }
-fieldset.switch-states.size_5 input:checked:nth-of-type(2) ~ .slide-button { left: 20%; }
-fieldset.switch-states.size_5 input:checked:nth-of-type(3) ~ .slide-button { left: 40%; }
-fieldset.switch-states.size_5 input:checked:nth-of-type(4) ~ .slide-button { left: 60%; }
-fieldset.switch-states.size_5 input:checked:nth-of-type(5) ~ .slide-button { left: 80%; }
-
-@-webkit-keyframes bugfix { from { position: relative; }
-  to { position: relative; } }
+.switch-states { padding: 0 20px 0 0; margin-right: 5px; }
+.switch-states .switch { -moz-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1); -webkit-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1); -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; background: #dee0e3; display: block; height: 25px; margin-top: 3px; width: 100%; z-index: 5; }
+.switch-states .switch a { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); color: #858585; color: rgba(31, 31, 31, 0.5); cursor: pointer; float: left; font-weight: bold; height: 100%; line-height: 25px; z-index: 2; }
+.switch-states .switch a:hover { color: #6c6c6c; color: rgba(31, 31, 31, 0.7); }
+.switch-states .switch a span { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; display: inline-block; padding: 0 10px; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); color: #858585; color: rgba(31, 31, 31, 0.5); }
+.switch-states .switch a.active { background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJiOWMzMiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY0YWIzNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #2b9c32), color-stop(100%, #64ab36)); background-image: -moz-linear-gradient(#2b9c32, #64ab36); background-image: -webkit-linear-gradient(#2b9c32, #64ab36); background-image: linear-gradient(#2b9c32, #64ab36); -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; -moz-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); -webkit-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); background-color: #2b9c32; }
+.switch-states .switch a.active span { color: #fff; text-shadow: 0 -1px 0 #287099; }
 
 /**
 * This file defines most styles of the CMS: Colors, fonts, backgrounds, 
