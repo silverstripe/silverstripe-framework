@@ -996,7 +996,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * It is expected that you call validate() in your own application to test that an object is valid before
 	 * attempting a write, and respond appropriately if it isn't.
 	 * 
-	 * @return A {@link ValidationResult} object
+	 * @see {@link ValidationResult}
+	 * @return ValidationResult
 	 */
 	protected function validate() {
 		$result = ValidationResult::create();
