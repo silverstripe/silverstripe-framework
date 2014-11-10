@@ -39,7 +39,7 @@ example, the tab panels have be applied in the CMS form before the form itself i
 avoid incorrect dimensions.
 </div>
 
-![Layout variations](_images/cms-architecture.png)
+![Layout variations](/_images/cms-architecture.png)
 
 ## Layout API
 

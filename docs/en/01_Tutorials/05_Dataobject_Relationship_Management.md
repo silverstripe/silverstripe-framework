@@ -5,7 +5,7 @@ summary: Learn how to create custom DataObjects and how to build interfaces for 
 
 ## Overview
 
-This tutorial explores the relationship and management of [DataObjects](/topics/datamodel#relations). It builds on the [second tutorial](2-extending-a-basic-site) where we learnt how to define
+This tutorial explores the relationship and management of [DataObjects](/developer_guides/model/dataobject). It builds on the [second tutorial](/tutorials/extending_a_basic_site) where we learnt how to define
 additional fields on our models, and attach images to them.
 
 ## What are we working towards?
@@ -61,8 +61,8 @@ Let's create the `Student` and `Project` objects.
 The relationships are defined through the `$has_one`
 and `$has_many` properties on the objects.
 The array keys declares the name of the relationship,
-the array values contain the class name (see the ["database structure"](/reference/database-structure)
-and ["datamodel"](/topics/datamodel) topics for more information).
+the array values contain the class name (see the ["database structure"](/developer_guides/model/database_structure)
+and ["datamodel"](/developer_guides/model/data_model_and_orm) topics for more information).
 
 As you can see, only the `Project` model extends `Page`,
 while `Student` is a plain `DataObject` subclass.
@@ -106,7 +106,7 @@ as part of the normal page hierarchy in the CMS.
 
 Now that we have created our `ProjectsHolder` and `Project` page types,  we'll add some content.
 Go into the CMS and create a `ProjectsHolder` page named **Projects**. 
-Then create one `Project` page for each project listed [above](#what-are-we-working-towards).
+Then create one `Project` page for each project listed [above](/tutorials/dataobject_relationship_management#what-are-we-working-towards).
 
 ### Data Management Interface: GridField
 
@@ -170,17 +170,17 @@ We call `setDisplayFields()` directly on the component responsible for their ren
 	using the `[ModelAdmin](reference/modeladmin)` interface instead.
 </div>
 
-![tutorial:tutorial5_project_creation.jpg](_images/tutorial5_project_creation.jpg)
+![tutorial:tutorial5_project_creation.jpg](/_images/tutorial5_project_creation.jpg)
 
 Select each `Project` page you have created before, 
 go in the tab panel called "Students", and add all students as required,
 by clicking on the link **Add Student** of your *GridField* table.
 
-![tutorial:tutorial5_addNew.jpg](_images/tutorial5_addNew.jpg)
+![tutorial:tutorial5_addNew.jpg](/_images/tutorial5_addNew.jpg)
 
 Once you have added all the students, and selected their projects, it should look a little like this:
 
-![tutorial:tutorial5_students.jpg](_images/tutorial5_students.jpg)
+![tutorial:tutorial5_students.jpg](/_images/tutorial5_students.jpg)
 
 ### Many-many relationships: Mentor
 
@@ -250,18 +250,18 @@ In the CMS, open one of your `Project` pages and select the "Mentors" tab.
 Add all the mentors listed [above](#what-are-we-working-towards) 
 by clicking on the **Add Mentor** button. 
 
-![tutorial:tutorial5_module_creation.jpg](_images/tutorial5_module_creation.jpg)
+![tutorial:tutorial5_module_creation.jpg](/_images/tutorial5_module_creation.jpg)
 
-To associate the mentor with a project, select one of the mentors, and click on the projects tab. Add all the projects a mentor is associated with (see the [list](#What_are_we_working_towards?)), by typing the name in "Find Projects by Page name" and clicking the "Link Existing" button.
+To associate the mentor with a project, select one of the mentors, and click on the projects tab. Add all the projects a mentor is associated with (see the [list](/tutorials/dataobject_relationship_management#What_are_we_working_towards?)), by typing the name in "Find Projects by Page name" and clicking the "Link Existing" button.
 You will notice that you are able to select the same `Project` for multiple mentors. 
 This is the definition of a **many-to-many** relation.
 
-![tutorial:tutorial5_module_selection.jpg](_images/tutorial5_module_selection.jpg)
+![tutorial:tutorial5_module_selection.jpg](/_images/tutorial5_module_selection.jpg)
 
 
 ## Website Display
 
-Now that we have created all the *Page* and *DataObject* classes necessary and the relational tables to manage the [relations](/topics/datamodel#relations) between them, we would like to see these relations on the website. We will see in this section how to display all these relations, 
+Now that we have created all the *Page* and *DataObject* classes necessary and the relational tables to manage the [relations](/developer_guides/model/data_model_and_orm#relations) between them, we would like to see these relations on the website. We will see in this section how to display all these relations, 
 but also how to create a template for a *DataObject*.
 
 For every kind of *Page* or *DataObject*, you can access to their relations thanks to the **control** loop.
@@ -276,7 +276,7 @@ accessing a "has-many" and "many-many" relationship
 in the template loops: to the template, it's just
 a named list of object.
 
-![tutorial:tutorial5_projects_table.jpg](_images/tutorial5_projects_table.jpg)
+![tutorial:tutorial5_projects_table.jpg](/_images/tutorial5_projects_table.jpg)
 
 **themes/simple/templates/Layout/ProjectsHolder.ss**
 
@@ -334,7 +334,7 @@ Creating the detail view for each `Project` page works in a very similar way.
 Given that we're in the context of a single project,
 we can access the "Students" and "Mentors" relationships directly in the template.
 
-![tutorial:tutorial5_project.jpg](_images/tutorial5_project.jpg)
+![tutorial:tutorial5_project.jpg](/_images/tutorial5_project.jpg)
 
 **themes/simple/templates/Layout/Project.ss**
 

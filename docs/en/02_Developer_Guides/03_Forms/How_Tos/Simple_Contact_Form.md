@@ -55,7 +55,7 @@ The reason it's standard practice to name the form function 'Form' is so that we
 
 If you now create a ContactPage in the CMS (making sure you have rebuilt the database and flushed the templates /dev/build?flush=all) and visit the page, you will now see a contact form.
 
-![](../_images/howto_contactForm.jpg)
+![](..//_images/howto_contactForm.jpg)
 
 
 Now that we have a contact form, we need some way of collecting the data submitted. We do this by creating a function on the controller with the same name as the form action. In this case, we create the function 'submit' on the ContactPage_Controller class.

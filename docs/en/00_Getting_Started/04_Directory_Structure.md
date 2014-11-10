@@ -50,7 +50,7 @@ Example Forum:
  | `forum/code` | PHP code for model and controller (subdirectories are optional)     | 
  | ...        | ...                                                                 | 
 
-![](_images/modules_folder.jpg)
+![](/_images/modules_folder.jpg)
 
 ### Module documentation
 
@@ -73,7 +73,7 @@ Example Forum Documentation:
  | `forum/docs/en/`       | English documentation  | 
  | `forum/docs/en/index.md`	| Documentation homepage. Should provide an introduction and links to remaining docs |
  | `forum/docs/en/Getting_Started.md` | Documentation page. Naming convention is Uppercase and underscores. |
- | `forum/docs/en/_images/` | Folder to store any images or media |
+ | `forum/docs/en//_images/` | Folder to store any images or media |
  | `forum/docs/en/Some_Topic/` | You can organise documentation into nested folders. Naming convention is Uppercase and underscores. |
 |`forum/docs/en/04_Some_Topic/00_Getting_Started.md`|Structure is created by use of numbered prefixes. This applies to nested folders and documentations pages, index.md should not have a prefix.|
 

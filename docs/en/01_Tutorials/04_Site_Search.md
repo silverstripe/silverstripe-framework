@@ -1,16 +1,17 @@
+title: Site Search
 summary: Enable website search. How to handle paged result sets and the SearchForm class.
 
 # Tutorial 4 - Site Search
 
 ## Overview
 
-This is a short tutorial demonstrating how to add search functionality to a SilverStripe site. It is recommended that you have completed the earlier tutorials  ([Building a basic site](1-building-a-basic-site), [Extending a basic site](2-extending-a-basic-site), [Forms](3-forms)), especially the tutorial on forms, before attempting this tutorial. While this tutorial will add search functionality to the site built in the previous tutorials, it should be straight  forward to follow this tutorial on any site of your own. 
+This is a short tutorial demonstrating how to add search functionality to a SilverStripe site. It is recommended that you have completed the earlier tutorials  ([Building a basic site](/tutorials/building_a_basic_site), [Extending a basic site](/tutorials/extending_a_basic_site), [Forms](/tutorials/forms)), especially the tutorial on forms, before attempting this tutorial. While this tutorial will add search functionality to the site built in the previous tutorials, it should be straight  forward to follow this tutorial on any site of your own. 
 
 ## What are we working towards?
 
 We are going to add a search box on the top of the page. When a user types something in the box, they are taken to a results page.
 
-![](_images/tutorial4_search.jpg)
+![](/_images/tutorial4_search.jpg)
 
 ## Creating the search form
 
@@ -45,7 +46,7 @@ To add the search form, we can add `$SearchForm` anywhere in our templates. In t
 
 This displays as:
 
-![](_images/tutorial4_searchbox.jpg)
+![](/_images/tutorial4_searchbox.jpg)
 
 ## Showing the results
 
@@ -151,10 +152,10 @@ class.
 Then finally add ?flush=1 to the URL and you should see the new template.
 
 
-![](_images/tutorial4_search.jpg)
+![](/_images/tutorial4_search.jpg)
 
 ## Summary
 
 This tutorial has demonstrated how easy it is to have full text searching on your site. To add search to a SilverStripe site add a search form, a results page, and you're done!
 
-[Next Tutorial >>](5-dataobject-relationship-management)
+[Next Tutorial >>](/tutorials/dataobject_relationship_management)
