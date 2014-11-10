@@ -49,6 +49,14 @@ class DataQueryTest extends SapphireTest {
 			$dq->sql());
 	}
 
+	public function testApplyReplationDeepInheretence() {
+		$newDQ = new DataQuery('DataQueryTest_E');
+		//apply a relation to a relation from an ancestor class
+		$newDQ->applyRelation('TestA');
+		$this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
+		$this->assertContains('"DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql());
+	}
+
 	public function testRelationReturn() {
 		$dq = new DataQuery('DataQueryTest_C');
 		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestA'),
@@ -63,6 +71,9 @@ class DataQueryTest extends SapphireTest {
 		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestBs'),
 			'DataQuery::applyRelation should return the name of the related object.');
 		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('ManyTestBs'),
+			'DataQuery::applyRelation should return the name of the related object.');
+		$newDQ = new DataQuery('DataQueryTest_E');
+		$this->assertEquals('DataQueryTest_A', $newDQ->applyRelation('TestA'),
 			'DataQuery::applyRelation should return the name of the related object.');
 	}
 

@@ -610,8 +610,9 @@ class DataQuery {
 				if(!$this->query->isJoinedTo($component)) {
 					$has_one = array_flip($model->has_one());
 					$foreignKey = $has_one[$component];
+					$realModelClass = ClassInfo::table_for_object_field($modelClass, "{$foreignKey}ID");
 					$this->query->addLeftJoin($component,
-						"\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
+						"\"$component\".\"ID\" = \"{$realModelClass}\".\"{$foreignKey}ID\"");
 				
 					/**
 					 * add join clause to the component's ancestry classes so that the search filter could search on
