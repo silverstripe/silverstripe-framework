@@ -626,7 +626,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
+					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
+					'clear' => _t('HtmlEditorField.CSSCLASSCLEAR', 'Force this element to clear others before it.')
 				)
 			)->addExtraClass('last')
 		);
@@ -760,7 +761,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
+					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
+					'clear' => _t('HtmlEditorField.CSSCLASSCLEAR', 'Force this element to clear others before it.')
 				)
 			)->addExtraClass('last')
 		);
