@@ -138,7 +138,7 @@ You can also sort randomly
 
 	:::php
 	$member = Member::get()->sort('RAND()')
-	
+
 ### Filter
 
 As you might expect, the `filter()` method filters the list of objects that gets
