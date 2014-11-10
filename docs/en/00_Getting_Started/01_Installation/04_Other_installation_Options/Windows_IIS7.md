@@ -154,7 +154,7 @@ Two other important folders to set the permissions on are `assets` and `silverst
 
 You will need to give **Modify** permission to **IUSR** user. To do it right click the folder and choose **Properties**. Then open the security tab, press **Edit** and add the **IUSR** user to the list by clicking the **Add** button. Afterwards tick **Modify** under **Allow** for that user. Repeat these steps for each folder.
 
-![](_images/iis7-iusr-permissions.jpg)
+![](/_images/iis7-iusr-permissions.jpg)
 
 ## Install SilverStripe
 

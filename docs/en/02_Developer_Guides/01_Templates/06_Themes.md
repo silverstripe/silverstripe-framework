@@ -45,7 +45,7 @@ the Site Configuration panel (http://yoursite.com/admin/settings)
 A `theme` within SilverStripe is simply a collection of templates and other front end assets such as javascript and css.
 located within the `themes` directory. 
 
-![themes:basicfiles.gif](/_images/basicfiles.gif)
+![themes:basicfiles.gif](//_images/basicfiles.gif)
 
 ## Submitting your theme to SilverStripe
 

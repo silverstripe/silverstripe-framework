@@ -21,19 +21,19 @@ All files, images and folders in the 'assets' directory are stored in the databa
 
 If you have the CMS module installed, you can manage files, folders and images in the "Files" section of the CMS. Inside this section, you will see a list of files and folders like below:
 
-![](/_images/assets.png)
+![](//_images/assets.png)
 
 You can click on any file to edit it, or click on any folder to open it. To delete a file or a folder, simply click the red 'X' symbol next to it. If you click to open a folder, you can go back up one level by clicking the 'up' arrow above the folder name (highlighted below):
 
-![](/_images/assets_up.png)
+![](//_images/assets_up.png)
 
 Once you click to edit a file, you will see a form similar to the one below, in which you can edit the file's title, filename, owner, or even change which folder the file is located in:
 
-![](/_images/assets_editform.png)
+![](//_images/assets_editform.png)
 
 You may also notice the 'Sync files' button (highlighted below). This button allows CMS users to 'synchronise' the database (remember, all files/folders are stored as database records) with the filesystem. This is particularly useful if someone has uploaded or removed files/folders via FTP, for example.
 
-![](/_images/assets_sync.png)
+![](//_images/assets_sync.png)
 
 ## Upload
 

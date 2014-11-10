@@ -1,18 +1,19 @@
+title: Forms
 summary: Capture and store user information through web forms.
 
 # Tutorial 3 - Forms
 
 ## Overview
 
-This tutorial is intended to be a continuation of the first two tutorials ([first tutorial](1-building-a-basic-site), [second tutorial](2-extending-a-basic-site)). In this tutorial we will build on the site we developed in the earlier tutorials and explore forms in SilverStripe. We will look at custom coded forms: forms which need to be written in PHP.
+This tutorial is intended to be a continuation of the first two tutorials ([first tutorial](/tutorials/building_a_basic_site), [second tutorial](/tutorials/extending_a_basic_site)). In this tutorial we will build on the site we developed in the earlier tutorials and explore forms in SilverStripe. We will look at custom coded forms: forms which need to be written in PHP.
 
-Instead of using a custom coded form, we could use the [userforms module](http://silverstripe.org/user-forms-module). This module allows users to construct forms via the CMS. A form created this way is much quicker to implement, but also lacks the flexibility of a coded form. 
+Instead of using a custom coded form, we could use the [userforms module](http://addons.silverstripe.org/add-ons/silverstripe/userforms). This module allows users to construct forms via the CMS. A form created this way is much quicker to implement, but also lacks the flexibility of a coded form. 
 
 ## What are we working towards?
 
 We will create a poll on the home page that asks the user their favourite web browser, and displays a bar graph of the results.
 
-![tutorial:tutorial3_pollresults.png](_images/tutorial3_pollresults.jpg)
+![tutorial:tutorial3_pollresults.png](/_images/tutorial3_pollresults.jpg)
 
 
 ## Creating the form
@@ -162,7 +163,7 @@ Add the following code to the existing `form.css` file:
 
 All going according to plan, if you visit [http://localhost/your_site_name/home/?flush=1](http://localhost/your_site_name/home/?flush=1) it should look something like this:
 
-![](_images/tutorial3_pollform.jpg)
+![](/_images/tutorial3_pollform.jpg)
 
 
 ## Processing the form
@@ -170,7 +171,7 @@ All going according to plan, if you visit [http://localhost/your_site_name/home/
 Great! We now have a browser poll form, but it doesn't actually do anything. In order to make the form work, we have to implement the 'doBrowserPoll()' method that we told it about.
 
 First, we need some way of saving the poll submissions to the database, so we can retrieve the results later. We can do this by creating a new object that extends from `[api:DataObject]`.
-If you recall, in the [second tutorial](2-extending-a-basic-site) we said that all objects that inherit from DataObject and have their own fields are stored in tables the database. Also recall that all pages extend DataObject indirectly through `[api:SiteTree]`. Here instead of extending SiteTree (or `[api:Page]`) to create a page type, we will extend `[api:DataObject]` directly:
+If you recall, in the [second tutorial](/tutorials/extending_a_basic_site) we said that all objects that inherit from DataObject and have their own fields are stored in tables the database. Also recall that all pages extend DataObject indirectly through `[api:SiteTree]`. Here instead of extending SiteTree (or `[api:Page]`) to create a page type, we will extend `[api:DataObject]` directly:
 
 **mysite/code/BrowserPollSubmission.php**
 
@@ -223,7 +224,7 @@ Change the end of the 'BrowserPollForm' function so it looks like this:
 
 If we then open the homepage and attempt to submit the form without filling in the required fields errors should appear.
 
-![](_images/tutorial3_validation.jpg)
+![](/_images/tutorial3_validation.jpg)
 
 
 ## Showing the poll results
@@ -270,7 +271,7 @@ Although the form is not shown, you'll still see the 'Browser Poll' heading. We'
 
 Now that we're collecting data, it would be nice to show the results on the website as well. We could simply output every vote, but that's boring. Let's group the results by browser, through the SilverStripe data model.
 
-In the [second tutorial](/tutorials/2-extending-a-basic-site), we got a collection of news articles for the home page by using the 'ArticleHolder::get()' function, which returns a `[api:DataList]`. We can get all submissions in the same fashion, through `BrowserPollSubmission::get()`. This list will be the starting point for our result aggregation.
+In the [second tutorial](/tutorials/extending_a_basic_site), we got a collection of news articles for the home page by using the 'ArticleHolder::get()' function, which returns a `[api:DataList]`. We can get all submissions in the same fashion, through `BrowserPollSubmission::get()`. This list will be the starting point for our result aggregation.
 
 Create the function 'BrowserPollResults' on the *HomePage_Controller* class.
 
@@ -347,10 +348,10 @@ and the poll results need to be displayed.
 
 We use the normal tactic of putting the data into an unordered list and using CSS to style it, except here we use inline styles to display a bar that is sized proportionate to the number of votes the browser has received. You should now have a complete poll.
 
-![](_images/tutorial3_pollresults.jpg)
+![](/_images/tutorial3_pollresults.jpg)
 
 ## Summary
 
-In this tutorial we have explored custom php forms, and displayed result sets through Grouped Lists. We have briefly covered the different approaches to creating and using forms. Whether you decide to use the [userforms module](http://silverstripe.org/user-forms-module) or create a form in PHP depends on the situation and flexibility required.
+In this tutorial we have explored custom php forms, and displayed result sets through Grouped Lists. We have briefly covered the different approaches to creating and using forms. Whether you decide to use the [userforms module](http://addons.silverstripe.org/add-ons/silverstripe/userforms) or create a form in PHP depends on the situation and flexibility required.
 
-[Next Tutorial >>](4-site-search)
+[Next Tutorial >>](/tutorials/site_search)

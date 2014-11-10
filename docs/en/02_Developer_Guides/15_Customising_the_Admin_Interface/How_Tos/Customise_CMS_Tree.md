@@ -41,7 +41,7 @@ code like this:
 	...
 
 By applying the proper style sheet, the snippet html above could produce the look of:
-![Page Node Screenshot](../_images/tree_node.png "Page Node")
+![Page Node Screenshot](..//_images/tree_node.png "Page Node")
 
 SiteTree is a `[api:DataObject]` which is versioned by `[api:Versioned]` extension.
 Each node can optionally have publication status flags, e.g. "Removed from draft".
@@ -76,6 +76,6 @@ __Example: using a subclass__
 
 The above subclass of `[api:SiteTree]` will add a new flag for indicating its
 __'Scheduled To Publish'__ status. The look of the page node will be changed
-from ![Normal Page Node](../_images/page_node_normal.png) to ![Scheduled Page Node](../_images/page_node_scheduled.png). The getStatusFlags has an `updateStatusFlags()`
+from ![Normal Page Node](..//_images/page_node_normal.png) to ![Scheduled Page Node](..//_images/page_node_scheduled.png). The getStatusFlags has an `updateStatusFlags()`
 extension point, so the flags can be modified through `DataExtension` rather than
 inheritance as well. Deleting existing flags works by simply unsetting the array key.
