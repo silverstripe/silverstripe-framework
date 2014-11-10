@@ -1,3 +1,4 @@
+title: Extending a basic site
 summary: Building on tutorial 1, a look at storing data in SilverStripe and creating a latest news feed.
 
 # Tutorial 2 - Extending a basic site
@@ -5,7 +6,7 @@ summary: Building on tutorial 1, a look at storing data in SilverStripe and crea
 ## Overview
 
 
-In the [first tutorial (Building a basic site)](1-building-a-basic-site) we learnt how to create a basic site using SilverStripe. This tutorial will build on that, and explore extending SilverStripe by creating our own page types. After doing this we should have a better understanding of how SilverStripe works.
+In the [first tutorial (Building a basic site)](/tutorials/building_a_basic_site) we learnt how to create a basic site using SilverStripe. This tutorial will build on that, and explore extending SilverStripe by creating our own page types. After doing this we should have a better understanding of how SilverStripe works.
 
 ## What are we working towards?
 
@@ -13,12 +14,12 @@ We are going to work on adding two new sections to the site we built in the firs
 
 The first of these new sections will be *News*, with a recent news listing on the homepage and an RSS feed: 
 
-![](_images/tutorial2_newslist.jpg)
+![](/_images/tutorial2_newslist.jpg)
 
 
 The second will be a *Staff* section, to demonstrate more complex database structures (such as associating an image with each staff member):
 
-![](_images/tutorial2_einstein.jpg)
+![](/_images/tutorial2_einstein.jpg)
 
 
 
@@ -52,7 +53,7 @@ Creating a new page type requires creating each of these three elements. We will
 A more in-depth introduction of Model-View-Controller can be found
 [here](http://www.slash7.com/articles/2005/02/22/mvc-the-most-vexing-conundrum).
 
-![](_images/tutorial2_pagetype-inheritance.jpg)
+![](/_images/tutorial2_pagetype-inheritance.jpg)
 
 ## Creating the news section page types
 
@@ -118,7 +119,7 @@ it. Add a *$db* property definition in the *ArticlePage* class:
 	}
 
 
-Every entry in the array is a *key => value* pair. The **key** is the name of the field, and the **value** is the type. See ["data types"](/topics/data-types) for a complete list of types.
+Every entry in the array is a *key => value* pair. The **key** is the name of the field, and the **value** is the type. See ["data types and casting"](/developer_guides/model/data_types_and_casting) for a complete list of types.
 
 <div class="hint" markdown="1">
 The names chosen for the fields you add must not already be used. Be careful using field names such as Title,
@@ -173,7 +174,7 @@ would create a new tab called "New Tab", and a single "Author" textfield inside.
 </div>
 
 We have added two fields: A simple `[api:TextField]` and a `[api:DateField]`.   
-There are many more fields available in the default installation, listed in ["form field types"](/reference/form-field-types).
+There are many more fields available in the default installation, listed in ["form field types"](/developer_guides/forms/fields/common_subclasses).
 
 	:::php
 	return $fields;
@@ -183,7 +184,7 @@ Finally, we return the fields to the CMS. If we flush the cache (by adding ?flus
 
 Now that we have created our page types, let's add some content. Go into the CMS and create an *ArticleHolder* page named "News", then create a few *ArticlePage*'s within it.
 
-![](_images/tutorial2_news-cms.jpg)
+![](/_images/tutorial2_news-cms.jpg)
 
 ##  Modifing the date field
 
@@ -268,13 +269,13 @@ To access the new fields, we use *$Date* and *$Author*. In fact, all template va
 spread across several tables in the database matched by id - e.g. *Content* is in the *SiteTree* table, and *Date* and
 *Author* are in the *ArticlePage* table. SilverStripe matches this data, and collates it into a single data object.
 
-![](_images/tutorial2_data-collation.jpg)
+![](/_images/tutorial2_data-collation.jpg)
 
 Rather than using *$Date* directly, we use *$Date.Nice*. If we look in the `[api:Date]` documentation, we can see
 that the *Nice* function returns the date in *dd/mm/yyyy* format, rather than the *yyyy-mm-dd* format stored in the
 database.
 
-![](_images/tutorial2_news.jpg)
+![](/_images/tutorial2_news.jpg)
 
 ###ArticleHolder Template
 We'll now create a template for the article holder. We want our news section to show a list of news items, each with a summary and a link to the main article (our Article Page).
@@ -302,12 +303,12 @@ We'll now create a template for the article holder. We want our news section to 
 
 Here we use the page control *Children*. As the name suggests, this control allows you to iterate over the children of a page. In this case, the children are our news articles. The *$Link* variable will give the address of the article which we can use to create a link, and the *FirstParagraph* function of the `[api:HTMLText]` field gives us a nice summary of the article. The function strips all tags from the paragraph extracted.
 
-![](_images/tutorial2_articleholder.jpg)
+![](/_images/tutorial2_articleholder.jpg)
 
 
 ### Using include files in templates
 
-We can make our templates more modular and easier to maintain by separating commonly-used components in to *include files*.  We are already familiar with the `<% include Sidebar %>` line from looking at the menu in the [first tutorial (Building a basic site)](1-building-a-basic-site).
+We can make our templates more modular and easier to maintain by separating commonly-used components in to *include files*.  We are already familiar with the `<% include Sidebar %>` line from looking at the menu in the [first tutorial (Building a basic site)](/tutorials/building_a_basic_site).
 
 We'll separate the display of linked articles as we want to reuse this code later on.
 
@@ -350,7 +351,7 @@ And this one to the *HomePage* class:
 
 This will change the icons for the pages in the CMS. 
 
-![](_images/tutorial2_icons2.jpg)
+![](/_images/tutorial2_icons2.jpg)
 
 <div class="hint" markdown="1">
 Note: The `news-file` icon may not exist in a default SilverStripe installation. Try adding your own image or choosing a different one from the `treeicons` collection.
@@ -370,7 +371,7 @@ It would be nice to greet page visitors with a summary of the latest news when t
 	}
 
 
-This function simply runs a database query that gets the latest news articles from the database. By default, this is five, but you can change it by passing a number to the function. See the [Data Model](../topics/datamodel) documentation for details. We can reference this function as a page control in our *HomePage* template:
+This function simply runs a database query that gets the latest news articles from the database. By default, this is five, but you can change it by passing a number to the function. See the [Data Model and ORM](/developer_guides/model/data_model_and_orm) documentation for details. We can reference this function as a page control in our *HomePage* template:
 
 **themes/simple/templates/Layout/Homepage.ss**
 
@@ -387,7 +388,7 @@ When SilverStripe comes across a variable or page control it doesn't recognize, 
 
 The controller for a page is only created when page is actually visited, while the data object is available when the page is referenced in other pages, e.g. by page controls. A good rule of thumb is to put all functions specific to the page currently being viewed in the controller; only if a function needs to be used in another page should you put it in the data object.
 
-![](_images/tutorial2_homepage-news.jpg)
+![](/_images/tutorial2_homepage-news.jpg)
 
 
 
@@ -412,7 +413,7 @@ This function creates an RSS feed of all the news articles, and outputs it to th
 
 Depending on your browser, you should see something like the picture below. If your browser doesn't support RSS, you will most likely see the XML output instead. For more on RSS, see `[api:RSSFeed]`
 
-![](_images/tutorial2_rss-feed.jpg)
+![](/_images/tutorial2_rss-feed.jpg)
 
 Now all we need is to let the user know that our RSS feed exists. Add this function to *ArticleHolder_Controller*:
 
@@ -479,12 +480,12 @@ We then add an `[api:UploadField]` in the *getCMSFields* function to the tab "Ro
 the *addFieldToTab* function will create it for us. The *UploadField* allows us to select an image or upload a new one in
 the CMS.
 
-![](_images/tutorial2_photo.jpg)
+![](/_images/tutorial2_photo.jpg)
 
 Rebuild the database ([http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build)) and open the CMS. Create
 a new *StaffHolder* called "Staff", and create some *StaffPage*s in it.
 
-![](_images/tutorial2_create-staff.jpg)
+![](/_images/tutorial2_create-staff.jpg)
 
 
 ### Creating the staff section templates
@@ -517,7 +518,7 @@ This template is very similar to the *ArticleHolder* template. The *SetWidth* me
 will resize the image before sending it to the browser. The resized image is cached, so the server doesn't have to
 resize the image every time the page is viewed.
 
-![](_images/tutorial2_staff-section.jpg)
+![](/_images/tutorial2_staff-section.jpg)
 
 The *StaffPage* template is also very straight forward.
 
@@ -538,10 +539,10 @@ The *StaffPage* template is also very straight forward.
 Here we use the *SetWidth* method to get a different sized image from the same source image. You should now have
 a complete staff section.
 
-![](_images/tutorial2_einstein.jpg)
+![](/_images/tutorial2_einstein.jpg)
 
 ## Summary
 
 In this tutorial we have explored the concept of page types. In the process of creating and extending page types we have covered many of the concepts required to build a site with SilverStripe.
 
-[Next Tutorial >>](3-forms)
+[Next Tutorial >>](/tutorials/forms)
