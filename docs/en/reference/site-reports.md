@@ -19,7 +19,7 @@ By default the CMS ships with several basic reports:
 *  Pages with no content
 *  Pages edited in the last 2 weeks
 
-Modules may come with ther own additional reports.
+Modules may come with their own additional reports.
 
 ## Creating Custom Reports
 
@@ -28,7 +28,7 @@ Custom reports can be created quickly and easily. A general knowledge of SilverS
 
 Inside the *mysite/code* folder create a file called *CustomSideReport.php*. Inside this file we can add our site reports. 
 
-The following example will list every Page on the current site.
+The following example will create a report to list every page on the current site.
 
 ###CustomSideReport.php 
 
@@ -40,7 +40,7 @@ The following example will list every Page on the current site.
 			return 'All Pages';
 		}
 		
-		// what we want the report to return and what order
+		// what we want the report to return
 		public function sourceRecords($params = null) {
 			return Page::get()->sort('Title');
 		}
@@ -61,7 +61,7 @@ More useful reports can be created by changing the `DataList` returned in the `s
 
 *  `CustomSideReport_ReportName` must extend `SS_Report`
 *  It is recommended to place all custom reports in the 1 file.
-** Create a *CustomSideReport.php* file and add classes as you need them inside that for each report
+  * Create a *CustomSideReport.php* file and add classes as you need them inside for each report
 
 ## TODO
 
