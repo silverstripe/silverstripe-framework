@@ -227,6 +227,14 @@ abstract class ModelAdmin extends LeftAndMain {
 	public function getList() {
 		$context = $this->getSearchContext();
 		$params = $this->request->requestVar('q');
+
+		// Parse all DateFields to handle user input non ISO 8601 dates
+		foreach(singleton($this->modelClass)->getDefaultSearchContext()->getFields() as $field) {
+			if($field->Type() == "date text") {
+				$params[$field->getName()] = date('Y-m-d', strtotime($params[$field->getName()]));
+			}
+		}
+
 		$list = $context->getResults($params);
 
 		$this->extend('updateList', $list);
