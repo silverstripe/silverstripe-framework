@@ -15,9 +15,9 @@ You can access `[api:SiteConfig]` options from any SS template by using the func
 	
 	// or 
 	
-	<% loop $SiteConfig %>
+	<% with $SiteConfig %>
 	$Title $AnotherField
-	<% end_loop %>
+	<% end_with %>
 
 
 Or if you want to access variables in the PHP you can do
@@ -48,7 +48,7 @@ Create a mysite/code/CustomSiteConfig.php file.
 	}
 
 
-Then activate your extension in your `[config.yml](/topics/configuration)` file.
+Then activate your extension in your [config.yml](/topics/configuration) file.
 
 	:::yml
 	SiteConfig:
