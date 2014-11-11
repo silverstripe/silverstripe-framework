@@ -369,7 +369,7 @@ these methods:
 
 - FormField->setTemplate()
 - FormField->setFieldHolderTemplate()
-- FormField->getSmallFieldHolderTemplate()
+- FormField->setSmallFieldHolderTemplate()
  
 <div class="hint" markdown='1'>
 Caution: Not all FormFields consistently uses templates set by the above methods.
