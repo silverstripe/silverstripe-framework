@@ -1664,19 +1664,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array The database fields
 	 */
 	public function db($fieldName = null) {
-		$classes = ClassInfo::ancestry($this);
-		$good = false;
+		$classes = ClassInfo::ancestry($this, true);
 		$items = array();
 
-		foreach($classes as $class) {
-			// Wait until after we reach DataObject
-			if(!$good) {
-				if($class == 'DataObject') {
-					$good = true;
-				}
-				continue;
-			}
-
+		foreach(array_reverse($classes) as $class) {
 			if(isset(self::$_cache_db[$class])) {
 				$dbItems = self::$_cache_db[$class];
 			} else {
