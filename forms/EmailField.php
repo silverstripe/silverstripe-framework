@@ -30,7 +30,7 @@ class EmailField extends TextField {
 	 * @param Validator $validator
 	 * @return String
 	 */
-	public function validate($validator) {
+	public function validate(Validator $validator) {
 		$this->value = trim($this->value);
 
 		$pcrePattern = '^[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*'

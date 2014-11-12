@@ -341,7 +341,7 @@ class CompositeField extends FormField {
 					// Clear an internal cache
 					$this->sequentialSet = null;
 
-					// A true results indicates that the field was foudn
+					// A true results indicates that the field was found
 					return true;
 				}
 			}
@@ -358,7 +358,13 @@ class CompositeField extends FormField {
 		return $result;
 	}
 
-	public function validate($validator) {
+	/**
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate(Validator $validator) {
 		$valid = true;
 		foreach($this->children as $idx => $child){
 			$valid = ($child && $child->validate($validator) && $valid);

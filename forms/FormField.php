@@ -15,7 +15,8 @@
  * format of a date or currency field. Define {@link saveInto()} to totally
  * customise saving. For example, data might be saved to the filesystem instead
  * of the data record, or saved to a component of the data record instead of
- * the data record itself.
+ * the data record itself. Define {@link validate()} to validate the form field
+ * and ensure that the content provided is valid.
  *
  * @package forms
  * @subpackage core
@@ -894,14 +895,13 @@ class FormField extends RequestHandler {
 			}
 
 	/**
-	 * Abstract method each {@link FormField} subclass must implement,
-	 * determines whether the field is valid or not based on the value.
-	 * @todo Make this abstract.
+	 * Validation method each {@link FormField} subclass should implement,
+	 * determining whether the field is valid or not based on the value.
 	 *
 	 * @param Validator
 	 * @return boolean
 	 */
-	public function validate($validator) {
+	public function validate(Validator $validator) {
 		return true;
 	}
 

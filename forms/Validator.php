@@ -42,10 +42,10 @@ abstract class Validator extends Object {
 	/**
 	 * Callback to register an error on a field (Called from implementations of {@link FormField::validate})
 	 *
-	 * @param $fieldName name of the field
-	 * @param $message error message to display
-	 * @param $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output.
-	 *                              See {@link getErrors()} for details.
+	 * @param string $fieldName name of the field
+	 * @param string $message error message to display
+	 * @param string $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output.
+	 * See {@link getErrors()} for details.
 	 */
 	public function validationError($fieldName, $message, $messageType='') {
 		$this->errors[] = array(

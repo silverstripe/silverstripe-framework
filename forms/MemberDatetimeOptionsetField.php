@@ -119,7 +119,13 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		}
 	}
 
-	public function validate($validator) {
+	/**
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate(Validator $validator) {
 		$value = isset($_POST[$this->name . '_custom']) ? $_POST[$this->name . '_custom'] : null;
 		if(!$value) return true; // no custom value, don't validate
 

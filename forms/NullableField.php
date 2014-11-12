@@ -126,4 +126,5 @@ class NullableField extends FormField {
 		$result .= (is_null($this->value)) ? "<<null>>" : $this->value;
 		return result;
 	}
+
 }

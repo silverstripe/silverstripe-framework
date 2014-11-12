@@ -358,7 +358,7 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 	}
 }
 
-class RequestHandlingTest_FormActionController extends Controller {
+class RequestHandlingTest_FormActionController extends Controller implements TestOnly {
 
 	protected $template = 'BlankPage';
 
@@ -417,7 +417,7 @@ class RequestHandlingTest_FormActionController extends Controller {
 /**
  * Simple extension for the test controller
  */
-class RequestHandlingTest_ControllerExtension extends Extension {
+class RequestHandlingTest_ControllerExtension extends Extension implements TestOnly {
 
 	public static $called_error = false;
 
@@ -490,7 +490,7 @@ class RequestHandlingTest_AllowedController extends Controller implements TestOn
 /**
  * Simple extension for the test controller - with allowed_actions define
  */
-class RequestHandlingTest_AllowedControllerExtension extends Extension {
+class RequestHandlingTest_AllowedControllerExtension extends Extension implements TestOnly {
 	private static $allowed_actions = array(
 		'otherExtendedMethod'
 	);
@@ -500,7 +500,7 @@ class RequestHandlingTest_AllowedControllerExtension extends Extension {
 	}
 }
 
-class RequestHandlingTest_ControllerFailover extends ViewableData {
+class RequestHandlingTest_ControllerFailover extends ViewableData implements TestOnly {
 	public function failoverMethod() {
 		return "failoverMethod";
 	}
@@ -509,7 +509,7 @@ class RequestHandlingTest_ControllerFailover extends ViewableData {
 /**
  * Form for the test
  */
-class RequestHandlingTest_Form extends Form {
+class RequestHandlingTest_Form extends Form implements TestOnly {
 	private static $url_handlers = array(
 		'fields/$FieldName' => 'handleField',
 		"POST " => "handleSubmission",
@@ -552,7 +552,7 @@ class RequestHandlingTest_ControllerFormWithAllowedActions extends Controller im
 	}
 }
 
-class RequestHandlingTest_FormWithAllowedActions extends Form {
+class RequestHandlingTest_FormWithAllowedActions extends Form implements TestOnly {
 
 	private static $allowed_actions = array(
 		'allowedformaction' => 1,
@@ -571,7 +571,7 @@ class RequestHandlingTest_FormWithAllowedActions extends Form {
 /**
  * Form field for the test
  */
-class RequestHandlingTest_FormField extends FormField {
+class RequestHandlingTest_FormField extends FormField implements TestOnly {
 	private static $url_handlers = array(
 		"POST " => "handleInPlaceEdit",
 		'' => 'handleField',
@@ -638,7 +638,7 @@ class RequestHandlingFieldTest_Controller extends Controller implements TestOnly
 /**
  * Form field for the test
  */
-class RequestHandlingTest_HandlingField extends FormField {
+class RequestHandlingTest_HandlingField extends FormField implements TestOnly {
 
 	private static $allowed_actions = array(
 		'actionOnField'

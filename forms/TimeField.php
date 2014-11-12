@@ -160,10 +160,12 @@ class TimeField extends TextField {
 	}
 
 	/**
-	 * @return Boolean
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
 	 */
-	public function validate($validator) {
-		$valid = true;
+	public function validate(Validator $validator) {
 
 		// Don't validate empty fields
 		if(empty($this->value)) return true;
@@ -259,9 +261,5 @@ class TimeField_Readonly extends TimeField {
 		}
 
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
-	}
-
-	public function validate($validator) {
-		return true;
 	}
 }

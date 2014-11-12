@@ -203,7 +203,7 @@ class ListboxField extends DropdownField {
 	}
 
 	/**
-	 * Load a value into this CheckboxSetField
+	 * Load a value into this ListboxField
 	 */
 	public function setValue($val, $obj = null) {
 		// If we're not passed a value directly,
@@ -279,6 +279,47 @@ class ListboxField extends DropdownField {
 	 */
 	public function getDefaultItems() {
 		return $this->defaultItems;
+	}
+
+	/**
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate(Validator $validator) {
+		$values = $this->value;
+		if (!$values) {
+			return true;
+		}
+		$source = $this->getSourceAsArray();
+		if (is_array($values)) {
+			if (!array_intersect_key($source,array_flip($values))) {
+				$validator->validationError(
+					$this->name,
+					_t(
+						"Please select a value within the list provided. {value} is not a valid option",
+						array('value' => $this->value)
+					),
+					"validation"
+				);
+				return false;
+			}
+		} else {
+			if (!array_key_exists($this->value, $source)) {
+				$validator->validationError(
+					$this->name,
+					_t(
+						'ListboxField.SOURCE_VALIDATION',
+						"Please select a value within the list provided. %s is not a valid option",
+						array('value' => $this->value)
+					),
+					"validation"
+				);
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

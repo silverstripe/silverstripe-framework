@@ -43,7 +43,7 @@ class CurrencyField extends TextField {
 		return $this->castedCopy('CurrencyField_Readonly');
 	}
 
-	public function validate($validator) {
+	public function validate(Validator $validator) {
 		if(!empty ($this->value)
 				&& !preg_match('/^\s*(\-?\$?|\$\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/', $this->value)) {
 

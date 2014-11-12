@@ -60,4 +60,21 @@ class CompositeFieldTest extends SapphireTest {
 		$this->assertNotNull($legend);
 		$this->assertEquals('My legend', (string)$legend[0]);
 	}
+
+	public function testValidation() {
+		$field = CompositeField::create(
+			$fieldOne = DropdownField::create('A'),
+			$fieldTwo = TextField::create('B')
+		);
+		$validator = new RequiredFields();
+		$this->assertFalse(
+			$field->validate($validator),
+			"Validation fails when child is invalid"
+		);
+		$fieldOne->setEmptyString('empty');
+		$this->assertTrue(
+			$field->validate($validator),
+			"Validates when children are valid"
+		);
+	}
 }

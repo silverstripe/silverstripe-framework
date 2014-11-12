@@ -463,7 +463,7 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	public function testEdit() {
-		$this->loginWithPermission('ADMIN');
+		$memberID = $this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file4 = $this->objFromFixture('File', 'file4');
@@ -474,7 +474,13 @@ class UploadFieldTest extends FunctionalTest {
 		$response = $this->get($baseUrl . '/edit');
 		$this->assertFalse($response->isError());
 
-		$response = $this->post($baseUrl . '/EditForm', array('Title' => 'File 4 modified'));
+		$response = $this->post(
+			$baseUrl . '/EditForm',
+				array(
+				'Title' => 'File 4 modified',
+				'OwnerID' => $memberID
+			)
+		);
 		$this->assertFalse($response->isError());
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);

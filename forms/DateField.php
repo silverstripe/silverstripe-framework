@@ -336,7 +336,7 @@ class DateField extends TextField {
 	/**
 	 * @return Boolean
 	 */
-	public function validate($validator) {
+	public function validate(Validator $validator) {
 		$valid = true;
 
 		// Don't validate empty fields
@@ -495,10 +495,6 @@ class DateField_Disabled extends DateField {
 
 	public function Type() {
 		return "date_disabled readonly";
-	}
-
-	public function validate($validator) {
-		return true;
 	}
 }
 

@@ -83,6 +83,8 @@ en:
   CheckboxField:
     NOANSWER: No
     YESANSWER: Yes
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -129,6 +131,7 @@ en:
   DropdownField:
     CHOOSE: (Choose)
     CHOOSESEARCH: '(Choose or Search)'
+    SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   EmailField:
     VALIDATION: 'Please enter an email address'
   Enum:
@@ -323,6 +326,8 @@ en:
   LeftAndMain_Menu_ss:
     Hello: Hi
     LOGOUT: 'Log out'
+  ListboxField:
+    SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
