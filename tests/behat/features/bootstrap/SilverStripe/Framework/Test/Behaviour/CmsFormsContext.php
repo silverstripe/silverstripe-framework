@@ -266,4 +266,19 @@ JS;
 		}
 	}
 
+	/**
+	 * @example Given the CMS settings has the following data
+	 *	| Title | My site title |
+	 *	| Theme | My site theme |
+	 * @Given /^the CMS settings have the following data$/
+	 */
+	public function theCmsSettingsHasData(TableNode $fieldsTable) {
+		$fields = $fieldsTable->getRowsHash();
+		$siteConfig = \SiteConfig::get()->first();
+		foreach($fields as $field => $value) {
+			$siteConfig->$field = $value;
+		}
+		$siteConfig->write();
+		$siteConfig->flushCache();
+	}
 }
