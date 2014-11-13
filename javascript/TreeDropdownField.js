@@ -165,6 +165,9 @@
 						}
 						if(node) tree.jstree('select_node', node);
 					}
+					else {
+						self.setTitle(' ');
+					}
 				};
 
 				// Load the tree if its not already present
