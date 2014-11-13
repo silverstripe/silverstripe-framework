@@ -46,25 +46,24 @@ class NumericField extends TextField {
 	}
 	
 	/**
-     * Returns a readonly version of this field
-     */
-    public function performReadonlyTransformation() {
-        $field = new NumericField_Readonly($this->name, $this->title, $this->value);
-        $field->setForm($this->form);
-        return $field;
-    }
-    
+	 * Returns a readonly version of this field
+	 */
+	public function performReadonlyTransformation() {
+		$field = new NumericField_Readonly($this->name, $this->title, $this->value);
+		$field->setForm($this->form);
+		return $field;
+	}
+
 }
 
-class NumericField_Readonly extends ReadonlyField{
+class NumericField_Readonly extends ReadonlyField {
 
-    public function performReadonlyTransformation() {
-        return clone $this;
-    }
+	public function performReadonlyTransformation() {
+		return clone $this;
+	}
 
-    public function Value() {
-        return Convert::raw2xml($this->value ?
-            "$this->value" : "0");
-    }
+	public function Value() {
+		return Convert::raw2xml($this->value ? "$this->value" : "0");
+	}
 
 }
