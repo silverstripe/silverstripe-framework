@@ -160,7 +160,9 @@ This is useful when you want to provide custom actions for the mapping of `teams
 
 The syntax for the `$url_handlers` array users the same pattern matches as the `YAML` configuration rules.
 
-## API Documentation
+## Links
 
-* [api:Controller]
-* [api:Director]
+* [api:Controller] API documentation
+* [api:Director] API documentation
+* [Example routes: framework](https://github.com/silverstripe/silverstripe-framework/blob/master/_config/routes.yml)
+* [Example routes: cms](https://github.com/silverstripe/silverstripe-cms/blob/master/_config/routes.yml)

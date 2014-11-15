@@ -406,17 +406,19 @@ file in the assets directory.  This requires PHP to be loaded as an Apache modul
 	php_flag engine off
 	Options -ExecCGI -Includes -Indexes 
 
-### Don't allow access to .yml files
+### Don't allow access to YAML files
 
-Yaml files are often used to store sensitive or semi-sensitive data for use by SilverStripe framework (for instance,
-configuration and test fixtures).
+YAML files are often used to store sensitive or semi-sensitive data for use by 
+SilverStripe, such as configuration files. We block access to any files
+with a `.yml` or `.yaml` extension through the default web server rewriting rules.
+If you need users to access files with this extension,
+you can bypass the rules for a specific directory.
+Here's an example for a `.htaccess` file used by the Apache web server:
 
-You should therefore block access to all yaml files (extension .yml) by default, and white list only yaml files
-you need to serve directly.
-
-See [Apache](/installation/webserver) and [Nginx](/installation/nginx) installation documentation for details 
-specific to your web server
-
+	<Files *.yml>
+		Order allow,deny
+		Allow from all
+	</Files>
 
 ## Passwords
 
