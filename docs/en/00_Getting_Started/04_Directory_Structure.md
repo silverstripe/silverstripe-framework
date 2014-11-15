@@ -78,11 +78,13 @@ Example Forum Documentation:
 |`forum/docs/en/04_Some_Topic/00_Getting_Started.md`|Structure is created by use of numbered prefixes. This applies to nested folders and documentations pages, index.md should not have a prefix.|
 
 
-## PHP Include Paths
+## Autoloading
 
-Due to the way `[api:ManifestBuilder]` recursively detects php-files and includes them through PHP5's
-*__autoload()*-feature, you don't need to worry about include paths. Feel free to structure your php-code into
-subdirectories inside the *code*-directory.
+SilverStripe recursively detects classes in PHP files by building up a manifest used for autoloading,
+as well as respecting Composer's built-in autoloading for libraries. This means
+in most cases, you don't need to worry about include paths or `require()` calls
+in your own code - after adding a new class, simply regenerate the manifest
+by using a `flush=1` query parameter. See the ["Manifests" documentation](/developer_guides/execution_pipeline/manifests) for details.
 
 ## Best Practices
 
