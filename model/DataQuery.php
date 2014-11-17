@@ -2,7 +2,7 @@
 
 /**
  * An object representing a query of data from the DataObject's supporting database.
- * Acts as a wrapper over {@link SQLSelect} and performs all of the query generation.
+ * Acts as a wrapper over {@link SQLQuery} and performs all of the query generation.
  * Used extensively by {@link DataList}.
  *
  * Unlike DataList, modifiers on DataQuery modify the object rather than returning a clone.
@@ -19,7 +19,7 @@ class DataQuery {
 	protected $dataClass;
 
 	/**
-	 * @var SQLSelect
+	 * @var SQLQuery
 	 */
 	protected $query;
 
@@ -65,7 +65,7 @@ class DataQuery {
 	}
 
 	/**
-	 * Return the {@link SQLSelect} object that represents the current query; note that it will
+	 * Return the {@link SQLQuery} object that represents the current query; note that it will
 	 * be a clone of the object.
 	 */
 	public function query() {
@@ -103,7 +103,7 @@ class DataQuery {
 			// As each condition is a single length array, do a single
 			// iteration to extract the predicate and parameters
 			foreach($condition as $predicate => $parameters) {
-				// @see SQLSelect::addWhere for why this is required here
+				// @see SQLQuery::addWhere for why this is required here
 				if(strpos($predicate, $fieldExpression) !== false) {
 					unset($where[$i]);
 					$matched = true;
@@ -146,7 +146,7 @@ class DataQuery {
 		$baseClass = array_shift($tableClasses);
 
 		// Build our intial query
-		$this->query = new SQLSelect(array());
+		$this->query = new SQLQuery(array());
 		$this->query->setDistinct(true);
 
 		if($sort = singleton($this->dataClass)->stat('default_sort')) {
@@ -167,7 +167,7 @@ class DataQuery {
 	 * Ensure that the query is ready to execute.
 	 *
 	 * @param array|null $queriedColumns Any columns to filter the query by
-	 * @return SQLSelect The finalised sql query
+	 * @return SQLQuery The finalised sql query
 	 */
 	public function getFinalisedQuery($queriedColumns = null) {
 		if(!$queriedColumns) $queriedColumns = $this->queriedColumns;
@@ -279,7 +279,7 @@ class DataQuery {
 	/**
 	 * Ensure that if a query has an order by clause, those columns are present in the select.
 	 *
-	 * @param SQLSelect $query
+	 * @param SQLQuery $query
 	 * @return null
 	 */
 	protected function ensureSelectContainsOrderbyColumns($query, $originalSelect = array()) {
@@ -317,7 +317,7 @@ class DataQuery {
 					// add new columns sort
 					$newOrderby[$qualCol] = $dir;
 
-					// To-do: Remove this if block once SQLSelect::$select has been refactored to store getSelect()
+					// To-do: Remove this if block once SQLQuery::$select has been refactored to store getSelect()
 					// format internally; then this check can be part of selectField()
 					$selects = $query->getSelect();
 					if(!isset($selects[$col]) && !in_array($qualCol, $selects)) {
@@ -326,7 +326,7 @@ class DataQuery {
 				} else {
 					$qualCol = '"' . implode('"."', $parts) . '"';
 
-					// To-do: Remove this if block once SQLSelect::$select has been refactored to store getSelect()
+					// To-do: Remove this if block once SQLQuery::$select has been refactored to store getSelect()
 					// format internally; then this check can be part of selectField()
 					if(!in_array($qualCol, $query->getSelect())) {
 						$query->selectField($qualCol);
@@ -436,7 +436,7 @@ class DataQuery {
 	/**
 	 * Update the SELECT clause of the query with the columns from the given table
 	 */
-	protected function selectColumnsFromTable(SQLSelect &$query, $tableClass, $columns = null) {
+	protected function selectColumnsFromTable(SQLQuery &$query, $tableClass, $columns = null) {
 		// Add SQL for multi-value fields
 		$databaseFields = DataObject::database_fields($tableClass, false);
 		$compositeFields = DataObject::composite_fields($tableClass, false);
@@ -505,8 +505,8 @@ class DataQuery {
 	/**
 	 * Adds a WHERE clause.
 	 *
-	 * @see SQLSelect::addWhere() for syntax examples, although DataQuery
-	 * won't expand multiple arguments as SQLSelect does.
+	 * @see SQLQuery::addWhere() for syntax examples, although DataQuery
+	 * won't expand multiple arguments as SQLQuery does.
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
@@ -522,8 +522,8 @@ class DataQuery {
 	/**
 	 * Append a WHERE with OR.
 	 *
-	 * @see SQLSelect::addWhere() for syntax examples, although DataQuery
-	 * won't expand multiple method arguments as SQLSelect does.
+	 * @see SQLQuery::addWhere() for syntax examples, although DataQuery
+	 * won't expand multiple method arguments as SQLQuery does.
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
@@ -539,7 +539,7 @@ class DataQuery {
 	/**
 	 * Set the ORDER BY clause of this query
 	 *
-	 * @see SQLSelect::orderby()
+	 * @see SQLQuery::orderby()
 	 *
 	 * @param String $sort Column to sort on (escaped SQL statement)
 	 * @param String $direction Direction ("ASC" or "DESC", escaped SQL statement)
@@ -748,7 +748,7 @@ class DataQuery {
 
 	/**
 	 * @param  String $field Select statement identifier, either the unquoted column name,
-	 * the full composite SQL statement, or the alias set through {@link SQLSelect->selectField()}.
+	 * the full composite SQL statement, or the alias set through {@link SQLQuery->selectField()}.
 	 * @return String The expression used to query this field via this DataQuery
 	 */
 	protected function expressionForField($field) {
@@ -813,7 +813,7 @@ class DataQuery {
 /**
  * Represents a subgroup inside a WHERE clause in a {@link DataQuery}
  *
- * Stores the clauses for the subgroup inside a specific {@link SQLSelect} object.
+ * Stores the clauses for the subgroup inside a specific {@link SQLQuery} object.
  * All non-where methods call their DataQuery versions, which uses the base
  * query object.
  *
@@ -826,7 +826,7 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
 	public function __construct(DataQuery $base, $connective) {
 		$this->dataClass = $base->dataClass;
 		$this->query = $base->query;
-		$this->whereQuery = new SQLSelect();
+		$this->whereQuery = new SQLQuery();
 		$this->whereQuery->setConnective($connective);
 
 		$base->where($this);

@@ -195,8 +195,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new DataList instance with a WHERE clause added to this list's query.
 	 *
 	 * Supports parameterised queries.
-	 * See SQLSelect::addWhere() for syntax examples, although DataList
-	 * won't expand multiple method arguments as SQLSelect does.
+	 * See SQLQuery::addWhere() for syntax examples, although DataList
+	 * won't expand multiple method arguments as SQLQuery does.
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
@@ -213,8 +213,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * All conditions provided in the filter will be joined with an OR
 	 *
 	 * Supports parameterised queries.
-	 * See SQLSelect::addWhere() for syntax examples, although DataList
-	 * won't expand multiple method arguments as SQLSelect does.
+	 * See SQLQuery::addWhere() for syntax examples, although DataList
+	 * won't expand multiple method arguments as SQLQuery does.
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
@@ -268,7 +268,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * order set.
 	 *
 	 * @see SS_List::sort()
-	 * @see SQLSelect::orderby
+	 * @see SQLQuery::orderby
 	 * @example $list = $list->sort('Name'); // default ASC sorting
 	 * @example $list = $list->sort('Name DESC'); // DESC sorting
 	 * @example $list = $list->sort('Name', 'ASC');

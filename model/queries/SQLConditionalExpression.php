@@ -366,7 +366,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	/**
 	 * Set a WHERE clause.
 	 *
-	 * @see SQLSelect::addWhere() for syntax examples
+	 * @see SQLQuery::addWhere() for syntax examples
 	 *
 	 * @param mixed $where Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $where,... Unlimited additional predicates
@@ -468,7 +468,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	}
 
 	/**
-	 * @see SQLSelect::addWhere()
+	 * @see SQLQuery::addWhere()
 	 *
 	 * @param mixed $filters Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $filters,... Unlimited additional predicates
@@ -482,7 +482,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	}
 
 	/**
-	 * @see SQLSelect::addWhere()
+	 * @see SQLQuery::addWhere()
 	 *
 	 * @param mixed $filters Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $filters,... Unlimited additional predicates
@@ -689,12 +689,12 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	}
 
 	/**
-	 * Generates an SQLSelect object using the currently specified parameters.
+	 * Generates an SQLQuery object using the currently specified parameters.
 	 *
-	 * @return SQLSelect
+	 * @return SQLQuery
 	 */
 	public function toSelect() {
-		$select = new SQLSelect();
+		$select = new SQLQuery();
 		$this->copyTo($select);
 		return $select;
 	}
