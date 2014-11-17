@@ -100,6 +100,10 @@ from the HTML source by the editor.
 Note: the default setting for the CMS's `extended_valid_elements` we are overriding here can be found in
 `framework/admin/_config.php`.
 
+### Further reading on setting options
+
+If you need to remove the majority of buttons available in the default editor, or are experiencing difficulty removing all separators - you need to remove all lines and re add the buttons as described [here](https://stojg.se/blog/2013-03-29-customize-tinymce-for-silverstripe-cms)
+
 ### Writing custom plugins
 
 It is also possible to add custom buttons to TinyMCE. A simple example of this is SilverStripe's `ssmacron`
