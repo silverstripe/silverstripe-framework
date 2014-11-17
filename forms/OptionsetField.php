@@ -120,5 +120,4 @@ class OptionsetField extends DropdownField {
 	public function ExtraOptions() {
 		return new ArrayList();
 	}
-
 }

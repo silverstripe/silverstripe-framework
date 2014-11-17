@@ -84,7 +84,7 @@
 class DropdownField extends FormField {
 
 	/**
-	 * @var Array $source Associative or numeric array of all dropdown items,
+	 * @var array|ArrayAccess $source Associative or numeric array of all dropdown items,
 	 * with array key as the submitted field value, and the array value as a
 	 * natural language description shown in the interface element.
 	 */
@@ -119,7 +119,7 @@ class DropdownField extends FormField {
 	/**
 	 * @param string $name The field name
 	 * @param string $title The field title
-	 * @param array $source An map of the dropdown items
+	 * @param array|ArrayAccess $source A map of the dropdown items
 	 * @param string $value The current value
 	 * @param Form $form The parent form
 	 */
@@ -223,14 +223,14 @@ class DropdownField extends FormField {
 	/**
 	 * Gets the source array including any empty default values.
 	 *
-	 * @return array
+	 * @return array|ArrayAccess
 	 */
 	public function getSource() {
 		return $this->source;
 	}
 
 	/**
-	 * @param array $source
+	 * @param array|ArrayAccess $source
 	 */
 	public function setSource($source) {
 		$this->source = $source;
@@ -284,6 +284,65 @@ class DropdownField extends FormField {
 		$field->setSource($this->getSource());
 		$field->setReadonly(true);
 
+		return $field;
+	}
+
+	/**
+	 * Get the source of this field as an array
+	 *
+	 * @return array
+	 */
+	public function getSourceAsArray()
+	{
+		$source = $this->getSource();
+		if (is_array($source)) {
+			return $source;
+		} else {
+			$sourceArray = array();
+			foreach ($source as $key => $value) {
+				$sourceArray[$key] = $value;
+			}
+		}
+		return $sourceArray;
+	}
+
+	/**
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate(Validator $validator) {
+		$source = $this->getSourceAsArray();
+		if (!array_key_exists($this->value, $source)) {
+			if ($this->getHasEmptyDefault() && !$this->value) {
+				return true;
+			}
+			$validator->validationError(
+				$this->name,
+				_t(
+					'DropdownField.SOURCE_VALIDATION',
+					"Please select a value within the list provided. {value} is not a valid option",
+					array('value' => $this->value)
+				),
+				"validation"
+			);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns another instance of this field, but "cast" to a different class.
+	 *
+	 * @see FormField::castedCopy()
+	 *
+	 * @param String $classOrCopy
+	 * @return FormField
+	 */
+	public function castedCopy($classOrCopy) {
+		$field = parent::castedCopy($classOrCopy);
+		$field->setHasEmptyDefault($this->getHasEmptyDefault());
 		return $field;
 	}
 }

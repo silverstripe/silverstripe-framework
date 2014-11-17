@@ -194,6 +194,76 @@ class ListboxFieldTest extends SapphireTest {
 		$field = new ListboxField('Choices', 'Choices', $choices);
 	}
 
+	public function testValidationWithArray() {
+		//test with array input
+		$field = ListboxField::create('Test', 'Testing', array(
+			1 => "One",
+			2 => "Two",
+			3 => "Three"
+		));
+		$validator = new RequiredFields();
+
+		$field->setValue(1);
+		$this->assertTrue(
+			$field->validate($validator),
+			'Validates values in source map'
+		);
+		$field->setMultiple(true);
+		$field->setValue(array(1));
+		$this->assertTrue(
+			$field->validate($validator),
+			'Validates values within source array'
+		);
+		//non valid value should fail
+		$field->setValue(4);
+		$this->assertFalse(
+			$field->validate($validator),
+			'Does not validates values not within source array'
+		);
+	}
+
+	public function testValidationWithDataList() {
+		//test with datalist input
+		$tag1 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag1');
+		$tag2 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag2');
+		$tag3 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag3');
+		$field = ListboxField::create('Test', 'Testing', DataObject::get("ListboxFieldTest_Tag")->map()->toArray());
+		$validator = new RequiredFields();
+
+		$field->setValue(
+			$tag1->ID
+		);
+		$this->assertTrue(
+			$field->validate($validator),
+			'Field validates values in source map'
+		);
+
+		/**
+		 * @todo re-enable these tests when field validation is removed from {@link ListboxField::setValue()} and moved
+		 * to the {@link ListboxField::validate()} function
+		 */
+//		$field->setValue(4);
+//		$this->assertFalse(
+//			$field->validate($validator),
+//			'Field does not validate values outside of source map'
+//		);
+		$field->setMultiple(true);
+		$field->setValue(false, new ArrayData(array(
+			$tag1->ID => $tag1->ID,
+			$tag2->ID => $tag2->ID
+		)));
+		$this->assertTrue(
+			$field->validate($validator),
+			'Validates values in source map'
+		);
+		//invalid value should fail
+		$field->setValue(4);
+		$this->assertFalse(
+			$field->validate($validator),
+			'Does not validate values not within source map'
+		);
+	}
+
 }
 
 class ListboxFieldTest_DataObject extends DataObject implements TestOnly {

@@ -310,4 +310,27 @@ class DropdownFieldTest extends SapphireTest {
 		return $foundDisabled;
 	}
 
+	public function testValidation() {
+		$field = DropdownField::create('Test', 'Testing', array(
+			"One" => "One",
+			"Two" => "Two"
+		));
+		$validator = new RequiredFields();
+		$form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
+		$field->setValue("One");
+		$this->assertTrue($field->validate($validator));
+		$field->setName("TestNew"); //try changing name of field
+		$this->assertTrue($field->validate($validator));
+		//non-existent value should make the field invalid
+		$field->setValue("Three");
+		$this->assertFalse($field->validate($validator));
+		//empty string shouldn't validate
+		$field->setValue('');
+		$this->assertFalse($field->validate($validator));
+		//empty field should validate after being set
+		$field->setEmptyString('Empty String');
+		$field->setValue('');
+		$this->assertTrue($field->validate($validator));
+	}
+
 }

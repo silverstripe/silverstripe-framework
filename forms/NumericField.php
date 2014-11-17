@@ -20,8 +20,14 @@ class NumericField extends TextField {
 		));
 	}
 
-	public function validate($validator) {
-		if(!$this->value && !$validator->fieldIsRequired($this->name)) {
+	/**
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate(Validator $validator) {
+		if(!$this->value) {
 			return true;
 		}
 

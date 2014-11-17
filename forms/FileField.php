@@ -181,7 +181,7 @@ class FileField extends FormField {
 		return ($this->folderName !== false) ? $this->folderName : Config::inst()->get('Upload', 'uploads_folder');
 	}
 
-	public function validate($validator) {
+	public function validate(Validator $validator) {
 		if(!isset($_FILES[$this->name])) return true;
 
 		$tmpFile = $_FILES[$this->name];

@@ -985,9 +985,7 @@ class UploadField extends FileField {
 	 * @param Validator $validator
 	 * @return boolean
 	 */
-	public function validate($validator) {
-
-		// @todo Test compatibility with RequiredFields
+	public function validate(Validator $validator) {
 		$name = $this->getName();
 		$files = $this->getItems();
 

@@ -58,7 +58,7 @@ class CreditCardField extends TextField {
 		else return $this->value;
 	}
 
-	public function validate($validator){
+	public function validate(Validator $validator){
 		// If the field is empty then don't return an invalidation message
 		if(!trim(implode("", $this->value))) return true;
 

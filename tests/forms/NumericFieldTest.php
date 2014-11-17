@@ -14,7 +14,7 @@ class NumericFieldTest extends SapphireTest {
 		$field = new NumericField('Number');
 		$field->setValue('12.00');
 
-		$validator = new RequiredFields('Number');
+		$validator = new RequiredFields();
 		$this->assertTrue($field->validate($validator));
 
 		$field->setValue('12,00');
@@ -24,7 +24,7 @@ class NumericFieldTest extends SapphireTest {
 		$this->assertTrue($field->validate($validator));
 
 		$field->setValue(false);
-		$this->assertFalse($field->validate($validator));
+		$this->assertTrue($field->validate($validator));
 
 		i18n::set_locale('de_DE');
 		$field->setValue('12,00');

@@ -144,6 +144,68 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$this->assertEquals('Test,Another', $dbValue);
 	}
 
+	public function testValidationWithArray() {
+		//test with array input
+		$field = CheckboxSetField::create('Test', 'Testing', array(
+			"One" => "One",
+			"Two" => "Two",
+			"Three" => "Three"
+		));
+		$validator = new RequiredFields();
+		$field->setValue(array("One" => "One", "Two" => "Two"));
+		$this->assertTrue(
+			$field->validate($validator),
+			'Field validates values within source array'
+		);
+		//non valid value should fail
+		$field->setValue(array("Four" => "Four"));
+		$this->assertFalse(
+			$field->validate($validator),
+			'Field does not validate values outside of source array'
+		);
+		//non valid value included with valid options should succeed
+		$field->setValue(array("One" => "One", "Two" => "Two", "Four" => "Four"));
+		$this->assertTrue(
+			$field->validate($validator),
+			'Field validates when presented with mixed valid and invalid values'
+		);
+	}
+
+	public function testValidationWithDataList() {
+		//test with datalist input
+		$checkboxTestArticle = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
+		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
+		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
+		$tag3 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag3');
+		$field = CheckboxSetField::create('Test', 'Testing', $checkboxTestArticle->Tags()	->map());
+		$validator = new RequiredFields();
+		$field->setValue(array(
+			$tag1->ID => $tag1->ID,
+			$tag2->ID => $tag2->ID
+		));
+		$this->assertTrue(
+			$field->validate($validator),
+			'Validates values in source map'
+		);
+		//invalid value should fail
+		$fakeID = CheckboxSetFieldTest_Tag::get()->max('ID') + 1;
+		$field->setValue(array($fakeID => $fakeID));
+		$this->assertFalse(
+			$field->validate($validator),
+			'Field does not valid values outside of source map'
+		);
+		//non valid value included with valid options should succeed
+		$field->setValue(array(
+			$tag1->ID => $tag1->ID,
+			$tag2->ID => $tag2->ID,
+			$tag3->ID => $tag3->ID
+		));
+		$this->assertTrue(
+			$field->validate($validator),
+			'Validates when presented with mixed valid and invalid values'
+		);
+	}
+
 }
 
 /**

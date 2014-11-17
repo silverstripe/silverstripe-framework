@@ -177,4 +177,14 @@ class MoneyField extends FormField {
 	public function getLocale() {
 		return $this->_locale;
 	}
+
+	/**
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate(Validator $validator) {
+		return !(is_null($this->fieldAmount) || is_null($this->fieldCurrency));
+	}
 }

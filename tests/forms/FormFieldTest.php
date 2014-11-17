@@ -3,7 +3,7 @@
  * @package framework
  * @subpackage tests
  */
-class FormFieldTest extends SapphireTest {
+class FormFieldTest extends SapphireTest implements TestOnly {
 
 	public function testAddExtraClass() {
 		$field = new FormField('MyField');
