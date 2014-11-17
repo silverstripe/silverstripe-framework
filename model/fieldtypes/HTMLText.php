@@ -175,6 +175,14 @@ class HTMLText extends Text {
 		return $this->Summary();
 	}
 
+	/**
+	 * Return the value of the field with relative links converted to absolute urls (with placeholders parsed).
+	 * @return string
+	 */
+	public function AbsoluteLinks() {
+		return HTTP::absoluteURLs($this->forTemplate());
+	}
+
 	public function forTemplate() {
 		if ($this->processShortcodes) {
 			return ShortcodeParser::get_active()->parse($this->value);

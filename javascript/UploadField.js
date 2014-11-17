@@ -449,8 +449,6 @@
 							self._prepareIframe(iframe, editform, itemInfo);
 							iframe.data('src', '');
 						}
-
-						if (editform.hasClass('opened')) editform.fitHeight();
 					});
 				} else {
 					self._prepareIframe(iframe, editform, itemInfo);
@@ -499,27 +497,19 @@
 
 		$('div.ss-upload .ss-uploadfield-item-editform').entwine({
 			fitHeight: function() {
-				var iframe = this.find('iframe'), padding = 32, parentPadding = 2;
-				var h = iframe.contents().find('form').height() + padding;	
+				var iframe = this.find('iframe'),
+					contents = iframe.contents().find('body'),
+					bodyH = contents.find('form').outerHeight(true), // We set the height to match the form's outer height
+					iframeH = bodyH + (iframe.outerHeight(true) - iframe.height()), // content's height + padding on iframe elem
+					containerH = iframeH + (this.outerHeight(true) - this.height()); // iframe height + padding on container elem
 
-				if(this.hasClass('includeParent')){
-					padding=0;
-					parentPadding=12;
-				}		
-				
-				/* Set height of body except in IE8. Setting this in IE8 breaks the 
-				dropdown */
-				if(!$.browser.msie && $.browser.version.slice(0,3) != "8.0"){					
-					iframe.contents().find('body').css({'height':(h-padding)});	
+				/* Set height of body except in IE8. Setting this in IE8 breaks the dropdown */
+				if( ! $.browser.msie && $.browser.version.slice(0,3) != "8.0"){
+					contents.find('body').css({'height': bodyH});	
 				}				
 				
-				// Set iframe to match its contents height
-				iframe.height(h);
-
-				// set container to match the same height
-				iframe.parent().animate({height: h+parentPadding}, 500);
-				iframe.contents().find('body form').css({'width':'98%'});
-
+				iframe.height(iframeH);
+				this.animate({height: containerH}, 500);
 			},
 			toggleEditForm: function() {
 				var itemInfo = this.prev('.ss-uploadfield-item-info'), status = itemInfo.find('.ss-uploadfield-item-status');

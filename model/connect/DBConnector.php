@@ -85,7 +85,7 @@ abstract class DBConnector {
 			$starttime = microtime(true);
 			$result = $callback($sql);
 			$endtime = round(microtime(true) - $starttime, 4);
-			Debug::message("\n$sql\n{$endtime}ms\n", false);
+			Debug::message("\n$sql\n{$endtime}s\n", false);
 			return $result;
 		} else {
 			return $callback($sql);

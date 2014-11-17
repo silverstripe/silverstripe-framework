@@ -27,18 +27,17 @@ abstract class LoginForm extends Form {
 	protected $authenticator_class;
 
 	/**
-	 * Get the authenticator class
-	 * @return Authenticator Returns the authenticator class for this login form.
+	 * Get the authenticator instance
+	 * 
+	 * @return Authenticator Returns the authenticator instance for this login form.
 	 */
-
 	public function getAuthenticator() {
 		if(!class_exists($this->authenticator_class) || !is_subclass_of($this->authenticator_class, 'Authenticator')) {
 			user_error("The form uses an invalid authenticator class! '{$this->authenticator_class}'"
 				. " is not a subclass of 'Authenticator'", E_USER_ERROR);
 			return;
 		}
-
-		return new $this->authenticator_class;
+		return Injector::inst()->get($this->authenticator_class);
 	}
 
 	/**

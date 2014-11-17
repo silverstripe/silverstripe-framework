@@ -61,7 +61,7 @@ require_once 'i18nSSLegacyAdapter.php';
  * @package framework
  * @subpackage misc
  */
-class i18n extends Object implements TemplateGlobalProvider {
+class i18n extends Object implements TemplateGlobalProvider, Flushable {
 
 	/**
 	 * This static variable is used to store the current defined locale.
@@ -96,6 +96,32 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @var array Array of priority keys to instances of Zend_Translate, mapped by name.
 	 */
 	protected static $translators;
+
+	/**
+	 * Triggered early in the request when someone requests a flush.
+	 */
+	public static function flush() {
+		$cache = self::get_cache();
+		$backend = $cache->getBackend();
+
+		if(
+			$backend instanceof Zend_Cache_Backend_ExtendedInterface
+			&& ($capabilities = $backend->getCapabilities())
+			&& $capabilities['tags']
+		) {
+			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $cache->getTags());
+		} else {
+			$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+		}
+	}
+
+	/**
+	 * Return an instance of the cache used for i18n data.
+	 * @return Zend_Cache
+	 */
+	public static function get_cache() {
+		return SS_Cache::factory('i18n', 'Output', array('lifetime' => null, 'automatic_serialization' => true));
+	}
 
 	/**
 	 * Use javascript i18n through the ss.i18n class (enabled by default).
@@ -2037,11 +2063,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 				// which is instanciated by core with a $clean instance variable.
 
 				if(!$adapter->isAvailable($lang)) {
-					i18n::include_by_locale($lang, (isset($_GET['flush'])));
+					i18n::include_by_locale($lang);
 				}
 
 				if(!$adapter->isAvailable($locale)) {
-					i18n::include_by_locale($locale, (isset($_GET['flush'])));
+					i18n::include_by_locale($locale);
 				}
 
 				$translation = $adapter->translate($entity, $locale);
@@ -2105,9 +2131,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function get_translators() {
 		if(!Zend_Translate::getCache()) {
-			Zend_Translate::setCache(
-				SS_Cache::factory('i18n', 'Output', array('lifetime' => null, 'automatic_serialization' => true))
-			);
+			Zend_Translate::setCache(self::get_cache());
 		}
 
 		if(!self::$translators) {
@@ -2120,8 +2144,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 				))
 			);
 
-			i18n::include_by_locale('en', isset($_GET['flush']));
-			i18n::include_by_locale('en_US', isset($_GET['flush']));
+			i18n::include_by_locale('en');
+			i18n::include_by_locale('en_US');
 		}
 
 		return self::$translators;
@@ -2513,7 +2537,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function include_by_locale($locale, $clean = false) {
 		if($clean) {
-			Zend_Translate::clearCache();
+			self::flush();
 		}
 
 		// Get list of module => path pairs, and then just the names

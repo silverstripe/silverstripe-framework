@@ -347,7 +347,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 
 	public function enumValuesForField($tableName, $fieldName) {
 		// Get the enum of all page types from the SiteTree table
-		$classnameinfo = DB::query("DESCRIBE \"$tableName\" \"$fieldName\"")->first();
+		$classnameinfo = $this->query("DESCRIBE \"$tableName\" \"$fieldName\"")->first();
 		preg_match_all("/'[^,]+'/", $classnameinfo["Type"], $matches);
 
 		$classes = array();

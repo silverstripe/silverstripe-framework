@@ -86,7 +86,7 @@ class TaskRunner extends Controller {
 			}
 		}
 
-		$message(sprintf('The build task "%s" could not be found', $name));
+		$message(sprintf('The build task "%s" could not be found', Convert::raw2xml($name)));
 	}
 
 	/**

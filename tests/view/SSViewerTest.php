@@ -1076,6 +1076,7 @@ after')
 				<body>
 				<a class="inline" href="#anchor">InlineLink</a>
 				$InsertedLink
+				<svg><use xlink:href="#sprite"></use></svg>
 				<body>
 			</html>');
 		$tmpl = new SSViewer($tmplFile);
@@ -1089,6 +1090,11 @@ after')
 		$this->assertContains(
 			'<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
 			$result
+		);
+		$this->assertContains(
+			'<svg><use xlink:href="#sprite"></use></svg>',
+			$result,
+			'SSTemplateParser should only rewrite anchor hrefs'
 		);
 
 		unlink($tmplFile);
@@ -1109,6 +1115,7 @@ after')
 				<body>
 				<a class="inline" href="#anchor">InlineLink</a>
 				$InsertedLink
+				<svg><use xlink:href="#sprite"></use></svg>
 				<body>
 			</html>');
 		$tmpl = new SSViewer($tmplFile);
@@ -1124,7 +1131,12 @@ after')
 		// 	'<a class="inline" href="<?php echo str_replace(',
 		// 	$result
 		// );
-
+		$this->assertContains(
+			'<svg><use xlink:href="#sprite"></use></svg>',
+			$result,
+			'SSTemplateParser should only rewrite anchor hrefs'
+		);
+		
 		unlink($tmplFile);
 
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig);

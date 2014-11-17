@@ -23,8 +23,7 @@
 	padding-left: 12px;
 }
 
-body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fieldset {
-	padding: $grid-x*2;
+body.cms.ss-uploadfield-edit-iframe {
 	overflow: auto;
 	background: #E2E2E2;
 	
@@ -39,6 +38,11 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			margin-left:0;
 		}
 	}
+}
+
+.composite.ss-assetuploadfield .details fieldset {
+	@extend body.cms.ss-uploadfield-edit-iframe;
+	padding: $grid-x*2;
 }
 
 .ss-assetuploadfield {
@@ -268,6 +272,8 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 
 			iframe {
 				width: 100%;
+				padding: $grid-x*2;
+				background: #E2E2E2;
 			}
 		}
 	}

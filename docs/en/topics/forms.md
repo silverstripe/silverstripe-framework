@@ -369,7 +369,7 @@ these methods:
 
 - FormField->setTemplate()
 - FormField->setFieldHolderTemplate()
-- FormField->getSmallFieldHolderTemplate()
+- FormField->setSmallFieldHolderTemplate()
  
 <div class="hint" markdown='1'>
 Caution: Not all FormFields consistently uses templates set by the above methods.
@@ -534,10 +534,8 @@ own validation.
 	// Limit extensions on upload (in PHP)
 	// Markup contains <input type="file" data-allowed-extensions="jpg,jpeg,gif" />
 	$exts = array('jpg', 'jpeg', 'gif');
-	$validator = new Upload_Validator();
-	$validator->setAllowedExtensions($exts);
-	$upload = Upload::create()->setValidator($validator);
-	$fileField = FileField::create('MyFile')->setUpload(new);
+	$fileField = FileField::create('MyFile');
+	$fileField->getValidator()->setAllowedExtensions($exts);
 	$fileField->setAttribute('data-allowed-extensions', implode(',', $exts));
 
 Note that these examples don't have any effect on the client as such, but are

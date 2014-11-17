@@ -11,6 +11,7 @@ well written bug reports can be half of the solution already!
  * [CMS Bugtracker](https://github.com/silverstripe/silverstripe-cms/issues)
  * [Documentation Bugtracker](https://github.com/silverstripe/silverstripe-framework/issues)
  * Search on [http://silverstripe.org/modules](http://silverstripe.org/modules) for module-specific bugtrackers
+ * Request features: [UserVoice](http://silverstripe.uservoice.com).
 
 Before submitting a bug:
 

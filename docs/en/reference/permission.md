@@ -25,6 +25,7 @@ This method should return a map of permission code names with a human readable e
 	:::php
 	class Page_Controller implements PermissionProvider {
 	  public function init() {
+	    parent::init();
 	    if(!Permission::check("VIEW_SITE")) Security::permissionFailure();
 	  }
 

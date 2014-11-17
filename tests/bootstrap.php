@@ -66,10 +66,3 @@ SapphireTest::set_is_running_test(true);
 // Remove the error handler so that PHPUnit can add its own
 restore_error_handler();
 
-if(!isset($_GET['flush']) || !$_GET['flush']) {
-	Debug::message(
-		"WARNING: Manifest not flushed. " .
-		"Add flush=1 as an argument to discover new classes or files.\n",
-		false
-	);
-}

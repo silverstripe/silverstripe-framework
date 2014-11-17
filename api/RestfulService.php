@@ -7,7 +7,8 @@
  * @package framework
  * @subpackage integration
  */
-class RestfulService extends ViewableData {
+class RestfulService extends ViewableData implements Flushable {
+
 	protected $baseURL;
 	protected $queryString;
 	protected $errorTag;
@@ -28,6 +29,19 @@ class RestfulService extends ViewableData {
 	 * @var array
 	 */
 	private static $default_curl_options = array();
+
+	/**
+	 * @config
+	 * @var bool Flushes caches if set to true. This is set by {@link flush()}
+	 */
+	private static $flush = false;
+
+	/**
+	 * Triggered early in the request when someone requests a flush.
+	 */
+	public static function flush() {
+		self::$flush = true;
+	}
 
 	/**
 	 * set a curl option that will be applied to all requests as default
@@ -168,7 +182,7 @@ class RestfulService extends ViewableData {
 		// Check for unexpired cached feed (unless flush is set)
 		//assume any cache_expire that is 0 or less means that we dont want to
 		// cache
-		if($this->cache_expire > 0 && !isset($_GET['flush'])
+		if($this->cache_expire > 0 && self::$flush
 				&& @file_exists($cache_path)
 				&& @filemtime($cache_path) + $this->cache_expire > time()) {
 

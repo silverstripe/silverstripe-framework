@@ -18,7 +18,7 @@ Append the option and corresponding value to your URL in your browser's address 
  | URL Variable | | Values | | Description                                                     | 
  | ------------ | | ------ | | -----------                                                     | 
  | flush=1      | | 1      | | Clears out all caches. Used mainly during development, e.g. when adding new classes or templates. Requires "dev" mode or ADMIN login |
- | showtemplate | | 1      | | Show the compiled version of all the templates used, including line numbers.  Good when you have a syntax error in a template. Cannot be used on a Live site without **isDev**.  **flush** can be used with the following values: |
+ | showtemplate | | 1      | | Show the compiled version of all the templates used, including line numbers.  Good when you have a syntax error in a template. Cannot be used on a Live site without **isDev**. |
 
 ## General Testing
 

@@ -66,7 +66,7 @@
  * to specifically remove it. To clear a value you can either delete 1 session value by the name that you saved it
  *
  * <code>
- * Session::clear('MyValue'); // myvalue is no longer 6.
+ * Session::clear('MyValue'); // MyValue is no longer 6.
  * </code>
  *
  * Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data
@@ -376,10 +376,8 @@ class Session {
 			// seperate (less secure) session for non-HTTPS requests
 			if($secure) session_name('SECSESSID');
 
-			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
-			// There's nothing we can do about this, because it's an operating system function!
 			if($sid) session_id($sid);
-			@session_start();
+			session_start();
 
 			$this->data = isset($_SESSION) ? $_SESSION : array();
 		}

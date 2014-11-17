@@ -16,7 +16,7 @@ Default setting:
 Overriding these defaults
 
   * `[api:HTTP::$cache_age]` can be used to set the max-age component of the cache-control line, in seconds.  
-Set it to 0 to disable caching; the "no-cache" clause in `Cache-Control` and `Pragma` will be included.
+Set it to 0 to disable caching; the "no-cache" clause in `Cache-Control` and `Pragma` will be included. It works only for live sites, if `SS_ENVIRONMENT_TYPE` is set to "dev" `[api:HTTP::$cache_age]` will be always overridden with 0.
   * `[api:HTTP::register_modification_date()]` can be used to set the modification date to something more recent than the default.
 
 How it works:

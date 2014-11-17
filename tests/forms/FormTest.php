@@ -308,7 +308,8 @@ class FormTest extends FunctionalTest {
 
 	public function testDisableSecurityTokenAcceptsSubmissionWithoutToken() {
 		SecurityToken::enable();
-
+		$expectedToken = SecurityToken::inst()->getValue();
+		
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
 		// can't use submitForm() as it'll automatically insert SecurityID into the POST data
 		$response = $this->post(
@@ -321,16 +322,30 @@ class FormTest extends FunctionalTest {
 		);
 		$this->assertEquals(400, $response->getStatusCode(), 'Submission fails without security token');
 
+		// Generate a new token which doesn't match the current one
+		$generator = new RandomGenerator();
+		$invalidToken = $generator->randomToken('sha1');
+		$this->assertNotEquals($invalidToken, $expectedToken);
+
+		// Test token with request
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
 		$response = $this->post(
 			'FormTest_ControllerWithSecurityToken/Form',
 			array(
 				'Email' => 'test@test.com',
 				'action_doSubmit' => 1,
-				'SecurityID' => -1
+				'SecurityID' => $invalidToken
 			)
 		);
 		$this->assertEquals(200, $response->getStatusCode(), 'Submission reloads form if security token invalid');
+		$this->assertTrue(
+			stripos($response->getBody(), 'name="SecurityID" value="'.$expectedToken.'"') !== false,
+			'Submission reloads with correct security token after failure'
+		);
+		$this->assertTrue(
+			stripos($response->getBody(), 'name="SecurityID" value="'.$invalidToken.'"') === false,
+			'Submission reloads without incorrect security token after failure'
+		);
 
 		$matched = $this->cssParser()->getBySelector('#Form_Form_Email');
 		$attrs = $matched[0]->attributes();
@@ -493,6 +508,52 @@ class FormTest extends FunctionalTest {
 		$this->assertContains('three="3"', $form->getAttributesHTML('one', 'two'));
 	}
 
+	function testMessageEscapeHtml() {
+		$form = $this->getStubForm();
+		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->sessionMessage('<em>Escaped HTML</em>', 'good', true);
+		$parser = new CSSContentParser($form->forTemplate());
+		$messageEls = $parser->getBySelector('.message');
+		$this->assertContains(
+			'&lt;em&gt;Escaped HTML&lt;/em&gt;',
+			$messageEls[0]->asXML()
+		);
+
+		$form = $this->getStubForm();
+		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->sessionMessage('<em>Unescaped HTML</em>', 'good', false);
+		$parser = new CSSContentParser($form->forTemplate());
+		$messageEls = $parser->getBySelector('.message');
+		$this->assertContains(
+			'<em>Unescaped HTML</em>',
+			$messageEls[0]->asXML()
+		);
+	}
+
+	function testFieldMessageEscapeHtml() {
+		$form = $this->getStubForm();
+		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->addErrorMessage('key1', '<em>Escaped HTML</em>', 'good', true);
+		$form->setupFormErrors();
+		$parser = new CSSContentParser($form->forTemplate());
+		$messageEls = $parser->getBySelector('#key1 .message');
+		$this->assertContains(
+			'&lt;em&gt;Escaped HTML&lt;/em&gt;',
+			$messageEls[0]->asXML()
+		);
+
+		$form = $this->getStubForm();
+		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->addErrorMessage('key1', '<em>Unescaped HTML</em>', 'good', false);
+		$form->setupFormErrors();
+		$parser = new CSSContentParser($form->forTemplate());
+		$messageEls = $parser->getBySelector('#key1 .message');
+		$this->assertContains(
+			'<em>Unescaped HTML</em>',
+			$messageEls[0]->asXML()
+		);
+	}
+	
 	protected function getStubForm() {
 		return new Form(
 			new FormTest_Controller(),

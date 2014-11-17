@@ -1,0 +1,23 @@
+---
+Name: DevelopmentAdmin
+---
+DevelopmentAdmin:
+  registered_controllers:
+    build:
+      controller: 'DevBuildController'
+      links:
+        build: 'Build/rebuild this environment. Call this whenever you have updated your project sources'
+    tests:
+      controller: 'TestRunner'
+      links:
+        tests: 'See a list of unit tests to run'
+        'tests/all': 'Run all tests'
+    jstests:
+      controller: 'JSTestRunner'
+      links: 
+        jstests: 'See a list of JavaScript tests to run'
+        'jstests/all': 'Run all JavaScript tests'
+    tasks:
+      controller: 'TaskRunner'
+      links:
+        tasks: 'See a list of build tasks to run'

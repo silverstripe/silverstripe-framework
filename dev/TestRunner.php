@@ -82,19 +82,24 @@ class TestRunner extends Controller {
 	 * top of the loader stacks.
 	 */
 	public static function use_test_manifest() {
+		$flush = true;
+		if(isset($_GET['flush']) && $_GET['flush'] === '0') {
+			$flush = false;
+		}
+
 		$classManifest = new SS_ClassManifest(
-			BASE_PATH, true, isset($_GET['flush'])
+			BASE_PATH, true, $flush
 		);
 
 		SS_ClassLoader::instance()->pushManifest($classManifest, false);
 		SapphireTest::set_test_class_manifest($classManifest);
 
 		SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
-			BASE_PATH, project(), true, isset($_GET['flush'])
+			BASE_PATH, project(), true, $flush
 		));
 
 		Config::inst()->pushConfigStaticManifest(new SS_ConfigStaticManifest(
-			BASE_PATH, true, isset($_GET['flush'])
+			BASE_PATH, true, $flush
 		));
 
 		// Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
@@ -111,15 +116,7 @@ class TestRunner extends Controller {
 		if (!self::$default_reporter) self::set_reporter(Director::is_cli() ? 'CliDebugView' : 'DebugView');
 
 		if(!PhpUnitWrapper::has_php_unit()) {
-			die("Please install PHPUnit using pear");
-		}
-
-		if(!isset($_GET['flush']) || !$_GET['flush']) {
-			Debug::message(
-				"WARNING: Manifest not flushed. " .
-				"Add flush=1 as an argument to discover new classes or files.\n",
-				false
-			);
+			die("Please install PHPUnit using Composer");
 		}
 	}
 
@@ -392,7 +389,7 @@ class TestRunner extends Controller {
 		if (count($classList) > 1) {
 			self::$default_reporter->writeInfo("All Tests", "Running test cases: ",implode(", ", $classList));
 		} elseif (count($classList) == 1) {
-			self::$default_reporter->writeInfo($classList[0], '');
+			self::$default_reporter->writeInfo(reset($classList), '');
 		} else {
 			// border case: no tests are available.
 			self::$default_reporter->writeInfo('', '');

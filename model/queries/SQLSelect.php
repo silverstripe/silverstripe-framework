@@ -534,8 +534,8 @@ class SQLSelect extends SQLConditionalExpression {
 			if($this->groupby) {
 				// @todo Test case required here
 				$countQuery = new SQLSelect();
-				$countQuery->select("count(*)");
-				$countQuery->addFrom(array('(' . $clone->sql($innerParameters) . ') all_distinct'));
+				$countQuery->setSelect("count(*)");
+				$countQuery->setFrom(array('(' . $clone->sql($innerParameters) . ') all_distinct'));
 				$sql = $countQuery->sql($parameters); // $parameters should be empty
 				$result = DB::prepared_query($sql, $innerParameters);
 				return $result->value();

@@ -765,9 +765,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $name;
 		} else {
 			$name = $this->singular_name();
-			if(substr($name,-1) == 'e') $name = substr($name,0,-1);
-			else if(substr($name,-1) == 'y') $name = substr($name,0,-1) . 'ie';
-
+			if(substr($name,-1) == 'y') $name = substr($name,0,-1) . 'ie';
 			return ucfirst($name . 's');
 		}
 	}
@@ -1050,7 +1048,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * It is expected that you call validate() in your own application to test that an object is valid before
 	 * attempting a write, and respond appropriately if it isn't.
 	 *
-	 * @return A {@link ValidationResult} object
+	 * @see {@link ValidationResult}
+	 * @return ValidationResult
 	 */
 	public function validate() {
 		$result = ValidationResult::create();
@@ -1817,19 +1816,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array The database fields
 	 */
 	public function db($fieldName = null) {
-		$classes = ClassInfo::ancestry($this);
-		$good = false;
+		$classes = ClassInfo::ancestry($this, true);
 		$items = array();
 
-		foreach($classes as $class) {
-			// Wait until after we reach DataObject
-			if(!$good) {
-				if($class == 'DataObject') {
-					$good = true;
-				}
-				continue;
-			}
-
+		foreach(array_reverse($classes) as $class) {
 			if(isset(self::$_cache_db[$class])) {
 				$dbItems = self::$_cache_db[$class];
 			} else {
@@ -3404,6 +3394,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$types['has_one'] = (array)singleton($ancestorClass)->uninherited('has_one', true);
 					$types['has_many'] = (array)singleton($ancestorClass)->uninherited('has_many', true);
 					$types['many_many'] = (array)singleton($ancestorClass)->uninherited('many_many', true);
+					$types['belongs_many_many'] = (array)singleton($ancestorClass)->uninherited('belongs_many_many', true);
 				}
 				foreach($types as $type => $attrs) {
 					foreach($attrs as $name => $spec) {
@@ -3442,7 +3433,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return array
 	 */
-	public function summaryFields(){
+	public function summaryFields() {
 		$fields = $this->stat('summary_fields');
 
 		// if fields were passed in numeric array,
@@ -3466,7 +3457,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Localize fields (if possible)
 		foreach($this->fieldLabels(false) as $name => $label) {
-			if(isset($fields[$name])) $fields[$name] = $label;
+			// only attempt to localize if the label definition is the same as the field name.
+			// this will preserve any custom labels set in the summary_fields configuration
+			if(isset($fields[$name]) && $name === $fields[$name]) {
+				$fields[$name] = $label;
+			}
 		}
 
 		return $fields;

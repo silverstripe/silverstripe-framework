@@ -135,7 +135,7 @@ For more information on how to paginate your results within the template, see [T
 to show the results of your custom search you need at least this content in your template, notice that
 Results.PaginationSummary(4) defines how many pages the search will show in the search results. something like:
 
-**Next   1 2  *3*  4  5  ��� 558**  
+**Next   1 2  *3*  4  5 &hellip; 558**  
 
 
 	:::ss

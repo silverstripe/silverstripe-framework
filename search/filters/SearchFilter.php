@@ -165,20 +165,10 @@ abstract class SearchFilter extends Object {
 			return $this->name;
 		}
 
-		// This code finds the table where the field named $this->name lives
-		// Todo: move to somewhere more appropriate, such as DataMapper, the
-		// magical class-to-be?
-		$candidateClass = $this->model;
-
-		while($candidateClass != 'DataObject') {
-			if( DataObject::has_own_table($candidateClass)
-				&& DataObject::has_own_table_database_field($candidateClass, $this->name)
-			) {
-				break;
-			}
-
-			$candidateClass = get_parent_class($candidateClass);
-		}
+		$candidateClass = ClassInfo::table_for_object_field(
+			$this->model, 
+			$this->name
+		);
 
 		if($candidateClass == 'DataObject') {
 			// fallback to the provided name in the event of a joined column

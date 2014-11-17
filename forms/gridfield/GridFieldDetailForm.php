@@ -528,7 +528,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$this->record->write();
 			$list->add($this->record, $extraData);
 		} catch(ValidationException $e) {
-			$form->sessionMessage($e->getResult()->message(), 'bad');
+			$form->sessionMessage($e->getResult()->message(), 'bad', false);
 			$responseNegotiator = new PjaxResponseNegotiator(array(
 				'CurrentForm' => function() use(&$form) {
 					return $form->forTemplate();
@@ -545,11 +545,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		// TODO Save this item into the given relationship
 
-		// TODO Allow HTML in form messages
-		// $link = '<a href="' . $this->Link('edit') . '">"'
-		// 	. htmlspecialchars($this->record->Title, ENT_QUOTES)
-		// 	. '"</a>';
-		$link = '"' . $this->record->Title . '"';
+		$link = '<a href="' . $this->Link('edit') . '">"' 
+			. htmlspecialchars($this->record->Title, ENT_QUOTES) 
+			. '"</a>';
 		$message = _t(
 			'GridFieldDetailForm.Saved',
 			'Saved {name} {link}',
@@ -559,7 +557,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			)
 		);
 
-		$form->sessionMessage($message, 'good');
+		$form->sessionMessage($message, 'good', false);
 
 		if($new_record) {
 			return $controller->redirect($this->Link());
@@ -586,7 +584,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 			$this->record->delete();
 		} catch(ValidationException $e) {
-			$form->sessionMessage($e->getResult()->message(), 'bad');
+			$form->sessionMessage($e->getResult()->message(), 'bad', false);
 			return $this->getToplevelController()->redirectBack();
 		}
 
@@ -599,9 +597,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$toplevelController = $this->getToplevelController();
 		if($toplevelController && $toplevelController instanceof LeftAndMain) {
 			$backForm = $toplevelController->getEditForm();
-			$backForm->sessionMessage($message, 'good');
+			$backForm->sessionMessage($message, 'good', false);
 		} else {
-			$form->sessionMessage($message, 'good');
+			$form->sessionMessage($message, 'good', false);
 		}
 
 		//when an item is deleted, redirect to the parent controller

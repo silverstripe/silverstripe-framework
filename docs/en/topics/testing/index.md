@@ -13,38 +13,29 @@ If you're more familiar with unit testing, but want a refresher of some of the c
 the [Testing Glossary](glossary). To get started now, follow the installation instructions below, and check
 [Troubleshooting](testing-guide-troubleshooting) in case you run into any problems.
 
-If you are familiar with PHP coding but new to unit testing, you should read the [Introduction](/topics/testing) and
-check out Mark's presentation [Getting to Grips with SilverStripe Testing](http://www.slideshare.net/maetl/getting-to-grips-with-silverstripe-testing).
+If you are familiar with PHP coding but new to unit testing then check out Mark's presentation [Getting to Grips with SilverStripe Testing](http://www.slideshare.net/maetl/getting-to-grips-with-silverstripe-testing).
 
 [Why Unit Test?](why-should-i-test) will give you reasons why you should be testing your code.
 
 You should also read over [the PHPUnit manual](http://www.phpunit.de/manual/current/en/). It provides a lot of
 fundamental concepts that we build on in this documentation.
 
-## Installation
-
-### Via Composer
-
-Unit tests are not included in the normal SilverStripe downloads, you are expected to work with local git repositories
+Unit tests are not included in the normal SilverStripe downloads so you need to install them through git repositories
 ([installation instructions](/installation/composer)).
 
-Once you've got the project up and running, check out the additional requirements to run unit tests:
+## Install with Composer
 
-	composer update --dev
+Once you've got your project up and running, open a terminal and cd to your project root.
 
-This will install (among other things) the [PHPUnit](http://www.phpunit.de/) dependency, which is the framework we're
-building our unit tests on. Composer installs it alongside the required PHP classes into the `vendor/bin/` directory.
-You can either use it through its full path (`vendor/bin/phpunit`), or symlink it into the root directory of your website:
+	composer require --dev "phpunit/phpunit:*@stable"
+
+This will install [PHPUnit](http://www.phpunit.de/) dependency, which is the framework we're
+building our unit tests on.  Composer installs it alongside the required PHP classes into the `vendor/bin/` directory.
+
+### Symlinking the PHPUnit Binary
+You can either use PHPUnit through its full path (`vendor/bin/phpunit`), or symlink it into the root directory of your website:
 
 	ln -s vendor/bin/phpunit phpunit
-
-### Via PEAR
-
-Alternatively, you can check out PHPUnit globally via the PEAR package manager
-([instructions](https://github.com/sebastianbergmann/phpunit/)).
-
-	pear config-set auto_discover 1
-	pear install pear.phpunit.de/PHPUnit
 
 ## Configuration
 
@@ -82,8 +73,6 @@ You will generally write two different kinds of test classes.
 
 *  **Unit Test:** Test the behaviour of one of your DataObjects.
 *  **Functional Test:** Test the behaviour of one of your controllers.
-
-Some people may note that we have used the same naming convention as Ruby on Rails.
 
 Tutorials and recipes for creating tests using the SilverStripe framework:
 
@@ -140,7 +129,6 @@ particularly around formatting test output.
 ### Via Web Browser
 
 Executing tests from the command line is recommended, since it most closely reflects
-test runs in any automated testing environments. If for some reason you don't have
-access to the command line, you can also run tests through the browser.
+test runs in any automated testing environments. However, you can also run tests through the browser (requires PHPUnit version 3.7.*@stable):
 
 	http://localhost/dev/tests

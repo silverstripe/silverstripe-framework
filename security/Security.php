@@ -222,6 +222,10 @@ class Security extends Controller implements TemplateGlobalProvider {
 			if(!Member::currentUser()) {
 				$response->setBody(_t('ContentController.NOTLOGGEDIN','Not logged in'));
 				$response->setStatusDescription(_t('ContentController.NOTLOGGEDIN','Not logged in'));
+				// Tell the CMS to allow re-aunthentication
+				if(CMSSecurity::enabled()) {
+					$response->addHeader('X-Reauthenticate', '1');
+				}
 			}
 			return $response;
 		} else {
@@ -316,26 +320,33 @@ class Security extends Controller implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Get the login form to process according to the submitted data
+	 * Get the selected authenticator for this request
+	 *
+	 * @return string Class name of Authenticator
 	 */
-	public function LoginForm() {
-		if(isset($this->requestParams['AuthenticationMethod'])) {
-			$authenticator = trim($_REQUEST['AuthenticationMethod']);
-
+	protected function getAuthenticator() {
+		$authenticator = $this->request->requestVar('AuthenticationMethod');
+		if($authenticator) {
 			$authenticators = Authenticator::get_authenticators();
 			if(in_array($authenticator, $authenticators)) {
-				return call_user_func(array($authenticator, 'get_login_form'), $this);
+				return $authenticator;
 			}
-		}
-		else {
-			if($authenticator = Authenticator::get_default_authenticator()) {
-				return call_user_func(array($authenticator, 'get_login_form'), $this);
-			}
+		} else {
+			return Authenticator::get_default_authenticator();
 		}
 
-		user_error('Passed invalid authentication method', E_USER_ERROR);
 	}
 
+	/**
+	 * Get the login form to process according to the submitted data
+	 *
+	 * @return Form
+	 */
+	public function LoginForm() {
+		$authenticator = $this->getAuthenticator();
+		if($authenticator) return $authenticator::get_login_form($this);
+		throw new Exception('Passed invalid authentication method');
+	}
 
 	/**
 	 * Get the login forms for all available authentication methods
@@ -345,15 +356,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 *
 	 * @todo Check how to activate/deactivate authentication methods
 	 */
-	public function GetLoginForms()
-	{
+	public function GetLoginForms() {
 		$forms = array();
 
 		$authenticators = Authenticator::get_authenticators();
 		foreach($authenticators as $authenticator) {
-			array_push($forms,
-						call_user_func(array($authenticator, 'get_login_form'),
-																$this));
+			$forms[] = $authenticator::get_login_form($this);
 		}
 
 		return $forms;
@@ -367,7 +375,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string Returns the link to the given action
 	 */
 	public function Link($action = null) {
-		return "Security/$action";
+		return Controller::join_links(Director::baseURL(), "Security", $action);
 	}
 
 	/**
@@ -395,79 +403,131 @@ class Security extends Controller implements TemplateGlobalProvider {
 		}
 	}
 
+	/**
+	 * Perform pre-login checking and prepare a response if available prior to login
+	 *
+	 * @return SS_HTTPResponse Substitute response object if the login process should be curcumvented.
+	 * Returns null if should proceed as normal.
+	 */
+	protected function preLogin() {
+		// Event handler for pre-login, with an option to let it break you out of the login form
+		$eventResults = $this->extend('onBeforeSecurityLogin');
+		// If there was a redirection, return
+		if($this->redirectedTo()) return $this->response;
+		// If there was an SS_HTTPResponse object returned, then return that
+		if($eventResults) {
+			foreach($eventResults as $result) {
+				if($result instanceof SS_HTTPResponse) return $result;
+			}
+		}
+	}
+
+	/**
+	 * Prepare the controller for handling the response to this request
+	 *
+	 * @param string $title Title to use
+	 * @return Controller
+	 */
+	protected function getResponseController($title) {
+		if(!class_exists('SiteTree')) return $this;
+
+		// Use sitetree pages to render the security page
+		$tmpPage = new Page();
+		$tmpPage->Title = $title;
+		$tmpPage->URLSegment = "Security";
+		// Disable ID-based caching  of the log-in page by making it a random number
+		$tmpPage->ID = -1 * rand(1,10000000);
+
+		$controller = Page_Controller::create($tmpPage);
+		$controller->setDataModel($this->model);
+		$controller->init();
+		return $controller;
+	}
+
+	/**
+	 * Determine the list of templates to use for rendering the given action
+	 *
+	 * @param string $action
+	 * @return array Template list
+	 */
+	protected function getTemplatesFor($action) {
+		return array("Security_{$action}", 'Security', $this->stat('template_main'), 'BlankPage');
+	}
+
+	/**
+	 * Combine the given forms into a formset with a tabbed interface
+	 *
+	 * @param array $forms List of LoginForm instances
+	 * @return string
+	 */
+	protected function generateLoginFormSet($forms) {
+		$viewData = new ArrayData(array(
+			'Forms' => new ArrayList($forms),
+		));
+		return $viewData->renderWith(
+			$this->getIncludeTemplate('MultiAuthenticatorLogin')
+		);
+	}
+
+	/**
+	 * Get the HTML Content for the $Content area during login
+	 *
+	 * @param string &$messageType Type of message, if available, passed back to caller
+	 * @return string Message in HTML format
+	 */
+	protected function getLoginMessage(&$messageType = null) {
+		$message = Session::get('Security.Message.message');
+		$messageType = null;
+		if(empty($message)) return null;
+
+		$messageType = Session::get('Security.Message.type');
+		if($messageType === 'bad') {
+			return "<p class=\"message $messageType\">$message</p>";
+		} else {
+			return "<p>$message</p>";
+		}
+	}
+
 
 	/**
 	 * Show the "login" page
 	 *
 	 * For multiple authenticators, Security_MultiAuthenticatorLogin is used.
-	 * See getTemplate and getIncludeTemplate for how to override template logic
+	 * See getTemplatesFor and getIncludeTemplate for how to override template logic
 	 *
 	 * @return string Returns the "login" page as HTML code.
 	 */
 	public function login() {
-		// Event handler for pre-login, with an option to let it break you out of the login form
-		$eventResults = $this->extend('onBeforeSecurityLogin');
-		// If there was a redirection, return
-		if($this->redirectedTo()) return;
-		// If there was an SS_HTTPResponse object returned, then return that
-		else if($eventResults) {
-			foreach($eventResults as $result) {
-				if($result instanceof SS_HTTPResponse) return $result;
-			}
-		}
+		// Check pre-login process
+		if($response = $this->preLogin()) return $response;
 
-		if(class_exists('SiteTree')) {
-			$tmpPage = new Page();
-			$tmpPage->Title = _t('Security.LOGIN', 'Log in');
-			$tmpPage->URLSegment = "Security";
-			// Disable ID-based caching  of the log-in page by making it a random number
-			$tmpPage->ID = -1 * rand(1,10000000);
-
-			$controller = Page_Controller::create($tmpPage);
-			$controller->setDataModel($this->model);
-			$controller->init();
-		}
-		else {
-			$controller = $this;
-		}
+		// Get response handler
+		$controller = $this->getResponseController(_t('Security.LOGIN', 'Log in'));
 
 		// if the controller calls Director::redirect(), this will break early
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
-		$content = '';
 		$forms = $this->GetLoginForms();
-		$formCount = count($forms);
-
-		if(!$formCount) {
+		if(!count($forms)) {
 			user_error('No login-forms found, please use Authenticator::register_authenticator() to add one',
 				E_USER_ERROR);
 		}
 
-		// Handle any for messages from validation, etc.
-		$message = Session::get('Security.Message.message');
+		// Handle any form messages from validation, etc.
 		$messageType = '';
-		if(!empty($message)) {
-			$messageType = Session::get('Security.Message.type');
-		}
+		$message = $this->getLoginMessage($messageType);
 
 		// We've displayed the message in the form output, so reset it for the next run.
 		Session::clear('Security.Message');
 
-		// If many login forms, display all to let user to choose.
-		if($formCount > 1) {
-			$viewData = new ArrayData(array(
-				'Forms' => new ArrayList($forms),
-			));
-
-			$content = $viewData->renderWith(
-				$this->getIncludeTemplate('MultiAuthenticatorLogin')
-			);
-		}
-		// Display the form
-		else {
+		// only display tabs when more than one authenticator is provided
+		// to save bandwidth and reduce the amount of custom styling needed 
+		if(count($forms) > 1) {
+			$content = $this->generateLoginFormSet($forms);
+		} else {
 			$content = $forms[0]->forTemplate();
 		}
-
+		
 		// Finally, customise the controller to add any form messages and the form.
 		$customisedController = $controller->customise(array(
 			"Message" => $message,
@@ -477,7 +537,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 		// Return the customised controller
 		return $customisedController->renderWith(
-			$this->getTemplate('login')
+			$this->getTemplatesFor('login')
 		);
 	}
 
@@ -492,17 +552,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string Returns the "lost password" page as HTML code.
 	 */
 	public function lostpassword() {
-		if(class_exists('SiteTree')) {
-			$tmpPage = new Page();
-			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
-			$tmpPage->URLSegment = 'Security';
-			// Disable ID-based caching  of the log-in page by making it a random number
-			$tmpPage->ID = -1 * rand(1,10000000);
-			$controller = Page_Controller::create($tmpPage);
-			$controller->init();
-		} else {
-			$controller = $this;
-		}
+		$controller = $this->getResponseController(_t('Security.LOSTPASSWORDHEADER', 'Lost Password'));
 
 		// if the controller calls Director::redirect(), this will break early
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
@@ -519,9 +569,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		));
 
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(
-			$this->getTemplate('lostpassword')
-		);
+		return $customisedController->renderWith($this->getTemplatesFor('lostpassword'));
 	}
 
 
@@ -555,17 +603,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
-		if(class_exists('SiteTree')) {
-			$tmpPage = new Page();
-			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
-			$tmpPage->URLSegment = 'Security';
-			// Disable ID-based caching  of the log-in page by making it a random number
-			$tmpPage->ID = -1 * rand(1,10000000);
-			$controller = Page_Controller::create($tmpPage);
-			$controller->init();
-		} else {
-			$controller = $this;
-		}
+		$controller = $this->getResponseController(_t('Security.LOSTPASSWORDHEADER', 'Lost Password'));
 
 		// if the controller calls Director::redirect(), this will break early
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
@@ -586,9 +624,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		));
 
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(
-			$this->getTemplate('passwordsent')
-		);
+		return $customisedController->renderWith($this->getTemplatesFor('passwordsent'));
 	}
 
 
@@ -622,17 +658,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string Returns the "change password" page as HTML code.
 	 */
 	public function changepassword() {
-		if(class_exists('SiteTree')) {
-			$tmpPage = new Page();
-			$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
-			$tmpPage->URLSegment = 'Security';
-			// Disable ID-based caching  of the log-in page by making it a random number
-			$tmpPage->ID = -1 * rand(1,10000000);
-			$controller = Page_Controller::create($tmpPage);
-			$controller->init();
-		} else {
-			$controller = $this;
-		}
+		$controller = $this->getResponseController(_t('Security.CHANGEPASSWORDHEADER', 'Change your password'));
 
 		// if the controller calls Director::redirect(), this will break early
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
@@ -695,9 +721,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 			}
 		}
 
-		return $customisedController->renderWith(
-			$this->getTemplate('changepassword')
-		);
+		return $customisedController->renderWith($this->getTemplatesFor('changepassword'));
 	}
 
 	/**
@@ -710,28 +734,13 @@ class Security extends Controller implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Gets the template for a particular action for use in rendering
-	 * For use in any subclass
-	 *
-	 * @return string|array Returns the template(s) for rendering
-	 */
-	public function getTemplate($action) {
-		return array(
-			'Security_' . $action,
-			'Security',
-			$this->stat('template_main'),
-			'BlankPage'
-		);
-	}
-
-	/**
 	 * Gets the template for an include used for security.
 	 * For use in any subclass.
 	 *
 	 * @return string|array Returns the template(s) for rendering
 	 */
 	public function getIncludeTemplate($name) {
-		return 'Security_' . $name;
+		return array('Security_' . $name);
 	}
 
 	/**
@@ -781,7 +790,19 @@ class Security extends Controller implements TemplateGlobalProvider {
 			$member = Permission::get_members_by_permission('ADMIN')->First();
 		}
 
+		if(!$member) {
+			$member = Member::default_admin();
+		}
+
 		return $member;
+	}
+
+	/**
+	 * Flush the default admin credentials
+	 */
+	public static function clear_default_admin() {
+		self::$default_username = null;
+		self::$default_password = null;
 	}
 
 
@@ -827,6 +848,24 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 */
 	public static function has_default_admin() {
 		return !empty(self::$default_username) && !empty(self::$default_password);
+	}
+
+	/**
+	 * Get default admin username
+	 *
+	 * @return string
+	 */
+	public static function default_admin_username() {
+		return self::$default_username;
+	}
+
+	/**
+	 * Get default admin password
+	 *
+	 * @return string
+	 */
+	public static function default_admin_password() {
+		return self::$default_password;
 	}
 
 	/**

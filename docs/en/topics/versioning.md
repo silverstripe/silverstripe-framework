@@ -186,6 +186,10 @@ from the `Controller` class.
 
 ## Recipes
 
+It can be useful to add the variable `$SilverStripeNavigator` somewhere into the template, since it allows you to put a mini "admin" bar on the page which isn't visible to non editors. It shows the current stage and provides a convenient CMS link and version changing link.
+
+Keep in mind that `$SilverStripeNavigator` is only available on ContentController, so useful when the Versioned extension is applied to SiteTree (default), and not when it's applied to DataObject.
+
 ### Trapping the publication event
 
 Sometimes, you'll want to do something whenever a particular kind of page is published.  This example sends an email
@@ -196,6 +200,5 @@ whenever a blog entry has been published.
 	  // ...
 	  public function onAfterPublish() {
 	    mail("sam@silverstripe.com", "Blog published", "The blog has been published");
-	    parent::onAfterPublish();
 	  }
 	}
