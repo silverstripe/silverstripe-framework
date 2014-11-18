@@ -9,18 +9,23 @@ class TextTest extends SapphireTest {
 	 * Test {@link Text->LimitCharacters()}
 	 */
 	public function testLimitCharacters() {
-		$cases1 = array(
+		$cases = array(
 			'The little brown fox jumped over the lazy cow.' => 'The little brown fox...',
 			'<p>This is some text in a paragraph.</p>' => '<p>This is some text...'
 		);
 		
-		foreach($cases1 as $originalValue => $expectedValue) {
+		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
 			$textObj->setValue($originalValue);
 			$this->assertEquals($expectedValue, $textObj->LimitCharacters());
 		}
-
-		$cases2 = array(
+	}
+    
+	/**
+	 * Test {@link Text->LimitCharactersToClosestWord()}
+	 */
+	public function testLimitCharactersToClosestWord() {
+		$cases = array(
 			/* Standard words limited, ellipsis added if truncated */
 			'Lorem ipsum dolor sit amet' => 'Lorem ipsum dolor sit...',
 
@@ -32,13 +37,16 @@ class TextTest extends SapphireTest {
 			/* HTML tags get stripped out, leaving the raw text */
 			'<p>Lorem ipsum dolor sit amet</p>' => 'Lorem ipsum dolor sit...',
 			'<p><span>Lorem ipsum dolor sit amet</span></p>' => 'Lorem ipsum dolor sit...',
-			'<p>Lorem ipsum</p>' => 'Lorem ipsum'
+			'<p>Lorem ipsum</p>' => 'Lorem ipsum',
+            
+			/* HTML entities are treated as a single character */
+			'Lorem &amp; ipsum dolor sit amet' => 'Lorem &amp; ipsum dolor...'
 		);
 
-		foreach($cases2 as $originalValue => $expectedValue) {
+		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
 			$textObj->setValue($originalValue);
-			$this->assertEquals($expectedValue, $textObj->LimitCharacters(24, '...', true));
+			$this->assertEquals($expectedValue, $textObj->LimitCharactersToClosestWord(24));
 		}
 	}
 
