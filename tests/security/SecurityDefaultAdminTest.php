@@ -51,6 +51,23 @@ class SecurityDefaultAdminTest extends SapphireTest {
 		$this->assertNull($admin->Password);
 	}
 
+	public function testFindAnAdministratorWithoutDefaultAdmin() {
+		// Clear default admin
+		Security::clear_default_admin();
+
+		$adminMembers = Permission::get_members_by_permission('ADMIN');
+		$this->assertEquals(0, $adminMembers->count());
+
+		$admin = Security::findAnAdministrator();
+
+		$this->assertInstanceOf('Member', $admin);
+		$this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
+
+		// User should be blank
+		$this->assertEmpty($admin->Email);
+		$this->assertEmpty($admin->Password);
+	}
+
 	public function testDefaultAdmin() {
 		$adminMembers = Permission::get_members_by_permission('ADMIN');
 		$this->assertEquals(0, $adminMembers->count());

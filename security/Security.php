@@ -767,11 +767,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		$member = null;
 
 		// find a group with ADMIN permission
-		$adminGroup = DataObject::get('Group')
-			->where(array('"Permission"."Code"' => 'ADMIN'))
-			->sort('"Group"."ID"')
-			->innerJoin("Permission", '"Group"."ID" = "Permission"."GroupID"')
-			->First();
+		$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
 
 		if(is_callable('Subsite::changeSubsite')) {
 			Subsite::changeSubsite($origSubsite);
@@ -783,6 +779,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 		if(!$adminGroup) {
 			singleton('Group')->requireDefaultRecords();
+			$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
 		}
 
 		if(!$member) {
@@ -792,6 +789,14 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 		if(!$member) {
 			$member = Member::default_admin();
+		}
+
+		if(!$member) {
+			// Failover to a blank admin
+			$member = Member::create();
+			$member->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
+			$member->write();
+			$member->Groups()->add($adminGroup);
 		}
 
 		return $member;
