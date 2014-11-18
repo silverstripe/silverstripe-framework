@@ -57,7 +57,7 @@ To call additional Javascript or jQuery files in to the CMS, edit your mysite/co
 	:::javascript
 	LeftAndMain: 
 	   extra_requirements_javascript:
-	      '/path/to/file.js'
+	      - '/path/to/file.js'
 	      
 ### jQuery Plugins
 
