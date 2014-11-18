@@ -198,6 +198,28 @@ process HTML5 tags, please use the
 
 ## Recipes
 
+### Removing buttons using jQuery
+
+Sometimes you may need to remove certain buttons from the WYSIWYG editor on a case by case basis, just on certain pages. Refer to the [javascript](http://doc.silverstripe.org/framework/en/topics/javascript) to see how to include custom JavaScript/jQuery in the CMS.
+
+The following code needs to reflect the elements in which you wish to remove. In the example, we are removing the bold and italics buttons from the BannerText HtmlEditorField.
+
+	:::javascript
+	(function($) {
+    $(document).ready(function(){
+        // What elements of the DOM do we want to make disappear?
+        var elements = ["a#Form_EditForm_BannerText_bold","a#Form_EditForm_BannerText_italic"];
+        // Function to remove the buttons/elements in a for loop
+        function removeButton(){
+            for(i=0; i <= elements.length; i++){
+                $(elements[i]).remove();
+            }
+        }
+        // Delay running the function until 500ms after the CMS has loaded. If we don't put this timeout here, the elements aren't loaded in advance of this script running.
+        setTimeout(removeButton,500);
+    })
+})(jQuery);
+
 ### Customizing the "Insert" panels
 
 In the standard installation, you can insert links (internal/external/anchor/email),
