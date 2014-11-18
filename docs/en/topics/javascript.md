@@ -50,6 +50,15 @@ code or any other framework code.
 		})
 	})(jQuery);
 
+### Custom jQuery/JavaScript in the CMS
+
+To call additional Javascript or jQuery files in to the CMS, edit your mysite/config/config.yml file as follows:
+
+	:::javascript
+	LeftAndMain: 
+	   extra_requirements_javascript:
+	      '/path/to/file.js'
+	      
 ### jQuery Plugins
 
 A jQuery Plugin is essentially a method call which can act on a collection of DOM elements. It is contained within the `jQuery.fn` namespace, and attaches itself automatically to all jQuery collections. The basics for are outlined in the
