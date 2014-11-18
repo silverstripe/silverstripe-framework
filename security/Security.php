@@ -450,7 +450,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @param string $action
 	 * @return array Template list
 	 */
-	protected function getTemplatesFor($action) {
+	public function getTemplatesFor($action) {
 		return array("Security_{$action}", 'Security', $this->stat('template_main'), 'BlankPage');
 	}
 

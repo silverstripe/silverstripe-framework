@@ -535,8 +535,8 @@ class FormTest extends FunctionalTest {
 		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->addErrorMessage('key1', '<em>Escaped HTML</em>', 'good', true);
 		$form->setupFormErrors();
-		$parser = new CSSContentParser($form->forTemplate());
-		$messageEls = $parser->getBySelector('#key1 .message');
+		$parser = new CSSContentParser($result = $form->forTemplate());
+		$messageEls = $parser->getBySelector('#Form_Form_key1_Holder .message');
 		$this->assertContains(
 			'&lt;em&gt;Escaped HTML&lt;/em&gt;',
 			$messageEls[0]->asXML()
@@ -547,7 +547,7 @@ class FormTest extends FunctionalTest {
 		$form->addErrorMessage('key1', '<em>Unescaped HTML</em>', 'good', false);
 		$form->setupFormErrors();
 		$parser = new CSSContentParser($form->forTemplate());
-		$messageEls = $parser->getBySelector('#key1 .message');
+		$messageEls = $parser->getBySelector('#Form_Form_key1_Holder .message');
 		$this->assertContains(
 			'<em>Unescaped HTML</em>',
 			$messageEls[0]->asXML()

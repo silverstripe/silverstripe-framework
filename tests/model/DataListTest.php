@@ -124,13 +124,13 @@ class DataListTest extends SapphireTest {
 
 	public function testDistinct() {
 		$list = DataObjectTest_TeamComment::get();
-		$this->assertContains('SELECT DISTINCT', $list->dataQuery()->sql(), 'Query is set as distinct by default');
+		$this->assertContains('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query is set as distinct by default');
 
 		$list = $list->distinct(false);
-		$this->assertNotContains('SELECT DISTINCT', $list->dataQuery()->sql(), 'Query does not contain distinct');
+		$this->assertNotContains('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query does not contain distinct');
 
 		$list = $list->distinct(true);
-		$this->assertContains('SELECT DISTINCT', $list->dataQuery()->sql(), 'Query contains distinct');
+		$this->assertContains('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query contains distinct');
 	}
 
 	public function testDataClass() {

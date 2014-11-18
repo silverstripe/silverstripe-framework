@@ -54,7 +54,7 @@ class DataQueryTest extends SapphireTest {
 		//apply a relation to a relation from an ancestor class
 		$newDQ->applyRelation('TestA');
 		$this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
-		$this->assertContains('"DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql());
+		$this->assertContains('"DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
 	}
 
 	public function testRelationReturn() {
@@ -174,13 +174,13 @@ class DataQueryTest extends SapphireTest {
 
 	public function testDistinct() {
 		$query = new DataQuery('DataQueryTest_E');
-		$this->assertContains('SELECT DISTINCT', $query->sql(), 'Query is set as distinct by default');
+		$this->assertContains('SELECT DISTINCT', $query->sql($params), 'Query is set as distinct by default');
 
 		$query = $query->distinct(false);
-		$this->assertNotContains('SELECT DISTINCT', $query->sql(), 'Query does not contain distinct');
+		$this->assertNotContains('SELECT DISTINCT', $query->sql($params), 'Query does not contain distinct');
 
 		$query = $query->distinct(true);
-		$this->assertContains('SELECT DISTINCT', $query->sql(), 'Query contains distinct');
+		$this->assertContains('SELECT DISTINCT', $query->sql($params), 'Query contains distinct');
  	}
 	
 	public function testComparisonClauseInt() {

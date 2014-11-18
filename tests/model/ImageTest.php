@@ -231,7 +231,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	/**
-	 * @expectedException PHPUnit_Framework_Error
+	 * @expectedException InvalidArgumentException
 	 */
 	public function testGenerateImageWithInvalidParameters() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');

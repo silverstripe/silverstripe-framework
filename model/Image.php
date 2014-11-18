@@ -612,7 +612,6 @@ class Image extends File implements Flushable {
 				closedir($handle);
 			}
 		}
-		$pattern = "/^(({$generateFuncs}).*\-)+" . preg_quote($this->Name) . "$/i";
 
 		$pattern = $this->getFilenamePatterns($this->Name);
 

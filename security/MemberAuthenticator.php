@@ -67,6 +67,7 @@ class MemberAuthenticator extends Authenticator {
 		if($member && !$asDefaultAdmin) {
 			$result = $member->checkPassword($data['Password']);
 			$success = $result->valid();
+		} else {
 			$result = new ValidationResult(false, _t('Member.ERRORWRONGCRED'));
 		}
 
@@ -116,8 +117,7 @@ class MemberAuthenticator extends Authenticator {
 			} else {
 				// Audit logging hook
 				singleton('Member')->extend('authenticationFailedUnknownUser', $data);
-
-			$attempt->Email = $userEmail;
+			}
 		}
 
 		$attempt->Email = $email;
