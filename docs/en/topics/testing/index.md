@@ -132,3 +132,13 @@ Executing tests from the command line is recommended, since it most closely refl
 test runs in any automated testing environments. However, you can also run tests through the browser (requires PHPUnit version 3.7.*@stable):
 
 	http://localhost/dev/tests
+
+### Test clean up
+
+Running the SilverStripe tests can create a lot of temporary databases. A simple way to clean up these created databases
+is to use the MySQL command line to find and delete all databases which are prefixed with `ss_tmpdb`. The following
+snippet is an easy way to achieve this.
+
+```bash
+mysql -uroot -p'password'  -e "show databases" | grep ss_tmpdb | awk '{print "drop database " $1 "; select sleep(0.1);"}' | mysql -uroot -p'password'
+```
