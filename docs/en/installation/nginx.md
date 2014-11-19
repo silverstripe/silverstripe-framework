@@ -23,70 +23,99 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 		server_name site.com www.site.com;
 	
 		location / {
-			try_files $uri /framework/main.php?url=$uri&$query_string;
-		}
-	
-		error_page 404 /assets/error-404.html;
-		error_page 500 /assets/error-500.html;
-	
-		location ^~ /assets/ {
-			sendfile on;
-			try_files $uri =404;
-		}
-	
-		location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {
-			fastcgi_keep_conn on;
-			fastcgi_pass   127.0.0.1:9000;
-			fastcgi_index  index.php;
-			fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-			include        fastcgi_params;
-		}
-	
-		location ~ /(mysite|framework|cms)/.*\.(php|php3|php4|php5|phtml|inc)$ {
-			deny all;
-		}
-	
-		location ~ /\.. {
-			deny all;
-		}
-	
-		location ~ \.ss$ {
-			satisfy any;
-			allow 127.0.0.1;
-			deny all;
-		}
-	
-		location ~ web\.config$ {
-			deny all;
-		}
-	
-		location ~ \.ya?ml$ {
-			deny all;
-		}
-	
-		location ^~ /vendor/ {
-			deny all;
-		}
-	
-		location ~* /silverstripe-cache/ {
-			deny all;
-		}
-	
-		location ~* composer\.(json|lock)$ {
-			deny all;
-		}
-	
-		location ~* /(cms|framework)/silverstripe_version$ {
-			deny all;
-		}
-	
-		location ~ \.php$ {
-	                fastcgi_keep_conn on;
-	                fastcgi_pass   127.0.0.1:9000;
-	                fastcgi_index  index.php;
-	                fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-	                include        fastcgi_params;
-		}
+	        try_files $uri @silverstripe;
+	    }
+	 
+	    location ~ ^/(index|install).php {
+	        fastcgi_split_path_info ^((?U).+\.php)(/?.+)$;
+	        include fastcgi_params;
+	        fastcgi_pass unix:/var/run/php5-fpm.sock;
+	    }
+	 
+	    # whitelist php files that are called directly and need to be interpreted
+	    location = /framework/thirdparty/tinymce/tiny_mce_gzip.php {
+	        include fastcgi_params;
+	        fastcgi_pass unix:/var/run/php5-fpm.sock;
+	    }
+	 
+	    location = /framework/thirdparty/tinymce-spellchecker/rpc.php {
+	        include fastcgi_params;
+	        fastcgi_pass unix:/var/run/php5-fpm.sock;
+	    }
+	 
+	    location @silverstripe {
+	        expires off;
+	        include fastcgi_params;
+	        fastcgi_pass unix:/var/run/php5-fpm.sock;
+	        fastcgi_param SCRIPT_FILENAME $document_root/framework/main.php;
+	        fastcgi_param SCRIPT_NAME /framework/main.php;
+	        fastcgi_param QUERY_STRING url=$uri&$args;
+	        fastcgi_buffer_size 128k;
+			fastcgi_buffers 4 256k;
+			fastcgi_busy_buffers_size 256k;
+			proxy_connect_timeout 90;
+			proxy_send_timeout 180;
+			proxy_read_timeout 180;
+			proxy_buffer_size 128k;
+			proxy_buffers 4 256k;
+			proxy_busy_buffers_size 256k;
+			proxy_intercept_errors on;
+	    }
+	 
+	    #
+	    # Error Pages
+	    #
+	    error_page 503 @maintenance;
+	 
+	    if (-f $document_root/maintenance.html ) {
+	        return 503;
+	    }
+	 
+	    location @maintenance {
+	        try_files /maintenance.html =503;
+	    }
+	 
+	    error_page 500 /assets/error-500.html;
+	 
+	    #
+	    # Deny access to protected folder/files
+	    #
+	    location ^~ /assets/ {
+	        try_files $uri =404;
+	    }
+	 
+	    location ^~ /silverstripe-cache/ {
+	        deny all;
+	    }
+	 
+	    location ^~ /vendor/ {
+	        deny all;
+	    }
+	 
+	    location ~ /composer\.(json|lock) {
+	        deny all;
+	    }
+	 
+	    location ~ /(\.|web\.config) {
+	        deny all;
+	    }
+	 
+	    location ~ \.(yml|bak|swp)$ {
+	        deny all;
+	    }
+	 
+	    location ~ ~$ {
+	        deny all;
+	    }
+	 
+	    location ~ \.(php|php[345]|phtml|inc)$ {
+	        deny all;
+	    }
+	 
+	    location ~ ^/(cms|framework)/silverstripe_version$ {
+	        deny all;
+	    }
+
 	}
 
 The above configuration sets up a virtual host `site.com` with
