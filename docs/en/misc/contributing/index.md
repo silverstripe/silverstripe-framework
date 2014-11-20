@@ -14,3 +14,7 @@ Or, for more detailed guidance, read one of the following pages:
  * [Writing and translating **documentation**](documentation)
  * [**Translating** user-interface elements](translation)
 
+## House rules for everybody contributing to SilverStripe
+ * Ask questions on the [forum](http://silverstripe.org/forum), and stick to more high-level discussions on the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
+ * Make sure you know how to [raise good bug reports](/misc/contributing/issues)
+ * Everybody can contribute to SilverStripe! If you do, ensure you can [submit solid pull requests](/misc/contributing/code)
