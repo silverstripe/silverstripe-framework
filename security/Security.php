@@ -770,11 +770,14 @@ class Security extends Controller {
 		}
 
 		if(!$member) {
+			Config::nest();
+			Config::inst()->update('DataObject', 'validation_enabled', false);
 			// Failover to a blank admin
 			$member = Member::create();
 			$member->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
 			$member->write();
 			$member->Groups()->add($adminGroup);
+			Config::unnest();
 		}
 
 		return $member;

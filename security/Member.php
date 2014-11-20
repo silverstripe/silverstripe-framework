@@ -243,6 +243,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			->filter('Email', Security::default_admin_username())
 			->first();
 		if(!$admin) {
+			//disable validation for DataObjects so we can force the write of the admin
+			Config::nest();
+			Config::inst()->update('DataObject', 'validation_enabled', false);
 			// 'Password' is not set to avoid creating
 			// persistent logins in the database. See Security::setDefaultAdmin().
 			// Set 'Email' to identify this as the default admin
@@ -250,6 +253,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$admin->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
 			$admin->Email = Security::default_admin_username();
 			$admin->write();
+			Config::unnest();
 		}
 
 		// Ensure this user is in the admin group
