@@ -14,6 +14,14 @@ class CMSSecurity extends Security {
 		'success'
 	);
 
+	/**
+	 * Enable in-cms reauthentication
+	 *
+	 * @var boolean
+	 * @config
+	 */
+	private static $reauth_enabled = true;
+
 	public function init() {
 		parent::init();
 
@@ -140,6 +148,9 @@ PHP
 	 * @return bool
 	 */
 	public static function enabled() {
+		// Disable shortcut
+		if(!static::config()->reauth_enabled) return false;
+		
 		// Count all cms-supported methods
 		$authenticators = Authenticator::get_authenticators();
 		foreach($authenticators as $authenticator) {
