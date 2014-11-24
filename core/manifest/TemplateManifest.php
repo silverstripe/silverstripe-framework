@@ -6,7 +6,7 @@
  * @package framework
  * @subpackage manifest
  */
-class SS_TemplateManifest {
+class SS_TemplateManifest implements Flushable {
 
 	const TEMPLATES_DIR = 'templates';
 
@@ -18,6 +18,13 @@ class SS_TemplateManifest {
 	protected $inited;
 	protected $forceRegen;
 	protected $templates = array();
+	
+	/**
+	 * Triggered early in the request when someone requests a flush.
+	 */
+	public static function flush() {
+		SS_TemplateLoader::instance()->getManifest()->regenerate(true);
+	}
 
 	/**
 	 * Constructs a new template manifest. The manifest is not actually built
