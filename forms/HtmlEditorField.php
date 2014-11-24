@@ -135,6 +135,10 @@ class HtmlEditorField extends TextareaField {
 					$resized=$image->ResizedImage($width, $height);
 					if($resized) $img->setAttribute('src', $resized->getRelativePath());
 				}
+				
+				// Use this extension point to manipulate images inserted using TinyMCE, e.g. add a CSS class
+				// $image is the image, $img is the DOM model
+				$this->extend('processImage',$image,$img);
 			}
 
 			// Add default empty title & alt attributes.
