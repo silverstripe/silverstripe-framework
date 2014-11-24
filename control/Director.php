@@ -414,11 +414,22 @@ class Director implements TemplateGlobalProvider {
 	 * @return String
 	 */
 	public static function protocol() {
-		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])&&strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])=='https') {
-			return "https://";
+		if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') {
+			// Convention for (non-standard) proxy signaling a HTTPS forward,
+			// see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+			return 'https://';
+		} else if (isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') {
+			// Less conventional proxy header
+			return 'https://';
+		} else if (isset($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) == 'on') {
+			// Microsoft proxy convention: https://support.microsoft.com/?kbID=307347
+			return 'https://';
+		} else if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
+			return 'https://';
+		} else if (isset($_SERVER['SSL'])) {
+			return 'https://';
 		}
-		return (isset($_SERVER['SSL']) || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) 
-			? 'https://' : 'http://';
+		return 'http://';
 	}
 
 	/**
