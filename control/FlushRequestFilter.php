@@ -8,7 +8,7 @@
 class FlushRequestFilter implements RequestFilter {
 
 	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
-		if(array_key_exists('flush', $request->getVars())) {
+		if(array_key_exists('flush', $request->getVars()) || $request->getURL() == 'dev/build') {
 			foreach(ClassInfo::implementorsOf('Flushable') as $class) {
 				$class::flush();
 			}
