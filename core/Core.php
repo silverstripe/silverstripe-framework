@@ -71,6 +71,7 @@ require_once 'dev/Backtrace.php';
 require_once 'dev/ZendLog.php';
 require_once 'dev/Log.php';
 require_once 'filesystem/FileFinder.php';
+require_once 'core/Flushable.php';
 require_once 'core/manifest/ManifestCache.php';
 require_once 'core/manifest/ClassLoader.php';
 require_once 'core/manifest/ConfigManifest.php';
@@ -111,17 +112,16 @@ if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
 	require_once BASE_PATH . '/vendor/autoload.php';
 }
 
-// Now that the class manifest is up, load the configuration
+// Now that the class manifest is up, load the static configuration
 $configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
 Config::inst()->pushConfigStaticManifest($configManifest);
 
-// Now that the class manifest is up, load the configuration
+// And then the yaml configuration
 $configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
 Config::inst()->pushConfigYamlManifest($configManifest);
 
-SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
-	BASE_PATH, project(), false, isset($_GET['flush'])
-));
+// Load template manifest
+SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(BASE_PATH, project()));
 
 // If in live mode, ensure deprecation, strict and notices are not reported
 if(Director::isLive()) {
