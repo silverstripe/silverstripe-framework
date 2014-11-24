@@ -907,7 +907,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$oldMode = self::get_reading_mode();
 		self::reading_stage('Stage');
 
-		$list = DataObject::get(get_class($this->owner), $filter, $sort, $join, $limit);
+		$baseClass = ClassInfo::baseDataClass(get_class($this->owner));
+		$list = DataObject::get($baseClass, $filter, $sort, $join, $limit);
 		if($having) $having = $list->having($having);
 
 		$query = $list->dataQuery()->query();
