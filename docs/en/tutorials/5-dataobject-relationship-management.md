@@ -98,7 +98,7 @@ The restriction is enforced through the `$allowed_children` directive.
 	}
 
 You might have noticed that we don't specify the relationship
-to a project. That's because its already inherited from the parent implementation,
+to a project. That's because it's already inherited from the parent implementation,
 as part of the normal page hierarchy in the CMS.
 
 Now that we have created our `ProjectsHolder` and `Project` page types,  we'll add some content.
@@ -113,7 +113,7 @@ and collect those within a `ProjectsHolder`.
 But what about creating `Student` records?
 
 Since students are related to a single project, we will
-allow editing them right the on the CMS interface in the `Project` page type.
+allow editing them right on the CMS interface in the `Project` page type.
 We do this through a powerful field called `[GridField](/reference/grid-field)`.
 All customization to fields for a page type are managed through a method called
 `getCMSFields()`, so let's add it there:
