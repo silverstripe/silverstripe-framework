@@ -41,7 +41,7 @@ This is the least desirable way of extending the `[api:Member]` class. It's bett
 (see below).
 </div>
 
-You can defined subclasses of `[api:Member]` to add extra fields or functionality to the built-in membership system.
+You can define subclasses of `[api:Member]` to add extra fields or functionality to the built-in membership system.
 
 	:::php
 	class MyMember extends Member {
