@@ -228,6 +228,47 @@ class FormTest extends FunctionalTest {
 		);
 	}
 
+	public function testValidationExemptActions() {
+		$response = $this->get('FormTest_Controller');
+
+		$response = $this->submitForm(
+			'Form_Form',
+			'action_doSubmit',
+			array(
+				'Email' => 'test@test.com'
+			)
+		);
+			
+		// Firstly, assert that required fields still work when not using an exempt action
+		$this->assertPartialMatchBySelector(
+			'#Form_Form_SomeRequiredField_Holder .required',
+			array('"Some Required Field" is required'),
+			'Required fields show a notification on field when left blank'
+		);
+
+		// Re-submit the form using validation-exempt button
+		$response = $this->submitForm(
+			'Form_Form',
+			'action_doSubmitValidationExempt',
+			array(
+				'Email' => 'test@test.com'
+			)
+		);
+
+		// The required message should be empty if validation was skipped
+		$items = $this->cssParser()->getBySelector('#Form_Form_SomeRequiredField_Holder .required');
+		$this->assertEmpty($items);
+
+		// And the session message should show up is submitted successfully
+		$this->assertPartialMatchBySelector(
+			'#Form_Form_error',
+			array(
+				'Validation skipped'
+			),
+			'Form->sessionMessage() shows up after reloading the form'
+		);
+	}
+	
 	public function testSessionValidationMessage() {
 		$this->get('FormTest_Controller');
 
@@ -634,13 +675,15 @@ class FormTest_Controller extends Controller implements TestOnly {
 				new CheckboxSetField('Boxes', null, array('1'=>'one','2'=>'two'))
 			),
 			new FieldList(
-				new FormAction('doSubmit')
+				new FormAction('doSubmit'),
+				new FormAction('doSubmitValidationExempt')
 			),
 			new RequiredFields(
 				'Email',
 				'SomeRequiredField'
 			)
 		);
+		$form->setValidationExemptActions(array('doSubmitValidationExempt'));
 		$form->disableSecurityToken(); // Disable CSRF protection for easier form submission handling
 
 		return $form;
@@ -648,6 +691,11 @@ class FormTest_Controller extends Controller implements TestOnly {
 
 	public function doSubmit($data, $form, $request) {
 		$form->sessionMessage('Test save was successful', 'good');
+		return $this->redirectBack();
+	}
+
+	public function doSubmitValidationExempt($data, $form, $request) {
+		$form->sessionMessage('Validation skipped', 'good');
 		return $this->redirectBack();
 	}
 

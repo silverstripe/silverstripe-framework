@@ -152,6 +152,11 @@ class Form extends RequestHandler {
 	 */
 	protected $attributes = array();
 
+	/**
+	 * @var array
+	 */
+	protected $validationExemptActions = array();
+
 	private static $allowed_actions = array(
 		'handleField',
 		'httpSubmission',
@@ -579,6 +584,25 @@ class Form extends RequestHandler {
 	public function unsetValidator(){
 		$this->validator = null;
 		return $this;
+	}
+
+	/**
+	 * Set actions that are exempt from validation
+	 * 
+	 * @param array
+	 */
+	public function setValidationExemptActions($actions) {
+		$this->validationExemptActions = $actions;
+		return $this;
+	}
+
+	/**
+	 * Get a list of actions that are exempt from validation
+	 * 
+	 * @return array
+	 */
+	public function getValidationExemptActions() {
+		return $this->validationExemptActions;
 	}
 
 	/**
@@ -1188,6 +1212,7 @@ class Form extends RequestHandler {
 	 *
 	 * This includes form validation, if it fails, we redirect back
 	 * to the form with appropriate error messages.
+	 * Always return true if the current form action is exempt from validation
 	 *
 	 * Triggered through {@link httpSubmission()}.
 	 *
@@ -1197,6 +1222,11 @@ class Form extends RequestHandler {
 	 * @return boolean
 	 */
 	public function validate(){
+		$buttonClicked = $this->buttonClicked();
+		if($buttonClicked && in_array($buttonClicked->actionName(), $this->getValidationExemptActions())) {
+			return true;
+		}
+
 		if($this->validator){
 			$errors = $this->validator->validate();
 
@@ -1535,7 +1565,10 @@ class Form extends RequestHandler {
 	 * @return FormAction
 	 */
 	public function buttonClicked() {
-		foreach($this->actions->dataFields() as $action) {
+		$actions = $this->actions->dataFields();
+		if(!$actions) return;
+
+		foreach($actions as $action) {
 			if($action->hasMethod('actionname') && $this->buttonClickedFunc == $action->actionName()) {
 				return $action;
 			}
