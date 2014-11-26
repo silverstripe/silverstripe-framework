@@ -114,13 +114,12 @@ class SSViewerTest extends SapphireTest {
 		$jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
 		Requirements::combine_files('testRequirementsCombine.js', array($jsFile));
 		require_once('thirdparty/jsmin/jsmin.php');
-
+		
 		// first make sure that our test js file causes an exception to be thrown
 		try{
 			$content = JSMin::minify($content);
-			$this->fail('JSMin did not throw exception on minify bad file: ');
 			Requirements::set_backend($oldBackend);
-			return;
+			$this->fail('JSMin did not throw exception on minify bad file: ');
 		}catch(Exception $e){
 			// exception thrown... good
 		}
@@ -131,21 +130,18 @@ class SSViewerTest extends SapphireTest {
 			Requirements::process_combined_files();
 		}catch(PHPUnit_Framework_Error_Warning $e){
 			if(strstr($e->getMessage(), 'Failed to minify') === false){
-				$this->fail('Requirements::process_combined_files raised a warning, which is good, but this is not the expected warning ("Failed to minify..."): '.$e);
 				Requirements::set_backend($oldBackend);
-				return;
+				$this->fail('Requirements::process_combined_files raised a warning, which is good, but this is not the expected warning ("Failed to minify..."): '.$e);
 			}
 		}catch(Exception $e){
-			$this->fail('Requirements::process_combined_files did not catch exception caused by minifying bad js file: '.$e);
 			Requirements::set_backend($oldBackend);
-			return;
+			$this->fail('Requirements::process_combined_files did not catch exception caused by minifying bad js file: '.$e);
 		}
 		
 		// and make sure the combined content matches the input content, i.e. no loss of functionality
 		if(!file_exists($combinedTestFilePath)){
-			$this->fail('No combined file was created at expected path: '.$combinedTestFilePath);
 			Requirements::set_backend($oldBackend);
-			return;
+			$this->fail('No combined file was created at expected path: '.$combinedTestFilePath);
 		}
 		$combinedTestFileContents = file_get_contents($combinedTestFilePath);
 		$this->assertContains($jsFileContents, $combinedTestFileContents);
