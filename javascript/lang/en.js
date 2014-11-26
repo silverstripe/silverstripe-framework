@@ -19,7 +19,7 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 	"FILEIFRAMEFIELD.DELETEIMAGE": "Delete Image",
 	"FILEIFRAMEFIELD.CONFIRMDELETE": "Are you sure you want to delete this file?",
 	"LeftAndMain.IncompatBrowserWarning": "Your browser is not compatible with the CMS interface. Please use Internet Explorer 7+, Google Chrome 10+ or Mozilla Firefox 3.5+.",
-	"GRIDFIELD.ERRORINTRANSACTION": "An error occured while fetching data from the server\n Please try again later.",
+	"GRIDFIELD.ERRORINTRANSACTION": "An error occurred while fetching data from the server\n Please try again later.",
 	"HtmlEditorField.SelectAnchor": "Select an anchor",
 	"UploadField.ConfirmDelete": "Are you sure you want to remove this file from the server filesystem?",
 	"UploadField.PHP_MAXFILESIZE": "File exceeds upload_max_filesize (php.ini directive)",
