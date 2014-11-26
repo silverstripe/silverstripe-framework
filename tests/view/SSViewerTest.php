@@ -125,20 +125,22 @@ class SSViewerTest extends SapphireTest {
 			// exception thrown... good
 		}
 
-		// secondly, make sure that requirements combine can handle this and continue safely
+		// secondly, make sure that requirements combine throws the correct warning, and only that warning
 		@unlink($combinedTestFilePath);
 		try{
-			/*
-			 * Use @ (ignore warning) because a warning would cause php unit to throw an exception and therefore change the execution
-			 * process and mess up the next test.
-			 */ 
-			@Requirements::process_combined_files();
+			Requirements::process_combined_files();
+		}catch(PHPUnit_Framework_Error_Warning $e){
+			if(strstr($e->getMessage(), 'Failed to minify') === false){
+				$this->fail('Requirements::process_combined_files raised a warning, which is good, but this is not the expected warning ("Failed to minify..."): '.$e);
+				Requirements::set_backend($oldBackend);
+				return;
+			}
 		}catch(Exception $e){
 			$this->fail('Requirements::process_combined_files did not catch exception caused by minifying bad js file: '.$e);
 			Requirements::set_backend($oldBackend);
 			return;
 		}
-
+		
 		// and make sure the combined content matches the input content, i.e. no loss of functionality
 		if(!file_exists($combinedTestFilePath)){
 			$this->fail('No combined file was created at expected path: '.$combinedTestFilePath);
@@ -147,7 +149,6 @@ class SSViewerTest extends SapphireTest {
 		}
 		$combinedTestFileContents = file_get_contents($combinedTestFilePath);
 		$this->assertContains($jsFileContents, $combinedTestFileContents);
-		
 
 		// reset
 		Requirements::set_backend($oldBackend);
