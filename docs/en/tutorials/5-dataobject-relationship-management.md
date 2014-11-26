@@ -148,10 +148,10 @@ All customization to fields for a page type are managed through a method called
 	}
 
 This creates a tabular field, which lists related student records, one row at a time.
-Its empty by default, but you can add new students as required,
+It's empty by default, but you can add new students as required,
 or relate them to the project by typing in the box above the table.
 
-In our case, want to manage those records, edit their details, and add new ones. 
+In our case, we want to manage those records, edit their details, and add new ones. 
 To accomplish this, we have added a specific `[api:GridFieldConfig]`.
 While we could've built the config from scratch, there's several
 preconfigured instances. The `GridFieldConfig_RecordEditor` default configures
@@ -184,7 +184,7 @@ Once you have added all the students, and selected their projects, it should loo
 Now we have a fairly good picture of how students relate to their projects.
 But students generally have somebody looking them over the shoulder.
 In our case, that's the "mentor". Each project can have many of them,
-and each mentor can be have one or more projects. They're busy guys!
+and each mentor can have one or more projects. They're busy guys!
 This is called a *many-many* relationship.
 
 The first step is to create the `Mentor` object and set the relation with the `Project` page type.
@@ -270,7 +270,7 @@ which lists all projects, and condenses their
 student and mentor relationships into a single line.
 You'll notice that there's no difference between
 accessing a "has-many" and "many-many" relationship
-in the template loops: To the template, its just
+in the template loops: to the template, it's just
 a named list of object.
 
 ![tutorial:tutorial5_projects_table.jpg](_images/tutorial5_projects_table.jpg)
