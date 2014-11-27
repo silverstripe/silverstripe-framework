@@ -114,17 +114,41 @@ To use this backend, you need a memcached daemon and the memcache PECL extension
  	:::php
 	// _config.php 
 	SS_Cache::add_backend(
-		'primary_memcached', 
+		'primary_memcached',
 		'Memcached',
 		array(
-			'host' => 'localhost', 
-			'port' => 11211, 
-			'persistent' => true, 
-			'weight' => 1, 
-			'timeout' => 5,
-			'retry_interval' => 15, 
-			'status' => true, 
-			'failure_callback' => '' 
+		  	'servers' => array(
+		  		'host' => 'localhost',
+				'port' => 11211,
+				'persistent' => true,
+				'weight' => 1,
+				'timeout' => 5,
+				'retry_interval' => 15,
+				'status' => true,
+				'failure_callback' => null
+			)
+		)
+	);
+	SS_Cache::pick_backend('primary_memcached', 'any', 10);
+
+If your Memcached instance is using a local Unix socket instead of a network port:
+
+ 	:::php
+	// _config.php 
+	SS_Cache::add_backend(
+		'primary_memcached',
+		'Memcached',
+		array(
+		  	'servers' => array(
+				'host' => 'unix:///path/to/memcached.socket',
+				'port' => 0,
+				'persistent' => true,
+				'weight' => 1,
+				'timeout' => 5,
+				'retry_interval' => 15,
+				'status' => true,
+				'failure_callback' => null
+			)
 		)
 	);
 	SS_Cache::pick_backend('primary_memcached', 'any', 10);
