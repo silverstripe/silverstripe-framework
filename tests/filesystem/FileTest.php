@@ -191,6 +191,11 @@ class FileTest extends SapphireTest {
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals(ASSETS_DIR . '/FileTest.txt', $file->RelativeLink());
 		$this->assertEquals(Director::baseURL() . ASSETS_DIR . '/FileTest.txt', $file->Link());
+
+		// Testing alternate base URL functionality
+		Config::inst()->update('File', 'alternate_base_url', 'http://test.cdn/');
+		$this->assertEquals('http://test.cdn/' . ASSETS_DIR . '/FileTest.txt', $file->Link());
+		Config::inst()->update('File', 'alternate_base_url', null);
 	}
 	
 	public function testGetRelativePath() {
@@ -215,11 +220,21 @@ class FileTest extends SapphireTest {
 	public function testGetURL() {
 		$rootfile = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals(Director::baseURL() . $rootfile->getFilename(), $rootfile->getURL());
+
+		// Testing alternate base URL functionality
+		Config::inst()->update('File', 'alternate_base_url', 'http://test.cdn/');
+		$this->assertEquals('http://test.cdn/' . $rootfile->getFilename(), $rootfile->getURL());
+		Config::inst()->update('File', 'alternate_base_url', null);
 	}
 	
 	public function testGetAbsoluteURL() {
 		$rootfile = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals(Director::absoluteBaseURL() . $rootfile->getFilename(), $rootfile->getAbsoluteURL());
+
+		// Testing alternate base URL functionality
+		Config::inst()->update('File', 'alternate_base_url', 'http://test.cdn/');
+		$this->assertEquals('http://test.cdn/' . $rootfile->getFilename(), $rootfile->getAbsoluteURL());
+		Config::inst()->update('File', 'alternate_base_url', null);
 	}
 	
 	public function testNameAndTitleGeneration() {

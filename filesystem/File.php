@@ -161,6 +161,13 @@ class File extends DataObject {
 
 	/**
 	 * @config
+     * @var string An alternate absolute base path to add to all image links and URLs. Good for
+	 *             setting up a static content domain for a CDN or alternate asset hosting like Amazon S3.
+	 */
+	private static $alternate_base_url = null;
+
+	/**
+	 * @config
 	 * @var If this is true, then restrictions set in {@link $allowed_max_file_size} and
 	 * {@link $allowed_extensions} will be applied to users with admin privileges as
 	 * well.
@@ -247,11 +254,25 @@ class File extends DataObject {
 	}
 	
 	public function Link() {
-		return Director::baseURL() . $this->RelativeLink();
+		return ($this->getAlternateBaseURL() ?: Director::baseURL()) . $this->RelativeLink();
 	}
 
 	public function RelativeLink() {
 		return $this->Filename;
+	}
+
+	/**
+	 * If an alternate base path has been configured either in _ss_environment.php or the
+	 * File class, return it. Otherwise return null.
+	 *
+	 * @return string
+	 */
+	private function getAlternateBaseURL() {
+		if(defined('SS_ALTERNATE_ASSETS_BASE_URL')) {
+			return SS_ALTERNATE_ASSETS_BASE_URL;
+		} else {
+			return $this->config()->alternate_base_url;
+		}
 	}
 
 	/**
@@ -667,7 +688,7 @@ class File extends DataObject {
 	 * @return string
 	 */
 	public function getAbsoluteURL() {
-		return Director::absoluteBaseURL() . $this->getFilename();
+		return ($this->getAlternateBaseURL() ?: Director::absoluteBaseURL()) . $this->getFilename();
 	}
 	
 	/**
@@ -677,7 +698,7 @@ class File extends DataObject {
 	 * @return string
 	 */
 	public function getURL() {
-		return Director::baseURL() . $this->getFilename();
+		return ($this->getAlternateBaseURL() ?: Director::baseURL()) . $this->getFilename();
 	}
 
 	/**
