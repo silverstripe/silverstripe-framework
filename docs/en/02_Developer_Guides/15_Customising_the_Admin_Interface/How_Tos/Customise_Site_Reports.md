@@ -1,13 +1,15 @@
-# Site Reports
+title: Customise site reports
+summary: Creating your own custom data or content reports.
+# Customise site reports
 
 ## Introduction
-A report is a little bit of functionally in the CMS designed to provide a report of your data or content. You can access
+Reports are a useful feature in the CMS designed to provide a view of your data or content. You can access
 the site reports by clicking *Reports* in the left hand side bar and selecting the report you wish to view.
 
-![](_images/sitereport.png) 
+![](/_images/sitereport.png) 
 
 
-## Default Reports
+## Default reports
 
 By default the CMS ships with several basic reports:
 
@@ -21,10 +23,10 @@ By default the CMS ships with several basic reports:
 
 Modules may come with their own additional reports.
 
-## Creating Custom Reports
+## Creating custom reports
 
 Custom reports can be created quickly and easily. A general knowledge of SilverStripe's
-[Datamodel](/topics/datamodel) is useful before creating a custom report. 
+[datamodel and ORM](../../model/data_model_and_orm) is useful before creating a custom report. 
 
 Inside the *mysite/code* folder create a file called *CustomSideReport.php*. Inside this file we can add our site reports. 
 
@@ -68,5 +70,5 @@ More useful reports can be created by changing the `DataList` returned in the `s
 *  How to format and make advanced reports.
 *  More examples
 
-## API Documentation
+## API documentation
 `[api:ReportAdmin]`
