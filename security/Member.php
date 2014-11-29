@@ -30,7 +30,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	private static $db = array(
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar',
-		'Email' => 'Varchar(256)', // See RFC 5321, Section 4.5.3.1.3.
+		'Email' => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
 		'TempIDHash' => 'Varchar(160)', // Temporary id used for cms re-authentication
 		'TempIDExpired' => 'SS_Datetime', // Expiry of temp login
 		'Password' => 'Varchar(160)',
