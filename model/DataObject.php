@@ -967,6 +967,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function forceChange() {
 		// Ensure lazy fields loaded
 		$this->loadLazyFields();
+		
+		//Only proceed if this object is in the database
+		if (empty($this->ID)) return $this;
 
 		// $this->record might not contain the blank values so we loop on $this->inheritedDatabaseFields() as well
 		$fieldNames = array_unique(array_merge(
