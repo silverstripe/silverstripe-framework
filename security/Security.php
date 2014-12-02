@@ -278,7 +278,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 				// Somewhat hackish way to render a login form with an error message.
 				$me = new Security();
 				$form = $me->LoginForm();
-				$form->sessionMessage($message, 'warning');
+				$form->sessionMessage($message, 'warning', false);
 				Session::set('MemberLoginForm.force_message',1);
 				$formText = $me->login();
 
