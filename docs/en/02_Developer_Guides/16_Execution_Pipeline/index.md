@@ -76,7 +76,7 @@ Running SilverStripe without web server based rewriting is not recommended since
 can leave sensitive files exposed to public access (the `RewriteRule` conditions from above don't apply).
 </div>
 
-## Boostrap
+## Bootstrap
 
 All requests go through `framework/main.php`, which sets up the execution environment:
 
