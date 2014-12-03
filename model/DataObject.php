@@ -2637,7 +2637,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$groupList = implode(', ', $groups->column("ID"));
 
 					// TODO Fix relation table hardcoding
-					$query = new SQLSelect(
+					$query = new SQLQuery(
 						"\"Page_Can$perm\".PageID",
 					array("\"Page_Can$perm\""),
 						"GroupID IN ($groupList)");
@@ -2646,7 +2646,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 					if($perm == "View") {
 						// TODO Fix relation table hardcoding
-						$query = new SQLSelect("\"SiteTree\".\"ID\"", array(
+						$query = new SQLQuery("\"SiteTree\".\"ID\"", array(
 							"\"SiteTree\"",
 							"LEFT JOIN \"Page_CanView\" ON \"Page_CanView\".\"PageID\" = \"SiteTree\".\"ID\""
 							), "\"Page_CanView\".\"PageID\" IS NULL");
@@ -2927,7 +2927,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $callerClass The class of objects to be returned
 	 * @param string|array $filter A filter to be inserted into the WHERE clause.
-	 * Supports parameterised queries. See SQLSelect::addWhere() for syntax examples.
+	 * Supports parameterised queries. See SQLQuery::addWhere() for syntax examples.
 	 * @param string|array $sort A sort expression to be inserted into the ORDER
 	 * BY clause.  If omitted, self::$default_sort will be used.
 	 * @param string $join Deprecated 3.0 Join clause. Use leftJoin($table, $joinClause) instead.
@@ -2982,7 +2982,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $callerClass The class of objects to be returned
 	 * @param string|array $filter A filter to be inserted into the WHERE clause.
-	 * Supports parameterised queries. See SQLSelect::addWhere() for syntax examples.
+	 * Supports parameterised queries. See SQLQuery::addWhere() for syntax examples.
 	 * @param boolean $cache Use caching
 	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
 	 *

@@ -365,7 +365,7 @@ For example:
 	:::php
 	$members = Member::get()->where(array('"FirstName" = ?' => 'Sam'));
 
-If using `SQLSelect` you should use `addWhere`, `setWhere`, `addWhereAny`, or `setWhereAny` to modify the query.
+If using `SQLQuery` you should use `addWhere`, `setWhere`, `addWhereAny`, or `setWhereAny` to modify the query.
 
 Using the parameterised query syntax you can either provide a single variable as a parameter, an array of parameters
 if the SQL has multiple value placeholders, or simply pass an indexed array of strings for literal SQL.
@@ -443,7 +443,7 @@ E.g.
 		}
 	}
 
-	$query = SQLSelect::create()
+	$query = SQLQuery::create()
 		->setFrom('"MyObject"')
 		->setWhere($condition = new RandomCondition());
 	$condition->field = '"Score"';

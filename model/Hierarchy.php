@@ -38,15 +38,6 @@ class Hierarchy extends DataExtension {
 	 */
 	private static $node_threshold_leaf = 250;
 
-	public function augmentSQL(SQLSelect $query) {
-	}
-
-	public function augmentDatabase() {
-	}
-
-	public function augmentWrite(&$manipulation) {
-	}
-
 	public static function get_extra_config($class, $extension, $args) {
 		return array(
 			'has_one' => array('Parent' => $class)

@@ -322,7 +322,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	/**
-	 * Test that SQLSelect::queriedTables() applies the version-suffixes properly.
+	 * Test that SQLQuery::queriedTables() applies the version-suffixes properly.
 	 */
 	public function testQueriedTables() {
 		Versioned::reading_stage('Live');
