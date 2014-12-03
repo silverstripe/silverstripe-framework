@@ -69,11 +69,12 @@ class HtmlEditorConfig {
 	protected $settings = array(
 		'friendly_name' => '(Please set a friendly name for this config)',
 		'priority' => 0,
-		'mode' => "specific_textareas",
+		'mode' => "none", // initialized through HtmlEditorField.js redraw() logic
 		'editor_selector' => "htmleditor",
 		'width' => "100%",
 		'auto_resize' => false,
-		'theme' => "advanced",
+		'update_interval' => 5000, // Ensure update of this data every 5 seconds to the underlying textarea
+		'theme' => "modern",
 
 		'theme_advanced_layout_manager' => "SimpleLayout",
 		'theme_advanced_toolbar_location' => "top",
@@ -93,21 +94,52 @@ class HtmlEditorConfig {
 	 * Holder list of enabled plugins
 	 */
 	protected $plugins = array(
-		'contextmenu' => null, 
-		'table' => null, 
-		'emotions' => null, 
-		'paste' => null, 
-	);
+        "advlist" => null,
+        "autolink" => null,
+        "lists" => null,
+        "link" => null,
+        "image" => null,
+        // "charmap" => null,
+        // "print" => null,
+        // "preview" => null,
+        // "hr" => null,
+        "anchor" => null,
+        // "pagebreak" => null,
+        "searchreplace" => null,
+        "wordcount" => null,
+        "visualblocks" => null,
+        "visualchars" => null,
+        "code" => null,
+        "fullscreen" => null,
+        // "insertdatetime" => null,
+        "media" => null,
+        "nonbreaking" => null,
+        // "save" => null,
+        "table" => null,
+        "contextmenu" => null,
+        // "directionality" => null,
+        // "emoticons" => null,
+        "template" => null,
+        "paste" => null,
+        // "textcolor" => null,
+        // "colorpicker" => null,
+        // "textpattern" => null,
+    );
 
 	/**
 	 * Holder list of buttons, organised by line
 	 */
 	protected $buttons = array(
-		1 => array('bold','italic','underline','strikethrough','separator',
-			'justifyleft','justifycenter','justifyright','justifyfull','formatselect','separator',
-			'bullist','numlist','outdent','indent','blockquote','hr','charmap'),
-		2 => array('undo','redo','separator','cut','copy','paste','pastetext','pasteword','separator',
-			'advcode','search','replace','selectall','visualaid','separator','tablecontrols'),
+		1 => array(
+				'undo', 'redo', '|',
+				'styleselect', '|',
+				'bold', 'italic', 'removeformat', '|',
+				'alignleft', 'aligncenter', 'alignright', 'alignjustify', '|',
+				'bullist', 'numlist', 'outdent', 'indent','|',
+				'table', '|',
+				'image', 'link'
+			),
+		2 => array(),
 		3 => array()
 	);
 
@@ -313,7 +345,7 @@ class HtmlEditorConfig {
 		$config['plugins'] = implode(',', $internalPlugins);
 		
 		foreach ($this->buttons as $i=>$buttons) {
-			$config['theme_advanced_buttons'.$i] = implode(',', $buttons);
+			$config['toolbar'.$i] = implode(',', $buttons);
 		}
 		
 		return "

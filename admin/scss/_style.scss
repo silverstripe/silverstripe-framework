@@ -1094,7 +1094,15 @@ form.member-profile-form {
 		width: 800px;
 		z-index: 40;
 	}
-	
+
+	&.mce-fullscreen .cms-content {
+		//z-index: 1001;
+
+		div.mce-fullscreen {
+			position: absolute;
+		}
+	}
+
 	.cms-content-fields {
 		// always show a y scroll bar as popups like TreeDropdowns 
 		// can trigger longer pages and the extra scroll bar doesn't fire our sizing bar

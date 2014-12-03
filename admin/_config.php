@@ -31,17 +31,15 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 
 HtmlEditorConfig::get('cms')->disablePlugins('contextmenu');
 
-HtmlEditorConfig::get('cms')->enablePlugins('media', 'fullscreen', 'inlinepopups');
+HtmlEditorConfig::get('cms')->enablePlugins('media', 'fullscreen');
 HtmlEditorConfig::get('cms')->enablePlugins(array(
 	'ssbuttons' => sprintf('../../../%s/tinymce_ssbuttons/editor_plugin_src.js', THIRDPARTY_DIR)
 ));
-HtmlEditorConfig::get('cms')->enablePlugins('advimagescale');
-			
+
 HtmlEditorConfig::get('cms')->insertButtonsBefore('formatselect', 'styleselect');
-HtmlEditorConfig::get('cms')->addButtonsToLine(2, 
-	'ssmedia', 'ssflash', 'sslink', 'unlink', 'anchor', 'separator','code', 'fullscreen', 'separator');
-			
-HtmlEditorConfig::get('cms')->removeButtons('tablecontrols');
-HtmlEditorConfig::get('cms')->addButtonsToLine(3, 'tablecontrols');
+HtmlEditorConfig::get('cms')->addButtonsToLine(1, 'unlink', 'anchor', '|', 'code', 'fullscreen', '|');
+HtmlEditorConfig::get('cms')->insertButtonsBefore('undo', 'menubtn', '|');
+
+HtmlEditorConfig::get('cms')->setOption('menubar', 'edit view format table tools');
 
 CMSMenu::remove_menu_item('CMSProfileController');
