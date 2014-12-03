@@ -94,17 +94,17 @@ class TinyMCE_Compressor {
 		$plugins = self::getParam("plugins");
 		if ($plugins)
 			$this->settings["plugins"] = $plugins;
-		$plugins = explode(',', $this->settings["plugins"]);
+		$plugins = array_unique(explode(',', $this->settings["plugins"]));
 
 		$themes = self::getParam("themes");
 		if ($themes)
 			$this->settings["themes"] = $themes;
-		$themes = explode(',', $this->settings["themes"]);
+		$themes = array_unique(explode(',', $this->settings["themes"]));
 
 		$languages = self::getParam("languages");
 		if ($languages)
 			$this->settings["languages"] = $languages;
-		$languages = explode(',', $this->settings["languages"]);
+		$languages = array_unique(explode(',', $this->settings["languages"]));
 
 		$tagFiles = self::getParam("files");
 		if ($tagFiles)
@@ -119,7 +119,7 @@ class TinyMCE_Compressor {
 			$this->settings["source"] = ($src === "true");
 
 		// Add core
-		$files[] = "tiny_mce";
+		$files[] = "tinymce.jquery";
 		foreach ($languages as $language)
 			$files[] = "langs/$language";
 
@@ -140,16 +140,16 @@ class TinyMCE_Compressor {
 		}
 
 		// Add any specified files.
-		$allFiles = array_merge($files, explode(',', $this->settings['files']));
+		$allFiles = array_merge($files, array_unique(explode(',', $this->settings['files'])));
 
 		// Process source files
 		for ($i = 0; $i < count($allFiles); $i++) {
 			$file = $allFiles[$i];
 
-			if ($this->settings["source"] && file_exists($file . "_src.js")) {
-				$file .= "_src.js";
-			} else if (file_exists($file . ".js"))  {
+			if ($this->settings["source"] && file_exists($file . ".js")) {
 				$file .= ".js";
+			} else if (file_exists($file . ".min.js"))  {
+				$file .= ".min.js";
 			} else {
 				$file = "";
 			}
