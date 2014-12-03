@@ -119,7 +119,7 @@ class TinyMCE_Compressor {
 			$this->settings["source"] = ($src === "true");
 
 		// Add core
-		$files[] = "tiny_mce";
+		$files[] = "tinymce.jquery";
 		foreach ($languages as $language)
 			$files[] = "langs/$language";
 
@@ -146,10 +146,10 @@ class TinyMCE_Compressor {
 		for ($i = 0; $i < count($allFiles); $i++) {
 			$file = $allFiles[$i];
 
-			if ($this->settings["source"] && file_exists($file . "_src.js")) {
-				$file .= "_src.js";
-			} else if (file_exists($file . ".js"))  {
+			if ($this->settings["source"] && file_exists($file . ".js")) {
 				$file .= ".js";
+			} else if (file_exists($file . ".min.js"))  {
+				$file .= ".min.js";
 			} else {
 				$file = "";
 			}
