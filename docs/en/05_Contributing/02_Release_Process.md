@@ -11,78 +11,34 @@ The current maintainer responsible for planning and performing releases is Ingo 
 ## Release Planning
 
 Our most up-to-date release plans are typically in the ["framework" milestone](https://github.com/silverstripe/silverstripe-framework/issues/milestones) and ["cms" milestone](https://github.com/silverstripe/silverstripe-cms/issues/milestones).
-New features and API changes are typically discussed on the [core
-mailinglist](http://groups.google.com/group/silverstripe-dev). They are prioritized by the core team as tickets on 
-github.com. 
+New features and API changes are discussed on the [core mailinglist](http://groups.google.com/group/silverstripe-dev). They are prioritised by the core team as tickets on 
+github.com. In addition, we collect community feedback on [silverstripe.uservoice.com](https://silverstripe.uservoice.com).
+Any feature ideas we're planning to implement will be flagged there.
 
 Release dates are usually not published prior to the release, but you can get a good idea of the release status by
 reviewing the release milestone on github.com. Releases will be
 announced on the [release announcements mailing list](http://groups.google.com/group/silverstripe-announce).
 
-Releases of the *cms* and *framework* modules are coupled at the moment, they
-follow the same numbering scheme.
+Releases of the *cms* and *framework* modules are coupled at the moment, they follow the same numbering scheme.
 
 ## Release Numbering
 
-*  Versions are numbered by major version number, minor version number, and micro version number, in the form *A.B.C*
-(e.g. *2.4.1*)
-*  *A* is the *major version number*, which is only incremented for major changes and core rewrites, lots of them won't
-be backwards compatible. 
-*  *B* is the *minor version number*. It is incremented for our typical releases with new features and bugfixes. We
-strive for few changes to be backwards incompatible, and will deprecate any APIs before removing them.
-*  *C* is the *micro version number*, incremented for bugfixes, minor enhancements and security fixes. Unless
-security-related, all changes will be fully backwards compatible to the minor version number.
-*  Major and minor releases have an *alpha* cycle, which is a preview developer release which that see major changes
-until release. It is followed by a *beta* cycle, which is feature complete and used by the wider development community
-for stability and regression testing. Naming convention is *A.B.C-alpha* and *A.B.C-beta*.
-*  Major, minor and micro releases can have one or more *release candidates (RC)*, to be used by the wider community. A
-release candidate signifies that the core team thinks the release is ready without further changes. The actual release
-should be a identical copy of the latest RC. Naming convention is *A.B.C-rc1* (and further increments).
-* Major releases may have a *preview* cycle which is a early snapshot of the codebase for developers before 
-going into the *alpha* cycle. Preview releases are named *A.B.C-pr1* (and further increments).
+SilverStripe follows [Semantic Versioning](http://semver.org).
 
-### Major releases
+Note: Until November 2014, the project didn't adhere to Semantic Versioning. Instead. a "minor release" in semver terminology
+was treated as a "major release" in SilverStripe. For example, the *3.1.0* release contained API breaking changes, and
+the *3.1.1* release contained new features rather than just bugfixes.
 
-So far, major releases have happened every couple of years. Most new releases are *minor version number* or *micro
-version number* increments.
-So far, we have had two major releases; from the *1.x* to the *2.x* line and from the *2.x* to the *3.x* line.
-
-### Minor releases
-
-Minor releases have happened about once every 18 months. 
-For example, *2.3* was released in February 2009, followed by *2.4* in May 2010.
-
-These releases will contain new features, general enhancements and bugfixes. APIs from previous minor releases can be
-*deprecated*, but will stay available for one more minor release. So, if an API is deprecated in *A.B*, it will continue
-to work in *A.B+1*, and removed in *A.B+2*. 
-
-An example: Say we'd want to rename *BasicAuth::requireLogin()* to follow our coding conventions, which is
-*BasicAuth::require_login()*. The method was introduced in *2.1*, we've made the change in *2.3*?
-
-*  *2.3* would've marked the method as *@deprecated*, and documents it as an *API CHANGE* in our
-[changelog](/changelogs). The old method continues to work, but will throw an *E_USER_NOTICE*.
-*  *2.4* would've removed the method, also documenting it as an *API CHANGE*, and mentioning it in the
-[upgrading](/installation/upgrading) guidelines.
-
-Exceptions to the deprecation cycle are APIs that have been moved into their own module, and continue to work with the
-new minor release. These changes can be performed in a single minor release without a deprecation period.
-
-### Micro releases
-
-Micro releases are issued about every two months for the latest release, typically for security reasons.
-You can safely upgrade to those releases (after reading the [upgrading](/upgrading/) guidelines).
-For example, *2.3.6* was released in February 2010, followed by *2.3.7* in March 2010.
-
-### Supported versions
+## Supported versions
 
 At any point in time, the core development team will support a set of releases to varying levels:
 
-*  The current *development trunk* will get new features and bug fixes that might require major refactoring before going
-into a release (Note: At the moment, bugfixing and feature development might happen on the current release branch, to be
-merged back to trunk regularly).
-*  Applicable bugfixes on trunk will also be merged back to the last minor release branch, to be released as the next
-micro release.
-*  Security fixes will be applied to the current trunk and the previous two minor releases (e.g. *2.3.8* and *2.4.1*).
+*  The current *master* will get new features, bug fixes and API changes that might require major refactoring before going
+into a release. At the moment, bugfixing and feature development might happen on the current major release branch (e.g. *3*), to be
+merged forward to master regularly.
+*  Applicable bugfixes on master will also be merged back to the last major release branch, to be released as the next
+patch release
+*  Security fixes will be applied to the current master and the previous two major releases (e.g. *4.0*, *3.2* and *3.1*).
 
 ## Deprecation
 
@@ -97,30 +53,32 @@ How to deprecate an API:
 *  Add a `@deprecated` item to the docblock tag, with a `{@link <class>}` item pointing to the new API to use.
 *  Update the deprecated code to throw a `[api:Deprecation::notice()]` error.
 *  Both the docblock and error message should contain the **target version** where the functionality is removed.
-   So if you're committing the change to a 3.1 pre-release version, the target version will either be 3.2 or 4.0,
-   depending on how disruptive the change is.
+   So if you're committing the change to a *3.1* minor release, the target version will be *4.0*. 
+*  Deprecations should not be committed to patch releases
 *  Deprecations should just be committed to pre-release branches, ideally before they enter the "beta" phase.
    If deprecations are introduced after this point, their target version needs to be increased by one.
 *  Make sure that the old deprecated function works by calling the new function - don't have duplicated code!
 *  The commit message should contain an `API` prefix (see ["commit message format"](code#commit-messages))
+*  Document the change in the [changelog](/changelogs) for the next release
 *  Deprecated APIs can be removed after developers had a chance to react to the changes. As a rule of thumb, leave the 
 code with the deprecation warning in for at least three micro releases. Only remove code in a minor or major release. 
+*  Exceptions to the deprecation cycle are APIs that have been moved into their own module, and continue to work with the
+new minor release. These changes can be performed in a single minor release without a deprecation period.
 
 Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::is_dev()`:
 
 	:::php
 	/**
 	 * Returns true if your are in development mode
-	 * @deprecated 3.1 Use {@link Env::is_dev()} instead.
+	 * @deprecated 4.0 Use {@link Env::is_dev()} instead.
 	 */
 	public function isDev() {
-		Deprecation::notice('3.1', 'Use Env::is_dev() instead');
+		Deprecation::notice('4.0', 'Use Env::is_dev() instead');
 		return Env::is_dev();
 	}
 
-This change could be committed to a 3.1.0-alpha2 release, stays deprecated in all following minor releases
-(3.1.0-beta1, 3.1.0, 3.1.1), and gets removed from 3.2.0. If the change was introduced in an already
-released version (e.g. 3.1.1), the target version becomes 3.2 instead.
+This change could be committed to a minor release like *3.2.0*, and stays deprecated in all following minor releases
+(e.g. *3.3.0*, *3.4.0*), until a new major release (e.g. *4.0.0*) where it gets removed from the codebase. 
 
 ## Security Releases
 
