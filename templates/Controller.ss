@@ -38,7 +38,7 @@
 					<li><p><a href="http://doc.silverstripe.org">doc.silverstripe.org</a> Searchable developer documentation, how-tos, tutorials, and reference.</p></li>
 
 					<li><p><a href="http://api.silverstripe.org">api.silverstripe.org</a> API documentation for PHP classes, methods and properties.</p></li>
-				<ul>
+				</ul>
 			<% end_if %>
 		</div>
 	</body>
