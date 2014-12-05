@@ -416,8 +416,9 @@ body.cms {
 	.loading-animation {
 		display: none;
 		position: absolute;
-		left: 49%;
-		top: 75%;
+		left: 50%;
+		margin-left: -21.5px; // Half of spinner size
+		top: 80%;
 	}
 }
 
