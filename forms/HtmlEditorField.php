@@ -107,6 +107,10 @@ class HtmlEditorField extends TextareaField {
 				}
 			}
 
+			// Use this extension point to manipulate images inserted using TinyMCE, e.g. add a CSS class
+			// $image is the image, $img is the DOM model
+			$this->extend('processImage', $image, $img);
+
 			// Add default empty title & alt attributes.
 			if(!$img->getAttribute('alt')) $img->setAttribute('alt', '');
 			if(!$img->getAttribute('title')) $img->setAttribute('title', '');
