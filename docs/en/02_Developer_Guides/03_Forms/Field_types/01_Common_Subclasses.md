@@ -1,9 +1,9 @@
-title: Common FormField Types
+title: Common FormField type subclasses
 summary: A table containing a list of the common FormField subclasses.
 
-# Form Field Types
+# Common FormField type subclasses
 
-This is a highlevel overview of available `[api:FormField]` subclasses. An automatically generated list is available 
+This is a high level overview of available `[api:FormField]` subclasses. An automatically generated list is available 
 on the SilverStripe API documentation.
 
 ## Basic
@@ -20,7 +20,7 @@ on the SilverStripe API documentation.
  * `[api:FormAction]`: Button element for forms, both for `<input type="submit">` and `<button>`.
  * `[api:ResetFormAction]`: Action that clears all fields on a form.
 
-## Formatted Input
+## Formatted input
 
  * `[api:AjaxUniqueTextField]`: Text field that automatically checks that the value entered is unique for the given set of fields in a given set of tables.
  * `[api:ConfirmedPasswordField]`: Two masked input fields, checks for matching passwords.
@@ -38,7 +38,7 @@ on the SilverStripe API documentation.
  * `[api:OptionsetField]`: Set of radio buttons designed to emulate a dropdown.
  * `[api:PhoneNumberField]`: Field for displaying phone numbers. It separates the number, the area code and optionally the country code and extension.
  * `[api:SelectionGroup]`: SelectionGroup represents a number of fields which are selectable by a radio button that appears at the beginning of each item.
- * `[api:TimeField]`: Input field with time-specific, localized validation.
+ * `[api:TimeField]`: Input field with time-specific, localised validation.
 
 ## Structure
 
