@@ -1,6 +1,7 @@
-title: Rich-Text Editing (WYSIWYG)
+title: Rich-text editing (WYSIWYG)
+summary: SilverStripe's use and configuration of TinyMCE html editor.
 
-# Rich-Text Editing (WYSIWYG)
+# Rich-text editing (WYSIWYG)
 
 Editing and formatting content is the bread and butter of every content management system, which is why SilverStripe 
 has a tight integration with our preferred editor library, [TinyMCE](http://tinymce.com).
@@ -163,7 +164,7 @@ You can then enable this plugin through the [api:HtmlEditorConfig::enablePlugins
 For more complex examples see the [Creating a Plugin](http://www.tinymce.com/wiki.php/Creating_a_plugin) in TinyMCE
 documentation, or browse through plugins that come with the Framework at `thirdparty/tinymce/plugins`.
 
-## Image and Media Insertion
+## Image and media insertion
 
 The `[api:HtmlEditorField]` API also handles inserting images and media files into the managed HTML content. It can be 
 used both for referencing files on the webserver filesystem (through the `[api:File]` and `[api:Image]` APIs), as well 
@@ -212,7 +213,7 @@ to successfully process HTML5 tags, please use the
 
 ## Recipes
 
-### Customizing the "Insert" panels
+### Customising the "Insert" panels
 
 In the standard installation, you can insert links (internal/external/anchor/email),
 images as well as flash media files. The forms used for preparing the new content element
@@ -253,8 +254,8 @@ Note: The dropdown is only available if more than one config exists.
 Each interface can have multiple fields of this type, each with their own toolbar to set formatting
 and insert HTML elements. They do share one common set of dialogs for inserting links and other media though,
 encapsulated in the `[api:HtmlEditorField_Toolbar]` class.
-In the CMS, those dialogs are automatically instanciated, but in your own interfaces outside
-of the CMS you have to take care of instanciation yourself:
+In the CMS, those dialogs are automatically instantiate, but in your own interfaces outside
+of the CMS you have to take care of instantiate yourself:
 
 	:::php
 	// File: mysite/code/MyController.php
