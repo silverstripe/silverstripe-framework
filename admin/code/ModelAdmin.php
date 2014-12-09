@@ -225,14 +225,14 @@ abstract class ModelAdmin extends LeftAndMain {
 	}
 	
 	public function getList() {
-		$context = $this->getSearchContext();
-		$params = $this->request->requestVar('q');
-		$list = $context->getResults($params);
+        	$context = $this->getSearchContext();
+        	$params = $this->request->requestVar('q');
+        	$list = $context->getResults(array_map('trim', $params));
 
-		$this->extend('updateList', $list);
+        	$this->extend('updateList', $list);
 
-		return $list;
-	}
+            	return $list;
+        }
 
 	
 	/**
