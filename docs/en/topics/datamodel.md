@@ -769,6 +769,7 @@ You can build a map from any DataList like this:
 	:::php
 	$members = Member::get()->map('ID', 'FirstName');
 	
+
 This will return a map where the keys are Member IDs, and the values are the
 corresponding FirstName values. Like everything else in the ORM, these maps are
 lazy loaded, so the following code will only query a single record from the
