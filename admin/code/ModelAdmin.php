@@ -227,7 +227,12 @@ abstract class ModelAdmin extends LeftAndMain {
 	public function getList() {
         	$context = $this->getSearchContext();
         	$params = $this->request->requestVar('q');
-        	$list = $context->getResults(array_map('trim', $params));
+        	
+        	if(is_array($params) {
+        		$params = array_map('trim', $params);
+        	}
+        	
+        	$list = $context->getResults(params);
 
         	$this->extend('updateList', $list);
 
