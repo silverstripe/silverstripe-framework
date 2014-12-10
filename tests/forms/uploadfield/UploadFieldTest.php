@@ -277,7 +277,7 @@ class UploadFieldTest extends FunctionalTest {
 
 		// Check record has two files attached
 		$this->assertEquals(array('File2', 'File3'), $record->HasManyFiles()->column('Title'));
-		
+
 		// Remove file 2
 		$response = $this->mockUploadFileIDs('HasManyFiles', array($file3->ID));
 		$this->assertEmpty($response['errors']);
@@ -285,7 +285,7 @@ class UploadFieldTest extends FunctionalTest {
 		// check only file 3 is left
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertEquals(array('File3'), $record->HasManyFiles()->column('Title'));
-		
+
 		// Check file 2 object itself exists
 		$this->assertFileExists($file3->FullPath, 'File is only detached, not deleted from filesystem');
 	}
@@ -757,7 +757,7 @@ class UploadFieldTest extends FunctionalTest {
 			// Normal post requests can't submit empty array values for fields
 			$data[$fileField] = array('Files' => $files);
 		}
-		
+
 		$form = new UploadFieldTestForm();
 		$form->loadDataFrom($data, true);
 		if($form->validate()) {
@@ -808,6 +808,11 @@ class UploadFieldTest extends FunctionalTest {
 
 	public function setUp() {
 		parent::setUp();
+
+
+		$member = Security::findAnAdministrator();
+		if($member) $member->logIn();
+		else throw Exception("Unable to find Administrator");
 		
 		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
 

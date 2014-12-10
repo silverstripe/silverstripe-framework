@@ -276,61 +276,7 @@ class File extends DataObject {
 			unlink($this->getFullPath());
 		}
 	}
-	
-	/**
-	 * @todo Enforce on filesystem URL level via mod_rewrite
-	 * 
-	 * @return boolean
-	 */
-	public function canView($member = null) {
-		if(!$member) $member = Member::currentUser();
-		
-		$results = $this->extend('canView', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
-		
-		return true;
-	}
-	
-	/**
-	 * Returns true if the following conditions are met:
-	 * - CMS_ACCESS_AssetAdmin
-	 * 
-	 * @todo Decouple from CMS view access
-	 * 
-	 * @return boolean
-	 */
-	public function canEdit($member = null) {
-		if(!$member) $member = Member::currentUser();
-		
-		$result = $this->extendedCan('canEdit', $member);
-		if($result !== null) return $result;
-		
-		return true;
-	}
-	
-	/**
-	 * @return boolean
-	 */
-	public function canCreate($member = null) {
-		if(!$member) $member = Member::currentUser();
-		
-		$result = $this->extendedCan('canCreate', $member);
-		if($result !== null) return $result;
-		
-		return $this->canEdit($member);
-	}
-	
-	/**
-	 * @return boolean
-	 */
-	public function canDelete($member = null) {
-		if(!$member) $member = Member::currentUser();
-		
-		$results = $this->extend('canDelete', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
-		
-		return $this->canEdit($member);
-	}
+
 
 	/**
 	 * Returns the fields to power the edit screen of files in the CMS.
