@@ -64,5 +64,19 @@ class CacheTest extends SapphireTest {
 		$this->assertEquals(1200, $cache->getOption('lifetime'));
 	}
 
+	/**
+	 * Test that flushing does not clear caches that aren't deliberately being
+	 * cleared (e.g. with Flushable)
+	 */
+	public function testFlushDoesNotClearAllCaches() {
+		$cache = SS_Cache::factory('test');
+		$cache->save('Foo', 'cachekey');
+		$this->assertEquals('Foo', $cache->load('cachekey'));
+
+		Director::test('/?flush=1');
+
+		$this->assertEquals('Foo', $cache->load('cachekey'));
+	}
+
 }
 	
