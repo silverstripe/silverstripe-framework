@@ -38,7 +38,7 @@ class GDBackend extends Object implements Image_Backend {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
 		increase_time_limit_to(300);
 
-		if($filename) {
+		if($filename && is_readable($filename)) {
 			// We use getimagesize instead of extension checking, because sometimes extensions are wrong.
 			list($width, $height, $type, $attr) = getimagesize($filename);
 			switch($type) {
