@@ -955,7 +955,7 @@ class SSViewer implements Flushable {
 				&& ($capabilities = $backend->getCapabilities())
 				&& $capabilities['tags']
 			) {
-				$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $cache->getTags());
+				$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, $cache->getTags());
 			} else {
 				$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 			}
