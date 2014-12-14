@@ -2,13 +2,14 @@ title: Cookies
 summary: A set of static methods for manipulating PHP cookies.
 
 # Cookies
+## Accessing and Manipulating Cookies
 
 Cookies are a mechanism for storing data in the remote browser and thus tracking or identifying return users. 
 
 SilverStripe uses cookies for remembering users preferences. Application code can modify a users cookies through
 the [api:Cookie] class. This class mostly follows the PHP API.
 
-## set
+### set
 
 Sets the value of cookie with configuration.
 
@@ -17,7 +18,7 @@ Sets the value of cookie with configuration.
 
 	// Cookie::set('MyApplicationPreference', 'Yes');
 
-## get
+### get
 
 Returns the value of cookie.
 
@@ -27,7 +28,7 @@ Returns the value of cookie.
 	// Cookie::get('MyApplicationPreference');
 	// returns 'Yes'
 
-## force_expiry
+### force_expiry
 
 Clears a given cookie.
 
@@ -57,7 +58,7 @@ from the browser.
 
 	Cookie::get('cookie1');
 
-## Resetting the Cookie_Backend state
+### Resetting the Cookie_Backend state
 
 Assuming that your application hasn't messed around with the `$_COOKIE` superglobal, you can reset the state of your
 `Cookie_Backend` by simply unregistering the `CookieJar` service with `Injector`. Next time you access `Cookie` it'll
@@ -95,6 +96,32 @@ If you need to implement your own Cookie_Backend you can use the injector system
 
 To be a valid backend your class must implement the [api:Cookie_Backend] interface.
 
+## Advanced Usage
+
+### Sent vs Received Cookies
+
+Sometimes it's useful to be able to tell if a cookie was set by the process (thus will be sent to the browser) or if it
+came from the browser as part of the request.
+
+Using the `Cookie_Backend` we can do this like such:
+
+	:::php
+	Cookie::set('CookieName', 'CookieVal');
+
+	Cookie::get('CookieName'); //gets the cookie as we set it
+
+	//will return the cookie as it was when it was sent in the request
+	Cookie::get('CookieName', false);
+
+
+### Accessing all the cookies at once
+
+One can also access all of the cookies in one go using the `Cookie_Backend`
+
+	:::php
+	Cookie::get_inst()->getAll(); //returns all the cookies including ones set during the current process
+
+	Cookie::get_inst()->getAll(false); //returns all the cookies in the request
 
 ## API Documentation
 
