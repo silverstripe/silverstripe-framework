@@ -222,5 +222,5 @@ editform, or 'fileEditValidator' to determine the validator (eg RequiredFields).
   
 ## TODO: Using the UploadField in a frontend form
 
-*At this moment the UploadField not yet fully supports being used on a frontend 
+*At this moment the UploadField not yet fully support being used on a frontend 
 form.* 
