@@ -60,8 +60,8 @@ in `<yourproject>/_config/routes.yml` with the following format:
 	After: framework/routes#coreroutes
 	---
 	Director:
-  		rules:
-    		'subscriptions/$Action' : 'SubscriptionController'
+		rules:
+			'subscriptions/$Action' : 'SubscriptionController'
 
 The [Controller](/topics/controller) documentation has a wide range of examples 
 and explanations on how the rules get processed for those methods.
