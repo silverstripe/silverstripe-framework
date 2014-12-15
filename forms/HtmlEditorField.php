@@ -253,6 +253,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					EmailField::create('email', _t('HtmlEditorField.EMAIL', 'Email address')),
 					TreeDropdownField::create('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'ID', 'Title', true),
 					TextField::create('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
+					TextField::create('Subject', _t('HtmlEditorField.SUBJECT', 'Email subject')),
 					TextField::create('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
 					CheckboxField::create('TargetBlank',
 						_t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?')),
