@@ -14,7 +14,7 @@ framework for dealing with submissions and validation.
 
 ## How to's
 
-[CHILDREN How_Tos]
+[CHILDREN Folder="How_Tos"]
 
 ## API Documentation
 
