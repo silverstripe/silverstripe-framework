@@ -1,30 +1,59 @@
 Folder:
-   subfolder:
-      Name: FileTest-subfolder
-   folder1:
-      Name: FileTest-folder1
-   folder2:
-      Name: FileTest-folder2
-   folder1-subfolder1:
-      Name: FileTest-folder1-subfolder1
-      ParentID: =>Folder.folder1
+  subfolder:
+    Name: FileTest-subfolder
+  folder1:
+    Name: FileTest-folder1
+  folder2:
+    Name: FileTest-folder2
+  folder1-subfolder1:
+    Name: FileTest-folder1-subfolder1
+    ParentID: =>Folder.folder1
 File:
-   asdf:
-      Filename: assets/FileTest.txt
-   gif:
-      Filename: assets/FileTest.gif
-   pdf:
-      Filename: assets/FileTest.pdf
-   setfromname:
-      Name: FileTest.png
-      ParentID: 0
-   subfolderfile:
-      Filename: assets/FileTest-subfolder/FileTestSubfolder.txt
-      ParentID: =>Folder.subfolder
-   subfolderfile-setfromname:
-      Name: FileTestSubfolder2.txt
-      ParentID: =>Folder.subfolder
-   file1-folder1:
-      Filename: assets/FileTest-folder1/File1.txt
-      Name: File1.txt
-      ParentID: =>Folder.folder1
+  asdf:
+    Filename: assets/FileTest.txt
+  gif:
+    Filename: assets/FileTest.gif
+  pdf:
+    Filename: assets/FileTest.pdf
+  setfromname:
+    Name: FileTest.png
+    ParentID: 0
+  subfolderfile:
+    Filename: assets/FileTest-subfolder/FileTestSubfolder.txt
+    ParentID: =>Folder.subfolder
+  subfolderfile-setfromname:
+    Name: FileTestSubfolder2.txt
+    ParentID: =>Folder.subfolder
+  file1-folder1:
+    Filename: assets/FileTest-folder1/File1.txt
+    Name: File1.txt
+    ParentID: =>Folder.folder1
+Permission:
+  admin:
+    Code: ADMIN
+  cmsmain:
+    Code: CMS_ACCESS_LeftAndMain
+  assetadmin:
+    Code: CMS_ACCESS_AssetAdmin
+Group:
+  admins:
+    Title: Administrators
+    Permissions: =>Permission.admin
+  cmsusers:
+    Title: 'CMS Users'
+    Permissions: =>Permission.cmsmain
+  assetusers:
+    Title: 'Asset Users'
+    Permissions: =>Permission.cmsmain, =>Permission.assetadmin
+Member:
+  frontend:
+    Email: frontend@example.com
+  cms:
+    Email: cms@silverstripe.com
+    Groups: =>Group.cmsusers
+  admin:
+    Email: admin@silverstripe.com
+    Groups: =>Group.admins
+  assetadmin:
+    Email: assetadmin@silverstripe.com
+    Groups: =>Group.assetusers

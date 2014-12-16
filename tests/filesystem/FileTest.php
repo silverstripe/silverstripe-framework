@@ -381,6 +381,30 @@ class FileTest extends SapphireTest {
 		$file2->write();
 		$this->assertEquals($member1->ID, $file2->OwnerID, 'Owner not overwritten on existing files');
 	}
+
+	public function testCanEdit() {
+		$file = $this->objFromFixture('File', 'gif');
+
+		// Test anonymous permissions
+		Session::set('loggedInAs', null);
+		$this->assertFalse($file->canEdit(), "Anonymous users can't edit files");
+
+		// Test permissionless user
+		$this->objFromFixture('Member', 'frontend')->logIn();
+		$this->assertFalse($file->canEdit(), "Permissionless users can't edit files");
+
+		// Test cms non-asset user
+		$this->objFromFixture('Member', 'cms')->logIn();
+		$this->assertFalse($file->canEdit(), "Basic CMS users can't edit files");
+
+		// Test asset-admin user
+		$this->objFromFixture('Member', 'assetadmin')->logIn();
+		$this->assertTrue($file->canEdit(), "Asset admin users can edit files");
+
+		// Test admin
+		$this->objFromFixture('Member', 'admin')->logIn();
+		$this->assertTrue($file->canEdit(), "Admins can edit files");
+	}
 		
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

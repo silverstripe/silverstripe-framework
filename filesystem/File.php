@@ -305,7 +305,7 @@ class File extends DataObject {
 		$result = $this->extendedCan('canEdit', $member);
 		if($result !== null) return $result;
 		
-		return true;
+		return Permission::checkMember($member, 'CMS_ACCESS_AssetAdmin');
 	}
 	
 	/**
