@@ -1,4 +1,4 @@
-# SQL Select
+# SQLQuery
 
 ## Introduction
 
@@ -18,8 +18,8 @@ the following three statements are functionally equivalent:
 	:::php
 	// Through raw SQL
 	$count = DB::query('SELECT COUNT(*) FROM "Member"')->value();
-	// Through SQLSelect abstraction layer
-	$query = new SQLSelect();
+	// Through SQLQuery abstraction layer
+	$query = new SQLQuery();
 	$count = $query->setFrom('Member')->setSelect('COUNT(*)')->value();
 	// Through the ORM
 	$count = Member::get()->count();
@@ -45,7 +45,7 @@ how to properly prepare user input and variables for use in queries
 
 ### SELECT
 
-Selection can be done by creating an instance of `SQLSelect`, which allows
+Selection can be done by creating an instance of `SQLQuery`, which allows
 management of all elements of a SQL SELECT query, including columns, joined tables,
 conditional filters, grouping, limiting, and sorting.
 
@@ -54,36 +54,36 @@ E.g.
 	:::php
 	<?php
 
-	$sqlSelect = new SQLSelect();
-	$sqlSelect->setFrom('Player');
-	$sqlSelect->selectField('FieldName', 'Name');
-	$sqlSelect->selectField('YEAR("Birthday")', 'Birthyear');
-	$sqlSelect->addLeftJoin('Team','"Player"."TeamID" = "Team"."ID"');
-	$sqlSelect->addWhere(array('YEAR("Birthday") = ?' => 1982));
-	// $sqlSelect->setOrderBy(...);
-	// $sqlSelect->setGroupBy(...);
-	// $sqlSelect->setHaving(...);
-	// $sqlSelect->setLimit(...);
-	// $sqlSelect->setDistinct(true);
+	$sqlQuery = new SQLQuery();
+	$sqlQuery->setFrom('Player');
+	$sqlQuery->selectField('FieldName', 'Name');
+	$sqlQuery->selectField('YEAR("Birthday")', 'Birthyear');
+	$sqlQuery->addLeftJoin('Team','"Player"."TeamID" = "Team"."ID"');
+	$sqlQuery->addWhere(array('YEAR("Birthday") = ?' => 1982));
+	// $sqlQuery->setOrderBy(...);
+	// $sqlQuery->setGroupBy(...);
+	// $sqlQuery->setHaving(...);
+	// $sqlQuery->setLimit(...);
+	// $sqlQuery->setDistinct(true);
 	
 	// Get the raw SQL (optional) and parameters
-	$rawSQL = $sqlSelect->sql($parameters);
+	$rawSQL = $sqlQuery->sql($parameters);
 	
 	// Execute and return a Query object
-	$result = $sqlSelect->execute();
+	$result = $sqlQuery->execute();
 
 	// Iterate over results
 	foreach($result as $row) {
 	  echo $row['BirthYear'];
 	}
 
-The result of `SQLSelect::execute()` is an array lightly wrapped in a database-specific subclass of `[api:SS_Query]`. 
+The result of `SQLQuery::execute()` is an array lightly wrapped in a database-specific subclass of `[api:SS_Query]`. 
 This class implements the *Iterator*-interface, and provides convenience-methods for accessing the data.
 
 ### DELETE
 
 Deletion can be done either by calling `DB::query`/`DB::prepared_query` directly,
-by creating a `SQLDelete` object, or by transforming a `SQLSelect` into a `SQLDelete`
+by creating a `SQLDelete` object, or by transforming a `SQLQuery` into a `SQLDelete`
 object instead.
 
 For example, creating a `SQLDelete` object
@@ -96,12 +96,12 @@ For example, creating a `SQLDelete` object
 		->setWhere(array('"SiteTree"."ShowInMenus"' => 0));
 	$query->execute();
 
-Alternatively, turning an existing `SQLSelect` into a delete
+Alternatively, turning an existing `SQLQuery` into a delete
 
 	:::php
 	<?php
 
-	$query = SQLSelect::create()
+	$query = SQLQuery::create()
 		->setFrom('"SiteTree"')
 		->setWhere(array('"SiteTree"."ShowInMenus"' => 0))
 		->toDelete();
@@ -220,12 +220,12 @@ e.g. when you want a single column rather than a full-blown object representatio
 Example: Get the count from a relationship.
 
 	:::php
-	$sqlSelect = new SQLSelect();
-  $sqlSelect->setFrom('Player');
-  $sqlSelect->addSelect('COUNT("Player"."ID")');
-  $sqlSelect->addWhere(array('"Team"."ID"' => 99));
-  $sqlSelect->addLeftJoin('Team', '"Team"."ID" = "Player"."TeamID"');
-  $count = $sqlSelect->execute()->value();
+	$sqlQuery = new SQLQuery();
+	$sqlQuery->setFrom('Player');
+	$sqlQuery->addSelect('COUNT("Player"."ID")');
+	$sqlQuery->addWhere(array('"Team"."ID"' => 99));
+	$sqlQuery->addLeftJoin('Team', '"Team"."ID" = "Player"."TeamID"');
+	$count = $sqlQuery->execute()->value();
 
 Note that in the ORM, this call would be executed in an efficient manner as well:
 
@@ -240,14 +240,14 @@ This can be useful for creating dropdowns.
 Example: Show player names with their birth year, but set their birth dates as values.
 
 	:::php
-	$sqlSelect = new SQLSelect();
-	$sqlSelect->setFrom('Player');
-	$sqlSelect->setSelect('Birthdate');
-	$sqlSelect->selectField('CONCAT("Name", ' - ', YEAR("Birthdate")', 'NameWithBirthyear');
-	$map = $sqlSelect->execute()->map();
+	$sqlQuery = new SQLQuery();
+	$sqlQuery->setFrom('Player');
+	$sqlQuery->setSelect('Birthdate');
+	$sqlQuery->selectField('CONCAT("Name", ' - ', YEAR("Birthdate")', 'NameWithBirthyear');
+	$map = $sqlQuery->execute()->map();
 	$field = new DropdownField('Birthdates', 'Birthdates', $map);
 
-Note that going through SQLSelect is just necessary here 
+Note that going through SQLQuery is just necessary here 
 because of the custom SQL value transformation (`YEAR()`). 
 An alternative approach would be a custom getter in the object definition.
 

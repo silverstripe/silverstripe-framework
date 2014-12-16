@@ -99,13 +99,6 @@ abstract class SQLExpression {
 	 * @return string The completed SQL query
 	 */
 	public function sql(&$parameters = array()) {
-		if(func_num_args() == 0) {
-			Deprecation::notice(
-				'3.2',
-				'SQLExpression::sql() now may produce parameters which are necessary to execute this query'
-			);
-		}
-
 		// Build each component as needed
 		$sql = DB::build_sql($this, $parameters);
 
