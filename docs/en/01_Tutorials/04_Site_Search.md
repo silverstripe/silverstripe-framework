@@ -11,7 +11,7 @@ This is a short tutorial demonstrating how to add search functionality to a Silv
 
 We are going to add a search box on the top of the page. When a user types something in the box, they are taken to a results page.
 
-![](/_images/tutorial4_search.jpg)
+![](../_images/tutorial4_search.jpg)
 
 ## Creating the search form
 
@@ -46,7 +46,7 @@ To add the search form, we can add `$SearchForm` anywhere in our templates. In t
 
 This displays as:
 
-![](/_images/tutorial4_searchbox.jpg)
+![](../_images/tutorial4_searchbox.jpg)
 
 ## Showing the results
 
@@ -152,7 +152,7 @@ class.
 Then finally add ?flush=1 to the URL and you should see the new template.
 
 
-![](/_images/tutorial4_search.jpg)
+![](../_images/tutorial4_search.jpg)
 
 ## Summary
 

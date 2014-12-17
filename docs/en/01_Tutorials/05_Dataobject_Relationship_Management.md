@@ -170,17 +170,17 @@ We call `setDisplayFields()` directly on the component responsible for their ren
 	using the `[ModelAdmin](reference/modeladmin)` interface instead.
 </div>
 
-![tutorial:tutorial5_project_creation.jpg](/_images/tutorial5_project_creation.jpg)
+![tutorial:tutorial5_project_creation.jpg](../_images/tutorial5_project_creation.jpg)
 
 Select each `Project` page you have created before, 
 go in the tab panel called "Students", and add all students as required,
 by clicking on the link **Add Student** of your *GridField* table.
 
-![tutorial:tutorial5_addNew.jpg](/_images/tutorial5_addNew.jpg)
+![tutorial:tutorial5_addNew.jpg](../_images/tutorial5_addNew.jpg)
 
 Once you have added all the students, and selected their projects, it should look a little like this:
 
-![tutorial:tutorial5_students.jpg](/_images/tutorial5_students.jpg)
+![tutorial:tutorial5_students.jpg](../_images/tutorial5_students.jpg)
 
 ### Many-many relationships: Mentor
 
@@ -250,13 +250,13 @@ In the CMS, open one of your `Project` pages and select the "Mentors" tab.
 Add all the mentors listed [above](#what-are-we-working-towards) 
 by clicking on the **Add Mentor** button. 
 
-![tutorial:tutorial5_module_creation.jpg](/_images/tutorial5_module_creation.jpg)
+![tutorial:tutorial5_module_creation.jpg](../_images/tutorial5_module_creation.jpg)
 
 To associate the mentor with a project, select one of the mentors, and click on the projects tab. Add all the projects a mentor is associated with (see the [list](/tutorials/dataobject_relationship_management#What_are_we_working_towards?)), by typing the name in "Find Projects by Page name" and clicking the "Link Existing" button.
 You will notice that you are able to select the same `Project` for multiple mentors. 
 This is the definition of a **many-to-many** relation.
 
-![tutorial:tutorial5_module_selection.jpg](/_images/tutorial5_module_selection.jpg)
+![tutorial:tutorial5_module_selection.jpg](../_images/tutorial5_module_selection.jpg)
 
 
 ## Website Display
@@ -276,7 +276,7 @@ accessing a "has-many" and "many-many" relationship
 in the template loops: to the template, it's just
 a named list of object.
 
-![tutorial:tutorial5_projects_table.jpg](/_images/tutorial5_projects_table.jpg)
+![tutorial:tutorial5_projects_table.jpg](../_images/tutorial5_projects_table.jpg)
 
 **themes/simple/templates/Layout/ProjectsHolder.ss**
 
@@ -334,7 +334,7 @@ Creating the detail view for each `Project` page works in a very similar way.
 Given that we're in the context of a single project,
 we can access the "Students" and "Mentors" relationships directly in the template.
 
-![tutorial:tutorial5_project.jpg](/_images/tutorial5_project.jpg)
+![tutorial:tutorial5_project.jpg](../_images/tutorial5_project.jpg)
 
 **themes/simple/templates/Layout/Project.ss**
 
