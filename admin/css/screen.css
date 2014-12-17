@@ -582,6 +582,7 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .memberdatetimeoptionset .toggle { font-size: 11px; }
 
 .cms .cms-content { border-right: 1px solid #BBB; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; background: #ECEFF1; width: 800px; z-index: 40; }
+.cms.mce-fullscreen .cms-content div.mce-fullscreen { position: absolute; }
 .cms .cms-content-fields { overflow-y: auto; overflow-x: auto; background: #e6eaed; width: 100%; }
 .cms .cms-content-fields #Root_Main .confirmedpassword { border-bottom: none; box-shadow: none; }
 .cms .cms-content-fields #Root_Main .customFormat { max-width: 80px; }

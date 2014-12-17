@@ -2,7 +2,7 @@
 
 	// TinyMCE will stop loading if it encounters non-existent external script file
 	// when included through tiny_mce_gzip.php. Only load the external lang package if it is available.
-	var availableLangs = ['en', 'de'];
+	var availableLangs = ['en', 'de', 'nl'];
 	if(jQuery.inArray(tinymce.settings.language, availableLangs) != -1) {
 		tinymce.PluginManager.requireLangPack("ssbuttons");
 	}
@@ -15,7 +15,7 @@
 		 * The current keys are longname, author, authorurl, infourl and version.
 		 *
 		 * @returns Name/value array containing information about the plugin.
-		 * @type Array 
+		 * @type Array
 		 */
 		getInfo : function() {
 			return {
@@ -28,8 +28,27 @@
 		},
 
 		init : function(ed, url) {
-			ed.addButton('sslink', {title : ed.getLang('tinymce_ssbuttons.insertlink'), cmd : 'sslink', 'class' : 'mce_link'}); 
-			ed.addButton('ssmedia', {title : ed.getLang('tinymce_ssbuttons.insertmedia'), cmd : 'ssmedia', 'class' : 'mce_image'}); 
+			ed.addButton('link', {
+				title: ed.getLang('tinymce_ssbuttons', 'insertlink'),
+				cmd: 'sslink',
+				class: 'mce_link',
+				onPostRender: function() {
+					var ctrl = this;
+
+					// Disable link button when no link is selected
+					ed.on('nodechange', function(e) {
+						ctrl.disabled(e.element.nodeName != 'A' && !ed.selection.getContent());
+						ctrl.active(e.element.nodeName == 'A');
+					});
+				}
+			});
+
+			ed.addButton('image', {
+				title: ed.getLang('tinymce_ssbuttons', 'insertmedia'),
+				cmd: 'ssmedia',
+				class: 'mce_image'
+			});
+
 
 			ed.addCommand('sslink', function(ed) {
 				jQuery('#' + this.id).entwine('ss').openLinkDialog();
@@ -39,27 +58,43 @@
 				jQuery('#' + this.id).entwine('ss').openMediaDialog();
 			});
 
-			// Replace the mceAdvLink and mceLink commands with the sslink command, and
-			// the mceAdvImage and mceImage commands with the ssmedia command
-			ed.onBeforeExecCommand.add(function(ed, cmd, ui, val, a){
-				if (cmd == 'mceAdvLink' || cmd == 'mceLink'){
-					ed.execCommand('sslink', ui, val, a);
-					a.terminate = true;
-				}
-				else if (cmd == 'mceAdvImage' || cmd == 'mceImage'){
-					ed.execCommand('ssmedia', ui, val, a);
-					a.terminate = true;
+
+			// Hide menu by default. Add toggle button.
+			menubar = '.mce-container.mce-toolbar[role=menubar]';
+			setTimeout(function(){
+				jQuery('.mce-container.mce-toolbar[role=menubar]')
+					.addClass('hidden')
+					.css({display : 'none'});
+			}, 50); // need a timeout, otherwise not triggered properly.
+
+			ed.addButton('menubtn', {
+				text: 'Menu',
+				title: 'Menu',
+				icon: false,
+				onclick: function() {
+					if(jQuery(menubar).hasClass('hidden')) {
+						jQuery(menubar).removeClass('hidden').css({display : 'block'});
+					} else {
+						jQuery(menubar).addClass('hidden').css({display : 'none'});
+					}
 				}
 			});
 
-			// Disable link button when no link is selected
-			ed.onNodeChange.add(function(ed, cm, n, co) {
-				cm.setDisabled('sslink', co && n.nodeName != 'A');
-				cm.setActive('sslink', n.nodeName == 'A' && !n.name);
-			});
+			/**
+			 * optional fullscreen function, todo: onresize fix
+			 */
+			/*ed.on('FullscreenStateChanged', function(e) { console.log(jQuery('#pages-controller-cms-content').offset());
+				if(e.state === true) {
+					e.target.container.style.width = jQuery('#pages-controller-cms-content').width()+'px';
+					e.target.container.style.left = jQuery('#pages-controller-cms-content').offset().left+'px';
+				} else {
+					e.target.container.style.width = '100%';
+					e.target.container.style.left = 'auto';
+				}
+			});*/
 
-			ed.onSaveContent.add(function(ed, o) {
-				var content = jQuery(o.content);
+			ed.on('SaveContent', function(e) {
+				var content = jQuery(e.content);
 				content.find('.ss-htmleditorfield-file.embed').each(function() {
 					var el = jQuery(this);
 					var shortCode = '[embed width="' + el.attr('width') + '"'
@@ -70,12 +105,12 @@
 										+ '[/embed]';
 					el.replaceWith(shortCode);
 				});
-				o.content = jQuery('<div />').append(content).html(); // Little hack to get outerHTML string
+				e.content = jQuery('<div />').append(content).html(); // Little hack to get outerHTML string
 			});
 
 			var shortTagRegex = /(.?)\[embed(.*?)\](.+?)\[\/\s*embed\s*\](.?)/gi;
-			ed.onBeforeSetContent.add(function(ed, o) {
-				var matches = null, content = o.content;
+			ed.on('BeforeSetContent', function(e) {
+				var matches = null, content = e.content;
 				var prefix, suffix, attributes, attributeString, url;
 				var attrs, attr;
 				var imgEl;
@@ -118,7 +153,7 @@
 
 					content = content.replace(matches[0], prefix + (jQuery('<div/>').append(imgEl).html()) + suffix);
 				}
-				o.content = content;
+				e.content = content;
 			});
 		}
 	});

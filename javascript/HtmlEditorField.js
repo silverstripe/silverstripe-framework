@@ -59,58 +59,13 @@ ss.editorWrappers.tinyMCE = (function() {
 		 * @param Function
 		 */
 		create: function(domID, config) {
-			this.instance = new tinymce.Editor(domID, config);
+			this.instance = tinymce.createEditor(domID, config);
 
-			// Patch TinyMCE events into underlying textarea field.
-			this.instance.onInit.add(function(ed) {
-				if(!ss.editorWrappers.tinyMCE.patched) {
-					// Not ideal, but there's a memory leak we need to patch
-					var originalDestroy = tinymce.themes.AdvancedTheme.prototype.destroy;
-
-					tinymce.themes.AdvancedTheme.prototype.destroy = function() {
-						originalDestroy.apply(this, arguments);
-
-						if (this.statusKeyboardNavigation) {
-							this.statusKeyboardNavigation.destroy();
-							this.statusKeyboardNavigation = null;
-						}
-					};
-
-					ss.editorWrappers.tinyMCE.patched = true;
-				}
-
-				jQuery(ed.getElement()).trigger('editorinit');
-
-				// Periodically check for inline changes when focused,
-				// since TinyMCE's onChange only fires on certain actions
-				// like inserting a new paragraph, as opposed to any user input.
-				// This also works around an issue where the "save" button
-				// wouldn't trigger if the click is the cause of a "blur" event
-				// after an (undetected) inline change. This "blur" causes onChange
-				// to trigger, which will change the button markup to show "alternative" styles,
-				// effectively cancelling the original click event.
-				if(ed.settings.update_interval) {
-					var interval;
-					jQuery(ed.getBody()).on('focus', function() {
-						interval = setInterval(function() {
-							// Update underlying element as necessary
-							var element = jQuery(ed.getElement());
-							if(ed.isDirty()) {
-								// Set content without triggering editor content cleanup
-								element.val(ed.getContent({format : 'raw', no_events : 1}));
-							}
-						}, ed.settings.update_interval);
-					});
-					jQuery(ed.getBody()).on('blur', function() {
-						clearInterval(interval);
-					});
-				}
-			});
-			this.instance.onChange.add(function(ed, l) {
+			this.instance.on('change', function(e) {
 				// Update underlying textarea on every change, so external handlers
 				// such as changetracker have a chance to trigger properly.
-				ed.save();
-				jQuery(ed.getElement()).trigger('change');
+				e.target.save();
+				jQuery(e.target.getElement()).trigger('change');
 			});
 			// Add more events here as needed.
 
@@ -290,26 +245,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				this._super();
 			},
-			onremove: function() {
-				var ed = tinyMCE.get(this.attr('id'));
-				if (ed) {
-					ed.remove();
-					ed.destroy();
-
-					// TinyMCE leaves behind events. We should really fix TinyMCE, but lets brute force it for now
-					$.each(jQuery.cache, function(){
-						var source = this.handle && this.handle.elem;
-						if (!source) return;
-
-						var parent = source;
-						while (parent && parent.nodeType == 1) parent = parent.parentNode;
-
-						if (!parent) $(source).unbind().remove();
-					});
-				}
-
-				this._super();
-			},
 
 			getContainingForm: function(){
 				return this.closest('form');
@@ -412,6 +347,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					});
 				}
 			}
+
 		});
 
 		$('.htmleditorfield-dialog').entwine({
@@ -637,14 +573,12 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.modifySelection(function(ed){
 					ed.insertLink(this.getLinkAttributes());
 				});
-
 				this.updateFromEditor();
 			},
 			removeLink: function() {
 				this.modifySelection(function(ed){
 					ed.removeLink();
 				});
-
 				this.close();
 			},
 
@@ -688,7 +622,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						// http://www.w3.org/TR/1999/REC-html401-19991224/struct/links.html#h-12.2
 
 						if(ed) {
-							var raw = ed.getContent().match(/name="([^"]+?)"|name='([^']+?)'/gim);
+							var raw = ed.getContent().match(/id="([^"]+?)"|id='([^']+?)'/gim);
 							if (raw && raw.length) {
 								for(var i = 0; i < raw.length; i++) {
 									collectedAnchors.push(raw[i].substr(6).replace(/"$/, ''));
@@ -1396,6 +1330,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this._super();
 
 				this.setOrigVal(parseInt(this.val(), 10));
+
 			},
 			onunmatch: function() {
 				this._super();
