@@ -1104,7 +1104,7 @@ class Requirements_Backend {
 		$base = Director::baseFolder() . '/';
 		foreach(array_diff_key($combinedFiles, $this->blocked) as $combinedFile => $dummy) {
 			$fileList = $this->combine_files[$combinedFile];
-			$combinedFilePath = $base . $combinedFilesFolder . '/' . $combinedFile;
+			$combinedFilePath = $base . rtrim($combinedFilesFolder, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $combinedFile;
 
 
 			// Make the folder if necessary
