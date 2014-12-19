@@ -147,10 +147,8 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 		} else {
 			if ($currentController->Title) {
 				$title = $currentController->Title;
-			} else {
-				if($form->getName()){
-					$title = $form->getName();
-				}
+			} elseif ($form->getName()) {
+				$title = $form->getName();
 			}
 		}
 
