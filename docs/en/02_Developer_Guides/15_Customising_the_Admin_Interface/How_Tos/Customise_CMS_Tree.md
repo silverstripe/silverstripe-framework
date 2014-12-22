@@ -1,4 +1,4 @@
-# How to customize the CMS tree #
+# How to customize the CMS tree
 
 ## Overview
 
@@ -12,7 +12,7 @@ which recursively collects all nodes based on various filtering criteria.
 The node strictly just has to implement the `[api:Hierarchy]` extension,
 but in the CMS usually is a `[api:SiteTree]` object.
 
-## Add status lozenges to tree nodes ##
+## Add status lozenges to tree nodes
 
 A tree node in CMS could be rendered with lot of extra information but a node title, such as a
 link that wraps around the node title, a node's id which is given as id attribute of the node
@@ -58,7 +58,7 @@ be used for flagging anything you like, we should keep this lozenge to show vers
 status, while let `SiteTree->CMSTreeClasses()` to deal with other customised classes, which
 will be used for the class attribute of &lt;li&gt; tag of the tree node.
 
-### Add new flag ###
+### Add new flag
 __Example: using a subclass__
 
 	:::php
