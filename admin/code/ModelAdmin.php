@@ -212,8 +212,8 @@ abstract class ModelAdmin extends LeftAndMain {
 		$params = $this->request->requestVar('q');
 		
 		if(is_array($params)) {
-+        		$params = array_map('trim', $params);
-+        	}
+	       		$params = array_map('trim', $params);
+        	}
 
 		$list = $context->getResults($params);
 
