@@ -39,7 +39,7 @@ Let's create the `Student` and `Project` objects.
 	class Student extends DataObject {
 		private static $db = array(
 			'Name' => 'Varchar',
-			'University' => 'Varchar',
+			'University' => 'Varchar'
 		);
 		private static $has_one = array(
 			'Project' => 'Project'
@@ -198,7 +198,7 @@ The first step is to create the `Mentor` object and set the relation with the `P
 	<?php
 	class Mentor extends DataObject {
 		private static $db = array(
-			'Name' => 'Varchar',
+			'Name' => 'Varchar'
 		);
 		private static $belongs_many_many = array(
 			'Projects' => 'Project'
