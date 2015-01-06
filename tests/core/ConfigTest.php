@@ -81,6 +81,10 @@ class ConfigTest_TestNest extends Object implements TestOnly {
 	private static $bar = 5;
 }
 
+class ConfigStaticTest_ArrayBlankValue extends Config implements TestOnly  {
+	public static $has_blank = array('', 'test_1', 'test_2');
+}
+
 class ConfigTest extends SapphireTest {
 	
 	public function testNest() {
@@ -133,6 +137,10 @@ class ConfigTest extends SapphireTest {
 		Config::inst()->update('ConfigStaticTest_Third', 'second', array('test_3_2'));
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Third', 'second', Config::FIRST_SET),
 			array('test_3_2'));
+
+		Config::inst()->update('ConfigStaticTest_ArrayBlankValue', 'has_blank', array('test_3'));
+		$this->assertEquals(array('test_3', '', 'test_1', 'test_2'),
+			Config::inst()->get('ConfigStaticTest_ArrayBlankValue', 'has_blank'));
 	}
 
 	public function testUpdateWithFalsyValues() {
