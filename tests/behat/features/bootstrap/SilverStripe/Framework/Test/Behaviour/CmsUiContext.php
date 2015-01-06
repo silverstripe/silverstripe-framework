@@ -418,7 +418,7 @@ class CmsUiContext extends BehatContext {
 			'named', 
 			array('select', $this->getSession()->getSelectorsHandler()->xpathLiteral($field))
 		);
-		if($nativeField) {
+		if($nativeField && $nativeField->isVisible()) {
 			$nativeField->selectOption($value);
 			return;
 		}
