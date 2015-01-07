@@ -3,6 +3,6 @@
      data-url-tree="$Link(tree)"
      data-title="$TitleURLEncoded"
      <% if $Description %>title="$Description"<% end_if %>
-     <% if $Metadata %>data-metadata="$Metadata"<% end_if %>>
+     <% if $Metadata %>data-metadata="$Metadata"<% end_if %> tabindex="0">
 	<input id="$ID" type="hidden" name="$Name" value="$Value" />
 </div>
