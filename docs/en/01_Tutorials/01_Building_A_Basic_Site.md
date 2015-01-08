@@ -383,7 +383,7 @@ We'll also replace the title text with an image. Find this line:
 
 	:::ss
 	<div id="Banner">
-	  <img src="http://www.silverstripe.org/themes/silverstripe/images/sslogo.png" alt="Homepage image" />
+	  <img src="http://www.silverstripe.org/assets/SilverStripe-200.png" alt="Homepage image" />
 	</div>
 
 
