@@ -514,6 +514,7 @@ en:
     NEWGROUP: 'New Group'
     PERMISSIONS: Permissions
     ROLES: Roles
+    GROUPS: Groups
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roles
     Users: Users
