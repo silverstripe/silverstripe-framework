@@ -125,15 +125,13 @@ An example using the `MyFactory` service to create instances of the `MyService` 
 	Injector:
 	  MyService:
 	    factory: MyFactory
-	  MyFactory:
-	    class: MyFactoryImplementation
 
-**mysite/code/MyFactoryImplementation.php**
+**mysite/code/MyFactory.php**
 
 	:::php
 	<?php
 
-	class MyFactoryImplementation implements SilverStripe\Framework\Injector\Factory {
+	class MyFactory implements SilverStripe\Framework\Injector\Factory {
 
 		public function create($service, array $params = array()) {
 			return new MyServiceImplementation();
