@@ -147,8 +147,8 @@ or placed between SilverStripe template tags:
 
 **Flushing the cache**
 
-Whenever we edit a template file, we need to append *?flush=1* onto the end of the URL, e.g.
-http://localhost/your_site_name/?flush=1. SilverStripe stores template files in a cache for quicker load times. Whenever there are
+Whenever we edit a template file, we need to append *?flush* onto the end of the URL, e.g.
+http://localhost/your_site_name/?flush. SilverStripe stores template files in a cache for quicker load times. Whenever there are
 changes to the template, we must flush the cache in order for the changes to take effect.
 
 ##  The Navigation System
@@ -368,7 +368,7 @@ It always tries to use the most specific template in an inheritance chain.
 
 ### Creating a new template
 
-To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*. If we flush the cache (*?flush=1*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
+To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*. If we flush the cache (*?flush*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
 
 First, we don't need the breadcrumbs and the secondary menu for the homepage. Let's remove them:
 	:::ss
