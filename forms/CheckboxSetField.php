@@ -83,35 +83,24 @@ class CheckboxSetField extends OptionsetField {
 			}
 		}
 		
-		// Source is not an array
-		if(!is_array($source) && !is_a($source, 'SQLMap')) {
-			if(is_array($values)) {
+		// Generate $items array from $values, if set
+		if ($values) {
+			// If $values is an array, we can directly use it
+			if (is_array($values)) {
 				$items = $values;
-			} else {
-				// Source and values are DataObject sets.
-				if($values && is_a($values, 'SS_List')) {
-					foreach($values as $object) {
-						if(is_a($object, 'DataObject')) {
-							$items[] = $object->ID;
-						}
+			}
+			// If it is a list, append each object's ID to $items
+			elseif ($values instanceof SS_List) {
+				foreach($values as $object) {
+					if(is_a($object, 'DataObject')) {
+						$items[] = $object->ID;
 					}
-				} elseif($values && is_string($values)) {
-					$items = explode(',', $values);
-					$items = str_replace('{comma}', ',', $items);
 				}
 			}
-		} else {
-			// Sometimes we pass a singluar default value thats ! an array && !SS_List
-			if($values instanceof SS_List || is_array($values)) {
-				$items = $values;
-			} else {
-				if($values === null) {
-					$items = array();
-				}
-				else {
-					$items = explode(',', $values);
-					$items = str_replace('{comma}', ',', $items);
-				}
+			// If it is a string, generate $items by splitting by comma
+			elseif (is_string($values)) {
+				$items = explode(',', $values);
+				$items = str_replace('{comma}', ',', $items);
 			}
 		}
 
