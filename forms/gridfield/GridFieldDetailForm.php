@@ -403,6 +403,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			}
 		}
 
+		if($this->controller->hasMethod('currentPageID') && $this->controller->currentPageID()) {
+			$fields->push(new HiddenField('CMSMainCurrentPageID', null, $this->controller->currentPageID()));
+		}
 		// Caution: API violation. Form expects a Controller, but we are giving it a RequestHandler instead.
 		// Thanks to this however, we are able to nest GridFields, and also access the initial Controller by
 		// dereferencing GridFieldDetailForm_ItemRequest->getController() multiple times. See getToplevelController
