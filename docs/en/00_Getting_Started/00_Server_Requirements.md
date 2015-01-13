@@ -45,7 +45,7 @@ comfortably allows over a million page views per month. Caching and other optimi
 ten or even one hundred times. SilverStripe CMS can be used in multiple-server architectures to improve scalability and
 redundancy.
 
-For more information on how to scale SilverStripe see the [Performance](../../developer_guides/performance/) Gluide.
+For more information on how to scale SilverStripe see the [Performance](/developer_guides/performance/) Guide.
 
 ## Client side (CMS) requirements
 
@@ -57,5 +57,5 @@ systems.
 
 SilverStripe CMS is designed to make excellent, standards-compliant websites that are compatible with a wide range of
 industry standard browsers and operating systems. A competent developer is able to produce websites that meet W3C
-guidelines for HTML, CSS, JavaScript, and accessibility, in addition to meeting specific guildelines, such as
+guidelines for HTML, CSS, JavaScript, and accessibility, in addition to meeting specific guide lines, such as
 e-government requirements.
