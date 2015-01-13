@@ -281,7 +281,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$firstCrumb = $crumbs->shift();
 			if($params['FieldName'] == 'Groups') {
 				$crumbs->unshift(new ArrayData(array(
-					'Title' => singleton('Group')->plural_name(),
+					'Title' => singleton('Group')->i18n_plural_name(),
 					'Link' => $this->Link('groups')
 				)));
 			} elseif($params['FieldName'] == 'Users') {
