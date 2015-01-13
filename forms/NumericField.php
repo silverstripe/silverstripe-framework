@@ -53,9 +53,33 @@ class NumericField extends TextField {
 
 		return true;
 	}
+    
+	/**
+	 * displays the value in its current locality format
+	 */
+	public function setValue($val) {
+                
+                require_once THIRDPARTY_PATH."/Zend/Locale/Format.php";
+                    
+		if(is_numeric($val)){		
+                    $locale = new Zend_Locale(i18n::get_locale());
+                    $this->value = Zend_Locale_Format::toNumber($val, array('locale' => $locale));
+                }else if(Zend_Locale_Format::isNumber(
+                        trim($val), 
+			array('locale' => i18n::get_locale())
+                )){
+                    $this->value = trim($val);
+                }
+		return $this;
+	}
 
 	public function dataValue() {
-		return (is_numeric($this->value)) ? $this->value : 0;
+		
+		require_once THIRDPARTY_PATH."/Zend/Locale/Format.php";
+                
+                $locale = new Zend_Locale(i18n::get_locale());
+                $number = Zend_Locale_Format::getNumber($this->value, array('locale' => $locale));
+		return $number;
 	}
 	
 	/**
