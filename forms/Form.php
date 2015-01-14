@@ -142,6 +142,12 @@ class Form extends RequestHandler {
 	protected $extraClasses = array();
 
 	/**
+	 * @config
+	 * @var array $default_classes The default classes to apply to the Form
+	 */
+	private static $default_classes = array();
+
+	/**
 	 * @var string
 	 */
 	protected $encType;
@@ -224,6 +230,8 @@ class Form extends RequestHandler {
 		}
 
 		$this->securityToken = ($securityEnabled) ? new SecurityToken() : new NullSecurityToken();
+
+		$this->setupDefaultClasses();
 	}
 
 	private static $url_handlers = array(
@@ -261,6 +269,19 @@ class Form extends RequestHandler {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * set up the default classes for the form. This is done on construct so that the default classes can be removed
+	 * after instantiation
+	 */
+	protected function setupDefaultClasses() {
+		$defaultClasses = self::config()->get('default_classes');
+		if ($defaultClasses) {
+			foreach ($defaultClasses as $class) {
+				$this->addExtraClass($class);
+			}
+		}
 	}
 
 	/**
