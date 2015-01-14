@@ -409,6 +409,9 @@ An RSS feed is something that no news section should be without. SilverStripe ma
 	}
 
 
+Ensure that when you have input the code to implement an RSS feed; flush the webpage afterwards
+(add ?flush=all on the end of your URL)
+
 This function creates an RSS feed of all the news articles, and outputs it to the browser. If we go to [http://localhost/your_site_name/news/rss](http://localhost/your_site_name/news/rss) we should see our RSS feed. When there is more to a URL after a page's base URL, "rss" in this case, SilverStripe will call the function with that name on the controller if it exists.
 
 Depending on your browser, you should see something like the picture below. If your browser doesn't support RSS, you will most likely see the XML output instead. For more on RSS, see `[api:RSSFeed]`
