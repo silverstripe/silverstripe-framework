@@ -186,7 +186,7 @@ Now that we have created our page types, let's add some content. Go into the CMS
 
 ![](../_images/tutorial2_news-cms.jpg)
 
-##  Modifing the date field
+##  Modifying the date field
 
 At the moment, your date field will look just like a text field. 
 This makes it confusing and doesn't give the user much help when adding a date. 
