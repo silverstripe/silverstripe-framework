@@ -73,6 +73,8 @@ class MemberAuthenticator extends Authenticator {
 		if(!$success) {
 			if($member) $member->registerFailedLogin();
 			if($form) $form->sessionMessage($result->message(), 'bad');
+		} else {
+			if($member) $member->registerSuccessfulLogin();
 		}
 
 		return $member;
