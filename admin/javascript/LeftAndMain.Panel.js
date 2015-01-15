@@ -1,12 +1,12 @@
 (function($) {
 	
-	$.entwine('ss', function($){
-		
+	$.entwine('ss', function($) {
+
 		// setup jquery.entwine
 		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 
 		/**
-		 * Hoizontal collapsible panel. Generic enough to work with CMS menu as well as various "filter" panels.
+		 * Horizontal collapsible panel. Generic enough to work with CMS menu as well as various "filter" panels.
 		 * 
 		 * A panel consists of the following parts:
 		 * - Container div: The outer element, with class ".cms-panel"
@@ -45,7 +45,7 @@
 				// Set panel width same as the content panel it contains. Assumes the panel has overflow: hidden.
 				this.setWidthExpanded(this.find('.cms-panel-content').innerWidth());
 				
-				// Assumes the collasped width is indicated by the toggle, or by an optional collapsed view
+				// Assumes the collapsed width is indicated by the toggle, or by an optionally collapsed view
 				var collapsedContent = this.find('.cms-panel-content-collapsed');
 				this.setWidthCollapsed(collapsedContent.length ? collapsedContent.innerWidth() : this.find('.toggle-expand').innerWidth());
 
@@ -132,6 +132,13 @@
 			onclick: function(e) {
 				this.getPanel().collapsePanel();
 				return false;
+			}
+		});
+
+		$('.cms-content-tools.collapsed').entwine({
+			// Expand CMS' centre pane, when the pane itself is clicked somewhere
+			onclick: function(e) {
+				$('.cms-panel .toggle-expand').trigger('click');
 			}
 		});
 	});

@@ -6,7 +6,7 @@ summary: Creating your own custom data or content reports.
 Reports are a useful feature in the CMS designed to provide a view of your data or content. You can access
 the site reports by clicking *Reports* in the left hand side bar and selecting the report you wish to view.
 
-![](/_images/sitereport.png) 
+![](../../../_images/sitereport.png) 
 
 
 ## Default reports

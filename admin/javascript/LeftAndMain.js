@@ -515,7 +515,18 @@ jQuery.noConflict();
 				// Set 'fake' referer - we call pushState() before making the AJAX request, so we have to
 				// set our own referer here
 				if (typeof state.data.__forceReferer !== 'undefined') {
-					headers['X-Backurl'] = state.data.__forceReferer;
+					// Ensure query string is properly encoded if present
+					var url = state.data.__forceReferer;
+					
+					try {
+						// Prevent double-encoding by attempting to decode
+						url = decodeURI(url);
+					} catch(e) {
+						// URL not encoded, or was encoded incorrectly, so do nothing
+					} finally {
+						// Set our referer header to the encoded URL
+						headers['X-Backurl'] = encodeURI(url);
+					}
 				}
 				
 				contentEls.addClass('loading');

@@ -1,4 +1,4 @@
-# How to customize the CMS tree #
+# How to customize the CMS tree
 
 ## Overview
 
@@ -12,7 +12,7 @@ which recursively collects all nodes based on various filtering criteria.
 The node strictly just has to implement the `[api:Hierarchy]` extension,
 but in the CMS usually is a `[api:SiteTree]` object.
 
-## Add status lozenges to tree nodes ##
+## Add status lozenges to tree nodes
 
 A tree node in CMS could be rendered with lot of extra information but a node title, such as a
 link that wraps around the node title, a node's id which is given as id attribute of the node
@@ -41,7 +41,7 @@ code like this:
 	...
 
 By applying the proper style sheet, the snippet html above could produce the look of:
-![Page Node Screenshot](..//_images/tree_node.png "Page Node")
+![Page Node Screenshot](../../../_images/tree_node.png "Page Node")
 
 SiteTree is a `[api:DataObject]` which is versioned by `[api:Versioned]` extension.
 Each node can optionally have publication status flags, e.g. "Removed from draft".
@@ -58,7 +58,7 @@ be used for flagging anything you like, we should keep this lozenge to show vers
 status, while let `SiteTree->CMSTreeClasses()` to deal with other customised classes, which
 will be used for the class attribute of &lt;li&gt; tag of the tree node.
 
-### Add new flag ###
+### Add new flag
 __Example: using a subclass__
 
 	:::php
@@ -76,6 +76,6 @@ __Example: using a subclass__
 
 The above subclass of `[api:SiteTree]` will add a new flag for indicating its
 __'Scheduled To Publish'__ status. The look of the page node will be changed
-from ![Normal Page Node](..//_images/page_node_normal.png) to ![Scheduled Page Node](..//_images/page_node_scheduled.png). The getStatusFlags has an `updateStatusFlags()`
+from ![Normal Page Node](../../../_images/page_node_normal.png) to ![Scheduled Page Node](../../../_images/page_node_scheduled.png). The getStatusFlags has an `updateStatusFlags()`
 extension point, so the flags can be modified through `DataExtension` rather than
 inheritance as well. Deleting existing flags works by simply unsetting the array key.

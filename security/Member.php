@@ -30,7 +30,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	private static $db = array(
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar',
-		'Email' => 'Varchar(256)', // See RFC 5321, Section 4.5.3.1.3.
+		'Email' => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
 		'TempIDHash' => 'Varchar(160)', // Temporary id used for cms re-authentication
 		'TempIDExpired' => 'SS_Datetime', // Expiry of temp login
 		'Password' => 'Varchar(160)',
@@ -456,9 +456,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 
 		// Clear the incorrect log-in count
-		if(self::config()->lock_out_after_incorrect_logins) {
-			$this->FailedLoginCount = 0;
-		}
+		$this->registerSuccessfulLogin();
 
 		// Don't set column if its not built yet (the login might be precursor to a /dev/build...)
 		if(array_key_exists('LockedOutUntil', DB::field_list('Member'))) {
@@ -1536,6 +1534,16 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$this->write();
 	}
 
+	/**
+	 * Tell this member that a successful login has been made
+	 */
+	public function registerSuccessfulLogin() {
+		if(self::config()->lock_out_after_incorrect_logins) {
+			// Forgive all past login failures
+			$this->FailedLoginCount = 0;
+			$this->write();
+		}
+	}
 	/**
 	 * Get the HtmlEditorConfig for this user to be used in the CMS.
 	 * This is set by the group. If multiple configurations are set,

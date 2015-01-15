@@ -95,9 +95,9 @@ Injector::set_inst($injector);
 // Regenerate the manifest if ?flush is set, or if the database is being built.
 // The coupling is a hack, but it removes an annoying bug where new classes
 // referenced in _config.php files can be referenced during the build process.
-$flush = (isset($_GET['flush']) || isset($_REQUEST['url']) && (
-	$_REQUEST['url'] == 'dev/build' || $_REQUEST['url'] == BASE_URL . '/dev/build'
-));
+$requestURL = isset($_REQUEST['url']) ? trim($_REQUEST['url'], '/') : false;
+$flush = (isset($_GET['flush']) || $requestURL == 'dev/build' || $requestURL == BASE_URL . '/dev/build');
+
 global $manifest;
 $manifest = new SS_ClassManifest(BASE_PATH, false, $flush);
 
@@ -111,16 +111,17 @@ if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
 	require_once BASE_PATH . '/vendor/autoload.php';
 }
 
-// Now that the class manifest is up, load the configuration
+// Now that the class manifest is up, load the static configuration
 $configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
 Config::inst()->pushConfigStaticManifest($configManifest);
 
-// Now that the class manifest is up, load the configuration
+// And then the yaml configuration
 $configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
 Config::inst()->pushConfigYamlManifest($configManifest);
 
+// Load template manifest
 SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
-	BASE_PATH, project(), false, isset($_GET['flush'])
+	BASE_PATH, project(), false, $flush
 ));
 
 // If in live mode, ensure deprecation, strict and notices are not reported

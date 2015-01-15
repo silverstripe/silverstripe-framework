@@ -13,7 +13,7 @@ Instead of using a custom coded form, we could use the [userforms module](http:/
 
 We will create a poll on the home page that asks the user their favourite web browser, and displays a bar graph of the results.
 
-![tutorial:tutorial3_pollresults.png](/_images/tutorial3_pollresults.jpg)
+![tutorial:tutorial3_pollresults.png](../_images/tutorial3_pollresults.jpg)
 
 
 ## Creating the form
@@ -171,7 +171,7 @@ Add the following code to the existing `form.css` file:
 
 All going according to plan, if you visit [http://localhost/your_site_name/home/?flush=1](http://localhost/your_site_name/home/?flush=1) it should look something like this:
 
-![](/_images/tutorial3_pollform.jpg)
+![](../_images/tutorial3_pollform.jpg)
 
 
 ## Processing the form
@@ -232,7 +232,7 @@ Change the end of the 'BrowserPollForm' function so it looks like this:
 
 If we then open the homepage and attempt to submit the form without filling in the required fields errors should appear.
 
-![](/_images/tutorial3_validation.jpg)
+![](../_images/tutorial3_validation.jpg)
 
 
 ## Showing the poll results
@@ -356,7 +356,7 @@ and the poll results need to be displayed.
 
 We use the normal tactic of putting the data into an unordered list and using CSS to style it, except here we use inline styles to display a bar that is sized proportionate to the number of votes the browser has received. You should now have a complete poll.
 
-![](/_images/tutorial3_pollresults.jpg)
+![](../_images/tutorial3_pollresults.jpg)
 
 ## Summary
 

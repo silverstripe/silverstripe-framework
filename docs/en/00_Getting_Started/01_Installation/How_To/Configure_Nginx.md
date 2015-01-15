@@ -81,11 +81,14 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 		}
 	
 		location ~ \.php$ {
-	                fastcgi_keep_conn on;
-	                fastcgi_pass   127.0.0.1:9000;
-	                fastcgi_index  index.php;
-	                fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-	                include        fastcgi_params;
+			fastcgi_keep_conn on;
+			fastcgi_pass   127.0.0.1:9000;
+			fastcgi_index  index.php;
+			fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			include        fastcgi_params;
+			fastcgi_buffer_size 32k;
+			fastcgi_busy_buffers_size 64k;
+			fastcgi_buffers 4 32k;
 		}
 	}
 
