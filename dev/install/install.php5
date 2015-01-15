@@ -1554,6 +1554,8 @@ HTML;
 
 		if($base != '.') $baseClause = "RewriteBase '$base'\n";
 		else $baseClause = "";
+		if(strpos(strtolower(php_sapi_name()), "cgi") !== false) $cgiClause = "RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]\n";
+		else $cgiClause = "";
 		$modulePath = FRAMEWORK_NAME;
 		$rewrite = <<<TEXT
 # Deny access to templates (but allow from localhost)
@@ -1583,6 +1585,7 @@ ErrorDocument 500 /assets/error-500.html
 	SetEnv HTTP_MOD_REWRITE On
 	RewriteEngine On
 	$baseClause
+	$cgiClause
 
 	# Deny access to potentially sensitive files and folders
 	RewriteRule ^vendor(/|$) - [F,L,NC]

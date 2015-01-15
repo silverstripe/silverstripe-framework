@@ -32,18 +32,10 @@ If the issue does look like a new bug:
  * Describe your environment as detailed as possible: SilverStripe version, Browser, PHP version, Operating System, any installed SilverStripe modules.
  * *(optional)* [Submit a pull request](/misc/contributing/code) which fixes the issue.
 
-Ensure you give us enough information to diagnose your issue:
-
- * Switch your site to "[dev mode](/developer_guides/debugging)". Paste any PHP errors with their stacktraces. A generic "Server Error" message is not enough information.
- * If you suspect a JavaScript or CSS bug, check if it appears in other browsers
- * Use the [Chrome dev tools](https://developers.google.com/chrome-developer-tools/docs/overview) or [Firefox dev tools](https://developer.mozilla.org/en-US/docs/Tools)
- * Use the JavaScript console in your browser to determine if any errors happened there, and paste the complete info into issue description.
- * Use the "Network" panel to determine if any XHR ("Ajax") requests have returned errors, and paste the HTTP headers as well as HTTP response body into the issue description.
-
-Lastly, don't get your hopes up too high. Unless your issue is a blocker affecting a large
-number of users, don't expect SilverStripe developers to jump onto it right away.
-Your issue is a starting point where others with the same problem can collaborate
-with you to develop a fix. 
+Lastly, don't get your hopes up too high. Unless your issue is a blocker 
+affecting a large number of users, don't expect SilverStripe developers to jump 
+onto it right way. Your issue is a starting point where others with the same 
+problem can collaborate with you to develop a fix. 
 
 ## Feature Requests
 

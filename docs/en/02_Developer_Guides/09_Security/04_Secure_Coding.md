@@ -33,7 +33,7 @@ Example:
 	$records = DataObject::get_by_id('MyClass', 3);
 	$records = DataObject::get_one('MyClass', array('"ID" = ?' => 3));
 	$records = MyClass::get()->byID(3);
-	$records = SQLSelect::create()->addWhere(array('"ID"' => 3))->execute();
+	$records = SQLQuery::create()->addWhere(array('"ID"' => 3))->execute();
 
 Parameterised updates and inserts are also supported, but the syntax is a little different
 
@@ -98,7 +98,7 @@ As a rule of thumb, whenever you're creating SQL queries (or just chunks of SQL)
 but there may be cases where you need to take care of escaping yourself. See [coding-conventions](/misc/coding-conventions)
 and [datamodel](/topics/datamodel) for ways to parameterise, cast, and convert your data.
 
-*  `SQLSelect`
+*  `SQLQuery`
 *  `DB::query()`
 *  `DB::preparedQuery()`
 *  `Director::urlParams()`
@@ -454,16 +454,20 @@ file in the assets directory.  This requires PHP to be loaded as an Apache modul
 	php_flag engine off
 	Options -ExecCGI -Includes -Indexes 
 
-### Don't allow access to .yml files
+### Don't allow access to YAML files
 
-Yaml files are often used to store sensitive or semi-sensitive data for use by SilverStripe framework (for instance,
-configuration and test fixtures).
+YAML files are often used to store sensitive or semi-sensitive data for use by 
+SilverStripe, such as configuration files. We block access to any files
+with a `.yml` or `.yaml` extension through the default web server rewriting rules.
+If you need users to access files with this extension,
+you can bypass the rules for a specific directory.
+Here's an example for a `.htaccess` file used by the Apache web server:
 
-You should therefore block access to all yaml files (extension .yml) by default, and white list only yaml files
-you need to serve directly.
+	<Files *.yml>
+		Order allow,deny
+		Allow from all
+	</Files>
 
-See [Apache](/installation/webserver) and [Nginx](/installation/nginx) installation documentation for details 
-specific to your web server
 
 ### User uploaded files
 
@@ -486,6 +490,7 @@ take the following precautions:
    [Cookie Law and Flash Cookies](http://eucookiedirective.com/cookie-law-and-flash-cookies/).
 
 See [the Adobe Flash security page](http://www.adobe.com/devnet/flashplayer/security.html) for more information.
+	
 
 ADMIN privileged users may be allowed to override the above upload restrictions if the
 `File.apply_restrictions_to_admin` config is set to false. By default this is true, which enforces these

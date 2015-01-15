@@ -14,17 +14,15 @@ class BasicAuthTest extends FunctionalTest {
 		parent::setUp();
 
 		// Fixtures assume Email is the field used to identify the log in identity
-		self::$original_unique_identifier_field = Member::config()->unique_identifier_field;
+		Config::nest();
 		Member::config()->unique_identifier_field = 'Email';
 		Security::$force_database_is_ready = true; // Prevents Member test subclasses breaking ready test
+		Member::config()->lock_out_after_incorrect_logins = 10;
 	}
 
 	public function tearDown() {
+		Config::unnest();
 		parent::tearDown();
-
-		BasicAuth::protect_entire_site(false);
-		Member::config()->unique_identifier_field = self::$original_unique_identifier_field;
-		Security::$force_database_is_ready = null;
 	}
 
 	public function testBasicAuthEnabledWithoutLogin() {
@@ -107,6 +105,30 @@ class BasicAuthTest extends FunctionalTest {
 		$_SERVER['PHP_AUTH_PW'] = $origPw;
 	}
 
+	public function testBasicAuthFailureIncreasesFailedLoginCount() {
+		// Prior to login
+		$check = Member::get()->filter('Email', 'failedlogin@test.com')->first();
+		$this->assertEquals(0, $check->FailedLoginCount);
+
+		// First failed attempt
+		$_SERVER['PHP_AUTH_USER'] = 'failedlogin@test.com';
+		$_SERVER['PHP_AUTH_PW'] = 'test';
+		$response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+		$check = Member::get()->filter('Email', 'failedlogin@test.com')->first();
+		$this->assertEquals(1, $check->FailedLoginCount);
+
+		// Second failed attempt
+		$_SERVER['PHP_AUTH_PW'] = 'testwrong';
+		$response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+		$check = Member::get()->filter('Email', 'failedlogin@test.com')->first();
+		$this->assertEquals(2, $check->FailedLoginCount);
+
+		// successful basic auth should reset failed login count
+		$_SERVER['PHP_AUTH_PW'] = 'Password';
+		$response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+		$check = Member::get()->filter('Email', 'failedlogin@test.com')->first();
+		$this->assertEquals(0, $check->FailedLoginCount);
+	}
 }
 
 class BasicAuthTest_ControllerSecuredWithPermission extends Controller implements TestOnly {

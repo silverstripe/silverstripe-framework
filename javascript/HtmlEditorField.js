@@ -572,7 +572,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.find('.field[id$="Anchor_Holder"]').show();
 				}
 
-				if(linkType !== 'email') {
+				if(linkType == 'email') {
+					this.find('.field[id$="Subject_Holder"]').show();
+				} else {
 					this.find('.field[id$="TargetBlank_Holder"]').show();
 				}
 
@@ -587,6 +589,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			getLinkAttributes: function() {
 				var href,
 					target = null,
+					subject = this.find(':input[name=Subject]').val(),
 					anchor = this.find(':input[name=Anchor]').val();
 				
 				// Determine target
@@ -616,6 +619,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					
 					case 'email':
 						href = 'mailto:' + this.find(':input[name=email]').val();
+						if(subject) {
+							href += '?subject=' + encodeURIComponent(subject);
+						}
 						target = null;
 						break;
 
@@ -1093,7 +1099,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			validate: function() {
 				var val = this.val(), orig = val;
-
+				
+				val = $.trim(val);
 				val = val.replace(/^https?:\/\//i, '');
 				if (orig !== val) this.val(val);
 

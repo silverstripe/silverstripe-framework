@@ -357,7 +357,7 @@ class SQLQueryTest extends SapphireTest {
 
 	public function testJoinSubSelect() {
 
-		$query = new SQLQuery();
+		$query = new SQLSelect();
 		$query->setFrom('MyTable');
 		$query->addInnerJoin('(SELECT * FROM MyOtherTable)',
 			'Mot.MyTableID = MyTable.ID', 'Mot');

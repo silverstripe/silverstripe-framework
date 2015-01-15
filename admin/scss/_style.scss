@@ -1559,6 +1559,8 @@ body.cms-dialog {
 			.middleColumn {
 				margin-top: $grid-y*2; // same as left-floated h4
 				margin-left: $grid-x*23; // make room for headline
+				min-width: 0; // fit within available space
+				clear: none; // headline and dropdown on same line
 			}
 			.field.treedropdown {
 				border-bottom: 0; // don't show border, dropdown and gridfield visually belong together

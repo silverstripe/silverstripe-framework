@@ -50,6 +50,14 @@ class BasicAuth {
 		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
 		if(!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) return true;
 
+		$matches = array();
+		if (isset($_SERVER['HTTP_AUTHORIZATION']) &&
+			preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
+			list($name, $password) = explode(':', base64_decode($matches[1]));
+			$_SERVER['PHP_AUTH_USER'] = strip_tags($name);
+			$_SERVER['PHP_AUTH_PW'] = strip_tags($password);
+		}
+
 		$member = null;
 		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 			$member = MemberAuthenticator::authenticate(array(

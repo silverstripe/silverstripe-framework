@@ -46,13 +46,9 @@ documentation.  This helps prevent our documentation from getting out of date.
 
 ## Repositories
 
-*  End-user: [userhelp.silverstripe.org](http://userhelp.silverstripe.org) - a custom SilverStripe project (not open sourced at the moment).
-*  Developer Guides: [doc.silverstripe.org](http://doc.silverstripe.org) - powered by a
-SilverStripe project that uses the ["docsviewer" module](https://github.com/silverstripe/silverstripe-docsviewer)
-to convert Markdown formatted files into searchable HTML pages with index lists.
-Its contents are fetched from different releases automatically every couple of minutes.
-*  Developer API Documentation: [api.silverstripe.org](http://api.silverstripe.org) - powered by a customized
-[phpDocumentor](http://www.phpdoc.org/) template, and is regenerated automatically every night.
+*  End-user: [userhelp.silverstripe.org](http://github.com/silverstripe/userhelp.silverstripe.org)
+*  Developer guides: [doc.silverstripe.org](http://github.com/silverstripe/doc.silverstripe.org)
+*  Developer API documentation: [api.silverstripe.org](http://github.com/silverstripe/api.silverstripe.org)
 
 ## Source control
 

@@ -361,12 +361,6 @@ class DataQuery {
 	 * @return string The resulting SQL query (may be paramaterised)
 	 */
 	public function sql(&$parameters = array()) {
-		if(func_num_args() == 0) {
-			Deprecation::notice(
-				'3.2',
-				'DataQuery::sql() now may produce parameters which are necessary to execute this query'
-			);
-		}
 		return $this->getFinalisedQuery()->sql($parameters);
 	}
 

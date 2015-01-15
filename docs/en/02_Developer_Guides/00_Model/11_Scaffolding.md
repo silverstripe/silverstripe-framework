@@ -6,7 +6,7 @@ summary: A Model-driven approach to defining your application UI.
 The ORM already has a lot of information about the data represented by a `DataObject` through its `$db` property, so 
 SilverStripe will use that information to provide scaffold some interfaces. This is done though [api:FormScaffolder]
 to provide reasonable defaults based on the property type (e.g. a checkbox field for booleans). You can then further 
-customize those fields as required.
+customise those fields as required.
 
 ## Form Fields
 
@@ -32,7 +32,7 @@ An example is `DataObject`, SilverStripe will automatically create your CMS inte
 		}
 	}
 
-To fully customize your form fields, start with an empty FieldList.
+To fully customise your form fields, start with an empty FieldList.
 
 	:::php
 	<?php
@@ -53,11 +53,11 @@ To fully customize your form fields, start with an empty FieldList.
 
 
 You can also alter the fields of built-in and module `DataObject` classes through your own 
-[DataExtension](../extensions), and a call to `DataExtension->updateCMSFields`.
+[DataExtension](/developer_guides/extending/extensions), and a call to `DataExtension->updateCMSFields`.
 
 ## Searchable Fields
 
-The `$searchable_fields` property uses a mixed array format that can be used to further customize your generated admin
+The `$searchable_fields` property uses a mixed array format that can be used to further customise your generated admin
 system. The default is a set of array values listing the fields.
 
 	:::php
@@ -218,7 +218,7 @@ Non-textual elements (such as images and their manipulations) can also be used i
 	  );
 	}
 
-## Related Documenation
+## Related Documentation
 
 * [SearchFilters](searchfilters)
 

@@ -41,7 +41,7 @@ class GDBackend extends Object implements Image_Backend {
 
 		$this->cache = SS_Cache::factory('GDBackend_Manipulations');
 
-		if($filename) {
+		if($filename && is_readable($filename)) {
 			$this->cacheKey = md5(implode('_', array($filename, filemtime($filename))));
 			$this->manipulation = implode('|', $args);
 

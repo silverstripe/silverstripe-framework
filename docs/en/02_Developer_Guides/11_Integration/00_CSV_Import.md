@@ -118,7 +118,7 @@ We're going to use our knowledge from the previous example to import a more soph
 
 Sample CSV Content
 
-	"SpielerNummer","Name","Geburtsdatum","Gruppe"
+	"Number","Name","Birthday","Team"
 	11,"John Doe",1982-05-12,"FC Bayern"
 	12,"Jane Johnson", 1982-05-12,"FC Bayern"
 	13,"Jimmy Dole",,"Schalke 04"
@@ -171,11 +171,11 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 	   public $columnMap = array(
 	      'Number' => 'PlayerNumber', 
 	      'Name' => '->importFirstAndLastName', 
-	      'Geburtsdatum' => 'Birthday', 
-	      'Gruppe' => 'Team.Title', 
+	      'Birthday' => 'Birthday', 
+	      'Team' => 'Team.Title', 
 	   );
 	   public $duplicateChecks = array(
-	      'SpielerNummer' => 'PlayerNumber'
+	      'Number' => 'PlayerNumber'
 	   );
 	   public $relationCallbacks = array(
 	      'Team.Title' => array(

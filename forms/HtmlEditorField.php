@@ -110,7 +110,14 @@ class HtmlEditorField extends TextareaField {
 			// Add default empty title & alt attributes.
 			if(!$img->getAttribute('alt')) $img->setAttribute('alt', '');
 			if(!$img->getAttribute('title')) $img->setAttribute('title', '');
+		
+			// Use this extension point to manipulate images inserted using TinyMCE, e.g. add a CSS class, change default title
+			// $image is the image, $img is the DOM model
+			$this->extend('processImage', $image, $img);
 		}
+
+		// optionally manipulate the HTML after a TinyMCE edit and prior to a save
+		$this->extend('processHTML', $htmlValue);
 
 		// Store into record
 		$record->{$this->name} = $htmlValue->getContent();
@@ -253,6 +260,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					EmailField::create('email', _t('HtmlEditorField.EMAIL', 'Email address')),
 					TreeDropdownField::create('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'ID', 'Title', true),
 					TextField::create('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
+					TextField::create('Subject', _t('HtmlEditorField.SUBJECT', 'Email subject')),
 					TextField::create('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
 					CheckboxField::create('TargetBlank',
 						_t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?')),

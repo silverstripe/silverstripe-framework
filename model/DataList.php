@@ -182,12 +182,6 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param string The resulting SQL query (may be paramaterised)
 	 */
 	public function sql(&$parameters = array()) {
-		if(func_num_args() == 0) {
-			Deprecation::notice(
-				'3.2',
-				'DataList::sql() now may produce parameters which are necessary to execute this query'
-			);
-		}
 		return $this->dataQuery->query()->sql($parameters);
 	}
 
