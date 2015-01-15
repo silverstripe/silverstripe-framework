@@ -333,19 +333,20 @@ class GridFieldAddExistingAutocompleter
 		} else {
 			$labels = array();
 			if($searchFields) foreach($searchFields as $searchField) {
-				$label = singleton($dataClass)->fieldLabel($searchField);
+				$searchField = explode(':', $searchField);
+				$label = singleton($dataClass)->fieldLabel($searchField[0]);
 				if($label) $labels[] = $label;
 			}
 			if($labels) {
 				return _t(
 					'GridField.PlaceHolderWithLabels', 
 					'Find {type} by {name}',  
-					array('type' => singleton($dataClass)->plural_name(), 'name' => implode(', ', $labels))
+					array('type' => singleton($dataClass)->i18n_plural_name(), 'name' => implode(', ', $labels))
 				);
 			} else {
 				return _t(
 					'GridField.PlaceHolder', 'Find {type}',
-					array('type' => singleton($dataClass)->plural_name())
+					array('type' => singleton($dataClass)->i18n_plural_name())
 				);
 			}
 		}
