@@ -38,9 +38,19 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Text', $obj->db('Comment'));
 
 		$obj = new DataObjectTest_ExtendedTeamComment();
+		$dbFields = $obj->db();
 
 		// Assert overloaded fields have correct data type
 		$this->assertEquals('HTMLText', $obj->db('Comment'));
+		$this->assertEquals('HTMLText', $dbFields['Comment'],
+			'Calls to DataObject::db without a field specified return correct data types');
+
+		// assertEquals doesn't verify the order of array elements, so access keys manually to check order:
+		// expected: array('Name' => 'Varchar', 'Comment' => 'HTMLText')
+		reset($dbFields);
+		$this->assertEquals('Name', key($dbFields), 'DataObject::db returns fields in correct order');
+		next($dbFields);
+		$this->assertEquals('Comment', key($dbFields), 'DataObject::db returns fields in correct order');
 	}
 
 	public function testValidObjectsForBaseFields() {
