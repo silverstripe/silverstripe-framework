@@ -74,7 +74,7 @@ class FormScaffolder extends Object {
 		}
 		
 		// add database fields
-		foreach($this->obj->db() as $fieldName => $fieldType) {
+		foreach(array_reverse($this->obj->db()) as $fieldName => $fieldType) {
 			if($this->restrictFields && !in_array($fieldName, $this->restrictFields)) continue;
 			
 			// @todo Pass localized title
