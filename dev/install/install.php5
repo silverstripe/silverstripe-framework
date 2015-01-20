@@ -1494,7 +1494,7 @@ HTML;
 
 		if($base != '.') $baseClause = "RewriteBase '$base'\n";
 		else $baseClause = "";
-		if(strpos(strtolower(php_sapi_name()), "cgi") !== false) $cgiClause = "RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]\n";
+		if(strpos(strtolower(php_sapi_name()), "cgi") !== false) $cgiClause = "RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]\n";
 		else $cgiClause = "";
 		$modulePath = FRAMEWORK_NAME;
 		$rewrite = <<<TEXT
