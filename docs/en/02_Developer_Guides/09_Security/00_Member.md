@@ -91,7 +91,7 @@ and another subclass for the same email-address in the address-database.
 
 Using inheritance to add extra behaviour or data fields to a member is limiting, because you can only inherit from 1
 class. A better way is to use role extensions to add this behaviour. Add the following to your
-`[config.yml](/topics/configuration)`.
+`[config.yml](/developer_guides/configuration/configuration/#configuration-yaml-syntax-and-rules)`.
 
 	:::yml
 	Member:
