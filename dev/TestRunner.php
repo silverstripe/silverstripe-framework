@@ -78,9 +78,9 @@ class TestRunner extends Controller {
 	 * top of the loader stacks.
 	 */
 	public static function use_test_manifest() {
-		$flush = true;
-		if(isset($_GET['flush']) && $_GET['flush'] === '0') {
-			$flush = false;
+		$flush = false;
+		if(isset($_GET['flush']) && ($_GET['flush'] === '1' || $_GET['flush'] == 'all')) {
+			$flush = true;
 		}
 
 		$classManifest = new SS_ClassManifest(
