@@ -132,7 +132,6 @@ class SS_HTTPRequest implements ArrayAccess {
 			$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
 		}
 		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
-			$this->url = $matches[1];
 			$this->extension = $matches[2];
 		}
 		if($this->url) $this->dirParts = preg_split('|/+|', $this->url);
@@ -313,7 +312,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return string
 	 */
 	public function getURL($includeGetVars = false) {
-		$url = ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url; 
+		$url = $this->url;
 
 		if ($includeGetVars) { 
 			// if we don't unset $vars['url'] we end up with /my/url?url=my/url&foo=bar etc 
