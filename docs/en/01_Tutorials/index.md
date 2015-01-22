@@ -14,6 +14,8 @@ These include video screencasts, written tutorials and code examples to get you 
 * [Lesson 3: Adding dynamic content](http://www.silverstripe.org/learn/lessons/lesson-3/)
 * [Lesson 4: Working with multiple templates](http://www.silverstripe.org/learn/lessons/lesson-4-working-with-multiple-templates/)
 * [Lesson 5: The holder/page pattern](http://www.silverstripe.org/learn/lessons/lesson-5-the-holderpage-pattern/)
+* [Lesson 6: Adding Custom Fields to a Page](http://www.silverstripe.org/learn/lessons/lesson-6-adding-custom-fields-to-a-page/)
+* [Lesson 7: Working with Files and Images](http://www.silverstripe.org/learn/lessons/lesson-7-working-with-files-and-images/)
 
 
 ## Help: If you get stuck
