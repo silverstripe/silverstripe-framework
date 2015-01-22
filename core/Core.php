@@ -96,7 +96,7 @@ Injector::set_inst($injector);
 // The coupling is a hack, but it removes an annoying bug where new classes
 // referenced in _config.php files can be referenced during the build process.
 $requestURL = isset($_REQUEST['url']) ? trim($_REQUEST['url'], '/') : false;
-$flush = (isset($_GET['flush']) || $requestURL == 'dev/build' || $requestURL == BASE_URL . '/dev/build');
+$flush = (isset($_GET['flush']) || $requestURL === trim(BASE_URL . '/dev/build', '/'));
 
 global $manifest;
 $manifest = new SS_ClassManifest(BASE_PATH, false, $flush);
