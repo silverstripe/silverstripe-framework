@@ -26,7 +26,7 @@ An example is `DataObject`, SilverStripe will automatically create your CMS inte
 		public function getCMSFields() {
 			// parent::getCMSFields() does all the hard work and creates the fields for Title, IsActive and Content.
 			$fields = parent::getCMSFields();
-			$fields->fieldByName('IsActive')->setTitle('Is active?');
+			$fields->dataFieldByName('IsActive')->setTitle('Is active?');
 			
 			return $fields;
 		}
