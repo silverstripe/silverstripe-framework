@@ -17,6 +17,8 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
 		'DataObjectTest_TeamComment',
+		'DataObjectTest_EquipmentCompany',
+		'DataObjectTest_SubEquipmentCompany',
 		'DataObjectTest\NamespacedClass',
 		'DataObjectTest\RelationClass',
 		'DataObjectTest_ExtendedTeamComment',
@@ -1078,6 +1080,59 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals($changedDO->ClassName, 'DataObjectTest_SubTeam');
 	}
 
+	public function testMultipleManyManyWithSameClass() {
+		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$sponsors = $team->Sponsors();
+		$equipmentSuppliers = $team->EquipmentSuppliers();
+
+		// Check that DataObject::many_many() works as expected
+		list($class, $targetClass, $parentField, $childField, $joinTable) = $team->many_many('Sponsors');
+		$this->assertEquals('DataObjectTest_Team', $class,
+			'DataObject::many_many() didn\'t find the correct base class');
+		$this->assertEquals('DataObjectTest_EquipmentCompany', $targetClass,
+			'DataObject::many_many() didn\'t find the correct target class for the relation');
+		$this->assertEquals('DataObjectTest_EquipmentCompany_SponsoredTeams', $joinTable,
+			'DataObject::many_many() didn\'t find the correct relation table');
+
+		// Check that ManyManyList still works
+		$this->assertEquals(2, $sponsors->count(), 'Rows are missing from relation');
+		$this->assertEquals(1, $equipmentSuppliers->count(), 'Rows are missing from relation');
+
+		// Check everything works when no relation is present
+		$teamWithoutSponsor = $this->objFromFixture('DataObjectTest_Team', 'team3');
+		$this->assertInstanceOf('ManyManyList', $teamWithoutSponsor->Sponsors());
+		$this->assertEquals(0, $teamWithoutSponsor->Sponsors()->count());
+
+		// Check many_many_extraFields still works
+		$equipmentCompany = $this->objFromFixture('DataObjectTest_EquipmentCompany', 'equipmentcompany1');
+		$equipmentCompany->SponsoredTeams()->add($teamWithoutSponsor, array('SponsorFee' => 1000));
+		$sponsoredTeams = $equipmentCompany->SponsoredTeams();
+		$this->assertEquals(1000, $sponsoredTeams->byID($teamWithoutSponsor->ID)->SponsorFee,
+			'Data from many_many_extraFields was not stored/extracted correctly');
+
+		// Check subclasses correctly inherit multiple many_manys
+		$subTeam = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		$this->assertEquals(2, $subTeam->Sponsors()->count(),
+			'Child class did not inherit multiple many_manys');
+		$this->assertEquals(1, $subTeam->EquipmentSuppliers()->count(),
+			'Child class did not inherit multiple many_manys');
+		// Team 2 has one EquipmentCompany sponsor and one SubEquipmentCompany
+		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
+		$this->assertEquals(2, $team2->Sponsors()->count(),
+			'Child class did not inherit multiple belongs_many_manys');
+
+		// Check many_many_extraFields also works from the belongs_many_many side
+		$sponsors = $team2->Sponsors();
+		$sponsors->add($equipmentCompany, array('SponsorFee' => 750));
+		$this->assertEquals(750, $sponsors->byID($equipmentCompany->ID)->SponsorFee,
+			'Data from many_many_extraFields was not stored/extracted correctly');
+
+		$subEquipmentCompany = $this->objFromFixture('DataObjectTest_SubEquipmentCompany', 'subequipmentcompany1');
+		$subTeam->Sponsors()->add($subEquipmentCompany, array('SponsorFee' => 1200));
+		$this->assertEquals(1200, $subTeam->Sponsors()->byID($subEquipmentCompany->ID)->SponsorFee,
+			'Data from inherited many_many_extraFields was not stored/extracted correctly');
+	}
+
 	public function testManyManyExtraFields() {
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
@@ -1563,6 +1618,11 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 		)
 	);
 
+	private static $belongs_many_many = array(
+		'Sponsors' => 'DataObjectTest_EquipmentCompany.SponsoredTeams',
+		'EquipmentSuppliers' => 'DataObjectTest_EquipmentCompany.EquipmentCustomers'
+	);
+
 	private static $summary_fields = array(
 		'Title' => 'Custom Title',
 		'Title.UpperCase' => 'Title',
@@ -1695,6 +1755,25 @@ class DataObjectTest_Company extends DataObject implements TestOnly {
 	private static $has_many = array (
 		'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
 		'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
+	);
+}
+
+class DataObjectTest_EquipmentCompany extends DataObjectTest_Company implements TestOnly {
+	private static $many_many = array(
+		'SponsoredTeams' => 'DataObjectTest_Team',
+		'EquipmentCustomers' => 'DataObjectTest_Team'
+	);
+
+	private static $many_many_extraFields = array(
+		'SponsoredTeams' => array(
+			'SponsorFee' => 'Int'
+		)
+	);
+}
+
+class DataObjectTest_SubEquipmentCompany extends DataObjectTest_EquipmentCompany implements TestOnly {
+	private static $db = array(
+		'SubclassDatabaseField' => 'Varchar'
 	);
 }
 

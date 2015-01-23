@@ -1931,29 +1931,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$manyMany = $SNG_class->stat('belongs_many_many');
 				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
 				if($candidate) {
-					list($candidate,$varName) = explode('.',$candidate);
+					$relationName = null;
+					// Extract class and relation name from dot-notation
+					if(strpos($candidate, '.') !== false) {
+						list($candidate, $relationName) = explode('.', $candidate, 2);
+					}
 
 					$SNG_candidate = singleton($candidate);
 					$candidateManyMany = $SNG_candidate->stat('many_many');
 
-					if( empty($varName) ) {
-						// Find the relation given the class
-						if($candidateManyMany) {
-							foreach($candidateManyMany as $relation => $relatedClass) {
-								if($relatedClass == $class) {
-									$relationName = $relation;
-								}
+					// Find the relation given the class
+					if(!$relationName && $candidateManyMany) {
+						foreach($candidateManyMany as $relation => $relatedClass) {
+							if($relatedClass == $class) {
+								$relationName = $relation;
 							}
-						}	
-					} else {
-						$relationName = $varName;
+						}
 					}
 
-					if( !isset($relationName) ) {
-						user_error("Inverse component of $candidate not found ({$this->class})", E_USER_ERROR);
-					}
-		
-						$extraFields = $SNG_candidate->stat('many_many_extraFields');
+					$extraFields = $SNG_candidate->stat('many_many_extraFields');
 					if(isset($extraFields[$relationName])) {
 						return $extraFields[$relationName];
 					}
@@ -2011,8 +2007,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
 				$candidate = (isset($belongsManyMany[$component])) ? $belongsManyMany[$component] : null;
 				if($candidate) {
-
-					list($candidate,$varName) = explode('.',$candidate);
+					// Extract class and relation name from dot-notation
+					if(strpos($candidate, '.') !== false) {
+						list($candidate, $relationName) = explode('.', $candidate, 2);
+					}
 
 					$childField = $candidate . "ID";
 
@@ -2022,22 +2020,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						user_error("Inverse component of $candidate not found ({$this->class})", E_USER_ERROR);
 					}
 
-					if( empty($varName) ) {
+					if(isset($relationName) && isset($otherManyMany[$relationName])) {
+						$candidateClass = $otherManyMany[$relationName];
+						$joinTable = "{$candidate}_{$relationName}";
+					} else {
 						foreach($otherManyMany as $inverseComponentName => $candidateClass) {
 							if($candidateClass == $class || is_subclass_of($class, $candidateClass)) {
-								$parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
-
-								return array($class, $candidate, $parentField,
-								$childField,"{$candidate}_$inverseComponentName");
+								$joinTable = "{$candidate}_{$inverseComponentName}";
+								break;
 							}
 						}
-					} else {
-						if( isset($otherManyMany[$varName]) ) {
-							$candidateClass = $otherManyMany[$varName];
-							$parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
-							return array($class, $candidate, $parentField, $childField,"{$candidate}_$varName");
-						}
 					}
+
+					if(isset($joinTable)) {
+						$parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
+						return array($class, $candidate, $parentField, $childField, $joinTable);
+					}
+
 					user_error("Orphaned \$belongs_many_many value for $this->class.$component", E_USER_ERROR);
 				}
 			} else {

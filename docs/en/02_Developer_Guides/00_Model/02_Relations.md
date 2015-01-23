@@ -204,6 +204,27 @@ The relationship can also be navigated in [templates](../templates).
 		<% end_if %>
 	<% end_with %>
 
+To specify multiple $many_manys between the same classes, use the dot notation to distinguish them like below:
+
+	:::php
+	<?php
+
+	class Category extends DataObject {
+		
+		private static $many_many = array(
+			'Products' => 'Product',
+			'FeaturedProducts' => 'Product'
+		);
+	}
+
+	class Product extends DataObject {
+		
+		private static $belongs_many_many = array(
+			'Categories' => 'Category.Products',
+			'FeaturedInCategories' => 'Category.FeaturedProducts'
+		);
+	}
+
 ## many_many or belongs_many_many?
 
 If you're unsure about whether an object should take on `many_many` or `belongs_many_many`, the best way to think about it is that the object where the relationship will be edited (i.e. via checkboxes) should contain the `many_many`. For instance, in a `many_many` of Product => Categories, the `Product` should contain the `many_many`, because it is much more likely that the user will select Categories for a Product than vice-versa.
