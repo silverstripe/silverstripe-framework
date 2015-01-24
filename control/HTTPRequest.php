@@ -68,7 +68,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	protected $body;
 	
 	/**
-	 * @var array $allParams Contains an assiciative array of all
+	 * @var array $allParams Contains an associative array of all
 	 * arguments matched in all calls to {@link RequestHandler->handleRequest()}.
 	 * It's a "historical record" that's specific to the current call of
 	 * {@link handleRequest()}, and is only complete once the "last call" to that method is made.
