@@ -2,13 +2,13 @@
 
 /**
  * Tests for DataObject FormField scaffolding
- * 
+ *
  * @package framework
  * @subpackage tests
  *
  */
 class FormScaffolderTest extends SapphireTest {
-	
+
 	protected static $fixture_file = 'FormScaffolderTest.yml';
 
 	protected $extraDataObjects = array(
@@ -16,8 +16,8 @@ class FormScaffolderTest extends SapphireTest {
 		'FormScaffolderTest_Tag',
 		'FormScaffolderTest_Author',
 	);
-	
-	
+
+
 	public function testGetCMSFieldsSingleton() {
 		$article = new FormScaffolderTest_Article;
 		$fields = $article->getCMSFields();
@@ -33,9 +33,9 @@ class FormScaffolderTest extends SapphireTest {
 		$this->assertNotNull($fields->dataFieldByName('AuthorID'),
 			'getCMSFields() includes has_one fields on singletons');
 		$this->assertNull($fields->dataFieldByName('Tags'),
-			'getCMSFields() doesnt include many_many fields if no ID is present');
+			"getCMSFields() doesn't include many_many fields if no ID is present");
 	}
-	
+
 	public function testGetCMSFieldsInstance() {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
@@ -47,21 +47,29 @@ class FormScaffolderTest extends SapphireTest {
 			'getCMSFields() includes has_one fields on instances');
 		$this->assertNotNull($fields->dataFieldByName('Tags'),
 			'getCMSFields() includes many_many fields if ID is present on instances');
+		$this->assertNotNull($fields->dataFieldByName('SubjectOfArticles'),
+			'getCMSFields() includes polymorphic has_many fields if ID is present on instances');
+		$this->assertNull($fields->dataFieldByName('Subject'),
+			"getCMSFields() doesn't include polymorphic has_one field");
+		$this->assertNull($fields->dataFieldByName('SubjectID'),
+			"getCMSFields() doesn't include polymorphic has_one id field");
+		$this->assertNull($fields->dataFieldByName('SubjectClass'),
+			"getCMSFields() doesn't include polymorphic has_one class field");
 	}
-	
+
 	public function testUpdateCMSFields() {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
-		
+
 		$fields = $article1->getCMSFields();
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
-		
+
 		$this->assertNotNull(
 			$fields->dataFieldByName('AddedExtensionField'),
 			'getCMSFields() includes extended fields'
 		);
 	}
-	
+
 	public function testRestrictCMSFields() {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
@@ -76,7 +84,7 @@ class FormScaffolderTest extends SapphireTest {
 		$this->assertNull($fields->dataFieldByName('Content'),
 			'getCMSFields() doesnt include fields left out in a "restrictFields" definition');
 	}
-	
+
 	public function testFieldClassesOnGetCMSFields() {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
@@ -95,7 +103,7 @@ class FormScaffolderTest extends SapphireTest {
 			'getCMSFields() doesnt include fields left out in a "restrictFields" definition'
 		);
 	}
-	
+
 	public function testGetFormFields() {
 		$fields = singleton('FormScaffolderTest_Article')->getFrontEndFields();
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
@@ -107,14 +115,18 @@ class FormScaffolderTest extends SapphireTest {
 
 class FormScaffolderTest_Article extends DataObject implements TestOnly {
 	private static $db = array(
-		'Title' => 'Varchar', 
+		'Title' => 'Varchar',
 		'Content' => 'HTMLText'
 	);
 	private static $has_one = array(
-		'Author' => 'FormScaffolderTest_Author'
+		'Author' => 'FormScaffolderTest_Author',
+		'Subject' => 'DataObject'
 	);
 	private static $many_many = array(
-		'Tags' => 'FormScaffolderTest_Tag', 
+		'Tags' => 'FormScaffolderTest_Tag',
+	);
+	private static $has_many = array(
+		'SubjectOfArticles' => 'FormScaffolderTest_Article.Subject'
 	);
 }
 
@@ -123,15 +135,19 @@ class FormScaffolderTest_Author extends Member implements TestOnly {
 		'ProfileImage' => 'Image'
 	);
 	private static $has_many = array(
-		'Articles' => 'FormScaffolderTest_Article'
+		'Articles' => 'FormScaffolderTest_Article.Author',
+		'SubjectOfArticles' => 'FormScaffolderTest_Article.Subject'
 	);
 }
 class FormScaffolderTest_Tag extends DataObject implements TestOnly {
 	private static $db = array(
-		'Title' => 'Varchar', 
+		'Title' => 'Varchar',
 	);
 	private static $belongs_many_many = array(
 		'Articles' => 'FormScaffolderTest_Article'
+	);
+	private static $has_many = array(
+		'SubjectOfArticles' => 'FormScaffolderTest_Article.Subject'
 	);
 }
 class FormScaffolderTest_ArticleExtension extends DataExtension implements TestOnly {

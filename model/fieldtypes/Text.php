@@ -1,18 +1,18 @@
 <?php
 /**
  * Represents a variable-length string of up to 2 megabytes, designed to store raw text
- * 
+ *
  * Example definition via {@link DataObject::$db}:
  * <code>
  * static $db = array(
  * 	"MyDescription" => "Text",
  * );
  * </code>
- * 
+ *
  * @see HTMLText
  * @see HTMLVarchar
  * @see Varchar
- * 
+ *
  * @package framework
  * @subpackage model
  */
@@ -31,7 +31,7 @@ class Text extends StringField {
 		'LimitWordCount' => 'Text',
 		'LimitWordCountXML' => 'HTMLText',
 	);
-	
+
 	/**
  	 * (non-PHPdoc)
  	 * @see DBField::requireField()
@@ -49,7 +49,7 @@ class Text extends StringField {
 			'parts' => $parts
 		);
 
-		DB::requireField($this->tableName, $this->name, $values, $this->default);
+		DB::require_field($this->tableName, $this->name, $values, $this->default);
 	}
 
 	/**
@@ -69,7 +69,7 @@ class Text extends StringField {
 		if(!is_numeric($sentCount)) {
 			user_error("Text::LimitSentence() expects one numeric argument", E_USER_NOTICE);
 		}
-		
+
 		$output = array();
 		$data = trim(Convert::xml2raw($this->value));
 		$sentences = explode('.', $data);
@@ -79,14 +79,14 @@ class Text extends StringField {
 		for($i = 0; $i < $sentCount; $i++) {
 			if(isset($sentences[$i])) {
 				$sentence = trim($sentences[$i]);
-				if(!empty($sentence)) $output[] .= $sentence;		
+				if(!empty($sentence)) $output[] .= $sentence;
 			}
 		}
 
-		return count($output)==0 ? '' : implode($output, '. ') . '.';				
+		return count($output)==0 ? '' : implode($output, '. ') . '.';
 	}
-	
-	
+
+
 	/**
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
 	 */
@@ -114,12 +114,12 @@ class Text extends StringField {
 		// this needs to be more robust
 		$value = Convert::xml2raw( $this->value /*, true*/ );
 		if(!$value) return '';
-		
+
 		// grab the first paragraph, or, failing that, the whole content
 		if(strpos($value, "\n\n")) $value = substr($value, 0, strpos($value, "\n\n"));
-		$sentences = explode('.', $value);	
+		$sentences = explode('.', $value);
 		$count = count(explode(' ', $sentences[0]));
-		
+
 		// if the first sentence is too long, show only the first $maxWords words
 		if($count > $maxWords) {
 			return implode( ' ', array_slice(explode( ' ', $sentences[0] ), 0, $maxWords)) . '...';
@@ -132,19 +132,19 @@ class Text extends StringField {
 			if(count($sentences) > 0) {
 				$count += count(explode(' ', $sentences[0]));
 			}
-			
+
 			// Ensure that we don't trim half way through a tag or a link
 			$brokenLink = (
 				substr_count($result,'<') != substr_count($result,'>')) ||
 				(substr_count($result,'<a') != substr_count($result,'</a')
 			);
 		} while(($count < $maxWords || $brokenLink) && $sentences && trim( $sentences[0]));
-		
+
 		if(preg_match('/<a[^>]*>/', $result) && !preg_match( '/<\/a>/', $result)) $result .= '</a>';
-		
+
 		return Convert::raw2xml($result);
 	}
-	
+
 	/**
 	* Performs the same function as the big summary, but doesn't trim new paragraphs off data.
 	* Caution: Not XML/HTML-safe - does not respect closing tags.
@@ -157,10 +157,10 @@ class Text extends StringField {
 		$data = $plain ? Convert::xml2raw($this->value, true) : $this->value;
 
 		if(!$data) return '';
-			
-		$sentences = explode('.', $data);	
+
+		$sentences = explode('.', $data);
 		$count = count(explode(' ', $sentences[0]));
-		
+
 		// if the first sentence is too long, show only the first $maxWords words
 		if($count > $maxWords) {
 			return implode(' ', array_slice(explode( ' ', $sentences[0] ), 0, $maxWords)) . '...';
@@ -173,21 +173,21 @@ class Text extends StringField {
 				$result .= '. ';
 				$count += count(explode(' ', $sentences[0]));
 			}
-			
+
 			// Ensure that we don't trim half way through a tag or a link
 			$brokenLink = (
 				substr_count($result,'<') != substr_count($result,'>')) ||
 				(substr_count($result,'<a') != substr_count($result,'</a')
 			);
 		} while(($count < $maxWords || $brokenLink) && $sentences && trim($sentences[0]));
-		
+
 		if(preg_match( '/<a[^>]*>/', $result) && !preg_match( '/<\/a>/', $result)) {
 			$result .= '</a>';
 		}
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
 	 */
@@ -197,7 +197,7 @@ class Text extends StringField {
 		if($plain && $plain != 'html') {
 			$data = Convert::xml2raw($this->value, true);
 			if(!$data) return "";
-		
+
 			// grab the first paragraph, or, failing that, the whole content
 			$pos = strpos($data, "\n\n");
 			if($pos) $data = substr($data, 0, $pos);
@@ -205,28 +205,28 @@ class Text extends StringField {
 			return $data;
 		} else {
 			if(strpos($this->value, "</p>") === false) return $this->value;
-			
+
 			$data = substr($this->value, 0, strpos($this->value, "</p>") + 4);
 
 			if(strlen($data) < 20 && strpos($this->value, "</p>", strlen($data))) {
 				$data = substr($this->value, 0, strpos( $this->value, "</p>", strlen($data)) + 4 );
 			}
-			
-			return $data;			
+
+			return $data;
 		}
 	}
-	
+
 	/**
 	 * Perform context searching to give some context to searches, optionally
 	 * highlighting the search term.
-	 * 
+	 *
 	 * @param int $characters Number of characters in the summary
 	 * @param boolean $string Supplied string ("keywords")
 	 * @param boolean $striphtml Strip HTML?
 	 * @param boolean $highlight Add a highlight <span> element around search query?
 	 * @param String prefix text
-	 * @param String suffix 
-	 * 
+	 * @param String suffix
+	 *
 	 * @return string
 	 */
 	public function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true,
@@ -239,10 +239,10 @@ class Text extends StringField {
 
 		// Remove HTML tags so we don't have to deal with matching tags
 		$text = $striphtml ? $this->NoHTML() : $this->value;
-		
+
 		// Find the search string
 		$position = (int) stripos($text, $string);
-		
+
 		// We want to search string to be in the middle of our block to give it some context
 		$position = max(0, $position - ($characters / 2));
 
@@ -254,11 +254,11 @@ class Text extends StringField {
 
 		$summary = substr($text, $position, $characters);
 		$stringPieces = explode(' ', $string);
-		
+
 		if($highlight) {
 			// Add a span around all key words from the search term as well
 			if($stringPieces) {
-			
+
 				foreach($stringPieces as $stringPiece) {
 					if(strlen($stringPiece) > 2) {
 						$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>",
@@ -268,16 +268,16 @@ class Text extends StringField {
 			}
 		}
 		$summary = trim($summary);
-		
+
 		if($position > 0) $summary = $prefix . $summary;
 		if(strlen($this->value) > ($characters + $position)) $summary = $summary . $suffix;
-		
+
 		return $summary;
 	}
-	
+
 	/**
 	 * Allows a sub-class of TextParser to be rendered.
-	 * 
+	 *
 	 * @see TextParser for implementation details.
 	 * @return string
 	 */
@@ -293,7 +293,7 @@ class Text extends StringField {
 			return Convert::raw2xml($this->value);
 		}
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see DBField::scaffoldFormField()
@@ -307,7 +307,7 @@ class Text extends StringField {
 			return new TextareaField($this->name, $title);
 		}
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see DBField::scaffoldSearchField()

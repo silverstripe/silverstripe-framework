@@ -4,38 +4,38 @@
  * @subpackage tests
  */
 class FileNameFilterTest extends SapphireTest {
-	
+
 	public function testFilter() {
 		$name = 'Brötchen  für allë-mit_Unterstrich!.jpg';
 		$filter = new FileNameFilter();
 		$filter->setTransliterator(false);
 		$this->assertEquals(
-			'Brtchen-fr-all-mit-Unterstrich.jpg', 
+			'Brtchen-fr-all-mit-Unterstrich.jpg',
 			$filter->filter($name)
 		);
 	}
-	
+
 	public function testFilterWithTransliterator() {
 		$name = 'Brötchen  für allë-mit_Unterstrich!.jpg';
 		$filter = new FileNameFilter();
 		$filter->setTransliterator(new SS_Transliterator());
 		$this->assertEquals(
-			'Broetchen-fuer-alle-mit-Unterstrich.jpg', 
+			'Broetchen-fuer-alle-mit-Unterstrich.jpg',
 			$filter->filter($name)
 		);
 	}
-	
+
 	public function testFilterWithCustomRules() {
 		$name = 'Kuchen ist besser.jpg';
 		$filter = new FileNameFilter();
 		$filter->setTransliterator(false);
 		$filter->setReplacements(array('/[\s-]/' => '_'));
 		$this->assertEquals(
-			'Kuchen_ist_besser.jpg', 
+			'Kuchen_ist_besser.jpg',
 			$filter->filter($name)
 		);
 	}
-	
+
 	public function testFilterWithEmptyString() {
 		$name = 'ö ö ö.jpg';
 		$filter = new FileNameFilter();
@@ -45,11 +45,11 @@ class FileNameFilterTest extends SapphireTest {
 			empty($result)
 		);
 		$this->assertStringEndsWith(
-			'.jpg', 
+			'.jpg',
 			$result
 		);
 		$this->assertGreaterThan(
-			strlen('.jpg'), 
+			strlen('.jpg'),
 			strlen($result)
 		);
 	}

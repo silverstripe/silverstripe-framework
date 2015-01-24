@@ -35,7 +35,7 @@ class OembedTest extends SapphireTest {
 		$result = Oembed::get_oembed_from_url('http://www.silverstripe.com/watch12345', false, array('foo'=>'bar'));
 		$this->assertTrue($result!=false);
 		$this->assertEquals($result->getOembedURL(), 'http://www.silverstripe.com/oembed/?format=json&url='
-			. urlencode('http://www.silverstripe.com/watch12345').'&foo=bar', 
+			. urlencode('http://www.silverstripe.com/watch12345').'&foo=bar',
 			'Includes options');
 
 		// Test magic.

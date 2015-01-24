@@ -11,14 +11,14 @@ require_once 'Zend/Currency.php';
 
 /**
  * Implements the "Money" pattern.
- * 
+ *
  * @see http://www.martinfowler.com/eaaCatalog/money.html
  *
  * @todo Support different ways of rounding
  * @todo Equality operators
  * @todo Addition, substraction and allocation of values
  * @todo Model validation for $allowedCurrencies
- * 
+ *
  * @package framework
  * @subpackage model
  */
@@ -38,23 +38,23 @@ class Money extends DBField implements CompositeDBField {
 	 * @var boolean $isChanged
 	 */
 	protected $isChanged = false;
-	
+
 	/**
 	 * @var string $locale
 	 */
 	protected $locale = null;
-	
+
 	/**
 	 * @var Zend_Currency
 	 */
 	protected $currencyLib;
-	
+
 	/**
 	 * Limit the currencies
 	 * @var array $allowedCurrencies
 	 */
 	protected $allowedCurrencies;
-	
+
 	/**
 	 * @param array
 	 */
@@ -62,13 +62,13 @@ class Money extends DBField implements CompositeDBField {
 		"Currency" => "Varchar(3)",
 		"Amount" => 'Decimal(19,4)'
 	);
-	
+
 	public function __construct($name = null) {
 		$this->currencyLib = new Zend_Currency(null, i18n::get_locale());
-		
+
 		parent::__construct($name);
 	}
-	
+
 	public function compositeDatabaseFields() {
 		return self::$composite_db;
 	}
@@ -76,7 +76,7 @@ class Money extends DBField implements CompositeDBField {
 	public function requireField() {
 		$fields = $this->compositeDatabaseFields();
 		if($fields) foreach($fields as $name => $type){
-			DB::requireField($this->tableName, $this->name.$name, $type);
+			DB::require_field($this->tableName, $this->name.$name, $type);
 		}
 	}
 
@@ -87,7 +87,7 @@ class Money extends DBField implements CompositeDBField {
 			$manipulation['fields'][$this->name.'Currency']
 				= DBField::create_field('Varchar', $this->getCurrency())->nullValue();
 		}
-		
+
 		if($this->getAmount()) {
 			$manipulation['fields'][$this->name.'Amount'] = $this->getAmount();
 		} else {
@@ -95,7 +95,7 @@ class Money extends DBField implements CompositeDBField {
 				= DBField::create_field('Decimal', $this->getAmount())->nullValue();
 		}
 	}
-	
+
 	public function addToQuery(&$query) {
 		parent::addToQuery($query);
 		$query->selectField(sprintf('"%sAmount"', $this->name));
@@ -120,7 +120,7 @@ class Money extends DBField implements CompositeDBField {
 				} else if($currency = (string)$this->config()->default_currency) {
 					$this->setCurrency($currency, $markChanged);
 				}
-				
+
 				$this->setAmount($record[$this->name . 'Amount'], $markChanged);
 			} else {
 				$this->value = $this->nullValue();
@@ -152,7 +152,7 @@ class Money extends DBField implements CompositeDBField {
 		}
 		return (is_numeric($amount)) ? $this->currencyLib->toCurrency($amount, $options) : '';
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -160,7 +160,7 @@ class Money extends DBField implements CompositeDBField {
 		$options['display'] = Zend_Currency::USE_SHORTNAME;
 		return $this->Nice($options);
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -175,7 +175,7 @@ class Money extends DBField implements CompositeDBField {
 	public function getCurrency() {
 		return $this->currency;
 	}
-	
+
 	/**
 	 * @param string
 	 */
@@ -183,16 +183,16 @@ class Money extends DBField implements CompositeDBField {
 		$this->currency = $currency;
 		if($markChanged) $this->isChanged = true;
 	}
-	
+
 	/**
 	 * @todo Return casted Float DBField?
-	 * 
+	 *
 	 * @return float
 	 */
 	public function getAmount() {
 		return $this->amount;
 	}
-	
+
 	/**
 	 * @param float $amount
 	 */
@@ -200,14 +200,14 @@ class Money extends DBField implements CompositeDBField {
 		$this->amount = (float)$amount;
 		if($markChanged) $this->isChanged = true;
 	}
-	
+
 	/**
 	 * @return boolean
 	 */
 	public function exists() {
 		return ($this->getCurrency() && is_numeric($this->getAmount()));
 	}
-	
+
 	/**
 	 * @return boolean
 	 */
@@ -215,11 +215,11 @@ class Money extends DBField implements CompositeDBField {
 		$a = $this->getAmount();
 		return (!empty($a) && is_numeric($a));
 	}
-	
+
 	public function isChanged() {
 		return $this->isChanged;
 	}
-		
+
 	/**
 	 * @param string $locale
 	 */
@@ -227,65 +227,65 @@ class Money extends DBField implements CompositeDBField {
 		$this->locale = $locale;
 		$this->currencyLib->setLocale($locale);
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getLocale() {
 		return ($this->locale) ? $this->locale : i18n::get_locale();
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getSymbol($currency = null, $locale = null) {
-		
+
 		if($locale === null) $locale = $this->getLocale();
 		if($currency === null) $currency = $this->getCurrency();
-		
+
 		return $this->currencyLib->getSymbol($currency, $locale);
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getShortName($currency = null, $locale = null) {
 		if($locale === null) $locale = $this->getLocale();
 		if($currency === null) $currency = $this->getCurrency();
-		
+
 		return $this->currencyLib->getShortName($currency, $locale);
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getName($currency = null, $locale = null) {
 		if($locale === null) $locale = $this->getLocale();
 		if($currency === null) $currency = $this->getCurrency();
-		
+
 		return $this->currencyLib->getName($currency, $locale);
 	}
-	
+
 	/**
 	 * @param array $arr
 	 */
 	public function setAllowedCurrencies($arr) {
 		$this->allowedCurrencies = $arr;
 	}
-	
+
 	/**
 	 * @return array
 	 */
 	public function getAllowedCurrencies() {
 		return $this->allowedCurrencies;
 	}
-	
+
 	/**
 	 * Returns a CompositeField instance used as a default
 	 * for form scaffolding.
 	 *
 	 * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
-	 * 
+	 *
 	 * @param string $title Optional. Localized title of the generated instance
 	 * @return FormField
 	 */
@@ -293,10 +293,10 @@ class Money extends DBField implements CompositeDBField {
 		$field = new MoneyField($this->name);
 		$field->setAllowedCurrencies($this->getAllowedCurrencies());
 		$field->setLocale($this->getLocale());
-		
+
 		return $field;
 	}
-	
+
 	/**
 	 * For backwards compatibility reasons
 	 * (mainly with ecommerce module),

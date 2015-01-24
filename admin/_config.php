@@ -35,11 +35,11 @@ HtmlEditorConfig::get('cms')->enablePlugins(array(
 	'ssbuttons' => sprintf('../../../%s/tinymce_ssbuttons/editor_plugin_src.js', THIRDPARTY_DIR)
 ));
 HtmlEditorConfig::get('cms')->enablePlugins('advimagescale');
-			
+
 HtmlEditorConfig::get('cms')->insertButtonsBefore('formatselect', 'styleselect');
-HtmlEditorConfig::get('cms')->addButtonsToLine(2, 
+HtmlEditorConfig::get('cms')->addButtonsToLine(2,
 	'ssmedia', 'ssflash', 'sslink', 'unlink', 'anchor', 'separator','code', 'fullscreen', 'separator');
-			
+
 HtmlEditorConfig::get('cms')->removeButtons('tablecontrols');
 HtmlEditorConfig::get('cms')->addButtonsToLine(3, 'tablecontrols');
 

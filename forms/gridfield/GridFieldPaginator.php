@@ -1,21 +1,21 @@
 <?php
 /**
- * GridFieldPaginator paginates the {@link GridField} list and adds controls 
+ * GridFieldPaginator paginates the {@link GridField} list and adds controls
  * to the bottom of the {@link GridField}.
- * 
+ *
  * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
-	
+
 	/**
 	 * Specifies default items per page
-	 * 
+	 *
 	 * @config
 	 * @var int
 	 */
 	private static $default_items_per_page = 15;
-	
+
 	/**
 	 * @var int
 	 */
@@ -23,7 +23,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 
 	/**
 	 * Which template to use for rendering
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $itemClass = 'GridFieldPaginator_Row';
@@ -41,18 +41,18 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		$this->itemsPerPage = $itemsPerPage
 			?: Config::inst()->get('GridFieldPaginator', 'default_items_per_page');
 	}
-	
+
 	/**
 	 * Determine what happens when this component is used with a list that isn't {@link SS_Filterable}.
-	 * 
+	 *
 	 *  - true: An exception is thrown
 	 *  - false: This component will be ignored - it won't make any changes to the GridField.
-	 * 
+	 *
 	 * By default, this is set to true so that it's clearer what's happening, but the predefined
 	 * {@link GridFieldConfig} subclasses set this to false for flexibility.
 	 */
 	public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType) {
-		$this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType; 
+		$this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
 	}
 
 	/**
@@ -61,7 +61,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	public function getThrowExceptionOnBadDataType() {
 		return $this->throwExceptionOnBadDataType;
 	}
-	
+
 	/**
 	 * Check that this dataList is of the right data type.
 	 * Returns false if it's a bad data type, and if appropriate, throws an exception.
@@ -85,7 +85,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 */
 	public function getActions($gridField) {
 		if(!$this->checkDataType($gridField->getList())) return;
-		
+
 		return array('paginate');
 	}
 
@@ -99,28 +99,28 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 */
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		if(!$this->checkDataType($gridField->getList())) return;
-		
+
 		if($actionName !== 'paginate') {
 			return;
 		}
 		$state = $this->getGridPagerState($gridField);
 		$state->currentPage = (int)$arguments;
 	}
-	
+
 	protected $totalItems = 0;
-	
+
 	/**
 	 * Retrieves/Sets up the state object used to store and retrieve information
 	 * about the current paging details of this GridField
 	 * @param GridField $gridField
-	 * @return GridState_Data 
+	 * @return GridState_Data
 	 */
 	protected function getGridPagerState(GridField $gridField) {
 		$state = $gridField->State->GridFieldPaginator;
-		
+
 		// Force the state to the initial page if none is set
-		if(empty($state->currentPage)) $state->currentPage = 1;
-		
+		$state->currentPage(1);
+
 		return $state;
 	}
 
@@ -128,28 +128,28 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 *
 	 * @param GridField $gridField
 	 * @param SS_List $dataList
-	 * @return SS_List 
+	 * @return SS_List
 	 */
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
-		
+
 		if(!$this->checkDataType($dataList)) return $dataList;
-		
+
 		$state = $this->getGridPagerState($gridField);
-		
+
 		// Update item count prior to filter. GridFieldPageCount will rely on this value
 		$this->totalItems = $dataList->count();
 
 		if(!($dataList instanceof SS_Limitable) || ($dataList instanceof UnsavedRelationList)) {
 			return $dataList;
 		}
-		
+
 		$startRow = $this->itemsPerPage * ($state->currentPage - 1);
 		return $dataList->limit((int)$this->itemsPerPage, (int)$startRow);
 	}
-	
+
 	/**
 	 * Determines arguments to be passed to the template for building this field
-	 * @return ArrayData|null If paging is available this will be an ArrayData 
+	 * @return ArrayData|null If paging is available this will be an ArrayData
 	 * object of paging details with these parameters:
 	 * <ul>
 	 *	<li>OnlyOnePage:				boolean - Is there only one page?</li>
@@ -166,7 +166,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 */
 	public function getTemplateParameters(GridField $gridField) {
 		if(!$this->checkDataType($gridField->getList())) return null;
-		
+
 		$state = $this->getGridPagerState($gridField);
 
 		// Figure out which page and record range we're on
@@ -182,8 +182,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		$lastShownRecord = $state->currentPage * $this->itemsPerPage;
 		if($lastShownRecord > $totalRows)
 			$lastShownRecord = $totalRows;
-		
-		// If there is only 1 page for all the records in list, we don't need to go further 
+
+		// If there is only 1 page for all the records in list, we don't need to go further
 		// to sort out those first page, last page, pre and next pages, etc
 		// we are not render those in to the paginator.
 		if($totalPages === 1){
@@ -245,7 +245,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return array
 	 */
 	public function getHTMLFragments($gridField) {
-		
+
 		$forTemplate = $this->getTemplateParameters($gridField);
 		if($forTemplate) {
 			return array(

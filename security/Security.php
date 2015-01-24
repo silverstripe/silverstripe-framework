@@ -4,8 +4,8 @@
  * @package framework
  * @subpackage security
  */
-class Security extends Controller {
-	
+class Security extends Controller implements TemplateGlobalProvider {
+
 	private static $allowed_actions = array(
 		'index',
 		'login',
@@ -22,7 +22,7 @@ class Security extends Controller {
 
 	/**
 	 * Default user name. Only used in dev-mode by {@link setDefaultAdmin()}
-	 * 
+	 *
 	 * @var string
 	 * @see setDefaultAdmin()
 	 */
@@ -30,7 +30,7 @@ class Security extends Controller {
 
 	/**
 	 * Default password. Only used in dev-mode by {@link setDefaultAdmin()}
-	 * 
+	 *
 	 * @var string
 	 * @see setDefaultAdmin()
 	 */
@@ -55,33 +55,37 @@ class Security extends Controller {
 	private static $password_encryption_algorithm = 'blowfish';
 
 	/**
-	 * Showing "Remember me"-checkbox 
-	 * on loginform, and saving encrypted credentials to a cookie. 
+	 * Showing "Remember me"-checkbox
+	 * on loginform, and saving encrypted credentials to a cookie.
  	 *
  	 * @config
-	 * @var bool 
-	 */ 
+	 * @var bool
+	 */
 	private static $autologin_enabled = true;
-	
+
 	/**
 	 * Determine if login username may be remembered between login sessions
 	 * If set to false this will disable autocomplete and prevent username persisting in the session
-	 * 
+	 *
 	 * @config
 	 * @var bool
 	 */
 	private static $remember_username = true;
-	
+
 	/**
 	 * Location of word list to use for generating passwords
 	 *
 	 * @config
 	 * @var string
 	 */
-	protected static $word_list = './wordlist.txt';
-	
+	private static $word_list = './wordlist.txt';
+
+	/**
+	 * @config
+	 * @var string
+	 */
 	private static $template = 'BlankPage';
-	
+
 	/**
 	 * Template thats used to render the pages.
 	 *
@@ -89,7 +93,7 @@ class Security extends Controller {
 	 * @config
 	 */
 	private static $template_main = 'Page';
-	
+
 	/**
 	 * Default message set used in permission failures.
 	 *
@@ -105,7 +109,25 @@ class Security extends Controller {
 	 * @var String
 	 */
 	private static $token;
-	
+
+	/**
+	 * The default login URL
+	 *
+	 * @config
+	 *
+	 * @var string
+	 */
+	private static $login_url = "Security/login";
+
+	/**
+	 * The default logout URL
+	 *
+	 * @config
+	 *
+	 * @var string
+	 */
+	private static $logout_url = "Security/logout";
+
 	/**
 	 * Get location of word list file
 	 *
@@ -115,7 +137,7 @@ class Security extends Controller {
 		Deprecation::notice('3.2', 'Use the "Security.word_list" config setting instead');
 		return self::config()->word_list;
 	}
-	
+
 	/**
 	 * Enable or disable recording of login attempts
 	 * through the {@link LoginRecord} object.
@@ -124,13 +146,13 @@ class Security extends Controller {
 	 * @var boolean $login_recording
 	 */
 	private static $login_recording = false;
-	
+
 	/**
 	 * @var boolean If set to TRUE or FALSE, {@link database_is_ready()}
 	 * will always return FALSE. Used for unit testing.
 	 */
 	static $force_database_is_ready = null;
-	
+
 	/**
 	 * When the database has once been verified as ready, it will not do the
 	 * checks again.
@@ -149,7 +171,7 @@ class Security extends Controller {
 		Deprecation::notice('3.2', 'Use the "Security.word_list" config setting instead');
 		self::config()->word_list = $wordListFile;
 	}
-	
+
 	/**
 	 * Set the default message set used in permissions failures.
 	 *
@@ -191,9 +213,9 @@ class Security extends Controller {
 	 */
 	public static function permissionFailure($controller = null, $messageSet = null) {
 		self::set_ignore_disallowed_actions(true);
-		
+
 		if(!$controller) $controller = Controller::curr();
-		
+
 		if(Director::is_ajax()) {
 			$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
 			$response->setStatusCode(403);
@@ -214,15 +236,15 @@ class Security extends Controller {
 				} else {
 					$messageSet = array(
 						'default' => _t(
-							'Security.NOTEPAGESECURED', 
+							'Security.NOTEPAGESECURED',
 							"That page is secured. Enter your credentials below and we will send "
 								. "you right along."
 						),
 						'alreadyLoggedIn' => _t(
-							'Security.ALREADYLOGGEDIN', 
+							'Security.ALREADYLOGGEDIN',
 							"You don't have access to this page.  If you have another account that "
 								. "can access that page, you can log in again below.",
-							
+
 							"%s will be replaced with a link to log in."
 						),
 						'logInAgain' => _t(
@@ -312,6 +334,7 @@ class Security extends Controller {
 		} else {
 			return Authenticator::get_default_authenticator();
 		}
+
 	}
 
 	/**
@@ -427,7 +450,7 @@ class Security extends Controller {
 	 * @param string $action
 	 * @return array Template list
 	 */
-	protected function getTemplatesFor($action) {
+	public function getTemplatesFor($action) {
 		return array("Security_{$action}", 'Security', $this->stat('template_main'), 'BlankPage');
 	}
 
@@ -438,39 +461,23 @@ class Security extends Controller {
 	 * @return string
 	 */
 	protected function generateLoginFormSet($forms) {
-		// Include resources
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(FRAMEWORK_DIR . '/css/Security_login.css');
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TabSet.js');
-		
-		$content = '<div id="Form_EditForm">';
-		$content .= '<div class="ss-tabset">';
-		$content .= '<ul>';
-		$contentForms = '';
-
-		foreach($forms as $form) {
-			$content .= "<li><a href=\"#{$form->FormName()}_tab\">"
-				. $form->getAuthenticator()->get_name()
-				. "</a></li>\n";
-
-			$contentForms .= '<div class="tab" id="' . $form->FormName() . '_tab">'
-				. $form->forTemplate() . "</div>\n";
-		}
-
-		$content .= "</ul>\n" . $contentForms . "\n</div>\n</div>\n";
-		return $content;
+		$viewData = new ArrayData(array(
+			'Forms' => new ArrayList($forms),
+		));
+		return $viewData->renderWith(
+			$this->getIncludeTemplate('MultiAuthenticatorLogin')
+		);
 	}
 
 	/**
 	 * Get the HTML Content for the $Content area during login
 	 *
+	 * @param string &$messageType Type of message, if available, passed back to caller
 	 * @return string Message in HTML format
 	 */
-	protected function getLoginMessage() {
+	protected function getLoginMessage(&$messageType = null) {
 		$message = Session::get('Security.Message.message');
+		$messageType = null;
 		if(empty($message)) return null;
 
 		$messageType = Session::get('Security.Message.type');
@@ -485,20 +492,20 @@ class Security extends Controller {
 	/**
 	 * Show the "login" page
 	 *
+	 * For multiple authenticators, Security_MultiAuthenticatorLogin is used.
+	 * See getTemplatesFor and getIncludeTemplate for how to override template logic
+	 *
 	 * @return string Returns the "login" page as HTML code.
 	 */
 	public function login() {
 		// Check pre-login process
 		if($response = $this->preLogin()) return $response;
 
-		// Legacy: Allow projects to use custom mysite/css/tabs.css here
-		$customCSS = project() . '/css/tabs.css';
-		if(Director::fileExists($customCSS)) {
-			Requirements::css($customCSS);
-		}
-
 		// Get response handler
 		$controller = $this->getResponseController(_t('Security.LOGIN', 'Log in'));
+
+		// if the controller calls Director::redirect(), this will break early
+		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
 		$forms = $this->GetLoginForms();
 		if(!count($forms)) {
@@ -506,9 +513,13 @@ class Security extends Controller {
 				E_USER_ERROR);
 		}
 
-		// if the controller calls Director::redirect(), this will break early
-		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
-		
+		// Handle any form messages from validation, etc.
+		$messageType = '';
+		$message = $this->getLoginMessage($messageType);
+
+		// We've displayed the message in the form output, so reset it for the next run.
+		Session::clear('Security.Message');
+
 		// only display tabs when more than one authenticator is provided
 		// to save bandwidth and reduce the amount of custom styling needed 
 		if(count($forms) > 1) {
@@ -517,28 +528,24 @@ class Security extends Controller {
 			$content = $forms[0]->forTemplate();
 		}
 		
-		if($message = $this->getLoginMessage()) {
-			$customisedController = $controller->customise(array(
-				"Content" => $message,
-				"Form" => $content,
-			));
-		} else {
-			$customisedController = $controller->customise(array(
-				"Form" => $content,
-			));
-		}
-		
-		Session::clear('Security.Message');
+		// Finally, customise the controller to add any form messages and the form.
+		$customisedController = $controller->customise(array(
+			"Message" => $message,
+			"MessageType" => $messageType,
+			"Form" => $content,
+		));
 
-		// custom processing
-		return $customisedController->renderWith($this->getTemplatesFor('login'));
+		// Return the customised controller
+		return $customisedController->renderWith(
+			$this->getTemplatesFor('login')
+		);
 	}
-	
+
 	public function basicauthlogin() {
 		$member = BasicAuth::requireLogin("SilverStripe login", 'ADMIN');
 		$member->LogIn();
 	}
-	
+
 	/**
 	 * Show the "lost password" page
 	 *
@@ -551,16 +558,16 @@ class Security extends Controller {
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
 		$customisedController = $controller->customise(array(
-			'Content' => 
-				'<p>' . 
+			'Content' =>
+				'<p>' .
 				_t(
-					'Security.NOTERESETPASSWORD', 
+					'Security.NOTERESETPASSWORD',
 					'Enter your e-mail address and we will send you a link with which you can reset your password'
-				) . 
+				) .
 				'</p>',
 			'Form' => $this->LostPasswordForm(),
 		));
-		
+
 		//Controller::$currentController = $controller;
 		return $customisedController->renderWith($this->getTemplatesFor('lostpassword'));
 	}
@@ -592,7 +599,7 @@ class Security extends Controller {
 	 * Show the "password sent" page, after a user has requested
 	 * to reset their password.
 	 *
-	 * @param SS_HTTPRequest $request The SS_HTTPRequest for this action. 
+	 * @param SS_HTTPRequest $request The SS_HTTPRequest for this action.
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
@@ -608,14 +615,14 @@ class Security extends Controller {
 				array('email' => $email)),
 			'Content' =>
 				"<p>"
-				. _t('Security.PASSWORDSENTTEXT', 
+				. _t('Security.PASSWORDSENTTEXT',
 					"Thank you! A reset link has been sent to '{email}', provided an account exists for this email"
-					. " address.", 
+					. " address.",
 					array('email' => $email))
 				. "</p>",
 			'Email' => $email
 		));
-		
+
 		//Controller::$currentController = $controller;
 		return $customisedController->renderWith($this->getTemplatesFor('passwordsent'));
 	}
@@ -637,7 +644,7 @@ class Security extends Controller {
 		$selfController = new $selfControllerClass();
 		return $selfController->Link('changepassword') . "?m={$member->ID}&t=$autologinToken";
 	}
-	
+
 	/**
 	 * Show the "change password" page.
 	 * This page can either be called directly by logged-in users
@@ -645,7 +652,7 @@ class Security extends Controller {
 	 * or through a link emailed through {@link lostpassword()}.
 	 * In this case no old password is required, authentication is ensured
 	 * through the Member.AutoLoginHash property.
-	 * 
+	 *
 	 * @see ChangePasswordForm
 	 *
 	 * @return string Returns the "change password" page as HTML code.
@@ -666,15 +673,20 @@ class Security extends Controller {
 		if(isset($_REQUEST['t']) && $member && $member->validateAutoLoginToken($_REQUEST['t'])) {
 			// On first valid password reset request redirect to the same URL without hash to avoid referrer leakage.
 
+			// if there is a current member, they should be logged out
+			if ($curMember = Member::currentUser()) {
+				$curMember->logOut();
+			}
+
 			// Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
 			Session::set('AutoLoginHash', $member->encryptWithUserSettings($_REQUEST['t']));
-			
+
 			return $this->redirect($this->Link('changepassword'));
 		} elseif(Session::get('AutoLoginHash')) {
 			// Subsequent request after the "first load with hash" (see previous if clause).
 			$customisedController = $controller->customise(array(
 				'Content' =>
-					'<p>' . 
+					'<p>' .
 					_t('Security.ENTERNEWPASSWORD', 'Please enter a new password.') .
 					'</p>',
 				'Form' => $this->ChangePasswordForm(),
@@ -682,7 +694,7 @@ class Security extends Controller {
 		} elseif(Member::currentUser()) {
 			// Logged in user requested a password change form.
 			$customisedController = $controller->customise(array(
-				'Content' => '<p>' 
+				'Content' => '<p>'
 					. _t('Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>',
 				'Form' => $this->ChangePasswordForm()));
 
@@ -711,7 +723,7 @@ class Security extends Controller {
 
 		return $customisedController->renderWith($this->getTemplatesFor('changepassword'));
 	}
-	
+
 	/**
 	 * Factory method for the lost password form
 	 *
@@ -722,17 +734,27 @@ class Security extends Controller {
 	}
 
 	/**
+	 * Gets the template for an include used for security.
+	 * For use in any subclass.
+	 *
+	 * @return string|array Returns the template(s) for rendering
+	 */
+	public function getIncludeTemplate($name) {
+		return array('Security_' . $name);
+	}
+
+	/**
 	 * Return an existing member with administrator privileges, or create one of necessary.
-	 * 
+	 *
 	 * Will create a default 'Administrators' group if no group is found
 	 * with an ADMIN permission. Will create a new 'Admin' member with administrative permissions
-	 * if no existing Member with these permissions is found. 
-	 * 
+	 * if no existing Member with these permissions is found.
+	 *
 	 * Important: Any newly created administrator accounts will NOT have valid
 	 * login credentials (Email/Password properties), which means they can't be used for login
 	 * purposes outside of any default credentials set through {@link Security::setDefaultAdmin()}.
-	 * 
-	 * @return Member 
+	 *
+	 * @return Member
 	 */
 	public static function findAnAdministrator() {
 		// coupling to subsites module
@@ -746,11 +768,11 @@ class Security extends Controller {
 
 		// find a group with ADMIN permission
 		$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
-		
+
 		if(is_callable('Subsite::changeSubsite')) {
 			Subsite::changeSubsite($origSubsite);
 		}
-		
+
 		if ($adminGroup) {
 			$member = $adminGroup->Members()->First();
 		}
@@ -759,7 +781,7 @@ class Security extends Controller {
 			singleton('Group')->requireDefaultRecords();
 			$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
 		}
-		
+
 		if(!$member) {
 			singleton('Member')->requireDefaultRecords();
 			$member = Permission::get_members_by_permission('ADMIN')->First();
@@ -791,7 +813,7 @@ class Security extends Controller {
 
 	/**
 	 * Set a default admin in dev-mode
-	 * 
+	 *
 	 * This will set a static default-admin which is not existing
 	 * as a database-record. By this workaround we can test pages in dev-mode
 	 * with a unified login. Submitted login-credentials are first checked
@@ -809,13 +831,13 @@ class Security extends Controller {
 		self::$default_username = $username;
 		self::$default_password = $password;
 	}
-	
+
 	/**
 	 * Checks if the passed credentials are matching the default-admin.
 	 * Compares cleartext-password set through Security::setDefaultAdmin().
-	 * 
+	 *
 	 * @param string $username
-	 * @param string $password 
+	 * @param string $password
 	 * @return bool
 	 */
 	public static function check_default_admin($username, $password) {
@@ -825,12 +847,12 @@ class Security extends Controller {
 			&& self::has_default_admin()
 		);
 	}
-	
+
 	/**
 	 * Check that the default admin account has been set.
 	 */
 	public static function has_default_admin() {
-		return !empty(self::$default_username) && !empty(self::$default_password);		
+		return !empty(self::$default_username) && !empty(self::$default_password);
 	}
 
 	/**
@@ -889,10 +911,10 @@ class Security extends Controller {
 	 */
 	public static function set_password_encryption_algorithm($algorithm) {
 		Deprecation::notice('3.2', 'Use the "Security.password_encryption_algorithm" config setting instead');
-		
+
 		self::config()->password_encryption_algorithm = $algorithm;
 	}
-	
+
 	/**
 	 * @deprecated 3.2 Use the "Security.password_encryption_algorithm" config setting instead
 	 * @return String
@@ -919,8 +941,8 @@ class Security extends Controller {
 	 *  password and the used salt in the form:
 	 * <code>
 	 * 	array(
-	 * 	'password' => string, 
-	 * 	'salt' => string, 
+	 * 	'password' => string,
+	 * 	'salt' => string,
 	 * 	'algorithm' => string,
 	 * 	'encryptor' => PasswordEncryptor instance
 	 * 	)
@@ -932,12 +954,12 @@ class Security extends Controller {
 	public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null) {
 		// Fall back to the default encryption algorithm
 		if(!$algorithm) $algorithm = self::config()->password_encryption_algorithm;
-		
+
 		$e = PasswordEncryptor::create_for_algorithm($algorithm);
 
 		// New salts will only need to be generated if the password is hashed for the first time
 		$salt = ($salt) ? $salt : $e->salt($password);
-		
+
 		return array(
 			'password' => $e->encrypt($password, $salt, $member),
 			'salt' => $salt,
@@ -945,11 +967,11 @@ class Security extends Controller {
 			'encryptor' => $e
 		);
 	}
-	
+
 	/**
 	 * Checks the database is in a state to perform security checks.
 	 * See {@link DatabaseAdmin->init()} for more information.
-	 * 
+	 *
 	 * @return bool
 	 */
 	public static function database_is_ready() {
@@ -957,33 +979,36 @@ class Security extends Controller {
 		if(self::$force_database_is_ready !== NULL) return self::$force_database_is_ready;
 
 		if(self::$database_is_ready) return self::$database_is_ready;
-		
+
 		$requiredTables = ClassInfo::dataClassesFor('Member');
 		$requiredTables[] = 'Group';
 		$requiredTables[] = 'Permission';
-		
+
 		foreach($requiredTables as $table) {
+			// Skip test classes, as not all test classes are scaffolded at once
+			if(is_subclass_of($table, 'TestOnly')) continue;
+
 			// if any of the tables aren't created in the database
 			if(!ClassInfo::hasTable($table)) return false;
 
 			// HACK: DataExtensions aren't applied until a class is instantiated for
 			// the first time, so create an instance here.
 			singleton($table);
-		
+
 			// if any of the tables don't have all fields mapped as table columns
-			$dbFields = DB::fieldList($table);
+			$dbFields = DB::field_list($table);
 			if(!$dbFields) return false;
-			
-			$objFields = DataObject::database_fields($table);
+
+			$objFields = DataObject::database_fields($table, false);
 			$missingFields = array_diff_key($objFields, $dbFields);
-			
+
 			if($missingFields) return false;
 		}
 		self::$database_is_ready = true;
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Enable or disable recording of login attempts
 	 * through the {@link LoginRecord} object.
@@ -995,7 +1020,7 @@ class Security extends Controller {
 		Deprecation::notice('3.2', 'Use the "Security.login_recording" config setting instead');
 		self::$login_recording = (bool)$bool;
 	}
-	
+
 	/**
 	 * @deprecated 3.2 Use the "Security.login_recording" config setting instead
 	 * @return boolean
@@ -1004,7 +1029,7 @@ class Security extends Controller {
 		Deprecation::notice('3.2', 'Use the "Security.login_recording" config setting instead');
 		return self::$login_recording;
 	}
-	
+
 	/**
 	 * @config
 	 * @var string Set the default login dest
@@ -1013,7 +1038,7 @@ class Security extends Controller {
 	 * By default, this is set to the homepage.
 	 */
 	private static $default_login_dest = "";
-	
+
 	/**
 	 * @deprecated 3.2 Use the "Security.default_login_dest" config setting instead
 	 */
@@ -1033,7 +1058,7 @@ class Security extends Controller {
 	}
 
 	protected static $ignore_disallowed_actions = false;
-	
+
 	/**
 	 * Set to true to ignore access to disallowed actions, rather than returning permission failure
 	 * Note that this is just a flag that other code needs to check with Security::ignore_disallowed_actions()
@@ -1047,22 +1072,52 @@ class Security extends Controller {
 		return self::$ignore_disallowed_actions;
 	}
 
-	/** @config */
-	private static $login_url = "Security/login";
 
 	/**
 	 * Set a custom log-in URL if you have built your own log-in page.
+	 *
+	 * @deprecated 3.2 Use the "Security.login_url" config setting instead.
 	 */
 	public static function set_login_url($loginUrl) {
-		self::$login_url = $loginUrl;
+		Deprecation::notice('3.2', 'Use the "Security.login_url" config setting instead');
+		self::config()->update("login_url", $loginUrl);
 	}
+
 
 	/**
 	 * Get the URL of the log-in page.
-	 * Defaults to Security/login but can be re-set with {@link set_login_url()}
+	 *
+	 * To update the login url use the "Security.login_url" config setting.
+	 *
+	 * @return string
 	 */
 	public static function login_url() {
-		return self::$login_url;
+		return self::config()->login_url;
+	}
+
+
+	/**
+	 * Get the URL of the logout page.
+	 *
+	 * To update the logout url use the "Security.logout_url" config setting.
+	 *
+	 * @return string
+	 */
+	public static function logout_url() {
+		return self::config()->logout_url;
+	}
+
+
+	/**
+	 * Defines global accesible templates variables.
+	 *
+	 * @return array
+	 */
+	public static function get_template_global_variables() {
+		return array(
+			"LoginURL" => "login_url",
+			"LogoutURL" => "logout_url",
+		);
 	}
 
 }

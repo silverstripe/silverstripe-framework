@@ -87,7 +87,7 @@ class SSHTMLBBCodeParser_Filter_Lists extends SSHTMLBBCodeParser_Filter
         $c = $options['close'];
         $oe = $options['open_esc'];
         $ce = $options['close_esc'];
-        
+
         $pattern = array(   "!".$oe."\*".$ce."!",
                             "!".$oe."(u?)list=(?-i:A)(\s*[^".$ce."]*)".$ce."!i",
                             "!".$oe."(u?)list=(?-i:a)(\s*[^".$ce."]*)".$ce."!i",
@@ -95,7 +95,7 @@ class SSHTMLBBCodeParser_Filter_Lists extends SSHTMLBBCodeParser_Filter
                             "!".$oe."(u?)list=(?-i:i)(\s*[^".$ce."]*)".$ce."!i",
                             "!".$oe."(u?)list=(?-i:1)(\s*[^".$ce."]*)".$ce."!i",
                             "!".$oe."(u?)list([^".$ce."]*)".$ce."!i");
-        
+
         $replace = array(   $o."li".$c,
                             $o."\$1list=upper-alpha\$2".$c,
                             $o."\$1list=lower-alpha\$2".$c,
@@ -103,7 +103,7 @@ class SSHTMLBBCodeParser_Filter_Lists extends SSHTMLBBCodeParser_Filter
                             $o."\$1list=lower-roman\$2".$c,
                             $o."\$1list=decimal\$2".$c,
                             $o."\$1list\$2".$c );
-        
+
         $this->_preparsed = preg_replace($pattern, $replace, $this->_text);
     }
 }

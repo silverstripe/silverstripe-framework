@@ -71,7 +71,7 @@ parent::getCMSFields() and manipulate the `[api:FieldList]` from there.
 	:::php
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->insertBefore(new TextField("Age"), "HTMLEmail");
+		$fields->insertBefore("HTMLEmail", new TextField("Age"));
 		$fields->removeByName("JobTitle");
 		$fields->removeByName("Organisation");
 		return $fields;

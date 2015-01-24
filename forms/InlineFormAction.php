@@ -2,14 +2,14 @@
 /**
  * Render a button that will submit the form its contained in through ajax.
  * If you want to add custom behaviour, please set {@link inlcudeDefaultJS()} to FALSE
- * 
+ *
  * @see framework/javascript/InlineFormAction.js
- * 
+ *
  * @package forms
  * @subpackage actions
  */
 class InlineFormAction extends FormField {
-	
+
 	protected $includeDefaultJS = true;
 
 	/**
@@ -22,29 +22,29 @@ class InlineFormAction extends FormField {
 		$this->extraClass = ' '.$extraClass;
 		parent::__construct($action, $title, null, null);
 	}
-	
+
 	public function performReadonlyTransformation() {
 		return $this->castedCopy('InlineFormAction_ReadOnly');
 	}
-	
+
 	public function Field($properties = array()) {
 		if($this->includeDefaultJS) {
 			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/javascript/InlineFormAction.js',
 				array('ID'=>$this->id()));
 		}
-		
+
 		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\""
 			. " class=\"action{$this->extraClass}\" />";
-	}	
-	
-	public function Title() {
-		return false; 
 	}
-	
+
+	public function Title() {
+		return false;
+	}
+
 	/**
 	 * Optionally disable the default javascript include (framework/javascript/InlineFormAction.js),
 	 * which routes to an "admin-custom"-URL.
-	 * 
+	 *
 	 * @param $bool boolean
 	 */
 	public function includeDefaultJS($bool) {
@@ -58,15 +58,15 @@ class InlineFormAction extends FormField {
  * @subpackage actions
  */
 class InlineFormAction_ReadOnly extends FormField {
-	
+
 	protected $readonly = true;
-	
+
 	public function Field($properties = array()) {
 		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\""
 			. " disabled=\"disabled\" class=\"action disabled$this->extraClass\" />";
-	}	
-	
+	}
+
 	public function Title() {
-		return false; 
+		return false;
 	}
 }

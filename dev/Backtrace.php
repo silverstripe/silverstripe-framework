@@ -4,7 +4,7 @@
  * @subpackage dev
  */
 class SS_Backtrace {
-	
+
 	/**
 	 * @var array Replaces all arguments with a '<filtered>' string,
 	 * mostly for security reasons. Use string values for global functions,
@@ -38,22 +38,22 @@ class SS_Backtrace {
 		array('PasswordEncryptor_Blowfish', 'encrypt'),
 		array('PasswordEncryptor_Blowfish', 'salt'),
 	);
-	
+
 	/**
 	 * Return debug_backtrace() results with functions filtered
 	 * specific to the debugging system, and not the trace.
-	 * 
+	 *
 	 * @param null|array $ignoredFunctions If an array, filter these functions out of the trace
 	 * @return array
 	 */
 	public static function filtered_backtrace($ignoredFunctions = null) {
 		return self::filter_backtrace(debug_backtrace(), $ignoredFunctions);
 	}
-	
+
 	/**
 	 * Filter a backtrace so that it doesn't show the calls to the
 	 * debugging system, which is useless information.
-	 * 
+	 *
 	 * @param array $bt Backtrace to filter
 	 * @param null|array $ignoredFunctions List of extra functions to filter out
 	 * @return array
@@ -78,15 +78,15 @@ class SS_Backtrace {
 			'Debug::backtrace',
 			'exceptionHandler'
 		);
-		
+
 		if($ignoredFunctions) foreach($ignoredFunctions as $ignoredFunction) {
 			$defaultIgnoredFunctions[] = $ignoredFunction;
 		}
-		
+
 		while($bt && in_array(self::full_func_name($bt[0]), $defaultIgnoredFunctions)) {
 			array_shift($bt);
 		}
-		
+
 		$ignoredArgs = Config::inst()->get('SS_Backtrace', 'ignore_function_args');
 
 		// Filter out arguments
@@ -105,10 +105,10 @@ class SS_Backtrace {
 				foreach($bt[$i]['args'] as $j => $arg) $bt[$i]['args'][$j] = '<filtered>';
 			}
 		}
-		
-		return $bt;	
+
+		return $bt;
 	}
-	
+
 	/**
 	 * Render or return a backtrace from the given scope.
 	 *
@@ -125,11 +125,11 @@ class SS_Backtrace {
 			echo $result;
 		}
 	}
-	
+
 	/**
 	 * Return the full function name.  If showArgs is set to true, a string representation of the arguments will be
 	 * shown
-	 * 
+	 *
 	 * @param Object $item
 	 * @param boolean $showArg
 	 * @param Int $argCharLimit
@@ -140,7 +140,7 @@ class SS_Backtrace {
 		if(isset($item['class'])) $funcName .= $item['class'];
 		if(isset($item['type'])) $funcName .= $item['type'];
 		if(isset($item['function'])) $funcName .= $item['function'];
-		
+
 		if($showArgs && isset($item['args'])) {
 			$args = array();
 			foreach($item['args'] as $arg) {
@@ -151,16 +151,16 @@ class SS_Backtrace {
 					$args[] = get_class($arg);
 				}
 			}
-		
+
 			$funcName .= "(" . implode(",", $args)  .")";
 		}
-		
+
 		return $funcName;
 	}
-	
+
 	/**
 	 * Render a backtrace array into an appropriate plain-text or HTML string.
-	 * 
+	 *
 	 * @param string $bt The trace array, as returned by debug_backtrace() or Exception::getTrace()
 	 * @param boolean $plainText Set to false for HTML output, or true for plain-text output
 	 * @param array List of functions that should be ignored. If not set, a default is provided
@@ -181,7 +181,7 @@ class SS_Backtrace {
 					$name = self::full_func_name($item,true);
 				}
 				$result .= "<li><b>" . htmlentities($name, ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
-				$result .=  isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : ''; 
+				$result .=  isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : '';
 				$result .= isset($item['line']) ? ":$item[line]" : '';
 				$result .= "</li>\n";
 			}
@@ -189,5 +189,5 @@ class SS_Backtrace {
 		if(!$plainText) $result .= '</ul>';
 		return $result;
 	}
-	
+
 }

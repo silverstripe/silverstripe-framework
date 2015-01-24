@@ -12,17 +12,18 @@
 abstract class LoginForm extends Form {
 	public function __construct($controller, $name, $fields, $actions) {
 		parent::__construct($controller, $name, $fields, $actions);
-		
-		$this->disableSecurityToken();	
+
+		$this->disableSecurityToken();
 	}
 
 	/**
 	 * Authenticator class to use with this login form
-	 * 
+	 *
 	 * Set this variable to the authenticator class to use with this login
 	 * form.
 	 * @var string
 	 */
+
 	protected $authenticator_class;
 
 	/**
@@ -36,8 +37,17 @@ abstract class LoginForm extends Form {
 				. " is not a subclass of 'Authenticator'", E_USER_ERROR);
 			return;
 		}
-		
 		return Injector::inst()->get($this->authenticator_class);
 	}
+
+	/**
+	 * Get the authenticator name.
+	 * @return string The friendly name for use in templates, etc.
+	 */
+	public function getAuthenticatorName() {
+		$authClass = $this->authenticator_class;
+		return $authClass::get_name();
+	}
+
 }
 

@@ -3,7 +3,7 @@
  * @package framework
  * @subpackage tests
  */
-class FormFieldTest extends SapphireTest {
+class FormFieldTest extends SapphireTest implements TestOnly {
 
 	public function testAddExtraClass() {
 		$field = new FormField('MyField');
@@ -128,7 +128,7 @@ class FormFieldTest extends SapphireTest {
 			$constructor = $reflectionClass->getMethod('__construct');
 			if($constructor->getNumberOfRequiredParameters() > 1) continue;
 			if($fieldClass == 'CompositeField' || is_subclass_of($fieldClass, 'CompositeField')) continue;
-			
+
 			if ( $fieldClass = 'NullableField' ) {
 				$instance = new $fieldClass(new TextField("{$fieldClass}_instance"));
 			} else {
@@ -137,7 +137,7 @@ class FormFieldTest extends SapphireTest {
 			$isReadonlyBefore = $instance->isReadonly();
 			$readonlyInstance = $instance->performReadonlyTransformation();
 			$this->assertEquals(
-				$isReadonlyBefore, 
+				$isReadonlyBefore,
 				$instance->isReadonly(),
 				"FormField class {$fieldClass} retains its readonly state after calling performReadonlyTransformation()"
 			);
@@ -152,7 +152,7 @@ class FormFieldTest extends SapphireTest {
 			);
 		}
 	}
-	
+
 	public function testEveryFieldTransformsDisabledAsClone() {
 		$fieldClasses = ClassInfo::subclassesFor('FormField');
 		foreach($fieldClasses as $fieldClass) {
@@ -161,17 +161,17 @@ class FormFieldTest extends SapphireTest {
 			$constructor = $reflectionClass->getMethod('__construct');
 			if($constructor->getNumberOfRequiredParameters() > 1) continue;
 			if($fieldClass == 'CompositeField' || is_subclass_of($fieldClass, 'CompositeField')) continue;
-			
+
 			if ( $fieldClass = 'NullableField' ) {
 				$instance = new $fieldClass(new TextField("{$fieldClass}_instance"));
 			} else {
 				$instance = new $fieldClass("{$fieldClass}_instance");
 			}
-						
+
 			$isDisabledBefore = $instance->isDisabled();
 			$disabledInstance = $instance->performDisabledTransformation();
 			$this->assertEquals(
-				$isDisabledBefore, 
+				$isDisabledBefore,
 				$instance->isDisabled(),
 				"FormField class {$fieldClass} retains its disabled state after calling performDisabledTransformation()"
 			);
@@ -186,5 +186,5 @@ class FormFieldTest extends SapphireTest {
 			);
 		}
 	}
-	
+
 }

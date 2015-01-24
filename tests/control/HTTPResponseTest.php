@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class HTTPResponseTest extends SapphireTest {
-	
+
 	public function testStatusDescriptionStripsNewlines() {
 		$r = new SS_HTTPResponse('my body', 200, "my description \nwith newlines \rand carriage returns");
 		$this->assertEquals(
@@ -12,7 +12,7 @@ class HTTPResponseTest extends SapphireTest {
 			$r->getStatusDescription()
 		);
 	}
-	
+
 	public function testHTTPResponseException() {
 		$response = new SS_HTTPResponse("Test", 200, 'OK');
 

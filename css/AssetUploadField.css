@@ -13,11 +13,7 @@ Used in side panels and action tabs
 .ss-uploadfield-view-allowed-extensions { padding-top: 5px; clear: both; max-width: 750px; display: block; }
 .ss-uploadfield-view-allowed-extensions .toggle { font-style: normal; font-size: 12px; }
 
-#AssetUploadField { border-bottom: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-
 .backlink { padding-left: 12px; }
-
-#Form_EditorToolbarMediaForm .ui-tabs-panel { padding-left: 0px; }
 
 body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fieldset { overflow: auto; background: #E2E2E2; }
 body.cms.ss-uploadfield-edit-iframe span.readonly, .composite.ss-assetuploadfield .details fieldset span.readonly { font-style: italic; color: #777777; text-shadow: 0px 1px 0px #fff; }
@@ -25,6 +21,7 @@ body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-asse
 
 .composite.ss-assetuploadfield .details fieldset { padding: 16px; }
 
+.ss-assetuploadfield { border-bottom: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .ss-assetuploadfield h3 { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); margin: 0 0 8px; padding: 0 0 7px; clear: both; position: relative; }
 .ss-assetuploadfield .field { border-bottom: 0; box-shadow: none; }
 .ss-assetuploadfield .fileOverview { clear: both; margin-top: 10px; position: relative; }
@@ -86,3 +83,7 @@ body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-asse
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone { height: 54px; min-width: 250px; overflow: hidden; padding: 0; margin-top: 2px; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div { background-position: 0 11px; padding-top: 21px; margin-left: 33px; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div span { height: 38px; font-size: 18px; line-height: 18px; }
+
+/** ---------------------------------------------------- "@2x" media query ---------------------------------------------------- */
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) { /* Loading spinner */
+  .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform.loading { background-image: url(../admin/images/spinner@2x.gif); background-size: 43px 22px; } }

@@ -1,66 +1,66 @@
 <?php
 /**
- * Utility class to facilitate complex CSV-imports by defining column-mappings 
- * and custom converters. 
+ * Utility class to facilitate complex CSV-imports by defining column-mappings
+ * and custom converters.
  *
- * Uses the fgetcsv() function to process CSV input. Accepts a file-handler as 
+ * Uses the fgetcsv() function to process CSV input. Accepts a file-handler as
  * input.
- * 
+ *
  * @see http://tools.ietf.org/html/rfc4180
  *
  * @package framework
  * @subpackage bulkloading
- * 
- * @todo Support for deleting existing records not matched in the import 
+ *
+ * @todo Support for deleting existing records not matched in the import
  * (through relation checks)
  */
 class CsvBulkLoader extends BulkLoader {
-	
+
 	/**
 	 * Delimiter character (Default: comma).
 	 *
 	 * @var string
 	 */
 	public $delimiter = ',';
-	
+
 	/**
 	 * Enclosure character (Default: doublequote)
 	 *
 	 * @var string
 	 */
 	public $enclosure = '"';
-	
+
 	/**
 	 * Identifies if csv the has a header row.
 	 *
 	 * @var boolean
 	 */
 	public $hasHeaderRow = true;
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function preview($filepath) {
 		return $this->processAll($filepath, true);
 	}
-	
+
 	/**
 	 * @param string $filepath
 	 * @param boolean $preview
 	 */
 	protected function processAll($filepath, $preview = false) {
 		$results = new BulkLoader_Result();
-		
+
 		$csv = new CSVParser(
-			$filepath, 
-			$this->delimiter, 
+			$filepath,
+			$this->delimiter,
 			$this->enclosure
 		);
-		
+
 		// ColumnMap has two uses, depending on whether hasHeaderRow is set
 		if($this->columnMap) {
 			// if the map goes to a callback, use the same key value as the map
-			// value, rather than function name as multiple keys may use the 
+			// value, rather than function name as multiple keys may use the
 			// same callback
 			foreach($this->columnMap as $k => $v) {
 				if(strpos($v, "->") === 0) {
@@ -76,14 +76,14 @@ class CsvBulkLoader extends BulkLoader {
 				$csv->provideHeaderRow($map);
 			}
 		}
-		
+
 		foreach($csv as $row) {
 			$this->processRecord($row, $this->columnMap, $results, $preview);
 		}
-		
+
 		return $results;
 	}
-	
+
 	/**
 	 * @todo Better messages for relation checks and duplicate detection
 	 * Note that columnMap isn't used.
@@ -97,18 +97,18 @@ class CsvBulkLoader extends BulkLoader {
 	 */
 	protected function processRecord($record, $columnMap, &$results, $preview = false) {
 		$class = $this->objectClass;
-		
+
 		// find existing object, or create new one
 		$existingObj = $this->findExistingObject($record, $columnMap);
-		$obj = ($existingObj) ? $existingObj : new $class(); 
-		
+		$obj = ($existingObj) ? $existingObj : new $class();
+
 		// first run: find/create any relations and store them on the object
 		// we can't combine runs, as other columns might rely on the relation being present
 		$relations = array();
 		foreach($record as $fieldName => $val) {
 			// don't bother querying of value is not set
 			if($this->isNullValue($val)) continue;
-			
+
 			// checking for existing relations
 			if(isset($this->relationCallbacks[$fieldName])) {
 				// trigger custom search method for finding a relation based on the given value
@@ -131,7 +131,7 @@ class CsvBulkLoader extends BulkLoader {
 					$obj->write();
 					$obj->flushCache(); // avoid relation caching confusion
 				}
-				
+
 			} elseif(strpos($fieldName, '.') !== false) {
 				// we have a relation column with dot notation
 				list($relationName, $columnName) = explode('.', $fieldName);
@@ -158,7 +158,7 @@ class CsvBulkLoader extends BulkLoader {
 
 			// look up the mapping to see if this needs to map to callback
 			$mapped = $this->columnMap && isset($this->columnMap[$fieldName]);
-			
+
 			if($mapped && strpos($this->columnMap[$fieldName], '->') === 0) {
 				$funcName = substr($this->columnMap[$fieldName], 2);
 
@@ -172,30 +172,30 @@ class CsvBulkLoader extends BulkLoader {
 
 		// write record
 		$id = ($preview) ? 0 : $obj->write();
-		
+
 		// @todo better message support
 		$message = '';
-		
+
 		// save to results
 		if($existingObj) {
 			$results->addUpdated($obj, $message);
 		} else {
 			$results->addCreated($obj, $message);
 		}
-		
+
 		$objID = $obj->ID;
-		
+
 		$obj->destroy();
-		
+
 		// memory usage
 		unset($existingObj);
 		unset($obj);
-		
+
 		return $objID;
 	}
-	
+
 	/**
-	 * Find an existing objects based on one or more uniqueness columns 
+	 * Find an existing objects based on one or more uniqueness columns
 	 * specified via {@link self::$duplicateChecks}.
 	 *
 	 * @param array $record CSV data column
@@ -208,19 +208,17 @@ class CsvBulkLoader extends BulkLoader {
 
 		foreach($this->duplicateChecks as $fieldName => $duplicateCheck) {
 			if(is_string($duplicateCheck)) {
-				$SQL_fieldName = Convert::raw2sql($duplicateCheck); 
-				
-				if(!isset($record[$SQL_fieldName]) || empty($record[$SQL_fieldName])) {
-					//skip current duplicate check if field value is empty
-					continue;
-				}
 
-				$SQL_fieldValue = Convert::raw2sql($record[$SQL_fieldName]);
-				$existingRecord = DataObject::get_one($this->objectClass, "\"$SQL_fieldName\" = '{$SQL_fieldValue}'");
-				
-				if($existingRecord) {
-					return $existingRecord;
-				}
+				// Skip current duplicate check if field value is empty
+				if(empty($record[$duplicateCheck])) continue;
+
+				// Check existing record with this value
+				$dbFieldValue = $record[$duplicateCheck];
+				$existingRecord = DataObject::get($this->objectClass)
+					->filter($duplicateCheck, $dbFieldValue)
+					->first();
+
+				if($existingRecord) return $existingRecord;
 			} elseif(is_array($duplicateCheck) && isset($duplicateCheck['callback'])) {
 				if($this->hasMethod($duplicateCheck['callback'])) {
 					$existingRecord = $this->{$duplicateCheck['callback']}($record[$fieldName], $record);
@@ -241,9 +239,9 @@ class CsvBulkLoader extends BulkLoader {
 
 		return false;
 	}
-	
+
 	/**
-	 * Determine whether any loaded files should be parsed with a 
+	 * Determine whether any loaded files should be parsed with a
 	 * header-row (otherwise we rely on {@link self::$columnMap}.
 	 *
 	 * @return boolean

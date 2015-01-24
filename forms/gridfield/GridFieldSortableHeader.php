@@ -1,11 +1,11 @@
 <?php
 
 /**
- * GridFieldSortableHeader adds column headers to a {@link GridField} that can 
+ * GridFieldSortableHeader adds column headers to a {@link GridField} that can
  * also sort the columns.
- * 
+ *
  * @see GridField
- * 
+ *
  * @package forms
  * @subpackage fields-gridfield
  */
@@ -16,22 +16,22 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	 */
 	protected $throwExceptionOnBadDataType = true;
 
-	/** 
-	 * @var array 
+	/**
+	 * @var array
 	 */
 	public $fieldSorting = array();
-	
+
 	/**
 	 * Determine what happens when this component is used with a list that isn't {@link SS_Filterable}.
-	 * 
+	 *
 	 *  - true:  An exception is thrown
 	 *  - false: This component will be ignored - it won't make any changes to the GridField.
-	 * 
+	 *
 	 * By default, this is set to true so that it's clearer what's happening, but the predefined
 	 * {@link GridFieldConfig} subclasses set this to false for flexibility.
 	 */
 	public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType) {
-		$this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType; 
+		$this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
 	}
 
 	/**
@@ -40,7 +40,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	public function getThrowExceptionOnBadDataType() {
 		return $this->throwExceptionOnBadDataType;
 	}
-	
+
 	/**
 	 * Check that this dataList is of the right data type.
 	 * Returns false if it's a bad data type, and if appropriate, throws an exception.
@@ -67,16 +67,16 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		$this->fieldSorting = $sorting;
 		return $this;
 	}
-	
+
 	/**
 	 * @return array
 	 */
 	public function getFieldSorting() {
 		return $this->fieldSorting;
 	}
-	
+
 	/**
-	 * Returns the header row providing titles with sort buttons 
+	 * Returns the header row providing titles with sort buttons
 	 */
 	public function getHTMLFragments($gridField) {
 		if(!$this->checkDataType($gridField->getList())) return;
@@ -128,19 +128,19 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 
 			if($allowSort) {
 				$dir = 'asc';
-				if($state->SortColumn == $columnField && $state->SortDirection == 'asc') {
+				if($state->SortColumn(null) == $columnField && $state->SortDirection('asc') == 'asc') {
 					$dir = 'desc';
 				}
-				
+
 				$field = Object::create(
-					'GridField_FormAction', $gridField, 'SetOrder'.$fieldName, $title, 
+					'GridField_FormAction', $gridField, 'SetOrder'.$fieldName, $title,
 					"sort$dir", array('SortColumn' => $columnField)
 				)->addExtraClass('ss-gridfield-sort');
 
-				if($state->SortColumn == $columnField){
+				if($state->SortColumn(null) == $columnField){
 					$field->addExtraClass('ss-gridfield-sorted');
 
-					if($state->SortDirection == 'asc')
+					if($state->SortDirection('asc') == 'asc')
 						$field->addExtraClass('ss-gridfield-sorted-asc');
 					else
 						$field->addExtraClass('ss-gridfield-sorted-desc');
@@ -157,7 +157,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			}
 			$forTemplate->Fields->push($field);
 		}
-	
+
 		return array(
 			'header' => $forTemplate->renderWith('GridFieldSortableHeader_Row'),
 		);
@@ -173,7 +173,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 
 		return array('sortasc', 'sortdesc');
 	}
-	
+
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		if(!$this->checkDataType($gridField->getList())) return;
 
@@ -190,12 +190,12 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 				break;
 		}
 	}
-	
+
 	/**
 	 * Returns the manipulated (sorted) DataList. Field names will simply add an 
 	 * 'ORDER BY' clause, relation names will add appropriate joins to the
 	 * {@link DataQuery} first.
-	 * 
+	 *
 	 * @param GridField
 	 * @param SS_List
 	 * @return SS_List
@@ -215,7 +215,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			$lastAlias = $dataList->dataClass();
 			$tmpItem = singleton($lastAlias);
 			$parts = explode('.', $state->SortColumn);
-			
+
 			for($idx = 0; $idx < sizeof($parts); $idx++) {
 				$methodName = $parts[$idx];
 
@@ -254,7 +254,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		// as ->sort() won't do it by itself. Blame PostgreSQL for making this necessary
 		$pieces = explode('.', $column);
 		$column = '"' . implode('"."', $pieces) . '"';
-	
-		return $dataList->sort($column, $state->SortDirection);
+
+		return $dataList->sort($column, $state->SortDirection('asc'));
 	}
 }

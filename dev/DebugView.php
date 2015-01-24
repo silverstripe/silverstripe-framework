@@ -7,12 +7,12 @@
 /**
  * A basic HTML wrapper for stylish rendering of a developement info view.
  * Used to output error messages, and test results.
- * 
+ *
  * @package framework
  * @subpackage dev
  */
 class DebugView extends Object {
-	
+
 	/**
 	 * Column size to wrap long strings to
 	 *
@@ -65,7 +65,16 @@ class DebugView extends Object {
 		E_STRICT => array(
 			'title' => 'Strict Notice',
 			'class' => 'notice'
+		),
+		E_RECOVERABLE_ERROR => array(
+			'title' => 'Recoverable Error',
+			'class' => 'warning'
 		)
+	);
+
+	protected static $unknown_error = array(
+		'title' => 'Unknown Error',
+		'class' => 'error'
 	);
 
 	/**
@@ -88,15 +97,15 @@ class DebugView extends Object {
 			}
 		}
 		return implode('&nbsp;&rarr;&nbsp;', $pathLinks);
-	}	
-	
+	}
+
 	/**
 	 * Render HTML header for development views
 	 */
 	public function writeHeader() {
 		$url = htmlentities(
-			$_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'], 
-			ENT_COMPAT, 
+			$_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'],
+			ENT_COMPAT,
 			'UTF-8'
 		);
 
@@ -111,10 +120,10 @@ class DebugView extends Object {
 		echo '</head>';
 		echo '<body>';
 	}
-	
+
 	/**
 	 * Render the information header for the view
-	 * 
+	 *
 	 * @param string $title
 	 * @param string $title
 	 */
@@ -129,19 +138,19 @@ class DebugView extends Object {
 		}
 		echo '</div>';
 	}
-	
+
 	/**
 	 * Render HTML footer for development views
 	 */
 	public function writeFooter() {
-		echo "</body></html>";		
-	}	
+		echo "</body></html>";
+	}
 
 	/**
 	 * Write information about the error to the screen
 	 */
 	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
-		$errorType = self::$error_types[$errno];
+		$errorType = isset(self::$error_types[$errno]) ? self::$error_types[$errno] : self::$unknown_error;
 		$httpRequestEnt = htmlentities($httpRequest, ENT_COMPAT, 'UTF-8');
 		if (ini_get('html_errors')) {
 			$errstr = strip_tags($errstr);
@@ -172,7 +181,7 @@ class DebugView extends Object {
 		}
 		echo '</pre>';
 	}
-	
+
 	/**
 	 * Write a backtrace
 	 */
@@ -181,17 +190,17 @@ class DebugView extends Object {
 		echo SS_Backtrace::get_rendered_backtrace($trace);
 		echo '</div>';
 	}
-	
+
 	/**
 	 * @param string $text
 	 */
 	public function writeParagraph($text) {
 		echo '<p class="info">' . $text . '</p>';
 	}
-	
+
 	/**
 	 * Formats the caller of a method
-	 * 
+	 *
 	 * @param array $caller
 	 * @return string
 	 */
@@ -202,10 +211,10 @@ class DebugView extends Object {
 		}
 		return $return;
 	}
-	
+
 	/**
 	 * Outputs a variable in a user presentable way
-	 * 
+	 *
 	 * @param object $val
 	 * @param array $caller Caller information
 	 */

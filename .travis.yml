@@ -5,7 +5,7 @@ php:
 
 env:
   global:
-    - CORE_RELEASE=3.1
+    - CORE_RELEASE=master
     - "ARTIFACTS_AWS_REGION=us-east-1"
     - "ARTIFACTS_S3_BUCKET=silverstripe-travis-artifacts"
     - secure: "DjwZKhY/c0wXppGmd8oEMiTV0ayfOXiCmi9Lg1aXoSXNnj+sjLmhYwhUWjehjR6IX0MRtzJG6v7V5Y+4nSGe+i+XIrBQnhPQ95Jrkm1gKofX2mznWTl9npQElNS1DXi58NLPbiB3qxHWGFBRAWmRQrsAouyZabkPnChnSa9ldOg="
@@ -19,6 +19,8 @@ matrix:
   allow_failures:
     - php: hhvm-nightly
   include:
+    - php: 5.4
+      env: DB=MYSQL PDO=1
     - php: 5.5
       env: DB=MYSQL
     - php: 5.6

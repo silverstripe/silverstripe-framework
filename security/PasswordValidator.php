@@ -2,13 +2,13 @@
 
 /**
  * This class represents a validator for member passwords.
- * 
+ *
  * <code>
  * $pwdVal = new PasswordValidator();
  * $pwdValidator->minLength(7);
  * $pwdValidator->checkHistoricalPasswords(6);
  * $pwdValidator->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"));
- * 
+ *
  * Member::set_password_validator($pwdValidator);
  * </code>
  *
@@ -16,14 +16,14 @@
  * @subpackage security
  */
 class PasswordValidator extends Object {
-	
+
 	private static $character_strength_tests = array(
 		'lowercase' => '/[a-z]/',
 		'uppercase' => '/[A-Z]/',
 		'digits' => '/[0-9]/',
 		'punctuation' => '/[^A-Za-z0-9]/',
 	);
-	
+
 	protected $minLength, $minScore, $testNames, $historicalPasswordCount;
 
 	/**
@@ -31,35 +31,38 @@ class PasswordValidator extends Object {
 	 */
 	public function minLength($minLength) {
 		$this->minLength = $minLength;
+		return $this;
 	}
-	
+
 	/**
 	 * Check the character strength of the password.
 	 *
 	 * Eg: $this->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"))
-	 * 
+	 *
 	 * @param $minScore The minimum number of character tests that must pass
 	 * @param $testNames The names of the tests to perform
 	 */
 	public function characterStrength($minScore, $testNames) {
 		$this->minScore = $minScore;
 		$this->testNames = $testNames;
+		return $this;
 	}
-	
+
 	/**
 	 * Check a number of previous passwords that the user has used, and don't let them change to that.
 	 */
 	public function checkHistoricalPasswords($count) {
 		$this->historicalPasswordCount = $count;
+		return $this;
 	}
-	
+
 	/**
 	 * @param String $password
 	 * @param Member $member
 	 * @return ValidationResult
 	 */
 	public function validate($password, $member) {
-		$valid = new ValidationResult();
+		$valid = ValidationResult::create();
 
 		if($this->minLength) {
 			if(strlen($password) < $this->minLength) {
@@ -106,13 +109,10 @@ class PasswordValidator extends Object {
 		}
 
 		if($this->historicalPasswordCount) {
-			$previousPasswords = DataObject::get(
-				"MemberPassword",
-				"\"MemberID\" = $member->ID",
-				"\"Created\" DESC, \"ID\" DESC",
-				"",
-				$this->historicalPasswordCount
-			);
+			$previousPasswords = MemberPassword::get()
+				->where(array('"MemberPassword"."MemberID"' => $member->ID))
+				->sort('"Created" DESC, "ID" DESC')
+				->limit($this->historicalPasswordCount);
 			if($previousPasswords) foreach($previousPasswords as $previousPasswords) {
 				if($previousPasswords->checkPassword($password)) {
 					$valid->error(
@@ -126,8 +126,8 @@ class PasswordValidator extends Object {
 				}
 			}
 		}
-		
+
 		return $valid;
 	}
-	
+
 }

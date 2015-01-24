@@ -8,12 +8,12 @@
  * @subpackage fields-dataless
  */
 class HeaderField extends DatalessField {
-	
+
 	/**
 	 * @var int $headingLevel The level of the <h1> to <h6> HTML tag. Default: 2
 	 */
 	protected $headingLevel = 2;
-	
+
 	public function __construct($name, $title = null, $headingLevel = 2) {
 		// legacy handling for old parameters: $title, $heading, ...
 		// instead of new handling: $name, $title, $heading, ...
@@ -26,17 +26,17 @@ class HeaderField extends DatalessField {
 			$name = 'HeaderField' . $title;
 			$headingLevel = (isset($args[1])) ? $args[1] : null;
 			$form = (isset($args[3])) ? $args[3] : null;
-		} 
-		
+		}
+
 		if($headingLevel) $this->headingLevel = $headingLevel;
-		
+
 		parent::__construct($name, $title);
 	}
 
 	public function getHeadingLevel() {
 		return $this->headingLevel;
 	}
-	
+
 	public function setHeadingLevel($level) {
 		$this->headingLevel = $level;
 		return $this;

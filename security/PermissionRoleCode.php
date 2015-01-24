@@ -1,7 +1,7 @@
 <?php
 /**
  * A PermissionRoleCode represents a single permission code assigned to a {@link PermissionRole}.
- * 
+ *
  * @package framework
  * @subpackage security
  *
@@ -15,12 +15,12 @@ class PermissionRoleCode extends DataObject {
 	private static $db = array(
 		"Code" => "Varchar",
 	);
-	
+
 	private static $has_one = array(
 		"Role" => "PermissionRole",
 	);
 
-	protected function validate() {
+	public function validate() {
 		$result = parent::validate();
 
 		// Check that new code doesn't increase privileges, unless an admin is editing.

@@ -24,7 +24,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 * @var boolean
 	 */
 	protected $csvHasHeader = true;
-	
+
 	/**
 	 * Fragment to write the button to
 	 */
@@ -44,10 +44,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 */
 	public function getHTMLFragments($gridField) {
 		$button = new GridField_FormAction(
-			$gridField, 
-			'export', 
+			$gridField,
+			'export',
 			_t('TableListField.CSVEXPORT', 'Export to CSV'),
-			'export', 
+			'export',
 			null
 		);
 		$button->setAttribute('data-icon', 'download-csv');
@@ -173,7 +173,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		$this->exportColumns = $cols;
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */

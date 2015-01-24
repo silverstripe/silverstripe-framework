@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Representation of a DataModel - a collection of DataLists for each different 
+ * Representation of a DataModel - a collection of DataLists for each different
  * data type.
- * 
+ *
  * Usage:
  * <code>
  * $model = new DataModel;
@@ -19,7 +19,7 @@ class DataModel {
 	 * @var DataModel
 	 */
 	protected static $inst;
-	
+
 	/**
 	 * @var array $customDataLists
 	 */
@@ -34,12 +34,12 @@ class DataModel {
 		if(!self::$inst) {
 			self::$inst = new self;
 		}
-		
+
 		return self::$inst;
 	}
-	
+
 	/**
-	 * Set the global DataModel, used when data is requested from static 
+	 * Set the global DataModel, used when data is requested from static
 	 * methods.
 	 *
 	 * @return DataModel
@@ -47,7 +47,7 @@ class DataModel {
 	public static function set_inst(DataModel $inst) {
 		self::$inst = $inst;
 	}
-	
+
 	/**
 	 * @param string
 	 *
@@ -63,7 +63,7 @@ class DataModel {
 			return $list;
 		}
 	}
-	
+
 	/**
 	 * @param string
 	 * @param DataList
@@ -73,5 +73,5 @@ class DataModel {
 		$item->setDataModel($this);
 		$this->customDataLists[$class] = $item;
 	}
-	
+
 }

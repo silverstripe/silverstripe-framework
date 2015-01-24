@@ -433,7 +433,15 @@ Put code into the classes in the following order (where applicable).
 ### SQL Format
 
 If you have to use raw SQL, make sure your code works across databases make sure you escape your queries like below, 
-with the column or table name escaped with double quotes and values with single quotes.
+with the column or table name escaped with double quotes as below.
+
+	:::php
+	MyClass::get()->where(array("\"Score\" > ?" => 50));
+
+It is preferable to use parameterised queries whenever necessary to provide conditions
+to a SQL query, where values placeholders are each replaced with a single unquoted question mark.
+If it's absolutely necessary to use literal values in a query make sure that values
+are single quoted.
 
 	:::php
 	MyClass::get()->where("\"Title\" = 'my title'");

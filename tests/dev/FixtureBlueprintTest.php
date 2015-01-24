@@ -28,10 +28,10 @@ class FixtureBlueprintTest extends SapphireTest {
 		$obj = $blueprint->createObject(
 			'one',
 			array(
-				'ManyMany' => 
+				'ManyMany' =>
 					array(
 						array(
-							"=>FixtureFactoryTest_DataObjectRelation.relation1" => array(), 
+							"=>FixtureFactoryTest_DataObjectRelation.relation1" => array(),
 							"Label" => 'This is a label for relation 1'
 						),
 						array(
@@ -92,7 +92,7 @@ class FixtureBlueprintTest extends SapphireTest {
 		$obj = $blueprint->createObject(
 			'one',
 			array(
-				'ManyMany' => 
+				'ManyMany' =>
 					'=>FixtureFactoryTest_DataObjectRelation.relation1,' .
 					'=>FixtureFactoryTest_DataObjectRelation.relation2'
 			),
@@ -216,19 +216,19 @@ class FixtureBlueprintTest extends SapphireTest {
 
 	public function testDefineWithDefaultCustomSetters() {
 		$blueprint = new FixtureBlueprint(
-			'FixtureFactoryTest_DataObject', 
+			'FixtureFactoryTest_DataObject',
 			null,
 			array(
 			'Name' => function($obj, $data, $fixtures) {
 				return 'Default Name';
 			}
 		));
-		
+
 		$obj1 = $blueprint->createObject('one');
 		$this->assertEquals('Default Name', $obj1->Name);
 
 		$obj2 = $blueprint->createObject('one', array('Name' => 'Override Name'));
 		$this->assertEquals('Override Name', $obj2->Name);
 	}
-	
+
 }

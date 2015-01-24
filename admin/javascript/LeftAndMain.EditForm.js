@@ -86,16 +86,12 @@
 				
 				// Show validation errors if necessary
 				if(this.hasClass('validationerror')) {
-					// TODO validation shouldnt need a special case
-					statusMessage(ss.i18n._t('ModelAdmin.VALIDATIONERROR', 'Validation Error'), 'bad');
-
 					// Ensure the first validation error is visible
-					var firstTabWithErrors = this.find('.message.validation:first').closest('.tab');
+					var tabError = this.find('.message.validation, .message.required').first().closest('.tab');
 					$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
-					this.redraw();
-					firstTabWithErrors.closest('.ss-tabset').tabs('select', firstTabWithErrors.attr('id'));
+					tabError.closest('.ss-tabset').tabs('option', 'active', tabError.index('.tab'));
 				}
-			
+
 				this._super();
 			},
 			onremove: function() {
@@ -104,15 +100,6 @@
 			},
 			onmatch: function() {
 				this._super();
-
-				// focus input on first form element. Exclude elements which
-				// specifically opt-out of this behaviour via "data-skip-autofocus".
-				// This opt-out is useful if the first visible field is shown far down a scrollable area,
-				// for example for the pagination input field after a long GridField listing.
-				// Skip if an element in the form is already focused.
-				if(!this.find(document.activeElement).length) {
-					this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:first').focus();
-				}
 			},
 			onunmatch: function() {
 				this._super();
@@ -185,6 +172,162 @@
 				this.trigger('validate', {isValid: isValid});
 	
 				return isValid;
+			},
+			/*
+			 * Track focus on htmleditor fields
+			 */
+			'from .htmleditor': {
+				oneditorinit: function(e){
+					var self = this,
+						field = $(e.target).closest('.field.htmleditor'),
+						editor = field.find('textarea.htmleditor').getEditor().getInstance();
+
+					// TinyMCE 4 will add a focus event, but for now, use click
+					editor.onClick.add(function(e){
+						self.saveFieldFocus(field.attr('id'));
+					});
+				}
+			},
+			/*
+			 * Track focus on inputs
+			 */
+			'from .cms-edit-form :input:not(:submit)': {
+				onclick: function(e){
+					this.saveFieldFocus($(e.target).attr('id'));
+				},
+				onfocus: function(e){
+					this.saveFieldFocus($(e.target).attr('id'));
+				}
+			},
+			/*
+			 * Track focus on treedropdownfields. 
+			 */
+			'from .cms-edit-form .treedropdown *': {
+				onfocusin: function(e){
+					var field = $(e.target).closest('.field.treedropdown');
+					this.saveFieldFocus(field.attr('id'));
+				}
+			},
+			/*
+			 * Track focus on chosen selects
+			 */
+			'from .cms-edit-form .dropdown .chzn-container a': {
+				onfocusin: function(e){
+					var field = $(e.target).closest('.field.dropdown');
+					this.saveFieldFocus(field.attr('id'));
+				}
+			},
+			/*
+			 * Restore fields after tabs are restored
+			 */
+			'from .cms-container': {
+				ontabstaterestored: function(e){
+					this.restoreFieldFocus();
+				}
+			},
+			/*
+			 * Saves focus in Window session storage so it that can be restored on page load
+			 */
+			saveFieldFocus: function(selected){
+				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage === null) return;
+				
+				var id = $(this).attr('id'),
+					focusElements = [];
+
+				focusElements.push({
+					id:id, 
+					selected:selected
+				});
+
+				if(focusElements) {
+					try {
+						window.sessionStorage.setItem(id, JSON.stringify(focusElements));
+					} catch(err) {
+						if (err.code === DOMException.QUOTA_EXCEEDED_ERR && window.sessionStorage.length === 0) {
+							// If this fails we ignore the error as the only issue is that it 
+							// does not remember the focus state.
+							// This is a Safari bug which happens when private browsing is enabled.
+							return;
+						} else {
+							throw err;
+						}
+					}
+				}
+			},
+			/**
+			 * Set focus or window to previously saved fields.
+			 * Requires HTML5 sessionStorage support.
+			 *
+			 * Must follow tab restoration, as reliant on active tab
+			 */
+			restoreFieldFocus: function(){
+				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage === null) return;
+			
+				var self = this,
+					hasSessionStorage = (typeof(window.sessionStorage)!=="undefined" && window.sessionStorage),
+					sessionData = hasSessionStorage ? window.sessionStorage.getItem(this.attr('id')) : null,
+					sessionStates = sessionData ? JSON.parse(sessionData) : false,
+					elementID,
+					tabbed = this.find('.ss-tabset'),
+					activeTab,
+					elementTab,
+					toggleComposite,
+					scrollY;
+
+				if(hasSessionStorage && sessionStates.length > 0){
+
+					$.each(sessionStates, function(i, sessionState) {
+						if(self.is('#' + sessionState.id)){
+							elementID = $('#' + sessionState.selected);
+						}
+					});
+
+					if($(elementID).length < 1){
+						return;
+					}
+
+					activeTab = $(elementID).closest('.ss-tabset').find('.ui-tabs-nav .ui-tabs-active .ui-tabs-anchor').attr('id');
+					elementTab  = 'tab-' + $(elementID).closest('.ss-tabset .ui-tabs-panel').attr('id');
+
+					// Last focussed element differs to last selected tab, do nothing
+					if(tabbed && elementTab !== activeTab){
+						return;
+					}
+
+					toggleComposite = $(elementID).closest('.togglecomposite');
+
+					//Reopen toggle fields
+					if(toggleComposite.length > 0){
+						toggleComposite.accordion('activate', toggleComposite.find('.ui-accordion-header'));
+					}
+
+					//Calculate position for scroll
+					scrollY = $(elementID).position().top;
+
+					//Fall back to nearest visible element if hidden (for select type fields)
+					if(!$(elementID).is(':visible')){
+						elementID = '#' + $(elementID).closest('.field').attr('id');
+						scrollY = $(elementID).position().top;
+					}
+
+					//set focus to focus variable if element focusable
+					$(elementID).focus();
+
+					// Scroll fallback when element is not focusable
+					// Only scroll if element at least half way down window
+					if(scrollY > $(window).height() / 2){
+						self.find('.cms-content-fields').scrollTop(scrollY);
+					}
+				
+				} else {
+					// If there is no focus data attribute set, focus input on first form element. Exclude elements which
+					// specifically opt-out of this behaviour via "data-skip-autofocus".
+					// This opt-out is useful if the first visible field is shown far down a scrollable area,
+					// for example for the pagination input field after a long GridField listing.
+					// Skip if an element in the form is already focused.
+
+					this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:first').focus();
+				}
 			}
 		});
 

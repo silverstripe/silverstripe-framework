@@ -1,4 +1,12 @@
 tools:
+    php_pdepend:
+        enabled: true
+        excluded_dirs:
+            - vendor
+            - thirdparty
+            - tests
+            - parsers/HTML/BBCodeParser
+            - docs
     custom_commands:
         -
             scope: file

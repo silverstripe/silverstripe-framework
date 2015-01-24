@@ -16,11 +16,13 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
 ## Step-by-step: From forking to sending the pull request
 
+_**NOTE:** The commands on this page assume that you are branching from `3.1`, at the time of writing this is the pre-release branch._
+
 1. Install the project through composer. The process is described in detail in "[Installation through Composer](../../installation/composer#contributing)".
 
- 		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
+ 		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.1.x-dev
 
-2. Edit the `composer.json`. Remove the `@stable` markers from the core modules in there. 
+2. Edit the `composer.json`. Remove any `@stable` markers from the core modules in there. 
    Add your fork URLs, in this example a fork of the `cms` module on the `sminnee` github account 
    (replace with your own fork URL). Run a `composer update` afterwards.
 
@@ -29,7 +31,7 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 				"type": "vcs",
 				"url": "git@github.com:sminnee/silverstripe-cms.git"
 			}
-		]
+		],
 
 3. Add a new "upstream" remote so you can track the original repository for changes, and rebase/merge your fork as required.
 
@@ -38,19 +40,21 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
 4. [Branch for new issue and develop on issue branch](code#branch-for-new-issue-and-develop-on-issue-branch)
 
+		# verify current branch 'base' then branch and switch
+		git status
 		git branch ###-description
 		git checkout ###-description
 
-5. As time passes, the upstream repository accumulates new commits. Keep your working copy's master branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
+5. As time passes, the upstream repository accumulates new commits. Keep your working copy's branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
 
 		# [make sure all your changes are committed as necessary in branch]
 		git fetch upstream
-		git rebase upstream/master
+		git rebase upstream/3.1
 
 6. When development is complete, [squash all commit related to a single issue into a single commit](code#squash-all-commits-related-to-a-single-issue-into-a-single-commit).
 
 		git fetch upstream
-		git rebase -i upstream/master
+		git rebase -i upstream/3.1
 
 7. Push release candidate branch to GitHub 
 
@@ -132,6 +136,8 @@ Further guidelines:
 
 * Each commit should form a logical unit - if you fix two unrelated bugs, commit each one separately
 * If you are fixing a issue from our bugtracker ([cms](http://github.com/silverstripe/silverstripe-framework) and [framework](http://github.com/silverstripe/silverstripe-framework)), please append `(fixes #<ticketnumber>)`
+* When fixing issues across repos (e.g. a commit to `framework` fixes an issue raised in the `cms` bugtracker),
+  use `(fixes silverstripe/silverstripe-cms#<issue-number>)` ([details](https://github.com/blog/1439-closing-issues-across-repositories))
 * If your change is related to another commit, reference it with its abbreviated commit hash. 
 * Mention important changed classes and methods in the commit summary.
 
@@ -154,6 +160,7 @@ Example: Good commit message
 
 Before you start working on a new feature or bugfix, create a new branch dedicated to that one change named by issue number and description. If you're working on Issue #100, a retweet bugfix, create a new branch with the issue number and description, like this:
 
+	$ git status
 	$ git branch 100-dataobject-get-one
 	$ git checkout 100-dataobject-get-one
 
@@ -225,6 +232,10 @@ Most of these special files are listed in the `.gitignore` file and won't be inc
 One thing you do not want to do is to issue a git commit with the -a option. This automatically stages and commits every modified file that's not expressly defined in .gitignore, including your crawler logs.
 
 	$ git commit -a 
+
+Sometimes, you might correct an issue which was reported in a different repo. In these cases, don't simply refer to the issue number as GitHub will infer that as correcting an issue in the current repo. In these cases, use the full GitHub path to reference the issue.
+
+	$ git commit -m 'Issue silverstripe/silverstripe-cms#100: Some kind of descriptive message'
 
 ## What is git rebase?
 

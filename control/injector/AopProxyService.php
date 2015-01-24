@@ -3,7 +3,7 @@
 /**
  * A class that proxies another, allowing various functionality to be
  * injected.
- * 
+ *
  * @package framework
  * @subpackage injector
  */
@@ -13,20 +13,20 @@ class AopProxyService {
 	public $afterCall = array();
 
 	public $proxied;
-	
+
 	/**
 	 * Because we don't know exactly how the proxied class is usually called,
 	 * provide a default constructor
 	 */
 	public function __construct() {
-		
+
 	}
 
 	public function __call($method, $args) {
 		if (method_exists($this->proxied, $method)) {
 			$continue = true;
 			$result = null;
-			
+
 			if (isset($this->beforeCall[$method])) {
 				$methods = $this->beforeCall[$method];
 				if (!is_array($methods)) {
@@ -47,7 +47,7 @@ class AopProxyService {
 
 			if ($continue) {
 				$result = call_user_func_array(array($this->proxied, $method), $args);
-			
+
 				if (isset($this->afterCall[$method])) {
 					$methods = $this->afterCall[$method];
 					if (!is_array($methods)) {

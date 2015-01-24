@@ -1048,8 +1048,8 @@ visible. Added and removed with js in TabSet.js  */ /***************************
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel.first { left: 0; width: 203px; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .ui-icon { padding-right: 0; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .tab-nav-link, .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .ss-ui-button { font-size: 12px; }
-.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #PageType ul { padding: 0; }
-.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #PageType ul li { padding: 4px 5px; }
+.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #Form_AddForm_PageType_Holder ul { padding: 0; }
+.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #Form_AddForm_PageType_Holder ul li { padding: 4px 5px; }
 .cms .ss-ui-action-tabset.tabset-open ul.ui-tabs-nav, .cms .ss-ui-action-tabset.tabset-open ul.ui-tabs-nav li.first { -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; }
 .cms .ss-ui-action-tabset.tabset-open-last ul.ui-tabs-nav li.last { -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; }
 .cms .ss-ui-action-tabset .batch-check, .cms .ss-ui-action-tabset .ui-icon { display: inline-block; float: left; margin-left: -2px; padding-right: 6px; }
@@ -1144,3 +1144,62 @@ green tick icon as a background this is created using compass generated classes 
 .leftandmain-logindialog-dialog .ui-dialog-titlebar-close { display: none; }
 
 .leftandmain-logindialog-overlay { opacity: 0.8; }
+
+/** ----------------------------- Retina graphics ----------------------------- */
+/** This file defines graphics to use on high-DPI screens in the CMS  @package framework @subpackage admin */
+/** ---------------------------------------------------- "@2x" media query ---------------------------------------------------- */
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) { /* Loading spinner */
+  .cms-content-loading-spinner { background-image: url(../images/spinner@2x.gif); background-size: 43px 22px; }
+  .ui-dialog .ui-dialog-content.loading { background-image: url(../images/spinner@2x.gif); background-size: 43px 22px; }
+  .ui-dialog.loading { background-image: url(../images/spinner@2x.gif); background-size: 43px 22px; }
+  /* Default CMS logo */
+  .cms-logo a { background-image: url("../images/logo_small@2x.png"); background-size: 22px 22px; }
+  /* Logout button */
+  .cms-login-status .logout-link { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -184px; background-size: 30px auto; }
+  .cms-content-controls .icon-auto:before { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -274px; background-size: 30px auto; }
+  .cms-content-controls .icon-desktop:before { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -301px; background-size: 30px auto; }
+  .cms-content-controls .icon-tablet:before { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -436px; background-size: 30px auto; }
+  .cms-content-controls .icon-mobile:before { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -355px; background-size: 30px auto; }
+  .cms-content-controls .icon-split:before { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -409px; background-size: 30px auto; }
+  .cms-content-controls .icon-edit:before { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -328px; background-size: 30px auto; }
+  .cms-content-controls .icon-preview:before { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -382px; background-size: 30px auto; }
+  .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li a:after { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -26px; background-size: 30px auto; }
+  .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li a:hover:after { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 0; background-size: 30px auto; }
+  .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li.ui-state-active a:after { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -78px; background-size: 30px auto; }
+  .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li.ui-state-active a:hover:after { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -52px; background-size: 30px auto; }
+  /* CMS menu */
+  .cms-menu-list li a .toggle-children .toggle-children-icon { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -210px; background-size: 30px auto; }
+  .cms-menu-list li a .toggle-children.opened .toggle-children-icon { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -226px; background-size: 30px auto; }
+  .cms-menu-list li.current a .toggle-children .toggle-children-icon { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -242px; background-size: 30px auto; }
+  .cms-menu-list li.current a .toggle-children.opened .toggle-children-icon { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -258px; background-size: 30px auto; }
+  /* Sitetree */
+  .tree-holder.jstree-apple ins, .cms-tree.jstree-apple ins { background-image: url(../images/sitetree_ss_default_icons@2x.png); background-size: 108px 72px; }
+  /* UI widget "close" button */
+  .ui-widget-header a.ui-state-hover .ui-icon-closethick { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -104px; background-size: 30px auto; }
+  .ui-widget-header .ui-icon-closethick { background-image: url('../images/sprites-32x32-2x-sa271d435b9.png'); background-position: 0 -144px; background-size: 30px auto; }
+  /* Tab icons */
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.list a { background-image: url('../images/sprites-64x64-2x-se3e3f47b94.png'); background-position: 0 -150px; background-size: 40px auto; }
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.tree a { background-image: url('../images/sprites-64x64-2x-se3e3f47b94.png'); background-position: 0 -250px; background-size: 40px auto; }
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.edit a { background-image: url('../images/sprites-64x64-2x-se3e3f47b94.png'); background-position: 0 -50px; background-size: 40px auto; }
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.list.ui-state-active a { background-image: url('../images/sprites-64x64-2x-se3e3f47b94.png'); background-position: 0 -100px; background-size: 40px auto; }
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.tree.ui-state-active a { background-image: url('../images/sprites-64x64-2x-se3e3f47b94.png'); background-position: 0 -200px; background-size: 40px auto; }
+  .ui-tabs .ui-tabs-nav li.cms-tabset-icon.edit.ui-state-active a { background-image: url('../images/sprites-64x64-2x-se3e3f47b94.png'); background-position: 0 0; background-size: 40px auto; }
+  /* Menu icon classes */
+  .icon.icon-24 { background-image: url('../images/menu-icons/24x24-2x-sccfd928e17.png'); background-size: 24px auto; }
+  .icon.icon-24.icon-assetadmin { background-position: 0 -216px; }
+  .icon.icon-24.icon-cmsmain { background-position: 0 -192px; }
+  .icon.icon-24.icon-cmspagescontroller { background-position: 0 -168px; }
+  .icon.icon-24.icon-cmssettingscontroller { background-position: 0 -96px; }
+  .icon.icon-24.icon-securityadmin { background-position: 0 -24px; }
+  .icon.icon-24.icon-reportadmin { background-position: 0 -240px; }
+  .icon.icon-24.icon-commentadmin { background-position: 0 0; }
+  .icon.icon-24.icon-help { background-position: 0 -144px; }
+  .icon.icon-16 { background-image: url('../images/menu-icons/16x16-2x-sbe70081ef8.png'); background-size: 16px auto; }
+  .icon.icon-16.icon-assetadmin { background-position: 0 -144px; }
+  .icon.icon-16.icon-cmsmain { background-position: 0 -128px; }
+  .icon.icon-16.icon-cmspagescontroller { background-position: 0 -112px; }
+  .icon.icon-16.icon-cmssettingscontroller { background-position: 0 -64px; }
+  .icon.icon-16.icon-securityadmin { background-position: 0 -16px; }
+  .icon.icon-16.icon-reportadmin { background-position: 0 -160px; }
+  .icon.icon-16.icon-commentadmin { background-position: 0 0; }
+  .icon.icon-16.icon-help { background-position: 0 -96px; } }

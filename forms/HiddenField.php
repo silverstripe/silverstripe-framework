@@ -27,4 +27,9 @@ class HiddenField extends FormField {
 			array('type' => 'hidden')
 		);
 	}
+
+	function SmallFieldHolder($properties = array()) {
+		return $this->FieldHolder($properties);
+	}
+
 }

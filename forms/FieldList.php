@@ -6,7 +6,7 @@
  * @subpackage fields-structural
  */
 class FieldList extends ArrayList {
-	
+
 	/**
 	 * Cached flat representation of all fields in this set,
 	 * including fields nested in {@link CompositeFields}.
@@ -15,12 +15,12 @@ class FieldList extends ArrayList {
 	 * @var array
 	 */
 	protected $sequentialSet;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $sequentialSaveableSet;
-	
+
 	/**
 	 * @todo Documentation
 	 */
@@ -31,7 +31,7 @@ class FieldList extends ArrayList {
 	 * see {@link setTabPathRewrites()}.
 	 */
 	protected $tabPathRewrites = array();
-	
+
 	public function __construct($items = array()) {
 		if (!is_array($items) || func_num_args() > 1) {
 			$items = func_get_args();
@@ -43,7 +43,7 @@ class FieldList extends ArrayList {
 			if ($item instanceof FormField) $item->setContainerFieldList($this);
 		}
 	}
-	
+
 	/**
 	 * Return a sequential set of all fields that have data.  This excludes wrapper composite fields
 	 * as well as heading / help text fields.
@@ -52,17 +52,17 @@ class FieldList extends ArrayList {
 		if(!$this->sequentialSet) $this->collateDataFields($this->sequentialSet);
 		return $this->sequentialSet;
 	}
-	
+
 	public function saveableFields() {
 		if(!$this->sequentialSaveableSet) $this->collateDataFields($this->sequentialSaveableSet, true);
 		return $this->sequentialSaveableSet;
 	}
-	
+
 	protected function flushFieldsCache() {
 		$this->sequentialSet = null;
 		$this->sequentialSaveableSet = null;
 	}
-	
+
 	protected function collateDataFields(&$list, $saveableOnly = false) {
 		foreach($this as $field) {
 			if($field->isComposite()) $field->collateDataFields($list, $saveableOnly);
@@ -88,11 +88,11 @@ class FieldList extends ArrayList {
 			}
 		}
 	}
-	
+
 	/**
 	 * Add an extra field to a tab within this FieldList.
 	 * This is most commonly used when overloading getCMSFields()
-	 * 
+	 *
 	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab
 	 *                        or TabSet.Tab.Subtab. This function will create any missing tabs.
 	 * @param FormField $field The {@link FormField} object to add to the end of that tab.
@@ -106,14 +106,14 @@ class FieldList extends ArrayList {
 		$tab = $this->findOrMakeTab($tabName);
 
 		// Add the field to the end of this set
-		if($insertBefore) $tab->insertBefore($field, $insertBefore);
+		if($insertBefore) $tab->insertBefore($insertBefore, $field);
 		else $tab->push($field);
 	}
-	
+
 	/**
 	 * Add a number of extra fields to a tab within this FieldList.
 	 * This is most commonly used when overloading getCMSFields()
-	 * 
+	 *
 	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab
 	 *                        or TabSet.Tab.Subtab.
 	 * This function will create any missing tabs.
@@ -129,7 +129,7 @@ class FieldList extends ArrayList {
 		foreach($fields as $field) {
 			// Check if a field by the same name exists in this tab
 			if($insertBefore) {
-				$tab->insertBefore($field, $insertBefore);
+				$tab->insertBefore($insertBefore, $field);
 			} elseif(($name = $field->getName()) && $tab->fieldByName($name)) {
 				// It exists, so we need to replace the old one
 				$this->replaceField($field->getName(), $field);
@@ -141,7 +141,7 @@ class FieldList extends ArrayList {
 
 	/**
 	 * Remove the given field from the given tab in the field.
-	 * 
+	 *
 	 * @param string $tabName The name of the tab
 	 * @param string $fieldName The name of the field
 	 */
@@ -152,7 +152,7 @@ class FieldList extends ArrayList {
 		$tab = $this->findOrMakeTab($tabName);
 		$tab->removeByName($fieldName);
 	}
-	
+
 	/**
 	 * Removes a number of fields from a Tab/TabSet within this FieldList.
 	 *
@@ -164,15 +164,15 @@ class FieldList extends ArrayList {
 
 		// Find the tab
 		$tab = $this->findOrMakeTab($tabName);
-		
+
 		// Add the fields to the end of this set
 		foreach($fields as $field) $tab->removeByName($field);
 	}
-	
+
 	/**
 	 * Remove a field or fields from this FieldList by Name.
 	 * The field could also be inside a CompositeField.
-	 * 
+	 *
 	 * @param string|array $fieldName The name of, or an array with the field(s) or tab(s)
 	 * @param boolean $dataFieldOnly If this is true, then a field will only
 	 * be removed if it's a data field.  Dataless fields, such as tabs, will
@@ -196,7 +196,7 @@ class FieldList extends ArrayList {
 			if(is_object($child)){
 				$childName = $child->getName();
 				if(!$childName) $childName = $child->Title();
-				
+
 				if(($childName == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
 					array_splice( $this->items, $i, 1 );
 					break;
@@ -206,7 +206,7 @@ class FieldList extends ArrayList {
 			}
 		}
 	}
-	
+
 	/**
 	 * Replace a single field with another.  Ignores dataless fields such as Tabs and TabSets
 	 *
@@ -222,7 +222,7 @@ class FieldList extends ArrayList {
 				if($field->getName() == $fieldName && $field->hasData()) {
 					$this->items[$i] = $newField;
 					return true;
-				
+
 				} else if($field->isComposite()) {
 					if($field->replaceField($fieldName, $newField)) return true;
 				}
@@ -230,7 +230,7 @@ class FieldList extends ArrayList {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Rename the title of a particular field name in this set.
 	 *
@@ -241,12 +241,12 @@ class FieldList extends ArrayList {
 	public function renameField($fieldName, $newFieldTitle) {
 		$field = $this->dataFieldByName($fieldName);
 		if(!$field) return false;
-		
+
 		$field->setTitle($newFieldTitle);
-		
+
 		return $field->Title() == $newFieldTitle;
 	}
-	
+
 	/**
 	 * @return boolean
 	 */
@@ -256,15 +256,15 @@ class FieldList extends ArrayList {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Returns the specified tab object, creating it if necessary.
-	 * 
+	 *
 	 * @todo Support recursive creation of TabSets
-	 * 
+	 *
 	 * @param string $tabName The tab to return, in the form "Tab.Subtab.Subsubtab".
 	 *   Caution: Does not recursively create TabSet instances, you need to make sure everything
 	 *   up until the last tab in the chain exists.
@@ -304,21 +304,21 @@ class FieldList extends ArrayList {
 				}
 			}
 		}
-		
+
 		return $currentPointer;
 	}
 
 	/**
 	 * Returns a named field.
 	 * You can use dot syntax to get fields from child composite fields
-	 * 
+	 *
 	 * @todo Implement similiarly to dataFieldByName() to support nested sets - or merge with dataFields()
 	 */
 	public function fieldByName($name) {
 		$name = $this->rewriteTabPath($name);
 		if(strpos($name,'.') !== false)	list($name, $remainder) = explode('.',$name,2);
 		else $remainder = null;
-		
+
 		foreach($this->items as $child) {
 			if(trim($name) == trim($child->getName()) || $name == $child->id) {
 				if($remainder) {
@@ -335,11 +335,11 @@ class FieldList extends ArrayList {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns a named field in a sequential set.
 	 * Use this if you're using nested FormFields.
-	 * 
+	 *
 	 * @param string $name The name of the field to return
 	 * @return FormField instance
 	 */
@@ -354,53 +354,61 @@ class FieldList extends ArrayList {
 	/**
 	 * Inserts a field before a particular field in a FieldList.
 	 *
-	 * @param FormField $item The form field to insert
 	 * @param string $name Name of the field to insert before
+	 * @param FormField $item The form field to insert
 	 */
-	public function insertBefore($item, $name) {
+	public function insertBefore($name, $item) {
+		// Backwards compatibility for order of arguments
+		if($name instanceof FormField) {
+			list($item, $name) = array($name, $item);
+		}
 		$this->onBeforeInsert($item);
 		$item->setContainerFieldList($this);
-		
+
 		$i = 0;
 		foreach($this->items as $child) {
 			if($name == $child->getName() || $name == $child->id) {
 				array_splice($this->items, $i, 0, array($item));
 				return $item;
 			} elseif($child->isComposite()) {
-				$ret = $child->insertBefore($item, $name);
+				$ret = $child->insertBefore($name, $item);
 				if($ret) return $ret;
 			}
 			$i++;
 		}
-		
+
 		return false;
 	}
 
 	/**
 	 * Inserts a field after a particular field in a FieldList.
 	 *
-	 * @param FormField $item The form field to insert
 	 * @param string $name Name of the field to insert after
+	 * @param FormField $item The form field to insert
 	 */
-	public function insertAfter($item, $name) {
+	public function insertAfter($name, $item) {
+		// Backwards compatibility for order of arguments
+		if($name instanceof FormField) {
+			list($item, $name) = array($name, $item);
+		}
 		$this->onBeforeInsert($item);
 		$item->setContainerFieldList($this);
-		
+
 		$i = 0;
 		foreach($this->items as $child) {
 			if($name == $child->getName() || $name == $child->id) {
 				array_splice($this->items, $i+1, 0, array($item));
 				return $item;
 			} elseif($child->isComposite()) {
-				$ret = $child->insertAfter($item, $name);
+				$ret = $child->insertAfter($name, $item);
 				if($ret) return $ret;
 			}
 			$i++;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Push a single field into this FieldList instance.
 	 *
@@ -424,8 +432,8 @@ class FieldList extends ArrayList {
 			$this->rootFieldList()->removeByName($item->getName(), true);
 		}
 	}
-		
-	
+
+
 	/**
 	 * Set the Form instance for this FieldList.
 	 *
@@ -435,13 +443,13 @@ class FieldList extends ArrayList {
 		foreach($this as $field) {
 			$field->setForm($form);
 		}
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Load the given data into this form.
-	 * 
+	 *
 	 * @param data An map of data to load into the FieldList
 	 */
 	public function setValues($data) {
@@ -451,43 +459,43 @@ class FieldList extends ArrayList {
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * Return all <input type="hidden"> fields
 	 * in a form - including fields nested in {@link CompositeFields}.
 	 * Useful when doing custom field layouts.
-	 * 
+	 *
 	 * @return FieldList
 	 */
 	public function HiddenFields() {
 		$hiddenFields = new FieldList();
 		$dataFields = $this->dataFields();
-		
+
 		if($dataFields) foreach($dataFields as $field) {
 			if($field instanceof HiddenField) $hiddenFields->push($field);
 		}
-		
+
 		return $hiddenFields;
 	}
-	
+
 	/**
 	 * Return all fields except for the hidden fields.
 	 * Useful when making your own simplified form layouts.
 	 */
 	public function VisibleFields() {
 		$visibleFields = new FieldList();
-		
+
 		foreach($this as $field) {
 			if(!($field instanceof HiddenField)) $visibleFields->push($field);
 		}
-		
+
 		return $visibleFields;
 	}
 
 	/**
 	 * Transform this FieldList with a given tranform method,
 	 * e.g. $this->transform(new ReadonlyTransformation())
-	 * 
+	 *
 	 * @return FieldList
 	 */
 	public function transform($trans) {
@@ -506,12 +514,12 @@ class FieldList extends ArrayList {
 		if($this->containerField) return $this->containerField->rootFieldList();
 		else return $this;
 	}
-	
+
 	public function setContainerField($field) {
 		$this->containerField = $field;
 		return $this;
 	}
-	
+
 	/**
 	 * Transforms this FieldList instance to readonly.
 	 *
@@ -523,7 +531,7 @@ class FieldList extends ArrayList {
 
 	/**
 	 * Transform the named field into a readonly feld.
-	 * 
+	 *
 	 * @param string|FormField
 	 */
 	public function makeFieldReadonly($field) {
@@ -531,12 +539,12 @@ class FieldList extends ArrayList {
 		$srcField = $this->dataFieldByName($fieldName);
 		$this->replaceField($fieldName, $srcField->performReadonlyTransformation());
 	}
-	
+
 	/**
 	 * Change the order of fields in this FieldList by specifying an ordered list of field names.
 	 * This works well in conjunction with SilverStripe's scaffolding functions: take the scaffold, and
 	 * shuffle the fields around to the order that you want.
-	 * 
+	 *
 	 * Please note that any tabs or other dataless fields will be clobbered by this operation.
 	 *
 	 * @param array $fieldNames Field names can be given as an array, or just as a list of arguments.
@@ -544,11 +552,11 @@ class FieldList extends ArrayList {
 	public function changeFieldOrder($fieldNames) {
 		// Field names can be given as an array, or just as a list of arguments.
 		if(!is_array($fieldNames)) $fieldNames = func_get_args();
-		
+
 		// Build a map of fields indexed by their name.  This will make the 2nd step much easier.
 		$fieldMap = array();
 		foreach($this->dataFields() as $field) $fieldMap[$field->getName()] = $field;
-		
+
 		// Iterate through the ordered list	of names, building a new array to be put into $this->items.
 		// While we're doing this, empty out $fieldMap so that we can keep track of leftovers.
 		// Unrecognised field names are okay; just ignore them
@@ -559,33 +567,33 @@ class FieldList extends ArrayList {
 				unset($fieldMap[$fieldName]);
 			}
 		}
-		
+
 		// Add the leftover fields to the end of the list.
 		$fields = $fields + array_values($fieldMap);
-		
+
 		// Update our internal $this->items parameter.
 		$this->items = $fields;
-		
+
 		$this->flushFieldsCache();
 	}
-	
+
 	/**
 	 * Find the numerical position of a field within
 	 * the children collection. Doesn't work recursively.
-	 * 
+	 *
 	 * @param string|FormField
 	 * @return int Position in children collection (first position starts with 0). Returns FALSE if the field can't
 	 *             be found.
 	 */
 	public function fieldPosition($field) {
 		if(is_object($field)) $field = $field->getName();
-		
+
 		$i = 0;
 		foreach($this->dataFields() as $child) {
 			if($child->getName() == $field) return $i;
 			$i++;
 		}
-		
+
 		return false;
 	}
 
@@ -595,16 +603,16 @@ class FieldList extends ArrayList {
 	 * Mainly used for backwards compatibility.
 	 * Ensure that more specific rules are placed earlier in the list,
 	 * and that tabs with children are accounted for in the rule sets.
-	 * 
-	 * Example: 
+	 *
+	 * Example:
 	 * $fields->setTabPathRewriting(array(
 	 * 	// Rewrite specific innermost tab
 	 * 	'/^Root\.Content\.Main$/' => 'Root.Content',
 	 * 	// Rewrite all innermost tabs
 	 * 	'/^Root\.Content\.([^.]+)$/' => 'Root.\\1',
 	 * ));
-	 * 
-	 * @param array $rewrites 
+	 *
+	 * @param array $rewrites
 	 */
 	public function setTabPathRewrites($rewrites) {
 		$this->tabPathRewrites = $rewrites;
@@ -620,7 +628,7 @@ class FieldList extends ArrayList {
 	/**
 	 * Support function for backwards compatibility purposes.
 	 * Caution: Volatile API, might be removed in 3.1 or later.
-	 * 
+	 *
 	 * @param  String $tabname Path to a tab, e.g. "Root.Content.Main"
 	 * @return String Rewritten path, based on {@link tabPathRewrites}
 	 */
@@ -629,7 +637,7 @@ class FieldList extends ArrayList {
 		foreach($this->getTabPathRewrites() as $regex => $replace) {
 			if(preg_match($regex, $name)) {
 				$newName = preg_replace($regex, $replace, $name);
-				Deprecation::notice('3.0.0', 
+				Deprecation::notice('3.0.0',
 					sprintf(
 						'Using outdated tab path "%s", please use the new location "%s" instead',
 						$name,

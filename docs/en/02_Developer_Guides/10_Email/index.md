@@ -212,6 +212,15 @@ assets folder instead.
 		Email::set_mailer(new LocalMailer());
 	}
 
+
+### Setting bounce handler
+
+A bounce handler email can be specified one of a few ways:
+
+* Via config by setting the `Mailer.default_bounce_email` config to the desired email address.
+* Via _ss_environment.php by setting the `BOUNCE_EMAIL` definition.
+* Via PHP by calling `Email::mailer()->setBounceEmail('bounce@mycompany.com');`
+
 ## API Documentation
 
 * [api:Email]

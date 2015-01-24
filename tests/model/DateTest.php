@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class DateTest extends SapphireTest {
-	
+
 	protected $originalTZ;
 
 	public function setUp() {
@@ -60,37 +60,37 @@ class DateTest extends SapphireTest {
 			"Date->Nice() works with DD/MM/YYYY format"
 		);
 	}
-	
+
 	public function testNiceUS(){
 		$this->assertEquals('03/31/2008', DBField::create_field('Date', 1206968400)->NiceUs(),
 			"Date->NiceUs() works with timestamp integers"
 		);
 	}
-	
+
 	public function testYear(){
 		$this->assertEquals('2008', DBField::create_field('Date', 1206968400)->Year(),
 			"Date->Year() works with timestamp integers"
 		);
 	}
-	
+
 	public function testDay(){
 		$this->assertEquals('Monday', DBField::create_field('Date', 1206968400)->Day(),
 			"Date->Day() works with timestamp integers"
 		);
 	}
-	
+
 	public function testMonth(){
 		$this->assertEquals('March', DBField::create_field('Date', 1206968400)->Month(),
 			"Date->Month() works with timestamp integers"
 		);
 	}
-	
+
 	public function testShortMonth(){
 		$this->assertEquals('Mar', DBField::create_field('Date', 1206968400)->ShortMonth(),
 			"Date->ShortMonth() works with timestamp integers"
 		);
 	}
-	
+
 	public function testLongDate() {
 		$this->assertEquals('31 March 2008', DBField::create_field('Date', 1206968400)->Long(),
 			"Date->Long() works with numeric timestamp"
@@ -111,7 +111,7 @@ class DateTest extends SapphireTest {
 			"Date->Long() works with D/M/YYYY"
 		);
 	}
-	
+
 	public function testFull(){
 		$this->assertEquals('31 Mar 2008', DBField::create_field('Date', 1206968400)->Full(),
 			"Date->Full() works with timestamp integers"
@@ -164,19 +164,49 @@ class DateTest extends SapphireTest {
 		SS_Datetime::set_mock_now('2000-12-31 12:00:00');
 
 		$this->assertEquals(
+			'1 month ago', 
+			DBField::create_field('Date', '2000-11-26')->Ago(true, 1),
+			'Past match on days, less than two months, lowest significance'
+		);
+
+		$this->assertEquals(
+			'50 days ago', // Rounded from 49.5 days up
+			DBField::create_field('Date', '2000-11-12')->Ago(),
+			'Past match on days, less than two months'
+		);
+
+		$this->assertEquals(
+			'2 months ago', 
+			DBField::create_field('Date', '2000-10-27')->Ago(),
+			'Past match on days, over two months'
+		);
+
+		$this->assertEquals(
+			'66 days ago', // rounded from 65.5 days up
+			DBField::create_field('Date', '2000-10-27')->Ago(true, 3),
+			'Past match on days, over two months, significance of 3'
+		);
+
+		$this->assertEquals(
 			'10 years ago', 
 			DBField::create_field('Date', '1990-12-31')->Ago(),
 			'Exact past match on years'
 		);
 
 		$this->assertEquals(
-			'10 years ago', 
+			'10 years ago',
 			DBField::create_field('Date', '1990-12-30')->Ago(),
 			'Approximate past match on years'
 		);
 
 		$this->assertEquals(
 			'1 year ago', 
+			DBField::create_field('Date', '1999-12-30')->Ago(true, 1),
+			'Approximate past match in singular, lowest significance'
+		);
+
+		$this->assertEquals(
+			'12 months ago', 
 			DBField::create_field('Date', '1999-12-30')->Ago(),
 			'Approximate past match in singular'
 		);
@@ -188,34 +218,40 @@ class DateTest extends SapphireTest {
 		SS_Datetime::set_mock_now('2000-12-31 00:00:00');
 
 		$this->assertEquals(
-			'in 10 years', 
+			'in 10 years',
 			DBField::create_field('Date', '2010-12-31')->Ago(),
 			'Exact past match on years'
 		);
 
 		$this->assertEquals(
 			'in 1 day', 
+			DBField::create_field('Date', '2001-01-01')->Ago(true, 1),
+			'Approximate past match on minutes'
+		);
+
+		$this->assertEquals(
+			'in 24 hours', 
 			DBField::create_field('Date', '2001-01-01')->Ago(),
 			'Approximate past match on minutes'
 		);
 
 		SS_Datetime::clear_mock_now();
 	}
-	
-	public function testFormatFromSettings() {	
-		
+
+	public function testFormatFromSettings() {
+
 		$memberID = $this->logInWithPermission();
 		$member = DataObject::get_by_id('Member', $memberID);
 		$member->DateFormat = 'dd/MM/YYYY';
 		$member->write();
-		
+
 		$fixtures = array(
 			'2000-12-31' => '31/12/2000',
 			'31-12-2000' => '31/12/2000',
 			'31/12/2000' => '31/12/2000',
 			'2014-04-01' => '01/04/2014'
 		);
-		
+
 		foreach($fixtures as $from => $to) {
 			$date = DBField::create_field('Date', $from);
 			// With member
@@ -223,6 +259,6 @@ class DateTest extends SapphireTest {
 			// Without member
 			$this->assertEquals($to, $date->FormatFromSettings());
 		}
-	}	
+	}
 
 }

@@ -9,7 +9,7 @@
 class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {
 
 	/**
-	 * @var array Map of a property name on the printed objects, with values 
+	 * @var array Map of a property name on the printed objects, with values
 	 * being the column title in the CSV file.
 	 *
 	 * Note that titles are only used when {@link $csvHasHeader} is set to TRUE
@@ -20,7 +20,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	 * @var boolean
 	 */
 	protected $printHasHeader = true;
-	
+
 	/**
 	 * Fragment to write the button to.
 	 *
@@ -46,10 +46,10 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	 */
 	public function getHTMLFragments($gridField) {
 		$button = new GridField_FormAction(
-			$gridField, 
-			'print', 
+			$gridField,
+			'print',
 			_t('TableListField.Print', 'Print'),
-			'print', 
+			'print',
 			null
 		);
 
@@ -57,7 +57,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 		$button->addExtraClass('gridfield-button-print');
 
 		return array(
-			$this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>', 
+			$this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>',
 		);
 	}
 
@@ -115,7 +115,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	 * Return the columns to print
 	 *
 	 * @param GridField
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function getPrintColumnsForGridField(GridField $gridField) {
@@ -170,7 +170,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
  	 */
 	public function generatePrintData(GridField $gridField) {
 		$printColumns = $this->getPrintColumnsForGridField($gridField);
-		
+
 		$header = null;
 
 		if($this->printHasHeader) {
@@ -182,13 +182,13 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 				)));
 			}
 		}
-		
+
 		$items = $gridField->getManipulatedList();
 		$itemRows = new ArrayList();
 
 		foreach($items as $item) {
 			$itemRow = new ArrayList();
-			
+
 			foreach($printColumns as $field => $label) {
 				$value = $gridField->getDataFieldValue($item, $field);
 
@@ -196,7 +196,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 					"CellString" => $value,
 				)));
 			}
-			
+
 			$itemRows->push(new ArrayData(array(
 				"ItemRow" => $itemRow
 			)));
@@ -211,7 +211,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 			"Datetime" => SS_Datetime::now(),
 			"Member" => Member::currentUser(),
 		));
-		
+
 		return $ret;
 	}
 

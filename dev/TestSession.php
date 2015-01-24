@@ -12,6 +12,11 @@ class TestSession {
 	 * @var Session
 	 */
 	private $session;
+	
+	/**
+	 * @var Cookie_Backend
+	 */
+	private $cookies;
 
 	/**
 	 * @var SS_HTTPResponse
@@ -36,6 +41,7 @@ class TestSession {
 
 	public function __construct() {
 		$this->session = Injector::inst()->create('Session', array());
+		$this->cookies = Injector::inst()->create('Cookie_Backend');
 		$this->controller = new Controller();
 		$this->controller->setSession($this->session);
 		$this->controller->pushCurrent();
@@ -62,8 +68,15 @@ class TestSession {
 	public function get($url, $session = null, $headers = null, $cookies = null) {
 		$headers = (array) $headers;
 		if($this->lastUrl && !isset($headers['Referer'])) $headers['Referer'] = $this->lastUrl;
-		$this->lastResponse
-			= Director::test($url, null, $session ? $session : $this->session, null, null, $headers, $cookies);
+		$this->lastResponse = Director::test(
+			$url,
+			null,
+			$session ?: $this->session,
+			null,
+			null,
+			$headers,
+			$cookies ?: $this->cookies
+		);
 		$this->lastUrl = $url;
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
@@ -84,8 +97,15 @@ class TestSession {
 	public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
 		$headers = (array) $headers;
 		if($this->lastUrl && !isset($headers['Referer'])) $headers['Referer'] = $this->lastUrl;
-		$this->lastResponse
-			= Director::test($url, $data, $session ? $session : $this->session, null, $body, $headers, $cookies);
+		$this->lastResponse = Director::test(
+			$url,
+			$data,
+			$session ?: $this->session,
+			null,
+			$body,
+			$headers,
+			$cookies ?: $this->cookies
+		);
 		$this->lastUrl = $url;
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;

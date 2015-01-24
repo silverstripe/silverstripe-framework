@@ -9,27 +9,27 @@
  * @subpackage search
  */
 abstract class SearchFilter extends Object {
-	
+
 	/**
 	 * @var string Classname of the inspected {@link DataObject}
 	 */
 	protected $model;
-	
+
 	/**
 	 * @var string
 	 */
 	protected $name;
-	
+
 	/**
-	 * @var string 
+	 * @var string
 	 */
 	protected $fullName;
-	
+
 	/**
 	 * @var mixed
 	 */
 	protected $value;
-	
+
 	/**
 	 * @var array
 	 */
@@ -37,13 +37,13 @@ abstract class SearchFilter extends Object {
 
 	/**
 	 * @var string Name of a has-one, has-many or many-many relation (not the classname).
-	 * Set in the constructor as part of the name in dot-notation, and used in 
+	 * Set in the constructor as part of the name in dot-notation, and used in
 	 * {@link applyRelation()}.
 	 */
 	protected $relation;
-	
+
 	/**
-	 * @param string $fullName Determines the name of the field, as well as the searched database 
+	 * @param string $fullName Determines the name of the field, as well as the searched database
 	 *  column. Can contain a relation name in dot notation, which will automatically join
 	 *  the necessary tables (e.g. "Comments.Name" to join the "Comments" has-many relationship and
 	 *  search the "Name" column when applying this filter to a SiteTree class).
@@ -58,7 +58,7 @@ abstract class SearchFilter extends Object {
 		$this->value = $value;
 		$this->setModifiers($modifiers);
 	}
-	
+
 	/**
 	 * Called by constructor to convert a string pathname into
 	 * a well defined relationship sequence.
@@ -74,31 +74,30 @@ abstract class SearchFilter extends Object {
 			$this->name = $name;
 		}
 	}
-	
+
 	/**
 	 * Set the root model class to be selected by this
 	 * search query.
 	 *
 	 * @param string $className
-	 */	
+	 */
 	public function setModel($className) {
 		$this->model = $className;
 	}
-	
+
 	/**
-	 * Set the current value to be filtered on.
+	 * Set the current value(s) to be filtered on.
 	 *
-	 * @param string $value
+	 * @param string|array $value
 	 */
 	public function setValue($value) {
 		$this->value = $value;
 	}
-	
+
 	/**
 	 * Accessor for the current value to be filtered on.
-	 * Caution: Data is not escaped.
 	 *
-	 * @return string
+	 * @return string|array
 	 */
 	public function getValue() {
 		return $this->value;
@@ -121,7 +120,7 @@ abstract class SearchFilter extends Object {
 	public function getModifiers() {
 		return $this->modifiers;
 	}
-	
+
 	/**
 	 * The original name of the field.
 	 *
@@ -137,11 +136,11 @@ abstract class SearchFilter extends Object {
 	public function setName($name) {
 		$this->name = $name;
 	}
-	
+
 	/**
 	 * The full name passed to the constructor,
 	 * including any (optional) relations in dot notation.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getFullName() {
@@ -154,10 +153,10 @@ abstract class SearchFilter extends Object {
 	public function setFullName($name) {
 		$this->fullName = $name;
 	}
-	
+
 	/**
 	 * Normalizes the field name to table mapping.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getDbName() {
@@ -165,7 +164,7 @@ abstract class SearchFilter extends Object {
 		if($this->name == "NULL") {
 			return $this->name;
 		}
-		
+
 		$candidateClass = ClassInfo::table_for_object_field(
 			$this->model, 
 			$this->name
@@ -177,10 +176,10 @@ abstract class SearchFilter extends Object {
 			$parts = explode('.', $this->fullName);
 			return '"' . implode('"."', $parts) . '"';
 		}
-		
+
 		return "\"$candidateClass\".\"$this->name\"";
 	}
-	
+
 	/**
 	 * Return the value of the field as processed by the DBField class
 	 *
@@ -195,7 +194,7 @@ abstract class SearchFilter extends Object {
 		return $dbField->RAW();
 	}
 
-	
+
 	/**
 	 * Apply filter criteria to a SQL query.
 	 *
@@ -267,13 +266,13 @@ abstract class SearchFilter extends Object {
 	protected function excludeMany(DataQuery $query) {
 		throw new InvalidArgumentException(get_class($this) . "can't be used to filter by a list of items.");
 	}
-	
+
 	/**
 	 * Determines if a field has a value,
 	 * and that the filter should be applied.
 	 * Relies on the field being populated with
 	 * {@link setValue()}
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isEmpty() {
@@ -282,7 +281,7 @@ abstract class SearchFilter extends Object {
 
 	/**
 	 * Determines case sensitivity based on {@link getModifiers()}.
-	 * 
+	 *
 	 * @return Mixed TRUE or FALSE to enforce sensitivity, NULL to use field collation.
 	 */
 	protected function getCaseSensitive() {

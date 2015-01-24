@@ -135,7 +135,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$parser = new CSSContentParser($response->getBody());
 		$editform = $parser->getBySelector('#Form_ItemEditForm');
 		$editformurl = (string) $editform[0]['action'];
-		
+
 		$response = $this->post(
 			$editformurl,
 			array(
@@ -173,7 +173,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$manyManyField = $parser->getByXpath('//*[@id="Form_ItemEditForm"]//input[@name="ManyMany[IsPublished]"]');
 		$this->assertTrue((bool)$manyManyField);
-		
+
 		$response = $this->post(
 			$editformurl,
 			array(
@@ -216,7 +216,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]' .
-			'//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
+			'//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');
 		$this->assertEquals(
 			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
 				. '/item/%d/edit', $group->ID, $person->ID),
@@ -228,7 +228,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$categoryEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_Categories"]'
-			. '//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');	
+			. '//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');
 		$this->assertEquals(
 			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
 				. '/item/%d/ItemEditForm/field/Categories/item/%d/edit', $group->ID, $person->ID, $category->ID),
@@ -249,7 +249,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 	public function testItemEditFormCallback() {
 		$this->logInWithPermission('ADMIN');
-		
+
 		$category = new GridFieldDetailFormTest_Category();
 		$component = new GridFieldDetailForm();
 		$component->setItemEditFormCallback(function($form, $component) {
@@ -285,8 +285,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$response = $this->get($addLink);
 		$parser = new CSSContentParser($response->getBody());
-		$title = $parser->getBySelector('#GroupID span');
-		$id = $parser->getBySelector('#GroupID input');
+		$title = $parser->getBySelector('#Form_ItemEditForm_GroupID_Holder span');
+		$id = $parser->getBySelector('#Form_ItemEditForm_GroupID_Holder input');
 
 		$this->assertEquals($group->Name, (string) $title[0]);
 		$this->assertEquals($group->ID, (string) $id[0]['value']);
@@ -376,7 +376,7 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
  */
 
 class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		'Name' => 'Varchar'
 	);
@@ -406,7 +406,7 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
  */
 
 class GridFieldDetailFormTest_Controller extends Controller implements TestOnly {
-	
+
 	private static $allowed_actions = array('Form');
 
 	protected $template = 'BlankPage';
@@ -457,7 +457,7 @@ class GridFieldDetailFormTest_GroupController extends Controller implements Test
 class GridFieldDetailFormTest_CategoryController extends Controller implements TestOnly {
 
 	private static $allowed_actions = array('Form');
-	
+
 	protected $template = 'BlankPage';
 
 	public function Form() {

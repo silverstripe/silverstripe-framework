@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Use the SilverStripe configuration system to lookup config for a 
+ * Use the SilverStripe configuration system to lookup config for a
  * particular service.
  *
  * @package framework
  * @subpackage injector
  */
 class SilverStripeServiceConfigurationLocator extends ServiceConfigurationLocator {
-	
+
 	/**
 	 * List of Injector configurations cached from Config in class => config format.
 	 * If any config is false, this denotes that this class and all its parents 
@@ -17,9 +17,8 @@ class SilverStripeServiceConfigurationLocator extends ServiceConfigurationLocato
 	 * @var array
 	 */
 	protected $configs = array();
-	
+
 	public function locateConfigFor($name) {
-		
 		// Check direct or cached result
 		$config = $this->configFor($name);
 		if($config !== null) return $config;
@@ -30,7 +29,7 @@ class SilverStripeServiceConfigurationLocator extends ServiceConfigurationLocato
 			array_shift($parents);
 
 			foreach ($parents as $parent) {
-				// have we already got for this? 
+				// have we already got for this?
 				$config = $this->configFor($parent);
 				if($config !== null) {
 					// Cache this result

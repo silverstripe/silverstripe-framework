@@ -5,21 +5,21 @@
  * or an ISO 8601 formatted date (YYYY-MM-DD).
  * Alternatively you can set a timestamp that is evaluated through
  * PHP's built-in date() function according to your system locale.
- * 
+ *
  * Example definition via {@link DataObject::$db}:
  * <code>
  * static $db = array(
  * 	"Expires" => "Date",
  * );
  * </code>
- * 
+ *
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
- * 
+ *
  * @package framework
  * @subpackage model
  */
 class Date extends DBField {
-	
+
 	public function setValue($value, $record = null) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
 			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
@@ -38,10 +38,10 @@ class Date extends DBField {
 				return null;
 			}
 		}
-		
+
 		// Default to NZ date format - strtotime expects a US date
 		if(preg_match('#^([0-9]+)/([0-9]+)/([0-9]+)$#', $value, $parts)) {
-			$value = "$parts[2]/$parts[1]/$parts[3]";			
+			$value = "$parts[2]/$parts[1]/$parts[3]";
 		}
 
 		if(is_numeric($value)) {
@@ -59,40 +59,40 @@ class Date extends DBField {
 	}
 
 	/**
-	 * Returns the date in the format dd/mm/yy 
-	 */	 
+	 * Returns the date in the format dd/mm/yy
+	 */
 	public function Nice() {
 		if($this->value) return $this->Format('d/m/Y');
 	}
-	
+
 	/**
 	 * Returns the date in US format: “01/18/2006”
 	 */
 	public function NiceUS() {
 		if($this->value) return $this->Format('m/d/Y');
 	}
-	
-	/** 
+
+	/**
 	 * Returns the year from the given date
 	 */
 	public function Year() {
 		if($this->value) return $this->Format('Y');
 	}
-	
+
 	/**
 	 * Returns the Full day, of the given date.
 	 */
 	public function Day(){
 		if($this->value) return $this->Format('l');
 	}
-	
+
 	/**
 	 * Returns a full textual representation of a month, such as January.
 	 */
 	public function Month() {
 		if($this->value) return $this->Format('F');
 	}
-	
+
 	/**
 	 * Returns the short version of the month such as Jan
 	 */
@@ -112,24 +112,24 @@ class Date extends DBField {
 			return $this->Format($format);
 		}
 	}
-	
+
 	/**
 	 * Returns the date in the format 24 December 2006
 	 */
 	public function Long() {
 		if($this->value) return $this->Format('j F Y');
 	}
-	
+
 	/**
 	 * Returns the date in the format 24 Dec 2006
 	 */
 	public function Full() {
 		if($this->value) return $this->Format('j M Y');
 	}
-	
+
 	/**
 	 * Return the date using a particular formatting string.
-	 * 
+	 *
 	 * @param string $format Format code string. e.g. "d M Y" (see http://php.net/date)
 	 * @return string The date in the requested format
 	 */
@@ -139,7 +139,7 @@ class Date extends DBField {
 			return $date->Format($format);
 		}
 	}
-	
+
 	/**
 	 * Return the date formatted using the given strftime formatting string.
 	 *
@@ -151,29 +151,29 @@ class Date extends DBField {
 			return strftime($formattingString, strtotime($this->value));
 		}
 	}
-	
+
 	/**
 	 * Return a date formatted as per a CMS user's settings.
-	 * 
+	 *
 	 * @param Member $member
 	 * @return boolean | string A date formatted as per user-defined settings.
 	 */
 	public function FormatFromSettings($member = null) {
-		require_once 'Zend/Date.php';	
-		
+		require_once 'Zend/Date.php';
+
 		if(!$member) {
 			if(!Member::currentUserID()) {
 				return false;
 			}
 			$member = Member::currentUser();
 		}
-		
+
 		$formatD = $member->getDateFormat();
 		$zendDate = new Zend_Date($this->getValue(), 'y-MM-dd');
-		
+
 		return $zendDate->toString($formatD);
-	}		
-	
+	}
+
 	/*
 	 * Return a string in the form "12 - 16 Sept" or "12 Aug - 16 Sept"
 	 * @param Date $otherDateObj Another date object specifying the end of the range
@@ -187,43 +187,44 @@ class Date extends DBField {
 		$m2 = $otherDateObj->ShortMonth();
 		$y1 = $this->Year();
 		$y2 = $otherDateObj->Year();
-		
+
 		if($y1 != $y2) return "$d1 $m1 $y1 - $d2 $m2 $y2";
 		else if($m1 != $m2) return "$d1 $m1 - $d2 $m2 $y1";
 		else return "$d1 - $d2 $m1 $y1";
 	}
-	
+
 	public function Rfc822() {
 		if($this->value) return date('r', strtotime($this->value));
 	}
-	
+
 	public function Rfc2822() {
 		if($this->value) return date('Y-m-d H:i:s', strtotime($this->value));
 	}
-	
+
 	public function Rfc3339() {
 		$timestamp = ($this->value) ? strtotime($this->value) : false;
 		if(!$timestamp) return false;
-		
+
 		$date = date('Y-m-d\TH:i:s', $timestamp);
-		
+
 		$matches = array();
 		if(preg_match('/^([\-+])(\d{2})(\d{2})$/', date('O', $timestamp), $matches)) {
 			$date .= $matches[1].$matches[2].':'.$matches[3];
 		} else {
 			$date .= 'Z';
 		}
-		
+
 		return $date;
 	}
-	
+
 	/**
 	 * Returns the number of seconds/minutes/hours/days or months since the timestamp.
 	 *
 	 * @param boolean $includeSeconds Show seconds, or just round to "less than a minute".
+	 * @param int $significance Minimum significant value of X for "X units ago" to display
 	 * @return  String
 	 */
-	public function Ago($includeSeconds = true) {
+	public function Ago($includeSeconds = true, $significance = 2) {
 		if($this->value) {
 			$time = SS_Datetime::now()->Format('U');
 			if(strtotime($this->value) == $time || $time > strtotime($this->value)) {
@@ -231,14 +232,14 @@ class Date extends DBField {
 					'Date.TIMEDIFFAGO',
 					"{difference} ago",
 					'Natural language time difference, e.g. 2 hours ago',
-					array('difference' => $this->TimeDiff($includeSeconds))
+					array('difference' => $this->TimeDiff($includeSeconds, $significance))
 				);
 			} else {
 				return _t(
 					'Date.TIMEDIFFIN',
 					"in {difference}",
 					'Natural language time difference, e.g. in 2 hours',
-					array('difference' => $this->TimeDiff($includeSeconds))
+					array('difference' => $this->TimeDiff($includeSeconds, $significance))
 				);
 			}
 		}
@@ -246,88 +247,77 @@ class Date extends DBField {
 
 	/**
 	 * @param boolean $includeSeconds Show seconds, or just round to "less than a minute".
-	 * @return  String
+	 * @param int $significance Minimum significant value of X for "X units ago" to display
+	 * @return string
 	 */
-	public function TimeDiff($includeSeconds = true) {
+	public function TimeDiff($includeSeconds = true, $significance = 2) {
 		if(!$this->value) return false;
 
 		$time = SS_Datetime::now()->Format('U');
 		$ago = abs($time - strtotime($this->value));
-		
-		if($ago < 60 && $includeSeconds) {
-			$span = $ago;
-			$result = ($span != 1) ? "{$span} "._t("Date.SECS", "secs") : "{$span} "._t("Date.SEC", "sec");
-		} elseif($ago < 60) {
-			$result = _t('Date.LessThanMinuteAgo', 'less than a minute');
-		} elseif($ago < 3600) {
-			$span = round($ago/60);
-			$result = ($span != 1) ? "{$span} "._t("Date.MINS", "mins") : "{$span} "._t("Date.MIN", "min");
-		} elseif($ago < 86400) {
-			$span = round($ago/3600);
-			$result = ($span != 1) ? "{$span} "._t("Date.HOURS", "hours") : "{$span} "._t("Date.HOUR", "hour");
-		} elseif($ago < 86400*30) {
-			$span = round($ago/86400);
-			$result = ($span != 1) ? "{$span} "._t("Date.DAYS", "days") : "{$span} "._t("Date.DAY", "day");
-		} elseif($ago < 86400*365) {
-			$span = round($ago/86400/30);
-			$result = ($span != 1) ? "{$span} "._t("Date.MONTHS", "months") : "{$span} "._t("Date.MONTH", "month");
-		} elseif($ago > 86400*365) {
-			$span = round($ago/86400/365);
-			$result = ($span != 1) ? "{$span} "._t("Date.YEARS", "years") : "{$span} "._t("Date.YEAR", "year");
+		if($ago < 60 && !$includeSeconds) {
+			return _t('Date.LessThanMinuteAgo', 'less than a minute');
+		} elseif($ago < $significance * 60 && $includeSeconds) {
+			return $this->TimeDiffIn('seconds');
+		} elseif($ago < $significance * 3600) {
+			return $this->TimeDiffIn('minutes');
+		} elseif($ago < $significance * 86400) {
+			return $this->TimeDiffIn('hours');
+		} elseif($ago < $significance * 86400 * 30) {
+			return $this->TimeDiffIn('days');
+		} elseif($ago < $significance * 86400 * 365) {
+			return $this->TimeDiffIn('months');
+		} else {
+			return $this->TimeDiffIn('years');
 		}
-		
-		// Replace duplicate spaces, backwards compat with existing translations
-		$result = preg_replace('/\s+/', ' ', $result);
-
-		return $result;
 	}
-	
+
 	/**
 	 * Gets the time difference, but always returns it in a certain format
+	 * 
 	 * @param string $format The format, could be one of these: 
 	 * 'seconds', 'minutes', 'hours', 'days', 'months', 'years'.
-	 * 
-	 * @return string
+	 * @return string The resulting formatted period
 	 */
 	public function TimeDiffIn($format) {
-		if($this->value) {
-			$ago = abs(time() - strtotime($this->value));
+		if(!$this->value) return false;
+
+		$time = SS_Datetime::now()->Format('U');
+		$ago = abs($time - strtotime($this->value));
 			
-			switch($format) {
-				case "seconds":
-					$span = $ago;
-					return ($span != 1) ? "{$span} seconds" : "{$span} second";
-				break;
-				case "minutes":
-					$span = round($ago/60);
-					return ($span != 1) ? "{$span} minutes" : "{$span} minute";
-				break;
-				case "hours":
-					$span = round($ago/3600);
-					return ($span != 1) ? "{$span} hours" : "{$span} hour";
-				break;
-				case "days":
-					$span = round($ago/86400);
-					return ($span != 1) ? "{$span} days" : "{$span} day";
-				break;
-				case "months":
-					$span = round($ago/86400/30);
-					return ($span != 1) ? "{$span} months" : "{$span} month";
-				break;
-				case "years":
-					$span = round($ago/86400/365);
-					return ($span != 1) ? "{$span} years" : "{$span} year";
-				break;
-			}
+		switch($format) {
+			case "seconds":
+				$span = $ago;
+				return ($span != 1) ? "{$span} "._t("Date.SECS", "secs") : "{$span} "._t("Date.SEC", "sec");
+				
+			case "minutes":
+				$span = round($ago/60);
+				return ($span != 1) ? "{$span} "._t("Date.MINS", "mins") : "{$span} "._t("Date.MIN", "min");
+				
+			case "hours":
+				$span = round($ago/3600);
+				return ($span != 1) ? "{$span} "._t("Date.HOURS", "hours") : "{$span} "._t("Date.HOUR", "hour");
+				
+			case "days":
+				$span = round($ago/86400);
+				return ($span != 1) ? "{$span} "._t("Date.DAYS", "days") : "{$span} "._t("Date.DAY", "day");
+				
+			case "months":
+				$span = round($ago/86400/30);
+				return ($span != 1) ? "{$span} "._t("Date.MONTHS", "months") : "{$span} "._t("Date.MONTH", "month");
+				
+			case "years":
+				$span = round($ago/86400/365);
+				return ($span != 1) ? "{$span} "._t("Date.YEARS", "years") : "{$span} "._t("Date.YEAR", "year");
 		}
 	}
 
 	public function requireField() {
 		$parts=Array('datatype'=>'date', 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'date', 'parts'=>$parts);
-		DB::requireField($this->tableName, $this->name, $values);
+		DB::require_field($this->tableName, $this->name, $values);
 	}
-	
+
 	/**
 	 * Returns true if date is in the past.
 	 * @return boolean
@@ -335,7 +325,7 @@ class Date extends DBField {
 	public function InPast() {
 		return strtotime($this->value) < SS_Datetime::now()->Format('U');
 	}
-	
+
 	/**
 	 * Returns true if date is in the future.
 	 * @return boolean
@@ -343,7 +333,7 @@ class Date extends DBField {
 	public function InFuture() {
 		return strtotime($this->value) > SS_Datetime::now()->Format('U');
 	}
-	
+
 	/**
 	 * Returns true if date is today.
 	 * @return boolean
@@ -358,34 +348,34 @@ class Date extends DBField {
 	public function URLDate() {
 		return date('Y-m-d', strtotime($this->value));
 	}
-	
-	
+
+
 	public function days_between($fyear, $fmonth, $fday, $tyear, $tmonth, $tday){
 		return abs((mktime ( 0, 0, 0, $fmonth, $fday, $fyear) - mktime ( 0, 0, 0, $tmonth, $tday, $tyear))/(60*60*24));
 	}
-	
+
 	public function day_before($fyear, $fmonth, $fday){
 		return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-1,$fyear));
 	}
-	
+
 	public function next_day($fyear, $fmonth, $fday){
 		return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday+1,$fyear));
 	}
-	
+
 	public function weekday($fyear, $fmonth, $fday){ // 0 is a Monday
 		return (((mktime ( 0, 0, 0, $fmonth, $fday, $fyear) - mktime ( 0, 0, 0, 7, 17, 2006))/(60*60*24))+700000) % 7;
 	}
-	
+
 	public function prior_monday($fyear, $fmonth, $fday){
-		return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-$this->weekday($fyear, $fmonth, $fday),$fyear)); 
+		return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-$this->weekday($fyear, $fmonth, $fday),$fyear));
 	}
-	
+
 	/**
 	 * Return the nearest date in the past, based on day and month.
 	 * Automatically attaches the correct year.
-	 * 
+	 *
 	 * This is useful for determining a financial year start or end date.
-	 * 
+	 *
 	 * @param $fmonth int The number of the month (e.g. 3 is March, 4 is April)
 	 * @param $fday int The day of the month
 	 * @param $fyear int Determine historical value
@@ -396,7 +386,7 @@ class Date extends DBField {
 		$fday = (int) $fday;
 		$fmonth = (int) $fmonth;
 		$fyear = (int) $fyear;
-		
+
 		$pastDate = mktime(0, 0, 0, $fmonth, $fday, $fyear);
 		$curDate = mktime(0, 0, 0, date('m'), date('d'), $fyear);
 
@@ -406,17 +396,17 @@ class Date extends DBField {
 			return date('Y-m-d', mktime(0, 0, 0, $fmonth, $fday, $fyear - 1));
 		}
 	}
-	
+
 	public function scaffoldFormField($title = null, $params = null) {
 		$field = DateField::create($this->name, $title);
-		
+
 		// Show formatting hints for better usability
 		$field->setDescription(sprintf(
 			_t('FormField.Example', 'e.g. %s', 'Example format'),
 			Convert::raw2xml(Zend_Date::now()->toString($field->getConfig('dateformat')))
 		));
 		$field->setAttribute('placeholder', $field->getConfig('dateformat'));
-		
+
 		return $field;
 	}
 }

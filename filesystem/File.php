@@ -2,21 +2,21 @@
 /**
  * This class handles the representation of a file on the filesystem within the framework.
  * Most of the methods also handle the {@link Folder} subclass.
- * 
+ *
  * Note: The files are stored in the assets/ directory, but SilverStripe
  * looks at the db object to gather information about a file such as URL
  * It then uses this for all processing functions (like image manipulation).
- * 
+ *
  * <b>Security</b>
- * 
+ *
  * Caution: It is recommended to disable any script execution in the "assets/"
  * directory in the webserver configuration, to reduce the risk of exploits.
  * See http://doc.silverstripe.org/secure-development#filesystem
- * 
+ *
  * <b>Properties</b>
- * 
+ *
  * - "Name": File name (including extension) or folder name.
- *   Should be the same as the actual filesystem. 
+ *   Should be the same as the actual filesystem.
  * - "Title": Optional title of the file (for display purposes only).
  *   Defaults to "Name". Note that the Title field of Folder (subclass of File)
  *   is linked to Name, so Name and Title will always be the same.
@@ -29,16 +29,16 @@
  *   files, e.g. for fulltext indexing of PDF documents.
  * - "ParentID": Points to a {@link Folder} record. Should be in sync with
  *   "Filename". A ParentID=0 value points to the "assets/" folder, not the webroot.
- * 
+ *
  * <b>Synchronization</b>
- * 
- * Changes to a File database record can change the filesystem entry, 
+ *
+ * Changes to a File database record can change the filesystem entry,
  * but not the other way around. If the filesystem path is renamed outside
  * of SilverStripe, there's no way for the database to recover this linkage.
  * New physical files on the filesystem can be "discovered" via {@link Filesystem::sync()},
- * the equivalent {@link File} and {@link Folder} records are automatically 
+ * the equivalent {@link File} and {@link Folder} records are automatically
  * created by this method.
- * 
+ *
  * Certain property changes within the File API that can cause a "delayed" filesystem change:
  * The change is enforced in {@link onBeforeWrite()} later on.
  * - setParentID()
@@ -47,18 +47,18 @@
  * It is recommended that you use {@link write()} directly after setting any of these properties,
  * otherwise getters like {@link getFullPath()} and {@link getRelativePath()}
  * will result paths that are inconsistent with the filesystem.
- * 
+ *
  * Caution: Calling {@link delete()} will also delete from the filesystem.
  * Call {@link deleteDatabaseOnly()} if you want to avoid this.
- * 
+ *
  * <b>Creating Files and Folders</b>
- * 
+ *
  * Typically both files and folders should be created first on the filesystem,
  * and then reflected in as database records. Folders can be created recursively
  * from SilverStripe both in the database and filesystem through {@link Folder::findOrMake()}.
  * Ensure that you always set a "Filename" property when writing to the database,
  * leaving it out can lead to unexpected results.
- * 
+ *
  * @package framework
  * @subpackage filesystem
  *
@@ -90,20 +90,20 @@ class File extends DataObject {
 		// Only applies to files, doesn't inherit for folder
 		'ShowInSearch' => 'Boolean(1)',
 	);
-	
+
 	private static $has_one = array(
 		"Parent" => "File",
 		"Owner" => "Member"
 	);
-	
+
 	private static $has_many = array();
-	
+
 	private static $many_many = array();
-	
+
 	private static $defaults = array(
 		"ShowInSearch" => 1,
 	);
-	
+
 	private static $extensions = array(
 		"Hierarchy",
 	);
@@ -111,26 +111,26 @@ class File extends DataObject {
 	private static $casting = array (
 		'TreeTitle' => 'HTMLText'
 	);
-	
+
 	/**
 	 * @config
 	 * @var array List of allowed file extensions, enforced through {@link validate()}.
-	 * 
+	 *
 	 * Note: if you modify this, you should also change a configuration file in the assets directory.
 	 * Otherwise, the files will be able to be uploaded but they won't be able to be served by the
 	 * webserver.
-	 * 
+	 *
 	 *  - If you are running Apache you will need to change assets/.htaccess
-	 *  - If you are running IIS you will need to change assets/web.config 
+	 *  - If you are running IIS you will need to change assets/web.config
 	 *
 	 * Instructions for the change you need to make are included in a comment in the config file.
 	 */
 	private static $allowed_extensions = array(
 		'','ace','arc','arj','asf','au','avi','bmp','bz2','cab','cda','css','csv','dmg','doc','docx','dotx','dotm',
-		'flv','gif','gpx','gz','hqx','htm','html','ico','jar','jpeg','jpg','js','kml', 'm4a','m4v',
+		'flv','gif','gpx','gz','hqx','ico','jar','jpeg','jpg','js','kml', 'm4a','m4v',
 		'mid','midi','mkv','mov','mp3','mp4','mpa','mpeg','mpg','ogg','ogv','pages','pcx','pdf','pkg',
-		'png','pps','ppt','pptx','potx','potm','ra','ram','rm','rtf','sit','sitx','swf','tar','tgz','tif','tiff',
-		'txt','wav','webm','wma','wmv','xhtml','xls','xlsx','xltx','xltm','xml','zip','zipx',
+		'png','pps','ppt','pptx','potx','potm','ra','ram','rm','rtf','sit','sitx','tar','tgz','tif','tiff',
+		'txt','wav','webm','wma','wmv','xls','xlsx','xltx','xltm','zip','zipx',
 	);
 
 	/**
@@ -195,7 +195,7 @@ class File extends DataObject {
 
 		if (!$record) {
 			if(class_exists('ErrorPage')) {
-				$record = DataObject::get_one('ErrorPage', '"ErrorCode" = \'404\'');
+				$record = ErrorPage::get()->filter("ErrorCode", 404)->first();
 			}
 
 			if (!$record) return; // There were no suitable matches at all.
@@ -223,7 +223,7 @@ class File extends DataObject {
 
 	/**
 	 * Find a File object by the given filename.
-	 * 
+	 *
 	 * @param String $filename Matched against the "Name" property.
 	 * @return mixed null if not found, File object of found file
 	 */
@@ -237,21 +237,42 @@ class File extends DataObject {
 		$item = null;
 		foreach($parts as $part) {
 			if($part == ASSETS_DIR && !$parentID) continue;
-			$SQL_part = Convert::raw2sql($part);
-			$item = DataObject::get_one("File", "\"Name\" = '$SQL_part' AND \"ParentID\" = $parentID");
+			$item = File::get()->filter(array(
+				'Name' => $part,
+				'ParentID' => $parentID
+			))->first();
 			if(!$item) break;
 			$parentID = $item->ID;
 		}
-		
+
 		return $item;
 	}
-	
+
+	/**
+	 * Just an alias function to keep a consistent API with SiteTree
+	 *
+	 * @return string The link to the file
+	 */
 	public function Link() {
-		return Director::baseURL() . $this->RelativeLink();
+		return $this->getURL();
 	}
 
+	/**
+	 * Just an alias function to keep a consistent API with SiteTree
+	 *
+	 * @return string The relative link to the file
+	 */
 	public function RelativeLink() {
-		return $this->Filename;
+		return $this->getFilename();
+	}
+
+	/**
+	 * Just an alias function to keep a consistent API with SiteTree
+	 *
+	 * @return string The absolute link to the file
+	 */
+	public function AbsoluteLink() {
+		return $this->getAbsoluteURL();
 	}
 
 	/**
@@ -276,59 +297,59 @@ class File extends DataObject {
 			unlink($this->getFullPath());
 		}
 	}
-	
+
 	/**
 	 * @todo Enforce on filesystem URL level via mod_rewrite
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function canView($member = null) {
 		if(!$member) $member = Member::currentUser();
-		
+
 		$results = $this->extend('canView', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Returns true if the following conditions are met:
 	 * - CMS_ACCESS_AssetAdmin
-	 * 
+	 *
 	 * @todo Decouple from CMS view access
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function canEdit($member = null) {
 		if(!$member) $member = Member::currentUser();
-		
+
 		$result = $this->extendedCan('canEdit', $member);
 		if($result !== null) return $result;
-		
+
 		return Permission::checkMember($member, 'CMS_ACCESS_AssetAdmin');
 	}
-	
+
 	/**
 	 * @return boolean
 	 */
 	public function canCreate($member = null) {
 		if(!$member) $member = Member::currentUser();
-		
+
 		$result = $this->extendedCan('canCreate', $member);
 		if($result !== null) return $result;
-		
+
 		return $this->canEdit($member);
 	}
-	
+
 	/**
 	 * @return boolean
 	 */
 	public function canDelete($member = null) {
 		if(!$member) $member = Member::currentUser();
-		
+
 		$results = $this->extend('canDelete', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
-		
+
 		return $this->canEdit($member);
 	}
 
@@ -336,19 +357,19 @@ class File extends DataObject {
 	 * Returns the fields to power the edit screen of files in the CMS.
 	 * You can modify this FieldList by subclassing folder, or by creating a {@link DataExtension}
 	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
-	 * 
+	 *
 	 * @return FieldList
 	 */
 	public function getCMSFields() {
 		// Preview
 		if($this instanceof Image) {
 			$formattedImage = $this->getFormattedImage(
-				'SetWidth', 
+				'SetWidth',
 				Config::inst()->get('Image', 'asset_preview_width')
 			);
 			$thumbnail = $formattedImage ? $formattedImage->URL : '';
 			$previewField = new LiteralField("ImageFull",
-				"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnail}?r=" 
+				"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnail}?r="
 					. rand(1,100000)  . "' alt='{$this->Name}' />\n"
 			);
 		} else {
@@ -400,11 +421,13 @@ class File extends DataObject {
 					// $uploadField,
 					new TextField("Title", _t('AssetTableField.TITLE','Title')),
 					new TextField("Name", _t('AssetTableField.FILENAME','Filename')),
-					new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups()),
+					$ownerField
+						= new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups()),
 					$folderTree
 				)
 			)
 		);
+		$ownerField->setHasEmptyDefault(true);
 
 		// Folder has its own updateCMSFields hook
 		if(!($this instanceof Folder)) $this->extend('updateCMSFields', $fields);
@@ -417,7 +440,7 @@ class File extends DataObject {
 	 * This can be useful when grouping files by type,
 	 * showing icons on filelinks, etc.
 	 * Possible group values are: "audio", "mov", "zip", "image".
-	 * 
+	 *
 	 * @return String
 	 */
 	public static function get_app_category($ext) {
@@ -427,10 +450,10 @@ class File extends DataObject {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns a category based on the file extension.
-	 * 
+	 *
 	 * @return String
 	 */
 	public function appCategory() {
@@ -445,8 +468,8 @@ class File extends DataObject {
 	 * Return the relative URL of an icon for the file type,
 	 * based on the {@link appCategory()} value.
 	 * Images are searched for in "framework/images/app_icons/".
-	 * 
-	 * @return String 
+	 *
+	 * @return String
 	 */
 	public function Icon() {
 		$ext = strtolower($this->getExtension());
@@ -460,10 +483,10 @@ class File extends DataObject {
 
 		return FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.gif";
 	}
-	
+
 	/**
-	 * Should be called after the file was uploaded 
-	 */ 
+	 * Should be called after the file was uploaded
+	 */
 	public function onAfterUpload() {
 		$this->extend('onAfterUpload');
 	}
@@ -472,7 +495,9 @@ class File extends DataObject {
 	 * Delete the database record (recursively for folders) without touching the filesystem
 	 */
 	public function deleteDatabaseOnly() {
-		if(is_numeric($this->ID)) DB::query("DELETE FROM \"File\" WHERE \"ID\" = $this->ID");
+		if(is_numeric($this->ID)) {
+			DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', array($this->ID));
+		}
 	}
 
 	/**
@@ -496,19 +521,19 @@ class File extends DataObject {
 	 */
 	protected function onAfterWrite() {
 		parent::onAfterWrite();
-		
+
 		$this->updateFilesystem();
 	}
-	
+
 	/**
 	 * Moving the file if appropriate according to updated database content.
 	 * Throws an Exception if the new file already exists.
-	 * 
+	 *
 	 * Caution: This method should just be called during a {@link write()} invocation,
 	 * as it relies on {@link DataObject->isChanged()}, which is reset after a {@link write()} call.
 	 * Might be called as {@link File->updateFilesystem()} from within {@link Folder->updateFilesystem()},
 	 * so it has to handle both files and folders.
-	 * 
+	 *
 	 * Assumes that the "Filename" property was previously updated, either directly or indirectly.
 	 * (it might have been influenced by {@link setName()} or {@link setParentID()} before).
 	 */
@@ -517,27 +542,27 @@ class File extends DataObject {
 
 		// Regenerate "Filename", just to be sure
 		$this->setField('Filename', $this->getRelativePath());
-		
+
 		// If certain elements are changed, update the filesystem reference
 		if(!$this->isChanged('Filename')) return false;
-		
+
 		$changedFields = $this->getChangedFields();
 		$pathBefore = $changedFields['Filename']['before'];
 		$pathAfter = $changedFields['Filename']['after'];
-		
+
 		// If the file or folder didn't exist before, don't rename - its created
 		if(!$pathBefore) return;
-		
+
 		$pathBeforeAbs = Director::getAbsFile($pathBefore);
 		$pathAfterAbs = Director::getAbsFile($pathAfter);
-		
+
 		// TODO Fix Filetest->testCreateWithFilenameWithSubfolder() to enable this
 		// // Create parent folders recursively in database and filesystem
 		// if(!is_a($this, 'Folder')) {
 		// 	$folder = Folder::findOrMake(dirname($pathAfterAbs));
 		// 	if($folder) $this->ParentID = $folder->ID;
 		// }
-		
+
 		// Check that original file or folder exists, and rename on filesystem if required.
 		// The folder of the path might've already been renamed by Folder->updateFilesystem()
 		// before any filesystem update on contained file or subfolder records is triggered.
@@ -547,21 +572,21 @@ class File extends DataObject {
 				if(!file_exists($pathBeforeAbs)) {
 					throw new Exception("Cannot move $pathBeforeAbs to $pathAfterAbs - $pathBeforeAbs doesn't exist");
 				}
-				
+
 				// Check that target directory (not the file itself) exists.
 				// Only check if we're dealing with a file, otherwise the folder will need to be created
 				if(!file_exists(dirname($pathAfterAbs))) {
 					throw new Exception("Cannot move $pathBeforeAbs to $pathAfterAbs - Directory " . dirname($pathAfter)
 						. " doesn't exist");
 				}
-			} 
+			}
 
 			// Rename file or folder
 			$success = rename($pathBeforeAbs, $pathAfterAbs);
 			if(!$success) throw new Exception("Cannot move $pathBeforeAbs to $pathAfterAbs");
 		}
-		
-		
+
+
 		// Update any database references
 		$this->updateLinks($pathBefore, $pathAfter);
 	}
@@ -589,9 +614,9 @@ class File extends DataObject {
 	 * Also adds a suffix to the name if the filename already exists
 	 * on the filesystem, and is associated to a different {@link File} database record
 	 * in the same folder. This means "myfile.jpg" might become "myfile-1.jpg".
-	 * 
+	 *
 	 * Does not change the filesystem itself, please use {@link write()} for this.
-	 * 
+	 *
 	 * @param String $name
 	 */
 	public function setName($name) {
@@ -614,7 +639,7 @@ class File extends DataObject {
 			$suffix = 1;
 
 			while(File::get()->filter(array(
-					'Name' => $name, 
+					'Name' => $name,
 					'ParentID' => (int) $this->ParentID
 				))->exclude(array(
 					'ID' => $this->ID
@@ -627,7 +652,7 @@ class File extends DataObject {
 
 		// Update actual field value
 		$this->setField('Name', $name);
-		
+
 		// Ensure that the filename is updated as well (only in-memory)
 		// Important: Circumvent the getter to avoid infinite loops
 		$this->setField('Filename', $this->getRelativePath());
@@ -655,40 +680,40 @@ class File extends DataObject {
 		$this->setField('ParentID', (int)$parentID);
 
 		// Don't change on the filesystem, we'll handle that in onBeforeWrite()
-		$this->setField('Filename', $this->getRelativePath()); 
+		$this->setField('Filename', $this->getRelativePath());
 
 		return $this->getField('ParentID');
 	}
 
 	/**
 	 * Gets the absolute URL accessible through the web.
-	 * 
+	 *
 	 * @uses Director::absoluteBaseURL()
 	 * @return string
 	 */
 	public function getAbsoluteURL() {
-		return Director::absoluteBaseURL() . $this->getFilename();
+		return Director::absoluteURL($this->getURL());
 	}
-	
+
 	/**
 	 * Gets the relative URL accessible through the web.
-	 * 
+	 *
 	 * @uses Director::baseURL()
 	 * @return string
 	 */
 	public function getURL() {
-		return Director::baseURL() . $this->getFilename();
+		return Controller::join_links(Director::baseURL(), $this->getFilename());
 	}
 
 	/**
 	 * Returns an absolute filesystem path to the file.
 	 * Use {@link getRelativePath()} to get the same path relative to the webroot.
-	 * 
-	 * @return String 
+	 *
+	 * @return String
 	 */
 	public function getFullPath() {
 		$baseFolder = Director::baseFolder();
-		
+
 		if(strpos($this->getFilename(), $baseFolder) === 0) {
 			// if path is absolute already, just return
 			return $this->getFilename();
@@ -703,13 +728,13 @@ class File extends DataObject {
 	 * Serves as a "fallback" method to create the "Filename" property if it isn't set.
 	 * If no {@link Folder} is set ("ParentID" property),
 	 * defaults to a filename relative to the ASSETS_DIR (usually "assets/").
-	 * 
+	 *
 	 * @return String
 	 */
 	public function getRelativePath() {
 		if($this->ParentID) {
 			// Don't use the cache, the parent has just been changed
-			$p = DataObject::get_by_id('Folder', $this->ParentID, false); 
+			$p = DataObject::get_by_id('Folder', $this->ParentID, false);
 			if($p && $p->exists()) return $p->getRelativePath() . $this->getField("Name");
 			else return ASSETS_DIR . "/" . $this->getField("Name");
 		} else if($this->getField("Name")) {
@@ -740,31 +765,31 @@ class File extends DataObject {
 	 */
 	public function setFilename($val) {
 		$this->setField('Filename', $val);
-		
-		// "Filename" is the "master record" (existing on the filesystem), 
+
+		// "Filename" is the "master record" (existing on the filesystem),
 		// meaning we have to adjust the "Name" property in the database as well.
 		$this->setField('Name', basename($val));
 	}
 
 	/**
 	 * Returns the file extension
-	 * 
+	 *
 	 * @todo This overrides getExtension() in DataObject, but it does something completely different.
 	 * This should be renamed to getFileExtension(), but has not been yet as it may break
 	 * legacy code.
-	 * 
+	 *
 	 * @return String
 	 */
 	public function getExtension() {
 		return self::get_file_extension($this->getField('Filename'));
 	}
-	
+
 	/**
 	 * Gets the extension of a filepath or filename,
 	 * by stripping away everything before the last "dot".
 	 * Caution: Only returns the last extension in "double-barrelled"
 	 * extensions (e.g. "gz" for "tar.gz").
-	 * 
+	 *
 	 * Examples:
 	 * - "myfile" returns ""
 	 * - "myfile.txt" returns "txt"
@@ -776,7 +801,7 @@ class File extends DataObject {
 	public static function get_file_extension($filename) {
 		return pathinfo($filename, PATHINFO_EXTENSION);
 	}
-	
+
 	/**
 	 * Return the type of file for the given extension
 	 * on the current file name.
@@ -807,9 +832,9 @@ class File extends DataObject {
 			'html' => _t('File.HtmlType', 'HTML file'),
 			'htm' => _t('File.HtlType', 'HTML file')
 		);
-		
+
 		$ext = $this->getExtension();
-		
+
 		return isset($types[$ext]) ? $types[$ext] : 'unknown';
 	}
 
@@ -818,10 +843,10 @@ class File extends DataObject {
 	 */
 	public function getSize() {
 		$size = $this->getAbsoluteSize();
-		
+
 		return ($size) ? self::format_size($size) : false;
 	}
-	
+
 	/**
 	 * Formats a file size (eg: (int)42 becomes string '42 bytes')
 	 * @param int $size
@@ -835,10 +860,10 @@ class File extends DataObject {
 		if($size < 1024*1024*1024) return round(($size/1024)/1024) . ' MB';
 		return round($size/(1024*1024*1024)*10)/10 . ' GB';
 	}
-	
+
 	/**
 	 * Convert a php.ini value (eg: 512M) to bytes
-	 * 
+	 *
 	 * @param string $phpIniValue
 	 * @return int
 	 */
@@ -866,17 +891,17 @@ class File extends DataObject {
 			return 0;
 		}
 	}
-	
+
 	public function flushCache($persistant = true) {
 		parent::flushCache($persistant);
-		
+
 		self::$cache_file_fields = null;
 	}
-	
+
 	/**
 	 *
 	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
-	 * 
+	 *
 	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
@@ -885,10 +910,10 @@ class File extends DataObject {
 		$labels['Filename'] = _t('File.Filename', 'Filename');
 		$labels['Filename'] = _t('File.Filename', 'Filename');
 		$labels['Content'] = _t('File.Content', 'Content');
-		
+
 		return $labels;
 	}
-	
+
 	public function validate() {
 		if($this->config()->apply_restrictions_to_admin || !Permission::check('ADMIN')) {
 			// Extension validation
@@ -907,13 +932,15 @@ class File extends DataObject {
 				return new ValidationResult(false, $message);
 			}
 		}
-		
+
 		// We aren't validating for an existing "Filename" on the filesystem.
 		// A record should still be saveable even if the underlying record has been removed.
-		
-		return new ValidationResult(true);
+
+		$result = new ValidationResult(true);
+		$this->extend('validate', $result);
+		return $result;
 	}
-	
+
 	/**
 	 * @config
 	 * @var Array Only use lowercase extensions in here.
@@ -929,14 +956,14 @@ class File extends DataObject {
 	/**
 	 * Maps a {@link File} subclass to a specific extension.
 	 * By default, files with common image extensions will be created
-	 * as {@link Image} instead of {@link File} when using 
+	 * as {@link Image} instead of {@link File} when using
 	 * {@link Folder::constructChild}, {@link Folder::addUploadToFolder}),
 	 * and the {@link Upload} class (either directly or through {@link FileField}).
 	 * For manually instanciated files please use this mapping getter.
-	 * 
+	 *
 	 * Caution: Changes to mapping doesn't apply to existing file records in the database.
 	 * Also doesn't hook into {@link Object::getCustomClass()}.
-	 * 
+	 *
 	 * @param String File extension, without dot prefix. Use an asterisk ('*')
 	 * to specify a generic fallback if no mapping is found for an extension.
 	 * @return String Classname for a subclass of {@link File}
@@ -945,16 +972,16 @@ class File extends DataObject {
 		$map = array_change_key_case(self::config()->class_for_file_extension, CASE_LOWER);
 		return (array_key_exists(strtolower($ext), $map)) ? $map[strtolower($ext)] : $map['*'];
 	}
-	
+
 	/**
 	 * See {@link get_class_for_file_extension()}.
-	 * 
+	 *
 	 * @param String|array
 	 * @param String
 	 */
 	public static function set_class_for_file_extension($exts, $class) {
 		if(!is_array($exts)) $exts = array($exts);
-		
+
 		foreach($exts as $ext) {
 			if(!is_subclass_of($class, 'File')) {
 				throw new InvalidArgumentException(
@@ -964,5 +991,5 @@ class File extends DataObject {
 			self::config()->class_for_file_extension = array($ext => $class);
 		}
 	}
-	
+
 }

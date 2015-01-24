@@ -816,7 +816,9 @@ jQuery.noConflict();
 					var index, tabset = $(this), tabsetId = tabset.attr('id'), tab,
 						forcedTab = tabset.find('.ss-tabs-force-active');
 
-					if(!tabset.data('tabs')) return; // don't act on uninit'ed controls
+					if(!tabset.data('tabs')){
+						return; // don't act on uninit'ed controls
+					}
 
 					// The tabs may have changed, notify the widget that it should update its internal state.
 					tabset.tabs('refresh');
@@ -826,13 +828,20 @@ jQuery.noConflict();
 						index = forcedTab.index();
 					} else if(overrideStates && overrideStates[tabsetId]) {
 						tab = tabset.find(overrideStates[tabsetId].tabSelector);
-						if(tab.length) index = tab.index();
+						if(tab.length){
+							index = tab.index();
+						}
 					} else if(sessionStates) {
 						$.each(sessionStates, function(i, sessionState) {
-							if(tabset.is('#' + sessionState.id)) index = sessionState.selected;
-					});
-				}
-					if(index !== null) tabset.tabs('select', index);
+							if(tabset.is('#' + sessionState.id)){
+								index = sessionState.selected;
+							}
+						});
+					}
+					if(index !== null){
+						tabset.tabs('option', 'active', index);
+						self.trigger('tabstaterestored');
+					}
 				});
 			},
 

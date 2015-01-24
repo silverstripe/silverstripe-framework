@@ -4,9 +4,9 @@
  * allowing more data to be entered than a standard
  * text field. It creates the <textarea> tag in the
  * form HTML.
- * 
+ *
  * <b>Usage</b>
- * 
+ *
  * <code>
  * new TextareaField(
  *    $name = "description",
@@ -14,12 +14,12 @@
  *    $value = "This is the default description"
  * );
  * </code>
- * 
+ *
  * @package forms
  * @subpackage fields-basic
  */
 class TextareaField extends FormField {
-	
+
 	/**
 	 * @var int Visible number of text lines.
 	 */
@@ -45,7 +45,7 @@ class TextareaField extends FormField {
 	public function Type() {
 		return parent::Type() . ($this->readonly ? ' readonly' : '');
 	}
-	
+
 	/**
 	 * Set the number of rows in the textarea
 	 *
@@ -55,7 +55,7 @@ class TextareaField extends FormField {
 		$this->rows = $rows;
 		return $this;
 	}
-	
+
 	/**
 	 * Set the number of columns in the textarea
 	 *

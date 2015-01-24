@@ -565,27 +565,47 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				// Toggle field visibility depending on the link type.
 				this.find('div.content .field').hide();
-				this.find('.field#LinkType').show();
-				this.find('.field#' + linkType).show();
-				if(linkType == 'internal' || linkType == 'anchor') this.find('.field#Anchor').show();
-				if(linkType !== 'email') this.find('.field#TargetBlank').show();
-				if(linkType == 'anchor') this.find('.field#AnchorSelector').show();
-				this.find('.field#Description').show();
+				this.find('.field[id$="LinkType"]').show();
+				this.find('.field[id$="' + linkType +'_Holder"]').show();
+
+				if(linkType == 'internal' || linkType == 'anchor') {
+					this.find('.field[id$="Anchor_Holder"]').show();
+				}
+
+				if(linkType == 'email') {
+					this.find('.field[id$="Subject_Holder"]').show();
+				} else {
+					this.find('.field[id$="TargetBlank_Holder"]').show();
+				}
+
+				if(linkType == 'anchor') {
+					this.find('.field[id$="AnchorSelector_Holder"]').show();
+				}
+				this.find('.field[id$="Description_Holder"]').show();
 			},
 			/**
 			 * @return Object Keys: 'href', 'target', 'title'
 			 */
 			getLinkAttributes: function() {
-				var href, target = null, anchor = this.find(':input[name=Anchor]').val();
+				var href,
+					target = null,
+					subject = this.find(':input[name=Subject]').val(),
+					anchor = this.find(':input[name=Anchor]').val();
 				
 				// Determine target
-				if(this.find(':input[name=TargetBlank]').is(':checked')) target = '_blank';
-				
+				if(this.find(':input[name=TargetBlank]').is(':checked')) {
+					target = '_blank';
+				}
+
 				// All other attributes
 				switch(this.find(':input[name=LinkType]:checked').val()) {
 					case 'internal':
 						href = '[sitetree_link,id=' + this.find(':input[name=internal]').val() + ']';
-						if(anchor) href += '#' + anchor;
+
+						if(anchor) {
+							href += '#' + anchor;
+						}
+
 						break;
 
 					case 'anchor':
@@ -599,6 +619,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					
 					case 'email':
 						href = 'mailto:' + this.find(':input[name=email]').val();
+						if(subject) {
+							href += '?subject=' + encodeURIComponent(subject);
+						}
 						target = null;
 						break;
 
@@ -620,12 +643,14 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.modifySelection(function(ed){
 					ed.insertLink(this.getLinkAttributes());
 				});
+
 				this.updateFromEditor();
 			},
 			removeLink: function() {
 				this.modifySelection(function(ed){
 					ed.removeLink();
 				});
+
 				this.close();
 			},
 
@@ -1378,7 +1403,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this._super();
 
 				this.setOrigVal(parseInt(this.val(), 10));
-
 			},
 			onunmatch: function() {
 				this._super();
@@ -1461,7 +1485,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		});
 
 
-		$('form.htmleditorfield-mediaform #ParentID .TreeDropdownField').entwine({
+		$('form.htmleditorfield-mediaform .field[id$="ParentID_Holder"] .TreeDropdownField').entwine({
 			onadd: function() {
 				this._super();
 
@@ -1484,8 +1508,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
  */
 function sapphiremce_cleanup(type, value) {
 	if(type == 'get_from_editor') {
-		// replace indented text with a <blockquote>
-		value = value.replace(/<p [^>]*margin-left[^>]*>([^\n|\n\015|\015\n]*)<\/p>/ig,"<blockquote><p>$1</p></blockquote>");
 	
 		// replace VML pixel image references with image tags - experimental
 		value = value.replace(/<[a-z0-9]+:imagedata[^>]+src="?([^> "]+)"?[^>]*>/ig,"<img src=\"$1\">");

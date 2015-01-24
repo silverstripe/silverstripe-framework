@@ -4,38 +4,38 @@ define('TEST_SERVICES', dirname(__FILE__) . '/testservices');
 
 /**
  * Tests for the dependency injector
- * 
+ *
  * Note that these are SS conversions of the existing Simpletest unit tests
  *
  * @author marcus@silverstripe.com.au
  * @license BSD License http://silverstripe.org/bsd-license/
  */
 class InjectorTest extends SapphireTest {
-	
+
 	protected $nestingLevel = 0;
-	
+
 	public function setUp() {
 		parent::setUp();
-		
+
 		$this->nestingLevel = 0;
 	}
-	
+
 	public function tearDown() {
-		
+
 		while($this->nestingLevel > 0) {
 			$this->nestingLevel--;
 			Config::unnest();
 		}
-		
+
 		parent::tearDown();
 	}
-	
+
 	public function testCorrectlyInitialised() {
 		$injector = Injector::inst();
 		$this->assertTrue($injector->getConfigLocator() instanceof SilverStripeServiceConfigurationLocator,
 			'Failure most likely because the injector has been referenced BEFORE being initialised in Core.php');
 	}
-	
+
 	public function testBasicInjector() {
 		$injector = new Injector();
 		$injector->setAutoScanProperties(true);
@@ -105,7 +105,7 @@ class InjectorTest extends SapphireTest {
 		$this->assertEquals(get_class($myObject->sampleService), 'SampleService');
 
 		// also tests that ID can be the key in the array
-		$config = array('SampleService' => array('src' => TEST_SERVICES . '/AnotherService.php')); 
+		$config = array('SampleService' => array('src' => TEST_SERVICES . '/AnotherService.php'));
 		// , 'id' => 'SampleService'));
 		// load
 		$injector->load($config);
@@ -113,7 +113,7 @@ class InjectorTest extends SapphireTest {
 		$injector->inject($myObject);
 		$this->assertEquals('AnotherService', get_class($myObject->sampleService));
 	}
-	
+
 	public function testUpdateSpec() {
 		$injector = new Injector();
 		$services = array(
@@ -129,10 +129,10 @@ class InjectorTest extends SapphireTest {
 		);
 
 		$injector->load($services);
-		
+
 		$injector->updateSpec('AnotherService', 'filters', 'Three');
 		$another = $injector->get('AnotherService');
-		
+
 		$this->assertEquals(3, count($another->filters));
 		$this->assertEquals('Three', $another->filters[2]);
 	}
@@ -176,31 +176,31 @@ class InjectorTest extends SapphireTest {
 
 		$this->assertEquals(get_class($testObject->sampleService), 'AnotherService');
 	}
-	
+
 	public function testInjectingScopedService() {
 		$injector = new Injector();
-		
+
 		$config = array(
 			'AnotherService',
 			'AnotherService.DottedChild'	=> 'SampleService',
 		);
-		
+
 		$injector->load($config);
-		
+
 		$service = $injector->get('AnotherService.DottedChild');
 		$this->assertEquals(get_class($service), 'SampleService');
-		
+
 		$service = $injector->get('AnotherService.Subset');
 		$this->assertEquals(get_class($service), 'AnotherService');
-		
+
 		$injector->setInjectMapping('TestObject', 'sampleService', 'AnotherService.Geronimo');
 		$testObject = $injector->create('TestObject');
 		$this->assertEquals(get_class($testObject->sampleService), 'AnotherService');
-		
+
 		$injector->setInjectMapping('TestObject', 'sampleService', 'AnotherService.DottedChild.AnotherDown');
 		$testObject = $injector->create('TestObject');
 		$this->assertEquals(get_class($testObject->sampleService), 'SampleService');
-		
+
 	}
 
 	public function testInjectUsingConstructor() {
@@ -234,7 +234,7 @@ class InjectorTest extends SapphireTest {
 		$sample = $injector->get('SampleService');
 		$this->assertEquals($sample->constructorVarOne, 'val1');
 		$this->assertEquals(get_class($sample->constructorVarTwo), 'AnotherService');
-		
+
 		$injector = new Injector();
 		$config = array(array(
 				'src' => TEST_SERVICES . '/SampleService.php',
@@ -248,7 +248,7 @@ class InjectorTest extends SapphireTest {
 		$sample = $injector->get('SampleService');
 		$this->assertEquals($sample->constructorVarOne, 'val1');
 		$this->assertEquals($sample->constructorVarTwo, 'val2');
-		
+
 		// test constructors on prototype
 		$injector = new Injector();
 		$config = array(array(
@@ -264,10 +264,10 @@ class InjectorTest extends SapphireTest {
 		$sample = $injector->get('SampleService');
 		$this->assertEquals($sample->constructorVarOne, 'val1');
 		$this->assertEquals($sample->constructorVarTwo, 'val2');
-		
+
 		$again = $injector->get('SampleService');
 		$this->assertFalse($sample === $again);
-		
+
 		$this->assertEquals($sample->constructorVarOne, 'val1');
 		$this->assertEquals($sample->constructorVarTwo, 'val2');
 	}
@@ -355,24 +355,24 @@ class InjectorTest extends SapphireTest {
 		$this->assertEquals($obj1->circularOne, $obj2->circularOne);
 		$this->assertNotEquals($obj1, $obj2);
 	}
-	
+
 	public function testCreateWithConstructor() {
 		$injector = new Injector();
 		$obj = $injector->create('CircularTwo', 'param');
 		$this->assertEquals($obj->otherVar, 'param');
 	}
-	
+
 	public function testSimpleSingleton() {
 		$injector = new Injector();
-		
+
 		$one = $injector->create('CircularOne');
 		$two = $injector->create('CircularOne');
 
 		$this->assertFalse($one === $two);
-		
+
 		$one = $injector->get('CircularTwo');
 		$two = $injector->get('CircularTwo');
-		
+
 		$this->assertTrue($one === $two);
 	}
 
@@ -457,7 +457,7 @@ class InjectorTest extends SapphireTest {
 		$si = $injector->get('TestStaticInjections');
 		$this->assertEquals('NewRequirementsBackend', get_class($si->backend));
 	}
-	
+
 	public function testSetterInjections() {
 		$injector = new Injector();
 		$config = array(
@@ -493,7 +493,7 @@ class InjectorTest extends SapphireTest {
 		Config::inst()->update('Injector', 'MyChildClass', array('properties' => array('one' => 'the two')));
 		$obj = $injector->get('MyParentClass');
 		$this->assertEquals($obj->one, 'the one');
-		
+
 		$obj = $injector->get('MyChildClass');
 		$this->assertEquals($obj->one, 'the two');
 		
@@ -520,35 +520,35 @@ class InjectorTest extends SapphireTest {
 		$obj = $injector->get('MyParentClass');
 		$this->assertEquals($obj->one, 'the three');
 	}
-	
+
 	public function testSameNamedSingeltonPrototype() {
 		$injector = new Injector();
-		
+
 		// get a singleton object
 		$object = $injector->get('NeedsBothCirculars');
 		$object->var = 'One';
-		
+
 		$again = $injector->get('NeedsBothCirculars');
 		$this->assertEquals($again->var, 'One');
-		
+
 		// create a NEW instance object
 		$new = $injector->create('NeedsBothCirculars');
 		$this->assertNull($new->var);
-		
+
 		// this will trigger a problem below
 		$new->var = 'Two';
-		
+
 		$again = $injector->get('NeedsBothCirculars');
 		$this->assertEquals($again->var, 'One');
 	}
-	
+
 	public function testConvertServicePropertyOnCreate() {
-		// make sure convert service property is not called on direct calls to create, only on configured 
+		// make sure convert service property is not called on direct calls to create, only on configured
 		// declarations to avoid un-needed function calls
 		$injector = new Injector();
 		$item = $injector->create('ConstructableObject', '%$TestObject');
 		$this->assertEquals('%$TestObject', $item->property);
-		
+
 		// do it again but have test object configured as a constructor dependency
 		$injector = new Injector();
 		$config = array(
@@ -562,7 +562,7 @@ class InjectorTest extends SapphireTest {
 		$injector->load($config);
 		$item = $injector->get('ConstructableObject');
 		$this->assertTrue($item->property instanceof TestObject);
-		
+
 		// and with a configured object defining TestObject to be something else!
 		$injector = new Injector(array('locator' => 'InjectorTestConfigLocator'));
 		$config = array(
@@ -576,7 +576,7 @@ class InjectorTest extends SapphireTest {
 		$injector->load($config);
 		$item = $injector->get('ConstructableObject');
 		$this->assertTrue($item->property instanceof ConstructableObject);
-		
+
 		$this->assertInstanceOf('OtherTestObject', $item->property->property);
 	}
 
@@ -584,15 +584,15 @@ class InjectorTest extends SapphireTest {
 		$injector = new Injector();
 		$service  = new stdClass();
 
-		$injector->registerNamedService('NamedService', $service);
+		$injector->registerService($service, 'NamedService');
 		$this->assertEquals($service, $injector->get('NamedService'));
 	}
-	
+
 	public function testCreateConfiggedObjectWithCustomConstructorArgs() {
-		// need to make sure that even if the config defines some constructor params, 
+		// need to make sure that even if the config defines some constructor params,
 		// that we take our passed in constructor args instead
 		$injector = new Injector(array('locator' => 'InjectorTestConfigLocator'));
-		
+
 		$item = $injector->create('ConfigConstructor', 'othervalue');
 		$this->assertEquals($item->property, 'othervalue');
 	}
@@ -618,16 +618,16 @@ class InjectorTest extends SapphireTest {
 
 		$this->assertInstanceOf('TestObject', $injector->get('service'));
 	}
-	
+
 	/**
 	 * Test nesting of injector
 	 */
 	public function testNest() {
-		
-		// Outer nest to avoid interference with other 
+
+		// Outer nest to avoid interference with other
 		Injector::nest();
 		$this->nestingLevel++;
-		
+
 		// Test services
 		$config = array(
 			'NewRequirementsBackend',
@@ -638,7 +638,7 @@ class InjectorTest extends SapphireTest {
 		$this->assertInstanceOf('NewRequirementsBackend', $si->backend);
 		$this->assertInstanceOf('MyParentClass', Injector::inst()->get('MyParentClass'));
 		$this->assertInstanceOf('MyChildClass', Injector::inst()->get('MyChildClass'));
-		
+
 		// Test that nested injector values can be overridden
 		Injector::nest();
 		$this->nestingLevel++;
@@ -647,14 +647,14 @@ class InjectorTest extends SapphireTest {
 		$newsi->backend = new OriginalRequirementsBackend();
 		Injector::inst()->registerService($newsi, 'TestStaticInjections');
 		Injector::inst()->registerService(new MyChildClass(), 'MyParentClass');
-		
+
 		// Check that these overridden values are retrievable
 		$si = Injector::inst()->get('TestStaticInjections');
 		$this->assertInstanceOf('TestStaticInjections', $si);
 		$this->assertInstanceOf('OriginalRequirementsBackend', $si->backend);
 		$this->assertInstanceOf('MyParentClass', Injector::inst()->get('MyParentClass'));
 		$this->assertInstanceOf('MyParentClass', Injector::inst()->get('MyChildClass'));
-		
+
 		// Test that unnesting restores expected behaviour
 		Injector::unnest();
 		$this->nestingLevel--;
@@ -663,7 +663,7 @@ class InjectorTest extends SapphireTest {
 		$this->assertInstanceOf('NewRequirementsBackend', $si->backend);
 		$this->assertInstanceOf('MyParentClass', Injector::inst()->get('MyParentClass'));
 		$this->assertInstanceOf('MyChildClass', Injector::inst()->get('MyChildClass'));
-		
+
 		// Test reset of cache
 		Injector::inst()->unregisterAllObjects();
 		$si = Injector::inst()->get('TestStaticInjections');
@@ -671,7 +671,7 @@ class InjectorTest extends SapphireTest {
 		$this->assertInstanceOf('NewRequirementsBackend', $si->backend);
 		$this->assertInstanceOf('MyParentClass', Injector::inst()->get('MyParentClass'));
 		$this->assertInstanceOf('MyChildClass', Injector::inst()->get('MyChildClass'));
-		
+
 		// Return to nestingLevel 0
 		Injector::unnest();
 		$this->nestingLevel--;
@@ -703,7 +703,7 @@ class InjectorTestConfigLocator extends SilverStripeServiceConfigurationLocator 
 
 class ConstructableObject implements TestOnly {
 	public $property;
-	
+
 	public function __construct($prop) {
 		$this->property = $prop;
 	}
@@ -744,7 +744,7 @@ class CircularTwo implements TestOnly {
 	public $circularOne;
 
 	public $otherVar;
-	
+
 	public function __construct($value = null) {
 		$this->otherVar = $value;
 	}
@@ -763,7 +763,7 @@ class MyParentClass implements TestOnly {
 }
 
 class MyChildClass extends MyParentClass implements TestOnly {
-	
+
 }
 class MyGrandChildClass extends MyChildClass implements TestOnly {
 	
@@ -808,22 +808,22 @@ class TestStaticInjections implements TestOnly {
  * Make sure DI works with ViewableData's implementation of __isset
  */
 class TestSetterInjections extends ViewableData implements TestOnly {
-	
+
 	protected $backend;
-	
+
 	/** @config */
 	private static $dependencies = array(
 		'backend' => '%$NewRequirementsBackend'
 	);
-	
+
 	public function getBackend() {
 		return $this->backend;
 	}
-	
+
 	public function setBackend($backend) {
 		$this->backend = $backend;
 	}
-	
+
 }
 
 /**
@@ -834,7 +834,7 @@ class TestSetterInjections extends ViewableData implements TestOnly {
  */
 class SSObjectCreator extends InjectionCreator {
 	private $injector;
-	
+
 	public function __construct($injector) {
 		$this->injector = $injector;
 	}

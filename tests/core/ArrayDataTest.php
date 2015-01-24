@@ -49,13 +49,13 @@ class ArrayDataTest extends SapphireTest {
 
 	public function testSetField() {
 		$arrayData = new ArrayData(array());
-		
+
 		$arrayData->setField('d', 'Delta');
-		
+
 		$this->assertTrue($arrayData->hasField('d'));
 		$this->assertEquals('Delta', $arrayData->getField('d'));
 	}
-	
+
 	public function testGetArray() {
 		$originalDeprecation = Deprecation::dump_settings();
 		Deprecation::notification_version('2.4');
@@ -65,9 +65,9 @@ class ArrayDataTest extends SapphireTest {
 			'Bar' => 'Bar',
 			'Baz' => 'Baz'
 		);
-		
+
 		$arrayData = new ArrayData($array);
-		
+
 		$this->assertEquals($arrayData->toMap(), $array);
 
 		Deprecation::restore_settings($originalDeprecation);

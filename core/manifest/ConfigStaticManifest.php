@@ -320,7 +320,8 @@ class SS_ConfigStaticManifest_Parser {
 				// NOP
 			}
 			else {
-				user_error('Unexpected token when building static manifest: '.print_r($token, true), E_USER_ERROR);
+				user_error('Unexpected token ("' . token_name($type) . '") when building static manifest in class "'
+					. $class . '": '.print_r($token, true), E_USER_ERROR);
 			}
 		}
 

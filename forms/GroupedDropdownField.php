@@ -1,16 +1,16 @@
 <?php
 /**
  * Grouped dropdown, using <optgroup> tags.
- * 
+ *
  * $source parameter (from DropdownField) must be a two dimensional array.
  * The first level of the array is used for the <optgroup>, and the second
  * level are the <options> for each group.
- * 
+ *
  * Returns a <select> tag containing all the appropriate <option> tags, with
  * <optgroup> tags around the <option> tags as required.
- * 
+ *
  * <b>Usage</b>
- * 
+ *
  * <code>
  * new GroupedDropdownField(
  *    $name = "dropdown",
@@ -33,11 +33,11 @@
  *    )
  * )
  * </code>
- * 
+ *
  * <b>Disabling individual items</b>
- * 
+ *
  * <code>
- * $groupedDrDownField->setDisabledItems( 
+ * $groupedDrDownField->setDisabledItems(
  *    array(
  *       "numbers" => array(
  *       		"1" => "1",
@@ -49,7 +49,7 @@
  *    )
  * )
  * </code>
- * 
+ *
  * @package forms
  * @subpackage fields-basic
  */
@@ -63,7 +63,7 @@ class GroupedDropdownField extends DropdownField {
 				foreach($title as $value2 => $title2) {
 					$disabled = '';
 					if( array_key_exists($value, $this->disabledItems)
-							&& is_array($this->disabledItems[$value]) 
+							&& is_array($this->disabledItems[$value])
 							&& in_array($value2, $this->disabledItems[$value]) ){
 						$disabled = 'disabled="disabled"';
 					}
@@ -87,6 +87,6 @@ class GroupedDropdownField extends DropdownField {
 	public function Type() {
 		return 'groupeddropdown dropdown';
 	}
-	
+
 }
 

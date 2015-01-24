@@ -68,7 +68,7 @@ class XMLDataFormatterTest extends SapphireTest {
 		$this->arguments = $arguments;
 		$this->contents  = $content;
 		$this->tagName   = $tagName;
-		
+
 		return $content;
 	}
 

@@ -3,7 +3,7 @@
 
 /**
  * A utility class which builds a manifest of configuration items
- * 
+ *
  * @package framework
  * @subpackage manifest
  */
@@ -163,7 +163,7 @@ class SS_ConfigManifest {
 	 * environment, environment variables and constants that selects which yaml fragments actually make it into the
 	 * configuration because of "only"
 	 * and "except" rules.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function variantKey() {
@@ -260,7 +260,7 @@ class SS_ConfigManifest {
 			'module' => $match[1],
 			'file' => basename(basename($basename, '.yml'), '.yaml')
 		);
-		
+
 		// Make sure the linefeeds are all converted to \n, PCRE '$' will not match anything else.
 		$fileContents = str_replace(array("\r\n", "\r"), "\n", file_get_contents($pathname));
 
@@ -317,17 +317,17 @@ class SS_ConfigManifest {
 					'fragment' => $parser->parse($parts[$i+1])
 				);
 			}
-		}	
+		}
 	}
 
 	/**
 	 * Sorts the YAML fragments so that the "before" and "after" rules are met.
 	 * Throws an error if there's a loop
-	 * 
+	 *
 	 * We can't use regular sorts here - we need a topological sort. Easiest
 	 * way is with a DAG, so build up a DAG based on the before/after rules, then
 	 * sort that.
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function sortYamlFragments() {
@@ -374,11 +374,11 @@ class SS_ConfigManifest {
 		}
 
 	}
-	
+
 	/**
 	 * Return a string "after", "before" or "undefined" depending on whether the YAML fragment array element passed
 	 * as $a should be positioned after, before, or either compared to the YAML fragment array element passed as $b
-	 *  
+	 *
 	 * @param  $a Array - a YAML config fragment as loaded by addYAMLConfigFile
 	 * @param  $b Array - a YAML config fragment as loaded by addYAMLConfigFile
 	 * @return string "after", "before" or "undefined"
@@ -471,7 +471,7 @@ class SS_ConfigManifest {
 	 * @param  $rules array - A hash of rules as allowed in the only or except portion of a config fragment header
 	 * @return bool - True if the rules are met, false if not. (Note that depending on whether we were passed an
 	 *                only or an except rule,
-	 * which values means accept or reject a fragment 
+	 * which values means accept or reject a fragment
 	 */
 	public function matchesPrefilterVariantRules($rules) {
 		$matches = "undefined"; // Needs to be truthy, but not true
@@ -485,7 +485,7 @@ class SS_ConfigManifest {
 				case 'moduleexists':
 					$matches = $matches && $this->moduleExists($v);
 					break;
-				
+
 				default:
 					// NOP
 			}

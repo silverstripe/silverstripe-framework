@@ -13,14 +13,14 @@ class TextTest extends SapphireTest {
 			'The little brown fox jumped over the lazy cow.' => 'The little brown fox...',
 			'<p>This is some text in a paragraph.</p>' => '<p>This is some text...'
 		);
-		
+
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
 			$textObj->setValue($originalValue);
 			$this->assertEquals($expectedValue, $textObj->LimitCharacters());
 		}
 	}
-	
+
 	/**
 	 * Test {@link Text->LimitWordCount()}
 	 */
@@ -29,18 +29,18 @@ class TextTest extends SapphireTest {
 			/* Standard words limited, ellipsis added if truncated */
 			'The little brown fox jumped over the lazy cow.' => 'The little brown...',
 			' This text has white space around the ends ' => 'This text has...',
-		
+
 			/* Words less than the limt word count don't get truncated, ellipsis not added */
 			'Two words' => 'Two words',	// Two words shouldn't have an ellipsis
 			'One' => 'One',	// Neither should one word
 			'' => '',	// No words produces nothing!
-			
+
 			/* HTML tags get stripped out, leaving the raw text */
 			'<p>Text inside a paragraph tag should also work</p>' => 'Text inside a...',
 			'<p><span>Text nested inside another tag should also work</span></p>' => 'Text nested inside...',
 			'<p>Two words</p>' => 'Two words'
 		);
-		
+
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
 			$textObj->setValue($originalValue);
@@ -58,14 +58,14 @@ class TextTest extends SapphireTest {
 			"Stuff<Blah Blah" => "Stuff&lt;Blah Blah",
 			"Stuff>Blah Blah" => "Stuff&gt;Blah Blah"
 		);
-		
+
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
 			$textObj->setValue($originalValue);
 			$this->assertEquals($expectedValue, $textObj->LimitWordCountXML(3));
 		}
 	}
-	
+
 	/**
 	 * Test {@link Text->LimitSentences()}
 	 */
@@ -80,7 +80,7 @@ class TextTest extends SapphireTest {
 			'<p>First sentence. <em class="dummyClass">Second sentence</em>. Third sentence</p>'
 				=> 'First sentence. Second sentence.'
 		);
-		
+
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
 			$textObj->setValue($originalValue);
@@ -148,49 +148,49 @@ class TextTest extends SapphireTest {
 	public function testContextSummary() {
 		$testString1 = '<p>This is some text. It is a test</p>';
 		$testKeywords1 = 'test';
-		
+
 		$testString2 = '<p>This is some test text. Test test what if you have multiple keywords.</p>';
 		$testKeywords2 = 'some test';
-		
+
 		$testString3 = '<p>A dog ate a cat while looking at a Foobar</p>';
 		$testKeyword3 = 'a';
 		$testKeyword3a = 'ate';
 
 		$textObj = DBField::create_field('Text', $testString1, 'Text');
-		
+
 		$this->assertEquals(
 			'... text. It is a <span class="highlight">test</span>...',
 			$textObj->ContextSummary(20, $testKeywords1)
 		);
 
 		$textObj->setValue($testString2);
-		
+
 		$this->assertEquals(
 			'This is <span class="highlight">some</span> <span class="highlight">test</span> text.'
 				. ' <span class="highlight">test</span> <span class="highlight">test</span> what if you have...',
 			$textObj->ContextSummary(50, $testKeywords2)
 		);
-		
+
 		$textObj->setValue($testString3);
-		
+
 		// test that it does not highlight too much (eg every a)
 		$this->assertEquals(
 			'A dog ate a cat while looking at a Foobar',
 			$textObj->ContextSummary(100, $testKeyword3)
 		);
-		
+
 		// it should highlight 3 letters or more.
 		$this->assertEquals(
 			'A dog <span class="highlight">ate</span> a cat while looking at a Foobar',
 			$textObj->ContextSummary(100, $testKeyword3a)
 		);
-	}	
+	}
 
 	public function testRAW() {
 		$data = DBField::create_field('Text', 'This &amp; This');
 		$this->assertEquals($data->RAW(), 'This &amp; This');
 	}
-	
+
 	public function testXML() {
 		$data = DBField::create_field('Text', 'This & This');
 		$this->assertEquals($data->XML(), 'This &amp; This');

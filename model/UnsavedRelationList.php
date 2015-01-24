@@ -3,12 +3,12 @@
 /**
  * An {@link ArrayList} that represents an unsaved relation.
  *
- * has_many and many_many relations cannot be saved until after the DataObject 
- * they're on has been written. This List pretends to be a RelationList and 
+ * has_many and many_many relations cannot be saved until after the DataObject
+ * they're on has been written. This List pretends to be a RelationList and
  * stores the related objects in memory.
  *
- * It can store both saved objects (as IDs) or unsaved objects (as instances 
- * of $dataClass). Unsaved objects are then written when the list is saved 
+ * It can store both saved objects (as IDs) or unsaved objects (as instances
+ * of $dataClass). Unsaved objects are then written when the list is saved
  * into an instance of {@link RelationList}.
  *
  * Most methods that alter the list of objects throw LogicExceptions.
@@ -17,24 +17,24 @@
  * @subpackage model
  */
 class UnsavedRelationList extends ArrayList {
-	
+
 	/**
 	 * The DataObject class name that this relation is on
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $baseClass;
 
 	/**
 	 * The name of the relation
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $relationName;
 
 	/**
 	 * The DataObject class name that this relation is querying
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $dataClass;
@@ -111,7 +111,7 @@ class UnsavedRelationList extends ArrayList {
 
 	/**
 	 * Returns an Iterator for this relation.
-	 * 
+	 *
 	 * @return ArrayIterator
 	 */
 	public function getIterator() {
@@ -140,7 +140,7 @@ class UnsavedRelationList extends ArrayList {
 
 	/**
 	 * Add a number of items to the relation.
-	 * 
+	 *
 	 * @param array $items Items to add, as either DataObjects or IDs.
 	 * @return DataList
 	 */
@@ -176,7 +176,7 @@ class UnsavedRelationList extends ArrayList {
 
 	/**
 	 * Remove the items from this list with the given IDs
-	 * 
+	 *
 	 * @param array $idList
 	 */
 	public function removeMany($items) {
@@ -196,7 +196,7 @@ class UnsavedRelationList extends ArrayList {
 	/**
 	 * Sets the Relation to be the given ID list.
 	 * Records will be added and deleted as appropriate.
-	 * 
+	 *
 	 * @param array $idList List of IDs.
 	 */
 	public function setByIDList($idList) {

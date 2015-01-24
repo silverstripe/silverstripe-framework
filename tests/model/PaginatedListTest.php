@@ -10,7 +10,7 @@ class PaginatedListTest extends SapphireTest {
 	protected static $fixture_file = 'DataObjectTest.yml';
 
 	protected $extraDataObjects = array(
-		'DataObjectTest_Team',		
+		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
 		'DataObjectTest_Player'
 	);
@@ -41,7 +41,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testSetPaginationFromQuery() {
-		$query = $this->getMock('SQLQuery');
+		$query = $this->getMock('SQLSelect');
 		$query->expects($this->once())
 				->method('getLimit')
 				->will($this->returnValue(array('limit' => 15, 'start' => 30)));

@@ -2,10 +2,10 @@
 
 /**
  * File similar to main.php designed for command-line scripts
- * 
+ *
  * This file lets you execute SilverStripe requests from the command-line.  The URL is passed as the first argument to
  * the scripts.
- * 
+ *
  * @package framework
  * @subpackage core
  */
@@ -85,7 +85,7 @@ Put the following content into this file:
 
 /* Change this from 'dev' to 'live' for a production environment. */
 define('SS_ENVIRONMENT_TYPE', 'dev');
- 
+
 /* This defines a default database user */
 define('SS_DATABASE_SERVER', 'localhost');
 define('SS_DATABASE_USERNAME', '<user>');
@@ -93,7 +93,7 @@ define('SS_DATABASE_PASSWORD', '<password>');
 define('SS_DATABASE_NAME', '<database>');
 --------------------------------------------------
 
-Once you have done that, run 'composer install' or './framework/sake dev/build' to create 
+Once you have done that, run 'composer install' or './framework/sake dev/build' to create
 an empty database.
 
 For more information, please read this page in our docs:

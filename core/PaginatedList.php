@@ -92,7 +92,7 @@ class PaginatedList extends SS_ListDecorator {
 	public function getPageStart() {
 		if ($this->pageStart === null) {
 			if(
-				$this->request 
+				$this->request
 				&& isset($this->request[$this->getPaginationGetVar()])
 				&& $this->request[$this->getPaginationGetVar()] > 0
 			) {
@@ -144,9 +144,9 @@ class PaginatedList extends SS_ListDecorator {
 	 * Sets the page length, page start and total items from a query object's
 	 * limit, offset and unlimited count. The query MUST have a limit clause.
 	 *
-	 * @param SQLQuery $query
+	 * @param SQLSelect $query
 	 */
-	public function setPaginationFromQuery(SQLQuery $query) {
+	public function setPaginationFromQuery(SQLSelect $query) {
 		if ($limit = $query->getLimit()) {
 			$this->setPageLength($limit['limit']);
 			$this->setPageStart($limit['start']);

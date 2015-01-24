@@ -8,7 +8,7 @@ class GridFieldTest extends SapphireTest {
 		$obj = new GridField('testfield', 'testfield');
 		$this->assertTrue($obj instanceof GridField, 'Test that the constructor arguments are valid');
 	}
-	
+
 	/**
 	 * @covers GridField::__construct
 	 * @covers GridField::getList
@@ -40,7 +40,7 @@ class GridFieldTest extends SapphireTest {
 		$sort->setThrowExceptionOnBadDataType(false);
 		$filter->setThrowExceptionOnBadDataType(false);
 		$pagination->setThrowExceptionOnBadDataType(false);
-		
+
 		$this->assertEquals($expectedComponents, $obj->getConfig()->getComponents(), 'Testing default Config');
 	}
 
@@ -105,6 +105,51 @@ class GridFieldTest extends SapphireTest {
 		$obj = new GridField('testfield', 'testfield');
 		$this->assertTrue($obj->getState() instanceof GridState_Data);
 		$this->assertTrue($obj->getState(false) instanceof GridState);
+	}
+
+	/**
+	 * Tests usage of nested GridState values
+	 *
+	 * @covers GridState_Data::__get
+	 * @covers GridState_Data::__call
+	 * @covers GridState_Data::getData
+	 */
+	public function testGetStateData() {
+		$obj = new GridField('testfield', 'testfield');
+
+		// Check value persistance
+		$this->assertEquals(15, $obj->State->NoValue(15));
+		$this->assertEquals(15, $obj->State->NoValue(-1));
+		$obj->State->NoValue = 10;
+		$this->assertEquals(10, $obj->State->NoValue);
+		$this->assertEquals(10, $obj->State->NoValue(20));
+
+		// Test that values can be set, unset, and inspected
+		$this->assertFalse(isset($obj->State->NotSet));
+		$obj->State->NotSet = false;
+		$this->assertTrue(isset($obj->State->NotSet));
+		unset($obj->State->NotSet);
+		$this->assertFalse(isset($obj->State->NotSet));
+
+		// Test that false evaluating values are storable
+		$this->assertEquals(0, $obj->State->Falsey0(0)); // expect 0 back
+		$this->assertEquals(0, $obj->State->Falsey0(10)); // expect 0 back
+		$this->assertEquals(0, $obj->State->Falsey0); //expect 0 back
+		$obj->State->Falsey0 = 0; //manually assign 0
+		$this->assertEquals(0, $obj->State->Falsey0); //expect 0 back
+
+		// Test that false is storable
+		$this->assertFalse($obj->State->Falsey2(false));
+		$this->assertFalse($obj->State->Falsey2(true));
+		$this->assertFalse($obj->State->Falsey2);
+		$obj->State->Falsey2 = false;
+		$this->assertFalse($obj->State->Falsey2);
+
+		// Check nested values
+		$this->assertInstanceOf('GridState_Data', $obj->State->Nested);
+		$this->assertInstanceOf('GridState_Data', $obj->State->Nested->DeeperNested());
+		$this->assertEquals(3, $obj->State->Nested->DataValue(3));
+		$this->assertEquals(10, $obj->State->Nested->DeeperNested->DataValue(10));
 	}
 
 	/**
@@ -241,7 +286,7 @@ class GridFieldTest extends SapphireTest {
 		$obj = new GridField('testfield', 'testfield');
 		$obj->handleAlterAction('prft', array(), array());
 	}
-	
+
 	/**
 	 * @covers GridField::handleAction
 	 */
@@ -259,7 +304,7 @@ class GridFieldTest extends SapphireTest {
 		$value = $obj->getCastedValue('This is a sentance. This ia another.', array('Text->FirstSentence'));
 		$this->assertEquals('This is a sentance.', $value);
 	}
-	
+
 	/**
 	 * @covers GridField::getCastedValue
 	 */
@@ -283,7 +328,7 @@ class GridFieldTest extends SapphireTest {
 		// $request = new SS_HTTPRequest('POST', 'url');
 		// $obj->gridFieldAlterAction(array('StateID'=>$id), $form, $request);
 	}
-	
+
 	/**
 	 * Test the interface for adding custom HTML fragment slots via a component
 	 */
@@ -314,8 +359,8 @@ class GridFieldTest extends SapphireTest {
 		);
 		$field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
 		$form = new Form(new Controller(), 'testform', new FieldList(array($field)), new FieldList());
-		
-		$this->assertContains("<div class=\"right\">rightone\nrighttwo</div><div class=\"left\">left</div>", 
+
+		$this->assertContains("<div class=\"right\">rightone\nrighttwo</div><div class=\"left\">left</div>",
 			$field->FieldHolder());
 	}
 
@@ -339,8 +384,8 @@ class GridFieldTest extends SapphireTest {
 		);
 		$field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
 		$form = new Form(new Controller(), 'testform', new FieldList(array($field)), new FieldList());
-		
-		$this->assertContains("<div>first\n<strong>second</strong></div>", 
+
+		$this->assertContains("<div>first\n<strong>second</strong></div>",
 			$field->FieldHolder());
 	}
 
@@ -368,7 +413,7 @@ class GridFieldTest extends SapphireTest {
 		$this->setExpectedException('LogicException');
 		$field->FieldHolder();
 	}
-	
+
 	/**
 	 *  @covers GridField::FieldHolder
 	 */
@@ -382,22 +427,22 @@ class GridFieldTest extends SapphireTest {
 			new GridFieldTest_Permissions(array("ID" => 3, "Email" => "otto.fischer@example.org",
 				'Name' => 'Otto Fischer'))
 		));
-		
+
 		$config = new GridFieldConfig();
 		$config->addComponent(new GridFieldDataColumns());
 		$obj = new GridField('testfield', 'testfield', $list, $config);
 		$form = new Form(new Controller(), 'mockform', new FieldList(array($obj)), new FieldList());
 		$content = new CSSContentParser($obj->FieldHolder());
-		
+
 		$members = $content->getBySelector('.ss-gridfield-item tr');
-		
+
 		$this->assertEquals(2, count($members));
-		
+
 		$this->assertEquals((string)$members[0]->td[0], 'Ongi Schwimmer',
 			'First object Name should be Ongi Schwimmer');
 		$this->assertEquals((string)$members[0]->td[1], 'ongi.schwimmer@example.org',
 			'First object Email should be ongi.schwimmer@example.org');
-		
+
 		$this->assertEquals((string)$members[1]->td[0], 'Otto Fischer',
 			'Second object Name should be Otto Fischer');
 		$this->assertEquals((string)$members[1]->td[1], 'otto.fischer@example.org',
@@ -454,7 +499,7 @@ class GridFieldTest_Component implements GridField_ColumnProvider, GridField_Act
 		return 'handledAction is executed';
 	}
 
-	
+
 }
 
 class GridFieldTest_Component2 implements GridField_DataManipulator, TestOnly {
@@ -474,7 +519,7 @@ class GridFieldTest_Team extends DataObject implements TestOnly {
 	private static $many_many = array('Players' => 'GridFieldTest_Player');
 
 	private static $has_many = array('Cheerleaders' => 'GridFieldTest_Cheerleader');
-	
+
 	private static $searchable_fields = array(
 		'Name',
 		'City',
@@ -503,7 +548,7 @@ class GridFieldTest_HTMLFragments implements GridField_HTMLProvider, TestOnly{
 	public function __construct($fragments) {
 		$this->fragments = $fragments;
 	}
-	
+
 	public function getHTMLFragments($gridField) {
 		return $this->fragments;
 	}
@@ -514,12 +559,12 @@ class GridFieldTest_Permissions extends DataObject implements TestOnly {
 		'Name' => 'Varchar',
 		'Email' => 'Varchar',
 	);
-	
+
 	private static $summary_fields = array(
 		'Name',
 		'Email'
 	);
-	
+
 	public function canView($member = null) {
 		// Only records with odd numbers are viewable
 		if(!($this->ID % 2)){ return false; }

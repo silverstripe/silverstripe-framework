@@ -6,24 +6,24 @@
 
 /**
  * Represents a single year field.
- * 
+ *
  * @package framework
  * @subpackage model
  */
 class Year extends DBField {
-	
+
 	public function requireField() {
 		$parts=Array('datatype'=>'year', 'precision'=>4, 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'year', 'parts'=>$parts);
-		DB::requireField($this->tableName, $this->name, $values);
+		DB::require_field($this->tableName, $this->name, $values);
 	}
-	
+
 	public function scaffoldFormField($title = null, $params = null) {
 		$selectBox = new DropdownField($this->name, $title);
 		$selectBox->setSource($this->getDefaultOptions());
 		return $selectBox;
 	}
-	
+
 	/**
 	 * Returns a list of default options that can
 	 * be used to populate a select box, or compare against
@@ -43,5 +43,5 @@ class Year extends DBField {
 		}
 		return $years;
 	}
-	
+
 }

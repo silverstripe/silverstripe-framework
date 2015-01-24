@@ -7,17 +7,17 @@
  * @subpackage model
  */
 class ManyManyList extends RelationList {
-	
+
 	/**
 	 * @var string $joinTable
 	 */
 	protected $joinTable;
-	
+
 	/**
 	 * @var string $localKey
 	 */
 	protected $localKey;
-	
+
 	/**
 	 * @var string $foreignKey
 	 */
@@ -35,20 +35,20 @@ class ManyManyList extends RelationList {
 
 	/**
 	 * Create a new ManyManyList object.
-	 * 
+	 *
 	 * A ManyManyList object represents a list of {@link DataObject} records
 	 * that correspond to a many-many relationship.
-	 * 
+	 *
 	 * Generation of the appropriate record set is left up to the caller, using
 	 * the normal {@link DataList} methods. Addition arguments are used to
 	 * support {@@link add()} and {@link remove()} methods.
-	 * 
+	 *
 	 * @param string $dataClass The class of the DataObjects that this will list.
 	 * @param string $joinTable The name of the table whose entries define the content of this many_many relation.
 	 * @param string $localKey The key in the join table that maps to the dataClass' PK.
 	 * @param string $foreignKey The key in the join table that maps to joined class' PK.
 	 * @param string $extraFields A map of field => fieldtype of extra fields on the join table.
-	 * 
+	 *
 	 * @example new ManyManyList('Group','Group_Members', 'GroupID', 'MemberID');
 	 */
 	public function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
@@ -59,10 +59,16 @@ class ManyManyList extends RelationList {
 		$this->foreignKey = $foreignKey;
 		$this->extraFields = $extraFields;
 
-		$baseClass = ClassInfo::baseDataClass($dataClass);
+		$this->linkJoinTable();
+	}
 
+	/**
+	 * Setup the join between this dataobject and the necessary mapping table
+	 */
+	protected function linkJoinTable() {
 		// Join to the many-many join table
-		$this->dataQuery->innerJoin($joinTable, "\"$joinTable\".\"$this->localKey\" = \"$baseClass\".\"ID\"");
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
+		$this->dataQuery->innerJoin($this->joinTable, "\"{$this->joinTable}\".\"{$this->localKey}\" = \"{$baseClass}\".\"ID\"");
 
 		// Add the extra fields to the query
 		if($this->extraFields) {
@@ -86,12 +92,12 @@ class ManyManyList extends RelationList {
 				$this->_compositeExtraFields[$field] = array();
 
 				// append the composite field names to the select
-				foreach($obj->compositeDatabaseFields() as $k => $f) {
-					$col = $field . $k;
+				foreach($obj->compositeDatabaseFields() as $subField => $subSpec) {
+					$col = $field . $subField;
 					$finalized[] = $col;
 
 					// cache
-					$this->_compositeExtraFields[$field][] = $k;
+					$this->_compositeExtraFields[$field][] = $subField;
 				}
 			} else {
 				$finalized[] = $field;
@@ -113,16 +119,15 @@ class ManyManyList extends RelationList {
 
 		if($this->_compositeExtraFields) {
 			foreach($this->_compositeExtraFields as $fieldName => $composed) {
-				// convert joined extra fields into their composite field
-				// types.
+				// convert joined extra fields into their composite field types.
 				$value = array();
 
-				foreach($composed as $i => $k) {
-					if(isset($row[$fieldName . $k])) {
-						$value[$k] = $row[$fieldName . $k];
+				foreach($composed as $subField => $subSpec) {
+					if(isset($row[$fieldName . $subSpec])) {
+						$value[$subSpec] = $row[$fieldName . $subSpec];
 
 						// don't duplicate data in the record
-						unset($row[$fieldName . $k]);
+						unset($row[$fieldName . $subSpec]);
 					}
 				}
 
@@ -151,15 +156,16 @@ class ManyManyList extends RelationList {
 	 * @return string
 	 */
 	protected function foreignIDFilter($id = null) {
-		if ($id === null) $id = $this->getForeignID();
+		if ($id === null) {
+			$id = $this->getForeignID();
+		}
 
 		// Apply relation filter
+		$key = "\"{$this->joinTable}\".\"{$this->foreignKey}\"";
 		if(is_array($id)) {
-			return "\"$this->joinTable\".\"$this->foreignKey\" IN ('" . 
-				implode("', '", array_map('Convert::raw2sql', $id)) . "')";
+			return array("$key IN (".DB::placeholders($id).")"  => $id);
 		} else if($id !== null){
-			return "\"$this->joinTable\".\"$this->foreignKey\" = '" . 
-				Convert::raw2sql($id) . "'";
+			return array($key => $id);
 		}
 	}
 
@@ -170,85 +176,91 @@ class ManyManyList extends RelationList {
 	 * entries. However some subclasses of ManyManyList (Member_GroupSet) modify foreignIDFilter to
 	 * include additional calculated entries, so we need different filters when reading and when writing
 	 *
-	 * @return string
+	 * @param array|integer $id (optional) An ID or an array of IDs - if not provided, will use the current ids
+	 * as per getForeignID
+	 * @return array Condition In array(SQL => parameters format)
 	 */
 	protected function foreignIDWriteFilter($id = null) {
 		return $this->foreignIDFilter($id);
 	}
 
 	/**
-	 * Add an item to this many_many relationship. Does so by adding an entry
-	 * to the joinTable.
+	 * Add an item to this many_many relationship
+	 * Does so by adding an entry to the joinTable.
 	 *
 	 * @param mixed $item
-	 * @param array $extraFields A map of additional columns to insert into the
-	 *								joinTable
+	 * @param array $extraFields A map of additional columns to insert into the joinTable.
+	 * Column names should be ANSI quoted.
 	 */
-	public function add($item, $extraFields = null) {
+	public function add($item, $extraFields = array()) {
+		// Ensure nulls or empty strings are correctly treated as empty arrays
+		if(empty($extraFields)) $extraFields = array();
+
+		// Determine ID of new record
 		if(is_numeric($item)) {
 			$itemID = $item;
-		} else if($item instanceof $this->dataClass) {
+		} elseif($item instanceof $this->dataClass) {
 			$itemID = $item->ID;
 		} else {
-			throw new InvalidArgumentException(
-				"ManyManyList::add() expecting a $this->dataClass object, or ID value",
-				E_USER_ERROR
-			);
+			throw new InvalidArgumentException("ManyManyList::add() expecting a $this->dataClass object, or ID value",
+				E_USER_ERROR);
 		}
 
-		$foreignIDs = $this->getForeignID();
-		$foreignFilter = $this->foreignIDWriteFilter();
-
 		// Validate foreignID
-		if(!$foreignIDs) {
+		$foreignIDs = $this->getForeignID();
+		if(empty($foreignIDs)) {
 			throw new Exception("ManyManyList::add() can't be called until a foreign ID is set", E_USER_WARNING);
 		}
 
-		if($foreignFilter) {
-			$query = new SQLQuery("*", array("\"$this->joinTable\""));
-			$query->setWhere($foreignFilter);
-			$hasExisting = ($query->count() > 0);
-		} else {
-			$hasExisting = false;	
-		}
-
-		// Insert or update
-		foreach((array)$foreignIDs as $foreignID) {
-			$manipulation = array();
-
-			if($hasExisting) {
-				$manipulation[$this->joinTable]['command'] = 'update';	
-				$manipulation[$this->joinTable]['where'] = "\"$this->joinTable\".\"$this->foreignKey\" = " . 
-					"'" . Convert::raw2sql($foreignID) . "'" .
-					" AND \"$this->localKey\" = {$itemID}";
+		// Apply this item to each given foreign ID record
+		if(!is_array($foreignIDs)) $foreignIDs = array($foreignIDs);
+		foreach($foreignIDs as $foreignID) {
+			// Check for existing records for this item
+			if($foreignFilter = $this->foreignIDWriteFilter($foreignID)) {
+				// With the current query, simply add the foreign and local conditions
+				// The query can be a bit odd, especially if custom relation classes
+				// don't join expected tables (@see Member_GroupSet for example).
+				$query = new SQLSelect("*", "\"{$this->joinTable}\"");
+				$query->addWhere($foreignFilter);
+				$query->addWhere(array(
+					"\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+				));
+				$hasExisting = ($query->count() > 0);
 			} else {
-				$manipulation[$this->joinTable]['command'] = 'insert';	
+				$hasExisting = false;
+			}
+
+			$manipulation = array();
+			if($hasExisting) {
+				$manipulation[$this->joinTable]['command'] = 'update';
+				$manipulation[$this->joinTable]['where'] = array(
+					"\"{$this->joinTable}\".\"{$this->foreignKey}\"" => $foreignID,
+					"\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+				);
+			} else {
+				$manipulation[$this->joinTable]['command'] = 'insert';
 			}
 
 			if($extraFields) {
-				foreach($extraFields as $k => $v) {
-					if(is_null($v)) {
-						$manipulation[$this->joinTable]['fields'][$k] = 'NULL';
-					}
-					else {
-						if(is_object($v) && $v instanceof DBField) {
-							// rely on writeToManipulation to manage the changes
-							// required for this field.
-							$working = array('fields' => array());
+				foreach($extraFields as $fieldName => $fieldValue) {
+					if(is_null($fieldValue)) {
+						$manipulation[$this->joinTable]['fields'][$fieldName] = null;
+					} elseif($fieldValue instanceof DBField) {
+						// rely on writeToManipulation to manage the changes
+						// required for this field.
+						$working = array('fields' => array());
 
-							// create a new instance of the field so we can
-							// modify the field name to the correct version.
-							$field = DBField::create_field(get_class($v), $v);
-							$field->setName($k);
+						// create a new instance of the field so we can
+						// modify the field name to the correct version.
+						$field = DBField::create_field(get_class($fieldValue), $fieldValue);
+						$field->setName($fieldName);
+						$field->writeToManipulation($working);
 
-							$field->writeToManipulation($working);
-
-							foreach($working['fields'] as $extraK => $extraV) {
-								$manipulation[$this->joinTable]['fields'][$extraK] = $extraV;
-							}
-						} else {
-							$manipulation[$this->joinTable]['fields'][$k] =  "'" . Convert::raw2sql($v) . "'";
+						foreach($working['fields'] as $extraName => $extraValue) {
+							$manipulation[$this->joinTable]['fields'][$extraName] = $extraValue;
 						}
+					} else {
+						$manipulation[$this->joinTable]['fields'][$fieldName] =  $fieldValue;
 					}
 				}
 			}
@@ -272,7 +284,7 @@ class ManyManyList extends RelationList {
 		if(!($item instanceof $this->dataClass)) {
 			throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
 		}
-		
+
 		return $this->removeByID($item->ID);
 	}
 
@@ -287,16 +299,15 @@ class ManyManyList extends RelationList {
 	public function removeByID($itemID) {
 		if(!is_numeric($itemID)) throw new InvalidArgumentException("ManyManyList::removeById() expecting an ID");
 
-		$query = new SQLQuery("*", array("\"$this->joinTable\""));
-		$query->setDelete(true);
+		$query = new SQLDelete("\"{$this->joinTable}\"");
 
 		if($filter = $this->foreignIDWriteFilter($this->getForeignID())) {
 			$query->setWhere($filter);
 		} else {
 			user_error("Can't call ManyManyList::remove() until a foreign ID is set", E_USER_WARNING);
 		}
-		
-		$query->addWhere("\"$this->localKey\" = {$itemID}");
+
+		$query->addWhere(array("\"{$this->localKey}\"" => $itemID));
 		$query->execute();
 	}
 
@@ -311,33 +322,34 @@ class ManyManyList extends RelationList {
 
 		// Remove the join to the join table to avoid MySQL row locking issues.
 		$query = $this->dataQuery();
-		$query->removeFilterOn($query->getQueryParam('Foreign.Filter'));
+		$foreignFilter = $query->getQueryParam('Foreign.Filter');
+		$query->removeFilterOn($foreignFilter);
 
-		$query = $query->query();
-		$query->setSelect("\"$base\".\"ID\"");
+		$selectQuery = $query->query();
+		$selectQuery->setSelect("\"{$base}\".\"ID\"");
 
-		$from = $query->getFrom();
+		$from = $selectQuery->getFrom();
 		unset($from[$this->joinTable]);
-		$query->setFrom($from);
-		$query->setDistinct(false);
-
-		 // ensure any default sorting is removed, ORDER BY can break DELETE clauses
-		$query->setOrderBy(null, null);
+		$selectQuery->setFrom($from);
+		$selectQuery->setOrderBy(); // ORDER BY in subselects breaks MS SQL Server and is not necessary here
+		$selectQuery->setDistinct(false);
 
 		// Use a sub-query as SQLite does not support setting delete targets in
 		// joined queries.
-		$delete = new SQLQuery();
-		$delete->setDelete(true);
-		$delete->setFrom("\"$this->joinTable\"");
+		$delete = new SQLDelete();
+		$delete->setFrom("\"{$this->joinTable}\"");
 		$delete->addWhere($this->foreignIDFilter());
-		$delete->addWhere("\"$this->joinTable\".\"$this->localKey\" IN ({$query->sql()})");
+		$subSelect = $selectQuery->sql($parameters);
+		$delete->addWhere(array(
+			"\"{$this->joinTable}\".\"{$this->localKey}\" IN ($subSelect)" => $parameters
+		));
 		$delete->execute();
 	}
 
 	/**
 	 * Find the extra field data for a single row of the relationship join
 	 * table, given the known child ID.
-	 *	
+	 *
 	 * @param string $componentName The name of the component
 	 * @param int $itemID The ID of the child for the relationship
 	 *
@@ -353,17 +365,17 @@ class ManyManyList extends RelationList {
 		// @todo Optimize into a single query instead of one per extra field
 		if($this->extraFields) {
 			foreach($this->extraFields as $fieldName => $dbFieldSpec) {
-				$query = new SQLQuery("\"$fieldName\"", array("\"$this->joinTable\""));
+				$query = new SQLSelect("\"{$fieldName}\"", "\"{$this->joinTable}\"");
 				if($filter = $this->foreignIDWriteFilter($this->getForeignID())) {
 					$query->setWhere($filter);
 				} else {
 					user_error("Can't call ManyManyList::getExtraData() until a foreign ID is set", E_USER_WARNING);
 				}
-				$query->addWhere("\"$this->localKey\" = {$itemID}");
+				$query->addWhere("\"{$this->localKey}\" = {$itemID}");
 				$result[$fieldName] = $query->execute()->value();
 			}
 		}
-		
+
 		return $result;
 	}
 

@@ -3,7 +3,7 @@
 class DbDatetimeTest extends FunctionalTest {
 
 	protected static $fixture_file = 'DbDatetimeTest.yml';
-	
+
 	protected $extraDataObjects = array('DbDatetimeTest_Team');
 
 	protected $offset;
@@ -16,14 +16,14 @@ class DbDatetimeTest extends FunctionalTest {
 	 */
 	private function matchesRoughly($date1, $date2, $comment = '', $offset) {
 		$allowedDifference = 5 + abs($offset); // seconds
-		
+
 		$time1 = is_numeric($date1) ? $date1 : strtotime($date1);
 		$time2 = is_numeric($date2) ? $date2 : strtotime($date2);
-		
+
 		$this->assertTrue(abs($time1-$time2)<$allowedDifference,
 			$comment . " (times differ by " . abs($time1-$time2) . " seconds)");
 	}
-	
+
 	private function getDbNow() {
 		$query = 'SELECT ' . $this->adapter->formattedDatetimeClause('now', '%U');
 		return DB::query($query)->value();
@@ -36,7 +36,7 @@ class DbDatetimeTest extends FunctionalTest {
 	 */
 	private function checkPreconditions() {
 		// number of seconds of php and db time are out of sync
-		$offset = time() - strtotime(DB::query('SELECT ' . DB::getConn()->now())->value());
+		$offset = time() - strtotime(DB::query('SELECT ' . DB::get_conn()->now())->value());
 		$threshold = 5; // seconds
 
 		if($offset > 5) {
@@ -53,7 +53,7 @@ class DbDatetimeTest extends FunctionalTest {
 
 	public function setUp() {
 		parent::setUp();
-		$this->adapter = DB::getConn();
+		$this->adapter = DB::get_conn();
 	}
 
 	public function testCorrectNow() {
@@ -82,7 +82,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->matchesRoughly($result, strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created),
 			'fixture ->Created as timestamp', $offset);
 	}
-	
+
 	public function testDbDatetimeInterval() {
 		$offset = $this->checkPreconditions();
 
@@ -95,7 +95,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime('+1 Day', $this->getDbNow())), 'tomorrow',
 			$offset);
 
-		$query = new SQLQuery();
+		$query = new SQLSelect();
 		$query->setSelect(array());
 		$query->selectField($this->adapter->datetimeIntervalClause('"Created"', '-15 Minutes'), 'test')
 			->setFrom('"DbDateTimeTest_Team"')
@@ -106,7 +106,7 @@ class DbDatetimeTest extends FunctionalTest {
 				date('Y-m-d H:i:s', strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created) - 900),
 				'15 Minutes before creating fixture', $offset);
 	}
-	
+
 	public function testDbDatetimeDifference() {
 		$offset = $this->checkPreconditions();
 
@@ -123,7 +123,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$result = DB::query('SELECT ' . $clause)->value();
 		$this->matchesRoughly($result, -45 * 60, 'now - 45 minutes ahead', $offset);
 
-		$query = new SQLQuery();
+		$query = new SQLSelect();
 		$query->setSelect(array());
 		$query->selectField($this->adapter->datetimeDifferenceClause('"LastEdited"', '"Created"'), 'test')
 			->setFrom('"DbDateTimeTest_Team"')
@@ -135,7 +135,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->matchesRoughly($result, strtotime($lastedited) - strtotime($created),
 			'age of HomePage record in seconds since unix epoc', $offset);
 	}
-	
+
 }
 
 class DbDateTimeTest_Team extends DataObject implements TestOnly {

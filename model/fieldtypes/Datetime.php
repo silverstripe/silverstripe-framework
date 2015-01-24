@@ -5,26 +5,26 @@
  * or an ISO 8601 formatted date and time (Y-m-d H:i:s).
  * Alternatively you can set a timestamp that is evaluated through
  * PHP's built-in date() and strtotime() function according to your system locale.
- * 
+ *
  * For all computations involving the current date and time,
  * please use {@link SS_Datetime::now()} instead of PHP's built-in date() and time()
  * methods. This ensures that all time-based computations are testable with mock dates
  * through {@link SS_Datetime::set_mock_now()}.
- * 
+ *
  * Example definition via {@link DataObject::$db}:
  * <code>
  * static $db = array(
  *  "Expires" => "SS_Datetime",
  * );
  * </code>
- * 
+ *
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
- * 
+ *
  * @package framework
  * @subpackage model
  */
 class SS_Datetime extends Date implements TemplateGlobalProvider {
-	
+
 	public function setValue($value, $record = null) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
 			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
@@ -92,34 +92,34 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	public function Time24() {
 		if($this->value) return $this->Format('H:i');
 	}
-	
+
 	/**
 	 * Return a date and time formatted as per a CMS user's settings.
-	 * 
+	 *
 	 * @param Member $member
 	 * @return boolean | string A time and date pair formatted as per user-defined settings.
 	 */
 	public function FormatFromSettings($member = null) {
-		require_once 'Zend/Date.php';	
-		
+		require_once 'Zend/Date.php';
+
 		if(!$member) {
 			if(!Member::currentUserID()) {
 				return false;
 			}
 			$member = Member::currentUser();
 		}
-		
+
 		$formatD = $member->getDateFormat();
 		$formatT = $member->getTimeFormat();
-		
+
 		$zendDate = new Zend_Date($this->getValue(), 'y-MM-dd HH:mm:ss');
 		return $zendDate->toString($formatD).' '.$zendDate->toString($formatT);
-	}	
+	}
 
 	public function requireField() {
 		$parts=Array('datatype'=>'datetime', 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'SS_Datetime', 'parts'=>$parts);
-		DB::requireField($this->tableName, $this->name, $values);
+		DB::require_field($this->tableName, $this->name, $values);
 	}
 
 	/**
@@ -131,7 +131,7 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	public function URLDatetime() {
 		if($this->value) return $this->Format('Y-m-d%20H:i:s');
 	}
-	
+
 	public function scaffoldFormField($title = null, $params = null) {
 		$field = DatetimeField::create($this->name, $title);
 
@@ -151,16 +151,16 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 
 		return $field;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected static $mock_now = null;
-	
+
 	/**
 	 * Returns either the current system date as determined
 	 * by date(), or a mocked date through {@link set_mock_now()}.
-	 * 
+	 *
 	 * @return SS_Datetime
 	 */
 	public static function now() {
@@ -170,12 +170,12 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 			return DBField::create_field('SS_Datetime', date('Y-m-d H:i:s'));
 		}
 	}
-	
+
 	/**
 	 * Mock the system date temporarily, which is useful for time-based unit testing.
 	 * Use {@link clear_mock_now()} to revert to the current system date.
 	 * Caution: This sets a fixed date that doesn't increment with time.
-	 * 
+	 *
 	 * @param SS_Datetime|string $datetime Either in object format, or as a SS_Datetime compatible string.
 	 */
 	public static function set_mock_now($datetime) {
@@ -187,7 +187,7 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 			throw new Exception('SS_Datetime::set_mock_now(): Wrong format: ' . $datetime);
 		}
 	}
-	
+
 	/**
 	 * Clear any mocked date, which causes
 	 * {@link Now()} to return the current system date.
@@ -195,7 +195,7 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	public static function clear_mock_now() {
 		self::$mock_now = null;
 	}
-	
+
 	public static function get_template_global_variables() {
 		return array(
 			'Now' => array('method' => 'now', 'casting' => 'SS_Datetime'),

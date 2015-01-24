@@ -5,7 +5,7 @@
  */
 
 class HTMLCleanerTest extends SapphireTest {
-	
+
 	public function testHTMLClean() {
 		$cleaner = HTMLCleaner::inst();
 

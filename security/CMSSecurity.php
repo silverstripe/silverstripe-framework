@@ -60,8 +60,8 @@ class CMSSecurity extends Security {
 		return $this;
 	}
 
-	protected function getLoginMessage() {
-		return parent::getLoginMessage()
+	protected function getLoginMessage(&$messageType = null) {
+		return parent::getLoginMessage($messageType)
 			?: _t(
 				'CMSSecurity.LoginMessage',
 				'<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
@@ -168,9 +168,14 @@ PHP
 		user_error('Passed invalid authentication method', E_USER_ERROR);
 	}
 
-	protected function getTemplatesFor($action) {
+	public function getTemplatesFor($action) {
 		return array("CMSSecurity_{$action}", "CMSSecurity")
 			+ parent::getTemplatesFor($action);
+	}
+
+	public function getIncludeTemplate($name) {
+		return array("CMSSecurity_{$name}")
+			+ parent::getIncludeTemplate($name);
 	}
 
 	/**

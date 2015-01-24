@@ -89,12 +89,13 @@ class FixtureFactory {
 	 * @return Int Database identifier
 	 */
 	public function createRaw($table, $identifier, $data) {
-		$manipulation = array($table => array("fields" => array(), "command" => "insert")); 
-		foreach($data as $fieldName => $fieldVal) { 
-			$manipulation[$table]["fields"][$fieldName] = "'" . $this->parseValue($fieldVal) . "'"; 
+		$fields = array();
+		foreach($data as $fieldName => $fieldVal) {
+			$fields["\"{$fieldName}\""] = $this->parseValue($fieldVal);
 		}
-		DB::manipulate($manipulation);
-		$id = DB::getGeneratedID($table);
+		$insert = new SQLInsert("\"{$table}\"", $fields);
+		$insert->execute();
+		$id = DB::get_generated_id($table);
 		$this->fixtures[$table][$identifier] = $id;
 
 		return $id;
@@ -171,10 +172,10 @@ class FixtureFactory {
 					$class::get()->byId($dbId)->delete();
 				} else {
 					$table = $class;
-					DB::manipulate(array(
-						$table => array("fields" => array('ID' => $dbId), 
-							"command" => "delete")
+					$delete = new SQLDelete("\"$table\"", array(
+						"\"$table\".\"ID\"" => $dbId
 					));
+					$delete->execute();
 				}
 
 				unset($this->fixtures[$class][$id]);

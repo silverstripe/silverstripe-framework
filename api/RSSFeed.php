@@ -120,7 +120,7 @@ class RSSFeed extends ViewableData {
 
 		$this->lastModified = $lastModified;
 		$this->etag = $etag;
-		
+
 		parent::__construct();
 	}
 
@@ -149,7 +149,7 @@ class RSSFeed extends ViewableData {
 			foreach($this->entries as $entry) {
 				$output->push(
 					new RSSFeed_Entry($entry, $this->titleField, $this->descriptionField, $this->authorField));
-			}	
+			}
 		}
 		return $output;
 	}
@@ -276,7 +276,7 @@ class RSSFeed_Entry extends ViewableData {
 		$this->titleField = $titleField;
 		$this->descriptionField = $descriptionField;
 		$this->authorField = $authorField;
-		
+
 		parent::__construct();
 	}
 

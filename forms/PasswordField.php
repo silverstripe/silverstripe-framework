@@ -14,20 +14,6 @@ class PasswordField extends TextField {
 	 */
 	private static $autocomplete;
 
-	/**
-	 * Returns an input field, class="text" and type="text" with an optional
-	 * maxlength
-	 */
-	public function __construct($name, $title = null, $value = "") {
-		if(count(func_get_args()) > 3) {
-			Deprecation::notice('3.0', 'Use setMaxLength() instead of constructor arguments',
-				Deprecation::SCOPE_GLOBAL);
-		}
-
-		parent::__construct($name, $title, $value);
-	}
-
-
 	public function getAttributes() {
 		$attributes = array_merge(
 			parent::getAttributes(),
@@ -48,7 +34,7 @@ class PasswordField extends TextField {
 	public function performReadonlyTransformation() {
 		$field = $this->castedCopy('ReadonlyField');
 		$field->setValue('*****');
-		
+
 		return $field;
 	}
 

@@ -1,7 +1,7 @@
 <?php
 
 class DataQueryTest extends SapphireTest {
-	
+
 	protected static $fixture_file = 'DataQueryTest.yml';
 
 	protected $extraDataObjects = array(
@@ -40,13 +40,13 @@ class DataQueryTest extends SapphireTest {
 	public function testJoins() {
 		$dq = new DataQuery('Member');
 		$dq->innerJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
-		$this->assertContains("INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
-			$dq->sql());
+		$this->assertSQLContains("INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
+			$dq->sql($parameters));
 
 		$dq = new DataQuery('Member');
 		$dq->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
-		$this->assertContains("LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
-			$dq->sql());
+		$this->assertSQLContains("LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
+			$dq->sql($parameters));
 	}
 
 	public function testApplyReplationDeepInheretence() {
@@ -54,7 +54,7 @@ class DataQueryTest extends SapphireTest {
 		//apply a relation to a relation from an ancestor class
 		$newDQ->applyRelation('TestA');
 		$this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
-		$this->assertContains('"DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql());
+		$this->assertContains('"DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
 	}
 
 	public function testRelationReturn() {
@@ -91,9 +91,9 @@ class DataQueryTest extends SapphireTest {
 		$subDq->where('DataQueryTest_A.Name = \'John\'');
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
-		$this->assertContains(
-			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR (DataQueryTest_A.Name = 'Bob'))", 
-			$dq->sql()
+		$this->assertSQLContains(
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR (DataQueryTest_A.Name = 'Bob'))",
+			$dq->sql($parameters)
 		);
 	}
 
@@ -105,12 +105,15 @@ class DataQueryTest extends SapphireTest {
 		$subDq->where('DataQueryTest_A.Name = \'John\'');
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
-		$this->assertContains(
-			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') AND (DataQueryTest_A.Name = 'Bob'))", 
-			$dq->sql()
+		$this->assertSQLContains(
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') AND (DataQueryTest_A.Name = 'Bob'))",
+			$dq->sql($parameters)
 		);
 	}
 
+	/**
+	 * @todo Test paramaterised
+	 */
 	public function testNestedGroups() {
 		$dq = new DataQuery('DataQueryTest_A');
 
@@ -122,10 +125,10 @@ class DataQueryTest extends SapphireTest {
 		$subSubDq->where('DataQueryTest_A.Age = 50');
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
-		$this->assertContains(
+		$this->assertSQLContains(
 			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR ((DataQueryTest_A.Age = 18) "
-				. "AND (DataQueryTest_A.Age = 50)) OR (DataQueryTest_A.Name = 'Bob'))", 
-			$dq->sql()
+				. "AND (DataQueryTest_A.Age = 50)) OR (DataQueryTest_A.Name = 'Bob'))",
+			$dq->sql($parameters)
 		);
 	}
 
@@ -133,7 +136,8 @@ class DataQueryTest extends SapphireTest {
 		$dq = new DataQuery('DataQueryTest_A');
 		$dq->conjunctiveGroup();
 
-		$this->assertContains('WHERE (1=1)', $dq->sql());
+		// Empty groups should have no where condition at all
+		$this->assertSQLNotContains('WHERE', $dq->sql($parameters));
 	}
 
 	public function testSubgroupHandoff() {
@@ -145,23 +149,23 @@ class DataQueryTest extends SapphireTest {
 		$subDq->sort('"DataQueryTest_A"."Name"');
 		$orgDq->sort('"DataQueryTest_A"."Name"');
 
-		$this->assertEquals($dq->sql(), $orgDq->sql());
+		$this->assertSQLEquals($dq->sql($parameters), $orgDq->sql($parameters));
 
 		$subDq->limit(5, 7);
 		$orgDq->limit(5, 7);
 
-		$this->assertEquals($dq->sql(), $orgDq->sql());
+		$this->assertSQLEquals($dq->sql($parameters), $orgDq->sql($parameters));
 	}
-	
+
 	public function testOrderByMultiple() {
 		$dq = new DataQuery('SQLQueryTest_DO');
 		$dq = $dq->sort('"Name" ASC, MID("Name", 8, 1) DESC');
 		$this->assertContains(
-			'ORDER BY "Name" ASC, "_SortColumn0" DESC',
-			$dq->sql()
+			'ORDER BY "SQLQueryTest_DO"."Name" ASC, "_SortColumn0" DESC',
+			$dq->sql($parameters)
 		);
 	}
-	
+
 	public function testDefaultSort() {
 		$query = new DataQuery('DataQueryTest_E');
 		$result = $query->column('Title');
@@ -170,13 +174,13 @@ class DataQueryTest extends SapphireTest {
 
 	public function testDistinct() {
 		$query = new DataQuery('DataQueryTest_E');
-		$this->assertContains('SELECT DISTINCT', $query->sql(), 'Query is set as distinct by default');
+		$this->assertContains('SELECT DISTINCT', $query->sql($params), 'Query is set as distinct by default');
 
 		$query = $query->distinct(false);
-		$this->assertNotContains('SELECT DISTINCT', $query->sql(), 'Query does not contain distinct');
+		$this->assertNotContains('SELECT DISTINCT', $query->sql($params), 'Query does not contain distinct');
 
 		$query = $query->distinct(true);
-		$this->assertContains('SELECT DISTINCT', $query->sql(), 'Query contains distinct');
+		$this->assertContains('SELECT DISTINCT', $query->sql($params), 'Query contains distinct');
  	}
 	
 	public function testComparisonClauseInt() {
@@ -257,7 +261,7 @@ class DataQueryTest_B extends DataObject implements TestOnly {
 }
 
 class DataQueryTest_C extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		'Title' => 'Varchar'
 	);
@@ -286,11 +290,11 @@ class DataQueryTest_D extends DataObject implements TestOnly {
 }
 
 class DataQueryTest_E extends DataQueryTest_C implements TestOnly {
-	
+
 	private static $db = array(
 		'SortOrder' => 'Int'
 	);
-	
+
 	private static $default_sort = '"DataQueryTest_E"."SortOrder" ASC';
 }
 

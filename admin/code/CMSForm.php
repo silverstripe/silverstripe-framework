@@ -16,7 +16,7 @@ class CMSForm extends Form {
 
 	/**
 	 * Always return true if the current form action is exempt from validation
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function validate() {
@@ -26,7 +26,7 @@ class CMSForm extends Form {
 			|| parent::validate()
 		);
 	}
-	
+
 	/**
 	 * Route validation error responses through response negotiator,
 	 * so they return the correct markup as expected by the requesting client.
@@ -51,7 +51,7 @@ class CMSForm extends Form {
 
 	/**
 	 * Set actions that are exempt from validation
-	 * 
+	 *
 	 * @param array
 	 */
 	public function setValidationExemptActions($actions) {
@@ -61,7 +61,7 @@ class CMSForm extends Form {
 
 	/**
 	 * Get a list of actions that are exempt from validation
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getValidationExemptActions() {
@@ -84,11 +84,6 @@ class CMSForm extends Form {
 	 */
 	public function getResponseNegotiator() {
 		return $this->responseNegotiator;
-	}
-
-	public function FormName() {
-		if($this->htmlID) return $this->htmlID;
-		else return 'Form_' . str_replace(array('.', '/'), '', $this->name);
 	}
 
 }

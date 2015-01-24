@@ -1,22 +1,22 @@
 <?php
 /**
  * @see GridField
- * 
+ *
  * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldDataColumns implements GridField_ColumnProvider {
 
-	/** 
-	 * @var array 
+	/**
+	 * @var array
 	 */
 	public $fieldCasting = array();
 
-	/** 
-	 * @var array 
+	/**
+	 * @var array
 	 */
 	public $fieldFormatting = array();
-	
+
 	/**
 	 * This is the columns that will be visible
 	 *
@@ -27,31 +27,36 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	/**
 	 * Modify the list of columns displayed in the table.
 	 * See {@link GridFieldDataColumns->getDisplayFields()} and {@link GridFieldDataColumns}.
-	 * 
+	 *
 	 * @param GridField $gridField
 	 * @param array - List reference of all column names.
 	 */
 	public function augmentColumns($gridField, &$columns) {
 		$baseColumns = array_keys($this->getDisplayFields($gridField));
-		foreach($baseColumns as $col) $columns[] = $col;
+		
+		foreach($baseColumns as $col) {
+			$columns[] = $col;
+		}
+
+		$columns = array_unique($columns);
 	}
 
 	/**
 	 * Names of all columns which are affected by this component.
-	 * 
+	 *
 	 * @param GridField $gridField
-	 * @return array 
+	 * @return array
 	 */
 	public function getColumnsHandled($gridField) {
 		return array_keys($this->getDisplayFields($gridField));
 	}
-	
+
 	/**
 	 * Override the default behaviour of showing the models summaryFields with
 	 * these fields instead
 	 * Example: array( 'Name' => 'Members name', 'Email' => 'Email address')
 	 *
-	 * @param array $fields 
+	 * @param array $fields
 	 */
 	public function setDisplayFields($fields) {
 		if(!is_array($fields)) {
@@ -64,7 +69,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 
 	/**
 	 * Get the DisplayFields
-	 * 
+	 *
 	 * @return array
 	 * @see GridFieldDataColumns::setDisplayFields
 	 */
@@ -95,10 +100,10 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 
 	/**
 	 * Specify custom formatting for fields, e.g. to render a link instead of pure text.
-	 * 
+	 *
 	 * Caution: Make sure to escape special php-characters like in a normal php-statement.
 	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'.
-	 * 
+	 *
 	 * Alternatively, pass a anonymous function, which takes two parameters:
 	 * The value and the original list item.
 	 *
@@ -121,22 +126,22 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 
 	/**
 	 * HTML for the column, content of the <td> element.
-	 * 
+	 *
 	 * @param  GridField
 	 * @param  DataObject - Record displayed in this row
-	 * @param  string 
+	 * @param  string
 	 * @return string HTML for the column. Return NULL to skip.
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
 		// Find the data column for the given named column
 		$columns = $this->getDisplayFields($gridField);
 		$columnInfo = $columns[$columnName];
-		
+
 		// Allow callbacks
 		if(is_array($columnInfo) && isset($columnInfo['callback'])) {
 			$method = $columnInfo['callback'];
 			$value = $method($record);
-		
+
 		// This supports simple FieldName syntax
 		} else {
 			$value = $gridField->getDataFieldValue($record, $columnName);
@@ -151,10 +156,10 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 
 		return $value;
 	}
-	
+
 	/**
 	 * Attributes for the element containing the content returned by {@link getColumnContent()}.
-	 * 
+	 *
 	 * @param  GridField $gridField
 	 * @param  DataObject $record displayed in this row
 	 * @param  string $columnName
@@ -163,30 +168,30 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	public function getColumnAttributes($gridField, $record, $columnName) {
 		return array('class' => 'col-' . preg_replace('/[^\w]/', '-', $columnName));
 	}
-	
+
 	/**
 	 * Additional metadata about the column which can be used by other components,
 	 * e.g. to set a title for a search column header.
-	 * 
+	 *
 	 * @param GridField $gridField
 	 * @param string $columnName
 	 * @return array - Map of arbitrary metadata identifiers to their values.
 	 */
 	public function getColumnMetadata($gridField, $column) {
 		$columns = $this->getDisplayFields($gridField);
-		
+
 		$title = null;
 		if(is_string($columns[$column])) {
 			$title = $columns[$column];
 		} else if(is_array($columns[$column]) && isset($columns[$column]['title'])) {
 			$title = $columns[$column]['title'];
 		}
-		
+
 		return array(
 			'title' => $title,
 		);
 	}
-	
+
 	/**
 	 * Translate a Object.RelationName.ColumnName $columnName into the value that ColumnName returns
 	 *
@@ -208,14 +213,14 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Casts a field to a string which is safe to insert into HTML
 	 *
 	 * @param GridField $gridField
 	 * @param string $fieldName
 	 * @param string $value
-	 * @return string 
+	 * @return string
 	 */
 	protected function castValue($gridField, $fieldName, $value) {
 		// If a fieldCasting is specified, we assume the result is safe
@@ -237,14 +242,14 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 
 		return $value;
 	}
-	
+
 	/**
 	 *
 	 * @param GridField $gridField
 	 * @param DataObject $item
 	 * @param string $fieldName
 	 * @param string $value
-	 * @return string 
+	 * @return string
 	 */
 	protected function formatValue($gridField, $item, $fieldName, $value) {
 		if(!array_key_exists($fieldName, $this->fieldFormatting)) {
@@ -262,7 +267,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 			return $value;
 		}
 	}
-	
+
 	/**
 	 * Remove values from a value using FieldEscape setter
 	 *

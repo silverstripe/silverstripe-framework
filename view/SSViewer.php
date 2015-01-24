@@ -658,11 +658,17 @@ class SSViewer implements Flushable {
 
 	/**
 	 * Create a template from a string instead of a .ss file
-	 * 
+	 *
+	 * @param string $content The template content
+	 * @param bool|void $cacheTemplate Whether or not to cache the template from string
 	 * @return SSViewer
 	 */
-	public static function fromString($content) {
-		return new SSViewer_FromString($content);
+	public static function fromString($content, $cacheTemplate = null) {
+		$viewer = new SSViewer_FromString($content);
+		if ($cacheTemplate !== null) {
+			$viewer->setCacheTemplate($cacheTemplate);
+		}
+		return $viewer;
 	}
 	
 	/**
@@ -746,6 +752,13 @@ class SSViewer implements Flushable {
 		foreach($classes as $class) {
 			$template = $class . $suffix;
 			if(SSViewer::hasTemplate($template)) $templates[] = $template;
+
+			// If the class is "Page_Controller", look for Page.ss
+			if(stripos($class,'_controller') !== false) {
+				$template = str_ireplace('_controller','',$class) . $suffix;
+				if(SSViewer::hasTemplate($template)) $templates[] = $template;
+			}
+
 			if($baseClass && $class == $baseClass) break;
 		}
 		return $templates;
@@ -1051,13 +1064,6 @@ class SSViewer implements Flushable {
 	public function process($item, $arguments = null, $inheritedScope = null) {
 		SSViewer::$topLevel[] = $item;
 
-		if ($arguments && $arguments instanceof Zend_Cache_Core) {
-			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, ' .
-				'the second argument to process is now an array of variables.');
-			$this->setPartialCacheStore($arguments);
-			$arguments = null;
-		}
-
 		if(isset($this->chosenTemplates['main'])) {
 			$template = $this->chosenTemplates['main'];
 		} else {
@@ -1201,31 +1207,68 @@ class SSViewer implements Flushable {
  * @subpackage view
  */
 class SSViewer_FromString extends SSViewer {
+
+	/**
+	 * The global template caching behaviour if no instance override is specified
+	 * @config
+	 * @var bool
+	 */
+	private static $cache_template = true;
+	
+	/**
+	 * The template to use
+	 * @var string
+	 */
 	protected $content;
+	
+	/**
+	 * Indicates whether templates should be cached
+	 * @var bool
+	 */
+	protected $cacheTemplate;
 	
 	public function __construct($content, TemplateParser $parser = null) {
 		$this->setParser($parser ?: Injector::inst()->get('SSTemplateParser'));
 		$this->content = $content;
 	}
-	
+
 	public function process($item, $arguments = null, $scope = null) {
-		if ($arguments && $arguments instanceof Zend_Cache_Core) {
-			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, ' .
-				'the second argument to process is now an array of variables.');
-			$this->setPartialCacheStore($arguments);
-			$arguments = null;
+		$hash = sha1($this->content);
+		$cacheFile = TEMP_FOLDER . "/.cache.$hash";
+
+		if(!file_exists($cacheFile) || isset($_GET['flush'])) {
+			$content = $this->parseTemplateContent($this->content, "string sha1=$hash");
+			$fh = fopen($cacheFile,'w');
+			fwrite($fh, $content);
+			fclose($fh);
 		}
 
-		$template = $this->parseTemplateContent($this->content, "string sha1=".sha1($this->content));
+		$val = $this->includeGeneratedTemplate($cacheFile, $item, $arguments, null, $scope);
 
-		$tmpFile = tempnam(TEMP_FOLDER,"");
-		$fh = fopen($tmpFile, 'w');
-		fwrite($fh, $template);
-		fclose($fh);
+		if ($this->cacheTemplate !== null) {
+			$cacheTemplate = $this->cacheTemplate;
+		} else {
+			$cacheTemplate = Config::inst()->get('SSViewer_FromString', 'cache_template');
+		}
+		
+		if (!$cacheTemplate) {
+			unlink($cacheFile);
+		}
 
-		$val = $this->includeGeneratedTemplate($tmpFile, $item, $arguments, null, $scope);
-
-		unlink($tmpFile);
 		return $val;
+	}
+	
+	/**
+	 * @param boolean $cacheTemplate
+	 */
+	public function setCacheTemplate($cacheTemplate) {
+		$this->cacheTemplate = (bool) $cacheTemplate;
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function getCacheTemplate() {
+		return $this->cacheTemplate;
 	}
 }

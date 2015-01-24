@@ -167,6 +167,53 @@ If you want to bypass error handling, define `checkErrors` in the constructor fo
 		}
 	}
 
+
+### Setting cURL options
+
+Restful service uses cURL to make requests. There are various settings that can be defined on the cURL
+request (see http://www.php.net/manual/en/function.curl-setopt.php) via the curl_setopts function.
+
+There are two ways to define these for `RestfulService`; they can be global settings or per request settings.
+
+It is important to note that your cURL options will be applied LAST and so take preference over any default
+values that `RestfulService` sets (such as `CURLOPT_RETURNTRANSFER`) so changing these options may result
+in unexpected behaviour or broken functionality.
+
+
+#### Global cURL settings
+
+To set global cURL settings you can update the `RestfulService` config via the Config system or YAML.
+
+Here is an example to increase the HTTP Timeout globally. Insert this in your `_config.php` file:
+
+```php
+Config::inst()->update('RestfulService', 'default_curl_options', array(
+	CURLOPT_DNS_CACHE_TIMEOUT => 3600,
+	CURLOPT_CONNECTTIMEOUT => 10,
+));
+```
+
+
+#### Per request settings
+
+When making a request using `RestfulService` one can also pass through an array of cURL options in the last
+parameter in `RestfulService::request()`.
+
+For example:
+
+```php
+
+//cURL options
+$curlOptions = array(
+	CURLOPT_UNRESTRICTED_AUTH => true,
+);
+
+$service = new RestfulService('http://example.com/');
+$service->request('service.json', 'GET', null, null, $curlOptions);
+
+```
+
+
 ## How to's
 
 * [Embed an RSS Feed](how_to/embed_rss)

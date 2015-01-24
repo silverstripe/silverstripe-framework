@@ -134,18 +134,22 @@ JS;
 	 * Get message from session
 	 */
 	protected function getMessageFromSession() {
-		if(($member = Member::currentUser()) && !Session::get('MemberLoginForm.force_message')) {
+
+		$forceMessage = Session::get('MemberLoginForm.force_message');
+		if(($member = Member::currentUser()) && !$forceMessage) {
 			$this->message = _t(
 				'Member.LOGGEDINAS',
 				"You're logged in as {name}.",
 				array('name' => $member->{$this->loggedInAsField})
 			);
 		}
-		Session::set('MemberLoginForm.force_message', false);
 
-		parent::getMessageFromSession();
+		// Reset forced message
+		if($forceMessage) {
+			Session::set('MemberLoginForm.force_message', false);
+		}
 
-		return $this->message;
+		return parent::getMessageFromSession();
 	}
 
 
@@ -287,9 +291,19 @@ JS;
 	 * @param array $data Submitted data
 	 */
 	public function forgotPassword($data) {
-		$SQL_data = Convert::raw2sql($data);
-		$SQL_email = $SQL_data['Email'];
-		$member = DataObject::get_one('Member', "\"Email\" = '{$SQL_email}'");
+		// Ensure password is given
+		if(empty($data['Email'])) {
+			$this->sessionMessage(
+				_t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
+				'bad'
+			);
+
+			$this->controller->redirect('Security/lostpassword');
+			return;
+		}
+
+		// Find existing member
+		$member = Member::get()->filter("Email", $data['Email'])->first();
 
 		// Allow vetoing forgot password requests
 		$results = $this->extend('forgotPassword', $member);
@@ -312,7 +326,7 @@ JS;
 		} elseif($data['Email']) {
 			// Avoid information disclosure by displaying the same status,
 			// regardless wether the email address actually exists
-			$this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
+			$this->controller->redirect('Security/passwordsent/' . rawurlencode($data['Email']));
 		} else {
 			$this->sessionMessage(
 				_t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
@@ -324,3 +338,4 @@ JS;
 	}
 
 }
+
