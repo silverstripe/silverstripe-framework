@@ -515,6 +515,17 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		$list->items = $itemsToKeep;
 		return $list;
 	}
+	
+	/**
+	 * Filter this list to only contain the given Primary IDs
+	 *
+	 * @param array $ids Array of integers, will be automatically cast/escaped.
+	 * @return ArrayList
+	 */
+	public function byIDs(array $ids) {
+		$ids = array_map('intval', $ids); // sanitize
+		return $this->filter('ID', $ids);
+	}
 
 	public function byID($id) {
 		$firstElement = $this->filter("ID", $id)->first();
