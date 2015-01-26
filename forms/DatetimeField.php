@@ -84,7 +84,7 @@ class DatetimeField extends FormField {
 		);
 		$config = array_filter($config);
 		$this->addExtraClass('fieldgroup');
-		$this->addExtraClass(Convert::raw2json($config));
+		$this->setAttribute('data-datetime-config', Convert::raw2json($config));
 
 		return parent::FieldHolder($properties);
 	}

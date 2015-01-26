@@ -69,7 +69,7 @@ class TimeField extends TextField {
 			'timeformat' => $this->getConfig('timeformat')
 		);
 		$config = array_filter($config);
-		$this->addExtraClass(Convert::raw2json($config));
+		$this->setAttribute('data-time-config', Convert::raw2json($config));
 		return parent::Field($properties);
 	}
 	
