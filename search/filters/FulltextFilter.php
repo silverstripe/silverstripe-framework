@@ -68,18 +68,16 @@ class FulltextFilter extends SearchFilter {
 			} else {
 				// Parse a fulltext string (eg. fulltext ("ColumnA", "ColumnB")) to figure out which columns
 				// we need to search.
-				if(preg_match('/^fulltext\ \((.+)\)$/i', $index, $matches)) {
+				if(preg_match('/^fulltext\s+\((.+)\)$/i', $index, $matches)) {
 					return $matches[1];
 				} else {
 					throw new Exception("Invalid fulltext index format for '" . $this->getName()
 						. "' on '" . $this->model . "'");
-					return;
 				}
 			}
-			return $columns;
-		}		
-				
-		throw new Exception($this->getName() . ' is not a fulltext index on ' . $this->model . '.');
+		}
+
+		return parent::getDbName();
 	}
 
 }

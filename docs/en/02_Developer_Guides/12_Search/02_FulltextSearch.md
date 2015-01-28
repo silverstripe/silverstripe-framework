@@ -39,6 +39,43 @@ records and cannot easily be adapted to include custom `DataObject` instances. T
 default site search, have a look at those extensions and modify as required.
 </div>
 
+### Fulltext Filter
+
+SilverStripe provides a `[api:FulltextFiler]` which you can use to perform custom fulltext searches on
+`[api:DataList]`'s.
+
+Example DataObject:
+
+	:::php
+	class SearchableDataObject extends DataObject {
+		
+		private static $db = array(
+			"Title" => "Varchar(255)",
+			"Content" => "HTMLText",
+		);
+
+		private static $indexes = array(
+			'SearchFields' => array(
+				'type' => 'fulltext',
+				'name' => 'SearchFields',
+				'value' => '"Title", "Content"',
+			)
+		);
+
+		private static $create_table_options = array(
+			'MySQLDatabase' => 'ENGINE=MyISAM'
+		);
+
+	}
+
+Performing the search:
+
+	:::php
+	SearchableDataObject::get()->filter('SearchFields:fulltext', 'search term');
+
+If your search index is a single field size, then you may also specify the search filter by the name of the
+field instead of the index.
+
 ## API Documentation
 
 * [api:FulltextSearchable]
