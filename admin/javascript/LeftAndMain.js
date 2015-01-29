@@ -813,26 +813,36 @@ jQuery.noConflict();
 					sessionStates = sessionData ? JSON.parse(sessionData) : false;
 
 				this.find('.cms-tabset, .ss-tabset').each(function() {
-					var index, tabset = $(this), tabsetId = tabset.attr('id'), tab,
-						forcedTab = tabset.find('.ss-tabs-force-active');
+					var index, 
+						tabset = $(this), 
+						tabsetId = tabset.attr('id'), 
+						tab,
+						forcedTab = tabset.children('ul').children('li.ss-tabs-force-active');
 
 					if(!tabset.data('tabs')) return; // don't act on uninit'ed controls
 
 					// The tabs may have changed, notify the widget that it should update its internal state.
 					tabset.tabs('refresh');
 
-					// Make sure the intended tab is selected.
+					// Make sure the intended tab is selected. Only force the tab on the correct tabset though
 					if(forcedTab.length) {
-						index = forcedTab.index();
+						index = forcedTab.first().index();
 					} else if(overrideStates && overrideStates[tabsetId]) {
 						tab = tabset.find(overrideStates[tabsetId].tabSelector);
 						if(tab.length) index = tab.index();
 					} else if(sessionStates) {
-						$.each(sessionStates, function(i, sessionState) {
-							if(tabset.is('#' + sessionState.id)) index = sessionState.selected;
-					});
-				}
-					if(index !== null) tabset.tabs('select', index);
+						$.each(sessionStates, function(i, state) {
+							if(tabsetId == state.id) {
+								tabset.tabs('select', state.selected);
+							}
+						});
+
+						index = null;
+					}
+
+					if(index !== null) {
+						tabset.tabs('select', index);
+					}
 				});
 			},
 
