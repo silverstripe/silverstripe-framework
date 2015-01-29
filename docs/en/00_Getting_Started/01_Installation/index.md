@@ -1,7 +1,7 @@
 # Installation
 
 These instructions show you how to install SilverStripe on any web server. 
-The best way to install from the source code is to use [Composer](composer).
+The best way to install from the source code is to use [Composer](../composer).
 Check out our operating system specific guides for [Linux](linux_unix),
 [Windows Server](windows-pi) and [Mac OSX](mac-osx).
 
