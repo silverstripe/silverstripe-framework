@@ -977,6 +977,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				'PrevID' => $prev ? $prev->ID : null
 			);
 		}
+		$this->extend('updateUpdatedTreeNodes', $data, $request);
 		$this->response->addHeader('Content-Type', 'text/json');
 		return Convert::raw2json($data);
 	}
