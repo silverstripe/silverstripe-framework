@@ -657,8 +657,10 @@ class DataQuery {
 				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
 				$this->query->addInnerJoin($relationTable,
 					"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
-				$this->query->addLeftJoin($componentBaseClass,
-					"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
+				if (!$this->query->isJoinedTo($componentBaseClass)) {
+					$this->query->addLeftJoin($componentBaseClass,
+						"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
+				}
 				if(ClassInfo::hasTable($componentClass)) {
 					$this->query->addLeftJoin($componentClass,
 						"\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
