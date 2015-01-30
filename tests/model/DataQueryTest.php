@@ -96,7 +96,7 @@ class DataQueryTest extends SapphireTest {
 		$this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause has been removed from the query');
 		//another (potentially less crude check) for checking "FROM" clause
 		$fromTables = $newDQ->query()->getFrom();
-		$this->assertEquals($baseDBTable, $fromTables[$baseDBTable]);
+		$this->assertEquals('"' . $baseDBTable . '"', $fromTables[$baseDBTable]);
 	}
 
 	public function testRelationReturn() {
