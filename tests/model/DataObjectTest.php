@@ -18,6 +18,11 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Player',
 		'DataObjectTest_TeamComment',
 		'DataObjectTest_ExtendedTeamComment',
+		'DataObjectTest_Company',
+		'DataObjectTest_Staff',
+		'DataObjectTest_A',
+		'DataObjectTest_B',
+		'DataObjectTest_C',
 		'ManyManyListTest_Product',
 		'ManyManyListTest_Category',
 	);
@@ -1377,6 +1382,10 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 		'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team'
 	);
 
+	private static $extensions = array(
+		'DataObjectTest_Team_Extension',
+	);
+
 	private static $default_sort = '"Title"';
 
 	public function MyTitle() {
@@ -1487,19 +1496,19 @@ class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 	}
 }
 
-class DataObjectTest_Company extends DataObject {
+class DataObjectTest_Company extends DataObject implements TestOnly {
 	private static $has_one = array (
 		'CEO'         => 'DataObjectTest_CEO',
 		'PreviousCEO' => 'DataObjectTest_CEO'
 	);
-	
+
 	private static $has_many = array (
 		'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
 		'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
 	);
 }
 
-class DataObjectTest_Staff extends DataObject {
+class DataObjectTest_Staff extends DataObject implements TestOnly {
 	private static $has_one = array (
 		'CurrentCompany'  => 'DataObjectTest_Company',
 		'PreviousCompany' => 'DataObjectTest_Company'
@@ -1513,7 +1522,7 @@ class DataObjectTest_CEO extends DataObjectTest_Staff {
 	);
 }
 
-class DataObjectTest_TeamComment extends DataObject {
+class DataObjectTest_TeamComment extends DataObject implements TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
 		'Comment' => 'Text'
@@ -1532,5 +1541,23 @@ class DataObjectTest_ExtendedTeamComment extends DataObjectTest_TeamComment {
 	);
 }
 
-DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');
+class DataObjectTest_A extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'Title' => 'Varchar(255)',
+	);
+
+}
+
+class DataObjectTest_B extends DataObjectTest_A {
+	private static $many_many = array(
+		'ManyCs' => 'DataObjectTest_C',
+	);
+}
+
+class DataObjectTest_C extends DataObjectTest_A {
+	private static $belongs_many_many = array(
+		'ManyBs' => 'DataObjectTest_B',
+	);
+}
 
