@@ -25,6 +25,9 @@ class DataListTest extends SapphireTest {
 		'DataObjectTest\NamespacedClass',
 		'DataObjectTest_Company',
 		'DataObjectTest_Fan',
+		'DataObjectTest_A',
+		'DataObjectTest_B',
+		'DataObjectTest_C',
 		'ManyManyListTest_Product',
 		'ManyManyListTest_Category',
 	);
@@ -838,6 +841,19 @@ class DataListTest extends SapphireTest {
 
 		$this->assertEquals(1, $list->count());
 		$this->assertEquals('007', $list->first()->ShirtNumber);
+	}
+
+	public function testFilterOnImplicitJoinWithSharedInheritance() {
+		$list = DataObjectTest_B::get()->filter(array(
+			'ManyCs.ID' => array(
+				$this->idFromFixture('DataObjectTest_C', 'test1'),
+				$this->idFromFixture('DataObjectTest_C', 'test2'),
+			),
+		));
+		$this->assertEquals(2, $list->count());
+		$ids = $list->column('ID');
+		$this->assertContains($this->idFromFixture('DataObjectTest_B', 'test1'), $ids);
+		$this->assertContains($this->idFromFixture('DataObjectTest_B', 'test2'), $ids);
 	}
 
 	public function testFilterAndExcludeById() {

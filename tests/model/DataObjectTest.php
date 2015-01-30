@@ -29,6 +29,9 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Play',
 		'DataObjectTest_Ploy',
 		'DataObjectTest_Bogey',
+		'DataObjectTest_A',
+		'DataObjectTest_B',
+		'DataObjectTest_C',
 		'ManyManyListTest_Product',
 		'ManyManyListTest_Category',
 	);
@@ -1770,6 +1773,10 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 		'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team'
 	);
 
+	private static $extensions = array(
+		'DataObjectTest_Team_Extension',
+	);
+
 	private static $default_sort = '"Title"';
 
 	public function MyTitle() {
@@ -1963,9 +1970,25 @@ class DataObjectTest_ExtendedTeamComment extends DataObjectTest_TeamComment {
 	);
 }
 
+class DataObjectTest_A extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'Title' => 'Varchar(255)',
+	);
+
+}
+
+class DataObjectTest_B extends DataObjectTest_A {
+	private static $many_many = array(
+		'ManyCs' => 'DataObjectTest_C',
+	);
+}
+
+class DataObjectTest_C extends DataObjectTest_A {
+	private static $belongs_many_many = array(
+		'ManyBs' => 'DataObjectTest_B',
+	);
+}
 class DataObjectTest_Play extends DataObject implements TestOnly {}
 class DataObjectTest_Ploy extends DataObject implements TestOnly {}
 class DataObjectTest_Bogey extends DataObject implements TestOnly {}
-
-DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');
-

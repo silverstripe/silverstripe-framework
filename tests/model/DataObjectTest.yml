@@ -102,3 +102,17 @@ DataObjectTest_Company:
   company1:
     Name: 'Team co.'
     Owner: =>DataObjectTest_Player.player2
+DataObjectTest_C:
+  test1:
+    Title: 'Test 1'
+  test2:
+    Title: 'Test 2'
+  test3:
+    Title: 'Test 3'
+DataObjectTest_B:
+  test1:
+    Title: 'Test1'
+    ManyCs: =>DataObjectTest_C.test1,=>DataObjectTest_C.test2
+  test2:
+    Title: 'Test2'
+    ManyCs: =>DataObjectTest_C.test1,=>DataObjectTest_C.test3
