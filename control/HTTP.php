@@ -25,7 +25,12 @@ class HTTP {
 	protected static $etag = null;
 
 	/**
-	 * Turns a local system filename into a URL by comparing it to the script 
+     * @config
+     */
+    private static $cache_ajax_requests = true;
+
+	/**
+	 * Turns a local system filename into a URL by comparing it to the script
 	 * filename.
 	 *
 	 * @param string
@@ -325,7 +330,9 @@ class HTTP {
 
 		// Popuplate $responseHeaders with all the headers that we want to build
 		$responseHeaders = array();
-		if(function_exists('apache_request_headers')) {
+		$config = Config::inst();
+		// currently using a config setting to cancel this, seems to be so taht the CMS caches ajax requests
+		if(function_exists('apache_request_headers') && $config->get(get_called_class(), 'cache_ajax_requests')) {
 			$requestHeaders = apache_request_headers();
 			if(isset($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With']=='XMLHttpRequest') {
 				$cacheAge = 0;
