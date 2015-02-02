@@ -155,14 +155,13 @@ Each controller should define a `Link()` method. This should be used to avoid ha
 
 **mysite/code/controllers/TeamController.php**
 
-    :::php
-    public function Link($action = null) {
+	:::php
+    	public function Link($action = null) {
 		return Controller::join_links('teams', $action);
 	}
 
-<div class="info">
-The [api:Controller::join_links] is optional, but makes `Link()` more flexible by allowing an `$action` argument, and 
-concatenates the path segments with slashes. The action should map to a method on your controller.
+<div class="info" markdown="1">
+The [api:Controller::join_links] is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.
 </div>
 
 ## Related Documentation
