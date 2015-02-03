@@ -102,7 +102,7 @@ the same validation logic applied to it throughout.
 			}
 			else if($this->value > 5 || $this->value < 2) {
 				$validator->validationError(
-					$this->name, "Your number must be between 2 and 5, "validation", false
+					$this->name, "Your number must be between 2 and 5", "validation", false
 				);
 
 				return false;
