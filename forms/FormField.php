@@ -41,6 +41,12 @@ class FormField extends RequestHandler {
 	 */
 	protected $extraClasses;
 
+	/**
+	 * @config
+	 * @var array $default_classes The default classes to apply to the FormField
+	 */
+	private static $default_classes = array();
+
 	public $dontEscape;
 
 	/**
@@ -164,6 +170,21 @@ class FormField extends RequestHandler {
 		if($value !== NULL) $this->setValue($value);
 
 		parent::__construct();
+
+		$this->setupDefaultClasses();
+	}
+
+	/**
+	 * set up the default classes for the form. This is done on construct so that the default classes can be removed
+	 * after instantiation
+	 */
+	protected function setupDefaultClasses() {
+		$defaultClasses = self::config()->get('default_classes');
+		if ($defaultClasses) {
+			foreach ($defaultClasses as $class) {
+				$this->addExtraClass($class);
+			}
+		}
 	}
 
 	/**
