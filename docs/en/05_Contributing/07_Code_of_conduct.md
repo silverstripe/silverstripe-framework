@@ -2,7 +2,7 @@
 
 These guidelines aim to be an aspirational ideal for how we should behave when interacting in the SilverStripe developer community and to aid in building great open source software.
 
-This code of conduct should be applied to all discussions and interactions involving SilverStripe and its related resources. 
+This code of conduct should be applied to all discussions and interactions involving SilverStripe and its related resources.
 
 Honour the code of conduct whenever you participate formally and informally in our community and follow it in spirit as much as in letter.
 
@@ -27,8 +27,8 @@ Honour the code of conduct whenever you participate formally and informally in o
 
 ## Respect different levels of participation.
  * Welcome newcomers, spend a little time helping orientate them in our community.
- * All contributors and core committers, module maintainers and knowledge sharers are participating in the community in  a voluntary nature. Have respect for them and their time when making requests. You may need to exercise some patience.
- * Whenever possible reference your comments to others with example code or links to documentation.This helps people learn and become more experienced community members and developers.
+ * All contributors and core committers, module maintainers and knowledge sharers are participating in the community in a voluntary nature. Have respect for them and their time when making requests. You may need to exercise some patience.
+ * Whenever possible reference your comments to others with example code or links to documentation. This helps people learn and become more experienced community members and developers.
  * If you manage to solve your own problem, tell others how you solved it. This will help people in the future that find they have the same problem as you.
  * If you are reducing your input and potentially stepping away from the community please remember others might rely on your contributions. Be prepared to ensure these are kept open and available, spend some time handing over to another community member or core contributor to help continuity of SilverStripe open source.
 
@@ -41,11 +41,10 @@ Honour the code of conduct whenever you participate formally and informally in o
  * Call others on their behaviour within the community and remind them of this code where necessary.
  * Refer to [these helpful guides on conflict resolution](http://www.crnhq.org/pages.php?pID=10) to aid you.
 
-
 ## A living document
  * This is a living document, as core committers we don't have all the answers and we attempt to make the community an innovative and valuable space for everyone that wishes to participate.
 
- * If you would like to improve the wording, add additional items or simply fix typos each contribution to the code of conduct will be considered on it's merit and if agreed unanimously by the core committers it will be included in future revisions of the SilverStripe code of conduct.
+ * If you would like to improve the wording, add additional items, or simply fix typos, each contribution to the code of conduct will be considered on it's merit and agreed upon unanimously by the core committers. Any changes will be included in future revisions of the SilverStripe code of conduct.
 
 ## Core committers house rules
 Core committers are also bound by their [own set of house rules](core_committers#house_rules_for_the_core_committer_team).
