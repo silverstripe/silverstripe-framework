@@ -56,6 +56,6 @@ http://www.apache.org/foundation/policies/conduct.html
 
 https://www.djangoproject.com/conduct/
 
-http://speakup.io/coc.html
+http://web.archive.org/web/20141109123859/http://speakup.io/coc.html
 
 http://www.crnhq.org/pages.php?pID=10
