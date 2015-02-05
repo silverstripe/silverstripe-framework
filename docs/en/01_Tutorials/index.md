@@ -16,6 +16,7 @@ These include video screencasts, written tutorials and code examples to get you 
 * [Lesson 5: The holder/page pattern](http://www.silverstripe.org/learn/lessons/lesson-5-the-holderpage-pattern/)
 * [Lesson 6: Adding Custom Fields to a Page](http://www.silverstripe.org/learn/lessons/lesson-6-adding-custom-fields-to-a-page/)
 * [Lesson 7: Working with Files and Images](http://www.silverstripe.org/learn/lessons/lesson-7-working-with-files-and-images/)
+* [Lesson 8: Introduction to the ORM](http://www.silverstripe.org/learn/lessons/lesson-8-introduction-to-the-orm)
 
 
 ## Help: If you get stuck
