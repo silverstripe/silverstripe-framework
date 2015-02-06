@@ -103,6 +103,54 @@ class SSViewerTest extends SapphireTest {
 		<% require css($cssFile) %>");
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
 	}
+	
+	public function testRequirementsCombine(){
+		$oldBackend = Requirements::backend();
+		$testBackend = new Requirements_Backend();
+		Requirements::set_backend($testBackend);
+		$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
+
+		$jsFile = FRAMEWORK_DIR . '/tests/view/themes/javascript/bad.js';
+		$jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
+		Requirements::combine_files('testRequirementsCombine.js', array($jsFile));
+		require_once('thirdparty/jsmin/jsmin.php');
+		
+		// first make sure that our test js file causes an exception to be thrown
+		try{
+			$content = JSMin::minify($content);
+			Requirements::set_backend($oldBackend);
+			$this->fail('JSMin did not throw exception on minify bad file: ');
+		}catch(Exception $e){
+			// exception thrown... good
+		}
+
+		// secondly, make sure that requirements combine throws the correct warning, and only that warning
+		@unlink($combinedTestFilePath);
+		try{
+			Requirements::process_combined_files();
+		}catch(PHPUnit_Framework_Error_Warning $e){
+			if(strstr($e->getMessage(), 'Failed to minify') === false){
+				Requirements::set_backend($oldBackend);
+				$this->fail('Requirements::process_combined_files raised a warning, which is good, but this is not the expected warning ("Failed to minify..."): '.$e);
+			}
+		}catch(Exception $e){
+			Requirements::set_backend($oldBackend);
+			$this->fail('Requirements::process_combined_files did not catch exception caused by minifying bad js file: '.$e);
+		}
+		
+		// and make sure the combined content matches the input content, i.e. no loss of functionality
+		if(!file_exists($combinedTestFilePath)){
+			Requirements::set_backend($oldBackend);
+			$this->fail('No combined file was created at expected path: '.$combinedTestFilePath);
+		}
+		$combinedTestFileContents = file_get_contents($combinedTestFilePath);
+		$this->assertContains($jsFileContents, $combinedTestFileContents);
+
+		// reset
+		Requirements::set_backend($oldBackend);
+	}
+	
+
 
 	public function testComments() {
 		$output = $this->render(<<<SS

@@ -1139,10 +1139,16 @@ class Requirements_Backend {
 
 			if(!$refresh) continue;
 
+			$failedToMinify = false;
 			$combinedData = "";
 			foreach(array_diff($fileList, $this->blocked) as $file) {
 				$fileContent = file_get_contents($base . $file);
-				$fileContent = $this->minifyFile($file, $fileContent);
+				
+				try{
+					$fileContent = $this->minifyFile($file, $fileContent);
+				}catch(Exception $e){
+					$failedToMinify = true;
+				}
 
 				if ($this->write_header_comment) {
 					// write a header comment for each file for easier identification and debugging
@@ -1159,6 +1165,12 @@ class Requirements_Backend {
 				if(fwrite($fh, $combinedData) == strlen($combinedData)) $successfulWrite = true;
 				fclose($fh);
 				unset($fh);
+			}
+			
+			if($failedToMinify){
+				// Failed to minify, use unminified. This warning is raised at the end to allow code execution
+				// to complete in case this warning is caught inside a try-catch block. 
+				user_error('Failed to minify '.$file.', exception: '.$e->getMessage(), E_USER_WARNING);
 			}
 
 			// Unsuccessful write - just include the regular JS files, rather than the combined one
