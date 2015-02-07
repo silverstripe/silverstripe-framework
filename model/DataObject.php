@@ -3435,6 +3435,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @var array
 	 */
 	private static $casting = array(
+		"ID" => 'Int',
+		"ClassName" => 'Varchar',
 		"LastEdited" => "SS_Datetime",
 		"Created" => "SS_Datetime",
 		"Title" => 'Text',

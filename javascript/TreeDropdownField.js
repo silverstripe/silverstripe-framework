@@ -139,9 +139,11 @@
 			},
 			setTitle: function(title) {
 				title = title || this.data('title') || strings.fieldTitle;
-					
-				this.find('.treedropdownfield-title').html(title);
-				this.data('title', title); // separate view from storage (important for search cancellation)				
+
+				var func = this.data('escape-label-field') ? 'text' : 'html';
+
+				this.find('.treedropdownfield-title')[func](title);
+				this.data('title', title); // separate view from storage (important for search cancellation)
 			},
 			getTitle: function() {
 				return this.find('.treedropdownfield-title').text();

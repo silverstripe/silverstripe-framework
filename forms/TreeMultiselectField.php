@@ -46,6 +46,8 @@
 class TreeMultiselectField extends TreeDropdownField {
 	public function __construct($name, $title=null, $sourceObject="Group", $keyField="ID", $labelField="Title") {
 		parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
+		$this->removeExtraClass('single');
+		$this->addExtraClass('multiple');
 		$this->value = 'unchanged';
 	}
 
@@ -103,7 +105,11 @@ class TreeMultiselectField extends TreeDropdownField {
 
 		if($items && count($items)) {
 			foreach($items as $id => $item) {
-				$titleArray[] = $item->Title;
+				$title = $item->Title;
+				if ($item instanceof ViewableData && $item->escapeTypeForField('Title') != 'xml') {
+					$title = Convert::raw2xml($title);
+				}
+				$titleArray[] = $title;
 				$idArray[] = $item->ID;
 			}
 				
@@ -118,30 +124,18 @@ class TreeMultiselectField extends TreeDropdownField {
 		$dataUrlTree = '';
 		if ($this->form){
 			$dataUrlTree = $this->Link('tree');
-			if (isset($idArray) && count($idArray)){
+			if (!empty($idArray)){
 				$dataUrlTree = Controller::join_links($dataUrlTree, '?forceValue='.implode(',',$idArray));
 			}
 		}
-		return FormField::create_tag(
-			'div',
-			array (
-				'id'    => "TreeDropdownField_{$this->id()}",
-				'class' => 'TreeDropdownField multiple' . ($this->extraClass() ? " {$this->extraClass()}" : '')
-					. ($this->showSearch ? " searchable" : ''),
-				'data-url-tree' => $dataUrlTree,
-				'data-title' => $title,
-				'title' => $this->getDescription()
-			),
-			FormField::create_tag(
-				'input',
-				array (
-					'id'    => $this->id(),
-					'type'  => 'hidden',
-					'name'  => $this->name,
-					'value' => $value
-				)
+		$properties = array_merge(
+			$properties,
+			array(
+				'Title' => $title,
+				'Link' => $dataUrlTree,
 			)
 		);
+		return $this->customise($properties)->renderWith('TreeDropdownField');
 	}
 
 	/**

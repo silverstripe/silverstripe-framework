@@ -85,10 +85,15 @@ class DataDifferencer extends ViewableData {
 			if(in_array($field, $this->ignoredFields)) continue;
 			if(in_array($field, array_keys($hasOnes))) continue;
 
+			$escape = false;
+			if ($this->toRecord->escapeTypeForField($field) != 'xml') {
+				$escape = true;
+			}
 			if(!$this->fromRecord) {
-				$diffed->setField($field, "<ins>" . $this->toRecord->$field . "</ins>");
+				$val = $escape ? Convert::raw2xml($this->toRecord->$field) : $this->toRecord->$field;
+				$diffed->setField($field, "<ins>" . $val . "</ins>");
 			} else if($this->fromRecord->$field != $this->toRecord->$field) {
-				$diffed->setField($field, Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field));
+				$diffed->setField($field, Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field, $escape));
 			}
 		}
 

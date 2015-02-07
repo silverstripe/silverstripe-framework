@@ -274,12 +274,12 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function escapeTypeForField($field) {
 		if(!$class = $this->castingClass($field)) {
-			$class = self::$default_cast;
+			$class = $this->config()->get('default_cast');
 		}
-		
+
 		return Config::inst()->get($class, 'escape_type', Config::FIRST_SET);
 	}
-	
+
 	/**
 	 * Save the casting cache for this object (including data from any failovers) into a variable
 	 *

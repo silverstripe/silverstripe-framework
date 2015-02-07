@@ -99,7 +99,7 @@ class PermissionCheckboxSetField extends FormField {
 				if(!isset($uninheritedCodes[$permission->Code])) $uninheritedCodes[$permission->Code] = array();
 				$uninheritedCodes[$permission->Code][] = _t(
 					'PermissionCheckboxSetField.AssignedTo', 'assigned to "{title}"',
-					array('title' => $record->Title)
+					array('title' => $record->dbObject('Title')->forTemplate())
 				);
 			}
 
@@ -115,7 +115,7 @@ class PermissionCheckboxSetField extends FormField {
 								'PermissionCheckboxSetField.FromRole',
 								'inherited from role "{title}"',
 								'A permission inherited from a certain permission role',
-								array('title' => $role->Title)
+								array('title' => $role->dbObject('Title')->forTemplate())
 							);
 						}
 					}
@@ -134,7 +134,7 @@ class PermissionCheckboxSetField extends FormField {
 										'PermissionCheckboxSetField.FromRoleOnGroup',
 										'inherited from role "%s" on group "%s"',
 										'A permission inherited from a role on a certain group',
-										array('roletitle' => $role->Title, 'grouptitle' => $parent->Title)
+										array('roletitle' => $role->dbObject('Title')->forTemplate(), 'grouptitle' => $parent->dbObject('Title')->forTemplate())
 									);
 								}
 							}
@@ -149,7 +149,7 @@ class PermissionCheckboxSetField extends FormField {
 									'PermissionCheckboxSetField.FromGroup',
 									'inherited from group "{title}"',
 									'A permission inherited from a certain group',
-									array('title' => $parent->Title)
+									array('title' => $parent->dbObject('Title')->forTemplate())
 								);
 							}
 						}

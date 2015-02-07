@@ -94,12 +94,32 @@ class TreeDropdownField extends FormField {
 		$this->keyField     = $keyField;
 		$this->labelField   = $labelField;
 		$this->showSearch	= $showSearch;
-		
+
+		$this->addExtraClass('single');
+
 		parent::__construct($name, $title);
 	}
-	
+
 	/**
-	 * Set the ID of the root node of the tree. This defaults to 0 - i.e. 
+	 * Helper for the front end to know if we should escape the label value
+	 *
+	 * @return bool Whether the label field should be escaped
+	 */
+	public function getEscapeLabelField() {
+		// be defensive
+		$escape = true;
+		$sourceClass = $this->getSourceObject();
+		//if it's an array, then it's an explicit set of values and we have to assume they've escaped their values already
+		//if the field is cast as XML, then we don't need to escape
+		if (is_array($sourceClass) || (is_a($sourceClass, 'ViewableData', true) && singleton($sourceClass)->escapeTypeForField($this->getLabelField()) == 'xml')) {
+			$escape = false;
+		}
+
+		return $escape;
+	}
+
+	/**
+	 * Set the ID of the root node of the tree. This defaults to 0 - i.e.
 	 * displays the whole tree.
 	 *
 	 * @param int $ID
