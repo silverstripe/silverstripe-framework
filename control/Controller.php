@@ -297,7 +297,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$templates = array_unique($templates);
 		}
 		
-		return new SSViewer($templates);
+		$viewer = new SSViewer($templates);
+		$this->extend('updateViewer', $action, $viewer);
+		return $viewer;
 	}
 	
 	public function hasAction($action) {
