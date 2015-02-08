@@ -438,6 +438,10 @@ class FormField extends RequestHandler {
 	}
 
 	/**
+	 * Allows customization through an 'updateAttributes' hook on the base class.
+	 * Existing attributes are passed in as the first argument and can be manipulated,
+	 * but any attributes added through a subclass implementation won't be included.
+	 *
 	 * @return array
 	 */
 	public function getAttributes() {
@@ -456,7 +460,11 @@ class FormField extends RequestHandler {
 			$attrs['aria-required'] = 'true';
 		}
 
-		return array_merge($attrs, $this->attributes);
+		$attrs = array_merge($attrs, $this->attributes);
+
+		$this->extend('updateAttributes', $attrs);
+
+		return $attrs;
 	}
 
 	/**
