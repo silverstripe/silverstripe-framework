@@ -302,7 +302,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						if (!source) return;
 
 						var parent = source;
-						while (parent && parent.nodeType == 1) parent = parent.parentNode;
+						try {
+							while (parent && parent.nodeType == 1) parent = parent.parentNode;
+						}
+						catch(err) {}
 
 						if (!parent) $(source).unbind().remove();
 					});
