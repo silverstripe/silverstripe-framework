@@ -18,7 +18,7 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
 1. Install the project through composer. The process is described in detail in "[Installation through Composer](../../installation/composer#contributing)".
 
- 		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
+ 		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.1.x-dev
 
 2. Edit the `composer.json`. Remove the `@stable` markers from the core modules in there. 
    Add your fork URLs, in this example a fork of the `cms` module on the `sminnee` github account 
