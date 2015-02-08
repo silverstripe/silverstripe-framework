@@ -701,6 +701,15 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			(bool) $this->ID
 		));
 		$password->setCanBeEmpty(true);
+		
+		$fields->replaceField(
+			'Email', 
+			$emailField = new EmailField (
+				'Email',
+				$this->fieldLabel('Email')
+			)
+		);		
+		
 
 		$fields->replaceField('Locale', new DropdownField (
 			'Locale',
