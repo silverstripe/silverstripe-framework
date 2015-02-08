@@ -180,6 +180,8 @@ class ManyManyList extends RelationList {
 	 * Add an item to this many_many relationship. Does so by adding an entry
 	 * to the joinTable.
 	 *
+	 * @uses DataExtension->augmentWrite()
+	 *
 	 * @param mixed $item
 	 * @param array $extraFields A map of additional columns to insert into the
 	 *								joinTable
@@ -256,6 +258,8 @@ class ManyManyList extends RelationList {
 			$manipulation[$this->joinTable]['fields'][$this->localKey] = $itemID;
 			$manipulation[$this->joinTable]['fields'][$this->foreignKey] = $foreignID;
 
+			$this->extend('augmentWrite', $manipulation);
+
 			DB::manipulate($manipulation);
 		}
 	}
@@ -282,6 +286,8 @@ class ManyManyList extends RelationList {
 	 * Note that for a ManyManyList, the item is never actually deleted, only
 	 * the join table is affected
 	 *
+	 * @uses DataExtension->augmentSQL()
+	 *
 	 * @param int $itemID The item ID
 	 */
 	public function removeByID($itemID) {
@@ -297,12 +303,15 @@ class ManyManyList extends RelationList {
 		}
 		
 		$query->addWhere("\"$this->localKey\" = {$itemID}");
+		$this->extend('augmentSQL',$query, $this->dataQuery);
 		$query->execute();
 	}
 
 	/**
 	 * Remove all items from this many-many join.  To remove a subset of items,
 	 * filter it first.
+	 *
+	 * @uses DataExtension->augmentSQL()
 	 *
 	 * @return void
 	 */
@@ -331,6 +340,7 @@ class ManyManyList extends RelationList {
 		$delete->setFrom("\"$this->joinTable\"");
 		$delete->addWhere($this->foreignIDFilter());
 		$delete->addWhere("\"$this->joinTable\".\"$this->localKey\" IN ({$query->sql()})");
+		$this->extend('augmentSQL',$delete, $this->dataQuery);
 		$delete->execute();
 	}
 
@@ -338,6 +348,8 @@ class ManyManyList extends RelationList {
 	 * Find the extra field data for a single row of the relationship join
 	 * table, given the known child ID.
 	 *	
+	 * @uses DataExtension->augmentSQL()
+	 *
 	 * @param string $componentName The name of the component
 	 * @param int $itemID The ID of the child for the relationship
 	 *
@@ -360,6 +372,7 @@ class ManyManyList extends RelationList {
 					user_error("Can't call ManyManyList::getExtraData() until a foreign ID is set", E_USER_WARNING);
 				}
 				$query->addWhere("\"$this->localKey\" = {$itemID}");
+				$this->extend('augmentSQL',$query, $this->dataQuery);
 				$result[$fieldName] = $query->execute()->value();
 			}
 		}
