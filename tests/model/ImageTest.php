@@ -30,6 +30,8 @@ class ImageTest extends SapphireTest {
 			
 			if(!file_exists(BASE_PATH."/$folder->Filename")) mkdir(BASE_PATH."/$folder->Filename");
 		}
+
+		Image::add_extension('ImageTestExtension');
 	}
 	
 	public function tearDown() {
@@ -50,6 +52,8 @@ class ImageTest extends SapphireTest {
 				Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
 			}
 		}
+
+		Image::remove_extension('ImageTest');
 		
 		parent::tearDown();
 	}
@@ -229,7 +233,34 @@ class ImageTest extends SapphireTest {
 	
 	public function testGeneratedImageDeletion() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+
+		// Test resize method with arguments
 		$image_generated = $image->SetWidth(200);
+		$p = $image_generated->getFullPath();
+		$this->assertTrue(file_exists($p));
+		$image->deleteFormattedImages();
+		$this->assertFalse(file_exists($p));
+
+		// Test a resize method that takes no arguments
+		$image_generated = $image->TestImage();
+		$p = $image_generated->getFullPath();
+		$this->assertTrue(file_exists($p));
+		$image->deleteFormattedImages();
+		$this->assertFalse(file_exists($p));
+	}
+
+	public function testCacheFilename() {
+		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+
+		// Test a resize method that takes a string
+		$image_generated = $image->TestImageWithArgs('i/am\\a"string');
+		$p = $image_generated->getFullPath();
+		$this->assertTrue(file_exists($p));
+		$image->deleteFormattedImages();
+		$this->assertFalse(file_exists($p));
+
+		// Test a resize method that takes a non-scalar argument
+		$image_generated = $image->TestImageWithArgs(array(1, 2, 3), (object) array('Key' => 'Value'));
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p));
 		$image->deleteFormattedImages();
@@ -328,6 +359,22 @@ class ImageTest extends SapphireTest {
 		}
 
 		return $generateMethods;
+	}
+
+}
+
+class ImageTestExtension extends DataExtension {
+
+	public function TestImage() {
+		return $this->owner->getFormattedImage('TestImage');
+	}
+
+	public function TestImageWithArgs($argument1 = null, $argument2 = null) {
+		return $this->owner->getFormattedImage('TestImage', $argument1, $argument2);
+	}
+
+	public function generateTestImage(Image_Backend $backend) {
+		return $backend;
 	}
 
 }

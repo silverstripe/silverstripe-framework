@@ -458,10 +458,12 @@ class Image extends File implements Flushable {
 	public function cacheFilename($format) {
 		$args = func_get_args();
 		array_shift($args);
+		$args = array_filter($args, 'is_scalar');
+
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . "/";
-		
-		$format = $format.implode('', $args);
-		
+
+		$format .= preg_replace('/[^A-Za-z0-9\-_\.]/', '', implode('', $args));
+
 		return $folder . "_resampled/$format-" . $this->Name;
 	}
 	
