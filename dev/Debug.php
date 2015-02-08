@@ -430,6 +430,7 @@ class Debug {
 		}
 		$reporter->writeTrace(($errcontext ? $errcontext : debug_backtrace()));
 		$reporter->writeFooter();
+		return false;
 	}
 	
 	/**
