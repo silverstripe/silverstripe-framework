@@ -16,11 +16,11 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
 ## Step-by-step: From forking to sending the pull request
 
-_**NOTE:** The commands on this page assume that you are branching from `3.1`, at the time of writing this is the pre-release branch._
+_**NOTE:** The commands on this page assume that you are branching from `3.2`, at the time of writing this is the pre-release branch._
 
 1. Install the project through composer. The process is described in detail in "[Installation through Composer](../../installation/composer#contributing)".
 
- 		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.1.x-dev
+ 		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.2.x-dev
 
 2. Edit the `composer.json`. Remove any `@stable` markers from the core modules in there. 
    Add your fork URLs, in this example a fork of the `cms` module on the `sminnee` github account 
