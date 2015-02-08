@@ -326,7 +326,10 @@
 			 * Update preview whenever any panels are reloaded.
 			 */
 			'from .cms-container': {
-				onafterstatechange: function(){
+				onafterstatechange: function(e, data) {
+					// Don't update preview if we're dealing with a custom redirect
+					if(data.xhr.getResponseHeader('X-ControllerURL')) return;
+
 					this._initialiseFromContent();
 				}
 			},
