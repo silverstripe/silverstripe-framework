@@ -1993,6 +1993,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
 				$candidate = (isset($belongsManyMany[$component])) ? $belongsManyMany[$component] : null;
 				if($candidate) {
+					
+					// If $candidate is of dot notation for multiple many_many relations to the same class
+					if(strpos($candidate,'.') !== FALSE){
+						$candidate=explode('.', $candidate);
+						$candidate=$candidate[0];
+					}
+					
 					$childField = $candidate . "ID";
 
 					// We need to find the inverse component name
