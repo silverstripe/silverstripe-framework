@@ -51,7 +51,7 @@ The returned object is of type `Zend_Cache`.
 	$cache = SS_Cache::factory('foo'); 
 	if (!($result = $cache->load($cachekey))) {
 		$result = caluate some how;
-		$cache->save($result);
+		$cache->save($result, $cachekey);
 	}
 	return $result;
 
@@ -103,7 +103,7 @@ which can provide better performance, including APC, Xcache, ZendServer, Memcach
 If `?flush=1` is requested in the URL, e.g. http://mysite.com?flush=1, this will trigger a call to `flush()` on
 any classes that implement the `Flushable` interface. Using this, you can trigger your caches to clean.
 
-See [reference documentation on Flushable](/reference/flushable) for implementation details.
+See [reference documentation on Flushable](/developer_guides/execution_pipeline/flushable/) for implementation details.
 
 ### Memcached
 

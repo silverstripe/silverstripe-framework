@@ -76,7 +76,7 @@ The chapter on [configuration](/topics/configuration) has more details.
 ## Flushing
 
 If a `?flush=1` query parameter is added to a URL, a call to `flush()` will be triggered
-on any classes that implement the [Flushable](/reference/flushable) interface.
+on any classes that implement the [Flushable](flushable) interface.
 This enables developers to clear [manifest caches](manifests),
 for example when adding new templates or PHP classes.
 Note that you need to be in [dev mode](/getting_started/environment_management)

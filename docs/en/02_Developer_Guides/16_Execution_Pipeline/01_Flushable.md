@@ -31,7 +31,7 @@ This example uses `[api:SS_Cache]` in some custom code, and the same cache is cl
 			$something = $cache->load('mykey');
 			if(!$something) {
 				$something = 'value to be cached';
-				$cache->save($something);
+				$cache->save($something, 'mykey');
 			}
 			return $something;
 		}
