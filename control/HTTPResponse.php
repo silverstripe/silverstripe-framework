@@ -238,13 +238,17 @@ class SS_HTTPResponse {
 			$url = Director::absoluteURL($this->headers['Location'], true);
 			$urlATT = Convert::raw2htmlatt($url);
 			$urlJS = Convert::raw2js($url);
-			echo
-			"<p>Redirecting to <a href=\"$urlATT\" title=\"Click this link if your browser does not redirect you\">"
-				. "$urlATT... (output started on $file, line $line)</a></p>
-			<meta http-equiv=\"refresh\" content=\"1; url=$urlATT\" />
-			<script type=\"text/javascript\">setTimeout(function(){
-				window.location.href = \"$urlJS\";
-			}, 50);</script>";
+			$title = Director::isDev()
+				? "{$urlATT}... (output started on {$file}, line {$line})"
+				: "{$urlATT}...";
+			echo <<<EOT
+<p>Redirecting to <a href="{$urlATT}" title="Click this link if your browser does not redirect you">{$title}</a></p>
+<meta http-equiv="refresh" content="1; url={$urlATT}" />
+<script type="text/javascript">setTimeout(function(){
+	window.location.href = "{$urlJS}";
+}, 50);</script>";
+EOT
+			;
 		} else {
 			$line = $file = null;
 			if(!headers_sent($file, $line)) {
