@@ -11,7 +11,7 @@ These include video screencasts, written tutorials and code examples to get you 
 * [How to set up a local development environment in SilverStripe](https://vimeo.com/108861537)
 * [Lesson 1: Creating your first theme](http://www.silverstripe.org/learn/lessons/lesson-1-creating-your-first-theme/)
 * [Lesson 2: Migrating static templates into your theme](http://www.silverstripe.org/learn/lessons/lesson-2-migrating-static-templates-into-your-theme/)
-* [Lesson 3: Adding dynamic content](http://www.silverstripe.org/learn/lessons/lesson-3/)
+* [Lesson 3: Adding dynamic content](http://www.silverstripe.org/learn/lessons/lesson-3-adding-dynamic-content/)
 * [Lesson 4: Working with multiple templates](http://www.silverstripe.org/learn/lessons/lesson-4-working-with-multiple-templates/)
 * [Lesson 5: The holder/page pattern](http://www.silverstripe.org/learn/lessons/lesson-5-the-holderpage-pattern/)
 * [Lesson 6: Adding Custom Fields to a Page](http://www.silverstripe.org/learn/lessons/lesson-6-adding-custom-fields-to-a-page/)
