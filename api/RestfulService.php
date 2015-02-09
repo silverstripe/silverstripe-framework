@@ -448,6 +448,10 @@ class RestfulService extends ViewableData implements Flushable {
 	 */
 	protected function parseRawHeaders($rawHeaders) {
 		$headers = array();
+		//extract the last set of headers
+		$rawHeaders = array_filter(explode("\r\n\r\n", $rawHeaders));
+		$rawHeaders = array_pop($rawHeaders);
+
 		$fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $rawHeaders));
 		foreach ($fields as $field) {
 			if (preg_match('/([^:]+): (.+)/m', $field, $match)) {
