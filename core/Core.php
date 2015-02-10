@@ -188,7 +188,7 @@ function increase_memory_limit_to($memoryLimit = -1) {
 	// Check hard maximums
 	$max = get_increase_memory_limit_max();
 
-	if($max && $max != -1 && trANSLATE_MEMSTRING($memoryLimit) > translate_memstring($max)) return false;
+	if($max && $max != -1 && translate_memstring($memoryLimit) > translate_memstring($max)) return false;
 
 	// Increase the memory limit if it's too low
 	if($memoryLimit == -1 || translate_memstring($memoryLimit) > translate_memstring($curLimit)) {
