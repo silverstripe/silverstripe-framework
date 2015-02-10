@@ -913,8 +913,8 @@ class Form extends RequestHandler {
 	}
 	
 	/** @ignore */
-	private $formActionPath = false;
-	
+	protected $formActionPath = false;
+
 	/**
 	 * Set the form action attribute to a custom URL.
 	 * 
@@ -929,7 +929,7 @@ class Form extends RequestHandler {
 	/**
 	 * @ignore
 	 */
-	private $htmlID = null;
+	protected $htmlID = null;
 
 	/**
 	 * Returns the name of the form

@@ -28,13 +28,13 @@ class DataQuery {
 	 */
 	protected $collidingFields = array();
 
-	private $queriedColumns = null;
-	
+	protected $queriedColumns = null;
+
 	/**
 	 * @var Boolean
 	 */
-	private $queryFinalised = false;
-	
+	protected $queryFinalised = false;
+
 	// TODO: replace subclass_access with this
 	protected $querySubclasses = true;
 	// TODO: replace restrictclasses with this
@@ -759,8 +759,8 @@ class DataQuery {
 	 * An arbitrary store of query parameters that can be used by decorators.
 	 * @todo This will probably be made obsolete if we have subclasses of DataList and/or DataQuery.
 	 */
-	private $queryParams;
-	
+	protected $queryParams;
+
 	/**
 	 * Set an arbitrary query parameter, that can be used by decorators to add additional meta-data to the query.
 	 * It's expected that the $key will be namespaced, e.g, 'Versioned.stage' instead of just 'stage'.

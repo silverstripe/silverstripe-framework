@@ -13,7 +13,7 @@ class RequestProcessor implements RequestFilter {
 	 *
 	 * @var array
 	 */
-	private $filters = array();
+	protected $filters = array();
 
 	public function __construct($filters = array()) {
 		$this->filters = $filters;

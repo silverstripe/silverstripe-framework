@@ -721,7 +721,7 @@ class TestObject implements TestOnly {
 
 class OtherTestObject implements TestOnly {
 
-	private $sampleService;
+	protected $sampleService;
 
 	public function setSampleService($s) {
 		$this->sampleService = $s;
@@ -833,8 +833,8 @@ class TestSetterInjections extends ViewableData implements TestOnly {
  * @see https://github.com/silverstripe/sapphire
  */
 class SSObjectCreator extends InjectionCreator {
-	private $injector;
-	
+	protected $injector;
+
 	public function __construct($injector) {
 		$this->injector = $injector;
 	}

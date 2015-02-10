@@ -11,12 +11,12 @@ class TestSession {
 	/**
 	 * @var Session
 	 */
-	private $session;
+	protected $session;
 
 	/**
 	 * @var SS_HTTPResponse
 	 */
-	private $lastResponse;
+	protected $lastResponse;
 
 	/**
 	 * Necessary to use the mock session
@@ -32,7 +32,7 @@ class TestSession {
 	 *
 	 * @var string
 	 */
-	private $lastUrl;
+	protected $lastUrl;
 
 	public function __construct() {
 		$this->session = Injector::inst()->create('Session', array());
@@ -242,7 +242,7 @@ class TestSession_STResponseWrapper {
 	/**
 	 * @var SS_HTTPResponse
 	 */
-	private $response;
+	protected $response;
 
 	public function __construct(SS_HTTPResponse $response) {
 		$this->response = $response;

@@ -13,10 +13,10 @@
  * @subpackage search
  */
 class WithinRangeFilter extends SearchFilter {
-	
-	private $min;
-	private $max;
-	
+
+	protected $min;
+	protected $max;
+
 	public function setMin($min) {
 		$this->min = $min;
 	}
