@@ -278,7 +278,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function castingClass($field) {
 		$spec = $this->castingHelper($field);
-		if(!$spec) return null;
+		if(!$spec) return $this->config()->get('default_cast');
 
 		$bPos = strpos($spec,'(');
 		if($bPos === false) return $spec;
