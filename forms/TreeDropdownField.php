@@ -71,13 +71,15 @@ class TreeDropdownField extends FormField {
 	 *
 	 * @param string $name the field name
 	 * @param string $title the field label
-	 * @param sourceObject The object-type to list in the tree.  Must be a 
-	 *		{@link Hierarchy} subclass.  Alternatively, you can set this to an 
-	 *		array of key/value pairs, like a {@link DropdownField} source.  In 
-	 *		this case, the field will act like show a flat list of tree items, 
-	 *		without any hierarchy. This is most useful in conjunction with 
-	 *		{@link TreeMultiselectField}, for presenting a set of checkboxes in 
-	 *		a compact view.
+	 * @param string|array $sourceObject The object-type to list in the tree. This could
+	 * be one of the following:
+	 * - A DataObject class name with the {@link Hierarchy} extension.
+	 * - An array of key/value pairs, like a {@link DropdownField} source. In
+	 *   this case, the field will act like show a flat list of tree items,
+	 *	 without any hierarchy. This is most useful in conjunction with
+	 *   {@link TreeMultiselectField}, for presenting a set of checkboxes in
+	 *   a compact view. Note, that all value strings must be XML encoded
+	 *   safely prior to being passed in.
 	 *
 	 * @param string $keyField to field on the source class to save as the 
 	 *		field value (default ID).
@@ -98,24 +100,6 @@ class TreeDropdownField extends FormField {
 		$this->addExtraClass('single');
 
 		parent::__construct($name, $title);
-	}
-
-	/**
-	 * Helper for the front end to know if we should escape the label value
-	 *
-	 * @return bool Whether the label field should be escaped
-	 */
-	public function getEscapeLabelField() {
-		// be defensive
-		$escape = true;
-		$sourceClass = $this->getSourceObject();
-		//if it's an array, then it's an explicit set of values and we have to assume they've escaped their values already
-		//if the field is cast as XML, then we don't need to escape
-		if (is_array($sourceClass) || (is_a($sourceClass, 'ViewableData', true) && singleton($sourceClass)->escapeTypeForField($this->getLabelField()) == 'xml')) {
-			$escape = false;
-		}
-
-		return $escape;
 	}
 
 	/**
@@ -213,14 +197,14 @@ class TreeDropdownField extends FormField {
 		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
 	
 		$record = $this->Value() ? $this->objectForKey($this->Value()) : null;
-		if($record) {
-			$title = $record->{$this->labelField};
+		if($record instanceof ViewableData) {
+			$title = $record->obj($this->labelField)->forTemplate();
+		} elseif($record) {
+			$title = Convert::raw2xml($record->{$this->labelField});
+		} else if($this->showSearch) {
+			$title = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
 		} else {
-			if($this->showSearch) {
-				$title = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
-			} else {
-				$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
-			}
+			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		}
 
 		// TODO Implement for TreeMultiSelectField
@@ -305,8 +289,7 @@ class TreeDropdownField extends FormField {
 		}
 
 		$self = $this;
-		$escapeLabelField = ($obj->escapeTypeForField($this->labelField) != 'xml');
-		$titleFn = function(&$child) use(&$self, $escapeLabelField) {
+		$titleFn = function(&$child) use(&$self) {
 			$keyField = $self->keyField;
 			$labelField = $self->labelField;
 			return sprintf(
@@ -318,7 +301,7 @@ class TreeDropdownField extends FormField {
 				Convert::raw2xml($child->markingClasses()),
 				($self->nodeIsDisabled($child)) ? 'disabled' : '',
 				(int)$child->ID,
-				$escapeLabelField ? Convert::raw2xml($child->$labelField) : $child->$labelField
+				$child->obj($labelField)->forTemplate()
 			);
 		};
 

@@ -100,23 +100,20 @@ class TreeMultiselectField extends TreeDropdownField {
 		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
 	
 		$value = '';
-		$itemList = '';
+		$titleArray = array();
+		$idArray = array();
 		$items = $this->getItems();
 
 		if($items && count($items)) {
-			foreach($items as $id => $item) {
-				$title = $item->Title;
-				if ($item instanceof ViewableData && $item->escapeTypeForField('Title') != 'xml') {
-					$title = Convert::raw2xml($title);
-				}
-				$titleArray[] = $title;
+			foreach($items as $item) {
 				$idArray[] = $item->ID;
+				$titleArray[] = ($item instanceof ViewableData)
+					? $item->obj($this->labelField)->forTemplate()
+					: Convert::raw2xml($item->{$this->labelField});
 			}
 				
-			if(isset($titleArray)) {
-				$title = implode(", ", $titleArray);
-				$value = implode(",", $idArray);
-			}
+			$title = implode(", ", $titleArray);
+			$value = implode(",", $idArray);
 		} else {
 			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		} 
@@ -133,6 +130,7 @@ class TreeMultiselectField extends TreeDropdownField {
 			array(
 				'Title' => $title,
 				'Link' => $dataUrlTree,
+				'Value' => $value
 			)
 		);
 		return $this->customise($properties)->renderWith('TreeDropdownField');

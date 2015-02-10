@@ -192,7 +192,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 			foreach($printColumns as $field => $label) {
 				$value = $gridField->getDataFieldValue($item, $field);
 
-				if ($item->escapeTypeForField('Title') != 'xml') {
+				if($item->escapeTypeForField($field) != 'xml') {
 					$value = Convert::raw2xml($value);
 				}
 

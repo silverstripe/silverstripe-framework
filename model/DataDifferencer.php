@@ -85,15 +85,25 @@ class DataDifferencer extends ViewableData {
 			if(in_array($field, $this->ignoredFields)) continue;
 			if(in_array($field, array_keys($hasOnes))) continue;
 
-			$escape = false;
-			if ($this->toRecord->escapeTypeForField($field) != 'xml') {
-				$escape = true;
-			}
+			// Check if a field from-value is comparable
+			$toField = $this->toRecord->obj($field);
+			if(!($toField instanceof DBField)) continue;
+			$toValue = $toField->forTemplate();
+
+			// Show only to value
 			if(!$this->fromRecord) {
-				$val = $escape ? Convert::raw2xml($this->toRecord->$field) : $this->toRecord->$field;
-				$diffed->setField($field, "<ins>" . $val . "</ins>");
-			} else if($this->fromRecord->$field != $this->toRecord->$field) {
-				$diffed->setField($field, Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field, $escape));
+				$diffed->setField($field, "<ins>{$toValue}</ins>");
+				continue;
+			}
+
+			// Check if a field to-value is comparable
+			$fromField = $this->fromRecord->obj($field);
+			if(!($fromField instanceof DBField)) continue;
+			$fromValue = $fromField->forTemplate();
+
+			// Show changes between the two, if any exist
+			if($fromValue != $toValue) {
+				$diffed->setField($field, Diff::compareHTML($fromValue, $toValue));
 			}
 		}
 

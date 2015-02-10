@@ -139,10 +139,8 @@
 			},
 			setTitle: function(title) {
 				title = title || this.data('title') || strings.fieldTitle;
-
-				var func = this.data('escape-label-field') ? 'text' : 'html';
-
-				this.find('.treedropdownfield-title')[func](title);
+				
+				this.find('.treedropdownfield-title').html(title);
 				this.data('title', title); // separate view from storage (important for search cancellation)
 			},
 			getTitle: function() {
@@ -163,7 +161,7 @@
 						
 						if(title) {
 							self.setTitle(title);
-							self.data('title', title)
+							self.data('title', title);
 						}
 						if(node) tree.jstree('select_node', node);
 					}
@@ -237,6 +235,7 @@
 				var self = this;
 				return {
 					'core': {
+						'html_titles': true,
 						// 'initially_open': ['record-0'],
 						'animation': 0
 					},
