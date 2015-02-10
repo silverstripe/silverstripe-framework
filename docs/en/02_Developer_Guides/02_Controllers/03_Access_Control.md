@@ -75,14 +75,14 @@ Only public methods can be made accessible.
 
 		private static $allowed_actions = array(
 			'secure',
-			// secureaction won't work as it's private.
+			// secureaction won't work as it's protected.
 		);
 
 		public function secure() {
 			// ..
 		}
 
-		private function secureaction() {
+		protected function secureaction() {
 			// ..
 		}
 	}

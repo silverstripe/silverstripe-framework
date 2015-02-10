@@ -5,7 +5,7 @@ class PasswordEncryptorTest extends SapphireTest {
 	 *
 	 * @var Config
 	 */
-	private $config = null;
+	protected $config = null;
 
 	public function setUp() {
 		parent::setUp();

@@ -166,7 +166,7 @@ Assuming a class structure such as
 	<?php
 
 	class RestrictivePermissionService {
-		private $database;
+		protected $database;
 
 		public function setDatabase($d) {	
 			$this->database = $d;
@@ -174,8 +174,8 @@ Assuming a class structure such as
 	}
 	
 	class MySQLDatabase {
-		private $username;
-		private $password;
+		protected $username;
+		protected $password;
 		
 		public function __construct($username, $password) {
 			$this->username = $username;

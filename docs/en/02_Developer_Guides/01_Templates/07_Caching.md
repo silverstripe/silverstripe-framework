@@ -9,7 +9,7 @@ All functions that provide data to templates must have no side effects, as the v
 example, this controller method will not behave as you might imagine.
 
 	:::php
-	private $counter = 0;
+	protected $counter = 0;
 
 	public function Counter() {
 	    $this->counter += 1;
