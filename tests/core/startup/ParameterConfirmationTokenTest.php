@@ -23,7 +23,7 @@ class ParameterConfirmationTokenTest_ValidToken extends ParameterConfirmationTok
 
 class ParameterConfirmationTokenTest extends SapphireTest {
 
-	private function addPart($answer, $slash, $part) {
+	protected function addPart($answer, $slash, $part) {
 		$bare = str_replace('/', '', $part);
 
 		if ($bare) $answer = array_merge($answer, array($bare));

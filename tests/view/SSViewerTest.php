@@ -58,7 +58,7 @@ class SSViewerTest extends SapphireTest {
 		$this->assertExpectedStrings($result, $expected);
 	}
 
-	private function getScopeInheritanceTestData() {
+	protected function getScopeInheritanceTestData() {
 		return new ArrayData(array(
 			'Title' => 'TopTitleValue',
 			'Items' => new ArrayList(array(
@@ -72,7 +72,7 @@ class SSViewerTest extends SapphireTest {
 		));
 	}
 
-	private function assertExpectedStrings($result, $expected) {
+	protected function assertExpectedStrings($result, $expected) {
 		foreach ($expected as $expectedStr) {
 			$this->assertTrue(
 				(boolean) preg_match("/{$expectedStr}/", $result),
@@ -1300,7 +1300,7 @@ after')
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
 		Config::inst()->update('Director', 'environment_type', $origEnv);
 	}
-	private function _renderWithSourceFileComments($name, $expected) {
+	protected function _renderWithSourceFileComments($name, $expected) {
 		$viewer = new SSViewer(array($name));
 		$data = new ArrayData(array());
 		$result = $viewer->process($data);
@@ -1436,7 +1436,8 @@ class SSViewerTestFixture extends ViewableData {
 	}
 	
 
-	private function argedName($fieldName, $arguments) {
+
+	protected function argedName($fieldName, $arguments) {
 		$childName = $this->name ? "$this->name.$fieldName" : $fieldName;
 		if($arguments) return $childName . '(' . implode(',', $arguments) . ')';
 		else return $childName;

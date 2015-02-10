@@ -660,7 +660,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @return array $stack a stack of 
 	 */
-	private function _templates($custom = null, $suffix = null) {
+	protected function _templates($custom = null, $suffix = null) {
 		$matches = array();
 		
 		foreach(array_reverse(ClassInfo::ancestry($this)) as $className) {

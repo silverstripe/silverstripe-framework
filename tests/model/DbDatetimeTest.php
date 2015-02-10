@@ -14,7 +14,7 @@ class DbDatetimeTest extends FunctionalTest {
 	 * Check if dates match more or less. This takes into the account the db query
 	 * can overflow to the next second giving offset readings.
 	 */
-	private function matchesRoughly($date1, $date2, $comment = '', $offset) {
+	protected function matchesRoughly($date1, $date2, $comment = '', $offset) {
 		$allowedDifference = 5 + abs($offset); // seconds
 		
 		$time1 = is_numeric($date1) ? $date1 : strtotime($date1);
@@ -23,8 +23,8 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->assertTrue(abs($time1-$time2)<$allowedDifference,
 			$comment . " (times differ by " . abs($time1-$time2) . " seconds)");
 	}
-	
-	private function getDbNow() {
+
+	protected function getDbNow() {
 		$query = 'SELECT ' . $this->adapter->formattedDatetimeClause('now', '%U');
 		return DB::query($query)->value();
 	}
@@ -34,7 +34,7 @@ class DbDatetimeTest extends FunctionalTest {
 	 *
 	 * @return Int Offset in seconds
 	 */
-	private function checkPreconditions() {
+	protected function checkPreconditions() {
 		// number of seconds of php and db time are out of sync
 		$offset = time() - strtotime(DB::query('SELECT ' . DB::getConn()->now())->value());
 		$threshold = 5; // seconds
@@ -135,7 +135,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->matchesRoughly($result, strtotime($lastedited) - strtotime($created),
 			'age of HomePage record in seconds since unix epoc', $offset);
 	}
-	
+
 }
 
 class DbDateTimeTest_Team extends DataObject implements TestOnly {

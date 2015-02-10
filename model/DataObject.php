@@ -512,7 +512,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param $destinationObject the destination object to populate with the duplicated relations
 	 * @param $name the name of the relation to duplicate (e.g. members) 
 	 */
-	private function duplicateRelations($sourceObject, $destinationObject, $name) {
+	protected function duplicateRelations($sourceObject, $destinationObject, $name) {
 		$relations = $sourceObject->$name();
 		if ($relations) {
 			if ($relations instanceOf RelationList) {   //many-to-something relation
