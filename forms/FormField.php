@@ -255,6 +255,22 @@ class FormField extends RequestHandler {
 	 */
 	protected $schemaData = [];
 
+	private static $casting = array(
+		'FieldHolder' => 'HTMLText',
+		'Field' => 'HTMLText',
+		'AttributesHTML' => 'HTMLText',
+		'Value' => 'HTMLText',
+		'extraClass' => 'Text',
+		'ID' => 'Text',
+		'isReadOnly' => 'Boolean',
+		'HolderID' => 'Text',
+		'Title' => 'HTMLText',
+		'RightTitle' => 'HTMLText',
+		'MessageType' => 'Text',
+		'Message' => 'HTMLText',
+		'Description' => 'HTMLText',
+	);
+
 	/**
 	 * Structured schema state representing the FormField's current data and validation.
 	 * Used to render the FormField as a ReactJS Component on the front-end.

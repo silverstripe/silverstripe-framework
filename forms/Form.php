@@ -206,6 +206,15 @@ class Form extends RequestHandler {
 		'forTemplate',
 	);
 
+	private static $casting = array(
+		'AttributesHTML' => 'HTMLText',
+		'FormAttributes' => 'HTMLText',
+		'MessageType' => 'Text',
+		'Message' => 'HTMLText',
+		'FormName' => 'Text',
+		'Legend' => 'HTMLText',
+	);
+
 	/**
 	 * @var FormTemplateHelper
 	 */
