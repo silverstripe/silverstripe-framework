@@ -18,9 +18,10 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * __construct
 	 *
 	 * @param string $filename = null
+	 * @param array $args = array()
 	 * @return void
 	 */
-	public function __construct($filename = null) {
+	public function __construct($filename = null, $args = array()) {
 		if(is_string($filename)) {
 			parent::__construct($filename);
 		}
