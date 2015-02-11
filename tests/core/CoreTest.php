@@ -22,20 +22,22 @@ class CoreTest extends SapphireTest {
 			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user);
 		} else {
 			$user = getTempFolderUsername();
+			$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' . 
+				(PHP_MAJOR_VERSION * 100 + PHP_MINOR_VERSION);
 
 			// A typical Windows location for where sites are stored on IIS
-			$this->assertEquals(sys_get_temp_dir() . DIRECTORY_SEPARATOR .
-				'silverstripe-cacheC--inetpub-wwwroot-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
+			$this->assertEquals(
+				$base . 'C--inetpub-wwwroot-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
 				getTempFolder('C:\\inetpub\\wwwroot\\silverstripe-test-project'));
 
 			// A typical Mac OS X location for where sites are stored
-			$this->assertEquals(sys_get_temp_dir() . DIRECTORY_SEPARATOR .
-				'silverstripe-cache-Users-joebloggs-Sites-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
+			$this->assertEquals(
+				$base . '-Users-joebloggs-Sites-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
 				getTempFolder('/Users/joebloggs/Sites/silverstripe-test-project'));
 
 			// A typical Linux location for where sites are stored
-			$this->assertEquals(sys_get_temp_dir() . DIRECTORY_SEPARATOR .
-				'silverstripe-cache-var-www-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
+			$this->assertEquals(
+				$base . '-var-www-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
 				getTempFolder('/var/www/silverstripe-test-project'));
 		}
 	}
