@@ -244,7 +244,7 @@
 			//could be mailto, etc
 			isExternal: function( url ) {
 				var u = path.parseUrl( url );
-				return u.protocol && u.domain !== documentUrl.domain ? true : false;
+				return u.protocol && u.domain !== document.domain ? true : false;
 			},
 
 			hasProtocol: function( url ) {
