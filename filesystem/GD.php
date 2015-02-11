@@ -35,6 +35,13 @@ class GDBackend extends Object implements Image_Backend {
 		}
 	}
 
+	/**
+	 * __construct
+	 *
+	 * @param string $filename = null
+	 * @param array $args = array()
+	 * @return void
+	 */
 	public function __construct($filename = null, $args = array()) {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
 		increase_time_limit_to(300);
