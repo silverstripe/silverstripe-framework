@@ -347,9 +347,11 @@ class GDBackend extends Object implements Image_Backend {
 		$r = hexdec(substr($webColor,0,2));
 		$g = hexdec(substr($webColor,2,2));
 		$b = hexdec(substr($webColor,4,2));
-		
+		if(strlen($webColor) == 8) {
+			$a = hexdec(substr($webColor,6,2));
+			return imagecolorallocatealpha($image, $r, $g, $b, $a);
+		}
 		return imagecolorallocate($image, $r, $g, $b);
-		
 	}
 
 	/**
