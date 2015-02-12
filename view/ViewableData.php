@@ -58,8 +58,8 @@ class ViewableData extends Object implements IteratorAggregate {
 	/**
 	 * @var array
 	 */
-	private $objCache = array();
-	
+	protected $objCache = array();
+
 	// -----------------------------------------------------------------------------------------------------------------
 	
 	/**

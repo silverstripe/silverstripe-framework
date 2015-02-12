@@ -751,8 +751,8 @@ class Config_LRU {
 		$obj->c = ++$this->c;
 	}
 
-	private $hit = 0;
-	private $miss = 0;
+	protected $hit = 0;
+	protected $miss = 0;
 
 	public function stats() {
 		return $this->miss ? ($this->hit / $this->miss) : 0;

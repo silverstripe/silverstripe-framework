@@ -26,27 +26,27 @@ class SSViewer_Scope {
 	
 	// The stack of previous "global" items
 	// And array of item, itemIterator, itemIteratorTotal, pop_index, up_index, current_index
-	private $itemStack = array(); 
-	
+	protected $itemStack = array();
+
 	// The current "global" item (the one any lookup starts from)
-	protected $item; 
+	protected $item;
 
 	// If we're looping over the current "global" item, here's the iterator that tracks with item we're up to
-	protected $itemIterator; 
+	protected $itemIterator;
 
 	//Total number of items in the iterator
 	protected $itemIteratorTotal;
 	
 	// A pointer into the item stack for which item should be scope on the next pop call
-	private $popIndex;
+	protected $popIndex;
 
 	// A pointer into the item stack for which item is "up" from this one
-	private $upIndex = null;
+	protected $upIndex = null;
 
 	// A pointer into the item stack for which item is this one (or null if not in stack yet)
-	private $currentIndex = null;
-	
-	private $localIndex;
+	protected $currentIndex = null;
+
+	protected $localIndex;
 
 	public function __construct($item, $inheritedScope = null) {
 		$this->item = $item;
@@ -606,8 +606,8 @@ class SSViewer implements Flushable {
 	 * @var array $chosenTemplates Associative array for the different
 	 * template containers: "main" and "Layout". Values are absolute file paths to *.ss files.
 	 */
-	private $chosenTemplates = array();
-	
+	protected $chosenTemplates = array();
+
 	/**
 	 * @var boolean
 	 */

@@ -30,24 +30,24 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 	 * Flag if coverage report shall be generated or not.
 	 * @var boolean
 	 */
-	private $coverage = false;
+	protected $coverage = false;
 
 	/**
 	 * PHPUnit-TestSuite class. The tests, added to this suite are performed
 	 * in this test-run.
 	 * @var PHPUnit_Framework_TestSuite
 	 */
-	private $suite = null;
+	protected $suite = null;
 
 	/**
 	 * @var PHPUnit_Framework_TestResult
 	 */
-	private $results = null;
+	protected $results = null;
 
 	/**
 	 * @var PHPUnit_Framework_TestListener
 	 */
-	private $reporter = null;
+	protected $reporter = null;
 
 	/**
 	 * Shows the version, implemented by the phpunit-wrapper class instance.

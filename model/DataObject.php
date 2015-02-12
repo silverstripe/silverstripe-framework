@@ -142,7 +142,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @var array
 	 */
-	private $changed;
+	protected $changed;
 
 	/**
 	 * The database record (in the same format as $record), before

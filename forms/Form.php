@@ -167,17 +167,17 @@ class Form extends RequestHandler {
 	/**
 	 * @var FormTemplateHelper
 	 */
-	private $templateHelper = null;
+	protected $templateHelper = null;
 
 	/**
 	 * @ignore
 	 */
-	private $htmlID = null;
+	protected $htmlID = null;
 
 	/**
 	 * @ignore
 	 */
-	private $formActionPath = false;
+	protected $formActionPath = false;
 
 	/**
 	 * Create a new form, with the given fields an action buttons.

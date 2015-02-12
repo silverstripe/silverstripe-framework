@@ -130,27 +130,27 @@ class Injector {
 	 *
 	 * @var array
 	 */
-	private $serviceCache;
+	protected $serviceCache;
 
 	/**
 	 * Cache of items that need to be mapped for each service that gets injected
 	 *
 	 * @var array
 	 */
-	private $injectMap;
+	protected $injectMap;
 
 	/**
 	 * A store of all the service configurations that have been defined.
 	 *
 	 * @var array
 	 */
-	private $specs;
+	protected $specs;
 
 	/**
 	 * A map of all the properties that should be automagically set on all
 	 * objects instantiated by the injector
 	 */
-	private $autoProperties;
+	protected $autoProperties;
 
 	/**
 	 * A singleton if you want to use it that way
@@ -165,7 +165,7 @@ class Injector {
 	 *
 	 * @var boolean
 	 */
-	private $autoScanProperties = false;
+	protected $autoScanProperties = false;
 
 	/**
 	 * The default factory used to create new instances.

@@ -116,7 +116,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/** 
 	 * Helper arrays for illegalExtensions/requiredExtensions code
 	 */
-	private $extensionsToReapply = array(), $extensionsToRemove = array();
+	protected $extensionsToReapply = array(), $extensionsToRemove = array();
+
 
 	
 	/**
