@@ -1,6 +1,8 @@
 title: Extending a basic site
 summary: Building on tutorial 1, a look at storing data in SilverStripe and creating a latest news feed.
 
+**This tutorial is deprecated, and has been replaced by [Lesson 3](http://www.silverstripe.org/learn/lessons/lesson-3-adding-dynamic-content), [Lesson 4](http://www.silverstripe.org/learn/lessons/lesson-4-working-with-multiple-templates), and [Lesson 5](http://www.silverstripe.org/learn/lessons/lesson-5-the-holderpage-pattern)**
+
 # Tutorial 2 - Extending a basic site
 
 ## Overview
