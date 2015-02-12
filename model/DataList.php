@@ -244,7 +244,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @example $list = $list->sort('Name'); // default ASC sorting
 	 * @example $list = $list->sort('Name DESC'); // DESC sorting
 	 * @example $list = $list->sort('Name', 'ASC');
-	 * @example $list = $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+	 * @example $list = $list->sort(array('Name'=>'ASC', 'Age'=>'DESC'));
 	 *
 	 * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
 	 * @return DataList
