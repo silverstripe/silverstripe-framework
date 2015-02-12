@@ -6,7 +6,7 @@ class ContentNegotiatorTest extends SapphireTest {
 	 * Small helper to render templates from strings
 	 * Cloned from SSViewerTest
 	 */
-	private function render($templateString, $data = null) {
+	protected function render($templateString, $data = null) {
 		$t = SSViewer::fromString($templateString);
 		if(!$data) $data = new SSViewerTestFixture();
 		return $t->process($data);

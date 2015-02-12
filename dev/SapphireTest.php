@@ -768,7 +768,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Helper function for the DOS matchers
 	 */
-	private function dataObjectArrayMatch($item, $match) {
+	protected function dataObjectArrayMatch($item, $match) {
 		foreach($match as $k => $v) {
 			if(!array_key_exists($k, $item) || $item[$k] != $v) return false;
 		}
@@ -778,7 +778,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Helper function for the DOS matchers
 	 */
-	private function DOSSummaryForMatch($dataObjectSet, $match) {
+	protected function DOSSummaryForMatch($dataObjectSet, $match) {
 		$extracted = array();
 		foreach($dataObjectSet as $item) $extracted[] = array_intersect_key($item->toMap(), $match);
 		return var_export($extracted, true);

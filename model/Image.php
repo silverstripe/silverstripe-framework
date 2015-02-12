@@ -572,7 +572,7 @@ class Image extends File implements Flushable {
 	 * @param string $filename Filename of source image
 	 * @return array
 	 */
-	private function getFilenamePatterns($filename) {
+	protected function getFilenamePatterns($filename) {
 		$methodNames = $this->allMethodNames(true);
 		$generateFuncs = array();
 		foreach($methodNames as $methodName) {
@@ -594,7 +594,7 @@ class Image extends File implements Flushable {
 	/**
 	 * Generate a list of images that were generated from this image
 	 */
-	private function getGeneratedImages() {
+	protected function getGeneratedImages() {
 		$generatedImages = array();
 		$cachedFiles = array();
 

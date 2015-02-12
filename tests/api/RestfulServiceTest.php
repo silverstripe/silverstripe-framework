@@ -209,7 +209,7 @@ class RestfulServiceTest extends SapphireTest {
 	 *
 	 * @todo Generate the cachepath without hardcoding the cache data
 	 */
-	private function createFakeCachedResponse($connection, $subUrl) {
+	protected function createFakeCachedResponse($connection, $subUrl) {
 		$fullUrl = $connection->getAbsoluteRequestURL($subUrl);
 		//these are the defaul values that one would expect in the
 		$basicAuthStringMethod = new ReflectionMethod('RestfulServiceTest_MockErrorService', 'getBasicAuthString');
