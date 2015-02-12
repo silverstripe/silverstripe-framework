@@ -19,7 +19,11 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_TeamComment',
 		'DataObjectTest\NamespacedClass',
 		'DataObjectTest\RelationClass',
-		'DataObjectTest_ExtendedTeamComment'
+		'DataObjectTest_ExtendedTeamComment',
+		'DataObjectTest_Company',
+		'DataObjectTest_Staff',
+		'DataObjectTest_CEO',
+		'DataObjectTest_Fan',
 	);
 
 	public function testDb() {
@@ -1642,7 +1646,7 @@ class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 	}
 }
 
-class DataObjectTest_Company extends DataObject {
+class DataObjectTest_Company extends DataObject implements TestOnly {
 
 	private static $db = array(
 		'Name' => 'Varchar'
@@ -1660,7 +1664,7 @@ class DataObjectTest_Company extends DataObject {
 	);
 }
 
-class DataObjectTest_Staff extends DataObject {
+class DataObjectTest_Staff extends DataObject implements TestOnly {
 	private static $has_one = array (
 		'CurrentCompany'  => 'DataObjectTest_Company',
 		'PreviousCompany' => 'DataObjectTest_Company'
@@ -1675,7 +1679,7 @@ class DataObjectTest_CEO extends DataObjectTest_Staff {
 	);
 }
 
-class DataObjectTest_TeamComment extends DataObject {
+class DataObjectTest_TeamComment extends DataObject implements TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
 		'Comment' => 'Text'
@@ -1687,7 +1691,7 @@ class DataObjectTest_TeamComment extends DataObject {
 
 }
 
-class DataObjectTest_Fan extends DataObject {
+class DataObjectTest_Fan extends DataObject implements TestOnly {
 
 	private static $db = array(
 		'Name' => 'Varchar(255)'

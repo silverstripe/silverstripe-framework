@@ -21,9 +21,10 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment',
 		'VersionedTest_DataObject',
-		'VersionedTest_Subclass'
+		'VersionedTest_Subclass',
+		'VersionedLazy_DataObject',
+		'VersionedLazySub_DataObject',
 	);
 
 	public function testQueriedColumnsID() {
@@ -403,7 +404,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 
 
 /** Additional classes for versioned lazy loading testing */
-class VersionedLazy_DataObject extends DataObject {
+class VersionedLazy_DataObject extends DataObject implements TestOnly {
 	private static $db = array(
 		"PageName" => "Varchar"
 	);

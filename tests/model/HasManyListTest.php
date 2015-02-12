@@ -9,6 +9,7 @@ class HasManyListTest extends SapphireTest {
 		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
 		'DataObjectTest_Player',
+		'DataObjectTest_TeamComment',
 	);
 
 	public function testRelationshipEmptyOnNewRecords() {

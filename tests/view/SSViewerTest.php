@@ -1,6 +1,11 @@
 <?php
 
 class SSViewerTest extends SapphireTest {
+
+	protected $extraDataObjects = array(
+		'SSViewerTest_Object',
+	);
+
 	public function setUp() {
 		parent::setUp();
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
@@ -1461,7 +1466,7 @@ class SSViewerTest_Controller extends Controller {
 
 }
 
-class SSViewerTest_Object extends DataObject {
+class SSViewerTest_Object extends DataObject implements TestOnly {
 
 	public $number = null;
 
