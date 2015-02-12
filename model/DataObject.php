@@ -3738,11 +3738,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private static $summary_fields = null;
 
 	/**
-	 * Provides a list of allowed methods that can be called via RESTful api.
-	 */
-	public static $allowed_actions = null;
-
-	/**
 	 * Collect all static properties on the object
 	 * which contain natural language, and need to be translated.
 	 * The full entity name is composed from the class name and a custom identifier.
