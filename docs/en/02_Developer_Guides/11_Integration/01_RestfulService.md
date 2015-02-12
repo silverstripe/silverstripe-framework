@@ -80,6 +80,11 @@ To set the cache interval you can pass it as the 2nd argument to constructor.
 
 	$request = new RestfulService("http://example.harvestapp.com", $expiry );
 
+NB: Prior to SilverStripe 4, a value of zero for the cache interval had a different
+meaning to the one in SS_Cache, and was disabling the caching. From SilverStripe 4
+onwards, setting zero for the cache interval means that the cached object doesn't 
+expire. Using a negative value will prevent caching.
+
 
 ### Getting Values & Attributes
 
