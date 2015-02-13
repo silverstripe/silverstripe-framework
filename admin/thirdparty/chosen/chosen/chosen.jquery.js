@@ -49,7 +49,8 @@
 
     SelectParser.prototype.add_option = function(option, group_position, group_disabled) {
       if (option.nodeName.toUpperCase() === "OPTION") {
-        if (option.text !== "") {
+        // workaround for https://github.com/harvesthq/chosen/issues/2125
+        if (!option.text.match(/^\s*$/g)) {
           if (group_position != null) {
             this.parsed[group_position].children += 1;
           }
@@ -135,7 +136,12 @@ Copyright (c) 2011 by Harvest
       this.results_showing = false;
       this.result_highlighted = null;
       this.result_single_selected = null;
-      this.allow_single_deselect = (this.options.allow_single_deselect != null) && (this.form_field.options[0] != null) && this.form_field.options[0].text === "" ? this.options.allow_single_deselect : false;
+      this.allow_single_deselect = (this.options.allow_single_deselect != null)
+			  && (this.form_field.options[0] != null)
+			  // workaround for https://github.com/harvesthq/chosen/issues/2125
+			  && this.form_field.options[0].text.match(/^\s*$/g)
+				? this.options.allow_single_deselect
+				: false;
       this.disable_search_threshold = this.options.disable_search_threshold || 0;
       this.disable_search = this.options.disable_search || false;
       this.search_contains = this.options.search_contains || false;

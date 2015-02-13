@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\Relation;
+
 /**
  * A DataList that represents a relation.
  *
@@ -8,7 +10,7 @@
  * @package framework
  * @subpackage model
  */
-abstract class RelationList extends DataList {
+abstract class RelationList extends DataList implements Relation {
 
 	public function getForeignID() {
 		return $this->dataQuery->getQueryParam('Foreign.ID');

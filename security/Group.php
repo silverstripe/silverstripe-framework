@@ -202,7 +202,6 @@ class Group extends DataObject {
 			}
 
 			$rolesField = ListboxField::create('Roles', false, $allRoles->map()->toArray())
-					->setMultiple(true)
 					->setDefaultItems($groupRoleIDs)
 					->setAttribute('data-placeholder', _t('Group.AddRole', 'Add a role for this group'))
 					->setDisabledItems($inheritedRoleIDs);

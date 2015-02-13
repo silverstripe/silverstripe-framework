@@ -50,33 +50,46 @@
  * @package forms
  * @subpackage fields-basic
  */
-class OptionsetField extends DropdownField {
+class OptionsetField extends SingleSelectField {
 
 	/**
-	 * {@inheritdoc}
+	 * Build a field option for template rendering
+	 *
+	 * @param mixed $value Value of the option
+	 * @param string $title Title of the option
+	 * @param boolean $odd True if this should be striped odd. Otherwise it should be striped even
+	 * @return ArrayData Field option
 	 */
+	protected function getFieldOption($value, $title, $odd) {
+		// Check selection
+		$selected = $this->isSelectedValue($value, $this->Value());
+		$itemID = $this->ID() . '_' . Convert::raw2htmlid($value);
+		$extraClass = $odd ? 'odd' : 'even';
+		$extraClass .= ' val' . Convert::raw2htmlid($value);
+
+		return new ArrayData(array(
+			'ID' => $itemID,
+			'Class' => $extraClass,
+			'Name' => $this->getItemName(),
+			'Value' => $value,
+			'Title' => $title,
+			'isChecked' => $selected,
+			'isDisabled' => $this->isDisabled() || in_array($value, $this->getDisabledItems()),
+		));
+		}
+
+	protected function getItemName() {
+		return $this->getName();
+	}
+
 	public function Field($properties = array()) {
-		$source = $this->getSource();
-		$odd = 0;
 		$options = array();
-
-		if($source) {
-			foreach($source as $value => $title) {
-				$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $value);
-				$odd = ($odd + 1) % 2;
-				$extraClass = $odd ? 'odd' : 'even';
-				$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
-
-				$options[] = new ArrayData(array(
-					'ID' => $itemID,
-					'Class' => $extraClass,
-					'Name' => $this->name,
-					'Value' => $value,
-					'Title' => $title,
-					'isChecked' => $value == $this->value,
-					'isDisabled' => $this->disabled || in_array($value, $this->disabledItems),
-				));
-			}
+		$odd = false;
+		
+		// Add all options striped
+		foreach($this->getSourceEmpty() as $value => $title) {
+			$odd = !$odd;
+			$options[] = $this->getFieldOption($value, $title, $odd);
 		}
 
 		$properties = array_merge($properties, array(
@@ -92,23 +105,19 @@ class OptionsetField extends DropdownField {
 	 * {@inheritdoc}
 	 */
 	public function validate($validator) {
-		if (!$this->value) {
+		if (!$this->Value()) {
 			return true;
 		}
 
 		return parent::validate($validator);
 	}
 
-	public function ExtraOptions() {
-		return new ArrayList();
-	}
-	
 	public function getAttributes() {
 		$attributes = parent::getAttributes();
 		unset($attributes['name']);
 		unset($attributes['required']);
 		unset($attributes['role']);
-		
+
 		return $attributes;
 	}
 }
