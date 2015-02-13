@@ -107,6 +107,33 @@ class SS_ClassManifest {
 	}
 
 	/**
+	 * Create a {@link TokenisedRegularExpression} that extracts the namespaces imported with the 'use' keyword
+	 *
+	 * This searches symbols for a `use` followed by 1 or more namespaces which are optionally aliased using the `as`
+	 * keyword. The relevant matching tokens are added one-by-one into an array (using `save_to` param).
+	 *
+	 * eg: use Namespace\ClassName as Alias, OtherNamespace\ClassName;
+	 *
+	 * @return TokenisedRegularExpression
+	 */
+	public static function get_imported_namespace_parser() {
+		return new TokenisedRegularExpression(array(
+			0 => T_USE,
+			1 => T_WHITESPACE,
+			2 => array(T_NS_SEPARATOR, 'save_to' => 'importString[]', 'optional' => true),
+			3 => array(T_STRING, 'save_to' => 'importString[]', 'can_jump_to' => array(2, 8)),
+			4 => array(T_WHITESPACE, 'save_to' => 'importString[]'),
+			5 => array(T_AS, 'save_to' => 'importString[]'),
+			6 => array(T_WHITESPACE, 'save_to' => 'importString[]'),
+			7 => array(T_STRING, 'save_to' => 'importString[]'),
+			8 => array(T_WHITESPACE, 'optional' => true),
+			9 => array(',', 'save_to' => 'importString[]', 'optional' => true, 'can_jump_to' => 2),
+			10 => array(T_WHITESPACE, 'optional' => true, 'can_jump_to' => 2),
+			11 => ';',
+		));
+	}
+
+	/**
 	 * Constructs and initialises a new class manifest, either loading the data
 	 * from the cache or re-scanning for classes.
 	 *
@@ -249,14 +276,14 @@ class SS_ClassManifest {
 	/**
 	 * Returns an array of module names mapped to their paths.
 	 *
-	 * "Modules" in SilverStripe are simply directories with a _config.php 
+	 * "Modules" in SilverStripe are simply directories with a _config.php
 	 * file.
 	 *
 	 * @return array
 	 */
 	public function getModules() {
 		$modules = array();
-		
+
 		if($this->configs) {
 			foreach($this->configs as $configPath) {
 				$modules[basename(dirname($configPath))] = dirname($configPath);
@@ -333,6 +360,124 @@ class SS_ClassManifest {
 		}
 	}
 
+	/**
+	 * Find a the full namespaced declaration of a class (or interface) from a list of candidate imports
+	 *
+	 * This is typically used to determine the full class name in classes that have imported namesapced symbols (having
+	 * used the `use` keyword)
+	 *
+	 * NB: remember the '\\' is an escaped backslash and is interpreted as a single \
+	 *
+	 * @param string $class The class (or interface) name to find in the candidate imports
+	 * @param string $namespace The namespace that was declared for the classes definition (if there was one)
+	 * @param array $imports The list of imported symbols (Classes or Interfaces) to test against
+	 *
+	 * @return string The fully namespaced class name
+	 */
+	protected function findClassOrInterfaceFromCandidateImports($class, $namespace = '', $imports = array()) {
+
+		//normalise the namespace
+		$namespace = rtrim($namespace, '\\');
+
+		//by default we'll use the $class as our candidate
+		$candidateClass = $class;
+
+		if (!$class) {
+			return $candidateClass;
+		}
+		//if the class starts with a \ then it is explicitly in the global namespace and we don't need to do
+		// anything else
+		if (substr($class, 0, 1) == '\\') {
+			$candidateClass = substr($class, 1);
+			return $candidateClass;
+		}
+		//if there's a namespace, starting assumption is the class is defined in that namespace
+		if ($namespace) {
+			$candidateClass = $namespace . '\\' . $class;
+		}
+
+		if (empty($imports)) {
+			return $candidateClass;
+		}
+
+		//normalised class name (PHP is case insensitive for symbols/namespaces
+		$lClass = strtolower($class);
+
+		//go through all the imports and see if the class exists within one of them
+		foreach ($imports as $alias => $import) {
+			//normalise import
+			$import = trim($import, '\\');
+
+			//if there is no string key, then there was no declared alias - we'll use the main declaration
+			if (is_int($alias)) {
+				$alias = strtolower($import);
+			} else {
+				$alias = strtolower($alias);
+			}
+
+			//exact match? Then it's a class in the global namespace that was imported OR it's an alias of
+			// another namespace
+			// or if it ends with the \ClassName then it's the class we are looking for
+			if ($lClass == $alias
+				|| substr_compare(
+					$alias,
+					'\\' . $lClass,
+					strlen($alias) - strlen($lClass) - 1,
+					// -1 because the $lClass length is 1 longer due to \
+					strlen($alias)
+				) === 0
+			) {
+				$candidateClass = $import;
+				break;
+			}
+		}
+		return $candidateClass;
+	}
+
+	/**
+	 * Return an array of array($alias => $import) from tokenizer's tokens of a PHP file
+	 *
+	 * NB: If there is no alias we don't set a key to the array
+	 *
+	 * @param array $tokens The parsed tokens from tokenizer's parsing of a PHP file
+	 *
+	 * @return array The array of imports as (optional) $alias => $import
+	 */
+	protected function getImportsFromTokens($tokens) {
+		//parse out the imports
+		$imports = self::get_imported_namespace_parser()->findAll($tokens);
+
+		//if there are any imports, clean them up
+		// imports come to us as array('importString' => array([array of matching tokens]))
+		// we need to join this nested array into a string and split out the alias and the import
+		if (!empty($imports)) {
+			$cleanImports = array();
+			foreach ($imports as $import) {
+				if (!empty($import['importString'])) {
+					//join the array up into a string
+					$importString = implode('', $import['importString']);
+					//split at , to get each import declaration
+					$importSet = explode(',', $importString);
+					foreach ($importSet as $importDeclaration) {
+						//split at ' as ' (any case) to see if we are aliasing the namespace
+						$importDeclaration = preg_split('/\s+as\s+/i', $importDeclaration);
+						//shift off the fully namespaced import
+						$qualifiedImport = array_shift($importDeclaration);
+						//if there are still items in the array, it's the alias
+						if (!empty($importDeclaration)) {
+							$cleanImports[array_shift($importDeclaration)] = $qualifiedImport;
+						}
+						else {
+							$cleanImports[] = $qualifiedImport;
+						}
+					}
+				}
+			}
+			$imports = $cleanImports;
+		}
+		return $imports;
+	}
+
 	public function handleFile($basename, $pathname, $depth) {
 		if ($basename == self::CONF_FILE) {
 			$this->configs[] = $pathname;
@@ -342,6 +487,7 @@ class SS_ClassManifest {
 		$classes    = null;
 		$interfaces = null;
 		$namespace = null;
+		$imports = null;
 
 		// The results of individual file parses are cached, since only a few
 		// files will have changed and TokenisedRegularExpression is quite
@@ -352,43 +498,70 @@ class SS_ClassManifest {
 
 		if ($data = $this->cache->load($key)) {
 			$valid = (
-				isset($data['classes']) && isset($data['interfaces']) && isset($data['namespace'])
-				&& is_array($data['classes']) && is_array($data['interfaces']) && is_string($data['namespace'])
+				isset($data['classes']) && is_array($data['classes'])
+				&& isset($data['interfaces']) && is_array($data['interfaces'])
+				&& isset($data['namespace']) && is_string($data['namespace'])
+				&& isset($data['imports']) && is_array($data['imports'])
 			);
 
 			if ($valid) {
-				$classes    = $data['classes'];
+				$classes = $data['classes'];
 				$interfaces = $data['interfaces'];
 				$namespace = $data['namespace'];
+				$imports = $data['imports'];
 			}
 		}
 
 		if (!$classes) {
 			$tokens     = token_get_all($file);
-			
+
 			$classes = self::get_namespaced_class_parser()->findAll($tokens);
+
 			$namespace = self::get_namespace_parser()->findAll($tokens);
+
 			if($namespace) {
-				$namespace = implode('', $namespace[0]['namespaceName']) . '\\';
+				$namespace = implode('', $namespace[0]['namespaceName']);
 			} else {
 				$namespace = '';
 			}
 
+			$imports = $this->getImportsFromTokens($tokens);
+
 			$interfaces = self::get_interface_parser()->findAll($tokens);
 
-			$cache = array('classes' => $classes, 'interfaces' => $interfaces, 'namespace' => $namespace);
+			$cache = array(
+				'classes' => $classes,
+				'interfaces' => $interfaces,
+				'namespace' => $namespace,
+				'imports' => $imports
+			);
 			$this->cache->save($cache, $key);
 		}
 
 		foreach ($classes as $class) {
-			$name       = $namespace . $class['className'];
-			$extends    = isset($class['extends']) ? implode('', $class['extends']) : null;
+			$name = $class['className'];
+			if ($namespace) {
+				$namespace = rtrim($namespace, '\\');
+				$name = $namespace . '\\' . $name;
+			}
+			$extends = isset($class['extends']) ? implode('', $class['extends']) : null;
 			$implements = isset($class['interfaces']) ? $class['interfaces'] : null;
 
-			if($extends && $extends[0] != '\\') {
-				$extends = $namespace . $extends;
-			} elseif($extends) {
-				$extends = substr($extends, 1);
+			if ($extends) {
+				$extends = $this->findClassOrInterfaceFromCandidateImports($extends, $namespace, $imports);
+			}
+
+			if (!empty($implements)) {
+				//join all the tokens
+				$implements = implode('', $implements);
+				//split at comma
+				$implements = explode(',', $implements);
+				//normalise interfaces
+				foreach ($implements as &$interface) {
+					$interface = $this->findClassOrInterfaceFromCandidateImports($interface, $namespace, $imports);
+				}
+				//release the var name
+				unset($interface);
 			}
 
 			$lowercaseName = strtolower($name);
@@ -414,32 +587,24 @@ class SS_ClassManifest {
 			}
 
 			if ($implements) {
-				$interface = $namespace;
-				for($i = 0; $i < count($implements); ++$i) {
-					if($implements[$i] == ',') {
-						$interface = $namespace;
-						continue;
-					}
-					if($implements[$i] == '\\' && $interface == $namespace) {
-						$interface = '';
-					} else {
-						$interface .= $implements[$i];
-					}
-					if($i == count($implements)-1 || $implements[$i+1] == ',') {
-						$interface = strtolower($interface);
+				foreach ($implements as $interface) {
+					$interface = strtolower($interface);
 
-						if (!isset($this->implementors[$interface])) {
-							$this->implementors[$interface] = array($name);
-						} else {
-							$this->implementors[$interface][] = $name;
-						}
+					if (!isset($this->implementors[$interface])) {
+						$this->implementors[$interface] = array($name);
+					} else {
+						$this->implementors[$interface][] = $name;
 					}
 				}
 			}
 		}
 
+		$interfaceBase = '';
+		if ($namespace) {
+			$interfaceBase = $namespace . '\\';
+		}
 		foreach ($interfaces as $interface) {
-			$this->interfaces[strtolower($namespace . $interface['interfaceName'])] = $pathname;
+			$this->interfaces[strtolower($interfaceBase . $interface['interfaceName'])] = $pathname;
 		}
 	}
 
