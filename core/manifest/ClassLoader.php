@@ -95,13 +95,13 @@ class SS_ClassLoader {
 	}
 
 	/**
-	 * Returns true if a class name exists in the manifest.
+	 * Returns true if a class or interface name exists in the manifest.
 	 *
 	 * @param  string $class
 	 * @return bool
 	 */
 	public function classExists($class) {
-		return class_exists($class, false) || $this->getItemPath($class);
+		return class_exists($class, false) || interface_exists($class, false) || $this->getItemPath($class);
 	}
 
 }
