@@ -46,6 +46,8 @@
 class TreeMultiselectField extends TreeDropdownField {
 	public function __construct($name, $title=null, $sourceObject="Group", $keyField="ID", $labelField="Title") {
 		parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
+		$this->removeExtraClass('single');
+		$this->addExtraClass('multiple');
 		$this->value = 'unchanged';
 	}
 
@@ -98,19 +100,20 @@ class TreeMultiselectField extends TreeDropdownField {
 		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
 	
 		$value = '';
-		$itemList = '';
+		$titleArray = array();
+		$idArray = array();
 		$items = $this->getItems();
 
 		if($items && count($items)) {
-			foreach($items as $id => $item) {
-				$titleArray[] = $item->Title;
+			foreach($items as $item) {
 				$idArray[] = $item->ID;
+				$titleArray[] = ($item instanceof ViewableData)
+					? $item->obj($this->labelField)->forTemplate()
+					: Convert::raw2xml($item->{$this->labelField});
 			}
 				
-			if(isset($titleArray)) {
-				$title = implode(", ", $titleArray);
-				$value = implode(",", $idArray);
-			}
+			$title = implode(", ", $titleArray);
+			$value = implode(",", $idArray);
 		} else {
 			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		} 
@@ -118,30 +121,19 @@ class TreeMultiselectField extends TreeDropdownField {
 		$dataUrlTree = '';
 		if ($this->form){
 			$dataUrlTree = $this->Link('tree');
-			if (isset($idArray) && count($idArray)){
+			if (!empty($idArray)){
 				$dataUrlTree = Controller::join_links($dataUrlTree, '?forceValue='.implode(',',$idArray));
 			}
 		}
-		return FormField::create_tag(
-			'div',
-			array (
-				'id'    => "TreeDropdownField_{$this->id()}",
-				'class' => 'TreeDropdownField multiple' . ($this->extraClass() ? " {$this->extraClass()}" : '')
-					. ($this->showSearch ? " searchable" : ''),
-				'data-url-tree' => $dataUrlTree,
-				'data-title' => $title,
-				'title' => $this->getDescription()
-			),
-			FormField::create_tag(
-				'input',
-				array (
-					'id'    => $this->id(),
-					'type'  => 'hidden',
-					'name'  => $this->name,
-					'value' => $value
-				)
+		$properties = array_merge(
+			$properties,
+			array(
+				'Title' => $title,
+				'Link' => $dataUrlTree,
+				'Value' => $value
 			)
 		);
+		return $this->customise($properties)->renderWith('TreeDropdownField');
 	}
 
 	/**
