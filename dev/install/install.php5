@@ -31,9 +31,8 @@ if(function_exists('session_start') && !session_id()) {
 	session_start();
 }
 
-require_once FRAMEWORK_NAME . '/core/Constants.php'; // this also includes TempPath.php
+require_once FRAMEWORK_NAME . '/core/Constants.php'; // this also includes TempPath.php;
 
-$usingEnv = false;
 $envFileExists = defined('SS_ENVIRONMENT_FILE');
 $usingEnv = $envFileExists && !empty($_REQUEST['useEnv']);
 
