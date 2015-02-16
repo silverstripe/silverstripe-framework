@@ -6,18 +6,18 @@
  * the same.
  * 
  * Example:
- * <code php>
+ * <code>
  * new CheckboxSetField(
- *    $name = "topics",
- *    $title = "I am interested in the following topics",
- *    $source = array(
- *       "1" => "Technology",
- *       "2" => "Gardening",
- *       "3" => "Cooking",
- *       "4" => "Sports"
- *    ),
- *    $value = "1"
- * )
+ *  $name = "topics",
+ *  $title = "I am interested in the following topics",
+ *  $source = array(
+ *      "1" => "Technology",
+ *      "2" => "Gardening",
+ *      "3" => "Cooking",
+ *      "4" => "Sports"
+ *  ),
+ *  $value = "1"
+ * );
  * </code>
  * 
  * <b>Saving</b>
