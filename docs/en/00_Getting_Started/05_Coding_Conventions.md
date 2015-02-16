@@ -254,7 +254,6 @@ Keep the opening brace on the same line as the statement.
 		// ...
 	}
 
-	:::php
 	// bad
 	public function bar() 
 	{
