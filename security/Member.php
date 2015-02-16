@@ -99,9 +99,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	);
 	
 	private static $summary_fields = array(
-		'FirstName' => 'First Name',
-		'Surname' => 'Last Name',
-		'Email' => 'Email',
+		'FirstName',
+		'Surname',
+		'Email',
 	);
 
 	/**
