@@ -49,7 +49,7 @@ if ($dirsToCheck[0] == $dirsToCheck[1]) {
 foreach ($dirsToCheck as $dir) {
 	//check this dir and every parent dir (until we hit the base of the drive)
 	// or until we hit a dir we can't read
-	do {
+	while(true) {
 		//add the trailing slash we need to concatenate properly
 		$dir .= DIRECTORY_SEPARATOR;
 		//if it's readable, go ahead
@@ -66,11 +66,14 @@ foreach ($dirsToCheck as $dir) {
 			//break out of the while loop, we can't read the dir
 			break;
 		}
+		if (dirname($dir) == $dir) {
+			// here we need to check that the path of the last dir and the next one are
+			// not the same, if they are, we have hit the root of the drive
+			break;
+		}
 		//go up a directory
 		$dir = dirname($dir);
-		//here we need to check that the path of the last dir and the next one are
-		// not the same, if they are, we have hit the root of the drive
-	} while (dirname($dir) != $dir);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
