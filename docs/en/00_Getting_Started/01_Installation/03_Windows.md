@@ -40,8 +40,10 @@ $ composer create-project silverstripe/installer ./silverstripe
 * Unpack the archive into `C:\wamp\www`
 * Rename the unpacked directory from `C:\wamp\www\silverstripe-vX.X.X` to `C:\wamp\www\silverstripe`
  
-### Install and configure
-*  Visit `http://localhost/silverstripe` - you will see SilverStripe's installation screen.
+## Install and configure
+* Option 1: Environment file - Set up a file named _ss_environment.php either in the webroot or a directory above webroot and setup as per the [Environment Management process](/getting_started/environment_management).
+
+* Option 2: Installer - Visit `http://localhost/silverstripe` - you will see SilverStripe's installation screen.
 * You should be able to click "Install SilverStripe" and the installer will do its thing.  It takes a minute or two.
 * Once the installer has finished, visit `http://localhost/silverstripe`. You should see your new SilverStripe site's
 home page.
