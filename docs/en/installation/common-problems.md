@@ -23,6 +23,16 @@ On "live" environments, the `?isDev=1` solution is preferred, as it means that y
 (and potentially security sensitive) PHP errors as well.
 </div>
 
+## mod_rewrite isn't working but it's installed
+
+Due to some changes to `mod_dir` in [Apache 2.4](http://httpd.apache.org/docs/current/mod/mod_dir.html#DirectoryCheckHandler) (precedence of handlers), index.php gets added to the URLs as soon as you navigate to the homepage of your site. Further requests are then handled by index.php rather than `mod_rewrite` (framework/main.php). To fix this place the following before the `mod_rewrite` section of your .htaccess file:
+
+```
+<IfModule mod_dir.c>
+    DirectoryIndex disabled
+</IfModule>
+```
+
 ## My templates don't update on page refresh
 
 Putting ?flush=1 on the end of any SilverStripe URL will clear out all cached content; this is a pretty common solution
