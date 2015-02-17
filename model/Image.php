@@ -370,12 +370,13 @@ class Image extends File implements Flushable {
 	 * 
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
+	 * @param integer $transparencyPercent Level of transparency
 	 * @return Image
 	 */
-	public function PaddedImage($width, $height, $backgroundColor='FFFFFF') {
+	public function PaddedImage($width, $height, $backgroundColor='FFFFFF', $transparencyPercent=0) {
 		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
 			? $this 
-			: $this->getFormattedImage('PaddedImage', $width, $height, $backgroundColor);
+			: $this->getFormattedImage('PaddedImage', $width, $height, $backgroundColor, $transparencyPercent);
 	}
 	
 	/**
@@ -384,10 +385,11 @@ class Image extends File implements Flushable {
 	 * @param Image_Backend $backend
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
+	 * @param integer $transparencyPercent Level of transparency
 	 * @return Image_Backend
 	 */
-	public function generatePaddedImage(Image_Backend $backend, $width, $height, $backgroundColor='FFFFFF') {
-		return $backend->paddedResize($width, $height, $backgroundColor);
+	public function generatePaddedImage(Image_Backend $backend, $width, $height, $backgroundColor='FFFFFF', $transparencyPercent=0) {
+		return $backend->paddedResize($width, $height, $backgroundColor, $transparencyPercent);
 	}
 	
 	/**

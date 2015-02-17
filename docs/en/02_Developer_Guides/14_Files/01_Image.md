@@ -109,8 +109,15 @@ For output of an image tag with the image automatically resized to 80px width, y
 The paddedResize (PHP) and PaddedImage (template) methods allow you to resize an image with existing ratio and will
 pad any surplus space. You can specify the color of the padding using a hex code such as FFFFFF or 000000.
 
-You can also specify another hex value on the end to adjust the transparency. If you want the padding to be fully
-transparent then use E7 on the end (eg FFFFFFE7), if you want it 50% transparent then use 3C. Only works with png files.
+You can also specify a level of transparency to apply to the padding color in a fourth param. This will only effect
+png images.
+
+	:::php
+	$Image.PaddedImage(80, 80, FFFFFF, 50) // white padding with 50% transparency
+	$Image.PaddedImage(80, 80, FFFFFF, 100) // white padding with 100% transparency
+	$Image.PaddedImage(80, 80, FFFFFF, true) // white padding with 100% transparency
+	$Image.PaddedImage(80, 80, FFFFFF) // white padding with no transparency
+
 
 ### Form Upload
 

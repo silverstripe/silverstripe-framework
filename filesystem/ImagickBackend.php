@@ -183,17 +183,42 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 *
 	 * @param int $width
 	 * @param int $height
+	 * @param int $transparencyPercent
 	 * @return Image_Backend
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
+	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $transparencyPercent=0) {
 		$new = $this->resizeRatio($width, $height);
-		$new->setImageBackgroundColor("#".$backgroundColor);
+		if($transparencyPercent) {
+			$alphaHex = $this->calculateAlphaHex($transparencyPercent);
+			$new->setImageBackgroundColor("#{$backgroundColor}{$alphaHex}");
+		} else {
+			$new->setImageBackgroundColor("#{$backgroundColor}");
+		}
 		$w = $new->getImageWidth();
 		$h = $new->getImageHeight();
 		$new->extentImage($width,$height,($w-$width)/2,($h-$height)/2);
 		
 		return $new;
 	}
+
+	/**
+	 * Convert a percentage (or 'true') to a two char hex code to signifiy the level of an alpha channel
+	 *
+	 * @param $percent
+	 * @return string
+	 */
+	public function calculateAlphaHex($percent) {
+		if($percent > 100 || $percent == 'true') {
+			$percent = 100;
+		}
+		// unlike GD, this uses 255 instead of 127, and is reversed. Lower = more transparent
+		$alphaHex = dechex(255 - floor(255 * bcdiv($percent, 100, 2)));
+		if(strlen($alphaHex) == 1) {
+			$alphaHex =  '0' .$alphaHex;
+		}
+		return $alphaHex;
+	}
+
 	
 	/**
 	 * croppedResize
