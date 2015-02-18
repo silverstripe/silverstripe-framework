@@ -161,6 +161,7 @@ class SS_HTTPResponse {
 	 */
 	public function setBody($body) {
 		$this->body = $body ? (string)$body : $body; // Don't type-cast false-ish values, eg null is null not ''
+		return $this;
 	}
 	
 	/**
@@ -191,7 +192,6 @@ class SS_HTTPResponse {
 	public function getHeader($header) {
 		if(isset($this->headers[$header]))
 			return $this->headers[$header];			
-			return null;
 		}
 	
 	/**
