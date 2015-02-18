@@ -342,14 +342,14 @@ class GDBackend extends Object implements Image_Backend {
 			return $useAsMinimum ? $this->resizeByWidth( $maxWidth ) : $this->resizeByHeight( $maxHeight );
 	}
 	
-	public static function color_web2gd($image, $webColor, $transparencyPercent=0) {
+	public static function color_web2gd($image, $webColor, $transparencyPercent = 0) {
 		if(substr($webColor,0,1) == "#") $webColor = substr($webColor,1);
 		$r = hexdec(substr($webColor,0,2));
 		$g = hexdec(substr($webColor,2,2));
 		$b = hexdec(substr($webColor,4,2));
 
 		if($transparencyPercent) {
-			if($transparencyPercent > 100 || $transparencyPercent === 'true') {
+			if($transparencyPercent > 100) {
 				$transparencyPercent = 100;
 			}
 			$a = 127 * bcdiv($transparencyPercent, 100, 2);
@@ -366,7 +366,7 @@ class GDBackend extends Object implements Image_Backend {
 	 * @param backgroundColour
 	 * @param transparencyPercent
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $transparencyPercent=0) {
+	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $transparencyPercent = 0) {
 		if(!$this->gd) return;
 		$width = round($width);
 		$height = round($height);

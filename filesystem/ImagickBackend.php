@@ -186,7 +186,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @param int $transparencyPercent
 	 * @return Image_Backend
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $transparencyPercent=0) {
+	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $transparencyPercent = 0) {
 		$new = $this->resizeRatio($width, $height);
 		if($transparencyPercent) {
 			$alphaHex = $this->calculateAlphaHex($transparencyPercent);
@@ -208,7 +208,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return string
 	 */
 	public function calculateAlphaHex($percent) {
-		if($percent > 100 || $percent == 'true') {
+		if($percent > 100) {
 			$percent = 100;
 		}
 		// unlike GD, this uses 255 instead of 127, and is reversed. Lower = more transparent

@@ -115,7 +115,6 @@ png images.
 	:::php
 	$Image.PaddedImage(80, 80, FFFFFF, 50) // white padding with 50% transparency
 	$Image.PaddedImage(80, 80, FFFFFF, 100) // white padding with 100% transparency
-	$Image.PaddedImage(80, 80, FFFFFF, true) // white padding with 100% transparency
 	$Image.PaddedImage(80, 80, FFFFFF) // white padding with no transparency
 
 
