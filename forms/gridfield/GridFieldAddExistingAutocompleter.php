@@ -232,7 +232,7 @@ class GridFieldAddExistingAutocompleter
 		$originalSourceFileComments = Config::inst()->get('SSViewer', 'source_file_comments');
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
 		foreach($results as $result) {
-			if ($result->canEdit()) {
+			if ($result->canView()) {
 				$json[$result->ID] = html_entity_decode(SSViewer::fromString($this->resultsFormat)->process($result));
 			}
 		}
