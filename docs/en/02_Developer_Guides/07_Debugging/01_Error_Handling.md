@@ -41,10 +41,13 @@ You can indicate a log file relative to the site root.
 	:::php
 	if(!Director::isDev()) {
 		// log errors and warnings
-		SS_Log::add_writer(new SS_LogFileWriter('/my/logfile/path'), SS_Log::WARN, '<=');
-
+		SS_Log::add_writer(new SS_LogFileWriter('../silverstripe-errors-warnings.log'), SS_Log::WARN, '<=');
+		
 		// or just errors
-		SS_Log::add_writer(new SS_LogFileWriter('/my/logfile/path'), SS_Log::ERR);
+		SS_Log::add_writer(new SS_LogFileWriter('../silverstripe-errors.log'), SS_Log::ERR);
+		
+		// or notices (e.g. for Deprecation Notifications)
+		SS_Log::add_writer(new SS_LogFileWriter('../silverstripe-errors-notices.log'), SS_Log::NOTICE);
 	}
 
 <div class="info" markdown="1">
@@ -62,7 +65,7 @@ You can send both fatal errors and warnings in your code to a specified email-ad
 	:::php
 	if(!Director::isDev()) {
 		// log errors and warnings
-		SS_Log::add_writer(new SS_LogEmailWriter('admin@domain.com'), SS_Log::WARN, '<=');
+		SS_Log::add_writer(new SS_LogFileWriter('../silverstripe-errors-warnings.log'), SS_Log::WARN, '<=');
 
 		// or just errors
 		SS_Log::add_writer(new SS_LogEmailWriter('admin@domain.com'), SS_Log::ERR);
