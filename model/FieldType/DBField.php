@@ -68,6 +68,12 @@ abstract class DBField extends ViewableData {
 	 */
 	private static $default_search_filter_class = 'PartialMatchFilter';
 
+	//private static $default_cast = 'HTMLText';
+
+	private static $casting = array(
+		'ATT' => 'Text',
+	);
+
 	/**
 	 * @var $default mixed Default-value in the database.
 	 * Might be overridden on DataObject-level, but still useful for setting defaults on
