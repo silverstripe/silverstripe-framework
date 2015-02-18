@@ -215,6 +215,7 @@ jQuery.noConflict();
 				$('.ss-loading-screen').hide();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
+
 				this.restoreTabState();
 				
 				this._super();
@@ -770,8 +771,9 @@ jQuery.noConflict();
 				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage === null) return;
 
 				var selectedTabs = [], url = this._tabStateUrl();
-				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {
+				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {	
 					var id = $(el).attr('id');
+
 					if(!id) return; // we need a unique reference
 					if(!$(el).data('tabs')) return; // don't act on uninit'ed controls
 
@@ -807,32 +809,52 @@ jQuery.noConflict();
 			 * 	Used to mark a specific tab as active regardless of the previously saved options.
 			 */
 			restoreTabState: function(overrideStates) {
-				var self = this, url = this._tabStateUrl(),
+				var self = this, 
+					url = this._tabStateUrl(),
 					hasSessionStorage = (typeof(window.sessionStorage)!=="undefined" && window.sessionStorage),
 					sessionData = hasSessionStorage ? window.sessionStorage.getItem('tabs-' + url) : null,
 					sessionStates = sessionData ? JSON.parse(sessionData) : false;
-
+					
 				this.find('.cms-tabset, .ss-tabset').each(function() {
-					var index, tabset = $(this), tabsetId = tabset.attr('id'), tab,
-						forcedTab = tabset.find('.ss-tabs-force-active');
+					var index, 
+						tabset = $(this), 
+						tabsetId = tabset.attr('id'), 
+						tab,
+						forcedTab = tabset.find('li.ss-tabs-force-active');
 
 					if(!tabset.data('tabs')) return; // don't act on uninit'ed controls
 
 					// The tabs may have changed, notify the widget that it should update its internal state.
 					tabset.tabs('refresh');
 
-					// Make sure the intended tab is selected.
+					// Make sure the intended tab is selected. Only force the tab on the correct tabset though
 					if(forcedTab.length) {
-						index = forcedTab.index();
+						index = forcedTab.first().index();
+
+						if(sessionStates) {
+							if(sessionStates[0].id !== tabsetId) {
+								index = null;
+							}
+						}
 					} else if(overrideStates && overrideStates[tabsetId]) {
 						tab = tabset.find(overrideStates[tabsetId].tabSelector);
-						if(tab.length) index = tab.index();
+					
+						if(tab.length) {
+							index = tab.index();
+						}
 					} else if(sessionStates) {
-						$.each(sessionStates, function(i, sessionState) {
-							if(tabset.is('#' + sessionState.id)) index = sessionState.selected;
-					});
-				}
-					if(index !== null) tabset.tabs('select', index);
+						$.each(sessionStates, function(i, state) {
+							if(tabsetId == state.id) {
+								tabset.tabs('select', state.selected);
+							}
+						});
+
+						index = null;
+					}
+
+					if(index !== null) {
+						tabset.tabs('select', index);
+					}
 				});
 			},
 
@@ -843,6 +865,7 @@ jQuery.noConflict();
 			 *  (String) url Optional (sanitized) URL to clear a specific state.
 			 */
 			clearTabState: function(url) {
+
 				if(typeof(window.sessionStorage)=="undefined") return;
 
 				var s = window.sessionStorage;
@@ -854,7 +877,6 @@ jQuery.noConflict();
 				}
 				}
 			},
-
 			/**
 			 * Remove tab state for the current URL.
 			 */
