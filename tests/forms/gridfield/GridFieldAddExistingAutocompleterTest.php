@@ -111,3 +111,16 @@ class GridFieldAddExistingAutocompleterTest_Controller extends Controller implem
 		return new Form($this, 'Form', new FieldList($field), new FieldList());
 	}
 }
+
+class GridFieldTest_Team extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'Name' => 'Varchar',
+		'City' => 'Varchar'
+	);
+
+	public function canView($member = null) {
+		return true;
+	}
+
+}
