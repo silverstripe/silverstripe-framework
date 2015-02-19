@@ -179,18 +179,22 @@
 			 * Store the preview options for this page.
 			 */
 			saveState : function(name, value) {
-				if(!window.localStorage) return;
-				
-				window.localStorage.setItem('cms-preview-state-' + name, value);
+				try {
+					window.localStorage.setItem('cms-preview-state-' + name, value);
+				} catch (exception) {
+					return false;
+				}
 			},
 
 			/**
 			 * Load previously stored preferences
 			 */
 			loadState : function(name) {
-				if(!window.localStorage) return;
-				
-				return window.localStorage.getItem('cms-preview-state-' + name);
+				try {
+					window.localStorage.getItem('cms-preview-state-' + name);
+				} catch (exception) {
+					return false;
+				}
 			}, 
 
 			/**
