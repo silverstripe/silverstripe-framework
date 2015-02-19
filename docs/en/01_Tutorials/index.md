@@ -2,9 +2,10 @@ title: Tutorials
 introduction: The tutorials below take a step by step look at how to build a SilverStripe application.
 
 ## Written Tutorials
-
-[CHILDREN]
-
+<div class="alert" markdown="1">
+These tutorials are deprecated, and have been replaced by the new [Lessons](http://silverstripe.org/learn/lessons) section.
+</div>
+[CHIDLREN]
 ##  Video lessons
 These include video screencasts, written tutorials and code examples to get you started working with SilverStripe websites.
 
@@ -17,6 +18,8 @@ These include video screencasts, written tutorials and code examples to get you 
 * [Lesson 6: Adding Custom Fields to a Page](http://www.silverstripe.org/learn/lessons/lesson-6-adding-custom-fields-to-a-page/)
 * [Lesson 7: Working with Files and Images](http://www.silverstripe.org/learn/lessons/lesson-7-working-with-files-and-images/)
 * [Lesson 8: Introduction to the ORM](http://www.silverstripe.org/learn/lessons/lesson-8-introduction-to-the-orm)
+* [Lesson 9: Data Relationships - $has_many](http://www.silverstripe.org/learn/lessons/lesson-9-working-with-data-relationships-has-many)
+* [Lesson 10: Introduction to the ORM](http://www.silverstripe.org/learn/lessons/lesson-10-working-with-data-relationships-many-many)
 
 
 ## Help: If you get stuck
