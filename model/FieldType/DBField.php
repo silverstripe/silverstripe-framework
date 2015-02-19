@@ -71,7 +71,7 @@ abstract class DBField extends ViewableData {
 	//private static $default_cast = 'HTMLText';
 
 	private static $casting = array(
-		'ATT' => 'Text',
+		'ATT' => 'HTMLText',
 	);
 
 	/**

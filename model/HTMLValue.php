@@ -163,6 +163,7 @@ class SS_HTML4Value extends SS_HTMLValue {
 		// Ensure that \r (carriage return) characters don't get replaced with "&#13;" entity by DOMDocument
 		// This behaviour is apparently XML spec, but we don't want this because it messes up the HTML
 		$content = str_replace(chr(13), '', $content);
+		$content = str_replace('&', 'SS_ENTITY_AMERSAND', $content);
 
 		// Reset the document if we're in an invalid state for some reason
 		if (!$this->isValid()) $this->setDocument(null);
@@ -175,5 +176,9 @@ class SS_HTML4Value extends SS_HTMLValue {
 		libxml_clear_errors();
 		libxml_use_internal_errors($errorState);
 		return $result;
+	}
+
+	public function getContent() {
+		return str_replace('SS_ENTITY_AMERSAND', '&', parent::getContent());
 	}
 }
