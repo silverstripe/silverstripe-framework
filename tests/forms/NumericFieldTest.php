@@ -177,30 +177,6 @@ class NumericFieldTest extends SapphireTest {
 		));
 	}
 
-	/**
-	 * Test empty values
-	 */
-	public function testEmptyValidator() {
-		i18n::set_locale('en_US');
-		$field = new NumericField('Number');
-
-		// Treats '0' as given for the sake of required fields
-		$field->setValue('0');
-		$this->assertTrue($field->validate($validator));
-		$this->assertEquals(0, $field->dataValue());
-
-		// Treat literal 0
-		$field->setValue(0);
-		$this->assertTrue($field->validate($validator));
-		$this->assertEquals(0, $field->dataValue());
-
-		// Should fail the 'required but not given' test
-		$field->setValue('');
-		$this->assertFalse($field->validate($validator));
-
-		$field->setValue(false);
-	}
-
 	public function testReadonly() {
 		i18n::set_locale('en_US');
 		$field = new NumericField('Number');
