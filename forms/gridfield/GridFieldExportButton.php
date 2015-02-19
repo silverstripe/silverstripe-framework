@@ -132,26 +132,28 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		}
 
 		foreach($items->limit(null) as $item) {
-			$columnData = array();
+			if($item->hasMethod('canView') && $item->canView()) {
+				$columnData = array();
 
-			foreach($csvColumns as $columnSource => $columnHeader) {
-				if(!is_string($columnHeader) && is_callable($columnHeader)) {
-					if($item->hasMethod($columnSource)) {
-						$relObj = $item->{$columnSource}();
+				foreach($csvColumns as $columnSource => $columnHeader) {
+					if(!is_string($columnHeader) && is_callable($columnHeader)) {
+						if($item->hasMethod($columnSource)) {
+							$relObj = $item->{$columnSource}();
+						} else {
+							$relObj = $item->relObject($columnSource);
+						}
+
+						$value = $columnHeader($relObj);
 					} else {
-						$relObj = $item->relObject($columnSource);
+						$value = $gridField->getDataFieldValue($item, $columnSource);
 					}
 
-					$value = $columnHeader($relObj);
-				} else {
-					$value = $gridField->getDataFieldValue($item, $columnSource);
+					$value = str_replace(array("\r", "\n"), "\n", $value);
+					$columnData[] = '"' . str_replace('"', '""', $value) . '"';
 				}
-
-				$value = str_replace(array("\r", "\n"), "\n", $value);
-				$columnData[] = '"' . str_replace('"', '\"', $value) . '"';
+				$fileData .= implode($separator, $columnData);
+				$fileData .= "\n";
 			}
-			$fileData .= implode($separator, $columnData);
-			$fileData .= "\n";
 
 			$item->destroy();
 		}

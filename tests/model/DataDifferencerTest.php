@@ -17,7 +17,7 @@ class DataDifferencerTest extends SapphireTest {
 	public function testArrayValues() {
 		$obj1 = $this->objFromFixture('DataDifferencerTest_Object', 'obj1');
 		// create a new version
-		$obj1->Choices = array('a');
+		$obj1->Choices = 'a';
 		$obj1->write();
 		$obj1v1 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version-1);
 		$obj1v2 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version);
@@ -87,15 +87,7 @@ class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
 		return $fields;
 	}
-
-	public function getChoices() {
-		return explode(',', $this->getField('Choices'));
-	}
-
-	public function setChoices($val) {
-		$this->setField('Choices', (is_array($val)) ? implode(',', $val) : $val);
-	}
-
+	
 }
 
 class DataDifferencerTest_HasOneRelationObject extends DataObject implements TestOnly {

@@ -30,7 +30,7 @@ The extension is automatically applied to `SiteTree` class. For more information
 ## Database Structure
 
 Depending on how many stages you configured, two or more new tables will be created for your records. In the above, this
-will create a new `MyClass_Live` table once you've rebuilt the database.
+will create a new `MyRecord_Live` table once you've rebuilt the database.
 
 <div class="notice" markdown="1">
 Note that the "Stage" naming has a special meaning here, it will leave the original table name unchanged, rather than 

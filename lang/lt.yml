@@ -75,7 +75,7 @@ lt:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Jūs pakeitėte slaptažodį'
     CHANGEPASSWORDTEXT2: 'Nuo šiol galite naudoti šiuos prisijungimo duomenis:'
-    EMAIL: E. paštas
+    EMAIL: El. paštas
     HELLO: Sveiki
     PASSWORD: Slaptažodis
   ConfirmedPasswordField:
@@ -173,7 +173,7 @@ lt:
   Form:
     CSRF_FAILED_MESSAGE: "Iškilo techninė problema. Prašome paspausti mygtuką Atgal,\nperkraukite naršyklės langą ir bandykite vėl."
     FIELDISREQUIRED: '{name} yra privalomas'
-    SubmitBtnLabel: Eiti
+    SubmitBtnLabel: Vykdyti
     VALIDATIONCREDITNUMBER: 'Prašome įsitikinti, ar teisingai suvedėte kreditinės kortelės numerį {number}'
     VALIDATIONNOTUNIQUE: 'Įvesta reikšmė nėra unikali'
     VALIDATIONPASSWORDSDONTMATCH: 'Nesutampa slaptažodžiai'
@@ -184,14 +184,14 @@ lt:
     CSRF_EXPIRED_MESSAGE: 'Jūsų prisijungimas nebegalioja. Prašome iš naujo išsaugoti duomenis.'
   FormField:
     Example: 'pvz. %s'
-    NONE: niekas
+    NONE: nėra
   GridAction:
     DELETE_DESCRIPTION: Ištrinti
     Delete: Ištrinti
     UnlinkRelation: Atkabinti
   GridField:
     Add: 'Sukurti {name}'
-    Filter: Filtras
+    Filter: Filtruoti
     FilterBy: 'Filtruoti pagal '
     Find: Rasti
     LEVELUP: 'Aukštyn'
@@ -303,10 +303,10 @@ lt:
     DELETED: Ištrinta.
     DropdownBatchActionsDefault: Veiksmai
     HELP: Pagalba
-    PAGETYPE: 'Puslapio tipas:'
+    PAGETYPE: 'Puslapio tipas: '
     PERMAGAIN: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'
     PERMALREADY: 'Deja, Jūs negalite patekti į šią TVS dalį. Jeigu norite prisijungti kitu vartotoju, tai atlikite žemiau'
-    PERMDEFAULT: 'Pasirinkite prisijungimo būda ir suveskite prisijungimo duomenis'
+    PERMDEFAULT: 'Pasirinkite prisijungimo būdą ir suveskite prisijungimo duomenis'
     PLEASESAVE: 'Prašome išsaugoti puslapį: Šis puslapis negali būti atnaujintas, nes jis dar nėra išsaugotas.'
     PreviewButton: Peržiūra
     REORGANISATIONSUCCESSFUL: 'Puslapių medis pertvarkytas sėkmingai.'
@@ -474,7 +474,7 @@ lt:
     LOGGEDOUT: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'
     LOGIN: 'Prisijungti'
     LOSTPASSWORDHEADER: 'Slaptažodžio atstatymas'
-    NOTEPAGESECURED: 'Šis puslapis yra apsaugotas. Įveskite savo prisijungimo duomenis, esančius žemiau.'
+    NOTEPAGESECURED: 'Šis puslapis yra apsaugotas. Įveskite savo duomenis į žemiau esančius laukelius.'
     NOTERESETLINKINVALID: '<p>Neteisinga arba negaliojanti slaptažodžio atstatymo nuoroda.</p><p>Galite atsisiųsti naują <a href="{link1}">čia</a> arba pasikeisti slaptažodį po to, kai <a href="{link2}">prisijungsite</a>.</p>'
     NOTERESETPASSWORD: 'Įveskite savo e. pašto adresą ir atsiųsime slaptažodžio atstatymui skirtą nuorodą'
     PASSWORDSENTHEADER: 'Slaptažodžio atstatymo nuoroda nusiųsta į ''{email}'''
@@ -490,7 +490,7 @@ lt:
     IMPORTUSERS: 'Importuoti vartotojus'
     MEMBERS: Nariai
     MENUTITLE: Saugumas
-    MemberListCaution: 'Dėmesio: Pašalinus vartotojus ir šio sąrašo, jie bus pašalinti iš visų grupių ir duomenų bazės.'
+    MemberListCaution: 'Dėmesio: Pašalinus vartotojus iš šio sąrašo, jie bus pašalinti ir iš visų grupių, bei duomenų bazės.'
     NEWGROUP: 'Nauja grupė'
     PERMISSIONS: Leidimai
     ROLES: Rolės
@@ -499,9 +499,9 @@ lt:
     Users: Vartotojai
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Importuoti iš CSV'
-    FileFieldLabel: 'CSV byla <small>(Leidžiami plėtiniai: *.csv)</small>'
+    FileFieldLabel: 'CSV byla <small>(leidžiami plėtiniai: *.csv)</small>'
   SilverStripeNavigator:
-    Auto: Automatiškai
+    Auto: Automatinis
     ChangeViewMode: 'Pakeisti peržiūros rėžimą'
     Desktop: Kompiuteris
     DualWindowView: 'Du langai'

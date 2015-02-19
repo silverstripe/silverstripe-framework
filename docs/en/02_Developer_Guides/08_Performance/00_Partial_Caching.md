@@ -159,7 +159,7 @@ To cache the contents of a page for all anonymous users, but dynamically calcula
 
 ## Uncached
 
-Yhe template tag 'uncached' can be used - it is the exact equivalent of a cached block with an if condition that always 
+The template tag 'uncached' can be used - it is the exact equivalent of a cached block with an if condition that always 
 returns false. The key and conditionals in an uncached tag are ignored, so you can easily temporarily disable a 
 particular cache block by changing just the tag, leaving the key and conditional intact.
 

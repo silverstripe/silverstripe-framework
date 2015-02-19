@@ -97,7 +97,7 @@ Once you have done that, run 'composer install' or './framework/sake dev/build' 
 an empty database.
 
 For more information, please read this page in our docs:
-http://doc.silverstripe.org/framework/en/topics/environment-management
+http://docs.silverstripe.org/en/getting_started/environment_management/
 
 
 ENVCONTENT;
@@ -110,7 +110,7 @@ DB::connect($databaseConfig);
 $url = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;
 if(!$url) {
 	echo 'Please specify an argument to cli-script.php/sake. For more information, visit'
-		. ' http://doc.silverstripe.org/framework/en/topics/commandline';
+		. ' http://docs.silverstripe.org/en/developer_guides/cli';
 	die();
 }
 

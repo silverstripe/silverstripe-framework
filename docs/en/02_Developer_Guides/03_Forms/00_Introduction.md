@@ -156,7 +156,7 @@ information on the CMS interface.
 Each [api:FormField] subclass has a number of methods you can call on it to customize its' behavior or HTML markup. The
 default `FormField` object has several methods for doing common operations. 
 
-<div class="notice">
+<div class="notice" markdown="1">
 Most of the `set` operations will return the object back so methods can be chained.
 </div>
 
@@ -238,14 +238,14 @@ with the particular button. In the previous example, clicking the 'Another Butto
  * The `Form` instance.
  * The `Controller` instance.
 
-<div class="notice">
+<div class="notice" markdown="1">
 If the `$action` method cannot be found on any of those or is marked as `private` or `protected`, an error will be 
 thrown.
 </div>
 
 The `$action` method takes two arguments:
 
- * `$data` an array containing the values of the form mapped from `$name` => '$value'
+ * `$data` an array containing the values of the form mapped from `$name => $value`
  * `$form` the submitted [api:Form] instance.
 
 	:::php

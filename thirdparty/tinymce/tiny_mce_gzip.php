@@ -12,14 +12,14 @@
 $frameworkPath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
 $basePath = rtrim(dirname($frameworkPath), DIRECTORY_SEPARATOR);
 
-require_once $frameworkPath . '/core/TempPath.php';
+require_once $frameworkPath . '/core/Constants.php';
 
 // Handle incoming request if it's a script call
 if (TinyMCE_Compressor::getParam("js")) {
 	// Default settings
 	$tinyMCECompressor = new TinyMCE_Compressor(array(
 		// CUSTOM SilverStripe
-		'cache_dir' => getTempFolder($basePath)
+		'cache_dir' => TEMP_FOLDER
 		// CUSTOM END
 	));
 

@@ -78,9 +78,9 @@ You will generally write two different kinds of test classes.
 
 Tutorials and recipes for creating tests using the SilverStripe framework:
 
-* [Creating a SilverStripe test](creating-a-silverstripe-test): Writing tests to check core data objects
-* [Creating a functional test](creating-a-functional-test): An overview of functional tests and how to write a functional test
-* [Testing Outgoing Email](testing-email): An overview of the built-in email testing code
+* [Creating a SilverStripe test](how_tos/write_a_sapphiretest): Writing tests to check core data objects
+* [Creating a functional test](how_tos/write_a_functionaltest): An overview of functional tests and how to write a functional test
+* [Testing Outgoing Email](how_tos/testing_email): An overview of the built-in email testing code
 
 ## Running Tests
 

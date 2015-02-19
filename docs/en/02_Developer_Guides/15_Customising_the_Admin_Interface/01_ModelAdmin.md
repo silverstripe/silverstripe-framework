@@ -150,7 +150,7 @@ The results are shown in a tabular listing, powered by the [GridField](../forms/
 the [api:GridFieldDataColumns] component. This component looks for a [api:DataObject::$summary_fields] static on your
 model class, where you can add or remove columns. To change the title, use [api:DataObject::$field_labels].
 
-**mysite/code/Page.php**
+**mysite/code/Product.php**
 
 	:::php
 	<?php

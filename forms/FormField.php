@@ -524,8 +524,8 @@ class FormField extends RequestHandler {
 	 * Set the field value.
 	 *
 	 * @param mixed $value
-	 *
-	 * @return FormField.
+	 * @param mixed $data Optional data source passed in by {@see Form::loadDataFrom}
+	 * @return FormField Self reference
 	 */
 	public function setValue($value) {
 		$this->value = $value;
