@@ -5,7 +5,7 @@ introduction: The tutorials below take a step by step look at how to build a Sil
 <div class="alert" markdown="1">
 These tutorials are deprecated, and have been replaced by the new [Lessons](http://silverstripe.org/learn/lessons) section.
 </div>
-[CHIDLREN]
+
 ##  Video lessons
 These include video screencasts, written tutorials and code examples to get you started working with SilverStripe websites.
 
