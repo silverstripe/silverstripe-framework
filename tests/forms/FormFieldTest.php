@@ -3,7 +3,56 @@
  * @package framework
  * @subpackage tests
  */
-class FormFieldTest extends SapphireTest implements TestOnly {
+class FormFieldTest extends SapphireTest {
+
+	protected $requiredExtensions = array(
+		'FormField' => array('FormFieldTest_Extension')
+	);
+
+	public function testDefaultClasses() {
+		Config::nest();
+
+		Config::inst()->update('FormField', 'default_classes', array(
+			'class1',
+		));
+
+		$field = new FormField('MyField');
+
+		$this->assertContains('class1', $field->extraClass(), 'Class list does not contain expected class');
+
+		Config::inst()->update('FormField', 'default_classes', array(
+			'class1',
+			'class2',
+		));
+
+		$field = new FormField('MyField');
+
+		$this->assertContains('class1 class2', $field->extraClass(), 'Class list does not contain expected class');
+
+		Config::inst()->update('FormField', 'default_classes', array(
+			'class3',
+		));
+
+		$field = new FormField('MyField');
+
+		$this->assertContains('class3', $field->extraClass(), 'Class list does not contain expected class');
+
+		$field->removeExtraClass('class3');
+
+		$this->assertNotContains('class3', $field->extraClass(), 'Class list contains unexpected class');
+
+		Config::inst()->update('TextField', 'default_classes', array(
+			'textfield-class',
+		));
+
+		$field = new TextField('MyField');
+
+		//check default classes inherit
+		$this->assertContains('class3', $field->extraClass(), 'Class list does not contain inherited class');
+		$this->assertContains('textfield-class', $field->extraClass(), 'Class list does not contain expected class');
+
+		Config::unnest();
+	}
 
 	public function testAddExtraClass() {
 		$field = new FormField('MyField');
@@ -185,6 +234,23 @@ class FormFieldTest extends SapphireTest implements TestOnly {
 				"FormField class {$fieldClass} returns a valid cloned disabled representation"
 			);
 		}
+	}
+
+	public function testUpdateAttributes() {
+		$field = new FormField('MyField');
+		$this->assertArrayHasKey('extended', $field->getAttributes());
+	}
+
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class FormFieldTest_Extension extends Extension implements TestOnly {
+
+	public function updateAttributes(&$attrs) {
+		$attrs['extended'] = true;
 	}
 
 }

@@ -31,60 +31,11 @@ if(function_exists('session_start') && !session_id()) {
 	session_start();
 }
 
-/**
- * Include _ss_environment.php file
- */
-$usingEnv = false;
-$envFileExists = false;
-//define the name of the environment file
-$envFile = '_ss_environment.php';
-//define the dirs to start scanning from (have to add the trailing slash)
-// we're going to check the realpath AND the path as the script sees it
-$dirsToCheck = array(
-	realpath('.'),
-	dirname($_SERVER['SCRIPT_FILENAME'])
-);
-//if they are the same, remove one of them
-if($dirsToCheck[0] == $dirsToCheck[1]) {
-	unset($dirsToCheck[1]);
-}
-foreach($dirsToCheck as $dir) {
-//check this dir and every parent dir (until we hit the base of the drive)
-	// or until we hit a dir we can't read
-	do {
-		//add the trailing slash we need to concatenate properly
-		$dir .= DIRECTORY_SEPARATOR;
-		//if it's readable, go ahead
-		if(@is_readable($dir)) {
-			//if the file exists, then we include it, set relevant vars and break out
-			if(file_exists($dir . $envFile)) {
-				include_once($dir . $envFile);
-				$envFileExists = true;
-				//legacy variable assignment
-				$usingEnv = true;
-				//break out of BOTH loops because we found the $envFile
-				break(2);
-			}
-		} else {
-			//break out of the while loop, we can't read the dir
-			break;
-		}
-		//go up a directory
-		$dir = dirname($dir);
-		//here we need to check that the path of the last dir and the next one are
-// not the same, if they are, we have hit the root of the drive
-	} while(dirname($dir) != $dir);
-}
+require_once FRAMEWORK_NAME . '/core/Constants.php'; // this also includes TempPath.php;
 
-if($envFileExists) {
-	if(!empty($_REQUEST['useEnv'])) {
-		$usingEnv = true;
-	} else {
-		$usingEnv = false;
-	}
-}
+$envFileExists = defined('SS_ENVIRONMENT_FILE');
+$usingEnv = $envFileExists && !empty($_REQUEST['useEnv']);
 
-require_once FRAMEWORK_NAME . '/core/Constants.php'; // this also includes TempPath.php
 require_once FRAMEWORK_NAME . '/dev/install/DatabaseConfigurationHelper.php';
 require_once FRAMEWORK_NAME . '/dev/install/DatabaseAdapterRegistry.php';
 
@@ -1554,7 +1505,7 @@ HTML;
 
 		if($base != '.') $baseClause = "RewriteBase '$base'\n";
 		else $baseClause = "";
-		if(strpos(strtolower(php_sapi_name()), "cgi") !== false) $cgiClause = "RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]\n";
+		if(strpos(strtolower(php_sapi_name()), "cgi") !== false) $cgiClause = "RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]\n";
 		else $cgiClause = "";
 		$modulePath = FRAMEWORK_NAME;
 		$rewrite = <<<TEXT

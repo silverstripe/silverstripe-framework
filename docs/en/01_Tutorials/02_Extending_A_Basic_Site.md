@@ -1,6 +1,10 @@
 title: Extending a basic site
 summary: Building on tutorial 1, a look at storing data in SilverStripe and creating a latest news feed.
 
+<div class="alert" markdown="1">
+This tutorial is deprecated, and has been replaced by Lessons 4, 5, and 6 in the [Lessons section](http://www.silverstripe.org/learn/lessons)
+</div>
+
 # Tutorial 2 - Extending a basic site
 
 ## Overview
@@ -246,7 +250,7 @@ page layout.
 ### ArticlePage Template
 First, the template for displaying a single article:
 
-**themes/simple/templates/Layout/ArticlePage.ss**
+**themes/simple/templates/Layout/ArticlePage.ss**
 
 
 	:::ss
@@ -408,6 +412,9 @@ An RSS feed is something that no news section should be without. SilverStripe ma
 		return $rss->outputToBrowser();
 	}
 
+
+Ensure that when you have input the code to implement an RSS feed; flush the webpage afterwards
+(add ?flush=all on the end of your URL). This is because allowed_actions has changed.
 
 This function creates an RSS feed of all the news articles, and outputs it to the browser. If we go to [http://localhost/your_site_name/news/rss](http://localhost/your_site_name/news/rss) we should see our RSS feed. When there is more to a URL after a page's base URL, "rss" in this case, SilverStripe will call the function with that name on the controller if it exists.
 

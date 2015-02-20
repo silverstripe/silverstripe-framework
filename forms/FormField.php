@@ -41,6 +41,12 @@ class FormField extends RequestHandler {
 	 */
 	protected $extraClasses;
 
+	/**
+	 * @config
+	 * @var array $default_classes The default classes to apply to the FormField
+	 */
+	private static $default_classes = array();
+
 	public $dontEscape;
 
 	/**
@@ -164,6 +170,21 @@ class FormField extends RequestHandler {
 		if($value !== NULL) $this->setValue($value);
 
 		parent::__construct();
+
+		$this->setupDefaultClasses();
+	}
+
+	/**
+	 * set up the default classes for the form. This is done on construct so that the default classes can be removed
+	 * after instantiation
+	 */
+	protected function setupDefaultClasses() {
+		$defaultClasses = self::config()->get('default_classes');
+		if ($defaultClasses) {
+			foreach ($defaultClasses as $class) {
+				$this->addExtraClass($class);
+			}
+		}
 	}
 
 	/**
@@ -417,6 +438,10 @@ class FormField extends RequestHandler {
 	}
 
 	/**
+	 * Allows customization through an 'updateAttributes' hook on the base class.
+	 * Existing attributes are passed in as the first argument and can be manipulated,
+	 * but any attributes added through a subclass implementation won't be included.
+	 *
 	 * @return array
 	 */
 	public function getAttributes() {
@@ -435,7 +460,11 @@ class FormField extends RequestHandler {
 			$attrs['aria-required'] = 'true';
 		}
 
-		return array_merge($attrs, $this->attributes);
+		$attrs = array_merge($attrs, $this->attributes);
+
+		$this->extend('updateAttributes', $attrs);
+
+		return $attrs;
 	}
 
 	/**
@@ -495,8 +524,8 @@ class FormField extends RequestHandler {
 	 * Set the field value.
 	 *
 	 * @param mixed $value
-	 *
-	 * @return FormField.
+	 * @param mixed $data Optional data source passed in by {@see Form::loadDataFrom}
+	 * @return FormField Self reference
 	 */
 	public function setValue($value) {
 		$this->value = $value;

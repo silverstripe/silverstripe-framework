@@ -519,6 +519,40 @@ class FormTest extends FunctionalTest {
 		);
 	}
 
+	public function testDefaultClasses() {
+		Config::nest();
+
+		Config::inst()->update('Form', 'default_classes', array(
+			'class1',
+		));
+
+		$form = $this->getStubForm();
+
+		$this->assertContains('class1', $form->extraClass(), 'Class list does not contain expected class');
+
+		Config::inst()->update('Form', 'default_classes', array(
+			'class1',
+			'class2',
+		));
+
+		$form = $this->getStubForm();
+
+		$this->assertContains('class1 class2', $form->extraClass(), 'Class list does not contain expected class');
+
+		Config::inst()->update('Form', 'default_classes', array(
+			'class3',
+		));
+
+		$form = $this->getStubForm();
+
+		$this->assertContains('class3', $form->extraClass(), 'Class list does not contain expected class');
+
+		$form->removeExtraClass('class3');
+
+		$this->assertNotContains('class3', $form->extraClass(), 'Class list contains unexpected class');
+
+		Config::unnest();
+	}
 
 	public function testAttributes() {
 		$form = $this->getStubForm();

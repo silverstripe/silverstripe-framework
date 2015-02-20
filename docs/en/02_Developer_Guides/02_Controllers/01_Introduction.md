@@ -67,16 +67,14 @@ It is standard in SilverStripe for your controller actions to be `lowercasewithn
 
 Action methods can return one of four main things:
 
-	* an array. In this case the values in the array are available in the templates and the controller completes as 
-	usual by returning a [api:SS_HTTPResponse] with the body set to the current template.
-	* `HTML`. SilverStripe will wrap the `HTML` into a `SS_HTTPResponse` and set the status code to 200.
-	* an [api:SS_HTTPResponse] containing a manually defined `status code` and `body`.
-	* an [api:SS_HTTPResponse_Exception]. A special type of response which indicates a error. By returning the 
-	exception, the execution pipeline can adapt and display any error handlers.
-
-	:::php
+* an array. In this case the values in the array are available in the templates and the controller completes as usual by returning a [api:SS_HTTPResponse] with the body set to the current template.
+* `HTML`. SilverStripe will wrap the `HTML` into a `SS_HTTPResponse` and set the status code to 200.
+* an [api:SS_HTTPResponse] containing a manually defined `status code` and `body`.
+* an [api:SS_HTTPResponse_Exception]. A special type of response which indicates a error. By returning the exception, the execution pipeline can adapt and display any error handlers.
 
 **mysite/code/controllers/TeamController.php**
+
+	:::php
 	/**
 	 * Return some additional data to the current response that is waiting to go out, this makes $Title set to 
 	 * 'MyTeamName' and continues on with generating the response.
@@ -155,14 +153,13 @@ Each controller should define a `Link()` method. This should be used to avoid ha
 
 **mysite/code/controllers/TeamController.php**
 
-    :::php
-    public function Link($action = null) {
+	:::php
+    	public function Link($action = null) {
 		return Controller::join_links('teams', $action);
 	}
 
-<div class="info">
-The [api:Controller::join_links] is optional, but makes `Link()` more flexible by allowing an `$action` argument, and 
-concatenates the path segments with slashes. The action should map to a method on your controller.
+<div class="info" markdown="1">
+The [api:Controller::join_links] is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.
 </div>
 
 ## Related Documentation

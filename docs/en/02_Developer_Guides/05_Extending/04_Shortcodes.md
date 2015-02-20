@@ -57,7 +57,7 @@ First we need to define a callback for the shortcode.
 		);
 
 		public function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName) {
-			return str_replace($content, "<em>$content</em>", $this->Content);
+			return "<em>" . $tagName . "</em> " . $content . "; " . count($arguments) . " arguments.";
 		}
 	}
 

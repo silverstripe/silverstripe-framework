@@ -1,4 +1,16 @@
 id:
+  AssetAdmin:
+    NEWFOLDER: Berkas baru
+  AssetTableField:
+    FILENAME: Nama berkas
+    FOLDER: Map
+    TITLE: Judul
+  AssetUploadField:
+    EDITALL: 'Ubah seluruhnya'
+    EDITANDORGANIZE: 'Ubah dan atur'
+    EDITINFO: 'Ubah berkas'
+    FILES: Berkas
+    TOTAL: Total
   BBCodeParser:
     ALIGNEMENT: Penjajaran barisan
     ALIGNEMENTEXAMPLE: 'jajar kanan'
@@ -44,18 +56,50 @@ id:
   DataObject:
     PLURALNAME: 'Objek-objek Data'
     SINGULARNAME: 'Objek Data'
+  Date:
+    DAY: hari
+    DAYS: hari
+    HOUR: jam
+    HOURS: jam
+    LessThanMinuteAgo: 'kurang dari semenit'
+    MIN: menit
+    MINS: menit
+    MONTH: bulan
+    MONTHS: bulan
+    SEC: detik
+    SECS: detik
+    TIMEDIFFAGO: '{difference} lalu'
+    YEAR: tahun
+    YEARS: tahun
   DateField:
     NOTSET: 'tidak diset'
     TODAY: hari ini
+    VALIDDATEFORMAT2: 'Mohon masukkan format tanggal yang valid ({format})'
+  DatetimeField:
+    NOTSET: 'Tidak diset'
   DropdownField:
     CHOOSE: (Pilih)
+    CHOOSESEARCH: '(Pilih or Cari)'
+  EmailField:
+    VALIDATION: 'Mohon masukkan alamat surel'
+  Enum:
+    ANY: Lain
   File:
     Content: Isi
+    CssType: 'Berkas CSS'
+    DocType: 'Dokumen Word'
     Filename: Nama File
+    HtlType: 'Berkas HTML'
+    HtmlType: 'Berkas HTML'
+    IcoType: 'Ikon gambar'
     NOFILESIZE: 'Ukuran file adalah nol bytes.'
     Name: Nama
     PLURALNAME: File-file
+    SINGULARNAME: Berkas
     Title: Judul
+  Folder:
+    PLURALNAME: Map
+    SINGULARNAME: Map
   ForgotPasswordEmail_ss:
     HELLO: Hai
     TEXT1: 'Inilah'
@@ -68,6 +112,16 @@ id:
     VALIDATOR: Pengesah
   FormField:
     NONE: tidak ada
+  GridAction:
+    DELETE_DESCRIPTION: Hapus
+    Delete: Hapus
+  GridField:
+    Add: 'Tambah {name}'
+    Filter: Saring
+    FilterBy: 'Saring dengan'
+    Find: Temukan
+    LinkExisting: 'Tautan tersedia'
+    NewRecord: 'Baru %s'
   Group:
     Code: 'Kode Grup'
     DefaultGroupTitleAdministrators: Pengurus
@@ -133,12 +187,39 @@ id:
     db_NumVisit: 'Jumlah Kunjungan'
     db_Password: Kata sandi
     db_PasswordExpiry: 'Tanggal Kata Sandi Berakhir'
+  MemberDatetimeOptionsetField:
+    TWODIGITDAY: 'Dua digit bulan'
+    TWODIGITHOUR: 'Dua angka jam (00 ke 23)'
+    TWODIGITYEAR: 'Dua-angka tahun'
+  MemberImportForm:
+    ResultCreated: 'Membuat {count} anggota'
+    ResultDeleted: 'Menghapus %d anggota'
+    ResultNone: 'Tidak ada perubahan'
+  MemberPassword:
+    PLURALNAME: 'Kata kunci anggota'
+  MemberTableField:
+    APPLY_FILTER: 'Terapkan saring'
+  ModelAdmin:
+    DELETE: Hapus
+    DELETEDRECORDS: 'Menghapus {count} rekod'
+    Title: 'Model Data'
+  ModelAdmin_ImportSpec_ss:
+    IMPORTSPECFIELDS: 'Kolom database'
+    IMPORTSPECRELATIONS: Hubungan
+  ModelAdmin_Tools_ss:
+    FILTER: Saring
+    IMPORT: Impor
+  ModelSidebar_ss:
+    IMPORT_TAB_HEADER: Impor
+    SEARCHLISTINGS: Cari
   MoneyField:
     FIELDLABELAMOUNT: Jumlah
     FIELDLABELCURRENCY: Mata Uang
   Permission:
     AdminGroup: Pengurus
     FULLADMINRIGHTS: 'Hak-hak administratif yang penuh'
+  PermissionRole:
+    Title: Judul
   PhoneNumberField:
     VALIDATION: 'Harap masukkan nomor telepon yang valid'
   Security:
@@ -162,5 +243,18 @@ id:
   ToggleField:
     LESS: kurang
     MORE: lebih
+  UploadField:
+    DOEDIT: Simpan
+    EDIT: Ubah
+    EDITINFO: 'Ubah berkas ini'
+    FIELDNOTSET: 'Informasi berkas tidak ditemukan'
+    FROMCOMPUTER: 'Dari komputermu'
+    FROMCOMPUTERINFO: 'Pilih dari berkas'
+    FROMFILES: 'Dari berkas'
+    OVERWRITEWARNING: 'Berkas dengan nama yang sama sudah ada'
+    REMOVE: Memindahkan
+    STARTALL: 'Jalankan semua'
+    Saved: Disimpan
+    UPLOADSINTO: 'simpan ke /{path}'
   Versioned:
     has_many_Versions: Versi-versi

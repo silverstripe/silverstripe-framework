@@ -58,14 +58,14 @@
 	/* Loading spinner */
 	.cms-content-loading-spinner {
 		background-image: url(../images/spinner@2x.gif);
-		background-size: 43px 22px;
+		background-size: 43px 43px;
 	}
 
 	.ui-dialog {
 		.ui-dialog-content {
 			&.loading {
 				background-image: url(../images/spinner@2x.gif);
-				background-size: 43px 22px;
+				background-size: 43px 43px;
 			}
 		}
 

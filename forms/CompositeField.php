@@ -49,7 +49,8 @@ class CompositeField extends FormField {
 		} elseif(is_array($children)) {
 			$this->children = new FieldList($children);
 		} else {
-			$children = is_array(func_get_args()) ? func_get_args() : array();
+			//filter out null/empty items
+			$children = array_filter(func_get_args());
 			$this->children = new FieldList($children);
 		}
 		$this->children->setContainerField($this);

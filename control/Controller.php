@@ -173,6 +173,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * If $Action isn't given, it will use "index" as a default.
 	 */
 	protected function handleAction($request, $action) {
+		$this->extend('beforeCallActionHandler', $request, $action);
+
 		foreach($request->latestParams() as $k => $v) {
 			if($v || !isset($this->urlParams[$k])) $this->urlParams[$k] = $v;
 		}
