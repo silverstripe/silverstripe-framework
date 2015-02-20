@@ -1,15 +1,19 @@
 <?php
 class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
-	protected static $fixture_file = 'GridFieldTest.yml';
+	protected static $fixture_file = 'GridFieldAddExistingAutocompleterTest.yml';
 
-	protected $extraDataObjects = array('GridFieldTest_Team', 'GridFieldTest_Player', 'GridFieldTest_Cheerleader');
+	protected $extraDataObjects = array(
+		'GridFieldAddExistingAutocompleterTest_Team',
+		'GridFieldAddExistingAutocompleterTest_Player',
+		'GridFieldAddExistingAutocompleterTest_Cheerleader'
+	);
 	
 	function testScaffoldSearchFields() {
 		$autoCompleter = new GridFieldAddExistingAutocompleter($targetFragment = 'before', array('Test'));
-		$gridFieldTest_Team = singleton('GridFieldTest_Team');
+		$gridFieldTest_Team = singleton('GridFieldAddExistingAutocompleterTest_Team');
 		$this->assertEquals(
-			$autoCompleter->scaffoldSearchFields('GridFieldTest_Team'), 
+			$autoCompleter->scaffoldSearchFields('GridFieldAddExistingAutocompleterTest_Team'), 
 			array(
 				'Name:PartialMatch',
 				'City:StartsWith',
@@ -17,7 +21,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 			)
 		);
 		$this->assertEquals(
-			$autoCompleter->scaffoldSearchFields('GridFieldTest_Cheerleader'), 
+			$autoCompleter->scaffoldSearchFields('GridFieldAddExistingAutocompleterTest_Cheerleader'), 
 			array(
 				'Name:StartsWith'
 			)
@@ -25,8 +29,8 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 	}
 				
 	function testSearch() {
-		$team1 = $this->objFromFixture('GridFieldTest_Team', 'team1');
-		$team2 = $this->objFromFixture('GridFieldTest_Team', 'team2');
+		$team1 = $this->objFromFixture('GridFieldAddExistingAutocompleterTest_Team', 'team1');
+		$team2 = $this->objFromFixture('GridFieldAddExistingAutocompleterTest_Team', 'team2');
 
 		$response = $this->get('GridFieldAddExistingAutocompleterTest_Controller');
 		$this->assertFalse($response->isError());
@@ -64,8 +68,8 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
 	public function testAdd() {
 		$this->logInWithPermission('ADMIN');
-		$team1 = $this->objFromFixture('GridFieldTest_Team', 'team1');
-		$team2 = $this->objFromFixture('GridFieldTest_Team', 'team2');
+		$team1 = $this->objFromFixture('GridFieldAddExistingAutocompleterTest_Team', 'team1');
+		$team2 = $this->objFromFixture('GridFieldAddExistingAutocompleterTest_Team', 'team2');
 
 		$response = $this->get('GridFieldAddExistingAutocompleterTest_Controller');
 		$this->assertFalse($response->isError());
@@ -102,7 +106,7 @@ class GridFieldAddExistingAutocompleterTest_Controller extends Controller implem
 	protected $template = 'BlankPage';
 
 	public function Form() {
-		$player = DataObject::get('GridFieldTest_Player')->find('Email', 'player1@test.com');
+		$player = DataObject::get('GridFieldAddExistingAutocompleterTest_Player')->find('Email', 'player1@test.com');
 		$config = GridFieldConfig::create()->addComponents(
 			$relationComponent = new GridFieldAddExistingAutocompleter('before'),
 			new GridFieldDataColumns()
@@ -112,15 +116,40 @@ class GridFieldAddExistingAutocompleterTest_Controller extends Controller implem
 	}
 }
 
-class GridFieldTest_Team extends DataObject implements TestOnly {
-
+class GridFieldAddExistingAutocompleterTest_Team extends DataObject implements TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
 		'City' => 'Varchar'
 	);
 
+	private static $many_many = array('Players' => 'GridFieldAddExistingAutocompleterTest_Player');
+
+	private static $has_many = array('Cheerleaders' => 'GridFieldAddExistingAutocompleterTest_Cheerleader');
+	
+	private static $searchable_fields = array(
+		'Name',
+		'City',
+		'Cheerleaders.Name'
+	);
+
 	public function canView($member = null) {
 		return true;
 	}
+}
 
+class GridFieldAddExistingAutocompleterTest_Player extends DataObject implements TestOnly {
+	private static $db = array(
+		'Name' => 'Varchar',
+		'Email' => 'Varchar',
+	);
+
+	private static $belongs_many_many = array('Teams' => 'GridFieldAddExistingAutocompleterTest_Team');
+}
+
+class GridFieldAddExistingAutocompleterTest_Cheerleader extends DataObject implements TestOnly {
+	private static $db = array(
+		'Name' => 'Varchar'
+	);
+
+	private static $has_one = array('Team' => 'GridFieldAddExistingAutocompleterTest_Team');
 }
