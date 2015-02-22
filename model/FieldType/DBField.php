@@ -68,10 +68,16 @@ abstract class DBField extends ViewableData {
 	 */
 	private static $default_search_filter_class = 'PartialMatchFilter';
 
-	//private static $default_cast = 'HTMLText';
-
 	private static $casting = array(
 		'ATT' => 'HTMLText',
+		'XML' => 'HTMLText',
+		'HTMLATT' => 'HTMLText',
+		'URLATT' => 'HTMLText',
+		'RAWURLATT' => 'HTMLText',
+		'ATT' => 'HTMLText',
+		'RAW' => 'HTMLText',
+		'JS' => 'HTMLText',
+		'HTML' => 'HTMLText',
 		'XML' => 'HTMLText',
 	);
 
