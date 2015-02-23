@@ -176,15 +176,17 @@ careful when messing with the order of requirements.
 By default, SilverStripe includes all Javascript files at the bottom of the page body, unless there's another script 
 already loaded, then, it's inserted before the first `<script>` tag. If this causes problems, it can be configured.
 
-**mysite/_config/app.yml**
-
-	:::yml
-	Requirements:
-	  write_js_to_body: true
-	  force_js_to_bottom: true
+	:::php
+	Requirements::set_force_js_to_bottom(true);
 
 `Requirements.force_js_to_bottom`, will force SilverStripe to write the Javascript to the bottom of the page body, even 
 if there is an earlier script tag.
+
+If the Javascript files are preferred to be placed in the `<head>` tag rather than in the `<body>` tag,
+`Requirements.write_js_to_body` should be set to false.
+
+	:::php
+	Requirements::set_force_js_to_bottom(true);
 
 
 ## API Documentation
