@@ -24,7 +24,7 @@ class CMSSecurity extends Security {
 	 */
 	private static $reauth_enabled = true;
 
-	public function init() {
+	protected function init() {
 		parent::init();
 
 		// Include CMS styles and js

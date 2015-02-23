@@ -194,7 +194,7 @@ class RequestHandler extends ViewableData {
 			if(!$this->hasAction($action)) {
 				return $this->httpError(404, "Action '$action' isn't available $classMessage.");
 			}
-			if(!$this->checkAccessAction($action) || in_array(strtolower($action), array('run', 'init'))) {
+			if(!$this->checkAccessAction($action) || in_array(strtolower($action), array('run', 'doInit'))) {
 				return $this->httpError(403, "Action '$action' isn't allowed $classMessage.");
 			}
 			$result = $this->handleAction($request, $action);
@@ -376,7 +376,7 @@ class RequestHandler extends ViewableData {
 			Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
 		);
 		if(!is_array($actions) || !$actionsWithoutExtra) {
-			if($action != 'init' && $action != 'run' && method_exists($this, $action)) return true;
+			if($action != 'doInit' && $action != 'run' && method_exists($this, $action)) return true;
 		}
 
 		return false;
@@ -493,8 +493,10 @@ class RequestHandler extends ViewableData {
 	 * or {@link handleRequest()}, but in some based we want to set it manually.
 	 *
 	 * @param SS_HTTPRequest
+	 * @return $this
 	 */
 	public function setRequest($request) {
 		$this->request = $request;
+		return $this;
 	}
 }

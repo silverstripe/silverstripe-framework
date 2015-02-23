@@ -21,7 +21,7 @@ class DatabaseAdmin extends Controller {
 		'import'
 	);
 
-	public function init() {
+	protected function init() {
 		parent::init();
 
 		// We allow access to this controller regardless of live-status or ADMIN permission only

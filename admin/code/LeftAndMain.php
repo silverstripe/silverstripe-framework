@@ -355,7 +355,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @uses LeftAndMainExtension->accessedCMS()
 	 * @uses CMSMenu
 	 */
-	public function init() {
+	protected function init() {
 		parent::init();
 
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', false);

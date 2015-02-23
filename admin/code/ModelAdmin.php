@@ -93,7 +93,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	/**
 	 * Initialize the model admin interface. Sets up embedded jquery libraries and requisite plugins.
 	 */
-	public function init() {
+	protected function init() {
 		parent::init();
 
 		$models = $this->getManagedModels();
