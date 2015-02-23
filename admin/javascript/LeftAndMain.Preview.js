@@ -179,22 +179,14 @@
 			 * Store the preview options for this page.
 			 */
 			saveState : function(name, value) {
-				try {
-					window.localStorage.setItem('cms-preview-state-' + name, value);
-				} catch (exception) {
-					return false;
-				}
+				if(this._storage()) window.localStorage.setItem('cms-preview-state-' + name, value);
 			},
 
 			/**
 			 * Load previously stored preferences
 			 */
 			loadState : function(name) {
-				try {
-					window.localStorage.getItem('cms-preview-state-' + name);
-				} catch (exception) {
-					return false;
-				}
+				if(this._storage()) return window.localStorage.getItem('cms-preview-state-' + name);
 			}, 
 
 			/**
@@ -279,6 +271,24 @@
 				this.disablePreview();
 
 				this._super();
+			},
+			
+			/**
+			* Detect and use localStorage credit Mathias Bynens ref: https://mathiasbynens.be/notes/localstorage-pattern
+			* -------------------------------------------------------------------
+			*/
+			_storage: function() {
+				var uid = new Date;
+				var storage;
+				var result;
+				try {
+					(storage = window.localStorage).setItem(uid, uid);
+					result = storage.getItem(uid) == uid;
+					storage.removeItem(uid);
+					return result && storage;
+				} catch (exception) {
+					console.warn('localStorge is not available due to current browser / system settings.');
+				}
 			},
 
 			/**
