@@ -655,15 +655,20 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return string
 	 */
 	public function getIP() {
+		$ip = false;
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 			//check ip from share internet
-			return $_SERVER['HTTP_CLIENT_IP'];
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
 		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 			//to check ip is pass from proxy
-			return  $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} elseif(isset($_SERVER['REMOTE_ADDR'])) {
-			return $_SERVER['REMOTE_ADDR'];
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 		}
+		if ((!$ip || !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE))
+			&& !empty($_SERVER['REMOTE_ADDR'])) {
+			//if no other forwarding ip is found, invalid, or internal ip address
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return $ip;
 	}
 
 	/**
