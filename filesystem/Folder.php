@@ -327,7 +327,7 @@ class Folder extends File {
 	}
 
 	public function validate() {
-		return new ValidationResult(true);
+		return ValidationResult::create();
 	}
 
 	//-------------------------------------------------------------------------------------------------

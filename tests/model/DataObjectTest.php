@@ -1644,11 +1644,11 @@ class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 	);
 
 	public function validate() {
-		if(!empty($this->Name)) {
-			return new ValidationResult();
-		} else {
-			return new ValidationResult(false, "This object needs a name. Otherwise it will have an identity crisis!");
+		$result = new ValidationResult();
+		if(empty($this->Name)) {
+			$result->addError("This object needs a name. Otherwise it will have an identity crisis!");
 		}
+		return $result;
 	}
 }
 

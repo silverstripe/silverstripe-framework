@@ -68,13 +68,13 @@ class MemberAuthenticator extends Authenticator {
 			$result = $member->checkPassword($data['Password']);
 			$success = $result->valid();
 		} else {
-			$result = new ValidationResult(false, _t('Member.ERRORWRONGCRED'));
+			$result = ValidationResult::create()->addError(_t('Member.ERRORWRONGCRED'));
 		}
 
 		// Emit failure to member and form (if available)
 		if(!$success) {
 			if($member) $member->registerFailedLogin();
-			if($form) $form->sessionMessage($result->message(), 'bad');
+			if($form) $form->setSessionValidationResult($result, true);
 		} else {
 			if($member) $member->registerSuccessfulLogin();
 		}
@@ -141,10 +141,10 @@ class MemberAuthenticator extends Authenticator {
 	public static function authenticate($data, Form $form = null) {
 		// Find authenticated member
 		$member = static::authenticate_member($data, $form, $success);
-		
+
 		// Optionally record every login attempt as a {@link LoginAttempt} object
 		static::record_login_attempt($data, $member, $success);
-		
+
 		// Legacy migration to precision-safe password hashes.
 		// A login-event with cleartext passwords is the only time
 		// when we can rehash passwords to a different hashing algorithm,

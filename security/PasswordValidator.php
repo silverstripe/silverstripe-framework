@@ -66,7 +66,7 @@ class PasswordValidator extends Object {
 
 		if($this->minLength) {
 			if(strlen($password) < $this->minLength) {
-				$valid->error(
+				$valid->addError(
 					sprintf(
 						_t(
 							'PasswordValidator.TOOSHORT',
@@ -74,6 +74,7 @@ class PasswordValidator extends Object {
 						),
 						$this->minLength
 					),
+					'bad',
 					'TOO_SHORT'
 				);
 			}
@@ -95,7 +96,7 @@ class PasswordValidator extends Object {
 			}
 
 			if($score < $this->minScore) {
-				$valid->error(
+				$valid->addError(
 					sprintf(
 						_t(
 							'PasswordValidator.LOWCHARSTRENGTH',
@@ -103,6 +104,7 @@ class PasswordValidator extends Object {
 						),
 						implode(', ', $missedTests)
 					),
+					'bad',
 					'LOW_CHARACTER_STRENGTH'
 				);
 			}
@@ -115,11 +117,12 @@ class PasswordValidator extends Object {
 				->limit($this->historicalPasswordCount);
 			if($previousPasswords) foreach($previousPasswords as $previousPasswords) {
 				if($previousPasswords->checkPassword($password)) {
-					$valid->error(
+					$valid->addError(
 						_t(
 							'PasswordValidator.PREVPASSWORD',
 							'You\'ve already used that password in the past, please choose a new password'
 						),
+						'bad',
 						'PREVIOUS_PASSWORD'
 					);
 					break;
