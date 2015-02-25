@@ -917,6 +917,20 @@ class DataObjectTest extends SapphireTest {
 	public function testManyManyExtraFields() {
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+
+		// Get all extra fields
+		$teamExtraFields = $team->many_many_extraFields();
+		$this->assertEquals(array(
+			'Players' => array('Position' => 'Varchar(100)')
+		), $teamExtraFields);
+
+		// Ensure fields from parent classes are included
+		$subTeam = singleton('DataObjectTest_SubTeam');
+		$teamExtraFields = $subTeam->many_many_extraFields();
+		$this->assertEquals(array(
+			'Players' => array('Position' => 'Varchar(100)'),
+			'FormerPlayers' => array('Position' => 'Varchar(100)')
+		), $teamExtraFields);
 		
 		// Extra fields are immediately available on the Team class (defined in $many_many_extraFields)
 		$teamExtraFields = $team->many_many_extraFields('Players');
@@ -1381,6 +1395,16 @@ class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 
 	private static $has_one = array(
 		"ParentTeam" => 'DataObjectTest_Team',
+	);
+
+	private static $many_many = array(
+		'FormerPlayers' => 'DataObjectTest_Player'
+	);
+	
+	private static $many_many_extraFields = array(
+		'FormerPlayers' => array(
+			'Position' => 'Varchar(100)'
+		)
 	);
 }
 class OtherSubclassWithSameField extends DataObjectTest_Team implements TestOnly {
