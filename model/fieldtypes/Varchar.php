@@ -93,7 +93,7 @@ class Varchar extends StringField {
 	 * (non-PHPdoc)
 	 * @see DBField::scaffoldFormField()
 	 */
-	public function scaffoldFormField($title = null, $params = null) {
+	public function scaffoldFormField($title = null) {
 		if(!$this->nullifyEmpty) {
 			// Allow the user to select if it's null instead of automatically assuming empty string is
 			return new NullableField(new TextField($this->name, $title));
