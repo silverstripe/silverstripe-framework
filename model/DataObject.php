@@ -1553,15 +1553,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Returns a one-to-many relation as a HasManyList
 	 *
 	 * @param string $componentName Name of the component
-	 * @param string $filter A filter to be inserted into the WHERE clause
-	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, the static
-	 *                           field $default_sort on the component class will be used.
+	 * @param string|null $filter Deprecated. A filter to be inserted into the WHERE clause
+	 * @param string|null|array $sort Deprecated. A sort expression to be inserted into the ORDER BY clause. If omitted,
+	 *                                the static field $default_sort on the component class will be used.
 	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
-	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause
+	 * @param string|null|array $limit Deprecated. A limit expression to be inserted into the LIMIT clause
 	 *
 	 * @return HasManyList The components of the one-to-many relationship.
 	 */
-	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = null) {
+	public function getComponents($componentName, $filter = null, $sort = null, $join = null, $limit = null) {
 		$result = null;
 
 		if(!$componentClass = $this->has_many($componentName)) {
@@ -1573,6 +1573,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			throw new \InvalidArgumentException(
 				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
 			);
+		}
+
+		if($filter !== null || $sort !== null || $limit !== null) {
+			Deprecation::notice('3.2', 'The $filter, $sort and $limit parameters for DataObject::getComponents() 
+				have been deprecated. Please manipluate the returned list directly.', Deprecation::SCOPE_GLOBAL);
 		}
 
 		// If we haven't been written yet, we can't save these relations, so use a list that handles this case
@@ -1716,8 +1721,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @todo Implement query-params
 	 */
-	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
-		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
+	public function getManyManyComponents($componentName, $filter = null, $sort = null, $join = null, $limit = null) {
+		list($parentClass, $componentClass, $parentField, $componentField, $table)
+			= $this->manyManyComponent($componentName);
+
+		if($filter !== null || $sort !== null || $join !== null || $limit !== null) {
+			Deprecation::notice('3.2', 'The $filter, $sort, $join and $limit parameters for 
+				DataObject::getManyManyComponents() have been deprecated. 
+				Please manipluate the returned list directly.', Deprecation::SCOPE_GLOBAL);
+		}
 
 		// If we haven't been written yet, we can't save these relations, so use a list that handles this case
 		if(!$this->ID) {
@@ -1744,68 +1756,125 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * @deprecated 4.0 Method has been replaced by hasOne() and hasOneComponent()
+	 * @param string $component
+	 * @return array|null
+	 */
+	public function has_one($component = null) {
+		if($component) {
+			Deprecation::notice('3.2', 'Please use hasOneComponent() instead');
+			return $this->hasOneComponent($component);
+		}
+
+		Deprecation::notice('3.2', 'Please use hasOne() instead');
+		return $this->hasOne();
+	}
+
+	/**
 	 * Return the class of a one-to-one component.  If $component is null, return all of the one-to-one components and
 	 * their classes. If the selected has_one is a polymorphic field then 'DataObject' will be returned for the type.
 	 *
-	 * @param string $component Name of component
-	 *
-	 * @return string|array The class of the one-to-one component, or an array of all one-to-one components and their
-	 *                      classes.
+	 * @param string $component Deprecated - Name of component
+	 * @return string|array The class of the one-to-one component, or an array of all one-to-one components and
+	 * 							their classes.
 	 */
-	public function has_one($component = null) {
-		$classes = ClassInfo::ancestry($this);
+	public function hasOne($component = null) {
+		if($component) {
+			Deprecation::notice(
+				'3.2',
+				'Please use DataObject::hasOneComponent() instead of passing a component name to hasOne()',
+				Deprecation::SCOPE_GLOBAL
+			);
+			return $this->hasOneComponent($component);
+		}
 
-		foreach($classes as $class) {
-			// Wait until after we reach DataObject
-			if(in_array($class, array('Object', 'ViewableData', 'DataObject'))) continue;
+		$items = (array)Config::inst()->get($this->class, 'has_one', Config::INHERITED);
 
-			if($component) {
-				$hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED);
-
-				if(isset($hasOne[$component])) {
-					return $hasOne[$component];
-				}
-			} else {
-				$newItems = (array)Config::inst()->get($class, 'has_one', Config::UNINHERITED);
-				// Validate the data
-				foreach($newItems as $k => $v) {
-					if(!is_string($k) || is_numeric($k) || !is_string($v)) {
-						user_error("$class::\$has_one has a bad entry: "
-						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a"
-						. " relationship name, and the map value should be the data class to join to.", E_USER_ERROR);
-					}
-				}
-				$items = isset($items) ? array_merge($newItems, (array)$items) : $newItems;
+		// Validate the data
+		foreach($items as $k => $v) {
+			if(!is_string($k) || is_numeric($k) || !is_string($v)) {
+				throw new LogicException("$this->class::\$has_one has a bad entry: "
+					. var_export($k, true). " => " . var_export($v, true) . ".  Each map key should be a
+					 relationship name, and the map value should be the data class to join to.");
 			}
 		}
-		return isset($items) ? $items : null;
+
+		return $items;
+	}
+
+	/**
+	 * Return data for a specific has_one component.
+	 * @param string $component
+	 * @return string|null
+	 */
+	public function hasOneComponent($component) {
+		$hasOnes = (array)Config::inst()->get($this->class, 'has_one', Config::INHERITED);
+
+		if(isset($hasOnes[$component])) {
+			return $hasOnes[$component];
+		}
+	}
+
+	/**
+	 * @deprecated 4.0 Method has been replaced by belongsTo() and belongsToComponent()
+	 * @param string $component
+	 * @param bool $classOnly
+	 * @return array|null
+	 */
+	public function belongs_to($component = null, $classOnly = true) {
+		if($component) {
+			Deprecation::notice('3.2', 'Please use belongsToComponent() instead');
+			return $this->belongsToComponent($component, $classOnly);
+		}
+
+		Deprecation::notice('3.2', 'Please use belongsTo() instead');
+		return $this->belongsTo(null, $classOnly);
 	}
 
 	/**
 	 * Returns the class of a remote belongs_to relationship. If no component is specified a map of all components and
 	 * their class name will be returned.
 	 *
-	 * @param string $component
+	 * @param string $component - Name of component
 	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
 	 *        the field data stripped off. It defaults to TRUE.
 	 * @return string|array
 	 */
-	public function belongs_to($component = null, $classOnly = true) {
-		$belongsTo = $this->config()->belongs_to;
-
+	public function belongsTo($component = null, $classOnly = true) {
 		if($component) {
-			if($belongsTo && array_key_exists($component, $belongsTo)) {
-				$belongsTo = $belongsTo[$component];
-			} else {
-				return false;
-			}
+			Deprecation::notice(
+				'3.2',
+				'Please use DataObject::belongsToComponent() instead of passing a component name to belongsTo()',
+				Deprecation::SCOPE_GLOBAL
+			);
+			return $this->belongsToComponent($component, $classOnly);
 		}
 
+		$belongsTo = (array)Config::inst()->get($this->class, 'belongs_to', Config::INHERITED);
 		if($belongsTo && $classOnly) {
 			return preg_replace('/(.+)?\..+/', '$1', $belongsTo);
 		} else {
 			return $belongsTo ? $belongsTo : array();
 		}
+	}
+
+	/**
+	 * Return data for a specific belongs_to component.
+	 * @param string $component
+	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
+	 *        the field data stripped off. It defaults to TRUE.
+	 * @return string|false
+	 */
+	public function belongsToComponent($component, $classOnly = true) {
+		$belongsTo = (array)Config::inst()->get($this->class, 'belongs_to', Config::INHERITED);
+
+		if($belongsTo && array_key_exists($component, $belongsTo)) {
+			$belongsTo = $belongsTo[$component];
+		} else {
+			return false;
+		}
+
+		return ($classOnly) ? preg_replace('/(.+)?\..+/', '$1', $belongsTo) : $belongsTo;
 	}
 
 	/**
@@ -1840,9 +1909,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				// Validate the data
 				foreach($dbItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) {
-						user_error("$class::\$db has a bad entry: "
-						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a"
-						. " property name, and the map value should be the property type.", E_USER_ERROR);
+						throw new LogicException("$class::\$db has a bad entry: "
+							. var_export($k, true). " => " . var_export($v, true) . ".  Each map key should be a
+							 property name, and the map value should be the property type.");
 					}
 				}
 
@@ -1854,25 +1923,41 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * @deprecated 4.0 Method has been replaced by hasMany() and hasManyComponent()
+	 * @param string $component
+	 * @param bool $classOnly
+	 * @return array|null
+	 */
+	public function has_many($component = null, $classOnly = true) {
+		if($component) {
+			Deprecation::notice('3.2', 'Please use hasManyComponent() instead');
+			return $this->hasManyComponent($component, $classOnly);
+		}
+
+		Deprecation::notice('3.2', 'Please use hasMany() instead');
+		return $this->hasMany(null, $classOnly);
+	}
+
+	/**
 	 * Gets the class of a one-to-many relationship. If no $component is specified then an array of all the one-to-many
 	 * relationships and their classes will be returned.
 	 *
-	 * @param string $component Name of component
+	 * @param string $component Deprecated - Name of component
 	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
 	 *        the field data stripped off. It defaults to TRUE.
-	 * @return string|array
+	 * @return string|array|false
 	 */
-	public function has_many($component = null, $classOnly = true) {
-		$hasMany = $this->config()->has_many;
-
+	public function hasMany($component = null, $classOnly = true) {
 		if($component) {
-			if($hasMany && array_key_exists($component, $hasMany)) {
-				$hasMany = $hasMany[$component];
-			} else {
-				return false;
-			}
+			Deprecation::notice(
+				'3.2',
+				'Please use DataObject::hasManyComponent() instead of passing a component name to hasMany()',
+				Deprecation::SCOPE_GLOBAL
+			);
+			return $this->hasManyComponent($component, $classOnly);
 		}
 
+		$hasMany = (array)Config::inst()->get($this->class, 'has_many', Config::INHERITED);
 		if($hasMany && $classOnly) {
 			return preg_replace('/(.+)?\..+/', '$1', $hasMany);
 		} else {
@@ -1881,96 +1966,112 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * Return data for a specific has_many component.
+	 * @param string $component
+	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
+	 *        the field data stripped off. It defaults to TRUE.
+	 * @return string|false
+	 */
+	public function hasManyComponent($component, $classOnly = true) {
+		$hasMany = (array)Config::inst()->get($this->class, 'has_many', Config::INHERITED);
+
+		if($hasMany && array_key_exists($component, $hasMany)) {
+			$hasMany = $hasMany[$component];
+		} else {
+			return false;
+		}
+
+		return ($classOnly) ? preg_replace('/(.+)?\..+/', '$1', $hasMany) : $hasMany;
+	}
+
+	/**
+	 * @deprecated 4.0 Method has been replaced by manyManyExtraFields() and
+	 *                 manyManyExtraFieldsForComponent()
+	 * @param string $component
+	 * @return array
+	 */
+	public function many_many_extraFields($component = null) {
+		if($component) {
+			Deprecation::notice('3.2', 'Please use manyManyExtraFieldsForComponent() instead');
+			return $this->manyManyExtraFieldsForComponent($component);
+		}
+
+		Deprecation::notice('3.2', 'Please use manyManyExtraFields() instead');
+		return $this->manyManyExtraFields();
+	}
+
+	/**
 	 * Return the many-to-many extra fields specification.
 	 *
 	 * If you don't specify a component name, it returns all
 	 * extra fields for all components available.
 	 *
-	 * @param string $component Name of component
-	 * @return array
+	 * @param string $component Deprecated - Name of component
+	 * @return array|null
 	 */
-	public function many_many_extraFields($component = null) {
-		$classes = ClassInfo::ancestry($this);
+	public function manyManyExtraFields($component = null) {
+		if($component) {
+			Deprecation::notice(
+				'3.2',
+				'Please use DataObject::manyManyExtraFieldsForComponent() instead of passing a component name 
+					to manyManyExtraFields()',
+				Deprecation::SCOPE_GLOBAL
+			);
+			return $this->manyManyExtraFieldsForComponent($component);
+		}
 
-		foreach($classes as $class) {
-			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
+		$items = (array)Config::inst()->get($this->class, 'many_many_extraFields', Config::INHERITED);
+		foreach($items as $k => $v) {
+			if(!is_array($v)) {
+				throw new LogicException("$this->class::\$many_many_extraFields has a bad entry: "
+					. var_export($k, true) . " => " . var_export($v, true)
+					. ". Each many_many_extraFields entry should map to a field specification array.");
+			}
+		}
+
+		return !empty($items) ? $items : null;
+	}
+
+	/**
+	 * Return the many-to-many extra fields specification for a specific component.
+	 * @param string $component
+	 * @return array|null
+	 */
+	public function manyManyExtraFieldsForComponent($component) {
+		// Get all many_many_extraFields defined in this class or parent classes
+		$extraFields = (array)Config::inst()->get($this->class, 'many_many_extraFields', Config::INHERITED);
+		// Extra fields are immediately available
+		if(isset($extraFields[$component])) {
+			return $extraFields[$component];
+		}
+
+		// Check this class' belongs_many_manys to see if any of their reverse associations contain extra fields
+		$manyMany = (array)Config::inst()->get($this->class, 'belongs_many_many', Config::INHERITED);
+		$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
+		if($candidate) {
 			$relationName = null;
+			// Extract class and relation name from dot-notation
+			if(strpos($candidate, '.') !== false) {
+				list($candidate, $relationName) = explode('.', $candidate, 2);
+			}
 
-			// Find extra fields for one component
-			if($component) {
-				$SNG_class = singleton($class);
-				$extraFields = $SNG_class->stat('many_many_extraFields');
+			// If we've not already found the relation name from dot notation, we need to find a relation that points
+			// back to this class. As there's no dot-notation, there can only be one relation pointing to this class, 
+			// so it's safe to assume that it's the correct one
+			if(!$relationName) {
+				$candidateManyManys = (array)Config::inst()->get($candidate, 'many_many', Config::UNINHERITED);
 
-				// Extra fields are immediately available on this class
-				if(isset($extraFields[$component])) {
-					return $extraFields[$component];
-				}
-
-				$manyMany = $SNG_class->stat('many_many');
-				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
-				if($candidate) {
-					$SNG_candidate = singleton($candidate);
-					$candidateManyMany = $SNG_candidate->stat('belongs_many_many');
-
-					// Find the relation given the class
-					if($candidateManyMany) foreach($candidateManyMany as $relation => $relatedClass) {
-						if($relatedClass == $class) {
-							$relationName = $relation;
-							break;
-						}
-					}
-
-					if($relationName) {
-						$extraFields = $SNG_candidate->stat('many_many_extraFields');
-						if(isset($extraFields[$relationName])) {
-							return $extraFields[$relationName];
-						}
+				foreach($candidateManyManys as $relation => $relatedClass) {
+					if($relatedClass === $this->class) {
+						$relationName = $relation;
 					}
 				}
+			}
 
-				$manyMany = $SNG_class->stat('belongs_many_many');
-				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
-				if($candidate) {
-					$relationName = null;
-					// Extract class and relation name from dot-notation
-					if(strpos($candidate, '.') !== false) {
-						list($candidate, $relationName) = explode('.', $candidate, 2);
-					}
-
-					$SNG_candidate = singleton($candidate);
-					$candidateManyMany = $SNG_candidate->stat('many_many');
-
-					// Find the relation given the class
-					if(!$relationName && $candidateManyMany) {
-						foreach($candidateManyMany as $relation => $relatedClass) {
-							if($relatedClass == $class) {
-								$relationName = $relation;
-							}
-						}
-					}
-
-					$extraFields = $SNG_candidate->stat('many_many_extraFields');
-					if(isset($extraFields[$relationName])) {
-						return $extraFields[$relationName];
-					}
-				}
-
-			} else {
-				// Find all the extra fields for all components
-				$newItems = (array)Config::inst()->get($class, 'many_many_extraFields', Config::UNINHERITED);
-
-				foreach($newItems as $k => $v) {
-					if(!is_array($v)) {
-						user_error(
-							"$class::\$many_many_extraFields has a bad entry: "
-							. var_export($k, true) . " => " . var_export($v, true)
-							. ". Each many_many_extraFields entry should map to a field specification array.",
-							E_USER_ERROR
-						);
-					}
-				}
-
-				$items = isset($items) ? array_merge($newItems, $items) : $newItems;
+			// If we've found a matching relation on the target class, see if we can find extra fields for it
+			$extraFields = (array)Config::inst()->get($candidate, 'many_many_extraFields', Config::UNINHERITED);
+			if(isset($extraFields[$relationName])) {
+				return $extraFields[$relationName];
 			}
 		}
 
@@ -1978,94 +2079,129 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * @deprecated 4.0 Method has been renamed to manyMany()
+	 * @param string $component
+	 * @return array|null
+	 */
+	public function many_many($component = null) {
+		if($component) {
+			Deprecation::notice('3.2', 'Please use manyManyComponent() instead');
+			return $this->manyManyComponent($component);
+		}
+
+		Deprecation::notice('3.2', 'Please use manyMany() instead');
+		return $this->manyMany();
+	}
+
+	/**
 	 * Return information about a many-to-many component.
 	 * The return value is an array of (parentclass, childclass).  If $component is null, then all many-many
 	 * components are returned.
 	 *
-	 * @param string $component Name of component
-	 *
-	 * @return array  An array of (parentclass, childclass), or an array of all many-many components
+	 * @see DataObject::manyManyComponent()
+	 * @param string $component Deprecated - Name of component
+	 * @return array|null An array of (parentclass, childclass), or an array of all many-many components
 	 */
-	public function many_many($component = null) {
-		$classes = ClassInfo::ancestry($this);
+	public function manyMany($component = null) {
+		if($component) {
+			Deprecation::notice(
+				'3.2',
+				'Please use DataObject::manyManyComponent() instead of passing a component name to manyMany()',
+				Deprecation::SCOPE_GLOBAL
+			);
+			return $this->manyManyComponent($component);
+		}
 
-		foreach($classes as $class) {
-			// Wait until after we reach DataObject
-			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
-
-			if($component) {
-				$manyMany = Config::inst()->get($class, 'many_many', Config::UNINHERITED);
-				// Try many_many
-				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
-				if($candidate) {
-					$parentField = $class . "ID";
-					$childField = ($class == $candidate) ? "ChildID" : $candidate . "ID";
-					return array($class, $candidate, $parentField, $childField, "{$class}_$component");
-				}
-
-				// Try belongs_many_many
-				$belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
-				$candidate = (isset($belongsManyMany[$component])) ? $belongsManyMany[$component] : null;
-				if($candidate) {
-					// Extract class and relation name from dot-notation
-					if(strpos($candidate, '.') !== false) {
-						list($candidate, $relationName) = explode('.', $candidate, 2);
-					}
-
-					$childField = $candidate . "ID";
-
-					// We need to find the inverse component name
-					$otherManyMany = Config::inst()->get($candidate, 'many_many', Config::UNINHERITED);
-					if(!$otherManyMany) {
-						user_error("Inverse component of $candidate not found ({$this->class})", E_USER_ERROR);
-					}
-
-					if(isset($relationName) && isset($otherManyMany[$relationName])) {
-						$candidateClass = $otherManyMany[$relationName];
-						$joinTable = "{$candidate}_{$relationName}";
-					} else {
-						foreach($otherManyMany as $inverseComponentName => $candidateClass) {
-							if($candidateClass == $class || is_subclass_of($class, $candidateClass)) {
-								$joinTable = "{$candidate}_{$inverseComponentName}";
-								break;
-							}
-						}
-					}
-
-					if(isset($joinTable)) {
-						$parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
-						return array($class, $candidate, $parentField, $childField, $joinTable);
-					}
-
-					user_error("Orphaned \$belongs_many_many value for $this->class.$component", E_USER_ERROR);
-				}
-			} else {
-				$newItems = (array)Config::inst()->get($class, 'many_many', Config::UNINHERITED);
-				// Validate the data
-				foreach($newItems as $k => $v) {
-					if(!is_string($k) || is_numeric($k) || !is_string($v)) {
-						user_error("$class::\$many_many has a bad entry: "
-						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a"
-						. " relationship name, and the map value should be the data class to join to.", E_USER_ERROR);
-					}
-				}
-				$items = isset($items) ? array_merge($newItems, $items) : $newItems;
-
-				$newItems = (array)Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
-				// Validate the data
-				foreach($newItems as $k => $v) {
-					if(!is_string($k) || is_numeric($k) || !is_string($v)) {
-						user_error("$class::\$belongs_many_many has a bad entry: "
-						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a"
-						. " relationship name, and the map value should be the data class to join to.", E_USER_ERROR);
-					}
-				}
-
-				$items = isset($items) ? array_merge($newItems, $items) : $newItems;
+		$manyManys = (array)Config::inst()->get($this->class, 'many_many', Config::INHERITED);
+		// Validate the data
+		foreach($manyManys as $k => $v) {
+			if(!is_string($k) || is_numeric($k) || !is_string($v)) {
+				throw new LogicException("$this->class::\$many_many has a bad entry: "
+					. var_export($k, true). " => " . var_export($v, true) . ".  Each map key should be a
+					 relationship name, and the map value should be the data class to join to.");
 			}
 		}
 
-		return isset($items) ? $items : null;
+		$belongsManyManys = (array)Config::inst()->get($this->class, 'belongs_many_many', Config::INHERITED);
+		// Validate the data
+		foreach($belongsManyManys as $k => $v) {
+			if(!is_string($k) || is_numeric($k) || !is_string($v)) {
+				throw new LogicException("$this->class::\$belongs_many_many has a bad entry: "
+					. var_export($k, true). " => " . var_export($v, true) . ".  Each map key should be a
+					 relationship name, and the map value should be the data class to join to.");
+			}
+		}
+
+		$items = array_merge($manyManys, $belongsManyManys);
+		return $items;
+	}
+
+	/**
+	 * Return information about a specific many_many component. Returns a numeric array of:
+	 * array(
+	 * 	<classname>,		The class that relation is defined in e.g. "Product"
+	 * 	<candidateName>,	The target class of the relation e.g. "Category"
+	 * 	<parentField>,		The field name pointing to <classname>'s table e.g. "ProductID"
+	 * 	<childField>,		The field name pointing to <candidatename>'s table e.g. "CategoryID"
+	 * 	<joinTable>			The join table between the two classes e.g. "Product_Categories"
+	 * )
+	 * @param string $component The component name
+	 * @return array|null
+	 */
+	public function manyManyComponent($component) {
+		$classes = $this->getClassAncestry();
+		foreach($classes as $class) {
+			$manyMany = Config::inst()->get($class, 'many_many', Config::UNINHERITED);
+			// Check if the component is defined in many_many on this class
+			$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
+			if($candidate) {
+				$parentField = $class . "ID";
+				$childField = ($class == $candidate) ? "ChildID" : $candidate . "ID";
+				return array($class, $candidate, $parentField, $childField, "{$class}_$component");
+			}
+
+			// Check if the component is defined in belongs_many_many on this class
+			$belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
+			$candidate = (isset($belongsManyMany[$component])) ? $belongsManyMany[$component] : null;
+			if($candidate) {
+				// Extract class and relation name from dot-notation
+				if(strpos($candidate, '.') !== false) {
+					list($candidate, $relationName) = explode('.', $candidate, 2);
+				}
+
+				$childField = $candidate . "ID";
+
+				// We need to find the inverse component name
+				$otherManyMany = Config::inst()->get($candidate, 'many_many', Config::UNINHERITED);
+				if(!$otherManyMany) {
+					throw new LogicException("Inverse component of $candidate not found ({$this->class})");
+				}
+
+				// If we've got a relation name (extracted from dot-notation), we can already work out
+				// the join table and candidate class name...
+				if(isset($relationName) && isset($otherManyMany[$relationName])) {
+					$candidateClass = $otherManyMany[$relationName];
+					$joinTable = "{$candidate}_{$relationName}";
+				} else {
+					// ... otherwise, we need to loop over the many_manys and find a relation that
+					// matches up to this class
+					foreach($otherManyMany as $inverseComponentName => $candidateClass) {
+						if($candidateClass == $class || is_subclass_of($class, $candidateClass)) {
+							$joinTable = "{$candidate}_{$inverseComponentName}";
+							break;
+						}
+					}
+				}
+
+				// If we could work out the join table, we've got all the info we need
+				if(isset($joinTable)) {
+					$parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
+					return array($class, $candidate, $parentField, $childField, $joinTable);
+				}
+
+				throw new LogicException("Orphaned \$belongs_many_many value for $this->class.$component");
+			}
+		}
 	}
 
 	/**

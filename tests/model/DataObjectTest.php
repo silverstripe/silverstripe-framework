@@ -1150,7 +1150,7 @@ class DataObjectTest extends SapphireTest {
 			'Players' => array('Position' => 'Varchar(100)'),
 			'FormerPlayers' => array('Position' => 'Varchar(100)')
 		), $teamExtraFields);
-		
+
 		// Extra fields are immediately available on the Team class (defined in $many_many_extraFields)
 		$teamExtraFields = $team->many_many_extraFields('Players');
 		$this->assertEquals($teamExtraFields, array(
