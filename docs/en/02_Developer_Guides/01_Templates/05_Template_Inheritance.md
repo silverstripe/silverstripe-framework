@@ -46,9 +46,10 @@ your entire project for the appropriate `.ss` files located in `template` direct
 It will each and prioritize templates in the following priority:
 
 1. mysite (or other name given to site folder)
-2. themes
-3. modules 
-4. framework.
+2. module-specific themes (e.g. themes/simple_blog)
+3. themes (e.g. themes/simple)
+4. modules  (e.g. blog)
+5. framework
 
 <div class="warning">
 Whenever you add or remove template files, rebuild the manifest by visiting `http://yoursite.com/?flush=1`. You can 
