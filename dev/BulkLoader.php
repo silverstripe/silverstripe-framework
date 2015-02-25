@@ -220,9 +220,9 @@ abstract class BulkLoader extends ViewableData {
 		// using $$includerelations flag as false, so that it only contain $db fields
 		$spec['fields'] = (array)singleton($this->objectClass)->fieldLabels(false);
 
-		$has_ones = singleton($this->objectClass)->has_one();
-		$has_manys = singleton($this->objectClass)->has_many();
-		$many_manys = singleton($this->objectClass)->many_many();
+		$has_ones = singleton($this->objectClass)->hasOne();
+		$has_manys = singleton($this->objectClass)->hasMany();
+		$many_manys = singleton($this->objectClass)->manyMany();
 
 		$spec['relations'] = (array)$has_ones + (array)$has_manys + (array)$many_manys;
 

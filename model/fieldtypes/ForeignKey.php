@@ -28,7 +28,7 @@ class ForeignKey extends Int {
 
 	public function scaffoldFormField($title = null, $params = null) {
 		$relationName = substr($this->name,0,-2);
-		$hasOneClass = $this->object->has_one($relationName);
+		$hasOneClass = $this->object->hasOneComponent($relationName);
 
 		if($hasOneClass && singleton($hasOneClass) instanceof Image) {
 			$field = new UploadField($relationName, $title);

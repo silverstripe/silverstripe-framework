@@ -1086,7 +1086,7 @@ class DataObjectTest extends SapphireTest {
 		$equipmentSuppliers = $team->EquipmentSuppliers();
 
 		// Check that DataObject::many_many() works as expected
-		list($class, $targetClass, $parentField, $childField, $joinTable) = $team->many_many('Sponsors');
+		list($class, $targetClass, $parentField, $childField, $joinTable) = $team->manyManyComponent('Sponsors');
 		$this->assertEquals('DataObjectTest_Team', $class,
 			'DataObject::many_many() didn\'t find the correct base class');
 		$this->assertEquals('DataObjectTest_EquipmentCompany', $targetClass,
@@ -1138,27 +1138,27 @@ class DataObjectTest extends SapphireTest {
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
 
 		// Get all extra fields
-		$teamExtraFields = $team->many_many_extraFields();
+		$teamExtraFields = $team->manyManyExtraFields();
 		$this->assertEquals(array(
 			'Players' => array('Position' => 'Varchar(100)')
 		), $teamExtraFields);
 
 		// Ensure fields from parent classes are included
 		$subTeam = singleton('DataObjectTest_SubTeam');
-		$teamExtraFields = $subTeam->many_many_extraFields();
+		$teamExtraFields = $subTeam->manyManyExtraFields();
 		$this->assertEquals(array(
 			'Players' => array('Position' => 'Varchar(100)'),
 			'FormerPlayers' => array('Position' => 'Varchar(100)')
 		), $teamExtraFields);
 
 		// Extra fields are immediately available on the Team class (defined in $many_many_extraFields)
-		$teamExtraFields = $team->many_many_extraFields('Players');
+		$teamExtraFields = $team->manyManyExtraFieldsForComponent('Players');
 		$this->assertEquals($teamExtraFields, array(
 			'Position' => 'Varchar(100)'
 		));
 
 		// We'll have to go through the relation to get the extra fields on Player
-		$playerExtraFields = $player->many_many_extraFields('Teams');
+		$playerExtraFields = $player->manyManyExtraFieldsForComponent('Teams');
 		$this->assertEquals($playerExtraFields, array(
 			'Position' => 'Varchar(100)'
 		));
@@ -1188,7 +1188,7 @@ class DataObjectTest extends SapphireTest {
 
 		// Check that ordering a many-many relation by an aggregate column doesn't fail
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
-		$player->Teams("", "count(DISTINCT \"DataObjectTest_Team_Players\".\"DataObjectTest_PlayerID\") DESC");
+		$player->Teams()->sort("count(DISTINCT \"DataObjectTest_Team_Players\".\"DataObjectTest_PlayerID\") DESC");
 	}
 
 	/**
@@ -1341,13 +1341,13 @@ class DataObjectTest extends SapphireTest {
 				'CurrentStaff'     => 'DataObjectTest_Staff',
 				'PreviousStaff'    => 'DataObjectTest_Staff'
 			),
-			$company->has_many(),
+			$company->hasMany(),
 			'has_many strips field name data by default.'
 		);
 
 		$this->assertEquals (
 			'DataObjectTest_Staff',
-			$company->has_many('CurrentStaff'),
+			$company->hasManyComponent('CurrentStaff'),
 			'has_many strips field name data by default on single relationships.'
 		);
 
@@ -1356,13 +1356,13 @@ class DataObjectTest extends SapphireTest {
 				'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
 				'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
 			),
-			$company->has_many(null, false),
+			$company->hasMany(null, false),
 			'has_many returns field name data when $classOnly is false.'
 		);
 
 		$this->assertEquals (
 			'DataObjectTest_Staff.CurrentCompany',
-			$company->has_many('CurrentStaff', false),
+			$company->hasManyComponent('CurrentStaff', false),
 			'has_many returns field name data on single records when $classOnly is false.'
 		);
 	}

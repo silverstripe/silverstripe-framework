@@ -547,10 +547,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// DO NOT copy has_many relations, because copying the relation would result in us changing the has_one
 		// relation on the other side of this relation to point at the copy and no longer the original (being a
 		// has_one, it can only point at one thing at a time). So, all relations except has_many can and are copied
-		if ($sourceObject->has_one()) foreach($sourceObject->has_one() as $name => $type) {
+		if ($sourceObject->hasOne()) foreach($sourceObject->hasOne() as $name => $type) {
 			$this->duplicateRelations($sourceObject, $destinationObject, $name);
 		}
-		if ($sourceObject->many_many()) foreach($sourceObject->many_many() as $name => $type) {
+		if ($sourceObject->manyMany()) foreach($sourceObject->manyMany() as $name => $type) {
 			//many_many include belongs_many_many
 			$this->duplicateRelations($sourceObject, $destinationObject, $name);
 		}
@@ -666,24 +666,24 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($this->class == 'DataObject') return;
 
 		// Set up accessors for joined items
-		if($manyMany = $this->many_many()) {
+		if($manyMany = $this->manyMany()) {
 			foreach($manyMany as $relationship => $class) {
 				$this->addWrapperMethod($relationship, 'getManyManyComponents');
 			}
 		}
-		if($hasMany = $this->has_many()) {
+		if($hasMany = $this->hasMany()) {
 
 			foreach($hasMany as $relationship => $class) {
 				$this->addWrapperMethod($relationship, 'getComponents');
 			}
 
 		}
-		if($hasOne = $this->has_one()) {
+		if($hasOne = $this->hasOne()) {
 			foreach($hasOne as $relationship => $class) {
 				$this->addWrapperMethod($relationship, 'getComponent');
 			}
 		}
-		if($belongsTo = $this->belongs_to()) foreach(array_keys($belongsTo) as $relationship) {
+		if($belongsTo = $this->belongsTo()) foreach(array_keys($belongsTo) as $relationship) {
 			$this->addWrapperMethod($relationship, 'getComponent');
 		}
 	}
@@ -972,7 +972,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// merge relations
 		if($includeRelations) {
-			if($manyMany = $this->many_many()) {
+			if($manyMany = $this->manyMany()) {
 				foreach($manyMany as $relationship => $class) {
 					$leftComponents = $leftObj->getManyManyComponents($relationship);
 					$rightComponents = $rightObj->getManyManyComponents($relationship);
@@ -983,7 +983,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 			}
 
-			if($hasMany = $this->has_many()) {
+			if($hasMany = $this->hasMany()) {
 				foreach($hasMany as $relationship => $class) {
 					$leftComponents = $leftObj->getComponents($relationship);
 					$rightComponents = $rightObj->getComponents($relationship);
@@ -995,7 +995,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 			}
 
-			if($hasOne = $this->has_one()) {
+			if($hasOne = $this->hasOne()) {
 				foreach($hasOne as $relationship => $class) {
 					$leftComponent = $leftObj->getComponent($relationship);
 					$rightComponent = $rightObj->getComponent($relationship);
@@ -1130,7 +1130,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$this->$fieldName = $fieldValue;
 				}
 				// Set many-many defaults with an array of ids
-				if(is_array($fieldValue) && $this->many_many($fieldName)) {
+				if(is_array($fieldValue) && $this->manyManyComponent($fieldName)) {
 					$manyManyJoin = $this->$fieldName();
 					$manyManyJoin->setByIdList($fieldValue);
 				}
@@ -1497,7 +1497,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $this->components[$componentName];
 		}
 
-		if($class = $this->has_one($componentName)) {
+		if($class = $this->hasOneComponent($componentName)) {
 			$joinField = $componentName . 'ID';
 			$joinID    = $this->getField($joinField);
 
@@ -1514,7 +1514,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(empty($component)) {
 				$component = $this->model->$class->newObject();
 			}
-		} elseif($class = $this->belongs_to($componentName)) {
+		} elseif($class = $this->belongsToComponent($componentName)) {
 
 			$joinField = $this->getRemoteJoinField($componentName, 'belongs_to', $polymorphic);
 			$joinID    = $this->ID;
@@ -1564,7 +1564,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function getComponents($componentName, $filter = null, $sort = null, $join = null, $limit = null) {
 		$result = null;
 
-		if(!$componentClass = $this->has_many($componentName)) {
+		if(!$componentClass = $this->hasManyComponent($componentName)) {
 			user_error("DataObject::getComponents(): Unknown 1-to-many component '$componentName'"
 				. " on class '$this->class'", E_USER_ERROR);
 		}
@@ -1652,7 +1652,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function getRemoteJoinField($component, $type = 'has_many', &$polymorphic = false) {
 		// Extract relation from current object
-		$remoteClass = $this->$type($component, false);
+		if($type === 'has_many') {
+			$remoteClass = $this->hasManyComponent($component, false);
+		} else {
+			$remoteClass = $this->belongsToComponent($component, false);
+		}		
+		
 		if(empty($remoteClass)) {
 			throw new Exception("Unknown $type component '$component' on class '$this->class'");
 		}
@@ -1742,7 +1747,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$result = ManyManyList::create(
 			$componentClass, $table, $componentField, $parentField,
-			$this->many_many_extraFields($componentName)
+			$this->manyManyExtraFieldsForComponent($componentName)
 		);
 		if($this->model) $result->setDataModel($this->model);
 
@@ -1879,7 +1884,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Return all of the database fields defined in self::$db and all the parent classes.
-	 * Doesn't include any fields specified by self::$has_one.  Use $this->has_one() to get these fields
+	 * Doesn't include any fields specified by self::$has_one.  Use $this->hasOne() to get these fields
 	 *
 	 * @param string $fieldName Limit the output to a specific field name
 	 * @return array The database fields
@@ -2693,7 +2698,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return (
 			array_key_exists($field, $this->record)
 			|| $this->db($field)
-			|| (substr($field,-2) == 'ID') && $this->has_one(substr($field,0, -2))
+			|| (substr($field,-2) == 'ID') && $this->hasOneComponent(substr($field,0, -2))
 			|| $this->hasMethod("get{$field}")
 		);
 	}
@@ -2782,7 +2787,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		if(Permission::checkMember($member, "ADMIN")) return true;
 
-		if($this->many_many('Can' . $perm)) {
+		if($this->manyManyComponent('Can' . $perm)) {
 			if($this->ParentID && $this->SecurityType == 'Inherit') {
 				if(!($p = $this->Parent)) {
 					return false;
@@ -2966,12 +2971,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $obj;
 
 		// Special case for has_one relationships
-		} else if(preg_match('/ID$/', $fieldName) && $this->has_one(substr($fieldName,0,-2))) {
+		} else if(preg_match('/ID$/', $fieldName) && $this->hasOneComponent(substr($fieldName,0,-2))) {
 			$val = $this->$fieldName;
 			return DBField::create_field('ForeignKey', $val, $fieldName, $this);
 
 		// has_one for polymorphic relations do not end in ID
-		} else if(($type = $this->has_one($fieldName)) && ($type === 'DataObject')) {
+		} else if(($type = $this->hasOneComponent($fieldName)) && ($type === 'DataObject')) {
 			$val = $this->$fieldName();
 			return DBField::create_field('PolymorphicForeignKey', $val, $fieldName, $this);
 
@@ -3069,16 +3074,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return String
 	 */
 	public function getReverseAssociation($className) {
-		if (is_array($this->many_many())) {
-			$many_many = array_flip($this->many_many());
+		if (is_array($this->manyMany())) {
+			$many_many = array_flip($this->manyMany());
 			if (array_key_exists($className, $many_many)) return $many_many[$className];
 		}
-		if (is_array($this->has_many())) {
-			$has_many = array_flip($this->has_many());
+		if (is_array($this->hasMany())) {
+			$has_many = array_flip($this->hasMany());
 			if (array_key_exists($className, $has_many)) return $has_many[$className];
 		}
-		if (is_array($this->has_one())) {
-			$has_one = array_flip($this->has_one());
+		if (is_array($this->hasOne())) {
+			$has_one = array_flip($this->hasOne());
 			if (array_key_exists($className, $has_one)) return $has_one[$className];
 		}
 
@@ -3947,7 +3952,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function hasValue($field, $arguments = null, $cache = true) {
 		// has_one fields should not use dbObject to check if a value is given
-		if(!$this->has_one($field) && ($obj = $this->dbObject($field))) {
+		if(!$this->hasOneComponent($field) && ($obj = $this->dbObject($field))) {
 			return $obj->exists();
 		} else {
 			return parent::hasValue($field, $arguments, $cache);

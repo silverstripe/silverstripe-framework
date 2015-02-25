@@ -645,7 +645,7 @@ class DataQuery {
 
 		foreach($relation as $rel) {
 			$model = singleton($modelClass);
-			if ($component = $model->has_one($rel)) {
+			if ($component = $model->hasOneComponent($rel)) {
 				if(!$this->query->isJoinedTo($component)) {
 					$foreignKey = $rel;
 					$realModelClass = ClassInfo::table_for_object_field($modelClass, "{$foreignKey}ID");
@@ -668,7 +668,7 @@ class DataQuery {
 				}
 				$modelClass = $component;
 
-			} elseif ($component = $model->has_many($rel)) {
+			} elseif ($component = $model->hasManyComponent($rel)) {
 				if(!$this->query->isJoinedTo($component)) {
 					$ancestry = $model->getClassAncestry();
 					$foreignKey = $model->getRemoteJoinField($rel);
@@ -690,7 +690,7 @@ class DataQuery {
 				}
 				$modelClass = $component;
 
-			} elseif ($component = $model->many_many($rel)) {
+			} elseif ($component = $model->manyManyComponent($rel)) {
 				list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
 				$parentBaseClass = ClassInfo::baseDataClass($parentClass);
 				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
