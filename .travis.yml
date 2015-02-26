@@ -1,4 +1,4 @@
-language: php 
+language: php
 
 php:
   - 5.4
@@ -13,11 +13,14 @@ env:
   matrix:
     - DB=MYSQL
     - DB=SQLITE
-    - DB=PGSQL 
+    - DB=PGSQL
 
 matrix:
   allow_failures:
-    - php: hhvm-nightly
+    - php: hhvm
+    - php: 7.0
+    - php: nightly
+
   include:
     - php: 5.5
       env: DB=MYSQL
@@ -27,7 +30,11 @@ matrix:
       env: DB=MYSQL BEHAT_TEST=1
     - php: 5.3
       env: DB=MYSQL
-    - php: hhvm-nightly
+    - php: 7.0
+      env: DB=MYSQL
+    - php: nightly
+      env: DB=MYSQL
+    - php: hhvm
       env: DB=MYSQL
       before_install:
         - sudo apt-get update -qq
@@ -43,7 +50,7 @@ before_script:
  - php ~/travis-support/travis_setup_selenium.php --if-env BEHAT_TEST
  - php ~/travis-support/travis_setup_php54_webserver.php --if-env BEHAT_TEST
 
-script: 
+script:
  - "if [ \"$BEHAT_TEST\" = \"\" ]; then vendor/bin/phpunit framework/tests; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ]; then vendor/bin/behat @framework; fi"
 
