@@ -368,8 +368,9 @@ class ImageExtension extends DataExtension {
 		);
 
 		function canEdit($member) {
-			// This part is important!
-			return Permission::check('ADMIN');
+			// WARNING! This affects permissions on ALL images. Setting this incorrectly can restrict
+			// access to authorised users or unintentionally give access to unauthorised users if set incorrectly.
+			return Permission::check('CMS_ACCESS_AssetAdmin');
 		}
 	}
 ```
@@ -378,6 +379,6 @@ class ImageExtension extends DataExtension {
 
 ```yml
 Image:
-  extensiona
-    -ImageExtension
+  extensions:
+    - ImageExtension
 ```
