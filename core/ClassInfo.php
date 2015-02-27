@@ -3,8 +3,8 @@
 /**
  * Provides introspection information about the class tree.
  *
- * It's a cached wrapper around the built-in class functions.  SilverStripe uses 
- * class introspection heavily and without the caching it creates an unfortunate 
+ * It's a cached wrapper around the built-in class functions.  SilverStripe uses
+ * class introspection heavily and without the caching it creates an unfortunate
  * performance hit.
  *
  * @package framework
@@ -35,7 +35,7 @@ class ClassInfo {
 	 * @var Array Cache for {@link ancestry()}.
 	 */
 	private static $_cache_ancestry = array();
-	
+
 	/**
 	 * @todo Move this to SS_Database or DB
 	 */
@@ -52,17 +52,18 @@ class ClassInfo {
 			return false;
 		}
 	}
-	
+
 	public static function reset_db_cache() {
 		self::$_cache_all_tables = null;
 		self::$_cache_ancestry = array();
 	}
-	
+
 	/**
 	 * Returns the manifest of all classes which are present in the database.
 	 * @param string $class Class name to check enum values for ClassName field
 	 */
 	public static function getValidSubClasses($class = 'SiteTree', $includeUnbacked = false) {
+		$class = self::class_name($class);
 		$classes = DB::getConn()->enumValuesForField($class, 'ClassName');
 		if (!$includeUnbacked) $classes = array_filter($classes, array('ClassInfo', 'exists'));
 		return $classes;
@@ -71,7 +72,7 @@ class ClassInfo {
 	/**
 	 * Returns an array of the current class and all its ancestors and children
 	 * which have a DB table.
-	 * 
+	 *
 	 * @param string|object $class
 	 * @todo Move this into data object
 	 * @return array
@@ -79,9 +80,7 @@ class ClassInfo {
 	public static function dataClassesFor($class) {
 		$result = array();
 
-		if (is_object($class)) {
-			$class = get_class($class);
-		}
+		$class = self::class_name($class);
 
 		$classes = array_merge(
 			self::ancestry($class),
@@ -102,7 +101,7 @@ class ClassInfo {
 	 * @return string
 	 */
 	public static function baseDataClass($class) {
-		if (is_object($class)) $class = get_class($class);
+		$class = self::class_name($class);
 
 		if (!is_subclass_of($class, 'DataObject')) {
 			throw new InvalidArgumentException("$class is not a subclass of DataObject");
@@ -121,29 +120,48 @@ class ClassInfo {
 	 * Returns a list of classes that inherit from the given class.
 	 * The resulting array includes the base class passed
 	 * through the $class parameter as the first array value.
-	 * 
+	 *
 	 * Example usage:
 	 * <code>
 	 * ClassInfo::subclassesFor('BaseClass');
 	 * 	array(
-	 * 	0 => 'BaseClass',
+	 * 	'BaseClass' => 'BaseClass',
 	 * 	'ChildClass' => 'ChildClass',
 	 * 	'GrandChildClass' => 'GrandChildClass'
 	 * )
 	 * </code>
-	 * 
+	 *
 	 * @param mixed $class string of the classname or instance of the class
 	 * @return array Names of all subclasses as an associative array.
 	 */
 	public static function subclassesFor($class) {
+		//normalise class case
+		$className = self::class_name($class);
 		$descendants = SS_ClassLoader::instance()->getManifest()->getDescendantsOf($class);
-		$result      = array($class => $class);
+		$result      = array($className => $className);
 
 		if ($descendants) {
 			return $result + ArrayLib::valuekey($descendants);
 		} else {
 			return $result;
 		}
+	}
+
+	/**
+	 * Convert a class name in any case and return it as it was defined in PHP
+	 *
+	 * eg: self::class_name('dataobJEct'); //returns 'DataObject'
+	 *
+	 * @param string|object $nameOrObject The classname or object you want to normalise
+	 *
+	 * @return string The normalised class name
+	 */
+	public static function class_name($nameOrObject) {
+		if (is_object($nameOrObject)) {
+			return get_class($nameOrObject);
+		}
+		$reflection = new ReflectionClass($nameOrObject);
+		return $reflection->getName();
 	}
 
 	/**
@@ -155,9 +173,11 @@ class ClassInfo {
 	 * @return array
 	 */
 	public static function ancestry($class, $tablesOnly = false) {
-		if (!is_string($class)) $class = get_class($class);
+		$class = self::class_name($class);
 
-		$cacheKey = $class . '_' . (string)$tablesOnly;
+		$lClass = strtolower($class);
+
+		$cacheKey = $lClass . '_' . (string)$tablesOnly;
 		$parent = $class;
 		if(!isset(self::$_cache_ancestry[$cacheKey])) {
 			$ancestry = array();
@@ -166,7 +186,7 @@ class ClassInfo {
 					$ancestry[$parent] = $parent;
 				}
 			} while ($parent = get_parent_class($parent));
-			self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry);	
+			self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry);
 		}
 
 		return self::$_cache_ancestry[$cacheKey];
@@ -184,16 +204,16 @@ class ClassInfo {
 	 * Returns true if the given class implements the given interface
 	 */
 	public static function classImplements($className, $interfaceName) {
-		return in_array($className, SS_ClassLoader::instance()->getManifest()->getImplementorsOf($interfaceName));
+		return in_array($className, self::implementorsOf($interfaceName));
 	}
 
 	/**
 	 * Get all classes contained in a file.
 	 * @uses ManifestBuilder
-	 * 
+	 *
 	 * @todo Doesn't return additional classes that only begin
 	 *  with the filename, and have additional naming separated through underscores.
-	 * 
+	 *
 	 * @param string $filePath Path to a PHP file (absolute or relative to webroot)
 	 * @return array
 	 */
@@ -205,16 +225,16 @@ class ClassInfo {
 		foreach($manifest as $class => $compareFilePath) {
 			if($absFilePath == $compareFilePath) $matchedClasses[] = $class;
 		}
-		
+
 		return $matchedClasses;
 	}
-	
+
 	/**
 	 * Returns all classes contained in a certain folder.
 	 *
 	 * @todo Doesn't return additional classes that only begin
 	 *  with the filename, and have additional naming separated through underscores.
-	 * 
+	 *
 	 * @param string $folderPath Relative or absolute folder path
 	 * @return array Array of class names
 	 */
@@ -233,25 +253,28 @@ class ClassInfo {
 	private static $method_from_cache = array();
 
 	public static function has_method_from($class, $method, $compclass) {
-		if (!isset(self::$method_from_cache[$class])) self::$method_from_cache[$class] = array();
+		$lClass = strtolower($class);
+		$lMethod = strtolower($method);
+		$lCompclass = strtolower($compclass);
+		if (!isset(self::$method_from_cache[$lClass])) self::$method_from_cache[$lClass] = array();
 
-		if (!array_key_exists($method, self::$method_from_cache[$class])) {
-			self::$method_from_cache[$class][$method] = false;
+		if (!array_key_exists($lMethod, self::$method_from_cache[$lClass])) {
+			self::$method_from_cache[$lClass][$lMethod] = false;
 
 			$classRef = new ReflectionClass($class);
 
 			if ($classRef->hasMethod($method)) {
 				$methodRef = $classRef->getMethod($method);
-				self::$method_from_cache[$class][$method] = $methodRef->getDeclaringClass()->getName();
+				self::$method_from_cache[$lClass][$lMethod] = $methodRef->getDeclaringClass()->getName();
 			}
 		}
 
-		return self::$method_from_cache[$class][$method] == $compclass;
+		return strtolower(self::$method_from_cache[$lClass][$lMethod]) == $lCompclass;
 	}
-	
+
 
 	/**
-	 * Returns the table name in the class hierarchy which contains a given 
+	 * Returns the table name in the class hierarchy which contains a given
 	 * field column for a {@link DataObject}. If the field does not exist, this
 	 * will return null.
 	 *
@@ -261,23 +284,26 @@ class ClassInfo {
 	 * @return string
 	 */
 	public static function table_for_object_field($candidateClass, $fieldName) {
-		if(!$candidateClass || !$fieldName) {
+		if(!$candidateClass || !$fieldName || !is_subclass_of($candidateClass, 'DataObject')) {
 			return null;
 		}
 
-		$exists = class_exists($candidateClass);
+		//normalise class name
+		$candidateClass = self::class_name($candidateClass);
+
+		$exists = self::exists($candidateClass);
 
 		while($candidateClass && $candidateClass != 'DataObject' && $exists) {
 			if(DataObject::has_own_table($candidateClass)) {
 				$inst = singleton($candidateClass);
-				
+
 				if($inst->hasOwnTableDatabaseField($fieldName)) {
 					break;
 				}
 			}
 
 			$candidateClass = get_parent_class($candidateClass);
-			$exists = class_exists($candidateClass);
+			$exists = $candidateClass && self::exists($candidateClass);
 		}
 
 		if(!$candidateClass || !$exists) {
