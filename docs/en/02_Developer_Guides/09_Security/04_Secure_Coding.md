@@ -7,7 +7,7 @@ See our "[Release Process](/misc/release-process#security-releases) on how to re
 
 ## SQL Injection
 
-The [coding-conventions](/misc/coding-conventions) help guard against SQL injection attacks but still require developer
+The [coding-conventions](/getting_started/coding_conventions) help guard against SQL injection attacks but still require developer
 diligence: ensure that any variable you insert into a filter / sort / join clause has been escaped.
 
 See [http://shiflett.org/articles/sql-injection](http://shiflett.org/articles/sql-injection).
@@ -49,7 +49,7 @@ result in *double escaping* and alters the actually saved data (e.g. by adding s
 ### Manual escaping
 
 As a rule of thumb, whenever you're creating raw queries (or just chunks of SQL), you need to take care of escaping
-yourself. See [coding-conventions](/misc/coding-conventions) and [datamodel](/topics/datamodel) for ways to cast and convert
+yourself. See [coding-conventions](/getting_started/coding_conventions) and [datamodel](/topics/datamodel) for ways to cast and convert
 your data.
 
 *  `SQLQuery`

@@ -309,7 +309,7 @@ equal the class names they manage.
 
 ## Related Documentation
 
-* [How to use a FixtureFactory](how_to/fixturefactories/)
+* [How to use a FixtureFactory](how_tos/fixturefactories/)
 
 ## API Documentation
 

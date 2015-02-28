@@ -66,7 +66,7 @@ Layout manager will automatically apply algorithms to the children of `.cms-cont
 For detailed discussion on available algorithms refer to
 [jLayout algorithms](https://github.com/bramstein/jlayout#layout-algorithms).
 
-Our [Howto: Extend the CMS Interface](../howto/extend-cms-interface) has a practical example on how to add a bottom
+Our [Howto: Extend the CMS Interface](how_tos/extend_cms_interface) has a practical example on how to add a bottom
 panel to the CMS UI.
 
 ### Methods
@@ -115,6 +115,6 @@ The parameters are as follows:
 
 ## Related
 
- * [Reference: CMS Architecture](../reference/cms-architecture)
- * [Reference: Preview](../reference/preview)
- * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
+ * [Reference: CMS Architecture](cms_architecture)
+ * [Reference: Preview](preview)
+ * [Howto: Extend the CMS Interface](how_tos/extend_cms_interface)

@@ -9,7 +9,7 @@ This tutorial is deprecated, and has been replaced by Lessons 7, 8, 9, and 10 in
 
 ## Overview
 
-This tutorial explores the relationship and management of [DataObjects](/developer_guides/model/dataobject). It builds on the [second tutorial](/tutorials/extending_a_basic_site) where we learnt how to define
+This tutorial explores the relationship and management of [DataObjects](api:DataObject). It builds on the [second tutorial](/tutorials/extending_a_basic_site) where we learnt how to define
 additional fields on our models, and attach images to them.
 
 ## What are we working towards?
@@ -65,8 +65,9 @@ Let's create the `Student` and `Project` objects.
 The relationships are defined through the `$has_one`
 and `$has_many` properties on the objects.
 The array keys declares the name of the relationship,
-the array values contain the class name (see the ["database structure"](/developer_guides/model/database_structure)
-and ["datamodel"](/developer_guides/model/data_model_and_orm) topics for more information).
+the array values contain the class name
+(see the ["datamodel"](/developer_guides/model/data_model_and_orm)
+topic for more information).
 
 As you can see, only the `Project` model extends `Page`,
 while `Student` is a plain `DataObject` subclass.

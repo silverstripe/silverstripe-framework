@@ -17,7 +17,7 @@ Flushing the various manifests is performed through a GET
 parameter (`flush=1`). Since this action requires more server resources than normal requests,
 executing the action is limited to the following cases when performed via a web request:
 
- * The [environment](/topics/environment-management) is in "dev mode"
+ * The [environment](../getting_started/environment_management) is in "dev mode"
  * A user is logged in with ADMIN permissions
  * An error occurs during startup
 

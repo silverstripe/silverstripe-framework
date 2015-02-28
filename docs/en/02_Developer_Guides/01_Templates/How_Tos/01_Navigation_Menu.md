@@ -31,4 +31,4 @@ top level menu with a nested second level using the `Menu` loop and a `Children`
 ## Related
 
 * [Template Syntax](../syntax)
-* [Common Variables](../command_variables)
+* [Common Variables](../common_variables)

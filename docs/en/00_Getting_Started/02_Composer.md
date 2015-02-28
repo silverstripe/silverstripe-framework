@@ -3,7 +3,7 @@
 Composer is a package management tool for PHP that lets you install and upgrade SilverStripe and its modules.  Although installing Composer is one extra step, it will give you much more flexibility than just downloading the file from silverstripe.org. This is our recommended way of downloading SilverStripe and managing your code.
 
 For more information about Composer, visit [its website](http://getcomposer.org/).
-We also have separate instructions for [installing modules with Composer](/topics/modules).
+We also have separate instructions for [installing modules with Composer](/developer_guides/extending/modules).
 
 # Basic usage
 
@@ -36,7 +36,7 @@ If you already have composer installed you can update it by running:
 Composer updates regularly, so you should run this command fairly often. These instructions assume you are running the latest version.
 
 ## Installing Composer on Windows WAMP
-For those that use WAMP as a development environment, [detailed information is available on installing using Composer.](/installation/windows-wamp#install-wamp) 
+For those that use WAMP as a development environment, [detailed information is available on installing using Composer.](/getting_started/installation/windows) 
 
 ## Create a new site
 
@@ -139,7 +139,7 @@ and remove the `@stable` markers from the `silverstripe/cms` and `silverstripe/f
 Another `composer update --dev` call will now fetch from the development branch instead.
 Note that you can also convert an existing composer project with these steps.
 
-Please read the ["Contributing Code"](/misc/contributing/code) documentation to find out how to
+Please read the ["Contributing Code"](/contributing/code) documentation to find out how to
 create forks and send pull requests.
 
 # Advanced usage
@@ -290,9 +290,9 @@ which triggers their installation into the correct path.
 
 ### How do I convert an existing project to Composer?
 
-The easiest way is to follow the [upgrading](/installation/upgrading) instructions
-and switch to a newer release. Alternatively, copy the `composer.json` file from 
-a newer release, and adjust the version settings in the "require" section to your needs.
+Copy the `composer.json` file from a newer release, and adjust the
+version settings in the "require" section to your needs. Then refer to
+the [upgrading documentation](/upgrading).
 You'll also need to update your webserver configuration
 from there (`.htaccess` or `web.config` files), in order to prevent
 web access to the composer-generated files.
