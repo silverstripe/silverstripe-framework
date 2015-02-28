@@ -11,7 +11,7 @@ equivalent:
 
 	:::php
 	// Through raw SQL.
-	$count = DB::query('SELECT COUNT(*) FROM "Member"')->value();
+	$count = DB::query('SELECT COUNT(*) FROM "Member"')->execute()->value();
 
 	// Through SQLQuery abstraction layer.
 	$query = new SQLQuery();
