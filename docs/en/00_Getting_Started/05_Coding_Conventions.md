@@ -117,7 +117,7 @@ Example: `mysite/code/MyClass.php`
 
 To help with namespacing common class names (like Database) it is recommended to use a prefix convention `SS_ClassName` but the filename will remain `ClassName.php`. 
 
-See [directory-structure](/topics/directory-structure) for more information.
+See [directory structure](directory_structure) for more information.
 
 ## Coding Style
 
@@ -450,5 +450,4 @@ which are licensed under BSD (see [license](http://framework.zend.com/license)).
 
 ## Related
 
- * [Topics: CSS](/topics/css)
- * [Reference: CMS Architecture](/reference/cms-archirecture)
+ * [Reference: CMS Architecture](/developer_guides/customising_the_admin_interface/cms_architecture)

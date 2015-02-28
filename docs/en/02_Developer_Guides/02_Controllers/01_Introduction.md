@@ -145,7 +145,7 @@ Controller actions can use `renderWith` to override this template selection proc
 `htmlaction`. `MyCustomTemplate.ss` would be used rather than `TeamsController`.
 
 For more information about templates, inheritance and how to rendering into views, See the 
-[Templates and Views](templates) documentation.
+[Templates and Views](../templates) documentation.
 
 ## Link
 

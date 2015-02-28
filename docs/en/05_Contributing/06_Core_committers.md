@@ -24,7 +24,7 @@ With great power comes great responsibility, so we have agreed on certain expect
  * Treat issues according to our [issue guidelines](issues_and_bugs)
  * Don't commit directly to core, raise pull requests instead (except trivial fixes)
  * Only merge code you have tested and fully understand. If in doubt, ask for a second opinion.
- * Ensure contributions have appropriate [test coverage](/topics/testing), are documented, and pass our [coding conventions](/getting_started/coding-conventions)
+ * Ensure contributions have appropriate [test coverage](../developer_guides/testing), are documented, and pass our [coding conventions](/getting_started/coding_conventions)
  * Keep the codebase "releasable" at all times (check our [release process](release_process))
  * API changes and non-trivial features should not be merged into release branches. 
  * API changes on master should not be merged until they have the buy-in of at least two core committers (or better, through the [core mailing list](https://groups.google.com/forum/#!forum/silverstripe-dev))

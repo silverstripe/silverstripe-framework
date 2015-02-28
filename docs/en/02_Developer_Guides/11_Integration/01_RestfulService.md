@@ -169,7 +169,7 @@ If you want to bypass error handling, define `checkErrors` in the constructor fo
 
 ## How to's
 
-* [Embed an RSS Feed](how_to/embed_rss)
+* [Embed an RSS Feed](how_tos/embed_rss)
 
 ## API Documentation
 

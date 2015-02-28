@@ -393,7 +393,7 @@ A page will normally contain some content and potentially a form of some kind. F
 SilverStripe log-in form. If you are on such a page, the `$Form` variable will contain the HTML content of the form. 
 Placing it just below `$Content` is a good default.
 
-You can add your own forms by implementing new form instances (see the [Forms tutorial](../tutorials/forms)).
+You can add your own forms by implementing new form instances (see the [Forms tutorial](/tutorials/forms)).
 
 
 ## Related

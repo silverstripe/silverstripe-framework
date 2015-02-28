@@ -103,7 +103,7 @@ Creates a map based on the first two columns of the query result.
 
 ## Related Documentation
 
-* [Introduction to the Data Model and ORM](../data_model_and_orm)
+* [Introduction to the Data Model and ORM](data_model_and_orm)
 
 ## API Documentation
 

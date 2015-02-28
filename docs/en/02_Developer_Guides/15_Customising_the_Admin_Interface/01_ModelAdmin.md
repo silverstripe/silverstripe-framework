@@ -10,7 +10,7 @@ It uses the framework's knowledge about the model to provide sensible defaults, 
 of lines of code, while still providing a solid base for customization.
 
 <div class="info" markdown="1">
-The interface is mainly powered by the [api:GridField] class ([documentation](../forms/fields/gridfield)), which can
+The interface is mainly powered by the [api:GridField] class ([documentation](../forms/field_types/gridfield)), which can
 also be used in other areas of your application.
 </div>
 
@@ -146,7 +146,7 @@ class (see [SearchContext](../search/searchcontext) docs for details).
 
 ## Displaying Results
 
-The results are shown in a tabular listing, powered by the [GridField](../forms/fields/gridfield), more specifically
+The results are shown in a tabular listing, powered by the [GridField](../forms/field_types/gridfield), more specifically
 the [api:GridFieldDataColumns] component. This component looks for a [api:DataObject::$summary_fields] static on your
 model class, where you can add or remove columns. To change the title, use [api:DataObject::$field_labels].
 
@@ -320,9 +320,9 @@ To customize the exported columns, create a new method called `getExportFields` 
 
 ## Related Documentation
 
-* [GridField](../forms/fields/gridfield)
+* [GridField](../forms/field_types/gridfield)
 * [Permissions](../security/permissions)
-* [SeachContext](../search/seachcontext)
+* [SearchContext](../search/searchcontext)
 
 ## API Documentation
 

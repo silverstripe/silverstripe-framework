@@ -13,7 +13,7 @@ information.
 All data tables in SilverStripe are defined as subclasses of [api:DataObject]. The [api:DataObject] class represents a 
 single row in a database table, following the ["Active Record"](http://en.wikipedia.org/wiki/Active_record_pattern) 
 design pattern. Database Columns are is defined as [Data Types](data_types_and_casting) in the static `$db` variable 
-along with any [relationships](../relations) defined as `$has_one`, `$has_many`, `$many_many` properties on the class.
+along with any [relationships](relations) defined as `$has_one`, `$has_many`, `$many_many` properties on the class.
 
 Let's look at a simple example:
 
@@ -222,7 +222,7 @@ Notice that we can step into the loop safely without having to check if `$player
 		// do something here
 	}
 
-See the [Lists](../lists) documentation for more information on dealing with [api:SS_List] instances.
+See the [Lists](lists) documentation for more information on dealing with [api:SS_List] instances.
 
 ## Returning a single DataObject
 
@@ -512,7 +512,7 @@ whenever a new object is created.
 
 <div class="notice" markdown='1'>
 Note: Alternatively you can set defaults directly in the database-schema (rather than the object-model). See 
-[Data Types and Casting](data-types) for details.
+[Data Types and Casting](data_types_and_casting) for details.
 </div>
 
 ## Subclasses

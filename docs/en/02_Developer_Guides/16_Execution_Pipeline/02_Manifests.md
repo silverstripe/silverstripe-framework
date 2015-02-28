@@ -64,14 +64,14 @@ a `tests/` folder, unless tests are executed.
 
 The `[api:SS_TemplateManifest]` class builds a manifest of all templates present in a directory,
 in both modules and themes. Templates in `tests/` folders are automatically excluded.
-The chapter on [template inheritance](../templates/template-inheritance) provides more details
+The chapter on [template inheritance](../templates/template_inheritance) provides more details
 on its operation.
 
 ## Config Manifest
 
 The `[api:SS_ConfigManifest]` loads builds a manifest of configuration items,
 for both PHP and YAML. It also takes care of ordering and merging configuration fragments.
-The chapter on [configuration](/topics/configuration) has more details.
+The chapter on [configuration](../configuration) has more details.
 
 ## Flushing
 
