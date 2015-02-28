@@ -37,7 +37,7 @@ class CompositeDBFieldTest extends SapphireTest {
 	}
 }
 
-class CompositeDBFieldTest_DataObject extends DataObject {
+class CompositeDBFieldTest_DataObject extends DataObject implements TestOnly {
 	private static $db = array(
 		'Title' => 'Text',
 		'MyMoney' => 'Money',
