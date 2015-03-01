@@ -24,7 +24,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$this->assertEquals(
 			(string)$firstResult[0], 
 			$folder1Subfolder1->Name, 
-			'FileTest-folder1-subfolder1 is found, nested under folder1'
+			$folder1Subfolder1->Name.' is found, nested under '.$folder1->Name
 		);
 
 		$subfolder = $this->objFromFixture('Folder','subfolder');
@@ -33,7 +33,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$this->assertEquals(
 			(string)$secondResult[0], 
 			$subfolder->Name, 
-			'FileTest-subfolder is found at root level'
+			$subfolder->Name.' is found at root level'
 		);
 
 		// other folders which don't contain the keyword 'sub' are not returned in search results
@@ -43,7 +43,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$this->assertEquals(
 			$noResult, 
 			array(), 
-			'FileTest-folder2 is not found'
+			$folder2.' is not found'
 		);
 
 		$field = new TreeDropdownField('TestTree', 'Test tree', 'File');
@@ -60,7 +60,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$this->assertEquals(
 			(string)$firstResult[0], 
 			$folder1Subfolder1->Name, 
-			'FileTest-folder1-subfolder1 is found, nested under folder1'
+			$folder1Subfolder1->Name.' is found, nested under '.$folder1->Name
 		);
 
 		// Looking for two files with 'sub' in their name, both under the same folder
@@ -68,18 +68,28 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$file2 = $this->objFromFixture('File','subfolderfile2');
 		$cssPath = 'ul.tree li#selector-TestTree-'.$subfolder->ID.' li#selector-TestTree-'.$file1->ID.' a';
 		$firstResult = $parser->getBySelector($cssPath);
+		$this->assertGreaterThan(
+			0, 
+			count($firstResult), 
+			$file1->Name.' with ID '.$file1->ID.' is in search results'
+		);
 		$this->assertEquals(
 			(string)$firstResult[0], 
 			$file1->Name, 
-			'TestFile1InSubfolder is found nested under subfolder'
+			$file1->Name.' is found nested under '.$subfolder->Name
 		);
 
 		$cssPath = 'ul.tree li#selector-TestTree-'.$subfolder->ID.' li#selector-TestTree-'.$file2->ID.' a';
 		$secondResult = $parser->getBySelector($cssPath);
+		$this->assertGreaterThan(
+			0,
+			count($secondResult), 
+			$file2->Name.' with ID '.$file2->ID.' is in search results'
+		);
 		$this->assertEquals(
 			(string)$secondResult[0], 
 			$file2->Name, 
-			'TestFile2InSubfolder is found nested under subfolder'
+			$file2->Name.' is found nested under '.$subfolder->Name
 		);
 
 		// other files which don't include 'sub' are not returned in search results
@@ -89,7 +99,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$this->assertEquals(
 			$noResult, 
 			array(), 
-			'FileTest.txt is not found'
+			$file3->Name.' is not found'
 		);
 	}
 
