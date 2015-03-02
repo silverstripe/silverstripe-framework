@@ -406,7 +406,12 @@
 										newNode = self.find('li[data-id='+nodeId+']');
 										correctStateFn(newNode);
 									});
-								} else {
+								} else if(self.find('li[data-id='+nodeId+']').length){
+                                    					self.jstree('load_node', -1, function() {
+                                        					newNode = self.find('li[data-id='+nodeId+']');
+                                        					correctStateFn(newNode);
+                                    					});
+                                				} else {
 									self.createNode(nodeData.html, nodeData, function(newNode) {
 										correctStateFn(newNode);
 									});
