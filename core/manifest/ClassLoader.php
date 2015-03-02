@@ -95,7 +95,7 @@ class SS_ClassLoader {
 	}
 
 	/**
-	 * Returns true if a class or interface name exists in the manifest.
+	 * Returns true if a class name exists in the manifest.
 	 *
 	 * @param  string $class
 	 * @return bool
