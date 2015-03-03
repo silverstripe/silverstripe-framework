@@ -49,6 +49,19 @@ class DataQueryTest extends SapphireTest {
 			$dq->sql());
 	}
 
+	public function testApplyRelation() {
+		// Test applyRelation with two has_ones pointing to the same class
+		$dq = new DataQuery('DataQueryTest_B');
+		$dq->applyRelation('TestC');
+		$this->assertTrue($dq->query()->isJoinedTo('DataQueryTest_C'));
+		$this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
+
+		$dq = new DataQuery('DataQueryTest_B');
+		$dq->applyRelation('TestCTwo');
+		$this->assertTrue($dq->query()->isJoinedTo('DataQueryTest_C'));
+		$this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
+	}
+
 	public function testApplyReplationDeepInheretence() {
 		$newDQ = new DataQuery('DataQueryTest_E');
 		//apply a relation to a relation from an ancestor class
@@ -253,6 +266,7 @@ class DataQueryTest_B extends DataObject implements TestOnly {
 
 	private static $has_one = array(
 		'TestC' => 'DataQueryTest_C',
+		'TestCTwo' => 'DataQueryTest_C',
 	);
 }
 
@@ -269,7 +283,8 @@ class DataQueryTest_C extends DataObject implements TestOnly {
 
 	private static $has_many = array(
 		'TestAs' => 'DataQueryTest_A',
-		'TestBs' => 'DataQueryTest_B',
+		'TestBs' => 'DataQueryTest_B.TestC',
+		'TestBsTwo' => 'DataQueryTest_B.TestCTwo',
 	);
 
 	private static $many_many = array(

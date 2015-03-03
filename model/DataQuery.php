@@ -608,8 +608,7 @@ class DataQuery {
 			$model = singleton($modelClass);
 			if ($component = $model->has_one($rel)) {
 				if(!$this->query->isJoinedTo($component)) {
-					$has_one = array_flip($model->has_one());
-					$foreignKey = $has_one[$component];
+					$foreignKey = $rel;
 					$realModelClass = ClassInfo::table_for_object_field($modelClass, "{$foreignKey}ID");
 					$this->query->addLeftJoin($component,
 						"\"$component\".\"ID\" = \"{$realModelClass}\".\"{$foreignKey}ID\"");
