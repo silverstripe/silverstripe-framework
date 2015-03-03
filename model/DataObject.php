@@ -1793,18 +1793,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $this->hasOneComponent($component);
 		}
 
-		$items = (array)Config::inst()->get($this->class, 'has_one', Config::INHERITED);
-
-		// Validate the data
-		foreach($items as $k => $v) {
-			if(!is_string($k) || is_numeric($k) || !is_string($v)) {
-				throw new LogicException("$this->class::\$has_one has a bad entry: "
-					. var_export($k, true). " => " . var_export($v, true) . ".  Each map key should be a
-					 relationship name, and the map value should be the data class to join to.");
-			}
-		}
-
-		return $items;
+		return (array)Config::inst()->get($this->class, 'has_one', Config::INHERITED);
 	}
 
 	/**
@@ -1911,15 +1900,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					return $dbItems[$fieldName];
 				}
 			} else {
-				// Validate the data
-				foreach($dbItems as $k => $v) {
-					if(!is_string($k) || is_numeric($k) || !is_string($v)) {
-						throw new LogicException("$class::\$db has a bad entry: "
-							. var_export($k, true). " => " . var_export($v, true) . ".  Each map key should be a
-							 property name, and the map value should be the property type.");
-					}
-				}
-
 				$items = isset($items) ? array_merge((array) $items, $dbItems) : $dbItems;
 			}
 		}
@@ -2025,16 +2005,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $this->manyManyExtraFieldsForComponent($component);
 		}
 
-		$items = (array)Config::inst()->get($this->class, 'many_many_extraFields', Config::INHERITED);
-		foreach($items as $k => $v) {
-			if(!is_array($v)) {
-				throw new LogicException("$this->class::\$many_many_extraFields has a bad entry: "
-					. var_export($k, true) . " => " . var_export($v, true)
-					. ". Each many_many_extraFields entry should map to a field specification array.");
-			}
-		}
-
-		return !empty($items) ? $items : null;
+		return Config::inst()->get($this->class, 'many_many_extraFields', Config::INHERITED);
 	}
 
 	/**
@@ -2118,24 +2089,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		$manyManys = (array)Config::inst()->get($this->class, 'many_many', Config::INHERITED);
-		// Validate the data
-		foreach($manyManys as $k => $v) {
-			if(!is_string($k) || is_numeric($k) || !is_string($v)) {
-				throw new LogicException("$this->class::\$many_many has a bad entry: "
-					. var_export($k, true). " => " . var_export($v, true) . ".  Each map key should be a
-					 relationship name, and the map value should be the data class to join to.");
-			}
-		}
-
 		$belongsManyManys = (array)Config::inst()->get($this->class, 'belongs_many_many', Config::INHERITED);
-		// Validate the data
-		foreach($belongsManyManys as $k => $v) {
-			if(!is_string($k) || is_numeric($k) || !is_string($v)) {
-				throw new LogicException("$this->class::\$belongs_many_many has a bad entry: "
-					. var_export($k, true). " => " . var_export($v, true) . ".  Each map key should be a
-					 relationship name, and the map value should be the data class to join to.");
-			}
-		}
 
 		$items = array_merge($manyManys, $belongsManyManys);
 		return $items;
@@ -3355,6 +3309,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$indexes = $this->databaseIndexes();
 
+		// Validate relationship configuration
+		$this->validateModelDefinitions();
+
 		if($fields) {
 			$hasAutoIncPK = ($this->class == ClassInfo::baseDataClass($this->class));
 			DB::require_table($this->class, $fields, $indexes, $hasAutoIncPK, $this->stat('create_table_options'),
@@ -3389,6 +3346,42 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Let any extentions make their own database fields
 		$this->extend('augmentDatabase', $dummy);
+	}
+
+	/**
+	 * Validate that the configured relations for this class use the correct syntaxes
+	 * @throws LogicException
+	 */
+	protected function validateModelDefinitions() {
+		$modelDefinitions = array(
+			'db' => Config::inst()->get($this->class, 'db', Config::UNINHERITED),
+			'has_one' => Config::inst()->get($this->class, 'has_one', Config::UNINHERITED),
+			'has_many' => Config::inst()->get($this->class, 'has_many', Config::UNINHERITED),
+			'belongs_to' => Config::inst()->get($this->class, 'belongs_to', Config::UNINHERITED),
+			'many_many' => Config::inst()->get($this->class, 'many_many', Config::UNINHERITED),
+			'belongs_many_many' => Config::inst()->get($this->class, 'belongs_many_many', Config::UNINHERITED),
+			'many_many_extraFields' => Config::inst()->get($this->class, 'many_many_extraFields', Config::UNINHERITED)
+		);
+
+		foreach($modelDefinitions as $defType => $relations) {
+			if( ! $relations) continue;
+
+			foreach($relations as $k => $v) {
+				if($defType === 'many_many_extraFields') {
+					if(!is_array($v)) {
+						throw new LogicException("$this->class::\$many_many_extraFields has a bad entry: "
+							. var_export($k, true) . " => " . var_export($v, true)
+							. ". Each many_many_extraFields entry should map to a field specification array.");
+					}
+				} else {
+					if(!is_string($k) || is_numeric($k) || !is_string($v)) {
+						throw new LogicException("$this->class::$defType has a bad entry: "
+							. var_export($k, true). " => " . var_export($v, true) . ".  Each map key should be a
+							 relationship name, and the map value should be the data class to join to.");
+					}
+				}
+			}
+		}
 	}
 
 	/**

@@ -1062,6 +1062,86 @@ class DataObjectTest extends SapphireTest {
 		);
 	}
 
+	protected function makeAccessible($object, $method) {
+		$reflectionMethod = new ReflectionMethod($object, $method);
+		$reflectionMethod->setAccessible(true);
+		return $reflectionMethod;
+	}
+
+	public function testValidateModelDefinitionsFailsWithArray() {
+		Config::nest();
+		
+		$object = new DataObjectTest_Team;
+		$method = $this->makeAccessible($object, 'validateModelDefinitions');
+
+		Config::inst()->update('DataObjectTest_Team', 'has_one', array('NotValid' => array('NoArraysAllowed')));
+		$this->setExpectedException('LogicException');
+
+		try {
+			$method->invoke($object);
+		} catch(Exception $e) {
+			Config::unnest(); // Catch the exception so we can unnest config before failing the test
+			throw $e;
+		}
+	}
+
+	public function testValidateModelDefinitionsFailsWithIntKey() {
+		Config::nest();
+		
+		$object = new DataObjectTest_Team;
+		$method = $this->makeAccessible($object, 'validateModelDefinitions');
+
+		Config::inst()->update('DataObjectTest_Team', 'has_many', array(12 => 'DataObjectTest_Player'));
+		$this->setExpectedException('LogicException');
+
+		try {
+			$method->invoke($object);
+		} catch(Exception $e) {
+			Config::unnest(); // Catch the exception so we can unnest config before failing the test
+			throw $e;
+		}
+	}
+
+	public function testValidateModelDefinitionsFailsWithIntValue() {
+		Config::nest();
+		
+		$object = new DataObjectTest_Team;
+		$method = $this->makeAccessible($object, 'validateModelDefinitions');
+
+		Config::inst()->update('DataObjectTest_Team', 'many_many', array('Players' => 12));
+		$this->setExpectedException('LogicException');
+
+		try {
+			$method->invoke($object);
+		} catch(Exception $e) {
+			Config::unnest(); // Catch the exception so we can unnest config before failing the test
+			throw $e;
+		}
+	}
+
+	/**
+	 * many_many_extraFields is allowed to have an array value, so shouldn't throw an exception
+	 */
+	public function testValidateModelDefinitionsPassesWithExtraFields() {
+		Config::nest();
+		
+		$object = new DataObjectTest_Team;
+		$method = $this->makeAccessible($object, 'validateModelDefinitions');
+
+		Config::inst()->update('DataObjectTest_Team', 'many_many_extraFields',
+			array('Relations' => array('Price' => 'Int')));
+
+		try {
+			$method->invoke($object);
+		} catch(Exception $e) {
+			Config::unnest();
+			$this->fail('Exception should not be thrown');
+			throw $e;
+		}
+
+		Config::unnest();
+	}
+
 	public function testNewClassInstance() {
 		$dataObject = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$changedDO = $dataObject->newClassInstance('DataObjectTest_SubTeam');
