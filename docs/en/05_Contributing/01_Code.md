@@ -59,7 +59,43 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 8. Issue pull request on GitHub.  Visit your forked respoistory on GitHub.com and click the "Create Pull Request" button nex tot the new branch.
 
 The core team is then responsible for reviewing patches and deciding if they will make it into core.  If
-there are any problems they will follow up with you, so please ensure they have a way to contact you! 
+there are any problems they will follow up with you, so please ensure they have a way to contact you!
+
+### The Pull Request Process
+
+Once your pull request is issued, it's not the end of the road. A [core committer](/contributing/core_committers/) will most likely have some questions for you and may ask you to make some changes depending on discussions you have.
+If you've been naughty and not adhered to the coding conventions, expect a few requests to make changes so your code is in-line.
+
+If your change is particularly significant, it may be referred to the [mailing list](https://groups.google.com/forum/#!forum/silverstripe-dev) for further community discussion.
+
+A core committer will also "label" your PR using the labels defined in GitHub, these are to correctly classify and help find your work at a later date.
+
+#### GitHub Labels
+
+The current GitHub labels are grouped into 5 sections:
+
+ 1. Changes - These are designed to signal what kind of change they are and how they fit into the [Semantic Versioning](http://semver.org/) schema
+ 2. Impact - What impact does this bug/issue/fix have, does it break a feature completely, is it just a side effect or is it trivial and not a bit problem (but a bit annoying)
+ 3. Effort - How much effort is required to fix this issue?
+ 4. Type - What aspect of the system the PR/issue covers
+ 5. Feedback - Are we waiting on feedback, if so who from? Typically used for issues that are likely to take a while to have feedback given
+
+| Label | Purpose |
+| ----- | ------- |
+| change/major | A change for the next major release (eg: 4.0) |
+| change/minor | A change for the next minor release (eg: 3.x) |
+| change/patch | A change for the next patch release (eg: 3.1.x) |
+| impact/critical | Broken functionality for which no work around can be produced |
+| impact/high | Broken functionality but can be mitigated by other non-core code changes |
+| impact/medium | Unexpected behaviour but does not break functionality |
+| impact/low | A nuisance but doesn't break any functionality (typos, etc) |
+| effort/easy | Someone with limited SilverStripe experience could resolve |
+| effort/medium | Someone with a good understanding of SilverStripe could resolve |
+| effort/hard | Only an expert with SilverStripe could resolve |
+| type/docs | A docs change |
+| type/frontend | A change to front-end (CSS, HTML, etc) |
+| feedback-required/core-team | Core team members need to give an in-depth consideration |
+| feedback-required/author | This issue is awaiting feedback from the original author of the PR |
 
 ### Workflow Diagram ###
 
