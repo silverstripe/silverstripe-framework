@@ -10,6 +10,10 @@
 		clear: both;
 	}
 
+	.description {
+		margin-left: 0;
+	}
+
 	.middleColumn {
 		// TODO .middleColumn styling should probably be theme specific (eg cms ui will look different than blackcandy)
 		// so we should move this style into the cms and black candy files
