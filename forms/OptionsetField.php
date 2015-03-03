@@ -75,7 +75,7 @@ class OptionsetField extends DropdownField {
 					'Name' => $this->name,
 					'Value' => $value,
 					'Title' => $title,
-					'isChecked' => $value == $this->value,
+					'isChecked' => $value === $this->value,
 					'isDisabled' => $this->disabled || in_array($value, $this->disabledItems),
 				));
 			}
