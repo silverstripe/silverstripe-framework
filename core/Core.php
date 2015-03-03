@@ -85,8 +85,6 @@ require_once 'control/injector/Injector.php';
 // Initialise the dependency injector as soon as possible, as it is 
 // subsequently used by some of the following code
 $injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
-$injector->registerService(Config::inst());
-
 Injector::set_inst($injector);
 
 ///////////////////////////////////////////////////////////////////////////////
