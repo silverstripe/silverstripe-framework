@@ -65,9 +65,10 @@ class PaginatedList extends SS_ListDecorator {
 	}
 
 	/**
-	 * Set the number of items displayed per page.
+	 * Set the number of items displayed per page. Set to zero to disable paging.
 	 *
 	 * @param int $length
+	 * @return $this
 	 */
 	public function setPageLength($length) {
 		$this->pageLength = $length;
@@ -77,7 +78,8 @@ class PaginatedList extends SS_ListDecorator {
 	/**
 	 * Sets the current page.
 	 *
-	 * @param int $page
+	 * @param int $page Page index beginning with 1
+	 * @return $this
 	 */
 	public function setCurrentPage($page) {
 		$this->pageStart = ($page - 1) * $this->getPageLength();
@@ -182,10 +184,11 @@ class PaginatedList extends SS_ListDecorator {
 	 * @return IteratorIterator
 	 */
 	public function getIterator() {
-		if($this->limitItems) {
+		$pageLength = $this->getPageLength();
+		if($this->limitItems && $pageLength) {
 			$tmptList = clone $this->list;
 			return new IteratorIterator(
-				$tmptList->limit($this->getPageLength(), $this->getPageStart())
+				$tmptList->limit($pageLength, $this->getPageStart())
 			);
 		} else {
 			return new IteratorIterator($this->list);
@@ -325,14 +328,20 @@ class PaginatedList extends SS_ListDecorator {
 	 * @return int
 	 */
 	public function CurrentPage() {
-		return floor($this->getPageStart() / $this->getPageLength()) + 1;
+		$pageLength = $this->getPageLength();
+		return $pageLength
+			? floor($this->getPageStart() / $pageLength) + 1
+			: 1;
 	}
 
 	/**
 	 * @return int
 	 */
 	public function TotalPages() {
-		return ceil($this->getTotalItems() / $this->getPageLength());
+		$pageLength = $this->getPageLength();
+		return $pageLength
+			? ceil($this->getTotalItems() / $pageLength)
+			: min($this->getTotalItems(), 1);
 	}
 
 	/**
@@ -372,10 +381,13 @@ class PaginatedList extends SS_ListDecorator {
 	 * @return int
 	 */
 	public function LastItem() {
-		if ($start = $this->getPageStart()) {
-			return min($start + $this->getPageLength(), $this->getTotalItems());
+		$pageLength = $this->getPageLength();
+		if(!$pageLength) {
+			return $this->getTotalItems();
+		} elseif ($start = $this->getPageStart()) {
+			return min($start + $pageLength, $this->getTotalItems());
 		} else {
-			return min($this->getPageLength(), $this->getTotalItems());
+			return min($pageLength, $this->getTotalItems());
 		}
 	}
 
