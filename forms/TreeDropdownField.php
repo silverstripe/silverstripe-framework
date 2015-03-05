@@ -463,8 +463,9 @@ class TreeDropdownField extends FormField {
 				if ($row->ParentID) $parents[$row->ParentID] = true;
 				$this->searchIds[$row->ID] = true;
 			}
+			$queryClass = ($this->sourceObject == "Folder") ? "File" : $this->sourceObject;
 			while (!empty($parents)) {
-				$res = DB::query('SELECT "ParentID", "ID" FROM "' . $this->sourceObject
+				$res = DB::query('SELECT "ParentID", "ID" FROM "' . $queryClass
 					. '" WHERE "ID" in ('.implode(',',array_keys($parents)).')');
 				$parents = array();
 
