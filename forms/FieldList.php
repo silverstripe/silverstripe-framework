@@ -149,8 +149,9 @@ class FieldList extends ArrayList {
 		$this->flushFieldsCache();
 
 		// Find the tab
-		$tab = $this->findOrMakeTab($tabName);
-		$tab->removeByName($fieldName);
+		$tab = $this->findTab($tabName);
+		if ($tab)
+			$tab->removeByName($fieldName);
 	}
 	
 	/**
@@ -163,7 +164,10 @@ class FieldList extends ArrayList {
 		$this->flushFieldsCache();
 
 		// Find the tab
-		$tab = $this->findOrMakeTab($tabName);
+		$tab = $this->findTab($tabName);
+		
+		if (!$tab)
+			return false;
 		
 		// Add the fields to the end of this set
 		foreach($fields as $field) $tab->removeByName($field);
@@ -258,6 +262,38 @@ class FieldList extends ArrayList {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Returns the specified tab object, or false if it does not exists.
+	 *
+	 * @param string $tabName The tab to return, in the form "Tab.Subtab.Subsubtab".
+	 *   Caution: Does not recursively create TabSet instances, you need to make sure everything
+	 *   up until the last tab in the chain exists.
+	 * @param string $title Natural language title of the tab. If {@link $tabName} is passed in dot notation,
+	 *   the title parameter will only apply to the innermost referenced tab.
+	 *   The title is only changed if the tab doesn't exist already.
+	 * @return Tab The found or false if none found
+	 */
+	public function findTab($tabName, $title = null) {
+		// Backwards compatibility measure: Allow rewriting of outdated tab paths
+		$tabName = $this->rewriteTabPath($tabName);
+
+		$parts = explode('.',$tabName);
+		$last_idx = count($parts) - 1;
+		// We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than
+		// add it to TabSet and Tab too.
+		$currentPointer = $this;
+		foreach($parts as $k => $part) {
+			$parentPointer = $currentPointer;
+			$currentPointer = $currentPointer->fieldByName($part);
+			// Tab does not exists just return false
+			if(!$currentPointer) {
+				return false;
+			}
+		}
+		
+		return $currentPointer;
 	}
 	
 	/**
