@@ -108,6 +108,70 @@ So, your deployment process, as it relates to Composer, should be as follows:
  * Deploy your project code base, using the deployment tool of your choice.
  * Run `composer install --no-dev -o` on your production version.
 
+## Composer managed modules, Git and .gitignore
+
+Modules and themes managed by composer should not be committed with your projects source code. For more details read  [Should I commit the dependencies in my vendor directory?](https://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md).
+
+Since SilverStripe modules are installed in to thier own folder, you have to manage your [.gitignore](http://git-scm.com/docs/gitignore) to ensure they are ignored from your repository.
+
+Here is the default SilverStripe [.gitignore](http://git-scm.com/docs/gitignore) with the forum module ignored
+
+	assets/*
+	_ss_environment.php
+	tools/phing-metadata
+	silverstripe-cache
+	.buildpath
+	.project
+	.settings
+	.idea
+	.DS_Store
+	vendor/
+	# Don't include the forum module, as this will be installed with composer
+	forum
+
+In large projects it can get difficult to manage your [.gitignore](http://git-scm.com/docs/gitignore) and ensure it contains all composer managed modules and themes.
+
+You can automate this with the [SSAutoGitIgnore](https://github.com/guru-digital/SSAutoGitIgnore/) package.
+This package will maintain your [.gitignore](http://git-scm.com/docs/gitignore) and ensure it is kept up to date with your composer managed modules without affecting custom ignores. Once installed and setup, it will automatically run every time you install, remove or update modules using composer.
+
+### Installing and enabling the SSAutoGitIgnore package
+
+Include the package in your project by running this command
+
+    composer require gdmedia/ss-auto-git-ignore
+
+Edit your composer.json and insert 
+
+    "scripts": {
+         "post-update-cmd": "GDM\\SSAutoGitIgnore\\UpdateScript::Go"
+    }
+
+This will instruct composer to run SSAutoGitIgnore after every update. SSAutoGitIgnore will then ensure composer managed models and themes are correctly added to your [.gitignore](http://git-scm.com/docs/gitignore).    
+For more information about SSAutoGitIgnore, see the [SSAutoGitIgnore home page](https://github.com/guru-digital/SSAutoGitIgnore/).    
+For more information about post-updated-cmd and scripts, read the ["Scripts" chapter of the Composer documentation](https://getcomposer.org/doc/articles/scripts.md).
+
+Full example of composer.json with the SSAutoGitIgnore installed and enabled
+
+	{
+		"name": "silverstripe/installer",
+		"description": "The SilverStripe Framework Installer",
+		"require": {
+			"php": ">=5.3.2",
+			"silverstripe/cms": "3.0.*",
+			"silverstripe/framework": "3.0.*",
+			"silverstripe-themes/simple": "*",
+			"gdmedia/ss-auto-git-ignore": "*"
+		},
+		"require-dev": {
+			"silverstripe/compass": "*",
+			"silverstripe/docsviewer": "*"
+		},
+		"scripts": {
+			"post-update-cmd": "GDM\\SSAutoGitIgnore\\UpdateScript::Go"
+		},
+		"minimum-stability": "dev"
+	}
+
 # Dev Environments for Contributing Code {#contributing}
 
 So you want to contribute to SilverStripe? Fantastic! You can do this with composer too.
