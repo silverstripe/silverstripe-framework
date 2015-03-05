@@ -119,7 +119,7 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 | `SS_ENVIRONMENT_TYPE`| The environment type: dev, test or live.|
 | `SS_DEFAULT_ADMIN_USERNAME`| The username of the default admin. This is a user with administrative privileges.|
 | `SS_DEFAULT_ADMIN_PASSWORD`| The password of the default admin. This will not be stored in the database.|
-| `SS_USE_BASIC_AUTH`| Protect the site with basic auth (good for test sites).<br/>When using CGI/FastCGI with Apache, you will have to add the `RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]` rewrite rule to your `.htaccess` file|
+| `SS_USE_BASIC_AUTH`| Protect the site with basic auth (good for test sites).<br/>When using CGI/FastCGI with Apache, you will have to add the `RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]` rewrite rule to your `.htaccess` file|
 | `SS_SEND_ALL_EMAILS_TO`| If you set this define, all emails will be redirected to this address.|
 | `SS_SEND_ALL_EMAILS_FROM`| If you set this define, all emails will be send from this address.|
 | `SS_ERROR_LOG` | |
