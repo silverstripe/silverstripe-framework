@@ -2,7 +2,7 @@
 /**
  * @package framework
  * @subpackage tests
- * 
+ *
  * @todo test Director::alternateBaseFolder()
  */
 class DirectorTest extends SapphireTest {
@@ -10,27 +10,24 @@ class DirectorTest extends SapphireTest {
 	protected static $originalRequestURI;
 
 	protected $originalProtocolHeaders = array();
-	
+
 	protected $originalGet = array();
-	
+
 	protected $originalSession = array();
 
 	public function setUp() {
 		parent::setUp();
-		
-		// Required for testRequestFilterInDirectorTest
-		Injector::nest();
 
 		// Hold the original request URI once so it doesn't get overwritten
 		if(!self::$originalRequestURI) {
 			self::$originalRequestURI = $_SERVER['REQUEST_URI'];
 		}
 		$_SERVER['REQUEST_URI'] = 'http://www.mysite.com';
-		
+
 		$this->originalGet = $_GET;
 		$this->originalSession = $_SESSION;
 		$_SESSION = array();
-		
+
 		Config::inst()->update('Director', 'rules', array(
 			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller',
 			'en-nz/$Action/$ID/$OtherID' => array(
@@ -49,16 +46,13 @@ class DirectorTest extends SapphireTest {
 			}
 		}
 	}
-	
+
 	public function tearDown() {
 		// TODO Remove director rule, currently API doesnt allow this
-		
-		// Remove base URL override (setting to false reverts to default behaviour)
-		Config::inst()->update('Director', 'alternate_base_url', false);
-		
+
 		$_GET = $this->originalGet;
 		$_SESSION = $this->originalSession;
-		
+
 		// Reinstate the original REQUEST_URI after it was modified by some tests
 		$_SERVER['REQUEST_URI'] = self::$originalRequestURI;
 
@@ -67,34 +61,32 @@ class DirectorTest extends SapphireTest {
 				$_SERVER[$header] = $value;
 			}
 		}
-		
-		Injector::unnest();
 
 		parent::tearDown();
 	}
-	
+
 	public function testFileExists() {
 		$tempFileName = 'DirectorTest_testFileExists.tmp';
 		$tempFilePath = TEMP_FOLDER . '/' . $tempFileName;
-		
+
 		// create temp file
 		file_put_contents($tempFilePath, '');
-		
+
 		$this->assertTrue(
-			Director::fileExists($tempFilePath), 
+			Director::fileExists($tempFilePath),
 			'File exist check with absolute path'
 		);
-		
+
 		$this->assertTrue(
-			Director::fileExists($tempFilePath . '?queryparams=1&foo[bar]=bar'), 
+			Director::fileExists($tempFilePath . '?queryparams=1&foo[bar]=bar'),
 			'File exist check with query params ignored'
 		);
-		
+
 		unlink($tempFilePath);
 	}
-	
+
 	public function testAbsoluteURL() {
-		
+
 		$rootURL = Director::protocolAndHost();
 		$_SERVER['REQUEST_URI'] = "$rootURL/mysite/sub-page/";
 		Config::inst()->update('Director', 'alternate_base_url', '/mysite/');
@@ -116,20 +108,20 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com', true));
 		$this->assertEquals("$rootURL/test", Director::absoluteURL("$rootURL/test"));
 		$this->assertEquals("$rootURL/test", Director::absoluteURL("$rootURL/test", true));
-		
+
 		// Test relative to base
 		$this->assertEquals("$rootURL/mysite/test", Director::absoluteURL("test", true));
 		$this->assertEquals("$rootURL/mysite/test/url", Director::absoluteURL("test/url", true));
 		$this->assertEquals("$rootURL/root", Director::absoluteURL("/root", true));
 		$this->assertEquals("$rootURL/root/url", Director::absoluteURL("/root/url", true));
-		
+
 		// Test relative to requested page
 		$this->assertEquals("$rootURL/mysite/sub-page/test", Director::absoluteURL("test"));
 		// Legacy behaviour resolves this to $rootURL/mysite/test/url
 		//$this->assertEquals("$rootURL/mysite/sub-page/test/url", Director::absoluteURL("test/url"));
 		$this->assertEquals("$rootURL/root", Director::absoluteURL("/root"));
 		$this->assertEquals("$rootURL/root/url", Director::absoluteURL("/root/url"));
-		
+
 		// Test that javascript links are not left intact
 		$this->assertStringStartsNotWith('javascript', Director::absoluteURL('javascript:alert("attack")'));
 		$this->assertStringStartsNotWith('alert', Director::absoluteURL('javascript:alert("attack")'));
@@ -140,7 +132,7 @@ class DirectorTest extends SapphireTest {
 	public function testAlternativeBaseURL() {
 		// Get original protocol and hostname
 		$rootURL = Director::protocolAndHost();
-		
+
 		// relative base URLs - you should end them in a /
 		Config::inst()->update('Director', 'alternate_base_url', '/relativebase/');
 		$_SERVER['REQUEST_URI'] = "$rootURL/relativebase/sub-page/";
@@ -180,7 +172,7 @@ class DirectorTest extends SapphireTest {
 			Director::absoluteURL('subfolder/test')
 		);
 	}
-	
+
 	/**
 	 * Tests that {@link Director::is_absolute()} works under different environment types
 	 */
@@ -196,12 +188,12 @@ class DirectorTest extends SapphireTest {
 			'folder'       => false,
 			'a/c:/'        => false
 		);
-		
+
 		foreach($expected as $path => $result) {
 			$this->assertEquals(Director::is_absolute($path), $result, "Test result for $path");
 		}
 	}
-	
+
 	public function testIsAbsoluteUrl() {
 		$this->assertTrue(Director::is_absolute_url('http://test.com/testpage'));
 		$this->assertTrue(Director::is_absolute_url('ftp://test.com'));
@@ -218,7 +210,7 @@ class DirectorTest extends SapphireTest {
 		$this->assertTrue(Director::is_absolute_url('http:test.com'));
 		$this->assertTrue(Director::is_absolute_url('//http://test.com'));
 	}
-	
+
 	public function testIsRelativeUrl() {
 		$siteUrl = Director::absoluteBaseURL();
 		$this->assertFalse(Director::is_relative_url('http://test.com'));
@@ -231,18 +223,18 @@ class DirectorTest extends SapphireTest {
 		$this->assertTrue(Director::is_relative_url('/relative/?url=http://test.com'));
 		$this->assertTrue(Director::is_relative_url('/relative/#=http://test.com'));
 	}
-	
+
 	public function testMakeRelative() {
 		$siteUrl = Director::absoluteBaseURL();
 		$siteUrlNoProtocol = preg_replace('/https?:\/\//', '', $siteUrl);
-		
+
 		$this->assertEquals(Director::makeRelative("$siteUrl"), '');
 		$this->assertEquals(Director::makeRelative("https://$siteUrlNoProtocol"), '');
 		$this->assertEquals(Director::makeRelative("http://$siteUrlNoProtocol"), '');
 
 		$this->assertEquals(Director::makeRelative("   $siteUrl/testpage   "), 'testpage');
 		$this->assertEquals(Director::makeRelative("$siteUrlNoProtocol/testpage"), 'testpage');
-		
+
 		$this->assertEquals(Director::makeRelative('ftp://test.com'), 'ftp://test.com');
 		$this->assertEquals(Director::makeRelative('http://test.com'), 'http://test.com');
 
@@ -252,7 +244,7 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals("test", Director::makeRelative("https://".$siteUrlNoProtocol."/test"));
 		$this->assertEquals("test", Director::makeRelative("http://".$siteUrlNoProtocol."/test"));
 	}
-	
+
 	/**
 	 * Mostly tested by {@link testIsRelativeUrl()},
 	 * just adding the host name matching aspect here.
@@ -264,7 +256,7 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse(Director::is_site_url("http://test.com?url=" . urlencode(Director::absoluteBaseURL())));
 		$this->assertFalse(Director::is_site_url("//test.com?url=" . Director::absoluteBaseURL()));
 	}
-	
+
 	/**
 	 * Tests isDev, isTest, isLive set from querystring
 	 */
@@ -274,32 +266,32 @@ class DirectorTest extends SapphireTest {
 		unset($_SESSION['isLive']);
 		unset($_GET['isTest']);
 		unset($_GET['isDev']);
-		
+
 		// Test isDev=1
 		$_GET['isDev'] = '1';
 		$this->assertTrue(Director::isDev());
 		$this->assertFalse(Director::isTest());
 		$this->assertFalse(Director::isLive());
-		
+
 		// Test persistence
 		unset($_GET['isDev']);
 		$this->assertTrue(Director::isDev());
 		$this->assertFalse(Director::isTest());
 		$this->assertFalse(Director::isLive());
-		
+
 		// Test change to isTest
 		$_GET['isTest'] = '1';
 		$this->assertFalse(Director::isDev());
 		$this->assertTrue(Director::isTest());
 		$this->assertFalse(Director::isLive());
-		
+
 		// Test persistence
 		unset($_GET['isTest']);
 		$this->assertFalse(Director::isDev());
 		$this->assertTrue(Director::isTest());
 		$this->assertFalse(Director::isLive());
 	}
-	
+
 	public function testResetGlobalsAfterTestRequest() {
 		$_GET = array('somekey' => 'getvalue');
 		$_POST = array('somekey' => 'postvalue');
@@ -315,7 +307,7 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals('cookievalue', $_COOKIE['somekey'],
 			'$_COOKIE reset to original value after Director::test()');
 	}
-	
+
 	public function testTestRequestCarriesGlobals() {
 		$fixture = array('somekey' => 'sometestvalue');
 		foreach(array('get', 'post') as $method) {
@@ -329,20 +321,20 @@ class DirectorTest extends SapphireTest {
 			}
 		}
 	}
-	
+
 	/**
-	 * Tests that additional parameters specified in the routing table are 
-	 * saved in the request 
+	 * Tests that additional parameters specified in the routing table are
+	 * saved in the request
 	 */
 	public function testRouteParams() {
 		Director::test('en-nz/myaction/myid/myotherid', null, null, null, null, null, null, $request);
-		
+
 		$this->assertEquals(
-			$request->params(), 
+			$request->params(),
 			array(
 				'Controller' => 'DirectorTestRequest_Controller',
-				'Action' => 'myaction', 
-				'ID' => 'myid', 
+				'Action' => 'myaction',
+				'ID' => 'myid',
 				'OtherID' => 'myotherid',
 				'Locale' => 'en_NZ'
 			)
@@ -406,7 +398,7 @@ class DirectorTest extends SapphireTest {
 			'CONTENT_TYPE'         => 'text/xml',
 			'CONTENT_LENGTH'       => 10
 		);
-		
+
 		$headers = array(
 			'Host'            => 'host',
 			'User-Agent'      => 'User Agent',
@@ -416,7 +408,7 @@ class DirectorTest extends SapphireTest {
 			'Content-Type'    => 'text/xml',
 			'Content-Length'  => '10'
 		);
-		
+
 		$this->assertEquals($headers, Director::extract_request_headers($request));
 	}
 
@@ -483,34 +475,34 @@ class DirectorTest extends SapphireTest {
 
 		$_SERVER = $origServer;
 	}
-	
+
 	public function testRequestFilterInDirectorTest() {
 		$filter = new TestRequestFilter;
-		
+
 		$processor = new RequestProcessor(array($filter));
-		
+
 		Injector::inst()->registerService($processor, 'RequestProcessor');
-		
+
 		$response = Director::test('some-dummy-url');
-		
+
 		$this->assertEquals(1, $filter->preCalls);
 		$this->assertEquals(1, $filter->postCalls);
-		
+
 		$filter->failPost = true;
-		
+
 		$this->setExpectedException('SS_HTTPResponse_Exception');
-		
+
 		$response = Director::test('some-dummy-url');
-		
+
 		$this->assertEquals(2, $filter->preCalls);
 		$this->assertEquals(2, $filter->postCalls);
-		
+
 		$filter->failPre = true;
-		
+
 		$response = Director::test('some-dummy-url');
-		
+
 		$this->assertEquals(3, $filter->preCalls);
-		
+
 		// preCall 'false' will trigger an exception and prevent post call execution
 		$this->assertEquals(2, $filter->postCalls);
 	}
@@ -519,13 +511,13 @@ class DirectorTest extends SapphireTest {
 class TestRequestFilter implements RequestFilter, TestOnly {
 	public $preCalls = 0;
 	public $postCalls = 0;
-	
+
 	public $failPre = false;
 	public $failPost = false;
 
 	public function preRequest(\SS_HTTPRequest $request, \Session $session, \DataModel $model) {
 		++$this->preCalls;
-		
+
 		if ($this->failPre) {
 			return false;
 		}
@@ -533,7 +525,7 @@ class TestRequestFilter implements RequestFilter, TestOnly {
 
 	public function postRequest(\SS_HTTPRequest $request, \SS_HTTPResponse $response, \DataModel $model) {
 		++$this->postCalls;
-		
+
 		if ($this->failPost) {
 			return false;
 		}

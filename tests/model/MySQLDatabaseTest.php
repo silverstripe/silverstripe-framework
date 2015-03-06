@@ -8,8 +8,9 @@ class MySQLDatabaseTest extends SapphireTest {
 	protected $extraDataObjects = array(
 		'MySQLDatabaseTest_DO',
 	);
-	
+
 	public function setUp() {
+		parent::setUp();
 		if(DB::getConn() instanceof MySQLDatabase) {
 			MySQLDatabaseTest_DO::config()->db = array(
 				'MultiEnum1' => 'MultiEnum("A, B, C, D","")',
@@ -18,9 +19,8 @@ class MySQLDatabaseTest extends SapphireTest {
 			);
 		}
 		$this->markTestSkipped('This test requires the Config API to be immutable');
-		parent::setUp();
 	}
-		
+
 	/**
 	 * Check that once a schema has been generated, then it doesn't need any more updating
 	 */
