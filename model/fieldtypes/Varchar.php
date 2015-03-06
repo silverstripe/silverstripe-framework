@@ -25,9 +25,11 @@ class Varchar extends StringField {
  	 * @param $size int The maximum size of the field, in terms of characters
  	 * @param $options array Optional parameters, e.g. array("nullifyEmpty"=>false).
  	 *                       See {@link StringField::setOptions()} for information on the available options
- 	 * @return unknown_type
  	 */
-	public function __construct($name = null, $size = 50, $options = array()) {
+	public function __construct($name = null, $size = null, $options = array()) {
+		if ($size === null) {
+			Deprecation::notice('3.2', 'The parameter $size is now required, please declare it');
+		}
 		$this->size = $size ? $size : 50;
 		parent::__construct($name, $options);
 	}
