@@ -144,7 +144,7 @@ abstract class DBField extends ViewableData {
 	 * @return boolean
 	 */
 	public function exists() {
-		return ($this->value);
+		return (bool)$this->value;
 	}
 	
 	/**

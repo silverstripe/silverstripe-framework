@@ -840,7 +840,7 @@ class GridField_FormAction extends FormAction {
 			'args' => $this->args,
 		);
 
-		$id = preg_replace('/[^\w]+/', '_', uniqid('', true));
+		$id = substr(md5(serialize($state)), 0, 8);
 		Session::set($id, $state);
 		$actionData['StateID'] = $id;
 		

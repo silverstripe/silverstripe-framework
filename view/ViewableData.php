@@ -273,13 +273,11 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string 'xml'|'raw'
 	 */
 	public function escapeTypeForField($field) {
-		if(!$class = $this->castingClass($field)) {
-			$class = self::$default_cast;
-		}
-		
+		$class = $this->castingClass($field) ?: $this->config()->default_cast;
+
 		return Config::inst()->get($class, 'escape_type', Config::FIRST_SET);
 	}
-	
+
 	/**
 	 * Save the casting cache for this object (including data from any failovers) into a variable
 	 *
@@ -367,7 +365,7 @@ class ViewableData extends Object implements IteratorAggregate {
 			
 			if(!is_object($value) && ($this->castingClass($fieldName) || $forceReturnedObject)) {
 				if(!$castConstructor = $this->castingHelper($fieldName)) {
-					$castConstructor = $this->stat('default_cast');
+					$castConstructor = $this->config()->default_cast;
 				}
 				
 				$valueObject = Object::create_from_string($castConstructor, $fieldName);
@@ -382,7 +380,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		}
 		
 		if(!is_object($value) && $forceReturnedObject) {
-			$default = Config::inst()->get('ViewableData', 'default_cast', Config::FIRST_SET);
+			$default = $this->config()->default_cast;
 			$castedValue = new $default($fieldName);
 			$castedValue->setValue($value);
 			$value = $castedValue;

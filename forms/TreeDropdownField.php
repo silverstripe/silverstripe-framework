@@ -71,13 +71,15 @@ class TreeDropdownField extends FormField {
 	 *
 	 * @param string $name the field name
 	 * @param string $title the field label
-	 * @param sourceObject The object-type to list in the tree.  Must be a 
-	 *		{@link Hierarchy} subclass.  Alternatively, you can set this to an 
-	 *		array of key/value pairs, like a {@link DropdownField} source.  In 
-	 *		this case, the field will act like show a flat list of tree items, 
-	 *		without any hierarchy. This is most useful in conjunction with 
-	 *		{@link TreeMultiselectField}, for presenting a set of checkboxes in 
-	 *		a compact view.
+	 * @param string|array $sourceObject The object-type to list in the tree. This could
+	 * be one of the following:
+	 * - A DataObject class name with the {@link Hierarchy} extension.
+	 * - An array of key/value pairs, like a {@link DropdownField} source. In
+	 *   this case, the field will act like show a flat list of tree items,
+	 *	 without any hierarchy. This is most useful in conjunction with
+	 *   {@link TreeMultiselectField}, for presenting a set of checkboxes in
+	 *   a compact view. Note, that all value strings must be XML encoded
+	 *   safely prior to being passed in.
 	 *
 	 * @param string $keyField to field on the source class to save as the 
 	 *		field value (default ID).
@@ -94,12 +96,14 @@ class TreeDropdownField extends FormField {
 		$this->keyField     = $keyField;
 		$this->labelField   = $labelField;
 		$this->showSearch	= $showSearch;
-		
+
+		$this->addExtraClass('single');
+
 		parent::__construct($name, $title);
 	}
-	
+
 	/**
-	 * Set the ID of the root node of the tree. This defaults to 0 - i.e. 
+	 * Set the ID of the root node of the tree. This defaults to 0 - i.e.
 	 * displays the whole tree.
 	 *
 	 * @param int $ID
@@ -193,14 +197,14 @@ class TreeDropdownField extends FormField {
 		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
 	
 		$record = $this->Value() ? $this->objectForKey($this->Value()) : null;
-		if($record) {
-			$title = $record->{$this->labelField};
+		if($record instanceof ViewableData) {
+			$title = $record->obj($this->labelField)->forTemplate();
+		} elseif($record) {
+			$title = Convert::raw2xml($record->{$this->labelField});
+		} else if($this->showSearch) {
+			$title = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
 		} else {
-			if($this->showSearch) {
-				$title = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
-			} else {
-				$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
-			}
+			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		}
 
 		// TODO Implement for TreeMultiSelectField
@@ -213,8 +217,7 @@ class TreeDropdownField extends FormField {
 			$properties,
 			array(
 				'Title' => $title,
-				'TitleURLEncoded' => rawurlencode($title),
-				'Metadata' => ($metadata) ? Convert::raw2att(Convert::raw2json($metadata)) : null
+				'Metadata' => ($metadata) ? Convert::raw2json($metadata) : null,
 			)
 		);
 
@@ -286,8 +289,7 @@ class TreeDropdownField extends FormField {
 		}
 
 		$self = $this;
-		$escapeLabelField = ($obj->escapeTypeForField($this->labelField) != 'xml');
-		$titleFn = function(&$child) use(&$self, $escapeLabelField) {
+		$titleFn = function(&$child) use(&$self) {
 			$keyField = $self->keyField;
 			$labelField = $self->labelField;
 			return sprintf(
@@ -299,7 +301,7 @@ class TreeDropdownField extends FormField {
 				Convert::raw2xml($child->markingClasses()),
 				($self->nodeIsDisabled($child)) ? 'disabled' : '',
 				(int)$child->ID,
-				$escapeLabelField ? Convert::raw2xml($child->$labelField) : $child->$labelField
+				$child->obj($labelField)->forTemplate()
 			);
 		};
 

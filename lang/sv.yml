@@ -11,6 +11,7 @@ sv:
     SIZE: 'Filstorlek'
     TITLE: Titel
     TYPE: 'Filtyp'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Välj filer'
     DRAGFILESHERE: 'Dra filer hit'
@@ -71,6 +72,7 @@ sv:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
     CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
+    EMAIL: E-post
     HELLO: Hej
     PASSWORD: Lösenord
   ConfirmedPasswordField:
@@ -78,6 +80,8 @@ sv:
     BETWEEN: 'Lösenord måste vara {min} till {max} tecken långa.'
     MAXIMUM: 'Lösenord får som längst vara {max} tecken långa.'
     SHOWONCLICKTITLE: 'Ändra lösenord'
+  ContentController:
+    NOTLOGGEDIN: 'Inte inloggad'
   CreditCardField:
     FIRST: första
     FOURTH: fjärde
@@ -87,8 +91,18 @@ sv:
     PLURALNAME: 'Dataobjekt'
     SINGULARNAME: 'Dataobjekt'
   Date:
+    DAY: dag
+    DAYS: dagar
+    HOUR: timme
+    HOURS: timmar
+    LessThanMinuteAgo: 'mindre än en minut'
+    MONTH: månad
+    MONTHS: månader
+    SEC: sek
     TIMEDIFFAGO: '{difference} sen'
     TIMEDIFFIN: 'om {difference}'
+    YEAR: år
+    YEARS: år
   DateField:
     NOTSET: 'inte angivet'
     TODAY: i dag
@@ -101,6 +115,7 @@ sv:
     INVALID_REQUEST: 'Ogiltig förfrågan'
   DropdownField:
     CHOOSE: (Välj)
+    CHOOSESEARCH: '(Välj eller sök)'
   EmailField:
     VALIDATION: 'Var snäll och ange en epostadress'
   Enum:
@@ -183,11 +198,21 @@ sv:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     Deleted: 'Raderade %s %s'
     Save: Spara
+  GridFieldEditButton_ss:
+    EDIT: Redigera
+  GridFieldItemEditView:
+    Go_back: 'Gå tillbaka'
   Group:
     AddRole: 'Lägg till roll för den här gruppen'
+    Code: 'Gruppkod'
+    DefaultGroupTitleAdministrators: Administratörer
     DefaultGroupTitleContentAuthors: 'Författare'
+    Description: Beskrivning
     GroupReminder: 'Om du väljer en förälder till gruppen så kommer gruppen ärva alla förälderns roller'
+    Locked: 'Låst?'
+    NoRoles: 'Inga roller fun'
     PLURALNAME: Grupper
+    RolesAddEditLink: 'Hantera roller'
     SINGULARNAME: Grupp
     Sort: 'Sorteringsordning'
     has_many_Permissions: Behörigheter
@@ -204,6 +229,7 @@ sv:
     ADDURL: 'Lägg till URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaljer &amp; dimensioner'
     ANCHORVALUE: Ankare
+    BUTTONADDURL: 'Lägg till URL'
     BUTTONINSERT: Infoga
     BUTTONINSERTLINK: 'Infoga länk'
     BUTTONREMOVELINK: 'Ta bort länk'
@@ -241,6 +267,7 @@ sv:
     LINKOPENNEWWIN: 'Öppna länk i nytt fönster?'
     LINKTO: 'Länka till'
     PAGE: Sida
+    URL: URL
     URLNOTANOEMBEDRESOURCE: 'URLen ''{url}'' gick inte  att omvandla till ett media.'
     UpdateMEDIA: 'Uppdatera media'
   Image:
@@ -264,6 +291,9 @@ sv:
     PreviewButton: Förhandsgranska
     REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
     SAVEDUP: Sparad.
+    ShowAsList: 'visa som lista'
+    TooManyPages: 'För många sidor'
+    ValidationError: 'Valideringsfel'
     VersionUnknown: okänd
   LeftAndMain_Menu_ss:
     Hello: Hej
@@ -273,6 +303,7 @@ sv:
     IP: 'IP-adress'
     PLURALNAME: 'Inloggningsförsök'
     SINGULARNAME: 'Inloggningsförsök'
+    Status: Status
   Member:
     ADDGROUP: 'Lägg till grupp'
     BUTTONCHANGEPASSWORD: 'Ändra lösenord'
@@ -295,6 +326,7 @@ sv:
     INVALIDNEWPASSWORD: 'Vi kunde inte godkänna det lösenordet: {password}'
     LOGGEDINAS: 'Du är inloggad som {name}.'
     NEWPASSWORD: 'Nytt lösenord'
+    NoPassword: 'Det finns inget lösenord för den här medlemmen'
     PASSWORD: Lösenord
     PLURALNAME: Medlemmar
     REMEMBERME: 'Kom ihåg mig nästa gång?'
@@ -335,6 +367,7 @@ sv:
     TWODIGITMONTH: 'Tvåsiffrig månad (01 = januari osv)'
     TWODIGITSECOND: 'Två siffror för sekund (00 till 59)'
     TWODIGITYEAR: 'Två siffror för år'
+    Toggle: 'Visa fomateringshjälp'
   MemberImportForm:
     Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small><a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
     Help2: "<div class=\"advanced\">\n<h4>Avancerat </h4>\n<ul>\n<li>Tillåtna kolumner: <em>%s</em></li>\n<li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\n<li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Code</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li>\n</ul>\n</div>"
@@ -350,6 +383,7 @@ sv:
   ModelAdmin:
     DELETE: Radera
     DELETEDRECORDS: 'Raderade {count} poster.'
+    EMPTYBEFOREIMPORT: 'Ersätt data'
     IMPORT: 'Importera från CSV'
     IMPORTEDRECORDS: 'Importerade {count} poster.'
     NOCSVFILE: 'Var god och bläddra efter en CSV-fil för import'
@@ -439,7 +473,9 @@ sv:
     BtnImport: 'Importera från CSV'
     FileFieldLabel: 'CSV-fil <small>(Tillåtna filtyper: *.csv)</small>'
   SilverStripeNavigator:
+    Auto: Auto
     Edit: Ändra
+    Width: bredd
   TableListField:
     CSVEXPORT: 'Exportera till CSV'
     Print: Skriv ut
@@ -454,6 +490,8 @@ sv:
     ATTACHFILE: 'Bifoga en fil'
     ATTACHFILES: 'Bifoga fil(er)'
     AttachFile: 'Bifoga fil(er)'
+    CHOOSEANOTHERFILE: 'Välj en annan fil'
+    CHOOSEANOTHERINFO: 'Ersätt den här filen med en annan från filarkivet'
     DELETE: 'Radera från filer'
     DELETEINFO: 'Ta bort filen permanent från filarkivet'
     DOEDIT: Spara
@@ -468,10 +506,13 @@ sv:
     FROMFILES: 'Från filer'
     HOTLINKINFO: 'Information: Denna bild kommer att bli länkad till. Var god kontrollera med ägaren till sajten att du har tillåtelse att länka till bilden.'
     MAXNUMBEROFFILES: 'Max antal ({count}) filer överstiget.'
+    MAXNUMBEROFFILESONE: 'Kan bara ladda upp en fil'
     MAXNUMBEROFFILESSHORT: 'Kan bara ladda upp {count} files'
+    OVERWRITEWARNING: 'En fil med samma namn finns redan'
     REMOVE: Ta bort
     REMOVEINFO: 'Ta bort filen härifrån, men radera den inte från filarkivet'
     STARTALL: 'Starta alla'
     Saved: Sparad
+    UPLOADSINTO: 'sparas till /{path}'
   Versioned:
     has_many_Versions: Versioner

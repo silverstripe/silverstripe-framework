@@ -168,12 +168,12 @@ fi:
   ForgotPasswordEmail_ss:
     HELLO: Hei
     TEXT1: 'Tässä on sinun'
-    TEXT2: 'salasanan tyhjäys -linkki'
+    TEXT2: 'salasanan vaihtolinkki'
     TEXT3: henkilölle
   Form:
     CSRF_FAILED_MESSAGE: "On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu painamalla F5-näppäintä ja yritä uudelleen."
     FIELDISREQUIRED: '{name} on pakollinen'
-    SubmitBtnLabel: Siirrä
+    SubmitBtnLabel: Siirry
     VALIDATIONCREDITNUMBER: 'Tarkista, ovatko antamasi luottokortin numerot ({number}) oikein'
     VALIDATIONNOTUNIQUE: 'Syötetty arvo ei ole yksilöllinen'
     VALIDATIONPASSWORDSDONTMATCH: 'Salasanat eivät täsmää'
@@ -234,7 +234,7 @@ fi:
     RolesAddEditLink: 'Lisää/muokkaa rooleja'
     SINGULARNAME: Ryhmä
     Sort: 'Järjestys'
-    has_many_Permissions: Luvat
+    has_many_Permissions: Oikeudet
     many_many_Members: Jäsenet
   GroupImportForm:
     Help1: '<p>Tuo yksi tai useampi ryhmä <em>CSV</em>-muotoisena (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'

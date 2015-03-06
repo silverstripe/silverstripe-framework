@@ -120,17 +120,17 @@ class File extends DataObject {
 	 * Otherwise, the files will be able to be uploaded but they won't be able to be served by the
 	 * webserver.
 	 * 
-	 *  - If you are running Apahce you will need to change assets/.htaccess
+	 *  - If you are running Apache you will need to change assets/.htaccess
 	 *  - If you are running IIS you will need to change assets/web.config 
 	 *
 	 * Instructions for the change you need to make are included in a comment in the config file.
 	 */
 	private static $allowed_extensions = array(
-		'','ace','arc','arj','asf','au','avi','bmp','bz2','cab','cda','css','csv','dmg','doc','docx',
+		'','ace','arc','arj','asf','au','avi','bmp','bz2','cab','cda','css','csv','dmg','doc','docx','dotx','dotm',
 		'flv','gif','gpx','gz','hqx','htm','html','ico','jar','jpeg','jpg','js','kml', 'm4a','m4v',
 		'mid','midi','mkv','mov','mp3','mp4','mpa','mpeg','mpg','ogg','ogv','pages','pcx','pdf','pkg',
-		'png','pps','ppt','pptx','ra','ram','rm','rtf','sit','sitx','swf','tar','tgz','tif','tiff',
-		'txt','wav','webm','wma','wmv','xhtml','xls','xlsx','xml','zip','zipx',
+		'png','pps','ppt','pptx','potx','potm','ra','ram','rm','rtf','sit','sitx','swf','tar','tgz','tif','tiff',
+		'txt','wav','webm','wma','wmv','xhtml','xls','xlsx','xltx','xltm','xml','zip','zipx',
 	);
 
 	/**
@@ -305,7 +305,7 @@ class File extends DataObject {
 		$result = $this->extendedCan('canEdit', $member);
 		if($result !== null) return $result;
 		
-		return true;
+		return Permission::checkMember($member, 'CMS_ACCESS_AssetAdmin');
 	}
 	
 	/**

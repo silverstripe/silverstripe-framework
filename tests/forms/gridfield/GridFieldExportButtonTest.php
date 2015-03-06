@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class GridFieldExportButtonTest extends SapphireTest {
 
 	protected $list;
@@ -10,7 +15,8 @@ class GridFieldExportButtonTest extends SapphireTest {
 	protected static $fixture_file = 'GridFieldExportButtonTest.yml';
 
 	protected $extraDataObjects = array(
-		'GridFieldExportButtonTest_Team'
+		'GridFieldExportButtonTest_Team',
+		'GridFieldExportButtonTest_NoView'
 	);
 
 	public function setUp() {
@@ -20,6 +26,21 @@ class GridFieldExportButtonTest extends SapphireTest {
 		$this->list = $this->list->sort('Name');
 		$config = GridFieldConfig::create()->addComponent(new GridFieldExportButton());
 		$this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
+	}
+
+	public function testCanView() {
+		$list = new DataList('GridFieldExportButtonTest_NoView');
+
+		$button = new GridFieldExportButton();
+		$button->setExportColumns(array('Name' => 'My Name'));
+
+		$config = GridFieldConfig::create()->addComponent(new GridFieldExportButton());
+		$gridField = new GridField('testfield', 'testfield', $list, $config);
+
+		$this->assertEquals(
+			"\"My Name\"\n",
+			$button->generateExportFileData($gridField)
+		);
 	}
 
 	public function testGenerateFileDataBasicFields() {
@@ -94,8 +115,12 @@ class GridFieldExportButtonTest extends SapphireTest {
 			$button->generateExportFileData($this->gridField)
 		);
 	}
-
 }
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class GridFieldExportButtonTest_Team extends DataObject implements TestOnly {
 
 	private static $db = array(
@@ -105,6 +130,23 @@ class GridFieldExportButtonTest_Team extends DataObject implements TestOnly {
 
 	public function canView($member = null) {
 		return true;
+	}
+
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class GridFieldExportButtonTest_NoView extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'Name' => 'Varchar',
+		'City' => 'Varchar'
+	);
+
+	public function canView($member = null) {
+		return false;
 	}
 
 }

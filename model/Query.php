@@ -23,22 +23,22 @@ abstract class SS_Query implements Iterator {
 	 *
 	 * @var array
 	 */
-	private $currentRecord = null;
-	
+	protected $currentRecord = null;
+
 	/**
 	 * The number of the current row in the interator.
 	 *
 	 * @var int
 	 */
-	private $rowNum = -1;
-	
+	protected $rowNum = -1;
+
 	/**
 	 * Flag to keep track of whether iteration has begun, to prevent unnecessary 
 	 * seeks.
 	 *
 	 * @var boolean
 	 */
-	private $queryHasBegun = false;
+	protected $queryHasBegun = false;
 
 	/**
 	 * Return an array containing all the values from a specific column. If no 

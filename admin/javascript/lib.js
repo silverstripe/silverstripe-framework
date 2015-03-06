@@ -194,8 +194,8 @@
 					// For embedded pages, remove the dialog hash key as in getFilePath(),
 					// otherwise the Data Url won't match the id of the embedded Page.
 					return u.hash.split( dialogHashKey )[0].replace( /^#/, "" );
-				} else if ( path.isSameDomain( u, documentBase ) ) {
-					return u.hrefNoHash.replace( documentBase.domain, "" );
+				} else if ( path.isSameDomain( u, document ) ) {
+					return u.hrefNoHash.replace( document.domain, "" );
 				}
 				return absUrl;
 			},
@@ -227,7 +227,7 @@
 
 			//return a url path with the window's location protocol/hostname/pathname removed
 			clean: function( url ) {
-				return url.replace( documentBase.domain, "" );
+				return url.replace( document.domain, "" );
 			},
 
 			//just return the url without an initial #
@@ -244,7 +244,7 @@
 			//could be mailto, etc
 			isExternal: function( url ) {
 				var u = path.parseUrl( url );
-				return u.protocol && u.domain !== documentUrl.domain ? true : false;
+				return u.protocol && u.domain !== document.domain ? true : false;
 			},
 
 			hasProtocol: function( url ) {

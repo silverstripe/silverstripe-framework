@@ -1074,7 +1074,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			validate: function() {
 				var val = this.val(), orig = val;
-
+				
+				val = $.trim(val);
 				val = val.replace(/^https?:\/\//i, '');
 				if (orig !== val) this.val(val);
 

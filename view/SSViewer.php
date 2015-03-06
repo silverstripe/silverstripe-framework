@@ -778,12 +778,14 @@ class SSViewer implements Flushable {
 		if(!$this->chosenTemplates) {
 			$templateList = (is_array($templateList)) ? $templateList : array($templateList);
 
-			user_error(
-				"None of these templates can be found in theme '"
-				. Config::inst()->get('SSViewer', 'theme') . "': "
-				. implode(".ss, ", $templateList) . ".ss", 
-				E_USER_WARNING
-			);
+			$message = 'None of the following templates could be found';
+			if(!$theme) {
+				$message .= ' (no theme in use)';
+			} else {
+				$message .= ' in theme "' . $theme . '"';
+			}
+
+			user_error($message . ': ' . implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
 		}
 	}
 

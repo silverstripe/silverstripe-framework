@@ -49,6 +49,27 @@ class DataQueryTest extends SapphireTest {
 			$dq->sql());
 	}
 
+	public function testApplyRelation() {
+		// Test applyRelation with two has_ones pointing to the same class
+		$dq = new DataQuery('DataQueryTest_B');
+		$dq->applyRelation('TestC');
+		$this->assertTrue($dq->query()->isJoinedTo('DataQueryTest_C'));
+		$this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
+
+		$dq = new DataQuery('DataQueryTest_B');
+		$dq->applyRelation('TestCTwo');
+		$this->assertTrue($dq->query()->isJoinedTo('DataQueryTest_C'));
+		$this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
+	}
+
+	public function testApplyReplationDeepInheretence() {
+		$newDQ = new DataQuery('DataQueryTest_E');
+		//apply a relation to a relation from an ancestor class
+		$newDQ->applyRelation('TestA');
+		$this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
+		$this->assertContains('"DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql());
+	}
+
 	public function testRelationReturn() {
 		$dq = new DataQuery('DataQueryTest_C');
 		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestA'),
@@ -63,6 +84,9 @@ class DataQueryTest extends SapphireTest {
 		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestBs'),
 			'DataQuery::applyRelation should return the name of the related object.');
 		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('ManyTestBs'),
+			'DataQuery::applyRelation should return the name of the related object.');
+		$newDQ = new DataQuery('DataQueryTest_E');
+		$this->assertEquals('DataQueryTest_A', $newDQ->applyRelation('TestA'),
 			'DataQuery::applyRelation should return the name of the related object.');
 	}
 
@@ -242,6 +266,7 @@ class DataQueryTest_B extends DataObject implements TestOnly {
 
 	private static $has_one = array(
 		'TestC' => 'DataQueryTest_C',
+		'TestCTwo' => 'DataQueryTest_C',
 	);
 }
 
@@ -258,7 +283,8 @@ class DataQueryTest_C extends DataObject implements TestOnly {
 
 	private static $has_many = array(
 		'TestAs' => 'DataQueryTest_A',
-		'TestBs' => 'DataQueryTest_B',
+		'TestBs' => 'DataQueryTest_B.TestC',
+		'TestBsTwo' => 'DataQueryTest_B.TestCTwo',
 	);
 
 	private static $many_many = array(

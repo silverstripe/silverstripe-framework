@@ -184,7 +184,7 @@ class RestfulService extends ViewableData implements Flushable {
 		// Check for unexpired cached feed (unless flush is set)
 		//assume any cache_expire that is 0 or less means that we dont want to
 		// cache
-		if($this->cache_expire > 0 && self::$flush
+		if($this->cache_expire > 0 && !self::$flush
 				&& @file_exists($cache_path)
 				&& @filemtime($cache_path) + $this->cache_expire > time()) {
 			

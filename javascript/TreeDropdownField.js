@@ -56,7 +56,7 @@
 			
 				var linkTitle = strings.openLink;
 				if(linkTitle) this.find("treedropdownfield-toggle-panel-link a").attr('title', linkTitle);
-				if(this.data('title')) this.setTitle(decodeURIComponent(this.data('title')));
+				if(this.data('title')) this.setTitle(this.data('title'));
 				
 				this.getPanel().hide();
 				this._super();
@@ -138,10 +138,10 @@
 				this[this.getPanel().is(':visible') ? 'closePanel' : 'openPanel']();
 			},
 			setTitle: function(title) {
-				if(!title) title = strings.fieldTitle;
-					
+				title = title || this.data('title') || strings.fieldTitle;
+				
 				this.find('.treedropdownfield-title').html(title);
-				this.data('title', encodeURIComponent(title)); // separate view from storage (important for search cancellation)				
+				this.data('title', title); // separate view from storage (important for search cancellation)
 			},
 			getTitle: function() {
 				return this.find('.treedropdownfield-title').text();
@@ -161,7 +161,7 @@
 						
 						if(title) {
 							self.setTitle(title);
-							self.data('title', title)
+							self.data('title', title);
 						}
 						if(node) tree.jstree('select_node', node);
 					}
@@ -235,6 +235,7 @@
 				var self = this;
 				return {
 					'core': {
+						'html_titles': true,
 						// 'initially_open': ['record-0'],
 						'animation': 0
 					},

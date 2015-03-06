@@ -13,8 +13,8 @@
  * 
  * 	public function getCMSFields() {
  * 		$fields = parent::getCMSFields();
- * 		$field = DropdownField::create('GalleryID', 'Gallery', Gallery::get()->map('ID', 'Title'));
- * 		$field->setEmptyString('(Select one)');
+ * 		$field = DropdownField::create('GalleryID', 'Gallery', Gallery::get()->map('ID', 'Title'))
+ * 			->setEmptyString('(Select one)');
  * 		$fields->addFieldToTab('Root.Content', $field, 'Content');
  * </code>
  * 
@@ -33,7 +33,7 @@
  * 
  * Example instantiation:
  * <code>
- * new DropdownField(
+ * DropdownField::create(
  *   'Country',
  *   'Country',
  *   array(
@@ -59,7 +59,7 @@
  * 
  * Field construction:
  * <code>
- * new DropdownField(
+ * DropdownField::create(
  *   'Country',
  *   'Country',
  *   singleton('MyObject')->dbObject('Country')->enumValues()
