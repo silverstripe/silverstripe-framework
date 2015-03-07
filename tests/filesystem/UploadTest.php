@@ -84,14 +84,52 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 
-		$v = new UploadTest_Validator();
-		$v->setAllowedMaxFileSize(array('txt' => 10));
-
 		// test upload into default folder
 		$u1 = new Upload();
+		$v = new UploadTest_Validator();
+
+		$v->setAllowedMaxFileSize(array('txt' => 10));
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
+		$this->assertFalse($result, 'Load failed because size was too big');
 
+		$v->setAllowedMaxFileSize(array('[doc]' => 10));
+		$u1->setValidator($v);
+		$result = $u1->load($tmpFile);
+		$this->assertFalse($result, 'Load failed because size was too big');
+
+		$v->setAllowedMaxFileSize(array('txt' => 200000));
+		$u1->setValidator($v);
+		$result = $u1->load($tmpFile);
+		$this->assertTrue($result, 'Load failed with setting max file size');
+
+		// check max file size set by app category
+		$tmpFileName = 'UploadTest-testUpload.jpg';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		file_put_contents($tmpFilePath, $tmpFileContent . $tmpFileContent);
+
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'image/jpeg',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'jpg',
+			'error' => UPLOAD_ERR_OK,
+		);
+
+		$v->setAllowedMaxFileSize(array('[image]' => '40k'));
+		$u1->setValidator($v);
+		$result = $u1->load($tmpFile);
+		$this->assertTrue($result, 'Load failed with setting max file size');
+
+		$v->setAllowedMaxFileSize(array('[image]' => '1k'));
+		$u1->setValidator($v);
+		$result = $u1->load($tmpFile);
+		$this->assertFalse($result, 'Load failed because size was too big');
+
+		$v->setAllowedMaxFileSize(array('[image]' => 1000));
+		$u1->setValidator($v);
+		$result = $u1->load($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
 	}
 
@@ -262,7 +300,7 @@ class UploadTest extends SapphireTest {
 			BASE_PATH . '/'  . $file->getRelativePath(),
 			'File exists'
 		);
-		
+
 		$u = new Upload();
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
@@ -280,7 +318,7 @@ class UploadTest extends SapphireTest {
 			$file2->ID,
 			'File database record is not the same'
 		);
-		
+
 		$u = new Upload();
 		$u->load($tmpFile);
 		$file3 = $u->getFile();
@@ -298,7 +336,7 @@ class UploadTest extends SapphireTest {
 			$file3->ID,
 			'File database record is not the same'
 		);
-		
+
 		$file->delete();
 		$file2->delete();
 		$file3->delete();
@@ -343,7 +381,7 @@ class UploadTest extends SapphireTest {
 			BASE_PATH . '/'  . $file->getRelativePath(),
 			'File exists'
 		);
-		
+
 		$u = new Upload();
 		$u->setValidator($v);
 		$u->load($tmpFile);
@@ -362,7 +400,7 @@ class UploadTest extends SapphireTest {
 			$file2->ID,
 			'File database record is not the same'
 		);
-		
+
 		$file->delete();
 		$file2->delete();
 	}
@@ -406,7 +444,7 @@ class UploadTest extends SapphireTest {
 			BASE_PATH . '/'  . $file->getRelativePath(),
 			'File exists'
 		);
-		
+
 		$u = new Upload();
 		$u->setValidator($v);
 		$u->setReplaceFile(true);
