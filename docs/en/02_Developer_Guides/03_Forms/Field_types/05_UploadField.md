@@ -148,6 +148,16 @@ NOTE: this only sets the configuration for your UploadField, this does NOT chang
 	$this->getValidator()->setAllowedMaxFileSize($size);
 ```
 
+You can also specify a default global maximum file size setting in your config for different file types. This is overridden when specifying the max allowed file size on the UploadField instance.
+
+```yaml
+	Upload_Validator: 
+	  default_max_file_size: 
+	    '[image]': '1m'
+	    '[doc]': '5m'
+	    'jpeg': 2000
+```
+
 ### Preview dimensions
 Set the dimensions of the image preview. By default the max width is set to 80 and the max height is set to 60.
 
@@ -296,6 +306,19 @@ Certain default values for the above can be configured using the YAML config sys
 ```
 
 The above settings can also be set on a per-instance basis by using `setConfig` with the appropriate key.
+
+The `Upload_Validator` class has configuration options for setting the `default_max_file_size`.
+
+```yaml
+	Upload_Validator: 
+	  default_max_file_size: 
+	    '[image]': '1m'
+	    '[doc]': '5m'
+	    'jpeg': 2000
+```
+
+You can specify the file extension or the app category (as specified in the `File` class) in square brackets. It supports setting the file size in bytes or using the syntax supported by `File::ini2bytes()`.
+
 
 You can also configure the underlying `[api:Upload]` class, by using the YAML config system.
 
