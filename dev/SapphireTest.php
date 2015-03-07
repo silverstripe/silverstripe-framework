@@ -347,7 +347,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Injector::unnest();
 		Config::unnest();
 
-		if($this->extensionsToReapply || $this->extensionsToRemove || $this->extraDataObjects) {
+		if(!empty($this->extensionsToReapply) || !empty($this->extensionsToRemove) || !empty($this->extraDataObjects)) {
 			$this->resetDBSchema();
 		}
 	}
