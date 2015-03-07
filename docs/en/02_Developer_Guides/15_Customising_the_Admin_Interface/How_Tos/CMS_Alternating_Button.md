@@ -156,4 +156,4 @@ cases.
 ## Summary ##
 
 The code presented gives you a fully functioning alternating button, similar to the defaults that come with the the CMS.
-These alternating buttons can be used to give user the advantage of visual feedback upon his actions.
+These alternating buttons can be used to give user the advantage of visual feedback upon their actions.

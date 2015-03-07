@@ -119,7 +119,7 @@ translators.
 ### I'm seeing lots of duplicated translations, what should I do?
 
 For now, please translate all duplications - sometimes they might be intentional, but mostly the developer just didn't 
-know his phrase was already translated. Please contact us about any duplicates that might be worth merging.
+know their phrase was already translated. Please contact us about any duplicates that might be worth merging.
 
 ### What happened to translate.silverstripe.org?
 

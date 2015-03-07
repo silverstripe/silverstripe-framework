@@ -223,7 +223,7 @@ JS;
 			return $this->controller->redirect(Director::absoluteBaseURL() . Security::config()->default_login_dest);
 		}
 
-		// Redirect the user to the page where he came from
+		// Redirect the user to the page where they came from
 		$member = Member::currentUser();
 		if($member) {
 			$firstname = Convert::raw2xml($member->FirstName);
