@@ -135,6 +135,14 @@ start parsing variables and the appropriate controller action AFTER the `//`).
 
 ## URL Handlers
 
+<div class="alert" markdown="1">
+You **must** use the **$url_handlers** static array described here if your URL
+pattern does not use the Controller class's default pattern of
+`$Action//$ID/$OtherID`. If you fail to do so, and your pattern has more than
+2 parameters, your controller will throw the error "I can't handle sub-URLs of
+a *class name* object" with HTTP status 404.
+</div>
+
 In the above example the URLs were configured using the [api:Director] rules in the **routes.yml** file. Alternatively 
 you can specify these in your Controller class via the **$url_handlers** static array. This array is processed by the 
 [api:RequestHandler] at runtime once the `Controller` has been matched.
@@ -154,11 +162,41 @@ This is useful when you want to provide custom actions for the mapping of `teams
 		);
 
 	    private static $url_handlers = array(
-			'staff/$ID/$Name' => 'payroll'
+			'staff/$ID/$Name' => 'payroll',
 			'coach/$ID/$Name' => 'payroll'
 	    );
 
 The syntax for the `$url_handlers` array users the same pattern matches as the `YAML` configuration rules.
+
+Now let’s consider a more complex example from a real project, where using
+**$url_handlers** is mandatory. In this example, the URLs are of the form
+`http://example.org/feed/go/`, followed by 5 parameters. The PHP controller
+class specifies the URL pattern in `$url_handlers`. Notice that it defines 5
+parameters.
+
+
+	:::php
+	class FeedController extends ContentController {
+
+		private static $allowed_actions = array('go');
+		private static $url_handlers = array(
+			'go/$UserName/$AuthToken/$Timestamp/$OutputType/$DeleteMode' => 'go'
+		);
+		public function go() {
+			$this->validateUser(
+				$this->request->param('UserName'),
+				$this->request->param('AuthToken')
+			);
+			/* more processing goes here */
+		}
+
+The YAML rule, in contrast, is simple. It needs to provide only enough
+information for the framework to choose the desired controller.
+
+	:::yaml
+	Director:
+	  rules:
+	    'feed': 'FeedController'
 
 ## Links
 
