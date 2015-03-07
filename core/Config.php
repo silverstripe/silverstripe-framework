@@ -10,62 +10,62 @@
  * - An array
  * - A non-array value
  *
- * If the value is an array, each value in the array may also be one of those 
+ * If the value is an array, each value in the array may also be one of those
  * three types.
  *
- * A property can have a value specified in multiple locations, each of which 
- * have a hard coded or explicit priority. We combine all these values together 
- * into a "composite" value using rules that depend on the priority order of 
+ * A property can have a value specified in multiple locations, each of which
+ * have a hard coded or explicit priority. We combine all these values together
+ * into a "composite" value using rules that depend on the priority order of
  * the locations to give the final value, using these rules:
  *
- * - If the value is an array, each array is added to the _beginning_ of the 
- *	composite array in ascending priority order. If a higher priority item has 
+ * - If the value is an array, each array is added to the _beginning_ of the
+ *	composite array in ascending priority order. If a higher priority item has
  *	a non-integer key which is the same as a lower priority item, the value of
- * 	those items  is merged using these same rules, and the result of the merge 
- *	is located in the same location the higher priority item would be if there 
+ * 	those items  is merged using these same rules, and the result of the merge
+ *	is located in the same location the higher priority item would be if there
  *	was no key clash. Other than in this key-clash situation, within the
  * 	particular array, order is preserved.
  *
- * - If the value is not an array, the highest priority value is used without 
+ * - If the value is not an array, the highest priority value is used without
  *	any attempt to merge.
  *
- * It is an error to have mixed types of the same named property in different 
- * locations (but an error will not necessarily be raised due to optimizations 
+ * It is an error to have mixed types of the same named property in different
+ * locations (but an error will not necessarily be raised due to optimizations
  * in the lookup code).
  *
- * The exception to this is "false-ish" values - empty arrays, empty strings, 
- * etc. When merging a non-false-ish value with a false-ish value, the result 
+ * The exception to this is "false-ish" values - empty arrays, empty strings,
+ * etc. When merging a non-false-ish value with a false-ish value, the result
  * will be the non-false-ish value regardless of priority. When merging two
  * false-ish values the result will be the higher priority false-ish value.
  *
- * The locations that configuration values are taken from in highest -> lowest 
+ * The locations that configuration values are taken from in highest -> lowest
  * priority order.
  *
  * - Any values set via a call to Config#update.
  *
- * - The configuration values taken from the YAML files in _config directories 
- *	(internally sorted in before / after order, where the item that is latest 
+ * - The configuration values taken from the YAML files in _config directories
+ *	(internally sorted in before / after order, where the item that is latest
  *	is highest priority).
  *
- * - Any static set on an "additional static source" class (such as an 
+ * - Any static set on an "additional static source" class (such as an
  *	extension) named the same as the name of the property.
  *
  * - Any static set on the class named the same as the name of the property.
  *
  * - The composite configuration value of the parent class of this class.
  *
- * At some of these levels you can also set masks. These remove values from the 
- * composite value at their priority point rather than add. They are much 
- * simpler. They consist of a list of key / value pairs. When applied against 
+ * At some of these levels you can also set masks. These remove values from the
+ * composite value at their priority point rather than add. They are much
+ * simpler. They consist of a list of key / value pairs. When applied against
  * the current composite value:
  *
- * - If the composite value is a sequential array, any member of that array 
+ * - If the composite value is a sequential array, any member of that array
  *	that matches any value in the mask is removed.
  *
- * - If the composite value is an associative array, any member of that array 
+ * - If the composite value is an associative array, any member of that array
  *	that matches both the key and value of any pair in the mask is removed.
  *
- * - If the composite value is not an array, if that value matches any value 
+ * - If the composite value is not an array, if that value matches any value
  * in the mask it is removed.
  *
  * @package framework
@@ -74,7 +74,7 @@
 class Config {
 
 	/**
-	 * A marker instance for the "anything" singleton value. Don't access 
+	 * A marker instance for the "anything" singleton value. Don't access
 	 * directly, even in-class, always use self::anything()
 	 *
 	 * @var Object
@@ -82,9 +82,9 @@ class Config {
 	private static $_anything = null;
 
 	/**
-	 * Get a marker class instance that is used to do a "remove anything with 
+	 * Get a marker class instance that is used to do a "remove anything with
 	 * this key" by adding $key => Config::anything() to the suppress array
-	 * 
+	 *
 	 * @return Object
 	 */
 	public static function anything() {
@@ -98,7 +98,7 @@ class Config {
 	// -- Source options bitmask --
 
 	/**
-	 * source options bitmask value - merge all parent configuration in as 
+	 * source options bitmask value - merge all parent configuration in as
 	 * lowest priority.
 	 *
 	 * @const
@@ -106,7 +106,7 @@ class Config {
 	const INHERITED = 0;
 
 	/**
-	 * source options bitmask value - only get configuration set for this 
+	 * source options bitmask value - only get configuration set for this
 	 * specific class, not any of it's parents.
 	 *
 	 * @const
@@ -114,23 +114,23 @@ class Config {
 	const UNINHERITED = 1;
 
 	/**
-	 * source options bitmask value - inherit, but stop on the first class 
+	 * source options bitmask value - inherit, but stop on the first class
 	 * that actually provides a value (event an empty value).
 	 *
 	 * @const
 	 */
 	const FIRST_SET = 2;
 
-	/** 
-	 * @const source options bitmask value - do not use additional statics 
-	 * sources (such as extension) 
+	/**
+	 * @const source options bitmask value - do not use additional statics
+	 * sources (such as extension)
 	 */
 	const EXCLUDE_EXTRA_SOURCES = 4;
 
 	// -- get_value_type response enum --
 
 	/**
-	 * Return flag for get_value_type indicating value is a scalar (or really 
+	 * Return flag for get_value_type indicating value is a scalar (or really
 	 * just not-an-array, at least ATM)
 	 *
 	 * @const
@@ -144,7 +144,7 @@ class Config {
 	const IS_ARRAY = 2;
 
 	/**
-	 * Get whether the value is an array or not. Used to be more complicated, 
+	 * Get whether the value is an array or not. Used to be more complicated,
 	 * but still nice sugar to have an enum to compare and not just a true /
 	 * false value.
 	 *
@@ -171,7 +171,7 @@ class Config {
 	}
 
 	/**
-	 * @todo If we can, replace next static & static methods with DI once that's in 
+	 * @todo If we can, replace next static & static methods with DI once that's in
 	 */
 	protected static $instance;
 
@@ -180,7 +180,7 @@ class Config {
 	 *
 	 * Configs should not normally be manually created.
 	 *
-	 * In general use you will use this method to obtain the current Config 
+	 * In general use you will use this method to obtain the current Config
 	 * instance.
 	 *
 	 * @return Config
@@ -198,7 +198,7 @@ class Config {
 	 *
 	 * {@link Config} objects should not normally be manually created.
 	 *
-	 * A use case for replacing the active configuration set would be for 
+	 * A use case for replacing the active configuration set would be for
 	 * creating an isolated environment for unit tests.
 	 *
 	 * @param Config $instance New instance of Config to assign
@@ -213,13 +213,13 @@ class Config {
 	}
 
 	/**
-	 * Make the newly active {@link Config} be a copy of the current active 
+	 * Make the newly active {@link Config} be a copy of the current active
 	 * {@link Config} instance.
 	 *
-	 * You can then make changes to the configuration by calling update and 
-	 * remove on the new value returned by {@link Config::inst()}, and then discard 
+	 * You can then make changes to the configuration by calling update and
+	 * remove on the new value returned by {@link Config::inst()}, and then discard
 	 * those changes later by calling unnest.
-	 * 
+	 *
 	 * @return Config Reference to new active Config instance
 	 */
 	public static function nest() {
@@ -231,13 +231,22 @@ class Config {
 	}
 
 	/**
-	 * Change the active Config back to the Config instance the current active 
+	 * Change the active Config back to the Config instance the current active
 	 * Config object was copied from.
-	 * 
+	 *
 	 * @return Config Reference to new active Config instance
 	 */
 	public static function unnest() {
-		return self::set_instance(self::$instance->nestedFrom);
+		if (self::inst()->nestedFrom) {
+			self::set_instance(self::inst()->nestedFrom);
+		}
+		else {
+			user_error(
+				"Unable to unnest root Config, please make sure you don't have mis-matched nest/unnest",
+				E_USER_WARNING
+			);
+		}
+		return self::inst();
 	}
 
 	/**
@@ -246,7 +255,7 @@ class Config {
 	protected $cache;
 
 	/**
-	 * Each copy of the Config object need's it's own cache, so changes don't 
+	 * Each copy of the Config object need's it's own cache, so changes don't
 	 * leak through to other instances.
 	 */
 	public function __construct() {
@@ -257,22 +266,22 @@ class Config {
 		$this->cache = clone $this->cache;
 	}
 
-	/** 
-	 * @var Config - The config instance this one was copied from when 
+	/**
+	 * @var Config - The config instance this one was copied from when
 	 * Config::nest() was called.
 	 */
 	protected $nestedFrom = null;
 
-	/** 
-	 * @var array - Array of arrays. Each member is an nested array keyed as 
-	 * $class => $name => $value, where value is a config value to treat as 
+	/**
+	 * @var array - Array of arrays. Each member is an nested array keyed as
+	 * $class => $name => $value, where value is a config value to treat as
 	 * the highest priority item.
 	 */
 	protected $overrides = array();
 
-	/** 
-	 * @var array $suppresses Array of arrays. Each member is an nested array 
-	 * keyed as $class => $name => $value, where value is a config value suppress 
+	/**
+	 * @var array $suppresses Array of arrays. Each member is an nested array
+	 * keyed as $class => $name => $value, where value is a config value suppress
 	 * from any lower priority item.
 	 */
 	protected $suppresses = array();
@@ -287,7 +296,7 @@ class Config {
 	 */
 	public function pushConfigStaticManifest(SS_ConfigStaticManifest $manifest) {
 		array_unshift($this->staticManifests, $manifest);
-		
+
 		$this->cache->clean();
 	}
 
@@ -483,8 +492,8 @@ class Config {
 			}
 
 			if (isset($this->suppresses[$k][$class][$name])) {
-				$suppress = $suppress 
-					? array_merge($suppress, $this->suppresses[$k][$class][$name]) 
+				$suppress = $suppress
+					? array_merge($suppress, $this->suppresses[$k][$class][$name])
 					: $this->suppresses[$k][$class][$name];
 			}
 		}
@@ -730,7 +739,7 @@ class Config_LRU {
 		// Target count - not always the lowest, but guaranteed to exist (or hit an empty item)
 		$target = $this->c - self::SIZE + 1;
 		$i = $stop = $this->i;
-		
+
 		do {
 			if (!($i--)) $i = self::SIZE-1;
 			$item = $this->cache[$i];
