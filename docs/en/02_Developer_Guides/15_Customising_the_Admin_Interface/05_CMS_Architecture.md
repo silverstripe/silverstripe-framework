@@ -222,7 +222,7 @@ In order for this to work, the CMS templates declare certain sections as "PJAX f
 through a `data-pjax-fragment` attribute. These names correlate to specific
 rendering logic in the PHP controllers, through the `[api:PjaxResponseNegotiator]` class.
 
-Through a custom `X-Pjax` HTTP header, the client can declare which view he's expecting,
+Through a custom `X-Pjax` HTTP header, the client can declare which view they're expecting,
 through identifiers like `CurrentForm` or `Content` (see `[api:LeftAndMain->getResponseNegotiator()]`).
 These identifiers are passed to `loadPanel()` via the `pjax` data option.
 The HTTP response is a JSON object literal, with template replacements keyed by their Pjax fragment.
