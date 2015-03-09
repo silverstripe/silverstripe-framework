@@ -64,6 +64,10 @@ class PaginatedListTest extends SapphireTest {
 
 		$this->assertEquals(10, $list->CurrentPage());
 		$this->assertEquals(90, $list->getPageStart());
+
+		// Test disabled paging
+		$list->setPageLength(0);
+		$this->assertEquals(1, $list->CurrentPage());
 	}
 
 	public function testGetIterator() {
@@ -93,6 +97,20 @@ class PaginatedListTest extends SapphireTest {
 		$list->setCurrentPage(999);
 		$this->assertDOSEquals(array(), $list->getIterator());
 
+		// Test disabled paging
+		$list->setPageLength(0);
+		$list->setCurrentPage(1);
+		$this->assertDOSEquals(
+			array(
+				array('Num' => 1),
+				array('Num' => 2),
+				array('Num' => 3),
+				array('Num' => 4),
+				array('Num' => 5)
+			), $list->getIterator()
+		);
+
+		// Test with dataobjectset
 		$players = DataObjectTest_Player::get();
 		$list = new PaginatedList($players);
 		$list->setPageLength(1);
@@ -127,6 +145,13 @@ class PaginatedListTest extends SapphireTest {
 			array('PageNum' => 4),
 		);
 		$this->assertDOSEquals($expectLimited, $list->Pages(3));
+
+		// Disable paging
+		$list->setPageLength(0);
+		$expectAll = array(
+			array('PageNum' => 1, 'CurrentBool' => true),
+		);
+		$this->assertDOSEquals($expectAll, $list->Pages());
 	}
 
 	public function testPaginationSummary() {
@@ -146,6 +171,13 @@ class PaginatedListTest extends SapphireTest {
 			array('PageNum' => 8),
 			array('PageNum' => null),
 			array('PageNum' => 25),
+		);
+		$this->assertDOSEquals($expect, $list->PaginationSummary(4));
+
+		// Disable paging
+		$list->setPageLength(0);
+		$expect = array(
+			array('PageNum' => 1, 'CurrentBool' => true)
 		);
 		$this->assertDOSEquals($expect, $list->PaginationSummary(4));
 	}
@@ -170,6 +202,10 @@ class PaginatedListTest extends SapphireTest {
 		$this->assertEquals(2, $list->CurrentPage());
 		$list->setPageStart(40);
 		$this->assertEquals(5, $list->CurrentPage());
+
+		// Disable paging
+		$list->setPageLength(0);
+		$this->assertEquals(1, $list->CurrentPage());
 	}
 
 	public function testTotalPages() {
@@ -183,6 +219,13 @@ class PaginatedListTest extends SapphireTest {
 
 		$list->setTotalItems(5);
 		$this->assertEquals(5, $list->TotalPages());
+
+		// Disable paging
+		$list->setPageLength(0);
+		$this->assertEquals(1, $list->TotalPages());
+
+		$list->setTotalItems(0);
+		$this->assertEquals(0, $list->TotalPages());
 	}
 
 	public function testMoreThanOnePage() {
@@ -194,6 +237,10 @@ class PaginatedListTest extends SapphireTest {
 
 		$list->setTotalItems(2);
 		$this->assertTrue($list->MoreThanOnePage());
+
+		// Disable paging
+		$list->setPageLength(0);
+		$this->assertFalse($list->MoreThanOnePage());
 	}
 
 	public function testNotFirstPage() {
@@ -230,6 +277,10 @@ class PaginatedListTest extends SapphireTest {
 		$this->assertEquals(20, $list->LastItem());
 		$list->setCurrentPage(3);
 		$this->assertEquals(25, $list->LastItem());
+
+		// Disable paging
+		$list->setPageLength(0);
+		$this->assertEquals(25, $list->LastItem());
 	}
 
 	public function testFirstLink() {
@@ -242,6 +293,10 @@ class PaginatedListTest extends SapphireTest {
 		$list->setPageLength(10);
 		$list->setTotalItems(100);
 		$this->assertContains('start=90', $list->LastLink());
+
+		// Disable paging
+		$list->setPageLength(0);
+		$this->assertContains('start=0', $list->LastLink());
 	}
 
 	public function testNextLink() {
@@ -257,6 +312,11 @@ class PaginatedListTest extends SapphireTest {
 		$this->assertContains('start=40', $list->NextLink());
 		$list->setCurrentPage(5);
 		$this->assertNull($list->NextLink());
+
+		// Disable paging
+		$list->setCurrentPage(1);
+		$list->setPageLength(0);
+		$this->assertNull($list->NextLink());
 	}
 
 	public function testPrevLink() {
@@ -270,6 +330,10 @@ class PaginatedListTest extends SapphireTest {
 		$this->assertContains('start=10', $list->PrevLink());
 		$list->setCurrentPage(5);
 		$this->assertContains('start=30', $list->PrevLink());
+
+		// Disable paging
+		$list->setPageLength(0);
+		$this->assertNull($list->PrevLink());
 	}
 
 }
