@@ -5,7 +5,7 @@ done through [WampServer](http://www.wampserver.com/en/). This can be useful if 
 want a Microsoft Windows machine with a very similar environment.
 
 Note: Installing on Microsoft's IIS webserver through Microsoft WebPI is likely to be easier, see
-[installation-on-windows-pi](windows-pi).
+[Windows with Web Platform Installer](other_installation_options/windows_platform_installer).
 
 ## Install WAMP
 

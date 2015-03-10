@@ -120,6 +120,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'Salt',
 		'NumVisit'
 	);
+
 	/**
 	 * @config
 	 * @var Array See {@link set_title_columns()}
@@ -230,7 +231,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public static function default_admin() {
 		// Check if set
 		if(!Security::has_default_admin()) return null;
-		
+
 		// Find or create ADMIN group
 		singleton('Group')->requireDefaultRecords();
 		$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
@@ -539,6 +540,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$hash = $member->encryptWithUserSettings($token);
 				$member->RememberLoginToken = $hash;
 				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
+
+				$member->NumVisit++;
 				$member->write();
 
 				// Audit logging hook
@@ -1442,8 +1445,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if(!($member && $member->exists())) return false;
 
 		// If the requesting member is not an admin, but has access to manage members,
-		// he still can't edit other members with ADMIN permission.
-		// This is a bit weak, strictly speaking he shouldn't be allowed to
+		// they still can't edit other members with ADMIN permission.
+		// This is a bit weak, strictly speaking they shouldn't be allowed to
 		// perform any action that could change the password on a member
 		// with "higher" permissions than himself, but thats hard to determine.
 		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) return false;

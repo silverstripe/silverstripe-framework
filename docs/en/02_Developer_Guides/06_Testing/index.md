@@ -12,18 +12,15 @@ SilverStripe uses [PHPUnit](http://www.phpunit.de) for unit tests, and the frame
 process of creating and managing tests.
 
 If you're more familiar with unit testing, but want a refresher of some of the concepts and terminology, you can browse
-the [Testing Glossary](glossary). To get started now, follow the installation instructions below, and check
-[Troubleshooting](testing-guide-troubleshooting) in case you run into any problems.
+the [Testing Glossary](testing_glossary). To get started now, follow the installation instructions below.
 
 If you are familiar with PHP coding but new to unit testing then check out Mark's presentation [Getting to Grips with SilverStripe Testing](http://www.slideshare.net/maetl/getting-to-grips-with-silverstripe-testing).
-
-[Why Unit Test?](why-should-i-test) will give you reasons why you should be testing your code.
 
 You should also read over [the PHPUnit manual](http://www.phpunit.de/manual/current/en/). It provides a lot of
 fundamental concepts that we build on in this documentation.
 
 Unit tests are not included in the normal SilverStripe downloads so you need to install them through git repositories
-([installation instructions](/installation/composer)).
+([installation instructions](/getting_started/composer)).
 
 ## Install with Composer
 
@@ -108,7 +105,7 @@ All command-line arguments are documented on
 
 ### Via the "sake" Wrapper on Command Line
 
-The [sake](/topics/commandline) executable that comes with SilverStripe can trigger a customized
+The [sake](/developer_guides/cli/) executable that comes with SilverStripe can trigger a customized
 `[api:TestRunner]` class that handles the PHPUnit configuration and output formatting.
 While the custom test runner a handy tool, its also more limited than using `phpunit` directly,
 particularly around formatting test output.

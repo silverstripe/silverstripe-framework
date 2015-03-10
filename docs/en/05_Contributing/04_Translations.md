@@ -9,7 +9,7 @@ only have time for a partial translation or quick review work - our system accom
 same language.
 
 The content for UI elements (button labels, field titles) and instruction texts shown in the CMS and elsewhere is 
-stored in the PHP code for a module (see [i18n](/topics/i18n)). All content can be extracted as a "language file", and 
+stored in the PHP code for a module (see [i18n](../developer_guides/i18n)). All content can be extracted as a "language file", and 
 uploaded to an online translation editor interface. SilverStripe is already translated in over 60 languages, and we're 
 relying on native speakers to keep these up to date, and of course add new languages. 
 
@@ -83,13 +83,13 @@ dropdown which automatically includes all found translations (based on the files
 ### I've found a piece of untranslatable text
 
 It is entirely possible that we missed certain strings in preparing Silverstripe for translation-support. If you're 
-technically minded, please read [i18n](/topics/i18n) on how to make it translatable. Otherwise just post your findings 
+technically minded, please read [i18n](../developer_guides/i18n) on how to make it translatable. Otherwise just post your findings 
 to the forum.
 
 ### How do I add my own module?
 
 Once you've built a translation-enabled module, you can run the "textcollector" on your local installation for this 
-specific module (see [i18n](/topics/i18n)). This should find all calls to `_t()` in php and template files, and generate 
+specific module (see [i18n](../developer_guides/i18n)). This should find all calls to `_t()` in php and template files, and generate 
 a new lang file with the default locale (path: <mymodule>/lang/en.yml). Upload this file to the online translation 
 tool, and wait for your translators to do their magic!
 
@@ -119,7 +119,7 @@ translators.
 ### I'm seeing lots of duplicated translations, what should I do?
 
 For now, please translate all duplications - sometimes they might be intentional, but mostly the developer just didn't 
-know his phrase was already translated. Please contact us about any duplicates that might be worth merging.
+know their phrase was already translated. Please contact us about any duplicates that might be worth merging.
 
 ### What happened to translate.silverstripe.org?
 
@@ -128,7 +128,7 @@ This was a custom-built online translation tool serving us well for a couple of 
 were migrated. Unfortunately, the ownership of individual translations couldn't be migrated.
 
 As the new tool doesn't support the PHP format used in SilverStripe 2.x, this means that we no longer have a working 
-translation tool for PHP files. Please edit the PHP files directly and [send us pull requests](/misc/contributing).
+translation tool for PHP files. Please edit the PHP files directly and [send us pull requests](/contributing).
 
 This also applies for any modules staying compatible with SilverStripe 2.x.
 
@@ -140,7 +140,7 @@ board if you have specific comments on a translation.
 
 ## Related
 
- * [i18n](/developer_guids/i18n): Developer-level documentation of Silverstripe's i18n capabilities
- * [translation-process](translation-process): Information about managing translations for the core team and/or module maintainers.
+ * [i18n](/developer_guides/i18n): Developer-level documentation of Silverstripe's i18n capabilities
+ * [Translation Process](translation_process): Information about managing translations for the core team and/or module maintainers.
  * [translatable](https://github.com/silverstripe/silverstripe-translatable): DataObject-interface powering the website-content translations
  * ["Translatable ModelAdmin" module](http://silverstripe.org/translatablemodeladmin-module/): An extension which allows translations of DataObjects inside ModelAdmin

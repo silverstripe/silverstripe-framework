@@ -216,7 +216,7 @@ $service->request('service.json', 'GET', null, null, $curlOptions);
 
 ## How to's
 
-* [Embed an RSS Feed](how_to/embed_rss)
+* [Embed an RSS Feed](how_tos/embed_rss)
 
 ## API Documentation
 

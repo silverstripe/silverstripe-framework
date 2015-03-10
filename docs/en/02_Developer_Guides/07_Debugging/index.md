@@ -3,7 +3,7 @@ summary: Learn how to identify errors in your application and best practice for 
 # Debugging
 
 SilverStripe can be a large and complex framework to debug, but there are ways to make debugging less painful. In this
-guide we show the basics on defining the correct [Environment Type](environment_type) for your application and other
+guide we show the basics on defining the correct [Environment Type](environment_types) for your application and other
 built-in helpers for dealing with application errors.
 
 [CHILDREN]

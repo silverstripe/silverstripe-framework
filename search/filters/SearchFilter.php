@@ -228,7 +228,7 @@ abstract class SearchFilter extends Object {
 	 * @return DataQuery
 	 */
 	protected function applyMany(DataQuery $query) {
-		throw new InvalidArgumentException(get_class($this) . "can't be used to filter by a list of items.");
+		throw new InvalidArgumentException(get_class($this) . " can't be used to filter by a list of items.");
 	}
 
 	/**
@@ -264,7 +264,7 @@ abstract class SearchFilter extends Object {
 	 * @return DataQuery
 	 */
 	protected function excludeMany(DataQuery $query) {
-		throw new InvalidArgumentException(get_class($this) . "can't be used to filter by a list of items.");
+		throw new InvalidArgumentException(get_class($this) . " can't be used to filter by a list of items.");
 	}
 
 	/**

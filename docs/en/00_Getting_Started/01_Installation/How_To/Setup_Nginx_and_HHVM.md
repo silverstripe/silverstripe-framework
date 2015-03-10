@@ -107,4 +107,4 @@ e.g. `/etc/nginx/sites-enabled/mysite`:
 		include /etc/nginx/silverstripe.conf;
 	}
 
-For more information on nginx configuration, please see the [nginx installation](nginx) page.
+For more information on nginx configuration, please see the [nginx installation](configure_nginx) page.

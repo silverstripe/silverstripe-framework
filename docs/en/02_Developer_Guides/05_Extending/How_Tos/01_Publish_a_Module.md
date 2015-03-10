@@ -5,7 +5,7 @@ title: How to Publish a SilverStripe module
 If you wish to submit your module to our public directory, you take responsibility for a certain level of code quality, 
 adherence to conventions, writing documentation, and releasing updates. 
 
-SilverStripe uses [Composer](../../getting_started/composer/) to manage module releases and dependencies between 
+SilverStripe uses [Composer](../../../getting_started/composer/) to manage module releases and dependencies between 
 modules. If you plan on releasing your module to the public, ensure that you provide a `composer.json` file in the root 
 of your module containing the meta-data about your module.
 

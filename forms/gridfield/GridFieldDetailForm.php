@@ -95,7 +95,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 
 		// if no validator has been set on the GridField and the record has a
 		// CMS validator, use that.
-		if(!$this->getValidator() && method_exists($record, 'getCMSValidator')) {
+		if(!$this->getValidator() && (method_exists($record, 'getCMSValidator') || $record instanceof Object && $record->hasMethod('getCMSValidator'))) {
 			$this->setValidator($record->getCMSValidator());
 		}
 

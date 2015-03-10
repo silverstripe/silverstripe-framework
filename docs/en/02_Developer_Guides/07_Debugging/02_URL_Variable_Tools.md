@@ -24,7 +24,7 @@ Append the option and corresponding value to your URL in your browser's address 
 
  | URL Variable  | | Values | | Description                                                | 
  | ------------  | | ------ | | -----------                                                | 
- | isDev         | | 1      | | Put the site into [development mode](/topics/debugging), enabling debugging messages to the browser on a live server.  For security, you'll be asked to log in with an administrator log-in. Will persist for the current browser session. | 
+ | isDev         | | 1      | | Put the site into [development mode](../), enabling debugging messages to the browser on a live server.  For security, you'll be asked to log in with an administrator log-in. Will persist for the current browser session. | 
  | isTest        | | 1      | | See above. | 
  | debug         | | 1      | | Show a collection of debugging information about the director / controller operation        |
  | debug_request | | 1      | | Show all steps of the request from initial `[api:HTTPRequest]` to `[api:Controller]` to Template Rendering  | 

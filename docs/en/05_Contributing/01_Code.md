@@ -6,7 +6,7 @@ The SilverStripe core modules (`framework` and `cms`), as well as some of the mo
 git version control. SilverStripe hosts its modules on [github.com/silverstripe](http://github.com/silverstripe) and [github.com/silverstripe-labs](http://github.com/silverstripe-labs).  After [installing git](http://help.github.com/git-installation-redirect) and creating a [free github.com account](https://github.com/signup/free), you can "fork" a module,
 which creates a copy that you can commit to (see github's [guide to "forking"](http://help.github.com/forking/)).
 
-For other modules, our [module list on silverstripe.org](http://silverstripe.org/modules) lists the repository locations, typically using a version control system like "git" or "[subversion](subversion)". 
+For other modules, our [add-ons site](http://addons.silverstripe.org/add-ons) lists the repository locations, typically using the version control system like "git".
 
 <div class="hint" markdown="1">
 Note: By supplying code to the SilverStripe core team in patches, tickets and pull requests, you agree to assign copyright of that code to SilverStripe Limited, on the condition that SilverStripe Limited releases that code under the BSD license.
@@ -16,9 +16,10 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
 ## Step-by-step: From forking to sending the pull request
 
-_**NOTE:** The commands on this page assume that you are branching from `3.2`, at the time of writing this is the pre-release branch._
+_**NOTE:** The commands on this page assume that you are targetting framework version 3.2
 
-1. Install the project through composer. The process is described in detail in "[Installation through Composer](../../installation/composer#contributing)".
+1. Install the project through composer. The process is described in detail in "[Installation through Composer](../getting_started/composer#contributing)".
+
 
  		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.2.x-dev
 
@@ -63,7 +64,43 @@ _**NOTE:** The commands on this page assume that you are branching from `3.2`, a
 8. Issue pull request on GitHub.  Visit your forked respoistory on GitHub.com and click the "Create Pull Request" button nex tot the new branch.
 
 The core team is then responsible for reviewing patches and deciding if they will make it into core.  If
-there are any problems they will follow up with you, so please ensure they have a way to contact you! 
+there are any problems they will follow up with you, so please ensure they have a way to contact you!
+
+### The Pull Request Process
+
+Once your pull request is issued, it's not the end of the road. A [core committer](/contributing/core_committers/) will most likely have some questions for you and may ask you to make some changes depending on discussions you have.
+If you've been naughty and not adhered to the coding conventions, expect a few requests to make changes so your code is in-line.
+
+If your change is particularly significant, it may be referred to the [mailing list](https://groups.google.com/forum/#!forum/silverstripe-dev) for further community discussion.
+
+A core committer will also "label" your PR using the labels defined in GitHub, these are to correctly classify and help find your work at a later date.
+
+#### GitHub Labels
+
+The current GitHub labels are grouped into 5 sections:
+
+ 1. Changes - These are designed to signal what kind of change they are and how they fit into the [Semantic Versioning](http://semver.org/) schema
+ 2. Impact - What impact does this bug/issue/fix have, does it break a feature completely, is it just a side effect or is it trivial and not a bit problem (but a bit annoying)
+ 3. Effort - How much effort is required to fix this issue?
+ 4. Type - What aspect of the system the PR/issue covers
+ 5. Feedback - Are we waiting on feedback, if so who from? Typically used for issues that are likely to take a while to have feedback given
+
+| Label | Purpose |
+| ----- | ------- |
+| change/major | A change for the next major release (eg: 4.0) |
+| change/minor | A change for the next minor release (eg: 3.x) |
+| change/patch | A change for the next patch release (eg: 3.1.x) |
+| impact/critical | Broken functionality for which no work around can be produced |
+| impact/high | Broken functionality but can be mitigated by other non-core code changes |
+| impact/medium | Unexpected behaviour but does not break functionality |
+| impact/low | A nuisance but doesn't break any functionality (typos, etc) |
+| effort/easy | Someone with limited SilverStripe experience could resolve |
+| effort/medium | Someone with a good understanding of SilverStripe could resolve |
+| effort/hard | Only an expert with SilverStripe could resolve |
+| type/docs | A docs change |
+| type/frontend | A change to front-end (CSS, HTML, etc) |
+| feedback-required/core-team | Core team members need to give an in-depth consideration |
+| feedback-required/author | This issue is awaiting feedback from the original author of the PR |
 
 ### Workflow Diagram ###
 
@@ -75,7 +112,7 @@ If you aren't familiar with git and GitHub, try reading the ["GitHub bootcamp do
 We also found the [free online git book](http://git-scm.com/book/) and the [git crash course](http://gitref.org/) useful.
 If you're familiar with it, here's the short version of what you need to know. Once you fork and download the code:
 
-  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on our [bugtracker](/misc/contributing/issues)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
+  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (on our [GitHub repository's issues](https://github.com/silverstripe/silverstripe-framework/issues)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
 
   * **Do not merge the upstream master** with your development branch; *rebase* your branch on top of the upstream master.
 
@@ -86,7 +123,7 @@ If you're familiar with it, here's the short version of what you need to know. O
   * **Choose the correct branch**: Assume the current release is 3.0.3, and 3.1.0 is in beta state.
   Most pull requests should go against the `3.1.x-dev` *pre-release branch*, only critical bugfixes
   against the `3.0.x-dev` *release branch*. If you're changing an API or introducing a major feature,
-  the pull request should go against `master` (read more about our [release process](/misc/release-process)). Branches are periodically merged "upwards" (3.0 into 3.1, 3.1 into master).
+  the pull request should go against `master` (read more about our [release process](release_process)). Branches are periodically merged "upwards" (3.0 into 3.1, 3.1 into master).
 
 ### Editing files directly on GitHub.com
 
@@ -96,11 +133,11 @@ After you have edited the file, GitHub will offer to create a pull request for y
 
 ## Check List
 
-*  Adhere to our [coding conventions](/misc/coding-conventions)
+*  Adhere to our [coding conventions](/getting_started/coding_conventions)
 *  If your patch is extensive, discuss it first on the [silverstripe-dev google group](https://groups.google.com/group/silverstripe-dev) (ideally before doing any serious coding)
 *  When working on existing tickets, provide status updates through ticket comments
 *  Check your patches against the "master" branch, as well as the latest release branch
-*  Write [unit tests](/topics/testing)
+*  Write [unit tests](../developer_guides/testing/unit_testing)
 *  Write [Behat integration tests](https://github.com/silverstripe-labs/silverstripe-behat-extension) for any interface changes
 *  Describe specifics on how to test the effects of the patch
 *  It's better to submit multiple patches with separate bits of functionality than a big patch containing lots of
@@ -110,7 +147,7 @@ changes
 [API documentation](http://api.silverstripe.org/3.1/) for good examples.
 * Check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
-* When working with the CMS, please read the ["CMS Architecture Guide"](/reference/cms-architecture) first
+* When working with the CMS, please read the ["CMS Architecture Guide"](cms_architecture) first
 
 ## Commit Messages
 

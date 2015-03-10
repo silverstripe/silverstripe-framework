@@ -13,7 +13,7 @@ feel familiar to you. This is just a quick run down to get you started
 with some special conventions.
 
 For a more practical-oriented approach to CMS customizations, refer to the
-[Howto: Extend the CMS Interface](../howto/extend-cms-interface) which builds
+[Howto: Extend the CMS Interface](../how_tos/extend_cms_interface) which builds
 
 
 ## Markup and Style Conventions
@@ -47,7 +47,7 @@ As there's a whole lot of CSS driving the CMS, we have certain best practives ar
  * Use jQuery UI's built-in styles where possible, e.g. `ui-widget` for a generic container, or `ui-state-highlight`
    to highlight a specific component. See the [jQuery UI Theming API](http://jqueryui.com/docs/Theming/API) for a full list.
 
-See our [system requirements](../installation/server-requirements) for a list of supported browsers.
+See our [system requirements](/getting_started/server_requirements) for a list of supported browsers.
 
 ## Templates and Controllers
 
@@ -89,7 +89,7 @@ The various panels and UI components within them are loosely coupled to the layo
 attribute. The layout is triggered on the top element and cascades into children, with a `redraw` method defined on
 each panel and UI component that needs to update itself as a result of layouting.
 
-Refer to [Layout reference](../reference/layout) for further information.
+Refer to [Layout reference](cms_layout) for further information.
 
 ## Forms
 
@@ -148,7 +148,7 @@ correctly configured form.
 [jQuery.entwine](https://github.com/hafriedlander/jquery.entwine) is a thirdparty library
 which allows us to attach behaviour to DOM elements in a flexible and structured mannger.
 It replaces the `behaviour.js` library used in previous versions of the CMS interface.
-See [Topics: JavaScript](../topics/javascript) for more information on how to use it.
+See [JavaScript Development](javascript_development) for more information on how to use it.
 In the CMS interface, all entwine rules should be placed in the "ss" entwine namespace.
 If you want to call methods defined within these rules outside of entwine logic,
 you have to use this namespace, e.g. `$('.cms-menu').entwine('ss').collapse()`.
@@ -222,7 +222,7 @@ In order for this to work, the CMS templates declare certain sections as "PJAX f
 through a `data-pjax-fragment` attribute. These names correlate to specific
 rendering logic in the PHP controllers, through the `[api:PjaxResponseNegotiator]` class.
 
-Through a custom `X-Pjax` HTTP header, the client can declare which view he's expecting,
+Through a custom `X-Pjax` HTTP header, the client can declare which view they're expecting,
 through identifiers like `CurrentForm` or `Content` (see `[api:LeftAndMain->getResponseNegotiator()]`).
 These identifiers are passed to `loadPanel()` via the `pjax` data option.
 The HTTP response is a JSON object literal, with template replacements keyed by their Pjax fragment.
@@ -433,7 +433,7 @@ The CMS tree for viewing hierarchical structures (mostly pages) is powered
 by the [jstree](http://jstree.com) library. It is configured through
 `framework/admin/javascript/LeftAndMain.Tree.js`, as well as some
 HTML5 metadata generated on its container (see the `data-hints` attribute).
-For more information, see the [Howto: Customize the CMS tree](../howto/customize-cms-tree).
+For more information, see the [Howto: Customize the CMS tree](../how_tos/customize_cms_tree).
 
 Note that a similar tree logic is also used for the
 form fields to select one or more entries from those hierarchies
@@ -538,8 +538,8 @@ through the `PjaxResponseNegotiator` class (see above).
 
 ## Related
 
- * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
- * [Howto: Customize the CMS tree](../howto/customize-cms-tree)
- * [Reference: ModelAdmin](../reference/modeladmin)
- * [Reference: Layout](../reference/layout)
- * [Topics: Rich Text Editing](../topics/rich-text-editing)
+ * [Howto: Extend the CMS Interface](how_tos/extend_cms_interface)
+ * [Howto: Customize the CMS tree](how_tos/customize_cms_tree)
+ * [ModelAdmin API](api:ModelAdmin)
+ * [Reference: Layout](cms_layout)
+ * [Rich Text Editing](/developer_guides/forms/field_types/htmleditorfield)

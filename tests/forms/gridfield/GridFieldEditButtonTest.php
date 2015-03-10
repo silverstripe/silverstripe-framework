@@ -32,7 +32,7 @@ class GridFieldEditButtonTest extends SapphireTest {
 		// Check that there are content
 		$this->assertEquals(3, count($content->getBySelector('.ss-gridfield-item')));
 		// Make sure that there are edit links, even though the user doesn't have "edit" permissions
-		// (he can still view the records)
+		// (they can still view the records)
 		$this->assertEquals(2, count($content->getBySelector('.edit-link')),
 			'Edit links should show when not logged in.');
 	}

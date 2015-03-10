@@ -80,7 +80,7 @@ not PHP's built-in [date()](http://nz.php.net/manual/en/function.date.php).
 ### Language Names
 
 SilverStripe comes with a built-in list of common languages, listed by locale and region.
-They can be accessed via the `i18n.common_languages` and `i18n.common_locales` [config setting](/topics/configuration).
+They can be accessed via the `i18n.common_languages` and `i18n.common_locales` [config setting](/developer_guides/configuration).
 
 In order to add a value, add the following to your `config.yml`:
 
@@ -125,7 +125,7 @@ Date- and time related form fields support i18n ([api:DateField], [api:TimeField
 	$field->setConfig('dateformat', 'dd. MMMM YYYY'); // sets typical 'de_DE' date format, shows as "23. Juni 1982"
 
 Defaults can be applied globally for all field instances through the `DateField.default_config`
-and `TimeField.default_config` [configuration arrays](/topics/configuration).
+and `TimeField.default_config` [configuration arrays](/developer_guides/configuration).
 If no 'locale' default is set on the field, [api:i18n::get_locale()] will be used.
 
 **Important:** Form fields in the CMS are automatically configured according to the profile settings for the logged-in user (`Member->Locale`, `Member->DateFormat` and `Member->TimeFormat`). This means that in most cases,
@@ -408,7 +408,7 @@ The `ss.i18n` object contain a couple functions to help and replace dynamic vari
 
 ## Links
 
- * [Help to translate](/misc/contribute/translation) - Instructions for online collaboration to translate core
- * [Help to translate](/misc/translation-process) - Instructions for adding translation to your own modules
+ * [Help to translate](../../contributing/translations) - Instructions for online collaboration to translate core
+ * [Help to translate](../../contributing/translation_process) - Instructions for adding translation to your own modules
  * [http://www.i18nguy.com/](http://www.i18nguy.com/)
  * [balbus.tk i18n notes](http://www.balbus.tk/internationalize)

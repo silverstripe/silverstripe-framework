@@ -54,7 +54,7 @@ Example: Disallow creation of new players if the currently logged-in player is n
 
 Triggered before executing *delete()* on an existing object.
 
-Example: Checking for a specific [permission](/reference/permission) to delete this type of object. It checks if a 
+Example: Checking for a specific [permission](permissions) to delete this type of object. It checks if a 
 member is logged in who belongs to a group containing the permission "PLAYER_DELETE".
 
 	:::php
