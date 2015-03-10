@@ -161,6 +161,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected static $_cache_get_one;
 	protected static $_cache_get_class_ancestry;
 	protected static $_cache_composite_fields = array();
+	protected static $_cache_is_composite_field = array();
 	protected static $_cache_custom_database_fields = array();
 	protected static $_cache_field_labels = array();
 
@@ -308,14 +309,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Will check all applicable ancestor classes and aggregate results.
 	 */
 	public static function is_composite_field($class, $name, $aggregated = true) {
-		if(!isset(DataObject::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
+		$key = $class . '_' . $name . '_' . (string)$aggregated;
+
+		if(!isset(DataObject::$_cache_is_composite_field[$key])) {
+			$isComposite = null;
+
+			if(!isset(DataObject::$_cache_composite_fields[$class])) {
+				self::cache_composite_fields($class);
+			}
 		
-		if(isset(DataObject::$_cache_composite_fields[$class][$name])) {
-			return DataObject::$_cache_composite_fields[$class][$name];
-			
-		} else if($aggregated && $class != 'DataObject' && ($parentClass=get_parent_class($class)) != 'DataObject') {
-			return self::is_composite_field($parentClass, $name);
+			if(isset(DataObject::$_cache_composite_fields[$class][$name])) {
+				$isComposite = DataObject::$_cache_composite_fields[$class][$name];
+			} elseif($aggregated && $class != 'DataObject' && ($parentClass=get_parent_class($class)) != 'DataObject') {
+				$isComposite = self::is_composite_field($parentClass, $name);
+			}
+
+			DataObject::$_cache_is_composite_field[$key] = ($isComposite) ? $isComposite : false;
 		}
+
+		return DataObject::$_cache_is_composite_field[$key] ?: null;
 	}
 
 	/**
@@ -2960,6 +2972,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		DataObject::$_cache_db = array();
 		DataObject::$_cache_get_one = array();
 		DataObject::$_cache_composite_fields = array();
+		DataObject::$_cache_is_composite_field = array();
 		DataObject::$_cache_custom_database_fields = array();
 		DataObject::$_cache_get_class_ancestry = array();
 		DataObject::$_cache_field_labels = array();
