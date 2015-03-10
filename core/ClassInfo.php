@@ -157,15 +157,20 @@ class ClassInfo {
 		if (!is_string($class)) $class = get_class($class);
 
 		$cacheKey = $class . '_' . (string)$tablesOnly;
-		$parent = $class;
 		if(!isset(self::$_cache_ancestry[$cacheKey])) {
-			$ancestry = array();
-			do {
-				if (!$tablesOnly || DataObject::has_own_table($parent)) {
-					$ancestry[$parent] = $parent;
+			// Create an array containing this class and all parent classes
+			$ancestry = array($class => $class) + class_parents($class);
+			
+			// If we only want classes with a table in the db, filter out those that don't have one
+			if($tablesOnly) {
+				foreach($ancestry as $parent) {
+					if(!DataObject::has_own_table($parent)) {
+						unset($ancestry[$parent]);
+					}
 				}
-			} while ($parent = get_parent_class($parent));
-			self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry);
+			}
+			
+			self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry);	
 		}
 
 		return self::$_cache_ancestry[$cacheKey];
