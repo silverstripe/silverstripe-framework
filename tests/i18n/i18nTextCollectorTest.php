@@ -417,6 +417,9 @@ PHP;
 		$entities = array(
 			'Level1.Level2.EntityName' => array('Text', 'Context'),
 			'Level1.OtherEntityName' => array('Other Text', 'Other Context'),
+			'Level1.BoolTest' => array('True'),
+			'Level1.FlagTest' => array('No'),
+			'Level1.TextTest' => array('Maybe')
 		);
 		$yaml = <<<YAML
 de:
@@ -424,6 +427,9 @@ de:
     Level2:
       EntityName: Text
     OtherEntityName: 'Other Text'
+    BoolTest: 'True'
+    FlagTest: 'No'
+    TextTest: Maybe
 
 YAML;
 		$this->assertEquals($yaml, Convert::nl2os($writer->getYaml($entities, 'de')));
