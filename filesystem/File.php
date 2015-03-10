@@ -805,7 +805,7 @@ class File extends DataObject {
 			'js' => _t('File.JsType', 'Javascript file'),
 			'css' => _t('File.CssType', 'CSS file'),
 			'html' => _t('File.HtmlType', 'HTML file'),
-			'htm' => _t('File.HtlType', 'HTML file')
+			'htm' => _t('File.HtmlType', 'HTML file')
 		);
 		
 		$ext = $this->getExtension();
