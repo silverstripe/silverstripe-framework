@@ -93,9 +93,10 @@ class Security extends Controller {
 	/**
 	 * Default message set used in permission failures.
 	 *
+	 * @config
 	 * @var array|string
 	 */
-	private static $default_message_set = '';
+	private static $default_message_set;
 
 	/**
 	 * Random secure token, can be used as a crypto key internally.
@@ -176,9 +177,6 @@ class Security extends Controller {
 	 *                                 If you pass an array, you can use the
 	 *                                 following keys:
 	 *                                   - default: The default message
-	 *                                   - logInAgain: The message to show
-	 *                                                 if the user has just
-	 *                                                 logged out and the
 	 *                                   - alreadyLoggedIn: The message to
 	 *                                                      show if the user
 	 *                                                      is already logged
@@ -209,8 +207,8 @@ class Security extends Controller {
 		} else {
 			// Prepare the messageSet provided
 			if(!$messageSet) {
-				if(self::$default_message_set) {
-					$messageSet = self::$default_message_set;
+				if($configMessageSet = static::config()->get('default_message_set')) {
+					$messageSet = $configMessageSet;
 				} else {
 					$messageSet = array(
 						'default' => _t(
@@ -224,11 +222,6 @@ class Security extends Controller {
 								. "can access that page, you can log in again below.",
 							
 							"%s will be replaced with a link to log in."
-						),
-						'logInAgain' => _t(
-							'Security.LOGGEDOUT',
-							"You have been logged out.  If you would like to log in again, enter "
-								. "your credentials below."
 						)
 					);
 				}
