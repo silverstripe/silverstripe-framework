@@ -150,8 +150,9 @@ class FieldList extends ArrayList {
 
 		// Find the tab
 		$tab = $this->findTab($tabName);
-		if ($tab)
+		if ($tab) {
 			$tab->removeByName($fieldName);
+		}
 	}
 	
 	/**
@@ -166,11 +167,10 @@ class FieldList extends ArrayList {
 		// Find the tab
 		$tab = $this->findTab($tabName);
 		
-		if (!$tab)
-			return false;
-		
-		// Add the fields to the end of this set
-		foreach($fields as $field) $tab->removeByName($field);
+		// Remove the fields from the tab, if any found
+		if ($tab) {
+			foreach($fields as $field) $tab->removeByName($field);
+		}
 	}
 	
 	/**
@@ -279,7 +279,7 @@ class FieldList extends ArrayList {
 		// Backwards compatibility measure: Allow rewriting of outdated tab paths
 		$tabName = $this->rewriteTabPath($tabName);
 
-		$parts = explode('.',$tabName);
+		$parts = explode('.', $tabName);
 		$last_idx = count($parts) - 1;
 		// We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than
 		// add it to TabSet and Tab too.
