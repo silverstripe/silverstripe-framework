@@ -270,12 +270,9 @@ class FieldList extends ArrayList {
 	 * @param string $tabName The tab to return, in the form "Tab.Subtab.Subsubtab".
 	 *   Caution: Does not recursively create TabSet instances, you need to make sure everything
 	 *   up until the last tab in the chain exists.
-	 * @param string $title Natural language title of the tab. If {@link $tabName} is passed in dot notation,
-	 *   the title parameter will only apply to the innermost referenced tab.
-	 *   The title is only changed if the tab doesn't exist already.
 	 * @return Tab The found or false if none found
 	 */
-	public function findTab($tabName, $title = null) {
+	public function findTab($tabName) {
 		// Backwards compatibility measure: Allow rewriting of outdated tab paths
 		$tabName = $this->rewriteTabPath($tabName);
 
