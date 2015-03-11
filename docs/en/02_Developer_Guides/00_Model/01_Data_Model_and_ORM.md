@@ -12,7 +12,7 @@ information.
 
 All data tables in SilverStripe are defined as subclasses of [api:DataObject]. The [api:DataObject] class represents a 
 single row in a database table, following the ["Active Record"](http://en.wikipedia.org/wiki/Active_record_pattern) 
-design pattern. Database Columns are is defined as [Data Types](data_types_and_casting) in the static `$db` variable 
+design pattern. Database Columns are defined as [Data Types](data_types_and_casting) in the static `$db` variable 
 along with any [relationships](relations) defined as `$has_one`, `$has_many`, `$many_many` properties on the class.
 
 Let's look at a simple example:
@@ -401,7 +401,7 @@ Remove both Sam and Sig..
 		'Surname' => 'Minnée',
 	));
 
-And removing Sig and Sam with that are either age 17 or 74.
+And removing Sig and Sam with that are either age 17 or 43.
 
 	:::php
 	$players = Player::get()->exclude(array(
