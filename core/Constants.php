@@ -74,16 +74,6 @@ foreach ($dirsToCheck as $dir) {
 	}
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// GLOBALS AND DEFINE SETTING
-
-function stripslashes_recursively(&$array) {
-	foreach($array as $k => $v) {
-		if(is_array($v)) stripslashes_recursively($array[$k]);
-		else $array[$k] = stripslashes($v);
-	}
-}
-
 /**
  * A blank HTTP_HOST value is used to detect command-line execution.
  * We update the $_SERVER variable to contain data consistent with the rest of the application.
@@ -130,18 +120,6 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	 * need checking
 	 */
 } else {
-	/**
-	 * Fix magic quotes setting
-	 */
-	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
-		if($_REQUEST) stripslashes_recursively($_REQUEST);
-		if($_GET) stripslashes_recursively($_GET);
-		if($_POST) stripslashes_recursively($_POST);
-		if($_COOKIE) stripslashes_recursively($_COOKIE);
-		// No more magic_quotes!
-		trigger_error('get_magic_quotes_gpc support is being removed from Silverstripe. Please set this to off in ' .
-		' your php.ini and see http://php.net/manual/en/security.magicquotes.php', E_USER_WARNING);
-	}
 
 	/**
 	 * Fix HTTP_HOST from reverse proxies
