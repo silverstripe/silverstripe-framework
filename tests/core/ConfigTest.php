@@ -254,6 +254,18 @@ class ConfigTest extends SapphireTest {
 		$this->markTestIncomplete();
 	}
 
+	public function testModuleExists() {
+		Config::nest();
+
+		$manifest = new SS_ConfigManifest(dirname(__FILE__).'/fixtures', true, true);
+		Config::inst()->pushConfigYamlManifest($manifest);
+
+		$this->assertTrue(Config::inst()->moduleExists('configtestmodule'));
+		$this->assertFalse(Config::inst()->moduleExists('nonexistant'));
+
+		Config::unnest();
+	}
+
 	public function testLRUDiscarding() {
 		$cache = new ConfigTest_Config_LRU();
 

@@ -339,6 +339,22 @@ class Config {
 	}
 
 	/**
+	 * Check whether the given module exists in any of the manifests
+	 * 
+	 * @param string $module
+	 * @return boolean
+	 */
+	public function moduleExists($module) {
+		foreach($this->manifests as $manifest) {
+			if($manifest->moduleExists($module)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Merge a lower priority associative array into an existing higher priority associative array, as per the class
 	 * docblock rules
 	 *

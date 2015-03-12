@@ -96,6 +96,8 @@ class SS_ConfigManifest {
 			$this->phpConfigSources = $this->cache->load($this->key.'php_config_sources');
 			// Get the variant key spec
 			$this->variantKeySpec = $this->cache->load($this->key.'variant_key_spec');
+			// Get the list of modules
+			$this->modules = $this->cache->load($this->key.'modules');
 		}
 
 		// If we don't have a variantKeySpec (because we're forcing regen, or it just wasn't in the cache), generate it
@@ -222,6 +224,7 @@ class SS_ConfigManifest {
 			$this->cache->save($this->phpConfigSources, $this->key.'php_config_sources');
 			$this->cache->save($this->yamlConfigFragments, $this->key.'yaml_config_fragments');
 			$this->cache->save($this->variantKeySpec, $this->key.'variant_key_spec');
+			$this->cache->save($this->modules, $this->key.'modules');
 		}
 	}
 

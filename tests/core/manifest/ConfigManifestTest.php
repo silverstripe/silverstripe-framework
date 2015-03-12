@@ -104,9 +104,9 @@ class ConfigManifestTest extends SapphireTest {
 		// Test that load is called
 		$manifest = $this->getManifestMock(array('getCache', 'regenerate', 'buildYamlConfigVariant'));
 
-		// Load should be called twice
+		// Load should be called three times
 		$cache = $this->getCacheMock();
-		$cache->expects($this->exactly(2))
+		$cache->expects($this->exactly(3))
 			->method('load');
 
 		$manifest->expects($this->any())
@@ -120,7 +120,7 @@ class ConfigManifestTest extends SapphireTest {
 		$manifest = $this->getManifestMock(array('getCache', 'regenerate', 'buildYamlConfigVariant'));
 
 		$cache = $this->getCacheMock();
-		$cache->expects($this->exactly(2))
+		$cache->expects($this->exactly(3))
 			->method('load')
 			->will($this->onConsecutiveCalls(false, false));
 
@@ -138,7 +138,7 @@ class ConfigManifestTest extends SapphireTest {
 		$manifest = $this->getManifestMock(array('getCache', 'regenerate', 'buildYamlConfigVariant'));
 
 		$cache = $this->getCacheMock();
-		$cache->expects($this->exactly(2))
+		$cache->expects($this->exactly(3))
 			->method('load')
 			->will($this->onConsecutiveCalls(array(), array()));
 
