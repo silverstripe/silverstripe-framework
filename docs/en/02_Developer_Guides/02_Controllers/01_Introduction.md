@@ -39,7 +39,7 @@ routing.
 </div>
 
 <div class="alert" markdown="1">
-Make sure that after you have modified the `routes.yml` file, that you clear your SilverStripe caches using `flush=1`.
+Make sure that after you have modified the `routes.yml` file, that you clear your SilverStripe caches using `?flush=1`.
 </div>
 
 **mysite/_config/routes.yml**
@@ -70,7 +70,7 @@ Action methods can return one of four main things:
 * an array. In this case the values in the array are available in the templates and the controller completes as usual by returning a [api:SS_HTTPResponse] with the body set to the current template.
 * `HTML`. SilverStripe will wrap the `HTML` into a `SS_HTTPResponse` and set the status code to 200.
 * an [api:SS_HTTPResponse] containing a manually defined `status code` and `body`.
-* an [api:SS_HTTPResponse_Exception]. A special type of response which indicates a error. By returning the exception, the execution pipeline can adapt and display any error handlers.
+* an [api:SS_HTTPResponse_Exception]. A special type of response which indicates an error. By returning the exception, the execution pipeline can adapt and display any error handlers.
 
 **mysite/code/controllers/TeamController.php**
 
@@ -144,7 +144,7 @@ If a template of that name does not exist, then SilverStripe will fall back to t
 Controller actions can use `renderWith` to override this template selection process as in the previous example with 
 `htmlaction`. `MyCustomTemplate.ss` would be used rather than `TeamsController`.
 
-For more information about templates, inheritance and how to rendering into views, See the 
+For more information about templates, inheritance and how to render into views, See the 
 [Templates and Views](../templates) documentation.
 
 ## Link
@@ -154,7 +154,7 @@ Each controller should define a `Link()` method. This should be used to avoid ha
 **mysite/code/controllers/TeamController.php**
 
 	:::php
-    	public function Link($action = null) {
+	public function Link($action = null) {
 		return Controller::join_links('teams', $action);
 	}
 
