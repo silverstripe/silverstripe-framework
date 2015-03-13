@@ -62,7 +62,7 @@ class JSONDataFormatter extends DataFormatter {
 		}
 
 		if($this->relationDepth > 0) {
-			foreach($obj->has_one() as $relName => $relClass) {
+			foreach($obj->hasOne() as $relName => $relClass) {
 				if(!singleton($relClass)->stat('api_access')) continue;
 
 				// Field filtering
@@ -82,7 +82,7 @@ class JSONDataFormatter extends DataFormatter {
 				));
 			}
 
-			foreach($obj->has_many() as $relName => $relClass) {
+			foreach($obj->hasMany() as $relName => $relClass) {
 				if(!singleton($relClass)->stat('api_access')) continue;
 
 				// Field filtering
@@ -103,7 +103,7 @@ class JSONDataFormatter extends DataFormatter {
 				$serobj->$relName = $innerParts;
 			}
 
-			foreach($obj->many_many() as $relName => $relClass) {
+			foreach($obj->manyMany() as $relName => $relClass) {
 				if(!singleton($relClass)->stat('api_access')) continue;
 
 				// Field filtering

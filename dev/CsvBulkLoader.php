@@ -120,7 +120,7 @@ class CsvBulkLoader extends BulkLoader {
 					$relationObj = $obj->{$this->relationCallbacks[$fieldName]['callback']}($val, $record);
 				}
 				if(!$relationObj || !$relationObj->exists()) {
-					$relationClass = $obj->has_one($relationName);
+					$relationClass = $obj->hasOneComponent($relationName);
 					$relationObj = new $relationClass();
 					//write if we aren't previewing
 					if (!$preview) $relationObj->write();

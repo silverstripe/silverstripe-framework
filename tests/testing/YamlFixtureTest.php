@@ -49,7 +49,7 @@ class YamlFixtureTest extends SapphireTest {
 			$factory->getId("YamlFixtureTest_DataObject", "testobject1")
 		);
 		$this->assertTrue(
-			$object1->ManyMany()->Count() == 2,
+			$object1->ManyManyRelation()->Count() == 2,
 			"Should be two items in this relationship"
 		);
 		$this->assertGreaterThan(0, $factory->getId("YamlFixtureTest_DataObject", "testobject2"));
@@ -58,7 +58,7 @@ class YamlFixtureTest extends SapphireTest {
 			$factory->getId("YamlFixtureTest_DataObject", "testobject2")
 		);
 		$this->assertTrue(
-			$object2->ManyMany()->Count() == 1,
+			$object2->ManyManyRelation()->Count() == 1,
 			"Should be one item in this relationship"
 		);
 	}
@@ -79,7 +79,7 @@ class YamlFixtureTest_DataObject extends DataObject implements TestOnly {
 		"Name" => "Varchar"
 	);
 	private static $many_many = array(
-		"ManyMany" => "YamlFixtureTest_DataObjectRelation"
+		"ManyManyRelation" => "YamlFixtureTest_DataObjectRelation"
 	);
 }
 

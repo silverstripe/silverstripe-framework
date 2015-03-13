@@ -110,7 +110,11 @@ class FixtureBlueprint {
 			// Populate overrides
 			if($data) foreach($data as $fieldName => $fieldVal) {
 				// Defer relationship processing
-				if($obj->many_many($fieldName) || $obj->has_many($fieldName) || $obj->has_one($fieldName)) {
+				if(
+					$obj->manyManyComponent($fieldName)
+					|| $obj->hasManyComponent($fieldName)
+					|| $obj->hasOneComponent($fieldName)
+				) {
 					continue;
 				}
 
@@ -127,7 +131,7 @@ class FixtureBlueprint {
 
 			// Populate all relations
 			if($data) foreach($data as $fieldName => $fieldVal) {
-				if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
+				if($obj->manyManyComponent($fieldName) || $obj->hasManyComponent($fieldName)) {
 					$obj->write();
 
 					$parsedItems = array();
@@ -165,15 +169,15 @@ class FixtureBlueprint {
 							$parsedItems[] = $this->parseValue($item, $fixtures);
 						}
 
-						if($obj->has_many($fieldName)) {
+						if($obj->hasManyComponent($fieldName)) {
 							$obj->getComponents($fieldName)->setByIDList($parsedItems);
-						} elseif($obj->many_many($fieldName)) {
+						} elseif($obj->manyManyComponent($fieldName)) {
 							$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
 						}
 					}
 				} else {
 					$hasOneField = preg_replace('/ID$/', '', $fieldName);
-					if($className = $obj->has_one($hasOneField)) {
+					if($className = $obj->hasOneComponent($hasOneField)) {
 						$obj->{$hasOneField.'ID'} = $this->parseValue($fieldVal, $fixtures, $fieldClass);
 						// Inject class for polymorphic relation
 						if($className === 'DataObject') {
