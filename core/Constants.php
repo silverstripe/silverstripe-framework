@@ -78,6 +78,7 @@ foreach ($dirsToCheck as $dir) {
 // GLOBALS AND DEFINE SETTING
 
 function stripslashes_recursively(&$array) {
+	trigger_error('stripslashes_recursively is deprecated in 3.2', E_USER_DEPRECATED);
 	foreach($array as $k => $v) {
 		if(is_array($v)) stripslashes_recursively($array[$k]);
 		else $array[$k] = stripslashes($v);
@@ -140,7 +141,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 		if($_COOKIE) stripslashes_recursively($_COOKIE);
 		// No more magic_quotes!
 		trigger_error('get_magic_quotes_gpc support is being removed from Silverstripe. Please set this to off in ' .
-		' your php.ini and see http://php.net/manual/en/security.magicquotes.php', E_USER_WARNING);
+		' your php.ini and see http://php.net/manual/en/security.magicquotes.php', E_USER_DEPRECATED);
 	}
 
 	/**
