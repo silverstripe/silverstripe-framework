@@ -73,6 +73,47 @@ class SecurityTest extends FunctionalTest {
 		
 		$this->autoFollowRedirection = true;
 	}
+
+	public function testPermissionFailureSetsCorrectFormMessages() {
+		Config::nest();
+
+		// Controller that doesn't attempt redirections
+		$controller = new SecurityTest_NullController();
+		$controller->response = new SS_HTTPResponse();
+
+		Security::permissionFailure($controller, array('default' => 'Oops, not allowed'));
+		$this->assertEquals('Oops, not allowed', Session::get('Security.Message.message'));
+
+		// Test that config values are used correctly
+		Config::inst()->update('Security', 'default_message_set', 'stringvalue');
+		Security::permissionFailure($controller);
+		$this->assertEquals('stringvalue', Session::get('Security.Message.message'),
+			'Default permission failure message value was not present');
+
+		Config::inst()->remove('Security', 'default_message_set');
+		Config::inst()->update('Security', 'default_message_set', array('default' => 'arrayvalue'));
+		Security::permissionFailure($controller);
+		$this->assertEquals('arrayvalue', Session::get('Security.Message.message'),
+			'Default permission failure message value was not present');
+
+		// Test that non-default messages work.
+		// NOTE: we inspect the response body here as the session message has already
+		// been fetched and output as part of it, so has been removed from the session
+		$this->logInWithPermission('EDITOR');
+
+		Config::inst()->update('Security', 'default_message_set',
+			array('default' => 'default', 'alreadyLoggedIn' => 'You are already logged in!'));
+		Security::permissionFailure($controller);
+		$this->assertContains('You are already logged in!', $controller->response->getBody(),
+			'Custom permission failure message was ignored');
+
+		Security::permissionFailure($controller,
+			array('default' => 'default', 'alreadyLoggedIn' => 'One-off failure message'));
+		$this->assertContains('One-off failure message', $controller->response->getBody(),
+			"Message set passed to Security::permissionFailure() didn't override Config values");
+
+		Config::unnest();
+	}
 	
 	public function testLogInAsSomeoneElse() {
 		$member = DataObject::get_one('Member');
@@ -500,4 +541,12 @@ class SecurityTest_SecuredController extends Controller implements TestOnly {
 		
 		return 'Success';
 	}
+}
+
+class SecurityTest_NullController extends Controller implements TestOnly {
+
+	public function redirect($url, $code = 302) {
+		// NOOP
+	}
+
 }
