@@ -68,14 +68,18 @@ class OptionsetField extends DropdownField {
 				$odd = ($odd + 1) % 2;
 				$extraClass = $odd ? 'odd' : 'even';
 				$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
-				
+                if($value) {
+                    $checked = ($value == $this->value);
+                } else {
+                    $checked = ($value === $this->value) || (((string) $value) === ((string) $this->value));
+                }
 				$options[] = new ArrayData(array(
 					'ID' => $itemID,
 					'Class' => $extraClass,
 					'Name' => $this->name,
 					'Value' => $value,
 					'Title' => $title,
-					'isChecked' => $value === $this->value,
+					'isChecked' => $checked,
 					'isDisabled' => $this->disabled || in_array($value, $this->disabledItems),
 				));
 			}
