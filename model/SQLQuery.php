@@ -239,10 +239,10 @@ class SQLQuery {
 	/**
 	 * Set table for the SELECT clause.
 	 *
-	 * @example $query->setFrom("MyTable"); // SELECT * FROM MyTable
+	 * @example $query->setFrom('"MyTable"'); // SELECT * FROM "MyTable"
 	 *
-	 * @param string|array $from Escaped SQL statement, usually an unquoted table name
-	 * @return SQLQuery
+	 * @param string|array $from Single, or list of, ANSI quoted table names
+	 * @return self
 	 */
 	public function setFrom($from) {
 		$this->from = array();
@@ -252,10 +252,10 @@ class SQLQuery {
 	/**
 	 * Add a table to the SELECT clause.
 	 *
-	 * @example $query->addFrom("MyTable"); // SELECT * FROM MyTable
+	 * @example $query->addFrom('"MyTable"'); // SELECT * FROM "MyTable"
 	 *
-	 * @param string|array $from Escaped SQL statement, usually an unquoted table name
-	 * @return SQLQuery
+	 * @param string|array $from Single, or list of, ANSI quoted table names
+	 * @return self Self reference
 	 */
 	public function addFrom($from) {
 		if(is_array($from)) {
@@ -903,9 +903,13 @@ class SQLQuery {
 				else if(sizeof($join['filter']) == 1) $filter = $join['filter'][0];
 				else $filter = "(" . implode(") AND (", $join['filter']) . ")";
 
-				$table = strpos(strtoupper($join['table']), 'SELECT') ? $join['table'] : "\"" 
-					. $join['table'] . "\"";
-				$aliasClause = ($alias != $join['table']) ? " AS \"" . Convert::raw2sql($alias) . "\"" : "";
+				// Ensure tables are quoted, unless the table is actually a sub-select
+				$table = preg_match('/\bSELECT\b/i', $join['table'])
+					? $join['table']
+					: "\"{$join['table']}\"";
+				$aliasClause = ($alias != $join['table'])
+						? " AS \"{$alias}\""
+						: "";
 				$this->from[$alias] = strtoupper($join['type']) . " JOIN " 
 					. $table . "$aliasClause ON $filter";
 			}

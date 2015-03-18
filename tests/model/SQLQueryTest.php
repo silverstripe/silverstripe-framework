@@ -341,23 +341,34 @@ class SQLQueryTest extends SapphireTest {
 			$query->sql()
 		);
 	}
-	
+
 	public function testJoinSubSelect() {
 
+		// Test sub-select works
 		$query = new SQLQuery();
-		$query->setFrom('MyTable');
-		$query->addInnerJoin('(SELECT * FROM MyOtherTable)', 
-			'Mot.MyTableID = MyTable.ID', 'Mot');
-		$query->addLeftJoin('(SELECT MyLastTable.MyOtherTableID, COUNT(1) as MyLastTableCount FROM MyLastTable '
-			. 'GROUP BY MyOtherTableID)', 
-			'Mlt.MyOtherTableID = Mot.ID', 'Mlt');
-		$query->setOrderBy('COALESCE(Mlt.MyLastTableCount, 0) DESC');
+		$query->setFrom('"MyTable"');
+		$query->addInnerJoin('(SELECT * FROM "MyOtherTable")',
+			'"Mot"."MyTableID" = "MyTable"."ID"', 'Mot');
+		$query->addLeftJoin('(SELECT "MyLastTable"."MyOtherTableID", COUNT(1) as "MyLastTableCount" '
+			. 'FROM "MyLastTable" GROUP BY "MyOtherTableID")',
+			'"Mlt"."MyOtherTableID" = "Mot"."ID"', 'Mlt');
+		$query->setOrderBy('COALESCE("Mlt"."MyLastTableCount", 0) DESC');
 
-		$this->assertEquals('SELECT *, COALESCE(Mlt.MyLastTableCount, 0) AS "_SortColumn0" FROM MyTable '.
-			'INNER JOIN (SELECT * FROM MyOtherTable) AS "Mot" ON Mot.MyTableID = MyTable.ID ' .
-			'LEFT JOIN (SELECT MyLastTable.MyOtherTableID, COUNT(1) as MyLastTableCount FROM MyLastTable '
-			. 'GROUP BY MyOtherTableID) AS "Mlt" ON Mlt.MyOtherTableID = Mot.ID ' .
+		$this->assertEquals('SELECT *, COALESCE("Mlt"."MyLastTableCount", 0) AS "_SortColumn0" FROM "MyTable" '.
+			'INNER JOIN (SELECT * FROM "MyOtherTable") AS "Mot" ON "Mot"."MyTableID" = "MyTable"."ID" ' .
+			'LEFT JOIN (SELECT "MyLastTable"."MyOtherTableID", COUNT(1) as "MyLastTableCount" FROM "MyLastTable" '
+			. 'GROUP BY "MyOtherTableID") AS "Mlt" ON "Mlt"."MyOtherTableID" = "Mot"."ID" ' .
 			'ORDER BY "_SortColumn0" DESC',
+			$query->sql()
+		);
+
+		// Test that table names do not get mistakenly identified as sub-selects
+		$query = new SQLQuery();
+		$query->setFrom('"MyTable"');
+		$query->addInnerJoin('NewsArticleSelected', '"News"."MyTableID" = "MyTable"."ID"', 'News');
+		$this->assertEquals(
+			'SELECT * FROM "MyTable" INNER JOIN "NewsArticleSelected" AS "News" ON '.
+			'"News"."MyTableID" = "MyTable"."ID"',
 			$query->sql()
 		);
 
