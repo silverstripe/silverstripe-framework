@@ -50,9 +50,19 @@ class BasicAuth {
 		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
 		if(!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) return true;
 
+                /*
+                 * Enable HTTP Basic authentication workaround for PHP running in CGI mode with Apache
+                 * Depending on server configuration the auth header may be in HTTP_AUTHORIZATION or
+                 * REDIRECT_HTTP_AUTHORIZATION
+                 * 
+                 * The follow rewrite rule must be in the sites .htaccess file to enable this workaround
+                 * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+                 */
+		$authHeader = (isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] :
+			      (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] : null));
 		$matches = array();
-		if (isset($_SERVER['HTTP_AUTHORIZATION']) &&
-			preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
+		if ($authHeader &&
+                        preg_match('/Basic\s+(.*)$/i', $authHeader, $matches)) {
 			list($name, $password) = explode(':', base64_decode($matches[1]));
 			$_SERVER['PHP_AUTH_USER'] = strip_tags($name);
 			$_SERVER['PHP_AUTH_PW'] = strip_tags($password);
