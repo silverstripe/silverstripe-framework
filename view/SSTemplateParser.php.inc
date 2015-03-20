@@ -1138,7 +1138,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		$text = preg_replace(
 			'/(<a[^>]+href *= *)"#/i',
 			'\\1"\' . (Config::inst()->get(\'SSViewer\', \'rewrite_hash_links\') ?' .
-			' strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
+			' Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "") .
 				\'#',
 			$text
 		);
