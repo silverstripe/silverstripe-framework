@@ -796,14 +796,10 @@ class Director implements TemplateGlobalProvider {
 	 * @param string $destURL - The URL to redirect to
 	 */
 	protected static function force_redirect($destURL) {
-		$response = new SS_HTTPResponse(
-			"<h1>Your browser is not accepting header redirects</h1>".
-			"<p>Please <a href=\"$destURL\">click here</a>",
-			301
-		);
+		$response = new SS_HTTPResponse();
+		$response->redirect($destURL, 301);
 
 		HTTP::add_cache_headers($response);
-		$response->addHeader('Location', $destURL);
 
 		// TODO: Use an exception - ATM we can be called from _config.php, before Director#handleRequest's try block
 		$response->output();
