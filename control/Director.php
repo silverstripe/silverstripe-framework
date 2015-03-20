@@ -841,6 +841,7 @@ class Director implements TemplateGlobalProvider {
 	 * @return boolean|string String of URL when unit tests running, boolean FALSE if patterns don't match request URI
 	 */
 	public static function forceSSL($patterns = null, $secureDomain = null) {
+		if(Director::is_cli()) return false;
 		if(!isset($_SERVER['REQUEST_URI'])) return false;
 		
 		$matched = false;
@@ -889,7 +890,11 @@ class Director implements TemplateGlobalProvider {
 	 * Force a redirect to a domain starting with "www."
 	 */
 	public static function forceWWW() {
-		if(!Director::isDev() && !Director::isTest() && strpos($_SERVER['HTTP_HOST'], 'www') !== 0) {
+		if(!Director::is_cli() 
+			&& !Director::isDev() 
+			&& !Director::isTest() 
+			&& strpos($_SERVER['HTTP_HOST'], 'www') !== 0
+		) {
 			$destURL = str_replace(Director::protocol(), Director::protocol() . 'www.', 
 				Director::absoluteURL($_SERVER['REQUEST_URI']));
 
