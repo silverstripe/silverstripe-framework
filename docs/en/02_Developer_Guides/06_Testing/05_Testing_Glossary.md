@@ -3,7 +3,7 @@ title: Testing Glossary
 <dl>
 <dt>Assertion<dd>A predicate statement that must be true when a test runs.
 
-<dt>Behat<dd>A behaviour-driven testing library used with SilverStripe as a higher-level alternative to the `FunctionalTest` API, see <http://behat.org>.
+<dt>Behat<dd>A behaviour-driven testing library used with SilverStripe as a higher-level alternative to the `FunctionalTest` API, see http://behat.org.
 
 <dt>Test Case<dd>The atomic class type in most unit test frameworks. New unit tests are created by inheriting from the base test case.
 
@@ -17,9 +17,9 @@ title: Testing Glossary
 
 <dt>Spike<dd>A limited and throwaway sketch of code or experiment to get a feel for how long it will take to implement a certain feature, or a possible direction for how that feature might work.
 
-<dt>Test Double<dd>Also known as a 'Substitute'. A general term for a dummy object that replaces a real object with the same interface. Substituting objects is useful when a real object is difficult or impossible to incorporate into a unit test.
+<dt>Test Double<dd>Also known as a 'Substitute'. A general term for a dummy object that replaces a real object with the same interface. Substituting object is useful when a real object is difficult or impossible to incorporate into a unit test.
 
-**Fake Object**: A substitute object that simply replaces a real object with the same interface, and returns a pre-determined (usually fixed) value from each method.
+<dt>Fake Object<dd>A substitute object that simply replaces a real object with the same interface, and returns a pre-determined (usually fixed) value from each method.
 
 <dt>Mock Object<dd>A substitute object that mimics the same behavior as a real object (some people think of mocks as "crash test dummy" objects). Mocks differ from other kinds of substitute objects in that they must understand the context of each call to them, setting expectations of which, and what order, methods will be invoked and what parameters will be passed.
 
