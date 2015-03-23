@@ -51,9 +51,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param string $dataClass - The DataObject class to query.
 	 */
 	public function __construct($dataClass) {
-		$this->dataClass = $dataClass;
+		$this->dataClass = get_class(singleton($dataClass)); // avoid cast-sensitivity issues
 		$this->dataQuery = new DataQuery($this->dataClass);
-
 		parent::__construct();
 	}
 

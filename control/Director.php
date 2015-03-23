@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Director is responsible for processing URLs, and providing environment information.
  *
