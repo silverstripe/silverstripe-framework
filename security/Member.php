@@ -520,40 +520,44 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// Don't bother trying this multiple times
 		self::$_already_tried_to_auto_log_in = true;
 
-		if(strpos(Cookie::get('alc_enc'), ':') && !Session::get("loggedInAs")) {
-			list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
-			$SQL_uid = Convert::raw2sql($uid);
+		if(strpos(Cookie::get('alc_enc'), ':') === false
+			|| Session::get("loggedInAs")
+			|| !Security::database_is_ready()
+		) {
+			return;
+		}
 
-			$member = DataObject::get_one("Member", "\"Member\".\"ID\" = '$SQL_uid'");
+		list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
 
-			// check if autologin token matches
-			if($member) {
-				$hash = $member->encryptWithUserSettings($token);
-				if(!$member->RememberLoginToken || $member->RememberLoginToken !== $hash) {
-					$member = null;
-				}
+		$member = DataObject::get_by_id("Member", $uid);
+
+		// check if autologin token matches
+		if($member) {
+			$hash = $member->encryptWithUserSettings($token);
+			if(!$member->RememberLoginToken || $member->RememberLoginToken !== $hash) {
+				$member = null;
+			}
+		}
+
+		if($member) {
+			self::session_regenerate_id();
+			Session::set("loggedInAs", $member->ID);
+			// This lets apache rules detect whether the user has logged in
+			if(Member::config()->login_marker_cookie) {
+				Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
 			}
 
-			if($member) {
-				self::session_regenerate_id();
-				Session::set("loggedInAs", $member->ID);
-				// This lets apache rules detect whether the user has logged in
-				if(Member::config()->login_marker_cookie) {
-					Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
-				}
+			$generator = new RandomGenerator();
+			$token = $generator->randomToken('sha1');
+			$hash = $member->encryptWithUserSettings($token);
+			$member->RememberLoginToken = $hash;
+			Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
 
-				$generator = new RandomGenerator();
-				$token = $generator->randomToken('sha1');
-				$hash = $member->encryptWithUserSettings($token);
-				$member->RememberLoginToken = $hash;
-				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
+			$member->NumVisit++;
+			$member->write();
 
-				$member->NumVisit++;
-				$member->write();
-
-				// Audit logging hook
-				$member->extend('memberAutoLoggedIn');
-			}
+			// Audit logging hook
+			$member->extend('memberAutoLoggedIn');
 		}
 	}
 
