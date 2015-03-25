@@ -334,25 +334,28 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @return Form
 	 */
 	public function ImportForm() {
-		$modelName = $this->modelClass;
+		$modelSNG = singleton($this->modelClass);
+		$modelName = $modelSNG->i18n_singular_name();
 		// check if a import form should be generated
-		if(!$this->showImportForm || (is_array($this->showImportForm) && !in_array($modelName,$this->showImportForm))) {
+		if(!$this->showImportForm ||
+			(is_array($this->showImportForm) && !in_array($this->modelClass, $this->showImportForm))
+		) {
 			return false;
 		}
 
 		$importers = $this->getModelImporters();
-		if(!$importers || !isset($importers[$modelName])) return false;
-		
-		if(!singleton($modelName)->canCreate(Member::currentUser())) return false;
+		if(!$importers || !isset($importers[$this->modelClass])) return false;
+
+		if(!$modelSNG->canCreate(Member::currentUser())) return false;
 
 		$fields = new FieldList(
-			new HiddenField('ClassName', _t('ModelAdmin.CLASSTYPE'), $modelName),
+			new HiddenField('ClassName', _t('ModelAdmin.CLASSTYPE'), $this->modelClass),
 			new FileField('_CsvFile', false)
 		);
-		
+
 		// get HTML specification for each import (column names etc.)
-		$importerClass = $importers[$modelName];
-		$importer = new $importerClass($modelName);
+		$importerClass = $importers[$this->modelClass];
+		$importer = new $importerClass($this->modelClass);
 		$spec = $importer->getImportSpec();
 		$specFields = new ArrayList();
 		foreach($spec['fields'] as $name => $desc) {

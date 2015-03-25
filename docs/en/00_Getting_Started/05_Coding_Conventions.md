@@ -149,7 +149,7 @@ When a string is literal (contains no variable substitutions), the apostrophe or
 When a literal string itself contains apostrophes, it is permitted to demarcate the string with quotation marks or "double quotes". 
 
 	:::php
-	$greeting = "She said 'hello'";
+	$greeting = "They said 'hello'";
 
 This syntax is preferred over escaping apostrophes as it is much easier to read.
 

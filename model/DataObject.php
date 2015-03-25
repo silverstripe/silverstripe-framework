@@ -2321,7 +2321,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				user_error('DataObject::setField: passed an object that is not a DBField', E_USER_WARNING);
 			}
 		
-			$defaults = $this->stat('defaults');
 			// if a field is not existing or has strictly changed
 			if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
 				// TODO Add check for php-level defaults which are not set in the db

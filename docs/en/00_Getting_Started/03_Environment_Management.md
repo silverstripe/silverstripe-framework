@@ -93,9 +93,9 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 	define('SS_DEFAULT_ADMIN_USERNAME', '<email>');
 	define('SS_DEFAULT_ADMIN_PASSWORD', '<password>');
 	
-	// This causes errors to be written to the silverstripe.log file in the same directory as this file, so /var.
-	// Before PHP 5.3.0, you'll need to use dirname(__FILE__) instead of __DIR__
-	define('SS_ERROR_LOG', __DIR__ . '/silverstripe.log');
+	// This causes errors to be written to the BASE_PATH/silverstripe.log file.
+	// Path must be relative to BASE_PATH
+	define('SS_ERROR_LOG', 'silverstripe.log');
 	
 	// This is used by sake to know which directory points to which URL
 	global $_FILE_TO_URL_MAPPING;
@@ -122,4 +122,4 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 | `SS_USE_BASIC_AUTH`| Protect the site with basic auth (good for test sites).<br/>When using CGI/FastCGI with Apache, you will have to add the `RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]` rewrite rule to your `.htaccess` file|
 | `SS_SEND_ALL_EMAILS_TO`| If you set this define, all emails will be redirected to this address.|
 | `SS_SEND_ALL_EMAILS_FROM`| If you set this define, all emails will be send from this address.|
-| `SS_ERROR_LOG` | |
+| `SS_ERROR_LOG` | Relative path to the log file |

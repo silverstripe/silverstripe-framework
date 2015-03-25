@@ -434,27 +434,25 @@ class TreeDropdownField extends FormField {
 			$res = call_user_func($this->searchCallback, $this->sourceObject, $this->labelField, $this->search);
 		} else {
 			$sourceObject = $this->sourceObject;
-			$wheres = array();
+			$filters = array();
 			if(singleton($sourceObject)->hasDatabaseField($this->labelField)) {
-				$wheres[] = "\"$this->labelField\" LIKE '%$this->search%'";
+				$filters["{$this->labelField}:PartialMatch"]  = $this->search;
 			} else {
 				if(singleton($sourceObject)->hasDatabaseField('Title')) {
-					$wheres[] = "\"Title\" LIKE '%$this->search%'";
+					$filters["Title:PartialMatch"] = $this->search;
 				}
 				if(singleton($sourceObject)->hasDatabaseField('Name')) {
-					$wheres[] = "\"Name\" LIKE '%$this->search%'";
+					$filters["Name:PartialMatch"] = $this->search;
 				}
-			} 
-		
-			if(!$wheres) {
+			}
+			if(empty($filters)) {
 				throw new InvalidArgumentException(sprintf(
 					'Cannot query by %s.%s, not a valid database column',
 					$sourceObject,
 					$this->labelField
 				));
 			}
-
-			$res = DataObject::get($this->sourceObject, implode(' OR ', $wheres));
+			$res = DataObject::get($this->sourceObject)->filterAny($filters);
 		}
 		
 		if( $res ) {
@@ -463,15 +461,18 @@ class TreeDropdownField extends FormField {
 				if ($row->ParentID) $parents[$row->ParentID] = true;
 				$this->searchIds[$row->ID] = true;
 			}
+			
+			$sourceObject = $this->sourceObject;
+			
 			while (!empty($parents)) {
-				$res = DB::query('SELECT "ParentID", "ID" FROM "' . $this->sourceObject
-					. '" WHERE "ID" in ('.implode(',',array_keys($parents)).')');
+				$items = $sourceObject::get()
+					->filter("ID",array_keys($parents));
 				$parents = array();
 
-				foreach($res as $row) {
-					if ($row['ParentID']) $parents[$row['ParentID']] = true;
-					$this->searchIds[$row['ID']] = true;
-					$this->searchExpanded[$row['ID']] = true;
+				foreach($items as $item) {
+					if ($item->ParentID) $parents[$item->ParentID] = true;
+					$this->searchIds[$item->ID] = true;
+					$this->searchExpanded[$item->ID] = true;
 				}
 			}
 		}

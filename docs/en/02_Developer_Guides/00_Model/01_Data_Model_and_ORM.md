@@ -12,7 +12,7 @@ information.
 
 All data tables in SilverStripe are defined as subclasses of [api:DataObject]. The [api:DataObject] class represents a 
 single row in a database table, following the ["Active Record"](http://en.wikipedia.org/wiki/Active_record_pattern) 
-design pattern. Database Columns are is defined as [Data Types](data_types_and_casting) in the static `$db` variable 
+design pattern. Database Columns are defined as [Data Types](data_types_and_casting) in the static `$db` variable 
 along with any [relationships](relations) defined as `$has_one`, `$has_many`, `$many_many` properties on the class.
 
 Let's look at a simple example:
@@ -401,7 +401,7 @@ Remove both Sam and Sig..
 		'Surname' => 'Minnée',
 	));
 
-And removing Sig and Sam with that are either age 17 or 74.
+And removing Sig and Sam with that are either age 17 or 43.
 
 	:::php
 	$players = Player::get()->exclude(array(
@@ -409,7 +409,7 @@ And removing Sig and Sam with that are either age 17 or 74.
 		'Age' => array(17, 43)
 	));
 
-	// SELECT * FROM Player WHERE ("FirstName" NOT IN ('Sam','Sig) OR "Age" NOT IN ('17', '74));
+	// SELECT * FROM Player WHERE ("FirstName" NOT IN ('Sam','Sig) OR "Age" NOT IN ('17', '43'));
 
 You can use [SearchFilters](searchfilters) to add additional behavior to your `exclude` command.
 
@@ -548,7 +548,7 @@ The data for the following classes would be stored across the following tables:
 		- LastEdited: Datetime
 		- Title: Varchar
 		- Content: Text
-	NewsArticle:
+	NewsPage:
 		- ID: Int
 		- Summary: Text
 
@@ -558,7 +558,7 @@ Accessing the data is transparent to the developer.
 	$news = NewsPage::get();
 
 	foreach($news as $article) {
-		echo $news->Title;
+		echo $article->Title;
 	}
 
 The way the ORM stores the data is this:
@@ -575,7 +575,7 @@ example above, NewsSection didn't have its own data, so an extra table would be 
 *  In all the tables, ID is the primary key.  A matching ID number is used for all parts of a particular record: 
 record #2 in Page refers to the same object as record #2 in `[api:SiteTree]`.
 
-To retrieve a news article, SilverStripe joins the [api:SiteTree], [api:Page] and NewsArticle tables by their ID fields. 
+To retrieve a news article, SilverStripe joins the [api:SiteTree], [api:Page] and NewsPage tables by their ID fields. 
 
 ## Related Documentation
 

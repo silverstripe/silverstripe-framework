@@ -422,13 +422,22 @@ class Director implements TemplateGlobalProvider {
 	 */
 	public static function absoluteURL($url, $relativeToSiteBase = false) {
 		if(!isset($_SERVER['REQUEST_URI'])) return false;
+
+		//a url of . or ./ is the same as an empty url
+		if ($url == '.' || $url == './') {
+			$url = '';
+		}
 		
 		if(strpos($url,'/') === false && !$relativeToSiteBase) {
-			$url = dirname($_SERVER['REQUEST_URI'] . 'x') . '/' . $url;
+			//if there's no URL we want to force a trailing slash on the link
+			if (!$url) {
+				$url = '/';
+			}
+			$url = Controller::join_links(dirname($_SERVER['REQUEST_URI'] . 'x'), $url);
 		}
 
 		if(substr($url,0,4) != "http") {
-			if($url[0] != "/") $url = Director::baseURL()  . $url;
+			if(strpos($url, '/') !== 0) $url = Director::baseURL()  . $url;
 			// Sometimes baseURL() can return a full URL instead of just a path
 			if(substr($url,0,4) != "http") $url = self::protocolAndHost() . $url;
 		}
@@ -787,14 +796,10 @@ class Director implements TemplateGlobalProvider {
 	 * @param string $destURL - The URL to redirect to
 	 */
 	protected static function force_redirect($destURL) {
-		$response = new SS_HTTPResponse(
-			"<h1>Your browser is not accepting header redirects</h1>".
-			"<p>Please <a href=\"$destURL\">click here</a>",
-			301
-		);
+		$response = new SS_HTTPResponse();
+		$response->redirect($destURL, 301);
 
 		HTTP::add_cache_headers($response);
-		$response->addHeader('Location', $destURL);
 
 		// TODO: Use an exception - ATM we can be called from _config.php, before Director#handleRequest's try block
 		$response->output();

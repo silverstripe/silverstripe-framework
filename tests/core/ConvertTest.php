@@ -238,4 +238,55 @@ class ConvertTest extends SapphireTest {
 			Convert::raw2json($value)
 		);
 	}
+
+	public function testXML2Array() {
+		// Ensure an XML file at risk of entity expansion can be avoided safely
+		$inputXML = <<<XML
+<?xml version="1.0"?>
+<!DOCTYPE results [<!ENTITY long "SOME_SUPER_LONG_STRING">]>
+<results>
+    <result>Now include &long; lots of times to expand the in-memory size of this XML structure</result>
+    <result>&long;&long;&long;</result>
+</results>
+XML
+			;
+		try {
+			Convert::xml2array($inputXML, true);
+		} catch(Exception $ex) {}
+		$this->assertTrue(
+			isset($ex)
+			&& $ex instanceof InvalidArgumentException
+			&& $ex->getMessage() === 'XML Doctype parsing disabled'
+		);
+
+		// Test without doctype validation
+		$expected = array(
+			'result' => array(
+				"Now include SOME_SUPER_LONG_STRING lots of times to expand the in-memory size of this XML structure",
+				array(
+					'long' => array(
+						array(
+							'long' => 'SOME_SUPER_LONG_STRING'
+						),
+						array(
+							'long' => 'SOME_SUPER_LONG_STRING'
+						),
+						array(
+							'long' => 'SOME_SUPER_LONG_STRING'
+						)
+					)
+				)
+			)
+		);
+		$result = Convert::xml2array($inputXML, false, true);
+		$this->assertEquals(
+			$expected,
+			$result
+		);
+		$result = Convert::xml2array($inputXML, false, false);
+		$this->assertEquals(
+			$expected,
+			$result
+		);
+	}
 }
