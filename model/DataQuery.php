@@ -789,7 +789,7 @@ class DataQuery {
 	 * @param $fieldExpression String The field to select (escaped SQL statement)
 	 * @param $alias String The alias of that field (escaped SQL statement)
 	 */
-	protected function selectField($fieldExpression, $alias = null) {
+	public function selectField($fieldExpression, $alias = null) {
 		$this->query->selectField($fieldExpression, $alias);
 	}
 
