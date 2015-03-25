@@ -286,7 +286,7 @@ EOT
 	 * @return bool
 	 */
 	public function isFinished() {
-		return in_array($this->statusCode, array(301, 302, 401, 403));
+		return in_array($this->statusCode, array(301, 302, 303, 304, 305, 307, 401, 403));
 	}
 	
 }
