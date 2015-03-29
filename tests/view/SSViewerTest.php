@@ -909,7 +909,9 @@ after')
 	public function testRewriteHashlinks() {
 		$oldRewriteHashLinks = SSViewer::getOption('rewriteHashlinks');
 		SSViewer::setOption('rewriteHashlinks', true);
-		
+
+		$_SERVER['REQUEST_URI'] = 'http://path/to/file?foo"onclick="alert(\'xss\')""';
+
 		// Emulate SSViewer::process()
 		$base = Convert::raw2att($_SERVER['REQUEST_URI']);
 		
@@ -920,23 +922,40 @@ after')
 			<html>
 				<head><% base_tag %></head>
 				<body>
+				<a class="external-inline" href="http://google.com#anchor">ExternalInlineLink</a>
+				$ExternalInsertedLink
 				<a class="inline" href="#anchor">InlineLink</a>
 				$InsertedLink
+				<svg><use xlink:href="#sprite"></use></svg>
 				<body>
 			</html>');
 		$tmpl = new SSViewer($tmplFile);
 		$obj = new ViewableData();
 		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
+		$obj->ExternalInsertedLink = '<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>';
 		$result = $tmpl->process($obj);
 		$this->assertContains(
 			'<a class="inserted" href="' . $base . '#anchor">InsertedLink</a>',
 			$result
 		);
 		$this->assertContains(
+			'<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>',
+			$result
+		);
+		$this->assertContains(
 			'<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
 			$result
 		);
-		
+		$this->assertContains(
+			'<a class="external-inline" href="http://google.com#anchor">ExternalInlineLink</a>',
+			$result
+		);
+		$this->assertContains(
+			'<svg><use xlink:href="#sprite"></use></svg>',
+			$result,
+			'SSTemplateParser should only rewrite anchor hrefs'
+		);
+
 		unlink($tmplFile);
 		
 		SSViewer::setOption('rewriteHashlinks', $oldRewriteHashLinks);
@@ -962,7 +981,7 @@ after')
 		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
 		$result = $tmpl->process($obj);
 		$this->assertContains(
-			'<a class="inserted" href="<?php echo strip_tags(',
+			'<a class="inserted" href="<?php echo Convert::raw2att(',
 			$result
 		);
 		// TODO Fix inline links in PHP mode

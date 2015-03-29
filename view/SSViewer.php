@@ -928,9 +928,9 @@ class SSViewer {
 		if($this->rewriteHashlinks && self::$options['rewriteHashlinks']) {
 			if(strpos($output, '<base') !== false) {
 				if(SSViewer::$options['rewriteHashlinks'] === 'php') { 
-					$thisURLRelativeToBase = "<?php echo strip_tags(\$_SERVER['REQUEST_URI']); ?>"; 
+					$thisURLRelativeToBase = "<?php echo Convert::raw2att(\$_SERVER['REQUEST_URI']); ?>";
 				} else { 
-					$thisURLRelativeToBase = strip_tags($_SERVER['REQUEST_URI']); 
+					$thisURLRelativeToBase = Convert::raw2att($_SERVER['REQUEST_URI']);
 				}
 
 				$output = preg_replace('/(<a[^>]+href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
