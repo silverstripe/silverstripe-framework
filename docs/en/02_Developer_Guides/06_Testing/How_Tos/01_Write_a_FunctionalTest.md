@@ -12,7 +12,7 @@ response and modify the session within a test.
 	:::php
 	<?php
 
-	class HomePageTest extends SapphireTest {
+	class HomePageTest extends FunctionalTest {
 
 		/**
 		 * Test generation of the view
@@ -24,7 +24,7 @@ response and modify the session within a test.
 			$this->assertEquals(200, $page->getStatusCode());
 
 			// We should see a login form
-			$login = $this->submitForm("#LoginForm", null, array(
+			$login = $this->submitForm("LoginFormID", null, array(
 				'Email' => 'test@test.com',
 				'Password' => 'wrongpassword'
 			));
