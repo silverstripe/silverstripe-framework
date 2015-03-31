@@ -136,6 +136,12 @@
 		$('.ss-gridfield .action').entwine({
 			onclick: function(e){
 				var filterState='show'; //filterstate should equal current state.
+
+				// If the button is disabled, do nothing.
+				if (this.button('option', 'disabled')) {
+					e.preventDefault();
+					return;
+				}
 				
 				if(this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))){
 					filterState='hidden';
@@ -143,6 +149,34 @@
 
 				this.getGridField().reload({data: [{name: this.attr('name'), value: this.val(), filter: filterState}]});
 				e.preventDefault();
+			}
+		});
+
+		/**
+		 * Don't allow users to submit empty values in grid field auto complete inputs.
+		 */
+		$('.ss-gridfield .add-existing-autocompleter').entwine({
+			onbuttoncreate: function () {
+				var self = this;
+
+				this.toggleDisabled();
+
+				this.find('input[type="text"]').on('keyup', function () {
+					self.toggleDisabled();
+				});
+			},
+			onunmatch: function () {
+				this.find('input[type="text"]').off('keyup');
+			},
+			toggleDisabled: function () {
+				var $button = this.find('.ss-ui-button'),
+					$input = this.find('input[type="text"]'),
+					inputHasValue = $input.val() !== '',
+					buttonDisabled = $button.is(':disabled');
+
+				if ((inputHasValue && buttonDisabled) || (!inputHasValue && !buttonDisabled)) {
+					$button.button("option", "disabled", !buttonDisabled);
+				}
 			}
 		});
 

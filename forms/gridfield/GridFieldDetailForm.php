@@ -188,6 +188,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 */
 	public function setItemEditFormCallback(Closure $cb) {
 		$this->itemEditFormCallback = $cb;
+		return $this;
 	}
 
 	/**

@@ -361,7 +361,8 @@ class HTTP {
 			if(
 				$body &&
 				Director::is_https() &&
-				strstr($_SERVER["HTTP_USER_AGENT"], 'MSIE')==true &&
+				isset($_SERVER['HTTP_USER_AGENT']) &&
+				strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE')==true &&
 				strstr($contentDisposition, 'attachment;')==true
 			) {
 				// IE6-IE8 have problems saving files when https and no-cache are used

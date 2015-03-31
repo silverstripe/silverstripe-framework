@@ -45,7 +45,7 @@ In practice, this looks like:
 				FormAction::create("doSayHello")->setTitle("Say hello")
 			);
 
-			$required = new RequiredFields('Name')
+			$required = new RequiredFields('Name');
 
 			$form = new Form($this, 'HelloForm', $fields, $actions, $required);
 	

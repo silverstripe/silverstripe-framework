@@ -5,7 +5,7 @@ summary: Add Indexes to your Data Model to optimize database queries.
 
 It is sometimes desirable to add indexes to your data model, whether to optimize queries or add a uniqueness constraint 
 to a field. This is done through the `DataObject::$indexes` map, which maps index names to descriptor arrays that 
-represent each index. There's several supported notations:
+represent each index. There're several supported notations:
 
 	:::php
 	<?php
@@ -19,7 +19,7 @@ represent each index. There's several supported notations:
 		);
 	}
 	
-The `<index-name>` can be an an arbitrary identifier in order to allow for more than one index on a specific database 
+The `<index-name>` can be an arbitrary identifier in order to allow for more than one index on a specific database 
 column. The "advanced" notation supports more `<type>` notations. These vary between database drivers, but all of them 
 support the following:
 
@@ -27,8 +27,8 @@ support the following:
  * `unique`: Index plus uniqueness constraint on the value
  * `fulltext`: Fulltext content index
 
-In order to use more database specific or complex index notations, we also support raw SQL for as a value in the 
-`$indexes` definition. Keep in mind this will likely make your code less portable between databases.
+In order to use more database specific or complex index notations, we also support raw SQL as a value in the 
+`$indexes` definition. Keep in mind that using raw SQL is likely to make your code less portable between DBMSs.
 
 **mysite/code/MyTestObject.php**
 
