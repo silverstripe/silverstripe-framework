@@ -413,6 +413,20 @@ class Security extends Controller implements TemplateGlobalProvider {
 				if($result instanceof SS_HTTPResponse) return $result;
 			}
 		}
+
+		// If arriving on the login page already logged in, with no security error, and a ReturnURL then redirect
+		// back. The login message check is neccesary to prevent infinite loops where BackURL links to
+		// an action that triggers Security::permissionFailure.
+		// This step is necessary in cases such as automatic redirection where a user is authenticated
+		// upon landing on an SSL secured site and is automatically logged in, or some other case
+		// where the user has permissions to continue but is not given the option.
+		if($this->request->requestVar('BackURL')
+			&& !$this->getLoginMessage()
+			&& ($member = Member::currentUser())
+			&& $member->exists()
+		) {
+			return $this->redirectBack();
+		}
 	}
 
 	/**
@@ -523,6 +537,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		
 		// Finally, customise the controller to add any form messages and the form.
 		$customisedController = $controller->customise(array(
+			"Content" => $message,
 			"Message" => $message,
 			"MessageType" => $messageType,
 			"Form" => $content,
@@ -572,7 +587,8 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return Form Returns the lost password form
 	 */
 	public function LostPasswordForm() {
-		return MemberLoginForm::create(			$this,
+		return MemberLoginForm::create(
+			$this,
 			'LostPasswordForm',
 			new FieldList(
 				new EmailField('Email', _t('Member.EMAIL', 'Email'))
