@@ -225,6 +225,18 @@ class DataObjectTest extends SapphireTest {
 		), true);
 		$this->assertNotEmpty($subteam1);
 		$this->assertEquals($subteam1->Title, "Subteam 1");
+
+		$subteam1 = DataObject::get('dataobjecttest_subteam')
+			->filter('Title', 'Subteam 1')
+			->first();
+		$this->assertNotEmpty($subteam1);
+		$this->assertEquals($subteam1->Title, "Subteam 1");
+
+		$subteam1 = dataobjecttest_subteam::get()
+			->filter('Title', 'Subteam 1')
+			->first();
+		$this->assertNotEmpty($subteam1);
+		$this->assertEquals($subteam1->Title, "Subteam 1");
 	}
 
 	public function testGetSubclassFields() {

@@ -1927,7 +1927,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						}
 					}
 				}
-
+				
 				$manyMany = $SNG_class->stat('belongs_many_many');
 				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
 				if($candidate) {
@@ -1962,7 +1962,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						);
 					}
 				}
-
 				return isset($items) ? array_merge($newItems, $items) : $newItems;
 			}
 		}
@@ -2995,6 +2994,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "") {
 		$SNG = singleton($callerClass);
+		$callerClass = get_class($SNG); // avoid case-sensitivity issues
 
 		$cacheComponents = array($filter, $orderby, $SNG->extend('cacheKeyComponent'));
 		$cacheKey = md5(var_export($cacheComponents, true));

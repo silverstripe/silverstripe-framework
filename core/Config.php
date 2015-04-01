@@ -489,14 +489,14 @@ class Config {
 			}
 		}
 
-		$value = $nothing = null;
+		$value = null;
 
 		// Then the manifest values
 		foreach($this->manifests as $manifest) {
-			$value = $manifest->get($class, $name, $nothing);
-			if ($value !== $nothing) {
+			$value = $manifest->get($class, $name, null);
+			if ($value !== null) {
 				self::merge_low_into_high($result, $value, $suppress);
-				if ($result !== null && !is_array($result)) return $result;
+				if (!is_null($result) && !is_array($result)) return $result;
 			}
 		}
 
@@ -514,22 +514,23 @@ class Config {
 			if ($extraSources) $sources = array_merge($sources, $extraSources);
 		}
 
-		$value = $nothing = null;
-
 		foreach ($sources as $staticSource) {
-			if (is_array($staticSource)) {
-				$value = isset($staticSource[$name]) ? $staticSource[$name] : $nothing;
-			}
-			else {
-				foreach ($this->staticManifests as $i => $statics) {
-					$value = $statics->get($staticSource, $name, $nothing);
-					if ($value !== $nothing) break;
+			if(is_array($staticSource)) {
+				$value = isset($staticSource[$name]) ? $staticSource[$name] : null;
+			} else if(class_exists($staticSource) && property_exists($staticSource, $name)) {
+				$property = new ReflectionProperty($staticSource, $name);
+				if($property->isStatic() && $property->isPrivate()) {
+					$property->setAccessible(true);
+					$value = $property->getValue();
 				}
 			}
 
-			if ($value !== $nothing) {
+			if (!is_null($value)) {
 				self::merge_low_into_high($result, $value, $suppress);
-				if ($result !== null && !is_array($result)) return $result;
+				if (!is_null($result) && !is_array($result)) return $result;
+
+				// Reset value. If we don't do this, the value array may have double values.
+				$value = null;
 			}
 		}
 
@@ -541,7 +542,6 @@ class Config {
 			$parent = get_parent_class($class);
 			if ($parent) $this->getUncached($parent, $name, $sourceOptions, $result, $suppress, $tags);
 		}
-
 		return $result;
 	}
 

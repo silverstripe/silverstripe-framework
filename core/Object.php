@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A base class for all SilverStripe objects to inherit from.
  *
@@ -588,6 +589,7 @@ abstract class Object {
 						"add_to_class deprecated on $extensionClass. Use get_extra_config instead");
 				}
 
+				// @todo Remove in 4.0
 				call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass, $extensionArgs);
 
 				foreach(array_reverse(ClassInfo::ancestry($extensionClass)) as $extensionClassParent) {

@@ -74,13 +74,13 @@ require_once 'filesystem/FileFinder.php';
 require_once 'core/manifest/ManifestCache.php';
 require_once 'core/manifest/ClassLoader.php';
 require_once 'core/manifest/ConfigManifest.php';
-require_once 'core/manifest/ConfigStaticManifest.php';
 require_once 'core/manifest/ClassManifest.php';
 require_once 'core/manifest/ManifestFileFinder.php';
 require_once 'core/manifest/TemplateLoader.php';
 require_once 'core/manifest/TemplateManifest.php';
 require_once 'core/manifest/TokenisedRegularExpression.php';
 require_once 'control/injector/Injector.php';
+
 
 // Initialise the dependency injector as soon as possible, as it is
 // subsequently used by some of the following code
@@ -110,10 +110,6 @@ $loader->pushManifest($manifest);
 if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
 	require_once BASE_PATH . '/vendor/autoload.php';
 }
-
-// Now that the class manifest is up, load the static configuration
-$configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
-Config::inst()->pushConfigStaticManifest($configManifest);
 
 // And then the yaml configuration
 $configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
