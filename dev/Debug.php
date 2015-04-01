@@ -1,34 +1,34 @@
 <?php
 /**
  * Supports debugging and core error handling.
- * 
+ *
  * Attaches custom methods to the default error handling hooks
  * in PHP. Currently, two levels of error are supported:
- * 
+ *
  * - Notice
  * - Warning
  * - Error
- * 
+ *
  * Uncaught exceptions are currently passed to the debug
  * reporter as standard PHP errors.
- * 
+ *
  * Errors handled by this class are passed along to {@link SS_Log}.
  * For configuration information, see the {@link SS_Log}
  * class documentation.
- * 
+ *
  * @todo add support for user defined config: Debug::die_on_notice(true | false)
  * @todo better way of figuring out the error context to display in highlighted source
- * 
+ *
  * @package framework
  * @subpackage dev
  */
 class Debug {
-		
+
 	/**
 	 * @config
 	 * @var String indicating the file where errors are logged.
 	 * Filename is relative to the site root.
-	 * The named file will have a terse log sent to it, and the full log (an 
+	 * The named file will have a terse log sent to it, and the full log (an
 	 * encoded file containing backtraces and things) will go to a file of a similar
 	 * name, but with the suffix ".full" added.
 	 */
@@ -45,7 +45,7 @@ class Debug {
 	 * @var string The body of the message shown to users on the live site when a fatal error occurs.
 	 */
 	private static $friendly_error_detail = 'The website server has not been able to respond to your request.';
-	
+
 	/**
 	 * Show the contents of val in a debug-friendly way.
 	 * Debug::show() is intended to be equivalent to dprintr()
@@ -57,14 +57,14 @@ class Debug {
 				if(Director::is_ajax() || Director::is_cli())
 					echo "Debug ($caller[class]$caller[type]$caller[function]() in " . basename($caller['file'])
 						. ":$caller[line])\n";
-				else 
+				else
 					echo "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
 						. "<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]()"
 						. " \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
 			}
-			
+
 			echo Debug::text($val);
-	
+
 			if(!Director::is_ajax() && !Director::is_cli()) echo "</div>";
 			else echo "\n\n";
 		}
@@ -73,7 +73,7 @@ class Debug {
 
 	/**
 	 * Returns the caller for a specific method
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function caller() {
@@ -100,7 +100,7 @@ class Debug {
 			die();
 		}
 	}
-	
+
 	/**
 	 * Quick dump of a variable.
 	 *
@@ -123,9 +123,14 @@ class Debug {
 			} else {
 				$hasDebugMethod = method_exists($val, 'debug');
 			}
-			
+
 			if($hasDebugMethod) {
-				return $val->debug();
+				$debug = $val->debug();
+				// Conditional not necessary after 3.2. See https://github.com/silverstripe/silverstripe-framework/pull/4034
+				if ($debug instanceof ViewableData_Debugger) {
+					$debug = $debug->forTemplate();
+				}
+				return $debug;
 			}
 		}
 
@@ -168,15 +173,15 @@ class Debug {
 			}
 		}
 	}
-	
+
 	// Keep track of how many headers have been sent
 	private static $headerCount = 0;
-	
+
 	/**
 	 * Send a debug message in an HTTP header. Only works if you are
 	 * on Dev, and headers have not yet been sent.
 	 *
-	 * @param string $msg 
+	 * @param string $msg
 	 * @param string $prefix (optional)
 	 * @return void
 	 */
@@ -217,7 +222,7 @@ class Debug {
 	public static function noticeHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(error_reporting() == 0) return;
 		ini_set('display_errors', 0);
-		
+
 		// Send out the error details to the logger for writing
 		SS_Log::log(
 			array(
@@ -261,7 +266,7 @@ class Debug {
 			),
 			SS_Log::WARN
 		);
-		
+
 		if(Director::isDev()) {
 			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 		} else {
@@ -271,7 +276,7 @@ class Debug {
 
 	/**
 	 * Handle a fatal error, depending on the mode of the site (ie: Dev, Test, or Live).
-	 * 
+	 *
 	 * Runtime execution dies immediately once the error is generated.
 	 *
 	 * @param unknown_type $errno
@@ -282,7 +287,7 @@ class Debug {
 	 */
 	public static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		ini_set('display_errors', 0);
-		
+
 		// Send out the error details to the logger for writing
 		SS_Log::log(
 			array(
@@ -294,7 +299,7 @@ class Debug {
 			),
 			SS_Log::ERR
 		);
-		
+
 		if(Director::isDev() || Director::is_cli()) {
 			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		} else {
@@ -302,12 +307,12 @@ class Debug {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Render a user-facing error page, using the default HTML error template
 	 * rendered by {@link ErrorPage} if it exists. Doesn't use the standard {@link SS_HTTPResponse} class
-	 * the keep dependencies minimal. 
-	 * 
+	 * the keep dependencies minimal.
+	 *
 	 * @uses ErrorPage
 	 *
 	 * @param int $statusCode HTTP Status Code (Default: 500)
@@ -321,7 +326,7 @@ class Debug {
 		if(!$friendlyErrorMessage) {
 			$friendlyErrorMessage = Config::inst()->get('Debug', 'friendly_error_header');
 		}
-		
+
 		if(!$friendlyErrorDetail) {
 			$friendlyErrorDetail = Config::inst()->get('Debug', 'friendly_error_detail');
 		}
@@ -343,7 +348,7 @@ class Debug {
 		} else {
 			if(class_exists('ErrorPage')){
 				$errorFilePath = ErrorPage::get_filepath_for_errorcode(
-					$statusCode, 
+					$statusCode,
 					class_exists('Translatable') ? Translatable::get_current_locale() : null
 				);
 				if(file_exists($errorFilePath)) {
@@ -356,7 +361,7 @@ class Debug {
 				$renderer = new DebugView();
 				$renderer->writeHeader();
 				$renderer->writeInfo("Website Error", $friendlyErrorMessage, $friendlyErrorDetail);
-				
+
 				if(Email::config()->admin_email) {
 					$mailto = Email::obfuscate(Email::config()->admin_email);
 					$renderer->writeParagraph('Contact an administrator: ' . $mailto . '');
@@ -370,7 +375,7 @@ class Debug {
 
 	/**
 	 * Create an instance of an appropriate DebugView object.
-	 * 
+	 *
 	 * @return DebugView
 	 */
 	public static function create_debug_view() {
@@ -396,15 +401,15 @@ class Debug {
 			$errText = str_replace(array("\n","\r")," ",$errText);
 
 			if(!headers_sent()) header($_SERVER['SERVER_PROTOCOL'] . " 500 $errText");
-			
+
 			// if error is displayed through ajax with CliDebugView, use plaintext output
 			if(Director::is_ajax()) {
 				header('Content-Type: text/plain');
-			} 
+			}
 		}
-		
+
 		$reporter = self::create_debug_view();
-		
+
 		// Coupling alert: This relies on knowledge of how the director gets its URL, it could be improved.
 		$httpRequest = null;
 		if(isset($_SERVER['REQUEST_URI'])) {
@@ -431,7 +436,7 @@ class Debug {
 		$reporter->writeTrace(($errcontext ? $errcontext : debug_backtrace()));
 		$reporter->writeFooter();
 	}
-	
+
 	/**
 	 * Utility method to render a snippet of PHP source code, from selected file
 	 * and highlighting the given line number.
@@ -454,9 +459,9 @@ class Debug {
 			}
 			$offset++;
 		}
-		echo '</pre>';		
+		echo '</pre>';
 	}
-	
+
 	/**
 	 * Check if the user has permissions to run URL debug tools,
 	 * else redirect them to log in.
@@ -470,12 +475,12 @@ class Debug {
 			// This means we have to be careful about what objects we create, as we don't want Object::defineMethods()
 			// being called again.
 			// This basically calls Permission::checkMember($_SESSION['loggedInAs'], 'ADMIN');
-			
+
 			$memberID = $_SESSION['loggedInAs'];
-			
+
 			$groups = DB::query("SELECT \"GroupID\" from \"Group_Members\" WHERE \"MemberID\" = " . $memberID);
 			$groupCSV = implode($groups->column(), ',');
-			
+
 			$permission = DB::query("
 				SELECT \"ID\"
 				FROM \"Permission\"
@@ -485,12 +490,12 @@ class Debug {
 					AND \"GroupID\" IN ($groupCSV)
 				)
 			")->value();
-			
+
 			if($permission) {
 				return;
 			}
 		}
-		
+
 		// This basically does the same as
 		// Security::permissionFailure(null, "You need to login with developer access to make use of debugging tools.")
 		// We have to do this because of how early this method is called in execution.
@@ -515,8 +520,8 @@ class Debug {
 
 /**
  * Generic callback, to catch uncaught exceptions when they bubble up to the top of the call chain.
- * 
- * @ignore 
+ *
+ * @ignore
  * @param Exception $exception
  */
 function exceptionHandler($exception) {
@@ -533,8 +538,8 @@ function exceptionHandler($exception) {
  * Generic callback to catch standard PHP runtime errors thrown by the interpreter
  * or manually triggered with the user_error function.
  * Caution: The error levels default to E_ALL is the site is in dev-mode (set in main.php).
- * 
- * @ignore 
+ *
+ * @ignore
  * @param int $errno
  * @param string $errstr
  * @param string $errfile
