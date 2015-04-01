@@ -83,7 +83,9 @@ abstract class StringField extends DBField {
 	 * @see core/model/fieldtypes/DBField#exists()
 	 */
 	public function exists() {
-		return ($this->value || $this->value == '0') || ( !$this->nullifyEmpty && $this->value === '');
+		return $this->getValue() // All truthy values exist
+			|| (is_string($this->getValue()) && strlen($this->getValue())) // non-empty strings exist ('0' but not (int)0)
+			|| (!$this->getNullifyEmpty() && $this->getValue() === ''); // Remove this stupid exemption in 4.0
 	}
 
 	/**
