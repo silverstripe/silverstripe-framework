@@ -700,7 +700,14 @@ class ViewableData_Debugger extends ViewableData {
 		$this->object = $object;
 		parent::__construct();
 	}
-	
+
+	/**
+	 * @return string The rendered debugger
+	 */
+	public function __toString() {
+		return $this->forTemplate();
+	}
+
 	/**
 	 * Return debugging information, as XHTML. If a field name is passed, it will show debugging information on that
 	 * field, otherwise it will show information on all methods and fields.
