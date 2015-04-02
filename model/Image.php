@@ -123,25 +123,13 @@ class Image extends File implements Flushable {
 	}
 
 	/**
-	 * An image exists if it has a filename.
-	 * Does not do any filesystem checks.
-	 *
-	 * @return boolean
-	 */
-	public function exists() {
-		if(isset($this->record["Filename"])) {
-			return true;
-		}
-	}
-
-	/**
 	 * Return an XHTML img tag for this Image,
 	 * or NULL if the image file doesn't exist on the filesystem.
 	 *
 	 * @return string
 	 */
 	public function getTag() {
-		if(file_exists(Director::baseFolder() . '/' . $this->Filename)) {
+		if($this->exists()) {
 			$url = $this->getURL();
 			$title = ($this->Title) ? $this->Title : $this->Filename;
 			if($this->Title) {
@@ -229,7 +217,7 @@ class Image extends File implements Flushable {
 		// Check if image is already sized to the correct dimension
 		$widthRatio = $width / $this->getWidth();
 		$heightRatio = $height / $this->getHeight();
-		
+
 		if( $widthRatio < $heightRatio ) {
 			// Target is higher aspect ratio than image, so check width
 			if($this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')) return $this;
@@ -257,7 +245,7 @@ class Image extends File implements Flushable {
 	/**
 	 * Proportionally scale down this image if it is wider or taller than the specified dimensions.
 	 * Similar to Fit but without up-sampling. Use in templates with $FitMax.
-	 * 
+	 *
 	 * @uses Image::Fit()
 	 * @param integer $width The maximum width of the output image
 	 * @param integer $height The maximum height of the output image
@@ -266,7 +254,7 @@ class Image extends File implements Flushable {
 	public function FitMax($width, $height) {
 		// Temporary $force_resample support for 3.x, to be removed in 4.0
 		if (Config::inst()->get('Image', 'force_resample') && $this->getWidth() <= $width && $this->getHeight() <= $height) return $this->Fit($this->getWidth(),$this->getHeight());
-		
+
 		return $this->getWidth() > $width || $this->getHeight() > $height
 			? $this->Fit($width,$height)
 			: $this;
@@ -300,7 +288,7 @@ class Image extends File implements Flushable {
 	}
 
 	/**
-	 * Crop this image to the aspect ratio defined by the specified width and height, 
+	 * Crop this image to the aspect ratio defined by the specified width and height,
 	 * then scale down the image to those dimensions if it exceeds them.
 	 * Similar to Fill but without up-sampling. Use in templates with $FillMax.
 	 *
@@ -312,13 +300,13 @@ class Image extends File implements Flushable {
 	public function FillMax($width, $height) {
 		// Prevent divide by zero on missing/blank file
 		if(!$this->getWidth() || !$this->getHeight()) return null;
-		
+
 		// Temporary $force_resample support for 3.x, to be removed in 4.0
 		if (Config::inst()->get('Image', 'force_resample') && $this->isSize($width, $height)) return $this->Fill($width, $height);
-		
+
 		// Is the image already the correct size?
 		if ($this->isSize($width, $height)) return $this;
-		
+
 		// If not, make sure the image isn't upsampled
 		$imageRatio = $this->getWidth() / $this->getHeight();
 		$cropRatio = $width / $height;
@@ -326,7 +314,7 @@ class Image extends File implements Flushable {
 		if ($cropRatio < $imageRatio && $this->getHeight() < $height) return $this->Fill($this->getHeight()*$cropRatio, $this->getHeight());
 		// Otherwise we're cropping on the y axis (or not cropping at all) so compare widths
 		if ($this->getWidth() < $width) return $this->Fill($this->getWidth(), $this->getWidth()/$cropRatio);
-		
+
 		return $this->Fill($width, $height);
 	}
 
@@ -379,7 +367,7 @@ class Image extends File implements Flushable {
 	}
 
 	/**
-	 * Proportionally scale down this image if it is wider than the specified width. 
+	 * Proportionally scale down this image if it is wider than the specified width.
 	 * Similar to ScaleWidth but without up-sampling. Use in templates with $ScaleMaxWidth.
 	 *
 	 * @uses Image::ScaleWidth()
@@ -389,7 +377,7 @@ class Image extends File implements Flushable {
 	public function ScaleMaxWidth($width) {
 		// Temporary $force_resample support for 3.x, to be removed in 4.0
 		if (Config::inst()->get('Image', 'force_resample') && $this->getWidth() <= $width) return $this->ScaleWidth($this->getWidth());
-		
+
 		return $this->getWidth() > $width
 			? $this->ScaleWidth($width)
 			: $this;
@@ -419,7 +407,7 @@ class Image extends File implements Flushable {
 	}
 
 	/**
-	 * Proportionally scale down this image if it is taller than the specified height. 
+	 * Proportionally scale down this image if it is taller than the specified height.
 	 * Similar to ScaleHeight but without up-sampling. Use in templates with $ScaleMaxHeight.
 	 *
 	 * @uses Image::ScaleHeight()
@@ -429,7 +417,7 @@ class Image extends File implements Flushable {
 	public function ScaleMaxHeight($height) {
 		// Temporary $force_resample support for 3.x, to be removed in 4.0
 		if (Config::inst()->get('Image', 'force_resample') && $this->getHeight() <= $height) return $this->ScaleHeight($this->getHeight());
-		
+
 		return $this->getHeight() > $height
 			? $this->ScaleHeight($height)
 			: $this;
@@ -446,7 +434,7 @@ class Image extends File implements Flushable {
 	public function CropWidth($width) {
 		// Temporary $force_resample support for 3.x, to be removed in 4.0
 		if (Config::inst()->get('Image', 'force_resample') && $this->getWidth() <= $width) return $this->Fill($this->getWidth(), $this->getHeight());
-		
+
 		return $this->getWidth() > $width
 			? $this->Fill($width, $this->getHeight())
 			: $this;
@@ -463,7 +451,7 @@ class Image extends File implements Flushable {
 	public function CropHeight($height) {
 		// Temporary $force_resample support for 3.x, to be removed in 4.0
 		if (Config::inst()->get('Image', 'force_resample') && $this->getHeight() <= $height) return $this->Fill($this->getWidth(), $this->getHeight());
-		
+
 		return $this->getHeight() > $height
 			? $this->Fill($this->getWidth(), $height)
 			: $this;
@@ -684,7 +672,7 @@ class Image extends File implements Flushable {
 	public function getFormattedImage($format) {
 		$args = func_get_args();
 
-		if($this->ID && $this->Filename && Director::fileExists($this->Filename)) {
+		if($this->exists()) {
 			$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
 
 			if(!file_exists(Director::baseFolder()."/".$cacheFile) || self::$flush) {
@@ -950,8 +938,8 @@ class Image extends File implements Flushable {
 	public function getDimensions($dim = "string") {
 		if($this->getField('Filename')) {
 
-			$imagefile = Director::baseFolder() . '/' . $this->getField('Filename');
-			if(file_exists($imagefile)) {
+			$imagefile = $this->getFullPath();
+			if($this->exists()) {
 				$size = getimagesize($imagefile);
 				return ($dim === "string") ? "$size[0]x$size[1]" : $size[$dim];
 			} else {
