@@ -123,25 +123,13 @@ class Image extends File implements Flushable {
 	}
 
 	/**
-	 * An image exists if it has a filename.
-	 * Does not do any filesystem checks.
-	 * 
-	 * @return boolean
-	 */
-	public function exists() {
-		if(isset($this->record["Filename"])) {
-			return true;
-		}		
-	}
-	
-	/**
 	 * Return an XHTML img tag for this Image,
 	 * or NULL if the image file doesn't exist on the filesystem.
 	 * 
 	 * @return string
 	 */
 	public function getTag() {
-		if(file_exists(Director::baseFolder() . '/' . $this->Filename)) {
+		if($this->exists()) {
 			$url = $this->getURL();
 			$title = ($this->Title) ? $this->Title : $this->Filename;
 			if($this->Title) {
@@ -618,8 +606,8 @@ class Image extends File implements Flushable {
 	public function getDimensions($dim = "string") {
 		if($this->getField('Filename')) {
 
-			$imagefile = Director::baseFolder() . '/' . $this->getField('Filename');
-			if(file_exists($imagefile)) {
+			$imagefile = $this->getFullPath();
+			if($this->exists()) {
 				$size = getimagesize($imagefile);
 				return ($dim === "string") ? "$size[0]x$size[1]" : $size[$dim];
 			} else {
