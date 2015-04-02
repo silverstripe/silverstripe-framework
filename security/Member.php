@@ -472,8 +472,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		$this->regenerateTempID();
 
-		$this->write();
-
 		// Audit logging hook
 		$this->extend('memberLoggedIn');
 	}
