@@ -39,6 +39,26 @@ Mac OS X comes with a built-in webserver, but there are a number of other option
  * [Install using MAMP](installation/mac_osx)
  * [Install using Homebrew](installation/other_installation_options/mac_osx_homebrew)
 
+### Virtual Machines through Vagrant
+
+[Vagrant](https://www.vagrantup.com/) creates portable development environments
+which can be hosted on Linux, Windows and Mac OS X. The virtual machine
+usually runs a flavour of Linux. As a self-contained pre-configured environment,
+getting up an running with Vagrant tends to be easier than creating a complete
+development environment from scratch on your own machine.
+
+ * [silverstripe-australia/vagrant-environment](https://github.com/silverstripe-australia/vagrant-environment)
+ * [BetterBrief/vagrant-skeleton](https://github.com/BetterBrief/vagrant-skeleton)
+
+Note: These instructions are supported by the community.
+
+## Virtual Machines through Bitnami
+
+[Bitnami](https://bitnami.com) is an online service that makes it easy to get
+apps running on cloud providers like Amazon Web Services as well as local
+virtualised environments. Bitnami has a [SilverStripe Virtual Machine](https://bitnami.com/stack/silverstripe/virtual-machine)
+ready for download or installation on a cloud platform.
+
 ## Troubleshooting
 
 If you run into trouble, see [common-problems](installation/common_problems) or post to the 
