@@ -37,8 +37,7 @@ For more flexibility, you can set up either of the following web servers, and us
 Mac OS X comes with a built-in webserver, but there are a number of other options:
 
  * [Install using MAMP](installation/mac_osx)
- * Install using the built-in webserver (no docs yet)
- * Install using MacPorts (no docs yet)
+ * [Install using Homebrew](installation/other_installation_options/mac_osx_homebrew)
 
 ## Troubleshooting
 
