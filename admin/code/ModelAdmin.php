@@ -137,7 +137,7 @@ abstract class ModelAdmin extends LeftAndMain {
 
 	public function getEditForm($id = null, $fields = null) {
 		$list = $this->getList();
-		$exportButton = new GridFieldExportButton('before');
+		$exportButton = new GridFieldExportButton('buttons-before-left');
 		$exportButton->setExportColumns($this->getExportFields());
 		$listField = GridField::create(
 			$this->sanitiseClassName($this->modelClass),
@@ -146,7 +146,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			$fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
 				->addComponent($exportButton)
 				->removeComponentsByType('GridFieldFilterHeader')
-				->addComponents(new GridFieldPrintButton('before'))
+				->addComponents(new GridFieldPrintButton('buttons-before-left'))
 		);
 
 		// Validation
