@@ -206,6 +206,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider {
 			'Odd',
 			'EvenOdd',
 			'Pos',
+			'FromEnd',
 			'TotalItems',
 			'Modulus',
 			'MultipleOf',
@@ -310,6 +311,17 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider {
 	 */
 	public function Pos($startIndex = 1) {
 		return $this->iteratorPos + $startIndex;
+	}
+
+	/**
+	 * Return the position of this item from the last item in the list. The position of the final
+	 * item is $endIndex, which defaults to 1.
+	 *
+	 * @param integer $endIndex Value of the last item
+	 * @return int
+	 */
+	public function FromEnd($endIndex = 1) {
+		return $this->iteratorTotalItems - $this->iteratorPos + $endIndex - 1;
 	}
 
 	/**
