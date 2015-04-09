@@ -235,7 +235,7 @@ lt:
     SINGULARNAME: Grupė
     Sort: 'Rūšiavimo tvarka'
     has_many_Permissions: Leidimai
-    many_many_Members: Nariai
+    many_many_Members: Vartotojai
   GroupImportForm:
     Help1: '<p>Importuoti vieną ar kelias grupes <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href="#" class="toggle-advanced">Rodyti detalesnį aprašymą</a></small></p>'
     Help2: "<div class=\"advanced\">\n<h4>Detalesnis aprašymas</h4>\n<ul>\n<li>Galimi stulpeliai: <em>%s</em></li>\n<li>Esamos grupės yra surišamos su jų unikalia <em>Code</em> reikšme ir atnaujinamos duomenimis iš importuojamos bylos</li>\n<li>Grupių hierarchija gali būti sukurta naudojant <em>ParentCode</em> stulpelį.</li>\n<li>Leidimų gali būti priskirti naudojant <em>PermissionCode</em> stulpelį. Esami leidimai nebus pakeisti.</li>\n</ul>\n</div>"
@@ -350,15 +350,15 @@ lt:
     NEWPASSWORD: 'Naujas slaptažodis'
     NoPassword: 'Šis vartotojas neturi slaptažodžio.'
     PASSWORD: Slaptažodis
-    PLURALNAME: Nariai
+    PLURALNAME: Vartotojai
     REMEMBERME: 'Prisiminti jungiantis kitą kartą?'
-    SINGULARNAME: Narys
+    SINGULARNAME: Vartotojas
     SUBJECTPASSWORDCHANGED: 'Jūsų slaptažodis pakeistas'
     SUBJECTPASSWORDRESET: 'Slaptažodžio atstatymo nuoroda'
     SURNAME: Pavardė
     TIMEFORMAT: 'Laiko formatas'
-    VALIDATIONMEMBEREXISTS: 'Tokį e. paštą jau naudoja kitas narys.'
-    ValidationIdentifierFailed: 'Nepavyko perrašyti nario #{id} su tuo pačiu atpažinimo kodu ({name} = {value}))'
+    VALIDATIONMEMBEREXISTS: 'Vartotojas šiuo el. pašto adresu %s jau egzistuoja.'
+    ValidationIdentifierFailed: 'Nepavyko atnaujinti vartotojo #{id} duomenų su atpažinimo kodu ({name} = {value})'
     WELCOMEBACK: 'Sveiki, {firstname}'
     YOUROLDPASSWORD: 'Jūsų senas slaptažodis'
     belongs_many_many_Groups: Grupės
@@ -488,7 +488,7 @@ lt:
     GROUPNAME: 'Grupės pavadinimas'
     IMPORTGROUPS: 'Importuoti grupes'
     IMPORTUSERS: 'Importuoti vartotojus'
-    MEMBERS: Nariai
+    MEMBERS: Vartotojai
     MENUTITLE: Saugumas
     MemberListCaution: 'Dėmesio: Pašalinus vartotojus iš šio sąrašo, jie bus pašalinti ir iš visų grupių, bei duomenų bazės.'
     NEWGROUP: 'Nauja grupė'

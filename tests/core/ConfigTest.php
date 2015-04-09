@@ -254,54 +254,92 @@ class ConfigTest extends SapphireTest {
 		$this->markTestIncomplete();
 	}
 
-	public function testLRUDiscarding() {
-		$cache = new ConfigTest_Config_LRU();
+	public function testCacheCleaning() {
+		$cache = new ConfigTest_Config_MemCache();
 
+		for ($i = 0; $i < 1000; $i++) $cache->set($i, $i);
+		$this->assertEquals(1000, count($cache->cache));
+
+		$cache->clean();
+		$this->assertEquals(0, count($cache->cache), 'Clean clears all items');
+		$this->assertFalse($cache->get(1), 'Clean clears all items');
+
+		$cache->set(1, 1, array('Foo'));
+		$this->assertEquals(1, count($cache->cache));
+		$this->assertEquals(1, count($cache->tags));
+
+		$cache->clean('Foo');
+		$this->assertEquals(0, count($cache->tags), 'Clean items with matching tag');
+		$this->assertFalse($cache->get(1), 'Clean items with matching tag');
+
+		$cache->set(1, 1, array('Foo', 'Bar'));
+		$this->assertEquals(2, count($cache->tags));
+		$this->assertEquals(1, count($cache->cache));
+
+		$cache->clean('Bar');
+		$this->assertEquals(1, count($cache->tags));
+		$this->assertEquals(0, count($cache->cache), 'Clean items with any single matching tag');
+		$this->assertFalse($cache->get(1), 'Clean items with any single matching tag');
+	}
+
+	public function testLRUDiscarding() {
+		$depSettings = Deprecation::dump_settings();
+		Deprecation::restore_settings(array(
+			'level' => false,
+			'version' => false,
+			'moduleVersions' => false,
+		));
+		$cache = new ConfigTest_Config_LRU();
 		for ($i = 0; $i < Config_LRU::SIZE*2; $i++) $cache->set($i, $i);
 		$this->assertEquals(
 			Config_LRU::SIZE, count($cache->indexing),
 			'Homogenous usage gives exact discarding'
 		);
-
 		$cache = new ConfigTest_Config_LRU();
-
 		for ($i = 0; $i < Config_LRU::SIZE; $i++) $cache->set($i, $i);
 		for ($i = 0; $i < Config_LRU::SIZE; $i++) $cache->set(-1, -1);
 		$this->assertLessThan(
 			Config_LRU::SIZE, count($cache->indexing),
 			'Heterogenous usage gives sufficient discarding'
 		);
+		Deprecation::restore_settings($depSettings);
 	}
 
 	public function testLRUCleaning() {
+		$depSettings = Deprecation::dump_settings();
+		Deprecation::restore_settings(array(
+			'level' => false,
+			'version' => false,
+			'moduleVersions' => false,
+		));
 		$cache = new ConfigTest_Config_LRU();
-
 		for ($i = 0; $i < Config_LRU::SIZE; $i++) $cache->set($i, $i);
 		$this->assertEquals(Config_LRU::SIZE, count($cache->indexing));
-
 		$cache->clean();
 		$this->assertEquals(0, count($cache->indexing), 'Clean clears all items');
 		$this->assertFalse($cache->get(1), 'Clean clears all items');
-
 		$cache->set(1, 1, array('Foo'));
 		$this->assertEquals(1, count($cache->indexing));
-
 		$cache->clean('Foo');
 		$this->assertEquals(0, count($cache->indexing), 'Clean items with matching tag');
 		$this->assertFalse($cache->get(1), 'Clean items with matching tag');
-
 		$cache->set(1, 1, array('Foo', 'Bar'));
 		$this->assertEquals(1, count($cache->indexing));
-
 		$cache->clean('Bar');
 		$this->assertEquals(0, count($cache->indexing), 'Clean items with any single matching tag');
 		$this->assertFalse($cache->get(1), 'Clean items with any single matching tag');
+		Deprecation::restore_settings($depSettings);
 	}
 }
 
 class ConfigTest_Config_LRU extends Config_LRU implements TestOnly {
-
 	public $cache;
 	public $indexing;
+}
+
+class ConfigTest_Config_MemCache extends Config_MemCache implements TestOnly {
+
+	public $cache;
+	public $tags;
 
 }

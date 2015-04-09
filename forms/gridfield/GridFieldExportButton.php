@@ -155,7 +155,9 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 				$fileData .= "\n";
 			}
 
-			$item->destroy();
+			if ($item->hasMethod('destroy')) {
+				$item->destroy();
+			}
 		}
 
 		return $fileData;

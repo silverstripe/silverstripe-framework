@@ -55,7 +55,7 @@ with the CMS interface. Paste the following content into a new file called
 	.bookmarked-link.first {margin-top: 1em;}
 
 Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requirements_css`
-[configuration value](/topics/configuration).
+[configuration value](../../configuration).
 
 	:::yml
 	LeftAndMain:
@@ -85,7 +85,7 @@ and insert the following code.
 		}
 	}
 
-Enable the extension in your [configuration file](/topics/configuration)
+Enable the extension in your [configuration file](../../configuration)
 
 	:::yml
 	SiteTree:
@@ -114,7 +114,7 @@ Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension
 		}
 	}
 
-Enable the extension in your [configuration file](/topics/configuration)
+Enable the extension in your [configuration file](../../configuration)
 
 	:::yml
 	LeftAndMain:
@@ -191,11 +191,11 @@ Empty tabs will be automatically removed from the `FieldList` to prevent clutter
 </div>
 
 New actions will need associated controller handlers to work. You can use a
-`LeftAndMainExtension` to provide one. Refer to [Controller documentation](../topics/controller)
+`LeftAndMainExtension` to provide one. Refer to [Controller documentation](../../controllers)
 for instructions on setting up handlers.
 
 To make the actions more user-friendly you can also use alternating buttons as
-detailed in the [CMS Alternating Button](../reference/cms-alternating-button)
+detailed in the [CMS Alternating Button](cms_alternating_button)
 how-to.
 
 ## Summary
@@ -207,7 +207,7 @@ blocks and concepts for more complex extensions as well.
 
 ## Related
 
- * [Reference: CMS Architecture](../reference/cms-architecture)
- * [Reference: Layout](../reference/layout)
- * [Topics: Rich Text Editing](../topics/rich-text-editing)
- * [CMS Alternating Button](../howto/cms-alternating-button)
+ * [Reference: CMS Architecture](../cms_architecture)
+ * [Reference: Layout](../cms_layout)
+ * [Rich Text Editing](/developer_guides/forms/field_types/htmleditorfield)
+ * [CMS Alternating Button](cms_alternating_button)

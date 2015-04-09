@@ -14,7 +14,7 @@ This how-to will walk you through creation of a "Clean-up" button with two appea
 * active: "Clean-up now" green constructive button if the actions can be performed
 * netural: "Cleaned" default button if the action does not need to be done
 
-The controller code that goes with this example is listed in [Extend CMS Interface](../reference/extend-cms-interface).
+The controller code that goes with this example is listed in [Extend CMS Interface](extend_cms_interface).
 
 ## Backend support ##
 
@@ -156,4 +156,4 @@ cases.
 ## Summary ##
 
 The code presented gives you a fully functioning alternating button, similar to the defaults that come with the the CMS.
-These alternating buttons can be used to give user the advantage of visual feedback upon his actions.
+These alternating buttons can be used to give user the advantage of visual feedback upon their actions.

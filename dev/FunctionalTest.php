@@ -12,7 +12,7 @@
  *   $this->get("your/url");
  *
  *   // Submit a form on the page that you get in response
- *   $this->submitForm("MyForm_ID",  array("Email" => "invalid email ^&*&^"));
+ *   $this->submitForm("MyForm_ID", "action_dologin", array("Email" => "invalid email ^&*&^"));
  *
  *   // Validate the content that is returned
  *   $this->assertExactMatchBySelector("#MyForm_ID p.error", array("That email address is invalid."));

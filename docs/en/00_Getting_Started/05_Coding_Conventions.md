@@ -117,7 +117,7 @@ Example: `mysite/code/MyClass.php`
 
 To help with namespacing common class names (like Database) it is recommended to use a prefix convention `SS_ClassName` but the filename will remain `ClassName.php`. 
 
-See [directory-structure](/topics/directory-structure) for more information.
+See [directory structure](directory_structure) for more information.
 
 ## Coding Style
 
@@ -149,7 +149,7 @@ When a string is literal (contains no variable substitutions), the apostrophe or
 When a literal string itself contains apostrophes, it is permitted to demarcate the string with quotation marks or "double quotes". 
 
 	:::php
-	$greeting = "She said 'hello'";
+	$greeting = "They said 'hello'";
 
 This syntax is preferred over escaping apostrophes as it is much easier to read.
 
@@ -458,5 +458,4 @@ which are licensed under BSD (see [license](http://framework.zend.com/license)).
 
 ## Related
 
- * [Topics: CSS](/topics/css)
- * [Reference: CMS Architecture](/reference/cms-archirecture)
+ * [Reference: CMS Architecture](/developer_guides/customising_the_admin_interface/cms_architecture)

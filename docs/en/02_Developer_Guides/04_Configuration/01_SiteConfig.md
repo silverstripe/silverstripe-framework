@@ -16,7 +16,7 @@ throughout the site. Out of the box this includes selecting the current site the
 	
 	<% with $SiteConfig %>
 		$Title $AnotherField
-	<% end_loop %>
+	<% end_with %>
 
 To access variables in the PHP:
 
@@ -61,10 +61,10 @@ Then activate the extension.
 
 <div class="notice" markdown="1">
 After adding the class and the YAML change, make sure to rebuild your database by visiting http://yoursite.com/dev/build.
-You may also need to reload the screen with a `flush=1` i.e http://yoursite.com/admin/settings?flush=1.
+You may also need to reload the screen with a `?flush=1` i.e http://yoursite.com/admin/settings?flush=1.
 </div>
 
-You can define as many extensions for `SiteConfig` as you need. For example, if you're developing a module and what to
+You can define as many extensions for `SiteConfig` as you need. For example, if you're developing a module and want to
 provide the users a place to configure settings then the `SiteConfig` panel is the place to go it.
 
 ## API Documentation

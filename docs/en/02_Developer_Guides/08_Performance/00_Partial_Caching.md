@@ -22,15 +22,15 @@ will invalidate the cache after a given amount of time has expired (default 10 m
 Here are some more complex examples:
 
 	:::ss
-	<% cached 'database', LastEdited %> 
+	<% cached 'database', $LastEdited %> 
 		<!-- that updates every time the record changes. -->
 	<% end_cached %>
 	
-	<% cached 'loginblock', CurrentMember.ID %>
+	<% cached 'loginblock', $CurrentMember.ID %>
 		<!-- cached unique to the user. i.e for user 2, they will see a different cache to user 1 -->
 	<% end_cached %>
 
-	<% cached 'loginblock', LastEdited, CurrentMember.isAdmin %>
+	<% cached 'loginblock', $LastEdited, $CurrentMember.isAdmin %>
 		<!-- recached when block object changes, and if the user is admin -->
 	<% end_cached %>
 
@@ -53,13 +53,13 @@ user does not influence your template content, you can update this key as below;
 
 Often you want to invalidate a cache when any object in a set of objects change, or when the objects in a relationship 
 change. To do this, SilverStripe introduces the concept of Aggregates. These calculate and return SQL aggregates
-on sets of [api:DataObject]s - the most useful for us being the `Max` aggregate.
+on sets of [api:DataObject]s - the most useful for us being the `max` aggregate.
 
 For example, if we have a menu, we want that menu to update whenever _any_ page is edited, but would like to cache it
 otherwise. By using aggregates, we do that like this:
 
 	:::ss
-	<% cached 'navigation', List(SiteTree).max(LastEdited), List(SiteTree).count() %>
+	<% cached 'navigation', $List('SiteTree').max('LastEdited'), $List('SiteTree').count() %>
 
 The cache for this will update whenever a page is added, removed or edited.
 
@@ -67,10 +67,10 @@ If we have a block that shows a list of categories, we can make sure the cache u
 or edited
 
 	:::ss
-	<% cached 'categorylist', List(Category).max(LastEdited), List(Category).count() %>
+	<% cached 'categorylist', $List('Category').max('LastEdited'), $List('Category').count() %>
 
 <div class="notice" markdown="1">
-Note the use of both `.max(LastEdited)` and `.count()` - this takes care of both the case where an object has been 
+Note the use of both `.max('LastEdited')` and `.count()` - this takes care of both the case where an object has been 
 edited since the cache was last built, and also when an object has been deleted since the cache was last built.
 </div>
 
@@ -78,7 +78,7 @@ We can also calculate aggregates on relationships. A block that shows the curren
 whenever the relationship `Member::$has_many = array('Favourites' => Favourite')` changes.
 
 	:::ss
-	<% cached 'favourites', CurrentMember.ID, CurrentMember.Favourites.max(LastEdited) %>
+	<% cached 'favourites', $CurrentMember.ID, $CurrentMember.Favourites.max('LastEdited') %>
 
 ## Cache key calculated in controller
 
@@ -100,7 +100,7 @@ extract that logic into the controller.
 Then using that function in the cache key:
 
 	:::ss
-	<% cached FavouriteCacheKey %>
+	<% cached $FavouriteCacheKey %>
 
 
 ## Cache blocks and template changes
@@ -118,7 +118,7 @@ data updates.
 For instance, if we show some blog statistics, but are happy having them be slightly stale, we could do
 
 	:::ss
-	<% cached 'blogstatistics', Blog.ID %>
+	<% cached 'blogstatistics', $Blog.ID %>
 
 
 which will invalidate after the cache lifetime expires. If you need more control than that (cache lifetime is
@@ -133,7 +133,7 @@ configurable only on a site-wide basis), you could add a special function to you
 and then use it in the cache key
 
 	:::ss
-	<% cached 'blogstatistics', Blog.ID, BlogStatisticsCounter %>
+	<% cached 'blogstatistics', $Blog.ID, $BlogStatisticsCounter %>
 
 
 ## Cache block conditionals
@@ -146,7 +146,7 @@ Following on from the previous example, you might wish to only cache slightly-st
 heavy load:
 
 	:::ss
-	<% cached 'blogstatistics', Blog.ID if HighLoad %>
+	<% cached 'blogstatistics', $Blog.ID if $HighLoad %>
 
 
 By adding a `HighLoad` function to your `Page_Controller`, you could enable or disable caching dynamically.
@@ -155,7 +155,7 @@ To cache the contents of a page for all anonymous users, but dynamically calcula
  use something like:
 
 	:::ss
-	<% cached unless CurrentUser %>
+	<% cached unless $CurrentUser %>
 
 ## Uncached
 
@@ -178,10 +178,10 @@ portion dynamic, without having to include any member info in the page's cache k
 An example:
 
 	:::ss
-	<% cached LastEdited %>
+	<% cached $LastEdited %>
 	  Our wonderful site
 	
-	  <% cached Member.ID %>
+	  <% cached $Member.ID %>
 	    Welcome $Member.Name
 	  <% end_cached %>
 	
@@ -196,7 +196,7 @@ Cache conditionals and the uncached tag also work in the same nested manner. Sin
 could also write the last example as:
 
 	:::ss
-	<% cached LastEdited %>
+	<% cached $LastEdited %>
 	  Our wonderful site
 	
 	  <% uncached %>
@@ -214,7 +214,7 @@ letting you know if you've done this. You can often get around this using aggreg
 Failing example:
 
 	:::ss
-	<% cached LastEdited %>
+	<% cached $LastEdited %>
 	
 	  <% loop $Children %>
 	    <% cached LastEdited %>
@@ -227,9 +227,9 @@ Failing example:
 Can be re-written as:
 
 	:::ss
-	<% cached LastEdited %>
+	<% cached $LastEdited %>
 	
-	  <% cached AllChildren.max(LastEdited) %>
+	  <% cached $AllChildren.max('LastEdited') %>
 	    <% loop $Children %>
 	      $Name
 	    <% end_loop %>

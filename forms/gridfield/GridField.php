@@ -841,7 +841,8 @@ class GridField_FormAction extends FormAction {
 			'args' => $this->args,
 		);
 
-		$id = md5(serialize($state));
+		// Ensure $id doesn't contain only numeric characters
+		$id = 'gf_'.substr(md5(serialize($state)), 0, 8);
 		Session::set($id, $state);
 		$actionData['StateID'] = $id;
 

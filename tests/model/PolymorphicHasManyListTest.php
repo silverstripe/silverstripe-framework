@@ -19,7 +19,7 @@ class PolymorphicHasManyListTest extends SapphireTest {
 		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
 		'DataObjectTest_Player',
-		'DataObjectTest_Fan'
+		'DataObjectTest_Fan',
 	);
 
 	public function testRelationshipEmptyOnNewRecords() {

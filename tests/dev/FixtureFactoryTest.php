@@ -163,11 +163,11 @@ class FixtureFactoryTest_DataObject extends DataObject implements TestOnly {
 	);
 
 	private static $many_many = array(
-		"ManyMany" => "FixtureFactoryTest_DataObjectRelation"
+		"ManyManyRelation" => "FixtureFactoryTest_DataObjectRelation"
 	);
 
 	private static $many_many_extraFields = array(
-		"ManyMany" => array(
+		"ManyManyRelation" => array(
 			"Label" => "Varchar"
 		)
 	);

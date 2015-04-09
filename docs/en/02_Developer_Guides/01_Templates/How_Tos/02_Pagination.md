@@ -88,6 +88,9 @@ when using custom lists.
 	$pages = new PaginatedList(Page::get(), $this->request);
 	$pages->setPageLength(25);
 
+If you set this limit to 0 it will disable paging entirely, effectively causing it to appear as a single page
+list.
+
 ## Template Variables
 
 | Variable | Description |

@@ -109,7 +109,7 @@ class FileField extends FormField {
 
 		if($this->relationAutoSetting) {
 			// assume that the file is connected via a has-one
-			$hasOnes = $record->has_one($this->name);
+			$hasOnes = $record->hasOne($this->name);
 			// try to create a file matching the relation
 			$file = (is_string($hasOnes)) ? Object::create($hasOnes) : new $fileClass();
 		} else if($record instanceof File) {

@@ -68,13 +68,13 @@
 			&:hover {
 				text-decoration: none;
 				cursor: pointer;
-				text-shadow: none;
+				text-shadow:1px 1px 1px white;
 			}
 			> {
 				ins {
 					height: 16px;
 					width: 16px;
-					&.jstree-checkbox{
+					&.jstree-checkbox {
 						height:19px; //Larger to help avoid accidental page loads when trying to click checkboxes
        				}
 				}
@@ -111,7 +111,7 @@
 				background: transparent !important;
 				width: 100%;
 			}
-			a, a:hover{
+			a, a:hover {
 				margin: 0 !important;
 				padding: 0 !important;
 				text-indent: -9999px !important;
@@ -138,9 +138,9 @@
 	}
 
 	// Custom styles
-	.jstree-apple.jstree-focused {
+	.jstree.jstree-focused {
 		background: none;	
-		.jstree-apple > ul {
+		.jstree > ul {
 			background: none;
 		}
 	}
@@ -182,7 +182,7 @@
 		}
 	}
 
-	.jstree-themeroller{
+	.jstree-themeroller {
 		a {
 			padding: 0 2px;
 		}
@@ -276,7 +276,7 @@
 			min-width: 180px; 
 			*width:180px;
 		}
-		ul,li{
+		ul,li {
 			margin: 0;
 			padding: 0 ;
 			list-style-type: none;
@@ -316,7 +316,7 @@
 				margin-top: 3px;
 				margin-right: 5px;
 			}
-			&.vakata-hover > a{
+			&.vakata-hover > a {
 				padding: 1px 10px;
 				background: #3875d7;
 				@include background-image(linear-gradient(top, #3875d7 20%, #2a62bc 90%));
@@ -326,7 +326,7 @@
 		}
 	}
 	
-	#vakata-contextmenu{
+	#vakata-contextmenu {
 		.right {
 			right: 100%;
 			left: auto;
@@ -345,25 +345,25 @@
 			@include box-shadow(0 0 10px #CCC);
 			&.col-2{
 				width:180px * 2; // 2x the size of the original ul
-				li{
+				li {
 					width:50%;
 				}
 			}
 			&.col-3{
 				width:180px * 3; // 3x the size of the original ul
-				li{
+				li {
 					width:33%;
 				}
 			}
-			li{
+			li {
 				min-width:180px; 
 				float:left;
-				a{
+				a {
 					@include hide-text-overflow;
 				}
 			}
 		}
-		li{
+		li {
 			&.vakata-separator {
 				min-height: 0;
 				height: 1px;
@@ -409,8 +409,8 @@
 
 }
 
-.jstree-apple {
-	li, .jstree-apple ins {
+.jstree {
+	li, .jstree ins {
 		background:none;
 	}
 	.jstree-unchecked, .jstree-checked, .jstree-undetermined {
@@ -420,9 +420,9 @@
 	}
 }
 
-.tree-holder, .cms-tree{
-	&.jstree-apple{
-		li{
+.tree-holder, .cms-tree {
+	&.jstree {
+		li {
 			padding: 0px;
 			clear:  left;
 			&.Root {
@@ -440,8 +440,8 @@
 					text-decoration: line-through;
 				}
 			}
-			&.jstree-checked{
-				> a, > a:link{
+			&.jstree-checked {
+				> a, > a:link {
 					background-color: $color-cms-batchactions-menu-selected-background;
 				}
 			}
@@ -478,30 +478,15 @@
 		span.badge {
 			clear: both;
 			text-transform: uppercase;
+			text-shadow: none;
 			display: inline-block;
-			padding: 0px 3px;
+			position: relative;
+			padding: 2px 3px 1px;
 			font-size: 0.75em;
 			line-height: 1em;
 			margin-left: 3px;
-			margin-right: 6px;
 			margin-top:  -1px;
 			@include border-radius(2px, 2px);
-	
-			&.status-modified, &.status-addedtodraft  {
-				color:  #7E7470;
-				border: 1px solid #C9B800;
-				background-color: #FFF0BC;
-			}
-			&.status-deletedonlive, &.status-removedfromdraft {
-				color:  #636363;
-				border: 1px solid #E49393;
-				background-color: #F2DADB;
-			}
-			&.status-workflow-approval {
-				color:  #56660C;
-				border: 1px solid #7C8816;
-				background-color: #DAE79A;
-			}
 		}
 
 		/* comment speech bubble - ccs3 only - source: http://nicolasgallagher.com/pure-css-speech-bubbles/demo/ */
@@ -557,12 +542,36 @@
 			background-position:-20px 0;
 		}
 	}
-} 
+}
 
+/* ensure status is visible in sidebar */
+#cms-content-tools-CMSMain .cms-tree.jstree {
+	li {
+		min-width: 159px;
+	}
+	a {
+		overflow: hidden;
+		display: block;
+		position: relative;
+	}
+	span.badge {
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: 7px 9px 6px 5px;
+		margin: 0;
+		max-width: 40%;
+		@include transition(max-width .75s linear);
+	}
+	span.badge:hover {
+		max-width: 150px;
+	}
+}
 
 a .jstree-pageicon {
 	float: left;
 	margin-right: 4px;
+	position: relative;
 	li.class-HomePage > &{
 		background-position: 0 -48px;
 	}
@@ -577,6 +586,43 @@ a .jstree-pageicon {
 	}
 }
 
+/* tree status icons and labels */
+%tree-status-icon-before {
+	content:"";
+	display: block;
+	width:5px;
+	height: 5px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background: #fce2d0;
+	border: 1px solid #ff9344;
+	border-radius: 100px;
+	box-shadow: 0px 0px 0px 1px #fff;
+}
+@mixin tree-status-icon($label, $color, $bgColor) {
+	.cms-tree.jstree .status-#{$label} > a .jstree-pageicon:before {
+		@extend %tree-status-icon-before;
+	}
+	.jstree .status-#{$label} > .jstree-hovered,
+	.jstree .status-#{$label} > .jstree-clicked,
+	.cms-tree.jstree span.badge.status-#{$label},
+	.cms-tree.jstree .status-#{$label} > a .jstree-pageicon:before  {
+		background-color:$bgColor;
+		border-color:$color;
+	}
+	#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-#{$label}  {
+		box-shadow: 0px 0px 6px 2px $bgColor;
+	}
+	.cms-tree.jstree span.badge.status-#{$label}  {
+		color: $color;
+	}
+}
+@include tree-status-icon('modified', #ff7714, #fce2d0);
+@include tree-status-icon('addedtodraft', #e29a00, #f8f4d0);
+@include tree-status-icon('deletedonlive', #f0524f, #f9d6dd);
+@include tree-status-icon('removedfromdraft', #f0524f, #f9d6dd);
+@include tree-status-icon('workflow-approval', #0097d7, #d3f2ff);
 
 .cms-tree {
 	visibility: hidden; // enabled by JS to avoid layout glitches
@@ -608,7 +654,7 @@ a .jstree-pageicon {
 
 	// Show the loading indicator on the page icon rather than the default
 	// jstree icon (which is only used for its dragging handles)
-	a.jstree-loading{
+	a.jstree-loading {
 		.jstree-icon {
 			background-image: none !important;
 		}

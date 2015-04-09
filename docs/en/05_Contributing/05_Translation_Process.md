@@ -4,14 +4,14 @@ summary: Implement SilverStripe's internationalization system in your own module
 # Implementing Internationalization
 
 To find out about how to assist with translating SilverStripe from a users point of view, see the 
-[Contributing Translations page](translation).
+[Contributing Translations page](/contributing/translations).
 
 ## Set up your own module for localization
 
 ### Collecting translatable text
 
 As a first step, you can automatically collect all translatable text in your module through the `i18nTextCollector` 
-task. See [i18n](/topics/i18n#collecting-text) for more details.
+task. See [i18n](../developer_guides/i18n#collecting-text) for more details.
 
 ### Import master files
 
@@ -127,7 +127,7 @@ files back into the JS files SilverStripe can actually read. This requires an in
 
 # Related
 
- * [i18n](/topics/i18n): Developer-level documentation of Silverstripe's i18n capabilities
- * [contributing/translation](contributing/translation): Information for translators looking to contribute translations of the SilverStripe UI.
+ * [i18n](/developer_guides/i18n/): Developer-level documentation of Silverstripe's i18n capabilities
+ * [Contributing Translations](/contributing/translations): Information for translators looking to contribute translations of the SilverStripe UI.
  * [translatable](https://github.com/silverstripe/silverstripe-translatable): DataObject-interface powering the website-content translations
  * ["Translatable ModelAdmin" module](http://silverstripe.org/translatablemodeladmin-module/): An extension which allows translations of DataObjects inside ModelAdmin

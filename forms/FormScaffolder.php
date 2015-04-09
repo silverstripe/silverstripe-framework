@@ -93,8 +93,8 @@ class FormScaffolder extends Object {
 		}
 
 		// add has_one relation fields
-		if($this->obj->has_one()) {
-			foreach($this->obj->has_one() as $relationship => $component) {
+		if($this->obj->hasOne()) {
+			foreach($this->obj->hasOne() as $relationship => $component) {
 				if($this->restrictFields && !in_array($relationship, $this->restrictFields)) continue;
 				$fieldName = $component === 'DataObject'
 					? $relationship // Polymorphic has_one field is composite, so don't refer to ID subfield
@@ -118,10 +118,10 @@ class FormScaffolder extends Object {
 		// only add relational fields if an ID is present
 		if($this->obj->ID) {
 			// add has_many relation fields
-			if($this->obj->has_many()
+			if($this->obj->hasMany()
 					&& ($this->includeRelations === true || isset($this->includeRelations['has_many']))) {
 
-				foreach($this->obj->has_many() as $relationship => $component) {
+				foreach($this->obj->hasMany() as $relationship => $component) {
 					if($this->tabbed) {
 						$relationTab = $fields->findOrMakeTab(
 							"Root.$relationship",
@@ -145,10 +145,10 @@ class FormScaffolder extends Object {
 				}
 			}
 
-			if($this->obj->many_many()
+			if($this->obj->manyMany()
 					&& ($this->includeRelations === true || isset($this->includeRelations['many_many']))) {
 
-				foreach($this->obj->many_many() as $relationship => $component) {
+				foreach($this->obj->manyMany() as $relationship => $component) {
 					if($this->tabbed) {
 						$relationTab = $fields->findOrMakeTab(
 							"Root.$relationship",

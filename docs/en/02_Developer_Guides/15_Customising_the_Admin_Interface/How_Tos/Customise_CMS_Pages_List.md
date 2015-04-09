@@ -62,7 +62,7 @@ or across page types with common characteristics.
 		}
 	}
 
-Now you just need to enable the extension in your [configuration file](/topics/configuration).
+Now you just need to enable the extension in your [configuration file](../../configuration).
 
 	// mysite/_config/config.yml
 	LeftAndMain:

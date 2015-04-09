@@ -7,7 +7,7 @@ See our "[Release Process](/misc/release-process#security-releases) on how to re
 
 ## SQL Injection
 
-The [coding-conventions](/misc/coding-conventions) help guard against SQL injection attacks but still require developer
+The [coding-conventions](/getting_started/coding_conventions) help guard against SQL injection attacks but still require developer
 diligence: ensure that any variable you insert into a filter / sort / join clause is either parameterised, or has been
 escaped.
 
@@ -95,8 +95,8 @@ result in *double escaping* and alters the actually saved data (e.g. by adding s
 ### Manual escaping
 
 As a rule of thumb, whenever you're creating SQL queries (or just chunks of SQL) you should use parameterisation,
-but there may be cases where you need to take care of escaping yourself. See [coding-conventions](/misc/coding-conventions)
-and [datamodel](/topics/datamodel) for ways to parameterise, cast, and convert your data.
+but there may be cases where you need to take care of escaping yourself. See [coding-conventions](/getting_started/coding-conventions)
+and [datamodel](/developer_guides/model) for ways to parameterise, cast, and convert your data.
 
 *  `SQLQuery`
 *  `DB::query()`

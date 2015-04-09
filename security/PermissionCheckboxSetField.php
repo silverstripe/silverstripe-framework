@@ -269,7 +269,7 @@ class PermissionCheckboxSetField extends FormField {
 			$permission->delete();
 		}
 
-		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
+		if($fieldname && $record && ($record->hasManyComponent($fieldname) || $record->manyManyComponent($fieldname))) {
 
 			if(!$record->ID) $record->write(); // We need a record ID to write permissions
 

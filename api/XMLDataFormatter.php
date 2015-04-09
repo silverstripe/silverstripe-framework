@@ -68,7 +68,7 @@ class XMLDataFormatter extends DataFormatter {
 		}
 
 		if($this->relationDepth > 0) {
-			foreach($obj->has_one() as $relName => $relClass) {
+			foreach($obj->hasOne() as $relName => $relClass) {
 				if(!singleton($relClass)->stat('api_access')) continue;
 
 				// Field filtering
@@ -85,7 +85,7 @@ class XMLDataFormatter extends DataFormatter {
 					. "\"></$relName>\n";
 			}
 
-			foreach($obj->has_many() as $relName => $relClass) {
+			foreach($obj->hasMany() as $relName => $relClass) {
 				if(!singleton($relClass)->stat('api_access')) continue;
 
 				// Field filtering
@@ -103,7 +103,7 @@ class XMLDataFormatter extends DataFormatter {
 				$xml .= "</$relName>\n";
 			}
 
-			foreach($obj->many_many() as $relName => $relClass) {
+			foreach($obj->manyMany() as $relName => $relClass) {
 				if(!singleton($relClass)->stat('api_access')) continue;
 
 				// Field filtering

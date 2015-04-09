@@ -46,7 +46,7 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$this->assertEquals($group->Permissions()->Count(), 0, 'The tested group has no permissions');
 
 		$this->assertEquals($untouchable->Permissions()->Count(), 1, 'The other group has one permission');
-		$this->assertEquals($untouchable->Permissions("\"Code\"='ADMIN'")->Count(), 1,
+		$this->assertEquals($untouchable->Permissions()->where("\"Code\"='ADMIN'")->Count(), 1,
 			'The other group has ADMIN permission');
 
 		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount, 'There are no orphaned permissions');
@@ -62,14 +62,14 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$untouchable->flushCache();
 		$this->assertEquals($group->Permissions()->Count(), 2,
 			'The tested group has two permissions permission');
-		$this->assertEquals($group->Permissions("\"Code\"='ADMIN'")->Count(), 1,
+		$this->assertEquals($group->Permissions()->where("\"Code\"='ADMIN'")->Count(), 1,
 			'The tested group has ADMIN permission');
-		$this->assertEquals($group->Permissions("\"Code\"='NON-ADMIN'")->Count(), 1,
+		$this->assertEquals($group->Permissions()->where("\"Code\"='NON-ADMIN'")->Count(), 1,
 			'The tested group has CMS_ACCESS_AssetAdmin permission');
 
 		$this->assertEquals($untouchable->Permissions()->Count(), 1,
 			'The other group has one permission');
-		$this->assertEquals($untouchable->Permissions("\"Code\"='ADMIN'")->Count(), 1,
+		$this->assertEquals($untouchable->Permissions()->where("\"Code\"='ADMIN'")->Count(), 1,
 			'The other group has ADMIN permission');
 
 		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount+2,
@@ -85,12 +85,12 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$untouchable->flushCache();
 		$this->assertEquals($group->Permissions()->Count(), 1,
 			'The tested group has 1 permission');
-		$this->assertEquals($group->Permissions("\"Code\"='ADMIN'")->Count(), 1,
+		$this->assertEquals($group->Permissions()->where("\"Code\"='ADMIN'")->Count(), 1,
 			'The tested group has ADMIN permission');
 
 		$this->assertEquals($untouchable->Permissions()->Count(), 1,
 			'The other group has one permission');
-		$this->assertEquals($untouchable->Permissions("\"Code\"='ADMIN'")->Count(), 1,
+		$this->assertEquals($untouchable->Permissions()->where("\"Code\"='ADMIN'")->Count(), 1,
 			'The other group has ADMIN permission');
 
 		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount+1,

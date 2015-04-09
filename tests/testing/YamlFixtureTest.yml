@@ -6,7 +6,7 @@ YamlFixtureTest_DataObjectRelation:
 YamlFixtureTest_DataObject:
   testobject1:
     Name: TestObject1
-    ManyMany: =>YamlFixtureTest_DataObjectRelation.relation1,=>YamlFixtureTest_DataObjectRelation.relation2
+    ManyManyRelation: =>YamlFixtureTest_DataObjectRelation.relation1,=>YamlFixtureTest_DataObjectRelation.relation2
   testobject2:
     Name: TestObject2
-    ManyMany: =>YamlFixtureTest_DataObjectRelation.relation1
+    ManyManyRelation: =>YamlFixtureTest_DataObjectRelation.relation1

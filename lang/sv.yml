@@ -1,6 +1,7 @@
 sv:
   AssetAdmin:
     NEWFOLDER: Ny mapp
+    SHOWALLOWEDEXTS: 'Visa tillåtna filtyper'
   AssetTableField:
     CREATED: 'Först uppladdad'
     DIM: Dimensioner
@@ -67,6 +68,8 @@ sv:
     ACCESSALLINTERFACES: 'Tillgång till alla CMS-sektioner'
     ACCESSALLINTERFACESHELP: 'Ersätter mer specifika behörighetsinställningar.'
     SAVE: Spara
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Förhandsgranska sida'
   CMSProfileController:
     MENUTITLE: 'Min Profil'
   ChangePasswordEmail_ss:
@@ -87,6 +90,8 @@ sv:
     FOURTH: fjärde
     SECOND: andra
     THIRD: tredje
+  CurrencyField:
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Dataobjekt'
     SINGULARNAME: 'Dataobjekt'
@@ -96,9 +101,12 @@ sv:
     HOUR: timme
     HOURS: timmar
     LessThanMinuteAgo: 'mindre än en minut'
+    MIN: minut
+    MINS: minuter
     MONTH: månad
     MONTHS: månader
-    SEC: sek
+    SEC: sekund
+    SECS: sekunder
     TIMEDIFFAGO: '{difference} sen'
     TIMEDIFFIN: 'om {difference}'
     YEAR: år
@@ -121,37 +129,39 @@ sv:
   Enum:
     ANY: Vilken som helst
   File:
-    AviType: 'AVI videofil'
+    AviType: 'AVI-videofil'
     Content: Innehåll
-    CssType: 'CSS fil'
-    DmgType: 'Apple skivavbild'
-    DocType: 'Word dokument'
+    CssType: 'CSS-fil'
+    DmgType: 'Apple-skivavbild'
+    DocType: 'Word-dokument'
     Filename: Filnamn
-    GifType: 'GIF bild - bra för diagram'
-    GzType: 'GZIP packad fil'
-    HtlType: 'HTML fil'
-    HtmlType: 'HTML fil'
+    GifType: 'GIF-bild - bra för diagram'
+    GzType: 'GZIP-packad fil'
+    HtlType: 'HTML-fil'
+    HtmlType: 'HTML-fil'
     INVALIDEXTENSION: 'Filändelsen tillåts inte (tillåtna: {extensions})'
     INVALIDEXTENSIONSHORT: 'Filändelsen tillåts inte'
-    IcoType: 'Icon bild'
-    JpgType: 'JPEG bild - bra för fotografier'
-    JsType: 'Javascript fil'
-    Mp3Type: 'MP3 ljudfil'
-    MpgType: 'MPEG videofil'
+    IcoType: 'Ikonbild'
+    JpgType: 'JPEG-bild - bra för fotografier'
+    JsType: 'Javascript-fil'
+    Mp3Type: 'MP3-ljudfil'
+    MpgType: 'MPEG-videofil'
     NOFILESIZE: 'Filstorleken är noll bytes'
     NOVALIDUPLOAD: 'Filen är inte giltig för uppladdning'
     Name: Namn
     PLURALNAME: Filer
-    PdfType: 'Adobe Acrobat PDF fil'
-    PngType: 'PNG bild - bra allmänt format'
+    PdfType: 'Adobe Acrobat PDF-fil'
+    PngType: 'PNG-bild - bra allmänt format'
     SINGULARNAME: Fil
     TOOLARGE: 'Filen är för stor, max {size} tillåts'
     TOOLARGESHORT: 'Filstorlek överskriden {size}'
     TiffType: 'Tiff bildformat'
     Title: Titel
-    WavType: 'WAV ljudfil'
+    WavType: 'WAV-ljudfil'
     XlsType: 'Excel kalkylblad'
-    ZipType: 'ZIP packad fil'
+    ZipType: 'ZIP-packad fil'
+  Filesystem:
+    SYNCRESULTS: 'Synkning komplett: {createdcount} artiklar skapades, {deletedcount} artiklar raderades'
   Folder:
     PLURALNAME: Mappar
     SINGULARNAME: Mapp
@@ -161,14 +171,19 @@ sv:
     TEXT2: 'Återställningslänk för lösenord'
     TEXT3: för
   Form:
+    CSRF_FAILED_MESSAGE: "Ett tekniskt fel uppstod. Var god klicka på bakåt-knappen,\n⇥⇥⇥⇥⇥ladda om webbläsaren och försök igen."
+    FIELDISREQUIRED: '{name} är obligatoriskt'
     SubmitBtnLabel: Kör
     VALIDATIONCREDITNUMBER: 'Kontrollera att du angav kortnummret {number} rätt'
     VALIDATIONNOTUNIQUE: 'Det angivna värdet är inte unikt'
     VALIDATIONPASSWORDSDONTMATCH: 'Lösenorden stämmer inte överrens '
     VALIDATIONPASSWORDSNOTEMPTY: 'Lösenordfältet får inte vara tomt'
     VALIDATIONSTRONGPASSWORD: 'Lösenord måste innehålla minst en siffra och en bokstav.'
+    VALIDATOR: Validator
     VALIDCURRENCY: 'Var vänlig ange en korrekt valuta'
+    CSRF_EXPIRED_MESSAGE: 'Din session har upphört. Var god och skicka in formuläret på nytt.'
   FormField:
+    Example: 't.ex. %s'
     NONE: ingen
   GridAction:
     DELETE_DESCRIPTION: Radera
@@ -191,6 +206,7 @@ sv:
     ResetFilter: Rensa
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
+    EditPermissionsFailure: 'Rättigheter för avlänkning saknas'
   GridFieldDetailForm:
     CancelBtn: Avbryt
     Create: Skapa
@@ -198,6 +214,7 @@ sv:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     Deleted: 'Raderade %s %s'
     Save: Spara
+    Saved: 'Sparade {name} {link}'
   GridFieldEditButton_ss:
     EDIT: Redigera
   GridFieldItemEditView:
@@ -209,9 +226,11 @@ sv:
     DefaultGroupTitleContentAuthors: 'Författare'
     Description: Beskrivning
     GroupReminder: 'Om du väljer en förälder till gruppen så kommer gruppen ärva alla förälderns roller'
+    HierarchyPermsError: 'Den överordnade gruppen "%s" kan inte ges priviligerad tillgång (adminrättigheter krävs)'
     Locked: 'Låst?'
     NoRoles: 'Inga roller fun'
     PLURALNAME: Grupper
+    Parent: 'Överordnad grupp'
     RolesAddEditLink: 'Hantera roller'
     SINGULARNAME: Grupp
     Sort: 'Sorteringsordning'
@@ -250,6 +269,7 @@ sv:
     FindInFolder: 'Hitta i mapp'
     IMAGEALT: 'Alternativ text (alt)'
     IMAGEALTTEXT: 'Alternativ text (alt) - visas om bilden inte kan visas'
+    IMAGEALTTEXTDESC: 'Visas för skärmläsare eller om bilden inte kan visas'
     IMAGEDIMENSIONS: Dimensioner
     IMAGEHEIGHTPX: Höjd
     IMAGETITLE: 'Titel text (tooltip) - för ytterligare information om bilden'
@@ -319,8 +339,10 @@ sv:
     EMAIL: E-post
     EMPTYNEWPASSWORD: 'Det nya lösenordet kan inte vara tomt, vänligen försök igen'
     ENTEREMAIL: 'Ange en e-postadress för att få en återställningslänk för lösenordet.'
+    ERRORLOCKEDOUT2: 'Ditt konto har tillfälligt stängs av på grund av för många misslyckade inloggningsförsök. Försök igen om {count} minuter.'
     ERRORNEWPASSWORD: 'Du har angett ditt nya lösenord annorlunda, försök igen'
     ERRORPASSWORDNOTMATCH: 'Ditt nuvarande lösenord matchar inte, var god försök igen'
+    ERRORWRONGCRED: 'Antingen e-postadressen eller lösenordet är fel. Försök igen.'
     FIRSTNAME: 'Förnamn'
     INTERFACELANG: 'Gränssnittsspråk'
     INVALIDNEWPASSWORD: 'Vi kunde inte godkänna det lösenordet: {password}'
@@ -412,6 +434,10 @@ sv:
   Pagination:
     Page: Sida
     View: Visa
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Var god och stärk ditt lösenord genom att lägga till något av följande tecken: %s'
+    PREVPASSWORD: 'Du har redan använt samma lösenord tidigare, var god och välj ett nytt lösenord'
+    TOOSHORT: 'Lösenordet är för kort, det måste innehålla %s eller fler tecken.'
   Permission:
     AdminGroup: Administratör
     CMS_ACCESS_CATEGORY: 'CMS-åtkomst'
@@ -431,6 +457,7 @@ sv:
     Title: Rollnamn
   PermissionRoleCode:
     PLURALNAME: 'Koder för rollrättigheter'
+    PermsError: 'Koden "%s" kan inte ges privilegierad tillgång (adminrättigheter krävs)'
     SINGULARNAME: 'Kodför rollrättigheter'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller och åtkomsträttigheter'
@@ -446,6 +473,7 @@ sv:
     ERRORPASSWORDPERMISSION: 'Du måste vara inloggad för att kunna ändra ditt lösenord!'
     LOGGEDOUT: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
     LOGIN: 'Logga in'
+    LOSTPASSWORDHEADER: 'Bortglömt lösenord'
     NOTEPAGESECURED: 'Den här sidan är låst. Fyll i dina uppgifter nedan så skickar vi dig vidare.'
     NOTERESETLINKINVALID: '<p>Återställningslänk för lösenord är felaktig eller för gammal.</p><p>Du kan begära en ny <a href="{link1}">här</a> eller ändra ditt lösenord när du <a href="{link2}">loggat in</a>.</p>'
     NOTERESETPASSWORD: 'Ange din e-postadress så skickar vi en länk med vilken du kan återställa ditt lösenord'
@@ -474,8 +502,21 @@ sv:
     FileFieldLabel: 'CSV-fil <small>(Tillåtna filtyper: *.csv)</small>'
   SilverStripeNavigator:
     Auto: Auto
+    ChangeViewMode: 'Ändra visningsläge'
+    Desktop: Stationär
+    DualWindowView: 'Delat fönster'
     Edit: Ändra
+    EditView: 'Redigeringsläge'
+    Mobile: Mobil
+    PreviewState: 'Förhandsgranskningsstatus'
+    PreviewView: 'Förhandsgranskningsläge'
+    Responsive: Responsiv
+    SplitView: 'Uppdelat läge'
+    Tablet: Platta
+    ViewDeviceWidth: 'Välj bredd på förhandsgranskning'
     Width: bredd
+  SiteTree:
+    TABMAIN: Allmän
   TableListField:
     CSVEXPORT: 'Exportera till CSV'
     Print: Skriv ut

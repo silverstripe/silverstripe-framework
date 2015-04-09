@@ -97,9 +97,10 @@ class Security extends Controller implements TemplateGlobalProvider {
 	/**
 	 * Default message set used in permission failures.
 	 *
+	 * @config
 	 * @var array|string
 	 */
-	private static $default_message_set = '';
+	private static $default_message_set;
 
 	/**
 	 * Random secure token, can be used as a crypto key internally.
@@ -198,9 +199,6 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 *                                 If you pass an array, you can use the
 	 *                                 following keys:
 	 *                                   - default: The default message
-	 *                                   - logInAgain: The message to show
-	 *                                                 if the user has just
-	 *                                                 logged out and the
 	 *                                   - alreadyLoggedIn: The message to
 	 *                                                      show if the user
 	 *                                                      is already logged
@@ -231,8 +229,8 @@ class Security extends Controller implements TemplateGlobalProvider {
 		} else {
 			// Prepare the messageSet provided
 			if(!$messageSet) {
-				if(self::$default_message_set) {
-					$messageSet = self::$default_message_set;
+				if($configMessageSet = static::config()->get('default_message_set')) {
+					$messageSet = $configMessageSet;
 				} else {
 					$messageSet = array(
 						'default' => _t(
@@ -246,11 +244,6 @@ class Security extends Controller implements TemplateGlobalProvider {
 								. "can access that page, you can log in again below.",
 
 							"%s will be replaced with a link to log in."
-						),
-						'logInAgain' => _t(
-							'Security.LOGGEDOUT',
-							"You have been logged out.  If you would like to log in again, enter "
-								. "your credentials below."
 						)
 					);
 				}
@@ -420,6 +413,20 @@ class Security extends Controller implements TemplateGlobalProvider {
 				if($result instanceof SS_HTTPResponse) return $result;
 			}
 		}
+
+		// If arriving on the login page already logged in, with no security error, and a ReturnURL then redirect
+		// back. The login message check is neccesary to prevent infinite loops where BackURL links to
+		// an action that triggers Security::permissionFailure.
+		// This step is necessary in cases such as automatic redirection where a user is authenticated
+		// upon landing on an SSL secured site and is automatically logged in, or some other case
+		// where the user has permissions to continue but is not given the option.
+		if($this->request->requestVar('BackURL')
+			&& !$this->getLoginMessage()
+			&& ($member = Member::currentUser())
+			&& $member->exists()
+		) {
+			return $this->redirectBack();
+		}
 	}
 
 	/**
@@ -530,6 +537,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		
 		// Finally, customise the controller to add any form messages and the form.
 		$customisedController = $controller->customise(array(
+			"Content" => $message,
 			"Message" => $message,
 			"MessageType" => $messageType,
 			"Form" => $content,
@@ -579,7 +587,8 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return Form Returns the lost password form
 	 */
 	public function LostPasswordForm() {
-		return MemberLoginForm::create(			$this,
+		return MemberLoginForm::create(
+			$this,
 			'LostPasswordForm',
 			new FieldList(
 				new EmailField('Email', _t('Member.EMAIL', 'Email'))

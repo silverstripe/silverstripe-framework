@@ -6,6 +6,14 @@
  */
 class ClassInfoTest extends SapphireTest {
 
+	protected $extraDataObjects = array(
+		'ClassInfoTest_BaseClass',
+		'ClassInfoTest_ChildClass',
+		'ClassInfoTest_GrandChildClass',
+		'ClassInfoTest_BaseDataClass',
+		'ClassInfoTest_NoFields',
+	);
+
 	public function testExists() {
 		$this->assertTrue(ClassInfo::exists('Object'));
 		$this->assertTrue(ClassInfo::exists('ClassInfoTest'));
@@ -146,7 +154,7 @@ class ClassInfoTest extends SapphireTest {
  * @subpackage tests
  */
 
-class ClassInfoTest_BaseClass extends DataObject {
+class ClassInfoTest_BaseClass extends DataObject implements TestOnly {
 
 }
 
@@ -173,7 +181,7 @@ class ClassInfoTest_GrandChildClass extends ClassInfoTest_ChildClass {
  * @subpackage tests
  */
 
-class ClassInfoTest_BaseDataClass extends DataObject {
+class ClassInfoTest_BaseDataClass extends DataObject implements TestOnly {
 
 	private static $db = array(
 		'Title' => 'Varchar'

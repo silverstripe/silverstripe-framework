@@ -78,7 +78,7 @@ class DataDifferencer extends ViewableData {
 			$fields = array_keys($this->toRecord->toMap());
 		}
 
-		$hasOnes = array_merge($this->fromRecord->has_one(), $this->toRecord->has_one());
+		$hasOnes = array_merge($this->fromRecord->hasOne(), $this->toRecord->hasOne());
 
 		// Loop through properties
 		foreach($fields as $field) {

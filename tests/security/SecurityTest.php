@@ -74,6 +74,104 @@ class SecurityTest extends FunctionalTest {
 		$this->autoFollowRedirection = true;
 	}
 
+	public function testPermissionFailureSetsCorrectFormMessages() {
+		Config::nest();
+
+		// Controller that doesn't attempt redirections
+		$controller = new SecurityTest_NullController();
+		$controller->response = new SS_HTTPResponse();
+
+		Security::permissionFailure($controller, array('default' => 'Oops, not allowed'));
+		$this->assertEquals('Oops, not allowed', Session::get('Security.Message.message'));
+
+		// Test that config values are used correctly
+		Config::inst()->update('Security', 'default_message_set', 'stringvalue');
+		Security::permissionFailure($controller);
+		$this->assertEquals('stringvalue', Session::get('Security.Message.message'),
+			'Default permission failure message value was not present');
+
+		Config::inst()->remove('Security', 'default_message_set');
+		Config::inst()->update('Security', 'default_message_set', array('default' => 'arrayvalue'));
+		Security::permissionFailure($controller);
+		$this->assertEquals('arrayvalue', Session::get('Security.Message.message'),
+			'Default permission failure message value was not present');
+
+		// Test that non-default messages work.
+		// NOTE: we inspect the response body here as the session message has already
+		// been fetched and output as part of it, so has been removed from the session
+		$this->logInWithPermission('EDITOR');
+
+		Config::inst()->update('Security', 'default_message_set',
+			array('default' => 'default', 'alreadyLoggedIn' => 'You are already logged in!'));
+		Security::permissionFailure($controller);
+		$this->assertContains('You are already logged in!', $controller->response->getBody(),
+			'Custom permission failure message was ignored');
+
+		Security::permissionFailure($controller,
+			array('default' => 'default', 'alreadyLoggedIn' => 'One-off failure message'));
+		$this->assertContains('One-off failure message', $controller->response->getBody(),
+			"Message set passed to Security::permissionFailure() didn't override Config values");
+
+		Config::unnest();
+	}
+
+	/**
+	 * Follow all redirects recursively
+	 *
+	 * @param string $url
+	 * @param int $limit Max number of requests
+	 * @return SS_HTTPResponse
+	 */
+	protected function getRecursive($url, $limit = 10) {
+		$this->cssParser = null;
+		$response = $this->mainSession->get($url);
+		while(--$limit > 0 && $response instanceof SS_HTTPResponse && $response->getHeader('Location')) {
+			$response = $this->mainSession->followRedirection();
+		}
+		return $response;
+	}
+	
+	public function testAutomaticRedirectionOnLogin() {
+		// BackURL with permission error (not authenticated) should not redirect
+		if($member = Member::currentUser()) $member->logOut();
+		$response = $this->getRecursive('SecurityTest_SecuredController');
+		$this->assertContains(Convert::raw2xml("That page is secured."), $response->getBody());
+		$this->assertContains('<input type="submit" name="action_dologin"', $response->getBody());
+
+		// Non-logged in user should not be redirected, but instead shown the login form
+		// No message/context is available as the user has not attempted to view the secured controller
+		$response = $this->getRecursive('Security/login?BackURL=SecurityTest_SecuredController/');
+		$this->assertNotContains(Convert::raw2xml("That page is secured."), $response->getBody());
+		$this->assertNotContains(Convert::raw2xml("You don't have access to this page"), $response->getBody());
+		$this->assertContains('<input type="submit" name="action_dologin"', $response->getBody());
+
+		// BackURL with permission error (wrong permissions) should not redirect
+		$this->logInAs('grouplessmember');
+		$response = $this->getRecursive('SecurityTest_SecuredController');
+		$this->assertContains(Convert::raw2xml("You don't have access to this page"), $response->getBody());
+		$this->assertContains(
+			'<input type="submit" name="action_logout" value="Log in as someone else"',
+			$response->getBody()
+		);
+
+		// Directly accessing this page should attempt to follow the BackURL, but stop when it encounters the error
+		$response = $this->getRecursive('Security/login?BackURL=SecurityTest_SecuredController/');
+		$this->assertContains(Convert::raw2xml("You don't have access to this page"), $response->getBody());
+		$this->assertContains(
+			'<input type="submit" name="action_logout" value="Log in as someone else"',
+			$response->getBody()
+		);
+
+		// Check correctly logged in admin doesn't generate the same errors
+		$this->logInAs('admin');
+		$response = $this->getRecursive('SecurityTest_SecuredController');
+		$this->assertContains(Convert::raw2xml("Success"), $response->getBody());
+
+		// Directly accessing this page should attempt to follow the BackURL and succeed
+		$response = $this->getRecursive('Security/login?BackURL=SecurityTest_SecuredController/');
+		$this->assertContains(Convert::raw2xml("Success"), $response->getBody());
+	}
+
 	public function testLogInAsSomeoneElse() {
 		$member = DataObject::get_one('Member');
 
@@ -516,4 +614,12 @@ class SecurityTest_SecuredController extends Controller implements TestOnly {
 
 		return 'Success';
 	}
+}
+
+class SecurityTest_NullController extends Controller implements TestOnly {
+
+	public function redirect($url, $code = 302) {
+		// NOOP
+	}
+
 }

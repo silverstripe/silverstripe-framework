@@ -69,7 +69,7 @@ Note how the configuration happens in different entwine namespaces
 	}(jQuery));
 
 Load the file in the CMS via setting adding 'mysite/javascript/MyLeftAndMain.Preview.js'
-to the `LeftAndMain.extra_requirements_javascript` [configuration value](/topics/configuration)
+to the `LeftAndMain.extra_requirements_javascript` [configuration value](../configuration)
 
 	:::yml
 	LeftAndMain:
@@ -79,7 +79,7 @@ to the `LeftAndMain.extra_requirements_javascript` [configuration value](/topics
 In order to find out which configuration values are available, the source code
 is your best reference at the moment - have a look in `framework/admin/javascript/LeftAndMain.Preview.js`.
 To understand how layouts are handled in the CMS UI, have a look at the
-[CMS Architecture](/reference/cms-architecture) guide.
+[CMS Architecture](cms_architecture) guide.
 
 ## Enabling preview
 
@@ -146,7 +146,7 @@ You can find out current size by calling:
 ## Preview modes
 
 Preview modes map to the modes supported by the _threeColumnCompressor_ layout
-algorithm, see [layout reference](../reference/layout) for more details. You
+algorithm, see [layout reference](cms_layout) for more details. You
 can change modes by calling:
 
 	```js
@@ -184,4 +184,4 @@ previewable content is loaded.
 
 ## Related
 
- * [Reference: Layout](../reference/layout)
+ * [Reference: Layout](cms_layout)

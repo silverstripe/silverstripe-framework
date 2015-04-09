@@ -271,8 +271,13 @@ abstract class SQLConditionalExpression extends SQLExpression {
 				$filter = "(" . implode(") AND (", $join['filter']) . ")";
 			}
 
-			$table = strpos(strtoupper($join['table']), 'SELECT') ? $join['table'] : "\"" . $join['table'] . "\"";
-			$aliasClause = ($alias != $join['table']) ? " AS \"$alias\"" : "";
+			// Ensure tables are quoted, unless the table is actually a sub-select
+			$table = preg_match('/\bSELECT\b/i', $join['table'])
+				? $join['table']
+				: "\"{$join['table']}\"";
+			$aliasClause = ($alias != $join['table'])
+				? " AS \"{$alias}\""
+				: "";
 			$joins[$alias] = strtoupper($join['type']) . " JOIN " . $table . "$aliasClause ON $filter";
 			if(!empty($join['parameters'])) {
 				$parameters = array_merge($parameters, $join['parameters']);

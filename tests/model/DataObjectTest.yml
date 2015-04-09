@@ -1,68 +1,82 @@
+DataObjectTest_EquipmentCompany:
+  equipmentcompany1:
+    Name: Company corp
+  equipmentcompany2:
+    Name: 'Team co.'
+DataObjectTest_SubEquipmentCompany:
+  subequipmentcompany1:
+    Name: John Smith and co
 DataObjectTest_Team:
-	team1:
-		Title: Team 1
-	team2:
-		Title: Team 2
-	team3:
-		Title: Team 3
+  team1:
+    Title: Team 1
+    Sponsors: =>DataObjectTest_EquipmentCompany.equipmentcompany1,=>DataObjectTest_EquipmentCompany.equipmentcompany2
+    EquipmentSuppliers: =>DataObjectTest_EquipmentCompany.equipmentcompany2
+  team2:
+    Title: Team 2
+    Sponsors: =>DataObjectTest_EquipmentCompany.equipmentcompany2,=>DataObjectTest_SubEquipmentCompany.subequipmentcompany1
+    EquipmentSuppliers: =>DataObjectTest_EquipmentCompany.equipmentcompany1,=>DataObjectTest_EquipmentCompany.equipmentcompany2
+  team3:
+    Title: Team 3
 DataObjectTest_Player:
-	captain1:
-		FirstName: Captain
-		ShirtNumber: 007
-		FavouriteTeam: =>DataObjectTest_Team.team1
-		Teams: =>DataObjectTest_Team.team1
-		IsRetired: 1
-	captain2:
-		FirstName: Captain 2
-		Teams: =>DataObjectTest_Team.team2
-	player1:
-		FirstName: Player 1
-	player2:
-		FirstName: Player 2
-		Teams: =>DataObjectTest_Team.team1,=>DataObjectTest_Team.team2
+  captain1:
+    FirstName: Captain
+    ShirtNumber: 007
+    FavouriteTeam: =>DataObjectTest_Team.team1
+    Teams: =>DataObjectTest_Team.team1
+    IsRetired: 1
+  captain2:
+    FirstName: Captain 2
+    Teams: =>DataObjectTest_Team.team2
+  player1:
+    FirstName: Player 1
+  player2:
+    FirstName: Player 2
+    Teams: =>DataObjectTest_Team.team1,=>DataObjectTest_Team.team2
 DataObjectTest_SubTeam:
-	subteam1:
-		Title: Subteam 1
-		SubclassDatabaseField: Subclassed 1
-		ExtendedDatabaseField: Extended 1
-		ParentTeam: =>DataObjectTest_Team.team1
-	subteam2_with_player_relation:
-		Title: Subteam 2
-		SubclassDatabaseField: Subclassed 2
-		ExtendedHasOneRelationship: =>DataObjectTest_Player.player1
-	subteam3_with_empty_fields:
-		Title: Subteam 3
+  subteam1:
+    Title: Subteam 1
+    SubclassDatabaseField: Subclassed 1
+    ExtendedDatabaseField: Extended 1
+    ParentTeam: =>DataObjectTest_Team.team1
+    Sponsors: =>DataObjectTest_EquipmentCompany.equipmentcompany1,=>DataObjectTest_EquipmentCompany.equipmentcompany2
+    EquipmentSuppliers: =>DataObjectTest_EquipmentCompany.equipmentcompany1
+  subteam2_with_player_relation:
+    Title: Subteam 2
+    SubclassDatabaseField: Subclassed 2
+    ExtendedHasOneRelationship: =>DataObjectTest_Player.player1
+  subteam3_with_empty_fields:
+    Title: Subteam 3
 DataObjectTest_TeamComment:
-	comment1:
-		Name: Joe
-		Comment: This is a team comment by Joe
-		Team: =>DataObjectTest_Team.team1
-	comment2:
-		Name: Bob
-		Comment: This is a team comment by Bob
-		Team: =>DataObjectTest_Team.team1
-	comment3:
-		Name: Phil
-		Comment: Phil is a unique guy, and comments on team2
-		Team: =>DataObjectTest_Team.team2
+  comment1:
+    Name: Joe
+    Comment: This is a team comment by Joe
+    Team: =>DataObjectTest_Team.team1
+  comment2:
+    Name: Bob
+    Comment: This is a team comment by Bob
+    Team: =>DataObjectTest_Team.team1
+  comment3:
+    Name: Phil
+    Comment: Phil is a unique guy, and comments on team2
+    Team: =>DataObjectTest_Team.team2
 DataObjectTest_Fan:
-	fan1:
-		Name: Damian
-		Favourite: =>DataObjectTest_Team.team1
-	fan2:
-		Name: Stephen
-		Favourite: =>DataObjectTest_Player.player1
-		SecondFavourite: =>DataObjectTest_Team.team2
-	fan3:
-		Name: Richard
-		Favourite: =>DataObjectTest_Team.team1
-	fan4:
-		Name: Mitch
-		Favourite: =>DataObjectTest_SubTeam.subteam1
+  fan1:
+    Name: Damian
+    Favourite: =>DataObjectTest_Team.team1
+  fan2:
+    Name: Stephen
+    Favourite: =>DataObjectTest_Player.player1
+    SecondFavourite: =>DataObjectTest_Team.team2
+  fan3:
+    Name: Richard
+    Favourite: =>DataObjectTest_Team.team1
+  fan4:
+    Name: Mitch
+    Favourite: =>DataObjectTest_SubTeam.subteam1
 DataObjectTest_Company:
-	company1:
-		Name: Company corp
-		Owner: =>DataObjectTest_Player.player1
-	company1:
-		Name: 'Team co.'
-		Owner: =>DataObjectTest_Player.player2
+  company1:
+    Name: Company corp
+    Owner: =>DataObjectTest_Player.player1
+  company1:
+    Name: 'Team co.'
+    Owner: =>DataObjectTest_Player.player2
