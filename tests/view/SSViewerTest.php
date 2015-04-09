@@ -830,7 +830,19 @@ after')
 
 		//test Pos
 		$result = $this->render('<% loop Set %>$Pos<% end_loop %>',$data);
-		$this->assertEquals("12345678910",$result,"Even and Odd is returned in sequence numbers rendered in order");
+		$this->assertEquals("12345678910", $result, '$Pos is rendered in order');
+
+		//test Pos
+		$result = $this->render('<% loop Set %>$Pos(0)<% end_loop %>',$data);
+		$this->assertEquals("0123456789", $result, '$Pos(0) is rendered in order');
+
+		//test FromEnd
+		$result = $this->render('<% loop Set %>$FromEnd<% end_loop %>',$data);
+		$this->assertEquals("10987654321", $result, '$FromEnd is rendered in order');
+
+		//test FromEnd
+		$result = $this->render('<% loop Set %>$FromEnd(0)<% end_loop %>',$data);
+		$this->assertEquals("9876543210", $result, '$FromEnd(0) rendered in order');
 
 		//test Total
 		$result = $this->render('<% loop Set %>$TotalItems<% end_loop %>',$data);
