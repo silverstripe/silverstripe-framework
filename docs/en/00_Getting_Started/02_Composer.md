@@ -77,7 +77,7 @@ You can find other packages with the following command:
 
 	composer search silverstripe
 
-This will return a list of package names of the forum `vendor/package`.  If you prefer, you can search for pacakges on [packagist.org](https://packagist.org/search/?q=silverstripe).
+This will return a list of package names of the forum `vendor/package`.  If you prefer, you can search for packages on [packagist.org](https://packagist.org/search/?q=silverstripe).
 
 The second part after the colon, `*`, is a version string.  `*` is a good default: it will give you the latest version that works with the other modules you have installed.  Alternatively, you can specificy a specific version, or a constraint such as `>=3.0`.  For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key).
 
