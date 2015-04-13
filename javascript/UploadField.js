@@ -416,7 +416,7 @@
 				return false;
 			} 
 		});
-		$( 'div.ss-upload:not(.disabled):not(.readonly) .ss-uploadfield-item-edit').entwine({
+		$( 'div.ss-upload:not(.disabled):not(.readonly) .ss-uploadfield-item-edit, .ss-assetuploadfield .ss-uploadfield-item-edit').entwine({
 			onclick: function(e) {
 				var self = this,
 					editform = self.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform'),
@@ -426,8 +426,19 @@
 				// Ignore clicks while the iframe is loading
 				if (iframe.parent().hasClass('loading')) {
 					e.preventDefault();
+
 					return false;
 				}
+
+				this._loadIframe();
+
+				e.preventDefault(); // Avoid a form submit
+			},
+			_loadIframe: function() {
+				var self = this,
+					editform = self.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform'),
+					itemInfo = editform.prev('.ss-uploadfield-item-info'),
+					iframe = editform.find('iframe');
 
 				if (iframe.attr('src') == 'about:blank') {
 					// Lazy-load the iframe on editform toggle
@@ -439,7 +450,6 @@
 					disabled=this.siblings();
 					disabled.addClass('ui-state-disabled');
 					disabled.attr('disabled', 'disabled');
-
 					iframe.on('load', function() {
 						iframe.parent().removeClass('loading');
 
@@ -454,7 +464,6 @@
 					self._prepareIframe(iframe, editform, itemInfo);
 				}
 
-				e.preventDefault(); // Avoid a form submit
 				return false;
 			},
 			_prepareIframe: function(iframe, editform, itemInfo) {
