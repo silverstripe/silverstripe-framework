@@ -5,6 +5,7 @@
 				this._super();
 
 				this.accordion({
+					heightStyle: "content",
 					collapsible: true,
 					active: (this.hasClass("ss-toggle-start-closed")) ? false : 0
 				});
