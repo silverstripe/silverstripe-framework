@@ -13,7 +13,7 @@ feel familiar to you. This is just a quick run down to get you started
 with some special conventions.
 
 For a more practical-oriented approach to CMS customizations, refer to the
-[Howto: Extend the CMS Interface](../how_tos/extend_cms_interface) which builds
+[Howto: Extend the CMS Interface](how_tos/extend_cms_interface) which builds
 
 
 ## Markup and Style Conventions
