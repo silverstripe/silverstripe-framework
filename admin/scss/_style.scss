@@ -428,7 +428,7 @@ body.cms {
 .cms-content-actions, .cms-preview-controls {
 	margin: 0;
 	padding: $grid-y*1.5 $grid-y*1.5;
-	z-index: 0;
+	z-index: 999;
 	border-top: 1px solid lighten($color-separator, 4%);
 	@include box-shadow(
 		1px 0 0 $tab-panel-texture-color, 
