@@ -140,6 +140,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .ui-accordion .ui-accordion-content { border: 1px solid #c0c0c2; border-top: none; }
 
 .ui-autocomplete { max-height: 240px; overflow-x: hidden; overflow-y: auto; }
+.ui-autocomplete-loading { background-image: url(../images/throbber.gif) !important; background-position: 97% center !important; background-repeat: no-repeat !important; background-size: auto !important; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in framework/css/Form.css.  @package framework @subpackage admin */
 /** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
