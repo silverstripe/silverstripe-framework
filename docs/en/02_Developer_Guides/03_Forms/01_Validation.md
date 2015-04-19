@@ -137,7 +137,7 @@ reusable and would not be possible within the `CMS` or other automated `UI` but 
 
 			$form = new Form($controller, 'MyForm', $fields, $actions);
 
-			return $form
+			return $form;
 		}
 
 		public function doSubmitForm($data, $form) {
