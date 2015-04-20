@@ -349,7 +349,9 @@ class GridField extends FormField {
 				if($record->hasMethod('canView') && !$record->canView()) {
 					continue;
 				}
+
 				$rowContent = '';
+
 				foreach($this->getColumns() as $column) {
 					$colContent = $this->getColumnContent($record, $column);
 
@@ -360,10 +362,12 @@ class GridField extends FormField {
 
 					$colAttributes = $this->getColumnAttributes($record, $column);
 
-					$rowContent .= $this->newCell($this, $total, $idx, $record, $colAttributes, $colContent);
+					$rowContent .= $this->newCell($total, $idx, $record, $colAttributes, $colContent);
 				}
 
-				$rows[] = $this->newRow($this, $total, $idx, $record, array(), $rowContent);
+				$rowAttributes = $this->getRowAttributes($total, $idx, $record);
+
+				$rows[] = $this->newRow($total, $idx, $record, $rowAttributes, $rowContent);
 			}
 			$content['body'] = implode("\n", $rows);
 		}
@@ -422,7 +426,6 @@ class GridField extends FormField {
 	}
 
 	/**
-	 * @param GridField $gridfield
 	 * @param int $total
 	 * @param int $index
 	 * @param DataObject $record
@@ -431,7 +434,7 @@ class GridField extends FormField {
 	 *
 	 * @return string
 	 */
-	protected function newCell($gridfield, $total, $index, $record, $attributes, $content) {
+	protected function newCell($total, $index, $record, $attributes, $content) {
 		return FormField::create_tag(
 			'td',
 			$attributes,
@@ -440,7 +443,6 @@ class GridField extends FormField {
 	}
 
 	/**
-	 * @param GridField $gridfield
 	 * @param int $total
 	 * @param int $index
 	 * @param DataObject $record
@@ -449,7 +451,39 @@ class GridField extends FormField {
 	 *
 	 * @return string
 	 */
-	protected function newRow($gridfield, $total, $index, $record, $attributes, $content) {
+	protected function newRow($total, $index, $record, $attributes, $content) {
+		return FormField::create_tag(
+			'tr',
+			$attributes,
+			$content
+		);
+	}
+
+	/**
+	 * @param int $total
+	 * @param int $index
+	 * @param DataObject $record
+	 *
+	 * @return array
+	 */
+	protected function getRowAttributes($total, $index, $record) {
+		$rowClasses = $this->newRowClasses($total, $index, $record);
+
+		return array(
+			'class' => implode(' ', $rowClasses),
+			'data-id' => $record->ID,
+			'data-class' => $record->ClassName,
+		);
+	}
+
+	/**
+	 * @param int $total
+	 * @param int $index
+	 * @param DataObject $record
+	 *
+	 * @return array
+	 */
+	protected function newRowClasses($total, $index, $record) {
 		$classes = array('ss-gridfield-item');
 
 		if($index == 0) {
@@ -462,15 +496,7 @@ class GridField extends FormField {
 
 		$classes[] = ($index % 2) ? 'even' : 'odd';
 
-		return FormField::create_tag(
-			'tr',
-			array(
-				'class' => implode(' ', $classes),
-				'data-id' => $record->ID,
-				'data-class' => $record->ClassName,
-			),
-			$content
-		);
+		return $classes;
 	}
 
 	public function Field($properties = array()) {
