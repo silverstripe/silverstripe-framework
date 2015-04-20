@@ -650,7 +650,7 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .htmleditorfield-dialog.ui-dialog-content { padding: 0; position: relative; }
 .htmleditorfield-dialog .htmleditorfield-from-web .CompositeField { overflow: hidden; *zoom: 1; }
 .htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 55%; max-width: 512px; float: left; position: relative; }
-.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL label { position: absolute; left: 8px; top: 13px; font-weight: normal; color: #888; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL label { position: absolute; left: 8px; top: 13px; font-weight: normal; color: #888; width: 35px; padding-right: 0; }
 .htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL .middleColumn { margin-left: 0; }
 .htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL input.remoteurl { padding-left: 40px; max-width: 350px; }
 .htmleditorfield-dialog .htmleditorfield-from-web button.add-url { margin-top: 20px; overflow: hidden; *zoom: 1; border: none; background: none; opacity: 0.8; cursor: hand; }
