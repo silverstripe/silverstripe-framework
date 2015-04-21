@@ -53,7 +53,7 @@ class RestfulService extends ViewableData implements Flushable {
 	 */
 	public static function set_default_curl_option($option, $value) {
 		Deprecation::notice('3.2', 'Use the "RestfulService.default_curl_options" config setting instead');
-		Config::inst()->update('RestfulService', 'default_curl_options', array($option => $value));
+		Config::inst()->update(get_called_class(), 'default_curl_options', array($option => $value));
 	}
 
 	/**
@@ -63,7 +63,25 @@ class RestfulService extends ViewableData implements Flushable {
 	 */
 	public static function set_default_curl_options($optionArray) {
 		Deprecation::notice('3.2', 'Use the "RestfulService.default_curl_options" config setting instead');
-		Config::inst()->update('RestfulService', 'default_curl_options', $optionArray);
+		Config::inst()->update(get_called_class(), 'default_curl_options', $optionArray);
+	}
+
+	/**
+	 * Parses cURL options defined in YML configuration.
+	 *
+	 * @return array
+	 */
+	public static function get_default_curl_options() {
+		$rawOptions = static::config()->get('default_curl_options');
+		$options = array();
+		foreach($rawOptions as $key => $value) {
+			// See if this key looks like a constant and, if so, try to get its value and use *that* as the key instead.
+			if (!is_numeric($key) && substr($key, 0, 8) === "CURLOPT_" && defined($key)) {
+				$key = constant($key);
+			}
+			$options[$key] = $value;
+		}
+		return $options;
 	}
 
 	/**
@@ -83,7 +101,7 @@ class RestfulService extends ViewableData implements Flushable {
 			'Use the "RestfulService.default_curl_options" config setting instead, '
 				. 'with direct reference to the CURL_* options'
 		);
-		config::inst()->update('RestfulService', 'default_proxy', array(
+		Config::inst()->update(get_called_class(), 'default_proxy', array(
 			CURLOPT_PROXY => $proxy,
 			CURLOPT_PROXYUSERPWD => "{$user}:{$password}",
 			CURLOPT_PROXYPORT => $port,
@@ -175,7 +193,7 @@ class RestfulService extends ViewableData implements Flushable {
 			$method,
 			$data,
 			array_merge((array)$this->customHeaders, (array)$headers),
-			$curlOptions + (array)$this->config()->default_curl_options,
+			$curlOptions + (array)static::get_default_curl_options(),
 			$this->getBasicAuthString()
 		));
 
@@ -231,7 +249,7 @@ class RestfulService extends ViewableData implements Flushable {
 		$timeout   = 5;
 		$sapphireInfo = new SapphireInfo();
 		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
-		$curlOptions = $curlOptions + (array)$this->config()->default_curl_options;
+		$curlOptions = $curlOptions + (array)static::get_default_curl_options();
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -350,6 +368,20 @@ class RestfulService extends ViewableData implements Flushable {
 		$lastHeaders = array_pop($parts);
 		$headers = $this->parseRawHeaders($lastHeaders);
 		//return the response object
+		return $this->createResponse($rawBody, $statusCode, $headers);
+	}
+
+	/**
+	 * Instantiates the RestfulService_Response object -- however, this is only setup to allow easily overriding this
+	 * functionality to generate a different response object (which extends either RestfulService_Response or
+	 * SS_HTTPResponse) by overriding this class as well as this method.
+	 *
+	 * @param	string	$rawBody
+	 * @param	int		$statusCode
+	 * @param	array	$headers
+	 * @return	RestfulService_Response
+	 */
+	protected function createResponse($rawBody, $statusCode, $headers) {
 		return new RestfulService_Response($rawBody, $statusCode, $headers);
 	}
 
@@ -620,7 +652,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 	public function setCachedBody($content) {
 		Deprecation::notice('3.2', 'Setting the response body is now deprecated, set the cached request instead');
 		if (!$this->cachedResponse) {
-			$this->cachedResponse = new RestfulService_Response($content);
+			$this->cachedResponse = new static($content);
 		}
 		else {
 			$this->cachedResponse->setBody($content);
