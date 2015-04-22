@@ -1546,9 +1546,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(!is_array($remoteRelations)) {
 			$remoteRelations = array();
 		}
+
+		// See if we happen to already have an exact match pointing back to this object (or a parent object) and, if so, use that as our foreign key.
+		$ancestry = array_reverse(ClassInfo::ancestry($this));
+		if (array_key_exists($component, $remoteRelations) && in_array($remoteRelations[$component], $ancestry)) return $component . 'ID';
+
+		// Look for any relation that points back to this class or any parent class.
 		$remoteRelations = array_flip($remoteRelations);
-		
-		// look for remote has_one joins on this class or any parent classes
 		foreach(array_reverse(ClassInfo::ancestry($this)) as $class) {
 			if(array_key_exists($class, $remoteRelations)) return $remoteRelations[$class] . 'ID';
 		}
