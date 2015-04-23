@@ -1,6 +1,6 @@
-# How to implement an alternating button #
+# How to implement an alternating button
 
-## Introduction ##
+## Introduction
 
 *Save* and *Save & publish* buttons alternate their appearance to reflect the state of the underlying `SiteTree` object.
 This is based on a `ssui.button` extension available in `ssui.core.js`.
@@ -16,7 +16,7 @@ This how-to will walk you through creation of a "Clean-up" button with two appea
 
 The controller code that goes with this example is listed in [Extend CMS Interface](extend_cms_interface).
 
-## Backend support ##
+## Backend support
 
 First create and configure the action button with alternate state on a page type. The button comes with the default
 state already, so you just need to add the alternate state using two data additional attributes:
@@ -60,7 +60,7 @@ Here we initialise the button based on the backend check, and assume that the bu
 		// ...
 	}
 
-## Frontend support ##
+## Frontend support
 
 As with the *Save* and *Save & publish* buttons, you might want to add some scripted reactions to user actions on the
 frontend. You can affect the state of the button through the jQuery UI calls.
@@ -103,7 +103,7 @@ CMS core that tracks the changes to the input fields and reacts by enabling the 
 		}
 	});
 
-## Frontend hooks ##
+## Frontend hooks
 
 `ssui.button` defines several additional events so that you can extend the code with your own behaviours. For example
 this is used in the CMS to style the buttons. Three events are available:
@@ -153,7 +153,7 @@ cases.
 
 	}(jQuery));
 
-## Summary ##
+## Summary
 
 The code presented gives you a fully functioning alternating button, similar to the defaults that come with the the CMS.
 These alternating buttons can be used to give user the advantage of visual feedback upon their actions.
