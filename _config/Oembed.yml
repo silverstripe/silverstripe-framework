@@ -8,6 +8,12 @@ Oembed:
     'https://*.youtube.com/watch*':
       http: 'http://www.youtube.com/oembed/',
       https: 'https://www.youtube.com/oembed/?scheme=https'
+    'http://*.youtu.be/*':
+      http: 'http://www.youtube.com/oembed/',
+      https: 'https://www.youtube.com/oembed/?scheme=https'
+    'https://youtu.be/*':
+      http: 'http://www.youtube.com/oembed/',
+      https: 'https://www.youtube.com/oembed/?scheme=https'
     'http://*.flickr.com/*':
       'http://www.flickr.com/services/oembed/'
     'http://*.viddler.com/*':
