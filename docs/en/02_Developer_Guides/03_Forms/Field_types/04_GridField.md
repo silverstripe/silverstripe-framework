@@ -71,7 +71,7 @@ the `getConfig()` method on `GridField`.
 			);
 
 			// GridField configuration
-			$config = $gridField->getConfig();
+			$config = $grid->getConfig();
 
 			//
 			// Modification of existing components can be done by fetching that component.
