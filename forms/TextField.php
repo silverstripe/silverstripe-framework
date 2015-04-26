@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Text input field.
  *
@@ -6,50 +7,77 @@
  * @subpackage fields-basic
  */
 class TextField extends FormField {
-
 	/**
 	 * @var int
 	 */
 	protected $maxLength;
-	
+
 	/**
-	 * Returns an input field, class="text" and type="text" with an optional maxlength
+	 * Returns an input field.
+	 *
+	 * @param string $name
+	 * @param null|string $title
+	 * @param string $value
+	 * @param null|int $maxLength
+	 * @param null|Form $form
 	 */
 	public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null) {
-		$this->maxLength = $maxLength;
-		
-		parent::__construct($name, $title, $value, $form);
+		if($maxLength) {
+			$this->setMaxLength($maxLength);
+		}
+
+		if($form) {
+			$this->setForm($form);
+		}
+
+		parent::__construct($name, $title, $value);
 	}
-	
+
 	/**
-	 * @param int $length
+	 * @param int $maxLength
+	 *
+	 * @return static
 	 */
-	public function setMaxLength($length) {
-		$this->maxLength = $length;
-		
+	public function setMaxLength($maxLength) {
+		$this->maxLength = $maxLength;
+
 		return $this;
 	}
-	
+
 	/**
-	 * @return int
+	 * @return null|int
 	 */
 	public function getMaxLength() {
 		return $this->maxLength;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getAttributes() {
+		$maxLength = $this->getMaxLength();
+
+		$attributes = array();
+
+		if($maxLength) {
+			$attributes['maxLength'] = $maxLength;
+			$attributes['size'] = min($maxLength, 30);
+		}
+
 		return array_merge(
 			parent::getAttributes(),
-			array(
-				'maxlength' => $this->getMaxLength(),
-				'size' => ($this->getMaxLength()) ? min($this->getMaxLength(), 30) : null
-			)
+			$attributes
 		);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function InternallyLabelledField() {
-		if(!$this->value) $this->value = $this->Title();
+		if(!$this->value) {
+			$this->value = $this->Title();
+		}
+
 		return $this->Field();
 	}
-	
 }
