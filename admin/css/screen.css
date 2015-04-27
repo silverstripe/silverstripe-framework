@@ -180,6 +180,8 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field.cms-description-toggle.optionset li { width: 170px; }
 .field.cms-description-toggle.listbox select { margin-left: 0; }
 .field.cms-description-toggle.upload .description { margin-left: 184px; }
+.cms-file-info-data .field.cms-description-toggle > .middleColumn { margin-left: 8px !important; width: auto; min-width: 0; }
+.cms-file-info-data .field.cms-description-toggle .description { margin-left: 104px; width: auto; }
 
 form.stacked .field label, .field.stacked label { display: block; float: none; padding-bottom: 10px; }
 form.stacked .field .middleColumn, .field.stacked .middleColumn { margin-left: 0px; clear: left; }
@@ -711,7 +713,7 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .cms-file-info { overflow: auto; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); margin-bottom: 8px; }
 .cms-file-info .cms-file-info-preview { float: left; width: 176px; margin-right: 8px; }
 .cms-file-info .cms-file-info-preview img { max-width: 176px; max-height: 128px; }
-.cms-file-info .cms-file-info-data { float: left; }
+.cms-file-info .cms-file-info-data { float: left; width: 55%; }
 .cms-file-info .cms-file-info-data .field { margin: 0; padding-bottom: 8px; border: none; box-shadow: none; }
 .cms-file-info .cms-file-info-data .field label.left { width: 96px; }
 .cms-file-info .cms-file-info-data .field .middleColumn { margin-left: 104px; }
