@@ -309,6 +309,29 @@ class FieldList extends ArrayList {
 	}
 
 	/**
+	 * Returns the specified tab object.
+	 *
+	 * @param	string	$tabName
+	 * @return	Tab|null
+	 */
+	public function findTab($tabName) {
+		// Backwards compatibility measure: Allow rewriting of outdated tab paths
+		$tabName = $this->rewriteTabPath($tabName);
+
+		$parts = explode('.',$tabName);
+		// We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than
+		// add it to TabSet and Tab too.
+		$currentPointer = $this;
+		foreach($parts as $k => $part) {
+			$parentPointer = $currentPointer;
+			$currentPointer = $currentPointer->fieldByName($part);
+			if (!$currentPointer) return null;
+		}
+
+		return $currentPointer;
+	}
+
+	/**
 	 * Returns a named field.
 	 * You can use dot syntax to get fields from child composite fields
 	 *
