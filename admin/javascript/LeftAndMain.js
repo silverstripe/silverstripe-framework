@@ -633,8 +633,11 @@ jQuery.noConflict();
 
 				// Support a full reload
 				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
-					document.location.href = $('base').attr('href').replace(/\/*$/, '')
-						+ '/' + xhr.getResponseHeader('X-ControllerURL');
+					var baseUrl = $('base').attr('href'),
+						rawURL = xhr.getResponseHeader('X-ControllerURL'),
+						url = $.path.isAbsoluteUrl(rawURL) ? rawURL : $.path.makeUrlAbsolute(rawURL, baseUrl);
+
+					document.location.href = url;
 					return;
 				}
 
