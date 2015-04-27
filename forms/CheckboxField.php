@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Single checkbox field.
  *
@@ -6,59 +7,104 @@
  * @subpackage fields-basic
  */
 class CheckboxField extends FormField {
-
+	/**
+	 * @param int|bool $value
+	 *
+	 * @return $this
+	 */
 	public function setValue($value) {
-		$this->value = ($value) ? 1 : 0;
+		if($value) {
+			$this->value = 1;
+		} else {
+			$this->value = 0;
+		}
+
 		return $this;
 	}
 
+	/**
+	 * @return null|int
+	 */
 	public function dataValue() {
-		return ($this->value) ? 1 : NULL;
+		if($this->value) {
+			return 1;
+		}
+
+		return null;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function Value() {
-		return ($this->value) ? 1 : 0;
+		if($this->value) {
+			return 1;
+		}
+
+		return 0;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getAttributes() {
-		$attrs = parent::getAttributes();
-		$attrs['value'] = 1;
+		$attributes = array(
+			'type' => 'checkbox',
+			'value' => 1,
+		);
+
+		$attributes['checked'] = null;
+
+		if($this->Value()) {
+			$attributes['checked'] = 'checked';
+		}
+
 		return array_merge(
-			$attrs,
-			array(
-				'checked' => ($this->Value()) ? 'checked' : null,
-				'type' => 'checkbox',
-			)
+			parent::getAttributes(),
+			$attributes
 		);
 	}
 
 	/**
-	 * Returns a readonly version of this field
+	 * Creates a read-only version of the field.
+	 *
+	 * @return CheckboxField_Readonly
 	 */
 	public function performReadonlyTransformation() {
-		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value);
-		$field->setForm($this->form);
-		return $field;	
-	}
+		$field = new CheckboxField_Readonly(
+			$this->name,
+			$this->title,
+			$this->value
+		);
 
+		$field->setForm($this->form);
+
+		return $field;
+	}
 }
 
 /**
- * Readonly version of a checkbox field - "Yes" or "No".
+ * Readonly version of a checkbox field ('Yes' or 'No').
  *
  * @package forms
  * @subpackage fields-basic
  */
 class CheckboxField_Readonly extends ReadonlyField {
-
+	/**
+	 * @return static
+	 */
 	public function performReadonlyTransformation() {
 		return clone $this;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function Value() {
-		return Convert::raw2xml($this->value ?
-			_t('CheckboxField.YESANSWER', 'Yes') :
-			_t('CheckboxField.NOANSWER', 'No'));
-	}
+		if($this->value) {
+			return _t('CheckboxField.YESANSWER', 'Yes');
+		}
 
+		return _t('CheckboxField.NOANSWER', 'No');
+	}
 }
