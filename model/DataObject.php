@@ -1598,7 +1598,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $component Name of component
 	 *
-	 * @return string|array The class of the one-to-one component, or an array of all one-to-one components and their
+	 * @return string|array|null The class of the one-to-one component, or an array of all one-to-one components and their
 	 *                      classes.
 	 */
 	public function has_one($component = null) {
@@ -1709,7 +1709,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $component Name of component
 	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
 	 *        the field data stripped off. It defaults to TRUE.
-	 * @return string|array
+	 * @return string|array|null
 	 */
 	public function has_many($component = null, $classOnly = true) {
 		$hasMany = $this->config()->has_many;
@@ -1718,7 +1718,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if($hasMany && array_key_exists($component, $hasMany)) {
 				$hasMany = $hasMany[$component];
 			} else {
-				return false;
+				return null;
 			}
 		}
 		
@@ -1736,7 +1736,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * extra fields for all components available.
 	 * 
 	 * @param string $component Name of component
-	 * @return array
+	 * @return array|null
 	 */
 	public function many_many_extraFields($component = null) {
 		$classes = ClassInfo::ancestry($this);
@@ -1825,7 +1825,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $component Name of component
 	 *
-	 * @return array  An array of (parentclass, childclass), or an array of all many-many components
+	 * @return array|null  An array of (parentclass, childclass), or an array of all many-many components
 	 */
 	public function many_many($component = null) {
 		$classes = ClassInfo::ancestry($this);
