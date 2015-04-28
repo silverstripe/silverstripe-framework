@@ -1857,7 +1857,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $component
 	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
 	 *        the field data stripped off. It defaults to TRUE.
-	 * @return string|false
+	 * @return string|null
 	 */
 	public function belongsToComponent($component, $classOnly = true) {
 		$belongsTo = (array)Config::inst()->get($this->class, 'belongs_to', Config::INHERITED);
@@ -1865,7 +1865,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($belongsTo && array_key_exists($component, $belongsTo)) {
 			$belongsTo = $belongsTo[$component];
 		} else {
-			return false;
+			return null;
 		}
 
 		return ($classOnly) ? preg_replace('/(.+)?\..+/', '$1', $belongsTo) : $belongsTo;
@@ -1955,7 +1955,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $component
 	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
 	 *        the field data stripped off. It defaults to TRUE.
-	 * @return string|false
+	 * @return string|null
 	 */
 	public function hasManyComponent($component, $classOnly = true) {
 		$hasMany = (array)Config::inst()->get($this->class, 'has_many', Config::INHERITED);
@@ -1963,7 +1963,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($hasMany && array_key_exists($component, $hasMany)) {
 			$hasMany = $hasMany[$component];
 		} else {
-			return false;
+			return null;
 		}
 
 		return ($classOnly) ? preg_replace('/(.+)?\..+/', '$1', $hasMany) : $hasMany;
