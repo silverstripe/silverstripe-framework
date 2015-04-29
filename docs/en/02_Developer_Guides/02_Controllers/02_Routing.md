@@ -41,10 +41,10 @@ This route has defined that any URL beginning with `team` should create, and be 
 
 It also contains 3 `parameters` or `params` for short. `$Action`, `$ID` and `$Name`. These variables are placeholders 
 which will be filled when the user makes their request. Request parameters are available on the `SS_HTTPRequest` object 
-and able to be pulled out from a controller using `$this->request->param($name)`.
+and able to be pulled out from a controller using `$this->getRequest()->param($name)`.
 
 <div class="info" markdown="1">
-All Controllers have access to `$this->request` for the request object and `$this->response` for the response. 
+All Controllers have access to `$this->getRequest()` for the request object and `$this->response` for the response.
 </div>
 
 Here is what those parameters would look like for certain requests
@@ -52,7 +52,7 @@ Here is what those parameters would look like for certain requests
 	:::php
 	// GET /teams/
 
-	print_r($this->request->params());
+	print_r($this->getRequest()->params());
 
 	// Array
 	// (
@@ -63,7 +63,7 @@ Here is what those parameters would look like for certain requests
 
 	// GET /teams/players/
 
-	print_r($this->request->params());
+	print_r($this->getRequest()->params());
 
 	// Array
 	// (
@@ -74,7 +74,7 @@ Here is what those parameters would look like for certain requests
 
 	// GET /teams/players/1
 
-	print_r($this->request->params());
+	print_r($this->getRequest()->params());
 
 	// Array
 	// (
@@ -89,7 +89,7 @@ You can also fetch one parameter at a time.
 
 	// GET /teams/players/1/
 
-	echo $this->request->param('ID');
+	echo $this->getRequest()->param('ID');
 	// returns '1'
 
 
@@ -184,8 +184,8 @@ parameters.
 		);
 		public function go() {
 			$this->validateUser(
-				$this->request->param('UserName'),
-				$this->request->param('AuthToken')
+				$this->getRequest()->param('UserName'),
+				$this->getRequest()->param('AuthToken')
 			);
 			/* more processing goes here */
 		}

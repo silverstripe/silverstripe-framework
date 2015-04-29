@@ -689,10 +689,10 @@ class GridField extends FormField {
 			user_error("parent::__construct() needs to be called on {$handlerClass}::__construct()", E_USER_WARNING);
 		}
 
-		$this->request = $request;
+		$this->setRequest($request);
 		$this->setDataModel($model);
 
-		$fieldData = $this->request->requestVar($this->getName());
+		$fieldData = $this->getRequest()->requestVar($this->getName());
 		if($fieldData && isset($fieldData['GridState'])) $this->getState(false)->setValue($fieldData['GridState']);
 
 		foreach($this->getComponents() as $component) {

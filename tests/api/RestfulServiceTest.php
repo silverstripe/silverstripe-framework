@@ -343,18 +343,18 @@ class RestfulServiceTest_Controller extends Controller implements TestOnly {
 
 	public function index() {
 		$request = '';
-		foreach ($this->request->requestVars() as $key=>$value) {
+		foreach ($this->getRequest()->requestVars() as $key=>$value) {
 			$request .= "\t\t<request_item name=\"$key\">$value</request_item>\n";
 		}
 		$get = '';
-		foreach ($this->request->getVars() as $key => $value) {
+		foreach ($this->getRequest()->getVars() as $key => $value) {
 			$get .= "\t\t<get_item name=\"$key\">$value</get_item>\n";
 		}
 		$post = '';
-		foreach ($this->request->postVars() as $key => $value) {
+		foreach ($this->getRequest()->postVars() as $key => $value) {
 			$post .= "\t\t<post_item name=\"$key\">$value</post_item>\n";
 		}
-		$body = $this->request->getBody();
+		$body = $this->getRequest()->getBody();
 
 		$out = <<<XML
 <?xml version="1.0"?>

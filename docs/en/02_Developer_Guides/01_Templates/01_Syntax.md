@@ -84,7 +84,7 @@ Variables can come from your database fields, or custom methods you define on yo
 
 	:::php
 	public function UsersIpAddress() {
-		return $this->request->getIP();
+		return $this->getRequest()->getIP();
 	}
 
 **mysite/code/Page.ss**

@@ -28,7 +28,7 @@ class PaginatedList extends SS_ListDecorator {
 			throw new Exception('The request must be readable as an array.');
 		}
 
-		$this->request = $request;
+		$this->setRequest($request);
 		parent::__construct($list);
 	}
 
@@ -92,13 +92,14 @@ class PaginatedList extends SS_ListDecorator {
 	 * @return int
 	 */
 	public function getPageStart() {
+		$request = $this->getRequest();
 		if ($this->pageStart === null) {
 			if(
-				$this->request
-				&& isset($this->request[$this->getPaginationGetVar()])
-				&& $this->request[$this->getPaginationGetVar()] > 0
+				$request
+				&& isset($request[$this->getPaginationGetVar()])
+				&& $request[$this->getPaginationGetVar()] > 0
 			) {
-				$this->pageStart = (int)$this->request[$this->getPaginationGetVar()];
+				$this->pageStart = (int)$request[$this->getPaginationGetVar()];
 			} else {
 				$this->pageStart = 0;
 			}
@@ -431,6 +432,22 @@ class PaginatedList extends SS_ListDecorator {
 		if ($this->NotFirstPage()) {
 			return HTTP::setGetVar($this->getPaginationGetVar(), $this->getPageStart() - $this->getPageLength());
 		}
+	}
+
+	/**
+	 * Set the request object for this list
+	 *
+	 * @param SS_HTTPRequest
+	 */
+	public function setRequest($request) {
+		$this->request = $request;
+	}
+
+	/**
+	 * Get the request object for this list
+	 */
+	public function getRequest() {
+		return $this->request;
 	}
 
 }

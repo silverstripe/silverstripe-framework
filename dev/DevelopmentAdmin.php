@@ -33,7 +33,7 @@ class DevelopmentAdmin extends Controller {
 		parent::init();
 
 		// Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)
-		$requestedDevBuild = (stripos($this->request->getURL(), 'dev/build') === 0);
+		$requestedDevBuild = (stripos($this->getRequest()->getURL(), 'dev/build') === 0);
 
 		// We allow access to this controller regardless of live-status or ADMIN permission only
 		// if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
