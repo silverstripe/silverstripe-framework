@@ -264,7 +264,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if($this->redirectedTo()) return;
 
 		// Audit logging hook
-		if(empty($_REQUEST['executeForm']) && !$this->request->isAjax()) $this->extend('accessedCMS');
+		if(empty($_REQUEST['executeForm']) && !$this->getRequest()->isAjax()) $this->extend('accessedCMS');
 
 		// Set the members html editor config
 		if(Member::currentUser()) {
@@ -472,10 +472,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * See LeftAndMain.js for the required jQuery ajaxComplete handlers.
 	 */
 	public function redirect($url, $code=302) {
-		if($this->request->isAjax()) {
+		if($this->getRequest()->isAjax()) {
 			$this->response->addHeader('X-ControllerURL', $url);
-			if($this->request->getHeader('X-Pjax') && !$this->response->getHeader('X-Pjax')) {
-				$this->response->addHeader('X-Pjax', $this->request->getHeader('X-Pjax'));
+			if($this->getRequest()->getHeader('X-Pjax') && !$this->response->getHeader('X-Pjax')) {
+				$this->response->addHeader('X-Pjax', $this->getRequest()->getHeader('X-Pjax'));
 			}
 			$oldResponse = $this->response;
 			$newResponse = new LeftAndMain_HTTPResponse(
@@ -786,7 +786,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$filterFunction = null, $nodeCountThreshold = 30) {
 
 		// Filter criteria
-		$params = $this->request->getVar('q');
+		$params = $this->getRequest()->getVar('q');
 		if(isset($params['FilterClass']) && $filterClass = $params['FilterClass']){
 			if(!is_subclass_of($filterClass, 'CMSSiteTreeFilter')) {
 				throw new Exception(sprintf('Invalid filter class passed: %s', $filterClass));
@@ -1006,7 +1006,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->setCurrentPageID($record->ID);
 
 		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
-		return $this->getResponseNegotiator()->respond($this->request);
+		return $this->getResponseNegotiator()->respond($this->getRequest());
 	}
 
 	public function delete($data, $form) {
@@ -1021,7 +1021,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.DELETED', 'Deleted.')));
 		return $this->getResponseNegotiator()->respond(
-			$this->request,
+			$this->getRequest(),
 			array('currentform' => array($this, 'EmptyForm'))
 		);
 	}
@@ -1443,8 +1443,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return int
 	 */
 	public function currentPageID() {
-		if($this->request->requestVar('ID') && is_numeric($this->request->requestVar('ID')))	{
-			return $this->request->requestVar('ID');
+		if($this->getRequest()->requestVar('ID') && is_numeric($this->getRequest()->requestVar('ID')))	{
+			return $this->getRequest()->requestVar('ID');
 		} elseif (isset($this->urlParams['ID']) && is_numeric($this->urlParams['ID'])) {
 			return $this->urlParams['ID'];
 		} elseif(Session::get($this->sessionNamespace() . ".currentPage")) {

@@ -118,7 +118,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
-		$this->request = $request;
+		$this->setRequest($request);
 		$this->response = new SS_HTTPResponse();
 		$this->setDataModel($model);
 
@@ -487,13 +487,13 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		// In edge-cases, this will be called outside of a handleRequest() context; in that case,
 		// redirect to the homepage - don't break into the global state at this stage because we'll
 		// be calling from a test context or something else where the global state is inappropraite
-		if($this->request) {
-			if($this->request->requestVar('BackURL')) {
-				$url = $this->request->requestVar('BackURL');
-			} else if($this->request->isAjax() && $this->request->getHeader('X-Backurl')) {
-				$url = $this->request->getHeader('X-Backurl');
-			} else if($this->request->getHeader('Referer')) {
-				$url = $this->request->getHeader('Referer');
+		if($this->getRequest()) {
+			if($this->getRequest()->requestVar('BackURL')) {
+				$url = $this->getRequest()->requestVar('BackURL');
+			} else if($this->getRequest()->isAjax() && $this->getRequest()->getHeader('X-Backurl')) {
+				$url = $this->getRequest()->getHeader('X-Backurl');
+			} else if($this->getRequest()->getHeader('Referer')) {
+				$url = $this->getRequest()->getHeader('Referer');
 			}
 		}
 

@@ -111,7 +111,7 @@ class RequestHandler extends ViewableData {
 		$this->brokenOnConstruct = false;
 
 		// Check necessary to avoid class conflicts before manifest is rebuilt
-		if(class_exists('NullHTTPRequest')) $this->request = new NullHTTPRequest();
+		if(class_exists('NullHTTPRequest')) $this->setRequest(new NullHTTPRequest());
 
 		// This will prevent bugs if setDataModel() isn't called.
 		$this->model = DataModel::inst();
@@ -155,7 +155,7 @@ class RequestHandler extends ViewableData {
 			user_error("parent::__construct() needs to be called on {$handlerClass}::__construct()", E_USER_WARNING);
 		}
 
-		$this->request = $request;
+		$this->setRequest($request);
 		$this->setDataModel($model);
 
 		$match = $this->findAction($request);
@@ -462,11 +462,14 @@ class RequestHandler extends ViewableData {
 	 * @uses SS_HTTPResponse_Exception
 	 */
 	public function httpError($errorCode, $errorMessage = null) {
+
+		$request = $this->getRequest();
+
 		// Call a handler method such as onBeforeHTTPError404
-		$this->extend('onBeforeHTTPError' . $errorCode, $this->request);
+		$this->extend('onBeforeHTTPError' . $errorCode, $request);
 
 		// Call a handler method such as onBeforeHTTPError, passing 404 as the first arg
-		$this->extend('onBeforeHTTPError', $errorCode, $this->request);
+		$this->extend('onBeforeHTTPError', $errorCode, $request);
 
 		// Throw a new exception
 		throw new SS_HTTPResponse_Exception($errorMessage, $errorCode);

@@ -166,7 +166,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$rolesTab->push($rolesField);
 		}
 
-		$actionParam = $this->request->param('Action');
+		$actionParam = $this->getRequest()->param('Action');
 		if($actionParam == 'groups') {
 			$groupsTab->addExtraClass('ui-state-active');
 		} elseif($actionParam == 'users') {
@@ -273,7 +273,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		// Name root breadcrumb based on which record is edited,
 		// which can only be determined by looking for the fieldname of the GridField.
 		// Note: Titles should be same titles as tabs in RootForm().
-		$params = $this->request->allParams();
+		$params = $this->getRequest()->allParams();
 		if(isset($params['FieldName'])) {
 			// TODO FieldName param gets overwritten by nested GridFields,
 			// so shows "Members" rather than "Groups" for the following URL:

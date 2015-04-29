@@ -17,7 +17,7 @@ The `PaginatedList` will automatically set up query limits and read the request 
 	public function PaginatedPages() {
 		$list = Page::get();
 
-		return new PaginatedList($list, $this->request);
+		return new PaginatedList($list, $this->getRequest());
 	}
 
 <div class="notice" markdown="1">
@@ -78,14 +78,14 @@ when using custom lists.
 	:::php
 	$myPreLimitedList = Page::get()->limit(10);
 
-	$pages = new PaginatedList($myPreLimitedList, $this->request);
+	$pages = new PaginatedList($myPreLimitedList, $this->getRequest());
 	$pages->setLimitItems(false);
 
 
 ## Setting the limit of items
 
 	:::php
-	$pages = new PaginatedList(Page::get(), $this->request);
+	$pages = new PaginatedList(Page::get(), $this->getRequest());
 	$pages->setPageLength(25);
 
 If you set this limit to 0 it will disable paging entirely, effectively causing it to appear as a single page

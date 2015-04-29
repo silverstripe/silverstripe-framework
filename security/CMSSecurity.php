@@ -50,7 +50,7 @@ class CMSSecurity extends Security {
 	 * @return Member
 	 */
 	public function getTargetMember() {
-		if($tempid = $this->request->requestVar('tempid')) {
+		if($tempid = $this->getRequest()->requestVar('tempid')) {
 			return Member::member_from_tempid($tempid);
 		}
 	}
@@ -191,7 +191,7 @@ PHP
 
 		// Get redirect url
 		$controller = $this->getResponseController(_t('CMSSecurity.SUCCESS', 'Success'));
-		$backURL = $this->request->requestVar('BackURL')
+		$backURL = $this->getRequest()->requestVar('BackURL')
 			?: Session::get('BackURL')
 			?: Director::absoluteURL(AdminRootController::config()->url_base, true);
 

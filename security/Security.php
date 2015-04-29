@@ -318,7 +318,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string Class name of Authenticator
 	 */
 	protected function getAuthenticator() {
-		$authenticator = $this->request->requestVar('AuthenticationMethod');
+		$authenticator = $this->getRequest()->requestVar('AuthenticationMethod');
 		if($authenticator) {
 			$authenticators = Authenticator::get_authenticators();
 			if(in_array($authenticator, $authenticators)) {
@@ -420,7 +420,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		// This step is necessary in cases such as automatic redirection where a user is authenticated
 		// upon landing on an SSL secured site and is automatically logged in, or some other case
 		// where the user has permissions to continue but is not given the option.
-		if($this->request->requestVar('BackURL')
+		if($this->getRequest()->requestVar('BackURL')
 			&& !$this->getLoginMessage()
 			&& ($member = Member::currentUser())
 			&& $member->exists()

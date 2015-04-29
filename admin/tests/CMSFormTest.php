@@ -81,8 +81,8 @@ class CMSFormTest_Controller extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 
 	public function Link($action = null) {
-		return Controller::join_links('CMSFormTest_Controller', $this->request->latestParam('Action'),
-			$this->request->latestParam('ID'), $action);
+		return Controller::join_links('CMSFormTest_Controller', $this->getRequest()->latestParam('Action'),
+			$this->getRequest()->latestParam('ID'), $action);
 	}
 
 	public function Form() {

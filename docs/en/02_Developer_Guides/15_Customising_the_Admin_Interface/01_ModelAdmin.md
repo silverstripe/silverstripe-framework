@@ -215,7 +215,7 @@ checkbox which limits search results to expensive products (over $100).
 		public function getList() {
 			$list = parent::getList();
 
-			$params = $this->request->requestVar('q'); // use this to access search parameters
+			$params = $this->getRequest()->requestVar('q'); // use this to access search parameters
 
 			if($this->modelClass == 'Product' && isset($params['ExpensiveOnly']) && $params['ExpensiveOnly']) {
 				$list = $list->exclude('Price:LessThan', '100');
