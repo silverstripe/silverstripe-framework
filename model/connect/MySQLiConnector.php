@@ -29,12 +29,38 @@ class MySQLiConnector extends DBConnector {
 	protected $lastStatement = null;
 
 	/**
+	 * Record the last (pontentially unbuffered) prepared statement run
+	 *
+	 * @var MySQLStatement
+	 */
+	protected $lastResult = null;
+
+	/**
 	 * Store the most recent statement for later use
 	 *
 	 * @param mysqli_stmt $statement
 	 */
-	public function setLastStatement($statement) {
+	protected function setLastStatement($statement) {
 		$this->lastStatement = $statement;
+	}
+
+	/**
+	 * Store the most recent result for later use
+	 *
+	 * @param MySQLStatement $result
+	 */
+	protected function setLastResult($result) {
+		$this->lastResult = $result;
+	}
+
+	/**
+	 * Force the current statement to preload its results. This is often necessary to
+	 * free the connection to prepare subsequent statements.
+	 */
+	protected function buffer() {
+		if($this->lastResult) {
+			$this->lastResult->buffer();
+		}
 	}
 
 	/**
@@ -45,8 +71,12 @@ class MySQLiConnector extends DBConnector {
 	 * @return mysqli_stmt
 	 */
 	public function prepareStatement($sql, &$success) {
-		// Prepare statement with arguments
+		// Buffer any prior statements
+		$this->buffer();
 		$statement = $this->dbConn->stmt_init();
+
+		// Record last statement for error reporting
+		$this->setLastStatement($statement);
 		$success = $statement->prepare($sql);
 		return $statement;
 	}
@@ -113,10 +143,13 @@ class MySQLiConnector extends DBConnector {
 		// Check if we should only preview this query
 		if ($this->previewWrite($sql)) return;
 
+		// Buffer existing statements
+		$this->buffer();
+
 		// Benchmark query
 		$conn = $this->dbConn;
 		$handle = $this->benchmarkQuery($sql, function($sql) use($conn) {
-			return $conn->query($sql);
+			return $conn->query($sql, MYSQLI_STORE_RESULT);
 		});
 
 		if (!$handle || $this->dbConn->error) {
@@ -126,7 +159,7 @@ class MySQLiConnector extends DBConnector {
 
 		if($handle !== true) {
 			// Some non-select queries return true on success
-			return new MySQLQuery($this, $handle);
+			return new MySQLQuery($handle);
 		}
 	}
 
@@ -222,9 +255,11 @@ class MySQLiConnector extends DBConnector {
 		$lastStatement = $this->benchmarkQuery($sql, function($sql) use($parsedParameters, $blobs, $self) {
 
 			$statement = $self->prepareStatement($sql, $success);
-			if(!$success) return $statement;
+			if(!$success) return null;
 
-			$self->bindParameters($statement, $parsedParameters);
+			if($parsedParameters) {
+				$self->bindParameters($statement, $parsedParameters);
+			}
 
 			// Bind any blobs given
 			foreach($blobs as $blob) {
@@ -235,18 +270,18 @@ class MySQLiConnector extends DBConnector {
 			$statement->execute();
 			return $statement;
 		});
-
-		// check result
-		$this->setLastStatement($lastStatement);
+		
 		if (!$lastStatement || $lastStatement->error) {
 			$values = $this->parameterValues($parameters);
 			$this->databaseError($this->getLastError(), $errorLevel, $sql, $values);
 			return null;
 		}
 
-		// May not return result for non-select statements
-		if($result = $lastStatement->get_result()) {
-			return new MySQLQuery($this, $result, $lastStatement);
+		// Non-select queries will have no result data
+		if($lastStatement && ($metaData = $lastStatement->result_metadata())) {
+			$result = new MySQLStatement($lastStatement, $metaData);
+			$this->setLastResult($result);
+			return $result;
 		}
 	}
 
