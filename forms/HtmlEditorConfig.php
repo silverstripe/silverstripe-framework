@@ -11,11 +11,11 @@
  * @package forms
  * @subpackage fields-formattedinput
  */
-class HtmlEditorConfig {
+class HtmlEditorConfig extends Object {
 
-	private static $configs = array();
-	
-	private static $current = null;
+	protected static $configs = array();
+
+	protected static $current = null;
 	
 	/**
 	 * Get the HtmlEditorConfig object for the given identifier. This is a correct way to get an HtmlEditorConfig
@@ -26,8 +26,8 @@ class HtmlEditorConfig {
 	 *                            identifier
 	 */
 	public static function get($identifier = 'default') {
-		if (!array_key_exists($identifier, self::$configs)) self::$configs[$identifier] = new HtmlEditorConfig();
-		return self::$configs[$identifier];
+		if (!array_key_exists($identifier, static::$configs)) static::$configs[$identifier] = HtmlEditorConfig::create();
+		return static::$configs[$identifier];
 	}
 	
 	/**
@@ -36,7 +36,7 @@ class HtmlEditorConfig {
 	 * @return null
 	 */
 	public static function set_active($identifier = null) {
-		self::$current = $identifier;
+		static::$current = $identifier;
 	}
 	
 	/**
@@ -44,8 +44,8 @@ class HtmlEditorConfig {
 	 * @return HtmlEditorConfig - the active configuration object
 	 */
 	public static function get_active() {
-		$identifier = self::$current ? self::$current : 'default';
-		return self::get($identifier);
+		$identifier = static::$current ? static::$current : 'default';
+		return static::get($identifier);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ class HtmlEditorConfig {
 	public static function get_available_configs_map() {
 		$configs = array();
 		
-		foreach(self::$configs as $identifier => $config) {
+		foreach(static::$configs as $identifier => $config) {
 			$configs[$identifier] = $config->getOption('friendly_name');
 		}
 		
@@ -289,35 +289,78 @@ class HtmlEditorConfig {
 			$this->modifyButtons($button, 0, 1);
 		}
 	}
-	
+
 	/**
-	 * Generate the javascript that will set tinyMCE's configuration to that of the current settings of this object
-	 * @return string - the javascript
+	 * Generates the final configuration array which can be used in the TinyMCE editor (converted to JSON).
+	 *
+	 * @return array
 	 */
-	public function generateJS() {
+	public function getConfig() {
+		// Get base settings for this instance and pile on configured internal plugins as well as current button configuration.
 		$config = $this->settings;
-		
-		// plugins
+		$config['plugins'] = implode(',', $this->getInternalPlugins());
+		foreach ($this->buttons as $i=>$buttons) {
+			$config['theme_advanced_buttons'.$i] = implode(',', $buttons);
+		}
+
+		return $config;
+	}
+
+	/**
+	 * Returns an array of internal plugins.
+	 *
+	 * @return array
+	 */
+	public function getInternalPlugins() {
 		$internalPlugins = array();
-		$externalPluginsJS = '';
 		foreach($this->plugins as $plugin => $path) {
 			if(!$path) {
 				$internalPlugins[] = $plugin;
 			} else {
 				$internalPlugins[] = '-' . $plugin;
-				$externalPluginsJS .= sprintf(
-					'tinymce.PluginManager.load("%s", "%s");' . "\n",
-					$plugin,
-					$path
-				);
 			}
 		}
-		$config['plugins'] = implode(',', $internalPlugins);
-		
-		foreach ($this->buttons as $i=>$buttons) {
-			$config['theme_advanced_buttons'.$i] = implode(',', $buttons);
+		return $internalPlugins;
+	}
+
+	/**
+	 * Simply returns an array of external plugins.
+	 *
+	 * @return array
+	 */
+	public function getExternalPlugins() {
+		$externalPlugins = array();
+		foreach($this->plugins as $plugin => $path) {
+			if($path) $externalPlugins[$plugin] = $path;
 		}
-		
+		return $externalPlugins;
+	}
+
+	/**
+	 * Generates the JS necessary to load external plugin's into the editor.
+	 *
+	 * @return string
+	 */
+	public function getExternalPluginsJS() {
+		$externalPluginsJS = '';
+		foreach($this->getExternalPlugins() as $plugin => $path) {
+			$externalPluginsJS .= sprintf(
+				'tinymce.PluginManager.load("%s", "%s");' . "\n",
+				$plugin,
+				$path
+			);
+		}
+		return $externalPluginsJS;
+	}
+
+	/**
+	 * Generate the javascript that will set tinyMCE's configuration to that of the current settings of this object
+	 * @return string - the javascript
+	 */
+	public function generateJS() {
+		$config = $this->getConfig();
+		$externalPluginsJS = $this->getExternalPluginsJS();
+
 		return "
 if((typeof tinyMCE != 'undefined')) {
 	$externalPluginsJS
