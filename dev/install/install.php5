@@ -148,6 +148,12 @@ if(isset($_REQUEST['db'])) {
 	);
 }
 
+//Postgres needs lowercase
+if ($databaseConfig['type'] == 'PostgreSQLDatabase') {
+	$databaseConfig['database'] = strtolower($databaseConfig['database']);
+	$databaseConfig['username'] = strtolower($databaseConfig['username']);
+}
+
 if(isset($_REQUEST['admin'])) {
 	// Disabled inputs don't submit anything - we need to use the environment (except the database name)
 	if($usingEnv) {
