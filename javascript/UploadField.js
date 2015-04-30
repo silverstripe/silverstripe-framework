@@ -416,7 +416,7 @@
 				return false;
 			} 
 		});
-		$( 'div.ss-upload:not(.disabled):not(.readonly) .ss-uploadfield-item-edit, .ss-assetuploadfield .ss-uploadfield-item-edit').entwine({
+		$( 'div.ss-upload:not(.disabled):not(.readonly) .ss-uploadfield-item-edit, .ss-assetuploadfield:not(.disabled):not(.readonly) .ss-uploadfield-item-edit').entwine({
 			onclick: function(e) {
 				var self = this,
 					editform = self.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform'),
@@ -452,7 +452,8 @@
 					disabled.attr('disabled', 'disabled');
 					iframe.on('load', function() {
 						iframe.parent().removeClass('loading');
-
+						editform.fitHeight();
+						
 						// This ensures we only call _prepareIframe() on load once - otherwise it'll
 						// be superfluously called after clicking 'save' in the editform
 						if (iframe.data('src')) {
@@ -504,7 +505,7 @@
 
 
 
-		$('div.ss-upload .ss-uploadfield-item-editform').entwine({
+		$('.ss-uploadfield-item-editform').entwine({
 			fitHeight: function() {
 				var iframe = this.find('iframe'),
 					contents = iframe.contents().find('body'),
