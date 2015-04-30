@@ -172,7 +172,7 @@ ru:
     TEXT3: для
   Form:
     CSRF_FAILED_MESSAGE: "Произошла техническая ошибка. Нажмите кнопку \"Назад\", обновите страницу в браузере и повторите попытку."
-    FIELDISREQUIRED: 'Поле {$name} является обязательным'
+    FIELDISREQUIRED: 'Поле {name} является обязательным'
     SubmitBtnLabel: Выбрать
     VALIDATIONCREDITNUMBER: 'Пожалуйста, убедитесь, что номер кредитной карты {number} задан правильно'
     VALIDATIONNOTUNIQUE: 'Введенное значение не уникально'
