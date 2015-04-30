@@ -850,6 +850,8 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree .jstree-hovered, .cms-tree.jstree .jstree-hovered { text-shadow: none; text-decoration: none; }
 .tree-holder.jstree .jstree-closed > ins, .cms-tree.jstree .jstree-closed > ins { background-position: 0 0; }
 .tree-holder.jstree .jstree-open > ins, .cms-tree.jstree .jstree-open > ins { background-position: -20px 0; }
+.tree-holder.filtered-list li.class-Page a, .cms-tree.filtered-list li.class-Page a { color: #aaaaaa; }
+.tree-holder.filtered-list li.class-Page.filtered-item a, .cms-tree.filtered-list li.class-Page.filtered-item a { color: #0073c1; }
 
 /* ensure status is visible in sidebar */
 #cms-content-tools-CMSMain .cms-tree.jstree li { min-width: 159px; }
