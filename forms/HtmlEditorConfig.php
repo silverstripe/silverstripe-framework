@@ -295,7 +295,7 @@ class HtmlEditorConfig extends Object {
 	 *
 	 * @return array
 	 */
-	public function getConfig() {
+	protected function getConfig() {
 		// Get base settings for this instance and pile on configured internal plugins as well as current button configuration.
 		$config = $this->settings;
 		$config['plugins'] = implode(',', $this->getInternalPlugins());
@@ -311,7 +311,7 @@ class HtmlEditorConfig extends Object {
 	 *
 	 * @return array
 	 */
-	public function getInternalPlugins() {
+	protected function getInternalPlugins() {
 		$internalPlugins = array();
 		foreach($this->plugins as $plugin => $path) {
 			if(!$path) {
@@ -328,7 +328,7 @@ class HtmlEditorConfig extends Object {
 	 *
 	 * @return array
 	 */
-	public function getExternalPlugins() {
+	protected function getExternalPlugins() {
 		$externalPlugins = array();
 		foreach($this->plugins as $plugin => $path) {
 			if($path) $externalPlugins[$plugin] = $path;
@@ -341,7 +341,7 @@ class HtmlEditorConfig extends Object {
 	 *
 	 * @return string
 	 */
-	public function getExternalPluginsJS() {
+	protected function getExternalPluginsJS() {
 		$externalPluginsJS = '';
 		foreach($this->getExternalPlugins() as $plugin => $path) {
 			$externalPluginsJS .= sprintf(
