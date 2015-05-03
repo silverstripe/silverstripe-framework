@@ -76,7 +76,7 @@ does, such as `ArrayData` or `ArrayList`.
 					'Title' => 'First Job'
 				)));
 
-				return $this->customize(new ArrayData(array(
+				return $this->customise(new ArrayData(array(
 					'Name' => 'John',
 					'Role' => 'Head Coach',
 					'Experience' => $experience
