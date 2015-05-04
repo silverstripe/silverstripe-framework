@@ -7,10 +7,10 @@ Injector:
     properties:
       connector: %$PDOConnector
       schemaManager: %$MySQLSchemaManager
-      queryBuilder: %$DBQueryBuilder
+      queryBuilder: %$MySQLQueryBuilder
   MySQLDatabase:
     class: 'MySQLDatabase'
     properties:
       connector: %$MySQLiConnector
       schemaManager: %$MySQLSchemaManager
-      queryBuilder: %$DBQueryBuilder
+      queryBuilder: %$MySQLQueryBuilder
