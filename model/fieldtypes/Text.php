@@ -96,9 +96,9 @@ class Text extends StringField {
 
 		$words = preg_split('/\s+/', $paragraph);
 		foreach ($words as $i => $word) {
-			if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
-				return implode(' ', array_slice($words, 0, $i+1));
-			}
+		    if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|DR|Mr|MR|Mrs|MRS|Ms|MS|Sr|Jr|No)\.$/', $word)) {
+		        return implode(' ', array_slice($words, 0, $i+1));
+		    }
 		}
 
 		/* If we didn't find a sentence ending, use the summary. We re-call rather than using paragraph so that
