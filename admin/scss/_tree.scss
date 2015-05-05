@@ -154,6 +154,16 @@
 	// Show drag icons when draggable class is applied
 	.draggable a > .jstree-icon {
 		display: block;
+		cursor: move; // Fallback for IE users
+		cursor: -moz-grab;
+		cursor: -webkit-grab;
+		cursor: grab;
+
+		&:active {
+			cursor: -moz-grabbing;
+			cursor: -webkit-grabbing;
+			cursor: grabbing;
+		}
 	}
 
 
