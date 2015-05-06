@@ -201,6 +201,8 @@ abstract class Object {
 		$bucket = &$args;
 		$bucketStack = array();
 		$had_ns = false;
+		$isAssociativeArray = false;
+		$lastArrayKey = null;
 		
 		foreach($tokens as $token) {
 			$tName = is_array($token) ? $token[0] : $token;
@@ -228,7 +230,14 @@ abstract class Object {
 					default:
 						throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
 					}
-					$bucket[] = $argString;
+					
+					if($isAssociativeArray && $lastKey) {
+						$bucket[$lastKey] = $argString;
+						$lastKey = null;
+					} else {
+						$bucket[] = $argString;
+					}
+
 					break;
 			
 				case T_DNUMBER:
@@ -238,14 +247,29 @@ abstract class Object {
 				case T_LNUMBER:
 					$bucket[] = (int)$token[1];
 					break;
+
+				case T_DOUBLE_ARROW:
+					// We've found an associative array (the array itself has already been added to the bucket)
+					$isAssociativeArray = true;
+					$lastArrayKey = $bucket[sizeof($bucket)-1];
+					array_pop($bucket);
+					break;
 			
 				case T_STRING:
 					switch($token[1]) {
-						case 'true': $bucket[] = true; break;
-						case 'false': $bucket[] = false; break;
-						case 'null': $bucket[] = null; break;
+						case 'true': $castedArg = true; break;
+						case 'false': $castedArg = false; break;
+						case 'null': $castedArg = null; break;
 						default: throw new Exception("Bad T_STRING arg '{$token[1]}'");
 					}
+
+					if($isAssociativeArray && $lastArrayKey) {
+						$bucket[$lastArrayKey] = $castedArg;
+						$lastArrayKey = null;
+					} else {
+						$bucket[] = $castedArg;
+					}
+					
 					break;
 
 				case T_ARRAY:
