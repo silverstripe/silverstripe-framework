@@ -552,6 +552,17 @@
 			background-position:-20px 0;
 		}
 	}
+
+	// Applied to trees when displaying filter / search results.
+	&.filtered-list {
+		li.class-Page a {
+			color: $color-text-disabled;
+		}
+
+		li.class-Page.filtered-item a {
+			color: $color-text-blue-link;
+		}
+	}
 }
 
 /* ensure status is visible in sidebar */

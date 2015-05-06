@@ -773,6 +773,29 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 
 	/**
+	 * Gets the current search filter for this request, if available
+	 *
+	 * @throws InvalidArgumentException
+	 * @return LeftAndMain_SearchFilter
+	 */
+	protected function getSearchFilter() {
+		// Check for given FilterClass
+		$params = $this->getRequest()->getVar('q');
+		if(empty($params['FilterClass'])) {
+			return null;
+		}
+
+		// Validate classname
+		$filterClass = $params['FilterClass'];
+		$filterInfo = new ReflectionClass($filterClass);
+		if(!$filterInfo->implementsInterface('LeftAndMain_SearchFilter')) {
+			throw new InvalidArgumentException(sprintf('Invalid filter class passed: %s', $filterClass));
+		}
+		
+		return Injector::inst()->createWithArgs($filterClass, array($params));
+	}
+
+	/**
 	 * Get a site tree HTML listing which displays the nodes under the given criteria.
 	 *
 	 * @param $className The class of the root object
@@ -786,15 +809,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$filterFunction = null, $nodeCountThreshold = 30) {
 
 		// Filter criteria
-		$params = $this->getRequest()->getVar('q');
-		if(isset($params['FilterClass']) && $filterClass = $params['FilterClass']){
-			if(!is_subclass_of($filterClass, 'CMSSiteTreeFilter')) {
-				throw new Exception(sprintf('Invalid filter class passed: %s', $filterClass));
-			}
-			$filter = new $filterClass($params);
-		} else {
-			$filter = null;
-		}
+		$filter = $this->getSearchFilter();
 
 		// Default childrenMethod and numChildrenMethod
 		if(!$childrenMethod) $childrenMethod = ($filter && $filter->getChildrenMethod())
@@ -807,7 +822,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$numChildrenMethod = $filter->getNumChildrenMethod();
 			}
 		}
-		if(!$filterFunction) $filterFunction = ($filter) ? array($filter, 'isPageIncluded') : null;
+		if(!$filterFunction && $filter) {
+			$filterFunction = function($node) use($filter) {
+				return $filter->isPageIncluded($node);
+			};
+		}
 
 		// Get the tree root
 		$record = ($rootID) ? $this->getRecord($rootID) : null;
@@ -833,9 +852,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
 		$controller = $this;
 		$recordController = ($this->stat('tree_class') == 'SiteTree') ?  singleton('CMSPageEditController') : $this;
-		$titleFn = function(&$child, $numChildrenMethod) use(&$controller, &$recordController) {
+		$titleFn = function(&$child, $numChildrenMethod) use(&$controller, &$recordController, $filter) {
 			$link = Controller::join_links($recordController->Link("show"), $child->ID);
-			$node = LeftAndMain_TreeNode::create($child, $link, $controller->isCurrentPage($child), $numChildrenMethod);
+			$node = LeftAndMain_TreeNode::create($child, $link, $controller->isCurrentPage($child), $numChildrenMethod, $filter);
 			return $node->forTemplate();
 		};
 
@@ -1866,36 +1885,56 @@ class LeftAndMain_HTTPResponse extends SS_HTTPResponse {
 class LeftAndMain_TreeNode extends ViewableData {
 
 	/**
-	 * @var obj
+	 * Object represented by this node
+	 *
+	 * @var Object
 	 */
 	protected $obj;
 
 	/**
-	 * @var String Edit link to the current record in the CMS
+	 * Edit link to the current record in the CMS
+	 *
+	 * @var string
 	 */
 	protected $link;
 
 	/**
-	 * @var Bool
+	 * True if this is the currently selected node in the tree
+	 *
+	 * @var bool
 	 */
 	protected $isCurrent;
 
 	/**
+	 * Name of method to count the number of children
+	 * 
 	 * @var string
 	 */
 	protected $numChildrenMethod;
 
+
 	/**
-	 * @param $obj
-	 * @param null $link
-	 * @param bool $isCurrent
-	 * @param $numChildrenMethod
+	 *
+	 * @var LeftAndMain_SearchFilter
 	 */
-	public function __construct($obj, $link = null, $isCurrent = false, $numChildrenMethod='numChildren') {
+	protected $filter;
+
+	/**
+	 * @param Object $obj
+	 * @param string $link
+	 * @param bool $isCurrent
+	 * @param string $numChildrenMethod
+	 * @param LeftAndMain_SearchFilter $filter
+	 */
+	public function __construct($obj, $link = null, $isCurrent = false,
+		$numChildrenMethod = 'numChildren', $filter = null
+	) {
+		parent::__construct();
 		$this->obj = $obj;
 		$this->link = $link;
 		$this->isCurrent = $isCurrent;
 		$this->numChildrenMethod = $numChildrenMethod;
+		$this->filter = $filter;
 	}
 
 	/**
@@ -1915,15 +1954,33 @@ class LeftAndMain_TreeNode extends ViewableData {
 			. "</span></a>";
 	}
 
+	/**
+	 * Determine the CSS classes to apply to this node
+	 *
+	 * @return string
+	 */
 	public function getClasses() {
+		// Get classes from object
 		$classes = $this->obj->CMSTreeClasses($this->numChildrenMethod);
-		if($this->isCurrent) $classes .= " current";
-		$flags = $this->obj->hasMethod('getStatusFlags') ? $this->obj->getStatusFlags() : false;
+		if($this->isCurrent) {
+			$classes .= ' current';
+		}
+		// Get status flag classes
+		$flags = $this->obj->hasMethod('getStatusFlags')
+			? $this->obj->getStatusFlags()
+			: false;
 		if ($flags) {
 			$statuses = array_keys($flags);
 			foreach ($statuses as $s) {
 				$classes .= ' status-' . $s;
 			}
+		}
+		// Get additional filter classes
+		if($this->filter && ($filterClasses = $this->filter->getPageClasses($this->obj))) {
+			if(is_array($filterClasses)) {
+				$filterClasses = implode(' ' . $filterClasses);
+			}
+			$classes .= ' ' . $filterClasses;
 		}
 		return $classes;
 	}
@@ -1955,4 +2012,43 @@ class LeftAndMain_TreeNode extends ViewableData {
 		return $this;
 	}
 
+}
+
+/**
+ * Abstract interface for a class which may be used to filter the results displayed
+ * in a nested tree
+ */
+interface LeftAndMain_SearchFilter {
+
+	/**
+	 * Method on {@link Hierarchy} objects which is used to traverse into children relationships.
+	 *
+	 * @return string
+	 */
+	public function getChildrenMethod();
+
+	/**
+	 * Method on {@link Hierarchy} objects which is used find the number of children for a parent page
+	 *
+	 * @return string
+	 */
+	public function getNumChildrenMethod();
+
+
+	/**
+	 * Returns TRUE if the given page should be included in the tree.
+	 * Caution: Does NOT check view permissions on the page.
+	 *
+	 * @param DataObject $page
+	 * @return bool
+	 */
+	public function isPageIncluded($page);
+
+	/**
+	 * Given a page, determine any additional CSS classes to apply to the tree node
+	 *
+	 * @param DataObject $page
+	 * @return array|string
+	 */
+	public function getPageClasses($page);
 }
