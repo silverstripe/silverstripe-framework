@@ -1576,7 +1576,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		if($filter !== null || $sort !== null || $limit !== null) {
-			Deprecation::notice('3.2', 'The $filter, $sort and $limit parameters for DataObject::getComponents() 
+			Deprecation::notice('4.0', 'The $filter, $sort and $limit parameters for DataObject::getComponents() 
 				have been deprecated. Please manipluate the returned list directly.', Deprecation::SCOPE_GLOBAL);
 		}
 
@@ -1731,7 +1731,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			= $this->manyManyComponent($componentName);
 
 		if($filter !== null || $sort !== null || $join !== null || $limit !== null) {
-			Deprecation::notice('3.2', 'The $filter, $sort, $join and $limit parameters for 
+			Deprecation::notice('4.0', 'The $filter, $sort, $join and $limit parameters for 
 				DataObject::getManyManyComponents() have been deprecated. 
 				Please manipluate the returned list directly.', Deprecation::SCOPE_GLOBAL);
 		}
@@ -1767,11 +1767,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function has_one($component = null) {
 		if($component) {
-			Deprecation::notice('3.2', 'Please use hasOneComponent() instead');
+			Deprecation::notice('4.0', 'Please use hasOneComponent() instead');
 			return $this->hasOneComponent($component);
 		}
 
-		Deprecation::notice('3.2', 'Please use hasOne() instead');
+		Deprecation::notice('4.0', 'Please use hasOne() instead');
 		return $this->hasOne();
 	}
 
@@ -1786,7 +1786,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function hasOne($component = null) {
 		if($component) {
 			Deprecation::notice(
-				'3.2',
+				'4.0',
 				'Please use DataObject::hasOneComponent() instead of passing a component name to hasOne()',
 				Deprecation::SCOPE_GLOBAL
 			);
@@ -1817,11 +1817,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function belongs_to($component = null, $classOnly = true) {
 		if($component) {
-			Deprecation::notice('3.2', 'Please use belongsToComponent() instead');
+			Deprecation::notice('4.0', 'Please use belongsToComponent() instead');
 			return $this->belongsToComponent($component, $classOnly);
 		}
 
-		Deprecation::notice('3.2', 'Please use belongsTo() instead');
+		Deprecation::notice('4.0', 'Please use belongsTo() instead');
 		return $this->belongsTo(null, $classOnly);
 	}
 
@@ -1837,7 +1837,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function belongsTo($component = null, $classOnly = true) {
 		if($component) {
 			Deprecation::notice(
-				'3.2',
+				'4.0',
 				'Please use DataObject::belongsToComponent() instead of passing a component name to belongsTo()',
 				Deprecation::SCOPE_GLOBAL
 			);
@@ -1915,11 +1915,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function has_many($component = null, $classOnly = true) {
 		if($component) {
-			Deprecation::notice('3.2', 'Please use hasManyComponent() instead');
+			Deprecation::notice('4.0', 'Please use hasManyComponent() instead');
 			return $this->hasManyComponent($component, $classOnly);
 		}
 
-		Deprecation::notice('3.2', 'Please use hasMany() instead');
+		Deprecation::notice('4.0', 'Please use hasMany() instead');
 		return $this->hasMany(null, $classOnly);
 	}
 
@@ -1935,7 +1935,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function hasMany($component = null, $classOnly = true) {
 		if($component) {
 			Deprecation::notice(
-				'3.2',
+				'4.0',
 				'Please use DataObject::hasManyComponent() instead of passing a component name to hasMany()',
 				Deprecation::SCOPE_GLOBAL
 			);
@@ -1977,11 +1977,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function many_many_extraFields($component = null) {
 		if($component) {
-			Deprecation::notice('3.2', 'Please use manyManyExtraFieldsForComponent() instead');
+			Deprecation::notice('4.0', 'Please use manyManyExtraFieldsForComponent() instead');
 			return $this->manyManyExtraFieldsForComponent($component);
 		}
 
-		Deprecation::notice('3.2', 'Please use manyManyExtraFields() instead');
+		Deprecation::notice('4.0', 'Please use manyManyExtraFields() instead');
 		return $this->manyManyExtraFields();
 	}
 
@@ -1997,7 +1997,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function manyManyExtraFields($component = null) {
 		if($component) {
 			Deprecation::notice(
-				'3.2',
+				'4.0',
 				'Please use DataObject::manyManyExtraFieldsForComponent() instead of passing a component name 
 					to manyManyExtraFields()',
 				Deprecation::SCOPE_GLOBAL
@@ -2061,11 +2061,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function many_many($component = null) {
 		if($component) {
-			Deprecation::notice('3.2', 'Please use manyManyComponent() instead');
+			Deprecation::notice('4.0', 'Please use manyManyComponent() instead');
 			return $this->manyManyComponent($component);
 		}
 
-		Deprecation::notice('3.2', 'Please use manyMany() instead');
+		Deprecation::notice('4.0', 'Please use manyMany() instead');
 		return $this->manyMany();
 	}
 
@@ -2081,7 +2081,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function manyMany($component = null) {
 		if($component) {
 			Deprecation::notice(
-				'3.2',
+				'4.0',
 				'Please use DataObject::manyManyComponent() instead of passing a component name to manyMany()',
 				Deprecation::SCOPE_GLOBAL
 			);
