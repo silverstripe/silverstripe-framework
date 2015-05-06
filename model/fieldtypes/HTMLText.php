@@ -141,7 +141,7 @@ class HTMLText extends Text {
 		/* Otherwise work backwards for a looking for a sentence ending (we try to avoid abbreviations, but aren't
 		 * very good at it) */
 		for ($i = $maxWords; $i >= $maxWords - $flex && $i >= 0; $i--) {
-			if (preg_match('/\.$/', $words[$i]) && !preg_match('/(Dr|DR|Mr|MR|Mrs|MRS|Ms|MS|Sr|Jr|No)\.$/', $words[$i])) {
+			if (parent::is_sentence_end($words[$i])) {
 				return implode(' ', array_slice($words, 0, $i+1));
 			}
 		}
@@ -165,7 +165,7 @@ class HTMLText extends Text {
 		/* Then look for the first sentence ending. We could probably use a nice regex, but for now this will do */
 		$words = preg_split('/\s+/', $paragraph);
 		foreach ($words as $i => $word) {
-			if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|DR|Mr|MR|Mrs|MRS|Ms|MS|Sr|Jr|No)\.$/', $word)) {
+			if (parent::is_sentence_end($word)) {
 				return implode(' ', array_slice($words, 0, $i+1));
 			}
 		}
