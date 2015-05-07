@@ -173,8 +173,16 @@ class HTMLText extends Text {
 		/* If we didn't find a sentence ending, use the summary. We re-call rather than using paragraph so that
 		 * Summary will limit the result this time */
 		return $this->Summary();
-	}	
-	
+	}
+
+	/**
+	 * Return the value of the field with relative links converted to absolute urls (with placeholders parsed).
+	 * @return string
+	 */
+	public function AbsoluteLinks() {
+		return HTTP::absoluteURLs($this->forTemplate());
+	}
+
 	public function forTemplate() {
 		if ($this->processShortcodes) {
 			return ShortcodeParser::get_active()->parse($this->value);

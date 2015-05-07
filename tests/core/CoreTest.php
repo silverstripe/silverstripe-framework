@@ -22,20 +22,22 @@ class CoreTest extends SapphireTest {
 			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user);
 		} else {
 			$user = getTempFolderUsername();
+			$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' . 
+				preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
 
 			// A typical Windows location for where sites are stored on IIS
-			$this->assertEquals(sys_get_temp_dir() . DIRECTORY_SEPARATOR .
-				'silverstripe-cacheC--inetpub-wwwroot-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
+			$this->assertEquals(
+				$base . 'C--inetpub-wwwroot-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
 				getTempFolder('C:\\inetpub\\wwwroot\\silverstripe-test-project'));
 
 			// A typical Mac OS X location for where sites are stored
-			$this->assertEquals(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 
-				'silverstripe-cache-Users-joebloggs-Sites-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
+			$this->assertEquals(
+				$base . '-Users-joebloggs-Sites-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
 				getTempFolder('/Users/joebloggs/Sites/silverstripe-test-project'));
 
 			// A typical Linux location for where sites are stored
-			$this->assertEquals(sys_get_temp_dir() . DIRECTORY_SEPARATOR .
-				'silverstripe-cache-var-www-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
+			$this->assertEquals(
+				$base . '-var-www-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
 				getTempFolder('/var/www/silverstripe-test-project'));
 		}
 	}
@@ -43,17 +45,19 @@ class CoreTest extends SapphireTest {
 	public function tearDown() {
 		parent::tearDown();
 		$user = getTempFolderUsername();
+		$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' . 
+			preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
 		foreach(array(
-			'silverstripe-cacheC--inetpub-wwwroot-silverstripe-test-project',
-			'silverstripe-cache-Users-joebloggs-Sites-silverstripe-test-project',
-			'silverstripe-cache-var-www-silverstripe-test-project'
+			'C--inetpub-wwwroot-silverstripe-test-project',
+			'-Users-joebloggs-Sites-silverstripe-test-project',
+			'-cache-var-www-silverstripe-test-project'
 		) as $dir) {
-			$path = sys_get_temp_dir().DIRECTORY_SEPARATOR.$dir;
+			$path = $base . $dir;
 			if(file_exists($path)) {
 				rmdir($path . DIRECTORY_SEPARATOR . $user);
 				rmdir($path);
+			}
 		}
-		}
-		}
+	}
 
 }

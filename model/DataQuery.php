@@ -608,9 +608,10 @@ class DataQuery {
 			$model = singleton($modelClass);
 			if ($component = $model->has_one($rel)) {
 				if(!$this->query->isJoinedTo($component)) {
-					$foreignKey = $model->getReverseAssociation($component);
+					$foreignKey = $rel;
+					$realModelClass = ClassInfo::table_for_object_field($modelClass, "{$foreignKey}ID");
 					$this->query->addLeftJoin($component,
-						"\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
+						"\"$component\".\"ID\" = \"{$realModelClass}\".\"{$foreignKey}ID\"");
 				
 					/**
 					 * add join clause to the component's ancestry classes so that the search filter could search on

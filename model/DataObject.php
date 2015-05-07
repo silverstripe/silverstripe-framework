@@ -161,6 +161,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected static $_cache_get_one;
 	protected static $_cache_get_class_ancestry;
 	protected static $_cache_composite_fields = array();
+	protected static $_cache_is_composite_field = array();
 	protected static $_cache_custom_database_fields = array();
 	protected static $_cache_field_labels = array();
 
@@ -308,14 +309,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Will check all applicable ancestor classes and aggregate results.
 	 */
 	public static function is_composite_field($class, $name, $aggregated = true) {
-		if(!isset(DataObject::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
+		$key = $class . '_' . $name . '_' . (string)$aggregated;
+
+		if(!isset(DataObject::$_cache_is_composite_field[$key])) {
+			$isComposite = null;
+
+			if(!isset(DataObject::$_cache_composite_fields[$class])) {
+				self::cache_composite_fields($class);
+			}
 		
-		if(isset(DataObject::$_cache_composite_fields[$class][$name])) {
-			return DataObject::$_cache_composite_fields[$class][$name];
-			
-		} else if($aggregated && $class != 'DataObject' && ($parentClass=get_parent_class($class)) != 'DataObject') {
-			return self::is_composite_field($parentClass, $name);
+			if(isset(DataObject::$_cache_composite_fields[$class][$name])) {
+				$isComposite = DataObject::$_cache_composite_fields[$class][$name];
+			} elseif($aggregated && $class != 'DataObject' && ($parentClass=get_parent_class($class)) != 'DataObject') {
+				$isComposite = self::is_composite_field($parentClass, $name);
+			}
+
+			DataObject::$_cache_is_composite_field[$key] = ($isComposite) ? $isComposite : false;
 		}
+
+		return DataObject::$_cache_is_composite_field[$key] ?: null;
 	}
 
 	/**
@@ -713,9 +725,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $name;
 		} else {
 			$name = $this->singular_name();
-			if(substr($name,-1) == 'e') $name = substr($name,0,-1);
-			else if(substr($name,-1) == 'y') $name = substr($name,0,-1) . 'ie';
-
+			if(substr($name,-1) == 'y') $name = substr($name,0,-1) . 'ie';
 			return ucfirst($name . 's');
 		}
 	}
@@ -998,7 +1008,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * It is expected that you call validate() in your own application to test that an object is valid before
 	 * attempting a write, and respond appropriately if it isn't.
 	 * 
-	 * @return A {@link ValidationResult} object
+	 * @see {@link ValidationResult}
+	 * @return ValidationResult
 	 */
 	protected function validate() {
 		$result = ValidationResult::create();
@@ -1666,19 +1677,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array The database fields
 	 */
 	public function db($fieldName = null) {
-		$classes = ClassInfo::ancestry($this);
-		$good = false;
+		$classes = ClassInfo::ancestry($this, true);
+
+		// If we're looking for a specific field, we want to hit subclasses first as they may override field types
+		if($fieldName) {
+			$classes = array_reverse($classes);
+		}
+
 		$items = array();
-
 		foreach($classes as $class) {
-			// Wait until after we reach DataObject
-			if(!$good) {
-				if($class == 'DataObject') {
-					$good = true;
-				}
-				continue;
-			}
-
 			if(isset(self::$_cache_db[$class])) {
 				$dbItems = self::$_cache_db[$class];
 			} else {
@@ -1801,10 +1808,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					}
 				}
 				
-			} else {
-				
+			} else {	
 				// Find all the extra fields for all components
-				$newItems = eval("return (array){$class}::\$many_many_extraFields;");
+				$newItems = (array)Config::inst()->get($class, 'many_many_extraFields', Config::UNINHERITED);
 				
 				foreach($newItems as $k => $v) {
 					if(!is_array($v)) {
@@ -1817,9 +1823,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					}
 				}
 					
-				return isset($items) ? array_merge($newItems, $items) : $newItems;
+				$items = isset($items) ? array_merge($newItems, $items) : $newItems;
 			}
 		}
+
+		return isset($items) ? $items : null;
 	}
 	
 	/**
@@ -2325,7 +2333,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				user_error('DataObject::setField: passed an object that is not a DBField', E_USER_WARNING);
 			}
 		
-			$defaults = $this->stat('defaults');
 			// if a field is not existing or has strictly changed
 			if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
 				// TODO Add check for php-level defaults which are not set in the db
@@ -2965,6 +2972,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		DataObject::$_cache_db = array();
 		DataObject::$_cache_get_one = array();
 		DataObject::$_cache_composite_fields = array();
+		DataObject::$_cache_is_composite_field = array();
 		DataObject::$_cache_custom_database_fields = array();
 		DataObject::$_cache_get_class_ancestry = array();
 		DataObject::$_cache_field_labels = array();
@@ -3295,6 +3303,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$types['has_one'] = (array)singleton($ancestorClass)->uninherited('has_one', true);
 					$types['has_many'] = (array)singleton($ancestorClass)->uninherited('has_many', true);
 					$types['many_many'] = (array)singleton($ancestorClass)->uninherited('many_many', true);
+					$types['belongs_many_many'] = (array)singleton($ancestorClass)->uninherited('belongs_many_many', true);
 				}
 				foreach($types as $type => $attrs) {
 					foreach($attrs as $name => $spec) {
@@ -3439,6 +3448,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @var array
 	 */
 	private static $casting = array(
+		"ID" => 'Int',
+		"ClassName" => 'Varchar',
 		"LastEdited" => "SS_Datetime",
 		"Created" => "SS_Datetime",
 		"Title" => 'Text',

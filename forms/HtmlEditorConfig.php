@@ -125,7 +125,7 @@ class HtmlEditorConfig {
 	 * Set the value of one option
 	 * @param $k string - The key of the option to set
 	 * @param $v mixed - The value of the option to set
-	 * @return mixed - $v returned for chaining
+	 * @return HtmlEditorConfig
 	 */
 	public function setOption($k,$v) {
 		$this->settings[$k] = $v;
@@ -135,7 +135,7 @@ class HtmlEditorConfig {
 	/**
 	 * Set multiple options
 	 * @param $a array - The options to set, as keys and values of the array
-	 * @return null
+	 * @return HtmlEditorConfig
 	 */
 	public function setOptions($a) {
 		foreach ($a as $k=>$v) {
@@ -153,7 +153,7 @@ class HtmlEditorConfig {
 	 * @see http://wiki.moxiecode.com/index.php/TinyMCE:API/tinymce.PluginManager/load
 	 * 
 	 * @param String [0..] a string, or several strings, or a single array of strings - The plugins to enable
-	 * @return null
+	 * @return HtmlEditorConfig
 	 */
 	public function enablePlugins() {
 		$plugins = func_get_args();
@@ -166,12 +166,13 @@ class HtmlEditorConfig {
 			}
 			if (!array_key_exists($plugin, $this->plugins)) $this->plugins[$plugin] = $path;
 		}
+		return $this;
 	}
 
 	/**
 	 * Enable one or several plugins. Will properly handle being passed a plugin that is already disabled
 	 * @param String [0..] a string, or several strings, or a single array of strings - The plugins to disable
-	 * @return null
+	 * @return HtmlEditorConfig
 	 */
 	public function disablePlugins() {
 		$plugins = func_get_args();
@@ -198,7 +199,7 @@ class HtmlEditorConfig {
 	 * @param integer from 1..3 - The line number to redefine
 	 * @param string  a string or several strings, or a single array of strings - The button names to make this line
 	 *                contain 
-	 * @return null
+	 * @return HtmlEditorConfig
 	 */
 	public function setButtonsForLine() {
 		if (func_num_args() == 2) {
@@ -217,7 +218,7 @@ class HtmlEditorConfig {
 	 * @param integer from 1..3
 	 * @param string a string, or several strings, or a single array of strings - The button names to add to the end
 	 *               of this line 
-	 * @return null
+	 * @return HtmlEditorConfig
 	 */
 	public function addButtonsToLine() {
 		$inserts = func_get_args();

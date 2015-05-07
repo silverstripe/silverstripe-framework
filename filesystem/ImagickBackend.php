@@ -42,14 +42,14 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	/**
 	 * set_default_quality
 	 *
-	 * @deprecated 3.2 Use the "IMagickBackend.default_quality" config setting instead
+	 * @deprecated 3.2 Use the "ImagickBackend.default_quality" config setting instead
 	 * @param int $quality
 	 * @return void
 	 */
 	public static function set_default_quality($quality) {
-		Deprecation::notice('3.2', 'Use the "IMagickBackend.default_quality" config setting instead');
+		Deprecation::notice('3.2', 'Use the "ImagickBackend.default_quality" config setting instead');
 		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
-			config::inst()->update('IMagickBackend', 'default_quality', (int) $quality);
+			Config::inst()->update('ImagickBackend', 'default_quality', (int) $quality);
 		}
 	}
 	
@@ -104,9 +104,15 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 */
 	public function resize($width, $height) {
 		if(!$this->valid()) return;
-	
-		$width = round($width);
-		$height = round($height);
+		
+		if($width < 0 || $height < 0) throw new InvalidArgumentException("Image resizing dimensions cannot be negative");
+		if(!$width && !$height) throw new InvalidArgumentException("No dimensions given when resizing image");
+		if(!$width) throw new InvalidArgumentException("Width not given when resizing image");
+		if(!$height) throw new InvalidArgumentException("Height not given when resizing image");
+		
+		//use whole numbers, ensuring that size is at least 1x1
+		$width = max(1, round($width));
+		$height = max(1, round($height));
 		
 		$geometry = $this->getImageGeometry();
 		
@@ -114,10 +120,6 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		if ($width == $geometry["width"] && $height == $geometry["height"]) {
 			return $this;
 		}
-		
-		if(!$width && !$height) user_error("No dimensions given", E_USER_ERROR);
-		if(!$width) user_error("Width not given", E_USER_ERROR);
-		if(!$height) user_error("Height not given", E_USER_ERROR);
 		
 		$new = clone $this;
 		$new->resizeImage($width, $height, self::FILTER_LANCZOS, 1);

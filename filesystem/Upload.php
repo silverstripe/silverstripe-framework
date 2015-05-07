@@ -134,9 +134,10 @@ class Upload extends Controller {
 		$file = $nameFilter->filter($tmpFile['name']);
 		$fileName = basename($file);
 
-		$relativeFilePath = $parentFolder
-			? $parentFolder->getRelativePath() . "$fileName" 
-			: ASSETS_DIR . "/" . $fileName;
+		$relativeFolderPath = $parentFolder
+				? $parentFolder->getRelativePath()
+				: ASSETS_DIR . '/';
+		$relativeFilePath = $relativeFolderPath . $fileName;
 		
 		// Create a new file record (or try to retrieve an existing one)
 		if(!$this->file) {
@@ -156,26 +157,36 @@ class Upload extends Controller {
 			}
 		}
 		
-		// if filename already exists, version the filename (e.g. test.gif to test1.gif)
+		// if filename already exists, version the filename (e.g. test.gif to test2.gif, test2.gif to test3.gif)
 		if(!$this->replaceFile) {
+			$fileSuffixArray = explode('.', $fileName);
+			$fileTitle = array_shift($fileSuffixArray);
+			$fileSuffix = !empty($fileSuffixArray)
+					? '.' . implode('.', $fileSuffixArray)
+					: null;
+
+			// make sure files retain valid extensions
+			$oldFilePath = $relativeFilePath;
+			$relativeFilePath = $relativeFolderPath . $fileTitle . $fileSuffix;
+			if($oldFilePath !== $relativeFilePath) {
+				user_error("Couldn't fix $relativeFilePath", E_USER_ERROR);
+			}
 			while(file_exists("$base/$relativeFilePath")) {
 				$i = isset($i) ? ($i+1) : 2;
 				$oldFilePath = $relativeFilePath;
-				// make sure archives retain valid extensions
-				if(substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.gz')) == '.tar.gz' ||
-					substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.bz2')) == '.tar.bz2') {
-						$relativeFilePath = preg_replace('/[0-9]*(\.tar\.[^.]+$)/', $i . '\\1', $relativeFilePath);
-				} else if (strpos($relativeFilePath, '.') !== false) {
-					$relativeFilePath = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $relativeFilePath);
-				} else if (strpos($relativeFilePath, '_') !== false) {
-					$relativeFilePath = preg_replace('/_([^_]+$)/', '_'.$i, $relativeFilePath);
+
+				$pattern = '/([0-9]+$)/';
+				if(preg_match($pattern, $fileTitle)) {
+					$fileTitle = preg_replace($pattern, $i, $fileTitle);
 				} else {
-					$relativeFilePath .= '_'.$i;
+					$fileTitle .= $i;
 				}
+				$relativeFilePath = $relativeFolderPath . $fileTitle . $fileSuffix;
+
 				if($oldFilePath == $relativeFilePath && $i > 2) {
 					user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
 				}
-			}	
+			}
 		} else {
 			//reset the ownerID to the current member when replacing files
 			$this->file->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);

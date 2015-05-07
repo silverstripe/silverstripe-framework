@@ -428,7 +428,7 @@ body.cms {
 .cms-content-actions, .cms-preview-controls {
 	margin: 0;
 	padding: $grid-y*1.5 $grid-y*1.5;
-	z-index: 0;
+	z-index: 999;
 	border-top: 1px solid lighten($color-separator, 4%);
 	@include box-shadow(
 		1px 0 0 $tab-panel-texture-color, 
@@ -1427,11 +1427,11 @@ body.cms-dialog {
 
 			input.remoteurl {
 				padding-left: 40px;
+				max-width: 350px;
 			}
 		}
 		button.add-url{
-			margin-top:5px;
-			padding-top:15px;
+			margin-top:20px;
 			@include clearfix;
 			border:none;
 			background:none;
@@ -1443,9 +1443,7 @@ body.cms-dialog {
 			}
 			.ui-button-text{
 				margin-left:10px;
-				margin-top:-5px;
-				line-height:20px;
-				float:left;
+				padding-top:10px;
 			}
 			&:hover, &:active{
 				border:none;
@@ -1561,6 +1559,8 @@ body.cms-dialog {
 			.middleColumn {
 				margin-top: $grid-y*2; // same as left-floated h4
 				margin-left: $grid-x*23; // make room for headline
+				min-width: 0; // fit within available space
+				clear: none; // headline and dropdown on same line
 			}
 			.field.treedropdown {
 				border-bottom: 0; // don't show border, dropdown and gridfield visually belong together

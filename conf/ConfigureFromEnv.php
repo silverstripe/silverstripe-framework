@@ -54,7 +54,7 @@
  * _ss_environment.php handler
  */
 if(defined('SS_ENVIRONMENT_FILE')) {
-	// Only perform valdiation if SS_ENVIRONMENT_FILE is actually set, which is to say, there is an 
+	// Only perform validation if SS_ENVIRONMENT_FILE is actually set, which is to say, there is an
 	// _ss_environment.php file
 	foreach(array(
 		'SS_DATABASE_PASSWORD',
@@ -62,7 +62,7 @@ if(defined('SS_ENVIRONMENT_FILE')) {
 		'SS_ENVIRONMENT_TYPE',) as $reqDefine) {
 		if(!defined($reqDefine)) {
 			user_error("$reqDefine must be defined in your _ss_environment.php."
-				. "See http://doc.silverstripe.org/framework/en/topics/environment-management for more infomration",
+				. "See http://doc.silverstripe.org/framework/en/topics/environment-management for more information",
 				E_USER_ERROR);
 		}
 	}
@@ -129,7 +129,7 @@ if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
 	if(!defined('SS_DEFAULT_ADMIN_PASSWORD')) {
 		user_error("SS_DEFAULT_ADMIN_PASSWORD must be defined in your _ss_environment.php,"
 			. "if SS_DEFAULT_ADMIN_USERNAME is defined.  See "
-			. "http://doc.silverstripe.org/framework/en/topics/environment-management for more infomration", 
+			. "http://doc.silverstripe.org/framework/en/topics/environment-management for more information",
 			E_USER_ERROR);
 	}
 	Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);

@@ -51,6 +51,23 @@ abstract class Authenticator extends Object {
 	public static function get_login_form(Controller $controller) {
 	}
 
+	/**
+	 * Method that creates the re-authentication form for the in-CMS view
+	 *
+	 * @param Controller $controller
+	 */
+	public static function get_cms_login_form(Controller $controller) {
+	}
+
+	/**
+	 * Determine if this authenticator supports in-cms reauthentication
+	 *
+	 * @return bool
+	 */
+	public static function supports_cms() {
+		return false;
+	}
+
 
 	/**
 	 * Get the name of the authentication method
@@ -61,7 +78,7 @@ abstract class Authenticator extends Object {
 	}
 
 	public static function register($authenticator) {
-	self::register_authenticator($authenticator);	
+		self::register_authenticator($authenticator);
 	}
 
 
@@ -108,10 +125,10 @@ abstract class Authenticator extends Object {
 	 */
 	public static function unregister_authenticator($authenticator) {
 		if(call_user_func(array($authenticator, 'on_unregister')) === true) {
-					if(in_array($authenticator, self::$authenticators)) {
-						unset(self::$authenticators[array_search($authenticator, self::$authenticators)]);
-					}
-		};
+			if(in_array($authenticator, self::$authenticators)) {
+				unset(self::$authenticators[array_search($authenticator, self::$authenticators)]);
+			}
+		}
 	}
 
 

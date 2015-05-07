@@ -9,8 +9,9 @@ use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Behat\Exception\PendingException,
 	Behat\Mink\Exception\ElementHtmlException,
 	Behat\Gherkin\Node\PyStringNode,
-	Behat\Gherkin\Node\TableNode;
-
+	Behat\Gherkin\Node\TableNode,
+	Behat\MinkExtension\Context\MinkContext as MinkContext;
+	
 use Symfony\Component\DomCrawler\Crawler;
 
 // PHPUnit
@@ -44,6 +45,17 @@ class CmsFormsContext extends BehatContext {
 	}
 
 	/**
+	 * Returns fixed step argument (with \\" replaced back to ").
+	 * Copied from {@see MinkContext}
+	 *
+	 * @param string $argument
+	 * @return string
+	 */
+	protected function fixStepArgument($argument) {
+		return str_replace('\\"', '"', $argument);
+	}
+
+	/**
 	 * @Then /^I should( not? |\s*)see an edit page form$/
 	 */
 	public function stepIShouldSeeAnEditPageForm($negative) {
@@ -58,10 +70,13 @@ class CmsFormsContext extends BehatContext {
 	}
 
 	/**
-	 * @When /^I fill in the "(?P<field>([^"]*))" HTML field with "(?P<value>([^"]*))"$/
-	 * @When /^I fill in "(?P<value>([^"]*))" for the "(?P<field>([^"]*))" HTML field$/
+	 * @When /^I fill in the "(?P<field>(?:[^"]|\\")*)" HTML field with "(?P<value>(?:[^"]|\\")*)"$/
+	 * @When /^I fill in "(?P<value>(?:[^"]|\\")*)" for the "(?P<field>(?:[^"]|\\")*)" HTML field$/
 	 */
 	public function stepIFillInTheHtmlFieldWith($field, $value) {
+		$field = $this->fixStepArgument($field);
+		$value = $this->fixStepArgument($value);
+
 		$page = $this->getSession()->getPage();
 		$inputField = $page->findField($field);
 		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
@@ -74,9 +89,12 @@ class CmsFormsContext extends BehatContext {
 	}
 
 	/**
-	 * @When /^I append "(?P<value>([^"]*))" to the "(?P<field>([^"]*))" HTML field$/
+	 * @When /^I append "(?P<value>(?:[^"]|\\")*)" to the "(?P<field>(?:[^"]|\\")*)" HTML field$/
 	 */
 	public function stepIAppendTotheHtmlField($field, $value) {
+		$field = $this->fixStepArgument($field);
+		$value = $this->fixStepArgument($value);
+
 		$page = $this->getSession()->getPage();
 		$inputField = $page->findField($field);
 		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
@@ -89,9 +107,10 @@ class CmsFormsContext extends BehatContext {
 	}
 
 	/**
-	 * @Then /^the "(?P<locator>([^"]*))" HTML field should(?P<negative> not? |\s*)contain "(?P<html>.*)"$/
+	 * @Then /^the "(?P<locator>(?:[^"]|\\")*)" HTML field should(?P<negative> not? |\s*)contain "(?P<html>.*)"$/
 	 */
 	public function theHtmlFieldShouldContain($locator, $negative, $html) {
+		$locator = $this->fixStepArgument($locator);
 		$page = $this->getSession()->getPage();
 		$element = $page->findField($locator);
 		assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
@@ -132,9 +151,10 @@ class CmsFormsContext extends BehatContext {
 	 *
 	 * @todo Use an actual DOM parser for more accurate assertions
 	 * 
-	 * @Given /^"(?P<text>([^"]*))" in the "(?P<field>([^"]*))" HTML field should(?P<negate>(?: not)?) be (?P<formatting>(.*))$/
+	 * @Given /^"(?P<text>([^"]*))" in the "(?P<field>(?:[^"]|\\")*)" HTML field should(?P<negate>(?: not)?) be (?P<formatting>(.*))$/
 	 */
 	public function stepContentInHtmlFieldShouldHaveFormatting($text, $field, $negate, $formatting) {
+		$field = $this->fixStepArgument($field);
 		$page = $this->getSession()->getPage();
 		$inputField = $page->findField($field);
 		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
@@ -169,9 +189,10 @@ class CmsFormsContext extends BehatContext {
 	 * Selects the first textual match in the HTML editor. Does not support
 	 * selection across DOM node boundaries.
 	 * 
-	 * @When /^I select "(?P<text>([^"]*))" in the "(?P<field>([^"]*))" HTML field$/
+	 * @When /^I select "(?P<text>([^"]*))" in the "(?P<field>(?:[^"]|\\")*)" HTML field$/
 	 */
 	public function stepIHighlightTextInHtmlField($text, $field) {
+		$field = $this->fixStepArgument($field);
 		$page = $this->getSession()->getPage();
 		$inputField = $page->findField($field);
 		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));

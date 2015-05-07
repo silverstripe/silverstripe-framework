@@ -2,7 +2,7 @@ html { overflow-y: auto !important; }
 
 body { height: 100%; }
 
-#ComplexTableField_Popup_DetailForm input.loading { background: white url(../images/network-save.gif) left center no-repeat; padding-left: 16px; }
+#ComplexTableField_Popup_DetailForm input.loading { background: #fff url(../images/network-save.gif) left center no-repeat; padding-left: 16px; }
 
 .PageControls { padding: 5px; width: 100%; }
 .PageControls * { vertical-align: middle; }

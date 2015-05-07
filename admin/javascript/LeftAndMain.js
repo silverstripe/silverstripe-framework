@@ -10,7 +10,7 @@ jQuery.noConflict();
 		// Entwine's 'fromWindow::onresize' does not trigger on IE8. Use synthetic event.
 		var cb = function() {$('.cms-container').trigger('windowresize');};
 
-		// Workaround to avoid IE8 infinite loops when elements are resized as a result of this event 
+		// Workaround to avoid IE8 infinite loops when elements are resized as a result of this event
 		if($.browser.msie && parseInt($.browser.version, 10) < 9) {
 			var newWindowWidth = $(window).width(), newWindowHeight = $(window).height();
 			if(newWindowWidth != windowWidth || newWindowHeight != windowHeight) {
@@ -26,17 +26,51 @@ jQuery.noConflict();
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	$.entwine('ss', function($) {
+
+		/*
+		 * Handle messages sent via nested iframes
+		 * Messages should be raised via postMessage with an object with the 'type' parameter given.
+		 * An optional 'target' and 'data' parameter can also be specified. If no target is specified
+		 * events will be sent to the window instead.
+		 * type should be one of:
+		 *  - 'event' - Will trigger the given event (specified by 'event') on the target
+		 *  - 'callback' - Will call the given method (specified by 'callback') on the target
+		 */
+		$(window).on("message", function(e) {
+			var target,
+				event = e.originalEvent,
+				data = JSON.parse(event.data);
+
+			// Reject messages outside of the same origin
+			if($.path.parseUrl(window.location.href).domain !== $.path.parseUrl(event.origin).domain) return;
+
+			// Get target of this action
+			target = typeof(data.target) === 'undefined'
+				? $(window)
+				: $(data.target);
+
+			// Determine action
+			switch(data.type) {
+				case 'event':
+					target.trigger(data.event, data.data);
+					break;
+				case 'callback':
+					target[data.callback].call(target, data.data);
+					break;
+			}
+		});
+
 		/**
 		 * Position the loading spinner animation below the ss logo
-		 */ 
+		 */
 		var positionLoadingSpinner = function() {
 			var offset = 120; // offset from the ss logo
-			var spinner = $('.ss-loading-screen .loading-animation'); 
+			var spinner = $('.ss-loading-screen .loading-animation');
 			var top = ($(window).height() - spinner.height()) / 2;
 			spinner.css('top', top + offset);
 			spinner.show();
 		};
-		
+
 		// apply an select element only when it is ready, ie. when it is rendered into a template
 		// with css applied and got a width value.
 		var applyChosen = function(el) {
@@ -55,13 +89,13 @@ jQuery.noConflict();
 				setTimeout(function() {
 					// Make sure it's visible before applying the ui
 					el.show();
-					applyChosen(el); }, 
+					applyChosen(el); },
 				500);
 			}
 		};
 
 		/**
-		 * Compare URLs, but normalize trailing slashes in 
+		 * Compare URLs, but normalize trailing slashes in
 		 * URL to work around routing weirdnesses in SS_HTTPRequest.
 		 * Also normalizes relative URLs by prefixing them with the <base>.
 		 */
@@ -71,32 +105,49 @@ jQuery.noConflict();
 			url2 = $.path.isAbsoluteUrl(url2) ? url2 : $.path.makeUrlAbsolute(url2, baseUrl);
 			var url1parts = $.path.parseUrl(url1), url2parts = $.path.parseUrl(url2);
 			return (
-				url1parts.pathname.replace(/\/*$/, '') == url2parts.pathname.replace(/\/*$/, '') && 
+				url1parts.pathname.replace(/\/*$/, '') == url2parts.pathname.replace(/\/*$/, '') &&
 				url1parts.search == url2parts.search
 			);
 		};
-		
+
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
 		// global ajax handlers
 		$(document).ajaxComplete(function(e, xhr, settings) {
 			// Simulates a redirect on an ajax response.
 			if(window.History.enabled) {
-				var url = xhr.getResponseHeader('X-ControllerURL'), 
+				var url = xhr.getResponseHeader('X-ControllerURL'),
 					// TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
 					origUrl = History.getPageUrl().replace(/\/$/, ''),
-					opts, requestHeaders = settings.headers;
+					destUrl = settings.url,
+					opts;
 
-				if(url !== null && !isSameUrl(origUrl, url)) {
-					opts = {pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']};
+				// Only redirect if controller url differs to the requested or current one
+				if(url !== null &&
+					(!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))
+				) {
+					opts = {
+						// Ensure that redirections are followed through by history API by handing it a unique ID
+						id: (new Date()).getTime() + String(Math.random()).replace(/\D/g,''),
+						pjax: xhr.getResponseHeader('X-Pjax')
+							? xhr.getResponseHeader('X-Pjax')
+							: settings.headers['X-Pjax']
+					};
 					window.History.pushState(opts, '', url);
 				}
 			}
 
 			// Handle custom status message headers
 			var msg = (xhr.getResponseHeader('X-Status')) ? xhr.getResponseHeader('X-Status') : xhr.statusText,
+				reathenticate = xhr.getResponseHeader('X-Reauthenticate'),
 				msgType = (xhr.status < 200 || xhr.status > 399) ? 'bad' : 'good',
 				ignoredMessages = ['OK'];
+
+			// Enable reauthenticate dialog if requested
+			if(reathenticate) {
+				$('.cms-container').showLoginDialog();
+				return;
+			}
 
 			// Show message (but ignore aborted requests)
 			if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages)) {
@@ -107,14 +158,14 @@ jQuery.noConflict();
 
 		/**
 		 * Main LeftAndMain interface with some control panel and an edit form.
-		 * 
+		 *
 		 * Events:
 		 *  ajaxsubmit - ...
 		 *  validate - ...
 		 *  aftersubmitform - ...
 		 */
 		$('.cms-container').entwine({
-			
+
 			/**
 			 * Tracks current panel request.
 			 */
@@ -126,7 +177,7 @@ jQuery.noConflict();
 			FragmentXHR: {},
 
 			StateChangeCount: 0,
-			
+
 			/**
 			 * Options for the threeColumnCompressor layout algorithm.
 			 *
@@ -147,7 +198,7 @@ jQuery.noConflict();
 				// Browser detection
 				if($.browser.msie && parseInt($.browser.version, 10) < 8) {
 					$('.ss-loading-screen').append(
-						'<p class="ss-loading-incompat-warning"><span class="notice">' + 
+						'<p class="ss-loading-incompat-warning"><span class="notice">' +
 						'Your browser is not compatible with the CMS interface. Please use Internet Explorer 8+, Google Chrome or Mozilla Firefox.' +
 						'</span></p>'
 					).css('z-index', $('.ss-loading-screen').css('z-index')+1);
@@ -156,7 +207,7 @@ jQuery.noConflict();
 					this._super();
 					return;
 				}
-				
+
 				// Initialize layouts
 				this.redraw();
 
@@ -165,7 +216,7 @@ jQuery.noConflict();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
 				this.restoreTabState();
-				
+
 				this._super();
 			},
 
@@ -275,9 +326,9 @@ jQuery.noConflict();
 			 * Proxy around History.pushState() which handles non-HTML5 fallbacks,
 			 * as well as global change tracking. Change tracking needs to be synchronous rather than event/callback
 			 * based because the user needs to be able to abort the action completely.
-			 * 
+			 *
 			 * See handleStateChange() for more details.
-			 * 
+			 *
 			 * Parameters:
 			 *  - {String} url
 			 *  - {String} title New window title
@@ -292,20 +343,20 @@ jQuery.noConflict();
 				// Check change tracking (can't use events as we need a way to cancel the current state change)
 				var contentEls = this._findFragments(data.pjax ? data.pjax.split(',') : ['Content']);
 				var trackedEls = contentEls.find(':data(changetracker)').add(contentEls.filter(':data(changetracker)'));
-				
+
 				if(trackedEls.length) {
 					var abort = false;
-					
+
 					trackedEls.each(function() {
 						if(!$(this).confirmUnsavedChanges()) abort = true;
 					});
-					
+
 					if(abort) return;
 				}
 
 				// Save tab selections so we can restore them later
 				this.saveTabState();
-				
+
 				if(window.History.enabled) {
 					$.extend(data, {__forceReferer: forceReferer});
 					// Active menu item is set based on X-Controller ajax header,
@@ -331,31 +382,31 @@ jQuery.noConflict();
 
 			/**
 			 * Function: submitForm
-			 * 
+			 *
 			 * Parameters:
 			 *  {DOMElement} form - The form to be submitted. Needs to be passed
 			 *   in to avoid entwine methods/context being removed through replacing the node itself.
 			 *  {DOMElement} button - The pressed button (optional)
 			 *  {Function} callback - Called in complete() handler of jQuery.ajax()
 			 *  {Object} ajaxOptions - Object literal to merge into $.ajax() call
-			 * 
+			 *
 			 * Returns:
 			 *  (boolean)
 			 */
 			submitForm: function(form, button, callback, ajaxOptions) {
 				var self = this;
-		
+
 				// look for save button
 				if(!button) button = this.find('.Actions :submit[name=action_save]');
 				// default to first button if none given - simulates browser behaviour
 				if(!button) button = this.find('.Actions :submit:first');
-	
+
 				form.trigger('beforesubmitform');
 				this.trigger('submitform', {form: form, button: button});
-	
+
 				// set button to "submitting" state
 				$(button).addClass('loading');
-	
+
 				// validate if required
 				var validationResult = form.validate();
 				if(typeof validationResult!=='undefined' && !validationResult) {
@@ -366,12 +417,12 @@ jQuery.noConflict();
 
 					return false;
 				}
-				
+
 				// get all data from the form
 				var formData = form.serializeArray();
 				// add button action
 				formData.push({name: $(button).attr('name'), value:'1'});
-				// Artificial HTTP referer, IE doesn't submit them via ajax. 
+				// Artificial HTTP referer, IE doesn't submit them via ajax.
 				// Also rewrites anchors to their page counterparts, which is important
 				// as automatic browser ajax response redirects seem to discard the hash/fragment.
 				// TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
@@ -386,7 +437,7 @@ jQuery.noConflict();
 				// sending back different `X-Pjax` headers and content
 				jQuery.ajax(jQuery.extend({
 					headers: {"X-Pjax" : "CurrentForm,Breadcrumbs"},
-					url: form.attr('action'), 
+					url: form.attr('action'),
 					data: formData,
 					type: 'POST',
 					complete: function() {
@@ -402,7 +453,7 @@ jQuery.noConflict();
 						newContentEls.filter('form').trigger('aftersubmitform', {status: status, xhr: xhr, formData: formData});
 					}
 				}, ajaxOptions));
-	
+
 				return false;
 			},
 
@@ -411,21 +462,21 @@ jQuery.noConflict();
 			 * To trigger loading, pass a new URL to window.History.pushState().
 			 * Use loadPanel() as a pushState() wrapper as it provides some additional functionality
 			 * like global changetracking and user aborts.
-			 * 
+			 *
 			 * Due to the nature of history management, no callbacks are allowed.
 			 * Use the 'beforestatechange' and 'afterstatechange' events instead,
-			 * or overwrite the beforeLoad() and afterLoad() methods on the 
+			 * or overwrite the beforeLoad() and afterLoad() methods on the
 			 * DOM element you're loading the new content into.
-			 * Although you can pass data into pushState(), it shouldn't contain 
+			 * Although you can pass data into pushState(), it shouldn't contain
 			 * DOM elements or callback closures.
-			 * 
+			 *
 			 * The passed URL should allow reconstructing important interface state
 			 * without additional parameters, in the following use cases:
 			 * - Explicit loading through History.pushState()
 			 * - Implicit loading through browser navigation event triggered by the user (forward or back)
 			 * - Full window refresh without ajax
 			 * For example, a ModelAdmin search event should contain the search terms
-			 * as URL parameters, and the result display should automatically appear 
+			 * as URL parameters, and the result display should automatically appear
 			 * if the URL is loaded without ajax.
 			 */
 			handleStateChange: function() {
@@ -451,22 +502,33 @@ jQuery.noConflict();
 				// that can be reloaded without reloading the whole window.
 				if(contentEls.length < fragmentsArr.length) {
 					fragments = 'Content', fragmentsArr = ['Content'];
-					contentEls = this._findFragments(fragmentsArr);					
+					contentEls = this._findFragments(fragmentsArr);
 				}
-				
+
 				this.trigger('beforestatechange', {state: state, element: contentEls});
 
 				// Set Pjax headers, which can declare a preference for the returned view.
 				// The actually returned view isn't always decided upon when the request
 				// is fired, so the server might decide to change it based on its own logic.
 				headers['X-Pjax'] = fragments;
-		
+
 				// Set 'fake' referer - we call pushState() before making the AJAX request, so we have to
 				// set our own referer here
 				if (typeof state.data.__forceReferer !== 'undefined') {
-					headers['X-Backurl'] = state.data.__forceReferer;
+					// Ensure query string is properly encoded if present
+					var url = state.data.__forceReferer;
+
+					try {
+						// Prevent double-encoding by attempting to decode
+						url = decodeURI(url);
+					} catch(e) {
+						// URL not encoded, or was encoded incorrectly, so do nothing
+					} finally {
+						// Set our referer header to the encoded URL
+						headers['X-Backurl'] = encodeURI(url);
+					}
 				}
-				
+
 				contentEls.addClass('loading');
 				var xhr = $.ajax({
 					headers: headers,
@@ -481,7 +543,7 @@ jQuery.noConflict();
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: els, state: state});
 					}
 				});
-				
+
 				this.setStateChangeXHR(xhr);
 			},
 
@@ -571,8 +633,11 @@ jQuery.noConflict();
 
 				// Support a full reload
 				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
-					document.location.href = $('base').attr('href').replace(/\/*$/, '') 
-						+ '/' + xhr.getResponseHeader('X-ControllerURL');
+					var baseUrl = $('base').attr('href'),
+						rawURL = xhr.getResponseHeader('X-ControllerURL'),
+						url = $.path.isAbsoluteUrl(rawURL) ? rawURL : $.path.makeUrlAbsolute(rawURL, baseUrl);
+
+					document.location.href = url;
 					return;
 				}
 
@@ -589,7 +654,7 @@ jQuery.noConflict();
 				if(xhr.getResponseHeader('Content-Type').match(/^((text)|(application))\/json[ \t]*;?/i)) {
 					newFragments = data;
 				} else {
-					
+
 					// Fall back to replacing the content fragment if HTML is returned
 					var fragment = document.createDocumentFragment();
 					jQuery.clean( [ data ], document, fragment, [] );
@@ -670,9 +735,9 @@ jQuery.noConflict();
 			},
 
 			/**
-			 * 
-			 * 
-			 * Parameters: 
+			 *
+			 *
+			 * Parameters:
 			 * - fragments {Array}
 			 * Returns: jQuery collection
 			 */
@@ -689,14 +754,14 @@ jQuery.noConflict();
 
 			/**
 			 * Function: refresh
-			 * 
+			 *
 			 * Updates the container based on the current url
 			 *
 			 * Returns: void
 			 */
 			refresh: function() {
 				$(window).trigger('statechange');
-				
+
 				$(this).redraw();
 			},
 
@@ -725,7 +790,7 @@ jQuery.noConflict();
 						window.sessionStorage.setItem(tabsUrl, JSON.stringify(selectedTabs));
 					} catch(err) {
 						if (err.code === DOMException.QUOTA_EXCEEDED_ERR && window.sessionStorage.length === 0) {
-							// If this fails we ignore the error as the only issue is that it 
+							// If this fails we ignore the error as the only issue is that it
 							// does not remember the tab state.
 							// This is a Safari bug which happens when private browsing is enabled.
 							return;
@@ -785,7 +850,7 @@ jQuery.noConflict();
 
 				var s = window.sessionStorage;
 				if(url) {
-					s.removeItem('tabs-' + url);	
+					s.removeItem('tabs-' + url);
 				} else {
 					for(var i=0;i<s.length;i++) {
 						if(s.key(i).match(/^tabs-/)) s.removeItem(s.key(i));
@@ -805,9 +870,83 @@ jQuery.noConflict();
 					.replace(/\?.*/, '')
 					.replace(/#.*/, '')
 					.replace($('base').attr('href'), '');
+			},
+
+			showLoginDialog: function() {
+				var tempid = $('body').data('member-tempid'),
+					dialog = $('.leftandmain-logindialog'),
+					url = 'CMSSecurity/login';
+
+				// Force regeneration of any existing dialog
+				if(dialog.length) dialog.remove();
+
+				// Join url params
+				url = $.path.addSearchParams(url, {
+					'tempid': tempid,
+					'BackURL': window.location.href
+				});
+
+				// Show a placeholder for instant feedback. Will be replaced with actual
+				// form dialog once its loaded.
+				dialog = $('<div class="leftandmain-logindialog"></div>');
+				dialog.attr('id', new Date().getTime());
+				dialog.data('url', url);
+				$('body').append(dialog);
 			}
 		});
-		
+
+		// Login dialog page
+		$('.leftandmain-logindialog').entwine({
+			onmatch: function() {
+				this._super();
+
+				// Create jQuery dialog
+				this.ssdialog({
+					iframeUrl: this.data('url'),
+					dialogClass: "leftandmain-logindialog-dialog",
+					autoOpen: true,
+					minWidth: 500,
+					maxWidth: 500,
+					minHeight: 370,
+					maxHeight: 400,
+					closeOnEscape: false,
+					open: function() {
+						$('.ui-widget-overlay').addClass('leftandmain-logindialog-overlay');
+					},
+					close: function() {
+						$('.ui-widget-overlay').removeClass('leftandmain-logindialog-overlay');
+					}
+				});
+			},
+			onunmatch: function() {
+				this._super();
+			},
+			open: function() {
+				this.ssdialog('open');
+			},
+			close: function() {
+				this.ssdialog('close');
+			},
+			toggle: function(bool) {
+				if(this.is(':visible')) this.close();
+				else this.open();
+			},
+			/**
+			 * Callback activated by CMSSecurity_success.ss
+			 */
+			reauthenticate: function(data) {
+				// Replace all SecurityID fields with the given value
+				if(typeof(data.SecurityID) !== 'undefined') {
+					$(':input[name=SecurityID]').val(data.SecurityID);
+				}
+				// Update TempID for current user
+				if(typeof(data.TempID) !== 'undefined') {
+					$('body').data('member-tempid', data.TempID);
+				}
+				this.close();
+			}
+		});
+
 		/**
 		 * Add loading overlay to selected regions in the CMS automatically.
 		 * Not applied to all "*.loading" elements to avoid secondary regions
@@ -852,7 +991,7 @@ jQuery.noConflict();
 					return;
 				}
 
-				var href = this.attr('href'), 
+				var href = this.attr('href'),
 					url = (href && !href.match(/^#/)) ? href : this.data('href'),
 					data = {pjax: this.data('pjaxTarget')};
 
@@ -870,17 +1009,17 @@ jQuery.noConflict();
 			onclick: function(e) {
 				$(this).removeClass('ui-button-text-only');
 				$(this).addClass('ss-ui-button-loading ui-button-text-icons');
-				
+
 				var loading = $(this).find(".ss-ui-loading-icon");
-				
+
 				if(loading.length < 1) {
 					loading = $("<span></span>").addClass('ss-ui-loading-icon ui-button-icon-primary ui-icon');
-					
+
 					$(this).prepend(loading);
 				}
-				
+
 				loading.show();
-				
+
 				var href = this.attr('href'), url = href ? href : this.data('href');
 
 				jQuery.ajax({
@@ -888,16 +1027,16 @@ jQuery.noConflict();
 					// Ensure that form view is loaded (rather than whole "Content" template)
 					complete: function(xmlhttp, status) {
 						var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.responseText;
-						
+
 						try {
 							if (typeof msg != "undefined" && msg !== null) eval(msg);
 						}
 						catch(e) {}
-						
+
 						loading.hide();
-						
+
 						$(".cms-container").refresh();
-						
+
 						$(this).removeClass('ss-ui-button-loading ui-button-text-icons');
 						$(this).addClass('ui-button-text-only');
 					},
@@ -928,14 +1067,14 @@ jQuery.noConflict();
 					dialog = $('<div class="ss-ui-dialog" id="' + id + '" />');
 					$('body').append(dialog);
 				}
-				
+
 				var extraClass = this.data('popupclass')?this.data('popupclass'):'';
-				
+
 				dialog.ssdialog({iframeUrl: this.attr('href'), autoOpen: true, dialogExtraClass: extraClass});
 				return false;
 			}
 		});
-		
+
 		/**
 		 * Add styling to all contained buttons, and create buttonsets if required.
 		 */
@@ -965,20 +1104,20 @@ jQuery.noConflict();
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
 				// Remove whitespace to avoid gaps with inline elements
-				this.contents().filter(function() { 
-					return (this.nodeType == 3 && !/\S/.test(this.nodeValue)); 
+				this.contents().filter(function() {
+					return (this.nodeType == 3 && !/\S/.test(this.nodeValue));
 				}).remove();
 
 				// Init buttons if required
 				this.find('.ss-ui-button').each(function() {
 					if(!$(this).data('button')) $(this).button();
 				});
-				
+
 				// Mark up buttonsets
 				this.find('.ss-ui-buttonset').buttonset();
 			}
 		});
-		
+
 		/**
 		 * Duplicates functionality in DateField.js, but due to using entwine we can match
 		 * the DOM element on creation, rather than onclick - which allows us to decorate
@@ -1000,23 +1139,23 @@ jQuery.noConflict();
 				$(this).datepicker(config);
 				// // Unfortunately jQuery UI only allows configuration of icon images, not sprites
 				// this.next('button').button('option', 'icons', {primary : 'ui-icon-calendar'});
-				
+
 				this._super();
 			},
 			onunmatch: function() {
 				this._super();
 			}
 		});
-		
+
 		/**
 		 * Styled dropdown select fields via chosen. Allows things like search and optgroup
-		 * selection support. Rather than manually adding classes to selects we want 
+		 * selection support. Rather than manually adding classes to selects we want
 		 * styled, we style everything but the ones we tell it not to.
 		 *
-		 * For the CMS we also need to tell the parent div that his has a select so
+		 * For the CMS we also need to tell the parent div that it has a select so
 		 * we can fix the height cropping.
 		 */
-		
+
 		$('.cms .field.dropdown select, .cms .field select[multiple], .fieldholder-small select.dropdown').entwine({
 			onmatch: function() {
 				if(this.is('.no-chzn')) {
@@ -1033,20 +1172,20 @@ jQuery.noConflict();
 
 				// Apply Chosen
 				applyChosen(this);
-				
+
 				this._super();
 			},
 			onunmatch: function() {
 				this._super();
 			}
 		});
-	
+
 		$(".cms-panel-layout").entwine({
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 			}
 		});
-	
+
 		/**
 		 * Overload the default GridField behaviour (open a new URL in the browser)
 		 * with the CMS-specific ajax loading.
@@ -1064,7 +1203,7 @@ jQuery.noConflict();
 
 		/**
 		 * Generic search form in the CMS, often hooked up to a GridField results display.
-		 */	
+		 */
 		$('.cms-search-form').entwine({
 			onsubmit: function(e) {
 				// Remove empty elements and make the URL prettier
@@ -1122,7 +1261,7 @@ jQuery.noConflict();
 			},
 			onremove: function() {
 				if(window.debug) console.log('saving', this.data('url'), this);
-				
+
 				// Save the HTML state at the last possible moment.
 				// Don't store the DOM to avoid memory leaks.
 				if(!this.data('deferredNoCache')) window._panelDeferredCache[this.data('url')] = this.html();
@@ -1181,7 +1320,7 @@ jQuery.noConflict();
 				if(!this.data('uiTabs')) this.tabs({
 					active: (activeTab.index() != -1) ? activeTab.index() : 0,
 					beforeLoad: function(e, ui) {
-						// Disable automatic ajax loading of tabs without matching DOM elements, 
+						// Disable automatic ajax loading of tabs without matching DOM elements,
 						// determining if the current URL differs from the tab URL is too error prone.
 						return false;
 					},
@@ -1202,7 +1341,7 @@ jQuery.noConflict();
 					}
 				});
 			},
-		
+
 			/**
 			 * Ensure hash links are prefixed with the current page URL,
 			 * otherwise jQuery interprets them as being external.
@@ -1217,7 +1356,7 @@ jQuery.noConflict();
 			}
 		});
 	});
-	
+
 }(jQuery));
 
 var statusMessage = function(text, type) {

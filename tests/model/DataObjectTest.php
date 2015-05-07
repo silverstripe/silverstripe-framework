@@ -16,18 +16,41 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment'
+		'DataObjectTest_TeamComment',
+		'DataObjectTest_ExtendedTeamComment'
 	);
 
-	public function testBaseFieldsExcludedFromDb() {
-		$obj = new DataObjectTest_ValidatedObject();
-
+	public function testDb() {
+		$obj = new DataObjectTest_TeamComment();
 		$dbFields = $obj->db();
+
+		// Assert fields are included
 		$this->assertArrayHasKey('Name', $dbFields);
+
+		// Assert the base fields are excluded
 		$this->assertArrayNotHasKey('Created', $dbFields);
 		$this->assertArrayNotHasKey('LastEdited', $dbFields);
 		$this->assertArrayNotHasKey('ClassName', $dbFields);
 		$this->assertArrayNotHasKey('ID', $dbFields);
+
+		// Assert that the correct field type is returned when passing a field
+		$this->assertEquals('Varchar', $obj->db('Name'));
+		$this->assertEquals('Text', $obj->db('Comment'));
+
+		$obj = new DataObjectTest_ExtendedTeamComment();
+		$dbFields = $obj->db();
+
+		// Assert overloaded fields have correct data type
+		$this->assertEquals('HTMLText', $obj->db('Comment'));
+		$this->assertEquals('HTMLText', $dbFields['Comment'],
+			'Calls to DataObject::db without a field specified return correct data types');
+
+		// assertEquals doesn't verify the order of array elements, so access keys manually to check order:
+		// expected: array('Name' => 'Varchar', 'Comment' => 'HTMLText')
+		reset($dbFields);
+		$this->assertEquals('Name', key($dbFields), 'DataObject::db returns fields in correct order');
+		next($dbFields);
+		$this->assertEquals('Comment', key($dbFields), 'DataObject::db returns fields in correct order');
 	}
 
 	public function testValidObjectsForBaseFields() {
@@ -894,6 +917,20 @@ class DataObjectTest extends SapphireTest {
 	public function testManyManyExtraFields() {
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+
+		// Get all extra fields
+		$teamExtraFields = $team->many_many_extraFields();
+		$this->assertEquals(array(
+			'Players' => array('Position' => 'Varchar(100)')
+		), $teamExtraFields);
+
+		// Ensure fields from parent classes are included
+		$subTeam = singleton('DataObjectTest_SubTeam');
+		$teamExtraFields = $subTeam->many_many_extraFields();
+		$this->assertEquals(array(
+			'Players' => array('Position' => 'Varchar(100)'),
+			'FormerPlayers' => array('Position' => 'Varchar(100)')
+		), $teamExtraFields);
 		
 		// Extra fields are immediately available on the Team class (defined in $many_many_extraFields)
 		$teamExtraFields = $team->many_many_extraFields('Players');
@@ -949,21 +986,40 @@ class DataObjectTest extends SapphireTest {
 	 * Tests that singular_name() generates sensible defaults.
 	 */
 	public function testSingularName() {
-		$assertions = array (
+		$assertions = array(
 			'DataObjectTest_Player'       => 'Data Object Test Player',
 			'DataObjectTest_Team'         => 'Data Object Test Team',
 			'DataObjectTest_Fixture'      => 'Data Object Test Fixture'
 		);
 		
 		foreach($assertions as $class => $expectedSingularName) {
-			$this->assertEquals (
+			$this->assertEquals(
 				$expectedSingularName,
 				singleton($class)->singular_name(),
 				"Assert that the singular_name for '$class' is correct."
 			);
 		}
 	}
-	
+
+	/**
+	 * Tests that plural_name() generates sensible defaults.
+	 */
+	public function testPluralName() {
+		$assertions = array(
+			'DataObjectTest_Player'       => 'Data Object Test Players',
+			'DataObjectTest_Team'         => 'Data Object Test Teams',
+			'DataObjectTest_Fixture'      => 'Data Object Test Fixtures'
+		);
+
+		foreach($assertions as $class => $expectedPluralName) {
+			$this->assertEquals(
+				$expectedPluralName,
+				singleton($class)->plural_name(),
+				"Assert that the plural_name for '$class' is correct."
+			);
+		}
+	}
+
 	public function testHasDatabaseField() {
 		$team = singleton('DataObjectTest_Team');
 		$subteam = singleton('DataObjectTest_SubTeam');
@@ -1340,6 +1396,16 @@ class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 	private static $has_one = array(
 		"ParentTeam" => 'DataObjectTest_Team',
 	);
+
+	private static $many_many = array(
+		'FormerPlayers' => 'DataObjectTest_Player'
+	);
+	
+	private static $many_many_extraFields = array(
+		'FormerPlayers' => array(
+			'Position' => 'Varchar(100)'
+		)
+	);
 }
 class OtherSubclassWithSameField extends DataObjectTest_Team implements TestOnly {
 	private static $db = array(
@@ -1422,6 +1488,12 @@ class DataObjectTest_TeamComment extends DataObject {
 		'Team' => 'DataObjectTest_Team'
 	);
 
+}
+
+class DataObjectTest_ExtendedTeamComment extends DataObjectTest_TeamComment {
+	private static $db = array(
+		'Comment' => 'HTMLText'
+	);
 }
 
 DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');

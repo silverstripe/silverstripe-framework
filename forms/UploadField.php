@@ -1089,6 +1089,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function handleSelect(SS_HTTPRequest $request) {
+		if(!$this->canAttachExisting()) return $this->httpError(403);
 		return UploadField_SelectHandler::create($this, $this->getFolderName());
 	}
 	
@@ -1430,6 +1431,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		// Check item permissions
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
+		if($item instanceof Folder) return $this->httpError(403);
 		if(!$item->canDelete()) return $this->httpError(403);
 
 		// Delete the file from the filesystem. The file will be removed
@@ -1451,6 +1453,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		// Check item permissions
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
+		if($item instanceof Folder) return $this->httpError(403);
 		if(!$item->canEdit()) return $this->httpError(403);
 
 		Requirements::css(FRAMEWORK_DIR . '/css/UploadField.css');
@@ -1494,6 +1497,8 @@ class UploadField_ItemHandler extends RequestHandler {
 		// Check item permissions
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
+		if($item instanceof Folder) return $this->httpError(403);
+		if(!$item->canEdit()) return $this->httpError(403);
 
 		$form->saveInto($item);
 		$item->write();

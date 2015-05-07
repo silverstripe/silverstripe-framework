@@ -244,7 +244,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @example $list = $list->sort('Name'); // default ASC sorting
 	 * @example $list = $list->sort('Name DESC'); // DESC sorting
 	 * @example $list = $list->sort('Name', 'ASC');
-	 * @example $list = $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+	 * @example $list = $list->sort(array('Name'=>'ASC', 'Age'=>'DESC'));
 	 *
 	 * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
 	 * @return DataList
@@ -355,21 +355,21 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
-	 * Return a copy of this list which does not contain items matching any of these charactaristics.
+	 * Return a copy of this list which contains items matching any of these charactaristics.
 	 *
-	 * @example // filter bob from list
+	 * @example // only bob in the list
 	 *          $list = $list->filterAny('Name', 'bob'); 
 	 *          // SQL: WHERE "Name" = 'bob'
-	 * @example // filter aziz and bob from list
+	 * @example // azis or bob in the list
 	 *          $list = $list->filterAny('Name', array('aziz', 'bob'); 
 	 *          // SQL: WHERE ("Name" IN ('aziz','bob'))
-	 * @example // filter by bob or anybody aged 21
+	 * @example // bob or anyone aged 21 in the list
 	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>21)); 
 	 *          // SQL: WHERE ("Name" = 'bob' OR "Age" = '21')
-	 * @example // filter by bob or anybody aged 21 or 43
+	 * @example // bob or anyone aged 21 or 43 in the list
 	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>array(21, 43))); 
 	 *          // SQL: WHERE ("Name" = 'bob' OR ("Age" IN ('21', '43'))
-	 * @example // bob age 21 or 43, phil age 21 or 43 would be excluded
+	 * @example // all bobs, phils or anyone aged 21 or 43 in the list
 	 *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
 	 *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
 	 *

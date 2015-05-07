@@ -572,6 +572,16 @@ class SSViewer implements Flushable {
 	private static $source_file_comments = false;
 
 	/**
+	 * @ignore
+	 */
+	private static $template_cache_flushed = false;
+
+	/**
+	 * @ignore
+	 */
+	private static $cacheblock_cache_flushed = false;
+
+	/**
 	 * Set whether HTML comments indicating the source .SS file used to render this page should be
 	 * included in the output.  This is enabled by default
 	 *
@@ -642,7 +652,8 @@ class SSViewer implements Flushable {
 	 * Triggered early in the request when someone requests a flush.
 	 */
 	public static function flush() {
-		self::flush_template_cache();
+		self::flush_template_cache(true);
+		self::flush_cacheblock_cache(true);
 	}
 
 	/**
@@ -767,12 +778,14 @@ class SSViewer implements Flushable {
 		if(!$this->chosenTemplates) {
 			$templateList = (is_array($templateList)) ? $templateList : array($templateList);
 
-			user_error(
-				"None of these templates can be found in theme '"
-				. Config::inst()->get('SSViewer', 'theme') . "': "
-				. implode(".ss, ", $templateList) . ".ss", 
-				E_USER_WARNING
-			);
+			$message = 'None of the following templates could be found';
+			if(!$theme) {
+				$message .= ' (no theme in use)';
+			} else {
+				$message .= ' in theme "' . $theme . '"';
+			}
+
+			user_error($message . ': ' . implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
 		}
 	}
 
@@ -907,24 +920,50 @@ class SSViewer implements Flushable {
 			return $founds[0];
 		}
 	}
-
-	/**
-	 * @ignore
-	 */
-	static private $flushed = false;
 	
 	/**
 	 * Clears all parsed template files in the cache folder.
 	 *
 	 * Can only be called once per request (there may be multiple SSViewer instances).
+	 *
+	 * @param bool $force Set this to true to force a re-flush. If left to false, flushing
+	 * may only be performed once a request.
 	 */
-	public static function flush_template_cache() {
-		if (!self::$flushed) {
+	public static function flush_template_cache($force = false) {
+		if (!self::$template_cache_flushed || $force) {
 			$dir = dir(TEMP_FOLDER);
 			while (false !== ($file = $dir->read())) {
 				if (strstr($file, '.cache')) unlink(TEMP_FOLDER . '/' . $file);
 			}
-			self::$flushed = true;
+			self::$template_cache_flushed = true;
+		}
+	}
+
+	/**
+	 * Clears all partial cache blocks.
+	 *
+	 * Can only be called once per request (there may be multiple SSViewer instances).
+	 *
+	 * @param bool $force Set this to true to force a re-flush. If left to false, flushing
+	 * may only be performed once a request.
+	 */
+	public static function flush_cacheblock_cache($force = false) {
+		if (!self::$cacheblock_cache_flushed || $force) {
+			$cache = SS_Cache::factory('cacheblock');
+			$backend = $cache->getBackend();
+			
+			if(
+				$backend instanceof Zend_Cache_Backend_ExtendedInterface
+				&& ($capabilities = $backend->getCapabilities())
+				&& $capabilities['tags']
+			) {
+				$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $cache->getTags());
+			} else {
+				$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+			}
+
+			
+			self::$cacheblock_cache_flushed = true;
 		}
 	}
 
@@ -1070,9 +1109,9 @@ class SSViewer implements Flushable {
 		if($this->rewriteHashlinks && $rewrite) {
 			if(strpos($output, '<base') !== false) {
 				if($rewrite === 'php') { 
-					$thisURLRelativeToBase = "<?php echo strip_tags(\$_SERVER['REQUEST_URI']); ?>"; 
+					$thisURLRelativeToBase = "<?php echo Convert::raw2att(\$_SERVER['REQUEST_URI']); ?>";
 				} else { 
-					$thisURLRelativeToBase = strip_tags($_SERVER['REQUEST_URI']); 
+					$thisURLRelativeToBase = Convert::raw2att($_SERVER['REQUEST_URI']);
 				}
 
 				$output = preg_replace('/(<a[^>]+href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);

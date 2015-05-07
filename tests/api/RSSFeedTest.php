@@ -16,7 +16,6 @@ class RSSFeedTest extends SapphireTest {
 		$rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description");
 		$content = $rssFeed->outputToBrowser();
 
-		//Debug::message($content);
 		$this->assertContains('<link>http://www.example.org/item-a/</link>', $content);
 		$this->assertContains('<link>http://www.example.com/item-b.html</link>', $content);
 		$this->assertContains('<link>http://www.example.com/item-c.html</link>', $content);
@@ -44,6 +43,23 @@ class RSSFeedTest extends SapphireTest {
 		$this->assertContains('<description>ItemC AltContent</description>', $content);
 	}
 
+	public function testRSSFeedWithShortcode() {
+		$list = new ArrayList();
+		$list->push(new RSSFeedTest_ItemD());
+
+		$rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description");
+		$content = $rssFeed->outputToBrowser();
+
+		$this->assertContains('<link>http://www.example.org/item-d.html</link>', $content);
+
+		$this->assertContains('<title>ItemD</title>', $content);
+
+		$this->assertContains(
+			'<description>&lt;p&gt;ItemD Content test shortcode output&lt;/p&gt;</description>',
+			$content
+		);
+	}
+
 	public function testRenderWithTemplate() {
 		$rssFeed = new RSSFeed(new ArrayList(), "", "", "");
 		$rssFeed->setTemplate('RSSFeedTest');
@@ -61,6 +77,10 @@ class RSSFeedTest extends SapphireTest {
 		Config::inst()->update('Director', 'alternate_base_url', '/');
 		if(!self::$original_host) self::$original_host = $_SERVER['HTTP_HOST'];
 		$_SERVER['HTTP_HOST'] = 'www.example.org';
+
+		ShortcodeParser::get('default')->register('test_shortcode', function() {
+			return 'test shortcode output';
+		});
 	}
 
 	public function tearDown() {
@@ -77,7 +97,7 @@ class RSSFeedTest_ItemA extends ViewableData {
 		'Content' => 'Text',
 		'AltContent' => 'Text',
 	);
-	
+
 	public function getTitle() {
 		return "ItemA";
 	}
@@ -89,7 +109,7 @@ class RSSFeedTest_ItemA extends ViewableData {
 	public function getAltContent() {
 		return "ItemA AltContent";
 	}
-	
+
 	public function Link($action = null) {
 		return Controller::join_links("item-a/", $action);
 	}
@@ -132,5 +152,24 @@ class RSSFeedTest_ItemC extends ViewableData {
 
 	public function AbsoluteLink() {
 		return "http://www.example.com/item-c.html";
+	}
+}
+
+class RSSFeedTest_ItemD extends ViewableData {
+	// ItemD test fields - all fields use casting but Content & AltContent cast as HTMLText
+	private static $casting = array(
+		'Title' => 'Varchar',
+		'Content' => 'HTMLText'
+	);
+
+	public $Title = 'ItemD';
+	public $Content = '<p>ItemD Content [test_shortcode]</p>';
+
+	public function Link() {
+		return 'item-d.html';
+	}
+
+	public function AbsoluteLink() {
+		return 'http://www.example.org/item-d.html';
 	}
 }

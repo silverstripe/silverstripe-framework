@@ -758,12 +758,22 @@ class Requirements_Backend {
 				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
 
 				// We put script tags into the body, for performance.
-				// If your template already has script tags in the body, then we put our script
+				// If your template already has script tags in the body, then we try to put our script
 				// tags just before those. Otherwise, we put it at the bottom.
 				$p2 = stripos($content, '<body');
 				$p1 = stripos($content, '<script', $p2);
+				
+				$commentTags = array();
+				$canWriteToBody = ($p1 !== false)
+					&&
+					//check that the script tag is not inside a html comment tag
+					!(
+						preg_match('/.*(?|(<!--)|(-->))/U', $content, $commentTags, 0, $p1)
+						&& 
+						$commentTags[1] == '-->'
+					);
 
-				if($p1 !== false) {
+				if($canWriteToBody) {
 					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
 				} else {
 					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
@@ -1129,10 +1139,16 @@ class Requirements_Backend {
 
 			if(!$refresh) continue;
 
+			$failedToMinify = false;
 			$combinedData = "";
 			foreach(array_diff($fileList, $this->blocked) as $file) {
 				$fileContent = file_get_contents($base . $file);
-				$fileContent = $this->minifyFile($file, $fileContent);
+				
+				try{
+					$fileContent = $this->minifyFile($file, $fileContent);
+				}catch(Exception $e){
+					$failedToMinify = true;
+				}
 
 				if ($this->write_header_comment) {
 					// write a header comment for each file for easier identification and debugging
@@ -1149,6 +1165,12 @@ class Requirements_Backend {
 				if(fwrite($fh, $combinedData) == strlen($combinedData)) $successfulWrite = true;
 				fclose($fh);
 				unset($fh);
+			}
+			
+			if($failedToMinify){
+				// Failed to minify, use unminified. This warning is raised at the end to allow code execution
+				// to complete in case this warning is caught inside a try-catch block. 
+				user_error('Failed to minify '.$file.', exception: '.$e->getMessage(), E_USER_WARNING);
 			}
 
 			// Unsuccessful write - just include the regular JS files, rather than the combined one

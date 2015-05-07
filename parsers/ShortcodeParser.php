@@ -9,15 +9,15 @@
  * @package framework
  * @subpackage misc
  */
-class ShortcodeParser {
+class ShortcodeParser extends Object {
 	
 	public function img_shortcode($attrs) {
 		return "<img src='".$attrs['src']."'>";
 	}
 	
-	private static $instances = array();
+	protected static $instances = array();
 	
-	private static $active_instance = 'default';
+	protected static $active_instance = 'default';
 	
 	// --------------------------------------------------------------------------------------------------------------
 	
@@ -33,7 +33,7 @@ class ShortcodeParser {
 	 */
 	public static function get($identifier = 'default') {
 		if(!array_key_exists($identifier, self::$instances)) {
-			self::$instances[$identifier] = new ShortcodeParser();
+			self::$instances[$identifier] = static::create();
 		}
 		
 		return self::$instances[$identifier];
@@ -45,7 +45,7 @@ class ShortcodeParser {
 	 * @return ShortcodeParser
 	 */
 	public static function get_active() {
-		return self::get(self::$active_instance);
+		return static::get(self::$active_instance);
 	}
 	
 	/**
@@ -140,15 +140,15 @@ class ShortcodeParser {
 		}
 	}
 
-	private static $marker_class = '--ss-shortcode-marker';
+	protected static $marker_class = '--ss-shortcode-marker';
 
-	private static $block_level_elements = array(
+	protected static $block_level_elements = array(
 		'address', 'article', 'aside', 'audio', 'blockquote', 'canvas', 'dd', 'div', 'dl', 'fieldset', 'figcaption',
 		'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'ol', 'output', 'p',
 		'pre', 'section', 'table', 'ul'
 	);
 	
-	private static $attrrx = '
+	protected static $attrrx = '
 		([^\s\/\'"=,]+)       # Name  
 		\s* = \s*
 		(?:
@@ -158,11 +158,11 @@ class ShortcodeParser {
 		)
 ';
 	
-	private static function attrrx() {
+	protected static function attrrx() {
 		return '/'.self::$attrrx.'/xS';
 	}
 
-	private static $tagrx = '
+	protected static $tagrx = '
 		# HTML Tag
 		<(?<element>(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+)>
 		 
@@ -182,7 +182,7 @@ class ShortcodeParser {
 		(?<cesc2>\]?)  
 ';
 
-	private static function tagrx() {
+	protected static function tagrx() {
 		return '/'.sprintf(self::$tagrx, self::$attrrx).'/xS';
 	}
 
@@ -207,7 +207,7 @@ class ShortcodeParser {
 	protected function extractTags($content) {
 		$tags = array();
 		
-		if(preg_match_all(self::tagrx(), $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+		if(preg_match_all(static::tagrx(), $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
 			foreach($matches as $match) {
 				// Ignore any elements
 				if (empty($match['open'][0]) && empty($match['close'][0])) continue;
@@ -216,7 +216,7 @@ class ShortcodeParser {
 				$attrs = array();
 				
 				if (!empty($match['attrs'][0])) {
-					preg_match_all(self::attrrx(), $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
+					preg_match_all(static::attrrx(), $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
 
 					foreach ($attrmatches as $attr) {
 						list($whole, $name, $value) = array_values(array_filter($attr));

@@ -83,6 +83,18 @@ en:
   CheckboxField:
     NOANSWER: No
     YESANSWER: Yes
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Forgot password?'
+    BUTTONLOGIN: 'Log back in'
+    BUTTONLOGOUT: 'Log out'
+    PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
+  CMSSecurity:
+    INVALIDUSER: '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>'
+    LoginMessage: '<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
+    SUCCESS: Success
+    SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
+    TimedOutTitleAnonymous: 'Your session has timed out.'
+    TimedOutTitleMember: 'Hey {name}!<br />Your session has timed out.'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -176,7 +188,8 @@ en:
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'    
     FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
@@ -251,6 +264,8 @@ en:
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ANCHORSCANNOTACCESSPAGE: 'You are not permitted to access the content of the target page.'
+    ANCHORSPAGENOTFOUND: 'Target page not found.'
     ANCHORVALUE: Anchor
     BUTTONADDURL: 'Add url'
     BUTTONINSERT: Insert
@@ -354,6 +369,7 @@ en:
     NEWPASSWORD: 'New Password'
     NoPassword: 'There is no password on this member.'
     PASSWORD: Password
+    PASSWORDEXPIRED: 'Your password has expired. Please choose a new one.'
     PLURALNAME: Members
     REMEMBERME: 'Remember me next time?'
     SINGULARNAME: Member
@@ -460,8 +476,8 @@ en:
     SINGULARNAME: Role
     Title: Title
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
     PermsError: 'Can''t assign code "%s" with privileged permissions (requires ADMIN access)'
+    PLURALNAME: 'Permission Role Codes'
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'

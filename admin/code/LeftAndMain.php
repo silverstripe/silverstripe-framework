@@ -457,6 +457,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		// Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
 		$this->response->addHeader('X-Frame-Options', 'SAMEORIGIN');
+		$this->response->addHeader('Vary', 'X-Requested-With');
 		
 		return $response;
 	}

@@ -258,6 +258,10 @@ class UploadTest extends SapphireTest {
 			$file->Name,
 			'File has a name without a number because it\'s not a duplicate'
 		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file->getRelativePath(),
+			'File exists'
+		);
 		
 		$u = new Upload();
 		$u->load($tmpFile);
@@ -267,9 +271,37 @@ class UploadTest extends SapphireTest {
 			$file2->Name,
 			'File receives a number attached to the end before the extension'
 		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file2->getRelativePath(),
+			'File exists'
+		);
+		$this->assertGreaterThan(
+			$file->ID,
+			$file2->ID,
+			'File database record is not the same'
+		);
+		
+		$u = new Upload();
+		$u->load($tmpFile);
+		$file3 = $u->getFile();
+		$this->assertEquals(
+			'UploadTest-testUpload3.tar.gz',
+			$file3->Name,
+			'File receives a number attached to the end before the extension'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file3->getRelativePath(),
+			'File exists'
+		);
+		$this->assertGreaterThan(
+			$file2->ID,
+			$file3->ID,
+			'File database record is not the same'
+		);
 		
 		$file->delete();
 		$file2->delete();
+		$file3->delete();
 	}
 	
 	public function testUploadFileWithNoExtensionTwiceAppendsNumber() {
@@ -307,15 +339,28 @@ class UploadTest extends SapphireTest {
 			$file->Name,
 			'File is uploaded without extension'
 		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file->getRelativePath(),
+			'File exists'
+		);
 		
 		$u = new Upload();
 		$u->setValidator($v);
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
-			'UploadTest-testUpload-2',
+			'UploadTest-testUpload2',
 			$file2->Name,
 			'File receives a number attached to the end'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file2->getRelativePath(),
+			'File exists'
+		);
+		$this->assertGreaterThan(
+			$file->ID,
+			$file2->ID,
+			'File database record is not the same'
 		);
 		
 		$file->delete();
@@ -357,6 +402,10 @@ class UploadTest extends SapphireTest {
 			$file->Name,
 			'File is uploaded without extension'
 		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file->getRelativePath(),
+			'File exists'
+		);
 		
 		$u = new Upload();
 		$u->setValidator($v);
@@ -367,6 +416,10 @@ class UploadTest extends SapphireTest {
 			'UploadTest-testUpload',
 			$file2->Name,
 			'File does not receive new name'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file2->getRelativePath(),
+			'File exists'
 		);
 		$this->assertEquals(
 			$file->ID,
@@ -505,6 +558,70 @@ class UploadTest extends SapphireTest {
 
 		unlink($tmpFilePath);
 		$image->delete();
+	}
+
+	public function testFileVersioningWithAnExistingFile() {
+		$upload = function($tmpFileName) {
+			// create tmp file
+			$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+			$tmpFileContent = '';
+			for ($i = 0; $i < 10000; $i++) {
+				$tmpFileContent .= '0';
+			}
+			file_put_contents($tmpFilePath, $tmpFileContent);
+
+			// emulates the $_FILES array
+			$tmpFile = array(
+				'name' => $tmpFileName,
+				'type' => 'text/plaintext',
+				'size' => filesize($tmpFilePath),
+				'tmp_name' => $tmpFilePath,
+				'extension' => 'jpg',
+				'error' => UPLOAD_ERR_OK,
+			);
+
+			$v = new UploadTest_Validator();
+
+			// test upload into default folder
+			$u = new Upload();
+			$u->setReplaceFile(false);
+			$u->setValidator($v);
+			$u->load($tmpFile);
+			return $u->getFile();
+		};
+
+		$file1 = $upload('UploadTest-testUpload.jpg');
+		$this->assertEquals(
+			'UploadTest-testUpload.jpg',
+			$file1->Name,
+			'File does not receive new name'
+		);
+
+		$file2 = $upload('UploadTest-testUpload.jpg');
+		$this->assertEquals(
+			'UploadTest-testUpload2.jpg',
+			$file2->Name,
+			'File does receive new name'
+		);
+
+		$file3 = $upload('UploadTest-testUpload.jpg');
+		$this->assertEquals(
+			'UploadTest-testUpload3.jpg',
+			$file3->Name,
+			'File does receive new name'
+		);
+
+		$file4 = $upload('UploadTest-testUpload3.jpg');
+		$this->assertEquals(
+			'UploadTest-testUpload4.jpg',
+			$file4->Name,
+			'File does receive new name'
+		);
+
+		$file1->delete();
+		$file2->delete();
+		$file3->delete();
+		$file4->delete();
 	}
 
 }

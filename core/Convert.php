@@ -167,15 +167,32 @@ class Convert {
 	
 	/**
 	 * Converts an XML string to a PHP array
+	 * See http://phpsecurity.readthedocs.org/en/latest/Injection-Attacks.html#xml-external-entity-injection
 	 *
 	 * @uses recursiveXMLToArray()
-	 * @param string
-	 *
+	 * @param string $val
+	 * @param boolean $disableDoctypes Disables the use of DOCTYPE, and will trigger an error if encountered.
+	 * false by default.
+	 * @param boolean $disableExternals Disables the loading of external entities. false by default.
 	 * @return array
 	 */
-	public static function xml2array($val) {
-		$xml = new SimpleXMLElement($val);
-		return self::recursiveXMLToArray($xml);
+	public static function xml2array($val, $disableDoctypes = false, $disableExternals = false) {
+		// Check doctype
+		if($disableDoctypes && preg_match('/\<\!DOCTYPE.+]\>/', $val)) {
+			throw new InvalidArgumentException('XML Doctype parsing disabled');
+		}
+
+		// Disable external entity loading
+		if($disableExternals) $oldVal = libxml_disable_entity_loader($disableExternals);
+		try {
+			$xml = new SimpleXMLElement($val);
+			$result = self::recursiveXMLToArray($xml);
+		} catch(Exception $ex) {
+			if($disableExternals) libxml_disable_entity_loader($oldVal);
+			throw $ex;
+		}
+		if($disableExternals) libxml_disable_entity_loader($oldVal);
+		return $result;
 	}
 
 	/**

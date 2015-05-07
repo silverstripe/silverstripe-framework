@@ -423,6 +423,7 @@ class FormField extends RequestHandler {
 	 * Set the field value.
 	 * 
 	 * @param mixed $value
+	 * @param mixed $data Optional data source passed in by {@see Form::loadDataFrom}
 	 * @return FormField Self reference
 	 */
 	public function setValue($value) {
@@ -444,7 +445,7 @@ class FormField extends RequestHandler {
 	 * have to worry about linking the two.
 	 */
 	public function setForm($form) {
-		$this->form = $form; 
+		$this->form = $form;
 		return $this;
 	}
 	

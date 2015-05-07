@@ -161,6 +161,7 @@ class SS_HTTPResponse {
 	 */
 	public function setBody($body) {
 		$this->body = $body ? (string)$body : $body; // Don't type-cast false-ish values, eg null is null not ''
+		return $this;
 	}
 	
 	/**
@@ -191,7 +192,6 @@ class SS_HTTPResponse {
 	public function getHeader($header) {
 		if(isset($this->headers[$header]))
 			return $this->headers[$header];			
-			return null;
 		}
 	
 	/**
@@ -238,13 +238,17 @@ class SS_HTTPResponse {
 			$url = Director::absoluteURL($this->headers['Location'], true);
 			$urlATT = Convert::raw2htmlatt($url);
 			$urlJS = Convert::raw2js($url);
-			echo
-			"<p>Redirecting to <a href=\"$urlATT\" title=\"Click this link if your browser does not redirect you\">"
-				. "$urlATT... (output started on $file, line $line)</a></p>
-			<meta http-equiv=\"refresh\" content=\"1; url=$urlATT\" />
-			<script type=\"text/javascript\">setTimeout(function(){
-				window.location.href = \"$urlJS\";
-			}, 50);</script>";
+			$title = Director::isDev()
+				? "{$urlATT}... (output started on {$file}, line {$line})"
+				: "{$urlATT}...";
+			echo <<<EOT
+<p>Redirecting to <a href="{$urlATT}" title="Click this link if your browser does not redirect you">{$title}</a></p>
+<meta http-equiv="refresh" content="1; url={$urlATT}" />
+<script type="text/javascript">setTimeout(function(){
+	window.location.href = "{$urlJS}";
+}, 50);</script>";
+EOT
+			;
 		} else {
 			$line = $file = null;
 			if(!headers_sent($file, $line)) {
@@ -282,7 +286,7 @@ class SS_HTTPResponse {
 	 * @return bool
 	 */
 	public function isFinished() {
-		return in_array($this->statusCode, array(301, 302, 401, 403));
+		return in_array($this->statusCode, array(301, 302, 303, 304, 305, 307, 401, 403));
 	}
 	
 }
