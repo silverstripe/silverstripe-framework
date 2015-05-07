@@ -7,7 +7,22 @@ class SQLQueryTest extends SapphireTest {
 	protected $extraDataObjects = array(
 		'SQLQueryTest_DO',
 	);
-	
+
+	public function testCount() {
+
+		//basic counting
+		$qry = SQLQueryTest_DO::get()->dataQuery()->getFinalisedQuery();
+		$qry->setGroupBy('Common');
+		$ids = $this->allFixtureIDs('SQLQueryTest_DO');
+		$this->assertEquals(count($ids), $qry->count('"SQLQueryTest_DO"."ID"'));
+
+		//test with `having`
+		if (DB::getConn() instanceof MySQLDatabase) {
+			$qry->setHaving('"Date" > 2012-02-01');
+			$this->assertEquals(1, $qry->count('"SQLQueryTest_DO"."ID"'));
+		}
+	}
+
 	public function testEmptyQueryReturnsNothing() {
 		$query = new SQLQuery();
 		$this->assertEquals('', $query->sql());
