@@ -1,5 +1,4 @@
 <?php
-require_once 'Zend/Translate.php';
 
 /**
  * @package framework

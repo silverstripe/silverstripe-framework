@@ -4,7 +4,10 @@
 	"description": "The SilverStripe framework",
 	"homepage": "http://silverstripe.org",
 	"license": "BSD-3-Clause",
-	"keywords": ["silverstripe", "framework"],
+	"keywords": [
+		"silverstripe",
+		"framework"
+	],
 	"authors": [
 		{
 			"name": "SilverStripe",
@@ -23,7 +26,10 @@
 		"phpunit/PHPUnit": "~3.7@stable"
 	},
 	"autoload": {
-		"classmap": ["tests/behat/features/bootstrap"]	
+		"classmap": [
+			"tests/behat/features/bootstrap",
+			"thirdparty/Zend"
+		]
 	},
 	"minimum-stability": "dev"
 }

@@ -1,5 +1,4 @@
 <?php
-require_once 'Zend/Log.php';
 
 /**
  * Extensions to Zend_Log to make it work nicer
