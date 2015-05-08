@@ -1,5 +1,4 @@
 <?php
-require_once 'Zend/Date.php';
 
 /**
  * Form field to display an editable date string,

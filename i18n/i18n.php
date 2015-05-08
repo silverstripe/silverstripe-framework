@@ -1,5 +1,5 @@
 <?php
-require_once 'Zend/Translate.php';
+
 require_once 'i18nRailsYamlAdapter.php';
 require_once 'i18nSSLegacyAdapter.php';
 
@@ -167,7 +167,6 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 * @return string ISO date format
 	 */
 	public static function get_date_format() {
-		require_once 'Zend/Date.php';
 		$dateFormat = Config::inst()->get('i18n', 'date_format');
 		return ($dateFormat) ? $dateFormat : Zend_Locale_Format::getDateFormat(self::get_locale());
 	}
@@ -185,7 +184,6 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 * @return string ISO time format
 	 */
 	public static function get_time_format() {
-		require_once 'Zend/Date.php';
 		$timeFormat = Config::inst()->get('i18n', 'time_format');
 		return ($timeFormat) ? $timeFormat : Zend_Locale_Format::getTimeFormat(self::get_locale());
 	}
@@ -2520,7 +2518,6 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 * @return String "rtl" or "ltr"
 	 */
 	public static function get_script_direction($locale = null) {
-		require_once 'Zend/Locale/Data.php';
 		if(!$locale) $locale = i18n::get_locale();
 		try {
 			$dir = Zend_Locale_Data::getList($locale, 'layout');

@@ -8,7 +8,6 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	protected static $fixture_file = 'MemberDatetimeOptionsetFieldTest.yml';
 
 	protected function createDateFormatFieldForMember($member) {
-		require_once 'Zend/Date.php';
 		$defaultDateFormat = Zend_Locale_Format::getDateFormat($member->Locale);
 		$dateFormatMap = array(
 			'MMM d, yyyy' => Zend_Date::now()->toString('MMM d, yyyy'),
@@ -27,7 +26,6 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	}
 
 	protected function createTimeFormatFieldForMember($member) {
-		require_once 'Zend/Date.php';
 		$defaultTimeFormat = Zend_Locale_Format::getTimeFormat($member->Locale);
 		$timeFormatMap = array(
 			'h:mm a' => Zend_Date::now()->toString('h:mm a'),

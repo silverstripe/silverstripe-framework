@@ -100,7 +100,6 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	 * @return boolean | string A time and date pair formatted as per user-defined settings.
 	 */
 	public function FormatFromSettings($member = null) {
-		require_once 'Zend/Date.php';	
 		
 		if(!$member) {
 			if(!Member::currentUserID()) {

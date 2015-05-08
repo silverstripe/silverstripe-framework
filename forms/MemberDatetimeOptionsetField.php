@@ -124,7 +124,6 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		if(!$value) return true; // no custom value, don't validate
 
 		// Check that the current date with the date format is valid or not
-		require_once 'Zend/Date.php';
 		$date = Zend_Date::now()->toString($value);
 		$valid = Zend_Date::isDate($date, $value);
 		if($valid) {

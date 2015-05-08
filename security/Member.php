@@ -1113,7 +1113,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if($this->getField('DateFormat')) {
 			return $this->getField('DateFormat');
 		} elseif($this->getField('Locale')) {
-			require_once 'Zend/Date.php';
 			return Zend_Locale_Format::getDateFormat($this->Locale);
 		} else {
 			return i18n::get_date_format();
@@ -1131,7 +1130,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if($this->getField('TimeFormat')) {
 			return $this->getField('TimeFormat');
 		} elseif($this->getField('Locale')) {
-			require_once 'Zend/Date.php';
 			return Zend_Locale_Format::getTimeFormat($this->Locale);
 		} else {
 			return i18n::get_time_format();
@@ -1289,7 +1287,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 *                   editing this member.
 	 */
 	public function getCMSFields() {
-		require_once 'Zend/Date.php';
 
 		$self = $this;
 		$this->beforeUpdateCMSFields(function($fields) use ($self) {

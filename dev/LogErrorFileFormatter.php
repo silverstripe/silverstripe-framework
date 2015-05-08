@@ -1,5 +1,4 @@
 <?php
-require_once 'Zend/Log/Formatter/Interface.php';
 
 /**
  * Formats SS error entries in an error file log.

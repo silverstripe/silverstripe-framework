@@ -183,8 +183,6 @@ class SS_Cache {
 		}
 
 		$frontendOptions = $frontendOptions ? array_merge($basicOptions, $frontendOptions) : $basicOptions;
-		
-		require_once 'Zend/Cache.php';
 
 		return Zend_Cache::factory(
 			$frontend, $backend[0], $frontendOptions, $backend[1]

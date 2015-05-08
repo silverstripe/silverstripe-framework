@@ -7,8 +7,6 @@
  * @version   $Id: Currency.php 6137 2007-08-19 14:55:27Z shreef $
  */
 
-require_once 'Zend/Currency.php';
-
 /**
  * Implements the "Money" pattern.
  * 

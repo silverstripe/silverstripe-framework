@@ -1,5 +1,4 @@
 <?php
-require_once 'Zend/Log/Writer/Abstract.php';
 
 /**
  * Sends an error message to an email.

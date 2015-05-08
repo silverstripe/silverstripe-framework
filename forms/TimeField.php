@@ -1,5 +1,4 @@
 <?php
-require_once 'Zend/Date.php';
 
 /**
  * Form field to display editable time values in an <input type="text"> field. 
