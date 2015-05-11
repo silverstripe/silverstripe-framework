@@ -28,6 +28,7 @@ class CookieTest extends SapphireTest {
 			'cookie1' => 1,
 			'cookie2' => 'cookies',
 			'cookie3' => 'test',
+			'cookie_4' => 'value',
 		);
 
 		Injector::inst()->unregisterNamedObject('Cookie_Backend');
@@ -35,6 +36,8 @@ class CookieTest extends SapphireTest {
 		$this->assertEquals($_COOKIE['cookie1'], Cookie::get('cookie1'));
 		$this->assertEquals($_COOKIE['cookie2'], Cookie::get('cookie2'));
 		$this->assertEquals($_COOKIE['cookie3'], Cookie::get('cookie3'));
+		$this->assertEquals($_COOKIE['cookie_4'], Cookie::get('cookie.4'));
+		$this->assertEquals($_COOKIE['cookie_4'], Cookie::get('cookie_4'));
 
 		//for good measure check the CookieJar hasn't stored anything extra
 		$this->assertEquals($_COOKIE, Cookie::get_inst()->getAll(false));

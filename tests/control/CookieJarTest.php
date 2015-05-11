@@ -53,8 +53,20 @@ class CookieJarTest extends SapphireTest {
 		//make sure it was set
 		$this->assertEquals('testVal', $cookieJar->get('testCookie'));
 
-		//make sure we can distinguise it from ones that were "existing"
+		//make sure we can distinguish it from ones that were "existing"
 		$this->assertEmpty($cookieJar->get('testCookie', false));
+
+		//PHP will replace an incoming COOKIE called 'var.with.dots' to 'var_with_dots'
+		$cookieJar = new CookieJar(array(
+			'var_with_dots' => 'value',
+		));
+
+		$cookieJar->set('test.dots', 'dots');
+
+		//check we can access with '.' and with '_'
+		$this->assertEquals('value', $cookieJar->get('var.with.dots'));
+		$this->assertEquals('value', $cookieJar->get('var_with_dots'));
+		$this->assertEquals('dots', $cookieJar->get('test.dots'));
 	}
 
 	/**
@@ -120,14 +132,14 @@ class CookieJarTest extends SapphireTest {
 		//check we can add a new cookie and remove it and it doesn't leave any phantom values
 		$cookieJar->set('newCookie', 'i am new');
 
-		//check it's set by not recieved
+		//check it's set by not received
 		$this->assertEquals('i am new', $cookieJar->get('newCookie'));
 		$this->assertEmpty($cookieJar->get('newCookie', false));
 
 		//remove it
 		$cookieJar->forceExpiry('newCookie');
 
-		//check it's neither set nor reveived
+		//check it's neither set nor received
 		$this->assertEmpty($cookieJar->get('newCookie'));
 		$this->assertEmpty($cookieJar->get('newCookie', false));
 	}
