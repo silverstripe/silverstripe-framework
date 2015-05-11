@@ -311,11 +311,12 @@ class Requirements implements Flushable {
 	 *
 	 * @param string $combinedFileName Filename of the combined file relative to docroot
 	 * @param array  $files            Array of filenames relative to docroot
+	 * @param string $media
 	 *
 	 * @return bool|void
 	 */
-	public static function combine_files($combinedFileName, $files) {
-		self::backend()->combine_files($combinedFileName, $files);
+	public static function combine_files($combinedFileName, $files, $media = null) {
+		self::backend()->combine_files($combinedFileName, $files, $media);
 	}
 
 	/**
@@ -1034,6 +1035,7 @@ class Requirements_Backend {
 	 *
 	 * @param string $combinedFileName Filename of the combined file relative to docroot
 	 * @param array  $files            Array of filenames relative to docroot
+	 * @param string $media
 	 * 
 	 * @return bool|void
 	 */
