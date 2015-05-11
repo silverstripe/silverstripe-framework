@@ -319,7 +319,7 @@ class ConfirmedPasswordField extends FormField {
 	 * @param Validator $validator
 	 * @return bool
 	 */
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 		$name = $this->name;
 
 		// if field isn't visible, don't validate

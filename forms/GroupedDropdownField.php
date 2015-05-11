@@ -91,7 +91,7 @@ class GroupedDropdownField extends DropdownField {
 	/**
 	 * @todo Implement DropdownField::validate() with group validation support
 	 */
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 		return true;
 	}
 

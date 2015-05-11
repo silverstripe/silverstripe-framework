@@ -134,7 +134,7 @@ class PhoneNumberField extends FormField {
 	 * @param Validator $validator
 	 * @return bool
 	 */
-	public function validate(Validator $validator){
+	public function validate($validator){
 		$valid = preg_match(
 			'/^[0-9\+\-\(\)\s\#]*$/',
 			$this->joinPhoneNumber($this->value)

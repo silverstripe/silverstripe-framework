@@ -184,7 +184,7 @@ class MoneyField extends FormField {
 	 * @param Validator $validator
 	 * @return bool
 	 */
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 		return !(is_null($this->fieldAmount) || is_null($this->fieldCurrency));
 	}
 }
