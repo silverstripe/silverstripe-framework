@@ -96,8 +96,8 @@ class Requirements implements Flushable {
 	 * Add the javascript code to the header of the page
 	 *
 	 * See {@link Requirements_Backend::customScript()} for more info
-	 * @param script The script content
-	 * @param uniquenessID Use this to ensure that pieces of code only get added once.
+	 * @param string $script The script content
+	 * @param int $uniquenessID Use this to ensure that pieces of code only get added once.
 	 */
 	public static function customScript($script, $uniquenessID = null) {
 		self::backend()->customScript($script, $uniquenessID);
