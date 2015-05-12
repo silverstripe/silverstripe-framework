@@ -138,7 +138,7 @@
 		$('.cms-content-tools.collapsed').entwine({
 			// Expand CMS' centre pane, when the pane itself is clicked somewhere
 			onclick: function(e) {
-				$('.cms-panel .toggle-expand').trigger('click');
+				this.expandPanel();
 			}
 		});
 	});
