@@ -9,7 +9,7 @@
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 .cms .ss-ui-button { background-color: #e6e6e6; }
 .cms .ss-ui-button.ui-state-hover { background-color: #f3f3f3; }
-.cms .ss-ui-button.ss-ui-action-constructive { background-color: #1f9433; }
+.cms .ss-ui-button.ss-ui-action-constructive { background-color: #1F9433; }
 .cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover { background-color: #23a93a; }
 .cms .ss-ui-button.ss-gridfield-button-filter { background: #55a4d2 url(../../images/icons/filter-icons.png) no-repeat -14px 4px; }
 
@@ -20,7 +20,7 @@
 .ss-gridfield-button-filter.ss-ui-button.hover-alike { background-color: #338DC1; background-position: -16px 6px; filter: none; }
 
 .ss-gridfield-button-reset.ss-ui-button { background: #e6e6e6 url(../images/filter-icons.png) no-repeat 8px 5px; filter: none; }
-.ss-gridfield-button-reset.ss-ui-button.filtered:hover { background: red url(../images/filter-icons.png) no-repeat 8px -17px; filter: none; }
+.ss-gridfield-button-reset.ss-ui-button.filtered:hover { background: #f00 url(../images/filter-icons.png) no-repeat 8px -17px; filter: none; }
 .ss-gridfield-button-reset.ss-ui-button.filtered:active { background: #e60000 url(../images/filter-icons.png) no-repeat 9px -16px; filter: none; }
 
 .cms table.ss-gridfield-table tr td { border-right: 1px solid #9a9a9a; }
@@ -67,3 +67,7 @@ fieldset.switch-states .switch input.state-name { margin-left: -20px; }
 
 /* fix for actions buttons on edit page content overlapping */
 .cms-content-actions .ss-ui-buttonset button { margin-right: 0; }
+
+.tree-holder.filtered-list li > a, .tree-holder.filtered-list li > a:link, .cms-tree.filtered-list li > a, .cms-tree.filtered-list li > a:link { color: #aaa; }
+.tree-holder.filtered-list li.filtered-item > a, .tree-holder.filtered-list li.filtered-item > a:link, .cms-tree.filtered-list li.filtered-item > a, .cms-tree.filtered-list li.filtered-item > a:link { color: #0073C1; }
+.tree-holder.filtered-list li.disabled > a, .tree-holder.filtered-list li.disabled > a:link, .tree-holder.filtered-list li.edit-disabled > a, .tree-holder.filtered-list li.edit-disabled > a:link, .cms-tree.filtered-list li.disabled > a, .cms-tree.filtered-list li.disabled > a:link, .cms-tree.filtered-list li.edit-disabled > a, .cms-tree.filtered-list li.edit-disabled > a:link { color: #aaa; background: transparent none; cursor: default; }

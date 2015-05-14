@@ -43,8 +43,14 @@ abstract class CMSBatchAction extends Object {
 		$errors = 0;
 
 		foreach($status as $k => $v) {
-			if ($k == 'errors') $errors = count($v);
-			else $count += count($v);
+			switch($k) {
+				case 'error':
+					$errors += count($v);
+					break;
+				case 'success':
+					$count += count($v);
+					break;
+			}
 		}
 
 		$response = Controller::curr()->getResponse();
@@ -78,21 +84,26 @@ abstract class CMSBatchAction extends Object {
 	 *  }
 	 */
 	public function batchaction(SS_List $objs, $helperMethod, $successMessage, $arguments = array()) {
-		$status = array('modified' => array(), 'error' => array());
+		$status = array('modified' => array(), 'error' => array(), 'deleted' => array(), 'success' => array());
 
 		foreach($objs as $obj) {
 
 			// Perform the action
+			$id = $obj->ID;
 			if (!call_user_func_array(array($obj, $helperMethod), $arguments)) {
-				$status['error'][$obj->ID] = '';
+				$status['error'][$id] = $id;
+			} else {
+				$status['success'][$id] = $id;
 			}
 
 			// Now make sure the tree title is appropriately updated
-			$publishedRecord = DataObject::get_by_id($this->managedClass, $obj->ID);
+			$publishedRecord = DataObject::get_by_id($this->managedClass, $id);
 			if ($publishedRecord) {
-				$status['modified'][$publishedRecord->ID] = array(
+				$status['modified'][$id] = array(
 					'TreeTitle' => $publishedRecord->TreeTitle,
 				);
+			} else {
+				$status['deleted'][$id] = $id;
 			}
 			$obj->destroy();
 			unset($obj);
@@ -152,5 +163,16 @@ abstract class CMSBatchAction extends Object {
 	 */
 	public function canView() {
 		return true;
+	}
+
+	/**
+	 * Given a list of object IDs, filter out which items can have this batch action applied
+	 * to them.
+	 *
+	 * @param array $ids List of object ids
+	 * @return array Filtered list of $ids
+	 */
+	public function applicablePages($ids) {
+		return $ids;
 	}
 }

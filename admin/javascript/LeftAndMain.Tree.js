@@ -445,7 +445,13 @@
 			 * 	(Array)
 			 */
 			getSelectedIDs: function() {
-				return $.map($(this).jstree('get_checked'), function(el, i) {return $(el).data('id');});
+				return $(this)
+					.jstree('get_checked')
+					.not('.disabled')
+					.map(function() {
+						return $(this).data('id');
+					})
+					.get();
 			}
 		});
 		

@@ -47,3 +47,34 @@
 		}
 	}
 }
+
+// Fix for lack of support of :not selector
+// Applied to trees when displaying filter / search results.
+.tree-holder,
+.cms-tree {
+	&.filtered-list li {
+		> a,
+		> a:link {
+			color: $color-text-disabled;
+		}
+
+		// Re-apply default style to filtered items
+		&.filtered-item {
+			> a,
+			> a:link {
+				color: $color-text-blue-link;
+			}
+		}
+
+		// Re-re-apply disabled selector from top of _tree.scss
+		&.disabled,
+		&.edit-disabled {
+			> a,
+			> a:link {
+				color: $color-text-disabled;
+				background: transparent none;
+				cursor: default;
+			}
+		}
+	}
+}
