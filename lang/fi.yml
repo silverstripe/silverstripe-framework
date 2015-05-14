@@ -60,6 +60,8 @@ fi:
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   Boolean:
     ANY: Yhtään
+    NOANSWER: 'Ei'
+    YESANSWER: 'Kyllä'
   CMSLoadingScreen_ss:
     LOADING: Ladataan...
     REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaSkriptit päällä.'
@@ -78,6 +80,23 @@ fi:
     EMAIL: Sähköposti
     HELLO: Hei
     PASSWORD: Salasana
+  CheckboxField:
+    NOANSWER: 'Ei'
+    YESANSWER: 'Kyllä'
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. {value} ei kelpaa'
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Unohditko salasanasi?'
+    BUTTONLOGIN: 'Kirjaudu takaisin sisään'
+    BUTTONLOGOUT: 'Kirjaudu ulos'
+    PASSWORDEXPIRED: '<p>Salasanasi on vanhentunut. <a target="_top" href="{link}">Valitse uusi.</a></p>'
+  CMSSecurity:
+    INVALIDUSER: '<p>Virheellinen käyttäjä. <a target="_top" href="{link}">Ole hyvä ja tunnistaudu uudelleen</a> jatkaaksesi.</p>'
+    LoginMessage: '<p>Mikäli tallennus jäi tekemättä, voit kirjautua uudelleen ja jatkaa muokkausta.</p>'
+    SUCCESS: Onnistui
+    SUCCESSCONTENT: '<p>Kirjautuminen onnistui. Mikäli automaattinen edelleenohjaus ei toimi <a target="_top" href="{link}">klikkaa tästä</a></p>'
+    TimedOutTitleAnonymous: 'Istuntosi on vanhentunut.'
+    TimedOutTitleMember: 'Hei {name}!<br />Istuntosi on vanhentunut.'
   ConfirmedPasswordField:
     ATLEAST: 'Salasanan on oltava vähintään {min} merkkiä pitkä.'
     BETWEEN: 'Salasanan on oltava väh. {min} ja enintään {max} merkkiä pitkä.'
@@ -124,6 +143,7 @@ fi:
   DropdownField:
     CHOOSE: (Valitse)
     CHOOSESEARCH: '(Valitse tai Hae)'
+    SOURCE_VALIDATION: 'Valitse arvo pudotusvalikosta. {value} ei kelpaa'
   EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'
   Enum:
@@ -171,7 +191,7 @@ fi:
     TEXT2: 'salasanan vaihtolinkki'
     TEXT3: henkilölle
   Form:
-    CSRF_FAILED_MESSAGE: "On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu painamalla F5-näppäintä ja yritä uudelleen."
+    CSRF_FAILED_MESSAGE: 'On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu ja yritä uudelleen.'
     FIELDISREQUIRED: '{name} on pakollinen'
     SubmitBtnLabel: Siirry
     VALIDATIONCREDITNUMBER: 'Tarkista, ovatko antamasi luottokortin numerot ({number}) oikein'
@@ -238,7 +258,8 @@ fi:
     many_many_Members: Jäsenet
   GroupImportForm:
     Help1: '<p>Tuo yksi tai useampi ryhmä <em>CSV</em>-muotoisena (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Edistynyt käyttö</h4>\n<ul>\n<li>Sallitut palstat: <em>%s</em></li>\n<li>Olemassa olevat ryhmät kohdistetaan niiden uniikin <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\n<li>Ryhmien hierarkiat voidaan luoda <em>ParentCode</em>-palstalla.</li>\n<li>Oikeustasot voidaan kohdistaa <em>PermissionCode</em>-palstalla. Olemassa olevia oikeustasoja ei poisteta.</li>\n</ul>\n</div>"
+    Help2: "<div class=\"advanced\">\n\t<h4>Edistynyt käyttö</h4>\n\t<ul>\n\t<li>Sallitut palstat: <em>%s</em></li>\n\t<li>Olemassa olevat ryhmät kohdistetaan niiden uniikin <em>Code</em> arvolla, ja päivitetään uudet arvot tuodusta tiedostosta</li>\n\t<li>Oikeustasot voidaan luoda käyttämällä <em>ParentCode</em> palstaa.</li>\n\t<li>Oikeustasokoodit voidaan kohdistaa <em>PermissionCode</em> palstassa. Olemassaolevia oikeusia ei tyhjennetä.</li>\n\t</ul>\n\
+      </div>"
     ResultCreated: 'Luotiin {count} ryhmä(ä)'
     ResultDeleted: 'Poistettu %d ryhmää'
     ResultUpdated: 'Päivitetty %d ryhmää'
@@ -247,6 +268,8 @@ fi:
   HtmlEditorField:
     ADDURL: 'Lisää URL-osoite'
     ADJUSTDETAILSDIMENSIONS: 'Tarkat tiedot &amp; mitat'
+    ANCHORSCANNOTACCESSPAGE: 'Sinulla ei ole oikeuksia tarkastella tämän sivun sisältöä.'
+    ANCHORSPAGENOTFOUND: 'Kohdesivua ei löytynyt.'
     ANCHORVALUE: Ankkuri
     BUTTONADDURL: 'Lisää URL-osoite'
     BUTTONINSERT: Liitä
@@ -290,6 +313,7 @@ fi:
     URL: URL-osoite
     URLNOTANOEMBEDRESOURCE: 'URL-osoitetteesta ''{url}'' ei voitu liittää mediaa'
     UpdateMEDIA: 'Päivitä media'
+    SUBJECT: 'Sähköpostin aihe'
   Image:
     PLURALNAME: Tiedostot
     SINGULARNAME: Tiedosto
@@ -307,7 +331,7 @@ fi:
     PERMAGAIN: 'Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla.'
     PERMALREADY: 'Paihoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alla.'
     PERMDEFAULT: 'Valitse tunnistustapa ja syötä tunnistetietosi CMS:ään.'
-    PLEASESAVE: 'Ole hyvä ja tallenna sivu: tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu.'
+    PLEASESAVE: 'Tallenna sivu: tätä sivua ei voida päivittää, koska sitä ei ole vielä tallennettu.'
     PreviewButton: Esikatselu
     REORGANISATIONSUCCESSFUL: 'Hakemistopuu järjestettiin uudelleen onnistuneesti.'
     SAVEDUP: Tallennettu.
@@ -318,6 +342,8 @@ fi:
   LeftAndMain_Menu_ss:
     Hello: Hei
     LOGOUT: 'Kirjaudu ulos'
+  ListboxField:
+    SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. {value} ei kelpaa.'
   LoginAttempt:
     Email: 'Sähköpostiosoite'
     IP: 'IP-osoite'
@@ -350,6 +376,7 @@ fi:
     NEWPASSWORD: 'Uusi salasana'
     NoPassword: 'Tällä käyttäjällä ei ole salasanaa'
     PASSWORD: Salasana
+    PASSWORDEXPIRED: 'Salasanasi on vanhentunut. Ole hyvä ja valitse uusi.'
     PLURALNAME: Jäsenet
     REMEMBERME: 'Muista seuraavalla kerralla?'
     SINGULARNAME: Jäsen
@@ -456,8 +483,8 @@ fi:
     SINGULARNAME: Rooli
     Title: Roolin nimi
   PermissionRoleCode:
-    PLURALNAME: 'Käyttöoikeiden roolin koodit'
     PermsError: 'Ei voida asettaa koodia "%s" annetuilla oikeuksilla (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
+    PLURALNAME: 'Käyttöoikeuden roolin koodit'
     SINGULARNAME: 'Käyttöoikeiden roolin koodi'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
@@ -557,3 +584,5 @@ fi:
     UPLOADSINTO: 'tallentuu polkuun: /{path}'
   Versioned:
     has_many_Versions: Versiot
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. ''{value}'' ei kelpaa'
