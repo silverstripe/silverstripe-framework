@@ -2345,6 +2345,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 					// Value has changed as well, not just the type
 					$this->changed[$fieldName] = 2;
+
+					if (substr($fieldName,-2) == 'ID' && $this->has_one(substr($fieldName,0, -2))) {
+						unset($this->components[substr($fieldName,0, -2)]);
+					}
 				}
 
 				// If we've just lazy-loaded the column, then we need to populate the $original array by
