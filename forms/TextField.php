@@ -80,4 +80,26 @@ class TextField extends FormField {
 
 		return $this->Field();
 	}
+
+    /**
+     * Validate this field
+     *
+     * @param Validator $validator
+     * @return bool
+     */
+    public function validate(Validator $validator) {
+        if(!is_null($this->maxLength) && mb_strlen($this->value) > $this->maxLength) {
+            $validator->validationError(
+                $this->name,
+                _t(
+                    'TextField.VALIDATEMAXLENGTH',
+                    'The value for {name} must not exceed {maxLength} characters in length',
+                    array('name' => $this->getName(), 'maxLength' => $this->maxLength)
+                ),
+                "validation"
+            );
+            return false;
+        }
+        return true;
+    }
 }
