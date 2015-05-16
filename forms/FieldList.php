@@ -561,7 +561,7 @@ class FieldList extends ArrayList {
 		}
 		
 		// Add the leftover fields to the end of the list.
-		$fields = $fields + array_values($fieldMap);
+		$fields = array_values($fields + $fieldMap);
 		
 		// Update our internal $this->items parameter.
 		$this->items = $fields;

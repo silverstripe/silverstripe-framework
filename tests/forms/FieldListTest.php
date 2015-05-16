@@ -753,6 +753,37 @@ class FieldListTest extends SapphireTest {
 		$this->assertEquals(3, $tabB2->fieldPosition('B_post'));
 	}
 	
+	/**
+	 * FieldList::changeFieldOrder() should place specified fields in given
+	 * order then add any unspecified remainders at the end. Can be given an
+	 * array or list of arguments.
+	 */
+	public function testChangeFieldOrder() {
+		$fieldNames = array('A','B','C','D','E');
+		$setArray = new FieldList();
+		$setArgs = new FieldList();
+		foreach ($fieldNames as $fN) {
+			$setArray->push(new TextField($fN));
+			$setArgs->push(new TextField($fN));
+		}
+
+		$setArray->changeFieldOrder(array('D','B','E'));
+		$this->assertEquals(0, $setArray->fieldPosition('D'));
+		$this->assertEquals(1, $setArray->fieldPosition('B'));
+		$this->assertEquals(2, $setArray->fieldPosition('E'));
+		$this->assertEquals(3, $setArray->fieldPosition('A'));
+		$this->assertEquals(4, $setArray->fieldPosition('C'));
+
+		$setArgs->changeFieldOrder('D','B','E');
+		$this->assertEquals(0, $setArgs->fieldPosition('D'));
+		$this->assertEquals(1, $setArgs->fieldPosition('B'));
+		$this->assertEquals(2, $setArgs->fieldPosition('E'));
+		$this->assertEquals(3, $setArgs->fieldPosition('A'));
+		$this->assertEquals(4, $setArgs->fieldPosition('C'));
+
+		unset($setArray, $setArgs);
+	}
+	
 	public function testFieldPosition() {
 		$set = new FieldList(
 			new TextField('A'),
