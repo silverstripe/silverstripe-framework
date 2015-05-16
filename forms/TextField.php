@@ -87,7 +87,7 @@ class TextField extends FormField {
      * @param Validator $validator
      * @return bool
      */
-    public function validate(Validator $validator) {
+    public function validate($validator) {
         if(!is_null($this->maxLength) && mb_strlen($this->value) > $this->maxLength) {
             $validator->validationError(
                 $this->name,
