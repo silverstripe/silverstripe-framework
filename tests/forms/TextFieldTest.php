@@ -8,14 +8,18 @@ class TextFieldTest extends SapphireTest {
     private $fieldName = null;
     private $fieldMaxLength = null;
 
-    public function setup()
-    {
+    /**
+     * Setup base values
+     */
+    public function setup() {
         $this->fieldName = 'TestField';
         $this->fieldMaxLength = 5;
     }
 
-    public function testMaxLengthValidationFail()
-    {
+    /**
+     * Tests the TextField Max Length Validation Failure
+     */
+    public function testMaxLengthValidationFail() {
         $textField = new TextField($this->fieldName);
         $textField->setMaxLength($this->fieldMaxLength);
         $textField->setValue("John Doe");
@@ -24,8 +28,10 @@ class TextFieldTest extends SapphireTest {
         $this->assertFalse($result);
     }
 
-    public function testMaxLengthValidationSuccess()
-    {
+    /**
+     * Tests the TextField Max Length Validation Success
+     */
+    public function testMaxLengthValidationSuccess() {
         $textField = new TextField($this->fieldName);
         $textField->setMaxLength($this->fieldMaxLength);
         $textField->setValue("John");
