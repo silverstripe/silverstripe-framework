@@ -88,8 +88,8 @@ class Requirements implements Flushable {
 	 * See {@link Requirements_Backend::javascript()} for more info
 	 *
 	 */
-	public static function javascript($file) {
-		self::backend()->javascript($file);
+	public static function javascript($file, $async = false, $defer = false) {
+		self::backend()->javascript($file, $async, $defer);
 	}
 
 	/**
@@ -254,9 +254,11 @@ class Requirements implements Flushable {
 	 * @param string $combinedFileName
 	 * @param array $files
 	 * @param string $media
+	 * @param boolean $async flag to set the async attribute for the script tag.
+	 * @param boolean $defer flag to set the defer attribute for the script tag.
 	 */
-	public static function combine_files($combinedFileName, $files, $media = null) {
-		self::backend()->combine_files($combinedFileName, $files, $media);
+	public static function combine_files($combinedFileName, $files, $media = null, $async = false, $defer = false) {
+		self::backend()->combine_files($combinedFileName, $files, $media, $async, $defer);
 	}
 
 	/**
@@ -533,8 +535,11 @@ class Requirements_Backend {
 	 * Filenames should be relative to the base, eg, 'framework/javascript/loader.js'
 	 */
 
-	public function javascript($file) {
-		$this->javascript[$file] = true;
+	public function javascript($file, $async = false, $defer = false) {
+		$this->javascript[$file] = array(
+			"async" => $async,
+			"defer" => $defer
+		);
 	}
 
 	/**
@@ -707,11 +712,12 @@ class Requirements_Backend {
 
 			// Combine files - updates $this->javascript and $this->css
 			$this->process_combined_files();
-
-			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) {
+			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $attributes) {
+				$async = (isset($attributes['async']) && $attributes['async'] == true) ? " async" : "";
+				$defer = (isset($attributes['defer']) && $attributes['defer'] == true) ? " defer" : "";
 				$path = Convert::raw2xml($this->path_for_file($file));
 				if($path) {
-					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
+					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"{$async}{$defer}></script>\n";
 				}
 			}
 
@@ -951,8 +957,10 @@ class Requirements_Backend {
 	 *                                 by default)
 	 * @param array $files Array of filenames relative to the webroot
 	 * @param string $media Comma-separated list of media-types (e.g. "screen,projector").
+	 * @param boolean $async flag to set the async attribute for the script tag.
+	 * @param boolean $defer flag to set the defer attribute for the script tag.
 	 */
-	public function combine_files($combinedFileName, $files, $media = null) {
+	public function combine_files($combinedFileName, $files, $media = null, $async = false, $defer = false) {
 		// duplicate check
 		foreach($this->combine_files as $_combinedFileName => $_files) {
 			$duplicates = array_intersect($_files, $files);
@@ -972,7 +980,7 @@ class Requirements_Backend {
 							$this->css($file['path'], $media);
 							break;
 						default:
-							$this->javascript($file['path']);
+							$this->javascript($file['path'], $async, $defer);
 							break;
 					}
 					$files[$index] = $file['path'];
@@ -982,7 +990,7 @@ class Requirements_Backend {
 							$this->css($file[0], $media);
 							break;
 						default:
-							$this->javascript($file[0]);
+							$this->javascript($file[0], $async, $defer);
 							break;
 					}
 					$files[$index] = $file[0];
@@ -992,7 +1000,7 @@ class Requirements_Backend {
 			}
 			if (!is_array($file)) {
 				if(substr($file, -2) == 'js') {
-					$this->javascript($file);
+					$this->javascript($file, $async, $defer);
 				} elseif(substr($file, -3) == 'css') {
 					$this->css($file, $media);
 				} else {
@@ -1081,12 +1089,12 @@ class Requirements_Backend {
 		$combinedFiles = array();
 		$newJSRequirements = array();
 		$newCSSRequirements = array();
-		foreach($this->javascript as $file => $dummy) {
+		foreach($this->javascript as $file => $attributes) {
 			if(isset($combinerCheck[$file])) {
-				$newJSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = true;
-				$combinedFiles[$combinerCheck[$file]] = true;
+				$newJSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = $attributes;
+				$combinedFiles[$combinerCheck[$file]] = $attributes;
 			} else {
-				$newJSRequirements[$file] = true;
+				$newJSRequirements[$file] = $attributes;
 			}
 		}
 
