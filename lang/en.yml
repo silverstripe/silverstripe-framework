@@ -543,7 +543,7 @@ en:
   TableListField_PageControls_ss:
     OF: of
   TextField:
-      VALIDATEMAXLENGTH: 'The value for {name} must not exceed {maxLength} characters in length'
+    VALIDATEMAXLENGTH: 'The value for {name} must not exceed {maxLength} characters in length'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
