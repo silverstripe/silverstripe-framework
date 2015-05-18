@@ -148,6 +148,91 @@ form.nostyle {
 	&#Action {
     	box-shadow: none;
 	}
+
+	// When a field's description is toggleable, it's given an icon (right title) which is used as
+	// a click target for toggling the visibility of the description. See LeftAndMain.FieldDescriptionToggle.js
+	&.cms-description-toggle {
+
+		> .middleColumn { // The field wrapper
+			display: inline-block;
+			vertical-align: middle;
+			margin-left: 0;
+			width: 36%;
+			min-width: 300px;
+		}
+
+		.right { // The column the trigger is inside.
+			display: inline-block;
+			vertical-align: middle;
+			height: 15px;
+			margin: 0 0 0 7px;
+		}
+
+		.btn-icon-information { // The default icon.
+			display: inline-block;
+			width: 15px;
+			height: 15px;
+		}
+
+		.description {
+			padding: 12px 0;
+			width: 36%;
+		}
+
+		// Overrides of the above default styles, for specific field types.
+		&.textarea,
+		&.htmleditor,
+		&.optionset,
+		&.listbox,
+		&.upload {
+			.right {
+				vertical-align: top;
+				margin-top: 4px;
+			}
+		}
+
+		&.htmleditor {
+			.middleColumn,
+			.description {
+				width: 95%;
+			}
+		}
+
+		&.optionset {
+			.right {
+				margin-top: 8px;
+			}
+
+			li {
+				width: 170px;
+			}
+		}
+
+		&.listbox {
+			select {
+				margin-left: 0;
+			}
+		}
+
+		&.upload {
+			.description {
+				margin-left: 184px;
+			}
+		}
+
+		.cms-file-info-data & {
+			> .middleColumn {
+				margin-left: 8px !important;
+				width: auto;
+				min-width: 0;
+			}
+
+			.description {
+				margin-left: 104px;
+				width: auto;
+			}
+		}
+	}
 }
 
 form.stacked .field, .field.stacked {

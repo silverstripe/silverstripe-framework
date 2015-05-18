@@ -695,8 +695,8 @@ class FormTest_Controller extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 
 	public function Link($action = null) {
-		return Controller::join_links('FormTest_Controller', $this->request->latestParam('Action'),
-			$this->request->latestParam('ID'), $action);
+		return Controller::join_links('FormTest_Controller', $this->getRequest()->latestParam('Action'),
+			$this->getRequest()->latestParam('ID'), $action);
 	}
 
 	public function Form() {
@@ -754,8 +754,8 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 	protected $template = 'BlankPage';
 
 	public function Link($action = null) {
-		return Controller::join_links('FormTest_ControllerWithSecurityToken', $this->request->latestParam('Action'),
-			$this->request->latestParam('ID'), $action);
+		return Controller::join_links('FormTest_ControllerWithSecurityToken', $this->getRequest()->latestParam('Action'),
+			$this->getRequest()->latestParam('ID'), $action);
 	}
 
 	public function Form() {
@@ -789,8 +789,8 @@ class FormTest_ControllerWithStrictPostCheck extends Controller implements TestO
 	public function Link($action = null) {
 		return Controller::join_links(
 			'FormTest_ControllerWithStrictPostCheck',
-			$this->request->latestParam('Action'),
-			$this->request->latestParam('ID'),
+			$this->getRequest()->latestParam('Action'),
+			$this->getRequest()->latestParam('ID'),
 			$action
 		);
 	}

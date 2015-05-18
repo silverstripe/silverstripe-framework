@@ -234,14 +234,18 @@ class SQLSelect extends SQLConditionalExpression {
 		} else if($limit && is_string($limit)) {
 			if(strpos($limit, ',') !== false) {
 				list($start, $innerLimit) = explode(',', $limit, 2);
-			}
-			else {
+			} else {
 				list($innerLimit, $start) = explode(' OFFSET ', strtoupper($limit), 2);
 			}
 
 			$this->limit = array(
 				'start' => trim($start),
 				'limit' => trim($innerLimit),
+			);
+		} else if($limit === null && $offset) {
+			$this->limit = array(
+				'start' => $offset,
+				'limit' => $limit
 			);
 		} else {
 			$this->limit = $limit;
@@ -590,7 +594,7 @@ class SQLSelect extends SQLConditionalExpression {
 		$count = $clone->execute()->value();
 		// If there's a limit set, then that limit is going to heavily affect the count
 		if($this->limit) {
-			if($count >= ($this->limit['start'] + $this->limit['limit'])) {
+			if($this->limit['limit'] !== null && $count >= ($this->limit['start'] + $this->limit['limit'])) {
 				return $this->limit['limit'];
 			} else {
 				return max(0, $count - $this->limit['start']);

@@ -154,6 +154,16 @@
 	// Show drag icons when draggable class is applied
 	.draggable a > .jstree-icon {
 		display: block;
+		cursor: move; // Fallback for IE users
+		cursor: -moz-grab;
+		cursor: -webkit-grab;
+		cursor: grab;
+
+		&:active {
+			cursor: -moz-grabbing;
+			cursor: -webkit-grabbing;
+			cursor: grabbing;
+		}
 	}
 
 
@@ -540,6 +550,17 @@
 		}
 		.jstree-open > ins { 
 			background-position:-20px 0;
+		}
+	}
+
+	// Applied to trees when displaying filter / search results.
+	&.filtered-list {
+		li.class-Page a {
+			color: $color-text-disabled;
+		}
+
+		li.class-Page.filtered-item a {
+			color: $color-text-blue-link;
 		}
 	}
 }

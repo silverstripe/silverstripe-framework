@@ -357,8 +357,8 @@ class TestRunner extends Controller {
 
 		// Optionally skip certain tests
 		$skipTests = array();
-		if($this->request->getVar('SkipTests')) {
-			$skipTests = explode(',', $this->request->getVar('SkipTests'));
+		if($this->getRequest()->getVar('SkipTests')) {
+			$skipTests = explode(',', $this->getRequest()->getVar('SkipTests'));
 		}
 
 		$abstractClasses = array();

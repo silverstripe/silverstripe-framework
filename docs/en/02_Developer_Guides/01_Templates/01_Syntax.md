@@ -84,7 +84,7 @@ Variables can come from your database fields, or custom methods you define on yo
 
 	:::php
 	public function UsersIpAddress() {
-		return $this->request->getIP();
+		return $this->getRequest()->getIP();
 	}
 
 **mysite/code/Page.ss**
@@ -296,8 +296,11 @@ iteration.
  * `$Even`, `$Odd`: Returns boolean, handy for zebra striping
  * `$EvenOdd`: Returns a string, either 'even' or 'odd'. Useful for CSS classes.
  * `$First`, `$Last`, `$Middle`: Booleans about the position in the list
- * `$FirstLast`: Returns a string, "first", "last", or "". Useful for CSS classes.
- * `$Pos`: The current position in the list (integer). Will start at 1.
+ * `$FirstLast`: Returns a string, "first", "last", "first last" (if both), or "". Useful for CSS classes.
+ * `$Pos`: The current position in the list (integer).
+   Will start at 1, but can take a starting index as a parameter.
+ * `$FromEnd`: The position of the item from the end (integer).
+   Last item defaults to 1, but can be passed as a parameter.
  * `$TotalItems`: Number of items in the list (integer)
 
 	:::ss

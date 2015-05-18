@@ -9,42 +9,27 @@
 class MySQLQuery extends SS_Query {
 
 	/**
-	 * The MySQLiConnector object that created this result set.
-	 *
-	 * @var MySQLiConnector
-	 */
-	protected $database;
-
-	/**
 	 * The internal MySQL handle that points to the result set.
+	 * Select queries will have mysqli_result as a value.
+	 * Non-select queries will not
 	 *
-	 * @var mysqli_result
+	 * @var mixed
 	 */
 	protected $handle;
 
 	/**
-	 * The related mysqli statement object if generated using a prepared query
-	 *
-	 * @var mysqli_stmt
-	 */
-	protected $statement;
-
-	/**
 	 * Hook the result-set given into a Query class, suitable for use by SilverStripe.
-	 * @param MySQLDatabase $database The database object that created this query.
-	 * @param mysqli_result $handle the internal mysql handle that is points to the resultset.
-	 * @param mysqli_stmt $statement The related statement, if present
+	 *
+	 * @param MySQLiConnector $database The database object that created this query.
+	 * @param mixed $handle the internal mysql handle that is points to the resultset.
+	 * Non-mysqli_result values could be given for non-select queries (e.g. true)
 	 */
-	public function __construct(MySQLiConnector $database, $handle = null, $statement = null) {
-		$this->database = $database;
+	public function __construct($database, $handle) {
 		$this->handle = $handle;
-		$this->statement = $statement;
 	}
 
 	public function __destruct() {
 		if (is_object($this->handle)) $this->handle->free();
-		// Don't close statement as these may be re-used across the life of this request
-		// if (is_object($this->statement)) $this->statement->close();
 	}
 
 	public function seek($row) {

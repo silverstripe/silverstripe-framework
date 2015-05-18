@@ -506,7 +506,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return array
 	 */
 	public function getanchors() {
-		$id = (int)$this->request->getVar('PageID');
+		$id = (int)$this->getRequest()->getVar('PageID');
 		$anchors = array();
 
 		if (($page = Page::get()->byID($id)) && !empty($page)) {

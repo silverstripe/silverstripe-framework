@@ -98,8 +98,8 @@ abstract class ModelAdmin extends LeftAndMain {
 
 		$models = $this->getManagedModels();
 
-		if($this->request->param('ModelClass')) {
-			$this->modelClass = $this->unsanitiseClassName($this->request->param('ModelClass'));
+		if($this->getRequest()->param('ModelClass')) {
+			$this->modelClass = $this->unsanitiseClassName($this->getRequest()->param('ModelClass'));
 		} else {
 			reset($models);
 			$this->modelClass = key($models);
@@ -200,7 +200,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		$form->setFormAction($this->Link($this->sanitiseClassName($this->modelClass)));
 		$form->addExtraClass('cms-search-form');
 		$form->disableSecurityToken();
-		$form->loadDataFrom($this->request->getVars());
+		$form->loadDataFrom($this->getRequest()->getVars());
 
 		$this->extend('updateSearchForm', $form);
 
@@ -209,7 +209,7 @@ abstract class ModelAdmin extends LeftAndMain {
 
 	public function getList() {
 		$context = $this->getSearchContext();
-		$params = $this->request->requestVar('q');
+		$params = $this->getRequest()->requestVar('q');
 
 		if(is_array($params)) {
 			$params = array_map('trim', $params);
@@ -449,7 +449,7 @@ abstract class ModelAdmin extends LeftAndMain {
 
 		// Show the class name rather than ModelAdmin title as root node
 		$models = $this->getManagedModels();
-		$params = $this->request->getVars();
+		$params = $this->getRequest()->getVars();
 		if(isset($params['url'])) unset($params['url']);
 
 		$items[0]->Title = $models[$this->modelClass]['title'];
