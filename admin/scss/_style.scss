@@ -713,7 +713,7 @@ body.cms {
  */
 .cms-content-tools {
 	background: $tab-panel-texture-color;
-	width: $grid-x * 25;
+	width: $grid-x * 36;
 	overflow-y: auto;	
 	overflow-x: hidden;
 	z-index: 70;
@@ -736,7 +736,7 @@ body.cms {
 	}
 	
 	.cms-panel-content {
-		width: ($grid-x * 23);
+		width: $grid-x * 34;
 		padding: $grid-x*1.1 $grid-x 0; // smaller left/right padding to use space efficiently
 		overflow: auto;
 		height:100%;
@@ -1178,7 +1178,7 @@ form.member-profile-form {
 			span {
 				display: inline-block;
 				margin: 0 5px;
-				color: $color-text-dark;
+				color: #555d60;
 				font-size: 16px;
 			}
 			

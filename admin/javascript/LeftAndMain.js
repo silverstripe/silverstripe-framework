@@ -110,6 +110,41 @@ jQuery.noConflict();
 			);
 		};
 
+		/**
+		 * @func debounce
+		 * @param func {function} - The callback to invoke after `wait` milliseconds.
+		 * @param wait {number} - Milliseconds to wait.
+		 * @param immediate {boolean} - If true the callback will be invoked at the start rather than the end.
+		 * @return {function}
+		 * @desc Returns a function that will not be called until it hasn't been invoked for `wait` seconds.
+		 */
+		var debounce = function (func, wait, immediate) {
+			var timeout, context, args;
+
+			var later = function() {
+				timeout = null;
+				if (!immediate) func.apply(context, args);
+			};
+
+			return function() {
+				var callNow = immediate && !timeout;
+
+				context = this;
+				args = arguments;
+
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+
+				if (callNow) {
+					func.apply(context, args);
+				}
+			};
+		};
+
+		var ajaxCompleteEvent = debounce(function (context) {
+			$(window).trigger('ajaxComplete');
+		}, 1000, true);
+
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
 		// global ajax handlers
@@ -154,6 +189,8 @@ jQuery.noConflict();
 				// Decode into UTF-8, HTTP headers don't allow multibyte
 				statusMessage(decodeURIComponent(msg), msgType);
 			}
+
+			ajaxCompleteEvent(this);
 		});
 
 		/**
