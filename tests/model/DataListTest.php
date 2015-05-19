@@ -797,6 +797,180 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(0, $list->exclude('ID', $obj->ID)->count());
 	}
 
+	public function testFilterByNull() {
+		$list = DataObjectTest_Fan::get();
+		// Force DataObjectTest_Fan/fan5::Email to empty string
+		$fan5id = $this->idFromFixture('DataObjectTest_Fan', 'fan5');
+		DB::prepared_query("UPDATE \"DataObjectTest_Fan\" SET \"Email\" = '' WHERE \"ID\" = ?", array($fan5id));
+
+		// Filter by null email
+		$nullEmails = $list->filter('Email', null);
+		$this->assertDOSEquals(array(
+			array(
+				'Name' => 'Stephen',
+			),
+			array(
+				'Name' => 'Mitch',
+			)
+		), $nullEmails);
+
+		// Filter by non-null
+		$nonNullEmails = $list->filter('Email:not', null);
+		$this->assertDOSEquals(array(
+			array(
+				'Name' => 'Damian',
+				'Email' => 'damian@thefans.com',
+			),
+			array(
+				'Name' => 'Richard',
+				'Email' => 'richie@richers.com',
+			),
+			array(
+				'Name' => 'Hamish',
+			)
+		), $nonNullEmails);
+
+		// Filter by empty only
+		$emptyOnly = $list->filter('Email', '');
+		$this->assertDOSEquals(array(
+			array(
+				'Name' => 'Hamish',
+			)
+		), $emptyOnly);
+
+		// Non-empty only. This should include null values, since ExactMatchFilter works around
+		// the caveat that != '' also excludes null values in ANSI SQL-92 behaviour.
+		$nonEmptyOnly = $list->filter('Email:not', '');
+		$this->assertDOSEquals(array(
+			array(
+				'Name' => 'Damian',
+				'Email' => 'damian@thefans.com',
+			),
+			array(
+				'Name' => 'Richard',
+				'Email' => 'richie@richers.com',
+			),
+			array(
+				'Name' => 'Stephen',
+			),
+			array(
+				'Name' => 'Mitch',
+			)
+		), $nonEmptyOnly);
+
+		// Filter by many including null, empty string, and non-empty
+		$items1 = $list->filter('Email', array(null, '', 'damian@thefans.com'));
+		$this->assertDOSEquals(array(
+			array(
+				'Name' => 'Damian',
+				'Email' => 'damian@thefans.com',
+			),
+			array(
+				'Name' => 'Stephen',
+			),
+			array(
+				'Name' => 'Mitch',
+			),
+			array(
+				'Name' => 'Hamish',
+			)
+		), $items1);
+
+		// Filter exclusion of above list
+		$items2 = $list->filter('Email:not', array(null, '', 'damian@thefans.com'));
+		$this->assertDOSEquals(array(
+			array(
+				'Name' => 'Richard',
+				'Email' => 'richie@richers.com',
+			),
+		), $items2);
+
+		// Filter by many including empty string and non-empty
+		$items3 = $list->filter('Email', array('', 'damian@thefans.com'));
+		$this->assertDOSEquals(array(
+			array(
+				'Name' => 'Damian',
+				'Email' => 'damian@thefans.com',
+			),
+			array(
+				'Name' => 'Hamish',
+			)
+		), $items3);
+
+		// Filter by many including empty string and non-empty
+		// This also relies no the workaround for null comparison as in the $nonEmptyOnly test
+		$items4 = $list->filter('Email:not', array('', 'damian@thefans.com'));
+		$this->assertDOSEquals(array(
+			array(
+				'Name' => 'Richard',
+				'Email' => 'richie@richers.com',
+			),
+			array(
+				'Name' => 'Stephen',
+			),
+			array(
+				'Name' => 'Mitch',
+			)
+		), $items4);
+
+		// Filter by many including empty string and non-empty
+		// The extra null check isn't necessary, but check that this doesn't fail
+		$items5 = $list->filterAny(array(
+			'Email:not' => array('', 'damian@thefans.com'),
+			'Email' => null
+		));
+		$this->assertDOSEquals(array(
+			array(
+				'Name' => 'Richard',
+				'Email' => 'richie@richers.com',
+			),
+			array(
+				'Name' => 'Stephen',
+			),
+			array(
+				'Name' => 'Mitch',
+			)
+		), $items5);
+
+		// Filter by null or empty values
+		$items6 = $list->filter('Email', array(null, ''));
+		$this->assertDOSEquals(array(
+			array(
+				'Name' => 'Stephen',
+			),
+			array(
+				'Name' => 'Mitch',
+			),
+			array(
+				'Name' => 'Hamish',
+			)
+		), $items6);
+	}
+
+	/**
+	 * Test null checks with case modifiers
+	 */
+	public function testFilterByNullCase() {
+		// Test with case (case/nocase both use same code path)
+		// Test with and without null, and with inclusion/exclusion permutations
+		$list = DataObjectTest_Fan::get();
+
+		// Only an explicit NOT NULL should include null values
+		$items6 = $list->filter('Email:not:case', array(null, '', 'damian@thefans.com'));
+		$this->assertSQLContains(' AND "DataObjectTest_Fan"."Email" IS NOT NULL', $items6->sql());
+		
+		// These should all include values where Email IS NULL
+		$items7 = $list->filter('Email:nocase', array(null, '', 'damian@thefans.com'));
+		$this->assertSQLContains(' OR "DataObjectTest_Fan"."Email" IS NULL', $items7->sql());
+		$items8 = $list->filter('Email:not:case', array('', 'damian@thefans.com'));
+		$this->assertSQLContains(' OR "DataObjectTest_Fan"."Email" IS NULL', $items8->sql());
+
+		// These should not contain any null checks at all
+		$items9 = $list->filter('Email:nocase', array('', 'damian@thefans.com'));
+		$this->assertSQLNotContains('"DataObjectTest_Fan"."Email" IS NULL', $items9->sql());
+		$this->assertSQLNotContains('"DataObjectTest_Fan"."Email" IS NOT NULL', $items9->sql());
+	}
+
 	/**
 	 * $list = $list->filterByCallback(function($item, $list) { return $item->Age == 21; })
 	 */
@@ -865,7 +1039,8 @@ class DataListTest extends SapphireTest {
 
 		$sql = $list->sql($parameters);
 		$this->assertSQLContains(
-			'WHERE ("DataObjectTest_TeamComment"."Comment" = ?) AND (("DataObjectTest_TeamComment"."Name" != ?))',
+			'WHERE ("DataObjectTest_TeamComment"."Comment" = ?) AND (("DataObjectTest_TeamComment"."Name" != ? '
+			. 'OR "DataObjectTest_TeamComment"."Name" IS NULL))',
 			$sql);
 		$this->assertEquals(array('Phil is a unique guy, and comments on team2', 'Bob'), $parameters);
 	}

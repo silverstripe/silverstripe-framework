@@ -268,6 +268,20 @@ abstract class SS_Database {
 	}
 
 	/**
+	 * Generates a WHERE clause for null comparison check
+	 *
+	 * @param string $field Quoted field name
+	 * @param bool $isNull Whether to check for NULL or NOT NULL
+	 * @return string Non-parameterised null comparison clause
+	 */
+	public function nullCheckClause($field, $isNull) {
+		$clause = $isNull
+			? "%s IS NULL"
+			: "%s IS NOT NULL";
+		return sprintf($clause, $field);
+	}
+
+	/**
 	 * Generate a WHERE clause for text matching.
 	 *
 	 * @param String $field Quoted field name

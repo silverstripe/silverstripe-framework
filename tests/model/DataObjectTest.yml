@@ -62,6 +62,7 @@ DataObjectTest_TeamComment:
 DataObjectTest_Fan:
   fan1:
     Name: Damian
+    Email: damian@thefans.com
     Favourite: =>DataObjectTest_Team.team1
   fan2:
     Name: Stephen
@@ -69,10 +70,14 @@ DataObjectTest_Fan:
     SecondFavourite: =>DataObjectTest_Team.team2
   fan3:
     Name: Richard
+    Email: richie@richers.com
     Favourite: =>DataObjectTest_Team.team1
   fan4:
     Name: Mitch
     Favourite: =>DataObjectTest_SubTeam.subteam1
+  fan5:
+    Name: Hamish
+    Email: ''
 DataObjectTest_Company:
   company1:
     Name: Company corp
