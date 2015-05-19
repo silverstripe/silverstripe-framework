@@ -62,7 +62,7 @@
 			text-decoration: none;
 			padding: 1px 2px;
 			margin: 0;
-			border: 1px solid #fff;	
+			border: 1px solid #fff;
 			&:focus,
 			&:active,
 			&:hover {
@@ -73,13 +73,11 @@
 			> {
 				ins {
 					height: 16px;
-					width: 16px;
+					width: 12px;
 					&.jstree-checkbox {
-						height:19px; //Larger to help avoid accidental page loads when trying to click checkboxes
+						height: 19px; //Larger to help avoid accidental page loads when trying to click checkboxes
+						width: 16px;
        				}
-				}
-				.jstree-icon {
-					margin-right: 3px;
 				}
 			}
 		}
@@ -153,7 +151,7 @@
 
 	// Show drag icons when draggable class is applied
 	.draggable a > .jstree-icon {
-		display: block;
+		display: none;
 		cursor: move; // Fallback for IE users
 		cursor: -moz-grab;
 		cursor: -webkit-grab;
@@ -540,10 +538,10 @@
 			    border-color:#FFF0BC transparent;			    
 			}		
 		}
-		
+
 		.jstree-hovered {
 			text-shadow: none;
-			text-decoration: none;    
+			text-decoration: none;
 		}	
 		.jstree-closed > ins { 
 			background-position:0 0; 
@@ -563,6 +561,44 @@
 			color: $color-text-blue-link;
 		}
 	}
+}
+
+
+// For drag and drop icons to not appear whilst in multi-selection
+.cms-content-fields {
+	.cms-tree {
+		&.jstree {
+			.jstree-no-checkboxes {
+				li {
+					a {
+						padding-left: 15px;
+					}
+
+					.jstree-hovered,
+					.jstree-clicked,
+					a:focus {
+						padding-left: 3px;
+					}
+
+					.jstree-hovered,
+					.jstree-clicked,
+					a:focus {
+						.jstree-icon {
+							display: block;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// Override thirdparty themes
+.jstree-default a .jstree-icon,
+.jstree-default-rtl a .jstree-icon,
+.jstree-classic a .jstree-icon,
+.jstree-apple a .jstree-icon { 
+	background-position:-62px -19px;
 }
 
 /* ensure status is visible in sidebar */
