@@ -165,7 +165,7 @@ class TimeField extends TextField {
 	 * @param Validator $validator
 	 * @return bool
 	 */
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 
 		// Don't validate empty fields
 		if(empty($this->value)) return true;

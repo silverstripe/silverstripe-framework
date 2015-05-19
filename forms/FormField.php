@@ -922,7 +922,7 @@ class FormField extends RequestHandler {
 	 * @param Validator
 	 * @return boolean
 	 */
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 		return true;
 	}
 

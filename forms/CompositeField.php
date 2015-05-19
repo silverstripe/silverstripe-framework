@@ -365,7 +365,7 @@ class CompositeField extends FormField {
 	 * @param Validator $validator
 	 * @return bool
 	 */
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 		$valid = true;
 		foreach($this->children as $idx => $child){
 			$valid = ($child && $child->validate($validator) && $valid);
