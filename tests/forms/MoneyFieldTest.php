@@ -14,13 +14,13 @@ class MoneyFieldTest extends SapphireTest {
 		$o = new MoneyFieldTest_Object();
 		
 		$m = new Money();
-		$m->setAmount(1.23);
+		$m->setAmount(123456.78);
 		$m->setCurrency('EUR');
 		$f = new MoneyField('MyMoney', 'MyMoney', $m);
 		
 		$f->saveInto($o);
-		$this->assertEquals($o->MyMoney->getAmount(), 1.23);
-		$this->assertEquals($o->MyMoney->getCurrency(), 'EUR');
+		$this->assertEquals(123456.78, $o->MyMoney->getAmount());
+		$this->assertEquals('EUR', $o->MyMoney->getCurrency());
 	}
 	
 	public function testSetValueAsMoney() {
@@ -29,13 +29,13 @@ class MoneyFieldTest extends SapphireTest {
 		$f = new MoneyField('MyMoney', 'MyMoney');
 		
 		$m = new Money();
-		$m->setAmount(1.23);
+		$m->setAmount(123456.78);
 		$m->setCurrency('EUR');
 		$f->setValue($m);
 		
 		$f->saveInto($o);
-		$this->assertEquals($o->MyMoney->getAmount(), 1.23);
-		$this->assertEquals($o->MyMoney->getCurrency(), 'EUR');
+		$this->assertEquals(123456.78, $o->MyMoney->getAmount());
+		$this->assertEquals('EUR', $o->MyMoney->getCurrency());
 	}
 	
 	public function testSetValueAsArray() {
@@ -43,11 +43,11 @@ class MoneyFieldTest extends SapphireTest {
 		
 		$f = new MoneyField('MyMoney', 'MyMoney');
 		
-		$f->setValue(array('Currency'=>'EUR','Amount'=>1.23));
+		$f->setValue(array('Currency'=>'EUR','Amount'=>123456.78));
 		
 		$f->saveInto($o);
-		$this->assertEquals($o->MyMoney->getAmount(), 1.23);
-		$this->assertEquals($o->MyMoney->getCurrency(), 'EUR');
+		$this->assertEquals(123456.78, $o->MyMoney->getAmount());
+		$this->assertEquals('EUR', $o->MyMoney->getCurrency());
 	}
 
 	/**
@@ -59,12 +59,13 @@ class MoneyFieldTest extends SapphireTest {
 		$o = new MoneyFieldTest_CustomSetter_Object();
 		
 		$f = new MoneyField('CustomMoney', 'Test Money Field');
-		$f->setValue(array('Currency'=>'EUR','Amount'=>1.23));
+		$f->setValue(array('Currency'=>'EUR','Amount'=>123456.78));
 		
 		$f->saveInto($o);
-		$this->assertEquals($o->MyMoney->getAmount(), (2 * 1.23) );
-		$this->assertEquals($o->MyMoney->getCurrency(), 'EUR');
+		$this->assertEquals((2 * 123456.78), $o->MyMoney->getAmount());
+		$this->assertEquals('EUR', $o->MyMoney->getCurrency());
 	}
+
 }
 
 class MoneyFieldTest_Object extends DataObject implements TestOnly {
