@@ -489,7 +489,7 @@
 			text-shadow: none;
 			display: inline-block;
 			position: relative;
-			padding: 2px 3px 1px;
+			padding: 3px 3px 1px;
 			font-size: 0.75em;
 			line-height: 1em;
 			margin-left: 3px;
@@ -602,7 +602,7 @@
 }
 
 /* ensure status is visible in sidebar */
-#cms-content-tools-CMSMain .cms-tree.jstree {
+.cms-content-tools .cms-tree.jstree {
 	li {
 		min-width: 159px;
 	}
@@ -675,11 +675,11 @@ a .jstree-pageicon {
 		color: $color;
 	}
 }
-@include tree-status-icon('modified', #ff7714, #fce2d0);
-@include tree-status-icon('addedtodraft', #e29a00, #f8f4d0);
-@include tree-status-icon('deletedonlive', #f0524f, #f9d6dd);
-@include tree-status-icon('removedfromdraft', #f0524f, #f9d6dd);
-@include tree-status-icon('workflow-approval', #0097d7, #d3f2ff);
+@include tree-status-icon('modified', #EE6214, #FFF4ED);
+@include tree-status-icon('addedtodraft', #EE6214, #FFF4ED);
+@include tree-status-icon('deletedonlive', #5F7688, #F5F5F5);
+@include tree-status-icon('removedfromdraft', #5F7688, #F5F5F5);
+@include tree-status-icon('workflow-approval', #0070B4, #E8FAFF);
 
 .cms-tree {
 	visibility: hidden; // enabled by JS to avoid layout glitches
