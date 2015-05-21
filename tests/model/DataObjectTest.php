@@ -53,6 +53,30 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Comment', key($dbFields), 'DataObject::db returns fields in correct order');
 	}
 
+	public function testConstructAcceptsValues() {
+		// Values can be an array...
+		$player = new DataObjectTest_Player(array(
+			'FirstName' => 'James',
+			'Surname' => 'Smith'
+		));
+
+		$this->assertEquals('James', $player->FirstName);
+		$this->assertEquals('Smith', $player->Surname);
+
+		// ... or a stdClass inst
+		$data = new stdClass();
+		$data->FirstName = 'John';
+		$data->Surname = 'Doe';
+		$player = new DataObjectTest_Player($data);
+
+		$this->assertEquals('John', $player->FirstName);
+		$this->assertEquals('Doe', $player->Surname);
+
+		// IDs should be stored as integers, not strings
+		$player = new DataObjectTest_Player(array('ID' => '5'));
+		$this->assertSame(5, $player->ID);
+	}
+
 	public function testValidObjectsForBaseFields() {
 		$obj = new DataObjectTest_ValidatedObject();
 
