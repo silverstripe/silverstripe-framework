@@ -399,6 +399,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				E_USER_WARNING);
 			$record = null;
 		}
+		if (is_a($record, "stdClass")){
+			$record = (array)$record;
+		}
 
 		// Set $this->record to $record, but ignore NULLs
 		$this->record = array();
