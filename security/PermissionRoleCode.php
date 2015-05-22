@@ -30,7 +30,7 @@ class PermissionRoleCode extends DataObject {
 			&& in_array($this->Code, $privilegedCodes)
 			&& !Permission::check('ADMIN')
 		) {
-			$result->error(sprintf(
+			$result->addError(sprintf(
 				_t(
 					'PermissionRoleCode.PermsError',
 					'Can\'t assign code "%s" with privileged permissions (requires ADMIN access)'

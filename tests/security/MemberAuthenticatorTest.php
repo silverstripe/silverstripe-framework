@@ -23,7 +23,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		Security::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
 		parent::tearDown();
 	}
-	
+
 	public function testLegacyPasswordHashMigrationUponLogin() {
 		$member = new Member();
 
@@ -122,6 +122,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 			'tempid' => $tempID,
 			'Password' => 'mypassword'
 		), $form);
+		$form->setupFormErrors();
 		$this->assertNotEmpty($result);
 		$this->assertEquals($result->ID, $member->ID);
 		$this->assertEmpty($form->Message());
@@ -132,8 +133,9 @@ class MemberAuthenticatorTest extends SapphireTest {
 			'tempid' => $tempID,
 			'Password' => 'notmypassword'
 		), $form);
+		$form->setupFormErrors();
 		$this->assertEmpty($result);
-		$this->assertEquals('The provided details don&#039;t seem to be correct. Please try again.', $form->Message());
+		$this->assertEquals(Convert::raw2xml(_t('Member.ERRORWRONGCRED')), $form->Message());
 		$this->assertEquals('bad', $form->MessageType());
 	}
 
@@ -150,6 +152,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 			'Email' => 'admin',
 			'Password' => 'password'
 		), $form);
+		$form->setupFormErrors();
 		$this->assertNotEmpty($result);
 		$this->assertEquals($result->Email, Security::default_admin_username());
 		$this->assertEmpty($form->Message());
@@ -160,6 +163,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 			'Email' => 'admin',
 			'Password' => 'notmypassword'
 		), $form);
+		$form->setupFormErrors();
 		$this->assertEmpty($result);
 		$this->assertEquals('The provided details don&#039;t seem to be correct. Please try again.', $form->Message());
 		$this->assertEquals('bad', $form->MessageType());

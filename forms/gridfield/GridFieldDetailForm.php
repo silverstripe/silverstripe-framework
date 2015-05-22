@@ -580,7 +580,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		try {
 			if (!$this->record->canDelete()) {
 				throw new ValidationException(
-					_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"),0);
+					_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"));
 			}
 
 			$this->record->delete();

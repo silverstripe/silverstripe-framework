@@ -255,7 +255,7 @@ class FunctionalTest extends SapphireTest {
 		$items = $this->cssParser()->getBySelector($selector);
 
 		$actuals = array();
-		if($items) foreach($items as $item) $actuals[trim(preg_replace("/[ \n\r\t]+/", " ", $item. ''))] = true;
+		if($items) foreach($items as $item) $actuals[trim(preg_replace("/\s+/", " ", (string)$item))] = true;
 
 		foreach($expectedMatches as $match) {
 			$this->assertTrue(

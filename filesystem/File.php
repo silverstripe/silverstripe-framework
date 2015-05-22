@@ -929,14 +929,14 @@ class File extends DataObject {
 					'Argument 1: Comma-separated list of valid extensions',
 					array('extensions' => wordwrap(implode(', ',$exts)))
 				);
-				return new ValidationResult(false, $message);
+				return ValidationResult::create()->addError($message);
 			}
 		}
 
 		// We aren't validating for an existing "Filename" on the filesystem.
 		// A record should still be saveable even if the underlying record has been removed.
 
-		$result = new ValidationResult(true);
+		$result = ValidationResult::create();
 		$this->extend('validate', $result);
 		return $result;
 	}

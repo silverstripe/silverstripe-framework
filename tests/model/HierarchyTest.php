@@ -24,7 +24,10 @@ class HierarchyTest extends SapphireTest {
 			$obj2->write();
 		}
 		catch (ValidationException $e) {
-			$this->assertContains('Infinite loop found within the "HierarchyTest_Object" hierarchy', $e->getMessage());
+			$this->assertContains(
+				Convert::raw2xml('Infinite loop found within the "HierarchyTest_Object" hierarchy'),
+				$e->getMessage()
+			);
 			return;
 		}
 

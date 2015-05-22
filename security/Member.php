@@ -296,13 +296,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if (!$result->valid()) return $result;
 
 		if(empty($this->Password) && $this->exists()) {
-			$result->error(_t('Member.NoPassword','There is no password on this member.'));
+			$result->addError(_t('Member.NoPassword','There is no password on this member.'));
 			return $result;
 		}
 
 		$e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
 		if(!$e->check($this->Password, $password, $this->Salt, $this)) {
-			$result->error(_t (
+			$result->addError(_t (
 				'Member.ERRORWRONGCRED',
 				'The provided details don\'t seem to be correct. Please try again.'
 			));
@@ -323,7 +323,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$result = ValidationResult::create();
 
 		if($this->isLockedOut()) {
-			$result->error(
+			$result->addError(
 				_t(
 					'Member.ERRORLOCKEDOUT2',
 					'Your account has been temporarily disabled because of too many failed attempts at ' .
@@ -807,7 +807,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$existingRecord = DataObject::get_one('Member', $filter);
 
 			if($existingRecord) {
-				throw new ValidationException(ValidationResult::create(false, _t(
+				throw new ValidationException(ValidationResult::create()->adderror(_t(
 					'Member.ValidationIdentifierFailed',
 					'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))',
 					'Values in brackets show "fieldname = value", usually denoting an existing email address',
@@ -838,6 +838,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// Note that this only works with cleartext passwords, as we can't rehash
 		// existing passwords.
 		if((!$this->ID && $this->Password) || $this->isChanged('Password')) {
+			if($this->PasswordEncryption) $encryption = $this->PasswordEncryption;
+			else $encryption = Security::config()->password_encryption_algorithm;
+
 			// Password was changed: encrypt the password according the settings
 			$encryption_details = Security::encrypt_password(
 				$this->Password, // this is assumed to be cleartext

@@ -401,7 +401,7 @@ class SecurityTest extends FunctionalTest {
 					$member->LockedOutUntil,
 					'User does not have a lockout time set if under threshold for failed attempts'
 				);
-				$this->assertContains($this->loginErrorMessage(), Convert::raw2xml(_t('Member.ERRORWRONGCRED')));
+				$this->assertContains(Convert::raw2xml(_t('Member.ERRORWRONGCRED')), $this->loginErrorMessage());
 			} else {
 				// Fuzzy matching for time to avoid side effects from slow running tests
 				$this->assertGreaterThan(
@@ -600,7 +600,8 @@ class SecurityTest extends FunctionalTest {
 	 * Get the error message on the login form
 	 */
 	public function loginErrorMessage() {
-		return $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.formError.message');
+		$result = $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.result');
+		return $result->message();
 	}
 
 }

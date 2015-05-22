@@ -11,12 +11,14 @@ class ValidationExceptionTest extends SapphireTest
 	 */
 	public function testCreateFromValidationResult() {
 
-		$result = new ValidationResult(false, 'Not a valid result');
+		$result = new ValidationResult();
+		$result->addError('Not a valid result');
+
 		$exception = new ValidationException($result);
 
 		$this->assertEquals(0, $exception->getCode());
 		$this->assertEquals('Not a valid result', $exception->getMessage());
-		$this->assertEquals(false, $exception->getResult()->valid());
+		$this->assertFalse($exception->getResult()->valid());
 		$this->assertEquals('Not a valid result', $exception->getResult()->message());
 
 	}
@@ -27,8 +29,8 @@ class ValidationExceptionTest extends SapphireTest
 	 */
 	public function testCreateFromComplexValidationResult() {
 		$result = new ValidationResult();
-		$result->error('Invalid type')
-				->error('Out of kiwis');
+		$result->addError('Invalid type')
+				->addError('Out of kiwis');
 		$exception = new ValidationException($result);
 
 		$this->assertEquals(0, $exception->getCode());
@@ -46,7 +48,7 @@ class ValidationExceptionTest extends SapphireTest
 
 		$this->assertEquals(E_USER_ERROR, $exception->getCode());
 		$this->assertEquals('Error inferred from message', $exception->getMessage());
-		$this->assertEquals(false, $exception->getResult()->valid());
+		$this->assertFalse($exception->getResult()->valid());
 		$this->assertEquals('Error inferred from message', $exception->getResult()->message());
 	}
 
@@ -55,12 +57,13 @@ class ValidationExceptionTest extends SapphireTest
 	 * and a custom message
 	 */
 	public function testCreateWithValidationResultAndMessage() {
-		$result = new ValidationResult(false, 'Incorrect placement of cutlery');
+		$result = new ValidationResult();
+		$result->addError('Incorrect placement of cutlery');
 		$exception = new ValidationException($result, 'An error has occurred', E_USER_WARNING);
 
 		$this->assertEquals(E_USER_WARNING, $exception->getCode());
 		$this->assertEquals('An error has occurred', $exception->getMessage());
-		$this->assertEquals(false, $exception->getResult()->valid());
+		$this->assertFalse($exception->getResult()->valid());
 		$this->assertEquals('Incorrect placement of cutlery', $exception->getResult()->message());
 	}
 
@@ -71,8 +74,8 @@ class ValidationExceptionTest extends SapphireTest
 	 */
 	public function testCreateWithComplexValidationResultAndMessage() {
 		$result = new ValidationResult();
-		$result->error('A spork is not a knife')
-				->error('A knife is not a back scratcher');
+		$result->addError('A spork is not a knife')
+				->addError('A knife is not a back scratcher');
 		$exception = new ValidationException($result, 'An error has occurred', E_USER_WARNING);
 
 		$this->assertEquals(E_USER_WARNING, $exception->getCode());
@@ -89,8 +92,8 @@ class ValidationExceptionTest extends SapphireTest
 		$result = new ValidationResult();
 		$anotherresult = new ValidationResult();
 		$yetanotherresult = new ValidationResult();
-		$anotherresult->error("Eat with your mouth closed", "EATING101");
-		$yetanotherresult->error("You didn't wash your hands", "BECLEAN");
+		$anotherresult->addError("Eat with your mouth closed", 'bad', "EATING101");
+		$yetanotherresult->addError("You didn't wash your hands", 'bad', "BECLEAN", false);
 
 		$this->assertTrue($result->valid());
 		$this->assertFalse($anotherresult->valid());
@@ -102,7 +105,53 @@ class ValidationExceptionTest extends SapphireTest
 		$this->assertEquals(array(
 			"EATING101" => "Eat with your mouth closed",
 			"BECLEAN" => "You didn't wash your hands"
-		),$result->messageList());
+		), $result->messageList());
+	}
+
+	/**
+	 * Test that a ValidationException created with no contained ValidationResult
+	 * will correctly populate itself with an inferred version
+	 */
+	public function testCreateForField() {
+		$exception = ValidationException::create_for_field('Content', 'Content is required');
+
+		$this->assertEquals('Content is required', $exception->getMessage());
+		$this->assertEquals(false, $exception->getResult()->valid());
+
+		$this->assertEquals(array(
+			'Content' => array(
+				'message' => 'Content is required',
+				'messageType' => 'bad',
+			),
+		), $exception->getResult()->fieldErrors());
+	}
+
+	/**
+	 * Test that a ValidationException created with no contained ValidationResult
+	 * will correctly populate itself with an inferred version
+	 */
+	public function testValidationResultAddMethods() {
+		$result = new ValidationResult();
+		$result->addMessage('A spork is not a knife', 'bad');
+		$result->addError('A knife is not a back scratcher');
+		$result->addFieldMessage('Title', 'Title is good', 'good');
+		$result->addFieldError('Content', 'Content is bad');
+
+
+		$this->assertEquals(array(
+			'Title' => array(
+				'message' => 'Title is good',
+				'messageType' => 'good'
+			),
+			'Content' => array(
+				'message' => 'Content is bad',
+				'messageType' => 'bad'
+			)
+		), $result->fieldErrors());
+
+		$this->assertEquals('A spork is not a knife; A knife is not a back scratcher', $result->overallMessage());
+
+		$exception = ValidationException::create_for_field('Content', 'Content is required');
 	}
 
 }
