@@ -408,6 +408,36 @@ class SQLQueryTest extends SapphireTest {
 		$this->assertEquals('2012-05-01 09:00:00', $records['0']['_SortColumn0']);
 	}
 
+
+	public function testSelect() {
+		$query = new SQLQuery('"Title"', '"MyTable"');
+		$query->addSelect('"TestField"');
+		$this->assertEquals(
+			'SELECT "Title", "TestField" FROM "MyTable"',
+			$query->sql()
+		);
+
+		// Test replacement of select
+		$query->setSelect(array(
+			'Field' => '"Field"',
+			'AnotherAlias' => '"AnotherField"'
+		));
+		$this->assertEquals(
+			'SELECT "Field", "AnotherField" AS "AnotherAlias" FROM "MyTable"',
+			$query->sql()
+		);
+
+		// Check that ' as ' selects don't get mistaken as aliases
+		$query->addSelect(array(
+			'Relevance' => "MATCH (Title, MenuTitle) AGAINST ('Two as One')"
+		));
+		$this->assertEquals(
+			'SELECT "Field", "AnotherField" AS "AnotherAlias", MATCH (Title, MenuTitle) AGAINST (' .
+			'\'Two as One\') AS "Relevance" FROM "MyTable"',
+			$query->sql()
+		);
+	}
+
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {

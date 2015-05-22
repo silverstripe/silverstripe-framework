@@ -148,15 +148,18 @@ class SQLQuery {
 	 *
 	 * <code>
 	 *  // pass fields to select as single parameter array
-	 *  $query->setSelect(array("Col1","Col2"))->setFrom("MyTable");
+	 *  $query->setSelect(array('"Col1"', '"Col2"'))->setFrom('"MyTable"');
 	 *
 	 *  // pass fields to select as multiple parameters
-	 *  $query->setSelect("Col1", "Col2")->setFrom("MyTable");
+	 *  $query->setSelect('"Col1"', '"Col2"')->setFrom('"MyTable"');
+	 *
+	 *  // Set a list of selected fields as aliases
+	 *  $query->setSelect(array('Name' => '"Col1"', 'Details' => '"Col2"')->setFrom('"MyTable"');
 	 * </code>
 	 *
-	 * @param string|array $fields
+	 * @param string|array $fields Field names should be ANSI SQL quoted. Array keys should be unquoted.
 	 * @param boolean $clear Clear existing select fields?
-	 * @return SQLQuery
+	 * @return $this Self reference
 	 */
 	public function setSelect($fields) {
 		$this->select = array();
@@ -171,17 +174,10 @@ class SQLQuery {
 	/**
 	 * Add to the list of columns to be selected by the query.
 	 *
-	 * <code>
-	 *  // pass fields to select as single parameter array
-	 *  $query->addSelect(array("Col1","Col2"))->setFrom("MyTable");
+	 * @see setSelect for example usage
 	 *
-	 *  // pass fields to select as multiple parameters
-	 *  $query->addSelect("Col1", "Col2")->setFrom("MyTable");
-	 * </code>
-	 *
-	 * @param string|array $fields
-	 * @param boolean $clear Clear existing select fields?
-	 * @return SQLQuery
+	 * @param string|array $fields Field names should be ANSI SQL quoted. Array keys should be unquoted.
+	 * @return $this Self reference
 	 */
 	public function addSelect($fields) {
 		if (func_num_args() > 1) {
@@ -191,7 +187,7 @@ class SQLQuery {
 		}
 
 		foreach($fields as $idx => $field) {
-			if(preg_match('/^(.*) +AS +"?([^"]*)"?/i', $field, $matches)) {
+			if(preg_match('/^(.*) +AS +"([^"]*)"/i', $field, $matches)) {
 				Deprecation::notice("3.0", "Use selectField() to specify column aliases");
 				$this->selectField($matches[1], $matches[2]);
 			} else {
@@ -210,8 +206,8 @@ class SQLQuery {
 	/**
 	 * Select an additional field.
 	 *
-	 * @param $field String The field to select (escaped SQL statement)
-	 * @param $alias String The alias of that field (escaped SQL statement).
+	 * @param string $field The field to select (ansi quoted SQL identifier or statement)
+	 * @param string|null $alias The alias of that field (unquoted SQL identifier).
 	 * Defaults to the unquoted column name of the $field parameter.
 	 * @return SQLQuery
 	 */
@@ -499,8 +495,8 @@ class SQLQuery {
 	 * @example $sql->orderby("Column", "DESC");
 	 * @example $sql->orderby(array("Column" => "ASC", "ColumnTwo" => "DESC"));
 	 *
-	 * @param string|array $orderby Clauses to add (escaped SQL statement)
-	 * @param string $dir Sort direction, ASC or DESC
+	 * @param string|array $clauses Clauses to add (escaped SQL statement)
+	 * @param string $direction Sort direction, ASC or DESC
 	 *
 	 * @return SQLQuery
 	 */
@@ -519,7 +515,7 @@ class SQLQuery {
 	 * @example $sql->orderby(array("Column" => "ASC", "ColumnTwo" => "DESC"));
 	 *
 	 * @param string|array $orderby Clauses to add (escaped SQL statements)
-	 * @param string $dir Sort direction, ASC or DESC
+	 * @param string $direction Sort direction, ASC or DESC
 	 *
 	 * @return SQLQuery
 	 */
@@ -593,9 +589,9 @@ class SQLQuery {
 	/**
 	 * Extract the direction part of a single-column order by clause.
 	 * 
-	 * @param String
-	 * @param String
-	 * @return Array A two element array: array($column, $direction)
+	 * @param string $value
+	 * @param string $defaultDirection
+	 * @return array A two element array: array($column, $direction)
 	 */
 	private function getDirectionFromString($value, $defaultDirection = null) {
 		if(preg_match('/^(.*)(asc|desc)$/i', $value, $matches)) {
@@ -1013,7 +1009,7 @@ class SQLQuery {
 			$clone->setSelect(array("count($column)"));
 		}
 
-		$clone->setGroupBy(array());;
+		$clone->setGroupBy(array());
 		return $clone->execute()->value();
 	}
 
