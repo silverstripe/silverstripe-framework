@@ -103,12 +103,11 @@ $chain = new ErrorControlChain();
 $token = new ParameterConfirmationToken('flush');
 
 $chain
-	->then(function($chain) use ($token){
+	->then(function($chain) use ($token) {
 		// First, if $_GET['flush'] was set, but no valid token, suppress the flush
-		if (isset($_GET['flush']) && !$token->tokenProvided()) {
-			unset($_GET['flush']);
-		}
-		else {
+		if ($token->reloadRequired()) {
+			$token->suppress();
+		} else {
 			$chain->setSuppression(false);
 		}
 
