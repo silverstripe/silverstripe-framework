@@ -97,13 +97,17 @@ class GroupedDropdownField extends DropdownField {
 	public function validate($validator) {
 		$valid = false;
 		$source = $this->getSourceAsArray();
+		$disabled = $this->getDisabledItems();
 
 		if ($this->value) {
 			foreach ($source as $value => $title) {
-				// Check if value matches an option, or is in a nested array of grouped options
-				if ((is_array($title) && array_key_exists($this->value, $title))
-					|| ($this->value == $value)
-				) {
+				if (is_array($title) && array_key_exists($this->value, $title)) {
+					// Check that the set value is not in the list of disabled items
+					if (!isset($disabled[$value]) || !in_array($this->value, $disabled[$value])) {
+						$valid = true;
+					}
+				// Check that the value matches and is not disabled
+				} elseif($this->value == $value && !in_array($this->value, $disabled)) {
 					$valid = true;
 				}
 			}

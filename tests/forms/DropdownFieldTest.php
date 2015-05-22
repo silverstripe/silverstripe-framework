@@ -313,7 +313,8 @@ class DropdownFieldTest extends SapphireTest {
 	public function testValidation() {
 		$field = DropdownField::create('Test', 'Testing', array(
 			"One" => "One",
-			"Two" => "Two"
+			"Two" => "Two",
+			"Five" => "Five"
 		));
 		$validator = new RequiredFields();
 		$form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
@@ -331,6 +332,10 @@ class DropdownFieldTest extends SapphireTest {
 		$field->setEmptyString('Empty String');
 		$field->setValue('');
 		$this->assertTrue($field->validate($validator));
+		//disabled items shouldn't validate
+		$field->setDisabledItems(array('Five'));
+		$field->setValue('Five');
+		$this->assertFalse($field->validate($validator));
 	}
 
 }
