@@ -89,11 +89,42 @@ class GroupedDropdownField extends DropdownField {
 	}
 
 	/**
-	 * @todo Implement DropdownField::validate() with group validation support
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
 	 */
 	public function validate($validator) {
+		$valid = false;
+		$source = $this->getSourceAsArray();
+
+		if ($this->value) {
+			foreach ($source as $value => $title) {
+				// Check if value matches an option, or is in a nested array of grouped options
+				if ((is_array($title) && array_key_exists($this->value, $title))
+					|| ($this->value == $value)
+				) {
+					$valid = true;
+				}
+			}
+		} elseif ($this->getHasEmptyDefault()) {
+			$valid = true;
+		}
+
+		if (!$valid) {
+			$validator->validationError(
+				$this->name,
+				_t(
+					'DropdownField.SOURCE_VALIDATION',
+					"Please select a value within the list provided. {value} is not a valid option",
+					array('value' => $this->value)
+				),
+				"validation"
+			);
+			return false;
+		}
+
 		return true;
 	}
 
 }
-
