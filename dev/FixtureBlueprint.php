@@ -183,14 +183,8 @@ class FixtureBlueprint {
 
 			// If LastEdited was set in the fixture, set it here
 			if($data && array_key_exists('LastEdited', $data)) {
-				$edited = $this->parseValue($data['LastEdited'], $fixtures);
-				DB::manipulate(array(
-					$class => array(
-						"command" => "update", "id" => $obj->id,
-						"fields" => array("LastEdited" => "'".$edited."'")
-					)
-				));
-			}	
+				$this->overrideField($obj, 'LastEdited', $data['LastEdited'], $fixtures);
+			}
 		} catch(Exception $e) {
 			Config::inst()->update('DataObject', 'validation_enabled', $validationenabled);
 			throw $e;
@@ -286,6 +280,28 @@ class FixtureBlueprint {
 
 	protected function setValue($obj, $name, $value, $fixtures = null) {
 		$obj->$name = $this->parseValue($value, $fixtures);
+	}
+
+	protected function overrideField($obj, $name, $value, $fixtures = null) {
+		$class = $this->class;
+		$value = $this->parseValue($value, $fixtures);
+
+		foreach ($obj->getClassAncestry() as $ancestor) {
+			if (DataObject::has_own_table($ancestor)
+				&& singleton($ancestor)->hasOwnTableDatabaseField($name))
+			{
+				$class = $ancestor;
+				break;
+			}
+		}
+
+		DB::manipulate(array(
+			$class => array(
+				"command" => "update", "id" => $obj->ID,
+				"fields" => array($name => is_string($value) ? "'$value'" : $value)
+			)
+		));
+		$obj->$name = $value;
 	}
 
 }
