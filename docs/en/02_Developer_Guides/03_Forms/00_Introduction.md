@@ -100,7 +100,7 @@ Some common examples are [api:TextField] or [api:DropdownField].
 	TextField::create($name, $title, $value);
 
 <div class="info" markdown='1'>
-A list of the common FormField subclasses is available on the [Common Subclasses](fields/common_subclasses) page.
+A list of the common FormField subclasses is available on the [Common Subclasses](field_types/common_subclasses/) page.
 </div>
 
 The fields are added to the [api:FieldList] `fields` property on the `Form` and can be modified at up to the point the 
