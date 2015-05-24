@@ -773,9 +773,8 @@ form.import-form label.left { width: 250px; }
 .cms .jstree ins, .TreeDropdownField .treedropdownfield-panel .jstree ins { display: inline-block; text-decoration: none; width: 18px; height: 18px; margin: 0 0 0 0; padding: 0; float: left; }
 .cms .jstree a, .TreeDropdownField .treedropdownfield-panel .jstree a { display: inline-block; line-height: 16px; height: 16px; color: black; white-space: nowrap; text-decoration: none; padding: 1px 2px; margin: 0; border: 1px solid #fff; }
 .cms .jstree a:focus, .cms .jstree a:active, .cms .jstree a:hover, .TreeDropdownField .treedropdownfield-panel .jstree a:focus, .TreeDropdownField .treedropdownfield-panel .jstree a:active, .TreeDropdownField .treedropdownfield-panel .jstree a:hover { text-decoration: none; cursor: pointer; text-shadow: 1px 1px 1px white; }
-.cms .jstree a > ins, .TreeDropdownField .treedropdownfield-panel .jstree a > ins { height: 16px; width: 16px; }
-.cms .jstree a > ins.jstree-checkbox, .TreeDropdownField .treedropdownfield-panel .jstree a > ins.jstree-checkbox { height: 19px; }
-.cms .jstree a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree a > .jstree-icon { margin-right: 3px; }
+.cms .jstree a > ins, .TreeDropdownField .treedropdownfield-panel .jstree a > ins { height: 16px; width: 12px; }
+.cms .jstree a > ins.jstree-checkbox, .TreeDropdownField .treedropdownfield-panel .jstree a > ins.jstree-checkbox { height: 19px; width: 16px; }
 .cms .jstree .jstree-real-checkbox, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-real-checkbox { display: none; }
 .cms .jstree .jstree-wholerow-real, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow-real { position: relative; z-index: 1; }
 .cms .jstree .jstree-wholerow-real li, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow-real li { cursor: pointer; }
@@ -788,7 +787,7 @@ form.import-form label.left { width: 250px; }
 .cms .jstree.jstree-focused, .TreeDropdownField .treedropdownfield-panel .jstree.jstree-focused { background: none; }
 .cms .jstree.jstree-focused .jstree > ul, .TreeDropdownField .treedropdownfield-panel .jstree.jstree-focused .jstree > ul { background: none; }
 .cms a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel a > .jstree-icon { display: none; }
-.cms .draggable a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .draggable a > .jstree-icon { display: block; cursor: move; cursor: -moz-grab; cursor: -webkit-grab; cursor: grab; }
+.cms .draggable a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .draggable a > .jstree-icon { display: none; cursor: move; cursor: -moz-grab; cursor: -webkit-grab; cursor: grab; }
 .cms .draggable a > .jstree-icon:active, .TreeDropdownField .treedropdownfield-panel .draggable a > .jstree-icon:active { cursor: -moz-grabbing; cursor: -webkit-grabbing; cursor: grabbing; }
 .cms li.jstree-open > ul, .TreeDropdownField .treedropdownfield-panel li.jstree-open > ul { display: block; margin-left: -13px; }
 .cms li.jstree-open > ul li ul, .TreeDropdownField .treedropdownfield-panel li.jstree-open > ul li ul { margin-left: 2px; }
@@ -852,6 +851,12 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree .jstree-open > ins, .cms-tree.jstree .jstree-open > ins { background-position: -20px 0; }
 .tree-holder.filtered-list li.class-Page a, .cms-tree.filtered-list li.class-Page a { color: #aaa; }
 .tree-holder.filtered-list li.class-Page.filtered-item a, .cms-tree.filtered-list li.class-Page.filtered-item a { color: #0073C1; }
+
+.cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li a { padding-left: 15px; }
+.cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li .jstree-hovered, .cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li .jstree-clicked, .cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li a:focus { padding-left: 3px; }
+.cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li .jstree-hovered .jstree-icon, .cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li .jstree-clicked .jstree-icon, .cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li a:focus .jstree-icon { display: block; }
+
+.jstree-default a .jstree-icon, .jstree-default-rtl a .jstree-icon, .jstree-classic a .jstree-icon, .jstree-apple a .jstree-icon { background-position: -62px -19px; }
 
 /* ensure status is visible in sidebar */
 .cms-content-tools .cms-tree.jstree li { min-width: 159px; }
