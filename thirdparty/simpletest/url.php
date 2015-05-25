@@ -410,7 +410,7 @@ class SimpleUrl {
      */
     function asString() {
         $path = $this->_path;
-        $scheme = $identity = $host = $encoded = $fragment = '';
+        $scheme = $identity = $host = $port = $encoded = $fragment = '';
         if ($this->_username && $this->_password) {
             $identity = $this->_username . ':' . $this->_password . '@';
         }
@@ -419,13 +419,16 @@ class SimpleUrl {
             $scheme .= "://";
             $host = $this->getHost();
         }
+        if ($this->getPort() && $this->getPort() != 80 ) {
+            $port = ':'.$this->getPort();
+        }
         if (substr($this->_path, 0, 1) == '/') {
             $path = $this->normalisePath($this->_path);
         }
         $encoded = $this->getEncodedRequest();
         $fragment = $this->getFragment() ? '#'. $this->getFragment() : '';
         $coords = $this->getX() === false ? '' : '?' . $this->getX() . ',' . $this->getY();
-        return "$scheme$identity$host$path$encoded$fragment$coords";
+        return "$scheme$identity$host$port$path$encoded$fragment$coords";
     }
     
     /**

@@ -31,9 +31,12 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 
 		return array($answer, $slash);
 	}
+
+	protected $oldHost = null;
 	
 	public function setUp() {
 		parent::setUp();
+		$this->oldHost = $_SERVER['HTTP_HOST'];
 		$_GET['parameterconfirmationtokentest_notoken'] = 'value';
 		$_GET['parameterconfirmationtokentest_empty'] = '';
 		$_GET['parameterconfirmationtokentest_withtoken'] = '1';
@@ -48,6 +51,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		foreach($_GET as $param) {
 			if(stripos($param, 'parameterconfirmationtokentest_') === 0) unset($_GET[$param]);
 		}
+		$_SERVER['HTTP_HOST'] = $this->oldHost;
 		parent::tearDown();
 	}
 	

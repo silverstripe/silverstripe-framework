@@ -102,12 +102,12 @@ class ChangePasswordForm extends Form {
 				// TODO Add confirmation message to login redirect
 				Session::clear('AutoLoginHash');
 				
-				if (isset($_REQUEST['BackURL']) 
-					&& $_REQUEST['BackURL'] 
+				if (!empty($_REQUEST['BackURL'])
 					// absolute redirection URLs may cause spoofing 
 					&& Director::is_site_url($_REQUEST['BackURL'])
 				) {
-					$this->controller->redirect($_REQUEST['BackURL']);
+					$url = Director::absoluteURL($_REQUEST['BackURL']);
+					$this->controller->redirect($url);
 				}
 				else {
 					// Redirect to default location - the login form saying "You are logged in as..."
