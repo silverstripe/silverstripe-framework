@@ -139,6 +139,14 @@
 			onadd: function () {
 				var self = this;
 
+				setTimeout(function () {
+					// Use a timeout so this happens after the redraw.
+					// Triggering a toggle before redraw will result in an incorrect
+					// menu 'expanded width' being calculated when then menu
+					// is added in a collapsed state.
+					self.togglePanel(!self.getEvaluatedCollapsedState(), false, false);
+				}, 0);
+
 				// Setup automatic expand / collapse behaviour.
 				$(window).on('ajaxComplete', function (e) {
 					setTimeout(function () { // Use a timeout so this happens after the redraw

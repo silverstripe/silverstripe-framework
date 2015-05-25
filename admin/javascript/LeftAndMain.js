@@ -221,7 +221,7 @@ jQuery.noConflict();
 			 * See LeftAndMain.Layout.js for description of these options.
 			 */
 			LayoutOptions: {
-				minContentWidth: 820,
+				minContentWidth: 940,
 				minPreviewWidth: 400,
 				mode: 'content'
 			},
