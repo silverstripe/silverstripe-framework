@@ -474,6 +474,47 @@ This is a recommended option to secure any controller which displays
 or submits sensitive user input, and is enabled by default in all CMS controllers,
 as well as the login form.
 
+## Request hostname forgery
+
+When SilverStripe is run behind a reverse proxy, it's normally necessary for this proxy to
+use the `X-Forwarded-Host` request header to tell the webserver which hostname was originally
+requested. However, when SilverStripe is not run behind a proxy, this header can still be
+used by attackers to fool the server into mistaking its own identity.
+
+The risk of this kind of attack causing damage is especially high on sites which utilise caching
+mechanisms, as rewritten urls could persist between requests in order to misdirect other users
+into visiting external sites.
+
+In order to prevent this kind of attack, it's necessary to whitelist trusted proxy
+server IPs using the SS_TRUSTED_PROXY_IPS define in your _ss_environment.php.
+
+
+	:::php
+	define('SS_TRUSTED_PROXY_IPS', '127.0.0.1,192.168.0.1');
+
+
+If there is no proxy server, 'none' can be used to distrust all clients.
+If only trusted servers will make requests then you can use '*' to trust all clients.
+Otherwise a comma separated list of individual IP addresses should be declared.
+
+This behaviour is enabled whenever SS_TRUSTED_PROXY_IPS is defined, or if the
+`BlockUntrustedProxyHeaders` environment variable is declared. From 3.1.13 onwards
+this environment variable is included in the installer by default.
+
+
+	<IfModule mod_env.c>
+		# Ensure that X-Forwarded-Host is only allowed to determine the request
+		# hostname for servers ips defined by SS_TRUSTED_PROXY_IPS in your _ss_environment.php
+		# Note that in a future release this setting will be always on.
+		SetEnv BlockUntrustedProxyHeaders true
+	</IfModule>
+
+
+In a future release this behaviour will be changed to be on by default, and this environment
+variable will be no longer necessary, thus it will be necessary to always set
+SS_TRUSTED_PROXY_IPS if using a proxy.
+
+
 ##  Related
 
  * [http://silverstripe.org/security-releases/](http://silverstripe.org/security-releases/)

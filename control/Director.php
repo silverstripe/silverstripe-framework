@@ -495,14 +495,16 @@ class Director implements TemplateGlobalProvider {
 		if ($protocol = Config::inst()->get('Director', 'alternate_protocol')) {
 			$return = ($protocol == 'https');
 		} else if(
-			isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
+			TRUSTED_PROXY
+			&& isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
 			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'
 		) { 
 			// Convention for (non-standard) proxy signaling a HTTPS forward,
 			// see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
 			$return = true;
 		} else if(
-			isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
+			TRUSTED_PROXY
+			&& isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
 			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https'
 		) { 
 			// Less conventional proxy header

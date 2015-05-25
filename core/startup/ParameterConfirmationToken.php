@@ -114,14 +114,16 @@ class ParameterConfirmationToken {
 		// Are we http or https? Replicates Director::is_https() without its dependencies/
 		$proto = 'http';
 		if(
-			isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
+			TRUSTED_PROXY
+			&& isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
 			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'
 		) { 
 			// Convention for (non-standard) proxy signaling a HTTPS forward,
 			// see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
 			$proto = 'https';
 		} else if(
-			isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
+			TRUSTED_PROXY
+			&& isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
 			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https'
 		) { 
 			// Less conventional proxy header
