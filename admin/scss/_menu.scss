@@ -106,7 +106,7 @@
 	}
 		
 	&.collapsed {
-		width: 40px;
+		width: 40px !important; // Using important because JavaScript is overriding this value
 		cursor: auto;
 		z-index: 1000;
 		
@@ -148,6 +148,62 @@
 		&.cms-panel .cms-panel-content {
 			display: block; // override panel defaults
 		}
+
+		.ss-ui-button.sticky-toggle {
+			width: 50%;
+		}
+	}
+
+	.cms-panel-toggle {
+		a,
+		a.toggle-expand {
+			float: right;
+			width: 20px;
+		}
+	}
+
+	.ss-ui-button.sticky-toggle {
+		float: left;
+		width: 24px;
+		height: 24px;
+		margin: 0;
+		text-indent: -999em;
+		background-color: transparent;
+		background-image: url(../images/sticky-toggle-off.png);
+		background-repeat: no-repeat;
+		background-position: 3px;
+		border: 0;
+
+		&:hover {
+			@include box-shadow(0 0 0);
+		}
+
+		&.active {
+			background-image: url(../images/sticky-toggle-on.png);
+		}
+
+		.ui-button-text {
+			padding: 0;
+		}
+
+		// When the button is hovered, show the status indicator
+		&:hover {
+			+ .sticky-status-indicator {
+				display: block;
+				padding: 5px 6px 0;
+			}
+		}
+	}
+
+	.sticky-status-indicator {
+		display: none;
+		position: absolute;
+		top: -22px;
+		left: 2px;
+		font-size: 9px;
+		color: #555d60;
+		text-transform: uppercase;
+		background-color: $color-base;
 	}
 }
 
