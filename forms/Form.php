@@ -432,6 +432,7 @@ class Form extends RequestHandler {
 						if(Director::is_site_url($pageURL)) {
 							// Remove existing pragmas
 							$pageURL = preg_replace('/(#.*)/', '', $pageURL);
+							$pageURL = Director::absoluteURL($pageURL);
 							return $this->controller->redirect($pageURL . '#' . $this->FormName());
 						}
 					}
