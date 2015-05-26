@@ -9,7 +9,9 @@ class FixtureBlueprintTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
 		'FixtureFactoryTest_DataObject',
-		'FixtureFactoryTest_DataObjectRelation'
+		'FixtureFactoryTest_DataObjectRelation',
+		'FixtureBlueprintTest_SiteTree',
+		'FixtureBlueprintTest_Page'
 	);
 
 	public function testCreateWithRelationshipExtraFields() {
@@ -180,6 +182,40 @@ class FixtureBlueprintTest extends SapphireTest {
 		$this->assertEquals(99, $obj->ID);
 	}
 
+	public function testCreateWithLastEdited() {
+		$extpectedDate = '2010-12-14 16:18:20';
+		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$obj = $blueprint->createObject('lastedited', array('LastEdited' => $extpectedDate));
+		$this->assertNotNull($obj);
+		$this->assertEquals($extpectedDate, $obj->LastEdited);
+
+		$obj = FixtureFactoryTest_DataObject::get()->byID($obj->ID);
+		$this->assertEquals($extpectedDate, $obj->LastEdited);
+	}
+
+	public function testCreateWithClassAncestry() {
+		$data = array(
+			'Title' => 'My Title',
+			'Created' => '2010-12-14 16:18:20',
+			'LastEdited' => '2010-12-14 16:18:20',
+			'PublishDate' => '2015-12-09 06:03:00'
+		);
+		$blueprint = new FixtureBlueprint('FixtureBlueprintTest_Article');
+		$obj = $blueprint->createObject('home', $data);
+		$this->assertNotNull($obj);
+		$this->assertEquals($data['Title'], $obj->Title);
+		$this->assertEquals($data['Created'], $obj->Created);
+		$this->assertEquals($data['LastEdited'], $obj->LastEdited);
+		$this->assertEquals($data['PublishDate'], $obj->PublishDate);
+
+		$obj = FixtureBlueprintTest_Article::get()->byID($obj->ID);
+		$this->assertNotNull($obj);
+		$this->assertEquals($data['Title'], $obj->Title);
+		$this->assertEquals($data['Created'], $obj->Created);
+		$this->assertEquals($data['LastEdited'], $obj->LastEdited);
+		$this->assertEquals($data['PublishDate'], $obj->PublishDate);
+	}
+
 	public function testCallbackOnBeforeCreate() {
 		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
 		$this->_called = 0;
@@ -231,4 +267,33 @@ class FixtureBlueprintTest extends SapphireTest {
 		$this->assertEquals('Override Name', $obj2->Name);
 	}
 	
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class FixtureBlueprintTest_SiteTree extends DataObject implements TestOnly {
+
+	private static $db = array(
+		"Title" => "Varchar"
+	);
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class FixtureBlueprintTest_Page extends FixtureBlueprintTest_SiteTree {
+
+	private static $db = array(
+		'PublishDate' => 'SS_DateTime'
+	);
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class FixtureBlueprintTest_Article extends FixtureBlueprintTest_Page {
 }
