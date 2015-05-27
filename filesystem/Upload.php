@@ -157,7 +157,7 @@ class Upload extends Controller {
 			}
 		}
 
-		// if filename already exists, version the filename (e.g. test.gif to test2.gif, test2.gif to test3.gif)
+		// if filename already exists, version the filename (e.g. test.gif to test-2.gif, test-2.gif to test-3.gif)
 		if(!$this->replaceFile) {
 			$fileSuffixArray = explode('.', $fileName);
 			$fileTitle = array_shift($fileSuffixArray);
@@ -175,11 +175,11 @@ class Upload extends Controller {
 				$i = isset($i) ? ($i+1) : 2;
 				$oldFilePath = $relativeFilePath;
 
-				$pattern = '/([0-9]+$)/';
-				if(preg_match($pattern, $fileTitle)) {
-					$fileTitle = preg_replace($pattern, $i, $fileTitle);
+				$pattern = '/-v([0-9]+$)/';
+				if(preg_match($pattern, $fileTitle, $matches)) {
+					$fileTitle = preg_replace($pattern, '-v' . ($matches[1] + 1), $fileTitle);
 				} else {
-					$fileTitle .= $i;
+					$fileTitle .= '-v' . $i;
 				}
 				$relativeFilePath = $relativeFolderPath . $fileTitle . $fileSuffix;
 
