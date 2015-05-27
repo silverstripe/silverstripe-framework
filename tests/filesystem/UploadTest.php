@@ -684,21 +684,21 @@ class UploadTest extends SapphireTest {
 
 		$file2 = $upload('UploadTest-testUpload.jpg');
 		$this->assertEquals(
-			'UploadTest-testUpload2.jpg',
+			'UploadTest-testUpload-v2.jpg',
 			$file2->Name,
 			'File does receive new name'
 		);
 
 		$file3 = $upload('UploadTest-testUpload.jpg');
 		$this->assertEquals(
-			'UploadTest-testUpload3.jpg',
+			'UploadTest-testUpload-v3.jpg',
 			$file3->Name,
 			'File does receive new name'
 		);
 
-		$file4 = $upload('UploadTest-testUpload3.jpg');
+		$file4 = $upload('UploadTest-testUpload-v3.jpg');
 		$this->assertEquals(
-			'UploadTest-testUpload4.jpg',
+			'UploadTest-testUpload-v4.jpg',
 			$file4->Name,
 			'File does receive new name'
 		);
