@@ -741,7 +741,7 @@ class GridField extends FormField {
 	 *
 	 * @param string $actionName
 	 * @param mixed $args
-	 * @param arrray $data - send data from a form
+	 * @param array $data - send data from a form
 	 *
 	 * @return type
 	 * @throws InvalidArgumentException
