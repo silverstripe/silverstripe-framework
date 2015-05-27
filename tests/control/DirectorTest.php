@@ -402,6 +402,9 @@ class DirectorTest extends SapphireTest {
 	}
 
 	public function testIsHttps() {
+		if(!TRUSTED_PROXY) {
+			$this->markTestSkipped('Test cannot be run without trusted proxy');
+		}
 		// nothing available
 		$headers = array(
 			'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'
