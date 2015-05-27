@@ -355,6 +355,40 @@ You can use [SearchFilters](searchfilters) to add additional behavior to your `f
 		'PlayerNumber:GreaterThan' => '10'
 	));
 
+### Filtering by null values
+
+Since null values in SQL are special, they are non-comparable with other values, certain filters will add
+`IS NULL` or `IS NOT NULL` predicates automatically to your query. As per ANSI SQL-92, any comparison
+condition against a field will filter out nulls by default. Therefore, it's necessary to include certain null
+checks to ensure that exclusion filters behave predictably.
+
+For instance, the below code will select only values that do not match the given value, including nulls.
+
+
+	:::php
+	$players = Player::get()->filter('FirstName:not', 'Sam');
+	// ... WHERE "FirstName" != 'Sam' OR "FirstName" IS NULL
+	// Returns rows with any value (even null) other than Sam
+
+
+If null values should be excluded, include the null in your check.
+
+
+	:::php
+	$players = Player::get()->filter('FirstName:not', array('Sam', null));
+	// ... WHERE "FirstName" != 'Sam' AND "FirstName" IS NOT NULL
+	// Only returns non-null values for "FirstName" that aren't Sam.
+	// Strictly the IS NOT NULL isn't necessary, but is included for explicitness
+
+
+It is also often useful to filter by all rows with either empty or null for a given field.
+
+
+	:::php
+	$players = Player::get()->filter('FirstName', array(null, ''));
+	// ... WHERE "FirstName" == '' OR "FirstName" IS NULL
+	// Returns rows with FirstName which is either empty or null
+
 
 ### filterByCallback
 

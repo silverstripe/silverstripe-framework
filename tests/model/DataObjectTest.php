@@ -1887,7 +1887,8 @@ class DataObjectTest_TeamComment extends DataObject implements TestOnly {
 class DataObjectTest_Fan extends DataObject implements TestOnly {
 
 	private static $db = array(
-		'Name' => 'Varchar(255)'
+		'Name' => 'Varchar(255)',
+		'Email' => 'Varchar',
 	);
 
 	private static $has_one = array(

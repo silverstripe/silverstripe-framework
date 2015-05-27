@@ -352,6 +352,10 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @example $list = $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
 	 *          // aziz with the age 21 or 43 and bob with the Age 21 or 43
 	 *
+	 * Note: When filtering on nullable columns, null checks will be automatically added.
+	 * E.g. ->filter('Field:not', 'value) will generate '... OR "Field" IS NULL', and
+	 * ->filter('Field:not', null) will generate '"Field" IS NOT NULL'
+	 *
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
 	 *
 	 * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
