@@ -75,7 +75,7 @@ configuration. Here is an example of adding a `ssmacron` button after the `charm
 	HtmlEditorConfig::get('cms')->insertButtonsAfter('charmap', 'ssmacron');
 
 Buttons can also be removed:
-c
+
 **mysite/_config.php**
 	:::php
 	HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
@@ -224,7 +224,7 @@ Example: Remove field for "image captions"
 
 	:::php
 	// File: mysite/code/MyToolbarExtension.php
-	class MyToolbarExtension extends DataExtension {
+	class MyToolbarExtension extends Extension {
 		public function updateFieldsForImage(&$fields, $url, $file) {
 			$fields->removeByName('CaptionText');
 		}
