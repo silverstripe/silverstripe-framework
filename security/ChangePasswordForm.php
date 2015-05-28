@@ -108,12 +108,12 @@ class ChangePasswordForm extends Form {
 				$member->FailedLoginCount = null;
 				$member->write();
 				
-				if (isset($_REQUEST['BackURL']) 
-					&& $_REQUEST['BackURL'] 
+				if (!empty($_REQUEST['BackURL'])
 					// absolute redirection URLs may cause spoofing 
 					&& Director::is_site_url($_REQUEST['BackURL'])
 				) {
-					return $this->controller->redirect($_REQUEST['BackURL']);
+					$url = Director::absoluteURL($_REQUEST['BackURL']);
+					return $this->controller->redirect($url);
 				}
 				else {
 					// Redirect to default location - the login form saying "You are logged in as..."
