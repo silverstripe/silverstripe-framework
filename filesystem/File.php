@@ -390,7 +390,6 @@ class File extends DataObject {
 
 		//get a tree listing with only folder, no files
 		$folderTree = new TreeDropdownField("ParentID", _t('AssetTableField.FOLDER','Folder'), 'Folder');
-		$folderTree->setChildrenMethod('ChildFolders');
 
 		$fields = new FieldList(
 			new TabSet('Root',
