@@ -509,6 +509,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 		// absolute redirection URLs not located on this site may cause phishing
 		if(Director::is_site_url($url)) {
+			$url = Director::absoluteURL($url, true);
 			return $this->redirect($url);
 		} else {
 			return false;

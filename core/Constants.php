@@ -23,6 +23,8 @@
  * - FRAMEWORK_ADMIN_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/admin"
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
+ * - TRUSTED_PROXY: true or false, depending on whether the X-Forwarded-* HTTP
+ *   headers from the given client are trustworthy (e.g. from a reverse proxy).
  *
  * @package framework
  * @subpackage core
@@ -82,6 +84,32 @@ function stripslashes_recursively(&$array) {
 		if(is_array($v)) stripslashes_recursively($array[$k]);
 		else $array[$k] = stripslashes($v);
 	}
+}
+
+/**
+ * Validate whether the request comes directly from a trusted server or not
+ * This is necessary to validate whether or not the values of X-Forwarded-
+ * or Client-IP HTTP headers can be trusted
+ */
+if(!defined('TRUSTED_PROXY')) {
+	$trusted = true; // will be false by default in a future release
+
+	if(getenv('BlockUntrustedIPs') || defined('SS_TRUSTED_PROXY_IPS')) {
+		$trusted = false;
+
+		if(defined('SS_TRUSTED_PROXY_IPS') && SS_TRUSTED_PROXY_IPS !== 'none') {
+			if(SS_TRUSTED_PROXY_IPS === '*') {
+				$trusted = true;
+			} elseif(isset($_SERVER['REMOTE_ADDR'])) {
+				$trusted = in_array($_SERVER['REMOTE_ADDR'], explode(',', SS_TRUSTED_PROXY_IPS));
+			}
+		}
+	}
+
+	/**
+	 * Declare whether or not the connecting server is a trusted proxy
+	 */
+	define('TRUSTED_PROXY', $trusted);
 }
 
 /**
@@ -146,9 +174,18 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	/**
 	 * Fix HTTP_HOST from reverse proxies
 	 */
-	if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+	if (TRUSTED_PROXY && isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+		
 		// Get the first host, in case there's multiple separated through commas
 		$_SERVER['HTTP_HOST'] = strtok($_SERVER['HTTP_X_FORWARDED_HOST'], ',');
+	}
+}
+
+if (defined('SS_ALLOWED_HOSTS')) {
+	$all_allowed_hosts = explode(',', SS_ALLOWED_HOSTS);
+	if (!in_array($_SERVER['HTTP_HOST'], $all_allowed_hosts)) {
+		header('HTTP/1.1 400 Invalid Host', true, 400);
+		die();
 	}
 }
 

@@ -248,13 +248,19 @@ class SecurityTest extends FunctionalTest {
 		/* UNEXPIRED PASSWORD GO THROUGH WITHOUT A HITCH */
 		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
 		$this->assertEquals(302, $goodResponse->getStatusCode());
-		$this->assertEquals(Director::baseURL() . 'test/link', $goodResponse->getHeader('Location'));
+		$this->assertEquals(
+			Controller::join_links(Director::absoluteBaseURL(), 'test/link'),
+			$goodResponse->getHeader('Location')
+		);
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
 		
 		/* EXPIRED PASSWORDS ARE SENT TO THE CHANGE PASSWORD FORM */
 		$expiredResponse = $this->doTestLoginForm('expired@silverstripe.com' , '1nitialPassword');
 		$this->assertEquals(302, $expiredResponse->getStatusCode());
-		$this->assertEquals(Director::baseURL() . 'Security/changepassword', $expiredResponse->getHeader('Location'));
+		$this->assertEquals(
+			Controller::join_links(Director::baseURL(), 'Security/changepassword'),
+			$expiredResponse->getHeader('Location')
+		);
 		$this->assertEquals($this->idFromFixture('Member', 'expiredpassword'), 
 			$this->session()->inst_get('loggedInAs'));
 
@@ -262,7 +268,10 @@ class SecurityTest extends FunctionalTest {
 		$this->mainSession->followRedirection();
 		$changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
 		$this->assertEquals(302, $changedResponse->getStatusCode());
-		$this->assertEquals(Director::baseURL() . 'test/link', $changedResponse->getHeader('Location'));
+		$this->assertEquals(
+			Controller::join_links(Director::absoluteBaseURL(), 'test/link'),
+			$changedResponse->getHeader('Location')
+		);
 	}
 	
 	public function testChangePasswordForLoggedInUsers() {
@@ -272,13 +281,19 @@ class SecurityTest extends FunctionalTest {
 		$this->get('Security/changepassword?BackURL=test/back');
 		$changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
 		$this->assertEquals(302, $changedResponse->getStatusCode());
-		$this->assertEquals(Director::baseURL() . 'test/back', $changedResponse->getHeader('Location'));
+		$this->assertEquals(
+			Controller::join_links(Director::absoluteBaseURL(), 'test/back'),
+			$changedResponse->getHeader('Location')
+		);
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
 		
 		// Check if we can login with the new password
 		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , 'changedPassword');
 		$this->assertEquals(302, $goodResponse->getStatusCode());
-		$this->assertEquals(Director::baseURL() . 'test/link', $goodResponse->getHeader('Location'));
+		$this->assertEquals(
+			Controller::join_links(Director::absoluteBaseURL(), 'test/link'),
+			$goodResponse->getHeader('Location')
+		);
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
 	}
 	

@@ -31,19 +31,27 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 
 		return array($answer, $slash);
 	}
+
+	protected $oldHost = null;
 	
 	public function setUp() {
 		parent::setUp();
+		$this->oldHost = $_SERVER['HTTP_HOST'];
 		$_GET['parameterconfirmationtokentest_notoken'] = 'value';
 		$_GET['parameterconfirmationtokentest_empty'] = '';
 		$_GET['parameterconfirmationtokentest_withtoken'] = '1';
 		$_GET['parameterconfirmationtokentest_withtokentoken'] = 'dummy';
+		$_GET['parameterconfirmationtokentest_nulltoken'] = '1';
+		$_GET['parameterconfirmationtokentest_nulltokentoken'] = null;
+		$_GET['parameterconfirmationtokentest_emptytoken'] = '1';
+		$_GET['parameterconfirmationtokentest_emptytokentoken'] = '';
 	}
 	
 	public function tearDown() {
 		foreach($_GET as $param) {
 			if(stripos($param, 'parameterconfirmationtokentest_') === 0) unset($_GET[$param]);
 		}
+		$_SERVER['HTTP_HOST'] = $this->oldHost;
 		parent::tearDown();
 	}
 	
@@ -52,24 +60,32 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$emptyParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_empty');
 		$withToken = new ParameterConfirmationTokenTest_ValidToken('parameterconfirmationtokentest_withtoken');
 		$withoutParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_noparam');
+		$nullToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_nulltoken');
+		$emptyToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_emptytoken');
 		
 		// Check parameter
 		$this->assertTrue($withoutToken->parameterProvided());
 		$this->assertTrue($emptyParameter->parameterProvided());  // even if empty, it's still provided
 		$this->assertTrue($withToken->parameterProvided());
 		$this->assertFalse($withoutParameter->parameterProvided());
+		$this->assertTrue($nullToken->parameterProvided());
+		$this->assertTrue($emptyToken->parameterProvided());
 		
 		// Check token
 		$this->assertFalse($withoutToken->tokenProvided());
 		$this->assertFalse($emptyParameter->tokenProvided());
-		$this->assertTrue($withToken->tokenProvided());
+		$this->assertTrue($withToken->tokenProvided()); // Actually forced to true for this test
 		$this->assertFalse($withoutParameter->tokenProvided());
+		$this->assertFalse($nullToken->tokenProvided());
+		$this->assertFalse($emptyToken->tokenProvided());
 		
 		// Check if reload is required
 		$this->assertTrue($withoutToken->reloadRequired());
 		$this->assertTrue($emptyParameter->reloadRequired());
 		$this->assertFalse($withToken->reloadRequired());
 		$this->assertFalse($withoutParameter->reloadRequired());
+		$this->assertTrue($nullToken->reloadRequired());
+		$this->assertTrue($emptyToken->reloadRequired());
 		
 		// Check suppression
 		$this->assertTrue(isset($_GET['parameterconfirmationtokentest_notoken']));
