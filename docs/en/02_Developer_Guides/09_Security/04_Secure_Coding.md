@@ -476,6 +476,17 @@ as well as the login form.
 
 ## Request hostname forgery
 
+To prevent a forged hostname appearing being used by the application, SilverStripe
+allows the configure of a whitelist of hosts that are allowed to access the system. By defining
+this whitelist in your _ss_environment.php file, any request presenting a `Host` header that is
+_not_ in this list will be blocked with a HTTP 400 error:
+
+	:::php
+	define('SS_ALLOWED_HOSTS', 'www.mysite.com,mysite.com,subdomain.mysite.com');
+
+Please note that if this configuration is defined, you _must_ include _all_ subdomains (eg www.)
+that will be accessing the site.
+
 When SilverStripe is run behind a reverse proxy, it's normally necessary for this proxy to
 use the `X-Forwarded-Host` request header to tell the webserver which hostname was originally
 requested. However, when SilverStripe is not run behind a proxy, this header can still be
