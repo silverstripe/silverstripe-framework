@@ -362,17 +362,21 @@ class ManyManyList extends RelationList {
 			user_error('ComponentSet::getExtraData() passed a non-numeric child ID', E_USER_ERROR);
 		}
 
-		// @todo Optimize into a single query instead of one per extra field
 		if($this->extraFields) {
-			foreach($this->extraFields as $fieldName => $dbFieldSpec) {
-				$query = new SQLQuery("\"{$fieldName}\"", "\"{$this->joinTable}\"");
-				if($filter = $this->foreignIDWriteFilter($this->getForeignID())) {
-					$query->setWhere($filter);
-				} else {
-					user_error("Can't call ManyManyList::getExtraData() until a foreign ID is set", E_USER_WARNING);
-				}
-				$query->addWhere("\"{$this->localKey}\" = {$itemID}");
-				$result[$fieldName] = $query->execute()->value();
+			$cleanExtraFields = array();
+			foreach ($this->extraFields as $fieldName => $dbFieldSpec) {
+				$cleanExtraFields[] = "\"{$fieldName}\"";
+			}
+			$query = new SQLQuery($cleanExtraFields, "\"{$this->joinTable}\"");
+			if($filter = $this->foreignIDWriteFilter($this->getForeignID())) {
+				$query->setWhere($filter);
+			} else {
+				user_error("Can't call ManyManyList::getExtraData() until a foreign ID is set", E_USER_WARNING);
+			}
+			$query->addWhere("\"{$this->localKey}\" = {$itemID}");
+			$queryResult = $query->execute()->current();
+			foreach ($queryResult as $fieldName => $value) {
+				$result[$fieldName] = $value;
 			}
 		}
 
