@@ -226,7 +226,7 @@ Example: Remove field for "image captions"
 	// File: mysite/code/MyToolbarExtension.php
 	class MyToolbarExtension extends Extension {
 		public function updateFieldsForImage(&$fields, $url, $file) {
-			$fields->removeByName('Caption');
+			$fields->removeByName('CaptionText');
 		}
 	}
 
