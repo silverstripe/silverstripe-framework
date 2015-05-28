@@ -509,15 +509,15 @@ If only trusted servers will make requests then you can use '*' to trust all cli
 Otherwise a comma separated list of individual IP addresses should be declared.
 
 This behaviour is enabled whenever SS_TRUSTED_PROXY_IPS is defined, or if the
-`BlockUntrustedProxyHeaders` environment variable is declared. From 3.1.13 onwards
-this environment variable is included in the installer by default.
+`BlockUntrustedIPs` environment variable is declared. It is advisable to include the
+following in your .htaccess to ensure this behaviour is activated.
 
 
 	<IfModule mod_env.c>
 		# Ensure that X-Forwarded-Host is only allowed to determine the request
 		# hostname for servers ips defined by SS_TRUSTED_PROXY_IPS in your _ss_environment.php
 		# Note that in a future release this setting will be always on.
-		SetEnv BlockUntrustedProxyHeaders true
+		SetEnv BlockUntrustedIPs true
 	</IfModule>
 
 

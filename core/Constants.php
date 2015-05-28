@@ -94,7 +94,10 @@ function stripslashes_recursively(&$array) {
 if(!defined('TRUSTED_PROXY')) {
 	$trusted = true; // will be false by default in a future release
 
-	if(getenv('BlockUntrustedIPs') || defined('SS_TRUSTED_PROXY_IPS')) {
+	if(getenv('BlockUntrustedProxyHeaders') // Legacy setting (reverted from documentation)
+		|| getenv('BlockUntrustedIPs') // Documented setting
+		|| defined('SS_TRUSTED_PROXY_IPS')
+	) {
 		$trusted = false;
 
 		if(defined('SS_TRUSTED_PROXY_IPS') && SS_TRUSTED_PROXY_IPS !== 'none') {
