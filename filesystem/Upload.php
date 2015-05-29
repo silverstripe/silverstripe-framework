@@ -72,6 +72,17 @@ class Upload extends Controller {
 	 */
 	private static $uploads_folder = "Uploads";
 
+	/**
+	 * A prefix for the version number added to an uploaded file
+	 * when a file with the same name already exists.
+	 * Example using no prefix: IMG001.jpg becomes IMG2.jpg
+	 * Example using '-v' prefix: IMG001.jpg becomes IMG001-v2.jpg
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $version_prefix = ''; // a default value will be introduced in SS4.0
+
 	public function __construct() {
 		parent::__construct();
 		$this->validator = Injector::inst()->create('Upload_Validator');
@@ -175,11 +186,12 @@ class Upload extends Controller {
 				$i = isset($i) ? ($i+1) : 2;
 				$oldFilePath = $relativeFilePath;
 
-				$pattern = '/([0-9]+$)/';
-				if(preg_match($pattern, $fileTitle)) {
-					$fileTitle = preg_replace($pattern, $i, $fileTitle);
+				$prefix = $this->config()->version_prefix;
+				$pattern = '/' . preg_quote($prefix) . '([0-9]+$)/';
+				if(preg_match($pattern, $fileTitle, $matches)) {
+					$fileTitle = preg_replace($pattern, $prefix . ($matches[1] + 1), $fileTitle);
 				} else {
-					$fileTitle .= $i;
+					$fileTitle .= $prefix . $i;
 				}
 				$relativeFilePath = $relativeFolderPath . $fileTitle . $fileSuffix;
 
