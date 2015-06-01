@@ -179,14 +179,14 @@
 			 * Store the preview options for this page.
 			 */
 			saveState : function(name, value) {
-				if(this._storage()) window.localStorage.setItem('cms-preview-state-' + name, value);
+				if(this._supportsLocalStorage()) window.localStorage.setItem('cms-preview-state-' + name, value);
 			},
 
 			/**
 			 * Load previously stored preferences
 			 */
 			loadState : function(name) {
-				if(this._storage()) return window.localStorage.getItem('cms-preview-state-' + name);
+				if(this._supportsLocalStorage()) return window.localStorage.getItem('cms-preview-state-' + name);
 			}, 
 
 			/**
@@ -274,10 +274,12 @@
 			},
 			
 			/**
-			* Detect and use localStorage credit Mathias Bynens ref: https://mathiasbynens.be/notes/localstorage-pattern
+			* Detect and use localStorage if available.
+			* In IE11 windows 8.1 call to window.localStorage was throwing out an access denied error in some cases.
+			* This was causing the preview window not to display correctly in the CMS admin area. 
 			* -------------------------------------------------------------------
 			*/
-			_storage: function() {
+			_supportsLocalStorage: function() {
 				var uid = new Date;
 				var storage;
 				var result;
