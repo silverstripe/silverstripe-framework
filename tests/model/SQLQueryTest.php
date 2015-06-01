@@ -618,6 +618,17 @@ class SQLQueryTest extends SapphireTest {
 		$this->assertEquals(10, $limit['start']);
 	}
 
+	public function testJoinsAndReplacements() {
+		$query = new SQLQuery();
+		$query->setFrom('MyTable');
+		$query->addLeftJoin('MySelectionTable', '"MyTable"."ID" = "MySelectionTable"."ID"');
+		$query->renameTable('MySelectionTable', 'MySelectionTable_Replace');
+
+		$this->assertEquals('SELECT * FROM MyTable ' .
+			'LEFT JOIN "MySelectionTable_Replace" ON "MyTable"."ID" = "MySelectionTable_Replace"."ID"',
+			$query->sql()
+		);
+	}
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {
