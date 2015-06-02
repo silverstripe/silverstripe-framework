@@ -596,7 +596,7 @@ class SQLQueryTest extends SapphireTest {
 	public function testSelect() {
 		$query = new SQLQuery('"Title"', '"MyTable"');
 		$query->addSelect('"TestField"');
-		$this->assertEquals(
+		$this->assertSQLEquals(
 			'SELECT "Title", "TestField" FROM "MyTable"',
 			$query->sql()
 		);
@@ -606,7 +606,7 @@ class SQLQueryTest extends SapphireTest {
 			'Field' => '"Field"',
 			'AnotherAlias' => '"AnotherField"'
 		));
-		$this->assertEquals(
+		$this->assertSQLEquals(
 			'SELECT "Field", "AnotherField" AS "AnotherAlias" FROM "MyTable"',
 			$query->sql()
 		);
@@ -615,7 +615,7 @@ class SQLQueryTest extends SapphireTest {
 		$query->addSelect(array(
 			'Relevance' => "MATCH (Title, MenuTitle) AGAINST ('Two as One')"
 		));
-		$this->assertEquals(
+		$this->assertSQLEquals(
 			'SELECT "Field", "AnotherField" AS "AnotherAlias", MATCH (Title, MenuTitle) AGAINST (' .
 			'\'Two as One\') AS "Relevance" FROM "MyTable"',
 			$query->sql()

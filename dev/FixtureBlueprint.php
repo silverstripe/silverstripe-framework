@@ -298,7 +298,7 @@ class FixtureBlueprint {
 		DB::manipulate(array(
 			$table => array(
 				"command" => "update", "id" => $obj->ID,
-				"fields" => array($fieldName => is_string($value) ? "'$value'" : $value)
+				"fields" => array($fieldName => $value)
 			)
 		));
 		$obj->$fieldName = $value;

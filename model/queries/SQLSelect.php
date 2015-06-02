@@ -576,8 +576,13 @@ class SQLSelect extends SQLConditionalExpression {
 	 * @return int
 	 */
 	public function count( $column = null) {
+		// we can't clear the select if we're relying on its output by a HAVING clause
+		if(!empty($this->having)) {
+			$records = $this->execute();
+			return $records->numRecords();
+		}
 		// Choose a default column
-		if($column == null) {
+		elseif($column == null) {
 			if($this->groupby) {
 				$column = 'DISTINCT ' . implode(", ", $this->groupby);
 			} else {
