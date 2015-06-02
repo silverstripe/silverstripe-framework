@@ -715,6 +715,181 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($m2->validateAutoLoginToken($m1Token), 'Fails token validity test against other member.');
 	}
 
+	public function testRememberMeHashGeneration() {
+		$m1 = $this->objFromFixture('Member', 'grouplessmember');
+
+		$m1->login(true);
+		$hashes = RememberLoginHash::get()->filter('MemberID', $m1->ID);
+		$this->assertEquals($hashes->Count(), 1);
+		$firstHash = $hashes->First();
+		$this->assertNotNull($firstHash->DeviceID);
+		$this->assertNotNull($firstHash->RememberLoginHash);
+	}
+
+	public function testRememberMeHashAutologin() {
+		$m1 = $this->objFromFixture('Member', 'noexpiry');
+
+		$m1->login(true);
+		$firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->First();
+		$this->assertNotNull($firstHash);
+
+		// re-generates the hash so we can get the token
+		$firstHash->RememberLoginHash = $firstHash->getNewHash($m1);
+		$token = $firstHash->getToken();
+		$firstHash->write();
+
+		$response = $this->get(
+			'Security/login', 
+			$this->session(), 
+			null, 
+			array(
+				'alc_enc' => $m1->ID.':'.$token,
+				'alc_device' => $firstHash->DeviceID
+			)
+		);
+		$message = _t(
+			'Member.LOGGEDINAS',
+			"You're logged in as {name}.",
+			array('name' => $m1->FirstName)
+		);
+		$this->assertContains($message, $response->getBody());
+
+		$this->session()->inst_set('loggedInAs', null);
+
+		// A wrong token or a wrong device ID should not let us autologin 
+		$response = $this->get(
+			'Security/login', 
+			$this->session(), 
+			null, 
+			array(
+				'alc_enc' => $m1->ID.':'.str_rot13($token),
+				'alc_device' => $firstHash->DeviceID
+			)
+		);
+		$this->assertNotContains($message, $response->getBody());
+
+		$response = $this->get(
+			'Security/login', 
+			$this->session(), 
+			null, 
+			array(
+				'alc_enc' => $m1->ID.':'.$token,
+				'alc_device' => str_rot13($firstHash->DeviceID)
+			)
+		);
+		$this->assertNotContains($message, $response->getBody());
+
+		// Re-logging (ie 'alc_enc' has expired), and not checking the "Remember Me" option 
+		// should remove all previous hashes for this device
+		$response = $this->post(
+			'Security/LoginForm', 
+			array(
+				'Email' => $m1->Email,
+				'Password' => '1nitialPassword',
+				'AuthenticationMethod' => 'MemberAuthenticator',
+				'action_dologin' => 'action_dologin'
+			),
+			null,
+			$this->session(),
+			null, 
+			array(
+				'alc_device' => $firstHash->DeviceID
+			)
+		);
+		$this->assertContains($message, $response->getBody());
+		$this->assertEquals(RememberLoginHash::get()->filter('MemberID', $m1->ID)->Count(), 0);
+	}
+
+	public function testRememberMeMultipleDevices() {
+		$m1 = $this->objFromFixture('Member', 'noexpiry');
+
+		// First device
+		$m1->login(true);
+		Cookie::set('alc_device', null);
+		// Second device
+		$m1->login(true);
+
+		// Hash of first device
+		$firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->First();
+		$this->assertNotNull($firstHash);
+
+		// Hash of second device
+		$secondHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->Last();
+		$this->assertNotNull($secondHash);
+
+		// DeviceIDs are different
+		$this->assertNotEquals($firstHash->DeviceID, $secondHash->DeviceID);
+
+		// re-generates the hashes so we can get the tokens
+		$firstHash->RememberLoginHash = $firstHash->getNewHash($m1);
+		$firstToken = $firstHash->getToken();
+		$firstHash->write();
+
+		$secondHash->RememberLoginHash = $secondHash->getNewHash($m1);
+		$secondToken = $secondHash->getToken();
+		$secondHash->write();
+
+		// Accessing the login page should show the user's name straight away
+		$response = $this->get(
+			'Security/login', 
+			$this->session(), 
+			null, 
+			array(
+				'alc_enc' => $m1->ID.':'.$firstToken,
+				'alc_device' => $firstHash->DeviceID
+			)
+		);
+		$message = _t(
+			'Member.LOGGEDINAS',
+			"You're logged in as {name}.",
+			array('name' => $m1->FirstName)
+		);
+		$this->assertContains($message, $response->getBody());
+
+		$this->session()->inst_set('loggedInAs', null);
+
+		// Accessing the login page from the second device
+		$response = $this->get(
+			'Security/login', 
+			$this->session(), 
+			null, 
+			array(
+				'alc_enc' => $m1->ID.':'.$secondToken,
+				'alc_device' => $secondHash->DeviceID
+			)
+		);
+		$this->assertContains($message, $response->getBody());
+
+		$logout_across_devices = Config::inst()->get('RememberLoginHash', 'logout_across_devices');
+
+		// Logging out from the second device - only one device being logged out
+		Config::inst()->update('RememberLoginHash', 'logout_across_devices', false);
+		$response = $this->get(
+			'Security/logout', 
+			$this->session(), 
+			null, 
+			array(
+				'alc_enc' => $m1->ID.':'.$secondToken,
+				'alc_device' => $secondHash->DeviceID
+			)
+		);
+		$this->assertEquals(
+			RememberLoginHash::get()->filter(array('MemberID'=>$m1->ID, 'DeviceID'=>$firstHash->DeviceID))->Count(), 
+			1
+		);
+
+		// Logging out from any device when all login hashes should be removed
+		Config::inst()->update('RememberLoginHash', 'logout_across_devices', true);
+		$m1->login(true);
+		$response = $this->get('Security/logout', $this->session());
+		$this->assertEquals(
+			RememberLoginHash::get()->filter('MemberID', $m1->ID)->Count(), 
+			0
+		);
+
+		Config::inst()->update('RememberLoginHash', 'logout_across_devices', $logout_across_devices);
+	}
+
 	public function testCanDelete() {
 		$admin1 = $this->objFromFixture('Member', 'admin');
 		$admin2 = $this->objFromFixture('Member', 'other-admin');
