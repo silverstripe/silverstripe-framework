@@ -141,6 +141,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .ui-accordion .ui-accordion-content { border: 1px solid #c0c0c2; border-top: none; }
 
 .ui-autocomplete { max-height: 240px; overflow-x: hidden; overflow-y: auto; }
+.ui-autocomplete-loading { background-image: url(../images/throbber.gif) !important; background-position: 97% center !important; background-repeat: no-repeat !important; background-size: auto !important; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in framework/css/Form.css.  @package framework @subpackage admin */
 /** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
@@ -455,7 +456,7 @@ body.cms { overflow: hidden; }
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 50%; margin-left: -21.5px; top: 80%; }
 
 /** -------------------------------------------- Actions -------------------------------------------- */
-.cms-content-actions, .cms-preview-controls { margin: 0; padding: 12px 12px; z-index: 0; border-top: 1px solid #cacacc; -moz-box-shadow: 1px 0 0 #ECEFF1, rgba(248, 248, 248, 0.9) 0 1px 0px inset, rgba(201, 205, 206, 0.8) 0 0 1px; -webkit-box-shadow: 1px 0 0 #ECEFF1, rgba(248, 248, 248, 0.9) 0 1px 0px inset, rgba(201, 205, 206, 0.8) 0 0 1px; box-shadow: 1px 0 0 #ECEFF1, rgba(248, 248, 248, 0.9) 0 1px 0px inset, rgba(201, 205, 206, 0.8) 0 0 1px; height: 28px; background-color: #ECEFF1; }
+.cms-content-actions, .cms-preview-controls { margin: 0; padding: 12px 12px; z-index: 999; border-top: 1px solid #cacacc; -moz-box-shadow: 1px 0 0 #ECEFF1, rgba(248, 248, 248, 0.9) 0 1px 0px inset, rgba(201, 205, 206, 0.8) 0 0 1px; -webkit-box-shadow: 1px 0 0 #ECEFF1, rgba(248, 248, 248, 0.9) 0 1px 0px inset, rgba(201, 205, 206, 0.8) 0 0 1px; box-shadow: 1px 0 0 #ECEFF1, rgba(248, 248, 248, 0.9) 0 1px 0px inset, rgba(201, 205, 206, 0.8) 0 0 1px; height: 28px; background-color: #ECEFF1; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
 .message { display: block; clear: both; margin: 0 0 8px; padding: 10px 12px; font-weight: normal; border: 1px #ccc solid; background: #fff; background: rgba(255, 255, 255, 0.5); text-shadow: none; -moz-border-radius: 3px 3px 3px 3px; -webkit-border-radius: 3px; border-radius: 3px 3px 3px 3px; }

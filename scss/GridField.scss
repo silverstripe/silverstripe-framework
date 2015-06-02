@@ -332,10 +332,14 @@ $gf_grid_x:	16px;
 				}			
 			}			
 			&:hover {
-				background: #FFFAD6 !important;
+				background: #FFFAD6;
 			}
 			&:first-child {
 				background: transparent;
+
+				&:hover {
+					background: #FFFAD6;
+				}
 			}
 			&.ss-gridfield-even {
 				background: $gf_colour_zebra;
@@ -343,9 +347,16 @@ $gf_grid_x:	16px;
 				&.ss-gridfield-last {
 					border-bottom: none;
 				}
+				&:hover {
+					background: #FFFAD6;
+				}
 			}
 			&.even {
 				background: $gf_colour_zebra;
+
+				&:hover {
+					background: #FFFAD6;
+				}
 			}
 			
 			th {

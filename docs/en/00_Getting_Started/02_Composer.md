@@ -9,7 +9,9 @@ We also have separate instructions for [installing modules with Composer](/devel
 
 ## Installing composer
 
-To install Composer, run the following commands from your command-line.
+Before installing Composer you should ensure your system has the version control system, [Git installed](http://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Composer uses Git to check out the code dependancies you need to run your SilverStripe CMS website from the code repositories maintained on GitHub.
+
+Next, to install Composer, run the following commands from your command-line.
 
 	# Download composer.phar
 	curl -s https://getcomposer.org/installer | php
@@ -77,7 +79,7 @@ You can find other packages with the following command:
 
 	composer search silverstripe
 
-This will return a list of package names of the forum `vendor/package`.  If you prefer, you can search for pacakges on [packagist.org](https://packagist.org/search/?q=silverstripe).
+This will return a list of package names of the forum `vendor/package`.  If you prefer, you can search for packages on [packagist.org](https://packagist.org/search/?q=silverstripe).
 
 The second part after the colon, `*`, is a version string.  `*` is a good default: it will give you the latest version that works with the other modules you have installed.  Alternatively, you can specificy a specific version, or a constraint such as `>=3.0`.  For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key).
 

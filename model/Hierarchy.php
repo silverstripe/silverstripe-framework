@@ -315,7 +315,7 @@ class Hierarchy extends DataExtension {
 		}
 
 		// Set jstree open state, or mark it as a leaf (closed) if there are no children
-		if(!$this->$numChildrenMethod()) {
+		if(!$this->owner->$numChildrenMethod()) {
 			$classes .= " jstree-leaf closed";
 		} elseif($this->isTreeOpened()) {
 			$classes .= " jstree-open";

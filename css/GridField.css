@@ -68,11 +68,14 @@ Used in side panels and action tabs
 .cms table.ss-gridfield-table tr.sortable-header { background: #dbe3e8; }
 .cms table.ss-gridfield-table tr.sortable-header th { padding: 0; font-weight: normal; }
 .cms table.ss-gridfield-table tr.sortable-header th .ss-ui-button { font-weight: normal; }
-.cms table.ss-gridfield-table tr:hover { background: #FFFAD6 !important; }
+.cms table.ss-gridfield-table tr:hover { background: #FFFAD6; }
 .cms table.ss-gridfield-table tr:first-child { background: transparent; }
+.cms table.ss-gridfield-table tr:first-child:hover { background: #FFFAD6; }
 .cms table.ss-gridfield-table tr.ss-gridfield-even { background: #F0F4F7; }
 .cms table.ss-gridfield-table tr.ss-gridfield-even.ss-gridfield-last { border-bottom: none; }
+.cms table.ss-gridfield-table tr.ss-gridfield-even:hover { background: #FFFAD6; }
 .cms table.ss-gridfield-table tr.even { background: #F0F4F7; }
+.cms table.ss-gridfield-table tr.even:hover { background: #FFFAD6; }
 .cms table.ss-gridfield-table tr th { font-weight: bold; font-size: 12px; color: #FFF; padding: 5px; border-right: 1px solid rgba(0, 0, 0, 0.1); }
 .cms table.ss-gridfield-table tr th div.fieldgroup, .cms table.ss-gridfield-table tr th div.fieldgroup-field { width: 100%; position: relative; }
 .cms table.ss-gridfield-table tr th div.fieldgroup { min-width: 200px; padding-right: 0; }

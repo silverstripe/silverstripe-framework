@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This validation class handles all form and custom form validation through
  * the use of Required fields.
@@ -24,18 +25,25 @@ abstract class Validator extends Object {
 
 	/**
 	 * @param Form $form
+	 *
+	 * @return static
 	 */
 	public function setForm($form) {
 		$this->form = $form;
+
 		return $this;
 	}
 
 	/**
-	 * @return array Errors (if any)
+	 * Returns any errors there may be.
+	 *
+	 * @return null|array
 	 */
-	public function validate(){
+	public function validate() {
 		$this->errors = null;
+
 		$this->php($this->form->getData());
+
 		return $this->errors;
 	}
 
@@ -45,9 +53,10 @@ abstract class Validator extends Object {
 	 * @param string $fieldName name of the field
 	 * @param string $message error message to display
 	 * @param string $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output.
+	 *
 	 * See {@link getErrors()} for details.
 	 */
-	public function validationError($fieldName, $message, $messageType='') {
+	public function validationError($fieldName, $message, $messageType = '') {
 		$this->errors[] = array(
 			'fieldName' => $fieldName,
 			'message' => $message,
@@ -57,6 +66,7 @@ abstract class Validator extends Object {
 
 	/**
 	 * Returns all errors found by a previous call to {@link validate()}.
+	 *
 	 * The array contains the following keys for each error:
 	 * - 'fieldName': the name of the FormField instance
 	 * - 'message': Validation message (optionally localized)
@@ -70,28 +80,45 @@ abstract class Validator extends Object {
 		return $this->errors;
 	}
 
+	/**
+	 * @param string $fieldName
+	 * @param array $data
+	 */
 	public function requireField($fieldName, $data) {
 		if(is_array($data[$fieldName]) && count($data[$fieldName])) {
-			foreach($data[$fieldName] as $componentkey => $componentVal){
-				if(!strlen($componentVal)) {
-					$this->validationError($fieldName, "$fieldName $componentkey is required", "required");
+			foreach($data[$fieldName] as $componentKey => $componentValue) {
+				if(!strlen($componentValue)) {
+					$this->validationError(
+						$fieldName,
+						sprintf('%s %s is required', $fieldName, $componentKey),
+						'required'
+					);
 				}
 			}
-
 		} else if(!strlen($data[$fieldName])) {
-			$this->validationError($fieldName, "$fieldName is required", "required");
+			$this->validationError(
+				$fieldName,
+				sprintf('%s is required', $fieldName),
+				'required'
+			);
 		}
 	}
 
 	/**
 	 * Returns true if the named field is "required".
+	 *
 	 * Used by FormField to return a value for FormField::Required(), to do things like show *s on the form template.
+	 *
 	 * By default, it always returns false.
 	 */
 	public function fieldIsRequired($fieldName) {
 		return false;
 	}
 
+	/**
+	 * @param array $data
+	 *
+	 * @return mixed
+	 */
 	abstract public function php($data);
 }
-

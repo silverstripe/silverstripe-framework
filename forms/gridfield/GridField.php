@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Displays a {@link SS_List} in a grid format.
  *
@@ -32,18 +33,21 @@ class GridField extends FormField {
 
 	/**
 	 * The datasource
+	 *
 	 * @var SS_List
 	 */
 	protected $list = null;
 
 	/**
 	 * The classname of the DataObject that the GridField will display. Defaults to the value of $this->list->dataClass
+	 *
 	 * @var string
 	 */
 	protected $modelClassName = '';
 
 	/**
 	 * the current state of the GridField
+	 *
 	 * @var GridState
 	 */
 	protected $state = null;
@@ -115,6 +119,7 @@ class GridField extends FormField {
 	 * this modelclass $summary_fields
 	 *
 	 * @param string $modelClassName
+	 *
 	 * @see GridFieldDataColumns::getDisplayFields()
 	 */
 	public function setModelClass($modelClassName) {
@@ -129,8 +134,8 @@ class GridField extends FormField {
 	 * @return string
 	 */
 	public function getModelClass() {
-		if ($this->modelClassName) return $this->modelClassName;
-		if ($this->list && method_exists($this->list, 'dataClass')) {
+		if($this->modelClassName) return $this->modelClassName;
+		if($this->list && method_exists($this->list, 'dataClass')) {
 			$class = $this->list->dataClass();
 			if($class) return $class;
 		}
@@ -150,6 +155,7 @@ class GridField extends FormField {
 
 	/**
 	 * @param GridFieldConfig $config
+	 *
 	 * @return GridField
 	 */
 	public function setConfig(GridFieldConfig $config) {
@@ -166,6 +172,7 @@ class GridField extends FormField {
 	 *
 	 * @param $value
 	 * @param $castingDefinition
+	 *
 	 * @todo refactor this into GridFieldComponent
 	 */
 	public function getCastedValue($value, $castingDefinition) {
@@ -177,16 +184,16 @@ class GridField extends FormField {
 			$castingParams = array();
 		}
 
-		if(strpos($castingDefinition,'->') === false) {
+		if(strpos($castingDefinition, '->') === false) {
 			$castingFieldType = $castingDefinition;
 			$castingField = DBField::create_field($castingFieldType, $value);
-			$value = call_user_func_array(array($castingField,'XML'),$castingParams);
+			$value = call_user_func_array(array($castingField, 'XML'), $castingParams);
 		} else {
 			$fieldTypeParts = explode('->', $castingDefinition);
 			$castingFieldType = $fieldTypeParts[0];
 			$castingMethod = $fieldTypeParts[1];
 			$castingField = DBField::create_field($castingFieldType, $value);
-			$value = call_user_func_array(array($castingField,$castingMethod),$castingParams);
+			$value = call_user_func_array(array($castingField, $castingMethod), $castingParams);
 		}
 
 		return $value;
@@ -294,7 +301,7 @@ class GridField extends FormField {
 
 		$fragmentDefined = array('header' => true, 'footer' => true, 'before' => true, 'after' => true);
 		reset($content);
-		while(list($k,$v) = each($content)) {
+		while(list($k, $v) = each($content)) {
 			if(preg_match_all('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $v, $matches)) {
 				foreach($matches[1] as $match) {
 					$fragmentName = strtolower($match);
@@ -332,7 +339,7 @@ class GridField extends FormField {
 		foreach($content as $k => $v) {
 			if(empty($fragmentDefined[$k])) {
 				throw new LogicException("GridField HTML fragment '$k' was given content,"
-				. " but not defined.  Perhaps there is a supporting GridField component you need to add?");
+					. " but not defined.  Perhaps there is a supporting GridField component you need to add?");
 			}
 		}
 
@@ -343,29 +350,25 @@ class GridField extends FormField {
 				if($record->hasMethod('canView') && !$record->canView()) {
 					continue;
 				}
+
 				$rowContent = '';
+
 				foreach($this->getColumns() as $column) {
 					$colContent = $this->getColumnContent($record, $column);
+
 					// A return value of null means this columns should be skipped altogether.
-					if($colContent === null) continue;
+					if($colContent === null) {
+						continue;
+					}
+
 					$colAttributes = $this->getColumnAttributes($record, $column);
-					$rowContent .= FormField::create_tag('td', $colAttributes, $colContent);
+
+					$rowContent .= $this->newCell($total, $idx, $record, $colAttributes, $colContent);
 				}
-				$classes = array('ss-gridfield-item');
-				if ($idx == 0) $classes[] = 'first';
-				if ($idx == $total-1) $classes[] = 'last';
-				$classes[] = ($idx % 2) ? 'even' : 'odd';
-				$row = FormField::create_tag(
-					'tr',
-					array(
-						"class" => implode(' ', $classes),
-						'data-id' => $record->ID,
-						// TODO Allow per-row customization similar to GridFieldDataColumns
-						'data-class' => $record->ClassName,
-					),
-					$rowContent
-				);
-				$rows[] = $row;
+
+				$rowAttributes = $this->getRowAttributes($total, $idx, $record);
+
+				$rows[] = $this->newRow($total, $idx, $record, $rowAttributes, $rowContent);
 			}
 			$content['body'] = implode("\n", $rows);
 		}
@@ -418,9 +421,83 @@ class GridField extends FormField {
 		return
 			FormField::create_tag('fieldset', $attrs,
 				$content['before'] .
-				FormField::create_tag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
+				FormField::create_tag('table', $tableAttrs, $head . "\n" . $foot . "\n" . $body) .
 				$content['after']
 			);
+	}
+
+	/**
+	 * @param int $total
+	 * @param int $index
+	 * @param DataObject $record
+	 * @param array $attributes
+	 * @param string $content
+	 *
+	 * @return string
+	 */
+	protected function newCell($total, $index, $record, $attributes, $content) {
+		return FormField::create_tag(
+			'td',
+			$attributes,
+			$content
+		);
+	}
+
+	/**
+	 * @param int $total
+	 * @param int $index
+	 * @param DataObject $record
+	 * @param array $attributes
+	 * @param string $content
+	 *
+	 * @return string
+	 */
+	protected function newRow($total, $index, $record, $attributes, $content) {
+		return FormField::create_tag(
+			'tr',
+			$attributes,
+			$content
+		);
+	}
+
+	/**
+	 * @param int $total
+	 * @param int $index
+	 * @param DataObject $record
+	 *
+	 * @return array
+	 */
+	protected function getRowAttributes($total, $index, $record) {
+		$rowClasses = $this->newRowClasses($total, $index, $record);
+
+		return array(
+			'class' => implode(' ', $rowClasses),
+			'data-id' => $record->ID,
+			'data-class' => $record->ClassName,
+		);
+	}
+
+	/**
+	 * @param int $total
+	 * @param int $index
+	 * @param DataObject $record
+	 *
+	 * @return array
+	 */
+	protected function newRowClasses($total, $index, $record) {
+		$classes = array('ss-gridfield-item');
+
+		if($index == 0) {
+			$classes[] = 'first';
+		}
+
+		if($index == $total - 1) {
+			$classes[] = 'last';
+		}
+
+		$classes[] = ($index % 2) ? 'even' : 'odd';
+
+		return $classes;
 	}
 
 	public function Field($properties = array()) {
@@ -453,6 +530,7 @@ class GridField extends FormField {
 	 *
 	 * @param DataObject $record
 	 * @param string $column
+	 *
 	 * @return string
 	 * @throws InvalidArgumentException
 	 */
@@ -477,7 +555,7 @@ class GridField extends FormField {
 	 * Add additional calculated data fields to be used on this GridField
 	 *
 	 * @param array $fields a map of fieldname to callback. The callback will
-	 * 				be passed the record as an argument.
+	 *                      be passed the record as an argument.
 	 */
 	public function addDataFields($fields) {
 		if($this->customDataFields) {
@@ -513,6 +591,7 @@ class GridField extends FormField {
 	 *
 	 * @param DataObject $record
 	 * @param string $column
+	 *
 	 * @return array
 	 * @throws LogicException
 	 * @throws InvalidArgumentException
@@ -547,6 +626,7 @@ class GridField extends FormField {
 	 * Get metadata for a column, example array('Title'=>'Email address')
 	 *
 	 * @param string $column
+	 *
 	 * @return array
 	 * @throws LogicException
 	 * @throws InvalidArgumentException
@@ -611,6 +691,7 @@ class GridField extends FormField {
 	 * This is the action that gets executed when a GridField_AlterAction gets clicked.
 	 *
 	 * @param array $data
+	 *
 	 * @return string
 	 */
 	public function gridFieldAlterAction($data, $form, SS_HTTPRequest $request) {
@@ -661,7 +742,8 @@ class GridField extends FormField {
 	 *
 	 * @param string $actionName
 	 * @param mixed $args
-	 * @param arrray $data - send data from a form
+	 * @param array $data - send data from a form
+	 *
 	 * @return mixed
 	 * @throws InvalidArgumentException
 	 */
@@ -672,7 +754,7 @@ class GridField extends FormField {
 				continue;
 			}
 
-			if(in_array($actionName, array_map('strtolower', (array)$component->getActions($this)))) {
+			if(in_array($actionName, array_map('strtolower', (array) $component->getActions($this)))) {
 				return $component->handleAction($this, $actionName, $args, $data);
 			}
 		}
@@ -705,7 +787,7 @@ class GridField extends FormField {
 			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
 				if($params = $request->match($rule, true)) {
 					// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
-					if($action[0] == '$') $action = $params[substr($action,1)];
+					if($action[0] == '$') $action = $params[substr($action, 1)];
 					if(!method_exists($component, 'checkAccessAction') || $component->checkAccessAction($action)) {
 						if(!$action) {
 							$action = "index";
@@ -724,7 +806,8 @@ class GridField extends FormField {
 						}
 
 						if($this !== $result && !$request->isEmptyPattern($rule) && is_object($result)
-								&& $result instanceof RequestHandler) {
+							&& $result instanceof RequestHandler
+						) {
 
 							$returnValue = $result->handleRequest($request, $model);
 
@@ -734,11 +817,11 @@ class GridField extends FormField {
 
 							return $returnValue;
 
-						// If we return some other data, and all the URL is parsed, then return that
+							// If we return some other data, and all the URL is parsed, then return that
 						} else if($request->allParsed()) {
 							return $result;
 
-						// But if we have more content on the URL and we don't know what to do with it, return an error
+							// But if we have more content on the URL and we don't know what to do with it, return an error
 						} else {
 							return $this->httpError(404,
 								"I can't handle sub-URLs of a " . get_class($result) . " object.");
@@ -766,7 +849,7 @@ class GridField extends FormField {
  * This class is the base class when you want to have an action that alters
  * the state of the {@link GridField}, rendered as a button element.
  *
- * @package forms
+ * @package    forms
  * @subpackage fields-gridfield
  */
 class GridField_FormAction extends FormAction {
@@ -827,7 +910,7 @@ class GridField_FormAction extends FormAction {
 	 * @param string $val
 	 */
 	public function _nameEncode($match) {
-		return '%'.dechex(ord($match[0]));
+		return '%' . dechex(ord($match[0]));
 	}
 
 	/**
@@ -842,7 +925,7 @@ class GridField_FormAction extends FormAction {
 		);
 
 		// Ensure $id doesn't contain only numeric characters
-		$id = 'gf_'.substr(md5(serialize($state)), 0, 8);
+		$id = 'gf_' . substr(md5(serialize($state)), 0, 8);
 		Session::set($id, $state);
 		$actionData['StateID'] = $id;
 
@@ -851,7 +934,7 @@ class GridField_FormAction extends FormAction {
 			array(
 				// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch
 				// will strip it from the requests
-				'name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
+				'name' => 'action_gridFieldAlterAction' . '?' . http_build_query($actionData),
 				'data-url' => $this->gridField->Link(),
 			)
 		);
@@ -861,6 +944,7 @@ class GridField_FormAction extends FormAction {
 	 * Calculate the name of the gridfield relative to the Form
 	 *
 	 * @param GridField $base
+	 *
 	 * @return string
 	 */
 	protected function getNameFromParent() {
@@ -870,7 +954,7 @@ class GridField_FormAction extends FormAction {
 		do {
 			array_unshift($name, $base->getName());
 			$base = $base->getForm();
-		} while ($base && !($base instanceof Form));
+		} while($base && !($base instanceof Form));
 
 		return implode('.', $name);
 	}

@@ -475,6 +475,12 @@ class Folder extends File {
 	}
 
 	/**
+	 * Get the number of children of this folder that are also folders.
+	 */
+	public function numChildFolders() {
+		return $this->ChildFolders()->count();
+	}
+	/**
 	 * @return String
 	 */
 	public function CMSTreeClasses() {
@@ -486,7 +492,7 @@ class Folder extends File {
 		if(!$this->canEdit())
 			$classes .= " disabled";
 
-		$classes .= $this->markingClasses();
+		$classes .= $this->markingClasses('numChildFolders');
 
 		return $classes;
 	}

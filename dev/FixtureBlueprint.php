@@ -190,13 +190,7 @@ class FixtureBlueprint {
 
 			// If LastEdited was set in the fixture, set it here
 			if($data && array_key_exists('LastEdited', $data)) {
-				$edited = $this->parseValue($data['LastEdited'], $fixtures);
-				$update = new SQLUpdate(
-					$class,
-					array('"LastEdited"' => $edited),
-					array('"ID"' => $obj->id)
-				);
-				$update->execute();
+				$this->overrideField($obj, 'LastEdited', $data['LastEdited'], $fixtures);
 			}
 		} catch(Exception $e) {
 			Config::inst()->update('DataObject', 'validation_enabled', $validationenabled);
@@ -295,6 +289,19 @@ class FixtureBlueprint {
 
 	protected function setValue($obj, $name, $value, $fixtures = null) {
 		$obj->$name = $this->parseValue($value, $fixtures);
+	}
+
+	protected function overrideField($obj, $fieldName, $value, $fixtures = null) {
+		$table = ClassInfo::table_for_object_field(get_class($obj), $fieldName);
+		$value = $this->parseValue($value, $fixtures);
+
+		DB::manipulate(array(
+			$table => array(
+				"command" => "update", "id" => $obj->ID,
+				"fields" => array($fieldName => is_string($value) ? "'$value'" : $value)
+			)
+		));
+		$obj->$fieldName = $value;
 	}
 
 }

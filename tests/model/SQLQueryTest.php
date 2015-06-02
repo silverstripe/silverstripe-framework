@@ -14,6 +14,21 @@ class SQLQueryTest extends SapphireTest {
 		'SQLQueryTestChild'
 	);
 
+	public function testCount() {
+
+		//basic counting
+		$qry = SQLQueryTest_DO::get()->dataQuery()->getFinalisedQuery();
+		$qry->setGroupBy('Common');
+		$ids = $this->allFixtureIDs('SQLQueryTest_DO');
+		$this->assertEquals(count($ids), $qry->count('"SQLQueryTest_DO"."ID"'));
+
+		//test with `having`
+		if (DB::get_conn() instanceof MySQLDatabase) {
+			$qry->setHaving('"Date" > 2012-02-01');
+			$this->assertEquals(1, $qry->count('"SQLQueryTest_DO"."ID"'));
+		}
+	}
+
 	public function testEmptyQueryReturnsNothing() {
 		$query = new SQLQuery();
 		$this->assertSQLEquals('', $query->sql($parameters));
@@ -576,6 +591,35 @@ class SQLQueryTest extends SapphireTest {
 			$this->assertEquals('Object 1', $records[1]['Name']);
 			$this->assertEquals('1', $records[1]['_SortColumn0']);
 		}
+	}
+
+	public function testSelect() {
+		$query = new SQLQuery('"Title"', '"MyTable"');
+		$query->addSelect('"TestField"');
+		$this->assertEquals(
+			'SELECT "Title", "TestField" FROM "MyTable"',
+			$query->sql()
+		);
+
+		// Test replacement of select
+		$query->setSelect(array(
+			'Field' => '"Field"',
+			'AnotherAlias' => '"AnotherField"'
+		));
+		$this->assertEquals(
+			'SELECT "Field", "AnotherField" AS "AnotherAlias" FROM "MyTable"',
+			$query->sql()
+		);
+
+		// Check that ' as ' selects don't get mistaken as aliases
+		$query->addSelect(array(
+			'Relevance' => "MATCH (Title, MenuTitle) AGAINST ('Two as One')"
+		));
+		$this->assertEquals(
+			'SELECT "Field", "AnotherField" AS "AnotherAlias", MATCH (Title, MenuTitle) AGAINST (' .
+			'\'Two as One\') AS "Relevance" FROM "MyTable"',
+			$query->sql()
+		);
 	}
 
 	/**

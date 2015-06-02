@@ -116,7 +116,11 @@ class DataDifferencer extends ViewableData {
 			$toTitle = '';
 			if($this->toRecord->hasMethod($relName)) {
 				$relObjTo = $this->toRecord->$relName();
-				$toTitle = $relObjTo->hasMethod('Title') || $relObjTo->hasField('Title') ? $relObjTo->Title : '';
+				if($relObjTo) {
+					$toTitle = ($relObjTo->hasMethod('Title') || $relObjTo->hasField('Title')) ? $relObjTo->Title : '';
+				} else {
+					$toTitle = '';
+				}
 			}
 
 			if(!$this->fromRecord) {
@@ -134,7 +138,12 @@ class DataDifferencer extends ViewableData {
 				$fromTitle = '';
 				if($this->fromRecord->hasMethod($relName)) {
 					$relObjFrom = $this->fromRecord->$relName();
-					$fromTitle = $relObjFrom->hasMethod('Title') || $relObjFrom->hasField('Title') ? $relObjFrom->Title : '';
+					if($relObjFrom) {
+						$fromTitle = ($relObjFrom->hasMethod('Title') || $relObjFrom->hasField('Title')) ? $relObjFrom->Title : '';	
+					} else {
+						$fromTitle = '';
+					}
+					
 				}
 				if(isset($relObjFrom) && $relObjFrom instanceof Image) {
 					// TODO Use CMSThumbnail (see above)

@@ -24,7 +24,7 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
     "UploadField.ConfirmDelete": "Är du säker på att du vill radera denna fil från servern?",
     "UploadField.PHP_MAXFILESIZE": "Filen överskrider upload_max_filesize (php-ini-direktiv)",
     "UploadField.HTML_MAXFILESIZE": "Filen överskrider MAX_FILE_SIZE (HTML form-direktiv)",
-    "UploadField.ONLYPARTIALUPLOADED": "Filen laddas bara upp delvis",
+    "UploadField.ONLYPARTIALUPLOADED": "Filen laddades bara upp delvis",
     "UploadField.NOFILEUPLOADED": "Ingen fil laddades upp",
     "UploadField.NOTMPFOLDER": "Tillfällig mapp saknas",
     "UploadField.WRITEFAILED": "Kunde inte skriva filen",

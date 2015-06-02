@@ -105,15 +105,18 @@ class SQLSelect extends SQLConditionalExpression {
 	 *
 	 * <code>
 	 *  // pass fields to select as single parameter array
-	 *  $query->setSelect(array("Col1","Col2"))->setFrom("MyTable");
+	 *  $query->setSelect(array('"Col1"', '"Col2"'))->setFrom('"MyTable"');
 	 *
 	 *  // pass fields to select as multiple parameters
-	 *  $query->setSelect("Col1", "Col2")->setFrom("MyTable");
+	 *  $query->setSelect('"Col1"', '"Col2"')->setFrom('"MyTable"');
+	 *
+	 *  // Set a list of selected fields as aliases
+	 *  $query->setSelect(array('Name' => '"Col1"', 'Details' => '"Col2"')->setFrom('"MyTable"');
 	 * </code>
 	 *
-	 * @param string|array $fields
-	 * @param bool $clear Clear existing select fields?
-	 * @return self Self reference
+	 * @param string|array $fields Field names should be ANSI SQL quoted. Array keys should be unquoted.
+	 * @param boolean $clear Clear existing select fields?
+	 * @return $this Self reference
 	 */
 	public function setSelect($fields) {
 		$this->select = array();
@@ -128,17 +131,10 @@ class SQLSelect extends SQLConditionalExpression {
 	/**
 	 * Add to the list of columns to be selected by the query.
 	 *
-	 * <code>
-	 *  // pass fields to select as single parameter array
-	 *  $query->addSelect(array("Col1","Col2"))->setFrom("MyTable");
+	 * @see setSelect for example usage
 	 *
-	 *  // pass fields to select as multiple parameters
-	 *  $query->addSelect("Col1", "Col2")->setFrom("MyTable");
-	 * </code>
-	 *
-	 * @param string|array $fields
-	 * @param bool $clear Clear existing select fields?
-	 * @return self Self reference
+	 * @param string|array $fields Field names should be ANSI SQL quoted. Array keys should be unquoted.
+	 * @return $this Self reference
 	 */
 	public function addSelect($fields) {
 		if (func_num_args() > 1) {
@@ -146,9 +142,13 @@ class SQLSelect extends SQLConditionalExpression {
 		} else if(!is_array($fields)) {
 			$fields = array($fields);
 		}
-
 		foreach($fields as $idx => $field) {
-			$this->selectField($field, is_numeric($idx) ? null : $idx);
+			if(preg_match('/^(.*) +AS +"([^"]*)"/i', $field, $matches)) {
+				Deprecation::notice("3.0", "Use selectField() to specify column aliases");
+				$this->selectField($matches[1], $matches[2]);
+			} else {
+				$this->selectField($field, is_numeric($idx) ? null : $idx);
+			}
 		}
 
 		return $this;
@@ -157,10 +157,10 @@ class SQLSelect extends SQLConditionalExpression {
 	/**
 	 * Select an additional field.
 	 *
-	 * @param $field string The field to select (escaped SQL statement)
-	 * @param $alias string The alias of that field (escaped SQL statement).
+	 * @param string $field The field to select (ansi quoted SQL identifier or statement)
+	 * @param string|null $alias The alias of that field (unquoted SQL identifier).
 	 * Defaults to the unquoted column name of the $field parameter.
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function selectField($field, $alias = null) {
 		if(!$alias) {
@@ -264,9 +264,9 @@ class SQLSelect extends SQLConditionalExpression {
 	 * @example $sql->setOrderBy(array("Column" => "ASC", "ColumnTwo" => "DESC"));
 	 *
 	 * @param string|array $clauses Clauses to add (escaped SQL statement)
-	 * @param string $dir Sort direction, ASC or DESC
+	 * @param string $direction Sort direction, ASC or DESC
 	 *
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setOrderBy($clauses = null, $direction = null) {
 		$this->orderby = array();
@@ -284,7 +284,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 *
 	 * @param string|array $clauses Clauses to add (escaped SQL statements)
 	 * @param string $direction Sort direction, ASC or DESC
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addOrderBy($clauses = null, $direction = null) {
 		if(empty($clauses)) return $this;
@@ -350,9 +350,9 @@ class SQLSelect extends SQLConditionalExpression {
 	/**
 	 * Extract the direction part of a single-column order by clause.
 	 *
-	 * @param String
-	 * @param String
-	 * @return Array A two element array: array($column, $direction)
+	 * @param string $value
+	 * @param string $defaultDirection
+	 * @return array A two element array: array($column, $direction)
 	 */
 	private function getDirectionFromString($value, $defaultDirection = null) {
 		if(preg_match('/^(.*)(asc|desc)$/i', $value, $matches)) {
@@ -550,7 +550,7 @@ class SQLSelect extends SQLConditionalExpression {
 			$clone->setSelect(array("count($column)"));
 		}
 
-		$clone->setGroupBy(array());;
+		$clone->setGroupBy(array());
 		return $clone->execute()->value();
 	}
 

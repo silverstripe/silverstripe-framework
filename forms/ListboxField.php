@@ -215,13 +215,14 @@ class ListboxField extends DropdownField {
 
 		if($val) {
 			if(!$this->multiple && is_array($val)) {
-				throw new InvalidArgumentException('No array values allowed with multiple=false');
+				throw new InvalidArgumentException('Array values are not allowed (when multiple=false).');
 			}
 
 			if($this->multiple) {
 				$parts = (is_array($val)) ? $val : preg_split("/ *, */", trim($val));
 				if(ArrayLib::is_associative($parts)) {
-					throw new InvalidArgumentException('No associative arrays allowed multiple=true');
+					// This is due to the possibility of accidentally passing an array of values (as keys) and titles (as values) when only the keys were intended to be saved.
+					throw new InvalidArgumentException('Associative arrays are not allowed as values (when multiple=true), only indexed arrays.');
 				}
 
 				// Doesn't check against unknown values in order to allow for less rigid data handling.

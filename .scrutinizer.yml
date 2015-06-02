@@ -1,15 +1,7 @@
-tools:
-    php_pdepend:
-        enabled: true
-        excluded_dirs:
-            - vendor
-            - thirdparty
-            - tests
-            - parsers/HTML/BBCodeParser
-            - docs
-    custom_commands:
-        -
-            scope: file
-            command: php tests/phpcs_runner.php %pathname%
-            filter:
-               excluded_paths: ["*/css/*", "css/*", "thirdparty/*", "*/jquery-changetracker/*", "parsers/HTML/BBCodeParser/*", "*/SSTemplateParser.php$", "docs/*", "*/images/*"]
+inherit: true
+filter:
+  excluded_paths:
+    - thirdparty/*
+    - parsers/*
+    - docs/*
+    - images/*

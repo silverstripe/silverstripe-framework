@@ -326,7 +326,7 @@ class File extends DataObject {
 		$result = $this->extendedCan('canEdit', $member);
 		if($result !== null) return $result;
 
-		return Permission::checkMember($member, 'CMS_ACCESS_AssetAdmin');
+		return Permission::checkMember($member, array('CMS_ACCESS_AssetAdmin', 'CMS_ACCESS_LeftAndMain'));
 	}
 
 	/**
@@ -411,7 +411,6 @@ class File extends DataObject {
 
 		//get a tree listing with only folder, no files
 		$folderTree = new TreeDropdownField("ParentID", _t('AssetTableField.FOLDER','Folder'), 'Folder');
-		$folderTree->setChildrenMethod('ChildFolders');
 
 		$fields = new FieldList(
 			new TabSet('Root',
