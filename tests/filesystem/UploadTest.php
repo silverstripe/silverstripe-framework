@@ -352,7 +352,7 @@ class UploadTest extends SapphireTest {
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
-			'UploadTest-testUpload2.tar.gz',
+			'UploadTest-testUpload-v2.tar.gz',
 			$file2->Name,
 			'File receives a number attached to the end before the extension'
 		);
@@ -370,7 +370,7 @@ class UploadTest extends SapphireTest {
 		$u->load($tmpFile);
 		$file3 = $u->getFile();
 		$this->assertEquals(
-			'UploadTest-testUpload3.tar.gz',
+			'UploadTest-testUpload-v3.tar.gz',
 			$file3->Name,
 			'File receives a number attached to the end before the extension'
 		);
@@ -434,7 +434,7 @@ class UploadTest extends SapphireTest {
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
-			'UploadTest-testUpload2',
+			'UploadTest-testUpload-v2',
 			$file2->Name,
 			'File receives a number attached to the end'
 		);
@@ -584,7 +584,7 @@ class UploadTest extends SapphireTest {
 		$u->loadIntoFile($tmpFile, new File());
 		$file3 = $u->getFile();
 		$this->assertEquals(
-				'UploadTest-testUpload2.txt',
+				'UploadTest-testUpload-v2.txt',
 				$file3->Name,
 				'File does receive new name'
 		);
@@ -674,31 +674,35 @@ class UploadTest extends SapphireTest {
 			$u->load($tmpFile);
 			return $u->getFile();
 		};
+		
+		// test empty file version prefix
+		$originalVersionPrefix = Config::inst()->get('Upload', 'version_prefix');
+		Config::inst()->update('Upload', 'version_prefix', '');
 
-		$file1 = $upload('UploadTest-testUpload.jpg');
+		$file1 = $upload('UploadTest-IMG001.jpg');
 		$this->assertEquals(
-			'UploadTest-testUpload.jpg',
+			'UploadTest-IMG001.jpg',
 			$file1->Name,
 			'File does not receive new name'
 		);
 
-		$file2 = $upload('UploadTest-testUpload.jpg');
+		$file2 = $upload('UploadTest-IMG001.jpg');
 		$this->assertEquals(
-			'UploadTest-testUpload2.jpg',
+			'UploadTest-IMG2.jpg',
 			$file2->Name,
 			'File does receive new name'
 		);
 
-		$file3 = $upload('UploadTest-testUpload.jpg');
+		$file3 = $upload('UploadTest-IMG001.jpg');
 		$this->assertEquals(
-			'UploadTest-testUpload3.jpg',
+			'UploadTest-IMG3.jpg',
 			$file3->Name,
 			'File does receive new name'
 		);
 
-		$file4 = $upload('UploadTest-testUpload3.jpg');
+		$file4 = $upload('UploadTest-IMG3.jpg');
 		$this->assertEquals(
-			'UploadTest-testUpload4.jpg',
+			'UploadTest-IMG4.jpg',
 			$file4->Name,
 			'File does receive new name'
 		);
@@ -707,6 +711,44 @@ class UploadTest extends SapphireTest {
 		$file2->delete();
 		$file3->delete();
 		$file4->delete();
+		
+		// test '-v' file version prefix
+		Config::inst()->update('Upload', 'version_prefix', '-v');
+
+		$file1 = $upload('UploadTest2-IMG001.jpg');
+		$this->assertEquals(
+			'UploadTest2-IMG001.jpg',
+			$file1->Name,
+			'File does not receive new name'
+		);
+
+		$file2 = $upload('UploadTest2-IMG001.jpg');
+		$this->assertEquals(
+			'UploadTest2-IMG001-v2.jpg',
+			$file2->Name,
+			'File does receive new name'
+		);
+
+		$file3 = $upload('UploadTest2-IMG001.jpg');
+		$this->assertEquals(
+			'UploadTest2-IMG001-v3.jpg',
+			$file3->Name,
+			'File does receive new name'
+		);
+
+		$file4 = $upload('UploadTest2-IMG001-v3.jpg');
+		$this->assertEquals(
+			'UploadTest2-IMG001-v4.jpg',
+			$file4->Name,
+			'File does receive new name'
+		);
+
+		$file1->delete();
+		$file2->delete();
+		$file3->delete();
+		$file4->delete();
+		
+		Config::inst()->update('Upload', 'version_prefix', $originalVersionPrefix);
 	}
 
 }
