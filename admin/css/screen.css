@@ -767,15 +767,12 @@ form.import-form label.left { width: 250px; }
 .cms .jstree li, .TreeDropdownField .treedropdownfield-panel .jstree li { min-height: 18px; line-height: 25px; white-space: nowrap; margin-left: 18px; min-width: 18px; }
 .cms .jstree li.jstree-open > ul, .TreeDropdownField .treedropdownfield-panel .jstree li.jstree-open > ul { display: block; }
 .cms .jstree li.jstree-closed > ul, .TreeDropdownField .treedropdownfield-panel .jstree li.jstree-closed > ul { display: none; }
-.cms .jstree li.disabled > a, .TreeDropdownField .treedropdownfield-panel .jstree li.disabled > a { color: #aaaaaa; }
-.cms .jstree li.disabled > a:hover, .TreeDropdownField .treedropdownfield-panel .jstree li.disabled > a:hover { background: transparent; cursor: default; }
-.cms .jstree li.edit-disabled > a, .TreeDropdownField .treedropdownfield-panel .jstree li.edit-disabled > a { color: #aaaaaa; }
 .cms .jstree li > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree li > .jstree-icon { cursor: pointer; }
 .cms .jstree ins, .TreeDropdownField .treedropdownfield-panel .jstree ins { display: inline-block; text-decoration: none; width: 18px; height: 18px; margin: 0 0 0 0; padding: 0; float: left; }
 .cms .jstree a, .TreeDropdownField .treedropdownfield-panel .jstree a { display: inline-block; line-height: 16px; height: 16px; color: black; white-space: nowrap; text-decoration: none; padding: 1px 2px; margin: 0; border: 1px solid #fff; }
 .cms .jstree a:focus, .cms .jstree a:active, .cms .jstree a:hover, .TreeDropdownField .treedropdownfield-panel .jstree a:focus, .TreeDropdownField .treedropdownfield-panel .jstree a:active, .TreeDropdownField .treedropdownfield-panel .jstree a:hover { text-decoration: none; cursor: pointer; text-shadow: 1px 1px 1px white; }
-.cms .jstree a > ins, .TreeDropdownField .treedropdownfield-panel .jstree a > ins { height: 16px; width: 12px; }
-.cms .jstree a > ins.jstree-checkbox, .TreeDropdownField .treedropdownfield-panel .jstree a > ins.jstree-checkbox { height: 19px; width: 16px; }
+.cms .jstree a ins, .TreeDropdownField .treedropdownfield-panel .jstree a ins { height: 16px; width: 12px; }
+.cms .jstree a ins.jstree-checkbox, .TreeDropdownField .treedropdownfield-panel .jstree a ins.jstree-checkbox { height: 19px; width: 16px; }
 .cms .jstree .jstree-real-checkbox, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-real-checkbox { display: none; }
 .cms .jstree .jstree-wholerow-real, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow-real { position: relative; z-index: 1; }
 .cms .jstree .jstree-wholerow-real li, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow-real li { cursor: pointer; }
@@ -835,9 +832,10 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree li, .cms-tree.jstree li { padding: 0px; clear: left; }
 .tree-holder.jstree li.Root strong, .cms-tree.jstree li.Root strong { font-weight: bold; padding-left: 1px; }
 .tree-holder.jstree li.Root > a .jstree-icon, .cms-tree.jstree li.Root > a .jstree-icon { background-position: -56px -36px; }
-.tree-holder.jstree li.status-deletedonlive .text, .cms-tree.jstree li.status-deletedonlive .text { text-decoration: line-through; }
+.tree-holder.jstree li.status-deletedonlive > a .text, .tree-holder.jstree li.status-deletedonlive > a:link .text, .tree-holder.jstree li.status-archived > a .text, .tree-holder.jstree li.status-archived > a:link .text, .cms-tree.jstree li.status-deletedonlive > a .text, .cms-tree.jstree li.status-deletedonlive > a:link .text, .cms-tree.jstree li.status-archived > a .text, .cms-tree.jstree li.status-archived > a:link .text { text-decoration: line-through; }
 .tree-holder.jstree li.jstree-checked > a, .tree-holder.jstree li.jstree-checked > a:link, .cms-tree.jstree li.jstree-checked > a, .cms-tree.jstree li.jstree-checked > a:link { background-color: #efe999; }
-.tree-holder.jstree li.disabled > a > .jstree-checkbox, .cms-tree.jstree li.disabled > a > .jstree-checkbox { background-position: -57px -54px; }
+.tree-holder.jstree li.disabled > a, .tree-holder.jstree li.disabled > a:link, .tree-holder.jstree li.edit-disabled > a, .tree-holder.jstree li.edit-disabled > a:link, .cms-tree.jstree li.disabled > a, .cms-tree.jstree li.disabled > a:link, .cms-tree.jstree li.edit-disabled > a, .cms-tree.jstree li.edit-disabled > a:link { color: #aaa; background-color: transparent; cursor: default; }
+.tree-holder.jstree li.disabled > a > .jstree-checkbox, .tree-holder.jstree li.disabled > a:link > .jstree-checkbox, .tree-holder.jstree li.edit-disabled > a > .jstree-checkbox, .tree-holder.jstree li.edit-disabled > a:link > .jstree-checkbox, .cms-tree.jstree li.disabled > a > .jstree-checkbox, .cms-tree.jstree li.disabled > a:link > .jstree-checkbox, .cms-tree.jstree li.edit-disabled > a > .jstree-checkbox, .cms-tree.jstree li.edit-disabled > a:link > .jstree-checkbox { background-position: -57px -54px; }
 .tree-holder.jstree li.readonly, .cms-tree.jstree li.readonly { color: #aaa; padding-left: 18px; }
 .tree-holder.jstree li.readonly a, .tree-holder.jstree li.readonly a:link, .cms-tree.jstree li.readonly a, .cms-tree.jstree li.readonly a:link { margin: 0; padding: 0; }
 .tree-holder.jstree li.readonly .jstree-icon, .cms-tree.jstree li.readonly .jstree-icon { display: none; }
@@ -850,8 +848,7 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree .jstree-hovered, .cms-tree.jstree .jstree-hovered { text-shadow: none; text-decoration: none; }
 .tree-holder.jstree .jstree-closed > ins, .cms-tree.jstree .jstree-closed > ins { background-position: 0 0; }
 .tree-holder.jstree .jstree-open > ins, .cms-tree.jstree .jstree-open > ins { background-position: -20px 0; }
-.tree-holder.filtered-list li.class-Page a, .cms-tree.filtered-list li.class-Page a { color: #aaa; }
-.tree-holder.filtered-list li.class-Page.filtered-item a, .cms-tree.filtered-list li.class-Page.filtered-item a { color: #0073C1; }
+.tree-holder.filtered-list li:not(.filtered-item) > a, .cms-tree.filtered-list li:not(.filtered-item) > a { color: #aaa; }
 
 .cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li a { padding-left: 15px; }
 .cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li .jstree-hovered, .cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li .jstree-clicked, .cms-content-fields .cms-tree.jstree .jstree-no-checkboxes li a:focus { padding-left: 3px; }
@@ -872,7 +869,7 @@ li.class-VirtualPage > a .jstree-pageicon { background-position: 0 -32px; }
 li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 
 /* tree status icons and labels */
-.cms-tree.jstree .status-modified > a .jstree-pageicon:before, .cms-tree.jstree .status-addedtodraft > a .jstree-pageicon:before, .cms-tree.jstree .status-deletedonlive > a .jstree-pageicon:before, .cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before, .cms-tree.jstree .status-workflow-approval > a .jstree-pageicon:before { content: ""; display: block; width: 5px; height: 5px; position: absolute; bottom: 0; right: 0; background: #fce2d0; border: 1px solid #ff9344; border-radius: 100px; box-shadow: 0px 0px 0px 1px #fff; }
+.cms-tree.jstree .status-modified > a .jstree-pageicon:before, .cms-tree.jstree .status-addedtodraft > a .jstree-pageicon:before, .cms-tree.jstree .status-deletedonlive > a .jstree-pageicon:before, .cms-tree.jstree .status-archived > a .jstree-pageicon:before, .cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before, .cms-tree.jstree .status-workflow-approval > a .jstree-pageicon:before { content: ""; display: block; width: 5px; height: 5px; position: absolute; bottom: 0; right: 0; background: #fce2d0; border: 1px solid #ff9344; border-radius: 100px; box-shadow: 0px 0px 0px 1px #fff; }
 
 .jstree .status-modified > .jstree-hovered, .jstree .status-modified > .jstree-clicked, .cms-tree.jstree span.badge.status-modified, .cms-tree.jstree .status-modified > a .jstree-pageicon:before { background-color: #FFF4ED; border-color: #EE6214; }
 
@@ -891,6 +888,12 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 #cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-deletedonlive { box-shadow: 0px 0px 6px 2px #F5F5F5; }
 
 .cms-tree.jstree span.badge.status-deletedonlive { color: #5F7688; }
+
+.jstree .status-archived > .jstree-hovered, .jstree .status-archived > .jstree-clicked, .cms-tree.jstree span.badge.status-archived, .cms-tree.jstree .status-archived > a .jstree-pageicon:before { background-color: #F5F5F5; border-color: #5F7688; }
+
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-archived { box-shadow: 0px 0px 6px 2px #F5F5F5; }
+
+.cms-tree.jstree span.badge.status-archived { color: #5F7688; }
 
 .jstree .status-removedfromdraft > .jstree-hovered, .jstree .status-removedfromdraft > .jstree-clicked, .cms-tree.jstree span.badge.status-removedfromdraft, .cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before { background-color: #F5F5F5; border-color: #5F7688; }
 

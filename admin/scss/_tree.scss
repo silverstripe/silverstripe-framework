@@ -29,16 +29,6 @@
 			&.jstree-closed > ul {
 				display: none;
 			}
-			&.disabled > a {
-				color: #aaaaaa;
-				&:hover {
-					background: transparent;
-					cursor: default;
-				}
-			}
-			&.edit-disabled > a {
-				color: #aaaaaa;
-			}
 			// Expand/collapse arrows
 			& > .jstree-icon {
 				cursor: pointer;
@@ -70,14 +60,12 @@
 				cursor: pointer;
 				text-shadow:1px 1px 1px white;
 			}
-			> {
-				ins {
-					height: 16px;
-					width: 12px;
-					&.jstree-checkbox {
-						height: 19px; //Larger to help avoid accidental page loads when trying to click checkboxes
-						width: 16px;
-       				}
+			ins {
+				height: 16px;
+				width: 12px;
+				&.jstree-checkbox {
+					height: 19px; //Larger to help avoid accidental page loads when trying to click checkboxes
+					width: 16px;
 				}
 			}
 		}
@@ -443,9 +431,12 @@
 					background-position: -56px -36px;
 				}
 			}
-			&.status-deletedonlive {
-				.text {
-					text-decoration: line-through;
+			&.status-deletedonlive,
+			&.status-archived {
+				> a, > a:link {
+					.text {
+						text-decoration: line-through;
+					}
 				}
 			}
 			&.jstree-checked {
@@ -453,9 +444,16 @@
 					background-color: $color-cms-batchactions-menu-selected-background;
 				}
 			}
-			&.disabled {
-				> a > .jstree-checkbox {
-					background-position: -57px -54px;
+			&.disabled,
+			&.edit-disabled {
+				> a, > a:link {
+					color: $color-text-disabled;
+					background-color: transparent;
+					cursor: default;
+					
+					> .jstree-checkbox {
+						background-position: -57px -54px;
+					}
 				}
 			}
 			&.readonly {
@@ -553,12 +551,8 @@
 
 	// Applied to trees when displaying filter / search results.
 	&.filtered-list {
-		li.class-Page a {
+		li:not(.filtered-item) > a {
 			color: $color-text-disabled;
-		}
-
-		li.class-Page.filtered-item a {
-			color: $color-text-blue-link;
 		}
 	}
 }
@@ -678,6 +672,7 @@ a .jstree-pageicon {
 @include tree-status-icon('modified', #EE6214, #FFF4ED);
 @include tree-status-icon('addedtodraft', #EE6214, #FFF4ED);
 @include tree-status-icon('deletedonlive', #5F7688, #F5F5F5);
+@include tree-status-icon('archived', #5F7688, #F5F5F5);
 @include tree-status-icon('removedfromdraft', #5F7688, #F5F5F5);
 @include tree-status-icon('workflow-approval', #0070B4, #E8FAFF);
 
