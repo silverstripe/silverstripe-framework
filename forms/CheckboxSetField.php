@@ -96,8 +96,12 @@ class CheckboxSetField extends OptionsetField {
 						}
 					}
 				} elseif($values && is_string($values)) {
-					$items = explode(',', $values);
-					$items = str_replace('{comma}', ',', $items);
+					if(!empty($values)) {
+						$items = explode(',', $values);
+						$items = str_replace('{comma}', ',', $items);
+					} else {
+						$items = array();
+					}
 				}
 			}
 		} else {
@@ -109,8 +113,12 @@ class CheckboxSetField extends OptionsetField {
 					$items = array();
 				}
 				else {
-					$items = explode(',', $values);
-					$items = str_replace('{comma}', ',', $items);
+					if(!empty($values)) {
+						$items = explode(',', $values);
+						$items = str_replace('{comma}', ',', $items);
+					} else {
+						$items = array();
+					}
 				}
 			}
 		}
