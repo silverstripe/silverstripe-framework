@@ -445,6 +445,7 @@ body.cms {
  * -------------------------------------------- */
 
 .message {												// White
+	position: relative;
 	display: block;
 	clear: both;
 	margin: 0 0 $grid-y;
@@ -456,25 +457,61 @@ body.cms {
 	text-shadow: none;
 	@include border-radius(3px 3px 3px 3px);
 
-	&.notice {		
+	&.notice,
+	&.notice .error-details {
 		background-color: lighten($color-notice,22%);	// Blue
 		border-color: $color-notice;	
 	}
-	&.warning {											// Yellow
+	&.warning,
+	&.warning .error-details {											// Yellow
 		background-color: lighten($color-warning,47%);
 		border-color: $color-warning;
 	}
-	&.error, &.bad, &.required, &.validation {			// Red
+	&.error, &.bad, &.required, &.validation,
+	&.error .error-details, &.bad .error-details, &.required .error-details, &.validation .error-details, {			// Red
 		background-color: lighten($color-error,24%);
 		border-color: $color-error;
 	}	
-	&.good {											// Green
+	&.good,
+	&.good .error-details {											// Green
 		background-color: lighten($color-good,40%);
 		border-color: $color-good;
 	}
 	
 	p {
 		margin: 0;
+	}
+
+	strong
+	{
+		text-transform: uppercase;
+	}
+
+	.error-details
+	{
+		position: absolute;
+		bottom: -8px;
+		right: 5px;
+		padding: 0px 3px;
+
+		font-size: .7em;
+		text-transform: uppercase;
+
+		border: 1px #ccc solid;
+		background: #fff;
+		background: rgba(#fff,0.5);
+		@include border-radius(3px 3px 3px 3px);
+		cursor: pointer;
+
+		&:hover
+		{
+			font-weight: bold;
+		}
+
+		.content
+		{
+			display: none;
+		}
 	}
 }
 

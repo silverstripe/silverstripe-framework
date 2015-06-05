@@ -139,8 +139,6 @@ jQuery.noConflict();
 
 			// Handle custom status message headers
 			var msg = (xhr.getResponseHeader('X-Status')) ? xhr.getResponseHeader('X-Status') : xhr.statusText,
-				reathenticate = xhr.getResponseHeader('X-Reauthenticate'),
-				msgType = (xhr.status < 200 || xhr.status > 399) ? 'bad' : 'good',
 				ignoredMessages = ['OK'];
 
 			// Enable reauthenticate dialog if requested
@@ -152,7 +150,15 @@ jQuery.noConflict();
 			// Show message (but ignore aborted requests)
 			if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages)) {
 				// Decode into UTF-8, HTTP headers don't allow multibyte
-				statusMessage(decodeURIComponent(msg), msgType);
+				msg = decodeURIComponent(msg);
+
+				if ( xhr.status < 200 || xhr.status > 399 )
+				{
+					ss.notice.error(msg, xhr.responseText, {formatDetails: true});
+				}
+				else{
+					ss.notice.success(msg);
+				}
 			}
 		});
 
@@ -411,7 +417,7 @@ jQuery.noConflict();
 				var validationResult = form.validate();
 				if(typeof validationResult!=='undefined' && !validationResult) {
 					// TODO Automatically switch to the tab/position of the first error
-					statusMessage("Validation failed.", "bad");
+					ss.notice.error("Validation failed.");
 
 					$(button).removeClass('loading');
 
@@ -1365,11 +1371,16 @@ jQuery.noConflict();
 
 }(jQuery));
 
+/** @deprecated */
 var statusMessage = function(text, type) {
-	text = jQuery('<div/>').text(text).html(); // Escape HTML entities in text
-	jQuery.noticeAdd({text: text, type: type});
+	console.warn('statusMessage() is deprecated. Use ss.notice methods instead. See SSNotice.js.');
+	ss.notice.message(text, {
+		type: type
+	});
 };
 
+/** @deprecated */
 var errorMessage = function(text) {
-	jQuery.noticeAdd({text: text, type: 'error'});
+	console.warn('errorMessage() is deprecated. Use ss.notice methods instead. See SSNotice.js.');
+	ss.notice.error(text);
 };

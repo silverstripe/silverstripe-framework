@@ -6,5 +6,8 @@
 	"ModelAdmin.REALLYDELETE": "Do you really want to delete?",
 	"ModelAdmin.DELETED": "Deleted",
 	"ModelAdmin.VALIDATIONERROR": "Validation Error",
-	"LeftAndMain.PAGEWASDELETED": "This page was deleted.  To edit a page, select it from the left."
+	"LeftAndMain.PAGEWASDELETED": "This page was deleted.  To edit a page, select it from the left.",
+	"SSNotice.DETAILS": "Details",
+	"SSNotice.WARNING": "Warning",
+	"SSNotice.ERROR": "Error"
 }

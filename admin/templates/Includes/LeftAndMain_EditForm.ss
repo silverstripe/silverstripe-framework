@@ -30,8 +30,6 @@
 	<div class="cms-content-fields center <% if not $Fields.hasTabset %>cms-panel-padded<% end_if %>">
 		<% if $Message %>
 		<p id="{$FormName}_error" class="message $MessageType">$Message</p>
-		<% else %>
-		<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
 		<% end_if %>
 
 		<fieldset>

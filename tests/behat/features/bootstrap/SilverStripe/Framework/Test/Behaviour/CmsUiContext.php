@@ -56,7 +56,7 @@ class CmsUiContext extends BehatContext {
 	 * @Then /^I should see a "([^"]*)" notice$/
 	 */
 	public function iShouldSeeANotice($notice) {
-		$this->getMainContext()->assertElementContains('.notice-wrap', $notice);
+		$this->getMainContext()->assertElementContains('.message', $notice);
 	}
 
 	/**

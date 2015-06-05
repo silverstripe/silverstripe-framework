@@ -316,7 +316,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
 				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
 				THIRDPARTY_DIR . '/jquery-form/jquery.form.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
@@ -356,6 +355,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldDescriptionToggle.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.TreeDropdownField.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/SSNotice.js',
 			),
 			Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
 			Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
@@ -372,7 +372,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
 		}
 
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(FRAMEWORK_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
