@@ -21,7 +21,7 @@ class LeftAndMainTest extends FunctionalTest {
 
 		$this->backupCss = Config::inst()->get('LeftAndMain', 'extra_requirements_css');
 		$this->backupJs = Config::inst()->get('LeftAndMain', 'extra_requirements_javascript');
-		$this->backupCombined = Requirements::get_combined_files_enabled();
+		$this->backupCombined = Config::inst()->get('Requirements', 'combined_files_enabled');
 
 		Config::inst()->update('LeftAndMain', 'extra_requirements_css', array(
 			FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.css'
@@ -31,7 +31,7 @@ class LeftAndMainTest extends FunctionalTest {
 			FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.js'
 		));
 
-		Requirements::set_combined_files_enabled(false);
+		Config::inst()->update('Requirements', 'combined_files_enabled', false);
 	}
 
 	public function tearDown() {
@@ -39,8 +39,7 @@ class LeftAndMainTest extends FunctionalTest {
 
 		Config::inst()->update('LeftAndMain', 'extra_requirements_css', $this->backupCss);
 		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', $this->backupJs);
-
-		Requirements::set_combined_files_enabled($this->backupCombined);
+		Config::inst()->update('Requirements', 'combined_files_enabled', $this->backupCombined);
 	}
 
 

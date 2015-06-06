@@ -62,7 +62,7 @@ JavaScript in a separate file and instead load, via search and replace, several 
 	    "EditorCSS" => "cms/css/editor.css",
 	);
 
-	Requirements::javascriptTemplate("cms/javascript/editor.template.js", $vars);
+	Requirements::javascript_emplate("cms/javascript/editor.template.js", $vars);
 
 In this example, `editor.template.js` is expected to contain a replaceable variable expressed as `$EditorCSS`.
 
@@ -74,12 +74,12 @@ this is generally speaking the best way to do these things - it clearly marks th
 language.
 
 	:::php
-	Requirements::customScript(<<<JS
+	Requirements::custom_script(<<<JS
 	  alert("hi there");
 	JS
 	);
 
-	Requirements::customCSS(<<<CSS
+	Requirements::custom_css(<<<CSS
 	  .tree li.$className {
 	    background-image: url($icon);
 	  }
@@ -176,8 +176,12 @@ careful when messing with the order of requirements.
 By default, SilverStripe includes all Javascript files at the bottom of the page body, unless there's another script 
 already loaded, then, it's inserted before the first `<script>` tag. If this causes problems, it can be configured.
 
-	:::php
-	Requirements::set_force_js_to_bottom(true);
+	**mysite/_config/app.yml**
+
+	:::yml
+	Requirements:
+	  write_js_to_body: true
+	  force_js_to_bottom: true
 
 `Requirements.force_js_to_bottom`, will force SilverStripe to write the Javascript to the bottom of the page body, even 
 if there is an earlier script tag.
@@ -185,9 +189,13 @@ if there is an earlier script tag.
 If the Javascript files are preferred to be placed in the `<head>` tag rather than in the `<body>` tag,
 `Requirements.write_js_to_body` should be set to false.
 
-	:::php
-	Requirements::set_force_js_to_bottom(true);
+## Extending / Customising
 
+The `Requirements` class is essentially a convenience “front end” for a class named `RequirementsHandler`, which handles the actual tracking and output of files and scripts. If you need to override the `RequirementsHandler` backend, you can specify your own class (that implements `Requirements_Backend`) using the following configuration setting:
+
+	:::yml
+	Injector:
+	  Requirements_Backend: MyRequirementsHandler
 
 ## API Documentation
 

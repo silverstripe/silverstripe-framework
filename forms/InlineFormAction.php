@@ -29,7 +29,7 @@ class InlineFormAction extends FormField {
 
 	public function Field($properties = array()) {
 		if($this->includeDefaultJS) {
-			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/javascript/InlineFormAction.js',
+			Requirements::javascript_template(FRAMEWORK_DIR . '/javascript/InlineFormAction.js',
 				array('ID'=>$this->id()));
 		}
 

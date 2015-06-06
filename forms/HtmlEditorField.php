@@ -52,7 +52,7 @@ class HtmlEditorField extends TextareaField {
 			Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
 		}
 
-		Requirements::customScript($configObj->generateJS(), 'htmlEditorConfig');
+		Requirements::custom_script($configObj->generateJS(), 'htmlEditorConfig');
 	}
 
 	/**

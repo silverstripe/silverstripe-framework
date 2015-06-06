@@ -1864,7 +1864,17 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	function Require_Call(&$res, $sub) {
-		$res['php'] = "Requirements::".$sub['Method']['text'].'('.$sub['CallArguments']['php'].');';
+		$target = $sub['Method']['text'];
+		$methods = Requirements::get_template_global_variables();
+
+		if(array_key_exists($target, $methods)) {
+			$target = $methods[$target];
+		} elseif( ! in_array($target, $methods)) {
+			throw new SSTemplateParseException('Unable to call "Requirements::' . $target . '()". Perhaps the method '
+				. 'doesn’t exist or you have mis-spelled it.', $this);
+		}
+
+		$res['php'] = "Requirements::".$target.'('.$sub['CallArguments']['php'].');';
 	}
 
 	

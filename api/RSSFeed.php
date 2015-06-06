@@ -132,7 +132,7 @@ class RSSFeed extends ViewableData {
 	 */
 	public static function linkToFeed($url, $title = null) {
 		$title = Convert::raw2xml($title);
-		Requirements::insertHeadTags(
+		Requirements::insert_head_tags(
 			'<link rel="alternate" type="application/rss+xml" title="' . $title .
 			'" href="' . $url . '" />');
 	}

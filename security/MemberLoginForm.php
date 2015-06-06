@@ -127,7 +127,7 @@ class MemberLoginForm extends LoginForm {
 				if(el && el.focus && (typeof jQuery == 'undefined' || jQuery(el).is(':visible'))) el.focus();
 			})();
 JS;
-		Requirements::customScript($js, 'MemberLoginFormFieldFocus');
+		Requirements::custom_script($js, 'MemberLoginFormFieldFocus');
 	}
 
 	/**
