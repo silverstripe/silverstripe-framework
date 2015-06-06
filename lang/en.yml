@@ -548,6 +548,8 @@ en:
     Print: Print
   TableListField_PageControls_ss:
     OF: of
+  TextField:
+    VALUE_TOO_LONG: 'This field should only contain a maximum of {size} characters.'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

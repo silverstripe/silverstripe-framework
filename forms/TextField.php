@@ -52,4 +52,38 @@ class TextField extends FormField {
 		return $this->Field();
 	}
 
+	public function validate(Validator $validator) {
+
+		$form = $this->getForm();
+		if ($form) {
+			$record = $form->getRecord();
+			if ($record) {
+				foreach($record->db() as $fieldName => $fieldType) {
+					if ($fieldName == $this->name) {
+						$fieldObject = $record->dbObject($fieldName);
+						if ($fieldObject instanceof Varchar) {
+							if (strlen($this->value) > $fieldObject->getSize()) {
+								$validator->validationError(
+									$this->name,
+									_t(
+										'TextField.VALUE_TOO_LONG',
+										"This field should only contain a maximum of {size} characters.",
+										array(
+											'size' => $fieldObject->getSize()
+										)
+									),
+									"validation"
+								);
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+
+	}
+
 }
