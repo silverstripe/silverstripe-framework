@@ -42,7 +42,7 @@ class PermissionRoleCode extends DataObject {
 		return $result;
 	}
 
-	public function canCreate($member = null) {
+	public function canCreate($member = null, $context = array()) {
 		return Permission::check('APPLY_ROLES', 'any', $member);
 	}
 

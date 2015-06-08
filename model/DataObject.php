@@ -2823,12 +2823,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * else return $normalValue;
 	 * </code>
 	 *
-	 * @param String $methodName Method on the same object, e.g. {@link canEdit()}
+	 * @param string $methodName Method on the same object, e.g. {@link canEdit()}
 	 * @param Member|int $member
+	 * @param array $context Optional context
 	 * @return boolean|null
 	 */
-	public function extendedCan($methodName, $member) {
-		$results = $this->extend($methodName, $member);
+	public function extendedCan($methodName, $member, $context = array()) {
+		$results = $this->extend($methodName, $member, $context);
 		if($results && is_array($results)) {
 			// Remove NULLs
 			$results = array_filter($results, function($v) {return !is_null($v);});
@@ -2876,13 +2877,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @todo Should canCreate be a static method?
-	 *
 	 * @param Member $member
+	 * @param array $context Additional context-specific data which might
+	 * affect whether (or where) this object could be created.
 	 * @return boolean
 	 */
-	public function canCreate($member = null) {
-		$extended = $this->extendedCan(__FUNCTION__, $member);
+	public function canCreate($member = null, $context = array()) {
+		$extended = $this->extendedCan(__FUNCTION__, $member, $context);
 		if($extended !== null) {
 			return $extended;
 		}
