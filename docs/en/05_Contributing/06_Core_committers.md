@@ -7,7 +7,6 @@ The core committers team is reviewed approximately annually, new members are add
 * [Hamish Friedlander](https://github.com/hafriedlander)
 * [Ingo Schommer](https://github.com/chillu)
 * [Loz Calver](https://github.com/kinglozzer)
-* [Mateusz Uzdowski](https://github.com/mateusz/)
 * [Sam Minnée](https://github.com/sminnee)
 * [Sean Harvey](https://github.com/halkyon/)
 * [Stig Lindqvist](https://github.com/stojg)
