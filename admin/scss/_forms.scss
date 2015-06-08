@@ -308,7 +308,8 @@ form.small .field, .field.small {
 	/* chzn override */
 	.chzn-container {
 		max-width: 512px;
-		display: block;
+		vertical-align: bottom;
+		
 		.chzn-results {
 			
 			li {

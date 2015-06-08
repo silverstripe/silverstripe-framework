@@ -19,22 +19,16 @@ If you are familiar with PHP coding but new to unit testing then check out Mark'
 You should also read over [the PHPUnit manual](http://www.phpunit.de/manual/current/en/). It provides a lot of
 fundamental concepts that we build on in this documentation.
 
-Unit tests are not included in the normal SilverStripe downloads so you need to install them through git repositories
-([installation instructions](/getting_started/composer)).
+Unit tests are not included in the zip/tar.gz SilverStripe [downloads](http://www.silverstripe.org/software/download/) so to get them, install SilverStripe [with composer](/getting_started/composer).
 
-## Install with Composer
+## Invoking phpunit
 
-Once you've got your project up and running, open a terminal and cd to your project root.
+Once you have used composer to create your project, `cd` to your project root. Composer will have installed PHPUnit alongside the required PHP classes into the `vendor/bin/` directory.
 
-	composer require --dev "phpunit/phpunit:*@stable"
+If you don't want to invoke PHPUnit through its full path (`vendor/bin/phpunit`), add `./vendor/bin` to your $PATH, or symlink phpunit into the root directory of your website:
 
-This will install [PHPUnit](http://www.phpunit.de/) dependency, which is the framework we're
-building our unit tests on.  Composer installs it alongside the required PHP classes into the `vendor/bin/` directory.
-
-### Symlinking the PHPUnit Binary
-You can either use PHPUnit through its full path (`vendor/bin/phpunit`), or symlink it into the root directory of your website:
-
-	ln -s vendor/bin/phpunit phpunit
+- `PATH=./vendor/bin:$PATH` in your shell's profile script; **or**
+- `ln -s vendor/bin/phpunit phpunit` at the command prompt in your project root
 
 ## Configuration
 
@@ -128,6 +122,6 @@ particularly around formatting test output.
 ### Via Web Browser
 
 Executing tests from the command line is recommended, since it most closely reflects
-test runs in any automated testing environments. However, you can also run tests through the browser (requires PHPUnit version 3.7.*@stable):
+test runs in any automated testing environments. However, you can also run tests through the browser:
 
 	http://localhost/dev/tests

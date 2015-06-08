@@ -323,7 +323,7 @@ class DatetimeField extends FormField {
 		}
 	}
 
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 		$dateValid = $this->dateField->validate($validator);
 		$timeValid = $this->timeField->validate($validator);
 

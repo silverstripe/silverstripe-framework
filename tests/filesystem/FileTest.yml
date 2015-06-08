@@ -35,6 +35,8 @@ Permission:
     Code: CMS_ACCESS_LeftAndMain
   assetadmin:
     Code: CMS_ACCESS_AssetAdmin
+  securityadmin:
+    Code: CMS_ACCESS_SecurityAdmin
 Group:
   admins:
     Title: Administrators
@@ -42,9 +44,12 @@ Group:
   cmsusers:
     Title: 'CMS Users'
     Permissions: =>Permission.cmsmain
+  securityusers:
+    Title: 'Security Users'
+    Permissions: =>Permission.securityadmin
   assetusers:
     Title: 'Asset Users'
-    Permissions: =>Permission.cmsmain, =>Permission.assetadmin
+    Permissions: =>Permission.assetadmin
 Member:
   frontend:
     Email: frontend@example.com
@@ -57,3 +62,6 @@ Member:
   assetadmin:
     Email: assetadmin@silverstripe.com
     Groups: =>Group.assetusers
+  security:
+    Email: security@silverstripe.com
+    Groups: =>Group.securityusers

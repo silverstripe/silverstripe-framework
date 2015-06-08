@@ -336,7 +336,7 @@ class DateField extends TextField {
 	/**
 	 * @return Boolean
 	 */
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 		$valid = true;
 
 		// Don't validate empty fields

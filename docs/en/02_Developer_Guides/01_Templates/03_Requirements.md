@@ -186,7 +186,7 @@ If the Javascript files are preferred to be placed in the `<head>` tag rather th
 `Requirements.write_js_to_body` should be set to false.
 
 	:::php
-	Requirements::set_force_js_to_bottom(true);
+	Requirements::set_write_js_to_body(false);
 
 
 ## API Documentation

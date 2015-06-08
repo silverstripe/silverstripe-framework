@@ -29,16 +29,6 @@
 			&.jstree-closed > ul {
 				display: none;
 			}
-			&.disabled > a {
-				color: #aaaaaa;
-				&:hover {
-					background: transparent;
-					cursor: default;
-				}
-			}
-			&.edit-disabled > a {
-				color: #aaaaaa;
-			}
 			// Expand/collapse arrows
 			& > .jstree-icon {
 				cursor: pointer;
@@ -62,7 +52,7 @@
 			text-decoration: none;
 			padding: 1px 2px;
 			margin: 0;
-			border: 1px solid #fff;	
+			border: 1px solid #fff;
 			&:focus,
 			&:active,
 			&:hover {
@@ -70,16 +60,12 @@
 				cursor: pointer;
 				text-shadow:1px 1px 1px white;
 			}
-			> {
-				ins {
-					height: 16px;
+			ins {
+				height: 16px;
+				width: 12px;
+				&.jstree-checkbox {
+					height: 19px; //Larger to help avoid accidental page loads when trying to click checkboxes
 					width: 16px;
-					&.jstree-checkbox {
-						height:19px; //Larger to help avoid accidental page loads when trying to click checkboxes
-       				}
-				}
-				.jstree-icon {
-					margin-right: 3px;
 				}
 			}
 		}
@@ -153,7 +139,7 @@
 
 	// Show drag icons when draggable class is applied
 	.draggable a > .jstree-icon {
-		display: block;
+		display: none;
 		cursor: move; // Fallback for IE users
 		cursor: -moz-grab;
 		cursor: -webkit-grab;
@@ -445,9 +431,12 @@
 					background-position: -56px -36px;
 				}
 			}
-			&.status-deletedonlive {
-				.text {
-					text-decoration: line-through;
+			&.status-deletedonlive,
+			&.status-archived {
+				> a, > a:link {
+					.text {
+						text-decoration: line-through;
+					}
 				}
 			}
 			&.jstree-checked {
@@ -455,9 +444,16 @@
 					background-color: $color-cms-batchactions-menu-selected-background;
 				}
 			}
-			&.disabled {
-				> a > .jstree-checkbox {
-					background-position: -57px -54px;
+			&.disabled,
+			&.edit-disabled {
+				> a, > a:link {
+					color: $color-text-disabled;
+					background-color: transparent;
+					cursor: default;
+					
+					> .jstree-checkbox {
+						background-position: -57px -54px;
+					}
 				}
 			}
 			&.readonly {
@@ -491,7 +487,7 @@
 			text-shadow: none;
 			display: inline-block;
 			position: relative;
-			padding: 2px 3px 1px;
+			padding: 3px 3px 1px;
 			font-size: 0.75em;
 			line-height: 1em;
 			margin-left: 3px;
@@ -540,10 +536,10 @@
 			    border-color:#FFF0BC transparent;			    
 			}		
 		}
-		
+
 		.jstree-hovered {
 			text-shadow: none;
-			text-decoration: none;    
+			text-decoration: none;
 		}	
 		.jstree-closed > ins { 
 			background-position:0 0; 
@@ -555,18 +551,52 @@
 
 	// Applied to trees when displaying filter / search results.
 	&.filtered-list {
-		li.class-Page a {
+		li:not(.filtered-item) > a {
 			color: $color-text-disabled;
-		}
-
-		li.class-Page.filtered-item a {
-			color: $color-text-blue-link;
 		}
 	}
 }
 
+
+// For drag and drop icons to not appear whilst in multi-selection
+.cms-content-fields {
+	.cms-tree {
+		&.jstree {
+			.jstree-no-checkboxes {
+				li {
+					a {
+						padding-left: 15px;
+					}
+
+					.jstree-hovered,
+					.jstree-clicked,
+					a:focus {
+						padding-left: 3px;
+					}
+
+					.jstree-hovered,
+					.jstree-clicked,
+					a:focus {
+						.jstree-icon {
+							display: block;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// Override thirdparty themes
+.jstree-default a .jstree-icon,
+.jstree-default-rtl a .jstree-icon,
+.jstree-classic a .jstree-icon,
+.jstree-apple a .jstree-icon { 
+	background-position:-62px -19px;
+}
+
 /* ensure status is visible in sidebar */
-#cms-content-tools-CMSMain .cms-tree.jstree {
+.cms-content-tools .cms-tree.jstree {
 	li {
 		min-width: 159px;
 	}
@@ -639,11 +669,12 @@ a .jstree-pageicon {
 		color: $color;
 	}
 }
-@include tree-status-icon('modified', #ff7714, #fce2d0);
-@include tree-status-icon('addedtodraft', #e29a00, #f8f4d0);
-@include tree-status-icon('deletedonlive', #f0524f, #f9d6dd);
-@include tree-status-icon('removedfromdraft', #f0524f, #f9d6dd);
-@include tree-status-icon('workflow-approval', #0097d7, #d3f2ff);
+@include tree-status-icon('modified', #EE6214, #FFF4ED);
+@include tree-status-icon('addedtodraft', #EE6214, #FFF4ED);
+@include tree-status-icon('deletedonlive', #5F7688, #F5F5F5);
+@include tree-status-icon('archived', #5F7688, #F5F5F5);
+@include tree-status-icon('removedfromdraft', #5F7688, #F5F5F5);
+@include tree-status-icon('workflow-approval', #0070B4, #E8FAFF);
 
 .cms-tree {
 	visibility: hidden; // enabled by JS to avoid layout glitches

@@ -25,10 +25,12 @@ class DirectorTest extends SapphireTest {
 		if(!self::$originalRequestURI) {
 			self::$originalRequestURI = $_SERVER['REQUEST_URI'];
 		}
-
+		$_SERVER['REQUEST_URI'] = 'http://www.mysite.com';
+		
 		$this->originalGet = $_GET;
 		$this->originalSession = $_SESSION;
-
+		$_SESSION = array();
+		
 		Config::inst()->update('Director', 'rules', array(
 			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller',
 			'en-nz/$Action/$ID/$OtherID' => array(
@@ -136,27 +138,47 @@ class DirectorTest extends SapphireTest {
 	}
 
 	public function testAlternativeBaseURL() {
+		// Get original protocol and hostname
+		$rootURL = Director::protocolAndHost();
+		
 		// relative base URLs - you should end them in a /
 		Config::inst()->update('Director', 'alternate_base_url', '/relativebase/');
+		$_SERVER['REQUEST_URI'] = "$rootURL/relativebase/sub-page/";
+
 		$this->assertEquals('/relativebase/', Director::baseURL());
-		$this->assertEquals(Director::protocolAndHost() . '/relativebase/', Director::absoluteBaseURL());
-		$this->assertEquals(Director::protocolAndHost() . '/relativebase/subfolder/test',
-			Director::absoluteURL('subfolder/test'));
+		$this->assertEquals($rootURL . '/relativebase/', Director::absoluteBaseURL());
+		$this->assertEquals(
+			$rootURL . '/relativebase/subfolder/test',
+			Director::absoluteURL('subfolder/test')
+		);
 
 		// absolute base URLs - you should end them in a /
 		Config::inst()->update('Director', 'alternate_base_url', 'http://www.example.org/');
-		$_SERVER['REQUEST_URI'] = "http://www.example.org/";
+		$_SERVER['REQUEST_URI'] = "http://www.example.org/sub-page/";
 		$this->assertEquals('http://www.example.org/', Director::baseURL());
 		$this->assertEquals('http://www.example.org/', Director::absoluteBaseURL());
-		$this->assertEquals('http://www.example.org/', Director::absoluteURL(''));
-		$this->assertEquals('http://www.example.org/subfolder/test', Director::absoluteURL('subfolder/test'));
+		$this->assertEquals('http://www.example.org/sub-page/', Director::absoluteURL(''));
+		$this->assertEquals('http://www.example.org/', Director::absoluteURL('', true));
+		/*
+		 * See Legacy behaviour in testAbsoluteURL - sub-pages with '/' in the string are not correctly evaluated
+		$this->assertEquals(
+			'http://www.example.org/sub-page/subfolder/test',
+			Director::absoluteURL('subfolder/test')
+		);*/
+		$this->assertEquals(
+			'http://www.example.org/subfolder/test',
+			Director::absoluteURL('subfolder/test', true)
+		);
 
 		// Setting it to false restores functionality
 		Config::inst()->update('Director', 'alternate_base_url', false);
+		$_SERVER['REQUEST_URI'] = $rootURL;
 		$this->assertEquals(BASE_URL.'/', Director::baseURL());
-		$this->assertEquals(Director::protocolAndHost().BASE_URL.'/', Director::absoluteBaseURL(BASE_URL));
-		$this->assertEquals(Director::protocolAndHost().BASE_URL . '/subfolder/test',
-			Director::absoluteURL('subfolder/test'));
+		$this->assertEquals($rootURL.BASE_URL.'/', Director::absoluteBaseURL(BASE_URL));
+		$this->assertEquals(
+			$rootURL.BASE_URL . '/subfolder/test',
+			Director::absoluteURL('subfolder/test')
+		);
 	}
 
 	/**
@@ -418,6 +440,9 @@ class DirectorTest extends SapphireTest {
 	}
 
 	public function testIsHttps() {
+		if(!TRUSTED_PROXY) {
+			$this->markTestSkipped('Test cannot be run without trusted proxy');
+		}
 		// nothing available
 		$headers = array(
 			'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'

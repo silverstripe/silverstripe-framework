@@ -9,7 +9,7 @@
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 .cms .ss-ui-button { background-color: #e6e6e6; }
 .cms .ss-ui-button.ui-state-hover { background-color: #f3f3f3; }
-.cms .ss-ui-button.ss-ui-action-constructive { background-color: #1f9433; }
+.cms .ss-ui-button.ss-ui-action-constructive { background-color: #1F9433; }
 .cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover { background-color: #23a93a; }
 .cms .ss-ui-button.ss-gridfield-button-filter { background: #55a4d2 url(../../images/icons/filter-icons.png) no-repeat -14px 4px; }
 
@@ -20,7 +20,7 @@
 .ss-gridfield-button-filter.ss-ui-button.hover-alike { background-color: #338DC1; background-position: -16px 6px; filter: none; }
 
 .ss-gridfield-button-reset.ss-ui-button { background: #e6e6e6 url(../images/filter-icons.png) no-repeat 8px 5px; filter: none; }
-.ss-gridfield-button-reset.ss-ui-button.filtered:hover { background: red url(../images/filter-icons.png) no-repeat 8px -17px; filter: none; }
+.ss-gridfield-button-reset.ss-ui-button.filtered:hover { background: #f00 url(../images/filter-icons.png) no-repeat 8px -17px; filter: none; }
 .ss-gridfield-button-reset.ss-ui-button.filtered:active { background: #e60000 url(../images/filter-icons.png) no-repeat 9px -16px; filter: none; }
 
 .cms table.ss-gridfield-table tr td { border-right: 1px solid #9a9a9a; }
@@ -54,78 +54,78 @@ fieldset.switch-states .switch input.state-name { margin-left: -20px; }
 .cms-content-controls .preview-size-selector { display: none; }
 
 /** Helper SCSS file for generating sprites for the interface. */
-.btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-widget-content .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-widget-content .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-widget-content .btn-icon-add, .ui-state-default .btn-icon-addMedia, .ui-widget-content .btn-icon-addMedia, .ui-state-default .btn-icon-add_disabled, .ui-widget-content .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-widget-content .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-widget-content .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-widget-content .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-arrow-circle-double, .ui-widget-content .btn-icon-arrow-circle-double, .ui-state-default .btn-icon-back, .ui-widget-content .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-widget-content .btn-icon-back_disabled, .ui-state-default .btn-icon-chain--arrow, .ui-widget-content .btn-icon-chain--arrow, .ui-state-default .btn-icon-chain--exclamation, .ui-widget-content .btn-icon-chain--exclamation, .ui-state-default .btn-icon-chain--minus, .ui-widget-content .btn-icon-chain--minus, .ui-state-default .btn-icon-chain--pencil, .ui-widget-content .btn-icon-chain--pencil, .ui-state-default .btn-icon-chain--plus, .ui-widget-content .btn-icon-chain--plus, .ui-state-default .btn-icon-chain-small, .ui-widget-content .btn-icon-chain-small, .ui-state-default .btn-icon-chain-unchain, .ui-widget-content .btn-icon-chain-unchain, .ui-state-default .btn-icon-chain, .ui-widget-content .btn-icon-chain, .ui-state-default .btn-icon-cross-circle, .ui-widget-content .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-widget-content .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-cross, .ui-widget-content .btn-icon-cross, .ui-state-default .btn-icon-decline, .ui-widget-content .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-widget-content .btn-icon-decline_disabled, .ui-state-default .btn-icon-delete, .ui-widget-content .btn-icon-delete, .ui-state-default .btn-icon-deleteLight, .ui-widget-content .btn-icon-deleteLight, .ui-state-default .btn-icon-disk, .ui-widget-content .btn-icon-disk, .ui-state-default .btn-icon-document--pencil, .ui-widget-content .btn-icon-document--pencil, .ui-state-default .btn-icon-download-csv, .ui-widget-content .btn-icon-download-csv, .ui-state-default .btn-icon-drive-upload, .ui-widget-content .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-widget-content .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-grid_print, .ui-widget-content .btn-icon-grid_print, .ui-state-default .btn-icon-information, .ui-widget-content .btn-icon-information, .ui-state-default .btn-icon-magnifier, .ui-widget-content .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-widget-content .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-widget-content .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-widget-content .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-widget-content .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-widget-content .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-widget-content .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-widget-content .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-widget-content .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-widget-content .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-widget-content .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-widget-content .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-widget-content .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-widget-content .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-widget-content .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-widget-content .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled, .ui-widget-content .btn-icon-unpublish_disabled { background: url('../images/btn-icon-se43cec5357.png') no-repeat; }
+.btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-widget-content .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-widget-content .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-widget-content .btn-icon-add, .ui-state-default .btn-icon-addMedia, .ui-widget-content .btn-icon-addMedia, .ui-state-default .btn-icon-add_disabled, .ui-widget-content .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-widget-content .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-widget-content .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-widget-content .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-arrow-circle-double, .ui-widget-content .btn-icon-arrow-circle-double, .ui-state-default .btn-icon-back, .ui-widget-content .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-widget-content .btn-icon-back_disabled, .ui-state-default .btn-icon-chain--arrow, .ui-widget-content .btn-icon-chain--arrow, .ui-state-default .btn-icon-chain--exclamation, .ui-widget-content .btn-icon-chain--exclamation, .ui-state-default .btn-icon-chain--minus, .ui-widget-content .btn-icon-chain--minus, .ui-state-default .btn-icon-chain--pencil, .ui-widget-content .btn-icon-chain--pencil, .ui-state-default .btn-icon-chain--plus, .ui-widget-content .btn-icon-chain--plus, .ui-state-default .btn-icon-chain-small, .ui-widget-content .btn-icon-chain-small, .ui-state-default .btn-icon-chain-unchain, .ui-widget-content .btn-icon-chain-unchain, .ui-state-default .btn-icon-chain, .ui-widget-content .btn-icon-chain, .ui-state-default .btn-icon-cross-circle, .ui-widget-content .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-widget-content .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-cross, .ui-widget-content .btn-icon-cross, .ui-state-default .btn-icon-decline, .ui-widget-content .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-widget-content .btn-icon-decline_disabled, .ui-state-default .btn-icon-delete, .ui-widget-content .btn-icon-delete, .ui-state-default .btn-icon-deleteLight, .ui-widget-content .btn-icon-deleteLight, .ui-state-default .btn-icon-disk, .ui-widget-content .btn-icon-disk, .ui-state-default .btn-icon-document--pencil, .ui-widget-content .btn-icon-document--pencil, .ui-state-default .btn-icon-download-csv, .ui-widget-content .btn-icon-download-csv, .ui-state-default .btn-icon-drive-upload, .ui-widget-content .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-widget-content .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-grid_print, .ui-widget-content .btn-icon-grid_print, .ui-state-default .btn-icon-information, .ui-widget-content .btn-icon-information, .ui-state-default .btn-icon-magnifier, .ui-widget-content .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-widget-content .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-widget-content .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-widget-content .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-widget-content .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-widget-content .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-widget-content .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-widget-content .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-widget-content .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-widget-content .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-widget-content .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-widget-content .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-widget-content .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-widget-content .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-widget-content .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-widget-content .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled, .ui-widget-content .btn-icon-unpublish_disabled { background-image: url('../images/btn-icon-scb653ce8a9.png'); background-repeat: no-repeat; }
 
-.ui-state-default .btn-icon-accept, .ui-widget-content .btn-icon-accept { background-position: 0 -96px; }
-.ui-state-default .btn-icon-accept_disabled, .ui-widget-content .btn-icon-accept_disabled { background-position: 0 -80px; }
-.ui-state-default .btn-icon-add, .ui-widget-content .btn-icon-add { background-position: 0 0; }
-.ui-state-default .btn-icon-addMedia, .ui-widget-content .btn-icon-addMedia { background-position: 0 -208px; }
-.ui-state-default .btn-icon-add_disabled, .ui-widget-content .btn-icon-add_disabled { background-position: 0 -32px; }
-.ui-state-default .btn-icon-addpage, .ui-widget-content .btn-icon-addpage { background-position: 0 -144px; }
-.ui-state-default .btn-icon-addpage_disabled, .ui-widget-content .btn-icon-addpage_disabled { background-position: 0 -516px; }
-.ui-state-default .btn-icon-arrow-circle-135-left, .ui-widget-content .btn-icon-arrow-circle-135-left { background-position: 0 -356px; }
-.ui-state-default .btn-icon-arrow-circle-double, .ui-widget-content .btn-icon-arrow-circle-double { background-position: 0 -340px; }
-.ui-state-default .btn-icon-back, .ui-widget-content .btn-icon-back { background-position: 0 -372px; }
-.ui-state-default .btn-icon-back_disabled, .ui-widget-content .btn-icon-back_disabled { background-position: 0 -16px; }
-.ui-state-default .btn-icon-chain--arrow, .ui-widget-content .btn-icon-chain--arrow { background-position: 0 -740px; }
-.ui-state-default .btn-icon-chain--exclamation, .ui-widget-content .btn-icon-chain--exclamation { background-position: 0 -532px; }
-.ui-state-default .btn-icon-chain--minus, .ui-widget-content .btn-icon-chain--minus { background-position: 0 -756px; }
-.ui-state-default .btn-icon-chain--pencil, .ui-widget-content .btn-icon-chain--pencil { background-position: 0 -692px; }
-.ui-state-default .btn-icon-chain--plus, .ui-widget-content .btn-icon-chain--plus { background-position: 0 -724px; }
-.ui-state-default .btn-icon-chain-small, .ui-widget-content .btn-icon-chain-small { background-position: 0 -788px; }
-.ui-state-default .btn-icon-chain-unchain, .ui-widget-content .btn-icon-chain-unchain { background-position: 0 -500px; }
-.ui-state-default .btn-icon-chain, .ui-widget-content .btn-icon-chain { background-position: 0 -772px; }
-.ui-state-default .btn-icon-cross-circle, .ui-widget-content .btn-icon-cross-circle { background-position: 0 -468px; }
-.ui-state-default .btn-icon-cross-circle_disabled, .ui-widget-content .btn-icon-cross-circle_disabled { background-position: 0 -580px; }
-.ui-state-default .btn-icon-cross, .ui-widget-content .btn-icon-cross { background-position: 0 -276px; }
-.ui-state-default .btn-icon-decline, .ui-widget-content .btn-icon-decline { background-position: 0 -128px; }
-.ui-state-default .btn-icon-decline_disabled, .ui-widget-content .btn-icon-decline_disabled { background-position: 0 -192px; }
-.ui-state-default .btn-icon-delete, .ui-widget-content .btn-icon-delete { background-position: 0 -484px; }
-.ui-state-default .btn-icon-deleteLight, .ui-widget-content .btn-icon-deleteLight { background-position: 0 -307px; }
-.ui-state-default .btn-icon-disk, .ui-widget-content .btn-icon-disk { background-position: 0 -291px; }
-.ui-state-default .btn-icon-document--pencil, .ui-widget-content .btn-icon-document--pencil { background-position: 0 -564px; }
-.ui-state-default .btn-icon-download-csv, .ui-widget-content .btn-icon-download-csv { background-position: 0 -48px; }
-.ui-state-default .btn-icon-drive-upload, .ui-widget-content .btn-icon-drive-upload { background-position: 0 -436px; }
-.ui-state-default .btn-icon-drive-upload_disabled, .ui-widget-content .btn-icon-drive-upload_disabled { background-position: 0 -596px; }
-.ui-state-default .btn-icon-grid_print, .ui-widget-content .btn-icon-grid_print { background-position: 0 -260px; }
-.ui-state-default .btn-icon-information, .ui-widget-content .btn-icon-information { background-position: 0 -388px; }
-.ui-state-default .btn-icon-magnifier, .ui-widget-content .btn-icon-magnifier { background-position: 0 -548px; }
-.ui-state-default .btn-icon-minus-circle, .ui-widget-content .btn-icon-minus-circle { background-position: 0 -644px; }
-.ui-state-default .btn-icon-minus-circle_disabled, .ui-widget-content .btn-icon-minus-circle_disabled { background-position: 0 -660px; }
-.ui-state-default .btn-icon-navigation, .ui-widget-content .btn-icon-navigation { background-position: 0 -404px; }
-.ui-state-default .btn-icon-navigation_disabled, .ui-widget-content .btn-icon-navigation_disabled { background-position: 0 -452px; }
-.ui-state-default .btn-icon-network-cloud, .ui-widget-content .btn-icon-network-cloud { background-position: 0 -628px; }
-.ui-state-default .btn-icon-network-cloud_disabled, .ui-widget-content .btn-icon-network-cloud_disabled { background-position: 0 -708px; }
-.ui-state-default .btn-icon-pencil, .ui-widget-content .btn-icon-pencil { background-position: 0 -228px; }
-.ui-state-default .btn-icon-pencil_disabled, .ui-widget-content .btn-icon-pencil_disabled { background-position: 0 -612px; }
-.ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-widget-content .btn-icon-plug-disconnect-prohibition { background-position: 0 -244px; }
-.ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-widget-content .btn-icon-plug-disconnect-prohibition_disabled { background-position: 0 -676px; }
-.ui-state-default .btn-icon-preview, .ui-widget-content .btn-icon-preview { background-position: 0 -64px; }
-.ui-state-default .btn-icon-preview_disabled, .ui-widget-content .btn-icon-preview_disabled { background-position: 0 -160px; }
-.ui-state-default .btn-icon-settings, .ui-widget-content .btn-icon-settings { background-position: 0 -324px; }
-.ui-state-default .btn-icon-settings_disabled, .ui-widget-content .btn-icon-settings_disabled { background-position: 0 -420px; }
-.ui-state-default .btn-icon-unpublish, .ui-widget-content .btn-icon-unpublish { background-position: 0 -112px; }
-.ui-state-default .btn-icon-unpublish_disabled, .ui-widget-content .btn-icon-unpublish_disabled { background-position: 0 -176px; }
+.ui-state-default .btn-icon-accept, .ui-widget-content .btn-icon-accept { background-position: 0 0; }
+.ui-state-default .btn-icon-accept_disabled, .ui-widget-content .btn-icon-accept_disabled { background-position: 0 -16px; }
+.ui-state-default .btn-icon-add, .ui-widget-content .btn-icon-add { background-position: 0 -32px; }
+.ui-state-default .btn-icon-addMedia, .ui-widget-content .btn-icon-addMedia { background-position: 0 -48px; }
+.ui-state-default .btn-icon-add_disabled, .ui-widget-content .btn-icon-add_disabled { background-position: 0 -68px; }
+.ui-state-default .btn-icon-addpage, .ui-widget-content .btn-icon-addpage { background-position: 0 -84px; }
+.ui-state-default .btn-icon-addpage_disabled, .ui-widget-content .btn-icon-addpage_disabled { background-position: 0 -100px; }
+.ui-state-default .btn-icon-arrow-circle-135-left, .ui-widget-content .btn-icon-arrow-circle-135-left { background-position: 0 -116px; }
+.ui-state-default .btn-icon-arrow-circle-double, .ui-widget-content .btn-icon-arrow-circle-double { background-position: 0 -132px; }
+.ui-state-default .btn-icon-back, .ui-widget-content .btn-icon-back { background-position: 0 -148px; }
+.ui-state-default .btn-icon-back_disabled, .ui-widget-content .btn-icon-back_disabled { background-position: 0 -164px; }
+.ui-state-default .btn-icon-chain--arrow, .ui-widget-content .btn-icon-chain--arrow { background-position: 0 -180px; }
+.ui-state-default .btn-icon-chain--exclamation, .ui-widget-content .btn-icon-chain--exclamation { background-position: 0 -196px; }
+.ui-state-default .btn-icon-chain--minus, .ui-widget-content .btn-icon-chain--minus { background-position: 0 -212px; }
+.ui-state-default .btn-icon-chain--pencil, .ui-widget-content .btn-icon-chain--pencil { background-position: 0 -228px; }
+.ui-state-default .btn-icon-chain--plus, .ui-widget-content .btn-icon-chain--plus { background-position: 0 -244px; }
+.ui-state-default .btn-icon-chain-small, .ui-widget-content .btn-icon-chain-small { background-position: 0 -260px; }
+.ui-state-default .btn-icon-chain-unchain, .ui-widget-content .btn-icon-chain-unchain { background-position: 0 -276px; }
+.ui-state-default .btn-icon-chain, .ui-widget-content .btn-icon-chain { background-position: 0 -292px; }
+.ui-state-default .btn-icon-cross-circle, .ui-widget-content .btn-icon-cross-circle { background-position: 0 -308px; }
+.ui-state-default .btn-icon-cross-circle_disabled, .ui-widget-content .btn-icon-cross-circle_disabled { background-position: 0 -324px; }
+.ui-state-default .btn-icon-cross, .ui-widget-content .btn-icon-cross { background-position: 0 -340px; }
+.ui-state-default .btn-icon-decline, .ui-widget-content .btn-icon-decline { background-position: 0 -355px; }
+.ui-state-default .btn-icon-decline_disabled, .ui-widget-content .btn-icon-decline_disabled { background-position: 0 -371px; }
+.ui-state-default .btn-icon-delete, .ui-widget-content .btn-icon-delete { background-position: 0 -387px; }
+.ui-state-default .btn-icon-deleteLight, .ui-widget-content .btn-icon-deleteLight { background-position: 0 -403px; }
+.ui-state-default .btn-icon-disk, .ui-widget-content .btn-icon-disk { background-position: 0 -420px; }
+.ui-state-default .btn-icon-document--pencil, .ui-widget-content .btn-icon-document--pencil { background-position: 0 -436px; }
+.ui-state-default .btn-icon-download-csv, .ui-widget-content .btn-icon-download-csv { background-position: 0 -452px; }
+.ui-state-default .btn-icon-drive-upload, .ui-widget-content .btn-icon-drive-upload { background-position: 0 -468px; }
+.ui-state-default .btn-icon-drive-upload_disabled, .ui-widget-content .btn-icon-drive-upload_disabled { background-position: 0 -484px; }
+.ui-state-default .btn-icon-grid_print, .ui-widget-content .btn-icon-grid_print { background-position: 0 -500px; }
+.ui-state-default .btn-icon-information, .ui-widget-content .btn-icon-information { background-position: 0 -516px; }
+.ui-state-default .btn-icon-magnifier, .ui-widget-content .btn-icon-magnifier { background-position: 0 -532px; }
+.ui-state-default .btn-icon-minus-circle, .ui-widget-content .btn-icon-minus-circle { background-position: 0 -548px; }
+.ui-state-default .btn-icon-minus-circle_disabled, .ui-widget-content .btn-icon-minus-circle_disabled { background-position: 0 -564px; }
+.ui-state-default .btn-icon-navigation, .ui-widget-content .btn-icon-navigation { background-position: 0 -580px; }
+.ui-state-default .btn-icon-navigation_disabled, .ui-widget-content .btn-icon-navigation_disabled { background-position: 0 -596px; }
+.ui-state-default .btn-icon-network-cloud, .ui-widget-content .btn-icon-network-cloud { background-position: 0 -612px; }
+.ui-state-default .btn-icon-network-cloud_disabled, .ui-widget-content .btn-icon-network-cloud_disabled { background-position: 0 -628px; }
+.ui-state-default .btn-icon-pencil, .ui-widget-content .btn-icon-pencil { background-position: 0 -644px; }
+.ui-state-default .btn-icon-pencil_disabled, .ui-widget-content .btn-icon-pencil_disabled { background-position: 0 -660px; }
+.ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-widget-content .btn-icon-plug-disconnect-prohibition { background-position: 0 -676px; }
+.ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-widget-content .btn-icon-plug-disconnect-prohibition_disabled { background-position: 0 -692px; }
+.ui-state-default .btn-icon-preview, .ui-widget-content .btn-icon-preview { background-position: 0 -708px; }
+.ui-state-default .btn-icon-preview_disabled, .ui-widget-content .btn-icon-preview_disabled { background-position: 0 -724px; }
+.ui-state-default .btn-icon-settings, .ui-widget-content .btn-icon-settings { background-position: 0 -740px; }
+.ui-state-default .btn-icon-settings_disabled, .ui-widget-content .btn-icon-settings_disabled { background-position: 0 -756px; }
+.ui-state-default .btn-icon-unpublish, .ui-widget-content .btn-icon-unpublish { background-position: 0 -772px; }
+.ui-state-default .btn-icon-unpublish_disabled, .ui-widget-content .btn-icon-unpublish_disabled { background-position: 0 -788px; }
 
 .icon { text-indent: -9999px; border: none; outline: none; }
-.icon.icon-24 { width: 24px; height: 24px; background: url('../images/menu-icons/24x24-s391afdd013.png'); }
-.icon.icon-24.icon-assetadmin { background-position: 0 -120px; }
-.icon.icon-24.icon-cmsmain { background-position: 0 -48px; }
-.icon.icon-24.icon-cmspagescontroller { background-position: 0 -216px; }
-.icon.icon-24.icon-cmssettingscontroller { background-position: 0 0; }
+.icon.icon-24 { width: 24px; height: 24px; background: url('../images/menu-icons/24x24-s0dc15c36f9.png'); }
+.icon.icon-24.icon-assetadmin { background-position: 0 -216px; }
+.icon.icon-24.icon-cmsmain { background-position: 0 -192px; }
+.icon.icon-24.icon-cmspagescontroller { background-position: 0 -168px; }
+.icon.icon-24.icon-cmssettingscontroller { background-position: 0 -96px; }
 .icon.icon-24.icon-securityadmin { background-position: 0 -24px; }
-.icon.icon-24.icon-reportadmin { background-position: 0 -72px; }
-.icon.icon-24.icon-commentadmin { background-position: 0 -192px; }
-.icon.icon-24.icon-help { background-position: 0 -96px; }
-.icon.icon-16 { width: 16px; height: 16px; background: url('../images/menu-icons/16x16-sf5b94bb49b.png'); }
-.icon.icon-16.icon-assetadmin { background-position: 0 -80px; }
-.icon.icon-16.icon-cmsmain { background-position: 0 -16px; }
+.icon.icon-24.icon-reportadmin { background-position: 0 -240px; }
+.icon.icon-24.icon-commentadmin { background-position: 0 0; }
+.icon.icon-24.icon-help { background-position: 0 -144px; }
+.icon.icon-16 { width: 16px; height: 16px; background: url('../images/menu-icons/16x16-s3f4c846209.png'); }
+.icon.icon-16.icon-assetadmin { background-position: 0 -144px; }
+.icon.icon-16.icon-cmsmain { background-position: 0 -128px; }
 .icon.icon-16.icon-cmspagescontroller { background-position: 0 -112px; }
-.icon.icon-16.icon-cmssettingscontroller { background-position: 0 0; }
-.icon.icon-16.icon-securityadmin { background-position: 0 -48px; }
-.icon.icon-16.icon-reportadmin { background-position: 0 -32px; }
-.icon.icon-16.icon-commentadmin { background-position: 0 -144px; }
-.icon.icon-16.icon-help { background-position: 0 -64px; }
+.icon.icon-16.icon-cmssettingscontroller { background-position: 0 -64px; }
+.icon.icon-16.icon-securityadmin { background-position: 0 -16px; }
+.icon.icon-16.icon-reportadmin { background-position: 0 -160px; }
+.icon.icon-16.icon-commentadmin { background-position: 0 0; }
+.icon.icon-16.icon-help { background-position: 0 -96px; }
 
 html { overflow: hidden; }
 

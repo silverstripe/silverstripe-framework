@@ -293,8 +293,15 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			onremove: function() {
 				var ed = tinyMCE.get(this.attr('id'));
 				if (ed) {
-					ed.remove();
-					ed.destroy();
+					try {
+						ed.remove();
+					} catch(ex) {}
+					try {
+						ed.destroy();
+					} catch(ex) {}
+					
+					// Remove any residual tinyMCE editor element
+					this.next('.mceEditor').remove();
 
 					// TinyMCE leaves behind events. We should really fix TinyMCE, but lets brute force it for now
 					$.each(jQuery.cache, function(){

@@ -11,6 +11,6 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
     "ModelAdmin.REALLYDELETE": "Vill du verkligen radera?",
     "ModelAdmin.DELETED": "Raderad",
     "ModelAdmin.VALIDATIONERROR": "Valideringsfel",
-    "LeftAndMain.PAGEWASDELETED": "Sidan raderades. För att redigera en sida, välj den från menyn till vänster."
+    "LeftAndMain.PAGEWASDELETED": "Sidan raderades. För att redigera en sida, välj den i menyn till vänster."
 });
 }

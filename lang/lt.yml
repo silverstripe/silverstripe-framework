@@ -60,6 +60,8 @@ lt:
     ERRORNOTREC: 'Toks vartotojo vardas / slaptažodis neatpažintas'
   Boolean:
     ANY: Bet koks
+    NOANSWER: 'Ne'
+    YESANSWER: 'Taip'
   CMSLoadingScreen_ss:
     LOADING: Keliama...
     REQUIREJS: 'Šiai TVS būtina įjungti JavaScript.'
@@ -78,6 +80,23 @@ lt:
     EMAIL: El. paštas
     HELLO: Sveiki
     PASSWORD: Slaptažodis
+  CheckboxField:
+    NOANSWER: 'Ne'
+    YESANSWER: 'Taip'
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Pamiršote slaptažodį?'
+    BUTTONLOGIN: 'Prisijungti'
+    BUTTONLOGOUT: 'Atsijungti'
+    PASSWORDEXPIRED: '<p>Jūsų slaptažodžio galiojimas pasibaigė. <a target="_top" href="{link}">Prašome sukurti naują.</a></p>'
+  CMSSecurity:
+    INVALIDUSER: '<p>Blogas vartotojas. Norėdami tęsti, prašome <a target="_top" href="{link}">prisijungti</a> iš naujo.</p>'
+    LoginMessage: '<p>Jei dar neišsaugojote padarytus pakeitimus, jūs galėsite tęsti darbą, prisijungę žemiau esančioje formoje.</p>'
+    SUCCESS: Sėkmingai
+    SUCCESSCONTENT: '<p>Sėkmingai prisijungėte. Jeigu jūsų automatiškai nenukreipia, <a target="_top" href="{link}">spauskite čia</a></p>'
+    TimedOutTitleAnonymous: 'Jūsų prisijungimo galiojimas pasibaigė.'
+    TimedOutTitleMember: 'Sveiki, {name}!<br />Jūsų prisijungimo galiojimas pasibaigė.'
   ConfirmedPasswordField:
     ATLEAST: 'Slaptažodžiai privalo būti bent {min} simbolių ilgio.'
     BETWEEN: 'Slaptažodžiai privalo būti nuo {min} iki {max} simbolių ilgio.'
@@ -124,6 +143,7 @@ lt:
   DropdownField:
     CHOOSE: (Pasirinkti)
     CHOOSESEARCH: '(Pasirinkti arba Ieškoti)'
+    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
   EmailField:
     VALIDATION: 'Prašome suvesti el. pašto adresą'
   Enum:
@@ -171,7 +191,9 @@ lt:
     TEXT2: 'slaptažodžio atstatymo nuoroda'
     TEXT3: svetainei
   Form:
-    CSRF_FAILED_MESSAGE: "Iškilo techninė problema. Prašome paspausti mygtuką Atgal,\nperkraukite naršyklės langą ir bandykite vėl."
+    CSRF_FAILED_MESSAGE: 'Iškilo techninė problema. Prašome paspausti mygtuką Atgal,
+
+      perkraukite naršyklės langą ir bandykite vėl.'
     FIELDISREQUIRED: '{name} yra privalomas'
     SubmitBtnLabel: Vykdyti
     VALIDATIONCREDITNUMBER: 'Prašome įsitikinti, ar teisingai suvedėte kreditinės kortelės numerį {number}'
@@ -238,7 +260,8 @@ lt:
     many_many_Members: Vartotojai
   GroupImportForm:
     Help1: '<p>Importuoti vieną ar kelias grupes <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href="#" class="toggle-advanced">Rodyti detalesnį aprašymą</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Detalesnis aprašymas</h4>\n<ul>\n<li>Galimi stulpeliai: <em>%s</em></li>\n<li>Esamos grupės yra surišamos su jų unikalia <em>Code</em> reikšme ir atnaujinamos duomenimis iš importuojamos bylos</li>\n<li>Grupių hierarchija gali būti sukurta naudojant <em>ParentCode</em> stulpelį.</li>\n<li>Leidimų gali būti priskirti naudojant <em>PermissionCode</em> stulpelį. Esami leidimai nebus pakeisti.</li>\n</ul>\n</div>"
+    Help2: "<div class=\"advanced\">\n\t<h4>Sudėtingesni pasirinkimai</h4>\n\t<ul>\n\t<li>Galimi stulpeliai: <em>%s</em></li>\n\t<li>Esamos grupės yra surišamos su jų unikalia <em>Code</em> reikšme ir atnaujinamos duomenimis iš importuojamos bylos</li>\n\t<li>Grupių hierarchija gali būti sukurta naudojant <em>ParentCode</em> stulpelį.</li>\n\t<li>Leidimų kodai gali būti priskirti naudojant <em>PermissionCode</em> stulpelį. Esami leidimai nebus pakeisti.</li>\n\t</ul>\n\
+      </div>"
     ResultCreated: 'Sukurta {count} grupių'
     ResultDeleted: 'Ištrinta %d grupių'
     ResultUpdated: 'Atnaujinta %d grupių'
@@ -247,6 +270,8 @@ lt:
   HtmlEditorField:
     ADDURL: 'Pridėti URL'
     ADJUSTDETAILSDIMENSIONS: 'Detalesnė inf. ir matmenys'
+    ANCHORSCANNOTACCESSPAGE: 'Neturite teisių pasiekti pasirinkto puslapio turinį.'
+    ANCHORSPAGENOTFOUND: 'Pasirinktas puslapis nerastas.'
     ANCHORVALUE: Nuoroda
     BUTTONADDURL: 'Pridėti URL'
     BUTTONINSERT: Įterpti
@@ -290,6 +315,7 @@ lt:
     URL: URL adresas
     URLNOTANOEMBEDRESOURCE: 'Nepavyko URL nuorodos ''{url}'' panaudoti media turiniui.'
     UpdateMEDIA: 'Atnaujinti media'
+    SUBJECT: 'El. laiško tema'
   Image:
     PLURALNAME: Bylos
     SINGULARNAME: Byla
@@ -318,6 +344,8 @@ lt:
   LeftAndMain_Menu_ss:
     Hello: Sveiki
     LOGOUT: 'Atsijungti'
+  ListboxField:
+    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
   LoginAttempt:
     Email: 'E. pašto adresas'
     IP: 'IP adresas'
@@ -350,6 +378,7 @@ lt:
     NEWPASSWORD: 'Naujas slaptažodis'
     NoPassword: 'Šis vartotojas neturi slaptažodžio.'
     PASSWORD: Slaptažodis
+    PASSWORDEXPIRED: 'Jūsų slaptažodžio galiojimas pasibaigė. Prašome sukurti naują.'
     PLURALNAME: Vartotojai
     REMEMBERME: 'Prisiminti jungiantis kitą kartą?'
     SINGULARNAME: Vartotojas
@@ -456,8 +485,8 @@ lt:
     SINGULARNAME: Rolė
     Title: Pavadinimas
   PermissionRoleCode:
-    PLURALNAME: 'Leidimų rolių kodai'
     PermsError: 'Nepavyko priskirto kodo "%s" su priskirtais leidimais (būtina ADMIN prieiga)'
+    PLURALNAME: 'Leidimų rolių kodai'
     SINGULARNAME: 'Leidimų rolių kodai'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rolės ir priėjimo leidimai'
@@ -557,3 +586,5 @@ lt:
     UPLOADSINTO: 'saugo į /{path}'
   Versioned:
     has_many_Versions: Versijos
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'

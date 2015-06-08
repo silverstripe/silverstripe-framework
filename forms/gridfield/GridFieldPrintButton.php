@@ -204,8 +204,9 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 			$itemRows->push(new ArrayData(array(
 				"ItemRow" => $itemRow
 			)));
-
-			$item->destroy();
+			if ($item->hasMethod('destroy')) {
+				$item->destroy();
+			}
 		}
 
 		$ret = new ArrayData(array(

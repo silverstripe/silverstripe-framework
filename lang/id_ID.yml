@@ -1,0 +1,588 @@
+id_ID:
+  AssetAdmin:
+    NEWFOLDER: FolderBaru
+    SHOWALLOWEDEXTS: 'Tampilkan ekstensi yang dibolehkan'
+  AssetTableField:
+    CREATED: 'Pertama diunggah'
+    DIM: Dimensi
+    FILENAME: Nama berkas
+    FOLDER: Folder
+    LASTEDIT: 'Terakhir diubah'
+    OWNER: Pemilik
+    SIZE: 'Ukuran berkas'
+    TITLE: Judul
+    TYPE: 'Jenis berkas'
+    URL: URL
+  AssetUploadField:
+    ChooseFiles: 'Pilih berkas'
+    DRAGFILESHERE: 'Tarik berkas ke sini'
+    DROPAREA: 'Area Taruh'
+    EDITALL: 'Edit semua'
+    EDITANDORGANIZE: 'Edit & kelola'
+    EDITINFO: 'Edit berkas'
+    FILES: Berkas
+    FROMCOMPUTER: 'Pilih berkas dari komputer Anda'
+    FROMCOMPUTERINFO: 'Unggah dari komputer Anda'
+    TOTAL: Total
+    TOUPLOAD: 'Pilih berkas untuk diunggah...'
+    UPLOADINPROGRESS: 'Mohon tunggu... sedang mengunggah'
+    UPLOADOR: ATAU
+  BBCodeParser:
+    ALIGNEMENT: Perataan
+    ALIGNEMENTEXAMPLE: 'rata kanan'
+    BOLD: 'Teks Tebal'
+    BOLDEXAMPLE: Tebal
+    CODE: 'Blok Kode'
+    CODEDESCRIPTION: 'Blok kode tanpa format'
+    CODEEXAMPLE: 'Blok kode'
+    COLORED: 'Teks berwarna'
+    COLOREDEXAMPLE: 'teks biru'
+    EMAILLINK: 'Tautan email'
+    EMAILLINKDESCRIPTION: 'Buat tautan ke alamat email'
+    IMAGE: Gambar
+    IMAGEDESCRIPTION: 'Tampilkan gambar pada entri'
+    ITALIC: 'Teks Miring'
+    ITALICEXAMPLE: Miring
+    LINK: 'Tautan situs'
+    LINKDESCRIPTION: 'Tautan ke situs atau URL lain'
+    STRUCK: 'Teks Coret'
+    STRUCKEXAMPLE: Coret
+    UNDERLINE: 'Teks Garis Bawah'
+    UNDERLINEEXAMPLE: Garis Bawah
+    UNORDERED: 'daftar acak'
+    UNORDEREDDESCRIPTION: 'Daftar acak'
+    UNORDEREDEXAMPLE1: 'Item acak 1'
+  BackLink_Button_ss:
+    Back: Kembali
+  BasicAuth:
+    ENTERINFO: 'Mohon isikan nama pengguna dan kata kunci.'
+    ERRORNOTADMIN: 'Pengguna tersebut bukan pengelola.'
+    ERRORNOTREC: 'Nama pengguna dan kata kunci tidak dikenal'
+  Boolean:
+    ANY: Semua
+    NOANSWER: 'Tidak'
+    YESANSWER: 'Ya'
+  CMSLoadingScreen_ss:
+    LOADING: Memuat...
+    REQUIREJS: 'CMS memerlukan pengaktifan JavaScript.'
+  CMSMain:
+    ACCESS: 'Akses ke bagian ''{title}'''
+    ACCESSALLINTERFACES: 'Akses ke semua bagian CMS'
+    ACCESSALLINTERFACESHELP: 'Kesampingkan pengaturan akses yang spesifik.'
+    SAVE: Simpan
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Pratinjau situs'
+  CMSProfileController:
+    MENUTITLE: 'Profil Saya'
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Anda mengganti kata kunci menjadi'
+    CHANGEPASSWORDTEXT2: 'Anda sekarang dapat menggunakannya untuk masuk:'
+    EMAIL: Email
+    HELLO: Hai
+    PASSWORD: Kata kunci
+  CheckboxField:
+    NOANSWER: 'Tidak'
+    YESANSWER: 'Ya'
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Lupa kata kunci?'
+    BUTTONLOGIN: 'Masuk kembali'
+    BUTTONLOGOUT: 'Keluar'
+    PASSWORDEXPIRED: '<p>Kata kunci Anda telah kadaluarsa. <a target="_top" href="{link}">Mohon buat yang baru.</a></p>'
+  CMSSecurity:
+    INVALIDUSER: '<p>Pengguna tidak dikenal. <a target="_top" href="{link}">Mohon otentikasi ulang di sini</a> untuk melanjutkan.</p>'
+    LoginMessage: '<p>Jika ada pekerjaan yang belum tersimpan, Anda dapat kembali dengan masuk di sini.</p>'
+    SUCCESS: Berhasil
+    SUCCESSCONTENT: '<p>Berhasil masuk. Jika tidak secara otomatis diarahkan, klik <a target="_top" href="{link}">di sini</a></p>'
+    TimedOutTitleAnonymous: 'Sesi Anda sudah habis.'
+    TimedOutTitleMember: 'Hai {name}!<br />Sesi Anda sudah habis.'
+  ConfirmedPasswordField:
+    ATLEAST: 'Kata kunci harus setidaknya terdiri dari {min} karakter.'
+    BETWEEN: 'Kata kunci harus terdiri dari minimal {min} sampai {max} karakter.'
+    MAXIMUM: 'Kata kunci tidak boleh lebih dari {max} karakter.'
+    SHOWONCLICKTITLE: 'Ganti Kata Kunci'
+  ContentController:
+    NOTLOGGEDIN: 'Belum masuk'
+  CreditCardField:
+    FIRST: pertama
+    FOURTH: keempat
+    SECOND: kedua
+    THIRD: ketiga
+  CurrencyField:
+    CURRENCYSYMBOL: $
+  DataObject:
+    PLURALNAME: 'Obyek Data'
+    SINGULARNAME: 'Obyek Data'
+  Date:
+    DAY: hari
+    DAYS: hari
+    HOUR: jam
+    HOURS: jam
+    LessThanMinuteAgo: 'kurang dari semenit'
+    MIN: mnt
+    MINS: mnt
+    MONTH: bulan
+    MONTHS: bulan
+    SEC: dtk
+    SECS: dtk
+    TIMEDIFFAGO: '{difference} yang lalu'
+    TIMEDIFFIN: 'pada {difference}'
+    YEAR: tahun
+    YEARS: tahun
+  DateField:
+    NOTSET: 'tidak diatur'
+    TODAY: hari ini
+    VALIDDATEFORMAT2: 'Mohon isikan format tanggal yang valid ({format})'
+    VALIDDATEMAXDATE: 'Tanggal Anda harus lebih lama atau sama dengan tanggal maksimum ({date})'
+    VALIDDATEMINDATE: 'Tanggal Anda harus lebih baru atau sama dengan tanggal minimum ({date})'
+  DatetimeField:
+    NOTSET: 'Tidak diatur'
+  Director:
+    INVALID_REQUEST: 'Permintaan tidak valid'
+  DropdownField:
+    CHOOSE: (Pilih)
+    CHOOSESEARCH: '(Pilih atau Cari)'
+    SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
+  EmailField:
+    VALIDATION: 'Mohon isikan alamat email'
+  Enum:
+    ANY: Semua
+  File:
+    AviType: 'Berkas video AVI'
+    Content: Konten
+    CssType: 'Berkas CSS'
+    DmgType: 'Imej cakram Apple'
+    DocType: 'Dokumen Word'
+    Filename: Nama berkas
+    GifType: 'Gambar GIF - bagus untuk diagram'
+    GzType: 'Berkas kompresi GZIP'
+    HtlType: 'Berkas HTML'
+    HtmlType: 'Berkas HTML'
+    INVALIDEXTENSION: 'Ekstensi tidak dibolehkan (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Ekstensi tidak dibolehkan'
+    IcoType: 'Gambar ikon'
+    JpgType: 'Gambar JPEG - bagus untuk foto'
+    JsType: 'Berkas Javascript'
+    Mp3Type: 'Berkas audio MP3'
+    MpgType: 'Berkas video MPEG'
+    NOFILESIZE: 'Ukuran berkas nol byte.'
+    NOVALIDUPLOAD: 'Berkas tidak diunggah dengan benar'
+    Name: Nama
+    PLURALNAME: Berkas
+    PdfType: 'Berkas PDF Adobe Acrobat'
+    PngType: 'Gambar PNG - bagus untuk format serba-bisa'
+    SINGULARNAME: Berkas
+    TOOLARGE: 'Ukuran berkas terlalu besar, maksimal {size} dibolehkan'
+    TOOLARGESHORT: 'Ukuran berkas melebihi {size}'
+    TiffType: 'Format gambar tertanda'
+    Title: Judul
+    WavType: 'Berkas audio WAV'
+    XlsType: 'Dokumen Excel'
+    ZipType: 'Berkas kompresi ZIP'
+  Filesystem:
+    SYNCRESULTS: 'Penyelarasan selesai: {createdcount} item dibuat, {deletedcount} item dihapus'
+  Folder:
+    PLURALNAME: Folder
+    SINGULARNAME: Folder
+  ForgotPasswordEmail_ss:
+    HELLO: Hai
+    TEXT1: 'Berikut ini '
+    TEXT2: 'tautan ganti kata kunci'
+    TEXT3: untuk
+  Form:
+    CSRF_FAILED_MESSAGE: 'Kemungkinan ada masalah teknis. Mohon klik tombol kembali, muat ulang browser, dan coba lagi.'
+    FIELDISREQUIRED: '{name} wajib diisi'
+    SubmitBtnLabel: Lanjut
+    VALIDATIONCREDITNUMBER: 'Mohon pastikan Anda sudah mengisi nomer kartu kredit {number} dengan benar'
+    VALIDATIONNOTUNIQUE: 'Nilai yang diisikan tidak unik'
+    VALIDATIONPASSWORDSDONTMATCH: 'Kata kunci tidak sesuai'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Kata kunci tidak boleh kosong'
+    VALIDATIONSTRONGPASSWORD: 'Kata kunci harus setidaknya terdiri dari satu angka dan satu karakter alfanumerik'
+    VALIDATOR: Validasi
+    VALIDCURRENCY: 'Mohon isikan mata uang yang benar'
+    CSRF_EXPIRED_MESSAGE: 'Sesi Anda sudah habis. Mohon kirim ulang formulir.'
+  FormField:
+    Example: 'misalnya %s'
+    NONE: tidak ada
+  GridAction:
+    DELETE_DESCRIPTION: Hapus
+    Delete: Hapus
+    UnlinkRelation: Unlink
+  GridField:
+    Add: 'Tambah {name}'
+    Filter: Saring
+    FilterBy: 'Saring menurut '
+    Find: Cari
+    LEVELUP: 'Ke atas'
+    LinkExisting: 'Tautan yang Ada'
+    NewRecord: '%s baru'
+    NoItemsFound: 'Tidak ada data'
+    PRINTEDAT: 'Dicetak pada'
+    PRINTEDBY: 'Dicetak oleh'
+    PlaceHolder: 'Cari {type}'
+    PlaceHolderWithLabels: 'Cari {type} menurut {name}'
+    RelationSearch: 'Cari yang terkait'
+    ResetFilter: Reset
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'Tidak ada ijin menghapus'
+    EditPermissionsFailure: 'Tidak ada ijin membuka tautan'
+  GridFieldDetailForm:
+    CancelBtn: Batal
+    Create: Buat
+    Delete: Hapus
+    DeletePermissionsFailure: 'Tidak ada ijin menghapus'
+    Deleted: '%s %s dihapus'
+    Save: Simpan
+    Saved: 'Simpan {name} {link}'
+  GridFieldEditButton_ss:
+    EDIT: Edit
+  GridFieldItemEditView:
+    Go_back: 'Kembali'
+  Group:
+    AddRole: 'Tambahkan peran untuk kelompok ini'
+    Code: 'Kode Kelompok'
+    DefaultGroupTitleAdministrators: Pengelola
+    DefaultGroupTitleContentAuthors: 'Penulis Konten'
+    Description: Deskripsi
+    GroupReminder: 'Jika Anda memilih kelompok induk, kelompok ini akan mengambil perannya'
+    HierarchyPermsError: 'Tidak dapat menghubungkan kelompok induk "%s" dengan perijinan khusus (memerlukan akses PENGELOLA)'
+    Locked: 'Terkunci?'
+    NoRoles: 'Tidak ada peran'
+    PLURALNAME: Kelompok
+    Parent: 'Kelompok Induk'
+    RolesAddEditLink: 'Kelola peran'
+    SINGULARNAME: Kelompok
+    Sort: 'Urutkan'
+    has_many_Permissions: Perijinan
+    many_many_Members: Pengguna
+  GroupImportForm:
+    Help1: '<p>Impor satu atau lebih kelompok di format <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Tampilkan penggunaan mahir</a></small></p>'
+    Help2: "<div class=\"advanced\">\n\t<h4>Penggunaan mahir</h4>\n\t<ul>\n\t<li>Kolom yang dibolehkan: <em>%s</em></li>\n\t<li>Kelompok yang sudah terdata dihubungkan dengan nilai <em>Kode</em> uniknya, dan diperbarui dengan nilai apapun dari berkas yang diimpor</li>\n\t<li>Hirarki kelompok dapat dibuat dengan kolom <em>ParentCode</em>.</li>\n\t<li>Kode perijinan dapat dihubungkan dengan kolom <em>PermissionCode</em>. Perijinan yang sudah ada tidak akan terpengaruh.</li>\n\t</ul>\n</div>"
+    ResultCreated: '{count} kelompok dibuat'
+    ResultDeleted: '%d kelompok dihapus'
+    ResultUpdated: '%d kelompok diperbarui'
+  Hierarchy:
+    InfiniteLoopNotAllowed: 'Putaran berulang ditemukan pada hirarki "{type}". Mohon ganti induk untuk mengatasi masalah ini'
+  HtmlEditorField:
+    ADDURL: 'Tambah URL'
+    ADJUSTDETAILSDIMENSIONS: 'Rincian &amp; dimensi'
+    ANCHORSCANNOTACCESSPAGE: 'Anda tidak dijinkan mengakses konten laman yang diminta.'
+    ANCHORSPAGENOTFOUND: 'Laman yang diminta tidak ditemukan.'
+    ANCHORVALUE: Jangkar
+    BUTTONADDURL: 'Tambah URL'
+    BUTTONINSERT: Sisip
+    BUTTONINSERTLINK: 'Sisip tautan'
+    BUTTONREMOVELINK: 'Hapus tautan'
+    BUTTONUpdate: Perbarui
+    CAPTIONTEXT: 'Keterangan'
+    CSSCLASS: 'Perataan / gaya teks'
+    CSSCLASSCENTER: 'Rata tengah, mandiri'
+    CSSCLASSLEFT: 'Rata kiri, dengan teks menyesuaikan.'
+    CSSCLASSLEFTALONE: 'Rata kiri, mandiri.'
+    CSSCLASSRIGHT: 'Rata kanan, degan teks menyesuaikan.'
+    DETAILS: Rincian
+    EMAIL: 'Alamat email'
+    FILE: Berkas
+    FOLDER: Folder
+    FROMCMS: 'Dari CMS'
+    FROMCOMPUTER: 'Dari komputer Anda'
+    FROMWEB: 'Dari situs lain'
+    FindInFolder: 'Temukan di Folder'
+    IMAGEALT: 'Teks alternatif (alt)'
+    IMAGEALTTEXT: 'Teks alternatif (alt) - pengganti jika gambar tidak tampil'
+    IMAGEALTTEXTDESC: 'Tampil ke pembaca layar, atau jika gambar tidak tampil'
+    IMAGEDIMENSIONS: Dimensi
+    IMAGEHEIGHTPX: Tinggi
+    IMAGETITLE: 'Teks judul (tooltip) - untuk informasi tambahan tentang gambar'
+    IMAGETITLETEXT: 'Teks gambar (tooltip)'
+    IMAGETITLETEXTDESC: 'Untuk informasi tambahan tentang gambar'
+    IMAGEWIDTHPX: Lebar
+    INSERTMEDIA: 'Sisipkan Media'
+    LINK: 'Sisipkan Tautan'
+    LINKANCHOR: 'Jangkar pada laman ini'
+    LINKDESCR: 'Deskripsi tautan'
+    LINKEMAIL: 'Alamat email'
+    LINKEXTERNAL: 'Situs lain'
+    LINKFILE: 'Unduh berkas'
+    LINKINTERNAL: 'Laman pada situs'
+    LINKOPENNEWWIN: 'Buka tautan di jendela baru?'
+    LINKTO: 'Tautan ke'
+    PAGE: Laman
+    URL: URL
+    URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' tidak dapat dijadikan sumber daya media.'
+    UpdateMEDIA: 'Perbarui Media'
+    SUBJECT: 'Subyek email'
+  Image:
+    PLURALNAME: Berkas
+    SINGULARNAME: Berkas
+  Image_Cached:
+    PLURALNAME: Berkas
+    SINGULARNAME: Berkas
+  Image_iframe_ss:
+    TITLE: 'Iframe Pengunggahan Gambar'
+  LeftAndMain:
+    CANT_REORGANISE: 'Anda tidak diijinkan mengubah laman Tingkat Atas. Pengubahan Anda tidak tersimpan.'
+    DELETED: Terhapus.
+    DropdownBatchActionsDefault: Tindakan
+    HELP: Bantuan
+    PAGETYPE: 'Jenis laman:'
+    PERMAGAIN: 'Anda telah keluar dari situs. Jika ingin kembali masuk, isikan nama pengguna dan kata kunci di bawah ini.'
+    PERMALREADY: 'Maaf, Anda tidak dapat mengakses laman tersebut. Jika Anda ingin menggunakan akun lain, silakan masuk di sini'
+    PERMDEFAULT: 'Mohon pilih metode otentikasi dan isikan informasi login Anda.'
+    PLEASESAVE: 'Mohon Simpan Laman: Laman ini tidak dapat diperbarui karena belum disimpan.'
+    PreviewButton: Pratinjau
+    REORGANISATIONSUCCESSFUL: 'Pengaturan ulang struktur situs berhasil.'
+    SAVEDUP: Tersimpan.
+    ShowAsList: 'tampilkan sebagai daftar'
+    TooManyPages: 'Terlalu banyak laman'
+    ValidationError: 'Kesalahan validasi'
+    VersionUnknown: Tidak diketahui
+  LeftAndMain_Menu_ss:
+    Hello: Hai
+    LOGOUT: 'Keluar'
+  ListboxField:
+    SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
+  LoginAttempt:
+    Email: 'Alamat Email'
+    IP: 'Alamat IP'
+    PLURALNAME: 'Upaya Masuk'
+    SINGULARNAME: 'Upaya Masuk'
+    Status: Status
+  Member:
+    ADDGROUP: 'Tambah kelompok'
+    BUTTONCHANGEPASSWORD: 'Ganti Kata Kunci'
+    BUTTONLOGIN: 'Masuk'
+    BUTTONLOGINOTHER: 'Masuk dengan akun lain'
+    BUTTONLOSTPASSWORD: 'Saya lupa kata kuncinya'
+    CANTEDIT: 'Tidak ada ijin'
+    CONFIRMNEWPASSWORD: 'Konfirmasi Penggantian Kata Kunci'
+    CONFIRMPASSWORD: 'Konfirmasi Kata Kunci'
+    DATEFORMAT: 'Format tanggal'
+    DefaultAdminFirstname: 'Pengelola Utama'
+    DefaultDateTime: default
+    EMAIL: Email
+    EMPTYNEWPASSWORD: 'Kata kunci baru tidak boleh kosong, mohon coba lagi'
+    ENTEREMAIL: 'Mohon isikan alamat email untuk menerima tautan penggantian kata kunci.'
+    ERRORLOCKEDOUT2: 'Akun Anda untuk sementara diblok karena terlalu banyak upaya masuk yang gagal. Mohon coba lagi setelah {count} menit.'
+    ERRORNEWPASSWORD: 'Anda mengisikan kata kunci baru yang tidak sama, coba lagi'
+    ERRORPASSWORDNOTMATCH: 'Kata kunci Anda tidak sama, mohon coba lagi'
+    ERRORWRONGCRED: 'Rincian yang diisikan tidak benar. Mohon coba lagi.'
+    FIRSTNAME: 'Nama Depan'
+    INTERFACELANG: 'Bahasa Antarmuka'
+    INVALIDNEWPASSWORD: 'Kata kunci berikut tidak dapat diterima: {password}'
+    LOGGEDINAS: 'Anda masuk sebagai {name}.'
+    NEWPASSWORD: 'Kata Kunci Baru'
+    NoPassword: 'Tidak ada kata kunci untuk pengguna ini.'
+    PASSWORD: Kata kunci
+    PASSWORDEXPIRED: 'Kata kunci Anda telah kadaluarsa. Mohon buat yang baru.'
+    PLURALNAME: Pengguna
+    REMEMBERME: 'Ingat akun saya?'
+    SINGULARNAME: Pengguna
+    SUBJECTPASSWORDCHANGED: 'Kata kunci Anda telah diganti'
+    SUBJECTPASSWORDRESET: 'Tautan penggantian kata kunci Anda'
+    SURNAME: Nama Belakang
+    TIMEFORMAT: 'Format waktu'
+    VALIDATIONMEMBEREXISTS: 'Pengguna dengan %s yang sama sudah ada'
+    ValidationIdentifierFailed: 'Tidak dapat menimpa pengguna #{id} dengan pengenal yang sama ({name} = {value}))'
+    WELCOMEBACK: 'Selamat Datang kembali, {firstname}'
+    YOUROLDPASSWORD: 'Kata kunci lama'
+    belongs_many_many_Groups: Kelompok
+    db_LastVisited: 'Kunjungan Terakhir'
+    db_Locale: 'Lokal Antarmuka'
+    db_LockedOutUntil: 'Kunci sampai'
+    db_NumVisit: 'Jumlah Kunjungan'
+    db_Password: Kata kunci
+    db_PasswordExpiry: 'Tanggal Kadaluarsa'
+  MemberAuthenticator:
+    TITLE: 'E-mail &amp; Kata Kunci'
+  MemberDatetimeOptionsetField:
+    AMORPM: 'AM (Ante meridiem) atau PM (Post meridiem)'
+    Custom: Custom
+    DATEFORMATBAD: 'Format tanggal tidak benar'
+    DAYNOLEADING: 'Angka tanggal tanpa nol di depan'
+    DIGITSDECFRACTIONSECOND: 'Satu atau lebih angka merepresentasikan pecahan desimal dari detik'
+    FOURDIGITYEAR: 'Tahun empat angka'
+    FULLNAMEMONTH: 'Nama lengkap bulan (misalnya Juni)'
+    HOURNOLEADING: 'Angka jam tanpa nol di depan'
+    MINUTENOLEADING: 'Angka menit tanpa nol di depan'
+    MONTHNOLEADING: 'Angka bulan tanpa nol di depan'
+    Preview: Pratinjau
+    SHORTMONTH: 'Nama singkat bulan (misalnya Jun)'
+    TWODIGITDAY: 'Tanggal dua angka'
+    TWODIGITHOUR: 'Jam dua angka (00 sampai 23)'
+    TWODIGITMINUTE: 'Menit dua angka (00 sampai 59)'
+    TWODIGITMONTH: 'Bulan dua angka (01=Januari, dll)'
+    TWODIGITSECOND: 'Detik dua angka (00 sampai 59)'
+    TWODIGITYEAR: 'Tahun dua angka'
+    Toggle: 'Tampilkan bantuan pemformatan'
+  MemberImportForm:
+    Help1: '<p>Impor pengguna dalam <em>format CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Tampilkan penggunaan mahir</a></small></p>'
+    Help2: "<div class=\"advanced\">\n\t<h4>Penggunaan mahir</h4>\n\t<ul>\n\t<li>Kolom yang dibolehkan: <em>%s</em></li>\n\t<li>Pengguna yang sudah terdata dihubungkan dengan nilai <em>Kode</em> uniknya, \n\tdan diperbarui dengan nilai apapun dari berkas yang diimpor.</li>\n\t<li>Kelompok dapat dihubungkan dengan kolom <em>Kelompok</em>. Kelompok diidentifikasi dengan properti <em>Kode</em>-nya,\n\tkelompok ganda dapat dipisahkan dengan tanda koma. Kelompok yang sudah terdata tidak terpengaruh.</li>\n\t</ul>\n\
+      </div>"
+    ResultCreated: '{count} pengguna dibuat'
+    ResultDeleted: '%d pengguna dihapus'
+    ResultNone: 'Tidak ada pengubahan'
+    ResultUpdated: '{count} pengguna diperbarui'
+  MemberPassword:
+    PLURALNAME: 'Kata Kunci'
+    SINGULARNAME: 'Kata Kunci'
+  MemberTableField:
+    APPLY_FILTER: 'Terapkan Saring'
+  ModelAdmin:
+    DELETE: Hapus
+    DELETEDRECORDS: '{count} data dihapus.'
+    EMPTYBEFOREIMPORT: 'Ganti data'
+    IMPORT: 'Impor dari CSV'
+    IMPORTEDRECORDS: '{count} data diimpor.'
+    NOCSVFILE: 'Mohon pilih berkas CSV untuk diimpor'
+    NOIMPORT: 'Tidak ada yang terimpor'
+    RESET: Reset
+    Title: 'Model Data'
+    UPDATEDRECORDS: '{count} data diperbarui.'
+  ModelAdmin_ImportSpec_ss:
+    IMPORTSPECFIELDS: 'Kolom database'
+    IMPORTSPECLINK: 'Tampilkan Spesifikasi untuk %s'
+    IMPORTSPECRELATIONS: Keterkaitan
+    IMPORTSPECTITLE: 'Spesifikasi untuk %s'
+  ModelAdmin_Tools_ss:
+    FILTER: Saring
+    IMPORT: Impor
+  ModelSidebar_ss:
+    IMPORT_TAB_HEADER: Impor
+    SEARCHLISTINGS: Cari
+  MoneyField:
+    FIELDLABELAMOUNT: Jumlah
+    FIELDLABELCURRENCY: Mata Uang
+  NullableField:
+    IsNullLabel: 'N/A'
+  NumericField:
+    VALIDATION: '''{value}'' bukan angka, hanya angka yang dapat diterima isian ini'
+  Pagination:
+    Page: Laman
+    View: Tampilkan
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: %s'
+    PREVPASSWORD: 'Anda sudah pernah menggunakan kata kunci tersebut, mohon pilih kata kunci yang baru'
+    TOOSHORT: 'Kata kunci terlalu singkat, setidaknya harus terdiri dari %s karakter atau lebih'
+  Permission:
+    AdminGroup: Pengelola
+    CMS_ACCESS_CATEGORY: 'Akses CMS'
+    FULLADMINRIGHTS: 'Hak pengelolaan penuh'
+    FULLADMINRIGHTS_HELP: 'Abaikan dan kesampingkan semua perijinan yang terhubung lainnya.'
+    PLURALNAME: Perijinan
+    SINGULARNAME: Perijinan
+  PermissionCheckboxSetField:
+    AssignedTo: 'dihubungkan ke "{title}"'
+    FromGroup: 'diwarisi dari kelompok "{title}"'
+    FromRole: 'diwarisi dari peran "{title}"'
+    FromRoleOnGroup: 'diwarisi dari peran "%s" pada kelompok "%s"'
+  PermissionRole:
+    OnlyAdminCanApply: 'Hanya untuk pengelola'
+    PLURALNAME: Peran
+    SINGULARNAME: Peran
+    Title: Judul
+  PermissionRoleCode:
+    PermsError: 'Tidak dapat menghubungkan kode "%s" dengan perijinan khusus (memerlukan akses PENGELOLA)'
+    PLURALNAME: 'Kode Perijinan Peran'
+    SINGULARNAME: 'Kode Perijinan Peran'
+  Permissions:
+    PERMISSIONS_CATEGORY: 'Perijinan peran dan akses'
+    UserPermissionsIntro: 'Menghubungkan kelompok ke pengguna ini akan menyesuaikan perijinannya. Lihat bagian Kelompok untuk rincian perijinan pada kelompok individu.'
+  PhoneNumberField:
+    VALIDATION: 'Mohon isikan nomer telpon yang benar'
+  Security:
+    ALREADYLOGGEDIN: 'Anda tidak punya akses ke laman ini. Jika Anda punya akun lain dengan akses ke laman ini, silakan masuk kembali.'
+    BUTTONSEND: 'Kirimkan tautan penggantian kata kunci'
+    CHANGEPASSWORDBELOW: 'Anda dapat mengganti kata kunci di bawah ini.'
+    CHANGEPASSWORDHEADER: 'Ganti kata kunci'
+    ENTERNEWPASSWORD: 'Mohon isikan kata kunci yang baru.'
+    ERRORPASSWORDPERMISSION: 'Anda harus masuk untuk bisa mengganti kata kunci!'
+    LOGGEDOUT: 'Anda telah keluar. Jika ingin masuk kembali, isikan informasi akun Anda di sini.'
+    LOGIN: 'Masuk'
+    LOSTPASSWORDHEADER: 'Kata Kunci yang Terlupa'
+    NOTEPAGESECURED: 'Laman ini diamankan. Isikan data berikut untuk dikirimkan hak akses Anda.'
+    NOTERESETLINKINVALID: '<p>Tautan penggantian kata kunci tidak valid atau sudah kadaluarsa.</p><p>Anda dapat meminta yang baru <a href="{link1}">di sini</a> atau mengganti kata kunci setelah Anda <a href="{link2}">masuk</a>.</p>'
+    NOTERESETPASSWORD: 'Isikan alamat email Anda untuk mendapatkan tautan penggantian kata kunci'
+    PASSWORDSENTHEADER: 'Tautan penggantian kata kunci dikirimkan ke ''{email}'''
+    PASSWORDSENTTEXT: 'Terimakasih! Tautan reset telah dikirim ke ''{email}'', berisi informasi akun untuk alamat email ini.'
+  SecurityAdmin:
+    ACCESS_HELP: 'Bolehkan menampilkan, menambah dan mengedit pengguna, termasuk mengatur perijinan dan perannya.'
+    APPLY_ROLES: 'Terapkan peran ke kelompok'
+    APPLY_ROLES_HELP: 'Bolehkan mengedit peran yang diberikan ke kelompok. Memerlukan perijinan "Akses ke bagian ''Pengguna''".'
+    EDITPERMISSIONS: 'Kelola perijinan untuk kelompok'
+    EDITPERMISSIONS_HELP: 'Bolehkan mengedit Perijinan dan Alamat IP untuk kelompok. Memerlukan perijinan "Akses ke bagian ''Pengamanan''".'
+    GROUPNAME: 'Nama kelompok'
+    IMPORTGROUPS: 'Impor kelompok'
+    IMPORTUSERS: 'Impor pengguna'
+    MEMBERS: Pengguna
+    MENUTITLE: Pengamanan
+    MemberListCaution: 'Perhatian: Menghapus pengguna dari daftar ini akan menghapus mereka dari semua kelompok dan database'
+    NEWGROUP: 'Kelompok Baru'
+    PERMISSIONS: Perijinan
+    ROLES: Peran
+    ROLESDESCRIPTION: 'Peran adalah set perijinan yang sudah ditentukan, dan dapat dihubungkan ke kelompok.<br />Dapat diwariskan dari kelompok induk jika diperlukan.'
+    TABROLES: Peran
+    Users: Pengguna
+  SecurityAdmin_MemberImportForm:
+    BtnImport: 'Impor dari CSV'
+    FileFieldLabel: 'Berkas CSV <small>(Ekstensi yang dibolehkan: *.csv)</small>'
+  SilverStripeNavigator:
+    Auto: Otomatis
+    ChangeViewMode: 'Ganti modus tampil'
+    Desktop: Desktop
+    DualWindowView: 'Jendela Ganda'
+    Edit: Edit
+    EditView: 'Modus edit'
+    Mobile: Tampilan selular
+    PreviewState: 'Status Pratinjau'
+    PreviewView: 'Modus pratinjau'
+    Responsive: Tampilan responsif
+    SplitView: 'Modus terpisah'
+    Tablet: Tablet
+    ViewDeviceWidth: 'Pilih lebar pratinjau'
+    Width: lebar
+  SiteTree:
+    TABMAIN: Utama
+  TableListField:
+    CSVEXPORT: 'Ekspor ke CSV'
+    Print: Cetak
+  TableListField_PageControls_ss:
+    OF: dari
+  TimeField:
+    VALIDATEFORMAT: 'Isikan format waktu yang benar ({format})'
+  ToggleField:
+    LESS: kurang
+    MORE: lebih
+  UploadField:
+    ATTACHFILE: 'Lampirkan berkas'
+    ATTACHFILES: 'Lampirkan berkas'
+    AttachFile: 'Lampirkan berkas'
+    CHOOSEANOTHERFILE: 'Pilih berkas lain'
+    CHOOSEANOTHERINFO: 'Ganti berkas ini dengan berkas lain dari penyimpanan'
+    DELETE: 'Hapus dari berkas'
+    DELETEINFO: 'Hapus berkas secara permanen dari penyimpanan'
+    DOEDIT: Simpan
+    DROPFILE: 'taruh berkas'
+    DROPFILES: 'taruh berkas'
+    Dimensions: Dimensi
+    EDIT: Edit
+    EDITINFO: 'Edit berkas ini'
+    FIELDNOTSET: 'Informasi berkas tidak ada'
+    FROMCOMPUTER: 'Dari komputer Anda'
+    FROMCOMPUTERINFO: 'Pilih dari berkas'
+    FROMFILES: 'Dari berkas'
+    HOTLINKINFO: 'Informasi: Gambar ini akan ditautlangsungkan. Mohon pastikan Anda mendapat ijin dari pemilik situs untuk melakukannya.'
+    MAXNUMBEROFFILES: 'Jumlah maksimal {count} berkas terlampaui.'
+    MAXNUMBEROFFILESONE: 'Hanya dapat mengunggah satu berkas'
+    MAXNUMBEROFFILESSHORT: 'Dapat mengunggah {count} berkas'
+    OVERWRITEWARNING: 'Berkas dengan nama yang sama sudah ada'
+    REMOVE: Buang
+    REMOVEINFO: 'Hapus berkas ini dari sini, tapi jangan hapus dari penyimpanan'
+    STARTALL: 'Mulai semua'
+    Saved: Tersimpan
+    UPLOADSINTO: 'disimpan ke /{path}'
+  Versioned:
+    has_many_Versions: Versi
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'

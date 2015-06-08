@@ -27,10 +27,10 @@
 		 * - 'select': Fires when a menu item is selected (on any level).
 		 */
 		$('.cms-panel.cms-menu').entwine({
-			togglePanel: function(bool) {
+			togglePanel: function(doExpand, silent, doSaveState) {
 				//apply or unapply the flyout formatting, should only apply to cms-menu-list when the current collapsed panal is the cms menu.
 				$('.cms-menu-list').children('li').each(function(){
-					if (bool) { //expand
+					if (doExpand) { //expand
 						$(this).children('ul').each(function() {
 							$(this).removeClass('collapsed-flyout');
 							if ($(this).data('collapse')) {
@@ -48,9 +48,9 @@
 					}
 				});
 
-				this.toggleFlyoutState(bool);					
+				this.toggleFlyoutState(doExpand);
 
-				this._super(bool);
+				this._super(doExpand, silent, doSaveState);
 			},
 			toggleFlyoutState: function(bool) {
 				if (bool) { //expand
@@ -71,6 +71,90 @@
 					if (par.children('.child-flyout-indicator').length === 0) par.append('<span class="child-flyout-indicator"></span>').fadeIn();
 					par.children('.child-flyout-indicator').fadeIn();
 				}
+			},
+			siteTreePresent: function () {
+				return $('#cms-content-tools-CMSMain').length > 0;
+			},
+
+			/**
+			 * @func getPersistedStickyState
+			 * @return {boolean|undefined} - Returns true if the menu is sticky, false if unsticky. Returns undefined if there is no cookie set.
+			 * @desc Get the sticky state of the menu according to the cookie.
+			 */
+			getPersistedStickyState: function () {
+				var persistedState, cookieValue;
+
+				if ($.cookie !== void 0) {
+					cookieValue = $.cookie('cms-menu-sticky');
+
+					if (cookieValue !== void 0 && cookieValue !== null) {
+						persistedState = cookieValue === 'true';
+					}
+				}
+
+				return persistedState;
+			},
+
+			/**
+			 * @func setPersistedStickyState
+			 * @param {boolean} isSticky - Pass true if you want the panel to be sticky, false for unsticky.
+			 * @desc Set the collapsed value of the panel, stored in cookies.
+			 */
+			setPersistedStickyState: function (isSticky) {
+				if ($.cookie !== void 0) {
+					$.cookie('cms-menu-sticky', isSticky, { path: '/', expires: 31 });
+				}
+			},
+
+			/**
+			 * @func getEvaluatedCollapsedState
+			 * @return {boolean} - Returns true if the menu should be collapsed, false if expanded.
+			 * @desc Evaluate whether the menu should be collapsed.
+			 *       The basic rule is "If the SiteTree (middle column) is present, collapse the menu, otherwise expand the menu".
+			 *       This reason behind this is to give the content area more real estate when the SiteTree is present.
+			 *       The user may wish to override this automatic behaviour and have the menu expanded or collapsed at all times.
+			 *       So unlike manually toggling the menu, the automatic behaviour never updates the menu's cookie value.
+			 *       Here we use the manually set state and the automatic behaviour to evaluate what the collapsed state should be.
+			 */
+			getEvaluatedCollapsedState: function () {
+				var shouldCollapse,
+					manualState = this.getPersistedCollapsedState(),
+					menuIsSticky = $('.cms-menu').getPersistedStickyState(),
+					automaticState = this.siteTreePresent();
+
+				if (manualState === void 0) {
+					// There is no manual state, use automatic state.
+					shouldCollapse = automaticState;
+				} else if (manualState !== automaticState && menuIsSticky) {
+					// The manual and automatic statea conflict, use manual state.
+					shouldCollapse = manualState;
+				} else {
+					// Use automatic state.
+					shouldCollapse = automaticState;
+				}
+
+				return shouldCollapse;
+			},
+
+			onadd: function () {
+				var self = this;
+
+				setTimeout(function () {
+					// Use a timeout so this happens after the redraw.
+					// Triggering a toggle before redraw will result in an incorrect
+					// menu 'expanded width' being calculated when then menu
+					// is added in a collapsed state.
+					self.togglePanel(!self.getEvaluatedCollapsedState(), false, false);
+				}, 0);
+
+				// Setup automatic expand / collapse behaviour.
+				$(window).on('ajaxComplete', function (e) {
+					setTimeout(function () { // Use a timeout so this happens after the redraw
+						self.togglePanel(!self.getEvaluatedCollapsedState(), false, false);
+					}, 0);
+				});
+
+				this._super();
 			}
 		});
 
@@ -272,6 +356,64 @@
 				return false;
 			}
 		});
-		
+
+		/**
+		 * Toggles the manual override of the left menu's automatic expand / collapse behaviour.
+		 */
+		$('.cms-menu .sticky-toggle').entwine({
+
+			onadd: function () {
+				var isSticky = $('.cms-menu').getPersistedStickyState() ? true : false;
+
+				this.toggleCSS(isSticky);
+				this.toggleIndicator(isSticky);
+
+				this._super();
+			},
+
+			/**
+			 * @func toggleCSS
+			 * @param {boolean} isSticky - The current state of the menu.
+			 * @desc Toggles the 'active' CSS class of the element.
+			 */
+			toggleCSS: function (isSticky) {
+				this[isSticky ? 'addClass' : 'removeClass']('active');
+			},
+
+			/**
+			 * @func toggleIndicator
+			 * @param {boolean} isSticky - The current state of the menu.
+			 * @desc Updates the indicator's text based on the sticky state of the menu.
+			 */
+			toggleIndicator: function (isSticky) {
+				this.next('.sticky-status-indicator').text(isSticky ? 'fixed' : 'auto');
+			},
+
+			onclick: function () {
+				var $menu = this.closest('.cms-menu'),
+					persistedCollapsedState = $menu.getPersistedCollapsedState(),
+					persistedStickyState = $menu.getPersistedStickyState(),
+					newStickyState = persistedStickyState === void 0 ? !this.hasClass('active') : !persistedStickyState;
+
+				// Update the persisted collapsed state
+				if (persistedCollapsedState === void 0) {
+					// If there is no persisted menu state currently set, then set it to the menu's current state.
+					// This will be the case if the user has never manually expanded or collapsed the menu,
+					// or the menu has previously been made unsticky.
+					$menu.setPersistedCollapsedState($menu.hasClass('collapsed'));
+				} else if (persistedCollapsedState !== void 0 && newStickyState === false) {
+					// If there is a persisted state and the menu has been made unsticky, remove the persisted state.
+					$menu.clearPersistedCollapsedState();
+				}
+
+				// Persist the sticky state of the menu
+				$menu.setPersistedStickyState(newStickyState);
+
+				this.toggleCSS(newStickyState);
+				this.toggleIndicator(newStickyState);
+
+				this._super();
+			}
+		});
 	});
 }(jQuery));

@@ -38,12 +38,89 @@
 					this.serializeFromTree();
 				}
 			},
+			
+			/**
+			 * Register default bulk confirmation dialogs
+			 */
+			registerDefault: function() {
+				// Publish selected pages action
+				this.register('admin/pages/batchactions/publish', function(ids) {
+					var confirmed = confirm(
+						ss.i18n.inject(
+							ss.i18n._t(
+								"CMSMAIN.BATCH_PUBLISH_PROMPT",
+								"You have {num} page(s) selected.\n\nDo you really want to publish?"
+							),
+							{'num': ids.length}
+						)
+					);
+					return (confirmed) ? ids : false;
+				});
+
+				// Unpublish selected pages action
+				this.register('admin/pages/batchactions/unpublish', function(ids) {
+					var confirmed = confirm(
+						ss.i18n.inject(
+							ss.i18n._t(
+								"CMSMAIN.BATCH_UNPUBLISH_PROMPT",
+								"You have {num} page(s) selected.\n\nDo you really want to unpublish"
+							),
+							{'num': ids.length}
+						)
+					);
+					return (confirmed) ? ids : false;
+				});
+
+				// Delete selected pages action
+				// @deprecated since 4.0 Use archive instead
+				this.register('admin/pages/batchactions/delete', function(ids) {
+					var confirmed = confirm(
+						ss.i18n.inject(
+							ss.i18n._t(
+								"CMSMAIN.BATCH_DELETE_PROMPT",
+								"You have {num} page(s) selected.\n\nDo you really want to delete?"
+							),
+							{'num': ids.length}
+						)
+					);
+					return (confirmed) ? ids : false;
+				});
+
+				// Delete selected pages action
+				this.register('admin/pages/batchactions/archive', function(ids) {
+					var confirmed = confirm(
+						ss.i18n.inject(
+							ss.i18n._t(
+								"CMSMAIN.BATCH_ARCHIVE_PROMPT",
+								"You have {num} page(s) selected.\n\nDo you really want to archive?\n\nThese pages will be removed from both the draft and published sites without discarding the history."
+							),
+							{'num': ids.length}
+						)
+					);
+					return (confirmed) ? ids : false;
+				});
+
+				// Delete selected pages from live action
+				this.register('admin/pages/batchactions/deletefromlive', function(ids) {
+					var confirmed = confirm(
+						ss.i18n.inject(
+							ss.i18n._t(
+								"CMSMAIN.BATCH_DELETELIVE_PROMPT",
+								"You have {num} page(s) selected.\n\nDo you really want to delete these pages from live?"
+							),
+							{'num': ids.length}
+						)
+					);
+					return (confirmed) ? ids : false;
+				});
+			},
 
 			/**
 			 * Constructor: onmatch
 			 */
 			onadd: function() {
 				this._updateStateFromViewMode();
+				this.registerDefault();
 				this._super();
 			},
 
@@ -141,7 +218,12 @@
 			 *  {Object} rootNode
 			 */
 			refreshSelected : function(rootNode) {
-				var self = this, st = this.getTree(), ids = this.getIDs(), allIds = [];
+				var self = this,
+					st = this.getTree(),
+					ids = this.getIDs(),
+					allIds = [],
+					selectedAction = this.find(':input[name=Action]').val();
+			
 				// Default to refreshing the entire tree
 				if(rootNode == null) rootNode = st;
 
@@ -149,15 +231,22 @@
 					$($(st).getNodeByID(idx)).addClass('selected').attr('selected', 'selected');
 				}
 
+				// If no action is selected, enable all nodes
+				if(selectedAction == -1) {
+					$(rootNode).find('li').each(function() {
+						$(this).setEnabled(true);
+					});
+					return;
+				}
+
+				// Disable the nodes while the ajax request is being processed
 				$(rootNode).find('li').each(function() {
 					allIds.push($(this).data('id'));
-					
-					// Disable the nodes while the ajax request is being processed
 					$(this).addClass('treeloading').setEnabled(false);
 				});
-
+				
 				// Post to the server to ask which pages can have this batch action applied
-				var applicablePagesURL = this.find(':input[name=Action]').val() + '/applicablepages/?csvIDs=' + allIds.join(',');
+				var applicablePagesURL = selectedAction + '/applicablepages/?csvIDs=' + allIds.join(',');
 				jQuery.getJSON(applicablePagesURL, function(applicableIDs) {
 					// Set a CSS class on each tree node indicating which can be batch-actioned and which can't
 					jQuery(rootNode).find('li').each(function() {
@@ -169,6 +258,7 @@
 						} else {
 							// De-select the node if it's non-applicable
 							$(this).removeClass('selected').setEnabled(false);
+							$(this).prop('selected', false);
 						}
 					});
 					
@@ -185,10 +275,6 @@
 			serializeFromTree: function() {
 				var tree = this.getTree(), ids = tree.getSelectedIDs();
 				
-				// if no IDs are selected, stop here. This is an implict way for the
-				// callback to cancel the actions
-				if(!ids || !ids.length) return false;
-
 				// write IDs to the hidden field
 				this.setIDs(ids);
 				
@@ -212,7 +298,11 @@
 			 *  {Array}
 			 */
 			getIDs: function() {
-				return this.find(':input[name=csvIDs]').val().split(',');
+				// Map empty value to empty array
+				var value = this.find(':input[name=csvIDs]').val();
+				return value
+					? value.split(',')
+					: [];
 			},
 		
 			/**
@@ -222,17 +312,26 @@
 			 *  (Event) e
 			 */
 			onsubmit: function(e) {
-				var self = this, ids = this.getIDs(), tree = this.getTree();
+				var self = this, ids = this.getIDs(), tree = this.getTree(), actions = this.getActions();
 				
 				// if no nodes are selected, return with an error
 				if(!ids || !ids.length) {
-					alert(ss.i18n._t('CMSMAIN.SELECTONEPAGE'));
+					alert(ss.i18n._t('CMSMAIN.SELECTONEPAGE', 'Please select at least one page'));
+					e.preventDefault();
 					return false;
 				}
 				
 				// apply callback, which might modify the IDs
 				var type = this.find(':input[name=Action]').val();
-				if(this.getActions()[type]) ids = this.getActions()[type].apply(this, [ids]);
+				if(actions[type]) {
+					ids = this.getActions()[type].apply(this, [ids]);
+				}
+				
+				// Discontinue processing if there are no further items
+				if(!ids || !ids.length) {
+					e.preventDefault();
+					return false;
+				}
 			
 				// write (possibly modified) IDs back into to the hidden field
 				this.setIDs(ids);
@@ -290,6 +389,8 @@
 					dataType: 'json'
 				});
 			
+				// Never process this action; Only invoke via ajax
+				e.preventDefault();
 				return false;
 			}
 		
@@ -319,60 +420,16 @@
 					btn.attr('disabled', 'disabled').button('refresh');
 				} else {
 					btn.removeAttr('disabled').button('refresh');
-					// form.submit();
-				} 
+				}
+				
+				// Refresh selected / enabled nodes
+				$('#Form_BatchActionsForm').refreshSelected();
 
 				// TODO Should work by triggering change() along, but doesn't - entwine event bubbling?
 				this.trigger("liszt:updated");
 
 				this._super(e);
 			}
-		});
-
-		$(document).ready(function() {
-			/**
-			 * Publish selected pages action
-			 */
-			$('#Form_BatchActionsForm').register('admin/batchactions/publish', function(ids) {
-				var confirmed = confirm(
-					"You have " + ids.length + " pages selected.\n\n"
-					+ "Do your really want to publish?"
-				);
-				return (confirmed) ? ids : false;
-			});
-			
-			/**
-			 * Unpublish selected pages action
-			 */
-			$('#Form_BatchActionsForm').register('admin/batchactions/unpublish', function(ids) {
-				var confirmed = confirm(
-					"You have " + ids.length + " pages selected.\n\n"
-					+ "Do your really want to unpublish?"
-				);
-				return (confirmed) ? ids : false;
-			});
-			
-			/**
-			 * Delete selected pages action
-			 */
-			$('#Form_BatchActionsForm').register('admin/batchactions/delete', function(ids) {
-				var confirmed = confirm(
-					"You have " + ids.length + " pages selected.\n\n"
-					+ "Do your really want to delete?"
-				);
-				return (confirmed) ? ids : false;
-			});
-			
-			/**
-			 * Delete selected pages from live action 
-			 */
-			$('#Form_BatchActionsForm').register('admin/batchactions/deletefromlive', function(ids) {
-				var confirmed = confirm(
-					"You have " + ids.length + " pages selected.\n\n"
-					+ "Do your really want to delete these pages from live?"
-				);
-				return (confirmed) ? ids : false;
-			});
 		});
 	});
 	

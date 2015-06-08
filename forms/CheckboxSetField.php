@@ -318,7 +318,7 @@ class CheckboxSetField extends OptionsetField {
 	 * @param Validator $validator
 	 * @return bool
 	 */
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 		$values = $this->value;
 		if (!$values) {
 			return true;

@@ -15,10 +15,10 @@ email was sent using this method.
 		$e->send();
 	}
 
-To test that `MyMethod` sends the correct email, use the [api:Email::assertEmailSent] method.
+To test that `MyMethod` sends the correct email, use the [api:SapphireTest::assertEmailSent] method.
 
 	:::php
-	$this->assertEmailSend($to, $from, $subject, $body);
+	$this->assertEmailSent($to, $from, $subject, $body);
 
 	// to assert that the email is sent to the correct person
 	$this->assertEmailSent("someone@example.com", null, "/th.*e$/");

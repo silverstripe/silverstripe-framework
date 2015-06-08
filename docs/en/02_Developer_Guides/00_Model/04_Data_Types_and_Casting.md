@@ -42,8 +42,49 @@ In the `Player` example, we have four database columns each with a different dat
 *  [api:Time]: A time field
 *  [api:Varchar]: A variable-length string of up to 255 characters, designed to store raw text.
 
-You can define your own [api:DBField] instances if required as well. See the API documentation for a list of all the
-available subclasses.
+See the [API documentation](api:DBField) for a full list of available Data Types. You can define your own [api:DBField] instances if required as well. 
+
+## Default Values
+
+### Default values for new objects
+
+For complex default values for newly instantiated objects see [Dynamic Default Values](how_tos/dynamic_default_fields). 
+For simple values you can make use of the `$defaults` array. For example:
+
+	:::php
+	<?php
+
+	class Car extends DataObject {
+		
+		private static $db = array(
+			'Wheels' => 'Int',
+			'Condition' => 'Enum(array("New","Fair","Junk"))'
+		);
+		
+		private static $defaults = array(
+			'Wheels' => 4,
+			'Condition' => 'New'
+		);
+	}
+
+### Default values for new database columns
+
+When adding a new `$db` field to a DataObject you can specify a default value
+to be applied to all existing records when the column is added in the database
+for the first time. This will also be applied to any newly created objects
+going forward. You do this be passing an argument for the default value in your 
+`$db` items. For example:
+
+	:::php
+	<?php
+
+	class Car extends DataObject {
+		
+		private static $db = array(
+			'Wheels' => 'Int(4)',
+			'Condition' => 'Enum(array("New","Fair","Junk"), "New")'
+		);
+	}
 
 ## Formatting Output
 
@@ -81,7 +122,7 @@ Then we can refer to a new `Name` column on our `Player` instances. In templates
 	echo $player->getName()->LimitCharacters(2);
 	// returns "Sa.."
 
-### Casting
+## Casting
 
 Rather than manually returning objects from your custom functions. You can use the `$casting` property.
 

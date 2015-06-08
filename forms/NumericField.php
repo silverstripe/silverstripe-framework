@@ -76,7 +76,7 @@ class NumericField extends TextField {
 	 * @param Validator $validator
 	 * @return bool
 	 */
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 		if(!$this->value) {
 			return true;
 		}

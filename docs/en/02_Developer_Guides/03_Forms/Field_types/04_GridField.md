@@ -71,7 +71,7 @@ the `getConfig()` method on `GridField`.
 			);
 
 			// GridField configuration
-			$config = $gridField->getConfig();
+			$config = $grid->getConfig();
 
 			//
 			// Modification of existing components can be done by fetching that component.
@@ -373,7 +373,7 @@ Your new area can also be used by existing components, e.g. the [api:GridFieldPr
 ## Creating a Custom GridFieldComponent
 
 Customizing a `GridField` is easy, applications and modules can provide their own `GridFieldComponent` instances to add
-functionality. See [How to Create a GridFieldComponent](../how_tos/create_a_gridfield_component).
+functionality. See [How to Create a GridFieldComponent](../how_tos/create_a_gridfieldcomponent).
 
 ## Creating a Custom GridField_ActionProvider
 

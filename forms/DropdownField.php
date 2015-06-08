@@ -312,9 +312,11 @@ class DropdownField extends FormField {
 	 * @param Validator $validator
 	 * @return bool
 	 */
-	public function validate(Validator $validator) {
+	public function validate($validator) {
 		$source = $this->getSourceAsArray();
-		if (!array_key_exists($this->value, $source)) {
+		$disabled = $this->getDisabledItems();
+
+		if (!array_key_exists($this->value, $source) || in_array($this->value, $disabled)) {
 			if ($this->getHasEmptyDefault() && !$this->value) {
 				return true;
 			}

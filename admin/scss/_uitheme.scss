@@ -85,8 +85,16 @@
 	}
 }
 
-.ui-autocomplete{
+.ui-autocomplete {
 	max-height: 240px;
 	overflow-x: hidden;
 	overflow-y: auto;
+
+	/** sorry about the !important but the specificity of other selectors mandates it over writing out very specific selectors **/
+	&-loading {
+		background-image: url(../images/throbber.gif) !important;
+		background-position: 97% center !important;
+		background-repeat: no-repeat !important;
+		background-size: auto !important;
+	}
 }
