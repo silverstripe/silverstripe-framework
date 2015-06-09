@@ -811,6 +811,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// Get the tree root
 		$record = ($rootID) ? $this->getRecord($rootID) : null;
 		$obj = $record ? $record : singleton($className);
+
+		// Get the current page
+		// NOTE: This *must* be fetched before markPartialTree() is called, as this
+		// causes the Hierarchy::$marked cache to be flushed (@see CMSMain::getRecord)
+		// which means that deleted pages stored in the marked tree would be removed
+		$currentPage = $this->currentPage();
 		
 		// Mark the nodes of the tree to return
 		if ($filterFunction) $obj->setMarkingFilterFunction($filterFunction);
@@ -818,10 +824,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$obj->markPartialTree($nodeCountThreshold, $this, $childrenMethod, $numChildrenMethod);
 		
 		// Ensure current page is exposed
-		// This call flushes the Hierarchy::$marked cache when the current node is deleted
-		// @see CMSMain::getRecord()
-		// This will make it impossible to show children under a deleted parent page
-		// if($p = $this->currentPage()) $obj->markToExpose($p);
+		if($currentPage) $obj->markToExpose($currentPage);
 		
 		// NOTE: SiteTree/CMSMain coupling :-(
 		if(class_exists('SiteTree')) {
