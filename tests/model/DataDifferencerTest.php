@@ -55,8 +55,8 @@ class DataDifferencerTest extends SapphireTest {
 		$differ = new DataDifferencer($obj1v1, $obj1v2);
 		$obj1Diff = $differ->diffedData();
 
-		$this->assertContains($image1->Filename, $obj1Diff->getField('Image'));
-		$this->assertContains($image2->Filename, $obj1Diff->getField('Image'));
+		$this->assertContains($image1->Name, $obj1Diff->getField('Image'));
+		$this->assertContains($image2->Name, $obj1Diff->getField('Image'));
 		$this->assertContains('<ins>obj2</ins><del>obj1</del>',
 			str_replace(' ','',$obj1Diff->getField('HasOneRelationID')));
 	}

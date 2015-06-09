@@ -30,19 +30,30 @@ class ImageTest extends SapphireTest {
 
 			if(!file_exists(BASE_PATH."/$folder->Filename")) mkdir(BASE_PATH."/$folder->Filename");
 		}
+
+		// Copy test images for each of the fixture references
+		$imageIDs = $this->allFixtureIDs('Image');
+		foreach($imageIDs as $imageID) {
+			$image = DataObject::get_by_id('Image', $imageID);
+			$filePath = BASE_PATH."/$image->Filename";
+			$sourcePath = str_replace('assets/ImageTest/', 'framework/tests/model/testimages/', $filePath);
+			if(!file_exists($filePath)) {
+				if (!copy($sourcePath, $filePath)) user_error('Failed to copy test images', E_USER_ERROR);
+			}
+		}
 	}
 
 	public function tearDown() {
 		if($this->origBackend) Image::set_backend($this->origBackend);
 
-		/* Remove the test files that we've created */
+		// Remove the test files that we've created
 		$fileIDs = $this->allFixtureIDs('Image');
 		foreach($fileIDs as $fileID) {
 			$file = DataObject::get_by_id('Image', $fileID);
 			if($file && file_exists(BASE_PATH."/$file->Filename")) unlink(BASE_PATH."/$file->Filename");
 		}
 
-		/* Remove the test folders that we've crated */
+		// Remove the test folders that we've created
 		$folderIDs = $this->allFixtureIDs('Folder');
 		foreach($folderIDs as $folderID) {
 			$folder = DataObject::get_by_id('Folder', $folderID);
@@ -298,6 +309,10 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue(file_exists($p), 'Resized image exists after regeneration call');
 	}
 
+	/**
+	 * Tests that cached images are regenerated properly after a cached file is renamed with new arguments
+	 * ToDo: This doesn't seem like something that is worth testing - what is the point of this?
+	 */
 	public function testRegenerateImagesWithRenaming() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
 		$image_generated = $image->SetWidth(200);
@@ -311,8 +326,8 @@ class ImageTest extends SapphireTest {
 		$newPath = str_replace($oldArgumentString, $newArgumentString, $p);
 		$newRelative = str_replace($oldArgumentString, $newArgumentString, $image_generated->getFileName());
 		rename($p, $newPath);
-		$this->assertFalse(file_exists($p), 'Resized image does not exist after movement call under old name');
-		$this->assertTrue(file_exists($newPath), 'Resized image exists after movement call under new name');
+		$this->assertFalse(file_exists($p), 'Resized image does not exist at old path after renaming');
+		$this->assertTrue(file_exists($newPath), 'Resized image exists at new path after renaming');
 		$this->assertEquals(1, $image->regenerateFormattedImages(),
 			'Cached images were regenerated in the right number');
 

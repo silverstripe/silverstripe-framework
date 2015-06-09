@@ -224,13 +224,12 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function SetRatioSize($width, $height) {
-
 		// Prevent divide by zero on missing/blank file
-		if(empty($this->width) || empty($this->height)) return null;
+		if(!$this->getWidth() || !$this->getHeight()) return null;
 
 		// Check if image is already sized to the correct dimension
-		$widthRatio = $width / $this->width;
-		$heightRatio = $height / $this->height;
+		$widthRatio = $width / $this->getWidth();
+		$heightRatio = $height / $this->getHeight();
 		if( $widthRatio < $heightRatio ) {
 			// Target is higher aspect ratio than image, so check width
 			if($this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')) return $this;
@@ -510,7 +509,8 @@ class Image extends File implements Flushable {
 
 	/**
 	 * Generate a resized copy of this image with the given width & height.
-	 * Use in templates with $ResizedImage.
+	 * This can be used in templates with $ResizedImage but should be avoided,
+	 * as it's the only image manipulation function which can skew an image.
 	 *
 	 * @param integer $width Width to resize to
 	 * @param integer $height Height to resize to
@@ -648,9 +648,9 @@ class Image extends File implements Flushable {
 	public function regenerateFormattedImages() {
 		if(!$this->Filename) return 0;
 
-			// Without this, not a single file would be written
-			// caused by a check in getFormattedImage()
-		$_GET['flush'] = 1;
+		// Without this, not a single file would be written
+		// caused by a check in getFormattedImage()
+		$this->flush();
 
 		$numGenerated = 0;
 		$generatedImages = $this->getGeneratedImages();
