@@ -249,7 +249,9 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Just an alias function to keep a consistent API with SiteTree
+	 * Returns a web link download/view to the file. May be absolute or relateive, depending on configuration.
+	 *
+	 * When linking to files, use this method rather than constructing the link yourself.
 	 *
 	 * @return string The link to the file
 	 */
@@ -258,7 +260,9 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Just an alias function to keep a consistent API with SiteTree
+	 * Returns a web link to download/view the file, relative to the site base URL.
+	 *
+	 * When linking to files, use this method rather than constructing the link yourself.
 	 *
 	 * @return string The relative link to the file
 	 */
@@ -267,7 +271,9 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Just an alias function to keep a consistent API with SiteTree
+	 * Returns an absolute web link to download/view the file.
+	 *
+	 * When linking to files, use this method rather than constructing the link yourself.
 	 *
 	 * @return string The absolute link to the file
 	 */
@@ -685,9 +691,9 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Gets the absolute URL accessible through the web.
+	 * Alias of {@link File::AbsoluteLink()}.
 	 *
-	 * @uses Director::absoluteBaseURL()
+	 * @uses Director::absoluteURL()
 	 * @return string
 	 */
 	public function getAbsoluteURL() {
@@ -695,7 +701,7 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Gets the relative URL accessible through the web.
+	 * Alias of {@link File::Link()}.
 	 *
 	 * @uses Director::baseURL()
 	 * @return string
