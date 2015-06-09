@@ -74,6 +74,12 @@ class Image extends File implements Flushable {
 
 	/**
 	 * @config
+	 * @var boolean If true images will not be enlarged (affects setWidth and setHeight)
+	 */
+	private static $downsampling_only = false;
+
+	/**
+	 * @config
 	 * @var bool Regenerates images if set to true. This is set by {@link flush()}
 	 */
 	private static $flush = false;
@@ -263,9 +269,13 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function SetWidth($width) {
-		return $this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')
-			? $this
-			: $this->getFormattedImage('SetWidth', $width);
+		if (($this->isWidth($width) && !$this->config()->force_resample)
+				|| (($width >= $this->getWidth()) && $this->config()->downsampling_only)
+		) {
+			return $this;
+		} else {
+			return $this->getFormattedImage('SetWidth', $width);
+		}
 	}
 	
 	/**
@@ -286,9 +296,13 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function SetHeight($height) {
-		return $this->isHeight($height) && !Config::inst()->get('Image', 'force_resample')
-			? $this 
-			: $this->getFormattedImage('SetHeight', $height);
+		if (($this->isHeight($height) && !$this->config()->force_resample)
+				|| (($height >= $this->getHeight()) && $this->config()->downsampling_only)
+		) {
+			return $this;
+		} else {
+			return $this->getFormattedImage('SetHeight', $height);
+		}
 	}
 	
 	/**
