@@ -1093,7 +1093,6 @@ after')
 			// Let's throw something random in there.
 			$self->setExpectedException('InvalidArgumentException');
 			$templates = SSViewer::get_templates_by_class(array());
-			$this->assertCount(0, $templates);
 		});
 	}
 
