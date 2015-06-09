@@ -167,8 +167,9 @@ class UploadFieldTest extends FunctionalTest {
 			'UploadFieldTest_Controller/Form/field/AllowedExtensionsField/upload',
 			array('AllowedExtensionsField' => $this->getUploadFile($invalidFile))
 		);
-		$this->assertTrue($response->isError());
-		$this->assertContains('Extension is not allowed', $response->getBody());
+		$response = json_decode($response->getBody(), true);
+		$this->assertTrue(array_key_exists('error', $response[0]));
+		$this->assertContains('Extension is not allowed', $response[0]['error']);
 
 		$validFile = 'valid.txt';
 		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($validFile));
@@ -176,8 +177,8 @@ class UploadFieldTest extends FunctionalTest {
 			'UploadFieldTest_Controller/Form/field/AllowedExtensionsField/upload',
 			array('AllowedExtensionsField' => $this->getUploadFile($validFile))
 		);
-		$this->assertFalse($response->isError());
-		$this->assertNotContains('Extension is not allowed', $response->getBody());
+		$response = json_decode($response->getBody(), true);
+		$this->assertFalse(array_key_exists('error', $response[0]));
 	}
 
 	/**

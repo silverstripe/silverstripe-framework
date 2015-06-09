@@ -1223,20 +1223,25 @@ class UploadField extends FileField {
 		$name = $this->getName();
 		$postVars = $request->postVar($name);
 
-		// Save the temporary file into a File object
+		// Extract uploaded files from Form data
 		$uploadedFiles = $this->extractUploadedFileData($postVars);
-		$firstFile = reset($uploadedFiles);
-		$file = $this->saveTemporaryFile($firstFile, $error);
-		if(empty($file)) {
-			$return = array('error' => $error);
-		} else {
-			$return = $this->encodeFileAttributes($file);
+		$return = array();
+
+		// Save the temporary files into a File objects
+		// and save data/error on a per file basis
+		foreach ($uploadedFiles as $tempFile) {
+			$file = $this->saveTemporaryFile($tempFile, $error);
+			if(empty($file)) {
+				array_push($return, array('error' => $error));
+			} else {
+				array_push($return, $this->encodeFileAttributes($file));
+			}
+			$this->upload->clearErrors();
 		}
-		
+
 		// Format response with json
-		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
+		$response = new SS_HTTPResponse(Convert::raw2json($return));
 		$response->addHeader('Content-Type', 'text/plain');
-		if (!empty($return['error'])) $response->setStatusCode(403);
 		return $response;
 	}
 
