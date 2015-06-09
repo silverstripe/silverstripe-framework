@@ -258,7 +258,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					$siteTree,
 					TextField::create('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
 					EmailField::create('email', _t('HtmlEditorField.EMAIL', 'Email address')),
-					TreeDropdownField::create('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'ID', 'Title', true),
+					$fileField = UploadField::create('file', _t('HtmlEditorField.FILE', 'File')),
 					TextField::create('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
 					TextField::create('Subject', _t('HtmlEditorField.SUBJECT', 'Email subject')),
 					TextField::create('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
@@ -281,6 +281,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 		$headerWrap->addExtraClass('CompositeField composite cms-content-header nolabel ');
 		$contentComposite->addExtraClass('ss-insert-link content');
+		$fileField->setAllowedMaxFileNumber(1);
 
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
