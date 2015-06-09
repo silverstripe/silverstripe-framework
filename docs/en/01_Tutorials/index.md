@@ -20,6 +20,12 @@ These include video screencasts, written tutorials and code examples to get you 
 * [Lesson 8: Introduction to the ORM](http://www.silverstripe.org/learn/lessons/introduction-to-the-orm)
 * [Lesson 9: Data Relationships - $has_many](http://www.silverstripe.org/learn/lessons/working-with-data-relationships-has-many)
 * [Lesson 10: Introduction to the ORM](http://www.silverstripe.org/learn/lessons/working-with-data-relationships-many-many)
+* [Lesson 11: Introduction to frontend forms](http://www.silverstripe.org/learn/lessons/introduction-to-frontend-forms)
+* [Lesson 12: Data Extensions and SiteConfig](http://www.silverstripe.org/learn/lessons/data-extensions-and-siteconfig)
+* [Lesson 13: Introduction to ModelAdmin](http://www.silverstripe.org/learn/lessons/introduction-to-modeladmin)
+* [Lesson 14: Controller Actions/DataObjects as Pages](http://www.silverstripe.org/learn/lessons/controller-actions-dataobjects-as-pages)
+* [Lesson 15: Building a Search Form](http://www.silverstripe.org/learn/lessons/building-a-search-form)
+* [Lesson 16: Lists and Pagination](http://www.silverstripe.org/learn/lessons/lists-and-pagination)
 
 
 ## Help: If you get stuck
