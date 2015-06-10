@@ -358,8 +358,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(!is_string($fieldClass)) continue;
 
 			// Strip off any parameters
-			$bPos = strpos('(', $fieldClass);
-			if($bPos !== FALSE) $fieldClass = substr(0,$bPos, $fieldClass);
+			$bPos = strpos($fieldClass, '(');
+			if($bPos !== FALSE) $fieldClass = substr($fieldClass, 0, $bPos);
 			
 			// Test to see if it implements CompositeDBField
 			if(ClassInfo::classImplements($fieldClass, 'CompositeDBField')) {
