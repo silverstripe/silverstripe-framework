@@ -237,11 +237,12 @@ class Config {
 	 * @return Config Reference to new active Config instance
 	 */
 	public static function unnest() {
+		self::$instance->cache->clean();
 		return self::set_instance(self::$instance->nestedFrom);
 	}
 
 	/**
-	 * @var array
+	 * @var Config_Cache
 	 */
 	protected $cache;
 
@@ -681,9 +682,47 @@ class Config {
 /**
  * @package framework
  * @subpackage core
+ */
+interface Config_Cache {
+
+	/**
+	 * Set a config value
+	 * 
+	 * @param string $key
+	 * @param mixed $val
+	 * @param array $tags
+	 */
+	public function set($key, $val, $tags = array());
+	
+	/**
+	 * Get stats on this cache
+	 * 
+	 * @return array
+	 */
+	public function stats();
+	
+	/**
+	 * Get the value for a key
+	 * 
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get($key);
+	
+	/**
+	 * Clean values
+	 * 
+	 * @param string $tag Optional tag to limit cleaning to
+	 */
+	public function clean($tag = null);
+}
+
+/**
+ * @package framework
+ * @subpackage core
  * @deprecated 3.2
  */
-class Config_LRU {
+class Config_LRU implements Config_Cache {
 	const SIZE = 1000;
 
 	protected $cache;
@@ -793,7 +832,7 @@ class Config_LRU {
  * @package framework
  * @subpackage core
  */
-class Config_MemCache {
+class Config_MemCache implements Config_Cache {
 	protected $cache;
 
 	protected $i = 0;
