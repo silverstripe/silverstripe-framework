@@ -15,7 +15,7 @@ how you can load default records into the test database.
 		/** 
 		 * Defines the fixture file to use for this test class
 		 *
-		 /
+		 */
 		protected static $fixture_file = 'SiteTreeTest.yml';
 
 		/**
