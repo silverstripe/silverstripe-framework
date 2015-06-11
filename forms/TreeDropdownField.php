@@ -215,16 +215,21 @@ class TreeDropdownField extends FormField {
 		
 		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
-	
+
+		if($this->showSearch) {
+			$emptyTitle = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
+		} else {
+			$emptyTitle = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+		}
+
 		$record = $this->Value() ? $this->objectForKey($this->Value()) : null;
 		if($record instanceof ViewableData) {
 			$title = $record->obj($this->labelField)->forTemplate();
 		} elseif($record) {
 			$title = Convert::raw2xml($record->{$this->labelField});
-		} else if($this->showSearch) {
-			$title = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
-		} else {
-			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+		}
+		else {
+			$title = $emptyTitle;
 		}
 
 		// TODO Implement for TreeMultiSelectField
@@ -237,6 +242,7 @@ class TreeDropdownField extends FormField {
 			$properties,
 			array(
 				'Title' => $title,
+				'EmptyTitle' => $emptyTitle,
 				'Metadata' => ($metadata) ? Convert::raw2json($metadata) : null,
 			)
 		);
