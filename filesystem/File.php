@@ -332,11 +332,15 @@ class File extends DataObject {
 	/**
 	 * @return boolean
 	 */
-	public function canCreate($member = null) {
-		if(!$member) $member = Member::currentUser();
+	public function canCreate($member = null, $context = array()) {
+		if(!$member) {
+			$member = Member::currentUser();
+		}
 
-		$result = $this->extendedCan('canCreate', $member);
-		if($result !== null) return $result;
+		$result = $this->extendedCan('canCreate', $member, $context);
+		if($result !== null) {
+			return $result;
+		}
 
 		return $this->canEdit($member);
 	}

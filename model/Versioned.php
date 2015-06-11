@@ -183,7 +183,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 	/**
 	 * Augment the the SQLSelect that is created by the DataQuery
-	 * @todo Should this all go into VersionedDataQuery?
+	 *
+	 * @param SQLSelect $query
+	 * @param DataQuery $dataQuery
+	 * @throws InvalidArgumentException
 	 */
 	public function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null) {
 		if(!$dataQuery || !$dataQuery->getQueryParam('Versioned.mode')) {
