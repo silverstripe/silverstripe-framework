@@ -584,6 +584,10 @@ form.small .field, .field.small {
 			label {
 				float: none;
 				margin-left: 0;
+				
+				&.ss-ui-button {
+					float: left;	
+				}
 			}
 			.description {
 				margin-left: 0;
