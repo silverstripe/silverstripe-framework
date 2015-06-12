@@ -161,7 +161,7 @@ class GDTest extends SapphireTest {
 		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
 
 		try {
-			$gdFailure = new GDBackend_Failure($fullPath, array('SetWidth', 123));
+			$gdFailure = new GDBackend_Failure($fullPath, array('ScaleWidth', 123));
 			$this->fail('GDBackend_Failure should throw an exception when setting image resource');
 		} catch (GDBackend_Failure_Exception $e) {
 			$cache = SS_Cache::factory('GDBackend_Manipulations');
@@ -169,8 +169,8 @@ class GDTest extends SapphireTest {
 
 			$data = unserialize($cache->load($key));
 
-			$this->assertArrayHasKey('SetWidth|123', $data);
-			$this->assertTrue($data['SetWidth|123']);
+			$this->assertArrayHasKey('ScaleWidth|123', $data);
+			$this->assertTrue($data['ScaleWidth|123']);
 		}
 	}
 
@@ -183,12 +183,12 @@ class GDTest extends SapphireTest {
 		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
 
 		try {
-			$gdFailure = new GDBackend_Failure($fullPath, array('SetWidth-failed', 123));
+			$gdFailure = new GDBackend_Failure($fullPath, array('ScaleWidth-failed', 123));
 			$this->fail('GDBackend_Failure should throw an exception when setting image resource');
 		} catch (GDBackend_Failure_Exception $e) {
-			$gd = new GDBackend($fullPath, array('SetWidth', 123));
-			$this->assertTrue($gd->failedResample($fullPath, 'SetWidth-failed|123'));
-			$this->assertFalse($gd->failedResample($fullPath, 'SetWidth-not-failed|123'));
+			$gd = new GDBackend($fullPath, array('ScaleWidth', 123));
+			$this->assertTrue($gd->failedResample($fullPath, 'ScaleWidth-failed|123'));
+			$this->assertFalse($gd->failedResample($fullPath, 'ScaleWidth-not-failed|123'));
 		}
 	}
 

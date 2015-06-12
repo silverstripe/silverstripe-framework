@@ -3,7 +3,7 @@
 	
 	<div class="ss-uploadfield-item-preview">
 		<% if $Width %>
-			<span>$Preview.SetRatioSize(30, 40)</span>
+			<span>$Preview.Fit(30, 40)</span>
 		<% else %>
 		<span class="no-preview"></span>
 		<% end_if %>

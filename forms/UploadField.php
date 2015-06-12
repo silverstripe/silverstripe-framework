@@ -873,8 +873,8 @@ class UploadField extends FileField {
 				return $file->getThumbnail($width, $height)->getURL();
 			} elseif ($file->hasMethod('getThumbnailURL')) {
 				return $file->getThumbnailURL($width, $height);
-			} elseif ($file->hasMethod('SetRatioSize')) {
-				return $file->SetRatioSize($width, $height)->getURL();
+			} elseif ($file->hasMethod('Fit')) {
+				return $file->Fit($width, $height)->getURL();
 			} else {
 				return $file->Icon();
 			}

@@ -100,7 +100,7 @@ class ImageTest extends SapphireTest {
 	public function testMultipleGenerateManipulationCalls() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 
-		$imageFirst = $image->SetWidth(200);
+		$imageFirst = $image->ScaleWidth(200);
 		$this->assertNotNull($imageFirst);
 		$expected = 200;
 		$actual = $imageFirst->getWidth();
@@ -124,27 +124,27 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($image->isSize(300, 300));
 
 		// Set width to 300 pixels
-		$imageSetWidth = $image->SetWidth(300);
-		$this->assertEquals($imageSetWidth->getWidth(), 300);
-		$this->assertEquals($image->Filename, $imageSetWidth->Filename);
+		$imageScaleWidth = $image->ScaleWidth(300);
+		$this->assertEquals($imageScaleWidth->getWidth(), 300);
+		$this->assertEquals($image->Filename, $imageScaleWidth->Filename);
 
 		// Set height to 300 pixels
-		$imageSetHeight = $image->SetHeight(300);
-		$this->assertEquals($imageSetHeight->getHeight(), 300);
-		$this->assertEquals($image->Filename, $imageSetHeight->Filename);
+		$imageScaleHeight = $image->ScaleHeight(300);
+		$this->assertEquals($imageScaleHeight->getHeight(), 300);
+		$this->assertEquals($image->Filename, $imageScaleHeight->Filename);
 
 		// Crop image to 300 x 300
-		$imageCropped = $image->CroppedImage(300, 300);
+		$imageCropped = $image->Fill(300, 300);
 		$this->assertTrue($imageCropped->isSize(300, 300));
 		$this->assertEquals($image->Filename, $imageCropped->Filename);
 
 		// Resize (padded) to 300 x 300
-		$imageSized = $image->SetSize(300, 300);
+		$imageSized = $image->Pad(300, 300);
 		$this->assertTrue($imageSized->isSize(300, 300));
 		$this->assertEquals($image->Filename, $imageSized->Filename);
 
 		// Padded image 300 x 300 (same as above)
-		$imagePadded = $image->PaddedImage(300, 300);
+		$imagePadded = $image->Pad(300, 300);
 		$this->assertTrue($imagePadded->isSize(300, 300));
 		$this->assertEquals($image->Filename, $imagePadded->Filename);
 
@@ -153,16 +153,16 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($imageStretched->isSize(300, 300));
 		$this->assertEquals($image->Filename, $imageStretched->Filename);
 
-		// SetRatioSize (various options)
-		$imageSetRatioSize = $image->SetRatioSize(300, 600);
-		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
-		$this->assertEquals($image->Filename, $imageSetRatioSize->Filename);
-		$imageSetRatioSize = $image->SetRatioSize(600, 300);
-		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
-		$this->assertEquals($image->Filename, $imageSetRatioSize->Filename);
-		$imageSetRatioSize = $image->SetRatioSize(300, 300);
-		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
-		$this->assertEquals($image->Filename, $imageSetRatioSize->Filename);
+		// Fit (various options)
+		$imageFit = $image->Fit(300, 600);
+		$this->assertTrue($imageFit->isSize(300, 300));
+		$this->assertEquals($image->Filename, $imageFit->Filename);
+		$imageFit = $image->Fit(600, 300);
+		$this->assertTrue($imageFit->isSize(300, 300));
+		$this->assertEquals($image->Filename, $imageFit->Filename);
+		$imageFit = $image->Fit(300, 300);
+		$this->assertTrue($imageFit->isSize(300, 300));
+		$this->assertEquals($image->Filename, $imageFit->Filename);
 	}
 
 	/**
@@ -178,27 +178,27 @@ class ImageTest extends SapphireTest {
 		Config::inst()->update('Image', 'force_resample', true);
 
 		// Set width to 300 pixels
-		$imageSetWidth = $image->SetWidth(300);
-		$this->assertEquals($imageSetWidth->getWidth(), 300);
-		$this->assertNotEquals($image->Filename, $imageSetWidth->Filename);
+		$imageScaleWidth = $image->ScaleWidth(300);
+		$this->assertEquals($imageScaleWidth->getWidth(), 300);
+		$this->assertNotEquals($image->Filename, $imageScaleWidth->Filename);
 
 		// Set height to 300 pixels
-		$imageSetHeight = $image->SetHeight(300);
-		$this->assertEquals($imageSetHeight->getHeight(), 300);
-		$this->assertNotEquals($image->Filename, $imageSetHeight->Filename);
+		$imageScaleHeight = $image->ScaleHeight(300);
+		$this->assertEquals($imageScaleHeight->getHeight(), 300);
+		$this->assertNotEquals($image->Filename, $imageScaleHeight->Filename);
 
 		// Crop image to 300 x 300
-		$imageCropped = $image->CroppedImage(300, 300);
+		$imageCropped = $image->Fill(300, 300);
 		$this->assertTrue($imageCropped->isSize(300, 300));
 		$this->assertNotEquals($image->Filename, $imageCropped->Filename);
 
 		// Resize (padded) to 300 x 300
-		$imageSized = $image->SetSize(300, 300);
+		$imageSized = $image->Pad(300, 300);
 		$this->assertTrue($imageSized->isSize(300, 300));
 		$this->assertNotEquals($image->Filename, $imageSized->Filename);
 
 		// Padded image 300 x 300 (same as above)
-		$imagePadded = $image->PaddedImage(300, 300);
+		$imagePadded = $image->Pad(300, 300);
 		$this->assertTrue($imagePadded->isSize(300, 300));
 		$this->assertNotEquals($image->Filename, $imagePadded->Filename);
 
@@ -207,16 +207,16 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($imageStretched->isSize(300, 300));
 		$this->assertNotEquals($image->Filename, $imageStretched->Filename);
 
-		// SetRatioSize (various options)
-		$imageSetRatioSize = $image->SetRatioSize(300, 600);
-		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
-		$this->assertNotEquals($image->Filename, $imageSetRatioSize->Filename);
-		$imageSetRatioSize = $image->SetRatioSize(600, 300);
-		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
-		$this->assertNotEquals($image->Filename, $imageSetRatioSize->Filename);
-		$imageSetRatioSize = $image->SetRatioSize(300, 300);
-		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
-		$this->assertNotEquals($image->Filename, $imageSetRatioSize->Filename);
+		// Fit (various options)
+		$imageFit = $image->Fit(300, 600);
+		$this->assertTrue($imageFit->isSize(300, 300));
+		$this->assertNotEquals($image->Filename, $imageFit->Filename);
+		$imageFit = $image->Fit(600, 300);
+		$this->assertTrue($imageFit->isSize(300, 300));
+		$this->assertNotEquals($image->Filename, $imageFit->Filename);
+		$imageFit = $image->Fit(300, 300);
+		$this->assertTrue($imageFit->isSize(300, 300));
+		$this->assertNotEquals($image->Filename, $imageFit->Filename);
 		Config::inst()->update('Image', 'force_resample', $origForceResample);
 	}
 
@@ -225,20 +225,52 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($image->isSize(300, 300));
 
 		// Test normal resize
-		$resized = $image->SetSize(150, 100);
+		$resized = $image->Pad(150, 100);
 		$this->assertTrue($resized->isSize(150, 100));
 
 		// Test cropped resize
-		$cropped = $image->CroppedImage(100, 200);
+		$cropped = $image->Fill(100, 200);
 		$this->assertTrue($cropped->isSize(100, 200));
 
 		// Test padded resize
-		$padded = $image->PaddedImage(200, 100);
+		$padded = $image->Pad(200, 100);
 		$this->assertTrue($padded->isSize(200, 100));
 
-		// Test SetRatioSize
-		$ratio = $image->SetRatioSize(80, 160);
+		// Test Fit
+		$ratio = $image->Fit(80, 160);
 		$this->assertTrue($ratio->isSize(80, 80));
+
+		// Test FitMax
+		$fitMaxDn = $image->FitMax(200, 100);
+		$this->assertTrue($fitMaxDn->isSize(100, 100));
+		$fitMaxUp = $image->FitMax(500, 400);
+		$this->assertTrue($fitMaxUp->isSize(300, 300));
+		
+		//Test ScaleMax
+		$scaleMaxWDn = $image->ScaleMaxWidth(200);
+		$this->assertTrue($scaleMaxWDn->isSize(200, 200));
+		$scaleMaxWUp = $image->ScaleMaxWidth(400);
+		$this->assertTrue($scaleMaxWUp->isSize(300, 300));
+		$scaleMaxHDn = $image->ScaleMaxHeight(200);
+		$this->assertTrue($scaleMaxHDn->isSize(200, 200));
+		$scaleMaxHUp = $image->ScaleMaxHeight(400);
+		$this->assertTrue($scaleMaxHUp->isSize(300, 300));
+
+		// Test FillMax
+		$cropMaxDn = $image->FillMax(200, 100);
+		$this->assertTrue($cropMaxDn->isSize(200, 100));
+		$cropMaxUp = $image->FillMax(400, 200);
+		$this->assertTrue($cropMaxUp->isSize(300, 150));
+		
+		// Test Clip
+		$clipWDn = $image->CropWidth(200);
+		$this->assertTrue($clipWDn->isSize(200, 300));
+		$clipWUp = $image->CropWidth(400);
+		$this->assertTrue($clipWUp->isSize(300, 300));
+		$clipHDn = $image->CropHeight(200);
+		$this->assertTrue($clipHDn->isSize(300, 200));
+		$clipHUp = $image->CropHeight(400);
+		$this->assertTrue($clipHUp->isSize(300, 300));
 	}
 
 	/**
@@ -247,15 +279,15 @@ class ImageTest extends SapphireTest {
 	public function testGenerateImageWithInvalidParameters() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$image->setHeight('String');
-		$image->PaddedImage(600,600,'XXXXXX');
+		$image->Pad(600,600,'XXXXXX');
 	}
 
 	public function testCacheFilename() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
-		$imageFirst = $image->SetSize(200,200);
+		$imageFirst = $image->Pad(200,200,'CCCCCC');
 		$imageFilename = $imageFirst->getFullPath();
 			// Encoding of the arguments is duplicated from cacheFilename
-		$neededPart = 'SetSize' . base64_encode(json_encode(array(200,200)));
+		$neededPart = 'Pad' . base64_encode(json_encode(array(200,200,'CCCCCC')));
 		$this->assertContains($neededPart, $imageFilename, 'Filename for cached image is correctly generated');
 	}
 
@@ -263,7 +295,7 @@ class ImageTest extends SapphireTest {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$folder = new SS_FileFinder();
 
-		$imageFirst = $image->SetSize(200,200);
+		$imageFirst = $image->Pad(200,200);
 		$this->assertNotNull($imageFirst);
 		$expected = 200;
 		$actual = $imageFirst->getWidth();
@@ -276,7 +308,7 @@ class ImageTest extends SapphireTest {
 		$actual = $imageSecond->getHeight();
 		$this->assertEquals($expected, $actual);
 
-		$imageThird = $imageSecond->PaddedImage(600,600,'0F0F0F');
+		$imageThird = $imageSecond->Pad(600,600,'0F0F0F');
 		// Encoding of the arguments is duplicated from cacheFilename
 		$argumentString = base64_encode(json_encode(array(600,600,'0F0F0F')));
 		$this->assertNotNull($imageThird);
@@ -300,7 +332,7 @@ class ImageTest extends SapphireTest {
 
 	public function testRegenerateImages() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
-		$image_generated = $image->SetWidth(200);
+		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
 		$this->assertEquals(1, $image->regenerateFormattedImages(), 'Cached images were regenerated correct');
@@ -315,7 +347,7 @@ class ImageTest extends SapphireTest {
 	 */
 	public function testRegenerateImagesWithRenaming() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
-		$image_generated = $image->SetWidth(200);
+		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
 
@@ -337,7 +369,7 @@ class ImageTest extends SapphireTest {
 
 	public function testGeneratedImageDeletion() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
-		$image_generated = $image->SetWidth(200);
+		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
 		$numDeleted = $image->deleteFormattedImages();
@@ -351,11 +383,11 @@ class ImageTest extends SapphireTest {
 	public function testMultipleGenerateManipulationCallsImageDeletion() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
 
-		$firstImage = $image->SetWidth(200);
+		$firstImage = $image->ScaleWidth(200);
 		$firstImagePath = $firstImage->getFullPath();
 		$this->assertTrue(file_exists($firstImagePath));
 
-		$secondImage = $firstImage->SetHeight(100);
+		$secondImage = $firstImage->ScaleHeight(100);
 		$secondImagePath = $secondImage->getFullPath();
 		$this->assertTrue(file_exists($secondImagePath));
 
@@ -369,11 +401,11 @@ class ImageTest extends SapphireTest {
 	 */
 	public function testPathPropertiesCachedImage() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
-		$firstImage = $image->SetWidth(200);
+		$firstImage = $image->ScaleWidth(200);
 		$firstImagePath = $firstImage->getRelativePath();
 		$this->assertEquals($firstImagePath, $firstImage->Filename);
 
-		$secondImage = $firstImage->SetHeight(100);
+		$secondImage = $firstImage->ScaleHeight(100);
 		$secondImagePath = $secondImage->getRelativePath();
 		$this->assertEquals($secondImagePath, $secondImage->Filename);
 	}
