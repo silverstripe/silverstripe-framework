@@ -16,7 +16,8 @@ page you want to edit. Alternatively, locate the appropriate .md file in the
 
 
  * After editing the documentation, describe your changes in the "commit summary" and "extended description" fields below then press "Commit Changes".
- * After that you will see a form to submit a Pull Request. You should be able to adjust the version your document ion changes are for and then submit the form. Your changes will be sent to the core committers for approval.
+ * After that you will see a form to submit a Pull Request: "[pull requests](http://help.github.com/pull-requests/)". You should be able to adjust the version your 
+ * documentation changes are for and then submit the form. Your changes will be sent to the core committers for approval.
 
 <div class="warning" markdown='1'>
 You should make your changes in the lowest branch they apply to. For instance, if you fix a spelling issue that you found in the 3.1 documentation, submit your fix to that branch in Github and it'll be copied to the master (3.2) version of the documentation automatically. *Don't submit multiple pull requests*.
@@ -56,7 +57,7 @@ for documenting open source software.
 * Use PHPDoc in source code: Leave low level technical documentation to code comments within PHP, in [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) format. 
 * API and developer guides are two forms of source code documentation that complement each other.
 * API documentation should provide context, ie, the "bigger picture", by referring to developer guides inside your PHPDoc.
-* Make your documentation easy to find: Documentation lives by interlinking content so please make sure your contribution doesn't become an inaccessible island. At the very least, put a link to your page should on the index page in the same folder. A link to your page can also appear
+* Make your documentation easy to find: Documentation lives by interlinking content so please make sure your contribution doesn't become an inaccessible island. At the very least, put a link to your should on the index page in the same folder. A link to your page can also appear
 as "related content" on other resource (e.g. `/tutorials/site_search` might link to `/developer_guides/forms/introduction`).
 
 ## Writing style
@@ -67,7 +68,7 @@ as "related content" on other resource (e.g. `/tutorials/site_search` might link
 * Mark up correctly: Use preformatted text. Emphasis and bold make technical writing more easily "scannable".
 * Avoid FAQs: FAQs are not a replacement for coherent, well explained documentation. If you've done a good job
 documenting, there shouldn't be any "frequently asked questions" left.
-* "SilverStripe" should always appear without a space, use two capital S’.
+* "SilverStripe" should always appear without a space with both "S"s capitalised.
 * Use simple language and words. Avoid uncommon jargon and overly long words.
 * Use UK English and not US English. SilverStripe is proudly a New Zealand open source project we use the UK spelling and forms of English. The most common of these differences are -ize vs -ise, or -or vs our (eg color vs colour).
 * We use sentence case for titles so only capitalise the first letter of the first word of a title. The only exceptions to this are when using brand names (e.g. SilverStripe), acronyms (e.g. PHP) and class names (e.g. ModelAdmin).
@@ -91,7 +92,7 @@ Code:
 	</div>
 
 <div class="notice" markdown='1'>
-"Notification box": A notification box is goof for technical notifications relating to the main text. For example, notifying users about a deprecated feature.
+"Notification box": A notification box is good for technical notifications relating to the main text. For example, notifying users about a deprecated feature.
 </div>
 
 Code:
@@ -101,7 +102,7 @@ Code:
 	</div>
 
 <div class="warning" markdown='1'>
-"Warning box": A warning box is usefull for highlighting a severe bug or technical issue requiring a user's attention. For example, a code block with destructive functionality might not have its URL actions secured to keep the code shorter (Can a clearer example be given ??).
+"Warning box": A warning box is useful for highlighting a severe bug or a technical issue requiring a user's attention. For example, suppose a rare edge case sometimes leads to a variable being overwritten incorrectly. A warning box can be used to alert the user to this case so they can write their own code to handle it.  
 </div>
 
 Code:
