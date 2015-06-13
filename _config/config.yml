@@ -6,3 +6,8 @@ Upload:
   replaceFile: false
 MySQLDatabase:
   connection_charset: utf8
+HTTP:
+  cache_control:
+    max-age: 0
+    must-revalidate: "true"
+    no-transform: "true"
