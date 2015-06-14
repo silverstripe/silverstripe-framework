@@ -364,7 +364,7 @@ class File extends DataObject {
 		// Preview
 		if($this instanceof Image) {
 			$formattedImage = $this->getFormattedImage(
-				'SetWidth',
+				'ScaleWidth',
 				Config::inst()->get('Image', 'asset_preview_width')
 			);
 			$thumbnail = $formattedImage ? $formattedImage->URL : '';

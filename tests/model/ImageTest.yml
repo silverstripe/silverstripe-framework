@@ -1,6 +1,6 @@
 Folder:
     folder1:
-        Filename: assets/ImageTest
+        Filename: assets/ImageTest/
 Image:
     imageWithTitle:
         Title: This is a image Title
@@ -15,4 +15,12 @@ Image:
     imageWithMetacharacters:
         Title: This is a/an image Title
         Filename: assets/ImageTest/test_image.png
+        Parent: =>Folder.folder1
+    lowQualityJPEG:
+        Title: This is a low quality JPEG
+        Filename: assets/ImageTest/test_image_low-quality.jpg
+        Parent: =>Folder.folder1
+    highQualityJPEG:
+        Title: This is a high quality JPEG
+        Filename: assets/ImageTest/test_image_high-quality.jpg
         Parent: =>Folder.folder1

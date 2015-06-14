@@ -673,7 +673,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 */
 	protected function getFieldsForImage($url, $file) {
 		if($file->File instanceof Image) {
-			$formattedImage = $file->File->generateFormattedImage('SetWidth',
+			$formattedImage = $file->File->generateFormattedImage('ScaleWidth',
 				Config::inst()->get('Image', 'asset_preview_width'));
 			$thumbnailURL = Convert::raw2att($formattedImage ? $formattedImage->URL : $url);
 		} else {

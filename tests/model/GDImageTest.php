@@ -10,22 +10,9 @@ class GDImageTest extends ImageTest {
 			return;
 		}
 
-		parent::setUp();
-
 		Image::set_backend("GDBackend");
 
-		// Create a test files for each of the fixture references
-		$fileIDs = $this->allFixtureIDs('Image');
-		foreach($fileIDs as $fileID) {
-			$file = DataObject::get_by_id('Image', $fileID);
-
-			$image = imagecreatetruecolor(300,300);
-
-			imagepng($image, BASE_PATH."/{$file->Filename}");
-			imagedestroy($image);
-
-			$file->write();
-		}
+		parent::setUp();
 	}
 
 	public function tearDown() {
@@ -47,13 +34,13 @@ class GDImageTest extends ImageTest {
 
 		try {
 			// Simluate a failed manipulation
-			$gdFailure = new GDBackend_Failure($fullPath, array('SetWidth', 123));
+			$gdFailure = new GDBackend_Failure($fullPath, array('ScaleWidth', 123));
 			$this->fail('GDBackend_Failure should throw an exception when setting image resource');
 		} catch (GDBackend_Failure_Exception $e) {
 			// Check that the cache has stored the manipulation failure
 			$data = unserialize($cache->load($key));
-			$this->assertArrayHasKey('SetWidth|123', $data);
-			$this->assertTrue($data['SetWidth|123']);
+			$this->assertArrayHasKey('ScaleWidth|123', $data);
+			$this->assertTrue($data['ScaleWidth|123']);
 
 			// Delete the image object
 			$image->delete();
