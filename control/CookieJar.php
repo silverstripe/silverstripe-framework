@@ -3,7 +3,7 @@
 /**
  * A default backend for the setting and getting of cookies
  *
- * This backend allows one to better test Cookie setting and seperate cookie
+ * This backend allows one to better test Cookie setting and separate cookie
  * handling from the core
  *
  * @todo Create a config array for defaults (eg: httpOnly, secure, path, domain, expiry)
@@ -14,7 +14,7 @@
 class CookieJar implements Cookie_Backend {
 
 	/**
-	 * Hold the cookies that were existing at time of instatiation (ie: The ones
+	 * Hold the cookies that were existing at time of instantiation (ie: The ones
 	 * sent to PHP by the browser)
 	 *
 	 * @var array Existing cookies sent by the browser
@@ -30,7 +30,7 @@ class CookieJar implements Cookie_Backend {
 	protected $current = array();
 
 	/**
-	 * Hold any NEW cookies that were set by the appliation and will be sent
+	 * Hold any NEW cookies that were set by the application and will be sent
 	 * in the next response
 	 *
 	 * @var array New cookies set by the application
@@ -39,7 +39,7 @@ class CookieJar implements Cookie_Backend {
 
 	/**
 	 * When creating the backend we want to store the existing cookies in our
-	 * "existing" array. This allows us to distinguish between cookies we recieved
+	 * "existing" array. This allows us to distinguish between cookies we received
 	 * or we set ourselves (and didn't get from the browser)
 	 *
 	 * @param array $cookies The existing cookies to load into the cookie jar.
@@ -92,6 +92,8 @@ class CookieJar implements Cookie_Backend {
 	/**
 	 * Get the cookie value by name
 	 *
+	 * Cookie names are normalised to work around PHP's behaviour of replacing incoming variable name . with _
+	 *
 	 * @param string $name The name of the cookie to get
 	 * @param boolean $includeUnsent Include cookies we've yet to send when fetching values
 	 *
@@ -101,6 +103,12 @@ class CookieJar implements Cookie_Backend {
 		$cookies = $includeUnsent ? $this->current : $this->existing;
 		if (isset($cookies[$name])) {
 			return $cookies[$name];
+		}
+
+		//Normalise cookie names by replacing '.' with '_'
+		$safeName = str_replace('.', '_', $name);
+		if (isset($cookies[$safeName])) {
+			return $cookies[$safeName];
 		}
 	}
 
