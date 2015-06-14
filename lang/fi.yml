@@ -258,8 +258,7 @@ fi:
     many_many_Members: Jäsenet
   GroupImportForm:
     Help1: '<p>Tuo yksi tai useampi ryhmä <em>CSV</em>-muotoisena (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
-    Help2: "<div class=\"advanced\">\n\t<h4>Edistynyt käyttö</h4>\n\t<ul>\n\t<li>Sallitut palstat: <em>%s</em></li>\n\t<li>Olemassa olevat ryhmät kohdistetaan niiden uniikin <em>Code</em> arvolla, ja päivitetään uudet arvot tuodusta tiedostosta</li>\n\t<li>Oikeustasot voidaan luoda käyttämällä <em>ParentCode</em> palstaa.</li>\n\t<li>Oikeustasokoodit voidaan kohdistaa <em>PermissionCode</em> palstassa. Olemassaolevia oikeusia ei tyhjennetä.</li>\n\t</ul>\n\
-      </div>"
+    Help2: "<div class=\"advanced\">\n<h4>Edistynyt käyttö</h4>\n<ul>\n<li>Sallitut sarakkeet: <em>%s</em></li>\n<li>Olemassa olevat rhymes kohdistetaan niiden uniikin  <em>Code</em> arvolla, ja päivitetään arvot tuodusta tiedostosta</li>\n<li>Ryhmien hierarkiat voidaan luoda <em>ParentCode</em> sarakkeessa.</li>\n<li>Oikeustasokoodit voidaan kohdistaa <em>PermissionCode</em> sarakkeessa. Olemassa olevia oikeuksia ei tyhjennetä.</li>\n</ul>\n</div>"
     ResultCreated: 'Luotiin {count} ryhmä(ä)'
     ResultDeleted: 'Poistettu %d ryhmää'
     ResultUpdated: 'Päivitetty %d ryhmää'
