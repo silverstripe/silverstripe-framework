@@ -55,27 +55,27 @@ class Form extends RequestHandler {
 	public $IncludeFormTag = true;
 
 	/**
-	 * @var FieldList
+	 * @var FieldList|null
 	 */
 	protected $fields;
 
 	/**
-	 * @var FieldList
+	 * @var FieldList|null
 	 */
 	protected $actions;
 
 	/**
-	 * @var Controller
+	 * @var Controller|null
 	 */
 	protected $controller;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $name;
 
 	/**
-	 * @var Validator
+	 * @var Validator|null
 	 */
 	protected $validator;
 
@@ -90,12 +90,12 @@ class Form extends RequestHandler {
 	protected $strictFormMethodCheck = false;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected static $current_action;
 
 	/**
-	 * @var DataObject $record Populated by {@link loadDataFrom()}.
+	 * @var DataObject|null $record Populated by {@link loadDataFrom()}.
 	 */
 	protected $record;
 
@@ -112,7 +112,7 @@ class Form extends RequestHandler {
 	 * Useful to open a new window upon
 	 * form submission.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	protected $target;
 
@@ -121,7 +121,7 @@ class Form extends RequestHandler {
 	 * <legend> element before the <fieldset>
 	 * in Form.ss template.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	protected $legend;
 
@@ -131,22 +131,22 @@ class Form extends RequestHandler {
 	 * another template for customisation.
 	 *
 	 * @see Form->setTemplate()
-	 * @var string
+	 * @var string|null
 	 */
 	protected $template;
 
 	/**
-	 * @var callable
+	 * @var callable|null
 	 */
 	protected $buttonClickedFunc;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $message;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $messageType;
 
@@ -164,7 +164,7 @@ class Form extends RequestHandler {
 	protected $security = true;
 
 	/**
-	 * @var SecurityToken
+	 * @var SecurityToken|null
 	 */
 	protected $securityToken = null;
 
@@ -174,7 +174,7 @@ class Form extends RequestHandler {
 	protected $extraClasses = array();
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $encType;
 
@@ -196,7 +196,7 @@ class Form extends RequestHandler {
 	/**
 	 * @var bool
 	 */
-	protected $securityTokenAdded;
+	protected $securityTokenAdded = false;
 
 	/**
 	 * Create a new form, with the given fields an action buttons.
@@ -546,9 +546,8 @@ class Form extends RequestHandler {
 	 * form on the page upon validation errors in the form or if
 	 * they just need to redirect back to the page
 	 *
-	 * @param bool $bool
+	 * @param bool $bool Redirect to form on error?
 	 * @return $this
-	 * @internal param Redirect $bool to the form
 	 */
 	public function setRedirectToFormOnValidationError($bool) {
 		$this->redirectToFormOnValidationError = $bool;
