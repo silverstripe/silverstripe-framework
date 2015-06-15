@@ -593,7 +593,13 @@
 	background-position:-60px -19px;
 }
 
-/* ensure status is visible in sidebar */
+/**
+ * DEPRECATED:
+ * .cms-content-tools will be removed in 4.0
+ * Use .cms-content-filters instead.
+ *
+ * Ensure status is visible in sidebar
+ */
 .cms-content-tools .cms-tree.jstree {
 	li {
 		min-width: 159px;

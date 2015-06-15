@@ -911,3 +911,144 @@ fieldset.switch-states{
 } 
 //old web-kit browser fix	
 @-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }
+
+//Styling for filter/search dropdown
+.cms-content-filters {
+	fieldset {
+		margin-left: -16px;
+		margin-right: -16px;
+	}
+
+	.fieldgroup {
+		width: 50%;
+		display: inline-block;
+		max-width: 440px;
+		padding-right: 16px;
+		padding-left: 16px;
+		margin-bottom: 16px;
+		box-sizing: border-box;
+		margin-right: -2px;
+		vertical-align: top;
+
+		.first {
+			label, h1, h2, h3, h4, h5 {
+				display: block;
+				width: 176px;
+				padding: 8px 8px 6px 0;
+				line-height: 16px;
+				font-weight: bold;
+				margin: 0;
+				font-size: 100%;
+			}
+		}
+
+		.field {
+			width: 100%;
+			padding-right: 0;
+			padding-left: 0;
+		}
+
+		.fieldgroup-field {
+			position: relative;
+			margin-right: 0;
+			width: 48%;
+			display: inline-block;
+			padding: 0;
+
+			.description {
+				margin-top: 24px;
+			}
+
+			label {
+				position: absolute;
+				top: 28px;
+				font-style: italic;
+				color: #777;
+				font-weight: normal;
+			}
+
+			&.first {
+				width: 100%;
+				float: left;
+			}
+
+			&.last {
+				padding-right: 0;
+				float: right;
+			}
+		}
+
+		.fieldgroup {
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	.field {
+		border: none;
+		box-shadow: none;
+		width: 50%;
+		max-width: 440px;
+		display: inline-block;
+		margin: 0 0 8px 0;
+		padding-right: 16px;
+		padding-left: 16px;
+		padding-bottom: 0;
+		box-sizing: border-box;
+		margin-right: -2px;
+		vertical-align: top;
+
+		label.left {
+			text-shadow: none;
+			padding-bottom: 6px;
+		}
+
+		&.dropdown {
+			float: none;
+			display: inline-block;
+		}
+
+		.chzn-container {
+			width: 100% !important;
+			max-width: 100%;
+		}
+
+		input.text {
+			max-width: 100%;
+		}
+
+		&.checkbox {
+			display: block;
+		}
+	}
+
+	.importSpec {
+		margin-bottom: 8px;
+		padding-left: 16px;
+	}
+
+	.description {
+		margin-left: 0;
+	}
+
+	.middleColumn {
+		width: 100%;
+		margin-left: 0;
+		max-width: 100%;
+	}
+
+	.Actions {
+		margin: 8px 0 16px;
+	}
+
+	@media screen and (max-width:767px) {
+		fieldset {
+			.field,
+			.fieldgroup {
+				width: 100%;
+				max-width: 100%;
+			}
+		}
+	}
+}
+
