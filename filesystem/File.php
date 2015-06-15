@@ -913,7 +913,7 @@ class File extends DataObject {
 		return $labels;
 	}
 
-	public function validate() {
+	protected function validate() {
 		if($this->config()->apply_restrictions_to_admin || !Permission::check('ADMIN')) {
 			// Extension validation
 			// TODO Merge this with Upload_Validator
