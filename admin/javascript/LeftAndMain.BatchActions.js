@@ -339,6 +339,7 @@
 					tree.addClass('multiple');
 					tree.removeClass('draggable');
 					form.serializeFromTree();
+					$('#Form_BatchActionsForm').refreshSelected();
 				} else {
 					tree.removeClass('multiple');
 					tree.addClass('draggable');
@@ -350,13 +351,6 @@
 		 * Class: #Form_BatchActionsForm :select[name=Action]
 		 */
 		$('#Form_BatchActionsForm select[name=Action]').entwine({
-			onmatch: function() {
-				this.trigger('change');
-				this._super();
-			},
-			onunmatch: function() {
-				this._super();
-			},
 			onchange: function(e) {
 				var form = $(e.target.form),
 					btn = form.find(':submit'),
