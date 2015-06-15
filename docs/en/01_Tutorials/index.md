@@ -11,7 +11,7 @@ These include video screencasts, written tutorials and code examples to get you 
 
 * [How to set up a local development environment in SilverStripe](https://vimeo.com/108861537)
 * [Lesson 1: Creating your first theme](http://www.silverstripe.org/learn/lessons/creating-your-first-theme)
-* [Lesson 2: Migrating static templates into your theme]http://www.silverstripe.org/learn/lessons/migrating-static-templates-into-your-theme)
+* [Lesson 2: Migrating static templates into your theme](http://www.silverstripe.org/learn/lessons/migrating-static-templates-into-your-theme)
 * [Lesson 3: Adding dynamic content](http://www.silverstripe.org/learn/lessons/adding-dynamic-content)
 * [Lesson 4: Working with multiple templates](http://www.silverstripe.org/learn/lessons/working-with-multiple-templates)
 * [Lesson 5: The holder/page pattern](http://www.silverstripe.org/learn/lessons/the-holderpage-pattern)
@@ -26,7 +26,7 @@ These include video screencasts, written tutorials and code examples to get you 
 * [Lesson 14: Controller Actions/DataObjects as Pages](http://www.silverstripe.org/learn/lessons/controller-actions-dataobjects-as-pages)
 * [Lesson 15: Building a Search Form](http://www.silverstripe.org/learn/lessons/building-a-search-form)
 * [Lesson 16: Lists and Pagination](http://www.silverstripe.org/learn/lessons/lists-and-pagination)
-
+* [Lesson 17: Ajax Behaviour and Viewable Data](http://www.silverstripe.org/learn/lessons/ajax-behaviour-and-viewabledata)
 
 ## Help: If you get stuck
 
