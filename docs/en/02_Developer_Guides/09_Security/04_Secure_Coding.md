@@ -27,7 +27,7 @@ come from user input.
 Example:
 	
 	:::php
-	$records = DB::preparedQuery('SELECT * FROM "MyClass" WHERE "ID" = ?', array(3));
+	$records = DB::prepared_query('SELECT * FROM "MyClass" WHERE "ID" = ?', array(3));
 	$records = MyClass::get()->where(array('"ID" = ?' => 3));
 	$records = MyClass::get()->where(array('"ID"' => 3));
 	$records = DataObject::get_by_id('MyClass', 3);
@@ -48,7 +48,7 @@ Parameterised updates and inserts are also supported, but the syntax is a little
 		))
 		->assignSQL('"Created"', 'NOW()')
 		->execute();
-	DB::preparedQuery(
+	DB::prepared_query(
 		'INSERT INTO "MyClass" ("Name", "Position", "Age", "Created") VALUES(?, ?, GREATEST(0,?,?), NOW())'
 		array('Daniel', 'Accountant', 24, 28)
 	);
@@ -100,7 +100,7 @@ and [datamodel](/developer_guides/model) for ways to parameterise, cast, and con
 
 *  `SQLQuery`
 *  `DB::query()`
-*  `DB::preparedQuery()`
+*  `DB::prepared_query()`
 *  `Director::urlParams()`
 *  `Controller->requestParams`, `Controller->urlParams`
 *  `SS_HTTPRequest` data
