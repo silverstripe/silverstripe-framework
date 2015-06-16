@@ -410,8 +410,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(!is_string($fieldClass)) continue;
 
 			// Strip off any parameters
-			$bPos = strpos('(', $fieldClass);
-			if($bPos !== FALSE) $fieldClass = substr(0,$bPos, $fieldClass);
+			$bPos = strpos($fieldClass, '(');
+			if($bPos !== FALSE) $fieldClass = substr($fieldClass, 0, $bPos);
 
 			// Test to see if it implements CompositeDBField
 			if(ClassInfo::classImplements($fieldClass, 'CompositeDBField')) {
@@ -2584,6 +2584,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject $this
 	 */
 	public function setField($fieldName, $val) {
+		//if it's a has_one component, destroy the cache
+		if (substr($fieldName, -2) == 'ID') {
+			unset($this->components[substr($fieldName, 0, -2)]);
+		}
 		// Situation 1: Passing an DBField
 		if($val instanceof DBField) {
 			$val->Name = $fieldName;

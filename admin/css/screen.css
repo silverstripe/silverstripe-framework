@@ -265,6 +265,7 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .ss-toggle .ui-accordion-content .field:last-child { margin-bottom: 0; }
 .ss-toggle .ui-accordion-content .field .middleColumn { margin-left: 0; }
 .ss-toggle .ui-accordion-content .field label { float: none; margin-left: 0; }
+.ss-toggle .ui-accordion-content .field label.ss-ui-button { float: left; }
 .ss-toggle .ui-accordion-content .field .description { margin-left: 0; }
 
 /** ---------------------------------------------------- Checkbox Field ---------------------------------------------------- */

@@ -191,9 +191,7 @@ lt:
     TEXT2: 'slaptažodžio atstatymo nuoroda'
     TEXT3: svetainei
   Form:
-    CSRF_FAILED_MESSAGE: 'Iškilo techninė problema. Prašome paspausti mygtuką Atgal,
-
-      perkraukite naršyklės langą ir bandykite vėl.'
+    CSRF_FAILED_MESSAGE: 'Iškilo techninė problema. Prašome paspausti mygtuką Atgal, perkraukite naršyklės langą ir bandykite vėl.'
     FIELDISREQUIRED: '{name} yra privalomas'
     SubmitBtnLabel: Vykdyti
     VALIDATIONCREDITNUMBER: 'Prašome įsitikinti, ar teisingai suvedėte kreditinės kortelės numerį {number}'
@@ -260,8 +258,7 @@ lt:
     many_many_Members: Vartotojai
   GroupImportForm:
     Help1: '<p>Importuoti vieną ar kelias grupes <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href="#" class="toggle-advanced">Rodyti detalesnį aprašymą</a></small></p>'
-    Help2: "<div class=\"advanced\">\n\t<h4>Sudėtingesni pasirinkimai</h4>\n\t<ul>\n\t<li>Galimi stulpeliai: <em>%s</em></li>\n\t<li>Esamos grupės yra surišamos su jų unikalia <em>Code</em> reikšme ir atnaujinamos duomenimis iš importuojamos bylos</li>\n\t<li>Grupių hierarchija gali būti sukurta naudojant <em>ParentCode</em> stulpelį.</li>\n\t<li>Leidimų kodai gali būti priskirti naudojant <em>PermissionCode</em> stulpelį. Esami leidimai nebus pakeisti.</li>\n\t</ul>\n\
-      </div>"
+    Help2: "<div class=\"advanced\">\n<h4>Sudėtingesni pasirinkimai</h4>\n<ul>\n<li>Galimi stulpeliai: <em>%s</em></li>\n<li>Esamos grupės yra surišamos su jų unikalia <em>Code</em> reikšme ir atnaujinamos duomenimis iš importuojamos bylos</li>\n<li>Grupių hierarchija gali būti sukurta naudojant <em>ParentCode</em> stulpelį.</li>\n<li>Leidimų kodai gali būti priskirti naudojant <em>PermissionCode</em> stulpelį. Esami leidimai nebus pakeisti.</li>\n</ul>\n</div>"
     ResultCreated: 'Sukurta {count} grupių'
     ResultDeleted: 'Ištrinta %d grupių'
     ResultUpdated: 'Atnaujinta %d grupių'

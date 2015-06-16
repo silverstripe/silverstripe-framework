@@ -11,7 +11,7 @@ SilverStripe needs to boot its core and run through several stages of processing
 
 The first step in most environments is a rewrite of a request path into parameters passed to a PHP script.
 This allows writing friendly URLs instead of linking directly to PHP files.
-The implementation depends on your web server, we'll show you the most common one here: 
+The implementation depends on your web server; we'll show you the most common one here: 
 Apache with [mod_rewrite](http://httpd.apache.org/docs/2.0/mod/mod_rewrite.html).
 Check our [installation guides](/getting_started/installation) on how other web servers like IIS or nginx handle rewriting.
 
@@ -123,7 +123,7 @@ further filtering before content is sent to the end user
 
 The framework provides the ability to hook into the request both before and 
 after it is handled to allow binding custom logic. This can be used
-to transform or filter request data, instanciate helpers, execute global logic,
+to transform or filter request data, instantiate helpers, execute global logic,
 or even short-circuit execution (e.g. to enforce custom authentication schemes).
 The ["Request Filters" documentation](../controllers/requestfilters) shows you how.
 

@@ -1,11 +1,10 @@
 <?php
+
 /**
  * TextareaField creates a multi-line text field,
  * allowing more data to be entered than a standard
  * text field. It creates the <textarea> tag in the
  * form HTML.
- *
- * <b>Usage</b>
  *
  * <code>
  * new TextareaField(
@@ -19,17 +18,49 @@
  * @subpackage fields-basic
  */
 class TextareaField extends FormField {
-
 	/**
-	 * @var int Visible number of text lines.
+	 * Visible number of text lines.
+	 *
+	 * @var int
 	 */
 	protected $rows = 5;
 
 	/**
-	 * @var int Width of the text area (in average character widths)
+	 * Visible number of text columns.
+	 *
+	 * @var int
 	 */
 	protected $cols = 20;
 
+	/**
+	 * Set the number of rows in the textarea
+	 *
+	 * @param int $rows
+	 *
+	 * @return $this
+	 */
+	public function setRows($rows) {
+		$this->rows = $rows;
+
+		return $this;
+	}
+
+	/**
+	 * Set the number of columns in the textarea
+	 *
+	 * @param int $cols
+	 *
+	 * @return $this
+	 */
+	public function setColumns($cols) {
+		$this->cols = $cols;
+
+		return $this;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
@@ -42,30 +73,23 @@ class TextareaField extends FormField {
 		);
 	}
 
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function Type() {
-		return parent::Type() . ($this->readonly ? ' readonly' : '');
+		$parent = parent::Type();
+
+		if($this->readonly) {
+			return $parent . ' readonly';
+		}
+
+		return $parent;
 	}
 
 	/**
-	 * Set the number of rows in the textarea
-	 *
-	 * @param int
+	 * @return string
 	 */
-	public function setRows($rows) {
-		$this->rows = $rows;
-		return $this;
-	}
-
-	/**
-	 * Set the number of columns in the textarea
-	 *
-	 * @return int
-	 */
-	public function setColumns($cols) {
-		$this->cols = $cols;
-		return $this;
-	}
-
 	public function Value() {
 		return htmlentities($this->value, ENT_COMPAT, 'UTF-8');
 	}

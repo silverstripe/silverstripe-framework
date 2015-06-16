@@ -443,6 +443,7 @@ class DataObjectTest extends SapphireTest {
 	public function testHasOneRelationship() {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
+		$player2 = $this->objFromFixture('DataObjectTest_Player', 'player2');
 		$fan1 = $this->objFromFixture('DataObjectTest_Fan', 'fan1');
 
 		// Test relation probing
@@ -465,6 +466,15 @@ class DataObjectTest extends SapphireTest {
 			'Player 1 is the captain');
 		$this->assertEquals($team1->getComponent('Captain')->FirstName, 'Player 1',
 			'Player 1 is the captain');
+
+		$team1->CaptainID = $player2->ID;
+		$team1->write();
+
+		$this->assertEquals($player2->ID, $team1->Captain()->ID);
+		$this->assertEquals($player2->ID, $team1->getComponent('Captain')->ID);
+		$this->assertEquals('Player 2', $team1->Captain()->FirstName);
+		$this->assertEquals('Player 2', $team1->getComponent('Captain')->FirstName);
+
 
 		// Set the favourite team for fan1
 		$fan1->setField('FavouriteID', $team1->ID);
