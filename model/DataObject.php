@@ -2316,6 +2316,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject $this
 	 */
 	public function setField($fieldName, $val) {
+		//if it's a has_one component, destroy the cache
+		if (substr($fieldName, -2) == 'ID') {
+			unset($this->components[substr($fieldName, 0, -2)]);
+		}
 		// Situation 1: Passing an DBField
 		if($val instanceof DBField) {
 			$val->Name = $fieldName;
