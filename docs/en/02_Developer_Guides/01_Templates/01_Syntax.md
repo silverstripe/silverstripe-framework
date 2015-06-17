@@ -298,6 +298,7 @@ iteration.
  * `$First`, `$Last`, `$Middle`: Booleans about the position in the list.
  * `$FirstLast`: Returns a string, "first", "last", or "". Useful for CSS classes.
  * `$Pos`: The current position in the list (integer). Will start at 1.
+ * `$Pos(0)`: The current position in the list (integer). Will start at 0.
  * `$TotalItems`: Number of items in the list (integer).
 
 	:::ss
