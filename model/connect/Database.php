@@ -96,7 +96,19 @@ abstract class SS_Database {
 	 * @return SS_Query
 	 */
 	public function query($sql, $errorLevel = E_USER_ERROR) {
-		return $this->connector->query($sql, $errorLevel);
+		// Check if we should only preview this query
+		if ($this->previewWrite($sql)) {
+			return;
+		}
+
+		// Benchmark query
+		$connector = $this->connector;
+		return $this->benchmarkQuery(
+			$sql,
+			function($sql) use($connector, $errorLevel) {
+				return $connector->query($sql, $errorLevel);
+			}
+		);
 	}
 
 
@@ -109,7 +121,62 @@ abstract class SS_Database {
 	 * @return SS_Query
 	 */
 	public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR) {
-		return $this->connector->preparedQuery($sql, $parameters, $errorLevel);
+		// Check if we should only preview this query
+		if ($this->previewWrite($sql)) {
+			return;
+		}
+
+		// Benchmark query
+		$connector = $this->connector;
+		return $this->benchmarkQuery(
+			$sql,
+			function($sql) use($connector, $parameters, $errorLevel) {
+				return $connector->preparedQuery($sql, $parameters, $errorLevel);
+			}
+		);
+	}
+
+	/**
+	 * Determines if the query should be previewed, and thus interrupted silently.
+	 * If so, this function also displays the query via the debuging system.
+	 * Subclasess should respect the results of this call for each query, and not
+	 * execute any queries that generate a true response.
+	 *
+	 * @param string $sql The query to be executed
+	 * @return boolean Flag indicating that the query was previewed
+	 */
+	protected function previewWrite($sql) {
+		// Only preview if previewWrite is set, we are in dev mode, and
+		// the query is mutable
+		if (isset($_REQUEST['previewwrite'])
+			&& Director::isDev()
+			&& $this->connector->isQueryMutable($sql)
+		) {
+			// output preview message
+			Debug::message("Will execute: $sql");
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Allows the display and benchmarking of queries as they are being run
+	 *
+	 * @param string $sql Query to run, and single parameter to callback
+	 * @param callable $callback Callback to execute code
+	 * @return mixed Result of query
+	 */
+	protected function benchmarkQuery($sql, $callback) {
+		if (isset($_REQUEST['showqueries']) && Director::isDev()) {
+			$starttime = microtime(true);
+			$result = $callback($sql);
+			$endtime = round(microtime(true) - $starttime, 4);
+			Debug::message("\n$sql\n{$endtime}s\n", false);
+			return $result;
+		} else {
+			return $callback($sql);
+		}
 	}
 
 	/**
