@@ -90,7 +90,7 @@ class DataQuery {
 			$fieldExpression = key($fieldExpression);
 		}
 
-		$where = $this->query->getWhere();
+		$where = $this->query->toAppropriateExpression()->getWhere();
 		// Iterate through each condition
 		foreach($where as $i => $condition) {
 
@@ -836,6 +836,10 @@ class DataQuery {
  */
 class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
 
+	/**
+	 *
+	 * @var SQLQuery
+	 */
 	protected $whereQuery;
 
 	public function __construct(DataQuery $base, $connective) {
@@ -867,11 +871,14 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
 		$parameters = array();
 
 		// Ignore empty conditions
-		$where = $this->whereQuery->getWhere();
-		if(empty($where)) return null;
+		$query = $this->whereQuery->toAppropriateExpression();
+		$where = $query->getWhere();
+		if(empty($where)) {
+			return null;
+		}
 
 		// Allow database to manage joining of conditions
-		$sql = DB::get_conn()->getQueryBuilder()->buildWhereFragment($this->whereQuery, $parameters);
+		$sql = DB::get_conn()->getQueryBuilder()->buildWhereFragment($query, $parameters);
 		return preg_replace('/^\s*WHERE\s*/i', '', $sql);
 	}
 }
