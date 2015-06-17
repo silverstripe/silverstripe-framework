@@ -315,8 +315,12 @@ class Director implements TemplateGlobalProvider {
 			throw new SS_HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
 		}
 
-		// TODO: Pass in the DataModel
-		$result = Director::handleRequest($request, $session, $model);
+		try {
+			$result = Director::handleRequest($request, $session, $model);
+		} catch(Exception $ex) {
+			$onCleanup();
+			throw $ex;
+		}
 
 		// Ensure that the result is an SS_HTTPResponse object
 		if(is_string($result)) {
