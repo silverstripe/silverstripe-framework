@@ -542,10 +542,10 @@
 			text-decoration: none;
 		}	
 		.jstree-closed > ins { 
-			background-position:0 0; 
+			background-position:2px -1px;
 		}
 		.jstree-open > ins { 
-			background-position:-20px 0;
+			background-position:-18px -1px;
 		}
 	}
 
@@ -559,27 +559,25 @@
 
 
 // For drag and drop icons to not appear whilst in multi-selection
-.cms-content-fields {
-	.cms-tree {
-		&.jstree {
-			.jstree-no-checkboxes {
-				li {
-					a {
-						padding-left: 15px;
-					}
+.cms-tree {
+	&.jstree {
+		.jstree-no-checkboxes {
+			li {
+				a {
+					padding-left: 12px;
+				}
 
-					.jstree-hovered,
-					.jstree-clicked,
-					a:focus {
-						padding-left: 3px;
-					}
+				.jstree-hovered,
+				.jstree-clicked,
+				a:focus {
+					padding-left: 0;
+				}
 
-					.jstree-hovered,
-					.jstree-clicked,
-					a:focus {
-						.jstree-icon {
-							display: block;
-						}
+				.jstree-hovered,
+				.jstree-clicked,
+				a:focus {
+					.jstree-icon {
+						display: block;
 					}
 				}
 			}
@@ -592,7 +590,7 @@
 .jstree-default-rtl a .jstree-icon,
 .jstree-classic a .jstree-icon,
 .jstree-apple a .jstree-icon { 
-	background-position:-62px -19px;
+	background-position:-60px -19px;
 }
 
 /* ensure status is visible in sidebar */

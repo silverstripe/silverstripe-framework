@@ -919,7 +919,7 @@ class FormField extends RequestHandler {
 	 * Validation method each {@link FormField} subclass should implement,
 	 * determining whether the field is valid or not based on the value.
 	 *
-	 * @param Validator
+	 * @param Validator $validator
 	 * @return boolean
 	 */
 	public function validate($validator) {

@@ -230,37 +230,29 @@ class ManyManyList extends RelationList {
 				$hasExisting = false;
 			}
 
-			$manipulation = array();
+			// Blank manipulation
+			$manipulation = array(
+				$this->joinTable => array(
+					'command' => $hasExisting ? 'update' : 'insert',
+					'fields' => array()
+				)
+			);
 			if($hasExisting) {
-				$manipulation[$this->joinTable]['command'] = 'update';
 				$manipulation[$this->joinTable]['where'] = array(
 					"\"{$this->joinTable}\".\"{$this->foreignKey}\"" => $foreignID,
 					"\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
 				);
-			} else {
-				$manipulation[$this->joinTable]['command'] = 'insert';
 			}
 
-			if($extraFields) {
-				foreach($extraFields as $fieldName => $fieldValue) {
-					if(is_null($fieldValue)) {
-						$manipulation[$this->joinTable]['fields'][$fieldName] = null;
-					} elseif($fieldValue instanceof DBField) {
-						// rely on writeToManipulation to manage the changes
-						// required for this field.
-						$working = array('fields' => array());
-
-						// create a new instance of the field so we can
-						// modify the field name to the correct version.
-						$field = DBField::create_field(get_class($fieldValue), $fieldValue);
-						$field->setName($fieldName);
-						$field->writeToManipulation($working);
-
-						foreach($working['fields'] as $extraName => $extraValue) {
-							$manipulation[$this->joinTable]['fields'][$extraName] = $extraValue;
-						}
-					} else {
-						$manipulation[$this->joinTable]['fields'][$fieldName] =  $fieldValue;
+			if($extraFields && $this->extraFields) {
+				// Write extra field to manipluation in the same way
+				// that DataObject::prepareManipulationTable writes fields
+				foreach($this->extraFields as $fieldName => $fieldSpec) {
+					// Skip fields without an assignment
+					if(array_key_exists($fieldName, $extraFields)) {
+						$fieldObject = Object::create_from_string($fieldSpec, $fieldName);
+						$fieldObject->setValue($extraFields[$fieldName]);
+						$fieldObject->writeToManipulation($manipulation[$this->joinTable]);
 					}
 				}
 			}
@@ -357,24 +349,32 @@ class ManyManyList extends RelationList {
 	 */
 	public function getExtraData($componentName, $itemID) {
 		$result = array();
+		
+		// Skip if no extrafields or unsaved record
+		if(empty($this->extraFields) || empty($itemID)) {
+			return $result;
+		}
 
 		if(!is_numeric($itemID)) {
 			user_error('ComponentSet::getExtraData() passed a non-numeric child ID', E_USER_ERROR);
 		}
 
-		if($this->extraFields) {
-			$cleanExtraFields = array();
-			foreach ($this->extraFields as $fieldName => $dbFieldSpec) {
-				$cleanExtraFields[] = "\"{$fieldName}\"";
-			}
-			$query = new SQLSelect($cleanExtraFields, "\"{$this->joinTable}\"");
-			if($filter = $this->foreignIDWriteFilter($this->getForeignID())) {
-				$query->setWhere($filter);
-			} else {
-				user_error("Can't call ManyManyList::getExtraData() until a foreign ID is set", E_USER_WARNING);
-			}
-			$query->addWhere("\"{$this->localKey}\" = {$itemID}");
-			$queryResult = $query->execute()->current();
+		$cleanExtraFields = array();
+		foreach ($this->extraFields as $fieldName => $dbFieldSpec) {
+			$cleanExtraFields[] = "\"{$fieldName}\"";
+		}
+		$query = new SQLQuery($cleanExtraFields, "\"{$this->joinTable}\"");
+		$filter = $this->foreignIDWriteFilter($this->getForeignID());
+		if($filter) {
+			$query->setWhere($filter);
+		} else {
+			user_error("Can't call ManyManyList::getExtraData() until a foreign ID is set", E_USER_WARNING);
+		}
+		$query->addWhere(array(
+			"\"{$this->localKey}\"" => $itemID
+		));
+		$queryResult = $query->execute()->current();
+		if ($queryResult) {
 			foreach ($queryResult as $fieldName => $value) {
 				$result[$fieldName] = $value;
 			}

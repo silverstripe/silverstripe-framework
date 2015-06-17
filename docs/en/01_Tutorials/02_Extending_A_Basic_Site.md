@@ -512,7 +512,7 @@ The staff section templates aren't too difficult to create, thanks to the utilit
 		<% loop $Children %>
 			<article>
 				<h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
-				$Photo.SetWidth(150)
+				$Photo.ScaleWidth(150)
 				<p>$Content.FirstParagraph</p>
 				<a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a>
 			</article>
@@ -521,7 +521,7 @@ The staff section templates aren't too difficult to create, thanks to the utilit
 	</div>
 
 
-This template is very similar to the *ArticleHolder* template. The *SetWidth* method of the `[api:Image]` class
+This template is very similar to the *ArticleHolder* template. The *ScaleWidth* method of the `[api:Image]` class
 will resize the image before sending it to the browser. The resized image is cached, so the server doesn't have to
 resize the image every time the page is viewed.
 
@@ -537,13 +537,13 @@ The *StaffPage* template is also very straight forward.
 		<article>
 			<h1>$Title</h1>
 			<div class="content">
-				$Photo.SetWidth(433)
+				$Photo.ScaleWidth(433)
 				$Content</div>
 		</article>
 			$Form
 	</div>
 
-Here we use the *SetWidth* method to get a different sized image from the same source image. You should now have
+Here we use the *ScaleWidth* method to get a different sized image from the same source image. You should now have
 a complete staff section.
 
 ![](../_images/tutorial2_einstein.jpg)

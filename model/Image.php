@@ -216,31 +216,271 @@ class Image extends File implements Flushable {
 	}
 
 	/**
+	 * Scale image proportionally to fit within the specified bounds
+	 *
+	 * @param integer $width The width to size within
+	 * @param integer $height The height to size within
+	 * @return Image
+	 */
+	public function Fit($width, $height) {
+		// Prevent divide by zero on missing/blank file
+		if(!$this->getWidth() || !$this->getHeight()) return null;
+
+		// Check if image is already sized to the correct dimension
+		$widthRatio = $width / $this->getWidth();
+		$heightRatio = $height / $this->getHeight();
+		
+		if( $widthRatio < $heightRatio ) {
+			// Target is higher aspect ratio than image, so check width
+			if($this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')) return $this;
+		} else {
+			// Target is wider or same aspect ratio as image, so check height
+			if($this->isHeight($height) && !Config::inst()->get('Image', 'force_resample')) return $this;
+		}
+
+		// Item must be regenerated
+		return  $this->getFormattedImage('Fit', $width, $height);
+	}
+
+	/**
+	 * Scale image proportionally to fit within the specified bounds
+	 *
+	 * @param Image_Backend $backend
+	 * @param integer $width The width to size within
+	 * @param integer $height The height to size within
+	 * @return Image_Backend
+	 */
+	public function generateFit(Image_Backend $backend, $width, $height) {
+		return $backend->resizeRatio($width, $height);
+	}
+
+	/**
+	 * Proportionally scale down this image if it is wider or taller than the specified dimensions.
+	 * Similar to Fit but without up-sampling. Use in templates with $FitMax.
+	 * 
+	 * @uses Image::Fit()
+	 * @param integer $width The maximum width of the output image
+	 * @param integer $height The maximum height of the output image
+	 * @return Image
+	 */
+	public function FitMax($width, $height) {
+		// Temporary $force_resample support for 3.x, to be removed in 4.0
+		if (Config::inst()->get('Image', 'force_resample') && $this->getWidth() <= $width && $this->getHeight() <= $height) return $this->Fit($this->getWidth(),$this->getHeight());
+		
+		return $this->getWidth() > $width || $this->getHeight() > $height
+			? $this->Fit($width,$height)
+			: $this;
+	}
+
+	/**
+	 * Resize and crop image to fill specified dimensions.
+	 * Use in templates with $Fill
+	 *
+	 * @param integer $width Width to crop to
+	 * @param integer $height Height to crop to
+	 * @return Image
+	 */
+	public function Fill($width, $height) {
+		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
+			? $this
+			: $this->getFormattedImage('Fill', $width, $height);
+	}
+
+	/**
+	 * Resize and crop image to fill specified dimensions.
+	 * Use in templates with $Fill
+	 *
+	 * @param Image_Backend $backend
+	 * @param integer $width Width to crop to
+	 * @param integer $height Height to crop to
+	 * @return Image_Backend
+	 */
+	public function generateFill(Image_Backend $backend, $width, $height) {
+		return $backend->croppedResize($width, $height);
+	}
+
+	/**
+	 * Crop this image to the aspect ratio defined by the specified width and height, 
+	 * then scale down the image to those dimensions if it exceeds them.
+	 * Similar to Fill but without up-sampling. Use in templates with $FillMax.
+	 *
+	 * @uses Image::Fill()
+	 * @param integer $width The relative (used to determine aspect ratio) and maximum width of the output image
+	 * @param integer $height The relative (used to determine aspect ratio) and maximum height of the output image
+	 * @return Image
+	 */
+	public function FillMax($width, $height) {
+		// Prevent divide by zero on missing/blank file
+		if(!$this->getWidth() || !$this->getHeight()) return null;
+		
+		// Temporary $force_resample support for 3.x, to be removed in 4.0
+		if (Config::inst()->get('Image', 'force_resample') && $this->isSize($width, $height)) return $this->Fill($width, $height);
+		
+		// Is the image already the correct size?
+		if ($this->isSize($width, $height)) return $this;
+		
+		// If not, make sure the image isn't upsampled
+		$imageRatio = $this->getWidth() / $this->getHeight();
+		$cropRatio = $width / $height;
+		// If cropping on the x axis compare heights
+		if ($cropRatio < $imageRatio && $this->getHeight() < $height) return $this->Fill($this->getHeight()*$cropRatio, $this->getHeight());
+		// Otherwise we're cropping on the y axis (or not cropping at all) so compare widths
+		if ($this->getWidth() < $width) return $this->Fill($this->getWidth(), $this->getWidth()/$cropRatio);
+		
+		return $this->Fill($width, $height);
+	}
+
+	/**
+	 * Fit image to specified dimensions and fill leftover space with a solid colour (default white). Use in templates with $Pad.
+	 *
+	 * @param integer $width The width to size to
+	 * @param integer $height The height to size to
+	 * @return Image
+	 */
+	public function Pad($width, $height, $backgroundColor='FFFFFF') {
+		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
+			? $this
+			: $this->getFormattedImage('Pad', $width, $height, $backgroundColor);
+	}
+
+	/**
+	 * Fit image to specified dimensions and fill leftover space with a solid colour (default white). Use in templates with $Pad.
+	 *
+	 * @param Image_Backend $backend
+	 * @param integer $width The width to size to
+	 * @param integer $height The height to size to
+	 * @return Image_Backend
+	 */
+	public function generatePad(Image_Backend $backend, $width, $height, $backgroundColor='FFFFFF') {
+		return $backend->paddedResize($width, $height, $backgroundColor);
+	}
+
+	/**
+	 * Scale image proportionally by width. Use in templates with $ScaleWidth.
+	 *
+	 * @param integer $width The width to set
+	 * @return Image
+	 */
+	public function ScaleWidth($width) {
+		return $this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')
+			? $this
+			: $this->getFormattedImage('ScaleWidth', $width);
+	}
+
+	/**
+	 * Scale image proportionally by width. Use in templates with $ScaleWidth.
+	 *
+	 * @param Image_Backend $backend
+	 * @param int $width The width to set
+	 * @return Image_Backend
+	 */
+	public function generateScaleWidth(Image_Backend $backend, $width) {
+		return $backend->resizeByWidth($width);
+	}
+
+	/**
+	 * Proportionally scale down this image if it is wider than the specified width. 
+	 * Similar to ScaleWidth but without up-sampling. Use in templates with $ScaleMaxWidth.
+	 *
+	 * @uses Image::ScaleWidth()
+	 * @param integer $width The maximum width of the output image
+	 * @return Image
+	 */
+	public function ScaleMaxWidth($width) {
+		// Temporary $force_resample support for 3.x, to be removed in 4.0
+		if (Config::inst()->get('Image', 'force_resample') && $this->getWidth() <= $width) return $this->ScaleWidth($this->getWidth());
+		
+		return $this->getWidth() > $width
+			? $this->ScaleWidth($width)
+			: $this;
+	}
+
+	/**
+	 * Scale image proportionally by height. Use in templates with $ScaleHeight.
+	 *
+	 * @param integer $height The height to set
+	 * @return Image
+	 */
+	public function ScaleHeight($height) {
+		return $this->isHeight($height) && !Config::inst()->get('Image', 'force_resample')
+			? $this
+			: $this->getFormattedImage('ScaleHeight', $height);
+	}
+
+	/**
+	 * Scale image proportionally by height. Use in templates with $ScaleHeight.
+	 *
+	 * @param Image_Backend $backend
+	 * @param integer $height The height to set
+	 * @return Image_Backend
+	 */
+	public function generateScaleHeight(Image_Backend $backend, $height){
+		return $backend->resizeByHeight($height);
+	}
+
+	/**
+	 * Proportionally scale down this image if it is taller than the specified height. 
+	 * Similar to ScaleHeight but without up-sampling. Use in templates with $ScaleMaxHeight.
+	 *
+	 * @uses Image::ScaleHeight()
+	 * @param integer $height The maximum height of the output image
+	 * @return Image
+	 */
+	public function ScaleMaxHeight($height) {
+		// Temporary $force_resample support for 3.x, to be removed in 4.0
+		if (Config::inst()->get('Image', 'force_resample') && $this->getHeight() <= $height) return $this->ScaleHeight($this->getHeight());
+		
+		return $this->getHeight() > $height
+			? $this->ScaleHeight($height)
+			: $this;
+	}
+
+	/**
+	 * Crop image on X axis if it exceeds specified width. Retain height.
+	 * Use in templates with $CropWidth. Example: $Image.ScaleHeight(100).$CropWidth(100)
+	 *
+	 * @uses Image::Fill()
+	 * @param integer $width The maximum width of the output image
+	 * @return Image
+	 */
+	public function CropWidth($width) {
+		// Temporary $force_resample support for 3.x, to be removed in 4.0
+		if (Config::inst()->get('Image', 'force_resample') && $this->getWidth() <= $width) return $this->Fill($this->getWidth(), $this->getHeight());
+		
+		return $this->getWidth() > $width
+			? $this->Fill($width, $this->getHeight())
+			: $this;
+	}
+
+	/**
+	 * Crop image on Y axis if it exceeds specified height. Retain width.
+	 * Use in templates with $CropHeight. Example: $Image.ScaleWidth(100).CropHeight(100)
+	 *
+	 * @uses Image::Fill()
+	 * @param integer $height The maximum height of the output image
+	 * @return Image
+	 */
+	public function CropHeight($height) {
+		// Temporary $force_resample support for 3.x, to be removed in 4.0
+		if (Config::inst()->get('Image', 'force_resample') && $this->getHeight() <= $height) return $this->Fill($this->getWidth(), $this->getHeight());
+		
+		return $this->getHeight() > $height
+			? $this->Fill($this->getWidth(), $height)
+			: $this;
+	}
+
+	/**
 	 * Resize the image by preserving aspect ratio, keeping the image inside the
 	 * $width and $height
 	 *
 	 * @param integer $width The width to size within
 	 * @param integer $height The height to size within
 	 * @return Image
+	 * @deprecated 4.0 Use Fit instead
 	 */
 	public function SetRatioSize($width, $height) {
-
-		// Prevent divide by zero on missing/blank file
-		if(empty($this->width) || empty($this->height)) return null;
-
-		// Check if image is already sized to the correct dimension
-		$widthRatio = $width / $this->width;
-		$heightRatio = $height / $this->height;
-		if( $widthRatio < $heightRatio ) {
-			// Target is higher aspect ratio than image, so check width
-			if($this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')) return $this;
-		} else {
-			// Target is wider aspect ratio than image, so check height
-			if($this->isHeight($height) && !Config::inst()->get('Image', 'force_resample')) return $this;
-		}
-
-		// Item must be regenerated
-		return  $this->getFormattedImage('SetRatioSize', $width, $height);
+		Deprecation::notice('4.0', 'Use Fit instead');
+		return $this->Fit($width, $height);
 	}
 
 	/**
@@ -251,8 +491,10 @@ class Image extends File implements Flushable {
 	 * @param integer $width The width to size within
 	 * @param integer $height The height to size within
 	 * @return Image_Backend
+	 * @deprecated 4.0 Use generateFit instead
 	 */
 	public function generateSetRatioSize(Image_Backend $backend, $width, $height) {
+		Deprecation::notice('4.0', 'Use generateFit instead');
 		return $backend->resizeRatio($width, $height);
 	}
 
@@ -261,11 +503,11 @@ class Image extends File implements Flushable {
 	 *
 	 * @param integer $width The width to set
 	 * @return Image
+	 * @deprecated 4.0 Use ScaleWidth instead
 	 */
 	public function SetWidth($width) {
-		return $this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')
-			? $this
-			: $this->getFormattedImage('SetWidth', $width);
+		Deprecation::notice('4.0', 'Use ScaleWidth instead');
+		return $this->ScaleWidth($width);
 	}
 
 	/**
@@ -274,8 +516,10 @@ class Image extends File implements Flushable {
 	 * @param Image_Backend $backend
 	 * @param int $width The width to set
 	 * @return Image_Backend
+	 * @deprecated 4.0 Use generateScaleWidth instead
 	 */
 	public function generateSetWidth(Image_Backend $backend, $width) {
+		Deprecation::notice('4.0', 'Use generateScaleWidth instead');
 		return $backend->resizeByWidth($width);
 	}
 
@@ -284,11 +528,11 @@ class Image extends File implements Flushable {
 	 *
 	 * @param integer $height The height to set
 	 * @return Image
+	 * @deprecated 4.0 Use ScaleHeight instead
 	 */
 	public function SetHeight($height) {
-		return $this->isHeight($height) && !Config::inst()->get('Image', 'force_resample')
-			? $this
-			: $this->getFormattedImage('SetHeight', $height);
+		Deprecation::notice('4.0', 'Use ScaleHeight instead');
+		return $this->ScaleHeight($height);
 	}
 
 	/**
@@ -297,8 +541,10 @@ class Image extends File implements Flushable {
 	 * @param Image_Backend $backend
 	 * @param integer $height The height to set
 	 * @return Image_Backend
+	 * @deprecated 4.0 Use generateScaleHeight instead
 	 */
 	public function generateSetHeight(Image_Backend $backend, $height){
+		Deprecation::notice('4.0', 'Use generateScaleHeight instead');
 		return $backend->resizeByHeight($height);
 	}
 
@@ -309,11 +555,11 @@ class Image extends File implements Flushable {
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
 	 * @return Image
+	 * @deprecated 4.0 Use Pad instead
 	 */
 	public function SetSize($width, $height) {
-		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
-			? $this
-			: $this->getFormattedImage('SetSize', $width, $height);
+		Deprecation::notice('4.0', 'Use Pad instead');
+		return $this->Pad($width, $height);
 	}
 
 	/**
@@ -323,8 +569,10 @@ class Image extends File implements Flushable {
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
 	 * @return Image_Backend
+	 * @deprecated 4.0 Use generatePad instead
 	 */
 	public function generateSetSize(Image_Backend $backend, $width, $height) {
+		Deprecation::notice('4.0', 'Use generatePad instead');
 		return $backend->paddedResize($width, $height);
 	}
 
@@ -371,11 +619,11 @@ class Image extends File implements Flushable {
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
 	 * @return Image
+	 * @deprecated 4.0 Use Pad instead
 	 */
 	public function PaddedImage($width, $height, $backgroundColor='FFFFFF') {
-		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
-			? $this
-			: $this->getFormattedImage('PaddedImage', $width, $height, $backgroundColor);
+		Deprecation::notice('4.0', 'Use Pad instead');
+		return $this->Pad($width, $height, $backgroundColor);
 	}
 
 	/**
@@ -385,8 +633,10 @@ class Image extends File implements Flushable {
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
 	 * @return Image_Backend
+	 * @deprecated 4.0 Use generatePad instead
 	 */
 	public function generatePaddedImage(Image_Backend $backend, $width, $height, $backgroundColor='FFFFFF') {
+		Deprecation::notice('4.0', 'Use generatePad instead');
 		return $backend->paddedResize($width, $height, $backgroundColor);
 	}
 
@@ -510,7 +760,8 @@ class Image extends File implements Flushable {
 
 	/**
 	 * Generate a resized copy of this image with the given width & height.
-	 * Use in templates with $ResizedImage.
+	 * This can be used in templates with $ResizedImage but should be avoided,
+	 * as it's the only image manipulation function which can skew an image.
 	 *
 	 * @param integer $width Width to resize to
 	 * @param integer $height Height to resize to
@@ -547,11 +798,11 @@ class Image extends File implements Flushable {
 	 * @param integer $width Width to crop to
 	 * @param integer $height Height to crop to
 	 * @return Image
+	 * @deprecated 4.0 Use Fill instead
 	 */
 	public function CroppedImage($width, $height) {
-		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
-			? $this
-			: $this->getFormattedImage('CroppedImage', $width, $height);
+		Deprecation::notice('4.0', 'Use Fill instead');
+		return $this->Fill($width, $height);
 	}
 
 	/**
@@ -562,8 +813,10 @@ class Image extends File implements Flushable {
 	 * @param integer $width Width to crop to
 	 * @param integer $height Height to crop to
 	 * @return Image_Backend
+	 * @deprecated 4.0 Use generateFill instead
 	 */
 	public function generateCroppedImage(Image_Backend $backend, $width, $height) {
+		Deprecation::notice('4.0', 'Use generateFill instead');
 		return $backend->croppedResize($width, $height);
 	}
 
@@ -648,9 +901,9 @@ class Image extends File implements Flushable {
 	public function regenerateFormattedImages() {
 		if(!$this->Filename) return 0;
 
-			// Without this, not a single file would be written
-			// caused by a check in getFormattedImage()
-		$_GET['flush'] = 1;
+		// Without this, not a single file would be written
+		// caused by a check in getFormattedImage()
+		$this->flush();
 
 		$numGenerated = 0;
 		$generatedImages = $this->getGeneratedImages();

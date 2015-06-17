@@ -326,7 +326,7 @@ class Folder extends File {
 		}
 	}
 
-	public function validate() {
+	protected function validate() {
 		return new ValidationResult(true);
 	}
 

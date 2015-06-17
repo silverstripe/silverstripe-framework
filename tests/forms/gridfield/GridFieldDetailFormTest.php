@@ -174,11 +174,15 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$manyManyField = $parser->getByXpath('//*[@id="Form_ItemEditForm"]//input[@name="ManyMany[IsPublished]"]');
 		$this->assertTrue((bool)$manyManyField);
 
+		// Test save of IsPublished field
 		$response = $this->post(
 			$editformurl,
 			array(
 				'Name' => 'Updated Category',
-				'ManyMany' => array('IsPublished' => 1),
+				'ManyMany' => array(
+					'IsPublished' => 1,
+					'PublishedBy' => 'Richard'
+				),
 				'action_doSave' => 1
 			)
 		);
@@ -187,7 +191,33 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
 		$category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
 		$this->assertEquals(
-			array('IsPublished' => 1),
+			array(
+				'IsPublished' => 1,
+				'PublishedBy' => 'Richard'
+			),
+			$person->Categories()->getExtraData('', $category->ID)
+		);
+		
+		// Test update of value with falsey value
+		$response = $this->post(
+			$editformurl,
+			array(
+				'Name' => 'Updated Category',
+				'ManyMany' => array(
+					'PublishedBy' => ''
+				),
+				'action_doSave' => 1
+			)
+		);
+		$this->assertFalse($response->isError());
+
+		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
+		$category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
+		$this->assertEquals(
+			array(
+				'IsPublished' => 0,
+				'PublishedBy' => ''
+			),
 			$person->Categories()->getExtraData('', $category->ID)
 		);
 	}
@@ -316,7 +346,8 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 
 	private static $many_many_extraFields = array(
 		'Categories' => array(
-			'IsPublished' => 'Boolean'
+			'IsPublished' => 'Boolean',
+			'PublishedBy' => 'Varchar'
 		)
 	);
 
@@ -464,7 +495,10 @@ class GridFieldDetailFormTest_CategoryController extends Controller implements T
 		// GridField lists categories for a specific person
 		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
 		$detailFields = singleton('GridFieldDetailFormTest_Category')->getCMSFields();
-		$detailFields->addFieldToTab('Root.Main', new CheckboxField('ManyMany[IsPublished]'));
+		$detailFields->addFieldsToTab('Root.Main', array(
+			new CheckboxField('ManyMany[IsPublished]'),
+			new TextField('ManyMany[PublishedBy]'))
+		);
 		$field = new GridField('testfield', 'testfield', $person->Categories());
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$gridFieldForm->setFields($detailFields);

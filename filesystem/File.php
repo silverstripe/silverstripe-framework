@@ -368,7 +368,7 @@ class File extends DataObject {
 		// Preview
 		if($this instanceof Image) {
 			$formattedImage = $this->getFormattedImage(
-				'SetWidth',
+				'ScaleWidth',
 				Config::inst()->get('Image', 'asset_preview_width')
 			);
 			$thumbnail = $formattedImage ? $formattedImage->URL : '';
@@ -917,7 +917,7 @@ class File extends DataObject {
 		return $labels;
 	}
 
-	public function validate() {
+	protected function validate() {
 		if($this->config()->apply_restrictions_to_admin || !Permission::check('ADMIN')) {
 			// Extension validation
 			// TODO Merge this with Upload_Validator

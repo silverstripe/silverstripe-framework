@@ -495,20 +495,38 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		return $backlink;
 	}
-
-
+	
+	/**
+	 * Get the list of extra data from the $record as saved into it by
+	 * {@see Form::saveInto()}
+	 * 
+	 * Handles detection of falsey values explicitly saved into the
+	 * DataObject by formfields
+	 * 
+	 * @param DataObject $record
+	 * @param SS_List $list
+	 * @return array List of data to write to the relation
+	 */
+	protected function getExtraSavedData($record, $list) {
+		// Skip extra data if not ManyManyList
+		if(!($list instanceof ManyManyList)) {
+			return null;
+		}
+		
+		$data = array();
+		foreach($list->getExtraFields() as $field => $dbSpec) {
+			$savedField = "ManyMany[{$field}]";
+			if($record->hasField($savedField)) {
+				$data[$field] = $record->getField($savedField);
+			}
+		}
+		return $data;
+	}
 
 	public function doSave($data, $form) {
 		$new_record = $this->record->ID == 0;
 		$controller = $this->getToplevelController();
 		$list = $this->gridField->getList();
-
-		if($list instanceof ManyManyList) {
-			// Data is escaped in ManyManyList->add()
-			$extraData = (isset($data['ManyMany'])) ? $data['ManyMany'] : null;
-		} else {
-			$extraData = null;
-		}
 
 		if(!$this->record->canEdit()) {
 			return $controller->httpError(403);
@@ -527,6 +545,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		try {
 			$form->saveInto($this->record);
 			$this->record->write();
+			$extraData = $this->getExtraSavedData($this->record, $list);
 			$list->add($this->record, $extraData);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad', false);

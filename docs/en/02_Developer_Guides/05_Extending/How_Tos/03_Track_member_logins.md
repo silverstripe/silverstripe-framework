@@ -37,7 +37,7 @@ explicitly logging in or by invoking the "remember me" functionality.
 			
 			DB::query(sprintf(
 				'UPDATE "Member" SET "LastVisited" = %s, "NumVisit" = "NumVisit" + 1 WHERE "ID" = %d',
-				DB::getConn()->now(),
+				DB::get_conn()->now(),
 				$this->owner->ID
 			));
 		}

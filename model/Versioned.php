@@ -489,34 +489,34 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					if(!$isRootClass && ($versionedTables = ClassInfo::dataClassesFor($table))) {
 
 						foreach($versionedTables as $child) {
-							if($table == $child) break; // only need subclasses
+							if($table === $child) break; // only need subclasses
+							
+							// Select all orphaned version records
+							$orphanedQuery = SQLSelect::create()
+								->selectField("\"{$table}_versions\".\"ID\"")
+								->setFrom("\"{$table}_versions\"");
+								
+							// If we have a parent table limit orphaned records
+							// to only those that exist in this
+							if(DB::get_schema()->hasTable("{$child}_versions")) {
+								$orphanedQuery
+									->addLeftJoin(
+										"{$child}_versions",
+										"\"{$child}_versions\".\"RecordID\" = \"{$table}_versions\".\"RecordID\"
+										AND \"{$child}_versions\".\"Version\" = \"{$table}_versions\".\"Version\""
+									)
+									->addWhere("\"{$child}_versions\".\"ID\" IS NULL");
+							}
 
-							$count = DB::query("
-								SELECT COUNT(*) FROM \"{$table}_versions\"
-								LEFT JOIN \"{$child}_versions\"
-									ON \"{$child}_versions\".\"RecordID\" = \"{$table}_versions\".\"RecordID\"
-									AND \"{$child}_versions\".\"Version\" = \"{$table}_versions\".\"Version\"
-								WHERE \"{$child}_versions\".\"ID\" IS NULL
-							")->value();
-
+							$count = $orphanedQuery->count();
 							if($count > 0) {
-								DB::alteration_message("Removing orphaned versioned records", "deleted");
-
-								$affectedIDs = DB::query("
-									SELECT \"{$table}_versions\".\"ID\" FROM \"{$table}_versions\"
-									LEFT JOIN \"{$child}_versions\"
-										ON \"{$child}_versions\".\"RecordID\" = \"{$table}_versions\".\"RecordID\"
-										AND \"{$child}_versions\".\"Version\" = \"{$table}_versions\".\"Version\"
-									WHERE \"{$child}_versions\".\"ID\" IS NULL
-								")->column();
-
-								if(is_array($affectedIDs)) {
-									foreach($affectedIDs as $key => $value) {
-										DB::prepared_query(
-											"DELETE FROM \"{$table}_versions\" WHERE \"ID\" = ?",
-											array($value)
-										);
-									}
+								DB::alteration_message("Removing {$count} orphaned versioned records", "deleted");
+								$ids = $orphanedQuery->execute()->column();
+								foreach($ids as $id) {
+									DB::prepared_query(
+										"DELETE FROM \"{$table}_versions\" WHERE \"ID\" = ?",
+										array($id)
+									);
 								}
 							}
 						}
