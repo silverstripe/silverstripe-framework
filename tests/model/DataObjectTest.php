@@ -1821,7 +1821,7 @@ class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 		'Name' => 'Varchar(50)'
 	);
 
-	protected function validate() {
+	public function validate() {
 		if(!empty($this->Name)) {
 			return new ValidationResult();
 		} else {

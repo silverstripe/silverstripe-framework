@@ -1487,7 +1487,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	/**
 	 * Validate this member object.
 	 */
-	protected function validate() {
+	public function validate() {
 		$valid = parent::validate();
 
 		if(!$this->ID || $this->isChanged('Password')) {
