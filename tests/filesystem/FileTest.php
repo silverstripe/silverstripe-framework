@@ -103,18 +103,18 @@ class FileTest extends SapphireTest {
 
 		// Invalid ext
 		$file->Name = 'asdf.php';
-		$v = $file->doValidate();
+		$v = $file->validate();
 		$this->assertFalse($v->valid());
 		$this->assertContains('Extension is not allowed', $v->message());
 
 		// Valid ext
 		$file->Name = 'asdf.txt';
-		$v = $file->doValidate();
+		$v = $file->validate();
 		$this->assertTrue($v->valid());
 
 		// Capital extension is valid as well
 		$file->Name = 'asdf.TXT';
-		$v = $file->doValidate();
+		$v = $file->validate();
 		$this->assertTrue($v->valid());
 
 		Config::inst()->remove('File', 'allowed_extensions');

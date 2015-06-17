@@ -336,7 +336,7 @@ class Group extends DataObject {
 		$this->setField("Code", Convert::raw2url($val));
 	}
 
-	protected function validate() {
+	public function validate() {
 		$result = parent::validate();
 
 		// Check if the new group hierarchy would add certain "privileged permissions",
