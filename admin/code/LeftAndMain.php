@@ -976,6 +976,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$data[$id] = array(
 				'html' => $html, 
 				'ParentID' => $record->ParentID,
+				'Sort' => $record->Sort,
 				'NextID' => $next ? $next->ID : null,
 				'PrevID' => $prev ? $prev->ID : null
 			);
