@@ -391,7 +391,7 @@ class ConfigManifestTest extends SapphireTest {
 
 	public function testEnvironmentRules() {
 		foreach (array('dev', 'test', 'live') as $env) {
-			Config::inst()->nest();
+			Config::nest();
 
 			Config::inst()->update('Director', 'environment_type', $env);
 			$config = $this->getConfigFixtureValue('Environment');
@@ -403,13 +403,11 @@ class ConfigManifestTest extends SapphireTest {
 				);
 			}
 
-			Config::inst()->unnest();
+			Config::unnest();
 		}
 	}
 
 	public function testDynamicEnvironmentRules() {
-		Config::inst()->nest();
-
 		// First, make sure environment_type is live
 		Config::inst()->update('Director', 'environment_type', 'live');
 		$this->assertEquals('live', Config::inst()->get('Director', 'environment_type'));
@@ -423,8 +421,6 @@ class ConfigManifestTest extends SapphireTest {
 
 		// And that the dynamic rule was calculated correctly
 		$this->assertEquals('dev', Config::inst()->get('ConfigManifestTest', 'DynamicEnvironment'));
-
-		Config::inst()->unnest();
 	}
 
 	public function testMultipleRules() {
