@@ -63,7 +63,7 @@ class DatetimeField extends FormField {
 			->addExtraClass('fieldgroup-field');
 		$this->timeField = TimeField::create($name . '[time]', false)
 			->addExtraClass('fieldgroup-field');
-		$this->timezoneField = new HiddenField($this->getName() . '[timezone]');
+		$this->timezoneField = new HiddenField($name . '[timezone]');
 		
 		parent::__construct($name, $title, $value);
 	}
@@ -76,6 +76,14 @@ class DatetimeField extends FormField {
 		$this->timezoneField->setForm($form);
 
 		return $this;
+	}
+
+	public function setName($name) {
+		parent::setName($name);
+
+		$this->dateField->setName($name . '[date]');
+		$this->timeField->setName($name . '[time]');
+		$this->timezoneField->setName($name . '[timezone]');
 	}
 	
 	public function FieldHolder($properties = array()) {
