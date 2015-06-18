@@ -14,7 +14,7 @@ well written bug reports can be half of the solution already!
  * Search on [http://silverstripe.org/modules](http://silverstripe.org/modules) for module-specific bugtrackers
  * Request features: [UserVoice](http://silverstripe.uservoice.com).
 
-Before submitting a bug:
+Before submitting a bug: 
 
  * Ask for assistance on the [forums](http://www.silverstripe.org/community/forums/), [core mailinglist](http://groups.google.com/group/silverstripe-dev) or on [IRC](http://irc.silverstripe.org/) if you're unsure if its really a bug.
  * Search for similar, existing tickets
