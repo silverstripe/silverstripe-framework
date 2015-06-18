@@ -16,8 +16,7 @@ page you want to edit. Alternatively, locate the appropriate .md file in the
 
 
  * After editing the documentation, describe your changes in the "commit summary" and "extended description" fields below then press "Commit Changes".
- * After that you will see a form to submit a Pull Request: "[pull requests](http://help.github.com/pull-requests/)". You should be able to adjust the version your 
- * documentation changes are for and then submit the form. Your changes will be sent to the core committers for approval.
+ * After that you will see a form to submit a Pull Request: "[pull requests](http://help.github.com/pull-requests/)". You should be able to adjust the version your documentation changes apply to and then submit the form. Your changes will be sent to the core committers for approval.
 
 <div class="warning" markdown='1'>
 You should make your changes in the lowest branch they apply to. For instance, if you fix a spelling issue that you found in the 3.1 documentation, submit your fix to that branch in Github and it'll be copied to the master (3.2) version of the documentation automatically. *Don't submit multiple pull requests*.
@@ -57,7 +56,7 @@ for documenting open source software.
 * Use PHPDoc in source code: Leave low level technical documentation to code comments within PHP, in [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) format. 
 * API and developer guides are two forms of source code documentation that complement each other.
 * API documentation should provide context, ie, the "bigger picture", by referring to developer guides inside your PHPDoc.
-* Make your documentation easy to find: Documentation lives by interlinking content so please make sure your contribution doesn't become an inaccessible island. At the very least, put a link to your should on the index page in the same folder. A link to your page can also appear
+* Make your documentation easy to find: Documentation is useful only when it is interlinked so please make sure your contribution doesn't become an inaccessible island. At the very least, put a link to your index page in the same folder. A link to your page can also appear
 as "related content" on other resource (e.g. `/tutorials/site_search` might link to `/developer_guides/forms/introduction`).
 
 ## Writing style
@@ -85,7 +84,7 @@ sparingly.
 "Tip box": A tip box is great for adding, deepening or accenting information in the main text. They can be used for background knowledge, or to provide links to further information (ie, a "see also" link).
 </div>
 
-Code:
+Code for a Tip box:
 
 	<div class="hint" markdown='1'>
 	...
@@ -95,7 +94,7 @@ Code:
 "Notification box": A notification box is good for technical notifications relating to the main text. For example, notifying users about a deprecated feature.
 </div>
 
-Code:
+Code for a Notification box:
 
 	<div class="notice" markdown='1'>
 	...
@@ -105,7 +104,7 @@ Code:
 "Warning box": A warning box is useful for highlighting a severe bug or a technical issue requiring a user's attention. For example, suppose a rare edge case sometimes leads to a variable being overwritten incorrectly. A warning box can be used to alert the user to this case so they can write their own code to handle it.  
 </div>
 
-Code:
+Code for a Warning box:
 
 	<div class="warning" markdown='1'>
 	...
