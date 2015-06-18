@@ -60,10 +60,8 @@ How to deprecate an API:
 *  Make sure that the old deprecated function works by calling the new function - don't have duplicated code!
 *  The commit message should contain an `API` prefix (see ["commit message format"](code#commit-messages))
 *  Document the change in the [changelog](/changelogs) for the next release
-*  Deprecated APIs can be removed after developers have had a chance to react to the changes. As a rule of thumb, leave the 
-code with the deprecation warning in for at least three micro releases. Only remove code in a minor or major release. 
-*  Exceptions to the deprecation cycle are APIs that have been moved into their own module, and continue to work with the
-new minor release. These changes can be performed in a single minor release without a deprecation period.
+*  Deprecated APIs can be removed only after developers have had sufficient time to react to the changes. Hence,     deprecated APIs should be removed in MAJOR releases only. Between MAJOR releases, leave the code in place with    a deprecation warning. 
+*  Exceptions to the deprecation cycle are APIs that have been moved into their own module, and continue to work     with the new minor release. These changes can be performed in a single minor release without a deprecation        period.
 
 Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::is_dev()`:
 
