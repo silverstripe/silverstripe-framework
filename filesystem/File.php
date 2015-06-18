@@ -608,7 +608,7 @@ class File extends DataObject {
 
 		// If it's changed, check for duplicates
 		if($oldName && $oldName != $name) {
-			$base = pathinfo($name, PATHINFO_BASENAME);
+			$base = pathinfo($name, PATHINFO_FILENAME);
 			$ext = self::get_file_extension($name);
 			$suffix = 1;
 
@@ -620,7 +620,7 @@ class File extends DataObject {
 				))->first()
 			) {
 				$suffix++;
-				$name = "$base-$suffix$ext";
+				$name = "$base-$suffix.$ext";
 			}
 		}
 
