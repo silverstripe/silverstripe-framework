@@ -62,10 +62,10 @@ class Email extends ViewableData {
 	protected $bcc;
 
 	/**
-	 * @deprecated since version 3.3
+	 * @deprecated since version 4.0
 	 */
 	public static function set_mailer(Mailer $mailer) {
-		Deprecation::notice('3.3.0', 'Use Injector to override the Mailer service');
+		Deprecation::notice('4.0', 'Use Injector to override the Mailer service');
 		Injector::inst()->registerService($mailer, 'Mailer');
 	}
 
@@ -162,7 +162,7 @@ class Email extends ViewableData {
 		if($bcc != null) $this->bcc = $bcc;
 
 		if($bounceHandlerURL != null) {
-			Deprecation::notice('3.1', 'Use "emailbouncehandler" module');
+			Deprecation::notice('4.0', 'Use "emailbouncehandler" module');
 		}
 
 		parent::__construct();
@@ -177,8 +177,11 @@ class Email extends ViewableData {
 		return $this;
 	}
 
+	/**
+	 * @deprecated since version 4.0
+	 */
 	public function setBounceHandlerURL($bounceHandlerURL) {
-		Deprecation::notice('3.1', 'Use "emailbouncehandler" module');
+		Deprecation::notice('4.0', 'Use "emailbouncehandler" module');
 	}
 
 	public function attachFile($filename, $attachedFilename = null, $mimetype = null) {
@@ -538,20 +541,20 @@ class Email extends ViewableData {
 	 *
 	 * Used by {@link Email->send()}, {@link Email->sendPlain()}, {@link Debug->friendlyError()}.
 	 *
-	 * @deprecated 3.2 Use the "Email.admin_email" config setting instead
+	 * @deprecated 4.0 Use the "Email.admin_email" config setting instead
 	 * @param string $newEmail
 	 */
 	public static function setAdminEmail($newEmail) {
-		Deprecation::notice('3.2', 'Use the "Email.admin_email" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Email.admin_email" config setting instead');
 		Config::inst()->update('Email', 'admin_email', $newEmail);
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "Email.admin_email" config setting instead
+	 * @deprecated 4.0 Use the "Email.admin_email" config setting instead
 	 * @return string
 	 */
 	public static function getAdminEmail() {
-		Deprecation::notice('3.2', 'Use the "Email.admin_email" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Email.admin_email" config setting instead');
 		return Config::inst()->get('Email', 'admin_email');
 	}
 
@@ -562,10 +565,10 @@ class Email extends ViewableData {
 	 *
 	 * if(!Director::isLive()) Email::send_all_emails_to("someone@example.com")
 	 *
-	 * @deprecated 3.2 Use the "Email.send_all_emails_to" config setting instead
+	 * @deprecated 4.0 Use the "Email.send_all_emails_to" config setting instead
 	 */
 	public static function send_all_emails_to($emailAddress) {
-		Deprecation::notice('3.2', 'Use the "Email.send_all_emails_to" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Email.send_all_emails_to" config setting instead');
 		Config::inst()->update('Email', 'send_all_emails_to', $emailAddress);
 	}
 
@@ -580,10 +583,10 @@ class Email extends ViewableData {
 	 *
 	 * if(Director::isLive()) Email::cc_all_emails_to("supportperson@example.com")
 	 *
-	 * @deprecated 3.2 Use the "Email.cc_all_emails_to" config setting instead
+	 * @deprecated 4.0 Use the "Email.cc_all_emails_to" config setting instead
 	 */
 	public static function cc_all_emails_to($emailAddress) {
-		Deprecation::notice('3.2', 'Use the "Email.cc_all_emails_to" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Email.cc_all_emails_to" config setting instead');
 		Config::inst()->update('Email', 'cc_all_emails_to', $emailAddress);
 	}
 
@@ -598,10 +601,10 @@ class Email extends ViewableData {
 	 *
 	 * if(Director::isLive()) Email::cc_all_emails_to("supportperson@example.com")
 	 *
-	 * @deprecated 3.2 Use the "Email.bcc_all_emails_to" config setting instead
+	 * @deprecated 4.0 Use the "Email.bcc_all_emails_to" config setting instead
 	 */
 	public static function bcc_all_emails_to($emailAddress) {
-		Deprecation::notice('3.2', 'Use the "Email.bcc_all_emails_to" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Email.bcc_all_emails_to" config setting instead');
 		Config::inst()->update('Email', 'bcc_all_emails_to', $emailAddress);
 	}
 

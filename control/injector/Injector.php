@@ -750,10 +750,10 @@ class Injector {
 	/**
 	 * Register a service with an explicit name
 	 *
-	 * @deprecated since 3.1.1
+	 * @deprecated since 4.0
 	 */
 	public function registerNamedService($name, $service) {
-		Deprecation::notice('3.1.1', 'registerNamedService is deprecated, use registerService instead');
+		Deprecation::notice('4.0', 'registerNamedService is deprecated, use registerService instead');
 		return $this->registerService($service, $name);
 	}
 

@@ -246,7 +246,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	public function getJoins(&$parameters = array()) {
 		if(func_num_args() == 0) {
 			Deprecation::notice(
-				'3.2',
+				'4.0',
 				'SQLConditionalExpression::getJoins() now may produce parameters which are necessary to
 				execute this query'
 			);

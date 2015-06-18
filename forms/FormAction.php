@@ -100,7 +100,7 @@ class FormAction extends FormField {
 
 		// Remove this method override in 4.0
 		$decoded = Convert::xml2raw($title);
-		if($decoded !== $title) {
+		if($title && $decoded !== $title) {
 			Deprecation::notice(
 				'4.0',
 				'The FormAction title field should not be html encoded. Use buttonContent to set custom html instead'

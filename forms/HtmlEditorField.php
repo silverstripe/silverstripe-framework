@@ -29,7 +29,7 @@ class HtmlEditorField extends TextareaField {
 	protected $rows = 30;
 	
 	/**
-	 * @deprecated since version 3.2
+	 * @deprecated since version 4.0
 	 */
 	public static function include_js() {
 		Deprecation::notice('4.0', 'Use HtmlEditorConfig::require_js() instead');

@@ -477,17 +477,17 @@ class Mailer extends Object {
 	}
 
 	/**
-	 * @deprecated since version 3.2.0
+	 * @deprecated since version 4.0
 	 */
 	public function wrapImagesInline($htmlContent) {
-		Deprecation::notice('3.2.0', 'wrapImagesInline is deprecated');
+		Deprecation::notice('4.0', 'wrapImagesInline is deprecated');
 	}
 
 	/**
-	 * @deprecated since version 3.2.0
+	 * @deprecated since version 4.0
 	 */
 	public function wrapImagesInline_rewriter($url) {
-		Deprecation::notice('3.2.0', 'wrapImagesInline_rewriter is deprecated');
+		Deprecation::notice('4.0', 'wrapImagesInline_rewriter is deprecated');
 	}
 }
 
