@@ -214,6 +214,24 @@ class DatetimeFieldTest extends SapphireTest {
 		);
 	}
 
+	public function testGetName() {
+		$field = new DatetimeField('Datetime');
+		
+		$this->assertEquals('Datetime', $field->getName());
+		$this->assertEquals('Datetime[date]', $field->getDateField()->getName());
+		$this->assertEquals('Datetime[time]', $field->getTimeField()->getName());
+		$this->assertEquals('Datetime[timezone]', $field->getTimezoneField()->getName());
+	}
+
+	public function testSetName() {
+		$field = new DatetimeField('Datetime', 'Datetime');
+		$field->setName('CustomDatetime');
+		$this->assertEquals('CustomDatetime', $field->getName());
+		$this->assertEquals('CustomDatetime[date]', $field->getDateField()->getName());
+		$this->assertEquals('CustomDatetime[time]', $field->getTimeField()->getName());
+		$this->assertEquals('CustomDatetime[timezone]', $field->getTimezoneField()->getName());
+	}
+
 	protected function getMockForm() {
 		return new Form(
 			new Controller(), 
