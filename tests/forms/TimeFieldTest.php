@@ -91,6 +91,14 @@ class TimeFieldTest extends SapphireTest {
 		$f = new TimeField('Time', 'Time');	
 		$f->setValue('23:59:38');
 		$this->assertEquals($f->dataValue(), '23:59:38');
+
+		$f = new TimeField('Time', 'Time');
+		$f->setValue('12:00 am');
+		$this->assertEquals($f->dataValue(), '00:00:00');
+
+		$f = new TimeField('Time', 'Time');
+		$f->setValue('12:00:01 am');
+		$this->assertEquals($f->dataValue(), '00:00:01');
 	}
 		
 	public function testOverrideWithNull() {
