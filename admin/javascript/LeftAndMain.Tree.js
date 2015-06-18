@@ -264,7 +264,7 @@
 				this.jstree(
 					'create_node', 
 					parentNode.length ? parentNode : -1, 
-					'last', 
+					data.Sort ? data.Sort : 'last',  
 					properties,
 					function(node) {
 						var origClasses = node.attr('class');
