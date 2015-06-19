@@ -681,7 +681,7 @@ class Config {
 /**
  * @package framework
  * @subpackage core
- * @deprecated 3.2
+ * @deprecated 4.0
  */
 class Config_LRU {
 	const SIZE = 1000;
@@ -693,7 +693,7 @@ class Config_LRU {
 	protected $c = 0;
 
 	public function __construct() {
-		Deprecation::notice('3.2', 'Please use Config_MemCache instead', Deprecation::SCOPE_CLASS);
+		Deprecation::notice('4.0', 'Please use Config_MemCache instead', Deprecation::SCOPE_CLASS);
 		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
 			// SplFixedArray causes seg faults before PHP 5.3.7
 			$this->cache = array();

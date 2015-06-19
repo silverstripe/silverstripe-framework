@@ -908,12 +908,12 @@ class FormField extends RequestHandler {
 	}
 
 	/**
-	 * @deprecated 3.2 Use FormField::create_tag()
+	 * @deprecated 4.0 Use FormField::create_tag()
 	 */
 	public function createTag($tag, $attributes, $content = null) {
-		Deprecation::notice('3.2', 'Use FormField::create_tag()');
+		Deprecation::notice('4.0', 'Use FormField::create_tag()');
 		return self::create_tag($tag, $attributes, $content);
-			}
+	}
 
 	/**
 	 * Validation method each {@link FormField} subclass should implement,

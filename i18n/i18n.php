@@ -137,54 +137,56 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 *
 	 * @see Requirements::process_i18n_javascript()
 	 *
-	 * @deprecated 3.2 Use the "i18n.js_i18n" config setting instead
+	 * @deprecated 4.0 Use the "i18n.js_i18n" config setting instead
 	 * @param bool $bool
 	 */
 	public static function set_js_i18n($bool) {
-		Deprecation::notice('3.2', 'Use the "i18n.js_i18n" config setting instead');
+		Deprecation::notice('4.0', 'Use the "i18n.js_i18n" config setting instead');
 		Config::inst()->update('i18n', 'js_i18n', $bool);
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "i18n.js_i18n" config setting instead
+	 * @deprecated 4.0 Use the "i18n.js_i18n" config setting instead
 	 * @return bool
 	 */
 	public static function get_js_i18n() {
-		Deprecation::notice('3.2', 'Use the "i18n.js_i18n" config setting instead');
+		Deprecation::notice('4.0', 'Use the "i18n.js_i18n" config setting instead');
 		return Config::inst()->get('i18n', 'js_i18n');
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "i18n.date_format" config setting instead
+	 * @deprecated 4.0 Use the "i18n.date_format" config setting instead
 	 * @param string ISO date format
 	 */
 	public static function set_date_format($format) {
-		Deprecation::notice('3.2', 'Use the "i18n.date_format" config setting instead');
+		Deprecation::notice('4.0', 'Use the "i18n.date_format" config setting instead');
 		Config::inst()->update('i18n', 'date_format', $format);
 	}
 
 	/**
+	 * @deprecated since version 4.0
 	 * @return string ISO date format
 	 */
 	public static function get_date_format() {
-		Deprecation::notice('3.2', 'Use the "i18n.date_format" config setting instead');
+		Deprecation::notice('4.0', 'Use the "i18n.date_format" config setting instead');
 		return Config::inst()->get('i18n', 'date_format');
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "i18n.time_format" config setting instead
+	 * @deprecated 4.0 Use the "i18n.time_format" config setting instead
 	 * @param string ISO time format
 	 */
 	public static function set_time_format($format) {
-		Deprecation::notice('3.2', 'Use the "i18n.time_format" config setting instead');
+		Deprecation::notice('4.0', 'Use the "i18n.time_format" config setting instead');
 		Config::inst()->update('i18n', 'time_format', $format);
 	}
 
 	/**
+	 * @deprecated since version 4.0
 	 * @return string ISO time format
 	 */
 	public static function get_time_format() {
-		Deprecation::notice('3.2', 'Use the "i18n.time_format" config setting instead');
+		Deprecation::notice('4.0', 'Use the "i18n.time_format" config setting instead');
 		return Config::inst()->get('i18n', 'time_format');
 	}
 
@@ -2224,10 +2226,11 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	/**
 	 * Get a list of locales (code => language and country)
 	 *
+	 * @deprecated since version 4.0
 	 * @return list of languages in the form 'code' => 'name'
 	 */
 	public static function get_locale_list() {
-		Deprecation::notice('3.2', 'Use the "i18n.all_locales" config setting instead');
+		Deprecation::notice('4.0', 'Use the "i18n.all_locales" config setting instead');
 		return (array)Config::inst()->get('i18n', 'all_locales');
 	}
 

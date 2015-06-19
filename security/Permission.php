@@ -558,26 +558,26 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	/**
 	 * add a permission represented by the $code to the {@link slef::$hidden_permissions} list
 	 *
-	 * @deprecated 3.2 Use "Permission.hidden_permissions" config setting instead
+	 * @deprecated 4.0 Use "Permission.hidden_permissions" config setting instead
 	 * @param $code string - the permissions code
 	 * @return void
 	 */
 	public static function add_to_hidden_permissions($code){
 		if(is_string($codes)) $codes = array($codes);
-		Deprecation::notice('3.2', 'Use "Permission.hidden_permissions" config setting instead');
+		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
 		Config::inst()->update('Permission', 'hidden_permissions', $codes);
 	}
 
 	/**
 	 * remove a permission represented by the $code from the {@link slef::$hidden_permissions} list
 	 *
-	 * @deprecated 3.2 Use "Permission.hidden_permissions" config setting instead
+	 * @deprecated 4.0 Use "Permission.hidden_permissions" config setting instead
 	 * @param $code string - the permissions code
 	 * @return void
 	 */
 	public static function remove_from_hidden_permissions($code){
 		if(is_string($codes)) $codes = array($codes);
-		Deprecation::notice('3.2', 'Use "Permission.hidden_permissions" config setting instead');
+		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
 		Config::inst()->remove('Permission', 'hidden_permissions', $codes);
 	}
 
@@ -587,12 +587,12 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * Permissions can be grouped by nesting arrays. Scalar values are always
 	 * treated as permissions.
 	 *
-	 * @deprecated 3.2 Use "Permission.declared_permissions" config setting instead
+	 * @deprecated 4.0 Use "Permission.declared_permissions" config setting instead
 	 * @param array $permArray A (possibly nested) array of permissions to
 	 *                         declare for the system.
 	 */
 	public static function declare_permissions($permArray) {
-		Deprecation::notice('3.2', 'Use "Permission.declared_permissions" config setting instead');
+		Deprecation::notice('4.0', 'Use "Permission.declared_permissions" config setting instead');
 		self::config()->declared_permissions = $permArray;
 	}
 

@@ -43,7 +43,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected $usesDatabase = null;
 
+	/**
+	 * @deprecated since version 4.0
+	 */
 	protected $originalMailer;
+	
 	protected $originalMemberPasswordValidator;
 	protected $originalRequirements;
 	protected $originalIsRunningTest;
@@ -221,7 +225,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Set up email
 		$this->originalMailer = Email::mailer();
 		$this->mailer = new TestMailer();
-		Email::set_mailer($this->mailer);
+		Injector::inst()->registerService($this->mailer, 'Mailer');
 		Config::inst()->remove('Email', 'send_all_emails_to');
 
 		// Todo: this could be a special test model
@@ -471,10 +475,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		ini_set('memory_limit', ($this->originalMemoryLimit) ? $this->originalMemoryLimit : -1);
 
 		// Restore email configuration
-		if($this->originalMailer) {
-			Email::set_mailer($this->originalMailer);
-			$this->originalMailer = null;
-		}
+		$this->originalMailer = null;
 		$this->mailer = null;
 
 		// Restore password validation

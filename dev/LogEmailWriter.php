@@ -31,18 +31,18 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "SS_LogEmailWriter.send_from" config setting instead
+	 * @deprecated 4.0 Use the "SS_LogEmailWriter.send_from" config setting instead
 	 */
 	public static function set_send_from($address) {
-		Deprecation::notice('3.2', 'Use the "SS_LogEmailWriter.send_from" config setting instead');
+		Deprecation::notice('4.0', 'Use the "SS_LogEmailWriter.send_from" config setting instead');
 		Config::inst()->update('SS_LogEmailWriter', 'send_from', $address);
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "SS_LogEmailWriter.send_from" config setting instead
+	 * @deprecated 4.0 Use the "SS_LogEmailWriter.send_from" config setting instead
 	 */
 	public static function get_send_from() {
-		Deprecation::notice('3.2', 'Use the "SS_LogEmailWriter.send_from" config setting instead');
+		Deprecation::notice('4.0', 'Use the "SS_LogEmailWriter.send_from" config setting instead');
 		return Config::inst()->get('SS_LogEmailWriter', 'send_from');
 	}
 

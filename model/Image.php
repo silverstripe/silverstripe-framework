@@ -168,10 +168,10 @@ class Image extends File implements Flushable {
 	 * File names are filtered through {@link FileNameFilter}, see class documentation
 	 * on how to influence this behaviour.
 	 *
-	 * @deprecated 3.2
+	 * @deprecated 4.0
 	 */
 	public function loadUploadedImage($tmpFile) {
-		Deprecation::notice('3.2', 'Use the Upload::loadIntoFile()');
+		Deprecation::notice('4.0', 'Use the Upload::loadIntoFile()');
 
 		if(!is_array($tmpFile)) {
 			user_error("Image::loadUploadedImage() Not passed an array.  Most likely, the form hasn't got the right"

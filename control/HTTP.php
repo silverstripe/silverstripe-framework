@@ -103,7 +103,7 @@ class HTTP {
 	 */
 	public static function urlRewriter($content, $code) {
 		if(!is_callable($code)) {
-			Deprecation::notice(3.1, 'HTTP::urlRewriter expects a callable as the second parameter');
+			Deprecation::notice('4.0', 'HTTP::urlRewriter expects a callable as the second parameter');
 		}
 
 		// Replace attributes
