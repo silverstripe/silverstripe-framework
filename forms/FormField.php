@@ -703,7 +703,7 @@ class FormField extends RequestHandler {
 	 * such as an input tag.
 	 *
 	 * @param array $properties key value pairs of template variables
-	 * @return string
+	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
 		$obj = ($properties) ? $this->customise($properties) : $this;
@@ -719,7 +719,7 @@ class FormField extends RequestHandler {
 	 * @see FieldHolder.ss
 	 *
 	 * @param array $properties key value pairs of template variables
-	 * @return string
+	 * @return HTMLText
 	 */
 	public function FieldHolder($properties = array()) {
 		$obj = ($properties) ? $this->customise($properties) : $this;

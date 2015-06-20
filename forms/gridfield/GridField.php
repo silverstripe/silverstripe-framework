@@ -279,7 +279,7 @@ class GridField extends FormField {
 	 *
 	 * @param array $properties
 	 *
-	 * @return string
+	 * @return HTMLText
 	 */
 	public function FieldHolder($properties = array()) {
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
@@ -501,11 +501,11 @@ class GridField extends FormField {
 			$header . "\n" . $footer . "\n" . $body
 		);
 
-		return FormField::create_tag(
+		return DBField::create('HTMLText', FormField::create_tag(
 			'fieldset',
 			$fieldsetAttributes,
 			$content['before'] . $table . $content['after']
-		);
+		));
 	}
 
 	/**
@@ -589,7 +589,7 @@ class GridField extends FormField {
 	/**
 	 * @param array $properties
 	 *
-	 * @return string
+	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
 		return $this->FieldHolder($properties);
