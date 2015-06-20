@@ -56,7 +56,7 @@
 class GroupedDropdownField extends DropdownField {
 	/**
 	 * @param array $properties
-	 * @return FormField
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		$options = '';

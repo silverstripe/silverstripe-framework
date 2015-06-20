@@ -130,7 +130,7 @@ class DropdownField extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return FormField
+	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
 		$source = $this->getSource();
