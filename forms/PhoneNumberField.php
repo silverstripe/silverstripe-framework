@@ -27,6 +27,10 @@ class PhoneNumberField extends FormField {
 		parent::__construct($name, $title, $value);
 	}
 	
+	/**
+	 * @param array $properties
+	 * @return FieldGroup|HTMLText
+	 */
 	public function Field($properties = array()) {
 		$fields = new FieldGroup( $this->name );
 		$fields->setID("{$this->name}_Holder");
