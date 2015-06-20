@@ -117,6 +117,8 @@ class MoneyField extends FormField {
 
 	/**
 	 * Returns a readonly version of this field.
+	 *
+	 * @return MoneyField
 	 */
 	public function performReadonlyTransformation() {
 		$clone = clone $this;
