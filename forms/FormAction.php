@@ -74,6 +74,10 @@ class FormAction extends FormField {
 		return $this;
 	}
 
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function Field($properties = array()) {
 		$properties = array_merge(
 			$properties,
@@ -87,6 +91,10 @@ class FormAction extends FormField {
 		return parent::Field($properties);
 	}
 	
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function FieldHolder($properties = array()) {
 		return $this->Field($properties);
 	}

@@ -71,6 +71,10 @@ class PermissionCheckboxSetField extends FormField {
 		return $this->hiddenPermissions;
 	}
 
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function Field($properties = array()) {
 		Requirements::css(FRAMEWORK_DIR . '/css/CheckboxSetField.css');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/PermissionCheckboxSetField.js');
@@ -227,7 +231,8 @@ class PermissionCheckboxSetField extends FormField {
 			}
 		}
 		if($this->readonly) {
-			return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
+			return DBField::create('HTMLText',
+				"<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
 				"<li class=\"help\">" .
 				_t(
 					'Permissions.UserPermissionsIntro',
@@ -236,11 +241,14 @@ class PermissionCheckboxSetField extends FormField {
 				) .
 				"</li>" .
 				$options .
-				"</ul>\n";
+				"</ul>\n"
+			);
 		} else {
-			return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
+			return DBField::create_field('HTMLText',
+			    "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
 				$options . 
-				"</ul>\n";
+				"</ul>\n"
+			);
 		}
 	}
 	
