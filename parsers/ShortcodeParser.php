@@ -320,7 +320,18 @@ class ShortcodeParser extends Object {
 				}
 			}
 		}
-		
+
+		// Step 3: remove any tags that don't have handlers registered
+		// Only do this if self::$error_behavior == self::LEAVE
+		// This is optional but speeds things up.
+		if(self::$error_behavior == self::LEAVE) {
+			foreach($tags as $i => $tag) {
+				if(empty($this->shortcodes[$tag['open']])) {
+					unset($tags[$i]);
+				}
+			}
+		}
+
 		return array_values($tags);
 	}
 
@@ -550,7 +561,7 @@ class ShortcodeParser extends Object {
 
 		// Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
 		$parents = $this->findParentsForMarkers($shortcodes);
-		
+
 		foreach($shortcodes as $shortcode) {
 			$tag = $tags[$shortcode->getAttribute('data-tagid')];
 			$parent = $parents[$shortcode->getAttribute('data-parentid')];
