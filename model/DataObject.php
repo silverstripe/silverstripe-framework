@@ -1771,7 +1771,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$componentClass, $table, $componentField, $parentField,
 			$this->manyManyExtraFieldsForComponent($componentName)
 		);
+		
 		if($this->model) $result->setDataModel($this->model);
+		
+		$this->extend('updateManyManyComponents', $result);
 
 		// If this is called on a singleton, then we return an 'orphaned relation' that can have the
 		// foreignID set elsewhere.
