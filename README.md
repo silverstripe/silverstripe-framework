@@ -1,5 +1,7 @@
 ## SilverStripe Framework
 
+[![Join the chat at https://gitter.im/silverstripe/silverstripe-framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/silverstripe/silverstripe-framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://api.travis-ci.org/silverstripe/silverstripe-framework.svg?branch=master)](https://travis-ci.org/silverstripe/silverstripe-framework)
 [![Latest Stable Version](https://poser.pugx.org/silverstripe/framework/version.svg)](http://www.silverstripe.org/stable-download/)
 [![Latest Unstable Version](https://poser.pugx.org/silverstripe/framework/v/unstable.svg)](https://packagist.org/packages/silverstripe/framework)
