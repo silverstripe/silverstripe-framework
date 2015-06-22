@@ -461,7 +461,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				));
 			} else {
 				$url = Director::makeRelative($request->getVar('FileURL'));
-				$url = preg_replace('/_resampled\/[^-]+-/', '', $url);
+				$url = preg_replace('/_resampled\/(.+\/|[^-]+-)/', '', $url);
 				$file = File::get()->filter('Filename', $url)->first();
 				if(!$file) $file = new File(array(
 					'Title' => basename($url),

@@ -701,7 +701,7 @@ class Image extends File implements Flushable {
 	}
 
 	/**
-	 * Return the filename for the cached image, given it's format name and arguments.
+	 * Return the filename for the cached image, given its format name and arguments.
 	 * @param string $format The format name.
 	 * @return string
 	 * @throws InvalidArgumentException
@@ -709,12 +709,25 @@ class Image extends File implements Flushable {
 	public function cacheFilename($format) {
 		$args = func_get_args();
 		array_shift($args);
+
+		// Note: $folder holds the *original* file, while the Image we're working with
+		// may be a formatted image in a child directory (this happens when we're chaining formats)
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . "/";
 
-		$format = $format . base64_encode(json_encode($args, JSON_NUMERIC_CHECK));
-		$filename = $format . "-" . $this->Name;
-		$patterns = $this->getFilenamePatterns($this->Name);
-		if (!preg_match($patterns['FullPattern'], $filename)) {
+		$format = $format . base64url_encode(json_encode($args, JSON_NUMERIC_CHECK));
+		$filename = $format . "/" . $this->Name;
+
+		$pattern = $this->getFilenamePatterns($this->Name);
+
+		// Any previous formats need to be derived from this Image's directory, and prepended to the new filename
+		$prepend = array();
+		preg_match_all($pattern['GeneratorPattern'], $this->Filename, $matches, PREG_SET_ORDER);
+		foreach($matches as $formatdir) {
+			$prepend[] = $formatdir[0];
+		}
+		$filename = implode($prepend) . $filename;
+
+		if (!preg_match($pattern['FullPattern'], $filename)) {
 			throw new InvalidArgumentException('Filename ' . $filename
 				. ' that should be used to cache a resized image is invalid');
 		}
@@ -836,11 +849,11 @@ class Image extends File implements Flushable {
 		}
 		// All generate functions may appear any number of times in the image cache name.
 		$generateFuncs = implode('|', $generateFuncs);
-		$base64Match = "[a-zA-Z0-9\/\r\n+]*={0,2}";
+		$base64url_match = "[a-zA-Z0-9_-]*={0,2}";
 		return array(
-				'FullPattern' => "/^((?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-)+"
+				'FullPattern' => "/^((?P<Generator>{$generateFuncs})(?P<Args>" . $base64url_match . ")\/)+"
 									. preg_quote($filename) . "$/i",
-				'GeneratorPattern' => "/(?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-/i"
+				'GeneratorPattern' => "/(?P<Generator>{$generateFuncs})(?P<Args>" . $base64url_match . ")\//i"
 		);
 	}
 
@@ -854,42 +867,36 @@ class Image extends File implements Flushable {
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . '/';
 		$cacheDir = Director::getAbsFile($folder . '_resampled/');
 
+		// Find all paths with the same filename as this Image (the path contains the transformation info)
 		if(is_dir($cacheDir)) {
-			if($handle = opendir($cacheDir)) {
-				while(($file = readdir($handle)) !== false) {
-					// ignore all entries starting with a dot
-					if(substr($file, 0, 1) != '.' && is_file($cacheDir . $file)) {
-						$cachedFiles[] = $file;
-					}
+			$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($cacheDir));
+			foreach($files as $path => $file){
+				if ($file->getFilename() == $this->Name) {
+					$cachedFiles[] = $path;
 				}
-				closedir($handle);
 			}
 		}
 
 		$pattern = $this->getFilenamePatterns($this->Name);
 
-		foreach($cachedFiles as $cfile) {
-			if(preg_match($pattern['FullPattern'], $cfile, $matches)) {
-				if(Director::fileExists($cacheDir . $cfile)) {
-					$subFilename = substr($cfile, 0, -1 * strlen($this->Name));
-					preg_match_all($pattern['GeneratorPattern'], $subFilename, $subMatches, PREG_SET_ORDER);
+		// Reconstruct the image transformation(s) from the format-folder(s) in the path
+		// (if chained, they contain the transformations in the correct order)
+		foreach($cachedFiles as $cf_path) {
+			preg_match_all($pattern['GeneratorPattern'], $cf_path, $matches, PREG_SET_ORDER);
 
-					$generatorArray = array();
-					foreach ($subMatches as $singleMatch) {
-						$generatorArray[] = array('Generator' => $singleMatch['Generator'],
-						'Args' => json_decode(base64_decode($singleMatch['Args'])));
-					}
-
-						// Using array_reverse is important, as a cached image will
-						// have the generators settings in the filename in reversed
-						// order: the last generator given in the filename is the
-						// first that was used. Later resizements are prepended
-					$generatedImages[] = array ( 'FileName' => $cacheDir . $cfile,
-							'Generators' => array_reverse($generatorArray) );
-				}
+			$generatorArray = array();
+			foreach ($matches as $singleMatch) {
+				$generatorArray[] = array(
+					'Generator' => $singleMatch['Generator'],
+					'Args' => json_decode(base64url_decode($singleMatch['Args']))
+				);
 			}
-		}
 
+			$generatedImages[] = array(
+				'FileName' => $cf_path,
+				'Generators' => $generatorArray
+			);
+		}
 		return $generatedImages;
 	}
 
@@ -934,8 +941,14 @@ class Image extends File implements Flushable {
 		$numDeleted = 0;
 		$generatedImages = $this->getGeneratedImages();
 		foreach($generatedImages as $singleImage) {
-			unlink($singleImage['FileName']);
+			$path = $singleImage['FileName'];
+			unlink($path);
 			$numDeleted++;
+			do {
+				$path = dirname($path);
+			}
+			// remove the folder if it's empty (and it's not the assets folder)
+			while(!preg_match('/assets$/', $path) && Filesystem::removeFolderIfEmpty($path)); 
 		}
 
 		return $numDeleted;
@@ -1049,5 +1062,16 @@ class Image_Cached extends Image {
 	 */
 	public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false) {
 		throw new Exception("{$this->ClassName} can not be written back to the database.");
+	}
+}
+
+if(!function_exists('base64url_encode')) {
+	function base64url_encode($data) {
+		return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+	}
+}
+if(!function_exists('base64url_decode')) {
+	function base64url_decode($data) {
+		return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
 	}
 }
