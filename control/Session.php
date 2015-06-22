@@ -162,24 +162,24 @@ class Session {
 	 * To make cookies visible on all subdomains then the domain
 	 * must be prefixed with a dot like '.php.net'.
 	 *
-	 * @deprecated 3.2 Use the "Session.cookie_domain" config setting instead
+	 * @deprecated 4.0 Use the "Session.cookie_domain" config setting instead
 	 *
 	 * @param string $domain The domain to set
 	 */
 	public static function set_cookie_domain($domain) {
-		Deprecation::notice('3.2', 'Use the "Session.cookie_domain" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.cookie_domain" config setting instead');
 		Config::inst()->update('Session', 'cookie_domain', $domain);
 	}
 
 	/**
 	 * Get the cookie domain.
 	 *
-	 * @deprecated 3.2 Use the "Session.cookie_domain" config setting instead
+	 * @deprecated 4.0 Use the "Session.cookie_domain" config setting instead
 	 *
 	 * @return string
 	 */
 	public static function get_cookie_domain() {
-		Deprecation::notice('3.2', 'Use the "Session.cookie_domain" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.cookie_domain" config setting instead');
 		return Config::inst()->get('Session', 'cookie_domain');
 	}
 
@@ -187,24 +187,24 @@ class Session {
 	 * Path to set on the domain where the session cookie will work.
 	 * Use a single slash ('/') for all paths on the domain.
 	 *
-	 * @deprecated 3.2 Use the "Session.cookie_path" config setting instead
+	 * @deprecated 4.0 Use the "Session.cookie_path" config setting instead
 	 *
 	 * @param string $path The path to set
 	 */
 	public static function set_cookie_path($path) {
-		Deprecation::notice('3.2', 'Use the "Session.cookie_path" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.cookie_path" config setting instead');
 		Config::inst()->update('Session', 'cookie_path', $path);
 	}
 
 	/**
 	 * Get the path on the domain where the session cookie will work.
 	 *
-	 * @deprecated 3.2 Use the "Session.cookie_path" config setting instead
+	 * @deprecated 4.0 Use the "Session.cookie_path" config setting instead
 	 *
 	 * @return string
 	 */
 	public static function get_cookie_path() {
-		Deprecation::notice('3.2', 'Use the "Session.cookie_path" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.cookie_path" config setting instead');
 		if(Config::inst()->get('Session', 'cookie_path')) {
 			return Config::inst()->get('Session', 'cookie_path');
 		} else {
@@ -215,45 +215,46 @@ class Session {
 	/**
 	 * Secure cookie, tells the browser to only send it over SSL.
 	 *
-	 * @deprecated 3.2 Use the "Session.cookie_secure" config setting instead
+	 * @deprecated 4.0 Use the "Session.cookie_secure" config setting instead
 	 *
 	 * @param boolean $secure
 	 */
 	public static function set_cookie_secure($secure) {
-		Deprecation::notice('3.2', 'Use the "Session.cookie_secure" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.cookie_secure" config setting instead');
 		Config::inst()->update('Session', 'cookie_secure', (bool)$secure);
 	}
 
 	/**
 	 * Get if the cookie is secure
 	 *
-	 * @deprecated 3.2 Use the "Session.cookie_secure" config setting instead
+	 * @deprecated 4.0 Use the "Session.cookie_secure" config setting instead
 	 *
 	 * @return boolean
 	 */
 	public static function get_cookie_secure() {
-		Deprecation::notice('3.2', 'Use the "Session.cookie_secure" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.cookie_secure" config setting instead');
 		return Config::inst()->get('Session', 'cookie_secure');
 	}
 
 	/**
 	 * Set the session store path
 	 *
-	 * @deprecated 3.2 Use the "Session.session_store_path" config setting instead
+	 * @deprecated 4.0 Use the "Session.session_store_path" config setting instead
 	 *
 	 * @param string $path Filesystem path to the session store
 	 */
 	public static function set_session_store_path($path) {
-		Deprecation::notice('3.2', 'Use the "Session.session_store_path" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.session_store_path" config setting instead');
 		Config::inst()->update('Session', 'session_store_path', $path);
 	}
 
 	/**
 	 * Get the session store path
 	 * @return string
+	 * @deprecated since version 4.0
 	 */
 	public static function get_session_store_path() {
-		Deprecation::notice('3.2', 'Use the "Session.session_store_path" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.session_store_path" config setting instead');
 		return Config::inst()->get('Session', 'session_store_path');
 	}
 
@@ -270,12 +271,12 @@ class Session {
 	 *
 	 * Session::set_timeout is used to set the timeout value for any users whose address is not in the given IP range.
 	 *
-	 * @deprecated 3.2 Use the "Session.timeout_ips" config setting instead
+	 * @deprecated 4.0 Use the "Session.timeout_ips" config setting instead
 	 *
 	 * @param array $session_ips Array of IPv4 rules.
 	 */
 	public static function set_timeout_ips($ips) {
-		Deprecation::notice('3.2', 'Use the "Session.timeout_ips" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.timeout_ips" config setting instead');
 		Config::inst()->update('Session', 'timeout_ips', $ips);
 	}
 
@@ -605,20 +606,20 @@ class Session {
 	/**
 	 * Set the timeout of a Session value
 	 *
-	 * @deprecated 3.2 Use the "Session.timeout" config setting instead
+	 * @deprecated 4.0 Use the "Session.timeout" config setting instead
 	 *
 	 * @param int $timeout Time until a session expires in seconds. Defaults to expire when browser is closed.
 	 */
 	public static function set_timeout($timeout) {
-		Deprecation::notice('3.2', 'Use the "Session.timeout" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.timeout" config setting instead');
 		Config::inst()->update('Session', 'timeout', (int)$timeout);
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "Session.timeout" config setting instead
+	 * @deprecated 4.0 Use the "Session.timeout" config setting instead
 	 */
 	public static function get_timeout() {
-		Deprecation::notice('3.2', 'Use the "Session.timeout" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Session.timeout" config setting instead');
 		return Config::inst()->get('Session', 'timeout');
 	}
 }

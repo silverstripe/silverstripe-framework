@@ -36,10 +36,10 @@ class BBCodeParser extends TextParser {
 	private static $smilies_location = null;
 
 	/**
-	 * @deprecated 3.2 Use the "BBCodeParser.smilies_location" config setting instead
+	 * @deprecated 4.0 Use the "BBCodeParser.smilies_location" config setting instead
 	 */
 	public static function smilies_location() {
-		Deprecation::notice('3.2', 'Use the "BBCodeParser.smilies_location" config setting instead');
+		Deprecation::notice('4.0', 'Use the "BBCodeParser.smilies_location" config setting instead');
 		if(!BBCodeParser::$smilies_location) {
 			return FRAMEWORK_DIR . '/images/smilies';
 		}
@@ -47,42 +47,42 @@ class BBCodeParser extends TextParser {
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "BBCodeParser.smilies_location" config setting instead
+	 * @deprecated 4.0 Use the "BBCodeParser.smilies_location" config setting instead
 	 */
 	public static function set_icon_folder($path) {
-		Deprecation::notice('3.2', 'Use the "BBCodeParser.smilies_location" config setting instead');
+		Deprecation::notice('4.0', 'Use the "BBCodeParser.smilies_location" config setting instead');
 		static::config()->smilies_location = $path;
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "BBCodeParser.autolink_urls" config setting instead
+	 * @deprecated 4.0 Use the "BBCodeParser.autolink_urls" config setting instead
 	 */
 	public static function autolinkUrls() {
-		Deprecation::notice('3.2', 'Use the "BBCodeParser.autolink_urls" config setting instead');
+		Deprecation::notice('4.0', 'Use the "BBCodeParser.autolink_urls" config setting instead');
 		return static::config()->autolink_urls;
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "BBCodeParser.autolink_urls" config setting instead
+	 * @deprecated 4.0 Use the "BBCodeParser.autolink_urls" config setting instead
 	 */
 	public static function disable_autolink_urls($autolink = false) {
-		Deprecation::notice('3.2', 'Use the "BBCodeParser.autolink_urls" config setting instead');
+		Deprecation::notice('4.0', 'Use the "BBCodeParser.autolink_urls" config setting instead');
 		static::config()->autolink_urls = $autolink;
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "BBCodeParser.allow_smilies" config setting instead
+	 * @deprecated 4.0 Use the "BBCodeParser.allow_smilies" config setting instead
 	 */
 	public static function smiliesAllowed() {
-		Deprecation::notice('3.2', 'Use the "BBCodeParser.allow_smilies" config setting instead');
+		Deprecation::notice('4.0', 'Use the "BBCodeParser.allow_smilies" config setting instead');
 		return static::config()->allow_smilies;
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "BBCodeParser.allow_smilies" config setting instead
+	 * @deprecated 4.0 Use the "BBCodeParser.allow_smilies" config setting instead
 	 */
 	public static function enable_smilies() {
-		Deprecation::notice('3.2', 'Use the "BBCodeParser.allow_smilies" config setting instead');
+		Deprecation::notice('4.0', 'Use the "BBCodeParser.allow_smilies" config setting instead');
 		static::config()->allow_similies = true;
 	}
 

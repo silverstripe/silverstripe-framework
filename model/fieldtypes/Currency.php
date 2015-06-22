@@ -60,12 +60,12 @@ class Currency extends Decimal {
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "Currency.currency_symbol" config setting instead
+	 * @deprecated 4.0 Use the "Currency.currency_symbol" config setting instead
 	 * @param [type] $value [description]
 	 */
 
 	public static function setCurrencySymbol($value) {
-		Deprecation::notice('3.2', 'Use the "Currency.currency_symbol" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Currency.currency_symbol" config setting instead');
 		Currency::config()->currency_symbol = $value;
 	}
 }

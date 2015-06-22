@@ -202,10 +202,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	private static $temp_id_lifetime = 259200;
 
 	/**
-	 * @deprecated 3.2 Use the "Member.session_regenerate_id" config setting instead
+	 * @deprecated 4.0 Use the "Member.session_regenerate_id" config setting instead
 	 */
 	public static function set_session_regenerate_id($bool) {
-		Deprecation::notice('3.2', 'Use the "Member.session_regenerate_id" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Member.session_regenerate_id" config setting instead');
 		self::config()->session_regenerate_id = $bool;
 	}
 
@@ -275,11 +275,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * RewriteCond %{HTTP_COOKIE} !SS_LOGGED_IN=1
 	 * </pre>
 	 *
-	 * @deprecated 3.2 Use the "Member.login_marker_cookie" config setting instead
+	 * @deprecated 4.0 Use the "Member.login_marker_cookie" config setting instead
 	 * @param $cookieName string The name of the cookie to set.
 	 */
 	public static function set_login_marker_cookie($cookieName) {
-		Deprecation::notice('3.2', 'Use the "Member.login_marker_cookie" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Member.login_marker_cookie" config setting instead');
 		self::config()->login_marker_cookie = $cookieName;
 	}
 
@@ -369,11 +369,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Get the field used for uniquely identifying a member
 	 * in the database. {@see Member::$unique_identifier_field}
 	 *
-	 * @deprecated 3.2 Use the "Member.unique_identifier_field" config setting instead
+	 * @deprecated 4.0 Use the "Member.unique_identifier_field" config setting instead
 	 * @return string
 	 */
 	public static function get_unique_identifier_field() {
-		Deprecation::notice('3.2', 'Use the "Member.unique_identifier_field" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Member.unique_identifier_field" config setting instead');
 		return Member::config()->unique_identifier_field;
 	}
 
@@ -381,11 +381,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Set the field used for uniquely identifying a member
 	 * in the database. {@see Member::$unique_identifier_field}
 	 *
-	 * @deprecated 3.2 Use the "Member.unique_identifier_field" config setting instead
+	 * @deprecated 4.0 Use the "Member.unique_identifier_field" config setting instead
 	 * @param $field The field name to set as the unique field
 	 */
 	public static function set_unique_identifier_field($field) {
-		Deprecation::notice('3.2', 'Use the "Member.unique_identifier_field" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Member.unique_identifier_field" config setting instead');
 		Member::config()->unique_identifier_field = $field;
 	}
 
@@ -407,20 +407,20 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Set the number of days that a password should be valid for.
 	 * Set to null (the default) to have passwords never expire.
 	 *
-	 * @deprecated 3.2 Use the "Member.password_expiry_days" config setting instead
+	 * @deprecated 4.0 Use the "Member.password_expiry_days" config setting instead
 	 */
 	public static function set_password_expiry($days) {
-		Deprecation::notice('3.2', 'Use the "Member.password_expiry_days" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Member.password_expiry_days" config setting instead');
 		self::config()->password_expiry_days = $days;
 	}
 
 	/**
 	 * Configure the security system to lock users out after this many incorrect logins
 	 *
-	 * @deprecated 3.2 Use the "Member.lock_out_after_incorrect_logins" config setting instead
+	 * @deprecated 4.0 Use the "Member.lock_out_after_incorrect_logins" config setting instead
 	 */
 	public static function lock_out_after_incorrect_logins($numLogins) {
-		Deprecation::notice('3.2', 'Use the "Member.lock_out_after_incorrect_logins" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Member.lock_out_after_incorrect_logins" config setting instead');
 		self::config()->lock_out_after_incorrect_logins = $numLogins;
 	}
 

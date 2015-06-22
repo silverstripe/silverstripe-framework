@@ -16,7 +16,7 @@
  * 	protected $description = "Description"; // description of what it does
  *
  * 	public function run($request) {
- * 		if ($request->param('Direction') == 'down') {
+ * 		if ($request->getVar('Direction') == 'down') {
  * 			$this->down();
  * 		} else {
  * 			$this->up();

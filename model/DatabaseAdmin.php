@@ -265,10 +265,10 @@ class DatabaseAdmin extends Controller {
 	/**
 	 * Clear all data out of the database
 	 *
-	 * @deprecated since version 3.2
+	 * @deprecated since version 4.0
 	 */
 	public function clearAllData() {
-		Deprecation::notice('3.2', 'Use DB::get_conn()->clearAllData() instead');
+		Deprecation::notice('4.0', 'Use DB::get_conn()->clearAllData() instead');
 		DB::get_conn()->clearAllData();
 	}
 

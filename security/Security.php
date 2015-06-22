@@ -132,10 +132,10 @@ class Security extends Controller implements TemplateGlobalProvider {
 	/**
 	 * Get location of word list file
 	 *
-	 * @deprecated 3.2 Use the "Security.word_list" config setting instead
+	 * @deprecated 4.0 Use the "Security.word_list" config setting instead
 	 */
 	public static function get_word_list() {
-		Deprecation::notice('3.2', 'Use the "Security.word_list" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.word_list" config setting instead');
 		return self::config()->word_list;
 	}
 
@@ -165,22 +165,22 @@ class Security extends Controller implements TemplateGlobalProvider {
 	/**
 	 * Set location of word list file
 	 *
-	 * @deprecated 3.2 Use the "Security.word_list" config setting instead
+	 * @deprecated 4.0 Use the "Security.word_list" config setting instead
 	 * @param string $wordListFile Location of word list file
 	 */
 	public static function set_word_list($wordListFile) {
-		Deprecation::notice('3.2', 'Use the "Security.word_list" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.word_list" config setting instead');
 		self::config()->word_list = $wordListFile;
 	}
 
 	/**
 	 * Set the default message set used in permissions failures.
 	 *
-	 * @deprecated 3.2 Use the "Security.default_message_set" config setting instead
+	 * @deprecated 4.0 Use the "Security.default_message_set" config setting instead
 	 * @param string|array $messageSet
 	 */
 	public static function set_default_message_set($messageSet) {
-		Deprecation::notice('3.2', 'Use the "Security.default_message_set" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.default_message_set" config setting instead');
 		self::config()->default_message_set = $messageSet;
 	}
 
@@ -888,12 +888,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * This prevents sharing of the session across several sites in the
 	 * domain.
 	 *
-	 * @deprecated 3.2 Use the "Security.strict_path_checking" config setting instead
+	 * @deprecated 4.0 Use the "Security.strict_path_checking" config setting instead
 	 * @param boolean $strictPathChecking To enable or disable strict patch
 	 *                                    checking.
 	 */
 	public static function setStrictPathChecking($strictPathChecking) {
-		Deprecation::notice('3.2', 'Use the "Security.strict_path_checking" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.strict_path_checking" config setting instead');
 		self::config()->strict_path_checking = $strictPathChecking;
 	}
 
@@ -901,11 +901,11 @@ class Security extends Controller implements TemplateGlobalProvider {
 	/**
 	 * Get strict path checking
 	 *
-	 * @deprecated 3.2 Use the "Security.strict_path_checking" config setting instead
+	 * @deprecated 4.0 Use the "Security.strict_path_checking" config setting instead
 	 * @return boolean Status of strict path checking
 	 */
 	public static function getStrictPathChecking() {
-		Deprecation::notice('3.2', 'Use the "Security.strict_path_checking" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.strict_path_checking" config setting instead');
 		return self::config()->strict_path_checking;
 	}
 
@@ -913,23 +913,23 @@ class Security extends Controller implements TemplateGlobalProvider {
 	/**
 	 * Set the password encryption algorithm
 	 *
-	 * @deprecated 3.2 Use the "Security.password_encryption_algorithm" config setting instead
+	 * @deprecated 4.0 Use the "Security.password_encryption_algorithm" config setting instead
 	 * @param string $algorithm One of the available password encryption
 	 *  algorithms determined by {@link Security::get_encryption_algorithms()}
 	 * @return bool Returns TRUE if the passed algorithm was valid, otherwise FALSE.
 	 */
 	public static function set_password_encryption_algorithm($algorithm) {
-		Deprecation::notice('3.2', 'Use the "Security.password_encryption_algorithm" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.password_encryption_algorithm" config setting instead');
 
 		self::config()->password_encryption_algorithm = $algorithm;
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "Security.password_encryption_algorithm" config setting instead
+	 * @deprecated 4.0 Use the "Security.password_encryption_algorithm" config setting instead
 	 * @return String
 	 */
 	public static function get_password_encryption_algorithm() {
-		Deprecation::notice('3.2', 'Use the "Security.password_encryption_algorithm" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.password_encryption_algorithm" config setting instead');
 		return self::config()->password_encryption_algorithm;
 	}
 
@@ -1022,20 +1022,20 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * Enable or disable recording of login attempts
 	 * through the {@link LoginRecord} object.
 	 *
-	 * @deprecated 3.2 Use the "Security.login_recording" config setting instead
+	 * @deprecated 4.0 Use the "Security.login_recording" config setting instead
 	 * @param boolean $bool
 	 */
 	public static function set_login_recording($bool) {
-		Deprecation::notice('3.2', 'Use the "Security.login_recording" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.login_recording" config setting instead');
 		self::$login_recording = (bool)$bool;
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "Security.login_recording" config setting instead
+	 * @deprecated 4.0 Use the "Security.login_recording" config setting instead
 	 * @return boolean
 	 */
 	public static function login_recording() {
-		Deprecation::notice('3.2', 'Use the "Security.login_recording" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.login_recording" config setting instead');
 		return self::$login_recording;
 	}
 
@@ -1049,20 +1049,20 @@ class Security extends Controller implements TemplateGlobalProvider {
 	private static $default_login_dest = "";
 
 	/**
-	 * @deprecated 3.2 Use the "Security.default_login_dest" config setting instead
+	 * @deprecated 4.0 Use the "Security.default_login_dest" config setting instead
 	 */
 	public static function set_default_login_dest($dest) {
-		Deprecation::notice('3.2', 'Use the "Security.default_login_dest" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.default_login_dest" config setting instead');
 		self::config()->default_login_dest = $dest;
 	}
 
 	/**
 	 * Get the default login dest.
 	 *
-	 * @deprecated 3.2 Use the "Security.default_login_dest" config setting instead
+	 * @deprecated 4.0 Use the "Security.default_login_dest" config setting instead
 	 */
 	public static function default_login_dest() {
-		Deprecation::notice('3.2', 'Use the "Security.default_login_dest" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.default_login_dest" config setting instead');
 		return self::config()->default_login_dest;
 	}
 
@@ -1085,10 +1085,10 @@ class Security extends Controller implements TemplateGlobalProvider {
 	/**
 	 * Set a custom log-in URL if you have built your own log-in page.
 	 *
-	 * @deprecated 3.2 Use the "Security.login_url" config setting instead.
+	 * @deprecated 4.0 Use the "Security.login_url" config setting instead.
 	 */
 	public static function set_login_url($loginUrl) {
-		Deprecation::notice('3.2', 'Use the "Security.login_url" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Security.login_url" config setting instead');
 		self::config()->update("login_url", $loginUrl);
 	}
 

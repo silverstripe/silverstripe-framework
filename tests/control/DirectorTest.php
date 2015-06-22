@@ -18,19 +18,17 @@ class DirectorTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 
-		// Required for testRequestFilterInDirectorTest
-		Injector::nest();
 
 		// Hold the original request URI once so it doesn't get overwritten
 		if(!self::$originalRequestURI) {
 			self::$originalRequestURI = $_SERVER['REQUEST_URI'];
 		}
 		$_SERVER['REQUEST_URI'] = 'http://www.mysite.com';
-		
+
 		$this->originalGet = $_GET;
 		$this->originalSession = $_SESSION;
 		$_SESSION = array();
-		
+
 		Config::inst()->update('Director', 'rules', array(
 			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller',
 			'en-nz/$Action/$ID/$OtherID' => array(
@@ -53,9 +51,6 @@ class DirectorTest extends SapphireTest {
 	public function tearDown() {
 		// TODO Remove director rule, currently API doesnt allow this
 
-		// Remove base URL override (setting to false reverts to default behaviour)
-		Config::inst()->update('Director', 'alternate_base_url', false);
-
 		$_GET = $this->originalGet;
 		$_SESSION = $this->originalSession;
 
@@ -68,7 +63,6 @@ class DirectorTest extends SapphireTest {
 			}
 		}
 
-		Injector::unnest();
 
 		parent::tearDown();
 	}
@@ -140,7 +134,7 @@ class DirectorTest extends SapphireTest {
 	public function testAlternativeBaseURL() {
 		// Get original protocol and hostname
 		$rootURL = Director::protocolAndHost();
-		
+
 		// relative base URLs - you should end them in a /
 		Config::inst()->update('Director', 'alternate_base_url', '/relativebase/');
 		$_SERVER['REQUEST_URI'] = "$rootURL/relativebase/sub-page/";

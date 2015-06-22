@@ -25,11 +25,11 @@ class GDBackend extends Object implements Image_Backend {
 	/**
 	 * Set the default image quality.
 	 *
-	 * @deprecated 3.2 Use the "GDBackend.default_quality" config setting instead
+	 * @deprecated 4.0 Use the "GDBackend.default_quality" config setting instead
 	 * @param quality int A number from 0 to 100, 100 being the best quality.
 	 */
 	public static function set_default_quality($quality) {
-		Deprecation::notice('3.2', 'Use the "GDBackend.default_quality" config setting instead');
+		Deprecation::notice('4.0', 'Use the "GDBackend.default_quality" config setting instead');
 		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
 			config::inst()->update('GDBackend', 'default_quality', (int) $quality);
 		}
@@ -562,10 +562,10 @@ class GDBackend extends Object implements Image_Backend {
 class GD extends GDBackend {
 
 	/**
-	 * @deprecated 3.2 Use the "GDBackend.default_quality" config setting instead
+	 * @deprecated 4.0 Use the "GDBackend.default_quality" config setting instead
 	 */
 	public static function set_default_quality($quality) {
-		Deprecation::notice('3.2', 'Use the "GDBackend.default_quality" config setting instead');
+		Deprecation::notice('4.0', 'Use the "GDBackend.default_quality" config setting instead');
 		GDBackend::set_default_quality($quality);
 	}
 }

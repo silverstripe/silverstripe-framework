@@ -584,7 +584,7 @@ abstract class Object {
 				$sources[] = $extensionClass;
 
 				if(!ClassInfo::has_method_from($extensionClass, 'add_to_class', 'Extension')) {
-					Deprecation::notice('3.2.0',
+					Deprecation::notice('4.0',
 						"add_to_class deprecated on $extensionClass. Use get_extra_config instead");
 				}
 

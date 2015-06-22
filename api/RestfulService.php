@@ -47,22 +47,22 @@ class RestfulService extends ViewableData implements Flushable {
 	 * set a curl option that will be applied to all requests as default
 	 * {@see http://php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters}
 	 *
-	 * @deprecated 3.2 Use the "RestfulService.default_curl_options" config setting instead
+	 * @deprecated 4.0 Use the "RestfulService.default_curl_options" config setting instead
 	 * @param int $option The cURL opt Constant
 	 * @param mixed $value The cURL opt value
 	 */
 	public static function set_default_curl_option($option, $value) {
-		Deprecation::notice('3.2', 'Use the "RestfulService.default_curl_options" config setting instead');
+		Deprecation::notice('4.0', 'Use the "RestfulService.default_curl_options" config setting instead');
 		Config::inst()->update('RestfulService', 'default_curl_options', array($option => $value));
 	}
 
 	/**
 	 * set many defauly curl options at once
 	 *
-	 * @deprecated 3.2 Use the "RestfulService.default_curl_options" config setting instead
+	 * @deprecated 4.0 Use the "RestfulService.default_curl_options" config setting instead
 	 */
 	public static function set_default_curl_options($optionArray) {
-		Deprecation::notice('3.2', 'Use the "RestfulService.default_curl_options" config setting instead');
+		Deprecation::notice('4.0', 'Use the "RestfulService.default_curl_options" config setting instead');
 		Config::inst()->update('RestfulService', 'default_curl_options', $optionArray);
 	}
 
@@ -74,12 +74,12 @@ class RestfulService extends ViewableData implements Flushable {
 	 * @param string $user The proxy auth user name
 	 * @param string $password The proxy auth password
 	 * @param boolean $socks Set true to use socks5 proxy instead of http
-	 * @deprecated 3.2 Use the "RestfulService.default_curl_options" config setting instead,
+	 * @deprecated 4.0 Use the "RestfulService.default_curl_options" config setting instead,
 	 *             with direct reference to the CURL_* options
 	 */
 	public static function set_default_proxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
 		Deprecation::notice(
-			'3.1',
+			'4.0',
 			'Use the "RestfulService.default_curl_options" config setting instead, '
 				. 'with direct reference to the CURL_* options'
 		);
@@ -144,8 +144,11 @@ class RestfulService extends ViewableData implements Flushable {
 		$this->customHeaders[] = $header;
 	}
 
+	/**
+	 * @deprecated since version 4.0
+	 */
 	protected function constructURL(){
-		Deprecation::notice('3.2', 'constructURL is deprecated, please use `getAbsoluteRequestURL` instead');
+		Deprecation::notice('4.0', 'constructURL is deprecated, please use `getAbsoluteRequestURL` instead');
 		return Controller::join_links($this->baseURL, '?' . $this->queryString);
 	}
 
@@ -616,9 +619,10 @@ class RestfulService_Response extends SS_HTTPResponse {
 
 	/**
 	 * @param string
+	 * @deprecated since version 4.0
 	 */
 	public function setCachedBody($content) {
-		Deprecation::notice('3.2', 'Setting the response body is now deprecated, set the cached request instead');
+		Deprecation::notice('4.0', 'Setting the response body is now deprecated, set the cached request instead');
 		if (!$this->cachedResponse) {
 			$this->cachedResponse = new RestfulService_Response($content);
 		}
