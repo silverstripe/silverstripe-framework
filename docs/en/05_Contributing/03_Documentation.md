@@ -3,23 +3,23 @@ summary: Writing guide for contributing to SilverStripe developer and CMS user h
 
 # Contributing documentation
 
-Documentation for a software project is a continued and collaborative effort. We encourage everybody to contribute in any way they can, from simply fixing spelling mistakes, to writing recipes, to reviewing existing documentation and translating it to another language.
+Documentation for a software project is a continuing, collaborative effort. We encourage everybody to contribute in any way they can, from simply fixing spelling mistakes, to writing recipes, to reviewing existing documentation and translating it to other languages.
 
-Modifying documentation requires basic [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) and 
-[Markdown](http://daringfireball.net/projects/markdown/) knowledge, and a GitHub user account.
+Modifying documentation requires basic knowledge of [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc/) and 
+[Markdown](http://daringfireball.net/projects/markdown/) as well as a GitHub user account.
 
 ## Editing online
 
-The easiest way of editing any documentation is by clicking the "Edit this page" link at the bottom of the 
+The easiest way of editing any documentation is by clicking the "Edit this page" button at the bottom of the 
 page you want to edit. Alternatively, locate the appropriate .md file in the 
 [github.com/silverstripe/silverstripe-framework](https://github.com/silverstripe/silverstripe-framework/tree/master/docs/) repository and press the "edit" button. **You will need a free GitHub account to do this**. 
 
 
  * After editing the documentation, describe your changes in the "commit summary" and "extended description" fields below then press "Commit Changes".
- * After that you will see a form to submit a Pull Request: "[pull requests](http://help.github.com/pull-requests/)". You should be able to adjust the version your documentation changes apply to and then submit the form. Your changes will be sent to the core committers for approval.
+ * After committing your changes, you will see a form to submit a Pull Request: "[pull requests](http://help.github.com/pull-requests/)". You should be able to adjust the version to which your documentation changes apply before submitting form. Any changes you submit a pull request for will be sent to the core committers for approval.
 
 <div class="warning" markdown='1'>
-You should make your changes in the lowest branch they apply to. For instance, if you fix a spelling issue that you found in the 3.1 documentation, submit your fix to that branch in Github and it'll be copied to the master (3.2) version of the documentation automatically. *Don't submit multiple pull requests*.
+You should make your changes in the lowest branch they apply to. For instance, if you fix a spelling issue that you found in the 3.2 documentation, submit your fix to that branch in Github and it'll be copied to the master (3.2) version of the documentation automatically. *Don't submit multiple pull requests*.
 </div>
 
 ## Editing on your computer
@@ -36,8 +36,8 @@ If you submit a new feature or an API change, we strongly recommend that your pa
 
 ## Repositories
 
-*  End-user: [userhelp.silverstripe.org](http://github.com/silverstripe/userhelp.silverstripe.org)
-*  Developer guides: [doc.silverstripe.org](http://github.com/silverstripe/doc.silverstripe.org)
+*  End-user help: [userhelp.silverstripe.org](http://github.com/silverstripe/userhelp.silverstripe.org)
+*  Developer guides: [docs.silverstripe.org](http://github.com/silverstripe/docs.silverstripe.org)
 *  Developer API documentation: [api.silverstripe.org](http://github.com/silverstripe/api.silverstripe.org)
 
 ## Source control
@@ -64,7 +64,7 @@ as "related content" on other resource (e.g. `/tutorials/site_search` might link
 * Write in second person plural form: Use "we" instead of "I". It gives the text an instructive and collaborative style.
 * It's okay to address the reader: For example "First you'll install a webserver" is good style.
 * Write in an active and direct voice.
-* Mark up correctly: Use preformatted text. Emphasis and bold make technical writing more easily "scannable".
+* Mark up correctly: The use preformatted text, emphasis and bold all make technical writing more easily "scannable".
 * Avoid FAQs: FAQs are not a replacement for coherent, well explained documentation. If you've done a good job
 documenting, there shouldn't be any "frequently asked questions" left.
 * "SilverStripe" should always appear without a space with both "S"s capitalised.
@@ -73,7 +73,7 @@ documenting, there shouldn't be any "frequently asked questions" left.
 * We use sentence case for titles so only capitalise the first letter of the first word of a title. The only exceptions to this are when using brand names (e.g. SilverStripe), acronyms (e.g. PHP) and class names (e.g. ModelAdmin).
 * Use gender neutral language throughout the document, unless referencing a specific person. Use them, they, their, instead of he and she, his or her.
 * URLs: if the end of your sentence is a URL then you don't need to use a full stop.
-* Bullet points: Sentence case your bullet points. If a bullet point is a full sentence then end with a full stop. If it is a short point or a list, full stops are not required.
+* Bullet points: Sentence case your bullet points. If a bullet point is a full sentence then end with a full stop. If it is a sentence fragment or a comma separated list, full stops are not required.
 
 ## Highlighted blocks
 
@@ -117,7 +117,7 @@ on placing HTML blocks inside Markdown.
 
 Documentation is kept alongside the source code, typically in a module subdirectory like `framework/docs/en/`. Each language has its own subfolder, which can duplicate parts of or the entire body of documentation. German documentation would, for example, live in `framework/docs/de/`. The 
 [docsviewer](https://github.com/silverstripe/silverstripe-docsviewer) module that drives 
-[doc.silverstripe.org](http://doc.silverstripe.org) automatically resolves these subfolders into a language dropdown.
+[docs.silverstripe.org](http://docs.silverstripe.org) automatically resolves these subfolders into a language dropdown.
 
 ## Further reading
 
