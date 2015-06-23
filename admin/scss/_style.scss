@@ -79,6 +79,11 @@ body.cms {
 .cms-menu,
 .cms-content,
 .cms-content-header,
+/**
+ * DEPRECATED:
+ * .cms-content-tools will be removed in 4.0
+ * Use .cms-content-filters instead.
+ */
 .cms-content-tools,
 .cms-content-fields,
 .cms-edit-form,
@@ -157,6 +162,80 @@ body.cms {
 	}
 }
 
+.cms-content-header-top {
+	@include inline-block;
+	width: 100%;
+}
+
+/** ------------------------------------------------------------------
+ * Filters available in the top bar.
+ * This is a togglable element that displays a form
+ * used for filtering content.
+ * ----------------------------------------------------------------- */
+.cms-content-filters {
+	display: none;
+	width: 100%;
+	margin: 0 0 0 -16px;
+	padding: 16px;
+	background-color: #dddfe1;
+
+	.cms-search-form {
+		margin-bottom: 0;
+	}
+}
+
+.cms-content-view,
+.ui-tabs .cms-panel-padded .cms-content-view.ui-tabs-panel {
+	padding-top: 16px;
+}
+
+.cms-content-fields {
+	padding: 0 16px 16px;
+}
+
+.cms-tabset-nav-primary {
+	@include inline-block;
+	vertical-align: middle;
+}
+
+/** ------------------------------------------------------------------
+ * Buttons that use font icons
+ * ----------------------------------------------------------------- */
+.ss-ui-button.icon-button {
+	vertical-align: middle;
+	margin-right: 2px;
+	padding: .3em;
+	font-size: 1.4em;
+	letter-spacing: -3px;
+	text-shadow: none;
+	line-height: 1em;
+	background-color: transparent;
+	background-image: none;
+	border: 0;
+
+	&:hover,
+	&:active,
+	&:focus {
+		border: 0;
+		box-shadow: none;
+		background-image: none;
+		outline: 0;
+	}
+
+	&:hover,
+	&:active {
+		background-color: #b6b9bb;
+	}
+
+	&.active {
+		background-color: #b6b9bb;
+	}
+
+	.ui-button-text {
+		display: none;
+	}
+}
+
 /** --------------------------------------------
  * Tabs
  * -------------------------------------------- */
@@ -176,9 +255,6 @@ body.cms {
 
 		&.cms-edit-form {
 			padding: 0;
-		}
-		&.cms-panel-padded {
-			padding: $grid-y*2 $grid-x*2;
 		}
 	}
 
@@ -659,55 +735,28 @@ body.cms {
 		}
 	}
 
-	/* smaller treedropdown */
-	.chzn-container-single .chzn-single  {
-		height: 26px;
-		line-height: 26px;
-		padding-left:25px;
-		color: darken($color-dark-grey, 15%);
-		@include background-image(
-			linear-gradient($color-button-generic, darken($color-button-generic, 10%))
-		);
-		font: {
-			size:13px;
-			weight:bold;
-		}
-		text-shadow:darken($color-text-shadow, 10%) 0 -1px 1px;
-		box-shadow:none;
-		&:hover {
-			@include box-shadow(0 0 5px darken($color-button-generic, 20%));
-			@include background-image(
-				linear-gradient(lighten($color-button-generic, 2%), darken($color-button-generic, 8%))
-			);
-		}
-
-		&:active {
-			@include box-shadow(inset 0 1px 3px darken($color-button-generic, 60%));
-		}
- 		
- 		span {
- 			padding-top:1px;
- 		}
-
-		div {
-			border-left:none;
-			width:100%;
-		}
-
-		div b {
-			background: url(../images/sprites-32x32/menu-arrow-deselected-down.png) no-repeat 9px 11px;
-			float:right;
-			width:24px;
-		}	
-	}
-	
 	.ss-ui-button {
 		margin-bottom: $grid-y;
 	}
+
+	.cms-actions-buttons-row {
+		clear: both;
+	}
+
+	.cms-actions-tools-row {
+		clear: both;
+	}
+
+	.tool-action {
+		display: none;
+	}
 }
 
-
-/* --------------------------------------------------------
+/**
+ * DEPRECATED:
+ * .cms-content-tools will be removed in 4.0
+ * Use .cms-content-filters instead.
+ *
  * Content Tools is the sidebar on the left of the main content
  * panel
  */
@@ -885,6 +934,14 @@ body.cms {
 /** 
  * CMS Batch actions
  */
+.cms-content-batchactions-button {
+	@include inline-block;
+	padding: 4px 6px;
+	vertical-align: middle;
+	@include background-image(linear-gradient(top, #fff, #D9D9D9));
+	border: 1px solid #aaa;
+	@include border-radius(4px);
+}
 
 .cms-content-batchactions {
 	float: left;
@@ -911,75 +968,56 @@ body.cms {
 			vertical-align: middle;
 			display: none;
 		}
-
-		fieldset, .Actions {
-			display: inline-block;
-		}
-		#view-mode-batchactions {
-			margin-top: 2px;
-		}
 	}
 
-		&.inactive .view-mode-batchactions-wrapper {
-			border-radius: 4px;
-
-			.view-mode-batchactions-label {
-				display: inline;
-			}
-		}
-
-	form > * {
-		display: block;
-		float: left;
-	}
-
-	form.cms-batch-actions {
-		float:  left;
-	}
-
-	&.inactive form {
-		display: none;
-	}
-
-	.chzn-container-single {
-		display: block;
-
-		.chzn-single {
-			border-radius: 0;
-			@include background-image(linear-gradient(top, #fff, #D9D9D9));
-
-			span {
-				padding-top: 0;
-			}
-		}
-	}
-
-	
-	.cms-batch-actions {
-		.dropdown {
-			margin: 0;
-			.chzn-single {
-				padding-left: 8px; /* use default size without icon */
-			}
-		}
-		.Actions .ss-ui-button {
-			padding-top: 4px;
-			padding-bottom: 4px;
-			height: 28px;
-			margin-left: -1px;
-			border-top-left-radius: 0;
-			border-bottom-left-radius: 0;
-
-			&.ui-state-disabled {
-				opacity: 1;
-				color: #ccc;
-			}
-		}
+	.checkbox {
+		margin-top: 2px;
+		vertical-align: middle;
 	}
 }
+.cms-content-batchactions-dropdown {
+	@include inline-block;
 
-#Form_BatchActionsForm select {
-	width: 200px;
+	// Context specific rules for when batch actions are in the SiteTree panel.
+	.cms-content-tools & {
+		width: 100%;
+	}
+
+	fieldset { // The dropdown element wrapper
+		@include inline-block;
+		width: 200px;
+
+		.view-mode-batchactions-label {
+			display: inline;
+		}
+
+		// Context specific rules for when batch actions are in the SiteTree panel.
+		.cms-content-tools & {
+			width: 82%;
+		}
+	}
+
+	.dropdown { // The 'select' element
+		width: 100%;
+		height: 32px;
+	}
+
+	.Actions {
+		@include inline-block;
+
+		// Context specific rules for when batch actions are in the SiteTree panel.
+		.cms-content-tools & {
+			width: 16%;
+		}
+
+		padding: 0;
+	}
+
+	.action {
+		width: 100%;
+		height: 32px;
+		margin-bottom: 0;
+	}
 }
 
 /** --------------------------------------------
@@ -1188,6 +1226,12 @@ form.member-profile-form {
 			}
 		}
 	}
+
+	/**
+	 * DEPRECATED:
+	 * .cms-content-tools will be removed in 4.0
+	 * Use .cms-content-filters instead.
+	 */
 	&.cms-content-tools .cms-panel-toggle {
 		&.south {
 			border-top: 1px solid darken($tab-panel-texture-color,10%);
@@ -1274,13 +1318,6 @@ form.member-profile-form {
 		li a span {
 		   display: block !important;
 		}
-	}
-}
-
-.cms {
-	.cms-panel-padded {
-		padding: $grid-y*2 $grid-x*2;
-		margin:0;
 	}
 }
 

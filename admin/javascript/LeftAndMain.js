@@ -1401,6 +1401,47 @@ jQuery.noConflict();
 				});
 			}
 		});
+
+		/**
+		 * CMS content filters
+		 */
+		$('#filters-button').entwine({
+			onmatch: function () {
+				this._super();
+
+				this.data('collapsed', true); // The current colapsed state of the element.
+				this.data('animating', false); // True if the element is currently animating.
+			},
+			onunmatch: function () {
+				this._super();
+			},
+			showHide: function () {
+				var self = this,
+					$filters = $('.cms-content-filters').first(),
+					$container = $filters.closest('.cms-content-fields'),
+					collapsed = this.data('collapsed');
+
+				// Prevent the user from spamming the UI with animation requests.
+				if (this.data('animating')) {
+					return;
+				}
+
+				// Slide the element down / up based on it's current collapsed state.
+				$filters[collapsed ? 'slideDown' : 'slideUp']({
+					complete: function () {
+						// Update the element's state.
+						self.data('collapsed', !collapsed);
+						self.data('animating', false);
+					}
+				});
+
+				this.data('animating', true);
+			},
+			onclick: function () {
+				this.toggleClass('active');
+				this.showHide();
+			}
+		});
 	});
 
 }(jQuery));

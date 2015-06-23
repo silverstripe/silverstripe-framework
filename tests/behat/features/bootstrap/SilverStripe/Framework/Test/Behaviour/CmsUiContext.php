@@ -214,6 +214,27 @@ class CmsUiContext extends BehatContext {
 	}
 
 	/**
+	 * @When /^I (expand|collapse) the content filters$/
+	 */
+	public function iExpandTheContentFilters($action) {
+		$page = $this->getSession()->getPage();
+		$filterButton = $page->find('css', '#filters-button');
+		assertNotNull($filterButton, sprintf('Filter button link not found'));
+
+		$filterButtonCssClass = $filterButton->getAttribute('class');
+
+		if($action == 'expand') {
+			if(strpos($filterButtonCssClass, 'active') === false) {
+				$filterButton->click();
+			}
+		} else {
+			if(strpos($filterButtonCssClass, 'active') !== false) {
+				$filterButton->click();
+			}
+		}
+	}
+
+	/**
 	 * @When /^I (expand|collapse) "([^"]*)" in the tree$/
 	 */
 	public function iExpandInTheTree($action, $nodeText) {

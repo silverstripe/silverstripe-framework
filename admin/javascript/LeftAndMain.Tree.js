@@ -487,26 +487,5 @@
 				return this.data('id');
 			}
 		});
-		
-		$('.cms-content-batchactions input[name=view-mode-batchactions]').entwine({
-			onmatch: function() {
-				// set active by default
-				this.redraw();
-				this._super();
-			},
-			onunmatch: function() {
-				this._super();
-			},
-			onclick: function(e) {
-				this.redraw();
-			},
-			redraw: function(type) {
-				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
-				
-				$('.cms-tree')
-					.toggleClass('draggable', !this.is(':checked'))
-					.toggleClass('multiple', this.is(':checked'));
-			}
-		});
 	});
 }(jQuery));

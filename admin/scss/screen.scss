@@ -28,7 +28,7 @@ imported compass/support file and enables svg gradients in IE9.
 It was put here because there didn't seem to be a more logical place to put it.
 If more variables exist in the future, consider creating a variables file.*/
 
-$experimental-support-for-svg: true; 
+$experimental-support-for-svg: true;
 
 /** -----------------------------
  * Theme
@@ -48,6 +48,7 @@ $experimental-support-for-svg: true;
 /** -----------------------------
  * CMS Components
  * ------------------------------ */
+@import "fonts.scss";
 @import "typography.scss";
 @import "uitheme.scss";
 @import "forms.scss";
