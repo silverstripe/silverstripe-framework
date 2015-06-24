@@ -19,7 +19,7 @@ page you want to edit. Alternatively, locate the appropriate .md file in the
  * After committing you changes, you will see a form to submit a Pull Request: "[pull requests](http://help.github.com/pull-requests/)". You should be able to adjust the version to which your documentation changes apply before submitting the form. Any changes submitted in a pull request will be sent to the core committers for approval.
 
 <div class="warning" markdown='1'>
-You should make your changes in the lowest branch they apply to. For instance, if you fix a spelling issue that you found in the 3.2 documentation, submit your fix to that branch in Github and it'll be copied to the master (3.2) version of the documentation automatically. *Don't submit multiple pull requests*.
+You should make your changes in the lowest branch they apply to. For instance, if you fix a spelling issue that you found in the 3.2 documentation, submit your fix to that branch in Github and it'll be copied to the master (4.0) version of the documentation automatically. *Don't submit multiple pull requests*.
 </div>
 
 ## Editing on your computer
