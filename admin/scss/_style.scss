@@ -189,10 +189,6 @@ body.cms {
 	padding-top: 16px;
 }
 
-.cms-content-fields {
-	padding: 0 16px 16px;
-}
-
 .cms-tabset-nav-primary {
 	@include inline-block;
 	vertical-align: middle;
@@ -1318,6 +1314,12 @@ form.member-profile-form {
 		li a span {
 		   display: block !important;
 		}
+	}
+}
+
+.cms {
+	.cms-panel-padded {
+		padding: 0 $grid-y*2 $grid-x*2;
 	}
 }
 
