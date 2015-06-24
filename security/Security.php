@@ -1118,7 +1118,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 
 	/**
-	 * Defines global accesible templates variables.
+	 * Defines global accessible templates variables.
 	 *
 	 * @return array
 	 */
