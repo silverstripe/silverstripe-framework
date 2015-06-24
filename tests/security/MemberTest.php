@@ -172,6 +172,13 @@ class MemberTest extends FunctionalTest {
 		$this->assertInstanceOf('DataObject', $passwords->current());
 		$this->assertTrue($passwords->current()->checkPassword('1nitialPassword'),
 			"Password 1nitialPassword not found in MemberRecord");
+
+		//check we don't retain orphaned records when a member is deleted
+		$member->delete();
+
+		$passwords = MemberPassword::get()->filter('MemberID', $member->OldID);
+
+		$this->assertCount(0, $passwords);
 	}
 
 	/**
