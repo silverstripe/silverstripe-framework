@@ -59,7 +59,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	private static $has_one = array();
 
-	private static $has_many = array();
+	private static $has_many = array(
+		'LoggedPasswords' => 'MemberPassword',
+	);
 
 	private static $many_many = array();
 
@@ -877,6 +879,26 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if($this->isChanged('Password')) {
 			MemberPassword::log($this);
 		}
+	}
+
+	public function onAfterDelete() {
+		parent::onAfterDelete();
+
+		//prevent orphaned records remaining in the DB
+		$this->deletePasswordLogs();
+	}
+
+	/**
+	 * Delete the MemberPassword objects that are associated to this user
+	 *
+	 * @return self
+	 */
+	protected function deletePasswordLogs() {
+		foreach ($this->LoggedPasswords() as $password) {
+			$password->delete();
+			$password->destroy();
+		}
+		return $this;
 	}
 
 	/**
