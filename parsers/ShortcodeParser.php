@@ -103,11 +103,47 @@ class ShortcodeParser extends Object {
 		$this->shortcodes = array();
 	}
 	
+	/**
+	 * Call a shortcode and return its replacement text
+	 * Returns false if the shortcode isn't registered
+	 */
 	public function callShortcode($tag, $attributes, $content, $extra = array()) {
-		if (!isset($this->shortcodes[$tag])) return false;
+		if (!$tag || !isset($this->shortcodes[$tag])) return false;
 		return call_user_func($this->shortcodes[$tag], $attributes, $content, $this, $tag, $extra);
 	}
 	
+	/**
+	 * Return the text to insert in place of a shoprtcode.
+	 * Behaviour in the case of missing shortcodes depends on the setting of ShortcodeParser::$error_behavior.
+	 * @param $tag A map containing the the following keys:
+	 *  - 'open': The name of the tag
+	 *  - 'attrs': Attributes of the tag
+	 *  - 'content': Content of the tag
+	 * @param $extra Extra-meta data
+	 * @param $isHTMLAllowed A boolean indicating whether it's okay to insert HTML tags into the result
+	 */
+	function getShortcodeReplacementText($tag, $extra = array(), $isHTMLAllowed = true) {
+		$content = $this->callShortcode($tag['open'], $tag['attrs'], $tag['content'], $extra);
+
+		// Missing tag
+		if ($content === false) {
+			if(ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
+				user_error('Unknown shortcode tag '.$tag['open'], E_USER_ERRROR);
+			}
+			else if (self::$error_behavior == self::WARN && $isHTMLAllowed) {
+				$content = '<strong class="warning">'.$tag['text'].'</strong>';
+			}
+			else if(ShortcodeParser::$error_behavior == ShortcodeParser::STRIP) {
+				return '';
+			}
+			else {
+				return $tag['text'];
+			}
+		}
+
+		return $content;
+	}
+
 	// --------------------------------------------------------------------------------------------------------------
 	
 	protected function removeNode($node) {
@@ -207,6 +243,7 @@ class ShortcodeParser extends Object {
 	protected function extractTags($content) {
 		$tags = array();
 		
+		// Step 1: perform basic regex scan of individual tags
 		if(preg_match_all(static::tagrx(), $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
 			foreach($matches as $match) {
 				// Ignore any elements
@@ -236,8 +273,9 @@ class ShortcodeParser extends Object {
 					'escaped' => !empty($match['oesc'][0]) || !empty($match['cesc1'][0]) || !empty($match['cesc2'][0])
 				);
 			}
-			}
+		}
 
+		// Step 2: cluster open/close tag pairs into single entries
 		$i = count($tags);
 		while($i--) {
 			if(!empty($tags[$i]['close'])) {
@@ -282,7 +320,18 @@ class ShortcodeParser extends Object {
 				}
 			}
 		}
-		
+
+		// Step 3: remove any tags that don't have handlers registered
+		// Only do this if self::$error_behavior == self::LEAVE
+		// This is optional but speeds things up.
+		if(self::$error_behavior == self::LEAVE) {
+			foreach($tags as $i => $tag) {
+				if(empty($this->shortcodes[$tag['open']])) {
+					unset($tags[$i]);
+				}
+			}
+		}
+
 		return array_values($tags);
 	}
 
@@ -337,24 +386,11 @@ class ShortcodeParser extends Object {
 
 			if($tags) {
 				$node->nodeValue = $this->replaceTagsWithText($node->nodeValue, $tags,
-					function($idx, $tag) use ($parser, $extra){
-					$content = $parser->callShortcode($tag['open'], $tag['attrs'], $tag['content'], $extra);
-
-					if ($content === false) {
-						if(ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
-							user_error('Unknown shortcode tag '.$tag['open'], E_USER_ERRROR);
-						}
-						else if(ShortcodeParser::$error_behavior == ShortcodeParser::STRIP) {
-							return '';
-						}
-						else {
-							return $tag['text'];
-						}
+					function($idx, $tag) use ($parser, $extra) {
+						return $parser->getShortcodeReplacementText($tag, $extra, false);
 					}
-
-		return $content;
-				});
-	}
+				);
+			}
 		}
 	}
 	
@@ -365,17 +401,17 @@ class ShortcodeParser extends Object {
 	 */
 	protected function replaceElementTagsWithMarkers($content) {
 		$tags = $this->extractTags($content);
-		
+
 		if($tags) {
 			$markerClass = self::$marker_class;
 		
 			$content = $this->replaceTagsWithText($content, $tags, function($idx, $tag) use ($markerClass) {
 				return '<img class="'.$markerClass.'" data-tagid="'.$idx.'" />';
 			});
-				}
+		}
 		
 		return array($content, $tags);
-			}
+	}
 
 	protected function findParentsForMarkers($nodes) {
 		$parents = array();
@@ -477,23 +513,7 @@ class ShortcodeParser extends Object {
 	 * @param array $tag
 	 */
 	protected function replaceMarkerWithContent($node, $tag) {
-		$content = false;
-		if($tag['open']) $content = $this->callShortcode($tag['open'], $tag['attrs'], $tag['content']);
-
-		if ($content === false) {
-			if(self::$error_behavior == self::ERROR) {
-				user_error('Unknown shortcode tag '.$tag['open'], E_USER_ERRROR);
-			}
-			if (self::$error_behavior == self::WARN) {
-				$content = '<strong class="warning">'.$tag['text'].'</strong>';
-			}
-			else if (self::$error_behavior == self::LEAVE) {
-				$content = $tag['text'];
-			}
-			else {
-				// self::$error_behavior == self::STRIP - NOP
-			}
-		}
+		$content = $this->getShortcodeReplacementText($tag);
 		
 		if ($content) {
 			$parsed = Injector::inst()->create('HTMLValue', $content);
@@ -541,7 +561,7 @@ class ShortcodeParser extends Object {
 
 		// Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
 		$parents = $this->findParentsForMarkers($shortcodes);
-		
+
 		foreach($shortcodes as $shortcode) {
 			$tag = $tags[$shortcode->getAttribute('data-tagid')];
 			$parent = $parents[$shortcode->getAttribute('data-parentid')];
@@ -567,8 +587,21 @@ class ShortcodeParser extends Object {
 			$this->replaceMarkerWithContent($shortcode, $tag);
 		}
 
-		return $htmlvalue->getContent();
+		$content = $htmlvalue->getContent();
+
+		// Clean up any marker classes left over, for example, those injected into <script> tags
+		$parser = $this;
+		$content = preg_replace_callback(
+			// Not a general-case parser; assumes that the HTML generated in replaceElementTagsWithMarkers()
+			// hasn't been heavily modified
+			'/<img[^>]+class="'.preg_quote(self::$marker_class).'"[^>]+data-tagid="([^"]+)"[^>]+>/i',
+			function ($matches) use ($tags, $parser) {
+				$tag = $tags[$matches[1]];
+				return $parser->getShortcodeReplacementText($tag);
+			},
+			$content
+		);
+
+		return $content;
 	}
-	
-	
 }

@@ -211,6 +211,37 @@ class ShortcodeParserTest extends SapphireTest {
 		);
 	}
 
+	public function testShortcodesInsideScriptTag() {
+		$this->assertEqualsIgnoringWhitespace(
+			'<script>hello</script>',
+			$this->parser->parse('<script>[test_shortcode]hello[/test_shortcode]</script>')
+		);
+	}
+
+	public function testNumericShortcodes() {
+		$this->assertEqualsIgnoringWhitespace(
+			'[2]',
+			$this->parser->parse('[2]')
+		);
+		$this->assertEqualsIgnoringWhitespace(
+			'<script>[2]</script>',
+			$this->parser->parse('<script>[2]</script>')
+		);
+
+		$this->parser->register('2', function($attributes, $content, $this, $tag, $extra) {
+			return 'this is 2';
+		});
+
+		$this->assertEqualsIgnoringWhitespace(
+			'this is 2',
+			$this->parser->parse('[2]')
+		);
+		$this->assertEqualsIgnoringWhitespace(
+			'<script>this is 2</script>',
+			$this->parser->parse('<script>[2]</script>')
+		);
+	}
+
 	public function testExtraContext() {
 		$this->parser->parse('<a href="[test_shortcode]">Test</a>');
 
