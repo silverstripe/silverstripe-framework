@@ -29,7 +29,7 @@ Honour the code of conduct whenever you participate formally and informally in o
  * Welcome newcomers. Spend some time helping them to get orientated in our community.
  * All contributors and core committers, module maintainers and knowledge sharers are participating in the community in a voluntary nature. Have respect for them and their time when making requests. You may need to exercise some patience.
  * Whenever possible, reference your comments to others with example code or links to documentation. This helps people learn and become more experienced community members and developers.
- * If you manage to solve your own problem, tell others how you solved it. This will help people in the future who have to solve the sort of problem.
+ * If you manage to solve your own problem, tell others how you solved it. This will help people in the future who have to solve similar problems.
  * If you are reducing your input, and potentially stepping away from the community, please remember that others might be relying on your contributions. Be prepared to ensure your contributions remain open and available to the community. Spend some time handing your contributions over to another community member or core contributor to help with the continuity of SilverStripe open source development.
 
 ## Resolve conflicts directly
