@@ -858,6 +858,8 @@ form.import-form label.left { width: 250px; }
 
 .jstree-default a .jstree-icon, .jstree-default-rtl a .jstree-icon, .jstree-classic a .jstree-icon, .jstree-apple a .jstree-icon { background-position: -60px -19px; }
 
+.jstree-apple a { border-radius: 3px; }
+
 /* ensure status is visible in sidebar */
 .cms-content-tools .cms-tree.jstree li { min-width: 159px; }
 .cms-content-tools .cms-tree.jstree a { overflow: hidden; display: block; position: relative; }
@@ -870,44 +872,58 @@ li.class-RedirectorPage > a .jstree-pageicon { background-position: 0 -16px; }
 li.class-VirtualPage > a .jstree-pageicon { background-position: 0 -32px; }
 li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 
-/* tree status icons and labels */
-.cms-tree.jstree .status-modified > a .jstree-pageicon:before, .cms-tree.jstree .status-addedtodraft > a .jstree-pageicon:before, .cms-tree.jstree .status-deletedonlive > a .jstree-pageicon:before, .cms-tree.jstree .status-archived > a .jstree-pageicon:before, .cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before, .cms-tree.jstree .status-workflow-approval > a .jstree-pageicon:before { content: ""; display: block; width: 5px; height: 5px; position: absolute; bottom: 0; right: 0; background: #fce2d0; border: 1px solid #ff9344; border-radius: 100px; box-shadow: 0px 0px 0px 1px #fff; }
+/* Tree status labels and dots */
+.jstree-apple .jstree-clicked, .jstree-apple .jstree-hovered { background: #ebfbff; }
 
-.jstree .status-modified > .jstree-hovered, .jstree .status-modified > .jstree-clicked, .cms-tree.jstree span.badge.status-modified, .cms-tree.jstree .status-modified > a .jstree-pageicon:before { background-color: #FFF4ED; border-color: #EE6214; }
+.cms-tree.jstree .status-addedtodraft > a .jstree-pageicon:before, .cms-tree.jstree .status-modified > a .jstree-pageicon:before, .cms-tree.jstree .status-archived > a .jstree-pageicon:before, .cms-tree.jstree .status-deletedonlive > a .jstree-pageicon:before, .cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before, .cms-tree.jstree .status-workflow-approval > a .jstree-pageicon:before { content: ""; display: block; width: 6px; height: 6px; position: absolute; bottom: 0; right: 0; background: #fce2d0; border: 1px solid #fff; border-radius: 100px; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-modified { box-shadow: 0px 0px 6px 2px #FFF4ED; }
+.jstree .status-addedtodraft > .jstree-hovered, .jstree .status-addedtodraft > .jstree-clicked, .cms-tree.jstree span.badge.status-addedtodraft { background-color: #fff7f2; border-color: #F46B00; }
 
-.cms-tree.jstree span.badge.status-modified { color: #EE6214; }
+.cms-tree.jstree span.badge.status-addedtodraft { color: #F46B00; }
 
-.jstree .status-addedtodraft > .jstree-hovered, .jstree .status-addedtodraft > .jstree-clicked, .cms-tree.jstree span.badge.status-addedtodraft, .cms-tree.jstree .status-addedtodraft > a .jstree-pageicon:before { background-color: #FFF4ED; border-color: #EE6214; }
+.cms-tree.jstree .status-addedtodraft > a .jstree-pageicon:before { background-color: #ff7f22; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-addedtodraft { box-shadow: 0px 0px 6px 2px #FFF4ED; }
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-addedtodraft { -moz-box-shadow: 0px 0px 6px 2px #fff7f2; -webkit-box-shadow: 0px 0px 6px 2px #fff7f2; box-shadow: 0px 0px 6px 2px #fff7f2; }
 
-.cms-tree.jstree span.badge.status-addedtodraft { color: #EE6214; }
+.jstree .status-modified > .jstree-hovered, .jstree .status-modified > .jstree-clicked, .cms-tree.jstree span.badge.status-modified { background-color: #fff7f2; border-color: #F46B00; }
 
-.jstree .status-deletedonlive > .jstree-hovered, .jstree .status-deletedonlive > .jstree-clicked, .cms-tree.jstree span.badge.status-deletedonlive, .cms-tree.jstree .status-deletedonlive > a .jstree-pageicon:before { background-color: #F5F5F5; border-color: #5F7688; }
+.cms-tree.jstree span.badge.status-modified { color: #F46B00; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-deletedonlive { box-shadow: 0px 0px 6px 2px #F5F5F5; }
+.cms-tree.jstree .status-modified > a .jstree-pageicon:before { background-color: #fff2e8; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; }
 
-.cms-tree.jstree span.badge.status-deletedonlive { color: #5F7688; }
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-modified { -moz-box-shadow: 0px 0px 6px 2px #fff7f2; -webkit-box-shadow: 0px 0px 6px 2px #fff7f2; box-shadow: 0px 0px 6px 2px #fff7f2; }
 
-.jstree .status-archived > .jstree-hovered, .jstree .status-archived > .jstree-clicked, .cms-tree.jstree span.badge.status-archived, .cms-tree.jstree .status-archived > a .jstree-pageicon:before { background-color: #F5F5F5; border-color: #5F7688; }
+.jstree .status-archived > .jstree-hovered, .jstree .status-archived > .jstree-clicked, .cms-tree.jstree span.badge.status-archived { background-color: #f7f7f7; border-color: #455b6c; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-archived { box-shadow: 0px 0px 6px 2px #F5F5F5; }
+.cms-tree.jstree span.badge.status-archived { color: #455b6c; }
 
-.cms-tree.jstree span.badge.status-archived { color: #5F7688; }
+.cms-tree.jstree .status-archived > a .jstree-pageicon:before { background-color: #5F7688; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; }
 
-.jstree .status-removedfromdraft > .jstree-hovered, .jstree .status-removedfromdraft > .jstree-clicked, .cms-tree.jstree span.badge.status-removedfromdraft, .cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before { background-color: #F5F5F5; border-color: #5F7688; }
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-archived { -moz-box-shadow: 0px 0px 6px 2px #f7f7f7; -webkit-box-shadow: 0px 0px 6px 2px #f7f7f7; box-shadow: 0px 0px 6px 2px #f7f7f7; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-removedfromdraft { box-shadow: 0px 0px 6px 2px #F5F5F5; }
+.jstree .status-deletedonlive > .jstree-hovered, .jstree .status-deletedonlive > .jstree-clicked, .cms-tree.jstree span.badge.status-deletedonlive { background-color: #f7f7f7; border-color: #455b6c; }
 
-.cms-tree.jstree span.badge.status-removedfromdraft { color: #5F7688; }
+.cms-tree.jstree span.badge.status-deletedonlive { color: #455b6c; }
 
-.jstree .status-workflow-approval > .jstree-hovered, .jstree .status-workflow-approval > .jstree-clicked, .cms-tree.jstree span.badge.status-workflow-approval, .cms-tree.jstree .status-workflow-approval > a .jstree-pageicon:before { background-color: #E8FAFF; border-color: #0070B4; }
+.cms-tree.jstree .status-deletedonlive > a .jstree-pageicon:before { background-color: #f7f7f7; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-workflow-approval { box-shadow: 0px 0px 6px 2px #E8FAFF; }
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-deletedonlive { -moz-box-shadow: 0px 0px 6px 2px #f7f7f7; -webkit-box-shadow: 0px 0px 6px 2px #f7f7f7; box-shadow: 0px 0px 6px 2px #f7f7f7; }
+
+.jstree .status-removedfromdraft > .jstree-hovered, .jstree .status-removedfromdraft > .jstree-clicked, .cms-tree.jstree span.badge.status-removedfromdraft { background-color: #f7f7f7; border-color: #455b6c; }
+
+.cms-tree.jstree span.badge.status-removedfromdraft { color: #455b6c; }
+
+.cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before { background-color: #f7f7f7; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; }
+
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-removedfromdraft { -moz-box-shadow: 0px 0px 6px 2px #f7f7f7; -webkit-box-shadow: 0px 0px 6px 2px #f7f7f7; box-shadow: 0px 0px 6px 2px #f7f7f7; }
+
+.jstree .status-workflow-approval > .jstree-hovered, .jstree .status-workflow-approval > .jstree-clicked, .cms-tree.jstree span.badge.status-workflow-approval { background-color: #E8FAFF; border-color: #0070B4; }
 
 .cms-tree.jstree span.badge.status-workflow-approval { color: #0070B4; }
+
+.cms-tree.jstree .status-workflow-approval > a .jstree-pageicon:before { background-color: #0070B4; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #0070B4; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #0070B4; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #0070B4; }
+
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-workflow-approval { -moz-box-shadow: 0px 0px 6px 2px #E8FAFF; -webkit-box-shadow: 0px 0px 6px 2px #E8FAFF; box-shadow: 0px 0px 6px 2px #E8FAFF; }
 
 .cms-tree { visibility: hidden; }
 .cms-tree.multiple li > a > .jstree-icon { display: none; }
