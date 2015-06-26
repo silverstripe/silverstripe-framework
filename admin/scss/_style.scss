@@ -97,7 +97,7 @@ body.cms {
 .cms-content-header {
 	padding-left: $grid-x * 2;
 	z-index: 60;
-	min-height: 40px;
+	min-height: 48px;
 	background: {
 		image: url(../images/textures/cms_content_header.png);
 		repeat: repeat;
@@ -167,6 +167,117 @@ body.cms {
 	width: 100%;
 }
 
+// We have a faux three column layout when displaying Page content in the CMS.
+.has-panel {
+	.cms-content-header.north {
+		padding-left: $grid-x;
+
+		&.collapsed {
+			.cms-content-header-info {
+				width: 24px;
+				text-align: right;
+			}
+
+			.view-controls,
+			.section-label {
+				display: none;
+			}
+
+			.cms-content-header-nav {
+				margin-left: 31px;
+			}
+		}
+	}
+
+	.cms-content-header-info {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 1px;
+		width: $grid-x * 34;
+		margin-left: -$grid-x;
+		padding-bottom: $grid-y;
+		padding-left: $grid-x * 2;
+		padding-right: $grid-x;
+		background-color: #eceff1;
+		border-right: 1px solid $color-separator;
+	}
+
+	.cms-content-header-nav {
+		margin-left: 280px;
+	}
+
+	.section-heading {
+		margin-top: 8px;
+	}
+
+	.section-icon {
+		vertical-align: middle;
+	}
+
+	.section-label {
+		vertical-align: middle;
+		font-size: 1.2em;
+		font-weight: bold;
+	}
+
+	.breadcrumbs-wrapper {
+		float: left;
+		padding-top: 6px;
+		padding-left: $grid-x * 3;
+	}
+
+	.cms-content-header-tabs {
+		margin-top: 9px;
+	}
+
+	.cms-tabset-nav-primary.ui-tabs-nav .ui-state-default.ui-corner-top {
+		border-top: 1px solid #b3b3b3;
+	}
+
+	.view-controls {
+		float: right;
+		margin-top: 4px;
+	}
+
+	.cms-content-tools {
+		.cms-panel-content {
+			padding-top: 0;
+			overflow-x: hidden;
+		}
+	}
+}
+
+#page-title-heading {
+	line-height: 1.2em;
+}
+
+/** ------------------------------------------------------------------
+ * CMS Breadcrumbs
+ * ----------------------------------------------------------------- */
+.breadcrumbs-wrapper {
+	.crumb,
+	.sep {
+		font-size: .8em;
+		line-height: 1.2em;
+	}
+
+	.crumb {
+		&.last {
+			display: block;
+			padding: 8px 0;
+			font-size: 1.2em;
+		}
+	}
+
+	.sep {
+		+ .crumb.last {
+			padding-top: 0;
+			padding-bottom: 0;
+		}
+	}
+}
+
 /** ------------------------------------------------------------------
  * Filters available in the top bar.
  * This is a togglable element that displays a form
@@ -195,16 +306,24 @@ body.cms {
 }
 
 /** ------------------------------------------------------------------
- * Buttons that use font icons
+ * Buttons that use font icons.
+ * There are !important rules here because we need to override some Tab styling.
+ * It's tidier to have some !important rules here than have the Tab styles
+ * littered with load of context specific rules for icon-buttons.
+ * Icon buttons styles should always take presedence over Tab styles.
+ * Tabs should be refactored to use weaker selectors.
  * ----------------------------------------------------------------- */
-.ss-ui-button.icon-button {
+a.icon-button,
+button.ss-ui-button.icon-button {
 	vertical-align: middle;
 	margin-right: 2px;
-	padding: .3em;
-	font-size: 1.4em;
+	padding: .4em;
+	font-size: 1.2em;
 	letter-spacing: -3px;
+	text-indent: 0;
 	text-shadow: none;
 	line-height: 1em;
+	color: #393939;
 	background-color: transparent;
 	background-image: none;
 	border: 0;
@@ -215,7 +334,7 @@ body.cms {
 		border: 0;
 		box-shadow: none;
 		background-image: none;
-		outline: 0;
+		text-decoration: none;
 	}
 
 	&:hover,
@@ -229,6 +348,74 @@ body.cms {
 
 	.ui-button-text {
 		display: none;
+	}
+
+	// Context specific overrides for Tabs.
+	.ui-tabs.ui-tabs-nav & {
+		padding: 9px 8px 5px !important;
+		line-height: 1em !important;
+		background-color: transparent !important;
+		background-image: none !important;
+		border: 0 !important;
+
+		&:before {
+			margin-top: 2px;
+		}
+	}
+}
+
+.icon-button-group {
+	@include inline-block;
+	margin-top: 0;
+	vertical-align: middle;
+	border: 1px solid #CDCCD0;
+	@include border-radius(4px);
+
+	a.icon-button,
+	button.ss-ui-button.icon-button {
+		margin-right: 0;
+		line-height: 13px;
+		@include border-radius(0 0 0 0);
+
+		&:first-child {
+			@include border-radius(3px 0 0 3px);
+		}
+
+		&:last-child {
+			@include border-radius(0 3px 3px 0);
+		}
+
+		+ a.icon-button,
+		+ button.ss-ui-button.icon-button {
+			border-left: 1px solid #CDCCD0;
+		}
+	}
+
+	// Context specific overrides for Tabs.
+	.ui-tabs.ui-tabs-nav {
+		border-left: 0 !important;
+		margin-top: -2px !important;
+		padding-right: 0 !important;
+		overflow: hidden;
+
+		.cms-tabset-icon.ui-state-default {
+			background-color: transparent;
+			background-image: none;
+			border-left: 0;
+			border-right: 0;
+			@include box-shadow(none);
+
+			+ .cms-tabset-icon.ui-state-default {
+				border-left: 1px solid #CDCCD0;
+			}
+		}
+
+		.cms-tabset-icon.ui-state-active {
+			background-color: #b6b9bb;
+		}
+	}
+	.cms-content-header-tabs & {
+		overflow: hidden;
 	}
 }
 
@@ -259,40 +446,44 @@ body.cms {
 		background: none;
 	}
 
-		.ui-tabs-nav {
-			float: right;
-			margin: $grid-x*2 0 -1px 0;
-			padding: 0 $grid-x*1.5 0 0;
-			border-bottom: none;
+	.ui-tabs-nav {
+		float: right;
+		margin: $grid-x*2 0 -1px 0;
+		padding: 0 $grid-x*1.5 0 0;
+		border-bottom: none;
 
-			~ .ui-tabs-panel {
-				border-top:1px solid $color-button-generic-border;
-				clear: both;
-			}
+		~ .ui-tabs-panel {
+			border-top:1px solid $color-button-generic-border;
+			clear: both;
+		}
 			
-			li {
-				top: 0;
-				float: left;
-				border-bottom: 0 !important;
-			
-				a {
-					@include inline-block;
-					float: none;
-					font-weight: bold;
-					color: $color-text;
-					line-height: $grid-y * 4;
-					padding: 0 $grid-x*2 0;
-				}
+		li {
+			top: 0;
+			float: left;
+			border-bottom: 0 !important;
 
-				&:last-child {
-					// correctly right-align last tab
-					margin-right: 0;
-				}
+			a {
+				@include inline-block;
+				float: none;
+				font-weight: bold;
+				color: $color-text;
+				line-height: $grid-y * 4;
+				padding: 0 $grid-x*2 0;
 
-				&.ui-tabs-active {
-					margin-bottom: 0;
+				&.icon-button {
+					@extend a.icon-button;
 				}
 			}
+
+			&:last-child {
+				// correctly right-align last tab
+				margin-right: 0;
+			}
+
+			&.ui-tabs-active {
+				margin-bottom: 0;
+			}
+		}
 
 		.ui-state-default {
 			border:1px solid $color-button-generic-border;
@@ -340,7 +531,7 @@ body.cms {
 			&.search.ui-state-active a {background: sprite($sprites64, tab-search-hover) no-repeat;}
 		}
 	}
-		
+
 	.cms-panel-padded {
 		.ui-tabs-panel {
 			padding: 0; // Avoid double padding with parent
@@ -348,15 +539,16 @@ body.cms {
 			.ui-tabs-panel {
 				padding: $grid-x 0 0 0;
 			}
-			}
+		}
+
 		.Actions {
 			padding: 0; // Avoid double padding with parent
 		}
-	}		
+	}
 
 	&.ss-tabset-tabshidden .ui-tabs-panel {
 		border-top: none;
-}
+	}
 }
 
 /**
@@ -415,8 +607,13 @@ body.cms {
 	}
 
 	.cms-content-header-tabs {
-	float: right;
+		float: right;
+		margin-top: 11px;
+
+		.icon-button-group {
+			margin-right: 16px;
 		}
+	}
 
 /** -------------------------------------------------------
  * Loading Interface

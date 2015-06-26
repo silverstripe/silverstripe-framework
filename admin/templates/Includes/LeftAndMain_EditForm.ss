@@ -3,7 +3,6 @@
 <% end_if %>
 	<div class="cms-content-header north">
 		<div class="cms-content-header-info">
-			<% include BackLink_Button %>			
 			<% with $Controller %>
 				<% include CMSBreadcrumbs %>
 			<% end_with %>			
