@@ -80,7 +80,7 @@ does, such as `ArrayData` or `ArrayList`.
 					'Name' => 'John',
 					'Role' => 'Head Coach',
 					'Experience' => $experience
-				))->renderWith("AjaxTemplate");
+				)))->renderWith("AjaxTemplate");
 			} else {
 				return $this->httpError(404);
 			}
