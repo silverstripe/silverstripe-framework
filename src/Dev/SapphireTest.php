@@ -311,6 +311,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         $this->mailer = new TestMailer();
         Injector::inst()->registerService($this->mailer, 'SilverStripe\\Control\\Email\\Mailer');
         Email::config()->remove('send_all_emails_to');
+        Email::config()->remove('send_all_emails_from');
     }
 
     /**

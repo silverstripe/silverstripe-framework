@@ -2,88 +2,33 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
 
 class TestMailer extends Mailer
 {
+    /**
+     * @var string
+     * @config
+     */
+    private static $swift_transport = 'Swift_NullTransport';
+
     protected $emailsSent = array();
 
     /**
-     * Send a plain-text email.
-     * TestMailer will merely record that the email was asked to be sent, without sending anything.
-     *
-     * @param string $to
-     * @param string $from
-     * @param string $subject
-     * @param string $plainContent
-     * @param bool $attachedFiles
-     * @param bool $customHeaders
-     * @return bool|mixed
+     * @param \SilverStripe\Control\Email\Email $message
+     * @return int
      */
-    public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customHeaders = false)
+    public function send($message)
     {
-        $this->saveEmail([
-            'Type' => 'plain',
-            'To' => $to,
-            'From' => $from,
-            'Subject' => $subject,
-
-            'Content' => $plainContent,
-            'PlainContent' => $plainContent,
-
-            'AttachedFiles' => $attachedFiles,
-            'CustomHeaders' => $customHeaders,
-        ]);
-
-        return true;
-    }
-
-    /**
-     * Send a multi-part HTML email
-     * TestMailer will merely record that the email was asked to be sent, without sending anything.
-     *
-     * @param string $to
-     * @param string $from
-     * @param string $subject
-     * @param string $htmlContent
-     * @param bool $attachedFiles
-     * @param bool $customHeaders
-     * @param bool $plainContent
-     * @param bool $inlineImages
-     * @return bool|mixed
-     */
-    public function sendHTML(
-        $to,
-        $from,
-        $subject,
-        $htmlContent,
-        $attachedFiles = false,
-        $customHeaders = false,
-        $plainContent = false,
-        $inlineImages = false
-    ) {
-
-        $this->saveEmail([
-            'Type' => 'html',
-            'To' => $to,
-            'From' => $from,
-            'Subject' => $subject,
-
-            'Content' => $htmlContent,
-            'PlainContent' => $plainContent,
-            'HtmlContent' => $htmlContent,
-
-            'AttachedFiles' => $attachedFiles,
-            'CustomHeaders' => $customHeaders,
-            'InlineImages' => $inlineImages,
-        ]);
+        $this->saveEmail($message);
 
         return true;
     }
 
     /**
      * Save a single email to the log
-     * @param $data A map of information about the email
+     * @param mixed $data A map of information about the email
      */
     protected function saveEmail($data)
     {
@@ -96,6 +41,7 @@ class TestMailer extends Mailer
     public function clearEmails()
     {
         $this->emailsSent = array();
+        return $this;
     }
 
     /**
@@ -106,8 +52,7 @@ class TestMailer extends Mailer
      * @param string $from
      * @param string $subject
      * @param string $content
-     * @return array Contains the keys: 'type', 'to', 'from', 'subject', 'content', 'plainContent', 'attachedFiles',
-     *               'customHeaders', 'htmlContent', 'inlineImages'
+     * @return Email|false
      */
     public function findEmail($to, $from = null, $subject = null, $content = null)
     {
@@ -119,23 +64,29 @@ class TestMailer extends Mailer
         ];
 
         foreach ($this->emailsSent as $email) {
-            $matched = true;
-
-            foreach (array('To','From','Subject','Content') as $field) {
-                if ($value = $compare[$field]) {
-                    if ($value[0] == '/') {
-                        $matched = preg_match($value, $email[$field]);
-                    } else {
-                        $matched = ($value == $email[$field]);
+            foreach (array(
+                'to' => 'getTo',
+                'from' => 'getFrom',
+                'subject' => 'getSubeject',
+                'content' => 'getBody',
+            ) as $field => $method) {
+                if ($value = $$field) {
+                    $actual = $email->$method();
+                    $isRegex = $value[0] == '/';
+                    if (!is_array($actual)) {
+                        $actual = array($actual);
                     }
-                    if (!$matched) {
-                        break;
+                    foreach ($actual as $actualAddress => $actualName) {
+                        if ($isRegex) {
+                            $matched = preg_match($value, array($actualAddress, $actualName));
+                        } else {
+                            $matched = ($actualAddress == $value || $actualName == $value);
+                        }
+                        if ($matched) {
+                            return $email;
+                        }
                     }
                 }
-            }
-
-            if ($matched) {
-                return $email;
             }
         }
     }

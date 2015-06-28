@@ -7,6 +7,7 @@ use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
@@ -275,7 +276,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         if (!Security::has_default_admin()) {
             return null;
         }
-        
+
         // Find or create ADMIN group
         Group::singleton()->requireDefaultRecords();
         $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
@@ -953,17 +954,16 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // We don't send emails out on dev/tests sites to prevent accidentally spamming users.
         // However, if TestMailer is in use this isn't a risk.
-        if ((Director::isLive() || Email::mailer() instanceof TestMailer)
+        if ((Director::isLive() || Mailer::get_inst() instanceof TestMailer)
             && $this->isChanged('Password')
             && $this->record['Password']
             && $this->config()->notify_password_change
         ) {
             /** @var Email $e */
-            $e = Email::create();
-            $e->setSubject(_t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'));
-            $e->setTemplate('ChangePasswordEmail');
-            $e->populateTemplate($this);
-            $e->setTo($this->Email);
+            $e = Email::create_from_callback('SilverStripe\\Email\\ChangePasswordEmail', $this, function ($message) {
+                $message->setTo($this->Email);
+                $message->setSubject(_t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'));
+            });
             $e->send();
         }
 
@@ -1796,6 +1796,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             $this->write();
         }
     }
+
     /**
      * Get the HtmlEditorConfig for this user to be used in the CMS.
      * This is set by the group. If multiple configurations are set,

@@ -21,7 +21,8 @@
     "monolog/monolog": "~1.11",
     "league/flysystem": "~1.0.12",
     "symfony/yaml": "~2.7",
-    "embed/embed": "^2.6"
+    "embed/embed": "^2.6",
+    "swiftmailer/swiftmailer": "~5.4"
   },
   "require-dev": {
     "phpunit/PHPUnit": "~4.8",
