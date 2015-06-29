@@ -814,7 +814,7 @@ form.import-form label.left { width: 250px; }
 .cms #vakata-dragged .jstree-invalid, .TreeDropdownField .treedropdownfield-panel #vakata-dragged .jstree-invalid { background: red; }
 
 .jstree-apple li, .jstree-apple .jstree-apple ins { background: none; }
-.jstree-apple .jstree-unchecked > a > .jstree-checkbox, .jstree-apple .jstree-checked > a > .jstree-checkbox, .jstree-apple .jstree-undetermined > a > .jstree-checkbox { margin-right: 3px; }
+.jstree-apple .jstree-unchecked > a > .jstree-checkbox, .jstree-apple .jstree-checked > a > .jstree-checkbox, .jstree-apple .jstree-undetermined > a > .jstree-checkbox { border: 3px solid #e6eaed; position: relative; margin-top: -3px; margin-left: -3px;}
 
 .tree-holder.jstree-apple, .cms-tree.jstree-apple { /* comment speech bubble - ccs3 only - source: http://nicolasgallagher.com/pure-css-speech-bubbles/demo/ */ }
 .tree-holder.jstree-apple li, .cms-tree.jstree-apple li { padding: 0px; clear: left; }
