@@ -56,7 +56,7 @@ First we need to define a callback for the shortcode.
 			'MyShortCodeMethod' => 'HTMLText'
 		);
 
-		public function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName) {
+		public static function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName) {
 			return "<em>" . $tagName . "</em> " . $content . "; " . count($arguments) . " arguments.";
 		}
 	}
