@@ -415,11 +415,6 @@
 					text-decoration: line-through;
 				}
 			}
-			&.jstree-checked{
-				> a, > a:link{
-					background-color: $color-cms-batchactions-menu-selected-background;
-				}
-			} 
 			&.readonly {
 				color: $color-text-disabled;
 				padding-left: 18px;
@@ -436,7 +431,7 @@
 		}	
 		a, a:link {
 			color:  $color-text-blue-link;
-			padding: 3px 6px 3px 3px;
+			padding: 0;
 			border: none;
 			display:  inline-block;
 			margin-right: 5px;
@@ -516,8 +511,21 @@
 		
 		.jstree-hovered {
 			text-shadow: none;
-			text-decoration: none;    
-		}	
+			text-decoration: none;
+			background-color:transparent;
+		}
+		.text {
+			-moz-border-radius: 2px;
+			border-radius: 2px;
+			-webkit-border-radius: 2px;
+			padding: 3px 3px 3px 0;
+		}
+		.jstree-hovered .text {
+			background-color: #e7f4f9;
+		}
+		.jstree-checked .text {
+			background-color: $color-cms-batchactions-menu-selected-background;
+		}
 		.jstree-closed > ins { 
 			background-position:0 0; 
 		}
