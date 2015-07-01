@@ -287,8 +287,14 @@ class ImageTest extends SapphireTest {
 		$imageFirst = $image->Pad(200,200,'CCCCCC');
 		$imageFilename = $imageFirst->getFullPath();
 			// Encoding of the arguments is duplicated from cacheFilename
-		$neededPart = 'Pad' . base64_encode(json_encode(array(200,200,'CCCCCC')));
+		$args = array(200,200,'CCCCCC');
+		$neededPart = 'Pad' . base64_encode(json_encode(array_map('strval', $args)));
 		$this->assertContains($neededPart, $imageFilename, 'Filename for cached image is correctly generated');
+
+		$intImage = $image->SetWidth(200);
+		$strImage = $image->SetWidth('200');
+		$this->assertEquals($intImage->getFullPath(), $strImage->getFullPath(),
+			'Filenames for string/int arguments differ');
 	}
 
 	public function testMultipleGenerateManipulationCalls_Regeneration() {
@@ -309,8 +315,9 @@ class ImageTest extends SapphireTest {
 		$this->assertEquals($expected, $actual);
 
 		$imageThird = $imageSecond->Pad(600,600,'0F0F0F');
+
 		// Encoding of the arguments is duplicated from cacheFilename
-		$argumentString = base64_encode(json_encode(array(600,600,'0F0F0F')));
+		$argumentString = base64_encode(json_encode(array_map('strval', array(600,600,'0F0F0F'))));
 		$this->assertNotNull($imageThird);
 		$this->assertContains($argumentString, $imageThird->getFullPath(),
 			'Image contains background color for padded resizement');
@@ -352,8 +359,8 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
 
 		// Encoding of the arguments is duplicated from cacheFilename
-		$oldArgumentString = base64_encode(json_encode(array(200)));
-		$newArgumentString = base64_encode(json_encode(array(300)));
+		$oldArgumentString = base64_encode(json_encode(array('200')));
+		$newArgumentString = base64_encode(json_encode(array('300')));
 
 		$newPath = str_replace($oldArgumentString, $newArgumentString, $p);
 		$newRelative = str_replace($oldArgumentString, $newArgumentString, $image_generated->getFileName());

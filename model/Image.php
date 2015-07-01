@@ -711,7 +711,7 @@ class Image extends File implements Flushable {
 		array_shift($args);
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . "/";
 
-		$format = $format . base64_encode(json_encode($args, JSON_NUMERIC_CHECK));
+		$format = $format . base64_encode(json_encode(array_map('strval', $args)));
 		$filename = $format . "-" . $this->Name;
 		$patterns = $this->getFilenamePatterns($this->Name);
 		if (!preg_match($patterns['FullPattern'], $filename)) {
