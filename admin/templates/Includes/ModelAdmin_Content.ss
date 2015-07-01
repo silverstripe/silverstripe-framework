@@ -2,14 +2,17 @@
 
 	<div class="cms-content-header north">
 		<div class="cms-content-header-info">
-			<h2>
-				<% include CMSSectionIcon %>
-				<% if $SectionTitle %>
-					$SectionTitle
-				<% else %>
-					<% _t('ModelAdmin.Title', 'Data Models') %>
-				<% end_if %>
-			</h2>
+			<div class="breadcrumbs-wrapper">
+				<h2 id="page-title-heading">
+					<span class="cms-panel-link crumb last">
+						<% if $SectionTitle %>
+							$SectionTitle
+						<% else %>
+							<% _t('ModelAdmin.Title', 'Data Models') %>
+						<% end_if %>
+					</span>
+				</h2>
+			</div>
 		</div>
 
 		<div class="cms-content-header-tabs cms-tabset-nav-primary ss-ui-tabs-nav">

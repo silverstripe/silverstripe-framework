@@ -232,6 +232,8 @@ class CmsUiContext extends BehatContext {
 				$filterButton->click();
 			}
 		}
+
+		$this->getSession()->wait(2000, 'window.jQuery(".cms-content-filters:animated").length === 0');
 	}
 
 	/**

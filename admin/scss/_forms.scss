@@ -1050,5 +1050,28 @@ fieldset.switch-states{
 			}
 		}
 	}
+
+	// Context specific rules for when the filters are in a panel
+	.cms-panel & {
+		.field,
+		.fieldgroup {
+			width: 100%;
+			margin-bottom: 16px;
+		}
+
+		.fieldgroup-field {
+			h4 {
+				padding-top: 0;
+			}
+
+			label {
+				position: static;
+			}
+		}
+
+		.Actions {
+			margin-bottom: 0;
+		}
+	}
 }
 

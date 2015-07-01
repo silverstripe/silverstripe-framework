@@ -13,7 +13,9 @@
 [class*=" font-icon-"] {
 	&:before {
 		display: inline-block;
+		content: '';
 		width: 1em;
+		margin-top: 2px;
 		margin-right: .2em;
 		text-align: center;
 		text-decoration: inherit;
@@ -28,10 +30,13 @@
 	}
 }
 
-.font-icon-search:before {
-	content: '\e800';
-}
-
-.font-icon-list:before {
-	content: '\e801';
-}
+.font-icon-search:before { content: '\e800'; }
+.font-icon-tree:before { content: '\e801'; }
+.font-icon-list2:before { content: '\e802'; }
+.font-icon-cog:before { content: '\e803'; }
+.font-icon-check:before { content: '\e804'; }
+.font-icon-plus-solid:before { content: '\e805'; }
+.font-icon-list:before { content: '\e806'; }
+.font-icon-plus:before { content: '\e807'; }
+.font-icon-search2:before { content: '\e808'; }
+.font-icon-pencil:before { content: '\e80b'; }

@@ -1290,7 +1290,7 @@ jQuery.noConflict();
 				form.find(".dropdown select").prop('selectedIndex', 0).trigger("liszt:updated"); // Reset chosen.js
 				form.submit();
 				}
-		})
+		});
 
 		/**
 		 * Allows to lazy load a panel, by leaving it empty
@@ -1409,7 +1409,7 @@ jQuery.noConflict();
 			onmatch: function () {
 				this._super();
 
-				this.data('collapsed', true); // The current colapsed state of the element.
+				this.data('collapsed', true); // The current collapsed state of the element.
 				this.data('animating', false); // True if the element is currently animating.
 			},
 			onunmatch: function () {
@@ -1418,13 +1418,15 @@ jQuery.noConflict();
 			showHide: function () {
 				var self = this,
 					$filters = $('.cms-content-filters').first(),
-					$container = $filters.closest('.cms-content-fields'),
 					collapsed = this.data('collapsed');
 
 				// Prevent the user from spamming the UI with animation requests.
 				if (this.data('animating')) {
 					return;
 				}
+
+				this.toggleClass('active');
+				this.data('animating', true);
 
 				// Slide the element down / up based on it's current collapsed state.
 				$filters[collapsed ? 'slideDown' : 'slideUp']({
@@ -1434,11 +1436,8 @@ jQuery.noConflict();
 						self.data('animating', false);
 					}
 				});
-
-				this.data('animating', true);
 			},
 			onclick: function () {
-				this.toggleClass('active');
 				this.showHide();
 			}
 		});
