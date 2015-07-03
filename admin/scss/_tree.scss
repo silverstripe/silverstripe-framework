@@ -74,9 +74,14 @@
 				ins {
 					height: 16px;
 					width: 16px;
-					&.jstree-checkbox{
-						height:19px; //Larger to help avoid accidental page loads when trying to click checkboxes
-       				}
+					//Larger to help avoid accidental page loads when trying to click checkboxes
+					&.jstree-checkbox:before {
+						height:22px;
+						width: 25px;
+						margin: -3px;
+						content: '';
+						display: inline-block;
+					}
 				}
 				.jstree-icon {
 					margin-right: 3px;
