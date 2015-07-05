@@ -58,12 +58,13 @@ class MySQLStatement extends SS_Query {
 			$variables[] = &$this->boundValues[$field->name];
 		}
 
-		call_user_func_array(array($this->statement, 'bind_result'), $variables);
 		$this->bound = true;
 		$this->metadata->free();
 
 		// Buffer all results
 		$this->statement->store_result();
+
+		call_user_func_array(array($this->statement, 'bind_result'), $variables);
 	}
 
 	/**
