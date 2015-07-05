@@ -441,14 +441,12 @@ YAML;
 		$templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
 		$html = file_get_contents($templateFilePath);
 		$matches = $c->collectFromTemplate($html, 'mymodule', 'RandomNamespace');
-		
-		/*
-		$this->assertArrayHasKey('i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE', $matches);
+
+		$this->assertArrayHasKey('RandomNamespace.LAYOUTTEMPLATENONAMESPACE', $matches);
 		$this->assertEquals(
-			$matches['i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE'],
+			$matches['RandomNamespace.LAYOUTTEMPLATENONAMESPACE'],
 			array('Layout Template no namespace')
 		);
-		*/
 		$this->assertArrayHasKey('RandomNamespace.SPRINTFNONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['RandomNamespace.SPRINTFNONAMESPACE'],
@@ -464,85 +462,57 @@ YAML;
 			$matches['i18nTestModule.SPRINTFNAMESPACE'],
 			array('My replacement: %s')
 		);
-		$this->assertArrayHasKey('i18nTestModule.WITHNAMESPACE', $matches);
-		$this->assertEquals(
-			$matches['i18nTestModule.WITHNAMESPACE'],
-			array('Include Entity with Namespace')
-		);
-		$this->assertArrayHasKey('i18nTestModuleInclude.ss.NONAMESPACE', $matches);
-		$this->assertEquals(
-			$matches['i18nTestModuleInclude.ss.NONAMESPACE'],
-			array('Include Entity without Namespace')
-		);
-		$this->assertArrayHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE', $matches);
-		$this->assertEquals(
-			$matches['i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE'],
-			array('My include replacement: %s')
-		);
-		$this->assertArrayHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE', $matches);
-		$this->assertEquals(
-			$matches['i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE'],
-			array('My include replacement no namespace: %s')
-		);
+		
+		// Includes should not automatically inject translations into parent templates
+		$this->assertArrayNotHasKey('i18nTestModule.WITHNAMESPACE', $matches);
+		$this->assertArrayNotHasKey('i18nTestModuleInclude.ss.NONAMESPACE', $matches);
+		$this->assertArrayNotHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE', $matches);
+		$this->assertArrayNotHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE', $matches);
 	}
 	
 	public function testCollectFromThemesTemplates() {
 		$c = new i18nTextCollector();
-		
-		$theme = Config::inst()->get('SSViewer', 'theme');
 		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
 		
-		$templateFilePath = $this->alternateBasePath . '/themes/testtheme1/templates/Layout/i18nTestTheme1.ss';
-		$html = file_get_contents($templateFilePath);
-		$matches = $c->collectFromTemplate($html, 'themes/testtheme1', 'i18nTestTheme1.ss');
+		// Collect from layout
+		$layoutFilePath = $this->alternateBasePath . '/themes/testtheme1/templates/Layout/i18nTestTheme1.ss';
+		$layoutHTML = file_get_contents($layoutFilePath);
+		$layoutMatches = $c->collectFromTemplate($layoutHTML, 'themes/testtheme1', 'i18nTestTheme1.ss');
+		
 		// all entities from i18nTestTheme1.ss
 		$this->assertEquals(
-			$matches['i18nTestTheme1.LAYOUTTEMPLATE'],
-			array('Theme1 Layout Template')
+			array(
+				'i18nTestTheme1.LAYOUTTEMPLATE'
+					=> array('Theme1 Layout Template'),
+				'i18nTestTheme1.SPRINTFNAMESPACE'
+					=> array('Theme1 My replacement: %s'),
+				'i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE'
+					=> array('Theme1 Layout Template no namespace'),
+				'i18nTestTheme1.ss.SPRINTFNONAMESPACE'
+					=> array('Theme1 My replacement no namespace: %s'),
+			),
+			$layoutMatches
 		);
 		
-		$this->assertArrayHasKey('i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE', $matches);
+		// Collect from include
+		$includeFilePath = $this->alternateBasePath . '/themes/testtheme1/templates/Includes/i18nTestTheme1Include.ss';
+		$includeHTML = file_get_contents($includeFilePath);
+		$includeMatches = $c->collectFromTemplate($includeHTML, 'themes/testtheme1', 'i18nTestTheme1Include.ss');
+		
+		// all entities from i18nTestTheme1Include.ss
 		$this->assertEquals(
-			$matches['i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE'],
-			array('Theme1 Layout Template no namespace')
+			array(
+				'i18nTestTheme1Include.SPRINTFINCLUDENAMESPACE'
+					=> array('Theme1 My include replacement: %s'),
+				'i18nTestTheme1Include.WITHNAMESPACE'
+					=> array('Theme1 Include Entity with Namespace'),
+				'i18nTestTheme1Include.ss.NONAMESPACE'
+					=> array('Theme1 Include Entity without Namespace'),
+				'i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE'
+					=> array('Theme1 My include replacement no namespace: %s')
+			),
+			$includeMatches
 		);
-		
-		$this->assertEquals(
-			$matches['i18nTestTheme1.SPRINTFNAMESPACE'],
-			array('Theme1 My replacement: %s')
-		);
-		
-		$this->assertArrayHasKey('i18nTestTheme1.ss.SPRINTFNONAMESPACE', $matches);
-		$this->assertEquals(
-			$matches['i18nTestTheme1.ss.SPRINTFNONAMESPACE'],
-			array('Theme1 My replacement no namespace: %s')
-		);
-
-		// all entities from i18nTestTheme1Include.ss	
-		$this->assertEquals(
-			$matches['i18nTestTheme1Include.WITHNAMESPACE'],
-			array('Theme1 Include Entity with Namespace')
-		);
-		
-		$this->assertArrayHasKey('i18nTestTheme1Include.ss.NONAMESPACE', $matches);
-		$this->assertEquals(
-			$matches['i18nTestTheme1Include.ss.NONAMESPACE'],
-			array('Theme1 Include Entity without Namespace')
-		);
-		
-		
-		$this->assertEquals(
-			$matches['i18nTestTheme1Include.SPRINTFINCLUDENAMESPACE'],
-			array('Theme1 My include replacement: %s')
-		);
-		
-		$this->assertArrayHasKey('i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE', $matches);
-		$this->assertEquals(
-			$matches['i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE'],
-			array('Theme1 My include replacement no namespace: %s')
-		);
-		
-		Config::inst()->update('SSViewer', 'theme', $theme);
 	}
 
 	public function testCollectMergesWithExisting() {
@@ -712,6 +682,165 @@ YAML;
 			'My Object',
 			$matches['i18nTextCollectorTestMyObject.SINGULARNAME'][0]
 		);
+	}
+	
+	/**
+	 * Test that duplicate keys are resolved to the appropriate modules
+	 */
+	public function testResolveDuplicates() {
+		$collector = new i18nTextCollectorTest_Collector();
+		
+		// Dummy data as collected
+		$data1 = array(
+			'framework' => array(
+				'DataObject.PLURALNAME' => array('Data Objects'),
+				'DataObject.SINGULARNAME' => array('Data Object')
+			),
+			'mymodule' => array(
+				'DataObject.PLURALNAME' => array('Ignored String'),
+				'DataObject.STREETNAME' => array('Shortland Street')
+			)
+		);
+		$expected = array(
+			'framework' => array(
+				'DataObject.PLURALNAME' => array('Data Objects'),
+				// Because DataObject is in framework module
+				'DataObject.SINGULARNAME' => array('Data Object')
+			),
+			'mymodule' => array(
+				// Because this key doesn't exist in framework strings
+				'DataObject.STREETNAME' => array('Shortland Street')
+			)
+		);
+		
+		$resolved = $collector->resolveDuplicateConflicts_Test($data1);
+		$this->assertEquals($expected, $resolved);
+		
+		// Test getConflicts
+		$data2 = array(
+			'module1' => array(
+				'DataObject.ONE' => array('One'),
+				'DataObject.TWO' => array('Two'),
+				'DataObject.THREE' => array('Three'),
+			),
+			'module2' => array(
+				'DataObject.THREE' => array('Three'),
+			),
+			'module3' => array(
+				'DataObject.TWO' => array('Two'),
+				'DataObject.THREE' => array('Three'),
+			)
+		);
+		$conflictsA = $collector->getConflicts_Test($data2);
+		sort($conflictsA);
+		$this->assertEquals(
+			array('DataObject.THREE', 'DataObject.TWO'),
+			$conflictsA
+		);
+		
+		// Removing module3 should remove a conflict
+		unset($data2['module3']);
+		$conflictsB = $collector->getConflicts_Test($data2);
+		$this->assertEquals(
+			array('DataObject.THREE'),
+			$conflictsB
+		);
+	}
+	
+	/**
+	 * Test ability for textcollector to detect modules
+	 */
+	public function testModuleDetection() {
+		$collector = new i18nTextCollectorTest_Collector();
+		$modules = $collector->getModules_Test($this->alternateBasePath);
+		$this->assertEquals(
+			array(
+				'i18nnonstandardmodule',
+				'i18nothermodule',
+				'i18ntestmodule',
+				'themes/testtheme1',
+				'themes/testtheme2'
+			),
+			$modules
+		);
+	}
+	
+	/**
+	 * Test that text collector can detect module file lists properly
+	 */
+	public function testModuleFileList() {
+		$collector = new i18nTextCollectorTest_Collector();
+		$collector->basePath = $this->alternateBasePath;
+		$collector->baseSavePath = $this->alternateBaseSavePath;
+		
+		// Non-standard modules can't be safely filtered, so just index everything
+		$nonStandardFiles = $collector->getFileListForModule_Test('i18nnonstandardmodule');
+		$nonStandardRoot = $this->alternateBasePath . '/i18nnonstandardmodule';
+		$this->assertEquals(3, count($nonStandardFiles));
+		$this->assertArrayHasKey("{$nonStandardRoot}/_config.php", $nonStandardFiles);
+		$this->assertArrayHasKey("{$nonStandardRoot}/phpfile.php", $nonStandardFiles);
+		$this->assertArrayHasKey("{$nonStandardRoot}/template.ss", $nonStandardFiles);
+
+		// Normal module should have predictable dir structure
+		$testFiles = $collector->getFileListForModule_Test('i18ntestmodule');
+		$testRoot = $this->alternateBasePath . '/i18ntestmodule';
+		$this->assertEquals(6, count($testFiles));
+		// Code in code folder is detected
+		$this->assertArrayHasKey("{$testRoot}/code/i18nTestModule.php", $testFiles);
+		$this->assertArrayHasKey("{$testRoot}/code/subfolder/_config.php", $testFiles);
+		$this->assertArrayHasKey("{$testRoot}/code/subfolder/i18nTestSubModule.php", $testFiles);
+		// Templates in templates folder is detected
+		$this->assertArrayHasKey("{$testRoot}/templates/Includes/i18nTestModuleInclude.ss", $testFiles);
+		$this->assertArrayHasKey("{$testRoot}/templates/Layout/i18nTestModule.ss", $testFiles);
+		$this->assertArrayHasKey("{$testRoot}/templates/i18nTestModule.ss", $testFiles);
+		
+		// Standard modules with code in odd places should only have code in those directories detected
+		$otherFiles = $collector->getFileListForModule_Test('i18nothermodule');
+		$otherRoot = $this->alternateBasePath . '/i18nothermodule';
+		$this->assertEquals(3, count($otherFiles));
+		// Only detect well-behaved files
+		$this->assertArrayHasKey("{$otherRoot}/code/i18nOtherModule.php", $otherFiles);
+		$this->assertArrayHasKey("{$otherRoot}/code/i18nTestModuleDecorator.php", $otherFiles);
+		$this->assertArrayHasKey("{$otherRoot}/templates/i18nOtherModule.ss", $otherFiles);
+		
+		// Themes should detect all ss files only
+		$theme1Files = $collector->getFileListForModule_Test('themes/testtheme1');
+		$theme1Root = $this->alternateBasePath . '/themes/testtheme1/templates';
+		$this->assertEquals(3, count($theme1Files));
+		// Find only ss files
+		$this->assertArrayHasKey("{$theme1Root}/Includes/i18nTestTheme1Include.ss", $theme1Files);
+		$this->assertArrayHasKey("{$theme1Root}/Layout/i18nTestTheme1.ss", $theme1Files);
+		$this->assertArrayHasKey("{$theme1Root}/i18nTestTheme1Main.ss", $theme1Files);
+		
+		// Only 1 file here
+		$theme2Files = $collector->getFileListForModule_Test('themes/testtheme2');
+		$this->assertEquals(1, count($theme2Files));
+		$this->assertArrayHasKey(
+			$this->alternateBasePath . '/themes/testtheme2/templates/i18nTestTheme2.ss',
+			$theme2Files
+		);
+	}
+}
+
+
+/**
+ * Assist with testing of specific protected methods
+ */
+class i18nTextCollectorTest_Collector extends i18nTextCollector implements TestOnly {
+	public function getModules_Test($directory) {
+		return $this->getModules($directory);
+	}
+
+	public function resolveDuplicateConflicts_Test($entitiesByModule) {
+		return $this->resolveDuplicateConflicts($entitiesByModule);
+	}
+
+	public function getFileListForModule_Test($module) {
+		return parent::getFileListForModule($module);
+	}
+
+	public function getConflicts_Test($entitiesByModule) {
+		return parent::getConflicts($entitiesByModule);
 	}
 
 }
