@@ -522,7 +522,7 @@ class TreeDropdownField extends FormField {
 	 * Changes this field to the readonly field.
 	 */
 	public function performReadonlyTransformation() {
-		$copy = $this->castedCopy('TreeDropdownField_Readonly');
+		$copy = parent::performReadonlyTransformation();
 		$copy->setKeyField($this->keyField);
 		$copy->setLabelField($this->labelField);
 		$copy->setSourceObject($this->sourceObject);

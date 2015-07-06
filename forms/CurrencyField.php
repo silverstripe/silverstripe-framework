@@ -36,13 +36,6 @@ class CurrencyField extends TextField {
 		return 'currency text';
 	}
 
-	/**
-	 * Create a new class for this field
-	 */
-	public function performReadonlyTransformation() {
-		return $this->castedCopy('CurrencyField_Readonly');
-	}
-
 	public function validate($validator) {
         $currencySymbol = preg_quote(Config::inst()->get('Currency','currency_symbol'));
         $regex = '/^\s*(\-?'.$currencySymbol.'?|'.$currencySymbol.'\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/';
