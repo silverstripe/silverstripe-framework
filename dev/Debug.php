@@ -531,7 +531,8 @@ function exceptionHandler($exception) {
 	$file = $exception->getFile();
 	$line = $exception->getLine();
 	$context = $exception->getTrace();
-	return Debug::fatalHandler($errno, $message, $file, $line, $context);
+	Debug::fatalHandler($errno, $message, $file, $line, $context);
+	exit(1);
 }
 
 /**

@@ -758,7 +758,8 @@ abstract class Object {
 					);
 			}
 		} else {
-			// Please do not change the exception code number below.
+			// Please do not change the exception code number below as it effects VirtualPage in the cms.
+			// If anybody knows what 2175 means please update this comment. Thanks.
 			$class = get_class($this);
 			throw new Exception("Object->__call(): the method '$method' does not exist on '$class'", 2175);
 		}
