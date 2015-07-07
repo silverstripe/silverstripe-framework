@@ -64,8 +64,19 @@
 				height: 16px;
 				width: 12px;
 				&.jstree-checkbox {
-					height: 19px; //Larger to help avoid accidental page loads when trying to click checkboxes
 					width: 16px;
+					position: relative;
+					//Larger to help avoid accidental page loads when trying to click checkboxes
+					&:before {
+						content: '';
+						display: block;
+						position: absolute;
+						z-index: 1;
+						left: -3px;
+						top: -3px;
+						height: 22px;
+						width: 25px;
+					}
 				}
 			}
 		}
