@@ -862,8 +862,8 @@ form.import-form label.left { width: 250px; }
 .jstree-apple a { border-radius: 3px; }
 
 /* ensure status is visible in sidebar */
-.cms-content-tools .cms-tree.jstree li { min-width: 159px; }
-.cms-content-tools .cms-tree.jstree a { overflow: hidden; display: block; position: relative; }
+.cms-content-tools .cms-tree.jstree li { min-width: 187px; }
+.cms-content-tools .cms-tree.jstree a { overflow: hidden; text-overflow: ellipsis; display: block; position: relative; }
 .cms-content-tools .cms-tree.jstree span.badge { position: absolute; top: 0; right: 0; padding: 7px 9px 6px 5px; margin: 0; max-width: 40%; -moz-transition: max-width 0.75s linear; -o-transition: max-width 0.75s linear; -webkit-transition: max-width 0.75s linear; transition: max-width 0.75s linear; }
 .cms-content-tools .cms-tree.jstree span.badge:hover { max-width: 150px; }
 

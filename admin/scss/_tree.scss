@@ -610,10 +610,11 @@
 /* ensure status is visible in sidebar */
 .cms-content-tools .cms-tree.jstree {
 	li {
-		min-width: 159px;
+		min-width: 187px;
 	}
 	a {
 		overflow: hidden;
+		text-overflow: ellipsis;
 		display: block;
 		position: relative;
 	}
