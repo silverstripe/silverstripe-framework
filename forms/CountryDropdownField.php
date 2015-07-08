@@ -54,7 +54,6 @@ class CountryDropdownField extends DropdownField {
 			// We don't want a number of countries which have ceased to exist
 			unset($source['SU']); // Soviet Union
 			unset($source['BQ']); // British Antarctic Territory
-			unset($source['BY']); // Byelorussian SSR
 			unset($source['CT']); // Canton and Enderbury Islands
 			unset($source['NQ']); // Dronning Maud Land
 			unset($source['FX']); // France, Metropolitan
