@@ -50,6 +50,18 @@ class CountryDropdownField extends DropdownField {
 
 			// We don't want "unknown country" as an option
 			unset($source['ZZ']);
+
+			// We don't want a number of countries which have ceased to exist
+			unset($source['SU']); // Soviet Union
+			unset($source['BQ']); // British Antarctic Territory
+			unset($source['BY']); // Byelorussian SSR
+			unset($source['CT']); // Canton and Enderbury Islands
+			unset($source['NQ']); // Dronning Maud Land
+			unset($source['FX']); // France, Metropolitan
+			unset($source['FQ']); // French Southern and Antarctic Territories
+			unset($source['NT']); // Iraq-Saudi-Arabia Neutral Zone
+			unset($source['PZ']); // Panama Canal Zone
+			unset($source['CS']); // Serbia and Montenegro
 		}
 
 		parent::__construct($name, ($title===null) ? $name : $title, $source, $value, $form);
