@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AACC,gCAAE,GACD,MAAM,EAAC,CAAC,EACR,OAAO,EAAC,CAAC;AAEV,mCAAK,GACJ,UAAU,EAAC,eAAe,EAC1B,MAAM,EAAC,CAAC,EACR,OAAO,EAAC,CAAC;AAEV,mCAAK,GACJ,KAAK,EAAC,IAAI",
+"sources": ["../scss/CheckboxSetField.scss"],
+"names": [],
+"file": "CheckboxSetField.css"
+}
