@@ -60,30 +60,6 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	private $objCache = array();
 	
-	// -----------------------------------------------------------------------------------------------------------------
-	
-	/**
-	 * Converts a field spec into an object creator. For example: "Int" becomes "new Int($fieldName);" and "Varchar(50)"
-	 * becomes "new Varchar($fieldName, 50);".
-	 *
-	 * @param string $fieldSchema The field spec
-	 * @return string
-	 */
-	public static function castingObjectCreator($fieldSchema) {
-		Deprecation::notice('2.5', 'Use Object::create_from_string() instead');
-	}
-	
-	/**
-	 * Convert a field schema (e.g. "Varchar(50)") into a casting object creator array that contains both a className
-	 * and castingHelper constructor code. See {@link castingObjectCreator} for more information about the constructor.
-	 *
-	 * @param string $fieldSchema
-	 * @return array
-	 */
-	public static function castingObjectCreatorPair($fieldSchema) {
-		Deprecation::notice('2.5', 'Use Object::create_from_string() instead');
-	}
-	
 	// FIELD GETTERS & SETTERS -----------------------------------------------------------------------------------------
 	
 	/**
@@ -223,22 +199,6 @@ class ViewableData extends Object implements IteratorAggregate {
 	}
 	
 	// CASTING ---------------------------------------------------------------------------------------------------------
-	
-	/**
-	 * Get the class a field on this object would be casted to, as well as the casting helper for casting a field to
-	 * an object (see {@link ViewableData::castingHelper()} for information on casting helpers).
-	 *
-	 * The returned array contains two keys:
-	 *  - className: the class the field would be casted to (e.g. "Varchar")
-	 *  - castingHelper: the casting helper for casting the field (e.g. "return new Varchar($fieldName)")
-	 *
-	 * @param string $field
-	 * @return array
-	 */
-	public function castingHelperPair($field) {
-		Deprecation::notice('2.5', 'use castingHelper() instead');
-		return $this->castingHelper($field);
-	}
 
 	/**
 	 * Return the "casting helper" (a piece of PHP code that when evaluated creates a casted value object) for a field
