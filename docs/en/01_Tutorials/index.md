@@ -27,6 +27,7 @@ These include video screencasts, written tutorials and code examples to get you 
 * [Lesson 15: Building a Search Form](http://www.silverstripe.org/learn/lessons/building-a-search-form)
 * [Lesson 16: Lists and Pagination](http://www.silverstripe.org/learn/lessons/lists-and-pagination)
 * [Lesson 17: Ajax Behaviour and Viewable Data](http://www.silverstripe.org/learn/lessons/ajax-behaviour-and-viewabledata)
+* [Lesson 18: Dealing with Arbitrary Template Date](http://www.silverstripe.org/learn/lessons/dealing-with-arbitrary-template-data)
 
 ## Help: If you get stuck
 
