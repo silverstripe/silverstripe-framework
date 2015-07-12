@@ -421,8 +421,14 @@ class HTTP {
 		
 		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
 		foreach($responseHeaders as $k => $v) {
-			if($body) $body->addHeader($k, $v);
-			else if(!headers_sent()) header("$k: $v");
+			if($body) {
+				// Set the header now if it's not already set.
+				if ($body->getHeader($k) === null) {
+					$body->addHeader($k, $v);
+				}
+			} elseif(!headers_sent()) {
+				header("$k: $v");
+			}
 		}
 	}
 
