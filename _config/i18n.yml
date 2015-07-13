@@ -13,3 +13,8 @@ Name: defaulti18n
 i18n:
   module_priority:
     - other_modules
+---
+Name: textcollector
+---
+Injector:
+  i18nTextCollector_Writer: 'i18nTextCollector_Writer_RailsYaml'

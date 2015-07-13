@@ -27,15 +27,28 @@
  */
 class i18nTextCollector extends Object {
 	
+	/**
+	 * Default (master) locale
+	 *
+	 * @var string
+	 */
 	protected $defaultLocale;
 	
 	/**
-	 * @var string $basePath The directory base on which the collector should act.
+	 * The directory base on which the collector should act.
 	 * Usually the webroot set through {@link Director::baseFolder()}.
+	 * 
 	 * @todo Fully support changing of basePath through {@link SSViewer} and {@link ManifestBuilder}
+	 * 
+	 * @var string
 	 */
 	public $basePath;
-
+	
+	/**
+	 * Save path
+	 *
+	 * @var string 
+	 */
 	public $baseSavePath;
 
 	/**
@@ -44,98 +57,266 @@ class i18nTextCollector extends Object {
 	protected $writer;
 	
 	/**
+	 * List of file extensions to parse
+	 *
+	 * @var array
+	 */
+	protected $fileExtensions = array('php', 'ss');
+	
+	/**
 	 * @param $locale
 	 */
 	public function __construct($locale = null) {
-		$this->defaultLocale = ($locale) ? $locale : i18n::get_lang_from_locale(i18n::default_locale());
+		$this->defaultLocale = $locale
+			? $locale
+			: i18n::get_lang_from_locale(i18n::default_locale());
 		$this->basePath = Director::baseFolder();
 		$this->baseSavePath = Director::baseFolder();
 		
 		parent::__construct();
 	}
 
+	/**
+	 * Assign a writer
+	 * 
+	 * @param i18nTextCollector_Writer $writer
+	 */
 	public function setWriter($writer) {
 		$this->writer = $writer;
 	}
 
+	/**
+	 * Gets the currently assigned writer, or the default if none is specified.
+	 * 
+	 * @return i18nTextCollector_Writer
+	 */
 	public function getWriter() {
-		if(!$this->writer) $this->writer = new i18nTextCollector_Writer_RailsYaml();
+		if(!$this->writer) {
+			$this->setWriter(Injector::inst()->get('i18nTextCollector_Writer'));
+		}
 		return $this->writer;
 	}
 	
 	/**
-	 * This is the main method to build the master string tables with the original strings.
-	 * It will search for existent modules that use the i18n feature, parse the _t() calls
-	 * and write the resultant files in the lang folder of each module.
+	 * This is the main method to build the master string tables with the
+	 * original strings. It will search for existent modules that use the
+	 * i18n feature, parse the _t() calls and write the resultant files
+	 * in the lang folder of each module.
 	 * 
 	 * @uses DataObject->collectI18nStatics()
 	 * 
 	 * @param array $restrictToModules
-	 * @param array $mergeWithExisting Merge new master strings with existing ones
-	 * already defined in language files, rather than replacing them. This can be useful
-	 * for long-term maintenance of translations across releases, because it allows
-	 * "translation backports" to older releases without removing strings these older releases
-	 * still rely on.
+	 * @param bool $mergeWithExisting Merge new master strings with existing
+	 * ones already defined in language files, rather than replacing them.
+	 * This can be useful for long-term maintenance of translations across
+	 * releases, because it allows "translation backports" to older releases
+	 * without removing strings these older releases still rely on.
 	 */	
 	public function run($restrictToModules = null, $mergeWithExisting = false) {
 		$entitiesByModule = $this->collect($restrictToModules, $mergeWithExisting);
+		if(empty($entitiesByModule)) {
+			return;
+		}
+		
 		// Write each module language file
-		if($entitiesByModule) foreach($entitiesByModule as $module => $entities) {
-			$this->getWriter()->write($entities, $this->defaultLocale, $this->baseSavePath . '/' . $module);
+		foreach($entitiesByModule as $module => $entities) {
+			// Skip empty translations
+			if(empty($entities)) {
+				continue;
+			}
+			
+			// Clean sorting prior to writing
+			ksort($entities);
+			$path = $this->baseSavePath . '/' . $module;
+			$this->getWriter()->write($entities, $this->defaultLocale, $path);
 		}
 	}
 
-	public function collect($restrictToModules = null, $mergeWithExisting = false) {
-		$modules = scandir($this->basePath);
-		$themeFolders = array();
+	/**
+	 * Gets the list of modules in this installer
+	 * 
+	 * @param string $directory Path to look in
+	 * @return array List of modules as paths relative to base
+	 */
+	protected function getModules($directory) {
+		// Include self as head module
+		$modules = array();
 		
-		// A master string tables array (one mst per module)
-		$entitiesByModule = array();
+		// Get all standard modules
+		foreach(glob($directory."/*", GLOB_ONLYDIR) as $path) {
+			// Check for _config
+			if(!is_file("$path/_config.php") && !is_dir("$path/_config")) {
+				continue;
+			}
+			$modules[] = basename($path);
+		}
 		
-		foreach($modules as $index => $module){
-			if($module != 'themes') continue;
-			else {
-				$themes = scandir($this->basePath."/themes");
-				if(count($themes)){
-					foreach($themes as $theme) {
-						if(is_dir($this->basePath."/themes/".$theme) 
-								&& substr($theme,0,1) != '.' 
-								&& is_dir($this->basePath."/themes/".$theme."/templates")){
-
-							$themeFolders[] = 'themes/'.$theme;
-						}
-					}
-				}
-				$themesInd = $index;
+		// Get all themes
+		foreach(glob($directory."/themes/*", GLOB_ONLYDIR) as $path) {
+			// Check for templates
+			if(is_dir("$path/templates")) {
+				$modules[] = 'themes/'.basename($path);
 			}
 		}
 		
-		if(isset($themesInd)) {
-			unset($modules[$themesInd]);
+		return $modules;
+	}
+
+	/**
+	 * Extract all strings from modules and return these grouped by module name
+	 * 
+	 * @param array $restrictToModules
+	 * @param bool $mergeWithExisting
+	 * @return array
+	 */
+	public function collect($restrictToModules = array(), $mergeWithExisting = false) {
+		$entitiesByModule = $this->getEntitiesByModule();
+		
+		// Resolve conflicts between duplicate keys across modules
+		$entitiesByModule = $this->resolveDuplicateConflicts($entitiesByModule);
+
+		// Optionally merge with existing master strings
+		if($mergeWithExisting) {
+			$entitiesByModule = $this->mergeWithExisting($entitiesByModule);
 		}
 		
-		$modules = array_merge($modules, $themeFolders);
+		// Restrict modules we update to just the specified ones (if any passed)
+		if(!empty($restrictToModules)) {
+			foreach (array_diff(array_keys($entitiesByModule), $restrictToModules) as $module) {
+				unset($entitiesByModule[$module]);
+			}
+		}
+		return $entitiesByModule;
+	}
+	
+	/**
+	 * Resolve conflicts between duplicate keys across modules
+	 * 
+	 * @param array $entitiesByModule List of all modules with keys
+	 * @return array Filtered listo of modules with duplicate keys unassigned
+	 */
+	protected function resolveDuplicateConflicts($entitiesByModule) {
+		// Find all keys that exist across multiple modules
+		$conflicts = $this->getConflicts($entitiesByModule);
+		foreach($conflicts as $conflict) {
+			// Determine if we can narrow down the ownership
+			$bestModule = $this->getBestModuleForKey($entitiesByModule, $conflict);
+			if(!$bestModule) {
+				continue;
+			}
+			
+			// Remove foreign duplicates
+			foreach($entitiesByModule as $module => $entities) {
+				if($module !== $bestModule) {
+					unset($entitiesByModule[$module][$conflict]);
+				}
+			}
+		}
+		return $entitiesByModule;
+	}
+	
+	/**
+	 * Find all keys in the entity list that are duplicated across modules
+	 * 
+	 * @param array $entitiesByModule
+	 * @return array List of keys
+	 */
+	protected function getConflicts($entitiesByModule) {
+		$modules = array_keys($entitiesByModule);
+		$allConflicts = array();
+		// bubble-compare each group of modules
+		for($i = 0; $i < count($modules) - 1; $i++) {
+			$left = array_keys($entitiesByModule[$modules[$i]]);
+			for($j = $i+1; $j < count($modules); $j++) {
+				$right = array_keys($entitiesByModule[$modules[$j]]);
+				$conflicts = array_intersect($left, $right);
+				$allConflicts = array_merge($allConflicts, $conflicts);
+			}
+		}
+		return array_unique($allConflicts);
+	}
+	
+	/**
+	 * Determine the best module to be given ownership over this key
+	 * 
+	 * @param array $entitiesByModule
+	 * @param string $key
+	 * @return string Best module, if found
+	 */
+	protected function getBestModuleForKey($entitiesByModule, $key) {
+		// Check classes
+		$class = current(explode('.', $key));
+		$owner = i18n::get_owner_module($class);
+		if($owner) {
+			return $owner;
+		}
+		
+		// @todo - How to determine ownership of templates? Templates can
+		// exist in multiple locations with the same name.
 
+		// Display notice if not found
+		Debug::message(
+			"Duplicate key {$key} detected in multiple modules with no obvious owner",
+			false
+		);
+			
+		// Fall back to framework then cms modules
+		foreach(array('framework', 'cms') as $module) {
+			if(isset($entitiesByModule[$module][$key])) {
+				return $module;
+			}
+		}
+		
+		// Do nothing
+		return null;
+	}
+	
+	/**
+	 * Merge all entities with existing strings
+	 * 
+	 * @param array $entitiesByModule
+	 * @return array
+	 */
+	protected function mergeWithExisting($entitiesByModule) {
+		// TODO Support all defined source formats through i18n::get_translators().
+		//      Currently not possible because adapter instances can't be fully reset through the Zend API,
+		//      meaning master strings accumulate across modules
+		foreach($entitiesByModule as $module => $entities) {
+			$adapter = Injector::inst()->create('i18nRailsYamlAdapter');
+			$fileName = $adapter->getFilenameForLocale($this->defaultLocale);
+			$masterFile = "{$this->basePath}/{$module}/lang/{$fileName}";
+			if(!file_exists($masterFile)) {
+				continue;
+			}
+
+			$adapter->addTranslation(array(
+				'content' => $masterFile,
+				'locale' => $this->defaultLocale
+			));
+			$entitiesByModule[$module] = array_merge(
+				array_map(
+					// Transform each master string from scalar value to array of strings
+					function($v) {return array($v);},
+					$adapter->getMessages($this->defaultLocale)
+				),
+				$entities
+			);	
+		}
+		return $entitiesByModule;
+	}
+	
+	/**
+	 * Collect all entities grouped by module
+	 * 
+	 * @return array
+	 */
+	protected function getEntitiesByModule() {
+		// A master string tables array (one mst per module)
+		$entitiesByModule = array();
+		$modules = $this->getModules($this->basePath);
 		foreach($modules as $module) {
-			// Only search for calls in folder with a _config.php file or _config folder
-			// (which means they are modules, including themes folder)
-			$isValidModuleFolder = (
-				is_dir("$this->basePath/$module") 
-				&& substr($module,0,1) != '.'
-				&& (
-					is_file("$this->basePath/$module/_config.php")
-					|| is_dir("$this->basePath/$module/_config")
-				)
-			) || (
-				substr($module,0,7) == 'themes/'
-				&& is_dir("$this->basePath/$module")
-			);
-			
-			if(!$isValidModuleFolder) continue;
-			
 			// we store the master string tables 
 			$processedEntities = $this->processModule($module);
-
 			if(isset($entitiesByModule[$module])) {
 				$entitiesByModule[$module] = array_merge_recursive($entitiesByModule[$module], $processedEntities);
 			} else {
@@ -143,50 +324,22 @@ class i18nTextCollector extends Object {
 			}
 			
 			// extract all entities for "foreign" modules (fourth argument)
+			// @see CMSMenu::provideI18nEntities for an example usage
 			foreach($entitiesByModule[$module] as $fullName => $spec) {
-				if(isset($spec[2]) && $spec[2] && $spec[2] != $module) {
+				if(!empty($spec[2]) && $spec[2] !== $module) {
 					$othermodule = $spec[2];
-					if(!isset($entitiesByModule[$othermodule])) $entitiesByModule[$othermodule] = array();
+					if(!isset($entitiesByModule[$othermodule])) {
+						$entitiesByModule[$othermodule] = array();
+					}
 					unset($spec[2]);
 					$entitiesByModule[$othermodule][$fullName] = $spec;
 					unset($entitiesByModule[$module][$fullName]);
 				}
-			}		
-
-			// Optionally merge with existing master strings
-			// TODO Support all defined source formats through i18n::get_translators().
-			//      Currently not possible because adapter instances can't be fully reset through the Zend API,
-			//      meaning master strings accumulate across modules
-			if($mergeWithExisting) {
-				$adapter = Injector::inst()->create('i18nRailsYamlAdapter');
-				$masterFile = "{$this->basePath}/{$module}/lang/" 
-					. $adapter->getFilenameForLocale($this->defaultLocale);
-				if(!file_exists($masterFile)) continue;
-
-				$adapter->addTranslation(array(
-					'content' => $masterFile,
-					'locale' => $this->defaultLocale
-				));
-				$entitiesByModule[$module] = array_merge(
-					array_map(
-						// Transform each master string from scalar value to array of strings
-						function($v) {return array($v);},
-						$adapter->getMessages($this->defaultLocale)
-					),
-					$entitiesByModule[$module]
-				);	
 			}
 		}
-
-		// Restrict modules we update to just the specified ones (if any passed)
-		if($restrictToModules && count($restrictToModules)) {
-			foreach (array_diff(array_keys($entitiesByModule), $restrictToModules) as $module) {
-				unset($entitiesByModule[$module]);
-			}
-		}
-
 		return $entitiesByModule;
 	}
+	
 
 	public function write($module, $entities) {
 		$this->getWriter()->write($entities, $this->defaultLocale, $this->baseSavePath . '/' . $module);
@@ -196,38 +349,31 @@ class i18nTextCollector extends Object {
 	 * Builds a master string table from php and .ss template files for the module passed as the $module param
 	 * @see collectFromCode() and collectFromTemplate()
 	 *
-	 * @param string $module A module's name or just 'themes'
-	 * @return array $entities An array of entities found in the files that comprise the module
-	 * @todo Why the type juggling for $this->collectFromBlah()? They always return arrays.
+	 * @param string $module A module's name or just 'themes/<themename>'
+	 * @return array An array of entities found in the files that comprise the module
 	 */
 	protected function processModule($module) {
 		$entities = array();
 
 		// Search for calls in code files if these exists
-		$fileList = array();
-		if(is_dir("$this->basePath/$module/code")) {
-			$fileList = $this->getFilesRecursive("$this->basePath/$module/code");
-		} else if($module == FRAMEWORK_DIR || substr($module, 0, 7) == 'themes/') {
-			// framework doesn't have the usual module structure, so we'll scan all subfolders
-			$fileList = $this->getFilesRecursive("$this->basePath/$module", null, null, '/\/(tests|dev)$/');
-		}
+		$fileList = $this->getFileListForModule($module);
 		foreach($fileList as $filePath) {
-			// exclude ss-templates, they're scanned separately
-			if(substr($filePath,-3) == 'php') {
-				$content = file_get_contents($filePath);
-				$entities = array_merge($entities,(array)$this->collectFromCode($content, $module));
-				$entities = array_merge($entities, (array)$this->collectFromEntityProviders($filePath, $module));
-			}
-		}
-		
-		// Search for calls in template files if these exists
-		if(is_dir("$this->basePath/$module/")) {
-			$fileList = $this->getFilesRecursive("$this->basePath/$module/", null, 'ss');
-			foreach($fileList as $index => $filePath) {
-				$content = file_get_contents($filePath);
+			$extension = pathinfo($filePath, PATHINFO_EXTENSION);
+			$content = file_get_contents($filePath);
+			// Filter based on extension
+			if($extension === 'php') {
+				$entities = array_merge(
+					$entities,
+					$this->collectFromCode($content, $module),
+					$this->collectFromEntityProviders($filePath, $module)
+				);
+			} elseif($extension === 'ss') {
 				// templates use their filename as a namespace
 				$namespace = basename($filePath);
-				$entities = array_merge($entities, (array)$this->collectFromTemplate($content, $module, $namespace));
+				$entities = array_merge(
+					$entities,
+					$this->collectFromTemplate($content, $module, $namespace)
+				);
 			}
 		}
 
@@ -236,12 +382,45 @@ class i18nTextCollector extends Object {
 
 		return $entities;
 	}
+	
+	/**
+	 * Retrieves the list of files for this module
+	 * 
+	 * @param type $module
+	 * @return array List of files to parse
+	 */
+	protected function getFileListForModule($module) {
+		$modulePath = "{$this->basePath}/{$module}";
+		
+		// Search all .ss files in themes
+		if(stripos($module, 'themes/') === 0) {
+			return $this->getFilesRecursive($modulePath, null, 'ss');
+		}
+		
+		// If Framework or non-standard module structure, so we'll scan all subfolders
+		if($module === FRAMEWORK_DIR || !is_dir("{$modulePath}/code")) {
+			return $this->getFilesRecursive($modulePath);
+		}
+		
+		// Get code files
+		$files = $this->getFilesRecursive("{$modulePath}/code", null, 'php');
+
+		// Search for templates in this module
+		if(is_dir("{$modulePath}/templates")) {
+			$templateFiles = $this->getFilesRecursive("{$modulePath}/templates", null, 'ss');
+		} else {
+			$templateFiles = $this->getFilesRecursive($modulePath, null, 'ss');
+		}
+		
+		return array_merge($files, $templateFiles);
+	}
 
 	/**
 	 * Extracts translatables from .php files.
 	 * 
 	 * @param string $content The text content of a parsed template-file
-	 * @param string $module Module's name or 'themes'
+	 * @param string $module Module's name or 'themes'. Could also be a namespace
+	 * Generated by templates includes. E.g. 'UploadField.ss'
 	 * @return array $entities An array of entities representing the extracted translation function calls in code
 	 */		
 	public function collectFromCode($content, $module) {
@@ -324,33 +503,10 @@ class i18nTextCollector extends Object {
 	 * @param string $module Module's name or 'themes'
 	 * @param string $fileName The name of a template file when method is used in self-referencing mode
 	 * @return array $entities An array of entities representing the extracted template function calls
-	 * 
-	 * @todo Why the type juggling for $this->collectFromTemplate()? It always returns an array.
 	 */	
 	public function collectFromTemplate($content, $fileName, $module, &$parsedFiles = array()) {
-		$entities = array();
-		
-		// Search for included templates
-		preg_match_all('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', $content, $regs, PREG_SET_ORDER);
-		foreach($regs as $reg) {
-			$includeName = $reg[1];
-			$includeFileName = "{$includeName}.ss";
-			$filePath = SSViewer::getTemplateFileByType($includeName, 'Includes');
-			if(!$filePath) $filePath = SSViewer::getTemplateFileByType($includeName, 'main');
-			if($filePath && !in_array($filePath, $parsedFiles)) {
-				$parsedFiles[] = $filePath;
-				$includeContent = file_get_contents($filePath);
-				$entities = array_merge(
-					$entities,
-					(array)$this->collectFromTemplate($includeContent, $module, $includeFileName, $parsedFiles)
-				);
-			}
-			// @todo Will get massively confused if you include the includer -> infinite loop
-		}
-
 		// use parser to extract <%t style translatable entities
-		$translatables = i18nTextCollector_Parser::GetTranslatables($content);
-		$entities = array_merge($entities,(array)$translatables);
+		$entities = i18nTextCollector_Parser::GetTranslatables($content);
 
 		// use the old method of getting _t() style translatable entities
 		// Collect in actual template
@@ -370,31 +526,34 @@ class i18nTextCollector extends Object {
 	}
 	
 	/**
+	 * Allows classes which implement i18nEntityProvider to provide
+	 * additional translation strings.
+	 * 
+	 * Not all classes can be instanciated without mandatory arguments,
+	 * so entity collection doesn't work for all SilverStripe classes currently
+	 * 
 	 * @uses i18nEntityProvider
+	 * @param string $filePath
+	 * @param string $module
+	 * @return array
 	 */
 	public function collectFromEntityProviders($filePath, $module = null) {
 		$entities = array();
-
-		// HACK Ugly workaround to avoid "Cannot redeclare class PHPUnit_Framework_TestResult" error
-		// when running text collector with PHPUnit 3.4. There really shouldn't be any dependencies
-		// here, but the class reflection enforces autloading of seemingly unrelated classes.
-		// The main problem here is the CMSMenu class, which iterates through test classes,
-		// which in turn trigger autoloading of PHPUnit.
-		$phpunitwrapper = PhpUnitWrapper::inst();
-		$phpunitwrapper->init();
-		
 		$classes = ClassInfo::classes_for_file($filePath);
-		if($classes) foreach($classes as $class) {
-			// Not all classes can be instanciated without mandatory arguments,
-			// so entity collection doesn't work for all SilverStripe classes currently
-			// Requires PHP 5.1+
-			if(class_exists($class) && in_array('i18nEntityProvider', class_implements($class))) {
-				$reflectionClass = new ReflectionClass($class);
-				if($reflectionClass->isAbstract()) continue;
-
-				$obj = singleton($class);
-				$entities = array_merge($entities,(array)$obj->provideI18nEntities());
+		foreach($classes as $class) {
+			// Skip non-implementing classes
+			if(!class_exists($class) || !in_array('i18nEntityProvider', class_implements($class))) {
+				continue;
 			}
+
+			// Skip abstract classes
+			$reflectionClass = new ReflectionClass($class);
+			if($reflectionClass->isAbstract()) {
+				continue;
+			}
+
+			$obj = singleton($class);
+			$entities = array_merge($entities, (array)$obj->provideI18nEntities());
 		}
 		
 		ksort($entities);
@@ -438,30 +597,35 @@ class i18nTextCollector extends Object {
 	 * 
 	 * @param string $folder base directory to scan (will scan recursively)
 	 * @param array $fileList Array to which potential files will be appended
-	 * @param string $type Optional, "php" or "ss"
-	 * @param  string $folderExclude Regular expression matching folder names to exclude
+	 * @param string $type Optional, "php" or "ss" only
+	 * @param string $folderExclude Regular expression matching folder names to exclude
 	 * @return array $fileList An array of files
 	 */
-	protected function getFilesRecursive($folder, $fileList = null, $type = null, $folderExclude = null) {
-		if(!$folderExclude) $folderExclude = '/\/(tests)$/';
-		if(!$fileList) $fileList = array();
-		$items = scandir($folder);
-		$isValidFolder = (
-			!in_array('_manifest_exclude', $items)
-			&& !preg_match($folderExclude, $folder)
-		);
+	protected function getFilesRecursive($folder, $fileList = array(), $type = null, $folderExclude = '/\/(tests)$/') {
+		if(!$fileList) {
+			$fileList = array();
+		}
+		// Skip ignored folders
+		if(is_file("{$folder}/_manifest_exclude") || preg_match($folderExclude, $folder)) {
+			return $fileList;
+		}
 
-		if($items && $isValidFolder) foreach($items as $item) {
-			if(substr($item,0,1) == '.') continue;
-			if(substr($item,-4) == '.php' && (!$type || $type == 'php')) {
-				$fileList[substr($item,0,-4)] = "$folder/$item";
-			} else if(substr($item,-3) == '.ss' && (!$type || $type == 'ss')) {
-				$fileList[$item] = "$folder/$item";
-			} else if(is_dir("$folder/$item")) {
+		foreach(glob($folder.'/*') as $path) {
+			// Recurse if directory
+			if(is_dir($path)) {
 				$fileList = array_merge(
-					$fileList, 
-					$this->getFilesRecursive("$folder/$item", $fileList, $type, $folderExclude)
+					$fileList,
+					$this->getFilesRecursive($path, $fileList, $type, $folderExclude)
 				);
+				continue;
+			}
+			
+			// Check if this extension is included
+			$extension = pathinfo($path, PATHINFO_EXTENSION);
+			if(in_array($extension, $this->fileExtensions)
+				&& (!$type || $type === $extension)
+			) {
+				$fileList[$path] = $path;
 			}
 		}
 		return $fileList;
@@ -687,7 +851,9 @@ class i18nTextCollector_Parser extends SSTemplateParser {
 
 		// Run the parser and throw away the result
 		$parser = new i18nTextCollector_Parser($template);
-		if(substr($template, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $parser->pos = 3;
+		if(substr($template, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
+			$parser->pos = 3;
+		}
 		$parser->match_TopTemplate();
 
 		return self::$entities;

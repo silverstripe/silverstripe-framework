@@ -10,6 +10,9 @@
  * For any statics containing natural language, never use the static directly -
  * always wrap it in a getter.
  * 
+ * Classes must be able to be constructed without mandatory arguments, otherwise
+ * this interface will have no effect.
+ * 
  * @package framework
  * @subpackage i18n
  * @uses i18nTextCollector->collectFromEntityProviders()
