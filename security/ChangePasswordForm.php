@@ -129,9 +129,10 @@ class ChangePasswordForm extends Form {
 					_t(
 						'Member.INVALIDNEWPASSWORD', 
 						"We couldn't accept that password: {password}",
-						array('password' => nl2br("\n".$isValid->starredList()))
+						array('password' => nl2br("\n".Convert::raw2xml($isValid->starredList())))
 					), 
-					"bad"
+					"bad",
+					false
 				);
 
 				// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
