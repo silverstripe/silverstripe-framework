@@ -73,6 +73,10 @@ class DB {
 	 * Set it to null to revert to the main database.
 	 */
 	public static function set_alternative_database_name($name = null) {
+		// Skip if CLI
+		if(Director::is_cli()) {
+			return;
+		}
 		if($name) {
 			if(!self::valid_alternative_database_name($name)) {
 				throw new InvalidArgumentException(sprintf(
