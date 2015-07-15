@@ -117,14 +117,16 @@ To use this backend, you need a memcached daemon and the memcache PECL extension
 		'primary_memcached', 
 		'Memcached',
 		array(
-			'host' => 'localhost', 
-			'port' => 11211, 
-			'persistent' => true, 
-			'weight' => 1, 
-			'timeout' => 5,
-			'retry_interval' => 15, 
-			'status' => true, 
-			'failure_callback' => '' 
+			'servers' => array(
+				'host' => 'localhost', 
+				'port' => 11211, 
+				'persistent' => true, 
+				'weight' => 1, 
+				'timeout' => 5,
+				'retry_interval' => 15, 
+				'status' => true, 
+				'failure_callback' => ''
+			)
 		)
 	);
 	SS_Cache::pick_backend('primary_memcached', 'any', 10);
