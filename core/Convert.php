@@ -14,6 +14,8 @@
  *  html: HTML source suitable for use in a page or email
  *  text: Plain-text content, suitable for display to a user as-is, or insertion in a plaintext email.
  *
+ *  fqcn: A PHP fully qualified class name
+ *
  * Objects of type {@link ViewableData} can have an "escaping type",
  * which determines if they are automatically escaped before output by {@link SSViewer}.
  *
@@ -417,5 +419,19 @@ class Convert {
 	 */
 	public static function nl2os($data, $nl = PHP_EOL) {
 		return preg_replace('~\R~u', $nl, $data);
+	}
+
+	/**
+	 * Convert a FQCN to be suitable for an HTML attribute.
+	 *
+	 * Replaces backslashes (\) with dashes (-) then passes
+	 * the resulting string through Convert::raw2htmlname().
+	 *
+	 * @uses Convert::raw2htmlname()
+	 * @param string $val String to escape
+	 * @return string
+	 */
+	public function fqcn2htmlname($val) {
+		return self::raw2htmlname(str_replace('\\', '-', $val));
 	}
 }
