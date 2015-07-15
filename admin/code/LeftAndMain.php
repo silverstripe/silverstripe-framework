@@ -556,7 +556,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public static function menu_icon_for_class($class) {
 		$icon = Config::inst()->get($class, 'menu_icon', Config::FIRST_SET);
 		if (!empty($icon)) {
-			$class = strtolower($class);
+			$class = strtolower(Convert::raw2htmlname(str_replace('\\', '-', $class)));
 			return ".icon.icon-16.icon-{$class} { background: url('{$icon}'); } ";
 		}
 		return '';

@@ -92,7 +92,7 @@
 			updateMenuFromResponse: function(xhr) {
 				var controller = xhr.getResponseHeader('X-Controller');
 				if(controller) {
-					var item = this.find('li#Menu-' + controller);
+					var item = this.find('li#Menu-' + controller.replace(/\\/g, '-').replace(/[^a-zA-Z0-9\-_:.]+/, ''));
 					if(!item.hasClass('current')) item.select();
 				}
 				this.updateItems();
