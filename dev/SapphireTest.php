@@ -1,6 +1,4 @@
 <?php
-require_once 'TestRunner.php';
-
 /**
  * Test case class for the Sapphire framework.
  * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier
@@ -124,7 +122,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 
 	/**
-	 * Determines if unit tests are currently run (via {@link TestRunner}).
+	 * Determines if unit tests are currently run, flag set during test bootstrap.
 	 * This is used as a cheap replacement for fully mockable state
 	 * in certain contiditions (e.g. access checks).
 	 * Caution: When set to FALSE, certain controllers might bypass
@@ -821,6 +819,36 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$extracted = array();
 		foreach($dataObjectSet as $item) $extracted[] = array_intersect_key($item->toMap(), $match);
 		return var_export($extracted, true);
+	}
+
+	/**
+	 * Pushes a class and template manifest instance that include tests onto the
+	 * top of the loader stacks.
+	 */
+	public static function use_test_manifest() {
+		$flush = true;
+		if(isset($_GET['flush']) && $_GET['flush'] === '0') {
+			$flush = false;
+		}
+
+		$classManifest = new SS_ClassManifest(
+			BASE_PATH, true, $flush
+		);
+
+		SS_ClassLoader::instance()->pushManifest($classManifest, false);
+		SapphireTest::set_test_class_manifest($classManifest);
+
+		SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
+			BASE_PATH, project(), true, $flush
+		));
+
+		Config::inst()->pushConfigStaticManifest(new SS_ConfigStaticManifest(
+			BASE_PATH, true, $flush
+		));
+
+		// Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
+		// (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
+		DataObject::reset();
 	}
 
 	/**

@@ -80,11 +80,6 @@ Sake is particularly useful for running build tasks.
 	:::bash
 	sake dev/build "flush=1"
 
-Or running unit tests..
-
-	:::bash
-	sake dev/tests/all
-
 It can also be handy if you have a long running script..
 	
 	:::bash

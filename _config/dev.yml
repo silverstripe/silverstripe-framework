@@ -7,11 +7,6 @@ DevelopmentAdmin:
       controller: 'DevBuildController'
       links:
         build: 'Build/rebuild this environment. Call this whenever you have updated your project sources'
-    tests:
-      controller: 'TestRunner'
-      links:
-        tests: 'See a list of unit tests to run'
-        'tests/all': 'Run all tests'
     tasks:
       controller: 'TaskRunner'
       links:
