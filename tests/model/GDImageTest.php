@@ -3,15 +3,11 @@
 class GDImageTest extends ImageTest {
 
 	public function setUp() {
-		$skip = !extension_loaded("gd");
-		if($skip) {
-			$this->skipTest = true;
-		}
-
 		parent::setUp();
 
-		if($skip) {
+		if(!extension_loaded("gd")) {
 			$this->markTestSkipped("The GD extension is required");
+			return;
 		}
 
 		Config::inst()->update('Injector', 'Image_Backend', 'GDBackend');

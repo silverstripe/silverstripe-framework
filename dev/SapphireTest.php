@@ -30,11 +30,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $fixtureFactory;
 
 	/**
-	 * @var bool Set whether to include this test in the TestRunner or to skip this.
-	 */
-	protected $skipTest = false;
-
-	/**
 	 * @var Boolean If set to TRUE, this will force a test database to be generated
 	 * in {@link setUp()}. Note that this flag is overruled by the presence of a
 	 * {@link $fixture_file}, which always forces a database build.
@@ -183,13 +178,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->originalReadingMode = \Versioned::get_reading_mode();
 
 		// We cannot run the tests on this abstract class.
-		if(get_class($this) == "SapphireTest") $this->skipTest = true;
-
-		if($this->skipTest) {
-			$this->markTestSkipped(sprintf(
-				'Skipping %s ', get_class($this)
-			));
-
+		if(get_class($this) == "SapphireTest") {
+			$this->markTestSkipped(sprintf('Skipping %s ', get_class($this)));
 			return;
 		}
 
