@@ -223,7 +223,7 @@ class DataQuery {
 			if($this->dataClass != $baseClass) {
 				// Get the ClassName values to filter to
 				$classNames = ClassInfo::subclassesFor($this->dataClass);
-				if(!$classNames) user_error("DataList::create() Can't find data sub-classes for '$callerClass'");
+				if(!$classNames) user_error("DataList::create() Can't find data sub-classes for '{$this->dataClass}'");
 				$classNames = array_map(array(DB::getConn(), 'prepStringForDB'), $classNames);
 				$query->addWhere("\"$baseClass\".\"ClassName\" IN (" . implode(",", $classNames) . ")");
 			}
