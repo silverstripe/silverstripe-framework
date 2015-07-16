@@ -11,12 +11,12 @@ $color-base: #b0bec7 !default;
 $color-widget-bg: lighten($color-base, 20%) !default;
 
 /* Keep as solid colours transparent borders wont work in ie */
-$color-darker-bg: #D4D6D8 !default;
+$color-darker-bg: #E6EAED !default;
 $color-dark-bg: #142136 !default;
 $color-dark-separator: #19435c !default;
 $color-medium-separator: #808080 !default;
-$color-separator: #C0C0C2 !default;
-$color-light-separator: #d0d3d5 !default; 
+$color-separator: #C1C7CC !default; // Vertical dividers
+$color-light-separator: #D2D5D8 !default; // Horiontal dividers
 
 $color-tab: #d9d9d9 !default;
 $color-dark-grey: #7B8C91 !default;
@@ -37,7 +37,7 @@ $color-menu-background: #c6d7df !default;
 $color-menu-border: #8c99a1 !default;
 $color-panel-background: #c6d7df !default;
 
-$color-text: #444 !default;
+$color-text: #66727d !default;
 $color-text-light: white !default;
 $color-text-light-link: white !default;
 $color-text-disabled: #aaa !default;
@@ -48,7 +48,7 @@ $color-text-shadow: white !default;
 
 
 $color-button-generic: #e6e6e6 !default;
-$color-button-generic-border: #c0c0c2 !default;
+$color-button-generic-border: #d0d3d5 !default;
 
 $color-button-highlight: #e6e6e6 !default;
 $color-button-highlight-border: #708284 !default;
