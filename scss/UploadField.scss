@@ -18,7 +18,7 @@
 		// TODO .middleColumn styling should probably be theme specific (eg cms ui will look different than blackcandy)
 		// so we should move this style into the cms and black candy files
 		min-width: 510px;
-		max-width: 600px; // Capped width. 600px is about the average size of a preview split view
+		max-width: $grid-x * 87; // Capped width to line up with text fields
 		width:100%;
 		margin-left:0;
 		clear:both;
