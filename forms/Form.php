@@ -1415,9 +1415,10 @@ class Form extends RequestHandler {
 				// If field is in array-notation we need to access nested data
 				else if(strpos($name,'[')) {
 					// First encode data using PHP's method of converting nested arrays to form data
-					$flatData = urldecode(http_build_query($data));
+					$flatData    = http_build_query($data);
+					$encodedName = urlencode($name);
 					// Then pull the value out from that flattened string
-					preg_match('/' . addcslashes($name,'[]') . '=([^&]*)/', $flatData, $matches);
+					preg_match('/' . $encodedName . '=([^&]*)/', $flatData, $matches);
 
 					if (isset($matches[1])) {
 						$exists = true;
