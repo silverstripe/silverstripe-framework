@@ -1017,6 +1017,16 @@ class Image_Cached extends Image {
 		$this->Filename = $filename;
 	}
 
+	/**
+	 * Override the parent's exists method becuase the ID is explicitly set to -1 on a cached image we can't use the
+	 * default check
+	 *
+	 * @return bool Whether the cached image exists
+	 */
+	public function exists() {
+		return file_exists($this->getFullPath());
+	}
+
 	public function getRelativePath() {
 		return $this->getField('Filename');
 	}
