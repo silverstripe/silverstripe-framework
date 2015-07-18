@@ -140,18 +140,17 @@ class FormField extends RequestHandler {
 	public static function create_tag($tag, $attributes, $content = null) {
 		$preparedAttributes = '';
 
-		foreach($attributes as $k => $v) {
+		foreach ($attributes as $k => $v) {
 			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes
 			// can sometimes get finicky
-			if(!empty($v) || $v === '0' || ($k == 'value' && $v !== null) ) {
+			if (!empty($v) || $v === '0' || ($k == 'value' && $v !== null)) {
 				$preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
 			}
 		}
 
-		if($content || $tag != 'input') {
+		if ($content || $tag != 'input') {
 			return "<$tag$preparedAttributes>$content</$tag>";
-	}
-		else {
+		} else {
 			return "<$tag$preparedAttributes />";
 		}
 	}
@@ -703,7 +702,7 @@ class FormField extends RequestHandler {
 	 * such as an input tag.
 	 *
 	 * @param array $properties key value pairs of template variables
-	 * @return string
+	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
 		$obj = ($properties) ? $this->customise($properties) : $this;
