@@ -28,12 +28,12 @@ class DataQuery {
 	 */
 	protected $collidingFields = array();
 
-	private $queriedColumns = null;
+	protected $queriedColumns = null;
 
 	/**
 	 * @var Boolean
 	 */
-	private $queryFinalised = false;
+	protected $queryFinalised = false;
 
 	// TODO: replace subclass_access with this
 	protected $querySubclasses = true;

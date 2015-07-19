@@ -2,7 +2,7 @@
 
 class CookieTest extends SapphireTest {
 
-	private $cookieInst;
+	protected $cookieInst;
 
 	public function setUp() {
 		parent::setUp();

@@ -507,7 +507,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param string $value - the value that the filtercontext will use for matching
 	 * @todo Deprecated SearchContexts and pull their functionality into the core of the ORM
 	 */
-	private function applyFilterContext($field, $filter, $modifiers, $value) {
+	protected function applyFilterContext($field, $filter, $modifiers, $value) {
 		if($filter) {
 			$className = "{$filter}Filter";
 		} else {

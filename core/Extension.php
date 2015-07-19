@@ -35,7 +35,7 @@ abstract class Extension {
 	 * Reference counter to ensure that the owner isn't cleared until clearOwner() has
 	 * been called as many times as setOwner()
 	 */
-	private $ownerRefs = 0;
+	protected $ownerRefs = 0;
 
 	public $class;
 

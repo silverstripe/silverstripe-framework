@@ -7,7 +7,7 @@
  */
 class TeamCityListener implements PHPUnit_Framework_TestListener {
 
-	private function escape($str) {
+	protected function escape($str) {
 		return strtr($str, array(
 			"\n" => '|n',
 			"\r" => '|r',

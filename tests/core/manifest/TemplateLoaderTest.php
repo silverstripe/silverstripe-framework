@@ -7,9 +7,9 @@
  */
 class TemplateLoaderTest extends SapphireTest {
 
-	private $base;
-	private $manifest;
-	private $loader;
+	protected $base;
+	protected $manifest;
+	protected $loader;
 
 	/**
 	 * Set up manifest before each test

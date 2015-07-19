@@ -536,7 +536,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param array $indexes The indexes to convert
 	 * @return array $indexes
 	 */
-	private function uniqueToIndex($indexes) {
+	protected function uniqueToIndex($indexes) {
 		$unique_regex = '/unique/i';
 		$results = array();
 		foreach ($indexes as $key => $index) {

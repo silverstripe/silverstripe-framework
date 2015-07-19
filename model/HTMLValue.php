@@ -64,9 +64,9 @@ abstract class SS_HTMLValue extends ViewableData {
 	}
 
 	/** @var DOMDocument */
-	private $document = null;
+	protected $document = null;
 	/** @var bool */
-	private $valid = true;
+	protected $valid = true;
 
 	/**
 	 * Get the DOMDocument for the passed content

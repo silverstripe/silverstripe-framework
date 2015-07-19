@@ -354,7 +354,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 * @param string $defaultDirection
 	 * @return array A two element array: array($column, $direction)
 	 */
-	private function getDirectionFromString($value, $defaultDirection = null) {
+	protected function getDirectionFromString($value, $defaultDirection = null) {
 		if(preg_match('/^(.*)(asc|desc)$/i', $value, $matches)) {
 			$column = trim($matches[1]);
 			$direction = strtoupper($matches[2]);

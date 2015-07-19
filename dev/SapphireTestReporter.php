@@ -321,7 +321,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * @param obj PHPUnit_Framework_AssertationFailedError, PHPUnit error
 	 * @return array
 	 */
-	private function getTestException(PHPUnit_Framework_Test $test, Exception $e) {
+	protected function getTestException(PHPUnit_Framework_Test $test, Exception $e) {
 		// get the name of the testFile from the test
 		$testName = preg_replace('/(.*)\((.*[^)])\)/', '\\2', $test->toString());
 		$trace = $e->getTrace();

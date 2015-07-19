@@ -34,7 +34,7 @@ class Year extends DBField {
 	 * @param int $end end date to count down to
 	 * @return array
 	 */
-	private function getDefaultOptions($start=false, $end=false) {
+	protected function getDefaultOptions($start=false, $end=false) {
 		if (!$start) $start = (int)date('Y');
 		if (!$end) $end = 1900;
 		$years = array();
