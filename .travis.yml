@@ -2,6 +2,11 @@ language: php
 
 sudo: false
 
+addons:
+  apt:
+    packages:
+      - tidy
+
 cache:
   directories:
     - $HOME/.composer/cache
@@ -42,9 +47,6 @@ matrix:
       env: DB=MYSQL
     - php: hhvm
       env: DB=MYSQL
-      before_install:
-        - sudo apt-get update -qq
-        - sudo apt-get install -y tidy
 
 before_script:
  - composer self-update || true
