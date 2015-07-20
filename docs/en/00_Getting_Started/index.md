@@ -19,9 +19,9 @@ Other ways to get SilverStripe:
 To run SilverStripe on Linux/Unix, set up one of the following web servers: 
 
 *  [Install using Apache](installation) - our preferred platform
-*  [Install using Lighttpd](installation/how_to/configure_lighttpd) - fast, but a bit tricker to get going
+*  [Install using Lighttpd](installation/how_to/configure_lighttpd) - fast, but a bit trickier to get going
 *  [Install using Nginx](installation/how_to/configure_nginx) - Super fast at serving static files. Great for large traffic sites.
-*  [Install using nginx and HHVM](installation/how_to/setup_nginx_and_hhvm) - nginx and [HHVM](http://hhvm.com/) as a faster alternative to PHP
+*  [Install using nginx and HHVM](installation/how_to/setup_nginx_and_hhvm) - nginx and [HHVM](http://hhvm.com/) as a faster alternative to PHP.
 
 ### Windows
 

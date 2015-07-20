@@ -5,7 +5,7 @@
  * @subpackage security
  */
 class ChangePasswordForm extends Form {
-
+	
 	/**
 	 * Constructor
 	 *
@@ -28,7 +28,7 @@ class ChangePasswordForm extends Form {
 
 		if(!$fields) {
 			$fields = new FieldList();
-
+			
 			// Security/changepassword?h=XXX redirects to Security/changepassword
 			// without GET parameter to avoid potential HTTP referer leakage.
 			// In this case, a user is not logged in, and no 'old password' should be necessary.
@@ -65,7 +65,7 @@ class ChangePasswordForm extends Form {
 			if(empty($data['OldPassword']) || !$member->checkPassword($data['OldPassword'])->valid()) {
 				$this->clearMessage();
 				$this->sessionMessage(
-					_t('Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"),
+					_t('Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"), 
 					"bad"
 				);
 				// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
@@ -99,7 +99,7 @@ class ChangePasswordForm extends Form {
 			$isValid = $member->changePassword($data['NewPassword1']);
 			if($isValid->valid()) {
 				$member->logIn();
-
+				
 				// TODO Add confirmation message to login redirect
 				Session::clear('AutoLoginHash');
 
@@ -127,11 +127,12 @@ class ChangePasswordForm extends Form {
 				$this->clearMessage();
 				$this->sessionMessage(
 					_t(
-						'Member.INVALIDNEWPASSWORD',
+						'Member.INVALIDNEWPASSWORD', 
 						"We couldn't accept that password: {password}",
-						array('password' => nl2br("\n".$isValid->starredList()))
-					),
-					"bad"
+						array('password' => nl2br("\n".Convert::raw2xml($isValid->starredList())))
+					), 
+					"bad",
+					false
 				);
 
 				// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.

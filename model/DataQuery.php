@@ -333,7 +333,7 @@ class DataQuery {
 
 					if(!in_array($qualCol, $query->getSelect())) {
 						unset($newOrderby[$k]);
-						
+
 						$newOrderby["\"_SortColumn$i\""] = $dir;
 						$query->selectField($qualCol, "_SortColumn$i");
 
