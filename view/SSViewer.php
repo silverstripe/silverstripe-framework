@@ -785,7 +785,9 @@ class SSViewer implements Flushable {
 	 *  </code>
 	 */
 	public function __construct($templateList, TemplateParser $parser = null) {
-		$this->setParser($parser ?: Injector::inst()->get('SSTemplateParser'));
+		if ($parser) {
+			$this->setParser($parser);
+		}
 
 		if(!is_array($templateList) && substr((string) $templateList,-3) == '.ss') {
 			$this->chosenTemplates['main'] = $templateList;
@@ -829,6 +831,9 @@ class SSViewer implements Flushable {
 	 */
 	public function getParser()
 	{
+		if (!$this->parser) {
+			$this->parser = Injector::inst()->get('SSTemplateParser');
+		}
 		return $this->parser;
 	}
 
@@ -1105,6 +1110,8 @@ class SSViewer implements Flushable {
 		// through $Content and $Layout placeholders.
 		foreach(array('Content', 'Layout') as $subtemplate) {
 			if(isset($this->chosenTemplates[$subtemplate])) {
+				// NB: We intentionally avoid using ->getParser() here as it may trigger expensive 
+				// template parser instantiation that may not be necessary
 				$subtemplateViewer = new SSViewer($this->chosenTemplates[$subtemplate], $this->parser);
 				$subtemplateViewer->includeRequirements(false);
 				$subtemplateViewer->setPartialCacheStore($this->getPartialCacheStore());
@@ -1173,7 +1180,7 @@ class SSViewer implements Flushable {
 	}
 
 	public function parseTemplateContent($content, $template="") {
-		return $this->parser->compileString(
+		return $this->getParser()->compileString(
 			$content,
 			$template,
 			Director::isDev() && Config::inst()->get('SSViewer', 'source_file_comments')
@@ -1242,7 +1249,10 @@ class SSViewer_FromString extends SSViewer {
 	protected $cacheTemplate;
 	
 	public function __construct($content, TemplateParser $parser = null) {
-		$this->setParser($parser ?: Injector::inst()->get('SSTemplateParser'));
+		if ($parser) {
+			$this->setParser($parser);
+		}
+
 		$this->content = $content;
 	}
 
