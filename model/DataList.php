@@ -419,9 +419,9 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			$whereArguments = func_get_arg(0);
 		} elseif($numberFuncArgs == 2) {
 			$whereArguments[func_get_arg(0)] = func_get_arg(1);
-			} else {
+		} else {
 			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
-			}
+		}
 
 		return $this->alterDataQuery(function($query, $list) use ($whereArguments) {
 			$subquery = $query->disjunctiveGroup();
@@ -436,16 +436,16 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				$t = singleton($list->dataClass())->dbObject($field);
 				if($filterType) {
 					$className = "{$filterType}Filter";
-			} else {
+				} else {
 					$className = 'ExactMatchFilter';
 				}
 				if(!class_exists($className)){
 					$className = 'ExactMatchFilter';
 					array_unshift($modifiers, $filterType);
-			}
+				}
 				$t = new $className($field, $value, $modifiers);
 				$t->apply($subquery);
-		}
+			}
 		});
 	}
 

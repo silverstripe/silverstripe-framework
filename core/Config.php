@@ -237,7 +237,16 @@ class Config {
 	 * @return Config Reference to new active Config instance
 	 */
 	public static function unnest() {
-		return self::set_instance(self::$instance->nestedFrom);
+		if (self::inst()->nestedFrom) {
+			self::set_instance(self::inst()->nestedFrom);
+		}
+		else {
+			user_error(
+				"Unable to unnest root Config, please make sure you don't have mis-matched nest/unnest",
+				E_USER_WARNING
+			);
+		}
+		return self::inst();
 	}
 
 	/**

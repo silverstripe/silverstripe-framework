@@ -185,9 +185,10 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	}
 }
 
-if (defined('SS_ALLOWED_HOSTS')) {
+// Filter by configured allowed hosts
+if (defined('SS_ALLOWED_HOSTS') && php_sapi_name() !== "cli") {
 	$all_allowed_hosts = explode(',', SS_ALLOWED_HOSTS);
-	if (!in_array($_SERVER['HTTP_HOST'], $all_allowed_hosts)) {
+	if (!isset($_SERVER['HTTP_HOST']) || !in_array($_SERVER['HTTP_HOST'], $all_allowed_hosts)) {
 		header('HTTP/1.1 400 Invalid Host', true, 400);
 		die();
 	}

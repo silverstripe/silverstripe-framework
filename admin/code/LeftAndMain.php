@@ -555,7 +555,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public static function menu_icon_for_class($class) {
 		$icon = Config::inst()->get($class, 'menu_icon', Config::FIRST_SET);
 		if (!empty($icon)) {
-			$class = strtolower($class);
+			$class = strtolower(Convert::raw2htmlname(str_replace('\\', '-', $class)));
 			return ".icon.icon-16.icon-{$class} { background: url('{$icon}'); } ";
 		}
 		return '';
@@ -1962,8 +1962,9 @@ class LeftAndMain_TreeNode extends ViewableData {
 		$obj = $this->obj;
 		return "<li id=\"record-$obj->ID\" data-id=\"$obj->ID\" data-pagetype=\"$obj->ClassName\" class=\""
 			. $this->getClasses() . "\">" . "<ins class=\"jstree-icon\">&nbsp;</ins>"
-			. "<a href=\"" . $this->getLink() . "\" title=\"" . _t('LeftAndMain.PAGETYPE','Page type: ')
-			. "$obj->class\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle)
+			. "<a href=\"" . $this->getLink() . "\" title=\"("
+			. trim(_t('LeftAndMain.PAGETYPE','Page type'), " :") // account for inconsistencies in translations
+			. ": " . $obj->i18n_singular_name() . ") $obj->Title\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle)
 			. "</span></a>";
 	}
 

@@ -256,7 +256,7 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-button.ui-state-hover, .cms .ss-ui-button:hover { text-decoration: none; background-color: white; background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2U2ZTZlNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #e6e6e6)); background: -moz-linear-gradient(#ffffff, #e6e6e6); background: -webkit-linear-gradient(#ffffff, #e6e6e6); background: linear-gradient(#ffffff, #e6e6e6); -moz-box-shadow: 0 0 5px #b3b3b3; -webkit-box-shadow: 0 0 5px #b3b3b3; box-shadow: 0 0 5px #b3b3b3; }
 .cms .ss-ui-button:active, .cms .ss-ui-button:focus, .cms .ss-ui-button.ui-state-active, .cms .ss-ui-button.ui-state-focus { border: 1px solid #b3b3b3; background-color: white; background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2U2ZTZlNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #e6e6e6)); background: -moz-linear-gradient(#ffffff, #e6e6e6); background: -webkit-linear-gradient(#ffffff, #e6e6e6); background: linear-gradient(#ffffff, #e6e6e6); -moz-box-shadow: 0 0 5px #b3b3b3 inset; -webkit-box-shadow: 0 0 5px #b3b3b3 inset; box-shadow: 0 0 5px #b3b3b3 inset; }
 .cms .ss-ui-button.ss-ui-action-minor span { padding-left: 0; padding-right: 0; }
-.cms .ss-ui-button.ss-ui-action-constructive { text-shadow: none; font-weight: bold; color: white; border-color: #1F9433; border-bottom-color: #166a24; background-color: #1F9433; background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzk0YmU0MiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFmOTQzMyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #94be42), color-stop(100%, #1f9433)); background: -moz-linear-gradient(#94be42, #1f9433); background: -webkit-linear-gradient(#94be42, #1f9433); background: linear-gradient(#94be42, #1f9433); text-shadow: #1c872f 0 -1px -1px; }
+.cms .ss-ui-button.ss-ui-action-constructive { text-shadow: none; font-weight: bold; color: white; border-color: #1F9433; border-bottom-color: #166a24; background-color: #1F9433; background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzkzYmU0MiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFmOTQzMyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #93be42), color-stop(100%, #1f9433)); background: -moz-linear-gradient(#93be42, #1f9433); background: -webkit-linear-gradient(#93be42, #1f9433); background: linear-gradient(#93be42, #1f9433); text-shadow: #1c872f 0 -1px -1px; }
 .cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover, .cms .ss-ui-button.ss-ui-action-constructive:hover { border-color: #166a24; background-color: #1F9433; background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2E0Y2EzYSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzIzYTkzYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #a4ca3a), color-stop(100%, #23a93a)); background: -moz-linear-gradient(#a4ca3a, #23a93a); background: -webkit-linear-gradient(#a4ca3a, #23a93a); background: linear-gradient(#a4ca3a, #23a93a); }
 .cms .ss-ui-button.ss-ui-action-constructive:active, .cms .ss-ui-button.ss-ui-action-constructive:focus, .cms .ss-ui-button.ss-ui-action-constructive.ui-state-active, .cms .ss-ui-button.ss-ui-action-constructive.ui-state-focus { background-color: #1d8c30; -moz-box-shadow: inset 0 1px 3px #17181a, 0 1px 0 rgba(255, 255, 255, 0.6); -webkit-box-shadow: inset 0 1px 3px #17181a, 0 1px 0 rgba(255, 255, 255, 0.6); box-shadow: inset 0 1px 3px #17181a, 0 1px 0 rgba(255, 255, 255, 0.6); }
 .cms .ss-ui-button.ss-ui-action-destructive { color: #f00; background-color: #e6e6e6; }
@@ -882,7 +882,8 @@ form.import-form label.left { width: 250px; }
 .cms .jstree a, .TreeDropdownField .treedropdownfield-panel .jstree a { display: inline-block; line-height: 16px; height: 16px; color: black; white-space: nowrap; text-decoration: none; padding: 1px 2px; margin: 0; border: 1px solid #fff; }
 .cms .jstree a:focus, .cms .jstree a:active, .cms .jstree a:hover, .TreeDropdownField .treedropdownfield-panel .jstree a:focus, .TreeDropdownField .treedropdownfield-panel .jstree a:active, .TreeDropdownField .treedropdownfield-panel .jstree a:hover { text-decoration: none; cursor: pointer; text-shadow: 1px 1px 1px white; }
 .cms .jstree a ins, .TreeDropdownField .treedropdownfield-panel .jstree a ins { height: 16px; width: 12px; }
-.cms .jstree a ins.jstree-checkbox, .TreeDropdownField .treedropdownfield-panel .jstree a ins.jstree-checkbox { height: 19px; width: 16px; }
+.cms .jstree a ins.jstree-checkbox, .TreeDropdownField .treedropdownfield-panel .jstree a ins.jstree-checkbox { width: 16px; position: relative; }
+.cms .jstree a ins.jstree-checkbox:before, .TreeDropdownField .treedropdownfield-panel .jstree a ins.jstree-checkbox:before { content: ''; display: block; position: absolute; z-index: 1; left: -3px; top: -3px; height: 22px; width: 25px; }
 .cms .jstree .jstree-real-checkbox, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-real-checkbox { display: none; }
 .cms .jstree .jstree-wholerow-real, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow-real { position: relative; z-index: 1; }
 .cms .jstree .jstree-wholerow-real li, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow-real li { cursor: pointer; }
@@ -943,7 +944,7 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree li.Root strong, .cms-tree.jstree li.Root strong { font-weight: bold; padding-left: 1px; }
 .tree-holder.jstree li.Root > a .jstree-icon, .cms-tree.jstree li.Root > a .jstree-icon { background-position: -56px -36px; }
 .tree-holder.jstree li.status-deletedonlive > a .text, .tree-holder.jstree li.status-deletedonlive > a:link .text, .tree-holder.jstree li.status-archived > a .text, .tree-holder.jstree li.status-archived > a:link .text, .cms-tree.jstree li.status-deletedonlive > a .text, .cms-tree.jstree li.status-deletedonlive > a:link .text, .cms-tree.jstree li.status-archived > a .text, .cms-tree.jstree li.status-archived > a:link .text { text-decoration: line-through; }
-.tree-holder.jstree li.jstree-checked > a, .tree-holder.jstree li.jstree-checked > a:link, .cms-tree.jstree li.jstree-checked > a, .cms-tree.jstree li.jstree-checked > a:link { background-color: #efe999; }
+.tree-holder.jstree li.jstree-checked > a, .tree-holder.jstree li.jstree-checked > a:link, .cms-tree.jstree li.jstree-checked > a, .cms-tree.jstree li.jstree-checked > a:link { background-color: #fffcdc; }
 .tree-holder.jstree li.disabled > a, .tree-holder.jstree li.disabled > a:link, .tree-holder.jstree li.edit-disabled > a, .tree-holder.jstree li.edit-disabled > a:link, .cms-tree.jstree li.disabled > a, .cms-tree.jstree li.disabled > a:link, .cms-tree.jstree li.edit-disabled > a, .cms-tree.jstree li.edit-disabled > a:link { color: #aaa; background-color: transparent; cursor: default; }
 .tree-holder.jstree li.disabled > a > .jstree-checkbox, .tree-holder.jstree li.disabled > a:link > .jstree-checkbox, .tree-holder.jstree li.edit-disabled > a > .jstree-checkbox, .tree-holder.jstree li.edit-disabled > a:link > .jstree-checkbox, .cms-tree.jstree li.disabled > a > .jstree-checkbox, .cms-tree.jstree li.disabled > a:link > .jstree-checkbox, .cms-tree.jstree li.edit-disabled > a > .jstree-checkbox, .cms-tree.jstree li.edit-disabled > a:link > .jstree-checkbox { background-position: -57px -54px; }
 .tree-holder.jstree li.readonly, .cms-tree.jstree li.readonly { color: #aaa; padding-left: 18px; }
@@ -966,9 +967,17 @@ form.import-form label.left { width: 250px; }
 
 .jstree-default a .jstree-icon, .jstree-default-rtl a .jstree-icon, .jstree-classic a .jstree-icon, .jstree-apple a .jstree-icon { background-position: -60px -19px; }
 
+<<<<<<< HEAD
 /** DEPRECATED: .cms-content-tools will be removed in 4.0 Use .cms-content-filters instead.  Ensure status is visible in sidebar */
 .cms-content-tools .cms-tree.jstree li { min-width: 159px; }
 .cms-content-tools .cms-tree.jstree a { overflow: hidden; display: block; position: relative; }
+=======
+.jstree-apple a { border-radius: 3px; }
+
+/* ensure status is visible in sidebar */
+.cms-content-tools .cms-tree.jstree li { min-width: 187px; }
+.cms-content-tools .cms-tree.jstree a { overflow: hidden; text-overflow: ellipsis; display: block; position: relative; }
+>>>>>>> origin/3.2
 .cms-content-tools .cms-tree.jstree span.badge { position: absolute; top: 0; right: 0; padding: 7px 9px 6px 5px; margin: 0; max-width: 40%; -moz-transition: max-width 0.75s linear; -o-transition: max-width 0.75s linear; -webkit-transition: max-width 0.75s linear; transition: max-width 0.75s linear; }
 .cms-content-tools .cms-tree.jstree span.badge:hover { max-width: 150px; }
 
@@ -978,44 +987,58 @@ li.class-RedirectorPage > a .jstree-pageicon { background-position: 0 -16px; }
 li.class-VirtualPage > a .jstree-pageicon { background-position: 0 -32px; }
 li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 
-/* tree status icons and labels */
-.cms-tree.jstree .status-modified > a .jstree-pageicon:before, .cms-tree.jstree .status-addedtodraft > a .jstree-pageicon:before, .cms-tree.jstree .status-deletedonlive > a .jstree-pageicon:before, .cms-tree.jstree .status-archived > a .jstree-pageicon:before, .cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before, .cms-tree.jstree .status-workflow-approval > a .jstree-pageicon:before { content: ""; display: block; width: 5px; height: 5px; position: absolute; bottom: 0; right: 0; background: #fce2d0; border: 1px solid #ff9344; border-radius: 100px; box-shadow: 0px 0px 0px 1px #fff; }
+/* Tree status labels and dots */
+.jstree-apple .jstree-clicked, .jstree-apple .jstree-hovered { background: #ebfbff; }
 
-.jstree .status-modified > .jstree-hovered, .jstree .status-modified > .jstree-clicked, .cms-tree.jstree span.badge.status-modified, .cms-tree.jstree .status-modified > a .jstree-pageicon:before { background-color: #FFF4ED; border-color: #EE6214; }
+.cms-tree.jstree .status-addedtodraft > a .jstree-pageicon:before, .cms-tree.jstree .status-modified > a .jstree-pageicon:before, .cms-tree.jstree .status-archived > a .jstree-pageicon:before, .cms-tree.jstree .status-deletedonlive > a .jstree-pageicon:before, .cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before, .cms-tree.jstree .status-workflow-approval > a .jstree-pageicon:before { content: ""; display: block; width: 6px; height: 6px; position: absolute; bottom: 0; right: 0; background: #fce2d0; border: 1px solid #fff; border-radius: 100px; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-modified { box-shadow: 0px 0px 6px 2px #FFF4ED; }
+.jstree .status-addedtodraft > .jstree-hovered, .jstree .status-addedtodraft > .jstree-clicked, .cms-tree.jstree span.badge.status-addedtodraft { background-color: #fff7f2; border-color: #F46B00; }
 
-.cms-tree.jstree span.badge.status-modified { color: #EE6214; }
+.cms-tree.jstree span.badge.status-addedtodraft { color: #F46B00; }
 
-.jstree .status-addedtodraft > .jstree-hovered, .jstree .status-addedtodraft > .jstree-clicked, .cms-tree.jstree span.badge.status-addedtodraft, .cms-tree.jstree .status-addedtodraft > a .jstree-pageicon:before { background-color: #FFF4ED; border-color: #EE6214; }
+.cms-tree.jstree .status-addedtodraft > a .jstree-pageicon:before { background-color: #ff7f22; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-addedtodraft { box-shadow: 0px 0px 6px 2px #FFF4ED; }
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-addedtodraft { -moz-box-shadow: 0px 0px 6px 2px #fff7f2; -webkit-box-shadow: 0px 0px 6px 2px #fff7f2; box-shadow: 0px 0px 6px 2px #fff7f2; }
 
-.cms-tree.jstree span.badge.status-addedtodraft { color: #EE6214; }
+.jstree .status-modified > .jstree-hovered, .jstree .status-modified > .jstree-clicked, .cms-tree.jstree span.badge.status-modified { background-color: #fff7f2; border-color: #F46B00; }
 
-.jstree .status-deletedonlive > .jstree-hovered, .jstree .status-deletedonlive > .jstree-clicked, .cms-tree.jstree span.badge.status-deletedonlive, .cms-tree.jstree .status-deletedonlive > a .jstree-pageicon:before { background-color: #F5F5F5; border-color: #5F7688; }
+.cms-tree.jstree span.badge.status-modified { color: #F46B00; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-deletedonlive { box-shadow: 0px 0px 6px 2px #F5F5F5; }
+.cms-tree.jstree .status-modified > a .jstree-pageicon:before { background-color: #fff2e8; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #F46B00; }
 
-.cms-tree.jstree span.badge.status-deletedonlive { color: #5F7688; }
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-modified { -moz-box-shadow: 0px 0px 6px 2px #fff7f2; -webkit-box-shadow: 0px 0px 6px 2px #fff7f2; box-shadow: 0px 0px 6px 2px #fff7f2; }
 
-.jstree .status-archived > .jstree-hovered, .jstree .status-archived > .jstree-clicked, .cms-tree.jstree span.badge.status-archived, .cms-tree.jstree .status-archived > a .jstree-pageicon:before { background-color: #F5F5F5; border-color: #5F7688; }
+.jstree .status-archived > .jstree-hovered, .jstree .status-archived > .jstree-clicked, .cms-tree.jstree span.badge.status-archived { background-color: #f7f7f7; border-color: #455b6c; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-archived { box-shadow: 0px 0px 6px 2px #F5F5F5; }
+.cms-tree.jstree span.badge.status-archived { color: #455b6c; }
 
-.cms-tree.jstree span.badge.status-archived { color: #5F7688; }
+.cms-tree.jstree .status-archived > a .jstree-pageicon:before { background-color: #5F7688; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; }
 
-.jstree .status-removedfromdraft > .jstree-hovered, .jstree .status-removedfromdraft > .jstree-clicked, .cms-tree.jstree span.badge.status-removedfromdraft, .cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before { background-color: #F5F5F5; border-color: #5F7688; }
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-archived { -moz-box-shadow: 0px 0px 6px 2px #f7f7f7; -webkit-box-shadow: 0px 0px 6px 2px #f7f7f7; box-shadow: 0px 0px 6px 2px #f7f7f7; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-removedfromdraft { box-shadow: 0px 0px 6px 2px #F5F5F5; }
+.jstree .status-deletedonlive > .jstree-hovered, .jstree .status-deletedonlive > .jstree-clicked, .cms-tree.jstree span.badge.status-deletedonlive { background-color: #f7f7f7; border-color: #455b6c; }
 
-.cms-tree.jstree span.badge.status-removedfromdraft { color: #5F7688; }
+.cms-tree.jstree span.badge.status-deletedonlive { color: #455b6c; }
 
-.jstree .status-workflow-approval > .jstree-hovered, .jstree .status-workflow-approval > .jstree-clicked, .cms-tree.jstree span.badge.status-workflow-approval, .cms-tree.jstree .status-workflow-approval > a .jstree-pageicon:before { background-color: #E8FAFF; border-color: #0070B4; }
+.cms-tree.jstree .status-deletedonlive > a .jstree-pageicon:before { background-color: #f7f7f7; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; }
 
-#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-workflow-approval { box-shadow: 0px 0px 6px 2px #E8FAFF; }
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-deletedonlive { -moz-box-shadow: 0px 0px 6px 2px #f7f7f7; -webkit-box-shadow: 0px 0px 6px 2px #f7f7f7; box-shadow: 0px 0px 6px 2px #f7f7f7; }
+
+.jstree .status-removedfromdraft > .jstree-hovered, .jstree .status-removedfromdraft > .jstree-clicked, .cms-tree.jstree span.badge.status-removedfromdraft { background-color: #f7f7f7; border-color: #455b6c; }
+
+.cms-tree.jstree span.badge.status-removedfromdraft { color: #455b6c; }
+
+.cms-tree.jstree .status-removedfromdraft > a .jstree-pageicon:before { background-color: #f7f7f7; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #455b6c; }
+
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-removedfromdraft { -moz-box-shadow: 0px 0px 6px 2px #f7f7f7; -webkit-box-shadow: 0px 0px 6px 2px #f7f7f7; box-shadow: 0px 0px 6px 2px #f7f7f7; }
+
+.jstree .status-workflow-approval > .jstree-hovered, .jstree .status-workflow-approval > .jstree-clicked, .cms-tree.jstree span.badge.status-workflow-approval { background-color: #E8FAFF; border-color: #0070B4; }
 
 .cms-tree.jstree span.badge.status-workflow-approval { color: #0070B4; }
+
+.cms-tree.jstree .status-workflow-approval > a .jstree-pageicon:before { background-color: #0070B4; -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #0070B4; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #0070B4; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #0070B4; }
+
+#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-workflow-approval { -moz-box-shadow: 0px 0px 6px 2px #E8FAFF; -webkit-box-shadow: 0px 0px 6px 2px #E8FAFF; box-shadow: 0px 0px 6px 2px #E8FAFF; }
 
 .cms-tree { visibility: hidden; }
 .cms-tree.multiple li > a > .jstree-icon { display: none; }
@@ -1335,7 +1358,7 @@ green tick icon as a background this is created using compass generated classes 
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) { /* Loading spinner */
   .cms-content-loading-spinner { background-image: url(../images/spinner@2x.gif); background-size: 43px 43px; }
   .ui-dialog .ui-dialog-content.loading { background-image: url(../images/spinner@2x.gif); background-size: 43px 43px; }
-  .ui-dialog.loading { background-image: url(../images/spinner@2x.gif); background-size: 43px 22px; }
+  .ui-dialog.loading { background-image: url(../images/spinner@2x.gif); background-size: 43px 43px; }
   /* Default CMS logo */
   .cms-logo a { background-image: url("../images/logo_small@2x.png"); background-size: 22px 22px; }
   /* Logout button */

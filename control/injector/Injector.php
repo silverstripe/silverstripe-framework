@@ -272,7 +272,16 @@ class Injector {
 	 * @return Injector Reference to restored active Injector instance
 	 */
 	public static function unnest() {
-		return self::set_inst(self::$instance->nestedFrom);
+		if (self::inst()->nestedFrom) {
+			self::set_inst(self::inst()->nestedFrom);
+		}
+		else {
+			user_error(
+				"Unable to unnest root Injector, please make sure you don't have mis-matched nest/unnest",
+				E_USER_WARNING
+			);
+		}
+		return self::inst();
 	}
 
 	/**
