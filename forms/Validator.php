@@ -4,7 +4,7 @@
  * This validation class handles all form and custom form validation through
  * the use of Required fields.
  *
- * Relies on javascript for client-side validation, and marking fields after serverside validation.
+ * Relies on javascript for client-side validation, and marking fields after server-side validation.
  *
  * Acts as a visitor to individual form fields.
  *
@@ -115,9 +115,19 @@ abstract class Validator extends Object {
 	}
 
 	/**
+	 * Performs actual validation. Data from the form is passed into this method.
+	 *
 	 * @param array $data
 	 *
 	 * @return mixed
 	 */
 	abstract public function php($data);
+
+	/**
+	 * Ensures your validator will not perform any validation at all, in case the current user doesn't have access to
+	 * edit any fields (for example).
+	 *
+	 * @return null
+	 */
+	abstract public function removeValidation();
 }
