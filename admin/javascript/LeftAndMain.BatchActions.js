@@ -350,8 +350,9 @@
 					complete: function(xmlhttp, status) {
 						button.removeClass('loading');
 
-						// Deselect all nodes
-						tree.jstree('uncheck_all');
+						// Refresh the tree.
+						// Makes sure all nodes have the correct CSS classes applied.
+						tree.jstree('refresh', -1);
 						self.setIDs([]);
 
 						// Reset action
