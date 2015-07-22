@@ -3,18 +3,18 @@
 	<% include LeftAndMain_ViewModeSelector SelectID="preview-mode-dropdown-in-preview" %>
 	
     <span id="preview-size-dropdown" class="preview-size-selector preview-selector field dropdown">
-		<select title="<% _t('SilverStripeNavigator.ViewDeviceWidth', 'Select a preview width') %>" id="preview-size-dropdown-select" class="preview-dropdown dropdown nolabel" autocomplete="off" name="Action">
-			<option data-icon="icon-auto" data-description="<% _t('SilverStripeNavigator.Responsive', 'Responsive') %>" class="icon-auto icon-view first" value="auto">
-				<% _t('SilverStripeNavigator.Auto', 'Auto') %>
+		<select title="<%t SilverStripeNavigator.ViewDeviceWidth 'Select a preview width' %>" id="preview-size-dropdown-select" class="preview-dropdown dropdown nolabel" autocomplete="off" name="Action">
+			<option data-icon="icon-auto" data-description="<%t SilverStripeNavigator.Responsive 'Responsive' %>" class="icon-auto icon-view first" value="auto">
+				<%t SilverStripeNavigator.Auto 'Auto' %>
 			</option>
-			<option data-icon="icon-desktop" data-description="1024px <% _t('SilverStripeNavigator.Width', 'width') %>" class="icon-desktop icon-view" value="desktop">
-				<% _t('SilverStripeNavigator.Desktop', 'Desktop') %>
+			<option data-icon="icon-desktop" data-description="1024px <%t SilverStripeNavigator.Width 'width' %>" class="icon-desktop icon-view" value="desktop">
+				<%t SilverStripeNavigator.Desktop 'Desktop' %>
 			</option>
-			<option data-icon="icon-tablet" data-description="800px <% _t('SilverStripeNavigator.Width', 'width') %>" class="icon-tablet icon-view" value="tablet">
-				<% _t('SilverStripeNavigator.Tablet', 'Tablet') %>
+			<option data-icon="icon-tablet" data-description="800px <%t SilverStripeNavigator.Width 'width' %>" class="icon-tablet icon-view" value="tablet">
+				<%t SilverStripeNavigator.Tablet 'Tablet' %>
 			</option>
-			<option data-icon="icon-mobile" data-description="400px <% _t('SilverStripeNavigator.Width', 'width') %>" class="icon-mobile icon-view last" value="mobile">
-				<% _t('SilverStripeNavigator.Mobile', 'Mobile') %>
+			<option data-icon="icon-mobile" data-description="400px <%t SilverStripeNavigator.Width 'width' %>" class="icon-mobile icon-view last" value="mobile">
+				<%t SilverStripeNavigator.Mobile 'Mobile' %>
 			</option>
 		</select>
 	</span>
@@ -32,7 +32,7 @@
 			</fieldset>
 		<% else %>
 			<span id="preview-state-dropdown" class="cms-preview-states field dropdown">
-				<select title="<% _t('SilverStripeNavigator.PreviewState', 'Preview State') %>" id="preview-states" class="preview-state dropdown nolabel" autocomplete="off" name="preview-state">
+				<select title="<%t SilverStripeNavigator.PreviewState 'Preview State' %>" id="preview-states" class="preview-state dropdown nolabel" autocomplete="off" name="preview-state">
 					<% loop $Items %>	
 					<option name="$Name" data-name="$Name" data-link="$Link" class="state-name $FirstLast" value="$Link" <% if $isActive %>selected<% end_if %>>
 						$Title

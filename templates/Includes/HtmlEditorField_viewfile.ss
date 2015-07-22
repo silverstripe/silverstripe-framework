@@ -15,7 +15,7 @@
 				$Name
 			</span>
 			<% if $Width %>
-			<div class="ss-uploadfield-item-status ui-state-success-text" title="<% _t('UploadField.Dimensions', 'Dimensions') %>">
+			<div class="ss-uploadfield-item-status ui-state-success-text" title="<%t UploadField.Dimensions 'Dimensions' %>">
 				{$Width} x {$Height} (px)
 			</div>
 			<% end_if %>
@@ -23,13 +23,13 @@
 			<div class="clear"><!-- --></div> 
 		</label>
 		<div class="ss-uploadfield-item-actions">	
-			<button data-icon="deleteLight" class="ss-uploadfield-item-cancel ss-uploadfield-item-remove" title="<% _t('UploadField.REMOVE', 'Remove') %>">
-				<% _t('UploadField.REMOVE', 'Remove') %>
+			<button data-icon="deleteLight" class="ss-uploadfield-item-cancel ss-uploadfield-item-remove" title="<%t UploadField.REMOVE 'Remove' %>">
+				<%t UploadField.REMOVE 'Remove' %>
 			</button>
 			
 			<div class="ss-uploadfield-item-edit edit">
-				<button class="ss-uploadfield-item-edit ss-ui-button ui-corner-all" title="<% _t('UploadField.EDITINFO', 'Edit this file') %>" data-icon="pencil">
-					<% _t('UploadField.EDIT', 'Edit') %>
+				<button class="ss-uploadfield-item-edit ss-ui-button ui-corner-all" title="<%t UploadField.EDITINFO 'Edit this file' %>" data-icon="pencil">
+					<%t UploadField.EDIT 'Edit' %>
 					<span class="toggle-details">
 						<span class="toggle-details-icon"></span>
 					</span>
