@@ -372,8 +372,10 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 	/**
 	 * Return a new instance of the list with an added filter
+	 *
+	 * @param  array $filterArray
 	 */
-	public function addFilter($filterArray) {
+	public function addFilter(array $filterArray) {
 		$list = $this;
 
 		foreach($filterArray as $field => $value) {
