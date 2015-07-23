@@ -7,6 +7,26 @@
  */
 class HTTPTest extends FunctionalTest {
 
+	public function testAddCacheHeaders() {
+		$body = "<html><head></head><body><h1>Mysite</h1></body></html>";
+		$response = new SS_HTTPResponse($body, 200);
+		$this->assertEmpty($response->getHeader('Cache-Control'));
+
+		HTTP::set_cache_age(30);
+		HTTP::add_cache_headers($response);
+
+		$this->assertNotEmpty($response->getHeader('Cache-Control'));
+
+		Config::inst()->update('Director', 'environment_type', 'dev');
+		HTTP::add_cache_headers($response);
+		$this->assertContains('max-age=0', $response->getHeader('Cache-Control'));
+
+		Config::inst()->update('Director', 'environment_type', 'live');
+		HTTP::add_cache_headers($response);
+		$this->assertContains('max-age=30', explode(', ', $response->getHeader('Cache-Control')));
+		$this->assertNotContains('max-age=0', $response->getHeader('Cache-Control'));
+	}
+
 	/**
 	 * Tests {@link HTTP::getLinksIn()}
 	 */
