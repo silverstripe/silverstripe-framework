@@ -70,9 +70,8 @@ require_once 'view/TemplateGlobalProvider.php';
 require_once 'control/Director.php';
 require_once 'dev/Debug.php';
 require_once 'dev/DebugView.php';
+require_once 'dev/CliDebugView.php';
 require_once 'dev/Backtrace.php';
-require_once 'dev/ZendLog.php';
-require_once 'dev/Log.php';
 require_once 'filesystem/FileFinder.php';
 require_once 'core/manifest/ManifestCache.php';
 require_once 'core/manifest/ClassLoader.php';
@@ -136,8 +135,9 @@ if(Director::isLive()) {
 /**
  * Load error handlers
  */
-Debug::loadErrorHandlers();
 
+$errorHandler = Injector::inst()->get('ErrorHandler');
+$errorHandler->start();
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS

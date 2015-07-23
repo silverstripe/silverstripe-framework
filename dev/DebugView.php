@@ -23,6 +23,38 @@ class DebugView extends Object
 	private static $columns = 100;
 
 	protected static $error_types = array(
+		0 => array(
+			'title' => 'Emergency',
+			'class' => 'error'
+		),
+		1 => array(
+			'title' => 'Alert',
+			'class' => 'error'
+		),
+		2 => array(
+			'title' => 'Critical',
+			'class' => 'error'
+		),
+		3 => array(
+			'title' => 'Error',
+			'class' => 'error'
+		),
+		4 =>  array(
+			'title' => 'Warning',
+			'class' => 'warning'
+		),
+		5 => array(
+			'title' => 'Notice',
+			'class' => 'notice'
+		),
+		6 => array(
+			'title' => 'Information',
+			'class' => 'info'
+		),
+		7=> array(
+			'title' => 'Debug',
+			'class' => 'debug'
+		),
 		E_USER_ERROR => array(
 			'title' => 'User Error',
 			'class' => 'error'

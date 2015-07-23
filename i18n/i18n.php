@@ -2114,12 +2114,12 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 					$placeholder = '{'.$variable.'}';
 					$returnValue = str_replace($placeholder, $injection, $returnValue, $count);
 					if(!$count) {
-						SS_Log::log(sprintf(
+						Injector::inst()->get('Logger')->log('notice', sprintf(
 							"Couldn't find placeholder '%s' in translation string '%s' (id: '%s')",
 							$placeholder,
 							$returnValue,
 							$entity
-						), SS_Log::NOTICE);
+						));
 					}
 				}
 			}
