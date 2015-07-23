@@ -8,7 +8,7 @@
 						<% if $SectionTitle %>
 							$SectionTitle
 						<% else %>
-							<% _t('ModelAdmin.Title', 'Data Models') %>
+							<%t ModelAdmin.Title 'Data Models' %>
 						<% end_if %>
 					</span>
 				</h2>
@@ -16,7 +16,7 @@
 		</div>
 
 		<div class="cms-content-header-tabs cms-tabset-nav-primary ss-ui-tabs-nav">
-			<button id="filters-button" class="icon-button font-icon-search" title="<% _t('CMSPagesController_Tools_ss.FILTER', 'Filter') %>"></button>
+			<button id="filters-button" class="icon-button font-icon-search" title="<%t CMSPagesController_Tools_ss.FILTER 'Filter' %>"></button>
 			<ul class="cms-tabset-nav-primary">
 				<% loop $ManagedModelTabs %>
 				<li class="tab-$ClassName $LinkOrCurrent<% if $LinkOrCurrent == 'current' %> ui-tabs-active<% end_if %>">
