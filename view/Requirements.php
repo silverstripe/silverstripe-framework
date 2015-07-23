@@ -91,9 +91,11 @@ class Requirements implements Flushable {
 	 * Register the given JavaScript file as required.
 	 * 
 	 * @param string $file Relative to docroot
+	 * @param boolean $async flag to set the async attribute for the script tag.
+	 * @param boolean $defer flag to set the defer attribute for the script tag.
 	 */
-	public static function javascript($file) {
-		self::backend()->javascript($file);
+	public static function javascript($file, $async = false, $defer = false) {
+		self::backend()->javascript($file, $async, $defer);
 	}
 
 	/**
@@ -312,11 +314,13 @@ class Requirements implements Flushable {
 	 * @param string $combinedFileName Filename of the combined file relative to docroot
 	 * @param array  $files            Array of filenames relative to docroot
 	 * @param string $media
+	 * @param boolean $async flag to set the async attribute for the script tag.
+	 * @param boolean $defer flag to set the defer attribute for the script tag.
 	 *
 	 * @return bool|void
 	 */
-	public static function combine_files($combinedFileName, $files, $media = null) {
-		self::backend()->combine_files($combinedFileName, $files, $media);
+	public static function combine_files($combinedFileName, $files, $media = null, $async = false, $defer = false) {
+		self::backend()->combine_files($combinedFileName, $files, $media, $async, $defer);
 	}
 
 	/**
@@ -594,9 +598,31 @@ class Requirements_Backend {
 	 * Register the given JavaScript file as required.
 	 *
 	 * @param string $file Relative to docroot
+	 * @param boolean $async flag to set the async attribute for the script tag.
+	 * @param boolean $defer flag to set the defer attribute for the script tag.
 	 */
-	public function javascript($file) {
-		$this->javascript[$file] = true;
+	public function javascript($file, $async = false, $defer = false) {
+		// make sure that async/defer is set if it is set once even if file is included multiple times
+		$async = (
+			$async || 
+			(
+				isset($this->javascript[$file]) 
+				&& isset($this->javascript[$file]["async"]) 
+				&& $this->javascript[$file]["async"] == true
+			)
+		);
+		$defer = (
+			$defer || 
+			(
+				isset($this->javascript[$file]) 
+				&& isset($this->javascript[$file]["defer"]) 
+				&& $this->javascript[$file]["defer"] == true
+			)
+		);
+		$this->javascript[$file] = array(
+			"async" => $async,
+			"defer" => $defer
+		);
 	}
 
 	/**
@@ -800,9 +826,11 @@ class Requirements_Backend {
 			$this->process_combined_files();
 
 			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) {
+				$async = (isset($attributes['async']) && $attributes['async'] == true) ? " async" : "";
+				$defer = (isset($attributes['defer']) && $attributes['defer'] == true) ? " defer" : "";
 				$path = Convert::raw2xml($this->path_for_file($file));
 				if($path) {
-					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
+					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"{$async}{$defer}></script>\n";
 				}
 			}
 
@@ -1036,10 +1064,12 @@ class Requirements_Backend {
 	 * @param string $combinedFileName Filename of the combined file relative to docroot
 	 * @param array  $files            Array of filenames relative to docroot
 	 * @param string $media
+	 * @param boolean $async flag to set the async attribute for the script tag.
+	 * @param boolean $defer flag to set the defer attribute for the script tag.
 	 * 
 	 * @return bool|void
 	 */
-	public function combine_files($combinedFileName, $files, $media = null) {
+	public function combine_files($combinedFileName, $files, $media = null, $async = false, $defer = false) {
 		// duplicate check
 		foreach($this->combine_files as $_combinedFileName => $_files) {
 			$duplicates = array_intersect($_files, $files);
@@ -1059,7 +1089,7 @@ class Requirements_Backend {
 							$this->css($file['path'], $media);
 							break;
 						default:
-							$this->javascript($file['path']);
+							$this->javascript($file['path'], $async, $defer);
 							break;
 					}
 					$files[$index] = $file['path'];
@@ -1069,7 +1099,7 @@ class Requirements_Backend {
 							$this->css($file[0], $media);
 							break;
 						default:
-							$this->javascript($file[0]);
+							$this->javascript($file[0], $async, $defer);
 							break;
 					}
 					$files[$index] = $file[0];
@@ -1079,7 +1109,7 @@ class Requirements_Backend {
 			}
 			if (!is_array($file)) {
 				if(substr($file, -2) == 'js') {
-					$this->javascript($file);
+					$this->javascript($file, $async, $defer);
 				} elseif(substr($file, -3) == 'css') {
 					$this->css($file, $media);
 				} else {
@@ -1173,12 +1203,12 @@ class Requirements_Backend {
 		$combinedFiles = array();
 		$newJSRequirements = array();
 		$newCSSRequirements = array();
-		foreach($this->javascript as $file => $dummy) {
+		foreach($this->javascript as $file => $attributes) {
 			if(isset($combinerCheck[$file])) {
-				$newJSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = true;
-				$combinedFiles[$combinerCheck[$file]] = true;
+				$newJSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = $attributes;
+				$combinedFiles[$combinerCheck[$file]] = $attributes;
 			} else {
-				$newJSRequirements[$file] = true;
+				$newJSRequirements[$file] = $attributes;
 			}
 		}
 
