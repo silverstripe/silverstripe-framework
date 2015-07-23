@@ -1326,6 +1326,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			// Members are displayed within  group edit form in SecurityAdmin
 			$fields->removeByName('Groups');
 
+			// Members shouldn't be able to directly view/edit logged passwords
+			$fields->removeByName('LoggedPasswords');
+
 			if(Permission::check('EDIT_PERMISSIONS')) {
 				$groupsMap = array();
 				foreach(Group::get() as $group) {
