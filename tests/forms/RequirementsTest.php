@@ -77,25 +77,54 @@ class RequirementsTest extends SapphireTest {
 	}
 
 	protected function setupCombinedNonrequiredRequirements($backend) {
-			$basePath = $this->getCurrentRelativePath();
+		$basePath = $this->getCurrentRelativePath();
 
-			$backend->clear();
-			$backend->setCombinedFilesFolder('assets');
+		$backend->clear();
+		$backend->setCombinedFilesFolder('assets');
 
-			// clearing all previously generated requirements (just in case)
-			$backend->clear_combined_files();
-			$backend->delete_combined_files('RequirementsTest_bc.js');
+		// clearing all previously generated requirements (just in case)
+		$backend->clear_combined_files();
+		$backend->delete_combined_files('RequirementsTest_bc.js');
+ 
+		// require files as combined includes
+		$backend->combine_files(
+			'RequirementsTest_bc.js',
+			array(
+				$basePath . '/RequirementsTest_b.js',
+				$basePath . '/RequirementsTest_c.js'
+			)
+		);
+	}
 
-			// require files as combined includes
-			$backend->combine_files(
-				'RequirementsTest_bc.js',
-				array(
-					$basePath . '/RequirementsTest_b.js',
-					$basePath . '/RequirementsTest_c.js'
-				)
-			);
-		}
+	protected function setupCombinedRequirementsJavascriptAsyncDefer($backend, $async, $defer) {
+		$basePath = $this->getCurrentRelativePath();
 
+		$backend->clear();
+		$backend->setCombinedFilesFolder('assets');
+
+		// clearing all previously generated requirements (just in case)
+		$backend->clear_combined_files();
+		$backend->delete_combined_files('RequirementsTest_bc.js');
+
+		// require files normally (e.g. called from a FormField instance)
+		$backend->javascript($basePath . '/RequirementsTest_a.js');
+		$backend->javascript($basePath . '/RequirementsTest_b.js');
+		$backend->javascript($basePath . '/RequirementsTest_c.js');
+
+		// require two of those files as combined includes
+		$backend->combine_files(
+			'RequirementsTest_bc.js',
+			array(
+				$basePath . '/RequirementsTest_b.js',
+				$basePath . '/RequirementsTest_c.js'
+			),
+			array(
+				'async' => $async,
+				'defer' => $defer,
+			)
+		);
+	}
+	
 	public function testCombinedJavascript() {
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
@@ -167,6 +196,149 @@ class RequirementsTest extends SapphireTest {
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 	}
 
+	public function testCombinedJavascriptAsyncDefer() {
+		// setup for testing async
+		$backend = new Requirements_Backend;
+		$backend->set_combined_files_enabled(true);
+		$backend->setCombinedFilesFolder('assets');
+		
+		$this->setupCombinedRequirementsJavascriptAsyncDefer($backend, true, false);
+		
+		$combinedFilePath = Director::baseFolder() . '/assets/' . 'RequirementsTest_bc.js';
+		
+		$html = $backend->includeInHTML(false, self::$html_template);
+
+		/* ASYNC IS INCLUDED IN SCRIPT TAG */
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_bc\.js\?m=\d+" async/', $html),
+			'async is included in script tag');
+
+		/* DEFER IS NOT INCLUDED IN SCRIPT TAG */
+		$this->assertNotContains('defer', $html, 'defer is not included');
+		
+		/* COMBINED JAVASCRIPT FILE EXISTS */
+		$this->assertTrue(file_exists($combinedFilePath),
+			'combined javascript file exists');
+
+		/* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
+		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
+			'combined javascript has correct content');
+		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('c')") !== false),
+			'combined javascript has correct content');
+
+		/* COMBINED FILES ARE NOT INCLUDED TWICE */
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_b\.js/', $html),
+			'combined files are not included twice');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_c\.js/', $html),
+			'combined files are not included twice');
+
+		/* NORMAL REQUIREMENTS ARE STILL INCLUDED */
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js/', $html),
+			'normal requirements are still included');
+
+		/* NORMAL REQUIREMENTS DON'T HAVE ASYNC/DEFER */
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d+" async/', $html),
+			'normal requirements don\'t have async');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d+" defer/', $html),
+			'normal requirements don\'t have defer');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d+" async defer/', $html),
+			'normal requirements don\'t have async/defer');
+		
+		$backend->delete_combined_files('RequirementsTest_bc.js');
+
+		// setup again for testing defer
+		$backend = new Requirements_Backend;
+		$backend->set_combined_files_enabled(true);
+		$backend->setCombinedFilesFolder('assets');
+		
+		$this->setupCombinedRequirementsJavascriptAsyncDefer($backend, false, true);
+		
+		$combinedFilePath = Director::baseFolder() . '/assets/' . 'RequirementsTest_bc.js';
+		
+		$html = $backend->includeInHTML(false, self::$html_template);
+
+		/* DEFER IS INCLUDED IN SCRIPT TAG */
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_bc\.js\?m=\d+" defer/', $html),
+			'defer is included in script tag');
+
+		/* ASYNC IS NOT INCLUDED IN SCRIPT TAG */
+		$this->assertNotContains('async', $html, 'async is not included');
+		
+		/* COMBINED JAVASCRIPT FILE EXISTS */
+		$this->assertTrue(file_exists($combinedFilePath),
+			'combined javascript file exists');
+
+		/* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
+		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
+			'combined javascript has correct content');
+		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('c')") !== false),
+			'combined javascript has correct content');
+
+		/* COMBINED FILES ARE NOT INCLUDED TWICE */
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_b\.js/', $html),
+			'combined files are not included twice');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_c\.js/', $html),
+			'combined files are not included twice');
+
+		/* NORMAL REQUIREMENTS ARE STILL INCLUDED */
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js/', $html),
+			'normal requirements are still included');
+
+		/* NORMAL REQUIREMENTS DON'T HAVE ASYNC/DEFER */
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d+" async/', $html),
+			'normal requirements don\'t have async');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d+" defer/', $html),
+			'normal requirements don\'t have defer');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d+" async defer/', $html),
+			'normal requirements don\'t have async/defer');
+		
+		$backend->delete_combined_files('RequirementsTest_bc.js');
+
+		// setup again for testing async and defer
+		$backend = new Requirements_Backend;
+		$backend->set_combined_files_enabled(true);
+		$backend->setCombinedFilesFolder('assets');
+		
+		$this->setupCombinedRequirementsJavascriptAsyncDefer($backend, true, true);
+		
+		$combinedFilePath = Director::baseFolder() . '/assets/' . 'RequirementsTest_bc.js';
+		
+		$html = $backend->includeInHTML(false, self::$html_template);
+
+		/* ASYNC/DEFER IS INCLUDED IN SCRIPT TAG */
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_bc\.js\?m=\d+" async defer/', $html),
+			'defer is included in script tag');
+
+		/* COMBINED JAVASCRIPT FILE EXISTS */
+		$this->assertTrue(file_exists($combinedFilePath),
+			'combined javascript file exists');
+
+		/* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
+		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
+			'combined javascript has correct content');
+		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('c')") !== false),
+			'combined javascript has correct content');
+
+		/* COMBINED FILES ARE NOT INCLUDED TWICE */
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_b\.js/', $html),
+			'combined files are not included twice');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_c\.js/', $html),
+			'combined files are not included twice');
+
+		/* NORMAL REQUIREMENTS ARE STILL INCLUDED */
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js/', $html),
+			'normal requirements are still included');
+
+		/* NORMAL REQUIREMENTS DON'T HAVE ASYNC/DEFER */
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d+" async/', $html),
+			'normal requirements don\'t have async');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d+" defer/', $html),
+			'normal requirements don\'t have defer');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d+" async defer/', $html),
+			'normal requirements don\'t have async/defer');
+		
+		$backend->delete_combined_files('RequirementsTest_bc.js');
+	}
+	
 	public function testCombinedCss() {
 		$basePath = $this->getCurrentRelativePath();
 		$backend = new Requirements_Backend;
@@ -178,7 +350,7 @@ class RequirementsTest extends SapphireTest {
 				$basePath . '/RequirementsTest_print_a.css',
 				$basePath . '/RequirementsTest_print_b.css'
 			),
-			'print'
+			array('media' => 'print')
 		);
 
 		$html = $backend->includeInHTML(false, self::$html_template);
@@ -424,7 +596,45 @@ class RequirementsTest extends SapphireTest {
 		$this->assertNotEquals($JsInBody, $html);
 		$this->assertEquals($JsAtEnd, $html);
 	}
-
+	
+	public function testJsAsyncDefer() {
+		$backend = new Requirements_Backend();
+		
+		// test without async and defer
+		$backend->javascript('http://www.mydomain.com/test1.js', false, false);
+		$html = $backend->includeInHTML(false, self::$html_template);
+		$this->assertContains(
+				'<script type="text/javascript" src="http://www.mydomain.com/test1.js"></script>',
+				$html
+		);
+		$this->assertNotContains('async', $html);
+		$this->assertNotContains('defer', $html);
+		
+		// test with async
+		$backend->javascript('http://www.mydomain.com/test2.js', true, false);
+		$html = $backend->includeInHTML(false, self::$html_template);
+		$this->assertContains(
+				'<script type="text/javascript" src="http://www.mydomain.com/test2.js" async></script>',
+				$html
+		);
+		
+		// test with defer
+		$backend->javascript('http://www.mydomain.com/test3.js', false, true);
+		$html = $backend->includeInHTML(false, self::$html_template);
+		$this->assertContains(
+				'<script type="text/javascript" src="http://www.mydomain.com/test3.js" defer></script>',
+				$html
+		);
+		
+		// test with async and defer
+		$backend->javascript('http://www.mydomain.com/test4.js', true, true);
+		$html = $backend->includeInHTML(false, self::$html_template);
+		$this->assertContains(
+				'<script type="text/javascript" src="http://www.mydomain.com/test4.js" async defer></script>',
+				$html
+		);
+	}
+	
 	public function testSuffix() {
 		$template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
 		$basePath = $this->getCurrentRelativePath();
