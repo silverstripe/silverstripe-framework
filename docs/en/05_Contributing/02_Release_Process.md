@@ -80,6 +80,25 @@ Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::i
 This change could be committed to a minor release like *3.2.0*, and stays deprecated in all following minor releases
 (e.g. *3.3.0*, *3.4.0*), until a new major release (e.g. *4.0.0*) where it gets removed from the codebase. 
 
+Deprecation notices are enabled by default on dev environment, but can be
+turned off via either _ss_environment.php or in your _config.php. Deprecation
+notices are always disabled on both live and test.
+
+
+`mysite/_config.php`
+
+
+    :::php
+    Deprecation::set_enabled(false);
+
+
+`_ss_environment.php`
+
+
+    :::php
+    define('SS_DEPRECATION_ENABLED', false);
+
+
 ## Security Releases
 
 ### Reporting an issue
