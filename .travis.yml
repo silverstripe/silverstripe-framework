@@ -7,10 +7,6 @@ addons:
     packages:
       - tidy
 
-cache:
-  directories:
-    - $HOME/.composer/cache
-
 php:
   - 5.4
 
