@@ -70,7 +70,7 @@ class Image extends File implements Flushable {
 	 * @config
 	 * @var bool Force all images to resample in all cases
 	 */
-	private static $force_resample = false;
+	private static $force_resample = true;
 
 	/**
 	 * @config
@@ -163,7 +163,34 @@ class Image extends File implements Flushable {
 	public function forTemplate() {
 		return $this->getTag();
 	}
+	
+	/**
+	 * Gets the source image URL for this resource
+	 * 
+	 * @return string
+	 */
+	public function getSourceURL() {
+		return parent::getURL();
+	}
 
+	/**
+	 * Gets the relative URL accessible through the web. If forced resampling is enabled 
+	 * the URL will point to an optimised file, if it is smaller than the original
+	 *
+	 * @uses Director::baseURL()
+	 * @return string
+	 */
+	public function getURL() {
+		if ($this->config()->force_resample) {
+			//return $resampled->getURL();
+			$resampled = $this->getFormattedImage('Resampled');
+			if ($resampled->getAbsoluteSize() < $this->getAbsoluteSize()) {
+				return $resampled->getURL();
+			}
+		}
+		return $this->getSourceURL();
+	}
+	
 	/**
 	 * File names are filtered through {@link FileNameFilter}, see class documentation
 	 * on how to influence this behaviour.
@@ -232,10 +259,10 @@ class Image extends File implements Flushable {
 		
 		if( $widthRatio < $heightRatio ) {
 			// Target is higher aspect ratio than image, so check width
-			if($this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')) return $this;
+			if($this->isWidth($width)) return $this;
 		} else {
 			// Target is wider or same aspect ratio as image, so check height
-			if($this->isHeight($height) && !Config::inst()->get('Image', 'force_resample')) return $this;
+			if($this->isHeight($height)) return $this;
 		}
 
 		// Item must be regenerated
@@ -281,7 +308,7 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function Fill($width, $height) {
-		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
+		return $this->isSize($width, $height)
 			? $this
 			: $this->getFormattedImage('Fill', $width, $height);
 	}
@@ -338,7 +365,7 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function Pad($width, $height, $backgroundColor='FFFFFF') {
-		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
+		return $this->isSize($width, $height)
 			? $this
 			: $this->getFormattedImage('Pad', $width, $height, $backgroundColor);
 	}
@@ -362,7 +389,7 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function ScaleWidth($width) {
-		return $this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')
+		return $this->isWidth($width)
 			? $this
 			: $this->getFormattedImage('ScaleWidth', $width);
 	}
@@ -402,7 +429,7 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function ScaleHeight($height) {
-		return $this->isHeight($height) && !Config::inst()->get('Image', 'force_resample')
+		return $this->isHeight($height)
 			? $this
 			: $this->getFormattedImage('ScaleHeight', $height);
 	}
@@ -467,6 +494,26 @@ class Image extends File implements Flushable {
 		return $this->getHeight() > $height
 			? $this->Fill($this->getWidth(), $height)
 			: $this;
+	}
+	
+	/**
+	 * Resample this Image to ensure quality preference is applied.
+	 * Warning: it's possible this will produce a larger file of lower quality
+	 *
+	 * @return Image
+	 */
+	public function Resampled() {
+		return $this->getFormattedImage('Resampled');
+	}
+
+	/**
+	 * Resample this Image to apply quality preference
+	 *
+	 * @param Image_Backend $backend
+	 * @return Image_Backend
+	 */
+	public function generateResampled(Image_Backend $backend){
+		return $backend;
 	}
 
 	/**
@@ -768,7 +815,7 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function ResizedImage($width, $height) {
-		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
+		return $this->isSize($width, $height)
 			? $this
 			: $this->getFormattedImage('ResizedImage', $width, $height);
 	}
@@ -1028,7 +1075,11 @@ class Image_Cached extends Image {
 		$this->ID = -1;
 		$this->Filename = $filename;
 	}
-
+	
+	public function getURL() {
+		return $this->getSourceURL();
+	}
+	
 	public function getRelativePath() {
 		return $this->getField('Filename');
 	}
