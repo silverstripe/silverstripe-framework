@@ -124,12 +124,12 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 * Generate export fields for CSV.
 	 *
 	 * @param GridField $gridField
-	 * @return array
+	 * @return string
 	 */
 	public function generateExportFileData($gridField) {
-		$separator = $this->csvSeparator;
+		$separator = $this->getCsvSeparator();
 		$csvColumns = $this->getExportColumnsForGridField($gridField);
-		$fileData = '';
+		$fileData = array();
 
 		if($this->csvHasHeader) {
 			$headers = array();
@@ -145,8 +145,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 				}
 			}
 
-			$fileData .= "\"" . implode("\"{$separator}\"", array_values($headers)) . "\"";
-			$fileData .= "\n";
+			$fileData[] = $headers;
 		}
 
 		//Remove GridFieldPaginator as we're going to export the entire list.
@@ -190,11 +189,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 					) {
 						$value = "\t" . $value;
 					}
-					$columnData[] = '"' . str_replace('"', '""', $value) . '"';
+					$columnData[] = $value;
 				}
 
-				$fileData .= implode($separator, $columnData);
-				$fileData .= "\n";
+				$fileData[] = $columnData;
 			}
 
 			if($item->hasMethod('destroy')) {
@@ -202,7 +200,13 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 			}
 		}
 
-		return $fileData;
+		// Convert the $fileData array into csv by capturing fputcsv's output
+		$csv = fopen('php://temp', 'r+');
+		foreach($fileData as $line) {
+			fputcsv($csv, $line, $separator);
+		}
+		rewind($csv);
+		return stream_get_contents($csv);
 	}
 
 	/**
