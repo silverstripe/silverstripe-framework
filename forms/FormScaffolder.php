@@ -132,7 +132,9 @@ class FormScaffolder extends Object {
 						$relationship,
 						$this->obj->fieldLabel($relationship),
 						$this->obj->$relationship(),
-						GridFieldConfig_RelationEditor::create()
+						singleton($component)->canEdit()
+							? GridFieldConfig_RecordEditor::create()
+							: GridFieldConfig_RecordViewer::create()
 					);
 					if($this->tabbed) {
 						$fields->addFieldToTab("Root.$relationship", $grid);
