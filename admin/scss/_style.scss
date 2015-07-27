@@ -1533,18 +1533,6 @@ body.cms-dialog {
 			// TODO Remove from PHP instead of hiding
 			display: none; // delete action shouldn't be allowed here
 		}
-		table.ss-gridfield-table {
-			tbody td:first-child {
-				padding: 0;
-				text-align: center;
-				img {
-					max-height: 30px; // same thumbnail size as uploadfield rows
-				}
-			}
-			tr td {
-				padding: $grid-x/2; // more compressed space
-			}	
-		}
 	}
 
 	.htmleditorfield-from-web, .htmleditorfield-from-cms {

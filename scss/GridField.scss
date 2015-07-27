@@ -674,5 +674,18 @@ $gf_grid_x:	16px;
 		td:last-child{
 			border-right: 1px solid $gf_colour_border;
 		}
+		
+		// Thumbnails e.g. in File admin, UploadField and HtmlEditorField file selection
+		td.col-StripThumbnail {
+			padding: 2px 4px;
+			width: 32px;
+			height: 32px;
+	
+			img {
+				width: 32px;
+				height: 32px;
+				display: block;
+			}
+		}
 	}
 }

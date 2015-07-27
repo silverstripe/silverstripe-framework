@@ -691,9 +691,6 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .htmleditorfield-linkform .ss-uploadfield .middleColumn { width: auto; }
 
 .htmleditorfield-mediaform .ss-gridfield .gridfield-button-delete { display: none; }
-.htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tbody td:first-child { padding: 0; text-align: center; }
-.htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tbody td:first-child img { max-height: 30px; }
-.htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tr td { padding: 4px; }
 .htmleditorfield-mediaform .htmleditorfield-from-web .ss-uploadfield .middleColumn, .htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { width: auto; background: none; border: none; margin-top: 13px; }
 .htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield h4 { float: left; margin-top: 4px; margin-bottom: 0; }
 .htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { margin-top: 16px; margin-left: 184px; min-width: 0; clear: none; }
