@@ -15,11 +15,11 @@
 class ArrayData extends ViewableData {
 
 	/**
-	 * @var array 
+	 * @var array
 	 * @see ArrayData::_construct()
 	 */
 	protected $array;
-	
+
 	/**
 	 * @param object|array $value An associative array, or an object with simple properties.
 	 * Converts object properties to keys of an associative array.
@@ -37,7 +37,7 @@ class ArrayData extends ViewableData {
 		}
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Get the source array
 	 *
@@ -46,7 +46,7 @@ class ArrayData extends ViewableData {
 	public function toMap() {
 		return $this->array;
 	}
-	
+
 	/**
 	 * Gets a field from this object.
 	 *
@@ -78,7 +78,7 @@ class ArrayData extends ViewableData {
 	public function setField($field, $value) {
 		$this->array[$field] = $value;
 	}
-	
+
 	/**
 	 * Check array to see if field isset
 	 *
@@ -88,7 +88,7 @@ class ArrayData extends ViewableData {
 	public function hasField($f) {
 		return isset($this->array[$f]);
 	}
-	
+
 	/**
 	 * Converts an associative array to a simple object
 	 *
