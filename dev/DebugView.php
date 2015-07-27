@@ -11,7 +11,8 @@
  * @package framework
  * @subpackage dev
  */
-class DebugView extends Object {
+class DebugView extends Object
+{
 
 	/**
 	 * Column size to wrap long strings to
@@ -100,9 +101,66 @@ class DebugView extends Object {
 	}
 
 	/**
-	 * Render HTML header for development views
+	 * @deprecated 4.0.0:5.0.0 Use renderHeader() instead
 	 */
 	public function writeHeader() {
+		Deprecation::notice('4.0', 'Use renderHeader() instead');
+		echo $this->renderHeader();
+	}
+
+	/**
+	 * @deprecated 4.0.0:5.0.0 Use renderInfo() instead
+	 */
+	public function writeInfo($title, $subtitle, $description=false) {
+		Deprecation::notice('4.0', 'Use renderInfo() instead');
+		echo $this->renderInfo($title, $subtitle, $description);
+	}
+
+	/**
+	 * @deprecated 4.0.0:5.0.0 Use renderFooter() instead
+	 */
+	public function writeFooter() {
+		Deprecation::notice('4.0', 'Use renderFooter() instead');
+		echo $this->renderFooter();
+	}
+
+	/**
+	 * @deprecated 4.0.0:5.0.0 Use renderError() instead
+	 */
+	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline) {
+		Deprecation::notice('4.0', 'Use renderError() instead');
+		echo $this->renderError($httpRequest, $errno, $errstr, $errfile, $errline);
+	}
+
+	/**
+	 * @deprecated 4.0.0:5.0.0 Use renderSourceFragment() instead
+	 */
+	public function writeSourceFragment($lines, $errline) {
+		Deprecation::notice('4.0', 'Use renderSourceFragment() instead');
+		echo $this->renderSourceFragment($lines, $errline);
+	}
+
+	/**
+	 * @deprecated 4.0.0:5.0.0 Use renderTrace() instead
+	 */
+	public function writeTrace($trace) {
+		Deprecation::notice('4.0', 'Use renderTrace() instead');
+		echo $this->renderTrace($trace);
+	}
+
+	/**
+	 * @deprecated 4.0.0:5.0.0 Use renderVariable() instead
+	 */
+	public function writeVariable($val, $caller) {
+		Deprecation::notice('4.0', 'Use renderVariable() instead');
+		echo $this->renderVariable($val, $caller);
+	}
+
+	/**
+	 * Render HTML header for development views
+	 * @return string
+	 */
+	public function renderHeader() {
 		$url = htmlentities(
 			$_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'],
 			ENT_COMPAT,
@@ -115,41 +173,55 @@ class DebugView extends Object {
 			'css/debug.css'
 		);
 
-		echo '<!DOCTYPE html><html><head><title>' . $url . '</title>';
-		echo '<link rel="stylesheet" type="text/css" href="'. $debugCSS .'" />';
-		echo '</head>';
-		echo '<body>';
+		$output = '<!DOCTYPE html><html><head><title>' . $url . '</title>';
+		$output .= '<link rel="stylesheet" type="text/css" href="'. $debugCSS .'" />';
+		$output .= '</head>';
+		$output .= '<body>';
+
+		return $output;
 	}
 
 	/**
 	 * Render the information header for the view
 	 *
-	 * @param string $title
-	 * @param string $title
+	 * @param string $title The main title
+	 * @param string $subtitle The subtitle
+	 * @param string|false $description The description to show
+	 * @return string
 	 */
-	public function writeInfo($title, $subtitle, $description=false) {
-		echo '<div class="info">';
-		echo "<h1>" . Convert::raw2xml($title) . "</h1>";
-		if($subtitle) echo "<h3>" . Convert::raw2xml($subtitle) . "</h3>";
+	public function renderInfo($title, $subtitle, $description=false) {
+		$output = '<div class="info">';
+		$output .= "<h1>" . Convert::raw2xml($title) . "</h1>";
+		if($subtitle) $output .= "<h3>" . Convert::raw2xml($subtitle) . "</h3>";
 		if ($description) {
-			echo "<p>$description</p>";
+			$output .= "<p>$description</p>";
 		} else {
-			echo $this->Breadcrumbs();
+			$output .= $this->Breadcrumbs();
 		}
-		echo '</div>';
+		$output .= '</div>';
+
+		return $output;
 	}
 
 	/**
 	 * Render HTML footer for development views
+	 * @return string
 	 */
-	public function writeFooter() {
-		echo "</body></html>";
+	public function renderFooter() {
+		return "</body></html>";
 	}
 
 	/**
-	 * Write information about the error to the screen
+	 * Render an error.
+	 *
+	 * @param  string $httpRequest the kind of request
+	 * @param  int $errno Codenumber of the error
+	 * @param  string $errstr The error message
+	 * @param  string $errfile The name of the soruce code file where the error occurred
+	 * @param  int $errline The line number on which the error occured
+	 * @return string
 	 */
-	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
+	public function renderError($httpRequest, $errno, $errstr, $errfile, $errline) {
 		$errorType = isset(self::$error_types[$errno]) ? self::$error_types[$errno] : self::$unknown_error;
 		$httpRequestEnt = htmlentities($httpRequest, ENT_COMPAT, 'UTF-8');
 		if (ini_get('html_errors')) {
@@ -157,51 +229,66 @@ class DebugView extends Object {
 		} else {
 			$errstr = Convert::raw2xml($errstr);
 		}
-		echo '<div class="info ' . $errorType['class'] . '">';
-		echo "<h1>[" . $errorType['title'] . '] ' . $errstr . "</h1>";
-		echo "<h3>$httpRequestEnt</h3>";
-		echo "<p>Line <strong>$errline</strong> in <strong>$errfile</strong></p>";
-		echo '</div>';
+		$output = '<div class="info ' . $errorType['class'] . '">';
+		$output .= "<h1>[" . $errorType['title'] . '] ' . $errstr . "</h1>";
+		$output .= "<h3>$httpRequestEnt</h3>";
+		$output .= "<p>Line <strong>$errline</strong> in <strong>$errfile</strong></p>";
+		$output .= '</div>';
+
+		return $output;
 	}
 
 	/**
-	 * Write a fragment of the a source file
-	 * @param $lines An array of file lines; the keys should be the original line numbers
+	 * Render a fragment of the a source file
+	 *
+	 * @param array $lines An array of file lines; the keys should be the original line numbers
+	 * @param int errLine The line of the error
+	 * @return string
 	 */
-	public function writeSourceFragment($lines, $errline) {
-		echo '<div class="trace"><h3>Source</h3>';
-		echo '<pre>';
+	public function renderSourceFragment($lines, $errline) {
+		$output = '<div class="trace"><h3>Source</h3>';
+		$output .= '<pre>';
 		foreach($lines as $offset => $line) {
 			$line = htmlentities($line, ENT_COMPAT, 'UTF-8');
 			if ($offset == $errline) {
-				echo "<span>$offset</span> <span class=\"error\">$line</span>";
+				$output .= "<span>$offset</span> <span class=\"error\">$line</span>";
 			} else {
-				echo "<span>$offset</span> $line";
+				$output .= "<span>$offset</span> $line";
 			}
 		}
-		echo '</pre>';
+		$output .= '</pre>';
+
+		return $output;
 	}
 
 	/**
-	 * Write a backtrace
+	 * Render a call track
+	 *
+	 * @param  array $trace The debug_backtrace() array
+	 * @return string
 	 */
-	public function writeTrace($trace) {
-		echo '<h3>Trace</h3>';
-		echo SS_Backtrace::get_rendered_backtrace($trace);
-		echo '</div>';
+	public function renderTrace($trace) {
+		$output = '<h3>Trace</h3>';
+		$output .= SS_Backtrace::get_rendered_backtrace($trace);
+		$output .= '</div>';
+
+		return $output;
 	}
 
 	/**
-	 * @param string $text
+	 * Render an arbitrary paragraph.
+	 *
+	 * @param  string $text The HTML-escaped text to render
+	 * @return string
 	 */
-	public function writeParagraph($text) {
-		echo '<p class="info">' . $text . '</p>';
+	public function renderParagraph($text) {
+		return '<p class="info">' . $text . '</p>';
 	}
 
 	/**
 	 * Formats the caller of a method
 	 *
-	 * @param array $caller
+	 * @param  array $caller
 	 * @return string
 	 */
 	protected function formatCaller($caller) {
@@ -215,14 +302,17 @@ class DebugView extends Object {
 	/**
 	 * Outputs a variable in a user presentable way
 	 *
-	 * @param object $val
-	 * @param array $caller Caller information
+	 * @param  object $val
+	 * @param  array $caller Caller information
+	 * @return string
 	 */
-	public function writeVariable($val, $caller) {
-		echo '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
-		echo "<span style=\"font-size: 12px;color:#666;\">" . $this->formatCaller($caller). " - </span>\n";
-		if (is_string($val)) print_r(wordwrap($val, self::config()->columns));
-		else print_r($val);
-		echo '</pre>';
+	public function renderVariable($val, $caller) {
+		$output = '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
+		$output .= "<span style=\"font-size: 12px;color:#666;\">" . $this->formatCaller($caller). " - </span>\n";
+		if (is_string($val)) $output .= wordwrap($val, self::config()->columns);
+		else $output .= var_export($val, true);
+		$output .= '</pre>';
+
+		return $output;
 	}
 }

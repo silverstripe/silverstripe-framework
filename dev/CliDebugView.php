@@ -9,49 +9,60 @@
  * @todo Perhaps DebugView should be an interface / ABC, implemented by HTMLDebugView and CliDebugView?
  */
 
-class CliDebugView extends DebugView {
+class CliDebugView extends DebugView
+{
 
 	/**
 	 * Render HTML header for development views
 	 */
-	public function writeHeader($httpRequest = null) {
+	public function renderHeader($httpRequest = null) {
 	}
 
 	/**
 	 * Render HTML footer for development views
 	 */
-	public function writeFooter() {
+	public function renderFooter() {
 	}
 
 	/**
 	 * Write information about the error to the screen
 	 */
-	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
-		$errorType = self::$error_types[$errno];
-		echo SS_Cli::text("ERROR [" . $errorType['title'] . "]: $errstr\nIN $httpRequest\n", "red", null, true);
-		echo SS_Cli::text("Line $errline in $errfile\n\n", "red");
+	public function renderError($httpRequest, $errno, $errstr, $errfile, $errline) {
+		if(!isset(self::$error_types[$errno])) {
+			$errorTypeTitle = "UNKNOWN TYPE, ERRNO $errno";
+		} else {
+			$errorTypeTitle = self::$error_types[$errno]['title'];
+		}
+		$output = SS_Cli::text("ERROR [" . $errorTypeTitle . "]: $errstr\nIN $httpRequest\n", "red", null, true);
+		$output .= SS_Cli::text("Line $errline in $errfile\n\n", "red");
+
+		return $output;
 	}
 
 	/**
 	 * Write a fragment of the a source file
 	 * @param $lines An array of file lines; the keys should be the original line numbers
 	 */
-	public function writeSourceFragment($lines, $errline) {
-		echo "Source\n======\n";
+	public function renderSourceFragment($lines, $errline) {
+		$output = "Source\n======\n";
 		foreach($lines as $offset => $line) {
-			echo ($offset == $errline) ? "* " : "  ";
-			echo str_pad("$offset:",5);
-			echo wordwrap($line, self::config()->columns, "\n       ");
+			$output .= ($offset == $errline) ? "* " : "  ";
+			$output .= str_pad("$offset:", 5);
+			$output .= wordwrap($line, self::config()->columns, "\n       ");
 		}
-		echo "\n";
+		$output .= "\n";
+
+		return $output;
 	}
 
 	/**
 	 * Write a backtrace
 	 */
-	public function writeTrace($trace = null) {
-		echo "Trace\n=====\n";
-		echo SS_Backtrace::get_rendered_backtrace($trace ? $trace : debug_backtrace(), true);
+	public function renderTrace($trace = null) {
+		$output = "Trace\n=====\n";
+		$output .= SS_Backtrace::get_rendered_backtrace($trace ? $trace : debug_backtrace(), true);
+
+		return $output;
 	}
 
 	/**
@@ -60,26 +71,30 @@ class CliDebugView extends DebugView {
 	 * @param string $title
 	 * @param string $title
 	 */
-	public function writeInfo($title, $subtitle, $description=false) {
-		echo wordwrap(strtoupper($title),self::config()->columns) . "\n";
-		echo wordwrap($subtitle,self::config()->columns) . "\n";
-		echo str_repeat('-',min(self::config()->columns,max(strlen($title),strlen($subtitle)))) . "\n";
-		echo wordwrap($description,self::config()->columns) . "\n\n";
+	public function renderInfo($title, $subtitle, $description=false) {
+		$output = wordwrap(strtoupper($title), self::config()->columns) . "\n";
+		$output .= wordwrap($subtitle, self::config()->columns) . "\n";
+		$output .= str_repeat('-', min(self::config()->columns, max(strlen($title), strlen($subtitle)))) . "\n";
+		$output .= wordwrap($description, self::config()->columns) . "\n\n";
+
+		return $output;
 	}
 
-	public function writeVariable($val, $caller) {
-		echo PHP_EOL;
-		echo SS_Cli::text(str_repeat('=', self::config()->columns), 'green');
-		echo PHP_EOL;
-		echo SS_Cli::text($this->formatCaller($caller), 'blue', null, true);
-		echo PHP_EOL.PHP_EOL;
+	public function renderVariable($val, $caller) {
+		$output = PHP_EOL;
+		$output .= SS_Cli::text(str_repeat('=', self::config()->columns), 'green');
+		$output .= PHP_EOL;
+		$output .= SS_Cli::text($this->formatCaller($caller), 'blue', null, true);
+		$output .= PHP_EOL.PHP_EOL;
 		if (is_string($val)) {
-			print_r(wordwrap($val, self::config()->columns));
+			$output .= wordwrap($val, self::config()->columns);
 		} else {
-			print_r($val);
+			$output .= var_export($val, true);
 		}
-		echo PHP_EOL;
-		echo SS_Cli::text(str_repeat('=', self::config()->columns), 'green');
-		echo PHP_EOL;
+		$output .= PHP_EOL;
+		$output .= SS_Cli::text(str_repeat('=', self::config()->columns), 'green');
+		$output .= PHP_EOL;
+
+		return $output;
 	}
 }
