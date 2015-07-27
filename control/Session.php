@@ -30,7 +30,7 @@
  * 	Session::set('MyVar', $var);
  *
  * 	// saves an array
- * 	Session::set('MyArrayOfValues', array('1','2','3'));
+ * 	Session::set('MyArrayOfValues', array('1', '2', '3'));
  *
  * 	// saves an object (you'll have to unserialize it back)
  * 	$object = new Object();
@@ -411,7 +411,7 @@ class Session {
 
 	public function inst_set($name, $val) {
 		// Quicker execution path for "."-free names
-		if(strpos($name,'.') === false) {
+		if(strpos($name, '.') === false) {
 			$this->data[$name] = $val;
 			$this->changedData[$name] = $val;
 
@@ -459,7 +459,7 @@ class Session {
 
 	public function inst_get($name) {
 		// Quicker execution path for "."-free names
-		if(strpos($name,'.') === false) {
+		if(strpos($name, '.') === false) {
 			if(isset($this->data[$name])) return $this->data[$name];
 
 		} else {
@@ -569,7 +569,7 @@ class Session {
 	* @param string $message the message you wish to add to it
 	* @param string $type the type of message
 	*/
-	public static function setFormMessage($formname, $message, $type){
+	public static function setFormMessage($formname, $message, $type) {
 		Session::set("FormInfo.$formname.formError.message", $message);
 		Session::set("FormInfo.$formname.formError.type", $type);
 	}
@@ -611,7 +611,7 @@ class Session {
 	 */
 	public static function set_timeout($timeout) {
 		Deprecation::notice('3.2', 'Use the "Session.timeout" config setting instead');
-		Config::inst()->update('Session', 'timeout', (int)$timeout);
+		Config::inst()->update('Session', 'timeout', (int) $timeout);
 	}
 
 	/**

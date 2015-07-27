@@ -109,8 +109,8 @@ class SS_HTTPRequest implements ArrayAccess {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
 		$this->setUrl($url);
 
-		$this->getVars = (array)$getVars;
-		$this->postVars = (array)$postVars;
+		$this->getVars = (array) $getVars;
+		$this->postVars = (array) $postVars;
 		$this->body = $body;
 	}
 
@@ -129,7 +129,7 @@ class SS_HTTPRequest implements ArrayAccess {
 
 		// Normalize URL if its relative (strictly speaking), or has leading slashes
 		if(Director::is_relative_url($url) || preg_match('/^\//', $url)) {
-			$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
+			$this->url = preg_replace(array('/\/+/', '/^\//', '/\/$/'),array('/', '', ''), $this->url);
 		}
 		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
 			$this->url = $matches[1];
@@ -440,7 +440,7 @@ class SS_HTTPRequest implements ArrayAccess {
 		// Check for the '//' marker that represents the "shifting point"
 		$doubleSlashPoint = strpos($pattern, '//');
 		if($doubleSlashPoint !== false) {
-			$shiftCount = substr_count(substr($pattern,0,$doubleSlashPoint), '/') + 1;
+			$shiftCount = substr_count(substr($pattern, 0, $doubleSlashPoint), '/') + 1;
 			$pattern = str_replace('//', '/', $pattern);
 			$patternParts = explode('/', $pattern);
 
@@ -462,10 +462,10 @@ class SS_HTTPRequest implements ArrayAccess {
 				// A variable ending in ! is required
 				if(substr($part,-1) == '!') {
 					$varRequired = true;
-					$varName = substr($part,1,-1);
+					$varName = substr($part, 1, -1);
 				} else {
 					$varRequired = false;
-					$varName = substr($part,1);
+					$varName = substr($part, 1);
 				}
 
 				// Fail if a required variable isn't populated
@@ -681,7 +681,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	public function getAcceptMimetypes($includeQuality = false) {
 		$mimetypes = array();
-		$mimetypesWithQuality = explode(',',$this->getHeader('Accept'));
+		$mimetypesWithQuality = explode(', ', $this->getHeader('Accept'));
 		foreach($mimetypesWithQuality as $mimetypeWithQuality) {
 			$mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality);
 		}
@@ -713,7 +713,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	public static function detect_method($origMethod, $postVars) {
 		if(isset($postVars['_method'])) {
-			if(!in_array(strtoupper($postVars['_method']), array('GET','POST','PUT','DELETE','HEAD'))) {
+			if(!in_array(strtoupper($postVars['_method']), array('GET', 'POST', 'PUT', 'DELETE', 'HEAD'))) {
 				user_error('Director::direct(): Invalid "_method" parameter', E_USER_ERROR);
 			}
 			return strtoupper($postVars['_method']);
