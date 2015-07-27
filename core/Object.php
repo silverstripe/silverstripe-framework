@@ -995,6 +995,8 @@ abstract class Object {
 	 * @return mixed the cached data
 	 */
 	public function cacheToFile($method, $lifetime = 3600, $ID = false, $arguments = array()) {
+		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
+
 		if(!$this->hasMethod($method)) {
 			throw new InvalidArgumentException("Object->cacheToFile(): the method $method does not exist to cache");
 		}
@@ -1022,6 +1024,8 @@ abstract class Object {
 	 * Clears the cache for the given cacheToFile call
 	 */
 	public function clearCache($method, $ID = false, $arguments = array()) {
+		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
+
 		$cacheName = $this->class . '_' . $method;
 		if(!is_array($arguments)) $arguments = array($arguments);
 		if($ID) $cacheName .= '_' . $ID;
@@ -1039,6 +1043,8 @@ abstract class Object {
 	 * @return mixed
 	 */
 	protected function loadCache($cache, $lifetime = 3600) {
+		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
+
 		$path = TEMP_FOLDER . '/' . $this->sanitiseCachename($cache);
 
 		if(!isset($_REQUEST['flush']) && file_exists($path) && (filemtime($path) + $lifetime) > time()) {
@@ -1055,6 +1061,7 @@ abstract class Object {
 	 * @param mixed $data data to save (must be serializable)
 	 */
 	protected function saveCache($cache, $data) {
+		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
 		file_put_contents(TEMP_FOLDER . '/' . $this->sanitiseCachename($cache), serialize($data));
 	}
 
@@ -1065,6 +1072,7 @@ abstract class Object {
 	 * @return string the name with all special cahracters replaced with underscores
 	 */
 	protected function sanitiseCachename($name) {
+		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
 		return str_replace(array('~', '.', '/', '!', ' ', "\n", "\r", "\t", '\\', ':', '"', '\'', ';'), '_', $name);
 	}
 
