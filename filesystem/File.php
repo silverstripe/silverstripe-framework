@@ -807,7 +807,7 @@ class File extends DataObject {
 			'htm' => _t('File.HtmlType', 'HTML file')
 		);
 		
-		$ext = $this->getExtension();
+		$ext = strtolower($this->getExtension());
 		
 		return isset($types[$ext]) ? $types[$ext] : 'unknown';
 	}
