@@ -25,9 +25,9 @@ class HTTP {
 	protected static $etag = null;
 
 	/**
-     * @config
-     */
-    private static $cache_ajax_requests = true;
+	 * @config
+	 */
+	private static $cache_ajax_requests = true;
 
 	/**
 	 * Turns a local system filename into a URL by comparing it to the script
@@ -39,7 +39,7 @@ class HTTP {
 		$slashPos = -1;
 
 		while(($slashPos = strpos($filename, "/", $slashPos+1)) !== false) {
-			if(substr($filename, 0, $slashPos) == substr($_SERVER['SCRIPT_FILENAME'],0,$slashPos)) {
+			if(substr($filename, 0, $slashPos) == substr($_SERVER['SCRIPT_FILENAME'], 0, $slashPos)) {
 				$commonLength = $slashPos;
 			} else {
 				break;
@@ -56,7 +56,7 @@ class HTTP {
 		$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? "https" : "http";
 
 		// Count the number of extra folders the script is in.
-		// $prefix = str_repeat("../", substr_count(substr($_SERVER[SCRIPT_FILENAME],$commonBaseLength)));
+		// $prefix = str_repeat("../", substr_count(substr($_SERVER[SCRIPT_FILENAME], $commonBaseLength)));
 
 		return "$protocol://". $_SERVER['HTTP_HOST'] . $url;
 	}
@@ -68,7 +68,7 @@ class HTTP {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
 		return HTTP::urlRewriter($html, function($url) {
 			//no need to rewrite, if uri has a protocol (determined here by existence of reserved URI character ":")
-			if(preg_match('/^\w+:/', $url)){
+			if(preg_match('/^\w+:/', $url)) {
 				return $url;
 			}
 			return Director::absoluteURL($url, true);
@@ -83,7 +83,7 @@ class HTTP {
 	 * <ul>
 	 * <li><code>'"../../" . $URL'</code></li>
 	 * <li><code>'myRewriter($URL)'</code></li>
-	 * <li><code>'(substr($URL,0,1)=="/") ? "../" . substr($URL,1) : $URL'</code></li>
+	 * <li><code>'(substr($URL, 0, 1)=="/") ? "../" . substr($URL, 1) : $URL'</code></li>
 	 * </ul>
 	 *
 	 * As of 3.2 $code should be a callable which takes a single parameter and returns
@@ -107,7 +107,7 @@ class HTTP {
 		}
 
 		// Replace attributes
-		$attribs = array("src","background","a" => "href","link" => "href", "base" => "href");
+		$attribs = array("src", "background", "a" => "href", "link" => "href", "base" => "href");
 		foreach($attribs as $tag => $attrib) {
 			if(!is_numeric($tag)) $tagPrefix = "$tag ";
 			else $tagPrefix = "";
