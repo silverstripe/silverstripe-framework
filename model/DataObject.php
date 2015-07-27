@@ -400,6 +400,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$record = null;
 		}
 
+		if(is_a($record, "stdClass")) {
+			$record = (array)$record;
+		}
+
 		// Set $this->record to $record, but ignore NULLs
 		$this->record = array();
 		foreach($record as $k => $v) {
