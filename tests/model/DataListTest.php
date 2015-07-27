@@ -192,7 +192,7 @@ class DataListTest extends SapphireTest {
 
 	public function testInnerJoinParameterised() {
 		$db = DB::get_conn();
-		
+
 		$list = DataObjectTest_TeamComment::get();
 		$list = $list->innerJoin(
 			'DataObjectTest_Team',
@@ -958,7 +958,7 @@ class DataListTest extends SapphireTest {
 		// Only an explicit NOT NULL should include null values
 		$items6 = $list->filter('Email:not:case', array(null, '', 'damian@thefans.com'));
 		$this->assertSQLContains(' AND "DataObjectTest_Fan"."Email" IS NOT NULL', $items6->sql());
-		
+
 		// These should all include values where Email IS NULL
 		$items7 = $list->filter('Email:nocase', array(null, '', 'damian@thefans.com'));
 		$this->assertSQLContains(' OR "DataObjectTest_Fan"."Email" IS NULL', $items7->sql());

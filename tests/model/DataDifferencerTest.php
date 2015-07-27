@@ -87,7 +87,7 @@ class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
 		return $fields;
 	}
-	
+
 }
 
 class DataDifferencerTest_HasOneRelationObject extends DataObject implements TestOnly {
