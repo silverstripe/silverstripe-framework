@@ -290,8 +290,8 @@ class Convert {
 	/**
 	 * Create a link if the string is a valid URL
 	 *
-	 * @param string The string to linkify
-	 * @return A link to the URL if string is a URL
+	 * @param string $string The string to linkify
+	 * @return string A link to the URL if string is a URL
 	 */
 	public static function linkIfMatch($string) {
 		if( preg_match( '/^[a-z+]+\:\/\/[a-zA-Z0-9$-_.+?&=!*\'()%]+$/', $string ) )
@@ -305,7 +305,9 @@ class Convert {
 	 *
 	 * @param string $data Input data
 	 * @param bool $preserveLinks
-	 * @param int $wordwrap
+	 * @param int $wordWrap
+	 * @param array $config
+	 * @return string
 	 */
 	public static function html2raw($data, $preserveLinks = false, $wordWrap = 0, $config = null) {
 		$defaultConfig = array(
@@ -414,8 +416,33 @@ class Convert {
 	 * sequences including \r, \r\n, \n, or unicode newline characters
 	 * @param string $nl The newline sequence to normalise to. Defaults to that
 	 * specified by the current OS
+	 * @return string
 	 */
 	public static function nl2os($data, $nl = PHP_EOL) {
 		return preg_replace('~\R~u', $nl, $data);
+	}
+
+	/**
+	 * Encode a value into a string that can be used as part of a filename. 
+	 * All string data must be UTF-8 encoded.
+	 *
+	 * @param mixed $val Value to be encoded
+	 * @return string
+	 */
+	public static function base64url_encode($val) {
+		return rtrim(strtr(base64_encode(json_encode($val)), '+/', '~_'), '=');
+	}
+
+	/**
+	 * Decode a value that was encoded with Convert::base64url_encode.
+	 *
+	 * @param string $val Value to be decoded
+	 * @return mixed Original value
+	 */
+	public static function base64url_decode($val) {
+		return json_decode(
+			base64_decode(str_pad(strtr($val, '~_', '+/'), strlen($val) % 4, '=', STR_PAD_RIGHT)),
+			true
+		);
 	}
 }

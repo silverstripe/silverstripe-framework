@@ -36,6 +36,9 @@ class ConvertTest extends SapphireTest {
 			'Normal text is not escaped');
 	}
 
+	/**
+	 * Tests {@link Convert::html2raw()}
+	 */
 	public function testHtml2raw() {
 		$val1 = 'This has a <strong>strong tag</strong>.';
 		$this->assertEquals('This has a *strong tag*.', Convert::html2raw($val1),
@@ -139,6 +142,9 @@ PHP
 		$this->assertEquals('This is some normal text.', Convert::xml2raw($val2), 'Normal text is not escaped');
 	}
 
+	/**
+	 * Tests {@link Convert::xml2raw()}
+	 */
 	public function testArray2JSON() {
 		$val = array(
 			'Joe' => 'Bloggs',
@@ -152,6 +158,9 @@ PHP
 			'Array is encoded in JSON');
 	}
 
+	/**
+	 * Tests {@link Convert::json2array()}
+	 */
 	public function testJSON2Array() {
 		$val = '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}';
 		$decoded = Convert::json2array($val);
@@ -161,6 +170,9 @@ PHP
 		$this->assertContains('Structure', $decoded['My']['Complicated']);
 	}
 
+	/**
+	 * Tests {@link Convert::testJSON2Obj()}
+	 */
 	public function testJSON2Obj() {
 		$val = '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}';
 		$obj = Convert::json2obj($val);
@@ -170,6 +182,7 @@ PHP
 	}
 
 	/**
+	 * Tests {@link Convert::testRaw2URL()}
 	 * @todo test toASCII()
 	 */
 	public function testRaw2URL() {
@@ -196,6 +209,9 @@ PHP
 		$this->assertEquals($expected, $actual, $message);
 	}
 
+	/**
+	 * Tests {@link Convert::nl2os()}
+	 */
 	public function testNL2OS() {
 
 		foreach(array("\r\n", "\r", "\n") as $nl) {
@@ -229,6 +245,9 @@ PHP
 		}
 	}
 
+	/**
+	 * Tests {@link Convert::raw2js()}
+	 */
 	public function testRaw2JS() {
 		// Test attempt to break out of string
 		$this->assertEquals(
@@ -255,6 +274,9 @@ PHP
 		);
 	}
 
+	/**
+	 * Tests {@link Convert::raw2json()}
+	 */
 	public function testRaw2JSON() {
 
 		// Test object
@@ -281,6 +303,9 @@ PHP
 		);
 	}
 
+	/**
+	 * Tests {@link Convert::xml2array()}
+	 */
 	public function testXML2Array() {
 		// Ensure an XML file at risk of entity expansion can be avoided safely
 		$inputXML = <<<XML
@@ -329,6 +354,46 @@ XML
 		$this->assertEquals(
 			$expected,
 			$result
+		);
+	}
+
+	/**
+	 * Tests {@link Convert::base64url_encode()} and {@link Convert::base64url_decode()}
+	 */
+	public function testBase64url() {
+		$data = 'Wëīrð characters ☺ such as ¤Ø¶÷╬';
+		// This requires this test file to have UTF-8 character encoding
+		$this->assertEquals(
+			$data, 
+			Convert::base64url_decode(Convert::base64url_encode($data))
+		);
+		
+		$data = 654.423;
+		$this->assertEquals(
+			$data,
+			Convert::base64url_decode(Convert::base64url_encode($data))
+		);
+		
+		$data = true;
+		$this->assertEquals(
+			$data,
+			Convert::base64url_decode(Convert::base64url_encode($data))
+		);
+		
+		$data = array('simple','array','¤Ø¶÷╬');
+		$this->assertEquals(
+			$data,
+			Convert::base64url_decode(Convert::base64url_encode($data))
+		);
+		
+		$data = array(
+			'a'  => 'associative',
+			4    => 'array',
+			'☺' => '¤Ø¶÷╬'
+		);
+		$this->assertEquals(
+			$data,
+			Convert::base64url_decode(Convert::base64url_encode($data))
 		);
 	}
 }
