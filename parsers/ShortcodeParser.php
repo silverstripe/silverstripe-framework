@@ -143,93 +143,7 @@ class ShortcodeParser extends Object {
 
 		return $content;
 	}
-
-	// --------------------------------------------------------------------------------------------------------------
 	
-	protected function removeNode($node) {
-		$node->parentNode->removeChild($node);
-	}
-	
-	protected function insertAfter($new, $after) {
-		$parent = $after->parentNode; $next = $after->nextSibling;
-		
-		if ($next) {
-			$parent->insertBefore($new, $next);
-		}
-		else {
-			$parent->appendChild($new);
-		}
-	}
-	
-	protected function insertListAfter($new, $after) {
-		$doc = $after->ownerDocument; $parent = $after->parentNode; $next = $after->nextSibling;
-
-		for ($i = 0; $i < $new->length; $i++) {
-			$imported = $doc->importNode($new->item($i), true);
-
-			if ($next) {
-				$parent->insertBefore($imported, $next);	
-			} 
-			else {
-				$parent->appendChild($imported);
-			}
-		}
-	}
-
-	protected static $marker_class = '--ss-shortcode-marker';
-
-	protected static $block_level_elements = array(
-		'address', 'article', 'aside', 'audio', 'blockquote', 'canvas', 'dd', 'div', 'dl', 'fieldset', 'figcaption',
-		'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'ol', 'output', 'p',
-		'pre', 'section', 'table', 'ul'
-	);
-	
-	protected static $attrrx = '
-		([^\s\/\'"=,]+)       # Name  
-		\s* = \s*
-		(?:
-			(?:\'([^\']+)\') | # Value surrounded by \'
-			(?:"([^"]+)")    | # Value surrounded by "
-			([^\s,\]]+)          # Bare value
-		)
-';
-	
-	protected static function attrrx() {
-		return '/'.self::$attrrx.'/xS';
-	}
-
-	protected static $tagrx = '
-		# HTML Tag
-		<(?<element>(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+)>
-		 
-		| # Opening tag
-		(?<oesc>\[?) 
-		\[ 
-			(?<open>\w+) 
-			[\s,]*
-			(?<attrs> (?: %s [\s,]*)* ) 
-		\/?\] 
-		(?<cesc1>\]?)
-		 
-		| # Closing tag
-		\[\/ 
-			(?<close>\w+) 
-		\] 
-		(?<cesc2>\]?)  
-';
-
-	protected static function tagrx() {
-		return '/'.sprintf(self::$tagrx, self::$attrrx).'/xS';
-	}
-
-	const WARN = 'warn';
-	const STRIP = 'strip';
-	const LEAVE = 'leave';
-	const ERROR = 'error';
-
-	public static $error_behavior = self::LEAVE;
-
-
 	/**
 	 * Look through a string that contains shortcode tags and pull out the locations and details
 	 * of those tags
@@ -240,7 +154,7 @@ class ShortcodeParser extends Object {
 	 * @return array - The list of tags found. When using an open/close pair, only one item will be in the array,
 	 * with "content" set to the text between the tags
 	 */
-	protected function extractTags($content) {
+	public function extractTags($content) {
 		$tags = array();
 		
 		// Step 1: perform basic regex scan of individual tags
@@ -334,6 +248,91 @@ class ShortcodeParser extends Object {
 
 		return array_values($tags);
 	}
+
+	// --------------------------------------------------------------------------------------------------------------
+	
+	protected function removeNode($node) {
+		$node->parentNode->removeChild($node);
+	}
+	
+	protected function insertAfter($new, $after) {
+		$parent = $after->parentNode; $next = $after->nextSibling;
+		
+		if ($next) {
+			$parent->insertBefore($new, $next);
+		}
+		else {
+			$parent->appendChild($new);
+		}
+	}
+	
+	protected function insertListAfter($new, $after) {
+		$doc = $after->ownerDocument; $parent = $after->parentNode; $next = $after->nextSibling;
+
+		for ($i = 0; $i < $new->length; $i++) {
+			$imported = $doc->importNode($new->item($i), true);
+
+			if ($next) {
+				$parent->insertBefore($imported, $next);	
+			} 
+			else {
+				$parent->appendChild($imported);
+			}
+		}
+	}
+
+	protected static $marker_class = '--ss-shortcode-marker';
+
+	protected static $block_level_elements = array(
+		'address', 'article', 'aside', 'audio', 'blockquote', 'canvas', 'dd', 'div', 'dl', 'fieldset', 'figcaption',
+		'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'ol', 'output', 'p',
+		'pre', 'section', 'table', 'ul'
+	);
+	
+	protected static $attrrx = '
+		([^\s\/\'"=,]+)       # Name  
+		\s* = \s*
+		(?:
+			(?:\'([^\']+)\') | # Value surrounded by \'
+			(?:"([^"]+)")    | # Value surrounded by "
+			([^\s,\]]+)          # Bare value
+		)
+';
+	
+	protected static function attrrx() {
+		return '/'.self::$attrrx.'/xS';
+	}
+
+	protected static $tagrx = '
+		# HTML Tag
+		<(?<element>(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+)>
+		 
+		| # Opening tag
+		(?<oesc>\[?) 
+		\[ 
+			(?<open>\w+) 
+			[\s,]*
+			(?<attrs> (?: %s [\s,]*)* ) 
+		\/?\] 
+		(?<cesc1>\]?)
+		 
+		| # Closing tag
+		\[\/ 
+			(?<close>\w+) 
+		\] 
+		(?<cesc2>\]?)  
+';
+
+	protected static function tagrx() {
+		return '/'.sprintf(self::$tagrx, self::$attrrx).'/xS';
+	}
+
+	const WARN = 'warn';
+	const STRIP = 'strip';
+	const LEAVE = 'leave';
+	const ERROR = 'error';
+
+	public static $error_behavior = self::LEAVE;
 
 	/**
 	 * Replaces the shortcode tags extracted by extractTags with HTML element "markers", so that
