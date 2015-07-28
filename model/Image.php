@@ -291,9 +291,6 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function FitMax($width, $height) {
-		// Temporary $force_resample support for 3.x, to be removed in 4.0
-		if (Config::inst()->get('Image', 'force_resample') && $this->getWidth() <= $width && $this->getHeight() <= $height) return $this->Fit($this->getWidth(),$this->getHeight());
-		
 		return $this->getWidth() > $width || $this->getHeight() > $height
 			? $this->Fit($width,$height)
 			: $this;
@@ -339,9 +336,6 @@ class Image extends File implements Flushable {
 	public function FillMax($width, $height) {
 		// Prevent divide by zero on missing/blank file
 		if(!$this->getWidth() || !$this->getHeight()) return null;
-		
-		// Temporary $force_resample support for 3.x, to be removed in 4.0
-		if (Config::inst()->get('Image', 'force_resample') && $this->isSize($width, $height)) return $this->Fill($width, $height);
 		
 		// Is the image already the correct size?
 		if ($this->isSize($width, $height)) return $this;
@@ -414,9 +408,6 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function ScaleMaxWidth($width) {
-		// Temporary $force_resample support for 3.x, to be removed in 4.0
-		if (Config::inst()->get('Image', 'force_resample') && $this->getWidth() <= $width) return $this->ScaleWidth($this->getWidth());
-		
 		return $this->getWidth() > $width
 			? $this->ScaleWidth($width)
 			: $this;
@@ -454,9 +445,6 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function ScaleMaxHeight($height) {
-		// Temporary $force_resample support for 3.x, to be removed in 4.0
-		if (Config::inst()->get('Image', 'force_resample') && $this->getHeight() <= $height) return $this->ScaleHeight($this->getHeight());
-		
 		return $this->getHeight() > $height
 			? $this->ScaleHeight($height)
 			: $this;
@@ -471,9 +459,6 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function CropWidth($width) {
-		// Temporary $force_resample support for 3.x, to be removed in 4.0
-		if (Config::inst()->get('Image', 'force_resample') && $this->getWidth() <= $width) return $this->Fill($this->getWidth(), $this->getHeight());
-		
 		return $this->getWidth() > $width
 			? $this->Fill($width, $this->getHeight())
 			: $this;
@@ -488,9 +473,6 @@ class Image extends File implements Flushable {
 	 * @return Image
 	 */
 	public function CropHeight($height) {
-		// Temporary $force_resample support for 3.x, to be removed in 4.0
-		if (Config::inst()->get('Image', 'force_resample') && $this->getHeight() <= $height) return $this->Fill($this->getWidth(), $this->getHeight());
-		
 		return $this->getHeight() > $height
 			? $this->Fill($this->getWidth(), $height)
 			: $this;
