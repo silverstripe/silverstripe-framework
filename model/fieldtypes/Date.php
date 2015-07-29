@@ -19,7 +19,15 @@
  * @subpackage model
  */
 class Date extends DBField {
-
+	
+	/**
+	 * @config
+	 * @see also SS_DateTime::niceDatetimeFormat
+	 * @see also Time::niceFormat
+	 */
+	private static $niceFormat = 'd/m/Y';
+	
+	
 	public function setValue($value, $record = null) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
 			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
@@ -59,16 +67,18 @@ class Date extends DBField {
 	}
 
 	/**
-	 * Returns the date in the format dd/mm/yy
-	 */
+	 * Returns the date in the format specified by the config value niceFormat, or dd/mm/yy by default
+	 */	 
 	public function Nice() {
-		if($this->value) return $this->Format('d/m/Y');
+		if($this->value) return $this->Format(Config::inst()->get(__CLASS__, 'niceFormat'));
 	}
-
+	
 	/**
 	 * Returns the date in US format: “01/18/2006”
+	 * @deprecated 3.2 Use Nice() with config setting Date::niceFormat instead
 	 */
 	public function NiceUS() {
+		Deprecation::notice('3.2', 'Use Nice() with config setting '.__CLASS__.'::niceFormat instead');
 		if($this->value) return $this->Format('m/d/Y');
 	}
 
