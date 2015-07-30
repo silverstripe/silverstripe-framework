@@ -25,7 +25,7 @@ class SilverStripeServiceConfigurationLocator extends ServiceConfigurationLocato
 		
 		// do parent lookup if it's a class
 		if (class_exists($name)) {
-			$parents = array_reverse(array_keys(ClassInfo::ancestry($name)));
+			$parents = array_reverse(array_values(ClassInfo::ancestry($name)));
 			array_shift($parents);
 
 			foreach ($parents as $parent) {
