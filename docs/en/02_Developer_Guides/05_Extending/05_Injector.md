@@ -111,6 +111,16 @@ Now the dependencies will be replaced with our configuration.
 	echo ($object->textProperty == 'My Text Value');
 	// returns true;
 
+As well as properties, method calls can also be specified:
+
+	:::yml
+	Injector:
+	  Logger:
+	    class: Monolog\Logger
+	    calls:
+	      - [ pushHandler, [ %$DefaultHandler ] ]
+
+
 ## Factories
 
 Some services require non-trivial construction which means they must be created by a factory class. To do this, create
