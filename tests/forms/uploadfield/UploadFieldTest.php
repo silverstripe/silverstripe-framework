@@ -253,23 +253,49 @@ class UploadFieldTest extends FunctionalTest {
 		// two should work and the third will fail.
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$record->HasManyFilesMaxTwo()->removeAll();
+		$this->assertCount(0, $record->HasManyFilesMaxTwo());
 
 		// Get references for each file to upload
 		$file1 = $this->objFromFixture('File', 'file1');
 		$file2 = $this->objFromFixture('File', 'file2');
 		$file3 = $this->objFromFixture('File', 'file3');
+		$this->assertTrue($file1->exists());
+		$this->assertTrue($file2->exists());
+		$this->assertTrue($file3->exists());
 
 		// Write the first element, should be okay.
 		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', array($file1->ID));
 		$this->assertEmpty($response['errors']);
+		$this->assertCount(1, $record->HasManyFilesMaxTwo());
+		$this->assertContains($file1->ID, $record->HasManyFilesMaxTwo()->getIDList());
+
+
+		$record->HasManyFilesMaxTwo()->removeAll();
+		$this->assertCount(0, $record->HasManyFilesMaxTwo());
+		$this->assertTrue($file1->exists());
+		$this->assertTrue($file2->exists());
+		$this->assertTrue($file3->exists());
+
+
 
 		// Write the second element, should be okay.
 		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', array($file1->ID, $file2->ID));
 		$this->assertEmpty($response['errors']);
+		$this->assertCount(2, $record->HasManyFilesMaxTwo());
+		$this->assertContains($file1->ID, $record->HasManyFilesMaxTwo()->getIDList());
+		$this->assertContains($file2->ID, $record->HasManyFilesMaxTwo()->getIDList());
+
+		$record->HasManyFilesMaxTwo()->removeAll();
+		$this->assertCount(0, $record->HasManyFilesMaxTwo());
+		$this->assertTrue($file1->exists());
+		$this->assertTrue($file2->exists());
+		$this->assertTrue($file3->exists());
+
 
 		// Write the third element, should result in error.
 		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', array($file1->ID, $file2->ID, $file3->ID));
 		$this->assertNotEmpty($response['errors']);
+		$this->assertCount(0, $record->HasManyFilesMaxTwo());
 	}
 
 	/**
@@ -948,22 +974,21 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	public function setUp() {
+		Config::inst()->update('File', 'update_filesystem', false);
 		parent::setUp();
 
 		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
 
 		/* Create a test folders for each of the fixture references */
-		$folderIDs = $this->allFixtureIDs('Folder');
-		foreach($folderIDs as $folderID) {
-			$folder = DataObject::get_by_id('Folder', $folderID);
-			if(!file_exists(BASE_PATH."/$folder->Filename")) mkdir(BASE_PATH."/$folder->Filename");
+		$folders = Folder::get()->byIDs($this->allFixtureIDs('Folder'));
+		foreach($folders as $folder) {
+			if(!file_exists($folder->getFullPath())) mkdir($folder->getFullPath());
 		}
 
 		/* Create a test files for each of the fixture references */
-		$fileIDs = $this->allFixtureIDs('File');
-		foreach($fileIDs as $fileID) {
-			$file = DataObject::get_by_id('File', $fileID);
-			$fh = fopen(BASE_PATH."/$file->Filename", "w");
+		$files = File::get()->byIDs($this->allFixtureIDs('File'));
+		foreach($files as $file) {
+			$fh = fopen($file->getFullPath(), "w");
 			fwrite($fh, str_repeat('x',1000000));
 			fclose($fh);
 		}
