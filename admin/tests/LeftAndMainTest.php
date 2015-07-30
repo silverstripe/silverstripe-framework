@@ -135,7 +135,7 @@ class LeftAndMainTest extends FunctionalTest {
 			$link = $menuItem->Link;
 
 			// don't test external links
-			if(preg_match('/^https?:\/\//',$link)) continue;
+			if(preg_match('/^(https?:)?\/\//',$link)) continue;
 
 			$response = $this->get($link);
 
