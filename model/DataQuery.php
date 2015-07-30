@@ -196,7 +196,7 @@ class DataQuery {
 			$tableClasses = $ancestorTables;
 		}
 
-		$tableNames = array_keys($tableClasses);
+		$tableNames = array_values($tableClasses);
 		$baseClass = $tableNames[0];
 
 		// Iterate over the tables and check what we need to select from them. If any selects are made (or the table is
