@@ -129,13 +129,23 @@
 			 * Doesn't cancel any unload or form removal events, you'll need to implement this based on the return
 			 * value of this message.
 			 * 
+			 * If changes are confirmed for discard, the 'changed' flag is reset.
+			 * 
 			 * Returns:
 			 *  (Boolean) FALSE if the user wants to abort with changes present, TRUE if no changes are detected 
 			 *  or the user wants to discard them.
 			 */
 			confirmUnsavedChanges: function() {
 				this.trigger('beforesubmitform');
-				return (this.is('.changed')) ? confirm(ss.i18n._t('LeftAndMain.CONFIRMUNSAVED')) : true;
+				if(!this.is('.changed')) {
+					return true;
+				}
+				var confirmed = confirm(ss.i18n._t('LeftAndMain.CONFIRMUNSAVED'));
+				if(confirmed) {
+					// confirm discard changes
+					this.removeClass('changed');
+				}
+				return confirmed;
 			},
 
 			/**
