@@ -83,6 +83,10 @@ class FileField extends FormField {
 		parent::__construct($name, $title, $value);
 	}
 
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function Field($properties = array()) {
 		$properties = array_merge($properties, array(
 			'MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize()
