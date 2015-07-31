@@ -12,6 +12,6 @@
 	<button data-href="$UploadFieldDeleteLink" class="ss-uploadfield-item-delete ss-ui-button ui-corner-all" title="<%t UploadField.DELETEINFO 'Permanently delete this file from the file store' %>" data-icon="minus-circle"><%t UploadField.DELETE 'Delete from files' %></button>
 <% end_if %>
 <% if $UploadField.canAttachExisting %>
-	<button class="ss-uploadfield-item-choose-another ss-uploadfield-fromfiles ss-ui-button ui-corner-all" title="<%t UploadField.CHOOSEANOTHERINFO' 'Replace this file with another one from the file store' %>" data-icon="network-cloud">
+	<button class="ss-uploadfield-item-choose-another ss-uploadfield-fromfiles ss-ui-button ui-corner-all" title="<%t UploadField.CHOOSEANOTHERINFO 'Replace this file with another one from the file store' %>" data-icon="network-cloud">
 	<%t UploadField.CHOOSEANOTHERFILE 'Choose another file' %></button>
 <% end_if %>
