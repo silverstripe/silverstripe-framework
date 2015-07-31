@@ -76,7 +76,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @config
 	 * @var string
 	 */
-	private static $help_link = 'http://userhelp.silverstripe.org/en/3.2/';
+	private static $help_link = '//userhelp.silverstripe.org/framework/en/3.2';
 
 	/**
 	 * @var array
@@ -1618,7 +1618,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @config
 	 * @var String
 	 */
-	private static $application_link = 'http://www.silverstripe.org/';
+	private static $application_link = '//www.silverstripe.org/';
 
 	/**
 	 * Sets the href for the anchor on the Silverstripe logo in the menu

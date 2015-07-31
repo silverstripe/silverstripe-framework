@@ -369,7 +369,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(!isset(DataObject::$_cache_composite_fields[$class])) {
 				self::cache_composite_fields($class);
 			}
-		
+
 			if(isset(DataObject::$_cache_composite_fields[$class][$name])) {
 				$isComposite = DataObject::$_cache_composite_fields[$class][$name];
 			} elseif($aggregated && $class != 'DataObject' && ($parentClass=get_parent_class($class)) != 'DataObject') {
@@ -450,6 +450,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				. " taken straight from the database.  Perhaps you should use DataList::create()->First(); instead?",
 				E_USER_WARNING);
 			$record = null;
+		}
+
+		if(is_a($record, "stdClass")) {
+			$record = (array)$record;
 		}
 
 		// Set $this->record to $record, but ignore NULLs
@@ -1263,6 +1267,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				continue;
 			}
 
+
 			// if database column doesn't correlate to a DBField instance...
 			$fieldObj = $this->dbObject($fieldName);
 			if(!$fieldObj) {
@@ -1679,7 +1684,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} else {
 			$remoteClass = $this->belongsToComponent($component, false);
 		}		
-		
+
 		if(empty($remoteClass)) {
 			throw new Exception("Unknown $type component '$component' on class '$this->class'");
 		}
@@ -2742,6 +2747,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public static function has_own_table($dataClass) {
 		if(!is_subclass_of($dataClass,'DataObject')) return false;
 
+		$dataClass = ClassInfo::class_name($dataClass);
 		if(!isset(DataObject::$cache_has_own_table[$dataClass])) {
 			if(get_parent_class($dataClass) == 'DataObject') {
 				DataObject::$cache_has_own_table[$dataClass] = true;
@@ -3127,6 +3133,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$result->setDataModel(DataModel::inst());
 		return $result;
 	}
+
 
 	/**
 	 * Return the first item matching the given query.

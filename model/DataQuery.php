@@ -196,7 +196,7 @@ class DataQuery {
 			$tableClasses = $ancestorTables;
 		}
 
-		$tableNames = array_keys($tableClasses);
+		$tableNames = array_values($tableClasses);
 		$baseClass = $tableNames[0];
 
 		// Iterate over the tables and check what we need to select from them. If any selects are made (or the table is
@@ -828,7 +828,9 @@ class DataQuery {
 /**
  * Represents a subgroup inside a WHERE clause in a {@link DataQuery}
  *
- * Stores the clauses for the subgroup inside a specific {@link SQLQuery} object.
+ * Stores the clauses for the subgroup inside a specific {@link SQLQuery}
+ * object.
+ *
  * All non-where methods call their DataQuery versions, which uses the base
  * query object.
  *

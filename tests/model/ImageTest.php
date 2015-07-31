@@ -70,6 +70,8 @@ class ImageTest extends SapphireTest {
 
 	public function testGetTagWithTitle() {
 		$image = $this->objFromFixture('Image', 'imageWithTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
+		
 		$expected = '<img src="' . Director::baseUrl()
 			. 'assets/ImageTest/test_image.png" alt="This is a image Title" />';
 		$actual = $image->getTag();
@@ -79,6 +81,8 @@ class ImageTest extends SapphireTest {
 
 	public function testGetTagWithoutTitle() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
+		
 		$expected = '<img src="' . Director::baseUrl() . 'assets/ImageTest/test_image.png" alt="test_image" />';
 		$actual = $image->getTag();
 
@@ -87,6 +91,8 @@ class ImageTest extends SapphireTest {
 
 	public function testGetTagWithoutTitleContainingDots() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitleContainingDots');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
+		
 		$expected = '<img src="' . Director::baseUrl()
 			. 'assets/ImageTest/test.image.with.dots.png" alt="test.image.with.dots" />';
 		$actual = $image->getTag();
@@ -99,6 +105,7 @@ class ImageTest extends SapphireTest {
 	 */
 	public function testMultipleGenerateManipulationCalls() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
 
 		$imageFirst = $image->ScaleWidth(200);
 		$this->assertNotNull($imageFirst);
@@ -119,8 +126,8 @@ class ImageTest extends SapphireTest {
 	 * of the output image do not resample the file.
 	 */
 	public function testReluctanceToResampling() {
-
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
 		$this->assertTrue($image->isSize(300, 300));
 
 		// Set width to 300 pixels
@@ -170,8 +177,8 @@ class ImageTest extends SapphireTest {
 	 * of the output image resample the file when force_resample is set to true.
 	 */
 	public function testForceResample() {
-
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
 		$this->assertTrue($image->isSize(300, 300));
 
 		$origForceResample = Config::inst()->get('Image', 'force_resample');
@@ -222,6 +229,7 @@ class ImageTest extends SapphireTest {
 
 	public function testImageResize() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
 		$this->assertTrue($image->isSize(300, 300));
 
 		// Test normal resize
@@ -278,12 +286,16 @@ class ImageTest extends SapphireTest {
 	 */
 	public function testGenerateImageWithInvalidParameters() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
+		
 		$image->setHeight('String');
 		$image->Pad(600,600,'XXXXXX');
 	}
 
 	public function testCacheFilename() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
+		
 		$imageFirst = $image->Pad(200,200,'CCCCCC');
 		$imageFilename = $imageFirst->getFullPath();
 			// Encoding of the arguments is duplicated from cacheFilename
@@ -293,6 +305,8 @@ class ImageTest extends SapphireTest {
 
 	public function testMultipleGenerateManipulationCalls_Regeneration() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
+		
 		$folder = new SS_FileFinder();
 
 		$imageFirst = $image->Pad(200,200);
@@ -332,6 +346,8 @@ class ImageTest extends SapphireTest {
 
 	public function testRegenerateImages() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
+		
 		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
@@ -347,6 +363,8 @@ class ImageTest extends SapphireTest {
 	 */
 	public function testRegenerateImagesWithRenaming() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
+		
 		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
@@ -369,6 +387,8 @@ class ImageTest extends SapphireTest {
 
 	public function testGeneratedImageDeletion() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
+		
 		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
@@ -382,6 +402,7 @@ class ImageTest extends SapphireTest {
 	 */
 	public function testMultipleGenerateManipulationCallsImageDeletion() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
 
 		$firstImage = $image->ScaleWidth(200);
 		$firstImagePath = $firstImage->getFullPath();
@@ -401,6 +422,7 @@ class ImageTest extends SapphireTest {
 	 */
 	public function testPathPropertiesCachedImage() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
 		$firstImage = $image->ScaleWidth(200);
 		$firstImagePath = $firstImage->getRelativePath();
 		$this->assertEquals($firstImagePath, $firstImage->Filename);
@@ -415,6 +437,7 @@ class ImageTest extends SapphireTest {
 	 */
 	public function testGenerateMethods() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
 		$generateMethods = $this->getGenerateMethods();
 
 		// test each generate method
@@ -432,6 +455,7 @@ class ImageTest extends SapphireTest {
 	 */
 	public function testDeleteFormattedImages() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->exists(), $image->getFilename() . " exists");
 		$generateMethods = $this->getGenerateMethods();
 
 		// get paths for each generate method

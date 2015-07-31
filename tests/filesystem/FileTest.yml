@@ -13,6 +13,8 @@ File:
     Filename: assets/FileTest.txt
   gif:
     Filename: assets/FileTest.gif
+  gifupper:
+    Filename: assets/FileTest.GIF
   pdf:
     Filename: assets/FileTest.pdf
   setfromname:
