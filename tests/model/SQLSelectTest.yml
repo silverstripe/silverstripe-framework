@@ -1,4 +1,4 @@
-SQLQueryTest_DO:
+SQLSelectTest_DO:
   test1:
     Name: 'Object 1'
     Meta: 'Details 1'

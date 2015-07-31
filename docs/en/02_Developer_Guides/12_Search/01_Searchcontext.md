@@ -7,7 +7,7 @@ summary: Configure the search form within ModelAdmin using the SearchContext cla
 input parameters. [api:SearchContext] is intentionally decoupled from any controller-logic, it just receives a set of
 search parameters and an object class it acts on.
 
-The default output of a [api:SearchContext] is either a [api:SQLQuery] object for further refinement, or a
+The default output of a [api:SearchContext] is either a [api:SQLSelect] object for further refinement, or a
 [api:DataObject] instance.
 
 <div class="notice" markdown="1">
@@ -110,7 +110,7 @@ the `$fields` constructor parameter.
 ### Pagination
 
 For pagination records on multiple pages, you need to wrap the results in a
-`PaginatedList` object. This object is also passed the generated `SQLQuery`
+`PaginatedList` object. This object is also passed the generated `SQLSelect`
 in order to read page limit information. It is also passed the current
 `SS_HTTPRequest` object so it can read the current page from a GET var.
 
