@@ -43,6 +43,19 @@ class Deprecation {
 	protected static $version;
 
 	/**
+	 * Override whether deprecation is enabled. If null, then fallback to 
+	 * SS_DEPRECATION_ENABLED, and then true if not defined.
+	 * 
+	 * Deprecation is only available on dev.
+	 * 
+	 * Must be configured outside of the config API, as deprecation API 
+	 * must be available before this to avoid infinite loops.
+	 *
+	 * @var boolean|null
+	 */
+	protected static $enabled = null;
+
+	/**
 	 *
 	 * @var array
 	 */
@@ -116,20 +129,47 @@ class Deprecation {
 			return $called['function'];
 		}
 	}
+	
+	/**
+	 * Determine if deprecation notices should be displayed
+	 * 
+	 * @return bool
+	 */
+	public static function get_enabled() {
+		// Deprecation is only available on dev
+		if(!Director::isDev()) {
+			return false;
+		}
+		if(isset(self::$enabled)) {
+			return self::$enabled;
+		}
+		if(defined('SS_DEPRECATION_ENABLED')) {
+			return SS_DEPRECATION_ENABLED;
+		}
+		return true;
+	}
+
+	/**
+	 * Toggle on or off deprecation notices. Will be ignored in live.
+	 * 
+	 * @param bool $enabled
+	 */
+	public static function set_enabled($enabled) {
+		self::$enabled = $enabled;
+	}
 
 	/**
 	 * Raise a notice indicating the method is deprecated if the version passed as the second argument is greater
 	 * than or equal to the check version set via ::notification_version
 	 *
-	 * @static
-	 * @param $string - The notice to raise
-	 * @param $atVersion - The version at which this notice should start being raised
-	 * @param Boolean $scope - Notice relates to the method or class context its called in.
-	 * @return void
+	 * @param string $atVersion The version at which this notice should start being raised
+	 * @param string $string The notice to raise
+	 * @param bool $scope Notice relates to the method or class context its called in.
 	 */
 	public static function notice($atVersion, $string = '', $scope = Deprecation::SCOPE_METHOD) {
-		// Never raise deprecation notices in a live environment
-		if(Director::isLive(true)) return;
+		if(!static::get_enabled()) {
+			return;
+		}
 
 		$checkVersion = self::$version;
 		// Getting a backtrace is slow, so we only do it if we need it
@@ -179,25 +219,27 @@ class Deprecation {
 
 	/**
 	 * Method for when testing. Dump all the current version settings to a variable for later passing to restore
-	 * @return array - opaque array that should only be used to pass to ::restore_version_settings
+	 * 
+	 * @return array Opaque array that should only be used to pass to {@see Deprecation::restore_settings()}
 	 */
 	public static function dump_settings() {
 		return array(
 			'level' => self::$notice_level,
 			'version' => self::$version,
-			'moduleVersions' => self::$module_version_overrides
+			'moduleVersions' => self::$module_version_overrides,
+			'enabled' => self::$enabled,
 		);
 	}
 
 	/**
 	 * Method for when testing. Restore all the current version settings from a variable
-	 * @static
-	 * @param $settings array - An array as returned by ::dump_version_settings
-	 * @return void
+	 * 
+	 * @param $settings array An array as returned by {@see Deprecation::dump_settings()}
 	 */
 	public static function restore_settings($settings) {
 		self::$notice_level = $settings['level'];
 		self::$version = $settings['version'];
 		self::$module_version_overrides = $settings['moduleVersions'];
+		self::$enabled = $settings['enabled'];
 	}
 }

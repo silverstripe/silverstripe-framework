@@ -88,7 +88,10 @@ class DatetimeField extends FormField {
 		return $this;
 	}
 
-
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function FieldHolder($properties = array()) {
 		$config = array(
 			'datetimeorder' => $this->getConfig('datetimeorder'),
@@ -100,14 +103,19 @@ class DatetimeField extends FormField {
 		return parent::FieldHolder($properties);
 	}
 
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function Field($properties = array()) {
 		Requirements::css(FRAMEWORK_DIR . '/css/DatetimeField.css');
 
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
-		return $this->dateField->FieldHolder() .
+		return DBField::create_field('HTMLText', $this->dateField->FieldHolder() .
 			$this->timeField->FieldHolder() .
 			$tzField .
-			'<div class="clear"><!-- --></div>';
+			'<div class="clear"><!-- --></div>'
+		);
 	}
 
 	/**

@@ -11,6 +11,18 @@ class ControllerTest extends FunctionalTest {
 			'ControllerTest_AccessBaseControllerExtension'
 		)
 	);
+	
+	protected $depSettings = null;
+
+	public function setUp() {
+		parent::setUp();
+		$this->depSettings = Deprecation::dump_settings();
+	}
+
+	public function tearDown() {
+		Deprecation::restore_settings($this->depSettings);
+		parent::tearDown();
+	}
 
 	public function testDefaultAction() {
 		/* For a controller with a template, the default action will simple run that template. */
@@ -208,6 +220,7 @@ class ControllerTest extends FunctionalTest {
 	 * @expectedExceptionMessage Wildcards (*) are no longer valid
 	 */
 	public function testWildcardAllowedActions() {
+		Deprecation::set_enabled(true);
 		$this->get('ControllerTest_AccessWildcardSecuredController');
 	}
 

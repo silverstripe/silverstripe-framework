@@ -27,14 +27,25 @@ class InlineFormAction extends FormField {
 		return $this->castedCopy('InlineFormAction_ReadOnly');
 	}
 
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function Field($properties = array()) {
 		if($this->includeDefaultJS) {
 			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/javascript/InlineFormAction.js',
 				array('ID'=>$this->id()));
 		}
 
-		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\""
-			. " class=\"action{$this->extraClass}\" />";
+		return DBField::create_field(
+			'HTMLText',
+			FormField::create('input', array(
+				'name' => sprintf('action_%s', $this->getName()),
+		        'value' => $this->title,
+		        'id' => $this->ID(),
+		        'class' => sprintf('action%s', $this->extraClass),
+			))
+		);
 	}
 
 	public function Title() {
@@ -61,9 +72,21 @@ class InlineFormAction_ReadOnly extends FormField {
 
 	protected $readonly = true;
 
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function Field($properties = array()) {
-		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\""
-			. " disabled=\"disabled\" class=\"action disabled$this->extraClass\" />";
+		return DBField::create_field('HTMLText',
+			FormField::create_tag('input', array(
+				'type' => 'submit',
+	            'name' => sprintf('action_%s', $this->name),
+	            'value' => $this->title,
+	            'id' => $this->id(),
+				'disabled' => 'disabled',
+	            'class' => 'action disabled ' . $this->extraClass,
+			))
+		);
 	}
 
 	public function Title() {

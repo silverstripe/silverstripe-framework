@@ -222,6 +222,15 @@ class File extends DataObject {
 	}
 
 	/**
+	 * A file only exists if the file_exists() and is in the DB as a record
+	 *
+	 * @return bool
+	 */
+	public function exists() {
+		return parent::exists() && file_exists($this->getFullPath());
+	}
+
+	/**
 	 * Find a File object by the given filename.
 	 *
 	 * @param String $filename Matched against the "Name" property.
@@ -293,7 +302,7 @@ class File extends DataObject {
 		// ensure that the record is synced with the filesystem before deleting
 		$this->updateFilesystem();
 
-		if($this->Filename && $this->Name && file_exists($this->getFullPath()) && !is_dir($this->getFullPath())) {
+		if($this->exists() && !is_dir($this->getFullPath())) {
 			unlink($this->getFullPath());
 		}
 	}
@@ -832,7 +841,7 @@ class File extends DataObject {
 			'htm' => _t('File.HtmlType', 'HTML file')
 		);
 
-		$ext = $this->getExtension();
+		$ext = strtolower($this->getExtension());
 
 		return isset($types[$ext]) ? $types[$ext] : 'unknown';
 	}

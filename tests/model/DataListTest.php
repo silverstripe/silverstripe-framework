@@ -146,6 +146,11 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals('DataObjectTest_TeamComment',$list->dataClass());
 	}
 
+	public function testDataClassCaseInsensitive() {
+		$list = DataList::create('dataobjecttest_teamcomment');
+		$this->assertTrue($list->exists());
+	}
+
 	public function testClone() {
 		$list = DataObjectTest_TeamComment::get();
 		$this->assertEquals($list, clone($list));
