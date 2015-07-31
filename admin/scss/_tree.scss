@@ -64,8 +64,19 @@
 				height: 16px;
 				width: 12px;
 				&.jstree-checkbox {
-					height: 19px; //Larger to help avoid accidental page loads when trying to click checkboxes
 					width: 16px;
+					position: relative;
+					//Larger to help avoid accidental page loads when trying to click checkboxes
+					&:before {
+						content: '';
+						display: block;
+						position: absolute;
+						z-index: 1;
+						left: -3px;
+						top: -3px;
+						height: 22px;
+						width: 25px;
+					}
 				}
 			}
 		}
@@ -592,14 +603,24 @@
 .jstree-apple a .jstree-icon { 
 	background-position:-60px -19px;
 }
+.jstree-apple a {
+	border-radius: 3px;
+}
 
-/* ensure status is visible in sidebar */
+/**
+ * DEPRECATED:
+ * .cms-content-tools will be removed in 4.0
+ * Use .cms-content-filters instead.
+ *
+ * Ensure status is visible in sidebar
+ */
 .cms-content-tools .cms-tree.jstree {
 	li {
-		min-width: 159px;
+		min-width: 187px;
 	}
 	a {
 		overflow: hidden;
+		text-overflow: ellipsis;
 		display: block;
 		position: relative;
 	}
@@ -635,44 +656,52 @@ a .jstree-pageicon {
 	}
 }
 
-/* tree status icons and labels */
+/* Tree status labels and dots */
+.jstree-apple .jstree-clicked,
+.jstree-apple .jstree-hovered {
+	background: #ebfbff;
+}
 %tree-status-icon-before {
 	content:"";
 	display: block;
-	width:5px;
-	height: 5px;
+	width:6px;
+	height: 6px;
 	position: absolute;
 	bottom: 0;
 	right: 0;
 	background: #fce2d0;
-	border: 1px solid #ff9344;
+	border: 1px solid #fff;
 	border-radius: 100px;
-	box-shadow: 0px 0px 0px 1px #fff;
 }
-@mixin tree-status-icon($label, $color, $bgColor) {
+@mixin tree-status-icon($label, $dotColor, $textColor, $bgColor) {
 	.cms-tree.jstree .status-#{$label} > a .jstree-pageicon:before {
 		@extend %tree-status-icon-before;
 	}
+	// Labels
 	.jstree .status-#{$label} > .jstree-hovered,
 	.jstree .status-#{$label} > .jstree-clicked,
-	.cms-tree.jstree span.badge.status-#{$label},
-	.cms-tree.jstree .status-#{$label} > a .jstree-pageicon:before  {
+	.cms-tree.jstree span.badge.status-#{$label}  {
 		background-color:$bgColor;
-		border-color:$color;
-	}
-	#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-#{$label}  {
-		box-shadow: 0px 0px 6px 2px $bgColor;
+		border-color:$textColor;
 	}
 	.cms-tree.jstree span.badge.status-#{$label}  {
-		color: $color;
+		color: $textColor;
+	}
+	// Dots
+	.cms-tree.jstree .status-#{$label} > a .jstree-pageicon:before  {
+		background-color:$dotColor;
+		@include box-shadow(0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px $textColor);
+	}
+	#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-#{$label}  {
+		@include box-shadow(0px 0px 6px 2px $bgColor);
 	}
 }
-@include tree-status-icon('modified', #EE6214, #FFF4ED);
-@include tree-status-icon('addedtodraft', #EE6214, #FFF4ED);
-@include tree-status-icon('deletedonlive', #5F7688, #F5F5F5);
-@include tree-status-icon('archived', #5F7688, #F5F5F5);
-@include tree-status-icon('removedfromdraft', #5F7688, #F5F5F5);
-@include tree-status-icon('workflow-approval', #0070B4, #E8FAFF);
+@include tree-status-icon('addedtodraft', #ff7f22, #F46B00, #fff7f2);
+@include tree-status-icon('modified', #fff2e8, #F46B00, #fff7f2);
+@include tree-status-icon('archived', #5F7688, #455b6c, #f7f7f7);
+@include tree-status-icon('deletedonlive', #f7f7f7, #455b6c, #f7f7f7);
+@include tree-status-icon('removedfromdraft', #f7f7f7, #455b6c, #f7f7f7);
+@include tree-status-icon('workflow-approval', #0070B4, #0070B4, #E8FAFF);
 
 .cms-tree {
 	visibility: hidden; // enabled by JS to avoid layout glitches

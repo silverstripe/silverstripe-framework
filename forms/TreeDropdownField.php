@@ -204,7 +204,7 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @return string
+	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');

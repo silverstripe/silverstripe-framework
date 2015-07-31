@@ -250,13 +250,13 @@ class ManyManyListTest extends SapphireTest {
 
 		// ensure that ManyManyListTest_ExtraFields_Clients.ValueCurrency is
 		// selected.
-		$db = DB::getConn();
+		$db = DB::get_conn();
 		$expected = 'SELECT DISTINCT "ManyManyListTest_ExtraFields_Clients"."WorthCurrency",'
 			.' "ManyManyListTest_ExtraFields_Clients"."WorthAmount", "ManyManyListTest_ExtraFields_Clients"."Reference",'
 			.' "ManyManyListTest_ExtraFields"."ClassName", "ManyManyListTest_ExtraFields"."LastEdited",'
 			.' "ManyManyListTest_ExtraFields"."Created", "ManyManyListTest_ExtraFields"."ID",'
 			.' CASE WHEN "ManyManyListTest_ExtraFields"."ClassName" IS NOT NULL THEN'
-			.' "ManyManyListTest_ExtraFields"."ClassName" ELSE '. $db->prepStringForDB('ManyManyListTest_ExtraFields')
+			.' "ManyManyListTest_ExtraFields"."ClassName" ELSE '. Convert::raw2sql('ManyManyListTest_ExtraFields', true)
 			.' END AS "RecordClassName" FROM "ManyManyListTest_ExtraFields" INNER JOIN'
 			.' "ManyManyListTest_ExtraFields_Clients" ON'
 			.' "ManyManyListTest_ExtraFields_Clients"."ManyManyListTest_ExtraFieldsID" ='

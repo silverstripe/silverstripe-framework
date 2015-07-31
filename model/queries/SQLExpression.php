@@ -24,18 +24,18 @@ abstract class SQLExpression {
 	protected $replacementsNew = array();
 
 	/**
-	 * @deprecated since version 3.2
+	 * @deprecated since version 4.0
 	 */
 	public function __get($field) {
-		Deprecation::notice('3.2', 'use get{Field} to get the necessary protected field\'s value');
+		Deprecation::notice('4.0', 'use get{Field} to get the necessary protected field\'s value');
 		return $this->$field;
 	}
 
 	/**
-	 * @deprecated since version 3.2
+	 * @deprecated since version 4.0
 	 */
 	public function __set($field, $value) {
-		Deprecation::notice('3.2', 'use set{Field} to set the necessary protected field\'s value');
+		Deprecation::notice('4.0', 'use set{Field} to set the necessary protected field\'s value');
 		return $this->$field = $value;
 	}
 

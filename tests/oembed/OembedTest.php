@@ -1,16 +1,6 @@
 <?php
 
 class OembedTest extends SapphireTest {
-	public function setUp() {
-		parent::setUp();
-		Config::nest();
-	}
-
-	public function tearDown() {
-		Config::unnest();
-		parent::tearDown();
-	}
-
 	public function testGetOembedFromUrl() {
 		Config::inst()->update('Oembed', 'providers', array(
 			'http://*.silverstripe.com/watch*'=>'http://www.silverstripe.com/oembed/'

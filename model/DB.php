@@ -50,10 +50,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::set_conn instead
+	 * @deprecated since version 4.0 Use DB::set_conn instead
 	 */
 	public static function setConn(SS_Database $connection, $name = 'default') {
-		Deprecation::notice('3.3', 'Use DB::set_conn instead');
+		Deprecation::notice('4.0', 'Use DB::set_conn instead');
 		self::set_conn($connection, $name);
 	}
 
@@ -71,10 +71,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::get_conn instead
+	 * @deprecated since version 4.0 Use DB::get_conn instead
 	 */
 	public static function getConn($name = 'default') {
-		Deprecation::notice('3.3', 'Use DB::get_conn instead');
+		Deprecation::notice('4.0', 'Use DB::get_conn instead');
 		return self::get_conn($name);
 	}
 
@@ -135,6 +135,10 @@ class DB {
 	 * Set it to null to revert to the main database.
 	 */
 	public static function set_alternative_database_name($name = null) {
+		// Skip if CLI
+		if(Director::is_cli()) {
+			return;
+		}
 		if($name) {
 			if(!self::valid_alternative_database_name($name)) {
 				throw new InvalidArgumentException(sprintf(
@@ -254,10 +258,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.2 DB::getConnect was never implemented and is obsolete
+	 * @deprecated since version 4.0 DB::getConnect was never implemented and is obsolete
 	 */
 	public static function getConnect($parameters) {
-		Deprecation::notice('3.2', 'DB::getConnect was never implemented and is obsolete');
+		Deprecation::notice('4.0', 'DB::getConnect was never implemented and is obsolete');
 	}
 
 	/**
@@ -363,10 +367,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::get_generated_id instead
+	 * @deprecated since version 4.0 Use DB::get_generated_id instead
 	 */
 	public static function getGeneratedID($table) {
-		Deprecation::notice('3.3', 'Use DB::get_generated_id instead');
+		Deprecation::notice('4.0', 'Use DB::get_generated_id instead');
 		return self::get_generated_id($table);
 	}
 
@@ -380,10 +384,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::is_active instead
+	 * @deprecated since version 4.0 Use DB::is_active instead
 	 */
 	public static function isActive() {
-		Deprecation::notice('3.3', 'Use DB::is_active instead');
+		Deprecation::notice('4.0', 'Use DB::is_active instead');
 		return self::is_active();
 	}
 
@@ -400,10 +404,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::create_database instead
+	 * @deprecated since version 4.0 Use DB::create_database instead
 	 */
 	public static function createDatabase($connect, $username, $password, $database) {
-		Deprecation::notice('3.3', 'Use DB::create_database instead');
+		Deprecation::notice('4.0', 'Use DB::create_database instead');
 		return self::create_database($database);
 	}
 
@@ -426,10 +430,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::create_table instead
+	 * @deprecated since version 4.0 Use DB::create_table instead
 	 */
 	public static function createTable($table, $fields = null, $indexes = null, $options = null) {
-		Deprecation::notice('3.3', 'Use DB::create_table instead');
+		Deprecation::notice('4.0', 'Use DB::create_table instead');
 		return self::create_table($table, $fields, $indexes, $options);
 	}
 
@@ -444,10 +448,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::create_field instead
+	 * @deprecated since version 4.0 Use DB::create_field instead
 	 */
 	public static function createField($table, $field, $spec) {
-		Deprecation::notice('3.3', 'Use DB::create_field instead');
+		Deprecation::notice('4.0', 'Use DB::create_field instead');
 		return self::create_field($table, $field, $spec);
 	}
 
@@ -474,12 +478,12 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::require_table instead
+	 * @deprecated since version 4.0 Use DB::require_table instead
 	 */
 	public static function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK = true,
 		$options = null, $extensions = null
 	) {
-		Deprecation::notice('3.3', 'Use DB::require_table instead');
+		Deprecation::notice('4.0', 'Use DB::require_table instead');
 		return self::require_table($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options, $extensions);
 	}
 
@@ -495,10 +499,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::require_field instead
+	 * @deprecated since version 4.0 Use DB::require_field instead
 	 */
 	public static function requireField($table, $field, $spec) {
-		Deprecation::notice('3.3', 'Use DB::require_field instead');
+		Deprecation::notice('4.0', 'Use DB::require_field instead');
 		return self::require_field($table, $field, $spec);
 	}
 
@@ -514,10 +518,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::require_index instead
+	 * @deprecated since version 4.0 Use DB::require_index instead
 	 */
 	public static function requireIndex($table, $index, $spec) {
-		Deprecation::notice('3.3', 'Use DB::require_index instead');
+		Deprecation::notice('4.0', 'Use DB::require_index instead');
 		self::require_index($table, $index, $spec);
 	}
 
@@ -531,10 +535,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::dont_require_table instead
+	 * @deprecated since version 4.0 Use DB::dont_require_table instead
 	 */
 	public static function dontRequireTable($table) {
-		Deprecation::notice('3.3', 'Use DB::dont_require_table instead');
+		Deprecation::notice('4.0', 'Use DB::dont_require_table instead');
 		self::dont_require_table($table);
 	}
 
@@ -549,10 +553,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::dont_require_field instead
+	 * @deprecated since version 4.0 Use DB::dont_require_field instead
 	 */
 	public static function dontRequireField($table, $fieldName) {
-		Deprecation::notice('3.3', 'Use DB::dont_require_field instead');
+		Deprecation::notice('4.0', 'Use DB::dont_require_field instead');
 		self::dont_require_field($table, $fieldName);
 	}
 
@@ -567,10 +571,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::check_and_repair_table instead
+	 * @deprecated since version 4.0 Use DB::check_and_repair_table instead
 	 */
 	public static function checkAndRepairTable($table) {
-		Deprecation::notice('3.3', 'Use DB::check_and_repair_table instead');
+		Deprecation::notice('4.0', 'Use DB::check_and_repair_table instead');
 		self::check_and_repair_table($table);
 	}
 
@@ -584,10 +588,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::affected_rows instead
+	 * @deprecated since version 4.0 Use DB::affected_rows instead
 	 */
 	public static function affectedRows() {
-		Deprecation::notice('3.3', 'Use DB::affected_rows instead');
+		Deprecation::notice('4.0', 'Use DB::affected_rows instead');
 		return self::affected_rows();
 	}
 
@@ -602,10 +606,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::table_list instead
+	 * @deprecated since version 4.0 Use DB::table_list instead
 	 */
 	public static function tableList() {
-		Deprecation::notice('3.3', 'Use DB::table_list instead');
+		Deprecation::notice('4.0', 'Use DB::table_list instead');
 		return self::table_list();
 	}
 
@@ -621,10 +625,10 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 3.3 Use DB::field_list instead
+	 * @deprecated since version 4.0 Use DB::field_list instead
 	 */
 	public static function fieldList($table) {
-		Deprecation::notice('3.3', 'Use DB::field_list instead');
+		Deprecation::notice('4.0', 'Use DB::field_list instead');
 		return self::field_list($table);
 	}
 

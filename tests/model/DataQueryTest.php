@@ -199,7 +199,7 @@ class DataQueryTest extends SapphireTest {
 	public function testComparisonClauseInt() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"SortOrder\") VALUES (2)");
 		$query = new DataQuery('DataQueryTest_F');
-		$query->where(DB::getConn()->comparisonClause('"SortOrder"', '2'));
+		$query->where(DB::get_conn()->comparisonClause('"SortOrder"', '2'));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find SortOrder");
 		$this->resetDBSchema(true);
 	}
@@ -207,7 +207,7 @@ class DataQueryTest extends SapphireTest {
 	public function testComparisonClauseDateFull() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyDate\") VALUES ('1988-03-04 06:30')");
 		$query = new DataQuery('DataQueryTest_F');
-		$query->where(DB::getConn()->comparisonClause('"MyDate"', '1988-03-04%'));
+		$query->where(DB::get_conn()->comparisonClause('"MyDate"', '1988-03-04%'));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
 		$this->resetDBSchema(true);
 	}
@@ -215,7 +215,7 @@ class DataQueryTest extends SapphireTest {
 	public function testComparisonClauseDateStartsWith() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyDate\") VALUES ('1988-03-04 06:30')");
 		$query = new DataQuery('DataQueryTest_F');
-		$query->where(DB::getConn()->comparisonClause('"MyDate"', '1988%'));
+		$query->where(DB::get_conn()->comparisonClause('"MyDate"', '1988%'));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
 		$this->resetDBSchema(true);
 	}
@@ -223,7 +223,7 @@ class DataQueryTest extends SapphireTest {
 	public function testComparisonClauseDateStartsPartial() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyDate\") VALUES ('1988-03-04 06:30')");
 		$query = new DataQuery('DataQueryTest_F');
-		$query->where(DB::getConn()->comparisonClause('"MyDate"', '%03-04%'));
+		$query->where(DB::get_conn()->comparisonClause('"MyDate"', '%03-04%'));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
 		$this->resetDBSchema(true);
 	}
@@ -231,7 +231,7 @@ class DataQueryTest extends SapphireTest {
 	public function testComparisonClauseTextCaseInsensitive() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyString\") VALUES ('HelloWorld')");
 		$query = new DataQuery('DataQueryTest_F');
-		$query->where(DB::getConn()->comparisonClause('"MyString"', 'helloworld'));
+		$query->where(DB::get_conn()->comparisonClause('"MyString"', 'helloworld'));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyString");
 		$this->resetDBSchema(true);
 	}
@@ -239,11 +239,11 @@ class DataQueryTest extends SapphireTest {
 	public function testComparisonClauseTextCaseSensitive() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyString\") VALUES ('HelloWorld')");
 		$query = new DataQuery('DataQueryTest_F');
-		$query->where(DB::getConn()->comparisonClause('"MyString"', 'HelloWorld', false, false, true));
+		$query->where(DB::get_conn()->comparisonClause('"MyString"', 'HelloWorld', false, false, true));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyString");
 
 		$query2 = new DataQuery('DataQueryTest_F');
-		$query2->where(DB::getConn()->comparisonClause('"MyString"', 'helloworld', false, false, true));
+		$query2->where(DB::get_conn()->comparisonClause('"MyString"', 'helloworld', false, false, true));
 		$this->assertEquals(0, $query2->count(), "Found mystring. Shouldn't be able too.");
 		$this->resetDBSchema(true);
 	}

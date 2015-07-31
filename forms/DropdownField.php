@@ -128,6 +128,10 @@ class DropdownField extends FormField {
 		parent::__construct($name, ($title===null) ? $name : $title, $value, $form);
 	}
 
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function Field($properties = array()) {
 		$source = $this->getSource();
 		$options = array();

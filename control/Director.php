@@ -84,13 +84,13 @@ class Director implements TemplateGlobalProvider {
 	 *
 	 * The director is responsible for turning URLs into Controller objects.
 	 *
-	 * @deprecated 3.2 Use the "Director.rules" config setting instead
+	 * @deprecated 4.0 Use the "Director.rules" config setting instead
 	 * @param $priority The priority of the rules; higher values will get your rule checked first.  We recommend
 	 *                  priority 100 for your site's rules.  The built-in rules are priority 10, standard modules are
 	 *                  priority 50.
 	 */
 	public static function addRules($priority, $rules) {
-		Deprecation::notice('3.2', 'Use the "Director.rules" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Director.rules" config setting instead');
 
 		Config::inst()->update('Director', 'rules', $rules);
 	}
@@ -610,10 +610,10 @@ class Director implements TemplateGlobalProvider {
 	 * Sets the root URL for the website.
 	 * If the site isn't accessible from the URL you provide, weird things will happen.
 	 *
-	 * @deprecated 3.2 Use the "Director.alternate_base_url" config setting instead
+	 * @deprecated 4.0 Use the "Director.alternate_base_url" config setting instead
 	 */
 	public static function setBaseURL($baseURL) {
-		Deprecation::notice('3.2', 'Use the "Director.alternate_base_url" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Director.alternate_base_url" config setting instead');
 		Config::inst()->update('Director', 'alternate_base_url', $baseURL);
 	}
 
@@ -630,10 +630,10 @@ class Director implements TemplateGlobalProvider {
 	 * Sets the root folder for the website.
 	 * If the site isn't accessible from the folder you provide, weird things will happen.
 	 *
-	 * @deprecated 3.2 Use the "Director.alternate_base_folder" config setting instead
+	 * @deprecated 4.0 Use the "Director.alternate_base_folder" config setting instead
 	 */
 	public static function setBaseFolder($baseFolder) {
-		Deprecation::notice('3.2', 'Use the "Director.alternate_base_folder" config setting instead');
+		Deprecation::notice('4.0', 'Use the "Director.alternate_base_folder" config setting instead');
 		Config::inst()->update('Director', 'alternate_base_folder', $baseFolder);
 	}
 
@@ -1023,7 +1023,7 @@ class Director implements TemplateGlobalProvider {
 	 * Once the environment type is set, it can be checked with {@link Director::isDev()}, {@link Director::isTest()},
 	 * and {@link Director::isLive()}.
 	 *
-	 * @deprecated 3.2 Use the "Director.environment_type" config setting instead
+	 * @deprecated 4.0 Use the "Director.environment_type" config setting instead
 	 * @param $et string The environment type: dev, test, or live.
 	 */
 	public static function set_environment_type($et) {
@@ -1031,7 +1031,7 @@ class Director implements TemplateGlobalProvider {
 			user_error("Director::set_environment_type passed '$et'.  It should be passed dev, test, or live",
 				E_USER_WARNING);
 		} else {
-			Deprecation::notice('3.2', 'Use the "Director.environment_type" config setting instead');
+			Deprecation::notice('4.0', 'Use the "Director.environment_type" config setting instead');
 			Config::inst()->update('Director', 'environment_type', $et);
 		}
 	}

@@ -15,6 +15,152 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 		$this->base = dirname(__FILE__) . '/fixtures/namespaced_classmanifest';
 		$this->manifest      = new SS_ClassManifest($this->base, false, true, false);
+		SS_ClassLoader::instance()->pushManifest($this->manifest, false);
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+		SS_ClassLoader::instance()->popManifest();
+	}
+
+	public function testGetImportedNamespaceParser() {
+		$file = file_get_contents($this->base . DIRECTORY_SEPARATOR . 'module/classes/ClassI.php');
+		$tokens = token_get_all($file);
+		$parsedTokens = SS_ClassManifest::get_imported_namespace_parser()->findAll($tokens);
+
+		$expectedItems = array(
+			array('ModelAdmin'),
+			array('Controller', '  ', 'as', '  ', 'Cont'),
+			array(
+				'SS_HTTPRequest', ' ', 'as', ' ', 'Request', ',',
+				'SS_HTTPResponse', ' ', 'AS', ' ', 'Response', ',',
+				'PermissionProvider', ' ', 'AS', ' ', 'P',
+			),
+			array('silverstripe', '\\', 'test', '\\', 'ClassA'),
+			array('\\', 'DataObject'),
+		);
+
+		$this->assertEquals(count($expectedItems), count($parsedTokens));
+
+		foreach ($expectedItems as $i => $item) {
+			$this->assertEquals($item, $parsedTokens[$i]['importString']);
+		}
+	}
+
+	public function testGetImportsFromTokens() {
+		$file = file_get_contents($this->base . DIRECTORY_SEPARATOR . 'module/classes/ClassI.php');
+		$tokens = token_get_all($file);
+
+		$method = new ReflectionMethod($this->manifest, 'getImportsFromTokens');
+		$method->setAccessible(true);
+
+		$expectedImports = array(
+			'ModelAdmin',
+			'Cont' => 'Controller',
+			'Request' => 'SS_HTTPRequest',
+			'Response' => 'SS_HTTPResponse',
+			'P' => 'PermissionProvider',
+			'silverstripe\test\ClassA',
+			'\DataObject',
+		);
+
+		$imports = $method->invoke($this->manifest, $tokens);
+
+		$this->assertEquals($expectedImports, $imports);
+
+	}
+
+	public function testClassInfoIsCorrect() {
+		$this->assertContains('SilverStripe\Framework\Tests\ClassI', ClassInfo::implementorsOf('PermissionProvider'));
+
+		//because we're using a nested manifest we have to "coalesce" the descendants again to correctly populate the
+		// descendants of the core classes we want to test against - this is a limitation of the test manifest not
+		// including all core classes
+		$method = new ReflectionMethod($this->manifest, 'coalesceDescendants');
+		$method->setAccessible(true);
+		$method->invoke($this->manifest, 'ModelAdmin');
+
+		$this->assertContains('SilverStripe\Framework\Tests\ClassI', ClassInfo::subclassesFor('ModelAdmin'));
+	}
+
+	public function testFindClassOrInterfaceFromCandidateImports() {
+		$method = new ReflectionMethod($this->manifest, 'findClassOrInterfaceFromCandidateImports');
+		$method->setAccessible(true);
+
+		$this->assertTrue(ClassInfo::exists('silverstripe\test\ClassA'));
+
+		$this->assertEquals('PermissionProvider', $method->invokeArgs($this->manifest, array(
+			'\PermissionProvider',
+			'Test\Namespace',
+			array(
+				'TestOnly',
+				'Controller',
+			),
+		)));
+
+		$this->assertEquals('PermissionProvider', $method->invokeArgs($this->manifest, array(
+			'PermissionProvider',
+			'Test\NAmespace',
+			array(
+				'PermissionProvider',
+			)
+		)));
+
+		$this->assertEmpty($method->invokeArgs($this->manifest, array(
+			'',
+			'TextNamespace',
+			array(
+				'PermissionProvider',
+			),
+		)));
+
+		$this->assertEmpty($method->invokeArgs($this->manifest, array(
+			'',
+			'',
+			array()
+		)));
+
+		$this->assertEquals('silverstripe\test\ClassA', $method->invokeArgs($this->manifest, array(
+			'ClassA',
+			'Test\Namespace',
+			array(
+				'silverstripe\test\ClassA',
+				'PermissionProvider',
+			),
+		)));
+
+		$this->assertEquals('ClassA', $method->invokeArgs($this->manifest, array(
+			'\ClassA',
+			'Test\Namespace',
+			array(
+				'silverstripe\test',
+			),
+		)));
+
+		$this->assertEquals('ClassA', $method->invokeArgs($this->manifest, array(
+			'ClassA',
+			'silverstripe\test',
+			array(
+				'\ClassA',
+			),
+		)));
+
+		$this->assertEquals('ClassA', $method->invokeArgs($this->manifest, array(
+			'Alias',
+			'silverstripe\test',
+			array(
+				'Alias' => '\ClassA',
+			),
+		)));
+
+		$this->assertEquals('silverstripe\test\ClassA', $method->invokeArgs($this->manifest, array(
+			'ClassA',
+			'silverstripe\test',
+			array(
+				'silverstripe\test\ClassB',
+			),
+		)));
+
 	}
 
 	public function testGetItemPath() {
@@ -43,7 +189,8 @@ class NamespacedClassManifestTest extends SapphireTest {
 			'silverstripe\test\classg' => "{$this->base}/module/classes/ClassG.php",
 			'silverstripe\test\classh' => "{$this->base}/module/classes/ClassH.php",
 			'sstemplateparser'         => FRAMEWORK_PATH."/view/SSTemplateParser.php",
-			'sstemplateparseexception' => FRAMEWORK_PATH."/view/SSTemplateParser.php"
+			'sstemplateparseexception' => FRAMEWORK_PATH."/view/SSTemplateParser.php",
+			'silverstripe\framework\tests\classi' => "{$this->base}/module/classes/ClassI.php",
 		);
 
 		$this->assertEquals($expect, $this->manifest->getClasses());
@@ -54,7 +201,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 			array('sstemplateparser', 'sstemplateparseexception', 'silverstripe\test\classa',
 				'silverstripe\test\classb', 'silverstripe\test\classc', 'silverstripe\test\classd',
 				'silverstripe\test\classe', 'silverstripe\test\classf', 'silverstripe\test\classg',
-				'silverstripe\test\classh'),
+				'silverstripe\test\classh', 'silverstripe\framework\tests\classi'),
 			$this->manifest->getClassNames());
 	}
 
@@ -88,7 +235,8 @@ class NamespacedClassManifestTest extends SapphireTest {
 		$expect = array(
 			'silverstripe\test\interfacea' => array('silverstripe\test\ClassE'),
 			'interfacea' => array('silverstripe\test\ClassF'),
-			'silverstripe\test\subtest\interfacea' => array('silverstripe\test\ClassG')
+			'silverstripe\test\subtest\interfacea' => array('silverstripe\test\ClassG'),
+			'permissionprovider' => array('SilverStripe\Framework\Tests\ClassI'),
 		);
 		$this->assertEquals($expect, $this->manifest->getImplementors());
 	}

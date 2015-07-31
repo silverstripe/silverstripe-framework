@@ -196,7 +196,7 @@ class DataQuery {
 			$tableClasses = $ancestorTables;
 		}
 
-		$tableNames = array_keys($tableClasses);
+		$tableNames = array_values($tableClasses);
 		$baseClass = $tableNames[0];
 
 		// Iterate over the tables and check what we need to select from them. If any selects are made (or the table is
@@ -333,7 +333,7 @@ class DataQuery {
 
 					if(!in_array($qualCol, $query->getSelect())) {
 						unset($newOrderby[$k]);
-						
+
 						$newOrderby["\"_SortColumn$i\""] = $dir;
 						$query->selectField($qualCol, "_SortColumn$i");
 
@@ -836,6 +836,10 @@ class DataQuery {
  */
 class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
 
+	/**
+	 *
+	 * @var SQLSelect
+	 */
 	protected $whereQuery;
 
 	public function __construct(DataQuery $base, $connective) {
@@ -868,7 +872,9 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
 
 		// Ignore empty conditions
 		$where = $this->whereQuery->getWhere();
-		if(empty($where)) return null;
+		if(empty($where)) {
+			return null;
+		}
 
 		// Allow database to manage joining of conditions
 		$sql = DB::get_conn()->getQueryBuilder()->buildWhereFragment($this->whereQuery, $parameters);

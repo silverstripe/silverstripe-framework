@@ -60,8 +60,8 @@ en:
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     ANY: Any
-    NOANSWER: No
-    YESANSWER: Yes
+    NOANSWER: 'No'
+    YESANSWER: 'Yes'
   CMSLoadingScreen_ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -81,8 +81,8 @@ en:
     HELLO: Hi
     PASSWORD: Password
   CheckboxField:
-    NOANSWER: No
-    YESANSWER: Yes
+    NOANSWER: 'No'
+    YESANSWER: 'Yes'
   CheckboxFieldSetField:
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   CMSMemberLoginForm:
@@ -192,7 +192,7 @@ en:
     TEXT3: for
   Form:
     CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'    
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
     FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
@@ -259,7 +259,7 @@ en:
     many_many_Members: Members
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: "<div class=\"advanced\">\n	<h4>Advanced usage</h4>\n	<ul>\n	<li>Allowed columns: <em>%s</em></li>\n	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the \n	imported file</li>\n	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>\n	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not\n	cleared.</li>\n	</ul>\n</div>"
+    Help2: "<div class=\"advanced\">\n	<h4>Advanced usage</h4>\n	<ul>\n	<li>Allowed columns: <em>%s</em></li>\n	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the\n	imported file</li>\n	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>\n	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not\n	cleared.</li>\n	</ul>\n</div>"
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
@@ -313,6 +313,7 @@ en:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+    SUBJECT: 'Email subject'
   Image:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -330,7 +331,7 @@ en:
     PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PLEASESAVE: 'Please Save Page: This page could not be updated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -342,7 +343,7 @@ en:
     Hello: Hi
     LOGOUT: 'Log out'
   ListboxField:
-    SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
+    SOURCE_VALIDATION: 'Please select a value within the list provided. %s is not a valid option'
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
@@ -585,3 +586,5 @@ en:
     UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Versions
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Please select a value within the list provided. ''{value}'' is not a valid option'

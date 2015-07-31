@@ -103,22 +103,22 @@ class MySQLiConnector extends DBConnector {
 	public function getVersion() {
 		return $this->dbConn->server_info;
 	}
-
-	protected function benchmarkQuery($sql, $callback) {
+	
+	/**
+	 * Invoked before any query is executed
+	 * 
+	 * @param string $sql
+	 */
+	protected function beforeQuery($sql) {
 		// Clear the last statement
 		$this->setLastStatement(null);
-		return parent::benchmarkQuery($sql, $callback);
 	}
 
 	public function query($sql, $errorLevel = E_USER_ERROR) {
-		// Check if we should only preview this query
-		if ($this->previewWrite($sql)) return;
+		$this->beforeQuery($sql);
 
 		// Benchmark query
-		$conn = $this->dbConn;
-		$handle = $this->benchmarkQuery($sql, function($sql) use($conn) {
-			return $conn->query($sql, MYSQLI_STORE_RESULT);
-		});
+		$handle = $this->dbConn->query($sql, MYSQLI_STORE_RESULT);
 
 		if (!$handle || $this->dbConn->error) {
 			$this->databaseError($this->getLastError(), $errorLevel, $sql);
@@ -208,23 +208,20 @@ class MySQLiConnector extends DBConnector {
 
 	public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR) {
 		// Shortcut to basic query when not given parameters
-		if(empty($parameters)) return $this->query($sql, $errorLevel);
+		if(empty($parameters)) {
+			return $this->query($sql, $errorLevel);
+		}
 
-		// Check if we should only preview this query
-		if ($this->previewWrite($sql)) return;
+		$this->beforeQuery($sql);
 
 		// Type check, identify, and prepare parameters for passing to the statement bind function
 		$parsedParameters = $this->parsePreparedParameters($parameters, $blobs);
 
 		// Benchmark query
-		$self = $this;
-		$lastStatement = $this->benchmarkQuery($sql, function($sql) use($parsedParameters, $blobs, $self) {
-
-			$statement = $self->prepareStatement($sql, $success);
-			if(!$success) return null;
-
+		$statement = $this->prepareStatement($sql, $success);
+		if($success) {
 			if($parsedParameters) {
-				$self->bindParameters($statement, $parsedParameters);
+				$this->bindParameters($statement, $parsedParameters);
 			}
 
 			// Bind any blobs given
@@ -234,18 +231,18 @@ class MySQLiConnector extends DBConnector {
 
 			// Safely execute the statement
 			$statement->execute();
-			return $statement;
-		});
+		}
 		
-		if (!$lastStatement || $lastStatement->error) {
+		if (!$success || $statement->error) {
 			$values = $this->parameterValues($parameters);
 			$this->databaseError($this->getLastError(), $errorLevel, $sql, $values);
 			return null;
 		}
 
 		// Non-select queries will have no result data
-		if($lastStatement && ($metaData = $lastStatement->result_metadata())) {
-			return new MySQLStatement($lastStatement, $metaData);
+		$metaData = $statement->result_metadata();
+		if($metaData) {
+			return new MySQLStatement($statement, $metaData);
 		} else {
 			// Replicate normal behaviour of ->query() on non-select calls
 			return new MySQLQuery($this, true);

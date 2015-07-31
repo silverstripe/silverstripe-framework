@@ -140,10 +140,10 @@ class File extends DataObject {
 	private static $app_categories = array(
 		'audio' => array(
 			"aif" ,"au" ,"mid" ,"midi" ,"mp3" ,"ra" ,"ram" ,"rm","mp3" ,"wav" ,"m4a" ,"snd" ,"aifc" ,"aiff" ,"wma",
-			"apl", "avr" ,"cda" ,"mp4" ,"ogg"
+			"apl", "avr" ,"cda" ,"ogg"
 		),
 		'mov' => array(
-			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt", "ogv", "webm"
+			"mpeg" ,"mpg" ,"mp4" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt", "ogv", "webm"
 		),
 		'zip' => array(
 			"arc" ,"rar" ,"tar" ,"gz" ,"tgz" ,"bz2" ,"dmg" ,"jar","ace" ,"arj" ,"bz" ,"cab"
@@ -222,6 +222,15 @@ class File extends DataObject {
 	}
 
 	/**
+	 * A file only exists if the file_exists() and is in the DB as a record
+	 *
+	 * @return bool
+	 */
+	public function exists() {
+		return parent::exists() && file_exists($this->getFullPath());
+	}
+
+	/**
 	 * Find a File object by the given filename.
 	 *
 	 * @param String $filename Matched against the "Name" property.
@@ -293,7 +302,7 @@ class File extends DataObject {
 		// ensure that the record is synced with the filesystem before deleting
 		$this->updateFilesystem();
 
-		if($this->Filename && $this->Name && file_exists($this->getFullPath()) && !is_dir($this->getFullPath())) {
+		if($this->exists() && !is_dir($this->getFullPath())) {
 			unlink($this->getFullPath());
 		}
 	}
@@ -637,7 +646,7 @@ class File extends DataObject {
 
 		// If it's changed, check for duplicates
 		if($oldName && $oldName != $name) {
-			$base = pathinfo($name, PATHINFO_BASENAME);
+			$base = pathinfo($name, PATHINFO_FILENAME);
 			$ext = self::get_file_extension($name);
 			$suffix = 1;
 
@@ -649,7 +658,7 @@ class File extends DataObject {
 				))->first()
 			) {
 				$suffix++;
-				$name = "$base-$suffix$ext";
+				$name = "$base-$suffix.$ext";
 			}
 		}
 
@@ -836,7 +845,7 @@ class File extends DataObject {
 			'htm' => _t('File.HtmlType', 'HTML file')
 		);
 
-		$ext = $this->getExtension();
+		$ext = strtolower($this->getExtension());
 
 		return isset($types[$ext]) ? $types[$ext] : 'unknown';
 	}

@@ -415,6 +415,13 @@ class InstallRequirements {
 			"Is the mysite/_config.php file writeable?",
 			null
 		));
+
+		$this->requireWriteable('mysite/_config/config.yml', array(
+			"File permissions",
+			"Is the mysite/_config/config.yml file writeable?",
+			null
+		));
+
 		if(!$this->checkModuleExists('cms')) {
 			$this->requireWriteable('mysite/code/RootURLController.php', array(
 				"File permissions",

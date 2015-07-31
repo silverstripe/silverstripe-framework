@@ -76,7 +76,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @config
 	 * @var string
 	 */
-	private static $help_link = 'http://userhelp.silverstripe.org/framework/en/3.1';
+	private static $help_link = '//userhelp.silverstripe.org/framework/en/3.2';
 
 	/**
 	 * @var array
@@ -555,7 +555,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public static function menu_icon_for_class($class) {
 		$icon = Config::inst()->get($class, 'menu_icon', Config::FIRST_SET);
 		if (!empty($icon)) {
-			$class = strtolower($class);
+			$class = strtolower(Convert::raw2htmlname(str_replace('\\', '-', $class)));
 			return ".icon.icon-16.icon-{$class} { background: url('{$icon}'); } ";
 		}
 		return '';
@@ -1397,8 +1397,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function BatchActionsForm() {
 		$actions = $this->batchactions()->batchActionList();
-		$actionsMap = array('-1' => _t('LeftAndMain.DropdownBatchActionsDefault', 'Actions'));
-		foreach($actions as $action) $actionsMap[$action->Link] = $action->Title;
+		$actionsMap = array();
+		foreach($actions as $action) {
+			$actionsMap[$action->Link] = $action->Title;
+		}
 
 		$form = new Form(
 			$this,
@@ -1409,7 +1411,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					'Action',
 					false,
 					$actionsMap
-				)->setAttribute('autocomplete', 'off')
+				)
+					->setAttribute('autocomplete', 'off')
+					->setAttribute('data-placeholder', _t('LeftAndMain.DropdownBatchActionsDefault', 'Actions'))
 			),
 			new FieldList(
 				// TODO i18n
@@ -1618,15 +1622,17 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @config
 	 * @var String
 	 */
-	private static $application_link = 'http://www.silverstripe.org/';
+	private static $application_link = '//www.silverstripe.org/';
 
 	/**
 	 * Sets the href for the anchor on the Silverstripe logo in the menu
+	 * 
+	 * @deprecated since version 4.0
 	 *
 	 * @param String $link
 	 */
 	public static function set_application_link($link) {
-		Deprecation::notice('3.2', 'Use the "LeftAndMain.application_link" config setting instead');
+		Deprecation::notice('4.0', 'Use the "LeftAndMain.application_link" config setting instead');
 		Config::inst()->update('LeftAndMain', 'application_link', $link);
 	}
 
@@ -1648,9 +1654,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 	/**
 	 * @param String $name
+	 * @deprecated since version 4.0
 	 */
 	public static function setApplicationName($name) {
-		Deprecation::notice('3.2', 'Use the "LeftAndMain.application_name" config setting instead');
+		Deprecation::notice('4.0', 'Use the "LeftAndMain.application_name" config setting instead');
 		Config::inst()->update('LeftAndMain', 'application_name', $name);
 	}
 
@@ -1747,21 +1754,24 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * Register the given javascript file as required in the CMS.
 	 * Filenames should be relative to the base, eg, FRAMEWORK_DIR . '/javascript/loader.js'
+	 * 
+	 * @deprecated since version 4.0
 	 */
 	public static function require_javascript($file) {
-		Deprecation::notice('3.2', 'Use "LeftAndMain.extra_requirements_javascript" config setting instead');
+		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_javascript" config setting instead');
 		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', array($file => array()));
 	}
 
 	/**
 	 * Register the given stylesheet file as required.
+	 * @deprecated since version 4.0
 	 *
 	 * @param $file String Filenames should be relative to the base, eg, THIRDPARTY_DIR . '/tree/tree.css'
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector")
 	 * @see http://www.w3.org/TR/REC-CSS2/media.html
 	 */
 	public static function require_css($file, $media = null) {
-		Deprecation::notice('3.2', 'Use "LeftAndMain.extra_requirements_css" config setting instead');
+		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_css" config setting instead');
 		Config::inst()->update('LeftAndMain', 'extra_requirements_css', array($file => array('media' => $media)));
 	}
 
@@ -1769,12 +1779,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Register the given "themeable stylesheet" as required.
 	 * Themeable stylesheets have globally unique names, just like templates and PHP files.
 	 * Because of this, they can be replaced by similarly named CSS files in the theme directory.
+	 * 
+	 * @deprecated since version 4.0
 	 *
 	 * @param $name String The identifier of the file.  For example, css/MyFile.css would have the identifier "MyFile"
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector")
 	 */
 	public static function require_themed_css($name, $media = null) {
-		Deprecation::notice('3.2', 'Use "LeftAndMain.extra_requirements_themedCss" config setting instead');
+		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_themedCss" config setting instead');
 		Config::inst()->update('LeftAndMain', 'extra_requirements_themedCss', array($name => array('media' => $media)));
 	}
 
@@ -1950,8 +1962,9 @@ class LeftAndMain_TreeNode extends ViewableData {
 		$obj = $this->obj;
 		return "<li id=\"record-$obj->ID\" data-id=\"$obj->ID\" data-pagetype=\"$obj->ClassName\" class=\""
 			. $this->getClasses() . "\">" . "<ins class=\"jstree-icon\">&nbsp;</ins>"
-			. "<a href=\"" . $this->getLink() . "\" title=\"" . _t('LeftAndMain.PAGETYPE','Page type: ')
-			. "$obj->class\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle)
+			. "<a href=\"" . $this->getLink() . "\" title=\"("
+			. trim(_t('LeftAndMain.PAGETYPE','Page type'), " :") // account for inconsistencies in translations
+			. ": " . $obj->i18n_singular_name() . ") $obj->Title\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle)
 			. "</span></a>";
 	}
 

@@ -246,7 +246,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	public function getJoins(&$parameters = array()) {
 		if(func_num_args() == 0) {
 			Deprecation::notice(
-				'3.2',
+				'4.0',
 				'SQLConditionalExpression::getJoins() now may produce parameters which are necessary to
 				execute this query'
 			);
@@ -371,7 +371,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	/**
 	 * Set a WHERE clause.
 	 *
-	 * @see SQLSelect::addWhere() for syntax examples
+	 * @see SQLConditionalExpression::addWhere() for syntax examples
 	 *
 	 * @param mixed $where Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $where,... Unlimited additional predicates
@@ -473,7 +473,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	}
 
 	/**
-	 * @see SQLSelect::addWhere()
+	 * @see SQLConditionalExpression::addWhere()
 	 *
 	 * @param mixed $filters Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $filters,... Unlimited additional predicates
@@ -487,7 +487,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	}
 
 	/**
-	 * @see SQLSelect::addWhere()
+	 * @see SQLConditionalExpression::addWhere()
 	 *
 	 * @param mixed $filters Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $filters,... Unlimited additional predicates

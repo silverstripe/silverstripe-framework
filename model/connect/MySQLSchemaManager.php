@@ -12,25 +12,13 @@ class MySQLSchemaManager extends DBSchemaManager {
 	 * Identifier for this schema, used for configuring schema-specific table
 	 * creation options
 	 */
-	const ID = 'MySQL';
+	const ID = 'MySQLDatabase';
 
 	public function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null) {
 		$fieldSchemas = $indexSchemas = "";
 
 		if (!empty($options[self::ID])) {
 			$addOptions = $options[self::ID];
-		} elseif (!empty($options[get_class($this)])) {
-			Deprecation::notice(
-				'3.2',
-				'Use MySQLSchemaManager::ID for referencing mysql-specific table creation options'
-			);
-			$addOptions = $options[get_class($this)];
-		} elseif (!empty($options[get_parent_class($this)])) {
-			Deprecation::notice(
-				'3.2',
-				'Use MySQLSchemaManager::ID for referencing mysql-specific table creation options'
-			);
-			$addOptions = $options[get_parent_class($this)];
 		} else {
 			$addOptions = "ENGINE=InnoDB";
 		}

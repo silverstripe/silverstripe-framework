@@ -46,7 +46,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Table will have been initially created by the $extraDataObjects setting
 
 		// Let's insert a new field here
-		Config::nest();
 		Config::inst()->update('DataObjectSchemaGenerationTest_DO', 'db', array(
 			'SecretField' => 'Varchar(100)'
 		));
@@ -59,9 +58,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 			$schema->cancelSchemaUpdate();
 			$test->assertTrue($needsUpdating);
 		});
-
-		// Restore db configuration
-		Config::unnest();
 	}
 
 	/**
@@ -84,7 +80,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		});
 
 		// Test with alternate index format, although these indexes are the same
-		Config::nest();
 		Config::inst()->remove('DataObjectSchemaGenerationTest_IndexDO', 'indexes');
 		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'indexes',
 			Config::inst()->get('DataObjectSchemaGenerationTest_IndexDO', 'indexes_alt')
@@ -98,9 +93,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 			$schema->cancelSchemaUpdate();
 			$test->assertFalse($needsUpdating);
 		});
-
-		// Restore old index format
-		Config::unnest();
 	}
 
 	/**
@@ -114,7 +106,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Table will have been initially created by the $extraDataObjects setting
 
 		// Update the SearchFields index here
-		Config::nest();
 		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'indexes', array(
 			'SearchFields' => array(
 				'value' => 'Title'
@@ -129,9 +120,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 			$schema->cancelSchemaUpdate();
 			$test->assertTrue($needsUpdating);
 		});
-
-		// Restore old indexes
-		Config::unnest();
 	}
 
 	/**

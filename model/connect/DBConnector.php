@@ -10,11 +10,20 @@ abstract class DBConnector {
 
 	/**
 	 * List of operations to treat as write
+	 * Implicitly includes all ddl_operations
 	 *
 	 * @config
 	 * @var array
 	 */
-	private static $write_operations = array('insert', 'update', 'delete', 'replace', 'alter', 'drop');
+	private static $write_operations = array('insert', 'update', 'delete', 'replace');
+	
+	/**
+	 * List of operations to treat as DDL
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $ddl_operations = array('alter', 'drop', 'create', 'truncate');
 
 	/**
 	 * Error handler for database errors.
@@ -27,6 +36,7 @@ abstract class DBConnector {
 	 * @param integer $errorLevel The level of the error to throw.
 	 * @param string $sql The SQL related to this query
 	 * @param array $parameters Parameters passed to the query
+	 * @throws SS_DatabaseException
 	 */
 	protected function databaseError($msg, $errorLevel = E_USER_ERROR, $sql = null, $parameters = array()) {
 		// Prevent errors when error checking is set at zero level
@@ -47,48 +57,59 @@ abstract class DBConnector {
 			user_error($msg, $errorLevel);
 		}
 	}
-
+	
 	/**
-	 * Determines if the query should be previewed, and thus interrupted silently.
-	 * If so, this function also displays the query via the debuging system.
-	 * Subclasess should respect the results of this call for each query, and not
-	 * execute any queries that generate a true response.
-	 *
-	 * @param string $sql The query to be executed
-	 * @return boolean Flag indicating that the query was previewed
+	 * Determine if this SQL statement is a destructive operation (write or ddl)
+	 * 
+	 * @param string $sql
+	 * @return bool
 	 */
-	protected function previewWrite($sql) {
-		// Break if not requested
-		if (!isset($_REQUEST['previewwrite'])) return false;
-
-		// Break if non-write operation
-		$operation = strtolower(substr($sql, 0, strpos($sql, ' ')));
-		$writeOperations = Config::inst()->get(get_class($this), 'write_operations');
-		if (!in_array($operation, $writeOperations)) {
+	public function isQueryMutable($sql) {
+		$operations = array_merge(
+			Config::inst()->get(get_class($this), 'write_operations'),
+			Config::inst()->get(get_class($this), 'ddl_operations')
+		);
+		return $this->isQueryType($sql, $operations);
+	}
+	
+	/**
+	 * Determine if this SQL statement is a DDL operation
+	 * 
+	 * @param string $sql
+	 * @return bool
+	 */
+	public function isQueryDDL($sql) {
+		$operations = Config::inst()->get(get_class($this), 'ddl_operations');
+		return $this->isQueryType($sql, $operations);
+	}
+	
+	/**
+	 * Determine if this SQL statement is a write operation
+	 * (alters content but not structure)
+	 * 
+	 * @param string $sql
+	 * @return bool
+	 */
+	public function isQueryWrite($sql) {
+		$operations = Config::inst()->get(get_class($this), 'write_operations');
+		return $this->isQueryType($sql, $operations);
+	}
+	
+	/**
+	 * Determine if a query is of the given type
+	 * 
+	 * @param string $sql Raw SQL
+	 * @param string|array $type Type or list of types (first word in the query). Must be lowercase
+	 */
+	protected function isQueryType($sql, $type) {
+		if(!preg_match('/^(?<operation>\w+)\b/', $sql, $matches)) {
 			return false;
 		}
-
-		// output preview message
-		Debug::message("Will execute: $sql");
-		return true;
-	}
-
-	/**
-	 * Allows the display and benchmarking of queries as they are being run
-	 *
-	 * @param string $sql Query to run, and single parameter to callback
-	 * @param callable $callback Callback to execute code
-	 * @return mixed Result of query
-	 */
-	protected function benchmarkQuery($sql, $callback) {
-		if (isset($_REQUEST['showqueries']) && Director::isDev(true)) {
-			$starttime = microtime(true);
-			$result = $callback($sql);
-			$endtime = round(microtime(true) - $starttime, 4);
-			Debug::message("\n$sql\n{$endtime}s\n", false);
-			return $result;
+		$operation = $matches['operation'];
+		if(is_array($type)) {
+			return in_array(strtolower($operation), $type);
 		} else {
-			return $callback($sql);
+			return strcasecmp($sql, $type) === 0;
 		}
 	}
 

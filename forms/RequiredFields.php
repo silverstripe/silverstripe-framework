@@ -34,8 +34,11 @@ class RequiredFields extends Validator {
 		parent::__construct();
 	}
 
+	/**
+	 * @deprecated since version 4.0
+	 */
 	public function useLabels($flag) {
-		Deprecation::notice('3.2', 'useLabels will be removed from 3.2, please do not use it or implement it yourself');
+		Deprecation::notice('4.0', 'useLabels will be removed from 4.0, please do not use it or implement it yourself');
 		$this->useLabels = $flag;
 		return $this;
 	}

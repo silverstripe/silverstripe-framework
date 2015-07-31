@@ -36,6 +36,10 @@ class ReadonlyField extends FormField {
 		return clone $this;
 	}
 
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function Field($properties = array()) {
 		// Include a hidden field in the HTML
 		if($this->includeHiddenField && $this->readonly) {

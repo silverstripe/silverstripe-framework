@@ -111,6 +111,7 @@ if(!defined('TRUSTED_PROXY')) {
  */
 if(!isset($_SERVER['HTTP_HOST'])) {
 	// HTTP_HOST, REQUEST_PORT, SCRIPT_NAME, and PHP_SELF
+	global $_FILE_TO_URL_MAPPING;	
 	if(isset($_FILE_TO_URL_MAPPING)) {
 		$fullPath = $testPath = realpath($_SERVER['SCRIPT_FILENAME']);
 		while($testPath && $testPath != '/' && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
@@ -162,9 +163,10 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	}
 }
 
-if (defined('SS_ALLOWED_HOSTS')) {
+// Filter by configured allowed hosts
+if (defined('SS_ALLOWED_HOSTS') && php_sapi_name() !== "cli") {
 	$all_allowed_hosts = explode(',', SS_ALLOWED_HOSTS);
-	if (!in_array($_SERVER['HTTP_HOST'], $all_allowed_hosts)) {
+	if (!isset($_SERVER['HTTP_HOST']) || !in_array($_SERVER['HTTP_HOST'], $all_allowed_hosts)) {
 		header('HTTP/1.1 400 Invalid Host', true, 400);
 		die();
 	}

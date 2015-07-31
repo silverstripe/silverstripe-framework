@@ -182,16 +182,8 @@ end of each test.
 				$page->publish('Stage', 'Live');
 			}
 
-			// reset configuration for the test.
-			Config::nest();
+			// set custom configuration for the test.
 			Config::inst()->update('Foo', 'bar', 'Hello!');
-		}
-
-		public function tearDown() {
-			// restores the config variables
-			Config::unnest();
-
-			parent::tearDown();
 		}
 
 		public function testMyMethod() {
@@ -222,6 +214,32 @@ individual test case.
 
 			// ..
 		}
+	}
+	
+### Config and Injector Nesting
+
+A powerful feature of both [`Config`](/developer_guides/configuration/configuration/) and [`Injector`](/developer_guides/extending/injector/) is the ability to "nest" them so that you can make changes that can easily be discarded without having to manage previous values.
+
+The testing suite makes use of this to "sandbox" each of the unit tests as well as each suite to prevent leakage between tests.
+
+If you need to make changes to `Config` (or `Injector) for each test (or the whole suite) you can safely update `Config` (or `Injector`) settings in the `setUp` or `tearDown` functions.
+
+It's important to remember that the `parent::setUp();` functions will need to be called first to ensure the nesting feature works as expected.
+
+	:::php
+	function setUpOnce() {
+		parent::setUpOnce();
+		//this will remain for the whole suite and be removed for any other tests
+		Config::inst()->update('ClassName', 'var_name', 'var_value');
+	}
+	
+	function testFeatureDoesAsExpected() {
+		//this will be reset to 'var_value' at the end of this test function
+		Config::inst()->update('ClassName', 'var_name', 'new_var_value');
+	}
+	
+	function testAnotherFeatureDoesAsExpected() {
+		Config::inst()->get('ClassName', 'var_name'); // this will be 'var_value'
 	}
 
 ## Generating a Coverage Report

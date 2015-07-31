@@ -82,6 +82,19 @@ class ConfigTest_TestNest extends Object implements TestOnly {
 }
 
 class ConfigTest extends SapphireTest {
+	
+	protected $depSettings = null;
+	
+	public function setUp() {
+		parent::setUp();
+		$this->depSettings = Deprecation::dump_settings();
+		Deprecation::set_enabled(false);
+	}
+	
+	public function tearDown() {
+		Deprecation::restore_settings($this->depSettings);
+		parent::tearDown();
+	}
 
 	public function testNest() {
 
@@ -189,8 +202,7 @@ class ConfigTest extends SapphireTest {
 		// But it won't affect subclasses - this is *uninherited* static
 		$this->assertNotContains('test_2b',
 			Config::inst()->get('ConfigStaticTest_Third', 'first', Config::UNINHERITED));
-		$this->assertNotContains('test_2b',
-			Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
+		$this->assertNull(Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
 
 		// Subclasses that don't have the static explicitly defined should allow definition, also
 		// This also checks that set can be called after the first uninherited get()
@@ -283,12 +295,6 @@ class ConfigTest extends SapphireTest {
 	}
 
 	public function testLRUDiscarding() {
-		$depSettings = Deprecation::dump_settings();
-		Deprecation::restore_settings(array(
-			'level' => false,
-			'version' => false,
-			'moduleVersions' => false,
-		));
 		$cache = new ConfigTest_Config_LRU();
 		for ($i = 0; $i < Config_LRU::SIZE*2; $i++) $cache->set($i, $i);
 		$this->assertEquals(
@@ -302,16 +308,9 @@ class ConfigTest extends SapphireTest {
 			Config_LRU::SIZE, count($cache->indexing),
 			'Heterogenous usage gives sufficient discarding'
 		);
-		Deprecation::restore_settings($depSettings);
 	}
 
 	public function testLRUCleaning() {
-		$depSettings = Deprecation::dump_settings();
-		Deprecation::restore_settings(array(
-			'level' => false,
-			'version' => false,
-			'moduleVersions' => false,
-		));
 		$cache = new ConfigTest_Config_LRU();
 		for ($i = 0; $i < Config_LRU::SIZE; $i++) $cache->set($i, $i);
 		$this->assertEquals(Config_LRU::SIZE, count($cache->indexing));
@@ -328,7 +327,6 @@ class ConfigTest extends SapphireTest {
 		$cache->clean('Bar');
 		$this->assertEquals(0, count($cache->indexing), 'Clean items with any single matching tag');
 		$this->assertFalse($cache->get(1), 'Clean items with any single matching tag');
-		Deprecation::restore_settings($depSettings);
 	}
 }
 

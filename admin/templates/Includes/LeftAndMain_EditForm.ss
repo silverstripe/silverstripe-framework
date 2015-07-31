@@ -3,7 +3,6 @@
 <% end_if %>
 	<div class="cms-content-header north">
 		<div class="cms-content-header-info">
-			<% include BackLink_Button %>			
 			<% with $Controller %>
 				<% include CMSBreadcrumbs %>
 			<% end_with %>			
@@ -51,7 +50,7 @@
 			<% end_loop %>
 			<% if $Controller.LinkPreview %>
 			<a href="$Controller.LinkPreview" class="cms-preview-toggle-link ss-ui-button" data-icon="preview">
-				<% _t('LeftAndMain.PreviewButton', 'Preview') %> &raquo;
+				<%t LeftAndMain.PreviewButton 'Preview' %> &raquo;
 			</a>
 			<% end_if %>
 		</div>

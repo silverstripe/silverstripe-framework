@@ -363,7 +363,7 @@ class ManyManyList extends RelationList {
 		foreach ($this->extraFields as $fieldName => $dbFieldSpec) {
 			$cleanExtraFields[] = "\"{$fieldName}\"";
 		}
-		$query = new SQLQuery($cleanExtraFields, "\"{$this->joinTable}\"");
+		$query = new SQLSelect($cleanExtraFields, "\"{$this->joinTable}\"");
 		$filter = $this->foreignIDWriteFilter($this->getForeignID());
 		if($filter) {
 			$query->setWhere($filter);

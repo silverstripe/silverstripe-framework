@@ -103,7 +103,7 @@ class HTTP {
 	 */
 	public static function urlRewriter($content, $code) {
 		if(!is_callable($code)) {
-			Deprecation::notice(3.1, 'HTTP::urlRewriter expects a callable as the second parameter');
+			Deprecation::notice('4.0', 'HTTP::urlRewriter expects a callable as the second parameter');
 		}
 
 		// Replace attributes
@@ -308,7 +308,7 @@ class HTTP {
 	/**
 	 * Add the appropriate caching headers to the response, including If-Modified-Since / 304 handling.
 	 *
-	 * @param SS_HTTPResponse The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
+	 * @param SS_HTTPResponse $body The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
 	 *                            deprecated; in these cases, the headers are output directly.
 	 */
 	public static function add_cache_headers($body = null) {
@@ -328,21 +328,17 @@ class HTTP {
 		// us trying.
 		if(headers_sent() && !$body) return;
 
-		// Popuplate $responseHeaders with all the headers that we want to build
+		// Populate $responseHeaders with all the headers that we want to build
 		$responseHeaders = array();
 
 		$config = Config::inst();
 		$cacheControlHeaders = Config::inst()->get('HTTP', 'cache_control');
 
 
-		// currently using a config setting to cancel this, seems to be so taht the CMS caches ajax requests
+		// currently using a config setting to cancel this, seems to be so that the CMS caches ajax requests
 		if(function_exists('apache_request_headers') && $config->get(get_called_class(), 'cache_ajax_requests')) {
-			$requestHeaders = apache_request_headers();
+			$requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
 
-			if(isset($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With']=='XMLHttpRequest') {
-				$cacheAge = 0;
-			}
-			// bdc: now we must check for DUMB IE6:
 			if(isset($requestHeaders['x-requested-with']) && $requestHeaders['x-requested-with']=='XMLHttpRequest') {
 				$cacheAge = 0;
 			}
@@ -383,12 +379,15 @@ class HTTP {
 		foreach($cacheControlHeaders as $header => $value) {
 			if(is_null($value)) {
 				unset($cacheControlHeaders[$header]);
-			} elseif(is_bool($value) || $value === "true") {
+			} elseif((is_bool($value) && $value) || $value === "true") {
 				$cacheControlHeaders[$header] = $header;
 			} else {
 				$cacheControlHeaders[$header] = $header."=".$value;
 			}
 		}
+
+		$responseHeaders['Cache-Control'] = implode(', ', $cacheControlHeaders);
+		unset($cacheControlHeaders, $header, $value);
 
 		if(self::$modification_date && $cacheAge > 0) {
 			$responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);

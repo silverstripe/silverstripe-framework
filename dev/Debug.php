@@ -524,7 +524,8 @@ function exceptionHandler($exception) {
 	$file = $exception->getFile();
 	$line = $exception->getLine();
 	$context = $exception->getTrace();
-	return Debug::fatalHandler($errno, $message, $file, $line, $context);
+	Debug::fatalHandler($errno, $message, $file, $line, $context);
+	exit(1);
 }
 
 /**
@@ -558,6 +559,7 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 		case E_CORE_ERROR:
 		case E_USER_ERROR:
 		default:
-			return Debug::fatalHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
+			Debug::fatalHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
+			exit(1);
 	}
 }

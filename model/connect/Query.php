@@ -146,6 +146,7 @@ abstract class SS_Query implements Iterator {
 	public function rewind() {
 		if ($this->queryHasBegun && $this->numRecords() > 0) {
 			$this->queryHasBegun = false;
+			$this->currentRecord = null;
 			return $this->seek(0);
 		}
 	}

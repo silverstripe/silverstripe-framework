@@ -323,13 +323,13 @@ class DateField extends TextField {
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "DateField.default_config" config setting instead
+	 * @deprecated 4.0 Use the "DateField.default_config" config setting instead
 	 * @param String $k
 	 * @param mixed $v
 	 * @return boolean
 	 */
 	public static function set_default_config($k, $v) {
-		Deprecation::notice('3.2', 'Use the "DateField.default_config" config setting instead');
+		Deprecation::notice('4.0', 'Use the "DateField.default_config" config setting instead');
 		return Config::inst()->update('DateField', 'default_config', array($k => $v));
 	}
 
