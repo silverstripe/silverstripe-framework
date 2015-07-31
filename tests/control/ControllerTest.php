@@ -328,7 +328,7 @@ class ControllerTest extends FunctionalTest {
 	*/
 
 	public function testRedirectBackByReferer() {
-		$internalRelativeUrl = '/some-url';
+		$internalRelativeUrl = Controller::join_links(Director::baseURL(), '/some-url');
 		$internalAbsoluteUrl = Controller::join_links(Director::absoluteBaseURL(), '/some-url');
 		
 		$response = $this->get('ControllerTest_Controller/redirectbacktest', null,
@@ -354,7 +354,7 @@ class ControllerTest extends FunctionalTest {
 	}
 
 	public function testRedirectBackByBackUrl() {
-		$internalRelativeUrl = '/some-url';
+		$internalRelativeUrl = Controller::join_links(Director::baseURL(), '/some-url');
 		$internalAbsoluteUrl = Controller::join_links(Director::absoluteBaseURL(), '/some-url');
 		
 		$response = $this->get('ControllerTest_Controller/redirectbacktest?BackURL=' . urlencode($internalRelativeUrl));
