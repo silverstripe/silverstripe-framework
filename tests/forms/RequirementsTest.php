@@ -366,10 +366,11 @@ class RequirementsTest extends SapphireTest {
 		$backend = new Requirements_Backend();
 		$backend->set_suffix_requirements(false);
 		$src = $this->getCurrentRelativePath() . '/RequirementsTest_a.js';
+		$urlSrc = Controller::join_links(Director::baseURL(), $src);
 		$backend->javascript($src);
 		$html = $backend->includeInHTML(false, $template);
 		$this->assertEquals('<html><head></head><body><!--<script>alert("commented out");</script>-->'
-			. '<h1>more content</h1><script type="text/javascript" src="/' . $src . '"></script></body></html>', $html);
+			. '<h1>more content</h1><script type="text/javascript" src="' . $urlSrc . '"></script></body></html>', $html);
 	}
 
 	public function testForceJsToBottom() {
