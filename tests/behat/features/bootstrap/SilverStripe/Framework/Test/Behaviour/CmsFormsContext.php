@@ -235,7 +235,7 @@ JS;
 	 */
 	public function iShouldSeeAButton($negative, $text) {
 		$page = $this->getSession()->getPage();
-		$els = $page->findAll('named', array('link_or_button', "'$text'"));
+		$els = $page->findAll('named', ['link_or_button', "'$text'"]);
 		$matchedEl = null;
 		foreach($els as $el) {
 			if($el->isVisible()) $matchedEl = $el;
@@ -253,7 +253,7 @@ JS;
 	 */
 	public function iShouldSeeAField($negative, $text) {
 		$page = $this->getSession()->getPage();
-		$els = $page->findAll('named', array('field', "'$text'"));
+		$els = $page->findAll('named', ['field', "'$text'"]);
 		$matchedEl = null;
 		foreach($els as $el) {
 			if($el->isVisible()) $matchedEl = $el;

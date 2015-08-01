@@ -29,12 +29,12 @@ class ClassInfo {
 	/**
 	 * Cache for {@link hasTable()}
 	 */
-	private static $_cache_all_tables = array();
+	private static $_cache_all_tables = [];
 
 	/**
 	 * @var Array Cache for {@link ancestry()}.
 	 */
-	private static $_cache_ancestry = array();
+	private static $_cache_ancestry = [];
 
 	/**
 	 * @todo Move this to SS_Database or DB
@@ -49,7 +49,7 @@ class ClassInfo {
 
 	public static function reset_db_cache() {
 		self::$_cache_all_tables = null;
-		self::$_cache_ancestry = array();
+		self::$_cache_ancestry = [];
 	}
 
 	/**
@@ -63,7 +63,7 @@ class ClassInfo {
 	public static function getValidSubClasses($class = 'SiteTree', $includeUnbacked = false) {
 		$class = self::class_name($class);
 		$classes = DB::get_schema()->enumValuesForField($class, 'ClassName');
-		if (!$includeUnbacked) $classes = array_filter($classes, array('ClassInfo', 'exists'));
+		if (!$includeUnbacked) $classes = array_filter($classes, ['ClassInfo', 'exists']);
 		return $classes;
 	}
 
@@ -76,7 +76,7 @@ class ClassInfo {
 	 * @return array
 	 */
 	public static function dataClassesFor($class) {
-		$result = array();
+		$result = [];
 
 		$class = self::class_name($class);
 
@@ -137,7 +137,7 @@ class ClassInfo {
 		//normalise class case
 		$className = self::class_name($class);
 		$descendants = SS_ClassLoader::instance()->getManifest()->getDescendantsOf($class);
-		$result      = array($className => $className);
+		$result      = [$className => $className];
 
 		if ($descendants) {
 			return $result + ArrayLib::valuekey($descendants);
@@ -179,7 +179,7 @@ class ClassInfo {
 		$cacheKey = $lClass . '_' . (string)$tablesOnly;
 		$parent = $class;
 		if(!isset(self::$_cache_ancestry[$cacheKey])) {
-			$ancestry = array();
+			$ancestry = [];
 			do {
 				if (!$tablesOnly || DataObject::has_own_table($parent)) {
 					$ancestry[$parent] = $parent;
@@ -218,7 +218,7 @@ class ClassInfo {
 	 */
 	public static function classes_for_file($filePath) {
 		$absFilePath    = Director::getAbsFile($filePath);
-		$matchedClasses = array();
+		$matchedClasses = [];
 		$manifest       = SS_ClassLoader::instance()->getManifest()->getClasses();
 
 		foreach($manifest as $class => $compareFilePath) {
@@ -239,7 +239,7 @@ class ClassInfo {
 	 */
 	public static function classes_for_folder($folderPath) {
 		$absFolderPath  = Director::getAbsFile($folderPath);
-		$matchedClasses = array();
+		$matchedClasses = [];
 		$manifest       = SS_ClassLoader::instance()->getManifest()->getClasses();
 
 		foreach($manifest as $class => $compareFilePath) {
@@ -249,13 +249,13 @@ class ClassInfo {
 		return $matchedClasses;
 	}
 
-	private static $method_from_cache = array();
+	private static $method_from_cache = [];
 
 	public static function has_method_from($class, $method, $compclass) {
 		$lClass = strtolower($class);
 		$lMethod = strtolower($method);
 		$lCompclass = strtolower($compclass);
-		if (!isset(self::$method_from_cache[$lClass])) self::$method_from_cache[$lClass] = array();
+		if (!isset(self::$method_from_cache[$lClass])) self::$method_from_cache[$lClass] = [];
 
 		if (!array_key_exists($lMethod, self::$method_from_cache[$lClass])) {
 			self::$method_from_cache[$lClass][$lMethod] = false;

@@ -16,7 +16,7 @@ class ValidationResult extends Object {
 	/**
 	 * Array of errors
 	 */
-	protected $errorList = array();
+	protected $errorList = [];
 
 	/**
 	 * Create a new ValidationResult.
@@ -73,7 +73,7 @@ class ValidationResult extends Object {
 	 * @return array
 	 */
 	public function codeList() {
-		$codeList = array();
+		$codeList = [];
 		foreach($this->errorList as $k => $v) if(!is_numeric($k)) $codeList[] = $k;
 		return $codeList;
 	}

@@ -1,16 +1,16 @@
 <?php
 
 class DataObjectSchemaGenerationTest extends SapphireTest {
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'DataObjectSchemaGenerationTest_DO',
 		'DataObjectSchemaGenerationTest_IndexDO'
-	);
+	];
 
 	public function setUpOnce() {
 
 		// enable fulltext option on this table
 		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'create_table_options',
-			array(MySQLSchemaManager::ID => 'ENGINE=MyISAM'));
+			[MySQLSchemaManager::ID => 'ENGINE=MyISAM']);
 
 		parent::setUpOnce();
 	}
@@ -46,9 +46,9 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Table will have been initially created by the $extraDataObjects setting
 
 		// Let's insert a new field here
-		Config::inst()->update('DataObjectSchemaGenerationTest_DO', 'db', array(
+		Config::inst()->update('DataObjectSchemaGenerationTest_DO', 'db', [
 			'SecretField' => 'Varchar(100)'
-		));
+		]);
 
 		// Verify that the above extra field triggered a schema update
 		$schema->schemaUpdate(function() use ($test, $schema) {
@@ -106,11 +106,11 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Table will have been initially created by the $extraDataObjects setting
 
 		// Update the SearchFields index here
-		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'indexes', array(
-			'SearchFields' => array(
+		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'indexes', [
+			'SearchFields' => [
 				'value' => 'Title'
-			)
-		));
+			]
+		]);
 
 		// Verify that the above index change triggered a schema update
 		$schema->schemaUpdate(function() use ($test, $schema) {
@@ -175,35 +175,35 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 }
 
 class DataObjectSchemaGenerationTest_DO extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Enum1' => 'Enum("A, B, C, D","")',
 		'Enum2' => 'Enum("A, B, C, D","A")',
-	);
+	];
 }
 
 
 class DataObjectSchemaGenerationTest_IndexDO extends DataObjectSchemaGenerationTest_DO implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar(255)',
 		'Content' => 'Text'
-	);
+	];
 
-	private static $indexes = array(
+	private static $indexes = [
 		'NameIndex' => 'unique ("Title")',
-		'SearchFields' => array(
+		'SearchFields' => [
 			'type' => 'fulltext',
 			'name' => 'SearchFields',
 			'value' => '"Title","Content"'
-		)
-	);
+		]
+	];
 
 	/** @config */
-	private static $indexes_alt = array(
-		'NameIndex' => array(
+	private static $indexes_alt = [
+		'NameIndex' => [
 			'type' => 'unique',
 			'name' => 'NameIndex',
 			'value' => '"Title"'
-		),
+		],
 		'SearchFields' => 'fulltext ("Title","Content")'
-	);
+	];
 }

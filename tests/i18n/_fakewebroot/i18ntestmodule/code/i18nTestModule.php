@@ -1,9 +1,9 @@
 <?php
 class i18nTestModule extends DataObject implements TestOnly {
 
-	static $db = array(
+	static $db = [
 		'MyField' => 'Varchar',
-	);
+	];
 
 	public function myMethod() {
 		_t(

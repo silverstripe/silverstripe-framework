@@ -15,10 +15,10 @@ class MemberAuthenticator extends Authenticator {
 	 *
 	 * @var array
 	 */
-	private static $migrate_legacy_hashes = array(
+	private static $migrate_legacy_hashes = [
 		'md5' => 'md5_v2.4',
 		'sha1' => 'sha1_v2.4'
-	);
+	];
 
 	/**
 	 * Attempt to find and authenticate member if possible from the given data

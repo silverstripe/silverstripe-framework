@@ -12,7 +12,7 @@ class HTMLVarchar extends Varchar {
 
 	protected $processShortcodes = true;
 
-	public function setOptions(array $options = array()) {
+	public function setOptions(array $options = []) {
 		parent::setOptions($options);
 
 		if(array_key_exists("shortcodes", $options)) {

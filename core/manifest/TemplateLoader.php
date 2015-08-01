@@ -15,7 +15,7 @@ class SS_TemplateLoader {
 	/**
 	 * @var SS_TemplateManifest[]
 	 */
-	protected $manifests = array();
+	protected $manifests = [];
 
 	/**
 	 * @return SS_TemplateLoader
@@ -62,7 +62,7 @@ class SS_TemplateLoader {
 	 * @return array
 	 */
 	public function findTemplates($templates, $theme = null) {
-		$result = array();
+		$result = [];
 		$project = project();
 
 		foreach ((array) $templates as $template) {
@@ -76,9 +76,9 @@ class SS_TemplateLoader {
 
 			if ($found = $this->getManifest()->getCandidateTemplate($template, $theme)) {
 					if ($type && isset($found[$type])) {
-						$found = array(
+						$found = [
 							'main' => $found[$type]
-						);
+						];
 					}
 					$result = array_merge($found, $result);
 				}

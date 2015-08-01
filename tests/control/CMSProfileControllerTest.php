@@ -15,7 +15,7 @@ class CMSProfileControllerTest extends FunctionalTest {
 		$anotherMember = $this->objFromFixture('Member', 'user2');
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
-		$response = $this->post('admin/myprofile/EditForm', array(
+		$response = $this->post('admin/myprofile/EditForm', [
 			'action_save' => 1,
 			'ID' => $anotherMember->ID,
 			'FirstName' => 'JoeEdited',
@@ -24,7 +24,7 @@ class CMSProfileControllerTest extends FunctionalTest {
 			'Locale' => $member->Locale,
 			'Password[_Password]' => 'password',
 			'Password[_ConfirmPassword]' => 'password',
-		));
+		]);
 
 		$anotherMember = $this->objFromFixture('Member', 'user2');
 
@@ -35,7 +35,7 @@ class CMSProfileControllerTest extends FunctionalTest {
 		$member = $this->objFromFixture('Member', 'user1');
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
-		$response = $this->post('admin/myprofile/EditForm', array(
+		$response = $this->post('admin/myprofile/EditForm', [
 			'action_save' => 1,
 			'ID' => $member->ID,
 			'FirstName' => 'JoeEdited',
@@ -44,7 +44,7 @@ class CMSProfileControllerTest extends FunctionalTest {
 			'Locale' => $member->Locale,
 			'Password[_Password]' => 'password',
 			'Password[_ConfirmPassword]' => 'password',
-		));
+		]);
 
 		$member = $this->objFromFixture('Member', 'user1');
 
@@ -53,12 +53,12 @@ class CMSProfileControllerTest extends FunctionalTest {
 
 	public function testExtendedPermissionsStopEditingOwnProfile() {
 		$existingExtensions = Config::inst()->get('Member', 'extensions');
-		Config::inst()->update('Member', 'extensions', array('CMSProfileControllerTestExtension'));
+		Config::inst()->update('Member', 'extensions', ['CMSProfileControllerTestExtension']);
 
 		$member = $this->objFromFixture('Member', 'user1');
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
-		$response = $this->post('admin/myprofile/EditForm', array(
+		$response = $this->post('admin/myprofile/EditForm', [
 			'action_save' => 1,
 			'ID' => $member->ID,
 			'FirstName' => 'JoeEdited',
@@ -67,7 +67,7 @@ class CMSProfileControllerTest extends FunctionalTest {
 			'Locale' => $member->Locale,
 			'Password[_Password]' => 'password',
 			'Password[_ConfirmPassword]' => 'password',
-		));
+		]);
 
 		$member = $this->objFromFixture('Member', 'user1');
 

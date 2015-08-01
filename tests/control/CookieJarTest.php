@@ -15,11 +15,11 @@ class CookieJarTest extends SapphireTest {
 	public function testConstruct() {
 
 		//some default cookies to load
-		$defaultCookies = array(
+		$defaultCookies = [
 			'cookie1' => 1,
 			'cookie2' => 'cookies',
 			'cookie3' => 'test',
-		);
+		];
 
 		$cookieJar = new CookieJar($defaultCookies);
 
@@ -30,7 +30,7 @@ class CookieJarTest extends SapphireTest {
 		$this->assertEquals($defaultCookies, $cookieJar->getAll(true));
 
 		//check an empty array is accepted
-		$cookieJar = new CookieJar(array());
+		$cookieJar = new CookieJar([]);
 		$this->assertEmpty($cookieJar->getAll(false));
 
 
@@ -57,9 +57,9 @@ class CookieJarTest extends SapphireTest {
 		$this->assertEmpty($cookieJar->get('testCookie', false));
 
 		//PHP will replace an incoming COOKIE called 'var.with.dots' to 'var_with_dots'
-		$cookieJar = new CookieJar(array(
+		$cookieJar = new CookieJar([
 			'var_with_dots' => 'value',
-		));
+		]);
 
 		$cookieJar->set('test.dots', 'dots');
 
@@ -75,9 +75,9 @@ class CookieJarTest extends SapphireTest {
 	 */
 	public function testExistingVersusNew() {
 		//load with a cookie
-		$cookieJar = new CookieJar(array(
+		$cookieJar = new CookieJar([
 			'cookieExisting' => 'i woz here',
-		));
+		]);
 
 		//set a new cookie
 		$cookieJar->set('cookieNew', 'i am new');
@@ -96,15 +96,15 @@ class CookieJarTest extends SapphireTest {
 		$this->assertEquals('i woz here', $cookieJar->get('cookieExisting', false));
 
 		//check we can get all cookies
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'cookieExisting' => 'i woz changed',
 			'cookieNew' => 'i am new',
-		), $cookieJar->getAll());
+		], $cookieJar->getAll());
 
 		//check we can get all original cookies
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'cookieExisting' => 'i woz here',
-		), $cookieJar->getAll(false));
+		], $cookieJar->getAll(false));
 	}
 
 	/**
@@ -112,9 +112,9 @@ class CookieJarTest extends SapphireTest {
 	 */
 	public function testForceExpiry() {
 		//load an existing cookie
-		$cookieJar = new CookieJar(array(
+		$cookieJar = new CookieJar([
 			'cookieExisting' => 'i woz here',
-		));
+		]);
 
 		//make sure it's available
 		$this->assertEquals('i woz here', $cookieJar->get('cookieExisting'));

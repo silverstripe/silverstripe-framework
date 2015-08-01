@@ -8,11 +8,11 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 	protected static $fixture_file = 'GridFieldDetailFormTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'GridFieldDetailFormTest_Person',
 		'GridFieldDetailFormTest_PeopleGroup',
 		'GridFieldDetailFormTest_Category',
-	);
+	];
 
 	public function testValidator() {
 		$this->logInWithPermission('ADMIN');
@@ -32,11 +32,11 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$response = $this->post(
 			$addformurl,
-			array(
+			[
 				'FirstName' => 'Jeremiah',
 				'ajax' => 1,
 				'action_doSave' => 1
-			)
+			]
 		);
 
 		$parser = new CSSContentParser($response->getBody());
@@ -45,10 +45,10 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$response = $this->post(
 			$addformurl,
-			array(
+			[
 				'ajax' => 1,
 				'action_doSave' => 1
-			)
+			]
 		);
 
 		$parser = new CSSContentParser($response->getBody());
@@ -79,11 +79,11 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$response = $this->post(
 			$addformurl,
-			array(
+			[
 				'FirstName' => 'Jeremiah',
 				'Surname' => 'BullFrog',
 				'action_doSave' => 1
-			)
+			]
 		);
 		$this->assertFalse($response->isError());
 
@@ -138,11 +138,11 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$response = $this->post(
 			$editformurl,
-			array(
+			[
 				'FirstName' => 'Bilbo',
 				'Surname' => 'Baggins',
 				'action_doSave' => 1
-			)
+			]
 		);
 		$this->assertFalse($response->isError());
 
@@ -150,7 +150,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
-		$this->assertDOSContains(array(array('Surname' => 'Baggins')), $group->People());
+		$this->assertDOSContains([['Surname' => 'Baggins']], $group->People());
 	}
 
 	public function testEditFormWithManyManyExtraData() {
@@ -177,47 +177,47 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		// Test save of IsPublished field
 		$response = $this->post(
 			$editformurl,
-			array(
+			[
 				'Name' => 'Updated Category',
-				'ManyMany' => array(
+				'ManyMany' => [
 					'IsPublished' => 1,
 					'PublishedBy' => 'Richard'
-				),
+				],
 				'action_doSave' => 1
-			)
+			]
 		);
 		$this->assertFalse($response->isError());
 
 		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
-		$category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
+		$category = $person->Categories()->filter(['Name' => 'Updated Category'])->First();
 		$this->assertEquals(
-			array(
+			[
 				'IsPublished' => 1,
 				'PublishedBy' => 'Richard'
-			),
+			],
 			$person->Categories()->getExtraData('', $category->ID)
 		);
 		
 		// Test update of value with falsey value
 		$response = $this->post(
 			$editformurl,
-			array(
+			[
 				'Name' => 'Updated Category',
-				'ManyMany' => array(
+				'ManyMany' => [
 					'PublishedBy' => ''
-				),
+				],
 				'action_doSave' => 1
-			)
+			]
 		);
 		$this->assertFalse($response->isError());
 
 		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
-		$category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
+		$category = $person->Categories()->filter(['Name' => 'Updated Category'])->First();
 		$this->assertEquals(
-			array(
+			[
 				'IsPublished' => 0,
 				'PublishedBy' => ''
-			),
+			],
 			$person->Categories()->getExtraData('', $category->ID)
 		);
 	}
@@ -331,25 +331,25 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Group' => 'GridFieldDetailFormTest_PeopleGroup'
-	);
+	];
 
-	private static $many_many = array(
+	private static $many_many = [
 		'Categories' => 'GridFieldDetailFormTest_Category'
-	);
+	];
 
-	private static $many_many_extraFields = array(
-		'Categories' => array(
+	private static $many_many_extraFields = [
+		'Categories' => [
 			'IsPublished' => 'Boolean',
 			'PublishedBy' => 'Varchar'
-		)
-	);
+		]
+	];
 
 	private static $default_sort = '"FirstName"';
 
@@ -366,9 +366,9 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 	}
 
 	public function getCMSValidator() {
-		return new RequiredFields(array(
+		return new RequiredFields([
 			'FirstName', 'Surname'
-		));
+		]);
 	}
 }
 
@@ -378,13 +378,13 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
  */
 
 class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar'
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'People' => 'GridFieldDetailFormTest_Person'
-	);
+	];
 
 	private static $default_sort = '"Name"';
 
@@ -408,13 +408,13 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 
 class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar'
-	);
+	];
 
-	private static $belongs_many_many = array(
+	private static $belongs_many_many = [
 		'People' => 'GridFieldDetailFormTest_Person'
-	);
+	];
 
 	private static $default_sort = '"Name"';
 
@@ -438,7 +438,7 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 
 class GridFieldDetailFormTest_Controller extends Controller implements TestOnly {
 
-	private static $allowed_actions = array('Form');
+	private static $allowed_actions = ['Form'];
 
 	protected $template = 'BlankPage';
 
@@ -466,7 +466,7 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 
 class GridFieldDetailFormTest_GroupController extends Controller implements TestOnly {
 
-	private static $allowed_actions = array('Form');
+	private static $allowed_actions = ['Form'];
 
 	protected $template = 'BlankPage';
 
@@ -487,7 +487,7 @@ class GridFieldDetailFormTest_GroupController extends Controller implements Test
 
 class GridFieldDetailFormTest_CategoryController extends Controller implements TestOnly {
 
-	private static $allowed_actions = array('Form');
+	private static $allowed_actions = ['Form'];
 
 	protected $template = 'BlankPage';
 
@@ -495,9 +495,9 @@ class GridFieldDetailFormTest_CategoryController extends Controller implements T
 		// GridField lists categories for a specific person
 		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
 		$detailFields = singleton('GridFieldDetailFormTest_Category')->getCMSFields();
-		$detailFields->addFieldsToTab('Root.Main', array(
+		$detailFields->addFieldsToTab('Root.Main', [
 			new CheckboxField('ManyMany[IsPublished]'),
-			new TextField('ManyMany[PublishedBy]'))
+			new TextField('ManyMany[PublishedBy]')]
 		);
 		$field = new GridField('testfield', 'testfield', $person->Categories());
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));

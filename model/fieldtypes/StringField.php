@@ -15,7 +15,7 @@ abstract class StringField extends DBField {
 	/**
 	 * @var array
 	 */
-	private static $casting = array(
+	private static $casting = [
 		"LimitCharacters" => "Text",
 		"LimitCharactersToClosestWord" => "Text",
 		'LimitWordCount' => 'Text',
@@ -23,7 +23,7 @@ abstract class StringField extends DBField {
 		"LowerCase" => "Text",
 		"UpperCase" => "Text",
 		'NoHTML' => 'Text',
-	);
+	];
 
 	/**
 	 * Construct a string type field with a set of optional parameters.
@@ -32,7 +32,7 @@ abstract class StringField extends DBField {
 	 * @param $options array An array of options e.g. array('nullifyEmpty'=>false).  See
 	 *                       {@link StringField::setOptions()} for information on the available options
 	 */
-	public function __construct($name = null, $options = array()) {
+	public function __construct($name = null, $options = []) {
 		// Workaround: The singleton pattern calls this constructor with true/1 as the second parameter, so we
 		// must ignore it
 		if(is_array($options)){
@@ -53,7 +53,7 @@ abstract class StringField extends DBField {
 	 *   </li></ul>
 	 * @return unknown_type
 	 */
-	public function setOptions(array $options = array()) {
+	public function setOptions(array $options = []) {
 		if(array_key_exists("nullifyEmpty", $options)) {
 			$this->nullifyEmpty = $options["nullifyEmpty"] ? true : false;
 		}

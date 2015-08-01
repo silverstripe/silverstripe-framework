@@ -32,13 +32,13 @@ class Filesystem extends Object {
 	 *
 	 * @var array
 	 */
-	private static $sync_blacklisted_patterns = array(
+	private static $sync_blacklisted_patterns = [
 		"/^\./",
 		"/^_combinedfiles$/i",
 		"/^_resampled$/i",
 		"/^web.config/i",
 		"/^Thumbs(.)/"
-	);
+	];
 
 	/**
 	 * Create a folder on the filesystem, recursively.
@@ -212,7 +212,7 @@ class Filesystem extends Object {
 		return _t(
 			'Filesystem.SYNCRESULTS',
 			'Sync complete: {createdcount} items created, {deletedcount} items deleted',
-			array('createdcount' => (int)$results['added'], 'deletedcount' => (int)$results['deleted'])
+			['createdcount' => (int)$results['added'], 'deletedcount' => (int)$results['deleted']]
 		);
 	}
 

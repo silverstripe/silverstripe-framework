@@ -1,8 +1,8 @@
 <?php
 class i18nTestModuleExtension extends DataExtension {
 
-	public static $db = array(
+	public static $db = [
 		'MyExtraField' => 'Varchar'
-	);
+	];
 
 }

@@ -15,7 +15,7 @@ if(version_compare(PHPUnit_Runner_Version::id(), '3.5', '<')) {
 
 // Fake the script name and base
 global $_SERVER;
-if (!$_SERVER) $_SERVER = array();
+if (!$_SERVER) $_SERVER = [];
 
 $frameworkPath = dirname(dirname(__FILE__));
 $frameworkDir = basename($frameworkPath);
@@ -28,13 +28,13 @@ if(!defined('BASE_PATH')) define('BASE_PATH', dirname($frameworkPath));
 // Copied from cli-script.php, to enable same behaviour through phpunit runner.
 if(isset($_SERVER['argv'][2])) {
 	$args = array_slice($_SERVER['argv'],2);
-	if(!isset($_GET)) $_GET = array();
-	if(!isset($_REQUEST)) $_REQUEST = array();
+	if(!isset($_GET)) $_GET = [];
+	if(!isset($_REQUEST)) $_REQUEST = [];
 	foreach($args as $arg) {
 		if(strpos($arg,'=') == false) {
 			$_GET['args'][] = $arg;
 		} else {
-			$newItems = array();
+			$newItems = [];
 			parse_str( (substr($arg,0,2) == '--') ? substr($arg,2) : $arg, $newItems );
 			$_GET = array_merge($_GET, $newItems);
 		}

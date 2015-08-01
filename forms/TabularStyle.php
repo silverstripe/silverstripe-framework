@@ -56,7 +56,7 @@ class TabularStyle extends ViewableData {
 	 * This is the 'wrapper' aspect of the code
 	 */
 	public function __call($func, $args) {
-		return call_user_func_array(array(&$this->form, $func), $args);
+		return call_user_func_array([&$this->form, $func], $args);
 	}
 	public function __get($field) {
 		return $this->form->$field;

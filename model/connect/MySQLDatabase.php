@@ -56,7 +56,7 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function setSQLMode($mode) {
 		if (empty($mode)) return;
-		$this->preparedQuery("SET sql_mode = ?", array($mode));
+		$this->preparedQuery("SET sql_mode = ?", [$mode]);
 	}
 
 	/**
@@ -66,7 +66,7 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function selectTimezone($timezone) {
 		if (empty($timezone)) return;
-		$this->preparedQuery("SET SESSION time_zone = ?", array($timezone));
+		$this->preparedQuery("SET SESSION time_zone = ?", [$timezone]);
 	}
 
 	public function supportsCollations() {
@@ -98,7 +98,7 @@ class MySQLDatabase extends SS_Database {
 		$keywords = $this->escapeString($keywords);
 		$htmlEntityKeywords = htmlentities($keywords, ENT_NOQUOTES, 'UTF-8');
 
-		$extraFilters = array('SiteTree' => '', 'File' => '');
+		$extraFilters = ['SiteTree' => '', 'File' => ''];
 
 		if ($booleanSearch) $boolean = "IN BOOLEAN MODE";
 
@@ -132,8 +132,8 @@ class MySQLDatabase extends SS_Database {
 			$match['File'] = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
 
 			// We make the relevance search by converting a boolean mode search into a normal one
-			$relevanceKeywords = str_replace(array('*', '+', '-'), '', $keywords);
-			$htmlEntityRelevanceKeywords = str_replace(array('*', '+', '-'), '', $htmlEntityKeywords);
+			$relevanceKeywords = str_replace(['*', '+', '-'], '', $keywords);
+			$htmlEntityRelevanceKeywords = str_replace(['*', '+', '-'], '', $htmlEntityKeywords);
 			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
 					. "AGAINST ('$relevanceKeywords') "
 					. "+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";
@@ -144,42 +144,42 @@ class MySQLDatabase extends SS_Database {
 		}
 
 		// Generate initial DataLists and base table names
-		$lists = array();
-		$baseClasses = array('SiteTree' => '', 'File' => '');
+		$lists = [];
+		$baseClasses = ['SiteTree' => '', 'File' => ''];
 		foreach ($classesToSearch as $class) {
 			$lists[$class] = DataList::create($class)->where($notMatch . $match[$class] . $extraFilters[$class], "");
 			$baseClasses[$class] = '"' . $class . '"';
 		}
 
 		// Make column selection lists
-		$select = array(
-			'SiteTree' => array(
+		$select = [
+			'SiteTree' => [
 				"ClassName", "$baseClasses[SiteTree].\"ID\"", "ParentID",
 				"Title", "MenuTitle", "URLSegment", "Content",
 				"LastEdited", "Created",
 				"Filename" => "_utf8''", "Name" => "_utf8''",
 				"Relevance" => $relevance['SiteTree'], "CanViewType"
-			),
-			'File' => array(
+			],
+			'File' => [
 				"ClassName", "$baseClasses[File].\"ID\"", "ParentID" => "_utf8''",
 				"Title", "MenuTitle" => "_utf8''", "URLSegment" => "_utf8''", "Content",
 				"LastEdited", "Created",
 				"Filename", "Name",
 				"Relevance" => $relevance['File'], "CanViewType" => "NULL"
-			),
-		);
+			],
+		];
 
 		// Process and combine queries
-		$querySQLs = array();
-		$queryParameters = array();
+		$querySQLs = [];
+		$queryParameters = [];
 		$totalCount = 0;
 		foreach ($lists as $class => $list) {
 			$query = $list->dataQuery()->query();
 
 			// There's no need to do all that joining
-			$query->setFrom(array(str_replace(array('"', '`'), '', $baseClasses[$class]) => $baseClasses[$class]));
+			$query->setFrom([str_replace(['"', '`'], '', $baseClasses[$class]) => $baseClasses[$class]]);
 			$query->setSelect($select[$class]);
-			$query->setOrderBy(array());
+			$query->setOrderBy([]);
 
 			$querySQLs[] = $query->sql($parameters);
 			$queryParameters = array_merge($queryParameters, $parameters);
@@ -191,7 +191,7 @@ class MySQLDatabase extends SS_Database {
 		// Get records
 		$records = $this->preparedQuery($fullQuery, $queryParameters);
 
-		$objects = array();
+		$objects = [];
 
 		foreach ($records as $record) {
 			$objects[] = new $record['ClassName']($record);
@@ -261,7 +261,7 @@ class MySQLDatabase extends SS_Database {
 	public function formattedDatetimeClause($date, $format) {
 		preg_match_all('/%(.)/', $format, $matches);
 		foreach ($matches[1] as $match)
-			if (array_search($match, array('Y', 'm', 'd', 'H', 'i', 's', 'U')) === false) {
+			if (array_search($match, ['Y', 'm', 'd', 'H', 'i', 's', 'U']) === false) {
 				user_error('formattedDatetimeClause(): unsupported format character %' . $match, E_USER_WARNING);
 			}
 

@@ -6,17 +6,17 @@
 class MemberTest extends FunctionalTest {
 	protected static $fixture_file = 'MemberTest.yml';
 
-	protected $orig = array();
+	protected $orig = [];
 	protected $local = null;
 
-	protected $illegalExtensions = array(
-		'Member' => array(
+	protected $illegalExtensions = [
+		'Member' => [
 			// TODO Coupling with modules, this should be resolved by automatically
 			// removing all applied extensions before a unit test
 			'ForumRole',
 			'OpenIDAuthenticatedRole'
-		)
-	);
+		]
+	];
 
 	public function __construct() {
 		parent::__construct();
@@ -346,15 +346,15 @@ class MemberTest extends FunctionalTest {
 		$ceogroup = $this->objFromFixture('Group', 'ceogroup');
 
 		$this->assertTrue(
-			$staffmember->inGroups(array($staffgroup, $managementgroup)),
+			$staffmember->inGroups([$staffgroup, $managementgroup]),
 			'inGroups() succeeds if a membership is detected on one of many passed groups'
 		);
 		$this->assertFalse(
-			$staffmember->inGroups(array($ceogroup, $managementgroup)),
+			$staffmember->inGroups([$ceogroup, $managementgroup]),
 			'inGroups() fails if a membership is detected on none of the passed groups'
 		);
 		$this->assertFalse(
-			$ceomember->inGroups(array($staffgroup, $managementgroup), true),
+			$ceomember->inGroups([$staffgroup, $managementgroup], true),
 			'inGroups() fails if no direct membership is detected on any of the passed groups (in strict mode)'
 		);
 	}
@@ -374,9 +374,9 @@ class MemberTest extends FunctionalTest {
 		$grouplessMember->addToGroupByCode('somegroupthatwouldneverexist', 'New Group');
 		$this->assertEquals($grouplessMember->Groups()->Count(), 2);
 
-		$group = DataObject::get_one('Group', array(
+		$group = DataObject::get_one('Group', [
 			'"Group"."Code"' => 'somegroupthatwouldneverexist'
-		));
+		]);
 		$this->assertNotNull($group);
 		$this->assertEquals($group->Code, 'somegroupthatwouldneverexist');
 		$this->assertEquals($group->Title, 'New Group');
@@ -587,34 +587,34 @@ class MemberTest extends FunctionalTest {
 		$adminGroup = $this->objFromFixture('Group', 'admingroup');
 		$staffMember = $this->objFromFixture('Member', 'staffmember');
 		$adminMember = $this->objFromFixture('Member', 'admin');
-		$newAdminGroup = new Group(array('Title' => 'newadmin'));
+		$newAdminGroup = new Group(['Title' => 'newadmin']);
 		$newAdminGroup->write();
 		Permission::grant($newAdminGroup->ID, 'ADMIN');
-		$newOtherGroup = new Group(array('Title' => 'othergroup'));
+		$newOtherGroup = new Group(['Title' => 'othergroup']);
 		$newOtherGroup->write();
 
 		$this->assertTrue(
-			$staffMember->onChangeGroups(array($staffGroup->ID)),
+			$staffMember->onChangeGroups([$staffGroup->ID]),
 			'Adding existing non-admin group relation is allowed for non-admin members'
 		);
 		$this->assertTrue(
-			$staffMember->onChangeGroups(array($newOtherGroup->ID)),
+			$staffMember->onChangeGroups([$newOtherGroup->ID]),
 			'Adding new non-admin group relation is allowed for non-admin members'
 		);
 		$this->assertFalse(
-			$staffMember->onChangeGroups(array($newAdminGroup->ID)),
+			$staffMember->onChangeGroups([$newAdminGroup->ID]),
 			'Adding new admin group relation is not allowed for non-admin members'
 		);
 
 		$this->session()->inst_set('loggedInAs', $adminMember->ID);
 		$this->assertTrue(
-			$staffMember->onChangeGroups(array($newAdminGroup->ID)),
+			$staffMember->onChangeGroups([$newAdminGroup->ID]),
 			'Adding new admin group relation is allowed for normal users, when granter is logged in as admin'
 		);
 		$this->session()->inst_set('loggedInAs', null);
 
 		$this->assertTrue(
-			$adminMember->onChangeGroups(array($newAdminGroup->ID)),
+			$adminMember->onChangeGroups([$newAdminGroup->ID]),
 			'Adding new admin group relation is allowed for admin members'
 		);
 	}
@@ -782,15 +782,15 @@ class MemberTest extends FunctionalTest {
 		$validator = new Member_Validator();
 		$validator->setForm($form);
 
-		$pass = $validator->php(array(
+		$pass = $validator->php([
 			'FirstName' => 'Borris',
 			'Email' => 'borris@silverstripe.com'
-		));
+		]);
 
-		$fail = $validator->php(array(
+		$fail = $validator->php([
 			'Email' => 'borris@silverstripe.com',
 			'Surname' => ''
-		));
+		]);
 
 		$this->assertTrue($pass, 'Validator requires on FirstName and Email');
 		$this->assertFalse($fail, 'Missing FirstName');
@@ -798,22 +798,22 @@ class MemberTest extends FunctionalTest {
 		$ext = new MemberTest_ValidatorExtension();
 		$ext->updateValidator($validator);
 
-		$pass = $validator->php(array(
+		$pass = $validator->php([
 			'FirstName' => 'Borris',
 			'Email' => 'borris@silverstripe.com'
-		));
+		]);
 
-		$fail = $validator->php(array(
+		$fail = $validator->php([
 			'Email' => 'borris@silverstripe.com'
-		));
+		]);
 
 		$this->assertFalse($pass, 'Missing surname');
 		$this->assertFalse($fail, 'Missing surname value');
 
-		$fail = $validator->php(array(
+		$fail = $validator->php([
 			'Email' => 'borris@silverstripe.com',
 			'Surname' => 'Silverman'
-		));
+		]);
 
 		$this->assertTrue($fail, 'Passes with email and surname now (no firstname)');
 	}
@@ -913,7 +913,7 @@ class MemberTest_PasswordValidator extends PasswordValidator {
 		parent::__construct();
 		$this->minLength(7);
 		$this->checkHistoricalPasswords(6);
-		$this->characterStrength(3, array('lowercase','uppercase','digits','punctuation'));
+		$this->characterStrength(3, ['lowercase','uppercase','digits','punctuation']);
 	}
 
 }

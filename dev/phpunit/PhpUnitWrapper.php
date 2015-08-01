@@ -227,7 +227,7 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 	 */
 	protected function moduleDirectories() {
 		$files = scandir(BASE_PATH);
-		$modules = array();
+		$modules = [];
 		foreach($files as $file) {
 			if(is_dir(BASE_PATH . "/$file") && file_exists(BASE_PATH . "/$file/_config.php")) {
 				$modules[] = $file;

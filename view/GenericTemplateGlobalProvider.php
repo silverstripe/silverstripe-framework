@@ -2,21 +2,21 @@
 class GenericTemplateGlobalProvider implements TemplateGlobalProvider {
 
 	public static function get_template_global_variables() {
-		return array(
+		return [
 			'ModulePath',
 			'List' => 'getDataList'
-		);
+		];
 	}
 
 	/**
 	 * @var array Module paths
 	 */
-	public static $modules = array(
+	public static $modules = [
 		'framework' => FRAMEWORK_DIR,
 		'frameworkadmin' => FRAMEWORK_ADMIN_DIR,
 		'thirdparty' => THIRDPARTY_DIR,
 		'assets' => ASSETS_DIR
-	);
+	];
 
 	/**
 	 * Given some pre-defined modules, return the filesystem path of the module.

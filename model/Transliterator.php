@@ -33,7 +33,7 @@ class SS_Transliterator extends Object {
 	 * Transliteration using strtr() and a lookup table
 	 */
 	protected function useStrTr($source) {
-		$table = array(
+		$table = [
 			'Š'=>'S', 'š'=>'s', 'Đ'=>'Dj', 'đ'=>'dj', 'Ž'=>'Z', 'ž'=>'z', 'Č'=>'C', 'č'=>'c', 'Ć'=>'C', 'ć'=>'c',
 			'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'Ae', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
 			'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O',
@@ -47,7 +47,7 @@ class SS_Transliterator extends Object {
 			'Ę'=>'E', 'Ė'=>'E', 'Į'=>'I','Ų'=>'U','Ū'=>'U',
 			"ľ"=>"l", "Ľ"=>"L", "ť"=>"t", "Ť"=>"T", "ů"=>"u", "Ů"=>"U",
 			'ł'=>'l', 'Ł'=>'L', 'ń'=>'n', 'Ń'=>'N', 'ś'=>'s', 'Ś'=>'S', 'ź'=>'z', 'Ź'=>'Z', 'ż'=>'z', 'Ż'=>'Z',
-		);
+		];
 
 		return strtr($source, $table);
 	}

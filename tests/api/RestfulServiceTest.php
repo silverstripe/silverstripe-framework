@@ -30,12 +30,12 @@ class RestfulServiceTest extends SapphireTest {
 	 * Check we can put slashes anywhere and it works
 	 */
 	public function testGetAbsoluteURLSlashes() {
-		$urls = array(
+		$urls = [
 			'/url/',
 			'url',
 			'/url',
 			'url/',
-		);
+		];
 		$restWithoutSlash = new RestfulService('http://example.com');
 		$restWithSlash = new RestfulService('http://example.com/');
 		foreach ($urls as $url) {
@@ -53,9 +53,9 @@ class RestfulServiceTest extends SapphireTest {
 		$restWithoutSlash = new RestfulService('http://example.com?b=query2');
 		$restWithSlash = new RestfulService('http://example.com/?b=query2');
 		$restWithQuery = new RestfulService('http://example.com/?b=query2');
-		$restWithQuery->setQueryString(array(
+		$restWithQuery->setQueryString([
 			'c' => 'query3',
-		));
+		]);
 		$this->assertEquals('http://example.com/url?b=query2&a=query1', $restWithoutSlash->getAbsoluteRequestURL('url?a=query1'));
 		$this->assertEquals('http://example.com/url?b=query2&a=query1', $restWithSlash->getAbsoluteRequestURL('url?a=query1'));
 		$this->assertEquals('http://example.com/url?b=query2&a=query1&c=query3', $restWithQuery->getAbsoluteRequestURL('url?a=query1'));
@@ -67,9 +67,9 @@ class RestfulServiceTest extends SapphireTest {
 		$restWithoutSlash = new RestfulService('http://example.com');
 		$restWithSlash = new RestfulService('http://example.com/');
 		$restWithQuery = new RestfulService('http://example.com/');
-		$restWithQuery->setQueryString(array(
+		$restWithQuery->setQueryString([
 			'c' => 'query3',
-		));
+		]);
 		$this->assertEquals('http://example.com/url?a=query1', $restWithoutSlash->getAbsoluteRequestURL('url?a=query1'));
 		$this->assertEquals('http://example.com/url?a=query1', $restWithSlash->getAbsoluteRequestURL('url?a=query1'));
 		$this->assertEquals('http://example.com/url?a=query1&c=query3', $restWithQuery->getAbsoluteRequestURL('url?a=query1'));
@@ -90,11 +90,11 @@ class RestfulServiceTest extends SapphireTest {
 	public function testSpecialCharacters() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
-		$params = array(
+		$params = [
 			'test1a' => 4352655636.76543, // number test
 			'test1b' => '$&+,/:;=?@#%', // special char test. These should all get encoded
 			'test1c' => 'And now for a string test' // string test
-		);
+		];
 		$service->setQueryString($params);
 		$responseBody = $service->request($url)->getBody();
 		foreach ($params as $key => $value) {
@@ -106,10 +106,10 @@ class RestfulServiceTest extends SapphireTest {
 	public function testGetDataWithSetQueryString() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
-		$params = array(
+		$params = [
 			'test1a' => 'val1a',
 			'test1b' => 'val1b'
-		);
+		];
 		$service->setQueryString($params);
 		$responseBody = $service->request($url)->getBody();
 		foreach ($params as $key => $value) {
@@ -121,10 +121,10 @@ class RestfulServiceTest extends SapphireTest {
 	public function testGetDataWithUrlParameters() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
-		$params = array(
+		$params = [
 			'test1a' => 'val1a',
 			'test1b' => 'val1b'
-		);
+		];
 		$url .= '?' . http_build_query($params);
 		$responseBody = $service->request($url)->getBody();
 		foreach ($params as $key => $value) {
@@ -135,10 +135,10 @@ class RestfulServiceTest extends SapphireTest {
 
 	public function testPostData() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
-		$params = array(
+		$params = [
 			'test1a' => 'val1a',
 			'test1b' => 'val1b'
-		);
+		];
 		$responseBody = $service->request('RestfulServiceTest_Controller/', 'POST', $params)->getBody();
 		foreach ($params as $key => $value) {
 			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
@@ -158,17 +158,17 @@ class RestfulServiceTest extends SapphireTest {
 		$url = 'RestfulServiceTest_Controller/';
 
 		// First run
-		$params = array(
+		$params = [
 			'test1a' => 'first run',
-		);
+		];
 		$service->setQueryString($params);
 		$responseBody = $service->request($url)->getBody();
 		$this->assertContains("<request_item name=\"test1a\">first run</request_item>", $responseBody);
 
 		// Second run
-		$params = array(
+		$params = [
 			'test1a' => 'second run',
-		);
+		];
 		$service->setQueryString($params);
 		$responseBody = $service->request($url)->getBody();
 		$this->assertContains("<request_item name=\"test1a\">second run</request_item>", $responseBody);
@@ -216,14 +216,14 @@ class RestfulServiceTest extends SapphireTest {
 		$basicAuthStringMethod->setAccessible(true);
 		$cachePathMethod = new ReflectionMethod('RestfulServiceTest_MockErrorService', 'getCachePath');
 		$cachePathMethod->setAccessible(true);
-		$cache_path = $cachePathMethod->invokeArgs($connection, array(array(
+		$cache_path = $cachePathMethod->invokeArgs($connection, [[
 			$fullUrl,
 			'GET',
 			null,
-			array(),
-			array(),
+			[],
+			[],
 			$basicAuthStringMethod->invoke($connection)
-		)));
+		]]);
 
 		$cacheResponse = new RestfulService_Response("Cache response body");
 		$store = serialize($cacheResponse);
@@ -237,16 +237,16 @@ class RestfulServiceTest extends SapphireTest {
 					"Set-Cookie: foo=bar\r\n".
 					"Set-Cookie: baz=quux\r\n".
 					"Set-Cookie: bar=foo\r\n";
-		$expected = array(
+		$expected = [
 			'Content-Type' => 'text/html; charset=UTF-8',
 			'Server' => 'Funky/1.0',
 			'X-BB-ExampleMANycaPS' => 'test',
-			'Set-Cookie' => array(
+			'Set-Cookie' => [
 				'foo=bar',
 				'baz=quux',
 				'bar=foo'
-			)
-		);
+			]
+		];
 		$headerFunction = new ReflectionMethod('RestfulService', 'parseRawHeaders');
 		$headerFunction->setAccessible(true);
 		$this->assertEquals(
@@ -297,7 +297,7 @@ class RestfulServiceTest extends SapphireTest {
 
 		$this->assertEquals(
 			$response->getHeaders(),
-			array(
+			[
 				'Server' => "nginx",
 				'Date' => "Fri, 20 Sep 2013 01:53:08 GMT",
 				'Content-Type' => "text/html; charset=utf-8",
@@ -306,7 +306,7 @@ class RestfulServiceTest extends SapphireTest {
 				'X-Frame-Options' => "SAMEORIGIN",
 				'Cache-Control' => "no-cache, max-age=0, must-revalidate, no-transform",
 				'Vary' => "Accept-Encoding"
-			),
+			],
 			'Only last header is extracted and parsed.'
 		);
 	}
@@ -323,17 +323,17 @@ class RestfulServiceTest extends SapphireTest {
 			''
 		);
 
-		$this->assertEquals($response->getHeaders(), array(), 'Headers are correctly extracted.');
+		$this->assertEquals($response->getHeaders(), [], 'Headers are correctly extracted.');
 	}
 }
 
 class RestfulServiceTest_Controller extends Controller implements TestOnly {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'httpErrorWithoutCache',
 		'httpErrorWithCache'
-	);
+	];
 
 	public function init() {
 		$this->basicAuthEnabled = false;
@@ -420,10 +420,10 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 
 	public $session = null;
 
-	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = array()) {
+	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = []) {
 
 		if(!$this->session) {
-			$this->session = Injector::inst()->create('Session', array());
+			$this->session = Injector::inst()->create('Session', []);
 		}
 
 		$url = $this->baseURL . $subURL; // Url for the request
@@ -442,7 +442,7 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 
 		$method = strtoupper($method);
 
-		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
+		assert(in_array($method, ['GET','POST','PUT','DELETE','HEAD','OPTIONS']));
 
 		// Add headers
 		if($this->customHeaders) {
@@ -479,7 +479,7 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
  */
 class RestfulServiceTest_MockErrorService extends RestfulService {
 
-	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
+	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = []) {
 		return new RestfulService_Response('<error>HTTP Error</error>', 400);
 	}
 

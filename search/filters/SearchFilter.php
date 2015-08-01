@@ -50,7 +50,7 @@ abstract class SearchFilter extends Object {
 	 * @param mixed $value
 	 * @param array $modifiers
 	 */
-	public function __construct($fullName, $value = false, array $modifiers = array()) {
+	public function __construct($fullName, $value = false, array $modifiers = []) {
 		$this->fullName = $fullName;
 
 		// sets $this->name and $this->relation

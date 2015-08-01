@@ -41,7 +41,7 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
      * @access  private
      * @var     array
      */
-    var $_allowedSchemes = array('http', 'https', 'ftp');
+    var $_allowedSchemes = ['http', 'https', 'ftp'];
 
     /**
      * Default scheme
@@ -57,14 +57,14 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
      * @access   private
      * @var      array
      */
-    var $_definedTags = array(
-        'url' => array(
+    var $_definedTags = [
+        'url' => [
             'htmlopen'  => 'a',
             'htmlclose' => 'a',
             'allowed'   => 'none^img',
-            'attributes'=> array('url' => 'href=%2$s%1$s%2$s')
-        )
-    );
+            'attributes'=> ['url' => 'href=%2$s%1$s%2$s']
+        ]
+    ];
 
 
     /**
@@ -94,13 +94,13 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
 
         $schemes = implode('|', $this->_allowedSchemes);
 
-        $pattern = array(   "/(?<![\"'=".$ce."\/])(".$oe."[^".$ce."]*".$ce.")?(((".$schemes."):\/\/|www)[@-a-z0-9.]+\.[a-z]{2,4}[^\s()\[\]]*)/i",
+        $pattern = [   "/(?<![\"'=".$ce."\/])(".$oe."[^".$ce."]*".$ce.")?(((".$schemes."):\/\/|www)[@-a-z0-9.]+\.[a-z]{2,4}[^\s()\[\]]*)/i",
                             "!".$oe."url(".$ce."|\s.*".$ce.")(.*)".$oe."/url".$ce."!iU",
-                            "!".$oe."url=((([a-z]*:(//)?)|www)[@-a-z0-9.]+)([^\s\[\]]*)".$ce."(.*)".$oe."/url".$ce."!i");
+                            "!".$oe."url=((([a-z]*:(//)?)|www)[@-a-z0-9.]+)([^\s\[\]]*)".$ce."(.*)".$oe."/url".$ce."!i"];
 
-        $pp = preg_replace_callback($pattern[0], array($this, 'smarterPPLinkExpand'), $this->_text);
+        $pp = preg_replace_callback($pattern[0], [$this, 'smarterPPLinkExpand'], $this->_text);
         $pp = preg_replace($pattern[1], $o."url=\$2\$1\$2".$o."/url".$c, $pp);
-        $this->_preparsed = preg_replace_callback($pattern[2], array($this, 'smarterPPLink'), $pp);
+        $this->_preparsed = preg_replace_callback($pattern[2], [$this, 'smarterPPLink'], $pp);
 
     }
 

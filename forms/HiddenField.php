@@ -12,7 +12,7 @@ class HiddenField extends FormField {
 	 *
 	 * @return HTMLText
 	 */
-	public function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = []) {
 		return $this->Field($properties);
 	}
 
@@ -40,13 +40,13 @@ class HiddenField extends FormField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'type' => 'hidden',
-			)
+			]
 		);
 	}
 
-	function SmallFieldHolder($properties = array()) {
+	function SmallFieldHolder($properties = []) {
 		return $this->FieldHolder($properties);
 	}
 

@@ -5,10 +5,10 @@
  */
 class CompositeDBFieldTest extends SapphireTest {
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'CompositeDBFieldTest_DataObject',
 		'SubclassedDBFieldObject',
-	);
+	];
 
 	public function testHasDatabaseFieldOnDataObject() {
 		$obj = singleton('CompositeDBFieldTest_DataObject');
@@ -24,7 +24,7 @@ class CompositeDBFieldTest extends SapphireTest {
 	public function testCompositeFieldMetaDataFunctions() {
 		$this->assertEquals('Money', DataObject::is_composite_field('CompositeDBFieldTest_DataObject', 'MyMoney'));
 		$this->assertNull(DataObject::is_composite_field('CompositeDBFieldTest_DataObject', 'Title'));
-		$this->assertEquals(array('MyMoney' => 'Money'),
+		$this->assertEquals(['MyMoney' => 'Money'],
 			DataObject::composite_fields('CompositeDBFieldTest_DataObject'));
 
 
@@ -32,21 +32,21 @@ class CompositeDBFieldTest extends SapphireTest {
 		$this->assertEquals('Money', DataObject::is_composite_field('SubclassedDBFieldObject', 'OtherMoney'));
 		$this->assertNull(DataObject::is_composite_field('SubclassedDBFieldObject', 'Title'));
 		$this->assertNull(DataObject::is_composite_field('SubclassedDBFieldObject', 'OtherField'));
-				$this->assertEquals(array('MyMoney' => 'Money', 'OtherMoney' => 'Money'),
+				$this->assertEquals(['MyMoney' => 'Money', 'OtherMoney' => 'Money'],
 			DataObject::composite_fields('SubclassedDBFieldObject'));
 	}
 }
 
 class CompositeDBFieldTest_DataObject extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Text',
 		'MyMoney' => 'Money',
-	);
+	];
 }
 
 class SubclassedDBFieldObject extends CompositeDBFieldTest_DataObject {
-	private static $db = array(
+	private static $db = [
 		'OtherField' => 'Text',
 		'OtherMoney' => 'Money',
-	);
+	];
 }

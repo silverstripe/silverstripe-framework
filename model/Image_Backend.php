@@ -16,7 +16,7 @@ interface Image_Backend {
 	 * @param array $args = array()
 	 * @return void
 	 */
-	public function __construct($filename = null, $args = array());
+	public function __construct($filename = null, $args = []);
 
 	/**
 	 * writeTo

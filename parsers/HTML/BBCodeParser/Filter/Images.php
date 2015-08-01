@@ -42,19 +42,19 @@ class SSHTMLBBCodeParser_Filter_Images extends SSHTMLBBCodeParser_Filter
     * @access   private
     * @var      array
     */
-    var $_definedTags = array(
-        'img' => array(
+    var $_definedTags = [
+        'img' => [
             'htmlopen'  => 'img',
             'htmlclose' => '',
             'allowed'   => 'none',
-            'attributes'=> array(
+            'attributes'=> [
                 'img'   => 'src=%2$s%1$s%2$s',
                 'w'     => 'width=%2$s%1$d%2$s',
                 'h'     => 'height=%2$s%1$d%2$s',
                 'alt'   => 'alt=%2$s%1$s%2$s',
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
     /**
     * Executes statements before the actual array building starts

@@ -82,35 +82,35 @@ class File extends DataObject {
 
 	private static $plural_name = "Files";
 
-	private static $db = array(
+	private static $db = [
 		"Name" => "Varchar(255)",
 		"Title" => "Varchar(255)",
 		"Filename" => "Text",
 		"Content" => "Text",
 		// Only applies to files, doesn't inherit for folder
 		'ShowInSearch' => 'Boolean(1)',
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		"Parent" => "File",
 		"Owner" => "Member"
-	);
+	];
 
-	private static $has_many = array();
+	private static $has_many = [];
 
-	private static $many_many = array();
+	private static $many_many = [];
 
-	private static $defaults = array(
+	private static $defaults = [
 		"ShowInSearch" => 1,
-	);
+	];
 
-	private static $extensions = array(
+	private static $extensions = [
 		"Hierarchy",
-	);
+	];
 
-	private static $casting = array (
+	private static $casting = [
 		'TreeTitle' => 'HTMLText'
-	);
+	];
 
 	/**
 	 * @config
@@ -125,39 +125,39 @@ class File extends DataObject {
 	 *
 	 * Instructions for the change you need to make are included in a comment in the config file.
 	 */
-	private static $allowed_extensions = array(
+	private static $allowed_extensions = [
 		'','ace','arc','arj','asf','au','avi','bmp','bz2','cab','cda','css','csv','dmg','doc','docx','dotx','dotm',
 		'flv','gif','gpx','gz','hqx','ico','jar','jpeg','jpg','js','kml', 'm4a','m4v',
 		'mid','midi','mkv','mov','mp3','mp4','mpa','mpeg','mpg','ogg','ogv','pages','pcx','pdf','pkg',
 		'png','pps','ppt','pptx','potx','potm','ra','ram','rm','rtf','sit','sitx','tar','tgz','tif','tiff',
 		'txt','wav','webm','wma','wmv','xls','xlsx','xltx','xltm','zip','zipx',
-	);
+	];
 
 	/**
 	 * @config
 	 * @var array Category identifiers mapped to commonly used extensions.
 	 */
-	private static $app_categories = array(
-		'audio' => array(
+	private static $app_categories = [
+		'audio' => [
 			"aif" ,"au" ,"mid" ,"midi" ,"mp3" ,"ra" ,"ram" ,"rm","mp3" ,"wav" ,"m4a" ,"snd" ,"aifc" ,"aiff" ,"wma",
 			"apl", "avr" ,"cda" ,"ogg"
-		),
-		'mov' => array(
+		],
+		'mov' => [
 			"mpeg" ,"mpg" ,"mp4" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt", "ogv", "webm"
-		),
-		'zip' => array(
+		],
+		'zip' => [
 			"arc" ,"rar" ,"tar" ,"gz" ,"tgz" ,"bz2" ,"dmg" ,"jar","ace" ,"arj" ,"bz" ,"cab"
-		),
-		'image' => array(
+		],
+		'image' => [
 			"bmp" ,"gif" ,"jpg" ,"jpeg" ,"pcx" ,"tif" ,"png" ,"alpha","als" ,"cel" ,"icon" ,"ico" ,"ps"
-		),
-		'flash' => array(
+		],
+		'flash' => [
 			'swf', 'fla'
-		),
-		'doc' => array(
+		],
+		'doc' => [
 			'doc','docx','txt','rtf','xls','xlsx','pages', 'ppt','pptx','pps','csv', 'html','htm','xhtml', 'xml','pdf'
-		)
-	);
+		]
+	];
 
 	/**
 	 * @config
@@ -206,11 +206,11 @@ class File extends DataObject {
 			// build some useful meta-data (file type and size) as data attributes
 			$attrs = ' ';
 			if($record instanceof File) {
-				foreach(array(
+				foreach([
 					'class' => 'file',
 					'data-type' => $record->getExtension(),
 					'data-size' => $record->getSize()
-				) as $name => $value) {
+				] as $name => $value) {
 					$attrs .= sprintf('%s="%s" ', $name, $value);
 				}
 			}
@@ -246,10 +246,10 @@ class File extends DataObject {
 		$item = null;
 		foreach($parts as $part) {
 			if($part == ASSETS_DIR && !$parentID) continue;
-			$item = File::get()->filter(array(
+			$item = File::get()->filter([
 				'Name' => $part,
 				'ParentID' => $parentID
-			))->first();
+			])->first();
 			if(!$item) break;
 			$parentID = $item->ID;
 		}
@@ -335,13 +335,13 @@ class File extends DataObject {
 		$result = $this->extendedCan('canEdit', $member);
 		if($result !== null) return $result;
 
-		return Permission::checkMember($member, array('CMS_ACCESS_AssetAdmin', 'CMS_ACCESS_LeftAndMain'));
+		return Permission::checkMember($member, ['CMS_ACCESS_AssetAdmin', 'CMS_ACCESS_LeftAndMain']);
 	}
 
 	/**
 	 * @return boolean
 	 */
-	public function canCreate($member = null, $context = array()) {
+	public function canCreate($member = null, $context = []) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
@@ -508,7 +508,7 @@ class File extends DataObject {
 	 */
 	public function deleteDatabaseOnly() {
 		if(is_numeric($this->ID)) {
-			DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', array($this->ID));
+			DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', [$this->ID]);
 		}
 	}
 
@@ -650,12 +650,12 @@ class File extends DataObject {
 			$ext = self::get_file_extension($name);
 			$suffix = 1;
 
-			while(File::get()->filter(array(
+			while(File::get()->filter([
 					'Name' => $name,
 					'ParentID' => (int) $this->ParentID
-				))->exclude(array(
+				])->exclude([
 					'ID' => $this->ID
-				))->first()
+				])->first()
 			) {
 				$suffix++;
 				$name = "$base-$suffix.$ext";
@@ -671,7 +671,7 @@ class File extends DataObject {
 
 		// Update title
 		if(!$this->Title) {
-			$this->Title = str_replace(array('-','_'),' ', preg_replace('/\.[^.]+$/', '', $name));
+			$this->Title = str_replace(['-','_'],' ', preg_replace('/\.[^.]+$/', '', $name));
 		}
 
 		return $name;
@@ -821,7 +821,7 @@ class File extends DataObject {
 	 * @return string
 	 */
 	public function getFileType() {
-		$types = array(
+		$types = [
 			'gif' => _t('File.GifType', 'GIF image - good for diagrams'),
 			'jpg' => _t('File.JpgType', 'JPEG image - good for photos'),
 			'jpeg' => _t('File.JpgType', 'JPEG image - good for photos'),
@@ -843,7 +843,7 @@ class File extends DataObject {
 			'css' => _t('File.CssType', 'CSS file'),
 			'html' => _t('File.HtmlType', 'HTML file'),
 			'htm' => _t('File.HtmlType', 'HTML file')
-		);
+		];
 
 		$ext = strtolower($this->getExtension());
 
@@ -939,7 +939,7 @@ class File extends DataObject {
 					'File.INVALIDEXTENSION',
 					'Extension is not allowed (valid: {extensions})',
 					'Argument 1: Comma-separated list of valid extensions',
-					array('extensions' => wordwrap(implode(', ',$exts)))
+					['extensions' => wordwrap(implode(', ',$exts))]
 				);
 				return new ValidationResult(false, $message);
 			}
@@ -957,13 +957,13 @@ class File extends DataObject {
 	 * @config
 	 * @var Array Only use lowercase extensions in here.
 	 */
-	private static $class_for_file_extension = array(
+	private static $class_for_file_extension = [
 		'*' => 'File',
 		'jpg' => 'Image',
 		'jpeg' => 'Image',
 		'png' => 'Image',
 		'gif' => 'Image',
-	);
+	];
 
 	/**
 	 * Maps a {@link File} subclass to a specific extension.
@@ -992,7 +992,7 @@ class File extends DataObject {
 	 * @param String
 	 */
 	public static function set_class_for_file_extension($exts, $class) {
-		if(!is_array($exts)) $exts = array($exts);
+		if(!is_array($exts)) $exts = [$exts];
 
 		foreach($exts as $ext) {
 			if(!is_subclass_of($class, 'File')) {
@@ -1000,7 +1000,7 @@ class File extends DataObject {
 					sprintf('Class "%s" (for extension "%s") is not a valid subclass of File', $class, $ext)
 				);
 			}
-			self::config()->class_for_file_extension = array($ext => $class);
+			self::config()->class_for_file_extension = [$ext => $class];
 		}
 	}
 

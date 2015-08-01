@@ -48,7 +48,7 @@ class MemberImportForm extends Form {
 					)
 				)
 			);
-			$fileField->getValidator()->setAllowedExtensions(array('csv'));
+			$fileField->getValidator()->setAllowedExtensions(['csv']);
 		}
 
 		if(!$actions) {
@@ -72,24 +72,24 @@ class MemberImportForm extends Form {
 		$loader = new MemberCsvBulkLoader();
 
 		// optionally set group relation
-		if($this->group) $loader->setGroups(array($this->group));
+		if($this->group) $loader->setGroups([$this->group]);
 
 		// load file
 		$result = $loader->load($data['CsvFile']['tmp_name']);
 
 		// result message
-		$msgArr = array();
+		$msgArr = [];
 		if($result->CreatedCount()) $msgArr[] = _t(
 			'MemberImportForm.ResultCreated', 'Created {count} members',
-			array('count' => $result->CreatedCount())
+			['count' => $result->CreatedCount()]
 		);
 		if($result->UpdatedCount()) $msgArr[] = _t(
 			'MemberImportForm.ResultUpdated', 'Updated {count} members',
-			array('count' => $result->UpdatedCount())
+			['count' => $result->UpdatedCount()]
 		);
 		if($result->DeletedCount()) $msgArr[] = _t(
 			'MemberImportForm.ResultDeleted', 'Deleted %d members',
-			array('count' => $result->DeletedCount())
+			['count' => $result->DeletedCount()]
 		);
 		$msg = ($msgArr) ? implode(',', $msgArr) : _t('MemberImportForm.ResultNone', 'No changes');
 

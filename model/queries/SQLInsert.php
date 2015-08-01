@@ -14,7 +14,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	 *
 	 * @var array[SQLAssignmentRow]
 	 */
-	protected $rows = array();
+	protected $rows = [];
 
 	/**
 	 * The table name to insert into
@@ -30,7 +30,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	 * @param array $assignments List of column assignments
 	 * @return static
 	 */
-	public static function create($into = null, $assignments = array()) {
+	public static function create($into = null, $assignments = []) {
 		return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
 	}
 
@@ -40,7 +40,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	 * @param string $into Table name to insert into (ANSI quoted)
 	 * @param array $assignments List of column assignments
 	 */
-	function __construct($into = null, $assignments = array()) {
+	function __construct($into = null, $assignments = []) {
 		$this->setInto($into);
 		if(!empty($assignments)) {
 			$this->setAssignments($assignments);
@@ -107,7 +107,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	 * @return array
 	 */
 	public function getColumns() {
-		$columns = array();
+		$columns = [];
 		foreach($this->getRows() as $row) {
 			$columns = array_merge($columns, $row->getColumns());
 		}
@@ -189,7 +189,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	 * @return self The self reference to this query
 	 */
 	public function clear() {
-		$this->rows = array();
+		$this->rows = [];
 		return $this;
 	}
 }

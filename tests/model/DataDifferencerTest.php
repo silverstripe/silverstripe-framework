@@ -8,11 +8,11 @@ class DataDifferencerTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataDifferencerTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'DataDifferencerTest_Object',
 		'DataDifferencerTest_HasOneRelationObject',
 		'DataDifferencerTest_MockImage',
-	);
+	];
 
 	public function testArrayValues() {
 		$obj1 = $this->objFromFixture('DataDifferencerTest_Object', 'obj1');
@@ -64,24 +64,24 @@ class DataDifferencerTest extends SapphireTest {
 
 class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
-	private static $extensions = array('Versioned("Stage", "Live")');
+	private static $extensions = ['Versioned("Stage", "Live")'];
 
-	private static $db = array(
+	private static $db = [
 		'Choices' => "Varchar",
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Image' => 'DataDifferencerTest_MockImage',
 		'HasOneRelation' => 'DataDifferencerTest_HasOneRelationObject'
-	);
+	];
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$choices = array(
+		$choices = [
 			'a' => 'a',
 			'b' => 'b',
 			'c' => 'c',
-		);
+		];
 		$listField = new ListboxField('Choices', 'Choices', $choices);
 		$fields->push($listField);
 
@@ -92,13 +92,13 @@ class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
 class DataDifferencerTest_HasOneRelationObject extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar'
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'Objects' => 'DataDifferencerTest_Object'
-	);
+	];
 }
 
 class DataDifferencerTest_MockImage extends Image implements TestOnly {

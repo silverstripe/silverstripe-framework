@@ -7,16 +7,16 @@
 class GroupedDropdownFieldTest extends SapphireTest {
 
 	public function testValidation() {
-		$field = GroupedDropdownField::create('Test', 'Testing', array(
+		$field = GroupedDropdownField::create('Test', 'Testing', [
 			"1" => "One",
-			"Group One" => array(
+			"Group One" => [
 				"2" => "Two",
 				"3" => "Three"
-			),
-			"Group Two" => array(
+			],
+			"Group Two" => [
 				"4" => "Four"
-			)
-		));
+			]
+		]);
 
 		$validator = new RequiredFields();
 
@@ -41,12 +41,12 @@ class GroupedDropdownFieldTest extends SapphireTest {
 		$this->assertTrue($field->validate($validator));
 
 		//disabled items shouldn't validate
-		$field->setDisabledItems(array('1'));
+		$field->setDisabledItems(['1']);
 		$field->setValue('1');
 		$this->assertFalse($field->validate($validator));
 
 		//grouped disabled items shouldn't validate
-		$field->setDisabledItems(array("Group One" => array("2")));
+		$field->setDisabledItems(["Group One" => ["2"]]);
 		$field->setValue('2');
 		$this->assertFalse($field->validate($validator));
 	}

@@ -40,9 +40,9 @@ class HasManyList extends RelationList {
 		// Apply relation filter
 		$key = "\"$this->foreignKey\"";
 		if(is_array($id)) {
-			return array("$key IN (".DB::placeholders($id).")"  => $id);
+			return ["$key IN (".DB::placeholders($id).")"  => $id];
 		} else if($id !== null){
-			return array($key => $id);
+			return [$key => $id];
 		}
 	}
 

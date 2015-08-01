@@ -110,14 +110,14 @@ abstract class DBSchemaManager {
 		$this->schemaIsUpdating = true;
 
 		// Update table list
-		$this->tableList = array();
+		$this->tableList = [];
 		$tables = $this->tableList();
 		foreach ($tables as $table) {
 			$this->tableList[strtolower($table)] = $table;
 		}
 
 		// Clear update list for client code to mess around with
-		$this->schemaUpdateTransaction = array();
+		$this->schemaUpdateTransaction = [];
 
 		$error = null;
 		try {
@@ -191,13 +191,13 @@ abstract class DBSchemaManager {
 	 * @param array $advanced_options Advanced table creation options
 	 */
 	public function transCreateTable($table, $options = null, $advanced_options = null) {
-		$this->schemaUpdateTransaction[$table] = array(
+		$this->schemaUpdateTransaction[$table] = [
 			'command' => 'create',
-			'newFields' => array(),
-			'newIndexes' => array(),
+			'newFields' => [],
+			'newIndexes' => [],
 			'options' => $options,
 			'advancedOptions' => $advanced_options
-		);
+		];
 	}
 
 	/**
@@ -269,14 +269,14 @@ abstract class DBSchemaManager {
 	 */
 	protected function transInitTable($table) {
 		if (!isset($this->schemaUpdateTransaction[$table])) {
-			$this->schemaUpdateTransaction[$table] = array(
+			$this->schemaUpdateTransaction[$table] = [
 				'command' => 'alter',
-				'newFields' => array(),
-				'newIndexes' => array(),
-				'alteredFields' => array(),
-				'alteredIndexes' => array(),
+				'newFields' => [],
+				'newIndexes' => [],
+				'alteredFields' => [],
+				'alteredIndexes' => [],
 				'alteredOptions' => ''
-			);
+			];
 		}
 	}
 
@@ -298,7 +298,7 @@ abstract class DBSchemaManager {
 	 * @param array $extensions List of extensions
 	 */
 	public function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK = true,
-		$options = array(), $extensions = false
+		$options = [], $extensions = false
 	) {
 		if (!isset($this->tableList[strtolower($table)])) {
 			$this->transCreateTable($table, $options, $extensions);
@@ -493,11 +493,11 @@ abstract class DBSchemaManager {
 	protected function parseIndexSpec($name, $spec) {
 		// Support $indexes = array('ColumnName' => true) for quick indexes
 		if ($spec === true) {
-			return array(
+			return [
 				'name' => $name,
 				'value' => $this->quoteColumnSpecString($name),
 				'type' => 'index'
-			);
+			];
 		}
 
 		// Do minimal cleanup on any already parsed spec
@@ -508,11 +508,11 @@ abstract class DBSchemaManager {
 		}
 
 		// Nicely formatted spec!
-		return array(
+		return [
 			'name' => $name,
 			'value' => $this->quoteColumnSpecString($spec),
 			'type' => $this->determineIndexType($spec)
-		);
+		];
 	}
 
 	/**
@@ -626,7 +626,7 @@ abstract class DBSchemaManager {
 			// If enums/sets are being modified, then we need to fix existing data in the table.
 			// Update any records where the enum is set to a legacy value to be set to the default.
 			// One hard-coded exception is SiteTree - the default for this is Page.
-			foreach (array('enum', 'set') as $enumtype) {
+			foreach (['enum', 'set'] as $enumtype) {
 				if (preg_match("/^$enumtype/i", $specValue)) {
 					$newStr = preg_replace("/(^$enumtype\s*\(')|('$\).*)/i", "", $spec_orig);
 					$new = preg_split("/'\s*,\s*'/", $newStr);
@@ -634,7 +634,7 @@ abstract class DBSchemaManager {
 					$oldStr = preg_replace("/(^$enumtype\s*\(')|('$\).*)/i", "", $fieldValue);
 					$old = preg_split("/'\s*,\s*'/", $newStr);
 
-					$holder = array();
+					$holder = [];
 					foreach ($old as $check) {
 						if (!in_array($check, $new)) {
 							$holder[] = $check;

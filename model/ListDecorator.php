@@ -127,7 +127,7 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 	 */
 	public function sort() {
 		$args = func_get_args();
-		return call_user_func_array(array($this->list, 'sort'), $args);
+		return call_user_func_array([$this->list, 'sort'], $args);
 	}
 
 	public function canFilterBy($by) {
@@ -144,7 +144,7 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 	 */
 	public function filter(){
 		$args = func_get_args();
-		return call_user_func_array(array($this->list, 'filter'), $args);
+		return call_user_func_array([$this->list, 'filter'], $args);
 	}
 
 	/**
@@ -184,7 +184,7 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 	 */
 	public function exclude(){
 		$args = func_get_args();
-		return call_user_func_array(array($this->list, 'exclude'), $args);
+		return call_user_func_array([$this->list, 'exclude'], $args);
 	}
 
 	public function debug() {

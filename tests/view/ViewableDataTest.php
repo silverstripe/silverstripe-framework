@@ -52,10 +52,10 @@ class ViewableDataTest extends SapphireTest {
 
 	public function testArrayCustomise() {
 		$viewableData    = new ViewableDataTest_Castable();
-		$newViewableData = $viewableData->customise(array (
+		$newViewableData = $viewableData->customise([
 			'test'         => 'overwritten',
 			'alwaysCasted' => 'overwritten'
-		));
+		]);
 
 		$this->assertEquals('test', $viewableData->XML_val('test'));
 		$this->assertEquals('casted', $viewableData->XML_val('alwaysCasted'));
@@ -82,7 +82,7 @@ class ViewableDataTest extends SapphireTest {
 	}
 
 	public function testDefaultValueWrapping() {
-		$data = new ArrayData(array('Title' => 'SomeTitleValue'));
+		$data = new ArrayData(['Title' => 'SomeTitleValue']);
 		// this results in a cached raw string in ViewableData:
 		$this->assertTrue($data->hasValue('Title'));
 		$this->assertFalse($data->hasValue('SomethingElse'));
@@ -118,12 +118,12 @@ class ViewableDataTest extends SapphireTest {
 	}
 
 	public function testCastingClass() {
-		$expected = array(
+		$expected = [
 			'NonExistant'   => null,
 			'Field'         => 'CastingType',
 			'Argument'      => 'ArgumentType',
 			'ArrayArgument' => 'ArrayArgumentType'
-		);
+		];
 		$obj = new ViewableDataTest_CastingClass();
 
 		foreach($expected as $field => $class) {
@@ -184,10 +184,10 @@ class ViewableDataTest_Castable extends ViewableData {
 
 	private static $default_cast = 'ViewableData_Caster';
 
-	private static $casting = array (
+	private static $casting = [
 		'alwaysCasted'    => 'ViewableDataTest_RequiresCasting',
 		'castedUnsafeXML' => 'ViewableData_UnescaptedCaster'
-	);
+	];
 
 	public $test = 'test';
 
@@ -259,11 +259,11 @@ class ViewableDataTest_Container extends ViewableData {
 }
 
 class ViewableDataTest_CastingClass extends ViewableData {
-	private static $casting = array(
+	private static $casting = [
 		'Field'         => 'CastingType',
 		'Argument'      => 'ArgumentType(Argument)',
 		'ArrayArgument' => 'ArrayArgumentType(array(foo, bar))'
-	);
+	];
 }
 
 class ViewableDataTest_NoCastingInformation extends ViewableData {

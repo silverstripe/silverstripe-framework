@@ -87,10 +87,10 @@ class FileField extends FormField {
 	 * @param array $properties
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
-		$properties = array_merge($properties, array(
+	public function Field($properties = []) {
+		$properties = array_merge($properties, [
 			'MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize()
-		));
+		]);
 
 		return parent::Field($properties);
 	}
@@ -98,7 +98,7 @@ class FileField extends FormField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array('type' => 'file')
+			['type' => 'file']
 		);
 	}
 
@@ -248,7 +248,7 @@ class FileField extends FormField {
 	 * @return $this
 	 */
 	public function setAllowedFileCategories($category) {
-		$extensions = array();
+		$extensions = [];
 		$knownCategories = File::config()->app_categories;
 
 		// Parse arguments

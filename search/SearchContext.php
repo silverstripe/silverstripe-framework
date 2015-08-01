@@ -71,7 +71,7 @@ class SearchContext extends Object {
 	public function __construct($modelClass, $fields = null, $filters = null) {
 		$this->modelClass = $modelClass;
 		$this->fields = ($fields) ? $fields : new FieldList();
-		$this->filters = ($filters) ? $filters : array();
+		$this->filters = ($filters) ? $filters : [];
 
 		parent::__construct();
 	}
@@ -93,7 +93,7 @@ class SearchContext extends Object {
 	 */
 	protected function applyBaseTableFields() {
 		$classes = ClassInfo::dataClassesFor($this->modelClass);
-		$fields = array("\"".ClassInfo::baseDataClass($this->modelClass).'".*');
+		$fields = ["\"".ClassInfo::baseDataClass($this->modelClass).'".*'];
 		if($this->modelClass != $classes[0]) $fields[] = '"'.$classes[0].'".*';
 		//$fields = array_keys($model->db());
 		$fields[] = '"'.$classes[0].'".\"ClassName\" AS "RecordClassName"';
@@ -140,7 +140,7 @@ class SearchContext extends Object {
 		$query = $query->sort($sort);
 
 		// hack to work with $searchParems when it's an Object
-		$searchParamArray = array();
+		$searchParamArray = [];
 		if (is_object($searchParams)) {
 			$searchParamArray = $searchParams->getVars();
 		} else {
@@ -153,7 +153,7 @@ class SearchContext extends Object {
 				$filter->setModel($this->modelClass);
 				$filter->setValue($value);
 				if(! $filter->isEmpty()) {
-					$query = $query->alterDataQuery(array($filter, 'apply'));
+					$query = $query->alterDataQuery([$filter, 'apply']);
 				}
 			}
 		}
@@ -176,7 +176,7 @@ class SearchContext extends Object {
 	 * @return SS_List
 	 */
 	public function getResults($searchParams, $sort = false, $limit = false) {
-		$searchParams = array_filter((array)$searchParams, array($this,'clearEmptySearchFields'));
+		$searchParams = array_filter((array)$searchParams, [$this,'clearEmptySearchFields']);
 
 		// getQuery actually returns a DataList
 		return $this->getQuery($searchParams, $sort, $limit);

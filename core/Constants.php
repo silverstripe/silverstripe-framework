@@ -40,10 +40,10 @@
 $envFile = '_ss_environment.php';
 //define the dirs to start scanning from (have to add the trailing slash)
 // we're going to check the realpath AND the path as the script sees it
-$dirsToCheck = array(
+$dirsToCheck = [
 	realpath('.'),
 	dirname($_SERVER['SCRIPT_FILENAME'])
-);
+];
 //if they are the same, remove one of them
 if ($dirsToCheck[0] == $dirsToCheck[1]) {
 	unset($dirsToCheck[1]);
@@ -131,7 +131,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	}
 
 	// Everything else
-	$serverDefaults = array(
+	$serverDefaults = [
 		'SERVER_PROTOCOL' => 'HTTP/1.1',
 		'HTTP_ACCEPT' => 'text/plain;q=0.5',
 		'HTTP_ACCEPT_LANGUAGE' => '*;q=0.5',
@@ -143,7 +143,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 		'REMOTE_ADDR' => '127.0.0.1',
 		'REQUEST_METHOD' => 'GET',
 		'HTTP_USER_AGENT' => 'CLI',
-	);
+	];
 
 	$_SERVER = array_merge($serverDefaults, $_SERVER);
 

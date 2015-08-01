@@ -29,7 +29,7 @@ class PasswordValidatorTest extends SapphireTest {
 
 	public function testValidateMinScore() {
 		$v = new PasswordValidator();
-		$v->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"));
+		$v->characterStrength(3, ["lowercase", "uppercase", "digits", "punctuation"]);
 
 		$r = $v->validate('aA', new Member());
 		$this->assertFalse($r->valid(), 'Passing too few tests');

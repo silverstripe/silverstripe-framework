@@ -6,13 +6,13 @@
 class GridField_URLHandlerTest extends FunctionalTest {
 	public function testFormSubmission() {
 		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/showform");
-		$formResult = $this->submitForm('Form_Form', 'action_doAction', array('Test' => 'foo bar') );
+		$formResult = $this->submitForm('Form_Form', 'action_doAction', ['Test' => 'foo bar'] );
 		$this->assertEquals("Submitted foo bar to component", $formResult->getBody());
 	}
 
 	public function testNestedRequestHandlerFormSubmission() {
 		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/item/3/showform");
-		$formResult = $this->submitForm('Form_Form', 'action_doAction', array('Test' => 'foo bar') );
+		$formResult = $this->submitForm('Form_Form', 'action_doAction', ['Test' => 'foo bar'] );
 		$this->assertEquals("Submitted foo bar to item #3", $formResult->getBody());
 	}
 
@@ -31,7 +31,7 @@ class GridField_URLHandlerTest extends FunctionalTest {
 
 class GridField_URLHandlerTest_Controller extends Controller implements TestOnly {
 
-	private static $allowed_actions = array('Form');
+	private static $allowed_actions = ['Form'];
 
 	public function Link() {
 		return get_class($this) ."/";
@@ -55,17 +55,17 @@ class GridField_URLHandlerTest_Controller extends Controller implements TestOnly
  */
 class GridField_URLHandlerTest_Component extends RequestHandler implements GridField_URLHandler {
 
-	private static $allowed_actions = array('Form', 'showform', 'testpage', 'handleItem');
+	private static $allowed_actions = ['Form', 'showform', 'testpage', 'handleItem'];
 
 	protected $gridField;
 
 	public function getURLHandlers($gridField) {
-		return array(
+		return [
 			'showform' => 'showform',
 			'testpage' => 'testpage',
 			'Form' => 'Form',
 			'item/$ID' => 'handleItem',
-		);
+		];
 	}
 
 	public function handleItem($gridField, $request) {
@@ -103,7 +103,7 @@ class GridField_URLHandlerTest_Component extends RequestHandler implements GridF
 
 class GridField_URLHandlerTest_Component_ItemRequest extends RequestHandler {
 
-	private static $allowed_actions = array('Form', 'showform', 'testpage');
+	private static $allowed_actions = ['Form', 'showform', 'testpage'];
 
 	protected $gridField;
 

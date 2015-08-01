@@ -89,7 +89,7 @@ abstract class DataExtension extends Extension {
 	 *               the values are additional fields/relations to be defined.
 	 */
 	public function extraStatics($class = null, $extension = null) {
-		return array();
+		return [];
 	}
 
 	/**

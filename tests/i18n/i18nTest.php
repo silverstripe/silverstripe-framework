@@ -20,9 +20,9 @@ class i18nTest extends SapphireTest {
 	 */
 	protected $alternateBasePath;
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'i18nTest_DataObject'
-	);
+	];
 
 
 	public function setUp() {
@@ -45,11 +45,11 @@ class i18nTest extends SapphireTest {
 		// Override default adapter to avoid cached translations between tests.
 		// Emulates behaviour in i18n::get_translators()
 		$this->origAdapter = i18n::get_translator('core');
-		$adapter = new Zend_Translate(array(
+		$adapter = new Zend_Translate([
 			'adapter' => 'i18nRailsYamlAdapter',
 			'locale' => i18n::default_locale(),
 			'disableNotices' => true,
-		));
+		]);
 		i18n::register_translator($adapter, 'core');
 		$adapter->removeCache();
 		i18n::include_by_locale('en');
@@ -103,21 +103,21 @@ class i18nTest extends SapphireTest {
 		i18n::set_locale('de_DE');
 		$obj = new i18nTest_DataObject();
 
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTest_DataObject.MyProperty' => 'MyProperty'
-		), 'en_US');
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		], 'en_US');
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTest_DataObject.MyProperty' => 'Mein Attribut'
-		), 'de_DE');
+		], 'de_DE');
 
 		$this->assertEquals(
 			$obj->fieldLabel('MyProperty'),
 			'Mein Attribut'
 		);
 
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTest_DataObject.MyUntranslatedProperty' => 'Mein Attribut'
-		), 'en_US');
+		], 'en_US');
 		$this->assertEquals(
 			$obj->fieldLabel('MyUntranslatedProperty'),
 			'My Untranslated Property'
@@ -130,12 +130,12 @@ class i18nTest extends SapphireTest {
 		$oldLocale = i18n::get_locale();
 		i18n::set_locale('en_US');
 
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTest_Object.MyProperty' => 'Untranslated'
-		), 'en_US');
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		], 'en_US');
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTest_Object.my_translatable_property' => 'Übersetzt'
-		), 'de_DE');
+		], 'de_DE');
 
 		$this->assertEquals(
 			i18nTest_Object::$my_translatable_property,
@@ -165,7 +165,7 @@ class i18nTest extends SapphireTest {
 		$oldLocale = i18n::get_locale();
 
 		i18n::set_locale('en_US');
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTestModule.MAINTEMPLATE' => 'Main Template',
 			'i18nTestModule.ss.SPRINTFNONAMESPACE' => 'My replacement no namespace: %s',
 			'i18nTestModule.LAYOUTTEMPLATE' => 'Layout Template',
@@ -175,10 +175,10 @@ class i18nTest extends SapphireTest {
 			'i18nTestModuleInclude.ss.NONAMESPACE' => 'Include Entity without Namespace',
 			'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'My include replacement: %s',
 			'i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE' => 'My include replacement no namespace: %s'
-		), 'en_US');
+		], 'en_US');
 
 		$viewer = new SSViewer('i18nTestModule');
-		$parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
+		$parsedHtml = Convert::nl2os($viewer->process(new ArrayData(['TestProperty' => 'TestPropertyValue'])));
 		$this->assertContains(
 			Convert::nl2os("Layout Template\n"),
 			$parsedHtml
@@ -189,7 +189,7 @@ class i18nTest extends SapphireTest {
 		);
 
 		i18n::set_locale('de_DE');
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTestModule.MAINTEMPLATE' => 'TRANS Main Template',
 			'i18nTestModule.ss.SPRINTFNONAMESPACE' => 'TRANS My replacement no namespace: %s',
 			'i18nTestModule.LAYOUTTEMPLATE' => 'TRANS Layout Template',
@@ -199,10 +199,10 @@ class i18nTest extends SapphireTest {
 			'i18nTestModuleInclude.ss.NONAMESPACE' => 'TRANS Include Entity without Namespace',
 			'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'TRANS My include replacement: %s',
 			'i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE' => 'TRANS My include replacement no namespace: %s'
-		), 'de_DE');
+		], 'de_DE');
 
 		$viewer = new SSViewer('i18nTestModule');
-		$parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
+		$parsedHtml = Convert::nl2os($viewer->process(new ArrayData(['TestProperty' => 'TestPropertyValue'])));
 		$this->assertContains(
 			Convert::nl2os("TRANS Main Template\n"),
 			$parsedHtml
@@ -245,11 +245,11 @@ class i18nTest extends SapphireTest {
 
 		i18n::set_locale('en_US');
 
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTestModule.NEWMETHODSIG' => 'TRANS New _t method signature test',
 			'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}',
 			'i18nTestModule.INJECTIONSLEGACY' => 'TRANS Hello %s %s. But it is late, %s',
-		), 'en_US');
+		], 'en_US');
 
 		$entity = "i18nTestModule.INJECTIONS";
 		$default = "Hello {name} {greeting}. But it is late, {goodbye}";
@@ -261,27 +261,27 @@ class i18nTest extends SapphireTest {
 		);
 
 		$translated = i18n::_t($entity.'_DOES_NOT_EXIST', $default,
-			array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"));
+			["name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"]);
 		$this->assertContains(
 			"Hello Mark welcome. But it is late, bye",
 			$translated, "Testing fallback to the translation default (but using the injection array)"
 		);
 
 		$translated = i18n::_t($entity, $default,
-			array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
+			["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]);
 		$this->assertContains(
 			"TRANS Hello Paul good you are here. But it is late, see you",
 			$translated, "Testing entity, default string and injection array"
 		);
 
 		$translated = i18n::_t($entity, $default, "New context (this should be ignored)",
-			array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
+			["name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"]);
 		$this->assertContains(
 			"TRANS Hello Steffen willkommen. But it is late, wiedersehen",
 			$translated, "Full test of translation, using default, context and injection array"
 		);
 
-		$translated = i18n::_t($entity, array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
+		$translated = i18n::_t($entity, ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
 		$this->assertContains(
 			"TRANS Hello Cat meow. But it is late, meow",
 			$translated, "Testing a translation with just entity and injection array"
@@ -289,7 +289,7 @@ class i18nTest extends SapphireTest {
 
 		$translated = i18n::_t(
 			'i18nTestModule.INJECTIONSLEGACY', // has %s placeholders
-			array("name"=>"Cat", "greeting2"=>"meow", "goodbye"=>"meow")
+			["name"=>"Cat", "greeting2"=>"meow", "goodbye"=>"meow"]
 		);
 		$this->assertContains(
 			"TRANS Hello Cat meow. But it is late, meow",
@@ -298,7 +298,7 @@ class i18nTest extends SapphireTest {
 
 		$translated = i18n::_t(
 			'i18nTestModule.INJECTIONSLEGACY', // has %s placeholders
-			array("Cat", "meow"/*, "meow" */) // remove third arg
+			["Cat", "meow"/*, "meow" */] // remove third arg
 		);
 		$this->assertContains(
 			"TRANS Hello Cat meow. But it is late, ",
@@ -307,7 +307,7 @@ class i18nTest extends SapphireTest {
 
 		$translated = i18n::_t(
 			'i18nTestModule.INJECTIONS', // has {name} placeholders
-			array("Cat", "meow", "meow")
+			["Cat", "meow", "meow"]
 		);
 		$this->assertContains(
 			"TRANS Hello Cat meow. But it is late, meow",
@@ -325,13 +325,13 @@ class i18nTest extends SapphireTest {
 		$oldLocale = i18n::get_locale();
 
 		i18n::set_locale('en_US');
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTestModule.NEWMETHODSIG' => 'TRANS New _t method signature test',
 			'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}'
-		),'en_US');
+		],'en_US');
 
 		$viewer = new SSViewer('i18nTestModule');
-		$parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
+		$parsedHtml = Convert::nl2os($viewer->process(new ArrayData(['TestProperty' => 'TestPropertyValue'])));
 		$this->assertContains(
 			Convert::nl2os("Hello Mark welcome. But it is late, bye\n"),
 			$parsedHtml, "Testing fallback to the translation default (but using the injection array)"
@@ -376,16 +376,16 @@ class i18nTest extends SapphireTest {
 	public function testTranslate() {
 		$oldLocale = i18n::get_locale();
 
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTestModule.ENTITY' => 'Entity with "Double Quotes"',
-		), 'en_US');
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		], 'en_US');
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTestModule.ENTITY' => 'Entity with "Double Quotes" (de)',
 			'i18nTestModule.ADDITION' => 'Addition (de)',
-		), 'de');
-		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+		], 'de');
+		i18n::get_translator('core')->getAdapter()->addTranslation([
 			'i18nTestModule.ENTITY' => 'Entity with "Double Quotes" (de_AT)',
-		), 'de_AT');
+		], 'de_AT');
 
 
 		$this->assertEquals(i18n::_t('i18nTestModule.ENTITY'), 'Entity with "Double Quotes"',
@@ -433,7 +433,7 @@ class i18nTest extends SapphireTest {
 		);
 
 		// set _fakewebroot module priority
-		Config::inst()->update('i18n', 'module_priority', array('subfolder','i18ntestmodule'));
+		Config::inst()->update('i18n', 'module_priority', ['subfolder','i18ntestmodule']);
 
 		i18n::include_by_locale('de');
 
@@ -476,10 +476,10 @@ class i18nTest extends SapphireTest {
 	}
 
 	public function testRegisterTranslator() {
-		$translator = new Zend_Translate(array(
+		$translator = new Zend_Translate([
 			'adapter' => 'i18nTest_CustomTranslatorAdapter',
 			'disableNotices' => true,
-		));
+		]);
 
 		i18n::register_translator($translator, 'custom', 10);
 		$translators = i18n::get_translators();
@@ -500,11 +500,11 @@ class i18nTest extends SapphireTest {
 
 		// Changed manifest, so we also need to unset all previously collected messages.
 		// The easiest way to do this it to register a new adapter.
-		$adapter = new Zend_Translate(array(
+		$adapter = new Zend_Translate([
 			'adapter' => 'i18nRailsYamlAdapter',
 			'locale' => i18n::default_locale(),
 			'disableNotices' => true,
-		));
+		]);
 		i18n::register_translator($adapter, 'core');
 
 		i18n::set_locale('en_US');
@@ -520,10 +520,10 @@ class i18nTest extends SapphireTest {
 		);
 
 		// Add a new translator
-		$translator = new Zend_Translate(array(
+		$translator = new Zend_Translate([
 			'adapter' => 'i18nTest_CustomTranslatorAdapter',
 			'disableNotices' => true,
-		));
+		]);
 		i18n::register_translator($translator, 'custom', 11);
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
@@ -537,10 +537,10 @@ class i18nTest extends SapphireTest {
 		);
 
 		// Add a second new translator to test priorities
-		$translator = new Zend_Translate(array(
+		$translator = new Zend_Translate([
 			'adapter' => 'i18nTest_OtherCustomTranslatorAdapter',
 			'disableNotices' => true,
-		));
+		]);
 		i18n::register_translator($translator, 'othercustom_lower_prio', 5);
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
@@ -549,10 +549,10 @@ class i18nTest extends SapphireTest {
 		);
 
 		// Add a third new translator to test priorities
-		$translator = new Zend_Translate(array(
+		$translator = new Zend_Translate([
 			'adapter' => 'i18nTest_OtherCustomTranslatorAdapter',
 			'disableNotices' => true,
-		));
+		]);
 
 		i18n::register_translator($translator, 'othercustom_higher_prio', 15);
 
@@ -573,7 +573,7 @@ class i18nTest extends SapphireTest {
 		Config::inst()->update(
 			'i18n',
 			'common_languages',
-			array('de_CGN' => array('name' => 'German (Cologne)', 'native' => 'K&ouml;lsch'))
+			['de_CGN' => ['name' => 'German (Cologne)', 'native' => 'K&ouml;lsch']]
 		);
 		$this->assertEquals('German (Cologne)', i18n::get_language_name('de_CGN'));
 		$this->assertEquals('K&ouml;lsch', i18n::get_language_name('de_CGN', true));
@@ -582,22 +582,22 @@ class i18nTest extends SapphireTest {
 
 class i18nTest_DataObject extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'MyProperty' => 'Varchar',
 		'MyUntranslatedProperty' => 'Text'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'HasOneRelation' => 'Member'
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'HasManyRelation' => 'Member'
-	);
+	];
 
-	private static $many_many = array(
+	private static $many_many = [
 		'ManyManyRelation' => 'Member'
-	);
+	];
 
 	/**
 	 *
@@ -621,23 +621,23 @@ class i18nTest_Object extends Object implements TestOnly, i18nEntityProvider {
 	}
 
 	public function provideI18nEntities() {
-		return array(
-			"i18nTest_Object.my_translatable_property" => array(
+		return [
+			"i18nTest_Object.my_translatable_property" => [
 				self::$my_translatable_property
-			)
-		);
+			]
+		];
 	}
 }
 
 class i18nTest_CustomTranslatorAdapter extends Zend_Translate_Adapter
 		implements TestOnly,i18nTranslateAdapterInterface {
-	protected function _loadTranslationData($filename, $locale, array $options = array()) {
-		return array(
-			$locale => array(
+	protected function _loadTranslationData($filename, $locale, array $options = []) {
+		return [
+			$locale => [
 				'AdapterEntity1' =>  'AdapterEntity1 CustomAdapter (' . $locale . ')',
 				'i18nTestModule.ENTITY' => 'i18nTestModule.ENTITY CustomAdapter (' . $locale . ')',
-			)
-		);
+			]
+		];
 	}
 
 	public function toString() {
@@ -651,12 +651,12 @@ class i18nTest_CustomTranslatorAdapter extends Zend_Translate_Adapter
 
 class i18nTest_OtherCustomTranslatorAdapter extends Zend_Translate_Adapter
 		implements TestOnly,i18nTranslateAdapterInterface {
-	protected function _loadTranslationData($filename, $locale, array $options = array()) {
-		return array(
-			$locale => array(
+	protected function _loadTranslationData($filename, $locale, array $options = []) {
+		return [
+			$locale => [
 				'i18nTestModule.ENTITY' => 'i18nTestModule.ENTITY OtherCustomAdapter (' . $locale . ')',
-			)
-		);
+			]
+		];
 	}
 
 	public function toString() {

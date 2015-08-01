@@ -37,10 +37,10 @@ class GroupTest extends FunctionalTest {
 		$member = $this->objFromFixture('GroupTest_Member', 'admin');
 		$form->loadDataFrom($member);
 		$checkboxSetField = $form->Fields()->fieldByName('Groups');
-		$checkboxSetField->setValue(array(
+		$checkboxSetField->setValue([
 			$adminGroup->ID => $adminGroup->ID, // keep existing relation
 			$parentGroup->ID => $parentGroup->ID, // add new relation
-		));
+		]);
 		$form->saveInto($member);
 		$updatedGroups = $member->Groups();
 
@@ -53,10 +53,10 @@ class GroupTest extends FunctionalTest {
 		// Test unsetting relationship
 		$form->loadDataFrom($member);
 		$checkboxSetField = $form->Fields()->fieldByName('Groups');
-		$checkboxSetField->setValue(array(
+		$checkboxSetField->setValue([
 			$adminGroup->ID => $adminGroup->ID, // keep existing relation
 			//$parentGroup->ID => $parentGroup->ID, // remove previously set relation
-		));
+		]);
 		$form->saveInto($member);
 		$member->flushCache();
 		$updatedGroups = $member->Groups();

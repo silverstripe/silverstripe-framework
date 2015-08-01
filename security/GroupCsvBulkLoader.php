@@ -7,9 +7,9 @@
  */
 class GroupCsvBulkLoader extends CsvBulkLoader {
 
-	public $duplicateChecks = array(
+	public $duplicateChecks = [
 		'Code' => 'Code',
-	);
+	];
 
 	public function __construct($objectClass = null) {
 		if(!$objectClass) $objectClass = 'Group';
@@ -28,9 +28,9 @@ class GroupCsvBulkLoader extends CsvBulkLoader {
 		// are imported to avoid missing "early" references to parents
 		// which are imported later on in the CSV file.
 		if(isset($record['ParentCode']) && $record['ParentCode']) {
-			$parentGroup = DataObject::get_one('Group', array(
+			$parentGroup = DataObject::get_one('Group', [
 				'"Group"."Code"' => $record['ParentCode']
-			));
+			]);
 			if($parentGroup) {
 				$group->ParentID = $parentGroup->ID;
 				$group->write();
@@ -41,12 +41,12 @@ class GroupCsvBulkLoader extends CsvBulkLoader {
 		// existing permissions arent cleared.
 		if(isset($record['PermissionCodes']) && $record['PermissionCodes']) {
 			foreach(explode(',', $record['PermissionCodes']) as $code) {
-				$p = DataObject::get_one('Permission', array(
+				$p = DataObject::get_one('Permission', [
 					'"Permission"."Code"' => $code,
 					'"Permission"."GroupID"' => $group->ID
-				));
+				]);
 				if(!$p) {
-					$p = new Permission(array('Code' => $code));
+					$p = new Permission(['Code' => $code]);
 					$p->write();
 				}
 				$group->Permissions()->add($p);

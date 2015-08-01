@@ -23,10 +23,10 @@ class GridField extends FormField {
 	/**
 	 * @var array
 	 */
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'gridFieldAlterAction',
-	);
+	];
 
 	/**
 	 * Data source.
@@ -61,7 +61,7 @@ class GridField extends FormField {
 	 *
 	 * @var array
 	 */
-	protected $components = array();
+	protected $components = [];
 
 	/**
 	 * Internal dispatcher for column handlers.
@@ -77,7 +77,7 @@ class GridField extends FormField {
 	 *
 	 * @var array
 	 */
-	protected $customDataFields = array();
+	protected $customDataFields = [];
 
 	/**
 	 * @var string
@@ -117,7 +117,7 @@ class GridField extends FormField {
 	 * @return string
 	 */
 	public function index($request) {
-		return $this->gridFieldAlterAction(array(), $this->getForm(), $request);
+		return $this->gridFieldAlterAction([], $this->getForm(), $request);
 	}
 
 	/**
@@ -198,7 +198,7 @@ class GridField extends FormField {
 	 * @return mixed
 	 */
 	public function getCastedValue($value, $castingDefinition) {
-		$castingParams = array();
+		$castingParams = [];
 
 		if(is_array($castingDefinition)) {
 			$castingParams = $castingDefinition;
@@ -210,14 +210,14 @@ class GridField extends FormField {
 			$castingFieldType = $castingDefinition;
 			$castingField = DBField::create_field($castingFieldType, $value);
 
-			return call_user_func_array(array($castingField, 'XML'), $castingParams);
+			return call_user_func_array([$castingField, 'XML'], $castingParams);
 		}
 
 		list($castingFieldType, $castingMethod) = explode('->', $castingDefinition);
 
 		$castingField = DBField::create_field($castingFieldType, $value);
 
-		return call_user_func_array(array($castingField, $castingMethod), $castingParams);
+		return call_user_func_array([$castingField, $castingMethod], $castingParams);
 	}
 
 	/**
@@ -281,7 +281,7 @@ class GridField extends FormField {
 	 *
 	 * @return HTMLText
 	 */
-	public function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = []) {
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(FRAMEWORK_DIR . '/css/GridField.css');
 
@@ -297,12 +297,12 @@ class GridField extends FormField {
 
 		$list = $this->getManipulatedList();
 
-		$content = array(
+		$content = [
 			'before' => '',
 			'after' => '',
 			'header' => '',
 			'footer' => '',
-		);
+		];
 
 		foreach($this->getComponents() as $item) {
 			if($item instanceof GridField_HTMLProvider) {
@@ -329,12 +329,12 @@ class GridField extends FormField {
 		// Replace custom fragments and check which fragments are defined. Circular dependencies
 		// are detected by disallowing any item to be deferred more than 5 times.
 
-		$fragmentDefined = array(
+		$fragmentDefined = [
 			'header' => true,
 			'footer' => true,
 			'before' => true,
 			'after' => true,
-		);
+		];
 
 		reset($content);
 
@@ -399,7 +399,7 @@ class GridField extends FormField {
 		$total = count($list);
 
 		if($total > 0) {
-			$rows = array();
+			$rows = [];
 
 			foreach($list as $index => $record) {
 				if($record->hasMethod('canView') && !$record->canView()) {
@@ -440,17 +440,17 @@ class GridField extends FormField {
 		if(empty($content['body'])) {
 			$cell = FormField::create_tag(
 				'td',
-				array(
+				[
 					'colspan' => count($columns),
-				),
+				],
 				_t('GridField.NoItemsFound', 'No items found')
 			);
 
 			$row = FormField::create_tag(
 				'tr',
-				array(
+				[
 					'class' => 'ss-gridfield-item ss-gridfield-no-items',
-				),
+				],
 				$cell
 			);
 
@@ -465,11 +465,11 @@ class GridField extends FormField {
 
 		$fieldsetAttributes = array_diff_key(
 			$this->getAttributes(),
-			array(
+			[
 				'value' => false,
 				'type' => false,
 				'name' => false,
-			)
+			]
 		);
 
 		$fieldsetAttributes['data-name'] = $this->getName();
@@ -480,17 +480,17 @@ class GridField extends FormField {
 			$tableId = $this->id;
 		}
 
-		$tableAttributes = array(
+		$tableAttributes = [
 			'id' => $tableId,
 			'class' => 'ss-gridfield-table',
 			'cellpadding' => '0',
 			'cellspacing' => '0',
-		);
+		];
 
 		if($this->getDescription()) {
 			$content['after'] .= FormField::create_tag(
 				'span',
-				array('class' => 'description'),
+				['class' => 'description'],
 				$this->getDescription()
 			);
 		}
@@ -552,11 +552,11 @@ class GridField extends FormField {
 	protected function getRowAttributes($total, $index, $record) {
 		$rowClasses = $this->newRowClasses($total, $index, $record);
 
-		return array(
+		return [
 			'class' => implode(' ', $rowClasses),
 			'data-id' => $record->ID,
 			'data-class' => $record->ClassName,
-		);
+		];
 	}
 
 	/**
@@ -567,7 +567,7 @@ class GridField extends FormField {
 	 * @return array
 	 */
 	protected function newRowClasses($total, $index, $record) {
-		$classes = array('ss-gridfield-item');
+		$classes = ['ss-gridfield-item'];
 
 		if($index == 0) {
 			$classes[] = 'first';
@@ -591,7 +591,7 @@ class GridField extends FormField {
 	 *
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		return $this->FieldHolder($properties);
 	}
 
@@ -601,9 +601,9 @@ class GridField extends FormField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'data-url' => $this->Link(),
-			)
+			]
 		);
 	}
 
@@ -613,7 +613,7 @@ class GridField extends FormField {
 	 * @return array
 	 */
 	public function getColumns() {
-		$columns = array();
+		$columns = [];
 
 		foreach($this->getComponents() as $item) {
 			if($item instanceof GridField_ColumnProvider) {
@@ -718,7 +718,7 @@ class GridField extends FormField {
 		}
 
 		if(!empty($this->columnDispatch[$column])) {
-			$attributes = array();
+			$attributes = [];
 
 			foreach($this->columnDispatch[$column] as $handler) {
 				/**
@@ -764,7 +764,7 @@ class GridField extends FormField {
 		}
 
 		if(!empty($this->columnDispatch[$column])) {
-			$metaData = array();
+			$metaData = [];
 
 			foreach($this->columnDispatch[$column] as $handler) {
 				/**
@@ -809,7 +809,7 @@ class GridField extends FormField {
 	 * Build an columnDispatch that maps a GridField_ColumnProvider to a column for reference later.
 	 */
 	protected function buildColumnDispatch() {
-		$this->columnDispatch = array();
+		$this->columnDispatch = [];
 
 		foreach($this->getComponents() as $item) {
 			if($item instanceof GridField_ColumnProvider) {
@@ -852,7 +852,7 @@ class GridField extends FormField {
 				$stateChange = Session::get($matches[1]);
 				$actionName = $stateChange['actionName'];
 
-				$arguments = array();
+				$arguments = [];
 
 				if(isset($stateChange['args'])) {
 					$arguments = $stateChange['args'];
@@ -1020,7 +1020,7 @@ class GridField extends FormField {
 	protected function getOptionalTableHeader(array $content) {
 		if($content['header']) {
 			return FormField::create_tag(
-				'thead', array(), $content['header']
+				'thead', [], $content['header']
 			);
 		}
 
@@ -1035,7 +1035,7 @@ class GridField extends FormField {
 	protected function getOptionalTableBody(array $content) {
 		if($content['body']) {
 			return FormField::create_tag(
-				'tbody', array('class' => 'ss-gridfield-items'), $content['body']
+				'tbody', ['class' => 'ss-gridfield-items'], $content['body']
 			);
 		}
 
@@ -1050,7 +1050,7 @@ class GridField extends FormField {
 	protected function getOptionalTableFooter($content) {
 		if($content['footer']) {
 			return FormField::create_tag(
-				'tfoot', array(), $content['footer']
+				'tfoot', [], $content['footer']
 			);
 		}
 
@@ -1080,7 +1080,7 @@ class GridField_FormAction extends FormAction {
 	/**
 	 * @var array
 	 */
-	protected $args = array();
+	protected $args = [];
 
 	/**
 	 * @var string
@@ -1115,7 +1115,7 @@ class GridField_FormAction extends FormAction {
 	 * @return string
 	 */
 	public function nameEncode($value) {
-		return (string) preg_replace_callback('/[^\w]/', array($this, '_nameEncode'), $value);
+		return (string) preg_replace_callback('/[^\w]/', [$this, '_nameEncode'], $value);
 	}
 
 	/**
@@ -1132,11 +1132,11 @@ class GridField_FormAction extends FormAction {
 	 */
 	public function getAttributes() {
 		// Store state in session, and pass ID to client side.
-		$state = array(
+		$state = [
 			'grid' => $this->getNameFromParent(),
 			'actionName' => $this->actionName,
 			'args' => $this->args,
-		);
+		];
 
 		// Ensure $id doesn't contain only numeric characters
 		$id = 'gf_' . substr(md5(serialize($state)), 0, 8);
@@ -1145,12 +1145,12 @@ class GridField_FormAction extends FormAction {
 
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch
 				// will strip it from the requests
 				'name' => 'action_gridFieldAlterAction' . '?' . http_build_query($actionData),
 				'data-url' => $this->gridField->Link(),
-			)
+			]
 		);
 	}
 
@@ -1161,7 +1161,7 @@ class GridField_FormAction extends FormAction {
 	 */
 	protected function getNameFromParent() {
 		$base = $this->gridField;
-		$name = array();
+		$name = [];
 
 		do {
 			array_unshift($name, $base->getName());

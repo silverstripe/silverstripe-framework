@@ -12,32 +12,32 @@ class SS_Backtrace {
 	 * PHP's debug_backtrace() doesn't allow to inspect the argument names,
 	 * so all arguments of the provided functions will be filtered out.
 	 */
-	private static $ignore_function_args = array(
+	private static $ignore_function_args = [
 		'mysql_connect',
 		'mssql_connect',
 		'pg_connect',
-		array('mysqli', 'mysqli'),
-		array('mysqli', 'select_db'),
-		array('DB', 'connect'),
-		array('Security', 'check_default_admin'),
-		array('Security', 'encrypt_password'),
-		array('Security', 'setDefaultAdmin'),
-		array('DB', 'createDatabase'),
-		array('Member', 'checkPassword'),
-		array('Member', 'changePassword'),
-		array('MemberPassword', 'checkPassword'),
-		array('PasswordValidator', 'validate'),
-		array('PasswordEncryptor_PHPHash', 'encrypt'),
-		array('PasswordEncryptor_PHPHash', 'salt'),
-		array('PasswordEncryptor_LegacyPHPHash', 'encrypt'),
-		array('PasswordEncryptor_LegacyPHPHash', 'salt'),
-		array('PasswordEncryptor_MySQLPassword', 'encrypt'),
-		array('PasswordEncryptor_MySQLPassword', 'salt'),
-		array('PasswordEncryptor_MySQLOldPassword', 'encrypt'),
-		array('PasswordEncryptor_MySQLOldPassword', 'salt'),
-		array('PasswordEncryptor_Blowfish', 'encrypt'),
-		array('PasswordEncryptor_Blowfish', 'salt'),
-	);
+		['mysqli', 'mysqli'],
+		['mysqli', 'select_db'],
+		['DB', 'connect'],
+		['Security', 'check_default_admin'],
+		['Security', 'encrypt_password'],
+		['Security', 'setDefaultAdmin'],
+		['DB', 'createDatabase'],
+		['Member', 'checkPassword'],
+		['Member', 'changePassword'],
+		['MemberPassword', 'checkPassword'],
+		['PasswordValidator', 'validate'],
+		['PasswordEncryptor_PHPHash', 'encrypt'],
+		['PasswordEncryptor_PHPHash', 'salt'],
+		['PasswordEncryptor_LegacyPHPHash', 'encrypt'],
+		['PasswordEncryptor_LegacyPHPHash', 'salt'],
+		['PasswordEncryptor_MySQLPassword', 'encrypt'],
+		['PasswordEncryptor_MySQLPassword', 'salt'],
+		['PasswordEncryptor_MySQLOldPassword', 'encrypt'],
+		['PasswordEncryptor_MySQLOldPassword', 'salt'],
+		['PasswordEncryptor_Blowfish', 'encrypt'],
+		['PasswordEncryptor_Blowfish', 'salt'],
+	];
 
 	/**
 	 * Return debug_backtrace() results with functions filtered
@@ -59,7 +59,7 @@ class SS_Backtrace {
 	 * @return array
 	 */
 	public static function filter_backtrace($bt, $ignoredFunctions = null) {
-		$defaultIgnoredFunctions = array(
+		$defaultIgnoredFunctions = [
 			'SS_Log::log',
 			'SS_Backtrace::backtrace',
 			'SS_Backtrace::filtered_backtrace',
@@ -77,7 +77,7 @@ class SS_Backtrace {
 			'Debug::showError',
 			'Debug::backtrace',
 			'exceptionHandler'
-		);
+		];
 
 		if($ignoredFunctions) foreach($ignoredFunctions as $ignoredFunction) {
 			$defaultIgnoredFunctions[] = $ignoredFunction;
@@ -142,7 +142,7 @@ class SS_Backtrace {
 		if(isset($item['function'])) $funcName .= $item['function'];
 
 		if($showArgs && isset($item['args'])) {
-			$args = array();
+			$args = [];
 			foreach($item['args'] as $arg) {
 				if(!is_object($arg) || method_exists($arg, '__toString')) {
 					$sarg = is_array($arg) ? 'Array' : strval($arg);

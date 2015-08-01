@@ -22,88 +22,88 @@ class SS_ClassManifest {
 	protected $cache;
 	protected $cacheKey;
 
-	protected $classes      = array();
-	protected $roots        = array();
-	protected $children     = array();
-	protected $descendants  = array();
-	protected $interfaces   = array();
-	protected $implementors = array();
-	protected $configs      = array();
-	protected $configDirs   = array();
+	protected $classes      = [];
+	protected $roots        = [];
+	protected $children     = [];
+	protected $descendants  = [];
+	protected $interfaces   = [];
+	protected $implementors = [];
+	protected $configs      = [];
+	protected $configDirs   = [];
 
 	/**
 	 * @return TokenisedRegularExpression
 	 */
 	public static function get_class_parser() {
-		return new TokenisedRegularExpression(array(
+		return new TokenisedRegularExpression([
 			0 => T_CLASS,
 			1 => T_WHITESPACE,
-			2 => array(T_STRING, 'can_jump_to' => array(7, 14), 'save_to' => 'className'),
+			2 => [T_STRING, 'can_jump_to' => [7, 14], 'save_to' => 'className'],
 			3 => T_WHITESPACE,
 			4 => T_EXTENDS,
 			5 => T_WHITESPACE,
-			6 => array(T_STRING, 'save_to' => 'extends[]', 'can_jump_to' => 14),
+			6 => [T_STRING, 'save_to' => 'extends[]', 'can_jump_to' => 14],
 			7 => T_WHITESPACE,
 			8 => T_IMPLEMENTS,
 			9 => T_WHITESPACE,
-			10 => array(T_STRING, 'can_jump_to' => 14, 'save_to' => 'interfaces[]'),
-			11 => array(T_WHITESPACE, 'optional' => true),
-			12 => array(',', 'can_jump_to' => 10, 'save_to' => 'interfaces[]'),
-			13 => array(T_WHITESPACE, 'can_jump_to' => 10),
-			14 => array(T_WHITESPACE, 'optional' => true),
+			10 => [T_STRING, 'can_jump_to' => 14, 'save_to' => 'interfaces[]'],
+			11 => [T_WHITESPACE, 'optional' => true],
+			12 => [',', 'can_jump_to' => 10, 'save_to' => 'interfaces[]'],
+			13 => [T_WHITESPACE, 'can_jump_to' => 10],
+			14 => [T_WHITESPACE, 'optional' => true],
 			15 => '{',
-		));
+		]);
 	}
 
 	/**
 	 * @return TokenisedRegularExpression
 	 */
 	public static function get_namespaced_class_parser() {
-		return new TokenisedRegularExpression(array(
+		return new TokenisedRegularExpression([
 			0 => T_CLASS,
 			1 => T_WHITESPACE,
-			2 => array(T_STRING, 'can_jump_to' => array(8, 16), 'save_to' => 'className'),
+			2 => [T_STRING, 'can_jump_to' => [8, 16], 'save_to' => 'className'],
 			3 => T_WHITESPACE,
 			4 => T_EXTENDS,
 			5 => T_WHITESPACE,
-			6 => array(T_NS_SEPARATOR, 'save_to' => 'extends[]', 'optional' => true),
-			7 => array(T_STRING, 'save_to' => 'extends[]', 'can_jump_to' => array(6, 16)),
+			6 => [T_NS_SEPARATOR, 'save_to' => 'extends[]', 'optional' => true],
+			7 => [T_STRING, 'save_to' => 'extends[]', 'can_jump_to' => [6, 16]],
 			8 => T_WHITESPACE,
 			9 => T_IMPLEMENTS,
 			10 => T_WHITESPACE,
-			11 => array(T_NS_SEPARATOR, 'save_to' => 'interfaces[]', 'optional' => true),
-			12 => array(T_STRING, 'can_jump_to' => array(11, 16), 'save_to' => 'interfaces[]'),
-			13 => array(T_WHITESPACE, 'optional' => true),
-			14 => array(',', 'can_jump_to' => 11, 'save_to' => 'interfaces[]'),
-			15 => array(T_WHITESPACE, 'can_jump_to' => 11),
-			16 => array(T_WHITESPACE, 'optional' => true),
+			11 => [T_NS_SEPARATOR, 'save_to' => 'interfaces[]', 'optional' => true],
+			12 => [T_STRING, 'can_jump_to' => [11, 16], 'save_to' => 'interfaces[]'],
+			13 => [T_WHITESPACE, 'optional' => true],
+			14 => [',', 'can_jump_to' => 11, 'save_to' => 'interfaces[]'],
+			15 => [T_WHITESPACE, 'can_jump_to' => 11],
+			16 => [T_WHITESPACE, 'optional' => true],
 			17 => '{',
-		));
+		]);
 	}
 
 	/**
 	 * @return TokenisedRegularExpression
 	 */
 	public static function get_namespace_parser() {
-		return new TokenisedRegularExpression(array(
+		return new TokenisedRegularExpression([
 			0 => T_NAMESPACE,
 			1 => T_WHITESPACE,
-			2 => array(T_NS_SEPARATOR, 'save_to' => 'namespaceName[]', 'optional' => true),
-			3 => array(T_STRING, 'save_to' => 'namespaceName[]', 'can_jump_to' => 2),
-			4 => array(T_WHITESPACE, 'optional' => true),
+			2 => [T_NS_SEPARATOR, 'save_to' => 'namespaceName[]', 'optional' => true],
+			3 => [T_STRING, 'save_to' => 'namespaceName[]', 'can_jump_to' => 2],
+			4 => [T_WHITESPACE, 'optional' => true],
 			5 => ';',
-		));
+		]);
 	}
 
 	/**
 	 * @return TokenisedRegularExpression
 	 */
 	public static function get_interface_parser() {
-		return new TokenisedRegularExpression(array(
+		return new TokenisedRegularExpression([
 			0 => T_INTERFACE,
 			1 => T_WHITESPACE,
-			2 => array(T_STRING, 'save_to' => 'interfaceName')
-		));
+			2 => [T_STRING, 'save_to' => 'interfaceName']
+		]);
 	}
 
 	/**
@@ -117,20 +117,20 @@ class SS_ClassManifest {
 	 * @return TokenisedRegularExpression
 	 */
 	public static function get_imported_namespace_parser() {
-		return new TokenisedRegularExpression(array(
+		return new TokenisedRegularExpression([
 			0 => T_USE,
 			1 => T_WHITESPACE,
-			2 => array(T_NS_SEPARATOR, 'save_to' => 'importString[]', 'optional' => true),
-			3 => array(T_STRING, 'save_to' => 'importString[]', 'can_jump_to' => array(2, 8)),
-			4 => array(T_WHITESPACE, 'save_to' => 'importString[]'),
-			5 => array(T_AS, 'save_to' => 'importString[]'),
-			6 => array(T_WHITESPACE, 'save_to' => 'importString[]'),
-			7 => array(T_STRING, 'save_to' => 'importString[]'),
-			8 => array(T_WHITESPACE, 'optional' => true),
-			9 => array(',', 'save_to' => 'importString[]', 'optional' => true, 'can_jump_to' => 2),
-			10 => array(T_WHITESPACE, 'optional' => true, 'can_jump_to' => 2),
+			2 => [T_NS_SEPARATOR, 'save_to' => 'importString[]', 'optional' => true],
+			3 => [T_STRING, 'save_to' => 'importString[]', 'can_jump_to' => [2, 8]],
+			4 => [T_WHITESPACE, 'save_to' => 'importString[]'],
+			5 => [T_AS, 'save_to' => 'importString[]'],
+			6 => [T_WHITESPACE, 'save_to' => 'importString[]'],
+			7 => [T_STRING, 'save_to' => 'importString[]'],
+			8 => [T_WHITESPACE, 'optional' => true],
+			9 => [',', 'save_to' => 'importString[]', 'optional' => true, 'can_jump_to' => 2],
+			10 => [T_WHITESPACE, 'optional' => true, 'can_jump_to' => 2],
 			11 => ';',
-		));
+		]);
 	}
 
 	/**
@@ -224,7 +224,7 @@ class SS_ClassManifest {
 		if (array_key_exists($lClass, $this->descendants)) {
 			return $this->descendants[$lClass];
 		} else {
-			return array();
+			return [];
 		}
 	}
 
@@ -260,7 +260,7 @@ class SS_ClassManifest {
 		if (array_key_exists($interface, $this->implementors)) {
 			return $this->implementors[$interface];
 		} else {
-			return array();
+			return [];
 		}
 	}
 
@@ -282,7 +282,7 @@ class SS_ClassManifest {
 	 * @return array
 	 */
 	public function getModules() {
-		$modules = array();
+		$modules = [];
 
 		if($this->configs) {
 			foreach($this->configs as $configPath) {
@@ -315,26 +315,26 @@ class SS_ClassManifest {
 	 * @param bool $cache Cache the result.
 	 */
 	public function regenerate($cache = true) {
-		$reset = array(
+		$reset = [
 			'classes', 'roots', 'children', 'descendants', 'interfaces',
 			'implementors', 'configs', 'configDirs'
-		);
+		];
 
 		// Reset the manifest so stale info doesn't cause errors.
 		foreach ($reset as $reset) {
-			$this->$reset = array();
+			$this->$reset = [];
 		}
 
 		$this->setDefaults();
 
 		$finder = new ManifestFileFinder();
-		$finder->setOptions(array(
+		$finder->setOptions([
 			'name_regex'    => '/^(_config.php|[^_].*\.php)$/',
-			'ignore_files'  => array('index.php', 'main.php', 'cli-script.php', 'SSTemplateParser.php'),
+			'ignore_files'  => ['index.php', 'main.php', 'cli-script.php', 'SSTemplateParser.php'],
 			'ignore_tests'  => !$this->tests,
-			'file_callback' => array($this, 'handleFile'),
-			'dir_callback' => array($this, 'handleDir')
-		));
+			'file_callback' => [$this, 'handleFile'],
+			'dir_callback' => [$this, 'handleDir']
+		]);
 		$finder->find($this->base);
 
 		foreach ($this->roots as $root) {
@@ -342,14 +342,14 @@ class SS_ClassManifest {
 		}
 
 		if ($cache) {
-			$data = array(
+			$data = [
 				'classes'      => $this->classes,
 				'descendants'  => $this->descendants,
 				'interfaces'   => $this->interfaces,
 				'implementors' => $this->implementors,
 				'configs'      => $this->configs,
 				'configDirs'   => $this->configDirs
-			);
+			];
 			$this->cache->save($data, $this->cacheKey);
 		}
 	}
@@ -374,7 +374,7 @@ class SS_ClassManifest {
 	 *
 	 * @return string The fully namespaced class name
 	 */
-	protected function findClassOrInterfaceFromCandidateImports($class, $namespace = '', $imports = array()) {
+	protected function findClassOrInterfaceFromCandidateImports($class, $namespace = '', $imports = []) {
 
 		//normalise the namespace
 		$namespace = rtrim($namespace, '\\');
@@ -451,7 +451,7 @@ class SS_ClassManifest {
 		// imports come to us as array('importString' => array([array of matching tokens]))
 		// we need to join this nested array into a string and split out the alias and the import
 		if (!empty($imports)) {
-			$cleanImports = array();
+			$cleanImports = [];
 			foreach ($imports as $import) {
 				if (!empty($import['importString'])) {
 					//join the array up into a string
@@ -529,12 +529,12 @@ class SS_ClassManifest {
 
 			$interfaces = self::get_interface_parser()->findAll($tokens);
 
-			$cache = array(
+			$cache = [
 				'classes' => $classes,
 				'interfaces' => $interfaces,
 				'namespace' => $namespace,
 				'imports' => $imports
-			);
+			];
 			$this->cache->save($cache, $key);
 		}
 
@@ -578,7 +578,7 @@ class SS_ClassManifest {
 				$extends = strtolower($extends);
 
 				if (!isset($this->children[$extends])) {
-					$this->children[$extends] = array($name);
+					$this->children[$extends] = [$name];
 				} else {
 					$this->children[$extends][] = $name;
 				}
@@ -591,7 +591,7 @@ class SS_ClassManifest {
 					$interface = strtolower($interface);
 
 					if (!isset($this->implementors[$interface])) {
-						$this->implementors[$interface] = array($name);
+						$this->implementors[$interface] = [$name];
 					} else {
 						$this->implementors[$interface][] = $name;
 					}
@@ -616,23 +616,23 @@ class SS_ClassManifest {
 	 * @return array
 	 */
 	protected function coalesceDescendants($class) {
-		$result = array();
+		$result = [];
 		$lClass = strtolower($class);
 
 		if (array_key_exists($lClass, $this->children)) {
-			$this->descendants[$lClass] = array();
+			$this->descendants[$lClass] = [];
 
 			foreach ($this->children[$lClass] as $class) {
 				$this->descendants[$lClass] = array_merge(
 					$this->descendants[$lClass],
-					array($class),
+					[$class],
 					$this->coalesceDescendants($class)
 				);
 			}
 
 			return $this->descendants[$lClass];
 		} else {
-			return array();
+			return [];
 		}
 	}
 

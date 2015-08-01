@@ -62,7 +62,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	 * @return array Resulting data
 	 */
 	protected function column($results) {
-		$array = array();
+		$array = [];
 		if($results instanceof mysqli_result) {
 			while($row = $results->fetch_array()) {
 				$array[] = $row[0];
@@ -84,10 +84,10 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 		$connection = $this->createConnection($databaseConfig, $error);
 		$success = !empty($connection);
 
-		return array(
+		return [
 			'success' => $success,
 			'error' => $error
-		);
+		];
 	}
 
 	public function getDatabaseVersion($databaseConfig) {
@@ -120,10 +120,10 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 		} else {
 			$error = "Could not determine your MySQL version.";
 		}
-		return array(
+		return [
 			'success' => $success,
 			'error' => $error
-		);
+		];
 	}
 
 	public function requireDatabaseConnection($databaseConfig) {
@@ -136,10 +136,10 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 			$error = 'Invalid characters in database name.';
 		}
 
-		return array(
+		return [
 			'success' => $success,
 			'error' => $error
-		);
+		];
 	}
 
 	/**
@@ -217,18 +217,18 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 			}
 		}
 
-		return array(
+		return [
 			'success' => $success,
 			'alreadyExists' => $alreadyExists
-		);
+		];
 	}
 
 	public function requireDatabaseAlterPermissions($databaseConfig) {
 		$conn = $this->createConnection($databaseConfig, $error);
 		$success = $this->checkDatabasePermission($conn, $databaseConfig['database'], 'ALTER');
-		return array(
+		return [
 			'success' => $success,
 			'applies' => true
-		);
+		];
 	}
 }

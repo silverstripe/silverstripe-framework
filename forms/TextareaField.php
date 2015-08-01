@@ -64,12 +64,12 @@ class TextareaField extends FormField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'rows' => $this->rows,
 				'cols' => $this->cols,
 				'value' => null,
 				'type' => null
-			)
+			]
 		);
 	}
 

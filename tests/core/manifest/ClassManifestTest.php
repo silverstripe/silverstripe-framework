@@ -20,14 +20,14 @@ class ClassManifestTest extends SapphireTest {
 	}
 
 	public function testGetItemPath() {
-		$expect = array(
+		$expect = [
 			'CLASSA'     => 'module/classes/ClassA.php',
 			'ClassA'     => 'module/classes/ClassA.php',
 			'classa'     => 'module/classes/ClassA.php',
 			'INTERFACEA' => 'module/interfaces/InterfaceA.php',
 			'InterfaceA' => 'module/interfaces/InterfaceA.php',
 			'interfacea' => 'module/interfaces/InterfaceA.php'
-		);
+		];
 
 		foreach ($expect as $name => $path) {
 			$this->assertEquals("{$this->base}/$path", $this->manifest->getItemPath($name));
@@ -35,7 +35,7 @@ class ClassManifestTest extends SapphireTest {
 	}
 
 	public function testGetClasses() {
-		$expect = array(
+		$expect = [
 			'classb'                   => "{$this->base}/module/classes/ClassB.php",
 			'classa'                   => "{$this->base}/module/classes/ClassA.php",
 			'classb'                   => "{$this->base}/module/classes/ClassB.php",
@@ -43,31 +43,31 @@ class ClassManifestTest extends SapphireTest {
 			'classd'                   => "{$this->base}/module/classes/ClassD.php",
 			'sstemplateparser'         => FRAMEWORK_PATH."/view/SSTemplateParser.php",
 			'sstemplateparseexception' => FRAMEWORK_PATH."/view/SSTemplateParser.php"
-		);
+		];
 		$this->assertEquals($expect, $this->manifest->getClasses());
 	}
 
 	public function testGetClassNames() {
 		$this->assertEquals(
-			array('sstemplateparser', 'sstemplateparseexception', 'classa', 'classb', 'classc', 'classd'),
+			['sstemplateparser', 'sstemplateparseexception', 'classa', 'classb', 'classc', 'classd'],
 			$this->manifest->getClassNames());
 	}
 
 	public function testGetDescendants() {
-		$expect = array(
-			'classa' => array('ClassC', 'ClassD'),
-			'classc' => array('ClassD')
-		);
+		$expect = [
+			'classa' => ['ClassC', 'ClassD'],
+			'classc' => ['ClassD']
+		];
 		$this->assertEquals($expect, $this->manifest->getDescendants());
 	}
 
 	public function testGetDescendantsOf() {
-		$expect = array(
-			'CLASSA' => array('ClassC', 'ClassD'),
-			'classa' => array('ClassC', 'ClassD'),
-			'CLASSC' => array('ClassD'),
-			'classc' => array('ClassD')
-		);
+		$expect = [
+			'CLASSA' => ['ClassC', 'ClassD'],
+			'classa' => ['ClassC', 'ClassD'],
+			'CLASSC' => ['ClassD'],
+			'classc' => ['ClassD']
+		];
 
 		foreach ($expect as $class => $desc) {
 			$this->assertEquals($desc, $this->manifest->getDescendantsOf($class));
@@ -75,28 +75,28 @@ class ClassManifestTest extends SapphireTest {
 	}
 
 	public function testGetInterfaces() {
-		$expect = array(
+		$expect = [
 			'interfacea' => "{$this->base}/module/interfaces/InterfaceA.php",
 			'interfaceb' => "{$this->base}/module/interfaces/InterfaceB.php"
-		);
+		];
 		$this->assertEquals($expect, $this->manifest->getInterfaces());
 	}
 
 	public function testGetImplementors() {
-		$expect = array(
-			'interfacea' => array('ClassB'),
-			'interfaceb' => array('ClassC')
-		);
+		$expect = [
+			'interfacea' => ['ClassB'],
+			'interfaceb' => ['ClassC']
+		];
 		$this->assertEquals($expect, $this->manifest->getImplementors());
 	}
 
 	public function testGetImplementorsOf() {
-		$expect = array(
-			'INTERFACEA' => array('ClassB'),
-			'interfacea' => array('ClassB'),
-			'INTERFACEB' => array('ClassC'),
-			'interfaceb' => array('ClassC')
-		);
+		$expect = [
+			'INTERFACEA' => ['ClassB'],
+			'interfacea' => ['ClassB'],
+			'INTERFACEB' => ['ClassC'],
+			'interfaceb' => ['ClassC']
+		];
 
 		foreach ($expect as $interface => $impl) {
 			$this->assertEquals($impl, $this->manifest->getImplementorsOf($interface));
@@ -104,16 +104,16 @@ class ClassManifestTest extends SapphireTest {
 	}
 
 	public function testGetConfigs() {
-		$expect = array("{$this->base}/module/_config.php");
+		$expect = ["{$this->base}/module/_config.php"];
 		$this->assertEquals($expect, $this->manifest->getConfigs());
 		$this->assertEquals($expect, $this->manifestTests->getConfigs());
 	}
 
 	public function testGetModules() {
-		$expect = array(
+		$expect = [
 			"module" => "{$this->base}/module",
 			"moduleb" => "{$this->base}/moduleb"
-		);
+		];
 		$this->assertEquals($expect, $this->manifest->getModules());
 		$this->assertEquals($expect, $this->manifestTests->getModules());
 	}

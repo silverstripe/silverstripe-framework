@@ -4,14 +4,14 @@ class DataQueryTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataQueryTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'DataQueryTest_A',
 		'DataQueryTest_B',
 		'DataQueryTest_C',
 		'DataQueryTest_D',
 		'DataQueryTest_E',
 		'DataQueryTest_F',
-	);
+	];
 
 
 	public function testSortByJoinedFieldRetainsSourceInformation() {
@@ -182,7 +182,7 @@ class DataQueryTest extends SapphireTest {
 	public function testDefaultSort() {
 		$query = new DataQuery('DataQueryTest_E');
 		$result = $query->column('Title');
-		$this->assertEquals(array('First', 'Second', 'Last'), $result);
+		$this->assertEquals(['First', 'Second', 'Last'], $result);
 	}
 
 	public function testDistinct() {
@@ -253,71 +253,71 @@ class DataQueryTest extends SapphireTest {
 
 class DataQueryTest_A extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar',
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'TestC' => 'DataQueryTest_C',
-	);
+	];
 }
 
 class DataQueryTest_B extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar',
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'TestC' => 'DataQueryTest_C',
 		'TestCTwo' => 'DataQueryTest_C',
-	);
+	];
 }
 
 class DataQueryTest_C extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'TestA' => 'DataQueryTest_A',
 		'TestB' => 'DataQueryTest_B',
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'TestAs' => 'DataQueryTest_A',
 		'TestBs' => 'DataQueryTest_B.TestC',
 		'TestBsTwo' => 'DataQueryTest_B.TestCTwo',
-	);
+	];
 
-	private static $many_many = array(
+	private static $many_many = [
 		'ManyTestAs' => 'DataQueryTest_A',
 		'ManyTestBs' => 'DataQueryTest_B',
-	);
+	];
 }
 
 class DataQueryTest_D extends DataObject implements TestOnly {
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Relation' => 'DataQueryTest_B',
-	);
+	];
 }
 
 class DataQueryTest_E extends DataQueryTest_C implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'SortOrder' => 'Int'
-	);
+	];
 
 	private static $default_sort = '"DataQueryTest_E"."SortOrder" ASC';
 }
 
 class DataQueryTest_F extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'SortOrder' => 'Int',
 		'MyDate' => 'SS_Datetime',
 		'MyString' => 'Text'
-	);
+	];
 }

@@ -79,8 +79,8 @@ class PermissionTest extends SapphireTest {
 		$accessMember = $this->objFromFixture('Member', 'access');
 		$accessAuthor = $this->objFromFixture('Member', 'author');
 
-		$result = Permission::get_members_by_permission(array('CMS_ACCESS_SecurityAdmin'));
-		$resultIDs = $result ? $result->column() : array();
+		$result = Permission::get_members_by_permission(['CMS_ACCESS_SecurityAdmin']);
+		$resultIDs = $result ? $result->column() : [];
 
 		$this->assertContains($accessMember->ID, $resultIDs,
 			'Member is found via a permission attached to a role');
@@ -92,7 +92,7 @@ class PermissionTest extends SapphireTest {
 		$permissionCheckboxSet = new PermissionCheckboxSetField('Permissions','Permissions','Permission','GroupID');
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 
-		Config::inst()->update('Permission', 'hidden_permissions', array('CMS_ACCESS_LeftAndMain'));
+		Config::inst()->update('Permission', 'hidden_permissions', ['CMS_ACCESS_LeftAndMain']);
 
 		$this->assertNotContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 

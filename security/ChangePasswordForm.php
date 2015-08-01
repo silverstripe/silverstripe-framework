@@ -129,7 +129,7 @@ class ChangePasswordForm extends Form {
 					_t(
 						'Member.INVALIDNEWPASSWORD', 
 						"We couldn't accept that password: {password}",
-						array('password' => nl2br("\n".Convert::raw2xml($isValid->starredList())))
+						['password' => nl2br("\n".Convert::raw2xml($isValid->starredList()))]
 					), 
 					"bad",
 					false

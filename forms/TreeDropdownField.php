@@ -42,13 +42,13 @@
 
 class TreeDropdownField extends FormField {
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'$Action!/$ID' => '$Action'
-	);
+	];
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'tree'
-	);
+	];
 
 	/**
 	 * @ignore
@@ -68,7 +68,7 @@ class TreeDropdownField extends FormField {
 	/**
 	 * Used by field search to leave only the relevant entries
 	 */
-	protected $searchIds = null, $showSearch, $searchExpanded = array();
+	protected $searchIds = null, $showSearch, $searchExpanded = [];
 
 	/**
 	 * CAVEAT: for search to work properly $labelField must be a database field,
@@ -206,7 +206,7 @@ class TreeDropdownField extends FormField {
 	/**
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
 
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
@@ -234,25 +234,25 @@ class TreeDropdownField extends FormField {
 		}
 
 		// TODO Implement for TreeMultiSelectField
-		$metadata = array(
+		$metadata = [
 			'id' => $record ? $record->ID : null,
 			'ClassName' => $record ? $record->ClassName : $this->sourceObject
-		);
+		];
 
 		$properties = array_merge(
 			$properties,
-			array(
+			[
 				'Title' => $title,
 				'EmptyTitle' => $emptyTitle,
 				'Metadata' => ($metadata) ? Convert::raw2json($metadata) : null,
-			)
+			]
 		);
 
 		return $this->customise($properties)->renderWith('TreeDropdownField');
 	}
 
 	public function extraClass() {
-		return implode(' ', array(parent::extraClass(), ($this->showSearch ? "searchable" : null)));
+		return implode(' ', [parent::extraClass(), ($this->showSearch ? "searchable" : null)]);
 	}
 
 	/**
@@ -301,7 +301,7 @@ class TreeDropdownField extends FormField {
 			$this->populateIDs();
 
 		if ($this->filterCallback || $this->search != "" )
-			$obj->setMarkingFilterFunction(array($this, "filterMarking"));
+			$obj->setMarkingFilterFunction([$this, "filterMarking"]);
 
 		$obj->markPartialTree($nodeCountThreshold = 30, $context = null,
 			$this->childrenMethod, $this->numChildrenMethod);
@@ -461,7 +461,7 @@ class TreeDropdownField extends FormField {
 			$res = call_user_func($this->searchCallback, $this->sourceObject, $this->labelField, $this->search);
 		} else {
 			$sourceObject = $this->sourceObject;
-			$filters = array();
+			$filters = [];
 			if(singleton($sourceObject)->hasDatabaseField($this->labelField)) {
 				$filters["{$this->labelField}:PartialMatch"]  = $this->search;
 			} else {
@@ -495,7 +495,7 @@ class TreeDropdownField extends FormField {
 			while (!empty($parents)) {
 				$items = $sourceObject::get()
 					->filter("ID",array_keys($parents));
-				$parents = array();
+				$parents = [];
 
 				foreach($items as $item) {
 					if ($item->ParentID) $parents[$item->ParentID] = true;
@@ -539,7 +539,7 @@ class TreeDropdownField extends FormField {
 class TreeDropdownField_Readonly extends TreeDropdownField {
 	protected $readonly = true;
 
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$fieldName = $this->labelField;
 		if($this->value) {
 			$keyObj = $this->objectForKey($this->value);
@@ -548,9 +548,9 @@ class TreeDropdownField_Readonly extends TreeDropdownField {
 			$obj = null;
 		}
 
-		$source = array(
+		$source = [
 			$this->value => $obj
-		);
+		];
 
 		$field = new LookupField($this->name, $this->title, $source);
 		$field->setValue($this->value);

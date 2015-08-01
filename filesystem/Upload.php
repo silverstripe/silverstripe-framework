@@ -21,10 +21,10 @@
  */
 class Upload extends Controller {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'load'
-	);
+	];
 
 	/**
 	 * A File object
@@ -61,7 +61,7 @@ class Upload extends Controller {
 	 *
 	 * @var array
 	 */
-	protected $errors = array();
+	protected $errors = [];
 
 	/**
 	 * A foldername relative to /assets,
@@ -158,11 +158,11 @@ class Upload extends Controller {
 		if(!$this->file->ID && $this->replaceFile) {
 			$fileClass = $this->file->class;
 			$file = File::get()
-				->filter(array(
+				->filter([
 					'ClassName' => $fileClass,
 					'Name' => $fileName,
 					'ParentID' => $parentFolder ? $parentFolder->ID : 0
-				))->First();
+				])->First();
 			if($file) {
 				$this->file = $file;
 			}
@@ -288,7 +288,7 @@ class Upload extends Controller {
 	 * including the validator's errors
 	 */
 	public function clearErrors() {
-		$this->errors = array();
+		$this->errors = [];
 		$this->validator->clearErrors();
 	}
 
@@ -327,7 +327,7 @@ class Upload_Validator {
 	* @config
 	* @var array
 	*/
-	private static $default_max_file_size = array();
+	private static $default_max_file_size = [];
 
 	/**
 	 * Information about the temporary file produced
@@ -337,7 +337,7 @@ class Upload_Validator {
 	 */
 	protected $tmpFile;
 
-	protected $errors = array();
+	protected $errors = [];
 
 	/**
 	 * Restrict filesize for either all filetypes
@@ -346,7 +346,7 @@ class Upload_Validator {
 	 *
 	 * @var array
 	 */
-	public $allowedMaxFileSize = array();
+	public $allowedMaxFileSize = [];
 
 	/**
 	 * @var array Collection of extensions.
@@ -357,7 +357,7 @@ class Upload_Validator {
 	 * 	array("jpg","GIF")
 	 * </code>
 	 */
-	public $allowedExtensions = array();
+	public $allowedExtensions = [];
 
 	/**
 	 * Return all errors that occurred while validating
@@ -373,7 +373,7 @@ class Upload_Validator {
 	 * Clear out all errors
 	 */
 	public function clearErrors() {
-		$this->errors = array();
+		$this->errors = [];
 	}
 
 	/**
@@ -439,7 +439,7 @@ class Upload_Validator {
 		if(is_array($rules) && count($rules)) {
 			// make sure all extensions are lowercase
 			$rules = array_change_key_case($rules, CASE_LOWER);
-			$finalRules = array();
+			$finalRules = [];
 			$tmpSize = 0;
 			
 			foreach ($rules as $rule => $value) {
@@ -542,7 +542,7 @@ class Upload_Validator {
 				'File.TOOLARGE',
 				'Filesize is too large, maximum {size} allowed',
 				'Argument 1: Filesize (e.g. 1MB)',
-				array('size' => $arg)
+				['size' => $arg]
 			);
 			return false;
 		}
@@ -553,7 +553,7 @@ class Upload_Validator {
 				'File.INVALIDEXTENSION',
 				'Extension is not allowed (valid: {extensions})',
 				'Argument 1: Comma-separated list of valid extensions',
-				array('extensions' => wordwrap(implode(', ', $this->allowedExtensions)))
+				['extensions' => wordwrap(implode(', ', $this->allowedExtensions))]
 			);
 			return false;
 		}

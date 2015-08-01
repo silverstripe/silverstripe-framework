@@ -43,25 +43,25 @@ class SSHTMLBBCodeParser_Filter_Lists extends SSHTMLBBCodeParser_Filter
     * @access   private
     * @var      array
     */
-    var $_definedTags = array(  'list'  => array(   'htmlopen'  => 'ol',
+    var $_definedTags = [  'list'  => [   'htmlopen'  => 'ol',
                                                     'htmlclose' => 'ol',
                                                     'allowed'   => 'all',
                                                     'child'     => 'none^li',
-                                                    'attributes'=> array('list'  => 'style=%2$slist-style-type:%1$s;%2$s')
-                                                    ),
-                                'ulist' => array(   'htmlopen'  => 'ul',
+                                                    'attributes'=> ['list'  => 'style=%2$slist-style-type:%1$s;%2$s']
+                                                    ],
+                                'ulist' => [   'htmlopen'  => 'ul',
                                                     'htmlclose' => 'ul',
                                                     'allowed'   => 'all',
                                                     'child'     => 'none^li',
-                                                    'attributes'=> array('list'  => 'style=%2$slist-style-type:%1$s;%2$s')
-                                                    ),
-                                'li'    => array(   'htmlopen'  => 'li',
+                                                    'attributes'=> ['list'  => 'style=%2$slist-style-type:%1$s;%2$s']
+                                                    ],
+                                'li'    => [   'htmlopen'  => 'li',
                                                     'htmlclose' => 'li',
                                                     'allowed'   => 'all',
                                                     'parent'    => 'none^ulist,list',
-                                                    'attributes'=> array()
-                                                    )
-                                );
+                                                    'attributes'=> []
+                                                    ]
+                                ];
 
 
     /**
@@ -88,21 +88,21 @@ class SSHTMLBBCodeParser_Filter_Lists extends SSHTMLBBCodeParser_Filter
         $oe = $options['open_esc'];
         $ce = $options['close_esc'];
 
-        $pattern = array(   "!".$oe."\*".$ce."!",
+        $pattern = [   "!".$oe."\*".$ce."!",
                             "!".$oe."(u?)list=(?-i:A)(\s*[^".$ce."]*)".$ce."!i",
                             "!".$oe."(u?)list=(?-i:a)(\s*[^".$ce."]*)".$ce."!i",
                             "!".$oe."(u?)list=(?-i:I)(\s*[^".$ce."]*)".$ce."!i",
                             "!".$oe."(u?)list=(?-i:i)(\s*[^".$ce."]*)".$ce."!i",
                             "!".$oe."(u?)list=(?-i:1)(\s*[^".$ce."]*)".$ce."!i",
-                            "!".$oe."(u?)list([^".$ce."]*)".$ce."!i");
+                            "!".$oe."(u?)list([^".$ce."]*)".$ce."!i"];
 
-        $replace = array(   $o."li".$c,
+        $replace = [   $o."li".$c,
                             $o."\$1list=upper-alpha\$2".$c,
                             $o."\$1list=lower-alpha\$2".$c,
                             $o."\$1list=upper-roman\$2".$c,
                             $o."\$1list=lower-roman\$2".$c,
                             $o."\$1list=decimal\$2".$c,
-                            $o."\$1list\$2".$c );
+                            $o."\$1list\$2".$c ];
 
         $this->_preparsed = preg_replace($pattern, $replace, $this->_text);
     }

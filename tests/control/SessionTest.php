@@ -43,46 +43,46 @@ class SessionTest extends SapphireTest {
 		$session = Session::get_all();
 		unset($session['HTTP_USER_AGENT']);
 
-		$this->assertEquals($session, array('Test' => 'Test', 'Test-2' => 'Test-2'));
+		$this->assertEquals($session, ['Test' => 'Test', 'Test-2' => 'Test-2']);
 	}
 
 	public function testSettingExistingDoesntClear() {
-		$s = Injector::inst()->create('Session', array('something' => array('does' => 'exist')));
+		$s = Injector::inst()->create('Session', ['something' => ['does' => 'exist']]);
 
 		$s->inst_set('something.does', 'exist');
 		$result = $s->inst_changedData();
 		unset($result['HTTP_USER_AGENT']);
-		$this->assertEquals(array(), $result);
+		$this->assertEquals([], $result);
 	}
 
 	/**
 	 * Check that changedData isn't populated with junk when clearing non-existent entries.
 	 */
 	public function testClearElementThatDoesntExist() {
-		$s = Injector::inst()->create('Session', array('something' => array('does' => 'exist')));
+		$s = Injector::inst()->create('Session', ['something' => ['does' => 'exist']]);
 
 		$s->inst_clear('something.doesnt.exist');
 		$result = $s->inst_changedData();
 		unset($result['HTTP_USER_AGENT']);
-		$this->assertEquals(array(), $result);
+		$this->assertEquals([], $result);
 
 		$s->inst_set('something-else', 'val');
 		$s->inst_clear('something-new');
 		$result = $s->inst_changedData();
 		unset($result['HTTP_USER_AGENT']);
-		$this->assertEquals(array('something-else' => 'val'), $result);
+		$this->assertEquals(['something-else' => 'val'], $result);
 	}
 
 	/**
 	 * Check that changedData is populated with clearing data.
 	 */
 	public function testClearElementThatDoesExist() {
-		$s = Injector::inst()->create('Session', array('something' => array('does' => 'exist')));
+		$s = Injector::inst()->create('Session', ['something' => ['does' => 'exist']]);
 
 		$s->inst_clear('something.does');
 		$result = $s->inst_changedData();
 		unset($result['HTTP_USER_AGENT']);
-		$this->assertEquals(array('something' => array('does' => null)), $result);
+		$this->assertEquals(['something' => ['does' => null]], $result);
 	}
 
 	public function testNonStandardPath(){
@@ -97,7 +97,7 @@ class SessionTest extends SapphireTest {
 		$_SERVER['HTTP_USER_AGENT'] = 'Test Agent';
 
 		// Generate our session
-		$s = Injector::inst()->create('Session', array());
+		$s = Injector::inst()->create('Session', []);
 		$s->inst_set('val', 123);
 		$s->inst_finalize();
 

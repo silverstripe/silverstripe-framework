@@ -28,7 +28,7 @@ class RequiredFields extends Validator {
 		if(!empty($required)) {
 			$this->required = ArrayLib::valuekey($required);
 		} else {
-			$this->required = array();
+			$this->required = [];
 		}
 
 		parent::__construct();
@@ -49,7 +49,7 @@ class RequiredFields extends Validator {
 	 * @return RequiredFields
 	 */
 	public function removeValidation() {
-		$this->required = array();
+		$this->required = [];
 
 		return $this;
 	}
@@ -121,11 +121,11 @@ class RequiredFields extends Validator {
 					$errorMessage = _t(
 						'Form.FIELDISREQUIRED',
 						'{name} is required',
-						array(
+						[
 							'name' => strip_tags(
 								'"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'
 							)
-						)
+						]
 					);
 
 					if($msg = $formField->getCustomValidationMessage()) {

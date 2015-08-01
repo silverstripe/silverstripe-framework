@@ -22,9 +22,9 @@ class DatalessField extends FormField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'type' => 'hidden',
-			)
+			]
 		);
 	}
 
@@ -34,7 +34,7 @@ class DatalessField extends FormField {
 	 *
 	 * @return HTMLText
 	 */
-	public function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = []) {
 		return $this->Field($properties);
 	}
 
@@ -42,7 +42,7 @@ class DatalessField extends FormField {
 	 * Returns the field's representation in a field group.
 	 * For dataless fields, this defaults to $Field.
 	 */
-	public function SmallFieldHolder($properties = array()) {
+	public function SmallFieldHolder($properties = []) {
 		return $this->Field($properties);
 	}
 

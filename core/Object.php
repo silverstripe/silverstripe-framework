@@ -38,13 +38,13 @@ abstract class Object {
 	private static $extensions = null;
 
 	private static
-		$classes_constructed = array(),
-		$extra_methods       = array(),
-		$built_in_methods    = array();
+		$classes_constructed = [],
+		$extra_methods       = [],
+		$built_in_methods    = [];
 
 	private static
-		$custom_classes = array(),
-		$strong_classes = array();
+		$custom_classes = [],
+		$strong_classes = [];
 
 	/**#@-*/
 
@@ -64,7 +64,7 @@ abstract class Object {
 	/**
 	 * @var array all current extension instances.
 	 */
-	protected $extension_instances = array();
+	protected $extension_instances = [];
 
 	/**
 	 * List of callbacks to call prior to extensions having extend called on them,
@@ -72,7 +72,7 @@ abstract class Object {
 	 *
 	 * @var array[callable]
 	 */
-	protected $beforeExtendCallbacks = array();
+	protected $beforeExtendCallbacks = [];
 
 	/**
 	 * Allows user code to hook into Object::extend prior to control
@@ -84,7 +84,7 @@ abstract class Object {
 	 */
 	protected function beforeExtending($method, $callback) {
 		if(empty($this->beforeExtendCallbacks[$method])) {
-			$this->beforeExtendCallbacks[$method] = array();
+			$this->beforeExtendCallbacks[$method] = [];
 		}
 		$this->beforeExtendCallbacks[$method][] = $callback;
 	}
@@ -95,7 +95,7 @@ abstract class Object {
 	 *
 	 * @var array[callable]
 	 */
-	protected $afterExtendCallbacks = array();
+	protected $afterExtendCallbacks = [];
 
 	/**
 	 * Allows user code to hook into Object::extend after control
@@ -107,7 +107,7 @@ abstract class Object {
 	 */
 	protected function afterExtending($method, $callback) {
 		if(empty($this->afterExtendCallbacks[$method])) {
-			$this->afterExtendCallbacks[$method] = array();
+			$this->afterExtendCallbacks[$method] = [];
 		}
 		$this->afterExtendCallbacks[$method][] = $callback;
 	}
@@ -163,7 +163,7 @@ abstract class Object {
 		return Injector::inst()->get($class);
 	}
 
-	private static $_cache_inst_args = array();
+	private static $_cache_inst_args = [];
 
 	/**
 	 * Create an object from a string representation.  It treats it as a PHP constructor without the
@@ -201,7 +201,7 @@ abstract class Object {
 				if($firstArg !== null) array_unshift($args, $firstArg);
 				array_unshift($args, $class);
 
-				self::$_cache_inst_args[$classSpec.$firstArg] = call_user_func_array(array('Object','create'), $args);
+				self::$_cache_inst_args[$classSpec.$firstArg] = call_user_func_array(['Object','create'], $args);
 			}
 		}
 
@@ -215,12 +215,12 @@ abstract class Object {
 	public static function parse_class_spec($classSpec) {
 		$tokens = token_get_all("<?php $classSpec");
 		$class = null;
-		$args = array();
+		$args = [];
 		$passedBracket = false;
 
 		// Keep track of the current bucket that we're putting data into
 		$bucket = &$args;
-		$bucketStack = array();
+		$bucketStack = [];
 		$had_ns = false;
 
 		foreach($tokens as $token) {
@@ -244,7 +244,7 @@ abstract class Object {
 						$argString = stripcslashes(substr($argString,1,-1));
 						break;
 					case "'":
-						$argString = str_replace(array("\\\\", "\\'"),array("\\", "'"), substr($argString,1,-1));
+						$argString = str_replace(["\\\\", "\\'"],["\\", "'"], substr($argString,1,-1));
 						break;
 					default:
 						throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
@@ -271,7 +271,7 @@ abstract class Object {
 
 				case T_ARRAY:
 					// Add an empty array to the bucket
-					$bucket[] = array();
+					$bucket[] = [];
 					$bucketStack[] = &$bucket;
 					$bucket = &$bucket[sizeof($bucket)-1];
 
@@ -280,7 +280,7 @@ abstract class Object {
 			} else {
 				if($tName == '[') {
 					// Add an empty array to the bucket
-					$bucket[] = array();
+					$bucket[] = [];
 					$bucketStack[] = &$bucket;
 					$bucket = &$bucket[sizeof($bucket)-1];
 				} elseif($tName == ')' || $tName == ']') {
@@ -291,7 +291,7 @@ abstract class Object {
 			}
 		}
 
-		return array($class, $args);
+		return [$class, $args];
 	}
 
 	/**
@@ -367,7 +367,7 @@ abstract class Object {
 		} else {
 			// TODO: This gets set once, then not updated, so any changes to statics after this is called the first
 			// time for any class won't be exposed
-			static $static_properties = array();
+			static $static_properties = [];
 
 			if (!isset($static_properties[$class])) {
 				$reflection = new ReflectionClass($class);
@@ -476,7 +476,7 @@ abstract class Object {
 			unset(self::$extra_methods[$subclass]);
 		}
 
-		Config::inst()->update($class, 'extensions', array($extension));
+		Config::inst()->update($class, 'extensions', [$extension]);
 		Config::inst()->extraConfigSourcesChanged($class);
 
 		Injector::inst()->unregisterNamedObject($class);
@@ -551,7 +551,7 @@ abstract class Object {
 		if($includeArgumentString) {
 			return $extensions;
 		} else {
-			$extensionClassnames = array();
+			$extensionClassnames = [];
 			if($extensions) foreach($extensions as $extension) {
 				$extensionClassnames[] = Extension::get_classname_without_arguments($extension);
 			}
@@ -561,7 +561,7 @@ abstract class Object {
 
 	// --------------------------------------------------------------------------------------------------------------
 
-	private static $unextendable_classes = array('Object', 'ViewableData', 'RequestHandler');
+	private static $unextendable_classes = ['Object', 'ViewableData', 'RequestHandler'];
 
 	static public function get_extra_config_sources($class = null) {
 		if($class === null) $class = get_called_class();
@@ -577,7 +577,7 @@ abstract class Object {
 
 		if($extensions) {
 			// Build a list of all sources;
-			$sources = array();
+			$sources = [];
 
 			foreach($extensions as $extension) {
 				list($extensionClass, $extensionArgs) = self::parse_class_spec($extension);
@@ -588,7 +588,7 @@ abstract class Object {
 						"add_to_class deprecated on $extensionClass. Use get_extra_config instead");
 				}
 
-				call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass, $extensionArgs);
+				call_user_func([$extensionClass, 'add_to_class'], $class, $extensionClass, $extensionArgs);
 
 				foreach(array_reverse(ClassInfo::ancestry($extensionClass)) as $extensionClassParent) {
 					if (ClassInfo::has_method_from($extensionClassParent, 'get_extra_config', $extensionClassParent)) {
@@ -653,7 +653,7 @@ abstract class Object {
 
 					if($obj) {
 						if(!empty($config['callSetOwnerFirst'])) $obj->setOwner($this);
-						$retVal = call_user_func_array(array($obj, $method), $arguments);
+						$retVal = call_user_func_array([$obj, $method], $arguments);
 						if(!empty($config['callSetOwnerFirst'])) $obj->clearOwner();
 						return $retVal;
 					}
@@ -671,7 +671,7 @@ abstract class Object {
 
 				case isset($config['wrap']) :
 					array_unshift($arguments, $config['method']);
-					return call_user_func_array(array($this, $config['wrap']), $arguments);
+					return call_user_func_array([$this, $config['wrap']], $arguments);
 
 				case isset($config['function']) :
 					return $config['function']($this, $arguments);
@@ -771,11 +771,11 @@ abstract class Object {
 		}
 
 		if($methods) {
-			$methodInfo = array(
+			$methodInfo = [
 				'property' => $property,
 				'index'    => $index,
 				'callSetOwnerFirst' => $extension instanceof Extension,
-			);
+			];
 
 			$newMethods = array_fill_keys($methods, $methodInfo);
 
@@ -796,10 +796,10 @@ abstract class Object {
 	 * @param string $wrap the method name to wrap to
 	 */
 	protected function addWrapperMethod($method, $wrap) {
-		self::$extra_methods[$this->class][strtolower($method)] = array (
+		self::$extra_methods[$this->class][strtolower($method)] = [
 			'wrap'   => $wrap,
 			'method' => $method
-		);
+		];
 	}
 
 	/**
@@ -811,9 +811,9 @@ abstract class Object {
 	 *        function
 	 */
 	protected function createMethod($method, $code) {
-		self::$extra_methods[$this->class][strtolower($method)] = array (
+		self::$extra_methods[$this->class][strtolower($method)] = [
 			'function' => create_function('$obj, $args', $code)
-		);
+		];
 	}
 
 	// --------------------------------------------------------------------------------------------------------------
@@ -889,7 +889,7 @@ abstract class Object {
 	 * @todo integrate inheritance rules
 	 */
 	public function invokeWithExtensions($method, $argument = null) {
-		$result = method_exists($this, $method) ? array($this->$method($argument)) : array();
+		$result = method_exists($this, $method) ? [$this->$method($argument)] : [];
 		$extras = $this->extend($method, $argument);
 
 		return $extras ? array_merge($result, $extras) : $result;
@@ -911,14 +911,14 @@ abstract class Object {
 	 * @return array
 	 */
 	public function extend($method, &$a1=null, &$a2=null, &$a3=null, &$a4=null, &$a5=null, &$a6=null, &$a7=null) {
-		$values = array();
+		$values = [];
 
 		if(!empty($this->beforeExtendCallbacks[$method])) {
 			foreach(array_reverse($this->beforeExtendCallbacks[$method]) as $callback) {
 				$value = call_user_func($callback, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
 				if($value !== null) $values[] = $value;
 			}
-			$this->beforeExtendCallbacks[$method] = array();
+			$this->beforeExtendCallbacks[$method] = [];
 		}
 
 		if($this->extension_instances) foreach($this->extension_instances as $instance) {
@@ -935,7 +935,7 @@ abstract class Object {
 				$value = call_user_func($callback, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
 				if($value !== null) $values[] = $value;
 			}
-			$this->afterExtendCallbacks[$method] = array();
+			$this->afterExtendCallbacks[$method] = [];
 		}
 
 		return $values;
@@ -994,7 +994,7 @@ abstract class Object {
 	 * @param array $arguments an optional array of arguments
 	 * @return mixed the cached data
 	 */
-	public function cacheToFile($method, $lifetime = 3600, $ID = false, $arguments = array()) {
+	public function cacheToFile($method, $lifetime = 3600, $ID = false, $arguments = []) {
 		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
 
 		if(!$this->hasMethod($method)) {
@@ -1003,7 +1003,7 @@ abstract class Object {
 
 		$cacheName = $this->class . '_' . $method;
 
-		if(!is_array($arguments)) $arguments = array($arguments);
+		if(!is_array($arguments)) $arguments = [$arguments];
 
 		if($ID) $cacheName .= '_' . $ID;
 		if(count($arguments)) $cacheName .= '_' . md5(serialize($arguments));
@@ -1014,7 +1014,7 @@ abstract class Object {
 			return $data;
 		}
 
-		$data = call_user_func_array(array($this, $method), $arguments);
+		$data = call_user_func_array([$this, $method], $arguments);
 		$this->saveCache($cacheName, $data);
 
 		return $data;
@@ -1023,11 +1023,11 @@ abstract class Object {
 	/**
 	 * Clears the cache for the given cacheToFile call
 	 */
-	public function clearCache($method, $ID = false, $arguments = array()) {
+	public function clearCache($method, $ID = false, $arguments = []) {
 		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
 
 		$cacheName = $this->class . '_' . $method;
-		if(!is_array($arguments)) $arguments = array($arguments);
+		if(!is_array($arguments)) $arguments = [$arguments];
 		if($ID) $cacheName .= '_' . $ID;
 		if(count($arguments)) $cacheName .= '_' . md5(serialize($arguments));
 
@@ -1073,7 +1073,7 @@ abstract class Object {
 	 */
 	protected function sanitiseCachename($name) {
 		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
-		return str_replace(array('~', '.', '/', '!', ' ', "\n", "\r", "\t", '\\', ':', '"', '\'', ';'), '_', $name);
+		return str_replace(['~', '.', '/', '!', ' ', "\n", "\r", "\t", '\\', ':', '"', '\'', ';'], '_', $name);
 	}
 
 }

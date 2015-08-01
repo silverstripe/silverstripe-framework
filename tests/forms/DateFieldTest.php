@@ -11,7 +11,7 @@ class DateFieldTest extends SapphireTest {
 		$this->originalLocale = i18n::get_locale();
 		i18n::set_locale('en_NZ');
 		$this->origConfig = Config::inst()->get('DateField', 'default_config');
-		Config::inst()->update('DateField', 'default_config', array('dateformat' => 'dd/MM/yyyy'));
+		Config::inst()->update('DateField', 'default_config', ['dateformat' => 'dd/MM/yyyy']);
 	}
 
 	public function tearDown() {
@@ -99,7 +99,7 @@ class DateFieldTest extends SapphireTest {
 	public function testSetValueWithDateArray() {
 		$f = new DateField('Date', 'Date');
 		$f->setConfig('dmyfields', true);
-		$f->setValue(array('day' => 29, 'month' => 03, 'year' => 2003));
+		$f->setValue(['day' => 29, 'month' => 03, 'year' => 2003]);
 		$this->assertEquals($f->dataValue(), '2003-03-29');
 	}
 
@@ -120,16 +120,16 @@ class DateFieldTest extends SapphireTest {
 	public function testValidateArray() {
 		$f = new DateField('Date', 'Date');
 		$f->setConfig('dmyfields', true);
-		$f->setValue(array('day' => 29, 'month' => 03, 'year' => 2003));
+		$f->setValue(['day' => 29, 'month' => 03, 'year' => 2003]);
 		$this->assertTrue($f->validate(new RequiredFields()));
 
 		$f->setValue(null);
 		$this->assertTrue($f->validate(new RequiredFields()), 'NULL values are validating TRUE');
 
-		$f->setValue(array());
+		$f->setValue([]);
 		$this->assertTrue($f->validate(new RequiredFields()), 'Empty array values are validating TRUE');
 
-		$f->setValue(array('day' => null, 'month' => null, 'year' => null));
+		$f->setValue(['day' => null, 'month' => null, 'year' => null]);
 		$this->assertTrue($f->validate(new RequiredFields()), 'Empty array values with keys are validating TRUE');
 
 		// TODO Fix array validation
@@ -141,18 +141,18 @@ class DateFieldTest extends SapphireTest {
 		$f = new DateField('Date', 'Date');
 		$f->setConfig('dmyfields', true);
 
-		$f->setValue(array('day' => '', 'month' => '', 'year' => ''));
+		$f->setValue(['day' => '', 'month' => '', 'year' => '']);
 		$this->assertNull($f->dataValue());
 
-		$f->setValue(array('day' => null, 'month' => null, 'year' => null));
+		$f->setValue(['day' => null, 'month' => null, 'year' => null]);
 		$this->assertNull($f->dataValue());
 	}
 
 	public function testValidateArrayValue() {
 		$f = new DateField('Date', 'Date');
-		$this->assertTrue($f->validateArrayValue(array('day' => 29, 'month' => 03, 'year' => 2003)));
-		$this->assertFalse($f->validateArrayValue(array('month' => 03, 'year' => 2003)));
-		$this->assertFalse($f->validateArrayValue(array('day' => 99, 'month' => 99, 'year' => 2003)));
+		$this->assertTrue($f->validateArrayValue(['day' => 29, 'month' => 03, 'year' => 2003]));
+		$this->assertFalse($f->validateArrayValue(['month' => 03, 'year' => 2003]));
+		$this->assertFalse($f->validateArrayValue(['day' => 99, 'month' => 99, 'year' => 2003]));
 	}
 
 	public function testFormatEnNz() {

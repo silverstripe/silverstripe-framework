@@ -117,8 +117,8 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	}
 
 	public function requireField() {
-		$parts=Array('datatype'=>'datetime', 'arrayValue'=>$this->arrayValue);
-		$values=Array('type'=>'SS_Datetime', 'parts'=>$parts);
+		$parts=['datatype'=>'datetime', 'arrayValue'=>$this->arrayValue];
+		$values=['type'=>'SS_Datetime', 'parts'=>$parts];
 		DB::require_field($this->tableName, $this->name, $values);
 	}
 
@@ -197,9 +197,9 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	}
 
 	public static function get_template_global_variables() {
-		return array(
-			'Now' => array('method' => 'now', 'casting' => 'SS_Datetime'),
-		);
+		return [
+			'Now' => ['method' => 'now', 'casting' => 'SS_Datetime'],
+		];
 	}
 }
 

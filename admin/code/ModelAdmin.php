@@ -48,14 +48,14 @@ abstract class ModelAdmin extends LeftAndMain {
 
 	private static $menu_icon = 'framework/admin/images/menu-icons/16x16/db.png';
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'ImportForm',
 		'SearchForm',
-	);
+	];
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'$ModelClass/$Action' => 'handleAction'
-	);
+	];
 
 	/**
 	 * @var String
@@ -234,12 +234,12 @@ abstract class ModelAdmin extends LeftAndMain {
 		$forms  = new ArrayList();
 
 		foreach($models as $class => $options) {
-			$forms->push(new ArrayData(array (
+			$forms->push(new ArrayData([
 				'Title'     => $options['title'],
 				'ClassName' => $class,
 				'Link' => $this->Link($this->sanitiseClassName($class)),
 				'LinkOrCurrent' => ($class == $this->modelClass) ? 'current' : 'link'
-			)));
+			]));
 		}
 
 		return $forms;
@@ -267,7 +267,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	public function getManagedModels() {
 		$models = $this->stat('managed_models');
 		if(is_string($models)) {
-			$models = array($models);
+			$models = [$models];
 		}
 		if(!count($models)) {
 			user_error(
@@ -281,7 +281,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		// Normalize models to have their model class in array key
 		foreach($models as $k => $v) {
 			if(is_numeric($k)) {
-				$models[$v] = array('title' => singleton($v)->i18n_singular_name());
+				$models[$v] = ['title' => singleton($v)->i18n_singular_name()];
 				unset($models[$k]);
 			}
 		}
@@ -308,7 +308,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			}
 		}
 
-		$importers = array();
+		$importers = [];
 		foreach($importerClasses as $modelClass => $importerClass) {
 			$importers[$modelClass] = new $importerClass($modelClass);
 		}
@@ -347,17 +347,17 @@ abstract class ModelAdmin extends LeftAndMain {
 		$spec = $importer->getImportSpec();
 		$specFields = new ArrayList();
 		foreach($spec['fields'] as $name => $desc) {
-			$specFields->push(new ArrayData(array('Name' => $name, 'Description' => $desc)));
+			$specFields->push(new ArrayData(['Name' => $name, 'Description' => $desc]));
 		}
 		$specRelations = new ArrayList();
 		foreach($spec['relations'] as $name => $desc) {
-			$specRelations->push(new ArrayData(array('Name' => $name, 'Description' => $desc)));
+			$specRelations->push(new ArrayData(['Name' => $name, 'Description' => $desc]));
 		}
-		$specHTML = $this->customise(array(
+		$specHTML = $this->customise([
 			'ModelName' => Convert::raw2att($modelName),
 			'Fields' => $specFields,
 			'Relations' => $specRelations,
-		))->renderWith('ModelAdmin_ImportSpec');
+		])->renderWith('ModelAdmin_ImportSpec');
 
 		$fields->push(new LiteralField("SpecFor{$modelName}", $specHTML));
 		$fields->push(
@@ -423,15 +423,15 @@ abstract class ModelAdmin extends LeftAndMain {
 		$message = '';
 		if($results->CreatedCount()) $message .= _t(
 			'ModelAdmin.IMPORTEDRECORDS', "Imported {count} records.",
-			array('count' => $results->CreatedCount())
+			['count' => $results->CreatedCount()]
 		);
 		if($results->UpdatedCount()) $message .= _t(
 			'ModelAdmin.UPDATEDRECORDS', "Updated {count} records.",
-			array('count' => $results->UpdatedCount())
+			['count' => $results->UpdatedCount()]
 		);
 		if($results->DeletedCount()) $message .= _t(
 			'ModelAdmin.DELETEDRECORDS', "Deleted {count} records.",
-			array('count' => $results->DeletedCount())
+			['count' => $results->DeletedCount()]
 		);
 		if(!$results->CreatedCount() && !$results->UpdatedCount()) {
 			$message .= _t('ModelAdmin.NOIMPORT', "Nothing to import");

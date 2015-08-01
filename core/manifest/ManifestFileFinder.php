@@ -19,11 +19,11 @@ class ManifestFileFinder extends SS_FileFinder {
 	const LANG_DIR     = 'lang';
 	const TESTS_DIR    = 'tests';
 
-	protected static $default_options = array(
+	protected static $default_options = [
 		'include_themes' => false,
 		'ignore_tests'   => true,
 		'min_depth'      => 1
-	);
+	];
 
 	public function acceptDir($basename, $pathname, $depth) {
 		// Skip over the assets directory in the site root.

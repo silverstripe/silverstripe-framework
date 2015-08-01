@@ -43,17 +43,17 @@ class JSTestRunner extends Controller {
 	/** @ignore */
 	private static $default_reporter;
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'' => 'browse',
 		'$TestCase' => 'only',
-	);
+	];
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'all',
 		'browse',
 		'only'
-	);
+	];
 
 	/**
 	 * Override the default reporter with a custom configured subclass.
@@ -121,7 +121,7 @@ class JSTestRunner extends Controller {
 					E_USER_ERROR);
 			}
 
-			$this->runTests(array($test));
+			$this->runTests([$test]);
 		}
 	}
 
@@ -150,7 +150,7 @@ class JSTestRunner extends Controller {
 	}
 
 	protected function getAllTestFiles() {
-		$testFiles = array();
+		$testFiles = [];
 
 		$baseDir = Director::baseFolder();
 		$modules = scandir($baseDir);
@@ -168,7 +168,7 @@ class JSTestRunner extends Controller {
 				$tests = scandir($testDir);
 				foreach($tests as $testFile) {
 					$testFileExt = pathinfo("$testDir/$testFile", PATHINFO_EXTENSION);
-					if(!in_array(strtolower($testFileExt),array('htm','html'))) continue;
+					if(!in_array(strtolower($testFileExt),['htm','html'])) continue;
 					$testFileNameWithoutExt = substr($testFile, 0,-strlen($testFileExt)-1);
 					$testUrl = Director::makeRelative("$testDir/$testFile");
 					$testUrl = substr($testUrl, 1);

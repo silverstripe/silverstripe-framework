@@ -41,7 +41,7 @@ class CleanImageManipulationCache extends BuildTask {
 				$path = $image->getFullPath();
 
 				if (file_exists($path)) {
-					$key = md5(implode('_', array($path, filemtime($path))));
+					$key = md5(implode('_', [$path, filemtime($path)]));
 
 					if ($manipulations = unserialize($cache->load($key))) {
 						$failedManipulations += count($manipulations);

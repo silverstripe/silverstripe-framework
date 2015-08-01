@@ -9,19 +9,19 @@
 class CMSBatchActionHandler extends RequestHandler {
 
 	/** @config */
-	private static $batch_actions = array();
+	private static $batch_actions = [];
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'$BatchAction/applicablepages' => 'handleApplicablePages',
 		'$BatchAction/confirmation' => 'handleConfirmation',
 		'$BatchAction' => 'handleBatchAction',
-	);
+	];
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'handleBatchAction',
 		'handleApplicablePages',
 		'handleConfirmation',
-	);
+	];
 
 	protected $parentController;
 
@@ -65,12 +65,12 @@ class CMSBatchActionHandler extends RequestHandler {
 			Config::inst()->update(
 				'CMSBatchActionHandler',
 				'batch_actions',
-				array(
-					$urlSegment => array(
+				[
+					$urlSegment => [
 						'class' => $batchActionClass,
 						'recordClass' => $recordClass
-					)
-				)
+					]
+				]
 			);
 		} else {
 			user_error("CMSBatchActionHandler::register() - Bad class '$batchActionClass'", E_USER_ERROR);
@@ -134,7 +134,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		if($ids) {
 			$applicableIDs = $actionHandler->applicablePages($ids);
 		} else {
-			$applicableIDs = array();
+			$applicableIDs = [];
 		}
 
 		$response = new SS_HTTPResponse(json_encode($applicableIDs));
@@ -161,7 +161,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		if($actionHandler->hasMethod('confirmationDialog')) {
 			$response = new SS_HTTPResponse(json_encode($actionHandler->confirmationDialog($ids)));
 		} else {
-			$response = new SS_HTTPResponse(json_encode(array('alert' => false)));
+			$response = new SS_HTTPResponse(json_encode(['alert' => false]));
 		}
 
 		$response->addHeader("Content-type", "application/json");
@@ -199,10 +199,10 @@ class CMSBatchActionHandler extends RequestHandler {
 		foreach($actions as $urlSegment => $action) {
 			$actionObj = $this->buildAction($action['class']);
 			if($actionObj->canView()) {
-				$actionDef = new ArrayData(array(
+				$actionDef = new ArrayData([
 					"Link" => Controller::join_links($this->Link(), $urlSegment),
 					"Title" => $actionObj->getActionTitle(),
-				));
+				]);
 				$actionList->push($actionDef);
 			}
 		}
@@ -276,9 +276,9 @@ class CMSBatchActionHandler extends RequestHandler {
 		if($recordClass::has_extension('Versioned')) {
 			// Workaround for get_including_deleted not supporting byIDs filter very well
 			// Ensure we select both stage / live records
-			$pages = Versioned::get_including_deleted($recordClass, array(
+			$pages = Versioned::get_including_deleted($recordClass, [
 				'"RecordID" IN ('.DB::placeholders($ids).')' => $ids
-			));
+			]);
 		} else {
 			$pages = DataObject::get($recordClass)->byIDs($ids);
 		}

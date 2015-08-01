@@ -18,23 +18,23 @@ class TokenisedRegularExpression {
 	}
 
 	public function findAll($tokens) {
-		$tokenTypes = array();
+		$tokenTypes = [];
 		foreach($tokens as $i => $token) {
 			if(is_array($token)) {
 				$tokenTypes[$i] = $token[0];
 			} else {
 				$tokenTypes[$i] = $token;
 				// Pre-process string tokens for matchFrom()
-				$tokens[$i] = array($token, $token);
+				$tokens[$i] = [$token, $token];
 			}
 		}
 
 		$startKeys = array_keys($tokenTypes, is_array($this->expression[0])
 			? $this->expression[0][0] : $this->expression[0]);
-		$allMatches = array();
+		$allMatches = [];
 
 		foreach($startKeys as $startKey) {
-			$matches = array();
+			$matches = [];
 			if($this->matchFrom($startKey, 0, $tokens, $matches)) {
 				$allMatches[] = $matches;
 			}
@@ -45,7 +45,7 @@ class TokenisedRegularExpression {
 	public function matchFrom($tokenPos, $expressionPos, &$tokens, &$matches) {
 		$expressionRule = $this->expression[$expressionPos];
 		$expectation = is_array($expressionRule) ? $expressionRule[0] : $expressionRule;
-		if(!is_array($expressionRule)) $expressionRule = array();
+		if(!is_array($expressionRule)) $expressionRule = [];
 
 		if($expectation == $tokens[$tokenPos][0]) {
 			if(isset($expressionRule['save_to'])) {

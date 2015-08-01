@@ -14,11 +14,11 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 			'GroupID'
 		);
 		$f->setHiddenPermissions(
-			array('NON-ADMIN')
+			['NON-ADMIN']
 		);
 		$this->assertEquals(
 			$f->getHiddenPermissions(),
-			array('NON-ADMIN')
+			['NON-ADMIN']
 		);
 		$this->assertContains('ADMIN', $f->Field());
 		$this->assertNotContains('NON-ADMIN', $f->Field());
@@ -52,10 +52,10 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount, 'There are no orphaned permissions');
 
 		// add some permissions
-		$field->setValue(array(
+		$field->setValue([
 			'ADMIN'=>true,
 			'NON-ADMIN'=>true
-		));
+		]);
 
 		$field->saveInto($group);
 		$group->flushCache();
@@ -76,9 +76,9 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 			'There are no orphaned permissions');
 
 		// remove permission
-		$field->setValue(array(
+		$field->setValue([
 			'ADMIN'=>true,
-		));
+		]);
 
 		$field->saveInto($group);
 		$group->flushCache();

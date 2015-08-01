@@ -12,9 +12,9 @@ require_once 'TestRunner.php';
 class SapphireTest extends PHPUnit_Framework_TestCase {
 
 	/** @config */
-	private static $dependencies = array(
+	private static $dependencies = [
 		'fixtureFactory' => '%$FixtureFactory',
-	);
+	];
 
 	/**
 	 * Path to fixture data for this test run.
@@ -74,7 +74,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * class names in here, and the require/augment default records
 	 * function will be called on them.
 	 */
-	protected $requireDefaultRecordsFrom = array();
+	protected $requireDefaultRecordsFrom = [];
 
 
 	/**
@@ -84,8 +84,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * The keys of the are the classes that the extensions can't be applied the extensions to, and
 	 * the values are an array of illegal extensions on that class.
 	 */
-	protected $illegalExtensions = array(
-	);
+	protected $illegalExtensions = [
+	];
 
 	/**
 	 * A list of extensions that must be applied during the execution of this run.  If they are
@@ -99,15 +99,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * array("MyTreeDataObject" => array("Versioned", "Hierarchy"))
 	 * </code>
 	 */
-	protected $requiredExtensions = array(
-	);
+	protected $requiredExtensions = [
+	];
 
 	/**
 	 * By default, the test database won't contain any DataObjects that have the interface TestOnly.
 	 * This variable lets you define additional TestOnly DataObjects to set up for this test.
 	 * Set it to an array of DataObject subclass names.
 	 */
-	protected $extraDataObjects = array();
+	protected $extraDataObjects = [];
 
 	/**
 	 * We need to disabling backing up of globals to avoid overriding
@@ -120,7 +120,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Helper arrays for illegalExtensions/requiredExtensions code
 	 */
-	private $extensionsToReapply = array(), $extensionsToRemove = array();
+	private $extensionsToReapply = [], $extensionsToRemove = [];
 
 
 	/**
@@ -165,7 +165,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @var array $fixtures Array of {@link YamlFixture} instances
 	 * @deprecated 3.1 Use $fixtureFactory instad
 	 */
-	protected $fixtures = array();
+	protected $fixtures = [];
 
 	protected $model;
 
@@ -210,13 +210,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		DataObject::reset();
 		if(class_exists('SiteTree')) SiteTree::reset();
 		Hierarchy::reset();
-		if(Controller::has_curr()) Controller::curr()->setSession(Injector::inst()->create('Session', array()));
+		if(Controller::has_curr()) Controller::curr()->setSession(Injector::inst()->create('Session', []));
 		Security::$database_is_ready = null;
 
 		// Add controller-name auto-routing
-		Config::inst()->update('Director', 'rules', array(
+		Config::inst()->update('Director', 'rules', [
 			'$Controller//$Action/$ID/$OtherID' => '*'
-		));
+		]);
 		
 		$fixtureFile = static::get_fixture_file();
 
@@ -253,7 +253,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 			if($fixtureFile) {
 				$pathForClass = $this->getCurrentAbsolutePath();
-				$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
+				$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : [$fixtureFile];
 
 				$i = 0;
 				foreach($fixtureFiles as $fixtureFilePath) {
@@ -313,7 +313,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		foreach($this->illegalExtensions as $class => $extensions) {
 			foreach($extensions as $extension) {
 				if ($class::has_extension($extension)) {
-					if(!isset($this->extensionsToReapply[$class])) $this->extensionsToReapply[$class] = array();
+					if(!isset($this->extensionsToReapply[$class])) $this->extensionsToReapply[$class] = [];
 					$this->extensionsToReapply[$class][] = $extension;
 					$class::remove_extension($extension);
 					$isAltered = true;
@@ -323,10 +323,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// Add any required extensions that aren't present
 		foreach($this->requiredExtensions as $class => $extensions) {
-			$this->extensionsToRemove[$class] = array();
+			$this->extensionsToRemove[$class] = [];
 			foreach($extensions as $extension) {
 				if(!$class::has_extension($extension)) {
-					if(!isset($this->extensionsToRemove[$class])) $this->extensionsToReapply[$class] = array();
+					if(!isset($this->extensionsToRemove[$class])) $this->extensionsToReapply[$class] = [];
 					$this->extensionsToRemove[$class][] = $extension;
 					$class::add_extension($extension);
 					$isAltered = true;
@@ -567,7 +567,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$found = (bool)$this->findEmail($to, $from, $subject, $content);
 
 		$infoParts = "";
-		$withParts = array();
+		$withParts = [];
 		if($to) $infoParts .= " to '$to'";
 		if($from) $infoParts .= " from '$from'";
 		if($subject) $withParts[] = "subject '$subject'";
@@ -602,7 +602,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *      ), $members);
 	 */
 	public function assertDOSContains($matches, $dataObjectSet) {
-		$extracted = array();
+		$extracted = [];
 		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
 
 		foreach($matches as $match) {
@@ -646,7 +646,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	public function assertDOSEquals($matches, $dataObjectSet) {
 		if(!$dataObjectSet) return false;
 
-		$extracted = array();
+		$extracted = [];
 		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
 
 		foreach($matches as $match) {
@@ -691,7 +691,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *     $this->assertDOSAllMatch(array('Status' => 'Active'), $members);
 	 */
 	public function assertDOSAllMatch($match, $dataObjectSet) {
-		$extracted = array();
+		$extracted = [];
 		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
 
 		foreach($extracted as $i => $item) {
@@ -784,7 +784,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Helper function for the DOS matchers
 	 */
 	private function DOSSummaryForMatch($dataObjectSet, $match) {
-		$extracted = array();
+		$extracted = [];
 		foreach($dataObjectSet as $item) $extracted[] = array_intersect_key($item->toMap(), $match);
 		return var_export($extracted, true);
 	}
@@ -808,7 +808,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				// Some DataExtensions keep a static cache of information that needs to
 				// be reset whenever the database is killed
 				foreach(ClassInfo::subclassesFor('DataExtension') as $class) {
-					$toCall = array($class, 'on_db_reset');
+					$toCall = [$class, 'on_db_reset'];
 					if(is_callable($toCall)) call_user_func($toCall);
 				}
 
@@ -829,7 +829,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			// be reset whenever the database is cleaned out
 			$classes = array_merge(ClassInfo::subclassesFor('DataExtension'), ClassInfo::subclassesFor('DataObject'));
 			foreach($classes as $class) {
-				$toCall = array($class, 'on_db_reset');
+				$toCall = [$class, 'on_db_reset'];
 				if(is_callable($toCall)) call_user_func($toCall);
 			}
 		}
@@ -856,7 +856,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$st->resetDBSchema();
 
 		// Reinstate PHPUnit error handling
-		set_error_handler(array('PHPUnit_Util_ErrorHandler', 'handleError'));
+		set_error_handler(['PHPUnit_Util_ErrorHandler', 'handleError']);
 
 		return $dbname;
 	}
@@ -931,9 +931,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$permission->write();
 			$group->Permissions()->add($permission);
 
-			$member = DataObject::get_one('Member', array(
+			$member = DataObject::get_one('Member', [
 				'"Member"."Email"' => "$permCode@example.org"
-			));
+			]);
 			if(!$member) $member = Injector::inst()->create('Member');
 
 			$member->FirstName = $permCode;
@@ -952,7 +952,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Cache for logInWithPermission()
 	 */
-	protected $cache_generatedMembers = array();
+	protected $cache_generatedMembers = [];
 
 
 	/**

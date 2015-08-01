@@ -58,10 +58,10 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @param array
 	 */
-	private static $composite_db = array(
+	private static $composite_db = [
 		"Currency" => "Varchar(3)",
 		"Amount" => 'Decimal(19,4)'
-	);
+	];
 
 	public function __construct($name = null) {
 		$this->currencyLib = new Zend_Currency(null, i18n::get_locale());
@@ -143,7 +143,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	public function Nice($options = array()) {
+	public function Nice($options = []) {
 		$amount = $this->getAmount();
 		if(!isset($options['display'])) $options['display'] = Zend_Currency::USE_SYMBOL;
 		if(!isset($options['currency'])) $options['currency'] = $this->getCurrency();
@@ -156,7 +156,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	public function NiceWithShortname($options = array()){
+	public function NiceWithShortname($options = []){
 		$options['display'] = Zend_Currency::USE_SHORTNAME;
 		return $this->Nice($options);
 	}
@@ -164,7 +164,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	public function NiceWithName($options = array()){
+	public function NiceWithName($options = []){
 		$options['display'] = Zend_Currency::USE_NAME;
 		return $this->Nice($options);
 	}

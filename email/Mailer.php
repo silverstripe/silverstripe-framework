@@ -116,7 +116,7 @@ class Mailer extends Object {
 		$headers = array_merge($headers, $customHeaders);
 
 		// Headers 'Cc' and 'Bcc' need to have the correct case
-		foreach(array('Bcc', 'Cc') as $correctKey) {
+		foreach(['Bcc', 'Cc'] as $correctKey) {
 			foreach($headers as $key => $value) {
 				if(strcmp($key, $correctKey) !== 0 && strcasecmp($key, $correctKey) === 0) {
 					$headers[$correctKey] = $value;
@@ -139,7 +139,7 @@ class Mailer extends Object {
 	 * @param array $customHeaders List of custom headers
 	 * @return mixed Return false if failure, or list of arguments if success
 	 */
-	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = array(), $customHeaders = array()) {
+	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = [], $customHeaders = []) {
 		// Prepare plain text body
 		$fullBody = $this->encodeMessage($plainContent, $this->getMessageEncoding());
 		$headers["Content-Type"] = "text/plain; charset=utf-8";
@@ -163,13 +163,13 @@ class Mailer extends Object {
 	 * @return mixed Return false if failure, or list of arguments if success
 	 */
 	public function sendHTML($to, $from, $subject, $htmlContent,
-		$attachedFiles = array(), $customHeaders = array(), $plainContent = ''
+		$attachedFiles = [], $customHeaders = [], $plainContent = ''
 	) {
 		// Prepare both Plain and HTML components and merge
 		$plainPart = $this->preparePlainSubmessage($plainContent, $htmlContent);
 		$htmlPart = $this->prepareHTMLSubmessage($htmlContent);
 		list($fullBody, $headers) = $this->encodeMultipart(
-			array($plainPart, $htmlPart),
+			[$plainPart, $htmlPart],
 			"multipart/alternative"
 		);
 
@@ -230,7 +230,7 @@ class Mailer extends Object {
 		}
 		
 		if($result) {
-			return array($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress);
+			return [$to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress];
 		}
 			
 		return false;
@@ -247,7 +247,7 @@ class Mailer extends Object {
 	protected function encodeAttachments($attachments, $headers, $body) {
 		// The first part is the message itself
 		$fullMessage = $this->processHeaders($headers, $body);
-		$messageParts = array($fullMessage);
+		$messageParts = [$fullMessage];
 
 		// Include any specified attachments as additional parts
 		foreach($attachments as $file) {
@@ -322,7 +322,7 @@ class Mailer extends Object {
 	 * @param array $headers Existing headers to include in response
 	 * @return array Array with two items, the body followed by headers
 	 */
-	protected function encodeMultipart($parts, $contentType, $headers = array()) {
+	protected function encodeMultipart($parts, $contentType, $headers = []) {
 		$separator = "----=_NextPart_" . preg_replace('/[^0-9]/', '', rand() * 10000000000);
 
 		$headers["MIME-Version"] = "1.0";
@@ -343,7 +343,7 @@ class Mailer extends Object {
 		$body = "$baseMessage\n" .
 			$separator . implode("\n".$separator, $parts) . "\n" . trim($separator) . "--";
 
-		return array($body, $headers);
+		return [$body, $headers];
 	}
 
 
@@ -411,7 +411,7 @@ class Mailer extends Object {
 		}
 		
 		if (is_string($file)) {
-			$file = array('filename' => $file);
+			$file = ['filename' => $file];
 			$fh = fopen($file['filename'], "rb");
 			if ($fh) {
 				$file['contents'] = "";

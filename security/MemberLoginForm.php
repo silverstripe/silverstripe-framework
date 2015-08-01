@@ -29,7 +29,7 @@ class MemberLoginForm extends LoginForm {
 	 * @var array
 	 * @config
 	 */
-	private static $allowed_actions = array('dologin', 'logout');
+	private static $allowed_actions = ['dologin', 'logout'];
 
 	/**
 	 * Constructor
@@ -140,7 +140,7 @@ JS;
 			$this->message = _t(
 				'Member.LOGGEDINAS',
 				"You're logged in as {name}.",
-				array('name' => $member->{$this->loggedInAsField})
+				['name' => $member->{$this->loggedInAsField}]
 			);
 		}
 
@@ -242,7 +242,7 @@ JS;
 			}
 
 			Session::set('Security.Message.message',
-				_t('Member.WELCOMEBACK', "Welcome Back, {firstname}", array('firstname' => $firstname))
+				_t('Member.WELCOMEBACK', "Welcome Back, {firstname}", ['firstname' => $firstname])
 			);
 			Session::set("Security.Message.type", "good");
 		}
@@ -272,7 +272,7 @@ JS;
 	 *                or NULL on failure.
 	 */
 	public function performLogin($data) {
-		$member = call_user_func_array(array($this->authenticator_class, 'authenticate'), array($data, $this));
+		$member = call_user_func_array([$this->authenticator_class, 'authenticate'], [$data, $this]);
 		if($member) {
 			$member->LogIn(isset($data['Remember']));
 			return $member;
@@ -319,9 +319,9 @@ JS;
 
 			$e = Member_ForgotPasswordEmail::create();
 			$e->populateTemplate($member);
-			$e->populateTemplate(array(
+			$e->populateTemplate([
 				'PasswordResetLink' => Security::getPasswordResetLink($member, $token)
-			));
+			]);
 			$e->setTo($member->Email);
 			$e->send();
 

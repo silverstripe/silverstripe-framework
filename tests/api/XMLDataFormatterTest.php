@@ -5,7 +5,7 @@ class XMLDataFormatterTest extends SapphireTest {
 	protected static $fixture_file = 'XMLDataFormatterTest.yml';
 
 	public function setUp() {
-		ShortcodeParser::get_active()->register('test_shortcode', array($this, 'shortcodeSaver'));
+		ShortcodeParser::get_active()->register('test_shortcode', [$this, 'shortcodeSaver']);
 
 		parent::setUp();
 	}
@@ -16,9 +16,9 @@ class XMLDataFormatterTest extends SapphireTest {
 		parent::tearDown();
 	}
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'XMLDataFormatterTest_DataObject'
-	);
+	];
 
 	public function testConvertDataObjectWithoutHeader() {
 		$formatter = new XMLDataFormatter();
@@ -75,10 +75,10 @@ class XMLDataFormatterTest extends SapphireTest {
 }
 class XMLDataFormatterTest_DataObject extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar(50)',
 		'Company' => 'Varchar(50)',
 		'Content' => 'HTMLText'
-	);
+	];
 
 }

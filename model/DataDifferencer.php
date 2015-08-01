@@ -39,7 +39,7 @@ class DataDifferencer extends ViewableData {
 	protected $fromRecord;
 	protected $toRecord;
 
-	protected $ignoredFields = array("ID","Version","RecordID");
+	protected $ignoredFields = ["ID","Version","RecordID"];
 
 	/**
 	 * Construct a DataDifferencer to show the changes between $fromRecord and $toRecord.
@@ -205,7 +205,7 @@ class DataDifferencer extends ViewableData {
 						$fieldDiff = "<ins>" . Convert::raw2xml($this->toRecord->$field) . "</ins>";
 					}
 				}
-				$changedFields->push(new ArrayData(array(
+				$changedFields->push(new ArrayData([
 					'Name' => $field,
 					'Title' => $base->fieldLabel($field),
 					'Diff' => $this->fromRecord
@@ -213,7 +213,7 @@ class DataDifferencer extends ViewableData {
 						: "<ins>" . $this->toRecord->$field . "</ins>",
 					'From' => $this->fromRecord ? $this->fromRecord->$field : null,
 					'To' => $this->toRecord ? $this->toRecord->$field : null,
-				)));
+				]));
 			}
 		}
 
@@ -228,7 +228,7 @@ class DataDifferencer extends ViewableData {
 		$diffed = clone $this->fromRecord;
 		$fields = array_keys($diffed->toMap());
 
-		$changedFields = array();
+		$changedFields = [];
 
 		foreach($fields as $field) {
 			if(in_array($field, $this->ignoredFields)) continue;

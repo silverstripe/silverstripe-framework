@@ -49,7 +49,7 @@ class SS_LogTest extends SapphireTest {
 		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
 		SS_Log::add_writer($testEmailWriter, SS_Log::ERR);
 
-		SS_Log::log('Email test', SS_Log::ERR, array('my-string' => 'test', 'my-array' => array('one' => 1)));
+		SS_Log::log('Email test', SS_Log::ERR, ['my-string' => 'test', 'my-array' => ['one' => 1]]);
 		$this->assertEmailSent('test@test.com');
 		$email = $this->findEmail('test@test.com');
 		$this->assertContains('[Error] Email test', $email['htmlContent']);
@@ -61,7 +61,7 @@ class SS_LogTest extends SapphireTest {
 		$this->assertContains('my-array', $extraRows[count($extraRows)-1]->td[0]->asXML(), 'Contains extra data key');
 		$this->assertContains(
 			"array('one'=&gt;1,)",
-			str_replace(array("\r", "\n", " "), '', $extraRows[count($extraRows)-1]->td[1]->asXML()),
+			str_replace(["\r", "\n", " "], '', $extraRows[count($extraRows)-1]->td[1]->asXML()),
 			'Serializes arrays correctly'
 		);
 	}
@@ -69,7 +69,7 @@ class SS_LogTest extends SapphireTest {
 	public function testEmailWriterDebugPriority() {
 		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
 		SS_Log::add_writer($testEmailWriter, SS_Log::DEBUG);
-		SS_Log::log('Test something', SS_Log::DEBUG, array('my-string' => 'test', 'my-array' => array('one' => 1)));
+		SS_Log::log('Test something', SS_Log::DEBUG, ['my-string' => 'test', 'my-array' => ['one' => 1]]);
 		$this->assertEmailSent('test@test.com');
 		$email = $this->findEmail('test@test.com');
 		$this->assertContains('[DEBUG] Test something', $email['htmlContent']);
@@ -78,7 +78,7 @@ class SS_LogTest extends SapphireTest {
 	public function testEmailWriterInfoPriority() {
 		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
 		SS_Log::add_writer($testEmailWriter, SS_Log::INFO);
-		SS_Log::log('Test something', SS_Log::INFO, array('my-string' => 'test', 'my-array' => array('one' => 1)));
+		SS_Log::log('Test something', SS_Log::INFO, ['my-string' => 'test', 'my-array' => ['one' => 1]]);
 		$this->assertEmailSent('test@test.com');
 		$email = $this->findEmail('test@test.com');
 		$this->assertContains('[INFO] Test something', $email['htmlContent']);
@@ -102,13 +102,13 @@ class SS_LogTest extends SapphireTest {
 		} catch(Exception $exception) {
 			// Mimics exceptionHandler, but without the exit(1)
 			SS_Log::log(
-				array(
+				[
 					'errno' => E_USER_ERROR,
 					'errstr' => ("Uncaught " . get_class($exception) . ": " . $exception->getMessage()),
 					'errfile' => $exception->getFile(),
 					'errline' => $exception->getLine(),
 					'errcontext' => $exception->getTrace()
-				),
+				],
 				SS_Log::ERR
 			);
 		}

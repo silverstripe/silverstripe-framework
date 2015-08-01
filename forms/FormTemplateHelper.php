@@ -42,7 +42,7 @@ class FormTemplateHelper {
 		}
 
 		return Convert::raw2htmlid(
-			get_class($form) . '_' . str_replace(array('.', '/'), '', $form->getName())
+			get_class($form) . '_' . str_replace(['.', '/'], '', $form->getName())
 		);
 	}
 
@@ -97,7 +97,7 @@ class FormTemplateHelper_Pre32 extends FormTemplateHelper {
 
 		return sprintf("%s_%s",
 			$form->class,
-			str_replace(array('.', '/'), '', $form->getName())
+			str_replace(['.', '/'], '', $form->getName())
 		);
 	}
 
@@ -124,7 +124,7 @@ class FormTemplateHelper_Pre32 extends FormTemplateHelper {
 		if($form = $field->getForm()) {
 			$form = sprintf("%s_%s",
 				get_class($form),
-				str_replace(array('.', '/'), '', $form->getName())
+				str_replace(['.', '/'], '', $form->getName())
 			);
 
 			return $form . '_' . $name;

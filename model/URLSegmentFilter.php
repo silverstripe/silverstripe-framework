@@ -26,7 +26,7 @@ class URLSegmentFilter extends Object {
 	 * @config
 	 * @var Array See {@link setReplacements()}.
 	 */
-	private static $default_replacements = array(
+	private static $default_replacements = [
 		'/&amp;/u' => '-and-',
 		'/&/u' => '-and-',
 		'/\s|\+/u' => '-', // remove whitespace/plus
@@ -35,7 +35,7 @@ class URLSegmentFilter extends Object {
 		'/[\-]{2,}/u' => '-', // remove duplicate dashes
 		'/^[\-]+/u' => '', // Remove all leading dashes
 		'/[\-]+$/u' => '' // Remove all trailing dashes
-	);
+	];
 
 	/**
 	 * Doesn't try to replace or transliterate non-ASCII filters.
@@ -51,7 +51,7 @@ class URLSegmentFilter extends Object {
 	/**
 	 * @var Array See {@link setReplacements()}
 	 */
-	public $replacements = array();
+	public $replacements = [];
 
 	/**
 	 * Note: Depending on the applied replacement rules, this method might result in an empty string.

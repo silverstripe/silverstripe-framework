@@ -12,7 +12,7 @@ abstract class HTMLCleaner extends Object {
 	/**
 	 * @var array
 	 */
-	protected $defaultConfig = array();
+	protected $defaultConfig = [];
 
 	/**
 	 * @var $config Array configuration variables for HTMLCleaners that support configuration (like Tidy)
@@ -80,7 +80,7 @@ class PurifierHTMLCleaner extends HTMLCleaner {
  */
 class TidyHTMLCleaner extends HTMLCleaner {
 
-	protected $defaultConfig = array(
+	protected $defaultConfig = [
 		'clean' => true,
 		'output-xhtml' => true,
 		'show-body-only' => true,
@@ -88,7 +88,7 @@ class TidyHTMLCleaner extends HTMLCleaner {
 		'doctype' => 'omit',
 		'input-encoding' => 'utf8',
 		'output-encoding' => 'utf8'
-	);
+	];
 
 	public function cleanHTML($content) {
 		$tidy = new tidy();

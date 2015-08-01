@@ -37,10 +37,10 @@ class AdminRootController extends Controller {
 	 */
 	public static function rules() {
 		if (self::$_rules === null) {
-			self::$_rules = array();
+			self::$_rules = [];
 
 			// Build an array of class => url_priority k/v pairs
-			$classes = array();
+			$classes = [];
 			foreach (CMSMenu::get_cms_classes() as $class) {
 				$classes[$class] = Config::inst()->get($class, 'url_priority', Config::FIRST_SET);
 			}
@@ -49,7 +49,7 @@ class AdminRootController extends Controller {
 			arsort($classes, SORT_NUMERIC);
 
 			// Map over the array calling add_rule_for_controller on each
-			array_map(array(__CLASS__, 'add_rule_for_controller'), array_keys($classes));
+			array_map([__CLASS__, 'add_rule_for_controller'], array_keys($classes));
 		}
 		return self::$_rules;
 	}

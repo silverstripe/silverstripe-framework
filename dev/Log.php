@@ -70,8 +70,8 @@ class SS_Log {
 	 * Caution: Depends on logger implementation (mainly targeted at {@link SS_LogEmailWriter}).
 	 * @see http://framework.zend.com/manual/en/zend.log.overview.html#zend.log.overview.understanding-fields
 	 */
-	protected static $log_globals = array(
-		'_SERVER' => array(
+	protected static $log_globals = [
+		'_SERVER' => [
 			'HTTP_ACCEPT',
 			'HTTP_ACCEPT_CHARSET',
 			'HTTP_ACCEPT_ENCODING',
@@ -80,8 +80,8 @@ class SS_Log {
 			'HTTP_USER_AGENT',
 			'HTTPS',
 			'REMOTE_ADDR',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Get the logger currently in use, or create a new one if it doesn't exist.
@@ -156,23 +156,23 @@ class SS_Log {
 	 */
 	public static function log($message, $priority, $extras = null) {
 		if($message instanceof Exception) {
-			$message = array(
+			$message = [
 				'errno' => '',
 				'errstr' => $message->getMessage(),
 				'errfile' => $message->getFile(),
 				'errline' => $message->getLine(),
 				'errcontext' => $message->getTrace()
-			);
+			];
 		} elseif(is_string($message)) {
 			$trace = SS_Backtrace::filtered_backtrace();
 			$lastTrace = $trace[0];
-			$message = array(
+			$message = [
 				'errno' => '',
 				'errstr' => $message,
 				'errfile' => isset($lastTrace['file']) ? $lastTrace['file'] : null,
 				'errline' => isset($lastTrace['line']) ? $lastTrace['line'] : null,
 				'errcontext' => $trace
-			);
+			];
 		}
 		try {
 			static::get_logger()->log($message, $priority, $extras);

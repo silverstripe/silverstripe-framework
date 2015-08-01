@@ -13,7 +13,7 @@ class HtmlEditorConfigTest extends SapphireTest {
 
 	public function testEnablePluginsByArray() {
 		$c = new HtmlEditorConfig();
-		$c->enablePlugins(array('plugin1', 'plugin2'));
+		$c->enablePlugins(['plugin1', 'plugin2']);
 		$this->assertContains('plugin1', array_keys($c->getPlugins()));
 		$this->assertContains('plugin2', array_keys($c->getPlugins()));
 	}
@@ -27,7 +27,7 @@ class HtmlEditorConfigTest extends SapphireTest {
 
 	public function testEnablePluginsByArrayWithPaths() {
 		$c = new HtmlEditorConfig();
-		$c->enablePlugins(array('plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2'));
+		$c->enablePlugins(['plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2']);
 		$plugins = $c->getPlugins();
 		$this->assertContains('plugin1', array_keys($plugins));
 		$this->assertEquals('/mypath/plugin1', $plugins['plugin1']);
@@ -44,8 +44,8 @@ class HtmlEditorConfigTest extends SapphireTest {
 
 	public function testDisablePluginsByArray() {
 		$c = new HtmlEditorConfig();
-		$c->enablePlugins(array('plugin1', 'plugin2'));
-		$c->disablePlugins(array('plugin1', 'plugin2'));
+		$c->enablePlugins(['plugin1', 'plugin2']);
+		$c->disablePlugins(['plugin1', 'plugin2']);
 		$this->assertNotContains('plugin1', array_keys($c->getPlugins()));
 		$this->assertNotContains('plugin2', array_keys($c->getPlugins()));
 	}
@@ -60,8 +60,8 @@ class HtmlEditorConfigTest extends SapphireTest {
 
 	public function testDisablePluginsByArrayWithPaths() {
 		$c = new HtmlEditorConfig();
-		$c->enablePlugins(array('plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2'));
-		$c->disablePlugins(array('plugin1', 'plugin2'));
+		$c->enablePlugins(['plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2']);
+		$c->disablePlugins(['plugin1', 'plugin2']);
 		$plugins = $c->getPlugins();
 		$this->assertNotContains('plugin1', array_keys($plugins));
 		$this->assertNotContains('plugin2', array_keys($plugins));
@@ -69,8 +69,8 @@ class HtmlEditorConfigTest extends SapphireTest {
 
 	public function testRequireJSIncludesAllExternalPlugins() {
 		$c = HtmlEditorConfig::get('config');
-		$c->enablePlugins(array('plugin1' => '/mypath/plugin1'));
-		$c->enablePlugins(array('plugin2' => '/mypath/plugin2'));
+		$c->enablePlugins(['plugin1' => '/mypath/plugin1']);
+		$c->enablePlugins(['plugin2' => '/mypath/plugin2']);
 
 		HtmlEditorConfig::require_js();
 		$js = Requirements::get_custom_scripts();

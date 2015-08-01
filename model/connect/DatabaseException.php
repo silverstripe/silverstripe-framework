@@ -20,7 +20,7 @@ class SS_DatabaseException extends Exception {
 	 *
 	 * @var array
 	 */
-	protected $parameters = array();
+	protected $parameters = [];
 
 	/**
 	 * Returns the SQL that generated this error
@@ -49,7 +49,7 @@ class SS_DatabaseException extends Exception {
 	 * @param string $sql The SQL executed for this query
 	 * @param array $parameters The parameters given for this query, if any
 	 */
-	function __construct($message = '', $code = 0, $previous = null, $sql = null, $parameters = array()) {
+	function __construct($message = '', $code = 0, $previous = null, $sql = null, $parameters = []) {
 		parent::__construct($message, $code, $previous);
 		$this->sql = $sql;
 		$this->parameters = $parameters;

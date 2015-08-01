@@ -69,10 +69,10 @@ class HeaderField extends DatalessField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'id' => $this->ID(),
 				'class' => $this->extraClass(),
-			)
+			]
 		);
 	}
 

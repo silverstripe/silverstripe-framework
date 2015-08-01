@@ -34,10 +34,10 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$member->Password = "mypassword";
 		$member->write();
 
-		$data = array(
+		$data = [
 			'Email' => $member->$field,
 			'Password' => 'mypassword'
-		);
+		];
 		MemberAuthenticator::authenticate($data);
 
 		$member = DataObject::get_by_id('Member', $member->ID);
@@ -48,7 +48,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 
 	public function testNoLegacyPasswordHashMigrationOnIncompatibleAlgorithm() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors',
-			array('crc32'=>array('PasswordEncryptor_PHPHash'=>'crc32')));
+			['crc32'=>['PasswordEncryptor_PHPHash'=>'crc32']]);
 		$field=Member::config()->unique_identifier_field;
 
 		$member = new Member();
@@ -57,10 +57,10 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$member->Password = "mypassword";
 		$member->write();
 
-		$data = array(
+		$data = [
 			'Email' => $member->$field,
 			'Password' => 'mypassword'
-		);
+		];
 		MemberAuthenticator::authenticate($data);
 
 		$member = DataObject::get_by_id('Member', $member->ID);
@@ -118,20 +118,20 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$this->assertNotEmpty($tempID);
 
 		// Test correct login
-		$result = MemberAuthenticator::authenticate(array(
+		$result = MemberAuthenticator::authenticate([
 			'tempid' => $tempID,
 			'Password' => 'mypassword'
-		), $form);
+		], $form);
 		$this->assertNotEmpty($result);
 		$this->assertEquals($result->ID, $member->ID);
 		$this->assertEmpty($form->Message());
 
 		// Test incorrect login
 		$form->clearMessage();
-		$result = MemberAuthenticator::authenticate(array(
+		$result = MemberAuthenticator::authenticate([
 			'tempid' => $tempID,
 			'Password' => 'notmypassword'
-		), $form);
+		], $form);
 		$this->assertEmpty($result);
 		$this->assertEquals('The provided details don&#039;t seem to be correct. Please try again.', $form->Message());
 		$this->assertEquals('bad', $form->MessageType());
@@ -146,20 +146,20 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$form = new Form($controller, 'Form', new FieldList(), new FieldList());
 
 		// Test correct login
-		$result = MemberAuthenticator::authenticate(array(
+		$result = MemberAuthenticator::authenticate([
 			'Email' => 'admin',
 			'Password' => 'password'
-		), $form);
+		], $form);
 		$this->assertNotEmpty($result);
 		$this->assertEquals($result->Email, Security::default_admin_username());
 		$this->assertEmpty($form->Message());
 
 		// Test incorrect login
 		$form->clearMessage();
-		$result = MemberAuthenticator::authenticate(array(
+		$result = MemberAuthenticator::authenticate([
 			'Email' => 'admin',
 			'Password' => 'notmypassword'
-		), $form);
+		], $form);
 		$this->assertEmpty($result);
 		$this->assertEquals('The provided details don&#039;t seem to be correct. Please try again.', $form->Message());
 		$this->assertEquals('bad', $form->MessageType());

@@ -30,7 +30,7 @@ class ArrayData extends ViewableData {
 		} elseif (ArrayLib::is_associative($value)) {
 			$this->array = $value;
 		} elseif (is_array($value) && count($value) === 0) {
-			$this->array = array();
+			$this->array = [];
 		} else {
 			$message = 'Parameter to ArrayData constructor needs to be an object or associative array';
 			throw new InvalidArgumentException($message);

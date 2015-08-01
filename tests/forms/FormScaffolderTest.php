@@ -11,11 +11,11 @@ class FormScaffolderTest extends SapphireTest {
 
 	protected static $fixture_file = 'FormScaffolderTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'FormScaffolderTest_Article',
 		'FormScaffolderTest_Tag',
 		'FormScaffolderTest_Author',
-	);
+	];
 
 
 	public function testGetCMSFieldsSingleton() {
@@ -73,9 +73,9 @@ class FormScaffolderTest extends SapphireTest {
 	public function testRestrictCMSFields() {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
-		$fields = $article1->scaffoldFormFields(array(
-			'restrictFields' => array('Title')
-		));
+		$fields = $article1->scaffoldFormFields([
+			'restrictFields' => ['Title']
+		]);
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
 
@@ -88,9 +88,9 @@ class FormScaffolderTest extends SapphireTest {
 	public function testFieldClassesOnGetCMSFields() {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
-		$fields = $article1->scaffoldFormFields(array(
-			'fieldClasses' => array('Title' => 'HtmlEditorField')
-		));
+		$fields = $article1->scaffoldFormFields([
+			'fieldClasses' => ['Title' => 'HtmlEditorField']
+		]);
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
 
@@ -114,46 +114,46 @@ class FormScaffolderTest extends SapphireTest {
 }
 
 class FormScaffolderTest_Article extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar',
 		'Content' => 'HTMLText'
-	);
-	private static $has_one = array(
+	];
+	private static $has_one = [
 		'Author' => 'FormScaffolderTest_Author',
 		'Subject' => 'DataObject'
-	);
-	private static $many_many = array(
+	];
+	private static $many_many = [
 		'Tags' => 'FormScaffolderTest_Tag',
-	);
-	private static $has_many = array(
+	];
+	private static $has_many = [
 		'SubjectOfArticles' => 'FormScaffolderTest_Article.Subject'
-	);
+	];
 }
 
 class FormScaffolderTest_Author extends Member implements TestOnly {
-	private static $has_one = array(
+	private static $has_one = [
 		'ProfileImage' => 'Image'
-	);
-	private static $has_many = array(
+	];
+	private static $has_many = [
 		'Articles' => 'FormScaffolderTest_Article.Author',
 		'SubjectOfArticles' => 'FormScaffolderTest_Article.Subject'
-	);
+	];
 }
 class FormScaffolderTest_Tag extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar',
-	);
-	private static $belongs_many_many = array(
+	];
+	private static $belongs_many_many = [
 		'Articles' => 'FormScaffolderTest_Article'
-	);
-	private static $has_many = array(
+	];
+	private static $has_many = [
 		'SubjectOfArticles' => 'FormScaffolderTest_Article.Subject'
-	);
+	];
 }
 class FormScaffolderTest_ArticleExtension extends DataExtension implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'ExtendedField' => 'Varchar'
-	);
+	];
 
 	public function updateCMSFields(FieldList $fields) {
 		$fields->addFieldToTab('Root.Main',

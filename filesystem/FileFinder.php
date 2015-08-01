@@ -32,9 +32,9 @@ class SS_FileFinder {
 	/**
 	 * @var array
 	 */
-	protected static $vcs_dirs = array(
+	protected static $vcs_dirs = [
 		'.git', '.svn', '.hg', '.bzr'
-	);
+	];
 
 	/**
 	 * The default options that are set on a new finder instance. Options not
@@ -45,7 +45,7 @@ class SS_FileFinder {
 	 *
 	 * @var array
 	 */
-	protected static $default_options = array(
+	protected static $default_options = [
 		'name_regex'           => null,
 		'accept_callback'      => null,
 		'accept_dir_callback'  => null,
@@ -57,7 +57,7 @@ class SS_FileFinder {
 		'ignore_vcs'           => true,
 		'min_depth'            => null,
 		'max_depth'            => null
-	);
+	];
 
 	/**
 	 * @var array
@@ -65,7 +65,7 @@ class SS_FileFinder {
 	protected $options;
 
 	public function __construct() {
-		$this->options = array();
+		$this->options = [];
 		$class = get_class($this);
 
 		// We build our options array ourselves, because possibly no class or config manifest exists at this point
@@ -121,8 +121,8 @@ class SS_FileFinder {
 	 * @return array
 	 */
 	public function find($base) {
-		$paths = array(array(rtrim($base, '/'), 0));
-		$found = array();
+		$paths = [[rtrim($base, '/'), 0]];
+		$found = [];
 
 		$fileCallback = $this->getOption('file_callback');
 		$dirCallback  = $this->getOption('dir_callback');
@@ -146,7 +146,7 @@ class SS_FileFinder {
 						);
 					}
 
-					$paths[] = array("$path/$basename", $depth + 1);
+					$paths[] = ["$path/$basename", $depth + 1];
 				} else {
 					if (!$this->acceptFile($basename, "$path/$basename", $depth)) {
 						continue;

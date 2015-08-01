@@ -36,7 +36,7 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 		$existinggroup = $this->objFromFixture('Group', 'existinggroup');
 
 		$loader = new MemberCsvBulkLoader();
-		$loader->setGroups(array($existinggroup));
+		$loader->setGroups([$existinggroup]);
 
 		$results = $loader->load($this->getCurrentRelativePath() . '/MemberCsvBulkLoaderTest.csv');
 
@@ -54,9 +54,9 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 		$loader = new MemberCsvBulkLoader();
 		$results = $loader->load($this->getCurrentRelativePath() . '/MemberCsvBulkLoaderTest_withGroups.csv');
 
-		$newgroup = DataObject::get_one('Group', array(
+		$newgroup = DataObject::get_one('Group', [
 			'"Group"."Code"' => 'newgroup'
-		));
+		]);
 		$this->assertEquals($newgroup->Title, 'newgroup');
 
 		$created = $results->Created()->toArray();

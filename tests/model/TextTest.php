@@ -9,10 +9,10 @@ class TextTest extends SapphireTest {
 	 * Test {@link Text->LimitCharacters()}
 	 */
 	public function testLimitCharacters() {
-		$cases = array(
+		$cases = [
 			'The little brown fox jumped over the lazy cow.' => 'The little brown fox...',
 			'<p>This is some text in a paragraph.</p>' => '<p>This is some text...'
-		);
+		];
 
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
@@ -25,7 +25,7 @@ class TextTest extends SapphireTest {
 	 * Test {@link Text->LimitCharactersToClosestWord()}
 	 */
 	public function testLimitCharactersToClosestWord() {
-		$cases = array(
+		$cases = [
 			/* Standard words limited, ellipsis added if truncated */
 			'Lorem ipsum dolor sit amet' => 'Lorem ipsum dolor sit...',
 
@@ -41,7 +41,7 @@ class TextTest extends SapphireTest {
 
 			/* HTML entities are treated as a single character */
 			'Lorem &amp; ipsum dolor sit amet' => 'Lorem &amp; ipsum dolor...'
-		);
+		];
 
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
@@ -54,7 +54,7 @@ class TextTest extends SapphireTest {
 	 * Test {@link Text->LimitWordCount()}
 	 */
 	public function testLimitWordCount() {
-		$cases = array(
+		$cases = [
 			/* Standard words limited, ellipsis added if truncated */
 			'The little brown fox jumped over the lazy cow.' => 'The little brown...',
 			' This text has white space around the ends ' => 'This text has...',
@@ -68,7 +68,7 @@ class TextTest extends SapphireTest {
 			'<p>Text inside a paragraph tag should also work</p>' => 'Text inside a...',
 			'<p><span>Text nested inside another tag should also work</span></p>' => 'Text nested inside...',
 			'<p>Two words</p>' => 'Two words'
-		);
+		];
 
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
@@ -81,12 +81,12 @@ class TextTest extends SapphireTest {
 	 * Test {@link Text->LimitWordCountXML()}
 	 */
 	public function testLimitWordCountXML() {
-		$cases = array(
+		$cases = [
 			'<p>Stuff & stuff</p>' => 'Stuff &amp;...',
 			"Stuff\nBlah Blah Blah" => "Stuff\nBlah Blah...",
 			"Stuff<Blah Blah" => "Stuff&lt;Blah Blah",
 			"Stuff>Blah Blah" => "Stuff&gt;Blah Blah"
-		);
+		];
 
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
@@ -99,7 +99,7 @@ class TextTest extends SapphireTest {
 	 * Test {@link Text->LimitSentences()}
 	 */
 	public function testLimitSentences() {
-		$cases = array(
+		$cases = [
 			'' => '',
 			'First sentence.' => 'First sentence.',
 			'First sentence. Second sentence' => 'First sentence. Second sentence.',
@@ -108,7 +108,7 @@ class TextTest extends SapphireTest {
 			'<p>First sentence. <em>Second sentence</em>. Third sentence</p>' => 'First sentence. Second sentence.',
 			'<p>First sentence. <em class="dummyClass">Second sentence</em>. Third sentence</p>'
 				=> 'First sentence. Second sentence.'
-		);
+		];
 
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
@@ -118,7 +118,7 @@ class TextTest extends SapphireTest {
 	}
 
 	public function testFirstSentance() {
-		$cases = array(
+		$cases = [
 			'' => '',
 			'First sentence.' => 'First sentence.',
 			'First sentence. Second sentence' => 'First sentence.',
@@ -129,7 +129,7 @@ class TextTest extends SapphireTest {
 			'<p>First sentence. <em>Second sentence</em>. Third sentence</p>' => 'First sentence.',
 			'<p>First sentence. <em class="dummyClass">Second sentence</em>. Third sentence</p>'
 				=> 'First sentence.'
-		);
+		];
 
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new Text('Test');
@@ -142,13 +142,13 @@ class TextTest extends SapphireTest {
 	 * Test {@link Text->BigSummary()}
 	 */
 	public function testBigSummaryPlain() {
-		$cases = array(
+		$cases = [
 			'<p>This text has multiple sentences. Big Summary uses this to split sentences up.</p>'
 				=> 'This text has multiple...',
 			'This text does not have multiple sentences' => 'This text does not...',
 			'Very short' => 'Very short',
 			'' => ''
-		);
+		];
 
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = DBField::create_field('Text', $originalValue);
@@ -160,13 +160,13 @@ class TextTest extends SapphireTest {
 	 * Test {@link Text->BigSummary()}
 	 */
 	public function testBigSummary() {
-		$cases = array(
+		$cases = [
 			'<strong>This</strong> text has multiple sentences. Big Summary uses this to split sentences up.</p>'
 				=> '<strong>This</strong> text has multiple...',
 			'This text does not have multiple sentences' => 'This text does not...',
 			'Very short' => 'Very short',
 			'' => ''
-		);
+		];
 
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = DBField::create_field('Text', $originalValue);

@@ -34,7 +34,7 @@ class LiteralField extends DatalessField {
 	 *
 	 * @return string
 	 */
-	public function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = []) {
 		if($this->content instanceof ViewableData) {
 			$context = $this->content;
 
@@ -53,7 +53,7 @@ class LiteralField extends DatalessField {
 	 *
 	 * @return string
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		return $this->FieldHolder($properties);
 	}
 

@@ -26,7 +26,7 @@ class SSViewer_Scope {
 
 	// The stack of previous "global" items
 	// And array of item, itemIterator, itemIteratorTotal, pop_index, up_index, current_index
-	private $itemStack = array();
+	private $itemStack = [];
 
 	// The current "global" item (the one any lookup starts from)
 	protected $item;
@@ -51,13 +51,13 @@ class SSViewer_Scope {
 	public function __construct($item, $inheritedScope = null) {
 		$this->item = $item;
 		$this->localIndex = 0;
-		$this->localStack = array();
+		$this->localStack = [];
 		if ($inheritedScope instanceof SSViewer_Scope) {
 			$this->itemIterator = $inheritedScope->itemIterator;
 			$this->itemIteratorTotal = $inheritedScope->itemIteratorTotal;
-			$this->itemStack[] = array($this->item, $this->itemIterator, $this->itemIteratorTotal, null, null, 0);
+			$this->itemStack[] = [$this->item, $this->itemIterator, $this->itemIteratorTotal, null, null, 0];
 		} else {
-			$this->itemStack[] = array($this->item, null, 0, null, null, 0);
+			$this->itemStack[] = [$this->item, null, 0, null, null, 0];
 		}
 	}
 
@@ -115,8 +115,8 @@ class SSViewer_Scope {
 				break;
 		}
 
-		$this->itemStack[] = array($this->item, $this->itemIterator, $this->itemIteratorTotal, null,
-			$this->upIndex, $this->currentIndex);
+		$this->itemStack[] = [$this->item, $this->itemIterator, $this->itemIteratorTotal, null,
+			$this->upIndex, $this->currentIndex];
 		return $this;
 	}
 
@@ -176,7 +176,7 @@ class SSViewer_Scope {
 
 	public function __call($name, $arguments) {
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-		$retval = $on ? call_user_func_array(array($on, $name), $arguments) : null;
+		$retval = $on ? call_user_func_array([$on, $name], $arguments) : null;
 
 		$this->resetLocalScope();
 		return $retval;
@@ -196,7 +196,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider {
 	protected $iteratorTotalItems;
 
 	public static function get_template_iterator_variables() {
-		return array(
+		return [
 			'First',
 			'Last',
 			'FirstLast',
@@ -210,7 +210,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider {
 			'TotalItems',
 			'Modulus',
 			'MultipleOf',
-		);
+		];
 	}
 
 	/**
@@ -391,7 +391,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 		// Build up global property providers array only once per request
 		if (self::$globalProperties === null) {
-			self::$globalProperties = array();
+			self::$globalProperties = [];
 			// Get all the exposed variables from all classes that implement the TemplateGlobalProvider interface
 			$this->createCallableArray(self::$globalProperties, "TemplateGlobalProvider",
 				"get_template_global_variables");
@@ -399,15 +399,15 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 		// Build up iterator property providers array only once per request
 		if (self::$iteratorProperties === null) {
-			self::$iteratorProperties = array();
+			self::$iteratorProperties = [];
 			// Get all the exposed variables from all classes that implement the TemplateIteratorProvider interface
 			// //call non-statically
 			$this->createCallableArray(self::$iteratorProperties, "TemplateIteratorProvider",
 				"get_template_iterator_variables", true);
 		}
 
-		$this->overlay = $overlay ? $overlay : array();
-		$this->underlay = $underlay ? $underlay : array();
+		$this->overlay = $overlay ? $overlay : [];
+		$this->underlay = $underlay ? $underlay : [];
 	}
 
 	protected function createCallableArray(&$extraArray, $interfaceToQuery, $variableMethod, $createObject = false) {
@@ -418,11 +418,11 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			if ($createObject) $implementer = new $implementer();
 
 			// Get the exposed variables
-			$exposedVariables = call_user_func(array($implementer, $variableMethod));
+			$exposedVariables = call_user_func([$implementer, $variableMethod]);
 
 			foreach($exposedVariables as $varName => $details) {
-				if (!is_array($details)) $details = array('method' => $details,
-					'casting' => Config::inst()->get('ViewableData', 'default_cast', Config::FIRST_SET));
+				if (!is_array($details)) $details = ['method' => $details,
+					'casting' => Config::inst()->get('ViewableData', 'default_cast', Config::FIRST_SET)];
 
 				// If just a value (and not a key => value pair), use it for both key and value
 				if (is_numeric($varName)) $varName = $details['method'];
@@ -431,7 +431,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 				$details['implementer'] = $implementer;
 
 				// And a callable array
-				if (isset($details['method'])) $details['callable'] = array($implementer, $details['method']);
+				if (isset($details['method'])) $details['callable'] = [$implementer, $details['method']];
 
 				// Save with both uppercase & lowercase first letter, so either works
 				$lcFirst = strtolower($varName[0]) . substr($varName,1);
@@ -458,7 +458,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 		// Check for a presenter-specific override
 		if (array_key_exists($property, $this->overlay)) {
-			$source = array('value' => $this->overlay[$property]);
+			$source = ['value' => $this->overlay[$property]];
 		}
 		// Check if the method to-be-called exists on the target object - if so, don't check any further
 		// injection locations
@@ -467,7 +467,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		}
 		// Check for a presenter-specific override
 		else if (array_key_exists($property, $this->underlay)) {
-			$source = array('value' => $this->underlay[$property]);
+			$source = ['value' => $this->underlay[$property]];
 		}
 		// Then for iterator-specific overrides
 		else if (array_key_exists($property, self::$iteratorProperties)) {
@@ -487,7 +487,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		}
 
 		if ($source) {
-			$res = array();
+			$res = [];
 
 			// Look up the value - either from a callable, or from a directly provided value
 			if (isset($source['callable'])) $res['value'] = call_user_func_array($source['callable'], $params);
@@ -531,7 +531,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 		//the public function parameters in an array
 		if (isset($arguments[1]) && $arguments[1] != null) $params = $arguments[1];
-		else $params = array();
+		else $params = [];
 
 		$val = $this->getInjectedValue($property, $params);
 		if ($val) {
@@ -620,7 +620,7 @@ class SSViewer implements Flushable {
 	 * @var array $chosenTemplates Associative array for the different
 	 * template containers: "main" and "Layout". Values are absolute file paths to *.ss files.
 	 */
-	private $chosenTemplates = array();
+	private $chosenTemplates = [];
 
 	/**
 	 * @var boolean
@@ -722,7 +722,7 @@ class SSViewer implements Flushable {
 	 */
 	public static function get_themes($path = null, $subthemes = false) {
 		$path   = rtrim($path ? $path : THEMES_PATH, '/');
-		$themes = array();
+		$themes = [];
 
 		if (!is_dir($path)) return $themes;
 
@@ -760,9 +760,9 @@ class SSViewer implements Flushable {
 		if(!is_string($className) || !class_exists($className)) {
 			throw new InvalidArgumentException('SSViewer::get_templates_by_class() expects a valid class name as ' .
 				'its first parameter.');
-			return array();
+			return [];
 		}
-		$templates = array();
+		$templates = [];
 		$classes = array_reverse(ClassInfo::ancestry($className));
 		foreach($classes as $class) {
 			$template = $class . $suffix;
@@ -806,7 +806,7 @@ class SSViewer implements Flushable {
 		}
 
 		if(!$this->chosenTemplates) {
-			$templateList = (is_array($templateList)) ? $templateList : array($templateList);
+			$templateList = (is_array($templateList)) ? $templateList : [$templateList];
 
 			$message = 'None of the following templates could be found';
 			if(!$theme) {
@@ -908,7 +908,7 @@ class SSViewer implements Flushable {
 	 */
 	private static $rewrite_hash_links = true;
 
-	protected static $topLevel = array();
+	protected static $topLevel = [];
 
 	public static function topLevel() {
 		if(SSViewer::$topLevel) {
@@ -1095,7 +1095,7 @@ class SSViewer implements Flushable {
 		}
 
 		$cacheFile = TEMP_FOLDER . "/.cache"
-			. str_replace(array('\\','/',':'), '.', Director::makeRelative(realpath($template)));
+			. str_replace(['\\','/',':'], '.', Director::makeRelative(realpath($template)));
 		$lastEdited = filemtime($template);
 
 		if(!file_exists($cacheFile) || filemtime($cacheFile) < $lastEdited) {
@@ -1107,17 +1107,17 @@ class SSViewer implements Flushable {
 			fclose($fh);
 		}
 
-		$underlay = array('I18NNamespace' => basename($template));
+		$underlay = ['I18NNamespace' => basename($template)];
 
 		// Makes the rendered sub-templates available on the parent item,
 		// through $Content and $Layout placeholders.
-		foreach(array('Content', 'Layout') as $subtemplate) {
+		foreach(['Content', 'Layout'] as $subtemplate) {
 			if(isset($this->chosenTemplates[$subtemplate])) {
 				$subtemplateViewer = clone $this;
 				// Disable requirements - this will be handled by the parent template
 				$subtemplateViewer->includeRequirements(false);
 				// The subtemplate is the only file we want to process, so set it as the "main" template file
-				$subtemplateViewer->chosenTemplates = array('main' => $this->chosenTemplates[$subtemplate]);
+				$subtemplateViewer->chosenTemplates = ['main' => $this->chosenTemplates[$subtemplate]];
 
 				$underlay[$subtemplate] = $subtemplateViewer->process($item, $arguments);
 			}
@@ -1146,7 +1146,7 @@ class SSViewer implements Flushable {
 			}
 		}
 
-		return DBField::create_field('HTMLText', $output, null, array('shortcodes' => false));
+		return DBField::create_field('HTMLText', $output, null, ['shortcodes' => false]);
 	}
 
 	/**

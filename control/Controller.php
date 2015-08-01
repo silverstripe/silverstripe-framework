@@ -41,7 +41,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Stack of current controllers.
 	 * Controller::$controller_stack[0] is the current controller.
 	 */
-	protected static $controller_stack = array();
+	protected static $controller_stack = [];
 
 	protected $basicAuthEnabled = true;
 
@@ -54,14 +54,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	/**
 	 * Default URL handlers - (Action)/(ID)/(OtherID)
 	 */
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'$Action//$ID/$OtherID' => 'handleAction',
-	);
+	];
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'handleAction',
 		'handleIndex',
-	);
+	];
 
 	/**
 	 * Initialisation function that is run before any action on the controller is called.
@@ -267,7 +267,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$templates = $this->template;
 		} else {
 			// Add action-specific templates for inheritance chain
-			$templates = array();
+			$templates = [];
 			$parentClass = $this->class;
 			if($action && $action != 'index') {
 				$parentClass = $this->class;
@@ -340,7 +340,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		if(isset($this->templates[$action])) return true;
 
 		$parentClass = $this->class;
-		$templates   = array();
+		$templates   = [];
 
 		while($parentClass != 'Controller') {
 			$templates[] = strtok($parentClass, '_') . '_' . $action;
@@ -407,7 +407,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	public function can($perm, $member = null) {
 		if(!$member) $member = Member::currentUser();
 		if(is_array($perm)) {
-			$perm = array_map(array($this, 'can'), $perm, array_fill(0, count($perm), $member));
+			$perm = array_map([$this, 'can'], $perm, array_fill(0, count($perm), $member));
 			return min($perm);
 		}
 		if($this->hasMethod($methodName = 'can' . $perm)) {
@@ -431,7 +431,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			if(isset(self::$controller_stack[1])) {
 				$this->session = self::$controller_stack[1]->getSession();
 			} else {
-				$this->session = Injector::inst()->create('Session', array());
+				$this->session = Injector::inst()->create('Session', []);
 			}
 		}
 	}
@@ -547,7 +547,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	public static function join_links() {
 		$args = func_get_args();
 		$result = "";
-		$queryargs = array();
+		$queryargs = [];
 		$fragmentIdentifier = null;
 
 		foreach($args as $arg) {
@@ -576,9 +576,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	public static function get_template_global_variables() {
-		return array(
+		return [
 			'CurrentPage' => 'curr',
-		);
+		];
 	}
 }
 

@@ -48,7 +48,7 @@ class RandomGenerator {
 			try {
 				$comObj = new COM('CAPICOM.Utilities.1');
 
-				if(is_callable(array($comObj,'GetRandom'))) {
+				if(is_callable([$comObj,'GetRandom'])) {
 					return  base64_decode($comObj->GetRandom(64, 0));
 				}
 			} catch (Exception $ex) {

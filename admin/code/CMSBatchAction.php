@@ -83,14 +83,14 @@ abstract class CMSBatchAction extends Object {
 	 *     }
 	 *  }
 	 */
-	public function batchaction(SS_List $objs, $helperMethod, $successMessage, $arguments = array()) {
-		$status = array('modified' => array(), 'error' => array(), 'deleted' => array(), 'success' => array());
+	public function batchaction(SS_List $objs, $helperMethod, $successMessage, $arguments = []) {
+		$status = ['modified' => [], 'error' => [], 'deleted' => [], 'success' => []];
 
 		foreach($objs as $obj) {
 
 			// Perform the action
 			$id = $obj->ID;
-			if (!call_user_func_array(array($obj, $helperMethod), $arguments)) {
+			if (!call_user_func_array([$obj, $helperMethod], $arguments)) {
 				$status['error'][$id] = $id;
 			} else {
 				$status['success'][$id] = $id;
@@ -99,9 +99,9 @@ abstract class CMSBatchAction extends Object {
 			// Now make sure the tree title is appropriately updated
 			$publishedRecord = DataObject::get_by_id($this->managedClass, $id);
 			if ($publishedRecord) {
-				$status['modified'][$id] = array(
+				$status['modified'][$id] = [
 					'TreeTitle' => $publishedRecord->TreeTitle,
-				);
+				];
 			} else {
 				$status['deleted'][$id] = $id;
 			}
@@ -126,7 +126,7 @@ abstract class CMSBatchAction extends Object {
 		if(!is_array($ids)) user_error("Bad \$ids passed to applicablePagesHelper()", E_USER_WARNING);
 		if(!is_string($methodName)) user_error("Bad \$methodName passed to applicablePagesHelper()", E_USER_WARNING);
 
-		$applicableIDs = array();
+		$applicableIDs = [];
 
 		$managedClass = $this->managedClass;
 		$draftPages = DataObject::get($managedClass)->byIDs($ids);

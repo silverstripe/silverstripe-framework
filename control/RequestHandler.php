@@ -66,9 +66,9 @@ class RequestHandler extends ViewableData {
 	 * the named parameter of the parsed URL wil be used to determine the method name.
 	 * @config
 	 */
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'$Action' => '$Action',
-	);
+	];
 
 
 	/**
@@ -194,7 +194,7 @@ class RequestHandler extends ViewableData {
 			if(!$this->hasAction($action)) {
 				return $this->httpError(404, "Action '$action' isn't available on class $className.");
 			}
-			if(!$this->checkAccessAction($action) || in_array(strtolower($action), array('run', 'init'))) {
+			if(!$this->checkAccessAction($action) || in_array(strtolower($action), ['run', 'init'])) {
 				return $this->httpError(403, "Action '$action' isn't allowed on class $className.");
 			}
 			$result = $this->handleAction($request, $action);
@@ -258,7 +258,7 @@ class RequestHandler extends ViewableData {
 						);
 					}
 
-					return array('rule' => $rule, 'action' => $action);
+					return ['rule' => $rule, 'action' => $action];
 				}
 			}
 
@@ -351,7 +351,7 @@ class RequestHandler extends ViewableData {
 		if($action == 'index') return true;
 
 		// Don't allow access to any non-public methods (inspect instance plus all extensions)
-		$insts = array_merge(array($this), (array)$this->getExtensionInstances());
+		$insts = array_merge([$this], (array)$this->getExtensionInstances());
 		foreach($insts as $inst) {
 			if(!method_exists($inst, $action)) continue;
 			$r = new ReflectionClass(get_class($inst));
@@ -389,7 +389,7 @@ class RequestHandler extends ViewableData {
 		$action = strtolower($actionOrigCasing);
 
 		$definingClass = null;
-		$insts = array_merge(array($this), (array)$this->getExtensionInstances());
+		$insts = array_merge([$this], (array)$this->getExtensionInstances());
 		foreach($insts as $inst) {
 			if(!method_exists($inst, $action)) continue;
 			$r = new ReflectionClass(get_class($inst));
@@ -423,7 +423,7 @@ class RequestHandler extends ViewableData {
 			} elseif(substr($test, 0, 2) == '->') {
 				// Determined by custom method with "->" prefix
 				list($method, $arguments) = Object::parse_class_spec(substr($test, 2));
-				$isAllowed = call_user_func_array(array($this, $method), $arguments);
+				$isAllowed = call_user_func_array([$this, $method], $arguments);
 			} else {
 				// Value is a permission code to check the current member against
 				$isAllowed = Permission::check($test);

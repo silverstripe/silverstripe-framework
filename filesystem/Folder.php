@@ -63,10 +63,10 @@ class Folder extends File {
 			// err in favour of matching existing folders if $folderPath
 			// includes illegal characters itself.
 			$partSafe = $filter->filter($part);
-			$item = Folder::get()->filter(array(
+			$item = Folder::get()->filter([
 				'ParentID' => $parentID,
-				'Name' => array($partSafe, $part)
-			))->first();
+				'Name' => [$partSafe, $part]
+			])->first();
 
 			if(!$item) {
 				$item = new Folder();
@@ -97,21 +97,21 @@ class Folder extends File {
 		// First, merge any children that are duplicates
 		$duplicateChildrenNames = DB::prepared_query(
 			'SELECT "Name" FROM "File" WHERE "ParentID" = ? GROUP BY "Name" HAVING count(*) > 1',
-			array($parentID)
+			[$parentID]
 		)->column();
 		if($duplicateChildrenNames) foreach($duplicateChildrenNames as $childName) {
 			// Note, we do this in the database rather than object-model; otherwise we get all sorts of problems
 			// about deleting files
 			$children = DB::prepared_query(
 				'SELECT "ID" FROM "File" WHERE "Name" = ? AND "ParentID" = ?',
-				array($childName, $parentID)
+				[$childName, $parentID]
 			)->column();
 			if($children) {
 				$keptChild = array_shift($children);
 				foreach($children as $removedChild) {
 					DB::prepared_query('UPDATE "File" SET "ParentID" = ? WHERE "ParentID" = ?',
-										array($keptChild, $removedChild));
-					DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', array($removedChild));
+										[$keptChild, $removedChild]);
+					DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', [$removedChild]);
 				}
 			} else {
 				user_error("Inconsistent database issue: SELECT ID FROM \"File\" WHERE Name = '$childName'"
@@ -122,8 +122,8 @@ class Folder extends File {
 
 		// Get index of database content
 		// We don't use DataObject so that things like subsites doesn't muck with this.
-		$dbChildren = DB::prepared_query('SELECT * FROM "File" WHERE "ParentID" = ?', array($parentID));
-		$hasDbChild = array();
+		$dbChildren = DB::prepared_query('SELECT * FROM "File" WHERE "ParentID" = ?', [$parentID]);
+		$hasDbChild = [];
 
 		if($dbChildren) {
 			foreach($dbChildren as $dbChild) {
@@ -181,7 +181,7 @@ class Folder extends File {
 					$child = $hasDbChild[$actualChild];
 					if(( !( $child instanceof Folder ) && is_dir($baseDir . $actualChild) )
 					|| (( $child instanceof Folder ) && !is_dir($baseDir . $actualChild)) ) {
-						DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', array($child->ID));
+						DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', [$child->ID]);
 						unset($hasDbChild[$actualChild]);
 					}
 				}
@@ -209,18 +209,18 @@ class Folder extends File {
 
 			// Iterate through the unwanted children, removing them all
 			if(isset($unwantedDbChildren)) foreach($unwantedDbChildren as $unwantedDbChild) {
-				DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', array($unwantedDbChild->ID));
+				DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', [$unwantedDbChild->ID]);
 				$deleted++;
 			}
 		} else {
-			DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', array($this->ID));
+			DB::prepared_query('DELETE FROM "File" WHERE "ID" = ?', [$this->ID]);
 		}
 
-		return array(
+		return [
 			'added' => $added,
 			'deleted' => $deleted,
 			'skipped' => $skipped
-		);
+		];
 	}
 
 	/**
@@ -249,7 +249,7 @@ class Folder extends File {
 		DB::prepared_query("INSERT INTO \"File\"
 			(\"ClassName\", \"ParentID\", \"OwnerID\", \"Name\", \"Filename\", \"Created\", \"LastEdited\", \"Title\")
 			VALUES (?, ?, ?, ?, ?, $nowExpression, $nowExpression, ?)",
-			array($className, $this->ID, $ownerID, $name, $filename, $name)
+			[$className, $this->ID, $ownerID, $name, $filename, $name]
 		);
 
 		return DB::get_generated_id("File");
@@ -282,7 +282,7 @@ class Folder extends File {
 		$file = $this->RelativePath . $file;
 		Filesystem::makeFolder(dirname("$base/$file"));
 
-		$doubleBarrelledExts = array('.gz', '.bz', '.bz2');
+		$doubleBarrelledExts = ['.gz', '.bz', '.bz2'];
 
 		$ext = "";
 		if(preg_match('/^(.*)(\.[^.]+)$/', $file, $matches)) {
@@ -503,7 +503,7 @@ class Folder extends File {
 	public function getTreeTitle() {
 		return $treeTitle = sprintf(
 			"<span class=\"jstree-foldericon\"></span><span class=\"item\">%s</span>",
-			Convert::raw2xml(str_replace(array("\n","\r"),"",$this->Title))
+			Convert::raw2xml(str_replace(["\n","\r"],"",$this->Title))
 		);
 	}
 }

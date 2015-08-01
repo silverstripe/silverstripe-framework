@@ -31,7 +31,7 @@ class PhoneNumberField extends FormField {
 	 * @param array $properties
 	 * @return FieldGroup|HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$fields = new FieldGroup( $this->name );
 		$fields->setID("{$this->name}_Holder");
 		list($countryCode, $areaCode, $phoneNumber, $extension) = $this->parseValue();
@@ -99,7 +99,7 @@ class PhoneNumberField extends FormField {
 		if( !is_array( $this->value ))
 			preg_match( '/^(?:(?:\+(\d+))?\s*\((\d+)\))?\s*([0-9A-Za-z]*)\s*(?:[#]\s*(\d+))?$/', $this->value, $parts);
 		else
-			return array( '', '', $this->value, '' );
+			return [ '', '', $this->value, '' ];
 
 		if(is_array($parts)) array_shift( $parts );
 

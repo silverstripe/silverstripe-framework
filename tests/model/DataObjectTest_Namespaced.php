@@ -7,22 +7,22 @@ namespace DataObjectTest;
  * Note that it was deliberated named to include "\N" to try and trip bad code up.
  */
 class NamespacedClass extends \DataObject implements \TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar',
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'Relations' => 'DataObjectTest\RelationClass'
-	);
+	];
 }
 
 class RelationClass extends \DataObject implements \TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Parent' => 'DataObject'
-	);
+	];
 }

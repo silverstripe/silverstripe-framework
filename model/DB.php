@@ -21,7 +21,7 @@ class DB {
 	 * The global database connection.
 	 * @var SS_Database
 	 */
-	private static $connections = array();
+	private static $connections = [];
 
 	/**
 	 * The last SQL query run.
@@ -104,7 +104,7 @@ class DB {
 		if($connection) {
 			return $connection->getQueryBuilder()->buildSQL($expression, $parameters);
 		} else {
-			$parameters = array();
+			$parameters = [];
 			return null;
 		}
 	}

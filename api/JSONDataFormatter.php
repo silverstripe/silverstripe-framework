@@ -13,17 +13,17 @@ class JSONDataFormatter extends DataFormatter {
 	protected $outputContentType = 'application/json';
 
 	public function supportedExtensions() {
-		return array(
+		return [
 			'json',
 			'js'
-		);
+		];
 	}
 
 	public function supportedMimeTypes() {
-		return array(
+		return [
 			'application/json',
 			'text/x-json'
-		);
+		];
 	}
 
 	/**
@@ -75,11 +75,11 @@ class JSONDataFormatter extends DataFormatter {
 				} else {
 					$href = Director::absoluteURL($this->config()->api_base . "$className/$id/$relName");
 				}
-				$serobj->$relName = ArrayData::array_to_object(array(
+				$serobj->$relName = ArrayData::array_to_object([
 					"className" => $relClass,
 					"href" => "$href.json",
 					"id" => $obj->$fieldName
-				));
+				]);
 			}
 
 			foreach($obj->hasMany() as $relName => $relClass) {
@@ -89,16 +89,16 @@ class JSONDataFormatter extends DataFormatter {
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
-				$innerParts = array();
+				$innerParts = [];
 				$items = $obj->$relName();
 				foreach($items as $item) {
 					//$href = Director::absoluteURL($this->config()->api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL($this->config()->api_base . "$relClass/$item->ID");
-					$innerParts[] = ArrayData::array_to_object(array(
+					$innerParts[] = ArrayData::array_to_object([
 						"className" => $relClass,
 						"href" => "$href.json",
 						"id" => $item->ID
-					));
+					]);
 				}
 				$serobj->$relName = $innerParts;
 			}
@@ -110,16 +110,16 @@ class JSONDataFormatter extends DataFormatter {
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
-				$innerParts = array();
+				$innerParts = [];
 				$items = $obj->$relName();
 				foreach($items as $item) {
 					//$href = Director::absoluteURL($this->config()->api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL($this->config()->api_base . "$relClass/$item->ID");
-					$innerParts[] = ArrayData::array_to_object(array(
+					$innerParts[] = ArrayData::array_to_object([
 						"className" => $relClass,
 						"href" => "$href.json",
 						"id" => $item->ID
-					));
+					]);
 				}
 				$serobj->$relName = $innerParts;
 			}
@@ -135,16 +135,16 @@ class JSONDataFormatter extends DataFormatter {
 	 * @return String XML
 	 */
 	public function convertDataObjectSet(SS_List $set, $fields = null) {
-		$items = array();
+		$items = [];
 		foreach($set as $do) {
 			if(!$do->canView()) continue;
 			$items[] = $this->convertDataObjectToJSONObject($do, $fields);
 		}
 
-		$serobj = ArrayData::array_to_object(array(
+		$serobj = ArrayData::array_to_object([
 			"totalSize" => (is_numeric($this->totalSize)) ? $this->totalSize : null,
 			"items" => $items
-		));
+		]);
 
 		return Convert::array2json($serobj);
 	}

@@ -2,9 +2,9 @@
 
 class OembedTest extends SapphireTest {
 	public function testGetOembedFromUrl() {
-		Config::inst()->update('Oembed', 'providers', array(
+		Config::inst()->update('Oembed', 'providers', [
 			'http://*.silverstripe.com/watch*'=>'http://www.silverstripe.com/oembed/'
-		));
+		]);
 		$escapedEndpointURL = urlencode("http://www.silverstripe.com/oembed/");
 
 		// Test with valid URL
@@ -22,7 +22,7 @@ class OembedTest extends SapphireTest {
 			'Triggers on matching URL without www');
 
 		// Test if options make their way to the URL
-		$result = Oembed::get_oembed_from_url('http://www.silverstripe.com/watch12345', false, array('foo'=>'bar'));
+		$result = Oembed::get_oembed_from_url('http://www.silverstripe.com/watch12345', false, ['foo'=>'bar']);
 		$this->assertTrue($result!=false);
 		$this->assertEquals($result->getOembedURL(), 'http://www.silverstripe.com/oembed/?format=json&url='
 			. urlencode('http://www.silverstripe.com/watch12345').'&foo=bar',
@@ -30,7 +30,7 @@ class OembedTest extends SapphireTest {
 
 		// Test magic.
 		$result = Oembed::get_oembed_from_url('http://www.silverstripe.com/watch12345', false,
-			array('height'=>'foo', 'width'=>'bar'));
+			['height'=>'foo', 'width'=>'bar']);
 		$this->assertTrue($result!=false);
 		$urlParts = parse_url($result->getOembedURL());
 		parse_str($urlParts['query'], $query);
@@ -39,20 +39,20 @@ class OembedTest extends SapphireTest {
 	}
 
 	public function testRequestProtocolReflectedInGetOembedFromUrl() {
-		Config::inst()->update('Oembed', 'providers', array(
-			'http://*.silverstripe.com/watch*'=> array(
+		Config::inst()->update('Oembed', 'providers', [
+			'http://*.silverstripe.com/watch*'=> [
 				'http' => 'http://www.silverstripe.com/oembed/',
 				'https' => 'https://www.silverstripe.com/oembed/?scheme=https',
-			),
-			'https://*.silverstripe.com/watch*'=> array(
+			],
+			'https://*.silverstripe.com/watch*'=> [
 				'http' => 'http://www.silverstripe.com/oembed/',
 				'https' => 'https://www.silverstripe.com/oembed/?scheme=https',
-			)
-		));
+			]
+		]);
 
 		Config::inst()->update('Director', 'alternate_protocol', 'http');
 
-		foreach(array('http', 'https') as $protocol) {
+		foreach(['http', 'https'] as $protocol) {
 			$url = $protocol.'://www.silverstripe.com/watch12345';
 			$result = Oembed::get_oembed_from_url($url);
 
@@ -64,7 +64,7 @@ class OembedTest extends SapphireTest {
 
 		Config::inst()->update('Director', 'alternate_protocol', 'https');
 
-		foreach(array('http', 'https') as $protocol) {
+		foreach(['http', 'https'] as $protocol) {
 			$url = $protocol.'://www.silverstripe.com/watch12345';
 			$result = Oembed::get_oembed_from_url($url);
 
@@ -76,7 +76,7 @@ class OembedTest extends SapphireTest {
 
 		Config::inst()->update('Director', 'alternate_protocol', 'foo');
 
-		foreach(array('http', 'https') as $protocol) {
+		foreach(['http', 'https'] as $protocol) {
 			$url = $protocol.'://www.silverstripe.com/watch12345';
 			$result = Oembed::get_oembed_from_url($url);
 

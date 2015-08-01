@@ -19,9 +19,9 @@ class ConfigTest_DefinesFooDoesntExtendObject implements TestOnly {
 
 class ConfigStaticTest_First extends Config implements TestOnly {
 	/** @config */
-	private static $first  = array('test_1');
+	private static $first  = ['test_1'];
 	/** @config */
-	private static $second = array('test_1');
+	private static $second = ['test_1'];
 	/** @config */
 	private static $third  = 'test_1';
 
@@ -44,34 +44,34 @@ class ConfigStaticTest_First extends Config implements TestOnly {
 }
 
 class ConfigStaticTest_Second extends ConfigStaticTest_First {
-	private static $first = array('test_2');
+	private static $first = ['test_2'];
 }
 
 class ConfigStaticTest_Third extends ConfigStaticTest_Second {
-	private static $first  = array('test_3');
-	private static $second = array('test_3');
-	public static $fourth = array('test_3');
+	private static $first  = ['test_3'];
+	private static $second = ['test_3'];
+	public static $fourth = ['test_3'];
 }
 
 class ConfigStaticTest_Fourth extends ConfigStaticTest_Third {
-	public static $fourth = array('test_4');
+	public static $fourth = ['test_4'];
 }
 
 class ConfigStaticTest_Combined1 extends Config implements TestOnly {
 	/** @config */
-	private static $first  = array('test_1');
+	private static $first  = ['test_1'];
 	/** @config */
-	private static $second = array('test_1');
+	private static $second = ['test_1'];
 }
 
 class ConfigStaticTest_Combined2 extends ConfigStaticTest_Combined1 {
-	private static $first  = array('test_2');
+	private static $first  = ['test_2'];
 	private static $second = null;
 }
 
 class ConfigStaticTest_Combined3 extends ConfigStaticTest_Combined2 {
-	private static $first  = array('test_3');
-	private static $second = array('test_3');
+	private static $first  = ['test_3'];
+	private static $second = ['test_3'];
 }
 
 class ConfigTest_TestNest extends Object implements TestOnly {
@@ -120,32 +120,32 @@ class ConfigTest extends SapphireTest {
 
 	public function testUpdateStatic() {
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_First', 'first', Config::FIRST_SET),
-			array('test_1'));
+			['test_1']);
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Second', 'first', Config::FIRST_SET),
-			array('test_2'));
+			['test_2']);
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Third', 'first', Config::FIRST_SET),
-			array('test_3'));
+			['test_3']);
 
-		Config::inst()->update('ConfigStaticTest_First', 'first', array('test_1_2'));
-		Config::inst()->update('ConfigStaticTest_Third', 'first', array('test_3_2'));
-		Config::inst()->update('ConfigStaticTest_Fourth', 'first', array('test_4'));
+		Config::inst()->update('ConfigStaticTest_First', 'first', ['test_1_2']);
+		Config::inst()->update('ConfigStaticTest_Third', 'first', ['test_3_2']);
+		Config::inst()->update('ConfigStaticTest_Fourth', 'first', ['test_4']);
 
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_First', 'first', Config::FIRST_SET),
-			array('test_1_2', 'test_1'));
+			['test_1_2', 'test_1']);
 
-		Config::inst()->update('ConfigStaticTest_Fourth', 'second', array('test_4'));
-		Config::inst()->update('ConfigStaticTest_Third', 'second', array('test_3_2'));
+		Config::inst()->update('ConfigStaticTest_Fourth', 'second', ['test_4']);
+		Config::inst()->update('ConfigStaticTest_Third', 'second', ['test_3_2']);
 
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Fourth', 'second', Config::FIRST_SET),
-			array('test_4'));
+			['test_4']);
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Third', 'second', Config::FIRST_SET),
-			array('test_3_2', 'test_3'));
+			['test_3_2', 'test_3']);
 
 		Config::inst()->remove('ConfigStaticTest_Third', 'second');
-		$this->assertEquals(array(), Config::inst()->get('ConfigStaticTest_Third', 'second'));
-		Config::inst()->update('ConfigStaticTest_Third', 'second', array('test_3_2'));
+		$this->assertEquals([], Config::inst()->get('ConfigStaticTest_Third', 'second'));
+		Config::inst()->update('ConfigStaticTest_Third', 'second', ['test_3_2']);
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Third', 'second', Config::FIRST_SET),
-			array('test_3_2'));
+			['test_3_2']);
 	}
 
 	public function testUpdateWithFalsyValues() {
@@ -190,8 +190,8 @@ class ConfigTest extends SapphireTest {
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_First',  'third', Config::UNINHERITED), 'test_1');
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Fourth', 'third', Config::UNINHERITED), null);
 
-		Config::inst()->update('ConfigStaticTest_First', 'first', array('test_1b'));
-		Config::inst()->update('ConfigStaticTest_Second', 'first', array('test_2b'));
+		Config::inst()->update('ConfigStaticTest_First', 'first', ['test_1b']);
+		Config::inst()->update('ConfigStaticTest_Second', 'first', ['test_2b']);
 
 		// Check that it can be applied to parent and subclasses, and queried directly
 		$this->assertContains('test_1b',
@@ -207,45 +207,45 @@ class ConfigTest extends SapphireTest {
 		// Subclasses that don't have the static explicitly defined should allow definition, also
 		// This also checks that set can be called after the first uninherited get()
 		// call (which can be buggy due to caching)
-		Config::inst()->update('ConfigStaticTest_Fourth', 'first', array('test_4b'));
+		Config::inst()->update('ConfigStaticTest_Fourth', 'first', ['test_4b']);
 		$this->assertContains('test_4b', Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
 	}
 
 	public function testCombinedStatic() {
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Combined3', 'first'),
-			array('test_3', 'test_2', 'test_1'));
+			['test_3', 'test_2', 'test_1']);
 
 		// test that null values are ignored, but values on either side are still merged
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Combined3', 'second'),
-			array('test_3', 'test_1'));
+			['test_3', 'test_1']);
 	}
 
 	public function testMerges() {
-		$result = array('A' => 1, 'B' => 2, 'C' => 3);
-		Config::merge_array_low_into_high($result, array('C' => 4, 'D' => 5));
-		$this->assertEquals($result, array('A' => 1, 'B' => 2, 'C' => 3, 'D' => 5));
+		$result = ['A' => 1, 'B' => 2, 'C' => 3];
+		Config::merge_array_low_into_high($result, ['C' => 4, 'D' => 5]);
+		$this->assertEquals($result, ['A' => 1, 'B' => 2, 'C' => 3, 'D' => 5]);
 
-		$result = array('A' => 1, 'B' => 2, 'C' => 3);
-		Config::merge_array_high_into_low($result, array('C' => 4, 'D' => 5));
-		$this->assertEquals($result, array('A' => 1, 'B' => 2, 'C' => 4, 'D' => 5));
+		$result = ['A' => 1, 'B' => 2, 'C' => 3];
+		Config::merge_array_high_into_low($result, ['C' => 4, 'D' => 5]);
+		$this->assertEquals($result, ['A' => 1, 'B' => 2, 'C' => 4, 'D' => 5]);
 
-		$result = array('A' => 1, 'B' => 2, 'C' => array(1, 2, 3));
-		Config::merge_array_low_into_high($result, array('C' => array(4, 5, 6), 'D' => 5));
-		$this->assertEquals($result, array('A' => 1, 'B' => 2, 'C' => array(1, 2, 3, 4, 5, 6), 'D' => 5));
+		$result = ['A' => 1, 'B' => 2, 'C' => [1, 2, 3]];
+		Config::merge_array_low_into_high($result, ['C' => [4, 5, 6], 'D' => 5]);
+		$this->assertEquals($result, ['A' => 1, 'B' => 2, 'C' => [1, 2, 3, 4, 5, 6], 'D' => 5]);
 
-		$result = array('A' => 1, 'B' => 2, 'C' => array(1, 2, 3));
-		Config::merge_array_high_into_low($result, array('C' => array(4, 5, 6), 'D' => 5));
-		$this->assertEquals($result, array('A' => 1, 'B' => 2, 'C' => array(4, 5, 6, 1, 2, 3), 'D' => 5));
+		$result = ['A' => 1, 'B' => 2, 'C' => [1, 2, 3]];
+		Config::merge_array_high_into_low($result, ['C' => [4, 5, 6], 'D' => 5]);
+		$this->assertEquals($result, ['A' => 1, 'B' => 2, 'C' => [4, 5, 6, 1, 2, 3], 'D' => 5]);
 
-		$result = array('A' => 1, 'B' => 2, 'C' => array('Foo' => 1, 'Bar' => 2), 'D' => 3);
-		Config::merge_array_low_into_high($result, array('C' => array('Bar' => 3, 'Baz' => 4)));
+		$result = ['A' => 1, 'B' => 2, 'C' => ['Foo' => 1, 'Bar' => 2], 'D' => 3];
+		Config::merge_array_low_into_high($result, ['C' => ['Bar' => 3, 'Baz' => 4]]);
 		$this->assertEquals($result,
-			array('A' => 1, 'B' => 2, 'C' => array('Foo' => 1, 'Bar' => 2, 'Baz' => 4), 'D' => 3));
+			['A' => 1, 'B' => 2, 'C' => ['Foo' => 1, 'Bar' => 2, 'Baz' => 4], 'D' => 3]);
 
-		$result = array('A' => 1, 'B' => 2, 'C' => array('Foo' => 1, 'Bar' => 2), 'D' => 3);
-		Config::merge_array_high_into_low($result, array('C' => array('Bar' => 3, 'Baz' => 4)));
+		$result = ['A' => 1, 'B' => 2, 'C' => ['Foo' => 1, 'Bar' => 2], 'D' => 3];
+		Config::merge_array_high_into_low($result, ['C' => ['Bar' => 3, 'Baz' => 4]]);
 		$this->assertEquals($result,
-			array('A' => 1, 'B' => 2, 'C' => array('Foo' => 1, 'Bar' => 3, 'Baz' => 4), 'D' => 3));
+			['A' => 1, 'B' => 2, 'C' => ['Foo' => 1, 'Bar' => 3, 'Baz' => 4], 'D' => 3]);
 	}
 
 	public function testStaticLookup() {
@@ -276,7 +276,7 @@ class ConfigTest extends SapphireTest {
 		$this->assertEquals(0, count($cache->cache), 'Clean clears all items');
 		$this->assertFalse($cache->get(1), 'Clean clears all items');
 
-		$cache->set(1, 1, array('Foo'));
+		$cache->set(1, 1, ['Foo']);
 		$this->assertEquals(1, count($cache->cache));
 		$this->assertEquals(1, count($cache->tags));
 
@@ -284,7 +284,7 @@ class ConfigTest extends SapphireTest {
 		$this->assertEquals(0, count($cache->tags), 'Clean items with matching tag');
 		$this->assertFalse($cache->get(1), 'Clean items with matching tag');
 
-		$cache->set(1, 1, array('Foo', 'Bar'));
+		$cache->set(1, 1, ['Foo', 'Bar']);
 		$this->assertEquals(2, count($cache->tags));
 		$this->assertEquals(1, count($cache->cache));
 
@@ -317,12 +317,12 @@ class ConfigTest extends SapphireTest {
 		$cache->clean();
 		$this->assertEquals(0, count($cache->indexing), 'Clean clears all items');
 		$this->assertFalse($cache->get(1), 'Clean clears all items');
-		$cache->set(1, 1, array('Foo'));
+		$cache->set(1, 1, ['Foo']);
 		$this->assertEquals(1, count($cache->indexing));
 		$cache->clean('Foo');
 		$this->assertEquals(0, count($cache->indexing), 'Clean items with matching tag');
 		$this->assertFalse($cache->get(1), 'Clean items with matching tag');
-		$cache->set(1, 1, array('Foo', 'Bar'));
+		$cache->set(1, 1, ['Foo', 'Bar']);
 		$this->assertEquals(1, count($cache->indexing));
 		$cache->clean('Bar');
 		$this->assertEquals(0, count($cache->indexing), 'Clean items with any single matching tag');

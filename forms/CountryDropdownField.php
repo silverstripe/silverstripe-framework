@@ -21,7 +21,7 @@ class CountryDropdownField extends DropdownField {
 	 */
 	private static $default_country = 'NZ';
 
-	protected $extraClasses = array('dropdown');
+	protected $extraClasses = ['dropdown'];
 
 	/**
 	 * Get the locale of the Member, or if we're not logged in or don't have a locale, use the default one
@@ -55,7 +55,7 @@ class CountryDropdownField extends DropdownField {
 		parent::__construct($name, ($title===null) ? $name : $title, $source, $value, $form);
 	}
 
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$source = $this->getSource();
 
 		if (!$this->value || !isset($source[$this->value])) {

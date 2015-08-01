@@ -140,13 +140,13 @@ PHP
 	}
 
 	public function testArray2JSON() {
-		$val = array(
+		$val = [
 			'Joe' => 'Bloggs',
 			'Tom' => 'Jones',
-			'My' => array(
+			'My' => [
 				'Complicated' => 'Structure'
-			)
-		);
+			]
+		];
 		$encoded = Convert::array2json($val);
 		$this->assertEquals('{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}', $encoded,
 			'Array is encoded in JSON');
@@ -198,7 +198,7 @@ PHP
 
 	public function testNL2OS() {
 
-		foreach(array("\r\n", "\r", "\n") as $nl) {
+		foreach(["\r\n", "\r", "\n"] as $nl) {
 
 			// Base case: no action
 			$this->assertEqualsQuoted(
@@ -267,7 +267,7 @@ PHP
 		);
 
 		// Array
-		$array = array('One' => 'Apple', 'Two' => 'Banana');
+		$array = ['One' => 'Apple', 'Two' => 'Banana'];
 		$this->assertEquals(
 			'{"One":"Apple","Two":"Banana"}',
 			Convert::raw2json($array)
@@ -302,24 +302,24 @@ XML
 		);
 
 		// Test without doctype validation
-		$expected = array(
-			'result' => array(
+		$expected = [
+			'result' => [
 				"Now include SOME_SUPER_LONG_STRING lots of times to expand the in-memory size of this XML structure",
-				array(
-					'long' => array(
-						array(
+				[
+					'long' => [
+						[
 							'long' => 'SOME_SUPER_LONG_STRING'
-						),
-						array(
+						],
+						[
 							'long' => 'SOME_SUPER_LONG_STRING'
-						),
-						array(
+						],
+						[
 							'long' => 'SOME_SUPER_LONG_STRING'
-						)
-					)
-				)
-			)
-		);
+						]
+					]
+				]
+			]
+		];
 		$result = Convert::xml2array($inputXML, false, true);
 		$this->assertEquals(
 			$expected,

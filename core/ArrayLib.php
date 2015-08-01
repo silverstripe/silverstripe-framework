@@ -49,7 +49,7 @@ class ArrayLib {
 			return false;
 		}
 
-		$result = array();
+		$result = [];
 
 		foreach($arr as $columnName => $column) {
 			foreach($column as $rowName => $cell) {
@@ -74,7 +74,7 @@ class ArrayLib {
 	 * @todo Improve documentation
 	 */
 	public static function array_values_recursive($arr) {
-		$lst = array();
+		$lst = [];
 
 		foreach(array_keys($arr) as $k) {
 			$v = $arr[$k];
@@ -177,7 +177,7 @@ class ArrayLib {
 	 */
 	public static function array_merge_recursive($array) {
 		$arrays = func_get_args();
-		$merged = array();
+		$merged = [];
 
 		if(count($arrays) == 1) {
 			return $array;
@@ -215,7 +215,7 @@ class ArrayLib {
 	 *
 	 * @return array
 	 */
-	public static function flatten($array, $preserveKeys = true, &$out = array()) {
+	public static function flatten($array, $preserveKeys = true, &$out = []) {
 		foreach($array as $key => $child) {
 			if(is_array($child)) {
 				$out = self::flatten($child, $preserveKeys, $out);

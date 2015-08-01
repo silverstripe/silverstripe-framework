@@ -61,7 +61,7 @@ class i18nTextCollector extends Object {
 	 *
 	 * @var array
 	 */
-	protected $fileExtensions = array('php', 'ss');
+	protected $fileExtensions = ['php', 'ss'];
 
 	/**
 	 * @param $locale
@@ -140,7 +140,7 @@ class i18nTextCollector extends Object {
 	 */
 	protected function getModules($directory) {
 		// Include self as head module
-		$modules = array();
+		$modules = [];
 
 		// Get all standard modules
 		foreach(glob($directory."/*", GLOB_ONLYDIR) as $path) {
@@ -169,7 +169,7 @@ class i18nTextCollector extends Object {
 	 * @param bool $mergeWithExisting
 	 * @return array
 	 */
-	public function collect($restrictToModules = array(), $mergeWithExisting = false) {
+	public function collect($restrictToModules = [], $mergeWithExisting = false) {
 		$entitiesByModule = $this->getEntitiesByModule();
 
 		// Resolve conflicts between duplicate keys across modules
@@ -223,7 +223,7 @@ class i18nTextCollector extends Object {
 	 */
 	protected function getConflicts($entitiesByModule) {
 		$modules = array_keys($entitiesByModule);
-		$allConflicts = array();
+		$allConflicts = [];
 		// bubble-compare each group of modules
 		for($i = 0; $i < count($modules) - 1; $i++) {
 			$left = array_keys($entitiesByModule[$modules[$i]]);
@@ -261,7 +261,7 @@ class i18nTextCollector extends Object {
 		);
 
 		// Fall back to framework then cms modules
-		foreach(array('framework', 'cms') as $module) {
+		foreach(['framework', 'cms'] as $module) {
 			if(isset($entitiesByModule[$module][$key])) {
 				return $module;
 			}
@@ -289,14 +289,14 @@ class i18nTextCollector extends Object {
 				continue;
 			}
 
-			$adapter->addTranslation(array(
+			$adapter->addTranslation([
 				'content' => $masterFile,
 				'locale' => $this->defaultLocale
-			));
+			]);
 			$entitiesByModule[$module] = array_merge(
 				array_map(
 					// Transform each master string from scalar value to array of strings
-					function($v) {return array($v);},
+					function($v) {return [$v];},
 					$adapter->getMessages($this->defaultLocale)
 				),
 				$entities
@@ -312,7 +312,7 @@ class i18nTextCollector extends Object {
 	 */
 	protected function getEntitiesByModule() {
 		// A master string tables array (one mst per module)
-		$entitiesByModule = array();
+		$entitiesByModule = [];
 		$modules = $this->getModules($this->basePath);
 		foreach($modules as $module) {
 			// we store the master string tables
@@ -329,7 +329,7 @@ class i18nTextCollector extends Object {
 				if(!empty($spec[2]) && $spec[2] !== $module) {
 					$othermodule = $spec[2];
 					if(!isset($entitiesByModule[$othermodule])) {
-						$entitiesByModule[$othermodule] = array();
+						$entitiesByModule[$othermodule] = [];
 					}
 					unset($spec[2]);
 					$entitiesByModule[$othermodule][$fullName] = $spec;
@@ -354,7 +354,7 @@ class i18nTextCollector extends Object {
 	 * @return array An array of entities found in the files that comprise the module
 	 */
 	protected function processModule($module) {
-		$entities = array();
+		$entities = [];
 
 		// Search for calls in code files if these exists
 		$fileList = $this->getFileListForModule($module);
@@ -425,13 +425,13 @@ class i18nTextCollector extends Object {
 	 * @return array $entities An array of entities representing the extracted translation function calls in code
 	 */
 	public function collectFromCode($content, $module) {
-		$entities = array();
+		$entities = [];
 
 		$tokens = token_get_all("<?php\n" . $content);
 		$inTransFn = false;
 		$inConcat = false;
 		$finalTokenDueToArray = false;
-		$currentEntity = array();
+		$currentEntity = [];
 		foreach($tokens as $token) {
 			if(is_array($token)) {
 				list($id, $text) = $token;
@@ -448,7 +448,7 @@ class i18nTextCollector extends Object {
 					// Dynamic definition from provideEntities - skip
 					$inTransFn = false;
 					$inConcat = false;
-					$currentEntity = array();
+					$currentEntity = [];
 				} elseif($inTransFn && $id == T_CONSTANT_ENCAPSED_STRING) {
 					// Fixed quoting escapes, and remove leading/trailing quotes
 					if(preg_match('/^\'/', $text)) {
@@ -477,7 +477,7 @@ class i18nTextCollector extends Object {
 				$inConcat = false;
 				$entity = array_shift($currentEntity);
 				$entities[$entity] = $currentEntity;
-				$currentEntity = array();
+				$currentEntity = [];
 				$finalTokenDueToArray = false;
 			}
 		}
@@ -505,7 +505,7 @@ class i18nTextCollector extends Object {
 	 * @param string $fileName The name of a template file when method is used in self-referencing mode
 	 * @return array $entities An array of entities representing the extracted template function calls
 	 */
-	public function collectFromTemplate($content, $fileName, $module, &$parsedFiles = array()) {
+	public function collectFromTemplate($content, $fileName, $module, &$parsedFiles = []) {
 		// use parser to extract <%t style translatable entities
 		$entities = i18nTextCollector_Parser::GetTranslatables($content);
 
@@ -539,7 +539,7 @@ class i18nTextCollector extends Object {
 	 * @return array
 	 */
 	public function collectFromEntityProviders($filePath, $module = null) {
-		$entities = array();
+		$entities = [];
 		$classes = ClassInfo::classes_for_file($filePath);
 		foreach($classes as $class) {
 			// Skip non-implementing classes
@@ -602,9 +602,9 @@ class i18nTextCollector extends Object {
 	 * @param string $folderExclude Regular expression matching folder names to exclude
 	 * @return array $fileList An array of files
 	 */
-	protected function getFilesRecursive($folder, $fileList = array(), $type = null, $folderExclude = '/\/(tests)$/') {
+	protected function getFilesRecursive($folder, $fileList = [], $type = null, $folderExclude = '/\/(tests)$/') {
 		if(!$fileList) {
-			$fileList = array();
+			$fileList = [];
 		}
 		// Skip ignored folders
 		if(is_file("{$folder}/_manifest_exclude") || preg_match($folderExclude, $folder)) {
@@ -778,7 +778,7 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 			. '/sfYamlDumper.php';
 
 		// Unflatten array
-		$entitiesNested = array();
+		$entitiesNested = [];
 		foreach($entities as $entity => $spec) {
 			// Legacy support: Don't count *.ss as namespace
 			$entity = preg_replace('/\.ss\./', '___ss.', $entity);
@@ -786,7 +786,7 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 			$currLevel = &$entitiesNested;
 			while($part = array_shift($parts)) {
 				$part = str_replace('___ss', '.ss', $part);
-				if(!isset($currLevel[$part])) $currLevel[$part] = array();
+				if(!isset($currLevel[$part])) $currLevel[$part] = [];
 				$currLevel = &$currLevel[$part];
 			}
 			$currLevel = $spec[0];
@@ -797,7 +797,7 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 		sfYaml::setSpecVersion('1.1');
 		$yamlHandler = new sfYaml();
 		// TODO Dumper can't handle YAML comments, so the context information is currently discarded
-		$result = $yamlHandler->dump(array($locale => $entitiesNested), 99);
+		$result = $yamlHandler->dump([$locale => $entitiesNested], 99);
 		sfYaml::setSpecVersion($oldVersion);
 		return $result;
 	}
@@ -811,19 +811,19 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
  */
 class i18nTextCollector_Parser extends SSTemplateParser {
 
-	private static $entities = array();
+	private static $entities = [];
 
-	private static $currentEntity = array();
+	private static $currentEntity = [];
 
 	public function __construct($string) {
 		$this->string = $string;
 		$this->pos = 0;
 		$this->depth = 0;
-		$this->regexps = array();
+		$this->regexps = [];
 	}
 
 	public function Translate__construct(&$res) {
-		self::$currentEntity = array(null,null,null); //start with empty array
+		self::$currentEntity = [null,null,null]; //start with empty array
 	}
 
 	public function Translate_Entity(&$res, $sub) {
@@ -841,14 +841,14 @@ class i18nTextCollector_Parser extends SSTemplateParser {
 	public function Translate__finalise(&$res) {
 		// set the entity name and the value (default), as well as the context (comment)
 		// priority is no longer used, so that is blank
-		self::$entities[self::$currentEntity[0]] = array(self::$currentEntity[1],null,self::$currentEntity[2]);
+		self::$entities[self::$currentEntity[0]] = [self::$currentEntity[1],null,self::$currentEntity[2]];
 	}
 
 	/**
 	 * Parses a template and returns any translatable entities
 	 */
 	public static function GetTranslatables($template) {
-		self::$entities = array();
+		self::$entities = [];
 
 		// Run the parser and throw away the result
 		$parser = new i18nTextCollector_Parser($template);

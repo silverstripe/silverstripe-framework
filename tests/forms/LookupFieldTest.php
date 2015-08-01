@@ -10,7 +10,7 @@ class LookupFieldTest extends SapphireTest {
 	protected static $fixture_file = 'LookupFieldTest.yml';
 
 	public function testNullValueWithNumericArraySource() {
-		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
+		$source = [1 => 'one', 2 => 'two', 3 => 'three'];
 		$f = new LookupField('test', 'test', $source);
 		$f->setValue(null);
 
@@ -21,7 +21,7 @@ class LookupFieldTest extends SapphireTest {
 	}
 
 	public function testStringValueWithNumericArraySource() {
-		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
+		$source = [1 => 'one', 2 => 'two', 3 => 'three'];
 		$f = new LookupField('test', 'test', $source);
 		$f->setValue(1);
 		$this->assertEquals(
@@ -31,7 +31,7 @@ class LookupFieldTest extends SapphireTest {
 	}
 
 	public function testUnknownStringValueWithNumericArraySource() {
-		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
+		$source = [1 => 'one', 2 => 'two', 3 => 'three'];
 		$f = new LookupField('test', 'test', $source);
 		$f->setValue('<ins>w00t</ins>');
 		$f->dontEscape = true; // simulates CMSMain->compareversions()
@@ -43,9 +43,9 @@ class LookupFieldTest extends SapphireTest {
 
 	public function testArrayValueWithAssociativeArraySource() {
 		// Array values (= multiple selections) might be set e.g. from ListboxField
-		$source = array('one' => 'one val', 'two' => 'two val', 'three' => 'three val');
+		$source = ['one' => 'one val', 'two' => 'two val', 'three' => 'three val'];
 		$f = new LookupField('test', 'test', $source);
-		$f->setValue(array('one','two'));
+		$f->setValue(['one','two']);
 		$this->assertEquals('<span class="readonly" id="test">one val, two val</span>'
 			. '<input type="hidden" name="test" value="one, two" />',
 			$f->Field()->getValue()
@@ -54,9 +54,9 @@ class LookupFieldTest extends SapphireTest {
 
 	public function testArrayValueWithNumericArraySource() {
 		// Array values (= multiple selections) might be set e.g. from ListboxField
-		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
+		$source = [1 => 'one', 2 => 'two', 3 => 'three'];
 		$f = new LookupField('test', 'test', $source);
-		$f->setValue(array(1,2));
+		$f->setValue([1,2]);
 		$this->assertEquals(
 			'<span class="readonly" id="test">one, two</span><input type="hidden" name="test" value="1, 2" />',
 			$f->Field()->getValue()
@@ -70,7 +70,7 @@ class LookupFieldTest extends SapphireTest {
 
 		$source = DataObject::get('Member');
 		$f = new LookupField('test', 'test', $source->map('ID', 'FirstName'));
-		$f->setValue(array($member1->ID, $member2->ID));
+		$f->setValue([$member1->ID, $member2->ID]);
 
 		$this->assertEquals(
 			sprintf(
@@ -84,17 +84,17 @@ class LookupFieldTest extends SapphireTest {
 	}
 
 	public function testWithMultiDimensionalSource() {
-		$choices = array(
-			"Non-vegetarian" => array(
+		$choices = [
+			"Non-vegetarian" => [
 				0 => 'Carnivore',
-			),
-			"Vegetarian" => array(
+			],
+			"Vegetarian" => [
 				3 => 'Carrots',
-			),
-			"Other" => array(
+			],
+			"Other" => [
 				9 => 'Vegan'
-			)
-		);
+			]
+		];
 
 		$f = new LookupField('test', 'test', $choices);
 		$f->setValue(3);
@@ -104,9 +104,9 @@ class LookupFieldTest extends SapphireTest {
 			$f->Field()->getValue()
 		);
 
-		$f->setValue(array(
+		$f->setValue([
 			3, 9
-		));
+		]);
 
 		$this->assertEquals(
 			'<span class="readonly" id="test">Carrots, Vegan</span><input type="hidden" name="test" value="3, 9" />',

@@ -60,7 +60,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 			);
 			return;
 		}
-		$alterList = array();
+		$alterList = [];
 
 		if ($newFields) {
 			foreach ($newFields as $k => $v) {
@@ -218,7 +218,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 		}
 	}
 
-	protected static $_cache_collation_info = array();
+	protected static $_cache_collation_info = [];
 
 	public function fieldList($table) {
 		$fields = $this->query("SHOW FULL FIELDS IN \"$table\"");
@@ -291,8 +291,8 @@ class MySQLSchemaManager extends DBSchemaManager {
 
 	public function indexList($table) {
 		$indexes = $this->query("SHOW INDEXES IN \"$table\"");
-		$groupedIndexes = array();
-		$indexList = array();
+		$groupedIndexes = [];
+		$indexList = [];
 
 		foreach ($indexes as $index) {
 			$groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $index['Column_name'];
@@ -313,11 +313,11 @@ class MySQLSchemaManager extends DBSchemaManager {
 		if ($groupedIndexes) {
 			foreach ($groupedIndexes as $index => $details) {
 				ksort($details['fields']);
-				$indexList[$index] = $this->parseIndexSpec($index, array(
+				$indexList[$index] = $this->parseIndexSpec($index, [
 					'name' => $index,
 					'value' => $this->implodeColumnList($details['fields']),
 					'type' => $details['type']
-				));
+				]);
 			}
 		}
 
@@ -325,7 +325,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 	}
 
 	public function tableList() {
-		$tables = array();
+		$tables = [];
 		foreach ($this->query("SHOW TABLES") as $record) {
 			$table = reset($record);
 			$tables[strtolower($table)] = $table;
@@ -338,7 +338,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 		$classnameinfo = $this->query("DESCRIBE \"$tableName\" \"$fieldName\"")->first();
 		preg_match_all("/'[^,]+'/", $classnameinfo["Type"], $matches);
 
-		$classes = array();
+		$classes = [];
 		foreach ($matches[0] as $value) {
 			$classes[] = stripslashes(trim($value, "'"));
 		}
@@ -346,9 +346,9 @@ class MySQLSchemaManager extends DBSchemaManager {
 	}
 
 	public function dbDataType($type) {
-		$values = Array(
+		$values = [
 			'unsigned integer' => 'UNSIGNED'
-		);
+		];
 
 		if (isset($values[$type])) return $values[$type];
 		else return '';

@@ -5,15 +5,15 @@
  */
 class TaskRunner extends Controller {
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'' => 'index',
 		'$TaskName' => 'runTask'
-	);
+	];
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'runTask',
-	);
+	];
 
 	public function init() {
 		parent::init();
@@ -93,7 +93,7 @@ class TaskRunner extends Controller {
 	 * @return array Array of associative arrays for each task (Keys: 'class', 'title', 'description')
 	 */
 	protected function getTasks() {
-		$availableTasks = array();
+		$availableTasks = [];
 
 		$taskClasses = ClassInfo::subclassesFor('BuildTask');
 		// remove the base class
@@ -105,12 +105,12 @@ class TaskRunner extends Controller {
 				? Convert::html2raw(singleton($class)->getDescription())
 				: singleton($class)->getDescription();
 
-			$availableTasks[] = array(
+			$availableTasks[] = [
 				'class' => $class,
 				'title' => singleton($class)->getTitle(),
 				'segment' => str_replace('\\', '-', $class),
 				'description' => $desc,
-			);
+			];
 		}
 
 		return $availableTasks;

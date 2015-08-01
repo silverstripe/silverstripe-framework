@@ -10,7 +10,7 @@ use SilverStripe\Framework\Injector\Factory;
  */
 class InjectionCreator implements Factory {
 
-	public function create($class, array $params = array()) {
+	public function create($class, array $params = []) {
 		$reflector = new ReflectionClass($class);
 
 		if (count($params)) {

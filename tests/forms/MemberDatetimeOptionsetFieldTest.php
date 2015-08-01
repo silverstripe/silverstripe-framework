@@ -10,12 +10,12 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	protected function createDateFormatFieldForMember($member) {
 		require_once 'Zend/Date.php';
 		$defaultDateFormat = Zend_Locale_Format::getDateFormat($member->Locale);
-		$dateFormatMap = array(
+		$dateFormatMap = [
 			'yyyy-MM-dd' => Zend_Date::now()->toString('yyyy-MM-dd'),
 			'yyyy/MM/dd' => Zend_Date::now()->toString('yyyy/MM/dd'),
 			'MM/dd/yyyy' => Zend_Date::now()->toString('MM/dd/yyyy'),
 			'dd/MM/yyyy' => Zend_Date::now()->toString('dd/MM/yyyy'),
-		);
+		];
 		$dateFormatMap[$defaultDateFormat] = Zend_Date::now()->toString($defaultDateFormat) . ' (default)';
 		$field = new MemberDatetimeOptionsetField(
 			'DateFormat',
@@ -29,10 +29,10 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	protected function createTimeFormatFieldForMember($member) {
 		require_once 'Zend/Date.php';
 		$defaultTimeFormat = Zend_Locale_Format::getTimeFormat($member->Locale);
-		$timeFormatMap = array(
+		$timeFormatMap = [
 			'h:mm a' => Zend_Date::now()->toString('h:mm a'),
 			'H:mm' => Zend_Date::now()->toString('H:mm'),
-		);
+		];
 		$timeFormatMap[$defaultTimeFormat] = Zend_Date::now()->toString($defaultTimeFormat) . ' (default)';
 		$field = new MemberDatetimeOptionsetField(
 			'TimeFormat',

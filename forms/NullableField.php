@@ -104,7 +104,7 @@ class NullableField extends FormField {
 	 *
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		if($this->isReadonly()) {
 			$nullableCheckbox = new CheckboxField_Readonly($this->getIsNullId());
 		} else {

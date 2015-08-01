@@ -32,8 +32,8 @@ class ConfigManifestTest extends SapphireTest {
 	protected function getCacheMock() {
 		return $this->getMock(
 			'Zend_Cache_Core',
-			array('load', 'save'),
-			array(),
+			['load', 'save'],
+			[],
 			'',
 			false
 		);
@@ -48,7 +48,7 @@ class ConfigManifestTest extends SapphireTest {
 		return $this->getMock(
 			'SS_ConfigManifest',
 			$methods,
-			array(), // no constructor arguments
+			[], // no constructor arguments
 			'', // default
 			false // don't call the constructor
 		);
@@ -62,7 +62,7 @@ class ConfigManifestTest extends SapphireTest {
 	 */
 	public function testCachingForceRegeneration() {
 		// Test that regenerate is called correctly.
-		$manifest = $this->getManifestMock(array('getCache', 'regenerate', 'buildYamlConfigVariant'));
+		$manifest = $this->getManifestMock(['getCache', 'regenerate', 'buildYamlConfigVariant']);
 
 		$manifest->expects($this->once()) // regenerate should be called once
 			->method('regenerate')
@@ -80,7 +80,7 @@ class ConfigManifestTest extends SapphireTest {
 		$manifest->__construct(dirname(__FILE__).'/fixtures/configmanifest', true, true);
 
 		// Test that save is called correctly
-		$manifest = $this->getManifestMock(array('getCache'));
+		$manifest = $this->getManifestMock(['getCache']);
 
 		$cache = $this->getCacheMock();
 		$cache->expects($this->atLeastOnce())
@@ -102,7 +102,7 @@ class ConfigManifestTest extends SapphireTest {
 	 */
 	public function testCachingNotForceRegeneration() {
 		// Test that load is called
-		$manifest = $this->getManifestMock(array('getCache', 'regenerate', 'buildYamlConfigVariant'));
+		$manifest = $this->getManifestMock(['getCache', 'regenerate', 'buildYamlConfigVariant']);
 
 		// Load should be called twice
 		$cache = $this->getCacheMock();
@@ -117,7 +117,7 @@ class ConfigManifestTest extends SapphireTest {
 
 
 		// Now test that regenerate is called because the cache is unprimed
-		$manifest = $this->getManifestMock(array('getCache', 'regenerate', 'buildYamlConfigVariant'));
+		$manifest = $this->getManifestMock(['getCache', 'regenerate', 'buildYamlConfigVariant']);
 
 		$cache = $this->getCacheMock();
 		$cache->expects($this->exactly(2))
@@ -135,12 +135,12 @@ class ConfigManifestTest extends SapphireTest {
 		$manifest->__construct(dirname(__FILE__).'/fixtures/configmanifest', false, false);
 
 		// Now test that when there is a value in the cache that regenerate isn't called
-		$manifest = $this->getManifestMock(array('getCache', 'regenerate', 'buildYamlConfigVariant'));
+		$manifest = $this->getManifestMock(['getCache', 'regenerate', 'buildYamlConfigVariant']);
 
 		$cache = $this->getCacheMock();
 		$cache->expects($this->exactly(2))
 			->method('load')
-			->will($this->onConsecutiveCalls(array(), array()));
+			->will($this->onConsecutiveCalls([], []));
 
 		$manifest->expects($this->any())
 			->method('getCache')
@@ -158,7 +158,7 @@ class ConfigManifestTest extends SapphireTest {
 	 */
 	public function testAddYAMLConfigFileReferencePathParsing() {
 		// Use a mock to avoid testing unrelated functionality
-		$manifest = $this->getManifestMock(array('addModule'));
+		$manifest = $this->getManifestMock(['addModule']);
 
 		// This tests that the addModule method is called with the correct value
 		$manifest->expects($this->once())
@@ -180,121 +180,121 @@ class ConfigManifestTest extends SapphireTest {
 		$result = $property->getValue($manifest);
 
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'module' => 'mysite',
 					'file' => 'testfile',
 					'name' => 'fragment',
-				),
-			),
+				],
+			],
 			@$result[0]['after'],
 			$this->getParsedAsMessage('mysite/testfile#fragment')
 		);
 
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'module' => 'test-module',
 					'file' => 'testfile',
 					'name' => 'fragment',
-				),
-			),
+				],
+			],
 			@$result[1]['after'],
 			$this->getParsedAsMessage('test-module/testfile#fragment')
 		);
 
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'module' => '*',
 					'file' => '*',
 					'name' => '*',
-				),
-			),
+				],
+			],
 			@$result[2]['after'],
 			$this->getParsedAsMessage('*')
 		);
 
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'module' => '*',
 					'file' => 'testfile',
 					'name' => '*'
-				),
-			),
+				],
+			],
 			@$result[3]['after'],
 			$this->getParsedAsMessage('*/testfile')
 		);
 
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'module' => '*',
 					'file' => '*',
 					'name' => 'fragment'
-				),
-			),
+				],
+			],
 			@$result[4]['after'],
 			$this->getParsedAsMessage('*/*#fragment')
 		);
 
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'module' => '*',
 					'file' => '*',
 					'name' => 'fragment'
-				),
-			),
+				],
+			],
 			@$result[5]['after'],
 			$this->getParsedAsMessage('#fragment')
 		);
 
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'module' => 'test-module',
 					'file' => '*',
 					'name' => 'fragment'
-				),
-			),
+				],
+			],
 			@$result[6]['after'],
 			$this->getParsedAsMessage('test-module#fragment')
 		);
 
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'module' => 'test-module',
 					'file' => '*',
 					'name' => '*'
-				),
-			),
+				],
+			],
 			@$result[7]['after'],
 			$this->getParsedAsMessage('test-module')
 		);
 
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'module' => 'test-module',
 					'file' => '*',
 					'name' => '*'
-				),
-			),
+				],
+			],
 			@$result[8]['after'],
 			$this->getParsedAsMessage('test-module/*')
 		);
 
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'module' => 'test-module',
 					'file' => '*',
 					'name' => '*'
-				),
-			),
+				],
+			],
 			@$result[9]['after'],
 			$this->getParsedAsMessage('test-module/*/#*')
 		);
@@ -390,13 +390,13 @@ class ConfigManifestTest extends SapphireTest {
 	}
 
 	public function testEnvironmentRules() {
-		foreach (array('dev', 'test', 'live') as $env) {
+		foreach (['dev', 'test', 'live'] as $env) {
 			Config::nest();
 
 			Config::inst()->update('Director', 'environment_type', $env);
 			$config = $this->getConfigFixtureValue('Environment');
 
-			foreach (array('dev', 'test', 'live') as $check) {
+			foreach (['dev', 'test', 'live'] as $check) {
 				$this->assertEquals(
 					$env == $check ? $check : 'not'.$check, @$config[ucfirst($check).'Environment'],
 					'Only & except rules correctly detect environment'
@@ -463,79 +463,79 @@ class ConfigManifestTest extends SapphireTest {
 		$accessor = new ConfigManifestTest_ConfigManifestAccess(BASE_PATH, true, false);
 
 		// A fragment with a fully wildcard before rule
-		$beforeWildcarded = array(
+		$beforeWildcarded = [
 			'module' => 'foo', 'file' => 'alpha', 'name' => '1',
-			'before' => array(array('module' => '*', 'file' => '*', 'name' => '*'))
-		);
+			'before' => [['module' => '*', 'file' => '*', 'name' => '*']]
+		];
 		// A fragment with a fully wildcard before rule and a fully explicit after rule
-		$beforeWildcardedAfterExplicit = array_merge($beforeWildcarded, array(
-			'after' => array(array('module' => 'bar', 'file' => 'beta', 'name' => '2'))
-		));
+		$beforeWildcardedAfterExplicit = array_merge($beforeWildcarded, [
+			'after' => [['module' => 'bar', 'file' => 'beta', 'name' => '2']]
+		]);
 		// A fragment with a fully wildcard before rule and two fully explicit after rules
-		$beforeWildcardedAfterTwoExplicitRules = array_merge($beforeWildcarded, array(
-			'after' => array(
-				array('module' => 'bar', 'file' => 'beta', 'name' => '2'),
-				array('module' => 'baz', 'file' => 'gamma', 'name' => '3')
-			)
-		));
+		$beforeWildcardedAfterTwoExplicitRules = array_merge($beforeWildcarded, [
+			'after' => [
+				['module' => 'bar', 'file' => 'beta', 'name' => '2'],
+				['module' => 'baz', 'file' => 'gamma', 'name' => '3']
+			]
+		]);
 		// A fragment with a fully wildcard before rule and a partially explicit after rule
-		$beforeWildcardedAfterPartialWildcarded = array_merge($beforeWildcarded, array(
-			'after' => array(array('module' => 'bar', 'file' => 'beta', 'name' => '*'))
-		));
+		$beforeWildcardedAfterPartialWildcarded = array_merge($beforeWildcarded, [
+			'after' => [['module' => 'bar', 'file' => 'beta', 'name' => '*']]
+		]);
 
 		// Wildcard should match any module
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcarded,
-			array('module' => 'qux', 'file' => 'delta', 'name' => '4')
+			['module' => 'qux', 'file' => 'delta', 'name' => '4']
 		), 'before');
 
 		// Wildcard should match any module even if there is an opposing rule, if opposing rule doesn't match
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcardedAfterExplicit,
-			array('module' => 'qux', 'file' => 'delta', 'name' => '4')
+			['module' => 'qux', 'file' => 'delta', 'name' => '4']
 		), 'before');
 
 		// Wildcard should match any module even if there is an opposing rule, if opposing rule doesn't match, no
 		// matter how many opposing rules
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcardedAfterExplicit,
-			array('module' => 'qux', 'file' => 'delta', 'name' => '4')
+			['module' => 'qux', 'file' => 'delta', 'name' => '4']
 		), 'before');
 
 		// Wildcard should match any module even if there is an opposing rule, if opposing rule doesn't match
 		// (even if some portions do)
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcardedAfterExplicit,
-			array('module' => 'bar', 'file' => 'beta', 'name' => 'nomatchy')
+			['module' => 'bar', 'file' => 'beta', 'name' => 'nomatchy']
 		), 'before');
 
 		// When opposing rule matches, wildcard should be ignored
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcardedAfterExplicit,
-			array('module' => 'bar', 'file' => 'beta', 'name' => '2')
+			['module' => 'bar', 'file' => 'beta', 'name' => '2']
 		), 'after');
 
 		// When any one of mutiple opposing rule exists, wildcard should be ignored
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcardedAfterTwoExplicitRules,
-			array('module' => 'bar', 'file' => 'beta', 'name' => '2')
+			['module' => 'bar', 'file' => 'beta', 'name' => '2']
 		), 'after');
 
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcardedAfterTwoExplicitRules,
-			array('module' => 'baz', 'file' => 'gamma', 'name' => '3')
+			['module' => 'baz', 'file' => 'gamma', 'name' => '3']
 		), 'after');
 
 		// When two opposed wildcard rules, and more specific one doesn't match, other should win
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcardedAfterPartialWildcarded,
-			array('module' => 'qux', 'file' => 'delta', 'name' => '4')
+			['module' => 'qux', 'file' => 'delta', 'name' => '4']
 		), 'before');
 
 		// When two opposed wildcard rules, and more specific one does match, more specific one should win
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcardedAfterPartialWildcarded,
-			array('module' => 'bar', 'file' => 'beta', 'name' => 'wildcardmatchy')
+			['module' => 'bar', 'file' => 'beta', 'name' => 'wildcardmatchy']
 		), 'after');
 	}
 

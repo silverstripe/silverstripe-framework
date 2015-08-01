@@ -71,7 +71,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	/**
 	 * An array of all the test speeds
 	 */
-	protected $testSpeeds = array();
+	protected $testSpeeds = [];
 
 	/**
 	 * Constructor, checks to see availability of PEAR Benchmark_Timer and
@@ -89,11 +89,11 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 			$this->hasTimer = false;
 		}
 
-		$this->suiteResults = array(
-			'suites'      => array(),         // array of suites run
+		$this->suiteResults = [
+			'suites'      => [],         // array of suites run
 			'hasTimer'    => $this->hasTimer, // availability of PEAR Benchmark_Timer
 			'totalTests'  => 0                // total number of tests run
-		);
+		];
 	}
 
 	/**
@@ -117,13 +117,13 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	public function startTestSuite( PHPUnit_Framework_TestSuite $suite) {
 		if(strlen($suite->getName())) {
 			$this->endCurrentTestSuite();
-		$this->currentSuite = array(
+		$this->currentSuite = [
 			'suite'      => $suite,  // the test suite
-			'tests'      => array(), // the tests in the suite
+			'tests'      => [], // the tests in the suite
 			'errors'     => 0,       // number of tests with errors (including setup errors)
 			'failures'   => 0,       // number of tests which failed
 			'incomplete' => 0,       // number of tests that were not completed correctly
-				'error'		 => null);	 // Any error encountered during setup of the test suite
+				'error'		 => null];	 // Any error encountered during setup of the test suite
 	}
 	}
 
@@ -140,7 +140,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 
 		if($test instanceof PHPUnit_Framework_TestCase) {
 			$this->endCurrentTest();
-			$this->currentTest = array(
+			$this->currentTest = [
 				// the name of the test (without the suite name)
 				'name'        => preg_replace('(\(.*\))', '', $test->toString()),
 				// execution time of the test
@@ -155,7 +155,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 				'trace'		  => NULL,
 				// a unique ID for this test (used for identification purposes in results)
 				'uid'         => md5(microtime())
-			);
+			];
 			if($this->hasTimer) $this->timer->start();
 		}
 	}
@@ -170,12 +170,12 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 */
 	protected function addStatus($status, $message, $exception, $trace) {
 		// Build status body to be saved
-		$status = array(
+		$status = [
 			'status' => $status,
 			'message' => $message,
 			'exception' => $exception,
 			'trace' => $trace
-		);
+		];
 
 		// Log either to current test or suite record
 		if($this->currentTest) {

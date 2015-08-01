@@ -29,7 +29,7 @@ class FileNameFilterTest extends SapphireTest {
 		$name = 'Kuchen ist besser.jpg';
 		$filter = new FileNameFilter();
 		$filter->setTransliterator(false);
-		$filter->setReplacements(array('/[\s-]/' => '_'));
+		$filter->setReplacements(['/[\s-]/' => '_']);
 		$this->assertEquals(
 			'Kuchen_ist_besser.jpg',
 			$filter->filter($name)

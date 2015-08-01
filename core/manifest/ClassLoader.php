@@ -16,7 +16,7 @@ class SS_ClassLoader {
 	/**
 	 * @var array Map of 'instance' (SS_ClassManifest) and other options.
 	 */
-	protected $manifests = array();
+	protected $manifests = [];
 
 	/**
 	 * @return SS_ClassLoader
@@ -50,7 +50,7 @@ class SS_ClassLoader {
 	 * look for classes in earlier manifests as well.
 	 */
 	public function pushManifest(SS_ClassManifest $manifest, $exclusive = true) {
-		$this->manifests[] = array('exclusive' => $exclusive, 'instance' => $manifest);
+		$this->manifests[] = ['exclusive' => $exclusive, 'instance' => $manifest];
 	}
 
 	/**
@@ -62,7 +62,7 @@ class SS_ClassLoader {
 	}
 
 	public function registerAutoloader() {
-		spl_autoload_register(array($this, 'loadClass'));
+		spl_autoload_register([$this, 'loadClass']);
 	}
 
 	/**

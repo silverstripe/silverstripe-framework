@@ -7,181 +7,181 @@
 class ArrayLibTest extends SapphireTest {
 
 	public function testInvert() {
-		$arr = array(
-			'row1' => array(
+		$arr = [
+			'row1' => [
 				'col1' =>'val1',
 				'col2' => 'val2'
-			),
-			'row2' => array(
+			],
+			'row2' => [
 				'col1' => 'val3',
 				'col2' => 'val4'
-			)
-		);
+			]
+		];
 
 		$this->assertEquals(
 			ArrayLib::invert($arr),
-			array(
-				'col1' => array(
+			[
+				'col1' => [
 					'row1' => 'val1',
 					'row2' => 'val3',
-				),
-				'col2' => array(
+				],
+				'col2' => [
 					'row1' => 'val2',
 					'row2' => 'val4',
-				),
-			)
+				],
+			]
 		);
 	}
 
 	public function testValuekey() {
 		$this->assertEquals(
 			ArrayLib::valuekey(
-				array(
+				[
 					'testkey1' => 'testvalue1',
 					'testkey2' => 'testvalue2'
-				)
+				]
 			),
-			array(
+			[
 				'testvalue1' => 'testvalue1',
 				'testvalue2' => 'testvalue2'
-			)
+			]
 		);
 	}
 
 	public function testArrayMergeRecursive() {
-		$first = array(
+		$first = [
 			'first' => 'a',
 			'second' => 'b',
-		);
-		$second = array(
+		];
+		$second = [
 			'third' => 'c',
 			'fourth' => 'd',
-		);
-		$expected = array(
+		];
+		$expected = [
 			'first' => 'a',
 			'second' => 'b',
 			'third' => 'c',
 			'fourth' => 'd',
-		);
+		];
 		$this->assertEquals(
 			$expected,
 			ArrayLib::array_merge_recursive($first, $second),
 			'First values should supplement second values'
 		);
 
-		$first = array(
+		$first = [
 			'first' => 'a',
 			'second' => 'b',
-		);
-		$second = array(
+		];
+		$second = [
 			'first' => 'c',
 			'third' => 'd',
-		);
-		$expected = array(
+		];
+		$expected = [
 			'first' => 'c',
 			'second' => 'b',
 			'third' => 'd',
-		);
+		];
 		$this->assertEquals(
 			$expected,
 			ArrayLib::array_merge_recursive($first, $second),
 			'Second values should override first values'
 		);
 
-		$first = array(
-			'first' => array(
+		$first = [
+			'first' => [
 				'first' => 'a',
-			),
-			'second' => array(
+			],
+			'second' => [
 				'second' => 'b',
-			),
-		);
-		$second = array(
-			'first' => array(
+			],
+		];
+		$second = [
+			'first' => [
 				'first' => 'c',
-			),
-			'third' => array(
+			],
+			'third' => [
 				'third' => 'd',
-			),
-		);
-		$expected = array(
-			'first' => array(
+			],
+		];
+		$expected = [
+			'first' => [
 				'first' => 'c',
-			),
-			'second' => array(
+			],
+			'second' => [
 				'second' => 'b',
-			),
-			'third' => array(
+			],
+			'third' => [
 				'third' => 'd',
-			),
-		);
+			],
+		];
 		$this->assertEquals(
 			$expected,
 			ArrayLib::array_merge_recursive($first, $second),
 			'Nested second values should override first values'
 		);
 
-		$first = array(
-			'first' => array(
+		$first = [
+			'first' => [
 				'first' => 'a',
-			),
-			'second' => array(
+			],
+			'second' => [
 				'second' => 'b',
-			),
-		);
-		$second = array(
-			'first' => array(
+			],
+		];
+		$second = [
+			'first' => [
 				'second' => 'c',
-			),
-			'third' => array(
+			],
+			'third' => [
 				'third' => 'd',
-			),
-		);
-		$expected = array(
-			'first' => array(
+			],
+		];
+		$expected = [
+			'first' => [
 				'first' => 'a',
 				'second' => 'c',
-			),
-			'second' => array(
+			],
+			'second' => [
 				'second' => 'b',
-			),
-			'third' => array(
+			],
+			'third' => [
 				'third' => 'd',
-			),
-		);
+			],
+		];
 		$this->assertEquals(
 			$expected,
 			ArrayLib::array_merge_recursive($first, $second),
 			'Nested first values should supplement second values'
 		);
 
-		$first = array(
-			'first' => array(
+		$first = [
+			'first' => [
 				0 => 'a',
-			),
-			'second' => array(
+			],
+			'second' => [
 				1 => 'b',
-			),
-		);
-		$second = array(
-			'first' => array(
+			],
+		];
+		$second = [
+			'first' => [
 				0 => 'c',
-			),
-			'third' => array(
+			],
+			'third' => [
 				2 => 'd',
-			),
-		);
-		$expected = array(
-			'first' => array(
+			],
+		];
+		$expected = [
+			'first' => [
 				0 => 'c',
-			),
-			'second' => array(
+			],
+			'second' => [
 				1 => 'b',
-			),
-			'third' => array(
+			],
+			'third' => [
 				2 => 'd',
-			),
-		);
+			],
+		];
 
 		$this->assertEquals(
 			$expected,
@@ -191,28 +191,28 @@ class ArrayLibTest extends SapphireTest {
 	}
 
 	public function testFlatten() {
-		$options = array(
+		$options = [
 			'1' => 'one',
 			'2' => 'two'
-		);
+		];
 
 		$expected = $options;
 
 		$this->assertEquals($expected, ArrayLib::flatten($options));
 
-		$options = array(
-			'1' => array(
+		$options = [
+			'1' => [
 				'2' => 'two',
 				'3' => 'three'
-			),
+			],
 			'4' => 'four'
-		);
+		];
 
-		$expected = array(
+		$expected = [
 			'2' => 'two',
 			'3' => 'three',
 			'4' => 'four'
-		);
+		];
 
 		$this->assertEquals($expected, ArrayLib::flatten($options));
 	}

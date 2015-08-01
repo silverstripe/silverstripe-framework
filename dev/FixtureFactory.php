@@ -30,18 +30,18 @@ class FixtureFactory {
 	 * @var array Array of fixture items, keyed by class and unique identifier,
 	 * with values being the generated database ID. Does not store object instances.
 	 */
-	protected $fixtures = array();
+	protected $fixtures = [];
 
 	/**
 	 * @var array Callbacks
 	 */
-	protected $blueprints = array();
+	protected $blueprints = [];
 
 	/**
 	 * @param String $name Unique name for this blueprint
 	 * @param array|FixtureBlueprint $defaults Array of default values, or a blueprint instance
 	 */
-	public function define($name, $defaults = array()) {
+	public function define($name, $defaults = []) {
 		if($defaults instanceof FixtureBlueprint) {
 			$this->blueprints[$name] = $defaults;
 		} else {
@@ -72,7 +72,7 @@ class FixtureFactory {
 		$class = $blueprint->getClass();
 
 		if(!isset($this->fixtures[$class])) {
-			$this->fixtures[$class] = array();
+			$this->fixtures[$class] = [];
 		}
 		$this->fixtures[$class][$identifier] = $obj->ID;
 
@@ -89,7 +89,7 @@ class FixtureFactory {
 	 * @return Int Database identifier
 	 */
 	public function createRaw($table, $identifier, $data) {
-		$fields = array();
+		$fields = [];
 		foreach($data as $fieldName => $fieldVal) {
 			$fields["\"{$fieldName}\""] = $this->parseValue($fieldVal);
 		}
@@ -164,7 +164,7 @@ class FixtureFactory {
 	 * @param String $class
 	 */
 	public function clear($limitToClass = null) {
-		$classes = ($limitToClass) ? array($limitToClass) : array_keys($this->fixtures);
+		$classes = ($limitToClass) ? [$limitToClass] : array_keys($this->fixtures);
 		foreach($classes as $class) {
 			$ids = $this->fixtures[$class];
 			foreach($ids as $id => $dbId) {
@@ -172,9 +172,9 @@ class FixtureFactory {
 					$class::get()->byId($dbId)->delete();
 				} else {
 					$table = $class;
-					$delete = new SQLDelete("\"$table\"", array(
+					$delete = new SQLDelete("\"$table\"", [
 						"\"$table\".\"ID\"" => $dbId
-					));
+					]);
 					$delete->execute();
 				}
 

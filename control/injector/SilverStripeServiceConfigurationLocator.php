@@ -16,7 +16,7 @@ class SilverStripeServiceConfigurationLocator extends ServiceConfigurationLocato
 	 *
 	 * @var array
 	 */
-	protected $configs = array();
+	protected $configs = [];
 
 	public function locateConfigFor($name) {
 

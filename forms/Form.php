@@ -171,13 +171,13 @@ class Form extends RequestHandler {
 	/**
 	 * @var array $extraClasses List of additional CSS classes for the form tag.
 	 */
-	protected $extraClasses = array();
+	protected $extraClasses = [];
 
 	/**
 	 * @config
 	 * @var array $default_classes The default classes to apply to the Form
 	 */
-	private static $default_classes = array();
+	private static $default_classes = [];
 
 	/**
 	 * @var string|null
@@ -188,18 +188,18 @@ class Form extends RequestHandler {
 	 * @var array Any custom form attributes set through {@link setAttributes()}.
 	 * Some attributes are calculated on the fly, so please use {@link getAttributes()} to access them.
 	 */
-	protected $attributes = array();
+	protected $attributes = [];
 
 	/**
 	 * @var array
 	 */
-	protected $validationExemptActions = array();
+	protected $validationExemptActions = [];
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'handleField',
 		'httpSubmission',
 		'forTemplate',
-	);
+	];
 
 	/**
 	 * @var FormTemplateHelper
@@ -279,12 +279,12 @@ class Form extends RequestHandler {
 	/**
 	 * @var array
 	 */
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'field/$FieldName!' => 'handleField',
 		'POST ' => 'httpSubmission',
 		'GET ' => 'httpSubmission',
 		'HEAD ' => 'httpSubmission',
-	);
+	];
 
 	/**
 	 * Set up current form errors in session to
@@ -374,7 +374,7 @@ class Form extends RequestHandler {
 				$data = $this->getData();
 				unset($data[$securityID]);
 				Session::set("FormInfo.{$this->FormName()}.data", $data);
-				Session::set("FormInfo.{$this->FormName()}.errors", array());
+				Session::set("FormInfo.{$this->FormName()}.errors", []);
 				$this->sessionMessage(
 					_t("Form.CSRF_EXPIRED_MESSAGE", "Your session has expired. Please re-submit the form."),
 					"warning"
@@ -390,13 +390,13 @@ class Form extends RequestHandler {
 				// Break off querystring arguments included in the action
 				if(strpos($paramName,'?') !== false) {
 					list($paramName, $paramVars) = explode('?', $paramName, 2);
-					$newRequestParams = array();
+					$newRequestParams = [];
 					parse_str($paramVars, $newRequestParams);
 					$vars = array_merge((array)$vars, (array)$newRequestParams);
 				}
 
 				// Cleanup action_, _x and _y from image fields
-				$funcName = preg_replace(array('/^action_/','/_x$|_y$/'),'',$paramName);
+				$funcName = preg_replace(['/^action_/','/_x$|_y$/'],'',$paramName);
 				break;
 			}
 		}
@@ -611,11 +611,11 @@ class Form extends RequestHandler {
 	 * @param bool $escapeHtml
 	 */
 	public function addErrorMessage($fieldName, $message, $messageType, $escapeHtml = true) {
-		Session::add_to_array("FormInfo.{$this->FormName()}.errors",  array(
+		Session::add_to_array("FormInfo.{$this->FormName()}.errors",  [
 			'fieldName' => $fieldName,
 			'message' => $escapeHtml ? Convert::raw2xml($message) : $message,
 			'messageType' => $messageType,
-		));
+		]);
 	}
 
 	/**
@@ -820,14 +820,14 @@ class Form extends RequestHandler {
 	 * @return array
 	 */
 	public function getAttributes() {
-		$attrs = array(
+		$attrs = [
 			'id' => $this->FormName(),
 			'action' => $this->FormAction(),
 			'method' => $this->FormMethod(),
 			'enctype' => $this->getEncType(),
 			'target' => $this->target,
 			'class' => $this->extraClass(),
-		);
+		];
 
 		if($this->validator && $this->validator->getErrors()) {
 			if(!isset($attrs['class'])) $attrs['class'] = '';
@@ -880,7 +880,7 @@ class Form extends RequestHandler {
 		}
 
 		// Create markup
-		$parts = array();
+		$parts = [];
 		foreach($attrs as $name => $value) {
 			$parts[] = ($value === true) ? "{$name}=\"{$name}\"" : "{$name}=\"" . Convert::raw2att($value) . "\"";
 		}
@@ -1024,7 +1024,7 @@ class Form extends RequestHandler {
 	 * @return string Form HTTP method restricted to 'GET' or 'POST'
 	 */
 	public function FormMethod() {
-		if(in_array($this->formMethod,array('GET','POST'))) {
+		if(in_array($this->formMethod,['GET','POST'])) {
 			return $this->formMethod;
 		} else {
 			return 'POST';
@@ -1509,7 +1509,7 @@ class Form extends RequestHandler {
 	 */
 	public function getData() {
 		$dataFields = $this->fields->dataFields();
-		$data = array();
+		$data = [];
 
 		if($dataFields){
 			foreach($dataFields as $field) {
@@ -1562,7 +1562,7 @@ class Form extends RequestHandler {
 	public function forTemplate() {
 		$return = $this->renderWith(array_merge(
 			(array)$this->getTemplate(),
-			array('Form')
+			['Form']
 		));
 
 		// Now that we're rendered, clear message
@@ -1580,10 +1580,10 @@ class Form extends RequestHandler {
 	 * @return HTML
 	 */
 	public function forAjaxTemplate() {
-		$view = new SSViewer(array(
+		$view = new SSViewer([
 			$this->getTemplate(),
 			'Form'
-		));
+		]);
 
 		$return = $view->dontRewriteHashlinks()->process($this);
 
@@ -1623,9 +1623,9 @@ class Form extends RequestHandler {
 	 * @return HTMLText
 	 */
 	public function renderWithoutActionButton($template) {
-		$custom = $this->customise(array(
+		$custom = $this->customise([
 			"Actions" => "",
-		));
+		]);
 
 		if(is_string($template)) {
 			$template = new SSViewer($template);

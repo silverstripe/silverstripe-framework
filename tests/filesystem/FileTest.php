@@ -7,13 +7,13 @@ class FileTest extends SapphireTest {
 
 	protected static $fixture_file = 'FileTest.yml';
 
-	protected $extraDataObjects = array('FileTest_MyCustomFile');
+	protected $extraDataObjects = ['FileTest_MyCustomFile'];
 
 	public function testLinkShortcodeHandler() {
 		$testFile = $this->objFromFixture('File', 'asdf');
 
 		$parser = new ShortcodeParser();
-		$parser->register('file_link', array('File', 'link_shortcode_handler'));
+		$parser->register('file_link', ['File', 'link_shortcode_handler']);
 
 		$fileShortcode = sprintf('[file_link,id=%d]', $testFile->ID);
 		$fileEnclosed  = sprintf('[file_link,id=%d]Example Content[/file_link]', $testFile->ID);
@@ -97,7 +97,7 @@ class FileTest extends SapphireTest {
 
 		$orig = Config::inst()->get('File', 'allowed_extensions');
 		Config::inst()->remove('File', 'allowed_extensions');
-		Config::inst()->update('File', 'allowed_extensions', array('txt'));
+		Config::inst()->update('File', 'allowed_extensions', ['txt']);
 
 		$file = $this->objFromFixture('File', 'asdf');
 
@@ -172,7 +172,7 @@ class FileTest extends SapphireTest {
 	public function testSetNameWithInvalidExtensionDoesntChangeFilesystem() {
 		$orig = Config::inst()->get('File', 'allowed_extensions');
 		Config::inst()->remove('File', 'allowed_extensions');
-		Config::inst()->update('File', 'allowed_extensions', array('txt'));
+		Config::inst()->update('File', 'allowed_extensions', ['txt']);
 
 		$file = $this->objFromFixture('File', 'asdf');
 		$oldPath = $file->getFullPath();
@@ -329,8 +329,8 @@ class FileTest extends SapphireTest {
 
 	public function testGetClassForFileExtension() {
 		$orig = File::config()->class_for_file_extension;
-		File::config()->class_for_file_extension = array('*' => 'MyGenericFileClass');
-		File::config()->class_for_file_extension = array('foo' => 'MyFooFileClass');
+		File::config()->class_for_file_extension = ['*' => 'MyGenericFileClass'];
+		File::config()->class_for_file_extension = ['foo' => 'MyFooFileClass'];
 
 		$this->assertEquals(
 			'MyFooFileClass',
@@ -353,7 +353,7 @@ class FileTest extends SapphireTest {
 
 	public function testFolderConstructChild() {
 		$orig = File::config()->class_for_file_extension;
-		File::config()->class_for_file_extension = array('gif' => 'FileTest_MyCustomFile');
+		File::config()->class_for_file_extension = ['gif' => 'FileTest_MyCustomFile'];
 
 		$folder1 = $this->objFromFixture('Folder', 'folder1');
 		$fileID = $folder1->constructChild('myfile.gif');
@@ -438,10 +438,10 @@ class FileTest extends SapphireTest {
 
 		// Conditional fixture creation in case the 'cms' module is installed
 		if(class_exists('ErrorPage')) {
-			$page = new ErrorPage(array(
+			$page = new ErrorPage([
 				'Title' => 'Page not Found',
 				'ErrorCode' => 404
-			));
+			]);
 			$page->write();
 			$page->publish('Stage', 'Live');
 		}

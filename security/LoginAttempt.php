@@ -22,21 +22,21 @@
  */
 class LoginAttempt extends DataObject {
 
-	private static $db = array(
+	private static $db = [
 		'Email' => 'Varchar(255)',
 		'Status' => "Enum('Success,Failure')",
 		'IP' => 'Varchar(255)',
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Member' => 'Member', // only linked if the member actually exists
-	);
+	];
 
-	private static $has_many = array();
+	private static $has_many = [];
 
-	private static $many_many = array();
+	private static $many_many = [];
 
-	private static $belongs_many_many = array();
+	private static $belongs_many_many = [];
 
 	/**
 	 *

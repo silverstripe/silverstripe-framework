@@ -18,11 +18,11 @@ class PermissionRoleTest extends FunctionalTest {
 	}
 
 	public function testValidatesPrivilegedPermissions() {
-		$nonAdminCode = new PermissionRoleCode(array('Code' => 'CMS_ACCESS_CMSMain'));
+		$nonAdminCode = new PermissionRoleCode(['Code' => 'CMS_ACCESS_CMSMain']);
 		$nonAdminValidateMethod = new ReflectionMethod($nonAdminCode, 'validate');
 		$nonAdminValidateMethod->setAccessible(true);
 
-		$adminCode = new PermissionRoleCode(array('Code' => 'ADMIN'));
+		$adminCode = new PermissionRoleCode(['Code' => 'ADMIN']);
 		$adminValidateMethod = new ReflectionMethod($adminCode, 'validate');
 		$adminValidateMethod->setAccessible(true);
 

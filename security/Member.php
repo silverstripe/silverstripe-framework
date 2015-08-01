@@ -27,7 +27,7 @@
  */
 class Member extends DataObject implements TemplateGlobalProvider {
 
-	private static $db = array(
+	private static $db = [
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar',
 		'Email' => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
@@ -51,29 +51,29 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// In ISO format
 		'DateFormat' => 'Varchar(30)',
 		'TimeFormat' => 'Varchar(30)',
-	);
+	];
 
-	private static $belongs_many_many = array(
+	private static $belongs_many_many = [
 		'Groups' => 'Group',
-	);
+	];
 
-	private static $has_one = array();
+	private static $has_one = [];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'LoggedPasswords' => 'MemberPassword',
-	);
+	];
 
-	private static $many_many = array();
+	private static $many_many = [];
 
-	private static $many_many_extraFields = array();
+	private static $many_many_extraFields = [];
 
 	private static $default_sort = '"Surname", "FirstName"';
 
-	private static $indexes = array(
+	private static $indexes = [
 		'Email' => true,
 		//Removed due to duplicate null values causing MSSQL problems
 		//'AutoLoginHash' => Array('type'=>'unique', 'value'=>'AutoLoginHash', 'ignoreNulls'=>true)
-	);
+	];
 
 	/**
 	 * @config
@@ -92,17 +92,17 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * with definition for different searching algorithms
 	 * (LIKE, FULLTEXT) and default FormFields to construct a searchform.
 	 */
-	private static $searchable_fields = array(
+	private static $searchable_fields = [
 		'FirstName',
 		'Surname',
 		'Email',
-	);
+	];
 
-	private static $summary_fields = array(
+	private static $summary_fields = [
 		'FirstName',
 		'Surname',
 		'Email',
-	);
+	];
 
 	/**
 	 * Internal-use only fields
@@ -110,7 +110,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @config
 	 * @var array
 	 */
-	private static $hidden_fields = array(
+	private static $hidden_fields = [
 		'RememberLoginToken',
 		'AutoLoginHash',
 		'AutoLoginExpired',
@@ -121,7 +121,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'TempIDExpired',
 		'Salt',
 		'NumVisit'
-	);
+	];
 
 	/**
 	 * @config
@@ -331,7 +331,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 					'Your account has been temporarily disabled because of too many failed attempts at ' .
 					'logging in. Please try again in {count} minutes.',
 					null,
-					array('count' => $this->config()->lock_out_delay_mins)
+					['count' => $this->config()->lock_out_delay_mins]
 				)
 			);
 		}
@@ -616,9 +616,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$generator = new RandomGenerator();
 			$token = $generator->randomToken();
 			$hash = $this->encryptWithUserSettings($token);
-		} while(DataObject::get_one('Member', array(
+		} while(DataObject::get_one('Member', [
 			'"Member"."AutoLoginHash"' => $hash
-		)));
+		]));
 
 		$this->AutoLoginHash = $hash;
 		$this->AutoLoginExpired = date('Y-m-d H:i:s', time() + (86400 * $lifetime));
@@ -653,10 +653,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public static function member_from_autologinhash($hash, $login = false) {
 
 		$nowExpression = DB::get_conn()->now();
-		$member = DataObject::get_one('Member', array(
+		$member = DataObject::get_one('Member', [
 			"\"Member\".\"AutoLoginHash\"" => $hash,
 			"\"Member\".\"AutoLoginExpired\" > $nowExpression" // NOW() can't be parameterised
-		));
+		]);
 
 		if($login && $member) $member->logIn();
 
@@ -802,9 +802,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if($this->$identifierField) {
 
 			// Note: Same logic as Member_Validator class
-			$filter = array("\"$identifierField\"" => $this->$identifierField);
+			$filter = ["\"$identifierField\"" => $this->$identifierField];
 			if($this->ID) {
-				$filter[] = array('"Member"."ID" <> ?' => $this->ID);
+				$filter[] = ['"Member"."ID" <> ?' => $this->ID];
 			}
 			$existingRecord = DataObject::get_one('Member', $filter);
 
@@ -813,11 +813,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 					'Member.ValidationIdentifierFailed',
 					'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))',
 					'Values in brackets show "fieldname = value", usually denoting an existing email address',
-					array(
+					[
 						'id' => $existingRecord->ID,
 						'name' => $identifierField,
 						'value' => $this->$identifierField
-					)
+					]
 				)));
 			}
 		}
@@ -912,7 +912,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// unless the current user is an admin already OR the logged in user is an admin
 		if(!(Permission::check('ADMIN') || Permission::checkMember($this, 'ADMIN'))) {
 			$adminGroups = Permission::get_groups_by_permission('ADMIN');
-			$adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
+			$adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : [];
 			return count(array_intersect($ids, $adminGroupIDs)) == 0;
 		} else {
 			return true;
@@ -947,9 +947,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if(is_numeric($group)) {
 			$groupCheckObj = DataObject::get_by_id('Group', $group);
 		} elseif(is_string($group)) {
-			$groupCheckObj = DataObject::get_one('Group', array(
+			$groupCheckObj = DataObject::get_one('Group', [
 				'"Group"."Code"' => $group
-			));
+			]);
 		} elseif($group instanceof Group) {
 			$groupCheckObj = $group;
 		} else {
@@ -974,9 +974,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @param string Title of the group
 	 */
 	public function addToGroupByCode($groupcode, $title = "") {
-		$group = DataObject::get_one('Group', array(
+		$group = DataObject::get_one('Group', [
 			'"Group"."Code"' => $groupcode
-		));
+		]);
 
 		if($group) {
 			$this->Groups()->add($group);
@@ -998,7 +998,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @param string $groupcode
 	 */
 	public function removeFromGroupByCode($groupcode) {
-		$group = Group::get()->filter(array('Code' => $groupcode))->first();
+		$group = Group::get()->filter(['Code' => $groupcode])->first();
 
 		if($group) {
 			$this->Groups()->remove($group);
@@ -1010,8 +1010,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @param String $sep Separator
 	 */
 	public static function set_title_columns($columns, $sep = ' ') {
-		if (!is_array($columns)) $columns = array($columns);
-		self::config()->title_format = array('columns' => $columns, 'sep' => $sep);
+		if (!is_array($columns)) $columns = [$columns];
+		self::config()->title_format = ['columns' => $columns, 'sep' => $sep];
 	}
 
 	//------------------- HELPER METHODS -----------------------------------//
@@ -1029,7 +1029,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function getTitle() {
 		$format = $this->config()->title_format;
 		if ($format) {
-			$values = array();
+			$values = [];
 			foreach($format['columns'] as $col) {
 				$values[] = $this->getField($col);
 			}
@@ -1063,7 +1063,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		$format = self::config()->title_format;
 		if ($format) {
-			$columnsWithTablename = array();
+			$columnsWithTablename = [];
 			foreach($format['columns'] as $column) {
 				$columnsWithTablename[] = "\"$tableName\".\"$column\"";
 			}
@@ -1176,7 +1176,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @see map()
 	 */
 	public static function map_in_groups($groups = null) {
-		$groupIDList = array();
+		$groupIDList = [];
 
 		if($groups instanceof SS_List) {
 			foreach( $groups as $group ) {
@@ -1190,7 +1190,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		// No groups, return all Members
 		if(!$groupIDList) {
-			return Member::get()->sort(array('Surname'=>'ASC', 'FirstName'=>'ASC'))->map();
+			return Member::get()->sort(['Surname'=>'ASC', 'FirstName'=>'ASC'])->map();
 		}
 
 		$membersList = new ArrayList();
@@ -1216,7 +1216,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public static function mapInCMSGroups($groups = null) {
 		if(!$groups || $groups->Count() == 0) {
-			$perms = array('ADMIN', 'CMS_ACCESS_AssetAdmin');
+			$perms = ['ADMIN', 'CMS_ACCESS_AssetAdmin'];
 
 			if(class_exists('CMSMain')) {
 				$cmsPerms = singleton('CMSMain')->providePermissions();
@@ -1231,12 +1231,12 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$permsClause = DB::placeholders($perms);
 			$groups = DataObject::get('Group')
 				->innerJoin("Permission", '"Permission"."GroupID" = "Group"."ID"')
-				->where(array(
+				->where([
 					"\"Permission\".\"Code\" IN ($permsClause)" => $perms
-				));
+				]);
 		}
 
-		$groupIDList = array();
+		$groupIDList = [];
 
 		if(is_a($groups, 'SS_List')) {
 			foreach($groups as $group) {
@@ -1251,9 +1251,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			->innerJoin("Group", '"Group"."ID" = "Group_Members"."GroupID"');
 		if($groupIDList) {
 			$groupClause = DB::placeholders($groupIDList);
-			$members = $members->where(array(
+			$members = $members->where([
 				"\"Group\".\"ID\" IN ($groupClause)" => $groupIDList
-			));
+			]);
 		}
 
 		return $members->sort('"Member"."Surname", "Member"."FirstName"')->map();
@@ -1330,7 +1330,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$fields->removeByName('LoggedPasswords');
 
 			if(Permission::check('EDIT_PERMISSIONS')) {
-				$groupsMap = array();
+				$groupsMap = [];
 				foreach(Group::get() as $group) {
 					// Listboxfield values are escaped, use ASCII char instead of &raquo;
 					$groupsMap[$group->ID] = $group->getBreadcrumbs(' > ');
@@ -1368,12 +1368,12 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			if($permissionsTab) $permissionsTab->addExtraClass('readonly');
 
 			$defaultDateFormat = Zend_Locale_Format::getDateFormat(new Zend_Locale($self->Locale));
-			$dateFormatMap = array(
+			$dateFormatMap = [
 				'MMM d, yyyy' => Zend_Date::now()->toString('MMM d, yyyy'),
 				'yyyy/MM/dd' => Zend_Date::now()->toString('yyyy/MM/dd'),
 				'MM/dd/yyyy' => Zend_Date::now()->toString('MM/dd/yyyy'),
 				'dd/MM/yyyy' => Zend_Date::now()->toString('dd/MM/yyyy'),
-			);
+			];
 			$dateFormatMap[$defaultDateFormat] = Zend_Date::now()->toString($defaultDateFormat)
 				. sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
 			$mainFields->push(
@@ -1386,10 +1386,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$dateFormatField->setValue($self->DateFormat);
 
 			$defaultTimeFormat = Zend_Locale_Format::getTimeFormat(new Zend_Locale($self->Locale));
-			$timeFormatMap = array(
+			$timeFormatMap = [
 				'h:mm a' => Zend_Date::now()->toString('h:mm a'),
 				'H:mm' => Zend_Date::now()->toString('H:mm'),
-			);
+			];
 			$timeFormatMap[$defaultTimeFormat] = Zend_Date::now()->toString($defaultTimeFormat)
 				. sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
 			$mainFields->push(
@@ -1604,10 +1604,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	}
 
 	public static function get_template_global_variables() {
-		return array(
+		return [
 			'CurrentMember' => 'currentUser',
 			'currentUser',
-		);
+		];
 	}
 }
 
@@ -1645,7 +1645,7 @@ class Member_GroupSet extends ManyManyList {
 		$groupIDs = $query->execute()->column();
 
 		// Get all ancestors, iteratively merging these into the master set
-		$allGroupIDs = array();
+		$allGroupIDs = [];
 		while($groupIDs) {
 			$allGroupIDs = array_merge($allGroupIDs, $groupIDs);
 			$groupIDs = DataObject::get("Group")->byIDs($groupIDs)->column("ParentID");
@@ -1655,9 +1655,9 @@ class Member_GroupSet extends ManyManyList {
 		// Add a filter to this DataList
 		if(!empty($allGroupIDs)) {
 			$allGroupIDsPlaceholders = DB::placeholders($allGroupIDs);
-			return array("\"Group\".\"ID\" IN ($allGroupIDsPlaceholders)" => $allGroupIDs);
+			return ["\"Group\".\"ID\" IN ($allGroupIDsPlaceholders)" => $allGroupIDs];
 		} else {
-			return array('"Group"."ID"' => 0);
+			return ['"Group"."ID"' => 0];
 		}
 	}
 
@@ -1722,10 +1722,10 @@ class Member_ForgotPasswordEmail extends Email {
  */
 class Member_Validator extends RequiredFields {
 
-	protected $customRequired = array(
+	protected $customRequired = [
 		'FirstName',
 		'Email'
-	);
+	];
 
 
 	/**
@@ -1757,9 +1757,9 @@ class Member_Validator extends RequiredFields {
 		$valid = parent::php($data);
 
 		$identifierField = Member::config()->unique_identifier_field;
-		$member = DataObject::get_one('Member', array(
+		$member = DataObject::get_one('Member', [
 			"\"$identifierField\"" => $data[$identifierField]
-		));
+		]);
 
 		// if we are in a complex table field popup, use ctf[childID], else use ID
 		if(isset($_REQUEST['ctf']['childID'])) {
@@ -1777,7 +1777,7 @@ class Member_Validator extends RequiredFields {
 				_t(
 					'Member.VALIDATIONMEMBEREXISTS',
 					'A member already exists with the same %s',
-					array('identifier' => strtolower($identifierField))
+					['identifier' => strtolower($identifierField)]
 				),
 				'required'
 			);

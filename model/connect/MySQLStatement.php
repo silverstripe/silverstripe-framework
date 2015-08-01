@@ -34,20 +34,20 @@ class MySQLStatement extends SS_Query {
 	 *
 	 * @var array
 	 */
-	protected $columns = array();
+	protected $columns = [];
 
 	/**
 	 * List of bound variables in the current row
 	 *
 	 * @var array
 	 */
-	protected $boundValues = array();
+	protected $boundValues = [];
 
 	/**
 	 * Binds this statement to the variables
 	 */
 	protected function bind() {
-		$variables = array();
+		$variables = [];
 
 		// Bind each field
 		while($field = $this->metadata->fetch_field()) {
@@ -64,7 +64,7 @@ class MySQLStatement extends SS_Query {
 		// Buffer all results
 		$this->statement->store_result();
 
-		call_user_func_array(array($this->statement, 'bind_result'), $variables);
+		call_user_func_array([$this->statement, 'bind_result'], $variables);
 	}
 
 	/**
@@ -103,7 +103,7 @@ class MySQLStatement extends SS_Query {
 		}
 
 		// Dereferenced row
-		$row = array();
+		$row = [];
 		foreach($this->boundValues as $key => $value) {
 			$row[$key] = $value;
 		}

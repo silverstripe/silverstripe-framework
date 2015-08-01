@@ -83,8 +83,8 @@ class CliTestReporter extends SapphireTestReporter {
 
 	protected function writeTest($test) {
 		if ($test['status'] != TEST_SUCCESS) {
-			$filteredTrace = array();
-			$ignoredClasses = array('TestRunner');
+			$filteredTrace = [];
+			$ignoredClasses = ['TestRunner'];
 			foreach($test['trace'] as $item) {
 				if(isset($item['file'])
 						&& strpos($item['file'], 'PHPUnit/Framework') === false

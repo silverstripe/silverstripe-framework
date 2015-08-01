@@ -24,7 +24,7 @@ class NumericField extends TextField {
 	 *
 	 * @throws Zend_Locale_Exception
 	 */
-	public function setValue($value, $data = array()) {
+	public function setValue($value, $data = []) {
 		require_once "Zend/Locale/Format.php";
 
 		// If passing in a non-string number, or a value
@@ -35,7 +35,7 @@ class NumericField extends TextField {
 
 			$this->value = Zend_Locale_Format::toNumber(
 				$value,
-				array('locale' => $locale)
+				['locale' => $locale]
 			);
 		} else {
 			$this->value = $this->clean($value);
@@ -71,7 +71,7 @@ class NumericField extends TextField {
 
 		return Zend_Locale_Format::isNumber(
 			$this->clean($this->value),
-			array('locale' => $locale)
+			['locale' => $locale]
 		);
 	}
 
@@ -83,10 +83,10 @@ class NumericField extends TextField {
 	}
 
 	public function getAttributes() {
-		return array_merge(parent::getAttributes(), array(
+		return array_merge(parent::getAttributes(), [
 			'type' => 'number',
 			'step' => 'any' // allows entering float/decimal numbers like "1.2" instead of just integers
-		));
+		]);
 	}
 
 	/**
@@ -109,7 +109,7 @@ class NumericField extends TextField {
 			_t(
 				'NumericField.VALIDATION',
 				"'{value}' is not a number, only numbers can be accepted for this field",
-				array('value' => $this->value)
+				['value' => $this->value]
 			),
 			"validation"
 		);
@@ -133,7 +133,7 @@ class NumericField extends TextField {
 
 		$number = Zend_Locale_Format::getNumber(
 			$this->clean($this->value),
-			array('locale' => $locale)
+			['locale' => $locale]
 		);
 
 		return $number;

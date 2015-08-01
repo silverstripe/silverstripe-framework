@@ -32,7 +32,7 @@ class ForeignKey extends Int {
 
 		if($hasOneClass && singleton($hasOneClass) instanceof Image) {
 			$field = new UploadField($relationName, $title);
-			$field->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
+			$field->getValidator()->setAllowedExtensions(['jpg', 'jpeg', 'png', 'gif']);
 		} elseif($hasOneClass && singleton($hasOneClass) instanceof File) {
 			$field = new UploadField($relationName, $title);
 		} else {

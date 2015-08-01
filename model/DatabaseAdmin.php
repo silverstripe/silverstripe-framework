@@ -14,12 +14,12 @@ require_once("model/DB.php");
 class DatabaseAdmin extends Controller {
 
 	/// SECURITY ///
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'build',
 		'cleanup',
 		'import'
-	);
+	];
 
 	public function init() {
 		parent::init();
@@ -54,7 +54,7 @@ class DatabaseAdmin extends Controller {
 		$allClasses = get_declared_classes();
 		foreach($allClasses as $class) {
 			if(get_parent_class($class) == "DataObject")
-				$rootClasses[$class] = array();
+				$rootClasses[$class] = [];
 		}
 
 		// Assign every other data object one of those
@@ -137,7 +137,7 @@ class DatabaseAdmin extends Controller {
 	 */
 	public static function lastBuilt() {
 		$file = TEMP_FOLDER . '/database-last-generated-' .
-			str_replace(array('\\','/',':'), '.' , Director::baseFolder());
+			str_replace(['\\','/',':'], '.' , Director::baseFolder());
 
 		if(file_exists($file)) {
 			return filemtime($file);
@@ -248,7 +248,7 @@ class DatabaseAdmin extends Controller {
 
 		touch(TEMP_FOLDER
 			. '/database-last-generated-'
-			. str_replace(array('\\', '/', ':'), '.', Director::baseFolder())
+			. str_replace(['\\', '/', ':'], '.', Director::baseFolder())
 		);
 
 		if(isset($_REQUEST['from_installer'])) {

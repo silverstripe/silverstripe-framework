@@ -22,10 +22,10 @@ class PjaxResponseNegotiator {
 	/**
 	 * @var Array See {@link respond()}
 	 */
-	protected $callbacks = array(
+	protected $callbacks = [
 		// TODO Using deprecated functionality, but don't want to duplicate Controller->redirectBack()
-		'default' => array('Director', 'redirectBack'),
-	);
+		'default' => ['Director', 'redirectBack'],
+	];
 
 	protected $response = null;
 
@@ -39,7 +39,7 @@ class PjaxResponseNegotiator {
 	 * @param SS_HTTPResponse An existing response to reuse (optional)
 	 * @param Array $callbacks
 	 */
-	public function __construct($callbacks = array(), $response = null) {
+	public function __construct($callbacks = [], $response = null) {
 		$this->callbacks = $callbacks;
 		$this->response = $response;
 	}
@@ -64,12 +64,12 @@ class PjaxResponseNegotiator {
 	 * @param array $fragmentOverride Change the response fragments.
 	 * @return SS_HTTPResponse
 	 */
-	public function respond(SS_HTTPRequest $request, $extraCallbacks = array()) {
+	public function respond(SS_HTTPRequest $request, $extraCallbacks = []) {
 		// Prepare the default options and combine with the others
 		$callbacks = array_merge($this->callbacks, $extraCallbacks);
 		$response = $this->getResponse();
 
-		$responseParts = array();
+		$responseParts = [];
 
 		if (isset($this->fragmentOverride)) {
 			$fragments = $this->fragmentOverride;

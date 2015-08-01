@@ -46,13 +46,13 @@ class SSHTMLBBCodeParser_Filter_EmailLinks extends SSHTMLBBCodeParser_Filter
     * @access   private
     * @var      array
     */
-    var $_definedTags = array(  'email' => array(   'htmlopen'  => 'a',
+    var $_definedTags = [  'email' => [   'htmlopen'  => 'a',
                                                     'htmlclose' => 'a',
                                                     'allowed'   => 'none^img',
-                                                    'attributes'=> array('email' =>'href=%2$smailto:%1$s%2$s')
+                                                    'attributes'=> ['email' =>'href=%2$smailto:%1$s%2$s']
 
-                                               )
-                              );
+                                               ]
+                              ];
 
 
     /**
@@ -78,10 +78,10 @@ class SSHTMLBBCodeParser_Filter_EmailLinks extends SSHTMLBBCodeParser_Filter
         $c = $options['close'];
         $oe = $options['open_esc'];
         $ce = $options['close_esc'];
-        $pattern = array(   "!(^|\s)([-a-z0-9_.]+@[-a-z0-9.]+\.[a-z]{2,4})!i",
-                            "!".$oe."email(".$ce."|\s.*".$ce.")(.*)".$oe."/email".$ce."!Ui");
-        $replace = array(   "\\1".$o."email=\\2".$c."\\2".$o."/email".$c,
-                            $o."email=\\2\\1\\2".$o."/email".$c);
+        $pattern = [   "!(^|\s)([-a-z0-9_.]+@[-a-z0-9.]+\.[a-z]{2,4})!i",
+                            "!".$oe."email(".$ce."|\s.*".$ce.")(.*)".$oe."/email".$ce."!Ui"];
+        $replace = [   "\\1".$o."email=\\2".$c."\\2".$o."/email".$c,
+                            $o."email=\\2\\1\\2".$o."/email".$c];
         $this->_preparsed = preg_replace($pattern, $replace, $this->_text);
     }
 

@@ -20,14 +20,14 @@ class GridFieldButtonRow implements GridField_HTMLProvider {
 	}
 
 	public function getHTMLFragments( $gridField) {
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			"TargetFragmentName" => $this->targetFragment,
 			"LeftFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-left)",
 			"RightFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-right)",
-		));
+		]);
 
-		return array(
+		return [
 			$this->targetFragment => $data->renderWith('GridFieldButtonRow')
-		);
+		];
 	}
 }

@@ -29,19 +29,19 @@ class SS_ConfigManifest {
 	 * All the _config.php files. Need to be included every request & can't be cached. Not variant specific.
 	 * @var array
 	 */
-	protected $phpConfigSources = array();
+	protected $phpConfigSources = [];
 
 	/**
 	 * All the _config/*.yml fragments pre-parsed and sorted in ascending include order. Not variant specific.
 	 * @var array
 	 */
-	protected $yamlConfigFragments = array();
+	protected $yamlConfigFragments = [];
 
 	/**
 	 * The calculated config from _config/*.yml, sorted, filtered and merged. Variant specific.
 	 * @var array
 	 */
-	public $yamlConfig = array();
+	public $yamlConfig = [];
 
 	/**
 	 * The variant key state as when yamlConfig was loaded
@@ -52,14 +52,14 @@ class SS_ConfigManifest {
 	/**
 	 * @var [callback] A list of callbacks to be called whenever the content of yamlConfig changes
 	 */
-	protected $configChangeCallbacks = array();
+	protected $configChangeCallbacks = [];
 
 	/**
 	 * A side-effect of collecting the _config fragments is the calculation of all module directories, since
 	 * the definition of a module is "a directory that contains either a _config.php file or a _config directory
 	 * @var array
 	 */
-	public $modules = array();
+	public $modules = [];
 
 	/** Adds a path as a module */
 	public function addModule($path) {
@@ -113,10 +113,10 @@ class SS_ConfigManifest {
 	 */
 	protected function getCache()
 	{
-		return SS_Cache::factory('SS_Configuration', 'Core', array(
+		return SS_Cache::factory('SS_Configuration', 'Core', [
 			'automatic_serialization' => true,
 			'lifetime' => null
-		));
+		]);
 	}
 
 	/**
@@ -194,24 +194,24 @@ class SS_ConfigManifest {
 	 * @param bool $cache Cache the result.
 	 */
 	public function regenerate($includeTests = false, $cache = true) {
-		$this->phpConfigSources = array();
-		$this->yamlConfigFragments = array();
-		$this->variantKeySpec = array();
+		$this->phpConfigSources = [];
+		$this->yamlConfigFragments = [];
+		$this->variantKeySpec = [];
 
 		$finder = new ManifestFileFinder();
-		$finder->setOptions(array(
+		$finder->setOptions([
 			'name_regex'    => '/(^|[\/\\\\])_config.php$/',
 			'ignore_tests'  => !$includeTests,
-			'file_callback' => array($this, 'addSourceConfigFile')
-		));
+			'file_callback' => [$this, 'addSourceConfigFile']
+		]);
 		$finder->find($this->base);
 
 		$finder = new ManifestFileFinder();
-		$finder->setOptions(array(
+		$finder->setOptions([
 			'name_regex'    => '/\.ya?ml$/',
 			'ignore_tests'  => !$includeTests,
-			'file_callback' => array($this, 'addYAMLConfigFile')
-		));
+			'file_callback' => [$this, 'addYAMLConfigFile']
+		]);
 		$finder->find($this->base);
 
 		$this->prefilterYamlFragments();
@@ -256,13 +256,13 @@ class SS_ConfigManifest {
 		$parser = new sfYamlParser();
 
 		// The base header
-		$base = array(
+		$base = [
 			'module' => $match[1],
 			'file' => basename(basename($basename, '.yml'), '.yaml')
-		);
+		];
 
 		// Make sure the linefeeds are all converted to \n, PCRE '$' will not match anything else.
-		$fileContents = str_replace(array("\r\n", "\r"), "\n", file_get_contents($pathname));
+		$fileContents = str_replace(["\r\n", "\r"], "\n", file_get_contents($pathname));
 
 		// YAML parsers really should handle this properly themselves, but neither spyc nor symfony-yaml do. So we
 		// follow in their vein and just do what we need, not what the spec says
@@ -270,10 +270,10 @@ class SS_ConfigManifest {
 
 		// If only one document, it's a headerless fragment. So just add it with an anonymous name
 		if (count($parts) == 1) {
-			$this->yamlConfigFragments[] = $base + array(
+			$this->yamlConfigFragments[] = $base + [
 				'name' => 'anonymous-1',
 				'fragment' => $parser->parse($parts[0])
-			);
+			];
 		}
 		// Otherwise it's a set of header/document pairs
 		else {
@@ -291,31 +291,31 @@ class SS_ConfigManifest {
 				if (!isset($header['name'])) $header['name'] = 'anonymous-'.(1+$i/2);
 
 				// Parse & normalise the before and after if present
-				foreach (array('before', 'after') as $order) {
+				foreach (['before', 'after'] as $order) {
 					if (isset($header[$order])) {
 						// First, splice into parts (multiple before or after parts are allowed, comma separated)
 						if (is_array($header[$order])) $orderparts = $header[$order];
 						else $orderparts = preg_split('/\s*,\s*/', $header[$order], -1, PREG_SPLIT_NO_EMPTY);
 
 						// For each, parse out into module/file#name, and set any missing to "*"
-						$header[$order] = array();
+						$header[$order] = [];
 						foreach($orderparts as $part) {
 							preg_match('! (?P<module>\*|[^\/#]+)? (\/ (?P<file>\*|\w+))? (\# (?P<fragment>\*|\w+))? !x',
 								$part, $match);
 
-							$header[$order][] = array(
+							$header[$order][] = [
 								'module' => isset($match['module']) && $match['module'] ? $match['module'] : '*',
 								'file' => isset($match['file']) && $match['file'] ? $match['file'] : '*',
 								'name' => isset($match['fragment'])  && $match['fragment'] ? $match['fragment'] : '*'
-							);
+							];
 						}
 					}
 				}
 
 				// And add to the fragments list
-				$this->yamlConfigFragments[] = $base + $header + array(
+				$this->yamlConfigFragments[] = $base + $header + [
 					'fragment' => $parser->parse($parts[$i+1])
-				);
+				];
 			}
 		}
 	}
@@ -384,17 +384,17 @@ class SS_ConfigManifest {
 	 * @return string "after", "before" or "undefined"
 	 */
 	protected function relativeOrder($a, $b) {
-		$matches = array();
+		$matches = [];
 
 		// Do the same thing for after and before
-		foreach (array('before', 'after') as $rulename) {
-			$matches[$rulename] = array();
+		foreach (['before', 'after'] as $rulename) {
+			$matches[$rulename] = [];
 
 			// Figure out for each rule, which part matches
 			if (isset($a[$rulename])) foreach ($a[$rulename] as $rule) {
-				$match = array();
+				$match = [];
 
-				foreach(array('module', 'file', 'name') as $part) {
+				foreach(['module', 'file', 'name'] as $part) {
 					// If part is *, we match _unless_ the opposite rule has a non-* matcher than also matches $b
 					if ($rule[$part] == '*') {
 						$match[$part] = 'wild';
@@ -409,9 +409,9 @@ class SS_ConfigManifest {
 		}
 
 		// Figure out the specificness of each match. 1 an actual match, 0 for a wildcard match, remove if no match
-		$matchlevel = array('before' => -1, 'after' => -1);
+		$matchlevel = ['before' => -1, 'after' => -1];
 
-		foreach (array('before', 'after') as $rulename) {
+		foreach (['before', 'after'] as $rulename) {
 			foreach ($matches[$rulename] as $i => $rule) {
 				$level = 0;
 
@@ -446,7 +446,7 @@ class SS_ConfigManifest {
 	 * saving yamlConfigFragments to speed up the process of checking the per-request variant/
 	 */
 	public function prefilterYamlFragments() {
-		$matchingFragments = array();
+		$matchingFragments = [];
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {
 			$matches = true;
@@ -501,7 +501,7 @@ class SS_ConfigManifest {
 	 * this variant.
 	 */
 	public function buildVariantKeySpec() {
-		$this->variantKeySpec = array();
+		$this->variantKeySpec = [];
 
 		foreach ($this->yamlConfigFragments as $fragment) {
 			if (isset($fragment['only'])) $this->addVariantKeySpecRules($fragment['only']);
@@ -526,18 +526,18 @@ class SS_ConfigManifest {
 					break;
 
 				case 'envvarset':
-					if (!isset($this->variantKeySpec['envvars'])) $this->variantKeySpec['envvars'] = array();
+					if (!isset($this->variantKeySpec['envvars'])) $this->variantKeySpec['envvars'] = [];
 					$this->variantKeySpec['envvars'][$k] = $k;
 					break;
 
 				case 'constantdefined':
-					if (!isset($this->variantKeySpec['constants'])) $this->variantKeySpec['constants'] = array();
+					if (!isset($this->variantKeySpec['constants'])) $this->variantKeySpec['constants'] = [];
 					$this->variantKeySpec['constants'][$k] = $k;
 					break;
 
 				default:
-					if (!isset($this->variantKeySpec['envvars'])) $this->variantKeySpec['envvars'] = array();
-					if (!isset($this->variantKeySpec['constants'])) $this->variantKeySpec['constants'] = array();
+					if (!isset($this->variantKeySpec['envvars'])) $this->variantKeySpec['envvars'] = [];
+					if (!isset($this->variantKeySpec['constants'])) $this->variantKeySpec['constants'] = [];
 					$this->variantKeySpec['envvars'][$k] = $this->variantKeySpec['constants'][$k] = $k;
 			}
 		}
@@ -570,7 +570,7 @@ class SS_ConfigManifest {
 			$this->regenerate($this->includeTests, $cache);
 		}
 
-		$this->yamlConfig = array();
+		$this->yamlConfig = [];
 		$this->yamlConfigVariantKey = $this->variantKey();
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {

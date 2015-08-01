@@ -12,13 +12,13 @@
  * @method PermissionRole Role()
  */
 class PermissionRoleCode extends DataObject {
-	private static $db = array(
+	private static $db = [
 		"Code" => "Varchar",
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		"Role" => "PermissionRole",
-	);
+	];
 
 	public function validate() {
 		$result = parent::validate();
@@ -42,7 +42,7 @@ class PermissionRoleCode extends DataObject {
 		return $result;
 	}
 
-	public function canCreate($member = null, $context = array()) {
+	public function canCreate($member = null, $context = []) {
 		return Permission::check('APPLY_ROLES', 'any', $member);
 	}
 

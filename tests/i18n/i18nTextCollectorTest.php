@@ -63,10 +63,10 @@ _t(
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
-			array(
-				'Test.CONCATENATED' => array("Line 1 and Line '2' and Line \"3\"",'Comment'),
-				'Test.CONCATENATED2' => array("Line \"4\" and Line 5")
-			)
+			[
+				'Test.CONCATENATED' => ["Line 1 and Line '2' and Line \"3\"",'Comment'],
+				'Test.CONCATENATED2' => ["Line \"4\" and Line 5"]
+			]
 		);
 	}
 
@@ -86,15 +86,15 @@ SS;
 
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
-			array(
-				'Test.SINGLEQUOTE' => array('Single Quote'),
-				'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test",null,null),
-				'i18nTestModule.INJECTIONS_0' => array("Hello {name} {greeting}, and {goodbye}", null, null),
-				'i18nTestModule.INJECTIONS_1' => array("Hello {name} {greeting}, and {goodbye}", null, null),
-				'i18nTestModule.INJECTIONS_2' => array("Hello {name} {greeting}", null, "context (ignored)"),
-				'i18nTestModule.INJECTIONS_3' => array(null, null, null),
-				'i18nTestModule.INJECTIONS_4' => array(null, null, null),
-			)
+			[
+				'Test.SINGLEQUOTE' => ['Single Quote'],
+				'i18nTestModule.NEWMETHODSIG' => ["New _t method signature test",null,null],
+				'i18nTestModule.INJECTIONS_0' => ["Hello {name} {greeting}, and {goodbye}", null, null],
+				'i18nTestModule.INJECTIONS_1' => ["Hello {name} {greeting}, and {goodbye}", null, null],
+				'i18nTestModule.INJECTIONS_2' => ["Hello {name} {greeting}", null, "context (ignored)"],
+				'i18nTestModule.INJECTIONS_3' => [null, null, null],
+				'i18nTestModule.INJECTIONS_4' => [null, null, null],
+			]
 		);
 	}
 
@@ -106,9 +106,9 @@ SS;
 SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
-			array(
-				'Test.SINGLEQUOTE' => array('Single Quote')
-			)
+			[
+				'Test.SINGLEQUOTE' => ['Single Quote']
+			]
 		);
 
 		$html = <<<SS
@@ -116,9 +116,9 @@ SS;
 SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
-			array(
-				'Test.DOUBLEQUOTE' => array("Double Quote and Spaces")
-			)
+			[
+				'Test.DOUBLEQUOTE' => ["Double Quote and Spaces"]
+			]
 		);
 		
 		$html = <<<SS
@@ -126,9 +126,9 @@ SS;
 SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
-			array(
-				'Test.NOSEMICOLON' => array("No Semicolon")
-			)
+			[
+				'Test.NOSEMICOLON' => ["No Semicolon"]
+			]
 		);
 	}
 
@@ -143,9 +143,9 @@ SS;
 SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
-			array(
-				'Test.NEWLINES' => array("New Lines")
-			)
+			[
+				'Test.NEWLINES' => ["New Lines"]
+			]
 		);
 
 		$html = <<<SS
@@ -157,9 +157,9 @@ SS;
 SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
-			array(
-				'Test.PRIOANDCOMMENT' => array(' Prio and Value with "Double Quotes"','Comment with "Double Quotes"')
-			)
+			[
+				'Test.PRIOANDCOMMENT' => [' Prio and Value with "Double Quotes"','Comment with "Double Quotes"']
+			]
 		);
 
 		$html = <<<SS
@@ -172,9 +172,9 @@ SS;
 SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
-			array(
-				'Test.PRIOANDCOMMENT' => array(" Prio and Value with 'Single Quotes'","Comment with 'Single Quotes'")
-			)
+			[
+				'Test.PRIOANDCOMMENT' => [" Prio and Value with 'Single Quotes'","Comment with 'Single Quotes'"]
+			]
 		);
 	}
 
@@ -187,9 +187,9 @@ _t('Test.SINGLEQUOTE','Single Quote');
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
-			array(
-				'Test.SINGLEQUOTE' => array('Single Quote')
-			)
+			[
+				'Test.SINGLEQUOTE' => ['Single Quote']
+			]
 		);
 		
 		$php = <<<PHP
@@ -197,9 +197,9 @@ _t(  "Test.DOUBLEQUOTE", "Double Quote and Spaces"   );
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
-			array(
-				'Test.DOUBLEQUOTE' => array("Double Quote and Spaces")
-			)
+			[
+				'Test.DOUBLEQUOTE' => ["Double Quote and Spaces"]
+			]
 		);
 	}
 	
@@ -214,9 +214,9 @@ _t(
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
-			array(
-				'Test.NEWLINES' => array("New Lines")
-			)
+			[
+				'Test.NEWLINES' => ["New Lines"]
+			]
 		);
 		
 		$php = <<<PHP
@@ -229,9 +229,9 @@ _t(
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
-			array(
-				'Test.PRIOANDCOMMENT' => array(' Value with "Double Quotes"','Comment with "Double Quotes"')
-			)
+			[
+				'Test.PRIOANDCOMMENT' => [' Value with "Double Quotes"','Comment with "Double Quotes"']
+			]
 		);
 		
 		$php = <<<PHP
@@ -244,9 +244,9 @@ _t(
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
-			array(
-				'Test.PRIOANDCOMMENT' => array(" Value with 'Single Quotes'","Comment with 'Single Quotes'")
-			)
+			[
+				'Test.PRIOANDCOMMENT' => [" Value with 'Single Quotes'","Comment with 'Single Quotes'"]
+			]
 		);
 		
 		$php = <<<PHP
@@ -257,9 +257,9 @@ _t(
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
-			array(
-				'Test.PRIOANDCOMMENT' => array("Value with 'Escaped Single Quotes'")
-			)
+			[
+				'Test.PRIOANDCOMMENT' => ["Value with 'Escaped Single Quotes'"]
+			]
 		);
 	
 		$php = <<<PHP
@@ -270,9 +270,9 @@ _t(
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
-			array(
-				'Test.PRIOANDCOMMENT' => array("Doublequoted Value with 'Unescaped Single Quotes'")
-			)
+			[
+				'Test.PRIOANDCOMMENT' => ["Doublequoted Value with 'Unescaped Single Quotes'"]
+			]
 		);
 	}
 	
@@ -291,9 +291,9 @@ PHP;
 		$eol = PHP_EOL;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
-			array(
-				'Test.NEWLINESINGLEQUOTE' => array("Line 1{$eol}Line 2")
-			)
+			[
+				'Test.NEWLINESINGLEQUOTE' => ["Line 1{$eol}Line 2"]
+			]
 		);
 
 		$php = <<<PHP
@@ -305,9 +305,9 @@ Line 2"
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
-			array(
-				'Test.NEWLINEDOUBLEQUOTE' => array("Line 1{$eol}Line 2")
-			)
+			[
+				'Test.NEWLINEDOUBLEQUOTE' => ["Line 1{$eol}Line 2"]
+			]
 		);
 	}
 
@@ -339,19 +339,19 @@ PHP;
 
 		$collectedTranslatables = $c->collectFromCode($php, 'mymodule');
 
-		$expectedArray = (array(
-			'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test"),
-			'i18nTestModule.INJECTIONS1' => array("_DOES_NOT_EXIST",
-				"Hello {name} {greeting}. But it is late, {goodbye}"),
-			'i18nTestModule.INJECTIONS2' => array("Hello {name} {greeting}. But it is late, {goodbye}"),
-			'i18nTestModule.INJECTIONS3' => array("Hello {name} {greeting}. But it is late, {goodbye}",
-				"New context (this should be ignored)"),
-			'i18nTestModule.INJECTIONS5' => array("_DOES_NOT_EXIST",
-				"Hello {name} {greeting}. But it is late, {goodbye}"),
-			'i18nTestModule.INJECTIONS6' => array("Hello {name} {greeting}. But it is late, {goodbye}"),
-			'i18nTestModule.INJECTIONS7' => array("Hello {name} {greeting}. But it is late, {goodbye}",
-				"New context (this should be ignored)"),
-		));
+		$expectedArray = ([
+			'i18nTestModule.NEWMETHODSIG' => ["New _t method signature test"],
+			'i18nTestModule.INJECTIONS1' => ["_DOES_NOT_EXIST",
+				"Hello {name} {greeting}. But it is late, {goodbye}"],
+			'i18nTestModule.INJECTIONS2' => ["Hello {name} {greeting}. But it is late, {goodbye}"],
+			'i18nTestModule.INJECTIONS3' => ["Hello {name} {greeting}. But it is late, {goodbye}",
+				"New context (this should be ignored)"],
+			'i18nTestModule.INJECTIONS5' => ["_DOES_NOT_EXIST",
+				"Hello {name} {greeting}. But it is late, {goodbye}"],
+			'i18nTestModule.INJECTIONS6' => ["Hello {name} {greeting}. But it is late, {goodbye}"],
+			'i18nTestModule.INJECTIONS7' => ["Hello {name} {greeting}. But it is late, {goodbye}",
+				"New context (this should be ignored)"],
+		]);
 
 		ksort($expectedArray);
 
@@ -366,19 +366,19 @@ PHP;
 		$c = new i18nTextCollector_Writer_Php();
 		
 		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.SIMPLE', array('Simple Value'), 'en_US'),
+			$c->langArrayCodeForEntitySpec('Test.SIMPLE', ['Simple Value'], 'en_US'),
 			"\$lang['en_US']['Test']['SIMPLE'] = 'Simple Value';" . PHP_EOL
 		);
 		
 		$this->assertEquals(
 			// single quotes should be properly escaped by the parser already
 			$c->langArrayCodeForEntitySpec('Test.ESCAPEDSINGLEQUOTES',
-				array("Value with 'Escaped Single Quotes'"), 'en_US'),
+				["Value with 'Escaped Single Quotes'"], 'en_US'),
 			"\$lang['en_US']['Test']['ESCAPEDSINGLEQUOTES'] = 'Value with \'Escaped Single Quotes\'';" . PHP_EOL
 		);
 		
 		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.DOUBLEQUOTES', array('Value with "Double Quotes"'), 'en_US'),
+			$c->langArrayCodeForEntitySpec('Test.DOUBLEQUOTES', ['Value with "Double Quotes"'], 'en_US'),
 			"\$lang['en_US']['Test']['DOUBLEQUOTES'] = 'Value with \"Double Quotes\"';" . PHP_EOL
 		);
 		
@@ -391,7 +391,7 @@ PHP;
 PHP;
 		$this->assertEquals(
 			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT',
-				array("Value with 'Single Quotes'","Comment with 'Single Quotes'"), 'en_US'),
+				["Value with 'Single Quotes'","Comment with 'Single Quotes'"], 'en_US'),
 			$php
 		);
 		
@@ -404,7 +404,7 @@ PHP;
 PHP;
 		$this->assertEquals(
 			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT',
-				array('Value with "Double Quotes"','Comment with "Double Quotes"'), 'en_US'),
+				['Value with "Double Quotes"','Comment with "Double Quotes"'], 'en_US'),
 			$php
 		);
 	}
@@ -414,13 +414,13 @@ PHP;
 	 */
 	public function testYamlWriter() {
 		$writer = new i18nTextCollector_Writer_RailsYaml();
-		$entities = array(
-			'Level1.Level2.EntityName' => array('Text', 'Context'),
-			'Level1.OtherEntityName' => array('Other Text', 'Other Context'),
-			'Level1.BoolTest' => array('True'),
-			'Level1.FlagTest' => array('No'),
-			'Level1.TextTest' => array('Maybe')
-		);
+		$entities = [
+			'Level1.Level2.EntityName' => ['Text', 'Context'],
+			'Level1.OtherEntityName' => ['Other Text', 'Other Context'],
+			'Level1.BoolTest' => ['True'],
+			'Level1.FlagTest' => ['No'],
+			'Level1.TextTest' => ['Maybe']
+		];
 		$yaml = <<<YAML
 de:
   Level1:
@@ -445,22 +445,22 @@ YAML;
 		$this->assertArrayHasKey('RandomNamespace.LAYOUTTEMPLATENONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['RandomNamespace.LAYOUTTEMPLATENONAMESPACE'],
-			array('Layout Template no namespace')
+			['Layout Template no namespace']
 		);
 		$this->assertArrayHasKey('RandomNamespace.SPRINTFNONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['RandomNamespace.SPRINTFNONAMESPACE'],
-			array('My replacement no namespace: %s')
+			['My replacement no namespace: %s']
 		);
 		$this->assertArrayHasKey('i18nTestModule.LAYOUTTEMPLATE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestModule.LAYOUTTEMPLATE'],
-			array('Layout Template')
+			['Layout Template']
 		);
 		$this->assertArrayHasKey('i18nTestModule.SPRINTFNAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestModule.SPRINTFNAMESPACE'],
-			array('My replacement: %s')
+			['My replacement: %s']
 		);
 		
 		// Includes should not automatically inject translations into parent templates
@@ -481,16 +481,16 @@ YAML;
 		
 		// all entities from i18nTestTheme1.ss
 		$this->assertEquals(
-			array(
+			[
 				'i18nTestTheme1.LAYOUTTEMPLATE'
-					=> array('Theme1 Layout Template'),
+					=> ['Theme1 Layout Template'],
 				'i18nTestTheme1.SPRINTFNAMESPACE'
-					=> array('Theme1 My replacement: %s'),
+					=> ['Theme1 My replacement: %s'],
 				'i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE'
-					=> array('Theme1 Layout Template no namespace'),
+					=> ['Theme1 Layout Template no namespace'],
 				'i18nTestTheme1.ss.SPRINTFNONAMESPACE'
-					=> array('Theme1 My replacement no namespace: %s'),
-			),
+					=> ['Theme1 My replacement no namespace: %s'],
+			],
 			$layoutMatches
 		);
 		
@@ -501,16 +501,16 @@ YAML;
 		
 		// all entities from i18nTestTheme1Include.ss
 		$this->assertEquals(
-			array(
+			[
 				'i18nTestTheme1Include.SPRINTFINCLUDENAMESPACE'
-					=> array('Theme1 My include replacement: %s'),
+					=> ['Theme1 My include replacement: %s'],
 				'i18nTestTheme1Include.WITHNAMESPACE'
-					=> array('Theme1 Include Entity with Namespace'),
+					=> ['Theme1 Include Entity with Namespace'],
 				'i18nTestTheme1Include.ss.NONAMESPACE'
-					=> array('Theme1 Include Entity without Namespace'),
+					=> ['Theme1 Include Entity without Namespace'],
 				'i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE'
-					=> array('Theme1 My include replacement no namespace: %s')
-			),
+					=> ['Theme1 My include replacement no namespace: %s']
+			],
 			$includeMatches
 		);
 	}
@@ -673,10 +673,10 @@ YAML;
 		$matches = $c->collectFromEntityProviders($filePath);
 		$this->assertEquals(
 			array_keys($matches),
-			array(
+			[
 				'i18nTextCollectorTestMyObject.PLURALNAME',
 				'i18nTextCollectorTestMyObject.SINGULARNAME',
-			)
+			]
 		);
 		$this->assertEquals(
 			'My Object',
@@ -691,50 +691,50 @@ YAML;
 		$collector = new i18nTextCollectorTest_Collector();
 		
 		// Dummy data as collected
-		$data1 = array(
-			'framework' => array(
-				'DataObject.PLURALNAME' => array('Data Objects'),
-				'DataObject.SINGULARNAME' => array('Data Object')
-			),
-			'mymodule' => array(
-				'DataObject.PLURALNAME' => array('Ignored String'),
-				'DataObject.STREETNAME' => array('Shortland Street')
-			)
-		);
-		$expected = array(
-			'framework' => array(
-				'DataObject.PLURALNAME' => array('Data Objects'),
+		$data1 = [
+			'framework' => [
+				'DataObject.PLURALNAME' => ['Data Objects'],
+				'DataObject.SINGULARNAME' => ['Data Object']
+			],
+			'mymodule' => [
+				'DataObject.PLURALNAME' => ['Ignored String'],
+				'DataObject.STREETNAME' => ['Shortland Street']
+			]
+		];
+		$expected = [
+			'framework' => [
+				'DataObject.PLURALNAME' => ['Data Objects'],
 				// Because DataObject is in framework module
-				'DataObject.SINGULARNAME' => array('Data Object')
-			),
-			'mymodule' => array(
+				'DataObject.SINGULARNAME' => ['Data Object']
+			],
+			'mymodule' => [
 				// Because this key doesn't exist in framework strings
-				'DataObject.STREETNAME' => array('Shortland Street')
-			)
-		);
+				'DataObject.STREETNAME' => ['Shortland Street']
+			]
+		];
 		
 		$resolved = $collector->resolveDuplicateConflicts_Test($data1);
 		$this->assertEquals($expected, $resolved);
 		
 		// Test getConflicts
-		$data2 = array(
-			'module1' => array(
-				'DataObject.ONE' => array('One'),
-				'DataObject.TWO' => array('Two'),
-				'DataObject.THREE' => array('Three'),
-			),
-			'module2' => array(
-				'DataObject.THREE' => array('Three'),
-			),
-			'module3' => array(
-				'DataObject.TWO' => array('Two'),
-				'DataObject.THREE' => array('Three'),
-			)
-		);
+		$data2 = [
+			'module1' => [
+				'DataObject.ONE' => ['One'],
+				'DataObject.TWO' => ['Two'],
+				'DataObject.THREE' => ['Three'],
+			],
+			'module2' => [
+				'DataObject.THREE' => ['Three'],
+			],
+			'module3' => [
+				'DataObject.TWO' => ['Two'],
+				'DataObject.THREE' => ['Three'],
+			]
+		];
 		$conflictsA = $collector->getConflicts_Test($data2);
 		sort($conflictsA);
 		$this->assertEquals(
-			array('DataObject.THREE', 'DataObject.TWO'),
+			['DataObject.THREE', 'DataObject.TWO'],
 			$conflictsA
 		);
 		
@@ -742,7 +742,7 @@ YAML;
 		unset($data2['module3']);
 		$conflictsB = $collector->getConflicts_Test($data2);
 		$this->assertEquals(
-			array('DataObject.THREE'),
+			['DataObject.THREE'],
 			$conflictsB
 		);
 	}
@@ -754,13 +754,13 @@ YAML;
 		$collector = new i18nTextCollectorTest_Collector();
 		$modules = $collector->getModules_Test($this->alternateBasePath);
 		$this->assertEquals(
-			array(
+			[
 				'i18nnonstandardmodule',
 				'i18nothermodule',
 				'i18ntestmodule',
 				'themes/testtheme1',
 				'themes/testtheme2'
-			),
+			],
 			$modules
 		);
 	}

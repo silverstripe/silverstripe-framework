@@ -69,10 +69,10 @@ class RequirementsTest extends SapphireTest {
 		// require two of those files as combined includes
 		$backend->combine_files(
 			'RequirementsTest_bc.js',
-			array(
+			[
 				$basePath . '/RequirementsTest_b.js',
 				$basePath . '/RequirementsTest_c.js'
-			)
+			]
 		);
 	}
 
@@ -89,10 +89,10 @@ class RequirementsTest extends SapphireTest {
 			// require files as combined includes
 			$backend->combine_files(
 				'RequirementsTest_bc.js',
-				array(
+				[
 					$basePath . '/RequirementsTest_b.js',
 					$basePath . '/RequirementsTest_c.js'
-				)
+				]
 			);
 		}
 
@@ -174,10 +174,10 @@ class RequirementsTest extends SapphireTest {
 
 		$backend->combine_files(
 			'print.css',
-			array(
+			[
 				$basePath . '/RequirementsTest_print_a.css',
 				$basePath . '/RequirementsTest_print_b.css'
-			),
+			],
 			'print'
 		);
 
@@ -227,16 +227,16 @@ class RequirementsTest extends SapphireTest {
 		// This throws a notice-level error, so we prefix with @
 		@$backend->combine_files(
 			'RequirementsTest_ac.js',
-			array(
+			[
 				$basePath . '/RequirementsTest_a.js',
 				$basePath . '/RequirementsTest_c.js'
-			)
+			]
 		);
 
 		$combinedFiles = $backend->get_combine_files();
 		$this->assertEquals(
 			array_keys($combinedFiles),
-			array('RequirementsTest_bc.js'),
+			['RequirementsTest_bc.js'],
 			"A single file can't be included in two combined files"
 		);
 
@@ -309,27 +309,27 @@ class RequirementsTest extends SapphireTest {
 		$backend = new Requirements_Backend();
 		$holder = Requirements::backend();
 		Requirements::set_backend($backend);
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'FailTest' => true,
-		));
+		]);
 		$data->renderWith('RequirementsTest_Conditionals');
 		$this->assertFileIncluded($backend, 'css', $basePath .'/RequirementsTest_a.css');
 		$this->assertFileIncluded($backend, 'js',
-			array($basePath .'/RequirementsTest_b.js', $basePath .'/RequirementsTest_c.js'));
+			[$basePath .'/RequirementsTest_b.js', $basePath .'/RequirementsTest_c.js']);
 		$this->assertFileNotIncluded($backend, 'js', $basePath .'/RequirementsTest_a.js');
 		$this->assertFileNotIncluded($backend, 'css',
-			array($basePath .'/RequirementsTest_b.css', $basePath .'/RequirementsTest_c.css'));
+			[$basePath .'/RequirementsTest_b.css', $basePath .'/RequirementsTest_c.css']);
 		$backend->clear();
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'FailTest' => false,
-		));
+		]);
 		$data->renderWith('RequirementsTest_Conditionals');
 		$this->assertFileNotIncluded($backend, 'css', $basePath .'/RequirementsTest_a.css');
 		$this->assertFileNotIncluded($backend, 'js',
-			array($basePath .'/RequirementsTest_b.js', $basePath .'/RequirementsTest_c.js'));
+			[$basePath .'/RequirementsTest_b.js', $basePath .'/RequirementsTest_c.js']);
 		$this->assertFileIncluded($backend, 'js', $basePath .'/RequirementsTest_a.js');
 		$this->assertFileIncluded($backend, 'css',
-			array($basePath .'/RequirementsTest_b.css', $basePath .'/RequirementsTest_c.css'));
+			[$basePath .'/RequirementsTest_b.css', $basePath .'/RequirementsTest_c.css']);
 		Requirements::set_backend($holder);
 	}
 
@@ -473,7 +473,7 @@ class RequirementsTest extends SapphireTest {
 		}
 
 		if(is_array($files)) {
-			$failedMatches = array();
+			$failedMatches = [];
 			foreach ($files as $file) {
 				if(!array_key_exists($file, $includedFiles)) {
 					$failedMatches[] = $file;
@@ -517,7 +517,7 @@ class RequirementsTest extends SapphireTest {
 		}
 
 		if(is_array($files)) {
-			$failedMatches = array();
+			$failedMatches = [];
 			foreach ($files as $file) {
 				if(array_key_exists($file, $includedFiles)) {
 					$failedMatches[] = $file;

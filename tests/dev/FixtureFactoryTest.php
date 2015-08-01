@@ -8,14 +8,14 @@ class FixtureFactoryTest extends SapphireTest {
 
 	protected $usesDatabase = true;
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'FixtureFactoryTest_DataObject',
 		'FixtureFactoryTest_DataObjectRelation'
-	);
+	];
 
 	public function testCreateRaw() {
 		$factory = new FixtureFactory();
-		$id = $factory->createRaw('FixtureFactoryTest_DataObject', 'one', array('Name' => 'My Name'));
+		$id = $factory->createRaw('FixtureFactoryTest_DataObject', 'one', ['Name' => 'My Name']);
 		$this->assertNotNull($id);
 		$this->assertGreaterThan(0, $id);
 		$obj = FixtureFactoryTest_DataObject::get()->find('ID', $id);
@@ -47,7 +47,7 @@ class FixtureFactoryTest extends SapphireTest {
 		$factory = new FixtureFactory();
 		$obj = $factory->createObject('FixtureFactoryTest_DataObject', 'one');
 		$this->assertEquals(
-			array('one' => $obj->ID),
+			['one' => $obj->ID],
 			$factory->getIds('FixtureFactoryTest_DataObject')
 		);
 	}
@@ -79,7 +79,7 @@ class FixtureFactoryTest extends SapphireTest {
 
 	public function testDefineWithDefaults() {
 		$factory = new FixtureFactory();
-		$factory->define('FixtureFactoryTest_DataObject', array('Name' => 'Default'));
+		$factory->define('FixtureFactoryTest_DataObject', ['Name' => 'Default']);
 		$obj = $factory->createObject('FixtureFactoryTest_DataObject', 'one');
 		$this->assertEquals('Default', $obj->Name);
 	}
@@ -95,7 +95,7 @@ class FixtureFactoryTest extends SapphireTest {
 			new FixtureBlueprint(
 				'FixtureFactoryTest_DataObjectWithDefaults',
 				'FixtureFactoryTest_DataObject',
-				array('Name' => 'Default')
+				['Name' => 'Default']
 			)
 		);
 
@@ -118,7 +118,7 @@ class FixtureFactoryTest extends SapphireTest {
 
 	public function testClear() {
 		$factory = new FixtureFactory();
-		$obj1Id = $factory->createRaw('FixtureFactoryTest_DataObject', 'one', array('Name' => 'My Name'));
+		$obj1Id = $factory->createRaw('FixtureFactoryTest_DataObject', 'one', ['Name' => 'My Name']);
 		$obj2 = $factory->createObject('FixtureFactoryTest_DataObject', 'two');
 
 		$factory->clear();
@@ -158,19 +158,19 @@ class FixtureFactoryTest extends SapphireTest {
  */
 class FixtureFactoryTest_DataObject extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"Name" => "Varchar"
-	);
+	];
 
-	private static $many_many = array(
+	private static $many_many = [
 		"ManyManyRelation" => "FixtureFactoryTest_DataObjectRelation"
-	);
+	];
 
-	private static $many_many_extraFields = array(
-		"ManyManyRelation" => array(
+	private static $many_many_extraFields = [
+		"ManyManyRelation" => [
 			"Label" => "Varchar"
-		)
-	);
+		]
+	];
 }
 
 /**
@@ -179,11 +179,11 @@ class FixtureFactoryTest_DataObject extends DataObject implements TestOnly {
  */
 class FixtureFactoryTest_DataObjectRelation extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"Name" => "Varchar"
-	);
+	];
 
-	private static $belongs_many_many = array(
+	private static $belongs_many_many = [
 		"TestParent" => "FixtureFactoryTest_DataObject"
-	);
+	];
 }

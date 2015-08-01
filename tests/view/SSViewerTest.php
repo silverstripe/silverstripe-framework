@@ -2,9 +2,9 @@
 
 class SSViewerTest extends SapphireTest {
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'SSViewerTest_Object',
-	);
+	];
 
 	public function setUp() {
 		parent::setUp();
@@ -28,9 +28,9 @@ class SSViewerTest extends SapphireTest {
 	 * Test that a template without a <head> tag still renders.
 	 */
 	public function testTemplateWithoutHeadRenders() {
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'Var' => 'var value'
-		));
+		]);
 
 		$result = $data->renderWith("SSViewerTestPartialTemplate");
 		$this->assertEquals('Test partial template: var value', trim(preg_replace("/<!--.*-->/U",'',$result)));
@@ -38,49 +38,49 @@ class SSViewerTest extends SapphireTest {
 
 	public function testIncludeScopeInheritance() {
 		$data = $this->getScopeInheritanceTestData();
-		$expected = array(
+		$expected = [
 			'Item 1 - First-ODD top:Item 1',
 			'Item 2 - EVEN top:Item 2',
 			'Item 3 - ODD top:Item 3',
 			'Item 4 - EVEN top:Item 4',
 			'Item 5 - ODD top:Item 5',
 			'Item 6 - Last-EVEN top:Item 6',
-		);
+		];
 
 		$result = $data->renderWith('SSViewerTestIncludeScopeInheritance');
 		$this->assertExpectedStrings($result, $expected);
 
 		// reset results for the tests that include arguments (the title is passed as an arg)
-		$expected = array(
+		$expected = [
 			'Item 1 _ Item 1 - First-ODD top:Item 1',
 			'Item 2 _ Item 2 - EVEN top:Item 2',
 			'Item 3 _ Item 3 - ODD top:Item 3',
 			'Item 4 _ Item 4 - EVEN top:Item 4',
 			'Item 5 _ Item 5 - ODD top:Item 5',
 			'Item 6 _ Item 6 - Last-EVEN top:Item 6',
-		);
+		];
 
 		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
 		$this->assertExpectedStrings($result, $expected);
 	}
 	
 	public function testIncludeTruthyness() {
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'Title' => 'TruthyTest',
-			'Items' => new ArrayList(array(
-				new ArrayData(array('Title' => 'Item 1')),
-				new ArrayData(array('Title' => '')),
-				new ArrayData(array('Title' => true)),
-				new ArrayData(array('Title' => false)),
-				new ArrayData(array('Title' => null)),
-				new ArrayData(array('Title' => 0)),
-				new ArrayData(array('Title' => 7))
-			))
-		));
+			'Items' => new ArrayList([
+				new ArrayData(['Title' => 'Item 1']),
+				new ArrayData(['Title' => '']),
+				new ArrayData(['Title' => true]),
+				new ArrayData(['Title' => false]),
+				new ArrayData(['Title' => null]),
+				new ArrayData(['Title' => 0]),
+				new ArrayData(['Title' => 7])
+			])
+		]);
 		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
 		
 		// We should not end up with empty values appearing as empty
-		$expected = array(
+		$expected = [
 			'Item 1 _ Item 1 - First-ODD top:Item 1',
 			'Untitled - EVEN top:',
 			'1 _ 1 - ODD top:1',
@@ -88,22 +88,22 @@ class SSViewerTest extends SapphireTest {
 			'Untitled - ODD top:',
 			'Untitled - EVEN top:0',
 			'7 _ 7 - Last-ODD top:7'
-		);
+		];
 		$this->assertExpectedStrings($result, $expected);
 	}
 
 	private function getScopeInheritanceTestData() {
-		return new ArrayData(array(
+		return new ArrayData([
 			'Title' => 'TopTitleValue',
-			'Items' => new ArrayList(array(
-				new ArrayData(array('Title' => 'Item 1')),
-				new ArrayData(array('Title' => 'Item 2')),
-				new ArrayData(array('Title' => 'Item 3')),
-				new ArrayData(array('Title' => 'Item 4')),
-				new ArrayData(array('Title' => 'Item 5')),
-				new ArrayData(array('Title' => 'Item 6'))
-			))
-		));
+			'Items' => new ArrayList([
+				new ArrayData(['Title' => 'Item 1']),
+				new ArrayData(['Title' => 'Item 2']),
+				new ArrayData(['Title' => 'Item 3']),
+				new ArrayData(['Title' => 'Item 4']),
+				new ArrayData(['Title' => 'Item 5']),
+				new ArrayData(['Title' => 'Item 6'])
+			])
+		]);
 	}
 
 	private function assertExpectedStrings($result, $expected) {
@@ -125,7 +125,7 @@ class SSViewerTest extends SapphireTest {
 	}
 
 	public function testRequirements() {
-		$requirements = $this->getMock("Requirements_Backend", array("javascript", "css"));
+		$requirements = $this->getMock("Requirements_Backend", ["javascript", "css"]);
 		$jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 		$cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 
@@ -147,7 +147,7 @@ class SSViewerTest extends SapphireTest {
 
 		$jsFile = FRAMEWORK_DIR . '/tests/view/themes/javascript/bad.js';
 		$jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
-		Requirements::combine_files('testRequirementsCombine.js', array($jsFile));
+		Requirements::combine_files('testRequirementsCombine.js', [$jsFile]);
 		require_once('thirdparty/jsmin/jsmin.php');
 		
 		// first make sure that our test js file causes an exception to be thrown
@@ -310,9 +310,9 @@ SS;
 	}
 
 	public function testLocalFunctionsTakePriorityOverGlobals() {
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'Page' => new SSViewerTest_Object()
-		));
+		]);
 
 		//call method with lots of arguments
 		$result = $this->render(
@@ -335,24 +335,24 @@ SS;
 
 	public function testCurrentScopeLoopWith() {
 		// Data to run the loop tests on - one sequence of three items, each with a subitem
-		$data = new ArrayData(array(
-			'Foo' => new ArrayList(array(
-				'Subocean' => new ArrayData(array(
+		$data = new ArrayData([
+			'Foo' => new ArrayList([
+				'Subocean' => new ArrayData([
 						'Name' => 'Higher'
-					)),
-				new ArrayData(array(
-					'Sub' => new ArrayData(array(
+					]),
+				new ArrayData([
+					'Sub' => new ArrayData([
 						'Name' => 'SubKid1'
-					))
-				)),
-				new ArrayData(array(
-					'Sub' => new ArrayData(array(
+					])
+				]),
+				new ArrayData([
+					'Sub' => new ArrayData([
 						'Name' => 'SubKid2'
-					))
-				)),
+					])
+				]),
 				new SSViewerTest_Object('Number6')
-			))
-		));
+			])
+		]);
 
 		$result = $this->render(
 			'<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',$data);
@@ -678,22 +678,22 @@ after')
 
 		$this->assertEquals(
 			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=$B %>',
-				new ArrayData(array('B' => 'Bar'))),
+				new ArrayData(['B' => 'Bar'])),
 			'<p>A</p><p>Bar</p>'
 		);
 
 		$this->assertEquals(
 			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A" %>',
-				new ArrayData(array('Arg1' => 'Foo', 'Arg2' => 'Bar'))),
+				new ArrayData(['Arg1' => 'Foo', 'Arg2' => 'Bar'])),
 			'<p>A</p><p>Bar</p>'
 		);
 
-		$data = new ArrayData(array(
-			'Nested' => new ArrayData(array(
-				'Object' => new ArrayData(array('Key' => 'A'))
-			)),
-			'Object' => new ArrayData(array('Key' => 'B'))
-		));
+		$data = new ArrayData([
+			'Nested' => new ArrayData([
+				'Object' => new ArrayData(['Key' => 'A'])
+			]),
+			'Object' => new ArrayData(['Key' => 'B'])
+		]);
 
 		$tmpl = SSViewer::fromString('<% include SSViewerTestIncludeObjectArguments A=$Nested.Object, B=$Object %>');
 		$res  = $tmpl->process($data);
@@ -702,22 +702,22 @@ after')
 
 
 	public function testRecursiveInclude() {
-		$view = new SSViewer(array('SSViewerTestRecursiveInclude'));
+		$view = new SSViewer(['SSViewerTestRecursiveInclude']);
 
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'Title' => 'A',
-			'Children' => new ArrayList(array(
-				new ArrayData(array(
+			'Children' => new ArrayList([
+				new ArrayData([
 					'Title' => 'A1',
-					'Children' => new ArrayList(array(
-						new ArrayData(array( 'Title' => 'A1 i', )),
-						new ArrayData(array( 'Title' => 'A1 ii', )),
-					)),
-				)),
-				new ArrayData(array( 'Title' => 'A2', )),
-				new ArrayData(array( 'Title' => 'A3', )),
-			)),
-		));
+					'Children' => new ArrayList([
+						new ArrayData([ 'Title' => 'A1 i', ]),
+						new ArrayData([ 'Title' => 'A1 ii', ]),
+					]),
+				]),
+				new ArrayData([ 'Title' => 'A2', ]),
+				new ArrayData([ 'Title' => 'A3', ]),
+			]),
+		]);
 
 		$result = $view->process($data);
 		// We don't care about whitespace
@@ -790,8 +790,8 @@ after')
 	}
 
 	public function testSSViewerBasicIteratorSupport() {
-		$data = new ArrayData(array(
-			'Set' => new ArrayList(array(
+		$data = new ArrayData([
+			'Set' => new ArrayList([
 				new SSViewerTest_Object("1"),
 				new SSViewerTest_Object("2"),
 				new SSViewerTest_Object("3"),
@@ -802,8 +802,8 @@ after')
 				new SSViewerTest_Object("8"),
 				new SSViewerTest_Object("9"),
 				new SSViewerTest_Object("10"),
-			))
-		));
+			])
+		]);
 
 		//base test
 		$result = $this->render('<% loop Set %>$Number<% end_loop %>',$data);
@@ -912,21 +912,21 @@ after')
 	public function testUpInWith() {
 
 		// Data to run the loop tests on - three levels deep
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'Name' => 'Top',
-			'Foo' => new ArrayData(array(
+			'Foo' => new ArrayData([
 				'Name' => 'Foo',
-				'Bar' => new ArrayData(array(
+				'Bar' => new ArrayData([
 					'Name' => 'Bar',
-					'Baz' => new ArrayData(array(
+					'Baz' => new ArrayData([
 						'Name' => 'Baz'
-					)),
-					'Qux' => new ArrayData(array(
+					]),
+					'Qux' => new ArrayData([
 						'Name' => 'Qux'
-					))
-				))
-			))
-		));
+					])
+				])
+			])
+		]);
 
 		// Basic functionality
 		$this->assertEquals('BarFoo',
@@ -966,29 +966,29 @@ after')
 	public function testUpInLoop(){
 
 		// Data to run the loop tests on - one sequence of three items, each with a subitem
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'Name' => 'Top',
-			'Foo' => new ArrayList(array(
-				new ArrayData(array(
+			'Foo' => new ArrayList([
+				new ArrayData([
 					'Name' => '1',
-					'Sub' => new ArrayData(array(
+					'Sub' => new ArrayData([
 						'Name' => 'Bar'
-					))
-				)),
-				new ArrayData(array(
+					])
+				]),
+				new ArrayData([
 					'Name' => '2',
-					'Sub' => new ArrayData(array(
+					'Sub' => new ArrayData([
 						'Name' => 'Baz'
-					))
-				)),
-				new ArrayData(array(
+					])
+				]),
+				new ArrayData([
 					'Name' => '3',
-					'Sub' => new ArrayData(array(
+					'Sub' => new ArrayData([
 						'Name' => 'Qux'
-					))
-				))
-			))
-		));
+					])
+				])
+			])
+		]);
 
 		// Make sure inside a loop, $Up refers to the current item of the loop
 		$this->assertEqualIgnoringWhitespace(
@@ -1043,29 +1043,29 @@ after')
 
 		// Data to run the loop tests on - one sequence of three items, one with child elements
 		// (of a different size to the main sequence)
-		$data = new ArrayData(array(
-			'Foo' => new ArrayList(array(
-				new ArrayData(array(
+		$data = new ArrayData([
+			'Foo' => new ArrayList([
+				new ArrayData([
 					'Name' => '1',
-					'Children' => new ArrayList(array(
-						new ArrayData(array(
+					'Children' => new ArrayList([
+						new ArrayData([
 							'Name' => 'a'
-						)),
-						new ArrayData(array(
+						]),
+						new ArrayData([
 							'Name' => 'b'
-						)),
-					)),
-				)),
-				new ArrayData(array(
+						]),
+					]),
+				]),
+				new ArrayData([
 					'Name' => '2',
 					'Children' => new ArrayList(),
-				)),
-				new ArrayData(array(
+				]),
+				new ArrayData([
 					'Name' => '3',
 					'Children' => new ArrayList(),
-				)),
-			)),
-		));
+				]),
+			]),
+		]);
 
 		// Make sure that including a loop inside a loop will not destroy the internal count of
 		// items, checked by using "Last"
@@ -1081,11 +1081,11 @@ after')
 		$self = $this;
 
 		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
-			$template = new SSViewer(array('Page'));
-			$self->assertEquals('Foo', $template->process(new ArrayData(array())));
+			$template = new SSViewer(['Page']);
+			$self->assertEquals('Foo', $template->process(new ArrayData([])));
 
-			$template = new SSViewer(array('Shortcodes', 'Page'));
-			$self->assertEquals('[file_link]', $template->process(new ArrayData(array())));
+			$template = new SSViewer(['Shortcodes', 'Page']);
+			$self->assertEquals('[file_link]', $template->process(new ArrayData([])));
 		});
 	}
 
@@ -1116,7 +1116,7 @@ after')
 
 			// Let's throw something random in there.
 			$self->setExpectedException('InvalidArgumentException');
-			$templates = SSViewer::get_templates_by_class(array());
+			$templates = SSViewer::get_templates_by_class([]);
 		});
 	}
 
@@ -1135,17 +1135,17 @@ after')
 		mkdir($testThemeBaseDir . $ds . 'darkshades');
 		mkdir($testThemeBaseDir . $ds . 'darkshades_blog');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'blackcandy' => 'blackcandy',
 			'darkshades' => 'darkshades'
-		), SSViewer::get_themes($testThemeBaseDir), 'Our test theme directory contains 2 themes');
+		], SSViewer::get_themes($testThemeBaseDir), 'Our test theme directory contains 2 themes');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'blackcandy' => 'blackcandy',
 			'blackcandy_blog' => 'blackcandy_blog',
 			'darkshades' => 'darkshades',
 			'darkshades_blog' => 'darkshades_blog'
-		), SSViewer::get_themes($testThemeBaseDir, true),
+		], SSViewer::get_themes($testThemeBaseDir, true),
 			'Our test theme directory contains 2 themes and 2 sub-themes');
 
 		// Remove all the test themes we created
@@ -1252,8 +1252,8 @@ after')
 		Config::inst()->update('Director', 'environment_type', 'dev');
 		Config::inst()->update('SSViewer', 'source_file_comments', true);
 		$f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
-		$templates = array(
-			array(
+		$templates = [
+			[
 				'name' => 'SSViewerTestCommentsFullSource',
 				'expected' => ""
 					. "<!doctype html>"
@@ -1263,8 +1263,8 @@ after')
 					. "\t<body></body>"
 					. "</html>"
 					. "<!-- end template $f/SSViewerTestCommentsFullSource.ss -->",
-			),
-			array(
+			],
+			[
 				'name' => 'SSViewerTestCommentsFullSourceHTML4Doctype',
 				'expected' => ""
 					. "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML "
@@ -1275,16 +1275,16 @@ after')
 					. "\t<body></body>"
 					. "</html>"
 					. "<!-- end template $f/SSViewerTestCommentsFullSourceHTML4Doctype.ss -->",
-			),
-			array(
+			],
+			[
 				'name' => 'SSViewerTestCommentsFullSourceNoDoctype',
 				'expected' => ""
 					. "<html><!-- template $f/SSViewerTestCommentsFullSourceNoDoctype.ss -->"
 					. "\t<head></head>"
 					. "\t<body></body>"
 					. "<!-- end template $f/SSViewerTestCommentsFullSourceNoDoctype.ss --></html>",
-			),
-			array(
+			],
+			[
 				'name' => 'SSViewerTestCommentsFullSourceIfIE',
 				'expected' => ""
 					. "<!doctype html>"
@@ -1296,8 +1296,8 @@ after')
 					. "\t<body></body>"
 					. "</html>"
 					. "<!-- end template $f/SSViewerTestCommentsFullSourceIfIE.ss -->",
-			),
-			array(
+			],
+			[
 				'name' => 'SSViewerTestCommentsFullSourceIfIENoDoctype',
 				'expected' => ""
 					. "<!--[if lte IE 8]> <html class='old-ie'> <![endif]-->"
@@ -1308,15 +1308,15 @@ after')
 					. "\t<head></head>"
 					. "\t<body></body>"
 					. "<!-- end template $f/SSViewerTestCommentsFullSourceIfIENoDoctype.ss --></html>",
-			),
-			array(
+			],
+			[
 				'name' => 'SSViewerTestCommentsPartialSource',
 				'expected' =>
 				"<!-- template $f/SSViewerTestCommentsPartialSource.ss -->"
 					. "<div class='typography'></div>"
 					. "<!-- end template $f/SSViewerTestCommentsPartialSource.ss -->",
-			),
-			array(
+			],
+			[
 				'name' => 'SSViewerTestCommentsWithInclude',
 				'expected' =>
 				"<!-- template $f/SSViewerTestCommentsWithInclude.ss -->"
@@ -1328,8 +1328,8 @@ after')
 					. "<!-- end include 'SSViewerTestCommentsInclude' -->"
 					. "</div>"
 					. "<!-- end template $f/SSViewerTestCommentsWithInclude.ss -->",
-			),
-		);
+			],
+		];
 		foreach ($templates as $template) {
 			$this->_renderWithSourceFileComments($template['name'], $template['expected']);
 		}
@@ -1337,55 +1337,55 @@ after')
 		Config::inst()->update('Director', 'environment_type', $origEnv);
 	}
 	private function _renderWithSourceFileComments($name, $expected) {
-		$viewer = new SSViewer(array($name));
-		$data = new ArrayData(array());
+		$viewer = new SSViewer([$name]);
+		$data = new ArrayData([]);
 		$result = $viewer->process($data);
-		$expected = str_replace(array("\r", "\n"), '', $expected);
-		$result = str_replace(array("\r", "\n"), '', $result);
+		$expected = str_replace(["\r", "\n"], '', $expected);
+		$result = str_replace(["\r", "\n"], '', $result);
 		$this->assertEquals($result, $expected);
 	}
 
 	public function testLoopIteratorIterator() {
 		$list = new PaginatedList(new ArrayList());
 		$viewer = new SSViewer_FromString('<% loop List %>$ID - $FirstName<br /><% end_loop %>');
-		$result = $viewer->process(new ArrayData(array('List' => $list)));
+		$result = $viewer->process(new ArrayData(['List' => $list]));
 		$this->assertEquals($result, '');
 	}
 
 	public function testProcessOnlyIncludesRequirementsOnce() {
-		$template = new SSViewer(array('SSViewerTestProcess'));
+		$template = new SSViewer(['SSViewerTestProcess']);
 		$basePath = dirname($this->getCurrentRelativePath()) . '/forms';
 
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(false);
 		$backend->combine_files(
 			'RequirementsTest_ab.css',
-			array(
+			[
 				$basePath . '/RequirementsTest_a.css',
 				$basePath . '/RequirementsTest_b.css'
-			)
+			]
 		);
 
 		Requirements::set_backend($backend);
 
-		$this->assertEquals(1, substr_count($template->process(array()), "a.css"));
-		$this->assertEquals(1, substr_count($template->process(array()), "b.css"));
+		$this->assertEquals(1, substr_count($template->process([]), "a.css"));
+		$this->assertEquals(1, substr_count($template->process([]), "b.css"));
 
 		// if we disable the requirements then we should get nothing
 		$template->includeRequirements(false);
-		$this->assertEquals(0, substr_count($template->process(array()), "a.css"));
-		$this->assertEquals(0, substr_count($template->process(array()), "b.css"));
+		$this->assertEquals(0, substr_count($template->process([]), "a.css"));
+		$this->assertEquals(0, substr_count($template->process([]), "b.css"));
 	}
 
 	public function testRequireCallInTemplateInclude() {
 		//TODO undo skip test on the event that templates ever obtain the ability to reference MODULE_DIR (or something to that effect)
 		if(FRAMEWORK_DIR === 'framework') {
-			$template = new SSViewer(array('SSViewerTestProcess'));
+			$template = new SSViewer(['SSViewerTestProcess']);
 
 			Requirements::set_suffix_requirements(false);
 
 			$this->assertEquals(1, substr_count(
-				$template->process(array()),
+				$template->process([]),
 				"tests/forms/RequirementsTest_a.js"
 			));
 		}
@@ -1396,21 +1396,21 @@ after')
 	}
 
 	public function testCallsWithArguments() {
-		$data = new ArrayData(array(
-			'Set' => new ArrayList(array(
+		$data = new ArrayData([
+			'Set' => new ArrayList([
 				new SSViewerTest_Object("1"),
 				new SSViewerTest_Object("2"),
 				new SSViewerTest_Object("3"),
 				new SSViewerTest_Object("4"),
 				new SSViewerTest_Object("5"),
-			)),
+			]),
 			'Level' => new SSViewerTest_LevelTest(1),
-			'Nest' => array(
+			'Nest' => [
 				'Level' => new SSViewerTest_LevelTest(2),
-			),
-		));
+			],
+		]);
 
-		$tests = array(
+		$tests = [
 			'$Level.output(1)' => '1-1',
 			'$Nest.Level.output($Set.First.Number)' => '2-1',
 			'<% with $Set %>$Up.Level.output($First.Number)<% end_with %>' => '1-1',
@@ -1427,7 +1427,7 @@ after')
 			'<% with $Nest %>
 				<% loop $Level.forLoop($Top.Set.Last.Number) %>$Number<% end_loop %>
 			<% end_with %>' => '!0!1!2!3!4',
-		);
+		];
 
 		foreach($tests as $template => $expected) {
 			$this->assertEquals($expected, trim($this->render($template, $data)));
@@ -1547,10 +1547,10 @@ class SSViewerTestFixture extends ViewableData {
 
 class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 
-	private static $casting = array(
+	private static $casting = [
 		'TextValue' => 'Text',
 		'HTMLValue' => 'HTMLText'
-	);
+	];
 
 	public function methodWithOneArgument($arg1) {
 		return "arg1:{$arg1}";
@@ -1570,9 +1570,9 @@ class SSViewerTest_Object extends DataObject implements TestOnly {
 
 	public $number = null;
 
-	private static $casting = array(
+	private static $casting = [
 		'Link' => 'Text',
-	);
+	];
 
 
 	public function __construct($number = null) {
@@ -1600,17 +1600,17 @@ class SSViewerTest_Object extends DataObject implements TestOnly {
 class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
 
 	public static function get_template_global_variables() {
-		return array(
-			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html', 'casting' => 'HTMLText'),
-			'SSViewerTest_GlobalHTMLEscaped' => array('method' => 'get_html'),
+		return [
+			'SSViewerTest_GlobalHTMLFragment' => ['method' => 'get_html', 'casting' => 'HTMLText'],
+			'SSViewerTest_GlobalHTMLEscaped' => ['method' => 'get_html'],
 
 			'SSViewerTest_GlobalAutomatic',
 			'SSViewerTest_GlobalReferencedByString' => 'get_reference',
-			'SSViewerTest_GlobalReferencedInArray' => array('method' => 'get_reference'),
+			'SSViewerTest_GlobalReferencedInArray' => ['method' => 'get_reference'],
 
-			'SSViewerTest_GlobalThatTakesArguments' => array('method' => 'get_argmix', 'casting' => 'HTMLText')
+			'SSViewerTest_GlobalThatTakesArguments' => ['method' => 'get_argmix', 'casting' => 'HTMLText']
 
-		);
+		];
 	}
 
 	public static function get_html() {
@@ -1644,7 +1644,7 @@ class SSViewerTest_LevelTest extends ViewableData implements TestOnly {
 	}
 
 	public function forLoop($number) {
-		$ret = array();
+		$ret = [];
 		for($i = 0; $i < (int)$number; ++$i) {
 			$ret[] = new SSViewerTest_Object("!$i");
 		}

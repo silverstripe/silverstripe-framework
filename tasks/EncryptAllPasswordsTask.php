@@ -35,10 +35,10 @@ class EncryptAllPasswordsTask extends BuildTask {
 		}
 
 		// Are there members with a clear text password?
-		$members = DataObject::get("Member")->where(array(
+		$members = DataObject::get("Member")->where([
 			'"Member"."PasswordEncryption"' => 'none',
 			'"Member"."Password" IS NOT NULL'
-		));
+		]);
 
 		if(!$members) {
 			$this->debugMessage('No passwords to encrypt');

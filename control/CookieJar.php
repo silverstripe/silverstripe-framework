@@ -19,7 +19,7 @@ class CookieJar implements Cookie_Backend {
 	 *
 	 * @var array Existing cookies sent by the browser
 	 */
-	protected $existing = array();
+	protected $existing = [];
 
 	/**
 	 * Hold the current cookies (ie: a mix of those that were sent to us and we
@@ -27,7 +27,7 @@ class CookieJar implements Cookie_Backend {
 	 *
 	 * @var array The state of cookies once we've sent the response
 	 */
-	protected $current = array();
+	protected $current = [];
 
 	/**
 	 * Hold any NEW cookies that were set by the application and will be sent
@@ -35,7 +35,7 @@ class CookieJar implements Cookie_Backend {
 	 *
 	 * @var array New cookies set by the application
 	 */
-	protected $new = array();
+	protected $new = [];
 
 	/**
 	 * When creating the backend we want to store the existing cookies in our
@@ -45,9 +45,9 @@ class CookieJar implements Cookie_Backend {
 	 * @param array $cookies The existing cookies to load into the cookie jar.
 	 * Omit this to default to $_COOKIE
 	 */
-	public function __construct($cookies = array()) {
+	public function __construct($cookies = []) {
 		$this->current = $this->existing = func_num_args()
-			? ($cookies ?: array()) // Convert empty values to blank arrays
+			? ($cookies ?: []) // Convert empty values to blank arrays
 			: $_COOKIE;
 	}
 

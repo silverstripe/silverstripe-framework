@@ -18,16 +18,16 @@ class NullableFieldTests extends SapphireTest {
 		$this->assertSame("abc", $a->Value());
 		$this->assertSame("abc", $a->dataValue());
 		$field = $a->Field();
-		$this->assertTag(array(
+		$this->assertTag([
 			'tag'=>'input',
 			'id'=>'Field1',
-			'attributes'=>array('type'=>'text', 'name'=>'Field1', 'value'=>'abc'),
-		), $field);
-		$this->assertTag(array(
+			'attributes'=>['type'=>'text', 'name'=>'Field1', 'value'=>'abc'],
+		], $field);
+		$this->assertTag([
 			'tag'=>'input',
 			'id'=>'Field1_IsNull',
-			'attributes'=>array('type'=>'checkbox', 'name'=>'Field1_IsNull', 'value'=>'1'),
-		), $field);
+			'attributes'=>['type'=>'checkbox', 'name'=>'Field1_IsNull', 'value'=>'1'],
+		], $field);
 	}
 	/**
 	 * Test that the NullableField works when it wraps a TextField containing an empty string
@@ -39,16 +39,16 @@ class NullableFieldTests extends SapphireTest {
 		$this->assertSame("", $a->Value());
 		$this->assertSame("", $a->dataValue());
 		$field = $a->Field();
-		$this->assertTag(array(
+		$this->assertTag([
 			'tag'=>'input',
 			'id'=>'Field1',
-			'attributes'=>array('type'=>'text', 'name'=>'Field1', 'value'=>''),
-		), $field);
-		$this->assertTag(array(
+			'attributes'=>['type'=>'text', 'name'=>'Field1', 'value'=>''],
+		], $field);
+		$this->assertTag([
 			'tag'=>'input',
 			'id'=>'Field1_IsNull',
-			'attributes'=>array('type'=>'checkbox', 'name'=>'Field1_IsNull', 'value'=>'1'),
-		), $field);
+			'attributes'=>['type'=>'checkbox', 'name'=>'Field1_IsNull', 'value'=>'1'],
+		], $field);
 	}
 	/**
 	 * Test that the NullableField works when it wraps a TextField containing a null string
@@ -60,16 +60,16 @@ class NullableFieldTests extends SapphireTest {
 		$this->assertSame(null, $a->Value());
 		$this->assertSame(null, $a->dataValue());
 		$field = $a->Field();
-		$this->assertTag(array(
+		$this->assertTag([
 			'tag'=>'input',
 			'id'=>'Field1',
-			'attributes'=>array('type'=>'text', 'name'=>'Field1', 'value'=>''),
-		), $field);
-		$this->assertTag(array(
+			'attributes'=>['type'=>'text', 'name'=>'Field1', 'value'=>''],
+		], $field);
+		$this->assertTag([
 			'tag'=>'input',
 			'id'=>'Field1_IsNull',
-			'attributes'=>array('type'=>'checkbox', 'name'=>'Field1_IsNull', 'value'=>'1', 'checked'=>'checked'),
-		), $field);
+			'attributes'=>['type'=>'checkbox', 'name'=>'Field1_IsNull', 'value'=>'1', 'checked'=>'checked'],
+		], $field);
 		unset($a);
 	}
 
@@ -108,15 +108,15 @@ class NullableFieldTests extends SapphireTest {
 	 */
 	public function testSetValueArray() {
 		$a = new NullableField(new TextField("Field1", "Field 1"));
-		$a->setValue("abc", array("Field1_IsNull"=>false));
+		$a->setValue("abc", ["Field1_IsNull"=>false]);
 		$this->assertSame("abc", $a->dataValue());
 
 		$a = new NullableField(new TextField("Field1", "Field 1"));
-		$a->setValue("", array("Field1_IsNull"=>false));
+		$a->setValue("", ["Field1_IsNull"=>false]);
 		$this->assertSame("", $a->dataValue());
 
 		$a = new NullableField(new TextField("Field1", "Field 1"));
-		$a->setValue("", array("Field1_IsNull"=>true));
+		$a->setValue("", ["Field1_IsNull"=>true]);
 		$this->assertSame(null, $a->dataValue());
 	}
 

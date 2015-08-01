@@ -18,7 +18,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	
 	private static $subitem_class = 'Member';
 	
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'EditForm',
 		'MemberImportForm',
 		'memberimport',
@@ -27,7 +27,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		'groups',
 		'users',
 		'roles'
-	);
+	];
 
 	public function init() {
 		parent::init();
@@ -93,14 +93,14 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			GridFieldConfig_RecordEditor::create()
 		);
 		$columns = $groupList->getConfig()->getComponentByType('GridFieldDataColumns');
-		$columns->setDisplayFields(array(
+		$columns->setDisplayFields([
 			'Breadcrumbs' => singleton('Group')->fieldLabel('Title')
-		));
-		$columns->setFieldFormatting(array(
+		]);
+		$columns->setFieldFormatting([
 			'Breadcrumbs' => function($val, $item) {
 				return Convert::raw2xml($item->getBreadcrumbs(' > '));
 			}
-		));
+		]);
 
 		$fields = new FieldList(
 			$root = new TabSet(
@@ -127,7 +127,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 		// Add import capabilities. Limit to admin since the import logic can affect assigned permissions
 		if(Permission::check('ADMIN')) {
-			$fields->addFieldsToTab('Root.Users', array(
+			$fields->addFieldsToTab('Root.Users', [
 				new HeaderField(_t('SecurityAdmin.IMPORTUSERS', 'Import users'), 3),
 				new LiteralField(
 					'MemberImportFormIframe',
@@ -137,8 +137,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 						$this->Link('memberimport')
 					)
 				)
-			));
-			$fields->addFieldsToTab('Root.Groups', array(
+			]);
+			$fields->addFieldsToTab('Root.Groups', [
 				new HeaderField(_t('SecurityAdmin.IMPORTGROUPS', 'Import groups'), 3),
 				new LiteralField(
 					'GroupImportFormIframe',
@@ -148,7 +148,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 						$this->Link('groupimport')
 					)
 				)
-			));
+			]);
 		}
 
 		// Tab nav in CMS is rendered through separate template		
@@ -206,10 +206,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
 		
-		return $this->renderWith('BlankPage', array(
+		return $this->renderWith('BlankPage', [
 			'Form' => $this->MemberImportForm()->forTemplate(),
 			'Content' => ' '
-		));
+		]);
 	}
 	
 	/**
@@ -238,10 +238,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
 		
-		return $this->renderWith('BlankPage', array(
+		return $this->renderWith('BlankPage', [
 			'Content' => ' ',
 			'Form' => $this->GroupImportForm()->forTemplate()
-		));
+		]);
 	}
 	
 	/**
@@ -280,20 +280,20 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			// admin/security/EditForm/field/Groups/item/2/ItemEditForm/field/Members/item/1/edit
 			$firstCrumb = $crumbs->shift();
 			if($params['FieldName'] == 'Groups') {
-				$crumbs->unshift(new ArrayData(array(
+				$crumbs->unshift(new ArrayData([
 					'Title' => singleton('Group')->i18n_plural_name(),
 					'Link' => $this->Link('groups')
-				)));
+				]));
 			} elseif($params['FieldName'] == 'Users') {
-				$crumbs->unshift(new ArrayData(array(
+				$crumbs->unshift(new ArrayData([
 					'Title' => _t('SecurityAdmin.Users', 'Users'),
 					'Link' => $this->Link('users')
-				)));
+				]));
 			} elseif($params['FieldName'] == 'Roles') {
-				$crumbs->unshift(new ArrayData(array(
+				$crumbs->unshift(new ArrayData([
 					'Title' => _t('SecurityAdmin.TABROLES', 'Roles'),
 					'Link' => $this->Link('roles')
-				)));
+				]));
 			}
 			$crumbs->unshift($firstCrumb);
 		} 
@@ -303,31 +303,31 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function providePermissions() {
 		$title = _t("SecurityAdmin.MENUTITLE", LeftAndMain::menu_title_for_class($this->class));
-		return array(
-			"CMS_ACCESS_SecurityAdmin" => array(
-				'name' => _t('CMSMain.ACCESS', "Access to '{title}' section", array('title' => $title)),
+		return [
+			"CMS_ACCESS_SecurityAdmin" => [
+				'name' => _t('CMSMain.ACCESS', "Access to '{title}' section", ['title' => $title]),
 				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access'),
 				'help' => _t(
 					'SecurityAdmin.ACCESS_HELP',
 					'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
 				)
-			),
-			'EDIT_PERMISSIONS' => array(
+			],
+			'EDIT_PERMISSIONS' => [
 				'name' => _t('SecurityAdmin.EDITPERMISSIONS', 'Manage permissions for groups'),
 				'category' => _t('Permissions.PERMISSIONS_CATEGORY', 'Roles and access permissions'),
 				'help' => _t('SecurityAdmin.EDITPERMISSIONS_HELP',
 					'Ability to edit Permissions and IP Addresses for a group.'
 					. ' Requires the "Access to \'Security\' section" permission.'),
 				'sort' => 0
-			),
-			'APPLY_ROLES' => array(
+			],
+			'APPLY_ROLES' => [
 				'name' => _t('SecurityAdmin.APPLY_ROLES', 'Apply roles to groups'),
 				'category' => _t('Permissions.PERMISSIONS_CATEGORY', 'Roles and access permissions'),
 				'help' => _t('SecurityAdmin.APPLY_ROLES_HELP', 'Ability to edit the roles assigned to a group.'
 					. ' Requires the "Access to \'Users\' section" permission.'),
 				'sort' => 0
-			)
-		);
+			]
+		];
 	}
 	
 	/**
@@ -338,7 +338,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 * @param $codes String|Array
 	 */
 	public static function add_hidden_permission($codes){
-		if(is_string($codes)) $codes = array($codes);
+		if(is_string($codes)) $codes = [$codes];
 		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
 		Config::inst()->update('Permission', 'hidden_permissions', $codes);
 	}
@@ -348,7 +348,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 * @param $codes String|Array
 	 */
 	public static function remove_hidden_permission($codes){
-		if(is_string($codes)) $codes = array($codes);
+		if(is_string($codes)) $codes = [$codes];
 		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
 		Config::inst()->remove('Permission', 'hidden_permissions', $codes);
 	}

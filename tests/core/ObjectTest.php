@@ -20,13 +20,13 @@ class ObjectTest extends SapphireTest {
 		$this->assertTrue($obj->hasMethod('extendableMethod'), "Extension method found in original spelling");
 		$this->assertTrue($obj->hasMethod('ExTendableMethod'), "Extension method found case-insensitive");
 
-		$objs = array();
+		$objs = [];
 		$objs[] = new ObjectTest_T2();
 		$objs[] = new ObjectTest_T2();
 		$objs[] = new ObjectTest_T2();
 
 		// All these methods should exist and return true
-		$trueMethods = array('testMethod','otherMethod','someMethod','t1cMethod','normalMethod');
+		$trueMethods = ['testMethod','otherMethod','someMethod','t1cMethod','normalMethod'];
 
 		foreach($objs as $i => $obj) {
 			foreach($trueMethods as $method) {
@@ -116,16 +116,16 @@ class ObjectTest extends SapphireTest {
 	 * Tests that {@link Object::create()} correctly passes all arguments to the new object
 	 */
 	public function testCreateWithArgs() {
-		$createdObj = ObjectTest_CreateTest::create('arg1', 'arg2', array(), null, 'arg5');
-		$this->assertEquals($createdObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
+		$createdObj = ObjectTest_CreateTest::create('arg1', 'arg2', [], null, 'arg5');
+		$this->assertEquals($createdObj->constructArguments, ['arg1', 'arg2', [], null, 'arg5']);
 
-		$strongObj = Object::strong_create('ObjectTest_CreateTest', 'arg1', 'arg2', array(), null, 'arg5');
-		$this->assertEquals($strongObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
+		$strongObj = Object::strong_create('ObjectTest_CreateTest', 'arg1', 'arg2', [], null, 'arg5');
+		$this->assertEquals($strongObj->constructArguments, ['arg1', 'arg2', [], null, 'arg5']);
 	}
 
 	public function testCreateLateStaticBinding() {
-		$createdObj = ObjectTest_CreateTest::create('arg1', 'arg2', array(), null, 'arg5');
-		$this->assertEquals($createdObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
+		$createdObj = ObjectTest_CreateTest::create('arg1', 'arg2', [], null, 'arg5');
+		$this->assertEquals($createdObj->constructArguments, ['arg1', 'arg2', [], null, 'arg5']);
 	}
 
 	/**
@@ -163,17 +163,17 @@ class ObjectTest extends SapphireTest {
 	public function testGetExtensions() {
 		$this->assertEquals(
 			Object::get_extensions('ObjectTest_ExtensionTest'),
-			array(
+			[
 				'oBjEcTTEST_ExtendTest1',
 				"ObjectTest_ExtendTest2",
-			)
+			]
 		);
 		$this->assertEquals(
 			Object::get_extensions('ObjectTest_ExtensionTest', true),
-			array(
+			[
 				'oBjEcTTEST_ExtendTest1',
 				"ObjectTest_ExtendTest2('FOO', 'BAR')",
-			)
+			]
 		);
 		$inst = new ObjectTest_ExtensionTest();
 		$extensions = $inst->getExtensionInstances();
@@ -374,76 +374,76 @@ class ObjectTest extends SapphireTest {
 		$object   = new ObjectTest_ExtendTest();
 		$argument = 'test';
 
-		$this->assertEquals($object->extend('extendableMethod'), array('ExtendTest2()'));
-		$this->assertEquals($object->extend('extendableMethod', $argument), array('ExtendTest2(modified)'));
+		$this->assertEquals($object->extend('extendableMethod'), ['ExtendTest2()']);
+		$this->assertEquals($object->extend('extendableMethod', $argument), ['ExtendTest2(modified)']);
 		$this->assertEquals($argument, 'modified');
 
-		$this->assertEquals($object->invokeWithExtensions('extendableMethod'), array('ExtendTest()', 'ExtendTest2()'));
+		$this->assertEquals($object->invokeWithExtensions('extendableMethod'), ['ExtendTest()', 'ExtendTest2()']);
 		$this->assertEquals (
 			$object->invokeWithExtensions('extendableMethod', 'test'),
-			array('ExtendTest(test)', 'ExtendTest2(modified)')
+			['ExtendTest(test)', 'ExtendTest2(modified)']
 		);
 	}
 
 	public function testParseClassSpec() {
 		// Simple case
 		$this->assertEquals(
-			array('Versioned',array('Stage', 'Live')),
+			['Versioned',['Stage', 'Live']],
 			Object::parse_class_spec("Versioned('Stage','Live')")
 		);
 		// String with commas
 		$this->assertEquals(
-			array('Versioned',array('Stage,Live', 'Stage')),
+			['Versioned',['Stage,Live', 'Stage']],
 			Object::parse_class_spec("Versioned('Stage,Live','Stage')")
 		);
 		// String with quotes
 		$this->assertEquals(
-			array('Versioned',array('Stage\'Stage,Live\'Live', 'Live')),
+			['Versioned',['Stage\'Stage,Live\'Live', 'Live']],
 			Object::parse_class_spec("Versioned('Stage\'Stage,Live\'Live','Live')")
 		);
 
 		// True, false and null values
 		$this->assertEquals(
-			array('ClassName', array('string', true, array('string', false))),
+			['ClassName', ['string', true, ['string', false]]],
 			Object::parse_class_spec('ClassName("string", true, array("string", false))')
 		);
 		$this->assertEquals(
-			array('ClassName', array(true, false, null)),
+			['ClassName', [true, false, null]],
 			Object::parse_class_spec('ClassName(true, false, null)')
 		);
 
 		// Array
 		$this->assertEquals(
-			array('Enum',array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
+			['Enum',[['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted']],
 			Object::parse_class_spec("Enum(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')")
 		);
 		// Nested array
 		$this->assertEquals(
-			array('Enum',array(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')),
-				'Unsubmitted')),
+			['Enum',[['Accepted', 'Pending', 'Declined', ['UnsubmittedA','UnsubmittedB']],
+				'Unsubmitted']],
 			Object::parse_class_spec(
 				"Enum(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')), 'Unsubmitted')")
 		);
 		// 5.4 Shorthand Array
 		$this->assertEquals(
-			array('Enum',array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
+			['Enum',[['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted']],
 			Object::parse_class_spec("Enum(['Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted']")
 		);
 		// 5.4 Nested shorthand array
 		$this->assertEquals(
-			array('Enum',array(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')),
-				'Unsubmitted')),
+			['Enum',[['Accepted', 'Pending', 'Declined', ['UnsubmittedA','UnsubmittedB']],
+				'Unsubmitted']],
 			Object::parse_class_spec(
 				"Enum(['Accepted', 'Pending', 'Declined', ['UnsubmittedA','UnsubmittedB']], 'Unsubmitted')")
 		);
 		// Namespaced class
 		$this->assertEquals(
-			array('Test\MyClass', array()),
+			['Test\MyClass', []],
 			Object::parse_class_spec('Test\MyClass')
 		);
 		// Fully qualified namespaced class
 		$this->assertEquals(
-			array('\Test\MyClass', array()),
+			['\Test\MyClass', []],
 			Object::parse_class_spec('\Test\MyClass')
 		);
 	}
@@ -476,7 +476,7 @@ class ObjectTest_T1C extends Object {
 
 class ObjectTest_T2 extends Object {
 	protected $failover;
-	protected $failoverArr = array();
+	protected $failoverArr = [];
 
 	public function __construct() {
 		$this->failover = new ObjectTest_T1A();
@@ -510,14 +510,14 @@ class ObjectTest_MyObject extends Object {
 	public $title = 'my object';
 	/** @config */
 	private static $mystaticProperty = "MyObject";
-	static $mystaticArray = array('one');
+	static $mystaticArray = ['one'];
 }
 
 class ObjectTest_MySubObject extends ObjectTest_MyObject {
 	public $title = 'my subobject';
 	private static $mystaticProperty = "MySubObject";
 	static $mystaticSubProperty = "MySubObject";
-	static $mystaticArray = array('two');
+	static $mystaticArray = ['two'];
 }
 
 class ObjectTest_CreateTest extends Object {
@@ -536,15 +536,15 @@ class ObjectTest_CreateTest3 extends Object {}
 
 class ObjectTest_ExtensionTest extends Object {
 
-	private static $extensions = array (
+	private static $extensions = [
 		'oBjEcTTEST_ExtendTest1',
 		"ObjectTest_ExtendTest2('FOO', 'BAR')",
-	);
+	];
 
 }
 
 class ObjectTest_ExtensionTest2 extends Object {
-	private static $extensions = array('ObjectTest_Extension');
+	private static $extensions = ['ObjectTest_Extension'];
 }
 
 
@@ -553,9 +553,9 @@ class ObjectTest_ExtensionTest3 extends Object {
 
 class ObjectTest_ExtensionRemoveTest extends Object {
 
-	private static $extensions = array (
+	private static $extensions = [
 		'ObjectTest_ExtendTest1',
-	);
+	];
 
 }
 
@@ -577,7 +577,7 @@ class ObjectTest_CacheTest extends Object {
 }
 
 class ObjectTest_ExtendTest extends Object {
-	private static $extensions = array('ObjectTest_ExtendTest1', 'ObjectTest_ExtendTest2');
+	private static $extensions = ['ObjectTest_ExtendTest1', 'ObjectTest_ExtendTest2'];
 	public function extendableMethod($argument = null) { return "ExtendTest($argument)"; }
 }
 

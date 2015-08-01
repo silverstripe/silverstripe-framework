@@ -20,9 +20,9 @@ class EmailField extends TextField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'type' => 'email',
-			)
+			]
 		);
 	}
 

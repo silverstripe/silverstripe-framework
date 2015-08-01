@@ -262,7 +262,7 @@ class ImageTest extends SapphireTest {
 		$imageFirst = $image->Pad(200,200,'CCCCCC');
 		$imageFilename = $imageFirst->getFullPath();
 			// Encoding of the arguments is duplicated from cacheFilename
-		$neededPart = 'Pad' . base64_encode(json_encode(array(200,200,'CCCCCC')));
+		$neededPart = 'Pad' . base64_encode(json_encode([200,200,'CCCCCC']));
 		$this->assertContains($neededPart, $imageFilename, 'Filename for cached image is correctly generated');
 	}
 
@@ -285,7 +285,7 @@ class ImageTest extends SapphireTest {
 
 		$imageThird = $imageSecond->Pad(600,600,'0F0F0F');
 		// Encoding of the arguments is duplicated from cacheFilename
-		$argumentString = base64_encode(json_encode(array(600,600,'0F0F0F')));
+		$argumentString = base64_encode(json_encode([600,600,'0F0F0F']));
 		$this->assertNotNull($imageThird);
 		$this->assertContains($argumentString, $imageThird->getFullPath(),
 			'Image contains background color for padded resizement');
@@ -327,8 +327,8 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
 
 		// Encoding of the arguments is duplicated from cacheFilename
-		$oldArgumentString = base64_encode(json_encode(array(200)));
-		$newArgumentString = base64_encode(json_encode(array(300)));
+		$oldArgumentString = base64_encode(json_encode([200]));
+		$newArgumentString = base64_encode(json_encode([300]));
 
 		$newPath = str_replace($oldArgumentString, $newArgumentString, $p);
 		$newRelative = str_replace($oldArgumentString, $newArgumentString, $image_generated->getFileName());
@@ -410,7 +410,7 @@ class ImageTest extends SapphireTest {
 		$generateMethods = $this->getGenerateMethods();
 
 		// get paths for each generate method
-		$paths = array();
+		$paths = [];
 		foreach ($generateMethods as $method) {
 			$generatedImage = $image->$method(333, 333, 'FFFFFF');
 			$paths[$method] = $generatedImage->getFullPath();
@@ -433,7 +433,7 @@ class ImageTest extends SapphireTest {
 	 * @return array
 	 */
 	protected function getGenerateMethods($custom = true) {
-		$generateMethods = array();
+		$generateMethods = [];
 		$methodNames = Image::create()->allMethodNames($custom);
 
 		foreach ($methodNames as $methodName) {

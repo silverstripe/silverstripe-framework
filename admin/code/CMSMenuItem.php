@@ -43,7 +43,7 @@ class CMSMenuItem extends Object {
 	 *
 	 * @var string
 	 */
-	protected $attributes = array();
+	protected $attributes = [];
 
 	/**
 	 * Create a new CMS Menu Item
@@ -87,7 +87,7 @@ class CMSMenuItem extends Object {
 		});
 
 		// Create markkup
-		$parts = array();
+		$parts = [];
 
 		foreach($attrs as $name => $value) {
 			$parts[] = ($value === true) ? "{$name}=\"{$name}\"" : "{$name}=\"" . Convert::raw2att($value) . "\"";

@@ -112,7 +112,7 @@ class CmsUiContext extends BehatContext {
 	public function iShouldSeeAButtonInCmsContentToolbar($text) {
 		$cms_content_toolbar_element = $this->getCmsContentToolbarElement();
 
-		$element = $cms_content_toolbar_element->find('named', array('link_or_button', "'$text'"));
+		$element = $cms_content_toolbar_element->find('named', ['link_or_button', "'$text'"]);
 		assertNotNull($element, sprintf('%s button not found', $text));
 	}
 
@@ -122,7 +122,7 @@ class CmsUiContext extends BehatContext {
 	public function stepIShouldSeeInCmsTree($text) {
 		$cms_tree_element = $this->getCmsTreeElement();
 
-		$element = $cms_tree_element->find('named', array('content', "'$text'"));
+		$element = $cms_tree_element->find('named', ['content', "'$text'"]);
 		assertNotNull($element, sprintf('%s not found', $text));
 	}
 
@@ -132,7 +132,7 @@ class CmsUiContext extends BehatContext {
 	public function stepIShouldNotSeeInCmsTree($text) {
 		$cms_tree_element = $this->getCmsTreeElement();
 
-		$element = $cms_tree_element->find('named', array('content', "'$text'"));
+		$element = $cms_tree_element->find('named', ['content', "'$text'"]);
 		assertNull($element, sprintf('%s found', $text));
 	}
 
@@ -278,7 +278,7 @@ class CmsUiContext extends BehatContext {
 
 		$tab_element = null;
 		foreach($tabsets as $tabset) {
-			$tab_element = $tabset->find('named', array('link_or_button', "'$tab'"));
+			$tab_element = $tabset->find('named', ['link_or_button', "'$tab'"]);
 			if($tab_element) break;
 		}
 		if($negate) {
@@ -304,7 +304,7 @@ class CmsUiContext extends BehatContext {
 		$tab_element = null;
 		foreach($tabsets as $tabset) {
 			if($tab_element) continue;
-			$tab_element = $tabset->find('named', array('link_or_button', "'$tab'"));
+			$tab_element = $tabset->find('named', ['link_or_button', "'$tab'"]);
 		}
 		assertNotNull($tab_element, sprintf('%s tab not found', $tab));
 
@@ -336,10 +336,10 @@ class CmsUiContext extends BehatContext {
 	 * @Given /^I set the CMS mode to "([^"]*)"$/
 	 */
 	public function iSetTheCmsToMode($mode) {
-		return array(
+		return [
 			new Step\When(sprintf('I fill in the "Change view mode" dropdown with "%s"', $mode)),
 			new Step\When('I wait for 1 second') // wait for CMS layout to redraw
-		);
+		];
 	}
 
 	/**
@@ -439,7 +439,7 @@ class CmsUiContext extends BehatContext {
 
 		$nativeField = $this->getSession()->getPage()->find(
 			'named',
-			array('select', $this->getSession()->getSelectorsHandler()->xpathLiteral($field))
+			['select', $this->getSession()->getSelectorsHandler()->xpathLiteral($field)]
 		);
 		if($nativeField && $nativeField->isVisible()) {
 			$nativeField->selectOption($value);
@@ -447,7 +447,7 @@ class CmsUiContext extends BehatContext {
 		}
 
 		// Given the fuzzy matching, we might get more than one matching field.
-		$formFields = array();
+		$formFields = [];
 
 		// Find by label
 		$formField = $this->getSession()->getPage()->findField($field);

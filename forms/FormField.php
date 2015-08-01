@@ -80,7 +80,7 @@ class FormField extends RequestHandler {
 	 * @config
 	 * @var array $default_classes The default classes to apply to the FormField
 	 */
-	private static $default_classes = array();
+	private static $default_classes = [];
 
 
 	/**
@@ -162,7 +162,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @var array
 	 */
-	protected $attributes = array();
+	protected $attributes = [];
 
 	/**
 	 * Takes a field name and converts camelcase to spaced words. Also resolves combined field
@@ -440,7 +440,7 @@ class FormField extends RequestHandler {
 	 * @return string
 	 */
 	public function extraClass() {
-		$classes = array();
+		$classes = [];
 
 		$classes[] = $this->Type();
 
@@ -552,7 +552,7 @@ class FormField extends RequestHandler {
 	 * @return array
 	 */
 	public function getAttributes() {
-		$attributes = array(
+		$attributes = [
 			'type' => 'text',
 			'name' => $this->getName(),
 			'value' => $this->Value(),
@@ -560,7 +560,7 @@ class FormField extends RequestHandler {
 			'id' => $this->ID(),
 			'disabled' => $this->isDisabled(),
 			'readonly' => $this->isReadonly()
-		);
+		];
 
 		if($this->Required()) {
 			$attributes['required'] = 'required';
@@ -608,7 +608,7 @@ class FormField extends RequestHandler {
 		}
 
 		// Create markup
-		$parts = array();
+		$parts = [];
 
 		foreach($attributes as $name => $value) {
 			if($value === true) {
@@ -830,7 +830,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @return string
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$context = $this;
 
 		if(count($properties)) {
@@ -855,7 +855,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @return string
 	 */
-	public function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = []) {
 		$context = $this;
 
 		if(count($properties)) {
@@ -872,7 +872,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @return string
 	 */
-	public function SmallFieldHolder($properties = array()) {
+	public function SmallFieldHolder($properties = []) {
 		$context = $this;
 
 		if(count($properties)) {
@@ -925,7 +925,7 @@ class FormField extends RequestHandler {
 	 * @return array
 	 */
 	private function _templates($customTemplate = null, $customTemplateSuffix = null) {
-		$matches = array();
+		$matches = [];
 
 		foreach(array_reverse(ClassInfo::ancestry($this)) as $className) {
 			$matches[] = $className . $customTemplateSuffix;

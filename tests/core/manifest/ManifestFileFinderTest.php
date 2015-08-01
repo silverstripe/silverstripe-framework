@@ -31,9 +31,9 @@ class ManifestFileFinderTest extends SapphireTest {
 		$finder = new ManifestFileFinder();
 		$finder->setOption('name_regex', '/\.txt$/');
 
-		$this->assertFinderFinds($finder, array(
+		$this->assertFinderFinds($finder, [
 			'module/module.txt'
-		));
+		]);
 	}
 
 	public function testIgnoreTests() {
@@ -41,10 +41,10 @@ class ManifestFileFinderTest extends SapphireTest {
 		$finder->setOption('name_regex', '/\.txt$/');
 		$finder->setOption('ignore_tests', false);
 
-		$this->assertFinderFinds($finder, array(
+		$this->assertFinderFinds($finder, [
 			'module/module.txt',
 			'module/tests/tests.txt'
-		));
+		]);
 	}
 
 	public function testIncludeThemes() {
@@ -52,10 +52,10 @@ class ManifestFileFinderTest extends SapphireTest {
 		$finder->setOption('name_regex', '/\.txt$/');
 		$finder->setOption('include_themes', true);
 
-		$this->assertFinderFinds($finder, array(
+		$this->assertFinderFinds($finder, [
 			'module/module.txt',
 			'themes/themes.txt'
-		));
+		]);
 	}
 
 }

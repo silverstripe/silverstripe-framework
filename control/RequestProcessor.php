@@ -13,9 +13,9 @@ class RequestProcessor implements RequestFilter {
 	 *
 	 * @var array
 	 */
-	private $filters = array();
+	private $filters = [];
 
-	public function __construct($filters = array()) {
+	public function __construct($filters = []) {
 		$this->filters = $filters;
 	}
 

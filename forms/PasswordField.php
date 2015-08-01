@@ -37,9 +37,9 @@ class PasswordField extends TextField {
 	 * {@inheritdoc}
 	 */
 	public function getAttributes() {
-		$attributes = array(
+		$attributes = [
 			'type' => 'password',
-		);
+		];
 
 		$autocomplete = Config::inst()->get('PasswordField', 'autocomplete');
 

@@ -61,7 +61,7 @@ class DateField extends TextField {
 	 * @config
 	 * @var array
 	 */
-	private static $default_config = array(
+	private static $default_config = [
 		'showcalendar' => false,
 		'jslocale' => null,
 		'dmyfields' => false,
@@ -71,7 +71,7 @@ class DateField extends TextField {
 		'datavalueformat' => 'yyyy-MM-dd',
 		'min' => null,
 		'max' => null,
-	);
+	];
 
 	/**
 	 * @var array
@@ -112,7 +112,7 @@ class DateField extends TextField {
 		parent::__construct($name, $title, $value);
 	}
 
-	public function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = []) {
 		if ($this->getConfig('showcalendar')) {
 			// TODO Replace with properly extensible view helper system
 			$d = DateField_View_JQuery::create($this);
@@ -136,7 +136,7 @@ class DateField extends TextField {
 		return $html;
 	}
 
-	function SmallFieldHolder($properties = array()){
+	function SmallFieldHolder($properties = []){
 		$d = DateField_View_JQuery::create($this);
 		$d->onBeforeRender();
 		$html = parent::SmallFieldHolder($properties);
@@ -144,18 +144,18 @@ class DateField extends TextField {
 		return $html;
 	}
 
-	public function Field($properties = array()) {
-		$config = array(
+	public function Field($properties = []) {
+		$config = [
 			'showcalendar' => $this->getConfig('showcalendar'),
 			'isoDateformat' => $this->getConfig('dateformat'),
 			'jquerydateformat' => DateField_View_JQuery::convert_iso_to_jquery_format($this->getConfig('dateformat')),
 			'min' => $this->getConfig('min'),
 			'max' => $this->getConfig('max')
-		);
+		];
 
 		// Add other jQuery UI specific, namespaced options (only serializable, no callbacks etc.)
 		// TODO Move to DateField_View_jQuery once we have a properly extensible HTML5 attribute system for FormField
-		$jqueryUIConfig = array();
+		$jqueryUIConfig = [];
 		foreach($this->getConfig() as $k => $v) {
 			if(preg_match('/^jQueryUI\.(.*)/', $k, $matches)) $jqueryUIConfig[$matches[1]] = $v;
 		}
@@ -189,7 +189,7 @@ class DateField extends TextField {
 			// order fields depending on format
 			$sep = $this->getConfig('dmyseparator');
 			$format = $this->getConfig('dateformat');
-			$fields = array();
+			$fields = [];
 			$fields[stripos($format, 'd')] = $fieldDay->Field();
 			$fields[stripos($format, 'm')] = $fieldMonth->Field();
 			$fields[stripos($format, 'y')] = $fieldYear->Field();
@@ -330,7 +330,7 @@ class DateField extends TextField {
 	 */
 	public static function set_default_config($k, $v) {
 		Deprecation::notice('4.0', 'Use the "DateField.default_config" config setting instead');
-		return Config::inst()->update('DateField', 'default_config', array($k => $v));
+		return Config::inst()->update('DateField', 'default_config', [$k => $v]);
 	}
 
 	/**
@@ -353,7 +353,7 @@ class DateField extends TextField {
 				$this->name,
 				_t(
 					'DateField.VALIDDATEFORMAT2', "Please enter a valid date format ({format})",
-					array('format' => $this->getConfig('dateformat'))
+					['format' => $this->getConfig('dateformat')]
 				),
 				"validation",
 				false
@@ -375,7 +375,7 @@ class DateField extends TextField {
 					_t(
 						'DateField.VALIDDATEMINDATE',
 						"Your date has to be newer or matching the minimum allowed date ({date})",
-						array('date' => $minDate->toString($this->getConfig('dateformat')))
+						['date' => $minDate->toString($this->getConfig('dateformat'))]
 					),
 					"validation",
 					false
@@ -395,7 +395,7 @@ class DateField extends TextField {
 					$this->name,
 					_t('DateField.VALIDDATEMAXDATE',
 						"Your date has to be older or matching the maximum allowed date ({date})",
-						array('date' => $maxDate->toString($this->getConfig('dateformat')))
+						['date' => $maxDate->toString($this->getConfig('dateformat'))]
 					),
 					"validation",
 					false
@@ -475,7 +475,7 @@ class DateField_Disabled extends DateField {
 
 	protected $disabled = true;
 
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		if($this->valueObj) {
 			if($this->valueObj->isToday()) {
 				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
@@ -520,7 +520,7 @@ class DateField_View_JQuery extends Object {
 	 * @var array Maps values from {@link i18n::$all_locales} to
 	 * localizations existing in jQuery UI.
 	 */
-	private static $locale_map = array(
+	private static $locale_map = [
 		'en_GB' => 'en-GB',
 		'en_US' => 'en',
 		'en_NZ' => 'en-GB',
@@ -530,7 +530,7 @@ class DateField_View_JQuery extends Object {
 		'zh_CN' => 'zh-CN',
 		'zh_HK' => 'zh-HK',
 		'zh_TW' => 'zh-TW',
-	);
+	];
 
 	/**
 	 * @param DateField $field
@@ -620,7 +620,7 @@ class DateField_View_JQuery extends Object {
 	 * @return String
 	 */
 	public static function convert_iso_to_jquery_format($format) {
-		$convert = array(
+		$convert = [
 			'/([^d])d([^d])/' => '$1d$2',
 			'/^d([^d])/' => 'd$1',
 			'/([^d])d$/' => '$1d',
@@ -667,7 +667,7 @@ class DateField_View_JQuery extends Object {
 			'/X/' => '',
 			'/r/' => '',
 			'/U/' => '',
-		);
+		];
 		$patterns = array_keys($convert);
 		$replacements = array_values($convert);
 

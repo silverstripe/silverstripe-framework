@@ -15,14 +15,14 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	 *
 	 * @var array $firstItems
 	 */
-	protected $firstItems = array();
+	protected $firstItems = [];
 
 	/**
 	 * @see SS_Map::push()
 	 *
 	 * @var array $lastItems
 	 */
-	protected $lastItems = array();
+	protected $lastItems = [];
 
 	/**
 	 * Construct a new map around an SS_list.
@@ -61,7 +61,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	 * @return array
 	 */
 	public function toArray() {
-		$array = array();
+		$array = [];
 
 		foreach($this as $k => $v) {
 			$array[$k] = $v;
@@ -98,9 +98,9 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	 */
 	public function unshift($key, $value) {
 		$oldItems = $this->firstItems;
-		$this->firstItems = array(
+		$this->firstItems = [
 			$key => $value
-		);
+		];
 
 		if($oldItems) {
 			$this->firstItems = $this->firstItems + $oldItems;
@@ -118,9 +118,9 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	public function push($key, $value) {
 		$oldItems = $this->lastItems;
 
-		$this->lastItems = array(
+		$this->lastItems = [
 			$key => $value
-		);
+		];
 
 		if($oldItems) {
 			$this->lastItems = $this->lastItems + $oldItems;
@@ -277,10 +277,10 @@ class SS_Map_Iterator implements Iterator {
 
 	protected $endItemIdx;
 
-	protected $firstItems = array();
-	protected $lastItems = array();
+	protected $firstItems = [];
+	protected $lastItems = [];
 
-	protected $excludedItems = array();
+	protected $excludedItems = [];
 
 	/**
 	 * @param Iterator $items The iterator to build this map from
@@ -297,14 +297,14 @@ class SS_Map_Iterator implements Iterator {
 
 		if($firstItems) {
 			foreach($firstItems as $k => $v) {
-				$this->firstItems[] = array($k,$v);
+				$this->firstItems[] = [$k,$v];
 				$this->excludedItems[] = $k;
 			}
 		}
 
 		if($lastItems) {
 			foreach($lastItems as $k => $v) {
-				$this->lastItems[] = array($k, $v);
+				$this->lastItems[] = [$k, $v];
 				$this->excludedItems[] = $k;
 			}
 		}

@@ -81,7 +81,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * @var array
 	 */
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'save',
 		'savetreenode',
@@ -94,7 +94,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'AddForm',
 		'batchactions',
 		'BatchActionsForm',
-	);
+	];
 
 	/**
 	 * @config
@@ -130,7 +130,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @config
 	 * @var array
 	 */
-	private static $extra_requirements_javascript = array();
+	private static $extra_requirements_javascript = [];
 
 	/**
 	 * YAML configuration example:
@@ -144,13 +144,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @config
 	 * @var array See {@link extra_requirements_javascript}
 	 */
-	private static $extra_requirements_css = array();
+	private static $extra_requirements_css = [];
 
 	/**
 	 * @config
 	 * @var array See {@link extra_requirements_javascript}
 	 */
-	private static $extra_requirements_themedCss = array();
+	private static $extra_requirements_themedCss = [];
 
 	/**
 	 * If true, call a keepalive ping every 5 minutes from the CMS interface,
@@ -186,7 +186,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")) return true;
 
 		// Check for LeftAndMain sub-class permissions
-		$codes = array();
+		$codes = [];
 		$extraCodes = $this->stat('required_permission_codes');
 		if($extraCodes !== false) { // allow explicit FALSE to disable subclass check
 			if($extraCodes) $codes = array_merge($codes, (array)$extraCodes);
@@ -220,9 +220,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			_t('LeftAndMain.HELP', 'Help', 'Menu title'),
 			$this->config()->help_link,
 			-2,
-			array(
+			[
 				'target' => '_blank'
-			)
+			]
 		);
 
 		// Allow customisation of the access check by a extension
@@ -246,7 +246,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			}
 
 			// if no alternate menu items have matched, return a permission error
-			$messageSet = array(
+			$messageSet = [
 				'default' => _t('LeftAndMain.PERMDEFAULT',
 					"Please choose an authentication method and enter your credentials to access the CMS."),
 				'alreadyLoggedIn' => _t('LeftAndMain.PERMALREADY',
@@ -255,7 +255,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				'logInAgain' => _t('LeftAndMain.PERMAGAIN',
 					"You have been logged out of the CMS.  If you would like to log in again, enter a username and"
 					. " password below."),
-			);
+			];
 
 			return Security::permissionFailure($this, $messageSet);
 		}
@@ -276,7 +276,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$htmlEditorConfig = HtmlEditorConfig::get_active();
 		$htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
 		if(!$htmlEditorConfig->getOption('content_css')) {
-			$cssFiles = array();
+			$cssFiles = [];
 			$cssFiles[] = FRAMEWORK_ADMIN_DIR . '/css/editor.css';
 
 			// Use theme from the site config
@@ -306,7 +306,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// We also re-compress already compressed files through JSMin as this causes weird runtime bugs.
 		Requirements::combine_files(
 			'lib.js',
-			array(
+			[
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				FRAMEWORK_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/lib.js',
@@ -334,13 +334,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				FRAMEWORK_DIR . '/javascript/TabSet.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js',
 				FRAMEWORK_DIR . '/javascript/GridField.js',
-			)
+			]
 		);
 
 		if (Director::isDev()) Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/leaktools.js');
 
 		$leftAndMainIncludes = array_unique(array_merge(
-			array(
+			[
 				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.ActionTabSet.js',
@@ -354,7 +354,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldDescriptionToggle.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.TreeDropdownField.js',
-			),
+			],
 			Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
 			Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
 		));
@@ -409,7 +409,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			foreach($extraCss as $file => $config) {
 				if(is_numeric($file)) {
 					$file = $config;
-					$config = array();
+					$config = [];
 				}
 
 				Requirements::css($file, isset($config['media']) ? $config['media'] : null);
@@ -422,7 +422,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			foreach ($extraThemedCss as $file => $config) {
 				if(is_numeric($file)) {
 					$file = $config;
-					$config = array();
+					$config = [];
 				}
 
 				Requirements::themedCSS($file, isset($config['media']) ? $config['media'] : null);
@@ -576,7 +576,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(!$this->responseNegotiator) {
 			$controller = $this;
 			$this->responseNegotiator = new PjaxResponseNegotiator(
-				array(
+				[
 					'CurrentForm' => function() use(&$controller) {
 						return $controller->getEditForm()->forTemplate();
 					},
@@ -589,7 +589,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					'default' => function() use(&$controller) {
 						return $controller->renderWith($controller->getViewer('show'));
 					}
-				),
+				],
 				$this->response
 			);
 		}
@@ -668,14 +668,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 						if (!empty($menuIcon)) $menuIconStyling .= $menuIcon;
 					}
 
-					$menu->push(new ArrayData(array(
+					$menu->push(new ArrayData([
 						"MenuItem" => $menuItem,
 						"AttributesHTML" => $menuItem->getAttributesHTML(),
 						"Title" => Convert::raw2xml($title),
 						"Code" => DBField::create_field('Text', $code),
 						"Link" => $menuItem->url,
 						"LinkingMode" => $linkingmode
-					)));
+					]));
 				}
 			}
 			if ($menuIconStyling) Requirements::customCSS($menuIconStyling);
@@ -732,12 +732,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public function Breadcrumbs($unlinked = false) {
 		$defaultTitle = LeftAndMain::menu_title_for_class($this->class);
 		$title = _t("{$this->class}.MENUTITLE", $defaultTitle);
-		$items = new ArrayList(array(
-			new ArrayData(array(
+		$items = new ArrayList([
+			new ArrayData([
 				'Title' => $title,
 				'Link' => ($unlinked) ? false : $this->Link()
-			))
-		));
+			])
+		]);
 		$record = $this->currentPage();
 		if($record && $record->exists()) {
 			if($record->hasExtension('Hierarchy')) {
@@ -745,16 +745,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$ancestors = new ArrayList(array_reverse($ancestors->toArray()));
 				$ancestors->push($record);
 				foreach($ancestors as $ancestor) {
-					$items->push(new ArrayData(array(
+					$items->push(new ArrayData([
 						'Title' => ($ancestor->MenuTitle) ? $ancestor->MenuTitle : $ancestor->Title,
 						'Link' => ($unlinked) ? false : Controller::join_links($this->Link('show'), $ancestor->ID)
-					)));
+					]));
 				}
 			} else {
-				$items->push(new ArrayData(array(
+				$items->push(new ArrayData([
 					'Title' => ($record->MenuTitle) ? $record->MenuTitle : $record->Title,
 					'Link' => ($unlinked) ? false : Controller::join_links($this->Link('show'), $record->ID)
-				)));
+				]));
 			}
 		}
 
@@ -790,7 +790,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			throw new InvalidArgumentException(sprintf('Invalid filter class passed: %s', $filterClass));
 		}
 		
-		return Injector::inst()->createWithArgs($filterClass, array($params));
+		return Injector::inst()->createWithArgs($filterClass, [$params]);
 	}
 
 	/**
@@ -958,7 +958,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return String JSON
 	 */
 	public function updatetreenodes($request) {
-		$data = array();
+		$data = [];
 		$ids = explode(',', $request->getVar('ids'));
 		foreach($ids as $id) {
 			if($id === "") continue; // $id may be a blank string, which is invalid and should be skipped over
@@ -991,12 +991,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))
 				->forTemplate() . '</li>';
 
-			$data[$id] = array(
+			$data[$id] = [
 				'html' => $html,
 				'ParentID' => $record->ParentID,
 				'NextID' => $next ? $next->ID : null,
 				'PrevID' => $prev ? $prev->ID : null
-			);
+			];
 		}
 		$this->response->addHeader('Content-Type', 'text/json');
 		return Convert::raw2json($data);
@@ -1042,7 +1042,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.DELETED', 'Deleted.')));
 		return $this->getResponseNegotiator()->respond(
 			$this->getRequest(),
-			array('currentform' => array($this, 'EmptyForm'))
+			['currentform' => [$this, 'EmptyForm']]
 		);
 	}
 
@@ -1069,7 +1069,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		$className = $this->stat('tree_class');
-		$statusUpdates = array('modified'=>array());
+		$statusUpdates = ['modified'=>[]];
 		$id = $request->requestVar('ID');
 		$parentID = $request->requestVar('ParentID');
 
@@ -1086,7 +1086,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		$siblingIDs = $request->requestVar('SiblingIDs');
-		$statusUpdates = array('modified'=>array());
+		$statusUpdates = ['modified'=>[]];
 		if(!is_numeric($id) || !is_numeric($parentID)) throw new InvalidArgumentException();
 
 		$node = DataObject::get_by_id($className, $id);
@@ -1107,17 +1107,17 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$node->ParentID = (int)$parentID;
 			$node->write();
 
-			$statusUpdates['modified'][$node->ID] = array(
+			$statusUpdates['modified'][$node->ID] = [
 				'TreeTitle'=>$node->TreeTitle
-			);
+			];
 
 			// Update all dependent pages
 			if(class_exists('VirtualPage')) {
 				$virtualPages = VirtualPage::get()->filter("CopyContentFromID", $node->ID);
 				foreach($virtualPages as $virtualPage) {
-					$statusUpdates['modified'][$virtualPage->ID] = array(
+					$statusUpdates['modified'][$virtualPage->ID] = [
 						'TreeTitle' => $virtualPage->TreeTitle()
-					);
+					];
 				}
 			}
 
@@ -1132,16 +1132,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				if($id == $node->ID) {
 					$node->Sort = ++$counter;
 					$node->write();
-					$statusUpdates['modified'][$node->ID] = array(
+					$statusUpdates['modified'][$node->ID] = [
 						'TreeTitle' => $node->TreeTitle
-					);
+					];
 				} else if(is_numeric($id)) {
 					// Nodes that weren't "actually moved" shouldn't be registered as
 					// having been edited; do a direct SQL update instead
 					++$counter;
 					DB::prepared_query(
 						"UPDATE \"$className\" SET \"Sort\" = ? WHERE \"ID\" = ?",
-						array($counter, $id)
+						[$counter, $id]
 					);
 				}
 			}
@@ -1397,7 +1397,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function BatchActionsForm() {
 		$actions = $this->batchactions()->batchActionList();
-		$actionsMap = array();
+		$actionsMap = [];
 		foreach($actions as $action) {
 			$actionsMap[$action->Link] = $action->Title;
 		}
@@ -1436,9 +1436,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		Requirements::clear();
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/LeftAndMain_printable.css');
-		return array(
+		return [
 			"PrintForm" => $form
-		);
+		];
 	}
 
 	/**
@@ -1539,18 +1539,18 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return string
 	 */
 	public function CMSVersion() {
-		$versions = array();
-		$modules = array(
-			'silverstripe/framework' => array(
+		$versions = [];
+		$modules = [
+			'silverstripe/framework' => [
 				'title' => 'Framework',
 				'versionFile' => FRAMEWORK_PATH . '/silverstripe_version',
-			)
-		);
+			]
+		];
 		if(defined('CMS_PATH')) {
-			$modules['silverstripe/cms'] = array(
+			$modules['silverstripe/cms'] = [
 				'title' => 'CMS',
 				'versionFile' => CMS_PATH . '/silverstripe_version',
-			);
+			];
 		}
 
 		// Tries to obtain version number from composer.lock if it exists
@@ -1562,7 +1562,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if($versions) {
 				$versions = json_decode($versions, true);
 			} else {
-				$versions = array();
+				$versions = [];
 			}
 			if(!$versions && $jsonData = file_get_contents($composerLockPath)) {
 				$lockData = json_decode($jsonData);
@@ -1591,7 +1591,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			}
 		}
 
-		$out = array();
+		$out = [];
 		foreach($modules as $moduleName => $moduleSpec) {
 			$out[] = $modules[$moduleName]['title'] . ': ' . $versions[$moduleName];
 		}
@@ -1721,14 +1721,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 
 	public function providePermissions() {
-		$perms = array(
-			"CMS_ACCESS_LeftAndMain" => array(
+		$perms = [
+			"CMS_ACCESS_LeftAndMain" => [
 				'name' => _t('CMSMain.ACCESSALLINTERFACES', 'Access to all CMS sections'),
 				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access'),
 				'help' => _t('CMSMain.ACCESSALLINTERFACESHELP', 'Overrules more specific access settings.'),
 				'sort' => -100
-			)
-		);
+			]
+		];
 
 		// Add any custom ModelAdmin subclasses. Can't put this on ModelAdmin itself
 		// since its marked abstract, and needs to be singleton instanciated.
@@ -1737,15 +1737,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if(ClassInfo::classImplements($class, 'TestOnly')) continue;
 
 			$title = _t("{$class}.MENUTITLE", LeftAndMain::menu_title_for_class($class));
-			$perms["CMS_ACCESS_" . $class] = array(
+			$perms["CMS_ACCESS_" . $class] = [
 				'name' => _t(
 					'CMSMain.ACCESS',
 					"Access to '{title}' section",
 					"Item in permission selection identifying the admin section. Example: Access to 'Files & Images'",
-					array('title' => $title)
+					['title' => $title]
 				),
 				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access')
-			);
+			];
 		}
 
 		return $perms;
@@ -1759,7 +1759,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public static function require_javascript($file) {
 		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_javascript" config setting instead');
-		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', array($file => array()));
+		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', [$file => []]);
 	}
 
 	/**
@@ -1772,7 +1772,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public static function require_css($file, $media = null) {
 		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_css" config setting instead');
-		Config::inst()->update('LeftAndMain', 'extra_requirements_css', array($file => array('media' => $media)));
+		Config::inst()->update('LeftAndMain', 'extra_requirements_css', [$file => ['media' => $media]]);
 	}
 
 	/**
@@ -1787,7 +1787,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public static function require_themed_css($name, $media = null) {
 		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_themedCss" config setting instead');
-		Config::inst()->update('LeftAndMain', 'extra_requirements_themedCss', array($name => array('media' => $media)));
+		Config::inst()->update('LeftAndMain', 'extra_requirements_themedCss', [$name => ['media' => $media]]);
 	}
 
 }
@@ -1801,15 +1801,15 @@ class LeftAndMainMarkingFilter {
 	/**
 	 * @var array Request params (unsanitized)
 	 */
-	protected $params = array();
+	protected $params = [];
 
 	/**
 	 * @param array $params Request params (unsanitized)
 	 */
 	public function __construct($params = null) {
-		$this->ids = array();
-		$this->expanded = array();
-		$parents = array();
+		$this->ids = [];
+		$this->expanded = [];
+		$parents = [];
 
 		$q = $this->getQuery($params);
 		$res = $q->execute();
@@ -1830,7 +1830,7 @@ class LeftAndMainMarkingFilter {
 				"SELECT \"ParentID\", \"ID\" FROM \"SiteTree\" WHERE \"ID\" in ($parentsClause)",
 				array_keys($parents)
 			);
-			$parents = array();
+			$parents = [];
 
 			foreach($res as $row) {
 				if ($row['ParentID']) $parents[$row['ParentID']] = true;
@@ -1841,7 +1841,7 @@ class LeftAndMainMarkingFilter {
 	}
 
 	protected function getQuery($params) {
-		$where = array();
+		$where = [];
 
 		if(isset($params['ID'])) unset($params['ID']);
 		if($treeClass = static::config()->tree_class) foreach($params as $name => $val) {
@@ -1853,7 +1853,7 @@ class LeftAndMainMarkingFilter {
 		}
 
 		return new SQLSelect(
-			array("ParentID", "ID"),
+			["ParentID", "ID"],
 			'SiteTree',
 			$where
 		);

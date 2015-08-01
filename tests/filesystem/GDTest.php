@@ -8,12 +8,12 @@
  */
 class GDTest extends SapphireTest {
 
-	public static $filenames = array(
+	public static $filenames = [
 		'gif' => 'test_gif.gif',
 		'jpg' => 'test_jpg.jpg',
 		'png8' => 'test_png8.png',
 		'png32' => 'test_png32.png'
-	);
+	];
 
 	public function tearDown() {
 		$cache = SS_Cache::factory('GDBackend_Manipulations');
@@ -27,7 +27,7 @@ class GDTest extends SapphireTest {
 	 * @return array List of GD
 	 */
 	protected function applyToEachImage($callback = null) {
-		$gds = array();
+		$gds = [];
 		foreach(self::$filenames as $type => $file) {
 			$fullPath = realpath(dirname(__FILE__) . '/gdtest/' . $file);
 			$gd = new GDBackend($fullPath);
@@ -48,7 +48,7 @@ class GDTest extends SapphireTest {
 	 * array with red, blue, green, and alpha components
 	 */
 	protected function sampleAreas(GDBackend $gd, $horizontal = 4, $vertical = 4) {
-		$samples = array();
+		$samples = [];
 		for($y = 0; $y < $vertical; $y++) {
 			for($x = 0; $x < $horizontal; $x++) {
 				$colour = imagecolorat($gd->getImageResource(), $x * 5, $y * 5);
@@ -161,11 +161,11 @@ class GDTest extends SapphireTest {
 		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
 
 		try {
-			$gdFailure = new GDBackend_Failure($fullPath, array('ScaleWidth', 123));
+			$gdFailure = new GDBackend_Failure($fullPath, ['ScaleWidth', 123]);
 			$this->fail('GDBackend_Failure should throw an exception when setting image resource');
 		} catch (GDBackend_Failure_Exception $e) {
 			$cache = SS_Cache::factory('GDBackend_Manipulations');
-			$key = md5(implode('_', array($fullPath, filemtime($fullPath))));
+			$key = md5(implode('_', [$fullPath, filemtime($fullPath)]));
 
 			$data = unserialize($cache->load($key));
 
@@ -183,10 +183,10 @@ class GDTest extends SapphireTest {
 		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
 
 		try {
-			$gdFailure = new GDBackend_Failure($fullPath, array('ScaleWidth-failed', 123));
+			$gdFailure = new GDBackend_Failure($fullPath, ['ScaleWidth-failed', 123]);
 			$this->fail('GDBackend_Failure should throw an exception when setting image resource');
 		} catch (GDBackend_Failure_Exception $e) {
-			$gd = new GDBackend($fullPath, array('ScaleWidth', 123));
+			$gd = new GDBackend($fullPath, ['ScaleWidth', 123]);
 			$this->assertTrue($gd->failedResample($fullPath, 'ScaleWidth-failed|123'));
 			$this->assertFalse($gd->failedResample($fullPath, 'ScaleWidth-not-failed|123'));
 		}

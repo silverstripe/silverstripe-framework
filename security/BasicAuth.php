@@ -60,7 +60,7 @@ class BasicAuth {
                  */
 		$authHeader = (isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] :
 			      (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] : null));
-		$matches = array();
+		$matches = [];
 		if ($authHeader &&
                         preg_match('/Basic\s+(.*)$/i', $authHeader, $matches)) {
 			list($name, $password) = explode(':', base64_decode($matches[1]));
@@ -70,10 +70,10 @@ class BasicAuth {
 
 		$member = null;
 		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-			$member = MemberAuthenticator::authenticate(array(
+			$member = MemberAuthenticator::authenticate([
 				'Email' => $_SERVER['PHP_AUTH_USER'],
 				'Password' => $_SERVER['PHP_AUTH_PW'],
-			), null);
+			], null);
 		}
 
 		if(!$member && $tryUsingSessionLogin) $member = Member::currentUser();

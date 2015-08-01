@@ -6,7 +6,7 @@
  */
 class Security extends Controller implements TemplateGlobalProvider {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'login',
 		'logout',
@@ -18,7 +18,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		'LoginForm',
 		'ChangePasswordForm',
 		'LostPasswordForm',
-	);
+	];
 
 	/**
 	 * Default user name. Only used in dev-mode by {@link setDefaultAdmin()}
@@ -232,7 +232,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 				if($configMessageSet = static::config()->get('default_message_set')) {
 					$messageSet = $configMessageSet;
 				} else {
-					$messageSet = array(
+					$messageSet = [
 						'default' => _t(
 							'Security.NOTEPAGESECURED',
 							"That page is secured. Enter your credentials below and we will send "
@@ -245,12 +245,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 							"%s will be replaced with a link to log in."
 						)
-					);
+					];
 				}
 			}
 
 			if(!is_array($messageSet)) {
-				$messageSet = array('default' => $messageSet);
+				$messageSet = ['default' => $messageSet];
 			}
 
 			$member = Member::currentUser();
@@ -350,7 +350,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @todo Check how to activate/deactivate authentication methods
 	 */
 	public function GetLoginForms() {
-		$forms = array();
+		$forms = [];
 
 		$authenticators = Authenticator::get_authenticators();
 		foreach($authenticators as $authenticator) {
@@ -458,7 +458,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return array Template list
 	 */
 	public function getTemplatesFor($action) {
-		return array("Security_{$action}", 'Security', $this->stat('template_main'), 'BlankPage');
+		return ["Security_{$action}", 'Security', $this->stat('template_main'), 'BlankPage'];
 	}
 
 	/**
@@ -468,9 +468,9 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	protected function generateLoginFormSet($forms) {
-		$viewData = new ArrayData(array(
+		$viewData = new ArrayData([
 			'Forms' => new ArrayList($forms),
-		));
+		]);
 		return $viewData->renderWith(
 			$this->getIncludeTemplate('MultiAuthenticatorLogin')
 		);
@@ -536,12 +536,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 		}
 		
 		// Finally, customise the controller to add any form messages and the form.
-		$customisedController = $controller->customise(array(
+		$customisedController = $controller->customise([
 			"Content" => $message,
 			"Message" => $message,
 			"MessageType" => $messageType,
 			"Form" => $content,
-		));
+		]);
 
 		// Return the customised controller
 		return $customisedController->renderWith(
@@ -565,7 +565,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		// if the controller calls Director::redirect(), this will break early
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
-		$customisedController = $controller->customise(array(
+		$customisedController = $controller->customise([
 			'Content' =>
 				'<p>' .
 				_t(
@@ -574,7 +574,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 				) .
 				'</p>',
 			'Form' => $this->LostPasswordForm(),
-		));
+		]);
 
 		//Controller::$currentController = $controller;
 		return $customisedController->renderWith($this->getTemplatesFor('lostpassword'));
@@ -619,18 +619,18 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 		$email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
 
-		$customisedController = $controller->customise(array(
+		$customisedController = $controller->customise([
 			'Title' => _t('Security.PASSWORDSENTHEADER', "Password reset link sent to '{email}'",
-				array('email' => $email)),
+				['email' => $email]),
 			'Content' =>
 				"<p>"
 				. _t('Security.PASSWORDSENTTEXT',
 					"Thank you! A reset link has been sent to '{email}', provided an account exists for this email"
 					. " address.",
-					array('email' => $email))
+					['email' => $email])
 				. "</p>",
 			'Email' => $email
-		));
+		]);
 
 		//Controller::$currentController = $controller;
 		return $customisedController->renderWith($this->getTemplatesFor('passwordsent'));
@@ -693,33 +693,33 @@ class Security extends Controller implements TemplateGlobalProvider {
 			return $this->redirect($this->Link('changepassword'));
 		} elseif(Session::get('AutoLoginHash')) {
 			// Subsequent request after the "first load with hash" (see previous if clause).
-			$customisedController = $controller->customise(array(
+			$customisedController = $controller->customise([
 				'Content' =>
 					'<p>' .
 					_t('Security.ENTERNEWPASSWORD', 'Please enter a new password.') .
 					'</p>',
 				'Form' => $this->ChangePasswordForm(),
-			));
+			]);
 		} elseif(Member::currentUser()) {
 			// Logged in user requested a password change form.
-			$customisedController = $controller->customise(array(
+			$customisedController = $controller->customise([
 				'Content' => '<p>'
 					. _t('Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>',
-				'Form' => $this->ChangePasswordForm()));
+				'Form' => $this->ChangePasswordForm()]);
 
 		} else {
 			// Show friendly message if it seems like the user arrived here via password reset feature.
 			if(isset($_REQUEST['m']) || isset($_REQUEST['t'])) {
 				$customisedController = $controller->customise(
-					array('Content' =>
+					['Content' =>
 						_t(
 							'Security.NOTERESETLINKINVALID',
 							'<p>The password reset link is invalid or expired.</p>'
 							. '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
 							. ' you <a href="{link2}">logged in</a>.</p>',
-							array('link1' => $this->Link('lostpassword'), 'link2' => $this->link('login'))
+							['link1' => $this->Link('lostpassword'), 'link2' => $this->link('login')]
 						)
-					)
+					]
 				);
 			} else {
 				self::permissionFailure(
@@ -749,7 +749,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string|array Returns the template(s) for rendering
 	 */
 	public function getIncludeTemplate($name) {
-		return array('Security_' . $name);
+		return ['Security_' . $name];
 	}
 
 	/**
@@ -969,12 +969,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 		// New salts will only need to be generated if the password is hashed for the first time
 		$salt = ($salt) ? $salt : $e->salt($password);
 
-		return array(
+		return [
 			'password' => $e->encrypt($password, $salt, $member),
 			'salt' => $salt,
 			'algorithm' => $algorithm,
 			'encryptor' => $e
-		);
+		];
 	}
 
 	/**
@@ -1123,10 +1123,10 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return array
 	 */
 	public static function get_template_global_variables() {
-		return array(
+		return [
 			"LoginURL" => "login_url",
 			"LogoutURL" => "logout_url",
-		);
+		];
 	}
 
 }

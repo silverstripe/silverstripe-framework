@@ -44,31 +44,31 @@ class SSHTMLBBCodeParser_Filter_Basic extends SSHTMLBBCodeParser_Filter
     * @access   private
     * @var      array
     */
-    var $_definedTags = array(  'b' => array(   'htmlopen'  => 'strong',
+    var $_definedTags = [  'b' => [   'htmlopen'  => 'strong',
                                                 'htmlclose' => 'strong',
                                                 'allowed'   => 'all',
-                                                'attributes'=> array()),
-                                'i' => array(   'htmlopen'  => 'em',
+                                                'attributes'=> []],
+                                'i' => [   'htmlopen'  => 'em',
                                                 'htmlclose' => 'em',
                                                 'allowed'   => 'all',
-                                                'attributes'=> array()),
-                                'u' => array(   'htmlopen'  => 'span style="text-decoration:underline;"',
+                                                'attributes'=> []],
+                                'u' => [   'htmlopen'  => 'span style="text-decoration:underline;"',
                                                 'htmlclose' => 'span',
                                                 'allowed'   => 'all',
-                                                'attributes'=> array()),
-                                's' => array(   'htmlopen'  => 'del',
+                                                'attributes'=> []],
+                                's' => [   'htmlopen'  => 'del',
                                                 'htmlclose' => 'del',
                                                 'allowed'   => 'all',
-                                                'attributes'=> array()),
-                                'sub' => array( 'htmlopen'  => 'sub',
+                                                'attributes'=> []],
+                                'sub' => [ 'htmlopen'  => 'sub',
                                                 'htmlclose' => 'sub',
                                                 'allowed'   => 'all',
-                                                'attributes'=> array()),
-                                'sup' => array( 'htmlopen'  => 'sup',
+                                                'attributes'=> []],
+                                'sup' => [ 'htmlopen'  => 'sup',
                                                 'htmlclose' => 'sup',
                                                 'allowed'   => 'all',
-                                                'attributes'=> array())
-                            );
+                                                'attributes'=> []]
+                            ];
 
 }
 

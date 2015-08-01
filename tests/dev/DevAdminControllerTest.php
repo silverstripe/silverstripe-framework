@@ -11,21 +11,21 @@ class DevAdminControllerTest extends FunctionalTest {
 	public function setUp(){
 		parent::setUp();
 
-		Config::inst()->update('DevelopmentAdmin', 'registered_controllers', array(
-			'x1' => array(
+		Config::inst()->update('DevelopmentAdmin', 'registered_controllers', [
+			'x1' => [
 				'controller' => 'DevAdminControllerTest_Controller1',
-				'links' => array(
+				'links' => [
 					'x1' => 'x1 link description',
 					'x1/y1' => 'x1/y1 link description'
-				)
-			),
-			'x2' => array(
+				]
+			],
+			'x2' => [
 				'controller' => 'DevAdminControllerTest_Controller2', // intentionally not a class that exists
-				'links' => array(
+				'links' => [
 					'x2' => 'x2 link description'
-				)
-			)
-		));
+				]
+			]
+		]);
 	}
 
 
@@ -89,15 +89,15 @@ class DevAdminControllerTest_Controller1 extends Controller {
 
 	const OK_MSG = 'DevAdminControllerTest_Controller1 TEST OK';
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'' => 'index',
 		'y1' => 'y1Action'
-	);
+	];
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'y1Action',
-	);
+	];
 
 
 	public function index(){

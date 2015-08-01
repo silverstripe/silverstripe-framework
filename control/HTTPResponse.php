@@ -10,7 +10,7 @@ class SS_HTTPResponse {
 	/**
 	 * @var array
 	 */
-	protected static $status_codes = array(
+	protected static $status_codes = [
 		100 => 'Continue',
 		101 => 'Switching Protocols',
 		200 => 'OK',
@@ -51,19 +51,19 @@ class SS_HTTPResponse {
 		503 => 'Service Unavailable',
 		504 => 'Gateway Timeout',
 		505 => 'HTTP Version Not Supported',
-	);
+	];
 
 	/**
 	 * @var array
 	 */
-	protected static $redirect_codes = array(
+	protected static $redirect_codes = [
 		301,
 		302,
 		303,
 		304,
 		305,
 		307
-	);
+	];
 
 	/**
 	 * @var Int
@@ -81,9 +81,9 @@ class SS_HTTPResponse {
 	 * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
 	 * @var array
 	 */
-	protected $headers = array(
+	protected $headers = [
 		"Content-Type" => "text/html; charset=utf-8",
-	);
+	];
 
 	/**
 	 * @var string
@@ -143,7 +143,7 @@ class SS_HTTPResponse {
 	 * @return string Description for a HTTP status code
 	 */
 	public function getStatusDescription() {
-		return str_replace(array("\r","\n"), '', $this->statusDescription);
+		return str_replace(["\r","\n"], '', $this->statusDescription);
 	}
 
 	/**
@@ -286,7 +286,7 @@ EOT
 	 * @return bool
 	 */
 	public function isFinished() {
-		return in_array($this->statusCode, array(301, 302, 303, 304, 305, 307, 401, 403));
+		return in_array($this->statusCode, [301, 302, 303, 304, 305, 307, 401, 403]);
 	}
 
 }

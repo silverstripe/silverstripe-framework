@@ -19,18 +19,18 @@
 class FormEncodedDataFormatter extends XMLDataFormatter {
 
 	public function supportedExtensions() {
-		return array(
-		);
+		return [
+		];
 	}
 
 	public function supportedMimeTypes() {
-		return array(
+		return [
 			'application/x-www-form-urlencoded'
-		);
+		];
 	}
 
 	public function convertStringToArray($strData) {
-		$postArray = array();
+		$postArray = [];
 		parse_str($strData, $postArray);
 		return $postArray;
 		//TODO: It would be nice to implement this function in Convert.php

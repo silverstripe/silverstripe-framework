@@ -50,10 +50,10 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	protected $itemEditFormCallback;
 
 	public function getURLHandlers($gridField) {
-		return array(
+		return [
 			'item/$ID' => 'handleItem',
 			'autocomplete' => 'handleAutocomplete',
-		);
+		];
 	}
 
 	/**
@@ -206,11 +206,11 @@ class GridFieldDetailForm implements GridField_URLHandler {
  */
 class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'edit',
 		'view',
 		'ItemEditForm'
-	);
+	];
 
 	/**
 	 *
@@ -249,10 +249,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 */
 	protected $template = 'GridFieldItemEditView';
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'$Action!' => '$Action',
 		'' => 'edit',
-	);
+	];
 
 	/**
 	 *
@@ -286,16 +286,16 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$form = $this->ItemEditForm($this->gridField, $request);
 		$form->makeReadonly();
 
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'Backlink'     => $controller->Link(),
 			'ItemEditForm' => $form
-		));
+		]);
 		$return = $data->renderWith($this->template);
 
 		if($request->isAjax()) {
 			return $return;
 		} else {
-			return $controller->customise(array('Content' => $return));
+			return $controller->customise(['Content' => $return]);
 		}
 	}
 
@@ -303,19 +303,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$controller = $this->getToplevelController();
 		$form = $this->ItemEditForm($this->gridField, $request);
 
-		$return = $this->customise(array(
+		$return = $this->customise([
 			'Backlink' => $controller->hasMethod('Backlink') ? $controller->Backlink() : $controller->Link(),
 			'ItemEditForm' => $form,
-		))->renderWith($this->template);
+		])->renderWith($this->template);
 
 		if($request->isAjax()) {
 			return $return;
 		} else {
 			// If not requested by ajax, we need to render it within the controller context+template
-			return $controller->customise(array(
+			return $controller->customise([
 				// TODO CMS coupling
 				'Content' => $return,
-			));
+			]);
 		}
 	}
 
@@ -435,7 +435,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		// Fields with the correct 'ManyMany' namespace need to be added manually through getCMSFields().
 		if($list instanceof ManyManyList) {
 			$extraData = $list->getExtraData('', $this->record->ID);
-			$form->loadDataFrom(array('ManyMany' => $extraData));
+			$form->loadDataFrom(['ManyMany' => $extraData]);
 		}
 
 		// TODO Coupling with CMS
@@ -513,7 +513,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			return null;
 		}
 		
-		$data = array();
+		$data = [];
 		foreach($list->getExtraFields() as $field => $dbSpec) {
 			$savedField = "ManyMany[{$field}]";
 			if($record->hasField($savedField)) {
@@ -549,14 +549,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$list->add($this->record, $extraData);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad', false);
-			$responseNegotiator = new PjaxResponseNegotiator(array(
+			$responseNegotiator = new PjaxResponseNegotiator([
 				'CurrentForm' => function() use(&$form) {
 					return $form->forTemplate();
 				},
 				'default' => function() use(&$controller) {
 					return $controller->redirectBack();
 				}
-			));
+			]);
 			if($controller->getRequest()->isAjax()){
 				$controller->getRequest()->addHeader('X-Pjax', 'CurrentForm');
 			}
@@ -571,10 +571,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$message = _t(
 			'GridFieldDetailForm.Saved',
 			'Saved {name} {link}',
-			array(
+			[
 				'name' => $this->record->i18n_singular_name(),
 				'link' => $link
-			)
+			]
 		);
 
 		$form->sessionMessage($message, 'good', false);
@@ -678,15 +678,15 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$items = $this->popupController->Breadcrumbs($unlinked);
 		if($this->record && $this->record->ID) {
-			$items->push(new ArrayData(array(
+			$items->push(new ArrayData([
 				'Title' => $this->record->Title,
 				'Link' => $this->Link()
-			)));
+			]));
 		} else {
-			$items->push(new ArrayData(array(
+			$items->push(new ArrayData([
 				'Title' => sprintf(_t('GridField.NewRecord', 'New %s'), $this->record->i18n_singular_name()),
 				'Link' => false
-			)));
+			]));
 		}
 
 		return $items;

@@ -3,7 +3,7 @@
 class DataExtensionTest extends SapphireTest {
 	protected static $fixture_file = 'DataExtensionTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'DataExtensionTest_Member',
 		'DataExtensionTest_Player',
 		'DataExtensionTest_RelatedObject',
@@ -11,11 +11,11 @@ class DataExtensionTest extends SapphireTest {
 		'DataExtensionTest_CMSFieldsBase',
 		'DataExtensionTest_CMSFieldsChild',
 		'DataExtensionTest_CMSFieldsGrandchild'
-	);
+	];
 
-	protected $requiredExtensions = array(
-		'DataObject' => array( 'DataExtensionTest_AppliedToDO' ),
-	);
+	protected $requiredExtensions = [
+		'DataObject' => [ 'DataExtensionTest_AppliedToDO' ],
+	];
 
 	public function testOneToManyAssociationWithExtension() {
 		$contact = new DataExtensionTest_Member();
@@ -38,12 +38,12 @@ class DataExtensionTest extends SapphireTest {
 		unset($contact);
 		unset($object);
 
-		$contact = DataObject::get_one("DataExtensionTest_Member", array(
+		$contact = DataObject::get_one("DataExtensionTest_Member", [
 			'"DataExtensionTest_Member"."Website"' => 'http://www.example.com'
-		));
-		$object = DataObject::get_one('DataExtensionTest_RelatedObject', array(
+		]);
+		$object = DataObject::get_one('DataExtensionTest_RelatedObject', [
 			'"DataExtensionTest_RelatedObject"."ContactID"' => $contactID
-		));
+		]);
 
 		$this->assertNotNull($object, 'Related object not null');
 		$this->assertInstanceOf('DataExtensionTest_Member', $object->Contact(),
@@ -97,9 +97,9 @@ class DataExtensionTest extends SapphireTest {
 		unset($player);
 
 		// Pull the record out of the DB and examine the extended fields
-		$player = DataObject::get_one('DataExtensionTest_Player', array(
+		$player = DataObject::get_one('DataExtensionTest_Player', [
 			'"DataExtensionTest_Player"."Name"' => 'Joe'
-		));
+		]);
 		$this->assertEquals($player->DateBirth, '1990-05-10');
 		$this->assertEquals($player->Address, '123 somewhere street');
 		$this->assertEquals($player->Status, 'Goalie');
@@ -224,37 +224,37 @@ class DataExtensionTest extends SapphireTest {
 
 class DataExtensionTest_Member extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"Name" => "Varchar",
 		"Email" => "Varchar"
-	);
+	];
 
 }
 
 class DataExtensionTest_Player extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar'
-	);
+	];
 
 }
 
 class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnly {
 
 	public static function get_extra_config($class = null, $extensionClass = null, $args = null) {
-		$config = array();
+		$config = [];
 
 		// Only add these extensions if the $class is set to DataExtensionTest_Player, to
 		// test that the argument works.
 		if($class == 'DataExtensionTest_Player') {
-			$config['db'] = array(
+			$config['db'] = [
 				'Address' => 'Text',
 				'DateBirth' => 'Date',
 				'Status' => "Enum('Shooter,Goalie')"
-			);
-			$config['defaults'] = array(
+			];
+			$config['defaults'] = [
 				'Status' => 'Goalie'
-			);
+			];
 		}
 
 		return $config;
@@ -264,18 +264,18 @@ class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnl
 
 class DataExtensionTest_ContactRole extends DataExtension implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Website' => 'Varchar',
 		'Phone' => 'Varchar(255)',
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'RelatedObjects' => 'DataExtensionTest_RelatedObject'
-	);
+	];
 
-	private static $defaults = array(
+	private static $defaults = [
 		'Phone' => '123'
-	);
+	];
 
 	private static $api_access = true;
 
@@ -283,14 +283,14 @@ class DataExtensionTest_ContactRole extends DataExtension implements TestOnly {
 
 class DataExtensionTest_RelatedObject extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"FieldOne" => "Varchar",
 		"FieldTwo" => "Varchar"
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		"Contact" => "DataExtensionTest_Member"
-	);
+	];
 
 }
 
@@ -298,9 +298,9 @@ DataExtensionTest_Member::add_extension('DataExtensionTest_ContactRole');
 
 class DataExtensionTest_MyObject extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar',
-	);
+	];
 
 	public function canOne($member = null) {
 		// extended access checks
@@ -359,9 +359,9 @@ class DataExtensionTest_Ext2 extends DataExtension implements TestOnly {
 
 class DataExtensionTest_Faves extends DataExtension implements TestOnly {
 
-	private static $many_many = array(
+	private static $many_many = [
 		'Faves' => 'DataExtensionTest_RelatedObject'
-	);
+	];
 
 }
 
@@ -382,13 +382,13 @@ DataExtensionTest_MyObject::add_extension('DataExtensionTest_Faves');
  */
 class DataExtensionTest_CMSFieldsBase extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'PageField' => 'Varchar(255)'
-	);
+	];
 
-	private static $extensions = array(
+	private static $extensions = [
 		'DataExtensionTest_CMSFieldsBaseExtension'
-	);
+	];
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -401,10 +401,10 @@ class DataExtensionTest_CMSFieldsBase extends DataObject implements TestOnly {
  * Extension to top level test class, tests that updateCMSFields work
  */
 class DataExtensionTest_CMSFieldsBaseExtension extends DataExtension implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'ExtendedFieldKeep' => 'Varchar(255)',
 		'ExtendedFieldRemove' => 'Varchar(255)'
-	);
+	];
 
 	public function updateCMSFields(FieldList $fields) {
 		$fields->addFieldToTab('Root.Test', new TextField('ExtendedFieldRemove'));
@@ -425,10 +425,10 @@ class DataExtensionTest_CMSFieldsBaseExtension extends DataExtension implements 
  * Tests usage of beforeExtendingCMSFields
  */
 class DataExtensionTest_CMSFieldsChild extends DataExtensionTest_CMSFieldsBase implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'ChildField' => 'Varchar(255)',
 		'ChildFieldBeforeExtension' => 'Varchar(255)'
-	);
+	];
 
 	public function getCMSFields() {
 		$this->beforeExtending('updateCMSFields', function(FieldList $fields) {
@@ -449,9 +449,9 @@ class DataExtensionTest_CMSFieldsChild extends DataExtensionTest_CMSFieldsBase i
  * Third level test class, testing that beforeExtendingCMSFields can be nested
  */
 class DataExtensionTest_CMSFieldsGrandchild extends DataExtensionTest_CMSFieldsChild implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'GrandchildField' => 'Varchar(255)'
-	);
+	];
 
 	public function getCMSFields() {
 		$this->beforeUpdateCMSFields(function(FieldList $fields) {

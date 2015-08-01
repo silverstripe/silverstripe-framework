@@ -4,14 +4,14 @@
  * @subpackage email
  */
 class TestMailer extends Mailer {
-	protected $emailsSent = array();
+	protected $emailsSent = [];
 
 	/**
 	 * Send a plain-text email.
 	 * TestMailer will merely record that the email was asked to be sent, without sending anything.
 	 */
 	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customHeaders = false) {
-		$this->emailsSent[] = array(
+		$this->emailsSent[] = [
 			'type' => 'plain',
 			'to' => $to,
 			'from' => $from,
@@ -22,7 +22,7 @@ class TestMailer extends Mailer {
 
 			'attachedFiles' => $attachedFiles,
 			'customHeaders' => $customHeaders,
-		);
+		];
 
 		return true;
 	}
@@ -34,7 +34,7 @@ class TestMailer extends Mailer {
 	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customHeaders = false,
 			$plainContent = false, $inlineImages = false) {
 
-		$this->emailsSent[] = array(
+		$this->emailsSent[] = [
 			'type' => 'html',
 			'to' => $to,
 			'from' => $from,
@@ -47,7 +47,7 @@ class TestMailer extends Mailer {
 			'attachedFiles' => $attachedFiles,
 			'customHeaders' => $customHeaders,
 			'inlineImages' => $inlineImages,
-		);
+		];
 
 		return true;
 	}
@@ -56,7 +56,7 @@ class TestMailer extends Mailer {
 	 * Clear the log of emails sent
 	 */
 	public function clearEmails() {
-		$this->emailsSent = array();
+		$this->emailsSent = [];
 	}
 
 	/**
@@ -73,7 +73,7 @@ class TestMailer extends Mailer {
 		foreach($this->emailsSent as $email) {
 			$matched = true;
 
-			foreach(array('to','from','subject','content') as $field) {
+			foreach(['to','from','subject','content'] as $field) {
 				if($value = $$field) {
 					if($value[0] == '/') $matched = preg_match($value, $email[$field]);
 					else $matched = ($value == $email[$field]);

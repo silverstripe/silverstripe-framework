@@ -185,12 +185,12 @@ class FormScaffolder extends Object {
 	 * @return array
 	 */
 	protected function getParamsArray() {
-		return array(
+		return [
 			'tabbed' => $this->tabbed,
 			'includeRelations' => $this->includeRelations,
 			'restrictFields' => $this->restrictFields,
 			'fieldClasses' => $this->fieldClasses,
 			'ajaxSafe' => $this->ajaxSafe
-		);
+		];
 	}
 }

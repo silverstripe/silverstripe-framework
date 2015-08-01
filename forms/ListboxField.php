@@ -44,12 +44,12 @@ class ListboxField extends DropdownField {
 	/**
 	 * @var Array
 	 */
-	protected $disabledItems = array();
+	protected $disabledItems = [];
 
 	/**
 	 * @var Array
 	 */
-	protected $defaultItems = array();
+	protected $defaultItems = [];
 
 	/**
 	 * Creates a new dropdown field.
@@ -61,7 +61,7 @@ class ListboxField extends DropdownField {
 	 * @param int $size Optional size of the select element
 	 * @param form The parent form
 	 */
-	public function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false) {
+	public function __construct($name, $title = '', $source = [], $value = '', $size = null, $multiple = false) {
 		if($size) $this->size = $size;
 		if($multiple) $this->multiple = $multiple;
 
@@ -71,36 +71,36 @@ class ListboxField extends DropdownField {
 	/**
 	 * Returns a <select> tag containing all the appropriate <option> tags
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		if($this->multiple) $this->name .= '[]';
-		$options = array();
+		$options = [];
 
 		// We have an array of values
 		if(is_array($this->value)){
 			// Loop through and figure out which values were selected.
 			foreach($this->getSource() as $value => $title) {
-				$options[] = new ArrayData(array(
+				$options[] = new ArrayData([
 					'Title' => $title,
 					'Value' => $value,
 					'Selected' => (in_array($value, $this->value) || in_array($value, $this->defaultItems)),
 					'Disabled' => $this->disabled || in_array($value, $this->disabledItems),
-				));
+				]);
 			}
 		} else {
 			// Listbox was based a singlular value, so treat it like a dropdown.
 			foreach($this->getSource() as $value => $title) {
-				$options[] = new ArrayData(array(
+				$options[] = new ArrayData([
 					'Title' => $title,
 					'Value' => $value,
 					'Selected' => ($value == $this->value || in_array($value, $this->defaultItems)),
 					'Disabled' => $this->disabled || in_array($value, $this->disabledItems),
-				));
+				]);
 			}
 		}
 
-		$properties = array_merge($properties, array(
+		$properties = array_merge($properties, [
 			'Options' => new ArrayList($options)
-		));
+		]);
 
 		return $this->customise($properties)->renderWith($this->getTemplates());
 	}
@@ -108,10 +108,10 @@ class ListboxField extends DropdownField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'multiple' => $this->multiple,
 				'size' => $this->size
-			)
+			]
 		);
 	}
 
@@ -155,7 +155,7 @@ class ListboxField extends DropdownField {
 	 */
 	public function dataValue() {
 		if($this->value && is_array($this->value) && $this->multiple) {
-			$filtered = array();
+			$filtered = [];
 			foreach($this->value as $item) {
 				if($item) {
 					$filtered[] = str_replace(",", "{comma}", $item);
@@ -181,7 +181,7 @@ class ListboxField extends DropdownField {
 			$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
 			if($fieldname && $record && $relation &&
 				($relation instanceof RelationList || $relation instanceof UnsavedRelationList)) {
-				$idList = (is_array($this->value)) ? array_values($this->value) : array();
+				$idList = (is_array($this->value)) ? array_values($this->value) : [];
 				if(!$record->ID) {
 					$record->write(); // record needs to have an ID in order to set relationships
 					$relation = ($fieldname && $record && $record->hasMethod($fieldname))
@@ -300,7 +300,7 @@ class ListboxField extends DropdownField {
 					$this->name,
 					_t(
 						"Please select a value within the list provided. {value} is not a valid option",
-						array('value' => $this->value)
+						['value' => $this->value]
 					),
 					"validation"
 				);
@@ -313,7 +313,7 @@ class ListboxField extends DropdownField {
 					_t(
 						'ListboxField.SOURCE_VALIDATION',
 						"Please select a value within the list provided. %s is not a valid option",
-						array('value' => $this->value)
+						['value' => $this->value]
 					),
 					"validation"
 				);

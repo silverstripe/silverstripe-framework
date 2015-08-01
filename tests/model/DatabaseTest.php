@@ -5,9 +5,9 @@
  */
 class DatabaseTest extends SapphireTest {
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'DatabaseTest_MyObject',
-	);
+	];
 
 	protected $usesDatabase = true;
 
@@ -155,9 +155,9 @@ class DatabaseTest extends SapphireTest {
 
 class DatabaseTest_MyObject extends DataObject implements TestOnly {
 
-	private static $create_table_options = array(MySQLSchemaManager::ID => 'ENGINE=InnoDB');
+	private static $create_table_options = [MySQLSchemaManager::ID => 'ENGINE=InnoDB'];
 
-	private static $db = array(
+	private static $db = [
 		'MyField' => 'Varchar'
-	);
+	];
 }

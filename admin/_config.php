@@ -1,6 +1,6 @@
 <?php
 // Default CMS HTMLEditorConfig
-HtmlEditorConfig::get('cms')->setOptions(array(
+HtmlEditorConfig::get('cms')->setOptions([
 	'friendly_name' => 'Default CMS',
 	'priority' => '50',
 
@@ -26,14 +26,14 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 	'extended_valid_elements' => "img[class|src|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name"
 		. "|usemap|data*],iframe[src|name|width|height|align|frameborder|marginwidth|marginheight|scrolling],"
 		. "object[width|height|data|type],param[name|value],map[class|name|id],area[shape|coords|href|target|alt]"
-));
+]);
 
 HtmlEditorConfig::get('cms')->disablePlugins('contextmenu');
 
 HtmlEditorConfig::get('cms')->enablePlugins('media', 'fullscreen', 'inlinepopups');
-HtmlEditorConfig::get('cms')->enablePlugins(array(
+HtmlEditorConfig::get('cms')->enablePlugins([
 	'ssbuttons' => sprintf('../../../%s/tinymce_ssbuttons/editor_plugin_src.js', THIRDPARTY_DIR)
-));
+]);
 HtmlEditorConfig::get('cms')->enablePlugins('advimagescale');
 
 HtmlEditorConfig::get('cms')->insertButtonsBefore('formatselect', 'styleselect');

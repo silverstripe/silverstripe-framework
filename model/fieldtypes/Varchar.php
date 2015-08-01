@@ -11,10 +11,10 @@
  */
 class Varchar extends StringField {
 
-	private static $casting = array(
+	private static $casting = [
 		"Initial" => "Text",
 		"URL" => "Text",
-	);
+	];
 
 	protected $size;
 
@@ -27,7 +27,7 @@ class Varchar extends StringField {
  	 *                       See {@link StringField::setOptions()} for information on the available options
  	 * @return unknown_type
  	 */
-	public function __construct($name = null, $size = 50, $options = array()) {
+	public function __construct($name = null, $size = 50, $options = []) {
 		$this->size = $size ? $size : 50;
 		parent::__construct($name, $options);
 	}
@@ -50,18 +50,18 @@ class Varchar extends StringField {
  	 * @see DBField::requireField()
  	 */
 	public function requireField() {
-		$parts = array(
+		$parts = [
 			'datatype'=>'varchar',
 			'precision'=>$this->size,
 			'character set'=>'utf8',
 			'collate'=>'utf8_general_ci',
 			'arrayValue'=>$this->arrayValue
-		);
+		];
 
-		$values = array(
+		$values = [
 			'type' => 'varchar',
 			'parts' => $parts
-		);
+		];
 
 		DB::require_field($this->tableName, $this->name, $values);
 	}

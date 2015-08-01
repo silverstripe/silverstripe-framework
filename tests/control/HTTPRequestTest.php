@@ -7,12 +7,12 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest("GET", "admin/crm/add");
 
 		/* When a rule matches, but has no variables, array("_matched" => true) is returned. */
-		$this->assertEquals(array("_matched" => true), $request->match('admin/crm', true));
+		$this->assertEquals(["_matched" => true], $request->match('admin/crm', true));
 
 		/* Becasue we shifted admin/crm off the stack, just "add" should be remaining */
 		$this->assertEquals("add", $request->remaining());
 
-		$this->assertEquals(array("_matched" => true), $request->match('add', true));
+		$this->assertEquals(["_matched" => true], $request->match('add', true));
 	}
 
 	public function testHttpMethodOverrides() {
@@ -37,7 +37,7 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'GET',
 			'admin/crm',
-			array('_method' => 'DELETE')
+			['_method' => 'DELETE']
 		);
 		$this->assertTrue(
 			$request->isGET(),
@@ -47,8 +47,8 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			array(),
-			array('_method' => 'DELETE')
+			[],
+			['_method' => 'DELETE']
 		);
 		$this->assertTrue(
 			$request->isDELETE(),
@@ -58,8 +58,8 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			array(),
-			array('_method' => 'put')
+			[],
+			['_method' => 'put']
 		);
 		$this->assertTrue(
 			$request->isPUT(),
@@ -69,8 +69,8 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			array(),
-			array('_method' => 'head')
+			[],
+			['_method' => 'head']
 		);
 		$this->assertTrue(
 			$request->isHEAD(),
@@ -80,8 +80,8 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			array(),
-			array('_method' => 'head')
+			[],
+			['_method' => 'head']
 		);
 		$this->assertTrue(
 			$request->isHEAD(),
@@ -91,7 +91,7 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			array('_method' => 'head')
+			['_method' => 'head']
 		);
 		$this->assertTrue(
 			$request->isPOST(),
@@ -100,20 +100,20 @@ class HTTPRequestTest extends SapphireTest {
 	}
 
 	public function testRequestVars() {
-		$getVars = array(
+		$getVars = [
 			'first' => 'a',
 			'second' => 'b',
-		);
-		$postVars = array(
+		];
+		$postVars = [
 			'third' => 'c',
 			'fourth' => 'd',
-		);
-		$requestVars = array(
+		];
+		$requestVars = [
 			'first' => 'a',
 			'second' => 'b',
 			'third' => 'c',
 			'fourth' => 'd',
-		);
+		];
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
@@ -126,19 +126,19 @@ class HTTPRequestTest extends SapphireTest {
 			'GET parameters should supplement POST parameters'
 		);
 
-		$getVars = array(
+		$getVars = [
 			'first' => 'a',
 			'second' => 'b',
-		);
-		$postVars = array(
+		];
+		$postVars = [
 			'first' => 'c',
 			'third' => 'd',
-		);
-		$requestVars = array(
+		];
+		$requestVars = [
 			'first' => 'c',
 			'second' => 'b',
 			'third' => 'd',
-		);
+		];
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
@@ -151,33 +151,33 @@ class HTTPRequestTest extends SapphireTest {
 			'POST parameters should override GET parameters'
 		);
 
-		$getVars = array(
-			'first' => array(
+		$getVars = [
+			'first' => [
 				'first' => 'a',
-			),
-			'second' => array(
+			],
+			'second' => [
 				'second' => 'b',
-			),
-		);
-		$postVars = array(
-			'first' => array(
+			],
+		];
+		$postVars = [
+			'first' => [
 				'first' => 'c',
-			),
-			'third' => array(
+			],
+			'third' => [
 				'third' => 'd',
-			),
-		);
-		$requestVars = array(
-			'first' => array(
+			],
+		];
+		$requestVars = [
+			'first' => [
 				'first' => 'c',
-			),
-			'second' => array(
+			],
+			'second' => [
 				'second' => 'b',
-			),
-			'third' => array(
+			],
+			'third' => [
 				'third' => 'd',
-			),
-		);
+			],
+		];
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
@@ -190,34 +190,34 @@ class HTTPRequestTest extends SapphireTest {
 			'Nested POST parameters should override GET parameters'
 		);
 
-		$getVars = array(
-			'first' => array(
+		$getVars = [
+			'first' => [
 				'first' => 'a',
-			),
-			'second' => array(
+			],
+			'second' => [
 				'second' => 'b',
-			),
-		);
-		$postVars = array(
-			'first' => array(
+			],
+		];
+		$postVars = [
+			'first' => [
 				'second' => 'c',
-			),
-			'third' => array(
+			],
+			'third' => [
 				'third' => 'd',
-			),
-		);
-		$requestVars = array(
-			'first' => array(
+			],
+		];
+		$requestVars = [
+			'first' => [
 				'first' => 'a',
 				'second' => 'c',
-			),
-			'second' => array(
+			],
+			'second' => [
 				'second' => 'b',
-			),
-			'third' => array(
+			],
+			'third' => [
 				'third' => 'd',
-			),
-		);
+			],
+		];
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
@@ -232,10 +232,10 @@ class HTTPRequestTest extends SapphireTest {
 	}
 
 	public function testIsAjax() {
-		$req = new SS_HTTPRequest('GET', '/', array('ajax' => 0));
+		$req = new SS_HTTPRequest('GET', '/', ['ajax' => 0]);
 		$this->assertFalse($req->isAjax());
 
-		$req = new SS_HTTPRequest('GET', '/', array('ajax' => 1));
+		$req = new SS_HTTPRequest('GET', '/', ['ajax' => 1]);
 		$this->assertTrue($req->isAjax());
 
 		$req = new SS_HTTPRequest('GET', '/');

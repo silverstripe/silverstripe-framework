@@ -118,8 +118,8 @@ class Convert {
 		} else {
 			return str_replace(
 				// Intercepts some characters such as <, >, and & which can interfere
-				array("\\", '"', "\n", "\r", "'", "<", ">", "&"),
-				array("\\\\", '\"', '\n', '\r', "\\'", "\\x3c", "\\x3e", "\\x26"),
+				["\\", '"', "\n", "\r", "'", "<", ">", "&"],
+				["\\\\", '\"', '\n', '\r', "\\'", "\\x3c", "\\x3e", "\\x26"],
 				$val
 			);
 		}
@@ -308,12 +308,12 @@ class Convert {
 	 * @param int $wordwrap
 	 */
 	public static function html2raw($data, $preserveLinks = false, $wordWrap = 0, $config = null) {
-		$defaultConfig = array(
+		$defaultConfig = [
 			'PreserveLinks' => false,
 			'ReplaceBoldAsterisk' => true,
 			'CompressWhitespace' => true,
 			'ReplaceImagesWithAlt' => true,
-		);
+		];
 		if(isset($config)) {
 			$config = array_merge($defaultConfig,$config);
 		} else {
@@ -389,8 +389,8 @@ class Convert {
 	 */
 	public static function raw2mailto($data) {
 		return str_ireplace(
-			array("\n",'?','=',' ','(',')','&','@','"','\'',';'),
-			array('%0A','%3F','%3D','%20','%28','%29','%26','%40','%22','%27','%3B'),
+			["\n",'?','=',' ','(',')','&','@','"','\'',';'],
+			['%0A','%3F','%3D','%20','%28','%29','%26','%40','%22','%27','%3B'],
 			$data
 		);
 	}

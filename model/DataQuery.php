@@ -26,7 +26,7 @@ class DataQuery {
 	/**
 	 * @var array
 	 */
-	protected $collidingFields = array();
+	protected $collidingFields = [];
 
 	private $queriedColumns = null;
 
@@ -97,7 +97,7 @@ class DataQuery {
 			// Rewrite condition groups as plain conditions before comparison
 			if($condition instanceof SQLConditionGroup) {
 				$predicate = $condition->conditionSQL($parameters);
-				$condition = array($predicate => $parameters);
+				$condition = [$predicate => $parameters];
 			}
 
 			// As each condition is a single length array, do a single
@@ -146,7 +146,7 @@ class DataQuery {
 		$baseClass = array_shift($tableClasses);
 
 		// Build our intial query
-		$this->query = new SQLSelect(array());
+		$this->query = new SQLSelect([]);
 		$this->query->setDistinct(true);
 
 		if($sort = singleton($this->dataClass)->stat('default_sort')) {
@@ -172,7 +172,7 @@ class DataQuery {
 	public function getFinalisedQuery($queriedColumns = null) {
 		if(!$queriedColumns) $queriedColumns = $this->queriedColumns;
 		if($queriedColumns) {
-			$queriedColumns = array_merge($queriedColumns, array('Created', 'LastEdited', 'ClassName'));
+			$queriedColumns = array_merge($queriedColumns, ['Created', 'LastEdited', 'ClassName']);
 		}
 
 		$query = clone $this->query;
@@ -215,7 +215,7 @@ class DataQuery {
 			if(!in_array($tableClass, $ancestorTables) && empty($selectColumns)) continue;
 
 			// Select necessary columns (unless an explicitly empty array)
-			if($selectColumns !== array()) {
+			if($selectColumns !== []) {
 				$this->selectColumnsFromTable($query, $tableClass, $selectColumns);
 			}
 
@@ -228,7 +228,7 @@ class DataQuery {
 		// Resolve colliding fields
 		if($this->collidingFields) {
 			foreach($this->collidingFields as $k => $collisions) {
-				$caseClauses = array();
+				$caseClauses = [];
 				foreach($collisions as $collision) {
 					if(preg_match('/^"([^"]+)"/', $collision, $matches)) {
 						$collisionBase = $matches[1];
@@ -252,9 +252,9 @@ class DataQuery {
 				$classNames = ClassInfo::subclassesFor($this->dataClass);
 				if(!$classNames) user_error("DataList::create() Can't find data sub-classes for '$callerClass'");
 				$classNamesPlaceholders = DB::placeholders($classNames);
-				$query->addWhere(array(
+				$query->addWhere([
 					"\"$baseClass\".\"ClassName\" IN ($classNamesPlaceholders)" => $classNames
-				));
+				]);
 			}
 		}
 
@@ -282,12 +282,12 @@ class DataQuery {
 	 * @param SQLSelect $query
 	 * @return null
 	 */
-	protected function ensureSelectContainsOrderbyColumns($query, $originalSelect = array()) {
+	protected function ensureSelectContainsOrderbyColumns($query, $originalSelect = []) {
 		$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
 		$baseClass = array_shift($tableClasses);
 
 		if($orderby = $query->getOrderBy()) {
-			$newOrderby = array();
+			$newOrderby = [];
 			$i = 0;
 			foreach($orderby as $k => $dir) {
 				$newOrderby[$k] = $dir;
@@ -360,7 +360,7 @@ class DataQuery {
 	 * @param array $parameters Out variable for parameters required for this query
 	 * @return string The resulting SQL query (may be paramaterised)
 	 */
-	public function sql(&$parameters = array()) {
+	public function sql(&$parameters = []) {
 		return $this->getFinalisedQuery()->sql($parameters);
 	}
 
@@ -447,7 +447,7 @@ class DataQuery {
 			if((is_null($columns) || in_array($k, $columns)) && !isset($compositeFields[$k])) {
 				// Update $collidingFields if necessary
 				if($expressionForField = $query->expressionForField($k)) {
-					if(!isset($this->collidingFields[$k])) $this->collidingFields[$k] = array($expressionForField);
+					if(!isset($this->collidingFields[$k])) $this->collidingFields[$k] = [$expressionForField];
 					$this->collidingFields[$k][] = "\"$tableClass\".\"$k\"";
 
 				} else {
@@ -602,7 +602,7 @@ class DataQuery {
 	 * ORM have a value of 10.
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
 	 */
-	public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
+	public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = []) {
 		if($table) {
 			$this->query->addInnerJoin($table, $onClause, $alias, $order, $parameters);
 		}
@@ -620,7 +620,7 @@ class DataQuery {
 	 * ORM have a value of 10.
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
 	 */
-	public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
+	public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = []) {
 		if($table) {
 			$this->query->addLeftJoin($table, $onClause, $alias, $order, $parameters);
 		}
@@ -719,11 +719,11 @@ class DataQuery {
 	public function subtract(DataQuery $subtractQuery, $field='ID') {
 		$fieldExpression = $subtractQuery->expressionForField($field);
 		$subSelect = $subtractQuery->getFinalisedQuery();
-		$subSelect->setSelect(array());
+		$subSelect->setSelect([]);
 		$subSelect->selectField($fieldExpression, $field);
 		$subSelect->setOrderBy(null);
 		$subSelectSQL = $subSelect->sql($subSelectParameters);
-		$this->where(array($this->expressionForField($field)." NOT IN ($subSelectSQL)" => $subSelectParameters));
+		$this->where([$this->expressionForField($field)." NOT IN ($subSelectSQL)" => $subSelectParameters]);
 
 		return $this;
 	}
@@ -752,9 +752,9 @@ class DataQuery {
 	 */
 	public function column($field = 'ID') {
 		$fieldExpression = $this->expressionForField($field);
-		$query = $this->getFinalisedQuery(array($field));
+		$query = $this->getFinalisedQuery([$field]);
 		$originalSelect = $query->getSelect();
-		$query->setSelect(array());
+		$query->setSelect([]);
 		$query->selectField($fieldExpression, $field);
 		$this->ensureSelectContainsOrderbyColumns($query, $originalSelect);
 
@@ -769,7 +769,7 @@ class DataQuery {
 	protected function expressionForField($field) {
 
 		// Prepare query object for selecting this field
-		$query = $this->getFinalisedQuery(array($field));
+		$query = $this->getFinalisedQuery([$field]);
 
 		// Allow query to define the expression for this field
 		$expression = $query->expressionForField($field);
@@ -868,7 +868,7 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
 	}
 
 	public function conditionSQL(&$parameters) {
-		$parameters = array();
+		$parameters = [];
 
 		// Ignore empty conditions
 		$where = $this->whereQuery->getWhere();

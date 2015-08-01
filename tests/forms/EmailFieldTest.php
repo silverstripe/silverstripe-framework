@@ -49,13 +49,13 @@ class EmailFieldTest extends FunctionalTest {
 	function testEmailFieldPopulation() {
 
 		$this->get('EmailFieldTest_Controller');
-		$this->submitForm('Form_Form', null, array(
+		$this->submitForm('Form_Form', null, [
 			'Email' => 'test@test.com'
-		));
+		]);
 
-		$this->assertPartialMatchBySelector('p.good',array(
+		$this->assertPartialMatchBySelector('p.good',[
 			'Test save was successful'
-		));
+		]);
 	}
 }
 
@@ -73,11 +73,11 @@ class EmailFieldTest_Validator extends Validator {
 
 class EmailFieldTest_Controller extends Controller implements TestOnly {
 
-	private static $allowed_actions = array('Form');
+	private static $allowed_actions = ['Form'];
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'$Action//$ID/$OtherID' => "handleAction",
-	);
+	];
 
 	protected $template = 'BlankPage';
 

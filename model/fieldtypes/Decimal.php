@@ -41,17 +41,17 @@ class Decimal extends DBField {
 	}
 
 	public function requireField() {
-		$parts = array(
+		$parts = [
 			'datatype' => 'decimal',
 			'precision' => "$this->wholeSize,$this->decimalSize",
 			'default' => $this->defaultValue,
 			'arrayValue' => $this->arrayValue
-		);
+		];
 
-		$values = array(
+		$values = [
 			'type' => 'decimal',
 			'parts' => $parts
-		);
+		];
 
 		DB::require_field($this->tableName, $this->name, $values);
 	}

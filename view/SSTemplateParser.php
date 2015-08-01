@@ -87,7 +87,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	 * See SSTemplateParser::ClosedBlock_Handle_Loop for an example of what the callable should look like
 	 * @var array
 	 */
-	protected $closedBlocks = array();
+	protected $closedBlocks = [];
 
 	/**
 	 * Stores the user-supplied open block extension rules in the form:
@@ -97,14 +97,14 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	 * See SSTemplateParser::OpenBlock_Handle_Base_tag for an example of what the callable should look like
 	 * @var array
 	 */
-	protected $openBlocks = array();
+	protected $openBlocks = [];
 
 	/**
 	 * Allow the injection of new closed & open block callables
 	 * @param array $closedBlocks
 	 * @param array $openBlocks
 	 */
-	public function __construct($closedBlocks = array(), $openBlocks = array()) {
+	public function __construct($closedBlocks = [], $openBlocks = []) {
 		$this->setClosedBlocks($closedBlocks);
 		$this->setOpenBlocks($openBlocks);
 	}
@@ -127,7 +127,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	 * @throws InvalidArgumentException
 	 */
 	public function setClosedBlocks($closedBlocks) {
-		$this->closedBlocks = array();
+		$this->closedBlocks = [];
 		foreach ((array) $closedBlocks as $name => $callable) {
 			$this->addClosedBlock($name, $callable);
 		}
@@ -142,7 +142,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	 * @throws InvalidArgumentException
 	 */
 	public function setOpenBlocks($openBlocks) {
-		$this->openBlocks = array();
+		$this->openBlocks = [];
 		foreach ((array) $openBlocks as $name => $callable) {
 			$this->addOpenBlock($name, $callable);
 		}
@@ -198,8 +198,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	
 	/* Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
 	OpenBlock | MalformedBlock | Injection | Text)+ */
-	protected $match_Template_typestack = array('Template');
-	function match_Template ($stack = array()) {
+	protected $match_Template_typestack = ['Template'];
+	function match_Template ($stack = []) {
 		$matchrule = "Template"; $result = $this->construct($matchrule, $matchrule, null);
 		$count = 0;
 		while (true) {
@@ -212,7 +212,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					$res_0 = $result;
 					$pos_0 = $this->pos;
 					$matcher = 'match_'.'Comment'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres );
 						$_47 = TRUE; break;
@@ -224,7 +224,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 						$res_2 = $result;
 						$pos_2 = $this->pos;
 						$matcher = 'match_'.'Translate'; $key = $matcher; $pos = $this->pos;
-						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres );
 							$_45 = TRUE; break;
@@ -236,7 +236,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 							$res_4 = $result;
 							$pos_4 = $this->pos;
 							$matcher = 'match_'.'If'; $key = $matcher; $pos = $this->pos;
-							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 							if ($subres !== FALSE) {
 								$this->store( $result, $subres );
 								$_43 = TRUE; break;
@@ -248,7 +248,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 								$res_6 = $result;
 								$pos_6 = $this->pos;
 								$matcher = 'match_'.'Require'; $key = $matcher; $pos = $this->pos;
-								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 								if ($subres !== FALSE) {
 									$this->store( $result, $subres );
 									$_41 = TRUE; break;
@@ -260,7 +260,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 									$res_8 = $result;
 									$pos_8 = $this->pos;
 									$matcher = 'match_'.'CacheBlock'; $key = $matcher; $pos = $this->pos;
-									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 									if ($subres !== FALSE) {
 										$this->store( $result, $subres );
 										$_39 = TRUE; break;
@@ -272,7 +272,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 										$res_10 = $result;
 										$pos_10 = $this->pos;
 										$matcher = 'match_'.'UncachedBlock'; $key = $matcher; $pos = $this->pos;
-										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 										if ($subres !== FALSE) {
 											$this->store( $result, $subres );
 											$_37 = TRUE; break;
@@ -284,7 +284,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 											$res_12 = $result;
 											$pos_12 = $this->pos;
 											$matcher = 'match_'.'OldI18NTag'; $key = $matcher; $pos = $this->pos;
-											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 											if ($subres !== FALSE) {
 												$this->store( $result, $subres );
 												$_35 = TRUE; break;
@@ -296,7 +296,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 												$res_14 = $result;
 												$pos_14 = $this->pos;
 												$matcher = 'match_'.'Include'; $key = $matcher; $pos = $this->pos;
-												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 												if ($subres !== FALSE) {
 													$this->store( $result, $subres );
 													$_33 = TRUE; break;
@@ -308,7 +308,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 													$res_16 = $result;
 													$pos_16 = $this->pos;
 													$matcher = 'match_'.'ClosedBlock'; $key = $matcher; $pos = $this->pos;
-													$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+													$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 													if ($subres !== FALSE) {
 														$this->store( $result, $subres );
 														$_31 = TRUE; break;
@@ -320,7 +320,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 														$res_18 = $result;
 														$pos_18 = $this->pos;
 														$matcher = 'match_'.'OpenBlock'; $key = $matcher; $pos = $this->pos;
-														$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+														$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 														if ($subres !== FALSE) {
 															$this->store( $result, $subres );
 															$_29 = TRUE; break;
@@ -332,7 +332,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 															$res_20 = $result;
 															$pos_20 = $this->pos;
 															$matcher = 'match_'.'MalformedBlock'; $key = $matcher; $pos = $this->pos;
-															$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+															$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 															if ($subres !== FALSE) {
 																$this->store( $result, $subres );
 																$_27 = TRUE; break;
@@ -344,7 +344,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 																$res_22 = $result;
 																$pos_22 = $this->pos;
 																$matcher = 'match_'.'Injection'; $key = $matcher; $pos = $this->pos;
-																$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+																$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 																if ($subres !== FALSE) {
 																	$this->store( $result, $subres );
 																	$_25 = TRUE; break;
@@ -352,7 +352,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 																$result = $res_22;
 																$this->pos = $pos_22;
 																$matcher = 'match_'.'Text'; $key = $matcher; $pos = $this->pos;
-																$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+																$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 																if ($subres !== FALSE) {
 																	$this->store( $result, $subres );
 																	$_25 = TRUE; break;
@@ -452,8 +452,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 	
 	/* Word: / [A-Za-z_] [A-Za-z0-9_]* / */
-	protected $match_Word_typestack = array('Word');
-	function match_Word ($stack = array()) {
+	protected $match_Word_typestack = ['Word'];
+	function match_Word ($stack = []) {
 		$matchrule = "Word"; $result = $this->construct($matchrule, $matchrule, null);
 		if (( $subres = $this->rx( '/ [A-Za-z_] [A-Za-z0-9_]* /' ) ) !== FALSE) {
 			$result["text"] .= $subres;
@@ -464,8 +464,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* Number: / [0-9]+ / */
-	protected $match_Number_typestack = array('Number');
-	function match_Number ($stack = array()) {
+	protected $match_Number_typestack = ['Number'];
+	function match_Number ($stack = []) {
 		$matchrule = "Number"; $result = $this->construct($matchrule, $matchrule, null);
 		if (( $subres = $this->rx( '/ [0-9]+ /' ) ) !== FALSE) {
 			$result["text"] .= $subres;
@@ -476,8 +476,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* Value: / [A-Za-z0-9_]+ / */
-	protected $match_Value_typestack = array('Value');
-	function match_Value ($stack = array()) {
+	protected $match_Value_typestack = ['Value'];
+	function match_Value ($stack = []) {
 		$matchrule = "Value"; $result = $this->construct($matchrule, $matchrule, null);
 		if (( $subres = $this->rx( '/ [A-Za-z0-9_]+ /' ) ) !== FALSE) {
 			$result["text"] .= $subres;
@@ -488,13 +488,13 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* CallArguments: :Argument ( < "," < :Argument )* */
-	protected $match_CallArguments_typestack = array('CallArguments');
-	function match_CallArguments ($stack = array()) {
+	protected $match_CallArguments_typestack = ['CallArguments'];
+	function match_CallArguments ($stack = []) {
 		$matchrule = "CallArguments"; $result = $this->construct($matchrule, $matchrule, null);
 		$_61 = NULL;
 		do {
 			$matcher = 'match_'.'Argument'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Argument" );
 			}
@@ -512,7 +512,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					else { $_59 = FALSE; break; }
 					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 					$matcher = 'match_'.'Argument'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres, "Argument" );
 					}
@@ -550,13 +550,13 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* Call: Method:Word ( "(" < :CallArguments? > ")" )? */
-	protected $match_Call_typestack = array('Call');
-	function match_Call ($stack = array()) {
+	protected $match_Call_typestack = ['Call'];
+	function match_Call ($stack = []) {
 		$matchrule = "Call"; $result = $this->construct($matchrule, $matchrule, null);
 		$_71 = NULL;
 		do {
 			$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Method" );
 			}
@@ -574,7 +574,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				$res_66 = $result;
 				$pos_66 = $this->pos;
 				$matcher = 'match_'.'CallArguments'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "CallArguments" );
 				}
@@ -608,13 +608,13 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* LookupStep: :Call &"." */
-	protected $match_LookupStep_typestack = array('LookupStep');
-	function match_LookupStep ($stack = array()) {
+	protected $match_LookupStep_typestack = ['LookupStep'];
+	function match_LookupStep ($stack = []) {
 		$matchrule = "LookupStep"; $result = $this->construct($matchrule, $matchrule, null);
 		$_75 = NULL;
 		do {
 			$matcher = 'match_'.'Call'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Call" );
 			}
@@ -641,11 +641,11 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* LastLookupStep: :Call */
-	protected $match_LastLookupStep_typestack = array('LastLookupStep');
-	function match_LastLookupStep ($stack = array()) {
+	protected $match_LastLookupStep_typestack = ['LastLookupStep'];
+	function match_LastLookupStep ($stack = []) {
 		$matchrule = "LastLookupStep"; $result = $this->construct($matchrule, $matchrule, null);
 		$matcher = 'match_'.'Call'; $key = $matcher; $pos = $this->pos;
-		$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+		$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 		if ($subres !== FALSE) {
 			$this->store( $result, $subres, "Call" );
 			return $this->finalise($result);
@@ -655,8 +655,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* Lookup: LookupStep ("." LookupStep)* "." LastLookupStep | LastLookupStep */
-	protected $match_Lookup_typestack = array('Lookup');
-	function match_Lookup ($stack = array()) {
+	protected $match_Lookup_typestack = ['Lookup'];
+	function match_Lookup ($stack = []) {
 		$matchrule = "Lookup"; $result = $this->construct($matchrule, $matchrule, null);
 		$_89 = NULL;
 		do {
@@ -665,7 +665,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$_86 = NULL;
 			do {
 				$matcher = 'match_'.'LookupStep'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) { $this->store( $result, $subres ); }
 				else { $_86 = FALSE; break; }
 				while (true) {
@@ -679,7 +679,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 						}
 						else { $_82 = FALSE; break; }
 						$matcher = 'match_'.'LookupStep'; $key = $matcher; $pos = $this->pos;
-						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres );
 						}
@@ -701,7 +701,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				}
 				else { $_86 = FALSE; break; }
 				$matcher = 'match_'.'LastLookupStep'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) { $this->store( $result, $subres ); }
 				else { $_86 = FALSE; break; }
 				$_86 = TRUE; break;
@@ -711,7 +711,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$result = $res_78;
 			$this->pos = $pos_78;
 			$matcher = 'match_'.'LastLookupStep'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$_89 = TRUE; break;
@@ -730,7 +730,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	
 	function Lookup__construct(&$res) {
 		$res['php'] = '$scope->locally()';
-		$res['LookupSteps'] = array();
+		$res['LookupSteps'] = [];
 	}
 	
 	/** 
@@ -762,8 +762,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 	/* Translate: "<%t" < Entity < (Default:QuotedString)? < (!("is" "=") < "is" < Context:QuotedString)? <
 	(InjectionVariables)? > "%>" */
-	protected $match_Translate_typestack = array('Translate');
-	function match_Translate ($stack = array()) {
+	protected $match_Translate_typestack = ['Translate'];
+	function match_Translate ($stack = []) {
 		$matchrule = "Translate"; $result = $this->construct($matchrule, $matchrule, null);
 		$_115 = NULL;
 		do {
@@ -771,7 +771,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			else { $_115 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			$matcher = 'match_'.'Entity'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_115 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
@@ -780,7 +780,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$_96 = NULL;
 			do {
 				$matcher = 'match_'.'QuotedString'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "Default" );
 				}
@@ -827,7 +827,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				else { $_107 = FALSE; break; }
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 				$matcher = 'match_'.'QuotedString'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "Context" );
 				}
@@ -847,7 +847,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$_111 = NULL;
 			do {
 				$matcher = 'match_'.'InjectionVariables'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) { $this->store( $result, $subres ); }
 				else { $_111 = FALSE; break; }
 				$_111 = TRUE; break;
@@ -871,8 +871,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* InjectionVariables: (< InjectionName:Word "=" Argument)+ */
-	protected $match_InjectionVariables_typestack = array('InjectionVariables');
-	function match_InjectionVariables ($stack = array()) {
+	protected $match_InjectionVariables_typestack = ['InjectionVariables'];
+	function match_InjectionVariables ($stack = []) {
 		$matchrule = "InjectionVariables"; $result = $this->construct($matchrule, $matchrule, null);
 		$count = 0;
 		while (true) {
@@ -882,7 +882,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			do {
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 				$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "InjectionName" );
 				}
@@ -893,7 +893,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				}
 				else { $_121 = FALSE; break; }
 				$matcher = 'match_'.'Argument'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) { $this->store( $result, $subres ); }
 				else { $_121 = FALSE; break; }
 				$_121 = TRUE; break;
@@ -914,8 +914,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* Entity: / [A-Za-z_] [\w\.]* / */
-	protected $match_Entity_typestack = array('Entity');
-	function match_Entity ($stack = array()) {
+	protected $match_Entity_typestack = ['Entity'];
+	function match_Entity ($stack = []) {
 		$matchrule = "Entity"; $result = $this->construct($matchrule, $matchrule, null);
 		if (( $subres = $this->rx( '/ [A-Za-z_] [\w\.]* /' ) ) !== FALSE) {
 			$result["text"] .= $subres;
@@ -970,8 +970,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* SimpleInjection: '$' :Lookup */
-	protected $match_SimpleInjection_typestack = array('SimpleInjection');
-	function match_SimpleInjection ($stack = array()) {
+	protected $match_SimpleInjection_typestack = ['SimpleInjection'];
+	function match_SimpleInjection ($stack = []) {
 		$matchrule = "SimpleInjection"; $result = $this->construct($matchrule, $matchrule, null);
 		$_126 = NULL;
 		do {
@@ -981,7 +981,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			}
 			else { $_126 = FALSE; break; }
 			$matcher = 'match_'.'Lookup'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Lookup" );
 			}
@@ -995,15 +995,15 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* BracketInjection: '{$' :Lookup "}" */
-	protected $match_BracketInjection_typestack = array('BracketInjection');
-	function match_BracketInjection ($stack = array()) {
+	protected $match_BracketInjection_typestack = ['BracketInjection'];
+	function match_BracketInjection ($stack = []) {
 		$matchrule = "BracketInjection"; $result = $this->construct($matchrule, $matchrule, null);
 		$_131 = NULL;
 		do {
 			if (( $subres = $this->literal( '{$' ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_131 = FALSE; break; }
 			$matcher = 'match_'.'Lookup'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Lookup" );
 			}
@@ -1022,15 +1022,15 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* Injection: BracketInjection | SimpleInjection */
-	protected $match_Injection_typestack = array('Injection');
-	function match_Injection ($stack = array()) {
+	protected $match_Injection_typestack = ['Injection'];
+	function match_Injection ($stack = []) {
 		$matchrule = "Injection"; $result = $this->construct($matchrule, $matchrule, null);
 		$_136 = NULL;
 		do {
 			$res_133 = $result;
 			$pos_133 = $this->pos;
 			$matcher = 'match_'.'BracketInjection'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$_136 = TRUE; break;
@@ -1038,7 +1038,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$result = $res_133;
 			$this->pos = $pos_133;
 			$matcher = 'match_'.'SimpleInjection'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$_136 = TRUE; break;
@@ -1059,11 +1059,11 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* DollarMarkedLookup: SimpleInjection */
-	protected $match_DollarMarkedLookup_typestack = array('DollarMarkedLookup');
-	function match_DollarMarkedLookup ($stack = array()) {
+	protected $match_DollarMarkedLookup_typestack = ['DollarMarkedLookup'];
+	function match_DollarMarkedLookup ($stack = []) {
 		$matchrule = "DollarMarkedLookup"; $result = $this->construct($matchrule, $matchrule, null);
 		$matcher = 'match_'.'SimpleInjection'; $key = $matcher; $pos = $this->pos;
-		$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+		$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 		if ($subres !== FALSE) {
 			$this->store( $result, $subres );
 			return $this->finalise($result);
@@ -1078,8 +1078,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* QuotedString: q:/['"]/   String:/ (\\\\ | \\. | [^$q\\])* /   '$q' */
-	protected $match_QuotedString_typestack = array('QuotedString');
-	function match_QuotedString ($stack = array()) {
+	protected $match_QuotedString_typestack = ['QuotedString'];
+	function match_QuotedString ($stack = []) {
 		$matchrule = "QuotedString"; $result = $this->construct($matchrule, $matchrule, null);
 		$_142 = NULL;
 		do {
@@ -1114,8 +1114,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* FreeString: /[^,)%!=><|&]+/ */
-	protected $match_FreeString_typestack = array('FreeString');
-	function match_FreeString ($stack = array()) {
+	protected $match_FreeString_typestack = ['FreeString'];
+	function match_FreeString ($stack = []) {
 		$matchrule = "FreeString"; $result = $this->construct($matchrule, $matchrule, null);
 		if (( $subres = $this->rx( '/[^,)%!=><|&]+/' ) ) !== FALSE) {
 			$result["text"] .= $subres;
@@ -1130,15 +1130,15 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	:QuotedString |
 	:Lookup !(< FreeString)|
 	:FreeString */
-	protected $match_Argument_typestack = array('Argument');
-	function match_Argument ($stack = array()) {
+	protected $match_Argument_typestack = ['Argument'];
+	function match_Argument ($stack = []) {
 		$matchrule = "Argument"; $result = $this->construct($matchrule, $matchrule, null);
 		$_162 = NULL;
 		do {
 			$res_145 = $result;
 			$pos_145 = $this->pos;
 			$matcher = 'match_'.'DollarMarkedLookup'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "DollarMarkedLookup" );
 				$_162 = TRUE; break;
@@ -1150,7 +1150,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				$res_147 = $result;
 				$pos_147 = $this->pos;
 				$matcher = 'match_'.'QuotedString'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "QuotedString" );
 					$_160 = TRUE; break;
@@ -1164,7 +1164,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					$_155 = NULL;
 					do {
 						$matcher = 'match_'.'Lookup'; $key = $matcher; $pos = $this->pos;
-						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres, "Lookup" );
 						}
@@ -1175,7 +1175,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 						do {
 							if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 							$matcher = 'match_'.'FreeString'; $key = $matcher; $pos = $this->pos;
-							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 							if ($subres !== FALSE) {
 								$this->store( $result, $subres );
 							}
@@ -1199,7 +1199,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					$result = $res_149;
 					$this->pos = $pos_149;
 					$matcher = 'match_'.'FreeString'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres, "FreeString" );
 						$_158 = TRUE; break;
@@ -1270,8 +1270,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 	
 	/* ComparisonOperator: "!=" | "==" | ">=" | ">" | "<=" | "<" | "=" */
-	protected $match_ComparisonOperator_typestack = array('ComparisonOperator');
-	function match_ComparisonOperator ($stack = array()) {
+	protected $match_ComparisonOperator_typestack = ['ComparisonOperator'];
+	function match_ComparisonOperator ($stack = []) {
 		$matchrule = "ComparisonOperator"; $result = $this->construct($matchrule, $matchrule, null);
 		$_187 = NULL;
 		do {
@@ -1381,23 +1381,23 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* Comparison: Argument < ComparisonOperator > Argument */
-	protected $match_Comparison_typestack = array('Comparison');
-	function match_Comparison ($stack = array()) {
+	protected $match_Comparison_typestack = ['Comparison'];
+	function match_Comparison ($stack = []) {
 		$matchrule = "Comparison"; $result = $this->construct($matchrule, $matchrule, null);
 		$_194 = NULL;
 		do {
 			$matcher = 'match_'.'Argument'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_194 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			$matcher = 'match_'.'ComparisonOperator'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_194 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			$matcher = 'match_'.'Argument'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_194 = FALSE; break; }
 			$_194 = TRUE; break;
@@ -1424,8 +1424,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* PresenceCheck: (Not:'not' <)? Argument */
-	protected $match_PresenceCheck_typestack = array('PresenceCheck');
-	function match_PresenceCheck ($stack = array()) {
+	protected $match_PresenceCheck_typestack = ['PresenceCheck'];
+	function match_PresenceCheck ($stack = []) {
 		$matchrule = "PresenceCheck"; $result = $this->construct($matchrule, $matchrule, null);
 		$_201 = NULL;
 		do {
@@ -1454,7 +1454,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				unset( $pos_199 );
 			}
 			$matcher = 'match_'.'Argument'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_201 = FALSE; break; }
 			$_201 = TRUE; break;
@@ -1483,15 +1483,15 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* IfArgumentPortion: Comparison | PresenceCheck */
-	protected $match_IfArgumentPortion_typestack = array('IfArgumentPortion');
-	function match_IfArgumentPortion ($stack = array()) {
+	protected $match_IfArgumentPortion_typestack = ['IfArgumentPortion'];
+	function match_IfArgumentPortion ($stack = []) {
 		$matchrule = "IfArgumentPortion"; $result = $this->construct($matchrule, $matchrule, null);
 		$_206 = NULL;
 		do {
 			$res_203 = $result;
 			$pos_203 = $this->pos;
 			$matcher = 'match_'.'Comparison'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$_206 = TRUE; break;
@@ -1499,7 +1499,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$result = $res_203;
 			$this->pos = $pos_203;
 			$matcher = 'match_'.'PresenceCheck'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$_206 = TRUE; break;
@@ -1520,8 +1520,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* BooleanOperator: "||" | "&&" */
-	protected $match_BooleanOperator_typestack = array('BooleanOperator');
-	function match_BooleanOperator ($stack = array()) {
+	protected $match_BooleanOperator_typestack = ['BooleanOperator'];
+	function match_BooleanOperator ($stack = []) {
 		$matchrule = "BooleanOperator"; $result = $this->construct($matchrule, $matchrule, null);
 		$_211 = NULL;
 		do {
@@ -1548,13 +1548,13 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* IfArgument: :IfArgumentPortion ( < :BooleanOperator < :IfArgumentPortion )* */
-	protected $match_IfArgument_typestack = array('IfArgument');
-	function match_IfArgument ($stack = array()) {
+	protected $match_IfArgument_typestack = ['IfArgument'];
+	function match_IfArgument ($stack = []) {
 		$matchrule = "IfArgument"; $result = $this->construct($matchrule, $matchrule, null);
 		$_220 = NULL;
 		do {
 			$matcher = 'match_'.'IfArgumentPortion'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "IfArgumentPortion" );
 			}
@@ -1566,14 +1566,14 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				do {
 					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 					$matcher = 'match_'.'BooleanOperator'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres, "BooleanOperator" );
 					}
 					else { $_218 = FALSE; break; }
 					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 					$matcher = 'match_'.'IfArgumentPortion'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres, "IfArgumentPortion" );
 					}
@@ -1607,8 +1607,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* IfPart: '<%' < 'if' [ :IfArgument > '%>' Template:$TemplateMatcher? */
-	protected $match_IfPart_typestack = array('IfPart');
-	function match_IfPart ($stack = array()) {
+	protected $match_IfPart_typestack = ['IfPart'];
+	function match_IfPart ($stack = []) {
 		$matchrule = "IfPart"; $result = $this->construct($matchrule, $matchrule, null);
 		$_230 = NULL;
 		do {
@@ -1620,7 +1620,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_230 = FALSE; break; }
 			$matcher = 'match_'.'IfArgument'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "IfArgument" );
 			}
@@ -1631,7 +1631,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res_229 = $result;
 			$pos_229 = $this->pos;
 			$matcher = 'match_'.$this->expression($result, $stack, 'TemplateMatcher'); $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
@@ -1650,8 +1650,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' Template:$TemplateMatcher? */
-	protected $match_ElseIfPart_typestack = array('ElseIfPart');
-	function match_ElseIfPart ($stack = array()) {
+	protected $match_ElseIfPart_typestack = ['ElseIfPart'];
+	function match_ElseIfPart ($stack = []) {
 		$matchrule = "ElseIfPart"; $result = $this->construct($matchrule, $matchrule, null);
 		$_240 = NULL;
 		do {
@@ -1663,7 +1663,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_240 = FALSE; break; }
 			$matcher = 'match_'.'IfArgument'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "IfArgument" );
 			}
@@ -1674,7 +1674,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res_239 = $result;
 			$pos_239 = $this->pos;
 			$matcher = 'match_'.$this->expression($result, $stack, 'TemplateMatcher'); $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
@@ -1693,8 +1693,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* ElsePart: '<%' < 'else' > '%>' Template:$TemplateMatcher? */
-	protected $match_ElsePart_typestack = array('ElsePart');
-	function match_ElsePart ($stack = array()) {
+	protected $match_ElsePart_typestack = ['ElsePart'];
+	function match_ElsePart ($stack = []) {
 		$matchrule = "ElsePart"; $result = $this->construct($matchrule, $matchrule, null);
 		$_248 = NULL;
 		do {
@@ -1709,7 +1709,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res_247 = $result;
 			$pos_247 = $this->pos;
 			$matcher = 'match_'.$this->expression($result, $stack, 'TemplateMatcher'); $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
@@ -1728,20 +1728,20 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* If: IfPart ElseIfPart* ElsePart? '<%' < 'end_if' > '%>' */
-	protected $match_If_typestack = array('If');
-	function match_If ($stack = array()) {
+	protected $match_If_typestack = ['If'];
+	function match_If ($stack = []) {
 		$matchrule = "If"; $result = $this->construct($matchrule, $matchrule, null);
 		$_258 = NULL;
 		do {
 			$matcher = 'match_'.'IfPart'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_258 = FALSE; break; }
 			while (true) {
 				$res_251 = $result;
 				$pos_251 = $this->pos;
 				$matcher = 'match_'.'ElseIfPart'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) { $this->store( $result, $subres ); }
 				else {
 					$result = $res_251;
@@ -1754,7 +1754,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res_252 = $result;
 			$pos_252 = $this->pos;
 			$matcher = 'match_'.'ElsePart'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else {
 				$result = $res_252;
@@ -1801,8 +1801,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* Require: '<%' < 'require' [ Call:(Method:Word "(" < :CallArguments  > ")") > '%>' */
-	protected $match_Require_typestack = array('Require');
-	function match_Require ($stack = array()) {
+	protected $match_Require_typestack = ['Require'];
+	function match_Require ($stack = []) {
 		$matchrule = "Require"; $result = $this->construct($matchrule, $matchrule, null);
 		$_274 = NULL;
 		do {
@@ -1817,7 +1817,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$_270 = NULL;
 			do {
 				$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "Method" );
 				}
@@ -1829,7 +1829,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				else { $_270 = FALSE; break; }
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 				$matcher = 'match_'.'CallArguments'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "CallArguments" );
 				}
@@ -1875,8 +1875,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		:QuotedString |
 		:Lookup
 	) */
-	protected $match_CacheBlockArgument_typestack = array('CacheBlockArgument');
-	function match_CacheBlockArgument ($stack = array()) {
+	protected $match_CacheBlockArgument_typestack = ['CacheBlockArgument'];
+	function match_CacheBlockArgument ($stack = []) {
 		$matchrule = "CacheBlockArgument"; $result = $this->construct($matchrule, $matchrule, null);
 		$_294 = NULL;
 		do {
@@ -1923,7 +1923,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					$res_283 = $result;
 					$pos_283 = $this->pos;
 					$matcher = 'match_'.'DollarMarkedLookup'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres, "DollarMarkedLookup" );
 						$_290 = TRUE; break;
@@ -1935,7 +1935,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 						$res_285 = $result;
 						$pos_285 = $this->pos;
 						$matcher = 'match_'.'QuotedString'; $key = $matcher; $pos = $this->pos;
-						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres, "QuotedString" );
 							$_288 = TRUE; break;
@@ -1943,7 +1943,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 						$result = $res_285;
 						$this->pos = $pos_285;
 						$matcher = 'match_'.'Lookup'; $key = $matcher; $pos = $this->pos;
-						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres, "Lookup" );
 							$_288 = TRUE; break;
@@ -1986,13 +1986,13 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 		
 	/* CacheBlockArguments: CacheBlockArgument ( < "," < CacheBlockArgument )* */
-	protected $match_CacheBlockArguments_typestack = array('CacheBlockArguments');
-	function match_CacheBlockArguments ($stack = array()) {
+	protected $match_CacheBlockArguments_typestack = ['CacheBlockArguments'];
+	function match_CacheBlockArguments ($stack = []) {
 		$matchrule = "CacheBlockArguments"; $result = $this->construct($matchrule, $matchrule, null);
 		$_303 = NULL;
 		do {
 			$matcher = 'match_'.'CacheBlockArgument'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_303 = FALSE; break; }
 			while (true) {
@@ -2008,7 +2008,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					else { $_301 = FALSE; break; }
 					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 					$matcher = 'match_'.'CacheBlockArgument'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) { $this->store( $result, $subres ); }
 					else { $_301 = FALSE; break; }
 					$_301 = TRUE; break;
@@ -2040,9 +2040,9 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	
 	/* CacheBlockTemplate: (Comment | Translate | If | Require |    OldI18NTag | Include | ClosedBlock |
 	OpenBlock | MalformedBlock | Injection | Text)+ */
-	protected $match_CacheBlockTemplate_typestack = array('CacheBlockTemplate','Template');
-	function match_CacheBlockTemplate ($stack = array()) {
-		$matchrule = "CacheBlockTemplate"; $result = $this->construct($matchrule, $matchrule, array('TemplateMatcher' => 'CacheRestrictedTemplate'));
+	protected $match_CacheBlockTemplate_typestack = ['CacheBlockTemplate','Template'];
+	function match_CacheBlockTemplate ($stack = []) {
+		$matchrule = "CacheBlockTemplate"; $result = $this->construct($matchrule, $matchrule, ['TemplateMatcher' => 'CacheRestrictedTemplate']);
 		$count = 0;
 		while (true) {
 			$res_347 = $result;
@@ -2054,7 +2054,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					$res_305 = $result;
 					$pos_305 = $this->pos;
 					$matcher = 'match_'.'Comment'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres );
 						$_344 = TRUE; break;
@@ -2066,7 +2066,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 						$res_307 = $result;
 						$pos_307 = $this->pos;
 						$matcher = 'match_'.'Translate'; $key = $matcher; $pos = $this->pos;
-						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres );
 							$_342 = TRUE; break;
@@ -2078,7 +2078,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 							$res_309 = $result;
 							$pos_309 = $this->pos;
 							$matcher = 'match_'.'If'; $key = $matcher; $pos = $this->pos;
-							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 							if ($subres !== FALSE) {
 								$this->store( $result, $subres );
 								$_340 = TRUE; break;
@@ -2090,7 +2090,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 								$res_311 = $result;
 								$pos_311 = $this->pos;
 								$matcher = 'match_'.'Require'; $key = $matcher; $pos = $this->pos;
-								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 								if ($subres !== FALSE) {
 									$this->store( $result, $subres );
 									$_338 = TRUE; break;
@@ -2102,7 +2102,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 									$res_313 = $result;
 									$pos_313 = $this->pos;
 									$matcher = 'match_'.'OldI18NTag'; $key = $matcher; $pos = $this->pos;
-									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 									if ($subres !== FALSE) {
 										$this->store( $result, $subres );
 										$_336 = TRUE; break;
@@ -2114,7 +2114,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 										$res_315 = $result;
 										$pos_315 = $this->pos;
 										$matcher = 'match_'.'Include'; $key = $matcher; $pos = $this->pos;
-										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 										if ($subres !== FALSE) {
 											$this->store( $result, $subres );
 											$_334 = TRUE; break;
@@ -2126,7 +2126,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 											$res_317 = $result;
 											$pos_317 = $this->pos;
 											$matcher = 'match_'.'ClosedBlock'; $key = $matcher; $pos = $this->pos;
-											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 											if ($subres !== FALSE) {
 												$this->store( $result, $subres );
 												$_332 = TRUE; break;
@@ -2138,7 +2138,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 												$res_319 = $result;
 												$pos_319 = $this->pos;
 												$matcher = 'match_'.'OpenBlock'; $key = $matcher; $pos = $this->pos;
-												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 												if ($subres !== FALSE) {
 													$this->store( $result, $subres );
 													$_330 = TRUE; break;
@@ -2150,7 +2150,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 													$res_321 = $result;
 													$pos_321 = $this->pos;
 													$matcher = 'match_'.'MalformedBlock'; $key = $matcher; $pos = $this->pos;
-													$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+													$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 													if ($subres !== FALSE) {
 														$this->store( $result, $subres );
 														$_328 = TRUE; break;
@@ -2162,7 +2162,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 														$res_323 = $result;
 														$pos_323 = $this->pos;
 														$matcher = 'match_'.'Injection'; $key = $matcher; $pos = $this->pos;
-														$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+														$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 														if ($subres !== FALSE) {
 															$this->store( $result, $subres );
 															$_326 = TRUE; break;
@@ -2170,7 +2170,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 														$result = $res_323;
 														$this->pos = $pos_323;
 														$matcher = 'match_'.'Text'; $key = $matcher; $pos = $this->pos;
-														$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+														$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 														if ($subres !== FALSE) {
 															$this->store( $result, $subres );
 															$_326 = TRUE; break;
@@ -2258,8 +2258,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	'<%' < "uncached" < CacheBlockArguments? ( < Conditional:("if"|"unless") > Condition:IfArgument )? > '%>'
 		Template:$TemplateMatcher?
 		'<%' < 'end_' ("uncached"|"cached"|"cacheblock") > '%>' */
-	protected $match_UncachedBlock_typestack = array('UncachedBlock');
-	function match_UncachedBlock ($stack = array()) {
+	protected $match_UncachedBlock_typestack = ['UncachedBlock'];
+	function match_UncachedBlock ($stack = []) {
 		$matchrule = "UncachedBlock"; $result = $this->construct($matchrule, $matchrule, null);
 		$_384 = NULL;
 		do {
@@ -2272,7 +2272,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res_352 = $result;
 			$pos_352 = $this->pos;
 			$matcher = 'match_'.'CacheBlockArguments'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else {
 				$result = $res_352;
@@ -2321,7 +2321,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				}
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 				$matcher = 'match_'.'IfArgument'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "Condition" );
 				}
@@ -2341,7 +2341,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res_367 = $result;
 			$pos_367 = $this->pos;
 			$matcher = 'match_'.$this->expression($result, $stack, 'TemplateMatcher'); $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
@@ -2416,8 +2416,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	
 	/* CacheRestrictedTemplate: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
 	OpenBlock | MalformedBlock | Injection | Text)+ */
-	protected $match_CacheRestrictedTemplate_typestack = array('CacheRestrictedTemplate','Template');
-	function match_CacheRestrictedTemplate ($stack = array()) {
+	protected $match_CacheRestrictedTemplate_typestack = ['CacheRestrictedTemplate','Template'];
+	function match_CacheRestrictedTemplate ($stack = []) {
 		$matchrule = "CacheRestrictedTemplate"; $result = $this->construct($matchrule, $matchrule, null);
 		$count = 0;
 		while (true) {
@@ -2430,7 +2430,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					$res_386 = $result;
 					$pos_386 = $this->pos;
 					$matcher = 'match_'.'Comment'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres );
 						$_433 = TRUE; break;
@@ -2442,7 +2442,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 						$res_388 = $result;
 						$pos_388 = $this->pos;
 						$matcher = 'match_'.'Translate'; $key = $matcher; $pos = $this->pos;
-						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres );
 							$_431 = TRUE; break;
@@ -2454,7 +2454,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 							$res_390 = $result;
 							$pos_390 = $this->pos;
 							$matcher = 'match_'.'If'; $key = $matcher; $pos = $this->pos;
-							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 							if ($subres !== FALSE) {
 								$this->store( $result, $subres );
 								$_429 = TRUE; break;
@@ -2466,7 +2466,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 								$res_392 = $result;
 								$pos_392 = $this->pos;
 								$matcher = 'match_'.'Require'; $key = $matcher; $pos = $this->pos;
-								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 								if ($subres !== FALSE) {
 									$this->store( $result, $subres );
 									$_427 = TRUE; break;
@@ -2478,7 +2478,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 									$res_394 = $result;
 									$pos_394 = $this->pos;
 									$matcher = 'match_'.'CacheBlock'; $key = $matcher; $pos = $this->pos;
-									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 									if ($subres !== FALSE) {
 										$this->store( $result, $subres );
 										$_425 = TRUE; break;
@@ -2490,7 +2490,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 										$res_396 = $result;
 										$pos_396 = $this->pos;
 										$matcher = 'match_'.'UncachedBlock'; $key = $matcher; $pos = $this->pos;
-										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 										if ($subres !== FALSE) {
 											$this->store( $result, $subres );
 											$_423 = TRUE; break;
@@ -2502,7 +2502,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 											$res_398 = $result;
 											$pos_398 = $this->pos;
 											$matcher = 'match_'.'OldI18NTag'; $key = $matcher; $pos = $this->pos;
-											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 											if ($subres !== FALSE) {
 												$this->store( $result, $subres );
 												$_421 = TRUE; break;
@@ -2514,7 +2514,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 												$res_400 = $result;
 												$pos_400 = $this->pos;
 												$matcher = 'match_'.'Include'; $key = $matcher; $pos = $this->pos;
-												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 												if ($subres !== FALSE) {
 													$this->store( $result, $subres );
 													$_419 = TRUE; break;
@@ -2526,7 +2526,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 													$res_402 = $result;
 													$pos_402 = $this->pos;
 													$matcher = 'match_'.'ClosedBlock'; $key = $matcher; $pos = $this->pos;
-													$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+													$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 													if ($subres !== FALSE) {
 														$this->store( $result, $subres );
 														$_417 = TRUE; break;
@@ -2538,7 +2538,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 														$res_404 = $result;
 														$pos_404 = $this->pos;
 														$matcher = 'match_'.'OpenBlock'; $key = $matcher; $pos = $this->pos;
-														$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+														$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 														if ($subres !== FALSE) {
 															$this->store( $result, $subres );
 															$_415 = TRUE; break;
@@ -2550,7 +2550,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 															$res_406 = $result;
 															$pos_406 = $this->pos;
 															$matcher = 'match_'.'MalformedBlock'; $key = $matcher; $pos = $this->pos;
-															$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+															$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 															if ($subres !== FALSE) {
 																$this->store( $result, $subres );
 																$_413 = TRUE; break;
@@ -2562,7 +2562,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 																$res_408 = $result;
 																$pos_408 = $this->pos;
 																$matcher = 'match_'.'Injection'; $key = $matcher; $pos = $this->pos;
-																$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+																$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 																if ($subres !== FALSE) {
 																	$this->store( $result, $subres );
 																	$_411 = TRUE; break;
@@ -2570,7 +2570,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 																$result = $res_408;
 																$this->pos = $pos_408;
 																$matcher = 'match_'.'Text'; $key = $matcher; $pos = $this->pos;
-																$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+																$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 																if ($subres !== FALSE) {
 																	$this->store( $result, $subres );
 																	$_411 = TRUE; break;
@@ -2680,8 +2680,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	Condition:IfArgument )? > '%>'
 		(CacheBlock | UncachedBlock | CacheBlockTemplate)*
 	'<%' < 'end_' ("cached"|"uncached"|"cacheblock") > '%>' */
-	protected $match_CacheBlock_typestack = array('CacheBlock');
-	function match_CacheBlock ($stack = array()) {
+	protected $match_CacheBlock_typestack = ['CacheBlock'];
+	function match_CacheBlock ($stack = []) {
 		$matchrule = "CacheBlock"; $result = $this->construct($matchrule, $matchrule, null);
 		$_491 = NULL;
 		do {
@@ -2728,7 +2728,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$_448 = NULL;
 			do {
 				$matcher = 'match_'.'CacheBlockArguments'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) { $this->store( $result, $subres ); }
 				else { $_448 = FALSE; break; }
 				$_448 = TRUE; break;
@@ -2781,7 +2781,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				}
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 				$matcher = 'match_'.'IfArgument'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "Condition" );
 				}
@@ -2808,7 +2808,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 						$res_464 = $result;
 						$pos_464 = $this->pos;
 						$matcher = 'match_'.'CacheBlock'; $key = $matcher; $pos = $this->pos;
-						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres );
 							$_471 = TRUE; break;
@@ -2820,7 +2820,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 							$res_466 = $result;
 							$pos_466 = $this->pos;
 							$matcher = 'match_'.'UncachedBlock'; $key = $matcher; $pos = $this->pos;
-							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 							if ($subres !== FALSE) {
 								$this->store( $result, $subres );
 								$_469 = TRUE; break;
@@ -2828,7 +2828,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 							$result = $res_466;
 							$this->pos = $pos_466;
 							$matcher = 'match_'.'CacheBlockTemplate'; $key = $matcher; $pos = $this->pos;
-							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 							if ($subres !== FALSE) {
 								$this->store( $result, $subres );
 								$_469 = TRUE; break;
@@ -2968,15 +2968,15 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 	
 	/* OldTPart: "_t" N "(" N QuotedString (N "," N CallArguments)? N ")" N (";")? */
-	protected $match_OldTPart_typestack = array('OldTPart');
-	function match_OldTPart ($stack = array()) {
+	protected $match_OldTPart_typestack = ['OldTPart'];
+	function match_OldTPart ($stack = []) {
 		$matchrule = "OldTPart"; $result = $this->construct($matchrule, $matchrule, null);
 		$_510 = NULL;
 		do {
 			if (( $subres = $this->literal( '_t' ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_510 = FALSE; break; }
 			$matcher = 'match_'.'N'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_510 = FALSE; break; }
 			if (substr($this->string,$this->pos,1) == '(') {
@@ -2985,11 +2985,11 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			}
 			else { $_510 = FALSE; break; }
 			$matcher = 'match_'.'N'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_510 = FALSE; break; }
 			$matcher = 'match_'.'QuotedString'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_510 = FALSE; break; }
 			$res_503 = $result;
@@ -2997,7 +2997,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$_502 = NULL;
 			do {
 				$matcher = 'match_'.'N'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) { $this->store( $result, $subres ); }
 				else { $_502 = FALSE; break; }
 				if (substr($this->string,$this->pos,1) == ',') {
@@ -3006,11 +3006,11 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				}
 				else { $_502 = FALSE; break; }
 				$matcher = 'match_'.'N'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) { $this->store( $result, $subres ); }
 				else { $_502 = FALSE; break; }
 				$matcher = 'match_'.'CallArguments'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) { $this->store( $result, $subres ); }
 				else { $_502 = FALSE; break; }
 				$_502 = TRUE; break;
@@ -3023,7 +3023,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				unset( $pos_503 );
 			}
 			$matcher = 'match_'.'N'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_510 = FALSE; break; }
 			if (substr($this->string,$this->pos,1) == ')') {
@@ -3032,7 +3032,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			}
 			else { $_510 = FALSE; break; }
 			$matcher = 'match_'.'N'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_510 = FALSE; break; }
 			$res_509 = $result;
@@ -3062,8 +3062,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* N: / [\s\n]* / */
-	protected $match_N_typestack = array('N');
-	function match_N ($stack = array()) {
+	protected $match_N_typestack = ['N'];
+	function match_N ($stack = []) {
 		$matchrule = "N"; $result = $this->construct($matchrule, $matchrule, null);
 		if (( $subres = $this->rx( '/ [\s\n]* /' ) ) !== FALSE) {
 			$result["text"] .= $subres;
@@ -3097,8 +3097,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 	
 	/* OldTTag: "<%" < OldTPart > "%>" */
-	protected $match_OldTTag_typestack = array('OldTTag');
-	function match_OldTTag ($stack = array()) {
+	protected $match_OldTTag_typestack = ['OldTTag'];
+	function match_OldTTag ($stack = []) {
 		$matchrule = "OldTTag"; $result = $this->construct($matchrule, $matchrule, null);
 		$_518 = NULL;
 		do {
@@ -3106,7 +3106,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			else { $_518 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			$matcher = 'match_'.'OldTPart'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_518 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
@@ -3126,8 +3126,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* OldSprintfTag: "<%" < "sprintf" < "(" < OldTPart < "," < CallArguments > ")" > "%>"  */
-	protected $match_OldSprintfTag_typestack = array('OldSprintfTag');
-	function match_OldSprintfTag ($stack = array()) {
+	protected $match_OldSprintfTag_typestack = ['OldSprintfTag'];
+	function match_OldSprintfTag ($stack = []) {
 		$matchrule = "OldSprintfTag"; $result = $this->construct($matchrule, $matchrule, null);
 		$_535 = NULL;
 		do {
@@ -3144,7 +3144,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			else { $_535 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			$matcher = 'match_'.'OldTPart'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_535 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
@@ -3155,7 +3155,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			else { $_535 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			$matcher = 'match_'.'CallArguments'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
 			else { $_535 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
@@ -3189,15 +3189,15 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 	
 	/* OldI18NTag: OldSprintfTag | OldTTag */
-	protected $match_OldI18NTag_typestack = array('OldI18NTag');
-	function match_OldI18NTag ($stack = array()) {
+	protected $match_OldI18NTag_typestack = ['OldI18NTag'];
+	function match_OldI18NTag ($stack = []) {
 		$matchrule = "OldI18NTag"; $result = $this->construct($matchrule, $matchrule, null);
 		$_540 = NULL;
 		do {
 			$res_537 = $result;
 			$pos_537 = $this->pos;
 			$matcher = 'match_'.'OldSprintfTag'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$_540 = TRUE; break;
@@ -3205,7 +3205,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$result = $res_537;
 			$this->pos = $pos_537;
 			$matcher = 'match_'.'OldTTag'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$_540 = TRUE; break;
@@ -3226,13 +3226,13 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* NamedArgument: Name:Word "=" Value:Argument */
-	protected $match_NamedArgument_typestack = array('NamedArgument');
-	function match_NamedArgument ($stack = array()) {
+	protected $match_NamedArgument_typestack = ['NamedArgument'];
+	function match_NamedArgument ($stack = []) {
 		$matchrule = "NamedArgument"; $result = $this->construct($matchrule, $matchrule, null);
 		$_545 = NULL;
 		do {
 			$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Name" );
 			}
@@ -3243,7 +3243,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			}
 			else { $_545 = FALSE; break; }
 			$matcher = 'match_'.'Argument'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Value" );
 			}
@@ -3278,8 +3278,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* Include: "<%" < "include" < Template:Word < (NamedArgument ( < "," < NamedArgument )*)? > "%>" */
-	protected $match_Include_typestack = array('Include');
-	function match_Include ($stack = array()) {
+	protected $match_Include_typestack = ['Include'];
+	function match_Include ($stack = []) {
 		$matchrule = "Include"; $result = $this->construct($matchrule, $matchrule, null);
 		$_564 = NULL;
 		do {
@@ -3290,7 +3290,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			else { $_564 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
@@ -3301,7 +3301,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$_560 = NULL;
 			do {
 				$matcher = 'match_'.'NamedArgument'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) { $this->store( $result, $subres ); }
 				else { $_560 = FALSE; break; }
 				while (true) {
@@ -3317,7 +3317,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 						else { $_558 = FALSE; break; }
 						if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 						$matcher = 'match_'.'NamedArgument'; $key = $matcher; $pos = $this->pos;
-						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres );
 						}
@@ -3355,7 +3355,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	function Include__construct(&$res){
-		$res['arguments'] = array();
+		$res['arguments'] = [];
 	}
 
 	function Include_Template(&$res, $sub){
@@ -3382,13 +3382,13 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* BlockArguments: :Argument ( < "," < :Argument)*  */
-	protected $match_BlockArguments_typestack = array('BlockArguments');
-	function match_BlockArguments ($stack = array()) {
+	protected $match_BlockArguments_typestack = ['BlockArguments'];
+	function match_BlockArguments ($stack = []) {
 		$matchrule = "BlockArguments"; $result = $this->construct($matchrule, $matchrule, null);
 		$_573 = NULL;
 		do {
 			$matcher = 'match_'.'Argument'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Argument" );
 			}
@@ -3406,7 +3406,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					else { $_571 = FALSE; break; }
 					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 					$matcher = 'match_'.'Argument'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres, "Argument" );
 					}
@@ -3431,8 +3431,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* NotBlockTag: "end_" | (("if" | "else_if" | "else" | "require" | "cached" | "uncached" | "cacheblock" | "include")]) */
-	protected $match_NotBlockTag_typestack = array('NotBlockTag');
-	function match_NotBlockTag ($stack = array()) {
+	protected $match_NotBlockTag_typestack = ['NotBlockTag'];
+	function match_NotBlockTag ($stack = []) {
 		$matchrule = "NotBlockTag"; $result = $this->construct($matchrule, $matchrule, null);
 		$_611 = NULL;
 		do {
@@ -3586,8 +3586,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 	/* ClosedBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > Zap:'%>' Template:$TemplateMatcher? 
 	'<%' < 'end_' '$BlockName' > '%>' */
-	protected $match_ClosedBlock_typestack = array('ClosedBlock');
-	function match_ClosedBlock ($stack = array()) {
+	protected $match_ClosedBlock_typestack = ['ClosedBlock'];
+	function match_ClosedBlock ($stack = []) {
 		$matchrule = "ClosedBlock"; $result = $this->construct($matchrule, $matchrule, null);
 		$_631 = NULL;
 		do {
@@ -3597,7 +3597,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res_615 = $result;
 			$pos_615 = $this->pos;
 			$matcher = 'match_'.'NotBlockTag'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$result = $res_615;
@@ -3609,7 +3609,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				$this->pos = $pos_615;
 			}
 			$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "BlockName" );
 			}
@@ -3621,7 +3621,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 				else { $_620 = FALSE; break; }
 				$matcher = 'match_'.'BlockArguments'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "BlockArguments" );
 				}
@@ -3651,7 +3651,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res_624 = $result;
 			$pos_624 = $this->pos;
 			$matcher = 'match_'.$this->expression($result, $stack, 'TemplateMatcher'); $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
@@ -3701,7 +3701,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	
 	function ClosedBlock_BlockArguments(&$res, $sub) {
 		if (isset($sub['Argument']['ArgumentMode'])) {
-			$res['Arguments'] = array($sub['Argument']);
+			$res['Arguments'] = [$sub['Argument']];
 			$res['ArgumentCount'] = 1;
 		}
 		else {
@@ -3773,8 +3773,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 	
 	/* OpenBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > '%>' */
-	protected $match_OpenBlock_typestack = array('OpenBlock');
-	function match_OpenBlock ($stack = array()) {
+	protected $match_OpenBlock_typestack = ['OpenBlock'];
+	function match_OpenBlock ($stack = []) {
 		$matchrule = "OpenBlock"; $result = $this->construct($matchrule, $matchrule, null);
 		$_644 = NULL;
 		do {
@@ -3784,7 +3784,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res_635 = $result;
 			$pos_635 = $this->pos;
 			$matcher = 'match_'.'NotBlockTag'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$result = $res_635;
@@ -3796,7 +3796,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				$this->pos = $pos_635;
 			}
 			$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "BlockName" );
 			}
@@ -3808,7 +3808,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 				else { $_640 = FALSE; break; }
 				$matcher = 'match_'.'BlockArguments'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "BlockArguments" );
 				}
@@ -3842,7 +3842,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	
 	function OpenBlock_BlockArguments(&$res, $sub) {
 		if (isset($sub['Argument']['ArgumentMode'])) {
-			$res['Arguments'] = array($sub['Argument']);
+			$res['Arguments'] = [$sub['Argument']];
 			$res['ArgumentCount'] = 1;
 		}
 		else {
@@ -3900,8 +3900,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 	
 	/* MismatchedEndBlock: '<%' < 'end_' :Word > '%>' */
-	protected $match_MismatchedEndBlock_typestack = array('MismatchedEndBlock');
-	function match_MismatchedEndBlock ($stack = array()) {
+	protected $match_MismatchedEndBlock_typestack = ['MismatchedEndBlock'];
+	function match_MismatchedEndBlock ($stack = []) {
 		$matchrule = "MismatchedEndBlock"; $result = $this->construct($matchrule, $matchrule, null);
 		$_652 = NULL;
 		do {
@@ -3911,7 +3911,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			if (( $subres = $this->literal( 'end_' ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_652 = FALSE; break; }
 			$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Word" );
 			}
@@ -3935,8 +3935,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 
 	/* MalformedOpenTag: '<%' < !NotBlockTag Tag:Word  !( ( [ :BlockArguments ] )? > '%>' ) */
-	protected $match_MalformedOpenTag_typestack = array('MalformedOpenTag');
-	function match_MalformedOpenTag ($stack = array()) {
+	protected $match_MalformedOpenTag_typestack = ['MalformedOpenTag'];
+	function match_MalformedOpenTag ($stack = []) {
 		$matchrule = "MalformedOpenTag"; $result = $this->construct($matchrule, $matchrule, null);
 		$_667 = NULL;
 		do {
@@ -3946,7 +3946,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$res_656 = $result;
 			$pos_656 = $this->pos;
 			$matcher = 'match_'.'NotBlockTag'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$result = $res_656;
@@ -3958,7 +3958,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				$this->pos = $pos_656;
 			}
 			$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Tag" );
 			}
@@ -3974,7 +3974,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 					else { $_661 = FALSE; break; }
 					$matcher = 'match_'.'BlockArguments'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres, "BlockArguments" );
 					}
@@ -4021,8 +4021,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 	
 	/* MalformedCloseTag: '<%' < Tag:('end_' :Word ) !( > '%>' ) */
-	protected $match_MalformedCloseTag_typestack = array('MalformedCloseTag');
-	function match_MalformedCloseTag ($stack = array()) {
+	protected $match_MalformedCloseTag_typestack = ['MalformedCloseTag'];
+	function match_MalformedCloseTag ($stack = []) {
 		$matchrule = "MalformedCloseTag"; $result = $this->construct($matchrule, $matchrule, null);
 		$_679 = NULL;
 		do {
@@ -4035,7 +4035,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				if (( $subres = $this->literal( 'end_' ) ) !== FALSE) { $result["text"] .= $subres; }
 				else { $_673 = FALSE; break; }
 				$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
-				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "Word" );
 				}
@@ -4086,15 +4086,15 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	}
 	
 	/* MalformedBlock: MalformedOpenTag | MalformedCloseTag */
-	protected $match_MalformedBlock_typestack = array('MalformedBlock');
-	function match_MalformedBlock ($stack = array()) {
+	protected $match_MalformedBlock_typestack = ['MalformedBlock'];
+	function match_MalformedBlock ($stack = []) {
 		$matchrule = "MalformedBlock"; $result = $this->construct($matchrule, $matchrule, null);
 		$_684 = NULL;
 		do {
 			$res_681 = $result;
 			$pos_681 = $this->pos;
 			$matcher = 'match_'.'MalformedOpenTag'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$_684 = TRUE; break;
@@ -4102,7 +4102,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$result = $res_681;
 			$this->pos = $pos_681;
 			$matcher = 'match_'.'MalformedCloseTag'; $key = $matcher; $pos = $this->pos;
-			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
 				$_684 = TRUE; break;
@@ -4120,8 +4120,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	/* Comment: "<%--" (!"--%>" /(?s)./)+ "--%>" */
-	protected $match_Comment_typestack = array('Comment');
-	function match_Comment ($stack = array()) {
+	protected $match_Comment_typestack = ['Comment'];
+	function match_Comment ($stack = []) {
 		$matchrule = "Comment"; $result = $this->construct($matchrule, $matchrule, null);
 		$_692 = NULL;
 		do {
@@ -4178,9 +4178,9 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		
 	/* TopTemplate: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
 	OpenBlock |  MalformedBlock | MismatchedEndBlock  | Injection | Text)+ */
-	protected $match_TopTemplate_typestack = array('TopTemplate','Template');
-	function match_TopTemplate ($stack = array()) {
-		$matchrule = "TopTemplate"; $result = $this->construct($matchrule, $matchrule, array('TemplateMatcher' => 'Template'));
+	protected $match_TopTemplate_typestack = ['TopTemplate','Template'];
+	function match_TopTemplate ($stack = []) {
+		$matchrule = "TopTemplate"; $result = $this->construct($matchrule, $matchrule, ['TemplateMatcher' => 'Template']);
 		$count = 0;
 		while (true) {
 			$res_748 = $result;
@@ -4192,7 +4192,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 					$res_694 = $result;
 					$pos_694 = $this->pos;
 					$matcher = 'match_'.'Comment'; $key = $matcher; $pos = $this->pos;
-					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres );
 						$_745 = TRUE; break;
@@ -4204,7 +4204,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 						$res_696 = $result;
 						$pos_696 = $this->pos;
 						$matcher = 'match_'.'Translate'; $key = $matcher; $pos = $this->pos;
-						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres );
 							$_743 = TRUE; break;
@@ -4216,7 +4216,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 							$res_698 = $result;
 							$pos_698 = $this->pos;
 							$matcher = 'match_'.'If'; $key = $matcher; $pos = $this->pos;
-							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 							if ($subres !== FALSE) {
 								$this->store( $result, $subres );
 								$_741 = TRUE; break;
@@ -4228,7 +4228,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 								$res_700 = $result;
 								$pos_700 = $this->pos;
 								$matcher = 'match_'.'Require'; $key = $matcher; $pos = $this->pos;
-								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 								if ($subres !== FALSE) {
 									$this->store( $result, $subres );
 									$_739 = TRUE; break;
@@ -4240,7 +4240,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 									$res_702 = $result;
 									$pos_702 = $this->pos;
 									$matcher = 'match_'.'CacheBlock'; $key = $matcher; $pos = $this->pos;
-									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 									if ($subres !== FALSE) {
 										$this->store( $result, $subres );
 										$_737 = TRUE; break;
@@ -4252,7 +4252,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 										$res_704 = $result;
 										$pos_704 = $this->pos;
 										$matcher = 'match_'.'UncachedBlock'; $key = $matcher; $pos = $this->pos;
-										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 										if ($subres !== FALSE) {
 											$this->store( $result, $subres );
 											$_735 = TRUE; break;
@@ -4264,7 +4264,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 											$res_706 = $result;
 											$pos_706 = $this->pos;
 											$matcher = 'match_'.'OldI18NTag'; $key = $matcher; $pos = $this->pos;
-											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 											if ($subres !== FALSE) {
 												$this->store( $result, $subres );
 												$_733 = TRUE; break;
@@ -4276,7 +4276,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 												$res_708 = $result;
 												$pos_708 = $this->pos;
 												$matcher = 'match_'.'Include'; $key = $matcher; $pos = $this->pos;
-												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 												if ($subres !== FALSE) {
 													$this->store( $result, $subres );
 													$_731 = TRUE; break;
@@ -4288,7 +4288,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 													$res_710 = $result;
 													$pos_710 = $this->pos;
 													$matcher = 'match_'.'ClosedBlock'; $key = $matcher; $pos = $this->pos;
-													$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+													$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 													if ($subres !== FALSE) {
 														$this->store( $result, $subres );
 														$_729 = TRUE; break;
@@ -4300,7 +4300,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 														$res_712 = $result;
 														$pos_712 = $this->pos;
 														$matcher = 'match_'.'OpenBlock'; $key = $matcher; $pos = $this->pos;
-														$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+														$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 														if ($subres !== FALSE) {
 															$this->store( $result, $subres );
 															$_727 = TRUE; break;
@@ -4312,7 +4312,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 															$res_714 = $result;
 															$pos_714 = $this->pos;
 															$matcher = 'match_'.'MalformedBlock'; $key = $matcher; $pos = $this->pos;
-															$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+															$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 															if ($subres !== FALSE) {
 																$this->store( $result, $subres );
 																$_725 = TRUE; break;
@@ -4324,7 +4324,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 																$res_716 = $result;
 																$pos_716 = $this->pos;
 																$matcher = 'match_'.'MismatchedEndBlock'; $key = $matcher; $pos = $this->pos;
-																$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+																$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 																if ($subres !== FALSE) {
 																	$this->store( $result, $subres );
 																	$_723 = TRUE; break;
@@ -4336,7 +4336,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 																	$res_718 = $result;
 																	$pos_718 = $this->pos;
 																	$matcher = 'match_'.'Injection'; $key = $matcher; $pos = $this->pos;
-																	$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+																	$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 																	if ($subres !== FALSE) {
 																		$this->store( $result, $subres );
 																		$_721 = TRUE; break;
@@ -4344,7 +4344,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 																	$result = $res_718;
 																	$this->pos = $pos_718;
 																	$matcher = 'match_'.'Text'; $key = $matcher; $pos = $this->pos;
-																	$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
+																	$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, [$result])) ) );
 																	if ($subres !== FALSE) {
 																		$this->store( $result, $subres );
 																		$_721 = TRUE; break;
@@ -4461,8 +4461,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		'{' !'$' |
 		'{$' !(/[A-Za-z_]/)
 	)+ */
-	protected $match_Text_typestack = array('Text');
-	function match_Text ($stack = array()) {
+	protected $match_Text_typestack = ['Text'];
+	function match_Text ($stack = []) {
 		$matchrule = "Text"; $result = $this->construct($matchrule, $matchrule, null);
 		$count = 0;
 		while (true) {

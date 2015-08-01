@@ -30,11 +30,11 @@ class GDImageTest extends ImageTest {
 		$image = $this->objFromFixture('Image', 'imageWithTitle');
 		$cache = SS_Cache::factory('GDBackend_Manipulations');
 		$fullPath = $image->getFullPath();
-		$key = md5(implode('_', array($fullPath, filemtime($fullPath))));
+		$key = md5(implode('_', [$fullPath, filemtime($fullPath)]));
 
 		try {
 			// Simluate a failed manipulation
-			$gdFailure = new GDBackend_Failure($fullPath, array('ScaleWidth', 123));
+			$gdFailure = new GDBackend_Failure($fullPath, ['ScaleWidth', 123]);
 			$this->fail('GDBackend_Failure should throw an exception when setting image resource');
 		} catch (GDBackend_Failure_Exception $e) {
 			// Check that the cache has stored the manipulation failure

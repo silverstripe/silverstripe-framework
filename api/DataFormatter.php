@@ -91,7 +91,7 @@ abstract class DataFormatter extends Object {
 	public static function for_extension($extension) {
 		$classes = ClassInfo::subclassesFor("DataFormatter");
 		array_shift($classes);
-		$sortedClasses = array();
+		$sortedClasses = [];
 		foreach($classes as $class) {
 			$sortedClasses[$class] = singleton($class)->stat('priority');
 		}
@@ -127,7 +127,7 @@ abstract class DataFormatter extends Object {
 	public static function for_mimetype($mimeType) {
 		$classes = ClassInfo::subclassesFor("DataFormatter");
 		array_shift($classes);
-		$sortedClasses = array();
+		$sortedClasses = [];
 		foreach($classes as $class) {
 			$sortedClasses[$class] = singleton($class)->stat('priority');
 		}
@@ -241,7 +241,7 @@ abstract class DataFormatter extends Object {
 	 * @return array
 	 */
 	protected function getFieldsForObj($obj) {
-		$dbFields = array();
+		$dbFields = [];
 
 		// if custom fields are specified, only select these
 		if(is_array($this->customFields)) {
@@ -266,7 +266,7 @@ abstract class DataFormatter extends Object {
 		}
 
 		// add default required fields
-		$dbFields = array_merge($dbFields, array('ID'=>'Int'));
+		$dbFields = array_merge($dbFields, ['ID'=>'Int']);
 
 		if(is_array($this->removeFields)) {
 			$dbFields = array_diff_key($dbFields, array_combine($this->removeFields,$this->removeFields));

@@ -9,11 +9,11 @@ class DirectorTest extends SapphireTest {
 
 	protected static $originalRequestURI;
 
-	protected $originalProtocolHeaders = array();
+	protected $originalProtocolHeaders = [];
 
-	protected $originalGet = array();
+	protected $originalGet = [];
 
-	protected $originalSession = array();
+	protected $originalSession = [];
 
 	public function setUp() {
 		parent::setUp();
@@ -27,19 +27,19 @@ class DirectorTest extends SapphireTest {
 
 		$this->originalGet = $_GET;
 		$this->originalSession = $_SESSION;
-		$_SESSION = array();
+		$_SESSION = [];
 
-		Config::inst()->update('Director', 'rules', array(
+		Config::inst()->update('Director', 'rules', [
 			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller',
-			'en-nz/$Action/$ID/$OtherID' => array(
+			'en-nz/$Action/$ID/$OtherID' => [
 				'Controller' => 'DirectorTestRequest_Controller',
 				'Locale' => 'en_NZ'
-			)
-		));
+			]
+		]);
 
-		$headers = array(
+		$headers = [
 			'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'
-		);
+		];
 
 		foreach($headers as $header) {
 			if(isset($_SERVER[$header])) {
@@ -94,7 +94,7 @@ class DirectorTest extends SapphireTest {
 		Config::inst()->update('Director', 'alternate_base_url', '/mysite/');
 
 		//test empty / local urls
-		foreach(array('', './', '.') as $url) {
+		foreach(['', './', '.'] as $url) {
 			$this->assertEquals("$rootURL/mysite/", Director::absoluteURL($url, Director::BASE));
 			$this->assertEquals("$rootURL/", Director::absoluteURL($url, Director::ROOT));
 			$this->assertEquals("$rootURL/mysite/sub-page/", Director::absoluteURL($url, Director::REQUEST));
@@ -196,7 +196,7 @@ class DirectorTest extends SapphireTest {
 	 * Tests that {@link Director::is_absolute()} works under different environment types
 	 */
 	public function testIsAbsolute() {
-		$expected = array (
+		$expected = [
 			'C:/something' => true,
 			'd:\\'         => true,
 			'e/'           => false,
@@ -206,7 +206,7 @@ class DirectorTest extends SapphireTest {
 			'something/c:' => false,
 			'folder'       => false,
 			'a/c:/'        => false
-		);
+		];
 
 		foreach($expected as $path => $result) {
 			$this->assertEquals(Director::is_absolute($path), $result, "Test result for $path");
@@ -285,7 +285,7 @@ class DirectorTest extends SapphireTest {
 		unset($_SESSION['isLive']);
 		unset($_GET['isTest']);
 		unset($_GET['isDev']);
-		$_SESSION = $_SESSION ?: array();
+		$_SESSION = $_SESSION ?: [];
 
 		// Test isDev=1
 		$_GET['isDev'] = '1';
@@ -313,16 +313,16 @@ class DirectorTest extends SapphireTest {
 	}
 
 	public function testResetGlobalsAfterTestRequest() {
-		$_GET = array('somekey' => 'getvalue');
-		$_POST = array('somekey' => 'postvalue');
-		$_COOKIE = array('somekey' => 'cookievalue');
+		$_GET = ['somekey' => 'getvalue'];
+		$_POST = ['somekey' => 'postvalue'];
+		$_COOKIE = ['somekey' => 'cookievalue'];
 
 		$cookies = Injector::inst()->createWithArgs(
 			'Cookie_Backend',
-			array(array('somekey' => 'sometestcookievalue'))
+			[['somekey' => 'sometestcookievalue']]
 		);
 
-		$getresponse = Director::test('errorpage?somekey=sometestgetvalue', array('somekey' => 'sometestpostvalue'),
+		$getresponse = Director::test('errorpage?somekey=sometestgetvalue', ['somekey' => 'sometestpostvalue'],
 			null, null, null, null, $cookies);
 
 		$this->assertEquals('getvalue', $_GET['somekey'],
@@ -334,9 +334,9 @@ class DirectorTest extends SapphireTest {
 	}
 
 	public function testTestRequestCarriesGlobals() {
-		$fixture = array('somekey' => 'sometestvalue');
-		foreach(array('get', 'post') as $method) {
-			foreach(array('return%sValue', 'returnRequestValue', 'returnCookieValue') as $testfunction) {
+		$fixture = ['somekey' => 'sometestvalue'];
+		foreach(['get', 'post'] as $method) {
+			foreach(['return%sValue', 'returnRequestValue', 'returnCookieValue'] as $testfunction) {
 				$url = 'DirectorTestRequest_Controller/' . sprintf($testfunction, ucfirst($method))
 					. '?' . http_build_query($fixture);
 
@@ -347,7 +347,7 @@ class DirectorTest extends SapphireTest {
 					strtoupper($method),
 					null,
 					null,
-					Injector::inst()->createWithArgs('Cookie_Backend', array($fixture))
+					Injector::inst()->createWithArgs('Cookie_Backend', [$fixture])
 				);
 
 				$this->assertInstanceOf('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
@@ -365,13 +365,13 @@ class DirectorTest extends SapphireTest {
 
 		$this->assertEquals(
 			$request->params(),
-			array(
+			[
 				'Controller' => 'DirectorTestRequest_Controller',
 				'Action' => 'myaction',
 				'ID' => 'myid',
 				'OtherID' => 'myotherid',
 				'Locale' => 'en_NZ'
-			)
+			]
 		);
 	}
 
@@ -387,30 +387,30 @@ class DirectorTest extends SapphireTest {
 
 	public function testForceSSLOnTopLevelPagePattern() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
-		$output = Director::forceSSL(array('/^admin/'));
+		$output = Director::forceSSL(['/^admin/']);
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 	}
 
 	public function testForceSSLOnSubPagesPattern() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . Config::inst()->get('Security', 'login_url');
-		$output = Director::forceSSL(array('/^Security/'));
+		$output = Director::forceSSL(['/^Security/']);
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 	}
 
 	public function testForceSSLWithPatternDoesNotMatchOtherPages() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'normal-page';
-		$output = Director::forceSSL(array('/^admin/'));
+		$output = Director::forceSSL(['/^admin/']);
 		$this->assertFalse($output);
 
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'just-another-page/sub-url';
-		$output = Director::forceSSL(array('/^admin/', '/^Security/'));
+		$output = Director::forceSSL(['/^admin/', '/^Security/']);
 		$this->assertFalse($output);
 	}
 
 	public function testForceSSLAlternateDomain() {
 		Config::inst()->update('Director', 'alternate_base_url', '/');
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
-		$output = Director::forceSSL(array('/^admin/'), 'secure.mysite.com');
+		$output = Director::forceSSL(['/^admin/'], 'secure.mysite.com');
 		$this->assertEquals($output, 'https://secure.mysite.com/admin');
 	}
 
@@ -418,7 +418,7 @@ class DirectorTest extends SapphireTest {
 	 * @covers Director::extract_request_headers()
 	 */
 	public function testExtractRequestHeaders() {
-		$request = array(
+		$request = [
 			'REDIRECT_STATUS'      => '200',
 			'HTTP_HOST'            => 'host',
 			'HTTP_USER_AGENT'      => 'User Agent',
@@ -431,9 +431,9 @@ class DirectorTest extends SapphireTest {
 			'SCRIPT_NAME'          => FRAMEWORK_DIR . '/main.php',
 			'CONTENT_TYPE'         => 'text/xml',
 			'CONTENT_LENGTH'       => 10
-		);
+		];
 
-		$headers = array(
+		$headers = [
 			'Host'            => 'host',
 			'User-Agent'      => 'User Agent',
 			'Accept'          => 'text/html',
@@ -441,7 +441,7 @@ class DirectorTest extends SapphireTest {
 			'Cookie'          => 'MyCookie=1',
 			'Content-Type'    => 'text/xml',
 			'Content-Length'  => '10'
-		);
+		];
 
 		$this->assertEquals($headers, Director::extract_request_headers($request));
 	}
@@ -455,9 +455,9 @@ class DirectorTest extends SapphireTest {
 			$this->markTestSkipped('Test cannot be run without trusted proxy');
 		}
 		// nothing available
-		$headers = array(
+		$headers = [
 			'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'
-		);
+		];
 
 		$origServer = $_SERVER;
 
@@ -530,7 +530,7 @@ class DirectorTest extends SapphireTest {
 	public function testRequestFilterInDirectorTest() {
 		$filter = new TestRequestFilter;
 
-		$processor = new RequestProcessor(array($filter));
+		$processor = new RequestProcessor([$filter]);
 
 		Injector::inst()->registerService($processor, 'RequestProcessor');
 
@@ -591,12 +591,12 @@ class TestRequestFilter implements RequestFilter, TestOnly {
 
 class DirectorTestRequest_Controller extends Controller implements TestOnly {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'returnGetValue',
 		'returnPostValue',
 		'returnRequestValue',
 		'returnCookieValue',
-	);
+	];
 
 	public function returnGetValue($request)		{ return $_GET['somekey']; }
 

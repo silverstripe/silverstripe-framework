@@ -39,9 +39,9 @@ class FolderTest extends SapphireTest {
 		);
 
 		$this->assertTrue(file_exists(ASSETS_PATH . $path), 'File');
-		$parentFolder = DataObject::get_one('Folder', array(
+		$parentFolder = DataObject::get_one('Folder', [
 			'"File"."Name"' => 'FolderTest'
-		));
+		]);
 		$this->assertNotNull($parentFolder);
 		$this->assertEquals($parentFolder->ID, $folder->ParentID);
 
@@ -151,9 +151,9 @@ class FolderTest extends SapphireTest {
 	 */
 	public function testRenameFolderAndCheckTheFile() {
 		// ID is prefixed in case Folder is subclassed by project/other module.
-		$folder1 = DataObject::get_one('Folder', array(
+		$folder1 = DataObject::get_one('Folder', [
 			'"File"."ID"' => $this->idFromFixture('Folder', 'folder1')
-		));
+		]);
 
 		$folder1->Name = 'FileTest-folder1-changed';
 		$folder1->write();
@@ -302,20 +302,20 @@ class FolderTest extends SapphireTest {
 		mkdir(ASSETS_PATH ."/FolderTest");
 		mkdir(ASSETS_PATH ."/FolderTest/sync");
 
-		$files = array(
+		$files = [
 			'.htaccess',
 			'.git',
 			'web.config',
 			'.DS_Store',
 			'_my_synced_file.txt',
 			'invalid_extension.xyz123'
-		);
+		];
 
-		$folders = array(
+		$folders = [
 			'_combinedfiles',
 			'_resampled',
 			'_testsync'
-		);
+		];
 
 		foreach($files as $file) {
 			$fh = fopen(ASSETS_PATH."/FolderTest/sync/$file", "w");
@@ -334,17 +334,17 @@ class FolderTest extends SapphireTest {
 		$this->assertEquals(2, $result['added']);
 
 		// folder with a path of _test should exist
-		$this->assertEquals(1, Folder::get()->filter(array(
+		$this->assertEquals(1, Folder::get()->filter([
 			'Name' => '_testsync'
-		))->count());
+		])->count());
 
-		$this->assertEquals(1, File::get()->filter(array(
+		$this->assertEquals(1, File::get()->filter([
 			'Name' => '_my_synced_file.txt'
-		))->count());
+		])->count());
 
-		$this->assertEquals(0, File::get()->filter(array(
+		$this->assertEquals(0, File::get()->filter([
 			'Name' => 'invalid_extension.xyz123'
-		))->count());
+		])->count());
 	}
 
 	public function testIllegalFilenames() {

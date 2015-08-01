@@ -13,7 +13,7 @@ class GridFieldPaginatorTest extends FunctionalTest {
 	protected $form;
 
 	/** @var array */
-	protected $extraDataObjects = array('GridFieldTest_Team', 'GridFieldTest_Player');
+	protected $extraDataObjects = ['GridFieldTest_Team', 'GridFieldTest_Player'];
 
 	public function setUp() {
 		parent::setUp();
@@ -24,7 +24,7 @@ class GridFieldPaginatorTest extends FunctionalTest {
 			new GridFieldPageCount('toolbar-header-right')
 		);
 		$this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
-		$this->form = new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
+		$this->form = new Form(new Controller(), 'mockform', new FieldList([$this->gridField]), new FieldList());
 	}
 
 	public function testThereIsPaginatorWhenMoreThanOnePage() {

@@ -10,12 +10,12 @@ if(!empty($_SERVER['argv'][1])) {
 	die("Usage: php {$_SERVER['argv'][0]} <file>\n");
 }
 
-$result = array('comments' => array());
+$result = ['comments' => []];
 
 $extension = pathinfo($path, PATHINFO_EXTENSION);
 
 // Whitelist of extensions to check (default phpcs list)
-if(in_array($extension, array('php', 'js', 'inc', 'css'))) {
+if(in_array($extension, ['php', 'js', 'inc', 'css'])) {
 	// Run each sniff
 
 	// phpcs --encoding=utf-8 --standard=framework/tests/phpcs/tabs.xml
@@ -41,11 +41,11 @@ function run_sniff($standard, $path, array &$result, $extraFlags = '') {
 			$sanePath = str_replace('/', '_', $path);
 			foreach($errors as $error) {
 				$attributes = $error->attributes();
-				$result['comments'][] = array(
+				$result['comments'][] = [
 					'line' => (int)strval($attributes->line),
 					'id' => $standard . '-' . $sanePath . '-' . $attributes->line . '-' . $attributes->column,
 					'message' => strval($error)
-				);
+				];
 			}
 		}
 	}

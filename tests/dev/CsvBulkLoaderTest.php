@@ -8,11 +8,11 @@ class CsvBulkLoaderTest extends SapphireTest {
 
 	protected static $fixture_file = 'CsvBulkLoaderTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'CsvBulkLoaderTest_Team',
 		'CsvBulkLoaderTest_Player',
 		'CsvBulkLoaderTest_PlayerContract',
-	);
+	];
 
 	/**
 	 * Test plain import with column auto-detection
@@ -30,9 +30,9 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
 
 		// Test that columns were correctly imported
-		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", array(
+		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", [
 			'"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
-		));
+		]);
 		$this->assertNotNull($obj);
 		$this->assertEquals("He's a good guy", $obj->Biography);
 		$this->assertEquals("1988-01-31", $obj->Birthday);
@@ -69,13 +69,13 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$file = fopen($filepath, 'r');
 		$compareCount = $this->getLineCount($file);
 		$compareRow = fgetcsv($file);
-		$loader->columnMap = array(
+		$loader->columnMap = [
 			'FirstName',
 			'Biography',
 			null, // ignored column
 			'Birthday',
 			'IsRegistered'
-		);
+		];
 		$loader->hasHeaderRow = false;
 		$results = $loader->load($filepath);
 
@@ -83,17 +83,17 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
 
 		// Test that columns were correctly imported
-		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", array(
+		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", [
 			'"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
-		));
+		]);
 		$this->assertNotNull($obj);
 		$this->assertEquals("He's a good guy", $obj->Biography);
 		$this->assertEquals("1988-01-31", $obj->Birthday);
 		$this->assertEquals("1", $obj->IsRegistered);
 
-		$obj2 = DataObject::get_one("CsvBulkLoaderTest_Player", array(
+		$obj2 = DataObject::get_one("CsvBulkLoaderTest_Player", [
 			'"CsvBulkLoaderTest_Player"."FirstName"' => 'Jane'
-		));
+		]);
 		$this->assertNotNull($obj2);
 		$this->assertEquals('0', $obj2->IsRegistered);
 
@@ -110,22 +110,22 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$compareCount = $this->getLineCount($file);
 		fgetcsv($file); // pop header row
 		$compareRow = fgetcsv($file);
-		$loader->columnMap = array(
+		$loader->columnMap = [
 			'first name' => 'FirstName',
 			'bio' => 'Biography',
 			'bday' => 'Birthday',
 			'teamtitle' => 'Team.Title', // test existing relation
 			'teamsize' => 'Team.TeamSize', // test existing relation
 			'salary' => 'Contract.Amount' // test relation creation
-		);
+		];
 		$loader->hasHeaderRow = true;
-		$loader->relationCallbacks = array(
-			'Team.Title' => array(
+		$loader->relationCallbacks = [
+			'Team.Title' => [
 				'relationname' => 'Team',
 				'callback' => 'getTeamByTitle'
-			),
+			],
 			// contract should be automatically discovered
-		);
+		];
 		$results = $loader->load($filepath);
 
 		// Test that right amount of columns was imported
@@ -137,9 +137,9 @@ class CsvBulkLoaderTest extends SapphireTest {
 
 		// Test of creating relation
 		$testContract = DataObject::get_one('CsvBulkLoaderTest_PlayerContract');
-		$testPlayer = DataObject::get_one("CsvBulkLoaderTest_Player", array(
+		$testPlayer = DataObject::get_one("CsvBulkLoaderTest_Player", [
 			'"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
-		));
+		]);
 		$this->assertEquals($testPlayer->ContractID, $testContract->ID, 'Creating new has_one relation works');
 
 		// Test nested setting of relation properties
@@ -159,12 +159,12 @@ class CsvBulkLoaderTest extends SapphireTest {
 		// first load
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithId.csv';
-		$loader->duplicateChecks = array(
+		$loader->duplicateChecks = [
 			'ExternalIdentifier' => 'ExternalIdentifier',
 			'NonExistantIdentifier' => 'ExternalIdentifier',
 			'ExternalIdentifier' => 'ExternalIdentifier',
 			'AdditionalIdentifier' => 'ExternalIdentifier'
-		);
+		];
 		$results = $loader->load($filepath);
 		$createdPlayers = $results->Created();
 
@@ -189,12 +189,12 @@ class CsvBulkLoaderTest extends SapphireTest {
 	public function testLoadWithCustomImportMethods() {
 		$loader = new CsvBulkLoaderTest_CustomLoader('CsvBulkLoaderTest_Player');
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv';
-		$loader->columnMap = array(
+		$loader->columnMap = [
 			'FirstName' => '->importFirstName',
 			'Biography' => 'Biography',
 			'Birthday' => 'Birthday',
 			'IsRegistered' => 'IsRegistered'
-		);
+		];
 		$results = $loader->load($filepath);
 		$createdPlayers = $results->Created();
 		$player = $createdPlayers->First();
@@ -206,12 +206,12 @@ class CsvBulkLoaderTest extends SapphireTest {
 	public function testLoadWithCustomImportMethodDuplicateMap() {
 		$loader = new CsvBulkLoaderTest_CustomLoader('CsvBulkLoaderTest_Player');
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv';
-		$loader->columnMap = array(
+		$loader->columnMap = [
 			'FirstName' => '->updatePlayer',
 			'Biography' => '->updatePlayer',
 			'Birthday' => 'Birthday',
 			'IsRegistered' => 'IsRegistered'
-		);
+		];
 
 		$results = $loader->load($filepath);
 
@@ -243,36 +243,36 @@ class CsvBulkLoaderTest_CustomLoader extends CsvBulkLoader implements TestOnly {
 
 class CsvBulkLoaderTest_Team extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar(255)',
 		'TeamSize' => 'Int',
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'Players' => 'CsvBulkLoaderTest_Player',
-	);
+	];
 
 }
 
 class CsvBulkLoaderTest_Player extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'FirstName' => 'Varchar(255)',
 		'Biography' => 'HTMLText',
 		'Birthday' => 'Date',
 		'ExternalIdentifier' => 'Varchar(255)', // used for uniqueness checks on passed property
 		'IsRegistered' => 'Boolean'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Team' => 'CsvBulkLoaderTest_Team',
 		'Contract' => 'CsvBulkLoaderTest_PlayerContract'
-	);
+	];
 
 	public function getTeamByTitle($title) {
-		return DataObject::get_one("CsvBulkLoaderTest_Team", array(
+		return DataObject::get_one("CsvBulkLoaderTest_Team", [
 			'"CsvBulkLoaderTest_Team"."Title"' => $title
-		));
+		]);
 	}
 
 	/**
@@ -289,9 +289,9 @@ class CsvBulkLoaderTest_Player extends DataObject implements TestOnly {
 
 
 class CsvBulkLoaderTest_PlayerContract extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Amount' => 'Currency',
-	);
+	];
 }
 
 

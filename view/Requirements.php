@@ -418,34 +418,34 @@ class Requirements_Backend {
 	 *
 	 * @var array $javascript
 	 */
-	protected $javascript = array();
+	protected $javascript = [];
 
 	/**
 	 * Paths to all required CSS files relative to the docroot.
 	 *
 	 * @var array $css
 	 */
-	protected $css = array();
+	protected $css = [];
 
 	/**
 	 * All custom javascript code that is inserted into the page's HTML
 	 *
 	 * @var array $customScript
 	 */
-	protected $customScript = array();
+	protected $customScript = [];
 
 	/**
 	 * All custom CSS rules which are inserted directly at the bottom of the HTML <head> tag
 	 *
 	 * @var array $customCSS
 	 */
-	protected $customCSS = array();
+	protected $customCSS = [];
 
 	/**
 	 * All custom HTML markup which is added before the closing <head> tag, e.g. additional
 	 * metatags.
 	 */
-	protected $customHeadTags = array();
+	protected $customHeadTags = [];
 
 	/**
 	 * Remembers the file paths or uniquenessIDs of all Requirements cleared through
@@ -453,7 +453,7 @@ class Requirements_Backend {
 	 *
 	 * @var array $disabled
 	 */
-	protected $disabled = array();
+	protected $disabled = [];
 
 	/**
 	 * The file paths (relative to docroot) or uniquenessIDs of any included requirements which
@@ -465,7 +465,7 @@ class Requirements_Backend {
 	 *
 	 * @var array $blocked
 	 */
-	protected $blocked = array();
+	protected $blocked = [];
 
 	/**
 	 * A list of combined files registered via {@link combine_files()}. Keys are the output file
@@ -473,7 +473,7 @@ class Requirements_Backend {
 	 *
 	 * @var array $combine_files
 	 */
-	public $combine_files = array();
+	public $combine_files = [];
 
 	/**
 	 * Use the JSMin library to minify any javascript file passed to {@link combine_files()}.
@@ -670,8 +670,8 @@ class Requirements_Backend {
 	 */
 	public function javascriptTemplate($file, $vars, $uniquenessID = null) {
 		$script = file_get_contents(Director::getAbsFile($file));
-		$search = array();
-		$replace = array();
+		$search = [];
+		$replace = [];
 
 		if($vars) foreach($vars as $k => $v) {
 			$search[] = '$' . $k;
@@ -690,9 +690,9 @@ class Requirements_Backend {
 	 *                      (e.g. 'screen,projector')
 	 */
 	public function css($file, $media = null) {
-		$this->css[$file] = array(
+		$this->css[$file] = [
 			"media" => $media
-		);
+		];
 	}
 
 	/**
@@ -714,7 +714,7 @@ class Requirements_Backend {
 	 */
 	public function clear($fileOrID = null) {
 		if($fileOrID) {
-			foreach(array('javascript','css', 'customScript', 'customCSS', 'customHeadTags') as $type) {
+			foreach(['javascript','css', 'customScript', 'customCSS', 'customHeadTags'] as $type) {
 				if(isset($this->{$type}[$fileOrID])) {
 					$this->disabled[$type][$fileOrID] = $this->{$type}[$fileOrID];
 					unset($this->{$type}[$fileOrID]);
@@ -727,11 +727,11 @@ class Requirements_Backend {
 			$this->disabled['customCSS'] = $this->customCSS;
 			$this->disabled['customHeadTags'] = $this->customHeadTags;
 
-			$this->javascript = array();
-			$this->css = array();
-			$this->customScript = array();
-			$this->customCSS = array();
-			$this->customHeadTags = array();
+			$this->javascript = [];
+			$this->css = [];
+			$this->customScript = [];
+			$this->customCSS = [];
+			$this->customHeadTags = [];
 		}
 	}
 
@@ -775,7 +775,7 @@ class Requirements_Backend {
 	 * Removes all items from the block list
 	 */
 	public function unblock_all() {
-		$this->blocked = array();
+		$this->blocked = [];
 	}
 
 	/**
@@ -851,7 +851,7 @@ class Requirements_Backend {
 				$p2 = stripos($content, '<body');
 				$p1 = stripos($content, '<script', $p2);
 
-				$commentTags = array();
+				$commentTags = [];
 				$canWriteToBody = ($p1 !== false)
 					&&
 					// Check that the script tag is not inside a html comment tag
@@ -886,8 +886,8 @@ class Requirements_Backend {
 	 */
 	public function include_in_response(SS_HTTPResponse $response) {
 		$this->process_combined_files();
-		$jsRequirements = array();
-		$cssRequirements = array();
+		$jsRequirements = [];
+		$cssRequirements = [];
 
 		foreach(array_diff_key($this->javascript, $this->blocked) as $file => $dummy) {
 			$path = $this->path_for_file($file);
@@ -923,7 +923,7 @@ class Requirements_Backend {
 	 * @return array
 	 */
 	public function add_i18n_javascript($langDir, $return = false, $langOnly = false) {
-		$files = array();
+		$files = [];
 		$base = Director::baseFolder() . '/';
 		if(i18n::config()->js_i18n) {
 			// Include i18n.js even if no languages are found.  The fact that
@@ -933,14 +933,14 @@ class Requirements_Backend {
 
 			if(substr($langDir,-1) != '/') $langDir .= '/';
 
-			$candidates = array(
+			$candidates = [
 				'en.js',
 				'en_US.js',
 				i18n::get_lang_from_locale(i18n::default_locale()) . '.js',
 				i18n::default_locale() . '.js',
 				i18n::get_lang_from_locale(i18n::get_locale()) . '.js',
 				i18n::get_locale() . '.js',
-			);
+			];
 			foreach($candidates as $candidate) {
 				if(file_exists($base . DIRECTORY_SEPARATOR . $langDir . $candidate)) {
 					$files[] = $langDir . $candidate;
@@ -1053,7 +1053,7 @@ class Requirements_Backend {
 			if(is_array($file)) {
 				// Either associative array path=>path type=>type or numeric 0=>path 1=>type
 				// Otherwise, assume path is the first item
-				if (isset($file['type']) && in_array($file['type'], array('css', 'javascript', 'js'))) {
+				if (isset($file['type']) && in_array($file['type'], ['css', 'javascript', 'js'])) {
 					switch ($file['type']) {
 						case 'css':
 							$this->css($file['path'], $media);
@@ -1063,7 +1063,7 @@ class Requirements_Backend {
 							break;
 					}
 					$files[$index] = $file['path'];
-				} elseif (isset($file[1]) && in_array($file[1], array('css', 'javascript', 'js'))) {
+				} elseif (isset($file[1]) && in_array($file[1], ['css', 'javascript', 'js'])) {
 					switch ($file[1]) {
 						case 'css':
 							$this->css($file[0], $media);
@@ -1107,7 +1107,7 @@ class Requirements_Backend {
 	 * @param string $combinedFileName If left blank, all combined files are deleted.
 	 */
 	public function delete_combined_files($combinedFileName = null) {
-		$combinedFiles = ($combinedFileName) ? array($combinedFileName => null) : $this->combine_files;
+		$combinedFiles = ($combinedFileName) ? [$combinedFileName => null] : $this->combine_files;
 		$combinedFolder = ($this->getCombinedFilesFolder()) ?
 			(Director::baseFolder() . '/' . $this->combinedFilesFolder) : Director::baseFolder();
 		foreach($combinedFiles as $combinedFile => $sourceItems) {
@@ -1136,7 +1136,7 @@ class Requirements_Backend {
 	 * Clear all registered CSS and JavaScript file combinations
 	 */
 	public function clear_combined_files() {
-		$this->combine_files = array();
+		$this->combine_files = [];
 	}
 
 	/**
@@ -1154,7 +1154,7 @@ class Requirements_Backend {
 		}
 
 		// Make a map of files that could be potentially combined
-		$combinerCheck = array();
+		$combinerCheck = [];
 		foreach($this->combine_files as $combinedFile => $sourceItems) {
 			foreach($sourceItems as $sourceItem) {
 				if(isset($combinerCheck[$sourceItem]) && $combinerCheck[$sourceItem] != $combinedFile){
@@ -1170,9 +1170,9 @@ class Requirements_Backend {
 		$combinedFilesFolder = ($this->getCombinedFilesFolder()) ? ($this->getCombinedFilesFolder() . '/') : '';
 
 		// Figure out which ones apply to this request
-		$combinedFiles = array();
-		$newJSRequirements = array();
-		$newCSSRequirements = array();
+		$combinedFiles = [];
+		$newJSRequirements = [];
+		$newCSSRequirements = [];
 		foreach($this->javascript as $file => $dummy) {
 			if(isset($combinerCheck[$file])) {
 				$newJSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = true;

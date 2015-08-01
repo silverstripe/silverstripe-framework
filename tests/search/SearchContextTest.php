@@ -4,7 +4,7 @@ class SearchContextTest extends SapphireTest {
 
 	protected static $fixture_file = 'SearchContextTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'SearchContextTest_Person',
 		'SearchContextTest_Book',
 		'SearchContextTest_Company',
@@ -12,18 +12,18 @@ class SearchContextTest extends SapphireTest {
 		'SearchContextTest_Deadline',
 		'SearchContextTest_Action',
 		'SearchContextTest_AllFilterTypes',
-	);
+	];
 
 	public function testResultSetFilterReturnsExpectedCount() {
 		$person = singleton('SearchContextTest_Person');
 		$context = $person->getDefaultSearchContext();
-		$results = $context->getResults(array('Name'=>''));
+		$results = $context->getResults(['Name'=>'']);
 		$this->assertEquals(5, $results->Count());
 
-		$results = $context->getResults(array('EyeColor'=>'green'));
+		$results = $context->getResults(['EyeColor'=>'green']);
 		$this->assertEquals(2, $results->Count());
 
-		$results = $context->getResults(array('EyeColor'=>'green', 'HairColor'=>'black'));
+		$results = $context->getResults(['EyeColor'=>'green', 'HairColor'=>'black']);
 		$this->assertEquals(1, $results->Count());
 	}
 
@@ -45,11 +45,11 @@ class SearchContextTest extends SapphireTest {
 		$context = $person->getDefaultSearchContext();
 
 		$this->assertEquals(
-			array(
+			[
 				"Name" => new PartialMatchFilter("Name"),
 				"HairColor" => new PartialMatchFilter("HairColor"),
 				"EyeColor" => new PartialMatchFilter("EyeColor")
-			),
+			],
 			$context->getFilters()
 		);
 	}
@@ -59,9 +59,9 @@ class SearchContextTest extends SapphireTest {
 		$context = $book->getDefaultSearchContext();
 
 		$this->assertEquals(
-			array(
+			[
 				"Title" => new PartialMatchFilter("Title")
-			),
+			],
 			$context->getFilters()
 		);
 	}
@@ -71,11 +71,11 @@ class SearchContextTest extends SapphireTest {
 		$context = $company->getDefaultSearchContext();
 
 		$this->assertEquals(
-			array(
+			[
 				"Name" => new PartialMatchFilter("Name"),
 				"Industry" => new PartialMatchFilter("Industry"),
 				"AnnualProfit" => new PartialMatchFilter("AnnualProfit")
-			),
+			],
 			$context->getFilters()
 		);
 	}
@@ -100,7 +100,7 @@ class SearchContextTest extends SapphireTest {
 		$project = singleton('SearchContextTest_Project');
 		$context = $project->getDefaultSearchContext();
 
-		$params = array("Name"=>"Blog Website", "Actions__SolutionArea"=>"technical");
+		$params = ["Name"=>"Blog Website", "Actions__SolutionArea"=>"technical"];
 
 		$results = $context->getResults($params);
 
@@ -121,14 +121,14 @@ class SearchContextTest extends SapphireTest {
 	public function testCanGenerateQueryUsingAllFilterTypes() {
 		$all = singleton("SearchContextTest_AllFilterTypes");
 		$context = $all->getDefaultSearchContext();
-		$params = array(
+		$params = [
 			"ExactMatch" => "Match me exactly",
 			"PartialMatch" => "partially",
-			"CollectionMatch" => array("ExistingCollectionValue","NonExistingCollectionValue",4,"Inline'Quotes'"),
+			"CollectionMatch" => ["ExistingCollectionValue","NonExistingCollectionValue",4,"Inline'Quotes'"],
 			"StartsWith" => "12345",
 			"EndsWith" => "ijkl",
 			"Fulltext" => "two"
-		);
+		];
 
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->Count());
@@ -138,9 +138,9 @@ class SearchContextTest extends SapphireTest {
 	public function testStartsWithFilterCaseInsensitive() {
 		$all = singleton("SearchContextTest_AllFilterTypes");
 		$context = $all->getDefaultSearchContext();
-		$params = array(
+		$params = [
 			"StartsWith" => "12345-6789 camelcase", // spelled lowercase
-		);
+		];
 
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->Count());
@@ -150,9 +150,9 @@ class SearchContextTest extends SapphireTest {
 	public function testEndsWithFilterCaseInsensitive() {
 		$all = singleton("SearchContextTest_AllFilterTypes");
 		$context = $all->getDefaultSearchContext();
-		$params = array(
+		$params = [
 			"EndsWith" => "IJKL", // spelled uppercase
-		);
+		];
 
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->Count());
@@ -165,104 +165,104 @@ class SearchContextTest extends SapphireTest {
 
 class SearchContextTest_Person extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"Name" => "Varchar",
 		"Email" => "Varchar",
 		"HairColor" => "Varchar",
 		"EyeColor" => "Varchar"
-	);
+	];
 
-	private static $searchable_fields = array(
+	private static $searchable_fields = [
 		"Name", "HairColor", "EyeColor"
-	);
+	];
 
 }
 
 class SearchContextTest_Book extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"Title" => "Varchar",
 		"Summary" => "Varchar"
-	);
+	];
 
 }
 
 class SearchContextTest_Company extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"Name" => "Varchar",
 		"Industry" => "Varchar",
 		"AnnualProfit" => "Int"
-	);
+	];
 
-	private static $summary_fields = array(
+	private static $summary_fields = [
 		"Industry"
-	);
+	];
 
-	private static $searchable_fields = array(
+	private static $searchable_fields = [
 		"Name" => "PartialMatchFilter",
-		"Industry" => array(
+		"Industry" => [
 			'field' => "TextareaField"
-		),
-		"AnnualProfit" => array(
+		],
+		"AnnualProfit" => [
 			'field' => "NumericField",
 			'filter' => "PartialMatchFilter",
 			'title' => 'The Almighty Annual Profit'
-		)
-	);
+		]
+	];
 
 }
 
 class SearchContextTest_Project extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"Name" => "Varchar"
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		"Deadline" => "SearchContextTest_Deadline"
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		"Actions" => "SearchContextTest_Action"
-	);
+	];
 
-	private static $searchable_fields = array(
+	private static $searchable_fields = [
 		"Name" => "PartialMatchFilter",
 		"Actions.SolutionArea" => "ExactMatchFilter",
 		"Actions.Description" => "PartialMatchFilter"
-	);
+	];
 
 }
 
 class SearchContextTest_Deadline extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"CompletionDate" => "SS_Datetime"
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		"Project" => "SearchContextTest_Project"
-	);
+	];
 
 }
 
 class SearchContextTest_Action extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"Description" => "Text",
 		"SolutionArea" => "Varchar"
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		"Project" => "SearchContextTest_Project"
-	);
+	];
 
 }
 
 class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"ExactMatch" => "Varchar",
 		"PartialMatch" => "Varchar",
 		"SubstringMatch" => "Varchar",
@@ -271,16 +271,16 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 		"EndsWith" => "Varchar",
 		"HiddenValue" => "Varchar",
 		'FulltextField' => 'Text',
-	);
+	];
 
-	private static $searchable_fields = array(
+	private static $searchable_fields = [
 		"ExactMatch" => "ExactMatchFilter",
 		"PartialMatch" => "PartialMatchFilter",
 		"CollectionMatch" => "ExactMatchFilter",
 		"StartsWith" => "StartsWithFilter",
 		"EndsWith" => "EndsWithFilter",
 		"FulltextField" => "FulltextFilter",
-	);
+	];
 
 }
 

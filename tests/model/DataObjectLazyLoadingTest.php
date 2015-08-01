@@ -6,13 +6,13 @@
 
 class DataObjectLazyLoadingTest extends SapphireTest {
 
-	protected static $fixture_file = array(
+	protected static $fixture_file = [
 		'DataObjectTest.yml',
 		'VersionedTest.yml'
-	);
+	];
 
 	// These are all defined in DataObjectTest.php and VersionedTest.php
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'DataObjectTest_Team',
 		'DataObjectTest_Fixture',
 		'DataObjectTest_SubTeam',
@@ -28,12 +28,12 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		'VersionedTest_Subclass',
 		'VersionedLazy_DataObject',
 		'VersionedLazySub_DataObject',
-	);
+	];
 
 	public function testQueriedColumnsID() {
 		$db = DB::get_conn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
-		$playerList = $playerList->setQueriedColumns(array('ID'));
+		$playerList = $playerList->setQueriedColumns(['ID']);
 		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
 			'"DataObjectTest_Team"."Created", "DataObjectTest_Team"."ID", CASE WHEN '.
 			'"DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
@@ -48,7 +48,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 	public function testQueriedColumnsFromBaseTableAndSubTable() {
 		$db = DB::get_conn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
-		$playerList = $playerList->setQueriedColumns(array('Title', 'SubclassDatabaseField'));
+		$playerList = $playerList->setQueriedColumns(['Title', 'SubclassDatabaseField']);
 		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
 			'"DataObjectTest_Team"."Created", "DataObjectTest_Team"."Title", ' .
 			'"DataObjectTest_SubTeam"."SubclassDatabaseField", "DataObjectTest_Team"."ID", CASE WHEN ' .
@@ -63,7 +63,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 	public function testQueriedColumnsFromBaseTable() {
 		$db = DB::get_conn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
-		$playerList = $playerList->setQueriedColumns(array('Title'));
+		$playerList = $playerList->setQueriedColumns(['Title']);
 		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
 			'"DataObjectTest_Team"."Created", "DataObjectTest_Team"."Title", "DataObjectTest_Team"."ID", ' .
 			'CASE WHEN "DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
@@ -77,7 +77,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 	public function testQueriedColumnsFromSubTable() {
 		$db = DB::get_conn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
-		$playerList = $playerList->setQueriedColumns(array('SubclassDatabaseField'));
+		$playerList = $playerList->setQueriedColumns(['SubclassDatabaseField']);
 		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
 			'"DataObjectTest_Team"."Created", "DataObjectTest_SubTeam"."SubclassDatabaseField", ' .
 			'"DataObjectTest_Team"."ID", CASE WHEN "DataObjectTest_Team"."ClassName" IS NOT NULL THEN ' .
@@ -202,11 +202,11 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		// Updated lazyloaded field
 		$subteam1Lazy->SubclassDatabaseField = 'Changed';
 		$this->assertEquals(
-			array('SubclassDatabaseField' => array(
+			['SubclassDatabaseField' => [
 				'before' => 'Subclassed 1',
 				'after' => 'Changed',
 				'level' => 2
-			)),
+			]],
 			$subteam1Lazy->getChangedFields()
 		);
 	}
@@ -408,19 +408,19 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 
 /** Additional classes for versioned lazy loading testing */
 class VersionedLazy_DataObject extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		"PageName" => "Varchar"
-	);
-	private static $extensions = array(
+	];
+	private static $extensions = [
 		"Versioned('Stage', 'Live')"
-	);
+	];
 }
 
 class VersionedLazySub_DataObject extends VersionedLazy_DataObject {
-	private static $db = array(
+	private static $db = [
 		"ExtraField" => "Varchar",
-	);
-	private static $extensions = array(
+	];
+	private static $extensions = [
 		"Versioned('Stage', 'Live')"
-	);
+	];
 }

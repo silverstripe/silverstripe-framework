@@ -23,17 +23,17 @@ class LookupField extends DropdownField {
 	 *
 	 * @return string
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$source = $this->getSource();
 
 		// Normalize value to array to simplify further processing
 		if(is_array($this->value) || is_object($this->value)) {
 			$values = $this->value;
 		} else {
-			$values = array(trim($this->value));
+			$values = [trim($this->value)];
 		}
 
-		$mapped = array();
+		$mapped = [];
 
 		if($source instanceof SQLMap) {
 			foreach($values as $value) {
@@ -48,14 +48,14 @@ class LookupField extends DropdownField {
 				}
 			}
 		} else {
-			$mapped = array();
+			$mapped = [];
 		}
 
 		// Don't check if string arguments are matching against the source,
 		// as they might be generated HTML diff views instead of the actual values
 		if($this->value && !is_array($this->value) && !$mapped) {
-			$mapped = array(trim($this->value));
-			$values = array();
+			$mapped = [trim($this->value)];
+			$values = [];
 		}
 
 		if($mapped) {
@@ -71,10 +71,10 @@ class LookupField extends DropdownField {
 			$inputValue = '';
 		}
 
-		$properties = array_merge($properties, array(
+		$properties = array_merge($properties, [
 			'AttrValue' => $attrValue,
 			'InputValue' => $inputValue
-		));
+		]);
 
 		return parent::Field($properties);
 	}

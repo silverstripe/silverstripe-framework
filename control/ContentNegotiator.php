@@ -114,11 +114,11 @@ class ContentNegotiator extends Object {
 	public static function process(SS_HTTPResponse $response) {
 		if(!self::enabled_for($response)) return;
 
-		$mimes = array(
+		$mimes = [
 			"xhtml" => "application/xhtml+xml",
 			"html" => "text/html",
-		);
-		$q = array();
+		];
+		$q = [];
 		if(headers_sent()) {
 			$chosenFormat = Config::inst()->get('ContentNegotiator', 'default_format');
 
@@ -133,7 +133,7 @@ class ContentNegotiator extends Object {
 
 			} else {
 				foreach($mimes as $format => $mime) {
-					$regExp = '/' . str_replace(array('+','/'),array('\+','\/'), $mime) . '(;q=(\d+\.\d+))?/i';
+					$regExp = '/' . str_replace(['+','/'],['\+','\/'], $mime) . '(;q=(\d+\.\d+))?/i';
 					if (isset($_SERVER['HTTP_ACCEPT']) && preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
 						$preference = isset($matches[2]) ? $matches[2] : 1;
 						if(!isset($q[$preference])) $q[$preference] = $format;
@@ -216,7 +216,7 @@ class ContentNegotiator extends Object {
 			'<base href="$1"><!--[if lte IE 6]></base><![endif]-->', $content);
 
 		$content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content);
-		$content = str_replace(array('/>','xml:lang','application/xhtml+xml'),array('>','lang','text/html'), $content);
+		$content = str_replace(['/>','xml:lang','application/xhtml+xml'],['>','lang','text/html'], $content);
 
 		// Only replace the doctype in templates with the xml header
 		if($hasXMLHeader) {

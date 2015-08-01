@@ -55,10 +55,10 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 	}
 
 	public function testValidation() {
-		$field = new ConfirmedPasswordField('Test', 'Testing', array(
+		$field = new ConfirmedPasswordField('Test', 'Testing', [
 			"_Password" => "abc123",
 			"_ConfirmPassword" => "abc123"
-		));
+		]);
 		$validator = new RequiredFields();
 		$form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
 		$this->assertTrue(
@@ -71,10 +71,10 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 			"Validates when field name is changed"
 		);
 		//non-matching password should make the field invalid
-		$field->setValue(array(
+		$field->setValue([
 			"_Password" => "abc123",
 			"_ConfirmPassword" => "123abc"
-		));
+		]);
 		$this->assertFalse(
 			$field->validate($validator),
 			"Does not validate when passwords differ"

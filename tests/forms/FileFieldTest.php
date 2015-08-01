@@ -17,13 +17,13 @@ class FileFieldTest extends FunctionalTest {
 			),
 			new FieldList()
 		);
-		$fileFieldValue = array(
+		$fileFieldValue = [
 			'name' => 'aCV.txt',
 			'type' => 'application/octet-stream',
 			'tmp_name' => '/private/var/tmp/phpzTQbqP',
 			'error' => 0,
 			'size' => 3471
-		);
+		];
 		$fileField->setValue($fileFieldValue);
 
 		$this->assertTrue(
@@ -45,13 +45,13 @@ class FileFieldTest extends FunctionalTest {
 			new RequiredFields('cv')
 		);
 		// All fields are filled but for some reason an error occured when uploading the file => fails
-		$fileFieldValue = array(
+		$fileFieldValue = [
 			'name' => 'aCV.txt',
 			'type' => 'application/octet-stream',
 			'tmp_name' => '/private/var/tmp/phpzTQbqP',
 			'error' => 1,
 			'size' => 3471
-		);
+		];
 		$fileField->setValue($fileFieldValue);
 
 		$this->assertFalse(
@@ -60,7 +60,7 @@ class FileFieldTest extends FunctionalTest {
 		);
 
 		// We pass an empty set of parameters for the uploaded file => fails
-		$fileFieldValue = array();
+		$fileFieldValue = [];
 		$fileField->setValue($fileFieldValue);
 
 		$this->assertFalse(

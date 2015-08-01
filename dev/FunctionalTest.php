@@ -193,7 +193,7 @@ class FunctionalTest extends SapphireTest {
 	 * @param array $data Map of GET/POST data.
 	 * @return SS_HTTPResponse
 	 */
-	public function submitForm($formID, $button = null, $data = array()) {
+	public function submitForm($formID, $button = null, $data = []) {
 		$this->cssParser = null;
 		$response = $this->mainSession->submitForm($formID, $button, $data);
 		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
@@ -250,11 +250,11 @@ class FunctionalTest extends SapphireTest {
 	 * @return boolean
 	 */
 	public function assertPartialMatchBySelector($selector, $expectedMatches) {
-		if(is_string($expectedMatches)) $expectedMatches = array($expectedMatches);
+		if(is_string($expectedMatches)) $expectedMatches = [$expectedMatches];
 
 		$items = $this->cssParser()->getBySelector($selector);
 
-		$actuals = array();
+		$actuals = [];
 		if($items) foreach($items as $item) $actuals[trim(preg_replace("/[ \n\r\t]+/", " ", $item. ''))] = true;
 
 		foreach($expectedMatches as $match) {
@@ -283,11 +283,11 @@ class FunctionalTest extends SapphireTest {
 	 * @return boolean
 	 */
 	public function assertExactMatchBySelector($selector, $expectedMatches) {
-		if(is_string($expectedMatches)) $expectedMatches = array($expectedMatches);
+		if(is_string($expectedMatches)) $expectedMatches = [$expectedMatches];
 
 		$items = $this->cssParser()->getBySelector($selector);
 
-		$actuals = array();
+		$actuals = [];
 		if($items) foreach($items as $item) $actuals[] = trim(preg_replace("/[ \n\r\t]+/", " ", $item. ''));
 
 		$this->assertTrue(
@@ -313,11 +313,11 @@ class FunctionalTest extends SapphireTest {
 	 * @return boolean
 	 */
 	public function assertPartialHTMLMatchBySelector($selector, $expectedMatches) {
-		if(is_string($expectedMatches)) $expectedMatches = array($expectedMatches);
+		if(is_string($expectedMatches)) $expectedMatches = [$expectedMatches];
 
 		$items = $this->cssParser()->getBySelector($selector);
 
-		$actuals = array();
+		$actuals = [];
 		if($items) foreach($items as $item) $actuals[$item->asXML()] = true;
 
 		foreach($expectedMatches as $match) {
@@ -347,7 +347,7 @@ class FunctionalTest extends SapphireTest {
 	public function assertExactHTMLMatchBySelector($selector, $expectedMatches) {
 		$items = $this->cssParser()->getBySelector($selector);
 
-		$actuals = array();
+		$actuals = [];
 		if($items) foreach($items as $item) $actuals[] = $item->asXML();
 
 		$this->assertTrue(

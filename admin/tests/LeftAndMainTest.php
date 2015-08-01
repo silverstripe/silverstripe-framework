@@ -8,7 +8,7 @@ class LeftAndMainTest extends FunctionalTest {
 
 	protected static $fixture_file = 'LeftAndMainTest.yml';
 
-	protected $extraDataObjects = array('LeftAndMainTest_Object');
+	protected $extraDataObjects = ['LeftAndMainTest_Object'];
 
 	protected $backupCss, $backupJs, $backupCombined;
 
@@ -23,13 +23,13 @@ class LeftAndMainTest extends FunctionalTest {
 		$this->backupJs = Config::inst()->get('LeftAndMain', 'extra_requirements_javascript');
 		$this->backupCombined = Requirements::get_combined_files_enabled();
 
-		Config::inst()->update('LeftAndMain', 'extra_requirements_css', array(
+		Config::inst()->update('LeftAndMain', 'extra_requirements_css', [
 			FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.css'
-		));
+		]);
 
-		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', array(
+		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', [
 			FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.js'
-		));
+		]);
 
 		Requirements::set_combined_files_enabled(false);
 	}
@@ -74,11 +74,11 @@ class LeftAndMainTest extends FunctionalTest {
 		// Move page2 before page1
 		$siblingIDs[0] = $page2->ID;
 		$siblingIDs[1] = $page1->ID;
-		$data = array(
+		$data = [
 			'SiblingIDs' => $siblingIDs,
 			'ID' => $page2->ID,
 			'ParentID' => 0
-		);
+		];
 
 		$response = $this->post('LeftAndMainTest_Controller/savetreenode', $data);
 		$this->assertEquals(200, $response->getStatusCode());
@@ -101,16 +101,16 @@ class LeftAndMainTest extends FunctionalTest {
 		$page32 = $this->objFromFixture('LeftAndMainTest_Object', 'page32');
 
 		// Move page2 into page3, between page3.1 and page 3.2
-		$siblingIDs = array(
+		$siblingIDs = [
 			$page31->ID,
 			$page2->ID,
 			$page32->ID
-		);
-		$data = array(
+		];
+		$data = [
 			'SiblingIDs' => $siblingIDs,
 			'ID' => $page2->ID,
 			'ParentID' => $page3->ID
-		);
+		];
 		$response = $this->post('LeftAndMainTest_Controller/savetreenode', $data);
 		$this->assertEquals(200, $response->getStatusCode());
 		$page2 = DataObject::get_by_id('LeftAndMainTest_Object', $page2->ID, false);
@@ -162,7 +162,7 @@ class LeftAndMainTest extends FunctionalTest {
 		$menuItems = singleton('LeftAndMain')->MainMenu(false);
 		$this->assertEquals(
 			array_map($allValsFn, $menuItems->column('Code')),
-			array(),
+			[],
 			'Without valid login, members cant access any menu entries'
 		);
 
@@ -173,7 +173,7 @@ class LeftAndMainTest extends FunctionalTest {
 		sort($menuItems);
 		$this->assertEquals(
 			$menuItems,
-			array('Help', 'SecurityAdmin'),
+			['Help', 'SecurityAdmin'],
 			'Groups with limited access can only access the interfaces they have permissions for'
 		);
 
@@ -264,15 +264,15 @@ class LeftAndMainTest_Controller extends LeftAndMain implements TestOnly {
  */
 class LeftAndMainTest_Object extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar',
 		'URLSegment' => 'Varchar',
 		'Sort' => 'Int',
-	);
+	];
 
-	private static $extensions = array(
+	private static $extensions = [
 		'Hierarchy'
-	);
+	];
 
 	public function CMSTreeClasses() {}
 

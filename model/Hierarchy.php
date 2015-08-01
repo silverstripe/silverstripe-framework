@@ -39,9 +39,9 @@ class Hierarchy extends DataExtension {
 	private static $node_threshold_leaf = 250;
 
 	public static function get_extra_config($class, $extension, $args) {
-		return array(
-			'has_one' => array('Parent' => $class)
-		);
+		return [
+			'has_one' => ['Parent' => $class]
+		];
 	}
 
 	/**
@@ -65,7 +65,7 @@ class Hierarchy extends DataExtension {
 						'Hierarchy.InfiniteLoopNotAllowed',
 						'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this',
 						'First argument is the class that makes up the hierarchy.',
-						array('type' => $this->owner->class)
+						['type' => $this->owner->class]
 					),
 					'INFINITE_LOOP'
 				);
@@ -189,7 +189,7 @@ class Hierarchy extends DataExtension {
 
 		if(!is_numeric($nodeCountThreshold)) $nodeCountThreshold = 30;
 
-		$this->markedNodes = array($this->owner->ID => $this->owner);
+		$this->markedNodes = [$this->owner->ID => $this->owner];
 		$this->owner->markUnexpanded();
 
 		// foreach can't handle an ever-growing $nodes list
@@ -210,10 +210,10 @@ class Hierarchy extends DataExtension {
 	 * @param mixed $parameterValue The value the parameter must be to be marked.
 	 */
 	public function setMarkingFilter($parameterName, $parameterValue) {
-		$this->markingFilter = array(
+		$this->markingFilter = [
 			"parameter" => $parameterName,
 			"value" => $parameterValue
-		);
+		];
 	}
 
 	/**
@@ -222,9 +222,9 @@ class Hierarchy extends DataExtension {
 	 * @param string $funcName The function name.
 	 */
 	public function setMarkingFilterFunction($funcName) {
-		$this->markingFilter = array(
+		$this->markingFilter = [
 			"func" => $funcName,
-		);
+		];
 	}
 
 	/**
@@ -381,19 +381,19 @@ class Hierarchy extends DataExtension {
 	 * True if this DataObject is marked.
 	 * @var boolean
 	 */
-	protected static $marked = array();
+	protected static $marked = [];
 
 	/**
 	 * True if this DataObject is expanded.
 	 * @var boolean
 	 */
-	protected static $expanded = array();
+	protected static $expanded = [];
 
 	/**
 	 * True if this DataObject is opened.
 	 * @var boolean
 	 */
-	protected static $treeOpened = array();
+	protected static $treeOpened = [];
 
 	/**
 	 * Mark this DataObject as expanded.
@@ -462,7 +462,7 @@ class Hierarchy extends DataExtension {
 	 * @return int
 	 */
 	public function getDescendantIDList() {
-		$idList = array();
+		$idList = [];
 		$this->loadDescendantIDListInto($idList);
 		return $idList;
 	}
@@ -637,10 +637,10 @@ class Hierarchy extends DataExtension {
 		$children = $baseClass::get()
 			->filter('ParentID', (int)$this->owner->ID)
 			->exclude('ID', (int)$this->owner->ID)
-			->setDataQueryParam(array(
+			->setDataQueryParam([
 				'Versioned.mode' => $onlyDeletedFromStage ? 'stage_unique' : 'stage',
 				'Versioned.stage' => 'Live'
-			));
+			]);
 
 		if(!$showAll) $children = $children->filter('ShowInMenus', 1);
 
@@ -655,10 +655,10 @@ class Hierarchy extends DataExtension {
 		if($p = $this->owner->__get("ParentID")) {
 			$tableClasses = ClassInfo::dataClassesFor($this->owner->class);
 			$baseClass = array_shift($tableClasses);
-			return DataObject::get_one($this->owner->class, array(
-				array("\"$baseClass\".\"ID\"" => $p),
+			return DataObject::get_one($this->owner->class, [
+				["\"$baseClass\".\"ID\"" => $p],
 				$filter
-			));
+			]);
 		}
 	}
 
@@ -686,7 +686,7 @@ class Hierarchy extends DataExtension {
 	 * @return String
 	 */
 	public function getBreadcrumbs($separator = ' &raquo; ') {
-		$crumbs = array();
+		$crumbs = [];
 		$ancestors = array_reverse($this->owner->getAncestors()->toArray());
 		foreach($ancestors as $ancestor) $crumbs[] = $ancestor->Title;
 		$crumbs[] = $this->owner->Title;
@@ -760,15 +760,15 @@ class Hierarchy extends DataExtension {
 	public function flushCache() {
 		$this->_cache_children = null;
 		$this->_cache_numChildren = null;
-		self::$marked = array();
-		self::$expanded = array();
-		self::$treeOpened = array();
+		self::$marked = [];
+		self::$expanded = [];
+		self::$treeOpened = [];
 	}
 
 	public static function reset() {
-		self::$marked = array();
-		self::$expanded = array();
-		self::$treeOpened = array();
+		self::$marked = [];
+		self::$expanded = [];
+		self::$treeOpened = [];
 	}
 
 }
