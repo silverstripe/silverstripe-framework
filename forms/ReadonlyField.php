@@ -16,6 +16,12 @@ class ReadonlyField extends FormField {
 	 * @var boolean
 	 */
 	protected $includeHiddenField = false;
+	
+	/**
+	 * Store original formfield class
+	 * @var string
+	 */
+	protected $origClass = null;
 
 	/**
 	 * If true, a hidden field will be included in the HTML for the readonly field.
@@ -30,6 +36,10 @@ class ReadonlyField extends FormField {
 	 */
 	public function setIncludeHiddenField($includeHiddenField) {
 		$this->includeHiddenField = $includeHiddenField;
+	}
+	
+	public function setOrigClass($class) {
+		$this->origClass = $class;
 	}
 
 	public function performReadonlyTransformation() {
@@ -49,8 +59,13 @@ class ReadonlyField extends FormField {
 	}
 
 	public function Value() {
-		if($this->value) return $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
-		else return '<i>(' . _t('FormField.NONE', 'none') . ')</i>';
+		if($this->value) {
+			return $this->dontEscape ? $this->value : 
+				(($this->origClass == 'TextareaField') ? nl2br(Convert::raw2xml($this->value)) : 
+                    Convert::raw2xml($this->value));
+		} else { 
+			return '<i>(' . _t('FormField.NONE', 'none') . ')</i>';
+		}
 	}
 
 	public function getAttributes() {
