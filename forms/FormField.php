@@ -967,6 +967,7 @@ class FormField extends RequestHandler {
 		$copy = $this->castedCopy('ReadonlyField');
 
 		$copy->setReadonly(true);
+		$copy->setOrigClass(get_class($this));
 
 		return $copy;
 	}
