@@ -67,37 +67,44 @@ if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
  */
 global $url;
 
-// PHP 5.4's built-in webserver uses this
-if (php_sapi_name() == 'cli-server') {
-	$url = $_SERVER['REQUEST_URI'];
+// Helper to safely parse and load a querystring fragment
+$parseQuery = function($query) {
+	parse_str($query, $_GET);
+	if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+};
 
-	// Querystring args need to be explicitly parsed
-	if(strpos($url,'?') !== false) {
-		list($url, $query) = explode('?',$url,2);
-		parse_str($query, $_GET);
-		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+// Apache rewrite rules and IIS use this
+if (isset($_GET['url']) && php_sapi_name() !== 'cli-server') {
+
+	// Prevent injection of url= querystring argument by prioritising any leading url argument
+	if(isset($_SERVER['QUERY_STRING']) &&
+		preg_match('/^(?<url>url=[^&?]*)(?<query>.*[&?]url=.*)$/', $_SERVER['QUERY_STRING'], $results)
+	) {
+		$queryString = $results['query'].'&'.$results['url'];
+		$parseQuery($queryString);
 	}
 
-	// Pass back to the webserver for files that exist
-	if(file_exists(BASE_PATH . $url) && is_file(BASE_PATH . $url)) return false;
-
-	// Apache rewrite rules use this
-} else if (isset($_GET['url'])) {
 	$url = $_GET['url'];
+
 	// IIS includes get variables in url
 	$i = strpos($url, '?');
 	if($i !== false) {
 		$url = substr($url, 0, $i);
 	}
 
-	// Lighttpd uses this
+	// Lighttpd and PHP 5.4's built-in webserver use this
 } else {
-	if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
-		list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
-		parse_str($query, $_GET);
-		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
-	} else {
-		$url = $_SERVER["REQUEST_URI"];
+	$url = $_SERVER['REQUEST_URI'];
+
+	// Querystring args need to be explicitly parsed
+	if(strpos($url,'?') !== false) {
+		list($url, $query) = explode('?',$url,2);
+		$parseQuery($query);
+	}
+
+	// Pass back to the webserver for files that exist
+	if(php_sapi_name() === 'cli-server' && file_exists(BASE_PATH . $url) && is_file(BASE_PATH . $url)) {
+		return false;
 	}
 }
 

@@ -11,14 +11,37 @@
  * It will likely be heavily refactored before the release of 3.2
  */
 class ParameterConfirmationToken {
+
+	/**
+	 * The name of the parameter
+	 *
+	 * @var string
+	 */
 	protected $parameterName = null;
+
+	/**
+	 * The parameter given
+	 *
+	 * @var string|null The string value, or null if not provided
+	 */
 	protected $parameter = null;
+
+	/**
+	 * The validated and checked token for this parameter
+	 *
+	 * @var string|null A string value, or null if either not provided or invalid
+	 */
 	protected $token = null;
 
 	protected function pathForToken($token) {
 		return TEMP_FOLDER.'/token_'.preg_replace('/[^a-z0-9]+/', '', $token);
 	}
 
+	/**
+	 * Generate a new random token and store it
+	 *
+	 * @return string Token name
+	 */
 	protected function genToken() {
 		// Generate a new random token (as random as possible)
 		require_once(dirname(dirname(dirname(__FILE__))).'/security/RandomGenerator.php');
@@ -31,7 +54,17 @@ class ParameterConfirmationToken {
 		return $token;
 	}
 
+	/**
+	 * Validate a token
+	 *
+	 * @param string $token
+	 * @return boolean True if the token is valid
+	 */
 	protected function checkToken($token) {
+		if(!$token) {
+			return false;
+		}
+		
 		$file = $this->pathForToken($token);
 		$content = null;
 
@@ -43,18 +76,25 @@ class ParameterConfirmationToken {
 		return $content == $token;
 	}
 
+	/**
+	 * Create a new ParameterConfirmationToken
+	 *
+	 * @param string $parameterName Name of the querystring parameter to check
+	 */
 	public function __construct($parameterName) {
 		// Store the parameter name
 		$this->parameterName = $parameterName;
+		
 		// Store the parameter value
 		$this->parameter = isset($_GET[$parameterName]) ? $_GET[$parameterName] : null;
-		// Store the token
-		$this->token = isset($_GET[$parameterName.'token']) ? $_GET[$parameterName.'token'] : null;
 
-		// If a token was provided, but isn't valid, ignore it
-		if ($this->token && (!$this->checkToken($this->token))) $this->token = null;
+		// If the token provided is valid, mark it as such
+		$token = isset($_GET[$parameterName.'token']) ? $_GET[$parameterName.'token'] : null;
+		if ($this->checkToken($token)) {
+			$this->token = $token;
+		}
 	}
-	
+
 	/**
 	 * Get the name of this token
 	 * 
@@ -66,6 +106,7 @@ class ParameterConfirmationToken {
 
 	/**
 	 * Is the parameter requested?
+	 * ?parameter and ?parameter=1 are both considered requested
 	 * 
 	 * @return bool
 	 */
@@ -75,13 +116,14 @@ class ParameterConfirmationToken {
 
 	/**
 	 * Is the necessary token provided for this parameter?
+	 * A value must be provided for the token
 	 * 
 	 * @return bool
 	 */
 	public function tokenProvided() {
-		return $this->token !== null;
+		return !empty($this->token);
 	}
-	
+
 	/**
 	 * Is this parameter requested without a valid token?
 	 * 
@@ -90,7 +132,7 @@ class ParameterConfirmationToken {
 	public function reloadRequired() {
 		return $this->parameterProvided() && !$this->tokenProvided();
 	}
-	
+
 	/**
 	 * Suppress the current parameter by unsetting it from $_GET
 	 */
@@ -98,6 +140,11 @@ class ParameterConfirmationToken {
 		unset($_GET[$this->parameterName]);
 	}
 
+	/**
+	 * Determine the querystring parameters to include
+	 *
+	 * @return array List of querystring parameters with name and token parameters
+	 */
 	public function params() {
 		return array(
 			$this->parameterName => $this->parameter,
@@ -114,14 +161,16 @@ class ParameterConfirmationToken {
 		// Are we http or https? Replicates Director::is_https() without its dependencies/
 		$proto = 'http';
 		if(
-			isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
+			TRUSTED_PROXY
+			&& isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
 			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'
 		) { 
 			// Convention for (non-standard) proxy signaling a HTTPS forward,
 			// see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
 			$proto = 'https';
 		} else if(
-			isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
+			TRUSTED_PROXY
+			&& isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
 			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https'
 		) { 
 			// Less conventional proxy header
@@ -154,6 +203,10 @@ class ParameterConfirmationToken {
 		return "$proto://" . preg_replace('#/{2,}#', '/', implode('/', $parts));
 	}
 
+	/**
+	 * Forces a reload of the request with the token included
+	 * This method will terminate the script with `die`
+	 */
 	public function reloadWithToken() {
 		$location = $this->currentAbsoluteURL();
 
@@ -174,12 +227,12 @@ You are being redirected. If you are not redirected soon, <a href='$location'>cl
 		else header('location: '.$location, true, 302);
 		die;
 	}
-	
+
 	/**
 	 * Given a list of token names, suppress all tokens that have not been validated, and 
 	 * return the non-validated token with the highest priority
 	 * 
-	 * @param type $keys List of token keys in ascending priority (low to high)
+	 * @param array $keys List of token keys in ascending priority (low to high)
 	 * @return ParameterConfirmationToken The token container for the unvalidated $key given with the highest priority
 	 */
 	public static function prepare_tokens($keys) {

@@ -139,7 +139,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .ui-accordion .ui-accordion-header { border-color: #c0c0c2; margin-bottom: 0; }
 .ui-accordion .ui-accordion-content { border: 1px solid #c0c0c2; border-top: none; }
 
-.ui-autocomplete { max-height: 240px; overflow-x: hidden; overflow-y: auto; }
+.ui-autocomplete { max-height: 240px; overflow-x: hidden; overflow-y: auto; /** sorry about the !important but the specificity of other selectors mandates it over writing out very specific selectors **/ }
 .ui-autocomplete-loading { background-image: url(../images/throbber.gif) !important; background-position: 97% center !important; background-repeat: no-repeat !important; background-size: auto !important; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in framework/css/Form.css.  @package framework @subpackage admin */
@@ -249,6 +249,7 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .ss-toggle .ui-accordion-content .field:last-child { margin-bottom: 0; }
 .ss-toggle .ui-accordion-content .field .middleColumn { margin-left: 0; }
 .ss-toggle .ui-accordion-content .field label { float: none; margin-left: 0; }
+.ss-toggle .ui-accordion-content .field label.ss-ui-button { float: left; }
 .ss-toggle .ui-accordion-content .field .description { margin-left: 0; }
 
 /** ---------------------------------------------------- Checkbox Field ---------------------------------------------------- */
@@ -540,11 +541,11 @@ body.cms { overflow: hidden; }
 .cms-content-batchactions { float: left; position: relative; display: block; }
 .cms-content-batchactions .view-mode-batchactions-wrapper { height: 18px; float: left; padding: 4px 6px; border: 1px solid #aaa; margin-bottom: 8px; margin-right: -1px; background-color: #D9D9D9; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Q5ZDlkOSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #d9d9d9)); background-image: -moz-linear-gradient(top, #ffffff, #d9d9d9); background-image: -webkit-linear-gradient(top, #ffffff, #d9d9d9); background-image: linear-gradient(to bottom, #ffffff, #d9d9d9); border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
 .cms-content-batchactions .view-mode-batchactions-wrapper input { vertical-align: middle; }
-.cms-content-batchactions .view-mode-batchactions-wrapper label { vertical-align: middle; display: none; }
+.cms-content-batchactions .view-mode-batchactions-wrapper .view-mode-batchactions-label { vertical-align: middle; display: none; }
 .cms-content-batchactions .view-mode-batchactions-wrapper fieldset, .cms-content-batchactions .view-mode-batchactions-wrapper .Actions { display: inline-block; }
 .cms-content-batchactions .view-mode-batchactions-wrapper #view-mode-batchactions { margin-top: 2px; }
 .cms-content-batchactions.inactive .view-mode-batchactions-wrapper { border-radius: 4px; }
-.cms-content-batchactions.inactive .view-mode-batchactions-wrapper label { display: inline; }
+.cms-content-batchactions.inactive .view-mode-batchactions-wrapper .view-mode-batchactions-label { display: inline; }
 .cms-content-batchactions form > * { display: block; float: left; }
 .cms-content-batchactions form.cms-batch-actions { float: left; }
 .cms-content-batchactions.inactive form { display: none; }

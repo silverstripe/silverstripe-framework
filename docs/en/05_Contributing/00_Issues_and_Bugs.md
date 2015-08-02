@@ -62,4 +62,4 @@ read our guide on [how to write secure code](/developer_guides/security/secure_c
 
 * [silverstripe.org/forums](http://www.silverstripe.org/community/forums/): Forums on silverstripe.org
 * [silverstripe-dev](http://groups.google.com/group/silverstripe-dev/): Core development mailinglist
-* [silverstripe-documentation](http://groups.google.com/group/silverstripe-translators/): Translation team mailing list
+* [silverstripe-documentation](http://groups.google.com/group/silverstripe-documentation/): Documentation mailing list

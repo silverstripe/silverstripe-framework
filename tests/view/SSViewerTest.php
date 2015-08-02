@@ -46,15 +46,43 @@ class SSViewerTest extends SapphireTest {
 
 		// reset results for the tests that include arguments (the title is passed as an arg)
 		$expected = array(
-			'Item 1 - Item 1 - First-ODD top:Item 1',
-			'Item 2 - Item 2 - EVEN top:Item 2',
-			'Item 3 - Item 3 - ODD top:Item 3',
-			'Item 4 - Item 4 - EVEN top:Item 4',
-			'Item 5 - Item 5 - ODD top:Item 5',
-			'Item 6 - Item 6 - Last-EVEN top:Item 6',
+			'Item 1 _ Item 1 - First-ODD top:Item 1',
+			'Item 2 _ Item 2 - EVEN top:Item 2',
+			'Item 3 _ Item 3 - ODD top:Item 3',
+			'Item 4 _ Item 4 - EVEN top:Item 4',
+			'Item 5 _ Item 5 - ODD top:Item 5',
+			'Item 6 _ Item 6 - Last-EVEN top:Item 6',
 		);
 
 		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
+		$this->assertExpectedStrings($result, $expected);
+	}
+	
+	public function testIncludeTruthyness() {
+		$data = new ArrayData(array(
+			'Title' => 'TruthyTest',
+			'Items' => new ArrayList(array(
+				new ArrayData(array('Title' => 'Item 1')),
+				new ArrayData(array('Title' => '')),
+				new ArrayData(array('Title' => true)),
+				new ArrayData(array('Title' => false)),
+				new ArrayData(array('Title' => null)),
+				new ArrayData(array('Title' => 0)),
+				new ArrayData(array('Title' => 7))
+			))
+		));
+		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
+		
+		// We should not end up with empty values appearing as empty
+		$expected = array(
+			'Item 1 _ Item 1 - First-ODD top:Item 1',
+			'Untitled - EVEN top:',
+			'1 _ 1 - ODD top:1',
+			'Untitled - EVEN top:',
+			'Untitled - ODD top:',
+			'Untitled - EVEN top:0',
+			'7 _ 7 - Last-ODD top:7'
+		);
 		$this->assertExpectedStrings($result, $expected);
 	}
 
@@ -1093,7 +1121,6 @@ after')
 			// Let's throw something random in there.
 			$self->setExpectedException('InvalidArgumentException');
 			$templates = SSViewer::get_templates_by_class(array());
-			$this->assertCount(0, $templates);
 		});
 	}
 

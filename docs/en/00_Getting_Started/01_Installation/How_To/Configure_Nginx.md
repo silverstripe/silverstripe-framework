@@ -8,12 +8,14 @@ able to run PHP files via the FastCGI-wrapper from Nginx.
 
 Now you need to set up a virtual host in Nginx with configuration settings
 that are similar to those shown below.
+
 <div class="notice" markdown='1'>
 If you don't fully understand the configuration presented here, consult the
 [nginx documentation](http://nginx.org/en/docs/).
 
 Especially be aware of [accidental php-execution](https://nealpoole.com/blog/2011/04/setting-up-php-fastcgi-and-nginx-dont-trust-the-tutorials-check-your-configuration/ "Don't trust the tutorials") when extending the configuration.
 </div>
+
 But enough of the disclaimer, on to the actual configuration — typically in `nginx.conf`:
 
 	server {
@@ -21,6 +23,11 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 		root /path/to/ss/folder;
 	
 		server_name site.com www.site.com;
+
+		# Defend against SS-2015-013 -- http://www.silverstripe.org/software/download/security-releases/ss-2015-013
+		if ($http_x_forwarded_host) {
+			return 400;
+		}
 	
 		location / {
 			try_files $uri /framework/main.php?url=$uri&$query_string;

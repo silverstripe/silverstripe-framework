@@ -53,6 +53,30 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Comment', key($dbFields), 'DataObject::db returns fields in correct order');
 	}
 
+	public function testConstructAcceptsValues() {
+		// Values can be an array...
+		$player = new DataObjectTest_Player(array(
+			'FirstName' => 'James',
+			'Surname' => 'Smith'
+		));
+
+		$this->assertEquals('James', $player->FirstName);
+		$this->assertEquals('Smith', $player->Surname);
+
+		// ... or a stdClass inst
+		$data = new stdClass();
+		$data->FirstName = 'John';
+		$data->Surname = 'Doe';
+		$player = new DataObjectTest_Player($data);
+
+		$this->assertEquals('John', $player->FirstName);
+		$this->assertEquals('Doe', $player->Surname);
+
+		// IDs should be stored as integers, not strings
+		$player = new DataObjectTest_Player(array('ID' => '5'));
+		$this->assertSame(5, $player->ID);
+	}
+
 	public function testValidObjectsForBaseFields() {
 		$obj = new DataObjectTest_ValidatedObject();
 
@@ -311,6 +335,7 @@ class DataObjectTest extends SapphireTest {
 	public function testHasOneRelationship() {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
+		$player2 = $this->objFromFixture('DataObjectTest_Player', 'player2');
 
 		// Add a captain to team 1
 		$team1->setField('CaptainID', $player1->ID);
@@ -325,6 +350,14 @@ class DataObjectTest extends SapphireTest {
 			'Player 1 is the captain');
 		$this->assertEquals($team1->getComponent('Captain')->FirstName, 'Player 1',
 			'Player 1 is the captain');
+
+		$team1->CaptainID = $player2->ID;
+		$team1->write();
+
+		$this->assertEquals($player2->ID, $team1->Captain()->ID);
+		$this->assertEquals($player2->ID, $team1->getComponent('Captain')->ID);
+		$this->assertEquals('Player 2', $team1->Captain()->FirstName);
+		$this->assertEquals('Player 2', $team1->getComponent('Captain')->FirstName);
 	}
 	
 	/**

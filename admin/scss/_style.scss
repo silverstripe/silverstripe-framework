@@ -906,7 +906,7 @@ body.cms {
 			vertical-align: middle;
 		}
 
-		label {
+		.view-mode-batchactions-label {
 			vertical-align: middle;
 			display: none;
 		}
@@ -922,7 +922,7 @@ body.cms {
 		&.inactive .view-mode-batchactions-wrapper {
 			border-radius: 4px;
 
-			label {
+			.view-mode-batchactions-label {
 				display: inline;
 			}
 		}

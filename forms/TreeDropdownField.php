@@ -56,9 +56,13 @@ class TreeDropdownField extends FormField {
 	protected $sourceObject, $keyField, $labelField, $filterCallback,
 		$disableCallback, $searchCallback, $baseID = 0;
 	/**
-	 * @var string default child method in Hierarcy->getChildrenAsUL
+	 * @var string default child method in Hierarchy->getChildrenAsUL
 	 */
 	protected $childrenMethod = 'AllChildrenIncludingDeleted';
+	/**
+	 * @var string default child counting method in Hierarchy->getChildrenAsUL
+	 */
+	protected $numChildrenMethod = 'numChildren';
 	
 	/**
 	 * Used by field search to leave only the relevant entries
@@ -96,6 +100,12 @@ class TreeDropdownField extends FormField {
 		$this->keyField     = $keyField;
 		$this->labelField   = $labelField;
 		$this->showSearch	= $showSearch;
+		
+		//Extra settings for Folders
+		if ($sourceObject == 'Folder') {
+			$this->childrenMethod = 'ChildFolders';
+			$this->numChildrenMethod = 'numChildFolders';
+		}
 
 		$this->addExtraClass('single');
 
@@ -171,14 +181,24 @@ class TreeDropdownField extends FormField {
 
 	/**
 	 * @param $method The parameter to ChildrenMethod to use when calling Hierarchy->getChildrenAsUL in
-	 * {@link Hierarchy}. The method specified determined the structure of the returned list. Use "ChildFolders"
+	 * {@link Hierarchy}. The method specified determines the structure of the returned list. Use "ChildFolders"
 	 * in place of the default to get a drop-down listing with only folders, i.e. not including the child elements in
-	 * the currently selected folder.
+	 * the currently selected folder. setNumChildrenMethod() should be used as well for proper functioning.
 	 * 
 	 * See {@link Hierarchy} for a complete list of possible methods.
 	 */
 	public function setChildrenMethod($method) {
 		$this->childrenMethod = $method;
+		return $this;
+	}
+	
+	/**
+	 * @param $method The parameter to numChildrenMethod to use when calling Hierarchy->getChildrenAsUL in
+	 * {@link Hierarchy}. Should be used in conjunction with setChildrenMethod().
+	 * 
+	 */
+	public function setNumChildrenMethod($method) {
+		$this->numChildrenMethod = $method;
 		return $this;
 	}
 
@@ -195,16 +215,21 @@ class TreeDropdownField extends FormField {
 		
 		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
-	
+
+		if($this->showSearch) {
+			$emptyTitle = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
+		} else {
+			$emptyTitle = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+		}
+
 		$record = $this->Value() ? $this->objectForKey($this->Value()) : null;
 		if($record instanceof ViewableData) {
 			$title = $record->obj($this->labelField)->forTemplate();
 		} elseif($record) {
 			$title = Convert::raw2xml($record->{$this->labelField});
-		} else if($this->showSearch) {
-			$title = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
-		} else {
-			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+		}
+		else {
+			$title = $emptyTitle;
 		}
 
 		// TODO Implement for TreeMultiSelectField
@@ -217,6 +242,7 @@ class TreeDropdownField extends FormField {
 			$properties,
 			array(
 				'Title' => $title,
+				'EmptyTitle' => $emptyTitle,
 				'Metadata' => ($metadata) ? Convert::raw2json($metadata) : null,
 			)
 		);
@@ -273,10 +299,11 @@ class TreeDropdownField extends FormField {
 		if ( $this->search != "" )
 			$this->populateIDs();
 		
-		if ($this->filterCallback || $this->sourceObject == 'Folder' || $this->search != "" )
+		if ($this->filterCallback || $this->search != "" )
 			$obj->setMarkingFilterFunction(array($this, "filterMarking"));
 		
-		$obj->markPartialTree();
+		$obj->markPartialTree($nodeCountThreshold = 30, $context = null,
+			$this->childrenMethod, $this->numChildrenMethod);
 		
 		// allow to pass values to be selected within the ajax request
 		if( isset($_REQUEST['forceValue']) || $this->value ) {
@@ -298,7 +325,7 @@ class TreeDropdownField extends FormField {
 				Convert::raw2xml($child->$keyField),
 				Convert::raw2xml($child->$keyField),
 				Convert::raw2xml($child->class),
-				Convert::raw2xml($child->markingClasses()),
+				Convert::raw2xml($child->markingClasses($self->numChildrenMethod)),
 				($self->nodeIsDisabled($child)) ? 'disabled' : '',
 				(int)$child->ID,
 				$child->obj($labelField)->forTemplate()
@@ -330,7 +357,7 @@ class TreeDropdownField extends FormField {
 				null,
 				true, 
 				$this->childrenMethod,
-				'numChildren',
+				$this->numChildrenMethod,
 				true, // root call
 				null,
 				$nodeCountCallback
@@ -343,7 +370,7 @@ class TreeDropdownField extends FormField {
 				null,
 				true, 
 				$this->childrenMethod,
-				'numChildren',
+				$this->numChildrenMethod,
 				true, // root call
 				null,
 				$nodeCountCallback
@@ -353,15 +380,14 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * Marking public function for the tree, which combines different filters sensibly. If a filter function has been
-	 * set, that will be called. If the source is a folder, automatically filter folder. And if search text is set,
+	 * Marking public function for the tree, which combines different filters sensibly.
+	 * If a filter function has been set, that will be called. And if search text is set,
 	 * filter on that too. Return true if all applicable conditions are true, false otherwise.
 	 * @param $node
 	 * @return unknown_type
 	 */
 	public function filterMarking($node) {
 		if ($this->filterCallback && !call_user_func($this->filterCallback, $node)) return false;
-		if ($this->sourceObject == "Folder" && $node->ClassName != 'Folder') return false;
 		if ($this->search != "") {
 			return isset($this->searchIds[$node->ID]) && $this->searchIds[$node->ID] ? true : false;
 		}

@@ -653,10 +653,10 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return string
 	 */
 	public function getIP() {
-		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+		if (TRUSTED_PROXY && !empty($_SERVER['HTTP_CLIENT_IP'])) {
 			//check ip from share internet
 			return $_SERVER['HTTP_CLIENT_IP'];
-		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+		} elseif (TRUSTED_PROXY && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 			//to check ip is pass from proxy
 			return  $_SERVER['HTTP_X_FORWARDED_FOR'];
 		} elseif(isset($_SERVER['REMOTE_ADDR'])) {

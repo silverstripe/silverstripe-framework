@@ -1,12 +1,12 @@
-title: Implement Internationalization
-summary: Implement SilverStripe's internationalization system in your own modules.
+title: Implement Internationalisation
+summary: Implement SilverStripe's internationalisation system in your own modules.
 
-# Implementing Internationalization
+# Implementing Internationalisation
 
-To find out about how to assist with translating SilverStripe from a users point of view, see the 
+To find out about how to assist with translating SilverStripe from a user's point of view, see the 
 [Contributing Translations page](/contributing/translations).
 
-## Set up your own module for localization
+## Set up your own module for localisation
 
 ### Collecting translatable text
 
@@ -33,7 +33,7 @@ source_lang = en
 type = YML
 ```
 
-If you don't have existing translations, your project is ready to go - simply point translators to the URL, have them 
+If you don't have existing translations to import, your project is ready to go - simply point translators to the URL, have them 
 sign up, and they can create languages and translations as required.
 
 ### Import existing translations
@@ -57,7 +57,7 @@ assumes you're adhering to the following guidelines:
  - Run the `i18nTextCollectorTask` with the `merge=true` option to avoid deleting unused entities
    (which might still be relevant in older release branches)
 
-### Converting your language files from 2.4 PHP format
+### Converting your language files from 2.4 PHP format to YML
 
 The conversion from PHP format to YML is taken care of by a module called 
 [i18n_yml_converter](https://github.com/chillu/i18n_yml_converter).
@@ -116,7 +116,7 @@ First of all, you need to create those source files in JSON, and store them in `
 	source_lang = en
 	type = KEYVALUEJSON
 
-Now you can upload the source files via a normal `tx push`. Once translations come in, you need to convert the source 
+Then you can upload the source files via a normal `tx push`. Once translations come in, you need to convert the source 
 files back into the JS files SilverStripe can actually read. This requires an installation of our 
 [buildtools](https://github.com/silverstripe/silverstripe-buildtools).
 

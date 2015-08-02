@@ -82,23 +82,23 @@ class ConfigTest_TestNest extends Object implements TestOnly {
 }
 
 class ConfigTest extends SapphireTest {
-	
+
 	public function testNest() {
-		
+
 		// Check basic config
 		$this->assertEquals(3, Config::inst()->get('ConfigTest_TestNest', 'foo'));
 		$this->assertEquals(5, Config::inst()->get('ConfigTest_TestNest', 'bar'));
-		
+
 		// Test nest copies data
 		Config::nest();
 		$this->assertEquals(3, Config::inst()->get('ConfigTest_TestNest', 'foo'));
 		$this->assertEquals(5, Config::inst()->get('ConfigTest_TestNest', 'bar'));
-		
+
 		// Test nested data can be updated
 		Config::inst()->update('ConfigTest_TestNest', 'foo', 4);
 		$this->assertEquals(4, Config::inst()->get('ConfigTest_TestNest', 'foo'));
 		$this->assertEquals(5, Config::inst()->get('ConfigTest_TestNest', 'bar'));
-		
+
 		// Test unnest restores data
 		Config::unnest();
 		$this->assertEquals(3, Config::inst()->get('ConfigTest_TestNest', 'foo'));
@@ -189,12 +189,11 @@ class ConfigTest extends SapphireTest {
 		// But it won't affect subclasses - this is *uninherited* static
 		$this->assertNotContains('test_2b',
 			Config::inst()->get('ConfigStaticTest_Third', 'first', Config::UNINHERITED));
-		$this->assertNotContains('test_2b',
-			Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
+		$this->assertNull(Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
 
 		// Subclasses that don't have the static explicitly defined should allow definition, also
-		// This also checks that set can be called after the first uninherited get() 
-		// call (which can be buggy due to caching) 
+		// This also checks that set can be called after the first uninherited get()
+		// call (which can be buggy due to caching)
 		Config::inst()->update('ConfigStaticTest_Fourth', 'first', array('test_4b'));
 		$this->assertContains('test_4b', Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
 	}
@@ -227,7 +226,7 @@ class ConfigTest extends SapphireTest {
 
 		$result = array('A' => 1, 'B' => 2, 'C' => array('Foo' => 1, 'Bar' => 2), 'D' => 3);
 		Config::merge_array_low_into_high($result, array('C' => array('Bar' => 3, 'Baz' => 4)));
-		$this->assertEquals($result, 
+		$this->assertEquals($result,
 			array('A' => 1, 'B' => 2, 'C' => array('Foo' => 1, 'Bar' => 2, 'Baz' => 4), 'D' => 3));
 
 		$result = array('A' => 1, 'B' => 2, 'C' => array('Foo' => 1, 'Bar' => 2), 'D' => 3);

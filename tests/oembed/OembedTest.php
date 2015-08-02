@@ -1,16 +1,6 @@
 <?php
 
 class OembedTest extends SapphireTest {
-	public function setUp() {
-		parent::setUp();
-		Config::nest();
-	}
-
-	public function tearDown() {
-		Config::unnest();
-		parent::tearDown();
-	}
-
 	public function testGetOembedFromUrl() {
 		Config::inst()->update('Oembed', 'providers', array(
 			'http://*.silverstripe.com/watch*'=>'http://www.silverstripe.com/oembed/'
@@ -35,7 +25,7 @@ class OembedTest extends SapphireTest {
 		$result = Oembed::get_oembed_from_url('http://www.silverstripe.com/watch12345', false, array('foo'=>'bar'));
 		$this->assertTrue($result!=false);
 		$this->assertEquals($result->getOembedURL(), 'http://www.silverstripe.com/oembed/?format=json&url='
-			. urlencode('http://www.silverstripe.com/watch12345').'&foo=bar', 
+			. urlencode('http://www.silverstripe.com/watch12345').'&foo=bar',
 			'Includes options');
 
 		// Test magic.

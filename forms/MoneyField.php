@@ -106,12 +106,12 @@ class MoneyField extends FormField {
 		$fieldName = $this->name;
 		if($dataObject->hasMethod("set$fieldName")) {
 			$dataObject->$fieldName = DBField::create_field('Money', array(
-				"Currency" => $this->fieldCurrency->Value(),
-				"Amount" => $this->fieldAmount->Value()
+				"Currency" => $this->fieldCurrency->dataValue(),
+				"Amount" => $this->fieldAmount->dataValue()
 			));
 		} else {
-			$dataObject->$fieldName->setCurrency($this->fieldCurrency->Value()); 
-			$dataObject->$fieldName->setAmount($this->fieldAmount->Value());
+			$dataObject->$fieldName->setCurrency($this->fieldCurrency->dataValue());
+			$dataObject->$fieldName->setAmount($this->fieldAmount->dataValue());
 		}
 	}
 
@@ -155,7 +155,7 @@ class MoneyField extends FormField {
 		$this->allowedCurrencies = $arr;
 		
 		// @todo Has to be done twice in case allowed currencies changed since construction
-		$oldVal = $this->fieldCurrency->Value();
+		$oldVal = $this->fieldCurrency->dataValue();
 		$this->fieldCurrency = $this->FieldCurrency($this->name);
 		$this->fieldCurrency->setValue($oldVal);
 

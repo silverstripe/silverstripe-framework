@@ -392,7 +392,7 @@ nl:
     Toggle: 'Toon opmaak hulp'
   MemberImportForm:
     Help1: '<p>Importeer leden in <em>CSV</em>-formaat (comma-separated values). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
-    Help2: "<div class=\"advanced\">\n\t<h4>Advanced usage</h4>\n\t<ul>\n\t<li>Allowed columns: <em>%s</em></li>\n\t<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from\n\tthe imported file.</li>\n\t<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,\n\tmultiple groups can be separated by comma. Existing group memberships are not cleared.</li>\n\t</ul>\n</div>"
+    Help2: "<div class=\"advanced\">\n<h4>Geavanceerd gebruik</h4>\n<ul>\n<li>Toegestane kolommen: <em>%s</em></li>\n<li>Bestaande groepen worden geïdentificeerd door middel van hun unieke <em>Code</em>-waarde, en aangepast met de nieuwe waarden vanuit het geïmporteerde bestand</li>\n<li>Groepshiërarchiën kunnen aangemaakt worden door een <em>ParentCode</em>-kolom te gebruiken</li>\n<li>Toegangscodeskunnen toegewezen worden met de <em>PermissionCode</em> kolom. Bestaande toegangscodes worden niet verwijderd.</li>\n</ul>\n</div>"
     ResultCreated: '{count} leden aangemaakt'
     ResultDeleted: '%d leden verwijderd'
     ResultNone: 'Geen wijzingen'

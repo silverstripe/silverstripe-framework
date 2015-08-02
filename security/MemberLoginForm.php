@@ -190,7 +190,7 @@ JS;
 	 * )
 	 *
 	 * @param array $data
-	 * @return void
+	 * @return SS_HTTPResponse
 	 */
 	protected function logInUserAndRedirect($data) {
 		Session::clear('SessionForms.MemberLoginForm.Email');
@@ -209,18 +209,21 @@ JS;
 		}
 
 		// Absolute redirection URLs may cause spoofing
-		if(isset($_REQUEST['BackURL']) && $_REQUEST['BackURL'] && Director::is_site_url($_REQUEST['BackURL']) ) {
-			return $this->controller->redirect($_REQUEST['BackURL']);
-		}
-
-		// Spoofing attack, redirect to homepage instead of spoofing url
-		if(isset($_REQUEST['BackURL']) && $_REQUEST['BackURL'] && !Director::is_site_url($_REQUEST['BackURL'])) {
-			return $this->controller->redirect(Director::absoluteBaseURL());
+		if(!empty($_REQUEST['BackURL'])) {
+			$url = $_REQUEST['BackURL'];
+			if(Director::is_site_url($url) ) {
+				$url = Director::absoluteURL($url);
+			} else {
+				// Spoofing attack, redirect to homepage instead of spoofing url
+				$url = Director::absoluteBaseURL();
+			}
+			return $this->controller->redirect($url);
 		}
 
 		// If a default login dest has been set, redirect to that.
-		if (Security::config()->default_login_dest) {
-			return $this->controller->redirect(Director::absoluteBaseURL() . Security::config()->default_login_dest);
+		if ($url = Security::config()->default_login_dest) {
+			$url = Controller::join_links(Director::absoluteBaseURL(), $url);
+			return $this->controller->redirect($url);
 		}
 
 		// Redirect the user to the page where they came from

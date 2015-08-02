@@ -22,7 +22,9 @@ class i18nTextCollectorTask extends BuildTask {
 		parent::init();
 		
 		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
-		if(!$canAccess) return Security::permissionFailure($this);
+		if(!$canAccess) {
+			return Security::permissionFailure($this);
+		}
 	}
 	
 	/**
@@ -31,13 +33,50 @@ class i18nTextCollectorTask extends BuildTask {
 	 * and write the resultant files in the lang folder of each module.
 	 * 
 	 * @uses DataObject->collectI18nStatics()
+	 * 
+	 * @param SS_HTTPRequest $request
 	 */	
 	public function run($request) {
 		increase_time_limit_to();
-		$c = new i18nTextCollector($request->getVar('locale'));
-		$writer = $request->getVar('writer');
-		if($writer) $c->setWriter(new $writer());
-		$restrictModules = ($request->getVar('module')) ? explode(',', $request->getVar('module')) : null;
-		return $c->run($restrictModules, (bool)$request->getVar('merge'));
+		$collector = i18nTextCollector::create($request->getVar('locale'));
+		
+		$merge = $this->getIsMerge($request);
+		
+		// Custom writer
+		$writerName = $request->getVar('writer');
+		if($writerName) {
+			$writer = Injector::inst()->get($writerName);
+			$collector->setWriter($writer);
+		}
+		
+		// Get restrictions
+		$restrictModules = ($request->getVar('module'))
+			? explode(',', $request->getVar('module'))
+			: null;
+		
+		$collector->run($restrictModules, $merge);
+		
+		Debug::message(__CLASS__ . " completed!", false);
+	}
+	
+	/**
+	 * Check if we should merge
+	 * 
+	 * @param SS_HTTPRequest $request
+	 */
+	protected function getIsMerge($request) {
+		$merge = $request->getVar('merge');
+		
+		// Default to false if not given
+		if(!isset($merge)) {
+			Deprecation::notice(
+				"4.0",
+				"merge will be enabled by default in 4.0. Please use merge=false if you do not want to merge."
+			);
+			return false;
+		}
+
+		// merge=0 or merge=false will disable merge
+		return !in_array($merge, array('0', 'false'));
 	}
 }

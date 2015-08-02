@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Password input field.
+ *
  * @package forms
  * @subpackage fields-formattedinput
  */
 class PasswordField extends TextField {
-
 	/**
 	 * Controls the autocomplete attribute on the field.
 	 *
@@ -15,45 +16,62 @@ class PasswordField extends TextField {
 	private static $autocomplete;
 
 	/**
-	 * Returns an input field, class="text" and type="text" with an optional
-	 * maxlength
+	 * Returns an input field.
+	 *
+	 * @param string $name
+	 * @param null|string $title
+	 * @param string $value
 	 */
-	public function __construct($name, $title = null, $value = "") {
+	public function __construct($name, $title = null, $value = '') {
 		if(count(func_get_args()) > 3) {
-			Deprecation::notice('3.0', 'Use setMaxLength() instead of constructor arguments',
-				Deprecation::SCOPE_GLOBAL);
+			Deprecation::notice(
+				'3.0', 'Use setMaxLength() instead of constructor arguments',
+				Deprecation::SCOPE_GLOBAL
+			);
 		}
 
 		parent::__construct($name, $title, $value);
 	}
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getAttributes() {
-		$attributes = array_merge(
-			parent::getAttributes(),
-			array('type' => 'password')
+		$attributes = array(
+			'type' => 'password',
 		);
 
 		$autocomplete = Config::inst()->get('PasswordField', 'autocomplete');
-		if (isset($autocomplete)) {
-			$attributes['autocomplete'] = $autocomplete ? 'on' : 'off';
+
+		if($autocomplete) {
+			$attributes['autocomplete'] = 'on';
+		} else {
+			$attributes['autocomplete'] = 'off';
 		}
 
-		return $attributes;
+		return array_merge(
+			parent::getAttributes(),
+			$attributes
+		);
 	}
 
 	/**
-	 * Makes a pretty readonly field with some stars in it
+	 * Creates a read-only version of the field.
+	 *
+	 * @return FormField
 	 */
 	public function performReadonlyTransformation() {
 		$field = $this->castedCopy('ReadonlyField');
+
 		$field->setValue('*****');
-		
+
 		return $field;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function Type() {
 		return 'text password';
 	}
 }
-

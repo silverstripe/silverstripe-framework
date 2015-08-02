@@ -1,6 +1,6 @@
 # How to customize the CMS Menu
 
-## Adding a administration panel
+## Adding an administration panel
 
 Every time you add a new extension of the `[api:LeftAndMain]` class to the CMS,
 SilverStripe will automatically create a new `[api:CMSMenuItem]` for it

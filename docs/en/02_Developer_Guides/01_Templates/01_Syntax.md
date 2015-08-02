@@ -70,7 +70,7 @@ These variables will call a method / field on the object and insert the returned
 *  `$Foo.Bar` will call `$obj->Foo()->Bar()` 
 
 If a variable returns a string, that string will be inserted into the template. If the variable returns an object, then
-the system will attempt to render the object through its' `forTemplate()` method. If the `forTemplate()` method has not 
+the system will attempt to render the object through its `forTemplate()` method. If the `forTemplate()` method has not 
 been defined, the system will return an error.
 
 <div class="note" markdown="1">
@@ -96,7 +96,7 @@ Variables can come from your database fields, or custom methods you define on yo
 	Method names that begin with `get` will automatically be resolved when their prefix is excluded. For example, the above method call `$UsersIpAddress` would also invoke a method named `getUsersIpAddress()`.
 </div>
 
-The variable's that can be used in a template vary based on the object currently in [scope](#scope). Scope defines what
+The variables that can be used in a template vary based on the object currently in [scope](#scope). Scope defines what
 object the methods get called on. For the standard `Page.ss` template the scope is the current [api:Page_Controller] 
 class. This object gives you access to all the database fields on [api:Page_Controller], its corresponding [api:Page]
 record and any subclasses of those two.
@@ -243,7 +243,7 @@ object that is being looped over.
 `<% loop %>` statements iterate over a [api:DataList] instance. As the template has access to the list object, 
 templates can call [api:DataList] methods. 
 
-Sort the list by a given field.
+Sorting the list by a given field.
 
 	:::ss
 	<ul>
@@ -270,7 +270,7 @@ Reversing the loop.
 		<% end_loop %>
 	</ul>
 
-Filtering the loop
+Filtering the loop.
 
 	:::ss
 	<ul>
@@ -279,7 +279,7 @@ Filtering the loop
 		<% end_loop %>
 	</ul>
 
-Methods can also be chained
+Methods can also be chained.
 
 	:::ss
 	<ul>
@@ -293,12 +293,13 @@ Methods can also be chained
 Inside the loop scope, there are many variables at your disposal to determine the current position in the list and 
 iteration.
 
- * `$Even`, `$Odd`: Returns boolean, handy for zebra striping
+ * `$Even`, `$Odd`: Returns boolean, handy for zebra striping.
  * `$EvenOdd`: Returns a string, either 'even' or 'odd'. Useful for CSS classes.
- * `$First`, `$Last`, `$Middle`: Booleans about the position in the list
+ * `$First`, `$Last`, `$Middle`: Booleans about the position in the list.
  * `$FirstLast`: Returns a string, "first", "last", or "". Useful for CSS classes.
  * `$Pos`: The current position in the list (integer). Will start at 1.
- * `$TotalItems`: Number of items in the list (integer)
+ * `$Pos(0)`: The current position in the list (integer). Will start at 0.
+ * `$TotalItems`: Number of items in the list (integer).
 
 	:::ss
 	<ul>
@@ -341,7 +342,7 @@ $Modulus and $MultipleOf can help to build column and grid layouts.
 </div>
 
 $MultipleOf(value, offset) can also be utilized to build column and grid layouts. In this case we want to add a `<br>` 
-after every 3th item.
+after every 3rd item.
 
 	:::ss
 	<% loop $Children %>
@@ -386,7 +387,7 @@ layout template is the [api:Page_Controller] that is currently being rendered.
 When the scope is a `Page_Controller` it will automatically also look up any methods in the corresponding `Page` data
 record. In the case of `$Title` the flow looks like
 
-	$Title --> [Looks up: Current Page_Controller and parent classes] --> [Looks up: Current Page and parent classes].
+	$Title --> [Looks up: Current Page_Controller and parent classes] --> [Looks up: Current Page and parent classes]
 
 The list of variables you could use in your template is the total of all the methods in the current scope object, parent
 classes of the current scope object, and any [api:Extension] instances you have.

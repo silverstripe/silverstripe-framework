@@ -390,7 +390,6 @@ class File extends DataObject {
 
 		//get a tree listing with only folder, no files
 		$folderTree = new TreeDropdownField("ParentID", _t('AssetTableField.FOLDER','Folder'), 'Folder');
-		$folderTree->setChildrenMethod('ChildFolders');
 
 		$fields = new FieldList(
 			new TabSet('Root',
@@ -808,7 +807,7 @@ class File extends DataObject {
 			'htm' => _t('File.HtmlType', 'HTML file')
 		);
 		
-		$ext = $this->getExtension();
+		$ext = strtolower($this->getExtension());
 		
 		return isset($types[$ext]) ? $types[$ext] : 'unknown';
 	}
