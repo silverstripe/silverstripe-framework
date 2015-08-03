@@ -31,7 +31,7 @@ The benefit of constructing objects through this syntax is `ClassName` can be sw
 	  MyClassName:
 	    class: MyBetterClassName
 
-Repeated calls to `create()` create a new class each time.
+Repeated calls to `create()` create a new object each time.
 
 	:::php
 	$object = Injector::inst()->create('MyClassName');
