@@ -253,12 +253,13 @@ jQuery.noConflict();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
 				this.restoreTabState();
-
 				this._super();
 			},
 
 			fromWindow: {
-				onstatechange: function(){ this.handleStateChange(); }
+				onstatechange: function(e){
+					this.handleStateChange(e); 
+				}
 			},
 
 			'onwindowresize': function() {
@@ -358,6 +359,34 @@ jQuery.noConflict();
 				this.find('.cms-preview').redraw();
 				this.find('.cms-content').redraw();
 			},
+			
+			/**
+			 * Confirm whether the current user can navigate away from this page
+			 * 
+			 * @param {array} selectors Optional list of selectors
+			 * @returns {boolean} True if the navigation can proceed
+			 */
+			checkCanNavigate: function(selectors) {
+				// Check change tracking (can't use events as we need a way to cancel the current state change)
+				var contentEls = this._findFragments(selectors || ['Content']),
+					trackedEls = contentEls
+						.find(':data(changetracker)')
+						.add(contentEls.filter(':data(changetracker)')),
+					safe = true;
+
+				if(!trackedEls.length) {
+					return true;
+				}
+
+				trackedEls.each(function() {
+					// See LeftAndMain.EditForm.js
+					if(!$(this).confirmUnsavedChanges()) {
+						safe = false;
+					}
+				});
+
+				return safe;
+			},
 
 			/**
 			 * Proxy around History.pushState() which handles non-HTML5 fallbacks,
@@ -377,18 +406,9 @@ jQuery.noConflict();
 				if(!title) title = "";
 				if (!forceReferer) forceReferer = History.getState().url;
 
-				// Check change tracking (can't use events as we need a way to cancel the current state change)
-				var contentEls = this._findFragments(data.pjax ? data.pjax.split(',') : ['Content']);
-				var trackedEls = contentEls.find(':data(changetracker)').add(contentEls.filter(':data(changetracker)'));
-
-				if(trackedEls.length) {
-					var abort = false;
-
-					trackedEls.each(function() {
-						if(!$(this).confirmUnsavedChanges()) abort = true;
-					});
-
-					if(abort) return;
+				// Check for unsaved changes
+				if(!this.checkCanNavigate(data.pjax ? data.pjax.split(',') : ['Content'])) {
+					return;
 				}
 
 				// Save tab selections so we can restore them later
@@ -493,6 +513,16 @@ jQuery.noConflict();
 
 				return false;
 			},
+			
+			/**
+			 * Last html5 history state
+			 */
+			LastState: null,
+			
+			/**
+			 * Flag to pause handleStateChange
+			 */
+			PauseState: false,
 
 			/**
 			 * Handles ajax loading of new panels through the window.History object.
@@ -517,6 +547,10 @@ jQuery.noConflict();
 			 * if the URL is loaded without ajax.
 			 */
 			handleStateChange: function() {
+				if(this.getPauseState()) {
+					return;
+				}
+				
 				// Don't allow parallel loading to avoid edge cases
 				if(this.getStateChangeXHR()) this.getStateChangeXHR().abort();
 
@@ -533,6 +567,30 @@ jQuery.noConflict();
 					document.location.href = state.url;
 					return;
 				}
+
+				if(!this.checkCanNavigate()) {
+					// If history is emulated (ie8 or below) disable attempting to restore
+					if(h.emulated.pushState) {
+						return;
+					}
+					
+					var lastState = this.getLastState();
+					
+					// Suppress panel loading while resetting state
+					this.setPauseState(true);
+					
+					// Restore best last state
+					if(lastState) {
+						h.pushState(lastState.id, lastState.title, lastState.url);
+					} else {
+						h.back();
+					}
+					this.setPauseState(false);
+					
+					// Abort loading of this panel
+					return;
+				}
+				this.setLastState(state);
 
 				// If any of the requested Pjax fragments don't exist in the current view,
 				// fetch the "Content" view instead, which is the "outermost" fragment
