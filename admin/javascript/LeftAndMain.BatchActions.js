@@ -100,6 +100,20 @@
 					return (confirmed) ? ids : false;
 				});
 
+				// Restore selected archived pages
+				this.register('admin/pages/batchactions/restore', function(ids) {
+					var confirmed = confirm(
+						ss.i18n.inject(
+							ss.i18n._t(
+								"CMSMAIN.BATCH_RESTORE_PROMPT",
+								"You have {num} page(s) selected.\n\nDo you really want to restore to stage?\n\nChildren of archived pages will be restored to the root level, unless those pages are also being restored."
+							),
+							{'num': ids.length}
+						)
+					);
+					return (confirmed) ? ids : false;
+				});
+
 				// Delete selected pages from live action
 				this.register('admin/pages/batchactions/deletefromlive', function(ids) {
 					var confirmed = confirm(
