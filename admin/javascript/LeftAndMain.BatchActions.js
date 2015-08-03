@@ -92,7 +92,7 @@
 						ss.i18n.inject(
 							ss.i18n._t(
 								"CMSMAIN.BATCH_ARCHIVE_PROMPT",
-								"You have {num} page(s) selected.\n\nDo you really want to archive?\n\nThese pages will be removed from both the draft and published sites without discarding the history."
+								"You have {num} page(s) selected.\n\nAre you sure you want to archive these pages?\n\nThese pages and all of their children pages will be unpublished and sent to the archive."
 							),
 							{'num': ids.length}
 						)
