@@ -63,11 +63,8 @@ class SS_TemplateLoader {
 	 */
 	public function findTemplates($templates, $theme = null) {
 		$result = array();
-		$project = project();
 
 		foreach ((array) $templates as $template) {
-			$found = false;
-
 			if (strpos($template, '/')) {
 				list($type, $template) = explode('/', $template, 2);
 			} else {

@@ -498,7 +498,7 @@ class Config {
 			}
 		}
 
-		$value = $nothing = null;
+		$nothing = null;
 
 		// Then the manifest values
 		foreach($this->manifests as $manifest) {
