@@ -122,9 +122,17 @@ class CompositeField extends FormField {
 	public function getLegend() {
 		return $this->legend;
 	}
-
+	
+	/**
+	 * @deprecated
+	 */
 	public function extraClasses() {
-		$classes = array('field', 'CompositeField', parent::extraClasses());
+		Deprecation::notice('4.0', 'Use extraClass() instead');
+		return $this->extraClass();
+	}
+
+	public function extraClass() {
+		$classes = array('field', 'CompositeField', parent::extraClass());
 		if($this->columnCount) $classes[] = 'multicolumn';
 
 		return implode(' ', $classes);
