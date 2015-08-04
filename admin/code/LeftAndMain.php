@@ -247,14 +247,20 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			
 			// if no alternate menu items have matched, return a permission error
 			$messageSet = array(
-				'default' => _t('LeftAndMain.PERMDEFAULT',
-					"Please choose an authentication method and enter your credentials to access the CMS."),
-				'alreadyLoggedIn' => _t('LeftAndMain.PERMALREADY',
+				'default' => _t(
+					'LeftAndMain.PERMDEFAULT',
+					"You must be logged in to access the administration area; please enter your credentials below."
+				),
+				'alreadyLoggedIn' => _t(
+					'LeftAndMain.PERMALREADY',
 					"I'm sorry, but you can't access that part of the CMS.  If you want to log in as someone else, do"
-					. " so below"),
-				'logInAgain' => _t('LeftAndMain.PERMAGAIN',
+					. " so below."
+				),
+				'logInAgain' => _t(
+					'LeftAndMain.PERMAGAIN',
 					"You have been logged out of the CMS.  If you would like to log in again, enter a username and"
-					. " password below."),
+					. " password below."
+				),
 			);
 
 			return Security::permissionFailure($this, $messageSet);
