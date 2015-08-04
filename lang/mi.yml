@@ -170,7 +170,6 @@ mi:
     TEXT2: 'hono tautuhi kupuhipa anō'
     TEXT3: mā
   Form:
-    CSRF_FAILED_MESSAGE: "Te āhua nei kua puta he raru hangarau. Pāwhiria te pātene hoki, ka tāmata anō i tō pūtirotiro, ka ngana anō."
     FIELDISREQUIRED: 'Ka hiahiatia te {name}'
     SubmitBtnLabel: Haere
     VALIDATIONCREDITNUMBER: 'Tirohia kua tika tō tāuru i te tau kāri nama {number}'
@@ -235,7 +234,6 @@ mi:
     many_many_Members: Ngā Mema
   GroupImportForm:
     Help1: '<p>Kawea mai ngā kaiwhakamahi i te hōputu <em>CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
-    Help2: "<div class=\"advanced\">\n  <h4>Advanced usage</h4>\n   <ul>\n  <li>Allowed columns: <em>%s</em></li>\n <li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the \n    imported file</li>\n    <li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>\n  <li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not\n cleared.</li>\n </ul>\n</div>"
     ResultCreated: 'I hangaia e {count} ngā rōpū'
     ResultDeleted: 'Kua mukua e %d ngā rōpū'
     ResultUpdated: 'Kua whakahōutia e %d ngā rōpū'
@@ -304,7 +302,6 @@ mi:
     PERMAGAIN: 'Kua takiputaina atu koe i te CMS. Ki te pīrangi koe ki te takiuru atu anō, tāurutia tētahi ingoa kaiwhakamahi me te kupuhipa i raro.'
     PERMALREADY: 'Aroha mai, kāore e taea te whakauru i tērā wāhanga o te CMS. Ki te pīrangi koe ki te takiuru atu mā tētahi atu ingoa, whakamahia ki raro nei.'
     PERMDEFAULT: 'Whiriwhiria tētahi aratuka motuhēhēnga me te tāuru i ō taipitopito tuakiri ki te uru ki te CMS.'
-    PLEASESAVE: 'Tiaki Whārangi: Kāore i taea tēnei whārangi te whakahōu nā te mea kāore anō kia tiakina.'
     PreviewButton: Arokite
     REORGANISATIONSUCCESSFUL: 'Kua momoho te whakaraupapa anō i te rākau pae'
     SAVEDUP: Kua Tiakina
@@ -453,7 +450,6 @@ mi:
     SINGULARNAME: Tūranga
     Title: Taitara
   PermissionRoleCode:
-    PLURALNAME: 'Ngā Waehere Tūnga Whakaaetanga'
     SINGULARNAME: 'Waehere Tūnga Whakaaetanga'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ngā tūnga me ngā whakaaetanga uru'

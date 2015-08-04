@@ -342,7 +342,7 @@ lt:
     Hello: Sveiki
     LOGOUT: 'Atsijungti'
   ListboxField:
-    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
+    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''%s'' yra negalima reikšmė.'
   LoginAttempt:
     Email: 'E. pašto adresas'
     IP: 'IP adresas'
@@ -548,6 +548,8 @@ lt:
     Print: Spausdinti
   TableListField_PageControls_ss:
     OF: iš
+  TextField:
+    VALIDATEMAXLENGTH: '''{name}'' reikšmė negali būti ilgesnė nei {maxLength} simbolių ilgio.'
   TimeField:
     VALIDATEFORMAT: 'Prašome suvesti laiką teisingu formatu ({format})'
   ToggleField:

@@ -341,8 +341,6 @@ fi:
   LeftAndMain_Menu_ss:
     Hello: Hei
     LOGOUT: 'Kirjaudu ulos'
-  ListboxField:
-    SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. {value} ei kelpaa.'
   LoginAttempt:
     Email: 'Sähköpostiosoite'
     IP: 'IP-osoite'

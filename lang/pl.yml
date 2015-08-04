@@ -171,7 +171,6 @@ pl:
     TEXT2: 'link zmiany hasła'
     TEXT3: dla
   Form:
-    CSRF_FAILED_MESSAGE: "Wygląda na to, że wystąpił błąd techniczny. Kliknij przycisk Wstecz, odśwież przeglądarkę i spróbuj ponownie."
     FIELDISREQUIRED: '{name} jest wymagane'
     SubmitBtnLabel: Przejdź
     VALIDATIONCREDITNUMBER: 'Proszę upewnij się, że wprowadzony numer karty kredytowej {number} jest prawidłowy'
@@ -237,7 +236,6 @@ pl:
     many_many_Members: Użytkownicy
   GroupImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
-    Help2: "<div class=\"advanced\">\n⇥<h4>Użycie zaawansowane</h4>\n⇥<ul>\n⇥<li>Rozpoznawane pola: <em>%s</em></li>\n⇥<li>Istniejące grupy zostaną uaktualnione nowymi wartościami z importowanego pliku. Dopasowanie nastąpi poprzez porównanie z unikalną wartością w polu <em>Code</em>.</li>\n⇥<li>Grupy hierarchiczne mogą zostać utworzone przy pomocy pola <em>ParentCode</em>.</li>\n⇥<li>Kody zezwoleń mogą zostać dodane przy użyciu pola <em>PermissionCode</em>. Istniejące zezwolenia nie zostaną usunięte.</li>\n⇥</ul>\n</div>"
     ResultCreated: 'Stworzono grup: {count}'
     ResultDeleted: 'Usunięto grup: %d'
     ResultUpdated: 'Zaktualizowano grup: %d'
@@ -306,7 +304,6 @@ pl:
     PERMAGAIN: 'Zostałeś wylogowany z CMSa. Jeśli chcesz zalogować się ponownie, wpisz login i hasło poniżej.'
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
-    PLEASESAVE: 'Proszę zapisać stronę. Ta strona nie mogła zostać uaktualniona, ponieważ nie została jeszcze zapisana.'
     PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
@@ -455,7 +452,6 @@ pl:
     SINGULARNAME: Rola
     Title: Tytuł
   PermissionRoleCode:
-    PLURALNAME: 'Kod roli uprawnień'
     PermsError: 'Nie można przyporządkować uprzywilejowanego uprawnienia "%s" (wymagane uprawnienie ADMIN)'
     SINGULARNAME: 'Kod roli uprawnienia'
   Permissions:

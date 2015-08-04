@@ -341,8 +341,6 @@ id_ID:
   LeftAndMain_Menu_ss:
     Hello: Hai
     LOGOUT: 'Keluar'
-  ListboxField:
-    SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
   LoginAttempt:
     Email: 'Alamat Email'
     IP: 'Alamat IP'
