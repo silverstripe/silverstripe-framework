@@ -1,5 +1,5 @@
 title: Caching
-summary: Reduce rending time with cached templates and understand the limitations of the ViewableData object caching.
+summary: Reduce rendering time with cached templates and understand the limitations of the ViewableData object caching.
 
 # Caching 
 
