@@ -58,12 +58,12 @@ class FulltextFilter extends SearchFilter {
 		if(is_array($indexes) && array_key_exists($this->getName(), $indexes)) {
 			$index = $indexes[$this->getName()];
 			if(is_array($index) && array_key_exists("value", $index)) {
-				return $index['value'];
+				return $this->prepareColumns($index['value']);
 			} else {
 				// Parse a fulltext string (eg. fulltext ("ColumnA", "ColumnB")) to figure out which columns
 				// we need to search.
 				if(preg_match('/^fulltext\s+\((.+)\)$/i', $index, $matches)) {
-					return $matches[1];
+					return $this->prepareColumns($matches[1]);
 				} else {
 					throw new Exception("Invalid fulltext index format for '" . $this->getName()
 						. "' on '" . $this->model . "'");
@@ -72,6 +72,19 @@ class FulltextFilter extends SearchFilter {
 		}
 
 		return parent::getDbName();
+	}
+	
+	private function prepareColumns($columns) {
+		$class = '';
+		$parts = explode(',', $columns);
+		array_walk($parts, function(&$col, $key) use (&$class) {
+			$name = trim($col, " \t\n\r\0\x0B\"");
+			if (empty($class)) {
+				$class = ClassInfo::table_for_object_field($this->model, $name);
+			}
+			$col = sprintf('"%s"."%s"', $class, $name);
+		});
+		return implode(',', $parts);
 	}
 
 }
