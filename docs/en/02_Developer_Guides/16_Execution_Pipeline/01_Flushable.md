@@ -11,7 +11,7 @@ implementors of `[api:Flushable]`.
 
 ## Usage
 
-To use this API, you need to make your class implement `[api:Flushable]`, and define a `flush()` static function that specifies the actions to be executed upon a flush request.
+To use this API, implement `[api:Flushable]` and define a static method `flush()` that specifies the actions to be executed upon a flush request.
 
 ### Usage with SS_Cache
 
