@@ -51,7 +51,7 @@ By default, requests for files existing in the filesystem will be passed through
 		RewriteRule silverstripe-cache(/|$) - [F,L,NC]
 		RewriteRule composer\.(json|lock) - [F,L,NC]
 
-		# If no file with the requested name exists, pass the request over to Silverstripe's main.php script, 
+		# If no file with the requested name exists, pass the request over to SilverStripe's main.php script, 
 		# retaining any existing request parameters as well as adding the original path as a query parameter. 
 		RewriteCond %{REQUEST_URI} ^(.*)$
 		RewriteCond %{REQUEST_FILENAME} !-f
@@ -113,7 +113,7 @@ and determines the controller, action and any arguments to be used ([Routing](..
 further filtering before content is sent to the end user.
  * The response is output to the client.
 
-## Request Pre-processing and Post-processing
+## Request pre-processing and post-processing
 
 The framework provides the ability to hook into the request both before and 
 after it is handled, allowing the binding of custom logic. This can be used
