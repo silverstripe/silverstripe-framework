@@ -1,20 +1,19 @@
 title: Flushable
-summary: Allows a class to define it's own flush functionality.
+summary: Allows a class to define its own flush functionality.
  
 # Flushable
 
 ## Introduction
 
-Allows a class to define it's own flush functionality, which is triggered when `flush=1` is requested in the URL.
-`[api:FlushRequestFilter]` is run before a request is made, calling `flush()` statically on all
+The Flushable interface enables one to define, for each implementing class, a flush functionality that gets triggered when `flush=1` is requested in the URL.
+`[api:FlushRequestFilter]` is run before a request is made, calling the static method `flush()` on all
 implementors of `[api:Flushable]`.
 
 ## Usage
 
-To use this API, you need to make your class implement `[api:Flushable]`, and define a `flush()` static function,
-this defines the actions that need to be executed on a flush request.
+To use this API, you need to make your class implement `[api:Flushable]`, and define a `flush()` static function that specifies the actions to be executed upon a flush request.
 
-### Using with SS_Cache
+### Usage with SS_Cache
 
 This example uses `[api:SS_Cache]` in some custom code, and the same cache is cleaned on flush:
 
@@ -40,9 +39,7 @@ This example uses `[api:SS_Cache]` in some custom code, and the same cache is cl
 
 ### Using with filesystem
 
-Another example, some temporary files are created in a directory in assets, and are deleted on flush. This would be
-useful in an example like `GD` or `Imagick` generating resampled images, but we want to delete any cached images on
-flush so they are re-created on demand.
+In the code below, some temporary files are created in a sub-directory _tempfiles of the assets directory, and are deleted on flush. This would be useful, for example, when using `GD` or `Imagick` to generate resampled images; we may want to delete any cached images on flush so the reseampled images are re-created on demand.
 
 	:::php
 	<?php
