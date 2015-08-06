@@ -37,7 +37,7 @@ This example uses `[api:SS_Cache]` in some custom code, and the same cache is cl
 	
 	}
 
-### Using with filesystem
+### Usage with filesystem
 
 In the code below, some temporary files are created in a sub-directory _tempfiles of the assets directory, and are deleted on flush. This would be useful, for example, when using `GD` or `Imagick` to generate resampled images; we may want to delete any cached images on flush so the reseampled images are re-created on demand.
 
