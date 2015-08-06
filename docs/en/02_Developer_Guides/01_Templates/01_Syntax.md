@@ -1,11 +1,10 @@
 title: Template Syntax
-summary: A look at the operations, variables and language controls you can use within templates.
+summary: A look at the operations, variables and control structures you can use within templates.
 
 # Template Syntax
 
-SilverStripe templates are plain text files that have `.ss` extension and located within the `templates` directory of 
-a module, theme, or your `mysite` folder. A template can contain any markup language (e.g HTML, CSV, JSON..) and before
-being rendered to the user, they're processed through [api:SSViewer]. This process replaces placeholders such as `$Var` 
+SilverStripe templates are plain text files that have a `.ss` extension and are located within the `templates` directory of 
+a module, a theme, or your `mysite` folder. Templates can contain any markup language (e.g HTML, CSV, JSON..) and and are processed through [api:SSViewer] before being rendered. This process replaces placeholders such as `$Var` 
 with real content from your [model](../model) and allows you to define logic controls like `<% if $Var %>`. 
 
 An example of a SilverStripe template is below:
@@ -49,14 +48,14 @@ text-based format.
 
 Variables are placeholders that will be replaced with data from the [DataModel](../model/) or the current 
 [Controller](../controllers). Variables are prefixed with a `$` character. Variable names must start with an 
-alphabetic character or underscore, with subsequent characters being alphanumeric or underscore:
+alphabetic character or an underscore, with subsequent characters being alphanumeric or underscore:
 
 	:::ss
 	$Title
 
 This inserts the value of the Title database field of the page being displayed in place of `$Title`. 
 
-Variables can be chained together, and include arguments.
+Variables can be chained together, and include arguments:
 
 	:::ss
 	$Foo
@@ -78,7 +77,7 @@ For more detail around how variables are inserted and formatted into a template 
 [Formating, Modifying and Casting Variables](casting)
 </div>
 
-Variables can come from your database fields, or custom methods you define on your objects.
+Variables can come from your database fields, or custom methods you define on your objects:
 
 **mysite/code/Page.php**
 
@@ -97,9 +96,8 @@ Variables can come from your database fields, or custom methods you define on yo
 </div>
 
 The variables that can be used in a template vary based on the object currently in [scope](#scope). Scope defines what
-object the methods get called on. For the standard `Page.ss` template the scope is the current [api:Page_Controller] 
-class. This object gives you access to all the database fields on [api:Page_Controller], its corresponding [api:Page]
-record and any subclasses of those two.
+object the methods get called on. For the standard `Page.ss` template, the scope is the current [api:Page_Controller] class enabling you to access all the database fields on [api:Page_Controller], its corresponding [api:Page]
+record and any ancestors of the two.
 
 **mysite/code/Layout/Page.ss**
 
@@ -128,7 +126,7 @@ A conditional can also check for a value other than falsy.
 	<% end_if %>
 
 <div class="notice" markdown="1">
-When inside template tags variables should have a '$' prefix, and literals should have quotes. 
+When inside template tags, variables should have a '$' prefix, and literals should have quotes. 
 </div>
 
 Conditionals can also provide the `else` case.
@@ -164,14 +162,14 @@ The inverse of `<% if %>` is `<% if not %>`.
 
 Multiple checks can be done using `||`, `or`, `&&` or `and`. 
 
-If *either* of the conditions is true.
+To test if *either* of the conditions is true:
 
 	:::ss
 	<% if $MyDinner == "kipper" || $MyDinner == "salmon" %>
 		yummy, fish for tea
 	<% end_if %>
 
-If *both* of the conditions are true.
+To test if *both* of the conditions are true:
 
 	:::ss
 	<% if $MyDinner == "quiche" && $YourDinner == "kipper" %>
@@ -190,22 +188,19 @@ You can use inequalities like `<`, `<=`, `>`, `>=` to compare numbers.
 
 ## Includes
 
-Within SilverStripe templates we have the ability to include other templates from the `template/Includes` directory 
-using the `<% include %>` tag.
+Within SilverStripe templates, we have the ability to include other templates from the `template/Includes` directory using the `<% include %>` tag.
 
 	:::ss
 	<% include SideBar %>
 
-The `include` tag can be particularly helpful for nested functionality and breaking large templates up. In this example, 
-the include only happens if the user is logged in.
+The `include` tag can be particularly helpful for nested functionality and breaking large templates up into smaller, reusable ones. In this example, the include only happens if the user is logged in.
 
 	:::ss
 	<% if $CurrentMember %>
 		<% include MembersOnlyInclude %>
 	<% end_if %>
 
-Includes can't directly access the parent scope when the include is included. However you can pass arguments to the 
-include.
+An include can't directly access the parent scope when included. However you can pass arguments from the parent scope to the include:
 
 	:::ss
 	<% with $CurrentMember %>
@@ -231,11 +226,9 @@ This snippet loops over the children of a page, and generates an unordered list 
 page. 
 
 <div class="notice" markdown="1">
-$Title inside the loop refers to the Title property on each object that is looped over, not the current page like
-the reference of `$Title` outside the loop. 
+Inside the loop, the `$Title` variable refers to the title property of each object that is being looped over. However, outside the loop, `$Title` refers to the title property of the current page. 
 
-This demonstrates the concept of [Scope](#scope). When inside a <% loop %> the scope of the template has changed to the 
-object that is being looped over.
+This demonstrates the concept of [Scope](#scope). When inside a `<% loop %>` the scope of the template has changed to the object that is being looped over.
 </div>
 
 ### Altering the list
@@ -243,7 +236,7 @@ object that is being looped over.
 `<% loop %>` statements iterate over a [api:DataList] instance. As the template has access to the list object, 
 templates can call [api:DataList] methods. 
 
-Sorting the list by a given field.
+To sort the list by a given field:
 
 	:::ss
 	<ul>
@@ -252,7 +245,7 @@ Sorting the list by a given field.
 		<% end_loop %>
 	</ul>
 
-Limiting the number of items displayed.
+To limit the number of items displayed:
 
 	:::ss
 	<ul>
@@ -261,7 +254,7 @@ Limiting the number of items displayed.
 		<% end_loop %>
 	</ul>
 
-Reversing the loop.
+To reverse the looping order:
 
 	:::ss
 	<ul>
@@ -270,7 +263,7 @@ Reversing the loop.
 		<% end_loop %>
 	</ul>
 
-Filtering the loop.
+To filter out a subset of $Children to loop over:
 
 	:::ss
 	<ul>
@@ -279,7 +272,7 @@ Filtering the loop.
 		<% end_loop %>
 	</ul>
 
-Methods can also be chained.
+Methods can also be chained in loop conditions:
 
 	:::ss
 	<ul>
@@ -293,7 +286,7 @@ Methods can also be chained.
 Inside the loop scope, there are many variables at your disposal to determine the current position in the list and 
 iteration.
 
- * `$Even`, `$Odd`: Returns boolean, handy for zebra striping.
+ * `$Even`, `$Odd`: Returns boolean. Handy for zebra striping.
  * `$EvenOdd`: Returns a string, either 'even' or 'odd'. Useful for CSS classes.
  * `$First`, `$Last`, `$Middle`: Booleans about the position in the list.
  * `$FirstLast`: Returns a string, "first", "last", or "". Useful for CSS classes.
@@ -353,14 +346,14 @@ after every 3rd item.
 
 ### Escaping
 
-Sometimes you will have template tags which need to roll into one another. Use `{}` to contain variables.
+Sometimes you will have template tags which need to roll into one another. Use `{}` to contain variables:
 
 	:::ss
-	$Foopx // will returns "" (as it looks for a `Foopx` value)
+	$Foopx // will return "" (as it looks for a non-existent `Foopx` value)
 	{$Foo}px  // returns "3px" (CORRECT)
 
 
-Or when having a `$` sign in front of the variable such as displaying money.
+Wrap variables with `{}` when a `$` symbol is needed in front of a variable, such as when displaying a dollar amount:
 
 	:::ss
 	$$Foo // returns ""
@@ -381,22 +374,22 @@ For more information on formatting and casting variables see [Formating, Modifyi
 In the `<% loop %>` section, we saw an example of two **scopes**. Outside the `<% loop %>...<% end_loop %>`, we were in 
 the scope of the top level `Page`. But inside the loop, we were in the scope of an item in the list (i.e the `Child`) 
 
-The scope determines where the value comes from when you refer to a variable. Typically the outer scope of a `Page.ss` 
+The scope determines where the value comes from when you refer to a variable. Typically, the outer scope of a `Page.ss` 
 layout template is the [api:Page_Controller] that is currently being rendered. 
 
-When the scope is a `Page_Controller` it will automatically also look up any methods in the corresponding `Page` data
-record. In the case of `$Title` the flow looks like
+When the scope is a `Page_Controller`, any methods in the corresponding `Page` data
+record can be referenced. In the case of `$Title`, the referencing process looks like this:
 
 	$Title --> [Looks up: Current Page_Controller and parent classes] --> [Looks up: Current Page and parent classes]
 
-The list of variables you could use in your template is the total of all the methods in the current scope object, parent
+The list of variables you can use in your template consists of all methods in the current scope object, parent
 classes of the current scope object, and any [api:Extension] instances you have.
 
 ### Navigating Scope
 
 #### Up
 
-When in a particular scope, `$Up` takes the scope back to the previous level.
+When in a particular scope, use `$Up` to take the scope back to the previous level:
 
 	:::ss
 	<h1>Children of '$Title'</h1>
@@ -409,7 +402,7 @@ When in a particular scope, `$Up` takes the scope back to the previous level.
 		<% end_loop %>
 	<% end_loop %>
 
-Given the following structure, it will output the text.
+Given the following page structure, 
 	
 	My Page
 	|
@@ -418,6 +411,8 @@ Given the following structure, it will output the text.
  	| 	+- Grandchild 1
  	|
  	+-+ Child 2
+
+the template code will output the following text:
 
 	Children of 'My Page'
 
@@ -429,7 +424,7 @@ Given the following structure, it will output the text.
 #### Top
 
 While `$Up` provides us a way to go up one level of scope, `$Top` is a shortcut to jump to the top most scope of the 
-page. The  previous example could be rewritten to use the following syntax.
+page. The  previous example could be rewritten to use the following syntax:
 
 	:::ss
 	<h1>Children of '$Title'</h1>
@@ -453,7 +448,7 @@ The `<% with %>` tag lets you change into a new scope. Consider the following ex
 		Hello, $FirstName, welcome back. Your current balance is $Balance.
 	<% end_with %>
 
-This is functionalty the same as the following:
+This is functionally equivalent to the following:
 
 	:::ss
 	Hello, $CurrentMember.FirstName, welcome back. Yout current balance is $CurrentMember.Balance
@@ -468,14 +463,14 @@ refer directly to properties and methods of the [api:Member] object. `$FirstName
 
 ## Comments
 
-Using standard HTML comments is supported. These comments will be included in the published site.
+Using standard HTML comments in templates is supported. These comments will be included in the published site.
 
 	:::ss
 	$EditForm <!-- Some public comment about the form -->
 
 
-However you can also use special SilverStripe comments which will be stripped out of the published site. This is useful
-for adding notes for other developers but for things you don't want published in the public html.
+However you can also use special SilverStripe comments in your templates which will be stripped out of the published site. This is useful
+for adding notes for other developers that you don't want published in the served output.
 
 	:::ss
 	$EditForm <%-- Some hidden comment about the form --%>
