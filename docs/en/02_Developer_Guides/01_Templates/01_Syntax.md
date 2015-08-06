@@ -4,8 +4,7 @@ summary: A look at the operations, variables and control structures you can use 
 # Template Syntax
 
 SilverStripe templates are plain text files that have a `.ss` extension and are located within the `templates` directory of 
-a module, a theme, or your `mysite` folder. Templates can contain any markup language (e.g HTML, CSV, JSON..) and before
-being rendered are processed through [api:SSViewer]. This process replaces placeholders such as `$Var` 
+a module, a theme, or your `mysite` folder. Templates can contain any markup language (e.g HTML, CSV, JSON..) and and are processed through [api:SSViewer] before being rendered. This process replaces placeholders such as `$Var` 
 with real content from your [model](../model) and allows you to define logic controls like `<% if $Var %>`. 
 
 An example of a SilverStripe template is below:
@@ -98,7 +97,7 @@ Variables can come from your database fields, or custom methods you define on yo
 
 The variables that can be used in a template vary based on the object currently in [scope](#scope). Scope defines what
 object the methods get called on. For the standard `Page.ss` template, the scope is the current [api:Page_Controller] class enabling you to access all the database fields on [api:Page_Controller], its corresponding [api:Page]
-record and any subclasses of those two.
+record and any ancestors of the two.
 
 **mysite/code/Layout/Page.ss**
 
@@ -194,7 +193,7 @@ Within SilverStripe templates, we have the ability to include other templates fr
 	:::ss
 	<% include SideBar %>
 
-The `include` tag can be particularly helpful for nested functionality and breaking large templates up into smaller ones. In this example, the include only happens if the user is logged in.
+The `include` tag can be particularly helpful for nested functionality and breaking large templates up into smaller, reusable ones. In this example, the include only happens if the user is logged in.
 
 	:::ss
 	<% if $CurrentMember %>
@@ -227,9 +226,9 @@ This snippet loops over the children of a page, and generates an unordered list 
 page. 
 
 <div class="notice" markdown="1">
-Inside the loop, the $Title variable refers to the title property of each object that is being looped over. However, outside the loop, $Title refers to the title property of the current page. 
+Inside the loop, the `$Title` variable refers to the title property of each object that is being looped over. However, outside the loop, `$Title` refers to the title property of the current page. 
 
-This demonstrates the concept of [Scope](#scope). When inside a <% loop %> the scope of the template has changed to the object that is being looped over.
+This demonstrates the concept of [Scope](#scope). When inside a `<% loop %>` the scope of the template has changed to the object that is being looped over.
 </div>
 
 ### Altering the list
@@ -350,11 +349,11 @@ after every 3rd item.
 Sometimes you will have template tags which need to roll into one another. Use `{}` to contain variables:
 
 	:::ss
-	$Foopx // will return "" (as it looks for a non-existant `Foopx` value)
+	$Foopx // will return "" (as it looks for a non-existent `Foopx` value)
 	{$Foo}px  // returns "3px" (CORRECT)
 
 
-Use `{}` when having a `$` sign in front of the variable, such as displaying amounts of money in dollars:
+Wrap variables with `{}` when a `$` symbol is needed in front of a variable, such as when displaying a dollar amount:
 
 	:::ss
 	$$Foo // returns ""
@@ -449,7 +448,7 @@ The `<% with %>` tag lets you change into a new scope. Consider the following ex
 		Hello, $FirstName, welcome back. Your current balance is $Balance.
 	<% end_with %>
 
-This is functionally the same as the following:
+This is functionally equivalent to the following:
 
 	:::ss
 	Hello, $CurrentMember.FirstName, welcome back. Yout current balance is $CurrentMember.Balance
@@ -471,7 +470,7 @@ Using standard HTML comments in templates is supported. These comments will be i
 
 
 However you can also use special SilverStripe comments in your templates which will be stripped out of the published site. This is useful
-for adding notes for other developers that you don't want published in the public html.
+for adding notes for other developers that you don't want published in the served output.
 
 	:::ss
 	$EditForm <%-- Some hidden comment about the form --%>
