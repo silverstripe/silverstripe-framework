@@ -4,21 +4,18 @@ summary: An overview of the steps involved in delivering a SilverStripe web page
 
 ## Introduction
 
-In order to transform a HTTP request or a commandline exeuction into a response,
+In order to transform a HTTP request or a command line execution into a response,
 SilverStripe needs to boot its core and run through several stages of processing.
 
 ## Request Rewriting
 
-The first step in most environments is a rewrite of a request path into parameters passed to a PHP script.
-This allows writing friendly URLs instead of linking directly to PHP files.
-The implementation depends on your web server; we'll show you the most common one here: 
+The first step in most environments is a rewriting of the request path into parameters which then get passed to a PHP script. This allows writing friendly URLs instead of linking directly to PHP files.
+The rewriting implementation depends on your web server; we'll show you the most common one here: 
 Apache with [mod_rewrite](http://httpd.apache.org/docs/2.0/mod/mod_rewrite.html).
-Check our [installation guides](/getting_started/installation) on how other web servers like IIS or nginx handle rewriting.
+See our [installation guides](/getting_started/installation) on how other web servers like IIS or nginx handle request rewriting.
 
-The standard SilverStripe project ships with a `.htaccess` file in your webroot for this purpose.
-By default, requests will be passed through for files existing on the filesystem.
-Some access control is in place to deny access to potentially sensitive files in the webroot, such as YAML configuration files.
-If no file can be directly matched, control is handed off to `framework/main.php`.
+The standard SilverStripe project ships with a `.htaccess` file in your webroot for request rewriting (see below).
+By default, requests for files existing in the filesystem will be passed through as is. Of course, some access control is in place to deny access to potentially sensitive files in the webroot, such as YAML configuration files. If no file in the file system matches the one requested, the request is then handed off to `framework/main.php` for rewriting.
 
 	### SILVERSTRIPE START ###
 
@@ -54,13 +51,13 @@ If no file can be directly matched, control is handed off to `framework/main.php
 		RewriteRule silverstripe-cache(/|$) - [F,L,NC]
 		RewriteRule composer\.(json|lock) - [F,L,NC]
 
-		# Process through SilverStripe if no file with the requested name exists.
-		# Pass through the original path as a query parameter, and retain the existing parameters.
+		# If no file with the requested name exists, pass the request over to SilverStripe's main.php script, 
+		# retaining any existing request parameters as well as adding the original path as a query parameter. 
 		RewriteCond %{REQUEST_URI} ^(.*)$
 		RewriteCond %{REQUEST_FILENAME} !-f
 		RewriteRule .* framework/main.php?url=%1 [QSA]
 
-		# If requesting the main script directly, rewrite to the installer
+		# If requesting SilverStripe's main.php script directly, rewrite request to the installer
 		RewriteCond %{REQUEST_URI} ^(.*)/framework/main.php$
 		RewriteCond %{REQUEST_FILENAME} !-f
 		RewriteRule . %1/install.php? [R,L]
@@ -72,57 +69,54 @@ SilverStripe can also operate without this level of rewriting, in which case all
 through an `index.php` script in the webroot.
 
 <div class="notice" markdown="1">
-Running SilverStripe without web server based rewriting is not recommended since it
-can leave sensitive files exposed to public access (the `RewriteRule` conditions from above don't apply).
+Running SilverStripe without web server based rewriting is not recommended since, in this case, the `RewriteRule` conditions above don't apply, potentially leaving sensitive files exposed to public access.
 </div>
 
 ## Bootstrap
 
-All requests go through `framework/main.php`, which sets up the execution environment:
+When requests are passed over to `framework/main.php`, the script sets up the execution environment as follows:
 
- * Tries to locate an `_ss_environment.php` 
-   [configuration file](/getting_started/environment_management) in the webroot, 
-   or the two levels above it (to allow sharing configuration between multiple webroots).
- * Sets constants based on the filesystem structure (e.g. `BASE_URL`, `BASE_PATH` and `TEMP_FOLDER`)
- * Normalizes the `url` parameter in preparation for handing it off to `Director`
- * Connects to a database, based on information stored in the global `$databaseConfig` variable.
-   The configuration is either defined in your `_config.php`, or through `_ss_environment.php`
- * Sets up [error handlers](../debugging/error_handling)
- * Optionally continues a [session](../cookies_and_sessions/sessions) if the request already contains a session identifier
- * Loads manifests for PHP classes, templates, as well as any [YAML configuration](../configuration).
- * Optionally regenerates these manifests (if a ["flush" query parameter](flushable) is set)
- * Executes all procedural configuration defined through `_config.php` in all discovered modules
- * Loads the Composer PHP class autoloader
- * Hands control over to `[api:Director]`
+ * Tries to locate a `_ss_environment.php` [configuration file](/getting_started/environment_management) in the webroot, 
+   or the two levels above it (to allow sharing a single configuration file across multiple webroots).
+ * Sets constants based on the filesystem structure (e.g. `BASE_URL`, `BASE_PATH` and `TEMP_FOLDER`).
+ * Normalises the `url` parameter in preparation for handing it off to `Director`.
+ * Connects to a database, based on information stored in the global `$databaseConfig` variable, either defined in your `_config.php`, or through your `_ss_environment.php`.
+ * Sets up [error handlers](../debugging/error_handling).
+ * Optionally continues a [session](../cookies_and_sessions/sessions) if the request already contains a session identifier.
+ * Loads manifests for PHP classes, templates, as well as any [YAML configuration](../configuration) files.
+ * Optionally regenerates these manifests (when a ["flush" query parameter](flushable) is set).
+ * Executes all procedural configurations defined in the `_config.php` files for each discovered module.
+ * Loads the Composer PHP class autoloader.
+ * Hands control over to `[api:Director]`.
 
-While you usually don't need to modify the bootstrap on this level, some deeper customizations like
-adding your own manifests or a performance-optimized routing might require it.
-An example of this can be found in the ["staticpublisher" module](https://github.com/silverstripe-labs/silverstripe-staticpublisher/blob/master/main.php).
-The modules instructs web servers to route through its own `main.php` to determine which requests can be cached
+While you usually don't need to modify the bootstrap on this level, some deeper customisations like
+adding your own manifests or performance-optimised routing might require it.
+An example of such customisations can be found in the ["staticpublisher" module](https://github.com/silverstripe-labs/silverstripe-staticpublisher/blob/master/main.php).
+The module instructs web servers to route through its own `main.php` to determine which requests can be cached
 before handing control off to SilverStripe's own `main.php`.
 
 ## Routing and Request Handling
 
-The `main.php` script relies on `[api:Director]` to work out which [controller](../controllers/) should handle this request. It parses the URL, matching it to one of a number of patterns, 
-and determines the controller, action and any argument to be used ([Routing](../controllers/routing)).
+The `main.php` script relies on `[api:Director]` to determine which [controller](../controllers/) should handle each request. The `main.php` script parses the URL, matching it to one of a number of patterns, 
+and determines the controller, action and any arguments to be used ([Routing](../controllers/routing)):
 
- * Creates a `[api:SS_HTTPRequest]` object containing all request and environment information
- * The [session](../cookies_and_sessions/sessions) holds an abstraction of PHP session
- * Instantiates a [controller](../controllers/) object
+ * Creates a `[api:SS_HTTPRequest]` object containing all request and environment information.
+ * The [session](../cookies_and_sessions/sessions) stores an abstraction of the PHP session.
+ * Instantiates a [controller](../controllers/) object.
  * The `[api:Injector]` is first referenced, and asks the registered 
    [RequestFilter](../controllers/requestfilters)
-   to pre-process the request object (see below)
- * The `Controller` executes the actual business logic and populates an `[api:SS_HTTPResponse]`
- * The `Controller` can optionally hand off control to further nested controllers
- * The `Controller` optionally renders a response body through `SSViewer` [templates](../templates)
+   to pre-process the request object (see below).
+ * The `Controller` executes the actual business logic and populates an `[api:SS_HTTPResponse]`.
+ * The `Controller` can optionally hand off control to additional, nested controllers.
+ * The `Controller` optionally renders a response body through `SSViewer` [templates](../templates).
  * The `[api:RequestProcessor]` is called to post-process the request to allow 
-further filtering before content is sent to the end user
- * The response is output to the client
+further filtering before content is sent to the end user.
+ * The response is output to the client.
 
-## Request Preprocessing and Postprocessing
+## Request pre-processing and post-processing
 
 The framework provides the ability to hook into the request both before and 
-after it is handled to allow binding custom logic. This can be used
+after it is handled, allowing the binding of custom logic. This can be used
 to transform or filter request data, instantiate helpers, execute global logic,
 or even short-circuit execution (e.g. to enforce custom authentication schemes).
 The ["Request Filters" documentation](../controllers/requestfilters) shows you how.
@@ -130,9 +124,8 @@ The ["Request Filters" documentation](../controllers/requestfilters) shows you h
 ## Flushing Manifests
 
 If a `?flush=1` query parameter is added to a URL, a call to `flush()` will be triggered
-on any classes that implement the [Flushable](flushable) interface.
-This enables developers to clear [manifest caches](manifests),
-for example when adding new templates or PHP classes.
+on any classes implementing the [Flushable](flushable) interface.
+This enables developers to clear [manifest caches](manifests) whenever they add new templates or PHP classes.
 Note that you need to be in [dev mode](/getting_started/environment_management)
 or logged-in as an administrator for flushing to take effect.
 
