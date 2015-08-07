@@ -287,7 +287,7 @@ class ImageTest extends SapphireTest {
 		$imageFirst = $image->Pad(200,200,'CCCCCC');
 		$imageFilename = $imageFirst->getFullPath();
 			// Encoding of the arguments is duplicated from cacheFilename
-		$neededPart = 'Pad' . base64_encode(json_encode(array(200,200,'CCCCCC')));
+		$neededPart = 'Pad' . base64url_encode(json_encode(array(200,200,'CCCCCC')));
 		$this->assertContains($neededPart, $imageFilename, 'Filename for cached image is correctly generated');
 	}
 
@@ -310,23 +310,24 @@ class ImageTest extends SapphireTest {
 
 		$imageThird = $imageSecond->Pad(600,600,'0F0F0F');
 		// Encoding of the arguments is duplicated from cacheFilename
-		$argumentString = base64_encode(json_encode(array(600,600,'0F0F0F')));
+		$argumentString = base64url_encode(json_encode(array(600,600,'0F0F0F')));
 		$this->assertNotNull($imageThird);
 		$this->assertContains($argumentString, $imageThird->getFullPath(),
 			'Image contains background color for padded resizement');
 
-		$imageThirdPath = $imageThird->getFullPath();
-		$filesInFolder = $folder->find(dirname($imageThirdPath));
+		$resampledFolder = dirname($image->getFullPath()) . "/_resampled";
+		$filesInFolder = $folder->find($resampledFolder);
 		$this->assertEquals(3, count($filesInFolder),
 			'Image folder contains only the expected number of images before regeneration');
 
+		$imageThirdPath = $imageThird->getFullPath();
 		$hash = md5_file($imageThirdPath);
 		$this->assertEquals(3, $image->regenerateFormattedImages(),
 			'Cached images were regenerated in the right number');
 		$this->assertEquals($hash, md5_file($imageThirdPath), 'Regeneration of third image is correct');
 
 		/* Check that no other images exist, to ensure that the regeneration did not create other images */
-		$this->assertEquals($filesInFolder, $folder->find(dirname($imageThirdPath)),
+		$this->assertEquals($filesInFolder, $folder->find($resampledFolder),
 			'Image folder contains only the expected image files after regeneration');
 	}
 
@@ -352,11 +353,12 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
 
 		// Encoding of the arguments is duplicated from cacheFilename
-		$oldArgumentString = base64_encode(json_encode(array(200)));
-		$newArgumentString = base64_encode(json_encode(array(300)));
+		$oldArgumentString = base64url_encode(json_encode(array(200)));
+		$newArgumentString = base64url_encode(json_encode(array(300)));
 
 		$newPath = str_replace($oldArgumentString, $newArgumentString, $p);
-		$newRelative = str_replace($oldArgumentString, $newArgumentString, $image_generated->getFileName());
+		if(!file_exists(dirname($newPath))) mkdir(dirname($newPath));
+		$newRelative = str_replace($oldArgumentString, $newArgumentString, $image_generated->getFilename());
 		rename($p, $newPath);
 		$this->assertFalse(file_exists($p), 'Resized image does not exist at old path after renaming');
 		$this->assertTrue(file_exists($newPath), 'Resized image exists at new path after renaming');
