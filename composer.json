@@ -19,7 +19,8 @@
 		"php": ">=5.4.0",
 		"composer/installers": "~1.0",
 		"monolog/monolog": "~1.11",
-		"league/flysystem": "~1.0.12"
+		"league/flysystem": "~1.0.12",
+		"symfony/yaml": "~2.7"
 	},
 	"require-dev": {
 		"phpunit/PHPUnit": "~3.7"
