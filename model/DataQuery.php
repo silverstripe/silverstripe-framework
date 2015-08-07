@@ -232,10 +232,12 @@ class DataQuery {
 				foreach($collisions as $collision) {
 					if(preg_match('/^"([^"]+)"/', $collision, $matches)) {
 						$collisionBase = $matches[1];
-						$collisionClasses = ClassInfo::subclassesFor($collisionBase);
-						$collisionClasses = Convert::raw2sql($collisionClasses, true);
-						$caseClauses[] = "WHEN \"$baseClass\".\"ClassName\" IN ("
-							. implode(", ", $collisionClasses) . ") THEN $collision";
+						if(class_exists($collisionBase)) {
+							$collisionClasses = ClassInfo::subclassesFor($collisionBase);
+							$collisionClasses = Convert::raw2sql($collisionClasses, true);
+							$caseClauses[] = "WHEN \"$baseClass\".\"ClassName\" IN ("
+								. implode(", ", $collisionClasses) . ") THEN $collision";
+						}
 					} else {
 						user_error("Bad collision item '$collision'", E_USER_WARNING);
 					}
