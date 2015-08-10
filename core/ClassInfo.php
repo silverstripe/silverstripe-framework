@@ -159,6 +159,13 @@ class ClassInfo {
 	public static function class_name($nameOrObject) {
 		if (is_object($nameOrObject)) {
 			return get_class($nameOrObject);
+		} elseif (!self::exists($nameOrObject)) {
+			Deprecation::notice(
+				'4.0',
+				"ClassInfo::class_name() passed a class that doesn't exist. Support for this will be removed in 4.0",
+				Deprecation::SCOPE_GLOBAL
+			);
+			return $nameOrObject;
 		}
 		$reflection = new ReflectionClass($nameOrObject);
 		return $reflection->getName();
