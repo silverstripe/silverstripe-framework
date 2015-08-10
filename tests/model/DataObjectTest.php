@@ -7,7 +7,7 @@ class DataObjectTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'DataObjectTest_Team',
 		'DataObjectTest_Fixture',
 		'DataObjectTest_SubTeam',
@@ -26,7 +26,7 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Staff',
 		'DataObjectTest_CEO',
 		'DataObjectTest_Fan',
-	);
+	];
 
 	public function testDb() {
 		$obj = new DataObjectTest_TeamComment();
@@ -63,10 +63,10 @@ class DataObjectTest extends SapphireTest {
 
 	public function testConstructAcceptsValues() {
 		// Values can be an array...
-		$player = new DataObjectTest_Player(array(
+		$player = new DataObjectTest_Player([
 			'FirstName' => 'James',
 			'Surname' => 'Smith'
-		));
+		]);
 
 		$this->assertEquals('James', $player->FirstName);
 		$this->assertEquals('Smith', $player->Surname);
@@ -81,14 +81,14 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Doe', $player->Surname);
 
 		// IDs should be stored as integers, not strings
-		$player = new DataObjectTest_Player(array('ID' => '5'));
+		$player = new DataObjectTest_Player(['ID' => '5']);
 		$this->assertSame(5, $player->ID);
 	}
 
 	public function testValidObjectsForBaseFields() {
 		$obj = new DataObjectTest_ValidatedObject();
 
-		foreach (array('Created', 'LastEdited', 'ClassName', 'ID') as $field) {
+		foreach (['Created', 'LastEdited', 'ClassName', 'ID'] as $field) {
 			$helper = $obj->dbObject($field);
 			$this->assertTrue(
 				($helper instanceof DBField),
@@ -207,25 +207,25 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Captain', $captain1->FirstName);
 
 		// Test get_one() without caching
-		$comment1 = DataObject::get_one('DataObjectTest_TeamComment', array(
+		$comment1 = DataObject::get_one('DataObjectTest_TeamComment', [
 			'"DataObjectTest_TeamComment"."Name"' => 'Joe'
-		), false);
+		], false);
 		$comment1->Comment = "Something Else";
 
-		$comment2 = DataObject::get_one('DataObjectTest_TeamComment', array(
+		$comment2 = DataObject::get_one('DataObjectTest_TeamComment', [
 			'"DataObjectTest_TeamComment"."Name"' => 'Joe'
-		), false);
+		], false);
 		$this->assertNotEquals($comment1->Comment, $comment2->Comment);
 
 		// Test get_one() with caching
-		$comment1 = DataObject::get_one('DataObjectTest_TeamComment', array(
+		$comment1 = DataObject::get_one('DataObjectTest_TeamComment', [
 			'"DataObjectTest_TeamComment"."Name"' => 'Bob'
-		), true);
+		], true);
 		$comment1->Comment = "Something Else";
 
-		$comment2 = DataObject::get_one('DataObjectTest_TeamComment', array(
+		$comment2 = DataObject::get_one('DataObjectTest_TeamComment', [
 			'"DataObjectTest_TeamComment"."Name"' => 'Bob'
-		), true);
+		], true);
 		$this->assertEquals((string)$comment1->Comment, (string)$comment2->Comment);
 
 		// Test get_one() with order by without caching
@@ -250,9 +250,9 @@ class DataObjectTest extends SapphireTest {
 			$this->markTestSkipped('MySQL only');
 		}
 
-		$subteam1 = DataObject::get_one('dataobjecttest_subteam', array(
+		$subteam1 = DataObject::get_one('dataobjecttest_subteam', [
 			'"DataObjectTest_Team"."Title"' => 'Subteam 1'
-		), true);
+		], true);
 		$this->assertNotEmpty($subteam1);
 		$this->assertEquals($subteam1->Title, "Subteam 1");
 	}
@@ -334,7 +334,7 @@ class DataObjectTest extends SapphireTest {
 		$parent->Relations()->add($child);
 
 		$this->assertEquals(1, $parent->Relations()->count());
-		$this->assertEquals(array('New Child'), $parent->Relations()->column('Title'));
+		$this->assertEquals(['New Child'], $parent->Relations()->column('Title'));
 		$this->assertEquals('New Parent', $child->Parent()->Name);
 	}
 
@@ -406,7 +406,7 @@ class DataObjectTest extends SapphireTest {
 		$team1->Comments()->remove($comment2);
 
 		$team1CommentIDs = $team1->Comments()->sort('ID')->column('ID');
-		$this->assertEquals(array($comment1->ID, $newComment->ID), $team1CommentIDs);
+		$this->assertEquals([$comment1->ID, $newComment->ID], $team1CommentIDs);
 
 		// Test that removing an item from a list doesn't remove it from the same
 		// relation belonging to a different object
@@ -414,7 +414,7 @@ class DataObjectTest extends SapphireTest {
 		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
 		$team2->Comments()->remove($comment1);
 		$team1CommentIDs = $team1->Comments()->sort('ID')->column('ID');
-		$this->assertEquals(array($comment1->ID, $newComment->ID), $team1CommentIDs);
+		$this->assertEquals([$comment1->ID, $newComment->ID], $team1CommentIDs);
 	}
 
 
@@ -452,7 +452,7 @@ class DataObjectTest extends SapphireTest {
 		$team1->Fans()->remove($fan3);
 
 		$team1FanIDs = $team1->Fans()->sort('ID')->column('ID');
-		$this->assertEquals(array($fan1->ID, $newFan->ID), $team1FanIDs);
+		$this->assertEquals([$fan1->ID, $newFan->ID], $team1FanIDs);
 
 		// Test that removing an item from a list doesn't remove it from the same
 		// relation belonging to a different object
@@ -460,7 +460,7 @@ class DataObjectTest extends SapphireTest {
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$player1->Fans()->remove($fan1);
 		$team1FanIDs = $team1->Fans()->sort('ID')->column('ID');
-		$this->assertEquals(array($fan1->ID, $newFan->ID), $team1FanIDs);
+		$this->assertEquals([$fan1->ID, $newFan->ID], $team1FanIDs);
 	}
 
 
@@ -529,30 +529,30 @@ class DataObjectTest extends SapphireTest {
 
 		$this->assertEquals(
 			$obj->getChangedFields(false, 1),
-			array(
-				'FirstName' => array(
+			[
+				'FirstName' => [
 					'before' => 'Captain',
 					'after' => 'Captain-changed',
 					'level' => 2
-				),
-				'IsRetired' => array(
+				],
+				'IsRetired' => [
 					'before' => 1,
 					'after' => true,
 					'level' => 1
-				)
-			),
+				]
+			],
 			'Changed fields are correctly detected with strict type changes (level=1)'
 		);
 
 		$this->assertEquals(
 			$obj->getChangedFields(false, 2),
-			array(
-				'FirstName' => array(
+			[
+				'FirstName' => [
 					'before'=>'Captain',
 					'after'=>'Captain-changed',
 					'level' => 2
-				)
-			),
+				]
+			],
 			'Changed fields are correctly detected while ignoring type changes (level=2)'
 		);
 
@@ -560,13 +560,13 @@ class DataObjectTest extends SapphireTest {
 		$newObj->FirstName = "New Player";
 		$this->assertEquals(
 			$newObj->getChangedFields(false, 2),
-			array(
-				'FirstName' => array(
+			[
+				'FirstName' => [
 					'before' => null,
 					'after' => 'New Player',
 					'level' => 2
-				)
-			),
+				]
+			],
 			'Initialised fields are correctly detected as full changes'
 		);
 	}
@@ -808,7 +808,7 @@ class DataObjectTest extends SapphireTest {
 
 		$this->assertEquals(
 			array_keys($teamInstance->inheritedDatabaseFields()),
-			array(
+			[
 				//'ID',
 				//'ClassName',
 				//'Created',
@@ -819,13 +819,13 @@ class DataObjectTest extends SapphireTest {
 				'CaptainID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
-			),
+			],
 			'inheritedDatabaseFields() contains all fields defined on instance: base, extended and foreign keys'
 		);
 
 		$this->assertEquals(
 			array_keys(DataObject::database_fields('DataObjectTest_Team', false)),
-			array(
+			[
 				//'ID',
 				'ClassName',
 				'LastEdited',
@@ -836,13 +836,13 @@ class DataObjectTest extends SapphireTest {
 				'CaptainID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
-			),
+			],
 			'databaseFields() contains only fields defined on instance, including base, extended and foreign keys'
 		);
 
 		$this->assertEquals(
 			array_keys($subteamInstance->inheritedDatabaseFields()),
-			array(
+			[
 				//'ID',
 				//'ClassName',
 				//'Created',
@@ -855,16 +855,16 @@ class DataObjectTest extends SapphireTest {
 				'CaptainID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID',
-			),
+			],
 			'inheritedDatabaseFields() on subclass contains all fields, including base, extended  and foreign keys'
 		);
 
 		$this->assertEquals(
 			array_keys(DataObject::database_fields('DataObjectTest_SubTeam', false)),
-			array(
+			[
 				'SubclassDatabaseField',
 				'ParentTeamID',
-			),
+			],
 			'databaseFields() on subclass contains only fields defined on instance'
 		);
 	}
@@ -929,12 +929,12 @@ class DataObjectTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$team1->CaptainID = $this->idFromFixture('DataObjectTest_Player', 'captain1');
 
-		$team1->update(array(
+		$team1->update([
 			'DatabaseField' => 'Something',
 			'Captain.FirstName' => 'Jim',
 			'Captain.Email' => 'jim@example.com',
 			'Captain.FavouriteTeam.Title' => 'New and improved team 1',
-		));
+		]);
 
 		/* Test the simple case of updating fields on the object itself */
 		$this->assertEquals('Something', $team1->DatabaseField);
@@ -957,10 +957,10 @@ class DataObjectTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$team1->CaptainID = 0;
 
-		$team1->update(array(
+		$team1->update([
 			'Captain.FirstName' => 'Jim',
 			'Captain.FavouriteTeam.Title' => 'New and improved team 1',
-		));
+		]);
 		/* Test that the captain ID has been updated */
 		$this->assertGreaterThan(0, $team1->CaptainID);
 
@@ -1108,7 +1108,7 @@ class DataObjectTest extends SapphireTest {
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
-		Config::inst()->update('DataObjectTest_Team', 'has_one', array('NotValid' => array('NoArraysAllowed')));
+		Config::inst()->update('DataObjectTest_Team', 'has_one', ['NotValid' => ['NoArraysAllowed']]);
 		$this->setExpectedException('LogicException');
 
 		try {
@@ -1125,7 +1125,7 @@ class DataObjectTest extends SapphireTest {
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
-		Config::inst()->update('DataObjectTest_Team', 'has_many', array(12 => 'DataObjectTest_Player'));
+		Config::inst()->update('DataObjectTest_Team', 'has_many', [12 => 'DataObjectTest_Player']);
 		$this->setExpectedException('LogicException');
 
 		try {
@@ -1142,7 +1142,7 @@ class DataObjectTest extends SapphireTest {
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
-		Config::inst()->update('DataObjectTest_Team', 'many_many', array('Players' => 12));
+		Config::inst()->update('DataObjectTest_Team', 'many_many', ['Players' => 12]);
 		$this->setExpectedException('LogicException');
 
 		try {
@@ -1163,7 +1163,7 @@ class DataObjectTest extends SapphireTest {
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
 		Config::inst()->update('DataObjectTest_Team', 'many_many_extraFields',
-			array('Relations' => array('Price' => 'Int')));
+			['Relations' => ['Price' => 'Int']]);
 
 		try {
 			$method->invoke($object);
@@ -1219,7 +1219,7 @@ class DataObjectTest extends SapphireTest {
 
 		// Check many_many_extraFields still works
 		$equipmentCompany = $this->objFromFixture('DataObjectTest_EquipmentCompany', 'equipmentcompany1');
-		$equipmentCompany->SponsoredTeams()->add($teamWithoutSponsor, array('SponsorFee' => 1000));
+		$equipmentCompany->SponsoredTeams()->add($teamWithoutSponsor, ['SponsorFee' => 1000]);
 		$sponsoredTeams = $equipmentCompany->SponsoredTeams();
 		$this->assertEquals(1000, $sponsoredTeams->byID($teamWithoutSponsor->ID)->SponsorFee,
 			'Data from many_many_extraFields was not stored/extracted correctly');
@@ -1237,12 +1237,12 @@ class DataObjectTest extends SapphireTest {
 
 		// Check many_many_extraFields also works from the belongs_many_many side
 		$sponsors = $team2->Sponsors();
-		$sponsors->add($equipmentCompany, array('SponsorFee' => 750));
+		$sponsors->add($equipmentCompany, ['SponsorFee' => 750]);
 		$this->assertEquals(750, $sponsors->byID($equipmentCompany->ID)->SponsorFee,
 			'Data from many_many_extraFields was not stored/extracted correctly');
 
 		$subEquipmentCompany = $this->objFromFixture('DataObjectTest_SubEquipmentCompany', 'subequipmentcompany1');
-		$subTeam->Sponsors()->add($subEquipmentCompany, array('SponsorFee' => 1200));
+		$subTeam->Sponsors()->add($subEquipmentCompany, ['SponsorFee' => 1200]);
 		$this->assertEquals(1200, $subTeam->Sponsors()->byID($subEquipmentCompany->ID)->SponsorFee,
 			'Data from inherited many_many_extraFields was not stored/extracted correctly');
 	}
@@ -1253,29 +1253,29 @@ class DataObjectTest extends SapphireTest {
 
 		// Get all extra fields
 		$teamExtraFields = $team->manyManyExtraFields();
-		$this->assertEquals(array(
-			'Players' => array('Position' => 'Varchar(100)')
-		), $teamExtraFields);
+		$this->assertEquals([
+			'Players' => ['Position' => 'Varchar(100)']
+		], $teamExtraFields);
 
 		// Ensure fields from parent classes are included
 		$subTeam = singleton('DataObjectTest_SubTeam');
 		$teamExtraFields = $subTeam->manyManyExtraFields();
-		$this->assertEquals(array(
-			'Players' => array('Position' => 'Varchar(100)'),
-			'FormerPlayers' => array('Position' => 'Varchar(100)')
-		), $teamExtraFields);
+		$this->assertEquals([
+			'Players' => ['Position' => 'Varchar(100)'],
+			'FormerPlayers' => ['Position' => 'Varchar(100)']
+		], $teamExtraFields);
 
 		// Extra fields are immediately available on the Team class (defined in $many_many_extraFields)
 		$teamExtraFields = $team->manyManyExtraFieldsForComponent('Players');
-		$this->assertEquals($teamExtraFields, array(
+		$this->assertEquals($teamExtraFields, [
 			'Position' => 'Varchar(100)'
-		));
+		]);
 
 		// We'll have to go through the relation to get the extra fields on Player
 		$playerExtraFields = $player->manyManyExtraFieldsForComponent('Teams');
-		$this->assertEquals($playerExtraFields, array(
+		$this->assertEquals($playerExtraFields, [
 			'Position' => 'Varchar(100)'
-		));
+		]);
 
 		// Iterate through a many-many relationship and confirm that extra fields are included
 		$newTeam = new DataObjectTest_Team();
@@ -1289,7 +1289,7 @@ class DataObjectTest extends SapphireTest {
 		$newPlayer->write();
 
 		// The idea of Sam as a prop is essentially humourous.
-		$newTeam->Players()->add($newPlayer, array("Position" => "Prop"));
+		$newTeam->Players()->add($newPlayer, ["Position" => "Prop"]);
 
 		// Requery and uncache everything
 		$newTeam->flushCache();
@@ -1319,11 +1319,11 @@ class DataObjectTest extends SapphireTest {
 	 * Tests that singular_name() generates sensible defaults.
 	 */
 	public function testSingularName() {
-		$assertions = array(
+		$assertions = [
 			'DataObjectTest_Player'       => 'Data Object Test Player',
 			'DataObjectTest_Team'         => 'Data Object Test Team',
 			'DataObjectTest_Fixture'      => 'Data Object Test Fixture'
-		);
+		];
 
 		foreach($assertions as $class => $expectedSingularName) {
 			$this->assertEquals(
@@ -1338,11 +1338,11 @@ class DataObjectTest extends SapphireTest {
 	 * Tests that plural_name() generates sensible defaults.
 	 */
 	public function testPluralName() {
-		$assertions = array(
+		$assertions = [
 			'DataObjectTest_Player'       => 'Data Object Test Players',
 			'DataObjectTest_Team'         => 'Data Object Test Teams',
 			'DataObjectTest_Fixture'      => 'Data Object Test Fixtures'
-		);
+		];
 
 		foreach($assertions as $class => $expectedPluralName) {
 			$this->assertEquals(
@@ -1412,7 +1412,7 @@ class DataObjectTest extends SapphireTest {
 		// Check that the values of those fields are properly read from the database
 		$values = DataObject::get("DataObjectTest_Team", "\"DataObjectTest_Team\".\"ID\" IN
 			($obj1->ID, $obj2->ID)")->column("SubclassDatabaseField");
-		$this->assertEquals(array_intersect($values, array('obj1', 'obj2')), $values);
+		$this->assertEquals(array_intersect($values, ['obj1', 'obj2']), $values);
 	}
 
 	public function testClassNameSetForNewObjects() {
@@ -1451,10 +1451,10 @@ class DataObjectTest extends SapphireTest {
 		$company = new DataObjectTest_Company();
 
 		$this->assertEquals (
-			array (
+			[
 				'CurrentStaff'     => 'DataObjectTest_Staff',
 				'PreviousStaff'    => 'DataObjectTest_Staff'
-			),
+			],
 			$company->hasMany(),
 			'has_many strips field name data by default.'
 		);
@@ -1466,10 +1466,10 @@ class DataObjectTest extends SapphireTest {
 		);
 
 		$this->assertEquals (
-			array (
+			[
 				'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
 				'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
-			),
+			],
 			$company->hasMany(null, false),
 			'has_many returns field name data when $classOnly is false.'
 		);
@@ -1677,72 +1677,72 @@ class DataObjectTest extends SapphireTest {
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'IsRetired' => 'Boolean',
 		'ShirtNumber' => 'Varchar',
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'FavouriteTeam' => 'DataObjectTest_Team',
-	);
+	];
 
-	private static $belongs_many_many = array(
+	private static $belongs_many_many = [
 		'Teams' => 'DataObjectTest_Team'
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'Fans' => 'DataObjectTest_Fan.Favourite' // Polymorphic - Player fans
-	);
+	];
 
-	private static $belongs_to = array (
+	private static $belongs_to = [
 		'CompanyOwned'    => 'DataObjectTest_Company.Owner'
-	);
+	];
 
-	private static $searchable_fields = array(
+	private static $searchable_fields = [
 		'IsRetired',
 		'ShirtNumber'
-	);
+	];
 }
 
 class DataObjectTest_Team extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar',
 		'DatabaseField' => 'HTMLVarchar'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		"Captain" => 'DataObjectTest_Player',
 		'HasOneRelationship' => 'DataObjectTest_Player',
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'SubTeams' => 'DataObjectTest_SubTeam',
 		'Comments' => 'DataObjectTest_TeamComment',
 		'Fans' => 'DataObjectTest_Fan.Favourite' // Polymorphic - Team fans
-	);
+	];
 
-	private static $many_many = array(
+	private static $many_many = [
 		'Players' => 'DataObjectTest_Player'
-	);
+	];
 
-	private static $many_many_extraFields = array(
-		'Players' => array(
+	private static $many_many_extraFields = [
+		'Players' => [
 			'Position' => 'Varchar(100)'
-		)
-	);
+		]
+	];
 
-	private static $belongs_many_many = array(
+	private static $belongs_many_many = [
 		'Sponsors' => 'DataObjectTest_EquipmentCompany.SponsoredTeams',
 		'EquipmentSuppliers' => 'DataObjectTest_EquipmentCompany.EquipmentCustomers'
-	);
+	];
 
-	private static $summary_fields = array(
+	private static $summary_fields = [
 		'Title' => 'Custom Title',
 		'Title.UpperCase' => 'Title',
 		'Captain.ShirtNumber' => 'Captain\'s shirt number',
 		'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team'
-	);
+	];
 
 	private static $default_sort = '"Title"';
 
@@ -1757,7 +1757,7 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 }
 
 class DataObjectTest_Fixture extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		// Funny field names
 		'Data' => 'Varchar',
 		'Duplicate' => 'Varchar',
@@ -1769,18 +1769,18 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 
 		'MyFieldWithDefault' => 'Varchar',
 		'MyFieldWithAltDefault' => 'Varchar'
-	);
+	];
 
-	private static $defaults = array(
+	private static $defaults = [
 		'MyFieldWithDefault' => 'Default Value',
-	);
+	];
 
-	private static $summary_fields = array(
+	private static $summary_fields = [
 		'Data' => 'Data',
 		'DateField.Nice' => 'Date'
-	);
+	];
 
-	private static $searchable_fields = array();
+	private static $searchable_fields = [];
 
 	public function populateDefaults() {
 		parent::populateDefaults();
@@ -1791,28 +1791,28 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 }
 
 class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'SubclassDatabaseField' => 'Varchar'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		"ParentTeam" => 'DataObjectTest_Team',
-	);
+	];
 
-	private static $many_many = array(
+	private static $many_many = [
 		'FormerPlayers' => 'DataObjectTest_Player'
-	);
+	];
 
-	private static $many_many_extraFields = array(
-		'FormerPlayers' => array(
+	private static $many_many_extraFields = [
+		'FormerPlayers' => [
 			'Position' => 'Varchar(100)'
-		)
-	);
+		]
+	];
 }
 class OtherSubclassWithSameField extends DataObjectTest_Team implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'SubclassDatabaseField' => 'Varchar',
-	);
+	];
 }
 
 
@@ -1825,13 +1825,13 @@ class DataObjectTest_FieldlessSubTable extends DataObjectTest_Team implements Te
 
 class DataObjectTest_Team_Extension extends DataExtension implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'ExtendedDatabaseField' => 'Varchar'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'ExtendedHasOneRelationship' => 'DataObjectTest_Player'
-	);
+	];
 
 	public function getExtendedDynamicField() {
 		return "extended dynamic field";
@@ -1841,9 +1841,9 @@ class DataObjectTest_Team_Extension extends DataExtension implements TestOnly {
 
 class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar(50)'
-	);
+	];
 
 	public function validate() {
 		if(!empty($this->Name)) {
@@ -1856,85 +1856,85 @@ class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 
 class DataObjectTest_Company extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar'
-	);
+	];
 
-	private static $has_one = array (
+	private static $has_one = [
 		'CEO'         => 'DataObjectTest_CEO',
 		'PreviousCEO' => 'DataObjectTest_CEO',
 		'Owner'       => 'DataObject' // polymorphic
-	);
+	];
 
-	private static $has_many = array (
+	private static $has_many = [
 		'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
 		'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
-	);
+	];
 }
 
 class DataObjectTest_EquipmentCompany extends DataObjectTest_Company implements TestOnly {
-	private static $many_many = array(
+	private static $many_many = [
 		'SponsoredTeams' => 'DataObjectTest_Team',
 		'EquipmentCustomers' => 'DataObjectTest_Team'
-	);
+	];
 
-	private static $many_many_extraFields = array(
-		'SponsoredTeams' => array(
+	private static $many_many_extraFields = [
+		'SponsoredTeams' => [
 			'SponsorFee' => 'Int'
-		)
-	);
+		]
+	];
 }
 
 class DataObjectTest_SubEquipmentCompany extends DataObjectTest_EquipmentCompany implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'SubclassDatabaseField' => 'Varchar'
-	);
+	];
 }
 
 class DataObjectTest_Staff extends DataObject implements TestOnly {
-	private static $has_one = array (
+	private static $has_one = [
 		'CurrentCompany'  => 'DataObjectTest_Company',
 		'PreviousCompany' => 'DataObjectTest_Company'
-	);
+	];
 }
 
 class DataObjectTest_CEO extends DataObjectTest_Staff {
-	private static $belongs_to = array (
+	private static $belongs_to = [
 		'Company'         => 'DataObjectTest_Company.CEO',
 		'PreviousCompany' => 'DataObjectTest_Company.PreviousCEO',
 		'CompanyOwned'    => 'DataObjectTest_Company.Owner'
-	);
+	];
 }
 
 class DataObjectTest_TeamComment extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar',
 		'Comment' => 'Text'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Team' => 'DataObjectTest_Team'
-	);
+	];
 
 }
 
 class DataObjectTest_Fan extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar(255)',
 		'Email' => 'Varchar',
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Favourite' => 'DataObject', // Polymorphic relation
 		'SecondFavourite' => 'DataObject'
-	);
+	];
 }
 
 class DataObjectTest_ExtendedTeamComment extends DataObjectTest_TeamComment {
-	private static $db = array(
+	private static $db = [
 		'Comment' => 'HTMLText'
-	);
+	];
 }
 
 DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');

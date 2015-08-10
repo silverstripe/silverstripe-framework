@@ -14,9 +14,9 @@ class Image extends File implements Flushable {
 
 	private static $backend = "GDBackend";
 
-	private static $casting = array(
+	private static $casting = [
 		'Tag' => 'HTMLText',
-	);
+	];
 
 	/**
 	 * @config
@@ -702,10 +702,10 @@ class Image extends File implements Flushable {
 		$args = func_get_args();
 
 		if($this->exists()) {
-			$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
+			$cacheFile = call_user_func_array([$this, "cacheFilename"], $args);
 
 			if(!file_exists(Director::baseFolder()."/".$cacheFile) || self::$flush) {
-				call_user_func_array(array($this, "generateFormattedImage"), $args);
+				call_user_func_array([$this, "generateFormattedImage"], $args);
 			}
 
 			$cached = new Image_Cached($cacheFile);
@@ -749,12 +749,12 @@ class Image extends File implements Flushable {
 	public function generateFormattedImage($format) {
 		$args = func_get_args();
 
-		$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
+		$cacheFile = call_user_func_array([$this, "cacheFilename"], $args);
 
-		$backend = Injector::inst()->createWithArgs(self::config()->backend, array(
+		$backend = Injector::inst()->createWithArgs(self::config()->backend, [
 			Director::baseFolder()."/" . $this->Filename,
 			$args
-		));
+		]);
 
 		if($backend->hasImageResource()) {
 
@@ -764,7 +764,7 @@ class Image extends File implements Flushable {
 				array_shift($args);
 				array_unshift($args, $backend);
 
-				$backend = call_user_func_array(array($this, $generateFunc), $args);
+				$backend = call_user_func_array([$this, $generateFunc], $args);
 				if($backend){
 					$backend->writeTo(Director::baseFolder()."/" . $cacheFile);
 				}
@@ -844,7 +844,7 @@ class Image extends File implements Flushable {
 	 */
 	private function getFilenamePatterns($filename) {
 		$methodNames = $this->allMethodNames(true);
-		$generateFuncs = array();
+		$generateFuncs = [];
 		foreach($methodNames as $methodName) {
 			if(substr($methodName, 0, 8) == 'generate') {
 				$format = substr($methodName, 8);
@@ -854,19 +854,19 @@ class Image extends File implements Flushable {
 		// All generate functions may appear any number of times in the image cache name.
 		$generateFuncs = implode('|', $generateFuncs);
 		$base64Match = "[a-zA-Z0-9\/\r\n+]*={0,2}";
-		return array(
+		return [
 				'FullPattern' => "/^((?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-)+"
 									. preg_quote($filename) . "$/i",
 				'GeneratorPattern' => "/(?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-/i"
-		);
+		];
 	}
 
 	/**
 	 * Generate a list of images that were generated from this image
 	 */
 	private function getGeneratedImages() {
-		$generatedImages = array();
-		$cachedFiles = array();
+		$generatedImages = [];
+		$cachedFiles = [];
 
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . '/';
 		$cacheDir = Director::getAbsFile($folder . '_resampled/');
@@ -891,18 +891,18 @@ class Image extends File implements Flushable {
 					$subFilename = substr($cfile, 0, -1 * strlen($this->Name));
 					preg_match_all($pattern['GeneratorPattern'], $subFilename, $subMatches, PREG_SET_ORDER);
 
-					$generatorArray = array();
+					$generatorArray = [];
 					foreach ($subMatches as $singleMatch) {
-						$generatorArray[] = array('Generator' => $singleMatch['Generator'],
-						'Args' => json_decode(base64_decode($singleMatch['Args'])));
+						$generatorArray[] = ['Generator' => $singleMatch['Generator'],
+						'Args' => json_decode(base64_decode($singleMatch['Args']))];
 					}
 
 						// Using array_reverse is important, as a cached image will
 						// have the generators settings in the filename in reversed
 						// order: the last generator given in the filename is the
 						// first that was used. Later resizements are prepended
-					$generatedImages[] = array ( 'FileName' => $cacheDir . $cfile,
-							'Generators' => array_reverse($generatorArray) );
+					$generatedImages[] = [ 'FileName' => $cacheDir . $cfile,
+							'Generators' => array_reverse($generatorArray) ];
 				}
 			}
 		}
@@ -924,14 +924,14 @@ class Image extends File implements Flushable {
 
 		$numGenerated = 0;
 		$generatedImages = $this->getGeneratedImages();
-		$doneList = array();
+		$doneList = [];
 		foreach($generatedImages as $singleImage) {
 			$cachedImage = $this;
 			if (in_array($singleImage['FileName'], $doneList) ) continue;
 
 			foreach($singleImage['Generators'] as $singleGenerator) {
-				$args = array_merge(array($singleGenerator['Generator']), $singleGenerator['Args']);
-				$cachedImage = call_user_func_array(array($cachedImage, "getFormattedImage"), $args);
+				$args = array_merge([$singleGenerator['Generator']], $singleGenerator['Args']);
+				$cachedImage = call_user_func_array([$cachedImage, "getFormattedImage"], $args);
 			}
 			$doneList[] = $singleImage['FileName'];
 			$numGenerated++;
@@ -1041,7 +1041,7 @@ class Image_Cached extends Image {
 	 *                             Singletons don't have their defaults set.
 	 */
 	public function __construct($filename = null, $isSingleton = false) {
-		parent::__construct(array(), $isSingleton);
+		parent::__construct([], $isSingleton);
 		$this->ID = -1;
 		$this->Filename = $filename;
 	}

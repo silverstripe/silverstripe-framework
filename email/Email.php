@@ -81,12 +81,12 @@ class Email extends ViewableData {
 	/**
 	 * @param array $customHeaders A map of header-name -> header-value
 	 */
-	protected $customHeaders = array();
+	protected $customHeaders = [];
 
 	/**
 	 * @param array $attachements Internal, use {@link attachFileFromString()} or {@link attachFile()}
 	 */
-	protected $attachments = array();
+	protected $attachments = [];
 
 	/**
 	 * @param boolean $
@@ -169,11 +169,11 @@ class Email extends ViewableData {
 	}
 
 	public function attachFileFromString($data, $filename, $mimetype = null) {
-		$this->attachments[] = array(
+		$this->attachments[] = [
 			'contents' => $data,
 			'filename' => $filename,
 			'mimetype' => $mimetype,
-		);
+		];
 		return $this;
 	}
 
@@ -313,7 +313,7 @@ class Email extends ViewableData {
 
 	protected function templateData() {
 		if($this->template_data) {
-			return $this->template_data->customise(array(
+			return $this->template_data->customise([
 				"To" => $this->to,
 				"Cc" => $this->cc,
 				"Bcc" => $this->bcc,
@@ -322,7 +322,7 @@ class Email extends ViewableData {
 				"Body" => $this->body,
 				"BaseURL" => $this->BaseURL(),
 				"IsEmail" => true,
-			));
+			]);
 		} else {
 			return $this;
 		}
@@ -659,7 +659,7 @@ class Email extends ViewableData {
 				);
 				return '<span class="codedirection">' . strrev($email) . '</span>';
 			case 'visible' :
-				$obfuscated = array('@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] ');
+				$obfuscated = ['@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] '];
 				return strtr($email, $obfuscated);
 			case 'hex' :
 				$encoded = '';

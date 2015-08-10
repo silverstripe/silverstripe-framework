@@ -17,8 +17,8 @@ define('FRAMEWORK_NAME', 'framework');
 if (version_compare(phpversion(), '5.3.3', '<')) {
 	header("HTTP/1.1 500 Server Error");
 	echo str_replace(
-		array('$PHPVersion', 'sapphire'),
-		array(phpversion(), FRAMEWORK_NAME),
+		['$PHPVersion', 'sapphire'],
+		[phpversion(), FRAMEWORK_NAME],
 		file_get_contents(FRAMEWORK_NAME . "/dev/install/php5-required.html"));
 	die();
 }

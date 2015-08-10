@@ -14,7 +14,7 @@ interface Cookie_Backend {
 	 *
 	 * @param array $cookies The existing cookies to load into the cookie jar
 	 */
-	public function __construct($cookies = array());
+	public function __construct($cookies = []);
 	
 	/**
 	 * Set a cookie

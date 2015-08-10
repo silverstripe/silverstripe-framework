@@ -239,7 +239,7 @@ abstract class SS_Database {
 	 * @return array List of field values with the keys as escaped column names
 	 */
 	protected function escapeColumnKeys($fieldValues) {
-		$out = array();
+		$out = [];
 		foreach($fieldValues as $field => $value) {
 			$out[$this->escapeIdentifier($field)] = $value;
 		}
@@ -279,7 +279,7 @@ abstract class SS_Database {
 					if(!empty($writeInfo['where'])) {
 						$query->addWhere($writeInfo['where']);
 					} elseif(!empty($writeInfo['id'])) {
-						$query->addWhere(array('"ID"' => $writeInfo['id']));
+						$query->addWhere(['"ID"' => $writeInfo['id']]);
 					}
 
 					// Test to see if this update query shouldn't, in fact, be an insert
@@ -931,7 +931,7 @@ abstract class SS_Database {
 	 * @deprecated since version 4.0 Use DB::require_table() instead
 	 */
 	public function requireTable($table, $fieldSchema = null, $indexSchema = null,
-		$hasAutoIncPK = true, $options = array(), $extensions = false
+		$hasAutoIncPK = true, $options = [], $extensions = false
 	) {
 		Deprecation::notice('4.0', 'Use DB::require_table() instead');
 		return $this->getSchemaManager()->requireTable(
@@ -982,7 +982,7 @@ abstract class SS_Database {
 	/**
 	 * @deprecated since version 4.0 Use DB::build_sql() instead
 	 */
-	public function sqlQueryToString(SQLExpression $query, &$parameters = array()) {
+	public function sqlQueryToString(SQLExpression $query, &$parameters = []) {
 		Deprecation::notice('4.0', 'Use DB::build_sql() instead');
 		return $this->getQueryBuilder()->buildSQL($query, $parameters);
 	}

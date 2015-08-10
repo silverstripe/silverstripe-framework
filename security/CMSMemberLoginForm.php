@@ -128,7 +128,7 @@ class CMSMemberLoginForm extends LoginForm {
 			'CMSMemberLoginForm.PASSWORDEXPIRED',
 			'<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>',
 			'Message displayed to user if their session cannot be restored',
-			array('link' => $changePasswordURLATT)
+			['link' => $changePasswordURLATT]
 		);
 
 		// Redirect to change password page

@@ -34,7 +34,7 @@ class ToggleCompositeField extends CompositeField {
 	 *
 	 * @return HTMLText
 	 */
-	public function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = []) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
@@ -55,10 +55,10 @@ class ToggleCompositeField extends CompositeField {
 	 * {@inheritdoc}
 	 */
 	public function getAttributes() {
-		$attributes = array(
+		$attributes = [
 			'id' => $this->id(),
 			'class' => $this->extraClass(),
-		);
+		];
 
 		if($this->getStartClosed()) {
 			$attributes['class'] .= ' ss-toggle ss-toggle-start-closed';

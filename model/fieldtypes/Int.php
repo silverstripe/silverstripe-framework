@@ -21,21 +21,21 @@ class Int extends DBField {
 	}
 
 	public function requireField() {
-		$parts=Array(
+		$parts=[
 			'datatype'=>'int',
 			'precision'=>11,
 			'null'=>'not null',
 			'default'=>$this->defaultVal,
-			'arrayValue'=>$this->arrayValue);
+			'arrayValue'=>$this->arrayValue];
 
-		$values=Array('type'=>'int', 'parts'=>$parts);
+		$values=['type'=>'int', 'parts'=>$parts];
 		DB::require_field($this->tableName, $this->name, $values);
 	}
 
 	public function Times() {
 		$output = new ArrayList();
 		for( $i = 0; $i < $this->value; $i++ )
-			$output->push( new ArrayData( array( 'Number' => $i + 1 ) ) );
+			$output->push( new ArrayData( [ 'Number' => $i + 1 ] ) );
 
 		return $output;
 	}

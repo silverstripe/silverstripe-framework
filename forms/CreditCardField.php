@@ -18,15 +18,15 @@ class CreditCardField extends TextField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'autocomplete' => 'off',
 				'maxlength' => 4,
 				'size' => 4
-			)
+			]
 		);
 	}
 
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$parts = $this->value;
 		if(!is_array($parts)) $parts = explode("\n", chunk_split($parts,4,"\n"));
 		$parts = array_pad($parts, 4, "");
@@ -78,7 +78,7 @@ class CreditCardField extends TextField {
 					_t(
 						'Form.VALIDATIONCREDITNUMBER',
 						"Please ensure you have entered the {number} credit card number correctly",
-						array('number' => $number)
+						['number' => $number]
 					),
 					"validation",
 					false

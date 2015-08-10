@@ -4,7 +4,7 @@ class DbDatetimeTest extends FunctionalTest {
 
 	protected static $fixture_file = 'DbDatetimeTest.yml';
 
-	protected $extraDataObjects = array('DbDatetimeTest_Team');
+	protected $extraDataObjects = ['DbDatetimeTest_Team'];
 
 	protected $offset;
 
@@ -96,7 +96,7 @@ class DbDatetimeTest extends FunctionalTest {
 			$offset);
 
 		$query = new SQLSelect();
-		$query->setSelect(array());
+		$query->setSelect([]);
 		$query->selectField($this->adapter->datetimeIntervalClause('"Created"', '-15 Minutes'), 'test')
 			->setFrom('"DbDateTimeTest_Team"')
 			->setLimit(1);
@@ -124,7 +124,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->matchesRoughly($result, -45 * 60, 'now - 45 minutes ahead', $offset);
 
 		$query = new SQLSelect();
-		$query->setSelect(array());
+		$query->setSelect([]);
 		$query->selectField($this->adapter->datetimeDifferenceClause('"LastEdited"', '"Created"'), 'test')
 			->setFrom('"DbDateTimeTest_Team"')
 			->setLimit(1);
@@ -139,7 +139,7 @@ class DbDatetimeTest extends FunctionalTest {
 }
 
 class DbDateTimeTest_Team extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar'
-	);
+	];
 }

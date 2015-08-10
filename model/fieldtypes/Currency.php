@@ -52,7 +52,7 @@ class Currency extends Decimal {
 			$this->value = $value;
 
 		} else if(preg_match('/-?\$?[0-9,]+(.[0-9]+)?([Ee][0-9]+)?/', $value, $matches)) {
-			$this->value = str_replace(array('$',',',$this->config()->currency_symbol),'',$matches[0]);
+			$this->value = str_replace(['$',',',$this->config()->currency_symbol],'',$matches[0]);
 
 		} else {
 			$this->value = 0;

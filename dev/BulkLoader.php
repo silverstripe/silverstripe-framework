@@ -69,7 +69,7 @@ abstract class BulkLoader extends ViewableData {
 	 *
 	 * @var array
 	 */
-	public $columnMap = array();
+	public $columnMap = [];
 
 	/**
 	 * Find a has_one relation based on a specific column value.
@@ -87,7 +87,7 @@ abstract class BulkLoader extends ViewableData {
 	 *
 	 * @var array
 	 */
-	public $relationCallbacks = array();
+	public $relationCallbacks = [];
 
 	/**
 	 * Specifies how to determine duplicates based on one or more provided fields
@@ -116,7 +116,7 @@ abstract class BulkLoader extends ViewableData {
 	 *
 	 * @var array
 	 */
-	public $duplicateChecks = array();
+	public $duplicateChecks = [];
 
 	/**
 	 * @var Boolean $clearBeforeImport Delete ALL records before importing.
@@ -214,7 +214,7 @@ abstract class BulkLoader extends ViewableData {
 	 * @return array
 	 **/
 	public function getImportSpec() {
-		$spec = array();
+		$spec = [];
 
 		// get database columns (fieldlabels include fieldname as a key)
 		// using $$includerelations flag as false, so that it only contain $db fields
@@ -272,24 +272,24 @@ class BulkLoader_Result extends Object {
 	 * array(array('ID'=>1, 'ClassName'=>'Member', 'Message'=>'Updated existing record based on ParentID relation'))
 	 * </code>
 	 */
-	protected $created = array();
+	protected $created = [];
 
 	/**
 	 * @var array (see {@link $created})
 	 */
-	protected $updated = array();
+	protected $updated = [];
 
 	/**
 	 * @var array (see {@link $created})
 	 */
-	protected $deleted = array();
+	protected $deleted = [];
 
 	/**
 	 * Stores the last change.
 	 * It is in the same format as {@link $created} but with an additional key, "ChangeType", which will be set to
 	 * one of 3 strings: "created", "updated", or "deleted"
 	 */
-	protected $lastChange = array();
+	protected $lastChange = [];
 
 	/**
 	 * Returns the count of all objects which were
@@ -360,11 +360,11 @@ class BulkLoader_Result extends Object {
 	 * @param $message string
 	 */
 	public function addCreated($obj, $message = null) {
-		$this->created[] = $this->lastChange = array(
+		$this->created[] = $this->lastChange = [
 			'ID' => $obj->ID,
 			'ClassName' => $obj->class,
 			'Message' => $message
-		);
+		];
 		$this->lastChange['ChangeType'] = 'created';
 	}
 
@@ -373,11 +373,11 @@ class BulkLoader_Result extends Object {
 	 * @param $message string
 	 */
 	public function addUpdated($obj, $message = null) {
-		$this->updated[] = $this->lastChange = array(
+		$this->updated[] = $this->lastChange = [
 			'ID' => $obj->ID,
 			'ClassName' => $obj->class,
 			'Message' => $message
-		);
+		];
 		$this->lastChange['ChangeType'] = 'updated';
 	}
 
@@ -386,11 +386,11 @@ class BulkLoader_Result extends Object {
 	 * @param $message string
 	 */
 	public function addDeleted($obj, $message = null) {
-		$this->deleted[] = $this->lastChange = array(
+		$this->deleted[] = $this->lastChange = [
 			'ID' => $obj->ID,
 			'ClassName' => $obj->class,
 			'Message' => $message
-		);
+		];
 		$this->lastChange['ChangeType'] = 'deleted';
 	}
 

@@ -38,21 +38,21 @@ class GridFieldFooter implements GridField_HTMLProvider {
 	public function getHTMLFragments($gridField) {
 		$count = $gridField->getList()->count();
 
-		$forTemplate = new ArrayData(array(
+		$forTemplate = new ArrayData([
 			'ShowRecordCount' => $this->showrecordcount,
 			'Message' => $this->message,
 			'FirstShownRecord' => 1,
 			'LastShownRecord' => $count,
 			'NumRecords' => $count
-		));
+		]);
 
-		return array(
+		return [
 			'footer' => $forTemplate->renderWith(
 				'GridFieldFooter',
-				array(
+				[
 					'Colspan' => count($gridField->getColumns())
-				)
+				]
 			)
-		);
+		];
 	}
 }

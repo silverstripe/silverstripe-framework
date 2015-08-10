@@ -95,7 +95,7 @@ class Session {
 	 * @config
 	 * @var array
 	 */
-	private static $session_ips = array();
+	private static $session_ips = [];
 
 	/**
 	 * @config
@@ -124,9 +124,9 @@ class Session {
 	/**
 	 * Session data
 	 */
-	protected $data = array();
+	protected $data = [];
 
-	protected $changedData = array();
+	protected $changedData = [];
 
 	protected function userAgent() {
 		if (isset($_SERVER['HTTP_USER_AGENT'])) {
@@ -348,7 +348,7 @@ class Session {
 			return Controller::curr()->getSession();
 		} else {
 			if(!self::$default_session) {
-				self::$default_session = Injector::inst()->create('Session', isset($_SESSION) ? $_SESSION : array());
+				self::$default_session = Injector::inst()->create('Session', isset($_SESSION) ? $_SESSION : []);
 			}
 
 			return self::$default_session;
@@ -380,7 +380,7 @@ class Session {
 			if($sid) session_id($sid);
 			session_start();
 
-			$this->data = isset($_SESSION) ? $_SESSION : array();
+			$this->data = isset($_SESSION) ? $_SESSION : [];
 		}
 
 		// Modify the timeout behaviour so it's the *inactive* time before the session expires.
@@ -406,7 +406,7 @@ class Session {
 			// Clean up the superglobal - session_destroy does not do it.
 			// http://nz1.php.net/manual/en/function.session-destroy.php
 			unset($_SESSION);
-			$this->data = array();
+			$this->data = [];
 		}
 	}
 
@@ -546,7 +546,7 @@ class Session {
 	protected function recursivelyApply($data, &$dest) {
 		foreach($data as $k => $v) {
 			if(is_array($v)) {
-				if(!isset($dest[$k]) || !is_array($dest[$k])) $dest[$k] = array();
+				if(!isset($dest[$k]) || !is_array($dest[$k])) $dest[$k] = [];
 				$this->recursivelyApply($v, $dest[$k]);
 			} else {
 				$dest[$k] = $v;

@@ -21,32 +21,32 @@
  */
 class Group extends DataObject {
 
-	private static $db = array(
+	private static $db = [
 		"Title" => "Varchar(255)",
 		"Description" => "Text",
 		"Code" => "Varchar(255)",
 		"Locked" => "Boolean",
 		"Sort" => "Int",
 		"HtmlEditorConfig" => "Text"
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		"Parent" => "Group",
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		"Permissions" => "Permission",
 		"Groups" => "Group"
-	);
+	];
 
-	private static $many_many = array(
+	private static $many_many = [
 		"Members" => "Member",
 		"Roles" => "PermissionRole",
-	);
+	];
 
-	private static $extensions = array(
+	private static $extensions = [
 		"Hierarchy",
-	);
+	];
 
 	public function populateDefaults() {
 		parent::populateDefaults();
@@ -113,7 +113,7 @@ class Group extends DataObject {
 			$config->addComponents(new GridFieldExportButton('buttons-after-left'));
 			$config->addComponents(new GridFieldPrintButton('buttons-after-left'));
 			$config->getComponentByType('GridFieldAddExistingAutocompleter')
-				->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
+				->setResultsFormat('$Title ($Email)')->setSearchFields(['FirstName', 'Surname', 'Email']);
 			$config->getComponentByType('GridFieldDetailForm')
 				->setValidator(new Member_Validator())
 				->setItemEditFormCallback(function($form, $component) use($group) {
@@ -197,8 +197,8 @@ class Group extends DataObject {
 				$groupRoleIDs = $groupRoles->column('ID') + $inheritedRoles->column('ID');
 				$inheritedRoleIDs = $inheritedRoles->column('ID');
 			} else {
-				$groupRoleIDs = array();
-				$inheritedRoleIDs = array();
+				$groupRoleIDs = [];
+				$inheritedRoleIDs = [];
 			}
 
 			$rolesField = ListboxField::create('Roles', false, $allRoles->map()->toArray())
@@ -279,8 +279,8 @@ class Group extends DataObject {
 	 * @return array
 	 */
 	public function collateFamilyIDs() {
-		$familyIDs = array();
-		$chunkToAdd = array($this->ID);
+		$familyIDs = [];
+		$chunkToAdd = [$this->ID];
 
 		while($chunkToAdd) {
 			$familyIDs = array_merge($familyIDs,$chunkToAdd);
@@ -408,7 +408,7 @@ class Group extends DataObject {
 				// without this check, a user would be able to add himself to an administrators group
 				// with just access to the "Security" admin interface
 				Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin") &&
-				!Permission::get()->filter(array('GroupID' => $this->ID, 'Code' => 'ADMIN'))->exists()
+				!Permission::get()->filter(['GroupID' => $this->ID, 'Code' => 'ADMIN'])->exists()
 			)
 		) {
 			return true;

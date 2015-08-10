@@ -13,7 +13,7 @@
  */
 class HtmlEditorConfig {
 
-	private static $configs = array();
+	private static $configs = [];
 
 	private static $current = null;
 
@@ -62,7 +62,7 @@ class HtmlEditorConfig {
 	 * @return array
 	 */
 	public static function get_available_configs_map() {
-		$configs = array();
+		$configs = [];
 
 		foreach(self::$configs as $identifier => $config) {
 			$configs[$identifier] = $config->getOption('friendly_name');
@@ -74,7 +74,7 @@ class HtmlEditorConfig {
 	/**
 	 * Holder for all TinyMCE settings _except_ plugins and buttons
 	 */
-	protected $settings = array(
+	protected $settings = [
 		'friendly_name' => '(Please set a friendly name for this config)',
 		'priority' => 0,
 		'mode' => "none", // initialized through HtmlEditorField.js redraw() logic
@@ -96,29 +96,29 @@ class HtmlEditorConfig {
 		'relative_urls' => true,
 		'verify_html' => true,
 		'browser_spellcheck' => true,
-	);
+	];
 
 	/**
 	 * Holder list of enabled plugins
 	 */
-	protected $plugins = array(
+	protected $plugins = [
 		'contextmenu' => null,
 		'table' => null,
 		'emotions' => null,
 		'paste' => null,
-	);
+	];
 
 	/**
 	 * Holder list of buttons, organised by line
 	 */
-	protected $buttons = array(
-		1 => array('bold','italic','underline','strikethrough','separator',
+	protected $buttons = [
+		1 => ['bold','italic','underline','strikethrough','separator',
 			'justifyleft','justifycenter','justifyright','justifyfull','formatselect','separator',
-			'bullist','numlist','outdent','indent','blockquote','hr','charmap'),
-		2 => array('undo','redo','separator','cut','copy','paste','pastetext','pasteword','separator',
-			'advcode','search','replace','selectall','visualaid','separator','tablecontrols'),
-		3 => array()
-	);
+			'bullist','numlist','outdent','indent','blockquote','hr','charmap'],
+		2 => ['undo','redo','separator','cut','copy','paste','pastetext','pasteword','separator',
+			'advcode','search','replace','selectall','visualaid','separator','tablecontrols'],
+		3 => []
+	];
 
 	/**
 	 * Get the current value of an option
@@ -217,7 +217,7 @@ class HtmlEditorConfig {
 			$buttons = func_get_args();
 			$line = array_shift($buttons);
 		}
-		$this->buttons[$line] = is_array($buttons) ? $buttons : array($buttons);
+		$this->buttons[$line] = is_array($buttons) ? $buttons : [$buttons];
 		return $this;
 	}
 
@@ -307,15 +307,15 @@ class HtmlEditorConfig {
 		require_once 'tinymce/tiny_mce_gzip.php';
 		$useGzip = Config::inst()->get('HtmlEditorField', 'use_gzip');
 
-		$configs = array();
-		$externalPlugins = array();
-		$internalPlugins = array();
-		$languages = array();
+		$configs = [];
+		$externalPlugins = [];
+		$internalPlugins = [];
+		$languages = [];
 
 		foreach (self::$configs as $configID => $config) {
 			$settings = $config->settings;
 			// parse plugins
-			$configPlugins = array();
+			$configPlugins = [];
 			foreach($config->plugins as $plugin => $path) {
 				if(!$path) {
 					$configPlugins[] = $plugin;
@@ -351,12 +351,12 @@ class HtmlEditorConfig {
 		// tinyMCE JS requirement
 		if ( $useGzip )
 		{
-			$tag = TinyMCE_Compressor::renderTag(array(
+			$tag = TinyMCE_Compressor::renderTag([
 				'url' => THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
 				'plugins' => implode(',', $internalPlugins),
 				'themes' => 'advanced',
 				'languages' => implode(",", array_filter($languages))
-			), true);
+			], true);
 			preg_match('/src="([^"]*)"/', $tag, $matches);
 			Requirements::javascript(html_entity_decode($matches[1]));
 		}

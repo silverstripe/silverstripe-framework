@@ -18,7 +18,7 @@
  */
 class Text extends StringField {
 
-	private static $casting = array(
+	private static $casting = [
 		"AbsoluteLinks" => "Text",
 		"BigSummary" => "Text",
 		"ContextSummary" => "Text",
@@ -30,24 +30,24 @@ class Text extends StringField {
 		'EscapeXML' => 'Text',
 		'LimitWordCount' => 'Text',
 		'LimitWordCountXML' => 'HTMLText',
-	);
+	];
 
 	/**
  	 * (non-PHPdoc)
  	 * @see DBField::requireField()
  	 */
 	public function requireField() {
-		$parts = array(
+		$parts = [
 			'datatype' => 'mediumtext',
 			'character set' => 'utf8',
 			'collate' => 'utf8_general_ci',
 			'arrayValue' => $this->arrayValue
-		);
+		];
 
-		$values= array(
+		$values= [
 			'type' => 'text',
 			'parts' => $parts
-		);
+		];
 
 		DB::require_field($this->tableName, $this->name, $values, $this->default);
 	}
@@ -70,7 +70,7 @@ class Text extends StringField {
 			user_error("Text::LimitSentence() expects one numeric argument", E_USER_NOTICE);
 		}
 
-		$output = array();
+		$output = [];
 		$data = trim(Convert::xml2raw($this->value));
 		$sentences = explode('.', $data);
 

@@ -48,7 +48,7 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 		$data .= SS_Backtrace::get_rendered_backtrace($errcontext);
 
 		// Compile extra data
-		$blacklist = array('message', 'timestamp', 'priority', 'priorityName');
+		$blacklist = ['message', 'timestamp', 'priority', 'priorityName'];
 		$extras = array_diff_key($event, array_combine($blacklist, $blacklist));
 		if($extras) {
 			$data .= "<h3>Details</h3>\n";
@@ -71,10 +71,10 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 
 		$subject = "[$errorType] in $relfile:{$errline} (http://{$host}{$uri})";
 
-		return array(
+		return [
 			'subject' => $subject,
 			'data' => $data
-		);
+		];
 	}
 
 }

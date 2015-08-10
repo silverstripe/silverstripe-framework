@@ -8,8 +8,8 @@ class ListboxFieldTest extends SapphireTest {
 
 	protected static $fixture_file = 'ListboxFieldTest.yml';
 
-	protected $extraDataObjects = array('ListboxFieldTest_DataObject', 'ListboxFieldTest_Article',
-		'ListboxFieldTest_Tag');
+	protected $extraDataObjects = ['ListboxFieldTest_DataObject', 'ListboxFieldTest_Article',
+		'ListboxFieldTest_Tag'];
 
 	public function testFieldWithManyManyRelationship() {
 		$articleWithTags = $this->objFromFixture('ListboxFieldTest_Article', 'articlewithtags');
@@ -37,7 +37,7 @@ class ListboxFieldTest extends SapphireTest {
 		$field = new ListboxField("Tags", "Test field", DataObject::get("ListboxFieldTest_Tag")->map()->toArray());
 		$field->setMultiple(true);
 		$field->setValue(null, $articleWithTags);
-		$field->setDisabledItems(array($tag1->ID, $tag3->ID));
+		$field->setDisabledItems([$tag1->ID, $tag3->ID]);
 
 		$p = new CSSContentParser($field->Field());
 		$tag1xml = $p->getByXpath('//option[@value=' . $tag1->ID . ']');
@@ -52,7 +52,7 @@ class ListboxFieldTest extends SapphireTest {
 	}
 
 	public function testSaveIntoNullValueWithMultipleOff() {
-		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
+		$choices = ['a' => 'a value', 'b' => 'b value','c' => 'c value'];
 		$field = new ListboxField('Choices', 'Choices', $choices);
 		$field->multiple = true;
 
@@ -65,7 +65,7 @@ class ListboxFieldTest extends SapphireTest {
 	}
 
 	public function testSaveIntoNullValueWithMultipleOn() {
-		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
+		$choices = ['a' => 'a value', 'b' => 'b value','c' => 'c value'];
 		$field = new ListboxField('Choices', 'Choices', $choices);
 		$field->multiple = true;
 
@@ -78,7 +78,7 @@ class ListboxFieldTest extends SapphireTest {
 	}
 
 	public function testSaveInto() {
-		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
+		$choices = ['a' => 'a value', 'b' => 'b value','c' => 'c value'];
 		$field = new ListboxField('Choices', 'Choices', $choices);
 		$field->multiple = false;
 
@@ -89,13 +89,13 @@ class ListboxFieldTest extends SapphireTest {
 	}
 
 	public function testSaveIntoMultiple() {
-		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
+		$choices = ['a' => 'a value', 'b' => 'b value','c' => 'c value'];
 		$field = new ListboxField('Choices', 'Choices', $choices);
 		$field->multiple = true;
 
 		// As array
 		$obj1 = new ListboxFieldTest_DataObject();
-		$field->setValue(array('a', 'c'));
+		$field->setValue(['a', 'c']);
 		$field->saveInto($obj1);
 		$this->assertEquals('a,c', $obj1->Choices);
 
@@ -115,43 +115,43 @@ class ListboxFieldTest extends SapphireTest {
 		$field->setMultiple(true);
 
 		// Save new relations
-		$field->setValue(array($tag1->ID,$tag2->ID));
+		$field->setValue([$tag1->ID,$tag2->ID]);
 		$field->saveInto($article);
 		$article = Dataobject::get_by_id('ListboxFieldTest_Article', $article->ID, false);
-		$this->assertEquals(array($tag1->ID, $tag2->ID), $article->Tags()->sort('ID')->column('ID'));
+		$this->assertEquals([$tag1->ID, $tag2->ID], $article->Tags()->sort('ID')->column('ID'));
 
 		// Remove existing relation
-		$field->setValue(array($tag1->ID));
+		$field->setValue([$tag1->ID]);
 		$field->saveInto($article);
 		$article = Dataobject::get_by_id('ListboxFieldTest_Article', $article->ID, false);
-		$this->assertEquals(array($tag1->ID), $article->Tags()->sort('ID')->column('ID'));
+		$this->assertEquals([$tag1->ID], $article->Tags()->sort('ID')->column('ID'));
 
 		// Set NULL value
 		$field->setValue(null);
 		$field->saveInto($article);
 		$article = Dataobject::get_by_id('ListboxFieldTest_Article', $article->ID, false);
-		$this->assertEquals(array(), $article->Tags()->sort('ID')->column('ID'));
+		$this->assertEquals([], $article->Tags()->sort('ID')->column('ID'));
 	}
 
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetValueFailsOnArrayIfMultipleIsOff() {
-		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
+		$choices = ['a' => 'a value', 'b' => 'b value','c' => 'c value'];
 		$field = new ListboxField('Choices', 'Choices', $choices);
 		$field->multiple = false;
 
 		// As array (type error)
 		$failsOnArray = false;
 		$obj = new ListboxFieldTest_DataObject();
-		$field->setValue(array('a', 'c'));
+		$field->setValue(['a', 'c']);
 	}
 
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetValueFailsOnStringIfChoiceInvalidAndMultipleIsOff() {
-		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
+		$choices = ['a' => 'a value', 'b' => 'b value','c' => 'c value'];
 		$field = new ListboxField('Choices', 'Choices', $choices);
 		$field->multiple = false;
 
@@ -161,7 +161,7 @@ class ListboxFieldTest extends SapphireTest {
 	}
 
 	public function testFieldRenderingMultipleOff() {
-		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
+		$choices = ['a' => 'a value', 'b' => 'b value','c' => 'c value'];
 		$field = new ListboxField('Choices', 'Choices', $choices);
 		$field->multiple = true;
 		$field->setValue('a');
@@ -174,7 +174,7 @@ class ListboxFieldTest extends SapphireTest {
 	}
 
 	public function testFieldRenderingMultipleOn() {
-		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
+		$choices = ['a' => 'a value', 'b' => 'b value','c' => 'c value'];
 		$field = new ListboxField('Choices', 'Choices', $choices);
 		$field->multiple = true;
 		$field->setValue('a,c');
@@ -190,17 +190,17 @@ class ListboxFieldTest extends SapphireTest {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testCommasInSourceKeys() {
-		$choices = array('a' => 'a value', 'b,with,comma' => 'b value,with,comma',);
+		$choices = ['a' => 'a value', 'b,with,comma' => 'b value,with,comma',];
 		$field = new ListboxField('Choices', 'Choices', $choices);
 	}
 
 	public function testValidationWithArray() {
 		//test with array input
-		$field = ListboxField::create('Test', 'Testing', array(
+		$field = ListboxField::create('Test', 'Testing', [
 			1 => "One",
 			2 => "Two",
 			3 => "Three"
-		));
+		]);
 		$validator = new RequiredFields();
 
 		$field->setValue(1);
@@ -209,7 +209,7 @@ class ListboxFieldTest extends SapphireTest {
 			'Validates values in source map'
 		);
 		$field->setMultiple(true);
-		$field->setValue(array(1));
+		$field->setValue([1]);
 		$this->assertTrue(
 			$field->validate($validator),
 			'Validates values within source array'
@@ -248,10 +248,10 @@ class ListboxFieldTest extends SapphireTest {
 //			'Field does not validate values outside of source map'
 //		);
 		$field->setMultiple(true);
-		$field->setValue(false, new ArrayData(array(
+		$field->setValue(false, new ArrayData([
 			$tag1->ID => $tag1->ID,
 			$tag2->ID => $tag2->ID
-		)));
+		]));
 		$this->assertTrue(
 			$field->validate($validator),
 			'Validates values in source map'
@@ -267,24 +267,24 @@ class ListboxFieldTest extends SapphireTest {
 }
 
 class ListboxFieldTest_DataObject extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Choices' => 'Text'
-	);
+	];
 }
 
 class ListboxFieldTest_Article extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		"Content" => "Text",
-	);
+	];
 
-	private static $many_many = array(
+	private static $many_many = [
 		"Tags" => "ListboxFieldTest_Tag",
-	);
+	];
 
 }
 
 class ListboxFieldTest_Tag extends DataObject implements TestOnly {
-	private static $belongs_many_many = array(
+	private static $belongs_many_many = [
 		'Articles' => 'ListboxFieldTest_Article'
-	);
+	];
 }

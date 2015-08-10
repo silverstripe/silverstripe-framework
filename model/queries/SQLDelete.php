@@ -17,7 +17,7 @@ class SQLDelete extends SQLConditionalExpression {
 	 *
 	 * @var array
 	 */
-	protected $delete = array();
+	protected $delete = [];
 
 	/**
 	 * Construct a new SQLDelete.
@@ -28,7 +28,7 @@ class SQLDelete extends SQLConditionalExpression {
 	 * @param array|string $delete The table(s) to delete, if multiple tables are queried from
 	 * @return self Self reference
 	 */
-	public static function create($from = array(), $where = array(), $delete = array()) {
+	public static function create($from = [], $where = [], $delete = []) {
 		return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
 	}
 
@@ -40,7 +40,7 @@ class SQLDelete extends SQLConditionalExpression {
 	 * @param array $where An array of WHERE clauses.
 	 * @param array|string $delete The table(s) to delete, if multiple tables are queried from
 	 */
-	function __construct($from = array(), $where = array(), $delete = array()) {
+	function __construct($from = [], $where = [], $delete = []) {
 		parent::__construct($from, $where);
 		$this->setDelete($delete);
 	}
@@ -63,7 +63,7 @@ class SQLDelete extends SQLConditionalExpression {
 	 * @return self Self reference
 	 */
 	public function setDelete($tables) {
-		$this->delete = array();
+		$this->delete = [];
 		return $this->addDelete($tables);
 	}
 
@@ -78,7 +78,7 @@ class SQLDelete extends SQLConditionalExpression {
 		if(is_array($tables)) {
 			$this->delete = array_merge($this->delete, $tables);
 		} elseif(!empty($tables)) {
-			$this->delete[str_replace(array('"','`'), '', $tables)] = $tables;
+			$this->delete[str_replace(['"','`'], '', $tables)] = $tables;
 		}
 	}
 }

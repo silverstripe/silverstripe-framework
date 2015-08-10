@@ -8,14 +8,14 @@
 class TeamCityListener implements PHPUnit_Framework_TestListener {
 
 	private function escape($str) {
-		return strtr($str, array(
+		return strtr($str, [
 			"\n" => '|n',
 			"\r" => '|r',
 			"[" => '|[',
 			"]" => '|]',
 			"'" => "|'",
 			"|" => '||'
-		));
+		]);
 	}
 
 	public function startTestSuite(PHPUnit_Framework_TestSuite $suite) {

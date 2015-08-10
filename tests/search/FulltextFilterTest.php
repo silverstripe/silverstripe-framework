@@ -2,9 +2,9 @@
 
 class FulltextFilterTest extends SapphireTest {
 	
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'FulltextFilterTest_DataObject'
-	);
+	];
 
 	protected static $fixture_file = "FulltextFilterTest.yml";
 
@@ -47,9 +47,9 @@ class FulltextFilterTest extends SapphireTest {
 		$filter1->apply($query1);
 		$this->assertEquals('"ColumnA", "ColumnB"', $filter1->getDbName());
 		$this->assertEquals(
-			array(array(
-				"MATCH (\"ColumnA\", \"ColumnB\") AGAINST (?)" => array('SilverStripe')
-			)),
+			[[
+				"MATCH (\"ColumnA\", \"ColumnB\") AGAINST (?)" => ['SilverStripe']
+			]],
 			$query1->query()->getWhere()
 		);
 
@@ -61,9 +61,9 @@ class FulltextFilterTest extends SapphireTest {
 		$filter2->apply($query2);
 		$this->assertEquals('"ColumnC", "ColumnD"', $filter2->getDbName());
 		$this->assertEquals(
-			array(array(
-				"MATCH (\"ColumnC\", \"ColumnD\") AGAINST (?)" => array('SilverStripe')
-			)),
+			[[
+				"MATCH (\"ColumnC\", \"ColumnD\") AGAINST (?)" => ['SilverStripe']
+			]],
 			$query2->query()->getWhere()
 		);
 
@@ -74,9 +74,9 @@ class FulltextFilterTest extends SapphireTest {
 		$filter3->apply($query3);
 		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA"', $filter3->getDbName());
 		$this->assertEquals(
-			array(array(
-				"MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\") AGAINST (?)" => array('SilverStripe')
-			)),
+			[[
+				"MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\") AGAINST (?)" => ['SilverStripe']
+			]],
 			$query3->query()->getWhere()
 		);
 	}
@@ -86,26 +86,26 @@ class FulltextFilterTest extends SapphireTest {
 
 class FulltextFilterTest_DataObject extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		"ColumnA" => "Varchar(255)",
 		"ColumnB" => "HTMLText",
 		"ColumnC" => "Varchar(255)",
 		"ColumnD" => "HTMLText",
 		"ColumnE" => 'Varchar(255)'
-	);
+	];
 
-	private static $indexes = array(
-		'SearchFields' => array(
+	private static $indexes = [
+		'SearchFields' => [
 			'type' => 'fulltext',
 			'name' => 'SearchFields',
 			'value' => '"ColumnA", "ColumnB"',
-		),
+		],
 		'OtherSearchFields' => 'fulltext ("ColumnC", "ColumnD")',
 		'SingleIndex' => 'fulltext ("ColumnE")'
-	);
+	];
 	
-	private static $create_table_options = array(
+	private static $create_table_options = [
 		"MySQLDatabase" => "ENGINE=MyISAM",
-	);
+	];
 
 }

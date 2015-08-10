@@ -10,9 +10,9 @@ class AopProxyTest extends SapphireTest {
 	public function testBeforeMethodsCalled() {
 		$proxy = new AopProxyService();
 		$aspect = new BeforeAfterCallTestAspect();
-		$proxy->beforeCall = array(
+		$proxy->beforeCall = [
 			'myMethod'	=> $aspect
-		);
+		];
 
 		$proxy->proxied = new ProxyTestObject();
 
@@ -27,9 +27,9 @@ class AopProxyTest extends SapphireTest {
 		$aspect = new BeforeAfterCallTestAspect();
 		$aspect->block = true;
 
-		$proxy->beforeCall = array(
+		$proxy->beforeCall = [
 			'myMethod'	=> $aspect
-		);
+		];
 
 		$proxy->proxied = new ProxyTestObject();
 
@@ -56,9 +56,9 @@ class AopProxyTest extends SapphireTest {
 		$proxy = new AopProxyService();
 		$aspect = new BeforeAfterCallTestAspect();
 
-		$proxy->afterCall = array(
+		$proxy->afterCall = [
 			'myMethod'	=> $aspect
-		);
+		];
 
 		$proxy->proxied = new ProxyTestObject();
 

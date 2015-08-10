@@ -4,13 +4,13 @@ class HierarchyTest extends SapphireTest {
 
 	protected static $fixture_file = 'HierarchyTest.yml';
 
-	protected $requiredExtensions = array(
-		'HierarchyTest_Object' => array('Hierarchy', 'Versioned')
-	);
+	protected $requiredExtensions = [
+		'HierarchyTest_Object' => ['Hierarchy', 'Versioned']
+	];
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'HierarchyTest_Object'
-	);
+	];
 
 	/**
 	 * Test the Hierarchy prevents infinite loops.
@@ -41,7 +41,7 @@ class HierarchyTest extends SapphireTest {
 		$this->objFromFixture('HierarchyTest_Object', 'obj3')->delete();
 
 		// Check that obj1-3 appear at the top level of the AllHistoricalChildren tree
-		$this->assertEquals(array("Obj 1", "Obj 2", "Obj 3"),
+		$this->assertEquals(["Obj 1", "Obj 2", "Obj 3"],
 			singleton('HierarchyTest_Object')->AllHistoricalChildren()->column('Title'));
 
 		// Check numHistoricalChildren
@@ -49,7 +49,7 @@ class HierarchyTest extends SapphireTest {
 
 		// Check that both obj 2 children are returned
 		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$this->assertEquals(array("Obj 2a", "Obj 2b"),
+		$this->assertEquals(["Obj 2a", "Obj 2b"],
 			$obj2->AllHistoricalChildren()->column('Title'));
 
 		// Check numHistoricalChildren
@@ -60,7 +60,7 @@ class HierarchyTest extends SapphireTest {
 		$obj3 = Versioned::get_including_deleted("HierarchyTest_Object", "\"Title\" = 'Obj 3'")->First();
 
 		// Check that both obj 3 children are returned
-		$this->assertEquals(array("Obj 3a", "Obj 3b", "Obj 3c"),
+		$this->assertEquals(["Obj 3a", "Obj 3b", "Obj 3c"],
 			$obj3->AllHistoricalChildren()->column('Title'));
 
 		// Check numHistoricalChildren
@@ -81,14 +81,14 @@ class HierarchyTest extends SapphireTest {
 
 		// Query some objs in a different context and check their m
 		$objs = DataObject::get("HierarchyTest_Object", '', '"ID" ASC');
-		$marked = $expanded = array();
+		$marked = $expanded = [];
 		foreach($objs as $obj) {
 			if($obj->isMarked()) $marked[] = $obj->Title;
 			if($obj->isExpanded()) $expanded[] = $obj->Title;
 		}
 
-		$this->assertEquals(array('Obj 2', 'Obj 3', 'Obj 2a', 'Obj 2b'), $marked);
-		$this->assertEquals(array('Obj 2', 'Obj 2a', 'Obj 2b'), $expanded);
+		$this->assertEquals(['Obj 2', 'Obj 3', 'Obj 2a', 'Obj 2b'], $marked);
+		$this->assertEquals(['Obj 2', 'Obj 2a', 'Obj 2b'], $expanded);
 	}
 
 	public function testNumChildren() {
@@ -200,13 +200,13 @@ class HierarchyTest extends SapphireTest {
 			true,  // rootCall
 			$nodeCountThreshold
 		);
-		$this->assertTreeContains($html, array($obj2),
+		$this->assertTreeContains($html, [$obj2],
 			'Contains root elements'
 		);
-		$this->assertTreeContains($html, array($obj2, $obj2a),
+		$this->assertTreeContains($html, [$obj2, $obj2a],
 			'Contains child elements (in correct nesting)'
 		);
-		$this->assertTreeContains($html, array($obj2, $obj2a, $obj2aa),
+		$this->assertTreeContains($html, [$obj2, $obj2a, $obj2aa],
 			'Contains grandchild elements (in correct nesting)'
 		);
 	}
@@ -231,13 +231,13 @@ class HierarchyTest extends SapphireTest {
 			true,
 			$nodeCountThreshold
 		);
-		$this->assertTreeContains($html, array($obj1),
+		$this->assertTreeContains($html, [$obj1],
 			'Contains root elements'
 		);
-		$this->assertTreeContains($html, array($obj2),
+		$this->assertTreeContains($html, [$obj2],
 			'Contains root elements'
 		);
-		$this->assertTreeNotContains($html, array($obj2, $obj2a),
+		$this->assertTreeNotContains($html, [$obj2, $obj2a],
 			'Does not contains child elements because they exceed minNodeCount'
 		);
 	}
@@ -266,10 +266,10 @@ class HierarchyTest extends SapphireTest {
 			true,
 			$nodeCountThreshold
 		);
-		$this->assertTreeContains($html, array($obj2),
+		$this->assertTreeContains($html, [$obj2],
 			'Contains root elements'
 		);
-		$this->assertTreeContains($html, array($obj2, $obj2a, $obj2aa),
+		$this->assertTreeContains($html, [$obj2, $obj2a, $obj2aa],
 			'Does contain marked children nodes regardless of configured threshold'
 		);
 	}
@@ -289,7 +289,7 @@ class HierarchyTest extends SapphireTest {
 		$root->setMarkingFilterFunction(function($record) use($obj2, $obj2a, $obj2aa) {
 			// Results need to include parent hierarchy, even if we just want to
 			// match the innermost node.
-			return in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID));
+			return in_array($record->ID, [$obj2->ID, $obj2a->ID, $obj2aa->ID]);
 		});
 		$root->markPartialTree($nodeCountThreshold);
 
@@ -303,10 +303,10 @@ class HierarchyTest extends SapphireTest {
 			true,
 			$nodeCountThreshold
 		);
-		$this->assertTreeNotContains($html, array($obj1),
+		$this->assertTreeNotContains($html, [$obj1],
 			'Does not contain root elements which dont match the filter'
 		);
-		$this->assertTreeContains($html, array($obj2, $obj2a, $obj2aa),
+		$this->assertTreeContains($html, [$obj2, $obj2a, $obj2aa],
 			'Contains non-root elements which match the filter'
 		);
 	}
@@ -326,7 +326,7 @@ class HierarchyTest extends SapphireTest {
 		$root->setMarkingFilterFunction(function($record) use($obj2, $obj2a, $obj2aa) {
 			// Results need to include parent hierarchy, even if we just want to
 			// match the innermost node.
-			return in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID));
+			return in_array($record->ID, [$obj2->ID, $obj2a->ID, $obj2aa->ID]);
 		});
 		$root->markPartialTree($nodeCountThreshold);
 
@@ -340,10 +340,10 @@ class HierarchyTest extends SapphireTest {
 			true,
 			$nodeCountThreshold
 		);
-		$this->assertTreeNotContains($html, array($obj1),
+		$this->assertTreeNotContains($html, [$obj1],
 			'Does not contain root elements which dont match the filter'
 		);
-		$this->assertTreeContains($html, array($obj2, $obj2a, $obj2aa),
+		$this->assertTreeContains($html, [$obj2, $obj2a, $obj2aa],
 			'Contains non-root elements which match the filter'
 		);
 	}
@@ -377,16 +377,16 @@ class HierarchyTest extends SapphireTest {
 			$nodeCountThreshold,
 			$nodeCountCallback
 		);
-		$this->assertTreeContains($html, array($obj1),
+		$this->assertTreeContains($html, [$obj1],
 			'Does contain root elements regardless of count'
 		);
-		$this->assertTreeContains($html, array($obj3),
+		$this->assertTreeContains($html, [$obj3],
 			'Does contain root elements regardless of count'
 		);
-		$this->assertTreeContains($html, array($obj2, $obj2a),
+		$this->assertTreeContains($html, [$obj2, $obj2a],
 			'Contains children which do not exceed threshold'
 		);
-		$this->assertTreeNotContains($html, array($obj3, $obj3a),
+		$this->assertTreeNotContains($html, [$obj3, $obj3a],
 			'Does not contain children which exceed threshold'
 		);
 	}
@@ -530,14 +530,14 @@ class HierarchyTest extends SapphireTest {
 }
 
 class HierarchyTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar'
-	);
+	];
 
-	private static $extensions = array(
+	private static $extensions = [
 		'Hierarchy',
 		"Versioned('Stage', 'Live')",
-	);
+	];
 
 	public function cmstreeclasses() {
 		return $this->markingClasses();

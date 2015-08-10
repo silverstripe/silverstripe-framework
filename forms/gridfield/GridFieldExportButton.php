@@ -57,16 +57,16 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		);
 		$button->setAttribute('data-icon', 'download-csv');
 		$button->addExtraClass('no-ajax');
-		return array(
+		return [
 			$this->targetFragment => '<p class="grid-csv-button">' . $button->Field() . '</p>',
-		);
+		];
 	}
 
 	/**
 	 * export is an action button
 	 */
 	public function getActions($gridField) {
-		return array('export');
+		return ['export'];
 	}
 
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
@@ -79,9 +79,9 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 * it is also a URL
 	 */
 	public function getURLHandlers($gridField) {
-		return array(
+		return [
 			'export' => 'handleExport',
-		);
+		];
 	}
 
 	/**
@@ -106,10 +106,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		$csvColumns = ($this->exportColumns)
 			? $this->exportColumns
 			: singleton($gridField->getModelClass())->summaryFields();
-		$fileData = array();
+		$fileData = [];
 
 		if($this->csvHasHeader) {
-			$headers = array();
+			$headers = [];
 
 			// determine the CSV headers. If a field is callable (e.g. anonymous function) then use the
 			// source name as the header instead
@@ -134,7 +134,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
 		foreach($items->limit(null) as $item) {
 			if(!$item->hasMethod('canView') || $item->canView()) {
-				$columnData = array();
+				$columnData = [];
 
 				foreach($csvColumns as $columnSource => $columnHeader) {
 					if(!is_string($columnHeader) && is_callable($columnHeader)) {

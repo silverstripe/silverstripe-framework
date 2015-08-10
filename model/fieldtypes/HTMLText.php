@@ -13,7 +13,7 @@
 class HTMLText extends Text {
 	private static $escape_type = 'xml';
 
-	private static $casting = array(
+	private static $casting = [
 		"AbsoluteLinks" => "HTMLText",
 		"BigSummary" => "HTMLText",
 		"ContextSummary" => "HTMLText",
@@ -30,15 +30,15 @@ class HTMLText extends Text {
 		'LimitWordCount' => 'HTMLText',
 		'LimitWordCountXML' => 'HTMLText',
 		'NoHTML' => 'Text',
-	);
+	];
 
 	protected $processShortcodes = true;
 
 	protected $whitelist = false;
 
-	public function __construct($name = null, $options = array()) {
+	public function __construct($name = null, $options = []) {
 		if(is_string($options)) {
-			$options = array('whitelist' => $options);
+			$options = ['whitelist' => $options];
 		}
 
 		return parent::__construct($name, $options);
@@ -59,7 +59,7 @@ class HTMLText extends Text {
 	 *                the text() directive. E.g. 'link,meta,text()' will allow only <link /> <meta /> and text at
 	 *                the root level.
 	 */
-	public function setOptions(array $options = array()) {
+	public function setOptions(array $options = []) {
 		parent::setOptions($options);
 
 		if(array_key_exists("shortcodes", $options)) {
@@ -206,7 +206,7 @@ class HTMLText extends Text {
 		if($this->whitelist) {
 			$dom = Injector::inst()->create('HTMLValue', $value);
 
-			$query = array();
+			$query = [];
 			$textFilter = ' | //body/text()';
 			foreach ($this->whitelist as $tag) {
 				if($tag === 'text()') {

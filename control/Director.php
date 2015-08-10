@@ -33,7 +33,7 @@ class Director implements TemplateGlobalProvider {
 
 	static private $urlParams;
 
-	static private $rules = array();
+	static private $rules = [];
 
 	/**
 	 * @var SiteTree
@@ -50,13 +50,13 @@ class Director implements TemplateGlobalProvider {
 	 * @config
 	 * @var array
 	 */
-	private static $dev_servers = array();
+	private static $dev_servers = [];
 
 	/**
 	 * @config
 	 * @var array
 	 */
-	private static $test_servers = array();
+	private static $test_servers = [];
 
 	/**
 	 * Setting this explicitly specifies the protocol (http or https) used, overriding
@@ -147,7 +147,7 @@ class Director implements TemplateGlobalProvider {
 		}
 
 		// Initiate an empty session - doesn't initialize an actual PHP session until saved (see below)
-		$session = Injector::inst()->create('Session', isset($_SESSION) ? $_SESSION : array());
+		$session = Injector::inst()->create('Session', isset($_SESSION) ? $_SESSION : []);
 
 		// Only resume a session if its not started already, and a session identifier exists
 		if(!isset($_SESSION) && Session::request_contains_session_id()) {
@@ -229,8 +229,8 @@ class Director implements TemplateGlobalProvider {
 	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	public static function test($url, $postVars = null, $session = array(), $httpMethod = null, $body = null,
-			$headers = array(), $cookies = array(), &$request = null) {
+	public static function test($url, $postVars = null, $session = [], $httpMethod = null, $body = null,
+			$headers = [], $cookies = [], &$request = null) {
 
 		Config::nest();
 		Injector::nest();
@@ -238,22 +238,22 @@ class Director implements TemplateGlobalProvider {
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
 		$oldStage = Versioned::current_stage();
-		$getVars = array();
+		$getVars = [];
 
 		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
 
-		if(!$session) $session = Injector::inst()->create('Session', array());
+		if(!$session) $session = Injector::inst()->create('Session', []);
 		$cookieJar = $cookies instanceof Cookie_Backend
 			? $cookies
-			: Injector::inst()->createWithArgs('Cookie_Backend', array($cookies ?: array()));
+			: Injector::inst()->createWithArgs('Cookie_Backend', [$cookies ?: []]);
 
 		// Back up the current values of the superglobals
-		$existingRequestVars = isset($_REQUEST) ? $_REQUEST : array();
-		$existingGetVars = isset($_GET) ? $_GET : array();
-		$existingPostVars = isset($_POST) ? $_POST : array();
-		$existingSessionVars = isset($_SESSION) ? $_SESSION : array();
-		$existingCookies = isset($_COOKIE) ? $_COOKIE : array();
-		$existingServer	= isset($_SERVER) ? $_SERVER : array();
+		$existingRequestVars = isset($_REQUEST) ? $_REQUEST : [];
+		$existingGetVars = isset($_GET) ? $_GET : [];
+		$existingPostVars = isset($_POST) ? $_POST : [];
+		$existingSessionVars = isset($_SESSION) ? $_SESSION : [];
+		$existingCookies = isset($_COOKIE) ? $_COOKIE : [];
+		$existingServer	= isset($_SERVER) ? $_SERVER : [];
 
 		$existingRequirementsBackend = Requirements::backend();
 
@@ -313,7 +313,7 @@ class Director implements TemplateGlobalProvider {
 		$_REQUEST = ArrayLib::array_merge_recursive((array)$getVars, (array)$postVars);
 		$_GET = (array)$getVars;
 		$_POST = (array)$postVars;
-		$_SESSION = $session ? $session->inst_getAll() : array();
+		$_SESSION = $session ? $session->inst_getAll() : [];
 		$_COOKIE = $cookieJar->getAll(false);
 		Injector::inst()->registerService($cookieJar, 'Cookie_Backend');
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
@@ -368,9 +368,9 @@ class Director implements TemplateGlobalProvider {
 		foreach($rules as $pattern => $controllerOptions) {
 			if(is_string($controllerOptions)) {
 				if(substr($controllerOptions,0,2) == '->') {
-					$controllerOptions = array('Redirect' => substr($controllerOptions,2));
+					$controllerOptions = ['Redirect' => substr($controllerOptions,2)];
 				} else {
-					$controllerOptions = array('Controller' => $controllerOptions);
+					$controllerOptions = ['Controller' => $controllerOptions];
 				}
 			}
 
@@ -798,7 +798,7 @@ class Director implements TemplateGlobalProvider {
 	 * @return array
 	 */
 	public static function extract_request_headers(array $server) {
-		$headers = array();
+		$headers = [];
 
 		foreach($server as $key => $value) {
 			if(substr($key, 0, 5) == 'HTTP_') {
@@ -1139,12 +1139,12 @@ class Director implements TemplateGlobalProvider {
 	 * as global variables in the templates.
 	 */
 	public static function get_template_global_variables() {
-		return array(
+		return [
 			'absoluteBaseURL',
 			'baseURL',
 			'is_ajax',
 			'isAjax' => 'is_ajax',
 			'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
-		);
+		];
 	}
 }

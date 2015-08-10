@@ -2,13 +2,13 @@
 
 class DevBuildController extends Controller {
 	
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'' => 'build'	
-	);
+	];
 	
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'build'
-	);
+	];
 	
 	
 	public function build($request) {

@@ -21,7 +21,7 @@ class FulltextSearchableTest extends SapphireTest {
 		parent::tearDown();
 
 		File::remove_extension('FulltextSearchable');
-		Config::inst()->update('File', 'create_table_options', array('MySQLDatabase' => 'ENGINE=InnoDB'));
+		Config::inst()->update('File', 'create_table_options', ['MySQLDatabase' => 'ENGINE=InnoDB']);
 	}
 
 	public function testEnable() {
@@ -29,7 +29,7 @@ class FulltextSearchableTest extends SapphireTest {
 	}
 
 	public function testEnableWithCustomClasses() {
-		FulltextSearchable::enable(array('File'));
+		FulltextSearchable::enable(['File']);
 		$this->assertTrue(File::has_extension('FulltextSearchable'));
 
 		File::remove_extension('FulltextSearchable');

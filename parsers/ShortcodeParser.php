@@ -15,13 +15,13 @@ class ShortcodeParser extends Object {
 		return "<img src='".$attrs['src']."'>";
 	}
 	
-	protected static $instances = array();
+	protected static $instances = [];
 	
 	protected static $active_instance = 'default';
 	
 	// --------------------------------------------------------------------------------------------------------------
 	
-	protected $shortcodes = array();
+	protected $shortcodes = [];
 	
 	// --------------------------------------------------------------------------------------------------------------
 	
@@ -100,14 +100,14 @@ class ShortcodeParser extends Object {
 	 * Remove all registered shortcodes.
 	 */
 	public function clear() {
-		$this->shortcodes = array();
+		$this->shortcodes = [];
 	}
 	
 	/**
 	 * Call a shortcode and return its replacement text
 	 * Returns false if the shortcode isn't registered
 	 */
-	public function callShortcode($tag, $attributes, $content, $extra = array()) {
+	public function callShortcode($tag, $attributes, $content, $extra = []) {
 		if (!$tag || !isset($this->shortcodes[$tag])) return false;
 		return call_user_func($this->shortcodes[$tag], $attributes, $content, $this, $tag, $extra);
 	}
@@ -122,7 +122,7 @@ class ShortcodeParser extends Object {
 	 * @param $extra Extra-meta data
 	 * @param $isHTMLAllowed A boolean indicating whether it's okay to insert HTML tags into the result
 	 */
-	function getShortcodeReplacementText($tag, $extra = array(), $isHTMLAllowed = true) {
+	function getShortcodeReplacementText($tag, $extra = [], $isHTMLAllowed = true) {
 		$content = $this->callShortcode($tag['open'], $tag['attrs'], $tag['content'], $extra);
 
 		// Missing tag
@@ -178,11 +178,11 @@ class ShortcodeParser extends Object {
 
 	protected static $marker_class = '--ss-shortcode-marker';
 
-	protected static $block_level_elements = array(
+	protected static $block_level_elements = [
 		'address', 'article', 'aside', 'audio', 'blockquote', 'canvas', 'dd', 'div', 'dl', 'fieldset', 'figcaption',
 		'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'ol', 'output', 'p',
 		'pre', 'section', 'table', 'ul'
-	);
+	];
 	
 	protected static $attrrx = '
 		([^\s\/\'"=,]+)       # Name  
@@ -241,7 +241,7 @@ class ShortcodeParser extends Object {
 	 * with "content" set to the text between the tags
 	 */
 	protected function extractTags($content) {
-		$tags = array();
+		$tags = [];
 		
 		// Step 1: perform basic regex scan of individual tags
 		if(preg_match_all(static::tagrx(), $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
@@ -250,7 +250,7 @@ class ShortcodeParser extends Object {
 				if (empty($match['open'][0]) && empty($match['close'][0])) continue;
 
 				// Pull the attributes out into a key/value hash
-				$attrs = array();
+				$attrs = [];
 				
 				if (!empty($match['attrs'][0])) {
 					preg_match_all(static::attrrx(), $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
@@ -262,7 +262,7 @@ class ShortcodeParser extends Object {
 				}
 				
 				// And store the indexes, tag details, etc
-				$tags[] = array(
+				$tags[] = [
 					'text' => $match[0][0],
 					's' => $match[0][1],
 					'e' => $match[0][1] + strlen($match[0][0]),
@@ -271,7 +271,7 @@ class ShortcodeParser extends Object {
 					'attrs' => $attrs,
 					'content' => '',
 					'escaped' => !empty($match['oesc'][0]) || !empty($match['cesc1'][0]) || !empty($match['cesc2'][0])
-				);
+				];
 			}
 		}
 
@@ -382,7 +382,7 @@ class ShortcodeParser extends Object {
 		for($i = 0; $i < $attributes->length; $i++) {
 			$node = $attributes->item($i);
 			$tags = $this->extractTags($node->nodeValue);
-			$extra = array('node' => $node, 'element' => $node->ownerElement);
+			$extra = ['node' => $node, 'element' => $node->ownerElement];
 
 			if($tags) {
 				$node->nodeValue = $this->replaceTagsWithText($node->nodeValue, $tags,
@@ -410,11 +410,11 @@ class ShortcodeParser extends Object {
 			});
 		}
 		
-		return array($content, $tags);
+		return [$content, $tags];
 	}
 
 	protected function findParentsForMarkers($nodes) {
-		$parents = array();
+		$parents = [];
 		
 		foreach($nodes as $node) {
 			$parent = $node;

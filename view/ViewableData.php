@@ -23,9 +23,9 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @var array
 	 * @config
 	 */
-	private static $casting = array(
+	private static $casting = [
 		'CSSClasses' => 'Varchar'
-	);
+	];
 
 	/**
 	 * The default object to cast scalar fields to if casting information is not specified, and casting to an object
@@ -39,7 +39,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	/**
 	 * @var array
 	 */
-	private static $casting_cache = array();
+	private static $casting_cache = [];
 
 	// -----------------------------------------------------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	/**
 	 * @var array
 	 */
-	private $objCache = array();
+	private $objCache = [];
 
 	// -----------------------------------------------------------------------------------------------------------------
 
@@ -314,7 +314,7 @@ class ViewableData extends Object implements IteratorAggregate {
 
 		foreach($ancestry as $class) {
 			if(!isset(self::$casting_cache[$class]) && $merge) {
-				$mergeFields = is_subclass_of($class, 'DataObject') ? array('db', 'casting') : array('casting');
+				$mergeFields = is_subclass_of($class, 'DataObject') ? ['db', 'casting'] : ['casting'];
 
 				if($mergeFields) foreach($mergeFields as $field) {
 					$casting = Config::inst()->get($class, $field, Config::UNINHERITED);
@@ -417,7 +417,7 @@ class ViewableData extends Object implements IteratorAggregate {
 			if($this instanceof FormField && $fieldName == 'Name') $methodIsAllowed = false;
 
 			if($methodIsAllowed && $this->hasMethod($fieldName)) {
-				$value = $arguments ? call_user_func_array(array($this, $fieldName), $arguments) : $this->$fieldName();
+				$value = $arguments ? call_user_func_array([$this, $fieldName], $arguments) : $this->$fieldName();
 			} else {
 				$value = $this->$fieldName;
 			}
@@ -531,7 +531,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return array
 	 */
 	public function getXMLValues($fields) {
-		$result = array();
+		$result = [];
 
 		foreach($fields as $field) {
 			$result[$field] = $this->XML_val($field);
@@ -551,7 +551,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return ArrayIterator
 	 */
 	public function getIterator() {
-		return new ArrayIterator(array($this));
+		return new ArrayIterator([$this]);
 	}
 
 	// UTILITY METHODS -------------------------------------------------------------------------------------------------
@@ -600,7 +600,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @uses ClassInfo
 	 */
 	public function CSSClasses($stopAtClass = 'ViewableData') {
-		$classes       = array();
+		$classes       = [];
 		$classAncestry = array_reverse(ClassInfo::ancestry($this->class));
 		$stopClasses   = ClassInfo::ancestry($stopAtClass);
 
@@ -656,10 +656,10 @@ class ViewableData_Customised extends ViewableData {
 
 	public function __call($method, $arguments) {
 		if($this->customised->hasMethod($method)) {
-			return call_user_func_array(array($this->customised, $method), $arguments);
+			return call_user_func_array([$this->customised, $method], $arguments);
 		}
 
-		return call_user_func_array(array($this->original, $method), $arguments);
+		return call_user_func_array([$this->original, $method], $arguments);
 	}
 
 	public function __get($property) {

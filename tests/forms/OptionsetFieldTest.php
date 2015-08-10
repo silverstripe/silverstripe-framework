@@ -8,10 +8,10 @@ class OptionsetFieldTest extends SapphireTest {
 		$f = new OptionsetField(
 			'Test',
 			false,
-			array(0 => 'Zero', 1 => 'One')
+			[0 => 'Zero', 1 => 'One']
 		);
 
-		$f->setDisabledItems(array(0));
+		$f->setDisabledItems([0]);
 		$p = new CSSContentParser($f->Field());
 		$item0 = $p->getBySelector('#Test_0');
 		$item1 = $p->getBySelector('#Test_1');
@@ -26,7 +26,7 @@ class OptionsetFieldTest extends SapphireTest {
 	}
 
 	public function testReadonlyField() {
-		$sourceArray = array(0 => 'No', 1 => 'Yes');
+		$sourceArray = [0 => 'No', 1 => 'Yes'];
 		$field = new OptionsetField('FeelingOk', 'are you feeling ok?', $sourceArray, 1);
 		$field->setEmptyString('(Select one)');
 		$field->setValue(1);

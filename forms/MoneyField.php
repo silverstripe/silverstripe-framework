@@ -44,7 +44,7 @@ class MoneyField extends FormField {
 	 * @param array
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		return DBField::create_field('HTMLText',
 			"<div class=\"fieldgroup\">" .
 			"<div class=\"fieldgroup-field\">" . $this->fieldCurrency->SmallFieldHolder() . "</div>" .
@@ -108,10 +108,10 @@ class MoneyField extends FormField {
 	public function saveInto(DataObjectInterface $dataObject) {
 		$fieldName = $this->name;
 		if($dataObject->hasMethod("set$fieldName")) {
-			$dataObject->$fieldName = DBField::create_field('Money', array(
+			$dataObject->$fieldName = DBField::create_field('Money', [
 				"Currency" => $this->fieldCurrency->dataValue(),
 				"Amount" => $this->fieldAmount->dataValue()
-			));
+			]);
 		} else {
 			$dataObject->$fieldName->setCurrency($this->fieldCurrency->dataValue());
 			$dataObject->$fieldName->setAmount($this->fieldAmount->dataValue());

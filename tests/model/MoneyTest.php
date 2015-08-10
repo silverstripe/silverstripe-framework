@@ -15,10 +15,10 @@ class MoneyTest extends SapphireTest {
 
 	protected static $fixture_file = 'MoneyTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'MoneyTest_DataObject',
 		'MoneyTest_SubClass',
-	);
+	];
 
 	public function testMoneyFieldsReturnedAsObjects() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
@@ -108,15 +108,15 @@ class MoneyTest extends SapphireTest {
 		$USD->setLocale('en_US');
 		$USD->setAmount(53292.18);
 		$this->assertSame('$53,292.18', $USD->Nice());
-		$this->assertSame('$ 53.292,18', $USD->Nice(array('format' => 'de_AT')));
+		$this->assertSame('$ 53.292,18', $USD->Nice(['format' => 'de_AT']));
 	}
 
 	public function testGetSign() {
 		$SKR = new Money();
-		$SKR->setValue(array(
+		$SKR->setValue([
 			'Currency' => 'SKR',
 			'Amount' => 3.44
-		));
+		]);
 
 		$this->assertSame('€',	$SKR->getSymbol('EUR','de_AT'));
 		$this->assertSame(null,	$SKR->getSymbol());
@@ -128,10 +128,10 @@ class MoneyTest extends SapphireTest {
 		}
 
 		$EUR = new Money();
-		$EUR->setValue(array(
+		$EUR->setValue([
 			'Currency' => 'EUR',
 			'Amount' => 3.44
-		));
+		]);
 		$EUR->setLocale('de_DE');
 		$this->assertSame('€',	$EUR->getSymbol());
 	}
@@ -139,10 +139,10 @@ class MoneyTest extends SapphireTest {
 	public function testGetName()
 	{
 		$m = new Money();
-		$m->setValue(array(
+		$m->setValue([
 			'Currency' => 'EUR',
 			'Amount' => 3.44
-		));
+		]);
 		$m->setLocale('ar_EG');
 
 		$this->assertSame('Estnische Krone', $m->getName('EEK','de_AT'));
@@ -157,10 +157,10 @@ class MoneyTest extends SapphireTest {
 
 	public function testGetShortName() {
 		$m = new Money();
-		$m->setValue(array(
+		$m->setValue([
 			'Currency' => 'EUR',
 			'Amount' => 3.44
-		));
+		]);
 		$m->setLocale('de_AT');
 
 		$this->assertSame('EUR', $m->getShortName('Euro',	 'de_AT'));
@@ -177,10 +177,10 @@ class MoneyTest extends SapphireTest {
 
 	public function testSetValueAsArray() {
 		$m = new Money();
-		$m->setValue(array(
+		$m->setValue([
 			'Currency' => 'EUR',
 			'Amount' => 3.44
-		));
+		]);
 		$this->assertEquals(
 			$m->getCurrency(),
 			'EUR'
@@ -193,10 +193,10 @@ class MoneyTest extends SapphireTest {
 
 	public function testSetValueAsMoney() {
 		$m1 = new Money();
-		$m1->setValue(array(
+		$m1->setValue([
 			'Currency' => 'EUR',
 			'Amount' => 3.44
-		));
+		]);
 		$m2 = new Money();
 		$m2->setValue($m1);
 		$this->assertEquals(
@@ -214,17 +214,17 @@ class MoneyTest extends SapphireTest {
 		$this->assertFalse($m1->exists());
 
 		$m2 = new Money();
-		$m2->setValue(array(
+		$m2->setValue([
 			'Currency' => 'EUR',
 			'Amount' => 3.44
-		));
+		]);
 		$this->assertTrue($m2->exists());
 
 		$m3 = new Money();
-		$m3->setValue(array(
+		$m3->setValue([
 			'Currency' => 'EUR',
 			'Amount' => 0
-		));
+		]);
 		$this->assertTrue($m3->exists());
 	}
 
@@ -234,10 +234,10 @@ class MoneyTest extends SapphireTest {
 		$this->assertInstanceOf('Money', $obj->obj('MyMoney'));
 
 		$m = new Money();
-		$m->setValue(array(
+		$m->setValue([
 			'Currency' => 'EUR',
 			'Amount' => 1.23
-		));
+		]);
 		$obj->MyMoney = $m;
 
 		$this->assertEquals($obj->MyMoney->getCurrency(), 'EUR');
@@ -247,10 +247,10 @@ class MoneyTest extends SapphireTest {
 	public function testWriteToDataObject() {
 		$obj = new MoneyTest_DataObject();
 		$m = new Money();
-		$m->setValue(array(
+		$m->setValue([
 			'Currency' => 'EUR',
 			'Amount' => 1.23
-		));
+		]);
 		$obj->MyMoney = $m;
 		$obj->write();
 
@@ -283,28 +283,28 @@ class MoneyTest extends SapphireTest {
 		$m = new Money();
 		$obj->MyMoney = $m;
 
-		$m->setValue(array('Amount' => 1));
+		$m->setValue(['Amount' => 1]);
 		$this->assertTrue($obj->MyMoney->hasAmount());
 
-		$m->setValue(array('Amount' => 1.00));
+		$m->setValue(['Amount' => 1.00]);
 		$this->assertTrue($obj->MyMoney->hasAmount());
 
-		$m->setValue(array('Amount' => 1.01));
+		$m->setValue(['Amount' => 1.01]);
 		$this->assertTrue($obj->MyMoney->hasAmount());
 
-		$m->setValue(array('Amount' => 0.99));
+		$m->setValue(['Amount' => 0.99]);
 		$this->assertTrue($obj->MyMoney->hasAmount());
 
-		$m->setValue(array('Amount' => 0.01));
+		$m->setValue(['Amount' => 0.01]);
 		$this->assertTrue($obj->MyMoney->hasAmount());
 
-		$m->setValue(array('Amount' => 0));
+		$m->setValue(['Amount' => 0]);
 		$this->assertFalse($obj->MyMoney->hasAmount());
 
-		$m->setValue(array('Amount' => 0.0));
+		$m->setValue(['Amount' => 0.0]);
 		$this->assertFalse($obj->MyMoney->hasAmount());
 
-		$m->setValue(array('Amount' => 0.00));
+		$m->setValue(['Amount' => 0.00]);
 		$this->assertFalse($obj->MyMoney->hasAmount());
 	}
 
@@ -315,10 +315,10 @@ class MoneyTest extends SapphireTest {
  * @subpackage tests
  */
 class MoneyTest_DataObject extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'MyMoney' => 'Money',
 		//'MyOtherMoney' => 'Money',
-	);
+	];
 }
 
 /**
@@ -327,8 +327,8 @@ class MoneyTest_DataObject extends DataObject implements TestOnly {
  */
 class MoneyTest_SubClass extends MoneyTest_DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'MyOtherMoney' => 'Money',
-	);
+	];
 
 }

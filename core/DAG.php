@@ -21,10 +21,10 @@ class SS_DAG implements IteratorAggregate {
 	protected $dag;
 
 	public function __construct($data = null) {
-		$data = $data ? array_values($data) : array();
+		$data = $data ? array_values($data) : [];
 
 		$this->data = $data;
-		$this->dag = array_fill_keys(array_keys($data), array());
+		$this->dag = array_fill_keys(array_keys($data), []);
 	}
 
 	/**
@@ -33,7 +33,7 @@ class SS_DAG implements IteratorAggregate {
 	 */
 	public function additem($item) {
 		$this->data[] = $item;
-		$this->dag[] = array();
+		$this->dag[] = [];
 	}
 
 	/**
@@ -52,7 +52,7 @@ class SS_DAG implements IteratorAggregate {
 		if ($i === false) throw new Exception("Couldnt find 'from' item in data when adding edge to DAG");
 		if ($j === false) throw new Exception("Couldnt find 'to' item in data when adding edge to DAG");
 
-		if (!isset($this->dag[$j])) $this->dag[$j] = array();
+		if (!isset($this->dag[$j])) $this->dag[$j] = [];
 		$this->dag[$j][] = $i;
 	}
 
@@ -62,7 +62,7 @@ class SS_DAG implements IteratorAggregate {
 	 * @throws Exception - If the graph is cyclic (and so can't be sorted)
 	 */
 	public function sort() {
-		$data = $this->data; $dag = $this->dag; $sorted = array();
+		$data = $this->data; $dag = $this->dag; $sorted = [];
 
 		while (true) {
 			$withedges = array_filter($dag, 'count');
@@ -135,11 +135,11 @@ class SS_DAG_Iterator implements Iterator {
 	}
 
 	public function current() {
-		$res = array();
+		$res = [];
 
 		$res['from'] = $this->data[$this->i];
 
-		$res['to'] = array();
+		$res['to'] = [];
 		foreach ($this->dag[$this->i] as $to) $res['to'][] = $this->data[$to];
 
 		return $res;

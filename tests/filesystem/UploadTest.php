@@ -15,14 +15,14 @@ class UploadTest extends SapphireTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => 'txt',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 
 		$v = new UploadTest_Validator();
 
@@ -75,30 +75,30 @@ class UploadTest extends SapphireTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => 'txt',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 		
 		// test upload into default folder
 		$u1 = new Upload();
 		$v = new UploadTest_Validator();
 		
-		$v->setAllowedMaxFileSize(array('txt' => 10));
+		$v->setAllowedMaxFileSize(['txt' => 10]);
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
 		
-		$v->setAllowedMaxFileSize(array('[doc]' => 10));
+		$v->setAllowedMaxFileSize(['[doc]' => 10]);
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
 		
-		$v->setAllowedMaxFileSize(array('txt' => 200000));
+		$v->setAllowedMaxFileSize(['txt' => 200000]);
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertTrue($result, 'Load failed with setting max file size');
@@ -108,26 +108,26 @@ class UploadTest extends SapphireTest {
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
 		file_put_contents($tmpFilePath, $tmpFileContent . $tmpFileContent);
 		
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'image/jpeg',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => 'jpg',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 		
-		$v->setAllowedMaxFileSize(array('[image]' => '40k'));
+		$v->setAllowedMaxFileSize(['[image]' => '40k']);
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertTrue($result, 'Load failed with setting max file size');
 		
-		$v->setAllowedMaxFileSize(array('[image]' => '1k'));
+		$v->setAllowedMaxFileSize(['[image]' => '1k']);
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
 		
-		$v->setAllowedMaxFileSize(array('[image]' => 1000));
+		$v->setAllowedMaxFileSize(['[image]' => 1000]);
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
@@ -137,10 +137,10 @@ class UploadTest extends SapphireTest {
 		Config::nest();
 		
 		// Check the max file size uses the config values
-		$configMaxFileSizes = array(
+		$configMaxFileSizes = [
 			'[image]' => '1k',
 			'txt' => 1000
-		);
+		];
 		Config::inst()->update('Upload_Validator', 'default_max_file_size', $configMaxFileSizes);
 		$v = new UploadTest_Validator();
 		
@@ -151,10 +151,10 @@ class UploadTest extends SapphireTest {
 		$this->assertEquals(1000, $retrievedSize, 'Max file size check on default values failed (config extension set check)');
 		
 		// Check instance values for max file size
-		$maxFileSizes = array(
+		$maxFileSizes = [
 			'[doc]' => 2000,
 			'txt' => '4k'
-		);
+		];
 		$v = new UploadTest_Validator();
 		$v->setAllowedMaxFileSize($maxFileSizes);
 		
@@ -189,17 +189,17 @@ class UploadTest extends SapphireTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => '',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 
 		$v = new UploadTest_Validator();
-		$v->setAllowedMaxFileSize(array('' => 10));
+		$v->setAllowedMaxFileSize(['' => 10]);
 
 		// test upload into default folder
 		$u1 = new Upload();
@@ -218,17 +218,17 @@ class UploadTest extends SapphireTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => 'php',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 
 		$v = new UploadTest_Validator();
-		$v->setAllowedExtensions(array('txt'));
+		$v->setAllowedExtensions(['txt']);
 
 		// test upload into default folder
 		$u = new Upload();
@@ -247,17 +247,17 @@ class UploadTest extends SapphireTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => 'txt',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 
 		$v = new UploadTest_Validator();
-		$v->setAllowedExtensions(array('txt'));
+		$v->setAllowedExtensions(['txt']);
 
 		// test upload into default folder
 		$u = new Upload();
@@ -280,17 +280,17 @@ class UploadTest extends SapphireTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => '',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 
 		$v = new UploadTest_Validator();
-		$v->setAllowedExtensions(array('txt'));
+		$v->setAllowedExtensions(['txt']);
 
 		// test upload into default folder
 		$u = new Upload();
@@ -322,14 +322,14 @@ class UploadTest extends SapphireTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => 'tar.gz',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 
 		// Make sure there are none here, otherwise they get renamed incorrectly for the test.
 		$this->deleteTestUploadFiles("/UploadTest-testUpload.*tar\.gz/");
@@ -398,20 +398,20 @@ class UploadTest extends SapphireTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => 'txt',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 
 		// Make sure there are none here, otherwise they get renamed incorrectly for the test.
 		$this->deleteTestUploadFiles("/UploadTest-testUpload.*/");
 
 		$v = new UploadTest_Validator();
-		$v->setAllowedExtensions(array(''));
+		$v->setAllowedExtensions(['']);
 
 		// test upload into default folder
 		$u = new Upload();
@@ -461,20 +461,20 @@ class UploadTest extends SapphireTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => 'txt',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 
 		// Make sure there are none here, otherwise they get renamed incorrectly for the test.
 		$this->deleteTestUploadFiles("/UploadTest-testUpload.*/");
 
 		$v = new UploadTest_Validator();
-		$v->setAllowedExtensions(array(''));
+		$v->setAllowedExtensions(['']);
 
 		// test upload into default folder
 		$u = new Upload();
@@ -526,14 +526,14 @@ class UploadTest extends SapphireTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		$tmpFile = array(
+		$tmpFile = [
 			'name' => $tmpFileName,
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
 			'extension' => 'txt',
 			'error' => UPLOAD_ERR_OK,
-		);
+		];
 
 		// Make sure there are none here, otherwise they get renamed incorrectly for the test.
 		$this->deleteTestUploadFiles("/UploadTest-testUpload.*/");
@@ -611,14 +611,14 @@ class UploadTest extends SapphireTest {
 			copy(__DIR__ . '/gdtest/test_jpg.jpg', $tmpFilePath);
 
 			// emulates the $_FILES array
-			$tmpFile = array(
+			$tmpFile = [
 				'name' => $tmpFileName,
 				'type' => 'text/plaintext',
 				'size' => filesize($tmpFilePath),
 				'tmp_name' => $tmpFilePath,
 				'extension' => 'jpg',
 				'error' => UPLOAD_ERR_OK,
-			);
+			];
 
 			$v = new UploadTest_Validator();
 
@@ -656,14 +656,14 @@ class UploadTest extends SapphireTest {
 			file_put_contents($tmpFilePath, $tmpFileContent);
 
 			// emulates the $_FILES array
-			$tmpFile = array(
+			$tmpFile = [
 				'name' => $tmpFileName,
 				'type' => 'text/plaintext',
 				'size' => filesize($tmpFilePath),
 				'tmp_name' => $tmpFilePath,
 				'extension' => 'jpg',
 				'error' => UPLOAD_ERR_OK,
-			);
+			];
 
 			$v = new UploadTest_Validator();
 
@@ -772,7 +772,7 @@ class UploadTest_Validator extends Upload_Validator implements TestOnly {
 				'File.TOOLARGE',
 				'Filesize is too large, maximum {size} allowed',
 				'Argument 1: Filesize (e.g. 1MB)',
-				array('size' => $arg)
+				['size' => $arg]
 			);
 			return false;
 		}
@@ -783,7 +783,7 @@ class UploadTest_Validator extends Upload_Validator implements TestOnly {
 				'File.INVALIDEXTENSION',
 				'Extension is not allowed (valid: {extensions})',
 				'Argument 1: Comma-separated list of valid extensions',
-				array('extensions' => implode(',', $this->allowedExtensions))
+				['extensions' => implode(',', $this->allowedExtensions)]
 			);
 			return false;
 		}

@@ -4,13 +4,13 @@
  * @subpackage tests
  */
 class i18nTextCollectorTestMySubObject extends i18nTextCollectorTestMyObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'SubProperty' => 'Varchar',
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'SubRelation' => 'Group'
-	);
+	];
 
 	private static $singular_name = "My Sub Object";
 

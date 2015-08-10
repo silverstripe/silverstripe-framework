@@ -2,10 +2,10 @@
 
 class YamlFixtureTest extends SapphireTest {
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'YamlFixtureTest_DataObject',
 		'YamlFixtureTest_DataObjectRelation',
-	);
+	];
 
 	public function testAbsoluteFixturePath() {
 		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
@@ -75,19 +75,19 @@ class YamlFixtureTest extends SapphireTest {
 }
 
 class YamlFixtureTest_DataObject extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		"Name" => "Varchar"
-	);
-	private static $many_many = array(
+	];
+	private static $many_many = [
 		"ManyManyRelation" => "YamlFixtureTest_DataObjectRelation"
-	);
+	];
 }
 
 class YamlFixtureTest_DataObjectRelation extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		"Name" => "Varchar"
-	);
-	private static $belongs_many_many = array(
+	];
+	private static $belongs_many_many = [
 		"TestParent" => "YamlFixtureTest_DataObject"
-	);
+	];
 }

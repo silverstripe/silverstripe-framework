@@ -20,7 +20,7 @@ class ConfigStaticManifestTest extends SapphireTest {
 	static $sint = 1;
 	static $sfloat = 2.5;
 	static $sstring = 'string';
-	static $sarray = array(1, 2, array(3, 4), 5);
+	static $sarray = [1, 2, [3, 4], 5];
 	static $sheredoc = <<<DOC
 heredoc
 DOC;
@@ -30,7 +30,7 @@ DOC;
 
 	// @codingStandardsIgnoreStart
 	// Assigning multiple values
-	static $onone, $onull = null, $oint = 1, $ofloat = 2.5, $ostring = 'string', $oarray = array(1, 2, array(3, 4), 5), $oheredoc = <<<DOC
+	static $onone, $onull = null, $oint = 1, $ofloat = 2.5, $ostring = 'string', $oarray = [1, 2, [3, 4], 5], $oheredoc = <<<DOC
 heredoc
 DOC
 , $onowdoc = <<<'DOC'
@@ -44,11 +44,11 @@ DOC;
 		$mint = 1,
 		$mfloat = 2.5,
 		$mstring = 'string',
-		$marray = array(
+		$marray = [
 			1, 2,
-			array(3, 4),
+			[3, 4],
 			5
-		),
+		],
 		$mheredoc = <<<DOC
 heredoc
 DOC
@@ -92,7 +92,7 @@ DOC;
 	public function testParsingAccessLevels() {
 		$statics = $this->parseSelf()->getStatics();
 
-		$levels = array(
+		$levels = [
 			'nolevel' => null,
 			'public' => T_PUBLIC,
 			'public2' => T_PUBLIC,
@@ -101,7 +101,7 @@ DOC;
 			'private' => T_PRIVATE,
 			'private2' => T_PRIVATE,
 			'nolevel_after_private' => null
-		);
+		];
 
 		foreach($levels as $var => $level) {
 			$this->assertEquals(
@@ -116,7 +116,7 @@ DOC;
 		$statics = $this->parseSelf()->getStatics();
 
 		// Check assigning values
-		$values = array(
+		$values = [
 			'none',
 			'null',
 			'int',
@@ -125,13 +125,13 @@ DOC;
 			'array',
 			'heredoc',
 			'nowdoc'
-		);
+		];
 
-		$prepends = array(
+		$prepends = [
 			's', // Each on it's own
 			'o', // All on one line
 			'm'  // All in on static statement, but each on own line
-		);
+		];
 
 		foreach ($values as $value) {
 			foreach ($prepends as $prepend) {
@@ -178,10 +178,10 @@ DOC;
 
 		$statics = $parser->getStatics();
 
-		$expectedValue = array(
+		$expectedValue = [
 			'Name' => 'Varchar',
 			'Description' => 'Text',
-		);
+		];
 
 		$this->assertEquals($expectedValue, $statics['ConfigStaticManifestTestMyObject']['db']['value']);
 	}
@@ -193,67 +193,67 @@ DOC;
 
 		$statics = $parser->getStatics();
 
-		$expectedValue = array(
+		$expectedValue = [
 			'Name' => 'Varchar',
 			'Description' => 'Text',
-		);
+		];
 
 		$this->assertEquals($expectedValue, $statics['config\staticmanifest\NamespaceTest']['db']['value']);
 	}
 
 	public function testParsingMultyStringClass() {
-		static $tokens = array(
-			array(T_OPEN_TAG, "<?php\n", 1),
-			array(T_WHITESPACE, "\n", 2),
-			array(T_CLASS, 'class', 3),
-			array(T_WHITESPACE, ' ', 3),
+		static $tokens = [
+			[T_OPEN_TAG, "<?php\n", 1],
+			[T_WHITESPACE, "\n", 2],
+			[T_CLASS, 'class', 3],
+			[T_WHITESPACE, ' ', 3],
 			':',
-			array(T_STRING, 'ss', 3),
+			[T_STRING, 'ss', 3],
 			':',
-			array(T_STRING, 'test2', 3),
-			array(T_WHITESPACE, ' ', 3),
-			array(T_EXTENDS, 'extends', 3),
-			array(T_WHITESPACE, ' ', 3),
+			[T_STRING, 'test2', 3],
+			[T_WHITESPACE, ' ', 3],
+			[T_EXTENDS, 'extends', 3],
+			[T_WHITESPACE, ' ', 3],
 			':',
-			array(T_STRING, 'ss', 3),
+			[T_STRING, 'ss', 3],
 			':',
-			array(T_STRING, 'test', 3),
-			array(T_WHITESPACE, ' ', 3),
-			array(T_IMPLEMENTS, 'implements', 3),
-			array(T_WHITESPACE, ' ', 3),
-			array(T_STRING, 'TestOnly', 3),
-			array(T_WHITESPACE, ' ', 3),
+			[T_STRING, 'test', 3],
+			[T_WHITESPACE, ' ', 3],
+			[T_IMPLEMENTS, 'implements', 3],
+			[T_WHITESPACE, ' ', 3],
+			[T_STRING, 'TestOnly', 3],
+			[T_WHITESPACE, ' ', 3],
 			'{',
-			array(T_WHITESPACE, "\n\t", 3),
-			array(T_PRIVATE, 'private', 4),
-			array(T_WHITESPACE, ' ', 4),
-			array(T_STATIC, 'static', 4),
-			array(T_WHITESPACE, ' ', 4),
-			array(T_VARIABLE, '$test', 4),
-			array(T_WHITESPACE, ' ', 4),
+			[T_WHITESPACE, "\n\t", 3],
+			[T_PRIVATE, 'private', 4],
+			[T_WHITESPACE, ' ', 4],
+			[T_STATIC, 'static', 4],
+			[T_WHITESPACE, ' ', 4],
+			[T_VARIABLE, '$test', 4],
+			[T_WHITESPACE, ' ', 4],
 			'=',
-			array(T_WHITESPACE, ' ', 4),
-			array(T_ARRAY, 'array', 4),
+			[T_WHITESPACE, ' ', 4],
+			[T_ARRAY, 'array', 4],
 			'(',
-			array(T_LNUMBER, '3', 4),
+			[T_LNUMBER, '3', 4],
 			')',
 			';',
-			array(T_WHITESPACE, "\n", 4),
+			[T_WHITESPACE, "\n", 4],
 			'}',
-			array(T_WHITESPACE, "\n", 5),
-		);
+			[T_WHITESPACE, "\n", 5],
+		];
 
 		$parser = new ConfigStaticManifestTest_Parser($tokens);
 		$parser->parse();
 
 		$statics = $parser->getStatics();
 
-		$expected = array(
-			'test' => array(
+		$expected = [
+			'test' => [
 				'access' => T_PRIVATE,
-				'value' => array(3)
-			)
-		);
+				'value' => [3]
+			]
+		];
 
 		$this->assertEquals($expected, $statics[':ss:test2']);
 	}

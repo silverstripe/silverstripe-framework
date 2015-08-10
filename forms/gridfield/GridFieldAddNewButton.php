@@ -29,23 +29,23 @@ class GridFieldAddNewButton implements GridField_HTMLProvider {
 		$singleton = singleton($gridField->getModelClass());
 
 		if(!$singleton->canCreate()) {
-			return array();
+			return [];
 		}
 
 		if(!$this->buttonName) {
 			// provide a default button name, can be changed by calling {@link setButtonName()} on this component
 			$objectName = $singleton->i18n_singular_name();
-			$this->buttonName = _t('GridField.Add', 'Add {name}', array('name' => $objectName));
+			$this->buttonName = _t('GridField.Add', 'Add {name}', ['name' => $objectName]);
 		}
 
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'NewLink' => Controller::join_links($gridField->Link('item'), 'new'),
 			'ButtonName' => $this->buttonName,
-		));
+		]);
 
-		return array(
+		return [
 			$this->targetFragment => $data->renderWith('GridFieldAddNewbutton'),
-		);
+		];
 	}
 
 }

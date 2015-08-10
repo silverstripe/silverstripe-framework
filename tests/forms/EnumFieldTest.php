@@ -5,9 +5,9 @@
  */
 class EnumFieldTest extends SapphireTest {
 	public function testAnyFieldIsPresentInSearchField() {
-		$values = array (
+		$values = [
 				'Key' => 'Value'
-		);
+		];
 		$enumField = new Enum('testField', $values);
 
 		$searchField = $enumField->scaffoldSearchField();

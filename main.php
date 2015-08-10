@@ -118,7 +118,7 @@ require_once('core/startup/ErrorControlChain.php');
 require_once('core/startup/ParameterConfirmationToken.php');
 
 // Prepare tokens and execute chain
-$reloadToken = ParameterConfirmationToken::prepare_tokens(array('isTest', 'isDev', 'flush'));
+$reloadToken = ParameterConfirmationToken::prepare_tokens(['isTest', 'isDev', 'flush']);
 $chain = new ErrorControlChain();
 $chain
 	->then(function($chain) use ($reloadToken) {

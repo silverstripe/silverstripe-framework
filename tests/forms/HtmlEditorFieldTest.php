@@ -9,11 +9,11 @@ class HtmlEditorFieldTest extends FunctionalTest {
 
 	protected static $use_draft_site = true;
 
-	protected $requiredExtensions = array(
-		'HtmlEditorField_Toolbar' => array('HtmlEditorFieldTest_DummyMediaFormFieldExtension')
-	);
+	protected $requiredExtensions = [
+		'HtmlEditorField_Toolbar' => ['HtmlEditorFieldTest_DummyMediaFormFieldExtension']
+	];
 
-	protected $extraDataObjects = array('HtmlEditorFieldTest_Object');
+	protected $extraDataObjects = ['HtmlEditorFieldTest_Object'];
 
 	public function testBasicSaving() {
 		$obj = new HtmlEditorFieldTest_Object();
@@ -88,7 +88,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$this->assertEquals(10, (int)$xml[0]['width'], 'Width tag of resized image is set.');
 		$this->assertEquals(20, (int)$xml[0]['height'], 'Height tag of resized image is set.');
 
-		$neededFilename = 'assets/_resampled/ResizedImage' . base64_encode(json_encode(array(10,20))) .
+		$neededFilename = 'assets/_resampled/ResizedImage' . base64_encode(json_encode([10,20])) .
 			'-HTMLEditorFieldTest_example.jpg';
 
 		$this->assertEquals($neededFilename, (string)$xml[0]['src'], 'Correct URL of resized image is set.');
@@ -125,7 +125,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 	}
 
 	public function testHtmlEditorFieldFileRemote() {
-		$fileFixture = new File(array('Name' => 'my_local_image.jpg', 'Filename' => 'folder/my_local_image.jpg'));
+		$fileFixture = new File(['Name' => 'my_local_image.jpg', 'Filename' => 'folder/my_local_image.jpg']);
 		$file = new HtmlEditorField_File('http://localdomain.com/folder/my_local_image.jpg', $fileFixture);
 		$this->assertEquals('http://localdomain.com/folder/my_local_image.jpg', $file->URL);
 		$this->assertEquals('my_local_image.jpg', $file->Name);
@@ -148,9 +148,9 @@ class HtmlEditorFieldTest_DummyMediaFormFieldExtension extends Extension impleme
 }
 
 class HtmlEditorFieldTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar',
 		'Content' => 'HTMLText',
 		'HasBrokenFile' => 'Boolean'
-	);
+	];
 }

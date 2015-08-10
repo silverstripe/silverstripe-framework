@@ -5,10 +5,10 @@
  */
 class MoneyFieldTest extends SapphireTest {
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'MoneyFieldTest_Object',
 		'MoneyFieldTest_CustomSetter_Object',
-	);
+	];
 
 	public function testSaveInto() {
 		$o = new MoneyFieldTest_Object();
@@ -43,7 +43,7 @@ class MoneyFieldTest extends SapphireTest {
 
 		$f = new MoneyField('MyMoney', 'MyMoney');
 
-		$f->setValue(array('Currency'=>'EUR','Amount'=>123456.78));
+		$f->setValue(['Currency'=>'EUR','Amount'=>123456.78]);
 
 		$f->saveInto($o);
 		$this->assertEquals(123456.78, $o->MyMoney->getAmount());
@@ -59,7 +59,7 @@ class MoneyFieldTest extends SapphireTest {
 		$o = new MoneyFieldTest_CustomSetter_Object();
 
 		$f = new MoneyField('CustomMoney', 'Test Money Field');
-		$f->setValue(array('Currency'=>'EUR','Amount'=>123456.78));
+		$f->setValue(['Currency'=>'EUR','Amount'=>123456.78]);
 
 		$f->saveInto($o);
 		$this->assertEquals((2 * 123456.78), $o->MyMoney->getAmount());
@@ -69,9 +69,9 @@ class MoneyFieldTest extends SapphireTest {
 }
 
 class MoneyFieldTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'MyMoney' => 'Money',
-	);
+	];
 }
 
 /**
@@ -79,9 +79,9 @@ class MoneyFieldTest_Object extends DataObject implements TestOnly {
  * MyMoney.
  */
 class MoneyFieldTest_CustomSetter_Object extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'MyMoney' => 'Money',
-	);
+	];
 
 	public function getCustomMoney() {
 		return $this->MyMoney->getValue();

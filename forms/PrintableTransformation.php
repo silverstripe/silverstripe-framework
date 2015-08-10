@@ -25,7 +25,7 @@ class PrintableTransformation_TabSet extends TabSet {
 		CompositeField::__construct($tabs);
 	}
 
-	public function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = []) {
 		// This gives us support for sub-tabs.
 		$tag = ($this->tabSet) ? "h2>" : "h1>";
 

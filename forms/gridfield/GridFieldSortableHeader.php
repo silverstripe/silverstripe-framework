@@ -19,7 +19,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	/**
 	 * @var array
 	 */
-	public $fieldSorting = array();
+	public $fieldSorting = [];
 
 	/**
 	 * Determine what happens when this component is used with a list that isn't {@link SS_Filterable}.
@@ -81,7 +81,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	public function getHTMLFragments($gridField) {
 		if(!$this->checkDataType($gridField->getList())) return;
 
-		$forTemplate = new ArrayData(array());
+		$forTemplate = new ArrayData([]);
 		$forTemplate->Fields = new ArrayList;
 
 		$state = $gridField->State->GridFieldSortableHeader;
@@ -134,7 +134,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 
 				$field = Object::create(
 					'GridField_FormAction', $gridField, 'SetOrder'.$fieldName, $title,
-					"sort$dir", array('SortColumn' => $columnField)
+					"sort$dir", ['SortColumn' => $columnField]
 				)->addExtraClass('ss-gridfield-sort');
 
 				if($state->SortColumn(null) == $columnField){
@@ -158,9 +158,9 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			$forTemplate->Fields->push($field);
 		}
 
-		return array(
+		return [
 			'header' => $forTemplate->renderWith('GridFieldSortableHeader_Row'),
-		);
+		];
 	}
 
 	/**
@@ -171,7 +171,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	public function getActions($gridField) {
 		if(!$this->checkDataType($gridField->getList())) return;
 
-		return array('sortasc', 'sortdesc');
+		return ['sortasc', 'sortdesc'];
 	}
 
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {

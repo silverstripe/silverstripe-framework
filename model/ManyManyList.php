@@ -31,7 +31,7 @@ class ManyManyList extends RelationList {
 	/**
 	 * @var array $_compositeExtraFields
 	 */
-	protected $_compositeExtraFields = array();
+	protected $_compositeExtraFields = [];
 
 	/**
 	 * Create a new ManyManyList object.
@@ -51,7 +51,7 @@ class ManyManyList extends RelationList {
 	 *
 	 * @example new ManyManyList('Group','Group_Members', 'GroupID', 'MemberID');
 	 */
-	public function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
+	public function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = []) {
 		parent::__construct($dataClass);
 
 		$this->joinTable = $joinTable;
@@ -83,13 +83,13 @@ class ManyManyList extends RelationList {
 	 * @return void
 	 */
 	protected function appendExtraFieldsToQuery() {
-		$finalized = array();
+		$finalized = [];
 
 		foreach($this->extraFields as $field => $spec) {
 			$obj = Object::create_from_string($spec);
 
 			if($obj instanceof CompositeDBField) {
-				$this->_compositeExtraFields[$field] = array();
+				$this->_compositeExtraFields[$field] = [];
 
 				// append the composite field names to the select
 				foreach($obj->compositeDatabaseFields() as $subField => $subSpec) {
@@ -115,12 +115,12 @@ class ManyManyList extends RelationList {
 	 */
 	protected function createDataObject($row) {
 		// remove any composed fields
-		$add = array();
+		$add = [];
 
 		if($this->_compositeExtraFields) {
 			foreach($this->_compositeExtraFields as $fieldName => $composed) {
 				// convert joined extra fields into their composite field types.
-				$value = array();
+				$value = [];
 
 				foreach($composed as $subField => $subSpec) {
 					if(isset($row[$fieldName . $subSpec])) {
@@ -163,9 +163,9 @@ class ManyManyList extends RelationList {
 		// Apply relation filter
 		$key = "\"{$this->joinTable}\".\"{$this->foreignKey}\"";
 		if(is_array($id)) {
-			return array("$key IN (".DB::placeholders($id).")"  => $id);
+			return ["$key IN (".DB::placeholders($id).")"  => $id];
 		} else if($id !== null){
-			return array($key => $id);
+			return [$key => $id];
 		}
 	}
 
@@ -192,9 +192,9 @@ class ManyManyList extends RelationList {
 	 * @param array $extraFields A map of additional columns to insert into the joinTable.
 	 * Column names should be ANSI quoted.
 	 */
-	public function add($item, $extraFields = array()) {
+	public function add($item, $extraFields = []) {
 		// Ensure nulls or empty strings are correctly treated as empty arrays
-		if(empty($extraFields)) $extraFields = array();
+		if(empty($extraFields)) $extraFields = [];
 
 		// Determine ID of new record
 		if(is_numeric($item)) {
@@ -213,7 +213,7 @@ class ManyManyList extends RelationList {
 		}
 
 		// Apply this item to each given foreign ID record
-		if(!is_array($foreignIDs)) $foreignIDs = array($foreignIDs);
+		if(!is_array($foreignIDs)) $foreignIDs = [$foreignIDs];
 		foreach($foreignIDs as $foreignID) {
 			// Check for existing records for this item
 			if($foreignFilter = $this->foreignIDWriteFilter($foreignID)) {
@@ -222,26 +222,26 @@ class ManyManyList extends RelationList {
 				// don't join expected tables (@see Member_GroupSet for example).
 				$query = new SQLSelect("*", "\"{$this->joinTable}\"");
 				$query->addWhere($foreignFilter);
-				$query->addWhere(array(
+				$query->addWhere([
 					"\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
-				));
+				]);
 				$hasExisting = ($query->count() > 0);
 			} else {
 				$hasExisting = false;
 			}
 
 			// Blank manipulation
-			$manipulation = array(
-				$this->joinTable => array(
+			$manipulation = [
+				$this->joinTable => [
 					'command' => $hasExisting ? 'update' : 'insert',
-					'fields' => array()
-				)
-			);
+					'fields' => []
+				]
+			];
 			if($hasExisting) {
-				$manipulation[$this->joinTable]['where'] = array(
+				$manipulation[$this->joinTable]['where'] = [
 					"\"{$this->joinTable}\".\"{$this->foreignKey}\"" => $foreignID,
 					"\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
-				);
+				];
 			}
 
 			if($extraFields && $this->extraFields) {
@@ -299,7 +299,7 @@ class ManyManyList extends RelationList {
 			user_error("Can't call ManyManyList::remove() until a foreign ID is set", E_USER_WARNING);
 		}
 
-		$query->addWhere(array("\"{$this->localKey}\"" => $itemID));
+		$query->addWhere(["\"{$this->localKey}\"" => $itemID]);
 		$query->execute();
 	}
 
@@ -332,9 +332,9 @@ class ManyManyList extends RelationList {
 		$delete->setFrom("\"{$this->joinTable}\"");
 		$delete->addWhere($this->foreignIDFilter());
 		$subSelect = $selectQuery->sql($parameters);
-		$delete->addWhere(array(
+		$delete->addWhere([
 			"\"{$this->joinTable}\".\"{$this->localKey}\" IN ($subSelect)" => $parameters
-		));
+		]);
 		$delete->execute();
 	}
 
@@ -348,7 +348,7 @@ class ManyManyList extends RelationList {
 	 * @return array Map of fieldName => fieldValue
 	 */
 	public function getExtraData($componentName, $itemID) {
-		$result = array();
+		$result = [];
 		
 		// Skip if no extrafields or unsaved record
 		if(empty($this->extraFields) || empty($itemID)) {
@@ -359,7 +359,7 @@ class ManyManyList extends RelationList {
 			user_error('ComponentSet::getExtraData() passed a non-numeric child ID', E_USER_ERROR);
 		}
 
-		$cleanExtraFields = array();
+		$cleanExtraFields = [];
 		foreach ($this->extraFields as $fieldName => $dbFieldSpec) {
 			$cleanExtraFields[] = "\"{$fieldName}\"";
 		}
@@ -370,9 +370,9 @@ class ManyManyList extends RelationList {
 		} else {
 			user_error("Can't call ManyManyList::getExtraData() until a foreign ID is set", E_USER_WARNING);
 		}
-		$query->addWhere(array(
+		$query->addWhere([
 			"\"{$this->localKey}\"" => $itemID
-		));
+		]);
 		$queryResult = $query->execute()->current();
 		if ($queryResult) {
 			foreach ($queryResult as $fieldName => $value) {

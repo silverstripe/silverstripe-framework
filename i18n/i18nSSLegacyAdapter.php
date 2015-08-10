@@ -13,19 +13,19 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 	 *
 	 * @param  array|Zend_Config $options Translation content
 	 */
-	public function __construct($options = array()) {
+	public function __construct($options = []) {
 		$this->_options['keyDelimiter'] = ".";
 		parent::__construct($options);
 	}
 
-	protected function _loadTranslationData($data, $locale, array $options = array()) {
+	protected function _loadTranslationData($data, $locale, array $options = []) {
 		$options = array_merge($this->_options, $options);
 
 		if ($options['clear']  ||  !isset($this->_translate[$locale])) {
-			$this->_translate[$locale] = array();
+			$this->_translate[$locale] = [];
 		}
 
-		if(is_array($data)) return array($locale => $data);
+		if(is_array($data)) return [$locale => $data];
 
 		$this->_filename = $data;
 
@@ -38,11 +38,11 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 		}
 
 		global $lang;
-		if(!isset($lang['en_US'])) $lang['en_US'] = array();
+		if(!isset($lang['en_US'])) $lang['en_US'] = [];
 		// TODO Diff locale array to avoid re-parsing all previous translations whenever a new module is included.
 		require_once($this->_filename);
 
-		$flattened = array();
+		$flattened = [];
 		if($lang[$locale]) {
 			$iterator = new i18nSSLegacyAdapter_Iterator(new RecursiveArrayIterator($lang[$locale]));
 			foreach($iterator as $k => $v) {
@@ -51,7 +51,7 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 			}
 		}
 
-		return array($locale => $flattened);
+		return [$locale => $flattened];
 	}
 
 	public function toString() {
@@ -70,7 +70,7 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
  */
 class i18nSSLegacyAdapter_Iterator extends RecursiveIteratorIterator {
 
-	protected $keyStack = array();
+	protected $keyStack = [];
 
 	public function callGetChildren() {
 		$this->keyStack[] = parent::key();
@@ -87,6 +87,6 @@ class i18nSSLegacyAdapter_Iterator extends RecursiveIteratorIterator {
 	}
 
 	public function getKeyStack() {
-		return array_merge($this->keyStack, array(parent::key()));
+		return array_merge($this->keyStack, [parent::key()]);
 	}
 }

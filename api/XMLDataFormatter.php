@@ -14,16 +14,16 @@ class XMLDataFormatter extends DataFormatter {
 	protected $outputContentType = 'text/xml';
 
 	public function supportedExtensions() {
-		return array(
+		return [
 			'xml'
-		);
+		];
 	}
 
 	public function supportedMimeTypes() {
-		return array(
+		return [
 			'text/xml',
 			'application/xml',
-		);
+		];
 	}
 
 	/**

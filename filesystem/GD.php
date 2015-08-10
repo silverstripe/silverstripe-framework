@@ -42,18 +42,18 @@ class GDBackend extends Object implements Image_Backend {
 	 * @param array $args = array()
 	 * @return void
 	 */
-	public function __construct($filename = null, $args = array()) {
+	public function __construct($filename = null, $args = []) {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
 		increase_time_limit_to(300);
 
 		$this->cache = SS_Cache::factory('GDBackend_Manipulations');
 
 		if($filename && is_readable($filename)) {
-			$this->cacheKey = md5(implode('_', array($filename, filemtime($filename))));
+			$this->cacheKey = md5(implode('_', [$filename, filemtime($filename)]));
 			$this->manipulation = implode('|', $args);
 
 			$cacheData = unserialize($this->cache->load($this->cacheKey));
-			$cacheData = ($cacheData !== false) ? $cacheData : array();
+			$cacheData = ($cacheData !== false) ? $cacheData : [];
 
 			if ($this->imageAvailable($filename, $this->manipulation)) {
 				$cacheData[$this->manipulation] = true;
@@ -553,7 +553,7 @@ class GDBackend extends Object implements Image_Backend {
 		$file = Director::baseFolder() . "/" . $frontend->Filename;
 
 		if (file_exists($file)) {
-			$key = md5(implode('_', array($file, filemtime($file))));
+			$key = md5(implode('_', [$file, filemtime($file)]));
 			$this->cache->remove($key);
 		}
 	}

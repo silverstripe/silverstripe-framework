@@ -181,7 +181,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param array $parameters Out variable for parameters required for this query
 	 * @param string The resulting SQL query (may be paramaterised)
 	 */
-	public function sql(&$parameters = array()) {
+	public function sql(&$parameters = []) {
 		return $this->dataQuery->query()->sql($parameters);
 	}
 
@@ -306,7 +306,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 			if ($col) {
 				// sort('Name','Desc')
-				if(!in_array(strtolower($dir),array('desc','asc'))){
+				if(!in_array(strtolower($dir),['desc','asc'])){
 					user_error('Second argument to sort must be either ASC or DESC');
 				}
 
@@ -366,7 +366,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		$arguments = func_get_args();
 		switch(sizeof($arguments)) {
 			case 1: $filters = $arguments[0]; break;
-			case 2: $filters = array($arguments[0] => $arguments[1]); break;
+			case 2: $filters = [$arguments[0] => $arguments[1]]; break;
 			default:
 				throw new InvalidArgumentException('Incorrect number of arguments passed to filter()');
 		}
@@ -419,7 +419,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	public function filterAny() {
 		$numberFuncArgs = count(func_get_args());
-		$whereArguments = array();
+		$whereArguments = [];
 
 		if($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
 			$whereArguments = func_get_arg(0);
@@ -528,7 +528,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 		$t = new $className($field, $value, $modifiers);
 
-		return $this->alterDataQuery(array($t, 'apply'));
+		return $this->alterDataQuery([$t, 'apply']);
 	}
 
 	/**
@@ -549,7 +549,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	public function exclude() {
 		$numberFuncArgs = count(func_get_args());
-		$whereArguments = array();
+		$whereArguments = [];
 
 		if($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
 			$whereArguments = func_get_arg(0);
@@ -616,7 +616,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
 	 * @return DataList
 	 */
-	public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
+	public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = []) {
 		return $this->alterDataQuery(function($query) use ($table, $onClause, $alias, $order, $parameters){
 			$query->innerJoin($table, $onClause, $alias, $order, $parameters);
 		});
@@ -634,7 +634,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
 	 * @return DataList
 	 */
-	public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
+	public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = []) {
 		return $this->alterDataQuery(function($query) use ($table, $onClause, $alias, $order, $parameters){
 			$query->leftJoin($table, $onClause, $alias, $order, $parameters);
 		});
@@ -649,7 +649,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	public function toArray() {
 		$query = $this->dataQuery->query();
 		$rows = $query->execute();
-		$results = array();
+		$results = [];
 
 		foreach($rows as $row) {
 			$results[] = $this->createDataObject($row);
@@ -664,7 +664,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return array
 	 */
 	public function toNestedArray() {
-		$result = array();
+		$result = [];
 
 		foreach($this as $item) {
 			$result[] = $item->toMap();
@@ -888,7 +888,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param array $idList List of IDs.
 	 */
 	public function setByIDList($idList) {
-		$has = array();
+		$has = [];
 
 		// Index current data
 		foreach($this->column() as $id) {
@@ -917,7 +917,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	public function getIDList() {
 		$ids = $this->column("ID");
-		return $ids ? array_combine($ids, $ids) : array();
+		return $ids ? array_combine($ids, $ids) : [];
 	}
 
 	/**

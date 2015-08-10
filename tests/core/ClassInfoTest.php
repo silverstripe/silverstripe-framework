@@ -6,13 +6,13 @@
  */
 class ClassInfoTest extends SapphireTest {
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'ClassInfoTest_BaseClass',
 		'ClassInfoTest_ChildClass',
 		'ClassInfoTest_GrandChildClass',
 		'ClassInfoTest_BaseDataClass',
 		'ClassInfoTest_NoFields',
-	);
+	];
 
 	public function setUp() {
 		parent::setUp();
@@ -31,21 +31,21 @@ class ClassInfoTest extends SapphireTest {
 	public function testSubclassesFor() {
 		$this->assertEquals(
 			ClassInfo::subclassesFor('ClassInfoTest_BaseClass'),
-			array(
+			[
 				'ClassInfoTest_BaseClass' => 'ClassInfoTest_BaseClass',
 				'ClassInfoTest_ChildClass' => 'ClassInfoTest_ChildClass',
 				'ClassInfoTest_GrandChildClass' => 'ClassInfoTest_GrandChildClass'
-			),
+			],
 			'ClassInfo::subclassesFor() returns only direct subclasses and doesnt include base class'
 		);
 		ClassInfo::reset_db_cache();
 		$this->assertEquals(
 			ClassInfo::subclassesFor('classinfotest_baseclass'),
-			array(
+			[
 				'ClassInfoTest_BaseClass' => 'ClassInfoTest_BaseClass',
 				'ClassInfoTest_ChildClass' => 'ClassInfoTest_ChildClass',
 				'ClassInfoTest_GrandChildClass' => 'ClassInfoTest_GrandChildClass'
-			),
+			],
 			'ClassInfo::subclassesFor() is acting in a case sensitive way when it should not'
 		);
 	}
@@ -87,13 +87,13 @@ class ClassInfoTest extends SapphireTest {
 	 */
 	public function testAncestry() {
 		$ancestry = ClassInfo::ancestry('ClassInfoTest_ChildClass');
-		$expect = ArrayLib::valuekey(array(
+		$expect = ArrayLib::valuekey([
 			'Object',
 			'ViewableData',
 			'DataObject',
 			'ClassInfoTest_BaseClass',
 			'ClassInfoTest_ChildClass',
-		));
+		]);
 		$this->assertEquals($expect, $ancestry);
 
 		ClassInfo::reset_db_cache();
@@ -104,7 +104,7 @@ class ClassInfoTest extends SapphireTest {
 
 		ClassInfo::reset_db_cache();
 		$ancestry = ClassInfo::ancestry('ClassInfoTest_ChildClass', true);
-		$this->assertEquals(array('ClassInfoTest_BaseClass' => 'ClassInfoTest_BaseClass'), $ancestry,
+		$this->assertEquals(['ClassInfoTest_BaseClass' => 'ClassInfoTest_BaseClass'], $ancestry,
 			'$tablesOnly option excludes memory-only inheritance classes'
 		);
 	}
@@ -113,17 +113,17 @@ class ClassInfoTest extends SapphireTest {
 	 * @covers ClassInfo::dataClassesFor()
 	 */
 	public function testDataClassesFor() {
-		$expect = array(
+		$expect = [
 			'ClassInfoTest_BaseDataClass' => 'ClassInfoTest_BaseDataClass',
 			'ClassInfoTest_HasFields'     => 'ClassInfoTest_HasFields',
 			'ClassInfoTest_WithRelation' => 'ClassInfoTest_WithRelation'
-		);
+		];
 
-		$classes = array(
+		$classes = [
 			'ClassInfoTest_BaseDataClass',
 			'ClassInfoTest_NoFields',
 			'ClassInfoTest_HasFields',
-		);
+		];
 
 		ClassInfo::reset_db_cache();
 		$this->assertEquals($expect, ClassInfo::dataClassesFor($classes[0]));
@@ -132,10 +132,10 @@ class ClassInfoTest extends SapphireTest {
 		ClassInfo::reset_db_cache();
 		$this->assertEquals($expect, ClassInfo::dataClassesFor($classes[1]));
 
-		$expect = array(
+		$expect = [
 			'ClassInfoTest_BaseDataClass' => 'ClassInfoTest_BaseDataClass',
 			'ClassInfoTest_HasFields'     => 'ClassInfoTest_HasFields',
-		);
+		];
 
 		ClassInfo::reset_db_cache();
 		$this->assertEquals($expect, ClassInfo::dataClassesFor($classes[2]));
@@ -225,9 +225,9 @@ class ClassInfoTest_GrandChildClass extends ClassInfoTest_ChildClass {
 
 class ClassInfoTest_BaseDataClass extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar'
-	);
+	];
 }
 
 /**
@@ -246,9 +246,9 @@ class ClassInfoTest_NoFields extends ClassInfoTest_BaseDataClass {
 
 class ClassInfoTest_HasFields extends ClassInfoTest_NoFields {
 
-	private static $db = array(
+	private static $db = [
 		'Description' => 'Varchar'
-	);
+	];
 }
 
 /**
@@ -258,7 +258,7 @@ class ClassInfoTest_HasFields extends ClassInfoTest_NoFields {
 
 class ClassInfoTest_WithRelation extends ClassInfoTest_NoFields {
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Relation' => 'ClassInfoTest_HasFields'
-	);
+	];
 }

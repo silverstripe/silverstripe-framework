@@ -99,17 +99,17 @@ class NumericFieldTest extends SapphireTest {
 	 * German locale values (same as dutch)
 	 */
 	public function testGermanLocales() {
-		$this->checkDataFormatting('de_DE', $formatting = array(
+		$this->checkDataFormatting('de_DE', $formatting = [
 			'13000' => "13.000",
 			'15' => '15',
 			'12.0' => '12,0',
 			'12.1' => '12,1',
 			'14000.5' => "14.000,5",
-		));
+		]);
 
 		$this->checkDataFormatting('nl_NL', $formatting);
 
-		$this->checkInputValidation('de_DE', $validation = array(
+		$this->checkInputValidation('de_DE', $validation = [
 			'13000' => 13000,
 			'12,00' => 12.00,
 			'12.00' => false,
@@ -120,7 +120,7 @@ class NumericFieldTest extends SapphireTest {
 			'15 000.5' => false,
 			'15.000,5' => 15000.5,
 			'15,000.5' => false,
-		));
+		]);
 
 		$this->checkInputValidation('nl_NL', $validation);
 	}
@@ -129,15 +129,15 @@ class NumericFieldTest extends SapphireTest {
 	 * French locale values
 	 */
 	public function testFrenchLocales() {
-		$this->checkDataFormatting('fr_FR', array(
+		$this->checkDataFormatting('fr_FR', [
 			'13000' => "13 000",
 			'15' => '15',
 			'12.0' => '12,0',
 			'12.1' => '12,1',
 			'14000.5' => "14 000,5",
-		));
+		]);
 		
-		$this->checkInputValidation('fr_FR', array(
+		$this->checkInputValidation('fr_FR', [
 			'13000' => 13000,
 			'12,00' => 12.00,
 			'12.00' => false,
@@ -148,22 +148,22 @@ class NumericFieldTest extends SapphireTest {
 			'15 000.5' => false,
 			'15.000,5' => false,
 			'15,000.5' => false,
-		));
+		]);
 	}
 
 	/**
 	 * US locale values
 	 */
 	public function testUSLocales() {
-		$this->checkDataFormatting('en_US', array(
+		$this->checkDataFormatting('en_US', [
 			'13000' => "13,000",
 			'15' => '15',
 			'12.0' => '12.0',
 			'12.1' => '12.1',
 			'14000.5' => "14,000.5",
-		));
+		]);
 
-		$this->checkInputValidation('en_US', array(
+		$this->checkInputValidation('en_US', [
 			'13000' => 13000,
 			'12,00' => false,
 			'12.00' => 12.00,
@@ -174,7 +174,7 @@ class NumericFieldTest extends SapphireTest {
 			'15 000.5' => false,
 			'15.000,5' => false,
 			'15,000.5' => 15000.5,
-		));
+		]);
 	}
 
 	public function testReadonly() {
@@ -195,7 +195,7 @@ class NumericFieldTest extends SapphireTest {
 
 class NumericFieldTest_Object extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Number' => 'Float'
-	);
+	];
 }

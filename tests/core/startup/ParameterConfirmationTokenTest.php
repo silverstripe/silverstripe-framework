@@ -26,10 +26,10 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 	private function addPart($answer, $slash, $part) {
 		$bare = str_replace('/', '', $part);
 
-		if ($bare) $answer = array_merge($answer, array($bare));
+		if ($bare) $answer = array_merge($answer, [$bare]);
 		if ($part) $slash = (substr($part, -1) == '/') ? '/' : '';
 
-		return array($answer, $slash);
+		return [$answer, $slash];
 	}
 
 	protected $oldHost = null;
@@ -95,16 +95,16 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 
 	public function testPrepareTokens() {
 		// Test priority ordering
-		$token = ParameterConfirmationToken::prepare_tokens(array(
+		$token = ParameterConfirmationToken::prepare_tokens([
 			'parameterconfirmationtokentest_notoken',
 			'parameterconfirmationtokentest_empty',
 			'parameterconfirmationtokentest_noparam'
-		));
+		]);
 		// Test no invalid tokens
 		$this->assertEquals('parameterconfirmationtokentest_empty', $token->getName());
-		$token = ParameterConfirmationToken::prepare_tokens(array(
+		$token = ParameterConfirmationToken::prepare_tokens([
 			'parameterconfirmationtokentest_noparam'
-		));
+		]);
 		$this->assertEmpty($token);
 	}
 
@@ -119,13 +119,13 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 
 		$token = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_parameter');
 
-		foreach(array('foo','foo/') as $host) {
-			list($hostAnswer, $hostSlash) = $this->addPart(array(), '', $host);
+		foreach(['foo','foo/'] as $host) {
+			list($hostAnswer, $hostSlash) = $this->addPart([], '', $host);
 
-			foreach(array('', '/', 'bar', 'bar/', '/bar', '/bar/') as $base) {
+			foreach(['', '/', 'bar', 'bar/', '/bar', '/bar/'] as $base) {
 				list($baseAnswer, $baseSlash) = $this->addPart($hostAnswer, $hostSlash, $base);
 
-				foreach(array('', '/', 'baz', 'baz/', '/baz', '/baz/') as $url) {
+				foreach(['', '/', 'baz', 'baz/', '/baz', '/baz/'] as $url) {
 					list($urlAnswer, $urlSlash) = $this->addPart($baseAnswer, $baseSlash, $url);
 
 					$_SERVER['HTTP_HOST'] = $host;

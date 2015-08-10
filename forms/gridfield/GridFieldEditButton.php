@@ -35,7 +35,7 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 	 * @return array
 	 */
 	public function getColumnAttributes($gridField, $record, $columnName) {
-		return array('class' => 'col-buttons');
+		return ['class' => 'col-buttons'];
 	}
 
 	/**
@@ -47,7 +47,7 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 	 */
 	public function getColumnMetadata($gridField, $columnName) {
 		if($columnName == 'Actions') {
-			return array('title' => '');
+			return ['title' => ''];
 		}
 	}
 
@@ -58,7 +58,7 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 	 * @return array
 	 */
 	public function getColumnsHandled($gridField) {
-		return array('Actions');
+		return ['Actions'];
 	}
 
 	/**
@@ -68,7 +68,7 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 	 * @return array
 	 */
 	public function getActions($gridField) {
-		return array();
+		return [];
 	}
 
 	/**
@@ -82,9 +82,9 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 		// No permission checks, handled through GridFieldDetailForm,
 		// which can make the form readonly if no edit permissions are available.
 
-		$data = new ArrayData(array(
+		$data = new ArrayData([
 			'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit')
-		));
+		]);
 
 		return $data->renderWith('GridFieldEditButton');
 	}

@@ -61,7 +61,7 @@ class SSHTMLBBCodeParser
 	 * @access   private
 	 * @var      array
 	 */
-	var $_definedTags  = array();
+	var $_definedTags  = [];
 
 	/**
 	 * A string containing the input
@@ -85,7 +85,7 @@ class SSHTMLBBCodeParser
 	 * @access   private
 	 * @var      array
 	 */
-	var $_tagArray      = array();
+	var $_tagArray      = [];
 
 	/**
 	 * A string containing the parsed version of the text
@@ -101,14 +101,14 @@ class SSHTMLBBCodeParser
 	 * @access   private
 	 * @var      array
 	 */
-	var $_options = array(
+	var $_options = [
 		'quotestyle'    => 'double',
 		'quotewhat'     => 'all',
 		'open'          => '[',
 		'close'         => ']',
 		'xmlclose'      => true,
 		'filters'       => 'Basic'
-	);
+	];
 
 	/**
 	 * An array of filters used for parsing
@@ -116,7 +116,7 @@ class SSHTMLBBCodeParser
 	 * @access   private
 	 * @var      array
 	 */
-	var $_filters       = array();
+	var $_filters       = [];
 
 	/**
 	 * Constructor, initialises the options and filters
@@ -136,7 +136,7 @@ class SSHTMLBBCodeParser
 	 * @access   public
 	 * @author   Stijn de Reede  <sjr@gmx.co.uk>
 	 */
-	public function SSHTMLBBCodeParser($options = array())
+	public function SSHTMLBBCodeParser($options = [])
 	{
 		// set the already set options
 		$baseoptions = &SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser', '_options');
@@ -181,7 +181,7 @@ class SSHTMLBBCodeParser
 	{
 		static $properties;
 		if (!isset($properties[$class])) {
-			$properties[$class] = array();
+			$properties[$class] = [];
 		}
 		if (!array_key_exists($var, $properties[$class])) {
 			$properties[$class][$var] = null;
@@ -244,7 +244,7 @@ class SSHTMLBBCodeParser
 		}
 		// also remove the related $this->_definedTags for this filter,
 		// preserving the others
-		$this->_definedTags = array();
+		$this->_definedTags = [];
 		foreach (array_keys($this->_filters) as $filter) {
 			$this->_definedTags = array_merge(
 				$this->_definedTags,
@@ -267,7 +267,7 @@ class SSHTMLBBCodeParser
 			if (strpos($filters, ',') !== false) {
 				$filters = explode(',', $filters);
 			} else {
-				$filters = array($filters);
+				$filters = [$filters];
 			}
 		}
 		if (!is_array($filters)) {
@@ -335,13 +335,13 @@ class SSHTMLBBCodeParser
 	 */
 	public function _buildTagArray()
 	{
-		$this->_tagArray = array();
+		$this->_tagArray = [];
 		$str = $this->_preparsed;
 		$strPos = 0;
 		$strLength = strlen($str);
 
 		while (($strPos < $strLength)) {
-			$tag = array();
+			$tag = [];
 			$openPos = strpos($str, $this->_options['open'], $strPos);
 			if ($openPos === false) {
 				$openPos = $strLength;
@@ -413,7 +413,7 @@ class SSHTMLBBCodeParser
 	 */
 	public function _buildTag($str)
 	{
-		$tag = array('text' => $str, 'attributes' => array());
+		$tag = ['text' => $str, 'attributes' => []];
 
 		if (substr($str, 1, 1) == '/') {        // closing tag
 
@@ -435,7 +435,7 @@ class SSHTMLBBCodeParser
 			// split the tag with arguments and all
 			$oe = $this->_options['open_esc'];
 			$ce = $this->_options['close_esc'];
-			$tagArray = array();
+			$tagArray = [];
 			if (preg_match("!$oe([a-z0-9]+)[^$ce]*$ce!i", $str, $tagArray) == 0) {
 				return false;
 			}
@@ -446,7 +446,7 @@ class SSHTMLBBCodeParser
 
 			// tnx to Onno for the regex
 			// validate the arguments
-			$attributeArray = array();
+			$attributeArray = [];
 			$regex = "![\s$oe]([a-z0-9]+)=(\"[^\s$ce]+\"|[^\s$ce]";
 			if ($tag['tag'] != 'url') {
 				$regex .= "[^=]";
@@ -485,8 +485,8 @@ class SSHTMLBBCodeParser
 	 */
 	public function _validateTagArray()
 	{
-		$newTagArray = array();
-		$openTags = array();
+		$newTagArray = [];
+		$openTags = [];
 		foreach ($this->_tagArray as $tag) {
 			$prevTag = end($newTagArray);
 			switch ($tag['type']) {
@@ -553,7 +553,7 @@ class SSHTMLBBCodeParser
 			case 2:
 				if (($tag['tag'] == end($openTags) || $this->_isAllowed(end($openTags), $tag['tag']))) {
 					if (in_array($tag['tag'], $openTags)) {
-						$tmpOpenTags = array();
+						$tmpOpenTags = [];
 						while (end($openTags) != $tag['tag']) {
 							$newTagArray[] = $this->_buildTag('[/'.end($openTags).']');
 							$tmpOpenTags[] = end($openTags);

@@ -9,12 +9,12 @@ class RequiredFieldsTest extends SapphireTest {
 
 	public function testConstructingWithArray() {
 		//can we construct with an array?
-		$fields = array(
+		$fields = [
 			'Title',
 			'Content',
 			'Image',
 			'AnotherField'
-		);
+		];
 		$requiredFields = new RequiredFields($fields);
 		//check the fields and the array match
 		$this->assertEquals(
@@ -34,12 +34,12 @@ class RequiredFieldsTest extends SapphireTest {
 		);
 		//check the fields match
 		$this->assertEquals(
-			array(
+			[
 				'Title',
 				'Content',
 				'Image',
 				'AnotherField'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Failed to set the required fields using arguments"
 		);
@@ -73,31 +73,31 @@ class RequiredFieldsTest extends SapphireTest {
 		$requiredFields->removeRequiredField('Content');
 		//compare the arrays
 		$this->assertEquals(
-			array(
+			[
 				'Title',
 				'Image',
 				'AnotherField'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Failed to remove the 'Content' field from required list"
 		);
 		//let's remove another
 		$requiredFields->removeRequiredField('Title');
 		$this->assertEquals(
-			array(
+			[
 				'Image',
 				'AnotherField'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Failed to remove 'Title' field from required list"
 		);
 		//lets try to remove one that doesn't exist
 		$requiredFields->removeRequiredField('DontExists');
 		$this->assertEquals(
-			array(
+			[
 				'Image',
 				'AnotherField'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Removing a non-existant field from required list altered the list of required fields"
 		);
@@ -112,10 +112,10 @@ class RequiredFieldsTest extends SapphireTest {
 		$requiredFields->addRequiredField('Content');
 		//check it was added
 		$this->assertEquals(
-			array(
+			[
 				'Title',
 				'Content'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Failed to add a new field to the required list"
 		);
@@ -123,11 +123,11 @@ class RequiredFieldsTest extends SapphireTest {
 		$requiredFields->addRequiredField('Image');
 		//check it was added
 		$this->assertEquals(
-			array(
+			[
 				'Title',
 				'Content',
 				'Image'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Failed to add a second new field to the required list"
 		);
@@ -135,10 +135,10 @@ class RequiredFieldsTest extends SapphireTest {
 		$requiredFields->removeRequiredField('Title');
 		//check it was removed
 		$this->assertEquals(
-			array(
+			[
 				'Content',
 				'Image'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Failed to remove 'Title' field from required list"
 		);
@@ -146,11 +146,11 @@ class RequiredFieldsTest extends SapphireTest {
 		$requiredFields->addRequiredField('Title');
 		//check it's in there
 		$this->assertEquals(
-			array(
+			[
 				'Content',
 				'Image',
 				'Title'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Failed to add 'Title' back to the required field list"
 		);
@@ -158,11 +158,11 @@ class RequiredFieldsTest extends SapphireTest {
 		$requiredFields->addRequiredField('Content');
 		//check the field wasn't added
 		$this->assertEquals(
-			array(
+			[
 				'Content',
 				'Image',
 				'Title'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Adding a duplicate field to required field list had unexpected behaviour"
 		);
@@ -177,22 +177,22 @@ class RequiredFieldsTest extends SapphireTest {
 			'AnotherField'
 		);
 		//create another validator with other fields
-		$otherRequiredFields = new RequiredFields(array(
+		$otherRequiredFields = new RequiredFields([
 			'ExtraField1',
 			'ExtraField2'
-		));
+		]);
 		//append the new fields
 		$requiredFields->appendRequiredFields($otherRequiredFields);
 		//check they were added correctly
 		$this->assertEquals(
-			array(
+			[
 				'Title',
 				'Content',
 				'Image',
 				'AnotherField',
 				'ExtraField1',
 				'ExtraField2'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Merging of required fields failed to behave as expected"
 		);
@@ -207,14 +207,14 @@ class RequiredFieldsTest extends SapphireTest {
 		$requiredFields->appendRequiredFields($otherRequiredFields);
 		//check nothing was changed
 		$this->assertEquals(
-			array(
+			[
 				'Title',
 				'Content',
 				'Image',
 				'AnotherField',
 				'ExtraField1',
 				'ExtraField2'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Merging of required fields with duplicates failed to behave as expected"
 		);
@@ -230,7 +230,7 @@ class RequiredFieldsTest extends SapphireTest {
 		$requiredFields->appendRequiredFields($otherRequiredFields);
 		//check that only the new fields were added
 		$this->assertEquals(
-			array(
+			[
 				'Title',
 				'Content',
 				'Image',
@@ -239,7 +239,7 @@ class RequiredFieldsTest extends SapphireTest {
 				'ExtraField2',
 				'ExtraField3',
 				'ExtraField4'
-			),
+			],
 			$requiredFields->getRequired(),
 			"Merging of required fields with some duplicates in a muddled order failed to behave as expected"
 		);
@@ -247,12 +247,12 @@ class RequiredFieldsTest extends SapphireTest {
 
 	public function testFieldIsRequired() {
 		//get the validator
-		$requiredFields = new RequiredFields($fieldNames = array(
+		$requiredFields = new RequiredFields($fieldNames = [
 			'Title',
 			'Content',
 			'Image',
 			'AnotherField'
-		));
+		]);
 
 		foreach($fieldNames as $field) {
 			$this->assertTrue(

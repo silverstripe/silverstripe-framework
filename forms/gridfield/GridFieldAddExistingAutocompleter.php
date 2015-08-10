@@ -61,7 +61,7 @@ class GridFieldAddExistingAutocompleter
 	 *
 	 * @var Array
 	 */
-	protected $searchFields = array();
+	protected $searchFields = [];
 
 	/**
 	 * @var string SSViewer template to render the results presentation
@@ -95,7 +95,7 @@ class GridFieldAddExistingAutocompleter
 	public function getHTMLFragments($gridField) {
 		$dataClass = $gridField->getList()->dataClass();
 
-		$forTemplate = new ArrayData(array());
+		$forTemplate = new ArrayData([]);
 		$forTemplate->Fields = new ArrayList();
 
 		$searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"));
@@ -121,9 +121,9 @@ class GridFieldAddExistingAutocompleter
 		$forTemplate->Fields->push($findAction);
 		$forTemplate->Fields->push($addAction);
 
-		return array(
+		return [
 			$this->targetFragment => $forTemplate->renderWith($this->itemClass)
-		);
+		];
 	}
 
 	/**
@@ -132,7 +132,7 @@ class GridFieldAddExistingAutocompleter
 	 * @return array
 	 */
 	public function getActions($gridField) {
-		return array('addto');
+		return ['addto'];
 	}
 
 	/**
@@ -179,9 +179,9 @@ class GridFieldAddExistingAutocompleter
 	 * @return array
 	 */
 	public function getURLHandlers($gridField) {
-		return array(
+		return [
 			'search' => 'doSearch',
-		);
+		];
 	}
 
 	/**
@@ -203,7 +203,7 @@ class GridFieldAddExistingAutocompleter
 				$dataClass));
 		}
 
-		$params = array();
+		$params = [];
 		foreach($searchFields as $searchField) {
 			$name = (strpos($searchField, ':') !== FALSE) ? $searchField : "$searchField:StartsWith";
 			$params[$name] = $request->getVar('gridfield_relationsearch');
@@ -214,7 +214,7 @@ class GridFieldAddExistingAutocompleter
 			->sort(strtok($searchFields[0], ':'), 'ASC')
 			->limit($this->getResultsLimit());
 
-		$json = array();
+		$json = [];
 		$originalSourceFileComments = Config::inst()->get('SSViewer', 'source_file_comments');
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
 		foreach($results as $result) {
@@ -296,9 +296,9 @@ class GridFieldAddExistingAutocompleter
 		}
 		if (is_null($fields)) {
 			if ($obj->hasDatabaseField('Title')) {
-				$fields = array('Title');
+				$fields = ['Title'];
 			} elseif ($obj->hasDatabaseField('Name')) {
-				$fields = array('Name');
+				$fields = ['Name'];
 			}
 		}
 
@@ -317,7 +317,7 @@ class GridFieldAddExistingAutocompleter
 		if($this->placeholderText) {
 			return $this->placeholderText;
 		} else {
-			$labels = array();
+			$labels = [];
 			if($searchFields) foreach($searchFields as $searchField) {
 				$searchField = explode(':', $searchField);
 				$label = singleton($dataClass)->fieldLabel($searchField[0]);
@@ -327,12 +327,12 @@ class GridFieldAddExistingAutocompleter
 				return _t(
 					'GridField.PlaceHolderWithLabels',
 					'Find {type} by {name}',
-					array('type' => singleton($dataClass)->i18n_plural_name(), 'name' => implode(', ', $labels))
+					['type' => singleton($dataClass)->i18n_plural_name(), 'name' => implode(', ', $labels)]
 				);
 			} else {
 				return _t(
 					'GridField.PlaceHolder', 'Find {type}',
-					array('type' => singleton($dataClass)->i18n_plural_name())
+					['type' => singleton($dataClass)->i18n_plural_name()]
 				);
 			}
 		}

@@ -207,7 +207,7 @@ class Date extends DBField {
 
 		$date = date('Y-m-d\TH:i:s', $timestamp);
 
-		$matches = array();
+		$matches = [];
 		if(preg_match('/^([\-+])(\d{2})(\d{2})$/', date('O', $timestamp), $matches)) {
 			$date .= $matches[1].$matches[2].':'.$matches[3];
 		} else {
@@ -232,14 +232,14 @@ class Date extends DBField {
 					'Date.TIMEDIFFAGO',
 					"{difference} ago",
 					'Natural language time difference, e.g. 2 hours ago',
-					array('difference' => $this->TimeDiff($includeSeconds, $significance))
+					['difference' => $this->TimeDiff($includeSeconds, $significance)]
 				);
 			} else {
 				return _t(
 					'Date.TIMEDIFFIN',
 					"in {difference}",
 					'Natural language time difference, e.g. in 2 hours',
-					array('difference' => $this->TimeDiff($includeSeconds, $significance))
+					['difference' => $this->TimeDiff($includeSeconds, $significance)]
 				);
 			}
 		}
@@ -313,8 +313,8 @@ class Date extends DBField {
 	}
 
 	public function requireField() {
-		$parts=Array('datatype'=>'date', 'arrayValue'=>$this->arrayValue);
-		$values=Array('type'=>'date', 'parts'=>$parts);
+		$parts=['datatype'=>'date', 'arrayValue'=>$this->arrayValue];
+		$values=['type'=>'date', 'parts'=>$parts];
 		DB::require_field($this->tableName, $this->name, $values);
 	}
 

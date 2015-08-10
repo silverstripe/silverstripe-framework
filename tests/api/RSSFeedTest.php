@@ -92,11 +92,11 @@ class RSSFeedTest extends SapphireTest {
 
 class RSSFeedTest_ItemA extends ViewableData {
 	// RSS-feed items must have $casting/$db information.
-	private static $casting = array(
+	private static $casting = [
 		'Title' => 'Varchar',
 		'Content' => 'Text',
 		'AltContent' => 'Text',
-	);
+	];
 
 	public function getTitle() {
 		return "ItemA";
@@ -137,10 +137,10 @@ class RSSFeedTest_ItemB extends ViewableData {
 
 class RSSFeedTest_ItemC extends ViewableData {
 	// ItemC tests fields - Title has casting, Content doesn't.
-	private static $casting = array(
+	private static $casting = [
 		'Title' => 'Varchar',
 		'AltContent' => 'Text',
-	);
+	];
 
 	public $Title = "ItemC";
 	public $Content = "ItemC Content";
@@ -157,10 +157,10 @@ class RSSFeedTest_ItemC extends ViewableData {
 
 class RSSFeedTest_ItemD extends ViewableData {
 	// ItemD test fields - all fields use casting but Content & AltContent cast as HTMLText
-	private static $casting = array(
+	private static $casting = [
 		'Title' => 'Varchar',
 		'Content' => 'HTMLText'
-	);
+	];
 
 	public $Title = 'ItemD';
 	public $Content = '<p>ItemD Content [test_shortcode]</p>';

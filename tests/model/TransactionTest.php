@@ -5,9 +5,9 @@
  */
 class TransactionTest extends SapphireTest {
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'TransactionTest_Object'
-	);
+	];
 
 	public function testCreateWithTransaction() {
 
@@ -57,7 +57,7 @@ class TransactionTest extends SapphireTest {
 }
 
 class TransactionTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Varchar(255)'
-	);
+	];
 }

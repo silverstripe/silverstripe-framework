@@ -16,7 +16,7 @@
 class ExactMatchFilter extends SearchFilter {
 
 	public function setModifiers(array $modifiers) {
-		if(($extras = array_diff($modifiers, array('not', 'nocase', 'case'))) != array()) {
+		if(($extras = array_diff($modifiers, ['not', 'nocase', 'case'])) != []) {
 			throw new InvalidArgumentException(
 				get_class($this) . ' does not accept ' . implode(', ', $extras) . ' as modifiers');
 		}
@@ -74,7 +74,7 @@ class ExactMatchFilter extends SearchFilter {
 			$nullClause = DB::get_conn()->nullCheckClause($field, true);
 			$where .= " OR {$nullClause}";
 		}
-		return $query->where(array($where => $value));
+		return $query->where([$where => $value]);
 	}
 
 	/**
@@ -180,10 +180,10 @@ class ExactMatchFilter extends SearchFilter {
 			}
 		}
 
-		return $query->where(array($predicate => $values));
+		return $query->where([$predicate => $values]);
 	}
 
 	public function isEmpty() {
-		return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
+		return $this->getValue() === [] || $this->getValue() === null || $this->getValue() === '';
 	}
 }

@@ -99,10 +99,10 @@ class ValidationExceptionTest extends SapphireTest
 		$result->combineAnd($anotherresult)
 				->combineAnd($yetanotherresult);
 		$this->assertFalse($result->valid());
-		$this->assertEquals(array(
+		$this->assertEquals([
 			"EATING101" => "Eat with your mouth closed",
 			"BECLEAN" => "You didn't wash your hands"
-		),$result->messageList());
+		],$result->messageList());
 	}
 
 }

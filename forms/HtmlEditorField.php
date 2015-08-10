@@ -57,12 +57,12 @@ class HtmlEditorField extends TextareaField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'tinymce' => 'true',
 				'style'   => 'width: 97%; height: ' . ($this->rows * 16) . 'px', // prevents horizontal scrollbars
 				'value' => null,
 				'data-config' => $this->editorConfig
-			)
+			]
 		);
 	}
 
@@ -135,7 +135,7 @@ class HtmlEditorField extends TextareaField {
  * @subpackage fields-formattedinput
  */
 class HtmlEditorField_Readonly extends ReadonlyField {
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$valforInput = $this->value ? Convert::raw2att($this->value) : "";
 		return "<span class=\"readonly typography\" id=\"" . $this->id() . "\">"
 			. ( $this->value && $this->value != '<p></p>' ? $this->value : '<i>(not set)</i>' )
@@ -155,12 +155,12 @@ class HtmlEditorField_Readonly extends ReadonlyField {
  */
 class HtmlEditorField_Toolbar extends RequestHandler {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'LinkForm',
 		'MediaForm',
 		'viewfile',
 		'getanchors'
-	);
+	];
 
 	/**
 	 * @var string
@@ -200,10 +200,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return callback
 	 */
 	public function siteTreeSearchCallback($sourceObject, $labelField, $search) {
-		return DataObject::get($sourceObject)->filterAny(array(
+		return DataObject::get($sourceObject)->filterAny([
 			'MenuTitle:PartialMatch' => $search,
 			'Title:PartialMatch' => $search
-		));
+		]);
 	}
 
 	/**
@@ -216,7 +216,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$siteTree = TreeDropdownField::create('internal', _t('HtmlEditorField.PAGE', "Page"),
 			'SiteTree', 'ID', 'MenuTitle', true);
 		// mimic the SiteTree::getMenuTitle(), which is bypassed when the search is performed
-		$siteTree->setSearchFunction(array($this, 'siteTreeSearchCallback'));
+		$siteTree->setSearchFunction([$this, 'siteTreeSearchCallback']);
 
 		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span>'
 			. '<strong class="title">%s</strong></span>';
@@ -235,13 +235,13 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					OptionsetField::create(
 						'LinkType',
 						sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.LINKTO', 'Link to')),
-						array(
+						[
 							'internal' => _t('HtmlEditorField.LINKINTERNAL', 'Page on the site'),
 							'external' => _t('HtmlEditorField.LINKEXTERNAL', 'Another website'),
 							'anchor' => _t('HtmlEditorField.LINKANCHOR', 'Anchor on this page'),
 							'email' => _t('HtmlEditorField.LINKEMAIL', 'Email address'),
 							'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),
-						),
+						],
 						'internal'
 					),
 					LiteralField::create('Step2',
@@ -322,10 +322,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fileField->setAttribute('data-selectable', true);
 		$fileField->setAttribute('data-multiselect', true);
 		$columns = $fileField->getConfig()->getComponentByType('GridFieldDataColumns');
-		$columns->setDisplayFields(array(
+		$columns->setDisplayFields([
 			'CMSThumbnail' => false,
 			'Name' => _t('File.Name'),
-		));
+		]);
 
 		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span>'
 			. '<strong class="title">%s</strong></span>';
@@ -455,18 +455,18 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		if($url = $request->getVar('FileURL')) {
 			if(Director::is_absolute_url($url) && !Director::is_site_url($url)) {
 				$url = $url;
-				$file = new File(array(
+				$file = new File([
 					'Title' => basename($url),
 					'Filename' => $url
-				));
+				]);
 			} else {
 				$url = Director::makeRelative($request->getVar('FileURL'));
 				$url = preg_replace('/_resampled\/[^-]+-/', '', $url);
 				$file = File::get()->filter('Filename', $url)->first();
-				if(!$file) $file = new File(array(
+				if(!$file) $file = new File([
 					'Title' => basename($url),
 					'Filename' => $url
-				));
+				]);
 			}
 		} elseif($id = $request->getVar('ID')) {
 			$file = DataObject::get_by_id('File', $id);
@@ -489,9 +489,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fields = $this->getFieldsForFile($url, $fileWrapper);
 		$this->extend('updateFieldsForFile', $fields, $url, $fileWrapper);
 
-		return $fileWrapper->customise(array(
+		return $fileWrapper->customise([
 			'Fields' => $fields,
-		))->renderWith($this->templateViewFile);
+		])->renderWith($this->templateViewFile);
 	}
 
 	/**
@@ -501,7 +501,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 */
 	public function getanchors() {
 		$id = (int)$this->getRequest()->getVar('PageID');
-		$anchors = array();
+		$anchors = [];
 
 		if (($page = Page::get()->byID($id)) && !empty($page)) {
 			if (!$page->canView()) {
@@ -597,12 +597,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			DropdownField::create(
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
-				array(
+				[
 					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
 					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
-				)
+				]
 			)->addExtraClass('last')
 		);
 
@@ -731,12 +731,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			DropdownField::create(
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
-				array(
+				[
 					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
 					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
-				)
+				]
 			)->addExtraClass('last')
 		);
 
@@ -784,7 +784,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Array All extensions which can be handled by the different views.
 	 */
 	protected function getAllowedExtensions() {
-		$exts = array('jpg', 'gif', 'png', 'swf','jpeg');
+		$exts = ['jpg', 'gif', 'png', 'swf','jpeg'];
 		$this->extend('updateAllowedExtensions', $exts);
 		return $exts;
 	}
@@ -802,10 +802,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
  */
 class HtmlEditorField_File extends ViewableData {
 
-	private static $casting = array(
+	private static $casting = [
 		'URL' => 'Varchar',
 		'Name' => 'Varchar'
-	);
+	];
 
 	/** @var String */
 	protected $url;
@@ -851,7 +851,7 @@ class HtmlEditorField_File extends ViewableData {
 			return $this->file->CMSThumbnail();
 		} else {
 			// Hack to use the framework's built-in thumbnail support without creating a local file representation
-			$tmpFile = new File(array('Name' => $this->Name, 'Filename' => $this->Name));
+			$tmpFile = new File(['Name' => $this->Name, 'Filename' => $this->Name]);
 			return $tmpFile->CMSThumbnail();
 		}
 	}
@@ -865,7 +865,7 @@ class HtmlEditorField_File extends ViewableData {
 			return $this->file->appCategory();
 		} else {
 			// Hack to use the framework's built-in thumbnail support without creating a local file representation
-			$tmpFile = new File(array('Name' => $this->Name, 'Filename' => $this->Name));
+			$tmpFile = new File(['Name' => $this->Name, 'Filename' => $this->Name]);
 			return $tmpFile->appCategory();
 		}
 	}
@@ -881,10 +881,10 @@ class HtmlEditorField_File extends ViewableData {
  */
 class HtmlEditorField_Embed extends HtmlEditorField_File {
 
-	private static $casting = array(
+	private static $casting = [
 		'Type' => 'Varchar',
 		'Info' => 'Varchar'
-	);
+	];
 
 	protected $oembed;
 
@@ -898,7 +898,7 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 					'HtmlEditorField.URLNOTANOEMBEDRESOURCE',
 					"The URL '{url}' could not be turned into a media resource.",
 					"The given URL is not a valid Oembed resource; the embed element couldn't be created.",
-					array('url' => $url)
+					['url' => $url]
 				)));
 			$controller->response->setStatusCode(404);
 

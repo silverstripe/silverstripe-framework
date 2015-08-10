@@ -31,20 +31,20 @@ class InlineFormAction extends FormField {
 	 * @param array $properties
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		if($this->includeDefaultJS) {
 			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/javascript/InlineFormAction.js',
-				array('ID'=>$this->id()));
+				['ID'=>$this->id()]);
 		}
 
 		return DBField::create_field(
 			'HTMLText',
-			FormField::create('input', array(
+			FormField::create('input', [
 				'name' => sprintf('action_%s', $this->getName()),
 		        'value' => $this->title,
 		        'id' => $this->ID(),
 		        'class' => sprintf('action%s', $this->extraClass),
-			))
+			])
 		);
 	}
 
@@ -76,16 +76,16 @@ class InlineFormAction_ReadOnly extends FormField {
 	 * @param array $properties
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		return DBField::create_field('HTMLText',
-			FormField::create_tag('input', array(
+			FormField::create_tag('input', [
 				'type' => 'submit',
 	            'name' => sprintf('action_%s', $this->name),
 	            'value' => $this->title,
 	            'id' => $this->id(),
 				'disabled' => 'disabled',
 	            'class' => 'action disabled ' . $this->extraClass,
-			))
+			])
 		);
 	}
 

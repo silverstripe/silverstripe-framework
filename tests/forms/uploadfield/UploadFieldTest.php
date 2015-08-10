@@ -8,11 +8,11 @@ class UploadFieldTest extends FunctionalTest {
 
 	protected static $fixture_file = 'UploadFieldTest.yml';
 
-	protected $extraDataObjects = array('UploadFieldTest_Record');
+	protected $extraDataObjects = ['UploadFieldTest_Record'];
 
-	protected $requiredExtensions = array(
-		'File' => array('UploadFieldTest_FileExtension')
-	);
+	protected $requiredExtensions = [
+		'File' => ['UploadFieldTest_FileExtension']
+	];
 
 	/**
 	 * Test that files can be uploaded against an object with no relation
@@ -26,9 +26,9 @@ class UploadFieldTest extends FunctionalTest {
 		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
-		$uploadedFile = DataObject::get_one('File', array(
+		$uploadedFile = DataObject::get_one('File', [
 			'"File"."Name"' => $tmpFileName
-		));
+		]);
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 	}
 
@@ -48,9 +48,9 @@ class UploadFieldTest extends FunctionalTest {
 		$response = $this->mockFileUpload('HasOneFile', $tmpFileName);
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
-		$uploadedFile = DataObject::get_one('File', array(
+		$uploadedFile = DataObject::get_one('File', [
 			'"File"."Name"' => $tmpFileName
-		));
+		]);
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		// Secondly, ensure that simply uploading an object does not save the file against the relation
@@ -58,7 +58,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertFalse($record->HasOneFile()->exists());
 
 		// Thirdly, test submitting the form with the encoded data
-		$response = $this->mockUploadFileIDs('HasOneFile', array($uploadedFile->ID));
+		$response = $this->mockUploadFileIDs('HasOneFile', [$uploadedFile->ID]);
 		$this->assertEmpty($response['errors']);
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertTrue($record->HasOneFile()->exists());
@@ -81,9 +81,9 @@ class UploadFieldTest extends FunctionalTest {
 		$response = $this->mockFileUpload('HasOneExtendedFile', $tmpFileName);
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
-		$uploadedFile = DataObject::get_one('UploadFieldTest_ExtendedFile', array(
+		$uploadedFile = DataObject::get_one('UploadFieldTest_ExtendedFile', [
 			'"File"."Name"' => $tmpFileName
-		));
+		]);
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		// Test that the record isn't written to automatically
@@ -91,7 +91,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertFalse($record->HasOneExtendedFile()->exists());
 
 		// Test that saving the form writes the record
-		$response = $this->mockUploadFileIDs('HasOneExtendedFile', array($uploadedFile->ID));
+		$response = $this->mockUploadFileIDs('HasOneExtendedFile', [$uploadedFile->ID]);
 		$this->assertEmpty($response['errors']);
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertTrue($record->HasOneExtendedFile()->exists());
@@ -112,9 +112,9 @@ class UploadFieldTest extends FunctionalTest {
 		$response = $this->mockFileUpload('HasManyFiles', $tmpFileName);
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
-		$uploadedFile = DataObject::get_one('File', array(
+		$uploadedFile = DataObject::get_one('File', [
 			'"File"."Name"' => $tmpFileName
-		));
+		]);
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		// Test that the record isn't written to automatically
@@ -122,7 +122,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertEquals(2, $record->HasManyFiles()->Count()); // Existing two files should be retained
 
 		// Test that saving the form writes the record
-		$ids = array_merge($record->HasManyFiles()->getIDList(), array($uploadedFile->ID));
+		$ids = array_merge($record->HasManyFiles()->getIDList(), [$uploadedFile->ID]);
 		$response = $this->mockUploadFileIDs('HasManyFiles', $ids);
 		$this->assertEmpty($response['errors']);
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
@@ -143,9 +143,9 @@ class UploadFieldTest extends FunctionalTest {
 		$response = $this->mockFileUpload('ManyManyFiles', $tmpFileName);
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
-		$uploadedFile = DataObject::get_one('File', array(
+		$uploadedFile = DataObject::get_one('File', [
 			'"File"."Name"' => $tmpFileName
-		));
+		]);
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		// Test that the record isn't written to automatically
@@ -154,7 +154,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertEquals($relationCount, $record->ManyManyFiles()->Count());
 
 		// Test that saving the form writes the record
-		$ids = array_merge($record->ManyManyFiles()->getIDList(), array($uploadedFile->ID));
+		$ids = array_merge($record->ManyManyFiles()->getIDList(), [$uploadedFile->ID]);
 		$response = $this->mockUploadFileIDs('ManyManyFiles', $ids);
 		$this->assertEmpty($response['errors']);
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
@@ -174,10 +174,10 @@ class UploadFieldTest extends FunctionalTest {
 		// Test invalid file
 		// Relies on Upload_Validator failing to allow this extension
 		$invalidFile = 'invalid.php';
-		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($invalidFile));
+		$_FILES = ['AllowedExtensionsField' => $this->getUploadFile($invalidFile)];
 		$response = $this->post(
 			'UploadFieldTest_Controller/Form/field/AllowedExtensionsField/upload',
-			array('AllowedExtensionsField' => $this->getUploadFile($invalidFile))
+			['AllowedExtensionsField' => $this->getUploadFile($invalidFile)]
 		);
 		$response = json_decode($response->getBody(), true);
 		$this->assertTrue(array_key_exists('error', $response[0]));
@@ -185,10 +185,10 @@ class UploadFieldTest extends FunctionalTest {
 
 		// Test valid file
 		$validFile = 'valid.txt';
-		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($validFile));
+		$_FILES = ['AllowedExtensionsField' => $this->getUploadFile($validFile)];
 		$response = $this->post(
 			'UploadFieldTest_Controller/Form/field/AllowedExtensionsField/upload',
-			array('AllowedExtensionsField' => $this->getUploadFile($validFile))
+			['AllowedExtensionsField' => $this->getUploadFile($validFile)]
 		);
 		$response = json_decode($response->getBody(), true);
 		$this->assertFalse(array_key_exists('error', $response[0]));
@@ -196,10 +196,10 @@ class UploadFieldTest extends FunctionalTest {
 		// Test that setAllowedExtensions rejects extensions explicitly denied by File.allowed_extensions
 		// Relies on File::validate failing to allow this extension
 		$invalidFile = 'invalid.php';
-		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($invalidFile));
+		$_FILES = ['AllowedExtensionsField' => $this->getUploadFile($invalidFile)];
 		$response = $this->post(
 			'UploadFieldTest_Controller/Form/field/InvalidAllowedExtensionsField/upload',
-			array('InvalidAllowedExtensionsField' => $this->getUploadFile($invalidFile))
+			['InvalidAllowedExtensionsField' => $this->getUploadFile($invalidFile)]
 		);
 		$response = json_decode($response->getBody(), true);
 		$this->assertTrue(array_key_exists('error', $response[0]));
@@ -216,13 +216,13 @@ class UploadFieldTest extends FunctionalTest {
 		// Get references for each file to upload
 		$file1 = $this->objFromFixture('File', 'file1');
 		$file2 = $this->objFromFixture('File', 'file2');
-		$fileIDs = array($file1->ID, $file2->ID);
+		$fileIDs = [$file1->ID, $file2->ID];
 
 		// Test each of the three cases - has one with no max filel limit, has one with a limit of
 		// one, has one with a limit of more than one (makes no sense, but should test it anyway).
 		// Each of them should public function in the same way - attaching the first file should work, the
 		// second should cause an error.
-		foreach (array('HasOneFile', 'HasOneFileMaxOne', 'HasOneFileMaxTwo') as $recordName) {
+		foreach (['HasOneFile', 'HasOneFileMaxOne', 'HasOneFileMaxTwo'] as $recordName) {
 
 			// Unset existing has_one relation before re-uploading
 			$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -264,7 +264,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertTrue($file3->exists());
 
 		// Write the first element, should be okay.
-		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', array($file1->ID));
+		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', [$file1->ID]);
 		$this->assertEmpty($response['errors']);
 		$this->assertCount(1, $record->HasManyFilesMaxTwo());
 		$this->assertContains($file1->ID, $record->HasManyFilesMaxTwo()->getIDList());
@@ -279,7 +279,7 @@ class UploadFieldTest extends FunctionalTest {
 
 
 		// Write the second element, should be okay.
-		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', array($file1->ID, $file2->ID));
+		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', [$file1->ID, $file2->ID]);
 		$this->assertEmpty($response['errors']);
 		$this->assertCount(2, $record->HasManyFilesMaxTwo());
 		$this->assertContains($file1->ID, $record->HasManyFilesMaxTwo()->getIDList());
@@ -293,7 +293,7 @@ class UploadFieldTest extends FunctionalTest {
 
 
 		// Write the third element, should result in error.
-		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', array($file1->ID, $file2->ID, $file3->ID));
+		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', [$file1->ID, $file2->ID, $file3->ID]);
 		$this->assertNotEmpty($response['errors']);
 		$this->assertCount(0, $record->HasManyFilesMaxTwo());
 	}
@@ -309,7 +309,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertTrue($record->HasOneFile()->exists());
 
 		// Remove from record
-		$response = $this->mockUploadFileIDs('HasOneFile', array());
+		$response = $this->mockUploadFileIDs('HasOneFile', []);
 		$this->assertEmpty($response['errors']);
 
 		// Check file is removed
@@ -329,15 +329,15 @@ class UploadFieldTest extends FunctionalTest {
 		$file3 = $this->objFromFixture('File', 'file3');
 
 		// Check record has two files attached
-		$this->assertEquals(array('File2', 'File3'), $record->HasManyFiles()->column('Title'));
+		$this->assertEquals(['File2', 'File3'], $record->HasManyFiles()->column('Title'));
 
 		// Remove file 2
-		$response = $this->mockUploadFileIDs('HasManyFiles', array($file3->ID));
+		$response = $this->mockUploadFileIDs('HasManyFiles', [$file3->ID]);
 		$this->assertEmpty($response['errors']);
 
 		// check only file 3 is left
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
-		$this->assertEquals(array('File3'), $record->HasManyFiles()->column('Title'));
+		$this->assertEquals(['File3'], $record->HasManyFiles()->column('Title'));
 
 		// Check file 2 object itself exists
 		$this->assertFileExists($file3->FullPath, 'File is only detached, not deleted from filesystem');
@@ -356,7 +356,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertContains('File5', $record->ManyManyFiles()->column('Title'));
 
 		// Remove file 4
-		$response = $this->mockUploadFileIDs('ManyManyFiles', array($file5->ID));
+		$response = $this->mockUploadFileIDs('ManyManyFiles', [$file5->ID]);
 		$this->assertEmpty($response['errors']);
 
 		// check only file 5 is left
@@ -384,7 +384,7 @@ class UploadFieldTest extends FunctionalTest {
 		// Delete physical file and update record
 		$response = $this->mockFileDelete('HasOneFile', $file1->ID);
 		$this->assertFalse($response->isError());
-		$response = $this->mockUploadFileIDs('HasOneFile', array());
+		$response = $this->mockUploadFileIDs('HasOneFile', []);
 		$this->assertEmpty($response['errors']);
 
 		// Check that file is not set against record
@@ -406,19 +406,19 @@ class UploadFieldTest extends FunctionalTest {
 		$file3 = $this->objFromFixture('File', 'file3');
 
 		// Check that files initially exists
-		$this->assertEquals(array('File2', 'File3'), $record->HasManyFiles()->column('Title'));
+		$this->assertEquals(['File2', 'File3'], $record->HasManyFiles()->column('Title'));
 		$this->assertFileExists($file2->FullPath);
 		$this->assertFileExists($file3->FullPath);
 
 		// Delete physical file and update record without file 2
 		$response = $this->mockFileDelete('HasManyFiles', $file2->ID);
 		$this->assertFalse($response->isError());
-		$response = $this->mockUploadFileIDs('HasManyFiles', array($file3->ID));
+		$response = $this->mockUploadFileIDs('HasManyFiles', [$file3->ID]);
 		$this->assertEmpty($response['errors']);
 
 		// Test that file is removed from record
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
-		$this->assertEquals(array('File3'), $record->HasManyFiles()->column('Title'));
+		$this->assertEquals(['File3'], $record->HasManyFiles()->column('Title'));
 
 		// Test that physical file is removed
 		$this->assertFileNotExists($file2->FullPath, 'File is also removed from filesystem');
@@ -486,7 +486,7 @@ class UploadFieldTest extends FunctionalTest {
 		$items = $parser->getBySelector(
 			'#UploadFieldTestForm_Form_HasManyNoViewFiles_Holder .ss-uploadfield-files .ss-uploadfield-item'
 		);
-		$ids = array();
+		$ids = [];
 		foreach($items as $item) $ids[] = (int)$item['data-fileid'];
 
 		$this->assertContains($file4->ID, $ids, 'Views related file');
@@ -507,7 +507,7 @@ class UploadFieldTest extends FunctionalTest {
 		$response = $this->mockFileEditForm('ManyManyFiles', $file4->ID);
 		$this->assertFalse($response->isError());
 
-		$response = $this->mockFileEdit('ManyManyFiles', $file4->ID, array('Title' => 'File 4 modified'));
+		$response = $this->mockFileEdit('ManyManyFiles', $file4->ID, ['Title' => 'File 4 modified']);
 		$this->assertFalse($response->isError());
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
@@ -518,14 +518,14 @@ class UploadFieldTest extends FunctionalTest {
 		$response = $this->mockFileEditForm('ManyManyFiles', $fileNoEdit->ID);
 		$this->assertEquals(403, $response->getStatusCode());
 
-		$response = $this->mockFileEdit('ManyManyFiles', $fileNoEdit->ID, array());
+		$response = $this->mockFileEdit('ManyManyFiles', $fileNoEdit->ID, []);
 		$this->assertEquals(403, $response->getStatusCode());
 
 		// Test folder permissions
 		$response = $this->mockFileEditForm('ManyManyFiles', $folder->ID);
 		$this->assertEquals(403, $response->getStatusCode());
 
-		$response = $this->mockFileEdit('ManyManyFiles', $folder->ID, array());
+		$response = $this->mockFileEdit('ManyManyFiles', $folder->ID, []);
 		$this->assertEquals(403, $response->getStatusCode());
 	}
 
@@ -550,27 +550,27 @@ class UploadFieldTest extends FunctionalTest {
 
 	public function testSetItems() {
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
-		$items = new ArrayList(array(
+		$items = new ArrayList([
 			$this->objFromFixture('File', 'file1'),
 			$this->objFromFixture('File', 'file2')
-		));
+		]);
 
 		// Field with no record attached
 		$field = UploadField::create('DummyField');
 		$field->setItems($items);
-		$this->assertEquals(array('File1', 'File2'), $field->getItems()->column('Title'));
+		$this->assertEquals(['File1', 'File2'], $field->getItems()->column('Title'));
 
 		// Anonymous field
 		$field = UploadField::create('MyField');
 		$field->setRecord($record);
 		$field->setItems($items);
-		$this->assertEquals(array('File1', 'File2'), $field->getItems()->column('Title'));
+		$this->assertEquals(['File1', 'File2'], $field->getItems()->column('Title'));
 
 		// Field with has_one auto-detected
 		$field = UploadField::create('HasOneFile');
 		$field->setRecord($record);
 		$field->setItems($items);
-		$this->assertEquals(array('File1', 'File2'), $field->getItems()->column('Title'),
+		$this->assertEquals(['File1', 'File2'], $field->getItems()->column('Title'),
 			'Allows overwriting of items even when relationship is detected'
 		);
 	}
@@ -581,17 +581,17 @@ class UploadFieldTest extends FunctionalTest {
 		// Anonymous field
 		$field = UploadField::create('MyField');
 		$field->setValue(null, $record);
-		$this->assertEquals(array(), $field->getItems()->column('Title'));
+		$this->assertEquals([], $field->getItems()->column('Title'));
 
 		// Field with has_one auto-detected
 		$field = UploadField::create('HasOneFile');
 		$field->setValue(null, $record);
-		$this->assertEquals(array('File1'), $field->getItems()->column('Title'));
+		$this->assertEquals(['File1'], $field->getItems()->column('Title'));
 
 		// Field with has_many auto-detected
 		$field = UploadField::create('HasManyFiles');
 		$field->setValue(null, $record);
-		$this->assertEquals(array('File2', 'File3'), $field->getItems()->column('Title'));
+		$this->assertEquals(['File2', 'File3'], $field->getItems()->column('Title'));
 
 		// Field with many_many auto-detected
 		$field = UploadField::create('ManyManyFiles');
@@ -757,7 +757,7 @@ class UploadFieldTest extends FunctionalTest {
 
 		Upload::config()->replaceFile = false;
 		UploadField::config()->defaultConfig = array_merge(
-			UploadField::config()->defaultConfig, array('overwriteWarning' => true)
+			UploadField::config()->defaultConfig, ['overwriteWarning' => true]
 		);
 
 		$tmpFileName = 'testUploadBasic.txt';
@@ -865,13 +865,13 @@ class UploadFieldTest extends FunctionalTest {
 		file_put_contents($tmpFilePath, $tmpFileContent);
 
 		// emulates the $_FILES array
-		return array(
-			'name' => array('Uploads' => array($tmpFileName)),
-			'type' => array('Uploads' => array('text/plaintext')),
-			'size' => array('Uploads' => array(filesize($tmpFilePath))),
-			'tmp_name' => array('Uploads' => array($tmpFilePath)),
-			'error' => array('Uploads' => array(UPLOAD_ERR_OK)),
-		);
+		return [
+			'name' => ['Uploads' => [$tmpFileName]],
+			'type' => ['Uploads' => ['text/plaintext']],
+			'size' => ['Uploads' => [filesize($tmpFilePath)]],
+			'tmp_name' => ['Uploads' => [$tmpFilePath]],
+			'error' => ['Uploads' => [UPLOAD_ERR_OK]],
+		];
 	}
 
 	/**
@@ -884,17 +884,17 @@ class UploadFieldTest extends FunctionalTest {
 	protected function mockUploadFileIDs($fileField, $ids) {
 
 		// collate file ids
-		$files = array();
+		$files = [];
 		foreach($ids as $id) {
 			$files[$id] = $id;
 		}
 
-		$data = array(
+		$data = [
 			'action_submit' => 1
-		);
+		];
 		if($files) {
 			// Normal post requests can't submit empty array values for fields
-			$data[$fileField] = array('Files' => $files);
+			$data[$fileField] = ['Files' => $files];
 		}
 
 		$form = new UploadFieldTestForm();
@@ -903,9 +903,9 @@ class UploadFieldTest extends FunctionalTest {
 			$record = $form->getRecord();
 			$form->saveInto($record);
 			$record->write();
-			return array('errors' => null);
+			return ['errors' => null];
 		} else {
-			return array('errors' => $form->getValidator()->getErrors());
+			return ['errors' => $form->getValidator()->getErrors()];
 		}
 	}
 
@@ -918,10 +918,10 @@ class UploadFieldTest extends FunctionalTest {
 	 */
 	protected function mockFileUpload($fileField, $tmpFileName) {
 		$upload = $this->getUploadFile($tmpFileName);
-		$_FILES = array($fileField => $upload);
+		$_FILES = [$fileField => $upload];
 		return $this->post(
 			"UploadFieldTest_Controller/Form/field/{$fileField}/upload",
-			array($fileField => $upload)
+			[$fileField => $upload]
 		);
 	}
 
@@ -952,7 +952,7 @@ class UploadFieldTest extends FunctionalTest {
 	 * @param array $fields Fields to update
 	 * @return SS_HTTPResponse form response
 	 */
-	protected function mockFileEdit($fileField, $fileID, $fields = array()) {
+	protected function mockFileEdit($fileField, $fileID, $fields = []) {
 		return $this->post(
 			"UploadFieldTest_Controller/Form/field/{$fileField}/item/{$fileID}/EditForm",
 			$fields
@@ -969,7 +969,7 @@ class UploadFieldTest extends FunctionalTest {
 	protected function mockFileDelete($fileField, $fileID) {
 		return $this->post(
 			"UploadFieldTest_Controller/Form/field/{$fileField}/item/{$fileID}/delete",
-			array()
+			[]
 		);
 	}
 
@@ -1028,48 +1028,48 @@ class UploadFieldTest extends FunctionalTest {
 
 class UploadFieldTest_Record extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Title' => 'Text',
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'HasOneFile' => 'File',
 		'HasOneFileMaxOne' => 'File',
 		'HasOneFileMaxTwo' => 'File',
 		'HasOneExtendedFile' => 'UploadFieldTest_ExtendedFile'
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'HasManyFiles' => 'File.HasManyRecord',
 		'HasManyFilesMaxTwo' => 'File.HasManyMaxTwoRecord',
 		'HasManyNoViewFiles' => 'File.HasManyNoViewRecord',
 		'ReadonlyField' => 'File.ReadonlyRecord'
-	);
+	];
 
-	private static $many_many = array(
+	private static $many_many = [
 		'ManyManyFiles' => 'File'
-	);
+	];
 
 }
 
 class UploadFieldTest_FileExtension extends DataExtension implements TestOnly {
 
-	private static $has_one = array(
+	private static $has_one = [
 		'HasManyRecord' => 'UploadFieldTest_Record',
 		'HasManyMaxTwoRecord' => 'UploadFieldTest_Record',
 		'HasManyNoViewRecord' => 'UploadFieldTest_Record',
 		'ReadonlyRecord' => 'UploadFieldTest_Record'
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		'HasOneRecords' => 'UploadFieldTest_Record.HasOneFile',
 		'HasOneMaxOneRecords' => 'UploadFieldTest_Record.HasOneFileMaxOne',
 		'HasOneMaxTwoRecords' => 'UploadFieldTest_Record.HasOneFileMaxTwo',
-	);
+	];
 
-	private static $belongs_many_many = array(
+	private static $belongs_many_many = [
 		'ManyManyRecords' => 'UploadFieldTest_Record'
-	);
+	];
 
 	public function canDelete($member = null) {
 		if($this->owner->Name == 'nodelete.txt') return false;
@@ -1089,9 +1089,9 @@ class UploadFieldTest_FileExtension extends DataExtension implements TestOnly {
  */
 class UploadFieldTest_ExtendedFile extends File implements TestOnly {
 
-	private static $has_many = array(
+	private static $has_many = [
 		'HasOneExtendedRecords' => 'UploadFieldTest_Record.HasOneExtendedFile'
-	);
+	];
 }
 
 class UploadFieldTestForm extends Form implements TestOnly {
@@ -1163,10 +1163,10 @@ class UploadFieldTestForm extends Form implements TestOnly {
 			->setCanAttachExisting(false);
 
 		$fieldAllowedExtensions = new UploadField('AllowedExtensionsField');
-		$fieldAllowedExtensions->getValidator()->setAllowedExtensions(array('txt'));
+		$fieldAllowedExtensions->getValidator()->setAllowedExtensions(['txt']);
 
 		$fieldInvalidAllowedExtensions = new UploadField('InvalidAllowedExtensionsField');
-		$fieldInvalidAllowedExtensions->getValidator()->setAllowedExtensions(array('txt', 'php'));
+		$fieldInvalidAllowedExtensions->getValidator()->setAllowedExtensions(['txt', 'php']);
 
 		$fields = new FieldList(
 			$fieldRootFolder,
@@ -1211,7 +1211,7 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 
 	protected $template = 'BlankPage';
 
-	private static $allowed_actions = array('Form', 'index', 'submit');
+	private static $allowed_actions = ['Form', 'index', 'submit'];
 
 	public function Form() {
 		return new UploadFieldTestForm($this, 'Form');

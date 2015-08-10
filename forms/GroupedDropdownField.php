@@ -55,7 +55,7 @@
  */
 class GroupedDropdownField extends DropdownField {
 
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$options = '';
 		foreach($this->getSource() as $value => $title) {
 			if(is_array($title)) {
@@ -121,7 +121,7 @@ class GroupedDropdownField extends DropdownField {
 				_t(
 					'DropdownField.SOURCE_VALIDATION',
 					"Please select a value within the list provided. {value} is not a valid option",
-					array('value' => $this->value)
+					['value' => $this->value]
 				),
 				"validation"
 			);

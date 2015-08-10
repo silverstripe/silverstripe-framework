@@ -220,13 +220,13 @@ class Debug {
 
 		// Send out the error details to the logger for writing
 		SS_Log::log(
-			array(
+			[
 				'errno' => $errno,
 				'errstr' => $errstr,
 				'errfile' => $errfile,
 				'errline' => $errline,
 				'errcontext' => $errcontext
-			),
+			],
 			SS_Log::NOTICE
 		);
 
@@ -252,13 +252,13 @@ class Debug {
 
 		// Send out the error details to the logger for writing
 		SS_Log::log(
-			array(
+			[
 				'errno' => $errno,
 				'errstr' => $errstr,
 				'errfile' => $errfile,
 				'errline' => $errline,
 				'errcontext' => $errcontext
-			),
+			],
 			SS_Log::WARN
 		);
 
@@ -285,13 +285,13 @@ class Debug {
 
 		// Send out the error details to the logger for writing
 		SS_Log::log(
-			array(
+			[
 				'errno' => $errno,
 				'errstr' => $errstr,
 				'errfile' => $errfile,
 				'errline' => $errline,
 				'errcontext' => $errcontext
-			),
+			],
 			SS_Log::ERR
 		);
 
@@ -328,7 +328,7 @@ class Debug {
 
 		if(!headers_sent()) {
 			// Ensure the error message complies with the HTTP 1.1 spec
-			$msg = strip_tags(str_replace(array("\n", "\r"), '', $friendlyErrorMessage));
+			$msg = strip_tags(str_replace(["\n", "\r"], '', $friendlyErrorMessage));
 			if(Controller::has_curr()) {
 				$response = Controller::curr()->getResponse();
 				$response->setStatusCode($statusCode, $msg);
@@ -392,7 +392,7 @@ class Debug {
 	public static function showError($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
 		if(!headers_sent()) {
 			$errText = "$errtype at line $errline of $errfile";
-			$errText = str_replace(array("\n","\r")," ",$errText);
+			$errText = str_replace(["\n","\r"]," ",$errText);
 
 			if(!headers_sent()) header($_SERVER['SERVER_PROTOCOL'] . " 500 $errText");
 
@@ -479,11 +479,11 @@ class Debug {
 				WHERE "Permission"."Code" = ?
 				AND "Permission"."Type" = ?
 				AND "Group_Members"."MemberID" = ?',
-				array(
+				[
 					'ADMIN', // Code
 					Permission::GRANT_PERMISSION, // Type
 					$memberID // MemberID
-				)
+				]
 			)->value();
 
 			if($permission) return;

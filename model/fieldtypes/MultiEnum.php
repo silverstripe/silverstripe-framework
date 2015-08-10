@@ -32,17 +32,17 @@ class MultiEnum extends Enum {
 
 	public function requireField(){
 
-		$values=array(
+		$values=[
 			'type'=>'set',
-			'parts'=>array(
+			'parts'=>[
 				'enums'=>$this->enum,
 				'character set'=>'utf8',
 				'collate'=> 'utf8_general_ci',
 				'default'=> $this->default,
 				'table'=>$this->tableName,
 				'arrayValue'=>$this->arrayValue
-			)
-		);
+			]
+		];
 
 		DB::require_field($this->tableName, $this->name, $values);
 

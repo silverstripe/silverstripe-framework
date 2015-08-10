@@ -7,9 +7,9 @@ class CheckboxFieldTest extends SapphireTest {
 
 	protected $usesDatabase = true;
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'CheckboxFieldTest_Article',
-	);
+	];
 
 	public function testFieldValueTrue() {
 		/* Create the field, and set the value as boolean true */
@@ -170,8 +170,8 @@ class CheckboxFieldTest extends SapphireTest {
 }
 class CheckboxFieldTest_Article extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'IsChecked' => 'Boolean'
-	);
+	];
 
 }

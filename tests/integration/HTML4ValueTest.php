@@ -7,13 +7,13 @@ class SS_HTML4ValueTest extends SapphireTest {
 	public function testInvalidHTMLSaving() {
 		$value = new SS_HTML4Value();
 
-		$invalid = array (
+		$invalid = [
 			'<p>Enclosed Value</p></p>'                              => '<p>Enclosed Value</p>',
 			'<meta content="text/html"></meta>'                      => '<meta content="text/html">',
 			'<p><div class="example"></div></p>'                     => '<p></p><div class="example"></div>',
 			'<html><html><body><falsetag "attribute=""attribute""">' => '<falsetag></falsetag>',
 			'<body<body<body>/bodu>/body>'                           => '/bodu&gt;/body&gt;'
-		);
+		];
 
 		foreach($invalid as $input => $expected) {
 			$value->setContent($input);
@@ -31,11 +31,11 @@ class SS_HTML4ValueTest extends SapphireTest {
 	public function testInvalidHTMLTagNames() {
 		$value = new SS_HTML4Value();
 
-		$invalid = array(
+		$invalid = [
 			'<p><div><a href="test-link"></p></div>',
 			'<html><div><a href="test-link"></a></a></html_>',
 			'""\'\'\'"""\'""<<<>/</<htmlbody><a href="test-link"<<>'
-		);
+		];
 
 		foreach($invalid as $input) {
 			$value->setContent($input);

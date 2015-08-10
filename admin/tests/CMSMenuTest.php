@@ -40,9 +40,9 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 	public function testLinkWithExternalAttributes() {
 		CMSMenu::clear_menu();
 
-		CMSMenu::add_link('LinkCode', 'link title', 'http://www.example.com', -2, array(
+		CMSMenu::add_link('LinkCode', 'link title', 'http://www.example.com', -2, [
 			'target' => '_blank'
-		));
+		]);
 
 		$menuItems = CMSMenu::get_menu_items();
 		$menuItem = $menuItems['LinkCode'];

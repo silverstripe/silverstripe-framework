@@ -13,7 +13,7 @@
 class PartialMatchFilter extends SearchFilter {
 
 	public function setModifiers(array $modifiers) {
-		if(($extras = array_diff($modifiers, array('not', 'nocase', 'case'))) != array()) {
+		if(($extras = array_diff($modifiers, ['not', 'nocase', 'case'])) != []) {
 			throw new InvalidArgumentException(
 				get_class($this) . ' does not accept ' . implode(', ', $extras) . ' as modifiers');
 		}
@@ -41,14 +41,14 @@ class PartialMatchFilter extends SearchFilter {
 			$this->getCaseSensitive(),
 			true
 		);
-		return $query->where(array(
+		return $query->where([
 			$comparisonClause => $this->getMatchPattern($this->getValue())
-		));
+		]);
 	}
 
 	protected function applyMany(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		$whereClause = array();
+		$whereClause = [];
 		$comparisonClause = DB::get_conn()->comparisonClause(
 			$this->getDbName(),
 			null,
@@ -58,7 +58,7 @@ class PartialMatchFilter extends SearchFilter {
 			true
 		);
 		foreach($this->getValue() as $value) {
-			$whereClause[] = array($comparisonClause => $this->getMatchPattern($value));
+			$whereClause[] = [$comparisonClause => $this->getMatchPattern($value)];
 		}
 		return $query->whereAny($whereClause);
 	}
@@ -73,9 +73,9 @@ class PartialMatchFilter extends SearchFilter {
 			$this->getCaseSensitive(),
 			true
 		);
-		return $query->where(array(
+		return $query->where([
 			$comparisonClause => $this->getMatchPattern($this->getValue())
-		));
+		]);
 	}
 
 	protected function excludeMany(DataQuery $query) {
@@ -89,17 +89,17 @@ class PartialMatchFilter extends SearchFilter {
 			$this->getCaseSensitive(),
 			true
 		);
-		$parameters = array();
+		$parameters = [];
 		foreach($values as $value) {
 			$parameters[] = $this->getMatchPattern($value);
 		}
 		// Since query connective is ambiguous, use AND explicitly here
 		$count = count($values);
 		$predicate = implode(' AND ', array_fill(0, $count, $comparisonClause));
-		return $query->where(array($predicate => $parameters));
+		return $query->where([$predicate => $parameters]);
 	}
 
 	public function isEmpty() {
-		return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
+		return $this->getValue() === [] || $this->getValue() === null || $this->getValue() === '';
 	}
 }

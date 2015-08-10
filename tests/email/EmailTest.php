@@ -12,13 +12,13 @@ class EmailTest extends SapphireTest {
 		$email->attachFile(__DIR__ . '/fixtures/attachment.txt', null, 'text/plain');
 
 		$this->assertEquals(
-			array('contents'=>'foo bar', 'filename'=>'foo.txt', 'mimetype'=>'text/plain'),
+			['contents'=>'foo bar', 'filename'=>'foo.txt', 'mimetype'=>'text/plain'],
 			$email->attachments[0],
 			'File is attached correctly from string'
 		);
 
 		$this->assertEquals(
-			array('contents'=>'Hello, I\'m a text document.', 'filename'=>'attachment.txt', 'mimetype'=>'text/plain'),
+			['contents'=>'Hello, I\'m a text document.', 'filename'=>'attachment.txt', 'mimetype'=>'text/plain'],
 			$email->attachments[1],
 			'File is attached correctly from file'
 		);
@@ -37,22 +37,22 @@ class EmailTest extends SapphireTest {
 
 		$email->addCustomHeader('Reply-To', 'test1@example.com');
 		$this->assertEquals(
-			array('Reply-To' => 'test1@example.com'),
+			['Reply-To' => 'test1@example.com'],
 			$email->customHeaders,
 			'addCustomHeader() adds headers'
 		);
 
 		$email->addCustomHeader('Reply-To', 'test2@example.com');
 		$this->assertEquals(
-			array('Reply-To' => 'test1@example.com, test2@example.com'),
+			['Reply-To' => 'test1@example.com, test2@example.com'],
 			$email->customHeaders,
 			'addCustomHeader() appends data to existing headers'
 		);
 	}
 
 	public function testValidEmailAddress() {
-		$validEmails = array('test@example.com', 'test-123@example.sub.com');
-		$invalidEmails = array('foo.bar@', '@example.com', 'foo@');
+		$validEmails = ['test@example.com', 'test-123@example.sub.com'];
+		$invalidEmails = ['foo.bar@', '@example.com', 'foo@'];
 
 		foreach ($validEmails as $email) {
 			$this->assertEquals(
@@ -133,23 +133,23 @@ class EmailTest extends SapphireTest {
 		$this->assertEquals('Test send plain', $sent['subject']);
 		$this->assertEquals('Testing Email->sendPlain()', $sent['content']);
 		$this->assertEquals(
-			array(
-				0 => array(
+			[
+				0 => [
 					'contents'=>'Hello, I\'m a text document.',
 					'filename'=>'attachment.txt',
 					'mimetype'=>'text/plain'
-				)
-			),
+				]
+			],
 			$sent['files']
 		);
 		$this->assertEquals(
-			array(
+			[
 				'foo' => 'bar',
 				'X-SilverStripeMessageID' => 'emailtest.123',
 				'X-SilverStripeSite' => 'emailtest',
 				'Cc' => 'cc@example.com',
 				'Bcc' => 'bcc@example.com'
-			),
+			],
 			$sent['customheaders']
 		);
 	}
@@ -183,23 +183,23 @@ class EmailTest extends SapphireTest {
 		$this->assertContains('Testing Email->sendPlain()', $sent['content']);
 		$this->assertNull($sent['plaincontent']);
 		$this->assertEquals(
-			array(
-				0 => array(
+			[
+				0 => [
 					'contents'=>'Hello, I\'m a text document.',
 					'filename'=>'attachment.txt',
 					'mimetype'=>'text/plain'
-				)
-			),
+				]
+			],
 			$sent['files']
 		);
 		$this->assertEquals(
-			array(
+			[
 				'foo' => 'bar',
 				'X-SilverStripeMessageID' => 'emailtest.123',
 				'X-SilverStripeSite' => 'emailtest',
 				'Cc' => 'cc@example.com',
 				'Bcc' => 'bcc@example.com'
-			),
+			],
 			$sent['customheaders']
 		);
 	}
@@ -210,7 +210,7 @@ class EmailTest_Mailer extends Mailer {
 
 	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false,
 			$plainContent = false) {
-		return array(
+		return [
 			'to' => $to,
 			'from' => $from,
 			'subject' => $subject,
@@ -218,18 +218,18 @@ class EmailTest_Mailer extends Mailer {
 			'files' => $attachedFiles,
 			'customheaders' => $customheaders,
 			'plaincontent' => $plainContent
-		);
+		];
 	}
 
 	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
-		return array(
+		return [
 			'to' => $to,
 			'from' => $from,
 			'subject' => $subject,
 			'content' => $plainContent,
 			'files' => $attachedFiles,
 			'customheaders' => $customheaders
-		);
+		];
 	}
 
 }

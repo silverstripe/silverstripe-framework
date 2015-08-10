@@ -15,14 +15,14 @@ class GridFieldEditButtonTest extends SapphireTest {
 	protected static $fixture_file = 'GridFieldActionTest.yml';
 
 	/** @var array */
-	protected $extraDataObjects = array('GridFieldAction_Delete_Team', 'GridFieldAction_Edit_Team');
+	protected $extraDataObjects = ['GridFieldAction_Delete_Team', 'GridFieldAction_Edit_Team'];
 
 	public function setUp() {
 		parent::setUp();
 		$this->list = new DataList('GridFieldAction_Edit_Team');
 		$config = GridFieldConfig::create()->addComponent(new GridFieldEditButton());
 		$this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
-		$this->form = new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
+		$this->form = new Form(new Controller(), 'mockform', new FieldList([$this->gridField]), new FieldList());
 	}
 
 	public function testShowEditLinks() {
@@ -46,10 +46,10 @@ class GridFieldEditButtonTest extends SapphireTest {
 }
 
 class GridFieldAction_Edit_Team extends DataObject implements TestOnly {
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar',
 		'City' => 'Varchar'
-	);
+	];
 
 	public function canView($member = null) {
 		return true;

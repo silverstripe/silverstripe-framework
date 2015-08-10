@@ -67,7 +67,7 @@ class TabSet extends CompositeField {
 	 * Returns a tab-strip and the associated tabs.
 	 * The HTML is a standardised format, containing a &lt;ul;
 	 */
-	public function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = []) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
@@ -106,10 +106,10 @@ class TabSet extends CompositeField {
 	public function getAttributes() {
 		return array_merge(
 			$this->attributes,
-			array(
+			[
 				'id' => $this->id(),
 				'class' => $this->extraClass()
-			)
+			]
 		);
 	}
 

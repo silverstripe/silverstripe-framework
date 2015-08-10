@@ -8,16 +8,16 @@
 class GroupedListTest extends SapphireTest {
 
 	public function testGroupBy() {
-		$list = new GroupedList(new ArrayList(array(
-			array('Name' => 'AAA'),
-			array('Name' => 'AAA'),
-			array('Name' => 'BBB'),
-			array('Name' => 'BBB'),
-			array('Name' => 'AAA'),
-			array('Name' => 'BBB'),
-			array('Name' => 'CCC'),
-			array('Name' => 'CCC')
-		)));
+		$list = new GroupedList(new ArrayList([
+			['Name' => 'AAA'],
+			['Name' => 'AAA'],
+			['Name' => 'BBB'],
+			['Name' => 'BBB'],
+			['Name' => 'AAA'],
+			['Name' => 'BBB'],
+			['Name' => 'CCC'],
+			['Name' => 'CCC']
+		]));
 
 		$grouped = $list->groupBy('Name');
 
@@ -28,16 +28,16 @@ class GroupedListTest extends SapphireTest {
 	}
 
 	public function testGroupedBy() {
-		$list = new GroupedList(new ArrayList(array(
-			array('Name' => 'AAA'),
-			array('Name' => 'AAA'),
-			array('Name' => 'BBB'),
-			array('Name' => 'BBB'),
-			array('Name' => 'AAA'),
-			array('Name' => 'BBB'),
-			array('Name' => 'CCC'),
-			array('Name' => 'CCC')
-		)));
+		$list = new GroupedList(new ArrayList([
+			['Name' => 'AAA'],
+			['Name' => 'AAA'],
+			['Name' => 'BBB'],
+			['Name' => 'BBB'],
+			['Name' => 'AAA'],
+			['Name' => 'BBB'],
+			['Name' => 'CCC'],
+			['Name' => 'CCC']
+		]));
 
 		$grouped = $list->GroupedBy('Name');
 		$first   = $grouped->first();
@@ -52,48 +52,48 @@ class GroupedListTest extends SapphireTest {
 	public function testGroupedByChildren(){
 		$list = GroupedList::create(
 			ArrayList::create(
-				array(
-					ArrayData::create(array(
+				[
+					ArrayData::create([
 						'Name' => 'AAA',
 						'Number' => '111',
-					)),
-					ArrayData::create(array(
+					]),
+					ArrayData::create([
 						'Name' => 'BBB',
 						'Number' => '111',
-					)),
-					ArrayData::create(array(
+					]),
+					ArrayData::create([
 						'Name'   => 'AAA',
 						'Number' => '222',
-					)),
-					ArrayData::create(array(
+					]),
+					ArrayData::create([
 						'Name'   => 'BBB',
 						'Number' => '111',
-					)),
-					ArrayData::create(array(
+					]),
+					ArrayData::create([
 						'Name'   => 'AAA',
 						'Number' => '111',
-					)),
-					ArrayData::create(array(
+					]),
+					ArrayData::create([
 						'Name'   => 'AAA',
 						'Number' => '333',
-					)),
-					ArrayData::create(array(
+					]),
+					ArrayData::create([
 						'Name'   => 'BBB',
 						'Number' => '222',
-					)),
-					ArrayData::create(array(
+					]),
+					ArrayData::create([
 						'Name'   => 'BBB',
 						'Number' => '333',
-					)),
-					ArrayData::create(array(
+					]),
+					ArrayData::create([
 						'Name'   => 'AAA',
 						'Number' => '111',
-					)),
-					ArrayData::create(array(
+					]),
+					ArrayData::create([
 						'Name'   => 'AAA',
 						'Number' => '333',
-					))
-				)
+					])
+				]
 			)
 		);
 		$grouped = $list->GroupedBy('Name');

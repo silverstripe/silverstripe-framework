@@ -107,7 +107,7 @@ class HTTP {
 		}
 
 		// Replace attributes
-		$attribs = array("src", "background", "a" => "href", "link" => "href", "base" => "href");
+		$attribs = ["src", "background", "a" => "href", "link" => "href", "base" => "href"];
 		foreach($attribs as $tag => $attrib) {
 			if(!is_numeric($tag)) $tagPrefix = "$tag ";
 			else $tagPrefix = "";
@@ -118,7 +118,7 @@ class HTTP {
 		}
 		// Replace css styles
 		// @todo - http://www.css3.info/preview/multiple-backgrounds/
-		$styles = array('background-image', 'background', 'list-style-image', 'list-style', 'content');
+		$styles = ['background-image', 'background', 'list-style-image', 'list-style', 'content'];
 		foreach($styles as $style) {
 			$regExps[] = "/($style:[^;]*url *\(\")([^\"]+)(\"\))/i";
 			$regExps[] = "/($style:[^;]*url *\(')([^']+)('\))/i";
@@ -181,7 +181,7 @@ class HTTP {
 		}
 
 		// Parse params and add new variable
-		$params = array();
+		$params = [];
 		if(isset($parts['query'])) parse_str($parts['query'], $params);
 		$params[$varname] = $varvalue;
 
@@ -225,14 +225,14 @@ class HTTP {
 	 * @return array
 	 */
 	public static function findByTagAndAttribute($content, $attributes) {
-		$regexes = array();
+		$regexes = [];
 
 		foreach($attributes as $tag => $attribute) {
 			$regexes[] = "/<{$tag} [^>]*$attribute *= *([\"'])(.*?)\\1[^>]*>/i";
 			$regexes[] = "/<{$tag} [^>]*$attribute *= *([^ \"'>]+)/i";
 		}
 
-		$result = array();
+		$result = [];
 
 		if($regexes) foreach($regexes as $regex) {
 			if(preg_match_all($regex, $content, $matches)) {
@@ -244,11 +244,11 @@ class HTTP {
 	}
 
 	public static function getLinksIn($content) {
-		return self::findByTagAndAttribute($content, array("a" => "href"));
+		return self::findByTagAndAttribute($content, ["a" => "href"]);
 	}
 
 	public static function getImagesIn($content) {
-		return self::findByTagAndAttribute($content, array("img" => "src"));
+		return self::findByTagAndAttribute($content, ["img" => "src"]);
 	}
 
 	/**
@@ -329,7 +329,7 @@ class HTTP {
 		if(headers_sent() && !$body) return;
 
 		// Populate $responseHeaders with all the headers that we want to build
-		$responseHeaders = array();
+		$responseHeaders = [];
 
 		$config = Config::inst();
 		$cacheControlHeaders = Config::inst()->get('HTTP', 'cache_control');
@@ -398,7 +398,7 @@ class HTTP {
 			// when it shouldn't be trying to use that page at all because it's the "logged in" version.
 			// By also using and etag that includes both the modification date and all the varies
 			// values which we also check against we can catch this and not return a 304
-			$etagParts = array(self::$modification_date, serialize($_COOKIE));
+			$etagParts = [self::$modification_date, serialize($_COOKIE)];
 			$etagParts[] = Director::is_https() ? 'https' : 'http';
 			if (isset($_SERVER['HTTP_USER_AGENT'])) $etagParts[] = $_SERVER['HTTP_USER_AGENT'];
 			if (isset($_SERVER['HTTP_ACCEPT'])) $etagParts[] = $_SERVER['HTTP_ACCEPT'];

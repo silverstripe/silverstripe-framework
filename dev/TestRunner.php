@@ -24,7 +24,7 @@ class TestRunner extends Controller {
 	/** @ignore */
 	private static $default_reporter;
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'' => 'browse',
 		'coverage/module/$ModuleName' => 'coverageModule',
 		'coverage/suite/$SuiteName!' => 'coverageSuite',
@@ -36,9 +36,9 @@ class TestRunner extends Controller {
 		'all' => 'all',
 		'build' => 'build',
 		'$TestCase' => 'only'
-	);
+	];
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'browse',
 		'coverage',
@@ -52,7 +52,7 @@ class TestRunner extends Controller {
 		'all',
 		'build',
 		'only'
-	);
+	];
 
 	/**
 	 * @var Array Blacklist certain directories for the coverage report.
@@ -61,11 +61,11 @@ class TestRunner extends Controller {
 	 * @see http://www.phpunit.de/manual/current/en/appendixes.configuration.html
 	 *      #appendixes.configuration.blacklist-whitelist
 	 */
-	static $coverage_filter_dirs = array(
+	static $coverage_filter_dirs = [
 		'*/thirdparty',
 		'*/tests',
 		'*/lang',
-	);
+	];
 
 	/**
 	 * Override the default reporter with a custom configured subclass.
@@ -246,10 +246,10 @@ class TestRunner extends Controller {
 	 */
 	public function module($request, $coverage = false) {
 		self::use_test_manifest();
-		$classNames = array();
+		$classNames = [];
 		$moduleNames = explode(',', $request->param('ModuleName'));
 
-		$ignored = array('functionaltest', 'phpsyntaxtest');
+		$ignored = ['functionaltest', 'phpsyntaxtest'];
 
 		foreach($moduleNames as $moduleName) {
 			$classNames = array_merge(
@@ -267,7 +267,7 @@ class TestRunner extends Controller {
 	 * @param array $ignore Ignore these test classes if they are found.
 	 * @return array
 	 */
-	protected function getTestsInDirectory($directory, $ignore = array()) {
+	protected function getTestsInDirectory($directory, $ignore = []) {
 		$classes = ClassInfo::classes_for_folder($directory);
 		return $this->filterTestClasses($classes, $ignore);
 	}
@@ -278,7 +278,7 @@ class TestRunner extends Controller {
 	 * @param array $ignore Ignore these test classes if they are found.
 	 * @return array
 	 */
-	protected function getTestsInFile($file, $ignore = array()) {
+	protected function getTestsInFile($file, $ignore = []) {
 		$classes = ClassInfo::classes_for_file($file);
 		return $this->filterTestClasses($classes, $ignore);
 	}
@@ -288,7 +288,7 @@ class TestRunner extends Controller {
 	 * @param array $ignore Ignore these test classes if they are found.
 	 */
 	protected function filterTestClasses($classes, $ignore) {
-		$testClasses = array();
+		$testClasses = [];
 		if($classes) {
 			foreach($classes as $className) {
 				if(
@@ -319,7 +319,7 @@ class TestRunner extends Controller {
 			user_error("TestRunner::suite(): couldn't find the $suite testsuite in phpunit.xml");
 		}
 		$suite = array_shift($suite);
-		$classNames = array();
+		$classNames = [];
 		if(isset($suite->directory)) {
 			foreach($suite->directory as $directory) {
 				$classNames = array_merge($classNames, $this->getTestsInDirectory($directory));
@@ -356,12 +356,12 @@ class TestRunner extends Controller {
 		$this->setUp();
 
 		// Optionally skip certain tests
-		$skipTests = array();
+		$skipTests = [];
 		if($this->getRequest()->getVar('SkipTests')) {
 			$skipTests = explode(',', $this->getRequest()->getVar('SkipTests'));
 		}
 
-		$abstractClasses = array();
+		$abstractClasses = [];
 		foreach($classList as $className) {
 			// Ensure that the autoloader pulls in the test class, as PHPUnit won't know how to do this.
 			class_exists($className);

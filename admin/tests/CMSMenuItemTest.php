@@ -7,7 +7,7 @@ class CMSMenuItemTest extends SapphireTest {
 
 	public function testAttributes() {
 		$menuItem = new CMSMenuItem('Foo', 'foo');
-		$exampleAttributes = array('title' => 'foo bar', 'disabled' => true, 'data-foo' => '<something>');
+		$exampleAttributes = ['title' => 'foo bar', 'disabled' => true, 'data-foo' => '<something>'];
 
 		$this->assertEquals(
 			'title="foo bar" disabled="disabled" data-foo="&lt;something&gt;"',
@@ -15,7 +15,7 @@ class CMSMenuItemTest extends SapphireTest {
 			'Attributes appear correctly when passed as an argument'
 		);
 
-		$emptyAttributes = array('empty' => '');
+		$emptyAttributes = ['empty' => ''];
 		$this->assertEquals(
 			'',
 			$menuItem->getAttributesHTML($emptyAttributes),

@@ -24,7 +24,7 @@ class GridFieldLevelup extends Object implements GridField_HTMLProvider {
 	/**
 	 * @var array Extra attributes for the link
 	 */
-	protected $attributes = array();
+	protected $attributes = [];
 
 	/**
 	 *
@@ -50,20 +50,20 @@ class GridFieldLevelup extends Object implements GridField_HTMLProvider {
 			if($parent) $parentID = $parent->ID;
 
 			// Attributes
-			$attrs = array_merge($this->attributes, array(
+			$attrs = array_merge($this->attributes, [
 				'href' => sprintf($this->linkSpec, $parentID),
 				'class' => 'cms-panel-link list-parent-link'
-			));
+			]);
 			$attrsStr = '';
 			foreach($attrs as $k => $v) $attrsStr .= " $k=\"" . Convert::raw2att($v) . "\"";
 
-			$forTemplate = new ArrayData(array(
+			$forTemplate = new ArrayData([
 				'UpLink' => sprintf('<a%s>%s</a>', $attrsStr, _t('GridField.LEVELUP', 'Level up'))
-			));
+			]);
 
-			return array(
+			return [
 				'before' => $forTemplate->renderWith('GridFieldLevelup'),
-			);
+			];
 		}
 	}
 

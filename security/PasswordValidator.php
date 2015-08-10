@@ -17,12 +17,12 @@
  */
 class PasswordValidator extends Object {
 
-	private static $character_strength_tests = array(
+	private static $character_strength_tests = [
 		'lowercase' => '/[a-z]/',
 		'uppercase' => '/[A-Z]/',
 		'digits' => '/[0-9]/',
 		'punctuation' => '/[^A-Za-z0-9]/',
-	);
+	];
 
 	protected $minLength, $minScore, $testNames, $historicalPasswordCount;
 
@@ -81,7 +81,7 @@ class PasswordValidator extends Object {
 
 		if($this->minScore) {
 			$score = 0;
-			$missedTests = array();
+			$missedTests = [];
 			foreach($this->testNames as $name) {
 				if(preg_match(self::config()->character_strength_tests[$name], $password)) {
 					$score++;
@@ -110,7 +110,7 @@ class PasswordValidator extends Object {
 
 		if($this->historicalPasswordCount) {
 			$previousPasswords = MemberPassword::get()
-				->where(array('"MemberPassword"."MemberID"' => $member->ID))
+				->where(['"MemberPassword"."MemberID"' => $member->ID])
 				->sort('"Created" DESC, "ID" DESC')
 				->limit($this->historicalPasswordCount);
 			if($previousPasswords) foreach($previousPasswords as $previousPasswords) {

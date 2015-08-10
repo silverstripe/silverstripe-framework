@@ -40,7 +40,7 @@ class TestSession {
 	private $lastUrl;
 
 	public function __construct() {
-		$this->session = Injector::inst()->create('Session', array());
+		$this->session = Injector::inst()->create('Session', []);
 		$this->cookies = Injector::inst()->create('Cookie_Backend');
 		$this->controller = new Controller();
 		$this->controller->setSession($this->session);
@@ -130,7 +130,7 @@ class TestSession {
 	 * @param array $data Map of GET/POST data.
 	 * @return SS_HTTPResponse
 	 */
-	public function submitForm($formID, $button = null, $data = array()) {
+	public function submitForm($formID, $button = null, $data = []) {
 		$page = $this->lastPage();
 		if($page) {
 			$form = $page->getFormById($formID);
@@ -151,7 +151,7 @@ class TestSession {
 
 			$url = Director::makeRelative($form->getAction()->asString());
 
-			$postVars = array();
+			$postVars = [];
 			parse_str($submission->_encode(), $postVars);
 			return $this->post($url, $postVars);
 

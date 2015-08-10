@@ -37,7 +37,7 @@ class SS_ZendLog extends Zend_Log {
 	 * Clear all writers in this logger.
 	 */
 	public function clearWriters() {
-		$this->_writers = array();
+		$this->_writers = [];
 	}
 
 }

@@ -16,7 +16,7 @@ class SS_TemplateManifest {
 	protected $cacheKey;
 	protected $project;
 	protected $inited;
-	protected $templates = array();
+	protected $templates = [];
 
 	/**
 	 * Constructs a new template manifest. The manifest is not actually built
@@ -121,7 +121,7 @@ class SS_TemplateManifest {
 		if (array_key_exists($name, $this->templates)) {
 			return $this->templates[$name];
 		} else {
-			return array();
+			return [];
 		}
 	}
 
@@ -135,7 +135,7 @@ class SS_TemplateManifest {
 	 * @return array
 	 */
 	public function getCandidateTemplate($name, $theme = null) {
-		$found = array();
+		$found = [];
 		$candidates = $this->getTemplate($name);
 
 		// theme overrides modules
@@ -162,12 +162,12 @@ class SS_TemplateManifest {
 	 */
 	public function regenerate($cache = true) {
 		$finder = new ManifestFileFinder();
-		$finder->setOptions(array(
+		$finder->setOptions([
 			'name_regex'     => '/\.ss$/',
 			'include_themes' => true,
 			'ignore_tests'  => !$this->tests,
-			'file_callback'  => array($this, 'handleFile')
-		));
+			'file_callback'  => [$this, 'handleFile']
+		]);
 
 		$finder->find($this->base);
 

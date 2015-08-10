@@ -23,7 +23,7 @@ class DataModel {
 	/**
 	 * @var array $customDataLists
 	 */
-	protected $customDataLists = array();
+	protected $customDataLists = [];
 
 	/**
 	 * Get the global DataModel.

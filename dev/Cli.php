@@ -51,7 +51,7 @@ class SS_Cli extends Object {
 	 */
 	public static function start_colour($fgColour = null, $bgColour = null, $bold = false) {
 		if(!self::supports_colour()) return "";
-		$colours = array(
+		$colours = [
 			'black' => 0,
 			'red' => 1,
 			'green' => 2,
@@ -60,7 +60,7 @@ class SS_Cli extends Object {
 			'magenta' => 5,
 			'cyan' => 6,
 			'white' => 7,
-		);
+		];
 
 		$prefix = "";
 

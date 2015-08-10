@@ -25,10 +25,10 @@ class CheckboxField extends FormField {
 		$attrs['value'] = 1;
 		return array_merge(
 			$attrs,
-			array(
+			[
 				'checked' => ($this->Value()) ? 'checked' : null,
 				'type' => 'checkbox',
-			)
+			]
 		);
 	}
 

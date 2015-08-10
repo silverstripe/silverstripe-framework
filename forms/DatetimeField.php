@@ -45,11 +45,11 @@ class DatetimeField extends FormField {
 	 * @config
 	 * @var array
 	 */
-	private static $default_config = array(
+	private static $default_config = [
 		'datavalueformat' => 'yyyy-MM-dd HH:mm:ss',
 		'usertimezone' => null,
 		'datetimeorder' => '%s %s',
-	);
+	];
 
 	/**
 	 * @var array
@@ -92,10 +92,10 @@ class DatetimeField extends FormField {
 	 * @param array $properties
 	 * @return HTMLText
 	 */
-	public function FieldHolder($properties = array()) {
-		$config = array(
+	public function FieldHolder($properties = []) {
+		$config = [
 			'datetimeorder' => $this->getConfig('datetimeorder'),
-		);
+		];
 		$config = array_filter($config);
 		$this->addExtraClass('fieldgroup');
 		$this->addExtraClass(Convert::raw2json($config));
@@ -107,7 +107,7 @@ class DatetimeField extends FormField {
 	 * @param array $properties
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		Requirements::css(FRAMEWORK_DIR . '/css/DatetimeField.css');
 
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
@@ -375,7 +375,7 @@ class DatetimeField_Readonly extends DatetimeField {
 
 	protected $readonly = true;
 
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$valDate = $this->dateField->dataValue();
 		$valTime = $this->timeField->dataValue();
 

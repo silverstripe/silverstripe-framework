@@ -5,7 +5,7 @@
  */
 class MemberDatetimeOptionsetField extends OptionsetField {
 
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberDatetimeOptionsetField.js');
 
 		$options = '';

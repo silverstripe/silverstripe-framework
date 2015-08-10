@@ -11,7 +11,7 @@
  */
 class SQLFormatter extends Object {
 
-	protected static $newline_before_tokens = array(
+	protected static $newline_before_tokens = [
 		'SELECT',
 		'UPDATE',
 		'INSERT',
@@ -25,7 +25,7 @@ class SQLFormatter extends Object {
 		'ORDER BY',
 		'GROUP BY',
 		'LIMIT',
-	);
+	];
 
 	public function formatPlain($sql) {
 		$sql = $this->addNewlines($sql, false);

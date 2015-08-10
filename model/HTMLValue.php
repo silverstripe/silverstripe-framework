@@ -32,7 +32,7 @@ abstract class SS_HTMLValue extends ViewableData {
 
 		// saveHTML Percentage-encodes any URI-based attributes. We don't want this, since it interferes with
 		// shortcodes. So first, save all the attribute values for later restoration.
-		$attrs = array(); $i = 0;
+		$attrs = []; $i = 0;
 
 		foreach ($xp->query('//body//@*') as $attr) {
 			$key = "__HTMLVALUE_".($i++);
@@ -42,10 +42,10 @@ abstract class SS_HTMLValue extends ViewableData {
 
 		// Then, call saveHTML & extract out the content from the body tag
 		$res = preg_replace(
-			array(
+			[
 				'/^(.*?)<body>/is',
 				'/<\/body>(.*?)$/isD',
-			),
+			],
 			'',
 			$doc->saveHTML()
 		);
@@ -116,7 +116,7 @@ abstract class SS_HTMLValue extends ViewableData {
 		$doc = $this->getDocument();
 
 		if(method_exists($doc, $method)) {
-			return call_user_func_array(array($doc, $method), $arguments);
+			return call_user_func_array([$doc, $method], $arguments);
 		}
 		else {
 			return parent::__call($method, $arguments);

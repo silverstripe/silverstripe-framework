@@ -68,20 +68,20 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * @var array $db_for_versions_table
 	 */
-	private static $db_for_versions_table = array(
+	private static $db_for_versions_table = [
 		"RecordID" => "Int",
 		"Version" => "Int",
 		"WasPublished" => "Boolean",
 		"AuthorID" => "Int",
 		"PublisherID" => "Int"
-	);
+	];
 
 	/**
 	 * @var array
 	 */
-	private static $db = array(
+	private static $db = [
 		'Version' => 'Int'
-	);
+	];
 
 	/**
 	 * Used to enable or disable the prepopulation of the version number cache.
@@ -96,7 +96,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * @var array
 	 */
-	private static $archive_tables = array();
+	private static $archive_tables = [];
 
 	/**
 	 * Additional database indexes for the new
@@ -104,13 +104,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * @var array $indexes_for_versions_table
 	 */
-	private static $indexes_for_versions_table = array(
+	private static $indexes_for_versions_table = [
 		'RecordID_Version' => '("RecordID","Version")',
 		'RecordID' => true,
 		'Version' => true,
 		'AuthorID' => true,
 		'PublisherID' => true,
-	);
+	];
 
 	/**
 	 * An array of DataObject extensions that may require versioning for extra tables
@@ -128,7 +128,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * @var array
 	 */
-	protected static $versionableExtensions = array('Translatable' => 'lang');
+	protected static $versionableExtensions = ['Translatable' => 'lang'];
 
 	/**
 	 * Reset static configuration variables to their default values.
@@ -146,7 +146,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * The first stage is considered the 'default' stage, the last stage is
 	 * considered the 'live' stage.
 	 */
-	public function __construct($stages = array('Stage','Live')) {
+	public function __construct($stages = ['Stage','Live']) {
 		parent::__construct();
 
 		if(!is_array($stages)) {
@@ -219,7 +219,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				}
 			}
 			// Link to the version archived on that date
-			$query->addWhere(array(
+			$query->addWhere([
 				"\"{$baseTable}_versions\".\"Version\" IN
 				(SELECT LatestVersion FROM
 					(SELECT
@@ -231,7 +231,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					) AS \"{$baseTable}_versions_latest\"
 					WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
 				)" => $date
-			));
+			]);
 			break;
 
 		// Reading a specific stage (Stage or Live)
@@ -343,7 +343,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		// accidentally querying the *_versions tables.
 		$versionedMode = $dataObject->getSourceQueryParam('Versioned.mode');
 		$dataClass = $dataQuery->dataClass();
-		$modesToAllowVersioning = array('all_versions', 'latest_versions', 'archive');
+		$modesToAllowVersioning = ['all_versions', 'latest_versions', 'archive'];
 		if(
 			!empty($dataObject->Version) &&
 			(!empty($versionedMode) && in_array($versionedMode,$modesToAllowVersioning))
@@ -372,7 +372,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		// Remove references to them
-		self::$archive_tables = array();
+		self::$archive_tables = [];
 	}
 
 	public function augmentDatabase() {
@@ -381,7 +381,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$isRootClass = ($this->owner->class == ClassInfo::baseDataClass($this->owner->class));
 
 		// Build a list of suffixes whose tables need versioning
-		$allSuffixes = array();
+		$allSuffixes = [];
 		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
 			if ($this->owner->hasExtension($versionableExtension)) {
 				$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
@@ -448,21 +448,21 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				} else {
 					// Create fields for any tables of subclasses
 					$versionFields = array_merge(
-						array(
+						[
 							"RecordID" => "Int",
 							"Version" => "Int",
-						),
+						],
 						(array)$fields
 					);
 
 					//Unique indexes will not work on versioned tables, so we'll convert them to standard indexes:
 					$indexes = $this->uniqueToIndex($indexes);
 					$versionIndexes = array_merge(
-						array(
-							'RecordID_Version' => array('type' => 'unique', 'value' => '"RecordID","Version"'),
+						[
+							'RecordID_Version' => ['type' => 'unique', 'value' => '"RecordID","Version"'],
 							'RecordID' => true,
 							'Version' => true,
-						),
+						],
 						(array)$indexes
 					);
 				}
@@ -480,7 +480,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 						DB::prepared_query(
 							"DELETE FROM \"{$table}_versions\" WHERE \"RecordID\" = ?
 							AND \"Version\" = ? AND \"ID\" != ?",
-							array($dup['RecordID'], $dup['Version'], $dup['ID'])
+							[$dup['RecordID'], $dup['Version'], $dup['ID']]
 						);
 					}
 
@@ -515,7 +515,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 								foreach($ids as $id) {
 									DB::prepared_query(
 										"DELETE FROM \"{$table}_versions\" WHERE \"ID\" = ?",
-										array($id)
+										[$id]
 									);
 								}
 							}
@@ -541,7 +541,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	private function uniqueToIndex($indexes) {
 		$unique_regex = '/unique/i';
-		$results = array();
+		$results = [];
 		foreach ($indexes as $key => $index) {
 			$results[$key] = $index;
 
@@ -573,13 +573,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$baseDataClass = ClassInfo::baseDataClass($table);
 		
 		// Set up a new entry in (table)_versions
-		$newManipulation = array(
+		$newManipulation = [
 			"command" => "insert",
 			"fields" => isset($manipulation[$table]['fields']) ? $manipulation[$table]['fields'] : null
-		);
+		];
 
 		// Add any extra, unchanged fields to the version record.
-		$data = DB::prepared_query("SELECT * FROM \"$table\" WHERE \"ID\" = ?", array($recordID))->record();
+		$data = DB::prepared_query("SELECT * FROM \"$table\" WHERE \"ID\" = ?", [$recordID])->record();
 
 		if ($data) {
 			$fields = DataObject::database_fields($table);
@@ -604,7 +604,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if($recordID) {
 			$nextVersion = DB::prepared_query("SELECT MAX(\"Version\") + 1
 				FROM \"{$baseDataClass}_versions\" WHERE \"RecordID\" = ?",
-				array($recordID)
+				[$recordID]
 			)->value();
 		}
 		$nextVersion = $nextVersion ?: 1;
@@ -633,7 +633,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if($manipulation[$table]['command'] == 'insert') {
 			DB::prepared_query(
 				"DELETE FROM \"{$table}\" WHERE \"ID\" = ?",
-				array($recordID)
+				[$recordID]
 			);
 		}
 
@@ -796,7 +796,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		return DB::prepared_query("SELECT \"$table1\".\"Version\" = \"$table2\".\"Version\" FROM \"$table1\"
 			 INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\"
 			 WHERE \"$table1\".\"ID\" = ?",
-			array($this->owner->ID)
+			[$this->owner->ID]
 		)->value();
 	}
 
@@ -836,7 +836,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			DB::prepared_query("UPDATE \"{$extTable}_versions\"
 				SET \"WasPublished\" = ?, \"PublisherID\" = ?
 				WHERE \"RecordID\" = ? AND \"Version\" = ?",
-				array(1, $publisherID, $from->ID, $from->Version)
+				[1, $publisherID, $from->ID, $from->Version]
 			);
 
 			$oldMode = Versioned::get_reading_mode();
@@ -888,7 +888,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			"SELECT CASE WHEN \"$table1\".\"Version\"=\"$table2\".\"Version\" THEN 1 ELSE 0 END
 			 FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\"
 			 AND \"$table1\".\"ID\" = ?",
-			array($this->owner->ID)
+			[$this->owner->ID]
 		)->value();
 
 		return !$stagesAreEqual;
@@ -928,10 +928,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			if(is_string($tableJoin) && $tableJoin[0] == '"') {
 				$baseTable = str_replace('"','',$tableJoin);
 			} elseif(is_string($tableJoin) && substr($tableJoin,0,5) != 'INNER') {
-				$query->setFrom(array(
+				$query->setFrom([
 					$table => "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\"=\"{$baseTable}_versions\".\"RecordID\""
 						. " AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\""
-				));
+				]);
 			}
 			$query->renameTable($table, $table . '_versions');
 		}
@@ -941,9 +941,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 		}
 
-		$query->addWhere(array(
+		$query->addWhere([
 			"\"{$baseTable}_versions\".\"RecordID\" = ?" => $this->owner->ID
-		));
+		]);
 		$query->setOrderBy(($sort) ? $sort
 			: "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC");
 
@@ -1017,7 +1017,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		// Determine the reading mode
 		if(isset($_GET['stage'])) {
 			$stage = ucfirst(strtolower($_GET['stage']));
-			if(!in_array($stage, array('Stage', 'Live'))) $stage = 'Live';
+			if(!in_array($stage, ['Stage', 'Live'])) $stage = 'Live';
 			$mode = 'Stage.' . $stage;
 		} elseif (isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
 			$mode = 'Archive.' . $_GET['archiveDate'];
@@ -1165,17 +1165,17 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		// get version as performance-optimized SQL query (gets called for each page in the sitetree)
 		$version = DB::prepared_query(
 			"SELECT \"Version\" FROM \"$stageTable\" WHERE \"ID\" = ?",
-			array($id)
+			[$id]
 		)->value();
 
 		// cache value (if required)
 		if($cache) {
 			if(!isset(self::$cache_versionnumber[$baseClass])) {
-				self::$cache_versionnumber[$baseClass] = array();
+				self::$cache_versionnumber[$baseClass] = [];
 			}
 
 			if(!isset(self::$cache_versionnumber[$baseClass][$stage])) {
-				self::$cache_versionnumber[$baseClass][$stage] = array();
+				self::$cache_versionnumber[$baseClass][$stage] = [];
 			}
 
 			self::$cache_versionnumber[$baseClass][$stage][$id] = $version;
@@ -1198,7 +1198,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			return;
 		}
 		$filter = "";
-		$parameters = array();
+		$parameters = [];
 		if($idList) {
 			// Validate the ID list
 			foreach($idList as $id) {
@@ -1238,10 +1238,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			$containerClass = 'DataList') {
 
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
-		return $result->setDataQueryParam(array(
+		return $result->setDataQueryParam([
 			'Versioned.mode' => 'stage',
 			'Versioned.stage' => $stage
-		));
+		]);
 	}
 
 	/**
@@ -1399,7 +1399,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	public function flushCache() {
-		self::$cache_versionnumber = array();
+		self::$cache_versionnumber = [];
 	}
 
 	/**
@@ -1428,9 +1428,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	public static function get_template_global_variables() {
-		return array(
+		return [
 			'CurrentReadingMode' => 'get_reading_mode'
-		);
+		];
 	}
 }
 

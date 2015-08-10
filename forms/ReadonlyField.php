@@ -40,7 +40,7 @@ class ReadonlyField extends FormField {
 	 * @param array $properties
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		// Include a hidden field in the HTML
 		if($this->includeHiddenField && $this->readonly) {
 			$hidden = clone $this;
@@ -60,10 +60,10 @@ class ReadonlyField extends FormField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'type' => 'hidden',
 				'value' => $this->readonly ? null : $this->value,
-			)
+			]
 		);
 	}
 

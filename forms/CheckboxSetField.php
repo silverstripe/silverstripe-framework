@@ -41,18 +41,18 @@ class CheckboxSetField extends OptionsetField {
 	/**
 	 * @var array
 	 */
-	protected $defaultItems = array();
+	protected $defaultItems = [];
 
 	/**
 	 * @todo Explain different source data that can be used with this field,
 	 * e.g. SQLMap, ArrayList or an array.
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		Requirements::css(FRAMEWORK_DIR . '/css/CheckboxSetField.css');
 
-		$properties = array_merge($properties, array(
+		$properties = array_merge($properties, [
 			'Options' => $this->getOptions()
-		));
+		]);
 
 		return $this->customise($properties)->renderWith(
 			$this->getTemplates()
@@ -67,7 +67,7 @@ class CheckboxSetField extends OptionsetField {
 
 		$source = $this->source;
 		$values = $this->value;
-		$items = array();
+		$items = [];
 
 		// Get values from the join, if available
 		if(is_object($this->form)) {
@@ -100,7 +100,7 @@ class CheckboxSetField extends OptionsetField {
 						$items = explode(',', $values);
 						$items = str_replace('{comma}', ',', $items);
 					} else {
-						$items = array();
+						$items = [];
 					}
 				}
 			}
@@ -110,14 +110,14 @@ class CheckboxSetField extends OptionsetField {
 				$items = $values;
 			} else {
 				if($values === null) {
-					$items = array();
+					$items = [];
 				}
 				else {
 					if(!empty($values)) {
 						$items = explode(',', $values);
 						$items = str_replace('{comma}', ',', $items);
 					} else {
-						$items = array();
+						$items = [];
 					}
 				}
 			}
@@ -127,10 +127,10 @@ class CheckboxSetField extends OptionsetField {
 			unset($source['']);
 		}
 
-		$options = array();
+		$options = [];
 
 		if ($source == null) {
-			$source = array();
+			$source = [];
 		}
 
 		foreach($source as $value => $item) {
@@ -146,7 +146,7 @@ class CheckboxSetField extends OptionsetField {
 			$extraClass = $odd ? 'odd' : 'even';
 			$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
 
-			$options[] = new ArrayData(array(
+			$options[] = new ArrayData([
 				'ID' => $itemID,
 				'Class' => $extraClass,
 				'Name' => "{$this->name}[{$value}]",
@@ -154,7 +154,7 @@ class CheckboxSetField extends OptionsetField {
 				'Title' => $title,
 				'isChecked' => in_array($value, $items) || in_array($value, $this->defaultItems),
 				'isDisabled' => $this->disabled || in_array($value, $this->disabledItems)
-			));
+			]);
 		}
 
 		$options = new ArrayList($options);
@@ -212,7 +212,7 @@ class CheckboxSetField extends OptionsetField {
 		$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
 		if($fieldname && $record && $relation &&
 			($relation instanceof RelationList || $relation instanceof UnsavedRelationList)) {
-			$idList = array();
+			$idList = [];
 			if($this->value) foreach($this->value as $id => $bool) {
 				if($bool) {
 					$idList[] = $id;
@@ -237,7 +237,7 @@ class CheckboxSetField extends OptionsetField {
 	 */
 	public function dataValue() {
 		if($this->value && is_array($this->value)) {
-			$filtered = array();
+			$filtered = [];
 			foreach($this->value as $item) {
 				if($item) {
 					$filtered[] = str_replace(",", "{comma}", $item);
@@ -265,7 +265,7 @@ class CheckboxSetField extends OptionsetField {
 	 */
 	public function performReadonlyTransformation() {
 		$values = '';
-		$data = array();
+		$data = [];
 
 		$items = $this->value;
 		if($this->source) {
@@ -339,7 +339,7 @@ class CheckboxSetField extends OptionsetField {
 					_t(
 						'CheckboxSetField.SOURCE_VALIDATION',
 						"Please select a value within the list provided. '{value}' is not a valid option",
-						array('value' => implode(' and ', array_diff($sourceArray, $values)))
+						['value' => implode(' and ', array_diff($sourceArray, $values))]
 					),
 					"validation"
 				);
@@ -352,7 +352,7 @@ class CheckboxSetField extends OptionsetField {
 					_t(
 						'CheckboxSetField.SOURCE_VALIDATION',
 						"Please select a value within the list provided. '{value}' is not a valid option",
-						array('value' => $this->value)
+						['value' => $this->value]
 					),
 					"validation"
 				);

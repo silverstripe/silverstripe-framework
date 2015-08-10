@@ -128,7 +128,7 @@ class DateTest extends SapphireTest {
 		$date = DBField::create_field('Date', false);
 		$this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
 
-		$date = DBField::create_field('Date', array());
+		$date = DBField::create_field('Date', []);
 		$this->assertNull($date->getValue(), 'Empty array evaluates to NULL');
 
 		$date = DBField::create_field('Date', '0');
@@ -245,12 +245,12 @@ class DateTest extends SapphireTest {
 		$member->DateFormat = 'dd/MM/YYYY';
 		$member->write();
 
-		$fixtures = array(
+		$fixtures = [
 			'2000-12-31' => '31/12/2000',
 			'31-12-2000' => '31/12/2000',
 			'31/12/2000' => '31/12/2000',
 			'2014-04-01' => '01/04/2014'
-		);
+		];
 
 		foreach($fixtures as $from => $to) {
 			$date = DBField::create_field('Date', $from);

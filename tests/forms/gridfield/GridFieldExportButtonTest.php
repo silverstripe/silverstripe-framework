@@ -14,10 +14,10 @@ class GridFieldExportButtonTest extends SapphireTest {
 
 	protected static $fixture_file = 'GridFieldExportButtonTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'GridFieldExportButtonTest_Team',
 		'GridFieldExportButtonTest_NoView'
-	);
+	];
 
 	public function setUp() {
 		parent::setUp();
@@ -32,7 +32,7 @@ class GridFieldExportButtonTest extends SapphireTest {
 		$list = new DataList('GridFieldExportButtonTest_NoView');
 
 		$button = new GridFieldExportButton();
-		$button->setExportColumns(array('Name' => 'My Name'));
+		$button->setExportColumns(['Name' => 'My Name']);
 
 		$config = GridFieldConfig::create()->addComponent(new GridFieldExportButton());
 		$gridField = new GridField('testfield', 'testfield', $list, $config);
@@ -45,7 +45,7 @@ class GridFieldExportButtonTest extends SapphireTest {
 
 	public function testGenerateFileDataBasicFields() {
 		$button = new GridFieldExportButton();
-		$button->setExportColumns(array('Name' => 'My Name'));
+		$button->setExportColumns(['Name' => 'My Name']);
 
 		$this->assertEquals(
 			'"My Name"'."\n".
@@ -57,12 +57,12 @@ class GridFieldExportButtonTest extends SapphireTest {
 
 	public function testGenerateFileDataAnonymousFunctionField() {
 		$button = new GridFieldExportButton();
-		$button->setExportColumns(array(
+		$button->setExportColumns([
 			'Name' => 'Name',
 			'City' => function($obj) {
 				return $obj->getValue() . ' city';
 			}
-		));
+		]);
 
 		$this->assertEquals(
 			'Name,City'."\n".
@@ -74,10 +74,10 @@ class GridFieldExportButtonTest extends SapphireTest {
 
 	public function testBuiltInFunctionNameCanBeUsedAsHeader() {
 		$button = new GridFieldExportButton();
-		$button->setExportColumns(array(
+		$button->setExportColumns([
 			'Name' => 'Name',
 			'City' => 'strtolower'
-		));
+		]);
 
 		$this->assertEquals(
 			'Name,strtolower'."\n".
@@ -89,10 +89,10 @@ class GridFieldExportButtonTest extends SapphireTest {
 
 	public function testNoCsvHeaders() {
 		$button = new GridFieldExportButton();
-		$button->setExportColumns(array(
+		$button->setExportColumns([
 			'Name' => 'Name',
 			'City' => 'City'
-		));
+		]);
 		$button->setCsvHasHeader(false);
 
 		$this->assertEquals(
@@ -110,7 +110,7 @@ class GridFieldExportButtonTest extends SapphireTest {
 		$arrayList = new ArrayList();
 		for ($i = 1; $i <= 16; $i++) {
 			$dataobject = new DataObject( 
-				array ( 'ID' => $i )
+				[ 'ID' => $i ]
 			);
 			$arrayList->add($dataobject);
 		}
@@ -145,10 +145,10 @@ class GridFieldExportButtonTest extends SapphireTest {
  */
 class GridFieldExportButtonTest_Team extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar',
 		'City' => 'Varchar'
-	);
+	];
 
 	public function canView($member = null) {
 		return true;
@@ -162,10 +162,10 @@ class GridFieldExportButtonTest_Team extends DataObject implements TestOnly {
  */
 class GridFieldExportButtonTest_NoView extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar',
 		'City' => 'Varchar'
-	);
+	];
 
 	public function canView($member = null) {
 		return false;

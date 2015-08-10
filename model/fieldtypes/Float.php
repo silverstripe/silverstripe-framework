@@ -14,13 +14,13 @@ class Float extends DBField {
 	}
 
 	public function requireField() {
-		$parts = Array(
+		$parts = [
 			'datatype'=>'float',
 			'null'=>'not null',
 			'default'=>$this->defaultVal,
 			'arrayValue'=>$this->arrayValue
-		);
-		$values = Array('type'=>'float', 'parts'=>$parts);
+		];
+		$values = ['type'=>'float', 'parts'=>$parts];
 		DB::require_field($this->tableName, $this->name, $values);
 	}
 

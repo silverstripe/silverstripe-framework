@@ -30,10 +30,10 @@ class FieldListTest extends SapphireTest {
 
 		/* We add field objects to the FieldList, using two different methods */
 		$fields->addFieldToTab('Root', new TextField('Country'));
-		$fields->addFieldsToTab('Root', array(
+		$fields->addFieldsToTab('Root', [
 			new EmailField('Email'),
 			new TextField('Name'),
-		));
+		]);
 
 		/* Check that the field objects were created */
 		$this->assertNotNull($fields->dataFieldByName('Country'));
@@ -57,7 +57,7 @@ class FieldListTest extends SapphireTest {
 		$tab = new Tab('Root');
 		$fields->push($tab);
 
-		$fields->addFieldsToTab('Root', array(
+		$fields->addFieldsToTab('Root', [
 			$group1 = new FieldGroup(
 				new TextField('Name'),
 				new EmailField('Email')
@@ -66,7 +66,7 @@ class FieldListTest extends SapphireTest {
 				new TextField('Company'),
 				new TextareaField('Address')
 			)
-		));
+		]);
 
 		/* Check that the field objects were created */
 		$this->assertNotNull($fields->dataFieldByName('Name'));
@@ -144,21 +144,21 @@ class FieldListTest extends SapphireTest {
 		$fields->push($tab);
 
 		/* We add an array of fields, using addFieldsToTab() */
-		$fields->addFieldsToTab('Root', array(
+		$fields->addFieldsToTab('Root', [
 			new TextField('Name', 'Your name'),
 			new EmailField('Email', 'Email address'),
 			new NumericField('Number', 'Insert a number')
-		));
+		]);
 
 		/* We have 3 fields inside the tab, which we just created */
 		$this->assertEquals(3, $tab->Fields()->Count());
 
 		/* We remove the 3 fields from the tab */
-		$fields->removeFieldsFromTab('Root', array(
+		$fields->removeFieldsFromTab('Root', [
 			'Name',
 			'Email',
 			'Number'
-		));
+		]);
 
 		/* We have no fields in the tab now */
 		$this->assertEquals(0, $tab->Fields()->Count());
@@ -201,7 +201,7 @@ class FieldListTest extends SapphireTest {
 		$this->assertEquals(2, $fields->Count());
 
 		/* Then, we call up removeByName() to take it out again */
-		$fields->removeByName(array('Name', 'Email'));
+		$fields->removeByName(['Name', 'Email']);
 
 		/* We have 0 fields in our set now, as we've just removed the one we added */
 		$this->assertEquals(0, $fields->Count());
@@ -425,17 +425,17 @@ class FieldListTest extends SapphireTest {
 			)
 		);
 
-		$fields->addFieldsToTab('Root.Main', array(
+		$fields->addFieldsToTab('Root.Main', [
 			new TextField('NewField1'),
 			new TextField('NewField2')
-		), 'B');
+		], 'B');
 
-		$this->assertEquals(array_keys($fields->dataFields()), array(
+		$this->assertEquals(array_keys($fields->dataFields()), [
 			'A',
 			'NewField1',
 			'NewField2',
 			'B'
-		));
+		]);
 	}
 
 	/**
@@ -791,7 +791,7 @@ class FieldListTest extends SapphireTest {
 	 * array or list of arguments.
 	 */
 	public function testChangeFieldOrder() {
-		$fieldNames = array('A','B','C','D','E');
+		$fieldNames = ['A','B','C','D','E'];
 		$setArray = new FieldList();
 		$setArgs = new FieldList();
 		foreach ($fieldNames as $fN) {
@@ -799,7 +799,7 @@ class FieldListTest extends SapphireTest {
 			$setArgs->push(new TextField($fN));
 		}
 
-		$setArray->changeFieldOrder(array('D','B','E'));
+		$setArray->changeFieldOrder(['D','B','E']);
 		$this->assertEquals(0, $setArray->fieldPosition('D'));
 		$this->assertEquals(1, $setArray->fieldPosition('B'));
 		$this->assertEquals(2, $setArray->fieldPosition('E'));
@@ -923,10 +923,10 @@ class FieldListTest extends SapphireTest {
 				$tab2Level1 = new Tab("Tab2Level1")
 			)
 		);
-		$fields->setTabPathRewrites(array(
+		$fields->setTabPathRewrites([
 			'/Root\.Tab1Level1\.([^.]+)$/' => 'Root.Tab1Level1Renamed.\\1',
 			'/Root\.Tab1Level1$/' => 'Root.Tab1Level1Renamed',
-		));
+		]);
 		$method = new ReflectionMethod($fields, 'rewriteTabPath');
 		$method->setAccessible(true);
 		$this->assertEquals(
@@ -961,10 +961,10 @@ class FieldListTest extends SapphireTest {
 				$tab2Level1 = new Tab("Tab2Level1")
 			)
 		);
-		$fields->setTabPathRewrites(array(
+		$fields->setTabPathRewrites([
 			'/Root\.Tab1Level1\.([^.]+)$/' => 'Root.Tab1Level1Renamed.\\1',
 			'/Root\.Tab1Level1$/' => 'Root.Tab1Level1Renamed',
-		));
+		]);
 
 		$this->assertEquals($tab1Level1, $fields->findOrMakeTab('Root.Tab1Level1'),
 			'findOrMakeTab() with toplevel tab under old name'

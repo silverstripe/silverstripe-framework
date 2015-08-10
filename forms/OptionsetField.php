@@ -55,12 +55,12 @@ class OptionsetField extends DropdownField {
 	/**
 	 * @var Array
 	 */
-	protected $disabledItems = array();
+	protected $disabledItems = [];
 
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$source = $this->getSource();
 		$odd = 0;
-		$options = array();
+		$options = [];
 
 		if($source) {
 			foreach($source as $value => $title) {
@@ -69,7 +69,7 @@ class OptionsetField extends DropdownField {
 				$extraClass = $odd ? 'odd' : 'even';
 				$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
 
-				$options[] = new ArrayData(array(
+				$options[] = new ArrayData([
 					'ID' => $itemID,
 					'Class' => $extraClass,
 					'Name' => $this->name,
@@ -77,13 +77,13 @@ class OptionsetField extends DropdownField {
 					'Title' => $title,
 					'isChecked' => $value == $this->value,
 					'isDisabled' => $this->disabled || in_array($value, $this->disabledItems),
-				));
+				]);
 			}
 		}
 
-		$properties = array_merge($properties, array(
+		$properties = array_merge($properties, [
 			'Options' => new ArrayList($options)
-		));
+		]);
 
 		return $this->customise($properties)->renderWith(
 			$this->getTemplates()

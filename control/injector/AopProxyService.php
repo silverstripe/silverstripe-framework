@@ -8,9 +8,9 @@
  * @subpackage injector
  */
 class AopProxyService {
-	public $beforeCall = array();
+	public $beforeCall = [];
 
-	public $afterCall = array();
+	public $afterCall = [];
 
 	public $proxied;
 
@@ -30,7 +30,7 @@ class AopProxyService {
 			if (isset($this->beforeCall[$method])) {
 				$methods = $this->beforeCall[$method];
 				if (!is_array($methods)) {
-					$methods = array($methods);
+					$methods = [$methods];
 				}
 				foreach ($methods as $handler) {
 					$alternateReturn = null;
@@ -46,12 +46,12 @@ class AopProxyService {
 			}
 
 			if ($continue) {
-				$result = call_user_func_array(array($this->proxied, $method), $args);
+				$result = call_user_func_array([$this->proxied, $method], $args);
 
 				if (isset($this->afterCall[$method])) {
 					$methods = $this->afterCall[$method];
 					if (!is_array($methods)) {
-						$methods = array($methods);
+						$methods = [$methods];
 					}
 					foreach ($methods as $handler) {
 						$return = $handler->afterCall($this->proxied, $method, $args, $result);

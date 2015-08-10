@@ -57,7 +57,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	public function getItems() {
 		// If the value has been set, use that
 		if($this->value != 'unchanged' && is_array($this->sourceObject)) {
-			$items = array();
+			$items = [];
 			$values = is_array($this->value) ? $this->value : preg_split('/ *, */', trim($this->value));
 			foreach($values as $value) {
 				$item = new stdClass;
@@ -88,7 +88,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * We overwrite the field attribute to add our hidden fields, as this
 	 * formfield can contain multiple values.
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
 
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
@@ -100,8 +100,8 @@ class TreeMultiselectField extends TreeDropdownField {
 		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
 
 		$value = '';
-		$titleArray = array();
-		$idArray = array();
+		$titleArray = [];
+		$idArray = [];
 		$items = $this->getItems();
 
 		if($items && count($items)) {
@@ -127,11 +127,11 @@ class TreeMultiselectField extends TreeDropdownField {
 		}
 		$properties = array_merge(
 			$properties,
-			array(
+			[
 				'Title' => $title,
 				'Link' => $dataUrlTree,
 				'Value' => $value
-			)
+			]
 		);
 		return $this->customise($properties)->renderWith('TreeDropdownField');
 	}
@@ -144,7 +144,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	public function saveInto(DataObjectInterface $record) {
 		// Detect whether this field has actually been updated
 		if($this->value !== 'unchanged') {
-			$items = array();
+			$items = [];
 
 			$fieldName = $this->name;
 			$saveDest = $record->$fieldName();
@@ -191,8 +191,8 @@ class TreeMultiselectField_Readonly extends TreeMultiselectField {
 
 	protected $readonly = true;
 
-	public function Field($properties = array()) {
-		$titleArray = $itemIDs = array();
+	public function Field($properties = []) {
+		$titleArray = $itemIDs = [];
 		$titleList = $itemIDsList = "";
 		if($items = $this->getItems()) {
 			foreach($items as $item) $titleArray[] = $item->Title;

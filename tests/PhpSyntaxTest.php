@@ -17,11 +17,11 @@ class PhpSyntaxTest extends SapphireTest {
 		// Ignore this test completely if running the test suite on windows
 		// TODO: Make it work on all platforms, by building an alternative to find | grep.
 		$returnCode = 0;
-		$output = array();
+		$output = [];
 		exec("which find && which grep && which php", $output, $returnCode);
 		if($returnCode != 0) return;
 
-		$settingTests = array('short_open_tag=Off','short_open_tag=On -d asp_tags=On');
+		$settingTests = ['short_open_tag=Off','short_open_tag=On -d asp_tags=On'];
 
 		$files = $this->getAllFiles('php');
 		$files[] = FRAMEWORK_PATH.'/dev/install/config-form.html';
@@ -30,7 +30,7 @@ class PhpSyntaxTest extends SapphireTest {
 			$CLI_file = escapeshellarg($file);
 			foreach($settingTests as $settingTest) {
 				$returnCode = 0;
-				$output = array();
+				$output = [];
 				exec("php -l -d $settingTest $CLI_file", $output, $returnCode);
 				$hasErrors = ($returnCode != 0
 					&& strpos('No syntax errors detected', implode("\n", $output)) === FALSE);

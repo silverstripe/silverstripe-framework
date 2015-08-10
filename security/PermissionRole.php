@@ -20,18 +20,18 @@
  * @method ManyManyList Groups() List of Group objects
  */
 class PermissionRole extends DataObject {
-	private static $db = array(
+	private static $db = [
 		"Title" => "Varchar",
 		"OnlyAdminCanApply" => "Boolean"
-	);
+	];
 
-	private static $has_many = array(
+	private static $has_many = [
 		"Codes" => "PermissionRoleCode",
-	);
+	];
 
-	private static $belongs_many_many = array(
+	private static $belongs_many_many = [
 		"Groups" => "Group",
-	);
+	];
 
 	private static $default_sort = '"Title"';
 
@@ -87,7 +87,7 @@ class PermissionRole extends DataObject {
 		return Permission::check('APPLY_ROLES', 'any', $member);
 	}
 
-	public function canCreate($member = null, $context = array()) {
+	public function canCreate($member = null, $context = []) {
 		return Permission::check('APPLY_ROLES', 'any', $member);
 	}
 

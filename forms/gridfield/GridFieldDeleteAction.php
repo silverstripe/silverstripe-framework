@@ -60,7 +60,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @return array
 	 */
 	public function getColumnAttributes($gridField, $record, $columnName) {
-		return array('class' => 'col-buttons');
+		return ['class' => 'col-buttons'];
 	}
 
 	/**
@@ -72,7 +72,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 */
 	public function getColumnMetadata($gridField, $columnName) {
 		if($columnName == 'Actions') {
-			return array('title' => '');
+			return ['title' => ''];
 		}
 	}
 
@@ -83,7 +83,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @return array
 	 */
 	public function getColumnsHandled($gridField) {
-		return array('Actions');
+		return ['Actions'];
 	}
 
 	/**
@@ -93,7 +93,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @return array
 	 */
 	public function getActions($gridField) {
-		return array('deleterecord', 'unlinkrelation');
+		return ['deleterecord', 'unlinkrelation'];
 	}
 
 	/**
@@ -108,7 +108,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 			if(!$record->canEdit()) return;
 
 			$field = GridField_FormAction::create($gridField, 'UnlinkRelation'.$record->ID, false,
-					"unlinkrelation", array('RecordID' => $record->ID))
+					"unlinkrelation", ['RecordID' => $record->ID])
 				->addExtraClass('gridfield-button-unlink')
 				->setAttribute('title', _t('GridAction.UnlinkRelation', "Unlink"))
 				->setAttribute('data-icon', 'chain--minus');
@@ -116,7 +116,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 			if(!$record->canDelete()) return;
 
 			$field = GridField_FormAction::create($gridField,  'DeleteRecord'.$record->ID, false, "deleterecord",
-					array('RecordID' => $record->ID))
+					['RecordID' => $record->ID])
 				->addExtraClass('gridfield-button-delete')
 				->setAttribute('title', _t('GridAction.Delete', "Delete"))
 				->setAttribute('data-icon', 'cross-circle')

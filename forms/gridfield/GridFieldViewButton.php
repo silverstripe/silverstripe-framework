@@ -14,23 +14,23 @@ class GridFieldViewButton implements GridField_ColumnProvider {
 	}
 
 	public function getColumnsHandled($field) {
-		return array('Actions');
+		return ['Actions'];
 	}
 
 	public function getColumnContent($field, $record, $col) {
 		if($record->canView()) {
-			$data = new ArrayData(array(
+			$data = new ArrayData([
 				'Link' => Controller::join_links($field->Link('item'), $record->ID, 'view')
-			));
+			]);
 			return $data->renderWith('GridFieldViewButton');
 		}
 	}
 
 	public function getColumnAttributes($field, $record, $col) {
-		return array('class' => 'col-buttons');
+		return ['class' => 'col-buttons'];
 	}
 
 	public function getColumnMetadata($gridField, $col) {
-		return array('title' => null);
+		return ['title' => null];
 	}
 }

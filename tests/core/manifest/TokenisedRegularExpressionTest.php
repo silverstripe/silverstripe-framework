@@ -97,26 +97,26 @@ PHP
 		$tokens = $this->getTokens();
 
 		$matches = $parser->findAll($tokens);
-		$classes = array();
+		$classes = [];
 		if($matches) foreach($matches as $match) $classes[$match['className']] = $match;
 
 		$this->assertArrayHasKey('ClassA', $classes);
 		$this->assertArrayHasKey('ClassB', $classes);
 
 		$this->assertArrayHasKey('ClassC', $classes);
-		$this->assertEquals(array('ParentClassC'), $classes['ClassC']['extends']);
+		$this->assertEquals(['ParentClassC'], $classes['ClassC']['extends']);
 
 		$this->assertArrayHasKey('ClassD', $classes);
-		$this->assertEquals(array('ParentClassD'), $classes['ClassD']['extends']);
+		$this->assertEquals(['ParentClassD'], $classes['ClassD']['extends']);
 		$this->assertContains('InterfaceA', $classes['ClassD']['interfaces']);
 
 		$this->assertArrayHasKey('ClassE', $classes);
-		$this->assertEquals(array('ParentClassE'), $classes['ClassE']['extends']);
+		$this->assertEquals(['ParentClassE'], $classes['ClassE']['extends']);
 		$this->assertContains('InterfaceA', $classes['ClassE']['interfaces']);
 		$this->assertContains('InterfaceB', $classes['ClassE']['interfaces']);
 
 		$this->assertArrayHasKey('ClassF', $classes);
-		$this->assertEquals(array('ParentClassF'), $classes['ClassF']['extends']);
+		$this->assertEquals(['ParentClassF'], $classes['ClassF']['extends']);
 		$this->assertContains('InterfaceA', $classes['ClassF']['interfaces']);
 		$this->assertContains('InterfaceB', $classes['ClassF']['interfaces']);
 	}
@@ -128,24 +128,24 @@ PHP
 
 		$matches = $parser->findAll($tokens);
 
-		$classes = array();
+		$classes = [];
 		if($matches) foreach($matches as $match) $classes[$match['className']] = $match;
 
 		$this->assertArrayHasKey('ClassA', $classes);
 		$this->assertArrayHasKey('ClassB', $classes);
-		$this->assertEquals(array('ParentClassB'), $classes['ClassB']['extends']);
+		$this->assertEquals(['ParentClassB'], $classes['ClassB']['extends']);
 
 		$this->assertArrayHasKey('ClassC', $classes);
-		$this->assertEquals(array('\\', 'ParentClassC'), $classes['ClassC']['extends']);
+		$this->assertEquals(['\\', 'ParentClassC'], $classes['ClassC']['extends']);
 
 		$this->assertArrayHasKey('ClassD', $classes);
-		$this->assertEquals(array('subtest', '\\', 'ParentClassD'), $classes['ClassD']['extends']);
+		$this->assertEquals(['subtest', '\\', 'ParentClassD'], $classes['ClassD']['extends']);
 
 		$this->assertArrayHasKey('ClassE', $classes);
 		$this->assertContains('InterfaceE', $classes['ClassE']['interfaces']);
 
 		$this->assertArrayHasKey('ClassF', $classes);
-		$this->assertEquals(array('\\', 'InterfaceF'), $classes['ClassF']['interfaces']);
+		$this->assertEquals(['\\', 'InterfaceF'], $classes['ClassF']['interfaces']);
 	}
 
 	public function testInterfaceDefParser() {
@@ -154,7 +154,7 @@ PHP
 		$tokens = $this->getTokens();
 
 		$matches = $parser->findAll($tokens);
-		$interfaces = array();
+		$interfaces = [];
 		if($matches) foreach($matches as $match) $interfaces[$match['interfaceName']] = $match;
 
 		$this->assertArrayHasKey('InterfaceA', $interfaces);
@@ -172,7 +172,7 @@ PHP
 		$namespacedMatches = $parser->findAll($namespacedTokens);
 		$matches = $parser->findAll($tokens);
 
-		$this->assertEquals(array(), $matches);
-		$this->assertEquals(array('silverstripe', '\\', 'test'), $namespacedMatches[0]['namespaceName']);
+		$this->assertEquals([], $matches);
+		$this->assertEquals(['silverstripe', '\\', 'test'], $namespacedMatches[0]['namespaceName']);
 	}
 }

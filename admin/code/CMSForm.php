@@ -21,11 +21,11 @@ class CMSForm extends Form {
 			$this->setupFormErrors();
 			$result = $this->forTemplate();
 
-			return $negotiator->respond($request, array(
+			return $negotiator->respond($request, [
 				'CurrentForm' => function() use($result) {
 					return $result;
 				}
-			));
+			]);
 		} else {
 			return parent::getValidationErrorResponse();
 		}

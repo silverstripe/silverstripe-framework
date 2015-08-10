@@ -9,9 +9,9 @@ class DecimalTest extends SapphireTest {
 
 	protected $testDataObject;
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'DecimalTest_DataObject'
-	);
+	];
 
 	public function setUp() {
 		parent::setUp();
@@ -46,16 +46,16 @@ class DecimalTest extends SapphireTest {
  */
 class DecimalTest_DataObject extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar',
 		'MyDecimal1' => 'Decimal',
 		'MyDecimal2' => 'Decimal(5,3,2.5)',
 		'MyDecimal3' => 'Decimal(4,2,"Invalid default value")',
 		'MyDecimal4' => 'Decimal'
-	);
+	];
 
-	private static $defaults = array(
+	private static $defaults = [
 		'MyDecimal4' => 4
-	);
+	];
 
 }

@@ -14,15 +14,15 @@ class Boolean extends DBField {
 	}
 
 	public function requireField() {
-		$parts=Array(
+		$parts=[
 			'datatype'=>'tinyint',
 			'precision'=>1,
 			'sign'=>'unsigned',
 			'null'=>'not null',
 			'default'=>$this->defaultVal,
 			'arrayValue'=>$this->arrayValue
-		);
-		$values=Array('type'=>'boolean', 'parts'=>$parts);
+		];
+		$values=['type'=>'boolean', 'parts'=>$parts];
 		DB::require_field($this->tableName, $this->name, $values);
 	}
 
@@ -52,10 +52,10 @@ class Boolean extends DBField {
 
 	public function scaffoldSearchField($title = null) {
 		$anyText = _t('Boolean.ANY', 'Any');
-		$source = array(
+		$source = [
 			1 => _t('Boolean.YESANSWER', 'Yes'),
 			0 => _t('Boolean.NOANSWER', 'No')
-		);
+		];
 
 		$field = new DropdownField($this->name, $title, $source);
 		$field->setEmptyString("($anyText)");

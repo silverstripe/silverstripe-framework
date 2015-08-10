@@ -8,12 +8,12 @@ class ManyManyListTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
 		'DataObjectTest_Player',
 		'ManyManyListTest_ExtraFields'
-	);
+	];
 
 
 	public function testAddCompositedExtraFields() {
@@ -25,10 +25,10 @@ class ManyManyListTest extends SapphireTest {
 		$money->setCurrency('USD');
 
 		// the actual test is that this does not generate an error in the sql.
-		$obj->Clients()->add($obj, array(
+		$obj->Clients()->add($obj, [
 			'Worth' => $money,
 			'Reference' => 'Foo'
-		));
+		]);
 
 		$check = $obj->Clients()->First();
 
@@ -47,7 +47,7 @@ class ManyManyListTest extends SapphireTest {
 	public function testRelationshipEmptyOnNewRecords() {
 		// Relies on the fact that (unrelated) teams exist in the fixture file already
 		$newPlayer = new DataObjectTest_Player(); // many_many Teams
-		$this->assertEquals(array(), $newPlayer->Teams()->column('ID'));
+		$this->assertEquals([], $newPlayer->Teams()->column('ID'));
 	}
 
 	public function testAddingSingleDataObjectByReference() {
@@ -103,12 +103,12 @@ class ManyManyListTest extends SapphireTest {
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
-		$player1->Teams()->setByIdList(array($team1->ID, $team2->ID));
-		$this->assertEquals(array($team1->ID, $team2->ID), $player1->Teams()->sort('Title')->column());
-		$player1->Teams()->setByIdList(array($team1->ID));
-		$this->assertEquals(array($team1->ID), $player1->Teams()->sort('Title')->column());
-		$player1->Teams()->setByIdList(array($team2->ID));
-		$this->assertEquals(array($team2->ID), $player1->Teams()->sort('Title')->column());
+		$player1->Teams()->setByIdList([$team1->ID, $team2->ID]);
+		$this->assertEquals([$team1->ID, $team2->ID], $player1->Teams()->sort('Title')->column());
+		$player1->Teams()->setByIdList([$team1->ID]);
+		$this->assertEquals([$team1->ID], $player1->Teams()->sort('Title')->column());
+		$player1->Teams()->setByIdList([$team2->ID]);
+		$this->assertEquals([$team2->ID], $player1->Teams()->sort('Title')->column());
 	}
 
 	public function testAddingWithMultipleForeignKeys() {
@@ -118,10 +118,10 @@ class ManyManyListTest extends SapphireTest {
 		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
 
 		$playersTeam1Team2 = DataObjectTest_Team::get()->relation('Players')
-			->forForeignID(array($team1->ID, $team2->ID));
+			->forForeignID([$team1->ID, $team2->ID]);
 		$playersTeam1Team2->add($newPlayer);
 		$this->assertEquals(
-			array($team1->ID, $team2->ID),
+			[$team1->ID, $team2->ID],
 			$newPlayer->Teams()->sort('Title')->column('ID')
 		);
 	}
@@ -131,30 +131,30 @@ class ManyManyListTest extends SapphireTest {
 		$player->write();
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 
-		$team1->Players()->add($player, array('Position' => 'Captain'));
+		$team1->Players()->add($player, ['Position' => 'Captain']);
 		$this->assertEquals(
-			array('Position' => 'Captain'),
+			['Position' => 'Captain'],
 			$team1->Players()->getExtraData('Teams', $player->ID),
 			'Writes extrafields'
 		);
 
 		$team1->Players()->add($player);
 		$this->assertEquals(
-			array('Position' => 'Captain'),
+			['Position' => 'Captain'],
 			$team1->Players()->getExtraData('Teams', $player->ID),
 			'Retains extrafields on subsequent adds with NULL fields'
 		);
 
-		$team1->Players()->add($player, array('Position' => 'Defense'));
+		$team1->Players()->add($player, ['Position' => 'Defense']);
 		$this->assertEquals(
-			array('Position' => 'Defense'),
+			['Position' => 'Defense'],
 			$team1->Players()->getExtraData('Teams', $player->ID),
 			'Updates extrafields on subsequent adds with fields'
 		);
 
-		$team1->Players()->add($player, array('Position' => null));
+		$team1->Players()->add($player, ['Position' => null]);
 		$this->assertEquals(
-			array('Position' => null),
+			['Position' => null],
 			$team1->Players()->getExtraData('Teams', $player->ID),
 			'Allows clearing of extrafields on subsequent adds'
 		);
@@ -171,12 +171,12 @@ class ManyManyListTest extends SapphireTest {
 
 		// Captain 1 belongs to one team; team1
 		$captain1 = $this->objFromFixture('DataObjectTest_Player', 'captain1');
-		$this->assertEquals(array($teamOneID),$captain1->Teams()->column("ID"),
+		$this->assertEquals([$teamOneID],$captain1->Teams()->column("ID"),
 			'Precondition; player2 belongs to team1');
 
 		// Player 2 belongs to both teams: team1, team2
 		$player2 = $this->objFromFixture('DataObjectTest_Player', 'player2');
-		$this->assertEquals(array($teamOneID,$teamTwoID), $player2->Teams()->sort('Title')->column('ID'),
+		$this->assertEquals([$teamOneID,$teamTwoID], $player2->Teams()->sort('Title')->column('ID'),
 			'Precondition; player2 belongs to team1 and team2');
 
 		// We want to find the teams for player2 where the captain does not belong to
@@ -213,8 +213,8 @@ class ManyManyListTest extends SapphireTest {
 		$secondPlayers->add($a);
 		$secondPlayers->add($b);
 
-		$this->assertEquals(array('a', 'b'), $firstPlayers->sort('ShirtNumber')->column('ShirtNumber'));
-		$this->assertEquals(array('a', 'b'), $secondPlayers->sort('ShirtNumber')->column('ShirtNumber'));
+		$this->assertEquals(['a', 'b'], $firstPlayers->sort('ShirtNumber')->column('ShirtNumber'));
+		$this->assertEquals(['a', 'b'], $secondPlayers->sort('ShirtNumber')->column('ShirtNumber'));
 
 		$firstPlayers->removeAll();
 
@@ -226,12 +226,12 @@ class ManyManyListTest extends SapphireTest {
 		$firstPlayers->add($a);
 		$firstPlayers->add($b);
 
-		$this->assertEquals(array('a', 'b'), $firstPlayers->sort('ShirtNumber')->column('ShirtNumber'));
+		$this->assertEquals(['a', 'b'], $firstPlayers->sort('ShirtNumber')->column('ShirtNumber'));
 
 		$firstPlayers->filter('ShirtNumber', 'b')->removeAll();
 
-		$this->assertEquals(array('a'), $firstPlayers->column('ShirtNumber'));
-		$this->assertEquals(array('a', 'b'), $secondPlayers->sort('ShirtNumber')->column('ShirtNumber'));
+		$this->assertEquals(['a'], $firstPlayers->column('ShirtNumber'));
+		$this->assertEquals(['a', 'b'], $secondPlayers->sort('ShirtNumber')->column('ShirtNumber'));
 
 		$this->assertNotNull(DataObjectTest_Player::get()->byID($a->ID));
 		$this->assertNotNull(DataObjectTest_Player::get()->byID($b->ID));
@@ -242,10 +242,10 @@ class ManyManyListTest extends SapphireTest {
 			'ManyManyListTest_ExtraFields',
 			'ManyManyListTest_ExtraFields_Clients',
 			'ManyManyListTest_ExtraFieldsID',
-			'ChildID', array(
+			'ChildID', [
 				'Worth' => 'Money',
 				'Reference' => 'Varchar'
-			)
+			]
 		);
 
 		// ensure that ManyManyListTest_ExtraFields_Clients.ValueCurrency is
@@ -274,18 +274,18 @@ class ManyManyListTest extends SapphireTest {
  */
 class ManyManyListTest_ExtraFields extends DataObject implements TestOnly {
 
-	private static $many_many = array(
+	private static $many_many = [
 		'Clients' => 'ManyManyListTest_ExtraFields'
-	);
+	];
 
-	private static $belongs_many_many = array(
+	private static $belongs_many_many = [
 		'WorksWith' => 'ManyManyListTest_ExtraFields'
-	);
+	];
 
-	private static $many_many_extraFields = array(
-		'Clients' => array(
+	private static $many_many_extraFields = [
+		'Clients' => [
 			'Reference' => 'Varchar',
 			'Worth' => 'Money'
-		)
-	);
+		]
+	];
 }

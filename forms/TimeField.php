@@ -27,11 +27,11 @@ class TimeField extends TextField {
 	 * @config
 	 * @var array
 	 */
-	private static $default_config = array(
+	private static $default_config = [
 		'timeformat' => null,
 		'use_strtotime' => true,
 		'datavalueformat' => 'HH:mm:ss'
-	);
+	];
 
 	/**
 	 * @var array
@@ -64,10 +64,10 @@ class TimeField extends TextField {
 		parent::__construct($name,$title,$value);
 	}
 
-	public function Field($properties = array()) {
-		$config = array(
+	public function Field($properties = []) {
+		$config = [
 			'timeformat' => $this->getConfig('timeformat')
-		);
+		];
 		$config = array_filter($config);
 		$this->addExtraClass(Convert::raw2json($config));
 		return parent::Field($properties);
@@ -175,7 +175,7 @@ class TimeField extends TextField {
 				$this->name,
 				_t(
 					'TimeField.VALIDATEFORMAT', "Please enter a valid time format ({format})",
-					array('format' => $this->getConfig('timeformat'))
+					['format' => $this->getConfig('timeformat')]
 				),
 				"validation",
 				false
@@ -252,7 +252,7 @@ class TimeField_Readonly extends TimeField {
 
 	protected $readonly = true;
 
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		if($this->valueObj) {
 			$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('timeformat')));
 		} else {

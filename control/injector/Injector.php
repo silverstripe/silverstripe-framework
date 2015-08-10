@@ -195,15 +195,15 @@ class Injector {
 	 *				Service configuration
 	 */
 	public function __construct($config = null) {
-		$this->injectMap = array();
-		$this->serviceCache = array(
+		$this->injectMap = [];
+		$this->serviceCache = [
 			'Injector'		=> $this,
-		);
-		$this->specs = array(
-			'Injector'		=> array('class' => 'Injector')
-		);
+		];
+		$this->specs = [
+			'Injector'		=> ['class' => 'Injector']
+		];
 
-		$this->autoProperties = array();
+		$this->autoProperties = [];
 
 
 		$creatorClass = isset($config['creator']) ? $config['creator'] : 'InjectionCreator';
@@ -337,9 +337,9 @@ class Injector {
 	 * @param string $injectVia Whether to inject by setting a property or calling a setter
 	 */
 	public function setInjectMapping($class, $property, $toInject, $injectVia = 'property') {
-		$mapping = isset($this->injectMap[$class]) ? $this->injectMap[$class] : array();
+		$mapping = isset($this->injectMap[$class]) ? $this->injectMap[$class] : [];
 
-		$mapping[$property] = array('name' => $toInject, 'type' => $injectVia);
+		$mapping[$property] = ['name' => $toInject, 'type' => $injectVia];
 
 		$this->injectMap[$class] = $mapping;
 	}
@@ -367,12 +367,12 @@ class Injector {
 	 *
 	 * @param array $config
 	 */
-	public function load($config = array()) {
-		$services = array();
+	public function load($config = []) {
+		$services = [];
 
 		foreach ($config as $specId => $spec) {
 			if (is_string($spec)) {
-				$spec = array('class' => $spec);
+				$spec = ['class' => $spec];
 			}
 
 			$file = isset($spec['src']) ? $spec['src'] : null;
@@ -466,7 +466,7 @@ class Injector {
 			// and reload the object; existing bindings don't get
 			// updated though! (for now...)
 			if (isset($this->serviceCache[$id])) {
-				$this->instantiate(array('class'=>$id), $id);
+				$this->instantiate(['class'=>$id], $id);
 			}
 		}
 	}
@@ -493,7 +493,7 @@ class Injector {
 	 */
 	public function convertServiceProperty($value) {
 		if (is_array($value)) {
-			$newVal = array();
+			$newVal = [];
 			foreach ($value as $k => $v) {
 				$newVal[$k] = $this->convertServiceProperty($v);
 			}
@@ -539,12 +539,12 @@ class Injector {
 	 */
 	protected function instantiate($spec, $id=null, $type = null) {
 		if (is_string($spec)) {
-			$spec = array('class' => $spec);
+			$spec = ['class' => $spec];
 		}
 		$class = $spec['class'];
 
 		// create the object, using any constructor bindings
-		$constructorParams = array();
+		$constructorParams = [];
 		if (isset($spec['constructor']) && is_array($spec['constructor'])) {
 			$constructorParams = $spec['constructor'];
 		}
@@ -594,7 +594,7 @@ class Injector {
 		$objtype = $asType ? $asType : get_class($object);
 		$mapping = isset($this->injectMap[$objtype]) ? $this->injectMap[$objtype] : null;
 
-		$spec = empty($this->specs[$objtype]) ? array() : $this->specs[$objtype];
+		$spec = empty($this->specs[$objtype]) ? [] : $this->specs[$objtype];
 
 		// first off, set any properties defined in the service specification for this
 		// object type
@@ -625,7 +625,7 @@ class Injector {
 				}
 
 				// Check that the method exists and is callable
-				$objectMethod = array($object, $method[0]);
+				$objectMethod = [$object, $method[0]];
 				if (!is_callable($objectMethod)) {
 					throw new \InvalidArgumentException("'$method[0]' in 'calls' entry is not a public method");
 				}
@@ -634,7 +634,7 @@ class Injector {
 				call_user_func_array(
 					$objectMethod,
 					$this->convertServiceProperty(
-						isset($method[1]) ? $method[1] : array()
+						isset($method[1]) ? $method[1] : []
 					)
 				);
 			}
@@ -660,7 +660,7 @@ class Injector {
 							// Pull the name out of the registry
 							$value = $this->get($name);
 							$propertyObject->setValue($object, $value);
-							$mapping[$origName] = array('name' => $name, 'type' => 'property');
+							$mapping[$origName] = ['name' => $name, 'type' => 'property'];
 						}
 					}
 				}
@@ -677,7 +677,7 @@ class Injector {
 							// Pull the name out of the registry
 							$value = $this->get($pname);
 							$methodObj->invoke($object, $value);
-							$mapping[$methName] = array('name' => $pname, 'type' => 'method');
+							$mapping[$methName] = ['name' => $pname, 'type' => 'method'];
 						}
 					}
 				}
@@ -788,7 +788,7 @@ class Injector {
 			$registerAt = $replace;
 		}
 
-		$this->specs[$registerAt] = array('class' => get_class($service));
+		$this->specs[$registerAt] = ['class' => get_class($service)];
 		$this->serviceCache[$registerAt] = $service;
 		$this->inject($service);
 	}
@@ -817,7 +817,7 @@ class Injector {
 	 * Clear out all objects that are managed by the injetor.
 	 */
 	public function unregisterAllObjects() {
-		$this->serviceCache = array('Injector' => $this);
+		$this->serviceCache = ['Injector' => $this];
 	}
 
 	/**
@@ -875,7 +875,7 @@ class Injector {
 
 		$config = $this->configLocator->locateConfigFor($name);
 		if ($config) {
-			$this->load(array($name => $config));
+			$this->load([$name => $config]);
 			if (isset($this->specs[$name])) {
 				$spec = $this->specs[$name];
 				$this->updateSpecConstructor($spec);
@@ -889,10 +889,10 @@ class Injector {
 		// If we've got this far, we're dealing with a case of a user wanting
 		// to create an object based on its name. So, we need to fake its config
 		// if the user wants it managed as a singleton service style object
-		$spec = array('class' => $name, 'constructor' => $constructorArgs);
+		$spec = ['class' => $name, 'constructor' => $constructorArgs];
 		if ($asSingleton) {
 			// need to load the spec in; it'll be given the singleton type by default
-			$this->load(array($name => $spec));
+			$this->load([$name => $spec]);
 			return $this->instantiate($spec, $name);
 		}
 

@@ -40,9 +40,9 @@ abstract class ComparisonFilter extends SearchFilter {
 		$this->model = $query->applyRelation($this->relation);
 
 		$predicate = sprintf("%s %s ?", $this->getDbName(), $this->getOperator());
-		return $query->where(array(
+		return $query->where([
 			$predicate => $this->getDbFormattedValue()
-		));
+		]);
 	}
 
 	/**
@@ -56,12 +56,12 @@ abstract class ComparisonFilter extends SearchFilter {
 		$this->model = $query->applyRelation($this->relation);
 
 		$predicate = sprintf("%s %s ?", $this->getDbName(), $this->getInverseOperator());
-		return $query->where(array(
+		return $query->where([
 			$predicate => $this->getDbFormattedValue()
-		));
+		]);
 	}
 
 	public function isEmpty() {
-		return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
+		return $this->getValue() === [] || $this->getValue() === null || $this->getValue() === '';
 	}
 }

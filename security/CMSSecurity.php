@@ -5,14 +5,14 @@
  */
 class CMSSecurity extends Security {
 
-	private static $casting = array(
+	private static $casting = [
 		'Title' => 'HTMLText'
-	);
+	];
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'LoginForm',
 		'success'
-	);
+	];
 
 	/**
 	 * Enable in-cms reauthentication
@@ -30,13 +30,13 @@ class CMSSecurity extends Security {
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
 		Requirements::combine_files(
 			'cmssecurity.js',
-			array(
+			[
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/lib.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/CMSSecurity.js'
-			)
+			]
 		);
 	}
 
@@ -81,7 +81,7 @@ class CMSSecurity extends Security {
 				'CMSSecurity.TimedOutTitleMember',
 				'Hey {name}!<br />Your session has timed out.',
 				'Title for CMS popup login form for a known user',
-				array('name' => $member->FirstName)
+				['name' => $member->FirstName]
 			);
 		} else {
 			return _t(
@@ -105,7 +105,7 @@ class CMSSecurity extends Security {
 			'CMSSecurity.INVALIDUSER',
 			'<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>',
 			'Message displayed to user if their session cannot be restored',
-			array('link' => $loginURLATT)
+			['link' => $loginURLATT]
 		);
 		$this->response->setStatusCode(200);
 		$this->response->setBody(<<<PHP
@@ -131,7 +131,7 @@ PHP
 	}
 
 	public function GetLoginForms() {
-		$forms = array();
+		$forms = [];
 		$authenticators = Authenticator::get_authenticators();
 		foreach($authenticators as $authenticator) {
 			// Get only CMS-supporting authenticators
@@ -169,12 +169,12 @@ PHP
 	}
 
 	public function getTemplatesFor($action) {
-		return array("CMSSecurity_{$action}", "CMSSecurity")
+		return ["CMSSecurity_{$action}", "CMSSecurity"]
 			+ parent::getTemplatesFor($action);
 	}
 
 	public function getIncludeTemplate($name) {
-		return array("CMSSecurity_{$name}")
+		return ["CMSSecurity_{$name}"]
 			+ parent::getIncludeTemplate($name);
 	}
 
@@ -196,15 +196,15 @@ PHP
 			?: Director::absoluteURL(AdminRootController::config()->url_base, true);
 
 		// Show login
-		$controller = $controller->customise(array(
+		$controller = $controller->customise([
 			'Content' => _t(
 				'CMSSecurity.SUCCESSCONTENT',
 				'<p>Login success. If you are not automatically redirected '.
 				'<a target="_top" href="{link}">click here</a></p>',
 				'Login message displayed in the cms popup once a user has re-authenticated themselves',
-				array('link' => $backURL)
+				['link' => $backURL]
 			)
-		));
+		]);
 		
 		return $controller->renderWith($this->getTemplatesFor('success'));
 	}

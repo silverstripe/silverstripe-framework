@@ -15,7 +15,7 @@ class RestfulService extends ViewableData implements Flushable {
 	protected $checkErrors;
 	protected $cache_expire;
 	protected $authUsername, $authPassword;
-	protected $customHeaders = array();
+	protected $customHeaders = [];
 	protected $proxy;
 
 	/**
@@ -28,7 +28,7 @@ class RestfulService extends ViewableData implements Flushable {
 	 * @config
 	 * @var array
 	 */
-	private static $default_curl_options = array();
+	private static $default_curl_options = [];
 
 	/**
 	 * @config
@@ -53,7 +53,7 @@ class RestfulService extends ViewableData implements Flushable {
 	 */
 	public static function set_default_curl_option($option, $value) {
 		Deprecation::notice('4.0', 'Use the "RestfulService.default_curl_options" config setting instead');
-		Config::inst()->update('RestfulService', 'default_curl_options', array($option => $value));
+		Config::inst()->update('RestfulService', 'default_curl_options', [$option => $value]);
 	}
 
 	/**
@@ -83,12 +83,12 @@ class RestfulService extends ViewableData implements Flushable {
 			'Use the "RestfulService.default_curl_options" config setting instead, '
 				. 'with direct reference to the CURL_* options'
 		);
-		config::inst()->update('RestfulService', 'default_proxy', array(
+		config::inst()->update('RestfulService', 'default_proxy', [
 			CURLOPT_PROXY => $proxy,
 			CURLOPT_PROXYUSERPWD => "{$user}:{$password}",
 			CURLOPT_PROXYPORT => $port,
 			CURLOPT_PROXYTYPE => ($socks ? CURLPROXY_SOCKS5 : CURLPROXY_HTTP)
-		));
+		]);
 	}
 
 	/**
@@ -121,12 +121,12 @@ class RestfulService extends ViewableData implements Flushable {
 	 * @param boolean $socks Set true to use socks5 proxy instead of http
 	 */
 	public function setProxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
-		$this->proxy = array(
+		$this->proxy = [
 			CURLOPT_PROXY => $proxy,
 			CURLOPT_PROXYUSERPWD => "{$user}:{$password}",
 			CURLOPT_PROXYPORT => $port,
 			CURLOPT_PROXYTYPE => ($socks ? CURLPROXY_SOCKS5 : CURLPROXY_HTTP)
-		);
+		];
 	}
 
 	/**
@@ -166,21 +166,21 @@ class RestfulService extends ViewableData implements Flushable {
 	 * @return RestfulService_Response - If curl request produces error, the returned response's status code will
 	 *                                   be 500
 	 */
-	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = array()) {
+	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = []) {
 
 		$url = $this->getAbsoluteRequestURL($subURL);
 		$method = strtoupper($method);
 
-		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
+		assert(in_array($method, ['GET','POST','PUT','DELETE','HEAD','OPTIONS']));
 
-		$cache_path = $this->getCachePath(array(
+		$cache_path = $this->getCachePath([
 			$url,
 			$method,
 			$data,
 			array_merge((array)$this->customHeaders, (array)$headers),
 			$curlOptions + (array)$this->config()->default_curl_options,
 			$this->getBasicAuthString()
-		));
+		]);
 
 		// Check for unexpired cached feed (unless flush is set)
 		//assume any cache_expire that is 0 or less means that we dont want to
@@ -229,7 +229,7 @@ class RestfulService extends ViewableData implements Flushable {
 	 * @param  array $curlOptions
 	 * @return RestfulService_Response
 	 */
-	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
+	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = []) {
 		$ch        = curl_init();
 		$timeout   = 5;
 		$sapphireInfo = new SapphireInfo();
@@ -368,7 +368,7 @@ class RestfulService extends ViewableData implements Flushable {
 	 * @return array The assosiative array of headers
 	 */
 	protected function parseRawHeaders($rawHeaders) {
-		$headers = array();
+		$headers = [];
 		$fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $rawHeaders));
 		foreach( $fields as $field ) {
 			if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
@@ -379,7 +379,7 @@ class RestfulService extends ViewableData implements Flushable {
 				);
 				if( isset($headers[$match[1]]) ) {
 					if (!is_array($headers[$match[1]])) {
-						$headers[$match[1]] = array($headers[$match[1]]);
+						$headers[$match[1]] = [$headers[$match[1]]];
 					}
 					$headers[$match[1]][] = $match[2];
 				} else {
@@ -421,7 +421,7 @@ class RestfulService extends ViewableData implements Flushable {
 
 		if($childElements){
 			foreach($childElements as $child){
-				$data = array();
+				$data = [];
 				foreach($child->attributes() as $key => $value){
 					$data["$key"] = Convert::raw2xml($value);
 				}
@@ -477,7 +477,7 @@ class RestfulService extends ViewableData implements Flushable {
 
 		if($childElements){
 			foreach($childElements as $child){
-				$data = array();
+				$data = [];
 				$this->getRecurseValues($child,$data);
 				$output->push(new ArrayData($data));
 			}
@@ -554,7 +554,7 @@ class RestfulService extends ViewableData implements Flushable {
 
 		if($childElements)
 		foreach($childElements as $child){
-		$data = array();
+		$data = [];
 			foreach($child->attributes() as $key => $value){
 				$data["$key"] = Convert::raw2xml($value);
 			}

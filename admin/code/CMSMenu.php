@@ -23,7 +23,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 *  - array('type' => 'add', 'item' => new CMSMenuItem(...) )
 	 *  - array('type' => 'remove', 'code' => 'codename' )
 	 */
-	protected static $menu_item_changes = array();
+	protected static $menu_item_changes = [];
 	
 	/**
 	 * Set to true if clear_menu() is called, to indicate that the default menu shouldn't be
@@ -135,7 +135,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 * @return array
 	 */
 	public static function get_menu_items() {
-		$menuItems = array();
+		$menuItems = [];
 
 		// Set up default menu items
 		if(!self::$menu_is_cleared) {
@@ -163,8 +163,8 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 		}
 		
 		// Sort menu items according to priority, then title asc
-		$menuPriority = array();
-		$menuTitle    = array();
+		$menuPriority = [];
+		$menuTitle    = [];
 		foreach($menuItems as $key => $menuItem) {
 			$menuPriority[$key] = is_numeric($menuItem->priority) ? $menuItem->priority : 0;
 			$menuTitle[$key]    = $menuItem->title;
@@ -186,7 +186,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 			$member = Member::currentUser();
 		}
 		
-		$viewableMenuItems = array();
+		$viewableMenuItems = [];
 		$allMenuItems = self::get_menu_items();
 		if($allMenuItems) foreach($allMenuItems as $code => $menuItem) {
 			// exclude all items which have a controller to perform permission
@@ -213,14 +213,14 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 * @param string $code Unique identifier for this menu item
 	 */
 	public static function remove_menu_item($code) {
-		self::$menu_item_changes[] = array('type' => 'remove', 'code' => $code);
+		self::$menu_item_changes[] = ['type' => 'remove', 'code' => $code];
 	}
 	
 	/**
 	 * Clears the entire menu
 	 */
 	public static function clear_menu() {
-		self::$menu_item_changes = array();
+		self::$menu_item_changes = [];
 		self::$menu_is_cleared = true;
 	}
 
@@ -247,22 +247,22 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 			$item->setAttributes($attributes);
 		}
 
-		self::$menu_item_changes[] = array(
+		self::$menu_item_changes[] = [
 			'type' => 'add',
 			'code' => $code,
 			'item' => $item,
-		);
+		];
 	}
 	
 	/**
 	 * Add a previously built menu item object to the menu
 	 */
 	protected static function add_menu_item_obj($code, $cmsMenuItem) {
-		self::$menu_item_changes[] = array(
+		self::$menu_item_changes[] = [
 			'type' => 'add',
 			'code' => $code,
 			'item' => $cmsMenuItem,
-		);
+		];
 	}
 
 	/**
@@ -308,11 +308,11 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 */
 	public function provideI18nEntities() {
 		$cmsClasses = self::get_cms_classes();
-		$entities = array();
+		$entities = [];
 		foreach($cmsClasses as $cmsClass) {
 			$defaultTitle = LeftAndMain::menu_title_for_class($cmsClass);
 			$ownerModule = i18n::get_owner_module($cmsClass);
-			$entities["{$cmsClass}.MENUTITLE"] = array($defaultTitle, 'Menu title', $ownerModule);
+			$entities["{$cmsClass}.MENUTITLE"] = [$defaultTitle, 'Menu title', $ownerModule];
 		}
 		return $entities;
 	}

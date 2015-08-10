@@ -6,11 +6,11 @@ class ControllerTest extends FunctionalTest {
 
 	protected $autoFollowRedirection = false;
 
-	protected $requiredExtensions = array(
-		'ControllerTest_AccessBaseController' => array(
+	protected $requiredExtensions = [
+		'ControllerTest_AccessBaseController' => [
 			'ControllerTest_AccessBaseControllerExtension'
-		)
-	);
+		]
+	];
 	
 	protected $depSettings = null;
 
@@ -345,14 +345,14 @@ class ControllerTest extends FunctionalTest {
 		$internalAbsoluteUrl = Controller::join_links(Director::absoluteBaseURL(), '/some-url');
 		
 		$response = $this->get('ControllerTest_Controller/redirectbacktest', null,
-			array('Referer' => $internalRelativeUrl));
+			['Referer' => $internalRelativeUrl]);
 		$this->assertEquals(302, $response->getStatusCode());
 		$this->assertEquals($internalAbsoluteUrl, $response->getHeader('Location'),
 			"Redirects on internal relative URLs"
 		);
 
 		$response = $this->get('ControllerTest_Controller/redirectbacktest', null,
-			array('Referer' => $internalAbsoluteUrl));
+			['Referer' => $internalAbsoluteUrl]);
 		$this->assertEquals(302, $response->getStatusCode());
 		$this->assertEquals($internalAbsoluteUrl, $response->getHeader('Location'),
 			"Redirects on internal absolute URLs"
@@ -360,7 +360,7 @@ class ControllerTest extends FunctionalTest {
 
 		$externalAbsoluteUrl = 'http://myhost.com/some-url';
 		$response = $this->get('ControllerTest_Controller/redirectbacktest', null,
-			array('Referer' => $externalAbsoluteUrl));
+			['Referer' => $externalAbsoluteUrl]);
 		$this->assertEquals(200, $response->getStatusCode(),
 			"Doesn't redirect on external URLs"
 		);
@@ -419,17 +419,17 @@ class ControllerTest_Controller extends Controller implements TestOnly {
 
 	public $Content = "default content";
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'methodaction',
 		'stringaction',
 		'redirectbacktest',
 		'templateaction'
-	);
+	];
 
 	public function methodaction() {
-		return array(
+		return [
 			"Content" => "methodaction content"
-		);
+		];
 	}
 
 	public function stringaction() {
@@ -455,7 +455,7 @@ class ControllerTest_UnsecuredController extends Controller implements TestOnly 
 
 class ControllerTest_AccessBaseController extends Controller implements TestOnly {
 
-	private static $allowed_actions = array();
+	private static $allowed_actions = [];
 
 	// Denied for all
 	public function method1() {}
@@ -466,12 +466,12 @@ class ControllerTest_AccessBaseController extends Controller implements TestOnly
 
 class ControllerTest_AccessSecuredController extends ControllerTest_AccessBaseController implements TestOnly {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		"method1", // denied because only defined in parent
 		"method2" => true, // granted because its redefined
 		"adminonly" => "ADMIN",
 		'templateaction' => 'ADMIN'
-	);
+	];
 
 	public function method2() {}
 
@@ -483,28 +483,28 @@ class ControllerTest_AccessSecuredController extends ControllerTest_AccessBaseCo
 
 class ControllerTest_AccessWildcardSecuredController extends ControllerTest_AccessBaseController implements TestOnly {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		"*" => "ADMIN", // should throw exception
-	);
+	];
 
 	}
 
 class ControllerTest_IndexSecuredController extends ControllerTest_AccessBaseController implements TestOnly {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		"index" => "ADMIN",
-	);
+	];
 
 	}
 
 class ControllerTest_AccessBaseControllerExtension extends Extension implements TestOnly {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		"extensionmethod1" => true, // granted because defined on this class
 		"method1" => true, // ignored because method not defined on this class
 		"method2" => true, // ignored because method not defined on this class
 		"protectedextensionmethod" => true, // ignored because method is protected
-	);
+	];
 
 	// Allowed for all
 	public function extensionmethod1() {}
@@ -521,14 +521,14 @@ class ControllerTest_AccessBaseControllerExtension extends Extension implements 
 
 class ControllerTest_HasAction extends Controller {
 
-	private static $allowed_actions = array (
+	private static $allowed_actions = [
 		'allowed_action',
 		//'other_action' => 'lowercase_permission'
-	);
+	];
 
-	protected $templates = array (
+	protected $templates = [
 		'template_action' => 'template'
-	);
+	];
 
 }
 
@@ -540,9 +540,9 @@ class ControllerTest_HasAction_Unsecured extends ControllerTest_HasAction implem
 
 class ControllerTest_ContainerController extends Controller implements TestOnly {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'subcontroller',
-	);
+	];
 
 	public function subcontroller() {
 		return new ControllerTest_SubController();
@@ -552,14 +552,14 @@ class ControllerTest_ContainerController extends Controller implements TestOnly 
 
 class ControllerTest_SubController extends Controller implements TestOnly {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'subaction',
 		'subvieweraction',
-	);
+	];
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'substring/subvieweraction' => 'subvieweraction',
-	);
+	];
 
 	public function subaction() {
 		return $this->getAction();
@@ -574,9 +574,9 @@ class ControllerTest_SubController extends Controller implements TestOnly {
 	}
 
 	public function subvieweraction() {
-		return $this->customise(array(
+		return $this->customise([
 			'Thoughts' => 'Hope this works',
-		));
+		]);
 	}
 
 }

@@ -33,7 +33,7 @@ class MailerTest extends SapphireTest {
 			"What is the <purpose> of testing?",
 			$testMessage,
 			null,
-			array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
+			['CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com']
 		);
 
 		$this->assertEquals('email@silverstripe.com', $to);
@@ -75,7 +75,7 @@ PHP
 			"What is the <purpose> of testing?",
 			$testMessage,
 			null,
-			array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
+			['CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com']
 		);
 
 		$this->assertEquals('bounce@silverstripe.com', $bounceAddress);
@@ -115,7 +115,7 @@ PHP
 			"What is the <purpose> of testing?",
 			$testMessageHTML,
 			null,
-			array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
+			['CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com']
 		);
 
 		$this->assertEquals('email@silverstripe.com', $to);
@@ -181,7 +181,7 @@ PHP
 			"What is the <purpose> of testing?",
 			$testMessageHTML,
 			null,
-			array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
+			['CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com']
 		);
 
 		$this->assertEquals('bounce@silverstripe.com', $bounceAddress);
@@ -238,6 +238,6 @@ PHP
  */
 class MailerTest_MockMailer extends Mailer implements TestOnly {
 	protected function email($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress) {
-		return array($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress);
+		return [$to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress];
 	}
 }

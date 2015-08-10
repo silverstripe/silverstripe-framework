@@ -29,11 +29,11 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		// Override default adapter to avoid cached translations between tests.
 		// Emulates behaviour in i18n::get_translators()
 		$this->origAdapter = i18n::get_translator('core');
-		$adapter = new Zend_Translate(array(
+		$adapter = new Zend_Translate([
 			'adapter' => 'i18nSSLegacyAdapter',
 			'locale' => i18n::default_locale(),
 			'disableNotices' => true,
-		));
+		]);
 		i18n::register_translator($adapter, 'core');
 		$adapter->removeCache();
 		i18n::include_by_locale('en');

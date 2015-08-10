@@ -56,10 +56,10 @@
 if(defined('SS_ENVIRONMENT_FILE')) {
 	// Only perform validation if SS_ENVIRONMENT_FILE is actually set, which is to say, there is an
 	// _ss_environment.php file
-	foreach(array(
+	foreach([
 		'SS_DATABASE_PASSWORD',
 		'SS_DATABASE_USERNAME',
-		'SS_ENVIRONMENT_TYPE',) as $reqDefine) {
+		'SS_ENVIRONMENT_TYPE',] as $reqDefine) {
 		if(!defined($reqDefine)) {
 			user_error("$reqDefine must be defined in your _ss_environment.php."
 				. "See http://doc.silverstripe.org/framework/en/topics/environment-management for more information",
@@ -89,7 +89,7 @@ if(!isset($database) || !$database) {
 
 if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 	global $databaseConfig;
-	$databaseConfig = array(
+	$databaseConfig = [
 		"type" => defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : "MySQLDatabase",
 		"server" => defined('SS_DATABASE_SERVER') ? SS_DATABASE_SERVER : 'localhost',
 		"username" => SS_DATABASE_USERNAME,
@@ -97,7 +97,7 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 		"database" => (defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : '')
 			. $database
 			. (defined('SS_DATABASE_SUFFIX') ? SS_DATABASE_SUFFIX : ''),
-	);
+	];
 
 	// Set the port if called for
 	if(defined('SS_DATABASE_PORT')) {

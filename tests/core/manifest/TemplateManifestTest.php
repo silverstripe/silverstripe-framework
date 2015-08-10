@@ -23,48 +23,48 @@ class TemplateManifestTest extends SapphireTest {
 	}
 
 	public function testGetTemplates() {
-		$expect = array(
-			'root' => array(
+		$expect = [
+			'root' => [
 				'module' => "{$this->base}/module/Root.ss"
-			),
-			'page' => array(
+			],
+			'page' => [
 				'main'   => "{$this->base}/module/templates/Page.ss",
 				'Layout' => "{$this->base}/module/templates/Layout/Page.ss",
-				'themes' => array('theme' => array(
+				'themes' => ['theme' => [
 					'main'   => "{$this->base}/themes/theme/templates/Page.ss",
 					'Layout' => "{$this->base}/themes/theme/templates/Layout/Page.ss"
-				))
-			),
-			'custompage' => array(
+				]]
+			],
+			'custompage' => [
 				'Layout' => "{$this->base}/module/templates/Layout/CustomPage.ss"
-			),
-			'customtemplate' => array(
+			],
+			'customtemplate' => [
 				'main' => "{$this->base}/module/templates/CustomTemplate.ss",
-				'myproject' => array(
+				'myproject' => [
 					'main' => "{$this->base}/myproject/templates/CustomTemplate.ss"
-				)
-			),
-			'subfolder' => array(
+				]
+			],
+			'subfolder' => [
 				'main' => "{$this->base}/module/subfolder/templates/Subfolder.ss"
-			),
-			'customthemepage' => array (
+			],
+			'customthemepage' => [
 				'Layout' => "{$this->base}/module/templates/Layout/CustomThemePage.ss",
 				'themes' =>
-				array(
-					'theme' => array('main' => "{$this->base}/themes/theme/templates/CustomThemePage.ss",)
-				)
-			),
-			'include' => array('themes' => array(
-				'theme' => array(
+				[
+					'theme' => ['main' => "{$this->base}/themes/theme/templates/CustomThemePage.ss",]
+				]
+			],
+			'include' => ['themes' => [
+				'theme' => [
 					'Includes' => "{$this->base}/themes/theme/templates/Includes/Include.ss"
-				)
-			))
-		);
+				]
+			]]
+		];
 
 		$expectTests = $expect;
-		$expectTests['test'] = array(
+		$expectTests['test'] = [
 			'main' => "{$this->base}/module/tests/templates/Test.ss"
-		);
+		];
 
 		$manifest      = $this->manifest->getTemplates();
 		$manifestTests = $this->manifestTests->getTemplates();
@@ -86,32 +86,32 @@ class TemplateManifestTest extends SapphireTest {
 	}
 
 	public function testGetTemplate() {
-		$expectPage = array(
+		$expectPage = [
 			'main'   => "{$this->base}/module/templates/Page.ss",
 			'Layout' => "{$this->base}/module/templates/Layout/Page.ss",
-			'themes' => array('theme' => array(
+			'themes' => ['theme' => [
 				'main'   => "{$this->base}/themes/theme/templates/Page.ss",
 				'Layout' => "{$this->base}/themes/theme/templates/Layout/Page.ss"
-			))
-		);
+			]]
+		];
 
-		$expectTests = array(
+		$expectTests = [
 			'main' => "{$this->base}/module/tests/templates/Test.ss"
-		);
+		];
 
 		$this->assertEquals($expectPage, $this->manifest->getTemplate('Page'));
 		$this->assertEquals($expectPage, $this->manifest->getTemplate('PAGE'));
 		$this->assertEquals($expectPage, $this->manifestTests->getTemplate('Page'));
 		$this->assertEquals($expectPage, $this->manifestTests->getTemplate('PAGE'));
 
-		$this->assertEquals(array(), $this->manifest->getTemplate('Test'));
+		$this->assertEquals([], $this->manifest->getTemplate('Test'));
 		$this->assertEquals($expectTests, $this->manifestTests->getTemplate('Test'));
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'main' => "{$this->base}/module/templates/CustomTemplate.ss",
-			'myproject' => array(
+			'myproject' => [
 				'main' => "{$this->base}/myproject/templates/CustomTemplate.ss"
-		)), $this->manifestTests->getTemplate('CustomTemplate'));
+		]], $this->manifestTests->getTemplate('CustomTemplate'));
 	}
 
 }

@@ -12,7 +12,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$field = new TreeDropdownField('TestTree', 'Test tree', 'Folder');
 
 		// case insensitive search against keyword 'sub' for folders
-		$request = new SS_HTTPRequest('GET','url',array('search'=>'sub'));
+		$request = new SS_HTTPRequest('GET','url',['search'=>'sub']);
 		$tree = $field->tree($request);
 		
 		$folder1 = $this->objFromFixture('Folder','folder1');
@@ -42,14 +42,14 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$noResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
 			$noResult, 
-			array(), 
+			[], 
 			$folder2.' is not found'
 		);
 
 		$field = new TreeDropdownField('TestTree', 'Test tree', 'File');
 
 		// case insensitive search against keyword 'sub' for files
-		$request = new SS_HTTPRequest('GET','url',array('search'=>'sub'));
+		$request = new SS_HTTPRequest('GET','url',['search'=>'sub']);
 		$tree = $field->tree($request);
 
 		$parser = new CSSContentParser($tree);
@@ -98,7 +98,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$noResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
 			$noResult, 
-			array(), 
+			[], 
 			$file3->Name.' is not found'
 		);
 	}

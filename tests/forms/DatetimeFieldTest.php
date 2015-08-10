@@ -12,8 +12,8 @@ class DatetimeFieldTest extends SapphireTest {
 		i18n::set_locale('en_NZ');
 		$this->origDateConfig = Config::inst()->get('DateField', 'default_config');
 		$this->origTimeConfig = Config::inst()->get('TimeField', 'default_config');
-		Config::inst()->update('DateField', 'default_config', array('dateformat' => 'dd/MM/yyyy'));
-		Config::inst()->update('TimeField', 'default_config', array('timeformat' => 'HH:mm:ss'));
+		Config::inst()->update('DateField', 'default_config', ['dateformat' => 'dd/MM/yyyy']);
+		Config::inst()->update('TimeField', 'default_config', ['timeformat' => 'HH:mm:ss']);
 	}
 
 	public function tearDown() {
@@ -30,10 +30,10 @@ class DatetimeFieldTest extends SapphireTest {
 		$f = new DatetimeField('MyDatetime', null);
 		$form = $this->getMockForm();
 		$form->Fields()->push($f);
-		$f->setValue(array(
+		$f->setValue([
 			'date' => '29/03/2003',
 			'time' => '23:59:38'
-		));
+		]);
 		$m = new DatetimeFieldTest_Model();
 		$form->saveInto($m);
 		$this->assertEquals('2003-03-29 23:59:38', $m->MyDatetime);
@@ -82,20 +82,20 @@ class DatetimeFieldTest extends SapphireTest {
 	public function testSetValueWithArray() {
 		$f = new DatetimeField('Datetime', 'Datetime');
 		// Values can only be localized (= non-ISO) in array notation
-		$f->setValue(array(
+		$f->setValue([
 			'date' => '29/03/2003',
 			'time' => '11pm'
-		));
+		]);
 		$this->assertEquals($f->dataValue(), '2003-03-29 23:00:00');
 	}
 
 	public function testSetValueWithDmyArray() {
 		$f = new DatetimeField('Datetime', 'Datetime');
 		$f->getDateField()->setConfig('dmyfields', true);
-		$f->setValue(array(
-			'date' => array('day' => 29, 'month' => 03, 'year' => 2003),
+		$f->setValue([
+			'date' => ['day' => 29, 'month' => 03, 'year' => 2003],
 			'time' => '11pm'
-		));
+		]);
 		$this->assertEquals($f->dataValue(), '2003-03-29 23:00:00');
 	}
 
@@ -134,12 +134,12 @@ class DatetimeFieldTest extends SapphireTest {
 		// Berlin and Auckland have 12h time difference in northern hemisphere summer, but Berlin and Moscow only 2h.
 		$f = new DatetimeField('Datetime', 'Datetime');
 		$f->setConfig('usertimezone', 'Pacific/Auckland'); // should be overridden by form submission
-		$f->setValue(array(
+		$f->setValue([
 			// pass in default format, at user time (Moscow)
 			'date' => '24/06/2003',
 			'time' => '23:59:59',
 			'timezone' => 'Europe/Moscow'
-		));
+		]);
 		$this->assertEquals('24/06/2003 23:59:59', $f->Value(), 'View composite value matches user timezone');
 		$this->assertEquals('24/06/2003', $f->getDateField()->Value(), 'View date part matches user timezone');
 		$this->assertEquals('23:59:59', $f->getTimeField()->Value(), 'View time part matches user timezone');
@@ -156,11 +156,11 @@ class DatetimeFieldTest extends SapphireTest {
 		// Berlin and Auckland have 12h time difference in northern hemisphere summer, but Berlin and Moscow only 2h.
 		$f = new DatetimeField('Datetime', 'Datetime');
 		$f->setConfig('usertimezone', 'Europe/Moscow');
-		$f->setValue(array(
+		$f->setValue([
 			// pass in default format, at user time (Moscow)
 			'date' => '24/06/2003',
 			'time' => '23:59:59',
-		));
+		]);
 		$this->assertEquals('2003-06-24 21:59:59', $f->dataValue(), 'Data value matches server timezone');
 
 		date_default_timezone_set($oldTz);
@@ -170,10 +170,10 @@ class DatetimeFieldTest extends SapphireTest {
 		$form = $this->getMockForm();
 		$field = new DatetimeField('Datetime', 'Datetime');
 		$field->setForm($form);
-		$field->setValue(array(
+		$field->setValue([
 			'date' => '24/06/2003',
 			'time' => '23:59:59',
-		));
+		]);
 		$dateField = new DateField('Datetime[date]');
 		$field->setDateField($dateField);
 
@@ -194,10 +194,10 @@ class DatetimeFieldTest extends SapphireTest {
 		$form = $this->getMockForm();
 		$field = new DatetimeField('Datetime', 'Datetime');
 		$field->setForm($form);
-		$field->setValue(array(
+		$field->setValue([
 			'date' => '24/06/2003',
 			'time' => '23:59:59',
-		));
+		]);
 		$timeField = new TimeField('Datetime[time]');
 		$field->setTimeField($timeField);
 
@@ -250,8 +250,8 @@ class DatetimeFieldTest extends SapphireTest {
  */
 class DatetimeFieldTest_Model extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'MyDatetime' => 'SS_Datetime'
-	);
+	];
 
 }

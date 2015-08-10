@@ -41,7 +41,7 @@ class GridState extends HiddenField {
 	 */
 	public static function array_to_object($d) {
 		if(is_array($d)) {
-			return (object) array_map(array('GridState', 'array_to_object'), $d);
+			return (object) array_map(['GridState', 'array_to_object'], $d);
 		}
 
 		return $d;
@@ -83,7 +83,7 @@ class GridState extends HiddenField {
 	 */
 	public function Value() {
 		if(!$this->data) {
-			return json_encode(array());
+			return json_encode([]);
 		}
 
 		return json_encode($this->data->toArray());
@@ -131,7 +131,7 @@ class GridState_Data {
 	 */
 	protected $data;
 
-	public function __construct($data = array()) {
+	public function __construct($data = []) {
 		$this->data = $data;
 	}
 
@@ -183,7 +183,7 @@ class GridState_Data {
 	}
 
 	public function toArray() {
-		$output = array();
+		$output = [];
 
 		foreach($this->data as $k => $v) {
 			$output[$k] = (is_object($v) && method_exists($v, 'toArray')) ? $v->toArray() : $v;
@@ -202,8 +202,8 @@ class GridState_Data {
 class GridState_Component implements GridField_HTMLProvider {
 
 	public function getHTMLFragments($gridField) {
-		return array(
+		return [
 			'before' => $gridField->getState(false)->Field()
-		);
+		];
 	}
 }

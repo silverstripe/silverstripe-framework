@@ -24,9 +24,9 @@ define('30719',E_ALL);
  */
 class SapphireREPL extends Controller {
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index'
-	);
+	];
 
 	public function error_handler( $errno, $errstr, $errfile, $errline, $errctx ) {
 		// Ignore unless important error
@@ -47,7 +47,7 @@ class SapphireREPL extends Controller {
 
 		/* Fall back to our simpler interface */
 		if( empty( $__shell ) ) {
-			set_error_handler(array($this, 'error_handler'));
+			set_error_handler([$this, 'error_handler']);
 
 			echo "SilverStripe Interactive Command-line (REPL interface). Type help for hints.\n\n";
 			while(true) {

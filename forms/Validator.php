@@ -57,11 +57,11 @@ abstract class Validator extends Object {
 	 * See {@link getErrors()} for details.
 	 */
 	public function validationError($fieldName, $message, $messageType = '') {
-		$this->errors[] = array(
+		$this->errors[] = [
 			'fieldName' => $fieldName,
 			'message' => $message,
 			'messageType' => $messageType,
-		);
+		];
 	}
 
 	/**

@@ -122,7 +122,7 @@ class ConfirmedPasswordField extends FormField {
 	 *
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/ConfirmedPasswordField.js');
 		Requirements::css(FRAMEWORK_DIR . '/css/ConfirmedPasswordField.css');
@@ -367,21 +367,21 @@ class ConfirmedPasswordField extends FormField {
 				$errorMsg = _t(
 					'ConfirmedPasswordField.BETWEEN',
 					'Passwords must be {min} to {max} characters long.',
-					array('min' => $this->minLength, 'max' => $this->maxLength)
+					['min' => $this->minLength, 'max' => $this->maxLength]
 				);
 			} elseif($this->minLength) {
 				$limit = "{{$this->minLength}}.*";
 				$errorMsg = _t(
 					'ConfirmedPasswordField.ATLEAST',
 					'Passwords must be at least {min} characters long.',
-					array('min' => $this->minLength)
+					['min' => $this->minLength]
 				);
 			} elseif($this->maxLength) {
 				$limit = "{0,{$this->maxLength}}";
 				$errorMsg = _t(
 					'ConfirmedPasswordField.MAXIMUM',
 					'Passwords must be at most {max} characters long.',
-					array('max' => $this->maxLength)
+					['max' => $this->maxLength]
 				);
 			}
 			$limitRegex = '/^.' . $limit . '$/';

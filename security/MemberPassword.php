@@ -13,21 +13,21 @@
  * @method Member Member() Owner of the password
  */
 class MemberPassword extends DataObject {
-	private static $db = array(
+	private static $db = [
 		'Password' => 'Varchar(160)',
 		'Salt' => 'Varchar(50)',
 		'PasswordEncryption' => 'Varchar(50)',
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Member' => 'Member'
-	);
+	];
 
-	private static $has_many = array();
+	private static $has_many = [];
 
-	private static $many_many = array();
+	private static $many_many = [];
 
-	private static $belongs_many_many = array();
+	private static $belongs_many_many = [];
 
 	/**
 	 * Log a password change from the given member.

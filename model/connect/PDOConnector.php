@@ -48,13 +48,13 @@ class PDOConnector extends DBConnector {
 	 *
 	 * @var array
 	 */
-	protected $cachedStatements = array();
+	protected $cachedStatements = [];
 
 	/**
 	 * Flush all prepared statements
 	 */
 	public function flushStatements() {
-		$this->cachedStatements = array();
+		$this->cachedStatements = [];
 	}
 
 	/**
@@ -73,7 +73,7 @@ class PDOConnector extends DBConnector {
 		// Generate new statement
 		$statement = $this->pdoConnection->prepare(
 			$sql,
-			array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY)
+			[PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
 		);
 		
 		// Only cache select statements
@@ -99,7 +99,7 @@ class PDOConnector extends DBConnector {
 		// Note that we don't select the database here until explicitly
 		// requested via selectDatabase
 		$driver = $parameters['driver'] . ":";
-		$dsn = array();
+		$dsn = [];
 
 		// Typically this is false, but some drivers will request this
 		if($selectDB) {
@@ -143,9 +143,9 @@ class PDOConnector extends DBConnector {
 		}
 
 		// Connection commands to be run on every re-connection
-		$options = array(
+		$options = [
 			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
-		);
+		];
 		if(self::is_emulate_prepare()) {
 			$options[PDO::ATTR_EMULATE_PREPARES] = true;
 		}
@@ -313,7 +313,7 @@ class PDOConnector extends DBConnector {
 	 * @param array $parameters
 	 * @return \PDOQuery
 	 */
-	protected function prepareResults($statement, $errorLevel, $sql, $parameters = array()) {
+	protected function prepareResults($statement, $errorLevel, $sql, $parameters = []) {
 		
 		// Record row-count and errors of last statement
 		if($this->hasError($statement)) {

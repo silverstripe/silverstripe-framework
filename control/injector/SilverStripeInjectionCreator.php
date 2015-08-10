@@ -8,7 +8,7 @@ use SilverStripe\Framework\Injector\Factory;
  */
 class SilverStripeInjectionCreator implements Factory {
 
-	public function create($class, array $params = array()) {
+	public function create($class, array $params = []) {
 		$class = Object::getCustomClass($class);
 		$reflector = new ReflectionClass($class);
 

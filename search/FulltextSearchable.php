@@ -41,19 +41,19 @@ class FulltextSearchable extends DataExtension {
 	 * @param Array $searchableClasses The extension will be applied to all DataObject subclasses
 	 *  listed here. Default: {@link SiteTree} and {@link File}.
 	 */
-	public static function enable($searchableClasses = array('SiteTree', 'File')) {
-		$defaultColumns = array(
+	public static function enable($searchableClasses = ['SiteTree', 'File']) {
+		$defaultColumns = [
 			'SiteTree' => '"Title","MenuTitle","Content","MetaDescription"',
 			'File' => '"Title","Filename","Content"'
-		);
+		];
 
-		if(!is_array($searchableClasses)) $searchableClasses = array($searchableClasses);
+		if(!is_array($searchableClasses)) $searchableClasses = [$searchableClasses];
 		foreach($searchableClasses as $class) {
 			if(!class_exists($class)) continue;
 
 			if(isset($defaultColumns[$class])) {
 				Config::inst()->update(
-					$class, 'create_table_options', array(MySQLSchemaManager::ID => 'ENGINE=MyISAM')
+					$class, 'create_table_options', [MySQLSchemaManager::ID => 'ENGINE=MyISAM']
 				);
 				$class::add_extension("FulltextSearchable('{$defaultColumns[$class]}')");
 			} else {
@@ -72,7 +72,7 @@ class FulltextSearchable extends DataExtension {
 	 * @param Array|String $searchFields Comma-separated list (or array) of database column names
 	 *  that can be searched on. Used for generation of the database index defintions.
 	 */
-	public function __construct($searchFields = array()) {
+	public function __construct($searchFields = []) {
 		if(is_array($searchFields)) $this->searchFields = '"'.implode('","', $searchFields).'"';
 		else $this->searchFields = $searchFields;
 
@@ -80,15 +80,15 @@ class FulltextSearchable extends DataExtension {
 	}
 
 	public static function get_extra_config($class, $extensionClass, $args) {
-		return array(
-			'indexes' => array(
-				'SearchFields' => array(
+		return [
+			'indexes' => [
+				'SearchFields' => [
 					'type' => 'fulltext',
 					'name' => 'SearchFields',
 					'value' => $args[0]
-				)
-			)
-		);
+				]
+			]
+		];
 	}
 
 	/**

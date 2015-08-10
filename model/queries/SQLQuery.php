@@ -21,8 +21,8 @@ class SQLQuery extends SQLSelect {
 	/**
 	 * @deprecated since version 4.0
 	 */
-	public function __construct($select = "*", $from = array(), $where = array(), $orderby = array(),
-		$groupby = array(), $having = array(), $limit = array()
+	public function __construct($select = "*", $from = [], $where = [], $orderby = [],
+		$groupby = [], $having = [], $limit = []
 	) {
 		parent::__construct($select, $from, $where, $orderby, $groupby, $having, $limit);
 		Deprecation::notice('4.0', 'Use SQLSelect instead');
@@ -44,7 +44,7 @@ class SQLQuery extends SQLSelect {
 		return $this->isDelete;
 	}
 
-	public function sql(&$parameters = array()) {
+	public function sql(&$parameters = []) {
 		return $this->toAppropriateExpression()->sql($parameters);
 	}
 	
@@ -132,7 +132,7 @@ class SQLQuery_ParameterInjector {
 	 * @return array
 	 */
 	public function injectConditions($conditions) {
-		$result = array();
+		$result = [];
 		foreach($conditions as $condition) {
 			// Evaluate the result of SQLConditionGroup here
 			if($condition instanceof SQLConditionGroup) {

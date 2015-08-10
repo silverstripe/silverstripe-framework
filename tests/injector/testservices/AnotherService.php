@@ -2,5 +2,5 @@
 
 class AnotherService
 {
-	public $filters = array();
+	public $filters = [];
 }

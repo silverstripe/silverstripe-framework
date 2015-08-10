@@ -23,9 +23,9 @@ class SS_ConfigStaticManifest {
 	protected $index;
 	protected $statics;
 
-	static protected $initial_classes = array(
+	static protected $initial_classes = [
 		'Object', 'ViewableData', 'Injector', 'Director'
-	);
+	];
 
 	/**
 	 * Constructs and initialises a new config static manifest, either loading the data
@@ -95,21 +95,21 @@ class SS_ConfigStaticManifest {
 	 * Completely regenerates the manifest file.
 	 */
 	public function regenerate($cache = true) {
-		$this->index = array('$statics' => array());
-		$this->statics = array();
+		$this->index = ['$statics' => []];
+		$this->statics = [];
 
 		$finder = new ManifestFileFinder();
-		$finder->setOptions(array(
+		$finder->setOptions([
 			'name_regex'    => '/^([^_].*\.php)$/',
-			'ignore_files'  => array('index.php', 'main.php', 'cli-script.php', 'SSTemplateParser.php'),
+			'ignore_files'  => ['index.php', 'main.php', 'cli-script.php', 'SSTemplateParser.php'],
 			'ignore_tests'  => !$this->tests,
-			'file_callback' => array($this, 'handleFile')
-		));
+			'file_callback' => [$this, 'handleFile']
+		]);
 
 		$finder->find($this->base);
 
 		if($cache) {
-			$keysets = array();
+			$keysets = [];
 
 			foreach ($this->statics as $class => $details) {
 				if (in_array($class, self::$initial_classes)) {
@@ -157,8 +157,8 @@ class SS_ConfigStaticManifest {
  */
 class SS_ConfigStaticManifest_Parser {
 
-	protected $info = array();
-	protected $statics = array();
+	protected $info = [];
+	protected $statics = [];
 
 	protected $path;
 	protected $tokens;
@@ -207,7 +207,7 @@ class SS_ConfigStaticManifest_Parser {
 	 * @return null|string - Either the next string or null if there isn't one
 	 */
 	protected function nextString($ignoreWhitespace = true) {
-		static $stop = array('{', '}', '(', ')', '[', ']');
+		static $stop = ['{', '}', '(', ')', '[', ']'];
 
 		$string = '';
 		while ($this->pos < $this->length) {
@@ -357,14 +357,14 @@ class SS_ConfigStaticManifest_Parser {
 		}
 
 		if (!isset($this->info[$class])) {
-			$this->info[$class] = array(
+			$this->info[$class] = [
 				'path' => $this->path,
 				'mtime' => filemtime($this->path),
-			);
+			];
 		}
 
 		if(!isset($this->statics[$class])) {
-			$this->statics[$class] = array();
+			$this->statics[$class] = [];
 		}
 
 		$value = trim($value);
@@ -375,10 +375,10 @@ class SS_ConfigStaticManifest_Parser {
 			$value = null;
 		}
 
-		$this->statics[$class][$variable] = array(
+		$this->statics[$class][$variable] = [
 			'access' => $access,
 			'value' => $value
-		);
+		];
 
 		if($token == ',') $this->parseStatic($access, $class);
 	}

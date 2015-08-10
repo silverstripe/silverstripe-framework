@@ -9,7 +9,7 @@ class SS_MapTest extends SapphireTest {
 	// Borrow the model from DataObjectTest
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'DataObjectTest_Team',
 		'DataObjectTest_Fixture',
 		'DataObjectTest_SubTeam',
@@ -19,42 +19,42 @@ class SS_MapTest extends SapphireTest {
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
 		'DataObjectTest_TeamComment'
-	);
+	];
 
 
 	public function testValues() {
 		$list = DataObjectTest_TeamComment::get()->sort('Name');
 		$map = new SS_Map($list, 'Name', 'Comment');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'This is a team comment by Bob',
 			'This is a team comment by Joe',
 			'Phil is a unique guy, and comments on team2'
-		), $map->values());
+		], $map->values());
 
 
 		$map->push('Push', 'Item');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'This is a team comment by Bob',
 			'This is a team comment by Joe',
 			'Phil is a unique guy, and comments on team2',
 			'Item'
-		), $map->values());
+		], $map->values());
 
 		$map = new SS_Map(new ArrayList());
 		$map->push('Push', 'Pushed value');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'Pushed value'
-		), $map->values());
+		], $map->values());
 
 		$map = new SS_Map(new ArrayList());
 		$map->unshift('Unshift', 'Unshift item');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'Unshift item'
-		), $map->values());
+		], $map->values());
 	}
 
 
@@ -94,65 +94,65 @@ class SS_MapTest extends SapphireTest {
 	public function testToArray() {
 		$list = DataObjectTest_TeamComment::get();
 		$map = new SS_Map($list, 'Name', 'Comment');
-		$this->assertEquals(array("Joe" => "This is a team comment by Joe",
+		$this->assertEquals(["Joe" => "This is a team comment by Joe",
 			"Bob" => "This is a team comment by Bob",
-			"Phil" => "Phil is a unique guy, and comments on team2"), $map->toArray());
+			"Phil" => "Phil is a unique guy, and comments on team2"], $map->toArray());
 	}
 
 	public function testKeys() {
 		$list = DataObjectTest_TeamComment::get()->sort('Name');
 		$map = new SS_Map($list, 'Name', 'Comment');
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'Bob',
 			'Joe',
 			'Phil'
-		), $map->keys());
+		], $map->keys());
 
 		$map->unshift('Unshift', 'Item');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'Unshift',
 			'Bob',
 			'Joe',
 			'Phil'
-		), $map->keys());
+		], $map->keys());
 
 		$map->push('Push', 'Item');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'Unshift',
 			'Bob',
 			'Joe',
 			'Phil',
 			'Push'
-		), $map->keys());
+		], $map->keys());
 
 		$map = new SS_Map(new ArrayList());
 		$map->push('Push', 'Item');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'Push'
-		), $map->keys());
+		], $map->keys());
 
 		$map = new SS_Map(new ArrayList());
 		$map->unshift('Unshift', 'Item');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'Unshift'
-		), $map->keys());
+		], $map->keys());
 	}
 
 	public function testMethodAsValueField() {
 		$list = DataObjectTest_Team::get()->sort('Title');
 		$map = new SS_Map($list, 'ID', 'MyTitle');
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'Team Subteam 1',
 			'Team Subteam 2',
 			'Team Subteam 3',
 			'Team Team 1',
 			'Team Team 2',
 			'Team Team 3'
-		), $map->values());
+		], $map->values());
 	}
 
 	public function testUnshift() {
@@ -161,47 +161,47 @@ class SS_MapTest extends SapphireTest {
 
 		$map->unshift(-1, '(All)');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			-1 => "(All)",
 			"Joe" => "This is a team comment by Joe",
 			"Bob" => "This is a team comment by Bob",
-			"Phil" => "Phil is a unique guy, and comments on team2"), $map->toArray());
+			"Phil" => "Phil is a unique guy, and comments on team2"], $map->toArray());
 
 		$map->unshift(0, '(Select)');
 
 		$this->assertEquals('(All)', $map[-1]);
 		$this->assertEquals('(Select)', $map[0]);
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			0 => "(Select)",
 			-1 => "(All)",
 			"Joe" => "This is a team comment by Joe",
 			"Bob" => "This is a team comment by Bob",
-			"Phil" => "Phil is a unique guy, and comments on team2"), $map->toArray());
+			"Phil" => "Phil is a unique guy, and comments on team2"], $map->toArray());
 
 		$map->unshift("Bob","Replaced");
-		$this->assertEquals(array(
+		$this->assertEquals([
 			"Bob" => "Replaced",
 			0 => "(Select)",
 			-1 => "(All)",
 			"Joe" => "This is a team comment by Joe",
-			"Phil" => "Phil is a unique guy, and comments on team2"), $map->toArray());
+			"Phil" => "Phil is a unique guy, and comments on team2"], $map->toArray());
 
 		$map->unshift("Phil","Replaced as well");
-		$this->assertEquals(array(
+		$this->assertEquals([
 			"Phil" => "Replaced as well",
 			"Bob" => "Replaced",
 			0 => "(Select)",
 			-1 => "(All)",
-			"Joe" => "This is a team comment by Joe"), $map->toArray());
+			"Joe" => "This is a team comment by Joe"], $map->toArray());
 
 		$map->unshift("Joe","Replaced the last one");
-		$this->assertEquals(array(
+		$this->assertEquals([
 			"Joe" => "Replaced the last one",
 			"Phil" => "Replaced as well",
 			"Bob" => "Replaced",
 			0 => "(Select)",
-			-1 => "(All)"), $map->toArray());
+			-1 => "(All)"], $map->toArray());
 	}
 
 	public function testPush() {
@@ -210,12 +210,12 @@ class SS_MapTest extends SapphireTest {
 
 		$map->push(1, '(All)');
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			"Joe" => "This is a team comment by Joe",
 			"Bob" => "This is a team comment by Bob",
 			"Phil" => "Phil is a unique guy, and comments on team2",
 			1 => "(All)"
-		), $map->toArray());
+		], $map->toArray());
 	}
 
 	public function testCount() {

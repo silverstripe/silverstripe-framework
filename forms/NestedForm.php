@@ -23,7 +23,7 @@ class NestedForm extends ViewableData {
 		$actions = $this->form->Actions();
 		foreach($actions as $action) {
 			$action->setFullAction('action_' . $action->actionName()
-				.'?formController=' . str_replace(array('?','.'), array('&','%2e'), $this->form->FormAction()) );
+				.'?formController=' . str_replace(['?','.'], ['&','%2e'], $this->form->FormAction()) );
 		}
 		return $actions;
 	}

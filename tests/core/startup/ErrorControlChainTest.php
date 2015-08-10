@@ -57,7 +57,7 @@ require_once '$classpath';
 		exec("php $codepath 2>$null", $stdout, $errcode);
 		unlink($codepath);
 
-		return array(implode("\n", $stdout), $errcode);
+		return [implode("\n", $stdout), $errcode];
 	}
 }
 
@@ -131,7 +131,7 @@ class ErrorControlChainTest extends SapphireTest {
 		list($out, $code) = $chain
 			->then(function(){
 				ini_set('memory_limit', '10M');
-				$a = array();
+				$a = [];
 				while(1) $a[] = 1;
 			})
 			->thenIfErrored(function(){

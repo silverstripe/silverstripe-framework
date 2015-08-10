@@ -5,33 +5,33 @@
  */
 class FormFieldTest extends SapphireTest {
 
-	protected $requiredExtensions = array(
-		'FormField' => array('FormFieldTest_Extension')
-	);
+	protected $requiredExtensions = [
+		'FormField' => ['FormFieldTest_Extension']
+	];
 
 	public function testDefaultClasses() {
 		Config::nest();
 
-		Config::inst()->update('FormField', 'default_classes', array(
+		Config::inst()->update('FormField', 'default_classes', [
 			'class1',
-		));
+		]);
 
 		$field = new FormField('MyField');
 
 		$this->assertContains('class1', $field->extraClass(), 'Class list does not contain expected class');
 
-		Config::inst()->update('FormField', 'default_classes', array(
+		Config::inst()->update('FormField', 'default_classes', [
 			'class1',
 			'class2',
-		));
+		]);
 
 		$field = new FormField('MyField');
 
 		$this->assertContains('class1 class2', $field->extraClass(), 'Class list does not contain expected class');
 
-		Config::inst()->update('FormField', 'default_classes', array(
+		Config::inst()->update('FormField', 'default_classes', [
 			'class3',
-		));
+		]);
 
 		$field = new FormField('MyField');
 
@@ -41,9 +41,9 @@ class FormFieldTest extends SapphireTest {
 
 		$this->assertNotContains('class3', $field->extraClass(), 'Class list contains unexpected class');
 
-		Config::inst()->update('TextField', 'default_classes', array(
+		Config::inst()->update('TextField', 'default_classes', [
 			'textfield-class',
-		));
+		]);
 
 		$field = new TextField('MyField');
 

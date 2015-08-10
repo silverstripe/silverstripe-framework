@@ -15,37 +15,37 @@ class DatabaseAdapterRegistry {
 	 *
 	 * @var array
 	 */
-	private static $default_fields = array(
-		'server' => array(
+	private static $default_fields = [
+		'server' => [
 			'title' => 'Database server',
 			'envVar' => 'SS_DATABASE_SERVER',
 			'default' => 'localhost'
-		),
-		'username' => array(
+		],
+		'username' => [
 			'title' => 'Database username',
 			'envVar' => 'SS_DATABASE_USERNAME',
 			'default' => 'root'
-		),
-		'password' => array(
+		],
+		'password' => [
 			'title' => 'Database password',
 			'envVar' => 'SS_DATABASE_PASSWORD',
 			'default' => 'password'
-		),
-		'database' => array(
+		],
+		'database' => [
 			'title' => 'Database name',
 			'default' => 'SS_mysite',
-			'attributes' => array(
+			'attributes' => [
 				"onchange" => "this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');"
-			)
-		),
-	);
+			]
+		],
+	];
 
 	/**
 	 * Internal array of registered database adapters
 	 *
 	 * @var array
 	 */
-	private static $adapters = array();
+	private static $adapters = [];
 
 	/**
 	 * Add new adapter to the registry

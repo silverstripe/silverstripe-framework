@@ -25,14 +25,14 @@ class PolymorphicForeignKey extends ForeignKey implements CompositeDBField {
 	 *
 	 * @var string
 	 */
-	protected static $classname_spec_cache = array();
+	protected static $classname_spec_cache = [];
 
 	/**
 	 * Clear all cached classname specs. It's necessary to clear all cached subclassed names
 	 * for any classes if a new class manifest is generated.
 	 */
 	public static function clear_classname_spec_cache() {
-		self::$classname_spec_cache = array();
+		self::$classname_spec_cache = [];
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {
@@ -119,10 +119,10 @@ class PolymorphicForeignKey extends ForeignKey implements CompositeDBField {
 
 		// Check if an object is assigned directly
 		if($value instanceof DataObject) {
-			$record = array(
+			$record = [
 				$idField => $value->ID,
 				$classField => $value->class
-			);
+			];
 		}
 
 		// Convert an object to an array
@@ -157,7 +157,7 @@ class PolymorphicForeignKey extends ForeignKey implements CompositeDBField {
 
 		// Ensure the table level cache exists
 		if(empty(self::$classname_spec_cache[$this->tableName])) {
-			self::$classname_spec_cache[$this->tableName] = array();
+			self::$classname_spec_cache[$this->tableName] = [];
 		}
 
 		// Ensure the field level cache exists
@@ -177,10 +177,10 @@ class PolymorphicForeignKey extends ForeignKey implements CompositeDBField {
 				= "Enum(array('" . implode("', '", array_filter($classNames)) . "'))";
 		}
 
-		return array(
+		return [
 			'ID' => 'Int',
 			'Class' => self::$classname_spec_cache[$this->tableName][$this->name]
-		);
+		];
 	}
 
 	public function isChanged() {

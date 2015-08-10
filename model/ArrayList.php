@@ -23,13 +23,13 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 *
 	 * @var array
 	 */
-	protected $items = array();
+	protected $items = [];
 
 	/**
 	 *
 	 * @param array $items - an initial array to fill this object with
 	 */
-	public function __construct(array $items = array()) {
+	public function __construct(array $items = []) {
 		$this->items = array_values($items);
 		parent::__construct();
 	}
@@ -108,7 +108,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return array
 	 */
 	public function toNestedArray() {
-		$result = array();
+		$result = [];
 
 		foreach ($this->items as $item) {
 			if (is_object($item)) {
@@ -201,7 +201,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @param string $field
 	 */
 	public function removeDuplicates($field = 'ID') {
-		$seen = array();
+		$seen = [];
 		$renumberKeys = false;
 
 		foreach ($this->items as $key => $item) {
@@ -280,7 +280,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return array
 	 */
 	public function map($keyfield = 'ID', $titlefield = 'Title') {
-		$map = array();
+		$map = [];
 
 		foreach ($this->items as $item) {
 			$map[$this->extractValue($item, $keyfield)] = $this->extractValue(
@@ -314,7 +314,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return array
 	 */
 	public function column($colName = 'ID') {
-		$result = array();
+		$result = [];
 
 		foreach ($this->items as $item) {
 			$result[] = $this->extractValue($item, $colName);
@@ -378,7 +378,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			throw new InvalidArgumentException("Invalid sort() direction");
 		}
 
-		return array($column, $direction);
+		return [$column, $direction];
 	}
 
 	/**
@@ -423,12 +423,12 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		}
 
 		// This the main sorting algorithm that supports infinite sorting params
-		$multisortArgs = array();
-		$values = array();
+		$multisortArgs = [];
+		$values = [];
 		foreach($columnsToSort as $column => $direction ) {
 			// The reason these are added to columns is of the references, otherwise when the foreach
 			// is done, all $values and $direction look the same
-			$values[$column] = array();
+			$values[$column] = [];
 			$sortDirection[$column] = $direction;
 			// We need to subtract every value into a temporary array for sorting
 			foreach($this->items as $index => $item) {
@@ -485,7 +485,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			throw new InvalidArgumentException('filter takes one array or two arguments');
 		}
 
-		$keepUs = array();
+		$keepUs = [];
 		if(count(func_get_args())==2){
 			$keepUs[func_get_arg(0)] = func_get_arg(1);
 		}
@@ -496,7 +496,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			}
 		}
 
-		$itemsToKeep = array();
+		$itemsToKeep = [];
 		foreach($this->items as $item){
 			$keepItem = true;
 			foreach($keepUs as $column => $value ) {
@@ -571,7 +571,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			throw new InvalidArgumentException('exclude() takes one array or two arguments');
 		}
 
-		$removeUs = array();
+		$removeUs = [];
 		if(count(func_get_args())==2){
 			$removeUs[func_get_arg(0)] = func_get_arg(1);
 		}
@@ -584,7 +584,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 
 		$hitsRequiredToRemove = count($removeUs);
-		$matches = array();
+		$matches = [];
 		foreach($removeUs as $column => $excludeValue) {
 			foreach($this->items as $key => $item){
 				if(!is_array($excludeValue) && $this->extractValue($item, $column) == $excludeValue) {
@@ -597,7 +597,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 		$keysToRemove = array_keys($matches,$hitsRequiredToRemove);
 
-		$itemsToKeep = array();
+		$itemsToKeep = [];
 		foreach($this->items as $key => $value) {
 			if(!in_array($key, $keysToRemove)) {
 				$itemsToKeep[] = $value;

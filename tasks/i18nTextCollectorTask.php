@@ -77,6 +77,6 @@ class i18nTextCollectorTask extends BuildTask {
 		}
 
 		// merge=0 or merge=false will disable merge
-		return !in_array($merge, array('0', 'false'));
+		return !in_array($merge, ['0', 'false']);
 	}
 }

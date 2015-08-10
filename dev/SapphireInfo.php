@@ -5,11 +5,11 @@
  * @subpackage control
  */
 class SapphireInfo extends Controller {
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'baseurl',
 		'version',
 		'environmenttype',
-	);
+	];
 
 	public function init() {
 		parent::init();

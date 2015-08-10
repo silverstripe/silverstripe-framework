@@ -10,7 +10,7 @@ class SecurityTest extends FunctionalTest {
 
 	protected $autoFollowRedirection = false;
 
-	protected $priorAuthenticators = array();
+	protected $priorAuthenticators = [];
 
 	protected $priorDefaultAuthenticator = null;
 
@@ -81,7 +81,7 @@ class SecurityTest extends FunctionalTest {
 		$controller = new SecurityTest_NullController();
 		$controller->response = new SS_HTTPResponse();
 
-		Security::permissionFailure($controller, array('default' => 'Oops, not allowed'));
+		Security::permissionFailure($controller, ['default' => 'Oops, not allowed']);
 		$this->assertEquals('Oops, not allowed', Session::get('Security.Message.message'));
 
 		// Test that config values are used correctly
@@ -91,7 +91,7 @@ class SecurityTest extends FunctionalTest {
 			'Default permission failure message value was not present');
 
 		Config::inst()->remove('Security', 'default_message_set');
-		Config::inst()->update('Security', 'default_message_set', array('default' => 'arrayvalue'));
+		Config::inst()->update('Security', 'default_message_set', ['default' => 'arrayvalue']);
 		Security::permissionFailure($controller);
 		$this->assertEquals('arrayvalue', Session::get('Security.Message.message'),
 			'Default permission failure message value was not present');
@@ -102,13 +102,13 @@ class SecurityTest extends FunctionalTest {
 		$this->logInWithPermission('EDITOR');
 
 		Config::inst()->update('Security', 'default_message_set',
-			array('default' => 'default', 'alreadyLoggedIn' => 'You are already logged in!'));
+			['default' => 'default', 'alreadyLoggedIn' => 'You are already logged in!']);
 		Security::permissionFailure($controller);
 		$this->assertContains('You are already logged in!', $controller->response->getBody(),
 			'Custom permission failure message was ignored');
 
 		Security::permissionFailure($controller,
-			array('default' => 'default', 'alreadyLoggedIn' => 'One-off failure message'));
+			['default' => 'default', 'alreadyLoggedIn' => 'One-off failure message']);
 		$this->assertContains('One-off failure message', $controller->response->getBody(),
 			"Message set passed to Security::permissionFailure() didn't override Config values");
 
@@ -192,10 +192,10 @@ class SecurityTest extends FunctionalTest {
 		$response = $this->submitForm(
 			'MemberLoginForm_LoginForm',
 			null,
-			array(
+			[
 				'AuthenticationMethod' => 'MemberAuthenticator',
 				'action_dologout' => 1,
-			)
+			]
 		);
 
 		/* We get a good response */
@@ -368,7 +368,7 @@ class SecurityTest extends FunctionalTest {
 
 		// Request new password by email
 		$response = $this->get('Security/lostpassword');
-		$response = $this->post('Security/LostPasswordForm', array('Email' => 'sam@silverstripe.com'));
+		$response = $this->post('Security/LostPasswordForm', ['Email' => 'sam@silverstripe.com']);
 
 		$this->assertEmailSent('sam@silverstripe.com');
 
@@ -431,7 +431,7 @@ class SecurityTest extends FunctionalTest {
 				'Your account has been temporarily disabled because of too many failed attempts at ' .
 				'logging in. Please try again in {count} minutes.',
 				null,
-				array('count' => Member::config()->lock_out_delay_mins)
+				['count' => Member::config()->lock_out_delay_mins]
 			);
 			if($i > Member::config()->lock_out_after_incorrect_logins) {
 				$this->assertContains($msg, $this->loginErrorMessage());
@@ -513,22 +513,22 @@ class SecurityTest extends FunctionalTest {
 
 		/* UNSUCCESSFUL ATTEMPTS WITH WRONG PASSWORD FOR EXISTING USER ARE LOGGED */
 		$this->doTestLoginForm('sam@silverstripe.com', 'wrongpassword');
-		$attempt = DataObject::get_one('LoginAttempt', array(
+		$attempt = DataObject::get_one('LoginAttempt', [
 			'"LoginAttempt"."Email"' => 'sam@silverstripe.com'
-		));
+		]);
 		$this->assertTrue(is_object($attempt));
-		$member = DataObject::get_one('Member', array(
+		$member = DataObject::get_one('Member', [
 			'"Member"."Email"' => 'sam@silverstripe.com'
-		));
+		]);
 		$this->assertEquals($attempt->Status, 'Failure');
 		$this->assertEquals($attempt->Email, 'sam@silverstripe.com');
 		$this->assertEquals($attempt->Member(), $member);
 
 		/* UNSUCCESSFUL ATTEMPTS WITH NONEXISTING USER ARE LOGGED */
 		$this->doTestLoginForm('wronguser@silverstripe.com', 'wrongpassword');
-		$attempt = DataObject::get_one('LoginAttempt', array(
+		$attempt = DataObject::get_one('LoginAttempt', [
 			'"LoginAttempt"."Email"' => 'wronguser@silverstripe.com'
-		));
+		]);
 		$this->assertTrue(is_object($attempt));
 		$this->assertEquals($attempt->Status, 'Failure');
 		$this->assertEquals($attempt->Email, 'wronguser@silverstripe.com');
@@ -542,12 +542,12 @@ class SecurityTest extends FunctionalTest {
 
 		/* SUCCESSFUL ATTEMPTS ARE LOGGED */
 		$this->doTestLoginForm('sam@silverstripe.com', '1nitialPassword');
-		$attempt = DataObject::get_one('LoginAttempt', array(
+		$attempt = DataObject::get_one('LoginAttempt', [
 			'"LoginAttempt"."Email"' => 'sam@silverstripe.com'
-		));
-		$member = DataObject::get_one('Member', array(
+		]);
+		$member = DataObject::get_one('Member', [
 			'"Member"."Email"' => 'sam@silverstripe.com'
-		));
+		]);
 		$this->assertTrue(is_object($attempt));
 		$this->assertEquals($attempt->Status, 'Success');
 		$this->assertEquals($attempt->Email, 'sam@silverstripe.com');
@@ -586,12 +586,12 @@ class SecurityTest extends FunctionalTest {
 		return $this->submitForm(
 			"MemberLoginForm_LoginForm",
 			null,
-			array(
+			[
 				'Email' => $email,
 				'Password' => $password,
 				'AuthenticationMethod' => 'MemberAuthenticator',
 				'action_dologin' => 1,
-			)
+			]
 		);
 	}
 
@@ -602,12 +602,12 @@ class SecurityTest extends FunctionalTest {
 		return $this->submitForm(
 			"ChangePasswordForm_ChangePasswordForm",
 			null,
-			array(
+			[
 				'OldPassword' => $oldPassword,
 				'NewPassword1' => $newPassword,
 				'NewPassword2' => $newPassword,
 				'action_doChangePassword' => 1,
-			)
+			]
 		);
 	}
 
@@ -622,7 +622,7 @@ class SecurityTest extends FunctionalTest {
 
 class SecurityTest_SecuredController extends Controller implements TestOnly {
 
-	private static $allowed_actions = array('index');
+	private static $allowed_actions = ['index'];
 
 	public function index() {
 		if(!Permission::check('ADMIN')) return Security::permissionFailure($this);

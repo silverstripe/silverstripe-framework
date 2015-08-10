@@ -15,19 +15,19 @@
  */
 class DevelopmentAdmin extends Controller {
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'' => 'index',
 		'build/defaults' => 'buildDefaults',
 		'generatesecuretoken' => 'generatesecuretoken',
 		'$Action' => 'runRegisteredController',
-	);
+	];
 	
-	private static $allowed_actions = array( 
+	private static $allowed_actions = [ 
 		'index', 
 		'buildDefaults',
 		'runRegisteredController',
 		'generatesecuretoken',
-	);
+	];
 
 	public function init() {
 		parent::init();
@@ -140,7 +140,7 @@ class DevelopmentAdmin extends Controller {
 	 * @return array of url => description
 	 */
 	protected static function get_links(){
-		$links = array();
+		$links = [];
 		
 		$reg = Config::inst()->get(__CLASS__, 'registered_controllers');
 		foreach($reg as $registeredController){

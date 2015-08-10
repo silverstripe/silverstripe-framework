@@ -13,8 +13,8 @@
 class Year extends DBField {
 
 	public function requireField() {
-		$parts=Array('datatype'=>'year', 'precision'=>4, 'arrayValue'=>$this->arrayValue);
-		$values=Array('type'=>'year', 'parts'=>$parts);
+		$parts=['datatype'=>'year', 'precision'=>4, 'arrayValue'=>$this->arrayValue];
+		$values=['type'=>'year', 'parts'=>$parts];
 		DB::require_field($this->tableName, $this->name, $values);
 	}
 
@@ -37,7 +37,7 @@ class Year extends DBField {
 	private function getDefaultOptions($start=false, $end=false) {
 		if (!$start) $start = (int)date('Y');
 		if (!$end) $end = 1900;
-		$years = array();
+		$years = [];
 		for($i=$start;$i>=$end;$i--) {
 			$years[$i] = $i;
 		}

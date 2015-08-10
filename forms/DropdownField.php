@@ -114,7 +114,7 @@ class DropdownField extends FormField {
 	/**
 	 * @var array $disabledItems The keys for items that should be disabled (greyed out) in the dropdown
 	 */
-	protected $disabledItems = array();
+	protected $disabledItems = [];
 
 	/**
 	 * @param string $name The field name
@@ -123,7 +123,7 @@ class DropdownField extends FormField {
 	 * @param string $value The current value
 	 * @param Form $form The parent form
 	 */
-	public function __construct($name, $title=null, $source=array(), $value='', $form=null) {
+	public function __construct($name, $title=null, $source=[], $value='', $form=null) {
 		$this->setSource($source);
 		parent::__construct($name, ($title===null) ? $name : $title, $value, $form);
 	}
@@ -132,20 +132,20 @@ class DropdownField extends FormField {
 	 * @param array $properties
 	 * @return HTMLText
 	 */
-	public function Field($properties = array()) {
+	public function Field($properties = []) {
 		$source = $this->getSource();
-		$options = array();
+		$options = [];
 
 		if ($this->getHasEmptyDefault()) {
 			$selected = ($this->value === '' || $this->value === null);
 			$disabled = (in_array('', $this->disabledItems, true)) ? 'disabled' : false;
 
-			$options[] = new ArrayData(array(
+			$options[] = new ArrayData([
 				'Value' => '',
 				'Title' => $this->getEmptyString(),
 				'Selected' => $selected,
 				'Disabled' => $disabled
-			));
+			]);
 		}
 
 		if ($source) {
@@ -169,18 +169,18 @@ class DropdownField extends FormField {
 					$disabled = 'disabled';
 				}
 
-				$options[] = new ArrayData(array(
+				$options[] = new ArrayData([
 					'Title' => $title,
 					'Value' => $value,
 					'Selected' => $selected,
 					'Disabled' => $disabled,
-				));
+				]);
 			}
 		}
 
-		$properties = array_merge($properties, array(
+		$properties = array_merge($properties, [
 			'Options' => new ArrayList($options)
-		));
+		]);
 
 		return parent::Field($properties);
 	}
@@ -210,10 +210,10 @@ class DropdownField extends FormField {
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array(
+			[
 				'type' => null,
 				'value' => null
-			)
+			]
 		);
 	}
 
@@ -302,7 +302,7 @@ class DropdownField extends FormField {
 		if (is_array($source)) {
 			return $source;
 		} else {
-			$sourceArray = array();
+			$sourceArray = [];
 			foreach ($source as $key => $value) {
 				$sourceArray[$key] = $value;
 			}
@@ -329,7 +329,7 @@ class DropdownField extends FormField {
 				_t(
 					'DropdownField.SOURCE_VALIDATION',
 					"Please select a value within the list provided. {value} is not a valid option",
-					array('value' => $this->value)
+					['value' => $this->value]
 				),
 				"validation"
 			);

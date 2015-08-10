@@ -8,11 +8,11 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 
 	protected static $fixture_file = 'GridFieldSortableHeaderTest.yml';
 
-	protected $extraDataObjects = array(
+	protected $extraDataObjects = [
 		'GridFieldSortableHeaderTest_Team',
 		'GridFieldSortableHeaderTest_Cheerleader',
 		'GridFieldSortableHeaderTest_CheerleaderHat'
-	);
+	];
 
 	/**
 	 * Tests that the appropriate sortable headers are generated
@@ -60,11 +60,11 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 		$listB = $compontent->getManipulatedData($gridField, $list);
 
 		$this->assertEquals(
-			array('Auckland', 'Cologne', 'Melbourne', 'Wellington'),
+			['Auckland', 'Cologne', 'Melbourne', 'Wellington'],
 			$listA->column('City')
 		);
 		$this->assertEquals(
-			array('Wellington', 'Melbourne', 'Cologne', 'Auckland'),
+			['Wellington', 'Melbourne', 'Cologne', 'Auckland'],
 			$listB->column('City')
 		);
 
@@ -77,11 +77,11 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 		$relationListB = $compontent->getManipulatedData($gridField, $list);
 
 		$this->assertEquals(
-			array('Wellington', 'Melbourne', 'Cologne', 'Auckland'),
+			['Wellington', 'Melbourne', 'Cologne', 'Auckland'],
 			$relationListA->column('City')
 		);
 		$this->assertEquals(
-			array('Auckland', 'Cologne', 'Melbourne', 'Wellington'),
+			['Auckland', 'Cologne', 'Melbourne', 'Wellington'],
 			$relationListB->column('City')
 		);
 
@@ -94,11 +94,11 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 		$relationListD = $compontent->getManipulatedData($gridField, $list);
 
 		$this->assertEquals(
-			array('Cologne', 'Auckland', 'Wellington', 'Melbourne'),
+			['Cologne', 'Auckland', 'Wellington', 'Melbourne'],
 			$relationListC->column('City')
 		);
 		$this->assertEquals(
-			array('Melbourne', 'Wellington', 'Auckland', 'Cologne'),
+			['Melbourne', 'Wellington', 'Auckland', 'Cologne'],
 			$relationListD->column('City')
 		);
 	}
@@ -107,44 +107,44 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 
 class GridFieldSortableHeaderTest_Team extends DataObject implements TestOnly {
 
-	private static $summary_fields = array(
+	private static $summary_fields = [
 		'Name' => 'Name',
 		'City.Initial' => 'City',
 		'Cheerleader.Hat.Colour' => 'Cheerleader Hat'
-	);
+	];
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar',
 		'City' => 'Varchar'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Cheerleader' => 'GridFieldSortableHeaderTest_Cheerleader'
-	);
+	];
 
 }
 
 class GridFieldSortableHeaderTest_Cheerleader extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Name' => 'Varchar'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Team' => 'GridFieldSortableHeaderTest_Team',
 		'Hat' => 'GridFieldSortableHeaderTest_CheerleaderHat'
-	);
+	];
 
 }
 
 class GridFieldSortableHeaderTest_CheerleaderHat extends DataObject implements TestOnly {
 
-	private static $db = array(
+	private static $db = [
 		'Colour' => 'Varchar'
-	);
+	];
 
-	private static $has_one = array(
+	private static $has_one = [
 		'Cheerleader' => 'GridFieldSortableHeaderTest_Cheerleader'
-	);
+	];
 
 }

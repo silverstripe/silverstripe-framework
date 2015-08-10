@@ -27,11 +27,11 @@ class CSSContentParser extends Object {
 			$tidy = new tidy();
 			$tidy->parseString(
 				$content,
-				array(
+				[
 					'output-xhtml' => true,
 					'numeric-entities' => true,
 					'wrap' => 0, // We need this to be consistent for functional test string comparisons
-				),
+				],
 				'utf8'
 			);
 			$tidy->cleanRepair();
@@ -97,7 +97,7 @@ class CSSContentParser extends Object {
 			} else {
 				$xpath .= "//*";
 			}
-			$xfilters = array();
+			$xfilters = [];
 			if(preg_match('/#([^#.\[]+)/', $part, $matches)) {
 				$xfilters[] = "@id='$matches[1]'";
 			}

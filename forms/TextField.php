@@ -57,7 +57,7 @@ class TextField extends FormField {
 	public function getAttributes() {
 		$maxLength = $this->getMaxLength();
 
-		$attributes = array();
+		$attributes = [];
 
 		if($maxLength) {
 			$attributes['maxLength'] = $maxLength;
@@ -94,7 +94,7 @@ class TextField extends FormField {
 				_t(
 					'TextField.VALIDATEMAXLENGTH',
 					'The value for {name} must not exceed {maxLength} characters in length',
-					array('name' => $this->getName(), 'maxLength' => $this->maxLength)
+					['name' => $this->getName(), 'maxLength' => $this->maxLength]
 				),
 				"validation"
 			);

@@ -4,10 +4,10 @@ class ArrayDataTest extends SapphireTest {
 
 	public function testViewabledataItemsInsideArraydataArePreserved() {
 		/* ViewableData objects will be preserved, but other objects will be converted */
-		$arrayData = new ArrayData(array(
+		$arrayData = new ArrayData([
 			"A" => new Varchar("A"),
 			"B" => new stdClass(),
-		));
+		]);
 		$this->assertEquals("Varchar", get_class($arrayData->A));
 		$this->assertEquals("ArrayData", get_class($arrayData->B));
 	}
@@ -24,7 +24,7 @@ class ArrayDataTest extends SapphireTest {
 	}
 
 	public function testWrappingAnAssociativeArrayWorks() {
-		$array = array("A" => "Alpha", "B" => "Beta");
+		$array = ["A" => "Alpha", "B" => "Beta"];
 		$this->assertTrue(ArrayLib::is_associative($array));
 
 		$arrayData = new ArrayData($array);
@@ -35,7 +35,7 @@ class ArrayDataTest extends SapphireTest {
 	}
 
 	public function testRefusesToWrapAnIndexedArray() {
-		$array = array(0 => "One", 1 => "Two");
+		$array = [0 => "One", 1 => "Two"];
 		$this->assertFalse(ArrayLib::is_associative($array));
 
 		/*
@@ -48,7 +48,7 @@ class ArrayDataTest extends SapphireTest {
 	}
 
 	public function testSetField() {
-		$arrayData = new ArrayData(array());
+		$arrayData = new ArrayData([]);
 
 		$arrayData->setField('d', 'Delta');
 
@@ -60,11 +60,11 @@ class ArrayDataTest extends SapphireTest {
 		$originalDeprecation = Deprecation::dump_settings();
 		Deprecation::notification_version('2.4');
 
-		$array = array(
+		$array = [
 			'Foo' => 'Foo',
 			'Bar' => 'Bar',
 			'Baz' => 'Baz'
-		);
+		];
 
 		$arrayData = new ArrayData($array);
 
@@ -74,7 +74,7 @@ class ArrayDataTest extends SapphireTest {
 	}
 
 	public function testArrayToObject() {
-		$arr = array("test1" => "result1","test2"=>"result2");
+		$arr = ["test1" => "result1","test2"=>"result2"];
 		$obj = ArrayData::array_to_object($arr);
 		$objExpected = new stdClass();
 		$objExpected->test1 = "result1";

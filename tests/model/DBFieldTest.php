@@ -95,7 +95,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals(123, singleton('Varchar')->prepValueForDB(123));
 
 		/* AllowEmpty Varchar behaviour */
-		$varcharField = new Varchar("testfield", 50, array("nullifyEmpty"=>false));
+		$varcharField = new Varchar("testfield", 50, ["nullifyEmpty"=>false]);
 		$this->assertSame(0, $varcharField->prepValueForDB(0));
 		$this->assertSame(null, $varcharField->prepValueForDB(null));
 		$this->assertSame(null, $varcharField->prepValueForDB(false));
@@ -125,7 +125,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals(123, singleton('Text')->prepValueForDB(123));
 
 		/* AllowEmpty Text behaviour */
-		$textField = new Text("testfield", array("nullifyEmpty"=>false));
+		$textField = new Text("testfield", ["nullifyEmpty"=>false]);
 		$this->assertSame(0, $textField->prepValueForDB(0));
 		$this->assertSame(null, $textField->prepValueForDB(null));
 		$this->assertSame(null, $textField->prepValueForDB(false));
@@ -172,7 +172,7 @@ class DBFieldTest extends SapphireTest {
 		$varcharField->setValue(null);
 		$this->assertFalse($varcharField->exists());
 
-		$varcharField = new Varchar("testfield", 50, array('nullifyEmpty'=>false));
+		$varcharField = new Varchar("testfield", 50, ['nullifyEmpty'=>false]);
 		$this->assertFalse($varcharField->getNullifyEmpty());
 		$varcharField->setValue('abc');
 		$this->assertTrue($varcharField->exists());
@@ -190,7 +190,7 @@ class DBFieldTest extends SapphireTest {
 		$textField->setValue(null);
 		$this->assertFalse($textField->exists());
 
-		$textField = new Text("testfield", array('nullifyEmpty'=>false));
+		$textField = new Text("testfield", ['nullifyEmpty'=>false]);
 		$this->assertFalse($textField->getNullifyEmpty());
 		$textField->setValue('abc');
 		$this->assertTrue($textField->exists());
@@ -201,8 +201,8 @@ class DBFieldTest extends SapphireTest {
 	}
 
 	public function testStringFieldsWithMultibyteData() {
-		$plainFields = array('Varchar', 'Text');
-		$htmlFields = array('HTMLVarchar', 'HTMLText');
+		$plainFields = ['Varchar', 'Text'];
+		$htmlFields = ['HTMLVarchar', 'HTMLText'];
 		$allFields = array_merge($plainFields, $htmlFields);
 
 		$value = 'üåäöÜÅÄÖ';

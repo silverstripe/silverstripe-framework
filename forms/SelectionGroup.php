@@ -40,7 +40,7 @@ class SelectionGroup extends CompositeField {
 			$this->setValue($value);
 		}
 
-		$selectionItems = array();
+		$selectionItems = [];
 
 		foreach($items as $key => $item) {
 			if($item instanceof SelectionGroup_Item) {
@@ -68,7 +68,7 @@ class SelectionGroup extends CompositeField {
 	public function FieldList() {
 		$items = parent::FieldList()->toArray();
 		$count = 0;
-		$newItems = array();
+		$newItems = [];
 
 		foreach($items as $item) {
 			if($this->value == $item->getValue()) {
@@ -80,25 +80,25 @@ class SelectionGroup extends CompositeField {
 			}
 
 			$itemID = $this->ID() . '_' . (++$count);
-			$extra = array(
+			$extra = [
 				"RadioButton" => FormField::create_tag(
 					'input',
-					array(
+					[
 						'class' => 'selector',
 						'type' => 'radio',
 						'id' => $itemID,
 						'name' => $this->name,
 						'value' => $item->getValue(),
 						'checked' => $checked
-					)
+					]
 				),
 				"RadioLabel" => FormField::create_tag(
 					'label',
-					array('for' => $itemID),
+					['for' => $itemID],
 					$item->getTitle()
 				),
 				"Selected" => $firstSelected,
-			);
+			];
 			$newItems[] = $item->customise($extra);
 		}
 
@@ -109,7 +109,7 @@ class SelectionGroup extends CompositeField {
 		return true;
 	}
 
-	public function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = []) {
 		Requirements::javascript(THIRDPARTY_DIR .'/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR   . '/javascript/SelectionGroup.js');
 		Requirements::css(FRAMEWORK_DIR . '/css/SelectionGroup.css');
@@ -140,7 +140,7 @@ class SelectionGroup_Item extends CompositeField {
 	function __construct($value, $fields = null, $title = null) {
 		$this->value = $value;
 		$this->title = ($title) ? $title : $value;
-		if($fields && !is_array($fields)) $fields = array($fields);
+		if($fields && !is_array($fields)) $fields = [$fields];
 
 		parent::__construct($fields);
 	}

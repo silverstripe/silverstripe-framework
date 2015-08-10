@@ -136,7 +136,7 @@ class Oembed {
 	 * @param $options array Options to be used for constructing the resulting descriptor.
 	 * @returns Oembed_Result/bool An Oembed descriptor, or false
 	 */
-	public static function get_oembed_from_url($url, $type = false, array $options = array()) {
+	public static function get_oembed_from_url($url, $type = false, array $options = []) {
 		if(!self::is_enabled()) return false;
 
 		// Find or build the Oembed URL.
@@ -226,11 +226,11 @@ class Oembed_Result extends ViewableData {
 	 */
 	protected $extraClass;
 
-	private static $casting = array(
+	private static $casting = [
 		'html' => 'HTMLText',
-	);
+	];
 
-	public function __construct($url, $origin = false, $type = false, array $options = array()) {
+	public function __construct($url, $origin = false, $type = false, array $options = []) {
 		$this->url = $url;
 		$this->origin = $origin;
 		$this->type = $type;
@@ -259,14 +259,14 @@ class Oembed_Result extends ViewableData {
 		$service = new RestfulService($this->url, 60*60*24*7);
 		$body = $service->request();
 		if(!$body || $body->isError()) {
-			$this->data = array();
+			$this->data = [];
 			return;
 		}
 		$body = $body->getBody();
 		$data = json_decode($body, true);
 		if(!$data) {
 			// if the response is no valid JSON we might have received a binary stream to an image
-			$data = array();
+			$data = [];
 			if (!function_exists('imagecreatefromstring')) {
 				throw new LogicException('imagecreatefromstring function does not exist - Please make sure GD is installed');
 			}
@@ -292,7 +292,7 @@ class Oembed_Result extends ViewableData {
 
 		// Purge everything if the type does not match.
 		if($this->type && $this->type != $data['type']) {
-			$data = array();
+			$data = [];
 		}
 
 		$this->data = $data;

@@ -7,7 +7,7 @@ class SecurityAdminTest extends FunctionalTest {
 
 	protected static $fixture_file = 'LeftAndMainTest.yml';
 
-	protected $extraDataObjects = array('LeftAndMainTest_Object');
+	protected $extraDataObjects = ['LeftAndMainTest_Object'];
 
 	// TODO Fix export feature (moved from MemberTableField to GridFieldExportButton)
 	// public function testGroupExport() {
@@ -50,7 +50,7 @@ class SecurityAdminTest extends FunctionalTest {
 
 		$group = $this->objFromFixture('Group', 'admin');
 
-		Config::inst()->update('Permission', 'hidden_permissions', array('CMS_ACCESS_ReportAdmin'));
+		Config::inst()->update('Permission', 'hidden_permissions', ['CMS_ACCESS_ReportAdmin']);
 		$response = $this->get(sprintf('admin/security/EditForm/field/Groups/item/%d/edit', $group->ID));
 
 		$this->assertContains(

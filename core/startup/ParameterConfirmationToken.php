@@ -146,10 +146,10 @@ class ParameterConfirmationToken {
 	 * @return array List of querystring parameters with name and token parameters
 	 */
 	public function params() {
-		return array(
+		return [
 			$this->parameterName => $this->parameter,
 			$this->parameterName.'token' => $this->genToken()
-		);
+		];
 	}
 
 	/** What to use instead of BASE_URL. Must not contain protocol or host. @var string */
@@ -190,14 +190,14 @@ class ParameterConfirmationToken {
 		if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) $proto = 'https';
 		if(isset($_SERVER['SSL'])) $proto = 'https';
 
-		$parts = array_filter(array(
+		$parts = array_filter([
 			// What's our host
 			$_SERVER['HTTP_HOST'],
 			// SilverStripe base
 			self::$alternateBaseURL !== null ? self::$alternateBaseURL : BASE_URL,
 			// And URL
 			$url
-		));
+		]);
 
 		// Join together with protocol into our current absolute URL, avoiding duplicated "/" characters
 		return "$proto://" . preg_replace('#/{2,}#', '/', implode('/', $parts));

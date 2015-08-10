@@ -59,7 +59,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 	public function getActions($gridField) {
 		if(!$this->checkDataType($gridField->getList())) return;
 
-		return array('filter', 'reset');
+		return ['filter', 'reset'];
 	}
 
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
@@ -105,7 +105,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 	public function getHTMLFragments($gridField) {
 		if(!$this->checkDataType($gridField->getList())) return;
 
-		$forTemplate = new ArrayData(array());
+		$forTemplate = new ArrayData([]);
 		$forTemplate->Fields = new ArrayList;
 		$columns = $gridField->getColumns();
 		$filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
@@ -157,8 +157,8 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 			$forTemplate->Fields->push($fields);
 		}
 
-		return array(
+		return [
 			'header' => $forTemplate->renderWith('GridFieldFilterHeader_Row'),
-		);
+		];
 	}
 }

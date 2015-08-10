@@ -104,7 +104,7 @@ class CsvBulkLoader extends BulkLoader {
 
 		// first run: find/create any relations and store them on the object
 		// we can't combine runs, as other columns might rely on the relation being present
-		$relations = array();
+		$relations = [];
 		foreach($record as $fieldName => $val) {
 			// don't bother querying of value is not set
 			if($this->isNullValue($val)) continue;
@@ -166,7 +166,7 @@ class CsvBulkLoader extends BulkLoader {
 			} else if($obj->hasMethod("import{$fieldName}")) {
 				$obj->{"import{$fieldName}"}($val, $record);
 			} else {
-				$obj->update(array($fieldName => $val));
+				$obj->update([$fieldName => $val]);
 			}
 		}
 

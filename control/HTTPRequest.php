@@ -45,12 +45,12 @@ class SS_HTTPRequest implements ArrayAccess {
 	/**
 	 * @var array $getVars Contains alls HTTP GET parameters passed into this request.
 	 */
-	protected $getVars = array();
+	protected $getVars = [];
 
 	/**
 	 * @var array $postVars Contains alls HTTP POST parameters passed into this request.
 	 */
-	protected $postVars = array();
+	protected $postVars = [];
 
 	/**
 	 * HTTP Headers like "Content-Type: text/xml"
@@ -58,7 +58,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
 	 * @var array
 	 */
-	protected $headers = array();
+	protected $headers = [];
 
 	/**
 	 * Raw HTTP body, used by PUT and POST requests.
@@ -73,7 +73,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * It's a "historical record" that's specific to the current call of
 	 * {@link handleRequest()}, and is only complete once the "last call" to that method is made.
 	 */
-	protected $allParams = array();
+	protected $allParams = [];
 
 	/**
 	 * @var array $latestParams Contains an associative array of all
@@ -83,7 +83,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * while processed in {@link RequestHandler} and to get the last
 	 * processes arguments.
 	 */
-	protected $latestParams = array();
+	protected $latestParams = [];
 
 	/**
 	 * @var array $routeParams Contains an associative array of all arguments
@@ -98,14 +98,14 @@ class SS_HTTPRequest implements ArrayAccess {
 	 *       Controller: 'ModelAsController'
 	 *       Locale: 'en_NZ'
 	 */
-	protected $routeParams = array();
+	protected $routeParams = [];
 
 	protected $unshiftedButParsedParts = 0;
 
 	/**
 	 * Construct a SS_HTTPRequest from a URL relative to the site root.
 	 */
-	public function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
+	public function __construct($httpMethod, $url, $getVars = [], $postVars = [], $body = null) {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
 		$this->setUrl($url);
 
@@ -129,14 +129,14 @@ class SS_HTTPRequest implements ArrayAccess {
 
 		// Normalize URL if its relative (strictly speaking), or has leading slashes
 		if(Director::is_relative_url($url) || preg_match('/^\//', $url)) {
-			$this->url = preg_replace(array('/\/+/', '/^\//', '/\/$/'),array('/', '', ''), $this->url);
+			$this->url = preg_replace(['/\/+/', '/^\//', '/\/$/'],['/', '', ''], $this->url);
 		}
 		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
 			$this->url = $matches[1];
 			$this->extension = $matches[2];
 		}
 		if($this->url) $this->dirParts = preg_split('|/+|', $this->url);
-		else $this->dirParts = array();
+		else $this->dirParts = [];
 
 		return $this;
 	}
@@ -264,7 +264,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return bool
 	 */
 	public function isMedia() {
-		return in_array($this->getExtension(), array('css', 'js', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'ico'));
+		return in_array($this->getExtension(), ['css', 'js', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'ico']);
 	}
 
 	/**
@@ -434,7 +434,7 @@ class SS_HTTPRequest implements ArrayAccess {
 
 		// Special case for the root URL controller
 		if(!$pattern) {
-			return ($this->dirParts == array()) ? array('Matched' => true) : false;
+			return ($this->dirParts == []) ? ['Matched' => true] : false;
 		}
 
 		// Check for the '//' marker that represents the "shifting point"
@@ -453,7 +453,7 @@ class SS_HTTPRequest implements ArrayAccess {
 		// Filter out any "empty" matching parts - either from an initial / or a trailing /
 		$patternParts = array_values(array_filter($patternParts));
 
-		$arguments = array();
+		$arguments = [];
 		foreach($patternParts as $i => $part) {
 			$part = trim($part);
 
@@ -504,7 +504,7 @@ class SS_HTTPRequest implements ArrayAccess {
 			if($v || !isset($this->allParams[$k])) $this->allParams[$k] = $v;
 		}
 
-		if($arguments === array()) $arguments['_matched'] = true;
+		if($arguments === []) $arguments['_matched'] = true;
 		return $arguments;
 	}
 
@@ -623,7 +623,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return String|Array
 	 */
 	public function shift($count = 1) {
-		$return = array();
+		$return = [];
 
 		if($count == 1) return array_shift($this->dirParts);
 
@@ -680,7 +680,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return array
 	 */
 	public function getAcceptMimetypes($includeQuality = false) {
-		$mimetypes = array();
+		$mimetypes = [];
 		$mimetypesWithQuality = explode(', ', $this->getHeader('Accept'));
 		foreach($mimetypesWithQuality as $mimetypeWithQuality) {
 			$mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality);
@@ -713,7 +713,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	public static function detect_method($origMethod, $postVars) {
 		if(isset($postVars['_method'])) {
-			if(!in_array(strtoupper($postVars['_method']), array('GET', 'POST', 'PUT', 'DELETE', 'HEAD'))) {
+			if(!in_array(strtoupper($postVars['_method']), ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'])) {
 				user_error('Director::direct(): Invalid "_method" parameter', E_USER_ERROR);
 			}
 			return strtoupper($postVars['_method']);

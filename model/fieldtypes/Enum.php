@@ -65,7 +65,7 @@ class Enum extends StringField {
 	 * @return void
 	 */
 	public function requireField() {
-		$parts = array(
+		$parts = [
 			'datatype' => 'enum',
 			'enums' => $this->enum,
 			'character set' => 'utf8',
@@ -73,12 +73,12 @@ class Enum extends StringField {
 			'default' => $this->default,
 			'table' => $this->tableName,
 			'arrayValue' => $this->arrayValue
-		);
+		];
 
-		$values = array(
+		$values = [
 			'type' => 'enum',
 			'parts' => $parts
-		);
+		];
 
 		DB::require_field($this->tableName, $this->name, $values);
 	}
@@ -129,7 +129,7 @@ class Enum extends StringField {
 	 */
 	public function enumValues($hasEmpty = false) {
 		return ($hasEmpty)
-			? array_merge(array('' => ''), ArrayLib::valuekey($this->enum))
+			? array_merge(['' => ''], ArrayLib::valuekey($this->enum))
 			: ArrayLib::valuekey($this->enum);
 	}
 }

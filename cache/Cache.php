@@ -14,17 +14,17 @@ class SS_Cache {
 	/**
 	 * @var array $backends
 	 */
-	protected static $backends = array();
+	protected static $backends = [];
 
 	/**
 	 * @var array $backend_picks
 	 */
-	protected static $backend_picks = array();
+	protected static $backend_picks = [];
 
 	/**
 	 * @var array $cache_lifetime
 	 */
-	protected static $cache_lifetime = array();
+	protected static $cache_lifetime = [];
 
 	/**
 	 * Initialize the 'default' named cache backend.
@@ -37,17 +37,17 @@ class SS_Cache {
 				mkdir($cachedir);
 			}
 
-			self::$backends['default'] = array(
+			self::$backends['default'] = [
 				'File',
-				array(
+				[
 					'cache_dir' => $cachedir
-				)
-			);
+				]
+			];
 
-			self::$cache_lifetime['default'] = array(
+			self::$cache_lifetime['default'] = [
 				'lifetime' => 600,
 				'priority' => 1
-			);
+			];
 		}
 	}
 
@@ -62,9 +62,9 @@ class SS_Cache {
 	 *
 	 * @return none
 	 */
-	public static function add_backend($name, $type, $options = array()) {
+	public static function add_backend($name, $type, $options = []) {
 		self::init();
-		self::$backends[$name] = array($type, $options);
+		self::$backends[$name] = [$type, $options];
 	}
 
 	/**
@@ -90,10 +90,10 @@ class SS_Cache {
 		}
 
 		if ($priority >= $current) {
-			self::$backend_picks[$for] = array(
+			self::$backend_picks[$for] = [
 				'name' => $name,
 				'priority' => $priority
-			);
+			];
 		}
 	}
 
@@ -130,10 +130,10 @@ class SS_Cache {
 		}
 
 		if ($priority >= $current) {
-			self::$cache_lifetime[$for] = array(
+			self::$cache_lifetime[$for] = [
 				'lifetime' => $lifetime,
 				'priority' => $priority
-			);
+			];
 		}
 	}
 
@@ -156,7 +156,7 @@ class SS_Cache {
 		$cache_lifetime = self::$cache_lifetime['default']['lifetime'];
 		$lifetime_priority = -1;
 
-		foreach(array('any', $for) as $name) {
+		foreach(['any', $for] as $name) {
 			if(isset(self::$backend_picks[$name])) {
 				if(self::$backend_picks[$name]['priority'] > $backend_priority) {
 					$backend_name = self::$backend_picks[$name]['name'];
@@ -174,7 +174,7 @@ class SS_Cache {
 
 		$backend = self::$backends[$backend_name];
 
-		$basicOptions = array('cache_id_prefix' => $for);
+		$basicOptions = ['cache_id_prefix' => $for];
 
 		if ($cache_lifetime >= 0) {
 			$basicOptions['lifetime'] = $cache_lifetime;

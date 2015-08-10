@@ -17,7 +17,7 @@ class GridFieldConfigTest extends SapphireTest {
 			->addComponent($c3 = new GridFieldConfigTest_MyOtherComponent());
 
 		$this->assertEquals(
-			new ArrayList(array($c1, $c2, $c3)),
+			new ArrayList([$c1, $c2, $c3]),
 			$config->getComponents()
 		);
 	}
@@ -29,15 +29,15 @@ class GridFieldConfigTest extends SapphireTest {
 			->addComponent($c3 = new GridFieldConfigTest_MyOtherComponent());
 
 		$this->assertEquals(
-			new ArrayList(array($c1)),
+			new ArrayList([$c1]),
 			$config->getComponentsByType('GridFieldConfigTest_MyComponent')
 		);
 		$this->assertEquals(
-			new ArrayList(array($c2, $c3)),
+			new ArrayList([$c2, $c3]),
 			$config->getComponentsByType('GridFieldConfigTest_MyOtherComponent')
 		);
 		$this->assertEquals(
-			new ArrayList(array($c1, $c2, $c3)),
+			new ArrayList([$c1, $c2, $c3]),
 			$config->getComponentsByType('GridField_URLHandler')
 		);
 		$this->assertEquals(
@@ -116,9 +116,9 @@ class GridFieldConfigTest extends SapphireTest {
 }
 
 class GridFieldConfigTest_MyComponent implements GridField_URLHandler, TestOnly {
-	public function getURLHandlers($gridField) {return array();}
+	public function getURLHandlers($gridField) {return [];}
 }
 
 class GridFieldConfigTest_MyOtherComponent implements GridField_URLHandler, TestOnly {
-	public function getURLHandlers($gridField) {return array();}
+	public function getURLHandlers($gridField) {return [];}
 }

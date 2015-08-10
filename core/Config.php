@@ -277,19 +277,19 @@ class Config {
 	 * $class => $name => $value, where value is a config value to treat as
 	 * the highest priority item.
 	 */
-	protected $overrides = array();
+	protected $overrides = [];
 
 	/**
 	 * @var array $suppresses Array of arrays. Each member is an nested array
 	 * keyed as $class => $name => $value, where value is a config value suppress
 	 * from any lower priority item.
 	 */
-	protected $suppresses = array();
+	protected $suppresses = [];
 
 	/**
 	 * @var array
 	 */
-	protected $staticManifests = array();
+	protected $staticManifests = [];
 
 	/**
 	 * @param SS_ConfigStaticManifest
@@ -301,7 +301,7 @@ class Config {
 	}
 
 	/** @var [array] - The list of settings pulled from config files to search through */
-	protected $manifests = array();
+	protected $manifests = [];
 
 	/**
 	 * Add another manifest to the list of config manifests to search through.
@@ -315,7 +315,7 @@ class Config {
 		// Now that we've got another yaml config manifest we need to clean the cache
 		$this->cache->clean();
 		// We also need to clean the cache if the manifest's calculated config values change
-		$manifest->registerChangeCallback(array($this->cache, 'clean'));
+		$manifest->registerChangeCallback([$this->cache, 'clean']);
 
 		// @todo: Do anything with these. They're for caching after config.php has executed
 		$this->collectConfigPHPSettings = true;
@@ -327,7 +327,7 @@ class Config {
 	}
 
 	/** @var [Config_ForClass] - The list of Config_ForClass instances, keyed off class */
-	static protected $for_class_instances = array();
+	static protected $for_class_instances = [];
 
 	/**
 	 * Get an accessor that returns results by class by default.
@@ -454,7 +454,7 @@ class Config {
 	}
 
 	static protected function filter_array_by_suppress_array($array, $suppress) {
-		$res = array();
+		$res = [];
 
 		foreach ($array as $k => $v) {
 			$suppressed = self::check_key_or_value_contained_in_suppress_array($k, $v, $suppress);
@@ -468,7 +468,7 @@ class Config {
 		return $res;
 	}
 
-	protected $extraConfigSources = array();
+	protected $extraConfigSources = [];
 
 	public function extraConfigSourcesChanged($class) {
 		unset($this->extraConfigSources[$class]);
@@ -509,7 +509,7 @@ class Config {
 			}
 		}
 
-		$sources = array($class);
+		$sources = [$class];
 
 		// Include extensions only if not flagged not to, and some have been set
 		if (($sourceOptions & self::EXCLUDE_EXTRA_SOURCES) != self::EXCLUDE_EXTRA_SOURCES) {
@@ -586,7 +586,7 @@ class Config {
 		$key = $class.$name.$sourceOptions;
 
 		if (($result = $this->cache->get($key)) === false) {
-			$tags = array();
+			$tags = [];
 			$result = null;
 			$this->getUncached($class, $name, $sourceOptions, $result, $suppress, $tags);
 			$this->cache->set($key, $result, $tags);
@@ -615,7 +615,7 @@ class Config {
 		if(is_null($val)) {
 			$this->remove($class, $name);
 		} else {
-			if (!isset($this->overrides[0][$class])) $this->overrides[0][$class] = array();
+			if (!isset($this->overrides[0][$class])) $this->overrides[0][$class] = [];
 
 			if (!array_key_exists($name, $this->overrides[0][$class])) {
 				$this->overrides[0][$class][$name] = $val;
@@ -662,23 +662,23 @@ class Config {
 		$key = $argc > 2 ? func_get_arg(2) : self::anything();
 		$value = $argc > 3 ? func_get_arg(3) : self::anything();
 
-		$suppress = array($key, $value);
+		$suppress = [$key, $value];
 
 		if (isset($this->overrides[0][$class][$name])) {
 			$value = $this->overrides[0][$class][$name];
 
 			if (is_array($value)) {
-				$this->overrides[0][$class][$name] = self::filter_array_by_suppress_array($value, array($suppress));
+				$this->overrides[0][$class][$name] = self::filter_array_by_suppress_array($value, [$suppress]);
 			}
 			else {
-				if (self::check_value_contained_in_suppress_array($value, array($suppress))) {
+				if (self::check_value_contained_in_suppress_array($value, [$suppress])) {
 					unset($this->overrides[0][$class][$name]);
 				}
 			}
 		}
 
-		if (!isset($this->suppresses[0][$class])) $this->suppresses[0][$class] = array();
-		if (!isset($this->suppresses[0][$class][$name])) $this->suppresses[0][$class][$name] = array();
+		if (!isset($this->suppresses[0][$class])) $this->suppresses[0][$class] = [];
+		if (!isset($this->suppresses[0][$class][$name])) $this->suppresses[0][$class][$name] = [];
 
 		$this->suppresses[0][$class][$name][] = $suppress;
 
@@ -705,7 +705,7 @@ class Config_LRU {
 		Deprecation::notice('4.0', 'Please use Config_MemCache instead', Deprecation::SCOPE_CLASS);
 		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
 			// SplFixedArray causes seg faults before PHP 5.3.7
-			$this->cache = array();
+			$this->cache = [];
 		}
 		else {
 			$this->cache = new SplFixedArray(self::SIZE);
@@ -717,13 +717,13 @@ class Config_LRU {
 			$this->cache[$i]->key = null;
 		}
 
-		$this->indexing = array();
+		$this->indexing = [];
 	}
 
 	public function __clone() {
 		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
 			// SplFixedArray causes seg faults before PHP 5.3.7
-			$cloned = array();
+			$cloned = [];
 		}
 		else {
 			$cloned = new SplFixedArray(self::SIZE);
@@ -734,7 +734,7 @@ class Config_LRU {
 		$this->cache = $cloned;
 	}
 
-	public function set($key, $val, $tags = array()) {
+	public function set($key, $val, $tags = []) {
 		// Find an index to set at
 		$replacing = null;
 
@@ -793,7 +793,7 @@ class Config_LRU {
 		}
 		else {
 			for ($i = 0; $i < self::SIZE; $i++) $this->cache[$i]->key = null;
-			$this->indexing = array();
+			$this->indexing = [];
 		}
 	}
 }
@@ -807,21 +807,21 @@ class Config_MemCache {
 
 	protected $i = 0;
 	protected $c = 0;
-	protected $tags = array();
+	protected $tags = [];
 
 	public function __construct() {
-		$this->cache = array();
+		$this->cache = [];
 	}
 
-	public function set($key, $val, $tags = array()) {
+	public function set($key, $val, $tags = []) {
 		foreach($tags as $t) {
 			if(!isset($this->tags[$t])) {
-				$this->tags[$t] = array();
+				$this->tags[$t] = [];
 			}
 			$this->tags[$t][$key] = true;
 		}
 
-		$this->cache[$key] = array($val, $tags);
+		$this->cache[$key] = [$val, $tags];
 	}
 
 	private $hit = 0;
@@ -855,8 +855,8 @@ class Config_MemCache {
 				unset($this->tags[$tag]);
 			}
 		} else {
-			$this->cache = array();
-			$this->tags = array();
+			$this->cache = [];
+			$this->tags = [];
 		}
 	}
 }

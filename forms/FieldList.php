@@ -30,9 +30,9 @@ class FieldList extends ArrayList {
 	 * @var array Ordered list of regular expressions,
 	 * see {@link setTabPathRewrites()}.
 	 */
-	protected $tabPathRewrites = array();
+	protected $tabPathRewrites = [];
 
-	public function __construct($items = array()) {
+	public function __construct($items = []) {
 		if (!is_array($items) || func_num_args() > 1) {
 			$items = func_get_args();
 		}
@@ -360,7 +360,7 @@ class FieldList extends ArrayList {
 	public function insertBefore($name, $item) {
 		// Backwards compatibility for order of arguments
 		if($name instanceof FormField) {
-			list($item, $name) = array($name, $item);
+			list($item, $name) = [$name, $item];
 		}
 		$this->onBeforeInsert($item);
 		$item->setContainerFieldList($this);
@@ -368,7 +368,7 @@ class FieldList extends ArrayList {
 		$i = 0;
 		foreach($this->items as $child) {
 			if($name == $child->getName() || $name == $child->id) {
-				array_splice($this->items, $i, 0, array($item));
+				array_splice($this->items, $i, 0, [$item]);
 				return $item;
 			} elseif($child->isComposite()) {
 				$ret = $child->insertBefore($name, $item);
@@ -389,7 +389,7 @@ class FieldList extends ArrayList {
 	public function insertAfter($name, $item) {
 		// Backwards compatibility for order of arguments
 		if($name instanceof FormField) {
-			list($item, $name) = array($name, $item);
+			list($item, $name) = [$name, $item];
 		}
 		$this->onBeforeInsert($item);
 		$item->setContainerFieldList($this);
@@ -397,7 +397,7 @@ class FieldList extends ArrayList {
 		$i = 0;
 		foreach($this->items as $child) {
 			if($name == $child->getName() || $name == $child->id) {
-				array_splice($this->items, $i+1, 0, array($item));
+				array_splice($this->items, $i+1, 0, [$item]);
 				return $item;
 			} elseif($child->isComposite()) {
 				$ret = $child->insertAfter($name, $item);
@@ -554,13 +554,13 @@ class FieldList extends ArrayList {
 		if(!is_array($fieldNames)) $fieldNames = func_get_args();
 
 		// Build a map of fields indexed by their name.  This will make the 2nd step much easier.
-		$fieldMap = array();
+		$fieldMap = [];
 		foreach($this->dataFields() as $field) $fieldMap[$field->getName()] = $field;
 
 		// Iterate through the ordered list	of names, building a new array to be put into $this->items.
 		// While we're doing this, empty out $fieldMap so that we can keep track of leftovers.
 		// Unrecognised field names are okay; just ignore them
-		$fields = array();
+		$fields = [];
 		foreach($fieldNames as $fieldName) {
 			if(isset($fieldMap[$fieldName])) {
 				$fields[] = $fieldMap[$fieldName];
