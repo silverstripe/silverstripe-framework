@@ -180,11 +180,11 @@ class Injector {
 	 * @var Factory
 	 */
 	protected $objectCreator;
-	
+
 	/**
 	 * Locator for determining Config properties for services
-	 * 
-	 * @var ServiceConfigurationLocator 
+	 *
+	 * @var ServiceConfigurationLocator
 	 */
 	protected $configLocator;
 
