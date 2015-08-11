@@ -1,6 +1,6 @@
-<div class="importSpec" id="SpecFor{$ModelName}">
-	<a href="#SpecDetailsFor{$ModelName}" class="detailsLink"><% sprintf(_t('ModelAdmin_ImportSpec_ss.IMPORTSPECLINK', 'Show Specification for %s'),$ModelName) %></a>
-	<div class="details" id="SpecDetailsFor{$ModelName}">
+<div class="importSpec" id="SpecFor{$ClassName}">
+	<a href="#SpecDetailsFor{$ClassName}" class="detailsLink"><% sprintf(_t('ModelAdmin_ImportSpec_ss.IMPORTSPECLINK', 'Show Specification for %s'),$ModelName) %></a>
+	<div class="details" id="SpecDetailsFor{$ClassName}">
 	<h4><% sprintf(_t('ModelAdmin_ImportSpec_ss.IMPORTSPECTITLE', 'Specification for %s'),$ModelName) %></h4>
 		<h5><% _t('ModelAdmin_ImportSpec_ss.IMPORTSPECFIELDS', 'Database columns') %></h5>
 		<% loop $Fields %>
