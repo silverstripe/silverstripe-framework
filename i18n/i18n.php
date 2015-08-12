@@ -1100,6 +1100,10 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 			'name' => 'Dutch',
 			'native' => 'Nederlands'
 		),
+		'nl_BE' => array(
+			'name' => 'Dutch (Belgium)',
+			'native' => 'Nederlands (Belgi&euml;)'
+		),
 		'en_NZ' => array(
 			'name' => 'English (NZ)',
 			'native' => 'English (NZ)'
@@ -1131,6 +1135,10 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 		'fr_FR' => array(
 			'name' => 'French',
 			'native' => 'fran&ccedil;ais'
+		),
+		'fr_BE' => array(
+			'name' => 'French (Belgium)',
+			'native' => 'Fran&ccedil;ais (Belgique)'
 		),
 		'gd_GB' => array(
 			'name' => 'Gaelic',
@@ -1367,14 +1375,6 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 		'zu_ZA' => array(
 			'name' => 'Zulu',
 			'native' => 'isiZulu'
-		),
-		'nl_BE' => array(
-			'name' => 'Dutch (Belgium)',
-			'native' => 'Nederlands (Belgi&euml;)'
-		),
-		'fr_BE' => array(
-			'name' => 'French (Belgium)',
-			'native' => 'Fran&ccedil;ais (Belgique)'
 		),
 	);
 
