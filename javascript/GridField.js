@@ -371,9 +371,7 @@
 							url: $(searchField).data('searchUrl'),
 							data: encodeURIComponent(searchField.attr('name'))+'='+encodeURIComponent(searchField.val()), 
 							success: function(data) {
-								response( $.map(JSON.parse(data), function( name, id ) {
-									return { label: name, value: name, id: id };
-								}));
+								response(JSON.parse(data));
 							},
 							error: function(e) {
 								alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION', 'An error occured while fetching data from the server\n Please try again later.'));
