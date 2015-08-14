@@ -543,7 +543,7 @@ controller's `init()` method:
 	class MyController extends Controller {
 		public function init() {
 			parent::init();
-			$this->response->addHeader('X-Frame-Options', 'SAMEORIGIN');
+			$this->getResponse()->addHeader('X-Frame-Options', 'SAMEORIGIN');
 		}
 	}
 	

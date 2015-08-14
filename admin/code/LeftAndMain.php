@@ -227,7 +227,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		// Allow customisation of the access check by a extension
 		// Also all the canView() check to execute Controller::redirect()
-		if(!$this->canView() && !$this->response->isFinished()) {
+		if(!$this->canView() && !$this->getResponse()->isFinished()) {
 			// When access /admin/, we should try a redirect to another part of the admin rather than be locked out
 			$menu = $this->MainMenu();
 			foreach($menu as $candidate) {
@@ -445,8 +445,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$msgs = _t('LeftAndMain.ValidationError', 'Validation error') . ': '
 				. $e->getMessage();
 			$e = new SS_HTTPResponse_Exception($msgs, 403);
-			$e->getResponse()->addHeader('Content-Type', 'text/plain');
-			$e->getResponse()->addHeader('X-Status', rawurlencode($msgs));
+			$errorResponse = $e->getResponse();
+			$errorResponse->addHeader('Content-Type', 'text/plain');
+			$errorResponse->addHeader('X-Status', rawurlencode($msgs));
+			$e->setResponse($errorResponse);
 			throw $e;
 		}
 
@@ -455,9 +457,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', urlencode($title));
 
 		// Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
-		$this->response->addHeader('X-Frame-Options', 'SAMEORIGIN');
-		$this->response->addHeader('Vary', 'X-Requested-With');
-		
+		$originalResponse = $this->getResponse();
+		$originalResponse->addHeader('X-Frame-Options', 'SAMEORIGIN');
+		$originalResponse->addHeader('Vary', 'X-Requested-With');
+
 		return $response;
 	}
 
@@ -471,21 +474,21 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function redirect($url, $code=302) {
 		if($this->getRequest()->isAjax()) {
-			$this->response->addHeader('X-ControllerURL', $url);
-			if($this->getRequest()->getHeader('X-Pjax') && !$this->response->getHeader('X-Pjax')) {
-				$this->response->addHeader('X-Pjax', $this->getRequest()->getHeader('X-Pjax'));
+			$response = $this->getResponse();
+			$response->addHeader('X-ControllerURL', $url);
+			if($this->getRequest()->getHeader('X-Pjax') && !$response->getHeader('X-Pjax')) {
+				$response->addHeader('X-Pjax', $this->getRequest()->getHeader('X-Pjax'));
 			}
-			$oldResponse = $this->response;
 			$newResponse = new LeftAndMain_HTTPResponse(
-				$oldResponse->getBody(),
-				$oldResponse->getStatusCode(),
-				$oldResponse->getStatusDescription()
+				$response->getBody(),
+				$response->getStatusCode(),
+				$response->getStatusDescription()
 			);
-			foreach($oldResponse->getHeaders() as $k => $v) {
+			foreach($response->getHeaders() as $k => $v) {
 				$newResponse->addHeader($k, $v);
 			}
 			$newResponse->setIsFinished(true);
-			$this->response = $newResponse;
+			$this->setResponse($newResponse);
 			return ''; // Actual response will be re-requested by client
 		} else {
 			parent::redirect($url, $code);
@@ -590,7 +593,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 						return $controller->renderWith($controller->getViewer('show'));
 					}
 				),
-				$this->response
+				$this->getResponse()
 			);
 		}
 		return $this->responseNegotiator;
@@ -789,7 +792,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(!$filterInfo->implementsInterface('LeftAndMain_SearchFilter')) {
 			throw new InvalidArgumentException(sprintf('Invalid filter class passed: %s', $filterClass));
 		}
-		
+
 		return Injector::inst()->createWithArgs($filterClass, array($params));
 	}
 
@@ -835,7 +838,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// causes the Hierarchy::$marked cache to be flushed (@see CMSMain::getRecord)
 		// which means that deleted pages stored in the marked tree would be removed
 		$currentPage = $this->currentPage();
-		
+
 		// Mark the nodes of the tree to return
 		if ($filterFunction) $obj->setMarkingFilterFunction($filterFunction);
 
@@ -998,7 +1001,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				'PrevID' => $prev ? $prev->ID : null
 			);
 		}
-		$this->response->addHeader('Content-Type', 'text/json');
+		$this->getResponse()->addHeader('Content-Type', 'text/json');
 		return Convert::raw2json($data);
 	}
 
@@ -1025,7 +1028,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->extend('onAfterSave', $record);
 		$this->setCurrentPageID($record->ID);
 
-		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
+		$this->getResponse()->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
 		return $this->getResponseNegotiator()->respond($this->getRequest());
 	}
 
@@ -1039,7 +1042,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		$record->delete();
 
-		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.DELETED', 'Deleted.')));
+		$this->getResponse()->addHeader('X-Status', rawurlencode(_t('LeftAndMain.DELETED', 'Deleted.')));
 		return $this->getResponseNegotiator()->respond(
 			$this->getRequest(),
 			array('currentform' => array($this, 'EmptyForm'))
@@ -1060,7 +1063,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function savetreenode($request) {
 		if (!Permission::check('SITETREE_REORGANISE') && !Permission::check('ADMIN')) {
-			$this->response->setStatusCode(
+			$this->getResponse()->setStatusCode(
 				403,
 				_t('LeftAndMain.CANT_REORGANISE',
 					"You do not have permission to rearange the site tree. Your change was not saved.")
@@ -1076,7 +1079,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if($className == 'SiteTree' && $page = DataObject::get_by_id('Page', $id)){
 			$root = $page->getParentType();
 			if(($parentID == '0' || $root == 'root') && !SiteConfig::current_site_config()->canCreateTopLevel()){
-				$this->response->setStatusCode(
+				$this->getResponse()->setStatusCode(
 					403,
 					_t('LeftAndMain.CANT_REORGANISE',
 						"You do not have permission to alter Top level pages. Your change was not saved.")
@@ -1093,7 +1096,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if($node && !$node->canEdit()) return Security::permissionFailure($this);
 
 		if(!$node) {
-			$this->response->setStatusCode(
+			$this->getResponse()->setStatusCode(
 				500,
 				_t('LeftAndMain.PLEASESAVE',
 					"Please Save Page: This page could not be updated because it hasn't been saved yet."
@@ -1121,7 +1124,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 
-			$this->response->addHeader('X-Status',
+			$this->getResponse()->addHeader('X-Status',
 				rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 
@@ -1146,7 +1149,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 
-			$this->response->addHeader('X-Status',
+			$this->getResponse()->addHeader('X-Status',
 				rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 
@@ -1626,7 +1629,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 	/**
 	 * Sets the href for the anchor on the Silverstripe logo in the menu
-	 * 
+	 *
 	 * @deprecated since version 4.0
 	 *
 	 * @param String $link
@@ -1754,7 +1757,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * Register the given javascript file as required in the CMS.
 	 * Filenames should be relative to the base, eg, FRAMEWORK_DIR . '/javascript/loader.js'
-	 * 
+	 *
 	 * @deprecated since version 4.0
 	 */
 	public static function require_javascript($file) {
@@ -1779,7 +1782,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Register the given "themeable stylesheet" as required.
 	 * Themeable stylesheets have globally unique names, just like templates and PHP files.
 	 * Because of this, they can be replaced by similarly named CSS files in the theme directory.
-	 * 
+	 *
 	 * @deprecated since version 4.0
 	 *
 	 * @param $name String The identifier of the file.  For example, css/MyFile.css would have the identifier "MyFile"
@@ -1920,7 +1923,7 @@ class LeftAndMain_TreeNode extends ViewableData {
 
 	/**
 	 * Name of method to count the number of children
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $numChildrenMethod;
