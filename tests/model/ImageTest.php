@@ -287,7 +287,7 @@ class ImageTest extends SapphireTest {
 		$imageFirst = $image->Pad(200,200,'CCCCCC');
 		$imageFilename = $imageFirst->getFullPath();
 			// Encoding of the arguments is duplicated from cacheFilename
-		$neededPart = 'Pad' . base64_encode(json_encode(array(200,200,'CCCCCC')));
+		$neededPart = 'Pad' . Convert::base64url_encode(array(200,200,'CCCCCC'));
 		$this->assertContains($neededPart, $imageFilename, 'Filename for cached image is correctly generated');
 	}
 
@@ -310,7 +310,7 @@ class ImageTest extends SapphireTest {
 
 		$imageThird = $imageSecond->Pad(600,600,'0F0F0F');
 		// Encoding of the arguments is duplicated from cacheFilename
-		$argumentString = base64_encode(json_encode(array(600,600,'0F0F0F')));
+		$argumentString = Convert::base64url_encode(array(600,600,'0F0F0F'));
 		$this->assertNotNull($imageThird);
 		$this->assertContains($argumentString, $imageThird->getFullPath(),
 			'Image contains background color for padded resizement');
@@ -352,8 +352,8 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
 
 		// Encoding of the arguments is duplicated from cacheFilename
-		$oldArgumentString = base64_encode(json_encode(array(200)));
-		$newArgumentString = base64_encode(json_encode(array(300)));
+		$oldArgumentString = Convert::base64url_encode(array(200));
+		$newArgumentString = Convert::base64url_encode(array(300));
 
 		$newPath = str_replace($oldArgumentString, $newArgumentString, $p);
 		$newRelative = str_replace($oldArgumentString, $newArgumentString, $image_generated->getFileName());

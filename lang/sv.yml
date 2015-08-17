@@ -339,8 +339,6 @@ sv:
   LeftAndMain_Menu_ss:
     Hello: Hej
     LOGOUT: 'Logga ut'
-  ListboxField:
-    SOURCE_VALIDATION: 'Vänligen välj att värde i listan. {value} är inget giltigt val'
   LoginAttempt:
     Email: 'E-postadress'
     IP: 'IP-adress'

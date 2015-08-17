@@ -25,7 +25,6 @@ env:
 matrix:
   allow_failures:
     - php: hhvm
-    - php: 7.0
     - php: nightly
 
   include:
@@ -38,8 +37,6 @@ matrix:
     - php: 5.4
       env: DB=MYSQL BEHAT_TEST=1
     - php: 5.3
-      env: DB=MYSQL
-    - php: 7.0
       env: DB=MYSQL
     - php: nightly
       env: DB=MYSQL

@@ -1,5 +1,22 @@
 el:
+  AssetTableField:
+    DIM: Διαστάσεις
+    FILENAME: Όνομα αρχείου
+    FOLDER: Φάκελος
+    OWNER: Ιδιοκτήτης
+    TITLE: Τίτλος
+  AssetUploadField:
+    FILES: Αρχεία
+    TOTAL: Σύνολο
+    UPLOADOR: Ή
+  BBCodeParser:
+    IMAGE: Εικόνα
+  Boolean:
+    NOANSWER: 'Όχι'
+    YESANSWER: 'Ναί'
   CMSMain:
     SAVE: Αποθήκευση
+  CMSProfileController:
+    MENUTITLE: 'Το προφίλ μου'
   LeftAndMain:
     HELP: Βοήθεια

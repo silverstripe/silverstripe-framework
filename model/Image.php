@@ -689,7 +689,7 @@ class Image extends File implements Flushable {
 	}
 
 	/**
-	 * Return the filename for the cached image, given it's format name and arguments.
+	 * Return the filename for the cached image, given its format name and arguments.
 	 * @param string $format The format name.
 	 * @return string
 	 * @throws InvalidArgumentException
@@ -699,7 +699,7 @@ class Image extends File implements Flushable {
 		array_shift($args);
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . "/";
 
-		$format = $format . base64_encode(json_encode($args, JSON_NUMERIC_CHECK));
+		$format = $format . Convert::base64url_encode($args);
 		$filename = $format . "-" . $this->Name;
 		$patterns = $this->getFilenamePatterns($this->Name);
 		if (!preg_match($patterns['FullPattern'], $filename)) {
@@ -824,11 +824,11 @@ class Image extends File implements Flushable {
 		}
 		// All generate functions may appear any number of times in the image cache name.
 		$generateFuncs = implode('|', $generateFuncs);
-		$base64Match = "[a-zA-Z0-9\/\r\n+]*={0,2}";
+		$base64url_match = "[a-zA-Z0-9_~]*={0,2}";
 		return array(
-				'FullPattern' => "/^((?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-)+"
+				'FullPattern' => "/^((?P<Generator>{$generateFuncs})(?P<Args>" . $base64url_match . ")\-)+"
 									. preg_quote($filename) . "$/i",
-				'GeneratorPattern' => "/(?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-/i"
+				'GeneratorPattern' => "/(?P<Generator>{$generateFuncs})(?P<Args>" . $base64url_match . ")\-/i"
 		);
 	}
 
@@ -865,7 +865,7 @@ class Image extends File implements Flushable {
 					$generatorArray = array();
 					foreach ($subMatches as $singleMatch) {
 						$generatorArray[] = array('Generator' => $singleMatch['Generator'],
-						'Args' => json_decode(base64_decode($singleMatch['Args'])));
+						'Args' => Convert::base64url_decode($singleMatch['Args']));
 					}
 
 						// Using array_reverse is important, as a cached image will

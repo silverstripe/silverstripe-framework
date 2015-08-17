@@ -1,5 +1,5 @@
 {
-    "CMSMAIN.SELECTONEPAGE": "Please select at least one page",
+    "CMSMAIN.SELECTONEPAGE": "Bitte mindestens eine Seite auswählen",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to unpublish",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to publish?",
     "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",

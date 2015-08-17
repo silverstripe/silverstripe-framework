@@ -311,7 +311,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			new GridFieldFilterHeader(),
 			new GridFieldSortableHeader(),
 			new GridFieldDataColumns(),
-			new GridFieldPaginator(5),
+			new GridFieldPaginator(7),
 			// TODO Shouldn't allow delete here, its too confusing with a "remove from editor view" action.
 			// Remove once we can fit the search button in the last actual title column
 			new GridFieldDeleteAction(),
@@ -323,8 +323,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fileField->setAttribute('data-multiselect', true);
 		$columns = $fileField->getConfig()->getComponentByType('GridFieldDataColumns');
 		$columns->setDisplayFields(array(
-			'CMSThumbnail' => false,
-			'Name' => _t('File.Name'),
+			'StripThumbnail' => false,
+			'Title' => _t('File.Title'),
+			'Created' => singleton('File')->fieldLabel('Created'),
+		));
+		$columns->setFieldCasting(array(
+			'Created' => 'SS_Datetime->Nice'
 		));
 
 		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span>'

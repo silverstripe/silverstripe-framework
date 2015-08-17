@@ -50,6 +50,15 @@ class ClassInfoTest extends SapphireTest {
 		);
 	}
 
+	public function testClassName() {
+		$this->assertEquals('ClassInfoTest', ClassInfo::class_name($this));
+		$this->assertEquals('ClassInfoTest', ClassInfo::class_name('ClassInfoTest'));
+		$this->assertEquals('ClassInfoTest', ClassInfo::class_name('CLaSsInfOTEsT'));
+
+		// This is for backwards compatiblity and will be removed in 4.0
+		$this->assertEquals('IAmAClassThatDoesNotExist', ClassInfo::class_name('IAmAClassThatDoesNotExist'));
+	}
+
 	public function testClassesForFolder() {
 		//$baseFolder = Director::baseFolder() . '/' . FRAMEWORK_DIR . '/tests/_ClassInfoTest';
 		//$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);

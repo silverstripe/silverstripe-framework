@@ -1566,16 +1566,21 @@ class UploadField_SelectHandler extends RequestHandler {
 		$config->addComponent(new GridFieldFilterHeader());
 		$config->addComponent($colsComponent = new GridFieldDataColumns());
 		$colsComponent->setDisplayFields(array(
-			'Title' => singleton('File')->fieldLabel('Name'),
-			'Filename' => singleton('File')->fieldLabel('Filename'),
+			'StripThumbnail' => '',
+			'Title' => singleton('File')->fieldLabel('Title'),
+			'Created' => singleton('File')->fieldLabel('Created'),
 			'Size' => singleton('File')->fieldLabel('Size')
 		));
+		$colsComponent->setFieldCasting(array(
+			'Created' => 'SS_Datetime->Nice'
+		));
+		$config->addComponent(new GridFieldPaginator(11));
 
 		// If relation is to be autoset, we need to make sure we only list compatible objects.
 		$baseClass = $this->parent->getRelationAutosetClass();
 
 		// Create the data source for the list of files within the current directory.
-		$files = DataList::create($baseClass);
+		$files = DataList::create($baseClass)->exclude('ClassName', 'Folder');
 		if($folderID) $files = $files->filter('ParentID', $folderID);
 
 		$fileField = new GridField('Files', false, $files, $config);

@@ -100,6 +100,23 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals($count, $count2);
 	}
 
+	public function testDuplicate() {
+		$obj1 = new VersionedTest_Subclass();
+		$obj1->ExtraField = 'Foo';
+		$obj1->write(); // version 1
+		$obj1->publish('Stage', 'Live');
+		$obj1->ExtraField = 'Foo2';
+		$obj1->write(); // version 2
+
+		// Make duplicate
+		$obj2 = $obj1->duplicate();
+
+		// Check records differ
+		$this->assertNotEquals($obj1->ID, $obj2->ID);
+		$this->assertEquals(2, $obj1->Version);
+		$this->assertEquals(1, $obj2->Version);
+	}
+
 	public function testForceChangeUpdatesVersion() {
 		$obj = new VersionedTest_DataObject();
 		$obj->Name = "test";

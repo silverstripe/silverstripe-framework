@@ -171,7 +171,6 @@ es:
     TEXT2: 'enlace para restablecer contraseña'
     TEXT3: para
   Form:
-    CSRF_FAILED_MESSAGE: "Parece que hay un problema técnico. Por favor presionar el botón volver \n\n⇥⇥⇥⇥⇥refresca tu navegador e intenta nuevamente"
     FIELDISREQUIRED: 'Se requiere este campo'
     SubmitBtnLabel: Ir
     VALIDATIONCREDITNUMBER: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente {number}'
@@ -238,7 +237,6 @@ es:
     many_many_Members: Miembros
   GroupImportForm:
     Help1: '<p>Importar uno o más grupos en formato <em>CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Uso avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Grupos existentes son relacionados por su valor <em>Code</em>, y actualizados con nuevos valores desde el archivo importado</li>\\n<li>Jerarquías de grupos pueden ser creadas usando una columna <em>ParentCode</em>.</li>\\n<li>Códigos de permiso pueden ser asignados por la columna  <em>PermissionCode</em>. Códigos de permisos existentes no son borrados.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Creados {count} grupos'
     ResultDeleted: 'Se eliminaron %d grupos'
     ResultUpdated: 'Actualizados grupos %d'
@@ -307,7 +305,6 @@ es:
     PERMAGAIN: 'Ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña a continuación.'
     PERMALREADY: 'Lamentablemente no puede acceder a esta parte del CMS. Si quiere entrar como alguien distinto, hágalo a continuación'
     PERMDEFAULT: 'Introduzca su correo electrónico y su contraseña para acceder al CMS.'
-    PLEASESAVE: 'Por favor guardar la página: Esta página no puede ser actualizada porque no ha sido guardada aún.'
     PreviewButton: Vista previa
     REORGANISATIONSUCCESSFUL: 'Reorganizado el árbol del sitio con éxito.'
     SAVEDUP: Guardado
@@ -368,7 +365,6 @@ es:
     db_NumVisit: 'Número de Visitas'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha de vencimiento de la contraseña'
-    NoPassword: 'No hay contraseña para este usuario'
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Contraseña'
   MemberDatetimeOptionsetField:
@@ -457,7 +453,6 @@ es:
     SINGULARNAME: Regla
     Title: Título
   PermissionRoleCode:
-    PLURALNAME: 'Códigos de las reglas de permisos'
     PermsError: 'No se puede asignar permisos privilegiados al código "% s"  (requiere acceso de administrador)'
     SINGULARNAME: 'Códigos de las regla de permisos'
   Permissions:
@@ -467,7 +462,6 @@ es:
     VALIDATION: 'Por favor introduzca un número de teléfono válido'
   Security:
     ALREADYLOGGEDIN: 'No tiene acceso a esta página. Si posee otra cuenta con los privilegios para acceder a esta página, puede iniciar sesión a continuación.'
-    LOSTPASSWORDHEADER: 'Contraseña perdida'
     BUTTONSEND: 'Envíenme el enlace para restaurar la contraseña'
     CHANGEPASSWORDBELOW: 'Puede cambiar su contraseña a continuación.'
     CHANGEPASSWORDHEADER: 'Modifique su contraseña'

@@ -103,8 +103,6 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 			? $this->exportColumns
 			: singleton($gridField->getModelClass())->summaryFields();
 		$fileData = '';
-		$columnData = array();
-		$fieldItems = new ArrayList();
 
 		if($this->csvHasHeader) {
 			$headers = array();

@@ -171,7 +171,6 @@ zh:
     TEXT2: '密码重设链接'
     TEXT3: 为
   Form:
-    CSRF_FAILED_MESSAGE: "似乎出现了技术问题。请点击返回按钮，刷新您的浏览器，然后再试一次。"
     FIELDISREQUIRED: '{name} 为必填'
     SubmitBtnLabel: 前往
     VALIDATIONCREDITNUMBER: '请确保您输入了正确的 {number} 信用卡号码'
@@ -237,7 +236,6 @@ zh:
     many_many_Members: 成员
   GroupImportForm:
     Help1: '<p>用<em>CSV</em>格式（逗号分隔值）导入一个或多个小组。<small><a href="#" class="toggle-advanced">显示高级用法</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>高级用法</h4>\n<ul>\n<li>允许的列：<em>%s</em></li>\n<li>现存的小组根据其独特的<em>代码</em>值来匹配，并根据导入文件中的任何新值来更新</li>\n<li>小组的层次结构可以通过使用<em>父代码</em>列来创建。</li>\n<li>权限代码可由<em>权限代码</em>列来分配。现存的权限代码并不会被清除。</li>\n</ul>\n</div>"
     ResultCreated: '创建 {count} 个小组'
     ResultDeleted: '已删除 %d 小组'
     ResultUpdated: '已更新 %d 小组'
@@ -306,7 +304,6 @@ zh:
     PERMAGAIN: '您已经退出 CMS。如果您想再次登录，请在下面输入用户名和密码。'
     PERMALREADY: '抱歉，您不能访问 CMS 的这一部分。如果您想以不同的身份登录，请在下面进行操作'
     PERMDEFAULT: '请选择一种认证方法并输入您的凭据以访问 CMS。'
-    PLEASESAVE: '请保存页面：不能更新该页面因为它还没有被保存。'
     PreviewButton: 预览
     REORGANISATIONSUCCESSFUL: '重新组织网站地图已成功'
     SAVEDUP: 已保存。
@@ -455,7 +452,6 @@ zh:
     SINGULARNAME: 角色
     Title: 标题
   PermissionRoleCode:
-    PLURALNAME: '权限角色代码'
     PermsError: '无法为代码 "%s"分配特权权限（要求具备 ADMIN 访问）'
     SINGULARNAME: '权限角色代码'
   Permissions:

@@ -342,7 +342,7 @@ cs:
     Hello: Ahoj
     LOGOUT: 'Odhlásit se'
   ListboxField:
-    SOURCE_VALIDATION: 'Prosím vyberte hodnotu v seznamu. {value} není platná volba'
+    SOURCE_VALIDATION: 'Prosím vyberte hodnotu v nabídnutém seznamu. %s není platná volba'
   LoginAttempt:
     Email: 'Emailové adresy'
     IP: 'IP adresy'
@@ -548,6 +548,8 @@ cs:
     Print: Tisk
   TableListField_PageControls_ss:
     OF: z
+  TextField:
+    VALIDATEMAXLENGTH: 'Hodnota pro {name} nesmí překročit {maxLength} v délce znaků'
   TimeField:
     VALIDATEFORMAT: 'Prosím zadejte platný formát času ({format})'
   ToggleField:
