@@ -238,7 +238,7 @@ class File extends DataObject {
 	 */
 	public static function find($filename) {
 		// Get the base file if $filename points to a resampled file
-		$filename = preg_replace('/_resampled\/[^-]+-/', '', $filename);
+		$filename = Image::strip_resampled_prefix($filename);
 
 		// Split to folders and the actual filename, and traverse the structure.
 		$parts = explode("/", $filename);
