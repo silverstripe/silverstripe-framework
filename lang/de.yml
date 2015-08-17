@@ -100,7 +100,7 @@ de:
   ConfirmedPasswordField:
     ATLEAST: 'Passwörter müssen mindestens {min} Zeichen lang sein.'
     BETWEEN: 'Passwörter müssen zwischen {min} und {max} Zeichen lang sein.'
-    MAXIMUM: 'Passwörter dürfen maxinal {max} Zeichen lang sein.'
+    MAXIMUM: 'Passwörter dürfen maximal {max} Zeichen lang sein.'
     SHOWONCLICKTITLE: 'Passwort ändern'
   ContentController:
     NOTLOGGEDIN: 'Nicht eingeloggt'
@@ -342,7 +342,7 @@ de:
     Hello: Hallo
     LOGOUT: 'Abmelden'
   ListboxField:
-    SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
+    SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. %s ist kein gültiger Wert'
   LoginAttempt:
     Email: 'E-Mail-Adresse'
     IP: 'IP-Adresse'
@@ -548,6 +548,8 @@ de:
     Print: Drucken
   TableListField_PageControls_ss:
     OF: von
+  TextField:
+    VALIDATEMAXLENGTH: 'Der für {name} eingegebene Wert darf nicht mehr als {maxLength} Zeichen lang sein'
   TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
   ToggleField:

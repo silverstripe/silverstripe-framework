@@ -341,8 +341,6 @@ eo:
   LeftAndMain_Menu_ss:
     Hello: Saluton
     LOGOUT: 'Elsaluti'
-  ListboxField:
-    SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'
   LoginAttempt:
     Email: 'Retadreso'
     IP: 'IP-Adreso'

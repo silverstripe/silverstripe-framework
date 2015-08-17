@@ -1398,6 +1398,16 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$fields->removeByName('Version');
 	}
 
+	/**
+	 * Ensure version ID is reset to 0 on duplicate
+	 *
+	 * @param DataObject $source Record this was duplicated from
+	 * @param bool $doWrite
+	 */
+	public function onBeforeDuplicate($source, $doWrite) {
+		$this->owner->Version = 0;
+	}
+
 	public function flushCache() {
 		self::$cache_versionnumber = array();
 	}

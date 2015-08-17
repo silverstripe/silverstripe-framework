@@ -61,6 +61,8 @@ class ClassInfo {
 	 * @return array List of subclasses
 	 */
 	public static function getValidSubClasses($class = 'SiteTree', $includeUnbacked = false) {
+		if(is_string($class) && !class_exists($class)) return null;
+
 		$class = self::class_name($class);
 		$classes = DB::get_schema()->enumValuesForField($class, 'ClassName');
 		if (!$includeUnbacked) $classes = array_filter($classes, array('ClassInfo', 'exists'));
@@ -76,6 +78,8 @@ class ClassInfo {
 	 * @return array
 	 */
 	public static function dataClassesFor($class) {
+		if(is_string($class) && !class_exists($class)) return null;
+
 		$result = array();
 
 		$class = self::class_name($class);
@@ -100,6 +104,8 @@ class ClassInfo {
 	 * @return string
 	 */
 	public static function baseDataClass($class) {
+		if(is_string($class) && !class_exists($class)) return null;
+
 		$class = self::class_name($class);
 
 		if (!is_subclass_of($class, 'DataObject')) {
@@ -134,6 +140,8 @@ class ClassInfo {
 	 * @return array Names of all subclasses as an associative array.
 	 */
 	public static function subclassesFor($class) {
+		if(is_string($class) && !class_exists($class)) return null;
+
 		//normalise class case
 		$className = self::class_name($class);
 		$descendants = SS_ClassLoader::instance()->getManifest()->getDescendantsOf($class);
@@ -158,7 +166,15 @@ class ClassInfo {
 	public static function class_name($nameOrObject) {
 		if (is_object($nameOrObject)) {
 			return get_class($nameOrObject);
+		} elseif (!self::exists($nameOrObject)) {
+			Deprecation::notice(
+				'4.0',
+				"ClassInfo::class_name() passed a class that doesn't exist. Support for this will be removed in 4.0",
+				Deprecation::SCOPE_GLOBAL
+			);
+			return $nameOrObject;
 		}
+
 		$reflection = new ReflectionClass($nameOrObject);
 		return $reflection->getName();
 	}
@@ -172,6 +188,8 @@ class ClassInfo {
 	 * @return array
 	 */
 	public static function ancestry($class, $tablesOnly = false) {
+		if(is_string($class) && !class_exists($class)) return null;
+
 		$class = self::class_name($class);
 
 		$lClass = strtolower($class);

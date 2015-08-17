@@ -171,7 +171,6 @@ nb:
     TEXT2: 'lenke for nullstilling av passord'
     TEXT3: for
   Form:
-    CSRF_FAILED_MESSAGE: "Det ser ut til å ha oppstått et teknisk problem. Vennligst trykk på tilbakeknappen, oppdater nettsiden og prøv på nytt."
     FIELDISREQUIRED: '{name} er påkrevet'
     SubmitBtnLabel: Utfør
     VALIDATIONCREDITNUMBER: 'Vennligst sjekk at du har skrevet inn {number} korrekt kortnummer'
@@ -237,7 +236,6 @@ nb:
     many_many_Members: Medlemmer
   GroupImportForm:
     Help1: '<p>Importer en eller flere grupper i <em>CSV</em>-format (kommaseparerte verdier). <small><a href="#" class="toggle-advanced">Vis avanserte alternativer</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Avanserte alternativer</h4>\n<ul>\n<li>Tillatte kolonner: <em>%s</em></li>\n<li>Eksisterende grupper matches mot deres <em>Code</em>-verdi og oppdateres med nye verdier fra den importerte filen.</li>\n<li>Gruppehierarkier kan bli opprettet ved å benytte en <em>ParentCode</em>-kolonne.</li>\n<li>Tillatelseskoder kan bli angitt med <em>PermissionCode</em>-kolonnen. Eksisterende tillatelselskoder blir ikke fjernet.</li>\n</ul>\n</div>"
     ResultCreated: 'Opprettet {count} grupper'
     ResultDeleted: 'Slettet %d grupper'
     ResultUpdated: 'Oppdaterte %d grupper'
@@ -306,7 +304,6 @@ nb:
     PERMAGAIN: 'Du har blitt logget ut av publiseringssystemet. Hvis du vil logge deg på igjen, skriv inn brukernavn og passord under.'
     PERMALREADY: 'Beklager, men du har ikke tilgang til denne delen av publiseringssystemet. Hvis du vil logge inn som en annen bruker, gjør det nedenfor.'
     PERMDEFAULT: 'Vennligst velg en autentiseringsmetode og skriv inn brukernavn og passord for å få tilgang til publiseringssystemet.'
-    PLEASESAVE: 'Vennligst lagre siden: Denne siden kunne ikke oppdateres fordi den ikke har blitt lagret ennå.'
     PreviewButton: Forhåndsvisning
     REORGANISATIONSUCCESSFUL: 'Omorganisering av sidetreet vellykket'
     SAVEDUP: Lagret.
@@ -455,7 +452,6 @@ nb:
     SINGULARNAME: Rolle
     Title: Tittel
   PermissionRoleCode:
-    PLURALNAME: 'Koder for tillatelser'
     PermsError: 'Kan ikke angi kode "%s" med administratorrettigheter (krever ADMIN-tilgang)'
     SINGULARNAME: 'Tillatelseskode'
   Permissions:

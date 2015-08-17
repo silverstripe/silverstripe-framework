@@ -70,10 +70,22 @@ en:
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Save
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Forgot password?'
+    BUTTONLOGIN: 'Log back in'
+    BUTTONLOGOUT: 'Log out'
+    PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Website preview'
   CMSProfileController:
     MENUTITLE: 'My Profile'
+  CMSSecurity:
+    INVALIDUSER: '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>'
+    LoginMessage: '<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
+    SUCCESS: Success
+    SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
+    TimedOutTitleAnonymous: 'Your session has timed out.'
+    TimedOutTitleMember: 'Hey {name}!<br />Your session has timed out.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -85,18 +97,8 @@ en:
     YESANSWER: 'Yes'
   CheckboxFieldSetField:
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Forgot password?'
-    BUTTONLOGIN: 'Log back in'
-    BUTTONLOGOUT: 'Log out'
-    PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
-  CMSSecurity:
-    INVALIDUSER: '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>'
-    LoginMessage: '<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
-    SUCCESS: Success
-    SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
-    TimedOutTitleAnonymous: 'Your session has timed out.'
-    TimedOutTitleMember: 'Hey {name}!<br />Your session has timed out.'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Please select a value within the list provided. ''{value}'' is not a valid option'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -202,7 +204,6 @@ en:
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
-    CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
   FormField:
     Example: 'e.g. %s'
     NONE: none
@@ -310,10 +311,10 @@ en:
     LINKOPENNEWWIN: 'Open link in a new window?'
     LINKTO: 'Link to'
     PAGE: Page
+    SUBJECT: 'Email subject'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
-    SUBJECT: 'Email subject'
   Image:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -327,7 +328,7 @@ en:
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
     HELP: Help
-    PAGETYPE: 'Page type: '
+    PAGETYPE: 'Page type'
     PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
@@ -338,7 +339,7 @@ en:
     ShowAsList: 'show as list'
     TooManyPages: 'Too many pages'
     ValidationError: 'Validation error'
-    VersionUnknown: Unknown
+    VersionUnknown: unknown
   LeftAndMain_Menu_ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -483,8 +484,8 @@ en:
     SINGULARNAME: Role
     Title: Title
   PermissionRoleCode:
-    PermsError: 'Can''t assign code "%s" with privileged permissions (requires ADMIN access)'
     PLURALNAME: 'Permission Role Codes'
+    PermsError: 'Can''t assign code "%s" with privileged permissions (requires ADMIN access)'
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
@@ -586,5 +587,3 @@ en:
     UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Versions
-  CheckboxSetField:
-    SOURCE_VALIDATION: 'Please select a value within the list provided. ''{value}'' is not a valid option'

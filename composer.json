@@ -28,6 +28,6 @@
 		}
 	},
 	"autoload": {
-		"classmap": ["tests/behat/features/bootstrap"]	
+		"classmap": ["tests/behat/features/bootstrap"]
 	}
 }

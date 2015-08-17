@@ -20,7 +20,6 @@ da:
     PERMAGAIN: 'Du er blevet logget ud af CMS, hvis du vil logge ind igen, indtast brugernavn og kodeord nedenfor.'
     PERMALREADY: 'Beklager, men du kan ikke få adgang til denne del af CMS, hvis du vil logge ind som en anden, kan du gøre det nedenfor'
     PERMDEFAULT: 'Indtast din email adresse og kodeord for at få adgang til CMS systemet'
-    PLEASESAVE: 'Gem siden: Denne side kunne ikke blive opdateret, fordi den endnu ikke er gemt.'
   ModelAdmin:
     DELETE: Slet
     IMPORT: 'Importer fra CSV'

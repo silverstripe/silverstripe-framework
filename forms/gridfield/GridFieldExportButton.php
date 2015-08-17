@@ -119,10 +119,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
 			$fileData[] = $headers;
 		}
-		
+
 		//Remove GridFieldPaginator as we're going to export the entire list.
 		$gridField->getConfig()->removeComponentsByType('GridFieldPaginator');
-		
+
 		$items = $gridField->getManipulatedList();
 
 		// @todo should GridFieldComponents change behaviour based on whether others are available in the config?

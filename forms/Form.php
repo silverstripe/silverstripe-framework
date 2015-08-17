@@ -850,9 +850,6 @@ class Form extends RequestHandler {
 	public function getAttributesHTML($attrs = null) {
 		$exclude = (is_string($attrs)) ? func_get_args() : null;
 
-		if(!$attrs || is_string($attrs)) $attrs = $this->getAttributes();
-
-
 		// Figure out if we can cache this form
 		// - forms with validation shouldn't be cached, cos their error messages won't be shown
 		// - forms with security tokens shouldn't be cached because security tokens expire

@@ -171,7 +171,6 @@ nl:
     TEXT2: 'wachtwoord reset link'
     TEXT3: voor
   Form:
-    CSRF_FAILED_MESSAGE: "Er lijkt een technisch probleem te zijn. Klik op de knop 'terug', ververs de pagina, en probeer het opnieuw."
     FIELDISREQUIRED: '{name} is verplicht'
     SubmitBtnLabel: Versturen
     VALIDATIONCREDITNUMBER: 'Gelieve uw credit card number {number} juist in te vullen'
@@ -238,7 +237,6 @@ nl:
     many_many_Members: Leden
   GroupImportForm:
     Help1: '<p>Importeer een of meerdere groepen in <em>CSV</em>-formaat (comma-separated values). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Geavanceerd gebruik</h4>\n<ul>\n<li>Toegestane kolommen: <em>%s</em></li>\n<li>Bestaande groepen worden geïdentificeerd door middel van hun unieke <em>Code</em>-waarde, en aangepast met de nieuwe waarden vanuit het geïmporteerde bestand</li>\n<li>Groepshiërarchiën kunnen aangemaakt worden door een <em>ParentCode</em>-kolom te gebruiken</li>\n<li>Toegangscodeskunnen toegewezen worden met de <em>PermissionCode</em> kolom. Bestaande toegangscodes worden niet verwijderd.</li>\n</ul>\n</div>"
     ResultCreated: '{count} groepen aangemaakt'
     ResultDeleted: '%d groepen verwijderd'
     ResultUpdated: '%d groepen aangepast'
@@ -307,7 +305,6 @@ nl:
     PERMAGAIN: 'U bent uitgelogd uit het CMS.  Als u weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hieronder in.'
     PERMALREADY: 'Helaas, dat deel van het CMS is niet toegankelijk voor u. Hieronder kunt u als iemand anders inloggen.'
     PERMDEFAULT: 'Geef uw e-mailadres en wachtwoord in om in te loggen op het CMS.'
-    PLEASESAVE: 'Deze pagina kon niet bijgewerkt worden, omdat deze nog niet is opgeslagen.'
     PreviewButton: Voorbeeld
     REORGANISATIONSUCCESSFUL: 'Menu-indeling is aangepast'
     SAVEDUP: Opgeslagen.
@@ -456,7 +453,6 @@ nl:
     SINGULARNAME: Rol
     Title: Titel
   PermissionRoleCode:
-    PLURALNAME: 'Machtigingen rol codes'
     PermsError: 'U moet (ADMIN) rechten hebben om de code "%s" toe te kennen'
     SINGULARNAME: 'Machtigingen rol code'
   Permissions:
