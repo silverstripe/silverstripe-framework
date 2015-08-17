@@ -354,6 +354,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			$specRelations->push(new ArrayData(array('Name' => $name, 'Description' => $desc)));
 		}
 		$specHTML = $this->customise(array(
+			'ClassName' => str_replace('\\', '_', $className),
 			'ModelName' => Convert::raw2att($modelName),
 			'Fields' => $specFields,
 			'Relations' => $specRelations,
