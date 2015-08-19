@@ -4,7 +4,7 @@
  *
  * @package MCManager.includes
  * @author Moxiecode
- * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright Â© 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
 require_once("./includes/general.php");
@@ -23,14 +23,6 @@ $raw = "";
 // Try param
 if (isset($_POST["json_data"]))
 	$raw = getRequestParam("json_data");
-
-// Try globals array
-if (!$raw && isset($_GLOBALS) && isset($_GLOBALS["HTTP_RAW_POST_DATA"]))
-	$raw = $_GLOBALS["HTTP_RAW_POST_DATA"];
-
-// Try globals variable
-if (!$raw && isset($HTTP_RAW_POST_DATA))
-	$raw = $HTTP_RAW_POST_DATA;
 
 // Try stream
 if (!$raw) {
