@@ -24,14 +24,6 @@ $raw = "";
 if (isset($_POST["json_data"]))
 	$raw = getRequestParam("json_data");
 
-// Try globals array
-if (!$raw && isset($_GLOBALS) && isset($_GLOBALS["HTTP_RAW_POST_DATA"]))
-	$raw = $_GLOBALS["HTTP_RAW_POST_DATA"];
-
-// Try globals variable
-if (!$raw && isset($HTTP_RAW_POST_DATA))
-	$raw = $HTTP_RAW_POST_DATA;
-
 // Try stream
 if (!$raw) {
 	if (!function_exists('file_get_contents')) {
