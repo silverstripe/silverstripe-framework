@@ -342,6 +342,27 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * tearDown method that's called once per test class rather once per test method.
 	 */
 	public function tearDownOnce() {
+		// If we have made changes to the extensions present, then migrate the database schema.
+		if($this->extensionsToReapply || $this->extensionsToRemove) {
+			// @todo: This isn't strictly necessary to restore extensions, but only to ensure that
+			// Object::$extra_methods is properly flushed. This should be replaced with a simple
+			// flush mechanism for each $class.
+			//
+			// Remove extensions added for testing
+			foreach($this->extensionsToRemove as $class => $extensions) {
+				foreach($extensions as $extension) {
+					$class::remove_extension($extension);
+				}
+			}
+
+			// Reapply ones removed
+			foreach($this->extensionsToReapply as $class => $extensions) {
+				foreach($extensions as $extension) {
+					$class::add_extension($extension);
+				}
+			}
+		}
+		
 		//unnest injector / config now that the test suite is over
 		// this will reset all the extensions on the object too (see setUpOnce)
 		Injector::unnest();
