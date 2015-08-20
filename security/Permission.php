@@ -162,16 +162,23 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 		} else {
 			$memberID = (is_object($member)) ? $member->ID : $member; 
 		}
-		
+
+		// If $admin_implies_all was false then this would be inefficient, but that's an edge
+		// case and this keeps the code simpler
+		if(!is_array($code)) $code = array($code);
+
 		if($arg == 'any') {
 			// Cache the permissions in memory
 			if(!isset(self::$cache_permissions[$memberID])) {
 				self::$cache_permissions[$memberID] = self::permissions_for_member($memberID);
 			}
-			
-			// If $admin_implies_all was false then this would be inefficient, but that's an edge
-			// case and this keeps the code simpler
-			if(!is_array($code)) $code = array($code);
+			foreach ($code as $permCode) {
+				if (substr($permCode, 0, 11) == 'CMS_ACCESS_') {
+					//cms_access_leftandmain means access to all CMS areas
+					$code[] = 'CMS_ACCESS_LeftAndMain';
+					break;
+				}
+			}
 			if(Config::inst()->get('Permission', 'admin_implies_all')) $code[] = "ADMIN";
 
 			// Multiple $code values - return true if at least one matches, ie, intersection exists

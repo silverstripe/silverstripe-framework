@@ -22,6 +22,26 @@ class PermissionTest extends SapphireTest {
 		$member = $this->objFromFixture('Member', 'author');
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_VIEW_ALL"));
 	}
+
+	public function testLeftAndMainAccessAll() {
+		//add user and group
+		$member = Member::create()->update(array(
+			'FirstName' => 'Left',
+			'Surname' => 'Main',
+			'Email' => 'leftandmain@example.com',
+		));
+		$member->write();
+		$group = Group::create()->update(array(
+			'Title' => 'LeftAndMain',
+		));
+		$group->write();
+		Permission::grant($group->ID, 'CMS_ACCESS_LeftAndMain');
+		$group->DirectMembers()->add($member);
+
+		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
+		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
+		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
+	}
 	
 	public function testPermissionAreInheritedFromOneRole() {
 		$member = $this->objFromFixture('Member', 'author');
@@ -39,7 +59,7 @@ class PermissionTest extends SapphireTest {
 		$this->assertFalse(Permission::checkMember($member, "SITETREE_VIEW_ALL"));
 	}
 
-	function testPermissionsForMember() {
+	public function testPermissionsForMember() {
 		$member = $this->objFromFixture('Member', 'access');
 		$permissions = Permission::permissions_for_member($member->ID);
 		$this->assertEquals(4, count($permissions));
