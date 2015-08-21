@@ -174,6 +174,9 @@
 					// the native dropdown
 					setTimeout(function() { batchactions.addClass('inactive'); }, 100);
 				}
+				
+				// Refresh selected / enabled nodes
+				$('#Form_BatchActionsForm').refreshSelected();
 			},
 
 			/**
@@ -236,6 +239,7 @@
 					st = this.getTree(),
 					ids = this.getIDs(),
 					allIds = [],
+					viewMode = $('.cms-content-batchactions :input[name=view-mode-batchactions]'),
 					selectedAction = this.find(':input[name=Action]').val();
 			
 				// Default to refreshing the entire tree
@@ -246,7 +250,7 @@
 				}
 
 				// If no action is selected, enable all nodes
-				if(selectedAction == -1) {
+				if(!selectedAction || selectedAction == -1 || !viewMode.is(":checked")) {
 					$(rootNode).find('li').each(function() {
 						$(this).setEnabled(true);
 					});
