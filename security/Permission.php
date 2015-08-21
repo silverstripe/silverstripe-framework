@@ -163,8 +163,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 			$memberID = (is_object($member)) ? $member->ID : $member; 
 		}
 
-		// If $admin_implies_all was false then this would be inefficient, but that's an edge
-		// case and this keeps the code simpler
+		// Turn the code into an array as we may need to add other permsissions to the set we check
 		if(!is_array($code)) $code = array($code);
 
 		if($arg == 'any') {
@@ -179,6 +178,8 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 					break;
 				}
 			}
+			
+			// if ADMIN has all privileges, then we need to push that code in
 			if(Config::inst()->get('Permission', 'admin_implies_all')) $code[] = "ADMIN";
 
 			// Multiple $code values - return true if at least one matches, ie, intersection exists
