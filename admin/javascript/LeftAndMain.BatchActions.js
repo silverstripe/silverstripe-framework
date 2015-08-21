@@ -170,6 +170,7 @@
 					st = this.getTree(),
 					ids = this.getIDs(),
 					allIds = [],
+					viewMode = $('.cms-content-batchactions-button'),
 					selectedAction = this.find(':input[name=Action]').val();
 			
 				// Default to refreshing the entire tree
@@ -180,7 +181,7 @@
 				}
 
 				// If no action is selected, enable all nodes
-				if(!selectedAction || selectedAction == -1) {
+				if(!selectedAction || selectedAction == -1 || !viewMode.hasClass('active')) {
 					$(rootNode).find('li').each(function() {
 						$(this).setEnabled(true);
 					});
@@ -354,11 +355,12 @@
 					tree.addClass('multiple');
 					tree.removeClass('draggable');
 					form.serializeFromTree();
-					$('#Form_BatchActionsForm').refreshSelected();
 				} else {
 					tree.removeClass('multiple');
 					tree.addClass('draggable');
 				}
+				
+				$('#Form_BatchActionsForm').refreshSelected();
 			}
 		});
 
