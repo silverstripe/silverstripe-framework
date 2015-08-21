@@ -446,6 +446,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * {@link loadFixture()}
 	 */
 	public function clearFixtures() {
+		$this->fixtures = array();
 		$this->getFixtureFactory()->clear();
 	}
 

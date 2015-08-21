@@ -489,6 +489,13 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			throw new InvalidArgumentException("Bad field expression $field");
 		}
 
+		if (!$this->inAlterDataQueryCall) {
+			Deprecation::notice(
+				'4.0',
+				'getRelationName is mutating, and must be called inside an alterDataQuery block'
+			);
+		}
+
 		if(strpos($field,'.') === false) {
 			return '"'.$field.'"';
 		}
