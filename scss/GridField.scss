@@ -99,14 +99,9 @@ $gf_grid_x:	16px;
 			& > * {
 				margin-right:$gf_grid_x/2;
 				float: left;
-				font-size: $gf_grid_y*1.2;
 			}
 		}
-
-		.ss-gridfield-buttonrow {
-			font-size: $gf_grid_y*1.2;
 	}
-		}
 	
 	.ss-gridfield {
 		.grid-levelup {
