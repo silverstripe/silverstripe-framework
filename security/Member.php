@@ -12,8 +12,8 @@
  * @property string $RememberLoginToken
  * @property string $TempIDHash
  * @property string $TempIDExpired
- * @property int $NumVisit
- * @property string $LastVisited Date and time of last visit
+ * @property int $NumVisit @deprecated 4.0
+ * @property string $LastVisited @deprecated 4.0
  * @property string $AutoLoginHash
  * @property string $AutoLoginExpired
  * @property string $PasswordEncryption
@@ -35,6 +35,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'TempIDExpired' => 'SS_Datetime', // Expiry of temp login
 		'Password' => 'Varchar(160)',
 		'RememberLoginToken' => 'Varchar(160)', // Note: this currently holds a hash, not a token.
+		'NumVisit' => 'Int', // @deprecated 4.0
+		'LastVisited' => 'SS_Datetime', // @deprecated 4.0
 		'AutoLoginHash' => 'Varchar(160)', // Used to auto-login the user on password reset
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
@@ -82,6 +84,24 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	private static $notify_password_change = false;
 
 	/**
+	 * Flag whether or not member visits should be logged (count only)
+	 *
+	 * @deprecated 4.0
+	 * @var bool
+	 * @config
+	 */
+	private static $log_last_visited = true;
+
+	/**
+	 * Flag whether we should count number of visits
+	 *
+	 * @deprecated 4.0
+	 * @var bool
+	 * @config
+	 */
+	private static $log_num_visits = true;
+
+	/**
 	 * All searchable database columns
 	 * in this object, currently queried
 	 * with a "column LIKE '%keywords%'
@@ -120,7 +140,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'TempIDHash',
 		'TempIDExpired',
 		'Salt',
-		'NumVisit'
+		'NumVisit', // @deprecated 4.0
 	);
 
 	/**
@@ -446,6 +466,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// This lets apache rules detect whether the user has logged in
 		if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0);
 
+		$this->addVisit();
+
 		if($remember) {
 			// Store the hash and give the client the cookie with the token.
 			$generator = new RandomGenerator();
@@ -472,6 +494,19 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		// Audit logging hook
 		$this->extend('memberLoggedIn');
+	}
+
+	/**
+	 * @deprecated 4.0
+	 */
+	public function addVisit() {
+		if($this->config()->log_num_visits) {
+			Deprecation::notice(
+				'4.0',
+				'Member::$NumVisit is deprecated. From 4.0 onwards you should implement this as a custom extension'
+			);
+			$this->NumVisit++;
+		}
 	}
 
 	/**
@@ -549,7 +584,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$member->RememberLoginToken = $hash;
 			Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
 
-			$member->NumVisit++;
+			$member->addVisit();
 			$member->write();
 
 			// Audit logging hook
@@ -707,6 +742,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		));
 
 		$fields->removeByName(static::config()->hidden_fields);
+		$fields->removeByName('LastVisited');
 		$fields->removeByName('FailedLoginCount');
 
 
@@ -1315,7 +1351,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				_t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'),
 				i18n::get_existing_translations()
 			));
+
 			$mainFields->removeByName($self->config()->hidden_fields);
+			$mainFields->makeFieldReadonly('LastVisited');
 
 			if( ! $self->config()->lock_out_after_incorrect_logins) {
 				$mainFields->removeByName('FailedLoginCount');
@@ -1417,6 +1455,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$labels['Surname'] = _t('Member.SURNAME', 'Surname');
 		$labels['Email'] = _t('Member.EMAIL', 'Email');
 		$labels['Password'] = _t('Member.db_Password', 'Password');
+		$labels['NumVisit'] = _t('Member.db_NumVisit', 'Number of Visits');
+		$labels['LastVisited'] = _t('Member.db_LastVisited', 'Last Visited Date');
 		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
 		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', 'Security related date');
 		$labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');

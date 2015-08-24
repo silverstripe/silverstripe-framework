@@ -28,7 +28,7 @@ explicitly logging in or by invoking the "remember me" functionality.
 		public function updateCMSFields(FieldList $fields) {
 			$fields->addFieldsToTab('Root.Main', array(
 				ReadonlyField::create('LastVisited', 'Last visited'),
-				ReadonlyField::create('NumVisits', 'Number of visits')
+				ReadonlyField::create('NumVisit', 'Number of visits')
 			));
 		}
 
