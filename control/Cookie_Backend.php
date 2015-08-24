@@ -4,6 +4,9 @@
  * The Cookie_Backend interface for use with `Cookie::$inst`.
  *
  * See Cookie_DefaultBackend and Cookie
+ *
+ * @package framework
+ * @subpackage misc
  */
 interface Cookie_Backend {
 

@@ -4,6 +4,9 @@
  * Generic PhpUnitWrapper.
  * Originally intended for use with Composer based installations, but will work
  * with any fully functional autoloader.
+ *
+ * @package framework
+ * @subpackage dev
  */
 class PhpUnitWrapper_Generic extends PhpUnitWrapper {
 

@@ -9,6 +9,9 @@
  *
  * WARNING: This class is experimental and designed specifically for use pre-startup in main.php
  * It will likely be heavily refactored before the release of 3.2
+ *
+ * @package framework
+ * @subpackage misc
  */
 class ParameterConfirmationToken {
 
