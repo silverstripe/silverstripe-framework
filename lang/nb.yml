@@ -300,17 +300,13 @@ nb:
     DELETED: Slettet.
     DropdownBatchActionsDefault: Handlinger
     HELP: Hjelp
-    PAGETYPE: 'Side-type'
     PERMAGAIN: 'Du har blitt logget ut av publiseringssystemet. Hvis du vil logge deg på igjen, skriv inn brukernavn og passord under.'
-    PERMALREADY: 'Beklager, men du har ikke tilgang til denne delen av publiseringssystemet. Hvis du vil logge inn som en annen bruker, gjør det nedenfor.'
-    PERMDEFAULT: 'Vennligst velg en autentiseringsmetode og skriv inn brukernavn og passord for å få tilgang til publiseringssystemet.'
     PreviewButton: Forhåndsvisning
     REORGANISATIONSUCCESSFUL: 'Omorganisering av sidetreet vellykket'
     SAVEDUP: Lagret.
     ShowAsList: 'vis som liste'
     TooManyPages: 'For mange sider'
     ValidationError: 'Valideringsfeil'
-    VersionUnknown: Ukjent
   LeftAndMain_Menu_ss:
     Hello: Hei
     LOGOUT: 'Logg ut'
@@ -388,7 +384,6 @@ nb:
     Toggle: 'Vis formateringshjelp'
   MemberImportForm:
     Help1: '<p>Importer brukere i <em>CSV-format</em> (verdier adskilt med komma). <small><a href="#" class="toggle-advanced">Vis avanserte alternativer</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Avanserte alternativer</h4>\n<ul>\n<li>Tillatte kolonner: <em>%s</em></li>\n<li>Eksisterende brukere blir matchet mot deres unike <em>Code</em> og oppdatert med nye verdier fra den importerte filen.</li>\n<li>Grupper kan angis med  <em>Groups</em>-kolonnen. Grupper er identifisert ved deres <em>Code</em>. Grupper kan adskilles med komma. Eksisterende gruppemedlemskap blir ikke fjernet.</li>\n</ul>\n</div>"
     ResultCreated: 'Opprettet {count} medlemmer'
     ResultDeleted: 'Slettet %d medlemmer'
     ResultNone: 'Ingen endringer'

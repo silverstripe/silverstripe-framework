@@ -70,10 +70,22 @@ lt:
     ACCESSALLINTERFACES: 'Patekti į visas TVS dalis'
     ACCESSALLINTERFACESHELP: 'Perrašo konkretesnes nuostatas.'
     SAVE: Išsaugoti
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Pamiršote slaptažodį?'
+    BUTTONLOGIN: 'Prisijungti'
+    BUTTONLOGOUT: 'Atsijungti'
+    PASSWORDEXPIRED: '<p>Jūsų slaptažodžio galiojimas pasibaigė. <a target="_top" href="{link}">Prašome sukurti naują.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Puslapio peržiūra'
   CMSProfileController:
     MENUTITLE: 'Mano profilis'
+  CMSSecurity:
+    INVALIDUSER: '<p>Blogas vartotojas. Norėdami tęsti, prašome <a target="_top" href="{link}">prisijungti</a> iš naujo.</p>'
+    LoginMessage: '<p>Jei dar neišsaugojote padarytus pakeitimus, jūs galėsite tęsti darbą, prisijungę žemiau esančioje formoje.</p>'
+    SUCCESS: Sėkmingai
+    SUCCESSCONTENT: '<p>Sėkmingai prisijungėte. Jeigu jūsų automatiškai nenukreipia, <a target="_top" href="{link}">spauskite čia</a></p>'
+    TimedOutTitleAnonymous: 'Jūsų prisijungimo galiojimas pasibaigė.'
+    TimedOutTitleMember: 'Sveiki, {name}!<br />Jūsų prisijungimo galiojimas pasibaigė.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Jūs pakeitėte slaptažodį'
     CHANGEPASSWORDTEXT2: 'Nuo šiol galite naudoti šiuos prisijungimo duomenis:'
@@ -85,18 +97,8 @@ lt:
     YESANSWER: 'Taip'
   CheckboxFieldSetField:
     SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Pamiršote slaptažodį?'
-    BUTTONLOGIN: 'Prisijungti'
-    BUTTONLOGOUT: 'Atsijungti'
-    PASSWORDEXPIRED: '<p>Jūsų slaptažodžio galiojimas pasibaigė. <a target="_top" href="{link}">Prašome sukurti naują.</a></p>'
-  CMSSecurity:
-    INVALIDUSER: '<p>Blogas vartotojas. Norėdami tęsti, prašome <a target="_top" href="{link}">prisijungti</a> iš naujo.</p>'
-    LoginMessage: '<p>Jei dar neišsaugojote padarytus pakeitimus, jūs galėsite tęsti darbą, prisijungę žemiau esančioje formoje.</p>'
-    SUCCESS: Sėkmingai
-    SUCCESSCONTENT: '<p>Sėkmingai prisijungėte. Jeigu jūsų automatiškai nenukreipia, <a target="_top" href="{link}">spauskite čia</a></p>'
-    TimedOutTitleAnonymous: 'Jūsų prisijungimo galiojimas pasibaigė.'
-    TimedOutTitleMember: 'Sveiki, {name}!<br />Jūsų prisijungimo galiojimas pasibaigė.'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
   ConfirmedPasswordField:
     ATLEAST: 'Slaptažodžiai privalo būti bent {min} simbolių ilgio.'
     BETWEEN: 'Slaptažodžiai privalo būti nuo {min} iki {max} simbolių ilgio.'
@@ -191,6 +193,7 @@ lt:
     TEXT2: 'slaptažodžio atstatymo nuoroda'
     TEXT3: svetainei
   Form:
+    CSRF_EXPIRED_MESSAGE: 'Jūsų prisijungimas nebegalioja. Prašome iš naujo išsaugoti duomenis.'
     CSRF_FAILED_MESSAGE: 'Iškilo techninė problema. Prašome paspausti mygtuką Atgal, perkraukite naršyklės langą ir bandykite vėl.'
     FIELDISREQUIRED: '{name} yra privalomas'
     SubmitBtnLabel: Vykdyti
@@ -201,7 +204,6 @@ lt:
     VALIDATIONSTRONGPASSWORD: 'Slaptažodžiai privalo būti sudaryti panaudojant bent vieną skaitmenį ir bent vieną raidę'
     VALIDATOR: Tikrintojas
     VALIDCURRENCY: 'Prašome suvesti teisingą valiutą'
-    CSRF_EXPIRED_MESSAGE: 'Jūsų prisijungimas nebegalioja. Prašome iš naujo išsaugoti duomenis.'
   FormField:
     Example: 'pvz. %s'
     NONE: nėra
@@ -258,7 +260,6 @@ lt:
     many_many_Members: Vartotojai
   GroupImportForm:
     Help1: '<p>Importuoti vieną ar kelias grupes <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href="#" class="toggle-advanced">Rodyti detalesnį aprašymą</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Sudėtingesni pasirinkimai</h4>\n<ul>\n<li>Galimi stulpeliai: <em>%s</em></li>\n<li>Esamos grupės yra surišamos su jų unikalia <em>Code</em> reikšme ir atnaujinamos duomenimis iš importuojamos bylos</li>\n<li>Grupių hierarchija gali būti sukurta naudojant <em>ParentCode</em> stulpelį.</li>\n<li>Leidimų kodai gali būti priskirti naudojant <em>PermissionCode</em> stulpelį. Esami leidimai nebus pakeisti.</li>\n</ul>\n</div>"
     ResultCreated: 'Sukurta {count} grupių'
     ResultDeleted: 'Ištrinta %d grupių'
     ResultUpdated: 'Atnaujinta %d grupių'
@@ -309,10 +310,10 @@ lt:
     LINKOPENNEWWIN: 'Atidaryti nuorodą naujame lange?'
     LINKTO: 'Nuoroda į'
     PAGE: Puslapis
+    SUBJECT: 'El. laiško tema'
     URL: URL adresas
     URLNOTANOEMBEDRESOURCE: 'Nepavyko URL nuorodos ''{url}'' panaudoti media turiniui.'
     UpdateMEDIA: 'Atnaujinti media'
-    SUBJECT: 'El. laiško tema'
   Image:
     PLURALNAME: Bylos
     SINGULARNAME: Byla
@@ -326,10 +327,8 @@ lt:
     DELETED: Ištrinta.
     DropdownBatchActionsDefault: Veiksmai
     HELP: Pagalba
-    PAGETYPE: 'Puslapio tipas: '
+    PAGETYPE: 'Puslapio tipas'
     PERMAGAIN: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'
-    PERMALREADY: 'Deja, Jūs negalite patekti į šią TVS dalį. Jeigu norite prisijungti kitu vartotoju, tai atlikite žemiau'
-    PERMDEFAULT: 'Pasirinkite prisijungimo būdą ir suveskite prisijungimo duomenis'
     PLEASESAVE: 'Prašome išsaugoti puslapį: Šis puslapis negali būti atnaujintas, nes jis dar nėra išsaugotas.'
     PreviewButton: Peržiūra
     REORGANISATIONSUCCESSFUL: 'Puslapių medis pertvarkytas sėkmingai.'
@@ -337,7 +336,7 @@ lt:
     ShowAsList: 'rodyti kaip sąrašą'
     TooManyPages: 'Per daug puslapių'
     ValidationError: 'Tikrinimo klaida'
-    VersionUnknown: Nežinoma
+    VersionUnknown: nežinoma
   LeftAndMain_Menu_ss:
     Hello: Sveiki
     LOGOUT: 'Atsijungti'
@@ -418,7 +417,6 @@ lt:
     Toggle: 'Rodyti formatavimo aprašymą'
   MemberImportForm:
     Help1: '<p>Importuoti vartotojus <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href="#" class="toggle-advanced">Rodyti detalesnį aprašymą</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Detalesnis aprašymas</h4>\n<ul>\n<li>Galimi stulpeliai: <em>%s</em></li>\n<li>Esami vartotojai yra surišamos su jų unikalia <em>Code</em> reikšme ir atnaujinami duomenimis iš importuojamos bylos</li>\n<li>Grupės gali būti priskirtus naudojant <em>Groups</em> stulpelį. Grupės yra atpažįstamos pagal <em>Code</em> stulpelį, kelios grupės nurodomos per kablelį. Jau priskirtos grupės nebus pakeistos.</li>\n</ul>\n</div>"
     ResultCreated: 'Sukurta {count} vartotojų'
     ResultDeleted: 'Ištrinta %d vartotojų'
     ResultNone: 'Nėra jokių pakeitimų'
@@ -482,8 +480,8 @@ lt:
     SINGULARNAME: Rolė
     Title: Pavadinimas
   PermissionRoleCode:
-    PermsError: 'Nepavyko priskirto kodo "%s" su priskirtais leidimais (būtina ADMIN prieiga)'
     PLURALNAME: 'Leidimų rolių kodai'
+    PermsError: 'Nepavyko priskirto kodo "%s" su priskirtais leidimais (būtina ADMIN prieiga)'
     SINGULARNAME: 'Leidimų rolių kodai'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rolės ir priėjimo leidimai'
@@ -585,5 +583,3 @@ lt:
     UPLOADSINTO: 'saugo į /{path}'
   Versioned:
     has_many_Versions: Versijos
-  CheckboxSetField:
-    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
