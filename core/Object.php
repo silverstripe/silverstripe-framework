@@ -395,6 +395,58 @@ abstract class Object {
 	}
 
 	/**
+	 * @deprecated
+	 */
+	public static function get_static($class, $name, $uncached = false) {
+		Deprecation::notice('4.0', 'Replaced by Config#get');
+		return Config::inst()->get($class, $name, Config::FIRST_SET);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public static function set_static($class, $name, $value) {
+		Deprecation::notice('4.0', 'Replaced by Config#update');
+		Config::inst()->update($class, $name, $value);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public static function uninherited_static($class, $name, $uncached = false) {
+		Deprecation::notice('4.0', 'Replaced by Config#get');
+		return Config::inst()->get($class, $name, Config::UNINHERITED);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public static function combined_static($class, $name, $ceiling = false) {
+		if ($ceiling) throw new Exception('Ceiling argument to combined_static is no longer supported');
+
+		Deprecation::notice('4.0', 'Replaced by Config#get');
+		return Config::inst()->get($class, $name);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public static function addStaticVars($class, $properties, $replace = false) {
+		Deprecation::notice('4.0', 'Replaced by Config#update');
+		foreach($properties as $prop => $value) self::add_static_var($class, $prop, $value, $replace);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public static function add_static_var($class, $name, $value, $replace = false) {
+		Deprecation::notice('4.0', 'Replaced by Config#remove and Config#update');
+
+		if ($replace) Config::inst()->remove($class, $name);
+		Config::inst()->update($class, $name, $value);
+	}
+
+	/**
 	 * Return TRUE if a class has a specified extension.
 	 * This supports backwards-compatible format (static Object::has_extension($requiredExtension))
 	 * and new format ($object->has_extension($class, $requiredExtension))
@@ -441,7 +493,7 @@ abstract class Object {
 	 * instances, not existing ones (including all instances created through {@link singleton()}).
 	 *
 	 * @see http://doc.silverstripe.org/framework/en/trunk/reference/dataextension
-	 * @param string $class Class that should be extended - has to be a subclass of {@link Object}
+	 * @param string $classOrExtension Class that should be extended - has to be a subclass of {@link Object}
 	 * @param string $extension Subclass of {@link Extension} with optional parameters
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
