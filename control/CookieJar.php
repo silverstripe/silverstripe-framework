@@ -10,6 +10,9 @@
  * @todo A getter for cookies that haven't been sent to the browser yet
  * @todo Tests / a way to set the state without hacking with $_COOKIE
  * @todo Store the meta information around cookie setting (path, domain, secure, etc)
+ *
+ * @package framework
+ * @subpackage misc
  */
 class CookieJar implements Cookie_Backend {
 
