@@ -661,7 +661,10 @@ a.icon-button .ui-button-text, .ui-tabs .ui-tabs-nav li a.icon-button .ui-button
 /** ------------------------------------------------------------------
 * CMS notice, used for filter messages, but generic enough to use elsewhere
 * ----------------------------------------------------------------- */
-.cms-notice { display: block; margin: 0 0 8px; padding: 10px 12px; font-weight: normal; border: 1px #D2D5D8 solid; background: #fff; background: rgba(255, 255, 255, 0.5); text-shadow: none; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
+.cms-notice { display: block; margin: 0 0 8px; padding: 10px 12px; font-weight: normal; border: 1px #D2D5D8 solid; background: #fff; background: rgba(255, 255, 255, 0.5); text-shadow: none; }
+
+.cms-tree-filtered { position: absolute; margin: 0; width: 100%; box-sizing: border-box; margin-left: -16px; padding: 16px 16px; background: #D4E2EC; text-shadow: none; border: 0; }
+.cms-tree-filtered > strong, .cms-tree-filtered > a { font-size: 14px; }
 
 /**  CMS Batch actions */
 .cms-content-batchactions-button { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; padding: 4px 6px; vertical-align: middle; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Q5ZDlkOSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #d9d9d9)); background-image: -moz-linear-gradient(top, #ffffff, #d9d9d9); background-image: -webkit-linear-gradient(top, #ffffff, #d9d9d9); background-image: linear-gradient(to bottom, #ffffff, #d9d9d9); border: 1px solid #aaa; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
@@ -957,6 +960,7 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree .jstree-hovered, .cms-tree.jstree .jstree-hovered { text-shadow: none; text-decoration: none; }
 .tree-holder.jstree .jstree-closed > ins, .cms-tree.jstree .jstree-closed > ins { background-position: 2px -1px; }
 .tree-holder.jstree .jstree-open > ins, .cms-tree.jstree .jstree-open > ins { background-position: -18px -1px; }
+.tree-holder.filtered-list, .cms-tree.filtered-list { margin-top: 8px; }
 .tree-holder.filtered-list li:not(.filtered-item) > a, .cms-tree.filtered-list li:not(.filtered-item) > a { color: #aaa; }
 
 .cms-tree.jstree .jstree-no-checkboxes li a { padding-left: 12px; }
