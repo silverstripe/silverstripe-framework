@@ -12,8 +12,6 @@
  * @property string $RememberLoginToken
  * @property string $TempIDHash
  * @property string $TempIDExpired
- * @property int $NumVisit
- * @property string $LastVisited Date and time of last visit
  * @property string $AutoLoginHash
  * @property string $AutoLoginExpired
  * @property string $PasswordEncryption
@@ -120,7 +118,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'TempIDHash',
 		'TempIDExpired',
 		'Salt',
-		'NumVisit'
 	);
 
 	/**
@@ -549,7 +546,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$member->RememberLoginToken = $hash;
 			Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
 
-			$member->NumVisit++;
 			$member->write();
 
 			// Audit logging hook

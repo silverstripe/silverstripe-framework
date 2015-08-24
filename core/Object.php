@@ -441,7 +441,7 @@ abstract class Object {
 	 * instances, not existing ones (including all instances created through {@link singleton()}).
 	 *
 	 * @see http://doc.silverstripe.org/framework/en/trunk/reference/dataextension
-	 * @param string $class Class that should be extended - has to be a subclass of {@link Object}
+	 * @param string $classOrExtension Class that should be extended - has to be a subclass of {@link Object}
 	 * @param string $extension Subclass of {@link Extension} with optional parameters
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
