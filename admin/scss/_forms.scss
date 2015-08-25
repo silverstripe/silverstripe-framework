@@ -583,6 +583,70 @@ form.small .field, .field.small {
 		&.ss-ui-button-loading {
 			opacity: 0.8;
 		}
+
+		/* font-icon buttons */
+		&[class*="font-icon-"],
+		&[class^="font-icon-"],
+		&.ss-ui-button-constructive[class*="font-icon-"] {
+			padding: 5px 8px;
+			margin-bottom: $grid-y*1.5;
+			vertical-align: middle;
+			box-shadow: none;
+			border: 0;
+			background: none;
+			text-shadow: none;
+			text-decoration: none;
+			font-weight: normal;
+			color: $color-text;
+			
+			&:hover {
+				@include box-shadow(none);
+				background: #dee3e8;
+				color: $color-text;
+				border: 0;
+			}
+
+			&:focus {
+				@include box-shadow(none);
+				background: #dee3e8;
+				color: $color-text;
+				border: 0;
+			}
+
+			&:before {
+				font-size: 16px;
+				margin-right: 5px;
+				margin-top: 0;
+				vertical-align: middle;
+			}
+
+			&.ui-state-focus {
+				@include box-shadow(none);
+			}
+
+			&.active,
+			&:active {
+				@include box-shadow(0 0 3px rgba(191, 194, 196, .9) inset);
+				background: #dee3e8;
+				color: $color-text;
+				border: 0;
+			}
+
+			&.font-icon-search {
+				&:before {
+					margin-right: 2px;
+				}
+			}
+
+			.ui-button-text {
+				@include inline-block;
+				padding: 0;
+			}
+
+			.ui-icon {
+				display: none;
+			}
+		}
 	}
 
 	.ss-ui-buttonset {
