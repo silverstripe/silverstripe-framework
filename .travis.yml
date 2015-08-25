@@ -62,11 +62,6 @@ branches:
     - 2.3
     - translation-staging
 
-notifications:
-  irc:
-    channels:
-     - "irc.freenode.org#silverstripe"
-
 #  global:
 #   - secure: "AZmjVPtUD8JBA7ag4ULlEwEKXSEZbIUjDHeRBFugaOtdsn5yigGLmwYbzsg2tq7k7UkdbbAlGct0SUbiRJb9F2wPA5+eUd/p49fgDIU6CTSWIlT87H2BwgOrxKwS9sDwxLptPFM6vWQ8JKYSNGmVIepie9kQZbu4L2k5k6B69jQ="
 #   - secure: "f3kKpUn9cS5K+p/E52cMqN18cDApol/43LanDmHO6mo3iRAztk3jZLyfNOUq6JASKMqdh8+9kencRpEoaAYbcQnDPoZsT9POResiJ9/ADKB6RwWy+lcFHUp9E2Zf/x2VRh9FmXEguDhpWzkJqzWYJGCSig1IBp/+TjzKnsjQHIY="
