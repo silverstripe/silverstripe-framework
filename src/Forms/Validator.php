@@ -30,6 +30,11 @@ abstract class Validator extends Object
     protected $result;
 
     /**
+     * @var bool
+     */
+    private $enabled = true;
+
+    /**
      * @param Form $form
      * @return $this
      */
@@ -47,7 +52,9 @@ abstract class Validator extends Object
     public function validate()
     {
         $this->resetResult();
-        $this->php($this->form->getData());
+        if ($this->getEnabled()) {
+            $this->php($this->form->getData());
+        }
         return $this->result;
     }
 
@@ -128,6 +135,34 @@ abstract class Validator extends Object
      * @return mixed
      */
     abstract public function php($data);
+
+    /**
+     * @param bool $enabled
+     * @return $this
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = (bool)$enabled;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @return $this
+     */
+    public function removeValidation()
+    {
+        $this->setEnabled(false);
+        $this->resetResult();
+        return $this;
+    }
 
     /**
      * Clear current result
