@@ -1187,12 +1187,28 @@ button.ss-ui-button.icon-button {
 	display: block;
 	margin: 0 0 8px;
 	padding: 10px 12px;
-	font-weight: normal;  
+	font-weight: normal;
 	border: 1px $color-light-separator solid;
-	background: #fff; // for browsers that don't understand rgba
+	background: #fff; //for browsers that don't understand rgba
 	background: rgba(#fff,0.5);
 	text-shadow: none;
-	@include border-radius(3px);
+}
+
+.cms-tree-filtered {
+	position: absolute;
+	margin: 0;
+	width: 100%;
+	box-sizing: border-box;
+	margin-left: -$grid-x*2;
+	padding: $grid-y*2 $grid-x*2;
+	background: #D4E2EC;
+	text-shadow: none;
+	border: 0;
+	
+	> strong,
+	> a {
+		font-size: 14px;
+	}
 }
 
 /** 
