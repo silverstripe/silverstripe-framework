@@ -14,7 +14,7 @@ class PermissionTest extends SapphireTest {
 	}
 	
 	public function testGetCodesUngrouped() {
-		$codes = Permission::get_codes(null, false);
+		$codes = Permission::get_codes(false);
 		$this->assertArrayHasKey('SITETREE_VIEW_ALL', $codes);
 	}
 		
@@ -23,20 +23,25 @@ class PermissionTest extends SapphireTest {
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_VIEW_ALL"));
 	}
 
-	public function testLeftAndMainAccessAll() {
-		//add user and group
-		$member = Member::create()->update(array(
-			'FirstName' => 'Left',
-			'Surname' => 'Main',
-			'Email' => 'leftandmain@example.com',
+	public function testCMSAccess() {
+		$members = Member::get()->byIDs($this->allFixtureIDs('Member'));
+		foreach ($members as $member) {
+			$this->assertTrue(Permission::checkMember($member, 'CMS_ACCESS'));
+		}
+
+		$member = new Member();
+		$member->update(array(
+			'FirstName' => 'No CMS',
+			'Surname' => 'Access',
+			'Email' => 'no-access@example.com',
 		));
 		$member->write();
-		$group = Group::create()->update(array(
-			'Title' => 'LeftAndMain',
-		));
-		$group->write();
-		Permission::grant($group->ID, 'CMS_ACCESS_LeftAndMain');
-		$group->DirectMembers()->add($member);
+		$this->assertFalse(Permission::checkMember($member, 'CMS_ACCESS'));
+	}
+
+	public function testLeftAndMainAccessAll() {
+		//add user and group
+		$member = $this->objFromFixture('Member', 'leftandmain');
 
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));

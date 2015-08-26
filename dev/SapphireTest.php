@@ -412,7 +412,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Will collate all IDs form all fixtures if multiple fixtures are provided.
 	 *
 	 * @param string $className
-	 * @return A map of fixture-identifier => object-id
+	 * @return array A map of fixture-identifier => object-id
 	 */
 	protected function allFixtureIDs($className) {
 		return $this->getFixtureFactory()->getIds($className);
