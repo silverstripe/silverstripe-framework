@@ -424,6 +424,30 @@ class ArrayListTest extends SapphireTest {
 		$this->assertEquals($list->first()->ID, 1, 'Aron.2 should be first in the list');
 		$this->assertEquals($list->last()->ID, 3, 'Bert.3 should be last in the list');
 	}
+
+	/**
+	 * Check that we don't cause recursion errors with array_multisort() and circular dependencies
+	 */
+	public function testSortWithCircularDependencies() {
+		$itemA = new stdClass;
+		$childA = new stdClass;
+		$itemA->child = $childA;
+		$childA->parent = $itemA;
+		$itemA->Sort = 1;
+
+		$itemB = new stdClass;
+		$childB = new stdClass;
+		$itemB->child = $childB;
+		$childB->parent = $itemB;
+		$itemB->Sort = 1;
+
+		$items = new ArrayList;
+		$items->add($itemA);
+		$items->add($itemB);
+
+		// This call will trigger a fatal error if there are issues with circular dependencies
+		$items->sort('Sort');
+	}
 	
 	/**
 	 * $list->filter('Name', 'bob'); // only bob in the list
