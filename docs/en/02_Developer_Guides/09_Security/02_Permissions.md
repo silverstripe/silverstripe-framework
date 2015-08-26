@@ -66,6 +66,36 @@ currently logged in member is assumed.
 *  On a request, $request->hasPermission("View", $member = null) can be called.  See [datamodel](/topics/datamodel) for
 information on request objects.
 
+## Special cases
+
+### ADMIN permissions
+
+By default the config option `admin_implies_all` is true - this means that any user granted the `ADMIN` permission has
+all other permissions granted to them. This is a type of cascading of permissions that is hard coded into the permission
+system.
+
+### CMS access permissions
+
+Access to the CMS has a couple of special cases where permission codes can imply other permissions.
+
+#### 1. Granting access to all CMS permissions
+
+The `CMS_ACCESS_LeftAndMain` grants access to every single area of the CMS, without exception. Internally, this works by
+adding the `CMS_ACCESS_LeftAndMain` code to the set of accepted codes when a `CMS_ACCESS_*` permission is required.
+This works much like ADMIN permissions (see above)
+
+
+#### 2. Checking for any access to the CMS
+
+You can check if a user has access to the CMS by simply performing a check against `CMS_ACCESS`.
+
+	:::php
+	if (Permission::checkMember($member, 'CMS_ACCESS')) {
+		//user can access the CMS
+	}
+
+Internally, this checks that the user has any of the defined `CMS_ACCESS_*` permissions.
+
 
 ## API Documentation
 `[api:Permission]`
