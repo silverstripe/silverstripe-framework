@@ -50,20 +50,20 @@ class CMSProfileController extends LeftAndMain {
 	}
 
 	public function canView($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
-		
+		if(!$member && $member !== false) $member = Member::currentUser();
+
 		// cms menus only for logged-in members
 		if(!$member) return false;
-		
-		// Only check for generic CMS permissions
+
+		// Check they can access the CMS and that they are trying to edit themselves
 		if(
-			!Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")
-			&& !Permission::checkMember($member, "CMS_ACCESS_CMSMain")
+			Permission::checkMember($member, "CMS_ACCESS")
+			&& $member->ID === Member::currentUserID()
 		) {
-			return false;
+			return true;
 		}
-		
-		return true;
+
+		return false;
 	}
 
 	public function save($data, $form) {

@@ -32,7 +32,7 @@ class CMSProfileControllerTest extends FunctionalTest {
 	}
 
 	public function testMemberEditsOwnProfile() {
-		$member = $this->objFromFixture('Member', 'user1');
+		$member = $this->objFromFixture('Member', 'user3');
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
 		$response = $this->post('admin/myprofile/EditForm', array(
@@ -46,9 +46,9 @@ class CMSProfileControllerTest extends FunctionalTest {
 			'Password[_ConfirmPassword]' => 'password',
 		));
 
-		$member = $this->objFromFixture('Member', 'user1');
+		$member = $this->objFromFixture('Member', 'user3');
 
-		$this->assertEquals($member->FirstName, 'JoeEdited', 'FirstName field was changed');
+		$this->assertEquals('JoeEdited', $member->FirstName, 'FirstName field was changed');
 	}
 
 	public function testExtendedPermissionsStopEditingOwnProfile() {
