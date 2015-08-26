@@ -425,6 +425,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		// This the main sorting algorithm that supports infinite sorting params
 		$multisortArgs = array();
 		$values = array();
+		$objectHashes = array();
 		foreach($columnsToSort as $column => $direction ) {
 			// The reason these are added to columns is of the references, otherwise when the foreach
 			// is done, all $values and $direction look the same
@@ -433,6 +434,14 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			// We need to subtract every value into a temporary array for sorting
 			foreach($this->items as $index => $item) {
 				$values[$column][] = $this->extractValue($item, $column);
+
+				// If objects have the same sort value, array_multisort will attempt to inspect their properties.
+				// Customised ViewableData objects may have recursive dependencies, which will break this bevahiour,
+				// so we take the object's hash so these objects always have a unique value to sort on
+				if ($item instanceof ViewableData && $item->getCustomisedObj()) {
+					$hash = spl_object_hash($item);
+					$objectHashes[] = $hash;
+				}
 			}
 			// PHP 5.3 requires below arguments to be reference when using array_multisort together
 			// with call_user_func_array
@@ -440,6 +449,12 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			$multisortArgs[] = &$values[$column];
 			// First argument is the direction to be sorted,
 			$multisortArgs[] = &$sortDirection[$column];
+		}
+
+		// If we have object hashes we need to sort, add them here. This goes last as we don't actually want to sort
+		// by them - we only use them ensure that objects with recursive dependencies have a distinct sort value
+		if (!empty($objectHashes)) {
+			$multisortArgs[] = &$objectHashes;
 		}
 
 		$list = clone $this;

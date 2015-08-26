@@ -426,6 +426,25 @@ class ArrayListTest extends SapphireTest {
 	}
 
 	/**
+	 * Check that we don't cause recursion errors with array_multisort() and customised ViewableData objects
+	 */
+	public function testSortWithRecursiveReferences() {
+		$items = ArrayList::create();
+
+		// Objects need the same sort value so that their properties are compared by array_multisort
+		$items->add(DataObject::create(array('Order' => 1)));
+		$items->add(DataObject::create(array('Order' => 1)));
+
+		// Customising the object adds recursive dependencies (between the object and its customised instance)
+		foreach ($items as $item) {
+			$item->customise(array());
+		}
+
+		// This call will trigger a fatal error if there are recursion issues
+		$items->sort('Order');
+	}
+
+	/**
 	 * $list->filter('Name', 'bob'); // only bob in the list
 	 */
 	public function testSimpleFilter() {
