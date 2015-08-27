@@ -1,11 +1,20 @@
 <?php
+
+namespace SilverStripe\Model\FieldType;
+
+use DB;
+use DBField;
+use NumericField;
+use ArrayList;
+use ArrayData;
+
 /**
  * Represents a signed 32 bit integer field.
  *
  * @package framework
  * @subpackage model
  */
-class Int extends DBField {
+class DBInt extends DBField {
 
 	public function __construct($name = null, $defaultVal = 0) {
 		$this->defaultVal = is_int($defaultVal) ? $defaultVal : 0;
@@ -63,4 +72,5 @@ class Int extends DBField {
 	}
 
 }
+
 

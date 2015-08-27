@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBInt;
+
 /**
  * A special type Int field used for foreign keys in has_one relationships.
  * @uses ImageField
@@ -12,7 +15,7 @@
  * @package framework
  * @subpackage model
  */
-class ForeignKey extends Int {
+class ForeignKey extends DBInt {
 
 	/**
 	 * @var DataObject

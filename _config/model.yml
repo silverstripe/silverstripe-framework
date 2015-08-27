@@ -1,0 +1,5 @@
+Injector:
+  Int:
+    class: SilverStripe\Model\FieldType\DBInt
+  Float:
+    class: SilverStripe\Model\FieldType\DBFloat

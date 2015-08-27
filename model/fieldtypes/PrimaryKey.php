@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBInt;
+
 /**
  * A special type Int field used for primary keys.
  *
@@ -7,7 +10,7 @@
  * @package framework
  * @subpackage model
  */
-class PrimaryKey extends Int {
+class PrimaryKey extends DBInt {
 	/**
 	 * @var DataObject
 	 */
