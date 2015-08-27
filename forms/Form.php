@@ -657,8 +657,10 @@ class Form extends RequestHandler {
 		$extraFields = new FieldList();
 
 		$token = $this->getSecurityToken();
-		$tokenField = $token->updateFieldSet($this->fields);
-		if($tokenField) $tokenField->setForm($this);
+		if ($token) {
+			$tokenField = $token->updateFieldSet($this->fields);
+			if($tokenField) $tokenField->setForm($this);
+		}
 		$this->securityTokenAdded = true;
 
 		// add the "real" HTTP method if necessary (for PUT, DELETE and HEAD)
