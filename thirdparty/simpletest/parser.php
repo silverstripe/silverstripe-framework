@@ -37,7 +37,7 @@ class ParallelRegex {
      *                            for insensitive.
      *    @access public
      */
-    function ParallelRegex($case) {
+    function __construct($case) {
         $this->_case = $case;
         $this->_patterns = array();
         $this->_labels = array();
@@ -129,7 +129,7 @@ class SimpleStateStack {
      *    @param string $start        Starting state name.
      *    @access public
      */
-    function SimpleStateStack($start) {
+    function __construct($start) {
         $this->_stack = array($start);
     }
     
@@ -193,7 +193,7 @@ class SimpleLexer {
      *    @param boolean $case            True for case sensitive.
      *    @access public
      */
-    function SimpleLexer(&$parser, $start = "accept", $case = false) {
+    function __construct(&$parser, $start = "accept", $case = false) {
         $this->_case = $case;
         $this->_regexes = array();
         $this->_parser = &$parser;
@@ -456,8 +456,8 @@ class SimpleHtmlLexer extends SimpleLexer {
      *                                    reference.
      *    @access public
      */
-    function SimpleHtmlLexer(&$parser) {
-        $this->SimpleLexer($parser, 'text');
+    function __construct(&$parser) {
+        parent::__construct($parser, 'text');
         $this->mapHandler('text', 'acceptTextToken');
         $this->_addSkipping();
         foreach ($this->_getParsedTags() as $tag) {
@@ -552,7 +552,7 @@ class SimpleHtmlSaxParser {
      *    @param SimpleSaxListener $listener    SAX event handler.
      *    @access public
      */
-    function SimpleHtmlSaxParser(&$listener) {
+    function __construct(&$listener) {
         $this->_listener = &$listener;
         $this->_lexer = &$this->createLexer($this);
         $this->_tag = '';
@@ -728,7 +728,7 @@ class SimpleSaxListener {
      *    Sets the document to write to.
      *    @access public
      */
-    function SimpleSaxListener() {
+    function __construct() {
     }
     
     /**
