@@ -1280,7 +1280,7 @@ class Form extends RequestHandler {
 		if(is_object($data)) $this->record = $data;
 
 		// dont include fields without data
-		$dataFields = $this->fields->dataFields();
+		$dataFields = $this->Fields()->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
 			$name = $field->getName();
 
