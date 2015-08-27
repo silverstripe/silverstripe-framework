@@ -248,6 +248,39 @@ class ConfigTest extends SapphireTest {
 			array('A' => 1, 'B' => 2, 'C' => array('Foo' => 1, 'Bar' => 3, 'Baz' => 4), 'D' => 3));
 	}
 
+	public function testRemoveKey() {
+		// 4 copies of our test array
+		$oneA = $oneB = $oneC = $oneD = [
+			'arr' => [
+				'A' => 'eh',
+				'B' => 'bee',
+				'C' => [ 'see', 'sea' ]
+			],
+		];
+		$two = [
+			'arr' => [
+				'B' => '%%remove%%',
+				'C' => '%%remove%%',
+				'D' => 'dee',
+			]
+		];
+		$three = [
+			'arr' => '%%remove%%',
+		];
+
+		Config::merge_array_high_into_low($oneA, $two);
+		$this->assertEquals($oneA, [ 'arr' => [ 'A' => 'eh', 'D' => 'dee' ] ]);
+
+		Config::merge_array_low_into_high($oneB, $two);
+		$this->assertEquals($oneB, [ 'arr' => [ 'A' => 'eh', 'B' => 'bee', 'C' => [ 'see', 'sea' ], 'D' => 'dee' ] ]);
+
+		Config::merge_array_high_into_low($oneC, $three);
+		$this->assertEquals($oneC, []);
+
+		Config::merge_array_low_into_high($oneD, $three);
+		$this->assertEquals($oneD, [ 'arr' => [ 'A' => 'eh', 'B' => 'bee', 'C' => [ 'see', 'sea' ] ] ]);
+	}
+
 	public function testStaticLookup() {
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFoo', 'foo'), 1);
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFoo', 'bar'), null);

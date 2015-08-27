@@ -144,6 +144,17 @@ class Config {
 	const IS_ARRAY = 2;
 
 	/**
+	 * Return flag for get_value_type indicating value is a remove marker
+	 * @const
+	 */
+	const IS_REMOVE_MARKER = 3;
+
+	/**
+	 * The string used as a marker for remove actions
+	 */
+	const REMOVE_MARKER_STRING = '%%remove%%';
+
+	/**
 	 * Get whether the value is an array or not. Used to be more complicated,
 	 * but still nice sugar to have an enum to compare and not just a true /
 	 * false value.
@@ -153,11 +164,13 @@ class Config {
 	 * @return int - One of ISNT_ARRAY or IS_ARRAY
 	 */
 	protected static function get_value_type($val) {
-		if (is_array($val)) {
+		if($val === self::REMOVE_MARKER_STRING) {
+			return self::IS_REMOVE_MARKER;		
+		} elseif (is_array($val)) {
 			return self::IS_ARRAY;
+		} else {
+			return self::ISNT_ARRAY;
 		}
-
-		return self::ISNT_ARRAY;
 	}
 
 	/**
@@ -368,11 +381,26 @@ class Config {
 				$newType = self::get_value_type($v);
 				$currentType = self::get_value_type($dest[$k]);
 
+				// If there's a '%%remove%%' marker in the high-priority content, unset it
+				if($currentType === self::IS_REMOVE_MARKER) {
+					unset($dest[$k]);
+					continue;
+				}
+				// If there's a %%remove%% marker in the low-priority content, ignore it
+				if($newType === self::IS_REMOVE_MARKER) {
+					continue;
+				}
 				// Throw error if types don't match
-				if ($currentType !== $newType) self::type_mismatch();
+				elseif ($currentType !== $newType) {
+					self::type_mismatch();
+				}
 
-				if ($currentType == self::IS_ARRAY) self::merge_array_low_into_high($dest[$k], $v);
-				else continue;
+				if ($currentType == self::IS_ARRAY) {
+					self::merge_array_low_into_high($dest[$k], $v);
+				}
+				else {
+					continue;
+				}
 			}
 			else {
 				$dest[$k] = $v;

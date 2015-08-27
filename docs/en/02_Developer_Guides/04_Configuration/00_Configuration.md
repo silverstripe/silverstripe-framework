@@ -311,6 +311,19 @@ Due to YAML limitations, having multiple conditions of the same kind (say, two `
 will result in only the latter coming through.
 </div>
 
+## Removing values set in another config file
+
+Sometimes you will want to create a configuration file that removes configuration set by anotehr file. For example,
+you may wish to remove configuration provided by default by the framework or a module.
+
+To do this, you can set a configuration option to the special value, `%%remove%%`. For example, this will remove the
+routing rule for admin/ URLs:
+
+	Director:
+	  rules:
+	    admin: %%remove%%
+
+Note that this is case-sensitive - `%%REMOVE%%` won't work.
 
 ## API Documentation
 
