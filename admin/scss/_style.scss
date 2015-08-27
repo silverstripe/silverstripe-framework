@@ -1414,11 +1414,14 @@ body.cms-dialog {
 			float:left;
 			position: relative;
 
-      label {
-			position: absolute;
-			left: 8px;
-			top: 13px;
-			font-weight: normal; color: #888;
+			label {
+				position: absolute;
+				left: 8px;
+				top: 13px;
+				font-weight: normal; 
+				color: #888;
+				width: 35px; 
+				padding-right: 0;
 			}
 
 			.middleColumn {
