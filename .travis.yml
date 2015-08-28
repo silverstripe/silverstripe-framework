@@ -23,11 +23,6 @@ env:
     - DB=PGSQL
 
 matrix:
-  allow_failures:
-    - php: hhvm
-    - php: 7.0
-    - php: nightly
-
   include:
     - php: 5.4
       env: DB=MYSQL PDO=1
@@ -37,12 +32,6 @@ matrix:
       env: DB=MYSQL
     - php: 5.4
       env: DB=MYSQL BEHAT_TEST=1
-    - php: 7.0
-      env: DB=MYSQL
-    - php: nightly
-      env: DB=MYSQL
-    - php: hhvm
-      env: DB=MYSQL
 
 before_script:
  - composer self-update || true
