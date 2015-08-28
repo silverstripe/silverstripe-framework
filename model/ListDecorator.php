@@ -148,6 +148,32 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 	}
 
 	/**
+	 * Return a copy of this list which contains items matching any of these charactaristics.
+	 *
+	 * @example // only bob in the list
+	 *          $list = $list->filterAny('Name', 'bob');
+	 *          // SQL: WHERE "Name" = 'bob'
+	 * @example // azis or bob in the list
+	 *          $list = $list->filterAny('Name', array('aziz', 'bob');
+	 *          // SQL: WHERE ("Name" IN ('aziz','bob'))
+	 * @example // bob or anyone aged 21 in the list
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>21));
+	 *          // SQL: WHERE ("Name" = 'bob' OR "Age" = '21')
+	 * @example // bob or anyone aged 21 or 43 in the list
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>array(21, 43)));
+	 *          // SQL: WHERE ("Name" = 'bob' OR ("Age" IN ('21', '43'))
+	 * @example // all bobs, phils or anyone aged 21 or 43 in the list
+	 *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+	 *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
+	 *
+	 * @param string|array See {@link filter()}
+	 * @return DataList
+	 */
+	public function filterAny() {
+		return call_user_func_array(array($this->list, __FUNCTION__), func_get_args());
+	}
+
+	/**
 	 * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a
 	 * future implementation.
 	 * @see SS_Filterable::filterByCallback()
@@ -172,6 +198,26 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 
 	public function limit($limit, $offset = 0) {
 		return $this->list->limit($limit, $offset);
+	}
+
+	/**
+	 * Return the first item with the given ID
+	 *
+	 * @param int $id
+	 * @return mixed
+	 */
+	public function byID($id) {
+		return $this->list->byID($id);
+	}
+
+	/**
+	 * Filter this list to only contain the given Primary IDs
+	 *
+	 * @param array $ids Array of integers
+	 * @return SS_List
+	 */
+	public function byIDs($ids) {
+		return $this->list->byIDs($ids);
 	}
 
 	/**

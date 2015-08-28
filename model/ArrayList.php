@@ -56,7 +56,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return bool
 	 */
 	public function exists() {
-		return (bool) count($this);
+		return !empty($this->items);
 	}
 
 	/**
@@ -477,6 +477,79 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 *          // aziz with the age 21 or 43 and bob with the Age 21 or 43
 	 */
 	public function filter() {
+
+		$keepUs = call_user_func_array(array($this, 'normaliseFilterArgs'), func_get_args());
+
+		$itemsToKeep = array();
+		foreach($this->items as $item){
+			$keepItem = true;
+			foreach ($keepUs as $column => $value) {
+				if ((is_array($value) && !in_array($this->extractValue($item, $column), $value))
+					|| (!is_array($value) && $this->extractValue($item, $column) != $value)
+				) {
+					$keepItem = false;
+					break;
+				}
+			}
+			if($keepItem) {
+				$itemsToKeep[] = $item;
+			}
+		}
+
+		$list = clone $this;
+		$list->items = $itemsToKeep;
+		return $list;
+	}
+
+	/**
+	 * Return a copy of this list which contains items matching any of these charactaristics.
+	 *
+	 * @example // only bob in the list
+	 *          $list = $list->filterAny('Name', 'bob');
+	 * @example // azis or bob in the list
+	 *          $list = $list->filterAny('Name', array('aziz', 'bob');
+	 * @example // bob or anyone aged 21 in the list
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>21));
+	 * @example // bob or anyone aged 21 or 43 in the list
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>array(21, 43)));
+	 * @example // all bobs, phils or anyone aged 21 or 43 in the list
+	 *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+	 *
+	 * @param string|array See {@link filter()}
+	 * @return DataList
+	 */
+	public function filterAny() {
+		$keepUs = call_user_func_array(array($this, 'normaliseFilterArgs'), func_get_args());
+
+		$itemsToKeep = array();
+
+		foreach ($this->items as $item) {
+			foreach ($keepUs as $column => $value) {
+				$extractedValue = $this->extractValue($item, $column);
+				$matches = is_array($value) ? in_array($extractedValue, $value) : $extractedValue == $value;
+				if ($matches) {
+					$itemsToKeep[] = $item;
+					break;
+				}
+			}
+		}
+
+		$list = clone $this;
+		$list->items = array_unique($itemsToKeep, SORT_REGULAR);
+		return $list;
+
+	}
+
+	/**
+	 * Take the "standard" arguments that the filter/exclude functions take and return a single array with
+	 * 'colum' => 'value'
+	 *
+	 * @param $column array|string The column name to filter OR an assosicative array of column => value
+	 * @param $value array|string|null The values to filter the $column against
+	 *
+	 * @return array The normalised keyed array
+	 */
+	protected function normaliseFilterArgs($column, $value = null) {
 		if(count(func_get_args())>2){
 			throw new InvalidArgumentException('filter takes one array or two arguments');
 		}
@@ -496,24 +569,18 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			}
 		}
 
-		$itemsToKeep = array();
-		foreach($this->items as $item){
-			$keepItem = true;
-			foreach($keepUs as $column => $value ) {
-				if(is_array($value) && !in_array($this->extractValue($item, $column), $value)) {
-					$keepItem = false;
-				} elseif(!is_array($value) && $this->extractValue($item, $column) != $value) {
-					$keepItem = false;
-				}
-			}
-			if($keepItem) {
-				$itemsToKeep[] = $item;
-			}
-		}
+		return $keepUs;
+	}
 
-		$list = clone $this;
-		$list->items = $itemsToKeep;
-		return $list;
+	/**
+	 * Filter this list to only contain the given Primary IDs
+	 *
+	 * @param array $ids Array of integers, will be automatically cast/escaped.
+	 * @return ArrayList
+	 */
+	public function byIDs($ids) {
+		$ids = array_map('intval', $ids); // sanitize
+		return $this->filter('ID', $ids);
 	}
 
 	public function byID($id) {
@@ -563,25 +630,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 *          // bob age 21 or 43, phil age 21 or 43 would be excluded
 	 */
 	public function exclude() {
-		if(count(func_get_args())>2){
-			throw new InvalidArgumentException('exclude() takes one array or two arguments');
-		}
 
-		if(count(func_get_args()) == 1 && !is_array(func_get_arg(0))){
-			throw new InvalidArgumentException('exclude() takes one array or two arguments');
-		}
-
-		$removeUs = array();
-		if(count(func_get_args())==2){
-			$removeUs[func_get_arg(0)] = func_get_arg(1);
-		}
-
-		if(count(func_get_args())==1 && is_array(func_get_arg(0))){
-			foreach(func_get_arg(0) as $column => $excludeValue) {
-				$removeUs[$column] = $excludeValue;
-			}
-		}
-
+		$removeUs = call_user_func_array(array($this, 'normaliseFilterArgs'), func_get_args());
 
 		$hitsRequiredToRemove = count($removeUs);
 		$matches = array();
