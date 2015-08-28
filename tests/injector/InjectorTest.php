@@ -619,6 +619,91 @@ class InjectorTest extends SapphireTest {
 		$this->assertInstanceOf('TestObject', $injector->get('service'));
 	}
 
+	public function testMethods() {
+		// do it again but have test object configured as a constructor dependency
+		$injector = new Injector();
+		$config = array(
+			'A' => array(
+				'class' => 'TestObject',
+			),
+			'B' => array(
+				'class' => 'TestObject',
+			),
+			'TestService' => array(
+				'class' => 'TestObject',
+				'calls' => array(
+					array('myMethod', array('%$A')),
+					array('myMethod', array('%$B')),
+					array('noArgMethod')
+				)
+			)
+		);
+
+		$injector->load($config);
+		$item = $injector->get('TestService');
+		$this->assertTrue($item instanceof TestObject);
+		$this->assertEquals(
+			array($injector->get('A'), $injector->get('B'), 'noArgMethod called'),
+			$item->methodCalls
+		);
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testNonExistentMethods() {
+		$injector = new Injector();
+		$config = array(
+			'TestService' => array(
+				'class' => 'TestObject',
+				'calls' => array(
+					array('thisDoesntExist')
+				)
+			)
+		);
+
+		$injector->load($config);
+		$item = $injector->get('TestService');
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testProtectedMethods() {
+		$injector = new Injector();
+		$config = array(
+			'TestService' => array(
+				'class' => 'TestObject',
+				'calls' => array(
+					array('protectedMethod')
+				)
+			)
+		);
+
+		$injector->load($config);
+		$item = $injector->get('TestService');
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testTooManyArrayValues() {
+		$injector = new Injector();
+		$config = array(
+			'TestService' => array(
+				'class' => 'TestObject',
+				'calls' => array(
+					array('method', array('args'), 'what is this?')
+				)
+			)
+		);
+
+		$injector->load($config);
+		$item = $injector->get('TestService');
+	}
+
+
+
 	/**
 	 * Test nesting of injector
 	 */
@@ -713,10 +798,23 @@ class TestObject implements TestOnly {
 
 	public $sampleService;
 
+	public $methodCalls = array();
+
 	public function setSomething($v) {
 		$this->sampleService = $v;
 	}
 
+	public function myMethod($arg) {
+		$this->methodCalls[] = $arg;
+	}
+
+	public function noArgMethod() {
+		$this->methodCalls[] = 'noArgMethod called';
+	}
+
+	protected function protectedMethod() {
+		$this->methodCalls[] = 'protectedMethod called';
+	}
 }
 
 class OtherTestObject implements TestOnly {

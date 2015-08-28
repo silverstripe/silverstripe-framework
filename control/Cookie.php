@@ -62,36 +62,11 @@ class Cookie {
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public static function forceExpiry($name, $path = null, $domain = null) {
-		Deprecation::notice('4.0', 'Use Cookie::force_expiry instead.');
-
-		return self::force_expiry($name, $path, $domain);
-	}
-
-	/**
 	 * @param string
 	 * @param string
 	 * @param string
 	 */
 	public static function force_expiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true) {
 		return self::get_inst()->forceExpiry($name, $path, $domain, $secure, $httpOnly);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function set_report_errors($reportErrors) {
-		Deprecation::notice('4.0', 'Use "Cookie.report_errors" config setting instead');
-		Config::inst()->update('Cookie', 'report_errors', $reportErrors);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function report_errors() {
-		Deprecation::notice('4.0', 'Use "Cookie.report_errors" config setting instead');
-		return Config::inst()->get('Cookie', 'report_errors');
 	}
 }

@@ -35,6 +35,13 @@ class GDBackend extends Object implements Image_Backend {
 		}
 	}
 
+	/**
+	 * __construct
+	 *
+	 * @param string $filename = null
+	 * @param array $args = array()
+	 * @return void
+	 */
 	public function __construct($filename = null, $args = array()) {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
 		increase_time_limit_to(300);
@@ -86,24 +93,8 @@ class GDBackend extends Object implements Image_Backend {
 		$this->height = imagesy($resource);
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public function setGD($gd) {
-		Deprecation::notice('4.0', 'Use GD::setImageResource instead');
-		return $this->setImageResource($gd);
-	}
-
 	public function getImageResource() {
 		return $this->gd;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function getGD() {
-		Deprecation::notice('4.0', 'GD::getImageResource instead');
-		return $this->getImageResource();
 	}
 
 	/**
@@ -232,16 +223,6 @@ class GDBackend extends Object implements Image_Backend {
 	public function hasImageResource() {
 		return $this->gd ? true : false;
 	}
-
-	/**
-	 * @deprecated
-	 */
-	public function hasGD() {
-		Deprecation::notice('4.0', 'GD::hasImageResource instead',
-			Deprecation::SCOPE_CLASS);
-		return $this->hasImageResource();
-	}
-
 
 	/**
 	 * Resize an image, skewing it as necessary.

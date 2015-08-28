@@ -238,7 +238,14 @@ class Oembed_Result extends ViewableData {
 		if(isset($options['class'])) {
 			$this->extraClass = $options['class'];
 		}
-
+		if($options) {
+			if(isset($options['width'])) {
+				$this->Width = $options['width'];
+			}
+			if(isset($options['height'])) {
+				$this->Height = $options['height'];
+			}
+		}
 		parent::__construct();
 	}
 

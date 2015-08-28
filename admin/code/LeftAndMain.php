@@ -565,7 +565,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$icon = Config::inst()->get($class, 'menu_icon', Config::FIRST_SET);
 		if (!empty($icon)) {
 			$class = strtolower(Convert::raw2htmlname(str_replace('\\', '-', $class)));
-			return ".icon.icon-16.icon-{$class} { background: url('{$icon}'); } ";
+			return ".icon.icon-16.icon-{$class} { background-image: url('{$icon}'); } ";
 		}
 		return '';
 	}
@@ -1406,8 +1406,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function BatchActionsForm() {
 		$actions = $this->batchactions()->batchActionList();
-		$actionsMap = array('-1' => _t('LeftAndMain.DropdownBatchActionsDefault', 'Actions'));
-		foreach($actions as $action) $actionsMap[$action->Link] = $action->Title;
+		$actionsMap = array();
+		foreach($actions as $action) {
+			$actionsMap[$action->Link] = $action->Title;
+		}
 
 		$form = new Form(
 			$this,
@@ -1418,7 +1420,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					'Action',
 					false,
 					$actionsMap
-				)->setAttribute('autocomplete', 'off')
+				)
+					->setAttribute('autocomplete', 'off')
+					->setAttribute('data-placeholder', _t('LeftAndMain.DropdownBatchActionsDefault', 'Actions'))
 			),
 			new FieldList(
 				// TODO i18n
@@ -1857,7 +1861,7 @@ class LeftAndMainMarkingFilter {
 			}
 		}
 
-		return new SQLQuery(
+		return new SQLSelect(
 			array("ParentID", "ID"),
 			'SiteTree',
 			$where

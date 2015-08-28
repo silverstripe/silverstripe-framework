@@ -352,7 +352,7 @@ class UploadTest extends SapphireTest {
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
-			'UploadTest-testUpload2.tar.gz',
+			'UploadTest-testUpload-v2.tar.gz',
 			$file2->Name,
 			'File receives a number attached to the end before the extension'
 		);
@@ -370,7 +370,7 @@ class UploadTest extends SapphireTest {
 		$u->load($tmpFile);
 		$file3 = $u->getFile();
 		$this->assertEquals(
-			'UploadTest-testUpload3.tar.gz',
+			'UploadTest-testUpload-v3.tar.gz',
 			$file3->Name,
 			'File receives a number attached to the end before the extension'
 		);
@@ -434,7 +434,7 @@ class UploadTest extends SapphireTest {
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
-			'UploadTest-testUpload2',
+			'UploadTest-testUpload-v2',
 			$file2->Name,
 			'File receives a number attached to the end'
 		);
@@ -584,7 +584,7 @@ class UploadTest extends SapphireTest {
 		$u->loadIntoFile($tmpFile, new File());
 		$file3 = $u->getFile();
 		$this->assertEquals(
-				'UploadTest-testUpload2.txt',
+				'UploadTest-testUpload-v2.txt',
 				$file3->Name,
 				'File does receive new name'
 		);

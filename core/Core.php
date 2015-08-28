@@ -27,6 +27,9 @@ error_reporting(E_ALL | E_STRICT);
  */
 require_once dirname(__FILE__).'/Constants.php';
 
+global $_increase_time_limit_max;
+$_increase_time_limit_max = -1;
+
 /**
  * Priorities definition. These constants are used in calls to _t() as an optional argument
  */
@@ -255,7 +258,7 @@ function translate_memstring($memString) {
  */
 function increase_time_limit_to($timeLimit = null) {
 	$max = get_increase_time_limit_max();
-	if($max != -1 && $timeLimit > $max) return false;
+	if($max != -1 && $max != null && $timeLimit > $max) return false;
 
 	if(!ini_get('safe_mode')) {
 		if(!$timeLimit) {
@@ -273,8 +276,6 @@ function increase_time_limit_to($timeLimit = null) {
 		return false;
 	}
 }
-
-$_increase_time_limit_max = -1;
 
 /**
  * Set the maximum allowed value for {@link increase_timeLimit_to()};

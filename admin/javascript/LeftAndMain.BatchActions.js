@@ -40,7 +40,8 @@
 			},
 			
 			/**
-			 * Register default bulk confirmation dialogs
+			 * @func registerDefault
+			 * @desc Register default bulk confirmation dialogs
 			 */
 			registerDefault: function() {
 				// Publish selected pages action
@@ -129,63 +130,15 @@
 				});
 			},
 
-			/**
-			 * Constructor: onmatch
-			 */
 			onadd: function() {
-				this._updateStateFromViewMode();
 				this.registerDefault();
 				this._super();
 			},
 
-			'from .cms-content-batchactions :input[name=view-mode-batchactions]': {
-				onclick: function(e){
-					var checkbox = $(e.target), dropdown = this.find(':input[name=Action]'), tree = this.getTree();
-
-					if(checkbox.is(':checked')) {
-						tree.addClass('multiple');
-						tree.removeClass('draggable');
-						this.serializeFromTree();
-					} else {
-						tree.removeClass('multiple');
-						tree.addClass('draggable');
-					}
-
-					this._updateStateFromViewMode();
-				}
-			},
-
 			/**
-			 * Updates the select box state according to the current view mode.
-			 */
-			_updateStateFromViewMode: function() {
-				var viewMode = $('.cms-content-batchactions :input[name=view-mode-batchactions]');
-				var batchactions = $('.cms-content-batchactions');
-				var dropdown = this.find(':input[name=Action]');
-
-				// Batch actions only make sense when multiselect is enabled.
-				if(viewMode.is(':checked')) {
-					dropdown.trigger("liszt:updated");
-					batchactions.removeClass('inactive');
-				}
-				else {
-					dropdown.trigger("liszt:updated");
-					// Used timeout to make sure when it shows up you won't see
-					// the native dropdown
-					setTimeout(function() { batchactions.addClass('inactive'); }, 100);
-				}
-				
-				// Refresh selected / enabled nodes
-				$('#Form_BatchActionsForm').refreshSelected();
-			},
-
-			/**
-			 * Function: register
-			 * 
-			 * Parameters:
-			 * 
-			 * 	(String) type - ...
-			 * 	(Function) callback - ...
+			 * @func register
+			 * @param {string} type
+			 * @param {function} callback
 			 */
 			register: function(type, callback) {
 				this.trigger('register', {type: type, callback: callback});
@@ -193,53 +146,31 @@
 				actions[type] = callback;
 				this.setActions(actions);
 			},
-		
+
 			/**
-			 * Function: unregister
-			 * 
-			 * Remove an existing action.
-			 * 
-			 * Parameters:
-			 * 
-			 *  {String} type
+			 * @func unregister
+			 * @param {string} type
+			 * @desc Remove an existing action.
 			 */
 			unregister: function(type) {
 				this.trigger('unregister', {type: type});
-			
+
 				var actions = this.getActions();
 				if(actions[type]) delete actions[type];
 				this.setActions(actions);
 			},
-		
+
 			/**
-			 * Function: _isActive
-			 * 
-			 * Determines if we should allow and track tree selections.
-			 * 
-			 * Todo:
-			 *  Too much coupling with tabset
-			 * 
-			 * Returns:
-			 *  (boolean)
-			 */
-			_isActive: function() {
-				return $('.cms-content-batchactions').is(':visible');
-			},
-		
-			/**
-			 * Function: refreshSelected
-			 * 
-			 * Ajax callbacks determine which pages is selectable in a certain batch action.
-			 * 
-			 * Parameters:
-			 *  {Object} rootNode
+			 * @func refreshSelected
+			 * @param {object} rootNode
+			 * @desc Ajax callbacks determine which pages is selectable in a certain batch action.
 			 */
 			refreshSelected : function(rootNode) {
 				var self = this,
 					st = this.getTree(),
 					ids = this.getIDs(),
 					allIds = [],
-					viewMode = $('.cms-content-batchactions :input[name=view-mode-batchactions]'),
+					viewMode = $('.cms-content-batchactions-button'),
 					selectedAction = this.find(':input[name=Action]').val();
 			
 				// Default to refreshing the entire tree
@@ -250,7 +181,7 @@
 				}
 
 				// If no action is selected, enable all nodes
-				if(!selectedAction || selectedAction == -1 || !viewMode.is(":checked")) {
+				if(!selectedAction || selectedAction == -1 || !viewMode.hasClass('active')) {
 					$(rootNode).find('li').each(function() {
 						$(this).setEnabled(true);
 					});
@@ -285,10 +216,8 @@
 			},
 			
 			/**
-			 * Function: serializeFromTree
-			 * 
-			 * Returns:
-			 *  (boolean)
+			 * @func serializeFromTree
+			 * @return {boolean}
 			 */
 			serializeFromTree: function() {
 				var tree = this.getTree(), ids = tree.getSelectedIDs();
@@ -300,20 +229,16 @@
 			},
 			
 			/**
-			 * Function: setIDS
-			 *  
-			 * Parameters:
-			 *  {Array} ids
+			 * @func setIDS
+			 * @param {array} ids
 			 */
 			setIDs: function(ids) {
 				this.find(':input[name=csvIDs]').val(ids ? ids.join(',') : null);
 			},
 			
 			/**
-			 * Function: getIDS
-			 * 
-			 * Returns:
-			 *  {Array}
+			 * @func getIDS
+			 * @return {array}
 			 */
 			getIDs: function() {
 				// Map empty value to empty array
@@ -322,13 +247,7 @@
 					? value.split(',')
 					: [];
 			},
-		
-			/**
-			 * Function: onsubmit
-			 * 
-			 * Parameters:
-			 *  (Event) e
-			 */
+
 			onsubmit: function(e) {
 				var self = this, ids = this.getIDs(), tree = this.getTree(), actions = this.getActions();
 				
@@ -414,28 +333,46 @@
 			}
 		
 		});
-	
+
+		$('.cms-content-batchactions-button').entwine({
+			onmatch: function () {
+				this._super();
+				this.updateTree();
+			},
+			onunmatch: function () {
+				this._super();
+			},
+			onclick: function (e) {
+				this.updateTree();
+			},
+			updateTree: function () {
+				var tree = $('.cms-tree'),
+					form = $('#Form_BatchActionsForm');
+
+				this._super();
+
+				if(this.data('active')) {
+					tree.addClass('multiple');
+					tree.removeClass('draggable');
+					form.serializeFromTree();
+				} else {
+					tree.removeClass('multiple');
+					tree.addClass('draggable');
+				}
+				
+				$('#Form_BatchActionsForm').refreshSelected();
+			}
+		});
+
 		/**
 		 * Class: #Form_BatchActionsForm :select[name=Action]
 		 */
 		$('#Form_BatchActionsForm select[name=Action]').entwine({
-			
-			onmatch: function() {
-				this.trigger('change');
-				this._super();
-			},
-			onunmatch: function() {
-				this._super();
-			},
-			/**
-			 * Function: onchange
-			 * 
-			 * Parameters:
-			 *  (Event) e
-			 */
 			onchange: function(e) {
-				var form = $(e.target.form), btn = form.find(':submit');
-				if($(e.target).val() == -1) {
+				var form = $(e.target.form),
+					btn = form.find(':submit'),
+					selected = $(e.target).val();
+				if(!selected || selected == -1) {
 					btn.attr('disabled', 'disabled').button('refresh');
 				} else {
 					btn.removeAttr('disabled').button('refresh');

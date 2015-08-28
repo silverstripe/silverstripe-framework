@@ -180,11 +180,11 @@ class Injector {
 	 * @var Factory
 	 */
 	protected $objectCreator;
-	
+
 	/**
 	 * Locator for determining Config properties for services
-	 * 
-	 * @var ServiceConfigurationLocator 
+	 *
+	 * @var ServiceConfigurationLocator
 	 */
 	protected $configLocator;
 
@@ -594,12 +594,49 @@ class Injector {
 		$objtype = $asType ? $asType : get_class($object);
 		$mapping = isset($this->injectMap[$objtype]) ? $this->injectMap[$objtype] : null;
 
+		$spec = empty($this->specs[$objtype]) ? array() : $this->specs[$objtype];
+
 		// first off, set any properties defined in the service specification for this
 		// object type
-		if (isset($this->specs[$objtype]) && isset($this->specs[$objtype]['properties'])) {
+		if(!empty($spec['properties']) && is_array($spec['properties'])) {
 			foreach ($this->specs[$objtype]['properties'] as $key => $value) {
 				$val = $this->convertServiceProperty($value);
 				$this->setObjectProperty($object, $key, $val);
+			}
+		}
+
+		// Populate named methods
+		if (!empty($spec['calls']) && is_array($spec['calls'])) {
+			foreach ($spec['calls'] as $method) {
+				// Ignore any blank entries from the array; these may be left in due to config system limitations
+				if(!$method) continue;
+
+				// Format validation
+				if(!is_array($method) || !isset($method[0]) || isset($method[2])) {
+					throw new \InvalidArgumentException(
+						"'calls' entries in service definition should be 1 or 2 element arrays."
+					);
+				}
+				if(!is_string($method[0])) {
+					throw new \InvalidArgumentException("1st element of a 'calls' entry should be a string");
+				}
+				if(isset($method[1]) && !is_array($method[1])) {
+					throw new \InvalidArgumentException("2nd element of a 'calls' entry should an arguments array");
+				}
+
+				// Check that the method exists and is callable
+				$objectMethod = array($object, $method[0]);
+				if (!is_callable($objectMethod)) {
+					throw new \InvalidArgumentException("'$method[0]' in 'calls' entry is not a public method");
+				}
+
+				// Call it
+				call_user_func_array(
+					$objectMethod,
+					$this->convertServiceProperty(
+						isset($method[1]) ? $method[1] : array()
+					)
+				);
 			}
 		}
 

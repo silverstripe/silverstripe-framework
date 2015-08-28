@@ -69,6 +69,8 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testGetTagWithTitle() {
+		Config::inst()->update('Image', 'force_resample', false);
+		
 		$image = $this->objFromFixture('Image', 'imageWithTitle');
 		$expected = '<img src="' . Director::baseUrl()
 			. 'assets/ImageTest/test_image.png" alt="This is a image Title" />';
@@ -78,6 +80,8 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testGetTagWithoutTitle() {
+		Config::inst()->update('Image', 'force_resample', false);
+		
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$expected = '<img src="' . Director::baseUrl() . 'assets/ImageTest/test_image.png" alt="test_image" />';
 		$actual = $image->getTag();
@@ -86,6 +90,8 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testGetTagWithoutTitleContainingDots() {
+		Config::inst()->update('Image', 'force_resample', false);
+		
 		$image = $this->objFromFixture('Image', 'imageWithoutTitleContainingDots');
 		$expected = '<img src="' . Director::baseUrl()
 			. 'assets/ImageTest/test.image.with.dots.png" alt="test.image.with.dots" />';
@@ -166,58 +172,27 @@ class ImageTest extends SapphireTest {
 	}
 
 	/**
-	 * Tests that image manipulations that do not affect the resulting dimensions
-	 * of the output image resample the file when force_resample is set to true.
+	 * Tests that a URL to a resampled image is provided when force_resample is 
+	 * set to true, if the resampled file is smaller than the original.
 	 */
 	public function testForceResample() {
-
-		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
-		$this->assertTrue($image->isSize(300, 300));
-
-		$origForceResample = Config::inst()->get('Image', 'force_resample');
+		$imageHQ = $this->objFromFixture('Image', 'highQualityJPEG');
+		$imageHQR = $imageHQ->Resampled();
+		$imageLQ = $this->objFromFixture('Image', 'lowQualityJPEG');
+		$imageLQR = $imageLQ->Resampled();
+		
+		// Test resampled file is served when force_resample = true
 		Config::inst()->update('Image', 'force_resample', true);
-
-		// Set width to 300 pixels
-		$imageScaleWidth = $image->ScaleWidth(300);
-		$this->assertEquals($imageScaleWidth->getWidth(), 300);
-		$this->assertNotEquals($image->Filename, $imageScaleWidth->Filename);
-
-		// Set height to 300 pixels
-		$imageScaleHeight = $image->ScaleHeight(300);
-		$this->assertEquals($imageScaleHeight->getHeight(), 300);
-		$this->assertNotEquals($image->Filename, $imageScaleHeight->Filename);
-
-		// Crop image to 300 x 300
-		$imageCropped = $image->Fill(300, 300);
-		$this->assertTrue($imageCropped->isSize(300, 300));
-		$this->assertNotEquals($image->Filename, $imageCropped->Filename);
-
-		// Resize (padded) to 300 x 300
-		$imageSized = $image->Pad(300, 300);
-		$this->assertTrue($imageSized->isSize(300, 300));
-		$this->assertNotEquals($image->Filename, $imageSized->Filename);
-
-		// Padded image 300 x 300 (same as above)
-		$imagePadded = $image->Pad(300, 300);
-		$this->assertTrue($imagePadded->isSize(300, 300));
-		$this->assertNotEquals($image->Filename, $imagePadded->Filename);
-
-		// Resized (stretched) to 300 x 300
-		$imageStretched = $image->ResizedImage(300, 300);
-		$this->assertTrue($imageStretched->isSize(300, 300));
-		$this->assertNotEquals($image->Filename, $imageStretched->Filename);
-
-		// Fit (various options)
-		$imageFit = $image->Fit(300, 600);
-		$this->assertTrue($imageFit->isSize(300, 300));
-		$this->assertNotEquals($image->Filename, $imageFit->Filename);
-		$imageFit = $image->Fit(600, 300);
-		$this->assertTrue($imageFit->isSize(300, 300));
-		$this->assertNotEquals($image->Filename, $imageFit->Filename);
-		$imageFit = $image->Fit(300, 300);
-		$this->assertTrue($imageFit->isSize(300, 300));
-		$this->assertNotEquals($image->Filename, $imageFit->Filename);
-		Config::inst()->update('Image', 'force_resample', $origForceResample);
+		$this->assertLessThan($imageHQ->getAbsoluteSize(), $imageHQR->getAbsoluteSize(), 'Resampled image is smaller than original');
+		$this->assertEquals($imageHQ->getURL(), $imageHQR->getSourceURL(), 'Path to a resampled image was returned by getURL()');
+		
+		// Test original file is served when force_resample = true but original file is low quality
+		$this->assertGreaterThanOrEqual($imageLQ->getAbsoluteSize(), $imageLQR->getAbsoluteSize(), 'Resampled image is larger or same size as original');
+		$this->assertNotEquals($imageLQ->getURL(), $imageLQR->getSourceURL(), 'Path to the original image file was returned by getURL()');
+		
+		// Test original file is served when force_resample = false
+		Config::inst()->update('Image', 'force_resample', false);
+		$this->assertNotEquals($imageHQ->getURL(), $imageHQR->getSourceURL(), 'Path to the original image file was returned by getURL()');
 	}
 
 	public function testImageResize() {
@@ -245,7 +220,7 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($fitMaxDn->isSize(100, 100));
 		$fitMaxUp = $image->FitMax(500, 400);
 		$this->assertTrue($fitMaxUp->isSize(300, 300));
-		
+
 		//Test ScaleMax
 		$scaleMaxWDn = $image->ScaleMaxWidth(200);
 		$this->assertTrue($scaleMaxWDn->isSize(200, 200));
@@ -261,7 +236,7 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($cropMaxDn->isSize(200, 100));
 		$cropMaxUp = $image->FillMax(400, 200);
 		$this->assertTrue($cropMaxUp->isSize(300, 150));
-		
+
 		// Test Clip
 		$clipWDn = $image->CropWidth(200);
 		$this->assertTrue($clipWDn->isSize(200, 300));

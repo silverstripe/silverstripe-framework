@@ -8,25 +8,7 @@
  * @subpackage admin
  */
 class CMSForm extends Form {
-
-	/**
-	 * @var array
-	 */
-	protected $validationExemptActions = array();
-
-	/**
-	 * Always return true if the current form action is exempt from validation
-	 *
-	 * @return boolean
-	 */
-	public function validate() {
-		$buttonClicked = $this->buttonClicked();
-		return (
-			($buttonClicked && in_array($buttonClicked->actionName(), $this->getValidationExemptActions()))
-			|| parent::validate()
-		);
-	}
-
+	
 	/**
 	 * Route validation error responses through response negotiator,
 	 * so they return the correct markup as expected by the requesting client.
@@ -47,25 +29,6 @@ class CMSForm extends Form {
 		} else {
 			return parent::getValidationErrorResponse();
 		}
-	}
-
-	/**
-	 * Set actions that are exempt from validation
-	 *
-	 * @param array
-	 */
-	public function setValidationExemptActions($actions) {
-		$this->validationExemptActions = $actions;
-		return $this;
-	}
-
-	/**
-	 * Get a list of actions that are exempt from validation
-	 *
-	 * @return array
-	 */
-	public function getValidationExemptActions() {
-		return $this->validationExemptActions;
 	}
 
 	/**

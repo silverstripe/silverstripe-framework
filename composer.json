@@ -16,11 +16,16 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.3,<7",
+		"php": ">=5.4.0",
 		"composer/installers": "~1.0"
 	},
 	"require-dev": {
 		"phpunit/PHPUnit": "~3.7"
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "4.0.x-dev"
+		}
 	},
 	"autoload": {
 		"classmap": ["tests/behat/features/bootstrap"]

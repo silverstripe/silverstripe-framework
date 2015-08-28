@@ -71,20 +71,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	public function init() {
 		if($this->basicAuthEnabled) BasicAuth::protect_site_if_necessary();
 
-		// Directly access the session variable just in case the Group or Member tables don't yet exist
-		if(Member::config()->log_last_visited) {
-			Deprecation::notice(
-				'4.0',
-				'Member::$LastVisited is deprecated. From 4.0 onwards you should implement this as a custom extension'
-			);
-			if(Session::get('loggedInAs') && Security::database_is_ready() && ($member = Member::currentUser())) {
-				DB::prepared_query(
-					sprintf('UPDATE "Member" SET "LastVisited" = %s WHERE "ID" = ?', DB::get_conn()->now()),
-					array($member->ID)
-				);
-			}
-		}
-
 		// This is used to test that subordinate controllers are actually calling parent::init() - a common bug
 		$this->baseInitCalled = true;
 	}

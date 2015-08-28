@@ -20,7 +20,7 @@ class PermissionRoleCode extends DataObject {
 		"Role" => "PermissionRole",
 	);
 
-	protected function validate() {
+	public function validate() {
 		$result = parent::validate();
 
 		// Check that new code doesn't increase privileges, unless an admin is editing.
@@ -42,7 +42,7 @@ class PermissionRoleCode extends DataObject {
 		return $result;
 	}
 
-	public function canCreate($member = null) {
+	public function canCreate($member = null, $context = array()) {
 		return Permission::check('APPLY_ROLES', 'any', $member);
 	}
 

@@ -131,7 +131,11 @@ class CMSBatchActionHandler extends RequestHandler {
 		$ids = $this->cleanIDs($csvIDs);
 
 		// Filter by applicable pages
-		$applicableIDs = $actionHandler->applicablePages($ids);
+		if($ids) {
+			$applicableIDs = $actionHandler->applicablePages($ids);
+		} else {
+			$applicableIDs = array();
+		}
 
 		$response = new SS_HTTPResponse(json_encode($applicableIDs));
 		$response->addHeader("Content-type", "application/json");

@@ -1115,7 +1115,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @todo Make this abstract.
 	 *
-	 * @param Validator $validator
+	 * @param Validator
 	 *
 	 * @return bool
 	 */

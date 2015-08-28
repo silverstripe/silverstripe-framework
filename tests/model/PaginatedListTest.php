@@ -41,7 +41,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testSetPaginationFromQuery() {
-		$query = $this->getMock('SQLQuery');
+		$query = $this->getMock('SQLSelect');
 		$query->expects($this->once())
 				->method('getLimit')
 				->will($this->returnValue(array('limit' => 15, 'start' => 30)));

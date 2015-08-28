@@ -189,8 +189,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new DataList instance with a WHERE clause added to this list's query.
 	 *
 	 * Supports parameterised queries.
-	 * See SQLQuery::addWhere() for syntax examples, although DataList
-	 * won't expand multiple method arguments as SQLQuery does.
+	 * See SQLSelect::addWhere() for syntax examples, although DataList
+	 * won't expand multiple method arguments as SQLSelect does.
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
@@ -207,8 +207,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * All conditions provided in the filter will be joined with an OR
 	 *
 	 * Supports parameterised queries.
-	 * See SQLQuery::addWhere() for syntax examples, although DataList
-	 * won't expand multiple method arguments as SQLQuery does.
+	 * See SQLSelect::addWhere() for syntax examples, although DataList
+	 * won't expand multiple method arguments as SQLSelect does.
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
@@ -273,7 +273,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * order set.
 	 *
 	 * @see SS_List::sort()
-	 * @see SQLQuery::orderby
+	 * @see SQLSelect::orderby
 	 * @example $list = $list->sort('Name'); // default ASC sorting
 	 * @example $list = $list->sort('Name DESC'); // DESC sorting
 	 * @example $list = $list->sort('Name', 'ASC');
@@ -351,6 +351,10 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @example $list = $list->filter(array('Name'=>'bob, 'Age'=>array(21, 43))); // bob with the Age 21 or 43
 	 * @example $list = $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
 	 *          // aziz with the age 21 or 43 and bob with the Age 21 or 43
+	 *
+	 * Note: When filtering on nullable columns, null checks will be automatically added.
+	 * E.g. ->filter('Field:not', 'value) will generate '... OR "Field" IS NULL', and
+	 * ->filter('Field:not', null) will generate '"Field" IS NOT NULL'
 	 *
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
 	 *
@@ -490,8 +494,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		}
 
 		if (!$this->inAlterDataQueryCall) {
-			Deprecation::notice(
-				'4.0',
+			throw new BadMethodCallException(
 				'getRelationName is mutating, and must be called inside an alterDataQuery block'
 			);
 		}

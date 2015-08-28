@@ -359,7 +359,7 @@ jQuery.noConflict();
 				this.find('.cms-preview').redraw();
 				this.find('.cms-content').redraw();
 			},
-			
+
 			/**
 			 * Confirm whether the current user can navigate away from this page
 			 * 
@@ -513,7 +513,7 @@ jQuery.noConflict();
 
 				return false;
 			},
-			
+
 			/**
 			 * Last html5 history state
 			 */
@@ -1348,7 +1348,7 @@ jQuery.noConflict();
 				form.find(".dropdown select").prop('selectedIndex', 0).trigger("liszt:updated"); // Reset chosen.js
 				form.submit();
 				}
-		})
+		});
 
 		/**
 		 * Allows to lazy load a panel, by leaving it empty
@@ -1457,6 +1457,46 @@ jQuery.noConflict();
 					if(!matches) return;
 					$(this).attr('href', document.location.href.replace(/#.*/, '') + matches[0]);
 				});
+			}
+		});
+
+		/**
+		 * CMS content filters
+		 */
+		$('#filters-button').entwine({
+			onmatch: function () {
+				this._super();
+
+				this.data('collapsed', true); // The current collapsed state of the element.
+				this.data('animating', false); // True if the element is currently animating.
+			},
+			onunmatch: function () {
+				this._super();
+			},
+			showHide: function () {
+				var self = this,
+					$filters = $('.cms-content-filters').first(),
+					collapsed = this.data('collapsed');
+
+				// Prevent the user from spamming the UI with animation requests.
+				if (this.data('animating')) {
+					return;
+				}
+
+				this.toggleClass('active');
+				this.data('animating', true);
+
+				// Slide the element down / up based on it's current collapsed state.
+				$filters[collapsed ? 'slideDown' : 'slideUp']({
+					complete: function () {
+						// Update the element's state.
+						self.data('collapsed', !collapsed);
+						self.data('animating', false);
+					}
+				});
+			},
+			onclick: function () {
+				this.showHide();
 			}
 		});
 	});

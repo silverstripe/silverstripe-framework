@@ -41,7 +41,11 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 		$result = Convert::json2array($response->getBody());
 		$this->assertEquals(1, count($result));
-		$this->assertEquals(array($team2->ID => 'Team 2'), $result);
+		$this->assertEquals(array(array(
+			'label' => 'Team 2',
+			'value' => 'Team 2',
+			'id' => $team2->ID,
+		)), $result);
 
 		$response = $this->post(
 			'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield/'

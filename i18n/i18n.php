@@ -19,8 +19,9 @@ require_once 'i18nSSLegacyAdapter.php';
  *
  * Templates:
  * <code>
- * <% _t('MyNamespace.MYENTITY', 'My default natural language value') %>
- * <% sprintf(_t('MyNamespace.MYENTITY','Counting %s things'),$ThingsCount) %>
+ * <%t MyNamespace.MYENTITY 'My default natural language value' %>
+ * <%t MyNamespace.MYENTITY 'Counting %s things' s=$ThingsCount %>
+ * <%t MyNamespace.MYENTITY 'Counting {count} things' count=$ThingsCount %>
  * </code>
  *
  * Javascript (see framework/javascript/i18n.js):

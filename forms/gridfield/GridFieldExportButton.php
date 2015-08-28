@@ -21,6 +21,11 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	protected $csvSeparator = ",";
 
 	/**
+	 * @var string
+	 */
+	protected $csvEnclosure = '"';
+
+	/**
 	 * @var boolean
 	 */
 	protected $csvHasHeader = true;
@@ -98,11 +103,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 * @return array
 	 */
 	public function generateExportFileData($gridField) {
-		$separator = $this->csvSeparator;
 		$csvColumns = ($this->exportColumns)
 			? $this->exportColumns
 			: singleton($gridField->getModelClass())->summaryFields();
-		$fileData = '';
+		$fileData = array();
 
 		if($this->csvHasHeader) {
 			$headers = array();
@@ -113,13 +117,12 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 				$headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
 			}
 
-			$fileData .= "\"" . implode("\"{$separator}\"", array_values($headers)) . "\"";
-			$fileData .= "\n";
+			$fileData[] = $headers;
 		}
-		
+
 		//Remove GridFieldPaginator as we're going to export the entire list.
 		$gridField->getConfig()->removeComponentsByType('GridFieldPaginator');
-		
+
 		$items = $gridField->getManipulatedList();
 
 		// @todo should GridFieldComponents change behaviour based on whether others are available in the config?
@@ -150,12 +153,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 						}
 					}
 
-					$value = str_replace(array("\r", "\n"), "\n", $value);
-					$columnData[] = '"' . str_replace('"', '""', $value) . '"';
+					$columnData[] = $value;
 				}
 
-				$fileData .= implode($separator, $columnData);
-				$fileData .= "\n";
+				$fileData[] = $columnData;
 			}
 
 			if($item->hasMethod('destroy')) {
@@ -163,7 +164,13 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 			}
 		}
 
-		return $fileData;
+		// Convert the $fileData array into csv by capturing fputcsv's output
+		$csv = fopen('php://temp', 'r+');
+		foreach($fileData as $line) {
+			fputcsv($csv, $line, $this->csvSeparator, $this->csvEnclosure);
+		}
+		rewind($csv);
+		return stream_get_contents($csv);
 	}
 
 	/**
@@ -193,6 +200,21 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 */
 	public function setCsvSeparator($separator) {
 		$this->csvSeparator = $separator;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCsvEnclosure() {
+		return $this->csvEnclosure;
+	}
+
+	/**
+	 * @param string
+	 */
+	public function setCsvEnclosure($enclosure) {
+		$this->csvEnclosure = $enclosure;
 		return $this;
 	}
 

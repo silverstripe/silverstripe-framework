@@ -123,22 +123,8 @@ class DropdownField extends FormField {
 	 * @param string $value The current value
 	 * @param Form $form The parent form
 	 */
-	public function __construct($name, $title=null, $source=array(), $value='', $form=null, $emptyString=null) {
+	public function __construct($name, $title=null, $source=array(), $value='', $form=null) {
 		$this->setSource($source);
-
-		if($emptyString === true) {
-			Deprecation::notice('4.0',
-				'Please use setHasEmptyDefault(true) instead of passing a boolean true $emptyString argument',
-				Deprecation::SCOPE_GLOBAL);
-		}
-		if(is_string($emptyString)) {
-			Deprecation::notice('4.0', 'Please use setEmptyString() instead of passing a string emptyString argument.',
-				Deprecation::SCOPE_GLOBAL);
-		}
-
-		if($emptyString) $this->setHasEmptyDefault(true);
-		if(is_string($emptyString)) $this->setEmptyString($emptyString);
-
 		parent::__construct($name, ($title===null) ? $name : $title, $value, $form);
 	}
 

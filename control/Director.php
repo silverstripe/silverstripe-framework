@@ -16,6 +16,21 @@
  */
 class Director implements TemplateGlobalProvider {
 
+	/**
+	 * Specifies this url is relative to the base
+	 */
+	const BASE = 'BASE';
+
+	/**
+	 * Specifies this url is relative to the site root
+	 */
+	const ROOT = 'ROOT';
+
+	/**
+	 * specifies this url is relative to the current request
+	 */
+	const REQUEST = 'REQUEST';
+
 	static private $urlParams;
 
 	static private $rules = array();
@@ -428,36 +443,56 @@ class Director implements TemplateGlobalProvider {
 
 	/**
 	 * Turns the given URL into an absolute URL.
-	 * By default non-site root relative urls will be evaluated relative to the current request.
+	 * By default non-site root relative urls will be evaluated relative to the current base_url
 	 *
 	 * @param string $url URL To transform to absolute
-	 * @param bool $relativeToSiteBase Flag indicating if non-site root relative urls should be
-	 * evaluated relative to the site BaseURL instead of the current url.
+	 * @param string $relativeParent Method to use for evaluating relative urls.
+	 * Either one of BASE (baseurl), ROOT (site root), or REQUEST (requested page).
+	 * Defaults to BASE, which is the same behaviour as template url resolution.
+	 * Igored if the url is absolute or site root.
 	 * @return string The fully qualified URL
 	 */
-	public static function absoluteURL($url, $relativeToSiteBase = false) {
-		if(!isset($_SERVER['REQUEST_URI'])) return false;
-
-		//a url of . or ./ is the same as an empty url
-		if ($url == '.' || $url == './') {
-			$url = '';
+	public static function absoluteURL($url, $relativeParent = self::BASE) {
+		if(is_bool($relativeParent)) {
+			// Deprecate old boolean second parameter
+			Deprecation::notice('5.0', 'Director::absoluteURL takes an explicit parent for relative url');
+			$relativeParent = $relativeParent ? self::BASE : self::REQUEST;
 		}
-		
-		if(strpos($url,'/') === false && !$relativeToSiteBase) {
-			//if there's no URL we want to force a trailing slash on the link
-			if (!$url) {
-				$url = '/';
+
+		// Check if there is already a protocol given
+		if(preg_match('/^http(s?):\/\//', $url)) {
+			return $url;
+		}
+
+		// Absolute urls without protocol are added
+		// E.g. //google.com -> http://google.com
+		if(strpos($url, '//') === 0) {
+			return self::protocol() . substr($url, 2);
+		}
+
+		// Determine method for mapping the parent to this relative url
+		if($relativeParent === self::ROOT || self::is_root_relative_url($url)) {
+			// Root relative urls always should be evaluated relative to the root
+			$parent = self::protocolAndHost();
+
+		} elseif($relativeParent === self::REQUEST) {
+			// Request relative urls rely on the REQUEST_URI param (old default behaviour)
+			if(!isset($_SERVER['REQUEST_URI'])) {
+				return false;
 			}
-			$url = Controller::join_links(dirname($_SERVER['REQUEST_URI'] . 'x'), $url);
+			$parent = dirname($_SERVER['REQUEST_URI'] . 'x');
+
+		} else {
+			// Default to respecting site base_url
+			$parent = self::absoluteBaseURL();
 		}
 
-		if(substr($url,0,4) != "http") {
-			if(strpos($url, '/') !== 0) $url = Director::baseURL()  . $url;
-			// Sometimes baseURL() can return a full URL instead of just a path
-			if(substr($url,0,4) != "http") $url = self::protocolAndHost() . $url;
+		// Map empty urls to relative slash and join to base
+		if(empty($url) || $url === '.' || $url === './') {
+			$url = '/';
 		}
+		return Controller::join_links($parent, $url);
 
-		return $url;
 	}
 
 	/**
@@ -615,7 +650,7 @@ class Director implements TemplateGlobalProvider {
 		// Allow for the accidental inclusion whitespace and // in the URL
 		$url = trim(preg_replace('#([^:])//#', '\\1/', $url));
 
-			$base1 = self::absoluteBaseURL();
+		$base1 = self::absoluteBaseURL();
 		$baseDomain = substr($base1, strlen(self::protocol()));
 
 		// Only bother comparing the URL to the absolute version if $url looks like a URL.
@@ -667,8 +702,20 @@ class Director implements TemplateGlobalProvider {
 	 * @return bool
 	 */
 	public static function is_absolute($path) {
+		if(empty($path)) return false;
 		if($path[0] == '/' || $path[0] == '\\') return true;
 		return preg_match('/^[a-zA-Z]:[\\\\\/]/', $path) == 1;
+	}
+
+	/**
+	 * Determine if the url is root relative (i.e. starts with /, but not with //)
+	 * SilverStripe considers root relative urls as a subset of relative urls
+	 *
+	 * @param string $url
+	 * @return bool True if this url is root relative
+	 */
+	public static function is_root_relative_url($url) {
+		return strpos($url, '/') === 0 && strpos($url, '//') !== 0;
 	}
 
 	/**
@@ -700,8 +747,8 @@ class Director implements TemplateGlobalProvider {
 			// Base check for existence of a host on a compliant URL
 			parse_url($url, PHP_URL_HOST)
 			// Check for more than one leading slash without a protocol.
-				// While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
-				// and hence a potential security risk. Single leading slashes are not an issue though.
+			// While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
+			// and hence a potential security risk. Single leading slashes are not an issue though.
 			|| preg_match('%^\s*/{2,}%', $url)
 			|| (
 				// If a colon is found, check if it's part of a valid scheme definition
@@ -713,13 +760,13 @@ class Director implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Checks if a given URL is relative by checking {@link is_absolute_url()}.
+	 * Checks if a given URL is relative (or root relative) by checking {@link is_absolute_url()}
 	 *
 	 * @param string $url
 	 * @return boolean
 	 */
 	public static function is_relative_url($url) {
-		return (!Director::is_absolute_url($url));
+		return !static::is_absolute_url($url);
 	}
 
 	/**
@@ -747,7 +794,7 @@ class Director implements TemplateGlobalProvider {
 	/**
 	 * Takes a $_SERVER data array and extracts HTTP request headers.
 	 *
-	 * @param  array $data
+	 * @param  array $server
 	 * @return array
 	 */
 	public static function extract_request_headers(array $server) {
@@ -790,9 +837,14 @@ class Director implements TemplateGlobalProvider {
 
 	/**
 	 * Returns the Absolute URL of the site root.
+	 *
+	 * @return string
 	 */
 	public static function absoluteBaseURL() {
-		return Director::absoluteURL(Director::baseURL());
+		return self::absoluteURL(
+			self::baseURL(),
+			self::ROOT
+		);
 	}
 
 	/**

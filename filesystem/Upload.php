@@ -81,7 +81,7 @@ class Upload extends Controller {
 	 * @config
 	 * @var string
 	 */
-	private static $version_prefix = ''; // a default value will be introduced in SS4.0
+	private static $version_prefix = '-v';
 
 	public function __construct() {
 		parent::__construct();
@@ -168,7 +168,7 @@ class Upload extends Controller {
 			}
 		}
 
-		// if filename already exists, version the filename (e.g. test.gif to test2.gif, test2.gif to test3.gif)
+		// if filename already exists, version the filename (e.g. test.gif to test-v2.gif, test-v2.gif to test-v3.gif)
 		if(!$this->replaceFile) {
 			$fileSuffixArray = explode('.', $fileName);
 			$fileTitle = array_shift($fileSuffixArray);

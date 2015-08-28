@@ -242,7 +242,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * Cleanly end the current test
 	 */
 	protected function endCurrentTest() {
-		if(!$this->currentTest) return;
+		if(!$this->currentTest || !$this->currentSuite) return;
 
 		// Time the current test
 		$testDuration = microtime(true) - $this->startTestTime;

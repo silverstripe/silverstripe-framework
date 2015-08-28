@@ -395,58 +395,6 @@ abstract class Object {
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public static function get_static($class, $name, $uncached = false) {
-		Deprecation::notice('4.0', 'Replaced by Config#get');
-		return Config::inst()->get($class, $name, Config::FIRST_SET);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function set_static($class, $name, $value) {
-		Deprecation::notice('4.0', 'Replaced by Config#update');
-		Config::inst()->update($class, $name, $value);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function uninherited_static($class, $name, $uncached = false) {
-		Deprecation::notice('4.0', 'Replaced by Config#get');
-		return Config::inst()->get($class, $name, Config::UNINHERITED);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function combined_static($class, $name, $ceiling = false) {
-		if ($ceiling) throw new Exception('Ceiling argument to combined_static is no longer supported');
-
-		Deprecation::notice('4.0', 'Replaced by Config#get');
-		return Config::inst()->get($class, $name);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function addStaticVars($class, $properties, $replace = false) {
-		Deprecation::notice('4.0', 'Replaced by Config#update');
-		foreach($properties as $prop => $value) self::add_static_var($class, $prop, $value, $replace);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function add_static_var($class, $name, $value, $replace = false) {
-		Deprecation::notice('4.0', 'Replaced by Config#remove and Config#update');
-
-		if ($replace) Config::inst()->remove($class, $name);
-		Config::inst()->update($class, $name, $value);
-	}
-
-	/**
 	 * Return TRUE if a class has a specified extension.
 	 * This supports backwards-compatible format (static Object::has_extension($requiredExtension))
 	 * and new format ($object->has_extension($class, $requiredExtension))
@@ -1047,6 +995,8 @@ abstract class Object {
 	 * @return mixed the cached data
 	 */
 	public function cacheToFile($method, $lifetime = 3600, $ID = false, $arguments = array()) {
+		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
+
 		if(!$this->hasMethod($method)) {
 			throw new InvalidArgumentException("Object->cacheToFile(): the method $method does not exist to cache");
 		}
@@ -1074,6 +1024,8 @@ abstract class Object {
 	 * Clears the cache for the given cacheToFile call
 	 */
 	public function clearCache($method, $ID = false, $arguments = array()) {
+		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
+
 		$cacheName = $this->class . '_' . $method;
 		if(!is_array($arguments)) $arguments = array($arguments);
 		if($ID) $cacheName .= '_' . $ID;
@@ -1091,6 +1043,8 @@ abstract class Object {
 	 * @return mixed
 	 */
 	protected function loadCache($cache, $lifetime = 3600) {
+		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
+
 		$path = TEMP_FOLDER . '/' . $this->sanitiseCachename($cache);
 
 		if(!isset($_REQUEST['flush']) && file_exists($path) && (filemtime($path) + $lifetime) > time()) {
@@ -1107,6 +1061,7 @@ abstract class Object {
 	 * @param mixed $data data to save (must be serializable)
 	 */
 	protected function saveCache($cache, $data) {
+		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
 		file_put_contents(TEMP_FOLDER . '/' . $this->sanitiseCachename($cache), serialize($data));
 	}
 
@@ -1117,6 +1072,7 @@ abstract class Object {
 	 * @return string the name with all special cahracters replaced with underscores
 	 */
 	protected function sanitiseCachename($name) {
+		Deprecation::notice('4.0', 'Caching methods on Object have been deprecated. Use the SS_Cache API instead.');
 		return str_replace(array('~', '.', '/', '!', ' ', "\n", "\r", "\t", '\\', ':', '"', '\'', ';'), '_', $name);
 	}
 

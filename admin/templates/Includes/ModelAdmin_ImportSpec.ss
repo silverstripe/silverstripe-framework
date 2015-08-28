@@ -10,7 +10,7 @@
 		</dl>
 		<% end_loop %>
 
-		<h5><% _t('ModelAdmin_ImportSpec_ss.IMPORTSPECRELATIONS', 'Relations') %></h5>
+		<h5><%t ModelAdmin_ImportSpec_ss.IMPORTSPECRELATIONS 'Relations' %></h5>
 		<% loop $Relations %>
 		<dl>
 			<dt><em>$Name</em></dt>

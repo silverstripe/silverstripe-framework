@@ -12,7 +12,7 @@ class MySQLDatabase extends SS_Database {
 
 	/**
 	 * Default connection charset (may be overridden in $databaseConfig)
-	 * 
+	 *
 	 * @config
 	 * @var String
 	 */
@@ -47,14 +47,6 @@ class MySQLDatabase extends SS_Database {
 		if (!empty($parameters['database'])) {
 			$this->selectDatabase($parameters['database'], false, false);
 		}
-	}
-
-	/**
-	 * @deprecated 4.0 Use "MySQLDatabase.connection_charset" config setting instead
-	 */
-	public static function set_connection_charset($charset = 'utf8') {
-		Deprecation::notice('4.0', 'Use "MySQLDatabase.connection_charset" config setting instead');
-		Config::inst()->update('MySQLDatabase', 'connection_charset', $charset);
 	}
 
 	/**

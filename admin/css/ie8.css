@@ -35,6 +35,7 @@
 
 .cms-menu-list li a .icon { filter: none; }
 
+/** DEPRECATED: .cms-content-tools will be removed in 4.0 Use .cms-content-filters instead.  Fix for model admin filter styling */
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.file { margin: 0px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.file input.file { margin-left: -132px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.checkbox { padding: 0px; }
@@ -58,6 +59,7 @@ fieldset.switch-states .switch input.state-name { margin-left: -20px; }
 
 .cms-content-toolbar .cms-tree-view-modes .checkboxAboveTree { margin-right: 1px; }
 
+/** DEPRECATED: .cms-content-tools will be removed in 4.0 Use .cms-content-filters instead. */
 .cms .cms-content-tools .cms-panel-content .dropdown select { width: 152px; }
 
 .filter-buttons button { width: 23px !important; height: 23px !important; }
@@ -71,3 +73,5 @@ fieldset.switch-states .switch input.state-name { margin-left: -20px; }
 .tree-holder.filtered-list li > a, .tree-holder.filtered-list li > a:link, .cms-tree.filtered-list li > a, .cms-tree.filtered-list li > a:link { color: #aaa; }
 .tree-holder.filtered-list li.filtered-item > a, .tree-holder.filtered-list li.filtered-item > a:link, .cms-tree.filtered-list li.filtered-item > a, .cms-tree.filtered-list li.filtered-item > a:link { color: #0073C1; }
 .tree-holder.filtered-list li.disabled > a, .tree-holder.filtered-list li.disabled > a:link, .tree-holder.filtered-list li.edit-disabled > a, .tree-holder.filtered-list li.edit-disabled > a:link, .cms-tree.filtered-list li.disabled > a, .cms-tree.filtered-list li.disabled > a:link, .cms-tree.filtered-list li.edit-disabled > a, .cms-tree.filtered-list li.edit-disabled > a:link { color: #aaa; background: transparent none; cursor: default; }
+
+/*# sourceMappingURL=ie8.css.map */

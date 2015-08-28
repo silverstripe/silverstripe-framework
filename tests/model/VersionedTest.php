@@ -31,7 +31,7 @@ class VersionedTest extends SapphireTest {
 			'VersionedTest_WithIndexes_Live' =>
 				array('value' => false, 'message' => 'Unique indexes are no longer unique in _Live table'),
 		);
-	
+
 		// Test each table's performance
 		foreach ($tableExpectations as $tableName => $expectation) {
 			$indexes = DB::get_schema()->indexList($tableName);
@@ -339,7 +339,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	/**
-	 * Test that SQLQuery::queriedTables() applies the version-suffixes properly.
+	 * Test that SQLSelect::queriedTables() applies the version-suffixes properly.
 	 */
 	public function testQueriedTables() {
 		Versioned::reading_stage('Live');

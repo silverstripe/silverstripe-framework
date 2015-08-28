@@ -1067,7 +1067,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @see {@link ValidationResult}
 	 * @return ValidationResult
 	 */
-	protected function validate() {
+	public function validate() {
 		$result = ValidationResult::create();
 		$this->extend('validate', $result);
 		return $result;
@@ -1079,7 +1079,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return ValidationResult
 	 */
 	public function doValidate() {
-		// validate will be public in 4.0
+		Deprecation::notice('5.0', 'Use validate');
 		return $this->validate();
 	}
 
@@ -1634,14 +1634,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public function getComponentsQuery($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
-		Deprecation::notice('4.0', "Use getComponents to get a filtered DataList for an object's relation");
-		return $this->getComponents($componentName, $filter, $sort, $join, $limit);
-	}
-
-	/**
 	 * Find the foreign class of a relation on this DataObject, regardless of the relation type.
 	 *
 	 * @param $relationName Relation name.
@@ -1895,7 +1887,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $component
 	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
 	 *        the field data stripped off. It defaults to TRUE.
-	 * @return string|false
+	 * @return string|null
 	 */
 	public function belongsToComponent($component, $classOnly = true) {
 		$belongsTo = (array)Config::inst()->get($this->class, 'belongs_to', Config::INHERITED);
@@ -1903,7 +1895,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($belongsTo && array_key_exists($component, $belongsTo)) {
 			$belongsTo = $belongsTo[$component];
 		} else {
-			return false;
+			return null;
 		}
 
 		return ($classOnly) ? preg_replace('/(.+)?\..+/', '$1', $belongsTo) : $belongsTo;
@@ -1993,7 +1985,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $component
 	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
 	 *        the field data stripped off. It defaults to TRUE.
-	 * @return string|false
+	 * @return string|null
 	 */
 	public function hasManyComponent($component, $classOnly = true) {
 		$hasMany = (array)Config::inst()->get($this->class, 'has_many', Config::INHERITED);
@@ -2001,7 +1993,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($hasMany && array_key_exists($component, $hasMany)) {
 			$hasMany = $hasMany[$component];
 		} else {
-			return false;
+			return null;
 		}
 
 		return ($classOnly) ? preg_replace('/(.+)?\..+/', '$1', $hasMany) : $hasMany;
@@ -2803,7 +2795,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$groupList = implode(', ', $groups->column("ID"));
 
 					// TODO Fix relation table hardcoding
-					$query = new SQLQuery(
+					$query = new SQLSelect(
 						"\"Page_Can$perm\".PageID",
 					array("\"Page_Can$perm\""),
 						"GroupID IN ($groupList)");
@@ -2812,7 +2804,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 					if($perm == "View") {
 						// TODO Fix relation table hardcoding
-						$query = new SQLQuery("\"SiteTree\".\"ID\"", array(
+						$query = new SQLSelect("\"SiteTree\".\"ID\"", array(
 							"\"SiteTree\"",
 							"LEFT JOIN \"Page_CanView\" ON \"Page_CanView\".\"PageID\" = \"SiteTree\".\"ID\""
 							), "\"Page_CanView\".\"PageID\" IS NULL");
@@ -2854,12 +2846,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * else return $normalValue;
 	 * </code>
 	 *
-	 * @param String $methodName Method on the same object, e.g. {@link canEdit()}
+	 * @param string $methodName Method on the same object, e.g. {@link canEdit()}
 	 * @param Member|int $member
+	 * @param array $context Optional context
 	 * @return boolean|null
 	 */
-	public function extendedCan($methodName, $member) {
-		$results = $this->extend($methodName, $member);
+	public function extendedCan($methodName, $member, $context = array()) {
+		$results = $this->extend($methodName, $member, $context);
 		if($results && is_array($results)) {
 			// Remove NULLs
 			$results = array_filter($results, function($v) {return !is_null($v);});
@@ -2907,13 +2900,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @todo Should canCreate be a static method?
-	 *
 	 * @param Member $member
+	 * @param array $context Additional context-specific data which might
+	 * affect whether (or where) this object could be created.
 	 * @return boolean
 	 */
-	public function canCreate($member = null) {
-		$extended = $this->extendedCan(__FUNCTION__, $member);
+	public function canCreate($member = null, $context = array()) {
+		$extended = $this->extendedCan(__FUNCTION__, $member, $context);
 		if($extended !== null) {
 			return $extended;
 		}
@@ -3093,7 +3086,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $callerClass The class of objects to be returned
 	 * @param string|array $filter A filter to be inserted into the WHERE clause.
-	 * Supports parameterised queries. See SQLQuery::addWhere() for syntax examples.
+	 * Supports parameterised queries. See SQLSelect::addWhere() for syntax examples.
 	 * @param string|array $sort A sort expression to be inserted into the ORDER
 	 * BY clause.  If omitted, self::$default_sort will be used.
 	 * @param string $join Deprecated 3.0 Join clause. Use leftJoin($table, $joinClause) instead.
@@ -3144,42 +3137,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 
 	/**
-	 * @deprecated
-	 */
-	public function Aggregate($class = null) {
-		Deprecation::notice('4.0', 'Call aggregate methods on a DataList directly instead. In templates'
-			. ' an example of the new syntax is &lt% cached List(Member).max(LastEdited) %&gt instead'
-			. ' (check partial-caching.md documentation for more details.)');
-
-		if($class) {
-			$list = new DataList($class);
-			$list->setDataModel(DataModel::inst());
-		} else if(isset($this)) {
-			$list = new DataList(get_class($this));
-			$list->setDataModel($this->model);
-		} else {
-			throw new \InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed"
-				. " a classname");
-		}
-		return $list;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function RelationshipAggregate($relationship) {
-		Deprecation::notice('4.0', 'Call aggregate methods on a relationship directly instead.');
-
-		return $this->$relationship();
-	}
-
-	/**
 	 * Return the first item matching the given query.
 	 * All calls to get_one() are cached.
 	 *
 	 * @param string $callerClass The class of objects to be returned
 	 * @param string|array $filter A filter to be inserted into the WHERE clause.
-	 * Supports parameterised queries. See SQLQuery::addWhere() for syntax examples.
+	 * Supports parameterised queries. See SQLSelect::addWhere() for syntax examples.
 	 * @param boolean $cache Use caching
 	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
 	 *
@@ -3221,8 +3184,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject $this
 	 */
 	public function flushCache($persistent = true) {
-		if($persistent) Aggregate::flushCache($this->class);
-
 		if($this->class == 'DataObject') {
 			DataObject::$_cache_get_one = array();
 			return $this;
@@ -3977,11 +3938,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @config
 	 */
 	private static $summary_fields = null;
-
-	/**
-	 * Provides a list of allowed methods that can be called via RESTful api.
-	 */
-	public static $allowed_actions = null;
 
 	/**
 	 * Collect all static properties on the object
