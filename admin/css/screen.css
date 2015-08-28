@@ -1055,10 +1055,10 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-logo a { position: absolute; top: 8px; bottom: 8px; display: block; width: 24px; background: url("../images/logo_small.png") no-repeat left center; text-indent: -9999em; padding: 0 1px; left: 0; }
 .cms-logo span { font-weight: bold; font-size: 12px; line-height: 16px; padding: 6px 0; margin-left: 30px; }
 
-.cms-login-status { border-top: 1px solid #19435c; padding: 12px 0; line-height: 16px; font-size: 11px; min-height: 28px; }
-.cms-login-status .logout-link { display: inline-block; height: 28px; width: 16px; float: left; margin: 0 8px 0 5px; background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -772px no-repeat; background-position: 0 -766px; text-indent: -9999em; opacity: 0.9; }
+.cms-login-status { border-top: 1px solid #19435c; padding: 12px 0; line-height: 16px; font-size: 11px; }
+.cms-login-status .logout-link { display: inline-block; width: 16px; float: left; margin: 6px 8px 6px 5px; background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -772px no-repeat; text-indent: -9999em; opacity: 0.9; }
 .cms-login-status .logout-link:hover, .cms-login-status .logout-link:focus { opacity: 1; }
-.cms-login-status span { padding-top: 6px; }
+.cms-login-status span { padding: 6px 0 6px 26px; }
 
 .cms-menu { z-index: 80; background: #b0bec7; width: 160px; -moz-box-shadow: rgba(0, 0, 0, 0.9) 0 0 3px; -webkit-box-shadow: rgba(0, 0, 0, 0.9) 0 0 3px; box-shadow: rgba(0, 0, 0, 0.9) 0 0 3px; }
 .cms-menu a { text-decoration: none; }
