@@ -895,7 +895,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param array $ids Array of integers
 	 * @return DataList
 	 */
-	public function byIDs(array $ids) {
+	public function byIDs($ids) {
 		return $this->filter('ID', $ids);
 	}
 
