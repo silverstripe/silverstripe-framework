@@ -242,14 +242,6 @@ body.cms {
 		margin-top: 1px;
 	}
 
-	.font-icon-search {
-		margin-top: 1px;
-
-		&::before {
-			font-size: 1.3em;
-		}
-	}
-
 	.cms-content-tools {
 		.cms-panel-content {
 			padding-top: 0;
@@ -319,60 +311,63 @@ body.cms {
  * Icon buttons styles should always take presedence over Tab styles.
  * Tabs should be refactored to use weaker selectors.
  * ----------------------------------------------------------------- */
-a.icon-button,
-button.ss-ui-button.icon-button {
-	vertical-align: middle;
-	margin-right: 2px;
-	padding: .4em;
-	font-size: 1.2em;
-	letter-spacing: -3px;
-	text-indent: 0;
-	text-shadow: none;
-	line-height: 1em;
-	color: $color-text;
-	background-color: transparent;
-	background-image: none;
-	border: 0;
-
-	&:hover,
-	&:active,
-	&:focus {
-		border: 0;
-		box-shadow: none;
-		background-image: none;
-		text-decoration: none;
-	}
-
-	&:hover {
-		background-color: #d4dbe1;
-	}
-
-	&.active,
-	&:active {
-		background-color: #d4dbe1;
-		box-shadow: inset 0 0 3px rgba(191, 194, 196, .9);
-	}
-
-	.ui-button-text {
-		display: none;
-	}
-
-	// Context specific overrides for Tabs.
-	.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active &.cms-panel-link, 
-	.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default &.cms-panel-link {
-		padding: 6px 8px;
+.cms {
+	a.icon-button,
+	button.ss-ui-button.icon-button {
+		vertical-align: middle;
+		margin: 0 2px 0 0;
+		padding: 5px;
+		padding-right: 8px;
+		font-size: 14px;
+		letter-spacing: -3px;
+		text-indent: 0;
+		text-shadow: none;
 		line-height: 1em;
+		color: $color-text;
 		background-color: transparent;
 		background-image: none;
 		border: 0;
 
-		&:before {
-			margin-top: 2px;
+		&:hover,
+		&:active,
+		&:focus {
+			border: 0;
+			box-shadow: none;
+			background-image: none;
+			text-decoration: none;
+		}
+
+		&:hover {
+			background-color: #d4dbe1;
+		}
+
+		&.active,
+		&:active {
+			background-color: #d4dbe1;
+			box-shadow: inset 0 0 3px rgba(191, 194, 196, .9);
+		}
+
+		.ui-button-text {
+			display: none;
+		}
+
+		.ModelAdmin & {
+			margin-top: -11px;
 		}
 	}
+}
 
-	.ModelAdmin & {
-		margin-top: -11px;
+// Context specific overrides for Tabs.
+.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link, 
+.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link {
+	padding: 6px 8px;
+	line-height: 1em;
+	background-color: transparent;
+	background-image: none;
+	border: 0;
+
+	&:before {
+		vertical-align: middle;
 	}
 }
 
@@ -399,7 +394,6 @@ button.ss-ui-button.icon-button {
 
 		&:hover {
 			background: $tab-panel-texture-color;
-			padding-bottom: 5px;
 		}
 
 		&.active:hover {
@@ -429,14 +423,14 @@ button.ss-ui-button.icon-button {
 			+ .cms-tabset-icon.ui-state-default {
 				border-left: 1px solid #CDCCD0;
 			}
-		}
 
-		&:hover {
-			background: $tab-panel-texture-color;
-		}
+			&:hover {
+				background: $tab-panel-texture-color;
+			}
 
-		&.active:hover {
-			background: #d4dbe1;
+			&.ui-state-active:hover {
+				background: #d4dbe1;
+			}
 		}
 
 		.cms-tabset-icon.ui-state-active {
@@ -444,6 +438,7 @@ button.ss-ui-button.icon-button {
 			box-shadow: inset 0 0 3px rgba(191, 194, 196, .9);
 		}
 	}
+	
 	.cms-content-header-tabs & {
 		overflow: hidden;
 	}
@@ -640,12 +635,6 @@ button.ss-ui-button.icon-button {
 
 	.icon-button-group {
 		margin-right: 16px;
-	}
-
-	.font-icon-search {
-		&::before {
-			font-size: 1.3em;
-		}
 	}
 }
 
@@ -974,35 +963,6 @@ button.ss-ui-button.icon-button {
 			display: inline-block;
 			label {
 				color:$color-text-blue-link;
-			}
-		}
-	}
-
-	.ss-ui-button {
-		margin-bottom: $grid-y*1.5;
-	}
-
-	.cms-actions-buttons-row {
-		clear: both;
-
-		.ss-ui-button,
-		.ss-ui-button:hover,
-		.ss-ui-button:active,
-		.ss-ui-button:focus {
-			color: $color-text;
-			border: 0;
-			background: none;
-			box-shadow: none;
-			text-shadow: none;
-			text-decoration: none;
-			font-weight: normal;
-		}
-
-		.ss-ui-button {
-			&.active,
-			&:active,
-			&:hover {
-				background-color: #dee3e8;
 			}
 		}
 	}

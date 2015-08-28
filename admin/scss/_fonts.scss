@@ -1,43 +1,147 @@
+@charset "UTF-8";
+
 @font-face {
-	font-family: 'fontello';
-	src: url('../font/fontello.eot?77203683');
-	src: url('../font/fontello.eot?77203683#iefix') format('embedded-opentype'),
-		url('../font/fontello.woff?77203683') format('woff'),
-		url('../font/fontello.ttf?77203683') format('truetype'),
-		url('../font/fontello.svg?77203683#fontello') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
- 
-[class^="font-icon-"],
-[class*=" font-icon-"] {
-	&:before {
-		color: #66727d;
-		display: inline-block;
-		content: '';
-		width: 1em;
-		margin-top: 2px;
-		margin-right: .2em;
-		text-align: center;
-		text-decoration: inherit;
-		text-transform: none;
-		font-family: "fontello";
-		font-style: normal;
-		font-weight: normal;
-		font-variant: normal;
-		speak: none;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-	}
+  font-family: "silverstripe";
+  src:url("../font/silverstripe.eot");
+  src:url("../font/silverstripe.eot?#iefix") format("embedded-opentype"),
+    url("../font/silverstripe.woff") format("woff"),
+    url("../font/silverstripe.ttf") format("truetype"),
+    url("../font/silverstripe.svg#silverstripe") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
 }
 
-.font-icon-search:before { content: '\e800'; }
-.font-icon-tree:before { content: '\e801'; }
-.font-icon-list2:before { content: '\e802'; }
-.font-icon-cog:before { content: '\e803'; }
-.font-icon-check:before { content: '\e804'; }
-.font-icon-plus-solid:before { content: '\e805'; }
-.font-icon-list:before { content: '\e806'; }
-.font-icon-plus:before { content: '\e807'; }
-.font-icon-search2:before { content: '\e808'; }
-.font-icon-pencil:before { content: '\e80b'; }
+[class^="font-icon-"]:before,
+[class*="font-icon-"]:before {
+  font-family: "silverstripe" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-icon-search:before {
+  content: "s";
+}
+.font-icon-upload:before {
+  content: "b";
+}
+.font-icon-sync:before {
+  content: "c";
+}
+.font-icon-print:before {
+  content: "d";
+}
+.font-icon-list:before {
+  content: "e";
+}
+.font-icon-plus-circled:before {
+  content: "f";
+}
+.font-icon-check-mark-2:before {
+  content: "k";
+}
+.font-icon-pencil:before {
+  content: "m";
+}
+.font-icon-book:before {
+  content: "n";
+}
+.font-icon-book-open:before {
+  content: "o";
+}
+.font-icon-plus:before {
+  content: "j";
+}
+.font-icon-icon-tree:before {
+  content: "p";
+}
+.font-icon-flow-tree:before {
+  content: "q";
+}
+.font-icon-info-circled:before {
+  content: "y";
+}
+.font-icon-chart-line:before {
+  content: "B";
+}
+.font-icon-graph-bar:before {
+  content: "E";
+}
+.font-icon-torsos-all:before {
+  content: "F";
+}
+.font-icon-torso:before {
+  content: "H";
+}
+.font-icon-picture:before {
+  content: "v";
+}
+.font-icon-chart-pie:before {
+  content: "A";
+}
+.font-icon-sitemap:before {
+  content: "C";
+}
+.font-icon-globe:before {
+  content: "P";
+}
+.font-icon-globe-1:before {
+  content: "R";
+}
+.font-icon-chat:before {
+  content: "t";
+}
+.font-icon-comment:before {
+  content: "w";
+}
+.font-icon-logout:before {
+  content: "z";
+}
+.font-icon-cancel:before {
+  content: "D";
+}
+.font-icon-cancel-circled:before {
+  content: "Q";
+}
+.font-icon-trash-bin:before {
+  content: "S";
+}
+.font-icon-left-open:before {
+  content: "T";
+}
+.font-icon-right-open:before {
+  content: "U";
+}
+.font-icon-check-mark:before {
+  content: "G";
+}
+.font-icon-check-mark-circle:before {
+  content: "I";
+}
+.font-icon-level-up:before {
+  content: "V";
+}
+.font-icon-back-in-time:before {
+  content: "X";
+}
+.font-icon-cog:before {
+  content: "Y";
+}
+.font-icon-rocket:before {
+  content: "Z";
+}
+.font-icon-install:before {
+  content: "a";
+}
+.font-icon-down-circled:before {
+  content: "i";
+}
+.font-icon-eye:before {
+  content: "l";
+}
