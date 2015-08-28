@@ -274,10 +274,7 @@
 			},
 			
 			/**
-			* Detect and use localStorage if available.
-			* In IE11 windows 8.1 call to window.localStorage was throwing out an access denied error in some cases 
-			* which was causing the preview window not to display correctly in the CMS admin area. 
-			* -------------------------------------------------------------------
+			* Detect and use localStorage if available. In IE11 windows 8.1 call to window.localStorage was throwing out an access denied error in some cases which was causing the preview window not to display correctly in the CMS admin area.
 			*/
 			_supportsLocalStorage: function() {
 				var uid = new Date;
