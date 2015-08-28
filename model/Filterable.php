@@ -34,6 +34,30 @@ interface SS_Filterable extends SS_List {
 	public function filter();
 
 	/**
+	 * Return a copy of this list which contains items matching any of these charactaristics.
+	 *
+	 * @example // only bob in the list
+	 *          $list = $list->filterAny('Name', 'bob');
+	 *          // SQL: WHERE "Name" = 'bob'
+	 * @example // azis or bob in the list
+	 *          $list = $list->filterAny('Name', array('aziz', 'bob');
+	 *          // SQL: WHERE ("Name" IN ('aziz','bob'))
+	 * @example // bob or anyone aged 21 in the list
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>21));
+	 *          // SQL: WHERE ("Name" = 'bob' OR "Age" = '21')
+	 * @example // bob or anyone aged 21 or 43 in the list
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>array(21, 43)));
+	 *          // SQL: WHERE ("Name" = 'bob' OR ("Age" IN ('21', '43'))
+	 * @example // all bobs, phils or anyone aged 21 or 43 in the list
+	 *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+	 *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
+	 *
+	 * @param string|array See {@link filter()}
+	 * @return DataList
+	 */
+	public function filterAny();
+
+	/**
 	 * Return a new instance of this list that excludes any items with these charactaristics
 	 *
 	 * @return SS_Filterable
@@ -55,4 +79,20 @@ interface SS_Filterable extends SS_List {
 	 * @return SS_Filterable
 	 */
 	public function filterByCallback($callback);
+
+	/**
+	 * Return the first item with the given ID
+	 *
+	 * @param int $id
+	 * @return mixed
+	 */
+	public function byID($id);
+
+	/**
+	 * Filter this list to only contain the given Primary IDs
+	 *
+	 * @param array $ids Array of integers
+	 * @return SS_List
+	 */
+	public function byIDs($ids);
 }
