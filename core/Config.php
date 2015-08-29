@@ -796,6 +796,13 @@ class Config_LRU {
 			$this->indexing = array();
 		}
 	}
+
+	/**
+	 * Return the numbers of items in the index
+	 */
+	public function getIndexCount() {
+		return count($this->indexing);
+	}
 }
 
 /**
