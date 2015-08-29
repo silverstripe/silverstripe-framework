@@ -365,10 +365,11 @@ class RestfulServiceTest_Controller extends Controller implements TestOnly {
 	<body>$body</body>
 </test>
 XML;
-		$this->response->setBody($out);
-		$this->response->addHeader('Content-type', 'text/xml');
+		$response = $this->getResponse();
+		$response->setBody($out);
+		$response->addHeader('Content-type', 'text/xml');
 
-		return $this->response;
+		return $response;
 	}
 
 	public function invalid() {
@@ -390,11 +391,11 @@ XML;
 </test>
 XML;
 
-		$this->response->setBody($out);
-		$this->response->setStatusCode(400);
-		$this->response->addHeader('Content-type', 'text/xml');
+		$this->getResponse()->setBody($out);
+		$this->getResponse()->setStatusCode(400);
+		$this->getResponse()->addHeader('Content-type', 'text/xml');
 
-		return $this->response;
+		return $this->getResponse();
 	}
 
 	/**

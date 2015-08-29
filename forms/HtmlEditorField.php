@@ -27,7 +27,7 @@ class HtmlEditorField extends TextareaField {
 	private static $sanitise_server_side = false;
 
 	protected $rows = 30;
-	
+
 	/**
 	 * @deprecated since version 4.0
 	 */
@@ -47,7 +47,7 @@ class HtmlEditorField extends TextareaField {
 	 * @param string $title The human-readable field label.
 	 * @param mixed $value The value of the field.
 	 * @param string $config HTMLEditorConfig identifier to be used. Default to the active one.
-	 */	
+	 */
 	public function __construct($name, $title = null, $value = '', $config = null) {
 		parent::__construct($name, $title, $value);
 
@@ -101,7 +101,7 @@ class HtmlEditorField extends TextareaField {
 			// Add default empty title & alt attributes.
 			if(!$img->getAttribute('alt')) $img->setAttribute('alt', '');
 			if(!$img->getAttribute('title')) $img->setAttribute('title', '');
-		
+
 			// Use this extension point to manipulate images inserted using TinyMCE, e.g. add a CSS class, change default title
 			// $image is the image, $img is the DOM model
 			$this->extend('processImage', $image, $img);
@@ -897,16 +897,17 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 		$this->oembed = Oembed::get_oembed_from_url($url);
 		if(!$this->oembed) {
 			$controller = Controller::curr();
-			$controller->response->addHeader('X-Status',
+			$response = $controller->getResponse();
+			$response->addHeader('X-Status',
 				rawurlencode(_t(
 					'HtmlEditorField.URLNOTANOEMBEDRESOURCE',
 					"The URL '{url}' could not be turned into a media resource.",
 					"The given URL is not a valid Oembed resource; the embed element couldn't be created.",
 					array('url' => $url)
 				)));
-			$controller->response->setStatusCode(404);
+			$response->setStatusCode(404);
 
-			throw new SS_HTTPResponse_Exception($controller->response);
+			throw new SS_HTTPResponse_Exception($response);
 		}
 	}
 

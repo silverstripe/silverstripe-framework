@@ -17,8 +17,8 @@ class FakeController extends Controller {
 			'/'
 		);
 		$this->setRequest($request);
-		
-		$this->response = new SS_HTTPResponse();
+
+		$this->setResponse(new SS_HTTPResponse());
 
 		$this->init();
 	}

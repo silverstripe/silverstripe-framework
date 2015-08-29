@@ -107,8 +107,9 @@ class CMSSecurity extends Security {
 			'Message displayed to user if their session cannot be restored',
 			array('link' => $loginURLATT)
 		);
-		$this->response->setStatusCode(200);
-		$this->response->setBody(<<<PHP
+		$response = $this->getResponse();
+		$response->setStatusCode(200);
+		$response->setBody(<<<PHP
 <!DOCTYPE html>
 <html><body>
 $message
@@ -118,7 +119,8 @@ setTimeout(function(){top.location.href = "$loginURLJS";}, 0);
 </body></html>
 PHP
 		);
-		return $this->response;
+		$this->setResponse($response);
+		return $response;
 	}
 
 	protected function preLogin() {
@@ -126,7 +128,7 @@ PHP
 		if(!$this->getTargetMember()) {
 			return $this->redirectToExternalLogin();
 		}
-		
+
 		return parent::preLogin();
 	}
 
@@ -150,7 +152,7 @@ PHP
 	public static function enabled() {
 		// Disable shortcut
 		if(!static::config()->reauth_enabled) return false;
-		
+
 		// Count all cms-supported methods
 		$authenticators = Authenticator::get_authenticators();
 		foreach($authenticators as $authenticator) {
@@ -205,7 +207,7 @@ PHP
 				array('link' => $backURL)
 			)
 		));
-		
+
 		return $controller->renderWith($this->getTemplatesFor('success'));
 	}
 }

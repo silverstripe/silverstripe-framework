@@ -133,7 +133,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
 		$this->setRequest($request);
-		$this->response = new SS_HTTPResponse();
 		$this->setDataModel($model);
 
 		$this->extend('onBeforeInit');
@@ -148,10 +147,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 		$this->extend('onAfterInit');
 
+		$response = $this->getResponse();
 		// If we had a redirection or something, halt processing.
-		if($this->response->isFinished()) {
+		if($response->isFinished()) {
 			$this->popCurrent();
-			return $this->response;
+			return $response;
 		}
 
 		$body = parent::handleRequest($request, $model);
@@ -160,7 +160,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 				Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller;"
 					. "returning it without modification.");
 			}
-			$this->response = $body;
+			$response = $body;
+			$this->setResponse($response);
 
 		} else {
 			if($body instanceof Object && $body->hasMethod('getViewer')) {
@@ -171,15 +172,15 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 				$body = $body->getViewer($this->getAction())->process($body);
 			}
 
-			$this->response->setBody($body);
+			$response->setBody($body);
 		}
 
 
-		ContentNegotiator::process($this->response);
-		HTTP::add_cache_headers($this->response);
+		ContentNegotiator::process($response);
+		HTTP::add_cache_headers($response);
 
 		$this->popCurrent();
-		return $this->response;
+		return $response;
 	}
 
 	/**
@@ -226,7 +227,21 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Can be used to set the status code and headers
 	 */
 	public function getResponse() {
+		if (!$this->response) {
+			$this->setResponse(new SS_HTTPResponse());
+		}
 		return $this->response;
+	}
+
+	/**
+	 * Sets the SS_HTTPResponse object that this controller is building up.
+	 *
+	 * @param SS_HTTPResponse $response
+	 * @return Controller
+	 */
+	public function setResponse(SS_HTTPResponse $response) {
+		$this->response = $response;
+		return $this;
 	}
 
 	protected $baseInitCalled = false;
@@ -468,10 +483,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * @return SS_HTTPResponse
 	 */
 	public function redirect($url, $code=302) {
-		if(!$this->response) $this->response = new SS_HTTPResponse();
 
-		if($this->response->getHeader('Location') && $this->response->getHeader('Location') != $url) {
-			user_error("Already directed to " . $this->response->getHeader('Location')
+		if($this->getResponse()->getHeader('Location') && $this->getResponse()->getHeader('Location') != $url) {
+			user_error("Already directed to " . $this->getResponse()->getHeader('Location')
 				. "; now trying to direct to $url", E_USER_WARNING);
 			return;
 		}
@@ -481,7 +495,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$url = Director::baseURL() . $url;
 		}
 
-		return $this->response->redirect($url, $code);
+		return $this->getResponse()->redirect($url, $code);
 	}
 
 	/**
@@ -529,7 +543,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * return null;
 	 */
 	public function redirectedTo() {
-		return $this->response && $this->response->getHeader('Location');
+		return $this->getResponse() && $this->getResponse()->getHeader('Location');
 	}
 
 	/**
