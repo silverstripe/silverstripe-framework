@@ -7,6 +7,7 @@ use Injector;
 use Member;
 use Versioned;
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Filesystem\Storage\DBFile;
 
 /**
  * This class provides the necessary business logic to ensure that any assets attached
@@ -210,10 +211,9 @@ class AssetControlExtension extends \DataExtension
 		// Search for dbfile instances
 		$files = array();
 		foreach ($record->db() as $field => $db) {
-			// Extract assets from this database field
-			list($dbClass) = explode('(', $db);
-			if (!is_a($dbClass, 'DBFile', true)) {
-				continue;
+			$fieldObj = $record->$field;
+			if(!is_object($fieldObj) || !($record->$field instanceof DBFile)) {
+							continue;
 			}
 
 			// Omit variant and merge with set

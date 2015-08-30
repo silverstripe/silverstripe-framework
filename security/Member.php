@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBDatetime;
+
 /**
  * The member class which represents the users of the system
  *
@@ -489,7 +492,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$generator = new RandomGenerator();
 		$this->TempIDHash = $generator->randomToken('sha1');
 		$this->TempIDExpired = self::config()->temp_id_lifetime
-			? date('Y-m-d H:i:s', strtotime(SS_Datetime::now()->getValue()) + self::config()->temp_id_lifetime)
+			? date('Y-m-d H:i:s', strtotime(DBDatetime::now()->getValue()) + self::config()->temp_id_lifetime)
 			: null;
 		$this->write();
 	}
@@ -706,7 +709,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		// Exclude expired
 		if(static::config()->temp_id_lifetime) {
-			$members = $members->filter('TempIDExpired:GreaterThan', SS_Datetime::now()->getValue());
+			$members = $members->filter('TempIDExpired:GreaterThan', DBDatetime::now()->getValue());
 		}
 
 		return $members->first();

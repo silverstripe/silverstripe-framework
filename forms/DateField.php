@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBDate;
+
 require_once 'Zend/Date.php';
 
 /**
@@ -481,7 +484,7 @@ class DateField_Disabled extends DateField {
 				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
 					. ' ('._t('DateField.TODAY','today').')');
 			} else {
-				$df = new Date($this->name);
+				$df = new DBDate($this->name);
 				$df->setValue($this->dataValue());
 				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
 					. ', ' . $df->Ago());

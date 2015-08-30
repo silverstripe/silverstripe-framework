@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * Displays a {@link SS_List} in a grid format.
  *

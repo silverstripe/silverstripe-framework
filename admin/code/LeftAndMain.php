@@ -6,6 +6,7 @@
  */
 
 use SilverStripe\Forms\Schema\FormSchema;
+use SilverStripe\Model\FieldType\DBField;
 
 /**
  * LeftAndMain is the parent class of all the two-pane views in the CMS.
@@ -1824,7 +1825,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return String
 	 */
 	public function Locale() {
-		return DBField::create_field('DBLocale', i18n::get_locale());
+		return DBField::create_field('Locale', i18n::get_locale());
 	}
 
 	public function providePermissions() {

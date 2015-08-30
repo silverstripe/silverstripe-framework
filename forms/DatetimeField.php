@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * A composite field for date and time entry,
  * based on {@link DateField} and {@link TimeField}.

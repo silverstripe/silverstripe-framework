@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * RSSFeed class
  *
@@ -320,9 +323,7 @@ class RSSFeed_Entry extends ViewableData {
 				$obj->setValue($value);
 				return $obj;
 			} else {
-				$obj = new $defaultClass($fieldName);
-				$obj->setValue($this->failover->XML_val($fieldName));
-				return $obj;
+				return DBField::create_field($defaultClass, $this->failover->XML_val($fieldName), $fieldName);
 			}
 		}
 	}

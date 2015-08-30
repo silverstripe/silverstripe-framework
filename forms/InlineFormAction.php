@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * Render a button that will submit the form its contained in through ajax.
  * If you want to add custom behaviour, please set {@link includeDefaultJS()} to FALSE

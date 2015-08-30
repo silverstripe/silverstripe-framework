@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\FieldType\DBMoney;
+
 /**
  * @package framework
  * @subpackage tests
@@ -40,7 +42,7 @@ class ManyManyListTest extends SapphireTest {
 		$obj = new ManyManyListTest_ExtraFields();
 		$obj->write();
 
-		$money = new Money();
+		$money = new DBMoney();
 		$money->setAmount(100);
 		$money->setCurrency('USD');
 
@@ -53,7 +55,7 @@ class ManyManyListTest extends SapphireTest {
 		$check = $obj->Clients()->First();
 
 		$this->assertEquals('Foo', $check->Reference, 'Basic scalar fields should exist');
-		$this->assertInstanceOf('Money', $check->Worth, 'Composite fields should exist on the record');
+		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBMoney', $check->Worth, 'Composite fields should exist on the record');
 		$this->assertEquals(100, $check->Worth->getAmount());
 	}
 

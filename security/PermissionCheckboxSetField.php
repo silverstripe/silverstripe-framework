@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * Shows a categorized list of available permissions (through {@link Permission::get_codes()}).
  * Permissions which are assigned to a given {@link Group} record

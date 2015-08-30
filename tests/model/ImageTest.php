@@ -46,7 +46,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testGetTagWithTitle() {
-		Config::inst()->update('DBFile', 'force_resample', false);
+		Config::inst()->update('SilverStripe\Filesystem\Storage\DBFile', 'force_resample', false);
 
 		$image = $this->objFromFixture('Image', 'imageWithTitle');
 		$expected = '<img src="/assets/ImageTest/folder/444065542b/test-image.png" alt="This is a image Title" />';
@@ -56,7 +56,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testGetTagWithoutTitle() {
-		Config::inst()->update('DBFile', 'force_resample', false);
+		Config::inst()->update('SilverStripe\Filesystem\Storage\DBFile', 'force_resample', false);
 
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$expected = '<img src="/assets/ImageTest/folder/444065542b/test-image.png" alt="test image" />';
@@ -66,7 +66,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testGetTagWithoutTitleContainingDots() {
-		Config::inst()->update('DBFile', 'force_resample', false);
+		Config::inst()->update('SilverStripe\Filesystem\Storage\DBFile', 'force_resample', false);
 
 		$image = $this->objFromFixture('Image', 'imageWithoutTitleContainingDots');
 		$expected = '<img src="/assets/ImageTest/folder/46affab704/test.image.with.dots.png" alt="test.image.with.dots" />';
@@ -156,7 +156,7 @@ class ImageTest extends SapphireTest {
 		$imageLQR = $imageLQ->Resampled();
 
 		// Test resampled file is served when force_resample = true
-		Config::inst()->update('DBFile', 'force_resample', true);
+		Config::inst()->update('SilverStripe\Filesystem\Storage\DBFile', 'force_resample', true);
 		$this->assertLessThan($imageHQ->getAbsoluteSize(), $imageHQR->getAbsoluteSize(), 'Resampled image is smaller than original');
 		$this->assertEquals($imageHQ->getURL(), $imageHQR->getSourceURL(), 'Path to a resampled image was returned by getURL()');
 
@@ -165,7 +165,7 @@ class ImageTest extends SapphireTest {
 		$this->assertNotEquals($imageLQ->getURL(), $imageLQR->getSourceURL(), 'Path to the original image file was returned by getURL()');
 
 		// Test original file is served when force_resample = false
-		Config::inst()->update('DBFile', 'force_resample', false);
+		Config::inst()->update('SilverStripe\Filesystem\Storage\DBFile', 'force_resample', false);
 		$this->assertNotEquals($imageHQ->getURL(), $imageHQR->getSourceURL(), 'Path to the original image file was returned by getURL()');
 	}
 

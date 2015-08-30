@@ -1,4 +1,12 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBPolymorphicForeignKey;
+use SilverStripe\Model\FieldType\DBField;
+use SilverStripe\Model\FieldType\DBDatetime;
+use SilverStripe\Model\FieldType\DBPrimaryKey;
+use SilverStripe\Model\FieldType\DBComposite;
+use SilverStripe\Model\FieldType\DBClassName;
+
 /**
  * A single database record & abstract class for the data-access-model.
  *
@@ -278,7 +286,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$db = Config::inst()->get($class, 'db', Config::UNINHERITED) ?: array();
 		foreach($db as $fieldName => $fieldSpec) {
 			$fieldClass = strtok($fieldSpec, '(');
-			if(is_subclass_of($fieldClass, 'CompositeDBField')) {
+			if(singleton($fieldClass) instanceof DBComposite) {
 				$compositeFields[$fieldName] = $fieldSpec;
 			} else {
 				$dbFields[$fieldName] = $fieldSpec;
@@ -312,7 +320,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Get all database columns explicitly defined on a class in {@link DataObject::$db}
-	 * and {@link DataObject::$has_one}. Resolves instances of {@link CompositeDBField}
+	 * and {@link DataObject::$has_one}. Resolves instances of {@link DBComposite}
 	 * into the actual database fields, rather than the name of the field which
 	 * might not equate a database column.
 	 *
@@ -321,7 +329,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * Can be called directly on an object. E.g. Member::custom_database_fields()
 	 *
-	 * @uses CompositeDBField->compositeDatabaseFields()
+	 * @uses DBComposite->compositeDatabaseFields()
 	 *
 	 * @param string $class Class name to query from
 	 * @return array Map of fieldname to specification, similiar to {@link DataObject::$db}.
@@ -1348,7 +1356,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @throws ValidationException Exception that can be caught and handled by the calling function
 	 */
 	public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false) {
-		$now = SS_Datetime::now()->Rfc2822();
+		$now = DBDatetime::now()->Rfc2822();
 
 		// Execute pre-write tasks
 		$this->preWrite();
@@ -2421,7 +2429,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Update the changed array with references to changed obj-fields
 		foreach($this->record as $k => $v) {
-			// Prevents CompositeDBFields infinite looping on isChanged
+			// Prevents DBComposite infinite looping on isChanged
 			if(is_array($databaseFieldsOnly) && !in_array($k, $databaseFieldsOnly)) {
 				continue;
 			}
@@ -2504,7 +2512,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 			// Situation 1a: Composite fields should remain bound in case they are
 			// later referenced to update the parent dataobject
-			if($val instanceof CompositeDBField) {
+			if($val instanceof DBComposite) {
 				$val->bindTo($this);
 				$this->record[$fieldName] = $val;
 			}
