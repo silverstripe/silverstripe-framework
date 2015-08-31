@@ -43,7 +43,7 @@
 .filter-buttons button.ss-gridfield-button-filter { background-position: -18px 4px !important; }
 
 /* Alternative styles for the switch in old IE */
-fieldset.switch-states { padding-right: 5px; }
+fieldset.switch-states { padding-right: 20px; }
 fieldset.switch-states .switch { padding: 0; width: 132%; left: -32px; }
 fieldset.switch-states .switch label { overflow: visible; text-overflow: visible; white-space: normal; padding: 0; }
 fieldset.switch-states .switch label.active { color: #fff; background-color: #2b9c32; }
