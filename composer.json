@@ -17,7 +17,8 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"composer/installers": "~1.0"
+		"composer/installers": "~1.0",
+		"monolog/monolog": "~1.11"
 	},
 	"require-dev": {
 		"phpunit/PHPUnit": "~3.7"
