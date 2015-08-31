@@ -307,6 +307,9 @@ class HTTP {
 
 	/**
 	 * Add the appropriate caching headers to the response, including If-Modified-Since / 304 handling.
+	 * Note that setting HTTP::$cache_age will overrule any cache headers set by PHP's
+	 * session_cache_limiter functionality. It is your responsibility to ensure only cacheable data
+	 * is in fact cached, and HTTP::$cache_age isn't set when the HTTP body contains session-specific content.
 	 *
 	 * @param SS_HTTPResponse The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
 	 *                            deprecated; in these cases, the headers are output directly.
@@ -345,6 +348,11 @@ class HTTP {
 
 		if($cacheAge > 0) {
 			$responseHeaders["Cache-Control"] = "max-age={$cacheAge}, must-revalidate, no-transform";
+
+			// Set empty pragma to avoid PHP's session_cache_limiter adding conflicting caching information,
+			// defaulting to "nocache" on most PHP configurations (see http://php.net/session_cache_limiter).
+			// Since it's a deprecated HTTP 1.0 option, all modern HTTP clients and proxies should
+			// prefer the caching information indicated through the "Cache-Control" header.
 			$responseHeaders["Pragma"] = "";
 
 			// To do: User-Agent should only be added in situations where you *are* actually
@@ -369,6 +377,11 @@ class HTTP {
 				// (http://support.microsoft.com/kb/323308)
 				// Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
 				$responseHeaders["Cache-Control"] = "max-age=3, must-revalidate, no-transform";
+				
+				// Set empty pragma to avoid PHP's session_cache_limiter adding conflicting caching information,
+				// defaulting to "nocache" on most PHP configurations (see http://php.net/session_cache_limiter).
+				// Since it's a deprecated HTTP 1.0 option, all modern HTTP clients and proxies should
+				// prefer the caching information indicated through the "Cache-Control" header.
 				$responseHeaders["Pragma"] = "";
 			} else {
 				$responseHeaders["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-transform";
