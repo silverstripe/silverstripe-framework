@@ -89,7 +89,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$this->assertEquals(20, (int)$xml[0]['height'], 'Height tag of resized image is set.');
 
 		$neededFilename = 'assets/_resampled/ResizedImage' . Convert::base64url_encode(array(10,20)) .
-			'-HTMLEditorFieldTest_example.jpg';
+			'/HTMLEditorFieldTest_example.jpg';
 
 		$this->assertEquals($neededFilename, (string)$xml[0]['src'], 'Correct URL of resized image is set.');
 		$this->assertTrue(file_exists(BASE_PATH.DIRECTORY_SEPARATOR.$neededFilename), 'File for resized image exists');

@@ -458,14 +458,13 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		// but GridField doesn't allow for this kind of metadata customization at the moment.
 		if($url = $request->getVar('FileURL')) {
 			if(Director::is_absolute_url($url) && !Director::is_site_url($url)) {
-				$url = $url;
 				$file = new File(array(
 					'Title' => basename($url),
 					'Filename' => $url
 				));
 			} else {
 				$url = Director::makeRelative($request->getVar('FileURL'));
-				$url = preg_replace('/_resampled\/[^-]+-/', '', $url);
+				$url = Image::strip_resampled_prefix($url);
 				$file = File::get()->filter('Filename', $url)->first();
 				if(!$file) $file = new File(array(
 					'Title' => basename($url),

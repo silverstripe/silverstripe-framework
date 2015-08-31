@@ -119,7 +119,6 @@ class ImageTest extends SapphireTest {
 	 * of the output image do not resample the file.
 	 */
 	public function testReluctanceToResampling() {
-
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$this->assertTrue($image->isSize(300, 300));
 
@@ -170,7 +169,6 @@ class ImageTest extends SapphireTest {
 	 * of the output image resample the file when force_resample is set to true.
 	 */
 	public function testForceResample() {
-
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$this->assertTrue($image->isSize(300, 300));
 
@@ -315,23 +313,24 @@ class ImageTest extends SapphireTest {
 		$this->assertContains($argumentString, $imageThird->getFullPath(),
 			'Image contains background color for padded resizement');
 
-		$imageThirdPath = $imageThird->getFullPath();
-		$filesInFolder = $folder->find(dirname($imageThirdPath));
+		$resampledFolder = dirname($image->getFullPath()) . "/_resampled";
+		$filesInFolder = $folder->find($resampledFolder);
 		$this->assertEquals(3, count($filesInFolder),
 			'Image folder contains only the expected number of images before regeneration');
 
+		$imageThirdPath = $imageThird->getFullPath();
 		$hash = md5_file($imageThirdPath);
 		$this->assertEquals(3, $image->regenerateFormattedImages(),
 			'Cached images were regenerated in the right number');
 		$this->assertEquals($hash, md5_file($imageThirdPath), 'Regeneration of third image is correct');
 
 		/* Check that no other images exist, to ensure that the regeneration did not create other images */
-		$this->assertEquals($filesInFolder, $folder->find(dirname($imageThirdPath)),
+		$this->assertEquals($filesInFolder, $folder->find($resampledFolder),
 			'Image folder contains only the expected image files after regeneration');
 	}
 
 	public function testRegenerateImages() {
-		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
@@ -346,7 +345,7 @@ class ImageTest extends SapphireTest {
 	 * ToDo: This doesn't seem like something that is worth testing - what is the point of this?
 	 */
 	public function testRegenerateImagesWithRenaming() {
-		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
@@ -356,6 +355,7 @@ class ImageTest extends SapphireTest {
 		$newArgumentString = Convert::base64url_encode(array(300));
 
 		$newPath = str_replace($oldArgumentString, $newArgumentString, $p);
+		if(!file_exists(dirname($newPath))) mkdir(dirname($newPath));
 		$newRelative = str_replace($oldArgumentString, $newArgumentString, $image_generated->getFileName());
 		rename($p, $newPath);
 		$this->assertFalse(file_exists($p), 'Resized image does not exist at old path after renaming');
@@ -368,7 +368,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testGeneratedImageDeletion() {
-		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
@@ -381,7 +381,7 @@ class ImageTest extends SapphireTest {
 	 * Tests that generated images with multiple image manipulations are all deleted
 	 */
 	public function testMultipleGenerateManipulationCallsImageDeletion() {
-		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 
 		$firstImage = $image->ScaleWidth(200);
 		$firstImagePath = $firstImage->getFullPath();
@@ -400,7 +400,7 @@ class ImageTest extends SapphireTest {
 	 * Tests path properties of cached images with multiple image manipulations
 	 */
 	public function testPathPropertiesCachedImage() {
-		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$firstImage = $image->ScaleWidth(200);
 		$firstImagePath = $firstImage->getRelativePath();
 		$this->assertEquals($firstImagePath, $firstImage->Filename);
@@ -408,6 +408,33 @@ class ImageTest extends SapphireTest {
 		$secondImage = $firstImage->ScaleHeight(100);
 		$secondImagePath = $secondImage->getRelativePath();
 		$this->assertEquals($secondImagePath, $secondImage->Filename);
+	}
+
+	/**
+	 * Tests the static function Image::strip_resampled_prefix, to ensure that
+	 * the original filename can be extracted from the path of transformed images, 
+	 * both in current and previous formats 
+	 */
+	public function testStripResampledPrefix() {
+		$orig_image = $this->objFromFixture('Image', 'imageWithoutTitleContainingDots');
+
+		// current format (3.3+). Example:
+		// assets/ImageTest/_resampled/ScaleHeightWzIwMF0=/ScaleWidthWzQwMF0=/test.image.with.dots.png;
+		$firstImage = $orig_image->ScaleWidth(200);
+		$secondImage = $firstImage->ScaleHeight(200);
+		$paths_1 = $firstImage->Filename;
+		$paths_2 = $secondImage->Filename;
+
+		// 3.2 format  (did not work for multiple transformations)
+		$paths_3 = 'assets/ImageTest/_resampled/ScaleHeightWzIwMF0=-test.image.with.dots.png';
+
+		// 3.1 (and earlier) format  (did not work for multiple transformations)
+		$paths_4 = 'assets/ImageTest/_resampled/ScaleHeight200-test.image.with.dots.png';
+
+		$this->assertEquals($orig_image->Filename, Image::strip_resampled_prefix($paths_1));
+		$this->assertEquals($orig_image->Filename, Image::strip_resampled_prefix($paths_2));
+		$this->assertEquals($orig_image->Filename, Image::strip_resampled_prefix($paths_3));
+		$this->assertEquals($orig_image->Filename, Image::strip_resampled_prefix($paths_4));
 	}
 
 	/**
