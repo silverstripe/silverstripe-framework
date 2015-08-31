@@ -51,7 +51,6 @@ function getTempFolderUsername() {
 function getTempParentFolder($base = null) {
 	if(!$base && defined('BASE_PATH')) $base = BASE_PATH;
 
-	$tempPath = '';
 	$worked = true;
 
 	// first, try finding a silverstripe-cache dir built off the base path
