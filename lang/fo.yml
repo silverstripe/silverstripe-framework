@@ -88,11 +88,7 @@ fo:
     PAGE: Síða
   LeftAndMain:
     HELP: Leiðbeiningar
-    PAGETYPE: 'Slag av síðu:'
     PERMAGAIN: 'Tú ert blivin útritaður av CMS skipanini. Um tú ynskir at innrita aftur, inntøppa so títt brúkaranavn og loyniorð niðanfyri:'
-    PERMALREADY: 'Tíanverri, tú hevur ikki atgongd til handan partin av CMS skipanini. Um tú ynskir at innrita sum onkur annar, so kann tú gera tað niðanfyri.'
-    PERMDEFAULT: 'Inntøppa tygara teldupost og loyniorð fyri at fáa atgongd til CMS skipanina.'
-    PLEASESAVE: 'Vinarliga goym síðuna: Hendan síðan kundi ikki blíva dagført, tí at hon er ikki goymd enn.'
   LoginAttempt:
     Email: 'Teldupostur'
     IP: 'IP adressa'

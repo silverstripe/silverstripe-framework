@@ -67,11 +67,7 @@ hu:
     TITLE: 'Képfeltöltő iframe'
   LeftAndMain:
     HELP: Segítség
-    PAGETYPE: 'Oldal típusa:'
     PERMAGAIN: 'Kiléptetésre kerültél a CMS-ből. Ha újra be szeretnél lépni, add meg alább a felhasználóneved és jelszavad.'
-    PERMALREADY: 'Nincs jogosultságod a CMS ezen részének megtekintéséhez. Ha be szeretnél jelentkezni más felhasználóként, lejjebb megteheted.'
-    PERMDEFAULT: 'A CMS- be való belépéshez, kérünk válassz egy azonosítási módot, és írd be az azonosítási infomációkat.'
-    PLEASESAVE: 'Kérjük, mentsd el az oldalt: az oldalt nem lehetett frissíteni, mivel még nem került elmentésre.'
   Member:
     BUTTONCHANGEPASSWORD: 'Jelszó megváltoztatása'
     BUTTONLOGIN: 'Bejelentkezés'

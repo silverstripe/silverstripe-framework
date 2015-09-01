@@ -168,7 +168,6 @@ ja:
     TEXT2: 'パスワードリセットのリンク'
     TEXT3: は
   Form:
-    CSRF_FAILED_MESSAGE: "技術的な問題が生じた可能性があります。 戻るボタンをクリックしてブラウザを更新し、もう一度試してください。"
     FIELDISREQUIRED: '{name} が必要'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'クレジットカード番号 {number} が正しく入力されたかどうか確認してください'
@@ -233,7 +232,6 @@ ja:
     many_many_Members: メンバー
   GroupImportForm:
     Help1: '<p><em>CSV</em>フォーマット(カンマ区切り)から一つ以上のグループを取り込みます。<small><a href="#" class="toggle-advanced">高度な利用法について表示</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Advanced usage</h4>\n<ul>\n<li> 許可された列 : <em>%s</em></li>\n<li> 既存のグループは独自の <em> コード </em>　の数値で照合されて、インポートされたファイル </li> からの数値によりアップデートされます。\n<li> グループの階層は <em> 親コード </em> 列を使って作成することができます。 </li>\n<li> 権限のコードは <em> 権限コード </em> 列によって割り当てることができます。 既存の権限コードはクリアされていません。</li>\n</ul>\n</div>"
     ResultCreated: '{count} グループを作成しました'
     ResultDeleted: '%dグループを削除しました'
     ResultUpdated: '%dグループを更新しました'
@@ -298,18 +296,13 @@ ja:
     DELETED: 削除しました。
     DropdownBatchActionsDefault: アクション
     HELP: ヘルプ
-    PAGETYPE: 'ページの種類:'
     PERMAGAIN: 'ログアウトしました。再度ログインする場合は下にユーザー名とパスワードを入力してください。'
-    PERMALREADY: '申し訳ございません。ご指定になられたCMSの箇所にはアクセスいただけません。別ユーザーとしてログインをされたい場合は、下記より行えます。'
-    PERMDEFAULT: '認証方法を選択し、CMSにアクセスするために利用する認証情報を入力してください。'
-    PLEASESAVE: '保存してください: 保存してないため更新できません。'
     PreviewButton: プレビュー
     REORGANISATIONSUCCESSFUL: 'サイトツリーの再編集に成功しました。'
     SAVEDUP: 保存済み
     ShowAsList: 'リストとして表示する'
     TooManyPages: 'あまりにも多くのページ'
     ValidationError: '確認エラー'
-    VersionUnknown: 不明
   LeftAndMain_Menu_ss:
     Hello: こんにちは！
     LOGOUT: 'ログアウト'
@@ -387,7 +380,6 @@ ja:
     Toggle: '設定のヘルプを表示'
   MemberImportForm:
     Help1: '<p><em>CSVフォーマット</em>(コンマ区切り)でユーザーを取り込みます。 <small><a href="#" class="toggle-advanced">高度な利用方法を表示</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>高度な使用法</h4>\n<ul>\n<li>許可された列: <em>%s</em></li>\n<li>既存のユーザーは独自の<em>コード</ em>プロパティにより照合されて、インポートしたファイルからの新しい数値でアップデートされます。</li>\n<li>グループは<em>グループの</em>列によって割り当てられることができる。 グループは独自の<em>コード</em> プロパティによって識別され、複数のグループはコンマによって分割することができる。　既存のグループメンバーはクリアされていない。</li>\n</ul>\n</div>"
     ResultCreated: '{count}メンバーを作成しました'
     ResultDeleted: '%d人のメンバーを削除しました'
     ResultNone: '変更なし'
@@ -451,7 +443,6 @@ ja:
     SINGULARNAME: 役割
     Title: タイトル
   PermissionRoleCode:
-    PLURALNAME: '許可の役割のコード'
     SINGULARNAME: '許可の役割のコード'
   Permissions:
     PERMISSIONS_CATEGORY: '役割とアクセス権限'

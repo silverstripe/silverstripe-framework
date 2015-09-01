@@ -119,11 +119,7 @@ ca:
     TITLE: 'Iframe Carregador d''imatge'
   LeftAndMain:
     HELP: Ajuda
-    PAGETYPE: 'Tipus de pàgina:'
     PERMAGAIN: 'Heu estat desconnectat del SGC. Si voleu entrar de nou, introduïu un nom d''usuari i contrasenya a sota'
-    PERMALREADY: 'Lamentant-ho molt, no podeu accedir a aquesta part del SGC. Si voleu entrar com a algú altre, feu-ho a sota'
-    PERMDEFAULT: 'Introduïu la vostra adreça de correu electrònic i la contrasenya per a entrar al SGC.'
-    PLEASESAVE: 'Si us plau, deseu la pàgina: aquesta pàgina no s''ha pogut actualitzar perquè encara no s''ha desat.'
   LoginAttempt:
     Email: 'Adreça de correu'
     IP: 'Adreça IP'

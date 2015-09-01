@@ -144,9 +144,7 @@ pt:
   LeftAndMain:
     DropdownBatchActionsDefault: Ações
     HELP: Ajuda
-    PAGETYPE: 'Tipo de página: '
     PERMAGAIN: 'Saiu do CMS. Se se deseja autenticar novamente insira as suas credenciais abaixo.'
-    PLEASESAVE: 'Por favor salve a página: Esta página não pode ser atulizada porque ainda não foi salva.'
   LoginAttempt:
     Email: 'Endereço de Email'
     IP: 'Endereço IP'

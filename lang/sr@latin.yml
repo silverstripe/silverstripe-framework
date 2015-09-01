@@ -300,17 +300,13 @@ sr@latin:
     DELETED: Izbrisano
     DropdownBatchActionsDefault: Akcije
     HELP: Pomoć
-    PAGETYPE: 'Tip stranice'
     PERMAGAIN: 'Odjavljeni ste sa CMS-a. Ukoliko želite da se ponovo prijavite, unesite korisničko ime i lozinku.'
-    PERMALREADY: 'Ne možete da pristupite ovom delu CMS-a. Ako želite da se prijavite kao neko drugi, uradite to ispod'
-    PERMDEFAULT: 'Izaberite metodu autentifikacije i unesite podatke za pristup CMS-u.'
     PreviewButton: Prethodni pregled
     REORGANISATIONSUCCESSFUL: 'Stablo sajta je uspešno reorganizovano.'
     SAVEDUP: Sačuvano.
     ShowAsList: 'prikaži u vidu liste'
     TooManyPages: 'Previše stranica'
     ValidationError: 'Grešla pri proveri ispravnosti'
-    VersionUnknown: Nepoznato
   LeftAndMain_Menu_ss:
     Hello: Zdravo
     LOGOUT: 'Odjavi se'
@@ -388,7 +384,6 @@ sr@latin:
     Toggle: 'Prikaži pomoć za formatiranje'
   MemberImportForm:
     Help1: '<p>Uvezi korisnike u <em>CSV</em> formatu (zarezima razdvojene vrednosti). <small><a href="#" class="toggle-advanced">Prikaži napredno korišćenje</a></small></p>'
-    Help2: "<div class=\"advanced\"> <h4>Napredno korišćenje</h4> <ul> <li>Dozvoljene kolone: <em>%s</em></li> <li>Postojeće korisnici se prepoznaju po sopstvenom jedinstvenom svojstvu <em>Kôd</em> i ažuriraju novim vrednostima iz uvezene datoteke</li> <li>Grupe mogu biti dodeljene pomoću kolone  <em>Grupe</em>. Grupe se identifikuju putem njihovog svojstva <em>Kôd</em>, a više grupa se razdvaja zarezom. Postojeće članstvo u grupama se ne briše.</li>\n</ul></div>"
     ResultCreated: 'Kreirano {count} članova'
     ResultDeleted: 'Izbrisano %d članova'
     ResultNone: 'Bez promena'

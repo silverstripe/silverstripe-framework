@@ -119,11 +119,7 @@ pt_BR:
     TITLE: 'Upload de imagem'
   LeftAndMain:
     HELP: Ajuda
-    PAGETYPE: 'Tipo de página:'
     PERMAGAIN: 'Você foi desconectado do CMS. Se você quiser entrar novamente, digite um nome de usuário e senha abaixo.'
-    PERMALREADY: 'Sinto muito, mas você não pode acessar essa parte do CMS. Se você quiser entrar como outra pessoa, faça-o abaixo.'
-    PERMDEFAULT: 'Por favor, entre com seu e-mail e senha para entrar no sistema.'
-    PLEASESAVE: 'Por favor salve a página: Esta página não pode ser atulizada porque ainda não foi salva.'
   LoginAttempt:
     Email: 'Endereço de E-mail'
     IP: 'Endereço IP'

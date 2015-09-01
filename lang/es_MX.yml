@@ -183,12 +183,7 @@ es_MX:
   LeftAndMain:
     DropdownBatchActionsDefault: Acciones
     HELP: Ayuda
-    PAGETYPE: 'Tipo de página:'
     PERMAGAIN: 'Usted ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña.'
-    PERMALREADY: 'Lamentablemente no puedes ingresar a esta parte del CMS. Si quieres entrar como alguien distinto, hazlo a continuación'
-    PERMDEFAULT: 'Por favor, elija un método de autenticación e introduzca sus credenciales para acceder al CMS.'
-    PLEASESAVE: 'Por favor Guarda la Página: No se puede actualizar esta página porque aún no se ha guardado.'
-    VersionUnknown: desconocido
   LoginAttempt:
     Email: 'Dirección de Correo Electrónico'
     IP: 'Dirección IP'

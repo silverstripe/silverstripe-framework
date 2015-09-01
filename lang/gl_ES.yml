@@ -158,12 +158,7 @@ gl_ES:
   LeftAndMain:
     DropdownBatchActionsDefault: Accións
     HELP: Axuda
-    PAGETYPE: 'Tipo de páxina:'
     PERMAGAIN: 'Non tes unha sesión válida no CMS. Se queres volver entrar, insire o nome de usuario e contrasinal a continuación.'
-    PERMALREADY: 'Sintoo, pero non podes acceder a esta parte do CMS. Se queres iniciar sesión con outras credenciais, faino a continuación'
-    PERMDEFAULT: 'Escolle un método de autenticación e insire as túas credenciais para acceder o CMS.'
-    PLEASESAVE: 'Por favor Garda Páxina: Esta páxina podería non ser actualizada porque inda non foi gardada.'
-    VersionUnknown: descoñecido
   LoginAttempt:
     Email: 'Enderezo Correo-e'
     IP: 'Enderezo IP'

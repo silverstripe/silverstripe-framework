@@ -70,10 +70,22 @@ eo:
     ACCESSALLINTERFACES: 'Aliro al ĉiuj interfacoj de CMS'
     ACCESSALLINTERFACESHELP: 'Nuligas pli specifajn alirajn agordojn.'
     SAVE: Konservi
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Ĉu forgesis pasvorton?'
+    BUTTONLOGIN: 'Ree ensaluti'
+    BUTTONLOGOUT: 'Adiaŭi'
+    PASSWORDEXPIRED: '<p>Via pasvorto finiĝis. <a target="_top" href="{link}">Bonvolu elekti novan.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Antaŭvido de retejo'
   CMSProfileController:
     MENUTITLE: 'Mia agordaro'
+  CMSSecurity:
+    INVALIDUSER: '<p>Nevalida uzanto. <a target="_top" href="{link}">Bonvolu aŭtentigi ĉi tie</a> por daŭrigi.</p>'
+    LoginMessage: '<p>Se vi havas nekonservitan laboraĵon vi povos reveni al kie vi paŭzis reensalutante sube.</p>'
+    SUCCESS: Sukseso
+    SUCCESSCONTENT: '<p>Ensaluto suksesis. Se vi ne aŭtomate alidirektiĝos, <a target="_top" href="{link}">alklaku ĉi tie</a></p>'
+    TimedOutTitleAnonymous: 'Via seanco eltempiĝis.'
+    TimedOutTitleMember: 'He, {name}!<br />Via seanco eltempiĝis.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
     CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
@@ -85,18 +97,8 @@ eo:
     YESANSWER: 'Jes'
   CheckboxFieldSetField:
     SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Ĉu forgesis pasvorton?'
-    BUTTONLOGIN: 'Ree ensaluti'
-    BUTTONLOGOUT: 'Adiaŭi'
-    PASSWORDEXPIRED: '<p>Via pasvorto finiĝis. <a target="_top" href="{link}">Bonvolu elekti novan.</a></p>'
-  CMSSecurity:
-    INVALIDUSER: '<p>Nevalida uzanto. <a target="_top" href="{link}">Bonvolu aŭtentigi ĉi tie</a> por daŭrigi.</p>'
-    LoginMessage: '<p>Se vi havas nekonservitan laboraĵon vi povos reveni al kie vi paŭzis reensalutante sube.</p>'
-    SUCCESS: Sukseso
-    SUCCESSCONTENT: '<p>Ensaluto suksesis. Se vi ne aŭtomate alidirektiĝos, <a target="_top" href="{link}">alklaku ĉi tie</a></p>'
-    TimedOutTitleAnonymous: 'Via seanco eltempiĝis.'
-    TimedOutTitleMember: 'He, {name}!<br />Via seanco eltempiĝis.'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'
   ConfirmedPasswordField:
     ATLEAST: 'Pasvorto devas esti almenaŭ {min} signojn longa.'
     BETWEEN: 'Pasvorto devas esti inter {min} kaj {max} signojn longa.'
@@ -191,6 +193,7 @@ eo:
     TEXT2: 'pasvorta reagorda ligilo'
     TEXT3: por
   Form:
+    CSRF_EXPIRED_MESSAGE: 'Via seanco finiĝis. Bonvole resendu la formularon.'
     CSRF_FAILED_MESSAGE: 'Ŝajne okazis teknika problemo. Bonvolu alklaki la retrobutonon, refreŝigi vian foliumilon, kaj reprovi.'
     FIELDISREQUIRED: '{name} estas bezonata'
     SubmitBtnLabel: Iri
@@ -201,7 +204,6 @@ eo:
     VALIDATIONSTRONGPASSWORD: 'Pasvorto devas havi almenaŭ unu signon kaj unu literon.'
     VALIDATOR: Validigilo
     VALIDCURRENCY: 'Bonvole enigu validan kurzon'
-    CSRF_EXPIRED_MESSAGE: 'Via seanco finiĝis. Bonvole resendu la formularon.'
   FormField:
     Example: 'ekz. %s'
     NONE: neniu
@@ -258,7 +260,6 @@ eo:
     many_many_Members: Membroj
   GroupImportForm:
     Help1: '<p>Importi unu aŭ pliaj grupojn en formato <em>CSV</em> (perkome disigitaj valoroj values). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
-    Help2: "<div class=\"advanced\">\n\t<h4>Speciala uzado</h4>\n\t<ul>\n\t<li>Permesitaj kolumnoj: <em>%s</em></li>\n\t<li>Ekzistantaj grupoj kongruiĝas laŭ ilia unika valoro <em>Kodo</em>, kaj aktualiĝas per eventualaj novaj valoroj el la importita dosiero</li>\n\t<li>Grupaj hierarkioj estas kreeblaj uzante kolumnon <em>PraKodo</em>.</li>\n\t<li>Permesaj kodoj estas agordeblaj de la kolumno <em>PermesKodo</em>. Ekzistantaj permesaj kodoj ne vakiĝos.</li>\n\t</ul>\n</div>"
     ResultCreated: 'Kreiĝis {count} grupoj'
     ResultDeleted: 'Forigis %d grupojn'
     ResultUpdated: 'Aktualigis %d grupojn'
@@ -309,10 +310,10 @@ eo:
     LINKOPENNEWWIN: 'Malfermi ligilon en nova fenestro?'
     LINKTO: 'Ligilo al'
     PAGE: Paĝo
+    SUBJECT: 'Temo de retpoŝto'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ne estas konvertebla al memorilo.'
     UpdateMEDIA: 'Ĝisdatigi memorilon'
-    SUBJECT: 'Temo de retpoŝto'
   Image:
     PLURALNAME: Dosieroj
     SINGULARNAME: Dosiero
@@ -326,10 +327,7 @@ eo:
     DELETED: Forigita.
     DropdownBatchActionsDefault: Agoj
     HELP: Helpo
-    PAGETYPE: 'Tipo de paĝo:'
     PERMAGAIN: 'Vin adiaŭis la CMS. Se vi volas denove saluti, enigu salutnomon kaj pasvorton malsupre.'
-    PERMALREADY: 'Bedaŭrinde vi ne povas aliri tiun parton de la CMS. Se vi volas saluti kiel iu alia, tiel faru sube'
-    PERMDEFAULT: 'Enigi vian retadreson kaj pasvorton por aliri al la CMS.'
     PLEASESAVE: 'Bonvolu konservi paĝon: ne povis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ estas nekonservita.'
     PreviewButton: Antaŭvido
     REORGANISATIONSUCCESSFUL: 'Sukcese reorganizis la retejan arbon.'
@@ -337,12 +335,9 @@ eo:
     ShowAsList: 'vidigi kiel liston'
     TooManyPages: 'Tro da paĝoj'
     ValidationError: 'Validiga eraro'
-    VersionUnknown: Nekonata
   LeftAndMain_Menu_ss:
     Hello: Saluton
     LOGOUT: 'Elsaluti'
-  ListboxField:
-    SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'
   LoginAttempt:
     Email: 'Retadreso'
     IP: 'IP-Adreso'
@@ -418,7 +413,6 @@ eo:
     Toggle: 'Vidigi aranĝa helpo'
   MemberImportForm:
     Help1: '<p>Importi membrojn en <em>CSV-formato</em> (diskomaj valoroj ). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
-    Help2: "<div class=\"advanced\">\n⇥<h4>Spertula uzado</h4>\n⇥<ul>\n⇥<li>Permesitaj kolumnoj: <em>%s</em></li>\n⇥<li>Ekzistantaj uzuloj pariĝas per ilia unika atributo <em>Kodo</em>, kaj aktualiĝas per eventualaj valoroj el \n⇥la importita dosiero</li>\n⇥<li>Grupoj estas agordebla per kolumno <em>Grupoj</em>.</li>\n⇥<li>Grupoj estas identigeblaj per sia atributo <em>Kodo</em>. \nOpaj grupoj estu apartigitaj de komo. Ekzistantaj grupaj membrecoj \n⇥ne nuliĝas.</li>\n⇥</ul>\n</div>"
     ResultCreated: 'Krei {count} membrojn'
     ResultDeleted: 'Forigis %d membrojn'
     ResultNone: 'Neniu ŝanĝo'
@@ -482,8 +476,8 @@ eo:
     SINGULARNAME: Rolo
     Title: Titolo
   PermissionRoleCode:
-    PermsError: 'Ne povas agordi kodon "%s" kun privilegiaj permesoj (bezonas ADMIN-aliron)'
     PLURALNAME: 'Permesrolaj kodoj'
+    PermsError: 'Ne povas agordi kodon "%s" kun privilegiaj permesoj (bezonas ADMIN-aliron)'
     SINGULARNAME: 'Permesrola kodo'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roloj kaj aliraj permesoj'
@@ -583,5 +577,3 @@ eo:
     UPLOADSINTO: 'konservas en /{path}'
   Versioned:
     has_many_Versions: Versioj
-  CheckboxSetField:
-    SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'

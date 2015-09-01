@@ -55,11 +55,7 @@ zh_TW:
     TITLE: '圖片上載iFrame'
   LeftAndMain:
     HELP: 說明
-    PAGETYPE: '網頁類型：'
     PERMAGAIN: '您已被登出，請在下面重新登入。'
-    PERMALREADY: '抱歉，您沒有權力使用這個部分。您可以用別的帳號登入。'
-    PERMDEFAULT: '請選擇一個認證方法並登入。'
-    PLEASESAVE: '請儲存：這個網頁沒有被更新因為尚未被儲存。'
   Member:
     BUTTONCHANGEPASSWORD: '更改密碼'
     BUTTONLOGIN: '登入'

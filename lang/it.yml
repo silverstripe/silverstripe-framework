@@ -1,7 +1,7 @@
 it:
   AssetAdmin:
     NEWFOLDER: NuovaCartella
-    SHOWALLOWEDEXTS: 'Mostra le estensioni permesse'
+    SHOWALLOWEDEXTS: 'Mostra le estensioni consentite'
   AssetTableField:
     CREATED: 'Inizialmente caricato'
     DIM: Dimensioni
@@ -60,6 +60,8 @@ it:
     ERRORNOTREC: 'Nome utente / password non riconosciuti'
   Boolean:
     ANY: Qualsiasi
+    NOANSWER: 'No'
+    YESANSWER: 'Sì'
   CMSLoadingScreen_ss:
     LOADING: Caricamento in corso...
     REQUIREJS: 'Il CMS richiede JavaScript abilitato.'
@@ -68,16 +70,35 @@ it:
     ACCESSALLINTERFACES: 'Accesso a tutte le sezioni del CMS'
     ACCESSALLINTERFACESHELP: 'Annulla le impostazioni di accesso più specifiche.'
     SAVE: Salva
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Password dimenticata?'
+    BUTTONLOGIN: 'Accedi nuovamente'
+    BUTTONLOGOUT: 'Scollegati'
+    PASSWORDEXPIRED: '<p>La tua password è scaduta. <a target="_top" href="{link}">Per favore selezionarne una nuova.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Preview del sito'
   CMSProfileController:
     MENUTITLE: 'Il mio Profilo'
+  CMSSecurity:
+    INVALIDUSER: '<p>Utente non valido. <a target="_top" href="{link}">Per favore autenticarsi di nuovo</a> per continuare.</p>'
+    LoginMessage: '<p>Se hai del lavoro non salvato puo tornare a dove eri accedendo nuovamente da qui sotto.</p>'
+    SUCCESS: Successo
+    SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
+    TimedOutTitleAnonymous: 'La tua sessione è scaduta.'
+    TimedOutTitleMember: 'Ciao {name}!<br />La tua sessione è scaduta.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT2: 'Ora puoi utilizzare le seguenti credenziali per accedere:'
     EMAIL: Email
     HELLO: Ciao
     PASSWORD: Password
+  CheckboxField:
+    NOANSWER: 'No'
+    YESANSWER: 'Sì'
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. ''{value}'' non è un''opzione valida'
   ConfirmedPasswordField:
     ATLEAST: 'La password deve essere lunga almeno {min} caratteri.'
     BETWEEN: 'La password deve essere lunga da {min} a {max} caratteri.'
@@ -92,6 +113,9 @@ it:
     THIRD: terzo
   CurrencyField:
     CURRENCYSYMBOL: $
+  DataObject:
+    PLURALNAME: 'Data Object'
+    SINGULARNAME: 'Data Object'
   Date:
     DAY: giorno
     DAYS: giorni
@@ -105,6 +129,7 @@ it:
     SEC: secondo
     SECS: secondi
     TIMEDIFFAGO: '{difference} fa'
+    TIMEDIFFIN: 'in {difference}'
     YEAR: anno
     YEARS: anni
   DateField:
@@ -119,6 +144,8 @@ it:
     INVALID_REQUEST: 'Richiesta non valida'
   DropdownField:
     CHOOSE: (Scegli)
+    CHOOSESEARCH: '(Scegliere o Cercare)'
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
   EmailField:
     VALIDATION: 'Inserisci un indirizzo e-mail'
   Enum:
@@ -166,7 +193,8 @@ it:
     TEXT2: 'Link per l''azzeramento della password'
     TEXT3: per
   Form:
-    CSRF_FAILED_MESSAGE: "Sembra che ci sia stato un problema tecnico. Per favore clicca sul pulsante \"indietro\", ricarica la pagina e riprova."
+    CSRF_EXPIRED_MESSAGE: 'La tua sessione è scaduta. Per favore ritrasmettere la form.'
+    CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore cliccare sul pulsante "indietro", ricaricare la pagina e riprovare.'
     FIELDISREQUIRED: '{name} è richiesto'
     SubmitBtnLabel: Vai
     VALIDATIONCREDITNUMBER: 'Assicurati che il numero di carta di credito {number} sia inserito correttamente'
@@ -220,6 +248,7 @@ it:
     DefaultGroupTitleContentAuthors: 'Autori di contenuto'
     Description: Descrizione
     GroupReminder: 'Se scegli un gruppo genitore, questo gruppo erediterà tutti i suoi ruoli'
+    HierarchyPermsError: 'Non posso assegnare permessi privilegiati al gruppo genitore "%s" (richiede accesso ADMIN)'
     Locked: 'Bloccato?'
     NoRoles: 'Nessun ruolo trovato'
     PLURALNAME: Gruppi
@@ -231,7 +260,6 @@ it:
     many_many_Members: Membri
   GroupImportForm:
     Help1: '<p>Importa gruppi in formato <em>CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Utilizzo avanzato</h4>\n<ul>\n<li>Colonne consentite: <em>%s</em></li>\n<li>Gruppi esistenti sono individuati tramite il loro valore univoco <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>\n<li>È possibile creare gerarchie tra i gruppi usando la colonna <em>ParentCode</em></li>\n<li>Codici di permessi possono essere assegnati tramite la colonna <em>PermissionCode</em>. Codici di permessi esistenti non verranno cancellati.</li>\n</ul>\n</div>"
     ResultCreated: 'Creati {count} gruppi'
     ResultDeleted: 'Eliminati %d gruppi'
     ResultUpdated: 'Aggiornati %d gruppi'
@@ -240,6 +268,8 @@ it:
   HtmlEditorField:
     ADDURL: 'Aggiungi URL'
     ADJUSTDETAILSDIMENSIONS: 'Dettagli e dimensioni'
+    ANCHORSCANNOTACCESSPAGE: 'Non ti è consentito accedere al contenuto della pagina di destinazione.'
+    ANCHORSPAGENOTFOUND: 'Pagina di destinazione non trovata.'
     ANCHORVALUE: Ancora
     BUTTONADDURL: 'Aggiungi url'
     BUTTONINSERT: Inserisci
@@ -280,6 +310,7 @@ it:
     LINKOPENNEWWIN: 'Apri il link in una nuova finestra?'
     LINKTO: 'Collega a'
     PAGE: Pagina
+    SUBJECT: 'Oggetto email'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
     UpdateMEDIA: 'Aggiorna Media'
@@ -296,11 +327,9 @@ it:
     DELETED: Eliminato.
     DropdownBatchActionsDefault: Azioni
     HELP: Aiuto
-    PAGETYPE: 'Tipo di pagina:'
+    PAGETYPE: 'Tipo di pagina'
     PERMAGAIN: 'Sei stato disconnesso dal CMS. Se desideri autenticarti nuovamente, inserisci qui sotto nome utente e password.'
-    PERMALREADY: 'Siamo spiacenti, ma non puoi accedere a questa sezione del CMS. Se desideri autenticarti come qualcun altro, fallo qui sotto.'
-    PERMDEFAULT: 'Inserisci il tuo indirizzo email e password per accedere al CMS.'
-    PLEASESAVE: 'Per favore salva la pagina: La stessa potrebbe non venire aggiornata se non si provvede quanto prima a salvarla.'
+    PLEASESAVE: 'Per favore salvare la pagina: potrebbe non venire aggiornata perché non è ancora stata salvata.'
     PreviewButton: Anteprima
     REORGANISATIONSUCCESSFUL: 'Albero del sito riorganizzato con successo.'
     SAVEDUP: Salvato.
@@ -311,6 +340,8 @@ it:
   LeftAndMain_Menu_ss:
     Hello: Ciao
     LOGOUT: 'Disconnetti'
+  ListboxField:
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. %s non è un''opzione valida'
   LoginAttempt:
     Email: 'Indirizzo e-mail'
     IP: 'Indirizzo IP'
@@ -335,6 +366,7 @@ it:
     ERRORLOCKEDOUT2: 'Il tuo account è stato temporaneamente disabilitato perchè ci sono stati troppi tentativi di accesso errati. Riprova tra {count} minuti.'
     ERRORNEWPASSWORD: 'Hai inserito la tua nuova password in modo differente, prova di nuovo'
     ERRORPASSWORDNOTMATCH: 'La tua password attuale non corrisponde, per favore prova ancora'
+    ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
     FIRSTNAME: 'Nome'
     INTERFACELANG: 'Lingua dell''interfaccia'
     INVALIDNEWPASSWORD: 'Non possiamo accettare questa password: {password}'
@@ -342,6 +374,7 @@ it:
     NEWPASSWORD: 'Nuova password'
     NoPassword: 'Manca la password per questo utente.'
     PASSWORD: Password
+    PASSWORDEXPIRED: 'La tua password è scaduta. Per favore selezionarne una nuova.'
     PLURALNAME: Utenti
     REMEMBERME: 'Ricordati di me la prossima volta?'
     SINGULARNAME: Utente
@@ -384,7 +417,6 @@ it:
     Toggle: 'Mostra aiuto per la formattazione'
   MemberImportForm:
     Help1: '<p>Importa utenti in <em>formato CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Utilizzo avanzato</h4>\n<ul>\n<li>Colonne consentite: <em>%s</em></li>\n<li>Utenti esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>\n<li>I gruppi possono essere assegnati attraverso la colonna <em>Groups</em>. I gruppi sono identificati attraverso la loro colonna <em>Code</em>, più gruppi devono essere separati da virgola. L'appartenenza esistente a gruppi non viene cancellata.</li>\n</ul>\n</div>"
     ResultCreated: 'Creati {count} utenti'
     ResultDeleted: 'Eliminati %d utenti'
     ResultNone: 'Nessun cambiamento'
@@ -448,7 +480,8 @@ it:
     SINGULARNAME: Ruolo
     Title: Titolo
   PermissionRoleCode:
-    PLURALNAME: 'Codici di Ruolo'
+    PLURALNAME: 'Codici di ruolo'
+    PermsError: 'Non posso assegnare permessi privilegiati al codice "%s" (richiede accesso ADMIN)'
     SINGULARNAME: 'Codice Ruolo'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ruoli e permessi d''accesso'
@@ -464,6 +497,7 @@ it:
     ERRORPASSWORDPERMISSION: 'Devi essere autenticato per poter cambiare la tua password!'
     LOGGEDOUT: 'Sei stato disconnesso. Se vuoi autenticarti nuovamente, inserisci qui sotto le tue credenziali.'
     LOGIN: 'Entra'
+    LOSTPASSWORDHEADER: 'Password smarrita'
     NOTEPAGESECURED: 'La pagina è protetta. Inserisci le credenziali qui sotto per poter andare avanti.'
     NOTERESETLINKINVALID: '<p>Il link per azzerare la password non è valido o è scaduto.</p><p>Puoi richiederne uno nuovo <a href="{link1}">qui</a> o cambiare la tua password dopo che ti sei <a href="{link2}">connesso</a>.</p>'
     NOTERESETPASSWORD: 'Inserisci il tuo indirizzo e-mail e ti verrà inviato un link per poter azzerare la tua password.'
@@ -494,11 +528,14 @@ it:
     Auto: Auto
     ChangeViewMode: 'Cambia visualizzazione'
     Desktop: Desktop
+    DualWindowView: 'Finestra doppia'
     Edit: Modifica
     EditView: 'Modalità modifica'
     Mobile: Mobile
+    PreviewState: 'Stato anteprima'
     PreviewView: 'Modalità anteprima'
     Responsive: Responsivo
+    SplitView: 'Modalità promiscua'
     Tablet: Preview mode
     ViewDeviceWidth: 'Seleziona una larghezza di preview'
     Width: larghezza
@@ -509,6 +546,8 @@ it:
     Print: Stampa
   TableListField_PageControls_ss:
     OF: di
+  TextField:
+    VALIDATEMAXLENGTH: 'Il valore di {name} non deve superare i {maxLength} caratteri di lunghezza'
   TimeField:
     VALIDATEFORMAT: 'Inserisci un formato d''ora valido ({format})'
   ToggleField:

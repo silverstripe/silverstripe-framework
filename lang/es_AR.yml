@@ -132,11 +132,7 @@ es_AR:
     TITLE: 'Subiendo Imagen Iframe'
   LeftAndMain:
     HELP: Ayuda
-    PAGETYPE: 'Tipo de página:'
     PERMAGAIN: 'Haz sido desconectado del CMS. Si quieres volver a entrar, a continuación introduce tu nombre de usuario y contraseña.'
-    PERMALREADY: 'Lamentablemente no puedes ingresar a esta parte del CMS. Si quieres entrar como alguien distinto, haz eso a continuación'
-    PERMDEFAULT: 'Por favor elegir un método de autenticación e ingresar sus credenciales para acceder al CMS.'
-    PLEASESAVE: 'Por favor Guarda la Página: No se puede actualizar esta página porque aún no se ha guardado.'
   LoginAttempt:
     Email: 'Dirección Email'
     IP: 'Dirección IP'

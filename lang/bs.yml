@@ -100,11 +100,7 @@ bs:
     TITLE: 'Iframe za postavljanje slika'
   LeftAndMain:
     HELP: Pomoć
-    PAGETYPE: 'Tip stranice:'
     PERMAGAIN: 'Odjavljeni ste sa CMS-a. Ukoliko se želite ponovo prijaviti, unesite korisničko ime i šifru ispod.'
-    PERMALREADY: 'Žao nam je ali ne možete pristupiti ovom dijelu CMS-a. Ako se želite prijaviti sa drugim korisnikom uradite to ispod'
-    PERMDEFAULT: 'Unesite vašu e-mail adresu i šifru kako biste pristupili CMS-u.'
-    PLEASESAVE: 'Molimo snimite stranicu: Ova stranica ne može biti ažurirana ako nije prethodno snimljena.'
   Member:
     BUTTONCHANGEPASSWORD: 'Promijeni šifru'
     BUTTONLOGIN: 'Prijava'

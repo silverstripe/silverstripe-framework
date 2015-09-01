@@ -166,7 +166,7 @@ sl:
     TEXT2: 'povezava za ponastavitev gesla'
     TEXT3: za
   Form:
-    CSRF_FAILED_MESSAGE: "Verjetno je prišlo do tehničnih napak. Kliknite \"the back button\", osvežite brskalnik in poskusite ponovno."
+    CSRF_EXPIRED_MESSAGE: 'Vaša seja je potekla. Prosimo ponovno oddajte obrazec '
     FIELDISREQUIRED: '{name} je potrebno'
     SubmitBtnLabel: Naprej
     VALIDATIONCREDITNUMBER: 'Prosim, preverite, da ste vnesli številko kreditne kartice {number} pravilno.'
@@ -176,7 +176,6 @@ sl:
     VALIDATIONSTRONGPASSWORD: 'Geslo naj vsebuje vsaj eno črko in vsaj eno številko.'
     VALIDATOR: Preverjanje
     VALIDCURRENCY: 'Prosim, vnesite pravo valuto.'
-    CSRF_EXPIRED_MESSAGE: 'Vaša seja je potekla. Prosimo ponovno oddajte obrazec '
   FormField:
     Example: 'npr. %s'
     NONE: brez
@@ -287,18 +286,13 @@ sl:
     DELETED: Izbrisano.
     DropdownBatchActionsDefault: Dejanja
     HELP: Pomoč
-    PAGETYPE: 'Tip strani:'
     PERMAGAIN: 'Odjavili ste se iz CMS-vmesnika. Če se želite ponovno prijaviti, vpišite uporabniško ime in geslo.'
-    PERMALREADY: 'Do tega dela CMS-vmesnika nimate dostopa. Če se želite vpisati z drugim uporabniškim imenom, lahko to storite spodaj'
-    PERMDEFAULT: 'Izberite način avtentikacije in vpišite svoje podatke za dostop do CMS-vmesnika.'
-    PLEASESAVE: 'Shranite stran: te strani ne morete posodobiti, ker še ni bila shranjena.'
     PreviewButton: Predogled
     REORGANISATIONSUCCESSFUL: 'Struktura spletnega mesta je bila uspešno spremenjena.'
     SAVEDUP: Shranjeno.
     ShowAsList: 'pokaži kot seznam'
     TooManyPages: 'Preveč strani'
     ValidationError: 'Napaka pri potrjevanju'
-    VersionUnknown: Neznano
   LeftAndMain_Menu_ss:
     Hello: Pozdravljeni,
     LOGOUT: 'Odjava'

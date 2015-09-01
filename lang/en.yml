@@ -60,8 +60,8 @@ en:
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     ANY: Any
-    NOANSWER: No
-    YESANSWER: Yes
+    NOANSWER: 'No'
+    YESANSWER: 'Yes'
   CMSLoadingScreen_ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -70,24 +70,15 @@ en:
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Save
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Website preview'
-  CMSProfileController:
-    MENUTITLE: 'My Profile'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
-    EMAIL: Email
-    HELLO: Hi
-    PASSWORD: Password
-  CheckboxField:
-    NOANSWER: No
-    YESANSWER: Yes
   CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Forgot password?'
     BUTTONLOGIN: 'Log back in'
     BUTTONLOGOUT: 'Log out'
     PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Website preview'
+  CMSProfileController:
+    MENUTITLE: 'My Profile'
   CMSSecurity:
     INVALIDUSER: '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>'
     LoginMessage: '<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
@@ -95,6 +86,19 @@ en:
     SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
     TimedOutTitleAnonymous: 'Your session has timed out.'
     TimedOutTitleMember: 'Hey {name}!<br />Your session has timed out.'
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    EMAIL: Email
+    HELLO: Hi
+    PASSWORD: Password
+  CheckboxField:
+    NOANSWER: 'No'
+    YESANSWER: 'Yes'
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Please select a value within the list provided. ''{value}'' is not a valid option'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -141,6 +145,7 @@ en:
   DropdownField:
     CHOOSE: (Choose)
     CHOOSESEARCH: '(Choose or Search)'
+    SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   EmailField:
     VALIDATION: 'Please enter an email address'
   Enum:
@@ -189,7 +194,7 @@ en:
     TEXT3: for
   Form:
     CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'    
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
     FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
@@ -255,7 +260,7 @@ en:
     many_many_Members: Members
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: "<div class=\"advanced\">\n	<h4>Advanced usage</h4>\n	<ul>\n	<li>Allowed columns: <em>%s</em></li>\n	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the \n	imported file</li>\n	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>\n	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not\n	cleared.</li>\n	</ul>\n</div>"
+    Help2: '<div class="advanced"><h4>Advanced usage</h4><ul><li>Allowed columns: <em>%s</em></li><li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li><li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li><li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li></ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
@@ -287,8 +292,8 @@ en:
     FROMWEB: 'From the web'
     FindInFolder: 'Find in Folder'
     IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXT: 'Alternative text (alt) - shown if image can''t be displayed'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can''t be displayed'
     IMAGEDIMENSIONS: Dimensions
     IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
@@ -306,6 +311,7 @@ en:
     LINKOPENNEWWIN: 'Open link in a new window?'
     LINKTO: 'Link to'
     PAGE: Page
+    SUBJECT: 'Email subject'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
@@ -322,21 +328,23 @@ en:
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
     HELP: Help
-    PAGETYPE: 'Page type: '
+    PAGETYPE: 'Page type'
     PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
-    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below.'
+    PERMDEFAULT: 'You must be logged in to access the administration area; please enter your credentials below.'
+    PLEASESAVE: 'Please Save Page: This page could not be updated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     ShowAsList: 'show as list'
     TooManyPages: 'Too many pages'
     ValidationError: 'Validation error'
-    VersionUnknown: Unknown
+    VersionUnknown: unknown
   LeftAndMain_Menu_ss:
     Hello: Hi
     LOGOUT: 'Log out'
+  ListboxField:
+    SOURCE_VALIDATION: 'Please select a value within the list provided. %s is not a valid option'
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
@@ -412,7 +420,7 @@ en:
     Toggle: 'Show formatting help'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: "<div class=\"advanced\">\n	<h4>Advanced usage</h4>\n	<ul>\n	<li>Allowed columns: <em>%s</em></li>\n	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from\n	the imported file.</li>\n	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,\n	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>\n	</ul>\n</div>"
+    Help2: '<div class="advanced"><h4>Advanced usage</h4><ul><li>Allowed columns: <em>%s</em></li><li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li><li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li></ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
@@ -476,8 +484,8 @@ en:
     SINGULARNAME: Role
     Title: Title
   PermissionRoleCode:
-    PermsError: 'Can''t assign code "%s" with privileged permissions (requires ADMIN access)'
     PLURALNAME: 'Permission Role Codes'
+    PermsError: 'Can''t assign code "%s" with privileged permissions (requires ADMIN access)'
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
@@ -542,6 +550,8 @@ en:
     Print: Print
   TableListField_PageControls_ss:
     OF: of
+  TextField:
+    VALIDATEMAXLENGTH: 'The value for {name} must not exceed {maxLength} characters in length'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

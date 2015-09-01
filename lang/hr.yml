@@ -115,11 +115,7 @@ hr:
     TITLE: 'Iframe za upload slike'
   LeftAndMain:
     HELP: Pomoć
-    PAGETYPE: 'Tip Stranice:'
     PERMAGAIN: 'Odjavili ste se sa sustava. Želite li se ponovno prijaviti upišite korisničko ime i lozinku.'
-    PERMALREADY: 'Nažalost, ne možete pristupiti tom dijelu sustava. Želite li se prijaviti kao netko drugi učinite to ispod'
-    PERMDEFAULT: 'Odaberite metodu autorizacije te upišite svoje podatke za pristup sustavu.'
-    PLEASESAVE: 'Molim spremite stranicu: Stranica ne može biti ažurirana jer još uvijek nije spremljena.'
   Member:
     BUTTONCHANGEPASSWORD: 'Promjeni lozinku'
     BUTTONLOGIN: 'Prijava'

@@ -69,11 +69,7 @@ zh_CN:
     TITLE: '图象上传内嵌框架（Iframe）'
   LeftAndMain:
     HELP: 帮助
-    PAGETYPE: '网页类型'
     PERMAGAIN: '您于CMS的登录已被注销，请在下面输入用户名和密码重新登录。'
-    PERMALREADY: '对不起，您无权登录CMS的这一部分。如果您要用另外的帐号，请在下面登录。'
-    PERMDEFAULT: '请先选择一种验证方法并输入您的权限信息，以登录CMS。'
-    PLEASESAVE: '请先保存：因为该网页还未保存，所以该页无法更新。'
   Member:
     BUTTONCHANGEPASSWORD: '更改密码'
     BUTTONLOGIN: '登录'

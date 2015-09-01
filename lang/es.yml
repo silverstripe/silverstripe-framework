@@ -11,7 +11,7 @@ es:
     OWNER: Propietario
     SIZE: 'Tamaño'
     TITLE: Título
-    TYPE: 'Tipo'
+    TYPE: 'Tipo de archivo'
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Seleccione los archivos'
@@ -60,6 +60,8 @@ es:
     ERRORNOTREC: 'Ese nombre de usuario / contraseña no pudo ser reconocido.'
   Boolean:
     ANY: Cualquiera
+    NOANSWER: 'No'
+    YESANSWER: 'Sí'
   CMSLoadingScreen_ss:
     LOADING: Cargando...
     REQUIREJS: 'El CMS requiere que tenga habilitado JavaScript .'
@@ -68,16 +70,34 @@ es:
     ACCESSALLINTERFACES: 'Acceder a todas las interfaces del CMS'
     ACCESSALLINTERFACESHELP: 'Anula configuraciones de acceso más específicas.'
     SAVE: Guardar
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: '¿Olvidó su contraseña?'
+    BUTTONLOGIN: 'Volver a iniciar sesión'
+    BUTTONLOGOUT: 'Cerrar Sesión'
+    PASSWORDEXPIRED: '<p>Su contraseña expiró. <a target="_top" href="{link}">Por favor, elija una nueva.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Previsualización'
   CMSProfileController:
     MENUTITLE: 'Mi Perfil'
+  CMSSecurity:
+    INVALIDUSER: '<p>Usuario inválido. <a target="_top" href="{link}">Por favor, vuelva a autenticar aquí</a> para continuar.</p>'
+    LoginMessage: '<p>Si Ud tiene cualquier trabajo sin guardar puede volver donde lo dejó, iniciando sesión más abajo.</p>'
+    SUCCESSCONTENT: '<p>Inicio de sesión exitoso. Si Ud no es automáticamente redireccionado, <a target="_top" href="{link}">haga clic aquí</a></p>'
+    TimedOutTitleAnonymous: 'Expiró su sesión.'
+    TimedOutTitleMember: 'Eh {name}!<br />Tu sesión expiró.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Has cambiado tu contraseña por'
     CHANGEPASSWORDTEXT2: 'Ahora puede utilizar los siguientes datos de acreditación para iniciar sesión:'
     EMAIL: Correo electrónico
     HELLO: Hola
     PASSWORD: Contraseña
+  CheckboxField:
+    NOANSWER: 'No'
+    YESANSWER: 'Sí'
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
   ConfirmedPasswordField:
     ATLEAST: 'Las constraseñas deben tener al menos {min} caracteres de longitud.'
     BETWEEN: 'Las contraseñas deben tener desde {min} a {max} caracteres de longitud.'
@@ -124,6 +144,7 @@ es:
   DropdownField:
     CHOOSE: (Elegir)
     CHOOSESEARCH: '(Seleccionar o Buscar)'
+    SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
   EmailField:
     VALIDATION: 'Introduzca una dirección de correo electrónico'
   Enum:
@@ -139,8 +160,8 @@ es:
     GzType: 'Archivo comprimido GZIP'
     HtlType: 'Archivo HTML'
     HtmlType: 'Archivo HTML'
-    INVALIDEXTENSION: 'La extensión no es permitida (válidas: {extensions})'
-    INVALIDEXTENSIONSHORT: 'La extensión no es permitida'
+    INVALIDEXTENSION: 'La extensión no está permitida (válidas: {extensions})'
+    INVALIDEXTENSIONSHORT: 'La extensión no está permitida'
     IcoType: 'Imagen Icon'
     JpgType: 'Imagen JPEG - buena para fotos'
     JsType: 'Archivo Javascript'
@@ -171,8 +192,9 @@ es:
     TEXT2: 'enlace para restablecer contraseña'
     TEXT3: para
   Form:
-    CSRF_FAILED_MESSAGE: "Parece que hay un problema técnico. Por favor presionar el botón volver \n\n⇥⇥⇥⇥⇥refresca tu navegador e intenta nuevamente"
-    FIELDISREQUIRED: 'Se requiere este campo'
+    CSRF_EXPIRED_MESSAGE: 'Tu sesión ha expirado. Por favor re envíe el formulario'
+    CSRF_FAILED_MESSAGE: 'Parece que hubo un problema técnico. Por favor, haga clic en el botón Volver, recargue su navegador y vuelva a intentarlo.'
+    FIELDISREQUIRED: 'Se requiere {name} '
     SubmitBtnLabel: Ir
     VALIDATIONCREDITNUMBER: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente {number}'
     VALIDATIONNOTUNIQUE: 'El valor que se ha introducido no es único'
@@ -181,9 +203,8 @@ es:
     VALIDATIONSTRONGPASSWORD: 'Las contraseñas deben tener al menos un dígito y un carácter alfanumérico'
     VALIDATOR: Validador
     VALIDCURRENCY: 'Por favor, introduzca una moneda válida.'
-    CSRF_EXPIRED_MESSAGE: 'Tu sesión ha expirado. Por favor re envíe el formulario'
   FormField:
-    Example: 'Ejemplo'
+    Example: 'Ejemplo %s'
     NONE: ninguna
   GridAction:
     DELETE_DESCRIPTION: Borrar
@@ -214,18 +235,18 @@ es:
     DeletePermissionsFailure: 'Sin permiso para borrar'
     Deleted: 'Borrado %s %s'
     Save: Guardar
-    Saved: 'Guardado'
+    Saved: 'Guardado {name} {link}'
   GridFieldEditButton_ss:
     EDIT: Editar
   GridFieldItemEditView:
     Go_back: 'Volver'
   Group:
-    AddRole: 'Agregar rol'
+    AddRole: 'Agregar un rol para este grupo'
     Code: 'Código de grupo'
     DefaultGroupTitleAdministrators: Administradores
     DefaultGroupTitleContentAuthors: 'Editores'
     Description: Descripción
-    GroupReminder: 'Recordatorio'
+    GroupReminder: 'Si Ud elige un grupo padre, este grupo tomará todos sus roles'
     HierarchyPermsError: 'No se puede asignar permisos privilegiados al grupo "% s"  (requiere acceso de administrador)'
     Locked: '¿Bloqueado?'
     NoRoles: 'Sin roles'
@@ -238,7 +259,6 @@ es:
     many_many_Members: Miembros
   GroupImportForm:
     Help1: '<p>Importar uno o más grupos en formato <em>CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Uso avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Grupos existentes son relacionados por su valor <em>Code</em>, y actualizados con nuevos valores desde el archivo importado</li>\\n<li>Jerarquías de grupos pueden ser creadas usando una columna <em>ParentCode</em>.</li>\\n<li>Códigos de permiso pueden ser asignados por la columna  <em>PermissionCode</em>. Códigos de permisos existentes no son borrados.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Creados {count} grupos'
     ResultDeleted: 'Se eliminaron %d grupos'
     ResultUpdated: 'Actualizados grupos %d'
@@ -247,6 +267,8 @@ es:
   HtmlEditorField:
     ADDURL: 'Añadir URL'
     ADJUSTDETAILSDIMENSIONS: 'Detalles &amp; dimensiones'
+    ANCHORSCANNOTACCESSPAGE: 'No se le permite acceder al contenido de la página destino.'
+    ANCHORSPAGENOTFOUND: 'No se encontró la página destino.'
     ANCHORVALUE: Ancla
     BUTTONADDURL: 'Agregar URL'
     BUTTONINSERT: Insertar
@@ -287,6 +309,7 @@ es:
     LINKOPENNEWWIN: '¿Abrir enlace en una ventana nueva?'
     LINKTO: 'Enlazar a'
     PAGE: Página
+    SUBJECT: 'Asunto del Email'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ''no se puede convertir en un recurso multimedia.'
     UpdateMEDIA: 'Actualizar Media'
@@ -303,21 +326,21 @@ es:
     DELETED: Borrado
     DropdownBatchActionsDefault: Acciones
     HELP: Ayuda
-    PAGETYPE: 'Tipo de página:'
+    PAGETYPE: 'Tipo de página'
     PERMAGAIN: 'Ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña a continuación.'
-    PERMALREADY: 'Lamentablemente no puede acceder a esta parte del CMS. Si quiere entrar como alguien distinto, hágalo a continuación'
-    PERMDEFAULT: 'Introduzca su correo electrónico y su contraseña para acceder al CMS.'
-    PLEASESAVE: 'Por favor guardar la página: Esta página no puede ser actualizada porque no ha sido guardada aún.'
+    PLEASESAVE: 'Por favor guarde la página: Esta página no se ha podido actualizar porque aún no ha sido guardada.'
     PreviewButton: Vista previa
     REORGANISATIONSUCCESSFUL: 'Reorganizado el árbol del sitio con éxito.'
     SAVEDUP: Guardado
     ShowAsList: 'Mostrar como lista'
     TooManyPages: 'Muchas páginas'
     ValidationError: 'Error de validación'
-    VersionUnknown: Versión desconocida
+    VersionUnknown: desconocido
   LeftAndMain_Menu_ss:
     Hello: Hola
     LOGOUT: 'Finalizar la sesión'
+  ListboxField:
+    SOURCE_VALIDATION: 'Por favor, seleccione un valor dentro de la lista provista. %s no es una opcion válida'
   LoginAttempt:
     Email: 'Correo electrónico'
     IP: 'Dirección IP'
@@ -344,12 +367,13 @@ es:
     ERRORPASSWORDNOTMATCH: 'Su contraseña actual no concuerda, por favor intente de nuevo.'
     ERRORWRONGCRED: 'Los detalles provistos no parecen estar correctos. Por favor intentar nuevamente.'
     FIRSTNAME: 'Nombre(s)'
-    INTERFACELANG: 'Lenguaje de la Interfaz'
+    INTERFACELANG: 'Idioma de la Interfaz'
     INVALIDNEWPASSWORD: 'No podemos aceptar este password: {password}'
     LOGGEDINAS: 'Estás conectado como {name}.'
     NEWPASSWORD: 'Nueva Contraseña'
     NoPassword: 'No hay contraseña para este usuario'
     PASSWORD: Contraseña
+    PASSWORDEXPIRED: 'Su contraseña expiró. Por favor, elija una nueva.'
     PLURALNAME: Miembros
     REMEMBERME: '¿Recordarme la próxima vez?'
     SINGULARNAME: Miembro
@@ -392,7 +416,6 @@ es:
     Toggle: 'Cambiar'
   MemberImportForm:
     Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Uso avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Usuarios existentes son relacionados por su propiedad <em>Code</em>, y actualizados con nuevos valores desde el archivo importado.</li>\\n<li>Los grupos pueden ser asignaods por la columna <em>Groups</em>. Los grupos son identificados por su propiedad <em>Code</em>,\\nmúltiples grupos pueden ser separados por comas. Los grupos de miembros existentes no son borrados.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Creados {count} miembros'
     ResultDeleted: 'Se eliminaron %d miembros'
     ResultNone: 'No hay cambios'
@@ -456,7 +479,6 @@ es:
     SINGULARNAME: Regla
     Title: Título
   PermissionRoleCode:
-    PLURALNAME: 'Códigos de las reglas de permisos'
     PermsError: 'No se puede asignar permisos privilegiados al código "% s"  (requiere acceso de administrador)'
     SINGULARNAME: 'Códigos de las regla de permisos'
   Permissions:
@@ -522,6 +544,8 @@ es:
     Print: Imprimir
   TableListField_PageControls_ss:
     OF: de
+  TextField:
+    VALIDATEMAXLENGTH: 'El valor para {name} no puede exceder los {maxLength} caracteres de longitud'
   TimeField:
     VALIDATEFORMAT: 'Por favor, introduzca un formato de tiempo válido ({format})'
   ToggleField:
