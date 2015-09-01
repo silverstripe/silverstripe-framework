@@ -82,13 +82,6 @@ class NumericField extends TextField {
 		return 'numeric text';
 	}
 
-	public function getAttributes() {
-		return array_merge(parent::getAttributes(), array(
-			'type' => 'number',
-			'step' => 'any' // allows entering float/decimal numbers like "1.2" instead of just integers
-		));
-	}
-
 	/**
 	 * Validate this field
 	 *
