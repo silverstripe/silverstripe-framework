@@ -1508,9 +1508,9 @@ jQuery.noConflict();
 
 var statusMessage = function(text, type) {
 	text = jQuery('<div/>').text(text).html(); // Escape HTML entities in text
-	jQuery.noticeAdd({text: text, type: type});
+	jQuery.noticeAdd({text: text, type: type, stayTime: 5000, inEffect: {left: '0', opacity: 'show'}});
 };
 
 var errorMessage = function(text) {
-	jQuery.noticeAdd({text: text, type: 'error'});
+	jQuery.noticeAdd({text: text, type: 'error', stayTime: 5000, inEffect: {left: '0', opacity: 'show'}});
 };

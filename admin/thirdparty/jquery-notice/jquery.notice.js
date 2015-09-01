@@ -41,21 +41,29 @@
 			}
 			
 			// declare varaibles
-			var options, noticeWrapAll, noticeItemOuter, noticeItemInner, noticeItemClose;
-								
+			var options, noticeWrapAll, noticeItemOuter, noticeItemInner, noticeItemClose, hover = false;
+			
 			options 		= jQuery.extend({}, defaults, options);
 			noticeWrapAll	= (!jQuery('.notice-wrap').length) ? jQuery('<div></div>').addClass('notice-wrap').appendTo('body') : jQuery('.notice-wrap');
 			noticeItemOuter	= jQuery('<div></div>').addClass('notice-item-wrapper');
 			noticeItemInner	= jQuery('<div></div>').hide().addClass('notice-item ' + options.type).appendTo(noticeWrapAll).html('<p>'+options.text+'</p>').animate(options.inEffect, options.inEffectDuration).wrap(noticeItemOuter);
 			noticeItemClose	= jQuery('<div></div>').addClass('notice-item-close').prependTo(noticeItemInner).html('x').click(function() { jQuery.noticeRemove(noticeItemInner) });
 			
-			if(!options.stay)
-			{
-				setTimeout(function()
-				{
-					jQuery.noticeRemove(noticeItemInner);
-				},
-				options.stayTime);
+			noticeItemInner.hover(function() {
+				hover = true;
+			}, function () {
+				hover = false;
+			});
+
+			if (!options.stay) {
+				setTimeout( function () {
+					var noticeHover = setInterval(function () {
+						if(!hover) {
+							jQuery.noticeRemove(noticeItemInner);
+							clearInterval(noticeHover);
+						}
+					}, 1000);
+				}, options.stayTime);
 			}
 		},
 		
