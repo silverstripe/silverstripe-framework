@@ -317,7 +317,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			new GridFieldDeleteAction(),
 			new GridFieldDetailForm()
 		);
-		$fileField = new GridField('Files', false, null, $fileFieldConfig);
+		$fileField = GridField::create('Files', false, null, $fileFieldConfig);
 		$fileField->setList($this->getFiles($parentID));
 		$fileField->setAttribute('data-selectable', true);
 		$fileField->setAttribute('data-multiselect', true);
