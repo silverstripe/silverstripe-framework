@@ -4,16 +4,16 @@
 	
     <span id="preview-size-dropdown" class="preview-size-selector preview-selector field dropdown">
 		<select title="<%t SilverStripeNavigator.ViewDeviceWidth 'Select a preview width' %>" id="preview-size-dropdown-select" class="preview-dropdown dropdown nolabel" autocomplete="off" name="Action">
-			<option data-icon="icon-auto" data-description="<%t SilverStripeNavigator.Responsive 'Responsive' %>" class="icon-auto icon-view first" value="auto">
+			<option data-icon="font-icon-resize" data-description="<%t SilverStripeNavigator.Responsive 'Responsive' %>" class="font-icon-resize icon-view first" value="auto">
 				<%t SilverStripeNavigator.Auto 'Auto' %>
 			</option>
-			<option data-icon="icon-desktop" data-description="1024px <%t SilverStripeNavigator.Width 'width' %>" class="icon-desktop icon-view" value="desktop">
+			<option data-icon="font-icon-monitor" data-description="1024px <%t SilverStripeNavigator.Width 'width' %>" class="font-icon-monitor icon-view" value="desktop">
 				<%t SilverStripeNavigator.Desktop 'Desktop' %>
 			</option>
-			<option data-icon="icon-tablet" data-description="800px <%t SilverStripeNavigator.Width 'width' %>" class="icon-tablet icon-view" value="tablet">
+			<option data-icon="font-icon-tablet" data-description="800px <%t SilverStripeNavigator.Width 'width' %>" class="font-icon-tablet icon-view" value="tablet">
 				<%t SilverStripeNavigator.Tablet 'Tablet' %>
 			</option>
-			<option data-icon="icon-mobile" data-description="400px <%t SilverStripeNavigator.Width 'width' %>" class="icon-mobile icon-view last" value="mobile">
+			<option data-icon="font-icon-mobile" data-description="400px <%t SilverStripeNavigator.Width 'width' %>" class="font-icon-mobile icon-view last" value="mobile">
 				<%t SilverStripeNavigator.Mobile 'Mobile' %>
 			</option>
 		</select>
