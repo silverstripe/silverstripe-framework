@@ -800,20 +800,67 @@ body.cms {
 
 
 .notice-item {
-	border: 0;   
 	@include border-radius(3px);
 	font-family: inherit; 
 	font-size: inherit; 
-	padding: 8px 10px 8px 10px; 
+	padding: 6px 24px 8px 10px;
+	word-wrap: break-word;
+	min-height: 60px;
+	height: auto;
+	border: 0;
+	border-left: 3px solid;
+	color: #666;
+	left: 300px;
+	background: #fff;
+
+	&.success,
+	&.good,
+	&.green {
+		border-color: $color-good;
+	}
+
+	&.notice,
+	&.info,
+	&.blue {
+		border-color: $color-notice;
+	}
+
+	&.warning,
+	&.caution,
+	&.yellow {
+		border-color: $color-warning;
+	}
+
+	&.bad,
+	&.error,
+	&.red {
+		border-color: $color-error;
+	}
+
+	p {
+		margin-bottom: 0;
+	}
 }
 
 .notice-item-close {
-	color: #333333; 
-	background: url(../images/filter-icons.png) no-repeat 0 -20px; 
-	width: 1px; 
-	height: 1px; 
-	overflow: hidden; 
-	padding: 0px 0 20px 15px;
+	font-weight: normal;
+	width: 12px;
+	height: 16px;
+	color: #555; 
+	font-size: 16px;
+	overflow: hidden;
+	top: 4px;
+	right: 4px;
+	padding: 2px;
+	opacity: .8;
+
+	&::before {
+		content: 'x';
+	}
+
+	&:hover {
+		opacity: 1;
+	}
 }
 
 

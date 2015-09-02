@@ -660,9 +660,16 @@ body.cms { overflow: hidden; }
 .cms-edit-form .message { margin: 16px; }
 .cms-edit-form .ui-tabs-panel .message { margin: 16px 0; }
 
-.notice-item { border: 0; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; font-family: inherit; font-size: inherit; padding: 8px 10px 8px 10px; }
+.notice-item { -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; font-family: inherit; font-size: inherit; padding: 6px 24px 8px 10px; word-wrap: break-word; min-height: 60px; height: auto; border: 0; border-left: 3px solid; color: #666; left: 300px; background: #fff; }
+.notice-item.success, .notice-item.good, .notice-item.green { border-color: #72c34b; }
+.notice-item.notice, .notice-item.info, .notice-item.blue { border-color: #93CDE8; }
+.notice-item.warning, .notice-item.caution, .notice-item.yellow { border-color: #E9D104; }
+.notice-item.bad, .notice-item.error, .notice-item.red { border-color: #e68288; }
+.notice-item p { margin-bottom: 0; }
 
-.notice-item-close { color: #333333; background: url(../images/filter-icons.png) no-repeat 0 -20px; width: 1px; height: 1px; overflow: hidden; padding: 0px 0 20px 15px; }
+.notice-item-close { font-weight: normal; width: 12px; height: 16px; color: #555; font-size: 16px; overflow: hidden; top: 4px; right: 4px; padding: 2px; opacity: .8; }
+.notice-item-close::before { content: 'x'; }
+.notice-item-close:hover { opacity: 1; }
 
 /** -------------------------------------------- Page icons -------------------------------------------- */
 .page-icon, a .jstree-pageicon { display: block; width: 16px; height: 16px; background: transparent url(../images/sitetree_ss_pageclass_icons_default.png) no-repeat; }
