@@ -691,11 +691,7 @@ class Image extends File implements Flushable {
 				call_user_func_array(array($this, "generateFormattedImage"), $args);
 			}
 
-			$cached = new Image_Cached($cacheFile);
-			// Pass through the title so the templates can use it
-			$cached->Title = $this->Title;
-			// Pass through the parent, to store cached images in correct folder.
-			$cached->ParentID = $this->ParentID;
+			$cached = new Image_Cached($cacheFile, false, $this);
 			return $cached;
 		}
 	}
@@ -1037,8 +1033,9 @@ class Image_Cached extends Image {
 	 * @param boolean $isSingleton This this to true if this is a singleton() object, a stub for calling methods.
 	 *                             Singletons don't have their defaults set.
 	 */
-	public function __construct($filename = null, $isSingleton = false) {
+	public function __construct($filename = null, $isSingleton = false, Image $sourceImage = null) {
 		parent::__construct(array(), $isSingleton);
+		if ($sourceImage) $this->update($sourceImage->toMap());
 		$this->ID = -1;
 		$this->Filename = $filename;
 	}

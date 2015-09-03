@@ -341,6 +341,19 @@ class ImageTest extends SapphireTest {
 	}
 
 	/**
+	 * Test that propertes from the source Image are inherited by resampled images 
+	 */
+	public function testPropertyInheritance() {
+		$testString = 'This is a test';
+		$origImage = $this->objFromFixture('Image', 'imageWithTitle');
+		$origImage->TestProperty = $testString;
+		$resampled = $origImage->ScaleWidth(10);
+		$this->assertEquals($resampled->TestProperty, $testString);
+		$resampled2 = $resampled->ScaleWidth(5);
+		$this->assertEquals($resampled2->TestProperty, $testString);
+	}
+
+	/**
 	 * Tests that cached images are regenerated properly after a cached file is renamed with new arguments
 	 * ToDo: This doesn't seem like something that is worth testing - what is the point of this?
 	 */
