@@ -27,6 +27,9 @@ class ForeignKey extends Int {
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {
+		if(empty($this->object)) {
+			return null;
+		}
 		$relationName = substr($this->name,0,-2);
 		$hasOneClass = $this->object->hasOneComponent($relationName);
 
@@ -50,6 +53,13 @@ class ForeignKey extends Int {
 		}
 
 		return $field;
+	}
+
+	public function setValue($value, $record = null, $markChanged = true) {
+		if($record instanceof DataObject) {
+			$this->object = $record;
+		}
+		parent::setValue($value, $record, $markChanged);
 	}
 }
 

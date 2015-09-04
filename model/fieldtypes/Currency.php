@@ -46,7 +46,7 @@ class Currency extends Decimal {
 		else return $val;
 	}
 
-	public function setValue($value, $record = null) {
+	public function setValue($value, $record = null, $markChanged = true) {
 		$matches = null;
 		if(is_numeric($value)) {
 			$this->value = $value;

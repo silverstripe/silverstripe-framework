@@ -9,7 +9,19 @@
  */
 class Enum extends StringField {
 
-	protected $enum, $default;
+	/**
+	 * List of enum values
+	 *
+	 * @var array
+	 */
+	protected $enum = array();
+			
+	/**
+	 * Default value
+	 *
+	 * @var string|null
+	 */
+	protected $default = null;
 
 	private static $default_search_filter_class = 'ExactMatchFilter';
 
@@ -37,16 +49,12 @@ class Enum extends StringField {
 	 */
 	public function __construct($name = null, $enum = NULL, $default = NULL) {
 		if($enum) {
-			if(!is_array($enum)) {
-				$enum = preg_split("/ *, */", trim($enum));
-			}
-
-			$this->enum = $enum;
+			$this->setEnum($enum);
 
 			// If there's a default, then
 			if($default) {
-				if(in_array($default, $enum)) {
-					$this->default = $default;
+				if(in_array($default, $this->getEnum())) {
+					$this->setDefault($default);
 				} else {
 					user_error("Enum::__construct() The default value '$default' does not match any item in the"
 						. " enumeration", E_USER_ERROR);
@@ -54,7 +62,8 @@ class Enum extends StringField {
 
 			// By default, set the default value to the first item
 			} else {
-				$this->default = reset($enum);
+				$enum = $this->getEnum();
+				$this->setDefault(reset($enum));
 			}
 		}
 
@@ -67,11 +76,11 @@ class Enum extends StringField {
 	public function requireField() {
 		$parts = array(
 			'datatype' => 'enum',
-			'enums' => $this->enum,
+			'enums' => $this->getEnum(),
 			'character set' => 'utf8',
 			'collate' => 'utf8_general_ci',
-			'default' => $this->default,
-			'table' => $this->tableName,
+			'default' => $this->getDefault(),
+			'table' => $this->getTable(),
 			'arrayValue' => $this->arrayValue
 		);
 
@@ -80,7 +89,7 @@ class Enum extends StringField {
 			'parts' => $parts
 		);
 
-		DB::require_field($this->tableName, $this->name, $values);
+		DB::require_field($this->getTable(), $this->getName(), $values);
 	}
 
 	/**
@@ -91,8 +100,12 @@ class Enum extends StringField {
 	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null,
 			$emptyString = null) {
 
-		if(!$title) $title = $this->name;
-		if(!$name) $name = $this->name;
+		if(!$title) {
+			$title = $this->getName();
+		}
+		if(!$name) {
+			$name = $this->getName();
+		}
 
 		$field = new DropdownField($name, $title, $this->enumValues(false), $value, $form);
 		if($hasEmpty) {
@@ -129,7 +142,50 @@ class Enum extends StringField {
 	 */
 	public function enumValues($hasEmpty = false) {
 		return ($hasEmpty)
-			? array_merge(array('' => ''), ArrayLib::valuekey($this->enum))
-			: ArrayLib::valuekey($this->enum);
+			? array_merge(array('' => ''), ArrayLib::valuekey($this->getEnum()))
+			: ArrayLib::valuekey($this->getEnum());
+	}
+
+	/**
+	 * Get list of enum values
+	 *
+	 * @return array
+	 */
+	public function getEnum() {
+		return $this->enum;
+	}
+
+	/**
+	 * Set enum options
+	 *
+	 * @param string|array $enum
+	 * @return $this
+	 */
+	public function setEnum($enum) {
+		if(!is_array($enum)) {
+			$enum = preg_split("/ *, */", trim($enum));
+		}
+		$this->enum = $enum;
+		return $this;
+	}
+
+	/**
+	 * Get default vwalue
+	 *
+	 * @return string|null
+	 */
+	public function getDefault() {
+		return $this->default;
+	}
+
+	/**
+	 * Set default value
+	 *
+	 * @param string $default
+	 * @return $this
+	 */
+	public function setDefault($default) {
+		$this->default = $default;
+		return $this;
 	}
 }

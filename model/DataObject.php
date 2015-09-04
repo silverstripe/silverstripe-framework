@@ -186,8 +186,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	// base fields which are not defined in static $db
 	private static $fixed_fields = array(
-		'ID' => 'Int',
-		'ClassName' => 'Enum',
+		'ID' => 'PrimaryKey',
+		'ClassName' => 'DBClassName',
 		'LastEdited' => 'SS_Datetime',
 		'Created' => 'SS_Datetime',
 	);
@@ -230,44 +230,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @var [string] - class => ClassName field definition cache for self::database_fields
-	 */
-	private static $classname_spec_cache = array();
-
-	/**
 	 * Clear all cached classname specs. It's necessary to clear all cached subclassed names
 	 * for any classes if a new class manifest is generated.
 	 */
 	public static function clear_classname_spec_cache() {
-		self::$classname_spec_cache = array();
-		PolymorphicForeignKey::clear_classname_spec_cache();
-	}
-
-	/**
-	 * Determines the specification for the ClassName field for the given class
-	 *
-	 * @param string $class
-	 * @param boolean $queryDB Determine if the DB may be queried for additional information
-	 * @return string Resulting ClassName spec. If $queryDB is true this will include all
-	 * legacy types that no longer have concrete classes in PHP
-	 */
-	public static function get_classname_spec($class, $queryDB = true) {
-		// Check cache
-		if(!empty(self::$classname_spec_cache[$class])) return self::$classname_spec_cache[$class];
-
-		// Build known class names
-		$classNames = ClassInfo::subclassesFor($class);
-
-		// Enhance with existing classes in order to prevent legacy details being lost
-		if($queryDB && DB::get_schema()->hasField($class, 'ClassName')) {
-			$existing = DB::query("SELECT DISTINCT \"ClassName\" FROM \"{$class}\"")->column();
-			$classNames = array_unique(array_merge($classNames, $existing));
-		}
-		$spec = "Enum('" . implode(', ', $classNames) . "')";
-
-		// Only cache full information if queried
-		if($queryDB) self::$classname_spec_cache[$class] = $spec;
-		return $spec;
+		DBClassName::clear_classname_cache();
 	}
 
 	/**
@@ -285,7 +252,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			unset($fixed['ID']);
 			return array_merge(
 				$fixed,
-				array('ClassName' => self::get_classname_spec($class, $queryDB)),
 				self::custom_database_fields($class)
 			);
 		}
@@ -318,28 +284,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// Remove the original fieldname, it's not an actual database column
 			unset($fields[$fieldName]);
 
-			// Add all composite columns
-			$compositeFields = singleton($fieldClass)->compositeDatabaseFields();
-			if($compositeFields) foreach($compositeFields as $compositeName => $spec) {
+			// Add all composite columns, including polymorphic relationships
+			$fieldObj = Object::create_from_string($fieldClass, $fieldName);
+			$fieldObj->setTable($class);
+			$compositeFields = $fieldObj->compositeDatabaseFields();
+			foreach($compositeFields as $compositeName => $spec) {
 				$fields["{$fieldName}{$compositeName}"] = $spec;
 			}
 		}
 
 		// Add has_one relationships
 		$hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED);
-		if($hasOne) foreach(array_keys($hasOne) as $field) {
-
-			// Check if this is a polymorphic relation, in which case the relation
-			// is a composite field
-			if($hasOne[$field] === 'DataObject') {
-				$relationField = DBField::create_field('PolymorphicForeignKey', null, $field);
-				$relationField->setTable($class);
-				if($compositeFields = $relationField->compositeDatabaseFields()) {
-					foreach($compositeFields as $compositeName => $spec) {
-						$fields["{$field}{$compositeName}"] = $spec;
-					}
-				}
-			} else {
+		if($hasOne) foreach($hasOne as $field => $hasOneClass) {
+			// exclude polymorphic relationships
+			if($hasOneClass !== 'DataObject') {
 				$fields[$field . 'ID'] = 'ForeignKey';
 			}
 		}
@@ -385,6 +343,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Returns a list of all the composite if the given db field on the class is a composite field.
 	 * Will check all applicable ancestor classes and aggregate results.
+	 *
+	 * Includes composite has_one (Polymorphic) fields
+	 *
+	 * @param string $class Name of class to check
+	 * @param bool $aggregated Include fields in entire hierarchy, rather than just on this table
+	 * @return array
 	 */
 	public static function composite_fields($class, $aggregated = true) {
 		if(!isset(DataObject::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
@@ -405,6 +369,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private static function cache_composite_fields($class) {
 		$compositeFields = array();
 
+		// Check db
 		$fields = Config::inst()->get($class, 'db', Config::UNINHERITED);
 		if($fields) foreach($fields as $fieldName => $fieldClass) {
 			if(!is_string($fieldClass)) continue;
@@ -413,9 +378,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$bPos = strpos($fieldClass, '(');
 			if($bPos !== FALSE) $fieldClass = substr($fieldClass, 0, $bPos);
 
-			// Test to see if it implements CompositeDBField
-			if(ClassInfo::classImplements($fieldClass, 'CompositeDBField')) {
+			// Test to see if it extends CompositeDBField
+			if(is_subclass_of($fieldClass, 'CompositeDBField')) {
 				$compositeFields[$fieldName] = $fieldClass;
+			}
+		}
+
+		// check has_one PolymorphicForeignKey
+		$hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED);
+		if($hasOne) foreach($hasOne as $fieldName => $hasOneClass) {
+			if($hasOneClass === 'DataObject') {
+				$compositeFields[$fieldName] = 'PolymorphicForeignKey';
 			}
 		}
 
@@ -1274,8 +1247,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$fieldObj = DBField::create_field('Varchar', $fieldValue, $fieldName);
 			}
 
-			// Ensure DBField is repopulated and written to the manipulation
-			$fieldObj->setValue($fieldValue, $this->record);
+			// Write to manipulation
 			$fieldObj->writeToManipulation($manipulation[$class]);
 		}
 
@@ -1829,13 +1801,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Return data for a specific has_one component.
 	 * @param string $component
+	 * @param string $table Out parameter of the table this has_one field belongs to
 	 * @return string|null
 	 */
-	public function hasOneComponent($component) {
-		$hasOnes = (array)Config::inst()->get($this->class, 'has_one', Config::INHERITED);
+	public function hasOneComponent($component, &$table = null) {
+		$classes = ClassInfo::ancestry($this, true);
 
-		if(isset($hasOnes[$component])) {
-			return $hasOnes[$component];
+		foreach(array_reverse($classes) as $class) {
+			$hasOnes = Config::inst()->get($class, 'has_one', Config::UNINHERITED);
+			if(isset($hasOnes[$component])) {
+				$table = $class;
+				return $hasOnes[$component];
+			}
 		}
 	}
 
@@ -1906,9 +1883,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Doesn't include any fields specified by self::$has_one.  Use $this->hasOne() to get these fields
 	 *
 	 * @param string $fieldName Limit the output to a specific field name
+	 * @param string $table Out parameter of the table this db field is set to
 	 * @return array The database fields
 	 */
-	public function db($fieldName = null) {
+	public function db($fieldName = null, &$table = null) {
 		$classes = ClassInfo::ancestry($this, true);
 
 		// If we're looking for a specific field, we want to hit subclasses first as they may override field types
@@ -1927,6 +1905,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 			if($fieldName) {
 				if(isset($dbItems[$fieldName])) {
+					$table = $class;
 					return $dbItems[$fieldName];
 				}
 			} else {
@@ -2405,7 +2384,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function getField($field) {
 		// If we already have an object in $this->record, then we should just return that
-		if(isset($this->record[$field]) && is_object($this->record[$field]))  return $this->record[$field];
+		if(isset($this->record[$field]) && is_object($this->record[$field])) {
+			return $this->record[$field];
+		}
 
 		// Do we have a field that needs to be lazy loaded?
 		if(isset($this->record[$field.'_Lazy'])) {
@@ -2413,27 +2394,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$this->loadLazyFields($tableClass);
 		}
 
-		// Otherwise, we need to determine if this is a complex field
+		// In case of complex fields, return the DBField object
 		if(self::is_composite_field($this->class, $field)) {
-			$helper = $this->castingHelper($field);
-			$fieldObj = Object::create_from_string($helper, $field);
-
-			$compositeFields = $fieldObj->compositeDatabaseFields();
-			foreach ($compositeFields as $compositeName => $compositeType) {
-				if(isset($this->record[$field.$compositeName.'_Lazy'])) {
-					$tableClass = $this->record[$field.$compositeName.'_Lazy'];
-					$this->loadLazyFields($tableClass);
-				}
-			}
-
-			// write value only if either the field value exists,
-			// or a valid record has been loaded from the database
-			$value = (isset($this->record[$field])) ? $this->record[$field] : null;
-			if($value || $this->exists()) $fieldObj->setValue($value, $this->record, false);
-
-			$this->record[$field] = $fieldObj;
-
-			return $this->record[$field];
+			$helper = $this->db($field);
+			$obj = Object::create_from_string($helper, $field);
+			$obj->setValue(null, $this, false);
+			$this->record[$field] = $obj;
 		}
 
 		return isset($this->record[$field]) ? $this->record[$field] : null;
@@ -2530,7 +2496,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * )
 	 * </code>
 	 *
-	 * @param boolean $databaseFieldsOnly Get only database fields that have changed
+	 * @param boolean|array $databaseFieldsOnly Filter to determine which fields to return. Set to true
+	 * to return all database fields, or an array for an explicit filter. false returns all fields.
 	 * @param int $changeLevel The strictness of what is defined as change. Defaults to strict
 	 * @return array
 	 */
@@ -2539,12 +2506,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Update the changed array with references to changed obj-fields
 		foreach($this->record as $k => $v) {
+			// Prevents CompositeDBFields infinite looping on isChanged
+			if(is_array($databaseFieldsOnly) && !in_array($k, $databaseFieldsOnly)) {
+				continue;
+			}
 			if(is_object($v) && method_exists($v, 'isChanged') && $v->isChanged()) {
 				$this->changed[$k] = self::CHANGE_VALUE;
 			}
 		}
 
-		if($databaseFieldsOnly) {
+		if(is_array($databaseFieldsOnly)) {
+			$fields = array_intersect_key((array)$this->changed, array_flip($databaseFieldsOnly));
+		} elseif($databaseFieldsOnly) {
 			$databaseFields = $this->inheritedDatabaseFields();
 			$databaseFields['ID'] = true;
 			$databaseFields['LastEdited'] = true;
@@ -2584,7 +2557,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function isChanged($fieldName = null, $changeLevel = self::CHANGE_STRICT) {
-		$changed = $this->getChangedFields(false, $changeLevel);
+		$fields = $fieldName ? array($fieldName) : false;
+		$changed = $this->getChangedFields($fields, $changeLevel);
 		if(!isset($fieldName)) {
 			return !empty($changed);
 		}
@@ -2606,16 +2580,24 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if (substr($fieldName, -2) == 'ID') {
 			unset($this->components[substr($fieldName, 0, -2)]);
 		}
+
+		// If we've just lazy-loaded the column, then we need to populate the $original array
+		if(isset($this->record[$fieldName.'_Lazy'])) {
+			$tableClass = $this->record[$fieldName.'_Lazy'];
+			$this->loadLazyFields($tableClass);
+		}
+
 		// Situation 1: Passing an DBField
 		if($val instanceof DBField) {
-			$val->Name = $fieldName;
+			$val->setName($fieldName);
+			$val->saveInto($this);
 
-			// If we've just lazy-loaded the column, then we need to populate the $original array by
-			// called getField(). Too much overhead? Could this be done by a quicker method? Maybe only
-			// on a call to getChanged()?
-			$this->getField($fieldName);
-
-			$this->record[$fieldName] = $val;
+			// Situation 1a: Composite fields should remain bound in case they are
+			// later referenced to update the parent dataobject
+			if($val instanceof CompositeDBField) {
+				$val->bindTo($this);
+				$this->record[$fieldName] = $val;
+			}
 		// Situation 2: Passing a literal or non-DBField object
 		} else {
 			// If this is a proper database field, we shouldn't be getting non-DBField objects
@@ -2637,11 +2619,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$this->changed[$fieldName] = self::CHANGE_VALUE;
 				}
 
-				// If we've just lazy-loaded the column, then we need to populate the $original array by
-				// called getField(). Too much overhead? Could this be done by a quicker method? Maybe only
-				// on a call to getChanged()?
-				$this->getField($fieldName);
-
 				// Value is always saved back when strict check succeeds.
 				$this->record[$fieldName] = $val;
 			}
@@ -2657,21 +2634,28 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $fieldName Name of the field
 	 * @param mixed $value New field value
-	 * @return DataObject $this
+	 * @return $this
 	 */
-	public function setCastedField($fieldName, $val) {
+	public function setCastedField($fieldName, $value) {
 		if(!$fieldName) {
 			user_error("DataObject::setCastedField: Called without a fieldName", E_USER_ERROR);
 		}
-		$castingHelper = $this->castingHelper($fieldName);
-		if($castingHelper) {
-			$fieldObj = Object::create_from_string($castingHelper, $fieldName);
-			$fieldObj->setValue($val);
+		$fieldObj = $this->dbObject($fieldName);
+		if($fieldObj) {
+			$fieldObj->setValue($value);
 			$fieldObj->saveInto($this);
 		} else {
-			$this->$fieldName = $val;
+			$this->$fieldName = $value;
 		}
 		return $this;
+	}
+
+	public function castingHelper($field) {
+		// Allows db to act as implicit casting override
+		if($fieldSpec = $this->dbHelper($field)) {
+			return $fieldSpec;
+		}
+		return parent::castingHelper($field);
 	}
 
 	/**
@@ -2938,39 +2922,55 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DBField The field as a DBField object
 	 */
 	public function dbObject($fieldName) {
-		// If we have a CompositeDBField object in $this->record, then return that
+		// If we have a DBField object in $this->record, then return that
 		if(isset($this->record[$fieldName]) && is_object($this->record[$fieldName])) {
 			return $this->record[$fieldName];
+		}
 
-		// Special case for ID field
-		} else if($fieldName == 'ID') {
-			return new PrimaryKey($fieldName, $this);
+		// Build and populate new field otherwise
+		$helper = $this->dbHelper($fieldName, $table);
+		if($helper) {
+			$obj = Object::create_from_string($helper, $fieldName);
+			$obj->setTable($table);
+			$obj->setValue($this->$fieldName, $this, false);
+			return $obj;
+		}
+	}
 
-		// Special case for ClassName
-		} else if($fieldName == 'ClassName') {
-			$val = get_class($this);
-			return DBField::create_field('Varchar', $val, $fieldName);
-
-		} else if(array_key_exists($fieldName, self::$fixed_fields)) {
-			return DBField::create_field(self::$fixed_fields[$fieldName], $this->$fieldName, $fieldName);
+	/**
+	 * Get helper class spec for the given db field.
+	 *
+	 * Note that child fields of composite db fields will not be detectable via this method.
+	 * These should be resolved indirectly by referencing 'CompositeField.Child' instead of 'CompositeFieldChild'
+	 * in your templates
+	 *
+	 * @param string $fieldName
+	 * @param string $table Out parameter of the table this has_one field belongs to
+	 * @return DBField
+	 */
+	public function dbHelper($fieldName, &$table = null) {
+		// Fixed fields
+		if(array_key_exists($fieldName, self::$fixed_fields)) {
+			$table = $this->baseTable();
+			return self::$fixed_fields[$fieldName];
+		}
 
 		// General casting information for items in $db
-		} else if($helper = $this->db($fieldName)) {
-			$obj = Object::create_from_string($helper, $fieldName);
-			$obj->setValue($this->$fieldName, $this->record, false);
-			return $obj;
+		if($helper = $this->db($fieldName, $table)) {
+			return $helper;
+		}
 
 		// Special case for has_one relationships
-		} else if(preg_match('/ID$/', $fieldName) && $this->hasOneComponent(substr($fieldName,0,-2))) {
-			$val = $this->$fieldName;
-			return DBField::create_field('ForeignKey', $val, $fieldName, $this);
+		if(preg_match('/.+ID$/', $fieldName) && $this->hasOneComponent(substr($fieldName,0,-2), $table)) {
+			return 'ForeignKey';
+		}
 
 		// has_one for polymorphic relations do not end in ID
-		} else if(($type = $this->hasOneComponent($fieldName)) && ($type === 'DataObject')) {
-			$val = $this->$fieldName();
-			return DBField::create_field('PolymorphicForeignKey', $val, $fieldName, $this);
-
+		if(($type = $this->hasOneComponent($fieldName, $table)) && ($type === 'DataObject')) {
+			return 'PolymorphicForeignKey';
 		}
+
+		return null;
 	}
 
 	/**
@@ -3736,11 +3736,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Use a casting object for a field. This is a map from
 	 * field name to class name of the casting object.
+	 * 
 	 * @var array
 	 */
 	private static $casting = array(
-		"ID" => 'Int',
-		"ClassName" => 'Varchar',
+		"ID" => "PrimaryKey",
+		"ClassName" => "DBClassName",
 		"LastEdited" => "SS_Datetime",
 		"Created" => "SS_Datetime",
 		"Title" => 'Text',

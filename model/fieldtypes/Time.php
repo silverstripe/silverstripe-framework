@@ -16,7 +16,7 @@
  */
 class Time extends DBField {
 
-	public function setValue($value, $record = null) {
+	public function setValue($value, $record = null, $markChanged = true) {
 		if($value) {
 			if(preg_match( '/(\d{1,2})[:.](\d{2})([a|A|p|P|][m|M])/', $value, $match )) $this->TwelveHour( $match );
 			else $this->value = date('H:i:s', strtotime($value));

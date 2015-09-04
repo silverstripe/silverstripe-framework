@@ -130,20 +130,30 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 
 		// Test with blank entries
 		DataObject::clear_classname_spec_cache();
+		$do1 = new DataObjectSchemaGenerationTest_DO();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
-			"Enum('DataObjectSchemaGenerationTest_DO, DataObjectSchemaGenerationTest_IndexDO')",
-			$fields['ClassName']
+			array(
+				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
+				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+			),
+			$do1->dbObject('ClassName')->getEnum()
 		);
+
 
 		// Test with instance of subclass
 		$item1 = new DataObjectSchemaGenerationTest_IndexDO();
 		$item1->write();
 		DataObject::clear_classname_spec_cache();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
-			"Enum('DataObjectSchemaGenerationTest_DO, DataObjectSchemaGenerationTest_IndexDO')",
-			$fields['ClassName']
+			array(
+				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
+				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+			),
+			$item1->dbObject('ClassName')->getEnum()
 		);
 		$item1->delete();
 
@@ -152,9 +162,13 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$item2->write();
 		DataObject::clear_classname_spec_cache();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
-			"Enum('DataObjectSchemaGenerationTest_DO, DataObjectSchemaGenerationTest_IndexDO')",
-			$fields['ClassName']
+			array(
+				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
+				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+			),
+			$item2->dbObject('ClassName')->getEnum()
 		);
 		$item2->delete();
 
@@ -165,9 +179,13 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$item2->write();
 		DataObject::clear_classname_spec_cache();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
-			"Enum('DataObjectSchemaGenerationTest_DO, DataObjectSchemaGenerationTest_IndexDO')",
-			$fields['ClassName']
+			array(
+				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
+				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+			),
+			$item1->dbObject('ClassName')->getEnum()
 		);
 		$item1->delete();
 		$item2->delete();

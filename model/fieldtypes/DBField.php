@@ -131,14 +131,21 @@ abstract class DBField extends ViewableData {
 	}
 
 	/**
-	 * Set the value on the field.
+	 * Set the value of this field in various formats.
+	 * Used by {@link DataObject->getField()}, {@link DataObject->setCastedField()}
+	 * {@link DataObject->dbObject()} and {@link DataObject->write()}.
 	 *
-	 * Optionally takes the whole record as an argument, to pick other values.
+	 * As this method is used both for initializing the field after construction,
+	 * and actually changing its values, it needs a {@link $markChanged}
+	 * parameter.
 	 *
 	 * @param mixed $value
-	 * @param array $record
+	 * @param DataObject|array $record An array or object that this field is part of
+	 * @param boolean $markChanged Indicate wether this field should be marked changed.
+	 *  Set to FALSE if you are initializing this field after construction, rather
+	 *  than setting a new value.
 	 */
-	public function setValue($value, $record = null) {
+	public function setValue($value, $record = null, $markChanged = true) {
 		$this->value = $value;
 	}
 
@@ -207,8 +214,24 @@ abstract class DBField extends ViewableData {
 
 	}
 
+	/**
+	 * Assign this DBField to a table
+	 *
+	 * @param string $tableName
+	 * @return $this
+	 */
 	public function setTable($tableName) {
 		$this->tableName = $tableName;
+		return $this;
+	}
+
+	/**
+	 * Get the table this field belongs to, if assigned
+	 *
+	 * @return string|null
+	 */
+	public function getTable() {
+		return $this->tableName;
 	}
 
 	/**
