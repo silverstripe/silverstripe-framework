@@ -22,22 +22,7 @@ require_once 'Zend/Currency.php';
  * @package framework
  * @subpackage model
  */
-class Money extends DBField implements CompositeDBField {
-
-	/**
-	 * @var string $getCurrency()
-	 */
-	protected $currency;
-
-	/**
-	 * @var float $currencyAmount
-	 */
-	protected $amount;
-
-	/**
-	 * @var boolean $isChanged
-	 */
-	protected $isChanged = false;
+class Money extends CompositeDBField {
 
 	/**
 	 * @var string $locale
@@ -67,77 +52,6 @@ class Money extends DBField implements CompositeDBField {
 		$this->currencyLib = new Zend_Currency(null, i18n::get_locale());
 
 		parent::__construct($name);
-	}
-
-	public function compositeDatabaseFields() {
-		return self::$composite_db;
-	}
-
-	public function requireField() {
-		$fields = $this->compositeDatabaseFields();
-		if($fields) foreach($fields as $name => $type){
-			DB::require_field($this->tableName, $this->name.$name, $type);
-		}
-	}
-
-	public function writeToManipulation(&$manipulation) {
-		if($this->getCurrency()) {
-			$manipulation['fields'][$this->name.'Currency'] = $this->prepValueForDB($this->getCurrency());
-		} else {
-			$manipulation['fields'][$this->name.'Currency']
-				= DBField::create_field('Varchar', $this->getCurrency())->nullValue();
-		}
-
-		if($this->getAmount()) {
-			$manipulation['fields'][$this->name.'Amount'] = $this->getAmount();
-		} else {
-			$manipulation['fields'][$this->name.'Amount']
-				= DBField::create_field('Decimal', $this->getAmount())->nullValue();
-		}
-	}
-
-	public function addToQuery(&$query) {
-		parent::addToQuery($query);
-		$query->selectField(sprintf('"%sAmount"', $this->name));
-		$query->selectField(sprintf('"%sCurrency"', $this->name));
-	}
-
-	public function setValue($value, $record = null, $markChanged = true) {
-		// Convert an object to an array
-		if($record && $record instanceof DataObject) {
-			$record = $record->getQueriedDatabaseFields();
-		}
-
-		// @todo Allow resetting value to NULL through Money $value field
-		if ($value instanceof Money && $value->exists()) {
-			$this->setCurrency($value->getCurrency(), $markChanged);
-			$this->setAmount($value->getAmount(), $markChanged);
-			if($markChanged) $this->isChanged = true;
-		} else if($record && isset($record[$this->name . 'Amount'])) {
-			if($record[$this->name . 'Amount']) {
-				if(!empty($record[$this->name . 'Currency'])) {
-					$this->setCurrency($record[$this->name . 'Currency'], $markChanged);
-				} else if($currency = (string)$this->config()->default_currency) {
-					$this->setCurrency($currency, $markChanged);
-				}
-
-				$this->setAmount($record[$this->name . 'Amount'], $markChanged);
-			} else {
-				$this->value = $this->nullValue();
-			}
-			if($markChanged) $this->isChanged = true;
-		} else if (is_array($value)) {
-			if (array_key_exists('Currency', $value)) {
-				$this->setCurrency($value['Currency'], $markChanged);
-			}
-			if (array_key_exists('Amount', $value)) {
-				$this->setAmount($value['Amount'], $markChanged);
-			}
-			if($markChanged) $this->isChanged = true;
-		} else {
-			// @todo Allow to reset a money value by passing in NULL
-			//user_error('Invalid value in Money->setValue()', E_USER_ERROR);
-		}
 	}
 
 	/**
@@ -173,32 +87,28 @@ class Money extends DBField implements CompositeDBField {
 	 * @return string
 	 */
 	public function getCurrency() {
-		return $this->currency;
+		return $this->getField('Currency');
 	}
 
 	/**
 	 * @param string
 	 */
 	public function setCurrency($currency, $markChanged = true) {
-		$this->currency = $currency;
-		if($markChanged) $this->isChanged = true;
+		$this->setField('Currency', $currency, $markChanged);
 	}
 
 	/**
-	 * @todo Return casted Float DBField?
-	 *
 	 * @return float
 	 */
 	public function getAmount() {
-		return $this->amount;
+		return $this->getField('Amount');
 	}
 
 	/**
 	 * @param float $amount
 	 */
 	public function setAmount($amount, $markChanged = true) {
-		$this->amount = (float)$amount;
-		if($markChanged) $this->isChanged = true;
+		$this->setField('Amount', (float)$amount, $markChanged);
 	}
 
 	/**
@@ -214,10 +124,6 @@ class Money extends DBField implements CompositeDBField {
 	public function hasAmount() {
 		$a = $this->getAmount();
 		return (!empty($a) && is_numeric($a));
-	}
-
-	public function isChanged() {
-		return $this->isChanged;
 	}
 
 	/**
@@ -259,7 +165,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	public function getName($currency = null, $locale = null) {
+	public function getCurrencyName($currency = null, $locale = null) {
 		if($locale === null) $locale = $this->getLocale();
 		if($currency === null) $currency = $this->getCurrency();
 
@@ -290,7 +196,7 @@ class Money extends DBField implements CompositeDBField {
 	 * @return FormField
 	 */
 	public function scaffoldFormField($title = null) {
-		$field = new MoneyField($this->name);
+		$field = new MoneyField($this->getName());
 		$field->setAllowedCurrencies($this->getAllowedCurrencies());
 		$field->setLocale($this->getLocale());
 

@@ -1,8 +1,8 @@
 MoneyTest_DataObject:
-   test1:
-      MyMoneyCurrency: EUR
-      MyMoneyAmount: 1.23
+ test1:
+  MyMoneyCurrency: EUR
+  MyMoneyAmount: 1.23
 MoneyTest_SubClass:
-   test2:
-      MyOtherMoneyCurrency: GBP
-      MyOtherMoneyAmount: 2.46
+ test2:
+  MyOtherMoneyCurrency: GBP
+  MyOtherMoneyAmount: 2.46

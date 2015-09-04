@@ -106,15 +106,18 @@ class MoneyField extends FormField {
 	 * (see @link MoneyFieldTest_CustomSetter_Object for more information)
 	 */
 	public function saveInto(DataObjectInterface $dataObject) {
-		$fieldName = $this->name;
+		$fieldName = $this->getName();
 		if($dataObject->hasMethod("set$fieldName")) {
 			$dataObject->$fieldName = DBField::create_field('Money', array(
 				"Currency" => $this->fieldCurrency->dataValue(),
 				"Amount" => $this->fieldAmount->dataValue()
 			));
 		} else {
-			$dataObject->$fieldName->setCurrency($this->fieldCurrency->dataValue());
-			$dataObject->$fieldName->setAmount($this->fieldAmount->dataValue());
+			$currencyField = "{$fieldName}Currency";
+			$amountField = "{$fieldName}Amount";
+
+			$dataObject->$currencyField = $this->fieldCurrency->dataValue();
+			$dataObject->$amountField = $this->fieldAmount->dataValue();
 		}
 	}
 

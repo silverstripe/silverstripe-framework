@@ -145,11 +145,11 @@ class MoneyTest extends SapphireTest {
 		));
 		$m->setLocale('ar_EG');
 
-		$this->assertSame('Estnische Krone', $m->getName('EEK','de_AT'));
-		$this->assertSame('يورو', $m->getName());
+		$this->assertSame('Estnische Krone', $m->getCurrencyName('EEK','de_AT'));
+		$this->assertSame('يورو', $m->getCurrencyName());
 
 		try {
-			$m->getName('EGP', 'xy_XY');
+			$m->getCurrencyName('EGP', 'xy_XY');
 			$this->setExpectedException("Exception");
 		} catch(Exception $e) {
 		}

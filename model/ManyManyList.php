@@ -122,18 +122,17 @@ class ManyManyList extends RelationList {
 				// convert joined extra fields into their composite field types.
 				$value = array();
 
-				foreach($composed as $subField => $subSpec) {
-					if(isset($row[$fieldName . $subSpec])) {
-						$value[$subSpec] = $row[$fieldName . $subSpec];
+				foreach($composed as $subField) {
+					if(isset($row[$fieldName . $subField])) {
+						$value[$subField] = $row[$fieldName . $subField];
 
 						// don't duplicate data in the record
-						unset($row[$fieldName . $subSpec]);
+						unset($row[$fieldName . $subField]);
 					}
 				}
 
 				$obj = Object::create_from_string($this->extraFields[$fieldName], $fieldName);
 				$obj->setValue($value, null, false);
-
 				$add[$fieldName] = $obj;
 			}
 		}
