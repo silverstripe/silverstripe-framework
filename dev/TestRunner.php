@@ -422,7 +422,8 @@ class TestRunner extends Controller {
 		if(!Director::is_cli()) echo '</div>';
 
 		// Put the error handlers back
-		Debug::loadErrorHandlers();
+		$errorHandler = Injector::inst()->get('ErrorHandler');
+		$errorHandler->start();
 
 		if(!Director::is_cli()) self::$default_reporter->writeFooter();
 
