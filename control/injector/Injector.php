@@ -543,14 +543,25 @@ class Injector {
 		}
 		$class = $spec['class'];
 
+		// Check type
+		if (!$type) {
+			$type = isset($spec['type']) ? $spec['type'] : null;
+		}
+
 		// create the object, using any constructor bindings
 		$constructorParams = array();
 		if (isset($spec['constructor']) && is_array($spec['constructor'])) {
 			$constructorParams = $spec['constructor'];
 		}
 
-		$factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();
-		$object = $factory->create($class, $constructorParams);
+		// Catch service references
+		if (strpos($class, '%$') === 0) {
+			$otherID = substr($class, 2);
+			$object = $this->get($otherID, $type != 'prototype', $constructorParams);
+		} else {
+			$factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();
+			$object = $factory->create($class, $constructorParams);
+		}
 
 		// figure out if we have a specific id set or not. In some cases, we might be instantiating objects
 		// that we don't manage directly; we don't want to store these in the service cache below
@@ -560,10 +571,6 @@ class Injector {
 
 		// now set the service in place if needbe. This is NOT done for prototype beans, as they're
 		// created anew each time
-		if (!$type) {
-			$type = isset($spec['type']) ? $spec['type'] : null;
-		}
-
 		if ($id && (!$type || $type != 'prototype')) {
 			// this ABSOLUTELY must be set before the object is injected.
 			// This prevents circular reference errors down the line

@@ -444,6 +444,50 @@ class InjectorTest extends SapphireTest {
 	}
 
 	/**
+	 * Specific test method to illustrate various ways of setting a requirements backend
+	 */
+	public function testChainedComponents() {
+		$injector = new Injector();
+		$config = array(
+			'MyParentClass',
+			'AbstractClass' => '%$MyParentClass',
+			'AbstractClass2' => '%$AbstractClass',
+			'AbstractClass3' => '%$AbstractClass2'
+		);
+		$injector->load($config);
+
+		// Test root object get / create
+		$parent = $injector->get('MyParentClass');
+		$parent->one = 'singleton';
+		$parent2 = $injector->create('MyParentClass');
+		$parent2->two = 'prototype';
+		$parent3 = $injector->get('MyParentClass');
+
+		$this->assertEquals('singleton', $parent->one);
+		$this->assertNotEquals($parent->one, $parent2->one);
+		$this->assertEquals($parent->one, $parent3->one);
+
+		// Test nested objects
+		$abstract3 = $injector->get('AbstractClass3');
+		$this->assertTrue($abstract3 instanceof MyParentClass);
+
+		$abstract2 = $injector->get('AbstractClass2');
+		$this->assertTrue($abstract2 instanceof MyParentClass);
+		$this->assertEquals('singleton', $abstract2->one);
+
+		// prototype
+		$abstract2create = $injector->create('AbstractClass2');
+		$abstract2create->one = 'created prototype';
+		$this->assertTrue($abstract2create instanceof MyParentClass);
+		$this->assertNotEquals('created prototype', $parent->one, 'Injector::create creates a new instance');
+
+		// another singleton
+		$abstract2get = $injector->get('AbstractClass2');
+		$this->assertTrue($abstract2get instanceof MyParentClass);
+		$this->assertEquals('singleton', $abstract2get->one, 'Injector::get returns a singleton');
+	}
+
+	/**
 	 * disabled for now
 	 */
 	public function testStaticInjections() {

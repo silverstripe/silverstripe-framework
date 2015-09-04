@@ -225,6 +225,37 @@ Would setup the following
 * Look at the properties to be injected and look for the config for `MySQLDatabase`
 * Create a MySQLDatabase class, passing dbusername and dbpassword as the parameters to the constructor.
 
+## Chaining services
+
+Furthermore, you could use aliases for multiple or optional backend service via the used of chained references.
+
+
+	:::yaml
+	Injector:
+	  JSONProvider:
+	    class: TextProvider
+	    properties:
+	      Serialiser: JSONSerialiser
+	  XMLProvider:
+	    class: TextProvider
+	    properties:
+	      Serialiser: XMLSerialiser
+	  FrontendProvider: '%$JSONProvider'
+	  BackendProvider: '%$XMLProvider'
+
+
+User code could then override the provider assigned to the frontend with the following YML, without
+having to duplicate the entire service description.
+
+
+	:::yaml
+	Injector:
+	  FrontendProvider: '%$XMLProvider'
+
+
+This code will provide an instance of XMLProvider with the necessary properties when
+calling `Injector::inst()->get('FrontendProvider');`
+
 
 ## Testing with Injector
 
