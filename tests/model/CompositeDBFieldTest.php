@@ -35,6 +35,29 @@ class CompositeDBFieldTest extends SapphireTest {
 				$this->assertEquals(array('MyMoney' => 'Money', 'OtherMoney' => 'Money'),
 			DataObject::composite_fields('SubclassedDBFieldObject'));
 	}
+
+	/**
+	 * Tests that changes to the fields affect the underlying dataobject, and vice versa
+	 */
+	public function testFieldBinding() {
+		$object = new CompositeDBFieldTest_DataObject();
+		$object->MyMoney->Currency = 'NZD';
+		$object->MyMoney->Amount = 100.0;
+		$this->assertEquals('NZD', $object->MyMoneyCurrency);
+		$this->assertEquals(100.0, $object->MyMoneyAmount);
+		$object->write();
+
+		$object2 = CompositeDBFieldTest_DataObject::get()->byID($object->ID);
+		$this->assertEquals('NZD', $object2->MyMoney->Currency);
+		$this->assertEquals(100.0, $object2->MyMoney->Amount);
+
+		$object2->MyMoneyCurrency = 'USD';
+		$this->assertEquals('USD', $object2->MyMoney->Currency);
+
+		$object2->MyMoney->setValue(array('Currency' => 'EUR', 'Amount' => 200.0));
+		$this->assertEquals('EUR', $object2->MyMoneyCurrency);
+		$this->assertEquals(200.0, $object2->MyMoneyAmount);
+	}
 }
 
 class CompositeDBFieldTest_DataObject extends DataObject implements TestOnly {
