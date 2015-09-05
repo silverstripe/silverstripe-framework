@@ -50,11 +50,14 @@ class Varchar extends StringField {
  	 * @see DBField::requireField()
  	 */
 	public function requireField() {
+		$charset = Config::inst()->get('MySQLDatabase', 'connection_charset');
+		$collation = Config::inst()->get('MySQLDatabase', 'connection_collation');
+
 		$parts = array(
 			'datatype'=>'varchar',
 			'precision'=>$this->size,
-			'character set'=>'utf8',
-			'collate'=>'utf8_general_ci',
+			'character set'=> $charset,
+			'collate'=> $collation,
 			'arrayValue'=>$this->arrayValue
 		);
 

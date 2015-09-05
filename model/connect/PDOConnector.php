@@ -143,8 +143,11 @@ class PDOConnector extends DBConnector {
 		}
 
 		// Connection commands to be run on every re-connection
+		if(!isset($charset)) {
+			$charset = 'utf8';
+		}
 		$options = array(
-			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $charset
 		);
 		if(self::is_emulate_prepare()) {
 			$options[PDO::ATTR_EMULATE_PREPARES] = true;

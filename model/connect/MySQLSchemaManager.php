@@ -194,7 +194,9 @@ class MySQLSchemaManager extends DBSchemaManager {
 	}
 
 	public function createDatabase($name) {
-		$this->query("CREATE DATABASE \"$name\" DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci");
+		$charset = Config::inst()->get('MySQLDatabase', 'connection_charset');
+		$collation = Config::inst()->get('MySQLDatabase', 'connection_collation');
+		$this->query("CREATE DATABASE \"$name\" DEFAULT CHARACTER SET {$charset} DEFAULT COLLATE {$collation}");
 	}
 
 	public function dropDatabase($name) {
@@ -433,7 +435,9 @@ class MySQLSchemaManager extends DBSchemaManager {
 		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set
 		// utf8 collate utf8_general_ci default '{$this->default}'");
 		$valuesString = implode(",", Convert::raw2sql($values['enums'], true));
-		return "enum($valuesString) character set utf8 collate utf8_general_ci" . $this->defaultClause($values);
+		$charset = Config::inst()->get('MySQLDatabase', 'connection_charset');
+		$collation = Config::inst()->get('MySQLDatabase', 'connection_collation');
+		return "enum($valuesString) character set {$charset} collate {$collation}" . $this->defaultClause($values);
 	}
 
 	/**
@@ -449,7 +453,9 @@ class MySQLSchemaManager extends DBSchemaManager {
 		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set
 		//utf8 collate utf8_general_ci default '{$this->default}'");
 		$valuesString = implode(",", Convert::raw2sql($values['enums'], true));
-		return "set($valuesString) character set utf8 collate utf8_general_ci" . $this->defaultClause($values);
+		$charset = Config::inst()->get('MySQLDatabase', 'connection_charset');
+		$collation = Config::inst()->get('MySQLDatabase', 'connection_collation');
+		return "set($valuesString) character set {$charset} collate {$collation}" . $this->defaultClause($values);
 	}
 
 	/**
@@ -503,7 +509,9 @@ class MySQLSchemaManager extends DBSchemaManager {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'mediumtext', 'character set'=>'utf8', 'collate'=>'utf8_general_ci');
 		//DB::requireField($this->tableName, $this->name, "mediumtext character set utf8 collate utf8_general_ci");
-		return 'mediumtext character set utf8 collate utf8_general_ci' . $this->defaultClause($values);
+		$charset = Config::inst()->get('MySQLDatabase', 'connection_charset');
+		$collation = Config::inst()->get('MySQLDatabase', 'connection_collation');
+		return 'mediumtext character set ' . $charset . ' collate ' . $collation . $this->defaultClause($values);
 	}
 
 	/**
@@ -533,7 +541,9 @@ class MySQLSchemaManager extends DBSchemaManager {
 		//DB::requireField($this->tableName, $this->name, "varchar($this->size) character set utf8 collate
 		// utf8_general_ci");
 		$default = $this->defaultClause($values);
-		return "varchar({$values['precision']}) character set utf8 collate utf8_general_ci$default";
+		$charset = Config::inst()->get('MySQLDatabase', 'connection_charset');
+		$collation = Config::inst()->get('MySQLDatabase', 'connection_collation');
+		return "varchar({$values['precision']}) character set {$charset} collate {$collation}{$default}";
 	}
 
 	/*
