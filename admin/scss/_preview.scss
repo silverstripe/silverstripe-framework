@@ -21,30 +21,7 @@
 			color: $color-text-dark;
 		} 
 	}
-	.icon-auto:before {
-		background: sprite($sprites32, preview_auto) no-repeat;	
-	}
-	.icon-desktop:before {
-		background: sprite($sprites32, preview_desktop) no-repeat;
-	}
-	.icon-tablet:before {
-		background: sprite($sprites32, preview_tablet) no-repeat;
-	}
-	.icon-mobile:before {
-		background: sprite($sprites32, preview_mobile) no-repeat;
-	}
-	.icon-split:before {
-		background: sprite($sprites32, preview_split) no-repeat;
-	}
-	.icon-edit:before {
-		background: sprite($sprites32, preview_edit) no-repeat;
-	}
-	.icon-preview:before {
-		background: sprite($sprites32, preview_preview) no-repeat;
-	}
-	.icon-window:before {
-		background: sprite($sprites32, preview_dual_window) no-repeat;
-	}
+
 	.cms-navigator{
 		width: 100%;
 	}
@@ -118,9 +95,10 @@
 						display: none;
 					}
 
-					ul{
-						padding:0;
-						margin:0;
+					ul {
+						padding: 0;
+						margin: 0;
+						overflow: visible;
 
 						li{
 							font-size: 12px;
@@ -176,7 +154,48 @@
 								margin-right: 4px;
 							}
 							
-						}			
+						}
+
+						.disabled-tooltip {
+							position: absolute;
+							top: 0;
+							left: 0;
+							right: 0;
+							height: 32px;
+							background: rgba(255,255,255,0); // Prevent clicking on browsers that do not support pointer-events: none;
+
+							&::before {
+								content: 'Screen size too small';
+								text-align: center;
+								background: #555;
+								color: white;
+								padding: 4px 0;
+								position: absolute;
+								top: -24px;
+								left: -1px;
+								right: -1px;
+								border-radius: 3px 3px 0 0;
+								display: none;
+								z-index: 2;
+							}
+
+							&::after {
+								content: '';
+								position: absolute;
+								width: 10px;
+								height: 10px;
+								@include rotate(45deg);
+								display: none;
+								background: #555;
+								left: 47%;
+								top: -6px;
+							}
+
+							&:hover::after,
+							&:hover::before {
+								display: block;
+							}
+						}		
 					}
 				}
 			}			
@@ -188,6 +207,23 @@
 				background: darken($color-widget-bg, 2%);
 				color: $color-text;
 			}
+		}
+
+		&.split-disabled {
+			.chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns {
+				color: $color-text-disabled;
+				pointer-events: none;
+
+				&.highlighted, &:hover, &:focus {
+					color: $color-text-disabled;
+					background: #fff;
+					cursor: default;
+				}
+
+				&::before {
+					color: $color-text-disabled;
+				}
+			} 
 		}	
 	} 
 
