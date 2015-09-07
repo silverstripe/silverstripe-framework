@@ -64,7 +64,7 @@ class TreeDropdownField extends FormField {
 	 * @var string default child counting method in Hierarchy->getChildrenAsUL
 	 */
 	protected $numChildrenMethod = 'numChildren';
-	
+
 	/**
 	 * Used by field search to leave only the relevant entries
 	 */
@@ -101,7 +101,7 @@ class TreeDropdownField extends FormField {
 		$this->keyField     = $keyField;
 		$this->labelField   = $labelField;
 		$this->showSearch	= $showSearch;
-		
+
 		//Extra settings for Folders
 		if ($sourceObject == 'Folder') {
 			$this->childrenMethod = 'ChildFolders';
@@ -192,11 +192,11 @@ class TreeDropdownField extends FormField {
 		$this->childrenMethod = $method;
 		return $this;
 	}
-	
+
 	/**
 	 * @param $method The parameter to numChildrenMethod to use when calling Hierarchy->getChildrenAsUL in
 	 * {@link Hierarchy}. Should be used in conjunction with setChildrenMethod().
-	 * 
+	 *
 	 */
 	public function setNumChildrenMethod($method) {
 		$this->numChildrenMethod = $method;
@@ -247,6 +247,8 @@ class TreeDropdownField extends FormField {
 				'Metadata' => ($metadata) ? Convert::raw2json($metadata) : null,
 			)
 		);
+
+		$this->extend('onBeforeRender', $this);
 
 		return $this->customise($properties)->renderWith('TreeDropdownField');
 	}
@@ -489,9 +491,9 @@ class TreeDropdownField extends FormField {
 				if ($row->ParentID) $parents[$row->ParentID] = true;
 				$this->searchIds[$row->ID] = true;
 			}
-			
+
 			$sourceObject = $this->sourceObject;
-			
+
 			while (!empty($parents)) {
 				$items = $sourceObject::get()
 					->filter("ID",array_keys($parents));
