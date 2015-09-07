@@ -732,7 +732,7 @@ class Hierarchy extends DataExtension {
 		
 		$children = $baseClass::get()
 			->filter('ParentID', (int)$this->owner->ID)
-			->sort('Sort', 'ASC');
+			->sort('"Sort"', 'ASC');
 		if ($afterNode) {
 			$children = $children->filter('Sort:GreaterThan', $afterNode->Sort);
 		}
