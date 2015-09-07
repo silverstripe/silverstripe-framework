@@ -156,7 +156,8 @@ class DataListTest extends SapphireTest {
 			. ' "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID",'
 			. ' "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
 			. ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment')
-			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment"';
+			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment"'
+			. ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
 		$this->assertEquals($expected, $list->sql());
 	}
 
@@ -176,7 +177,8 @@ class DataListTest extends SapphireTest {
 			. ' "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
 			. ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment')
 			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN "DataObjectTest_Team" AS "Team"'
-			. ' ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
+			. ' ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"'
+			. ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
 
 		$this->assertEquals($expected, $list->sql());
 	}
@@ -197,7 +199,8 @@ class DataListTest extends SapphireTest {
 			. ' "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
 			. ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment')
 			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN "DataObjectTest_Team" AS "Team"'
-			. ' ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
+			. ' ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"'
+			. ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
 
 		$this->assertEquals($expected, $list->sql());
 
@@ -220,7 +223,8 @@ class DataListTest extends SapphireTest {
 			. 'ELSE ' . $db->prepStringForDB('DataObjectTest_TeamComment') . ' END AS "RecordClassName" '
 			. 'FROM "DataObjectTest_TeamComment" '
 			. 'LEFT JOIN "DataObjectTest\NamespacedClass" ON '
-			. '"DataObjectTest\NamespacedClass"."ID" = "DataObjectTest_TeamComment"."ID"';
+			. '"DataObjectTest\NamespacedClass"."ID" = "DataObjectTest_TeamComment"."ID"'
+			. ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
 		$this->assertEquals($expected, $list->sql(), 'Retains backslashes in namespaced classes');
 
 	}

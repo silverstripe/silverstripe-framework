@@ -579,7 +579,6 @@ class MemberTest extends FunctionalTest {
 	
 	public function testOnChangeGroups() {
 		$staffGroup = $this->objFromFixture('Group', 'staffgroup');
-		$adminGroup = $this->objFromFixture('Group', 'admingroup');
 		$staffMember = $this->objFromFixture('Member', 'staffmember');
 		$adminMember = $this->objFromFixture('Member', 'admin');
 		$newAdminGroup = new Group(array('Title' => 'newadmin'));
@@ -587,7 +586,7 @@ class MemberTest extends FunctionalTest {
 		Permission::grant($newAdminGroup->ID, 'ADMIN');
 		$newOtherGroup = new Group(array('Title' => 'othergroup'));
 		$newOtherGroup->write();
-		
+
 		$this->assertTrue(
 			$staffMember->onChangeGroups(array($staffGroup->ID)),
 			'Adding existing non-admin group relation is allowed for non-admin members'
@@ -611,6 +610,76 @@ class MemberTest extends FunctionalTest {
 		$this->assertTrue(
 			$adminMember->onChangeGroups(array($newAdminGroup->ID)),
 			'Adding new admin group relation is allowed for admin members'
+		);
+	}
+
+	/**
+	 * Test Member_GroupSet::add
+	 */
+	public function testOnChangeGroupsByAdd() {
+		$staffMember = $this->objFromFixture('Member', 'staffmember');
+		$adminMember = $this->objFromFixture('Member', 'admin');
+
+		// Setup new admin group
+		$newAdminGroup = new Group(array('Title' => 'newadmin'));
+		$newAdminGroup->write();
+		Permission::grant($newAdminGroup->ID, 'ADMIN');
+
+		// Setup non-admin group
+		$newOtherGroup = new Group(array('Title' => 'othergroup'));
+		$newOtherGroup->write();
+
+		// Test staff can be added to other group
+		$this->assertFalse($staffMember->inGroup($newOtherGroup));
+		$staffMember->Groups()->add($newOtherGroup);
+		$this->assertTrue(
+			$staffMember->inGroup($newOtherGroup),
+			'Adding new non-admin group relation is allowed for non-admin members'
+		);
+
+		// Test staff member can't be added to admin groups
+		$this->assertFalse($staffMember->inGroup($newAdminGroup));
+		$staffMember->Groups()->add($newAdminGroup);
+		$this->assertFalse(
+			$staffMember->inGroup($newAdminGroup),
+			'Adding new admin group relation is not allowed for non-admin members'
+		);
+
+		// Test staff member can be added to admin group by admins
+		$this->logInAs($adminMember);
+		$staffMember->Groups()->add($newAdminGroup);
+		$this->assertTrue(
+			$staffMember->inGroup($newAdminGroup),
+			'Adding new admin group relation is allowed for normal users, when granter is logged in as admin'
+		);
+
+		// Test staff member can be added if they are already admin
+		$this->session()->inst_set('loggedInAs', null);
+		$this->assertFalse($adminMember->inGroup($newAdminGroup));
+		$adminMember->Groups()->add($newAdminGroup);
+		$this->assertTrue(
+			$adminMember->inGroup($newAdminGroup),
+			'Adding new admin group relation is allowed for admin members'
+		);
+	}
+
+	/**
+	 * Test Member_GroupSet::add
+	 */
+	public function testOnChangeGroupsBySetIDList() {
+		$staffMember = $this->objFromFixture('Member', 'staffmember');
+
+		// Setup new admin group
+		$newAdminGroup = new Group(array('Title' => 'newadmin'));
+		$newAdminGroup->write();
+		Permission::grant($newAdminGroup->ID, 'ADMIN');
+		
+		// Test staff member can't be added to admin groups
+		$this->assertFalse($staffMember->inGroup($newAdminGroup));
+		$staffMember->Groups()->setByIDList(array($newAdminGroup->ID));
+		$this->assertFalse(
+			$staffMember->inGroup($newAdminGroup),
+			'Adding new admin group relation is not allowed for non-admin members'
 		);
 	}
 
