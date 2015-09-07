@@ -17,7 +17,7 @@ class LeftAndMainTest extends FunctionalTest {
 		
 		// @todo fix controller stack problems and re-activate
 		//$this->autoFollowRedirection = false;
-		CMSMenu::populate_menu();
+		$this->resetMenu();
 
 		$this->backupCss = Config::inst()->get('LeftAndMain', 'extra_requirements_css');
 		$this->backupJs = Config::inst()->get('LeftAndMain', 'extra_requirements_javascript');
@@ -32,6 +32,23 @@ class LeftAndMainTest extends FunctionalTest {
 		));
 
 		Requirements::set_combined_files_enabled(false);
+	}
+
+	/**
+	 * Clear menu to default state as per LeftAndMain::init()
+	 */
+	protected function resetMenu() {
+		CMSMenu::clear_menu();
+		CMSMenu::populate_menu();
+		CMSMenu::add_link(
+			'Help',
+			_t('LeftAndMain.HELP', 'Help', 'Menu title'),
+			LeftAndMain::config()->help_link,
+			-2,
+			array(
+				'target' => '_blank'
+			)
+		);
 	}
 
 	public function tearDown() {
@@ -127,13 +144,14 @@ class LeftAndMainTest extends FunctionalTest {
 	public function testLeftAndMainSubclasses() {
 		$adminuser = $this->objFromFixture('Member','admin');
 		$this->session()->inst_set('loggedInAs', $adminuser->ID);
-		
-		$menuItems = singleton('LeftAndMain')->MainMenu();
+
+		$this->resetMenu();
+		$menuItems = singleton('LeftAndMain')->MainMenu(false);
 		foreach($menuItems as $menuItem) {
 			$link = $menuItem->Link;
 			
 			// don't test external links
-			if(preg_match('/^https?:\/\//',$link)) continue;
+			if(preg_match('/^(https?:)?\/\//',$link)) continue;
 
 			$response = $this->get($link);
 			
@@ -157,6 +175,7 @@ class LeftAndMainTest extends FunctionalTest {
 		
 		// anonymous user
 		$this->session()->inst_set('loggedInAs', null);
+		$this->resetMenu();
 		$menuItems = singleton('LeftAndMain')->MainMenu(false);
 		$this->assertEquals(
 			array_map($allValsFn, $menuItems->column('Code')),
@@ -165,18 +184,24 @@ class LeftAndMainTest extends FunctionalTest {
 		);
 		
 		// restricted cms user
-		$this->session()->inst_set('loggedInAs', $securityonlyuser->ID);
+		$this->logInAs($securityonlyuser);
+		$this->resetMenu();
 		$menuItems = singleton('LeftAndMain')->MainMenu(false);
 		$this->assertEquals(
 			array_map($allValsFn, $menuItems->column('Code')),
-			array('SecurityAdmin','Help'),
+			array('CMSProfileController', 'SecurityAdmin','Help'),
 			'Groups with limited access can only access the interfaces they have permissions for'
 		);
 		
 		// all cms sections user
-		$this->session()->inst_set('loggedInAs', $allcmssectionsuser->ID);
+		$this->logInAs($allcmssectionsuser);
+		$this->resetMenu();
 		$menuItems = singleton('LeftAndMain')->MainMenu(false);
-		$this->assertContains('SecurityAdmin', 
+		$this->assertContains('CMSProfileController',
+			array_map($allValsFn, $menuItems->column('Code')),
+			'Group with CMS_ACCESS_LeftAndMain permission can edit own profile'
+		);
+		$this->assertContains('SecurityAdmin',
 			array_map($allValsFn, $menuItems->column('Code')),
 			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
 		);
@@ -186,7 +211,8 @@ class LeftAndMainTest extends FunctionalTest {
 		);
 		
 		// admin
-		$this->session()->inst_set('loggedInAs', $adminuser->ID);
+		$this->logInAs($adminuser);
+		$this->resetMenu();
 		$menuItems = singleton('LeftAndMain')->MainMenu(false);
 		$this->assertContains(
 			'SecurityAdmin',
@@ -265,6 +291,8 @@ class LeftAndMainTest_Object extends DataObject implements TestOnly {
 		'URLSegment' => 'Varchar',
 		'Sort' => 'Int',
 	);
+
+	private static $default_sort = '"Sort"';
 	
 	private static $extensions = array(
 		'Hierarchy'
