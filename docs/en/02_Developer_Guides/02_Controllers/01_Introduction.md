@@ -124,7 +124,7 @@ Action methods can return one of four main things:
 
 		$this->response->addHeader("Content-type", "application/json");
 
-		return $this->response.
+		return $this->response;
 	}
 
 For more information on how a URL gets mapped to an action see the [Routing](routing) documentation.
