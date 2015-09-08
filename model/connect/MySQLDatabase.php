@@ -159,7 +159,7 @@ class MySQLDatabase extends SS_Database {
 			$baseClasses[$class] = '"' . $class . '"';
 		}
 
-		$charset = Config::inst()->get('MySQLDatabase', 'connection_charset');
+		$charset = Config::inst()->get('MySQLDatabase', 'charset');
 
 		// Make column selection lists
 		$select = array(

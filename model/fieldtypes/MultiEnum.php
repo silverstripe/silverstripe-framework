@@ -31,8 +31,8 @@ class MultiEnum extends Enum {
 	}
 
 	public function requireField(){
-		$charset = Config::inst()->get('MySQLDatabase', 'connection_charset');
-		$collation = Config::inst()->get('MySQLDatabase', 'connection_collation');
+		$charset = Config::inst()->get('MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('MySQLDatabase', 'collation');
 		$values=array(
 			'type'=>'set',
 			'parts'=>array(

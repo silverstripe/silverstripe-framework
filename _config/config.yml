@@ -6,7 +6,8 @@ Upload:
   replaceFile: false
 MySQLDatabase:
   connection_charset: utf8
-  connection_collation: utf8_general_ci
+  charset: utf8
+  collation: utf8_general_ci
 HTTP:
   cache_control:
     max-age: 0
