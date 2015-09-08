@@ -134,20 +134,24 @@ class PDOConnector extends DBConnector {
 			}
 		}
 
+		// Connection charset and collation
+		$connCharset = Config::inst()->get('MySQLDatabase', 'connection_charset');
+		$connCollation = Config::inst()->get('MySQLDatabase', 'connection_collation');
+
 		// Set charset if given and not null. Can explicitly set to empty string to omit
 		if($parameters['driver'] !== 'sqlsrv') {
 			$charset = isset($parameters['charset'])
 					? $parameters['charset']
-					: 'utf8';
+					: $connCharset;
 			if (!empty($charset)) $dsn[] = "charset=$charset";
 		}
 
 		// Connection commands to be run on every re-connection
 		if(!isset($charset)) {
-			$charset = 'utf8';
+			$charset = $connCharset;
 		}
 		$options = array(
-			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $charset
+			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $charset . ' COLLATE ' . $connCollation
 		);
 		if(self::is_emulate_prepare()) {
 			$options[PDO::ATTR_EMULATE_PREPARES] = true;

@@ -56,6 +56,10 @@ class MySQLiConnector extends DBConnector {
 		// Normally $selectDB is set to false by the MySQLDatabase controller, as per convention
 		$selectedDB = ($selectDB && !empty($parameters['database'])) ? $parameters['database'] : null;
 
+		// Connection charset and collation
+		$connCharset = Config::inst()->get('MySQLDatabase', 'connection_charset');
+		$connCollation = Config::inst()->get('MySQLDatabase', 'connection_collation');
+
 		if(!empty($parameters['port'])) {
 			$this->dbConn = new MySQLi(
 				$parameters['server'],
@@ -77,11 +81,18 @@ class MySQLiConnector extends DBConnector {
 			$this->databaseError("Couldn't connect to MySQL database | " . $this->dbConn->connect_error);
 		}
 
-		// Set charset if given and not null. Can explicitly set to empty string to omit
+		// Set charset and collation if given and not null. Can explicitly set to empty string to omit
 		$charset = isset($parameters['charset'])
 				? $parameters['charset']
-				: 'utf8';
+				: $connCharset;
+
 		if (!empty($charset)) $this->dbConn->set_charset($charset);
+
+		$collation = isset($parameters['collation'])
+			? $parameters['collation']
+			: $connCollation;
+
+		if (!empty($collation)) $this->dbConn->query("SET collation_connection = {$collation}");
 	}
 
 	public function __destruct() {

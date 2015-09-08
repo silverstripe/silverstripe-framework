@@ -31,6 +31,13 @@ class MySQLDatabase extends SS_Database {
 			$parameters['charset'] = $charset;
 		}
 
+		// Set collation
+		if( empty($parameters['collation'])
+			&& ($collation = Config::inst()->get('MySQLDatabase', 'connection_collation'))
+		) {
+			$parameters['collation'] = $collation;
+		}
+
 		// Notify connector of parameters
 		$this->connector->connect($parameters);
 
