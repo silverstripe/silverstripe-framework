@@ -5,7 +5,6 @@ GridFieldExportButtonTest_Team:
     test-team-2:
         Name: Test2
         City: 'Quoted "City" 2'
-
 GridFieldExportButtonTest_NoView:
-	item1:
-		Name: Foo
+    item1:
+        Name: Foo
