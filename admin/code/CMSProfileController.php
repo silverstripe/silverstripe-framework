@@ -4,13 +4,11 @@
  * @package framework
  * @subpackage admin
  */
-class CMSProfileController extends LeftAndMain {
+class CMSProfileController extends LeftAndMain implements PermissionProvider {
 
 	private static $url_segment = 'myprofile';
 
 	private static $menu_title = 'My Profile';
-
-	private static $required_permission_codes = false;
 
 	private static $tree_class = 'Member';
 
@@ -59,6 +57,7 @@ class CMSProfileController extends LeftAndMain {
 		if(
 			!Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")
 			&& !Permission::checkMember($member, "CMS_ACCESS_CMSMain")
+			&& !Permission::checkMember($member, "CMS_ACCESS_CMSProfileController")
 		) {
 			return false;
 		}
@@ -94,6 +93,21 @@ class CMSProfileController extends LeftAndMain {
 	public function Breadcrumbs($unlinked = false) {
 		$items = parent::Breadcrumbs($unlinked);
 		return new ArrayList(array($items[0]));
+	}
+
+	public function providePermissions() {
+		$title = _t("CMSProfileController.MENUTITLE", 'My Profile');
+		
+		return array(
+			"CMS_ACCESS_CMSProfileController" => array(
+				'name' => _t('CMSMain.ACCESS', "Access to '{title}' section", array('title' => $title)),
+				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access'),
+				'help' => _t(
+					'CMSProfileController.ACCESS_HELP',
+					'Allow viewing of the section containing profile information.'
+				)
+			)
+		);
 	}
 
 }
