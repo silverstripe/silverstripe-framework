@@ -426,6 +426,29 @@ class ArrayListTest extends SapphireTest {
 	}
 
 	/**
+	 * Check that we don't cause recursion errors with array_multisort() and circular dependencies
+	 */
+	public function testSortWithCircularDependencies() {
+		$itemA = new stdClass;
+		$childA = new stdClass;
+		$itemA->child = $childA;
+		$childA->parent = $itemA;
+		$itemA->Sort = 1;
+
+		$itemB = new stdClass;
+		$childB = new stdClass;
+		$itemB->child = $childB;
+		$childB->parent = $itemB;
+		$itemB->Sort = 1;
+
+		$items = new ArrayList;
+		$items->add($itemA);
+		$items->add($itemB);
+
+		// This call will trigger a fatal error if there are issues with circular dependencies
+		$items->sort('Sort');
+	}
+	/**
 	 * $list->filter('Name', 'bob'); // only bob in the list
 	 */
 	public function testSimpleFilter() {
