@@ -70,10 +70,21 @@ sv:
     ACCESSALLINTERFACES: 'Tillgång till alla CMS-sektioner'
     ACCESSALLINTERFACESHELP: 'Ersätter mer specifika behörighetsinställningar.'
     SAVE: Spara
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Glömt lösenord?'
+    BUTTONLOGIN: 'Logga in igen'
+    BUTTONLOGOUT: 'Logga ut'
+    PASSWORDEXPIRED: '<p>Ditt lösenard har gått ut. <a target="_top" href="{link}">Vänligen ange ett nytt.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Förhandsgranska sida'
   CMSProfileController:
     MENUTITLE: 'Min Profil'
+  CMSSecurity:
+    INVALIDUSER: '<p>Ogiltig användare. <a target="_top" href="{link}">Vänligen ange dina inloggnings-uppgifter igen</a> för att fortsätta.</p>'
+    LoginMessage: '<p>Om du har osparade ändringar kan du fortsätta där du slutade genom att logga in igen nedan.</p>'
+    SUCCESSCONTENT: '<p>Inloggningen lyckades. <a target="_top" href="{link}">Klicka här</a> om du inte skickas vidare automatiskt.</p>'
+    TimedOutTitleAnonymous: 'Din session har upphört.'
+    TimedOutTitleMember: 'Hej {name}!<br />Din session har upphört.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
     CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
@@ -85,17 +96,8 @@ sv:
     YESANSWER: 'Ja'
   CheckboxFieldSetField:
     SOURCE_VALIDATION: 'Vänligen välj att värde i listan. {value} är inget giltigt val'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Glömt lösenord?'
-    BUTTONLOGIN: 'Logga in igen'
-    BUTTONLOGOUT: 'Logga ut'
-    PASSWORDEXPIRED: '<p>Ditt lösenard har gått ut. <a target="_top" href="{link}">Vänligen ange ett nytt.</a></p>'
-  CMSSecurity:
-    INVALIDUSER: '<p>Ogiltig användare. <a target="_top" href="{link}">Vänligen ange dina inloggnings-uppgifter igen</a> för att fortsätta.</p>'
-    LoginMessage: '<p>Om du har osparade ändringar kan du fortsätta där du slutade genom att logga in igen nedan.</p>'
-    SUCCESSCONTENT: '<p>Inloggningen lyckades. <a target="_top" href="{link}">Klicka här</a> om du inte skickas vidare automatiskt.</p>'
-    TimedOutTitleAnonymous: 'Din session har upphört.'
-    TimedOutTitleMember: 'Hej {name}!<br />Din session har upphört.'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Vänligen välj att värde i listan. {value} är inget giltigt val'
   ConfirmedPasswordField:
     ATLEAST: 'Lösenord måste vara minst {min} tecken långa.'
     BETWEEN: 'Lösenord måste vara {min} till {max} tecken långa.'
@@ -190,6 +192,7 @@ sv:
     TEXT2: 'Återställningslänk för lösenord'
     TEXT3: för
   Form:
+    CSRF_EXPIRED_MESSAGE: 'Din session har upphört. Var god och skicka in formuläret på nytt.'
     CSRF_FAILED_MESSAGE: 'Ett tekniskt fel uppstod. Var god klicka på bakåt-knappen, ladda om sidan i webbläsaren och försök igen'
     FIELDISREQUIRED: '{name} är obligatoriskt'
     SubmitBtnLabel: Kör
@@ -200,7 +203,6 @@ sv:
     VALIDATIONSTRONGPASSWORD: 'Lösenord måste innehålla minst en siffra och en bokstav.'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Var vänlig ange en korrekt valuta'
-    CSRF_EXPIRED_MESSAGE: 'Din session har upphört. Var god och skicka in formuläret på nytt.'
   FormField:
     Example: 't.ex. %s'
     NONE: ingen
@@ -307,10 +309,10 @@ sv:
     LINKOPENNEWWIN: 'Öppna länk i nytt fönster?'
     LINKTO: 'Länka till'
     PAGE: Sida
+    SUBJECT: 'Ämne'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URLen ''{url}'' gick inte  att omvandla till ett media.'
     UpdateMEDIA: 'Uppdatera media'
-    SUBJECT: 'Ämne'
   Image:
     PLURALNAME: Filer
     SINGULARNAME: Fil
@@ -324,10 +326,7 @@ sv:
     DELETED: Raderad
     DropdownBatchActionsDefault: Åtgärder
     HELP: Hjälp
-    PAGETYPE: 'Sidtyp'
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
-    PERMALREADY: 'Tyvärr så har du inte tillträde till den delen av CMSet. Om du vill logga in med en annan användare kan du göra det nedan'
-    PERMDEFAULT: 'Var god välj en inloggningsmetod och fyll i dina uppgifter för att logga in i CMSet.'
     PLEASESAVE: 'Var god spara sidan. Den kan inte uppdateras eftersom den har inte sparats ännu.'
     PreviewButton: Förhandsgranska
     REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
@@ -335,7 +334,7 @@ sv:
     ShowAsList: 'visa som lista'
     TooManyPages: 'För många sidor'
     ValidationError: 'Valideringsfel'
-    VersionUnknown: okänd
+    VersionUnknown: Okänd
   LeftAndMain_Menu_ss:
     Hello: Hej
     LOGOUT: 'Logga ut'
@@ -414,7 +413,6 @@ sv:
     Toggle: 'Visa fomateringshjälp'
   MemberImportForm:
     Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small><a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Avancerat </h4>\n<ul>\n<li>Tillåtna kolumner: <em>%s</em></li>\n<li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\n<li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Code</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li>\n</ul>\n</div>"
     ResultCreated: 'Skapade {count} medlemmar'
     ResultDeleted: 'Raderade %d medlemmar'
     ResultNone: 'Inga ändringar'
@@ -578,5 +576,3 @@ sv:
     UPLOADSINTO: 'sparas till /{path}'
   Versioned:
     has_many_Versions: Versioner
-  CheckboxSetField:
-    SOURCE_VALIDATION: 'Vänligen välj att värde i listan. {value} är inget giltigt val'

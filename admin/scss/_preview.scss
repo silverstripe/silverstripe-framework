@@ -16,10 +16,9 @@
 		&:before {
 			display:inline-block;
 			float:left;
-			content: '';
-			width: 23px;
-			height:17px;
+			width: 20px;
 			overflow: hidden;
+			color: $color-text-dark;
 		} 
 	}
 	.icon-auto:before {
@@ -49,9 +48,6 @@
 	.cms-navigator{
 		width: 100%;
 	}
-	.preview-selector.dropdown a.chzn-single{
-		text-indent:-200px;
-	}
 
 	/* Preview selectors. Overrides default chosen styles and applies its own */
 	.preview-selector {
@@ -59,20 +55,26 @@
 		border-bottom:none;
 		position:relative;
 		@include box-shadow(none);
-		margin: 3px 0 0 4px;
+		margin: 2px 0 0 4px;
 		padding: 0;
 		height: 28px;
 
 		a.chzn-single {						
-			width: 20px;
-			padding: 6px 5px 5px;
-			height: 18px;
-			margin: -3px 0 0;
+			width: 16px;
+			padding: 6px;
+			height: 16px;
+			margin: -2px 0 0;
 			filter: none;	/* remove ie background */
 			background: none;
 			border: none;
 			@include box-shadow(none);
 			@include border-radius(3px);
+
+			&::before {
+				font-size: 18px;
+				margin-top: -1px;
+				margin-left: -1px;
+			}
 
 			&:hover, &.chzn-single-with-drop  {
 				background-color: darken($color-widget-bg,6%);
@@ -130,6 +132,7 @@
 
 							&:before{
 								margin-right: 2px;
+								font-size: 16px;
 							}
 							&.description {
 								padding-top: 5px;

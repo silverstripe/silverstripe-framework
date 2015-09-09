@@ -1,27 +1,38 @@
 Permission:
-   admin:
-      Code: ADMIN
-   cmsmain:
-      Code: CMS_ACCESS_LeftAndMain
-   leftandmain:
-      Code: CMS_ACCESS_CMSMain
+  admin:
+    Code: ADMIN
+  cmsmain:
+    Code: CMS_ACCESS_LeftAndMain
+  leftandmain:
+    Code: CMS_ACCESS_CMSMain
+  test:
+    Code: CMS_ACCESS_TestController
+
 Group:
-   admins:
-      Title: Administrators
-      Permissions: =>Permission.admin
-   cmsusers:
-      Title: CMS Users
-      Permissions: =>Permission.cmsmain, =>Permission.leftandmain
+  admins:
+    Title: Administrators
+    Permissions: =>Permission.admin
+  cmsusers:
+    Title: CMS Users
+    Permissions: =>Permission.cmsmain, =>Permission.leftandmain
+  test:
+    Title: Test group
+    Permissions: =>Permission.test
+
 Member:
-   admin:
-      FirstName: Admin
-      Email: admin@user.com
-      Groups: =>Group.admins
-   user1:
-      FirstName: Joe
-      Email: user1@user.com
-      Groups: =>Group.cmsusers
-   user2:
-      FirstName: Steve
-      Email: user2@user.com
-      Groups: =>Group.cmsusers
+  admin:
+    FirstName: Admin
+    Email: admin@user.com
+    Groups: =>Group.admins
+  user1:
+    FirstName: Joe
+    Email: user1@user.com
+    Groups: =>Group.cmsusers
+  user2:
+    FirstName: Steve
+    Email: user2@user.com
+    Groups: =>Group.cmsusers
+  user3:
+    FirstName: Files
+    Email: user3@example.com
+    Groups: =>Group.test

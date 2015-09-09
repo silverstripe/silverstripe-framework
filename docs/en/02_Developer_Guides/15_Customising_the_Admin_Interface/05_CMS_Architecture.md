@@ -360,7 +360,7 @@ without affecting the response body.
 	class MyController extends LeftAndMain {
 		class myaction() {
 			// ...
-			$this->response->addHeader('X-Controller', 'MyOtherController');
+			$this->getResponse()->addHeader('X-Controller', 'MyOtherController');
 			return $html;
 		}
 	}

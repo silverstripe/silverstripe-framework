@@ -9,4 +9,3 @@ Font license info
    License:   SIL (http://scripts.sil.org/OFL)
    Homepage:  http://www.entypo.com
 
-

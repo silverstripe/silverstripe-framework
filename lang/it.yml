@@ -70,10 +70,22 @@ it:
     ACCESSALLINTERFACES: 'Accesso a tutte le sezioni del CMS'
     ACCESSALLINTERFACESHELP: 'Annulla le impostazioni di accesso più specifiche.'
     SAVE: Salva
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Password dimenticata?'
+    BUTTONLOGIN: 'Accedi nuovamente'
+    BUTTONLOGOUT: 'Scollegati'
+    PASSWORDEXPIRED: '<p>La tua password è scaduta. <a target="_top" href="{link}">Per favore selezionarne una nuova.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Preview del sito'
   CMSProfileController:
     MENUTITLE: 'Il mio Profilo'
+  CMSSecurity:
+    INVALIDUSER: '<p>Utente non valido. <a target="_top" href="{link}">Per favore autenticarsi di nuovo</a> per continuare.</p>'
+    LoginMessage: '<p>Se hai del lavoro non salvato puo tornare a dove eri accedendo nuovamente da qui sotto.</p>'
+    SUCCESS: Successo
+    SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
+    TimedOutTitleAnonymous: 'La tua sessione è scaduta.'
+    TimedOutTitleMember: 'Ciao {name}!<br />La tua sessione è scaduta.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT2: 'Ora puoi utilizzare le seguenti credenziali per accedere:'
@@ -85,18 +97,8 @@ it:
     YESANSWER: 'Sì'
   CheckboxFieldSetField:
     SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Password dimenticata?'
-    BUTTONLOGIN: 'Accedi nuovamente'
-    BUTTONLOGOUT: 'Scollegati'
-    PASSWORDEXPIRED: '<p>La tua password è scaduta. <a target="_top" href="{link}">Per favore selezionarne una nuova.</a></p>'
-  CMSSecurity:
-    INVALIDUSER: '<p>Utente non valido. <a target="_top" href="{link}">Per favore autenticarsi di nuovo</a> per continuare.</p>'
-    LoginMessage: '<p>Se hai del lavoro non salvato puo tornare a dove eri accedendo nuovamente da qui sotto.</p>'
-    SUCCESS: Successo
-    SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
-    TimedOutTitleAnonymous: 'La tua sessione è scaduta.'
-    TimedOutTitleMember: 'Ciao {name}!<br />La tua sessione è scaduta.'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. ''{value}'' non è un''opzione valida'
   ConfirmedPasswordField:
     ATLEAST: 'La password deve essere lunga almeno {min} caratteri.'
     BETWEEN: 'La password deve essere lunga da {min} a {max} caratteri.'
@@ -191,6 +193,7 @@ it:
     TEXT2: 'Link per l''azzeramento della password'
     TEXT3: per
   Form:
+    CSRF_EXPIRED_MESSAGE: 'La tua sessione è scaduta. Per favore ritrasmettere la form.'
     CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore cliccare sul pulsante "indietro", ricaricare la pagina e riprovare.'
     FIELDISREQUIRED: '{name} è richiesto'
     SubmitBtnLabel: Vai
@@ -201,7 +204,6 @@ it:
     VALIDATIONSTRONGPASSWORD: 'Le password devono avere almeno un numero e un carattere alfanumerico.'
     VALIDATOR: Valiidatore
     VALIDCURRENCY: 'Inserisci una valuta valida'
-    CSRF_EXPIRED_MESSAGE: 'La tua sessione è scaduta. Per favore ritrasmettere la form.'
   FormField:
     Example: 'es. %s'
     NONE: nessuno
@@ -258,7 +260,6 @@ it:
     many_many_Members: Membri
   GroupImportForm:
     Help1: '<p>Importa gruppi in formato <em>CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Utilizzo avanzato</h4>\n<ul>\n<li>Colonne consentite: <em>%s</em></li>\n<li>I gruppi esistenti sono identificati dalla proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>\n<li>Gerarchie di gruppi possono essere create usando la colonna <em>ParentCode</em>.</li>\n<li>I codici di permesso possono essere assegnati con la colonna <em>ParentCode</em>. I permessi esistenti non saranno azzerati.</li>\n</ul>\n</div>"
     ResultCreated: 'Creati {count} gruppi'
     ResultDeleted: 'Eliminati %d gruppi'
     ResultUpdated: 'Aggiornati %d gruppi'
@@ -309,10 +310,10 @@ it:
     LINKOPENNEWWIN: 'Apri il link in una nuova finestra?'
     LINKTO: 'Collega a'
     PAGE: Pagina
+    SUBJECT: 'Oggetto email'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
     UpdateMEDIA: 'Aggiorna Media'
-    SUBJECT: 'Oggetto email'
   Image:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -326,10 +327,8 @@ it:
     DELETED: Eliminato.
     DropdownBatchActionsDefault: Azioni
     HELP: Aiuto
-    PAGETYPE: 'Tipo di pagina:'
+    PAGETYPE: 'Tipo di pagina'
     PERMAGAIN: 'Sei stato disconnesso dal CMS. Se desideri autenticarti nuovamente, inserisci qui sotto nome utente e password.'
-    PERMALREADY: 'Siamo spiacenti, ma non puoi accedere a questa sezione del CMS. Se desideri autenticarti come qualcun altro, fallo qui sotto.'
-    PERMDEFAULT: 'Inserisci il tuo indirizzo email e password per accedere al CMS.'
     PLEASESAVE: 'Per favore salvare la pagina: potrebbe non venire aggiornata perché non è ancora stata salvata.'
     PreviewButton: Anteprima
     REORGANISATIONSUCCESSFUL: 'Albero del sito riorganizzato con successo.'
@@ -418,7 +417,6 @@ it:
     Toggle: 'Mostra aiuto per la formattazione'
   MemberImportForm:
     Help1: '<p>Importa utenti in <em>formato CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Utilizzo avanzato</h4>\n<ul>\n<li>Colonne consentite: <em>%s</em></li>\n<li>Utenti esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>\n<li>I gruppi possono essere assegnati attraverso la colonna <em>Groups</em>. I gruppi sono identificati attraverso la loro colonna <em>Code</em>, più gruppi devono essere separati da virgola. L'appartenenza esistente a gruppi non viene cancellata.</li>\n</ul>\n</div>"
     ResultCreated: 'Creati {count} utenti'
     ResultDeleted: 'Eliminati %d utenti'
     ResultNone: 'Nessun cambiamento'
@@ -482,8 +480,8 @@ it:
     SINGULARNAME: Ruolo
     Title: Titolo
   PermissionRoleCode:
-    PermsError: 'Non posso assegnare permessi privilegiati al codice "%s" (richiede accesso ADMIN)'
     PLURALNAME: 'Codici di ruolo'
+    PermsError: 'Non posso assegnare permessi privilegiati al codice "%s" (richiede accesso ADMIN)'
     SINGULARNAME: 'Codice Ruolo'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ruoli e permessi d''accesso'
@@ -585,5 +583,3 @@ it:
     UPLOADSINTO: 'salva in /{path}'
   Versioned:
     has_many_Versions: Versioni
-  CheckboxSetField:
-    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. ''{value}'' non è un''opzione valida'

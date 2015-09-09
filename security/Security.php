@@ -305,7 +305,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		parent::init();
 
 		// Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
-		$this->response->addHeader('X-Frame-Options', 'SAMEORIGIN');
+		$this->getResponse()->addHeader('X-Frame-Options', 'SAMEORIGIN');
 	}
 
 	public function index() {
@@ -391,7 +391,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		$member = Member::currentUser();
 		if($member) $member->logOut();
 
-		if($redirect && (!$this->response || !$this->response->isFinished())) {
+		if($redirect && (!$this->getResponse()->isFinished())) {
 			$this->redirectBack();
 		}
 	}
@@ -406,7 +406,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		// Event handler for pre-login, with an option to let it break you out of the login form
 		$eventResults = $this->extend('onBeforeSecurityLogin');
 		// If there was a redirection, return
-		if($this->redirectedTo()) return $this->response;
+		if($this->redirectedTo()) return $this->getResponse();
 		// If there was an SS_HTTPResponse object returned, then return that
 		if($eventResults) {
 			foreach($eventResults as $result) {
@@ -528,13 +528,13 @@ class Security extends Controller implements TemplateGlobalProvider {
 		Session::clear('Security.Message');
 
 		// only display tabs when more than one authenticator is provided
-		// to save bandwidth and reduce the amount of custom styling needed 
+		// to save bandwidth and reduce the amount of custom styling needed
 		if(count($forms) > 1) {
 			$content = $this->generateLoginFormSet($forms);
 		} else {
 			$content = $forms[0]->forTemplate();
 		}
-		
+
 		// Finally, customise the controller to add any form messages and the form.
 		$customisedController = $controller->customise(array(
 			"Content" => $message,

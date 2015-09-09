@@ -181,7 +181,7 @@ abstract class DBSchemaManager {
 		return (bool) $this->schemaUpdateTransaction;
 	}
 
-	// Transactional schema altering functions - they don't do anyhting except for update schemaUpdateTransaction
+	// Transactional schema altering functions - they don't do anything except for update schemaUpdateTransaction
 
 	/**
 	 * Instruct the schema manager to record a table creation to later execute

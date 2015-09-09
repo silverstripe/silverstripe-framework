@@ -55,6 +55,15 @@ class URLSegmentFilterTest extends SapphireTest {
 		);
 	}
 
+	public function testReplacesForwardSlashesWithAllowMultiByteOption() {
+		$f = new URLSegmentFilter();
+		$f->setAllowMultibyte(true);
+		$this->assertEquals(
+			urlencode('this-that'),
+			$f->filter('this/that')
+		);
+	}
+
 	public function testReplacements() {
 		$f = new URLSegmentFilter();
 		$this->assertEquals(

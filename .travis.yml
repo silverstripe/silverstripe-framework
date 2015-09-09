@@ -17,6 +17,8 @@ env:
 
 matrix:
   include:
+    - php: 5.3
+      env: DB=MYSQL
     - php: 5.4
       env: DB=PGSQL
     - php: 5.5
@@ -38,6 +40,7 @@ before_script:
 
 script:
  - "if [ \"$BEHAT_TEST\" = \"\" ]; then vendor/bin/phpunit framework/tests; fi"
+ - "if [ \"$BEHAT_TEST\" = \"\" ]; then vendor/bin/phpunit framework/admin/tests; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ]; then vendor/bin/behat @framework; fi"
 
 after_failure:
@@ -49,11 +52,6 @@ branches:
     - 2.2
     - 2.3
     - translation-staging
-
-notifications:
-  irc:
-    channels:
-     - "irc.freenode.org#silverstripe"
 
 #  global:
 #   - secure: "AZmjVPtUD8JBA7ag4ULlEwEKXSEZbIUjDHeRBFugaOtdsn5yigGLmwYbzsg2tq7k7UkdbbAlGct0SUbiRJb9F2wPA5+eUd/p49fgDIU6CTSWIlT87H2BwgOrxKwS9sDwxLptPFM6vWQ8JKYSNGmVIepie9kQZbu4L2k5k6B69jQ="

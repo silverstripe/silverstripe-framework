@@ -242,14 +242,6 @@ body.cms {
 		margin-top: 1px;
 	}
 
-	.font-icon-search {
-		margin-top: 1px;
-
-		&::before {
-			font-size: 1.3em;
-		}
-	}
-
 	.cms-content-tools {
 		.cms-panel-content {
 			padding-top: 0;
@@ -319,60 +311,63 @@ body.cms {
  * Icon buttons styles should always take presedence over Tab styles.
  * Tabs should be refactored to use weaker selectors.
  * ----------------------------------------------------------------- */
-a.icon-button,
-button.ss-ui-button.icon-button {
-	vertical-align: middle;
-	margin-right: 2px;
-	padding: .4em;
-	font-size: 1.2em;
-	letter-spacing: -3px;
-	text-indent: 0;
-	text-shadow: none;
-	line-height: 1em;
-	color: $color-text;
-	background-color: transparent;
-	background-image: none;
-	border: 0;
-
-	&:hover,
-	&:active,
-	&:focus {
-		border: 0;
-		box-shadow: none;
-		background-image: none;
-		text-decoration: none;
-	}
-
-	&:hover {
-		background-color: #d4dbe1;
-	}
-
-	&.active,
-	&:active {
-		background-color: #d4dbe1;
-		box-shadow: inset 0 0 3px rgba(191, 194, 196, .9);
-	}
-
-	.ui-button-text {
-		display: none;
-	}
-
-	// Context specific overrides for Tabs.
-	.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active &.cms-panel-link, 
-	.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default &.cms-panel-link {
-		padding: 6px 8px;
+.cms {
+	a.icon-button,
+	button.ss-ui-button.icon-button {
+		vertical-align: middle;
+		margin: 0 2px 0 0;
+		padding: 5px;
+		padding-right: 8px;
+		font-size: 14px;
+		letter-spacing: -3px;
+		text-indent: 0;
+		text-shadow: none;
 		line-height: 1em;
+		color: $color-text;
 		background-color: transparent;
 		background-image: none;
 		border: 0;
 
-		&:before {
-			margin-top: 2px;
+		&:hover,
+		&:active,
+		&:focus {
+			border: 0;
+			box-shadow: none;
+			background-image: none;
+			text-decoration: none;
+		}
+
+		&:hover {
+			background-color: #d4dbe1;
+		}
+
+		&.active,
+		&:active {
+			background-color: #d4dbe1;
+			box-shadow: inset 0 0 3px rgba(191, 194, 196, .9);
+		}
+
+		.ui-button-text {
+			display: none;
+		}
+
+		.ModelAdmin & {
+			margin-top: -11px;
 		}
 	}
+}
 
-	.ModelAdmin & {
-		margin-top: -11px;
+// Context specific overrides for Tabs.
+.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link, 
+.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link {
+	padding: 6px 8px;
+	line-height: 1em;
+	background-color: transparent;
+	background-image: none;
+	border: 0;
+
+	&:before {
+		vertical-align: middle;
 	}
 }
 
@@ -399,7 +394,6 @@ button.ss-ui-button.icon-button {
 
 		&:hover {
 			background: $tab-panel-texture-color;
-			padding-bottom: 5px;
 		}
 
 		&.active:hover {
@@ -429,14 +423,14 @@ button.ss-ui-button.icon-button {
 			+ .cms-tabset-icon.ui-state-default {
 				border-left: 1px solid #CDCCD0;
 			}
-		}
 
-		&:hover {
-			background: $tab-panel-texture-color;
-		}
+			&:hover {
+				background: $tab-panel-texture-color;
+			}
 
-		&.active:hover {
-			background: #d4dbe1;
+			&.ui-state-active:hover {
+				background: #d4dbe1;
+			}
 		}
 
 		.cms-tabset-icon.ui-state-active {
@@ -444,6 +438,7 @@ button.ss-ui-button.icon-button {
 			box-shadow: inset 0 0 3px rgba(191, 194, 196, .9);
 		}
 	}
+	
 	.cms-content-header-tabs & {
 		overflow: hidden;
 	}
@@ -641,12 +636,6 @@ button.ss-ui-button.icon-button {
 	.icon-button-group {
 		margin-right: 16px;
 	}
-
-	.font-icon-search {
-		&::before {
-			font-size: 1.3em;
-		}
-	}
 }
 
 .cms-content-fields .ui-tabs-nav {
@@ -811,20 +800,67 @@ button.ss-ui-button.icon-button {
 
 
 .notice-item {
-	border: 0;   
 	@include border-radius(3px);
 	font-family: inherit; 
 	font-size: inherit; 
-	padding: 8px 10px 8px 10px; 
+	padding: 6px 24px 8px 10px;
+	word-wrap: break-word;
+	min-height: 60px;
+	height: auto;
+	border: 0;
+	border-left: 3px solid;
+	color: #666;
+	left: 300px;
+	background: #fff;
+
+	&.success,
+	&.good,
+	&.green {
+		border-color: $color-good;
+	}
+
+	&.notice,
+	&.info,
+	&.blue {
+		border-color: $color-notice;
+	}
+
+	&.warning,
+	&.caution,
+	&.yellow {
+		border-color: $color-warning;
+	}
+
+	&.bad,
+	&.error,
+	&.red {
+		border-color: $color-error;
+	}
+
+	p {
+		margin-bottom: 0;
+	}
 }
 
 .notice-item-close {
-	color: #333333; 
-	background: url(../images/filter-icons.png) no-repeat 0 -20px; 
-	width: 1px; 
-	height: 1px; 
-	overflow: hidden; 
-	padding: 0px 0 20px 15px;
+	font-weight: normal;
+	width: 12px;
+	height: 16px;
+	color: #555; 
+	font-size: 16px;
+	overflow: hidden;
+	top: 4px;
+	right: 4px;
+	padding: 2px;
+	opacity: .8;
+
+	&::before {
+		content: 'x';
+	}
+
+	&:hover {
+		opacity: 1;
+	}
 }
 
 
@@ -974,35 +1010,6 @@ button.ss-ui-button.icon-button {
 			display: inline-block;
 			label {
 				color:$color-text-blue-link;
-			}
-		}
-	}
-
-	.ss-ui-button {
-		margin-bottom: $grid-y*1.5;
-	}
-
-	.cms-actions-buttons-row {
-		clear: both;
-
-		.ss-ui-button,
-		.ss-ui-button:hover,
-		.ss-ui-button:active,
-		.ss-ui-button:focus {
-			color: $color-text;
-			border: 0;
-			background: none;
-			box-shadow: none;
-			text-shadow: none;
-			text-decoration: none;
-			font-weight: normal;
-		}
-
-		.ss-ui-button {
-			&.active,
-			&:active,
-			&:hover {
-				background-color: #dee3e8;
 			}
 		}
 	}
@@ -1187,12 +1194,28 @@ button.ss-ui-button.icon-button {
 	display: block;
 	margin: 0 0 8px;
 	padding: 10px 12px;
-	font-weight: normal;  
+	font-weight: normal;
 	border: 1px $color-light-separator solid;
-	background: #fff; // for browsers that don't understand rgba
+	background: #fff; //for browsers that don't understand rgba
 	background: rgba(#fff,0.5);
 	text-shadow: none;
-	@include border-radius(3px);
+}
+
+.cms-tree-filtered {
+	position: absolute;
+	margin: 0;
+	width: 100%;
+	box-sizing: border-box;
+	margin-left: -$grid-x*2;
+	padding: $grid-y*2 $grid-x*2;
+	background: #D4E2EC;
+	text-shadow: none;
+	border: 0;
+	
+	> strong,
+	> a {
+		font-size: 14px;
+	}
 }
 
 /** 
@@ -1745,11 +1768,14 @@ body.cms-dialog {
 			float:left;
 			position: relative;
 
-      label {
-			position: absolute;
-			left: 8px;
-			top: 13px;
-			font-weight: normal; color: #888;
+			label {
+				position: absolute;
+				left: 8px;
+				top: 13px;
+				font-weight: normal; 
+				color: #888;
+				width: 35px; 
+				padding-right: 0;
 			}
 
 			.middleColumn {

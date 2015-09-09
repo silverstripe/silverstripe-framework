@@ -298,17 +298,13 @@ fr:
     DELETED: Supprimé.
     DropdownBatchActionsDefault: Actions
     HELP: Aide
-    PAGETYPE: 'Type de page&nbsp;:'
     PERMAGAIN: 'Vous avez été déconnecté du CMS. Si vous voulez vous reconnecter, entrez un nom d''utilisateur et un mot de passe ci-dessous.'
-    PERMALREADY: 'Désolé, mais vous ne pouvez pas accéder à cette partie du CMS. Si vous voulez changer d''identité, faites le ci-dessous'
-    PERMDEFAULT: 'Saisissez votre adresse de courriel et votre mot de passe pour accéder au CMS.'
     PreviewButton: Aperçu
     REORGANISATIONSUCCESSFUL: 'L’arbre du site a été bien réorganisé.'
     SAVEDUP: Enregistré.
     ShowAsList: 'lister'
     TooManyPages: 'Trop de pages'
     ValidationError: 'Erreur de validation'
-    VersionUnknown: inconnu
   LeftAndMain_Menu_ss:
     Hello: Bonjour
     LOGOUT: 'Déconnexion'
@@ -386,7 +382,6 @@ fr:
     Toggle: 'Afficher l’aide de mise en forme'
   MemberImportForm:
     Help1: '<p>Importer les membres au format<em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Afficher l''usage avancé.</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Utilisation avancée</h4>\n<ul>\n<li>Colonnes autorisées&nbsp;: <em>%s</em></li>\n<li>Les utilisateurs existants sont retrouvés avec leur <em>Code</em> unique et les registres sont mis à jour avec les nouvelles valeurs du fichier importé.</li>\n<li>Des groupes peuvent être assignés à l’aide de la colonne <em>Groups</em>. Les groupes sont identifiés par leur <em>Code</em>, plusieurs groupes peuvent être indiqués en les séparant par des virgules. L’appartenance actuelle aux groupes n’est pas modifiée.</li>\n</ul>\n</div>"
     ResultCreated: '{count} membres créés'
     ResultDeleted: '%d membres supprimés'
     ResultNone: 'Aucun changements'
