@@ -199,6 +199,8 @@ en:
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
+    EmptyFormNoCanViewHeading: 'Form permission error'
+    EmptyFormNoCanViewMsg: "Sorry, but you don't have permission to view this form."
   FormField:
     Example: 'e.g. %s'
     NONE: none

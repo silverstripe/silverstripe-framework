@@ -1171,10 +1171,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$record = $id;
 		} else {
 			$record = $this->getRecord($id);
-			if($record && !$record->canView()) return Security::permissionFailure($this);
 		}
 
-		if($record) {
+		if($record && $record->canView()) {
 			$fields = ($fields) ? $fields : $record->getCMSFields();
 			if ($fields == null) {
 				user_error(
@@ -1273,7 +1272,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$form->setFields($readonlyFields);
 			}
 		} else {
-			$form = $this->EmptyForm();
+			$msg = _t(
+				'Form.EmptyFormNoCanViewMsg',
+				'Sorry, but you don\'t have permission to view this form.'
+			);
+			$form = $this->EmptyForm($msg, 'bad');
 		}
 		
 		return $form;
@@ -1283,26 +1286,27 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Returns a placeholder form, used by {@link getEditForm()} if no record is selected.
 	 * Our javascript logic always requires a form to be present in the CMS interface.
 	 * 
+	 * @param string $message
+	 * @param string $type Used as the additional CSS class on the LiteralField e.g. 'good|bad'
 	 * @return Form
 	 */
-	public function EmptyForm() {
-		$form = CMSForm::create( 
-			$this, 
-			"EditForm", 
-			new FieldList(
-				// new HeaderField(
-				// 	'WelcomeHeader',
-				// 	$this->getApplicationName()
-				// ),
-				// new LiteralField(
-				// 	'WelcomeText',
-				// 	sprintf('<p id="WelcomeMessage">%s %s. %s</p>',
-				// 		_t('LeftAndMain_right_ss.WELCOMETO','Welcome to'),
-				// 		$this->getApplicationName(),
-				// 		_t('CHOOSEPAGE','Please choose an item from the left.')
-				// 	)
-				// )
-			), 
+	public function EmptyForm($message = '', $type = null) {
+		$fieldList = FieldList::create();
+		if($message && $type) {
+			$css = strtolower($type);
+			$msg = sprintf('<p class="message $css">%s</p>', $message);
+			$heading = _t(
+				'Form.EmptyFormNoCanViewHeading',
+				'Form permission error'
+			);
+			$fieldList->push(HeaderField::create('EmptyFormMessageHeading', $heading));
+			$fieldList->push(LiteralField::create('EmptyFormMessageContent', $msg));
+		}
+
+		$form = CMSForm::create(
+			$this,
+			"EditForm",
+			$fieldList,
 			new FieldList()
 		)->setHTMLID('Form_EditForm');
 		$form->setResponseNegotiator($this->getResponseNegotiator());
