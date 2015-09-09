@@ -1,11 +1,14 @@
 <?php
 
 /**
+ * @package framework
+ * @subpackage model
+ */
+
+/**
  * Object representing a SQL SELECT query.
  * The various parts of the SQL query can be manipulated individually.
  *
- * @package framework
- * @subpackage model
  * @deprecated since version 4.0
  */
 class SQLQuery extends SQLSelect {

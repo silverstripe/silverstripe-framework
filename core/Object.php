@@ -216,7 +216,6 @@ abstract class Object {
 		$tokens = token_get_all("<?php $classSpec");
 		$class = null;
 		$args = array();
-		$passedBracket = false;
 
 		// Keep track of the current bucket that we're putting data into
 		$bucket = &$args;

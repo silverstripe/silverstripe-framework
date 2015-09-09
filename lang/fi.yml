@@ -70,10 +70,22 @@ fi:
     ACCESSALLINTERFACES: 'Pääsy kaikkiin CMS-osioihin'
     ACCESSALLINTERFACESHELP: 'Ohittaa tarkemmat käyttöoikeudet.'
     SAVE: Tallenna
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Unohditko salasanasi?'
+    BUTTONLOGIN: 'Kirjaudu takaisin sisään'
+    BUTTONLOGOUT: 'Kirjaudu ulos'
+    PASSWORDEXPIRED: '<p>Salasanasi on vanhentunut. <a target="_top" href="{link}">Valitse uusi.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Nettisivun esikatselu'
   CMSProfileController:
     MENUTITLE: 'Profiilini'
+  CMSSecurity:
+    INVALIDUSER: '<p>Virheellinen käyttäjä. <a target="_top" href="{link}">Ole hyvä ja tunnistaudu uudelleen</a> jatkaaksesi.</p>'
+    LoginMessage: '<p>Mikäli tallennus jäi tekemättä, voit kirjautua uudelleen ja jatkaa muokkausta.</p>'
+    SUCCESS: Onnistui
+    SUCCESSCONTENT: '<p>Kirjautuminen onnistui. Mikäli automaattinen edelleenohjaus ei toimi <a target="_top" href="{link}">klikkaa tästä</a></p>'
+    TimedOutTitleAnonymous: 'Istuntosi on vanhentunut.'
+    TimedOutTitleMember: 'Hei {name}!<br />Istuntosi on vanhentunut.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
     CHANGEPASSWORDTEXT2: 'Kirjautuaksesi sisään voit käyttää seuraavia tietoja:'
@@ -85,18 +97,8 @@ fi:
     YESANSWER: 'Kyllä'
   CheckboxFieldSetField:
     SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. {value} ei kelpaa'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Unohditko salasanasi?'
-    BUTTONLOGIN: 'Kirjaudu takaisin sisään'
-    BUTTONLOGOUT: 'Kirjaudu ulos'
-    PASSWORDEXPIRED: '<p>Salasanasi on vanhentunut. <a target="_top" href="{link}">Valitse uusi.</a></p>'
-  CMSSecurity:
-    INVALIDUSER: '<p>Virheellinen käyttäjä. <a target="_top" href="{link}">Ole hyvä ja tunnistaudu uudelleen</a> jatkaaksesi.</p>'
-    LoginMessage: '<p>Mikäli tallennus jäi tekemättä, voit kirjautua uudelleen ja jatkaa muokkausta.</p>'
-    SUCCESS: Onnistui
-    SUCCESSCONTENT: '<p>Kirjautuminen onnistui. Mikäli automaattinen edelleenohjaus ei toimi <a target="_top" href="{link}">klikkaa tästä</a></p>'
-    TimedOutTitleAnonymous: 'Istuntosi on vanhentunut.'
-    TimedOutTitleMember: 'Hei {name}!<br />Istuntosi on vanhentunut.'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. ''{value}'' ei kelpaa'
   ConfirmedPasswordField:
     ATLEAST: 'Salasanan on oltava vähintään {min} merkkiä pitkä.'
     BETWEEN: 'Salasanan on oltava väh. {min} ja enintään {max} merkkiä pitkä.'
@@ -191,6 +193,7 @@ fi:
     TEXT2: 'salasanan vaihtolinkki'
     TEXT3: henkilölle
   Form:
+    CSRF_EXPIRED_MESSAGE: 'Istuntosi on umpeutunut. Lähetä lomake uudelleen.'
     CSRF_FAILED_MESSAGE: 'On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu ja yritä uudelleen.'
     FIELDISREQUIRED: '{name} on pakollinen'
     SubmitBtnLabel: Siirry
@@ -201,7 +204,6 @@ fi:
     VALIDATIONSTRONGPASSWORD: 'Salasanassa on oltava vähintään yksi numero ja yksi kirjain'
     VALIDATOR: Tarkistin
     VALIDCURRENCY: 'Ole hyvä ja valitse voimassa oleva valuutta'
-    CSRF_EXPIRED_MESSAGE: 'Istuntosi on umpeutunut. Lähetä lomake uudelleen.'
   FormField:
     Example: 'esim. %s'
     NONE: Ei yhtään
@@ -258,7 +260,6 @@ fi:
     many_many_Members: Jäsenet
   GroupImportForm:
     Help1: '<p>Tuo yksi tai useampi ryhmä <em>CSV</em>-muotoisena (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Edistynyt käyttö</h4>\n<ul>\n<li>Sallitut sarakkeet: <em>%s</em></li>\n<li>Olemassa olevat rhymes kohdistetaan niiden uniikin  <em>Code</em> arvolla, ja päivitetään arvot tuodusta tiedostosta</li>\n<li>Ryhmien hierarkiat voidaan luoda <em>ParentCode</em> sarakkeessa.</li>\n<li>Oikeustasokoodit voidaan kohdistaa <em>PermissionCode</em> sarakkeessa. Olemassa olevia oikeuksia ei tyhjennetä.</li>\n</ul>\n</div>"
     ResultCreated: 'Luotiin {count} ryhmä(ä)'
     ResultDeleted: 'Poistettu %d ryhmää'
     ResultUpdated: 'Päivitetty %d ryhmää'
@@ -309,10 +310,10 @@ fi:
     LINKOPENNEWWIN: 'Avataanko linkki uudessa ikkunassa?'
     LINKTO: 'Linkki'
     PAGE: Sivu
+    SUBJECT: 'Sähköpostin aihe'
     URL: URL-osoite
     URLNOTANOEMBEDRESOURCE: 'URL-osoitetteesta ''{url}'' ei voitu liittää mediaa'
     UpdateMEDIA: 'Päivitä media'
-    SUBJECT: 'Sähköpostin aihe'
   Image:
     PLURALNAME: Tiedostot
     SINGULARNAME: Tiedosto
@@ -326,10 +327,7 @@ fi:
     DELETED: Poistettu.
     DropdownBatchActionsDefault: Toimenpiteet
     HELP: Ohje
-    PAGETYPE: 'Sivutyyppi:'
     PERMAGAIN: 'Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla.'
-    PERMALREADY: 'Paihoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alla.'
-    PERMDEFAULT: 'Valitse tunnistustapa ja syötä tunnistetietosi CMS:ään.'
     PLEASESAVE: 'Tallenna sivu: tätä sivua ei voida päivittää, koska sitä ei ole vielä tallennettu.'
     PreviewButton: Esikatselu
     REORGANISATIONSUCCESSFUL: 'Hakemistopuu järjestettiin uudelleen onnistuneesti.'
@@ -337,7 +335,6 @@ fi:
     ShowAsList: 'näytä listana'
     TooManyPages: 'Liian monta sivua'
     ValidationError: 'Virhe vahvistuksessa'
-    VersionUnknown: tuntematon
   LeftAndMain_Menu_ss:
     Hello: Hei
     LOGOUT: 'Kirjaudu ulos'
@@ -416,7 +413,6 @@ fi:
     Toggle: 'Näytä muotoiluohjeet'
   MemberImportForm:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Edistynyt käyttö</h4>\n<ul>\n<li>Sallitut palstat: <em>%s</em></li>\n<li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\n<li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li>\n</ul>\n</div>"
     ResultCreated: 'Luotiin {count} käyttäjä(ä)'
     ResultDeleted: 'Poistettu %d jäsentä'
     ResultNone: 'Ei muutoksia'
@@ -480,8 +476,8 @@ fi:
     SINGULARNAME: Rooli
     Title: Roolin nimi
   PermissionRoleCode:
-    PermsError: 'Ei voida asettaa koodia "%s" annetuilla oikeuksilla (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     PLURALNAME: 'Käyttöoikeuden roolin koodit'
+    PermsError: 'Ei voida asettaa koodia "%s" annetuilla oikeuksilla (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     SINGULARNAME: 'Käyttöoikeiden roolin koodi'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
@@ -581,5 +577,3 @@ fi:
     UPLOADSINTO: 'tallentuu polkuun: /{path}'
   Versioned:
     has_many_Versions: Versiot
-  CheckboxSetField:
-    SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. ''{value}'' ei kelpaa'

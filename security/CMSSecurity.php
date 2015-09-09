@@ -2,6 +2,8 @@
 
 /**
  * Provides a security interface functionality within the cms
+ * @package framework
+ * @subpackage security
  */
 class CMSSecurity extends Security {
 

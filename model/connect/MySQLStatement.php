@@ -5,6 +5,9 @@
  *
  * By default streams unbuffered data, but seek(), rewind(), or numRecords() will force the statement to
  * buffer itself and sacrifice any potential performance benefit.
+ *
+ * @package framework
+ * @subpackage model
  */
 class MySQLStatement extends SS_Query {
 

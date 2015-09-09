@@ -587,6 +587,26 @@ class FormTest extends FunctionalTest {
 			$messageEls[0]->asXML()
 		);
 	}
+
+    public function testGetExtraFields()
+    {
+        $form = new FormTest_ExtraFieldsForm(
+            new FormTest_Controller(),
+            'Form',
+            new FieldList(new TextField('key1')),
+            new FieldList()
+        );
+
+        $data = array(
+            'key1' => 'test',
+            'ExtraFieldCheckbox' => false,
+        );
+
+        $form->loadDataFrom($data);
+
+        $formData = $form->getData();
+        $this->assertEmpty($formData['ExtraFieldCheckbox']);
+    }
 	
 	protected function getStubForm() {
 		return new Form(
@@ -732,41 +752,57 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 
 }
 
-class FormTest_ControllerWithStrictPostCheck extends Controller implements TestOnly {
+class FormTest_ControllerWithStrictPostCheck extends Controller implements TestOnly
+{
 
-	private static $allowed_actions = array('Form');
+    private static $allowed_actions = array('Form');
 
-	protected $template = 'BlankPage';
+    protected $template = 'BlankPage';
 
-	public function Link($action = null) {
-		return Controller::join_links(
-			'FormTest_ControllerWithStrictPostCheck',
-			$this->getRequest()->latestParam('Action'),
-			$this->getRequest()->latestParam('ID'),
-			$action
-		);
-	}
+    public function Link($action = null)
+    {
+        return Controller::join_links(
+            'FormTest_ControllerWithStrictPostCheck',
+            $this->request->latestParam('Action'),
+            $this->request->latestParam('ID'),
+            $action
+        );
+    }
 
-	public function Form() {
-		$form = new Form(
-			$this,
-			'Form',
-			new FieldList(
-				new EmailField('Email')
-			),
-			new FieldList(
-				new FormAction('doSubmit')
-			)
-		);
-		$form->setFormMethod('POST');
-		$form->setStrictFormMethodCheck(true);
-		$form->disableSecurityToken(); // Disable CSRF protection for easier form submission handling
+    public function Form()
+    {
+        $form = new Form(
+            $this,
+            'Form',
+            new FieldList(
+                new EmailField('Email')
+            ),
+            new FieldList(
+                new FormAction('doSubmit')
+            )
+        );
+        $form->setFormMethod('POST');
+        $form->setStrictFormMethodCheck(true);
+        $form->disableSecurityToken(); // Disable CSRF protection for easier form submission handling
 
-		return $form;
-	}
+        return $form;
+    }
 
-	public function doSubmit($data, $form, $request) {
-		$form->sessionMessage('Test save was successful', 'good');
-		return $this->redirectBack();
-	}
+    public function doSubmit($data, $form, $request)
+    {
+        $form->sessionMessage('Test save was successful', 'good');
+        return $this->redirectBack();
+    }
+}
+
+class FormTest_ExtraFieldsForm extends Form implements TestOnly {
+
+    public function getExtraFields() {
+        $fields = parent::getExtraFields();
+
+        $fields->push(new CheckboxField('ExtraFieldCheckbox', 'Extra Field Checkbox', 1));
+
+        return $fields;
+    }
+
 }

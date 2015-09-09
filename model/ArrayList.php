@@ -422,10 +422,15 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			throw new InvalidArgumentException("Bad arguments passed to sort()");
 		}
 
+		// Store the original keys of the items as a sort fallback, so we can preserve the original order in the event
+		// that array_multisort is unable to work out a sort order for them. This also prevents array_multisort trying
+		// to inspect object properties which can result in errors with circular dependencies
+		$originalKeys = array_keys($this->items);
+
 		// This the main sorting algorithm that supports infinite sorting params
 		$multisortArgs = array();
 		$values = array();
-		foreach($columnsToSort as $column => $direction ) {
+		foreach($columnsToSort as $column => $direction) {
 			// The reason these are added to columns is of the references, otherwise when the foreach
 			// is done, all $values and $direction look the same
 			$values[$column] = array();
@@ -442,6 +447,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			$multisortArgs[] = &$sortDirection[$column];
 		}
 
+		$multisortArgs[] = &$originalKeys;
+		
 		$list = clone $this;
 		// As the last argument we pass in a reference to the items that all the sorting will be applied upon
 		$multisortArgs[] = &$list->items;

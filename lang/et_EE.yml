@@ -274,16 +274,12 @@ et_EE:
     DELETED: Kustutatud.
     DropdownBatchActionsDefault: Tegevused
     HELP: Spikker
-    PAGETYPE: 'Lehekülje tüüp:'
     PERMAGAIN: 'Oled Sisuhaldusest välja logitud. Kui soovite uuesti sisse logida sisestage kasutajanimi ja parool.'
-    PERMALREADY: 'Vabandust, aga sul pole lubatud sisuhaldussüsteemi selle osa juurde pääseda. Kui soovid kellegi teisena sisse logida, tee seda allpool.'
-    PERMDEFAULT: 'Sisesta oma e-posti aadress ja parool sisuhaldussüsteemi ligipääsemiseks.'
     PreviewButton: Eelvaade
     REORGANISATIONSUCCESSFUL: 'Saidipuu korraldati edukalt ümber.'
     SAVEDUP: Salvestatud.
     ShowAsList: 'kuva nimekirjana'
     TooManyPages: 'Liiga palju lehekülgi'
-    VersionUnknown: Teadmata
   LeftAndMain_Menu_ss:
     Hello: Tere!
     LOGOUT: 'Logi välja'
