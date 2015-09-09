@@ -183,8 +183,8 @@ class Image extends File implements Flushable {
 	public function getURL() {
 		if ($this->config()->force_resample) {
 			//return $resampled->getURL();
-			$resampled = $this->getFormattedImage('Resampled');
-			if ($resampled->getAbsoluteSize() < $this->getAbsoluteSize()) {
+			$resampled = $this->Resampled();
+			if ($resampled !== $this && $resampled->getAbsoluteSize() < $this->getAbsoluteSize()) {
 				return $resampled->getURL();
 			}
 		}
@@ -746,9 +746,12 @@ class Image extends File implements Flushable {
 
 		// Any previous formats need to be derived from this Image's directory, and prepended to the new filename
 		$prepend = array();
-		preg_match_all($pattern['GeneratorPattern'], $this->Filename, $matches, PREG_SET_ORDER);
-		foreach($matches as $formatdir) {
-			$prepend[] = $formatdir[0];
+		if(($pos = stripos($this->Filename, '_resampled')) !== false ) {
+			$candidate = substr($this->Filename, $pos + strlen('_resampled'));
+			preg_match_all($pattern['GeneratorPattern'], $candidate, $matches, PREG_SET_ORDER);
+			foreach($matches as $formatdir) {
+				$prepend[] = $formatdir[0];
+			}
 		}
 		$filename = implode($prepend) . $filename;
 
@@ -884,8 +887,10 @@ class Image extends File implements Flushable {
 
 	/**
 	 * Generate a list of images that were generated from this image
+	 *
+	 * @return array
 	 */
-	private function getGeneratedImages() {
+	protected function getGeneratedImages() {
 		$generatedImages = array();
 		$cachedFiles = array();
 
@@ -907,13 +912,17 @@ class Image extends File implements Flushable {
 		// Reconstruct the image transformation(s) from the format-folder(s) in the path
 		// (if chained, they contain the transformations in the correct order)
 		foreach($cachedFiles as $cf_path) {
-			preg_match_all($pattern['GeneratorPattern'], $cf_path, $matches, PREG_SET_ORDER);
+			if(($pos = stripos($cf_path, '_resampled')) === false ) {
+				continue;
+			}
+			$cf_generated = substr($cf_path, $pos + strlen('_resampled'));
+			preg_match_all($pattern['GeneratorPattern'], $cf_generated, $matches, PREG_SET_ORDER);
 			
 			$generatorArray = array();
 			foreach ($matches as $singleMatch) {
 				$generatorArray[] = array(
 					'Generator' => $singleMatch['Generator'],
-					'Args' => Convert::base64url_decode($singleMatch['Args'])
+					'Args' => Convert::base64url_decode($singleMatch['Args']) ?: array()
 				);
 			}
 
@@ -1103,5 +1112,14 @@ class Image_Cached extends Image {
 	 */
 	public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false) {
 		throw new Exception("{$this->ClassName} can not be written back to the database.");
+	}
+
+	/**
+	 * Resampled images don't need subsequent resampling
+	 *
+	 * @param $this
+	 */
+	public function Resampled() {
+		return $this;
 	}
 }

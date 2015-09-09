@@ -193,7 +193,7 @@ class LeftAndMainTest extends FunctionalTest {
 		sort($menuItems);
 		$this->assertEquals(
 			$menuItems,
-			array('CMSProfileController', 'SecurityAdmin','Help'),
+			array('CMSProfileController', 'Help', 'SecurityAdmin'),
 			'Groups with limited access can only access the interfaces they have permissions for'
 		);
 

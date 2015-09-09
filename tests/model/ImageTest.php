@@ -266,6 +266,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testMultipleGenerateManipulationCalls_Regeneration() {
+		Config::inst()->update('Image', 'force_resample', false);
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$folder = new SS_FileFinder();
 
@@ -281,7 +282,7 @@ class ImageTest extends SapphireTest {
 		$expected = 100;
 		$actual = $imageSecond->getHeight();
 		$this->assertEquals($expected, $actual);
-
+		
 		$imageThird = $imageSecond->Pad(600,600,'0F0F0F');
 		// Encoding of the arguments is duplicated from cacheFilename
 		$argumentString = Convert::base64url_encode(array(600,600,'0F0F0F'));
