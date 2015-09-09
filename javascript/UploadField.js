@@ -316,6 +316,8 @@
 						indicator.remove();
 					},
 					success: function(data, status, xhr) {
+						if (!data || $.isEmptyObject(data)) return;
+
 						self.fileupload('attach', {
 							files: data,
 							options: self.fileupload('option'),
