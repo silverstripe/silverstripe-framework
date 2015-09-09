@@ -17,7 +17,7 @@ env:
 
 matrix:
   include:
-    - php: 5.3
+    - php: 5.4
       env: DB=MYSQL
     - php: 5.4
       env: DB=PGSQL
