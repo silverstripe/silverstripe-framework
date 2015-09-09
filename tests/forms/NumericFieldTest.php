@@ -187,8 +187,10 @@ class NumericFieldTest extends SapphireTest {
 		$field = new NumericField('Number');
 
 		$html = $field->Field();
-		$this->assertContains('type="number"', $html, 'number type set');
-		$this->assertContains('step="any"', $html, 'step value set to any');
+		
+		// @todo - Revert to number one day when html5 number supports proper localisation
+		// See https://github.com/silverstripe/silverstripe-framework/pull/4565
+		$this->assertContains('type="text"', $html, 'number type not set');
 	}
 
 }

@@ -300,17 +300,13 @@ pl:
     DELETED: Usunięto.
     DropdownBatchActionsDefault: Akcje
     HELP: Pomoc
-    PAGETYPE: 'Rodzaj strony:'
     PERMAGAIN: 'Zostałeś wylogowany z CMSa. Jeśli chcesz zalogować się ponownie, wpisz login i hasło poniżej.'
-    PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
-    PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
     PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
     ShowAsList: 'pokaż jako listę'
     TooManyPages: 'Zbyt wiele stron'
     ValidationError: 'Błąd walidacji'
-    VersionUnknown: Nieznany
   LeftAndMain_Menu_ss:
     Hello: Witaj
     LOGOUT: 'Wyloguj się'
@@ -388,7 +384,6 @@ pl:
     Toggle: 'Pokaż pomoc formatowania'
   MemberImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
-    Help2: "<div class=\"advanced\">\n⇥<h4>Użycie zaawansowane</h4>\n⇥<ul>\n⇥<li>Rozpoznawane pola: <em>%s</em></li>\n⇥<li>Istniejący użytkownicy zostaną uaktualnieni nowymi wartościami z importowanego pliku. Dopasowanie nastąpi poprzez porównanie z unikalną wartością w polu <em>Code</em>.</li>\n⇥<li>Grupy mogą zostać przydzielone przy użyciu pola <em>Groups</em>. Do grup należy odnieść się poprzez ich własność <em>Code</em>. Jeśli dodawanych jest wiele grup, należy je oddzielić przecinkiem. Istniejące przynależności do grup nie zostaną usunięte.</li>\n⇥</ul>\n</div>"
     ResultCreated: 'Utworzono {count} użytkowników'
     ResultDeleted: 'Usunięto %d użytkowników'
     ResultNone: 'Bez zmian'

@@ -114,7 +114,7 @@ So, your deployment process, as it relates to Composer, should be as follows:
 
 Modules and themes managed by composer should not be committed with your projects source code. For more details read  [Should I commit the dependencies in my vendor directory?](https://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md).
 
-Since SilverStripe modules are installed in to thier own folder, you have to manage your [.gitignore](http://git-scm.com/docs/gitignore) to ensure they are ignored from your repository.
+Since SilverStripe modules are installed into their own folder, you have to manage your [.gitignore](http://git-scm.com/docs/gitignore) to ensure they are ignored from your repository.
 
 Here is the default SilverStripe [.gitignore](http://git-scm.com/docs/gitignore) with the forum module ignored
 

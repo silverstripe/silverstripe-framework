@@ -307,6 +307,9 @@ class HTTP {
 
 	/**
 	 * Add the appropriate caching headers to the response, including If-Modified-Since / 304 handling.
+	 * Note that setting HTTP::$cache_age will overrule any cache headers set by PHP's
+	 * session_cache_limiter functionality. It is your responsibility to ensure only cacheable data
+	 * is in fact cached, and HTTP::$cache_age isn't set when the HTTP body contains session-specific content.
 	 *
 	 * @param SS_HTTPResponse $body The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
 	 *                            deprecated; in these cases, the headers are output directly.
@@ -346,6 +349,11 @@ class HTTP {
 
 		if($cacheAge > 0) {
 			$cacheControlHeaders['max-age'] = self::$cache_age;
+
+			// Set empty pragma to avoid PHP's session_cache_limiter adding conflicting caching information,
+			// defaulting to "nocache" on most PHP configurations (see http://php.net/session_cache_limiter).
+			// Since it's a deprecated HTTP 1.0 option, all modern HTTP clients and proxies should
+			// prefer the caching information indicated through the "Cache-Control" header.
 			$responseHeaders["Pragma"] = "";
 
 			// To do: User-Agent should only be added in situations where you *are* actually
@@ -370,6 +378,11 @@ class HTTP {
 				// (http://support.microsoft.com/kb/323308)
 				// Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
 				$cacheControlHeaders['max-age'] = 3;
+				
+				// Set empty pragma to avoid PHP's session_cache_limiter adding conflicting caching information,
+				// defaulting to "nocache" on most PHP configurations (see http://php.net/session_cache_limiter).
+				// Since it's a deprecated HTTP 1.0 option, all modern HTTP clients and proxies should
+				// prefer the caching information indicated through the "Cache-Control" header.
 				$responseHeaders["Pragma"] = "";
 			} else {
 				$cacheControlHeaders['no-cache'] = "true";

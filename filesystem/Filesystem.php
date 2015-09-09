@@ -79,6 +79,29 @@ class Filesystem extends Object {
 	}
 
 	/**
+	 * Remove a directory, but only if it is empty.
+	 *
+	 * @param string $folder Absolute folder path
+	 * @param boolean $recursive Remove contained empty folders before attempting to remove this one
+	 * @return boolean True on success, false on failure.
+	 */
+	public static function remove_folder_if_empty($folder, $recursive = true) {
+		if (!is_readable($folder)) return false;
+		$handle = opendir($folder);
+		while (false !== ($entry = readdir($handle))) {
+			if ($entry != "." && $entry != "..") {
+				// if an empty folder is detected, remove that one first and move on
+				if($recursive && is_dir($entry) && self::remove_folder_if_empty($entry)) continue;
+				// if a file was encountered, or a subdirectory was not empty, return false.
+				return false;
+			}
+		}
+		// if we are still here, the folder is empty. 
+		rmdir($folder);
+		return true;
+	}
+
+	/**
 	 * Cleanup function to reset all the Filename fields.  Visit File/fixfiles to call.
 	 */
 	public function fixfiles() {

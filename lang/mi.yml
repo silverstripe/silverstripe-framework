@@ -298,17 +298,13 @@ mi:
     DELETED: I mukua
     DropdownBatchActionsDefault: Ngā Mahi
     HELP: Āwhina
-    PAGETYPE: 'Momo whārangi:'
     PERMAGAIN: 'Kua takiputaina atu koe i te CMS. Ki te pīrangi koe ki te takiuru atu anō, tāurutia tētahi ingoa kaiwhakamahi me te kupuhipa i raro.'
-    PERMALREADY: 'Aroha mai, kāore e taea te whakauru i tērā wāhanga o te CMS. Ki te pīrangi koe ki te takiuru atu mā tētahi atu ingoa, whakamahia ki raro nei.'
-    PERMDEFAULT: 'Whiriwhiria tētahi aratuka motuhēhēnga me te tāuru i ō taipitopito tuakiri ki te uru ki te CMS.'
     PreviewButton: Arokite
     REORGANISATIONSUCCESSFUL: 'Kua momoho te whakaraupapa anō i te rākau pae'
     SAVEDUP: Kua Tiakina
     ShowAsList: 'whakaaturia hei rārangi'
     TooManyPages: 'He nui rawa ngā whārangi'
     ValidationError: 'Hapa manatoko'
-    VersionUnknown: tē mōhiotia
   LeftAndMain_Menu_ss:
     Hello: Kia ora
     LOGOUT: 'Takiputa'
@@ -386,7 +382,6 @@ mi:
     Toggle: 'Whakaaturia te āwhina whakahōputu'
   MemberImportForm:
     Help1: '<p>Kawea mai ngā kaiwhakamahi i te <em>hōputu CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
-    Help2: "<div class=\"advanced\">\n  <h4>Advanced usage</h4>\n   <ul>\n  <li>Allowed columns: <em>%s</em></li>\n <li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from\n   the imported file.</li>\n   <li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,\n  multiple groups can be separated by comma. Existing group memberships are not cleared.</li>\n   </ul>\n</div>"
     ResultCreated: 'I hangaia e {count} ngā mema'
     ResultDeleted: 'Kua mukua e %d ngā mema'
     ResultNone: 'Kāore he huringa'

@@ -74,6 +74,10 @@ The `phpunit` binary should be used from the root directory of your website.
 	# Run tests with optional `$_GET` parameters (you need an empty second argument)
 
 <div class="alert" markdown="1">
+The manifest is not flushed when running tests. Add `flush=all` to the test command to do this (see above example.)
+</div>
+
+<div class="alert" markdown="1">
 If phpunit is not installed globally on your machine, you may need to replace the above usage of `phpunit` with the full
 path (e.g `vendor/bin/phpunit framework/tests`)
 </div>

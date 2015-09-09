@@ -100,7 +100,8 @@ class TaskRunner extends Controller {
 		array_shift($taskClasses);
 
 		if($taskClasses) foreach($taskClasses as $class) {
-			if(!singleton($class)->isEnabled()) continue;
+			if (!$this->taskEnabled($class)) continue;
+
 			$desc = (Director::is_cli())
 				? Convert::html2raw(singleton($class)->getDescription())
 				: singleton($class)->getDescription();
@@ -114,6 +115,21 @@ class TaskRunner extends Controller {
 		}
 
 		return $availableTasks;
+	}
+
+	/**
+	 * @param string $class
+	 * @return boolean
+	 */
+	protected function taskEnabled($class) {
+		$reflectionClass = new ReflectionClass($class);
+		if ($reflectionClass->isAbstract()) {
+			return false;
+		} else if (!singleton($class)->isEnabled()) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

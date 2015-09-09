@@ -296,17 +296,13 @@ ja:
     DELETED: 削除しました。
     DropdownBatchActionsDefault: アクション
     HELP: ヘルプ
-    PAGETYPE: 'ページの種類:'
     PERMAGAIN: 'ログアウトしました。再度ログインする場合は下にユーザー名とパスワードを入力してください。'
-    PERMALREADY: '申し訳ございません。ご指定になられたCMSの箇所にはアクセスいただけません。別ユーザーとしてログインをされたい場合は、下記より行えます。'
-    PERMDEFAULT: '認証方法を選択し、CMSにアクセスするために利用する認証情報を入力してください。'
     PreviewButton: プレビュー
     REORGANISATIONSUCCESSFUL: 'サイトツリーの再編集に成功しました。'
     SAVEDUP: 保存済み
     ShowAsList: 'リストとして表示する'
     TooManyPages: 'あまりにも多くのページ'
     ValidationError: '確認エラー'
-    VersionUnknown: 不明
   LeftAndMain_Menu_ss:
     Hello: こんにちは！
     LOGOUT: 'ログアウト'
@@ -384,7 +380,6 @@ ja:
     Toggle: '設定のヘルプを表示'
   MemberImportForm:
     Help1: '<p><em>CSVフォーマット</em>(コンマ区切り)でユーザーを取り込みます。 <small><a href="#" class="toggle-advanced">高度な利用方法を表示</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>高度な使用法</h4>\n<ul>\n<li>許可された列: <em>%s</em></li>\n<li>既存のユーザーは独自の<em>コード</ em>プロパティにより照合されて、インポートしたファイルからの新しい数値でアップデートされます。</li>\n<li>グループは<em>グループの</em>列によって割り当てられることができる。 グループは独自の<em>コード</em> プロパティによって識別され、複数のグループはコンマによって分割することができる。　既存のグループメンバーはクリアされていない。</li>\n</ul>\n</div>"
     ResultCreated: '{count}メンバーを作成しました'
     ResultDeleted: '%d人のメンバーを削除しました'
     ResultNone: '変更なし'

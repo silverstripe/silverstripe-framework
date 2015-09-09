@@ -46,7 +46,7 @@ class TeamCityListener implements PHPUnit_Framework_TestListener {
 
 	public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time) {
 		$class = get_class($test);
-		$message = $this->escape($e->getMessage());
+		$message = $this->escape(PHPUnit_Framework_TestFailure::exceptionToString($e));
 		$trace = $this->escape($e->getTraceAsString());
 		echo "##teamcity[testFailed type='failure' name='{$class}.{$test->getName()}' message='$message'"
 			. " details='$trace']\n";

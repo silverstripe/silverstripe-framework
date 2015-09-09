@@ -79,7 +79,7 @@ class SecurityTest extends FunctionalTest {
 
 		// Controller that doesn't attempt redirections
 		$controller = new SecurityTest_NullController();
-		$controller->response = new SS_HTTPResponse();
+		$controller->setResponse(new SS_HTTPResponse());
 
 		Security::permissionFailure($controller, array('default' => 'Oops, not allowed'));
 		$this->assertEquals('Oops, not allowed', Session::get('Security.Message.message'));
@@ -104,12 +104,12 @@ class SecurityTest extends FunctionalTest {
 		Config::inst()->update('Security', 'default_message_set',
 			array('default' => 'default', 'alreadyLoggedIn' => 'You are already logged in!'));
 		Security::permissionFailure($controller);
-		$this->assertContains('You are already logged in!', $controller->response->getBody(),
+		$this->assertContains('You are already logged in!', $controller->getResponse()->getBody(),
 			'Custom permission failure message was ignored');
 
 		Security::permissionFailure($controller,
 			array('default' => 'default', 'alreadyLoggedIn' => 'One-off failure message'));
-		$this->assertContains('One-off failure message', $controller->response->getBody(),
+		$this->assertContains('One-off failure message', $controller->getResponse()->getBody(),
 			"Message set passed to Security::permissionFailure() didn't override Config values");
 
 		Config::unnest();
@@ -130,7 +130,7 @@ class SecurityTest extends FunctionalTest {
 		}
 		return $response;
 	}
-	
+
 	public function testAutomaticRedirectionOnLogin() {
 		// BackURL with permission error (not authenticated) should not redirect
 		if($member = Member::currentUser()) $member->logOut();

@@ -583,6 +583,70 @@ form.small .field, .field.small {
 		&.ss-ui-button-loading {
 			opacity: 0.8;
 		}
+
+		/* font-icon buttons */
+		&[class*="font-icon-"],
+		&[class^="font-icon-"],
+		&.ss-ui-button-constructive[class*="font-icon-"] {
+			padding: 5px 8px;
+			margin-bottom: $grid-y*1.5;
+			vertical-align: middle;
+			box-shadow: none;
+			border: 0;
+			background: none;
+			text-shadow: none;
+			text-decoration: none;
+			font-weight: normal;
+			color: $color-text;
+			
+			&:hover {
+				@include box-shadow(none);
+				background: #dee3e8;
+				color: $color-text;
+				border: 0;
+			}
+
+			&:focus {
+				@include box-shadow(none);
+				background: #dee3e8;
+				color: $color-text;
+				border: 0;
+			}
+
+			&:before {
+				font-size: 16px;
+				margin-right: 5px;
+				margin-top: 0;
+				vertical-align: middle;
+			}
+
+			&.ui-state-focus {
+				@include box-shadow(none);
+			}
+
+			&.active,
+			&:active {
+				@include box-shadow(0 0 3px rgba(191, 194, 196, .9) inset);
+				background: #dee3e8;
+				color: $color-text;
+				border: 0;
+			}
+
+			&.font-icon-search {
+				&:before {
+					margin-right: 2px;
+				}
+			}
+
+			.ui-button-text {
+				@include inline-block;
+				padding: 0;
+			}
+
+			.ui-icon {
+				display: none;
+			}
+		}
 	}
 
 	.ss-ui-buttonset {
@@ -801,25 +865,21 @@ input.radio {
 *	</fieldset>
 ****************************************************************/
 fieldset.switch-states{	
-	padding:0 20px 0 0;	
-	margin-right: 5px;
+	margin-right: 8px;
 
 	.switch{
-		@include box-shadow(inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1));
+		border: 2px solid lighten(#2d3035,65%);
 		@include border-radius(3px);
 		-webkit-animation: bugfix infinite 1s; //Bugfix for older Webkit, including mobile Webkit.
 		background:lighten(#2d3035,69%); 
 		display: block;				
-		height: 25px;
-		margin-top:3px;
-		padding:0 10px;	
+		height: 24px;
 		position: relative;			
 		width:100%;
 		z-index:5;
 		
 		label{
 			@include hide-text-overflow;
-			@include text-shadow(0 1px 0 rgba(255,255,255,0.5));	
 			color:lighten($color-text-dark,40%);
 			color:rgba($color-text-dark,0.5);
 			cursor: pointer;
@@ -829,6 +889,7 @@ fieldset.switch-states{
 			line-height: 25px;		
 			position:relative;
 			z-index:2;	
+			min-width: 80px;
 			/* Make text unselectable in browsers that support that */
 			-webkit-touch-callout: none;
 			-webkit-user-select: none;
@@ -844,7 +905,8 @@ fieldset.switch-states{
 				@include box-sizing('border-box');
 				@include hide-text-overflow;
 				display:inline-block;
-				padding:0 10px;
+				width: 100%;
+				text-align: center;
 			}
 		}
 		input {
@@ -855,22 +917,15 @@ fieldset.switch-states{
 			&:checked + label {
 				@include transition(all 0.3s ease-out 0s); 	
 				color: #fff;
-				text-shadow: 0 -1px 0 darken($color-menu-button,10%);
 			}
 		}
 		.slide-button{
-			@include background-image(linear-gradient(
-				#2b9c32,
-				#64ab36
-			));		
 			@include border-radius(3px);
-			@include box-shadow(inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2));
-			@include text-shadow(0 1px 0 rgba(255,255,255,0.5));
 			@include transition(all 0.3s ease-out 0s); 	
 			background-color: #2b9c32; 
 			display:block;
-			height: 100%;
-			left:0;
+			height: 24px;
+			left: 0;
 			padding: 0;
 			position: absolute;
 			top: 0;	

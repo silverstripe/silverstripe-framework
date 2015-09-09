@@ -44,7 +44,7 @@ which will be filled when the user makes their request. Request parameters are a
 and able to be pulled out from a controller using `$this->getRequest()->param($name)`.
 
 <div class="info" markdown="1">
-All Controllers have access to `$this->getRequest()` for the request object and `$this->response` for the response.
+All Controllers have access to `$this->getRequest()` for the request object and `$this->getResponse()` for the response.
 </div>
 
 Here is what those parameters would look like for certain requests

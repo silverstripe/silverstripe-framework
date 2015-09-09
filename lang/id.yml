@@ -70,10 +70,22 @@ id:
     ACCESSALLINTERFACES: 'Akses ke semua bagian CMS'
     ACCESSALLINTERFACESHELP: 'Kesampingkan pengaturan akses yang spesifik.'
     SAVE: Simpan
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Lupa kata kunci?'
+    BUTTONLOGIN: 'Masuk kembali'
+    BUTTONLOGOUT: 'Keluar'
+    PASSWORDEXPIRED: '<p>Kata kunci Anda telah kadaluarsa. <a target="_top" href="{link}">Mohon buat yang baru.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Pratinjau situs'
   CMSProfileController:
     MENUTITLE: 'Profil Saya'
+  CMSSecurity:
+    INVALIDUSER: '<p>Pengguna tidak dikenal. <a target="_top" href="{link}">Mohon otentikasi ulang di sini</a> untuk melanjutkan.</p>'
+    LoginMessage: '<p>Jika ada pekerjaan yang belum tersimpan, Anda dapat kembali dengan masuk di sini.</p>'
+    SUCCESS: Berhasil
+    SUCCESSCONTENT: '<p>Berhasil masuk. Jika tidak secara otomatis diarahkan, klik <a target="_top" href="{link}">di sini</a></p>'
+    TimedOutTitleAnonymous: 'Sesi Anda sudah habis.'
+    TimedOutTitleMember: 'Hai {name}!<br />Sesi Anda sudah habis.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Anda mengganti kata kunci menjadi'
     CHANGEPASSWORDTEXT2: 'Anda sekarang dapat menggunakannya untuk masuk:'
@@ -85,18 +97,8 @@ id:
     YESANSWER: 'Ya'
   CheckboxFieldSetField:
     SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Lupa kata kunci?'
-    BUTTONLOGIN: 'Masuk kembali'
-    BUTTONLOGOUT: 'Keluar'
-    PASSWORDEXPIRED: '<p>Kata kunci Anda telah kadaluarsa. <a target="_top" href="{link}">Mohon buat yang baru.</a></p>'
-  CMSSecurity:
-    INVALIDUSER: '<p>Pengguna tidak dikenal. <a target="_top" href="{link}">Mohon otentikasi ulang di sini</a> untuk melanjutkan.</p>'
-    LoginMessage: '<p>Jika ada pekerjaan yang belum tersimpan, Anda dapat kembali dengan masuk di sini.</p>'
-    SUCCESS: Berhasil
-    SUCCESSCONTENT: '<p>Berhasil masuk. Jika tidak secara otomatis diarahkan, klik <a target="_top" href="{link}">di sini</a></p>'
-    TimedOutTitleAnonymous: 'Sesi Anda sudah habis.'
-    TimedOutTitleMember: 'Hai {name}!<br />Sesi Anda sudah habis.'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
   ConfirmedPasswordField:
     ATLEAST: 'Kata kunci harus setidaknya terdiri dari {min} karakter.'
     BETWEEN: 'Kata kunci harus terdiri dari minimal {min} sampai {max} karakter.'
@@ -191,6 +193,7 @@ id:
     TEXT2: 'tautan ganti kata kunci'
     TEXT3: untuk
   Form:
+    CSRF_EXPIRED_MESSAGE: 'Sesi Anda sudah habis. Mohon kirim ulang formulir.'
     CSRF_FAILED_MESSAGE: 'Kemungkinan ada masalah teknis. Mohon klik tombol kembali, muat ulang browser, dan coba lagi.'
     FIELDISREQUIRED: '{name} wajib diisi'
     SubmitBtnLabel: Lanjut
@@ -201,7 +204,6 @@ id:
     VALIDATIONSTRONGPASSWORD: 'Kata kunci harus setidaknya terdiri dari satu angka dan satu karakter alfanumerik'
     VALIDATOR: Validasi
     VALIDCURRENCY: 'Mohon isikan mata uang yang benar'
-    CSRF_EXPIRED_MESSAGE: 'Sesi Anda sudah habis. Mohon kirim ulang formulir.'
   FormField:
     Example: 'misalnya %s'
     NONE: tidak ada
@@ -258,7 +260,6 @@ id:
     many_many_Members: Pengguna
   GroupImportForm:
     Help1: '<p>Impor satu atau lebih kelompok di format <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Tampilkan penggunaan mahir</a></small></p>'
-    Help2: "<div class=\"advanced\">\n\t<h4>Penggunaan mahir</h4>\n\t<ul>\n\t<li>Kolom yang dibolehkan: <em>%s</em></li>\n\t<li>Kelompok yang sudah terdata dihubungkan dengan nilai <em>Kode</em> uniknya, dan diperbarui dengan nilai apapun dari berkas yang diimpor</li>\n\t<li>Hirarki kelompok dapat dibuat dengan kolom <em>ParentCode</em>.</li>\n\t<li>Kode perijinan dapat dihubungkan dengan kolom <em>PermissionCode</em>. Perijinan yang sudah ada tidak akan terpengaruh.</li>\n\t</ul>\n</div>"
     ResultCreated: '{count} kelompok dibuat'
     ResultDeleted: '%d kelompok dihapus'
     ResultUpdated: '%d kelompok diperbarui'
@@ -309,10 +310,10 @@ id:
     LINKOPENNEWWIN: 'Buka tautan di jendela baru?'
     LINKTO: 'Tautan ke'
     PAGE: Laman
+    SUBJECT: 'Subyek email'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' tidak dapat dijadikan sumber daya media.'
     UpdateMEDIA: 'Perbarui Media'
-    SUBJECT: 'Subyek email'
   Image:
     PLURALNAME: Berkas
     SINGULARNAME: Berkas
@@ -326,10 +327,7 @@ id:
     DELETED: Terhapus.
     DropdownBatchActionsDefault: Tindakan
     HELP: Bantuan
-    PAGETYPE: 'Jenis laman:'
     PERMAGAIN: 'Anda telah keluar dari situs. Jika ingin kembali masuk, isikan nama pengguna dan kata kunci di bawah ini.'
-    PERMALREADY: 'Maaf, Anda tidak dapat mengakses laman tersebut. Jika Anda ingin menggunakan akun lain, silakan masuk di sini'
-    PERMDEFAULT: 'Mohon pilih metode otentikasi dan isikan informasi login Anda.'
     PLEASESAVE: 'Mohon Simpan Laman: Laman ini tidak dapat diperbarui karena belum disimpan.'
     PreviewButton: Pratinjau
     REORGANISATIONSUCCESSFUL: 'Pengaturan ulang struktur situs berhasil.'
@@ -337,7 +335,6 @@ id:
     ShowAsList: 'tampilkan sebagai daftar'
     TooManyPages: 'Terlalu banyak laman'
     ValidationError: 'Kesalahan validasi'
-    VersionUnknown: Tidak diketahui
   LeftAndMain_Menu_ss:
     Hello: Hai
     LOGOUT: 'Keluar'
@@ -416,8 +413,6 @@ id:
     Toggle: 'Tampilkan bantuan pemformatan'
   MemberImportForm:
     Help1: '<p>Impor pengguna dalam <em>format CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Tampilkan penggunaan mahir</a></small></p>'
-    Help2: "<div class=\"advanced\">\n\t<h4>Penggunaan mahir</h4>\n\t<ul>\n\t<li>Kolom yang dibolehkan: <em>%s</em></li>\n\t<li>Pengguna yang sudah terdata dihubungkan dengan nilai <em>Kode</em> uniknya, \n\tdan diperbarui dengan nilai apapun dari berkas yang diimpor.</li>\n\t<li>Kelompok dapat dihubungkan dengan kolom <em>Kelompok</em>. Kelompok diidentifikasi dengan properti <em>Kode</em>-nya,\n\tkelompok ganda dapat dipisahkan dengan tanda koma. Kelompok yang sudah terdata tidak terpengaruh.</li>\n\t</ul>\n\
-      </div>"
     ResultCreated: '{count} pengguna dibuat'
     ResultDeleted: '%d pengguna dihapus'
     ResultNone: 'Tidak ada pengubahan'
@@ -481,8 +476,8 @@ id:
     SINGULARNAME: Peran
     Title: Judul
   PermissionRoleCode:
-    PermsError: 'Tidak dapat menghubungkan kode "%s" dengan perijinan khusus (memerlukan akses PENGELOLA)'
     PLURALNAME: 'Kode Perijinan Peran'
+    PermsError: 'Tidak dapat menghubungkan kode "%s" dengan perijinan khusus (memerlukan akses PENGELOLA)'
     SINGULARNAME: 'Kode Perijinan Peran'
   Permissions:
     PERMISSIONS_CATEGORY: 'Perijinan peran dan akses'
@@ -582,5 +577,3 @@ id:
     UPLOADSINTO: 'disimpan ke /{path}'
   Versioned:
     has_many_Versions: Versi
-  CheckboxSetField:
-    SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'

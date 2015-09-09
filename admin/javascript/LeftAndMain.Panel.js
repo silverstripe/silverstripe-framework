@@ -212,8 +212,7 @@
 		$('.cms-content-tools.collapsed').entwine({
 			// Expand CMS' centre pane, when the pane itself is clicked somewhere
 			onclick: function(e) {
-				this.getPanel().expandPanel();
-
+				this.expandPanel();
 				this._super(e);
 			}
 		});

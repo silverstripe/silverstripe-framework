@@ -163,16 +163,35 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 			$memberID = (is_object($member)) ? $member->ID : $member;
 		}
 
+		// Turn the code into an array as we may need to add other permsissions to the set we check
+		if(!is_array($code)) $code = array($code);
+
 		if($arg == 'any') {
+			$adminImpliesAll = (bool)Config::inst()->get('Permission', 'admin_implies_all');
 			// Cache the permissions in memory
 			if(!isset(self::$cache_permissions[$memberID])) {
 				self::$cache_permissions[$memberID] = self::permissions_for_member($memberID);
 			}
-
-			// If $admin_implies_all was false then this would be inefficient, but that's an edge
-			// case and this keeps the code simpler
-			if(!is_array($code)) $code = array($code);
-			if(Config::inst()->get('Permission', 'admin_implies_all')) $code[] = "ADMIN";
+			foreach ($code as $permCode) {
+				if ($permCode === 'CMS_ACCESS') {
+					foreach (self::$cache_permissions[$memberID] as $perm) {
+						//if they have admin rights OR they have an explicit access to the CMS then give permission
+						if (($adminImpliesAll && $perm == 'ADMIN') || substr($perm, 0, 11) === 'CMS_ACCESS_') {
+							return true;
+						}
+					}
+				}
+				elseif (substr($permCode, 0, 11) === 'CMS_ACCESS_') {
+					//cms_access_leftandmain means access to all CMS areas
+					$code[] = 'CMS_ACCESS_LeftAndMain';
+					break;
+				}
+			}
+			
+			// if ADMIN has all privileges, then we need to push that code in
+			if($adminImpliesAll) {
+				$code[] = "ADMIN";
+			}
 
 			// Multiple $code values - return true if at least one matches, ie, intersection exists
 			return (bool)array_intersect($code, self::$cache_permissions[$memberID]);

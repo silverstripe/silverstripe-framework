@@ -70,26 +70,23 @@
 	padding: $grid-y*1.5 0;
 	line-height: 16px;
 	font-size: $font-base-size - 1;
-	min-height: 28px;
 
 	.logout-link {
-		display: inline-block;
-		height: 28px;
-		width: 16px;
 		float: left;
-		margin: 0 8px 0 5px;
-		background: sprite($sprites32, logout) no-repeat;
-		background-position: 0 -766px;
-		text-indent: -9999em;
-		opacity:0.9;
+		font-size: 16px;
+		height: 16px;
+		padding: 6px 8px 6px 5px;
+		opacity: .9;
+		color: #fff;
 
 		&:hover, &:focus{
-			opacity:1;
+			opacity: 1;
+			text-decoration: none;
 		}
 	}
 
 	span {
-		padding-top: 6px;
+		padding: 6px 0 6px 26px;
 	}
 }
 

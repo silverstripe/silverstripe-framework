@@ -300,17 +300,13 @@ zh:
     DELETED: 已删除。
     DropdownBatchActionsDefault: 动作
     HELP: 帮助
-    PAGETYPE: '页面类型'
     PERMAGAIN: '您已经退出 CMS。如果您想再次登录，请在下面输入用户名和密码。'
-    PERMALREADY: '抱歉，您不能访问 CMS 的这一部分。如果您想以不同的身份登录，请在下面进行操作'
-    PERMDEFAULT: '请选择一种认证方法并输入您的凭据以访问 CMS。'
     PreviewButton: 预览
     REORGANISATIONSUCCESSFUL: '重新组织网站地图已成功'
     SAVEDUP: 已保存。
     ShowAsList: '以列表方式展示'
     TooManyPages: '页面数目过多'
     ValidationError: '验证错误'
-    VersionUnknown: 位置
   LeftAndMain_Menu_ss:
     Hello: 您好
     LOGOUT: '退出'
@@ -388,7 +384,6 @@ zh:
     Toggle: '显示格式帮助'
   MemberImportForm:
     Help1: '<p>采用 <em>CSV 格式</em> 导入用户（逗号分隔值）<small><a href="#" class="toggle-advanced">显示高级用法</a></small></p>'
-    Help2: "<div class=\"advanced\">\n <h4>高级用法</h4>\n <ul>\n <li>允许的栏目：<em>%s</em></li>\n <li>通过独有的 <em>代码</em> 属性对现有用户进行配对并使用导入文件中任何新的值更新他们。</li>\n <li>群组可通过 <em>组别</em> 栏目进行分类。群组通过他们的<em>代码</em> 属性进行识别，\n多个群组可用逗号隔开。现有的群组分配情况不会被清除。</li>\n </ul>\n</div>"
     ResultCreated: '已创建 {count} 位成员'
     ResultDeleted: '已删除 %d 位成员'
     ResultNone: '无更改'

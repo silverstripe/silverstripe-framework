@@ -70,7 +70,7 @@ class ImageTest extends SapphireTest {
 
 	public function testGetTagWithTitle() {
 		Config::inst()->update('Image', 'force_resample', false);
-		
+
 		$image = $this->objFromFixture('Image', 'imageWithTitle');
 		$expected = '<img src="' . Director::baseUrl()
 			. 'assets/ImageTest/test_image.png" alt="This is a image Title" />';
@@ -81,7 +81,7 @@ class ImageTest extends SapphireTest {
 
 	public function testGetTagWithoutTitle() {
 		Config::inst()->update('Image', 'force_resample', false);
-		
+
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$expected = '<img src="' . Director::baseUrl() . 'assets/ImageTest/test_image.png" alt="test_image" />';
 		$actual = $image->getTag();
@@ -91,7 +91,7 @@ class ImageTest extends SapphireTest {
 
 	public function testGetTagWithoutTitleContainingDots() {
 		Config::inst()->update('Image', 'force_resample', false);
-		
+
 		$image = $this->objFromFixture('Image', 'imageWithoutTitleContainingDots');
 		$expected = '<img src="' . Director::baseUrl()
 			. 'assets/ImageTest/test.image.with.dots.png" alt="test.image.with.dots" />';
@@ -125,7 +125,6 @@ class ImageTest extends SapphireTest {
 	 * of the output image do not resample the file.
 	 */
 	public function testReluctanceToResampling() {
-
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$this->assertTrue($image->isSize(300, 300));
 
@@ -172,7 +171,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	/**
-	 * Tests that a URL to a resampled image is provided when force_resample is 
+	 * Tests that a URL to a resampled image is provided when force_resample is
 	 * set to true, if the resampled file is smaller than the original.
 	 */
 	public function testForceResample() {
@@ -180,16 +179,16 @@ class ImageTest extends SapphireTest {
 		$imageHQR = $imageHQ->Resampled();
 		$imageLQ = $this->objFromFixture('Image', 'lowQualityJPEG');
 		$imageLQR = $imageLQ->Resampled();
-		
+
 		// Test resampled file is served when force_resample = true
 		Config::inst()->update('Image', 'force_resample', true);
 		$this->assertLessThan($imageHQ->getAbsoluteSize(), $imageHQR->getAbsoluteSize(), 'Resampled image is smaller than original');
 		$this->assertEquals($imageHQ->getURL(), $imageHQR->getSourceURL(), 'Path to a resampled image was returned by getURL()');
-		
+
 		// Test original file is served when force_resample = true but original file is low quality
 		$this->assertGreaterThanOrEqual($imageLQ->getAbsoluteSize(), $imageLQR->getAbsoluteSize(), 'Resampled image is larger or same size as original');
 		$this->assertNotEquals($imageLQ->getURL(), $imageLQR->getSourceURL(), 'Path to the original image file was returned by getURL()');
-		
+
 		// Test original file is served when force_resample = false
 		Config::inst()->update('Image', 'force_resample', false);
 		$this->assertNotEquals($imageHQ->getURL(), $imageHQR->getSourceURL(), 'Path to the original image file was returned by getURL()');
@@ -290,23 +289,24 @@ class ImageTest extends SapphireTest {
 		$this->assertContains($argumentString, $imageThird->getFullPath(),
 			'Image contains background color for padded resizement');
 
-		$imageThirdPath = $imageThird->getFullPath();
-		$filesInFolder = $folder->find(dirname($imageThirdPath));
+		$resampledFolder = dirname($image->getFullPath()) . "/_resampled";
+		$filesInFolder = $folder->find($resampledFolder);
 		$this->assertEquals(3, count($filesInFolder),
 			'Image folder contains only the expected number of images before regeneration');
 
+		$imageThirdPath = $imageThird->getFullPath();
 		$hash = md5_file($imageThirdPath);
 		$this->assertEquals(3, $image->regenerateFormattedImages(),
 			'Cached images were regenerated in the right number');
 		$this->assertEquals($hash, md5_file($imageThirdPath), 'Regeneration of third image is correct');
 
 		/* Check that no other images exist, to ensure that the regeneration did not create other images */
-		$this->assertEquals($filesInFolder, $folder->find(dirname($imageThirdPath)),
+		$this->assertEquals($filesInFolder, $folder->find($resampledFolder),
 			'Image folder contains only the expected image files after regeneration');
 	}
 
 	public function testRegenerateImages() {
-		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
@@ -317,11 +317,24 @@ class ImageTest extends SapphireTest {
 	}
 
 	/**
+	 * Test that propertes from the source Image are inherited by resampled images
+	 */
+	public function testPropertyInheritance() {
+		$testString = 'This is a test';
+		$origImage = $this->objFromFixture('Image', 'imageWithTitle');
+		$origImage->TestProperty = $testString;
+		$resampled = $origImage->ScaleWidth(10);
+		$this->assertEquals($resampled->TestProperty, $testString);
+		$resampled2 = $resampled->ScaleWidth(5);
+		$this->assertEquals($resampled2->TestProperty, $testString);
+	}
+
+	/**
 	 * Tests that cached images are regenerated properly after a cached file is renamed with new arguments
 	 * ToDo: This doesn't seem like something that is worth testing - what is the point of this?
 	 */
 	public function testRegenerateImagesWithRenaming() {
-		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
@@ -331,6 +344,7 @@ class ImageTest extends SapphireTest {
 		$newArgumentString = Convert::base64url_encode(array(300));
 
 		$newPath = str_replace($oldArgumentString, $newArgumentString, $p);
+		if(!file_exists(dirname($newPath))) mkdir(dirname($newPath));
 		$newRelative = str_replace($oldArgumentString, $newArgumentString, $image_generated->getFileName());
 		rename($p, $newPath);
 		$this->assertFalse(file_exists($p), 'Resized image does not exist at old path after renaming');
@@ -343,7 +357,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testGeneratedImageDeletion() {
-		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$image_generated = $image->ScaleWidth(200);
 		$p = $image_generated->getFullPath();
 		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
@@ -356,7 +370,7 @@ class ImageTest extends SapphireTest {
 	 * Tests that generated images with multiple image manipulations are all deleted
 	 */
 	public function testMultipleGenerateManipulationCallsImageDeletion() {
-		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 
 		$firstImage = $image->ScaleWidth(200);
 		$firstImagePath = $firstImage->getFullPath();
@@ -375,7 +389,7 @@ class ImageTest extends SapphireTest {
 	 * Tests path properties of cached images with multiple image manipulations
 	 */
 	public function testPathPropertiesCachedImage() {
-		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$firstImage = $image->ScaleWidth(200);
 		$firstImagePath = $firstImage->getRelativePath();
 		$this->assertEquals($firstImagePath, $firstImage->Filename);
@@ -383,6 +397,33 @@ class ImageTest extends SapphireTest {
 		$secondImage = $firstImage->ScaleHeight(100);
 		$secondImagePath = $secondImage->getRelativePath();
 		$this->assertEquals($secondImagePath, $secondImage->Filename);
+	}
+
+	/**
+	 * Tests the static function Image::strip_resampled_prefix, to ensure that
+	 * the original filename can be extracted from the path of transformed images,
+	 * both in current and previous formats
+	 */
+	public function testStripResampledPrefix() {
+		$orig_image = $this->objFromFixture('Image', 'imageWithoutTitleContainingDots');
+
+		// current format (3.3+). Example:
+		// assets/ImageTest/_resampled/ScaleHeightWzIwMF0=/ScaleWidthWzQwMF0=/test.image.with.dots.png;
+		$firstImage = $orig_image->ScaleWidth(200);
+		$secondImage = $firstImage->ScaleHeight(200);
+		$paths_1 = $firstImage->Filename;
+		$paths_2 = $secondImage->Filename;
+
+		// 3.2 format  (did not work for multiple transformations)
+		$paths_3 = 'assets/ImageTest/_resampled/ScaleHeightWzIwMF0=-test.image.with.dots.png';
+
+		// 3.1 (and earlier) format  (did not work for multiple transformations)
+		$paths_4 = 'assets/ImageTest/_resampled/ScaleHeight200-test.image.with.dots.png';
+
+		$this->assertEquals($orig_image->Filename, Image::strip_resampled_prefix($paths_1));
+		$this->assertEquals($orig_image->Filename, Image::strip_resampled_prefix($paths_2));
+		$this->assertEquals($orig_image->Filename, Image::strip_resampled_prefix($paths_3));
+		$this->assertEquals($orig_image->Filename, Image::strip_resampled_prefix($paths_4));
 	}
 
 	/**
