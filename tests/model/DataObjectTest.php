@@ -35,18 +35,28 @@ class DataObjectTest extends SapphireTest {
 		// Assert fields are included
 		$this->assertArrayHasKey('Name', $dbFields);
 
-		// Assert the base fields are excluded
-		$this->assertArrayNotHasKey('Created', $dbFields);
-		$this->assertArrayNotHasKey('LastEdited', $dbFields);
-		$this->assertArrayNotHasKey('ClassName', $dbFields);
-		$this->assertArrayNotHasKey('ID', $dbFields);
+		// Assert the base fields are included
+		$this->assertArrayHasKey('Created', $dbFields);
+		$this->assertArrayHasKey('LastEdited', $dbFields);
+		$this->assertArrayHasKey('ClassName', $dbFields);
+		$this->assertArrayHasKey('ID', $dbFields);
 
 		// Assert that the correct field type is returned when passing a field
 		$this->assertEquals('Varchar', $obj->db('Name'));
 		$this->assertEquals('Text', $obj->db('Comment'));
 
+		// Test with table required
+		$this->assertEquals('DataObjectTest_TeamComment.Varchar', $obj->db('Name', true));
+		$this->assertEquals('DataObjectTest_TeamComment.Text', $obj->db('Comment', true));
+
 		$obj = new DataObjectTest_ExtendedTeamComment();
 		$dbFields = $obj->db();
+
+		// fixed fields are still included in extended classes
+		$this->assertArrayHasKey('Created', $dbFields);
+		$this->assertArrayHasKey('LastEdited', $dbFields);
+		$this->assertArrayHasKey('ClassName', $dbFields);
+		$this->assertArrayHasKey('ID', $dbFields);
 
 		// Assert overloaded fields have correct data type
 		$this->assertEquals('HTMLText', $obj->db('Comment'));
@@ -55,10 +65,14 @@ class DataObjectTest extends SapphireTest {
 
 		// assertEquals doesn't verify the order of array elements, so access keys manually to check order:
 		// expected: array('Name' => 'Varchar', 'Comment' => 'HTMLText')
-		reset($dbFields);
-		$this->assertEquals('Name', key($dbFields), 'DataObject::db returns fields in correct order');
-		next($dbFields);
-		$this->assertEquals('Comment', key($dbFields), 'DataObject::db returns fields in correct order');
+		$this->assertEquals(
+			array(
+				'Name',
+				'Comment'
+			),
+			array_slice(array_keys($dbFields), 4, 2),
+			'DataObject::db returns fields in correct order'
+		);
 	}
 
 	public function testConstructAcceptsValues() {
@@ -807,26 +821,8 @@ class DataObjectTest extends SapphireTest {
 		$subteamInstance = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 
 		$this->assertEquals(
-			array_keys($teamInstance->inheritedDatabaseFields()),
 			array(
-				//'ID',
-				//'ClassName',
-				//'Created',
-				//'LastEdited',
-				'Title',
-				'DatabaseField',
-				'ExtendedDatabaseField',
-				'CaptainID',
-				'HasOneRelationshipID',
-				'ExtendedHasOneRelationshipID'
-			),
-			'inheritedDatabaseFields() contains all fields defined on instance: base, extended and foreign keys'
-		);
-
-		$this->assertEquals(
-			array_keys(DataObject::database_fields('DataObjectTest_Team', false)),
-			array(
-				//'ID',
+				'ID',
 				'ClassName',
 				'LastEdited',
 				'Created',
@@ -837,34 +833,53 @@ class DataObjectTest extends SapphireTest {
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
 			),
-			'databaseFields() contains only fields defined on instance, including base, extended and foreign keys'
+			array_keys($teamInstance->db()),
+			'db() contains all fields defined on instance: base, extended and foreign keys'
 		);
 
 		$this->assertEquals(
-			array_keys($subteamInstance->inheritedDatabaseFields()),
 			array(
-				//'ID',
-				//'ClassName',
-				//'Created',
-				//'LastEdited',
-				'SubclassDatabaseField',
-				'ParentTeamID',
+				'ID',
+				'ClassName',
+				'LastEdited',
+				'Created',
+				'Title',
+				'DatabaseField',
+				'ExtendedDatabaseField',
+				'CaptainID',
+				'HasOneRelationshipID',
+				'ExtendedHasOneRelationshipID'
+			),
+			array_keys(DataObjectTest_Team::database_fields()),
+			'database_fields() contains only fields defined on instance, including base, extended and foreign keys'
+		);
+
+		$this->assertEquals(
+			array(
+				'ID',
+				'ClassName',
+				'LastEdited',
+				'Created',
 				'Title',
 				'DatabaseField',
 				'ExtendedDatabaseField',
 				'CaptainID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID',
+				'SubclassDatabaseField',
+				'ParentTeamID',
 			),
+			array_keys($subteamInstance->db()),
 			'inheritedDatabaseFields() on subclass contains all fields, including base, extended  and foreign keys'
 		);
 
 		$this->assertEquals(
-			array_keys(DataObject::database_fields('DataObjectTest_SubTeam', false)),
 			array(
+				'ID',
 				'SubclassDatabaseField',
 				'ParentTeamID',
 			),
+			array_keys(DataObject::database_fields('DataObjectTest_SubTeam')),
 			'databaseFields() on subclass contains only fields defined on instance'
 		);
 	}

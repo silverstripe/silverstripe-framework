@@ -129,7 +129,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 	public function testClassNameSpecGeneration() {
 
 		// Test with blank entries
-		DataObject::clear_classname_spec_cache();
+		DBClassName::clear_classname_cache();
 		$do1 = new DataObjectSchemaGenerationTest_DO();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
 		$this->assertEquals("DBClassName", $fields['ClassName']);
@@ -145,7 +145,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Test with instance of subclass
 		$item1 = new DataObjectSchemaGenerationTest_IndexDO();
 		$item1->write();
-		DataObject::clear_classname_spec_cache();
+		DBClassName::clear_classname_cache();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
 		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
@@ -160,7 +160,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Test with instance of main class
 		$item2 = new DataObjectSchemaGenerationTest_DO();
 		$item2->write();
-		DataObject::clear_classname_spec_cache();
+		DBClassName::clear_classname_cache();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
 		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
@@ -177,7 +177,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$item1->write();
 		$item2 = new DataObjectSchemaGenerationTest_DO();
 		$item2->write();
-		DataObject::clear_classname_spec_cache();
+		DBClassName::clear_classname_cache();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
 		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(

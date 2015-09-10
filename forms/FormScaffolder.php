@@ -73,8 +73,9 @@ class FormScaffolder extends Object {
 			$mainTab->setTitle(_t('SiteTree.TABMAIN', "Main"));
 		}
 
-		// add database fields
-		foreach($this->obj->db() as $fieldName => $fieldType) {
+		// Add logical fields directly specified in db config
+		foreach($this->obj->config()->db as $fieldName => $fieldType) {
+			// Skip restricted fields
 			if($this->restrictFields && !in_array($fieldName, $this->restrictFields)) continue;
 
 			// @todo Pass localized title
@@ -82,7 +83,14 @@ class FormScaffolder extends Object {
 				$fieldClass = $this->fieldClasses[$fieldName];
 				$fieldObject = new $fieldClass($fieldName);
 			} else {
-				$fieldObject = $this->obj->dbObject($fieldName)->scaffoldFormField(null, $this->getParamsArray());
+				$fieldObject = $this
+					->obj
+					->dbObject($fieldName)
+					->scaffoldFormField(null, $this->getParamsArray());
+			}
+			// Allow fields to opt-out of scaffolding
+			if(!$fieldObject) {
+				continue;
 			}
 			$fieldObject->setTitle($this->obj->fieldLabel($fieldName));
 			if($this->tabbed) {

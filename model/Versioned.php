@@ -401,7 +401,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			if ($suffix) $table = "{$classTable}_$suffix";
 			else $table = $classTable;
 
-			if($fields = DataObject::database_fields($this->owner->class)) {
+			$fields = DataObject::database_fields($this->owner->class);
+			unset($fields['ID']);
+			if($fields) {
 				$options = Config::inst()->get($this->owner->class, 'create_table_options', Config::FIRST_SET);
 				$indexes = $this->owner->databaseIndexes();
 				if ($suffix && ($ext = $this->owner->getExtensionInstance($allSuffixes[$suffix]))) {

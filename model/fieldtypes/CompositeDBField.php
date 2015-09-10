@@ -257,4 +257,13 @@ abstract class CompositeDBField extends DBField {
 		return $fieldObject;
 	}
 
+	public function castingHelper($field) {
+		$fields = $this->compositeDatabaseFields();
+		if(isset($fields[$field])) {
+			return $fields[$field];
+		}
+
+		parent::castingHelper($field);
+	}
+
 }

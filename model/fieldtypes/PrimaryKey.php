@@ -16,6 +16,25 @@ class PrimaryKey extends Int {
 	private static $default_search_filter_class = 'ExactMatchFilter';
 
 	/**
+	 * @var bool
+	 */
+	protected $autoIncrement = true;
+
+	public function setAutoIncrement($autoIncrement) {
+		$this->autoIncrement = $autoIncrement;
+		return $this;
+	}
+
+	public function getAutoIncrement() {
+		return $this->autoIncrement;
+	}
+
+	public function requireField() {
+		$spec = DB::get_schema()->IdColumn(false, $this->getAutoIncrement());
+		DB::require_field($this->getTable(), $this->getName(), $spec);
+	}
+
+	/**
 	 * @param string $name
 	 * @param DataOject $object The object that this is primary key for (should have a relation with $name)
 	 */
@@ -25,11 +44,11 @@ class PrimaryKey extends Int {
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {
-		$titleField = ($this->object->hasField('Title')) ? 'Title' : 'Name';
-		$map = DataList::create(get_class($this->object))->map('ID', $titleField);
-		$field = new DropdownField($this->name, $title, $map);
-		$field->setEmptyString(' ');
-		return $field;
+		return null;
+	}
+
+	public function scaffoldSearchField($title = null) {
+		parent::scaffoldFormField($title);
 	}
 
 	public function setValue($value, $record = null, $markChanged = true) {

@@ -207,7 +207,8 @@ class DataQuery {
 			$selectColumns = null;
 			if ($queriedColumns) {
 				// Restrict queried columns to that on the selected table
-				$tableFields = DataObject::database_fields($tableClass, false);
+				$tableFields = DataObject::database_fields($tableClass);
+				unset($tableFields['ID']);
 				$selectColumns = array_intersect($queriedColumns, array_keys($tableFields));
 			}
 
@@ -445,9 +446,10 @@ class DataQuery {
 	 */
 	protected function selectColumnsFromTable(SQLSelect &$query, $tableClass, $columns = null) {
 		// Add SQL for multi-value fields
-		$databaseFields = DataObject::database_fields($tableClass, false);
+		$databaseFields = DataObject::database_fields($tableClass);
 		$compositeFields = DataObject::composite_fields($tableClass, false);
-		if($databaseFields) foreach($databaseFields as $k => $v) {
+		unset($databaseFields['ID']);
+		foreach($databaseFields as $k => $v) {
 			if((is_null($columns) || in_array($k, $columns)) && !isset($compositeFields[$k])) {
 				// Update $collidingFields if necessary
 				if($expressionForField = $query->expressionForField($k)) {
@@ -459,7 +461,7 @@ class DataQuery {
 				}
 			}
 		}
-		if($compositeFields) foreach($compositeFields as $k => $v) {
+		foreach($compositeFields as $k => $v) {
 			if((is_null($columns) || in_array($k, $columns)) && $v) {
 				$dbO = Object::create_from_string($v, $k);
 				$dbO->setTable($tableClass);
@@ -762,7 +764,7 @@ class DataQuery {
 		$query->setSelect(array());
 		$query->selectField($fieldExpression, $field);
 		$this->ensureSelectContainsOrderbyColumns($query, $originalSelect);
-
+		
 		return $query->execute()->column($field);
 	}
 

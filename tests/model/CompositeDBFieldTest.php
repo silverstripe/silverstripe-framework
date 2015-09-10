@@ -21,6 +21,13 @@ class CompositeDBFieldTest extends SapphireTest {
 		$this->assertTrue($obj->dbObject('MyMoney')->hasField('Amount'));
 		$this->assertTrue($obj->dbObject('MyMoney')->hasField('Currency'));
 
+		// Test getField accessor
+		$this->assertTrue($obj->MyMoney instanceof Money);
+		$this->assertTrue($obj->MyMoney->hasField('Amount'));
+		$obj->MyMoney->Amount = 100.00;
+		$this->assertEquals(100.00, $obj->MyMoney->Amount);
+		$this->assertEquals(100.00, $obj->MyMoneyAmount);
+
 		// Not strictly correct
 		$this->assertFalse($obj->dbObject('MyMoney')->hasField('MyMoneyAmount'));
 		$this->assertFalse($obj->dbObject('MyMoney')->hasField('MyMoneyCurrency'));
@@ -32,7 +39,7 @@ class CompositeDBFieldTest extends SapphireTest {
 	 */
 	public function testCompositeFieldMetaDataFunctions() {
 		$this->assertEquals('Money', DataObject::is_composite_field('CompositeDBFieldTest_DataObject', 'MyMoney'));
-		$this->assertNull(DataObject::is_composite_field('CompositeDBFieldTest_DataObject', 'Title'));
+		$this->assertFalse(DataObject::is_composite_field('CompositeDBFieldTest_DataObject', 'Title'));
 		$this->assertEquals(
 			array(
 				'MyMoney' => 'Money',
@@ -44,8 +51,8 @@ class CompositeDBFieldTest extends SapphireTest {
 
 		$this->assertEquals('Money', DataObject::is_composite_field('SubclassedDBFieldObject', 'MyMoney'));
 		$this->assertEquals('Money', DataObject::is_composite_field('SubclassedDBFieldObject', 'OtherMoney'));
-		$this->assertNull(DataObject::is_composite_field('SubclassedDBFieldObject', 'Title'));
-		$this->assertNull(DataObject::is_composite_field('SubclassedDBFieldObject', 'OtherField'));
+		$this->assertFalse(DataObject::is_composite_field('SubclassedDBFieldObject', 'Title'));
+		$this->assertFalse(DataObject::is_composite_field('SubclassedDBFieldObject', 'OtherField'));
 		$this->assertEquals(
 			array(
 				'MyMoney' => 'Money',

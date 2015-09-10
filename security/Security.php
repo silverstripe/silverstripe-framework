@@ -1012,7 +1012,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 			$dbFields = DB::field_list($table);
 			if(!$dbFields) return false;
 
-			$objFields = DataObject::database_fields($table, false);
+			$objFields = DataObject::database_fields($table);
 			$missingFields = array_diff_key($objFields, $dbFields);
 
 			if($missingFields) return false;
