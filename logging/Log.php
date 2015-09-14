@@ -10,6 +10,8 @@
  *  - SS_Log::ERR
  *  - SS_Log::WARN
  *  - SS_Log::NOTICE
+ *  - SS_Log::INFO
+ *  - SS_Log::DEBUG
  *
  * You can add an error writer by calling {@link SS_Log::add_writer()}
  *
@@ -76,14 +78,12 @@ class SS_Log
 	 * error code, error line, error context (backtrace).
 	 *
 	 * @param mixed $message Exception object or array of error context variables
-	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
-	 * @param  mixed    $extras    Extra information to log in event
+	 * @param string $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN, SS_Log::NOTICE, SS_Log::INFO or SS_Log::DEBUG
 	 *
 	 * @deprecated 4.0.0:5.0.0 Use Injector::inst()->get('Logger')->log($priority, $message) instead
 	 */
-	public static function log($message, $priority, $extras = null) {
+	public static function log($message, $priority) {
 		Deprecation::notice('4.0', 'Use Injector::inst()->get(\'Logger\')->log($priority, $message) instead');
-
 		Injector::inst()->get('Logger')->log($priority, $message);
 	}
 }
