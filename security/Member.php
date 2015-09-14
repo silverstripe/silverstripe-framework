@@ -877,6 +877,20 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 	}
 
+	/**
+	 * Remeber the details of a member when they are deleted
+	 */
+	public function onBeforeDelete() {
+		$deleted = new DeletedMember();
+		$original = $this->owner->toMap();
+		unset($original['ClassName']);
+		foreach ($original as $k => $v) {
+			$deleted->$k = $v;
+		}
+		$deleted->write();
+		parent::onBeforeDelete();
+	}
+
 	public function onAfterDelete() {
 		parent::onAfterDelete();
 
