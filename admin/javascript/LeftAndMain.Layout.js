@@ -137,6 +137,13 @@
 			if (posthidden.content !== prehidden.content) spec.content.trigger('columnvisibilitychanged');
 			if (posthidden.preview !== prehidden.preview) spec.preview.trigger('columnvisibilitychanged');
 
+			// Calculate whether preview is possible in split mode
+			if (contentWidth + previewWidth < options.minContentWidth + options.minPreviewWidth) {
+				spec.preview.trigger('disable');
+			} else {
+				spec.preview.trigger('enable');
+			}
+
 			return container;
 		};
 

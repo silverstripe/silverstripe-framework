@@ -290,8 +290,6 @@ es:
     FROMWEB: 'Desde la web'
     FindInFolder: 'Buscar en carpeta'
     IMAGEALT: 'Texto alternativo (alt)'
-    IMAGEALTTEXT: 'Texto alternativo (alt) - es mostrado si la imagen no puede ser visualizada'
-    IMAGEALTTEXTDESC: 'Texto alternativo (desc) - es mostrado si la imagen no puede ser visualizada o a los lectores de pantalla'
     IMAGEDIMENSIONS: Dimensiones
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Texto del título (tooltip) - para obtener más información acerca de la imagen'
@@ -326,9 +324,7 @@ es:
     DELETED: Borrado
     DropdownBatchActionsDefault: Acciones
     HELP: Ayuda
-    PAGETYPE: 'Tipo de página'
     PERMAGAIN: 'Ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña a continuación.'
-    PLEASESAVE: 'Por favor guarde la página: Esta página no se ha podido actualizar porque aún no ha sido guardada.'
     PreviewButton: Vista previa
     REORGANISATIONSUCCESSFUL: 'Reorganizado el árbol del sitio con éxito.'
     SAVEDUP: Guardado

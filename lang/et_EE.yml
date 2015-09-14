@@ -240,7 +240,6 @@ et_EE:
     FROMWEB: 'Veebist'
     FindInFolder: 'Otsi kaustast'
     IMAGEALT: 'Asetekst (alt)'
-    IMAGEALTTEXT: 'Asetekst (alt) – kuvatakse, kui kujutist ei ole võimalik kuvada'
     IMAGEDIMENSIONS: Mõõtmed
     IMAGEHEIGHTPX: Laius
     IMAGETITLE: 'Pealkirja tekst (kohtspikker) – lisateabeks kujutise kohta'

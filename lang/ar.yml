@@ -263,8 +263,6 @@ ar:
     FROMWEB: 'من الإنترنت'
     FindInFolder: 'ابحث في المجلد'
     IMAGEALT: 'النص البديل (بديل)'
-    IMAGEALTTEXT: 'النص البديل (ألت) - يظهر إذا كان لا يمكن عرض الصورة'
-    IMAGEALTTEXTDESC: 'تبين قارئي الشاشة أو إذا لم يمكن عرض الصورة'
     IMAGEDIMENSIONS: الأبعاد
     IMAGEHEIGHTPX: الطول
     IMAGETITLE: 'العنوان - لإضافة معلومات إلى الصورة'

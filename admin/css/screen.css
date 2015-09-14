@@ -1200,14 +1200,6 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-content-controls.cms-preview-controls { z-index: 1; background: #eceff1; height: 30px; /* should be set in js Layout to match page actions */ padding: 12px 12px; }
 .cms-content-controls .icon-view, .cms-content-controls .preview-selector.dropdown a.chzn-single { white-space: nowrap; }
 .cms-content-controls .icon-view:before, .cms-content-controls .preview-selector.dropdown a.chzn-single:before { display: inline-block; float: left; width: 20px; overflow: hidden; color: #1f1f1f; }
-.cms-content-controls .icon-auto:before { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -898px no-repeat; }
-.cms-content-controls .icon-desktop:before { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -925px no-repeat; }
-.cms-content-controls .icon-tablet:before { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -1087px no-repeat; }
-.cms-content-controls .icon-mobile:before { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -1006px no-repeat; }
-.cms-content-controls .icon-split:before { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -1060px no-repeat; }
-.cms-content-controls .icon-edit:before { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -979px no-repeat; }
-.cms-content-controls .icon-preview:before { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -1033px no-repeat; }
-.cms-content-controls .icon-window:before { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -952px no-repeat; }
 .cms-content-controls .cms-navigator { width: 100%; }
 .cms-content-controls .preview-selector { float: right; border-bottom: none; position: relative; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; margin: 2px 0 0 4px; padding: 0; height: 28px; }
 .cms-content-controls .preview-selector a.chzn-single { width: 16px; padding: 6px; height: 16px; margin: -2px 0 0; filter: none; /* remove ie background */ background: none; border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
@@ -1222,7 +1214,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-content-controls .preview-selector .chzn-container { width: auto !important; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop { padding: 0; border-bottom: 1px solid #aaa; margin-top: -5px; width: auto !important; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop .chzn-search { display: none; }
-.cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul { padding: 0; margin: 0; }
+.cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul { padding: 0; margin: 0; overflow: visible; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul li { font-size: 12px; line-height: 16px; padding: 7px 16px 7px 6px; color: #0073C1; border-bottom: 1px solid #DDD; background-color: #FFF; /* Description styling */ }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul li:before { margin-right: 2px; font-size: 16px; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul li.description { padding-top: 5px; padding-bottom: 5px; }
@@ -1234,8 +1226,15 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul li.restricted:before { opacity: 0.2; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul li span { display: block; color: #6c6c6c; font-size: 0.85em; line-height: 1.1em; padding-left: 23px; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul li .icon-view { margin-right: 4px; }
+.cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul .disabled-tooltip { position: absolute; top: 0; left: 0; right: 0; height: 32px; background: rgba(255, 255, 255, 0); }
+.cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul .disabled-tooltip::before { content: 'Screen size too small'; text-align: center; background: #555; color: white; padding: 4px 0; position: absolute; top: -24px; left: -1px; right: -1px; border-radius: 3px 3px 0 0; display: none; z-index: 2; }
+.cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul .disabled-tooltip::after { content: ''; position: absolute; width: 10px; height: 10px; -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -webkit-transform: rotate(45deg); transform: rotate(45deg); display: none; background: #555; left: 47%; top: -6px; }
+.cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul .disabled-tooltip:hover::after, .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul .disabled-tooltip:hover::before { display: block; }
 .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected { background: #e6eaed; color: #66727d; }
 .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected.highlighted, .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected:hover, .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected:focus { background: #e6eaed; color: #66727d; }
+.cms-content-controls .preview-selector.split-disabled .chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns { color: #aaa; pointer-events: none; }
+.cms-content-controls .preview-selector.split-disabled .chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns.highlighted, .cms-content-controls .preview-selector.split-disabled .chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns:hover, .cms-content-controls .preview-selector.split-disabled .chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns:focus { color: #aaa; background: #fff; cursor: default; }
+.cms-content-controls .preview-selector.split-disabled .chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns::before { color: #aaa; }
 .cms-content-controls .cms-preview-states { float: right; }
 .cms-content-controls .cms-preview-states select { max-width: 150px; }
 .cms-content-controls .cms-preview-states.dropdown { max-width: 150px; }

@@ -1916,6 +1916,7 @@ class DataObjectTest_TeamComment extends DataObject implements TestOnly {
 		'Team' => 'DataObjectTest_Team'
 	);
 
+	private static $default_sort = '"Name" ASC';
 }
 
 class DataObjectTest_Fan extends DataObject implements TestOnly {
