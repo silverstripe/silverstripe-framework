@@ -261,8 +261,6 @@ ja:
     FROMWEB: 'Webから'
     FindInFolder: 'フォルダ内を探す'
     IMAGEALT: '代替テキスト(Alt)'
-    IMAGEALTTEXT: '代替(Alt)テキスト - 画像が表示されなかった場合に表示されます'
-    IMAGEALTTEXTDESC: 'スクリーンリーダー利用者やイメージが表示されなかった場合に表示されます'
     IMAGEDIMENSIONS: サイズ
     IMAGEHEIGHTPX: 高さ
     IMAGETITLE: 'タイトル(ツールチップ)テキスト - 画像に対する追加的情報'
