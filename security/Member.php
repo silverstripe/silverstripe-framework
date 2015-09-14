@@ -254,7 +254,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		// Ensure this user is in the admin group
 		if(!$admin->inGroup($adminGroup)) {
-			$admin->Groups()->add($adminGroup);
+			// Add member to group instead of adding group to member
+			// This bypasses the privilege escallation code in Member_GroupSet
+			$adminGroup
+				->DirectMembers()
+				->add($admin);
 		}
 
 		return $admin;
@@ -890,27 +894,30 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function onAfterWrite() {
 		parent::onAfterWrite();
 
+		Permission::flush_permission_cache();
+
 		if($this->isChanged('Password')) {
 			MemberPassword::log($this);
 		}
 	}
 
 	/**
+	 * Filter out admin groups to avoid privilege escalation,
 	 * If any admin groups are requested, deny the whole save operation.
 	 *
 	 * @param Array $ids Database IDs of Group records
-	 * @return boolean
+	 * @return boolean True if the change can be accepted
 	 */
 	public function onChangeGroups($ids) {
-		// Filter out admin groups to avoid privilege escalation,
 		// unless the current user is an admin already OR the logged in user is an admin
-		if(!(Permission::check('ADMIN') || Permission::checkMember($this, 'ADMIN'))) {
-			$adminGroups = Permission::get_groups_by_permission('ADMIN');
-			$adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
-			return count(array_intersect($ids, $adminGroupIDs)) == 0;
-		} else {
+		if(Permission::check('ADMIN') || Permission::checkMember($this, 'ADMIN')) {
 			return true;
 		}
+
+		// If there are no admin groups in this set then it's ok
+		$adminGroups = Permission::get_groups_by_permission('ADMIN');
+		$adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
+		return count(array_intersect($ids, $adminGroupIDs)) == 0;
 	}
 
 
@@ -1147,6 +1154,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Use {@link DirectGroups()} to only retrieve the group relations without inheritance.
 	 *
 	 * @todo Push all this logic into Member_GroupSet's getIterator()?
+	 * @return Member_Groupset
 	 */
 	public function Groups() {
 		$groups = Member_GroupSet::create('Group', 'Group_Members', 'GroupID', 'MemberID');
@@ -1656,6 +1664,47 @@ class Member_GroupSet extends ManyManyList {
 
 	public function foreignIDWriteFilter($id = null) {
 		return parent::foreignIDFilter($id);
+	}
+
+	public function add($item, $extraFields = null) {
+		// Get Group.ID
+		$itemID = null;
+		if(is_numeric($item)) {
+			$itemID = $item;
+		} else if($item instanceof Group) {
+			$itemID = $item->ID;
+		}
+
+		// Check if this group is allowed to be added
+		if($this->canAddGroups(array($itemID))) {
+			parent::add($item, $extraFields);
+		}
+	}
+
+	/**
+	 * Determine if the following groups IDs can be added
+	 *
+	 * @param array $itemIDs
+	 * @return boolean
+	 */
+	protected function canAddGroups($itemIDs) {
+		if(empty($itemIDs)) {
+			return true;
+		}
+		$member = $this->getMember();
+		return empty($member) || $member->onChangeGroups($itemIDs);
+	}
+
+	/**
+	 * Get foreign member record for this relation
+	 *
+	 * @return Member
+	 */
+	protected function getMember() {
+		$id = $this->getForeignID();
+		if($id) {
+			return DataObject::get_by_id('Member', $id);
+		}
 	}
 }
 

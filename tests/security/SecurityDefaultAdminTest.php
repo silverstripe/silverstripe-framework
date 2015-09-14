@@ -1,6 +1,8 @@
 <?php
 class SecurityDefaultAdminTest extends SapphireTest {
 
+	protected $usesDatabase = true;
+
 	protected $defaultUsername = null;
 	protected $defaultPassword = null;
 	
@@ -16,10 +18,12 @@ class SecurityDefaultAdminTest extends SapphireTest {
 		$this->defaultPassword = Security::default_admin_password();
 		Security::clear_default_admin();
 		Security::setDefaultAdmin('admin', 'password');
+		Permission::flush_permission_cache();
 	}
 
 	public function tearDown() {
 		Security::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
+		Permission::flush_permission_cache();
 		parent::tearDown();
 	}
 	
@@ -42,9 +46,9 @@ class SecurityDefaultAdminTest extends SapphireTest {
 	public function testFindAnAdministratorCreatesNewUser() {
 		$adminMembers = Permission::get_members_by_permission('ADMIN');
 		$this->assertEquals(0, $adminMembers->count());
-		
+
 		$admin = Security::findAnAdministrator();
-		
+
 		$this->assertInstanceOf('Member', $admin);
 		$this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
 		$this->assertEquals($admin->Email, Security::default_admin_username());

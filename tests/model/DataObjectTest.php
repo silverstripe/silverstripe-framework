@@ -1521,6 +1521,7 @@ class DataObjectTest_TeamComment extends DataObject {
 		'Team' => 'DataObjectTest_Team'
 	);
 
+	private static $default_sort = '"Name" ASC';
 }
 
 class DataObjectTest_ExtendedTeamComment extends DataObjectTest_TeamComment {

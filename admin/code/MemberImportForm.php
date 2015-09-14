@@ -22,17 +22,18 @@ class MemberImportForm extends Form {
 				. ' <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
 			);
 			$helpHtml .= _t(
-				'MemberImportForm.Help2', 
-'<div class="advanced">
-	<h4>Advanced usage</h4>
-	<ul>
-	<li>Allowed columns: <em>%s</em></li>
-	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from
-	the imported file.</li>
-	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,
-	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>
-	</ul>
-</div>');
+				'MemberImportForm.Help2',
+				'<div class="advanced">'
+				. '<h4>Advanced usage</h4>'
+				. '<ul>'
+				. '<li>Allowed columns: <em>%s</em></li>'
+				. '<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from '
+				. 'the imported file.</li>'
+				. '<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, '
+				. 'multiple groups can be separated by comma. Existing group memberships are not cleared.</li>'
+				. '</ul>'
+				. '</div>'
+			);
 			
 			$importer = new MemberCsvBulkLoader();
 			$importSpec = $importer->getImportSpec();

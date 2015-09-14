@@ -90,15 +90,35 @@ class DatabaseAdmin extends Controller {
 		// Get all our classes
 		SS_ClassLoader::instance()->getManifest()->regenerate();
 
-		if(isset($_GET['returnURL'])) {
+		$url = $this->getReturnURL();
+		if($url) {
 			echo "<p>Setting up the database; you will be returned to your site shortly....</p>";
 			$this->doBuild(true);
 			echo "<p>Done!</p>";
-			$this->redirect($_GET['returnURL']);
+			$this->redirect($url);
 		} else {
-			$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']),
-				!isset($_REQUEST['dont_populate']));
+			$quiet = $this->request->requestVar('quiet') !== null;
+			$fromInstaller = $this->request->requestVar('from_installer') !== null;
+			$populate = $this->request->requestVar('dont_populate') === null;
+			$this->doBuild($quiet || $fromInstaller, $populate);
 		}
+	}
+
+	/**
+	 * Gets the url to return to after build
+	 *
+	 * @return string|null
+	 */
+	protected function getReturnURL() {
+		$url = $this->request->getVar('returnURL');
+
+		// Check that this url is a site url
+		if(empty($url) || !Director::is_site_url($url)) {
+			return null;
+		}
+
+		// Convert to absolute URL
+		return Director::absoluteURL($url, true);
 	}
 
 	/**

@@ -265,8 +265,6 @@ sr:
     FROMWEB: 'Са веба'
     FindInFolder: 'Пронађи у фасцикли'
     IMAGEALT: 'Алтернативни текст (alt)'
-    IMAGEALTTEXT: 'Алтернативни текст (alt) - приказује се ако слика не може бити приказана'
-    IMAGEALTTEXTDESC: 'Приказује се читачима екрана или ако слика не може бити приказана'
     IMAGEDIMENSIONS: Димензије
     IMAGEHEIGHTPX: Висина
     IMAGETITLE: 'Текст наслова (tooltip) - за додатне информације о слици'

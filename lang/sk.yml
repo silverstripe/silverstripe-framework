@@ -291,8 +291,6 @@ sk:
     FROMWEB: 'Z webu'
     FindInFolder: 'Vyhľadať v priečinku'
     IMAGEALT: 'Atlernatívny text (alt)'
-    IMAGEALTTEXT: 'Atlernatívny text (alt) - zobrazí sa ak obrázok nemože byť zobrazený '
-    IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke, ak obrázok nemôže byť zobrazený'
     IMAGEDIMENSIONS: Rozmery
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
@@ -327,9 +325,7 @@ sk:
     DELETED: Zmazané.
     DropdownBatchActionsDefault: Akcie
     HELP: Pomoc
-    PAGETYPE: 'Typ stránky'
     PERMAGAIN: 'Boli ste odhlásený'
-    PLEASESAVE: 'Uložte stránku, prosím. Táto stránka nemôže byť aktualizovaná, pretože eště nebola uložená.'
     PreviewButton: Náhľad
     REORGANISATIONSUCCESSFUL: 'Strom webu bol reorganizovaný úspešne.'
     SAVEDUP: Uložené.
