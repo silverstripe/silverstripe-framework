@@ -408,4 +408,15 @@ class BulkLoader_Result extends Object {
 
 		return $set;
 	}
+
+	/**
+	 * Merges another BulkLoader_Result into this one.
+	 *
+	 * @param BulkLoader_Result $other
+	 */
+	public function merge(BulkLoader_Result $other) {
+		$this->created = array_merge($this->created, $other->created);
+		$this->updated = array_merge($this->updated, $other->updated);
+		$this->deleted = array_merge($this->deleted, $other->deleted);
+	}
 }

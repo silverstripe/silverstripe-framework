@@ -38,6 +38,15 @@ class CsvBulkLoader extends BulkLoader {
 	public $hasHeaderRow = true;
 
 	/**
+	 * Number of lines to split large CSV files into.
+	 *
+	 * @var int
+	 *
+	 * @config
+	 */
+	private static $lines = 1000;
+
+	/**
 	 * @inheritDoc
 	 */
 	public function preview($filepath) {
@@ -47,8 +56,115 @@ class CsvBulkLoader extends BulkLoader {
 	/**
 	 * @param string $filepath
 	 * @param boolean $preview
+	 *
+	 * @return null|BulkLoader_Result
 	 */
 	protected function processAll($filepath, $preview = false) {
+		$files = $this->splitFile($filepath);
+
+		$result = null;
+		$last = null;
+
+		try {
+			foreach ($files as $file) {
+				$last = $file;
+
+				$next = $this->processChunk($file, false);
+
+				if ($result instanceof BulkLoader_Result) {
+					$result->merge($next);
+				} else {
+					$result = $next;
+				}
+
+				@unlink($file);
+			}
+		} catch (Exception $e) {
+			print "Failed to parse {$last}\n";
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Splits a large file up into many smaller files.
+	 *
+	 * @param string $path Path to large file to split
+	 * @param int $lines Number of lines per file
+	 *
+	 * @return array List of file paths
+	 */
+	protected function splitFile($path, $lines = null) {
+		$previous = ini_get('auto_detect_line_endings');
+
+		ini_set('auto_detect_line_endings', true);
+
+		if (!is_int($lines)) {
+			$lines = $this->config()->get("lines");
+		}
+
+		$new = $this->getNewSplitFileName();
+
+		$to = fopen($new, 'w+');
+		$from = fopen($path, 'r');
+
+		$header = null;
+
+		if ($this->hasHeaderRow) {
+			$header = fgets($from);
+			fwrite($to, $header);
+		}
+
+		$files = array();
+		$files[] = $new;
+
+		$count = 0;
+
+		while (!feof($from)) {
+			fwrite($to, fgets($from));
+
+			$count++;
+
+			if ($count >= $lines) {
+				fclose($to);
+
+				// get a new temporary file name, to write the next lines to
+				$new = $this->getNewSplitFileName();
+
+				$to = fopen($new, 'w+');
+
+				if ($this->hasHeaderRow) {
+					// add the headers to the new file
+					fwrite($to, $header);
+				}
+
+				$files[] = $new;
+
+				$count = 0;
+			}
+		}
+
+		fclose($to);
+
+		ini_set('auto_detect_line_endings', $previous);
+
+		return $files;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getNewSplitFileName() {
+		return TEMP_FOLDER . '/' . uniqid('BulkLoader', true) . '.csv';
+	}
+
+	/**
+	 * @param string $filepath
+	 * @param boolean $preview
+	 *
+	 * @return BulkLoader_Result
+	 */
+	protected function processChunk($filepath, $preview = false) {
 		$results = new BulkLoader_Result();
 
 		$csv = new CSVParser(

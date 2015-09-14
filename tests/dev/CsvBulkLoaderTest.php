@@ -229,6 +229,17 @@ class CsvBulkLoaderTest extends SapphireTest {
 		return $i;
 	}
 
+	public function testLargeFileSplitIntoSmallerFiles() {
+		Config::inst()->update('CsvBulkLoader', 'lines', 3);
+
+		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
+		$path = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_LargeListOfPlayers.csv';
+
+		$results = $loader->load($path);
+
+		$this->assertEquals(10, $results->Count());
+	}
+
 }
 
 class CsvBulkLoaderTest_CustomLoader extends CsvBulkLoader implements TestOnly {
