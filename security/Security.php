@@ -805,7 +805,11 @@ class Security extends Controller implements TemplateGlobalProvider {
 			$member = Member::create();
 			$member->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
 			$member->write();
-			$member->Groups()->add($adminGroup);
+			// Add member to group instead of adding group to member
+			// This bypasses the privilege escallation code in Member_GroupSet
+			$adminGroup
+				->DirectMembers()
+				->add($member);
 		}
 
 		return $member;

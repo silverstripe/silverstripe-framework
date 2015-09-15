@@ -265,8 +265,6 @@ sr@latin:
     FROMWEB: 'Sa veba'
     FindInFolder: 'Pronađi u fascikli'
     IMAGEALT: 'Alternativni tekst (alt)'
-    IMAGEALTTEXT: 'Alternativni tekst (alt) - prikazuje se ako slika ne može biti prikazana'
-    IMAGEALTTEXTDESC: 'Prikazuje se čitačima ekrana ili ako slika ne može biti prikazana'
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Visina
     IMAGETITLE: 'Tekst naslova (tooltip) - za dodatne informacije o slici'

@@ -1,4 +1,5 @@
 (function($) {
+
 	$.entwine('ss.preview', function($){
 
 		/**
@@ -288,6 +289,20 @@
 				} catch (exception) {
 					console.warn('localStorge is not available due to current browser / system settings.');
 				}
+			},
+
+			onenable: function () {
+				var $viewModeSelector = $('.preview-mode-selector');
+
+				$viewModeSelector.removeClass('split-disabled');
+				$viewModeSelector.find('.disabled-tooltip').hide();
+			},
+
+			ondisable: function () {
+				var $viewModeSelector = $('.preview-mode-selector');
+
+				$viewModeSelector.addClass('split-disabled');
+				$viewModeSelector.find('.disabled-tooltip').show();
 			},
 
 			/**
@@ -581,7 +596,7 @@
 					.trigger('liszt:updated')
 					._addIcon();
 			}
-		});	
+		});
 
 		$('.preview-mode-selector select').entwine({
 			/**
@@ -602,7 +617,7 @@
 			 *  IE8 doesn't support programatic access to onchange event 
 			 *	so react on click
 			 */
-			onclick:function(e){				
+			onclick:function(e){
 				if ($.browser.msie) {
 					e.preventDefault();					
 					var index = this.index();
@@ -620,8 +635,16 @@
 		$('.cms-preview.column-hidden').entwine({
 			onmatch: function() {
 				$('#preview-mode-dropdown-in-content').show();
+				// Alert the user as to why the preview is hidden
+				if ($('.cms-preview .result-selected').hasClass('font-icon-columns')) {
+					statusMessage(ss.i18n._t(
+						'LeftAndMain.DISABLESPLITVIEW',
+						"Screen too small to show site preview in split mode"),
+					"error");
+				}
 				this._super();
 			},
+
 			onunmatch: function() {
 				$('#preview-mode-dropdown-in-content').hide();
 				this._super();
@@ -771,6 +794,16 @@
 			}
 		}); */
 
+		$('.preview-mode-selector .chzn-drop li:last-child').entwine({
+			onmatch: function () {
+				if ($('.preview-mode-selector').hasClass('split-disabled')) {
+					this.parent().append('<div class="disabled-tooltip"></div>');
+				} else {
+					this.parent().append('<div class="disabled-tooltip" style="display: none;"></div>');
+				}
+			}
+		});
+
 		/**
 		 * Recalculate the preview space to allow for horizontal scrollbar and the preview actions panel
 		 */
@@ -803,11 +836,9 @@
 		/**
 		 * Rotate preview to landscape
 		 */
-		$('.preview-device-outer').click(function() {
-			if(!$('.preview-device-outer').hasClass('rotate')) {
-				$('.preview-device-outer').addClass('rotate');
-			} else {
-				$('.preview-device-outer').removeClass('rotate');
+		$('.preview-device-outer').entwine({
+			onclick: function () {
+				this.toggleClass('rotate');
 			}
 		});
 	});

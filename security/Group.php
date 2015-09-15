@@ -108,7 +108,7 @@ class Group extends DataObject {
 
 		if($this->ID) {
 			$group = $this;
-			$config = new GridFieldConfig_RelationEditor();
+			$config = GridFieldConfig_RelationEditor::create();
 			$config->addComponent(new GridFieldButtonRow('after'));
 			$config->addComponents(new GridFieldExportButton('buttons-after-left'));
 			$config->addComponents(new GridFieldPrintButton('buttons-after-left'));
