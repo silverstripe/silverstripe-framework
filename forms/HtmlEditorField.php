@@ -506,7 +506,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$id = (int)$this->getRequest()->getVar('PageID');
 		$anchors = array();
 
-		if (($page = Page::get()->byID($id)) && !empty($page)) {
+		if (($page = SiteTree::get()->byID($id)) && !empty($page)) {
 			if (!$page->canView()) {
 				throw new SS_HTTPResponse_Exception(
 					_t(
