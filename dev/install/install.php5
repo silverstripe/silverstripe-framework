@@ -1540,6 +1540,12 @@ ErrorDocument 404 /assets/error-404.html
 ErrorDocument 500 /assets/error-500.html
 
 <IfModule mod_rewrite.c>
+
+	# Turn off index.php handling requests to the homepage fixes issue in apache >=2.4
+	<IfModule mod_dir.c>
+		DirectoryIndex disabled
+	</IfModule>
+
 	SetEnv HTTP_MOD_REWRITE On
 	RewriteEngine On
 	$baseClause

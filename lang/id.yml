@@ -291,8 +291,6 @@ id:
     FROMWEB: 'Dari situs lain'
     FindInFolder: 'Temukan di Folder'
     IMAGEALT: 'Teks alternatif (alt)'
-    IMAGEALTTEXT: 'Teks alternatif (alt) - pengganti jika gambar tidak tampil'
-    IMAGEALTTEXTDESC: 'Tampil ke pembaca layar, atau jika gambar tidak tampil'
     IMAGEDIMENSIONS: Dimensi
     IMAGEHEIGHTPX: Tinggi
     IMAGETITLE: 'Teks judul (tooltip) - untuk informasi tambahan tentang gambar'
@@ -328,7 +326,6 @@ id:
     DropdownBatchActionsDefault: Tindakan
     HELP: Bantuan
     PERMAGAIN: 'Anda telah keluar dari situs. Jika ingin kembali masuk, isikan nama pengguna dan kata kunci di bawah ini.'
-    PLEASESAVE: 'Mohon Simpan Laman: Laman ini tidak dapat diperbarui karena belum disimpan.'
     PreviewButton: Pratinjau
     REORGANISATIONSUCCESSFUL: 'Pengaturan ulang struktur situs berhasil.'
     SAVEDUP: Tersimpan.
