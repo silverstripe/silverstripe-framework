@@ -265,8 +265,6 @@ zh:
     FROMWEB: '从网站上'
     FindInFolder: '在文件夹中寻找'
     IMAGEALT: '替代性文本 (alt)'
-    IMAGEALTTEXT: '替代文字 (alt) - 用于图像无法显示时'
-    IMAGEALTTEXTDESC: '向显示屏读者显示，或者用于图像无法显示时'
     IMAGEDIMENSIONS: 体积
     IMAGEHEIGHTPX: 高度
     IMAGETITLE: '标题文字（工具提示）- 关于该图像的更多信息'

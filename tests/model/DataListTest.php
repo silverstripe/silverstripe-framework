@@ -166,7 +166,8 @@ class DataListTest extends SapphireTest {
 			. 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL '
 			. 'THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
 			. $db->quoteString('DataObjectTest_TeamComment')
-			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment"';
+			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment"'
+			. ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
 		$this->assertSQLEquals($expected, $list->sql($parameters));
 	}
 
@@ -189,7 +190,9 @@ class DataListTest extends SapphireTest {
 			. $db->quoteString('DataObjectTest_TeamComment')
 			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN '
 			. '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
-			. '"DataObjectTest_TeamComment"."TeamID"';
+			. '"DataObjectTest_TeamComment"."TeamID"'
+			. ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
+
 
 		$this->assertSQLEquals($expected, $list->sql($parameters));
 		$this->assertEmpty($parameters);
@@ -218,7 +221,8 @@ class DataListTest extends SapphireTest {
 			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN '
 			. '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
 			. '"DataObjectTest_TeamComment"."TeamID" '
-			. 'AND "DataObjectTest_Team"."Title" LIKE ?';
+			. 'AND "DataObjectTest_Team"."Title" LIKE ?'
+			. ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
 
 		$this->assertSQLEquals($expected, $list->sql($parameters));
 		$this->assertEquals(array('Team%'), $parameters);
@@ -242,7 +246,9 @@ class DataListTest extends SapphireTest {
 			. 'THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
 			. $db->quoteString('DataObjectTest_TeamComment')
 			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN "DataObjectTest_Team" '
-			. 'AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
+			. 'AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"'
+			. ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
+
 
 		$this->assertSQLEquals($expected, $list->sql($parameters));
 		$this->assertEmpty($parameters);
@@ -266,7 +272,8 @@ class DataListTest extends SapphireTest {
 			. 'ELSE ' . $db->quoteString('DataObjectTest_TeamComment') . ' END AS "RecordClassName" '
 			. 'FROM "DataObjectTest_TeamComment" '
 			. 'LEFT JOIN "DataObjectTest\NamespacedClass" ON '
-			. '"DataObjectTest\NamespacedClass"."ID" = "DataObjectTest_TeamComment"."ID"';
+			. '"DataObjectTest\NamespacedClass"."ID" = "DataObjectTest_TeamComment"."ID"'
+			. ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
 		$this->assertSQLEquals($expected, $list->sql($parameters), 'Retains backslashes in namespaced classes');
 		$this->assertEmpty($parameters);
 
@@ -295,7 +302,8 @@ class DataListTest extends SapphireTest {
 			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN '
 			. '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
 			. '"DataObjectTest_TeamComment"."TeamID" '
-			. 'AND "DataObjectTest_Team"."Title" LIKE ?';
+			. 'AND "DataObjectTest_Team"."Title" LIKE ?'
+			. ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
 
 		$this->assertSQLEquals($expected, $list->sql($parameters));
 		$this->assertEquals(array('Team%'), $parameters);
