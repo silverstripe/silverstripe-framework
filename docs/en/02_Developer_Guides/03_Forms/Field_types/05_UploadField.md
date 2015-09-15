@@ -1,14 +1,24 @@
 # UploadField
 
 ## Introduction
-The UploadField will let you upload one or multiple files of all types, including images. But that's not all it does - it will also link the uploaded file(s) to an existing relation and let you edit the linked files as well. That makes it flexible enough to sometimes even replace the GridField, like for instance in creating and managing a simple gallery.
+
+The UploadField will let you upload one or multiple files of all types, including images.
+But that's not all it does - it will also link the uploaded file(s) to an existing relation
+and let you edit the linked files as well. That makes it flexible enough to sometimes even
+replace the GridField, like for instance in creating and managing a simple gallery.
  
 ## Usage
-The field can be used in three ways: To upload a single file into a `has_one` relationship,or allow multiple files into a `has_many` or `many_many` relationship, or to act as a stand
+
+The field can be used in three ways: To upload a single file into a `has_one` relationship,
+or allow multiple files into a `has_many` or `many_many` relationship, or to act as a stand
 alone uploader into a folder with no underlying relation.
 
 ## Validation
-Although images are uploaded and stored on the filesystem immediately after selection,the value (or values) of this field will not be written to any related record until the record is saved and successfully validated. However, any invalid records will still persist across form submissions until explicitly removed or replaced by the user.
+
+Although images are uploaded and stored on the filesystem immediately after selection,
+the value (or values) of this field will not be written to any related record until the
+record is saved and successfully validated. However, any invalid records will still
+persist across form submissions until explicitly removed or replaced by the user.
 
 Care should be taken as invalid files may remain within the filesystem until explicitly removed.
 
@@ -32,19 +42,27 @@ The following example adds an UploadField to a page for single fileupload, based
 				$uploadField = new UploadField(
 					$name = 'SingleImage',
 					$title = 'Upload a single image'
-				)	
+				)
 			);
+			// Restrict validator to include only supported image formats
+			$uploadField->setAllowedFileCategories('image/supported');
+
 			return $fields;			
 		}	
 	}
 ```
 
-The UploadField will auto-detect the relation based on it's `name` property, and save it into the GalleyPages' `SingleImageID` field. Setting the `setAllowedMaxFileNumber` to 1 will make sure that only one image can ever be uploaded and linked to the relation.	
+The UploadField will auto-detect the relation based on its `name` property, and save
+it into the GalleyPages' `SingleImageID` field. Setting the `setAllowedMaxFileNumber`
+to 1 will make sure that only one image can ever be uploaded and linked to the relation.	
 
 ### Multiple fileupload
-Enable multiple fileuploads by using a many_many (or has_many) relation. Again, the `UploadField` will detect the relation based on its $name property value:
 
-```php
+Enable multiple fileuploads by using a many_many (or has_many) relation. Again,
+the `UploadField` will detect the relation based on its $name property value:
+
+
+	:::php
 	class GalleryPage extends Page {
 	
 		private static $many_many = array(
@@ -60,52 +78,62 @@ Enable multiple fileuploads by using a many_many (or has_many) relation. Again, 
 				$uploadField = new UploadField(
 					$name = 'GalleryImages',
 					$title = 'Upload one or more images (max 10 in total)'
-				)	
+				)
 			);
+
+			$uploadField->setAllowedFileCategories('image/supported');
 			$uploadField->setAllowedMaxFileNumber(10);
 			
 			return $fields;			
 		}	
 	}
-	class GalleryPage_Controller extends Page_Controller {
-	}
-```
 
-```php
+
+	:::php
 	class GalleryImageExtension extends DataExtension {
-		private static $belongs_many_many = array('Galleries' => 'GalleryPage);
+		private static $belongs_many_many = array(
+			'Galleries' => 'GalleryPage
+		);
 	}
-```
 
-```yml
-  Image:
-    extensions:
-        - GalleryImageExtension
-```
+
+	:::yaml
+	Image:
+	  extensions:
+	    - GalleryImageExtension
+
+
 <div class="notice" markdown='1'>
-In order to link both ends of the relationship together it's usually advisable to extend Image with the necessary $has_one, $belongs_to, $has_many or $belongs_many_many. In particular, a DataObject with $has_many Images will not work without this specified explicitly.
+In order to link both ends of the relationship together it's usually advisable to extend
+File with the necessary $has_one, $belongs_to, $has_many or $belongs_many_many.
+In particular, a DataObject with $has_many File will not work without this specified explicitly.
 </div>
 
 ## Configuration
+
 ### Overview
-The field can either be configured on an instance level with the various getProperty and setProperty functions, or globally by overriding the YAML defaults.
+
+UploadField can either be configured on an instance level with the various getProperty
+and setProperty functions, or globally by overriding the YAML defaults.
 
 See the [Configuration Reference](uploadfield#configuration-reference) section for possible values.
 
 Example: mysite/_config/uploadfield.yml
 
-```yml
+	:::yaml
 	after: framework#uploadfield
 	---
 	UploadField:
 	  defaultConfig:
 	    canUpload: false
-```
+
 
 ### Set a custom folder
-This example will save all uploads in the `/assets/customfolder/` folder. If the folder doesn't exist, it will be created. 
 
-```php
+This example will save all uploads in the `customfolder` in the configured assets store root (normally under 'assets')
+If the folder doesn't exist, it will be created. 
+
+	:::php
 	$fields->addFieldToTab(
 		'Root.Upload',	
 		$uploadField = new UploadField(
@@ -113,96 +141,145 @@ This example will save all uploads in the `/assets/customfolder/` folder. If the
 			$title = 'Please upload one or more images'		)	
 	);
 	$uploadField->setFolderName('customfolder');
-```
-### Limit the allowed filetypes
-`AllowedExtensions` defaults to the `File.allowed_extensions` configuration setting, but can be overwritten for each UploadField:
 
-```php
+
+### Limit the allowed filetypes
+
+`AllowedExtensions` defaults to the `File.allowed_extensions` configuration setting,
+but can be overwritten for each UploadField:
+
+
+	:::php
 	$uploadField->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
-```
+	
 
 Entire groups of file extensions can be specified in order to quickly limit types to known file categories.
+This can be done by using file category names, which are defined via the `File.app_categories` config. This
+list could be extended with any custom categories.
 
-```php
-	$uploadField->setAllowedFileCategories('image', 'doc');
-```
-This will limit files to the following extensions: bmp gif jpg jpeg pcx tif png alpha als cel icon ico ps doc docx txt rtf xls xlsx pages ppt pptx pps csv html htm xhtml xml pdf.
+The built in categories are:
 
-`AllowedExtensions` can also be set globally via the [YAML configuration](/developer_guides/configuration/configuration/#configuration-yaml-syntax-and-rules), for example you may add the following into your mysite/_config/config.yml:
+| File category   | Example extensions | 
+|-----------------|--------------------|
+| archive         | zip, gz, rar       |
+| audio           | mp3, wav, ogg      |
+| document        | doc, txt, pdf      |
+| flash           | fla, swf           |
+| image           | jpg, tiff, ps      |
+| image/supported | jpg, gif, png      |
+| video           | mkv, avi, mp4      |
 
-```yaml
+Note that although all image types are included in the 'image' category, only images that are in the 
+'images/supported' list are compatible with the SilverStripe image manipulations API. Other types
+can be uploaded, but cannot be resized.
+
+	:::php
+	$uploadField->setAllowedFileCategories('image/supported');
+
+
+This will limit files to the the compatible image formats: jpg, jpeg, gif, and png.
+
+`AllowedExtensions` can also be set globally via the
+[YAML configuration](/developer_guides/configuration/configuration/#configuration-yaml-syntax-and-rules),
+for example you may add the following into your mysite/_config/config.yml:
+
+
+	:::yaml
 	File: 
 	  allowed_extensions: 
 	    - 7zip 
 	    - xzip
-```
+
 
 ### Limit the maximum file size
-`AllowedMaxFileSize` is by default set to the lower value of the 2 php.ini configurations: `upload_max_filesize` and `post_max_size`. The value is set as bytes.
 
-NOTE: this only sets the configuration for your UploadField, this does NOT change your server upload settings, so if your server is set to only allow 1 MB and you set the UploadField to 2 MB, uploads will not work.
+`AllowedMaxFileSize` is by default set to the lower value of the 2 php.ini configurations:
+`upload_max_filesize` and `post_max_size`. The value is set as bytes.
 
-```php
+NOTE: this only sets the configuration for your UploadField, this does NOT change your
+server upload settings, so if your server is set to only allow 1 MB and you set the
+UploadField to 2 MB, uploads will not work.
+
+
+	:::php
 	$sizeMB = 2; // 2 MB
 	$size = $sizeMB * 1024 * 1024; // 2 MB in bytes
 	$this->getValidator()->setAllowedMaxFileSize($size);
-```
 
-You can also specify a default global maximum file size setting in your config for different file types. This is overridden when specifying the max allowed file size on the UploadField instance.
 
-```yaml
+You can also specify a default global maximum file size setting in your config for different file types.
+This is overridden when specifying the max allowed file size on the UploadField instance.
+
+
+	:::yaml
 	Upload_Validator: 
 	  default_max_file_size: 
 	    '[image]': '1m'
-	    '[doc]': '5m'
+	    '[document]': '5m'
 	    'jpeg': 2000
-```
+
 
 ### Preview dimensions
+
 Set the dimensions of the image preview. By default the max width is set to 80 and the max height is set to 60.
 
-```php
+
+	:::php
 	$uploadField->setPreviewMaxWidth(100);
 	$uploadField->setPreviewMaxHeight(100);
-```
+
 
 ### Disable attachment of existing files
+
 This can force the user to upload a new file, rather than link to the already existing file library
 
-```php
+
+	:::php
 	$uploadField->setCanAttachExisting(false);
-```
+
 
 ### Disable uploading of new files
+
 Alternatively, you can force the user to only specify already existing files in the file library
 
-```php
+
+	:::php
 	$uploadField->setCanUpload(false);
-```
+
 	
 ### Automatic or manual upload
-By default, the UploadField will try to automatically upload all selected files. Setting the `autoUpload` property to false, will present you with a list of selected files that you can then upload manually one by one:
 
-```php
+By default, the UploadField will try to automatically upload all selected files. Setting the `autoUpload`
+property to false, will present you with a list of selected files that you can then upload manually one by one:
+
+
+	:::php
 	$uploadField->setAutoUpload(false);
-```
+
 
 ### Change Detection
+
 The CMS interface will automatically notify the form containing
 an UploadField instance of changes, such as a new upload,
 or the removal of an existing upload (through a `dirty` event).
-The UI can then choose an appropriate response (e.g. highlighting the "save" button). If the UploadField doesn't save into a relation, there's technically no saveable change (the upload has already happened), which is why this feature can be disabled on demand.
+The UI can then choose an appropriate response (e.g. highlighting the "save" button).
+If the UploadField doesn't save into a relation, there's technically no saveable change
+(the upload has already happened), which is why this feature can be disabled on demand.
 
-```php
+
+	:::php
 	$uploadField->setConfig('changeDetection', false);
-```
+
 
 ### Build a simple gallery
-A gallery most times needs more then simple images. You might want to add a description, or maybe some settings to define a transition effect for each slide.
+
+A gallery most times needs more then simple images. You might want to add a description, or
+maybe some settings to define a transition effect for each slide.
  
 First create a [DataExtension](/developer_guides/extending/extensions) like this:
 
-```php
+
+	:::php
 	class GalleryImage extends DataExtension {
 
 		private static $db = array(
@@ -213,142 +290,152 @@ First create a [DataExtension](/developer_guides/extending/extensions) like this
 			'GalleryPage' => 'GalleryPage'
 		);
 	}
-```
+
 
 Now register the DataExtension for the Image class in your mysite/_config/config.yml:
 
-```yml
-Image:
-  extensions:
-    - GalleryImage
-```
+
+	:::yaml
+	Image:
+	  extensions:
+	    - GalleryImage
+
 
 <div class="notice" markdown='1'>
-Note: Although you can subclass the Image class instead of using a DataExtension, this is not advisable. For instance: when using a subclass, the 'From files' button will only return files that were uploaded for that subclass, it won't recognize any other images!
+Note: Although you can subclass the Image class instead of using a DataExtension, this is not advisable.
+For instance: when using a subclass, the 'From files' button will only return files that were uploaded
+for that subclass, it won't recognize any other images!
 </div>
 
 ### Edit uploaded images
-By default the UploadField will let you edit the following fields: *Title, Filename, Owner and Folder*. The fileEditFields` configuration setting allows you you alter these settings. One way to go about this is create a `getCustomFields` function in your GalleryImage object like this:
 
-```php
+By default the UploadField will let you edit the following fields: *Title, Filename, Owner and Folder*.
+The fileEditFields` configuration setting allows you you alter these settings. One way to go about this
+is create a `getCustomFields` function in your GalleryImage object like this:
+
+
+	:::php
 	class GalleryImage extends DataExtension {
-		...
-		
-		function getCustomFields() {
+		public function getCustomFields() {
 			$fields = new FieldList();
 			$fields->push(new TextField('Title', 'Title'));
 			$fields->push(new TextareaField('Description', 'Description'));
 			return $fields;
 		}
 	}
-``` 
-	
+
+
 Then, in your GalleryPage, tell the UploadField to use this function:
 
-```php
-	$uploadField->setFileEditFields('getCustomFields');
-```
 
-In a similar fashion you can use 'setFileEditActions' to set the actions for the editform, or 'fileEditValidator' to determine the validator (e.g. RequiredFields). 
+	:::php
+	$uploadField->setFileEditFields('getCustomFields');
+
+
+In a similar fashion you can use 'setFileEditActions' to set the actions for the editform, or
+'fileEditValidator' to determine the validator (e.g. RequiredFields). 
 
 ### Configuration Reference
- - `setAllowedMaxFileNumber`: (int) php validation of allowedMaxFileNumber only works when a db relation is available, set to null to allow unlimited if record has a has_one and allowedMaxFileNumber is null, it will be set to 1.
 
- - `setAllowedFileExtensions`: (array) List of file extensions allowed.
-
- - `setAllowedFileCategories`: (array|string) List of types of files allowed. May be any of 'image', 'audio', 'mov', 'zip', 'flash', or 'doc'.
-
- - `setAutoUpload`: (boolean) Should the field automatically trigger an upload once a file is selected?
-
- - `setCanAttachExisting`: (boolean|string) Can the user attach existing files from the library. String values are interpreted as permission codes.
-
- - `setCanPreviewFolder`: (boolean|string) Can the user preview the folder files will be saved into? String values are interpreted as permission codes.
-
- - `setCanUpload`: (boolean|string) Can the user upload new files, or just select from existing files. String values are interpreted as permission codes.
-
- - `setDownloadTemplateName`: (string) javascript template used to display already uploaded files, see javascript/UploadField_downloadtemplate.js.
-
- - `setFileEditFields`: (FieldList|string) FieldList $fields or string $name (of a method on File to provide a fields) for the EditForm (Example: 'getCMSFields').
-
- - `setFileEditActions`: (FieldList|string) FieldList $actions or string $name (of a method on File to provide a actions) for the EditForm (Example: 'getCMSActions').
-
- - `setFileEditValidator`: (string) Validator (eg RequiredFields) or string $name (of a method on File to provide a Validator) for the EditForm (Example: 'getCMSValidator').
-
- - `setOverwriteWarning`: (boolean) Show a warning when overwriting a file.
-
- - `setPreviewMaxWidth`: (int).
-
- - `setPreviewMaxHeight`: (int).
-
- - `setTemplateFileButtons`: (string) Template name to use for the file buttons.
-
- - `setTemplateFileEdit`: (string) Template name to use for the file edit form.
-
- - `setUploadTemplateName`: (string) javascript template used to display uploading files, see javascript/UploadField_uploadtemplate.js.
-
- - `setCanPreviewFolder`: (boolean|string) Is the upload folder visible to uploading users? String values are interpreted as permission codes.
+ * `setAllowedMaxFileNumber`: (int) php validation of allowedMaxFileNumber only works when a db 
+   relation is available, set to null to allow unlimited if record has a has_one and
+   allowedMaxFileNumber is null, it will be set to 1.
+ * `setAllowedFileExtensions`: (array) List of file extensions allowed.
+ * `setAllowedFileCategories`: (array|string) List of types of files allowed. May be any number of
+   categories as defined in `File.app_categories` config.
+ * `setAutoUpload`: (boolean) Should the field automatically trigger an upload once a file is selected?
+ * `setCanAttachExisting`: (boolean|string) Can the user attach existing files from the library. String
+   values are interpreted as permission codes.
+ * `setCanPreviewFolder`: (boolean|string) Can the user preview the folder files will be saved into?
+   String values are interpreted as permission codes.
+ * `setCanUpload`: (boolean|string) Can the user upload new files, or just select from existing files.
+   String values are interpreted as permission codes.
+ * `setDownloadTemplateName`: (string) javascript template used to display already uploaded files, see
+   javascript/UploadField_downloadtemplate.js.
+ * `setFileEditFields`: (FieldList|string) FieldList $fields or string $name (of a method on File to
+   provide a fields) for the EditForm (Example: 'getCMSFields').
+ * `setFileEditActions`: (FieldList|string) FieldList $actions or string $name (of a method on File to
+   provide a actions) for the EditForm (Example: 'getCMSActions').
+ * `setFileEditValidator`: (string) Validator (eg RequiredFields) or string $name (of a method on File
+   to provide a Validator) for the EditForm (Example: 'getCMSValidator').
+ * `setOverwriteWarning`: (boolean) Show a warning when overwriting a file.
+ * `setPreviewMaxWidth`: (int).
+ * `setPreviewMaxHeight`: (int).
+ * `setTemplateFileButtons`: (string) Template name to use for the file buttons.
+ * `setTemplateFileEdit`: (string) Template name to use for the file edit form.
+ * `setUploadTemplateName`: (string) javascript template used to display uploading files, see
+   javascript/UploadField_uploadtemplate.js.
+ * `setCanPreviewFolder`: (boolean|string) Is the upload folder visible to uploading users? String values
+   are interpreted as permission codes.
 
 Certain default values for the above can be configured using the YAML config system.
 
-```yaml
+
+	:::yaml
 	UploadField:
 	  defaultConfig:
-		autoUpload: true
-		allowedMaxFileNumber:
-		canUpload: true
-		canAttachExisting: 'CMS_ACCESS_AssetAdmin'
-		canPreviewFolder: true
-		previewMaxWidth: 80
-		previewMaxHeight: 60
-		uploadTemplateName: 'ss-uploadfield-uploadtemplate'
-		downloadTemplateName: 'ss-uploadfield-downloadtemplate'
-		overwriteWarning: true # Warning before overwriting existing  file (only relevant when Upload: replaceFile is true)
-```
+	    autoUpload: true
+	    allowedMaxFileNumber:
+	    canUpload: true
+	    canAttachExisting: 'CMS_ACCESS_AssetAdmin'
+	    canPreviewFolder: true
+	    previewMaxWidth: 80
+	    previewMaxHeight: 60
+	    uploadTemplateName: 'ss-uploadfield-uploadtemplate'
+	    downloadTemplateName: 'ss-uploadfield-downloadtemplate'
+	    overwriteWarning: true # Warning before overwriting existing  file (only relevant when Upload: replaceFile is true)
+
 
 The above settings can also be set on a per-instance basis by using `setConfig` with the appropriate key.
 
 The `Upload_Validator` class has configuration options for setting the `default_max_file_size`.
 
-```yaml
+
+	:::yaml
 	Upload_Validator: 
 	  default_max_file_size: 
 	    '[image]': '1m'
 	    '[doc]': '5m'
 	    'jpeg': 2000
-```
+
 
 You can specify the file extension or the app category (as specified in the `File` class) in square brackets. It supports setting the file size in bytes or using the syntax supported by `File::ini2bytes()`.
 
-
 You can also configure the underlying `[api:Upload]` class, by using the YAML config system.
 
-```yaml
+
+	:::yaml
 	Upload:
 	  # Globally disables automatic renaming of files and displays a warning before overwriting an existing file
 	  replaceFile: true
 	  uploads_folder: 'Uploads'
-```
+
   
 ## Using the UploadField in a frontend form
-The UploadField can be used in a frontend form, given that sufficient attention is given to the permissions granted to non-authorised users.
 
-By default Image::canDelete and Image::canEdit do not require admin privileges, so make sure you override the methods in your Image extension class.
+The UploadField can be used in a frontend form, given that sufficient attention is given to the permissions
+granted to non-authorised users.
 
-For instance, to generate an upload form suitable for saving images into a user-defined gallery the below code could be used:
+Make sure that, for any dataobjects being exposed to the frontend, appropriate `canEdit`, `canDelete` and `canCreate`
+are set appropriately, either via extensions on that dataobject or directly in subclasses.
+
+For instance, to generate an upload form suitable for saving images into a user-defined gallery the below
+code could be used:
 
 *In GalleryPage.php:*
 
-```php
-<?php
-class GalleryPage extends Page {}
-	
-class GalleryPage_Controller extends Page_Controller {
+
+	:::php
+	class GalleryPage extends Page {}
+
+	class GalleryPage_Controller extends Page_Controller {
 		private static $allowed_actions = array('Form');
 		public function Form() {
 			$fields = new FieldList(
 				new TextField('Title', 'Title', null, 255),
 				$field = new UploadField('Images', 'Upload Images')
 			); 
+			$field->setAllowedFileCategories('image/supported'); // Allow images only
 			$field->setCanAttachExisting(false); // Block access to SilverStripe assets library
 			$field->setCanPreviewFolder(false); // Don't show target filesystem folder on upload field
 			$field->relationAutoSetting = false; // Prevents the form thinking the GalleryPage is the underlying object
@@ -363,45 +450,43 @@ class GalleryPage_Controller extends Page_Controller {
 			return $this;
 		}
 	}
-```
+
 
 *Gallery.php:*
 
-```php
-<?php
+
+	:::php
 	class Gallery extends DataObject {	
 		private static $db = array(
 			'Title' => 'Varchar(255)'
 		);
-
 		private static $many_many = array(
 			'Images' => 'Image'
 		);
 	}
-```
+
 
 *ImageExtension.php:*
 	
-```php
-<?php
-class ImageExtension extends DataExtension {
+
+	:::php
+	class ImageExtension extends DataExtension {
 
 		private static $belongs_many_many = array(
 			'Gallery' => 'Gallery'
 		);
 
-		function canEdit($member) {
+		public function canEdit($member) {
 			// WARNING! This affects permissions on ALL images. Setting this incorrectly can restrict
 			// access to authorised users or unintentionally give access to unauthorised users if set incorrectly.
 			return Permission::check('CMS_ACCESS_AssetAdmin');
 		}
 	}
-```
+
 
 *mysite/_config/config.yml*
 
-```yml
-Image:
-  extensions:
-    - ImageExtension
-```
+	:::yaml
+	Image:
+	  extensions:
+	    - ImageExtension

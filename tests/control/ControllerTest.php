@@ -581,6 +581,6 @@ class ControllerTest_SubController extends Controller implements TestOnly {
 
 }
 
-class ControllerTest_SubController_Exception extends Exception {
+class ControllerTest_SubController_Exception extends Exception implements TestOnly {
 
 }

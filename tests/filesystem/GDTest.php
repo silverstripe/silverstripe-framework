@@ -15,9 +15,14 @@ class GDTest extends SapphireTest {
 		'png32' => 'test_png32.png'
 	);
 
+	public function setUp() {
+		parent::setUp();
+		GDBackend::flush();
+	}
+
 	public function tearDown() {
-		$cache = SS_Cache::factory('GDBackend_Manipulations');
-		$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+		GDBackend::flush();
+		parent::tearDown();
 	}
 
 	/**
@@ -30,7 +35,8 @@ class GDTest extends SapphireTest {
 		$gds = array();
 		foreach(self::$filenames as $type => $file) {
 			$fullPath = realpath(dirname(__FILE__) . '/gdtest/' . $file);
-			$gd = new GDBackend($fullPath);
+			$gd = new GDBackend();
+			$gd->loadFrom($fullPath);
 			if($callback) {
 				$gd = $callback($gd);
 			}
@@ -147,7 +153,8 @@ class GDTest extends SapphireTest {
 	 */
 	public function testImageSkippedWhenUnavailable() {
 		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
-		$gd = new GDBackend_ImageUnavailable($fullPath);
+		$gd = new GDBackend_ImageUnavailable();
+		$gd->loadFrom($fullPath);
 
 		/* Ensure no image resource is created if the image is unavailable */
 		$this->assertNull($gd->getImageResource());
@@ -155,23 +162,19 @@ class GDTest extends SapphireTest {
 
 	/**
 	 * Tests the integrity of the manipulation cache when an error occurs
-	 * @return void
 	 */
 	public function testCacheIntegrity() {
-		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
+		$fullPath = realpath(dirname(__FILE__) . '/gdtest/nonimagedata.jpg');
 
-		try {
-			$gdFailure = new GDBackend_Failure($fullPath, array('ScaleWidth', 123));
-			$this->fail('GDBackend_Failure should throw an exception when setting image resource');
-		} catch (GDBackend_Failure_Exception $e) {
-			$cache = SS_Cache::factory('GDBackend_Manipulations');
-			$key = md5(implode('_', array($fullPath, filemtime($fullPath))));
+		// Load invalid file
+		$gd = new GDBackend();
+		$gd->loadFrom($fullPath);
 
-			$data = unserialize($cache->load($key));
-
-			$this->assertArrayHasKey('ScaleWidth|123', $data);
-			$this->assertTrue($data['ScaleWidth|123']);
-		}
+		// Cache should refer to this file
+		$cache = SS_Cache::factory('GDBackend_Manipulations');
+		$key = sha1(implode('|', array($fullPath, filemtime($fullPath))));
+		$data = $cache->load($key);
+		$this->assertEquals('1', $data);
 	}
 
 	/**
@@ -180,32 +183,24 @@ class GDTest extends SapphireTest {
 	 * @return void
 	 */
 	public function testFailedResample() {
-		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
+		$fullPath = realpath(dirname(__FILE__) . '/gdtest/nonimagedata.jpg');
+		$fullPath2 = realpath(dirname(__FILE__) . '/gdtest/test_gif.gif');
 
-		try {
-			$gdFailure = new GDBackend_Failure($fullPath, array('ScaleWidth-failed', 123));
-			$this->fail('GDBackend_Failure should throw an exception when setting image resource');
-		} catch (GDBackend_Failure_Exception $e) {
-			$gd = new GDBackend($fullPath, array('ScaleWidth', 123));
-			$this->assertTrue($gd->failedResample($fullPath, 'ScaleWidth-failed|123'));
-			$this->assertFalse($gd->failedResample($fullPath, 'ScaleWidth-not-failed|123'));
-		}
+		// Load invalid file
+		$gd = new GDBackend();
+		$gd->loadFrom($fullPath);
+
+		// Cache should refre to this file
+		$this->assertTrue($gd->failedResample($fullPath, filemtime($fullPath)));
+		$this->assertFalse($gd->failedResample($fullPath2, filemtime($fullPath2)));
 	}
 
 }
 
 class GDBackend_ImageUnavailable extends GDBackend implements TestOnly {
 
-	public function imageAvailable($filename, $manipulation) {
-		return false;
-	}
-
-}
-
-class GDBackend_Failure extends GDBackend implements TestOnly {
-
-	public function setImageResource($resource) {
-		throw new GDBackend_Failure_Exception('GD failed to load image');
+	public function failedResample() {
+		return true;
 	}
 
 }

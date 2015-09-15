@@ -1,11 +1,5 @@
 <?php
 
-use Filesystem as SS_Filesystem;
-use League\Flysystem\Filesystem;
-use SilverStripe\Filesystem\Flysystem\AssetAdapter;
-use SilverStripe\Filesystem\Flysystem\FlysystemAssetStore;
-use SilverStripe\Filesystem\Flysystem\FlysystemUrlPlugin;
-
 /**
  * Description of DBFileTest
  *
@@ -24,22 +18,12 @@ class DBFileTest extends SapphireTest {
 		parent::setUp();
 
 		// Set backend
-		$adapter = new AssetAdapter(ASSETS_PATH . '/DBFileTest');
-		$filesystem = new Filesystem($adapter);
-		$filesystem->addPlugin(new FlysystemUrlPlugin());
-		$backend = new AssetStoreTest_SpyStore();
-		$backend->setFilesystem($filesystem);
-		Injector::inst()->registerService($backend, 'AssetStore');
-
-		// Disable legacy
-		Config::inst()->remove(get_class(new FlysystemAssetStore()), 'legacy_filenames');
-
-		// Update base url
+		AssetStoreTest_SpyStore::activate('DBFileTest');
 		Config::inst()->update('Director', 'alternate_base_url', '/mysite/');
 	}
 
 	public function tearDown() {
-		SS_Filesystem::removeFolder(ASSETS_PATH . '/DBFileTest');
+		AssetStoreTest_SpyStore::reset('DBFileTest');
 		parent::tearDown();
 	}
 
@@ -50,7 +34,7 @@ class DBFileTest extends SapphireTest {
 		$obj = new DBFileTest_Object();
 
 		// Test image tag
-		$fish = realpath(__DIR__ .'/../model/testimages/test_image_high-quality.jpg');
+		$fish = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
 		$this->assertFileExists($fish);
 		$obj->MyFile->setFromLocalFile($fish, 'awesome-fish.jpg');
 		$this->assertEquals(
@@ -66,6 +50,19 @@ class DBFileTest extends SapphireTest {
 		);
 	}
 
+	public function testValidation() {
+		$obj = new DBFileTest_ImageOnly();
+		
+		// Test from image
+		$fish = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$this->assertFileExists($fish);
+		$obj->MyFile->setFromLocalFile($fish, 'awesome-fish.jpg');
+
+		// This should fail
+		$this->setExpectedException('ValidationException');
+		$obj->MyFile->setFromString('puppies', 'subdir/puppy-document.txt');
+	}
+
 }
 
 /**
@@ -73,16 +70,21 @@ class DBFileTest extends SapphireTest {
  */
 class DBFileTest_Object extends DataObject implements TestOnly {
 	private static $db = array(
-		'MyFile' => 'DBFile'
+		"MyFile" => "DBFile"
 	);
 }
 
 
 class DBFileTest_Subclass extends DBFileTest_Object implements TestOnly {
 	private static $db = array(
-		'AnotherFile' => 'DBFile'
+		"AnotherFile" => "DBFile"
 	);
 }
 
 
+class DBFileTest_ImageOnly extends DataObject implements TestOnly {
+	private static $db = array(
+		"MyFile" => "DBFile('image/supported')"
+	);
+}
 

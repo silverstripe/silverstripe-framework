@@ -66,6 +66,13 @@ class DefaultAssetNameGenerator implements AssetNameGenerator {
 	protected $max = 100;
 
 	/**
+	 * Number of digits to prefix with 0, if padding
+	 *
+	 * @var int
+	 */
+	protected $padding = 0;
+
+	/**
 	 * First version
 	 *
 	 * @var int
@@ -76,6 +83,7 @@ class DefaultAssetNameGenerator implements AssetNameGenerator {
 		$this->filename = $filename;
 		$this->directory = ltrim(dirname($filename), '.');
 		$name = basename($this->filename);
+		// Note: Unlike normal extensions, we want to split at the first period, not the last.
 		if(($pos = strpos($name, '.')) !== false) {
 			$this->extension = substr($name, $pos);
 			$name = substr($name, 0, $pos);
@@ -84,10 +92,15 @@ class DefaultAssetNameGenerator implements AssetNameGenerator {
 		}
 
 		// Extract version prefix if already applied to this file
-		$pattern = '/^(?<name>.+)' . preg_quote($this->getPrefix()) . '(?<version>[0-9]+)$/';
+		$this->padding = 0;
+		$pattern = '/^(?<name>[^\/]+?)' . preg_quote($this->getPrefix()) . '(?<version>[0-9]+)$/';
 		if(preg_match($pattern, $name, $matches)) {
-			$this->first = $matches['version'] + 1;
+			$this->first = (int)$matches['version'];
 			$this->name = $matches['name'];
+			// Check if number is padded
+			if(strpos($matches['version'], '0') === 0) {
+				$this->padding = strlen($matches['version']);
+			}
 		} else {
 			$this->first = 1;
 			$this->name = $name;
@@ -109,13 +122,16 @@ class DefaultAssetNameGenerator implements AssetNameGenerator {
 		$version = $this->version;
 		
 		// Initially suggest original name
-		if($version === 1) {
+		if($version === $this->first) {
 			return $this->filename;
 		}
 
 		// If there are more than $this->max files we need a new scheme
-		if($version >= $this->max) {
+		if($version >= $this->max + $this->first - 1) {
 			$version = substr(md5(time()), 0, 10);
+		} elseif($this->padding) {
+			// Else, pad
+			$version = str_pad($version, $this->padding, '0', STR_PAD_LEFT);
 		}
 
 		// Build next name
@@ -127,7 +143,7 @@ class DefaultAssetNameGenerator implements AssetNameGenerator {
 	}
 
 	public function key() {
-		return $this->version;
+		return $this->version - $this->first;
 	}
 
 	public function next() {
@@ -139,7 +155,11 @@ class DefaultAssetNameGenerator implements AssetNameGenerator {
 	}
 
 	public function valid() {
-		return $this->version <= $this->max;
+		return $this->version < $this->max + $this->first;
+	}
+
+	public function getMaxTries() {
+		return $this->max;
 	}
 
 }

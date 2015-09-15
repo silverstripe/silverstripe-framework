@@ -10,26 +10,41 @@ Folder:
     ParentID: =>Folder.folder1
 File:
   asdf:
-    Filename: assets/FileTest.txt
-  gif:
-    Filename: assets/FileTest.gif
-  gifupper:
-    Filename: assets/FileTest.GIF
+    FileFilename: FileTest.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: FileTest.txt
   pdf:
-    Filename: assets/FileTest.pdf
-  setfromname:
-    Name: FileTest.png
-    ParentID: 0
+    FileFilename: FileTest.pdf
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: FileTest.pdf
   subfolderfile:
-    Filename: assets/FileTest-subfolder/FileTestSubfolder.txt
+    FileFilename: FileTest-subfolder/FileTestSubfolder.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: FileTestSubfolder.txt
     ParentID: =>Folder.subfolder
   subfolderfile-setfromname:
+    FileFilename: FileTest-subfolder/FileTestSubfolder2.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
     Name: FileTestSubfolder2.txt
     ParentID: =>Folder.subfolder
   file1-folder1:
-    Filename: assets/FileTest-folder1/File1.txt
+    FileFilename: FileTest-folder1/File1.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
     Name: File1.txt
     ParentID: =>Folder.folder1
+Image:
+  gif:
+    FileFilename: FileTest.gif
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: FileTest.gif
+  gifupper:
+    FileFilename: FileTest-gifupper.GIF
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: FileTest-gifupper.GIF
+  setfromname:
+    FileFilename: FileTest.png
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: FileTest.png
 Permission:
   admin:
     Code: ADMIN

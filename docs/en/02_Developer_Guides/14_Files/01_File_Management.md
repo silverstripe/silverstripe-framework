@@ -122,16 +122,15 @@ Other than files stored exclusively via DBFile, files can also exist as subclass
 
 Each record has the following database fields:
 
-| Field name     | Description                                                                                                                                          |
-| ----------     | -----------                                                                                                                                          |
-| `ClassName`    | The class name of the file (e.g. File, Image or Folder).                                                                                             |
-| `Name`         | The 'basename' of the file, or the folder name. For example 'my-image.jpg', or 'images' for a folder.                                                |
-| `Title`        | The optional, human-readable title of the file for display only (doesn't apply to folders).                                                          |
-| `Filename`     | The path to the file/folder, relative to the webroot. For example 'assets/images/my-image.jpg', or 'assets/images/' for a folder.                    |
-| `Content`      | Typically unused, but handy for a textual representation of files. For example for fulltext indexing of PDF documents.                               |
-| `ShowInSearch` | Whether the file should be shown in search results, defaults to '1'. See ["Tutorial 4 - Site Search"](/tutorials/site_search) for enabling search. |
-| `ParentID`     | The ID of the parent Folder that this File/Folder is in. A ParentID of '0' indicates that the File/Folder is in the 'assets' directory.              |
-| `OwnerID`      | The ID of the Member that 'owns' the File/Folder (not related to filesystem permissions).                                                            |
+| Field name     | Description																																			|
+| ----------     | -----------																																			|
+| `ClassName`    | The class name of the file (e.g. File, Image or Folder).																								|
+| `Name`         | The 'basename' of the file, or the folder name. For example 'my-image.jpg', or 'images' for a folder.												|
+| `Title`        | The optional, human-readable title of the file for display only (doesn't apply to folders).															|
+| `File`         | The `[api:DBFile]` field (see above) which stores the underlying asset content.																		|
+| `ShowInSearch` | Whether the file should be shown in search results, defaults to '1'. See ["Tutorial 4 - Site Search"](/tutorials/site_search) for enabling search.	|
+| `ParentID`     | The ID of the parent Folder that this File/Folder is in. A ParentID of '0' indicates that this is a top level record.								|
+| `OwnerID`      | The ID of the Member that 'owns' the File/Folder (not related to filesystem permissions).															|
 
 
 ## Management through the "Files" section of the CMS

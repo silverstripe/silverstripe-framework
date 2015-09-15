@@ -1,4 +1,7 @@
 <?php
+
+use Filesystem as SS_Filesystem;
+
 /**
  * @package framework
  * @subpackage tests
@@ -14,6 +17,27 @@ class HtmlEditorFieldTest extends FunctionalTest {
 	);
 
 	protected $extraDataObjects = array('HtmlEditorFieldTest_Object');
+
+	public function setUp() {
+		parent::setUp();
+
+		// Set backend root to /HtmlEditorFieldTest
+		AssetStoreTest_SpyStore::activate('HtmlEditorFieldTest');
+
+		// Create a test files for each of the fixture references
+		$files = File::get()->exclude('ClassName', 'Folder');
+		foreach($files as $file) {
+			$fromPath = BASE_PATH . '/framework/tests/forms/images/' . $file->Name;
+			$destPath = BASE_PATH . $file->getURL(); // Only correct for test asset store
+			SS_Filesystem::makeFolder(dirname($destPath));
+			copy($fromPath, $destPath);
+		}
+	}
+
+	public function tearDown() {
+		AssetStoreTest_SpyStore::reset();
+		parent::tearDown();
+	}
 
 	public function testBasicSaving() {
 		$obj = new HtmlEditorFieldTest_Object();
@@ -63,22 +87,11 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$obj = new HtmlEditorFieldTest_Object();
 		$editor = new HtmlEditorField('Content');
 
-		/*
-		 * Following stuff is neccessary to
-		 *     a) use the proper filename for the image we are referencing
-		 *     b) not confuse the "existing" filesystem by our test
-		 */
-		$imageFile = $this->objFromFixture('Image', 'example_image');
-		$imageFile->Filename = FRAMEWORK_DIR . '/' . $imageFile->Filename;
-		$origUpdateFilesystem = Config::inst()->get('File', 'update_filesystem');
-		Config::inst()->update('File', 'update_filesystem', false);
-		$imageFile->write();
-		Config::inst()->update('File', 'update_filesystem', $origUpdateFilesystem);
-		/*
-		 * End of test bet setting
-		 */
-
-		$editor->setValue('<img src="assets/HTMLEditorFieldTest_example.jpg" width="10" height="20" />');
+		$fileID = $this->idFromFixture('Image', 'example_image');
+		$editor->setValue(sprintf(
+			'<img src="assets/HTMLEditorFieldTest_example.jpg" width="10" height="20" data-fileid="%d" />',
+			$fileID
+		));
 		$editor->saveInto($obj);
 
 		$parser = new CSSContentParser($obj->Content);
@@ -88,9 +101,9 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$this->assertEquals(10, (int)$xml[0]['width'], 'Width tag of resized image is set.');
 		$this->assertEquals(20, (int)$xml[0]['height'], 'Height tag of resized image is set.');
 
-		$neededFilename = 'assets/_resampled/ResizedImage' . Convert::base64url_encode(array(10,20)) .
-			'/HTMLEditorFieldTest_example.jpg';
-
+		$neededFilename
+			= '/assets/HtmlEditorFieldTest/f5c7c2f814/HTMLEditorFieldTest-example__ResizedImageWzEwLDIwXQ.jpg';
+		
 		$this->assertEquals($neededFilename, (string)$xml[0]['src'], 'Correct URL of resized image is set.');
 		$this->assertTrue(file_exists(BASE_PATH.DIRECTORY_SEPARATOR.$neededFilename), 'File for resized image exists');
 		$this->assertEquals(false, $obj->HasBrokenFile, 'Referenced image file exists.');
@@ -117,7 +130,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 	}
 
 	public function testHtmlEditorFieldFileLocal() {
-		$file = new HtmlEditorField_File('http://domain.com/folder/my_image.jpg?foo=bar');
+		$file = new HtmlEditorField_Image('http://domain.com/folder/my_image.jpg?foo=bar');
 		$this->assertEquals('http://domain.com/folder/my_image.jpg?foo=bar', $file->URL);
 		$this->assertEquals('my_image.jpg', $file->Name);
 		$this->assertEquals('jpg', $file->Extension);
@@ -126,7 +139,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 
 	public function testHtmlEditorFieldFileRemote() {
 		$fileFixture = new File(array('Name' => 'my_local_image.jpg', 'Filename' => 'folder/my_local_image.jpg'));
-		$file = new HtmlEditorField_File('http://localdomain.com/folder/my_local_image.jpg', $fileFixture);
+		$file = new HtmlEditorField_Image('http://localdomain.com/folder/my_local_image.jpg', $fileFixture);
 		$this->assertEquals('http://localdomain.com/folder/my_local_image.jpg', $file->URL);
 		$this->assertEquals('my_local_image.jpg', $file->Name);
 		$this->assertEquals('jpg', $file->Extension);

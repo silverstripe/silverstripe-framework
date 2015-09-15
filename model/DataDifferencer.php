@@ -139,7 +139,9 @@ class DataDifferencer extends ViewableData {
 				if($this->fromRecord->hasMethod($relName)) {
 					$relObjFrom = $this->fromRecord->$relName();
 					if($relObjFrom) {
-						$fromTitle = ($relObjFrom->hasMethod('Title') || $relObjFrom->hasField('Title')) ? $relObjFrom->Title : '';	
+						$fromTitle = ($relObjFrom->hasMethod('Title') || $relObjFrom->hasField('Title'))
+							? $relObjFrom->Title
+							: '';
 					} else {
 						$fromTitle = '';
 					}

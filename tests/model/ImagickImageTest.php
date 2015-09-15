@@ -1,15 +1,18 @@
 <?php
 class ImagickImageTest extends ImageTest {
 	public function setUp() {
-		if(!extension_loaded("imagick")) {
-			$this->markTestSkipped("The Imagick extension is not available.");
+		$skip = !extension_loaded("imagick");
+		if($skip) {
 			$this->skipTest = true;
-			parent::setUp();
-			return;
 		}
 
-		Image::set_backend("ImagickBackend");
-
 		parent::setUp();
+		
+		if($skip) {
+			$this->markTestSkipped("The Imagick extension is not available.");
+		}
+
+		
+		Config::inst()->update('Injector', 'Image_Backend', 'ImagickBackend');
 	}
 }

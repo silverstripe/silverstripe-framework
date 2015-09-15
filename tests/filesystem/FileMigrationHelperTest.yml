@@ -1,0 +1,21 @@
+Folder:
+  parent:
+    Name: ParentFolder
+  subfolder:
+    Name: SubFolder
+    Parent: =>Folder.parent
+Image:
+  image1:
+    Name: myimage.jpg
+  image2:
+    Name: myimage.jpg
+    ParentID: =>Folder.subfolder
+File:
+  file1:
+    Name: anotherfile.jpg
+  file2:
+    Name: file.jpg
+    ParentID: =>Folder.parent
+  file3:
+    Name: picture.jpg
+    ParentID: =>Folder.subfolder

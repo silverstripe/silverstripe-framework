@@ -23,3 +23,5 @@ Injector:
   AssetNameGenerator:
     class: SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator
     type: prototype
+  # Image mechanism
+  Image_Backend: GDBackend
