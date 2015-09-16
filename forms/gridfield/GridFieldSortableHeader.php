@@ -208,53 +208,6 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			return $dataList;
 		}
 
-		$column = $state->SortColumn;
-
-		// if we have a relation column with dot notation
-		if(strpos($column, '.') !== false) {
-			$lastAlias = $dataList->dataClass();
-			$tmpItem = singleton($lastAlias);
-			$parts = explode('.', $state->SortColumn);
-
-			for($idx = 0; $idx < sizeof($parts); $idx++) {
-				$methodName = $parts[$idx];
-
-				// If we're not on the last item, we're looking at a relation
-				if($idx !== sizeof($parts) - 1) {
-					// Traverse to the relational list
-					$tmpItem = $tmpItem->$methodName();
-
-					$joinClass = ClassInfo::table_for_object_field(
-						$lastAlias, 
-						$methodName . "ID"
-					);
-
-					// if the field isn't in the object tree then it is likely
-					// been aliased. In that event, assume what the user has
-					// provided is the correct value
-					if(!$joinClass) $joinClass = $lastAlias;
-
-					$dataList = $dataList->leftJoin(
-						$tmpItem->class,
-						'"' . $methodName . '"."ID" = "' . $joinClass . '"."' . $methodName . 'ID"',
-						$methodName
-					);
-
-					// Store the last 'alias' name as it'll be used for the next
-					// join, or the 'sort' column
-					$lastAlias = $methodName;
-				} else {
-					// Change relation.relation.fieldname to alias.fieldname
-					$column = $lastAlias . '.' . $methodName;
-				}
-			}
-		}
-
-		// We need to manually create our ORDER BY "Foo"."Bar" string for relations,
-		// as ->sort() won't do it by itself. Blame PostgreSQL for making this necessary
-		$pieces = explode('.', $column);
-		$column = '"' . implode('"."', $pieces) . '"';
-
-		return $dataList->sort($column, $state->SortDirection('asc'));
+		return $dataList->sort($state->SortColumn, $state->SortDirection('asc'));
 	}
 }

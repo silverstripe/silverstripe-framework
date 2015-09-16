@@ -807,7 +807,6 @@ class DataObjectTest extends SapphireTest {
 		$subteamInstance = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 
 		$this->assertEquals(
-			array_keys($teamInstance->inheritedDatabaseFields()),
 			array(
 				//'ID',
 				//'ClassName',
@@ -817,14 +816,15 @@ class DataObjectTest extends SapphireTest {
 				'DatabaseField',
 				'ExtendedDatabaseField',
 				'CaptainID',
+				'FounderID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
 			),
+			array_keys($teamInstance->inheritedDatabaseFields()),
 			'inheritedDatabaseFields() contains all fields defined on instance: base, extended and foreign keys'
 		);
 
 		$this->assertEquals(
-			array_keys(DataObject::database_fields('DataObjectTest_Team', false)),
 			array(
 				//'ID',
 				'ClassName',
@@ -834,9 +834,11 @@ class DataObjectTest extends SapphireTest {
 				'DatabaseField',
 				'ExtendedDatabaseField',
 				'CaptainID',
+				'FounderID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
 			),
+			array_keys(DataObject::database_fields('DataObjectTest_Team', false)),
 			'databaseFields() contains only fields defined on instance, including base, extended and foreign keys'
 		);
 
@@ -853,6 +855,7 @@ class DataObjectTest extends SapphireTest {
 				'DatabaseField',
 				'ExtendedDatabaseField',
 				'CaptainID',
+				'FounderID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID',
 			),
@@ -1691,7 +1694,9 @@ class DataObjectTest_Player extends Member implements TestOnly {
 	);
 
 	private static $has_many = array(
-		'Fans' => 'DataObjectTest_Fan.Favourite' // Polymorphic - Player fans
+		'Fans' => 'DataObjectTest_Fan.Favourite', // Polymorphic - Player fans
+		'CaptainTeams' => 'DataObjectTest_Team.Captain',
+		'FoundingTeams' => 'DataObjectTest_Team.Founder'
 	);
 
 	private static $belongs_to = array (
@@ -1713,6 +1718,7 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 
 	private static $has_one = array(
 		"Captain" => 'DataObjectTest_Player',
+		"Founder" => 'DataObjectTest_Player',
 		'HasOneRelationship' => 'DataObjectTest_Player',
 	);
 
