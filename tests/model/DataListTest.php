@@ -521,6 +521,15 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
 	}
 
+	public function testSortWithCompositeSyntax() {
+		// Phil commented on team with founder surname "Aaron"
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->sort('Team.Founder.Surname', 'asc');
+		$this->assertEquals('Phil', $list->first()->Name);
+		$list = $list->sort('Team.Founder.Surname', 'desc');
+		$this->assertEquals('Phil', $list->last()->Name);
+	}
+
 	/**
 	 * $list->filter('Name', 'bob'); // only bob in the list
 	 */

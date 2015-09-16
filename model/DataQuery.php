@@ -670,7 +670,7 @@ class DataQuery {
 						$ancestry = array_reverse($ancestry);
 						foreach($ancestry as $ancestor){
 							if($ancestor != $component){
-								$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
+								$this->query->addLeftJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
 							}
 						}
 					}
@@ -703,7 +703,7 @@ class DataQuery {
 				list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
 				$parentBaseClass = ClassInfo::baseDataClass($parentClass);
 				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-				$this->query->addInnerJoin($relationTable,
+				$this->query->addLeftJoin($relationTable,
 					"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
 				$this->query->addLeftJoin($componentBaseClass,
 					"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
