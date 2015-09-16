@@ -204,7 +204,7 @@ class ShortcodeParser {
 	 * @return array - The list of tags found. When using an open/close pair, only one item will be in the array,
 	 * with "content" set to the text between the tags
 	 */
-	protected function extractTags($content) {
+	public function extractTags($content) {
 		$tags = array();
 
 		if(preg_match_all(self::tagrx(), $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
