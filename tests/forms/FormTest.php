@@ -19,6 +19,9 @@ class FormTest extends FunctionalTest {
 		Config::inst()->update('Director', 'rules', array(
 			'FormTest_Controller' => 'FormTest_Controller'
 		));
+		
+		// Suppress themes
+		Config::inst()->remove('SSViewer', 'theme');
 	}
 
 	public function testLoadDataFromRequest() {
