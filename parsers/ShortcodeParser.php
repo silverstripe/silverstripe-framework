@@ -240,7 +240,7 @@ class ShortcodeParser extends Object {
 	 * @return array - The list of tags found. When using an open/close pair, only one item will be in the array,
 	 * with "content" set to the text between the tags
 	 */
-	protected function extractTags($content) {
+	public function extractTags($content) {
 		$tags = array();
 		
 		// Step 1: perform basic regex scan of individual tags
