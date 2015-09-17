@@ -291,7 +291,11 @@ class ClassInfo {
 	 * @return string
 	 */
 	public static function table_for_object_field($candidateClass, $fieldName) {
-		if(!$candidateClass || !$fieldName || !is_subclass_of($candidateClass, 'DataObject')) {
+		if(!$candidateClass
+			|| !$fieldName
+			|| !class_exists($candidateClass)
+			|| !is_subclass_of($candidateClass, 'DataObject')
+		) {
 			return null;
 		}
 
