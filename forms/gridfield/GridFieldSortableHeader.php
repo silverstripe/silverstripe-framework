@@ -213,29 +213,43 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		// if we have a relation column with dot notation
 		if(strpos($column, '.') !== false) {
 			$lastAlias = $dataList->dataClass();
-			$tmpItem = singleton($lastAlias);
+			$lastInstance = $baseInstance = singleton($lastAlias);
+			$joinedWithoutAlias = ClassInfo::ancestry($lastAlias); // DataList will join these automatically
 			$parts = explode('.', $state->SortColumn);
-			
 			for($idx = 0; $idx < sizeof($parts); $idx++) {
 				$methodName = $parts[$idx];
 
 				// If we're not on the last item, we're looking at a relation
 				if($idx !== sizeof($parts) - 1) {
-					// Traverse to the relational list
-					$tmpItem = $tmpItem->$methodName();
+					// Traverse to the relational list, and get the object we are joining to
+					$methodInstance = $lastInstance->$methodName();
 
+					// Double check that we consider the table for the field we are joining from
 					$joinClass = ClassInfo::table_for_object_field(
-						$lastAlias, 
+						$lastInstance->class,
 						$methodName . "ID"
 					);
 
-					// if the field isn't in the object tree then it is likely
-					// been aliased. In that event, assume what the user has
-					// provided is the correct value
-					if(!$joinClass) $joinClass = $lastAlias;
+					// Join this table if necessary
+					if(!in_array($joinClass, $joinedWithoutAlias)) {
+						// Check if this has an alias somewhere in this query
+						if(!$joinClass || $joinClass === $lastInstance->class) {
+							// If this class was joined via alias, use that alias instead of the classname
+							$joinClass = $lastAlias;
+						} else {
+							// Otherwise, join this class un-aliased
+							$joinedWithoutAlias[] = $joinClass;
+							$dataList = $dataList->leftJoin(
+								$joinClass,
+								'"' . $joinClass . '"."ID" = "' . $lastAlias . '"."ID"',
+								$joinClass
+							);
+						}
+					}
 
+					// Add the joining-child table to the list as the current method alias
 					$dataList = $dataList->leftJoin(
-						$tmpItem->class,
+						$methodInstance->class,
 						'"' . $methodName . '"."ID" = "' . $joinClass . '"."' . $methodName . 'ID"',
 						$methodName
 					);
@@ -243,6 +257,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 					// Store the last 'alias' name as it'll be used for the next
 					// join, or the 'sort' column
 					$lastAlias = $methodName;
+					$lastInstance = $methodInstance;
 				} else {
 					// Change relation.relation.fieldname to alias.fieldname
 					$column = $lastAlias . '.' . $methodName;
