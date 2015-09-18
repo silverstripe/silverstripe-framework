@@ -89,6 +89,10 @@ class Upload extends Controller {
 		$this->replaceFile = self::config()->replaceFile;
 	}
 
+	public function index() {
+		return $this->httpError(404); // no-op
+	}
+
 	/**
 	 * Get current validator
 	 *
