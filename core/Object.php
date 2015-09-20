@@ -509,13 +509,17 @@ abstract class Object {
 		}
 		$extensionClass = $matches[1];
 		if(!class_exists($extensionClass)) {
-			user_error(sprintf('Object::add_extension() - Can\'t find extension class for "%s"', $extensionClass),
-				E_USER_ERROR);
+			user_error(
+				sprintf('Object::add_extension() - Can\'t find extension class for "%s"', $extensionClass),
+				E_USER_ERROR
+			);
 		}
 
 		if(!is_subclass_of($extensionClass, 'Extension')) {
-			user_error(sprintf('Object::add_extension() - Extension "%s" is not a subclass of Extension',
-				$extensionClass), E_USER_ERROR);
+			user_error(
+				sprintf('Object::add_extension() - Extension "%s" is not a subclass of Extension', $extensionClass),
+				E_USER_ERROR
+			);
 		}
 
 		// unset some caches
