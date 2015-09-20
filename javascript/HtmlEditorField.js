@@ -408,6 +408,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					// Show a placeholder for instant feedback. Will be replaced with actual
 					// form dialog once its loaded.
 					dialog = $('<div class="htmleditorfield-dialog htmleditorfield-' + type + 'dialog loading">');
+					
 					$('body').append(dialog);
 					$.ajax({
 						url: url,
@@ -446,6 +447,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			toggle: function(bool) {
 				if(this.is(':visible')) this.close();
 				else this.open();
+			},
+			onscroll: function () {
+				this.animate({
+					scrollTop: this.find('form').height()
+				}, 500);
 			}
 		});
 
@@ -1018,7 +1024,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					.toggleClass('ui-state-disabled', !hasItems); 
 					
 				// Hide file selection and step labels when editing an existing file
-				this.find('#MediaFormInsertMediaTabs,.header-edit')[editingSelected ? 'hide' : 'show']();
+				this.find('.htmleditorfield-from-computer')[editingSelected ? 'hide' : 'show']();
+				this.find('.htmleditorfield-from-cms')[editingSelected ? 'hide' : 'show']();
+				if (editingSelected) {
+					this.find('.htmleditorfield-from-web').hide();
+				}
 
 				// TODO Way too much knowledge on UploadField internals, use viewfile URL directly instead
 				this.find('.htmleditorfield-mediaform-heading.insert')[editingSelected ? 'hide' : 'show']();
@@ -1029,6 +1039,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find('.htmleditorfield-mediaform-heading.update')[editingSelected ? 'show' : 'hide']();
 				this.find('.Actions .media-update')[editingSelected ? 'show' : 'hide']();
 				this.find('.ss-uploadfield-item-editform').toggleEditForm(editingSelected);
+				this.find('.htmleditorfield-from-cms .field.treedropdown').css('left', $('.htmleditorfield-mediaform-heading:visible').outerWidth());
+				this.closest('.ui-dialog').addClass('ss-uploadfield-dropzone');
 			},
 			resetFields: function() {
 				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views
@@ -1073,6 +1085,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				if(!item.is('.ss-gridfield-item')) return;
 				form.closest('form').showFileView(item.data('id'));
 				form.redraw();
+
+				form.parent().trigger('scroll');
 			},
 			onselectableunselected: function(e, ui) {
 				var form = this.closest('form'), item = $(ui.unselected);
@@ -1107,6 +1121,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						form.showFileView(uploadedID);
 					}
 				});
+
+				form.parent().trigger('scroll');
 
 				form.redraw();
 			}
@@ -1158,6 +1174,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					container.addClass('loading');
 					form.showFileView('http://' + urlField.val()).done(function() {
 						container.removeClass('loading');
+
+						form.parent().trigger('scroll');
 					});
 					form.redraw();
 				}

@@ -24,7 +24,7 @@ en:
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose files to upload...'
+    TOUPLOAD: 'Upload'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -300,7 +300,7 @@ en:
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Width
-    INSERTMEDIA: 'Insert Media'
+    INSERTMEDIA: 'Insert media from'
     LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
     LINKDESCR: 'Link description'
@@ -314,7 +314,7 @@ en:
     SUBJECT: 'Email subject'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
+    UpdateMEDIA: 'Update media'
   Image:
     PLURALNAME: Files
     SINGULARNAME: File
