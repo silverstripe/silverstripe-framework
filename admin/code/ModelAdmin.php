@@ -212,7 +212,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		$params = $this->getRequest()->requestVar('q');
 
 		if(is_array($params)) {
-			$params = array_map('trim', $params);
+			$params = ArrayLib::array_map_recursive('trim', $params);
 		}
 
 		$list = $context->getResults($params);
