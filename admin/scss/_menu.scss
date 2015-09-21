@@ -1,7 +1,7 @@
 /**
  * Styles for the left hand side menu and header for the admin panels.
- * 
- * Take into consideration CSS selector performance. 
+ *
+ * Take into consideration CSS selector performance.
  *
  * @package framework
  * @subpackage admin
@@ -43,8 +43,8 @@
 		padding:0;
 	}
 	.version {
-		display: none; 
-	} 
+		display: none;
+	}
 	a {
 		position: absolute;
 		top: $grid-y;
@@ -75,9 +75,13 @@
 		float: left;
 		font-size: 16px;
 		height: 16px;
-		padding: 6px 8px 6px 5px;
+		width: 16px;
+		margin: 6px 8px 6px 5px;
+		text-indent: -999px;
+		overflow: hidden;
 		opacity: .9;
 		color: #fff;
+		background: sprite($sprites32, logout) no-repeat;
 
 		&:hover, &:focus{
 			opacity: 1;
@@ -99,7 +103,7 @@
 	a {
 		text-decoration: none;
 	}
-	
+
 	.cms-panel-content {
 		width: ($grid-x * 20);
 		overflow-x: hidden;
@@ -108,29 +112,29 @@
 		top:auto !important;
 		left:auto !important;
 	}
-		
+
 	&.collapsed {
 		width: 40px !important; // Using important because JavaScript is overriding this value
 		cursor: auto;
 		z-index: 1000;
-		
+
 		.cms-panel-header {
 			width: 30px;
-			
+
 			span {
 				display: none;
 			}
 		}
-		
+
 		.cms-menu-list {
 			overflow-x: hidden;
 			overflow-y: auto;
-			li{  
-			    width: 100%;
-			    float: left;   
-			    span.text {
+			li{
+				width: 100%;
+				float: left;
+				span.text {
 					display: none;
-				} 
+				}
 				ul {
 				display: none;
 				}
@@ -232,13 +236,13 @@
 
 			border-top: 1px solid lighten($color-base, 6%);
 			border-bottom: 1px solid darken($color-base, 20%);
-			
+
 			&:hover {
 				text-decoration: none;
 				background-color: lighten($color-base, 2%);
 				border-bottom: 1px solid darken($color-base, 15%);
 				color: lighten($color-text-dark, 5%);
-				
+
 				@include background-image(linear-gradient(
 					lighten($color-base, 5%),
 					$color-base
@@ -250,13 +254,13 @@
 				text-decoration: none;
 				background-color: darken($color-base, 5%);
 				color: lighten($color-text-dark, 10%);
-				
+
 				@include background-image(linear-gradient(
 					darken($color-base, 10%),
 					darken($color-base, 5%)
-				));			
+				));
 			}
-			
+
 			.icon {
 				display: block;
 				position: absolute;
@@ -264,9 +268,9 @@
 				margin-left: $grid-x / 2;
 				margin-top: -8px;
 
-				@include opacity(0.7);
+				@include opacity(0.9);
 			}
-			
+
 			.text {
 				display: block;
 				margin-left: 30px;
@@ -286,19 +290,19 @@
 					background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
 					vertical-align: middle;
 				}
-				
+
 				&.opened {
 					.toggle-children-icon {
 						background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;
 					}
 				}
 			}
-			
+
 		}
 		ul li a {
 			border-top: 1px solid lighten($color-base, 2%);
 		}
-	
+
 		&.current { //need to apply current stlye to flyout also (at least line height)
 			a {
 				color: $color-text-light;
@@ -307,7 +311,7 @@
 				border-bottom: 1px solid darken($color-menu-button, 15%);
 				background-color: $color-menu-button;
 				@include background-image(linear-gradient(
-					$color-menu-button, 
+					$color-menu-button,
 					darken($color-menu-button, 10%)
 				));
 
@@ -315,7 +319,7 @@
 					.toggle-children-icon {
 						background: sprite($sprites32, menu-arrow-down) no-repeat;
 					}
-					
+
 					&.opened {
 						.toggle-children-icon {
 							background: sprite($sprites32, menu-arrow-up) no-repeat;
@@ -323,12 +327,12 @@
 					}
 				}
 			}
-			
+
 			ul {
 				border-top: none;
 				display: block;
 			}
-			
+
 			li {
 				background-color: darken($color-menu-button, 10%);
 				a {
@@ -337,17 +341,17 @@
 					height: 32px;
 					line-height: 32px;
 					color: lighten($color-menu-button, 45%);
-				 	background: none;
+					background: none;
 					border-top: 1px solid darken($color-menu-button,4%);
 					border-bottom: 1px solid darken($color-menu-button, 20%);
-					
+
 					&.current,
 					&:hover {
 						background: darken($color-menu-button, 5%);
 						border-top: 1px solid darken($color-menu-button, 5%);
 						color: $color-text-light;
 					}
-					
+
 					&:focus {
 						background: darken($color-menu-button, 15%);
 						border-top: 1px solid darken($color-menu-button, 20%);
@@ -355,7 +359,7 @@
 					}
 
 				}
-				
+
 				&.current {
 					background: darken($color-menu-button, 5%);
 					border-top: 1px solid darken($color-menu-button, 5%);
@@ -365,7 +369,7 @@
 						color: $color-text-light;
 					}
 				}
-				
+
 				&.first a {
 					border-top: none;
 				}
@@ -414,7 +418,7 @@
 				display: none;
 			}
 		}
-		
+
 		li > li {
 			display: none;
 		}

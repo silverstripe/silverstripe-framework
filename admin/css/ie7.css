@@ -4,7 +4,7 @@
 /* Only for use as shadows as they wont work in older browsers */
 /*$color-optional: #a1d2eb !default; */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
-/** ----------------------------------------------- Typography.  ------------------------------------------------ */
+/** ----------------------------------------------- Typography. ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 .cms .ss-ui-button { background-color: #e6e6e6; }
@@ -118,7 +118,7 @@ fieldset.switch-states .switch input.state-name { margin-left: -20px; }
 .icon.icon-24.icon-reportadmin { background-position: 0 -240px; }
 .icon.icon-24.icon-commentadmin { background-position: 0 0; }
 .icon.icon-24.icon-help { background-position: 0 -144px; }
-.icon.icon-16 { width: 16px; height: 16px; background: url('../images/menu-icons/16x16-s3f4c846209.png'); }
+.icon.icon-16 { width: 16px; height: 16px; background: url('../images/menu-icons/16x16-s25720d110b.png'); }
 .icon.icon-16.icon-assetadmin { background-position: 0 -144px; }
 .icon.icon-16.icon-cmsmain { background-position: 0 -128px; }
 .icon.icon-16.icon-cmspagescontroller { background-position: 0 -112px; }

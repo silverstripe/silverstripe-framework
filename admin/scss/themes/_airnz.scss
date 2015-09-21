@@ -1,0 +1,31 @@
+/** -----------------------------------------------
+ * Colours
+ * ------------------------------------------------ */
+$color-darker-bg: #e5e5e5 !default;
+$color-dark-bg: #101010 !default;
+$color-dark-separator: #fff !default;
+$color-medium-separator: #fff !default;
+
+$color-text-dark-link: #88e8fe !default;
+$color-text-blue-link: #00819E !default;
+
+$color-text-dark: #101010;
+$color-base: #101010 !default;
+
+/** -----------------------------------------------
+ * Textures
+ * ----------------------------------------------- */
+$tab-panel-texture-color: #e5e5e5 !default;
+$tab-panel-texture-background: $tab-panel-texture-color !default;
+
+/** -----------------------------------------------
+ * Application Logo (CMS Logo) Must be 24px x 24px
+ * ------------------------------------------------ */
+$application-logo-small: url("/AirNZ/images/logo_small.png") !default;
+$application-logo-small-2x: url("/AirNZ/images/logo_small@2x.png") !default;
+
+@import "themes/default.scss";
+
+.cms-content-loading-spinner {
+	background: url(/AirNZ/images/spinner.gif) no-repeat 50% 50%;
+}
