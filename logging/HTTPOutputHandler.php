@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Framework\Logging;
 
-use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
 
 /**
@@ -53,7 +52,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
 		if(\Controller::has_curr()) {
 			$response = \Controller::curr()->getResponse();
 		} else {
-			$response = new SS_HTTPResponse();
+			$response = new \SS_HTTPResponse();
 		}
 
 		// If headers have been sent then these won't be used, and may throw errors that we wont' want to see.

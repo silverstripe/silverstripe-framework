@@ -263,17 +263,15 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * on this object.
 	 *
 	 * @param string $field
-	 * @return string
+	 * @return string Casting helper
 	 */
 	public function castingHelper($field) {
-		if($this->hasMethod('db') && $fieldSpec = $this->db($field)) {
-			return $fieldSpec;
+		$specs = $this->config()->casting;
+		if(isset($specs[$field])) {
+			return $specs[$field];
+		} elseif($this->failover) {
+			return $this->failover->castingHelper($field);
 		}
-
-		$specs = Config::inst()->get(get_class($this), 'casting');
-		if(isset($specs[$field])) return $specs[$field];
-
-		if($this->failover) return $this->failover->castingHelper($field);
 	}
 
 	/**

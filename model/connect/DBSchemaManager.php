@@ -328,7 +328,9 @@ abstract class DBSchemaManager {
 		}
 
 		//DB ABSTRACTION: we need to convert this to a db-specific version:
-		$this->requireField($table, 'ID', $this->IdColumn(false, $hasAutoIncPK));
+		if(!isset($fieldSchema['ID'])) {
+			$this->requireField($table, 'ID', $this->IdColumn(false, $hasAutoIncPK));
+		}
 
 		// Create custom fields
 		if ($fieldSchema) {
@@ -347,6 +349,11 @@ abstract class DBSchemaManager {
 				$fieldObj->arrayValue = $arrayValue;
 
 				$fieldObj->setTable($table);
+
+				if($fieldObj instanceof PrimaryKey) {
+					$fieldObj->setAutoIncrement($hasAutoIncPK);
+				}
+
 				$fieldObj->requireField();
 			}
 		}

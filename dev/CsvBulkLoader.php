@@ -60,6 +60,7 @@ class CsvBulkLoader extends BulkLoader {
 	 * @return null|BulkLoader_Result
 	 */
 	protected function processAll($filepath, $preview = false) {
+		$filepath = Director::getAbsFile($filepath);
 		$files = $this->splitFile($filepath);
 
 		$result = null;
