@@ -26,7 +26,9 @@ class ClassManifestTest extends SapphireTest {
 			'classa'     => 'module/classes/ClassA.php',
 			'INTERFACEA' => 'module/interfaces/InterfaceA.php',
 			'InterfaceA' => 'module/interfaces/InterfaceA.php',
-			'interfacea' => 'module/interfaces/InterfaceA.php'
+			'interfacea' => 'module/interfaces/InterfaceA.php',
+			'TestTraitA' => 'module/traits/TestTraitA.php',
+			'TestNamespace\Testing\TestTraitB' => 'module/traits/TestTraitB.php'
 		);
 
 		foreach ($expect as $name => $path) {
@@ -51,6 +53,13 @@ class ClassManifestTest extends SapphireTest {
 		$this->assertEquals(
 			array('sstemplateparser', 'sstemplateparseexception', 'classa', 'classb', 'classc', 'classd'),
 			$this->manifest->getClassNames());
+	}
+
+	public function testGetTraitNames() {
+		$this->assertEquals(
+			array('testtraita', 'testnamespace\testing\testtraitb'),
+			$this->manifest->getTraitNames()
+		);
 	}
 
 	public function testGetDescendants() {

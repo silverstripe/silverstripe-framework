@@ -30,6 +30,7 @@ class SS_ClassManifest {
 	protected $implementors = array();
 	protected $configs      = array();
 	protected $configDirs   = array();
+	protected $traits		= array();
 
 	/**
 	 * @return TokenisedRegularExpression
@@ -78,6 +79,17 @@ class SS_ClassManifest {
 			15 => array(T_WHITESPACE, 'can_jump_to' => 11),
 			16 => array(T_WHITESPACE, 'optional' => true),
 			17 => '{',
+		));
+	}
+
+	/**
+	 * @return TokenisedRegularExpression
+	 */
+	public static function get_trait_parser() {
+		return new \TokenisedRegularExpression(array(
+			0 => T_TRAIT,
+			1 => T_WHITESPACE,
+			2 => array(T_STRING, 'save_to' => 'traitName')
 		));
 	}
 
@@ -158,6 +170,7 @@ class SS_ClassManifest {
 			$this->implementors = $data['implementors'];
 			$this->configs      = $data['configs'];
 			$this->configDirs   = $data['configDirs'];
+			$this->traits		= $data['traits'];
 		} else {
 			$this->regenerate($cache);
 		}
@@ -177,6 +190,8 @@ class SS_ClassManifest {
 			return $this->classes[$name];
 		} elseif (isset($this->interfaces[$name])) {
 			return $this->interfaces[$name];
+		} elseif(isset($this->traits[$name])) {
+			return $this->traits[$name];
 		}
 	}
 
@@ -196,6 +211,15 @@ class SS_ClassManifest {
 	 */
 	public function getClassNames() {
 		return array_keys($this->classes);
+	}
+
+	/**
+	 * Returns a lowercase array of all trait names in the manifest
+	 *
+	 * @return array
+	 */
+	public function getTraitNames() {
+		return array_keys($this->traits);
 	}
 
 	/**
@@ -317,7 +341,7 @@ class SS_ClassManifest {
 	public function regenerate($cache = true) {
 		$reset = array(
 			'classes', 'roots', 'children', 'descendants', 'interfaces',
-			'implementors', 'configs', 'configDirs'
+			'implementors', 'configs', 'configDirs', 'traits'
 		);
 
 		// Reset the manifest so stale info doesn't cause errors.
@@ -348,7 +372,8 @@ class SS_ClassManifest {
 				'interfaces'   => $this->interfaces,
 				'implementors' => $this->implementors,
 				'configs'      => $this->configs,
-				'configDirs'   => $this->configDirs
+				'configDirs'   => $this->configDirs,
+				'traits'       => $this->traits,
 			);
 			$this->cache->save($data, $this->cacheKey);
 		}
@@ -488,6 +513,7 @@ class SS_ClassManifest {
 		$interfaces = null;
 		$namespace = null;
 		$imports = null;
+		$traits = null;
 
 		// The results of individual file parses are cached, since only a few
 		// files will have changed and TokenisedRegularExpression is quite
@@ -496,12 +522,14 @@ class SS_ClassManifest {
 		$file = file_get_contents($pathname);
 		$key  = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename) . '_' . md5($file);
 
+		$valid = false;
 		if ($data = $this->cache->load($key)) {
 			$valid = (
 				isset($data['classes']) && is_array($data['classes'])
 				&& isset($data['interfaces']) && is_array($data['interfaces'])
 				&& isset($data['namespace']) && is_string($data['namespace'])
 				&& isset($data['imports']) && is_array($data['imports'])
+				&& isset($data['traits']) && is_array($data['traits'])
 			);
 
 			if ($valid) {
@@ -509,13 +537,15 @@ class SS_ClassManifest {
 				$interfaces = $data['interfaces'];
 				$namespace = $data['namespace'];
 				$imports = $data['imports'];
+				$traits = $data['traits'];
 			}
 		}
 
-		if (!$classes) {
+		if (!$valid) {
 			$tokens     = token_get_all($file);
 
 			$classes = self::get_namespaced_class_parser()->findAll($tokens);
+			$traits = self::get_trait_parser()->findAll($tokens);
 
 			$namespace = self::get_namespace_parser()->findAll($tokens);
 
@@ -533,17 +563,21 @@ class SS_ClassManifest {
 				'classes' => $classes,
 				'interfaces' => $interfaces,
 				'namespace' => $namespace,
-				'imports' => $imports
+				'imports' => $imports,
+				'traits' => $traits
 			);
 			$this->cache->save($cache, $key);
 		}
 
+		// Ensure namespace has no trailing slash, and namespaceBase does
+		$namespaceBase = '';
+		if ($namespace) {
+			$namespace = rtrim($namespace, '\\');
+			$namespaceBase = $namespace . '\\';
+		}
+
 		foreach ($classes as $class) {
-			$name = $class['className'];
-			if ($namespace) {
-				$namespace = rtrim($namespace, '\\');
-				$name = $namespace . '\\' . $name;
-			}
+			$name = $namespaceBase . $class['className'];
 			$extends = isset($class['extends']) ? implode('', $class['extends']) : null;
 			$implements = isset($class['interfaces']) ? $class['interfaces'] : null;
 
@@ -599,12 +633,11 @@ class SS_ClassManifest {
 			}
 		}
 
-		$interfaceBase = '';
-		if ($namespace) {
-			$interfaceBase = $namespace . '\\';
-		}
 		foreach ($interfaces as $interface) {
-			$this->interfaces[strtolower($interfaceBase . $interface['interfaceName'])] = $pathname;
+			$this->interfaces[strtolower($namespaceBase . $interface['interfaceName'])] = $pathname;
+		}
+		foreach ($traits as $trait) {
+			$this->traits[strtolower($namespaceBase . $trait['traitName'])] = $pathname;
 		}
 	}
 
