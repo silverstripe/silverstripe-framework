@@ -132,7 +132,8 @@ abstract class SS_Database {
 			$sql,
 			function($sql) use($connector, $parameters, $errorLevel) {
 				return $connector->preparedQuery($sql, $parameters, $errorLevel);
-			}
+			},
+			$parameters
 		);
 	}
 
@@ -165,14 +166,20 @@ abstract class SS_Database {
 	 *
 	 * @param string $sql Query to run, and single parameter to callback
 	 * @param callable $callback Callback to execute code
+	 * @param array $parameters Parameters to display
 	 * @return mixed Result of query
 	 */
-	protected function benchmarkQuery($sql, $callback) {
+	protected function benchmarkQuery($sql, $callback, $parameters = null) {
 		if (isset($_REQUEST['showqueries']) && Director::isDev()) {
 			$starttime = microtime(true);
 			$result = $callback($sql);
 			$endtime = round(microtime(true) - $starttime, 4);
-			Debug::message("\n$sql\n{$endtime}s\n", false);
+			$message = $sql;
+			if($parameters) {
+				$message .= "\nparams: \"" . implode('", "', $parameters) . '"';
+			}
+			Debug::message("\n{$message}\n{$endtime}s\n", false);
+			
 			return $result;
 		} else {
 			return $callback($sql);
