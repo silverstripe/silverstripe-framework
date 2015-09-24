@@ -1,0 +1,25 @@
+---
+Name: assetstore
+---
+Injector:
+  # Public url plugin
+  FlysystemUrlPlugin:
+    class: 'SilverStripe\Filesystem\Flysystem\FlysystemUrlPlugin'
+  # Define the default adapter for this filesystem
+  FlysystemDefaultAdapter:
+    class: 'SilverStripe\Filesystem\Flysystem\AssetAdapter'
+  # Define the default filesystem
+  FlysystemBackend:
+    class: 'League\Flysystem\Filesystem'
+    constructor:
+      Adapter: '%$FlysystemDefaultAdapter'
+    calls:
+      PublicURLPlugin: [ addPlugin, [ %$FlysystemUrlPlugin ] ]
+  # Define our SS asset backend
+  AssetStore:
+    class: 'SilverStripe\Filesystem\Flysystem\FlysystemAssetStore'
+    properties:
+      Filesystem: '%$FlysystemBackend'
+  AssetNameGenerator:
+    class: SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator
+    type: prototype
