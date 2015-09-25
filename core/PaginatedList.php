@@ -435,6 +435,13 @@ class PaginatedList extends SS_ListDecorator {
 	}
 
 	/**
+	 * Returns the total number of items in the list
+	 */
+	public function TotalItems() {
+		return $this->getTotalItems();
+	}
+
+	/**
 	 * Set the request object for this list
 	 *
 	 * @param SS_HTTPRequest
