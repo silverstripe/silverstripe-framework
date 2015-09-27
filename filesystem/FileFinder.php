@@ -173,24 +173,28 @@ class SS_FileFinder {
 	 * @return bool
 	 */
 	protected function acceptDir($basename, $pathname, $depth) {
-		if ($this->getOption('ignore_vcs') && in_array($basename, self::$vcs_dirs)) {
+		if ($this->options['ignore_vcs'] && in_array($basename, self::$vcs_dirs)) {
 			return false;
 		}
 
-		if ($ignore = $this->getOption('ignore_dirs')) {
-			if (in_array($basename, $ignore)) return false;
+		$ignore = $this->options['ignore_dirs'];
+		if ($ignore && in_array($basename, $ignore)) {
+			return false;
 		}
 
-		if ($max = $this->getOption('max_depth')) {
-			if ($depth > $max) return false;
+		$max = $this->options['max_depth'];
+		if ($max && $depth > $max) {
+			return false;
 		}
 
-		if ($callback = $this->getOption('accept_callback')) {
-			if (!call_user_func($callback, $basename, $pathname, $depth)) return false;
+		$callback = $this->options['accept_callback'];
+		if ($callback && !call_user_func($callback, $basename, $pathname, $depth)) {
+			return false;
 		}
 
-		if ($callback = $this->getOption('accept_dir_callback')) {
-			if (!call_user_func($callback, $basename, $pathname, $depth)) return false;
+		$callback = $this->options['accept_dir_callback'];
+		if ($callback && !call_user_func($callback, $basename, $pathname, $depth)) {
+			return false;
 		}
 
 		return true;
@@ -203,24 +207,29 @@ class SS_FileFinder {
 	 * @return bool
 	 */
 	protected function acceptFile($basename, $pathname, $depth) {
-		if ($regex = $this->getOption('name_regex')) {
-			if (!preg_match($regex, $basename)) return false;
+		$regex = $this->options['name_regex'];
+		if ($regex && !preg_match($regex, $basename)) {
+			return false;
 		}
 
-		if ($ignore = $this->getOption('ignore_files')) {
-			if (in_array($basename, $ignore)) return false;
+		$ignore = $this->options['ignore_files'];
+		if ($ignore && in_array($basename, $ignore)) {
+			return false;
 		}
 
-		if ($minDepth = $this->getOption('min_depth')) {
-			if ($depth < $minDepth) return false;
+		$minDepth = $this->options['min_depth'];
+		if ($minDepth && $depth < $minDepth) {
+			return false;
 		}
 
-		if ($callback = $this->getOption('accept_callback')) {
-			if (!call_user_func($callback, $basename, $pathname, $depth)) return false;
+		$callback = $this->options['accept_callback'];
+		if ($callback && !call_user_func($callback, $basename, $pathname, $depth)) {
+			return false;
 		}
 
-		if ($callback = $this->getOption('accept_file_callback')) {
-			if (!call_user_func($callback, $basename, $pathname, $depth)) return false;
+		$callback = $this->options['accept_file_callback'];
+		if ($callback && !call_user_func($callback, $basename, $pathname, $depth)) {
+			return false;
 		}
 
 		return true;
