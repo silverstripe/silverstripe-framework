@@ -570,7 +570,7 @@ class Session {
 	* @param string $message the message you wish to add to it
 	* @param string $type the type of message
 	*/
-	public static function setFormMessage($formname, $message, $type){
+	public static function setFormMessage($formname, $message, $type) {
 		Session::set("FormInfo.$formname.formError.message", $message);
 		Session::set("FormInfo.$formname.formError.type", $type);
 	}
