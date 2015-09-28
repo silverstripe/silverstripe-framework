@@ -206,6 +206,18 @@ Used in side panels and action tabs
 
 .font-icon-resize:before { content: "L"; }
 
+.font-icon-silverstripe:before { content: "M"; }
+
+.font-icon-pencil:before { content: "m"; }
+
+.font-icon-trash:before { content: "g"; }
+
+.font-icon-edit:before { content: "N"; }
+
+.font-icon-tick:before { content: "O"; }
+
+.font-icon-folder-add:before { content: "S"; }
+
 /** File: typography.scss  Contains the basic typography related styles for the admin interface. */
 body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif; color: #66727d; }
 
@@ -509,7 +521,7 @@ body.cms { overflow: hidden; }
 .hide, .cms-helper-hide-actions .Actions { display: none; }
 
 /** -------------------------------------------- Panels Styles -------------------------------------------- */
-.cms-container { height: 100%; /*background: $tab-panel-texture-background;*/ background: #ECEFF1; }
+.cms-container { height: 100%; background: #ECEFF1; }
 
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form, .cms-preview, .cms-preview iframe, .cms-preview-controls { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; }
 
@@ -845,12 +857,12 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 
 .cms .ui-dialog .ss-ui-dialog.ui-dialog-content { padding-top: 0px; }
 
-.ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4; background-clip: content-box; border: 1px solid #666 !important; -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; overflow: visible; padding: 0; -moz-box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); }
+.ui-dialog { background: #ECEFF1; background-clip: content-box; border: 1px solid #666 !important; -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; overflow: visible; padding: 0; -moz-box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); }
 .ui-dialog .ui-dialog-titlebar.ui-widget-header { font-size: 14px; padding: 0; border: none; background-color: transparent; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; }
 .ui-dialog .ui-dialog-titlebar.ui-widget-header .ui-dialog-title { position: absolute; }
 .ui-dialog .ui-dialog-content { -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; overflow: auto; }
 .ui-dialog .ui-dialog-content.loading { background-image: url(../images/spinner.gif); background-position: 50% 50%; background-repeat: no-repeat; }
-.ui-dialog .cms-dialog-content { background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4; padding-bottom: 8px; padding-top: 0px; }
+.ui-dialog .cms-dialog-content { background: #ECEFF1; padding-bottom: 8px; padding-top: 0px; }
 .ui-dialog .cms-dialog-content .Actions { overflow: auto; margin: 8px 0; padding-bottom: 8px; float: right; }
 .ui-dialog .cms-dialog-content .ui-tabs { position: static; }
 .ui-dialog .cms-dialog-content .ui-tabs .ui-tabs-nav { position: absolute; top: 9px; right: 40px; }
@@ -858,23 +870,22 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .ui-dialog .cms-dialog-content .clear { clear: both; }
 .ui-dialog.loading { background-image: url(../images/spinner.gif); background-position: 50% 50%; background-repeat: no-repeat; }
 
-body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4; position: relative; }
+body.cms-dialog { overflow: auto; background: #ECEFF1; position: relative; }
 
 /** -------------------------------------------- "Insert X" forms -------------------------------------------- */
 .htmleditorfield-dialog.ui-dialog-content { padding: 0; position: relative; }
-.htmleditorfield-dialog .htmleditorfield-from-web .CompositeField { overflow: hidden; *zoom: 1; }
-.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 55%; max-width: 512px; float: left; position: relative; }
-.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL label { position: absolute; left: 8px; top: 13px; font-weight: normal; color: #888; width: 35px; padding-right: 0; }
-.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL .middleColumn { margin-left: 0; }
-.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL input.remoteurl { padding-left: 40px; max-width: 350px; }
-.htmleditorfield-dialog .htmleditorfield-from-web button.add-url { margin-top: 20px; overflow: hidden; *zoom: 1; border: none; background: none; opacity: 0.8; cursor: hand; }
-.htmleditorfield-dialog .htmleditorfield-from-web button.add-url .btn-icon-addMedia { width: 20px; height: 20px; }
-.htmleditorfield-dialog .htmleditorfield-from-web button.add-url .ui-button-text { margin-left: 10px; padding-top: 10px; }
-.htmleditorfield-dialog .htmleditorfield-from-web button.add-url:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url:active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; opacity: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web { display: none; text-align: center; }
+.htmleditorfield-dialog .htmleditorfield-from-web.CompositeField { overflow: hidden; *zoom: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web div.remoteurl { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 80%; width: calc(100% - 80px); position: relative; display: inline-block; padding: 0; margin: 0; }
+.htmleditorfield-dialog .htmleditorfield-from-web div.remoteurl label { position: absolute; left: 8px; top: 0; font-weight: normal; color: #888; width: 35px; padding-right: 0; z-index: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web div.remoteurl .middleColumn { margin-left: 0; max-width: none; }
+.htmleditorfield-dialog .htmleditorfield-from-web div.remoteurl input.remoteurl { padding-left: 44px; max-width: none; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url { display: inline-block; float: none; margin: 2px 0 0; vertical-align: top; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url:active { opacity: 1; }
 .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:active { opacity: 0.35; filter: Alpha(Opacity=35); }
-.htmleditorfield-dialog .htmleditorfield-from-web .loading button.add-url .ui-icon { background-image: url(../images/throbber.gif); background-position: 50% 50%; background-repeat: no-repeat; }
+.htmleditorfield-dialog .htmleditorfield-from-web.loading button.add-url::before { content: ''; background: url(../images/throbber.gif) no-repeat center center; padding: 8px; }
 .htmleditorfield-dialog .cms-content-header { padding: 0; width: 100%; height: 53px; }
-.htmleditorfield-dialog .cms-content-header h3 { padding: 12px 16px; margin: 0; line-height: 28px; }
+.htmleditorfield-dialog .cms-content-header h3 { padding: 12px 4px 12px 16px; margin: 0; line-height: 28px; display: inline-block; font-weight: normal; }
 .htmleditorfield-dialog .ss-insert-media, .htmleditorfield-dialog .Actions, .htmleditorfield-dialog .ss-insert-link { padding: 8px 16px; }
 .htmleditorfield-dialog .ss-insert-media .ui-tabs-panel, .htmleditorfield-dialog .Actions .ui-tabs-panel, .htmleditorfield-dialog .ss-insert-link .ui-tabs-panel { padding: 0; }
 .htmleditorfield-dialog .details .file-url { display: block; width: 300px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; }
@@ -887,10 +898,14 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .htmleditorfield-linkform .ss-uploadfield .middleColumn { width: auto; }
 
 .htmleditorfield-mediaform .ss-gridfield .gridfield-button-delete { display: none; }
-.htmleditorfield-mediaform .htmleditorfield-from-web .ss-uploadfield .middleColumn, .htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { width: auto; background: none; border: none; margin-top: 13px; }
-.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield h4 { float: left; margin-top: 4px; margin-bottom: 0; }
-.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { margin-top: 16px; margin-left: 184px; min-width: 0; clear: none; }
-.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .field.treedropdown { border-bottom: 0; padding: 0; }
+.htmleditorfield-mediaform .htmleditorfield-from-web.ss-uploadfield .middleColumn, .htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .middleColumn { width: auto; background: none; border: none; min-width: 0; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield h4 { float: left; margin-top: 4px; margin-bottom: 0; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .middleColumn { min-width: 0; clear: none; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .field.treedropdown { border-bottom: 0; padding: 0; position: absolute; margin: 0; top: 12px; left: 160px; width: auto; min-width: 200px; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .treedropdownfield-title { width: auto; padding: 5px 2px 5px 4px; max-width: 200px; font-size: 14px; font-weight: bold; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .treedropdownfield-toggle-panel-link { padding: 5px 4px 5px 0; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .treedropdownfield-toggle-panel-link a { background: url(../images/sitetree_ss_default_icons.png); background-position: -18px -4px; height: 14px; opacity: .8; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .TreeDropdownField { background: 0; box-shadow: none; border: 0; }
 .htmleditorfield-mediaform .ss-assetuploadfield .ss-uploadfield-editandorganize .ss-uploadfield-files .ss-uploadfield-item-info { background-color: #9e9e9e; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzllOWU5ZSIvPjxzdG9wIG9mZnNldD0iOCUiIHN0b3AtY29sb3I9IiM5ZDlkOWQiLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzg3ODc4NyIvPjxzdG9wIG9mZnNldD0iNTQlIiBzdG9wLWNvbG9yPSIjODY4Njg2Ii8+PHN0b3Agb2Zmc2V0PSI5NiUiIHN0b3AtY29sb3I9IiM2YjZiNmIiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM2YzZjNmMiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #9e9e9e), color-stop(8%, #9d9d9d), color-stop(50%, #878787), color-stop(54%, #868686), color-stop(96%, #6b6b6b), color-stop(100%, #6c6c6c)); background-image: -moz-linear-gradient(top, #9e9e9e 0%, #9d9d9d 8%, #878787 50%, #868686 54%, #6b6b6b 96%, #6c6c6c 100%); background-image: -webkit-linear-gradient(top, #9e9e9e 0%, #9d9d9d 8%, #878787 50%, #868686 54%, #6b6b6b 96%, #6c6c6c 100%); background-image: linear-gradient(to bottom, #9e9e9e 0%, #9d9d9d 8%, #878787 50%, #868686 54%, #6b6b6b 96%, #6c6c6c 100%); }
 
 /** -------------------------------------------- Search forms (used in AssetAdmin, ModelAdmin, etc) -------------------------------------------- */

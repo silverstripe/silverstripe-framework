@@ -163,42 +163,41 @@
 			Config: null,
 
 			onmatch: function() {
-			
-				if(this.is('.readonly,.disabled')) return;
 
-				var fileInput = this.find('.ss-uploadfield-fromcomputer-fileinput');
-				var dropZone = this.find('.ss-uploadfield-dropzone');
-				var config = fileInput.data('config');
-				
-				/* Attach classes to dropzone when element can be dropped*/
-				$(document).unbind('dragover');
-				$(document).bind('dragover', function (e) {
-					timeout = window.dropZoneTimeout;
-					var $target = $(e.target);
-					if (!timeout) {
-						dropZone.addClass('active');
-					} else {
-						clearTimeout(timeout);
-					}
-					if ($target.closest('.ss-uploadfield-dropzone').length > 0) {
-						dropZone.addClass('hover');
-					} else {
-						dropZone.removeClass('hover');
-					}
-					window.dropZoneTimeout = setTimeout(function () {
-						window.dropZoneTimeout = null;
-						dropZone.removeClass('active hover');
-					}, 100);
+				if (this.is('.readonly,.disabled')) {
+					return;
+				}
+
+				var $fileInput = this.find('.ss-uploadfield-fromcomputer-fileinput'),
+					$dropZone = $('.ss-uploadfield-dropzone'),
+					config = $fileInput.data('config');
+
+				// Drag & drop is opt-in so we have to prevent the default behaviour
+				// (which is 'do nothing') when the drop zone is dragged over.
+				$dropZone.on('dragover', function (e) {
+					e.preventDefault();
 				});
-				
-				//disable default behaviour if file dropped in the wrong area
-				$(document).bind('drop dragover', function (e){					
-					e.preventDefault(); 
+
+				$dropZone.on('dragenter', function (e) {
+					$dropZone.addClass('hover active');
 				});
+
+				$dropZone.on('dragleave', function (e) {
+					if (e.target === $dropZone[0]) {
+						$dropZone.removeClass('hover active');
+					}
+				});
+
+				$dropZone.on('drop', function (e) {
+					$dropZone.removeClass('hover active');
+
+					if (e.target !== $dropZone[0]) {
+						return false;
+					}
+				})
 
 				this.setConfig(config);
-				this.fileupload($.extend(true, 
-					{
+				this.fileupload($.extend(true, {
 						formData: function(form) {
 							var idVal = $(form).find(':input[name=ID]').val();
 							var data = [{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()}];
@@ -242,9 +241,9 @@
 					}, 
 					config, 
 					{
-						fileInput: fileInput,
-						dropZone: dropZone,
-						form: $(fileInput).closest('form'),
+						fileInput: $fileInput,
+						dropZone: $dropZone,
+						form: $fileInput.closest('form'),
 						previewAsCanvas: false,
 						acceptFileTypes: new RegExp(config.acceptFileTypes, 'i')
 					}
@@ -252,13 +251,12 @@
 
 				if (this.data('fileupload')._isXHRUpload({multipart: true})) {
 					$('.ss-uploadfield-item-uploador').hide().show();
-					dropZone.hide().show();
 				}
 
-				
 				this._super();
 			},
 			onunmatch: function() {
+				$dropZone.off('dragover dragenter dragleave drop');
 				this._super();
 			},
 			openSelectDialog: function(uploadedFile) {
@@ -358,6 +356,11 @@
 			}
 		});
 
+		$('div.ss-upload .upload-url').entwine({
+			onclick: function () {
+				$('.htmleditorfield-from-web').slideToggle(150, 'linear').find('input.remoteurl').focus();
+			}
+		});
 
 		$('div.ss-upload .ss-uploadfield-item-remove:not(.ui-state-disabled), .ss-uploadfield-item-delete:not(.ui-state-disabled)').entwine({
 			onclick: function(e) {

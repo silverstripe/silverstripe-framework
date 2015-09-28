@@ -71,7 +71,6 @@ body.cms {
  * -------------------------------------------- */
 .cms-container {
 	height: 100%;
-	/*background: $tab-panel-texture-background;*/
 	background: $tab-panel-texture-color;
 }
 
@@ -1662,7 +1661,7 @@ form.member-profile-form {
 // Elements with this class can either frame inline markup or an iframe,
 // most styles should be applied to .cms-dialog instead (which declares the content in the frame)
 .ui-dialog {
-	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+	background: $tab-panel-texture-color;
 	background-clip: content-box;
 	border: 1px solid #666 !important;
 	@include border-radius($grid-y);
@@ -1698,7 +1697,7 @@ form.member-profile-form {
 	}
 
 	.cms-dialog-content {
-		background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+		background: $tab-panel-texture-color;
 		padding-bottom: $grid-y;
 		padding-top:0px;
 
@@ -1743,7 +1742,7 @@ form.member-profile-form {
 
 body.cms-dialog {
 	overflow: auto;
-	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+	background: $tab-panel-texture-color;
 	position:relative;
 }
 
@@ -1757,56 +1756,55 @@ body.cms-dialog {
 	}
 
 	.htmleditorfield-from-web {
-		.CompositeField{
+		display: none;
+		text-align: center;
+
+		&.CompositeField{
 			@include clearfix;
 		}
-		#RemoteURL{
+
+		div.remoteurl{
 			border:none;
 			@include box-shadow-none;
-			width:55%;
-			max-width:512px;
-			float:left;
+			width: 80%; //Fallback for IE 8
+			width: calc(100% - 80px);
 			position: relative;
+			display: inline-block;
+			padding: 0;
+			margin: 0;
 
 			label {
 				position: absolute;
 				left: 8px;
-				top: 13px;
+				top: 0;
 				font-weight: normal; 
 				color: #888;
 				width: 35px; 
 				padding-right: 0;
+				z-index: 1;
 			}
 
 			.middleColumn {
 				margin-left: 0;
+				max-width: none;
 			}
 
 			input.remoteurl {
-				padding-left: 40px;
-				max-width: 350px;
+				padding-left: 44px;
+				max-width: none;
 			}
 		}
+
 		button.add-url{
-			margin-top:20px;
-			@include clearfix;
-			border:none;
-			background:none;
-			opacity:0.8;
-			cursor: hand;
-			.btn-icon-addMedia{
-				width:20px;
-				height:20px;
-			}
-			.ui-button-text{
-				margin-left:10px;
-				padding-top:10px;
-			}
+			display: inline-block;;
+			float: none;
+			margin: 2px 0 0;
+			vertical-align: top;
+
 			&:hover, &:active{
-				border:none;
-				@include box-shadow-none;
 				opacity:1;
 			}
+
 			&.ui-state-disabled {
 				&, &:hover, &:active {
 					opacity: 0.35;
@@ -1814,10 +1812,11 @@ body.cms-dialog {
 				}
 			}
 		}
-		.loading button.add-url .ui-icon {
-			background-image: url(../images/throbber.gif);
-			background-position: 50% 50%;
-			background-repeat: no-repeat;
+
+		&.loading button.add-url::before {
+			content: '';
+			background: url(../images/throbber.gif) no-repeat center center;
+			padding: 8px;
 		}
 	}
 
@@ -1826,10 +1825,12 @@ body.cms-dialog {
 		width:100%;
 		height: 53px;
 
-		h3{
-			padding: $grid-y*1.5 $grid-x*2;
+		h3 {
+			padding: $grid-y*1.5 $grid-x*.5 $grid-y*1.5 $grid-x*2;
 			margin: 0;
 			line-height: 28px;
+			display: inline-block;
+			font-weight: normal;
 		}
 	}
 
@@ -1891,32 +1892,63 @@ body.cms-dialog {
 	}
 
 	.htmleditorfield-from-web, .htmleditorfield-from-cms {
-		.ss-uploadfield {
+		&.ss-uploadfield {
 			.middleColumn {
 				width:auto;
 				background:none;
 				border:none;
-				margin-top:13px;
+				min-width: 0;
 			}
 		}
 	}
 
 	.htmleditorfield-from-cms {
-		.ss-uploadfield {
+		&.ss-uploadfield {
 			h4 {
 				float: left; // headline and dropdown on same line
 				margin-top: $grid-y/2; // bring to same baseline as dropdown
 				margin-bottom: 0;
 			}
+
 			.middleColumn {
-				margin-top: $grid-y*2; // same as left-floated h4
-				margin-left: $grid-x*23; // make room for headline
 				min-width: 0; // fit within available space
 				clear: none; // headline and dropdown on same line
 			}
+
 			.field.treedropdown {
 				border-bottom: 0; // don't show border, dropdown and gridfield visually belong together
 				padding: 0;
+				position: absolute;
+				margin: 0;
+				top: 12px;
+				left: 160px;
+				width: auto;
+				min-width: 200px;
+			}
+
+			.treedropdownfield-title {
+				width: auto;
+				padding: 5px 2px 5px 4px;
+				max-width: 200px;
+				font-size: 14px;
+				font-weight: bold;
+			}
+
+			.treedropdownfield-toggle-panel-link {
+				padding: 5px 4px 5px 0;
+
+				a {
+					background: url(../images/sitetree_ss_default_icons.png);
+					background-position: -18px -4px;
+					height: 14px;
+					opacity: .8;
+				}
+			}
+
+			.TreeDropdownField {
+				background: 0;
+				box-shadow: none;
+				border: 0;
 			}
 		}
 	}

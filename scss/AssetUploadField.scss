@@ -8,14 +8,37 @@
 
 // Temporary. To be hidden and replaced with javascript tooltip
 .ss-uploadfield-view-allowed-extensions {
-	padding-top:5px;
-	clear:both;
-	max-width:750px;
-	display:block;
+	margin-top: -42px;
+	max-width: 400px;
+	width: 30%;
+	background: $tab-panel-texture-color;
+	display: block;
+	float: right;
+	position: relative;
 
 	.toggle {
 		font-style: normal;
-		font-size: $font-base-size;
+		font-size: 16px;
+		float: right;
+		color: lighten($color-text, 20%);
+		position: absolute;
+		top: 4px;
+		right: 0;
+		width: 16px;
+		height: 16px;
+		overflow: hidden;
+
+		&:hover,
+		&:active,
+		&:focus {
+			text-decoration: none;
+			color: $color-text;
+		}
+	}
+
+	h4 {
+		margin: 0 0 6px;
+		padding-right: 20px;
 	}
 }
 
@@ -48,6 +71,9 @@ body.cms.ss-uploadfield-edit-iframe {
 .ss-assetuploadfield {
 	border-bottom: 0;
 	@include box-shadow(none);
+	margin: 0;
+	position: relative;
+	padding: 0;
 
 	h3 {
 		border-bottom: 1px solid $color-shadow-light;
@@ -279,97 +305,74 @@ body.cms.ss-uploadfield-edit-iframe {
 	}
 
 	.ss-uploadfield-addfile {
+		margin: 0 0 16px;
+		padding: 0;
 	
 		.ss-uploadfield-item-info {
-			float: left;
-			margin: 25px 0 0;
-			.ss-insert-media &{
-				margin: 10px 0px 0 20px;
-			}
-			label{
-				font-size: 18px;
-				line-height: 30px;
-				padding: 0px 16px;
-				margin-right:0px;
-			}
-		}
-		.ss-uploadfield-fromcomputer {
-			/*position: relative; */
-			overflow: hidden;
-			display: block;
-			.btn-icon-drive-upload-large {
-				background: url(../images/drive-upload-white.png) no-repeat 0px 0px;
-				width:32px;
-				height:32px;
-				margin-top:-12px;
-			}
-		}
-		.ss-uploadfield-item-uploador {
-			float: left;
-			font-weight: bold;
-			font-size: 22px;
-			padding: 0 20px;
-			line-height: 70px;
-			margin-top:10px;
-			display: none;
-			.ss-insert-media &{
-				font-size: 18px;
-				margin-top: -5px;
-			}
-		}
-		.ss-uploadfield-dropzone { 
-			margin-top:9px;
-			padding: 8px 0;
-			@include border-radius(13px);
-			@include box-shadow(rgba($color-medium-separator, 0.4) 0 0 4px 0 inset, 0 1px 0 #FAFAFA);
-			border: 2px dashed $color-medium-separator;
-			background: lighten($color-base,12%);
-			display: none;
-			height: 54px;
-			min-width: 280px;
-			float: left;
 			text-align: center;
+			width: 50%;
+			margin: -$grid-y*1.5 auto 0;
 
-			&.active{
-				&.hover{
-					@include box-shadow(rgba(#fff,0.6) 0 0 3px 2px inset);
+			.ss-insert-media & {
+				margin: 0 auto;
+
+				> span {
+					margin-top: 0;
 				}
 			}
-			div {
-				color:lighten($color-text, 10%);
-				text-shadow: 0px 1px 0px #fff;
-				background: url('../images/upload.png') 0 10px no-repeat;
-				z-index:1;
-				padding: 6px 48px 0;
-				line-height: 25px;
+
+			> span {
+				display: block;
+				padding: 0;
+				line-height: 1;
+				color: lighten($color-text, 20%);
+				margin-top: -12px;
+			}
+
+			.upload-url {
+				display: inline;
+				color: $color-text-blue-link;
+				cursor: pointer;
+			}
+		}
+
+		.ss-uploadfield-fromcomputer {
+			font-size: 14px;
+			padding: $grid-y*.5 $grid-x*1;
+			display: inline-block;
+			float: none;
+			overflow: hidden;
+			margin: -$grid-y*5 0 $grid-y*.75;
+			font-weight: normal;
+
+			.ss-insert-media & {
+				margin: 8px 0 4px;
+			}
+
+			&::before {
 				font-size: 20px;
-				font-weight: bold;
-				display: inline-block;
-				span {
-					display: block;
-					font-size: 12px;
-					z-index:-1;
-					margin-top:-3px;
-				}
+				margin-right: 6px;
 			}
-			.ss-insert-media &{
-				height: 54px;
-				min-width: 250px; //Design has these smaller than main upload area
-				overflow:hidden;
-				padding:0;
-				margin-top:2px;
-				div{
-					background-position:0 11px;
-					padding-top:21px;
-					margin-left: 33px;
-					span{
-						height:38px;
-						font-size:18px;
-						line-height: 18px;
-					}
-				}
-			}
-		}		
+		}	
+	}
+}
+
+.ss-uploadfield-dropzone {
+	&::after {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: rgba(236, 239, 241, .9) url('../admin/images/drag_drop_opt.svg') center center no-repeat;
+		background-size: 312px 325px;
+		z-index: 100;
+	}
+
+	&.active.hover {
+		&::after {
+			content: '';
+		}
 	}
 }
 
@@ -396,5 +399,4 @@ body.cms.ss-uploadfield-edit-iframe {
 			}
 		}
 	}
-
 }

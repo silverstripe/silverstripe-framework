@@ -136,9 +136,9 @@
 			autoOpen: false,
 			autoPosition: true,
 			minWidth: 500,
-			maxWidth: 700,
+			maxWidth: 800,
 			minHeight: 300,
-			maxHeight: 600,
+			maxHeight: 700,
 			widthRatio: 0.8,
 			heightRatio: 0.8,
 			resizable: false

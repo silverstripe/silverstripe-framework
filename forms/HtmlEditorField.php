@@ -278,7 +278,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
-		$form->addExtraClass('htmleditorfield-form htmleditorfield-linkform cms-dialog-content');
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-linkform cms-mediaform-content');
 
 		$this->extend('updateLinkForm', $form);
 
@@ -335,63 +335,39 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			. '<strong class="title">%s</strong></span>';
 
 		$fromCMS = new CompositeField(
-			new LiteralField('headerSelect',
-				'<h4>'.sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.FindInFolder', 'Find in Folder')).'</h4>'),
 			$select = TreeDropdownField::create('ParentID', "", 'Folder')
 				->addExtraClass('noborder')
 				->setValue($parentID),
 			$fileField
 		);
 
-		$fromCMS->addExtraClass('content ss-uploadfield');
+		$fromCMS->addExtraClass('content ss-uploadfield htmleditorfield-from-cms');
 		$select->addExtraClass('content-select');
 
 
 		$fromWeb = new CompositeField(
-			new LiteralField('headerURL',
-				'<h4>' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.ADDURL', 'Add URL')) . '</h4>'),
 			$remoteURL = new TextField('RemoteURL', 'http://'),
 			new LiteralField('addURLImage',
-				'<button class="action ui-action-constructive ui-button field add-url" data-icon="addMedia">' .
+				'<button class="action ui-action-constructive ui-button field font-icon-plus add-url">' .
 				_t('HtmlEditorField.BUTTONADDURL', 'Add url').'</button>')
 		);
 
 		$remoteURL->addExtraClass('remoteurl');
-		$fromWeb->addExtraClass('content ss-uploadfield');
+		$fromWeb->addExtraClass('content ss-uploadfield htmleditorfield-from-web');
 
 		Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
 		$computerUploadField = Object::create('UploadField', 'AssetUploadField', '');
 		$computerUploadField->setConfig('previewMaxWidth', 40);
 		$computerUploadField->setConfig('previewMaxHeight', 30);
-		$computerUploadField->addExtraClass('ss-assetuploadfield');
+		$computerUploadField->addExtraClass('ss-assetuploadfield htmleditorfield-from-computer');
 		$computerUploadField->removeExtraClass('ss-uploadfield');
 		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
 		$computerUploadField->setFolderName(Config::inst()->get('Upload', 'uploads_folder'));
 
-		$tabSet = new TabSet(
-			"MediaFormInsertMediaTabs",
-			Tab::create(
-				'FromComputer',
-				_t('HtmlEditorField.FROMCOMPUTER','From your computer'),
-				$computerUploadField
-			)->addExtraClass('htmleditorfield-from-computer'),
-			Tab::create(
-				'FromWeb',
-				_t('HtmlEditorField.FROMWEB', 'From the web'),
-				$fromWeb
-			)->addExtraClass('htmleditorfield-from-web'),
-			Tab::create(
-				'FromCms',
-				_t('HtmlEditorField.FROMCMS','From the CMS'),
-				$fromCMS
-			)->addExtraClass('htmleditorfield-from-cms')
-		);
-		$tabSet->addExtraClass('cms-tabset-primary');
-
 		$allFields = new CompositeField(
-			$tabSet,
-			new LiteralField('headerEdit', '<h4 class="field noborder header-edit">' . sprintf($numericLabelTmpl, '2',
-				_t('HtmlEditorField.ADJUSTDETAILSDIMENSIONS', 'Details &amp; dimensions')) . '</h4>'),
+			$computerUploadField,
+			$fromWeb,
+			$fromCMS,
 			$editComposite = new CompositeField(
 				new LiteralField('contentEdit', '<div class="content-edit ss-uploadfield-files files"></div>')
 			)
@@ -403,9 +379,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			new LiteralField(
 				'Heading',
 				sprintf('<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>',
-					_t('HtmlEditorField.INSERTMEDIA', 'Insert Media')).
+					_t('HtmlEditorField.INSERTMEDIA', 'Insert media from')).
 				sprintf('<h3 class="htmleditorfield-mediaform-heading update">%s</h3>',
-					_t('HtmlEditorField.UpdateMEDIA', 'Update Media'))
+					_t('HtmlEditorField.UpdateMEDIA', 'Update media'))
 			)
 		);
 
