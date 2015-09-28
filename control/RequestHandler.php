@@ -351,7 +351,7 @@ class RequestHandler extends ViewableData {
 		if($action == 'index') return true;
 
 		// Don't allow access to any non-public methods (inspect instance plus all extensions)
-		$insts = array_merge(array($this), (array)$this->getExtensionInstances());
+		$insts = array_merge(array($this), (array) $this->getExtensionInstances());
 		foreach($insts as $inst) {
 			if(!method_exists($inst, $action)) continue;
 			$r = new ReflectionClass(get_class($inst));
@@ -389,7 +389,7 @@ class RequestHandler extends ViewableData {
 		$action = strtolower($actionOrigCasing);
 
 		$definingClass = null;
-		$insts = array_merge(array($this), (array)$this->getExtensionInstances());
+		$insts = array_merge(array($this), (array) $this->getExtensionInstances());
 		foreach($insts as $inst) {
 			if(!method_exists($inst, $action)) continue;
 			$r = new ReflectionClass(get_class($inst));

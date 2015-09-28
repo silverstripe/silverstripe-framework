@@ -122,7 +122,7 @@ class Director implements TemplateGlobalProvider {
 				: $_SERVER['REQUEST_METHOD'],
 			$url,
 			$_GET,
-			ArrayLib::array_merge_recursive((array)$_POST, (array)$_FILES),
+			ArrayLib::array_merge_recursive((array) $_POST, (array) $_FILES),
 			@file_get_contents('php://input')
 		);
 
@@ -295,9 +295,9 @@ class Director implements TemplateGlobalProvider {
 		}
 
 		// Replace the superglobals with appropriate test values
-		$_REQUEST = ArrayLib::array_merge_recursive((array)$getVars, (array)$postVars);
-		$_GET = (array)$getVars;
-		$_POST = (array)$postVars;
+		$_REQUEST = ArrayLib::array_merge_recursive((array) $getVars, (array) $postVars);
+		$_GET = (array) $getVars;
+		$_POST = (array) $postVars;
 		$_SESSION = $session ? $session->inst_getAll() : array();
 		$_COOKIE = $cookieJar->getAll(false);
 		Injector::inst()->registerService($cookieJar, 'Cookie_Backend');

@@ -109,8 +109,8 @@ class SS_HTTPRequest implements ArrayAccess {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
 		$this->setUrl($url);
 
-		$this->getVars = (array)$getVars;
-		$this->postVars = (array)$postVars;
+		$this->getVars = (array) $getVars;
+		$this->postVars = (array) $postVars;
 		$this->body = $body;
 	}
 

@@ -612,7 +612,7 @@ class Session {
 	 */
 	public static function set_timeout($timeout) {
 		Deprecation::notice('4.0', 'Use the "Session.timeout" config setting instead');
-		Config::inst()->update('Session', 'timeout', (int)$timeout);
+		Config::inst()->update('Session', 'timeout', (int) $timeout);
 	}
 
 	/**
