@@ -378,7 +378,7 @@ class HTTP {
 				// (http://support.microsoft.com/kb/323308)
 				// Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
 				$cacheControlHeaders['max-age'] = 3;
-				
+
 				// Set empty pragma to avoid PHP's session_cache_limiter adding conflicting caching information,
 				// defaulting to "nocache" on most PHP configurations (see http://php.net/session_cache_limiter).
 				// Since it's a deprecated HTTP 1.0 option, all modern HTTP clients and proxies should
