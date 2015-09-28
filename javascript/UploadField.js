@@ -256,7 +256,7 @@
 				this._super();
 			},
 			onunmatch: function() {
-				$dropZone.off('dragover dragenter dragleave drop');
+				$('.ss-uploadfield-dropzone').off('dragover dragenter dragleave drop');
 				this._super();
 			},
 			openSelectDialog: function(uploadedFile) {
