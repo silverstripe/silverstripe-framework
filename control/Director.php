@@ -442,7 +442,7 @@ class Director implements TemplateGlobalProvider {
 		if ($url == '.' || $url == './') {
 			$url = '';
 		}
-		
+
 		if(strpos($url,'/') === false && !$relativeToSiteBase) {
 			//if there's no URL we want to force a trailing slash on the link
 			if (!$url) {

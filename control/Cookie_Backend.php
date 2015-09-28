@@ -18,7 +18,7 @@ interface Cookie_Backend {
 	 * @param array $cookies The existing cookies to load into the cookie jar
 	 */
 	public function __construct($cookies = array());
-	
+
 	/**
 	 * Set a cookie
 	 *
@@ -31,7 +31,7 @@ interface Cookie_Backend {
 	 * @param boolean $httpOnly Prevent the cookie being accessible by JS
 	 */
 	public function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = true);
-	
+
 	/**
 	 * Get the cookie value by name
 	 *
@@ -41,7 +41,7 @@ interface Cookie_Backend {
 	 * @return string|null The cookie value or null if unset
 	 */
 	public function get($name, $includeUnsent = true);
-	
+
 	/**
 	 * Get all the cookies
 	 *
@@ -49,7 +49,7 @@ interface Cookie_Backend {
 	 * @return array All the cookies
 	 */
 	public function getAll($includeUnsent = true);
-	
+
 	/**
 	 * Force the expiry of a cookie by name
 	 *
