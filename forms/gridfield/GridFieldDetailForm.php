@@ -334,7 +334,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		if (empty($this->record)) {
 			$controller = $this->getToplevelController();
-			$noActionURL = $controller->removeAction($_REQUEST['url']);
+			$url = $controller->getRequest()->getURL();
+			$noActionURL = $controller->removeAction($url);
 			$controller->getResponse()->removeHeader('Location');   //clear the existing redirect
 			return $controller->redirect($noActionURL, 302);
 		}
@@ -588,7 +589,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		} else {
 			// Changes to the record properties might've excluded the record from
 			// a filtered list, so return back to the main view if it can't be found
-			$noActionURL = $controller->removeAction($data['url']);
+			$url = $controller->getRequest()->getURL();
+			$noActionURL = $controller->removeAction($url);
 			$controller->getRequest()->addHeader('X-Pjax', 'Content');
 			return $controller->redirect($noActionURL, 302);
 		}
