@@ -199,7 +199,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 
 		// Code filters
 		$codeParams = is_array($code) ? $code : array($code);
-		$codeClause = DB::placeholders($codes);
+		$codeClause = DB::placeholders($codeParams);
 		$adminParams = (self::$admin_implies_all) ? array('ADMIN') : array();
 		$adminClause = (self::$admin_implies_all) ?  ", ?" : '';
 
