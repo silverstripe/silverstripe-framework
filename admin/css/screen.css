@@ -869,6 +869,7 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .ui-dialog .cms-dialog-content .ui-tabs .ui-tabs-panel { border: 0; }
 .ui-dialog .cms-dialog-content .clear { clear: both; }
 .ui-dialog.loading { background-image: url(../images/spinner.gif); background-position: 50% 50%; background-repeat: no-repeat; }
+.ui-dialog .ui-dialog-buttonpane { margin: 0; background: #E6EAED; border-top: 1px solid #D2D5D8; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
 
 body.cms-dialog { overflow: auto; background: #ECEFF1; position: relative; }
 

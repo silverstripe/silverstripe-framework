@@ -427,9 +427,25 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 		$('.htmleditorfield-dialog').entwine({
 			onadd: function() {
+
 				// Create jQuery dialog
 				if (!this.is('.ui-dialog-content')) {
-					this.ssdialog({autoOpen: true});
+					this.ssdialog({
+						autoOpen: true,
+						buttons: {
+							'insert': {
+								text: ss.i18n._t(
+									'HtmlEditorField.INSERT',
+									'Insert'
+								),
+								'data-icon': 'accept',
+								class: 'ss-ui-action-constructive media-insert',
+								click: function() {
+									$(this).find('form').submit();
+								}
+							}
+					    }
+					});
 				}
 
 				this._super();
@@ -1019,7 +1035,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				header[(hasItems) ? 'show' : 'hide']();
 
 				// Disable "insert" button if no files are selected
-				this.find('.Actions :submit')
+				this.closest('ui-dialog')
+					.find('ui-dialog-buttonpane .media-insert')
 					.button(hasItems ? 'enable' : 'disable')
 					.toggleClass('ui-state-disabled', !hasItems); 
 					
@@ -1035,12 +1052,20 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find('.ss-uploadfield-item-actions')[editingSelected ? 'hide' : 'show']();
 				this.find('.ss-uploadfield-item-name')[editingSelected ? 'hide' : 'show']();
 				this.find('.ss-uploadfield-item-preview')[editingSelected ? 'hide' : 'show']();
-				this.find('.Actions .media-insert')[editingSelected ? 'hide' : 'show']();
 				this.find('.htmleditorfield-mediaform-heading.update')[editingSelected ? 'show' : 'hide']();
 				this.find('.Actions .media-update')[editingSelected ? 'show' : 'hide']();
 				this.find('.ss-uploadfield-item-editform').toggleEditForm(editingSelected);
 				this.find('.htmleditorfield-from-cms .field.treedropdown').css('left', $('.htmleditorfield-mediaform-heading:visible').outerWidth());
 				this.closest('.ui-dialog').addClass('ss-uploadfield-dropzone');
+				this.closest('.ui-dialog')
+					.find('.ui-dialog-buttonpane .media-insert .ui-button-text')
+					.text([editingSelected ? ss.i18n._t(
+					'HtmlEditorField.UPDATE',
+					'Update'
+				) : ss.i18n._t(
+					'HtmlEditorField.INSERT',
+					'Insert'
+				)]);
 			},
 			resetFields: function() {
 				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views

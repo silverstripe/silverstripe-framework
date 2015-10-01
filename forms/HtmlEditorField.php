@@ -260,16 +260,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					HiddenField::create('Locale', null, $this->controller->Locale)
 				)
 			),
-			new FieldList(
-				ResetFormAction::create('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link'))
-					->addExtraClass('ss-ui-action-destructive')
-					->setUseButtonTag(true)
-				,
-				FormAction::create('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link'))
-					->addExtraClass('ss-ui-action-constructive')
-					->setAttribute('data-icon', 'accept')
-					->setUseButtonTag(true)
-			)
+			new FieldList()
 		);
 
 		$headerWrap->addExtraClass('CompositeField composite cms-content-header nolabel ');
@@ -393,22 +384,11 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$allFields
 		);
 
-		$actions = new FieldList(
-			FormAction::create('insertmedia', _t('HtmlEditorField.BUTTONINSERT', 'Insert'))
-				->addExtraClass('ss-ui-action-constructive media-insert')
-				->setAttribute('data-icon', 'accept')
-				->setUseButtonTag(true),
-			FormAction::create('insertmedia', _t('HtmlEditorField.BUTTONUpdate', 'Update'))
-				->addExtraClass('ss-ui-action-constructive media-update')
-				->setAttribute('data-icon', 'accept')
-				->setUseButtonTag(true)
-		);
-
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/MediaForm",
 			$fields,
-			$actions
+			new FieldList()
 		);
 
 
