@@ -47,7 +47,7 @@
 	</h3>			
 
 		<div class="ss-uploadfield-item-actions edit-all">
-		<button class="ss-uploadfield-item-edit-all ss-ui-button ui-corner-all" title="<% _t('AssetUploadField.EDITINFO', 'Edit files') %>" style="display:none;">
+		<button type="button" class="ss-uploadfield-item-edit-all ss-ui-button ui-corner-all" title="<% _t('AssetUploadField.EDITINFO', 'Edit files') %>" style="display:none;">
 			<% _t('AssetUploadField.EDITALL', 'Edit all') %>
 				<span class="toggle-details-icon"></span>
 		</button>
