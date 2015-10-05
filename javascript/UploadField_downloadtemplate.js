@@ -22,7 +22,7 @@ window.tmpl.cache['ss-uploadfield-downloadtemplate'] = tmpl(
 				'</label>' +
 				'{% if (file.error) { %}' +
 					'<div class="ss-uploadfield-item-actions">' + 
-						'<div class="ss-uploadfield-item-cancel ss-uploadfield-item-cancelfailed delete"><button class="icon icon-16" data-icon="delete" title="' + ss.i18n._t('UploadField.CANCELREMOVE', 'Cancel/Remove') + '">' + ss.i18n._t('UploadField.CANCELREMOVE', 'Cancel/Remove') + '</button></div>' +
+						'<div class="ss-uploadfield-item-cancel ss-uploadfield-item-cancelfailed delete"><button type="button" class="icon icon-16" data-icon="delete" title="' + ss.i18n._t('UploadField.CANCELREMOVE', 'Cancel/Remove') + '">' + ss.i18n._t('UploadField.CANCELREMOVE', 'Cancel/Remove') + '</button></div>' +
 					'</div>' +
 				'{% } else { %}' +
 					'<div class="ss-uploadfield-item-actions">{% print(file.buttons, true); %}</div>' +

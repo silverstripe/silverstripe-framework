@@ -380,7 +380,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				'<h4>' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.ADDURL', 'Add URL')) . '</h4>'),
 			$remoteURL = new TextField('RemoteURL', 'http://'),
 			new LiteralField('addURLImage',
-				'<button class="action ui-action-constructive ui-button field add-url" data-icon="addMedia">' .
+				'<button type="button" class="action ui-action-constructive ui-button field add-url" data-icon="addMedia">' .
 				_t('HtmlEditorField.BUTTONADDURL', 'Add url').'</button>')
 		);
 
