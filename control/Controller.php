@@ -387,7 +387,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**
 	 * Returns the current controller
-	 * @returns Controller
+	 * @return Controller
 	 */
 	public static function curr() {
 		if(Controller::$controller_stack) {
