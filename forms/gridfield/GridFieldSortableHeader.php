@@ -114,8 +114,8 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 					} elseif(method_exists($tmpItem, 'hasMethod') && $tmpItem->hasMethod($methodName)) {
 						// The part is a relation name, so get the object/list from it
 						$tmpItem = $tmpItem->$methodName();
-					} elseif($tmpItem instanceof DataObject && $tmpItem->hasField($methodName)) {
-						// Else, if we've found a field at the end of the chain, we can sort on it.
+					} elseif($tmpItem instanceof DataObject && $tmpItem->hasDatabaseField($methodName)) {
+						// Else, if we've found a database field at the end of the chain, we can sort on it.
 						// If a method is applied further to this field (E.g. 'Cost.Currency') then don't try to sort.
 						$allowSort = $idx === sizeof($parts) - 1;
 						break;
