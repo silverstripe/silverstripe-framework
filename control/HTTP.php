@@ -25,9 +25,9 @@ class HTTP {
 	protected static $etag = null;
 
 	/**
-     * @config
-     */
-    private static $cache_ajax_requests = true;
+	 * @config
+	 */
+	private static $cache_ajax_requests = true;
 
 	/**
 	 * Turns a local system filename into a URL by comparing it to the script
