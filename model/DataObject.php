@@ -1780,10 +1780,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $this->unsavedRelations[$componentName];
 		}
 
-		$result = ManyManyList::create(
-			$componentClass, $table, $componentField, $parentField,
-			$this->manyManyExtraFieldsForComponent($componentName)
-		);
+		$extraFields = $this->manyManyExtraFieldsForComponent($componentName) ?: array();
+		$result = ManyManyList::create($componentClass, $table, $componentField, $parentField, $extraFields);
 		
 		if($this->model) $result->setDataModel($this->model);
 		
