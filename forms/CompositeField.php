@@ -222,6 +222,9 @@ class CompositeField extends FormField {
 		return $ret;
 	}
 
+	/**
+	 * @uses FieldList->insertAfter()
+	 */
 	public function insertAfter($insertAfter, $field) {
 		$ret = $this->children->insertAfter($insertAfter, $field);
 		$this->sequentialSet = null;
