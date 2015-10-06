@@ -115,6 +115,7 @@ interface Image_Backend {
 	 * imageAvailable
 	 *
 	 * @param string $filename
+	 * @param string $manipulation
 	 * @return boolean
 	 */
 	public function imageAvailable($filename, $manipulation);

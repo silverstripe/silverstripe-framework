@@ -99,9 +99,10 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @todo Implement memory checking for Imagick? See {@link GD}
 	 *
 	 * @param string $filename
+	 * @param string $manipulation
 	 * @return boolean
 	 */
-	public function imageAvailable($filename) {
+	public function imageAvailable($filename, $manipulation) {
 		return true;
 	}
 

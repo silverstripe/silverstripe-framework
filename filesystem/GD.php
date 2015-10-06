@@ -108,6 +108,7 @@ class GDBackend extends Object implements Image_Backend {
 
 	/**
 	 * @param string $filename
+	 * @param string $manipulation
 	 * @return boolean
 	 */
 	public function imageAvailable($filename, $manipulation) {
