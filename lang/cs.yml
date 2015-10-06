@@ -260,6 +260,7 @@ cs:
     many_many_Members: Členové
   GroupImportForm:
     Help1: '<p>Import jedné nebo více skupin v <em>CSV</em> formátu (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'
+    Help2: '<div class="advanced"> <h4>Pokročilé použití</h4> <ul> <li>Povolené sloupce: <em>%s</em></li> <li>Existující skupiny jsou porovnány jejich unikátním <em>Code</em> hodnotou, a aktualizovány s novými hodnotami z importovaného souboru</li> <li>Hierarchie skupin může být tvořena použitím <em>ParentCode</em> sloupce.<li> <li>Kódy oprávnění mohou být přiřazeny <em>PermissionCode</em> sloupcem. Existující oprávnění nejsou smazána.</li> </ul> </div>'
     ResultCreated: 'Vytvořeno {count} skupin'
     ResultDeleted: 'Smazáno %d skupin'
     ResultUpdated: 'Aktualizováno %d skupin'
@@ -326,6 +327,8 @@ cs:
     DropdownBatchActionsDefault: Akcie
     HELP: Nápověda
     PERMAGAIN: 'Byli jste odhlášeni z CMS. Pokud se chcete znovu přihlásit, zadejte níže své uživatelské jméno a heslo.'
+    PERMALREADY: 'Omlouvám se, ale nemůžete vstoupit do této části CMS. Pokud se chcete přihlásit jako někdo jiný, udělejte tak níže.'
+    PERMDEFAULT: 'Musíte být přihlášen/a k přístup do oblasti administrace, zadejte vaše přihlošovací údaje dole, prosím.'
     PreviewButton: Náhled
     REORGANISATIONSUCCESSFUL: 'Strom webu reorganizován úspěšně.'
     SAVEDUP: Uloženo.
@@ -413,6 +416,7 @@ cs:
     Toggle: 'Ukázat nápovědu formátování'
   MemberImportForm:
     Help1: '<p>Import členů v <em>CSV formátu</em> (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'
+    Help2: '<div class="advanced"> <h4>Pokročilé použití</h4> <ul> <li>Povolené sloupce: <em>%s</em></li> <li>Existující uživatelé jsou porovnáni jejich unikátní vlastností <em>Code</em>, a aktualizováni s novými hodnotami z importovaného souboru.</li> <li>Skupiny mohou být přiřazeny sloupcem <em>Groups</em>. Skupiny jsou identifikovány svojí vlastností <em>Code</em>, více skupin může být odděleno čárkou. Existující členství ve skupině nejsou smazána.</li> </ul> </div>'
     ResultCreated: 'Vytvořeno {count} členů'
     ResultDeleted: 'Smazáno %d členů'
     ResultNone: 'Žádné změny'

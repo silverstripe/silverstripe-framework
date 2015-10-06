@@ -260,6 +260,7 @@ sk:
     many_many_Members: Členovia
   GroupImportForm:
     Help1: 'Importovať jednu alebo viac skupín v CSV formáte (čiarkov oddelené hodnoty). Zobraziť pokročilé použitie'
+    Help2: '<div class="advanced"> <h4>Pokročilé použitie</h4> <ul> <li>Povolené stĺpce: <em>%s</em></li> <li>Existujúce skupiny sú porovnávané s ich unikátnou <em>Code</em>; hodnotou, a aktualizované s novými hodnotami z importovaného súbory&lt;/li> <li>Skupina hierarchií môže byť tvorená použitím <em>ParentCode</em>; stĺpce.&lt;/li> <li>Kódy oprávnení môžu byť priradené <em>PermissionCode</em>; stĺpcom. Existujúce oprávnenia nie sú smazáné.</li> </ul> </div>'
     ResultCreated: 'Vytvorených {count} skupín'
     ResultDeleted: 'Zmazané %d skupiny'
     ResultUpdated: 'Aktualizované %d skupiny'
@@ -326,6 +327,8 @@ sk:
     DropdownBatchActionsDefault: Akcie
     HELP: Pomoc
     PERMAGAIN: 'Boli ste odhlásený'
+    PERMALREADY: 'Je mi ľúto, ale nemáte prístup k tejto časti CMS. Ak sa chcete prihlásiť ako niekto iný, urobte tak nižšie'
+    PERMDEFAULT: 'Musíte byť prihlásený/á k prístupu do oblasti administrácie, zadajte vaše prihlasovacie údaje dole, prosím.'
     PreviewButton: Náhľad
     REORGANISATIONSUCCESSFUL: 'Strom webu bol reorganizovaný úspešne.'
     SAVEDUP: Uložené.
@@ -413,6 +416,7 @@ sk:
     Toggle: 'Ukázať nápovedu formátovania'
   MemberImportForm:
     Help1: 'Importovať členov v <em>CSV formáte</em> (čiarkov oddelené hodnoty). Zobraziť pokročile použitie'
+    Help2: '<div class="advanced"> <h4>Pokročilé použitie</h4> <ul> <li>Povolené stĺpce: <em>%s</em></li> <li>Existujúci užívatelia sú porovnávaní ich unikátnou vlastnosťou <em>Code</em>, a aktualizovaní s novými hodnotami z importovaného súboru.</li> <li>Skupiny môžu byťt priradené stĺpcom <em>Groups</em>. Skupiny sú identifikované ich vlastnosťou <em>Code</em>, viacero skupín môže byť oddelené čiarkou. Existujúce členstvá skupiny nie sú smazané.</li> </ul> </div>'
     ResultCreated: 'Vytvorených {count} členov'
     ResultDeleted: 'Zmazaných %d členov'
     ResultNone: 'Žiadne zmeny'

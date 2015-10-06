@@ -60,6 +60,8 @@ zh:
     ERRORNOTREC: '那个用户名 / 密码无法被辨认'
   Boolean:
     ANY: 任何
+    NOANSWER: '不是'
+    YESANSWER: '是'
   CMSLoadingScreen_ss:
     LOADING: 正在载入……
     REQUIREJS: 'CMS 要求您启用 JavaScript。'
@@ -68,16 +70,35 @@ zh:
     ACCESSALLINTERFACES: '对所有 CMS 部分的访问'
     ACCESSALLINTERFACESHELP: '支配更多的特殊访问设置'
     SAVE: 保存
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: '忘记密码？'
+    BUTTONLOGIN: '重新登录'
+    BUTTONLOGOUT: '登出'
+    PASSWORDEXPIRED: '<p>您的密码已过期。 <a target="_top" href="{link}">请选择一个新的。</a></ P>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: '网站预览'
   CMSProfileController:
     MENUTITLE: '我的个人资料'
+  CMSSecurity:
+    INVALIDUSER: '<p>用户已无效。 <a target="_top" href="{link}">请在此继续重新进行身份验证</a>。</ p>'
+    LoginMessage: '<p>如果您有任何未保存的工作，你可以重新登录以回到你未保存的地方。</p>'
+    SUCCESS: 成功
+    SUCCESSCONTENT: '<p>登录成功。如果您没有自动重定向<a target="_top" href="{link}">点击此处</a></p>'
+    TimedOutTitleAnonymous: '你的登陆超时已过期。'
+    TimedOutTitleMember: '你好{name}!<br />你的登陆超时已过期。'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: '您的密码已更改为：'
     CHANGEPASSWORDTEXT2: '现在，您可以使用下列证书来登录了：'
     EMAIL: 电子邮件
     HELLO: 您好
     PASSWORD: 密码
+  CheckboxField:
+    NOANSWER: '不是'
+    YESANSWER: '是'
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
+  CheckboxSetField:
+    SOURCE_VALIDATION: '请选择列表内提供的选项。''{value}''不是一个有效的选项'
   ConfirmedPasswordField:
     ATLEAST: '密码长度必须至少 {min} 个字符。'
     BETWEEN: '密码长度必须含 {min} 到 {max} 个字符。'
@@ -124,6 +145,7 @@ zh:
   DropdownField:
     CHOOSE: （选择）
     CHOOSESEARCH: '（选择或搜索）'
+    SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
   EmailField:
     VALIDATION: '请输入一个电子邮件地址'
   Enum:
@@ -171,6 +193,7 @@ zh:
     TEXT2: '密码重设链接'
     TEXT3: 为
   Form:
+    CSRF_FAILED_MESSAGE: '似乎是一个技术问题。请点击返回按钮，刷新浏览器，然后再试一次。'
     FIELDISREQUIRED: '{name} 为必填'
     SubmitBtnLabel: 前往
     VALIDATIONCREDITNUMBER: '请确保您输入了正确的 {number} 信用卡号码'
@@ -244,6 +267,8 @@ zh:
   HtmlEditorField:
     ADDURL: '添加网址'
     ADJUSTDETAILSDIMENSIONS: '详情 &amp;amp; 体积'
+    ANCHORSCANNOTACCESSPAGE: '您不允许访问该页面的内容。'
+    ANCHORSPAGENOTFOUND: '无法找到该页面。'
     ANCHORVALUE: 固定
     BUTTONADDURL: '添加网址'
     BUTTONINSERT: 插入
@@ -282,6 +307,7 @@ zh:
     LINKOPENNEWWIN: '在新窗口中打开链接？'
     LINKTO: '链接到'
     PAGE: 页面
+    SUBJECT: '电子邮件标题'
     URL: 网址
     URLNOTANOEMBEDRESOURCE: '''{url}'' 该网址无法转换成媒体来源。'
     UpdateMEDIA: '更新媒体'
@@ -299,15 +325,19 @@ zh:
     DropdownBatchActionsDefault: 动作
     HELP: 帮助
     PERMAGAIN: '您已经退出 CMS。如果您想再次登录，请在下面输入用户名和密码。'
+    PERMALREADY: '抱歉，您不能访问这一部分的后台管理。如果您想以不同的身份登录，请在下面进行操作。'
     PreviewButton: 预览
     REORGANISATIONSUCCESSFUL: '重新组织网站地图已成功'
     SAVEDUP: 已保存。
     ShowAsList: '以列表方式展示'
     TooManyPages: '页面数目过多'
     ValidationError: '验证错误'
+    VersionUnknown: 未知
   LeftAndMain_Menu_ss:
     Hello: 您好
     LOGOUT: '退出'
+  ListboxField:
+    SOURCE_VALIDATION: '请选择列表内提供的选项。%s不是一个有效的选项'
   LoginAttempt:
     Email: '电子邮件地址'
     IP: 'IP 地址'
@@ -340,6 +370,7 @@ zh:
     NEWPASSWORD: '新密码'
     NoPassword: '该成员无密码'
     PASSWORD: 密码
+    PASSWORDEXPIRED: '您的密码已过期。 请选择一个新的。'
     PLURALNAME: 成员
     REMEMBERME: '下次记住我？'
     SINGULARNAME: 成员
@@ -445,6 +476,7 @@ zh:
     SINGULARNAME: 角色
     Title: 标题
   PermissionRoleCode:
+    PLURALNAME: '权限角色代码'
     PermsError: '无法为代码 "%s"分配特权权限（要求具备 ADMIN 访问）'
     SINGULARNAME: '权限角色代码'
   Permissions:
@@ -510,6 +542,8 @@ zh:
     Print: 打印
   TableListField_PageControls_ss:
     OF: 的
+  TextField:
+    VALIDATEMAXLENGTH: '{name} 的长度必须至多{maxLength} 个字符。'
   TimeField:
     VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
   ToggleField:
