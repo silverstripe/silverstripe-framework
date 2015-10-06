@@ -320,10 +320,10 @@ class ImageTest extends SapphireTest {
 		$this->assertEquals(3, count($filesInFolder),
 			'Image folder contains only the expected number of images before regeneration');
 
-		$hash = md5_file($imageThirdPath);
+		$stats = getimagesize($imageThirdPath);
 		$this->assertEquals(3, $image->regenerateFormattedImages(),
 			'Cached images were regenerated in the right number');
-		$this->assertEquals($hash, md5_file($imageThirdPath), 'Regeneration of third image is correct');
+		$this->assertEquals($stats, getimagesize($imageThirdPath), 'Regeneration of third image is correct');
 
 		/* Check that no other images exist, to ensure that the regeneration did not create other images */
 		$this->assertEquals($filesInFolder, $folder->find(dirname($imageThirdPath)),
