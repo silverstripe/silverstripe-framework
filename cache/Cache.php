@@ -27,11 +27,21 @@ class SS_Cache {
 	protected static $cache_lifetime = array();
 
 	/**
+	* @var int $default_cache_lifetime
+ 	*/
+	protected static $default_cache_lifetime = 600;
+	
+	/**
 	 * Initialize the 'default' named cache backend.
 	 */
 	protected static function init(){
 		if (!isset(self::$backends['default'])) {
 			$cachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache';
+
+
+			if( defined("SS_CACHE_DEFAULT_LIFETIME") ){
+				self::$default_cache_lifetime = constant("SS_CACHE_DEFAULT_LIFETIME");
+			}
 
 			if (!is_dir($cachedir)) {
 				mkdir($cachedir);
@@ -44,8 +54,9 @@ class SS_Cache {
 				)
 			);
 
+
 			self::$cache_lifetime['default'] = array(
-				'lifetime' => 600,
+				'lifetime' => self::$default_cache_lifetime,
 				'priority' => 1
 			);
 		}
@@ -118,11 +129,16 @@ class SS_Cache {
 	 * @param string $for The name of the cache to set this lifetime for (or 'any' for all backends)
 	 * @param integer $lifetime The lifetime of an item of the cache, in seconds, or -1 to disable caching
 	 * @param integer $priority The priority. The highest priority setting is used. Unlike backends, 'any' is not
-	 *                          special in terms of priority.
+	 *                          special in terms of priority. 
 	 */
-	public static function set_cache_lifetime($for, $lifetime=600, $priority=1) {
-		self::init();
+	public static function set_cache_lifetime($for, $lifetime = null, $priority=1) {
 
+		if( null === $lifetime ){
+			$lifetime = self::$default_cache_lifetime;
+		}
+
+		self::init();
+		
 		$current = -1;
 
 		if (isset(self::$cache_lifetime[$for])) {
