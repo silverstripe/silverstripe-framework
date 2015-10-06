@@ -53,13 +53,13 @@ class ExactMatchFilter extends SearchFilter {
 		$this->model = $query->applyRelation($this->relation);
 		$field = $this->getDbName();
 		$value = $this->getValue();
-		
+
 		// Null comparison check
 		if($value === null) {
 			$where = DB::get_conn()->nullCheckClause($field, $inclusive);
 			return $query->where($where);
 		}
-		
+
 		// Value comparison check
 		$where = DB::get_conn()->comparisonClause(
 			$field,
@@ -107,7 +107,7 @@ class ExactMatchFilter extends SearchFilter {
 	protected function manyFilter(DataQuery $query, $inclusive) {
 		$this->model = $query->applyRelation($this->relation);
 		$caseSensitive = $this->getCaseSensitive();
-		
+
 		// Check values for null
 		$field = $this->getDbName();
 		$values = $this->getValue();

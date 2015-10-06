@@ -443,7 +443,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 	/**
 	 * Get the injected value
-	 * 
+	 *
 	 * @param string $property Name of property
 	 * @param array $params
 	 * @param bool $cast If true, an object is always returned even if not an object.

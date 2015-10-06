@@ -51,7 +51,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
 	}
 
 	public function output() {
-		// TODO: Refactor into a content-type option 
+		// TODO: Refactor into a content-type option
 		if(\Director::is_ajax()) {
 			return $this->friendlyErrorMessage;
 
