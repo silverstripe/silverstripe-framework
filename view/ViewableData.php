@@ -188,7 +188,7 @@ class ViewableData extends Object implements IteratorAggregate {
 
 	/**
 	 * Method to facilitate deprecation of underscore-prefixed methods automatically being cached.
-	 * 
+	 *
 	 * @param string $field
 	 * @param array $arguments
 	 * @param string $identifier an optional custom cache identifier

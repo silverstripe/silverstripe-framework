@@ -172,7 +172,7 @@ abstract class SearchFilter extends Object {
 		}
 
 		$candidateClass = ClassInfo::table_for_object_field(
-			$this->model, 
+			$this->model,
 			$this->name
 		);
 
