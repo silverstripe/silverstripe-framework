@@ -315,7 +315,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Removes all the "action" part of the current URL and returns the result.
 	 * If no action parameter is present, returns the full URL
 	 * @static
-	 * @return String
+	 * @return string
 	 */
 	public function removeAction($fullURL, $action = null) {
 		if (!$action) $action = $this->getAction();    //default to current action
@@ -555,8 +555,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 *
 	 * Caution: All parameters are expected to be URI-encoded already.
 	 *
-	 * @param String
-	 * @return String
+	 * @param string
+	 * @return string
 	 */
 	public static function join_links() {
 		$args = func_get_args();

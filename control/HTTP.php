@@ -158,11 +158,11 @@ class HTTP {
 	 * This method will always return an absolute URL because
 	 * Director::makeRelative() can lead to inconsistent results.
 	 *
-	 * @param String $varname
-	 * @param String $varvalue
-	 * @param String $currentURL Relative or absolute URL (Optional).
-	 * @param String $separator Separator for http_build_query(). (Optional).
-	 * @return String Absolute URL
+	 * @param string $varname
+	 * @param string $varvalue
+	 * @param string $currentURL Relative or absolute URL (Optional).
+	 * @param string $separator Separator for http_build_query(). (Optional).
+	 * @return string Absolute URL
 	 */
 	public static function setGetVar($varname, $varvalue, $currentURL = null, $separator = '&amp;') {
 		$uri = $currentURL ? $currentURL : Director::makeRelative($_SERVER['REQUEST_URI']);

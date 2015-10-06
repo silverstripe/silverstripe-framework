@@ -66,12 +66,12 @@ class SS_HTTPResponse {
 	);
 
 	/**
-	 * @var Int
+	 * @var int
 	 */
 	protected $statusCode = 200;
 
 	/**
-	 * @var String
+	 * @var string
 	 */
 	protected $statusDescription = "OK";
 
@@ -104,8 +104,8 @@ class SS_HTTPResponse {
 	}
 
 	/**
-	 * @param String $code
-	 * @param String $description Optional. See {@link setStatusDescription()}.
+	 * @param string $code
+	 * @param string $description Optional. See {@link setStatusDescription()}.
 	 *  No newlines are allowed in the description.
 	 *  If omitted, will default to the standard HTTP description
 	 *  for the given $code value (see {@link $status_codes}).
@@ -124,7 +124,7 @@ class SS_HTTPResponse {
 	 * The text to be given alongside the status code ("reason phrase").
 	 * Caution: Will be overwritten by {@link setStatusCode()}.
 	 *
-	 * @param String $description
+	 * @param string $description
 	 * @return SS_HTTPRequest $this
 	 */
 	public function setStatusDescription($description) {
@@ -133,7 +133,7 @@ class SS_HTTPResponse {
 	}
 
 	/**
-	 * @return Int
+	 * @return int
 	 */
 	public function getStatusCode() {
 		return $this->statusCode;
@@ -312,7 +312,7 @@ class SS_HTTPResponse_Exception extends Exception {
 	protected $response;
 
 	/**
-	 * @param  string|SS_HTTPResponse body Either the plaintext content of the error message, or an SS_HTTPResponse
+	 * @param string|SS_HTTPResponse body Either the plaintext content of the error message, or an SS_HTTPResponse
 	 *                                     object representing it.  In either case, the $statusCode and
 	 *                                     $statusDescription will be the HTTP status of the resulting response.
 	 * @see SS_HTTPResponse::__construct();

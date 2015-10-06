@@ -99,7 +99,7 @@ class PjaxResponseNegotiator {
 	}
 
 	/**
-	 * @param String   $fragment
+	 * @param string   $fragment
 	 * @param Callable $callback
 	 */
 	public function setCallback($fragment, $callback) {
