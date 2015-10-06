@@ -73,18 +73,20 @@ class FulltextFilter extends SearchFilter {
 
 		return parent::getDbName();
 	}
-	
-	private function prepareColumns($columns) {
-		$class = '';
-		$parts = explode(',', $columns);
-		array_walk($parts, function(&$col, $key) use (&$class) {
-			$name = trim($col, " \t\n\r\0\x0B\"");
-			if (empty($class)) {
-				$class = ClassInfo::table_for_object_field($this->model, $name);
-			}
-			$col = sprintf('"%s"."%s"', $class, $name);
-		});
-		return implode(',', $parts);
+
+	/**
+	 * Adds table identifier to the every column.
+	 * Columns must have table identifier to prevent duplicate column name error.
+	 *
+	 * @return string
+	*/
+	protected function prepareColumns($columns) {
+		$cols = preg_split('/"?\s*,\s*"?/', trim($columns, '(") '));
+		$class = ClassInfo::table_for_object_field($this->model, current($cols));
+		$cols = array_map(function($col) use ($class) {
+			return sprintf('"%s"."%s"', $class, $col);
+		}, $cols);
+		return implode(',', $cols);
 	}
 
 }
