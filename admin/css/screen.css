@@ -218,6 +218,8 @@ Used in side panels and action tabs
 
 .font-icon-folder-add:before { content: "S"; }
 
+.font-icon-thumbnails:before { content: "W"; }
+
 /** File: typography.scss  Contains the basic typography related styles for the admin interface. */
 body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif; color: #66727d; }
 
@@ -588,6 +590,7 @@ body.cms { overflow: hidden; }
 .icon-button-group a.icon-button:hover, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:hover, .icon-button-group button.ss-ui-button.icon-button:hover { background: #ECEFF1; }
 .icon-button-group a.icon-button.active:hover, .icon-button-group button.ss-ui-button.icon-button.active:hover { background: #d4dbe1; }
 .icon-button-group a.icon-button + a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button + a.icon-button, .icon-button-group a.icon-button + button.ss-ui-button.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button + button.ss-ui-button.icon-button, .icon-button-group button.ss-ui-button.icon-button + a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li button.ss-ui-button.icon-button + a.icon-button, .icon-button-group button.ss-ui-button.icon-button + button.ss-ui-button.icon-button { border-left: 1px solid #CDCCD0; }
+.icon-button-group a.icon-button.font-icon-thumbnails::before, .icon-button-group button.ss-ui-button.icon-button.font-icon-thumbnails::before { margin-left: -2px; }
 .icon-button-group .ui-tabs.ui-tabs-nav { border-left: 0 !important; margin-top: -2px !important; padding-right: 0 !important; overflow: hidden; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default { background-color: transparent; background-image: none; border-left: 0; border-right: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default + .cms-tabset-icon.ui-state-default { border-left: 1px solid #CDCCD0; }
