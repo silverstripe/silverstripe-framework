@@ -620,7 +620,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * If you specify shifting more than 1 item off, then the items will be returned as an array
 	 *
 	 * @param int $count Shift Count
-	 * @return String|Array
+	 * @return string|Array
 	 */
 	public function shift($count = 1) {
 		$return = array();

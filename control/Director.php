@@ -794,7 +794,7 @@ class Director implements TemplateGlobalProvider {
 	/**
 	 * Takes a $_SERVER data array and extracts HTTP request headers.
 	 *
-	 * @param  array $server
+	 * @param array $server
 	 * @return array
 	 */
 	public static function extract_request_headers(array $server) {

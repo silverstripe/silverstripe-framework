@@ -302,7 +302,7 @@ class RequestHandler extends ViewableData {
 	 * so it is recommended to use the $class argument
 	 * when invoking this method.
 	 *
-	 * @param String $limitToClass
+	 * @param string $limitToClass
 	 * @return array|null
 	 */
 	public function allowedActions($limitToClass = null) {
