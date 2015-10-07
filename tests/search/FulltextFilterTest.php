@@ -45,9 +45,9 @@ class FulltextFilterTest extends SapphireTest {
 		$filter1->setModel('FulltextFilterTest_DataObject');
 		$query1 = FulltextFilterTest_DataObject::get()->dataQuery();
 		$filter1->apply($query1);
-		$this->assertNotEquals('"ColumnA", "ColumnB"', $filter1->getDbName());
+		$this->assertNotEquals('"ColumnA","ColumnB"', $filter1->getDbName());
 		$this->assertNotEquals(
-			array("MATCH (\"ColumnA\", \"ColumnB\") AGAINST ('SilverStripe')"),
+			array("MATCH (\"ColumnA\",\"ColumnB\") AGAINST ('SilverStripe')"),
 			$query1->query()->getWhere()
 		);
 
@@ -56,9 +56,9 @@ class FulltextFilterTest extends SapphireTest {
 		$filter1->setModel('FulltextFilterTest_DataObject');
 		$query1 = FulltextFilterTest_DataObject::get()->dataQuery();
 		$filter1->apply($query1);
-		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA", "FulltextFilterTest_DataObject"."ColumnB"', $filter1->getDbName());
+		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA","FulltextFilterTest_DataObject"."ColumnB"', $filter1->getDbName());
 		$this->assertEquals(
-			array("MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\", \"FulltextFilterTest_DataObject\".\"ColumnB\") AGAINST ('SilverStripe')"),
+			array("MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\",\"FulltextFilterTest_DataObject\".\"ColumnB\") AGAINST ('SilverStripe')"),
 			$query1->query()->getWhere()
 		);
 
@@ -67,9 +67,9 @@ class FulltextFilterTest extends SapphireTest {
 		$filter2->setModel('FulltextFilterTest_DataObject');
 		$query2 = FulltextFilterTest_DataObject::get()->dataQuery();
 		$filter2->apply($query2);
-		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnC", "FulltextFilterTest_DataObject"."ColumnD"', $filter2->getDbName());
+		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnC","FulltextFilterTest_DataObject"."ColumnD"', $filter2->getDbName());
 		$this->assertEquals(
-			array("MATCH (\"FulltextFilterTest_DataObject\".\"ColumnC\", \"FulltextFilterTest_DataObject\".\"ColumnD\") AGAINST ('SilverStripe')"),
+			array("MATCH (\"FulltextFilterTest_DataObject\".\"ColumnC\",\"FulltextFilterTest_DataObject\".\"ColumnD\") AGAINST ('SilverStripe')"),
 			$query2->query()->getWhere()
 		);
 
