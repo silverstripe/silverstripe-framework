@@ -362,7 +362,9 @@ class DropdownField extends FormField {
 	 */
 	public function castedCopy($classOrCopy) {
 		$field = parent::castedCopy($classOrCopy);
-		$field->setHasEmptyDefault($this->getHasEmptyDefault());
+		if(method_exists($field, 'setHasEmptyDefault')) {
+			$field->setHasEmptyDefault($this->getHasEmptyDefault());
+		}
 		return $field;
 	}
 }
