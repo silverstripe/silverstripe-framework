@@ -312,7 +312,7 @@ class FieldList extends ArrayList {
 	 * Returns a named field.
 	 * You can use dot syntax to get fields from child composite fields
 	 *
-	 * @todo Implement similiarly to dataFieldByName() to support nested sets - or merge with dataFields()
+	 * @todo Implement similarly to dataFieldByName() to support nested sets - or merge with dataFields()
 	 */
 	public function fieldByName($name) {
 		$name = $this->rewriteTabPath($name);
@@ -356,6 +356,7 @@ class FieldList extends ArrayList {
 	 *
 	 * @param string $name Name of the field to insert before
 	 * @param FormField $item The form field to insert
+	 * @return FormField|false
 	 */
 	public function insertBefore($name, $item) {
 		// Backwards compatibility for order of arguments
@@ -385,6 +386,7 @@ class FieldList extends ArrayList {
 	 *
 	 * @param string $name Name of the field to insert after
 	 * @param FormField $item The form field to insert
+	 * @return FormField|false
 	 */
 	public function insertAfter($name, $item) {
 		// Backwards compatibility for order of arguments
