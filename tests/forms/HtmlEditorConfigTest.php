@@ -75,8 +75,8 @@ class HtmlEditorConfigTest extends SapphireTest {
 		HtmlEditorConfig::require_js();
 		$js = Requirements::get_custom_scripts();
 
-		$this->assertContains('tinymce.PluginManager.load("plugin1", "/mypath/plugin1");', $js);
-		$this->assertContains('tinymce.PluginManager.load("plugin2", "/mypath/plugin2");', $js);
+		$this->assertContains('tinymce.PluginManager.load("plugin1", "/mypath/plugin1");', $js['htmlEditorConfig']);
+		$this->assertContains('tinymce.PluginManager.load("plugin2", "/mypath/plugin2");', $js['htmlEditorConfig']);
 	}
 
 	public function testRequireJSIncludesAllConfigs() {
@@ -86,7 +86,7 @@ class HtmlEditorConfigTest extends SapphireTest {
 		HtmlEditorConfig::require_js();
 		$js = Requirements::get_custom_scripts();
 
-		$this->assertContains('"configA":{', $js);
-		$this->assertContains('"configB":{', $js);
+		$this->assertContains('"configA":{', $js['htmlEditorConfig']);
+		$this->assertContains('"configB":{', $js['htmlEditorConfig']);
 	}
 }

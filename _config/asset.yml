@@ -25,3 +25,7 @@ Injector:
     type: prototype
   # Image mechanism
   Image_Backend: GDBackend
+  GeneratedAssetHandler:
+    class: SilverStripe\Filesystem\Storage\CacheGeneratedAssetHandler
+    properties:
+      AssetStore: '%$AssetStore'
