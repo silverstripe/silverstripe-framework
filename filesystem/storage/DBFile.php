@@ -15,7 +15,7 @@ use SilverStripe\Filesystem\Storage\AssetStore;
  * @property string $Variant Variant of the file
  *
  * @package framework
- * @subpackage model
+ * @subpackage filesystem
  */
 class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandler {
 
