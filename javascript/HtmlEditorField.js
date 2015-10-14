@@ -1296,7 +1296,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					'width' : width ? parseInt(width, 10) : null,
 					'height' : height ? parseInt(height, 10) : null,
 					'title' : this.find(':input[name=Title]').val(),
-					'class' : this.find(':input[name=CSSClass]').val()
+					'class' : this.find(':input[name=CSSClass]').val(),
+					'data-fileid' : this.find(':input[name=FileID]').val()
 				};
 			},
 			getExtraData: function() {
@@ -1379,6 +1380,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find(':input[name=Width]').val(node.width());
 				this.find(':input[name=Height]').val(node.height());
 				this.find(':input[name=CaptionText]').val(node.siblings('.caption:first').text());
+				this.find(':input[name=FileID]').val(node.data('fileid'));
 			}
 		});
 
@@ -1394,7 +1396,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				return {
 					'src' : this.find(':input[name=URL]').val(),
 					'width' : width ? parseInt(width, 10) : null,
-					'height' : height ? parseInt(height, 10) : null
+					'height' : height ? parseInt(height, 10) : null,
+					'data-fileid' : this.find(':input[name=FileID]').val()
 				};
 			},
 			getHTML: function() {
@@ -1431,7 +1434,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					'height' : height ? parseInt(height, 10) : null,
 					'class' : this.find(':input[name=CSSClass]').val(),
 					'alt' : this.find(':input[name=AltText]').val(),
-					'title' : this.find(':input[name=Title]').val()
+					'title' : this.find(':input[name=Title]').val(),
+					'data-fileid' : this.find(':input[name=FileID]').val()
 				};
 			},
 			getExtraData: function() {
@@ -1471,6 +1475,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find(':input[name=Height]').val(node.height());
 				this.find(':input[name=Title]').val(node.attr('title'));
 				this.find(':input[name=CSSClass]').val(node.data('cssclass'));
+				this.find(':input[name=FileID]').val(node.data('fileid'));
 			}
 		});
 

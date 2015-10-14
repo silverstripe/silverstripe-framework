@@ -161,12 +161,15 @@ class SS_Backtrace {
 	/**
 	 * Render a backtrace array into an appropriate plain-text or HTML string.
 	 *
-	 * @param string $bt The trace array, as returned by debug_backtrace() or Exception::getTrace()
+	 * @param array $bt The trace array, as returned by debug_backtrace() or Exception::getTrace()
 	 * @param boolean $plainText Set to false for HTML output, or true for plain-text output
 	 * @param array List of functions that should be ignored. If not set, a default is provided
 	 * @return string The rendered backtrace
 	 */
 	public static function get_rendered_backtrace($bt, $plainText = false, $ignoredFunctions = null) {
+		if(empty($bt)) {
+			return '';
+		}
 		$bt = self::filter_backtrace($bt, $ignoredFunctions);
 		$result = ($plainText) ? '' : '<ul>';
 		foreach($bt as $item) {

@@ -52,22 +52,22 @@ class FlysystemAssetStore implements AssetStore {
 		return $this->filesystem;
 	}
 
-	public function getAsStream($hash, $filename, $variant = null) {
-		$fileID = $this->getFileID($hash, $filename, $variant);
+	public function getAsStream($filename, $hash, $variant = null) {
+		$fileID = $this->getFileID($filename, $hash, $variant);
 		return $this->getFilesystem()->readStream($fileID);
 	}
 
-	public function getAsString($hash, $filename, $variant = null) {
-		$fileID = $this->getFileID($hash, $filename, $variant);
+	public function getAsString($filename, $hash, $variant = null) {
+		$fileID = $this->getFileID($filename, $hash, $variant);
 		return $this->getFilesystem()->read($fileID);
 	}
 
-	public function getAsURL($hash, $filename, $variant = null) {
-		$fileID = $this->getFileID($hash, $filename, $variant);
+	public function getAsURL($filename, $hash, $variant = null) {
+		$fileID = $this->getFileID($filename, $hash, $variant);
 		return $this->getFilesystem()->getPublicUrl($fileID);
 	}
 
-	public function setFromLocalFile($path, $filename = null, $conflictResolution = null) {		
+	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $conflictResolution = null) {
 		// Validate this file exists
 		if(!file_exists($path)) {
 			throw new InvalidArgumentException("$path does not exist");
@@ -91,28 +91,36 @@ class FlysystemAssetStore implements AssetStore {
 			return $result;
 		};
 
+		// When saving original filename, generate hash
+		if(!$variant) {
+			$hash = sha1_file($path);
+		}
+
 		// Submit to conflict check
-		$hash = sha1_file($path);
-		return $this->writeWithCallback($callback, $hash, $filename, $conflictResolution);
+		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution);
 	}
 
-	public function setFromString($data, $filename, $conflictResolution = null) {
+	public function setFromString($data, $filename, $hash = null, $variant = null, $conflictResolution = null) {
 		// Callback for saving content
 		$filesystem = $this->getFilesystem();
 		$callback = function($fileID) use ($filesystem, $data) {
 			return $filesystem->put($fileID, $data);
 		};
 
+		// When saving original filename, generate hash
+		if(!$variant) {
+			$hash = sha1($data);
+		}
+
 		// Submit to conflict check
-		$hash = sha1($data);
-		return $this->writeWithCallback($callback, $hash, $filename, $conflictResolution);
+		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution);
 	}
 
-	public function setFromStream($stream, $filename, $conflictResolution = null) {
+	public function setFromStream($stream, $filename, $hash = null, $variant = null, $conflictResolution = null) {
 		// If the stream isn't rewindable, write to a temporary filename
 		if(!$this->isSeekableStream($stream)) {
 			$path = $this->getStreamAsFile($stream);
-			$result = $this->setFromLocalFile($path, $filename, $conflictResolution);
+			$result = $this->setFromLocalFile($path, $filename, $hash, $variant, $conflictResolution);
 			unlink($path);
 			return $result;
 		}
@@ -123,9 +131,13 @@ class FlysystemAssetStore implements AssetStore {
 			return $filesystem->putStream($fileID, $stream);
 		};
 
+		// When saving original filename, generate hash
+		if(!$variant) {
+			$hash = $this->getStreamSHA1($stream);
+		}
+
 		// Submit to conflict check
-		$hash = $this->getStreamSHA1($stream);
-		return $this->writeWithCallback($callback, $hash, $filename, $conflictResolution);
+		return $this->writeWithCallback($callback, $filename, $hash, $variant, $conflictResolution);
 	}
 
 	/**
@@ -180,50 +192,102 @@ class FlysystemAssetStore implements AssetStore {
 	 * the storage request is approved.
 	 *
 	 * @param callable $callback Will be invoked and passed a fileID if the file should be stored
-	 * @param string $hash SHA1 of the file content
 	 * @param string $filename Name for the resulting file
+	 * @param string $hash SHA1 of the original file content
+	 * @param string $variant Variant to write
 	 * @param string $conflictResolution {@see AssetStore}. Will default to one chosen by the backend
 	 * @return array Tuple associative array (Filename, Hash, Variant)
 	 * @throws Exception
 	 */
-	protected function writeWithCallback($callback, $hash, $filename, $conflictResolution = null) {
+	protected function writeWithCallback($callback, $filename, $hash, $variant = null, $conflictResolution = null) {
+		// Set default conflict resolution
+		if(!$conflictResolution) {
+			$conflictResolution = $this->getDefaultConflictResolution($variant);
+		}
+		
+		// Validate parameters
+		if($variant && $conflictResolution === AssetStore::CONFLICT_RENAME) {
+			// As variants must follow predictable naming rules, they should not be dynamically renamed
+			throw new InvalidArgumentException("Rename cannot be used when writing variants");
+		}
+		if(!$filename) {
+			throw new InvalidArgumentException("Filename is missing");
+		}
+		if(!$hash) {
+			throw new InvalidArgumentException("File hash is missing");
+		}
+
 		$filename = $this->cleanFilename($filename);
-		$fileID = $this->getFileID($hash, $filename);
+		$fileID = $this->getFileID($filename, $hash, $variant);
 
 		// Check conflict resolution scheme
 		$resolvedID = $this->resolveConflicts($conflictResolution, $fileID);
-		if($resolvedID === false) {
-			// If defering to the existing file, return the sha of the existing file
-			$stream = $this
-				->getFilesystem()
-				->readStream($fileID);
-			$hash = $this->getStreamSHA1($stream);
-		} else {
+		if($resolvedID !== false) {
 			// Submit and validate result
 			$result = $callback($resolvedID);
 			if(!$result) {
 				throw new Exception("Could not save {$filename}");
 			}
-			
+
 			// in case conflict resolution renamed the file, return the renamed
 			$filename = $this->getOriginalFilename($resolvedID);
+			
+		} elseif(empty($variant)) {
+			// If defering to the existing file, return the sha of the existing file,
+			// unless we are writing a variant (which has the same hash value as its original file)
+			$stream = $this
+				->getFilesystem()
+				->readStream($fileID);
+			$hash = $this->getStreamSHA1($stream);
 		}
 
 		return array(
-			'Hash' => $hash,
 			'Filename' => $filename,
-			'Variant' => ''
+			'Hash' => $hash,
+			'Variant' => $variant
 		);
 	}
 
-	public function getMetadata($hash, $filename, $variant = null) {
-		$fileID = $this->getFileID($hash, $filename, $variant);
+	/**
+	 * Choose a default conflict resolution
+	 *
+	 * @param string $variant
+	 * @return string
+	 */
+	protected function getDefaultConflictResolution($variant) {
+		// If using new naming scheme (segment by hash) it's normally safe to overwrite files.
+		// Variants are also normally safe to overwrite, since lazy-generation is implemented at a higher level.
+		$legacy = $this->useLegacyFilenames();
+		if(!$legacy || $variant) {
+			return AssetStore::CONFLICT_OVERWRITE;
+		}
+		
+		// Legacy behaviour is to rename
+		return AssetStore::CONFLICT_RENAME;
+	}
+
+	/**
+	 * Determine if legacy filenames should be used. These do not have hash path parts.
+	 *
+	 * @return bool
+	 */
+	protected function useLegacyFilenames() {
+		return Config::inst()->get(get_class($this), 'legacy_filenames');
+	}
+
+	public function getMetadata($filename, $hash, $variant = null) {
+		$fileID = $this->getFileID($filename, $hash, $variant);
 		return $this->getFilesystem()->getMetadata($fileID);
 	}
 
-	public function getMimeType($hash, $filename, $variant = null) {
-		$fileID = $this->getFileID($hash, $filename, $variant);
+	public function getMimeType($filename, $hash, $variant = null) {
+		$fileID = $this->getFileID($filename, $hash, $variant);
 		return $this->getFilesystem()->getMimetype($fileID);
+	}
+
+	public function exists($filename, $hash, $variant = null) {
+		$fileID = $this->getFileID($filename, $hash, $variant);
+		return $this->getFilesystem()->has($fileID);
 	}
 
 	/**
@@ -231,7 +295,7 @@ class FlysystemAssetStore implements AssetStore {
 	 * 
 	 * @param string $conflictResolution
 	 * @param string $fileID
-	 * @return string|false Safe filename to write to. If false, then don't write.
+	 * @return string|false Safe filename to write to. If false, then don't write, and use existing file.
 	 * @throws Exception
 	 */
 	protected function resolveConflicts($conflictResolution, $fileID) {
@@ -265,7 +329,7 @@ class FlysystemAssetStore implements AssetStore {
 				throw new \InvalidArgumentException("File could not be renamed with path {$fileID}");
 			}
 
-			// Default to use existing file
+			// Use existing file
 			case AssetStore::CONFLICT_USE_EXISTING:
 			default: {
 				return false;
@@ -312,12 +376,16 @@ class FlysystemAssetStore implements AssetStore {
 			$variant = $matches['variant'];
 		}
 
-		// Remove hash
-		return preg_replace(
-			'/(?<hash>[a-zA-Z0-9]{10}\\/)(?<name>[^\\/]+)$/',
-			'$2',
-			$original
-		);
+		// Remove hash (unless using legacy filenames, without hash)
+		if($this->useLegacyFilenames()) {
+			return $original;
+		} else {
+			return preg_replace(
+				'/(?<hash>[a-zA-Z0-9]{10}\\/)(?<name>[^\\/]+)$/',
+				'$2',
+				$original
+			);
+		}
 	}
 
 	/**
@@ -325,12 +393,12 @@ class FlysystemAssetStore implements AssetStore {
 	 *
 	 * The resulting file will look something like my/directory/EA775CB4D4/filename__variant.jpg
 	 *
-	 * @param string $hash
 	 * @param string $filename Name of file
+	 * @param string $hash Hash of original file
 	 * @param string $variant (if given)
 	 * @return string Adaptor specific identifier for this file/version
 	 */
-	protected function getFileID($hash, $filename, $variant = null) {
+	protected function getFileID($filename, $hash, $variant = null) {
 		// Since we use double underscore to delimit variants, eradicate them from filename
 		$filename = $this->cleanFilename($filename);
 		$name = basename($filename);

@@ -14,8 +14,27 @@ use League\Flysystem\Adapter\Local;
  */
 class AssetAdapter extends Local {
 
+	/**
+	 * Config compatible permissions configuration
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $file_permissions = array(
+		'file' => [
+            'public' => 0744,
+            'private' => 0700,
+        ],
+        'dir' => [
+            'public' => 0755,
+            'private' => 0700,
+        ]
+	);
+
 	public function __construct($root = null, $writeFlags = LOCK_EX, $linkHandling = self::DISALLOW_LINKS) {
-		parent::__construct($root ?: ASSETS_PATH, $writeFlags, $linkHandling);
+		// Override permissions with config
+		$permissions = \Config::inst()->get(get_class($this), 'file_permissions');
+		parent::__construct($root ?: ASSETS_PATH, $writeFlags, $linkHandling, $permissions);
 	}
 
 	/**

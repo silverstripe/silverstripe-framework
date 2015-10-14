@@ -31,8 +31,11 @@ Object::useCustomClass('Datetime',   'SS_Datetime', true);
  */
 define('MCE_ROOT', FRAMEWORK_DIR . '/thirdparty/tinymce/');
 
-ShortcodeParser::get('default')->register('file_link', array('File', 'link_shortcode_handler'));
-ShortcodeParser::get('default')->register('embed', array('Oembed', 'handle_shortcode'));
+ShortcodeParser::get('default')
+	->register('file_link', array('File', 'handle_shortcode'))
+	->register('embed', array('Oembed', 'handle_shortcode'));
+// @todo
+//	->register('dbfile_link', array('DBFile', 'handle_shortcode'))
 
 // Zend_Cache temp directory setting
 $_ENV['TMPDIR'] = TEMP_FOLDER; // for *nix

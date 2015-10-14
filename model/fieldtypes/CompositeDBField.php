@@ -128,10 +128,9 @@ abstract class CompositeDBField extends DBField {
 	 * If $record is assigned to a dataobject, this field becomes a loose wrapper over
 	 * the records on that object instead.
 	 *
-	 * @param type $value
+	 * @param mixed $value
 	 * @param DataObject $record
-	 * @param type $markChanged
-	 * @return type
+	 * @param bool $markChanged
 	 */
 	public function setValue($value, $record = null, $markChanged = true) {
 		$this->isChanged = $markChanged;

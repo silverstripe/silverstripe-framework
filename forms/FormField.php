@@ -1260,4 +1260,24 @@ class FormField extends RequestHandler {
 		return $field;
 	}
 
+	/**
+	 * Determine if escaping of this field should be disabled
+	 *
+	 * @param bool $dontEscape
+	 * @return $this
+	 */
+	public function setDontEscape($dontEscape) {
+		$this->dontEscape = $dontEscape;
+		return $this;
+	}
+
+	/**
+	 * Determine if escaping is disabled
+	 *
+	 * @return bool
+	 */
+	public function getDontEscape() {
+		return $this->dontEscape;
+	}
+
 }

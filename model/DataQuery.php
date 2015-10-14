@@ -353,7 +353,9 @@ class DataQuery {
 	}
 
 	/**
-	 * Execute the query and return the result as {@link Query} object.
+	 * Execute the query and return the result as {@link SS_Query} object.
+	 *
+	 * @return SS_Query
 	 */
 	public function execute() {
 		return $this->getFinalisedQuery()->execute();

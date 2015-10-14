@@ -1,15 +1,19 @@
-DataDifferencerTest_MockImage:
-   image1:
-      Filename: framework/tests/model/testimages/test_image.png
-   image2:
-      Filename: framework/tests/model/testimages/test.image.with.dots.png
+Image:
+  image1:
+    FileFilename: test-image.png
+    FileHash: 444065542b5dd5187166d8e1cd684e0d724c5a97
+    Name: test-image.png
+  image2:
+    FileFilename: test.image.with.dots.png
+    FileHash: 46affab7043cfd9f1ded919dd24affd08e926eca
+    Name: test.image.with.dots.png
 DataDifferencerTest_HasOneRelationObject:
-   relobj1:
-      Title: obj1
-   relobj2:
-      Title: obj2
+  relobj1:
+    Title: obj1
+  relobj2:
+    Title: obj2
 DataDifferencerTest_Object:
-   obj1:
-      Choices: a,b
-      Image: =>DataDifferencerTest_MockImage.image1
-      HasOneRelation: =>DataDifferencerTest_HasOneRelationObject.relobj1
+  obj1:
+    Choices: a,b
+    Image: =>Image.image1
+    HasOneRelation: =>DataDifferencerTest_HasOneRelationObject.relobj1

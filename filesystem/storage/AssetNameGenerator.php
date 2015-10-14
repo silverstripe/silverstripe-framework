@@ -19,4 +19,11 @@ interface AssetNameGenerator extends \Iterator {
 	 * @param string $filename
 	 */
 	public function __construct($filename);
+
+	/**
+	 * Number of attempts allowed
+	 *
+	 * @return int
+	 */
+	public function getMaxTries();
 }

@@ -2,7 +2,9 @@ summary: Learn how to crop and resize images in templates and PHP code
 
 # Image
 
-Represents an image object through the `[api:Image]` class, inheriting all base functionality from the `[api:File]` class with extra functionality including resizing.
+Image files can be stored either through the `[api:Image]` dataobject, or though `[api:DBFile]` fields.
+In either case, the same image resizing and manipulation functionality is available though the common
+`[api:ImageManipulation]` trait.
 
 ## Usage
 
@@ -38,6 +40,9 @@ Here are some examples, assuming the `$Image` object has dimensions of 200x100px
 	$Image.ScaleMaxHeight(150) // Returns a 200x100px image (like ScaleHeight but prevents up-sampling)
 	$Image.Fit(300,300) // Returns an image that fits within a 300x300px boundary, resulting in a 300x150px image (up-sampled)
 	$Image.FitMax(300,300) // Returns a 200x100px image (like Fit but prevents up-sampling)
+
+	// Warning: This method can distort images that are not the correct aspect ratio
+	$Image.ResizedImage(200, 300) // Forces dimensions of this image to the given values.
 	
 	// Cropping functions
 	$Image.Fill(150,150) // Returns a 150x150px image resized and cropped to fill specified dimensions (up-sampled)
@@ -70,11 +75,11 @@ The image manipulation functions can be used in your code with the same names, e
 
 Some of the MetaData functions need to be prefixed with 'get', example `getHeight()`, `getOrientation()` etc.
 
-Please refer to the `[api:Image]` API documentation for specific functions.
+Please refer to the `[api:ImageManipulation]` API documentation for specific functions.
 
 ### Creating custom image functions
 
-You can also create your own functions by extending the image class, for example
+You can also create your own functions by decorating the `Image` class.
 
 	:::php
 	class MyImage extends DataExtension {
@@ -88,23 +93,31 @@ You can also create your own functions by extending the image class, for example
 		}
 		
 		public function PerfectSquare()	{
-			return $this->owner->getFormattedImage('PerfectSquare');
-		}
-		
-		public function generatePerfectSquare(Image_Backend $backend)	{
-			return $backend->croppedResize(100,100);
+			$variant = $this->owner->variantName(__FUNCTION__);
+			return $this->owner->manipulateImage($variant, function(Image_Backend $backend) {
+				return $backend->croppedResize(100,100);
+			});
 		}
 		
 		public function Exif(){
 			//http://www.v-nessa.net/2010/08/02/using-php-to-extract-image-exif-data
-			$image = $this->owner->AbsoluteLink();
-			$d=new ArrayList();	
+			$mime = $this->owner->getMimeType();
+			$content = $this->owner->getAsString();
+			$image = "data://{$mime};base64," . base64_encode($content);
+			$d = new ArrayList();
 			$exif = exif_read_data($image, 0, true);
 			foreach ($exif as $key => $section) {
-				$a=new ArrayList();	
-				foreach ($section as $name => $val)
-					$a->push(new ArrayData(array("Title"=>$name,"Content"=>$val)));
-				$d->push(new ArrayData(array("Title"=>strtolower($key),"Content"=>$a)));
+				$a = new ArrayList();	
+				foreach ($section as $name => $val) {
+					$a->push(new ArrayData(array(
+						"Title"=>$name,
+						"Content"=>$val
+					)));
+				}
+				$d->push(new ArrayData(array(
+					"Title"=>strtolower($key),
+					"Content"=>$a
+				)));
 			}
 			return $d;
 		}
@@ -112,6 +125,9 @@ You can also create your own functions by extending the image class, for example
 
 	:::yml
 	Image:
+	  extensions:
+	    - MyImage
+	DBFile:
 	  extensions:
 	    - MyImage
 
@@ -140,7 +156,11 @@ always produce resampled output by adding this to your
 mysite/config/config.yml file:
 
 	:::yml
-	Image:
+	# Configure resampling for File dataobject
+	File:
+	  force_resample: true
+	# DBFile can be configured independently
+	DBFile:
 	  force_resample: true
 
 If you are intending to resample images with SilverStripe it is good practice
@@ -148,16 +168,9 @@ to upload high quality (minimal compression) images as these will produce
 better results when resampled. Very high resolution images may cause GD to
 crash so a good size for website images is around 2000px on the longest edge.
 
-### Clearing Thumbnail Cache
-
-Images are (like all other Files) synchronized with the SilverStripe database.
-This syncing happens whenever you load the "Files & Images" interface,
-and whenever you upload or modify an Image through SilverStripe.
-
-If you encounter problems with images not appearing, or have mysteriously 
-disappeared, you can try manually flushing the image cache.
-
-	http://localhost/dev/tasks/FlushGeneratedImagesTask
-
 ## API Documentation
-`[api:Image]`
+
+ * `[api:File]`
+ * `[api:Image]`
+ * `[api:DBFile]`
+ * `[api:ImageManipulation]`
