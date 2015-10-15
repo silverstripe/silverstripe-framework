@@ -74,41 +74,14 @@ class HtmlEditorField extends TextareaField {
 			);
 		}
 
-		$htmlValue = Injector::inst()->create('HTMLValue', $this->value);
+		// Resample images
+		$value = Image::regenerate_html_links($this->value);
+		$htmlValue = Injector::inst()->create('HTMLValue', $value);
 
 		// Sanitise if requested
 		if($this->config()->sanitise_server_side) {
 			$santiser = Injector::inst()->create('HtmlEditorSanitiser', HtmlEditorConfig::get_active());
 			$santiser->sanitise($htmlValue);
-		}
-
-		// Resample images and add default attributes
-		if($images = $htmlValue->getElementsByTagName('img')) foreach($images as $img) {
-			// strip any ?r=n data from the src attribute
-			$img->setAttribute('src', preg_replace('/([^\?]*)\?r=[0-9]+$/i', '$1', $img->getAttribute('src')));
-
-			// Resample the images if the width & height have changed.
-			$fileID = $img->getAttribute('data-fileid');
-			if($fileID && ($image = File::get()->byID($fileID))) {
-				$width  = (int)$img->getAttribute('width');
-				$height = (int)$img->getAttribute('height');
-
-				if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
-					//Make sure that the resized image actually returns an image:
-					$resized = $image->ResizedImage($width, $height);
-					if($resized) {
-						$img->setAttribute('src', $resized->getURL());
-					}
-				}
-			}
-
-			// Add default empty title & alt attributes.
-			if(!$img->getAttribute('alt')) $img->setAttribute('alt', '');
-			if(!$img->getAttribute('title')) $img->setAttribute('title', '');
-
-			// Use this extension point to manipulate images inserted using TinyMCE, e.g. add a CSS class, change default title
-			// $image is the image, $img is the DOM model
-			$this->extend('processImage', $image, $img);
 		}
 
 		// optionally manipulate the HTML after a TinyMCE edit and prior to a save

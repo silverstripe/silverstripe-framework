@@ -559,10 +559,13 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 			$pathAfter = $result['Filename'];
 			$this->setFilename($pathAfter);
 		}
-
-		// Update any database references
-		$this->updateLinks($pathBefore, $pathAfter);
 		return true;
+	}
+
+	protected function onAfterWrite() {
+		parent::onAfterWrite();
+		// Update any database references
+		$this->updateLinks();
 	}
 
 	/**
@@ -640,11 +643,12 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	}
 
 	/**
-	 * @param String $old File path relative to the webroot
-	 * @param String $new File path relative to the webroot
+	 * Trigger update of all links to this file
+	 *
+	 * If CMS Module is installed, {@see SiteTreeFileExtension::updateLinks}
 	 */
-	protected function updateLinks($old, $new) {
-		$this->extend('updateLinks', $old, $new);
+	protected function updateLinks() {
+		$this->extend('updateLinks');
 	}
 
 	/**

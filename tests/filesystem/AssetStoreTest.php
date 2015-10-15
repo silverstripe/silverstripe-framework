@@ -432,7 +432,18 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 		self::$basedir = $basedir;
 
 		// Ensure basedir exists
-		SS_Filesystem::makeFolder(ASSETS_PATH . '/' . self::$basedir);
+		SS_Filesystem::makeFolder(self::base_path());
+	}
+
+	/**
+	 * Get absolute path to basedir
+	 *
+	 * @return string
+	 */
+	public static function base_path() {
+		if(self::$basedir) {
+			return ASSETS_PATH . '/' . self::$basedir;
+		}
 	}
 
 	/**
@@ -440,7 +451,7 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 	 */
 	public static function reset() {
 		if(self::$basedir) {
-			$path = ASSETS_PATH . '/' . self::$basedir;
+			$path = self::base_path();
 			if(file_exists($path)) {
 				SS_Filesystem::removeFolder($path);
 			}
@@ -456,7 +467,7 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 	 */
 	public static function getLocalPath(AssetContainer $asset) {
 		if($asset instanceof Folder) {
-			return ASSETS_PATH . '/' . self::$basedir . '/' . $asset->getFilename();
+			return self::base_path() . '/' . $asset->getFilename();
 		}
 		return BASE_PATH . $asset->getUrl();
 	}
