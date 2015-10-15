@@ -129,7 +129,7 @@ class MySQLDatabase extends SS_Database {
 				MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$keywords' $boolean)
 				+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityKeywords' $boolean)
 			";
-			$match['File'] = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
+			$match['File'] = "MATCH (Name, Title) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
 
 			// We make the relevance search by converting a boolean mode search into a normal one
 			$relevanceKeywords = str_replace(array('*', '+', '-'), '', $keywords);
@@ -137,7 +137,7 @@ class MySQLDatabase extends SS_Database {
 			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
 					. "AGAINST ('$relevanceKeywords') "
 					. "+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";
-			$relevance['File'] = "MATCH (Filename, Title, Content) AGAINST ('$relevanceKeywords')";
+			$relevance['File'] = "MATCH (Name, Title) AGAINST ('$relevanceKeywords')";
 		} else {
 			$relevance['SiteTree'] = $relevance['File'] = 1;
 			$match['SiteTree'] = $match['File'] = "1 = 1";
@@ -157,14 +157,14 @@ class MySQLDatabase extends SS_Database {
 				"ClassName", "$baseClasses[SiteTree].\"ID\"", "ParentID",
 				"Title", "MenuTitle", "URLSegment", "Content",
 				"LastEdited", "Created",
-				"Filename" => "_utf8''", "Name" => "_utf8''",
+				"Name" => "_utf8''",
 				"Relevance" => $relevance['SiteTree'], "CanViewType"
 			),
 			'File' => array(
 				"ClassName", "$baseClasses[File].\"ID\"", "ParentID" => "_utf8''",
-				"Title", "MenuTitle" => "_utf8''", "URLSegment" => "_utf8''", "Content",
+				"Title", "MenuTitle" => "_utf8''", "URLSegment" => "_utf8''", "Content" => "_utf8''",
 				"LastEdited", "Created",
-				"Filename", "Name",
+				"Name",
 				"Relevance" => $relevance['File'], "CanViewType" => "NULL"
 			),
 		);
