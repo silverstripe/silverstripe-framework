@@ -1,9 +1,9 @@
 <?php
 
-require_once 'thirdparty/spyc/spyc.php';
+use Symfony\Component\Yaml\Parser;
 
 /**
- * Uses the Spyc library to parse a YAML document (see http://yaml.org).
+ * Uses Symfony's YAML component to parse a YAML document (see http://yaml.org).
  * YAML is a simple markup languages that uses tabs and colons instead of the more verbose XML tags, 
  * and because of this much better for developers creating files by hand.
  * 
@@ -64,8 +64,6 @@ require_once 'thirdparty/spyc/spyc.php';
  * 
  * @package framework
  * @subpackage core
- * 
- * @see http://code.google.com/p/spyc/
  */
 class YamlFixture extends Object {
 
@@ -125,11 +123,16 @@ class YamlFixture extends Object {
 	 * @param  FixtureFactory $factory
 	 */
 	public function writeInto(FixtureFactory $factory) {
-		$parser = new Spyc();
+		$parser = new Parser();
 		if (isset($this->fixtureString)) {
-			$fixtureContent = $parser->load($this->fixtureString);
+			$fixtureContent = $parser->parse($this->fixtureString);
 		} else {
-			$fixtureContent = $parser->loadFile($this->fixtureFile);
+			if (!file_exists($this->fixtureFile)) return;
+
+			$contents = file_get_contents($this->fixtureFile);
+			$fixtureContent = $parser->parse($contents);
+
+			if (!$fixtureContent) return;
 		}
 
 		foreach($fixtureContent as $class => $items) {
