@@ -80,11 +80,18 @@ class UploadField extends FileField {
 	/**
 	 * Config for this field used in the front-end javascript
 	 * (will be merged into the config of the javascript file upload plugin).
-	 * See framework/_config/uploadfield.yml for configuration defaults and documentation.
 	 *
 	 * @var array
 	 */
-	protected $ufConfig = array(
+	protected $ufConfig = array();
+
+	/**
+	 * Front end config defaults
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $defaultConfig = array(
 		/**
 		 * Automatically upload the file once selected
 		 *
@@ -212,7 +219,7 @@ class UploadField extends FileField {
 		$this->addExtraClass('ss-upload'); // class, used by js
 		$this->addExtraClass('ss-uploadfield'); // class, used by css for uploadfield only
 
-		$this->ufConfig = array_merge($this->ufConfig, self::config()->defaultConfig);
+		$this->ufConfig = self::config()->defaultConfig;
 
 		parent::__construct($name, $title);
 
@@ -903,17 +910,6 @@ class UploadField extends FileField {
 			parent::getAttributes(),
 			array('data-selectdialog-url', $this->Link('select'))
 		);
-	}
-
-	public function extraClass() {
-		if($this->isDisabled()) {
-			$this->addExtraClass('disabled');
-		}
-		if($this->isReadonly()) {
-			$this->addExtraClass('readonly');
-		}
-		
-		return parent::extraClass();
 	}
 
 	public function Field($properties = array()) {

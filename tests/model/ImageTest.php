@@ -31,7 +31,7 @@ class ImageTest extends SapphireTest {
 		// Copy test images for each of the fixture references
 		$files = File::get()->exclude('ClassName', 'Folder');
 		foreach($files as $image) {
-			$filePath = BASE_PATH . $image->getURL(); // Only correct for test asset store
+			$filePath = AssetStoreTest_SpyStore::getLocalPath($image); // Only correct for test asset store
 			$sourcePath = BASE_PATH . '/framework/tests/model/testimages/' . $image->Name;
 			if(!file_exists($filePath)) {
 				SS_Filesystem::makeFolder(dirname($filePath));

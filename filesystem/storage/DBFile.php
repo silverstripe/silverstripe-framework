@@ -87,13 +87,12 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		'Title' => 'Varchar',
 		'MimeType' => 'Varchar',
 		'String' => 'Text',
-		'Tag' => 'HTMLText'
+		'Tag' => 'HTMLText',
+		'Size' => 'Varchar'
 	);
 
 	public function scaffoldFormField($title = null, $params = null) {
-		return null;
-		// @todo
-		//return new AssetUploadField($this->getName(), $title);
+		return AssetField::create($this->getName(), $title);
 	}
 
 	/**
@@ -241,13 +240,11 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 
 	/**
 	 * Get URL, but without resampling.
+	 * Note that this will return the url even if the file does not exist.
 	 *
 	 * @return string
 	 */
 	public function getSourceURL() {
-		if(!$this->exists()) {
-			return null;
-		}
 		return $this
 			->getStore()
 			->getAsURL($this->Filename, $this->Hash, $this->Variant);
@@ -294,7 +291,12 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 	}
 
 	public function exists() {
-		return !empty($this->Filename);
+		if(empty($this->Filename)) {
+			return false;
+		}
+		return $this
+			->getStore()
+			->exists($this->Filename, $this->Hash, $this->Variant);
 	}
 
 	public static function get_shortcodes() {
@@ -453,5 +455,19 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		}
 		
 		return parent::setField($field, $value, $markChanged);
+	}
+
+
+	/**
+	 * Returns the size of the file type in an appropriate format.
+	 *
+	 * @return string|false String value, or false if doesn't exist
+	 */
+	public function getSize() {
+		$size = $this->getAbsoluteSize();
+		if($size) {
+			return \File::format_size($size);
+		}
+		return false;
 	}
 }

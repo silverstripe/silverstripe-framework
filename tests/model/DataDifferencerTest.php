@@ -26,7 +26,7 @@ class DataDifferencerTest extends SapphireTest {
 		$files = File::get()->exclude('ClassName', 'Folder');
 		foreach($files as $file) {
 			$fromPath = BASE_PATH . '/framework/tests/model/testimages/' . $file->Name;
-			$destPath = BASE_PATH . $file->getURL(); // Only correct for test asset store
+			$destPath = AssetStoreTest_SpyStore::getLocalPath($file); // Only correct for test asset store
 			SS_Filesystem::makeFolder(dirname($destPath));
 			copy($fromPath, $destPath);
 		}
