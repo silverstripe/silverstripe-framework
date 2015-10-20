@@ -148,7 +148,7 @@ class GridField extends FormField {
 			return $this->modelClassName;
 		}
 
-		if($this->list && method_exists($this->list, 'dataClass')) {
+		if($this->list && $this->list->hasMethod('dataClass')) {
 			$class = $this->list->dataClass();
 
 			if($class) {
