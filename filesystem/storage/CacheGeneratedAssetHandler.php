@@ -105,7 +105,10 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 		$data = $cache->load($cacheID);
 		if($data) {
 			$result = unserialize($data);
-			return $this->validateResult($result, $filename);
+			$valid = $this->validateResult($result, $filename);
+			if($valid) {
+				return $result;
+			}
 		}
 
 		// Regenerate
@@ -127,8 +130,14 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 		if($result) {
 			$cache->save(serialize($result), $cacheID);
 		}
-		
-		return $this->validateResult($result, $filename);
+
+		// Ensure this result is successfully saved
+		$valid = $this->validateResult($result, $filename);
+		if($valid) {
+			return $result;
+		}
+
+		throw new Exception("Error regenerating file \"{$filename}\"");
 	}
 
 	/**
@@ -151,17 +160,16 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 	 *
 	 * @param mixed $result
 	 * @param string $filename
-	 * @return array The result
-	 * @throws Exception
+	 * @return bool True if this $result is valid
 	 */
 	protected function validateResult($result, $filename) {
+		if(!$result) {
+			return false;
+		}
+		
 		// Retrieve URL from tuple
 		$store = $this->getAssetStore();
-		if($result && $store->exists($result['Filename'], $result['Hash'], $result['Variant'])) {
-			return $result;
-		}
-
-		throw new Exception("Error regenerating file \"{$filename}\"");
+		return $store->exists($result['Filename'], $result['Hash'], $result['Variant']);
 	}
 
 }
