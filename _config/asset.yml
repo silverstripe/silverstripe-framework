@@ -29,3 +29,5 @@ Injector:
     class: SilverStripe\Filesystem\Storage\CacheGeneratedAssetHandler
     properties:
       AssetStore: '%$AssetStore'
+  Requirements_Minifier:
+    class: SilverStripe\View\JSMinifier

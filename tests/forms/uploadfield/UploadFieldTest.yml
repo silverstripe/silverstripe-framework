@@ -7,7 +7,7 @@ Folder:
 File:
   file1:
     Title: File1
-    FileFilename: assets/UploadFieldTest/file1.txt
+    FileFilename: UploadFieldTest/file1.txt
     FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
     Name: file1.txt
     Parent: =>Folder.folder1

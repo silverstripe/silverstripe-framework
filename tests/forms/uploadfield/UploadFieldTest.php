@@ -1,7 +1,5 @@
 <?php
 
-use Filesystem as SS_Filesystem;
-
 /**
  * @package framework
  * @subpackage tests
@@ -25,14 +23,14 @@ class UploadFieldTest extends FunctionalTest {
 		// Create a test folders for each of the fixture references
 		foreach(Folder::get() as $folder) {
 			$path = AssetStoreTest_SpyStore::getLocalPath($folder);
-			SS_Filesystem::makeFolder($path);
+			Filesystem::makeFolder($path);
 		}
 
 		// Create a test files for each of the fixture references
 		$files = File::get()->exclude('ClassName', 'Folder');
 		foreach($files as $file) {
 			$path = AssetStoreTest_SpyStore::getLocalPath($file);
-			SS_Filesystem::makeFolder(dirname($path));
+			Filesystem::makeFolder(dirname($path));
 			$fh = fopen($path, "w+");
 			fwrite($fh, str_repeat('x', 1000000));
 			fclose($fh);
@@ -845,7 +843,7 @@ class UploadFieldTest extends FunctionalTest {
 		// Check that uploaded files can be detected
 		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
 		$this->assertFalse($response->isError());
-		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/UploadFieldTest/315ae4c3d4/$tmpFileName");
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/UploadedFiles/315ae4c3d4/$tmpFileName");
 		$responseExists = $this->mockFileExists('NoRelationField', $tmpFileName);
 		$responseExistsData = json_decode($responseExists->getBody());
 		$this->assertFalse($responseExists->isError());
@@ -857,7 +855,7 @@ class UploadFieldTest extends FunctionalTest {
 		$tmpFileNameExpected = 'test-Upload-Bad.txt';
 		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
 		$this->assertFalse($response->isError());
-		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/UploadFieldTest/315ae4c3d4/$tmpFileNameExpected");
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/UploadedFiles/315ae4c3d4/$tmpFileNameExpected");
 		// With original file
 		$responseExists = $this->mockFileExists('NoRelationField', $tmpFileName);
 		$responseExistsData = json_decode($responseExists->getBody());
@@ -1086,49 +1084,49 @@ class UploadFieldTestForm extends Form implements TestOnly {
 			->setFolderName('/');
 
 		$fieldNoRelation = UploadField::create('NoRelationField')
-			->setFolderName('UploadFieldTest');
+			->setFolderName('UploadedFiles');
 
 		$fieldHasOne = UploadField::create('HasOneFile')
-			->setFolderName('UploadFieldTest');
+			->setFolderName('UploadedFiles');
 
 		$fieldHasOneExtendedFile = UploadField::create('HasOneExtendedFile')
-			->setFolderName('UploadFieldTest');
+			->setFolderName('UploadedFiles');
 
 		$fieldHasOneMaxOne = UploadField::create('HasOneFileMaxOne')
-			->setFolderName('UploadFieldTest')
+			->setFolderName('UploadedFiles')
 			->setAllowedMaxFileNumber(1);
 
 		$fieldHasOneMaxTwo = UploadField::create('HasOneFileMaxTwo')
-			->setFolderName('UploadFieldTest')
+			->setFolderName('UploadedFiles')
 			->setAllowedMaxFileNumber(2);
 
 		$fieldHasMany = UploadField::create('HasManyFiles')
-			->setFolderName('UploadFieldTest');
+			->setFolderName('UploadedFiles');
 
 		$fieldHasManyMaxTwo = UploadField::create('HasManyFilesMaxTwo')
-			->setFolderName('UploadFieldTest')
+			->setFolderName('UploadedFiles')
 			->setAllowedMaxFileNumber(2);
 
 		$fieldManyMany = UploadField::create('ManyManyFiles')
-			->setFolderName('UploadFieldTest');
+			->setFolderName('UploadedFiles');
 
 		$fieldHasManyNoView = UploadField::create('HasManyNoViewFiles')
-			->setFolderName('UploadFieldTest');
+			->setFolderName('UploadedFiles');
 
 		$fieldHasManyDisplayFolder = UploadField::create('HasManyDisplayFolder')
-			->setFolderName('UploadFieldTest')
+			->setFolderName('UploadedFiles')
 			->setDisplayFolderName('UploadFieldTest');
 
 		$fieldReadonly = UploadField::create('ReadonlyField')
-			->setFolderName('UploadFieldTest')
+			->setFolderName('UploadedFiles')
 			->performReadonlyTransformation();
 
 		$fieldDisabled = UploadField::create('DisabledField')
-			->setFolderName('UploadFieldTest')
+			->setFolderName('UploadedFiles')
 			->performDisabledTransformation();
 
 		$fieldSubfolder = UploadField::create('SubfolderField')
-			->setFolderName('UploadFieldTest/subfolder1');
+			->setFolderName('UploadedFiles/subfolder1');
 
 		$fieldCanUploadFalse = UploadField::create('CanUploadFalseField')
 			->setCanUpload(false);

@@ -25,7 +25,7 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 	 * @config
 	 * @var int
 	 */
-	private static $lifetime = 0;
+	private static $lifetime = null;
 
 	/**
 	 * Backend for generated files
@@ -59,7 +59,8 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 	 */
 	protected static function get_cache() {
 		$cache = SS_Cache::factory('CacheGeneratedAssetHandler');
-		$cache->setLifetime(Config::inst()->get(__CLASS__, 'lifetime'));
+		$lifetime = Config::inst()->get(__CLASS__, 'lifetime') ?: null; // map falsey to null (indefinite)
+		$cache->setLifetime($lifetime);
 		return $cache;
 	}
 
@@ -139,6 +140,7 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 
 		throw new Exception("Error regenerating file \"{$filename}\"");
 	}
+
 
 	/**
 	 * Get cache key for the given generated asset

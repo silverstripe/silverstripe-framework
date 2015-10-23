@@ -341,6 +341,16 @@ class Requirements {
 	 * Set whether you want to write the JS to the body of the page rather than at the end of the
 	 * head tag.
 	 *
+	 * @return bool
+	 */
+	public static function get_write_js_to_body() {
+		return self::backend()->getWriteJavascriptToBody();
+	}
+
+	/**
+	 * Set whether you want to write the JS to the body of the page rather than at the end of the
+	 * head tag.
+	 *
 	 * @param bool
 	 */
 	public static function set_write_js_to_body($var) {
@@ -348,13 +358,41 @@ class Requirements {
 	}
 
 	/**
+	 * Get whether to force the JavaScript to end of the body. Useful if you use inline script tags
+	 * that don't rely on scripts included via {@link Requirements::javascript()).
+	 *
+	 * @return bool
+	 */
+	public static function get_force_js_to_bottom() {
+		return self::backend()->getForceJSToBottom();
+	}
+
+	/**
 	 * Set whether to force the JavaScript to end of the body. Useful if you use inline script tags
 	 * that don't rely on scripts included via {@link Requirements::javascript()).
 	 *
-	 * @param boolean $var If true, force the JavaScript to be included at the bottom of the page
+	 * @param bool $var If true, force the JavaScript to be included at the bottom of the page
 	 */
 	public static function set_force_js_to_bottom($var) {
 		self::backend()->setForceJSToBottom($var);
+	}
+
+	/**
+	 * Check if JS minification is enabled
+	 *
+	 * @return bool
+	 */
+	public static function get_minify_combined_js_files() {
+		return self::backend()->getMinifyCombinedJSFiles();
+	}
+
+	/**
+	 * Enable or disable js minification
+	 *
+	 * @param bool $minify
+	 */
+	public static function set_minify_combined_js_files($minify) {
+		self::backend()->setMinifyCombinedJSFiles($minify);
 	}
 
 	/**
@@ -482,11 +520,18 @@ class Requirements_Backend {
 	protected $combinedFiles = array();
 
 	/**
+	 * Use the JSMin library to minify any javascript file passed to {@link combine_files()}.
+	 *
+	 * @var bool
+	 */
+	protected $minifyCombinedJSFiles = true;
+
+	/**
 	 * Whether or not file headers should be written when combining files
 	 *
 	 * @var boolean
 	 */
-	public $writeHeaderComment = true;
+	protected $writeHeaderComment = true;
 
 	/**
 	 * Where to save combined files. By default they're placed in assets/_combinedfiles, however
@@ -537,15 +582,6 @@ class Requirements_Backend {
 	 */
 	public function setCombinedFilesEnabled($enable) {
 		$this->combinedFilesEnabled = (bool) $enable;
-	}
-
-	/**
-	 * Check whether file combination is enabled.
-	 *
-	 * @return bool
-	 */
-	public function getCombinedFilesEnabled() {
-		return $this->combinedFilesEnabled;
 	}
 
 	/**
@@ -654,6 +690,26 @@ class Requirements_Backend {
 	 */
 	public function getForceJSToBottom() {
 		return $this->forceJSToBottom;
+	}
+
+	/**
+	 * Check if minify js files should be combined
+	 *
+	 * @return bool
+	 */
+	public function getMinifyCombinedJSFiles() {
+		return $this->minifyCombinedJSFiles;
+	}
+
+	/**
+	 * Set if combined js files should be minified
+	 *
+	 * @param bool $minify
+	 * @return $this
+	 */
+	public function setMinifyCombinedJSFiles($minify) {
+		$this->minifyCombinedJSFiles = $minify;
+		return $this;
 	}
 
 	/**
@@ -1284,7 +1340,7 @@ class Requirements_Backend {
 	 */
 	public function processCombinedFiles() {
 		// Check if combining is enabled
-		if(!$this->enabledCombinedFiles()) {
+		if(!$this->getCombinedFilesEnabled()) {
 			return;
 		}
 
@@ -1297,7 +1353,7 @@ class Requirements_Backend {
 			// Generate this file, unless blocked
 			$combinedURL = null;
 			if(!isset($this->blocked[$combinedFile])) {
-				$combinedURL = $this->getCombinedFileURL($combinedFile, $fileList);
+				$combinedURL = $this->getCombinedFileURL($combinedFile, $fileList, $type);
 			}
 
 			// Replace all existing files, injecting the combined file at the position of the first item
@@ -1347,9 +1403,10 @@ class Requirements_Backend {
 	 *
 	 * @param string $combinedFile Filename for this combined file
 	 * @param array $fileList List of files to combine
+	 * @param string $type Either 'js' or 'css'
 	 * @return string URL to this resource
 	 */
-	protected function getCombinedFileURL($combinedFile, $fileList) {
+	protected function getCombinedFileURL($combinedFile, $fileList, $type) {
 		// Generate path (Filename)
 		$combinedFileID = File::join_paths($this->getCombinedFilesFolder(), $combinedFile);
 
@@ -1357,16 +1414,24 @@ class Requirements_Backend {
 		$entropy = $this->getEntropyOfFiles($fileList);
 
 		// Send file combination request to the backend, with an optional callback to perform regeneration
+		$minify = $this->getMinifyCombinedJSFiles();
 		$combinedURL = $this
 			->getAssetHandler()
 			->getGeneratedURL(
 				$combinedFileID,
 				$entropy,
-				function() use ($fileList) {
+				function() use ($fileList, $minify, $type) {
+					// Physically combine all file content
 					$combinedData = '';
 					$base = Director::baseFolder() . '/';
+					$minifier = Injector::inst()->get('Requirements_Minifier');
 					foreach(array_diff($fileList, $this->getBlocked()) as $file) {
 						$fileContent = file_get_contents($base . $file);
+						// Use configured minifier
+						if($minify) {
+							$fileContent = $minifier->minify($fileContent, $type, $file);
+						}
+					
 						if ($this->writeHeaderComment) {
 							// Write a header comment for each file for easier identification and debugging.
 							$combinedData .= "/****** FILE: $file *****/\n";
@@ -1391,7 +1456,7 @@ class Requirements_Backend {
 	 *
 	 * @return bool
 	 */
-	protected function enabledCombinedFiles() {
+	public function getCombinedFilesEnabled() {
 		if(!$this->combinedFilesEnabled) {
 			return false;
 		}
@@ -1480,4 +1545,20 @@ class Requirements_Backend {
 		Debug::show($this->combinedFiles);
 	}
 
+}
+
+/**
+ * Provides an abstract interface for minifying content
+ */
+interface Requirements_Minifier {
+
+	/**
+	 * Minify the given content
+	 *
+	 * @param string $content
+	 * @param string $type Either js or css
+	 * @param string $filename Name of file to display in case of error
+	 * @return string minified content
+	 */
+	public function minify($content, $type, $filename);
 }
