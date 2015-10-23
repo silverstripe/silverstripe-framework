@@ -220,6 +220,8 @@ Used in side panels and action tabs
 
 .font-icon-thumbnails:before { content: "W"; }
 
+.font-icon-link:before { content: "2"; }
+
 /** File: typography.scss  Contains the basic typography related styles for the admin interface. */
 body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif; color: #66727d; }
 
@@ -353,14 +355,17 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-button.ss-ui-action-minor:focus, .cms .ss-ui-button.ss-ui-action-minor:active { text-decoration: none; color: #525252; }
 .cms .ss-ui-button.ss-ui-button-loading { opacity: 0.8; }
 .cms .ss-ui-button[class*="font-icon-"], .cms .ss-ui-button[class^="font-icon-"], .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] { padding: 5px 8px; margin-bottom: 12px; vertical-align: middle; box-shadow: none; border: 0; background: none; text-shadow: none; text-decoration: none; font-weight: normal; color: #66727d; }
-.cms .ss-ui-button[class*="font-icon-"]:hover, .cms .ss-ui-button[class^="font-icon-"]:hover, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:hover { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background: #dee3e8; color: #66727d; border: 0; }
-.cms .ss-ui-button[class*="font-icon-"]:focus, .cms .ss-ui-button[class^="font-icon-"]:focus, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background: #dee3e8; color: #66727d; border: 0; }
+.cms .ss-ui-button[class*="font-icon-"]:hover, .cms .ss-ui-button[class^="font-icon-"]:hover, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:hover { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background: #dee3e8; color: #4f5861; border: 0; }
+.cms .ss-ui-button[class*="font-icon-"]:focus, .cms .ss-ui-button[class^="font-icon-"]:focus, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background: #dee3e8; color: #4f5861; border: 0; }
 .cms .ss-ui-button[class*="font-icon-"]:before, .cms .ss-ui-button[class^="font-icon-"]:before, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:before { font-size: 16px; margin-right: 5px; margin-top: 0; vertical-align: middle; }
 .cms .ss-ui-button[class*="font-icon-"].ui-state-focus, .cms .ss-ui-button[class^="font-icon-"].ui-state-focus, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].ui-state-focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-.cms .ss-ui-button[class*="font-icon-"].active, .cms .ss-ui-button[class*="font-icon-"]:active, .cms .ss-ui-button[class^="font-icon-"].active, .cms .ss-ui-button[class^="font-icon-"]:active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:active { -moz-box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; -webkit-box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; background: #dee3e8; color: #66727d; border: 0; }
-.cms .ss-ui-button[class*="font-icon-"].font-icon-search:before, .cms .ss-ui-button[class^="font-icon-"].font-icon-search:before, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].font-icon-search:before { margin-right: 2px; }
+.cms .ss-ui-button[class*="font-icon-"].active, .cms .ss-ui-button[class*="font-icon-"]:active, .cms .ss-ui-button[class^="font-icon-"].active, .cms .ss-ui-button[class^="font-icon-"]:active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:active { -moz-box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; -webkit-box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; background: #dee3e8; color: #4f5861; border: 0; }
+.cms .ss-ui-button[class*="font-icon-"].font-icon-search, .cms .ss-ui-button[class^="font-icon-"].font-icon-search, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].font-icon-search { padding: 4px 5px; margin-right: 6px; }
+.cms .ss-ui-button[class*="font-icon-"].font-icon-search::before, .cms .ss-ui-button[class^="font-icon-"].font-icon-search::before, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].font-icon-search::before { font-size: 20px; }
 .cms .ss-ui-button[class*="font-icon-"] .ui-button-text, .cms .ss-ui-button[class^="font-icon-"] .ui-button-text, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] .ui-button-text { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; padding: 0; }
 .cms .ss-ui-button[class*="font-icon-"] .ui-icon, .cms .ss-ui-button[class^="font-icon-"] .ui-icon, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] .ui-icon { display: none; }
+.cms .ss-ui-button[class*="font-icon-"].no-text:hover, .cms .ss-ui-button[class*="font-icon-"].no-text:active, .cms .ss-ui-button[class*="font-icon-"].no-text:focus, .cms .ss-ui-button[class*="font-icon-"].no-text.active, .cms .ss-ui-button[class^="font-icon-"].no-text:hover, .cms .ss-ui-button[class^="font-icon-"].no-text:active, .cms .ss-ui-button[class^="font-icon-"].no-text:focus, .cms .ss-ui-button[class^="font-icon-"].no-text.active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text:hover, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text:active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text:focus, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text.active { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background: none; color: #4f5861; }
+.cms .ss-ui-button[class*="font-icon-"].no-text::before, .cms .ss-ui-button[class^="font-icon-"].no-text::before, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text::before { margin: 0; }
 .cms .ss-ui-buttonset .ui-button { margin-left: -1px; }
 .cms .ss-ui-buttonset { margin-left: 1px; }
 .cms .ss-ui-loading-icon { background: url(../../images/network-save.gif) no-repeat; display: block; width: 16px; height: 16px; }
@@ -583,7 +588,7 @@ body.cms { overflow: hidden; }
 .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link, .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link { padding: 6px 8px; line-height: 1em; background-color: transparent; background-image: none; border: 0; }
 .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link:before, .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link:before { vertical-align: middle; }
 
-.icon-button-group { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; margin-top: 2px; vertical-align: middle; border: 1px solid #CDCCD0; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
+.icon-button-group { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; margin-top: 1px; vertical-align: middle; border: 1px solid #CDCCD0; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
 .icon-button-group a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button, .icon-button-group button.ss-ui-button.icon-button { margin-right: 0; line-height: 13px; -moz-border-radius: 0 0 0 0; -webkit-border-radius: 0; border-radius: 0 0 0 0; }
 .icon-button-group a.icon-button:first-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:first-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:first-child, .icon-button-group button.ss-ui-button.icon-button:first-child { -moz-border-radius: 3px 0 0 3px; -webkit-border-radius: 3px; border-radius: 3px 0 0 3px; }
 .icon-button-group a.icon-button:last-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:last-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:last-child, .icon-button-group button.ss-ui-button.icon-button:last-child { -moz-border-radius: 0 3px 3px 0; -webkit-border-radius: 0; border-radius: 0 3px 3px 0; }
@@ -596,7 +601,7 @@ body.cms { overflow: hidden; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default + .cms-tabset-icon.ui-state-default { border-left: 1px solid #CDCCD0; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default:hover { background: #ECEFF1; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default.ui-state-active:hover { background: #d4dbe1; }
-.icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-active { background-color: #d4dbe1; box-shadow: inset 0 0 3px rgba(191, 194, 196, 0.9); }
+.icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-active { background-color: #d4dbe1; }
 .cms-content-header-tabs .icon-button-group { overflow: hidden; }
 
 /** -------------------------------------------- Tabs -------------------------------------------- */
@@ -642,7 +647,7 @@ body.cms { overflow: hidden; }
 .ui-tabs.cms-tabset-primary .ui-tabs-nav .ui-state-active, .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary .ui-state-active, .ui-tabs .cms-content-header-tabs .ui-tabs-nav .ui-state-active { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background: transparent; border-top: none; border: none; z-index: 2; }
 .ui-tabs.cms-tabset-primary .ui-tabs-nav .ui-state-active a, .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary .ui-state-active a, .ui-tabs .cms-content-header-tabs .ui-tabs-nav .ui-state-active a { border-bottom: 4px solid #66727d; padding: 0; margin: 0 12px 0; }
 
-.cms-content-header-tabs { float: right; margin-top: 8px; }
+.cms-content-header-tabs { float: right; margin-top: 12px; }
 .cms-content-header-tabs .icon-button-group { margin-right: 16px; }
 
 .cms-content-fields .ui-tabs-nav { float: none; padding: 0; border-bottom: 1px solid #d0d3d5; margin: 0 16px 0; }
@@ -889,9 +894,11 @@ body.cms-dialog { overflow: auto; background: #ECEFF1; position: relative; }
 .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:active { opacity: 0.35; filter: Alpha(Opacity=35); }
 .htmleditorfield-dialog .htmleditorfield-from-web.loading button.add-url::before { content: ''; background: url(../images/throbber.gif) no-repeat center center; padding: 8px; }
 .htmleditorfield-dialog .cms-content-header { padding: 0; width: 100%; height: 53px; }
-.htmleditorfield-dialog .cms-content-header h3 { padding: 12px 4px 12px 16px; margin: 0; line-height: 28px; display: inline-block; font-weight: normal; }
-.htmleditorfield-dialog .ss-insert-media, .htmleditorfield-dialog .Actions, .htmleditorfield-dialog .ss-insert-link { padding: 8px 16px; }
-.htmleditorfield-dialog .ss-insert-media .ui-tabs-panel, .htmleditorfield-dialog .Actions .ui-tabs-panel, .htmleditorfield-dialog .ss-insert-link .ui-tabs-panel { padding: 0; }
+.htmleditorfield-dialog .cms-content-header h3 { padding: 12px 0 12px 16px; margin: 0; line-height: 28px; display: inline-block; font-weight: normal; }
+.htmleditorfield-dialog .ss-insert-media, .htmleditorfield-dialog .ss-insert-link { padding: 12px 16px; }
+.htmleditorfield-dialog .ss-insert-media .ui-tabs-panel, .htmleditorfield-dialog .ss-insert-link .ui-tabs-panel { padding: 0; }
+.htmleditorfield-dialog .Actions { padding: 8px 16px; }
+.htmleditorfield-dialog .Actions .ui-tabs-panel { padding: 0; }
 .htmleditorfield-dialog .details .file-url { display: block; width: 300px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; }
 .htmleditorfield-dialog .details .cms-file-info .field { border: none; -moz-box-shadow: 0 0 0 transparent; -webkit-box-shadow: 0 0 0 transparent; box-shadow: 0 0 0 transparent; }
 .htmleditorfield-dialog .details .field { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }

@@ -144,7 +144,7 @@ en:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Choose)
-    CHOOSESEARCH: '(Choose or Search)'
+    CHOOSESEARCH: '(choose folder)'
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   EmailField:
     VALIDATION: 'Please enter an email address'

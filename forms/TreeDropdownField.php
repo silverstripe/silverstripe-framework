@@ -218,7 +218,7 @@ class TreeDropdownField extends FormField {
 		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
 
 		if($this->showSearch) {
-			$emptyTitle = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
+			$emptyTitle = _t('DropdownField.CHOOSESEARCH', '(choose folder)', 'start value of a dropdown');
 		} else {
 			$emptyTitle = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		}

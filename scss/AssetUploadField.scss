@@ -107,21 +107,17 @@ body.cms.ss-uploadfield-edit-iframe {
 		}		
 	}
 	.ss-uploadfield-item-actions.edit-all{
-		clear:both;
-		position:relative;	
-		z-index:9;
 		.ss-uploadfield-item-edit-all {
-			z-index:8;
-			position:absolute;
-			top:-33px;
-			padding:0;
+			float: right;
+			margin: -8px 0 0;
+			padding: 0;
 			background: none;
 			border: 0;
-			right:0;
 			@include box-shadow(none);
 			color: $color-text;		
+			
 			&:hover{
-				color: #1e7cba;	
+				color: lighten($color-text, 10%);	
 			}
 		}
 	}
@@ -305,21 +301,11 @@ body.cms.ss-uploadfield-edit-iframe {
 	}
 
 	.ss-uploadfield-addfile {
-		margin: 0 0 16px;
+		margin: 0;
 		padding: 0;
 	
 		.ss-uploadfield-item-info {
-			text-align: center;
-			width: 50%;
-			margin: -$grid-y*1.5 auto 0;
-
-			.ss-insert-media & {
-				margin: 0 auto;
-
-				> span {
-					margin-top: 0;
-				}
-			}
+			margin: 0;
 
 			> span {
 				display: block;
@@ -329,28 +315,22 @@ body.cms.ss-uploadfield-edit-iframe {
 				margin-top: -12px;
 			}
 
-			.upload-url {
-				display: inline;
-				color: $color-text-blue-link;
-				cursor: pointer;
+			.upload-url::before {
+				font-size: 23px;
 			}
 		}
 
 		.ss-uploadfield-fromcomputer {
-			font-size: 14px;
-			padding: $grid-y*.5 $grid-x*1;
-			display: inline-block;
-			float: none;
+			margin: 12px 2px;
 			overflow: hidden;
-			margin: -$grid-y*5 0 $grid-y*.75;
 			font-weight: normal;
-
+			
 			.ss-insert-media & {
-				margin: 8px 0 4px;
+				margin: 0 12px 0 0;
 			}
 
 			&::before {
-				font-size: 20px;
+				font-size: 23px;
 				margin-right: 6px;
 			}
 		}	

@@ -372,7 +372,7 @@ body.cms {
 
 .icon-button-group {
 	@include inline-block;
-	margin-top: 2px;
+	margin-top: 1px;
 	vertical-align: middle;
 	border: 1px solid #CDCCD0;
 	@include border-radius(4px);
@@ -440,7 +440,6 @@ body.cms {
 
 		.cms-tabset-icon.ui-state-active {
 			background-color: #d4dbe1;
-			box-shadow: inset 0 0 3px rgba(191, 194, 196, .9);
 		}
 	}
 	
@@ -636,10 +635,10 @@ body.cms {
 
 .cms-content-header-tabs {
 	float: right;
-	margin-top: 8px;
+	margin-top: $grid-y*1.5;
 
 	.icon-button-group {
-		margin-right: 16px;
+		margin-right: $grid-x*2;
 	}
 }
 
@@ -1840,16 +1839,25 @@ body.cms-dialog {
 		height: 53px;
 
 		h3 {
-			padding: $grid-y*1.5 $grid-x*.5 $grid-y*1.5 $grid-x*2;
+			padding: $grid-y*1.5 0 $grid-y*1.5 $grid-x*2;
 			margin: 0;
 			line-height: 28px;
 			display: inline-block;
 			font-weight: normal;
 		}
 	}
+	
+	.ss-insert-media, .ss-insert-link {
+		padding: $grid-y*1.5 $grid-x*2;
+		
+		.ui-tabs-panel {
+			padding: 0;
+		}
+	}
 
-	.ss-insert-media, .Actions, .ss-insert-link{
+	.Actions {
 		padding:$grid-y $grid-x*2 ;
+		
 		.ui-tabs-panel {
 			padding: 0;
 		}
