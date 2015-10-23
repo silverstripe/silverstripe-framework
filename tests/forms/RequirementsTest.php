@@ -71,6 +71,7 @@ class RequirementsTest extends SapphireTest {
 		$backend->clear();
 		$backend->clearCombinedFiles();
 		$backend->setCombinedFilesFolder('_combinedfiles');
+		$backend->setMinifyCombinedJSFiles(false);
 		CacheGeneratedAssetHandler::flush();
 	}
 
