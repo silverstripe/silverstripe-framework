@@ -41,7 +41,7 @@ class UploadTest extends SapphireTest {
 		// test upload into default folder
 		$u1 = new Upload();
 		$u1->setValidator($v);
-		$u1->load($tmpFile);
+		$u1->loadIntoFile($tmpFile);
 		$file1 = $u1->getFile();
 		$this->assertEquals(
 			'Uploads/UploadTest-testUpload.txt',
@@ -59,7 +59,7 @@ class UploadTest extends SapphireTest {
 		// test upload into custom folder
 		$customFolder = 'UploadTest-testUpload';
 		$u2 = new Upload();
-		$u2->load($tmpFile, $customFolder);
+		$u2->loadIntoFile($tmpFile, null, $customFolder);
 		$file2 = $u2->getFile();
 		$this->assertEquals(
 			'UploadTest-testUpload/UploadTest-testUpload.txt',
@@ -99,17 +99,17 @@ class UploadTest extends SapphireTest {
 		
 		$v->setAllowedMaxFileSize(array('txt' => 10));
 		$u1->setValidator($v);
-		$result = $u1->load($tmpFile);
+		$result = $u1->loadIntoFile($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
 		
 		$v->setAllowedMaxFileSize(array('[document]' => 10));
 		$u1->setValidator($v);
-		$result = $u1->load($tmpFile);
+		$result = $u1->loadIntoFile($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
 		
 		$v->setAllowedMaxFileSize(array('txt' => 200000));
 		$u1->setValidator($v);
-		$result = $u1->load($tmpFile);
+		$result = $u1->loadIntoFile($tmpFile);
 		$this->assertTrue($result, 'Load failed with setting max file size');
 		
 		// check max file size set by app category
@@ -128,17 +128,17 @@ class UploadTest extends SapphireTest {
 		
 		$v->setAllowedMaxFileSize(array('[image]' => '40k'));
 		$u1->setValidator($v);
-		$result = $u1->load($tmpFile);
+		$result = $u1->loadIntoFile($tmpFile);
 		$this->assertTrue($result, 'Load failed with setting max file size');
 		
 		$v->setAllowedMaxFileSize(array('[image]' => '1k'));
 		$u1->setValidator($v);
-		$result = $u1->load($tmpFile);
+		$result = $u1->loadIntoFile($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
 		
 		$v->setAllowedMaxFileSize(array('[image]' => 1000));
 		$u1->setValidator($v);
-		$result = $u1->load($tmpFile);
+		$result = $u1->loadIntoFile($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
 	}
 	
@@ -213,7 +213,7 @@ class UploadTest extends SapphireTest {
 		// test upload into default folder
 		$u1 = new Upload();
 		$u1->setValidator($v);
-		$result = $u1->load($tmpFile);
+		$result = $u1->loadIntoFile($tmpFile);
 
 		$this->assertFalse($result, 'Load failed because size was too big');
 	}
@@ -242,7 +242,7 @@ class UploadTest extends SapphireTest {
 		// test upload into default folder
 		$u = new Upload();
 		$u->setValidator($v);
-		$result = $u->load($tmpFile);
+		$result = $u->loadIntoFile($tmpFile);
 
 		$this->assertFalse($result, 'Load failed because extension was not accepted');
 	}
@@ -271,7 +271,7 @@ class UploadTest extends SapphireTest {
 		// test upload into default folder
 		$u = new Upload();
 		$u->setValidator($v);
-		$u->load($tmpFile);
+		$u->loadIntoFile($tmpFile);
 		$file = $u->getFile();
 		$this->assertFileExists(
 			AssetStoreTest_SpyStore::getLocalPath($file),
@@ -302,7 +302,7 @@ class UploadTest extends SapphireTest {
 
 		// test upload into default folder
 		$u = new Upload();
-		$result = $u->load($tmpFile);
+		$result = $u->loadIntoFile($tmpFile);
 
 		$this->assertFalse($result, 'Load failed because extension was not accepted');
 		$this->assertEquals(1, count($u->getErrors()), 'There is a single error of the file extension');
@@ -328,7 +328,7 @@ class UploadTest extends SapphireTest {
 
 		// test upload into default folder
 		$u = new Upload();
-		$u->load($tmpFile);
+		$u->loadIntoFile($tmpFile);
 		$file = $u->getFile();
 		$this->assertEquals(
 			'UploadTest-testUpload.tar.gz',
@@ -341,7 +341,7 @@ class UploadTest extends SapphireTest {
 		);
 		
 		$u = new Upload();
-		$u->load($tmpFile);
+		$u->loadIntoFile($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
 			'UploadTest-testUpload-v2.tar.gz',
@@ -359,7 +359,7 @@ class UploadTest extends SapphireTest {
 		);
 		
 		$u = new Upload();
-		$u->load($tmpFile);
+		$u->loadIntoFile($tmpFile);
 		$file3 = $u->getFile();
 		$this->assertEquals(
 			'UploadTest-testUpload-v3.tar.gz',
@@ -401,7 +401,7 @@ class UploadTest extends SapphireTest {
 		// test upload into default folder
 		$u = new Upload();
 		$u->setValidator($v);
-		$u->load($tmpFile);
+		$u->loadIntoFile($tmpFile);
 		$file = $u->getFile();
 
 		$this->assertEquals(
@@ -416,7 +416,7 @@ class UploadTest extends SapphireTest {
 		
 		$u = new Upload();
 		$u->setValidator($v);
-		$u->load($tmpFile);
+		$u->loadIntoFile($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
 			'UploadTest-testUpload-v2',
@@ -458,7 +458,7 @@ class UploadTest extends SapphireTest {
 		// test upload into default folder
 		$u = new Upload();
 		$u->setValidator($v);
-		$u->load($tmpFile);
+		$u->loadIntoFile($tmpFile);
 		$file = $u->getFile();
 
 		$this->assertEquals(
@@ -474,7 +474,7 @@ class UploadTest extends SapphireTest {
 		$u = new Upload();
 		$u->setValidator($v);
 		$u->setReplaceFile(true);
-		$u->load($tmpFile);
+		$u->loadIntoFile($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
 			'UploadTest-testUpload',
@@ -516,7 +516,7 @@ class UploadTest extends SapphireTest {
 		// test upload into default folder
 		$u = new Upload();
 		$u->setValidator($v);
-		$u->load($tmpFile);
+		$u->loadIntoFile($tmpFile);
 		$file = $u->getFile();
 
 		$this->assertEquals(
@@ -595,7 +595,7 @@ class UploadTest extends SapphireTest {
 			$u = new Upload();
 			$u->setReplaceFile(true);
 			$u->setValidator($v);
-			$u->load($tmpFile);
+			$u->loadIntoFile($tmpFile);
 			return $u->getFile();
 		};
 
@@ -637,7 +637,7 @@ class UploadTest extends SapphireTest {
 			$u = new Upload();
 			$u->setReplaceFile(false);
 			$u->setValidator($v);
-			$u->load($tmpFile);
+			$u->loadIntoFile($tmpFile);
 			return $u->getFile();
 		};
 		

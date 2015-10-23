@@ -125,15 +125,91 @@ class Upload extends Controller {
 	}
 
 	/**
+	 * 
+	 * @return AssetStore
+	 */
+	protected function getAssetStore() {
+		return Injector::inst()->get('AssetStore');
+	}
+
+	/**
+	 * Save an file passed from a form post into the AssetStore directly
+	 *
+	 * @param $tmpFile array Indexed array that PHP generated for every file it uploads.
+	 * @param $folderPath string Folder path relative to /assets
+	 * @return array|false Either the tuple array, or false if the file could not be saved
+	 */
+	public function load($tmpFile, $folderPath = false) {
+		// Validate filename
+		$filename = $this->getValidFilename($tmpFile, $folderPath);
+		if(!$filename) {
+			return false;
+		}
+
+		// Save file into backend
+		$result = $this->storeTempFile($tmpFile, $filename, $this->getAssetStore());
+
+		//to allow extensions to e.g. create a version after an upload
+		$this->extend('onAfterLoad', $result);
+		return $result;
+	}
+
+	/**
 	 * Save an file passed from a form post into this object.
 	 * File names are filtered through {@link FileNameFilter}, see class documentation
 	 * on how to influence this behaviour.
 	 *
-	 * @param $tmpFile array Indexed array that PHP generated for every file it uploads.
-	 * @param $folderPath string Folder path relative to /assets
-	 * @return Boolean|string Either success or error-message.
+	 * @param array $tmpFile
+	 * @param AssetContainer $file
+	 * @return bool True if the file was successfully saved into this record
 	 */
-	public function load($tmpFile, $folderPath = false) {
+	public function loadIntoFile($tmpFile, $file = null, $folderPath = false) {
+		$this->file = $file;
+
+		// Validate filename
+		$filename = $this->getValidFilename($tmpFile, $folderPath);
+		if(!$filename) {
+			return false;
+		}
+		$filename = $this->resolveExistingFile($filename);
+
+		// Save changes to underlying record (if it's a DataObject)
+		$this->storeTempFile($tmpFile, $filename, $this->file);
+		if($this->file instanceof DataObject) {
+			$this->file->write();
+		}
+
+		//to allow extensions to e.g. create a version after an upload
+		$this->file->extend('onAfterUpload');
+		$this->extend('onAfterLoadIntoFile', $this->file);
+		return true;
+	}
+
+	/**
+	 * Assign this temporary file into the given destination
+	 *
+	 * @param array $tmpFile
+	 * @param string $filename
+	 * @param AssetContainer|AssetStore $container
+	 * @return array
+	 */
+	protected function storeTempFile($tmpFile, $filename, $container) {
+		// Save file into backend
+		$conflictResolution = $this->replaceFile
+			? AssetStore::CONFLICT_OVERWRITE
+			: AssetStore::CONFLICT_RENAME;
+		return $container->setFromLocalFile($tmpFile['tmp_name'], $filename, null, null, $conflictResolution);
+	}
+
+	/**
+	 * Given a temporary file and upload path, validate the file and determine the
+	 * value of the 'Filename' tuple that should be used to store this asset.
+	 *
+	 * @param array $tmpFile
+	 * @param string $folderPath
+	 * @return string|false Value of filename tuple, or false if invalid
+	 */
+	protected function getValidFilename($tmpFile, $folderPath = false) {
 		if(!is_array($tmpFile)) {
 			throw new InvalidArgumentException(
 				"Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype"
@@ -157,23 +233,7 @@ class Upload extends Controller {
 		if($folderPath) {
 			$filename = File::join_paths($folderPath, $filename);
 		}
-
-		// Validate filename
-		$filename = $this->resolveExistingFile($filename);
-
-		// Save file into backend
-		$conflictResolution = $this->replaceFile ? AssetStore::CONFLICT_OVERWRITE : AssetStore::CONFLICT_RENAME;
-		$this->file->setFromLocalFile($tmpFile['tmp_name'], $filename, null, null, $conflictResolution);
-		
-		// Save changes to underlying record (if it's a DataObject)
-		if($this->file instanceof DataObject) {
-			$this->file->write();
-		}
-		
-		//to allow extensions to e.g. create a version after an upload
-		$this->file->extend('onAfterUpload');
-		$this->extend('onAfterLoad', $this->file);
-		return true;
+		return $filename;
 	}
 
 	/**
@@ -224,18 +284,6 @@ class Upload extends Controller {
 		// Fail
 		$tries = $renamer->getMaxTries();
 		throw new Exception("Could not rename {$filename} with {$tries} tries");
-	}
-
-	/**
-	 * Load temporary PHP-upload into File-object.
-	 *
-	 * @param array $tmpFile
-	 * @param AssetContainer $file
-	 * @return Boolean
-	 */
-	public function loadIntoFile($tmpFile, $file, $folderPath = false) {
-		$this->file = $file;
-		return $this->load($tmpFile, $folderPath);
 	}
 
 	/**

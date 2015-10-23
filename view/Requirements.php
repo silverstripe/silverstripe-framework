@@ -1392,9 +1392,6 @@ class Requirements_Backend {
 					break;
 				}
 			}
-			if($combinedURL && !$included) {
-				throw new Exception("Failed to merge combined file {$combinedFile} with existing requirements");
-			}
 		}
 	}
 

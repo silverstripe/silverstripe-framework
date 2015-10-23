@@ -53,7 +53,8 @@ doesn't necessarily have any visible styling.
 ## Files
 
  * `[api:FileField]`: Simple file upload dialog.
- * `[api:UploadField]`: File uploads through HTML5 features, including upload progress, preview and relationship management.
+ * `[api:UploadField]`: Upload to a `[api:File]` record, including upload progress, preview and relationship management.
+ * `[api:AssetField]`: Upload to a `[api:DBFile]` database field. Very similar to UploadField
 
 ## Relations
 

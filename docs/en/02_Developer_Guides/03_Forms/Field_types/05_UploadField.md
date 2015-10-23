@@ -6,6 +6,10 @@ The UploadField will let you upload one or multiple files of all types, includin
 But that's not all it does - it will also link the uploaded file(s) to an existing relation
 and let you edit the linked files as well. That makes it flexible enough to sometimes even
 replace the GridField, like for instance in creating and managing a simple gallery.
+
+The field automatically creates a `File` record for each uploaded file.
+In order to associate uploaded files directly to a `DataObject` via the 
+`[api:DBFile]` database field, please use [AssetField](AssetField).
  
 ## Usage
 
