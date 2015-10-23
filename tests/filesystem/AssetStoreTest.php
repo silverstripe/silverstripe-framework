@@ -7,6 +7,7 @@ use SilverStripe\Filesystem\Flysystem\FlysystemAssetStore;
 use SilverStripe\Filesystem\Flysystem\FlysystemUrlPlugin;
 use SilverStripe\Filesystem\Storage\AssetContainer;
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Filesystem\Storage\CacheGeneratedAssetHandler;
 
 class AssetStoreTest extends SapphireTest {
 
@@ -450,6 +451,10 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 	 * Reset defaults for this store
 	 */
 	public static function reset() {
+		// Need flushing since it won't have any files left
+		CacheGeneratedAssetHandler::flush();
+
+		// Remove all files in this store
 		if(self::$basedir) {
 			$path = self::base_path();
 			if(file_exists($path)) {
@@ -468,6 +473,12 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 	public static function getLocalPath(AssetContainer $asset) {
 		if($asset instanceof Folder) {
 			return self::base_path() . '/' . $asset->getFilename();
+		}
+		if($asset instanceof File) {
+			$asset = $asset->File;
+		}
+		if($asset instanceof DBFile) {
+			return BASE_PATH . $asset->getSourceURL();
 		}
 		return BASE_PATH . $asset->getUrl();
 	}

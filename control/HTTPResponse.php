@@ -272,8 +272,9 @@ EOT
 			// a more specific error description.
 			if(Director::isLive() && $this->isError() && !$this->body) {
 				$formatter = Injector::get('FriendlyErrorFormatter');
-				$formatter->setStatusCode($this->statusCode);
-				echo $formatter->format(array());
+				echo $formatter->format(array(
+					'code' => $this->statusCode
+				));
 
 			} else {
 				echo $this->body;
