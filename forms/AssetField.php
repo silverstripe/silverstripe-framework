@@ -476,6 +476,17 @@ class AssetField extends FileField {
 		return $this->setConfig('downloadTemplateName', $downloadTemplateName);
 	}
 
+	public function extraClass() {
+		if($this->isDisabled()) {
+			$this->addExtraClass('disabled');
+		}
+		if($this->isReadonly()) {
+			$this->addExtraClass('readonly');
+		}
+
+		return parent::extraClass();
+	}
+
 	public function Field($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');

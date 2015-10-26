@@ -460,15 +460,7 @@ class FormField extends RequestHandler {
 		//
 		// CSS class needs to be different from the one rendered through {@link FieldHolder()}.
 		if($this->Message()) {
-			$classes[] = 'holder-' . $this->MessageType();
-		}
-
-		if($this->isDisabled()) {
-			$classes[] = 'disabled';
-		}
-		
-		if($this->isReadonly()) {
-			$classes[] = 'readonly';
+			$classes[] .= 'holder-' . $this->MessageType();
 		}
 
 		return implode(' ', $classes);
