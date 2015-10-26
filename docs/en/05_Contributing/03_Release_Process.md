@@ -10,7 +10,7 @@ The current maintainer responsible for planning and performing releases is Ingo 
 
 ## Release Planning
 
-Our most up-to-date release plans are typically in the ["framework" milestone](https://github.com/silverstripe/silverstripe-framework/issues/milestones) and ["cms" milestone](https://github.com/silverstripe/silverstripe-cms/issues/milestones).
+Our most up-to-date release plans are typically in the ["framework" milestone](https://github.com/silverstripe/silverstripe-framework/milestones) and ["cms" milestone](https://github.com/silverstripe/silverstripe-cms/milestones).
 New features and API changes are discussed on the [core mailinglist](http://groups.google.com/group/silverstripe-dev). They are prioritised by the core team as tickets on 
 github.com. In addition, we collect community feedback on [silverstripe.uservoice.com](https://silverstripe.uservoice.com).
 Any feature ideas we're planning to implement will be flagged there.
