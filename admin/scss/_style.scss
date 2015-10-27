@@ -1769,11 +1769,16 @@ body.cms-dialog {
 	}
 
 	.htmleditorfield-from-web {
-		display: none;
 		text-align: center;
+		margin-bottom: $grid-y;
 
 		&.CompositeField{
 			@include clearfix;
+		}
+
+		.url-description {
+			text-align: left;
+			margin-bottom: $grid-y*1.5;
 		}
 
 		div.remoteurl{
@@ -1844,6 +1849,20 @@ body.cms-dialog {
 			line-height: 28px;
 			display: inline-block;
 			font-weight: normal;
+
+			&.insert {
+				.back-button {
+					margin: 0;
+					padding: 0;
+					cursor: pointer;
+
+					&::before {
+						margin-right: 4px;
+						font-size: 18px;
+						vertical-align: text-bottom;
+					}
+				}
+			}
 		}
 	}
 	

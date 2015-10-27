@@ -356,12 +356,6 @@
 			}
 		});
 
-		$('div.ss-upload .upload-url').entwine({
-			onclick: function () {
-				$('.htmleditorfield-from-web').slideToggle(150, 'linear').find('input.remoteurl').focus();
-			}
-		});
-
 		$('div.ss-upload .ss-uploadfield-item-remove:not(.ui-state-disabled), .ss-uploadfield-item-delete:not(.ui-state-disabled)').entwine({
 			onclick: function(e) {
 				var field = this.closest('div.ss-upload'),
