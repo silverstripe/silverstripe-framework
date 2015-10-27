@@ -71,7 +71,7 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 		self::get_cache()->clean();
 	}
 
-	public function getGeneratedURL($filename, $entropy = 0, $callback = null) {
+	public function getGeneratedURL($filename, $entropy, $callback) {
 		$result = $this->getGeneratedFile($filename, $entropy, $callback);
 		if($result) {
 			return $this
@@ -80,7 +80,7 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 		}
 	}
 
-	public function getGeneratedContent($filename, $entropy = 0, $callback = null) {
+	public function getGeneratedContent($filename, $entropy, $callback) {
 		$result = $this->getGeneratedFile($filename, $entropy, $callback);
 		if($result) {
 			return $this
@@ -99,7 +99,7 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 	 * @return array tuple array if available
 	 * @throws Exception If the file isn't available and $callback fails to regenerate content
 	 */
-	protected function getGeneratedFile($filename, $entropy = 0, $callback = null) {
+	protected function getGeneratedFile($filename, $entropy, $callback) {
 		// Check if there is an existing asset
 		$cache = self::get_cache();
 		$cacheID = $this->getCacheKey($filename, $entropy);
@@ -112,19 +112,8 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 			}
 		}
 
-		// Regenerate
-		if($callback) {
-			// Invoke regeneration and save
-			$content = call_user_func($callback);
-			return $this->updateContent($filename, $entropy, $content);
-		}
-	}
-
-	public function updateContent($filename, $entropy, $content) {
-		$cache = self::get_cache();
-		$cacheID = $this->getCacheKey($filename, $entropy);
-
-		// Store content
+		// Invoke regeneration and save
+		$content = call_user_func($callback);
 		$result = $this
 			->getAssetStore()
 			->setFromString($content, $filename);
@@ -140,7 +129,6 @@ class CacheGeneratedAssetHandler implements GeneratedAssetHandler, Flushable {
 
 		throw new Exception("Error regenerating file \"{$filename}\"");
 	}
-
 
 	/**
 	 * Get cache key for the given generated asset
