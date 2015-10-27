@@ -208,7 +208,7 @@ class Image extends File implements Flushable {
 	 *
 	 * @param integer $width The width to size within
 	 * @param integer $height The height to size within
-	 * @return Image
+	 * @return Image|null
 	 */
 	public function Fit($width, $height) {
 		// Prevent divide by zero on missing/blank file
@@ -266,7 +266,7 @@ class Image extends File implements Flushable {
 	 *
 	 * @param integer $width Width to crop to
 	 * @param integer $height Height to crop to
-	 * @return Image
+	 * @return Image|null
 	 */
 	public function Fill($width, $height) {
 		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
@@ -323,7 +323,7 @@ class Image extends File implements Flushable {
 	 *
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
-	 * @return Image
+	 * @return Image|null
 	 */
 	public function Pad($width, $height, $backgroundColor='FFFFFF') {
 		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
@@ -347,7 +347,7 @@ class Image extends File implements Flushable {
 	 * Scale image proportionally by width. Use in templates with $ScaleWidth.
 	 *
 	 * @param integer $width The width to set
-	 * @return Image
+	 * @return Image|null
 	 */
 	public function ScaleWidth($width) {
 		return $this->isWidth($width) && !Config::inst()->get('Image', 'force_resample')
@@ -387,7 +387,7 @@ class Image extends File implements Flushable {
 	 * Scale image proportionally by height. Use in templates with $ScaleHeight.
 	 *
 	 * @param integer $height The height to set
-	 * @return Image
+	 * @return Image|null
 	 */
 	public function ScaleHeight($height) {
 		return $this->isHeight($height) && !Config::inst()->get('Image', 'force_resample')
@@ -564,6 +564,11 @@ class Image extends File implements Flushable {
 		return $backend->paddedResize($width, $height);
 	}
 
+	/**
+	 * Resize this image for the CMS. Use in templates with $CMSThumbnail
+	 *
+	 * @return Image_Cached|null
+	 */
 	public function CMSThumbnail() {
 		return $this->getFormattedImage('CMSThumbnail');
 	}
@@ -667,7 +672,7 @@ class Image extends File implements Flushable {
 	 * Just pass the correct number of parameters expected by the working function
 	 *
 	 * @param string $format The name of the format.
-	 * @return Image_Cached
+	 * @return Image_Cached|null
 	 */
 	public function getFormattedImage($format) {
 		$args = func_get_args();
@@ -768,7 +773,7 @@ class Image extends File implements Flushable {
 	 * @param Image_Backend $backend
 	 * @param integer $width Width to resize to
 	 * @param integer $height Height to resize to
-	 * @return Image_Backend
+	 * @return Image_Backend|null
 	 */
 	public function generateResizedImage(Image_Backend $backend, $width, $height) {
 		if(!$backend){
@@ -933,7 +938,7 @@ class Image extends File implements Flushable {
 	 * Get the dimensions of this Image.
 	 * @param string $dim If this is equal to "string", return the dimensions in string form,
 	 * if it is 0 return the height, if it is 1 return the width.
-	 * @return string|int
+	 * @return string|int|null
 	 */
 	public function getDimensions($dim = "string") {
 		if($this->getField('Filename')) {
