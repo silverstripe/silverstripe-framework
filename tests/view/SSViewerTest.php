@@ -1,11 +1,30 @@
 <?php
 
 class SSViewerTest extends SapphireTest {
+
+	/**
+	 * Backup of $_SERVER global
+	 *
+	 * @var array
+	 */
+	protected $oldServer = array();
+
+	protected $extraDataObjects = array(
+		'SSViewerTest_Object',
+	);
+
 	public function setUp() {
 		parent::setUp();
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
+		Config::inst()->update('SSViewer_FromString', 'cache_template', false);
+		$this->oldServer = $_SERVER;
 	}
-	
+
+	public function tearDown() {
+		$_SERVER = $this->oldServer;
+		parent::tearDown();
+	}
+
 	/**
 	 * Tests for {@link Config::inst()->get('SSViewer', 'theme')} for different behaviour
 	 * of user defined themes via {@link SiteConfig} and default theme
@@ -1160,10 +1179,13 @@ after')
 		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links'); 
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', true);
 
-		$_SERVER['REQUEST_URI'] = 'http://path/to/file?foo"onclick="alert(\'xss\')""';
+		$_SERVER['HTTP_HOST'] = 'www.mysite.com';
+		$_SERVER['REQUEST_URI'] = '//file.com?foo"onclick="alert(\'xss\')""';
 
 		// Emulate SSViewer::process()
-		$base = Convert::raw2att($_SERVER['REQUEST_URI']);
+		// Note that leading double slashes have been rewritten to prevent these being mis-interepreted
+		// as protocol-less absolute urls
+		$base = Convert::raw2att('/file.com?foo"onclick="alert(\'xss\')""');
 		
 		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinks_' . sha1(rand()) . '.ss';
 		
@@ -1231,10 +1253,11 @@ after')
 		$obj = new ViewableData();
 		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
 		$result = $tmpl->process($obj);
-		$this->assertContains(
-			'<a class="inserted" href="<?php echo Convert::raw2att(',
-			$result
-		);
+
+		$code = <<<'EOC'
+<a class="inserted" href="<?php echo Convert::raw2att(preg_replace("/^(\/)+/", "/", $_SERVER['REQUEST_URI'])); ?>#anchor">InsertedLink</a>
+EOC;
+		$this->assertContains($code, $result);
 		// TODO Fix inline links in PHP mode
 		// $this->assertContains(
 		// 	'<a class="inline" href="<?php echo str_replace(',

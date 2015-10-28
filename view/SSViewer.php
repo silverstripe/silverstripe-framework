@@ -1110,10 +1110,10 @@ class SSViewer implements Flushable {
 		$rewrite = Config::inst()->get('SSViewer', 'rewrite_hash_links');
 		if($this->rewriteHashlinks && $rewrite) {
 			if(strpos($output, '<base') !== false) {
-				if($rewrite === 'php') { 
-					$thisURLRelativeToBase = "<?php echo Convert::raw2att(\$_SERVER['REQUEST_URI']); ?>";
+				if($rewrite === 'php') {
+					$thisURLRelativeToBase = "<?php echo Convert::raw2att(preg_replace(\"/^(\\\\/)+/\", \"/\", \$_SERVER['REQUEST_URI'])); ?>";
 				} else { 
-					$thisURLRelativeToBase = Convert::raw2att($_SERVER['REQUEST_URI']);
+					$thisURLRelativeToBase = Convert::raw2att(preg_replace("/^(\\/)+/", "/", $_SERVER['REQUEST_URI']));
 				}
 
 				$output = preg_replace('/(<a[^>]+href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
