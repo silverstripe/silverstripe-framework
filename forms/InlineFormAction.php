@@ -20,7 +20,7 @@ class InlineFormAction extends FormField {
 	 */
 	public function __construct($action, $title = "", $extraClass = '') {
 		$this->extraClass = ' '.$extraClass;
-		parent::__construct($action, $title, null, null);
+		parent::__construct($action, $title);
 	}
 
 	public function performReadonlyTransformation() {
@@ -39,7 +39,8 @@ class InlineFormAction extends FormField {
 
 		return DBField::create_field(
 			'HTMLText',
-			FormField::create('input', array(
+			FormField::create_tag('input', array(
+				'type' => 'submit',
 				'name' => sprintf('action_%s', $this->getName()),
 		        'value' => $this->title,
 		        'id' => $this->ID(),
