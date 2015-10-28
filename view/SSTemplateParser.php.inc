@@ -1135,11 +1135,15 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 		// TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this
 		// non-dynamically calculated
+		$code = <<<'EOC'
+(\Config::inst()->get('SSViewer', 'rewrite_hash_links')
+	? \Convert::raw2att( preg_replace("/^(\\/)+/", "/", $_SERVER['REQUEST_URI'] ) )
+	: "")
+EOC;
+		// Because preg_replace replacement requires escaped slashes, addcslashes here
 		$text = preg_replace(
 			'/(<a[^>]+href *= *)"#/i',
-			'\\1"\' . (Config::inst()->get(\'SSViewer\', \'rewrite_hash_links\') ?' .
-			' Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "") .
-				\'#',
+			'\\1"\' . ' . addcslashes($code, '\\')  . ' . \'#',
 			$text
 		);
 
