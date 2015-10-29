@@ -530,6 +530,17 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals('Phil', $list->last()->Name);
 	}
 
+	public function testSortInvalidParameters() {
+		$this->setExpectedException(
+			'InvalidArgumentException',
+			'Fans is not a linear relation on model DataObjectTest_Player'
+		);
+		$list = DataObjectTest_Team::get();
+		$list = $list->sort('Founder.Fans.Surname'); // Can't sort on has_many
+	}
+
+
+
 	/**
 	 * $list->filter('Name', 'bob'); // only bob in the list
 	 */

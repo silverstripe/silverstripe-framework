@@ -162,15 +162,16 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 			. 'ON "GridFieldSortableHeaderTest_TeamGroup"."ID" = "GridFieldSortableHeaderTest_Team"."ID"',
 			$relationListBsql
 		);
-		$this->assertContains(
-			'LEFT JOIN "GridFieldSortableHeaderTest_Mom" '
-			. 'ON "GridFieldSortableHeaderTest_Mom"."ID" = "GridFieldSortableHeaderTest_Team"."CheerleadersMomID"',
-			$relationListBsql
-		);
-		// Note that cheerleader is no longer aliased, as it is an implicit join
+		// Joined tables are joined basetable first
 		$this->assertContains(
 			'LEFT JOIN "GridFieldSortableHeaderTest_Cheerleader" '
-			. 'ON "GridFieldSortableHeaderTest_Mom"."ID" = "GridFieldSortableHeaderTest_Cheerleader"."ID"',
+				. 'ON "GridFieldSortableHeaderTest_Cheerleader"."ID" = "GridFieldSortableHeaderTest_Team"."CheerleadersMomID"',
+			$relationListBsql
+		);
+		// Then the basetable of the joined record is joined to the specific subtable
+		$this->assertContains(
+			'LEFT JOIN "GridFieldSortableHeaderTest_Mom" '
+			. 'ON "GridFieldSortableHeaderTest_Cheerleader"."ID" = "GridFieldSortableHeaderTest_Mom"."ID"',
 			$relationListBsql
 		);
 		$this->assertContains(
