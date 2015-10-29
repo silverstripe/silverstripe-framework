@@ -376,7 +376,8 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * sessions don't timeout. A common use is in the admin.
 	 */
 	public function ping() {
-		return 1;
+		if (Member::currentUserID()) return 1;
+		return Security::permissionFailure($this);
 	}
 
 	/**

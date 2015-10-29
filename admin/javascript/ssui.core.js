@@ -149,20 +149,22 @@
 			var self = this;
 
 			// Create iframe
-			var iframe = $('<iframe marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"></iframe>');
-			iframe.bind('load', function(e) {
-				if($(this).attr('src') == 'about:blank') return;
+			if (this.options.iframeUrl) {
+				var iframe = $('<iframe marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"></iframe>');
+				iframe.bind('load', function(e) {
+					if($(this).attr('src') == 'about:blank') return;
 
-				iframe.addClass('loaded').show(); // more reliable than 'src' attr check (in IE)
-				self._resizeIframe();
-				self.uiDialog.removeClass('loading');
-			}).hide();
+					iframe.addClass('loaded').show(); // more reliable than 'src' attr check (in IE)
+					self._resizeIframe();
+					self.uiDialog.removeClass('loading');
+				}).hide();
 
-			if(this.options.dialogExtraClass) this.uiDialog.addClass(this.options.dialogExtraClass);
-			this.element.append(iframe);
+				if(this.options.dialogExtraClass) this.uiDialog.addClass(this.options.dialogExtraClass);
+				this.element.append(iframe);
 
-			// Let the iframe handle its scrolling
-			if(this.options.iframeUrl) this.element.css('overflow', 'hidden');
+				// Let the iframe handle its scrolling
+				if(this.options.iframeUrl) this.element.css('overflow', 'hidden');
+			}
 		},
 		open: function() {
 			$.ui.dialog.prototype.open.call(this);
