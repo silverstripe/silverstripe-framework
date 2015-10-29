@@ -310,7 +310,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$select->addExtraClass('content-select');
 
 
+		$URLDescription = _t('HtmlEditorField.URLDESCRIPTION', 'Insert videos and images from the web into your page simply by entering the URL of the file. Make sure you have the rights or permissions before sharing media directly from the web.<br /><br />Please note that files are not added to the file store of the CMS but embeds the file from its original location, if for some reason the file is no longer available in its original location it will no longer be viewable on this page.');
 		$fromWeb = new CompositeField(
+			$description = new LiteralField('URLDescription', '<div class="url-description">' . $URLDescription . '</div>'),
 			$remoteURL = new TextField('RemoteURL', 'http://'),
 			new LiteralField('addURLImage',
 				'<button class="action ui-action-constructive ui-button field font-icon-plus add-url">' .
@@ -328,11 +330,22 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->removeExtraClass('ss-uploadfield');
 		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
 		$computerUploadField->setFolderName(Config::inst()->get('Upload', 'uploads_folder'));
+		
+		$defaultPanel = new CompositeField(
+			$computerUploadField,
+			$fromCMS
+		);
+		
+		$fromWebPanel = new CompositeField(
+			$fromWeb
+		);
+		
+		$defaultPanel->addExtraClass('htmleditorfield-default-panel');
+		$fromWebPanel->addExtraClass('htmleditorfield-web-panel');
 
 		$allFields = new CompositeField(
-			$computerUploadField,
-			$fromWeb,
-			$fromCMS,
+			$defaultPanel,
+			$fromWebPanel,
 			$editComposite = new CompositeField(
 				new LiteralField('contentEdit', '<div class="content-edit ss-uploadfield-files files"></div>')
 			)

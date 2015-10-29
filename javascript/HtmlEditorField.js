@@ -1029,6 +1029,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var node = this.getSelection(),
 					hasItems = Boolean(this.find('.ss-htmleditorfield-file').length),
 					editingSelected = node.is('img'),
+					insertingURL = this.hasClass('insertingURL'),
 					header = this.find('.header-edit');
 
 				// Only show second step if files are selected
@@ -1041,18 +1042,35 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					.toggleClass('ui-state-disabled', !hasItems); 
 					
 				// Hide file selection and step labels when editing an existing file
-				this.find('.htmleditorfield-from-computer')[editingSelected ? 'hide' : 'show']();
-				this.find('.htmleditorfield-from-cms')[editingSelected ? 'hide' : 'show']();
+				this.find('.htmleditorfield-default-panel')[editingSelected || insertingURL ? 'hide' : 'show']();
+				this.find('.htmleditorfield-web-panel')[editingSelected || !insertingURL ? 'hide' : 'show']();
+
+				var mediaFormHeading = this.find('.htmleditorfield-mediaform-heading.insert');
+				
 				if (editingSelected) {
-					this.find('.htmleditorfield-from-web').hide();
+					//When editing details of a file
+					mediaFormHeading.hide();
+				} else if (insertingURL) {
+					//When inserting an image from a URL
+					mediaFormHeading
+						.show()
+						.text(ss.i18n._t("HtmlEditorField.INSERTURL"))
+						.prepend('<button class="back-button font-icon-left-open no-text" title="' + ss.i18n._t("HtmlEditorField.BACK") + '"></button>');
+						
+					this.find('.htmleditorfield-web-panel input.remoteurl').focus();
+				} else {
+					//Default view when modal is opened
+					mediaFormHeading
+						.show()
+						.text(ss.i18n._t("HtmlEditorField.INSERTFROM"))
+						.find('.back-button').remove();
 				}
 
 				// TODO Way too much knowledge on UploadField internals, use viewfile URL directly instead
-				this.find('.htmleditorfield-mediaform-heading.insert')[editingSelected ? 'hide' : 'show']();
+				this.find('.htmleditorfield-mediaform-heading.update')[editingSelected ? 'show' : 'hide']();
 				this.find('.ss-uploadfield-item-actions')[editingSelected ? 'hide' : 'show']();
 				this.find('.ss-uploadfield-item-name')[editingSelected ? 'hide' : 'show']();
 				this.find('.ss-uploadfield-item-preview')[editingSelected ? 'hide' : 'show']();
-				this.find('.htmleditorfield-mediaform-heading.update')[editingSelected ? 'show' : 'hide']();
 				this.find('.Actions .media-update')[editingSelected ? 'show' : 'hide']();
 				this.find('.ss-uploadfield-item-editform').toggleEditForm(editingSelected);
 				this.find('.htmleditorfield-from-cms .field.treedropdown').css('left', $('.htmleditorfield-mediaform-heading:visible').outerWidth());
@@ -1101,6 +1119,26 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				});
 				
 				return dfr.promise();
+			}
+		});
+
+		//When 'Insert from URL' button is clicked
+		$('form.htmleditorfield-mediaform div.ss-upload .upload-url').entwine({
+			onclick: function () {
+				var form = this.closest('form');
+
+				form.addClass('insertingURL');
+				form.redraw();
+			}
+		});
+
+		//When back button is clicked while inserting URL
+		$('form.htmleditorfield-mediaform .htmleditorfield-mediaform-heading .back-button').entwine({
+			onclick: function() {
+				var form = this.closest('form');
+
+				form.removeClass('insertingURL');
+				form.redraw();
 			}
 		});
 

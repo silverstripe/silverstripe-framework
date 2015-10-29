@@ -602,14 +602,14 @@ form.small .field, .field.small {
 			&:hover {
 				@include box-shadow(none);
 				background: #dee3e8;
-				color: $color-text;
+				color: darken($color-text, 10%);
 				border: 0;
 			}
 
 			&:focus {
 				@include box-shadow(none);
 				background: #dee3e8;
-				color: $color-text;
+				color: darken($color-text, 10%);
 				border: 0;
 			}
 
@@ -628,13 +628,16 @@ form.small .field, .field.small {
 			&:active {
 				@include box-shadow(0 0 3px rgba(191, 194, 196, .9) inset);
 				background: #dee3e8;
-				color: $color-text;
+				color: darken($color-text, 10%);
 				border: 0;
 			}
 
 			&.font-icon-search {
-				&:before {
-					margin-right: 2px;
+				padding: 4px 5px;
+				margin-right: 6px;
+				
+				&::before {
+					font-size: 20px;
 				}
 			}
 
@@ -645,6 +648,21 @@ form.small .field, .field.small {
 
 			.ui-icon {
 				display: none;
+			}
+			
+			&.no-text {
+				&:hover,
+				&:active,
+				&:focus,
+				&.active {
+					@include box-shadow(none);
+					background: none;
+					color: darken($color-text, 10%);
+				}
+				
+				&::before {
+					margin: 0;
+				}
 			}
 		}
 	}

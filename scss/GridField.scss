@@ -104,14 +104,6 @@ $gf_grid_x:	16px;
 	}
 	
 	.ss-gridfield {
-		.grid-levelup {
-			text-indent: -9999em;
-			a.list-parent-link{
-				background: transparent url(../images/gridfield-level-up.png) no-repeat 0 0;
-				display:block;
-			}
-			margin-bottom: 6px;
-		}
 		.add-existing-autocompleter {
 			span {
 				float: left;		
