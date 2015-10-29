@@ -315,7 +315,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				if(stristr($sort, ' asc') || stristr($sort, ' desc')) {
 					$query->sort($sort);
 				} else {
-					$list->applyRelation($sort, $column);
+					$list->applyRelation($sort, $column, true);
 					$query->sort($column, 'ASC');
 				}
 			}
@@ -327,7 +327,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				foreach($sort as $column => $direction) {
 					// Convert column expressions to SQL fragment, while still allowing the passing of raw SQL
 					// fragments.
-					$list->applyRelation($column, $relationColumn);
+					$list->applyRelation($column, $relationColumn, true);
 					$query->sort($relationColumn, $direction, false);
 				}
 			}
@@ -480,9 +480,11 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param string $field Name of field or relation to apply
 	 * @param string &$columnName Quoted column name
+	 * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
+	 * if this relation will be used for sorting, and should not include duplicate rows.
 	 * @return DataList DataList with this relation applied
 	 */
-	public function applyRelation($field, &$columnName = null) {
+	public function applyRelation($field, &$columnName = null, $linearOnly = false) {
 		// If field is invalid, return it without modification
 		if(!$this->isValidRelationName($field)) {
 			$columnName = $field;
@@ -495,9 +497,23 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			return $this;
 		}
 
-		return $this->alterDataQuery(function(DataQuery $query, DataList $list) use ($field, &$columnName) {
-			$columnName = $list->getRelationName($field);
-		});
+		return $this->alterDataQuery(
+			function(DataQuery $query, DataList $list) use ($field, &$columnName, $linearOnly) {
+				$relations = explode('.', $field);
+				$fieldName = array_pop($relations);
+
+				// Apply
+				$relationModelName = $query->applyRelation($field, $linearOnly);
+
+				// Find the db field the relation belongs to
+				$className = ClassInfo::table_for_object_field($relationModelName, $fieldName);
+				if(empty($className)) {
+					$className = $relationModelName;
+				}
+
+				$columnName = '"'.$className.'"."'.$fieldName.'"';
+			}
+		);
 	}
 
 	/**
@@ -508,44 +524,6 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	protected function isValidRelationName($field) {
 		return preg_match('/^[A-Z0-9._]+$/i', $field);
-	}
-
-	/**
-	 * Translates a {@link Object} relation name to a Database name and apply
-	 * the relation join to the query.  Throws an InvalidArgumentException if
-	 * the $field doesn't correspond to a relation.
-	 *
-	 * @throws InvalidArgumentException
-	 * @param string $field
-	 *
-	 * @return string
-	 */
-	public function getRelationName($field) {
-		if(!$this->isValidRelationName($field)) {
-			throw new InvalidArgumentException("Bad field expression $field");
-		}
-
-		if (!$this->inAlterDataQueryCall) {
-			throw new BadMethodCallException(
-				'getRelationName is mutating, and must be called inside an alterDataQuery block'
-			);
-		}
-
-		if(strpos($field,'.') === false) {
-			return '"'.$field.'"';
-		}
-
-		$relations = explode('.', $field);
-		$fieldName = array_pop($relations);
-		$relationModelName = $this->dataQuery->applyRelation($field);
-
-		// Find the db field the relation belongs to
-		$className = ClassInfo::table_for_object_field($relationModelName, $fieldName);
-		if(empty($className)) {
-			$className = $relationModelName;
-		}
-
-		return '"'.$className.'"."'.$fieldName.'"';
 	}
 
 	/**

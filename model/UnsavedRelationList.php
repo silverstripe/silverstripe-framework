@@ -323,10 +323,6 @@ class UnsavedRelationList extends ArrayList {
 		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
 	}
 
-	public function getRelationName() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
 	public function innerJoin() {
 		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
 	}
