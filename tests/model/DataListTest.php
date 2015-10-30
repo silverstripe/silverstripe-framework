@@ -400,6 +400,11 @@ class DataListTest extends SapphireTest {
 		// byID() returns a DataObject, rather than a DataList
 		$this->assertInstanceOf('DataObjectTest_Team', $team);
 		$this->assertEquals('Team 2', $team->Title);
+
+		// Assert that filtering on ID searches by the base table, not the child table field
+		$query = DataObjectTest_SubTeam::get()->filter('ID', 4)->sql($parameters);
+		$this->assertContains('WHERE ("DataObjectTest_Team"."ID" = ?)', $query);
+		$this->assertNotContains('WHERE ("DataObjectTest_SubTeam"."ID" = ?)', $query);
 	}
 
 	/**
