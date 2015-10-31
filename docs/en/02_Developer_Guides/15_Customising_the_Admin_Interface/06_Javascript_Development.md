@@ -250,7 +250,7 @@ Ready](http://docs.jquery.com/How_jQuery_Works#Launching_Code_on_Document_Ready)
 jQuery supports automatically reapplying event handlers when new DOM elements get inserted, mostly through Ajax calls.
 This "binding" saves you from reapplying this step manually.
 
-Caution: Only applies to certain events, see the [jQuery.on() documentation](http://api.jquery.com/on/).
+Caution: Only applies to certain events, see the [jQuery.on() documentation](http://api.jquery.com/on/#direct-and-delegated-events).
 
 Example: Add a 'loading' classname to all pressed buttons
 
@@ -261,13 +261,10 @@ Example: Add a 'loading' classname to all pressed buttons
 	});
 
 	// binding, applies to any inserted elements as well
-	$('input[[type=submit]]').on(function() {
+	$('.cms-container').on('click', 'input[[type=submit]]', function() {
 	  $(this).addClass('loading');
 	});
 
-
-See [jQuery FAQ: Why do my events stop working after an AJAX
-request](http://docs.jquery.com/Frequently_Asked_Questions#Why_do_my_events_stop_working_after_an_AJAX_request.3F).
 
 ### Assume Element Collections
 
