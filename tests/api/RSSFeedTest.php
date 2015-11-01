@@ -43,6 +43,13 @@ class RSSFeedTest extends SapphireTest {
 		$this->assertContains('<description>ItemC AltContent</description>', $content);
 	}
 
+	public function testLinkEncoding() {
+		$list = new ArrayList();
+		$rssFeed = new RSSFeed($list, "http://www.example.com/?param1=true&param2=true", "Test RSS Feed");
+		$content = $rssFeed->outputToBrowser();
+		$this->assertContains('<link>http://www.example.com/?param1=true&amp;param2=true', $content);
+	}
+
 	public function testRSSFeedWithShortcode() {
 		$list = new ArrayList();
 		$list->push(new RSSFeedTest_ItemD());
