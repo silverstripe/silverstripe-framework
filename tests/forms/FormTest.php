@@ -32,12 +32,21 @@ class FormTest extends FunctionalTest {
 				new TextField('key1'),
 				new TextField('namespace[key2]'),
 				new TextField('namespace[key3][key4]'),
-				new TextField('othernamespace[key5][key6][key7]')
+				new TextField('othernamespace[key5][key6][key7]'),
+				new CheckboxsetField('namespace2[Key1][Key2]', 'CheckboxsetField', array(
+					1 => "Monday",
+					2 => "Tuesday",
+					3 => "Wednesday",
+					4 => "Thursday",
+					5 => "Friday",
+					6 => "Saturday",
+					7 => "Sunday"
+				))
 			),
 			new FieldList()
 		);
 
-		// url would be ?key1=val1&namespace[key2]=val2&namespace[key3][key4]=val4&othernamespace[key5][key6][key7]=val7
+		// url would be ?key1=val1&namespace[key2]=val2&namespace[key3][key4]=val4&othernamespace[key5][key6][key7]=val7&namespace2[Key1][Key2][1]=1&namespace2[Key1][Key2][4]=4
 		$requestData = array(
 			'key1' => 'val1',
 			'namespace' => array(
@@ -52,6 +61,14 @@ class FormTest extends FunctionalTest {
 						'key7' => 'val7'
 					)
 				)
+			),
+			'namespace2' => array(
+				'Key1' => array(
+					'Key2' => array(
+						1 => '1',
+						4 => '4'
+					)
+				)
 			)
 		);
 
@@ -62,6 +79,7 @@ class FormTest extends FunctionalTest {
 		$this->assertEquals($fields->fieldByName('namespace[key2]')->Value(), 'val2');
 		$this->assertEquals($fields->fieldByName('namespace[key3][key4]')->Value(), 'val4');
 		$this->assertEquals($fields->fieldByName('othernamespace[key5][key6][key7]')->Value(), 'val7');
+		$this->assertEquals($fields->fieldByName('namespace2[Key1][Key2]')->Value(), array('1', '4'));
 	}
 
 	public function testLoadDataFromUnchangedHandling() {

@@ -1416,10 +1416,13 @@ class Form extends RequestHandler {
 					// First encode data using PHP's method of converting nested arrays to form data
 					$flatData = urldecode(http_build_query($data));
 					// Then pull the value out from that flattened string
-					preg_match('/' . addcslashes($name,'[]') . '=([^&]*)/', $flatData, $matches);
+					preg_match_all('/' . addcslashes($name,'[]') . '[^=]*=([^&]*)/', $flatData, $matches);
 
-					if (isset($matches[1])) {
+					if (isset($matches[1]) && sizeof($matches[1]) == 1) {
 						$exists = true;
+						$val = $matches[1][0];
+					} elseif(isset($matches[1])) {
+						$exists	= true;
 						$val = $matches[1];
 					}
 				}
