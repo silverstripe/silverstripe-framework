@@ -28,7 +28,7 @@
 				// Remove all bound events.
 				// This guards against an edge case where the click handlers are not unbound
 				// because the panel is still open when the ajax edit form reloads.
-				var frame = $('.cms').find('iframe');
+				var frame = $('.cms-container').find('iframe');
 				frame.each(function(index, iframe){
 					$(iframe).contents().off('click.ss-ui-action-tabset');
 				});
@@ -58,7 +58,7 @@
 			 * Note: Should be called by a click event attached to 'this'
 			 */
 			attachCloseHandler: function(event, ui) {
-				var that = this, frame = $('.cms').find('iframe'), closeHandler;
+				var that = this, frame = $('.cms-container').find('iframe'), closeHandler;
 
 				// Create a handler for the click event so we can close tabs
 				// and easily remove the event once done
@@ -74,7 +74,7 @@
 						that.tabs('option', 'active', false); // close tabs
 
 						// remove click event from objects it is bound to (iframe's and document)
-						frame = $('.cms').find('iframe');
+						frame = $('.cms-container').find('iframe');
 						frame.each(function(index, iframe){
 							$(iframe).contents().off('click.ss-ui-action-tabset', closeHandler);
 						});
