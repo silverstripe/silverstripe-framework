@@ -67,7 +67,7 @@ the `getConfig()` method on `GridField`.
 			$fields = parent::getCMSFields();
 
 			$fields->addFieldToTab('Root.Pages', 
-				$grid = GridField('Pages', 'All pages', SiteTree::get())
+				$grid = new GridField('Pages', 'All pages', SiteTree::get())
 			);
 
 			// GridField configuration

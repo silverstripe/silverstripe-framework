@@ -17,11 +17,11 @@ top level menu with a nested second level using the `Menu` loop and a `Children`
 
 				<% if $LinkOrSection == section %>
 					<% if $Children %>
-						<li><ul class="secondary">
+						<ul class="secondary">
 							<% loop $Children %>
 								<li class="$LinkingMode"><a href="$Link">$MenuTitle</a></li>
 							<% end_loop %>
-						</ul></li>
+						</ul>
 					<% end_if %>
 				<% end_if %>
 			</li>

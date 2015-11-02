@@ -105,7 +105,10 @@
 									SiblingIDs: siblingIDs
 								},
 								success: function() {
-									$('.cms-edit-form :input[name=ParentID]').val(newParentID);
+									// We only need to update the ParentID if the current page we're on is the page being moved
+									if ($('.cms-edit-form :input[name=ID]').val() == nodeID) {
+										$('.cms-edit-form :input[name=ParentID]').val(newParentID);
+									}
 									self.updateNodesFromServer([nodeID]);
 								},
 								statusCode: {
