@@ -15,34 +15,74 @@
  */
 (function($){
 
+	/**
+	 * Decode URL from header string
+	 * 
+	 * @param {String} str
+	 * @returns {String}
+	 */
 	var decodePath = function(str) {
 		return str.replace(/%2C/g,',').replace(/\&amp;/g, '&').replace(/^\s+|\s+$/g, '');
+	};
+	
+	/**
+	 * Remove querystring from the url. Necessary to prevent a file being included twice in the same page if
+	 * requested at different times (e.g. during flush)
+	 * 
+	 * @param {String} str
+	 * @returns {String}
+	 */
+	var removeQuerystring = function(str) {
+		return str.split("?")[0];
 	};
 
 	$.extend({
 
 		// loaded files list - to protect against loading existed file again  (by PGA)
 		_ondemand_loaded_list : null,
+		
+		/**
+		 * Add a new url to the loaded item
+		 * 
+		 * @param {String} url
+		 */
+		registerLoadedItem : function(url) {
+			this._ondemand_loaded_list[removeQuerystring(url)] = 1;
+		},
 
 		/**
 		 * Returns true if the given CSS or JS script has already been loaded
+		 * 
+		 * @param {String} scriptUrl Decoded CSS or JS file url
+		 * @returns {Boolean}
 		 */
 		isItemLoaded : function(scriptUrl) {
-			var self = this, src;
+			var self = this, src, result;
 			if(this._ondemand_loaded_list === null) {
 				this._ondemand_loaded_list = {};
 				$('script').each(function() {
 					src = $(this).attr('src');
-					if(src) self._ondemand_loaded_list[src] = 1;
+					if(src) {
+						self.registerLoadedItem(src);
+					}
 				});
 				$('link[rel="stylesheet"]').each(function() {
 					src = $(this).attr('href');
-					if(src) self._ondemand_loaded_list[src] = 1;
+					if(src) {
+						self.registerLoadedItem(src);
+					}
 				});
 			}
-			return (this._ondemand_loaded_list[decodePath(scriptUrl)] !== undefined);
+			result = this._ondemand_loaded_list[removeQuerystring(scriptUrl)];
+			return typeof result !== 'undefined';
 		},
 
+		/**
+		 * Requires a CSS File
+		 * 
+		 * @param {String} styleUrl Decoded CSS file url
+		 * @param {String} media
+		 */
 		requireCss : function(styleUrl, media){
 			if(!media) media = 'all';
 
@@ -52,6 +92,7 @@
 			if(document.createStyleSheet){
 				var ss = document.createStyleSheet(styleUrl);
 				ss.media = media;
+				
 				
 			} else {
 				var styleTag = document.createElement('link');
@@ -63,8 +104,7 @@
 				}).appendTo($('head').get(0));
 			}
 			
-			this._ondemand_loaded_list[styleUrl] = 1;
-
+			this.registerLoadedItem(styleUrl);
 		},
 		
 		/**
@@ -110,7 +150,7 @@
 						dataType: 'script',
 						url: newJsInclude, 
 						success: function() {
-							self._ondemand_loaded_list[newJsInclude] = 1;
+							self.registerLoadedItem(newJsInclude);
 							getScriptQueue();
 						},
 						cache: false,
