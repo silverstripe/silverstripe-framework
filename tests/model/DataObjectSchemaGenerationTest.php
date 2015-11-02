@@ -178,6 +178,11 @@ class DataObjectSchemaGenerationTest_DO extends DataObject implements TestOnly {
 	private static $db = array(
 		'Enum1' => 'Enum("A, B, C, D","")',
 		'Enum2' => 'Enum("A, B, C, D","A")',
+		'NumberField' => 'Decimal',
+		'FloatingField' => 'Decimal(10,3,1.1)',
+		'TextValue' => 'Varchar',
+		'Date' => 'SS_Datetime',
+		'MyNumber' => 'Int'
 	);
 }
 

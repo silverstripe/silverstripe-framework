@@ -407,15 +407,17 @@ class MySQLSchemaManager extends DBSchemaManager {
 			$precision = $values['precision'];
 		}
 
-		$defaultValue = '';
+		// Fix format of default value to match precision
 		if (isset($values['default']) && is_numeric($values['default'])) {
 			$decs = strpos($precision, ',') !== false
 					? (int) substr($precision, strpos($precision, ',') + 1)
 					: 0;
-			$defaultValue = ' default ' . number_format($values['default'], $decs, '.', '');
+			$values['default'] = number_format($values['default'], $decs, '.', '');
+		} else {
+			unset($values['default']);
 		}
 
-		return "decimal($precision) not null $defaultValue";
+		return "decimal($precision) not null" . $this->defaultClause($values);
 	}
 
 	/**
