@@ -123,4 +123,31 @@ class GroupedListTest extends SapphireTest {
 		}
 	}
 
+	public function testTotalItems() {
+		$list = GroupedList::create(
+			ArrayList::create(
+				array(
+					ArrayData::create(array(
+						'Name' => 'AAA',
+						'Number' => '111',
+					)),
+					ArrayData::create(array(
+						'Name' => 'BBB',
+						'Number' => '111',
+					)),
+					ArrayData::create(array(
+						'Name'   => 'AAA',
+						'Number' => '222',
+					)),
+					ArrayData::create(array(
+						'Name'   => 'BBB',
+						'Number' => '111',
+					))
+				)
+			)
+		);
+
+		$this->assertEquals(4, $list->TotalItems());
+	}
+
 }
