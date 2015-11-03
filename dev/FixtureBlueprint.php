@@ -192,6 +192,11 @@ class FixtureBlueprint {
 			if($data && array_key_exists('LastEdited', $data)) {
 				$this->overrideField($obj, 'LastEdited', $data['LastEdited'], $fixtures);
 			}
+
+			// Ensure Folder objects exist physically, as otherwise future File fixtures can't detect them
+			if($obj instanceof Folder) {
+				Filesystem::makeFolder($obj->getFullPath());
+			}
 		} catch(Exception $e) {
 			Config::inst()->update('DataObject', 'validation_enabled', $validationenabled);
 			throw $e;

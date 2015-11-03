@@ -25,9 +25,9 @@ class HTTP {
 	protected static $etag = null;
 
 	/**
-     * @config
-     */
-    private static $cache_ajax_requests = true;
+	 * @config
+	 */
+	private static $cache_ajax_requests = true;
 
 	/**
 	 * Turns a local system filename into a URL by comparing it to the script
@@ -378,7 +378,7 @@ class HTTP {
 				// (http://support.microsoft.com/kb/323308)
 				// Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
 				$cacheControlHeaders['max-age'] = 3;
-				
+
 				// Set empty pragma to avoid PHP's session_cache_limiter adding conflicting caching information,
 				// defaulting to "nocache" on most PHP configurations (see http://php.net/session_cache_limiter).
 				// Since it's a deprecated HTTP 1.0 option, all modern HTTP clients and proxies should
@@ -448,8 +448,14 @@ class HTTP {
 
 		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
 		foreach($responseHeaders as $k => $v) {
-			if($body) $body->addHeader($k, $v);
-			else if(!headers_sent()) header("$k: $v");
+			if($body) {
+				// Set the header now if it's not already set.
+				if ($body->getHeader($k) === null) {
+					$body->addHeader($k, $v);
+				}
+			} elseif(!headers_sent()) {
+				header("$k: $v");
+			}
 		}
 	}
 

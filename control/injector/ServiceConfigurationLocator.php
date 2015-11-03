@@ -9,11 +9,11 @@
  * @subpackage injector
  */
 class ServiceConfigurationLocator {
-	
-	
+
+
 	/**
 	 * Finds the Injector config for a named service.
-	 * 
+	 *
 	 * @param string $name
 	 * @return mixed
 	 */

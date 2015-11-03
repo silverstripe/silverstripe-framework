@@ -38,7 +38,7 @@ class Enum extends StringField {
 	public function __construct($name = null, $enum = NULL, $default = NULL) {
 		if($enum) {
 			if(!is_array($enum)) {
-				$enum = preg_split("/ *, */", trim($enum));
+				$enum = preg_split("/\s*,\s*/", trim($enum, ", \t\n\r\0\x0B"));
 			}
 
 			$this->enum = $enum;

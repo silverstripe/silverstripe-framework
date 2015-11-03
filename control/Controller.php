@@ -591,7 +591,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 				$queryargs = array_merge($queryargs, $localargs);
 			}
 			if((is_string($arg) && $arg) || is_numeric($arg)) {
-				$arg = (string)$arg;
+				$arg = (string) $arg;
 				if($result && substr($result,-1) != '/' && $arg[0] != '/') $result .= "/$arg";
 				else $result .= (substr($result, -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
 			}

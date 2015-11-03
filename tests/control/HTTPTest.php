@@ -13,18 +13,37 @@ class HTTPTest extends FunctionalTest {
 		$this->assertEmpty($response->getHeader('Cache-Control'));
 
 		HTTP::set_cache_age(30);
-		HTTP::add_cache_headers($response);
 
+		HTTP::add_cache_headers($response);
 		$this->assertNotEmpty($response->getHeader('Cache-Control'));
 
+		// Ensure max-age is zero for development.
 		Config::inst()->update('Director', 'environment_type', 'dev');
+		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
 		$this->assertContains('max-age=0', $response->getHeader('Cache-Control'));
 
+		// Ensure max-age setting is respected in production.
 		Config::inst()->update('Director', 'environment_type', 'live');
+		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
 		$this->assertContains('max-age=30', explode(', ', $response->getHeader('Cache-Control')));
 		$this->assertNotContains('max-age=0', $response->getHeader('Cache-Control'));
+
+		// Still "live": Ensure header's aren't overridden if already set (using purposefully different values).
+		$headers = array(
+			'Vary' => '*',
+			'Pragma' => 'no-cache',
+			'Cache-Control' => 'max-age=0, no-cache, no-store',
+		);
+		$response = new SS_HTTPResponse($body, 200);
+		foreach($headers as $name => $value) {
+			$response->addHeader($name, $value);
+		}
+		HTTP::add_cache_headers($response);
+		foreach($headers as $name => $value) {
+			$this->assertEquals($value, $response->getHeader($name));
+		}
 	}
 
 	/**
