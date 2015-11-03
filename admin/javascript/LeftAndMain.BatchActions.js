@@ -240,8 +240,8 @@
 					ids = this.getIDs(),
 					allIds = [],
 					viewMode = $('.cms-content-batchactions :input[name=view-mode-batchactions]'),
-					selectedAction = this.find(':input[name=Action]').val();
-			
+					actionUrl = this.find(':input[name=Action]').val();
+
 				// Default to refreshing the entire tree
 				if(rootNode == null) rootNode = st;
 
@@ -250,7 +250,7 @@
 				}
 
 				// If no action is selected, enable all nodes
-				if(!selectedAction || selectedAction == -1 || !viewMode.is(":checked")) {
+				if(!actionUrl || actionUrl == -1 || !viewMode.is(":checked")) {
 					$(rootNode).find('li').each(function() {
 						$(this).setEnabled(true);
 					});
@@ -264,8 +264,12 @@
 				});
 				
 				// Post to the server to ask which pages can have this batch action applied
-				var applicablePagesURL = selectedAction + '/applicablepages/?csvIDs=' + allIds.join(',');
-				jQuery.getJSON(applicablePagesURL, function(applicableIDs) {
+				// Retain existing query parameters in URL before appending path
+				var actionUrlParts = $.path.parseUrl(actionUrl);
+				var applicablePagesUrl = actionUrlParts.hrefNoSearch + '/applicablepages/';
+				applicablePagesUrl = $.path.addSearchParams(applicablePagesUrl, actionUrlParts.search);
+				applicablePagesUrl = $.path.addSearchParams(applicablePagesUrl, {csvIDs: allIds.join(',')});
+				jQuery.getJSON(applicablePagesUrl, function(applicableIDs) {
 					// Set a CSS class on each tree node indicating which can be batch-actioned and which can't
 					jQuery(rootNode).find('li').each(function() {
 						$(this).removeClass('treeloading');
