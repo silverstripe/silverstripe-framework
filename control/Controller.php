@@ -119,6 +119,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
 		$this->setRequest($request);
+		$this->getResponse();
 		$this->setDataModel($model);
 
 		$this->extend('onBeforeInit');
@@ -394,7 +395,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**
 	 * Returns the current controller
-	 * @returns Controller
+	 * @return Controller
 	 */
 	public static function curr() {
 		if(Controller::$controller_stack) {

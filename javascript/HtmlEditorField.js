@@ -845,9 +845,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						} else if(el.is(':radio')) {
 							el.val([selected]).change();
 						} else if(fieldName == 'file') {
-							// Can't rely on fieldName, ad UploadFields have different naming convention
-							el = $('#' + fieldName);
-
+							// UploadField inputs have a slightly different naming convention
+							el = this.find(':input[name="' + fieldName + '[Uploads][]"]');
+							// We need the UploadField "field", not just the input
+							el = el.parents('.ss-uploadfield');
+							
 							// We have to wait for the UploadField to initialise
 							(function attach(el, selected) {
 								if( ! el.getConfig()) {

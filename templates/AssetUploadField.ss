@@ -21,7 +21,7 @@
 
 <div class="ss-uploadfield-editandorganize">
 	<div class="ss-uploadfield-item-actions edit-all">
-		<button class="ss-uploadfield-item-edit-all ss-ui-button ui-corner-all" title="<%t AssetUploadField.EDITINFO 'Edit files' %>" style="display:none;">
+		<button type="button" class="ss-uploadfield-item-edit-all ss-ui-button ui-corner-all" title="<%t AssetUploadField.EDITINFO 'Edit files' %>" style="display:none;">
 			<%t AssetUploadField.EDITALL 'Edit all' %>
 				<span class="toggle-details-icon"></span>
 		</button>

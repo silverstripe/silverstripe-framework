@@ -260,6 +260,7 @@ lt:
     many_many_Members: Vartotojai
   GroupImportForm:
     Help1: '<p>Importuoti vieną ar kelias grupes <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href="#" class="toggle-advanced">Rodyti detalesnį aprašymą</a></small></p>'
+    Help2: '<div class="advanced"><h4>Detalesnis aprašymas</h4><ul><li>Galimi stulpeliai: <em>%s</em>.</li><li>Esamos grupės yra surandamos su jų unikalia <em>Code</em> reikšme ir atnaujinamos duomenimis iš importuojamos bylos.</li><li>Grupių hierarchija gali būti sukurta naudojant <em>ParentCode</em> stulpelį.</li><li>Leidimų kodai gali būti priskirti naudojant <em>PermissionCode</em> stulpelį. Esami leidimai nebus pakeisti.</li></ul></div>'
     ResultCreated: 'Sukurta {count} grupių'
     ResultDeleted: 'Ištrinta %d grupių'
     ResultUpdated: 'Atnaujinta %d grupių'
@@ -291,6 +292,8 @@ lt:
     FROMWEB: 'Iš interneto'
     FindInFolder: 'Rasti kataloge'
     IMAGEALT: 'Alternatyvus tekstas (alt)'
+    IMAGEALTTEXT: 'Alternatyvus tekstas (alt) - rodomas, jeigu nepavyko parodyti paveikslėlio'
+    IMAGEALTTEXTDESC: 'Rodomas, jeigu nepavyko parodyti paveikslėlio'
     IMAGEDIMENSIONS: Matmenys
     IMAGEHEIGHTPX: Aukštis
     IMAGETITLE: 'Pavadinimo tekstas (tooltip) - papildomai informacijai apie paveikslėlį'
@@ -325,9 +328,11 @@ lt:
     DELETED: Ištrinta.
     DropdownBatchActionsDefault: Veiksmai
     HELP: Pagalba
+    PAGETYPE: 'Puslapio tipas:'
     PERMAGAIN: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'
     PERMALREADY: 'Deja, bet Jūs negalite patekti į šią TVS dalį. Jeigu norite prisijungti kitu vartotoju, tai atlikite žemiau.'
     PERMDEFAULT: 'Jūs turite būti prisijungę, norėdami pasiekti administravimo zoną; prašome suvesti prisijungimo duomenis į žemiau esančius laukelius.'
+    PLEASESAVE: 'Prašome išsaugoti puslapį: Šis puslapis negali būti atnaujintas, nes jis dar nėra išsaugotas.'
     PreviewButton: Peržiūra
     REORGANISATIONSUCCESSFUL: 'Puslapių medis pertvarkytas sėkmingai.'
     SAVEDUP: Išsaugota.
@@ -415,6 +420,7 @@ lt:
     Toggle: 'Rodyti formatavimo aprašymą'
   MemberImportForm:
     Help1: '<p>Importuoti vartotojus <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href="#" class="toggle-advanced">Rodyti detalesnį aprašymą</a></small></p>'
+    Help2: '<div class="advanced"><h4>Detalesnis aprašymas</h4><ul><li>Galimi stulpeliai: <em>%s</em>.</li><li>Esami vartotojai yra surandami su jų unikalia <em>Code</em> reikšme ir atnaujinami duomenimis iš importuojamos bylos.</li><li>Grupės gali būti priskirtos naudojant <em>Groups</em> column. stulpelį. Grupės yra atpažįstamos pagal <em>Code</em> stulpelį, kelios grupės nurodomos per kablelį. Jau priskirtos vartotojui grupės nebus pakeistos.</li></ul></div>'
     ResultCreated: 'Sukurta {count} vartotojų'
     ResultDeleted: 'Ištrinta %d vartotojų'
     ResultNone: 'Nėra jokių pakeitimų'

@@ -1,7 +1,7 @@
 title: Contributing Code
 summary: Fix bugs and add new features to help make SilverStripe better.
 
-# Contributing Code - Submiting Bugfixes and Enhancements
+# Contributing Code - Submitting Bugfixes and Enhancements
 
 SilverStripe will never be finished, and we need your help to keep making it better.  If you're a developer a great way to get involved is to contribute patches to our modules and core codebase, fixing bugs or adding features.
 

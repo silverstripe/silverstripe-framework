@@ -23,7 +23,7 @@ the [api:Extension] class for non DataObject subclasses (such as [api:Controller
 
 		public function SayHi() {
 			// $this->owner refers to the original instance. In this case a `Member`.
-			return "Hi ". $this->owner->Name;
+			return "Hi " . $this->owner->Name;
 		}
 	}
 
@@ -80,7 +80,7 @@ $has_one etc.
 
 		public function SayHi() {
 			// $this->owner refers to the original instance. In this case a `Member`.
-			return "Hi ". $this->owner->Name;
+			return "Hi " . $this->owner->Name;
 		}
 	}
 

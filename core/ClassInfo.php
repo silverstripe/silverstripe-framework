@@ -301,22 +301,30 @@ class ClassInfo {
 	 * @return string
 	 */
 	public static function table_for_object_field($candidateClass, $fieldName) {
-		if(!$candidateClass || !$fieldName || !is_subclass_of($candidateClass, 'DataObject')) {
+		if(!$candidateClass
+			|| !$fieldName
+			|| !class_exists($candidateClass)
+			|| !is_subclass_of($candidateClass, 'DataObject')
+		) {
 			return null;
 		}
 
 		//normalise class name
 		$candidateClass = self::class_name($candidateClass);
-
 		$exists = self::exists($candidateClass);
 
-		while($candidateClass && $candidateClass != 'DataObject' && $exists) {
-			if(DataObject::has_own_table($candidateClass)) {
-				$inst = singleton($candidateClass);
+		// Short circuit for fixed fields
+		$fixed = DataObject::config()->fixed_fields;
+		if($exists && isset($fixed[$fieldName])) {
+			return self::baseDataClass($candidateClass);
+		}
 
-				if($inst->hasOwnTableDatabaseField($fieldName)) {
-					break;
-				}
+		// Find regular field
+		while($candidateClass && $candidateClass != 'DataObject' && $exists) {
+			if( DataObject::has_own_table($candidateClass)
+				&& DataObject::has_own_table_database_field($candidateClass, $fieldName)
+			) {
+				break;
 			}
 
 			$candidateClass = get_parent_class($candidateClass);

@@ -57,11 +57,11 @@
 			<% end_if %>
 
 			<% if $canAttachExisting %>
-				<button class="ss-uploadfield-fromfiles ss-ui-button ui-corner-all" title="<%t UploadField.FROMCOMPUTERINFO 'Select from files' %>" data-icon="network-cloud"><%t UploadField.FROMFILES 'From files' %></button>
+				<button type="button" class="ss-uploadfield-fromfiles ss-ui-button ui-corner-all" title="<%t UploadField.FROMCOMPUTERINFO 'Select from files' %>" data-icon="network-cloud"><%t UploadField.FROMFILES 'From files' %></button>
 			<% end_if %>
 			<% if $canUpload %>
 				<% if not $autoUpload %>
-					<button class="ss-uploadfield-startall ss-ui-button ui-corner-all" data-icon="navigation"><%t UploadField.STARTALL 'Start all' %></button>
+					<button type="button" class="ss-uploadfield-startall ss-ui-button ui-corner-all" data-icon="navigation"><%t UploadField.STARTALL 'Start all' %></button>
 				<% end_if %>
 			<% end_if %>
 			<div class="clear"><!-- --></div>

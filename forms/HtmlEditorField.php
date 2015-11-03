@@ -315,7 +315,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$description = new LiteralField('URLDescription', '<div class="url-description">' . $URLDescription . '</div>'),
 			$remoteURL = new TextField('RemoteURL', 'http://'),
 			new LiteralField('addURLImage',
-				'<button class="action ui-action-constructive ui-button field font-icon-plus add-url">' .
+				'<button type="button" class="action ui-action-constructive ui-button field font-icon-plus add-url">' .
 				_t('HtmlEditorField.BUTTONADDURL', 'Add url').'</button>')
 		);
 

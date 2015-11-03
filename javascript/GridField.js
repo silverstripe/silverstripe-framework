@@ -55,7 +55,7 @@
 								content = '<span class="non-sortable"></span>';
 								self.addClass('show-filter').find('.filter-header').show();
 							} else {
-								content = '<button name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
+								content = '<button type="button" name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
 								self.removeClass('show-filter').find('.filter-header').hide();
 							}
 

@@ -278,21 +278,23 @@
 					sessionData = hasSessionStorage ? window.sessionStorage.getItem(this.attr('id')) : null,
 					sessionStates = sessionData ? JSON.parse(sessionData) : false,
 					elementID,
-					tabbed = this.find('.ss-tabset'),
+					tabbed = (this.find('.ss-tabset').length !== 0),
 					activeTab,
 					elementTab,
 					toggleComposite,
 					scrollY;
 
 				if(hasSessionStorage && sessionStates.length > 0){
-
 					$.each(sessionStates, function(i, sessionState) {
 						if(self.is('#' + sessionState.id)){
 							elementID = $('#' + sessionState.selected);
 						}
 					});
 
+					// If the element IDs saved in session states don't match up to anything in this particular form
+					// that probably means we haven't encountered this form yet, so focus on the first input
 					if($(elementID).length < 1){
+						this.focusFirstInput();
 						return;
 					}
 
@@ -330,14 +332,18 @@
 					}
 				
 				} else {
-					// If there is no focus data attribute set, focus input on first form element. Exclude elements which
-					// specifically opt-out of this behaviour via "data-skip-autofocus".
-					// This opt-out is useful if the first visible field is shown far down a scrollable area,
-					// for example for the pagination input field after a long GridField listing.
-					// Skip if an element in the form is already focused.
-
-					this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:first').focus();
+					// If session storage is not supported or there is nothing stored yet, focus on the first input 
+					this.focusFirstInput();
 				}
+			},
+			/**
+			 * Skip if an element in the form is already focused. Exclude elements which specifically
+			 * opt-out of this behaviour via "data-skip-autofocus". This opt-out is useful if the
+			 * first visible field is shown far down a scrollable area, for example for the pagination
+			 * input field after a long GridField listing.
+			 */
+			focusFirstInput: function() {
+				this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:first').focus();
 			}
 		});
 

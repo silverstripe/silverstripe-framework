@@ -6,6 +6,7 @@ The core committers team is reviewed approximately annually, new members are add
 * [Daniel Hensby](https://github.com/dhensby)
 * [Hamish Friedlander](https://github.com/hafriedlander)
 * [Ingo Schommer](https://github.com/chillu)
+* [Jono Menz](https://github.com/jonom)
 * [Loz Calver](https://github.com/kinglozzer)
 * [Sam Minnée](https://github.com/sminnee)
 * [Sean Harvey](https://github.com/halkyon/)
