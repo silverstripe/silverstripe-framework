@@ -4,14 +4,14 @@
  * @package framework
  * @subpackage tests
  */
-class SQLQueryTest extends SapphireTest {
+class SQLSelectTest extends SapphireTest {
 
-	protected static $fixture_file = 'SQLQueryTest.yml';
+	protected static $fixture_file = 'SQLSelectTest.yml';
 
 	protected $extraDataObjects = array(
-		'SQLQueryTest_DO',
-		'SQLQueryTestBase',
-		'SQLQueryTestChild'
+		'SQLSelectTest_DO',
+		'SQLSelectTestBase',
+		'SQLSelectTestChild'
 	);
 	
 	protected $oldDeprecation = null;
@@ -29,15 +29,15 @@ class SQLQueryTest extends SapphireTest {
 	public function testCount() {
 
 		//basic counting
-		$qry = SQLQueryTest_DO::get()->dataQuery()->getFinalisedQuery();
+		$qry = SQLSelectTest_DO::get()->dataQuery()->getFinalisedQuery();
 		$qry->setGroupBy('Common');
-		$ids = $this->allFixtureIDs('SQLQueryTest_DO');
-		$this->assertEquals(count($ids), $qry->count('"SQLQueryTest_DO"."ID"'));
+		$ids = $this->allFixtureIDs('SQLSelectTest_DO');
+		$this->assertEquals(count($ids), $qry->count('"SQLSelectTest_DO"."ID"'));
 
 		//test with `having`
 		if (DB::get_conn() instanceof MySQLDatabase) {
 			$qry->setHaving('"Date" > 2012-02-01');
-			$this->assertEquals(1, $qry->count('"SQLQueryTest_DO"."ID"'));
+			$this->assertEquals(1, $qry->count('"SQLSelectTest_DO"."ID"'));
 		}
 	}
 
@@ -419,7 +419,7 @@ class SQLQueryTest extends SapphireTest {
 	public function testSelectFirst() {
 		// Test first from sequence
 		$query = new SQLSelect();
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->setOrderBy('"Name"');
 		$result = $query->firstRow()->execute();
 
@@ -433,7 +433,7 @@ class SQLQueryTest extends SapphireTest {
 
 		// Test first from empty sequence
 		$query = new SQLSelect();
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->setOrderBy('"Name"');
 		$query->setWhere(array('"Name"' => 'Nonexistent Object'));
 		$result = $query->firstRow()->execute();
@@ -447,7 +447,7 @@ class SQLQueryTest extends SapphireTest {
 
 		// Test that given the last item, the 'first' in this list matches the last
 		$query = new SQLSelect();
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->setOrderBy('"Name"');
 		$query->setLimit(1, 1);
 		$result = $query->firstRow()->execute();
@@ -464,7 +464,7 @@ class SQLQueryTest extends SapphireTest {
 	public function testSelectLast() {
 		// Test last in sequence
 		$query = new SQLSelect();
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->setOrderBy('"Name"');
 		$result = $query->lastRow()->execute();
 
@@ -478,7 +478,7 @@ class SQLQueryTest extends SapphireTest {
 
 		// Test last from empty sequence
 		$query = new SQLSelect();
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->setOrderBy('"Name"');
 		$query->setWhere(array("\"Name\" = 'Nonexistent Object'"));
 		$result = $query->lastRow()->execute();
@@ -492,7 +492,7 @@ class SQLQueryTest extends SapphireTest {
 
 		// Test that given the first item, the 'last' in this list matches the first
 		$query = new SQLSelect();
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->setOrderBy('"Name"');
 		$query->setLimit(1);
 		$result = $query->lastRow()->execute();
@@ -511,7 +511,7 @@ class SQLQueryTest extends SapphireTest {
 	 */
 	public function testAggregate() {
 		$query = new SQLSelect('"Common"');
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->setGroupBy('"Common"');
 
 		$queryClone = $query->aggregate('COUNT(*)', 'cnt');
@@ -524,7 +524,7 @@ class SQLQueryTest extends SapphireTest {
 	 */
 	public function testAggregateNoOrderByIfNoLimit() {
 		$query = new SQLSelect();
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->setOrderBy('Common');
 		$query->setLimit(array());
 
@@ -534,7 +534,7 @@ class SQLQueryTest extends SapphireTest {
 		$this->assertEquals(array(), $limit);
 
 		$query = new SQLSelect();
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->setOrderBy('Common');
 		$query->setLimit(2);
 
@@ -553,7 +553,7 @@ class SQLQueryTest extends SapphireTest {
 	public function testOrderByContainingAggregateAndLimitOffset() {
 		$query = new SQLSelect();
 		$query->setSelect(array('"Name"', '"Meta"'));
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->setOrderBy(array('MAX("Date")'));
 		$query->setGroupBy(array('"Name"', '"Meta"'));
 		$query->setLimit('1', '1');
@@ -576,7 +576,7 @@ class SQLQueryTest extends SapphireTest {
 		if(DB::get_conn() instanceof MySQLDatabase) {
 			$query = new SQLSelect();
 			$query->setSelect(array('"Name"', '"Meta"'));
-			$query->setFrom('"SQLQueryTest_DO"');
+			$query->setFrom('"SQLSelectTest_DO"');
 			$query->setOrderBy(array('MID("Name", 8, 1) DESC', '"Name" ASC'));
 
 			$records = array();
@@ -629,7 +629,7 @@ class SQLQueryTest extends SapphireTest {
 	public function testLimitSetFromClauseString() {
 		$query = new SQLSelect();
 		$query->setSelect('*');
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setFrom('"SQLSelectTest_DO"');
 
 		$query->setLimit('20 OFFSET 10');
 		$limit = $query->getLimit();
@@ -639,22 +639,22 @@ class SQLQueryTest extends SapphireTest {
 
 	public function testParameterisedInnerJoins() {
 		$query = new SQLSelect();
-		$query->setSelect(array('"SQLQueryTest_DO"."Name"', '"SubSelect"."Count"'));
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setSelect(array('"SQLSelectTest_DO"."Name"', '"SubSelect"."Count"'));
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->addInnerJoin(
-			'(SELECT "Title", COUNT(*) AS "Count" FROM "SQLQueryTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
-			'"SQLQueryTest_DO"."Name" = "SubSelect"."Title"',
+			'(SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
+			'"SQLSelectTest_DO"."Name" = "SubSelect"."Title"',
 			'SubSelect',
 			20,
 			array('%MyName%')
 		);
-		$query->addWhere(array('"SQLQueryTest_DO"."Date" > ?' => '2012-08-08 12:00'));
+		$query->addWhere(array('"SQLSelectTest_DO"."Date" > ?' => '2012-08-08 12:00'));
 
-		$this->assertSQLEquals('SELECT "SQLQueryTest_DO"."Name", "SubSelect"."Count"
-			FROM "SQLQueryTest_DO" INNER JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLQueryTestBase"
-		   GROUP BY "Title" HAVING "Title" NOT LIKE ?) AS "SubSelect" ON "SQLQueryTest_DO"."Name" =
+		$this->assertSQLEquals('SELECT "SQLSelectTest_DO"."Name", "SubSelect"."Count"
+			FROM "SQLSelectTest_DO" INNER JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase"
+		   GROUP BY "Title" HAVING "Title" NOT LIKE ?) AS "SubSelect" ON "SQLSelectTest_DO"."Name" =
 		   "SubSelect"."Title"
-			WHERE ("SQLQueryTest_DO"."Date" > ?)', $query->sql($parameters)
+			WHERE ("SQLSelectTest_DO"."Date" > ?)', $query->sql($parameters)
 		);
 		$this->assertEquals(array('%MyName%', '2012-08-08 12:00'), $parameters);
 		$query->execute();
@@ -662,123 +662,29 @@ class SQLQueryTest extends SapphireTest {
 
 	public function testParameterisedLeftJoins() {
 		$query = new SQLSelect();
-		$query->setSelect(array('"SQLQueryTest_DO"."Name"', '"SubSelect"."Count"'));
-		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setSelect(array('"SQLSelectTest_DO"."Name"', '"SubSelect"."Count"'));
+		$query->setFrom('"SQLSelectTest_DO"');
 		$query->addLeftJoin(
-			'(SELECT "Title", COUNT(*) AS "Count" FROM "SQLQueryTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
-			'"SQLQueryTest_DO"."Name" = "SubSelect"."Title"',
+			'(SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
+			'"SQLSelectTest_DO"."Name" = "SubSelect"."Title"',
 			'SubSelect',
 			20,
 			array('%MyName%')
 		);
-		$query->addWhere(array('"SQLQueryTest_DO"."Date" > ?' => '2012-08-08 12:00'));
+		$query->addWhere(array('"SQLSelectTest_DO"."Date" > ?' => '2012-08-08 12:00'));
 
-		$this->assertSQLEquals('SELECT "SQLQueryTest_DO"."Name", "SubSelect"."Count"
-			FROM "SQLQueryTest_DO" LEFT JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLQueryTestBase"
-		   GROUP BY "Title" HAVING "Title" NOT LIKE ?) AS "SubSelect" ON "SQLQueryTest_DO"."Name" =
+		$this->assertSQLEquals('SELECT "SQLSelectTest_DO"."Name", "SubSelect"."Count"
+			FROM "SQLSelectTest_DO" LEFT JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase"
+		   GROUP BY "Title" HAVING "Title" NOT LIKE ?) AS "SubSelect" ON "SQLSelectTest_DO"."Name" =
 		   "SubSelect"."Title"
-			WHERE ("SQLQueryTest_DO"."Date" > ?)', $query->sql($parameters)
+			WHERE ("SQLSelectTest_DO"."Date" > ?)', $query->sql($parameters)
 		);
 		$this->assertEquals(array('%MyName%', '2012-08-08 12:00'), $parameters);
 		$query->execute();
 	}
-	
-	/**
-	 * Test deprecation of SQLQuery::getWhere working appropriately
-	 */
-	public function testDeprecatedGetWhere() {
-		// Temporarily disable deprecation
-		Deprecation::notification_version(null);
-		
-		$query = new SQLQuery();
-		$query->setSelect(array('"SQLQueryTest_DO"."Name"'));
-		$query->setFrom('"SQLQueryTest_DO"');
-		$query->addWhere(array(
-			'"SQLQueryTest_DO"."Date" > ?' => '2012-08-08 12:00'
-		));
-		$query->addWhere('"SQLQueryTest_DO"."Name" = \'Richard\'');
-		$query->addWhere(array(
-			'"SQLQueryTest_DO"."Meta" IN (?, \'Who?\', ?)' => array('Left', 'Right')
-		));
-		
-		$expectedSQL = <<<EOS
-SELECT "SQLQueryTest_DO"."Name"
- FROM "SQLQueryTest_DO"
- WHERE ("SQLQueryTest_DO"."Date" > ?)
- AND ("SQLQueryTest_DO"."Name" = 'Richard')
- AND ("SQLQueryTest_DO"."Meta" IN (?, 'Who?', ?))
-EOS
-			;
-		$expectedParameters = array('2012-08-08 12:00', 'Left', 'Right');
-		
-		
-		// Check sql evaluation of this query maintains the parameters
-		$sql = $query->sql($parameters);
-		$this->assertSQLEquals($expectedSQL, $sql);
-		$this->assertEquals($expectedParameters, $parameters);
-		
-		// Check that ->toAppropriateExpression()->setWhere doesn't modify the query
-		$query->setWhere($query->toAppropriateExpression()->getWhere());
-		$sql = $query->sql($parameters);
-		$this->assertSQLEquals($expectedSQL, $sql);
-		$this->assertEquals($expectedParameters, $parameters);
-		
-		// Check that getWhere are all flattened queries
-		$expectedFlattened = array(
-			'"SQLQueryTest_DO"."Date" > \'2012-08-08 12:00\'',
-			'"SQLQueryTest_DO"."Name" = \'Richard\'',
-			'"SQLQueryTest_DO"."Meta" IN (\'Left\', \'Who?\', \'Right\')'
-		);
-		$this->assertEquals($expectedFlattened, $query->getWhere());
-	}
-	
-	/**
-	 * Test deprecation of SQLQuery::setDelete/getDelete
-	 */
-	public function testDeprecatedSetDelete() {
-		// Temporarily disable deprecation
-		Deprecation::notification_version(null);
-		
-		$query = new SQLQuery();
-		$query->setSelect(array('"SQLQueryTest_DO"."Name"'));
-		$query->setFrom('"SQLQueryTest_DO"');
-		$query->setWhere(array('"SQLQueryTest_DO"."Name"' => 'Andrew'));
-
-		// Check SQL for select
-		$this->assertSQLEquals(<<<EOS
-SELECT "SQLQueryTest_DO"."Name" FROM "SQLQueryTest_DO"
-WHERE ("SQLQueryTest_DO"."Name" = ?)
-EOS
-			,
-			$query->sql($parameters)
-		);
-		$this->assertEquals(array('Andrew'), $parameters);
-		
-		// Check setDelete works
-		$query->setDelete(true);
-	$this->assertSQLEquals(<<<EOS
-DELETE FROM "SQLQueryTest_DO"
-WHERE ("SQLQueryTest_DO"."Name" = ?)
-EOS
-			,
-			$query->sql($parameters)
-		);
-		$this->assertEquals(array('Andrew'), $parameters);
-		
-		// Check that setDelete back to false restores the state
-		$query->setDelete(false);
-		$this->assertSQLEquals(<<<EOS
-SELECT "SQLQueryTest_DO"."Name" FROM "SQLQueryTest_DO"
-WHERE ("SQLQueryTest_DO"."Name" = ?)
-EOS
-			,
-			$query->sql($parameters)
-		);
-		$this->assertEquals(array('Andrew'), $parameters);
-	}
 }
 
-class SQLQueryTest_DO extends DataObject implements TestOnly {
+class SQLSelectTest_DO extends DataObject implements TestOnly {
 	private static $db = array(
 		"Name" => "Varchar",
 		"Meta" => "Varchar",
@@ -787,17 +693,14 @@ class SQLQueryTest_DO extends DataObject implements TestOnly {
 	);
 }
 
-class SQLQueryTestBase extends DataObject implements TestOnly {
+class SQLSelectTestBase extends DataObject implements TestOnly {
 	private static $db = array(
 		"Title" => "Varchar",
 	);
 }
 
-class SQLQueryTestChild extends SQLQueryTestBase {
+class SQLSelectTestChild extends SQLSelectTestBase {
 	private static $db = array(
 		"Name" => "Varchar",
-	);
-
-	private static $has_one = array(
 	);
 }

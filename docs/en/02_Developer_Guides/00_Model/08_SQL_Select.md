@@ -1,9 +1,9 @@
-title: SQLQuery
-summary: Write and modify direct database queries through SQLQuery.
+title: SQLSelect
+summary: Write and modify direct database queries through SQLSelect.
 
-# SQLQuery
+# SQLSelect
 
-A [api:SQLQuery] object represents a SQL query, which can be serialized into a SQL statement. Dealing with low-level 
+A [api:SQLSelect] object represents a SQL query, which can be serialized into a SQL statement. Dealing with low-level 
 SQL such as `mysql_query()` is not encouraged, since the ORM provides powerful abstraction API's.
 
 For example, if you want to run a simple `COUNT` SQL statement, the following three statements are functionally 
@@ -13,8 +13,8 @@ equivalent:
 	// Through raw SQL.
 	$count = DB::query('SELECT COUNT(*) FROM "Member"')->value();
 
-	// Through SQLQuery abstraction layer.
-	$query = new SQLQuery();
+	// Through SQLSelect abstraction layer.
+	$query = new SQLSelect();
 	$count = $query->setFrom('Member')->setSelect('COUNT(*)')->value();
 
 	// Through the ORM.
@@ -22,7 +22,7 @@ equivalent:
 
 
 <div class="info">
-The SQLQuery object is used by the SilverStripe ORM internally. By understanding SQLQuery, you can modify the SQL that 
+The SQLSelect object is used by the SilverStripe ORM internally. By understanding SQLSelect, you can modify the SQL that 
 the ORM creates.
 </div>
 
@@ -31,12 +31,12 @@ the ORM creates.
 ### Select
 
 	:::php
-	$sqlQuery = new SQLQuery();
+	$sqlQuery = new SQLSelect();
 	$sqlQuery->setFrom('Player');
 	$sqlQuery->selectField('FieldName', 'Name');
 	$sqlQuery->selectField('YEAR("Birthday")', 'Birthyear');
 	$sqlQuery->addLeftJoin('Team','"Player"."TeamID" = "Team"."ID"');
-	$sqlQuery->addWhere('YEAR("Birthday") = 1982');
+	$sqlQuery->addWhere(array('YEAR("Birthday") = ?' => 1982));
 
 	// $sqlQuery->setOrderBy(...);
 	// $sqlQuery->setGroupBy(...);
@@ -66,7 +66,7 @@ The `$result` is an array lightly wrapped in a database-specific subclass of `[a
 ### Insert / Update
 
 <div class="alert" markdown="1">
-Currently not supported through the `SQLQuery` class, please use raw `DB::query()` calls instead.
+Currently not supported through the `SQLSelect` class, please use raw `DB::query()` calls instead.
 </div>
 
 	:::php
@@ -75,10 +75,10 @@ Currently not supported through the `SQLQuery` class, please use raw `DB::query(
 ### Joins
 
 	:::php
-	$sqlQuery = new SQLQuery();
+	$sqlQuery = new SQLSelect();
 	$sqlQuery->setFrom('Player');
 	$sqlQuery->addSelect('COUNT("Player"."ID")');
-	$sqlQuery->addWhere('"Team"."ID" = 99');
+	$sqlQuery->addWhere(array('"Team"."ID" => 99));
 	$sqlQuery->addLeftJoin('Team', '"Team"."ID" = "Player"."TeamID"');
 	
 	$count = $sqlQuery->execute()->value();
@@ -88,7 +88,7 @@ Currently not supported through the `SQLQuery` class, please use raw `DB::query(
 Creates a map based on the first two columns of the query result. 
 
 	:::php
-	$sqlQuery = new SQLQuery();
+	$sqlQuery = new SQLSelect();
 	$sqlQuery->setFrom('Player');
 	$sqlQuery->setSelect('ID');
 	$sqlQuery->selectField('CONCAT("Name", ' - ', YEAR("Birthdate")', 'NameWithBirthyear');
@@ -108,7 +108,7 @@ Creates a map based on the first two columns of the query result.
 ## API Documentation
 
 * [api:DataObject]
-* [api:SQLQuery]
+* [api:SQLSelect]
 * [api:DB]
 * [api:Query]
 * [api:Database]

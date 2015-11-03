@@ -33,7 +33,7 @@ Example:
 	$records = DataObject::get_by_id('MyClass', 3);
 	$records = DataObject::get_one('MyClass', array('"ID" = ?' => 3));
 	$records = MyClass::get()->byID(3);
-	$records = SQLQuery::create()->addWhere(array('"ID"' => 3))->execute();
+	$records = SQLSelect::create()->addWhere(array('"ID"' => 3))->execute();
 
 Parameterised updates and inserts are also supported, but the syntax is a little different
 
@@ -98,7 +98,7 @@ As a rule of thumb, whenever you're creating SQL queries (or just chunks of SQL)
 but there may be cases where you need to take care of escaping yourself. See [coding-conventions](/getting_started/coding-conventions)
 and [datamodel](/developer_guides/model) for ways to parameterise, cast, and convert your data.
 
-*  `SQLQuery`
+*  `SQLSelect`
 *  `DB::query()`
 *  `DB::prepared_query()`
 *  `Director::urlParams()`
