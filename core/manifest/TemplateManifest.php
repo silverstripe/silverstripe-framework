@@ -178,29 +178,62 @@ class SS_TemplateManifest {
 		$this->inited = true;
 	}
 
+
+	/**
+	 * Callback triggered by ->regenerate() above, configured via $finder->setOptions() and then ultimately triggered
+	 * by the call to $finder->find().
+	 *
+	 * @param	string	$basename	Filename of the template (excluding path, but still including file extension).
+	 * @param	string	$pathname	Full path to template file, including filename itself.
+	 * @param	string	$depth		This is not used here, but passed by the ManifestFileFinder.
+	 */
 	public function handleFile($basename, $pathname, $depth) {
 		$projectFile = false;
 		$theme = null;
 
-		if (strpos($pathname, $this->base . '/' . THEMES_DIR) === 0) {
-			$start = strlen($this->base . '/' . THEMES_DIR) + 1;
+		// Get base directory of current template.
+		$basedir = basename(dirname($pathname));
+
+		// Default to deriving the template type directly from parent folder.
+		$type = $basedir;
+
+		// Generate absolute path to theme directory to see if this template belongs there.
+		$rootThemePath = $this->base . '/' . THEMES_DIR;
+		if (strpos($pathname, $rootThemePath) === 0) {
+			// Get actual theme name.
+			$start = strlen($rootThemePath) + 1;
 			$theme = substr($pathname, $start);
 			$theme = substr($theme, 0, strpos($theme, '/'));
+			$themeDir = $theme; // Before lopping off any parts trailing after "_", e.g. "mysite_context" becomes "mysite" below.
 			$theme = strtok($theme, '_');
-		} else if($this->project && (strpos($pathname, $this->base . '/' . $this->project .'/') === 0)) {
+
+			// Get full path to this particular template's theme.
+			$themePath = "$rootThemePath/$themeDir";
+
+			// Attempt to derive type from the folder directly below template base instead of the immediate parent folder.
+			// For example, this allows nesting of "Layout" templates within sub-folders.
+			$baseTemplatesPath = $themePath . '/' . self::TEMPLATES_DIR;
+			if (strpos($pathname, $baseTemplatesPath) === 0) {
+				// Parse out base directory relative to "templates" directory.
+				$relTemplatePath = substr($pathname, strlen($baseTemplatesPath) + 1);
+				$end = strpos($relTemplatePath, "/");
+				if ($end > 0) $type = substr($relTemplatePath, 0, $end);
+			}
+
+		} elseif($this->project && (strpos($pathname, $this->base . '/' . $this->project .'/') === 0)) {
 			$projectFile = true;
+
 		}
 
-		$type = basename(dirname($pathname));
 		$name = strtolower(substr($basename, 0, -3));
 
-		if ($type == self::TEMPLATES_DIR) {
+		if ($basedir == self::TEMPLATES_DIR) {
 			$type = 'main';
 		}
 
 		if ($theme) {
 			$this->templates[$name]['themes'][$theme][$type] = $pathname;
-		} else if($projectFile) {
+		} elseif($projectFile) {
 			$this->templates[$name][$this->project][$type] = $pathname;
 		} else {
 			$this->templates[$name][$type] = $pathname;
