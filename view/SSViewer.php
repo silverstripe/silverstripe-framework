@@ -1116,7 +1116,7 @@ class SSViewer implements Flushable {
 					$thisURLRelativeToBase = Convert::raw2att(preg_replace("/^(\\/)+/", "/", $_SERVER['REQUEST_URI']));
 				}
 
-				$output = preg_replace('/(<a[^>]+href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
+				$output = preg_replace('/(<[a-z][^>]+\s*href\s*=\s*)[\'"]?#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
 			}
 		}
 
