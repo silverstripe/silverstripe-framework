@@ -6,24 +6,41 @@
 @import "../admin/scss/_mixins";
 @import "_elementMixins";
 
-// Temporary. To be hidden and replaced with javascript tooltip
-.ss-uploadfield-view-allowed-extensions {
+.ss-uploadfield-view-allowed-extensions {	
 	margin-top: -42px;
-	max-width: 400px;
-	width: 30%;
-	background: $tab-panel-texture-color;
-	display: block;
 	float: right;
-	position: relative;
+	
+	.toggle-content {
+		opacity: 0;
+		box-sizing: border-box;
+		position: absolute;
+	    z-index: 1;
+	    padding: 2.5*$grid-y 2*$grid-x;
+	    width: 280px;
+	    right: -280px;
+	    top: 0;
+	    bottom: 0;
+	    border-left: 1px solid $color-separator;
+		box-shadow: 0 0 3px $color-separator;
+	    background: $tab-panel-texture-color;
+		transition: all .3s linear;
+		
+		h4 {
+			margin: 0 0 6px;
+			padding-right: 20px;
+		}
+	}
+
+	&.active .toggle-content {
+		right: 0;
+		opacity: 1;
+	}
 
 	.toggle {
-		font-style: normal;
+		cursor: pointer;
 		font-size: 16px;
 		float: right;
-		color: lighten($color-text, 20%);
-		position: absolute;
-		top: 4px;
-		right: 0;
+		color: $color-text;
 		width: 16px;
 		height: 16px;
 		overflow: hidden;
@@ -32,13 +49,8 @@
 		&:active,
 		&:focus {
 			text-decoration: none;
-			color: $color-text;
+			color: darken($color-text, 10%);;
 		}
-	}
-
-	h4 {
-		margin: 0 0 6px;
-		padding-right: 20px;
 	}
 }
 
@@ -72,7 +84,6 @@ body.cms.ss-uploadfield-edit-iframe {
 	border-bottom: 0;
 	@include box-shadow(none);
 	margin: 0;
-	position: relative;
 	padding: 0;
 
 	h3 {
