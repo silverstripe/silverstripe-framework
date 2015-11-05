@@ -384,7 +384,7 @@ class HTTP {
 				// prefer the caching information indicated through the "Cache-Control" header.
 				$responseHeaders["Pragma"] = "";
 			} else {
-				$responseHeaders["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-transform";
+				$responseHeaders["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate, no-transform";
 			}
 		}
 
