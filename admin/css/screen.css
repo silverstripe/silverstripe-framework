@@ -840,7 +840,7 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree li.readonly, .cms-tree.jstree li.readonly { color: #aaa; padding-left: 18px; }
 .tree-holder.jstree li.readonly a, .tree-holder.jstree li.readonly a:link, .cms-tree.jstree li.readonly a, .cms-tree.jstree li.readonly a:link { margin: 0; padding: 0; }
 .tree-holder.jstree li.readonly .jstree-icon, .cms-tree.jstree li.readonly .jstree-icon { display: none; }
-.tree-holder.jstree a, .tree-holder.jstree a:link, .cms-tree.jstree a, .cms-tree.jstree a:link { color: #0073C1; padding: 3px 6px 3px 3px; border: none; display: inline-block; margin-right: 5px; }
+.tree-holder.jstree a, .tree-holder.jstree a:link, .cms-tree.jstree a, .cms-tree.jstree a:link { color: #0073C1; padding: 3px 6px 3px 6px; border: none; display: inline-block; margin-right: 5px; }
 .tree-holder.jstree ins, .cms-tree.jstree ins { background-color: transparent; background-image: url(../images/sitetree_ss_default_icons.png); }
 .tree-holder.jstree span.badge, .cms-tree.jstree span.badge { clear: both; text-transform: uppercase; text-shadow: none; display: inline-block; position: relative; padding: 3px 3px 1px; font-size: 0.75em; line-height: 1em; margin-left: 3px; margin-top: -1px; -moz-border-radius: 2px / 2px; -webkit-border-radius: 2px 2px; border-radius: 2px / 2px; }
 .tree-holder.jstree span.comment-count, .cms-tree.jstree span.comment-count { clear: both; position: relative; text-transform: uppercase; display: inline-block; overflow: visible; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 3px; margin-right: 6px; -moz-border-radius: 2px / 2px; -webkit-border-radius: 2px 2px; border-radius: 2px / 2px; color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
@@ -851,9 +851,9 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree .jstree-open > ins, .cms-tree.jstree .jstree-open > ins { background-position: -18px -1px; }
 .tree-holder.filtered-list li:not(.filtered-item) > a, .cms-tree.filtered-list li:not(.filtered-item) > a { color: #aaa; }
 
-.cms-tree.jstree .jstree-no-checkboxes li a { padding-left: 12px; }
-.cms-tree.jstree .jstree-no-checkboxes li .jstree-hovered, .cms-tree.jstree .jstree-no-checkboxes li .jstree-clicked, .cms-tree.jstree .jstree-no-checkboxes li a:focus { padding-left: 0; }
-.cms-tree.jstree .jstree-no-checkboxes li .jstree-hovered .jstree-icon, .cms-tree.jstree .jstree-no-checkboxes li .jstree-clicked .jstree-icon, .cms-tree.jstree .jstree-no-checkboxes li a:focus .jstree-icon { display: block; }
+.cms-tree.jstree.draggable .jstree-no-checkboxes li a { padding-left: 12px; }
+.cms-tree.jstree.draggable .jstree-no-checkboxes li .jstree-hovered, .cms-tree.jstree.draggable .jstree-no-checkboxes li .jstree-clicked, .cms-tree.jstree.draggable .jstree-no-checkboxes li a:focus { padding-left: 0; }
+.cms-tree.jstree.draggable .jstree-no-checkboxes li .jstree-hovered .jstree-icon, .cms-tree.jstree.draggable .jstree-no-checkboxes li .jstree-clicked .jstree-icon, .cms-tree.jstree.draggable .jstree-no-checkboxes li a:focus .jstree-icon { display: block; }
 
 .jstree-default a .jstree-icon, .jstree-default-rtl a .jstree-icon, .jstree-classic a .jstree-icon, .jstree-apple a .jstree-icon { background-position: -60px -19px; }
 
