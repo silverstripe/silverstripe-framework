@@ -802,8 +802,37 @@ class Config_LRU {
  * @package framework
  * @subpackage core
  */
-class Config_MemCache {
+class Config_MemCache implements ConfigCacheInterface {
+
+	/**
+	 * Cache for config that is updated during runtime..
+	 *
+	 * @var array
+	 */
 	protected $cache;
+
+	/**
+	 * Stores pre-merged config cache so we don't have to merge on each new request
+	 *
+	 * @var SS_Cache
+	 */
+	protected $persistentCache;
+
+	/**
+	 * @var array
+	 */
+	protected $persistentCacheData;
+
+	/**
+	 * Stores keys for persistent cache keys that have been invalidated. These can be
+	 * invalidated when calling Config::inst()->update() or Config::inst()->remove()
+	 * at run-time.
+	 *
+	 * These are disabled per-request as these could be invalidated dynamically.
+	 *
+	 * @var array
+	 */
+	protected $disabledPersistentCache = array();
 
 	protected $i = 0;
 	protected $c = 0;
@@ -811,6 +840,18 @@ class Config_MemCache {
 
 	public function __construct() {
 		$this->cache = array();
+		$this->persistentCache = SS_Cache::factory(
+			'SS_Configuration_' . __CLASS__,
+			'Core', 
+			array(
+				'automatic_serialization' => true,
+				'lifetime' => null
+			)
+		);
+		$this->persistentCacheData = $this->persistentCache->load('_all');
+		if(!$this->persistentCacheData) {
+			$this->persistentCacheData = array();
+		}
 	}
 
 	public function set($key, $val, $tags = array()) {
@@ -821,7 +862,12 @@ class Config_MemCache {
 			$this->tags[$t][$key] = true;
 		}
 
-		$this->cache[$key] = array($val, $tags);
+		if(!$this->isPersistentCacheDisabled($key)) {
+			$this->persistentCacheData[$key] = array($val, $tags);
+			$this->persistentCache->save($this->persistentCacheData, '_all');
+		} else {
+			$this->cache[$key] = array($val, $tags);
+		}
 	}
 
 	private $hit = 0;
@@ -835,8 +881,10 @@ class Config_MemCache {
 		if(isset($this->cache[$key])) {
 			++$this->hit;
 			return $this->cache[$key][0];
+		} else if(isset($this->persistentCacheData[$key])) {
+			++$this->hit;
+			return $this->persistentCacheData[$key][0];
 		}
-
 		++$this->miss;
 		return false;
 	}
@@ -846,18 +894,54 @@ class Config_MemCache {
 			if(isset($this->tags[$tag])) {
 				foreach($this->tags[$tag] as $k => $dud) {
 					// Remove the key from everywhere else it is tagged
-					$ts = $this->cache[$k][1];
-					foreach($ts as $t) {
-						unset($this->tags[$t][$k]);
+					if(isset($this->cache[$k])) {
+						$ts = $this->cache[$k][1];
+						foreach($ts as $t) {
+							unset($this->tags[$t][$k]);
+						}
+						unset($this->cache[$k]);
 					}
-					unset($this->cache[$k]);
+					if(isset($this->persistentCacheData[$k])) {
+						$ts = $this->persistentCacheData[$k][1];
+						foreach($ts as $t) {
+							unset($this->tags[$t][$k]);
+						}
+						unset($this->persistentCacheData[$k]);
+					}
+					$this->disablePersistentCache($k);
 				}
 				unset($this->tags[$tag]);
 			}
 		} else {
 			$this->cache = array();
 			$this->tags = array();
+			$this->persistentCacheData = array();
+			$this->disabledPersistentCache = array();
 		}
+	}
+
+	/**
+	 * Checks whether a cache key has been invalidated for this request for persistent cache. 
+	 * This can happen when updating the config dynamically via Config::inst()->update() or
+	 * Config::inst()->remove().
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	protected function isPersistentCacheDisabled($key) {
+		return isset($this->disabledPersistentCache[$key]);
+	}
+
+	/**
+	 * Disables a cache key to prevent persistent cache being access for that key.
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	protected function disablePersistentCache($key) {
+		$this->disabledPersistentCache[$key] = true;
 	}
 }
 

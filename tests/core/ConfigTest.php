@@ -270,28 +270,49 @@ class ConfigTest extends SapphireTest {
 		$cache = new ConfigTest_Config_MemCache();
 
 		for ($i = 0; $i < 1000; $i++) $cache->set($i, $i);
-		$this->assertEquals(1000, count($cache->cache));
+		$this->assertEquals(1000, count($cache->persistentCacheData));
 
+		// Attempt to completely empty the cache.
+		// This should empty the entire cache
 		$cache->clean();
-		$this->assertEquals(0, count($cache->cache), 'Clean clears all items');
-		$this->assertFalse($cache->get(1), 'Clean clears all items');
+		$this->assertEmpty($cache->tags, 'Clean clears all items');
+		$this->assertEmpty($cache->disabledPersistentCache, 'Clean clears all items');
+		$this->assertEmpty($cache->persistentCacheData, 'Clean clears all items');
+		$this->assertEmpty($cache->cache, 'Clean clears all items');
+		$this->assertFalse($cache->get('MyKey'), 'Clean clears all items');
 
-		$cache->set(1, 1, array('Foo'));
-		$this->assertEquals(1, count($cache->cache));
-		$this->assertEquals(1, count($cache->tags));
+		// This should be added to persistent cache
+		$cache->set('MyKey', 1, array('Foo'));
+		$this->assertCount(1, $cache->tags);
+		$this->assertEmpty($cache->disabledPersistentCache, 'Nothing should be disabled');
+		$this->assertCount(1, $cache->persistentCacheData);
+		$this->assertEmpty($cache->cache);
+		$this->assertEquals($cache->get('MyKey'), 1);
 
+		// This should be removed from persistent cache and disable persistent cache for
+		// the key 'MyKey' in future set calls
 		$cache->clean('Foo');
-		$this->assertEquals(0, count($cache->tags), 'Clean items with matching tag');
-		$this->assertFalse($cache->get(1), 'Clean items with matching tag');
+		$this->assertCount(0, $cache->tags, 'Clean items with matching tag');
+		$this->assertCount(1, $cache->disabledPersistentCache, 'Cache should be empty');
+		$this->assertCount(0, $cache->persistentCacheData, 'Cache should be empty');
+		$this->assertCount(0, $cache->cache, 'Cache should be empty');
+		$this->assertFalse($cache->get('MyKey'), 'Clean items with matching tag');
 
-		$cache->set(1, 1, array('Foo', 'Bar'));
-		$this->assertEquals(2, count($cache->tags));
-		$this->assertEquals(1, count($cache->cache));
+		// We're setting 1 again, so this should go into the runtime cache ($cache->cache);
+		$cache->set('MyKey', 1, array('Foo', 'Bar'));
+		$this->assertCount(2, $cache->tags);
+		$this->assertCount(1, $cache->disabledPersistentCache);
+		$this->assertCount(0, $cache->persistentCacheData);
+		$this->assertCount(1, $cache->cache);
+		$this->assertEquals(1, $cache->get('MyKey'));
 
+		// Bar is the last tagged item so everything should be empty
 		$cache->clean('Bar');
-		$this->assertEquals(1, count($cache->tags));
-		$this->assertEquals(0, count($cache->cache), 'Clean items with any single matching tag');
-		$this->assertFalse($cache->get(1), 'Clean items with any single matching tag');
+		$this->assertCount(1, $cache->tags);
+		$this->assertCount(1, $cache->disabledPersistentCache);
+		$this->assertCount(0, $cache->persistentCacheData, 'Clean items with any single matching tag');
+		$this->assertCount(0, $cache->cache);
+		$this->assertFalse($cache->get('MyKey'), 'Clean items with any single matching tag');
 	}
 
 	public function testLRUDiscarding() {
@@ -336,8 +357,15 @@ class ConfigTest_Config_LRU extends Config_LRU implements TestOnly {
 }
 
 class ConfigTest_Config_MemCache extends Config_MemCache implements TestOnly {
-
+	
 	public $cache;
+	public $persistentCacheData;
+	public $disabledPersistentCache;
 	public $tags;
+
+	public function __construct() {
+		parent::__construct();
+		$this->persistentCacheData = array();
+	}
 
 }
