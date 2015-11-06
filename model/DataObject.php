@@ -781,7 +781,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $name;
 		} else {
 			$name = $this->singular_name();
-			if(substr($name,-1) == 'y') $name = substr($name,0,-1) . 'ie';
+			//if the penultimate character is not a vowel, replace "y" with "ies"
+			if (preg_match('/[^aeiou]y$/i', $name)) {
+				$name = substr($name,0,-1) . 'ie';
+			}
 			return ucfirst($name . 's');
 		}
 	}
