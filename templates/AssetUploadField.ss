@@ -10,9 +10,10 @@
 	<span class="ss-uploadfield-view-allowed-extensions"> 
 		<span class="description">
 
-			<a href="#" class="font-icon-info-circled toggle"><%t AssetAdmin.SHOWALLOWEDEXTS 'Show allowed extensions' %></a>
+			<a class="font-icon-info-circled toggle"><%t AssetAdmin.SHOWALLOWEDEXTS 'Show allowed extensions' %></a>
 			<div class="toggle-content">
-				<h4>Allowed file upload extensions</h4>
+				<a class="font-icon-cancel toggle"><%t AssetAdmin.HIDEALLOWEDEXTS 'Hide allowed extensions' %></a>
+				<h4><%t AssetAdmin.ALLOWEDEXTS 'Allowed file upload extensions' %></h4>
 				<p>$Extensions</p>
 			</div>
 		</span>	

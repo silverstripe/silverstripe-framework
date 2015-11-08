@@ -10,10 +10,12 @@
 /*Mixin used to generate slightly smaller text and forms
 Used in side panels and action tabs
 */
-.ss-uploadfield-view-allowed-extensions { margin-top: -42px; max-width: 400px; width: 30%; background: #ECEFF1; display: block; float: right; position: relative; }
-.ss-uploadfield-view-allowed-extensions .toggle { font-style: normal; font-size: 16px; float: right; color: #9ba5ae; position: absolute; top: 4px; right: 0; width: 16px; height: 16px; overflow: hidden; }
-.ss-uploadfield-view-allowed-extensions .toggle:hover, .ss-uploadfield-view-allowed-extensions .toggle:active, .ss-uploadfield-view-allowed-extensions .toggle:focus { text-decoration: none; color: #66727d; }
-.ss-uploadfield-view-allowed-extensions h4 { margin: 0 0 6px; padding-right: 20px; }
+.ss-uploadfield-view-allowed-extensions { margin-top: -42px; float: right; }
+.ss-uploadfield-view-allowed-extensions .toggle-content { opacity: 0; box-sizing: border-box; position: absolute; z-index: 1; padding: 20px 16px; width: 280px; right: -280px; top: 0; bottom: 0; border-left: 1px solid #C1C7CC; box-shadow: 0 0 3px #C1C7CC; background: #ECEFF1; transition: all .3s linear; }
+.ss-uploadfield-view-allowed-extensions .toggle-content h4 { margin: 0 0 6px; padding-right: 20px; }
+.ss-uploadfield-view-allowed-extensions.active .toggle-content { right: 0; opacity: 1; }
+.ss-uploadfield-view-allowed-extensions .toggle { cursor: pointer; font-size: 16px; float: right; color: #66727d; width: 16px; height: 16px; overflow: hidden; }
+.ss-uploadfield-view-allowed-extensions .toggle:hover, .ss-uploadfield-view-allowed-extensions .toggle:active, .ss-uploadfield-view-allowed-extensions .toggle:focus { text-decoration: none; color: #4f5861; }
 
 .backlink { padding-left: 12px; }
 
@@ -23,7 +25,7 @@ body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-asse
 
 .composite.ss-assetuploadfield .details fieldset { padding: 16px; }
 
-.ss-assetuploadfield { border-bottom: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; margin: 0; position: relative; padding: 0; }
+.ss-assetuploadfield { border-bottom: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; margin: 0; padding: 0; }
 .ss-assetuploadfield h3 { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); margin: 0 0 8px; padding: 0 0 7px; clear: both; position: relative; }
 .ss-assetuploadfield .field { border-bottom: 0; box-shadow: none; }
 .ss-assetuploadfield .fileOverview { clear: both; margin-top: 10px; position: relative; }
