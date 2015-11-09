@@ -134,7 +134,7 @@ Documentation will use the following format:
    * How to report security vulnerabilities. Note that PSR-9 / PSR-10 may be recommended once released.
    * Security, license, links to more detailed docs.
  * CONTRIBUTING.md explaining terms of contribution.
- * A changelog CHANGELOG.md (may link to other more detailed docs or GitHub releases if you want).
+ * A changelog CHANGELOG.md (may link to other more detailed docs or GitHub releases if you want). You could [use a changelog generator](https://github.com/skywinder/Github-Changelog-Generator) to help create this.
  * Has a licence (LICENSE.md file) - for SilverStripe supported this needs to be BSD.
  * Detailed documentation in /docs/en as a nested set of GitHub-compatible Markdown files.
  * Links and image references are relative, and are able to be followed in viewers such as GitHub.
