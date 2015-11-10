@@ -898,6 +898,26 @@ class DataListTest extends SapphireTest {
 	}
 
 	/**
+	 * Test exact match filter with empty array items
+	 */
+	public function testEmptyFilter() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->exclude('Name', array());
+
+		$sql = $list->sql($parameters);
+		$this->assertSQLContains('WHERE (("DataObjectTest_TeamComment"."Name" NOT IN (?)))', $sql);
+		$this->assertEquals(array(''), $parameters);
+
+
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filter('Name', array());
+
+		$sql = $list->sql($parameters);
+		$this->assertSQLContains('WHERE ("DataObjectTest_TeamComment"."Name" IN (?))', $sql);
+		$this->assertEquals(array(''), $parameters);
+	}
+
+	/**
 	 * $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
 	 */
 	public function testMultipleExcludeWithMultipleThatCheersEitherTeam() {
