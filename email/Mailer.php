@@ -452,6 +452,14 @@ class Mailer extends Object {
 	}
 
 	/**
+	 * @deprecated since version 4.0
+	 */
+	public function validEmailAddr($emailAddress) {
+		Deprecation::notice('4.0', 'This method will be removed in 4.0. Use protected method Mailer->validEmailAddress().');
+		return $this->validEmailAddress($emailAddress);
+	}
+
+	/**
 	 * Cleans up emails which may be in 'Name <email@silverstripe.com>' format
 	 *
 	 * @param string $emailAddress
@@ -596,8 +604,8 @@ function QuotedPrintable_encode($quotprint) {
  * @deprecated 3.1
  */
 function validEmailAddr($emailAddress) {
-	Deprecation::notice('4.0', 'Use Email->validEmailAddr() instead');
+	Deprecation::notice('4.0', 'This method will be removed in 4.0. Use protected method Mailer->validEmailAddress().');
 
 	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->validEmailAddr($emailAddress);	
+	return $mailer->validEmailAddr($emailAddress);
 }
