@@ -14,3 +14,9 @@ Injector:
       connector: %$MySQLiConnector
       schemaManager: %$MySQLSchemaManager
       queryBuilder: %$MySQLQueryBuilder
+  MySQLiConnector:
+    class: 'MySQLiConnector'
+    type: prototype
+  PDOConnector:
+    class: 'PDOConnector'
+    type: prototype
