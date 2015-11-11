@@ -519,7 +519,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			}
 
 			// Similar to the regex found in HtmlEditorField.js / getAnchors method.
-			if (preg_match_all("/name=\"([^\"]+?)\"|name='([^']+?)'/im", $page->Content, $matches)) {
+			if (preg_match_all("/\s(name|id)=\"([^\"]+?)\"|\s(name|id)='([^']+?)'/im", $page->Content, $matches)) {
 				$anchors = $matches[1];
 			}
 
