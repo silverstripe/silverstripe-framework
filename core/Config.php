@@ -585,7 +585,8 @@ class Config {
 		// Have we got a cached value? Use it if so
 		$key = $class.$name.$sourceOptions;
 
-		if (($result = $this->cache->get($key)) === false) {
+		list($cacheHit, $result) = $this->cache->checkAndGet($key);
+		if (!$cacheHit) {
 			$tags = array();
 			$result = null;
 			$this->getUncached($class, $name, $sourceOptions, $result, $suppress, $tags);
@@ -769,17 +770,37 @@ class Config_LRU {
 		return $this->miss ? ($this->hit / $this->miss) : 0;
 	}
 
+	/**
+	 * Return a cached value in the case of a hit, false otherwise.
+	 * For a more robust cache checking, use {@link checkAndGet()}
+	 *
+	 * @param  string $key The cache key
+	 * @return variant     Cached value, if hit. False otherwise
+	 */
 	public function get($key) {
-		if (isset($this->indexing[$key])) {
+		list($hit, $result) = $this->checkAndGet($key);
+		return $hit ? $result : false;
+	}
+
+	/**
+	 * Checks for a cache hit and looks up the value by returning multiple values.
+	 * Distinguishes a cached 'false' value from a cache miss.
+	 *
+	 * @param  string $key The cache key
+	 * @return array  First element boolean, isHit. Second element the actual result.
+	 */
+	public function checkAndGet($key) {
+		if (array_key_exists($key, $this->indexing)) {
 			$this->hit++;
 
 			$res = $this->cache[$this->indexing[$key]];
 			$res->c = ++$this->c;
-			return $res->value;
-		}
+			return array(true, $res->value);
 
-		$this->miss++;
-		return false;
+		} else {
+			$this->miss++;
+			return array(false, null);
+		}
 	}
 
 	public function clean($tag = null) {
@@ -832,13 +853,22 @@ class Config_MemCache {
 	}
 
 	public function get($key) {
-		if(isset($this->cache[$key])) {
-			++$this->hit;
-			return $this->cache[$key][0];
-		}
+		list($hit, $result) = $this->checkAndGet($key);
+		return $hit ? $result : false;
+	}
 
-		++$this->miss;
-		return false;
+	/**
+	 * Checks for a cache hit and returns the value as a multi-value return
+	 * @return array First element boolean, isHit. Second element the actual result.
+	 */
+	public function checkAndGet($key) {
+		if(array_key_exists($key, $this->cache)) {
+			++$this->hit;
+			return array(true, $this->cache[$key][0]);
+		} else {
+			++$this->miss;
+			return array(false, null);
+		}
 	}
 
 	public function clean($tag = null) {
