@@ -251,9 +251,9 @@ fr:
     CAPTIONTEXT: 'Légende'
     CSSCLASS: 'Alignement / Style'
     CSSCLASSCENTER: 'Centré'
-    CSSCLASSLEFT: 'A gauche, avec texte à la ligne.'
+    CSSCLASSLEFT: 'À gauche, avec texte autour.'
     CSSCLASSLEFTALONE: 'Sur la gauche seulement'
-    CSSCLASSRIGHT: 'a droite, avec texte à la ligne.'
+    CSSCLASSRIGHT: 'À droite, avec texte autour.'
     DETAILS: Détails
     EMAIL: 'Adresse email'
     FILE: Fichier
