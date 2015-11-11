@@ -623,22 +623,23 @@ class Config {
 		// Have we got a cached value? Use it if so
 		$key = $class.$name.$sourceOptions;
 
-		if(($result = $this->cache->get($key)) !== false) {
+		list($cacheHit, $result) = $this->cache->checkAndGet($key);
+		if($cacheHit) {
 			return $result;
-		} else if (
-			!$this->isPersistentCacheDisabled($class, $name)
-			&& ($result = $this->persistentCache->get($key)) !== false
-		) {
-			return $result;
-		} else {
-			$tags = array();
-			$result = null;
-			$this->getUncached($class, $name, $sourceOptions, $result, $suppress, $tags);
-			if(!$this->isPersistentCacheDisabled($class, $name)) {
-				$this->persistentCache->set($key, $result, $tags);
-			} else {
-				$this->cache->set($key, $result, $tags);
+		} else if (!$this->isPersistentCacheDisabled($class, $name)) {
+			list($cacheHit, $result) = $this->persistentCache->checkAndGet($key);
+			if($cacheHit) {
+				return $result;
 			}
+		}
+
+		$tags = array();
+		$result = null;
+		$this->getUncached($class, $name, $sourceOptions, $result, $suppress, $tags);
+		if(!$this->isPersistentCacheDisabled($class, $name)) {
+			$this->persistentCache->set($key, $result, $tags);
+		} else {
+			$this->cache->set($key, $result, $tags);
 		}
 
 		return $result;
@@ -822,17 +823,37 @@ class Config_LRU {
 		return $this->miss ? ($this->hit / $this->miss) : 0;
 	}
 
+	/**
+	 * Return a cached value in the case of a hit, false otherwise.
+	 * For a more robust cache checking, use {@link checkAndGet()}
+	 *
+	 * @param  string $key The cache key
+	 * @return variant     Cached value, if hit. False otherwise
+	 */
 	public function get($key) {
+		list($hit, $result) = $this->checkAndGet($key);
+		return $hit ? $result : false;
+	}
+
+	/**
+	 * Checks for a cache hit and looks up the value by returning multiple values.
+	 * Distinguishes a cached 'false' value from a cache miss.
+	 *
+	 * @param  string $key The cache key
+	 * @return array  First element boolean, isHit. Second element the actual result.
+	 */
+	public function checkAndGet($key) {
 		if (isset($this->indexing[$key])) {
 			$this->hit++;
 
 			$res = $this->cache[$this->indexing[$key]];
 			$res->c = ++$this->c;
-			return $res->value;
-		}
+			return array(true, $res->value);
 
-		$this->miss++;
-		return false;
+		} else {
+			$this->miss++;
+			return array(false, null);
+		}
 	}
 
 	public function clean($tag = null) {
@@ -889,12 +910,23 @@ class Config_MemCache implements ConfigCacheInterface {
 	}
 
 	public function get($key) {
+		list($hit, $result) = $this->checkAndGet($key);
+		return $hit ? $result : false;
+		return false;
+	}
+
+	/**
+	 * Checks for a cache hit and returns the value as a multi-value return
+	 * @return array First element boolean, isHit. Second element the actual result.
+	 */
+	public function checkAndGet($key) {
 		if(isset($this->cache[$key])) {
 			++$this->hit;
-			return $this->cache[$key][0];
+			return array(true, $this->cache[$key][0]);
+		} else {
+			++$this->miss;
+			return array(false, null);
 		}
-		++$this->miss;
-		return false;
 	}
 
 	public function clean($tag = null) {
