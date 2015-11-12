@@ -8,6 +8,22 @@
  */
 class ViewableDataTest extends SapphireTest {
 
+	/**
+	 * This test checks that getting a value by `PropertyName(property)` and `getPropertyName(property)`
+	 * returns the same value when there is a PropertyName() method in this object
+	 */
+	public function testMagicGetterMethod() {
+		$obj = new ViewableDataTest_MethodLookup();
+		$funcCall = $obj->obj('getMyMethod', array('fibbonacci'));
+		$getValue = $obj->obj('MyMethod', array('fibbonacci'));
+		$this->assertEquals($funcCall->value, $getValue->value);
+		// double check that the default value still works
+		$defaultFuncCall = $obj->obj('getMyMethod');
+		$this->assertEquals('default', $defaultFuncCall->value);
+		$defaultValueGet = $obj->obj('MyMethod');
+		$this->assertEquals('default', $defaultValueGet->value);
+	}
+
 	public function testRequiresCasting() {
 		$caster = new ViewableDataTest_Castable();
 
@@ -282,6 +298,13 @@ class ViewableDataTest_NotCached extends ViewableData {
 	protected function objCacheGet($key) {
 		// Disable caching
 		return null;
+	}
+}
+
+class ViewableDataTest_MethodLookup extends ViewableData {
+
+	public function getMyMethod($argument = 'default') {
+		return $argument;
 	}
 }
 
