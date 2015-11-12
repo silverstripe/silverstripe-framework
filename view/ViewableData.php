@@ -416,9 +416,12 @@ class ViewableData extends Object implements IteratorAggregate {
 			// HACK: Don't call the deprecated FormField::Name() method
 			$methodIsAllowed = true;
 			if($this instanceof FormField && $fieldName == 'Name') $methodIsAllowed = false;
-			
+
 			if($methodIsAllowed && $this->hasMethod($fieldName)) {
 				$value = $arguments ? call_user_func_array(array($this, $fieldName), $arguments) : $this->$fieldName();
+			} else if($this->hasMethod($method = "get$fieldName")) {
+				$methodName = "get$fieldName";
+				$value = $arguments ? call_user_func_array(array($this, $methodName), $arguments) : $this->$methodName();
 			} else {
 				$value = $this->$fieldName;
 			}
