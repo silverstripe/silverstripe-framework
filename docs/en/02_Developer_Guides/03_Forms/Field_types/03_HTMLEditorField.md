@@ -218,6 +218,18 @@ To refresh a oEmbed cache, append `?flush=1` to a URL.
 
 To disable oEmbed usage, set the `Oembed.enabled` configuration property to "false".
 
+## Limiting oembed URLs
+
+HtmlEditorField can have whitelists set on both the scheme (default http & https) and domains allowed when
+inserting files for use with oembed.
+
+This is performed through the config variables `HtmlEditorField_Toolbar::$fileurl_scheme_whitelist` and
+`HtmlEditorField_Toolbar::$fileurl_domain_whitelist`.
+
+Setting these configuration variables to empty arrays will disable the whitelist. Setting them to an array of
+lower case strings will require the scheme or domain respectively to exactly match one of those strings (no
+wildcards are currently supported).
+
 ### Doctypes
 
 Since TinyMCE generates markup, it needs to know which doctype your documents will be rendered in. You can set this 
