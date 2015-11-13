@@ -39,7 +39,7 @@ Honour the code of conduct whenever you participate formally and informally in o
  * Repeated and deliberate breachings of the code of conduct following this first reminder will be referred on to the team of core committers and may result in the member being asked to leave the community channels.
  * While we have a policy of not removing postings and comments from our digital channels, there may be times in which items are removed if deemed blatantly discriminatory towards individuals, groups or cultures.
  * If a member behaves inappropriately, politely bring this to their attention and gently remind them of the code of conduct when necessary.
- * Refer to [these helpful guides on conflict resolution](http://www.crnhq.org/pages.php?pID=10) to aid you when dealing with a conflict.
+ * Refer to [this helpful guide on conflict resolution](http://www.crnhq.org/files/66138/files/Handouts%20and%20Posters/ResolveTheConflictGuideposter.pdf) to aid you when dealing with a conflict.
 
 ## A living document
  * This is a living document. As core committers, we know we don't have all the answers so we want to make the community an innovative and valuable space for everyone that wishes to contribute.
