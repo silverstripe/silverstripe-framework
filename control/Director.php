@@ -854,14 +854,17 @@ class Director implements TemplateGlobalProvider {
 	 * @return boolean|string String of URL when unit tests running, boolean FALSE if patterns don't match request URI
 	 */
 	public static function forceSSL($patterns = null, $secureDomain = null) {
-		if(!isset($_SERVER['REQUEST_URI'])) return false;
+		if(!isset($_SERVER['REQUEST_URI'])) {
+			return false;
+		}
+
+		if(Director::is_cli()) {
+			return false;
+		}
 
 		$matched = false;
 
 		if($patterns) {
-			// Calling from the command-line?
-			if(!isset($_SERVER['REQUEST_URI'])) return;
-
 			$relativeURL = self::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			// protect portions of the site based on the pattern
