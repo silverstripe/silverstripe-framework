@@ -386,6 +386,7 @@ class HTTP {
 				$responseHeaders["Pragma"] = "";
 			} else {
 				$cacheControlHeaders['no-cache'] = "true";
+				$cacheControlHeaders['no-store'] = "true";
 			}
 		}
 
