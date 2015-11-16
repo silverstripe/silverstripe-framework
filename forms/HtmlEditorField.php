@@ -450,39 +450,97 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 
 	/**
+	 * @config
+	 * @var array - list of allowed schemes (no wildcard, all lower case) or empty to allow all schemes
+	 */
+	private static $fileurl_scheme_whitelist = array('http', 'https');
+
+	/**
+	 * @config
+	 * @var array - list of allowed domains (no wildcard, all lower case) or empty to allow all domains
+	 */
+	private static $fileurl_domain_whitelist = array();
+
+	protected function viewfile_getLocalFileByID($id) {
+		$file = DataObject::get_by_id('File', $id);
+
+		if ($file && $file->canView()) return array($file, $file->RelativeLink());
+		return array(null, null);
+	}
+
+	protected function viewfile_getLocalFileByURL($fileUrl) {
+		$filteredUrl = Director::makeRelative($fileUrl);
+		$filteredUrl = preg_replace('/_resampled\/[^-]+-/', '', $filteredUrl);
+
+		$file = File::get()->filter('Filename', $filteredUrl)->first();
+
+		if ($file && $file->canView()) return array($file, $filteredUrl);
+		return array(null, null);
+	}
+
+	protected function viewfile_getRemoteFileByURL($fileUrl) {
+		$scheme = strtolower(parse_url($fileUrl, PHP_URL_SCHEME));
+		$allowed_schemes = self::config()->fileurl_scheme_whitelist;
+
+		if (!$scheme || ($allowed_schemes && !in_array($scheme, $allowed_schemes))) {
+			$exception = new SS_HTTPResponse_Exception("This file scheme is not included in the whitelist", 400);
+			$exception->getResponse()->addHeader('X-Status', $exception->getMessage());
+			throw $exception;
+		}
+
+		$domain = strtolower(parse_url($fileUrl, PHP_URL_HOST));
+		$allowed_domains = self::config()->fileurl_domain_whitelist;
+
+		if (!$domain || ($allowed_domains && !in_array($domain, $allowed_domains))) {
+			$exception = new SS_HTTPResponse_Exception("This file hostname is not included in the whitelist", 400);
+			$exception->getResponse()->addHeader('X-Status', $exception->getMessage());
+			throw $exception;
+		}
+
+		return array(
+			new File(array(
+				'Title' => basename($fileUrl),
+				'Filename' => $fileUrl
+			)),
+			$fileUrl
+		);
+	}
+
+	/**
 	 * View of a single file, either on the filesystem or on the web.
 	 */
 	public function viewfile($request) {
+		$file = null;
+		$url = null;
 
 		// TODO Would be cleaner to consistently pass URL for both local and remote files,
 		// but GridField doesn't allow for this kind of metadata customization at the moment.
-		if($url = $request->getVar('FileURL')) {
-			if(Director::is_absolute_url($url) && !Director::is_site_url($url)) {
-				$url = $url;
-				$file = new File(array(
-					'Title' => basename($url),
-					'Filename' => $url
-				));
-			} else {
-				$url = Director::makeRelative($request->getVar('FileURL'));
-				$url = preg_replace('/_resampled\/[^-]+-/', '', $url);
-				$file = File::get()->filter('Filename', $url)->first();
-				if(!$file) $file = new File(array(
-					'Title' => basename($url),
-					'Filename' => $url
-				));
+		if($fileUrl = $request->getVar('FileURL')) {
+			// If this isn't an absolute URL, or is, but is to this site, try and get the File object
+			// that is associated with it
+			if(!Director::is_absolute_url($fileUrl) || Director::is_site_url($fileUrl)) {
+				list($file, $url) = $this->viewfile_getLocalFileByURL($fileUrl);
 			}
-		} elseif($id = $request->getVar('ID')) {
-			$file = DataObject::get_by_id('File', $id);
-			$url = $file->RelativeLink();
-		} else {
-			throw new LogicException('Need either "ID" or "FileURL" parameter to identify the file');
+			// If this is an absolute URL, but not to this site, use as an oembed source (after whitelisting URL)
+			else {
+				list($file, $url) = $this->viewfile_getRemoteFileByURL($fileUrl);
+			}
+		}
+		// Or we could have been passed an ID directly
+		elseif($id = $request->getVar('ID')) {
+			list($file, $url) = $this->viewfile_getLocalFileByID($id);
+		}
+		// Or we could have been passed nothing, in which case panic
+		else {
+			throw new SS_HTTPResponse_Exception('Need either "ID" or "FileURL" parameter to identify the file', 400);
 		}
 
 		// Instanciate file wrapper and get fields based on its type
 		// Check if appCategory is an image and exists on the local system, otherwise use oEmbed to refference a
 		// remote image
-		if($file && $file->appCategory() == 'image' && Director::is_site_url($url)) {
+		if (!$file || !$url) {
+			throw new SS_HTTPResponse_Exception('Unable to find file to view', 404);
+		} elseif($file->appCategory() == 'image' && Director::is_site_url($url)) {
 			$fileWrapper = new HtmlEditorField_Image($url, $file);
 		} elseif(!Director::is_site_url($url)) {
 			$fileWrapper = new HtmlEditorField_Embed($url, $file);

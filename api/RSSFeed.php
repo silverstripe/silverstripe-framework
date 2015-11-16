@@ -16,6 +16,7 @@ class RSSFeed extends ViewableData {
 	private static $casting = array(
 		"Title" => "Varchar",
 		"Description" => "Varchar",
+		"Link" => "Varchar",
 	);
 
 	/**

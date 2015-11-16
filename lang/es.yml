@@ -82,6 +82,7 @@ es:
   CMSSecurity:
     INVALIDUSER: '<p>Usuario inválido. <a target="_top" href="{link}">Por favor, vuelva a autenticar aquí</a> para continuar.</p>'
     LoginMessage: '<p>Si Ud tiene cualquier trabajo sin guardar puede volver donde lo dejó, iniciando sesión más abajo.</p>'
+    SUCCESS: Exito
     SUCCESSCONTENT: '<p>Inicio de sesión exitoso. Si Ud no es automáticamente redireccionado, <a target="_top" href="{link}">haga clic aquí</a></p>'
     TimedOutTitleAnonymous: 'Expiró su sesión.'
     TimedOutTitleMember: 'Eh {name}!<br />Tu sesión expiró.'
@@ -259,6 +260,7 @@ es:
     many_many_Members: Miembros
   GroupImportForm:
     Help1: '<p>Importar uno o más grupos en formato <em>CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
+    Help2: '<div class="advanced"><h4>Uso avanzado</h4><ul><li>Columnas permitidas: <em>%s</em></li><li>Grupos existentes son relacionados con su  <em>Código único</em> y actualizados con cualquier nuevo valor desde el archivo importado</li><li>Jerarquías de grupo pueden ser creadas utilizando la columna <em>ParentCode</em>.</li><li>Códigos de permiso pueden ser asignados por la columna <em>PermissionCode</em>. Códigos de permisos existentes no son eliminados.</li></ul></div>'
     ResultCreated: 'Creados {count} grupos'
     ResultDeleted: 'Se eliminaron %d grupos'
     ResultUpdated: 'Actualizados grupos %d'
@@ -325,6 +327,8 @@ es:
     DropdownBatchActionsDefault: Acciones
     HELP: Ayuda
     PERMAGAIN: 'Ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña a continuación.'
+    PERMALREADY: 'Lamentablemente no puede acceder a esta parte del CMS. Si quiere entrar como alguien distinto, hágalo a continuación'
+    PERMDEFAULT: 'Debes estar conectado para acceder al área de administración; por favor ingresa tus datos a continuación'
     PreviewButton: Vista previa
     REORGANISATIONSUCCESSFUL: 'Reorganizado el árbol del sitio con éxito.'
     SAVEDUP: Guardado
@@ -412,6 +416,7 @@ es:
     Toggle: 'Cambiar'
   MemberImportForm:
     Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
+    Help2: '<div class="advanced"><h4>Uso avanzado</h4><ul><li>Columnas permitidas: <em>%s</em></li><li>Usuarios existentes son relacionados con su  <em>Código único</em>, y actualizados con cualquier nuevo valor desde el archivo importado.</li><li>Grupos pueden ser asignados por la columna <em>Groups</em>. Grupos son identificados por su propiedad <em>Code</em>, multiples grupos pueden ser separados por una coma.  La pertenencia a grupos existentes no se borra.</li></ul></div>'
     ResultCreated: 'Creados {count} miembros'
     ResultDeleted: 'Se eliminaron %d miembros'
     ResultNone: 'No hay cambios'
@@ -475,6 +480,7 @@ es:
     SINGULARNAME: Regla
     Title: Título
   PermissionRoleCode:
+    PLURALNAME: 'Códigos de permiso'
     PermsError: 'No se puede asignar permisos privilegiados al código "% s"  (requiere acceso de administrador)'
     SINGULARNAME: 'Códigos de las regla de permisos'
   Permissions:
