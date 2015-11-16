@@ -1211,6 +1211,18 @@ class Form extends RequestHandler {
 			if($errors){
 				// Load errors into session and post back
 				$data = $this->getData();
+				// Encode validation messages as XML before saving into session state
+				// As per Form::addErrorMessage()
+				$errors = array_map(function($error) {
+					// Encode message as XML by default
+					if($error['message'] instanceof DBField) {
+						$error['message'] = $error['message']->forTemplate();;
+					} else {
+						$error['message'] = Convert::raw2xml($error['message']);
+					}
+					return $error;
+				}, $errors);
+
 				Session::set("FormInfo.{$this->FormName()}.errors", $errors);
 				Session::set("FormInfo.{$this->FormName()}.data", $data);
 				return false;
