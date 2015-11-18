@@ -264,6 +264,7 @@ class ConfirmedPasswordField extends FormField {
 		} else {
 			if($value || (!$value && $this->canBeEmpty)) {
 				$this->value = $value;
+				$this->confirmValue = $value;
 			}
 		}
 
@@ -273,7 +274,7 @@ class ConfirmedPasswordField extends FormField {
 				->setValue($this->value);
 
 			$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')
-				->setValue($this->value);
+				->setValue($this->confirmValue);
 		}
 
 		return $this;
