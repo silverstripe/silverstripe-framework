@@ -1,22 +1,25 @@
 title: Upgrading
 introduction: Keep your SilverStripe installations up to date with the latest fixes, security patches and new features.
 
-# Upgrading
+# Upgrading to SilverStripe 3.2
 
-SilverStripe Applications should be kept up to date with the latest security releases. Usually an update or upgrade to 
-your SilverStripe installation means overwriting files, flushing the cache and updating your database-schema. 
+SilverStripe applications should be kept up to date with the latest security releases. Usually an update or upgrade to your SilverStripe installation means overwriting files, flushing the cache and updating your database-schema. 
 
 <div class="info" markdown="1">
-See our [upgrade notes and changelogs](/changelogs) for release-specific information.
+See our [upgrade notes and changelogs](/changelogs/3.2.0) for 3.2.0 specific information, bugfixes and API changes.
 </div>
 
 ## Composer 
 
-For projects managed through Composer, check the version defined in your `composer.json` file. Update the version 
-constraints if required and update composer.
+For projects managed through Composer, update the version number of `framework` and `cms` to `^3.2` in your `composer.json` file and run `composer update`. 
 
-	:::bash
-	composer update
+```json
+	"require": {
+		"silverstripe/framework": "^3.2",
+		"silverstripe/cms": "^3.2"
+	}
+```
+This will also add extra dependencies, the `reports` and `siteconfig` modules. SilverStripe CMS is becoming more modular, and [composer is becoming the preferred way to manage your code](/getting_started/composer).
 
 ## Manual
 
@@ -27,7 +30,8 @@ constraints if required and update composer.
 *  Leave custom folders like *mysite* or *themes* in place.
 *  Identify system folders in your webroot (`cms`, `framework` and any additional modules). 
 *  Delete existing system folders (or move them outside of your webroot)
-*  Extract and replace system folders from your download (Deleting instead of "copying over" existing folders ensures that files removed from the new SilverStripe release are not persisting in your installation)
+*  Extract and replace system folders from your download (Deleting instead of "copying over" existing folders ensures that files removed from the new SilverStripe release are not persisting in your installation).
+*  As of SilverStripe CMS 3.2.0 you will also need to include the `reports` and `siteconfig` modules to ensure feature parity with previous versions of the CMS.
 *  Visit http://yoursite.com/dev/build/?flush=1 to rebuild the website database.
 *  Check if you need to adapt your code to changed PHP APIs
 *  Check if you have overwritten any core templates or styles which might need an update.
