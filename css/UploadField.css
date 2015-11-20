@@ -16,6 +16,7 @@ Used in side panels and action tabs
 .ss-uploadfield .ss-uploadfield-item { margin: 0; padding: 15px; overflow: auto; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview { height: 60px; line-height: 60px; width: 80px; text-align: center; font-weight: bold; float: left; overflow: hidden; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview.ss-uploadfield-dropzone { -moz-box-shadow: #808080 0 0 4px 0 inset; -webkit-box-shadow: #808080 0 0 4px 0 inset; box-shadow: #808080 0 0 4px 0 inset; border: 2px dashed #808080; background: #d0d3d5; display: none; margin-right: 15px; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview img { background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAJElEQVQYV2O8dOnSfwYkoKenx4jMZ6SDAmT7QGx0K1EcRBsFAJfOHd3Le79RAAAAAElFTkSuQmCC') repeat; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info { margin-left: 95px; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name { display: block; line-height: 13px; height: 26px; margin: 0; text-align: left; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .name { max-width: 240px; font-weight: bold; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; display: inline; float: left; }
