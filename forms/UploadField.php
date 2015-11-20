@@ -870,11 +870,13 @@ class UploadField extends FileField {
 			$width = $this->getPreviewMaxWidth();
 			$height = $this->getPreviewMaxHeight();
 			if ($file->hasMethod('getThumbnail')) {
-				return $file->getThumbnail($width, $height)->getURL();
+				$r = $file->getThumbnail($width, $height);
+				if ($r) return $r->getURL();
 			} elseif ($file->hasMethod('getThumbnailURL')) {
 				return $file->getThumbnailURL($width, $height);
 			} elseif ($file->hasMethod('Fit')) {
-				return $file->Fit($width, $height)->getURL();
+				$r = $file->Fit($width, $height);
+				if ($r) return $r->getURL();
 			} else {
 				return $file->Icon();
 			}
