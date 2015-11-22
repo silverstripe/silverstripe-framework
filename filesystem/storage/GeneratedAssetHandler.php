@@ -22,7 +22,7 @@ interface GeneratedAssetHandler {
 	 * if there is valid content.
 	 * @return string URL to generated file
 	 */
-	public function getGeneratedURL($filename, $entropy = 0, $callback = null);
+	public function getGeneratedURL($filename, $entropy, $callback);
 
 	/**
 	 * Given a filename and entropy, determine if a pre-generated file is valid. If this file is invalid
@@ -34,14 +34,5 @@ interface GeneratedAssetHandler {
 	 * if there is valid content.
 	 * @return string Content for this generated file
 	 */
-	public function getGeneratedContent($filename, $entropy = 0, $callback = null);
-
-	/**
-	 * Update content with new value
-	 *
-	 * @param string $filename
-	 * @param mixed $entropy
-	 * @param string $content Content to write to the backend
-	 */
-	public function updateContent($filename, $entropy, $content);
+	public function getGeneratedContent($filename, $entropy, $callback);
 }
