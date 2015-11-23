@@ -73,7 +73,7 @@ Enable multiple fileuploads by using a many_many (or has_many) relation. Again, 
 
 ```php
 	class GalleryImageExtension extends DataExtension {
-		private static $belongs_many_many = array('Galleries' => 'GalleryPage);
+		private static $belongs_many_many = array('Galleries' => 'GalleryPage');
 	}
 ```
 
