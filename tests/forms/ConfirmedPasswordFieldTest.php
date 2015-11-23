@@ -71,5 +71,25 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 		));
 		$this->assertFalse($field->validate($validator));
 	}
+	
+    public function testFormValidation() {
+        $form = new Form(
+            new Controller(),
+            'Form',
+            new FieldList($field = new ConfirmedPasswordField('Password')),
+            new FieldList()
+        );
+
+        $form->loadDataFrom(array(
+            'Password' => array(
+                '_Password' => '123',
+                '_ConfirmPassword' => '999',
+            )
+        ));
+
+        $this->assertEquals('123', $field->children->first()->Value());
+        $this->assertEquals('999', $field->children->last()->Value());
+        $this->assertNotEquals($field->children->first()->Value(), $field->children->last()->Value());
+    }
 
 }
