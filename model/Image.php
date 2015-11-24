@@ -1040,7 +1040,12 @@ class Image_Cached extends Image {
 	 */
 	public function __construct($filename = null, $isSingleton = false, Image $sourceImage = null) {
 		parent::__construct(array(), $isSingleton);
-		if ($sourceImage) $this->update($sourceImage->toMap());
+		if ($sourceImage) {
+			// Copy properties from source image, except unsafe ones
+			$properties = $sourceImage->toMap();
+			unset($properties['RecordClassName'], $properties['ClassName']);
+			$this->update($properties);
+		}
 		$this->ID = -1;
 		$this->Filename = $filename;
 	}
