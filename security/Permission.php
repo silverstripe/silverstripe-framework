@@ -17,7 +17,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	// the (1) after Type specifies the DB default value which is needed for
 	// upgrades from older SilverStripe versions
 	private static $db = array(
-		"Code" => "Varchar",
+		"Code" => "Varchar(255)",
 		"Arg" => "Int",
 		"Type" => "Int(1)"
 	);
