@@ -8,7 +8,14 @@ use SilverStripe\Filesystem\Storage\GeneratedAssetHandler;
  * @package framework
  * @subpackage view
  */
-class Requirements {
+class Requirements implements Flushable {
+
+	/**
+	 * Triggered early in the request when a flush is requested
+	 */
+	public static function flush() {
+		self::delete_all_combined_files();
+	}
 
 	/**
 	 * Enable combining of css/javascript files.
@@ -324,6 +331,14 @@ class Requirements {
 	}
 
 	/**
+	 * Deletes all generated combined files in the configured combined files directory,
+	 * but doesn't delete the directory itself
+	 */
+	public static function delete_all_combined_files() {
+		return self::backend()->deleteAllCombinedFiles();
+	}
+
+	/**
 	 * Re-sets the combined files definition. See {@link Requirements_Backend::clear_combined_files()}
 	 */
 	public static function clear_combined_files() {
@@ -619,8 +634,8 @@ class Requirements_Backend {
 
 	/**
 	 * Retrieve the combined files folder prefix
-	 * 
-	 * @return string 
+	 *
+	 * @return string
 	 */
 	public function getCombinedFilesFolder() {
 		if($this->combinedFilesFolder) {
@@ -931,7 +946,7 @@ class Requirements_Backend {
 		$this->customCSS = $this->disabled['customCSS'];
 		$this->customHeadTags = $this->disabled['customHeadTags'];
 	}
-	
+
 	/**
 	 * Block inclusion of a specific file
 	 *
@@ -1229,7 +1244,7 @@ class Requirements_Backend {
 		if(isset($this->combinedFiles[$combinedFileName])) {
 			return;
 		}
-		
+
 		// Add all files to necessary type list
 		$paths = array();
 		$combinedType = null;
@@ -1270,7 +1285,7 @@ class Requirements_Backend {
 				));
 			}
 		}
-		
+
 		$this->combinedFiles[$combinedFileName] = array(
 			'files' => $paths,
 			'type' => $combinedType,
@@ -1326,6 +1341,16 @@ class Requirements_Backend {
 	 */
 	protected function getAllCombinedFiles() {
 		return $this->combinedFiles;
+	}
+
+	/**
+	 * Clears all combined files
+	 */
+	public function deleteAllCombinedFiles() {
+		$combinedFolder = $this->getCombinedFilesFolder();
+		if($combinedFolder) {
+			$this->getAssetHandler()->removeContent($combinedFolder);
+		}
 	}
 
 	/**
@@ -1404,31 +1429,31 @@ class Requirements_Backend {
 	 * @return string URL to this resource
 	 */
 	protected function getCombinedFileURL($combinedFile, $fileList, $type) {
-		// Generate path (Filename)
-		$combinedFileID = File::join_paths($this->getCombinedFilesFolder(), $combinedFile);
+		// Filter blocked files
+		$fileList = array_diff($fileList, $this->getBlocked());
 
-		// Get entropy for this combined file (last modified date of most recent file)
-		$entropy = $this->getEntropyOfFiles($fileList);
+		// Generate path (Filename)
+		$filename = $this->hashedCombinedFilename($combinedFile, $fileList);
+		$combinedFileID =  File::join_paths($this->getCombinedFilesFolder(), $filename);
 
 		// Send file combination request to the backend, with an optional callback to perform regeneration
 		$minify = $this->getMinifyCombinedJSFiles();
 		$combinedURL = $this
 			->getAssetHandler()
-			->getGeneratedURL(
+			->getContentURL(
 				$combinedFileID,
-				$entropy,
 				function() use ($fileList, $minify, $type) {
 					// Physically combine all file content
 					$combinedData = '';
 					$base = Director::baseFolder() . '/';
 					$minifier = Injector::inst()->get('Requirements_Minifier');
-					foreach(array_diff($fileList, $this->getBlocked()) as $file) {
+					foreach($fileList as $file) {
 						$fileContent = file_get_contents($base . $file);
 						// Use configured minifier
 						if($minify) {
 							$fileContent = $minifier->minify($fileContent, $type, $file);
 						}
-					
+
 						if ($this->writeHeaderComment) {
 							// Write a header comment for each file for easier identification and debugging.
 							$combinedData .= "/****** FILE: $file *****/\n";
@@ -1439,13 +1464,21 @@ class Requirements_Backend {
 				}
 			);
 
-		// Since url won't be automatically suffixed, add it in here
-		if($this->getSuffixRequirements()) {
-			$q = stripos($combinedURL, '?') === false ? '?' : '&';
-			$combinedURL .= "{$q}m={$entropy}";
-		}
-
 		return $combinedURL;
+	}
+
+	/**
+	 * Given a filename and list of files, generate a new filename unique to these files
+	 *
+	 * @param string $name
+	 * @param array $files
+	 * @return string
+	 */
+	protected function hashedCombinedFilename($combinedFile, $fileList) {
+		$name = pathinfo($combinedFile, PATHINFO_FILENAME);
+		$hash = $this->hashOfFiles($fileList);
+		$extension = File::get_file_extension($combinedFile);
+		return $name . '-' . substr($hash, 0, 7) . '.' . $extension;
 	}
 
 	/**
@@ -1482,20 +1515,20 @@ class Requirements_Backend {
 	 * any of these files have changed.
 	 *
 	 * @param array $fileList List of files
-	 * @return int Last modified timestamp of these files
+	 * @return string SHA1 bashed file hash
 	 */
-	protected function getEntropyOfFiles($fileList) {
-		// file exists, check modification date of every contained file
+	protected function hashOfFiles($fileList) {
+		// Get hash based on hash of each file
 		$base = Director::baseFolder() . '/';
-		$srcLastMod = 0;
+		$hash = '';
 		foreach($fileList as $file) {
 			if(file_exists($base . $file)) {
-				$srcLastMod = max(filemtime($base . $file), $srcLastMod);
+				$hash .= sha1_file($base . $file);
 			} else {
 				throw new InvalidArgumentException("Combined file {$file} does not exist");
 			}
 		}
-		return $srcLastMod;
+		return sha1($hash);
 	}
 
 	/**

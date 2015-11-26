@@ -167,7 +167,7 @@ class SSViewerTest extends SapphireTest {
 		$testBackend->processCombinedFiles();
 		$js = $testBackend->getJavascript();
 		$combinedTestFilePath = BASE_PATH . reset($js);
-		$this->assertContains('testRequirementsCombine.js', $combinedTestFilePath);
+		$this->assertContains('_combinedfiles/testRequirementsCombine-7c20750.js', $combinedTestFilePath);
 
 		// and make sure the combined content matches the input content, i.e. no loss of functionality
 		if(!file_exists($combinedTestFilePath)) {

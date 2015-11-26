@@ -7,7 +7,7 @@ use SilverStripe\Filesystem\Flysystem\FlysystemAssetStore;
 use SilverStripe\Filesystem\Flysystem\FlysystemUrlPlugin;
 use SilverStripe\Filesystem\Storage\AssetContainer;
 use SilverStripe\Filesystem\Storage\AssetStore;
-use SilverStripe\Filesystem\Storage\CacheGeneratedAssetHandler;
+use SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler;
 
 class AssetStoreTest extends SapphireTest {
 
@@ -424,6 +424,11 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 		$backend->setFilesystem($filesystem);
 		Injector::inst()->registerService($backend, 'AssetStore');
 
+		// Assign flysystem backend to generated asset handler at the same time
+		$generated = new FlysystemGeneratedAssetHandler();
+		$generated->setFilesystem($filesystem);
+		Injector::inst()->registerService($generated, 'GeneratedAssetHandler');
+
 		// Disable legacy and set defaults
 		Config::inst()->remove(get_class(new FlysystemAssetStore()), 'legacy_filenames');
 		Config::inst()->update('Director', 'alternate_base_url', '/');
@@ -451,9 +456,6 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 	 * Reset defaults for this store
 	 */
 	public static function reset() {
-		// Need flushing since it won't have any files left
-		CacheGeneratedAssetHandler::flush();
-
 		// Remove all files in this store
 		if(self::$basedir) {
 			$path = self::base_path();
