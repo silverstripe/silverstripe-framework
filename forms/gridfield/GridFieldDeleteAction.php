@@ -105,7 +105,9 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
 		if($this->removeRelation) {
-			if(!$record->canEdit()) return;
+			$list = $gridField->getList();
+			if (is_a($list, 'ManyManyList') && !$record->canView()) return;
+			if(!is_a($list, 'ManyManyList') && !$record->canEdit()) return;
 
 			$field = GridField_FormAction::create($gridField, 'UnlinkRelation'.$record->ID, false,
 					"unlinkrelation", array('RecordID' => $record->ID))
@@ -149,10 +151,11 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 
 				$item->delete();
 			} else {
-				if(!$item->canEdit()) {
-				throw new ValidationException(
-					_t('GridFieldAction_Delete.EditPermissionsFailure',"No permission to unlink record"),0);
-			}
+				$list = $gridField->getList();
+				if ((is_a($list, 'ManyManyList') && !$item->canView()) || (!is_a($list, 'ManyManyList') && !$item->canEdit()))  {
+					throw new ValidationException(
+						_t('GridFieldAction_Delete.EditPermissionsFailure',"No permission to unlink record"),0);
+				}
 
 				$gridField->getList()->remove($item);
 			}
