@@ -297,28 +297,26 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 		if ($count == 2) {
 			list($col, $dir) = func_get_args();
+
+			// Validate direction
+			if(!in_array(strtolower($dir),array('desc','asc'))){
+				user_error('Second argument to sort must be either ASC or DESC');
+			}
+
+			$sort = array($col => $dir);
 		}
 		else {
 			$sort = func_get_arg(0);
 		}
 
-		return $this->alterDataQuery(function($query, $list) use ($sort, $col, $dir){
+		return $this->alterDataQuery(function(DataQuery $query, DataList $list) use ($sort){
 
-			if ($col) {
-				// sort('Name','Desc')
-				if(!in_array(strtolower($dir),array('desc','asc'))){
-					user_error('Second argument to sort must be either ASC or DESC');
-				}
-
-				$query->sort($col, $dir);
-			}
-
-			else if(is_string($sort) && $sort){
-				// sort('Name ASC')
+			if(is_string($sort) && $sort){
 				if(stristr($sort, ' asc') || stristr($sort, ' desc')) {
 					$query->sort($sort);
 				} else {
-					$query->sort($sort, 'ASC');
+					$list->applyRelation($sort, $column, true);
+					$query->sort($column, 'ASC');
 				}
 			}
 
@@ -326,15 +324,11 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				// sort(array('Name'=>'desc'));
 				$query->sort(null, null); // wipe the sort
 
-				foreach($sort as $col => $dir) {
+				foreach($sort as $column => $direction) {
 					// Convert column expressions to SQL fragment, while still allowing the passing of raw SQL
 					// fragments.
-					try {
-						$relCol = $list->getRelationName($col);
-					} catch(InvalidArgumentException $e) {
-						$relCol = $col;
-					}
-					$query->sort($relCol, $dir, false);
+					$list->applyRelation($column, $relationColumn, true);
+					$query->sort($relationColumn, $direction, false);
 				}
 			}
 		});
@@ -475,6 +469,64 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
+	 * Given a field or relation name, apply it safely to this datalist.
+	 *
+	 * Unlike getRelationName, this is immutable and will fallback to the quoted field
+	 * name if not a relation.
+	 *
+	 * @param string $field Name of field or relation to apply
+	 * @param string &$columnName Quoted column name
+	 * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
+	 * if this relation will be used for sorting, and should not include duplicate rows.
+	 * @return DataList DataList with this relation applied
+	 */
+	public function applyRelation($field, &$columnName = null, $linearOnly = false) {
+		// If field is invalid, return it without modification
+		if(!$this->isValidRelationName($field)) {
+			$columnName = $field;
+			return $this;
+		}
+
+		// Simple fields without relations are mapped directly
+		if(strpos($field,'.') === false) {
+			$columnName = '"'.$field.'"';
+			return $this;
+		}
+
+		return $this->alterDataQuery(
+			function(DataQuery $query, DataList $list) use ($field, &$columnName, $linearOnly) {
+				$relations = explode('.', $field);
+				$fieldName = array_pop($relations);
+
+				// Apply
+				if($linearOnly) {
+					$relationModelName = $query->applyLinearRelation($field);
+				} else {
+					$relationModelName = $query->applyRelation($field);
+				}
+
+				// Find the db field the relation belongs to
+				$className = ClassInfo::table_for_object_field($relationModelName, $fieldName);
+				if(empty($className)) {
+					$className = $relationModelName;
+				}
+
+				$columnName = '"'.$className.'"."'.$fieldName.'"';
+			}
+		);
+	}
+
+	/**
+	 * Check if the given field specification could be interpreted as an unquoted relation name
+	 *
+	 * @param string $field
+	 * @return bool
+	 */
+	protected function isValidRelationName($field) {
+		return preg_match('/^[A-Z0-9._]+$/i', $field);
+	}
+
+	/**
 	 * Translates a {@link Object} relation name to a Database name and apply
 	 * the relation join to the query.  Throws an InvalidArgumentException if
 	 * the $field doesn't correspond to a relation.
@@ -485,7 +537,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return string
 	 */
 	public function getRelationName($field) {
-		if(!preg_match('/^[A-Z0-9._]+$/i', $field)) {
+		if(!$this->isValidRelationName($field)) {
 			throw new InvalidArgumentException("Bad field expression $field");
 		}
 
@@ -504,7 +556,13 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		$fieldName = array_pop($relations);
 		$relationModelName = $this->dataQuery->applyRelation($field);
 
-		return '"'.$relationModelName.'"."'.$fieldName.'"';
+		// Find the db field the relation belongs to
+		$className = ClassInfo::table_for_object_field($relationModelName, $fieldName);
+		if(empty($className)) {
+			$className = $relationModelName;
+		}
+
+		return '"'.$className.'"."'.$fieldName.'"';
 	}
 
 	/**

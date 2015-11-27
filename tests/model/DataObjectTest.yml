@@ -20,13 +20,17 @@ DataObjectTest_Team:
 DataObjectTest_Player:
   captain1:
     FirstName: Captain
+    Surname: Zookeeper
     ShirtNumber: 007
     FavouriteTeam: =>DataObjectTest_Team.team1
     Teams: =>DataObjectTest_Team.team1
+    FoundingTeams: =>DataObjectTest_Team.team1
     IsRetired: 1
   captain2:
     FirstName: Captain 2
+    Surname: Aaron
     Teams: =>DataObjectTest_Team.team2
+    FoundingTeams: =>DataObjectTest_Team.team2
   player1:
     FirstName: Player 1
   player2:
