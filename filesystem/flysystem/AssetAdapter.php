@@ -32,9 +32,22 @@ class AssetAdapter extends Local {
 	);
 
 	public function __construct($root = null, $writeFlags = LOCK_EX, $linkHandling = self::DISALLOW_LINKS) {
+		// Get root path
+		if (!$root) {
+			// Empty root will set the path to assets
+			$root = ASSETS_PATH;
+		} elseif(strpos($root, './') === 0) {
+			// Substitute leading ./ with BASE_PATH
+			$root = BASE_PATH . substr($root, 1);
+		} elseif(strpos($root, '../') === 0) {
+			// Substitute leading ./ with parent of BASE_PATH, in case storage is outside of the webroot.
+			$root = dirname(BASE_PATH) . substr($root, 2);
+		}
+
 		// Override permissions with config
 		$permissions = \Config::inst()->get(get_class($this), 'file_permissions');
-		parent::__construct($root ?: ASSETS_PATH, $writeFlags, $linkHandling, $permissions);
+
+		parent::__construct($root, $writeFlags, $linkHandling, $permissions);
 	}
 
 	/**

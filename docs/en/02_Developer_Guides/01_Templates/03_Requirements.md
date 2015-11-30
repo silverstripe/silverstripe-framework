@@ -102,22 +102,83 @@ by reducing HTTP requests.
 
 <div class="alert" markdown='1'>
 To make debugging easier in your local environment, combined files is disabled when running your application in `dev`
-mode.
+mode. You can re-enable dev combination by setting `Requirements_Backend.combine_in_dev` to true.
 </div>
 
-By default it stores the generated file in the assets/ folder, but you can configure this by pointing the 
-`Requirements.combined_files_folder` configuration setting to a specific folder.
+### Configuring combined file storage
 
-**mysite/_config/app.yml**
-	
-	:::yml
-	Requirements:
-	  combined_files_folder: '_combined'
+In some situations or server configurations, it may be necessary to customise the behaviour of generated javascript
+files in order to ensure that current files are served in requests.
 
-<div class="info" markdown='1'>
-If SilverStripe doesn't have permissions on your server to write these files it will default back to including them
-individually. SilverStripe **will not** rewrite your paths within the file.
-</div>
+By default, files will be generated on demand in the format `assets/_combinedfiles/name-<hash>.js`,
+where `<hash>` represents the hash of the source files used to generate that content. The default flysystem backend,
+as used by the `[api:AssetStore]` backend, is used for this storage, but it can be substituted for any
+other backend.
+
+You can also use any of the below options in order to tweak this behaviour:
+
+ * `Requirements.disable_flush_combined` - By default all combined files are deleted on flush.
+   If combined files are stored in source control, and thus updated manually, you might want to
+   turn this on to disable this behaviour.
+ * `Requirements_Backend.combine_hash_querystring` - By default the `<hash>` of the source files is appended to
+   the end of the combined file (prior to the file extension). If combined files are versioned in source control,
+   or running in a distributed environment (such as one where the newest version of a file may not always be
+   immediately available) then it may sometimes be necessary to disable this. When this is set to true, the hash
+   will instead be appended via a querystring parameter to enable cache busting, but not in the
+   filename itself. I.e. `assets/_combinedfiles/name.js?m=<hash>`
+ * `Requirements_Backend.default_combined_files_folder` - This defaults to `_combinedfiles`, and is the folder
+   within the configured asset backend that combined files will be stored in. If using a backend shared with
+   other systems, it is usually necessary to distinguish combined files from other assets.
+ * `Requirements_Backend.combine_in_dev` - By default combined files will not be combined except in test
+   or live environments. Turning this on will allow for pre-combining of files in development mode.
+
+In some cases it may be necessary to create a new storage backend for combined files, if the default location
+is not appropriate. Normally a single backend is used for all site assets, so a number of objects must be
+replaced. For instance, the below will set a new set of dependencies to write to `mysite/javascript/combined`
+
+
+    :::yaml
+    ---
+    Name: myrequirements
+    ---
+    Requirements:
+      disable_flush_combined: true
+    Requirements_Backend:
+      combine_in_dev: true
+      combine_hash_querystring: true
+      default_combined_files_folder: 'combined'
+    Injector:
+      MySiteAdapter:
+        class: 'SilverStripe\Filesystem\Flysystem\AssetAdapter'
+        constructor:
+          Root: ./mysite/javascript 
+      # Define the default filesystem
+      MySiteBackend:
+        class: 'League\Flysystem\Filesystem'
+        constructor:
+          Adapter: '%$MySiteAdapter'
+        calls:
+          PublicURLPlugin: [ addPlugin, [ %$FlysystemUrlPlugin ] ]
+      # Requirements config
+      MySiteAssetHandler:
+        class: SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler
+        properties:
+          Filesystem: '%$MySiteBackend'
+      Requirements_Backend:
+        properties:
+          AssetHandler: '%$MySiteAssetHandler'
+
+In the above configuration, automatic expiry of generated files has been disabled, and it is necessary for
+the developer to maintain these files manually. This may be useful in environments where assets must
+be pre-cached, where scripts must be served alongside static files, or where no framework php request is
+guaranteed. Alternatively, files may be served from instances other than the one which generated the
+page response, and file synchronisation might not occur fast enough to propagate combined files to
+mirrored filesystems.
+
+In any case, care should be taken to determine the mechanism appropriate for your development
+and production environments.
+
+### Combined CSS Files
 
 You can also combine CSS files into a media-specific stylesheets as you would with the `Requirements::css` call - use
 the third paramter of the `combine_files` function:
@@ -129,6 +190,11 @@ the third paramter of the `combine_files` function:
 	);
 
 	Requirements::combine_files('print.css', $printStylesheets, 'print');
+
+<div class="alert" markdown='1'>
+When combining CSS files, take care of relative urls, as these will not be re-written to match
+the destination location of the resulting combined CSS.
+</div>
 
 ## Clearing assets
 
