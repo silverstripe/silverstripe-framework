@@ -25,9 +25,13 @@ Injector:
     type: prototype
   # Image mechanism
   Image_Backend: GDBackend
+  # Requirements config
   GeneratedAssetHandler:
     class: SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler
     properties:
       Filesystem: '%$FlysystemBackend'
   Requirements_Minifier:
     class: SilverStripe\View\JSMinifier
+  Requirements_Backend:
+    properties:
+      AssetHandler: '%$GeneratedAssetHandler'

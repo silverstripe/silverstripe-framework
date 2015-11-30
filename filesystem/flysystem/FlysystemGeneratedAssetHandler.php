@@ -67,8 +67,7 @@ class FlysystemGeneratedAssetHandler implements GeneratedAssetHandler {
 	 * @return bool Whether or not the file exists
 	 * @throws Exception If an error has occurred during save
 	 */
-	protected function checkOrCreate($filename, $callback = null)
-	{
+	protected function checkOrCreate($filename, $callback = null) {
 		// Check if there is an existing asset
 		if ($this->getFilesystem()->has($filename)) {
 			return true;

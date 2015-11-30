@@ -22,7 +22,7 @@ class RequirementsTest extends SapphireTest {
 	}
 
 	public function testExternalUrls() {
-		$backend = new Requirements_Backend;
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$backend->setCombinedFilesEnabled(true);
 
 		$backend->javascript('http://www.mydomain.com/test.js');
@@ -118,7 +118,7 @@ class RequirementsTest extends SapphireTest {
 	}
 
 	public function testCombinedJavascript() {
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupCombinedRequirements($backend);
 
 		$combinedFileName = '/_combinedfiles/RequirementsTest_bc-51622b5.js';
@@ -166,7 +166,7 @@ class RequirementsTest extends SapphireTest {
 
 		// Then do it again, this time not requiring the files beforehand
 		unlink($combinedFilePath);
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupCombinedNonrequiredRequirements($backend);
 		$html = $backend->includeInHTML(false, self::$html_template);
 
@@ -204,7 +204,7 @@ class RequirementsTest extends SapphireTest {
 
 	public function testCombinedCss() {
 		$basePath = $this->getCurrentRelativePath();
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 
 		$backend->combineFiles(
@@ -230,7 +230,7 @@ class RequirementsTest extends SapphireTest {
 		);
 
 		// Test that combining a file multiple times doesn't trigger an error
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 		$backend->combineFiles(
 			'style.css',
@@ -257,7 +257,7 @@ class RequirementsTest extends SapphireTest {
 
 	public function testBlockedCombinedJavascript() {
 		$basePath = $this->getCurrentRelativePath();
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupCombinedRequirements($backend);
 		$combinedFileName = '/_combinedfiles/RequirementsTest_bc-51622b5.js';
 		$combinedFilePath = AssetStoreTest_SpyStore::base_path() . $combinedFileName;
@@ -314,7 +314,7 @@ class RequirementsTest extends SapphireTest {
 	public function testArgsInUrls() {
 		$basePath = $this->getCurrentRelativePath();
 
-		$backend = new Requirements_Backend;
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 
 		$backend->javascript($basePath . '/RequirementsTest_a.js?test=1&test=2&test=3');
@@ -339,7 +339,7 @@ class RequirementsTest extends SapphireTest {
 	public function testRequirementsBackend() {
 		$basePath = $this->getCurrentRelativePath();
 
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 		$backend->javascript($basePath . '/a.js');
 
@@ -377,7 +377,7 @@ class RequirementsTest extends SapphireTest {
 		// to something else
 		$basePath = 'framework' . substr($basePath, strlen(FRAMEWORK_DIR));
 
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 		$holder = Requirements::backend();
 		Requirements::set_backend($backend);
@@ -406,7 +406,7 @@ class RequirementsTest extends SapphireTest {
 	}
 
 	public function testJsWriteToBody() {
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 		$backend->javascript('http://www.mydomain.com/test.js');
 
@@ -425,7 +425,7 @@ class RequirementsTest extends SapphireTest {
 
 	public function testIncludedJsIsNotCommentedOut() {
 		$template = '<html><head></head><body><!--<script>alert("commented out");</script>--></body></html>';
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 		$backend->javascript($this->getCurrentRelativePath() . '/RequirementsTest_a.js');
 		$html = $backend->includeInHTML(false, $template);
@@ -437,7 +437,7 @@ class RequirementsTest extends SapphireTest {
 	public function testCommentedOutScriptTagIsIgnored() {
 		$template = '<html><head></head><body><!--<script>alert("commented out");</script>-->'
 			. '<h1>more content</h1></body></html>';
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 		$backend->setSuffixRequirements(false);
 		$src = $this->getCurrentRelativePath() . '/RequirementsTest_a.js';
@@ -449,7 +449,7 @@ class RequirementsTest extends SapphireTest {
 	}
 
 	public function testForceJsToBottom() {
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 		$backend->javascript('http://www.mydomain.com/test.js');
 
@@ -505,7 +505,7 @@ class RequirementsTest extends SapphireTest {
 		$template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
 		$basePath = $this->getCurrentRelativePath();
 
-		$backend = new Requirements_Backend();
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 
 		$backend->javascript($basePath .'/RequirementsTest_a.js');

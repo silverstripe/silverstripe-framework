@@ -289,7 +289,7 @@ class Director implements TemplateGlobalProvider {
 		$existingRequirementsBackend = Requirements::backend();
 
 		Config::inst()->update('Cookie', 'report_errors', false);
-		Requirements::set_backend(new Requirements_Backend());
+		Requirements::set_backend(Injector::inst()->create('Requirements_Backend'));
 
 		// Set callback to invoke prior to return
 		$onCleanup = function() use(

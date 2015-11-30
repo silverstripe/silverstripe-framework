@@ -428,6 +428,7 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 		$generated = new FlysystemGeneratedAssetHandler();
 		$generated->setFilesystem($filesystem);
 		Injector::inst()->registerService($generated, 'GeneratedAssetHandler');
+		Requirements::backend()->setAssetHandler($generated);
 
 		// Disable legacy and set defaults
 		Config::inst()->remove(get_class(new FlysystemAssetStore()), 'legacy_filenames');

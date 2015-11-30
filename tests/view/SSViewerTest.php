@@ -146,7 +146,7 @@ class SSViewerTest extends SapphireTest {
 	}
 
 	public function testRequirementsCombine(){
-		$testBackend = new Requirements_Backend();
+		$testBackend = Injector::inst()->create('Requirements_Backend');
 		$testBackend->setSuffixRequirements(false);
 		//$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
 
@@ -1348,7 +1348,7 @@ after')
 		$template = new SSViewer(array('SSViewerTestProcess'));
 		$basePath = dirname($this->getCurrentRelativePath()) . '/forms';
 
-		$backend = new Requirements_Backend;
+		$backend = Injector::inst()->create('Requirements_Backend');
 		$backend->setCombinedFilesEnabled(false);
 		$backend->combineFiles(
 			'RequirementsTest_ab.css',

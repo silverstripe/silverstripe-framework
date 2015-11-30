@@ -11,10 +11,24 @@ use SilverStripe\Filesystem\Storage\GeneratedAssetHandler;
 class Requirements implements Flushable {
 
 	/**
+	 * Flag whether combined files should be deleted on flush.
+	 *
+	 * By default all combined files are deleted on flush. If combined files are stored in source control,
+	 * and thus updated manually, you might want to turn this on to disable this behaviour.
+	 *
+	 * @config
+	 * @var bool
+	 */
+	private static $disable_flush_combined = false;
+
+	/**
 	 * Triggered early in the request when a flush is requested
 	 */
 	public static function flush() {
-		self::delete_all_combined_files();
+		$disabled = Config::inst()->get(static::class, 'disable_flush_combined');
+		if(!$disabled) {
+			self::delete_all_combined_files();
+		}
 	}
 
 	/**
@@ -73,6 +87,9 @@ class Requirements implements Flushable {
 	 */
 	private static $backend = null;
 
+	/**
+	 * @return Requirements_Backend
+	 */
 	public static function backend() {
 		if(!self::$backend) {
 			self::$backend = Injector::inst()->create('Requirements_Backend');
@@ -442,7 +459,8 @@ class Requirements implements Flushable {
  * @package framework
  * @subpackage view
  */
-class Requirements_Backend {
+class Requirements_Backend
+{
 
 	/**
 	 * Whether to add caching query params to the requests for file-based requirements.
@@ -462,8 +480,10 @@ class Requirements_Backend {
 	protected $combinedFilesEnabled = true;
 
 	/**
-	 * Determine if files should be combined automatically on dev mode
-	 * By default, files will be left uncombined when developing.
+	 * Determine if files should be combined automatically on dev mode.
+	 *
+	 * By default combined files will not be combined except in test or
+	 * live environments. Turning this on will allow for pre-combining of files in development mode.
 	 *
 	 * @config
 	 * @var bool
@@ -574,7 +594,11 @@ class Requirements_Backend {
 	protected $forceJSToBottom = false;
 
 	/**
-	 * Configures the default prefix for comined files
+	 * Configures the default prefix for combined files.
+	 *
+	 * This defaults to `_combinedfiles`, and is the folder within the configured asset backend that
+	 * combined files will be stored in. If using a backend shared with other systems, it is usually
+	 * necessary to distinguish combined files from other assets.
 	 *
 	 * @config
 	 * @var string
@@ -582,12 +606,41 @@ class Requirements_Backend {
 	private static $default_combined_files_folder = '_combinedfiles';
 
 	/**
+	 * Flag to include the hash in the querystring instead of the filename for combined files.
+	 *
+	 * By default the `<hash>` of the source files is appended to the end of the combined file
+	 * (prior to the file extension). If combined files are versioned in source control or running
+	 * in a distributed environment (such as one where the newest version of a file may not always be
+	 * immediately available) then it may sometimes be necessary to disable this. When this is set to true,
+	 * the hash will instead be appended via a querystring parameter to enable cache busting, but not in
+	 * the filename itself. I.e. `assets/_combinedfiles/name.js?m=<hash>`
+	 *
+	 * @config
+	 * @var bool
+	 */
+	private static $combine_hash_querystring = false;
+
+	/**
+	 * @var GeneratedAssetHandler
+	 */
+	protected $assetHandler = null;
+
+	/**
 	 * Gets the backend storage for generated files
 	 *
 	 * @return GeneratedAssetHandler
 	 */
-	protected function getAssetHandler() {
-		return Injector::inst()->get('GeneratedAssetHandler');
+	public function getAssetHandler() {
+		return $this->assetHandler;
+	}
+
+	/**
+	 * Set a new asset handler for this backend
+	 *
+	 * @param GeneratedAssetHandler $handler
+	 */
+	public function setAssetHandler(GeneratedAssetHandler $handler) {
+		$this->assetHandler = $handler;
 	}
 
 	/**
@@ -1433,8 +1486,11 @@ class Requirements_Backend {
 		$fileList = array_diff($fileList, $this->getBlocked());
 
 		// Generate path (Filename)
-		$filename = $this->hashedCombinedFilename($combinedFile, $fileList);
-		$combinedFileID =  File::join_paths($this->getCombinedFilesFolder(), $filename);
+		$hashQuerystring = Config::inst()->get(static::class, 'combine_hash_querystring');
+		if(!$hashQuerystring) {
+			$combinedFile = $this->hashedCombinedFilename($combinedFile, $fileList);
+		}
+		$combinedFileID =  File::join_paths($this->getCombinedFilesFolder(), $combinedFile);
 
 		// Send file combination request to the backend, with an optional callback to perform regeneration
 		$minify = $this->getMinifyCombinedJSFiles();
@@ -1463,6 +1519,14 @@ class Requirements_Backend {
 					return $combinedData;
 				}
 			);
+
+		// If the name isn't hashed, we will need to append the querystring m= parameter instead
+		// Since url won't be automatically suffixed, add it in here
+		if($hashQuerystring && $this->getSuffixRequirements()) {
+			$hash = $this->hashOfFiles($fileList);
+			$q = stripos($combinedURL, '?') === false ? '?' : '&';
+			$combinedURL .= "{$q}m={$hash}";
+		}
 
 		return $combinedURL;
 	}
