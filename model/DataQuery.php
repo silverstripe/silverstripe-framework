@@ -642,9 +642,11 @@ class DataQuery {
 	 * in any overloaded {@link SearchFilter->apply()} methods manually.
 	 *
 	 * @param String|array $relation The array/dot-syntax relation to follow
+	 * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
+	 * if this relation will be used for sorting, and should not include duplicate rows.
 	 * @return The model class of the related item
 	 */
-	public function applyRelation($relation) {
+	public function applyRelation($relation, $linearOnly = false) {
 		// NO-OP
 		if(!$relation) return $this->dataClass;
 
@@ -655,68 +657,164 @@ class DataQuery {
 		foreach($relation as $rel) {
 			$model = singleton($modelClass);
 			if ($component = $model->hasOneComponent($rel)) {
-				if(!$this->query->isJoinedTo($component)) {
-					$foreignKey = $rel;
-					$realModelClass = ClassInfo::table_for_object_field($modelClass, "{$foreignKey}ID");
-					$this->query->addLeftJoin($component,
-						"\"$component\".\"ID\" = \"{$realModelClass}\".\"{$foreignKey}ID\"");
-
-					/**
-					 * add join clause to the component's ancestry classes so that the search filter could search on
-					 * its ancestor fields.
-					 */
-					$ancestry = ClassInfo::ancestry($component, true);
-					if(!empty($ancestry)){
-						$ancestry = array_reverse($ancestry);
-						foreach($ancestry as $ancestor){
-							if($ancestor != $component){
-								$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
-							}
-						}
-					}
-				}
+				// Join via has_one
+				$this->joinHasOneRelation($modelClass, $rel, $component);
 				$modelClass = $component;
 
 			} elseif ($component = $model->hasManyComponent($rel)) {
-				if(!$this->query->isJoinedTo($component)) {
-					$ancestry = $model->getClassAncestry();
-					$foreignKey = $model->getRemoteJoinField($rel);
-					$this->query->addLeftJoin($component,
-						"\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
-					/**
-					 * add join clause to the component's ancestry classes so that the search filter could search on
-					 * its ancestor fields.
-					 */
-					$ancestry = ClassInfo::ancestry($component, true);
-					if(!empty($ancestry)){
-						$ancestry = array_reverse($ancestry);
-						foreach($ancestry as $ancestor){
-							if($ancestor != $component){
-								$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
-							}
-						}
-					}
+				// Fail on non-linear relations
+				if($linearOnly) {
+					throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
 				}
+				// Join via has_many
+				$this->joinHasManyRelation($modelClass, $rel, $component);
 				$modelClass = $component;
 
 			} elseif ($component = $model->manyManyComponent($rel)) {
-				list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
-				$parentBaseClass = ClassInfo::baseDataClass($parentClass);
-				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-				$this->query->addInnerJoin($relationTable,
-					"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
-				$this->query->addLeftJoin($componentBaseClass,
-					"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
-				if(ClassInfo::hasTable($componentClass)) {
-					$this->query->addLeftJoin($componentClass,
-						"\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
+				// Fail on non-linear relations
+				if($linearOnly) {
+					throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
 				}
+				// Join via many_many
+				list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
+				$this->joinManyManyRelationship(
+					$parentClass, $componentClass, $parentField, $componentField, $relationTable
+				);
 				$modelClass = $componentClass;
 
 			}
 		}
 
 		return $modelClass;
+	}
+
+	/**
+	 * Join the given class to this query with the given key
+	 *
+	 * @param string $localClass Name of class that has the has_one to the joined class
+	 * @param string $localField Name of the has_one relationship to joi
+	 * @param string $foreignClass Class to join
+	 */
+	protected function joinHasOneRelation($localClass, $localField, $foreignClass)
+	{
+		if (!$foreignClass) {
+			throw new InvalidArgumentException("Could not find a has_one relationship {$localField} on {$localClass}");
+		}
+
+		if ($foreignClass === 'DataObject') {
+			throw new InvalidArgumentException(
+				"Could not join polymorphic has_one relationship {$localField} on {$localClass}"
+			);
+		}
+
+		// Skip if already joined
+		if($this->query->isJoinedTo($foreignClass)) {
+			return;
+		}
+
+		$realModelClass = ClassInfo::table_for_object_field($localClass, "{$localField}ID");
+		$foreignBase = ClassInfo::baseDataClass($foreignClass);
+		$this->query->addLeftJoin(
+			$foreignBase,
+			"\"$foreignBase\".\"ID\" = \"{$realModelClass}\".\"{$localField}ID\""
+		);
+
+		/**
+		 * add join clause to the component's ancestry classes so that the search filter could search on
+		 * its ancestor fields.
+		 */
+		$ancestry = ClassInfo::ancestry($foreignClass, true);
+		if(!empty($ancestry)){
+			$ancestry = array_reverse($ancestry);
+			foreach($ancestry as $ancestor){
+				if($ancestor != $foreignBase) {
+					$this->query->addLeftJoin($ancestor, "\"$foreignBase\".\"ID\" = \"$ancestor\".\"ID\"");
+				}
+			}
+		}
+	}
+
+	/**
+	 * Join the given has_many relation to this query.
+	 *
+	 * Doesn't work with polymorphic relationships
+	 *
+	 * @param string $localClass Name of class that has the has_many to the joined class
+	 * @param string $localField Name of the has_many relationship to join
+	 * @param string $foreignClass Class to join
+	 */
+	protected function joinHasManyRelation($localClass, $localField, $foreignClass) {
+		if(!$foreignClass || $foreignClass === 'DataObject') {
+			throw new InvalidArgumentException("Could not find a has_many relationship {$localField} on {$localClass}");
+		}
+		
+		// Skip if already joined
+		if($this->query->isJoinedTo($foreignClass)) {
+			return;
+		}
+
+		// Join table with associated has_one
+		$model = singleton($localClass);
+		$ancestry = $model->getClassAncestry();
+		$foreignKey = $model->getRemoteJoinField($localField, 'has_many', $polymorphic);
+		if($polymorphic) {
+			$this->query->addLeftJoin(
+				$foreignClass,
+				"\"$foreignClass\".\"{$foreignKey}ID\" = \"{$ancestry[0]}\".\"ID\" AND "
+					. "\"$foreignClass\".\"{$foreignKey}Class\" = \"{$ancestry[0]}\".\"ClassName\""
+			);
+		} else {
+			$this->query->addLeftJoin(
+				$foreignClass,
+				"\"$foreignClass\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\""
+			);
+		}
+		
+		/**
+		 * add join clause to the component's ancestry classes so that the search filter could search on
+		 * its ancestor fields.
+		 */
+		$ancestry = ClassInfo::ancestry($foreignClass, true);
+		$ancestry = array_reverse($ancestry);
+		foreach($ancestry as $ancestor){
+			if($ancestor != $foreignClass){
+				$this->query->addInnerJoin($ancestor, "\"$foreignClass\".\"ID\" = \"$ancestor\".\"ID\"");
+			}
+		}
+	}
+
+	/**
+	 * Join table via many_many relationship
+	 *
+	 * @param string $parentClass
+	 * @param string $componentClass
+	 * @param string $parentField
+	 * @param string $componentField
+	 * @param string $relationTable Name of relation table
+	 */
+	protected function joinManyManyRelationship($parentClass, $componentClass, $parentField, $componentField, $relationTable) {
+		$parentBaseClass = ClassInfo::baseDataClass($parentClass);
+		$componentBaseClass = ClassInfo::baseDataClass($componentClass);
+		$this->query->addLeftJoin(
+			$relationTable,
+			"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\""
+		);
+		$this->query->addLeftJoin(
+			$componentBaseClass,
+			"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\""
+		);
+
+		/**
+		 * add join clause to the component's ancestry classes so that the search filter could search on
+		 * its ancestor fields.
+		 */
+		$ancestry = ClassInfo::ancestry($componentClass, true);
+		$ancestry = array_reverse($ancestry);
+		foreach($ancestry as $ancestor){
+			if($ancestor != $componentBaseClass){
+				$this->query->addInnerJoin($ancestor, "\"$componentBaseClass\".\"ID\" = \"$ancestor\".\"ID\"");
+			}
+		}
 	}
 
 	/**

@@ -521,6 +521,26 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
 	}
 
+	public function testSortWithCompositeSyntax() {
+		// Phil commented on team with founder surname "Aaron"
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->sort('Team.Founder.Surname', 'asc');
+		$this->assertEquals('Phil', $list->first()->Name);
+		$list = $list->sort('Team.Founder.Surname', 'desc');
+		$this->assertEquals('Phil', $list->last()->Name);
+	}
+
+	public function testSortInvalidParameters() {
+		$this->setExpectedException(
+			'InvalidArgumentException',
+			'Fans is not a linear relation on model DataObjectTest_Player'
+		);
+		$list = DataObjectTest_Team::get();
+		$list = $list->sort('Founder.Fans.Surname'); // Can't sort on has_many
+	}
+
+
+
 	/**
 	 * $list->filter('Name', 'bob'); // only bob in the list
 	 */
