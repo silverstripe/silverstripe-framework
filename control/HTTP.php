@@ -358,7 +358,10 @@ class HTTP {
 
 			// To do: User-Agent should only be added in situations where you *are* actually
 			// varying according to user-agent.
-			$responseHeaders['Vary'] = 'Cookie, X-Forwarded-Protocol, User-Agent, Accept';
+            $vary = $config->get('HTTP', 'vary');
+            if ($vary && strlen($vary)) {
+                $responseHeaders['Vary'] = $vary;
+            }
 		}
 		else {
 			if($body) {
