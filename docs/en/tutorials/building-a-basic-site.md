@@ -1,4 +1,4 @@
-# Tutorial 1 - Building a Basic Site
+# Building a Basic Site
 
 ## Overview
 
@@ -46,7 +46,7 @@ When designing your site you should only need to modify the *mysite*, *themes* a
 
 ##  Using the CMS
 
-The CMS is the area in which you can manage your site content. You can access the cms at http://localhost/admin. You
+The CMS is the area in which you can manage your site content. You can access the cms at `http://localhost/admin`. You
 will be presented with a login screen. You can login with the details you provided at installation. After logging in you
 should be greeted with the CMS, pictured below (we've entered some test content).
 
@@ -76,7 +76,7 @@ behavior. We will explain page types in more depth as we progress; for now, make
 **SilverStripe's virtual URLs**
 
 While you are on the draft or live SilverStripe site, you may notice the URLs point to files that don't exist, e.g.
-http://localhost/contact. SilverStripe uses the URL field on the Meta-Data tab of the editor to look up the appropriate
+`http://localhost/contact`. SilverStripe uses the URL field on the Meta-Data tab of the editor to look up the appropriate
 page in the database.
 
 ![](_images/url.jpg)
@@ -466,11 +466,11 @@ to build a basic but fully functional site. You have also been briefly introduce
 correspond to templates and subtemplates. By using these templates, you have seen how to customize the site content
 according to the page type of the page you are displaying.
 
-In the next tutorial, [Extending a Basic Site](2-extending-a-basic-site), we will explore page types on a
+In the next tutorial, [Extending a Basic Site](extending-a-basic-site), we will explore page types on a
 deeper level, and see how you can customize your own page types to extend SilverStripe to do much more interesting
 things.
 
-[Next Tutorial >>](2-extending-a-basic-site)
+[Next Tutorial >>](extending-a-basic-site)
 
 ## Books on SilverStripe 
 

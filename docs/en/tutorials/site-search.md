@@ -1,4 +1,4 @@
-# Tutorial 4 - Site Search
+# Site Search
 
 ## Overview
 
@@ -259,4 +259,4 @@ Then finally add ?flush=1 to the URL and you should see the new template.
 This tutorial has demonstrated how easy it is to have full text searching on your site. To add search to a SilverStripe
 site, only a search form and a results page need to be created.
 
-[Next Tutorial >>](5-dataobject-relationship-management)
+[Next Tutorial >>](dataobject-relationship-management)

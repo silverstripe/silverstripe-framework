@@ -79,7 +79,7 @@ If the method/field returned is an iterator such as a `[api:DataObject]`, then t
 each element of that iterator.  This is the cornerstone of all menu and list generation in SilverStripe.  
 
 In this example, `Menu(1)` returns a `[api:DataObjectSet]` listing each top level main menu item (for more info on `Menu(1)`:
-[Making a Navigation System](/tutorials/1-building-a-basic-site#Making-a-Navigation-System)).  The `<a>`
+[Making a Navigation System](/tutorials/building-a-basic-site#Making-a-Navigation-System)).  The `<a>`
 tag is repeated once for each main menu item, and the `$Link` and `$Title` values for each menu item is substituted in.
 
 	:::ss
