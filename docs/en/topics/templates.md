@@ -73,7 +73,7 @@ TODO Explain SiteTree properties and SiteTree->MetaTags() overloading
 ### Including CSS and JavaScript files
 
 See [CSS](/topics/css) and [Javascript](/topics/javascript) topics for individual including of files and
-[requirements](reference/requirements) for good examples of including both Javascript and CSS files.
+[requirements](../reference/requirements) for good examples of including both Javascript and CSS files.
 
 ### Layout Tag
 
@@ -120,5 +120,5 @@ For more information about templates go to the [Advanced Templates](/reference/a
 * [themes](/topics/themes)
 * [widgets](/topics/widgets)
 * [images](/reference/image)
-* [Tutorial 1: Building a basic site](/tutorials/1-building-a-basic-site)
-* [Tutorial 2: Extending a basic site](/tutorials/2-extending-a-basic-site)
+* [Building a basic site](/tutorials/building-a-basic-site)
+* [Extending a basic site](/tutorials/extending-a-basic-site)

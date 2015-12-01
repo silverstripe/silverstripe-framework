@@ -197,5 +197,5 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 
 ## Related
 
-*  [api:CsvParser]
 *  [api:ModelAdmin]
+*  [api:CSVParser]

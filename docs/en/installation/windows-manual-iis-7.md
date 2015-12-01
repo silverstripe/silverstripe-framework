@@ -12,7 +12,7 @@ These versions of Windows will **NOT** work with this guide:
   * Windows Server 2003
   * Windows XP
 
-**IMPORTANT**: Windows Server 2003 users should [follow this guide](http://doc.silverstripe.org/installation-on-windows-server-2003-iis-6) to installing SilverStripe.
+**IMPORTANT**: Windows Server 2003 users should [follow this link](https://www.silverstripe.org/blog/installing-on-windows-now-easier-thanks-to-microsoft-web-platform-installer/) to instal SilverStripe.
 
 The goal is to get a good working web server platform so that one or more SilverStripe projects can be easily deployed onto the server using SVN.
 
@@ -133,7 +133,7 @@ Now that we've got the software installed, it's time to install the SilverStripe
 
 Create a new file called **_ss_environment.php** in **C:\inetpub\wwwroot**
 
-This file tells SilverStripe projects installed on this machine which database server and credentials, as well as anything environment specific. [More information on setting up the environment file](environment-management) is available.
+This file tells SilverStripe projects installed on this machine which database server and credentials, as well as anything environment specific. [More information on setting up the environment file](../topics/environment-management) is available.
 
 Inside the newly created _ss_environment.php file, insert the following code:
 
@@ -172,7 +172,7 @@ First of all, install a copy of TortoiseSVN and then follow these steps:
 
 ## Start SilverStripe installer
 
-Open a browser and point it to http://localhost/ss24
+Open a browser and point it to `http://localhost/ss24`
 
 If an installation screen shows up, congratulations! We're very close now.
 
@@ -201,7 +201,7 @@ Now that it's installed, all your PHP scripts should be executed considerably fa
 
 To check if it's installed, have a look at the phpinfo() output and look for wincache.
 
-To examine how it's being cached, visit http://localhost/wincache.php and enter the login details you set up above. This page will show you which files are currently cached and some basic reports of how the module is operating.
+To examine how it's being cached, visit `http://localhost/wincache.php` and enter the login details you set up above. This page will show you which files are currently cached and some basic reports of how the module is operating.
 
 ## Configuring PHP and IIS for production environments
 
@@ -264,7 +264,7 @@ To find out who the current user is, try echoing the result of get_current_user(
 
 **Q: When I try to access my SilverStripe site for the first time, I get a 404 error**
 
-**A:** Try accessing dev/build?username=admin&password=password at the end of the URL you requested. For example, http://localhost/ss24/dev/build?username=admin&password=password. This will ensure the database is built properly
+**A:** Try accessing dev/build?username=admin&password=password at the end of the URL you requested. For example, `http://localhost/ss24/dev/build?username=admin&password=password`. This will ensure the database is built properly
 
 **Q: How do I make IIS expose errors instead of giving a generic 500 or 404 page?**
 
@@ -272,7 +272,7 @@ To find out who the current user is, try echoing the result of get_current_user(
 
 Also, make sure that display_errors, display_startup_errors and html_errors in are set to On in php.ini.
 
-**Q: I get a 500 server error when trying to access the SilverStripe site. e.g. http://localhost/ss24**
+**Q: I get a 500 server error when trying to access the SilverStripe site. e.g. `http://localhost/ss24`**
 
 **A:** One of the reasons why this could be happening is the web.config file inside the ss24 directory has XML that is not well formed. Make sure there are NO spaces before the starting <?xml> tag, and make sure that everything is tabbed out correctly.
 
