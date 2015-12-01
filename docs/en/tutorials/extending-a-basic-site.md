@@ -1,10 +1,10 @@
-# Tutorial 2 - Extending a basic site
+# Extending a basic site
 
 ## Overview
 
 
-In the [first tutorial](1-building-a-basic-site) we learned how to create a basic site using SilverStripe. This
-tutorial builds on what you have learned in [the first tutorial](1-building-a-basic-site), so it is recommended
+In the [first tutorial](building-a-basic-site) we learned how to create a basic site using SilverStripe. This
+tutorial builds on what you have learned in [the first tutorial](building-a-basic-site), so it is recommended
 that you complete it first. 
 
 In this tutorial you will explore extending SilverStripe by creating your own page types. In doing this you will get a
@@ -684,4 +684,4 @@ a complete staff section.
 In this tutorial we have explored the concept of page types. In the process of creating and extending page types you
 have been introduced to many of the concepts required to build a site with SilverStripe.
 
-[Next Tutorial >>](3-forms)
+[Next Tutorial >>](forms)

@@ -89,5 +89,5 @@ Exit the editor and then run
 
 **Useful Links:**
 
-*  [Modules](module-developement)
-*  [Module Release Process](module-release-process)
+*  [Module Development](/topics/module-development)
+*  [Module Release Process](/topics/module-release-process)

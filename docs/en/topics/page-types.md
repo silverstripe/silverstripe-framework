@@ -10,7 +10,7 @@ Page Types are the basic building blocks of any SilverStripe website. A page typ
 when the form is submitted
 
 All the pages on the base installation are of the page type "Page". See
-[tutorial:2-extending-a-basic-site](/tutorials/2-extending-a-basic-site) for a good introduction to page-types.
+[tutorial:extending-a-basic-site](/tutorials/extending-a-basic-site) for a good introduction to page-types.
 
 Each page type on your website is a sub-class of the SiteTree class. Usually, you’ll define a class called ‘Page’
 and use this template to lay out the basic design elements that don’t change. Take a look at mysite/templates/Page.ss.
@@ -72,7 +72,7 @@ model works.
 
 ## Adding formfields and tabs
 
-See [form](/topics/forms) and [tutorial:2-extending-a-basic-site](/tutorials/2-extending-a-basic-site)
+See [form](/topics/forms) and [tutorial:extending-a-basic-site](/tutorials/extending-a-basic-site)
 
 ## Removing inherited form fields and tabs
 
@@ -125,8 +125,8 @@ required on a certain page-type.
 This will also work if you want to remove a whole tab e.g. $fields->removeByName('Metadata'); will remove the whole
 Metadata tab.
 
-For more information on forms, see [form](/topics/forms), [tutorial:2-extending-a-basic-site](/tutorials/2-extending-a-basic-site)
-and [tutorial:3-forms](/tutorials/3-forms).
+For more information on forms, see [form](/topics/forms), [tutorial:extending-a-basic-site](/tutorials/extending-a-basic-site)
+and [tutorial:forms](/tutorials/forms).
 
 ## Creating a new page:
 

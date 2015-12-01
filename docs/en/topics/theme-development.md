@@ -2,7 +2,7 @@
 
 ## Introduction
 
-[Tutorial 1](/tutorials/1-building-a-basic-site#templates) shows you how to create page templates. This guide will help
+The first [Tutorial](/tutorials/building-a-basic-site#templates) shows you how to create page templates. This guide will help
 you create your own SilverStripe website theme.
 
 Developing your own theme in SilverStripe is a piece of cake thanks to a very straight forward and clean templating
@@ -40,7 +40,7 @@ Layout template.
 ### HTML Templates
 
 Once you have created your folders you need to start to fill it out with a couple 'Core' files. First and most
-importantly is we need a HTML template for our design. Read the [Tutorial 1](/tutorials/1-building-a-basic-site#templates)
+importantly is we need a HTML template for our design. Read the [Tutorial 1](/tutorials/building-a-basic-site#templates)
 and the HTML pages for more in-depth discussion about the HTML templates and how they work. At the very least
 we need a Page.ss file (note the .ss extenstion - Don't worry its just HTML and any text editor will still read it). So
 go ahead and create 2 Page.ss files. One in templates, the other in Layout.
@@ -111,7 +111,7 @@ All you have to do now is tell your site to use your new theme - This is defined
 Go to yoursite.com/?flush=1 and check it out. You should be using your new theme! Not really that awesome or amazing is
 it? Next we need to add some CSS Magic!
 
-See [Templates](/reference/themes) for more information about templates.
+See [Templates](/topics/templates) for more information about templates.
 
 
 ### CSS Files

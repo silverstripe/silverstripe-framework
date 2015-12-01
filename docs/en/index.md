@@ -18,11 +18,11 @@ Please read our [guide to contributing documentation](misc/contributing#writing-
 
  * [Introduction to PHP5 (zend.com)](http://devzone.zend.com/node/view/id/627)
  *  [Tutorials](tutorials)
-   * [1. Building a basic site](tutorials/1-building-a-basic-site)
-   * [2. Extending a basic site](tutorials/2-extending-a-basic-site)
-   * [3. Forms](tutorials/3-forms)
-   * [4. Site Search](tutorials/4-site-search)
-   * [5. Relationships](tutorials/5-dataobject-relationship-management)
+   * [Building a basic site](tutorials/building-a-basic-site)
+   * [Extending a basic site](tutorials/extending-a-basic-site)
+   * [Forms](tutorials/forms)
+   * [Site Search](tutorials/site-search)
+   * [Relationships](tutorials/dataobject-relationship-management)
  * [Common Problems](installation/common-problems)
 
 ### Level 2: SilverStripe fundamentals
