@@ -120,5 +120,5 @@ For more information about templates go to the [Advanced Templates](/reference/a
 * [themes](/topics/themes)
 * [widgets](/topics/widgets)
 * [images](/reference/image)
-* [Tutorial 1: Building a basic site](/tutorials/building-a-basic-site)
-* [Tutorial 2: Extending a basic site](/tutorials/extending-a-basic-site)
+* [Building a basic site](/tutorials/building-a-basic-site)
+* [Extending a basic site](/tutorials/extending-a-basic-site)
