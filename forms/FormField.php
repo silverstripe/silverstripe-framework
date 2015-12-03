@@ -1146,6 +1146,26 @@ class FormField extends RequestHandler {
 	}
 
 	/**
+	 * Flag whether this field's content should be escaped.
+	 *
+	 * @param string $dontEscape
+	 *
+	 * @return $this
+	 */
+	public function setDontEscape($dontEscape) {
+		$this->dontEscape = $dontEscape;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDontEscape() {
+		return $this->description;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function debug() {
@@ -1247,15 +1267,14 @@ class FormField extends RequestHandler {
 			->setLeftTitle($this->LeftTitle())
 			->setRightTitle($this->RightTitle())
 			->addExtraClass($this->extraClass())
-			->setDescription($this->getDescription());
+            ->setDescription($this->getDescription())
+            ->setDontEscape($this->getDontEscape());
 
 		// Only include built-in attributes, ignore anything set through getAttributes().
 		// Those might change important characteristics of the field, e.g. its "type" attribute.
 		foreach($this->attributes as $attributeKey => $attributeValue) {
 			$field->setAttribute($attributeKey, $attributeValue);
 		}
-
-		$field->dontEscape = $this->dontEscape;
 
 		return $field;
 	}
