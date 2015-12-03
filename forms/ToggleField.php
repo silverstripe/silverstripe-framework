@@ -78,7 +78,7 @@ class ToggleField extends ReadonlyField {
 			<input type="hidden" name="$this->name" value="$valforInput" />
 HTML;
 		} else {
-			$this->dontEscape = true;
+			$this->setDontEscape(true);
 			$content = parent::Field();
 		}
 		

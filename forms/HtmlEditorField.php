@@ -119,7 +119,7 @@ class HtmlEditorField extends TextareaField {
 	 */
 	public function performReadonlyTransformation() {
 		$field = $this->castedCopy('HtmlEditorField_Readonly');
-		$field->dontEscape = true;
+		$field->setDontEscape(true);
 
 		return $field;
 	}
@@ -584,7 +584,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				CompositeField::create(
 					CompositeField::create(
 						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':', $file->Type),
-						$urlField = ReadonlyField::create(
+						ReadonlyField::create(
 							'ClickableURL',
 							_t('AssetTableField.URL','URL'),
 							sprintf(
@@ -592,7 +592,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 								Convert::raw2att($url),
 								Convert::raw2att($url)
 							)
-						)->addExtraClass('text-wrap')
+						)->addExtraClass('text-wrap')->setDontEscape(true)
 					)
 				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
 			)->setName("FilePreview")->addExtraClass('cms-file-info'),
@@ -626,7 +626,6 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)->addExtraClass('dimensions last')
 			);
 		}
-		$urlField->dontEscape = true;
 
 		if($file->Type == 'photo') {
 			$fields->insertBefore('CaptionText', new TextField(
@@ -698,7 +697,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					CompositeField::create(
 						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type'), $file->FileType),
 						new ReadonlyField("Size", _t('AssetTableField.SIZE','File size'), $file->getSize()),
-						$urlField = new ReadonlyField(
+						ReadonlyField::create(
 							'ClickableURL',
 							_t('AssetTableField.URL','URL'),
 							sprintf(
@@ -707,7 +706,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 								Convert::raw2att($file->Link()),
 								Convert::raw2att($file->RelativeLink())
 							)
-						),
+						)->setDontEscape(true),
 						new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded'),
 							$file->Created),
 						new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed'),
@@ -759,7 +758,6 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)->addExtraClass('dimensions last')
 			);
 		}
-		$urlField->dontEscape = true;
 
 		$this->extend('updateFieldsForImage', $fields, $url, $file);
 

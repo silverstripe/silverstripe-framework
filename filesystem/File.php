@@ -406,17 +406,16 @@ class File extends DataObject {
 			)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
 			CompositeField::create(
 				CompositeField::create(
-					new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':'),
-					new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $this->getSize()),
-					$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
+					ReadonlyField::create("FileType", _t('AssetTableField.TYPE','File type') . ':'),
+					ReadonlyField::create("Size", _t('AssetTableField.SIZE','File size') . ':', $this->getSize()),
+					ReadonlyField::create('ClickableURL', _t('AssetTableField.URL','URL'),
 						sprintf('<a href="%s" target="_blank">%s</a>', $this->Link(), $this->RelativeLink())
-					),
+					)->setDontEscape(true),
 					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':'),
 					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':')
 				)
 			)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
 		)->setName("FilePreview")->addExtraClass('cms-file-info');
-		$urlField->dontEscape = true;
 
 		//get a tree listing with only folder, no files
 		$folderTree = new TreeDropdownField("ParentID", _t('AssetTableField.FOLDER','Folder'), 'Folder');

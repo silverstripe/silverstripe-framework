@@ -67,7 +67,7 @@ class CurrencyField_Readonly extends ReadonlyField{
 	 */
 	public function Field($properties = array()) {
 		if($this->value){
-			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
+			$val = $this->getDontEscape() ? $this->value : Convert::raw2xml($this->value);
 			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
 		} else {
 			$val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
@@ -100,7 +100,7 @@ class CurrencyField_Disabled extends CurrencyField{
 	 */
 	public function Field($properties = array()) {
 		if($this->value){
-			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
+			$val = $this->getDontEscape() ? $this->value : Convert::raw2xml($this->value);
 			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
 		} else {
 			$val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
