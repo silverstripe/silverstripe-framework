@@ -260,6 +260,14 @@ class Config {
 	protected $persistentCache;
 
 	/**
+	 * An array of cache keys to ignore in persistent cache. These are added when a config
+	 * is dynamically updated. For example, this can happen on update or remove.
+	 *
+	 * @var array
+	 */
+	protected $disabledPersistentCacheKeys = array();
+
+	/**
 	 * Each copy of the Config object need's it's own cache, so changes don't
 	 * leak through to other instances.
 	 */
@@ -297,6 +305,28 @@ class Config {
 	 * @var array
 	 */
 	protected $staticManifests = array();
+
+	/**
+	 * Disable a persistent cache key.
+	 *
+	 * @param string $class
+	 * @param string $name
+	 */
+	protected function disablePersistentCache($class, $name) {
+		$this->disabledPersistentCacheKeys[$class . '.' . $name] = true;
+	}
+
+	/**
+	 * Checks if a perisistent cache key has been disabled.
+	 *
+	 * @param string $class
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
+	protected function isPersistentCacheDisabled($class, $name) {
+		return array_key_exists($class . '.' . $name, $this->disabledPersistentCacheKeys);
+	}
 
 	/**
 	 * @param SS_ConfigStaticManifest
@@ -595,13 +625,20 @@ class Config {
 
 		if(($result = $this->cache->get($key)) !== false) {
 			return $result;
-		} else if (($result = $this->persistentCache->get($key)) !== false) {
+		} else if (
+			!$this->isPersistentCacheDisabled($class, $name)
+			&& ($result = $this->persistentCache->get($key)) !== false
+		) {
 			return $result;
 		} else {
 			$tags = array();
 			$result = null;
 			$this->getUncached($class, $name, $sourceOptions, $result, $suppress, $tags);
-			$this->cache->set($key, $result, $tags);
+			if(!$this->isPersistentCacheDisabled($class, $name)) {
+				$this->persistentCache->set($key, $result, $tags);
+			} else {
+				$this->cache->set($key, $result, $tags);
+			}
 		}
 
 		return $result;
@@ -638,6 +675,7 @@ class Config {
 
 		$this->cache->clean("__{$class}__{$name}");
 		$this->persistentCache->clean("__{$class}__{$name}");
+		$this->disablePersistentCache($class, $name);
 	}
 
 	/**
@@ -697,6 +735,7 @@ class Config {
 
 		$this->cache->clean("__{$class}__{$name}");
 		$this->persistentCache->clean("__{$class}__{$name}");
+		$this->disablePersistentCache($class, $name);
 	}
 
 }
@@ -921,7 +960,6 @@ class Config_PersistentCache extends Config_MemCache implements Flushable {
 		parent::set($key, $value, $tags);
 		$this->backend->save($this->cache, '_all');
 	}
-
 }
 
 /**
