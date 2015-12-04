@@ -250,9 +250,14 @@ class Config {
 	}
 
 	/**
-	 * @var array
+	 * @var Config_MemCache
 	 */
 	protected $cache;
+
+	/**
+	 * @var Config_PersistentCache
+	 */
+	protected $persistentCache;
 
 	/**
 	 * Each copy of the Config object need's it's own cache, so changes don't
@@ -260,10 +265,12 @@ class Config {
 	 */
 	public function __construct() {
 		$this->cache = new Config_MemCache();
+		$this->persistentCache = new Config_PersistentCache();
 	}
 
 	public function __clone() {
 		$this->cache = clone $this->cache;
+		$this->persistentCache = clone $this->persistentCache;
 	}
 
 	/**
@@ -473,6 +480,7 @@ class Config {
 	public function extraConfigSourcesChanged($class) {
 		unset($this->extraConfigSources[$class]);
 		$this->cache->clean("__{$class}");
+		$this->persistentCache->clean("__{$class}");
 	}
 
 	protected function getUncached($class, $name, $sourceOptions, &$result, $suppress, &$tags) {
@@ -585,7 +593,11 @@ class Config {
 		// Have we got a cached value? Use it if so
 		$key = $class.$name.$sourceOptions;
 
-		if (($result = $this->cache->get($key)) === false) {
+		if(($result = $this->cache->get($key)) !== false) {
+			return $result;
+		} else if (($result = $this->persistentCache->get($key)) !== false) {
+			return $result;
+		} else {
 			$tags = array();
 			$result = null;
 			$this->getUncached($class, $name, $sourceOptions, $result, $suppress, $tags);
@@ -625,6 +637,7 @@ class Config {
 		}
 
 		$this->cache->clean("__{$class}__{$name}");
+		$this->persistentCache->clean("__{$class}__{$name}");
 	}
 
 	/**
@@ -683,6 +696,7 @@ class Config {
 		$this->suppresses[0][$class][$name][] = $suppress;
 
 		$this->cache->clean("__{$class}__{$name}");
+		$this->persistentCache->clean("__{$class}__{$name}");
 	}
 
 }
@@ -811,47 +825,13 @@ class Config_MemCache implements ConfigCacheInterface {
 	 */
 	protected $cache;
 
-	/**
-	 * Stores pre-merged config cache so we don't have to merge on each new request
-	 *
-	 * @var SS_Cache
-	 */
-	protected $persistentCache;
+	protected $hit = 0;
+	protected $miss = 0;
 
-	/**
-	 * @var array
-	 */
-	protected $persistentCacheData;
-
-	/**
-	 * Stores keys for persistent cache keys that have been invalidated. These can be
-	 * invalidated when calling Config::inst()->update() or Config::inst()->remove()
-	 * at run-time.
-	 *
-	 * These are disabled per-request as these could be invalidated dynamically.
-	 *
-	 * @var array
-	 */
-	protected $disabledPersistentCache = array();
-
-	protected $i = 0;
-	protected $c = 0;
 	protected $tags = array();
 
 	public function __construct() {
 		$this->cache = array();
-		$this->persistentCache = SS_Cache::factory(
-			'SS_Configuration_' . __CLASS__,
-			'Core', 
-			array(
-				'automatic_serialization' => true,
-				'lifetime' => null
-			)
-		);
-		$this->persistentCacheData = $this->persistentCache->load('_all');
-		if(!$this->persistentCacheData) {
-			$this->persistentCacheData = array();
-		}
 	}
 
 	public function set($key, $val, $tags = array()) {
@@ -862,16 +842,8 @@ class Config_MemCache implements ConfigCacheInterface {
 			$this->tags[$t][$key] = true;
 		}
 
-		if(!$this->isPersistentCacheDisabled($key)) {
-			$this->persistentCacheData[$key] = array($val, $tags);
-			$this->persistentCache->save($this->persistentCacheData, '_all');
-		} else {
-			$this->cache[$key] = array($val, $tags);
-		}
+		$this->cache[$key] = array($val, $tags);
 	}
-
-	private $hit = 0;
-	private $miss = 0;
 
 	public function stats() {
 		return $this->miss ? ($this->hit / $this->miss) : 0;
@@ -881,9 +853,6 @@ class Config_MemCache implements ConfigCacheInterface {
 		if(isset($this->cache[$key])) {
 			++$this->hit;
 			return $this->cache[$key][0];
-		} else if(isset($this->persistentCacheData[$key])) {
-			++$this->hit;
-			return $this->persistentCacheData[$key][0];
 		}
 		++$this->miss;
 		return false;
@@ -901,48 +870,58 @@ class Config_MemCache implements ConfigCacheInterface {
 						}
 						unset($this->cache[$k]);
 					}
-					if(isset($this->persistentCacheData[$k])) {
-						$ts = $this->persistentCacheData[$k][1];
-						foreach($ts as $t) {
-							unset($this->tags[$t][$k]);
-						}
-						unset($this->persistentCacheData[$k]);
-					}
-					$this->disablePersistentCache($k);
 				}
 				unset($this->tags[$tag]);
 			}
 		} else {
 			$this->cache = array();
 			$this->tags = array();
-			$this->persistentCacheData = array();
-			$this->disabledPersistentCache = array();
+		}
+	}
+}
+
+class Config_PersistentCache extends Config_MemCache implements Flushable {
+
+	/**
+	 * @var Zend_Cache_Backend
+	 */
+	protected $backend;
+
+	public static function flush() {
+		// Just passing true as the first parameter is enough to flush the cache
+		new Config_PersistentCache(true);
+	}
+
+	/**
+	 * @param bool $flush - whether to flush the cache or not
+	 */
+	public function __construct($flush = false) {
+		parent::__construct();
+		$this->backend = SS_Cache::factory(
+			'SS_Configuration_' . __CLASS__,
+			'Core', 
+			array(
+				'automatic_serialization' => true,
+				'lifetime' => null
+			)
+		);
+
+		// Flush if required.
+		if($flush) {
+			$this->backend->save(array(), '_all');
+		}
+		
+		$this->cache = $this->backend->load('_all');
+		if(!$this->cache) {
+			$this->cache = array();
 		}
 	}
 
-	/**
-	 * Checks whether a cache key has been invalidated for this request for persistent cache. 
-	 * This can happen when updating the config dynamically via Config::inst()->update() or
-	 * Config::inst()->remove().
-	 *
-	 * @param string $key
-	 *
-	 * @return bool
-	 */
-	protected function isPersistentCacheDisabled($key) {
-		return isset($this->disabledPersistentCache[$key]);
+	public function set($key, $value, $tags = array()) {
+		parent::set($key, $value, $tags);
+		$this->backend->save($this->cache, '_all');
 	}
 
-	/**
-	 * Disables a cache key to prevent persistent cache being access for that key.
-	 *
-	 * @param string $key
-	 *
-	 * @return bool
-	 */
-	protected function disablePersistentCache($key) {
-		$this->disabledPersistentCache[$key] = true;
-	}
 }
 
 /**
