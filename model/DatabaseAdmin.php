@@ -228,7 +228,11 @@ class DatabaseAdmin extends Controller {
 		$dbSchema->schemaUpdate(function() use($dataClasses, $testMode, $quiet){
 			foreach($dataClasses as $dataClass) {
 				// Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
-				if(!class_exists($dataClass)) continue;
+				if(!class_exists($dataClass) 
+					|| (($reflection = new ReflectionClass($dataClass)) 
+					&& $reflection->isAbstract())) {
+					continue;
+				}
 
 				// Check if this class should be excluded as per testing conventions
 				$SNG = singleton($dataClass);
@@ -255,7 +259,10 @@ class DatabaseAdmin extends Controller {
 			foreach($dataClasses as $dataClass) {
 				// Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
 				// Test_ indicates that it's the data class is part of testing system
-				if(strpos($dataClass,'Test_') === false && class_exists($dataClass)) {
+				if(strpos($dataClass,'Test_') === false
+					&& class_exists($dataClass)
+					&& (($reflection = new ReflectionClass($dataClass)) && !$reflection->isAbstract())) 
+				{
 					if(!$quiet) {
 						if(Director::is_cli()) echo " * $dataClass\n";
 						else echo "<li>$dataClass</li>\n";
