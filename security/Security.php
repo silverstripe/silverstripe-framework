@@ -208,6 +208,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 *
 	 * The alreadyLoggedIn value can contain a '%s' placeholder that will be replaced with a link
 	 * to log in.
+	 * @return SS_HTTPResponse
 	 */
 	public static function permissionFailure($controller = null, $messageSet = null) {
 		self::set_ignore_disallowed_actions(true);
@@ -226,79 +227,78 @@ class Security extends Controller implements TemplateGlobalProvider {
 				}
 			}
 			return $response;
-		} else {
-			// Prepare the messageSet provided
-			if(!$messageSet) {
-				if($configMessageSet = static::config()->get('default_message_set')) {
-					$messageSet = $configMessageSet;
-				} else {
-					$messageSet = array(
-						'default' => _t(
-							'Security.NOTEPAGESECURED',
-							"That page is secured. Enter your credentials below and we will send "
-								. "you right along."
-						),
-						'alreadyLoggedIn' => _t(
-							'Security.ALREADYLOGGEDIN',
-							"You don't have access to this page.  If you have another account that "
-								. "can access that page, you can log in again below.",
+		}
 
-							"%s will be replaced with a link to log in."
-						)
-					);
-				}
+		// Prepare the messageSet provided
+		if(!$messageSet) {
+			if($configMessageSet = static::config()->get('default_message_set')) {
+				$messageSet = $configMessageSet;
+			} else {
+				$messageSet = array(
+					'default' => _t(
+						'Security.NOTEPAGESECURED',
+						"That page is secured. Enter your credentials below and we will send "
+							. "you right along."
+					),
+					'alreadyLoggedIn' => _t(
+						'Security.ALREADYLOGGEDIN',
+						"You don't have access to this page.  If you have another account that "
+							. "can access that page, you can log in again below.",
+
+						"%s will be replaced with a link to log in."
+					)
+				);
 			}
+		}
 
-			if(!is_array($messageSet)) {
-				$messageSet = array('default' => $messageSet);
-			}
+		if(!is_array($messageSet)) {
+			$messageSet = array('default' => $messageSet);
+		}
 
-			$member = Member::currentUser();
+		$member = Member::currentUser();
 
-			// Work out the right message to show
-			if($member && $member->exists()) {
-				$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
-				$response->setStatusCode(403);
+		// Work out the right message to show
+		if($member && $member->exists()) {
+			$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
+			$response->setStatusCode(403);
 
-				//If 'alreadyLoggedIn' is not specified in the array, then use the default
-				//which should have been specified in the lines above
-				if(isset($messageSet['alreadyLoggedIn'])) {
-					$message = $messageSet['alreadyLoggedIn'];
-				} else {
-					$message = $messageSet['default'];
-				}
-
-				// Somewhat hackish way to render a login form with an error message.
-				$me = new Security();
-				$form = $me->LoginForm();
-				$form->sessionMessage($message, 'warning');
-				Session::set('MemberLoginForm.force_message',1);
-				$formText = $me->login();
-
-				$response->setBody($formText);
-
-				$controller->extend('permissionDenied', $member);
-
-				return $response;
+			//If 'alreadyLoggedIn' is not specified in the array, then use the default
+			//which should have been specified in the lines above
+			if(isset($messageSet['alreadyLoggedIn'])) {
+				$message = $messageSet['alreadyLoggedIn'];
 			} else {
 				$message = $messageSet['default'];
 			}
 
-			Session::set("Security.Message.message", $message);
-			Session::set("Security.Message.type", 'warning');
+			// Somewhat hackish way to render a login form with an error message.
+			$me = new Security();
+			$form = $me->LoginForm();
+			$form->sessionMessage($message, 'warning');
+			Session::set('MemberLoginForm.force_message',1);
+			$formText = $me->login();
 
-			Session::set("BackURL", $_SERVER['REQUEST_URI']);
+			$response->setBody($formText);
 
-			// TODO AccessLogEntry needs an extension to handle permission denied errors
-			// Audit logging hook
 			$controller->extend('permissionDenied', $member);
 
-			$controller->redirect(
-				Config::inst()->get('Security', 'login_url')
-				. "?BackURL=" . urlencode($_SERVER['REQUEST_URI'])
-			);
+			return $response;
+		} else {
+			$message = $messageSet['default'];
 		}
-		return;
+
+		Session::set("Security.Message.message", $message);
+		Session::set("Security.Message.type", 'warning');
+
+		Session::set("BackURL", $_SERVER['REQUEST_URI']);
+
+		// TODO AccessLogEntry needs an extension to handle permission denied errors
+		// Audit logging hook
+		$controller->extend('permissionDenied', $member);
+
+		return $controller->redirect(
+			Config::inst()->get('Security', 'login_url')
+			. "?BackURL=" . urlencode($_SERVER['REQUEST_URI'])
+		);
 	}
 
 	public function init() {

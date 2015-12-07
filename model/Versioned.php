@@ -992,6 +992,26 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 
 	/**
+	 * Determine if the current user is able to set the given site stage / archive
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @return bool
+	 */
+	public static function can_choose_site_stage($request) {
+		// Request is allowed if stage isn't being modified
+		if((!$request->getVar('stage') || $request->getVar('stage') === static::get_live_stage())
+			&& !$request->getVar('archiveDate')
+		) {
+			return true;
+		}
+
+		// Check permissions with member ID in session.
+		$member = Member::currentUser();
+		$permissions = Config::inst()->get(get_called_class(), 'non_live_permissions');
+		return $member && Permission::checkMember($member, $permissions);
+	}
+
+	/**
 	 * Choose the stage the site is currently on.
 	 *
 	 * If $_GET['stage'] is set, then it will use that stage, and store it in
@@ -1002,14 +1022,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * If neither of these are set, it checks the session, otherwise the stage
 	 * is set to 'Live'.
-	 *
-	 * @param Session $session Optional session within which to store the resulting stage
 	 */
-	public static function choose_site_stage($session = null) {
+	public static function choose_site_stage() {
 		// Check any pre-existing session mode
-		$preexistingMode = $session
-			? $session->inst_get('readingMode')
-			: Session::get('readingMode');
+		$preexistingMode = Session::get('readingMode');
 
 		// Determine the reading mode
 		if(isset($_GET['stage'])) {
@@ -1031,11 +1047,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if(($preexistingMode && $preexistingMode !== $mode)
 			|| (!$preexistingMode && $mode !== self::DEFAULT_MODE)
 		) {
-			if($session) {
-				$session->inst_set('readingMode', $mode);
-			} else {
-				Session::set('readingMode', $mode);
-			}
+			Session::set('readingMode', $mode);
 		}
 
 		if(!headers_sent() && !Director::is_cli()) {
