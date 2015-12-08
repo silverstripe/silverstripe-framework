@@ -48,28 +48,28 @@ class HTTPTest extends FunctionalTest {
 
 
     public function testConfigVary() {
-        $body = "<html><head></head><body><h1>Mysite</h1></body></html>";
+		$body = "<html><head></head><body><h1>Mysite</h1></body></html>";
 		$response = new SS_HTTPResponse($body, 200);
-        Config::inst()->update('Director', 'environment_type', 'live');
-        HTTP::set_cache_age(30);
+		Config::inst()->update('Director', 'environment_type', 'live');
+		HTTP::set_cache_age(30);
 		HTTP::add_cache_headers($response);
 
-        $v = $response->getHeader('Vary');
+		$v = $response->getHeader('Vary');
 		$this->assertNotEmpty($v);
 
-        $this->assertContains("Cookie", $v);
-        $this->assertContains("X-Forwarded-Protocol", $v);
-        $this->assertContains("User-Agent", $v);
-        $this->assertContains("Accept", $v);
+		$this->assertContains("Cookie", $v);
+		$this->assertContains("X-Forwarded-Protocol", $v);
+		$this->assertContains("User-Agent", $v);
+		$this->assertContains("Accept", $v);
 
-        Config::inst()->update('HTTP', 'vary', '');
+		Config::inst()->update('HTTP', 'vary', '');
 
-        $response = new SS_HTTPResponse($body, 200);
-        HTTP::add_cache_headers($response);
+		$response = new SS_HTTPResponse($body, 200);
+		HTTP::add_cache_headers($response);
 
-        $v = $response->getHeader('Vary');
+		$v = $response->getHeader('Vary');
 		$this->assertEmpty($v);
-    }
+	}
 
 	/**
 	 * Tests {@link HTTP::getLinksIn()}

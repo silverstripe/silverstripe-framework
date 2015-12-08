@@ -358,10 +358,10 @@ class HTTP {
 
 			// To do: User-Agent should only be added in situations where you *are* actually
 			// varying according to user-agent.
-            $vary = $config->get('HTTP', 'vary');
-            if ($vary && strlen($vary)) {
-                $responseHeaders['Vary'] = $vary;
-            }
+			$vary = $config->get('HTTP', 'vary');
+			if ($vary && strlen($vary)) {
+				$responseHeaders['Vary'] = $vary;
+			}
 		}
 		else {
 			if($body) {
