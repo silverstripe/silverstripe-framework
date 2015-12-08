@@ -239,7 +239,7 @@ class SS_ConfigStaticManifest_Parser {
 		$depth = 0; $namespace = null; $class = null; $clsdepth = null; $access = 0;
 
 		while($token = $this->next()) {
-			$type = is_array($token) ? $token[0] : $token;
+			$type = ($token === (array)$token) ? $token[0] : $token;
 
 			if($type == T_CLASS) {
 				$next = $this->nextString();
@@ -302,7 +302,7 @@ class SS_ConfigStaticManifest_Parser {
 		$value = '';
 
 		while($token = $this->next()) {
-			$type = is_array($token) ? $token[0] : $token;
+			$type = ($token === (array)$token) ? $token[0] : $token;
 
 			if($type == T_PUBLIC || $type == T_PRIVATE || $type == T_PROTECTED) {
 				$access = $type;
@@ -328,8 +328,8 @@ class SS_ConfigStaticManifest_Parser {
 		if($token == '=') {
 			$depth = 0;
 
-			while($token = $this->next(false)){
-				$type = is_array($token) ? $token[0] : $token;
+			while($token = ($this->pos >= $this->length) ? null : $this->tokens[$this->pos++]) {
+				$type = ($token === (array)$token) ? $token[0] : $token;
 
 				// Track array nesting depth
 				if($type == T_ARRAY || $type == '[') {
@@ -351,7 +351,7 @@ class SS_ConfigStaticManifest_Parser {
 					$value .= $class;
 				}
 				else {
-					$value .= is_array($token) ? $token[1] : $token;
+					$value .= ($token === (array)$token) ? $token[1] : $token;
 				}
 			}
 		}
