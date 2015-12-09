@@ -18,6 +18,10 @@ namespace SilverStripe\Filesystem\Storage;
  *   of the mechanism used to generate this file, and is up to user code to perform the actual
  *   generation. An empty variant identifies this file as the original file.
  *
+ * Write options have an additional $config parameter to provide additional options to the backend.
+ * This is an associative array. Standard array options include 'visibility' and 'conflict'.
+ *
+ * 'conflict' config option determines the conflict resolution mechanism.
  * When assets are stored in the backend, user code may request one of the following conflict resolution
  * mechanisms:
  *
@@ -28,6 +32,12 @@ namespace SilverStripe\Filesystem\Storage;
  * - CONFLICT_USE_EXISTING - If there is an existing file with this tuple, return the tuple for the
  *   existing file instead.
  * - CONFLICT_EXCEPTION - If there is an existing file with this tuple, throw an exception.
+ *
+ * 'visibility' config option determines whether the file should be marked as publicly visible.
+ * This may be assigned to one of the below values:
+ *
+ * - VISIBILITY_PUBLIC: This file may be accessed by any public user.
+ * - VISIBILITY_PROTECTED: This file must be whitelisted for individual users before being made available to that user.
  *
  * @package framework
  * @subpackage filesystem
@@ -58,44 +68,64 @@ interface AssetStore {
 	const CONFLICT_USE_EXISTING = 'existing';
 
 	/**
+	 * Protect this file
+	 */
+	const VISIBILITY_PROTECTED = 'protected';
+
+	/**
+	 * Make this file public
+	 */
+	const VISIBILITY_PUBLIC = 'public';
+
+	/**
+	 * Return list of feature capabilities of this backend as an array.
+	 * Array keys will be the options supported by $config, and the
+	 * values will be the list of accepted values for each option (or
+	 * true if any value is allowed).
+	 *
+	 * @return array
+	 */
+	public function getCapabilities();
+
+	/**
 	 * Assign a set of data to the backend
 	 *
 	 * @param string $data Raw binary/text content
 	 * @param string $filename Name for the resulting file
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
-	 * @param string $conflictResolution {@see AssetStore}. Will default to one chosen by the backend
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the given data.
 	 */
-	public function setFromString($data, $filename, $hash = null, $variant = null, $conflictResolution = null);
+	public function setFromString($data, $filename, $hash = null, $variant = null, $config = array());
 
-    /**
+	/**
 	 * Assign a local file to the backend.
 	 *
 	 * @param string $path Absolute filesystem path to file
-	 * @param type $filename Optional path to ask the backend to name as.
+	 * @param string $filename Optional path to ask the backend to name as.
 	 * Will default to the filename of the $path, excluding directories.
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
-	 * @param string $conflictResolution {@see AssetStore}
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the local file content.
 	 */
-    public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $conflictResolution = null);
+    public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array());
 
-    /**
+	/**
 	 * Assign a stream to the backend
 	 *
 	 * @param resource $stream Streamable resource
 	 * @param string $filename Name for the resulting file
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
-	 * @param string $conflictResolution {@see AssetStore}
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the raw stream.
 	 */
-    public function setFromStream($stream, $filename, $hash = null, $variant = null, $conflictResolution = null);
+    public function setFromStream($stream, $filename, $hash = null, $variant = null, $config = array());
 
     /**
 	 * Get contents of a given file
@@ -126,9 +156,14 @@ interface AssetStore {
 	 * @param string $hash sha1 hash of the file content.
 	 * If a variant is requested, this is the hash of the file before it was modified.
      * @param string|null $variant Optional variant string for this file
+	 * @param bool $grant Ensures that the url for any protected assets is granted for the current user.
+	 * If set to true, and the file is currently in protected mode, the asset store will ensure the
+	 * returned URL is accessible for the duration of the current session / user.
+	 * This will have no effect if the file is in published mode.
+	 * This will not grant access to users other than the owner of the current session.
      * @return string public url to this resource
      */
-    public function getAsURL($filename, $hash, $variant = null);
+    public function getAsURL($filename, $hash, $variant = null, $grant = true);
 
 	/**
 	 * Get metadata for this file, if available
@@ -153,6 +188,16 @@ interface AssetStore {
 	public function getMimeType($filename, $hash, $variant = null);
 
 	/**
+	 * Determine visibility of the given file
+	 *
+	 * @param string $filename
+	 * @param string $hash
+	 * @return string one of values defined by the constants VISIBILITY_PROTECTED or VISIBILITY_PUBLIC, or
+	 * null if the file does not exist
+	 */
+	public function getVisibility($filename, $hash);
+
+	/**
 	 * Determine if a file exists with the given tuple
 	 *
 	 * @param string $filename Filename (not including assets)
@@ -162,4 +207,63 @@ interface AssetStore {
 	 * @return bool Flag as to whether the file exists
 	 */
 	public function exists($filename, $hash, $variant = null);
+
+	/**
+	 * Delete a file (and all variants) identified by the given filename and hash
+	 *
+	 * @param string $filename
+	 * @param string $hash
+	 * @return bool Flag if a file was deleted
+	 */
+	public function delete($filename, $hash);
+
+	/**
+	 * Publicly expose the file (and all variants) identified by the given filename and hash
+	 *
+	 * @param string $filename Filename (not including assets)
+	 * @param string $hash sha1 hash of the file content.
+	 */
+	public function publish($filename, $hash);
+
+	/**
+	 * Protect a file (and all variants) from public access, identified by the given filename and hash.
+	 *
+	 * A protected file can be granted access to users on a per-session or per-user basis as response
+	 * to any future invocations of {@see grant()} or {@see getAsURL()} with $grant = true
+	 *
+	 * @param string $filename Filename (not including assets)
+	 * @param string $hash sha1 hash of the file content.
+	 */
+	public function protect($filename, $hash);
+
+	/**
+	 * Ensures that access to the specified protected file is granted for the current user.
+	 * If this file is currently in protected mode, the asset store will ensure the
+	 * returned asset for the duration of the current session / user.
+	 * This will have no effect if the file is in published mode.
+	 * This will not grant access to users other than the owner of the current session.
+	 * Does not require a member to be logged in.
+	 *
+	 * @param string $filename
+	 * @param string $hash
+	 */
+	public function grant($filename, $hash);
+
+	/**
+	 * Revoke access to the given file for the current user.
+	 * Note: This will have no effect if the given file is public
+	 *
+	 * @param string $filename
+	 * @param string $hash
+	 */
+	public function revoke($filename, $hash);
+
+	/**
+	 * Check if the current user can view the given file.
+	 *
+	 * @param string $filename
+	 * @param string $hash
+	 * @return bool True if the file is verified and grants access to the current session / user.
+	 */
+	public function canView($filename, $hash);
 }

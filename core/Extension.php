@@ -86,14 +86,15 @@ abstract class Extension {
 
 	/**
 	 * Helper method to strip eval'ed arguments from a string
-	 * thats passed to {@link DataObject::$extensions} or
+	 * that's passed to {@link DataObject::$extensions} or
 	 * {@link Object::add_extension()}.
 	 *
 	 * @param string $extensionStr E.g. "Versioned('Stage','Live')"
 	 * @return string Extension classname, e.g. "Versioned"
 	 */
 	public static function get_classname_without_arguments($extensionStr) {
-		return (($p = strpos($extensionStr, '(')) !== false) ? substr($extensionStr, 0, $p) : $extensionStr;
+		$parts = explode('(', $extensionStr);
+		return $parts[0];
 	}
 
 

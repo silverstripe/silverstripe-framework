@@ -56,11 +56,11 @@ interface Image_Backend {
 	 * @param string $filename Name for the resulting file
 	 * @param string $hash Hash of original file, if storing a variant.
 	 * @param string $variant Name of variant, if storing a variant.
-	 * @param string $conflictResolution {@see AssetStore}. Will default to one chosen by the backend
+	 * @param array $config Write options. {@see AssetStore}
 	 * @return array Tuple associative array (Filename, Hash, Variant) Unless storing a variant, the hash
 	 * will be calculated from the given data.
 	 */
-	public function writeToStore(AssetStore $assetStore, $filename, $hash = null, $variant = null, $conflictResolution = null);
+	public function writeToStore(AssetStore $assetStore, $filename, $hash = null, $variant = null, $config = array());
 
 	/**
 	 * Write the backend to a local path

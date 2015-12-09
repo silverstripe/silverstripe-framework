@@ -38,7 +38,7 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 	
 		location ^~ /assets/ {
 			sendfile on;
-			try_files $uri =404;
+			try_files $uri /framework/main.php?url=$uri&$query_string;
 		}
 	
 		location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {

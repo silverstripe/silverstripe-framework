@@ -548,14 +548,14 @@ class GDBackend extends Object implements Image_Backend, Flushable {
 		return $output;
 	}
 
-	public function writeToStore(AssetStore $assetStore, $filename, $hash = null, $variant = null, $conflictResolution = null) {
+	public function writeToStore(AssetStore $assetStore, $filename, $hash = null, $variant = null, $config = array()) {
 		// Write to temporary file, taking care to maintain the extension
 		$path = tempnam(sys_get_temp_dir(), 'gd');
 		if($extension = pathinfo($filename, PATHINFO_EXTENSION)) {
 			$path .= "." . $extension;
 		}
 		$this->writeTo($path);
-		$result = $assetStore->setFromLocalFile($path, $filename, $hash, $variant, $conflictResolution);
+		$result = $assetStore->setFromLocalFile($path, $filename, $hash, $variant, $config);
 		unlink($path);
 		return $result;
 	}

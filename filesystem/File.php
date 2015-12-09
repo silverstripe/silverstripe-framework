@@ -667,22 +667,24 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	 * Gets the URL of this file
 	 *
 	 * @uses Director::baseURL()
+	 * @param bool $grant Ensures that the url for any protected assets is granted for the current user.
 	 * @return string
 	 */
-	public function getURL() {
+	public function getURL($grant = true) {
 		if($this->File->exists()) {
-			return $this->File->getURL();
+			return $this->File->getURL($grant);
 		}
 	}
 
 	/**
 	 * Get URL, but without resampling.
 	 *
+	 * @param bool $grant Ensures that the url for any protected assets is granted for the current user.
 	 * @return string
 	 */
-	public function getSourceURL() {
+	public function getSourceURL($grant = true) {
 		if($this->File->exists()) {
-			return $this->File->getSourceURL();
+			return $this->File->getSourceURL($grant);
 		}
 	}
 
@@ -971,8 +973,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		}
 	}
 
-	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $conflictResolution = null) {
-		$result = $this->File->setFromLocalFile($path, $filename, $hash, $variant, $conflictResolution);
+	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array()) {
+		$result = $this->File->setFromLocalFile($path, $filename, $hash, $variant, $config);
 		
 		// Update File record to name of the uploaded asset
 		if($result) {
@@ -981,8 +983,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		return $result;
 	}
 
-	public function setFromStream($stream, $filename, $hash = null, $variant = null, $conflictResolution = null) {
-		$result = $this->File->setFromStream($stream, $filename, $hash, $variant, $conflictResolution);
+	public function setFromStream($stream, $filename, $hash = null, $variant = null, $config = array()) {
+		$result = $this->File->setFromStream($stream, $filename, $hash, $variant, $config);
 
 		// Update File record to name of the uploaded asset
 		if($result) {
@@ -991,8 +993,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		return $result;
 	}
 
-	public function setFromString($data, $filename, $hash = null, $variant = null, $conflictResolution = null) {
-		$result = $this->File->setFromString($data, $filename, $hash, $variant, $conflictResolution);
+	public function setFromString($data, $filename, $hash = null, $variant = null, $config = array()) {
+		$result = $this->File->setFromString($data, $filename, $hash, $variant, $config);
 
 		// Update File record to name of the uploaded asset
 		if($result) {
@@ -1063,7 +1065,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		if(count($args) === 1 && is_array($args[0])) {
 			$args = $args[0];
 		}
-		
+
 		$parts = array();
 		foreach($args as $arg) {
 			$part = trim($arg, ' \\/');
@@ -1075,4 +1077,31 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		return implode('/', $parts);
 	}
 
+	public function deleteFile() {
+		return $this->File->deleteFile();
+	}
+
+	public function getVisibility() {
+		return $this->File->getVisibility();
+	}
+
+	public function publishFile() {
+		$this->File->publishFile();
+	}
+
+	public function protectFile() {
+		$this->File->protectFile();
+	}
+
+	public function grantFile() {
+		$this->File->grantFile();
+	}
+
+	public function revokeFile() {
+		$this->File->revokeFile();
+	}
+
+	public function canViewFile() {
+		return $this->File->canViewFile();
+	}
 }

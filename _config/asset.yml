@@ -1,37 +1,66 @@
 ---
-Name: assetstore
+Name: coreflysystem
 ---
 Injector:
-  # Public url plugin
-  FlysystemUrlPlugin:
-    class: 'SilverStripe\Filesystem\Flysystem\FlysystemUrlPlugin'
   # Define the default adapter for this filesystem
-  FlysystemDefaultAdapter:
-    class: 'SilverStripe\Filesystem\Flysystem\AssetAdapter'
+  FlysystemPublicAdapter:
+    class: 'SilverStripe\Filesystem\Flysystem\PublicAssetAdapter'
+  # Define the secondary adapter for protected assets
+  FlysystemProtectedAdapter:
+    class: 'SilverStripe\Filesystem\Flysystem\ProtectedAssetAdapter'
   # Define the default filesystem
-  FlysystemBackend:
+  FlysystemPublicBackend:
     class: 'League\Flysystem\Filesystem'
     constructor:
-      Adapter: '%$FlysystemDefaultAdapter'
-    calls:
-      PublicURLPlugin: [ addPlugin, [ %$FlysystemUrlPlugin ] ]
+      Adapter: '%$FlysystemPublicAdapter'
+      Config:
+        visibility: public
+  # Define the secondary filesystem for protected assets
+  FlysystemProtectedBackend:
+    class: 'League\Flysystem\Filesystem'
+    constructor:
+      Adapter: '%$FlysystemProtectedAdapter'
+      Config:
+        visibility: private
+---
+Name: coreassets
+After:
+  - '#coreflysystem'
+---
+Injector:
   # Define our SS asset backend
   AssetStore:
     class: 'SilverStripe\Filesystem\Flysystem\FlysystemAssetStore'
     properties:
-      Filesystem: '%$FlysystemBackend'
+      PublicFilesystem: '%$FlysystemPublicBackend'
+      ProtectedFilesystem: '%$FlysystemProtectedBackend'
+  ProtectedFileController:
+    class: SilverStripe\Filesystem\Storage\ProtectedFileController
+    properties:
+      RouteHandler: '%$AssetStore'
   AssetNameGenerator:
     class: SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator
     type: prototype
-  # Image mechanism
-  Image_Backend: GDBackend
   # Requirements config
   GeneratedAssetHandler:
     class: SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler
     properties:
-      Filesystem: '%$FlysystemBackend'
+      Filesystem: '%$FlysystemPublicBackend'
   Requirements_Minifier:
     class: SilverStripe\View\JSMinifier
   Requirements_Backend:
     properties:
       AssetHandler: '%$GeneratedAssetHandler'
+---
+Name: coreassetroutes
+After:
+  - '#coreassets'
+---
+Director:
+  rules:
+    'assets': 'ProtectedFileController'
+---
+Name: imageconfig
+---
+Injector:
+  Image_Backend: GDBackend

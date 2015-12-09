@@ -12,35 +12,47 @@ class CliTestReporter extends SapphireTestReporter {
 	 */
 	public function writeResults() {
 		$passCount = 0;
-		$failCount = 0;
+		$failCount = $this->currentSession['failures'];
 		$testCount = 0;
-		$incompleteCount = 0;
-		$errorCount = 0;
+		$incompleteCount = $this->currentSession['incomplete'];
+		$errorCount = $this->currentSession['errors'];
 
 		foreach($this->suiteResults['suites'] as $suite) {
 			foreach($suite['tests'] as $test) {
 				$testCount++;
-				if($test['status'] == 2) {
-					$incompleteCount++;
-				} elseif($test['status'] === 1) {
-					$passCount++;
-				} else {
-					$failCount++;
+				switch($test['status']) {
+					case TEST_INCOMPLETE: {
+						$incompleteCount++;
+						break;
+					}
+					case TEST_SUCCESS: {
+						$passCount++;
+						break;
+					}
+					case TEST_ERROR: {
+						$errorCount++;
+						break;
+					}
+					default: {
+						$failCount++;
+						break;
+					}
 				}
 			}
 		}
 
 		echo "\n\n";
-		if ($failCount == 0 && $incompleteCount > 0) {
+		$breakages = $errorCount + $failCount;
+		if ($breakages == 0 && $incompleteCount > 0) {
 			echo SS_Cli::text(" OK, BUT INCOMPLETE TESTS! ", "black", "yellow");
-		} elseif ($failCount == 0) {
+		} elseif ($breakages == 0) {
 			echo SS_Cli::text(" ALL TESTS PASS ", "black", "green");
 		}  else {
 			echo SS_Cli::text(" AT LEAST ONE FAILURE ", "black", "red");
 		}
 
 		echo sprintf("\n\n%d tests run: %s, %s, and %s\n", $testCount, SS_Cli::text("$passCount passes"),
-			SS_Cli::text("$failCount failures"), SS_Cli::text("$incompleteCount incomplete"));
+			SS_Cli::text("$breakages failures"), SS_Cli::text("$incompleteCount incomplete"));
 
 		echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
 
@@ -80,6 +92,19 @@ class CliTestReporter extends SapphireTestReporter {
 		parent::endTest($test, $time);
 	}
 
+	protected function addStatus($status, $message, $exception, $trace) {
+		if(!$this->currentTest && !$this->currentSuite) {
+			// Log non-test errors immediately
+			$statusResult = array(
+				'status' => $status,
+				'message' => $message,
+				'exception' => $exception,
+				'trace' => $trace
+			);
+			$this->writeTest($statusResult);
+		}
+		parent::addStatus($status, $message, $exception, $trace);
+	}
 
 	protected function writeTest($test) {
 		if ($test['status'] != TEST_SUCCESS) {

@@ -198,7 +198,8 @@ class Upload extends Controller {
 		$conflictResolution = $this->replaceFile
 			? AssetStore::CONFLICT_OVERWRITE
 			: AssetStore::CONFLICT_RENAME;
-		return $container->setFromLocalFile($tmpFile['tmp_name'], $filename, null, null, $conflictResolution);
+		$config = array('conflict' => $conflictResolution);
+		return $container->setFromLocalFile($tmpFile['tmp_name'], $filename, null, null, $config);
 	}
 
 	/**

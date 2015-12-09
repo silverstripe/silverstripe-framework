@@ -63,7 +63,10 @@ class FileMigrationHelper extends Object {
 
 		// Copy local file into this filesystem
 		$filename = $file->getFilename();
-		$result = $file->setFromLocalFile($path, $filename, null, null, AssetStore::CONFLICT_OVERWRITE);
+		$result = $file->setFromLocalFile(
+			$path, $filename, null, null,
+			array('conflict' => AssetStore::CONFLICT_OVERWRITE)
+		);
 
 		// Move file if the APL changes filename value
 		if($result['Filename'] !== $filename) {

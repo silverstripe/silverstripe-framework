@@ -1,0 +1,22 @@
+<?php
+
+namespace SilverStripe\Filesystem\Storage;
+
+use SS_HTTPResponse;
+use SS_HTTPResponse_Exception;
+
+/**
+ * Represents a store usable with ProtectedFileController to serve up non-direct file requests
+ */
+interface AssetStoreRouter {
+
+    /**
+     * Generate a custom HTTP response for a request to a given asset, identified by a path.
+     *
+     *
+     * @param string $asset Asset path name, omitting any leading 'assets'
+     * @return SS_HTTPResponse
+     * @throws SS_HTTPResponse_Exception
+     */
+    public function getResponseFor($asset);
+}
