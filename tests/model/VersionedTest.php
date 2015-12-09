@@ -599,6 +599,8 @@ class VersionedTest extends SapphireTest {
 	 */
 	public function testReadingPersistent() {
 		$session = Injector::inst()->create('Session', array());
+		$adminID = $this->logInWithPermission('ADMIN');
+		$session->inst_set('loggedInAs', $adminID);
 
 		// Set to stage
 		Director::test('/?stage=Stage', null, $session);
@@ -630,10 +632,11 @@ class VersionedTest extends SapphireTest {
 
 		// Test that session doesn't redundantly store the default stage if it doesn't need to
 		$session2 = Injector::inst()->create('Session', array());
+		$session2->inst_set('loggedInAs', $adminID);
 		Director::test('/', null, $session2);
-		$this->assertEmpty($session2->inst_changedData());
+		$this->assertArrayNotHasKey('readingMode', $session2->inst_changedData());
 		Director::test('/?stage=Live', null, $session2);
-		$this->assertEmpty($session2->inst_changedData());
+		$this->assertArrayNotHasKey('readingMode', $session2->inst_changedData());
 
 		// Test choose_site_stage
 		Session::set('readingMode', 'Stage.Stage');
@@ -645,6 +648,15 @@ class VersionedTest extends SapphireTest {
 		Session::clear('readingMode');
 		Versioned::choose_site_stage();
 		$this->assertEquals('Stage.Live', Versioned::get_reading_mode());
+	}
+
+	/**
+	 * Test that stage parameter is blocked by non-administrative users
+	 */
+	public function testReadingModeSecurity() {
+		$this->setExpectedException('SS_HTTPResponse_Exception', 'Invalid request');
+		$session = Injector::inst()->create('Session', array());
+		$result = Director::test('/?stage=Stage', null, $session);
 	}
 
 	/**
