@@ -815,7 +815,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::reading_stage($stage);
 
-		$versionFromStage = DataObject::get($this->class)->byID($this->ID);
+		$versionFromStage = DataObject::get($this->owner->class)->byID($this->owner->ID);
 
 		Versioned::set_reading_mode($oldMode);
 		return $versionFromStage ? $versionFromStage->canView($member) : false;

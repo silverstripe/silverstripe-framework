@@ -33,7 +33,7 @@ class VersionedTest extends SapphireTest {
 			'VersionedTest_WithIndexes_Live' =>
 				array('value' => false, 'message' => 'Unique indexes are no longer unique in _Live table'),
 		);
-	
+
 		// Test each table's performance
 		foreach ($tableExpectations as $tableName => $expectation) {
 			$indexes = DB::get_schema()->indexList($tableName);
@@ -799,6 +799,40 @@ class VersionedTest extends SapphireTest {
 		$this->assertTrue($public1->canView());
 		$this->assertTrue($public2->canView());
 		$this->assertTrue($private->canView());
+	}
+
+
+	public function testCanViewStage() {
+		$public = $this->objFromFixture('VersionedTest_PublicStage', 'public1');
+		$private = $this->objFromFixture('VersionedTest_DataObject', 'page1');
+		Session::clear("loggedInAs");
+		Versioned::reading_stage('Stage');
+
+		// Test that all (and only) public pages are viewable in stage mode
+		// Unpublished records are not viewable in live regardless of permissions
+		$this->assertTrue($public->canViewStage('Stage'));
+		$this->assertFalse($private->canViewStage('Stage'));
+		$this->assertFalse($public->canViewStage('Live'));
+		$this->assertFalse($private->canViewStage('Live'));
+
+		// Writing records to live should make both stage and live modes viewable
+		$private->publish("Stage", "Live");
+		$public->publish("Stage", "Live");
+		$this->assertTrue($public->canViewStage('Stage'));
+		$this->assertTrue($private->canViewStage('Stage'));
+		$this->assertTrue($public->canViewStage('Live'));
+		$this->assertTrue($private->canViewStage('Live'));
+
+		// If the draft mode changes, the live mode remains public, although the updated
+		// draft mode is secured for non-public records.
+		$private->Title = 'Secret Title';
+		$private->write();
+		$public->Title = 'Public Title';
+		$public->write();
+		$this->assertTrue($public->canViewStage('Stage'));
+		$this->assertFalse($private->canViewStage('Stage'));
+		$this->assertTrue($public->canViewStage('Live'));
+		$this->assertTrue($private->canViewStage('Live'));
 	}
 }
 
