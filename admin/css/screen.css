@@ -344,7 +344,6 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-button[class*="font-icon-"]:before, .cms .ss-ui-button[class^="font-icon-"]:before, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:before { font-size: 16px; margin-right: 5px; margin-top: 0; vertical-align: middle; }
 .cms .ss-ui-button[class*="font-icon-"].ui-state-focus, .cms .ss-ui-button[class^="font-icon-"].ui-state-focus, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].ui-state-focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms .ss-ui-button[class*="font-icon-"].active, .cms .ss-ui-button[class*="font-icon-"]:active, .cms .ss-ui-button[class^="font-icon-"].active, .cms .ss-ui-button[class^="font-icon-"]:active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:active { -moz-box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; -webkit-box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; background: #dee3e8; color: #66727d; border: 0; }
-.cms .ss-ui-button[class*="font-icon-"].font-icon-search:before, .cms .ss-ui-button[class^="font-icon-"].font-icon-search:before, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].font-icon-search:before { margin-right: 2px; }
 .cms .ss-ui-button[class*="font-icon-"] .ui-button-text, .cms .ss-ui-button[class^="font-icon-"] .ui-button-text, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] .ui-button-text { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; padding: 0; }
 .cms .ss-ui-button[class*="font-icon-"] .ui-icon, .cms .ss-ui-button[class^="font-icon-"] .ui-icon, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] .ui-icon { display: none; }
 .cms .ss-ui-buttonset .ui-button { margin-left: -1px; }
@@ -542,7 +541,8 @@ body.cms { overflow: hidden; }
 .has-panel .section-label { vertical-align: middle; font-size: 1.2em; font-weight: normal; }
 .has-panel .breadcrumbs-wrapper { float: left; padding-top: 7px; padding-left: 20px; }
 .has-panel .cms-content-header-tabs { margin-top: 8px; }
-.has-panel .view-controls { float: right; margin-top: 1px; }
+.has-panel .view-controls { float: right; margin-top: 4px; }
+.has-panel .view-controls .icon-button-group .icon-button { padding: 6px 8px; height: 14px; }
 .has-panel .cms-content-tools .cms-panel-content { padding-top: 0; overflow-x: hidden; }
 
 #page-title-heading { line-height: 1.2em; }
@@ -559,25 +559,27 @@ body.cms { overflow: hidden; }
 .cms-tabset-nav-primary { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; vertical-align: middle; }
 
 /** ------------------------------------------------------------------ Buttons that use font icons. There are !important rules here because we need to override some Tab styling. It's tidier to have some !important rules here than have the Tab styles littered with load of context specific rules for icon-buttons. Icon buttons styles should always take presedence over Tab styles. Tabs should be refactored to use weaker selectors. ----------------------------------------------------------------- */
-.cms a.icon-button, .cms .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .cms a.icon-button, .cms button.ss-ui-button.icon-button { vertical-align: middle; margin: 0 2px 0 0; padding: 5px; padding-right: 8px; font-size: 14px; letter-spacing: -3px; text-indent: 0; text-shadow: none; line-height: 1em; color: #66727d; background-color: transparent; background-image: none; border: 0; }
+.cms a.icon-button, .cms .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .cms a.icon-button, .cms button.ss-ui-button.icon-button { vertical-align: middle; margin: 0 2px 0 0; padding: 5px 8px; font-size: 14px; text-indent: 0; text-shadow: none; line-height: 1em; color: #66727d; background-color: transparent; background-image: none; border: 0; }
 .cms a.icon-button:hover, .cms .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .cms a.icon-button:hover, .cms a.icon-button:active, .cms .ui-tabs .ui-tabs-nav li a.icon-button:active, .ui-tabs .ui-tabs-nav li .cms a.icon-button:active, .cms a.icon-button:focus, .cms .ui-tabs .ui-tabs-nav li a.icon-button:focus, .ui-tabs .ui-tabs-nav li .cms a.icon-button:focus, .cms button.ss-ui-button.icon-button:hover, .cms button.ss-ui-button.icon-button:active, .cms button.ss-ui-button.icon-button:focus { border: 0; box-shadow: none; background-image: none; text-decoration: none; }
 .cms a.icon-button:hover, .cms .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .cms a.icon-button:hover, .cms button.ss-ui-button.icon-button:hover { background-color: #d4dbe1; }
 .cms a.icon-button.active, .cms .ui-tabs .ui-tabs-nav li a.active.icon-button, .ui-tabs .ui-tabs-nav li .cms a.active.icon-button, .cms a.icon-button:active, .cms .ui-tabs .ui-tabs-nav li a.icon-button:active, .ui-tabs .ui-tabs-nav li .cms a.icon-button:active, .cms button.ss-ui-button.icon-button.active, .cms button.ss-ui-button.icon-button:active { background-color: #d4dbe1; box-shadow: inset 0 0 3px rgba(191, 194, 196, 0.9); }
+.cms a.icon-button.font-icon-search, .cms .ui-tabs .ui-tabs-nav li a.font-icon-search.icon-button, .ui-tabs .ui-tabs-nav li .cms a.font-icon-search.icon-button, .cms button.ss-ui-button.icon-button.font-icon-search { padding: 5px 6px; }
+.cms a.icon-button.font-icon-search:before, .cms button.ss-ui-button.icon-button.font-icon-search:before { font-size: 18px; margin-left: 1px; margin-right: 0; }
 .cms a.icon-button .ui-button-text, .cms .ui-tabs .ui-tabs-nav li a.icon-button .ui-button-text, .ui-tabs .ui-tabs-nav li .cms a.icon-button .ui-button-text, .cms button.ss-ui-button.icon-button .ui-button-text { display: none; }
 .ModelAdmin .cms a.icon-button, .ModelAdmin .cms .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .ModelAdmin .cms a.icon-button, .ModelAdmin .cms button.ss-ui-button.icon-button { margin-top: -11px; }
 
-.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link, .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link { padding: 6px 8px; line-height: 1em; background-color: transparent; background-image: none; border: 0; }
+.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link, .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link { padding: 5px 8px 6px; line-height: 1em; background-color: transparent; background-image: none; border: 0; }
 .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link:before, .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link:before { vertical-align: middle; }
 
-.icon-button-group { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; margin-top: 2px; vertical-align: middle; border: 1px solid #CDCCD0; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
-.icon-button-group a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button, .icon-button-group button.ss-ui-button.icon-button { margin-right: 0; line-height: 13px; -moz-border-radius: 0 0 0 0; -webkit-border-radius: 0; border-radius: 0 0 0 0; }
-.icon-button-group a.icon-button:first-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:first-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:first-child, .icon-button-group button.ss-ui-button.icon-button:first-child { -moz-border-radius: 3px 0 0 3px; -webkit-border-radius: 3px; border-radius: 3px 0 0 3px; }
-.icon-button-group a.icon-button:last-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:last-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:last-child, .icon-button-group button.ss-ui-button.icon-button:last-child { -moz-border-radius: 0 3px 3px 0; -webkit-border-radius: 0; border-radius: 0 3px 3px 0; }
+.icon-button-group { display: inline-block; vertical-align: middle; border: 1px solid #CDCCD0; border-radius: 4px; }
+.icon-button-group a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button, .icon-button-group button.ss-ui-button.icon-button { margin-right: 0; line-height: 13px; border-radius: 0; }
+.icon-button-group a.icon-button:first-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:first-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:first-child, .icon-button-group button.ss-ui-button.icon-button:first-child { border-radius: 3px 0 0 3px; }
+.icon-button-group a.icon-button:last-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:last-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:last-child, .icon-button-group button.ss-ui-button.icon-button:last-child { border-radius: 0 3px 3px 0; }
 .icon-button-group a.icon-button:hover, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:hover, .icon-button-group button.ss-ui-button.icon-button:hover { background: #ECEFF1; }
 .icon-button-group a.icon-button.active:hover, .icon-button-group button.ss-ui-button.icon-button.active:hover { background: #d4dbe1; }
 .icon-button-group a.icon-button + a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button + a.icon-button, .icon-button-group a.icon-button + button.ss-ui-button.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button + button.ss-ui-button.icon-button, .icon-button-group button.ss-ui-button.icon-button + a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li button.ss-ui-button.icon-button + a.icon-button, .icon-button-group button.ss-ui-button.icon-button + button.ss-ui-button.icon-button { border-left: 1px solid #CDCCD0; }
-.icon-button-group .ui-tabs.ui-tabs-nav { border-left: 0 !important; margin-top: -2px !important; padding-right: 0 !important; overflow: hidden; }
-.icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default { background-color: transparent; background-image: none; border-left: 0; border-right: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+.icon-button-group .ui-tabs.ui-tabs-nav { border-left: 0 !important; padding-right: 0 !important; margin-bottom: 0; overflow: hidden; }
+.icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default { background-color: transparent; background-image: none; margin: 0; padding: 0; border-left: 0; border-right: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default + .cms-tabset-icon.ui-state-default { border-left: 1px solid #CDCCD0; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default:hover { background: #ECEFF1; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default.ui-state-active:hover { background: #d4dbe1; }
@@ -628,6 +630,7 @@ body.cms { overflow: hidden; }
 .ui-tabs.cms-tabset-primary .ui-tabs-nav .ui-state-active a, .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary .ui-state-active a, .ui-tabs .cms-content-header-tabs .ui-tabs-nav .ui-state-active a { border-bottom: 4px solid #66727d; padding: 0; margin: 0 12px 0; }
 
 .cms-content-header-tabs { float: right; margin-top: 8px; }
+.cms-content-header-tabs.icon-button-group-tabs { margin-top: 12px; margin-bottom: 13px; }
 .cms-content-header-tabs .icon-button-group { margin-right: 16px; }
 
 .cms-content-fields .ui-tabs-nav { float: none; padding: 0; border-bottom: 1px solid #d0d3d5; margin: 0 16px 0; }

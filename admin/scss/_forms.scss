@@ -632,12 +632,6 @@ form.small .field, .field.small {
 				border: 0;
 			}
 
-			&.font-icon-search {
-				&:before {
-					margin-right: 2px;
-				}
-			}
-
 			.ui-button-text {
 				@include inline-block;
 				padding: 0;
