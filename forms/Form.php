@@ -229,20 +229,10 @@ class Form extends RequestHandler {
 	 * @param FieldList $fields All of the fields in the form - a {@link FieldList} of {@link FormField} objects.
 	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldLis} of
 	 *                           {@link FormAction} objects
-	 * @param Validator $validator Override the default validator instance (Default: {@link RequiredFields})
+	 * @param Validator|null $validator Override the default validator instance (Default: {@link RequiredFields})
 	 */
-	public function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null) {
+	public function __construct($controller, $name, FieldList $fields, FieldList $actions, Validator $validator = null) {
 		parent::__construct();
-
-		if(!$fields instanceof FieldList) {
-			throw new InvalidArgumentException('$fields must be a valid FieldList instance');
-		}
-		if(!$actions instanceof FieldList) {
-			throw new InvalidArgumentException('$actions must be a valid FieldList instance');
-		}
-		if($validator && !$validator instanceof Validator) {
-			throw new InvalidArgumentException('$validator must be a Validator instance');
-		}
 
 		$fields->setForm($this);
 		$actions->setForm($this);
