@@ -375,6 +375,37 @@ class FieldListTest extends SapphireTest {
 	}
 
 	/**
+	 * Test pushing a field to the beginning of a set.
+	 *
+	 * This tests {@link FieldList->unshift()}.
+	 */
+	public function testPushFieldToBeginningOfSet() {
+		$fields = new FieldList();
+
+		/* A field named Country is added to the set */
+		$fields->unshift(new TextField('Country'));
+
+		/* We only have 1 field in the set */
+		$this->assertEquals(1, $fields->Count());
+
+		/* Another field called Email is added to the set */
+		$fields->unshift(new EmailField('Email'));
+
+		/* There are now 2 fields in the set */
+		$this->assertEquals(2, $fields->Count());
+
+		/* The most recently added field is at the beginning of the set */
+		$this->assertEquals('Email', $fields->First()->getName());
+
+		// Test that pushing a composite field without a name onto the set works
+		$fields->unshift(new CompositeField(
+			new TextField('Test1'),
+			new TextField('Test2')
+		));
+		$this->assertEquals(3, $fields->Count());
+	}
+
+	/**
 	 * Test inserting a field before another in a set.
 	 *
 	 * This tests {@link FieldList->insertBefore()}.

@@ -214,6 +214,15 @@ class CompositeField extends FormField {
 	}
 
 	/**
+	 * Add a new child field to the beginning of the set.
+	 *
+	 * @param FormField
+	 */
+	public function unshift(FormField $field) {
+		$this->children->unshift($field);
+	}
+
+	/**
 	 * @uses FieldList->insertBefore()
 	 */
 	public function insertBefore($insertBefore, $field) {
