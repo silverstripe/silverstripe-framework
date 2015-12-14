@@ -117,6 +117,17 @@ class OptionsetField extends DropdownField {
 		return $this->disabledItems;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
+	public function validate($validator) {
+		if (!$this->value) {
+			return true;
+		}
+
+		return parent::validate($validator);
+	}
+
 	public function ExtraOptions() {
 		return new ArrayList();
 	}
