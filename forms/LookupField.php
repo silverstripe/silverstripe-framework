@@ -80,6 +80,16 @@ class LookupField extends DropdownField {
 	}
 
 	/**
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate($validator) {
+		return true;
+	}
+
+	/**
 	 * @return LookupField
 	 */
 	public function performReadonlyTransformation() {
