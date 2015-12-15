@@ -23,11 +23,11 @@ Oembed:
     'http://*.hulu.com/watch/*':
       'http://www.hulu.com/api/oembed.json'
     'http://*.vimeo.com/*':
-      http: 'http://www.vimeo.com/api/oembed.json',
-      https: 'https://www.vimeo.com/api/oembed.json'
+      http: 'http://vimeo.com/api/oembed.json',
+      https: 'https://vimeo.com/api/oembed.json'
     'https://*.vimeo.com/*':
-      http: 'http://www.vimeo.com/api/oembed.json',
-      https: 'https://www.vimeo.com/api/oembed.json'
+      http: 'http://vimeo.com/api/oembed.json',
+      https: 'https://vimeo.com/api/oembed.json'
     'http://twitter.com/*':
       http: 'https://api.twitter.com/1/statuses/oembed.json',
       https: 'https://api.twitter.com/1/statuses/oembed.json'
