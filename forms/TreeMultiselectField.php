@@ -103,6 +103,7 @@ class TreeMultiselectField extends TreeDropdownField {
 		$titleArray = array();
 		$idArray = array();
 		$items = $this->getItems();
+		$emptyTitle = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 
 		if($items && count($items)) {
 			foreach($items as $item) {
@@ -115,7 +116,7 @@ class TreeMultiselectField extends TreeDropdownField {
 			$title = implode(", ", $titleArray);
 			$value = implode(",", $idArray);
 		} else {
-			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+			$title = $emptyTitle;
 		} 
 		
 		$dataUrlTree = '';
@@ -129,6 +130,7 @@ class TreeMultiselectField extends TreeDropdownField {
 			$properties,
 			array(
 				'Title' => $title,
+				'EmptyTitle' => $emptyTitle,
 				'Link' => $dataUrlTree,
 				'Value' => $value
 			)
