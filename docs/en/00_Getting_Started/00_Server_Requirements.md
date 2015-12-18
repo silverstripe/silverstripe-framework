@@ -8,7 +8,7 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
 ## Web server software requirements
 
- * PHP 5.3.2+
+ * PHP 5.3.2+, <7
  * We recommend using a PHP accelerator or opcode cache, such as [xcache](http://xcache.lighttpd.net/) or [WinCache](http://www.iis.net/download/wincacheforphp).
  * Allocate at least 48MB of memory to each PHP process. (SilverStripe can be resource hungry for some intensive operations.)
  * Required modules: dom, gd2, fileinfo, hash, iconv, mbstring, mysqli (or other database driver), session, simplexml, tokenizer, xml.
@@ -33,6 +33,11 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
   * Linux/Unix/BSD
   * Microsoft Windows XP SP3, Vista, Windows 7, Server 2008, Server 2008 R2
   * Mac OS X 10.4+
+
+### Why doesn't SilverStripe 3 work with PHP 7?
+Unfortunately, SilverStripe has classes named the same as PHP reserved words, such as "Int" and "Float". This means that 
+we are unable to make SilverStripe 3 support PHP 7 without breaking backward compatibility. SilverStripe 4 will work 
+with PHP 7 and will be released in 2016. Until then, we recommend that you use PHP 5.6.
 
 ## Web server hardware requirements
 
