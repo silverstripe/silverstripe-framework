@@ -59,7 +59,7 @@ class ListboxField extends DropdownField {
 	 * @param array $source An map of the dropdown items
 	 * @param string|array $value You can pass an array of values or a single value like a drop down to be selected
 	 * @param int $size Optional size of the select element
-	 * @param form The parent form
+	 * @param boolean $multiple allow the selection of more than one item?
 	 */
 	public function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false) {
 		if($size) $this->size = $size;
@@ -133,10 +133,19 @@ class ListboxField extends DropdownField {
 		return $this;
 	}
 
+	/**
+	 * 
+	 * @inheritdoc
+	 */ 
 	public function setSource($source) {
+		if($source instanceof SS_Map) {
+			$source = $source->toArray();
+		}		
 		if($source) {
-			$hasCommas = array_filter(array_keys($source),
-				create_function('$key', 'return strpos($key, ",") !== FALSE;'));
+			$hasCommas = array_filter(
+				array_keys($source),
+				create_function('$key', 'return strpos($key, ",") !== FALSE;')
+			);
 			if($hasCommas) {
 				throw new InvalidArgumentException('No commas allowed in $source keys');
 			}
