@@ -220,8 +220,8 @@ class RestfulServiceTest extends SapphireTest {
 			$fullUrl,
 			'GET',
 			null,
-			array(),
-			array(),
+			$connection->getHeaders(),
+			RestfulService::config()->default_curl_options,
 			$basicAuthStringMethod->invoke($connection)
 		)));
 
@@ -284,19 +284,16 @@ class RestfulServiceTest extends SapphireTest {
 			"\r\n"
 			;
 
-		$headerFunction = new ReflectionMethod('RestfulService', 'extractResponse');
+		$headerFunction = new ReflectionMethod('RestfulService', 'parseRawHeaders');
 		$headerFunction->setAccessible(true);
 
 		$ch = curl_init();
-		$response = $headerFunction->invoke(
+		$parsedHeaders = $headerFunction->invoke(
 			new RestfulService(Director::absoluteBaseURL(),0),
-			$ch,
-			$rawHeaders,
-			''
+			$rawHeaders
 		);
 
 		$this->assertEquals(
-			$response->getHeaders(),
 			array(
 				'Server' => "nginx",
 				'Date' => "Fri, 20 Sep 2013 01:53:08 GMT",
@@ -307,23 +304,21 @@ class RestfulServiceTest extends SapphireTest {
 				'Cache-Control' => "no-cache, max-age=0, must-revalidate, no-transform",
 				'Vary' => "Accept-Encoding"
 			),
-			'Only last header is extracted and parsed.'
+			$parsedHeaders
 		);
 	}
 
 	public function testExtractResponseNoHead() {
-		$headerFunction = new ReflectionMethod('RestfulService', 'extractResponse');
+		$headerFunction = new ReflectionMethod('RestfulService', 'parseRawHeaders');
 		$headerFunction->setAccessible(true);
 
 		$ch = curl_init();
-		$response = $headerFunction->invoke(
+		$parsedHeaders = $headerFunction->invoke(
 			new RestfulService(Director::absoluteBaseURL(),0),
-			$ch,
-			'',
 			''
 		);
 
-		$this->assertEquals($response->getHeaders(), array(), 'Headers are correctly extracted.');
+		$this->assertEquals(array(), $parsedHeaders);
 	}
 }
 
