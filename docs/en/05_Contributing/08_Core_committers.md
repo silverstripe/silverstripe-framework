@@ -31,4 +31,5 @@ With great power comes great responsibility, so we have agreed on certain expect
  * Be inclusive. Ensure a wide range of SilverStripe developers can obtain an understanding of your code and docs, and you're not the only one who can maintain it.
  * Avoid `git push --force`, and be careful with your git remotes (no accidental pushes)
  * Use your own forks to create feature branches
+ * We release using the standard process. See the [Making a SilverStripe Core Release](making_a_silverstripe_core_release)
 
