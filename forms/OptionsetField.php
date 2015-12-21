@@ -61,26 +61,49 @@ class OptionsetField extends SingleSelectField {
 	 * @return ArrayData Field option
 	 */
 	protected function getFieldOption($value, $title, $odd) {
-		// Check selection
-		$selected = $this->isSelectedValue($value, $this->Value());
-		$itemID = $this->ID() . '_' . Convert::raw2htmlid($value);
-		$extraClass = $odd ? 'odd' : 'even';
-		$extraClass .= ' val' . Convert::raw2htmlid($value);
-
 		return new ArrayData(array(
-			'ID' => $itemID,
-			'Class' => $extraClass,
-			'Name' => $this->getItemName(),
+			'ID' => $this->getOptionID($value),
+			'Class' => $this->getOptionClass($value, $odd),
+			'Name' => $this->getOptionName(),
 			'Value' => $value,
 			'Title' => $title,
-			'isChecked' => $selected,
-			'isDisabled' => $this->isDisabled() || in_array($value, $this->getDisabledItems()),
+			'isChecked' => $this->isSelectedValue($value, $this->Value()),
+			'isDisabled' => $this->isDisabledValue($value)
 		));
 		}
 
-	protected function getItemName() {
+	/**
+	 * Generate an ID property for a single option
+	 *
+	 * @param string $value
+	 * @return string
+	 */
+	protected function getOptionID($value) {
+		return $this->ID() . '_' . Convert::raw2htmlid($value);
+	}
+
+	/**
+	 * Get the "name" property for each item in the list
+	 *
+	 * @return string
+	 */
+	protected function getOptionName() {
 		return $this->getName();
 	}
+
+	/**
+	 * Get extra classes for each item in the list
+	 *
+	 * @param string $value Value of this item
+	 * @param bool $odd If this item is odd numbered in the list
+	 * @return string
+	 */
+	protected function getOptionClass($value, $odd) {
+		$oddClass = $odd ? 'odd' : 'even';
+		$valueClass = ' val' . Convert::raw2htmlid($value);
+		return $oddClass . $valueClass;
+	}
+
 
 	public function Field($properties = array()) {
 		$options = array();

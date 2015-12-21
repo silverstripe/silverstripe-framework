@@ -147,10 +147,8 @@ abstract class MultiSelectField extends SelectField {
 		if($result !== false) {
 			return $result;
 		}
-		
-		// Parse data in legacy {comma} format
-		Deprecation::notice('4.0', 'Storing multi-selection values in comma separated format is deprecated');
-		return str_replace('{comma}', ',', explode(',', $value));
+
+		throw new \InvalidArgumentException("Invalid string encoded value for multi select field");
 	}
 	
 	/**

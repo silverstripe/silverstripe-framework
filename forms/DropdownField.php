@@ -96,7 +96,7 @@ class DropdownField extends SingleSelectField {
 
 		// Check disabled
 		$disabled = false;
-		if(in_array($value, $this->getDisabledItems()) && $title != $this->getEmptyString()){
+		if($this->isDisabledValue($value) && $title != $this->getEmptyString()){
 			$disabled = 'disabled';
 		}
 

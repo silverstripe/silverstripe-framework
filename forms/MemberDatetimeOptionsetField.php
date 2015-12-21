@@ -7,6 +7,14 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 
 	const CUSTOM_OPTION = '__custom__';
 
+	/**
+	 * Non-ambiguous date to use for the preview.
+	 * Must be in 'y-MM-dd HH:mm:ss' format
+	 *
+	 * @var string
+	 */
+	private static $preview_date = '25-12-2011 17:30:00';
+
 	public function Field($properties = array()) {
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberDatetimeOptionsetField.js');
 		$options = array();
@@ -53,15 +61,27 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		$option->setField('CustomName', $this->getName().'[Custom]');
 		$option->setField('CustomValue', $this->Value());
 		if($this->Value()) {
-			$preview = Convert::raw2xml(Zend_Date::now()->toString($this->Value()));
+			$preview = Convert::raw2xml($this->previewFormat($this->Value()));
 			$option->setField('CustomPreview', $preview);
 			$option->setField('CustomPreviewLabel', _t('MemberDatetimeOptionsetField.Preview', 'Preview'));
 		}
 		return $option;
 	}
 
-	public function getItemName() {
-		return parent::getItemName() . '[Options]';
+	/**
+	 * For a given format, generate a preview for the date
+	 *
+	 * @param string $format Date format
+	 * @return string
+	 */
+	protected function previewFormat($format) {
+		$date = $this->config()->preview_date;
+		$zendDate = new Zend_Date($date, 'y-MM-dd HH:mm:ss');
+		return $zendDate->toString($format);
+	}
+
+	public function getOptionName() {
+		return parent::getOptionName() . '[Options]';
 	}
 
 	public function Type() {

@@ -58,6 +58,19 @@ abstract class SelectField extends FormField {
 		return $this->disabledItems;
 	}
 
+	/**
+	 * Check if the given value is disabled
+	 *
+	 * @param string $value
+	 * @return bool
+	 */
+	protected function isDisabledValue($value) {
+		if($this->isDisabled()) {
+			return true;
+		}
+		return in_array($value, $this->getDisabledItems());
+	}
+
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
