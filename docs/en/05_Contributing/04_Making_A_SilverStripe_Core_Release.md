@@ -35,6 +35,7 @@ As a core contributor it is necessary to have installed the following set of too
   - `pip install transifex-client`
 * [AWS CLI tools](https://aws.amazon.com/cli/):
   - `pip install awscli`
+* The `tar` and `zip` commands
 * A good _ss_environment.php setup in your localhost webroot.
 
 Example `_ss_environment.php`:
