@@ -40,7 +40,7 @@ class ToggleCompositeField extends CompositeField {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/ToggleCompositeField.js');
 
-		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.css');
+		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 
 		$context = $this;
 
