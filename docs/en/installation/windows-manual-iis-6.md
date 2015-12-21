@@ -109,12 +109,12 @@ You should see some output showing the PHP version. If you get something else, o
 
 ## Install SilverStripe
 
-  - [Download SilverStripe](http://silverstripe.org/downloads)
+  - [Download SilverStripe](http://www.silverstripe.org/download/release-archive/)
   - Extract the download contents to **C:\Inetpub\wwwroot\silverstripe**
   - Open **inetmgr.exe**
   - Right click **Web Sites** and go to **New** > **Web Site**
   - Fill in all appropriate details. If you enter **(All Unassigned)** for the IP address field, make sure the port is something other than **80**, as this will conflict with "Default Web Site" in IIS. When asked for path, enter **C:\Inetpub\wwwroot\silverstripe**
-  - Browse to **http://localhost:8888** or to the IP address you just assigned in your browser.
+  - Browse to `http://localhost:8888` or to the IP address you just assigned in your browser.
 
 An installation screen should appear. There may be some permission problems, which you should be able to correct by assigning the **Users** group write permissions by right clicking files / folders in Windows Explorer and going to **Properties** then the **Security** tab.
 
@@ -147,4 +147,4 @@ Friendly URLs should now be working when you browse to your site.
 
 Remember that IIRF works on a per-virtual host basis. This means for each site you want IIRF to work for, you need to add a new entry to **Web Sites** in **inetmgr.exe**.
 
-Thanks to **kcd** for the rules: [http://www.silverstripe.org/installing-silverstripe/show/10488#post294415](http://www.silverstripe.org/installing-silverstripe/show/10488#post294415)
+Thanks to **kcd** for the rules: [http://www.silverstripe.org/community/forums/installing-silverstripe/show/10488](http://www.silverstripe.org/community/forums/installing-silverstripe/show/10488)

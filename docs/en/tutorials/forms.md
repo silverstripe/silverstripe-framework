@@ -1,4 +1,4 @@
-# Tutorial 3 - Forms
+# Forms
 
 ## Overview
 
@@ -168,7 +168,7 @@ Add the following code to the form style sheet:
 
 
 This CSS code will ensure that the form is formatted and positioned correctly. All going according to plan, if you visit
-[http://localhost/home?flush=1](http://localhost/home?flush=1) it should look something like below.
+`http://localhost/home?flush=1` it should look something like below.
 
 ![](_images/pollform.jpg)
 
@@ -417,4 +417,4 @@ In this tutorial we have explored forms, and seen the different approaches to cr
 decide to use the [userforms module](http://silverstripe.org/user-forms-module) or create a form in PHP depends on the situation and flexibility
 required.
 
-[Next Tutorial >>](4-site-search)
+[Next Tutorial >>](site-search)

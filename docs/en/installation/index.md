@@ -32,4 +32,4 @@ If you run into trouble, see [common-problems](common-problems) or post to the
 ## Related
 
  * [Module installation](../topics/modules)
- * [Suggested web hosts](http://doc.silverstripe.org/old/suggested-web-hosts)
+ * [Suggested web hosts](http://www.silverstripe.org/community/forums/archive/show/393)

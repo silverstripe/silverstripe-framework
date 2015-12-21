@@ -134,8 +134,8 @@ with core modules, such as the templates.
 
 #### Unit Testing
 
-A good way to avoid writing the same test stubs and var_dump() commands over and over again is to codify them as [unit
-tests](testing-guide). This way you integrate the debugging process right into your quality control, and eventually in
+A good way to avoid writing the same test stubs and var_dump() commands over and over again is to codify them as 
+[unit tests](/topics/testing/). This way you integrate the debugging process right into your quality control, and eventually in
 the development effort itself as "test-driven development".
 
 #### Profiling
