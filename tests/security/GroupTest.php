@@ -69,6 +69,20 @@ class GroupTest extends FunctionalTest {
 
 	}
 
+	public function testUnsavedGroups() {
+		$member = $this->objFromFixture('GroupTest_Member', 'admin');
+		$group = new Group();
+
+		// Can save user to unsaved group
+		$group->Members()->add($member);
+		$this->assertEquals(array($member->ID), array_values($group->Members()->getIDList()));
+
+		// Persists after writing to DB
+		$group->write();
+		$group = Group::get()->byID($group->ID);
+		$this->assertEquals(array($member->ID), array_values($group->Members()->getIDList()));
+	}
+
 	public function testCollateAncestorIDs() {
 		$parentGroup = $this->objFromFixture('Group', 'parentgroup');
 		$childGroup = $this->objFromFixture('Group', 'childgroup');
