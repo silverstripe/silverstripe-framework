@@ -1148,8 +1148,10 @@ class Requirements_Backend
 				$jsRequirements[] = str_replace(',', '%2C', $path);
 			}
 		}
-
-		$response->addHeader('X-Include-JS', implode(',', $jsRequirements));
+		
+		if(count($jsRequirements)) {
+			$response->addHeader('X-Include-JS', implode(',', $jsRequirements));
+		}
 
 		foreach($this->getCSS() as $file => $params) {
 			$path = $this->pathForFile($file);
@@ -1159,7 +1161,9 @@ class Requirements_Backend
 			}
 		}
 
-		$response->addHeader('X-Include-CSS', implode(',', $cssRequirements));
+		if(count($cssRequirements)) {
+			$response->addHeader('X-Include-CSS', implode(',', $cssRequirements));
+		}
 	}
 
 	/**
