@@ -127,6 +127,25 @@ class ViewableData extends Object implements IteratorAggregate {
 			$this->setField($property, $value);
 		}
 	}
+
+	/**
+	 * Set a failover object to attempt to get data from if it is not present on this object.
+	 * 
+	 * @param ViewableData $failover
+	 */
+	public function setFailover(ViewableData $failover) {
+		$this->failover = $failover;
+		$this->defineMethods();
+	}
+
+	/**
+	 * Get the current failover object if set
+	 * 
+	 * @return ViewableData|null
+	 */
+	public function getFailover() {
+		return $this->failover;
+	}
 	
 	/**
 	 * Check if a field exists on this object. This should be overloaded in child classes.
@@ -137,7 +156,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	public function hasField($field) {
 		return property_exists($this, $field);
 	}
-	
+
 	/**
 	 * Get the value of a field on this object. This should be overloaded in child classes.
 	 *
