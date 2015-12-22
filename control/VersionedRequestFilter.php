@@ -32,7 +32,7 @@ class VersionedRequestFilter implements RequestFilter {
 			$dummyController->popCurrent();
 			// Prevent output in testing
 			if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) {
-				return false;
+				throw new SS_HTTPResponse_Exception($response);
 			}
 			$response->output();
 			die;
