@@ -260,6 +260,7 @@ de:
     many_many_Members: Mitglieder
   GroupImportForm:
     Help1: '<p>Eine oder mehrere Gruppen im <em>CSV</em>-Format (kommaseparierte Werte) importieren. <small><a href="#" class="toggle-advanced">Erweiterte Nutzung</a></small></p>'
+    Help2: '<div class="advanced"><h4>Erweiterte Benutzung</h4><ul><li>Gültige Spalten: <em>%s</em></li><li>Bereits existierende Gruppen werden anhand ihres eindeutigen <em>Code</em> identifiziert und um neue Einträge aus der Importdatei erweitert.</li><li>Gruppenhierarchien können mittels der Spalte <em>ParentCode</em> erstellt werden.</li><li>Berechtigungen können in der Spalte <em>PermissionCode</em> hinzugefügt werden. Schon zugewiesene Berechtigungen werden nicht entfernt.</li></ul></div>'
     ResultCreated: '{count} Gruppe(n) wurden erstellt'
     ResultDeleted: '%d Gruppe(n) gelöscht'
     ResultUpdated: '%d Gruppe(n) aktualisiert'
@@ -291,6 +292,7 @@ de:
     FROMWEB: 'Aus dem Web'
     FindInFolder: 'In Ordner suchen'
     IMAGEALT: 'Alternativtext (alt)'
+    IMAGEALTTEXT: 'Alternativtext (alt) - erscheint, falls das Bild nicht angezeigt werden kann.'
     IMAGEDIMENSIONS: Dimensionen
     IMAGEHEIGHTPX: Höhe (px)
     IMAGETITLE: 'Titeltext (Tooltip) - für zusätzliche Informationen über das Bild'
@@ -325,7 +327,11 @@ de:
     DELETED: Gelöscht.
     DropdownBatchActionsDefault: Aktionen
     HELP: Hilfe
+    PAGETYPE: 'Seitentyp:'
     PERMAGAIN: 'Sie wurden aus dem System ausgeloggt. Falls Sie sich wieder einloggen möchten, geben Sie bitte Benutzernamen und Passwort im untenstehenden Formular an.'
+    PERMALREADY: 'Leider dürfen Sie diesen Teil des CMS nicht aufrufen. Wenn Sie sich als jemand anderes einloggen wollen, benutzen Sie bitte das nachstehende Formular.'
+    PERMDEFAULT: 'Sie müssen angemeldet sein, um auf diesen Bereich zugreifen zu können. Bitte geben Sie Ihre Zugangsdaten ein.'
+    PLEASESAVE: 'Diese Seite konnte nicht aktualisiert werden weil sie noch nicht gespeichert wurde - bitte speichern.'
     PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: 'Der Seitenbaum wurde erfolgreich sortiert.'
     SAVEDUP: Gespeichert.
@@ -413,6 +419,7 @@ de:
     Toggle: 'Hilfe zur Formatierung anzeigen'
   MemberImportForm:
     Help1: '<p>Mitglieder im <em>CSV</em>-Format (kommaseparierte Werte) importieren. <small><a href="#" class="toggle-advanced">Erweiterte Nutzung</a></small></p>'
+    Help2: '<div class="advanced"><h4>Erweiterte Benutzung</h4><ul><li>Gültige Spalten: <em>%s</em></li><li>Bereits existierende Benutzer werden anhand ihres eindeutigen <em>Code</em> identifiziert und um neue Einträge aus der Importdatei erweitert.</li><li>Gruppen können in der Spalte <em>Gruppen</em> hinzugefügt werden. Gruppen werden anhand ihres <em>Code</em> erkannt. Mehrere Gruppen werden Komma-separiert eingetragen. Schon zugewiesene Gruppen werden nicht entfernt.</li></ul></div>'
     ResultCreated: '{count} Mitglied(er) wurde(n) erstellt'
     ResultDeleted: '%d Mitglied(er) gelöscht'
     ResultNone: 'Keine Änderungen'

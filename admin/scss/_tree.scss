@@ -483,7 +483,7 @@
 		}	
 		a, a:link {
 			color:  $color-text-blue-link;
-			padding: 3px 6px 3px 3px;
+			padding: 3px 6px 3px 6px;
 			border: none;
 			display:  inline-block;
 			margin-right: 5px;
@@ -573,7 +573,7 @@
 
 // For drag and drop icons to not appear whilst in multi-selection
 .cms-tree {
-	&.jstree {
+	&.jstree.draggable {
 		.jstree-no-checkboxes {
 			li {
 				a {

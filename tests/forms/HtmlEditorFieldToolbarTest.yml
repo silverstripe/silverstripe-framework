@@ -1,0 +1,9 @@
+File:
+  example_file:
+    Name: example.pdf
+    Filename: folder/subfolder/example.pdf
+
+Image:
+  example_image:
+    Name: HTMLEditorFieldTest_example.jpg
+    Filename: tests/forms/images/HTMLEditorFieldTest_example.jpg

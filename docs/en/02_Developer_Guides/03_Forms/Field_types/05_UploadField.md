@@ -73,7 +73,7 @@ Enable multiple fileuploads by using a many_many (or has_many) relation. Again, 
 
 ```php
 	class GalleryImageExtension extends DataExtension {
-		private static $belongs_many_many = array('Galleries' => 'GalleryPage);
+		private static $belongs_many_many = array('Galleries' => 'GalleryPage');
 	}
 ```
 
@@ -110,7 +110,8 @@ This example will save all uploads in the `/assets/customfolder/` folder. If the
 		'Root.Upload',	
 		$uploadField = new UploadField(
 			$name = 'GalleryImages',
-			$title = 'Please upload one or more images'		)	
+			$title = 'Please upload one or more images'
+		)	
 	);
 	$uploadField->setFolderName('customfolder');
 ```

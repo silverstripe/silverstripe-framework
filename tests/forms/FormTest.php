@@ -238,6 +238,7 @@ class FormTest extends FunctionalTest {
 			'FormTest_Controller/Form',
 			array(
 				'Email' => 'invalid',
+				'Number' => '<a href="http://mysite.com">link</a>' // XSS attempt
 				// leaving out "Required" field
 			)
 		);
@@ -255,6 +256,17 @@ class FormTest extends FunctionalTest {
 				'"Some Required Field" is required'
 			),
 			'Required fields show a notification on field when left blank'
+		);
+
+		$this->assertContains(
+			'&#039;&lt;a href=&quot;http://mysite.com&quot;&gt;link&lt;/a&gt;&#039; is not a number, only numbers can be accepted for this field',
+			$response->getBody(),
+			"Validation messages are safely XML encoded"
+		);
+		$this->assertNotContains(
+			'<a href="http://mysite.com">link</a>',
+			$response->getBody(),
+			"Unsafe content is not emitted directly inside the response body"
 		);
 	}
 
@@ -688,7 +700,8 @@ class FormTest_Controller extends Controller implements TestOnly {
 			new FieldList(
 				new EmailField('Email'),
 				new TextField('SomeRequiredField'),
-				new CheckboxSetField('Boxes', null, array('1'=>'one','2'=>'two'))
+				new CheckboxSetField('Boxes', null, array('1'=>'one','2'=>'two')),
+				new NumericField('Number')
 			),
 			new FieldList(
 				new FormAction('doSubmit')

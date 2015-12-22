@@ -25,6 +25,35 @@ class OptionsetFieldTest extends SapphireTest {
 		);
 	}
 
+	public function testValidation() {
+		$field = OptionsetField::create('Test', 'Testing', array(
+			"One" => "One",
+			"Two" => "Two",
+			"Five" => "Five"
+		));
+		$validator = new RequiredFields('Test');
+		$form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
+
+		$field->setValue("One");
+		$this->assertTrue($field->validate($validator));
+
+		//non-existent value should make the field invalid
+		$field->setValue("Three");
+		$this->assertFalse($field->validate($validator));
+
+		//empty string should pass field-level validation...
+		$field->setValue('');
+		$this->assertTrue($field->validate($validator));
+
+		// ... but should not pass "RequiredFields" validation
+		$this->assertFalse($form->validate());
+
+		//disabled items shouldn't validate
+		$field->setDisabledItems(array('Five'));
+		$field->setValue('Five');
+		$this->assertFalse($field->validate($validator));
+	}
+
 	public function testReadonlyField() {
 		$sourceArray = array(0 => 'No', 1 => 'Yes');
 		$field = new OptionsetField('FeelingOk', 'are you feeling ok?', $sourceArray, 1);

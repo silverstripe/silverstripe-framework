@@ -56,6 +56,10 @@ class ExactMatchFilter extends SearchFilter {
 			// For queries using the default collation (no explicit case) we can use the WHERE .. IN .. syntax,
 			// providing simpler SQL than many WHERE .. OR .. fragments.
 			$column = $this->getDbName();
+			// If values is an empty array, fall back to 3.1 behaviour and use empty string comparison
+			if(empty($values)) {
+				$values = array('');
+			}
 			$placeholders = DB::placeholders($values);
 			return $query->where(array(
 				"$column IN ($placeholders)" => $values
@@ -109,6 +113,10 @@ class ExactMatchFilter extends SearchFilter {
 			// For queries using the default collation (no explicit case) we can use the WHERE .. NOT IN .. syntax,
 			// providing simpler SQL than many WHERE .. AND .. fragments.
 			$column = $this->getDbName();
+			// If values is an empty array, fall back to 3.1 behaviour and use empty string comparison
+			if(empty($values)) {
+				$values = array('');
+			}
 			$placeholders = DB::placeholders($values);
 			return $query->where(array(
 				"$column NOT IN ($placeholders)" => $values
