@@ -470,7 +470,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 	protected function viewfile_getLocalFileByURL($fileUrl) {
 		$filteredUrl = Director::makeRelative($fileUrl);
+
+		// Remove prefix and querystring
 		$filteredUrl = Image::strip_resampled_prefix($filteredUrl);
+		list($filteredUrl) = explode('?', $filteredUrl);
 
 		$file = File::get()->filter('Filename', $filteredUrl)->first();
 
@@ -512,6 +515,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	public function viewfile($request) {
 		$file = null;
 		$url = null;
+
 
 		// TODO Would be cleaner to consistently pass URL for both local and remote files,
 		// but GridField doesn't allow for this kind of metadata customization at the moment.

@@ -181,7 +181,7 @@
 				}
 
 				// If no action is selected, enable all nodes
-				if(!actionURL || actionURL == -1 || !viewMode.hasClass('active')) {
+				if(!actionUrl || actionUrl == -1 || !viewMode.hasClass('active')) {
 					$(rootNode).find('li').each(function() {
 						$(this).setEnabled(true);
 					});
