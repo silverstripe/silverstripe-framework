@@ -171,7 +171,7 @@ class RestfulService extends ViewableData implements Flushable {
 		$url = $this->getAbsoluteRequestURL($subURL);
 		$method = strtoupper($method);
 
-		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
+		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS','PATCH')));
 
 		$cache_path = $this->getCachePath(array(
 			$url,
@@ -259,8 +259,7 @@ class RestfulService extends ViewableData implements Flushable {
 		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, $this->getBasicAuthString());
 
 		// Add fields to POST and PUT requests
-		if($method == 'POST') {
-			curl_setopt($ch, CURLOPT_POST, 1);
+		if($method == 'POST' || $method == 'PATCH') {
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 		} elseif($method == 'PUT') {
 			$put = fopen("php://temp", 'r+');
