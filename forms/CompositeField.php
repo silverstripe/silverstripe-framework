@@ -123,8 +123,8 @@ class CompositeField extends FormField {
 		return $this->legend;
 	}
 
-	public function extraClasses() {
-		$classes = array('field', 'CompositeField', parent::extraClasses());
+	public function extraClass() {
+		$classes = array('field', 'CompositeField', parent::extraClass());
 		if($this->columnCount) $classes[] = 'multicolumn';
 		
 		return implode(' ', $classes);
