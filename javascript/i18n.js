@@ -198,8 +198,8 @@ ss.i18n = {
 			var detectedLocale;
 
 			// get by container tag
-			rawLocale = jQuery('body').attr('lang');
-		
+			rawLocale = jQuery('html').attr('lang') || jQuery('body').attr('lang');
+
 			// get by meta
 			if(!rawLocale) {
 				var metas = document.getElementsByTagName('meta');
