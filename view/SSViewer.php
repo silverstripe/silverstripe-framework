@@ -25,8 +25,8 @@
 class SSViewer_Scope {
 
 	// The stack of previous "global" items
-	// And array of item, itemIterator, itemIteratorTotal, pop_index, up_index, current_index
-	private $itemStack = array();
+	// And array of item, itemIterator, itemIteratorTotal, pop_index, up_index, current_index, parent_overlay
+	private $itemStack = array(); 
 
 	// The current "global" item (the one any lookup starts from)
 	protected $item;
@@ -180,6 +180,27 @@ class SSViewer_Scope {
 
 		$this->resetLocalScope();
 		return $retval;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getItemStack() {
+		return $this->itemStack;
+	}
+
+	/**
+	 * @param array
+	 */
+	protected function setItemStack(array $stack) {
+		$this->itemStack = $stack;
+	}
+
+	/**
+	 * @return int|null
+	 */
+	protected function getUpIndex() {
+		return $this->upIndex;
 	}
 }
 
@@ -517,6 +538,70 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			return $res;
 		}
 
+	}
+
+	/**
+	 * Store the current overlay (as it doesn't directly apply to the new scope
+	 * that's being pushed). We want to store the overlay against the next item
+	 * "up" in the stack (hence upIndex), rather than the current item, because
+	 * SSViewer_Scope::obj() has already been called and pushed the new item to
+	 * the stack by this point
+	 * @return SSViewer_Scope
+	 */
+	public function pushScope() {
+		$scope = parent::pushScope();
+
+		$itemStack = $this->getItemStack();
+		$itemStack[$this->getUpIndex()][6] = $this->overlay;
+
+		$this->setItemStack($itemStack);
+		$this->overlay = array();
+
+		return $scope;
+	}
+
+	/**
+	 * Now that we're going to jump up an item in the item stack, we need to
+	 * restore the overlay that was previously stored against the next item "up"
+	 * in the stack from the current one
+	 * @return SSViewer_Scope
+	 */
+	public function popScope() {
+		$itemStack = $this->getItemStack();
+		$this->overlay = $itemStack[$this->getUpIndex()][6];
+
+		return parent::popScope();
+	}
+
+	/**
+	 * $Up and $Top need to restore the overlay from the parent and top-level
+	 * scope respectively.
+	 */
+	public function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+		$overlayIndex = false;
+
+		switch($name) {
+			case 'Up':
+				$upIndex = $this->getUpIndex();
+				if ($upIndex === null) {
+					user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
+				}
+
+				$overlayIndex = $upIndex; // Parent scope
+				break;
+			case 'Top':
+				$overlayIndex = 0; // Top-level scope
+				break;
+		}
+
+		if ($overlayIndex !== false) {
+			$itemStack = $this->getItemStack();
+			if (!$this->overlay && isset($itemStack[$overlayIndex][6])) {
+				$this->overlay = $itemStack[$overlayIndex][6];
+			}
+		}
+
+		return parent::obj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
 
 	public function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
