@@ -3563,7 +3563,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				// Format: array('MyFieldName' => array(
 				//   'filter => 'ExactMatchFilter',
 				//   'field' => 'NumericField', // optional
-				//   'title' => 'My Title', // optiona.
+				//   'title' => 'My Title', // optional
 				// ))
 				$rewrite[$identifer] = array_merge(
 					array('filter' => $this->relObject($identifer)->stat('default_search_filter_class')),
