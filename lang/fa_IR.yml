@@ -1,7 +1,9 @@
 fa_IR:
   AssetAdmin:
     NEWFOLDER: پوشه جديد
+    SHOWALLOWEDEXTS: 'نمایش ضمیمه‌های مجاز'
   AssetTableField:
+    CREATED: 'نخستین بارگذاری'
     DIM: ابعاد
     FILENAME: نام فايل
     FOLDER: پوشه
@@ -9,27 +11,47 @@ fa_IR:
     OWNER: دارنده
     SIZE: 'حجم'
     TITLE: عنوان
-    TYPE: 'نوع'
-    URL: نشانی
+    TYPE: 'نوع فایل'
+    URL: نشانی اینترنتی
   AssetUploadField:
+    ChooseFiles: 'انتخاب فایل‌ها'
+    DRAGFILESHERE: 'فایل‌ها را به اینجا بکشید'
+    DROPAREA: 'محل انداختن'
     EDITALL: 'ویرایش همه'
+    EDITANDORGANIZE: 'ویرایش و مرتب‌سازی'
     EDITINFO: 'ویرایش فایل‌ها'
     FILES: فایل‌ها
+    FROMCOMPUTER: 'انتخاب فایل‌ها از کامپیوتر شما'
+    FROMCOMPUTERINFO: 'بارگذاری از کامپیوتر شما'
     TOTAL: مجموع
+    TOUPLOAD: 'انتخاب فایل‌ها جهت بارگذاری'
+    UPLOADINPROGRESS: 'لطفاً صبر کنید... بارگذاری در جریان است'
+    UPLOADOR: یا
   BBCodeParser:
     ALIGNEMENT: جاگذاری
     ALIGNEMENTEXAMPLE: 'به راست'
     BOLD: 'نوشته درست'
     BOLDEXAMPLE: درست
+    CODE: 'بلوک کد'
+    CODEDESCRIPTION: 'بلوک کد فرمت‌نشده'
+    CODEEXAMPLE: 'بلوک کد'
     COLORED: 'نوشته رنگی'
     COLOREDEXAMPLE: 'نوشته آبی'
     EMAILLINK: 'پیوند ایمیل'
+    EMAILLINKDESCRIPTION: 'ایجاد پیوند به یک نشانی ایمیل'
     IMAGE: عکس
+    IMAGEDESCRIPTION: 'نمایش یک تصویر در ارسال شما'
     ITALIC: 'نوشته گژ'
     ITALICEXAMPLE: گژ
     LINK: 'پیوند تارگاه'
+    LINKDESCRIPTION: 'پیوند به یک وب‌سایت یا نشانی اینترنتی دیگر'
     UNDERLINE: 'نوشته با زیرخط'
     UNDERLINEEXAMPLE: زیرخط
+  BackLink_Button_ss:
+    Back: بازگشت
+  BasicAuth:
+    ERRORNOTADMIN: 'این کاربر یک مدیر نیست.'
+    ERRORNOTREC: 'این نام کاربری / رمز عبور شناخته‌شده نیست'
   Boolean:
     ANY: هر
     NOANSWER: 'خیر'
@@ -40,6 +62,7 @@ fa_IR:
     SAVE: نگاهداری
   CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'رمز عبور را فراموش کرده‌اید؟'
+    BUTTONLOGIN: 'ورود دوباره'
     BUTTONLOGOUT: 'خروج'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'پیش‌نمایش وب‌سایت'
@@ -47,8 +70,11 @@ fa_IR:
     MENUTITLE: 'پروفایل من'
   CMSSecurity:
     SUCCESS: موفقیت
+    TimedOutTitleAnonymous: 'جلسه شما به پایان رسیده است.'
+    TimedOutTitleMember: 'سلام {name}!<br />زمان جلسه شما به پایان رسیده است.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'شما گذرواژه تان را دگرگون کردید برای'
+    CHANGEPASSWORDTEXT2: 'شما اکنون می‌توانید با این اطلاعات وارد شوید:'
     EMAIL: ايميل
     HELLO: درود
     PASSWORD: كلمه عبور
@@ -56,7 +82,12 @@ fa_IR:
     NOANSWER: 'خیر'
     YESANSWER: 'بله'
   ConfirmedPasswordField:
+    ATLEAST: 'رمزهای عبور باید حداقل {min} کاراکتر باشد.'
+    BETWEEN: 'رمزهای عبور باید بین {min} تا {max} کاراکتر باشد.'
+    MAXIMUM: 'رمزهای عبور باید حداکثر {max} کاراکتر باشد.'
     SHOWONCLICKTITLE: 'تغيير كلمه عبور'
+  ContentController:
+    NOTLOGGEDIN: 'وارد نشده'
   CreditCardField:
     FIRST: نخست
     FOURTH: چهارم
@@ -84,22 +115,47 @@ fa_IR:
     YEAR: سال
     YEARS: سال
   DateField:
+    NOTSET: 'نامشخص'
     TODAY: امروز
+    VALIDDATEFORMAT2: 'لطفاً یک قالب تاریخ معتبر وارد نمایید ({format})'
+  DatetimeField:
+    NOTSET: 'نامشخص'
+  Director:
+    INVALID_REQUEST: 'درخواست نامعتبر'
   DropdownField:
     CHOOSE: (گزینش)
+    CHOOSESEARCH: '(گزینش یا جستجو)'
+  EmailField:
+    VALIDATION: 'لطفاً یک نشانی ایمیل وارد نمایید'
   Enum:
     ANY: هر
   File:
     AviType: 'فایل ویدیو AVI'
     Content: محتوا
     CssType: 'فایل CSS'
+    DocType: 'فایل Word'
     Filename: نام پرونده
+    GifType: 'تصویر GIF - مناسب برای نمودارها'
+    GzType: 'فایل فشرده‌شده GZIP'
     HtlType: 'فایل HTML'
     HtmlType: 'فایل HTML'
+    IcoType: 'تصویر آیکن'
+    JpgType: 'تصویر JPEG - مناسب برای عکس‌ها'
+    JsType: 'فایل جاوااسکریپت'
+    Mp3Type: 'فایل صوتی MP3'
+    MpgType: 'فایل ویدیویی MPEG'
+    NOFILESIZE: 'حجم فایل صفر بایت است.'
+    NOVALIDUPLOAD: 'فایل یک بارگذاری معتبر نیست'
     Name: نام
     PLURALNAME: فايل ها
+    PdfType: 'فایل پی‌دی‌اف ادوبی اکروبات'
+    PngType: 'تصویر PNG - قالب مناسب همه منظوره'
     SINGULARNAME: فايل
+    TOOLARGE: 'حجم فایل بسیار زیاد است، حداکثر {size} مجاز است'
+    TOOLARGESHORT: 'حجم فایل از {size} فراتر است'
     Title: عنوان
+    WavType: 'فایل صوتی WAV'
+    ZipType: 'فایل فشرده‌شده زیپ'
   Folder:
     PLURALNAME: پوشه‌ها
     SINGULARNAME: پوشه
@@ -115,9 +171,20 @@ fa_IR:
   GridAction:
     DELETE_DESCRIPTION: حذف
     Delete: حذف
+    UnlinkRelation: حذف پیوند
   GridField:
+    Add: 'افزودن {name}'
+    Filter: پالایش
+    FilterBy: 'پالایش براساس'
     Find: بگرد
+    PlaceHolder: 'یافتن {type}'
+    PlaceHolderWithLabels: 'یافتن {type} از روی {name}'
     ResetFilter: از نو
+  GridFieldDetailForm:
+    CancelBtn: لغو
+    Create: ایجاد
+    Delete: حذف
+    Save: ذخیره
   GridFieldEditButton_ss:
     EDIT: ویرایش
   GridFieldItemEditView:
@@ -140,14 +207,22 @@ fa_IR:
     ResultUpdated: 'گروه %d بروز شد'
   HtmlEditorField:
     ADDURL: 'افزودن URL'
+    BUTTONADDURL: 'افزودن نشانی اینترنتی'
     BUTTONINSERT: وارد کردن
     BUTTONINSERTLINK: 'گذاشتن پیوند'
     BUTTONREMOVELINK: 'برداشتن پیوند'
     BUTTONUpdate: به روزرسانی
+    CAPTIONTEXT: 'متن کپشن'
     CSSCLASS: 'جاگیری / الگو'
+    DETAILS: جزئیات
     EMAIL: 'پست الکترونیک'
     FILE: پرونده
     FOLDER: پوشه
+    FROMCMS: 'از سامانه مدیریت محتوا'
+    FROMCOMPUTER: 'از کامپیوتر شما'
+    FROMWEB: 'از وب'
+    FindInFolder: 'یافتن در پوشه'
+    IMAGEDIMENSIONS: ابعاد
     IMAGEHEIGHTPX: بلندی
     IMAGEWIDTHPX: پهنا
     LINK: 'پیوند'
@@ -158,6 +233,7 @@ fa_IR:
     LINKOPENNEWWIN: 'در پنجره جدید باز شود ؟'
     LINKTO: 'پیوند به'
     PAGE: برگ
+    SUBJECT: 'موضوع پست الکترونیک'
     URL: نشانی
   Image:
     PLURALNAME: فایل‌ها
@@ -168,9 +244,11 @@ fa_IR:
   LeftAndMain:
     DELETED: حذف شده
     HELP: کمک
+    PAGETYPE: 'نوع صفحه'
     PERMAGAIN: 'شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید'
     PreviewButton: پیش‌نمایش
     SAVEDUP: ذخیره شده
+    VersionUnknown: نامشخص
   LeftAndMain_Menu_ss:
     Hello: درود
     LOGOUT: 'خروج'
@@ -179,35 +257,65 @@ fa_IR:
     IP: 'نشانی IP'
     Status: وضعیت
   Member:
+    ADDGROUP: 'افزودن گروه'
     BUTTONCHANGEPASSWORD: 'تغییر رمز عبور'
     BUTTONLOGIN: 'ورود'
+    BUTTONLOGINOTHER: 'ورود به عنوان شخصی دیگر'
+    BUTTONLOSTPASSWORD: 'من رمز عبور خود را فراموش کرده‌ام'
     CONFIRMNEWPASSWORD: 'تکرار رمز عبور جدید'
     CONFIRMPASSWORD: 'تکرار رمز عبور'
+    DATEFORMAT: 'قالب تاریخ'
     DefaultAdminFirstname: 'مدیر پیشفرض'
+    DefaultDateTime: پیش‌فرض
     EMAIL: پست الکترونیک
     EMPTYNEWPASSWORD: 'رمز عبور جدید نمیتواند خالی باشد، لطفا دوباره تلاش کنید'
+    ENTEREMAIL: 'لطفاً یک نشانی ایمیل وارد نمایید تا پیوند ازنوسازی رمز عبور را دریافت کنید.'
     FIRSTNAME: 'نام'
     INTERFACELANG: 'زبان برنامه'
+    LOGGEDINAS: 'شما به {name} عنوان وارد شده‌اید.'
     NEWPASSWORD: 'گذرواژه تازه'
+    NoPassword: 'رمز عبوری برای این کاربر وجود ندارد'
     PASSWORD: رمز عبور
     PLURALNAME: اعضاء
+    REMEMBERME: 'مرا برای بار بعدی به خاطر بسپار؟'
     SINGULARNAME: عضو
     SUBJECTPASSWORDCHANGED: 'گذرواژه شما دگرگون شد'
     SUBJECTPASSWORDRESET: 'پیوند ازنوسازی گذرواژه شما'
     SURNAME: نام خانوادگی
     TIMEFORMAT: 'قالب زمان'
+    WELCOMEBACK: 'خوش آمدید، {firstname}'
     YOUROLDPASSWORD: 'رمز عبور قدیمی'
     belongs_many_many_Groups: گروه‌ها
     db_LockedOutUntil: 'بسته شده تا '
+    db_NumVisit: 'شمار بازدید'
     db_Password: رمز عبور
     db_PasswordExpiry: 'تاریخ از میان رفتن گذرواژه'
+  MemberAuthenticator:
+    TITLE: 'ایمیل و رمز عبور'
   MemberDatetimeOptionsetField:
+    Custom: دلخواه
+    DATEFORMATBAD: 'قالب تاریخ نامعتبر است'
+    FOURDIGITYEAR: 'سال چهار عددی'
+    FULLNAMEMONTH: 'نام کامل ماه (مثال ژوئن)'
     Preview: پیش‌نمایش
+    TWODIGITDAY: 'شماره دو عددی روز از ماه'
+    TWODIGITHOUR: 'ساعت دو عددی (00 تا 23)'
+    TWODIGITYEAR: 'سال دو عددی'
   MemberImportForm:
     ResultDeleted: 'کاربر %d حذف شد'
     ResultNone: 'تغییری ایجاد نشد'
+  MemberPassword:
+    PLURALNAME: 'رمزهای عبور کاربر'
+    SINGULARNAME: 'رمز عبور کاربر'
+  MemberTableField:
+    APPLY_FILTER: 'اعمال پالایش'
   ModelAdmin:
     DELETE: حذف
+    EMPTYBEFOREIMPORT: 'جایگزینی داده'
+    RESET: از نو
+    Title: 'مدل‌های داده'
+  ModelAdmin_ImportSpec_ss:
+    IMPORTSPECFIELDS: 'ستون‌های پایگاه داده'
   ModelAdmin_Tools_ss:
     FILTER: پالایش
     IMPORT: وارد کردن
@@ -226,6 +334,8 @@ fa_IR:
     AdminGroup: مدیر کل
     CMS_ACCESS_CATEGORY: 'دسترسی CMS'
     FULLADMINRIGHTS: 'توانایی‌های کامل مدیریتی:'
+    PLURALNAME: دسترسی‌ها
+    SINGULARNAME: مجوز
   PermissionRole:
     PLURALNAME: وظایف
     SINGULARNAME: وظیفه
@@ -236,35 +346,68 @@ fa_IR:
     VALIDATION: 'لطفاً شماره تلفن معتبر وارد کنید'
   Security:
     ALREADYLOGGEDIN: 'شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید دوباره وارد شوید..'
+    BUTTONSEND: 'برایم یک ازنوسازی رمز عبور ارسال کن'
+    CHANGEPASSWORDBELOW: 'می‌توانید رمز عبور خود را در پایین تغییر دهید.'
     CHANGEPASSWORDHEADER: 'تغییر گذرواژه'
     ENTERNEWPASSWORD: 'لطفاً گذرواژه جدید را وارد کنید.'
+    ERRORPASSWORDPERMISSION: 'جهت تغییر رمز عبور خود باید وارد شده باشید!'
     LOGIN: 'ورود'
+    LOSTPASSWORDHEADER: 'فراموشی رمز عبور'
+    PASSWORDSENTHEADER: 'پیوند ازنوسازی رمز عبور به ''{email}'' ارسال شد'
   SecurityAdmin:
     APPLY_ROLES: 'اعمال وظایف به گروه'
+    GROUPNAME: 'نام گروه'
+    IMPORTGROUPS: 'وارد کردن گروه‌ها'
+    IMPORTUSERS: 'وارد کردن کاربران'
     MEMBERS: کاربران
     MENUTITLE: امنیت
     NEWGROUP: 'گروه تازه'
+    PERMISSIONS: دسترسی‌ها
     ROLES: وظایف
     TABROLES: وظایف
     Users: کاربران
   SecurityAdmin_MemberImportForm:
     BtnImport: 'وارد کردن'
   SilverStripeNavigator:
+    ChangeViewMode: 'تغییر وضعیت نمایش'
+    Desktop: کامپیوتر رومیزی
     Edit: ویرایش
+    EditView: 'وضعیت ویرایش'
     Mobile: موبایل
+    PreviewView: 'وضعیت پیش‌نمایش'
+    Responsive: واکنش‌گرا
+    SplitView: 'وضعیت دونیم شده'
     Tablet: تبلت
+    ViewDeviceWidth: 'انتخاب عرض پیش‌نمایش'
     Width: پهنا
   SiteTree:
     TABMAIN: اصلی
   TableListField:
+    CSVEXPORT: 'خروجی‌گیری به CSV'
     Print: چاپ
+  TableListField_PageControls_ss:
+    OF: از
+  TimeField:
+    VALIDATEFORMAT: 'لطفاً یک قالب زمان معتبر وارد نمایید ({format})'
   ToggleField:
     MORE: بیشتر
   UploadField:
+    ATTACHFILE: 'ضمیمه کردن یک فایل'
+    ATTACHFILES: 'ضمیمه کردن فایل‌ها'
+    AttachFile: 'ضمیمه کردن فایل‌(ها)'
+    CHOOSEANOTHERFILE: 'انتخاب فایلی دیگر'
+    DELETE: 'حذف از فایل‌ها'
     DOEDIT: ذخیره
+    DROPFILE: 'انداختن یک فایل'
+    DROPFILES: 'انداختن فایل‌ها'
     Dimensions: ابعاد
     EDIT: ویرایش
+    EDITINFO: 'ویرایش این فایل'
+    FROMCOMPUTER: 'از کامپیوتر شما'
+    FROMCOMPUTERINFO: 'انتخاب از فایل‌ها'
+    FROMFILES: 'از فایل‌ها'
     REMOVE: حذف
+    STARTALL: 'شروع همه'
     Saved: ذخیره شده
   Versioned:
     has_many_Versions: نسخه ها
