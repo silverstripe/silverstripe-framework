@@ -77,6 +77,8 @@ en:
     PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Website preview'
+  CMSPagesController_Tools_ss:
+    FILTER: Filter
   CMSProfileController:
     MENUTITLE: 'My Profile'
   CMSSecurity:
@@ -105,6 +107,7 @@ en:
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'You must log in with your CMS password in order to view the draft or archived content. <a href="%s">Click here to go back to the published site.</a>'
     NOTLOGGEDIN: 'Not logged in'
   CreditCardField:
     FIRST: first

@@ -292,6 +292,8 @@ eo:
     FROMWEB: 'El la TTT'
     FindInFolder: 'Serĉi en dosierujo'
     IMAGEALT: 'Alternativa teksto (alt)'
+    IMAGEALTTEXT: 'Alternativa teksto (alt) - vidigi ĝin se ne eblas vidigi bildon'
+    IMAGEALTTEXTDESC: 'Vidigita al ekranlegiloj aŭ se ne eblas vidii bildon'
     IMAGEDIMENSIONS: Dimensioj
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Titola teksto (ŝpruchelpilo) - por plua informo pri la bildo'
@@ -326,9 +328,11 @@ eo:
     DELETED: Forigita.
     DropdownBatchActionsDefault: Agoj
     HELP: Helpo
+    PAGETYPE: 'Tipo de paĝo:'
     PERMAGAIN: 'Vin adiaŭis la CMS. Se vi volas denove saluti, enigu salutnomon kaj pasvorton malsupre.'
     PERMALREADY: 'Bedaŭrinde vi ne povas aliri tiun parton de la CMS. Se vi volas ensaluti kiel aliulo, faru tion sube.'
     PERMDEFAULT: 'Necesas ensaluti por aliri la administran zonon; bonvolu enigi viajn akreditaĵoj sube.'
+    PLEASESAVE: 'Bonvolu konservi paĝon: Ne eblis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ ne estas konservita.'
     PreviewButton: Antaŭvido
     REORGANISATIONSUCCESSFUL: 'Sukcese reorganizis la retejan arbon.'
     SAVEDUP: Konservita.

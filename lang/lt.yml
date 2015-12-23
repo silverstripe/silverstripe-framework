@@ -77,6 +77,8 @@ lt:
     PASSWORDEXPIRED: '<p>Jūsų slaptažodžio galiojimas pasibaigė. <a target="_top" href="{link}">Prašome sukurti naują.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Puslapio peržiūra'
+  CMSPagesController_Tools_ss:
+    FILTER: Filtras
   CMSProfileController:
     MENUTITLE: 'Mano profilis'
   CMSSecurity:
@@ -105,6 +107,7 @@ lt:
     MAXIMUM: 'Slaptažodžiai privalo būti ne ilgesni nei {max} simbolių ilgio.'
     SHOWONCLICKTITLE: 'Pakeisti slaptažodį'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Jūs turite prisijungti su savo TVS slaptažodžiu, kad galėtumėte peržiūrėti juodraščio arba archyvo turinį.<a href="%s">Spauskite čia, norėdami grįžti į svetainę</a>.'
     NOTLOGGEDIN: 'Neprisijungęs'
   CreditCardField:
     FIRST: pirmas
@@ -328,7 +331,7 @@ lt:
     DELETED: Ištrinta.
     DropdownBatchActionsDefault: Veiksmai
     HELP: Pagalba
-    PAGETYPE: 'Puslapio tipas:'
+    PAGETYPE: 'Puslapio tipas'
     PERMAGAIN: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'
     PERMALREADY: 'Deja, bet Jūs negalite patekti į šią TVS dalį. Jeigu norite prisijungti kitu vartotoju, tai atlikite žemiau.'
     PERMDEFAULT: 'Jūs turite būti prisijungę, norėdami pasiekti administravimo zoną; prašome suvesti prisijungimo duomenis į žemiau esančius laukelius.'

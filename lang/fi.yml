@@ -260,6 +260,7 @@ fi:
     many_many_Members: Jäsenet
   GroupImportForm:
     Help1: '<p>Tuo yksi tai useampi ryhmä <em>CSV</em>-muotoisena (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
+    Help2: '<div class="advanced"><h4>Edistynyt käyttö</h4><ul><li>Sallitut palstat: <em>%s</em></li><li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li><li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li></ul></div>'
     ResultCreated: 'Luotiin {count} ryhmä(ä)'
     ResultDeleted: 'Poistettu %d ryhmää'
     ResultUpdated: 'Päivitetty %d ryhmää'
@@ -291,6 +292,8 @@ fi:
     FROMWEB: 'Webistä'
     FindInFolder: 'Etsi kansiosta'
     IMAGEALT: 'Vaihtoehtoinen teksti (alt)'
+    IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
+    IMAGEALTTEXTDESC: 'Näytetään ruudunlukuohjelmille tai jos kuvaa ei voi näyttää'
     IMAGEDIMENSIONS: Mitat
     IMAGEHEIGHTPX: Korkeus
     IMAGETITLE: 'Otsikko (tooltip) - kuvan lisätietoja varten'
@@ -325,16 +328,23 @@ fi:
     DELETED: Poistettu.
     DropdownBatchActionsDefault: Toimenpiteet
     HELP: Ohje
+    PAGETYPE: 'Sivutyyppi'
     PERMAGAIN: 'Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla.'
+    PERMALREADY: 'Paihoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alta.'
+    PERMDEFAULT: 'Sinun tulee olla kirjautuneena ylläpito-osioon; syötä tunnuksesi kenttiin.'
+    PLEASESAVE: 'Tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu. Tallenna sivu.'
     PreviewButton: Esikatselu
     REORGANISATIONSUCCESSFUL: 'Hakemistopuu järjestettiin uudelleen onnistuneesti.'
     SAVEDUP: Tallennettu.
     ShowAsList: 'näytä listana'
     TooManyPages: 'Liian monta sivua'
     ValidationError: 'Virhe vahvistuksessa'
+    VersionUnknown: tuntematon
   LeftAndMain_Menu_ss:
     Hello: Hei
     LOGOUT: 'Kirjaudu ulos'
+  ListboxField:
+    SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. %s ei kelpaa'
   LoginAttempt:
     Email: 'Sähköpostiosoite'
     IP: 'IP-osoite'
@@ -410,6 +420,7 @@ fi:
     Toggle: 'Näytä muotoiluohjeet'
   MemberImportForm:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
+    Help2: '<div class="advanced"><h4>Edistynyt käyttö</h4><ul><li>Sallitut palstat: <em>%s</em></li><li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li><li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li></ul></div>'
     ResultCreated: 'Luotiin {count} käyttäjä(ä)'
     ResultDeleted: 'Poistettu %d jäsentä'
     ResultNone: 'Ei muutoksia'
@@ -539,6 +550,8 @@ fi:
     Print: Tulosta
   TableListField_PageControls_ss:
     OF: /
+  TextField:
+    VALIDATEMAXLENGTH: '{name}-arvo ei voi ylittää {maxLength} merkin määrää.'
   TimeField:
     VALIDATEFORMAT: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
   ToggleField:
