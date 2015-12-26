@@ -78,6 +78,9 @@ require_once 'core/manifest/ManifestCache.php';
 require_once 'core/manifest/ClassLoader.php';
 require_once 'core/manifest/ConfigManifest.php';
 require_once 'core/manifest/ConfigStaticManifest.php';
+if (file_exists('core/manifest/ConfigStaticManifest40.php')) {
+	require_once 'core/manifest/ConfigStaticManifest40.php';
+}
 require_once 'core/manifest/ClassManifest.php';
 require_once 'core/manifest/ManifestFileFinder.php';
 require_once 'core/manifest/TemplateLoader.php';
@@ -113,7 +116,11 @@ if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
 }
 
 // Now that the class manifest is up, load the static configuration
-$configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
+if (class_exists('SS_ConfigStaticManifest_40')) {
+	$configManifest = new SS_ConfigStaticManifest_40(BASE_PATH, false, $flush);
+} else {
+	$configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
+}
 Config::inst()->pushConfigStaticManifest($configManifest);
 
 // And then the yaml configuration
