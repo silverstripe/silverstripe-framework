@@ -218,7 +218,6 @@
 			line-height: $grid-y * 2;
 			min-height: $grid-y * 2;
 			font-size: $font-base-size;
-			text-shadow: lighten($color-base, 5%) 1px 1px 0;
 			color: $color-text-dark;
 			padding: (1.5 * $grid-y - 1) 5px (1.5 * $grid-y - 1) 8px;
 			background-color: $color-base;
@@ -302,7 +301,6 @@
 		&.current { //need to apply current stlye to flyout also (at least line height)
 			a {
 				color: $color-text-light;
-				text-shadow: darken($color-menu-button, 20%) 0 -1px 0;
 				border-top: 1px solid lighten($color-menu-button, 10%);
 				border-bottom: 1px solid darken($color-menu-button, 15%);
 				background-color: $color-menu-button;
