@@ -514,7 +514,7 @@ class Config {
 		// Include extensions only if not flagged not to, and some have been set
 		if (($sourceOptions & self::EXCLUDE_EXTRA_SOURCES) != self::EXCLUDE_EXTRA_SOURCES) {
 			// If we don't have a fresh list of extra sources, get it from the class itself
-			if (!array_key_exists($class, $this->extraConfigSources)) {
+			if (!isset($class[$this->extraConfigSources]) || $class[$this->extraConfigSources] === null) {
 				$this->extraConfigSources[$class] = Object::get_extra_config_sources($class);
 			}
 
@@ -617,7 +617,7 @@ class Config {
 		} else {
 			if (!isset($this->overrides[0][$class])) $this->overrides[0][$class] = array();
 
-			if (!array_key_exists($name, $this->overrides[0][$class])) {
+			if (!isset($name[$this->overrides[0][$class]]) || $name[$this->overrides[0][$class]] === null) {
 				$this->overrides[0][$class][$name] = $val;
 			} else {
 				self::merge_high_into_low($this->overrides[0][$class][$name], $val);

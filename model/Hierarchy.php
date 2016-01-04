@@ -493,10 +493,14 @@ class Hierarchy extends DataExtension {
 	public function Children() {
 		if(!(isset($this->_cache_children) && $this->_cache_children)) {
 			$result = $this->owner->stageChildren(false);
-			$this->_cache_children = $result->filterByCallback(function($item) {
-				return $item->canView();
-			});
-					}
+			$children = array();
+			foreach ($result as $record) {
+				if ($record->canView()) {
+					$children[] = $record;
+				}
+			}
+			$this->_cache_children = new ArrayList($children);
+		}
 		return $this->_cache_children;
 	}
 
