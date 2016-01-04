@@ -179,6 +179,34 @@ class FormTest extends FunctionalTest {
 		);
 	}
 
+	public function testLookupFieldDisabledSaving() {
+		$object = new DataObjectTest_Team();
+		$form = new Form(
+			new Controller(),
+			'Form',
+			new FieldList(
+				new LookupField('Players', 'Players')
+			),
+			new FieldList()
+		);
+		$form->loadDataFrom(array(
+			'Players' => array(
+				14, 
+				18, 
+				22
+			),
+		));
+		$form->saveInto($object);
+		$playersIds = $object->Players()->getIDList();
+
+		$this->assertTrue($form->validate());
+		$this->assertEquals(
+			$playersIds,
+			array(),
+			'saveInto() should not save into the DataObject for the LookupField'
+		);
+	}
+
 	public function testLoadDataFromIgnoreFalseish() {
 		$form = new Form(
 			new Controller(),
