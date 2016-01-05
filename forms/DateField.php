@@ -245,7 +245,7 @@ class DateField extends TextField {
 					$this->valueObj = null;
 				}
 			} else {
-				// Setting in corect locale.
+				// Setting in correct locale.
 				// Caution: Its important to have this check *before* the ISO date fallback,
 				// as some dates are falsely detected as ISO by isDate(), e.g. '03/04/03'
 				// (en_NZ for 3rd of April, definetly not yyyy-MM-dd)
