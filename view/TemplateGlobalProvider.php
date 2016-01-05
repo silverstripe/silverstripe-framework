@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface that is implemented by any classes that want to expose a method that can be called in any 
+ * Interface that is implemented by any classes that want to expose a method that can be called in any
  * scope in a template.
  *
  * Director::AbsoluteBaseURL is an example of this.

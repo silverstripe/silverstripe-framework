@@ -9,16 +9,16 @@
  * of your values.
  * For any statics containing natural language, never use the static directly -
  * always wrap it in a getter.
- * 
+ *
  * Classes must be able to be constructed without mandatory arguments, otherwise
  * this interface will have no effect.
- * 
+ *
  * @package framework
  * @subpackage i18n
  * @uses i18nTextCollector->collectFromEntityProviders()
  */
 interface i18nEntityProvider {
-	
+
 	/**
 	 * Example usage:
 	 * <code>
@@ -28,13 +28,13 @@ interface i18nEntityProvider {
 	 * 	foreach($this->stat('my_static_array) as $key => $value) {
 	 * 		$entities["MyTestClass.my_static_array_{$key}"] = array(
 	 * 			$value,
-	 * 			
+	 *
 	 * 			'My context description'
 	 * 		);
 	 * 	}
 	 * 	return $entities;
 	 * }
-	 * 
+	 *
 	 * public static function my_static_array() {
 	 * 	$t_my_static_array = array();
 	 * 	foreach(self::$my_static_array as $k => $v) {
@@ -44,9 +44,9 @@ interface i18nEntityProvider {
 	 * }
 	 * }
 	 * </code>
-	 * 
+	 *
 	 * Example usage in {@link DataObject->provideI18nEntities()}.
-	 * 
+	 *
 	 * You can ask textcollector to add the provided entity to a different module
 	 * than the class is contained in by adding a 4th argument to the array:
 	 * <code>
@@ -55,7 +55,7 @@ interface i18nEntityProvider {
 	 * 	$entities = array();
 	 * 		$entities["MyOtherModuleClass.MYENTITY"] = array(
 	 * 			$value,
-	 * 			
+	 *
 	 * 			'My context description',
 	 * 			'myothermodule'
 	 * 		);
@@ -63,7 +63,7 @@ interface i18nEntityProvider {
 	 * 	return $entities;
 	 * }
 	 * </code>
-	 * 
+	 *
 	 * @return array All entites in an associative array, with
 	 * entity name as the key, and a numerical array of pseudo-arguments
 	 * for _t() as a value.

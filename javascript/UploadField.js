@@ -21,20 +21,20 @@
 			var firstNewFile = this._files.find('.ss-uploadfield-item').slice(data.files.length*-1).first();
 			var top = '+=' + (firstNewFile.position().top - parseInt(firstNewFile.css('marginTop'), 10) || 0 - parseInt(firstNewFile.css('borderTopWidth'), 10) || 0);
 			firstNewFile.offsetParent().animate({scrollTop: top}, 1000);
-			
-			/* Compute total size of files */		
+
+			/* Compute total size of files */
 			var fSize = 0;
 			for(var i = 0; i < data.files.length; i++){
 				if(typeof data.files[i].size === 'number'){
 					fSize = fSize + data.files[i].size;
-				}				
+				}
 			}
 
 			$('.fileOverview .uploadStatus .details .total').text(data.files.length);
 			if(typeof fSize === 'number' && fSize > 0){
 				fSize = this._formatFileSize(fSize);
 				$('.fileOverview .uploadStatus .details .fileSize').text(fSize);
-			}		
+			}
 
 			//Fixes case where someone uploads a single erroring file
 			if(data.files.length == 1 && data.files[0].error !== null){
@@ -79,7 +79,7 @@
 									.removeClass('ui-state-warning-text');
 								//upload only if the "overwrite" button is clicked
 								$.blueimpUI.fileupload.prototype._onSend.call(that, e, data);
-								
+
 								e.preventDefault(); // Avoid a form submit
 								return false;
 							});
@@ -139,7 +139,7 @@
 			});
 			data.isAdjusted = true;
 			data.files.valid = data.isValidated = valid;
-			
+
 			// Generate new file HTMl, and either append or replace (if replacing
 			// an already uploaded file).
 			data.context = this._renderDownload(files);
@@ -163,13 +163,13 @@
 			Config: null,
 
 			onmatch: function() {
-			
+
 				if(this.is('.readonly,.disabled')) return;
 
 				var fileInput = this.find('.ss-uploadfield-fromcomputer-fileinput');
 				var dropZone = this.find('.ss-uploadfield-dropzone');
 				var config = fileInput.data('config');
-				
+
 				/* Attach classes to dropzone when element can be dropped*/
 				$(document).unbind('dragover');
 				$(document).bind('dragover', function (e) {
@@ -190,20 +190,20 @@
 						dropZone.removeClass('active hover');
 					}, 100);
 				});
-				
+
 				//disable default behaviour if file dropped in the wrong area
-				$(document).bind('drop dragover', function (e){					
-					e.preventDefault(); 
+				$(document).bind('drop dragover', function (e){
+					e.preventDefault();
 				});
 
 				this.setConfig(config);
-				this.fileupload($.extend(true, 
+				this.fileupload($.extend(true,
 					{
 						formData: function(form) {
 							var idVal = $(form).find(':input[name=ID]').val();
 							var data = [{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()}];
 							if(idVal) data.push({name: 'ID', value: idVal});
-							
+
 							return data;
 						},
 						errorMessages: {
@@ -239,8 +239,8 @@
 										data.context.find('.ss-uploadfield-item-progressbarvalue').css('width', value);
 									}
 							}
-					}, 
-					config, 
+					},
+					config,
 					{
 						fileInput: fileInput,
 						dropZone: dropZone,
@@ -255,7 +255,7 @@
 					dropZone.hide().show();
 				}
 
-				
+
 				this._super();
 			},
 			onunmatch: function() {
@@ -265,14 +265,14 @@
 				// Create dialog and load iframe
 				var self = this, config = this.getConfig(), dialogId = 'ss-uploadfield-dialog-' + this.attr('id'), dialog = jQuery('#' + dialogId);
 				if(!dialog.length) dialog = jQuery('<div class="ss-uploadfield-dialog" id="' + dialogId + '" />');
-				
+
 				// If user selected 'Choose another file', we need the ID of the file to replace
 				var iframeUrl = config['urlSelectDialog'];
 				var uploadedFileId = null;
 				if (uploadedFile && uploadedFile.attr('data-fileid') > 0){
 					uploadedFileId = uploadedFile.attr('data-fileid');
 				}
-				
+
 				// Show dialog
 				dialog.ssdialog({iframeUrl: iframeUrl, height: 550});
 
@@ -329,7 +329,7 @@
 		});
 		$('div.ss-upload *').entwine({
 			getUploadField: function() {
-			
+
 				return this.parents('div.ss-upload:first');
 			}
 		});
@@ -363,9 +363,9 @@
 			onclick: function(e) {
 				var field = this.closest('div.ss-upload'),
 					config = field.getConfig('changeDetection'),
-					fileupload = field.data('fileupload'), 
+					fileupload = field.data('fileupload'),
 					item = this.closest('.ss-uploadfield-item'), msg = '';
-				
+
 				if(this.is('.ss-uploadfield-item-delete')) {
 					if(confirm(ss.i18n._t('UploadField.ConfirmDelete'))) {
 						if(config.changeDetection) {
@@ -391,7 +391,7 @@
 						fileupload._trigger('destroy', e, {context: item});
 					}
 				}
-				
+
 				e.preventDefault(); // Avoid a form submit
 				return false;
 			}
@@ -407,7 +407,7 @@
 					$(this).removeClass('opened').find('.toggle-details-icon').removeClass('opened');
 				}else{
 					$('.ss-uploadfield-item .ss-uploadfield-item-edit .toggle-details-icon').each(function(i){
-						if(!$(this).hasClass('opened')){							
+						if(!$(this).hasClass('opened')){
 							$(this).closest('.ss-uploadfield-item-edit').click();
 						}
 					});
@@ -416,7 +416,7 @@
 
 				e.preventDefault(); // Avoid a form submit
 				return false;
-			} 
+			}
 		});
 		$( 'div.ss-upload:not(.disabled):not(.readonly) .ss-uploadfield-item-edit').entwine({
 			onclick: function(e) {
@@ -461,20 +461,20 @@
 			},
 			_prepareIframe: function(iframe, editform, itemInfo) {
 				var disabled;
-				
+
 				// Mark the row as changed if any of its form fields are edited
 				iframe.contents().ready(function() {
 					// Need to use the iframe's own jQuery, as custom event triggers
 					// (e.g. from TreeDropdownField) can't be captured by the parent jQuery object.
 					var iframe_jQuery = iframe.get(0).contentWindow.jQuery;
 					iframe_jQuery(iframe_jQuery.find(':input')).bind('change', function(e){
-						editform.removeClass('edited'); 
-						editform.addClass('edited'); 
+						editform.removeClass('edited');
+						editform.addClass('edited');
 					});
 				});
-				
+
 				if (editform.hasClass('loading')) {
-					// TODO Display loading indication, and register an event to toggle edit form 
+					// TODO Display loading indication, and register an event to toggle edit form
 				} else {
 					if(this.hasClass('ss-uploadfield-item-edit')){
 						disabled=this.siblings();
@@ -483,7 +483,7 @@
 					}
 					editform.parent('.ss-uploadfield-item').removeClass('ui-state-warning');
 					editform.toggleEditForm();
-					
+
 					if (itemInfo.find('.toggle-details-icon').hasClass('opened')) {
 						disabled.addClass('ui-state-disabled');
 						disabled.attr('disabled', 'disabled');
@@ -507,9 +507,9 @@
 
 				/* Set height of body except in IE8. Setting this in IE8 breaks the dropdown */
 				if( ! $.browser.msie && $.browser.version.slice(0,3) != "8.0"){
-					contents.find('body').css({'height': bodyH});	
-				}				
-				
+					contents.find('body').css({'height': bodyH});
+				}
+
 				iframe.height(iframeH);
 				this.animate({height: containerH}, 500);
 			},
@@ -525,17 +525,17 @@
 					text = ss.i18n._t('UploadField.Editing', "Editing ...");
 					this.fitHeight();
 					this.addClass('opened');
-					itemInfo.find('.toggle-details-icon').addClass('opened');			
+					itemInfo.find('.toggle-details-icon').addClass('opened');
 					status.removeClass('ui-state-success-text').removeClass('ui-state-warning-text');
 					iframe.find('#Form_EditForm_action_doEdit').click(function(){
 						itemInfo.find('label .name').text(iframe.find('#Name input').val());
-					});	
+					});
 					if($('div.ss-upload  .ss-uploadfield-files .ss-uploadfield-item-actions .toggle-details-icon:not(.opened)').index() < 0){
 						$('div.ss-upload .ss-uploadfield-item-edit-all').addClass('opened').find('.toggle-details-icon').addClass('opened');
 					}
 
 				} else {
-					this.animate({height: 0}, 500);					
+					this.animate({height: 0}, 500);
 					this.removeClass('opened');
 					itemInfo.find('.toggle-details-icon').removeClass('opened');
 					$('div.ss-upload .ss-uploadfield-item-edit-all').removeClass('opened').find('.toggle-details-icon').removeClass('opened');
@@ -546,16 +546,16 @@
 						if(saved.hasClass('good')){
 							text = ss.i18n._t('UploadField.CHANGESSAVED', 'Changes Saved');
 							this.removeClass('edited').parent('.ss-uploadfield-item').removeClass('ui-state-warning');
-							status.addClass('ui-state-success-text');						
+							status.addClass('ui-state-success-text');
 						}else{
 							text = ss.i18n._t('UploadField.UNSAVEDCHANGES', 'Unsaved Changes');
 							this.parent('.ss-uploadfield-item').addClass('ui-state-warning');
 							status.addClass('ui-state-warning-text');
-						}							
+						}
 					}
 					saved.removeClass('good').hide();
 				}
-				status.attr('title',text).text(text);	
+				status.attr('title',text).text(text);
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-fromfiles').entwine({

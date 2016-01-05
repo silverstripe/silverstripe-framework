@@ -80,7 +80,7 @@ class LookupField extends DropdownField {
 	}
 
 	/**
-	 * Ignore validation as the field is readonly 
+	 * Ignore validation as the field is readonly
 	 *
 	 * @param Validator $validator
 	 * @return bool

@@ -678,7 +678,7 @@ class MemberTest extends FunctionalTest {
 		$newAdminGroup = new Group(array('Title' => 'newadmin'));
 		$newAdminGroup->write();
 		Permission::grant($newAdminGroup->ID, 'ADMIN');
-		
+
 		// Test staff member can't be added to admin groups
 		$this->assertFalse($staffMember->inGroup($newAdminGroup));
 		$staffMember->Groups()->setByIDList(array($newAdminGroup->ID));

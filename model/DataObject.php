@@ -1078,7 +1078,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Public accessor for {@see DataObject::validate()}
-	 * 
+	 *
 	 * @return ValidationResult
 	 */
 	public function doValidate() {
@@ -1606,7 +1606,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		if($filter !== null || $sort !== null || $limit !== null) {
-			Deprecation::notice('4.0', 'The $filter, $sort and $limit parameters for DataObject::getComponents() 
+			Deprecation::notice('4.0', 'The $filter, $sort and $limit parameters for DataObject::getComponents()
 				have been deprecated. Please manipluate the returned list directly.', Deprecation::SCOPE_GLOBAL);
 		}
 
@@ -1694,7 +1694,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$remoteClass = $this->hasManyComponent($component, false);
 		} else {
 			$remoteClass = $this->belongsToComponent($component, false);
-		}		
+		}
 
 		if(empty($remoteClass)) {
 			throw new Exception("Unknown $type component '$component' on class '$this->class'");
@@ -1769,8 +1769,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			= $this->manyManyComponent($componentName);
 
 		if($filter !== null || $sort !== null || $join !== null || $limit !== null) {
-			Deprecation::notice('4.0', 'The $filter, $sort, $join and $limit parameters for 
-				DataObject::getManyManyComponents() have been deprecated. 
+			Deprecation::notice('4.0', 'The $filter, $sort, $join and $limit parameters for
+				DataObject::getManyManyComponents() have been deprecated.
 				Please manipluate the returned list directly.', Deprecation::SCOPE_GLOBAL);
 		}
 
@@ -1785,9 +1785,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$extraFields = $this->manyManyExtraFieldsForComponent($componentName) ?: array();
 		$result = ManyManyList::create($componentClass, $table, $componentField, $parentField, $extraFields);
-		
+
 		if($this->model) $result->setDataModel($this->model);
-		
+
 		$this->extend('updateManyManyComponents', $result);
 
 		// If this is called on a singleton, then we return an 'orphaned relation' that can have the
@@ -2037,7 +2037,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($component) {
 			Deprecation::notice(
 				'4.0',
-				'Please use DataObject::manyManyExtraFieldsForComponent() instead of passing a component name 
+				'Please use DataObject::manyManyExtraFieldsForComponent() instead of passing a component name
 					to manyManyExtraFields()',
 				Deprecation::SCOPE_GLOBAL
 			);
@@ -2071,7 +2071,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 
 			// If we've not already found the relation name from dot notation, we need to find a relation that points
-			// back to this class. As there's no dot-notation, there can only be one relation pointing to this class, 
+			// back to this class. As there's no dot-notation, there can only be one relation pointing to this class,
 			// so it's safe to assume that it's the correct one
 			if(!$relationName) {
 				$candidateManyManys = (array)Config::inst()->get($candidate, 'many_many', Config::UNINHERITED);

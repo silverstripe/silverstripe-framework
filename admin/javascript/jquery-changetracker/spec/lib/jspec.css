@@ -90,7 +90,7 @@ body.jspec {
   margin: 0;
   padding: 0 0 5px 25px;
 }
-#jspec-report tr.even:hover + tr.body, 
+#jspec-report tr.even:hover + tr.body,
 #jspec-report tr.odd:hover + tr.body {
   display: block;
 }
@@ -101,7 +101,7 @@ body.jspec {
   font-weight: normal;
   color: #7B8D9B;
 }
-#jspec-report tr.even:hover, 
+#jspec-report tr.even:hover,
 #jspec-report tr.odd:hover {
   text-shadow: 1px 1px 1px #fff;
   background: #F2F5F7;
@@ -130,7 +130,7 @@ body.jspec {
   color: #1a1a1a;
 }
 #jspec-report tr.description:first-child td {
-  border-top: none;  
+  border-top: none;
 }
 #jspec-report .assertion {
   display: block;

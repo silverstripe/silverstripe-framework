@@ -6,7 +6,7 @@
 			</a>
 			<span><% if $SiteConfig %>$SiteConfig.Title<% else %>$ApplicationName<% end_if %></span>
 		</div>
-	
+
 		<div class="cms-login-status">
 			<a href="$LogoutURL" class="logout-link font-icon-logout" title="<%t LeftAndMain_Menu_ss.LOGOUT 'Log out' %>"></a>
 			<% with $CurrentMember %>
@@ -19,7 +19,7 @@
 			<% end_with %>
 		</div>
 	</div>
-		
+
 	<div class="cms-panel-content center">
 		<ul class="cms-menu-list">
 		<% loop $MainMenu %>
@@ -32,7 +32,7 @@
 		<% end_loop %>
 		</ul>
 	</div>
-		
+
 	<div class="cms-panel-toggle south">
 		<button class="sticky-toggle" type="button" title="Sticky nav">Sticky nav</button>
 		<span class="sticky-status-indicator">auto</span>

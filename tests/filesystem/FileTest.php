@@ -252,7 +252,7 @@ class FileTest extends SapphireTest {
 
 		$file = $this->objFromFixture('File', 'gifupper');
 		$this->assertEquals("GIF image - good for diagrams", $file->FileType);
-	
+
 		/* Only a few file types are given special descriptions; the rest are unknown */
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals("unknown", $file->FileType);
@@ -412,7 +412,7 @@ class FileTest extends SapphireTest {
 		$this->objFromFixture('Member', 'admin')->logIn();
 		$this->assertTrue($file->canEdit(), "Admins can edit files");
 	}
-		
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public function setUp() {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Matches on rows where the field is not equal to the given value.
- * 
+ *
  * @deprecated 3.1 Use ExactMatchFilter:not instead
  * @package framework
  * @subpackage search

@@ -14,7 +14,7 @@ DevelopmentAdmin:
         'tests/all': 'Run all tests'
     jstests:
       controller: 'JSTestRunner'
-      links: 
+      links:
         jstests: 'See a list of JavaScript tests to run'
         'jstests/all': 'Run all JavaScript tests'
     tasks:

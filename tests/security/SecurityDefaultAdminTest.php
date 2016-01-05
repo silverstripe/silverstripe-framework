@@ -5,7 +5,7 @@ class SecurityDefaultAdminTest extends SapphireTest {
 
 	protected $defaultUsername = null;
 	protected $defaultPassword = null;
-	
+
 	public function setUp() {
 		parent::setUp();
 
@@ -26,7 +26,7 @@ class SecurityDefaultAdminTest extends SapphireTest {
 		Permission::flush_permission_cache();
 		parent::tearDown();
 	}
-	
+
 	public function testCheckDefaultAdmin() {
 		$this->assertTrue(Security::has_default_admin());
 		$this->assertTrue(
@@ -75,9 +75,9 @@ class SecurityDefaultAdminTest extends SapphireTest {
 	public function testDefaultAdmin() {
 		$adminMembers = Permission::get_members_by_permission('ADMIN');
 		$this->assertEquals(0, $adminMembers->count());
-		
+
 		$admin = Member::default_admin();
-		
+
 		$this->assertInstanceOf('Member', $admin);
 		$this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
 		$this->assertEquals($admin->Email, Security::default_admin_username());

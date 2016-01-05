@@ -229,7 +229,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 			),
 			$person->Categories()->getExtraData('', $category->ID)
 		);
-		
+
 		// Test update of value with falsey value
 		$response = $this->post(
 			$editformurl,

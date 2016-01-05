@@ -364,28 +364,28 @@ XML
 		$data = 'Wëīrð characters ☺ such as ¤Ø¶÷╬';
 		// This requires this test file to have UTF-8 character encoding
 		$this->assertEquals(
-			$data, 
+			$data,
 			Convert::base64url_decode(Convert::base64url_encode($data))
 		);
-		
+
 		$data = 654.423;
 		$this->assertEquals(
 			$data,
 			Convert::base64url_decode(Convert::base64url_encode($data))
 		);
-		
+
 		$data = true;
 		$this->assertEquals(
 			$data,
 			Convert::base64url_decode(Convert::base64url_encode($data))
 		);
-		
+
 		$data = array('simple','array','¤Ø¶÷╬');
 		$this->assertEquals(
 			$data,
 			Convert::base64url_decode(Convert::base64url_encode($data))
 		);
-		
+
 		$data = array(
 			'a'  => 'associative',
 			4    => 'array',

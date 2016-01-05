@@ -9,7 +9,7 @@ Image:
     imageWithoutTitle:
         Filename: assets/ImageTest/test_image.png
         Parent: =>Folder.folder1
-    imageWithoutTitleContainingDots: 
+    imageWithoutTitleContainingDots:
         Filename: assets/ImageTest/test.image.with.dots.png
         Parent: =>Folder.folder1
     imageWithMetacharacters:

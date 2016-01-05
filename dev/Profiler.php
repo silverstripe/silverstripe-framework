@@ -9,9 +9,9 @@
 
 /**
  * Execution time profiler.
- * 
+ *
  * @deprecated 4.0 The Profiler class is deprecated, use third party tools like XHProf instead
- * 
+ *
  * @package framework
  * @subpackage misc
  */
@@ -26,7 +26,7 @@ class Profiler {
 	var $trace;
 	var $count;
 	var $running;
-	
+
 	protected static $inst;
 
 	/**
@@ -51,29 +51,29 @@ class Profiler {
 	}
 
 	// Public Methods
-	
+
 	public static function init() {
 		Deprecation::notice('4.0', 'The Profiler class is deprecated, use third party tools like XHProf instead');
 		if(!self::$inst) self::$inst = new Profiler(true,true);
 	}
-		
+
 	public static function mark($name, $level2 = "", $desc = "") {
 		if($level2 && $_GET['debug_profile'] > 1) $name .= " $level2";
-		
+
 		if(!self::$inst) self::$inst = new Profiler(true,true);
-		
+
 		self::$inst->startTimer($name, $desc);
 	}
 	public static function unmark($name, $level2 = "", $desc = "") {
 		if($level2 && $_GET['debug_profile'] > 1) $name .= " $level2";
-		
+
 		if(!self::$inst) self::$inst = new Profiler(true,true);
-		
+
 		self::$inst->stopTimer($name, $desc);
 	}
 	public static function show($showTrace = false) {
 		if(!self::$inst) self::$inst = new Profiler(true,true);
-		
+
 		echo "<div style=\"position: absolute; z-index: 100000; top: 20px; left: 20px; background-color: white;"
 			. " padding: 20px; border: 1px #AAA solid; height: 80%; overflow: auto;\">";
 		echo "<p><a href=\"#\" onclick=\"this.parentNode.parentNode.style.display = 'none'; return false;\">"

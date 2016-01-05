@@ -200,7 +200,7 @@ class DataListTest extends SapphireTest {
 
 	public function testInnerJoinParameterised() {
 		$db = DB::get_conn();
-		
+
 		$list = DataObjectTest_TeamComment::get();
 		$list = $list->innerJoin(
 			'DataObjectTest_Team',

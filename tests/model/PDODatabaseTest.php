@@ -5,7 +5,7 @@
  */
 
 class PDODatabaseTest extends SapphireTest {
-	
+
 	protected static $fixture_file = 'MySQLDatabaseTest.yml';
 
 	protected $extraDataObjects = array(

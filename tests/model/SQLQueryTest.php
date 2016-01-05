@@ -13,14 +13,14 @@ class SQLQueryTest extends SapphireTest {
 		'SQLQueryTestBase',
 		'SQLQueryTestChild'
 	);
-	
+
 	protected $oldDeprecation = null;
-	
+
 	public function setUp() {
 		parent::setUp();
 		$this->oldDeprecation = Deprecation::dump_settings();
 	}
-	
+
 	public function tearDown() {
 		Deprecation::restore_settings($this->oldDeprecation);
 		parent::tearDown();
@@ -693,14 +693,14 @@ class SQLQueryTest extends SapphireTest {
 		$this->assertEquals(array('%MyName%', '2012-08-08 12:00'), $parameters);
 		$query->execute();
 	}
-	
+
 	/**
 	 * Test deprecation of SQLQuery::getWhere working appropriately
 	 */
 	public function testDeprecatedGetWhere() {
 		// Temporarily disable deprecation
 		Deprecation::notification_version(null);
-		
+
 		$query = new SQLQuery();
 		$query->setSelect(array('"SQLQueryTest_DO"."Name"'));
 		$query->setFrom('"SQLQueryTest_DO"');
@@ -711,7 +711,7 @@ class SQLQueryTest extends SapphireTest {
 		$query->addWhere(array(
 			'"SQLQueryTest_DO"."Meta" IN (?, \'Who?\', ?)' => array('Left', 'Right')
 		));
-		
+
 		$expectedSQL = <<<EOS
 SELECT "SQLQueryTest_DO"."Name"
  FROM "SQLQueryTest_DO"
@@ -721,19 +721,19 @@ SELECT "SQLQueryTest_DO"."Name"
 EOS
 			;
 		$expectedParameters = array('2012-08-08 12:00', 'Left', 'Right');
-		
-		
+
+
 		// Check sql evaluation of this query maintains the parameters
 		$sql = $query->sql($parameters);
 		$this->assertSQLEquals($expectedSQL, $sql);
 		$this->assertEquals($expectedParameters, $parameters);
-		
+
 		// Check that ->toAppropriateExpression()->setWhere doesn't modify the query
 		$query->setWhere($query->toAppropriateExpression()->getWhere());
 		$sql = $query->sql($parameters);
 		$this->assertSQLEquals($expectedSQL, $sql);
 		$this->assertEquals($expectedParameters, $parameters);
-		
+
 		// Check that getWhere are all flattened queries
 		$expectedFlattened = array(
 			'"SQLQueryTest_DO"."Date" > \'2012-08-08 12:00\'',
@@ -742,14 +742,14 @@ EOS
 		);
 		$this->assertEquals($expectedFlattened, $query->getWhere());
 	}
-	
+
 	/**
 	 * Test deprecation of SQLQuery::setDelete/getDelete
 	 */
 	public function testDeprecatedSetDelete() {
 		// Temporarily disable deprecation
 		Deprecation::notification_version(null);
-		
+
 		$query = new SQLQuery();
 		$query->setSelect(array('"SQLQueryTest_DO"."Name"'));
 		$query->setFrom('"SQLQueryTest_DO"');
@@ -764,7 +764,7 @@ EOS
 			$query->sql($parameters)
 		);
 		$this->assertEquals(array('Andrew'), $parameters);
-		
+
 		// Check setDelete works
 		$query->setDelete(true);
 	$this->assertSQLEquals(<<<EOS
@@ -775,7 +775,7 @@ EOS
 			$query->sql($parameters)
 		);
 		$this->assertEquals(array('Andrew'), $parameters);
-		
+
 		// Check that setDelete back to false restores the state
 		$query->setDelete(false);
 		$this->assertSQLEquals(<<<EOS

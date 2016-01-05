@@ -486,7 +486,7 @@ class InjectorTest extends SapphireTest {
 	}
 
 	public function testInheritedConfig() {
-		
+
 		// Test top-down caching of config inheritance
 		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
 		Config::inst()->update('Injector', 'MyParentClass', array('properties' => array('one' => 'the one')));
@@ -496,27 +496,27 @@ class InjectorTest extends SapphireTest {
 
 		$obj = $injector->get('MyChildClass');
 		$this->assertEquals($obj->one, 'the two');
-		
+
 		$obj = $injector->get('MyGrandChildClass');
 		$this->assertEquals($obj->one, 'the two');
-		
+
 		$obj = $injector->get('MyGreatGrandChildClass');
 		$this->assertEquals($obj->one, 'the two');
-		
+
 		// Test bottom-up caching of config inheritance
 		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
 		Config::inst()->update('Injector', 'MyParentClass', array('properties' => array('one' => 'the three')));
 		Config::inst()->update('Injector', 'MyChildClass', array('properties' => array('one' => 'the four')));
-		
+
 		$obj = $injector->get('MyGreatGrandChildClass');
 		$this->assertEquals($obj->one, 'the four');
-		
+
 		$obj = $injector->get('MyGrandChildClass');
 		$this->assertEquals($obj->one, 'the four');
-		
+
 		$obj = $injector->get('MyChildClass');
 		$this->assertEquals($obj->one, 'the four');
-		
+
 		$obj = $injector->get('MyParentClass');
 		$this->assertEquals($obj->one, 'the three');
 	}
@@ -680,16 +680,16 @@ class InjectorTest extends SapphireTest {
 }
 
 class InjectorTestConfigLocator extends SilverStripeServiceConfigurationLocator implements TestOnly {
-	
+
 	protected function configFor($name) {
-		
+
 		switch($name) {
 			case 'TestObject':
 				return $this->configs[$name] = array(
 					'class' => 'ConstructableObject',
 					'constructor' => array('%$OtherTestObject')
 				);
-				
+
 			case 'ConfigConstructor':
 				return $this->configs[$name] = array(
 					'class' => 'ConstructableObject',
@@ -766,10 +766,10 @@ class MyChildClass extends MyParentClass implements TestOnly {
 
 }
 class MyGrandChildClass extends MyChildClass implements TestOnly {
-	
+
 }
 class MyGreatGrandChildClass extends MyGrandChildClass implements TestOnly {
-	
+
 }
 
 class DummyRequirements implements TestOnly {

@@ -5,7 +5,7 @@
 	/* Styling the background, controls sit on */
 	&.cms-preview-controls {
 		z-index: 1;
-		background: $color-widget-bg;	
+		background: $color-widget-bg;
 		height: 30px; /* should be set in js Layout to match page actions */
 		padding: $grid-y*1.5 $grid-y*1.5;
 	}
@@ -19,7 +19,7 @@
 			width: 20px;
 			overflow: hidden;
 			color: $color-text-dark;
-		} 
+		}
 	}
 
 	.cms-navigator{
@@ -36,7 +36,7 @@
 		padding: 0;
 		height: 28px;
 
-		a.chzn-single {						
+		a.chzn-single {
 			width: 16px;
 			padding: 6px;
 			height: 16px;
@@ -80,17 +80,17 @@
 					background: $color-widget-bg;
 				}
 			}
-		}			
+		}
 		.chzn-container {
 			width: auto !important; //over-ride chosen inline styles for preview selector
-			
+
 			&.chzn-with-rise {
-				.chzn-drop {	
+				.chzn-drop {
 					padding: 0;
 					border-bottom: 1px solid #aaa;
 					margin-top: -5px;
 					width: auto !important; //over-ride chosen inline width (doesn't take image into account)
-					
+
 					.chzn-search {
 						display: none;
 					}
@@ -143,7 +143,7 @@
 							}
 
 							/* Description styling */
-							span { 
+							span {
 								display:block;
 								color: lighten($color-text-dark, 30%);
 								font-size:0.85em;
@@ -153,7 +153,7 @@
 							.icon-view {
 								margin-right: 4px;
 							}
-							
+
 						}
 
 						.disabled-tooltip {
@@ -195,10 +195,10 @@
 							&:hover::before {
 								display: block;
 							}
-						}		
+						}
 					}
 				}
-			}			
+			}
 		}
 		.chzn-drop ul.chzn-results li.result-selected {
 			background: darken($color-widget-bg, 2%);
@@ -223,9 +223,9 @@
 				&::before {
 					color: $color-text-disabled;
 				}
-			} 
-		}	
-	} 
+			}
+		}
+	}
 
 	.cms-preview-states{
 		float: right;
@@ -264,14 +264,14 @@
 		font-size: 22px;
 		font-weight: bold;
 		height: 82px;
-		margin-top: -50px; 	
+		margin-top: -50px;
 		margin-left: -150px;	/* half of width */
 		position: absolute;
 		text-align: center;
 		text-shadow: 0 1px 0 #fff;
 		top: 50%;
 		left: 50%;
-		width: 300px;			
+		width: 300px;
 		span {
 			background: sprite($sprites64, preview) no-repeat;
 			display: block;
@@ -288,7 +288,7 @@
 		.preview-device-outer {
 			height: 100%;
 			width: 100%;
-			.preview-device-inner {	
+			.preview-device-inner {
 				@include box-sizing('border-box');
 				width: 100%;
 				height:100%;
@@ -309,13 +309,13 @@
 				background: lighten(#D2DBE0, 1%);
 				border: 1px solid transparent;
 				border-left:1px solid darken(#D2DBE0, 1%);
-				padding: 0 16px 16px;				
-				.preview-device-inner {					
+				padding: 0 16px 16px;
+				.preview-device-inner {
 					border-top:2px solid lighten(#D2DBE0,5%);
 					border-right: 1px solid transparent;
 					border-bottom:1px solid lighten(#D2DBE0,5%);
-					border-left:1px solid darken(#D2DBE0, 5%);					
-				}					
+					border-left:1px solid darken(#D2DBE0, 5%);
+				}
 			}
 		}
 	}
@@ -326,23 +326,23 @@
 			@include transition(all 0.3s ease-in 1s);
 			margin: 20px auto 20px;
 			overflow:hidden;
-			padding-top: 16px;			
+			padding-top: 16px;
 			.preview-device-inner {
 				@include rotate(0deg);
-				@include transition(all 0.3s ease-out 1s);				
+				@include transition(all 0.3s ease-out 1s);
 			}
-			&.rotate {				
-				@include rotate(-90deg); 
+			&.rotate {
+				@include rotate(-90deg);
 				@include transition(all 0.3s ease-in 1s);
 				height: 583px;
 				margin: 0px auto 0px;
-				width: 320px; 				
+				width: 320px;
 				.preview-device-inner {
-					@include apply-origin(160px 160px, false);	
+					@include apply-origin(160px 160px, false);
 					@include rotate(90deg);
-					@include transition(all 0.3s ease-out 1s); 
-					height: 320px; 
-					width: 583px;	
+					@include transition(all 0.3s ease-out 1s);
+					height: 320px;
+					width: 583px;
 				}
 			}
 		}
@@ -351,26 +351,26 @@
 		@include transition(all 0.3s ease-out 1s);
 		margin: 12% auto;
 		padding-top: 16px;
-		.preview-device-inner {			
+		.preview-device-inner {
 			@include transition(all 0.3s ease-out 1s);
 		}
 	}
-	&.tablet .preview-scroll .preview-device-outer { 
-		@include transition(all 0.3s ease-out 1s);			
+	&.tablet .preview-scroll .preview-device-outer {
+		@include transition(all 0.3s ease-out 1s);
 		margin: 0 auto;
-		.preview-device-inner {			
+		.preview-device-inner {
 			@include transition(all 0.3s ease-out 1s);
 		}
 	}
 	&.tabletLandscape .preview-scroll .preview-device-outer {
-		@include transition(all 0.3s ease-out 1s);	
+		@include transition(all 0.3s ease-out 1s);
 		margin: 0 auto;
-		.preview-device-inner {			
+		.preview-device-inner {
 			@include transition(all 0.3s ease-out 1s);
 		}
 	}
 	&.desktop .preview-scroll .preview-device-outer {
-		@include transition(all 0.3s ease-out 1s);		
+		@include transition(all 0.3s ease-out 1s);
 		margin: 0 auto;
 	}
 }

@@ -67,7 +67,7 @@ class ParameterConfirmationToken {
 		if(!$token) {
 			return false;
 		}
-		
+
 		$file = $this->pathForToken($token);
 		$content = null;
 
@@ -87,7 +87,7 @@ class ParameterConfirmationToken {
 	public function __construct($parameterName) {
 		// Store the parameter name
 		$this->parameterName = $parameterName;
-		
+
 		// Store the parameter value
 		$this->parameter = isset($_GET[$parameterName]) ? $_GET[$parameterName] : null;
 
@@ -110,7 +110,7 @@ class ParameterConfirmationToken {
 	/**
 	 * Is the parameter requested?
 	 * ?parameter and ?parameter=1 are both considered requested
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function parameterProvided() {
@@ -120,7 +120,7 @@ class ParameterConfirmationToken {
 	/**
 	 * Is the necessary token provided for this parameter?
 	 * A value must be provided for the token
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function tokenProvided() {

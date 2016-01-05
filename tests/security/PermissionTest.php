@@ -47,7 +47,7 @@ class PermissionTest extends SapphireTest {
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 	}
-	
+
 	public function testPermissionAreInheritedFromOneRole() {
 		$member = $this->objFromFixture('Member', 'author');
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));

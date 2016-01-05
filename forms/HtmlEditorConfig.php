@@ -46,7 +46,7 @@ class HtmlEditorConfig {
 	public static function get_active_identifier() {
 		$identifier = self::$current ? self::$current : 'default';
 		return $identifier;
-	}	
+	}
 	/**
 	 * Get the currently active configuration object
 	 * @return HtmlEditorConfig - the active configuration object
@@ -335,7 +335,7 @@ class HtmlEditorConfig {
 
 			// save config plugins settings
 			$settings['plugins'] = implode(',', $configPlugins);
-			
+
 			// buttons
 			foreach ($config->buttons as $i=>$buttons) {
 				$settings['theme_advanced_buttons'.$i] = implode(',', $buttons);

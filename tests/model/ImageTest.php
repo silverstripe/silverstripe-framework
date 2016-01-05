@@ -243,7 +243,7 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($fitMaxDn->isSize(100, 100));
 		$fitMaxUp = $image->FitMax(500, 400);
 		$this->assertTrue($fitMaxUp->isSize(300, 300));
-		
+
 		//Test ScaleMax
 		$scaleMaxWDn = $image->ScaleMaxWidth(200);
 		$this->assertTrue($scaleMaxWDn->isSize(200, 200));
@@ -259,7 +259,7 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($cropMaxDn->isSize(200, 100));
 		$cropMaxUp = $image->FillMax(400, 200);
 		$this->assertTrue($cropMaxUp->isSize(300, 150));
-		
+
 		// Test Clip
 		$clipWDn = $image->CropWidth(200);
 		$this->assertTrue($clipWDn->isSize(200, 300));
@@ -341,7 +341,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	/**
-	 * Test that propertes from the source Image are inherited by resampled images 
+	 * Test that propertes from the source Image are inherited by resampled images
 	 */
 	public function testPropertyInheritance() {
 		$testString = 'This is a test';
@@ -425,8 +425,8 @@ class ImageTest extends SapphireTest {
 
 	/**
 	 * Tests the static function Image::strip_resampled_prefix, to ensure that
-	 * the original filename can be extracted from the path of transformed images, 
-	 * both in current and previous formats 
+	 * the original filename can be extracted from the path of transformed images,
+	 * both in current and previous formats
 	 */
 	public function testStripResampledPrefix() {
 		$orig_image = $this->objFromFixture('Image', 'imageWithoutTitleContainingDots');

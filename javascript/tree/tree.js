@@ -1,12 +1,12 @@
 /*
  * Content-separated javascript tree widget
- * 
+ *
  * Usage:
  *     behaveAs(someUL, Tree)
  *  OR behaveAs(someUL, DraggableTree)
  *
  * Extended by Steven J. DeRose, deroses@mail.nih.gov, sderose@acm.org.
- * 
+ *
  * INPUT REQUIREMENTS:
  *     Put class="tree" on topmost UL(s).
  *     Can put class="closed" on LIs to have them collapsed on startup.
@@ -23,7 +23,7 @@
  *             span class="c"               <=== for spacing and lines
  *                a href="..."              <=== original pre-UL stuff (e.g., a)
  *       ul...
- * 
+ *
  */
 
 Tree = Class.create();
@@ -36,15 +36,15 @@ Tree.prototype = {
 	initialize: function(options) {
 		this.isDraggable = false;
 		var i,li;
-	
+
 		this.options = options ? options : {};
 		if(!this.options.tree) this.options.tree = this;
-	
+
 		this.tree = this.options.tree;
-		
+
 		// Set up observer
 		if(this == this.tree) Observable.applyTo(this);
-	
+
 		// Find all LIs to process
 		// Don't let it re-do a node it's already done.
 		for(i=0;i<this.childNodes.length;i++) {
@@ -54,21 +54,21 @@ Tree.prototype = {
 			this.childNodes[i].childNodes[0].attributes["class"] &&
 			this.childNodes[i].childNodes[0].attributes["class"] == "a")) {
 				li = this.childNodes[i];
-				
+
 				this.castAsTreeNode(li);
-				
+
 				// If we've added a DIV to this node, then increment i;
 				while(this.childNodes[i].tagName.toLowerCase() != "li") i++;
 			}
 		}
-	
+
 		// Not sure what following line is really doing for us....
 		this.className = this.className.replace(/ ?unformatted ?/, ' ');
-		
+
 		if(li) {
 			li.addNodeClass('last');
 			//li.addNodeClass('closed');
-				
+
 			if(this.parentNode.tagName.toLowerCase() == "li") {
 				this.treeNode = this.parentNode;
 			}
@@ -86,7 +86,7 @@ Tree.prototype = {
 	},
 
 	/**
-	 * Convert the given <li> tag into a suitable tree node	
+	 * Convert the given <li> tag into a suitable tree node
 	 */
 	castAsTreeNode: function(li) {
 		behaveAs(li, TreeNode, this.options);
@@ -100,7 +100,7 @@ Tree.prototype = {
 		if(el.treeNode.id.match(/([^-]+)-(.+)$/)) return RegExp.$1;
 		else return el.treeNode.id;
 	},
-	
+
 	childTreeNodes: function() {
 		var i,item, children = [];
 		for(i=0;item=this.childNodes[i];i++) {
@@ -111,7 +111,7 @@ Tree.prototype = {
 	hasChildren: function() {
 		return this.childTreeNodes().length > 0;
 	},
-	
+
 	/**
 	 * Turn a normal tree into a draggable one.
 	 */
@@ -137,7 +137,7 @@ Tree.prototype = {
 			DraggableTree.prototype.setUpDragability.apply(item);
 		}
 	},
-	
+
 	/**
 	 * Add the given child node to this tree node.
 	 * If 'before' is specified, then it will be inserted before that.
@@ -153,11 +153,11 @@ Tree.prototype = {
 		}
 		var lastNode, i, holder = this;
 		if(lastNode = this.lastTreeNode()) lastNode.removeNodeClass('last');
-		
+
 		// Do the actual moving
 		if(before) {
 			child.removeNodeClass('last');
-			
+
 			if(holder != before.parentNode) {
 				throw("TreeNode.appendTreeNode: 'before' not contained within the holder");
 				holder.appendChild(child);
@@ -167,20 +167,20 @@ Tree.prototype = {
 		} else {
 			holder.appendChild(child);
 		}
-		
+
 		if(this.parentNode && this.parentNode.fixDragHelperDivs) this.parentNode.fixDragHelperDivs();
 		if(oldParent && oldParent.fixDragHelperDivs) oldParent.fixDragHelperDivs();
-		
+
 		// Update the helper classes
 		if(this.parentNode && this.parentNode.tagName.toLowerCase() == 'li') {
 			if(this.parentNode.className.indexOf('closed') == -1) this.parentNode.addNodeClass('children');
 			this.lastTreeNode().addNodeClass('last');
 		}
-		
+
 		// Update the helper variables
 		if(this.parentNode.tagName.toLowerCase() == 'li') child.parentTreeNode = this.parentNode;
 		else child.parentTreeNode = null;
-		
+
 		if(this.isDraggable) {
 			for(x in DraggableTreeNode.prototype) child[x] = DraggableTreeNode.prototype[x];
 			DraggableTreeNode.prototype.setUpDragability.apply(child);
@@ -193,7 +193,7 @@ Tree.prototype = {
 			if(holder.childNodes[i].tagName && holder.childNodes[i].tagName.toLowerCase() == 'li') return holder.childNodes[i];
 		}
 	},
-	
+
 	/**
 	 * Remove the given child node from this tree node.
 	 */
@@ -201,34 +201,34 @@ Tree.prototype = {
 		// Remove the child
 		var holder = this;
 		try { holder.removeChild(child); } catch(er) { }
-		
+
 		// Look for remaining children
 		var i, hasChildren = false;
 		for(i=0;i<holder.childNodes.length;i++) {
 			if(holder.childNodes[i].tagName && holder.childNodes[i].tagName.toLowerCase() == "li") {
-				hasChildren = true; 
-				break; 
+				hasChildren = true;
+				break;
 			}
 		}
 
 		// Update the helper classes accordingly
 		if(!hasChildren) this.removeNodeClass('children');
 		else this.lastTreeNode().addNodeClass('last');
-		
+
 		// Update the helper variables
 		if(child.parentTreeNode == this.parentNode) {
 			child.parentTreeNode = null;
 		}
 	},
-	
+
 	open: function() {
-		
+
 	},
-	
+
 	expose: function() {
-	
+
 	},
-	
+
 	addNodeClass : function(className) {
 		if( this.parentNode.tagName.toLowerCase() == 'li' )
 			this.parentNode.addNodeClass(className);
@@ -245,42 +245,42 @@ TreeNode.prototype = {
 		var spanA, spanB, spanC;
 		var startingPoint, stoppingPoint, childUL;
 		var j;
-		
+
 		// Basic hook-ups
 		var li = this;
 		this.options = options ? options : {};
-		
+
 		this.tree = this.options.tree;
-		
+
 		if(!this.ajaxExpansion && this.options.ajaxExpansion)
 			this.ajaxExpansion = this.options.ajaxExpansion;
 		if(this.options.getIdx)
 			this.getIdx = this.options.getIdx;
-		
+
 		// Get this.recordID from the last "-" separated chunk of the id HTML attribute
 		// eg: <li id="treenode-6"> would give a recordID of 6
 		if(this.id && this.id.match(/([^-]+)-(.+)$/))
 			this.recordID = RegExp.$1;
-		
+
 		// Create our extra spans
 		spanA = document.createElement('span');
 		spanB = document.createElement('span');
 		spanC = document.createElement('span');
 		spanA.appendChild(spanB);
-		spanB.appendChild(spanC);	
+		spanB.appendChild(spanC);
 		spanA.className = 'a ' + li.className.replace('closed','spanClosed');
 		spanB.className = 'b';
 		spanB.onclick = TreeNode_bSpan_onclick;
 		spanC.className = 'c';
-		
+
 		this.castAsSpanA(spanA);
-		
+
 		// Add +/- icon to select node that has children
 		if (li.hasChildren() && li.className.indexOf('current') > -1) {
 			li.className = li.className + ' children';
 			spanA.className = spanA.className + ' children';
 		}
-		
+
 		// Find the UL within the LI, if it exists
 		stoppingPoint = li.childNodes.length;
 		startingPoint = 0;
@@ -293,25 +293,25 @@ TreeNode.prototype = {
 				continue;
 			}
 			*/
-	
+
 			if(li.childNodes[j].tagName && li.childNodes[j].tagName.toLowerCase() == 'ul') {
 				childUL = li.childNodes[j];
 				stoppingPoint = j;
-				break;					
+				break;
 			}
 		}
-		
+
 		// Move all the nodes up until that point into spanC
 		for(j=startingPoint;j<stoppingPoint;j++) {
 			/* Use [startingPoint] every time, because the appentChild
 				removes the node, so it then points to the next one. */
 			spanC.appendChild(li.childNodes[startingPoint]);
 		}
-		
+
 		// Insert the outermost extra span into the tree
 		if(li.childNodes.length > startingPoint) li.insertBefore(spanA, li.childNodes[startingPoint]);
 		else li.appendChild(spanA);
-	
+
 		// Create appropriate node references;
 		if(li.parentNode && li.parentNode.parentNode && li.parentNode.parentNode.tagName.toLowerCase() == 'li') {
 			li.parentTreeNode = li.parentNode.parentNode;
@@ -324,15 +324,15 @@ TreeNode.prototype = {
 		if(aTag) {
 			aTag.treeNode = li;
 			li.aTag = aTag;
-			
+
 		} else {
 			throw("Tree creation: A tree needs <a> tags inside the <li>s to work properly.");
 		}
-		
+
 
 		aTag.onclick = TreeNode_aTag_onclick.bindAsEventListener(aTag);
-		
-		
+
+
 		// Process the children
 		if(childUL != null) {
 			if(this.castAsTree(childUL)) { /* ***** RECURSE ***** */
@@ -343,24 +343,24 @@ TreeNode.prototype = {
 		} else {
 			this.removeNodeClass('closed');
 		}
-		
+
 		this.setIconByClass();
 	},
 
 	destroy: function() {
 		// Debug.show(this);
-		
+
 		this.tree = null;
 		this.treeNode = null;
 		this.parentTreeNode = null;
 
 		if(this.options) this.options.tree = null;
 		this.options = null;
-		
+
 		if(this.aTag) {
 			this.aTag.treeNode = null;
 			this.aTag.onclick = null;
-		}			
+		}
 		if(this.aSpan) {
 			this.aSpan.treeNode = null;
 			this.aSpan.onmouseover = null;
@@ -371,13 +371,13 @@ TreeNode.prototype = {
 			this.bSpan.onclick = null;
 		}
 		if(this.cSpan) this.cSpan.treeNode = null;
-		
+
 		this.aSpan = null;
 		this.bSpan = null;
 		this.cSpan = null;
 		this.aTag = null;
 	},
-	
+
 	/**
 	 * Cast the given span as the <span class="a"> item for this tree.
 	 */
@@ -391,7 +391,7 @@ TreeNode.prototype = {
 	castAsTree: function(childUL) {
 		return behaveAs(childUL, Tree, this.options);
 	},
-	
+
 	/**
 	 * Triggered from clicks on spans of class b, the +/- buttons.
 	 * Closed is represented by adding class close to the LI, and
@@ -405,7 +405,7 @@ TreeNode.prototype = {
 			this.treeNode.anchorWasClicked = false;
 			return;
 		}
-		
+
 		/* Note: It appears the 'force' parameter is no longer used. Here is old code that used it:
 		if( force == "open"){
 			treeOpen( topSpan, el )
@@ -419,13 +419,13 @@ TreeNode.prototype = {
 			if(this.className.match(/(^| )closed($| )/) || this.className.match(/(^| )unexpanded($| )/)) this.open();
 			else this.close();
 		}
-	},	
-	
+	},
+
 	open : function () {
 		// Normal tree node
 		if(Element.hasClassName(this, 'unexpanded') && !this.hasChildren()) {
 			if(this.ajaxExpansion) this.ajaxExpansion();
-		} 
+		}
 
 		if(!this.className.match(/(^| )closed($| )/)) return;
 
@@ -445,7 +445,7 @@ TreeNode.prototype = {
 		if(typeof _TREE_ICONS == 'undefined') return;
 		var classes = this.className.split(/\s+/);
 		var obj = this;
-		
+
 		classes.each(function(className) {
 			var className = className.replace(/class-/, '');
 			if(_TREE_ICONS[className]) {
@@ -453,14 +453,14 @@ TreeNode.prototype = {
 				obj.openFolderIcon = _TREE_ICONS[className].openFolderIcon;
 				obj.closedFolderIcon = _TREE_ICONS[className].closedFolderIcon;
 				throw $break;
-			
+
 			} else if(className == "Page") {
 				obj.fileIcon = null;
 				obj.openFolderIcon = null;
 				obj.closedFolderIcon = null;
 			}
 		});
-		
+
 		this.updateIcon();
 	},
 	updateIcon: function() {
@@ -470,7 +470,7 @@ TreeNode.prototype = {
 
 		} else if(this.openFolderIcon && this.className.indexOf('children') != -1) {
 			icon = this.openFolderIcon;
-			
+
 		} else if(this.fileIcon) {
 			icon = this.fileIcon;
 		}
@@ -485,10 +485,10 @@ TreeNode.prototype = {
 	appendTreeNode : function(child, before) {
 		this.treeNodeHolder().appendTreeNode(child, before);
 	},
-	
+
 	treeNodeHolder : function(performCast) {
 		if(performCast == null) performCast = true;
-		
+
 		var uls = this.getElementsByTagName('ul');
 		if(uls.length > 0) return uls[0];
 		else {
@@ -508,7 +508,7 @@ TreeNode.prototype = {
 		}
 		return false;
 	},
-	
+
 	/**
 	 * Remove the given child node from this tree node.
 	 */
@@ -516,20 +516,20 @@ TreeNode.prototype = {
 		// Remove the child
 		var holder = this.treeNodeHolder();
 		try { holder.removeChild(child); } catch(er) { }
-		
+
 		// Look for remaining children
 		var i, hasChildren = false;
 		for(i=0;i<holder.childNodes.length;i++) {
 			if(holder.childNodes[i].tagName && holder.childNodes[i].tagName.toLowerCase() == "li") {
-				hasChildren = true; 
-				break; 
+				hasChildren = true;
+				break;
 			}
 		}
 
 		// Update the helper classes accordingly
 		if(!hasChildren) this.removeNodeClass('children');
 		else this.lastTreeNode().addNodeClass('last');
-		
+
 		// Update the helper variables
 		child.parentTreeNode = null;
 	},
@@ -547,7 +547,7 @@ TreeNode.prototype = {
 			Element.addClassName(this, className);
 			if(className == 'closed') Element.removeClassName(this, 'children');
 			this.aSpan.className = 'a ' + this.className.replace('closed','spanClosed');
-	
+
 			if(className == 'children' || className == 'closed') this.updateIcon();
 		}
 	},
@@ -556,11 +556,11 @@ TreeNode.prototype = {
 			Element.removeClassName(this, className);
 			if(className == 'closed' && this.hasChildren()) Element.addClassName(this, 'children');
 			this.aSpan.className = 'a ' + this.className.replace('closed','spanClosed');
-	
+
 			if(className == 'children' || className == 'closed') this.updateIcon();
 		}
 	},
-	
+
 	getIdx : function() {
 		if(this.id.match(/([^-]+)-(.+)$/)) return RegExp.$2;
 		else return this.id;
@@ -568,13 +568,13 @@ TreeNode.prototype = {
 	getTitle: function() {
 		return this.aTag.innerHTML;
 	},
-	
+
 	installSubtree : function(response) {
 		var ul = this.treeNodeHolder(false);
 		ul.innerHTML = response.responseText;
 		ul.appendTreeNode = null;
 		this.castAsTree(ul);
-		/*		
+		/*
 		var i,lis = ul.childTreeNodes();
 		for(i=0;i<lis.length;i++) {
 			this.tree.castAsTreeNode(lis[i]);
@@ -633,7 +633,7 @@ TreeNode_aTag_onclick = function(event) {
 			return this.treeNode.onselect();
 		}
 	}
-	
+
 	return false;
 }
 
@@ -676,7 +676,7 @@ DraggableTree.prototype = {
 	stopBeingDraggable: function() {
 		// this.parentNode.destroy();
 		this.isDraggable = false;
-		
+
 		var i,item,nodes = this.getElementsByTagName('li');
 		for(i=0;item=nodes[i];i++) {
 			item.destroyDraggable();
@@ -684,14 +684,14 @@ DraggableTree.prototype = {
 		for(i=0;item=this.allDragHelpers[i];i++) {
 			Droppables.remove(item);
 			if(item.parentNode){
-				item.parentNode.removeChild(item);				
+				item.parentNode.removeChild(item);
 			}
 		}
 		this.allDragHelpers = [];
 	},
-	
+
 	/**
-	 * Convert the given <li> tag into a suitable tree node	
+	 * Convert the given <li> tag into a suitable tree node
 	 */
 	castAsTreeNode: function(li) {
 		behaveAs(li, DraggableTreeNode, this.options);
@@ -707,36 +707,36 @@ DraggableTreeNode.prototype = {
 	},
 	setUpDragability: function() {
 		// Set up drag and drop
-		this.draggableObj = new Draggable(this, TreeNodeDragger);	
-		
+		this.draggableObj = new Draggable(this, TreeNodeDragger);
+
 		//if(!this.dropperOptions || this.dropperOptions.accept != 'none')
 		Droppables.add(this.aTag, this.dropperOptions ? Object.extend(this.dropperOptions, TreeNodeDropper) : TreeNodeDropper);
-		
+
 		// Add before DIVs to be Droppable items
-		if(this.parentTreeNode && this.parentTreeNode.createDragHelper){		
+		if(this.parentTreeNode && this.parentTreeNode.createDragHelper){
 			this.parentTreeNode.createDragHelper(this);
-		} 
-		
+		}
+
 		if(this.hasChildren() && this.parentNode.tagName.toLowerCase() == "li") {
 			this.treeNode = this.parentNode;
 			// this.treeNode.createDragHelper();
 		}
-		
+
 		// Fix up the <a> click action
 		this.aTag._onclick_before_draggable = this.aTag.onclick;
 		this.aTag.baseClick = this.aTag.onclick;
-		
+
 		if(this.options.onParentChanged) this.onParentChanged = this.options.onParentChanged;
 		if(this.options.onOrderChanged) this.onOrderChanged = this.options.onOrderChanged;
 	},
-	
+
 	/**
 	 * Remove all the draggy stuff
 	 */
 	destroyDraggable: function() {
 		Droppables.remove(this.aTag);
 		this.aTag.onclick = this.aTag._onclick_before_draggable;
-		
+
 		if(this.draggableObj) {
 			this.draggableObj.destroy();
 			this.draggableObj = null;
@@ -750,13 +750,13 @@ DraggableTreeNode.prototype = {
 		childUL.makeDraggable();
 	},
 	*/
-	
+
 	/**
 	 * Rebuild the "Drag Helper DIVs" that sit around each tree node within this node
 	 */
 	fixDragHelperDivs : function() {
 		var i, holder = this.treeNodeHolder();
-		
+
 		// This variable toggles between div & li
 		var lastDiv, expecting = "div";
 		for(i=0;i<holder.childNodes.length;i++) {
@@ -771,7 +771,7 @@ DraggableTreeNode.prototype = {
 						holder.removeChild(holder.childNodes[i]);
 					}
 					i--;
-				
+
 				} else {
 					// Toggle expecting
 					expecting = (expecting == "div") ? "li" : "div";
@@ -785,19 +785,19 @@ DraggableTreeNode.prototype = {
 		if(expecting == "div") this.createDragHelper();
 	},
 
-	/** 
+	/**
 	 * Create a drag helper within this item.
 	 * It will be inserted to the end, or before the 'before' element if that is given.
 	 */
-	createDragHelper : function(before) {	
+	createDragHelper : function(before) {
 		// Create the node
 		var droppable = document.createElement('div');
 		droppable.className = "droppable";
 		droppable.treeNode = this;
-		
+
 		this.dragHelper = droppable;
 		this.tree.allDragHelpers[this.tree.allDragHelpers.length] = this.dragHelper;
-		
+
 		// Insert into the DOM
 		var holder = this.treeNodeHolder();
 		if(before) holder.insertBefore(droppable, before);
@@ -811,39 +811,39 @@ DraggableTreeNode.prototype = {
 	}
 }
 
-TreeNodeDragger = { 
+TreeNodeDragger = {
 	onStartDrag : function(dragger) {
 		dragger.oldParent = dragger.parentTreeNode;
 	},
-	revert: true 
+	revert: true
 }
 
 TreeNodeDropper = {
 	onDrop :  function(dragger, dropper, event) {
 		var result = true;
-		
+
 		// Handle event handlers
 		if(dragger.onParentChanged && dragger.parentTreeNode != dropper.treeNode)
 			result = dragger.onParentChanged(dragger, dragger.parentTreeNode, dropper.treeNode);
-			
+
 		// Get the future order of the children after the drop completes
 		var i = 0, item = null, items = [];
 		items[items.length] = dragger.treeNode;
 		for(i=0;item=dropper.treeNode.treeNodeHolder().childNodes[i];i++) {
 			if(item != dragger.treeNode) items[items.length] = item;
 		}
-			
+
 		if(result && dragger.onOrderChanged)
 			result = dragger.onOrderChanged(items, items[0]);
-			
+
 		if(result) {
 			dropper.treeNode.appendTreeNode(dragger.treeNode, dropper.treeNode.firstTreeNode());
 		}
 
 		dragger.wasDragged = true;
-		
+
 	},
-	hoverclass : 'dragOver', 
+	hoverclass : 'dragOver',
 	checkDroppableIsntContained : true
 }
 
@@ -865,12 +865,12 @@ TreeNodeSeparatorDropper = {
 		// Handle order change
 		if(result && dragger.onOrderChanged)
 			result = dragger.onOrderChanged(items, dragger.treeNode);
-			
+
 		if(result) {
 			dropper.treeNode.appendTreeNode(
 				dragger.treeNode, dropper);
 		}
-		
+
 		dragger.wasDragged = true;
 	},
 	hoverclass : 'dragOver',
@@ -882,7 +882,7 @@ TreeNodeSeparatorDropper = {
 
 /**
  * Mix-in for the tree to enable mulitselect support
- * Usage: 
+ * Usage:
  *   - tree.behaveAs(MultiselectTree)
  *   - tree.stopBehavingAs(MultiselectTree)
  */

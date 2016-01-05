@@ -423,7 +423,7 @@ class Convert {
 	}
 
 	/**
-	 * Encode a value into a string that can be used as part of a filename. 
+	 * Encode a value into a string that can be used as part of a filename.
 	 * All string data must be UTF-8 encoded.
 	 *
 	 * @param mixed $val Value to be encoded

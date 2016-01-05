@@ -134,7 +134,7 @@ html { overflow: hidden; }
 
 .cms-menu-list li { list-style-type: none; width: 100%; float: left; margin: 0px; padding: 0px; }
 
-/* Site tree 
+/* Site tree
 ------------------------- */
 .cms-tree-view-modes div { float: left; }
 .cms-tree-view-modes span { float: left; padding-top: 5px; }
@@ -167,7 +167,7 @@ select { padding: 10px 0; height: 30px; }
 
 .jstree li a .ui-icon { text-indent: 0px !important; }
 
-/* Gridfield 
+/* Gridfield
 ------------------------- */
 .cms table.ss-gridfield-table tbody td { width: auto; }
 .cms table.ss-gridfield-table tr th.extra span input { height: 23px; }

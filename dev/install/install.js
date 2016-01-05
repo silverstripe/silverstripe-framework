@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+
 	/**
 	 * Toggle field readonly modes, if check configuration comes from
 	 * _ss_environment (values populated on reload).
@@ -11,7 +11,7 @@ $(document).ready(function() {
 			$('.configured-by-env').attr('disabled', 'disabled');
 		}
 	});
-	
+
 	/**
 	 * Hide all existing database warnings, and show only current one
 	 */
@@ -22,24 +22,24 @@ $(document).ready(function() {
 		$('.databaseError').hide();
 		$('.databaseError', $(this).parent()).show();
 	});
-	
+
 	// Select first
 	$('#database_selection li input:checked').siblings('label').click();
-	
+
 	/**
 	 * Install button
 	 */
 	$('#reinstall_confirmation').click(function() {
 		$('#install_button').attr('disabled', !$(this).is(':checked'));
 	});
-	
+
 	$('#install_button').click(function() {
-		$('#saving_top').hide(); 
+		$('#saving_top').hide();
 		$(this).val('Installing SilverStripe...');
 	});
-	
+
 	/**
-	 * Show all the requirements 
+	 * Show all the requirements
 	 */
 	$('h5.requirement a').click(function() {
 		if($(this).text() == 'Hide All Requirements') {
@@ -50,9 +50,9 @@ $(document).ready(function() {
 		else {
 			// show the requirements.
 			$(this).parents('h5').next('table.testResults').find('.good').show();
-			$(this).text('Hide All Requirements');			
+			$(this).text('Hide All Requirements');
 		}
-		
+
 		return false;
 	});
 });

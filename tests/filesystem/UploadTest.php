@@ -83,31 +83,31 @@ class UploadTest extends SapphireTest {
 			'extension' => 'txt',
 			'error' => UPLOAD_ERR_OK,
 		);
-		
+
 		// test upload into default folder
 		$u1 = new Upload();
 		$v = new UploadTest_Validator();
-		
+
 		$v->setAllowedMaxFileSize(array('txt' => 10));
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
-		
+
 		$v->setAllowedMaxFileSize(array('[doc]' => 10));
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
-		
+
 		$v->setAllowedMaxFileSize(array('txt' => 200000));
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertTrue($result, 'Load failed with setting max file size');
-		
+
 		// check max file size set by app category
 		$tmpFileName = 'UploadTest-testUpload.jpg';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
 		file_put_contents($tmpFilePath, $tmpFileContent . $tmpFileContent);
-		
+
 		$tmpFile = array(
 			'name' => $tmpFileName,
 			'type' => 'image/jpeg',
@@ -116,26 +116,26 @@ class UploadTest extends SapphireTest {
 			'extension' => 'jpg',
 			'error' => UPLOAD_ERR_OK,
 		);
-		
+
 		$v->setAllowedMaxFileSize(array('[image]' => '40k'));
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertTrue($result, 'Load failed with setting max file size');
-		
+
 		$v->setAllowedMaxFileSize(array('[image]' => '1k'));
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
-		
+
 		$v->setAllowedMaxFileSize(array('[image]' => 1000));
 		$u1->setValidator($v);
 		$result = $u1->load($tmpFile);
 		$this->assertFalse($result, 'Load failed because size was too big');
 	}
-	
+
 	public function testGetAllowedMaxFileSize() {
 		Config::nest();
-		
+
 		// Check the max file size uses the config values
 		$configMaxFileSizes = array(
 			'[image]' => '1k',
@@ -143,13 +143,13 @@ class UploadTest extends SapphireTest {
 		);
 		Config::inst()->update('Upload_Validator', 'default_max_file_size', $configMaxFileSizes);
 		$v = new UploadTest_Validator();
-		
+
 		$retrievedSize = $v->getAllowedMaxFileSize('[image]');
 		$this->assertEquals(1024, $retrievedSize, 'Max file size check on default values failed (config category set check)');
-		
+
 		$retrievedSize = $v->getAllowedMaxFileSize('txt');
 		$this->assertEquals(1000, $retrievedSize, 'Max file size check on default values failed (config extension set check)');
-		
+
 		// Check instance values for max file size
 		$maxFileSizes = array(
 			'[doc]' => 2000,
@@ -157,26 +157,26 @@ class UploadTest extends SapphireTest {
 		);
 		$v = new UploadTest_Validator();
 		$v->setAllowedMaxFileSize($maxFileSizes);
-		
+
 		$retrievedSize = $v->getAllowedMaxFileSize('[doc]');
 		$this->assertEquals(2000, $retrievedSize, 'Max file size check on instance values failed (instance category set check)');
-		
+
 		// Check that the instance values overwrote the default values
 		// ie. The max file size will not exist for [image]
 		$retrievedSize = $v->getAllowedMaxFileSize('[image]');
 		$this->assertFalse($retrievedSize, 'Max file size check on instance values failed (config overridden check)');
-		
+
 		// Check a category that has not been set before
 		$retrievedSize = $v->getAllowedMaxFileSize('[zip]');
 		$this->assertFalse($retrievedSize, 'Max file size check on instance values failed (category not set check)');
-		
+
 		// Check a file extension that has not been set before
 		$retrievedSize = $v->getAllowedMaxFileSize('mp3');
 		$this->assertFalse($retrievedSize, 'Max file size check on instance values failed (extension not set check)');
-		
+
 		$retrievedSize = $v->getAllowedMaxFileSize('txt');
 		$this->assertEquals(4096, $retrievedSize, 'Max file size check on instance values failed (instance extension set check)');
-		
+
 		Config::unnest();
 	}
 
@@ -347,7 +347,7 @@ class UploadTest extends SapphireTest {
 			BASE_PATH . '/'  . $file->getRelativePath(),
 			'File exists'
 		);
-		
+
 		$u = new Upload();
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
@@ -365,7 +365,7 @@ class UploadTest extends SapphireTest {
 			$file2->ID,
 			'File database record is not the same'
 		);
-		
+
 		$u = new Upload();
 		$u->load($tmpFile);
 		$file3 = $u->getFile();
@@ -383,7 +383,7 @@ class UploadTest extends SapphireTest {
 			$file3->ID,
 			'File database record is not the same'
 		);
-		
+
 		$file->delete();
 		$file2->delete();
 		$file3->delete();
@@ -428,7 +428,7 @@ class UploadTest extends SapphireTest {
 			BASE_PATH . '/'  . $file->getRelativePath(),
 			'File exists'
 		);
-		
+
 		$u = new Upload();
 		$u->setValidator($v);
 		$u->load($tmpFile);
@@ -447,7 +447,7 @@ class UploadTest extends SapphireTest {
 			$file2->ID,
 			'File database record is not the same'
 		);
-		
+
 		$file->delete();
 		$file2->delete();
 	}
@@ -491,7 +491,7 @@ class UploadTest extends SapphireTest {
 			BASE_PATH . '/'  . $file->getRelativePath(),
 			'File exists'
 		);
-		
+
 		$u = new Upload();
 		$u->setValidator($v);
 		$u->setReplaceFile(true);
@@ -674,7 +674,7 @@ class UploadTest extends SapphireTest {
 			$u->load($tmpFile);
 			return $u->getFile();
 		};
-		
+
 		// test empty file version prefix
 		$originalVersionPrefix = Config::inst()->get('Upload', 'version_prefix');
 		Config::inst()->update('Upload', 'version_prefix', '');
@@ -711,7 +711,7 @@ class UploadTest extends SapphireTest {
 		$file2->delete();
 		$file3->delete();
 		$file4->delete();
-		
+
 		// test '-v' file version prefix
 		Config::inst()->update('Upload', 'version_prefix', '-v');
 
@@ -747,7 +747,7 @@ class UploadTest extends SapphireTest {
 		$file2->delete();
 		$file3->delete();
 		$file4->delete();
-		
+
 		Config::inst()->update('Upload', 'version_prefix', $originalVersionPrefix);
 	}
 

@@ -23,7 +23,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		Security::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
 		parent::tearDown();
 	}
-	
+
 	public function testLegacyPasswordHashMigrationUponLogin() {
 		$member = new Member();
 

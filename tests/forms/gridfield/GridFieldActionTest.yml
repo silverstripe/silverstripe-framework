@@ -8,7 +8,7 @@ GridFieldAction_Delete_Team:
 	team3:
 		Name: Team 3
 		City: Auckland
-    
+
 GridFieldAction_Edit_Team:
 	team1:
 		Name: Team 1

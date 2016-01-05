@@ -1,5 +1,5 @@
 de:
-  i18nTestTheme1: 
+  i18nTestTheme1:
     LAYOUTTEMPLATE: Theme1 Layout Template (de)
     SPRINTFNAMESPACE: Theme1 My replacement: %s (de)
   i18nTestTheme1Include:

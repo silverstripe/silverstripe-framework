@@ -1437,7 +1437,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		if(!$file) return $this->httpError(404);
 		if($file instanceof Folder) return $this->httpError(403);
 		if(!$file->canEdit()) return $this->httpError(403);
-		
+
 		// Get form components
 		$fields = $this->parent->getFileEditFields($file);
 		$actions = $this->parent->getFileEditActions($file);

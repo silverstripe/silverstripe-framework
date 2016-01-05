@@ -7,7 +7,7 @@
 /**
  * Checks if a value starts with one of the items of in a given set.
  * @deprecated 3.1 Use StartsWithFilter instead
- * 
+ *
  * @todo Add negation (NOT IN)6
  * @package framework
  * @subpackage search

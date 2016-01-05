@@ -17,18 +17,18 @@ jQuery.fn.extend({
 			var $this = jQuery(this);
 
 			var boxmodel = ['marginTop','marginBottom','paddingTop','paddingBottom','borderBottomWidth','borderTopWidth'];
-		
+
 			// don't bother if element or parent arent visible,
 			// we won't get height readings
 			if($this.is(':visible') && $this.parent().is(':visible')) {
-				
+
 				// we set overflow = hidden so that large children don't muck things up in IE6 box model
 				var origParentOverflow = $this.parent().css('overflow');
 				$this.parent().css('overflow', 'hidden');
-				
+
 				// get height from parent without any margins as a starting point,
 				// and reduce any top/bottom paddings
-				var height = $this.parent().innerHeight() 
+				var height = $this.parent().innerHeight()
 					- parseFloat($this.parent().css('paddingTop'))
 					- parseFloat($this.parent().css('paddingBottom'));
 
@@ -48,7 +48,7 @@ jQuery.fn.extend({
 
 				// set new height
 				$this.height(height);
-				
+
 				// Reset overflow
 				$this.parent().css('overflow', origParentOverflow);
 			}

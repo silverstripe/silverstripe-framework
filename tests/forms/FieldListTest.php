@@ -846,7 +846,7 @@ class FieldListTest extends SapphireTest {
 
 		unset($setArray, $setArgs);
 	}
-	
+
 	public function testFieldPosition() {
 		$set = new FieldList(
 			new TextField('A'),
