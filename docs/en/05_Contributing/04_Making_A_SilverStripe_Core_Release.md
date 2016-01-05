@@ -160,7 +160,7 @@ Check all tickets ([framework](https://github.com/silverstripe/silverstripe-fram
 [installer](https://github.com/silverstripe/silverstripe-installer/milestones)) assigned to that milestone are 
 either closed or reassigned to another milestone.
 
-Merge up from other older supported release branches (e.g. merge 3.1 into 3.2, then 3.2 into 3.3, then 3.3 into master).
+Merge up from other older supported release branches (e.g. merge `3.1`->`3.2`, `3.2`->`3.3`, `3.3`->`3`, `3`->`master`).
 
 This is the part of the release that prepares and tests everything locally, but
 doe not make any upstream changes (so it's safe to run without worrying about
