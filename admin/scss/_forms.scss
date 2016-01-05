@@ -59,7 +59,6 @@ form.nostyle {
 			padding: $grid-y $grid-x $grid-y 0;
 			line-height: $grid-y * 2;
 			font-weight: bold;
-			@include text-shadow(1px 1px 0 $color-text-shadow);
 		}		
 		&.right {
 			cursor: pointer;
@@ -89,7 +88,7 @@ form.nostyle {
 	// displayed alongside the field (rather than in a tooltip)
 	.description {
 		clear: both;
-		color: lighten($color-text, 20%);
+		color: lighten($color-text, 8.5%); //8.5% is the minimum required to meet contrast standards while still retaining visual difference from normal text
 		display: block;
 		font-style: italic;
 		line-height: $grid-y * 2;
@@ -1087,7 +1086,7 @@ fieldset.switch-states{
 	}
 
 	.Actions {
-		margin: 8px 0 16px;
+		margin: $grid-y 0;
 	}
 
 	@media screen and (max-width:767px) {
