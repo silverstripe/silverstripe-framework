@@ -113,10 +113,11 @@ if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
 }
 
 // Now that the class manifest is up, load the static configuration
-if (defined('SS_USE_OLD_CONFIGSTATICMANIFEST') && SS_USE_OLD_CONFIGSTATICMANIFEST) {
-	$configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
+if (defined('SS_CONFIGSTATICMANIFEST')) {
+	$configManifest = SS_CONFIGSTATICMANIFEST;
+	$configManifest = new $configManifest(BASE_PATH, false, $flush);
 } else {
-	$configManifest = new SS_ConfigStaticManifest_40(BASE_PATH, false, $flush);
+	$configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
 }
 Config::inst()->pushConfigStaticManifest($configManifest);
 
