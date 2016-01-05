@@ -124,4 +124,14 @@ class PermissionTest extends SapphireTest {
 		Config::inst()->remove('Permission', 'hidden_permissions');		
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 	}
+
+	public function testEmptyMemberFails() {
+		$member = new Member();
+		$this->assertFalse($member->exists());
+
+		$this->logInWithPermission('ADMIN');
+
+		$this->assertFalse(Permission::checkMember($member, 'ADMIN'));
+		$this->assertFalse(Permission::checkMember($member, 'CMS_ACCESS_LeftAndMain'));
+	}
 }
