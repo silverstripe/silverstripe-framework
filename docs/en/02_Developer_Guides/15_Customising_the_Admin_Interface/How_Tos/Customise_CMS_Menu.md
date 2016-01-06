@@ -43,7 +43,7 @@ In order to localize the menu title in different languages, use the
 the i18n text collection.
 
 For more information on language and translations, please refer to the
-[i18n](../../ii8n) docs.
+[i18n](../../i18n) docs.
 
 ## Adding an external link to the menu
 
