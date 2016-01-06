@@ -134,7 +134,7 @@ class SSViewerTest extends SapphireTest {
 	public function render($templateString, $data = null, $cacheTemplate = false) {
 		$t = SSViewer::fromString($templateString, $cacheTemplate);
 		if(!$data) $data = new SSViewerTestFixture();
-		return $t->process($data);
+		return trim(''.$t->process($data));
 	}
 
 	public function testRequirements() {
@@ -1095,10 +1095,10 @@ after')
 
 		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
 			$template = new SSViewer(array('Page'));
-			$self->assertEquals('Foo', $template->process(new ArrayData(array())));
+			$self->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
 
 			$template = new SSViewer(array('Shortcodes', 'Page'));
-			$self->assertEquals('[file_link]', $template->process(new ArrayData(array())));
+			$self->assertEquals("[file_link]\n\n", $template->process(new ArrayData(array())));
 		});
 	}
 
