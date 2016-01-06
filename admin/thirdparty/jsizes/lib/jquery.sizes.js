@@ -7,6 +7,7 @@
  */
 /*global jQuery*/
 (function ($) {
+	'use strict';
 	var num = function (value) {
 			return parseInt(value, 10) || 0;
 		};
@@ -25,9 +26,7 @@
 				if (value.height !== undefined) {
 					this.css(name + '-height', value.height);
 				}
-				return this;
-			}
-			else {
+			} else {
 				width = this.css(name + '-width');
 				height = this.css(name + '-height');
 				// Apparently:
@@ -36,6 +35,7 @@
 				return {'width': (name === 'max' && (width === undefined || width === 'none' || num(width) === -1) && Number.MAX_VALUE) || num(width), 
 						'height': (name === 'max' && (height === undefined || height === 'none' || num(height) === -1) && Number.MAX_VALUE) || num(height)};
 			}
+			return this;
 		};
 	});
 
@@ -64,14 +64,13 @@
 				if (value.right !== undefined) {
 					this.css(name + '-right' + (name === 'border' ? '-width' : ''), value.right);
 				}
-				return this;
-			}
-			else {
+			} else {
 				return {top: num(this.css(name + '-top' + (name === 'border' ? '-width' : ''))),
 						bottom: num(this.css(name + '-bottom' + (name === 'border' ? '-width' : ''))),
 						left: num(this.css(name + '-left' + (name === 'border' ? '-width' : ''))),
 						right: num(this.css(name + '-right' + (name === 'border' ? '-width' : '')))};
 			}
+			return this;
 		};
 	});
 }(jQuery));

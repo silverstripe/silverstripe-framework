@@ -1,0 +1,41 @@
+{
+  "name": "silverstripe-framework",
+  "version": "4.0.0",
+  "description": "The SilverStripe framework",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "engines": {
+    "node": "~4.2.0"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "sanity": "gulp sanity"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/silverstripe/silverstripe-framework.git"
+  },
+  "keywords": [
+    "silverstripe",
+    "framework"
+  ],
+  "author": "SilverStripe Ltd",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/silverstripe/silverstripe-framework/issues"
+  },
+  "homepage": "https://github.com/silverstripe/silverstripe-framework#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-diff": "^1.0.0",
+    "semver": "^5.1.0"
+  },
+  "dependencies": {
+    "blueimp-file-upload": "^6.0.3",
+    "blueimp-load-image": "^1.1.3",
+    "blueimp-tmpl": "^1.0.2",
+    "jquery-sizes": "^0.33.0"
+  }
+}
