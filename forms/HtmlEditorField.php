@@ -350,7 +350,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fromWeb = new CompositeField(
 			new LiteralField('headerURL',
 				'<h4>' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.ADDURL', 'Add URL')) . '</h4>'),
-			$remoteURL = new TextField('RemoteURL', 'http://'),
+			$remoteURL = new TextField('RemoteURL', ''),
 			new LiteralField('addURLImage',
 				'<button type="button" class="action ui-action-constructive ui-button field add-url" data-icon="addMedia">' .
 				_t('HtmlEditorField.BUTTONADDURL', 'Add url').'</button>')
