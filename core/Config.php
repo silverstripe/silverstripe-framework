@@ -273,7 +273,25 @@ class Config {
 	 */
 	public function __construct() {
 		$this->cache = new Config_MemCache();
-		$this->persistentCache = new Config_PersistentCache();
+
+		// If SS_PERSISTENTCONFIGCACHE is defined, then this will overrite the default.
+		$persistentCache = defined('SS_PERSISTENTCONFIGCACHE') ? SS_PERSISTENTCONFIGCACHE : false;
+		if(class_exists($persistentCache) && is_a($persistentCache, 'ConfigCacheInterface', true)) {
+			$this->persistentCache = new $persistentCache();
+		} else {
+			// We're too early in the startup to use config to determined 
+			// dev/live mode. We check for environment type constant.
+			$mode = defined('SS_ENVIRONMENT_TYPE') ? SS_ENVIRONMENT_TYPE : false;
+			if(!$mode || strtolower($mode) != 'dev') {
+				// If in live or test mode, use peristent cache which has performance improvements for the front-end
+				// but slows down the development process by required flush for private static changes.
+				$this->persistentCache = new Config_PersistentCache();
+			} else {
+				// If in dev mode, we can use memcache. Its slower on the front-end, but allows for faster development
+				// by not requiring a flush for each private static change.
+				$this->persistentCache = new Config_Memcache();
+			}
+		}
 	}
 
 	public function __clone() {
