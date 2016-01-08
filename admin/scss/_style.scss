@@ -501,9 +501,14 @@ body.cms {
 			top: 0;
 			float: left;
 			margin-top: 0;
+			
+			&:active {
+				outline: none;
+			}
 		
 			a {
 				@include inline-block;
+				outline: none;
 				float: none;
 				font-weight: normal;
 				color: $color-text;
