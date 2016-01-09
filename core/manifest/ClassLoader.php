@@ -101,8 +101,8 @@ class SS_ClassLoader {
 	 * @return bool
 	 */
 	public function classExists($class) {
-		Deprecation::notice('3.3', 'Not necessary anymore as this function is inlined in \'ClassInfo::exists\' for speed and that\'s the only place where it is used in core.');
-		return class_exists($class, false) || interface_exists($class, false) || $this->getItemPath($class);
+		Deprecation::notice('4.0', 'Use ClassInfo::exists.');
+		return ClassInfo::exists($class);
 	}
 
 }
