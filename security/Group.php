@@ -183,7 +183,7 @@ class Group extends DataObject {
 
 			// Add roles (and disable all checkboxes for inherited roles)
 			$allRoles = PermissionRole::get();
-			if(Permission::check('ADMIN')) {
+			if(!Permission::check('ADMIN')) {
 				$allRoles = $allRoles->filter("OnlyAdminCanApply", 0);
 			}
 			if($this->ID) {
