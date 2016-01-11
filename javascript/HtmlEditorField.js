@@ -667,12 +667,13 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			resetFileField: function() {
 				// If there's an attached item, remove it
-				var fileField = this.find('#file'),
+				var fileField = this.find('.ss-uploadfield[id$="file_Holder"]'),
 					fileUpload = fileField.data('fileupload'),
 					currentItem = fileField.find('.ss-uploadfield-item[data-fileid]');
 
 				if(currentItem.length) {
-					fileUpload._trigger('destroy', null, {content: currentItem});
+					fileUpload._trigger('destroy', null, {context: currentItem});
+					fileField.find('.ss-uploadfield-addfile').removeClass('borderTop');
 				}
 			},
 
