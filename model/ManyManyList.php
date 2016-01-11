@@ -349,7 +349,7 @@ class ManyManyList extends RelationList {
 	 */
 	public function getExtraData($componentName, $itemID) {
 		$result = array();
-		
+
 		// Skip if no extrafields or unsaved record
 		if(empty($this->extraFields) || empty($itemID)) {
 			return $result;

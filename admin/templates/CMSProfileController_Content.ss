@@ -2,10 +2,10 @@
 
 	<div class="cms-content-header north">
 		<% with $EditForm %>
-			<div class="cms-content-header-info">				
+			<div class="cms-content-header-info">
 				<% with $Controller %>
 					<% include CMSBreadcrumbs %>
-				<% end_with %>				
+				<% end_with %>
 			</div>
 			<% if $Fields.hasTabset %>
 				<% with $Fields.fieldByName('Root') %>

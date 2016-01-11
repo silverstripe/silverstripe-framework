@@ -216,7 +216,7 @@ class DatetimeFieldTest extends SapphireTest {
 
 	public function testGetName() {
 		$field = new DatetimeField('Datetime');
-		
+
 		$this->assertEquals('Datetime', $field->getName());
 		$this->assertEquals('Datetime[date]', $field->getDateField()->getName());
 		$this->assertEquals('Datetime[time]', $field->getTimeField()->getName());

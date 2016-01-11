@@ -192,7 +192,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	}
 
 	/**
-	 * Returns the manipulated (sorted) DataList. Field names will simply add an 
+	 * Returns the manipulated (sorted) DataList. Field names will simply add an
 	 * 'ORDER BY' clause, relation names will add appropriate joins to the
 	 * {@link DataQuery} first.
 	 *
@@ -225,7 +225,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 					$tmpItem = $tmpItem->$methodName();
 
 					$joinClass = ClassInfo::table_for_object_field(
-						$lastAlias, 
+						$lastAlias,
 						$methodName . "ID"
 					);
 

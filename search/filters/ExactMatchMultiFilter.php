@@ -8,7 +8,7 @@
  * Checks if a value is in a given set.
  * SQL syntax used: Column IN ('val1','val2')
  * @deprecated 3.1 Use ExactMatchFilter instead
- * 
+ *
  * @package framework
  * @subpackage search
  */

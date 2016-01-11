@@ -17,8 +17,8 @@ a img { border: none; }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary { display: block; }
 
-/*$experimental-support-for-svg variable comes from 
-imported compass/support file and enables svg gradients in IE9. 
+/*$experimental-support-for-svg variable comes from
+imported compass/support file and enables svg gradients in IE9.
 It was put here because there didn't seem to be a more logical place to put it.
 If more variables exist in the future, consider creating a variables file.*/
 /** ----------------------------- Theme ------------------------------ */
@@ -401,23 +401,23 @@ input.radio { margin-left: 0; }
 .action-hidden { display: none; }
 
 /***************************************************************
-* On/Off Switch. 
+* On/Off Switch.
 * Supports switching between up to 5 values (used for Draft/Published)
 * Example html set-up:
-*	<fieldset class="switch-states size_2"> 			
-*		<div class="switch">				
+*	<fieldset class="switch-states size_2">
+*		<div class="switch">
 *			<input id="Draft" class="first" name="view" type="radio" checked>
-*			<label for="Draft">Draft</label>	
+*			<label for="Draft">Draft</label>
 *			<input id="Published" class="last" name="view" type="radio">
-*			<label for="Published">Published</label>						
-*			<span class="slide-button"></span>	
-*		</div>			
+*			<label for="Published">Published</label>
+*			<span class="slide-button"></span>
+*		</div>
 *	</fieldset>
 ****************************************************************/
-fieldset.switch-states { margin-right: 8px; 	/*	
+fieldset.switch-states { margin-right: 8px; 	/*
 		Produce css for up to 5 states.
 
-		Note: with a little adjustment the switch can take more than 5 items, 
+		Note: with a little adjustment the switch can take more than 5 items,
 		but a dropdown would probably be more appropriate
 	*/ }
 fieldset.switch-states .switch { border: 2px solid #d3d6da; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; -webkit-animation: bugfix infinite 1s; background: #dee0e3; display: block; height: 24px; position: relative; width: 100%; z-index: 5; }
@@ -483,15 +483,15 @@ fieldset.switch-states.size_5 input:checked:nth-of-type(5) ~ .slide-button { lef
 .cms-panel .cms-content-filters .Actions { margin-bottom: 0; }
 
 /**
-* This file defines most styles of the CMS: Colors, fonts, backgrounds, 
+* This file defines most styles of the CMS: Colors, fonts, backgrounds,
 * alignments, dimensions.
-* 
-* Use SCSS variable definitions in screen.css to avoid repeating styles 
-* like background colours or padding dimensions. See themes/_default.scss 
+*
+* Use SCSS variable definitions in screen.css to avoid repeating styles
+* like background colours or padding dimensions. See themes/_default.scss
 * to get started.
-* 
-* To avoid this file getting too large and complicated, it is encouraged to 
-* create new SCSS files for larger components like the CMS menu or tree 
+*
+* To avoid this file getting too large and complicated, it is encouraged to
+* create new SCSS files for larger components like the CMS menu or tree
 * (see _tree.scss and _menu.scss).
 */
 /** ---------------------------------------------------- Core Styles. ---------------------------------------------------- */
@@ -838,7 +838,7 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 
 /** ------------------------------------------------------------------
 * Dialog
-* 
+*
 * Contained in a jQuery UI dialog ('.ui-dialog'), with either inline
 * markup (for the "insert" dialogs), or an iframe (for member profile).
 * ----------------------------------------------------------------- */
@@ -1271,22 +1271,22 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 /********************************************
 * Defines the styles for .ss-ui-action-tabset:
 * * Site tree action tabs (to perform actions on the site tree)
-* * Actions menu (Edit page actions) 
+* * Actions menu (Edit page actions)
 *
 * Reliant on TabSet.js to apply and remove some classes.
 *
-* Note: This is a special use case of tabs, so the default tab 
-* styling should not apply 
+* Note: This is a special use case of tabs, so the default tab
+* styling should not apply
 *
 **********************************************/
 .cms .ss-ui-action-tabset { float: left; position: relative; /*
-	Styles for the tab-nav of the site tree implementation 
-	of ss-ui-action-tabset 
+	Styles for the tab-nav of the site tree implementation
+	of ss-ui-action-tabset
 */ /* position a checkbox & icon within a tab */ /* Styles for the cms-actions in tree view, to use more limited space.
-Title hidden in tree view, until hover/active state added. Active is applied 
-to the first tab within the template, so there should always be one title 
+Title hidden in tree view, until hover/active state added. Active is applied
+to the first tab within the template, so there should always be one title
 visible. Added and removed with js in TabSet.js  */ /****************************************************************
-	Styles for the actions-menu implementation 
+	Styles for the actions-menu implementation
 	of ss-ui-action-tabset
 ****************************************************************/ }
 .cms .ss-ui-action-tabset.multi { /* Style the tab panels */ }
@@ -1405,7 +1405,7 @@ visible. Added and removed with js in TabSet.js  */ /***************************
 .permissioncheckboxset .optionset, .permissioncheckboxsetfield_readonly .optionset { overflow: auto; }
 .permissioncheckboxset .optionset li, .permissioncheckboxsetfield_readonly .optionset li { float: none; width: auto; clear: both; }
 
-/* For user permissions the readonly checkboxes are set as display none and are replaced with a <span> that has a 
+/* For user permissions the readonly checkboxes are set as display none and are replaced with a <span> that has a
 green tick icon as a background this is created using compass generated classes and hardcoded in the php */
 .permissioncheckboxsetfield_readonly .optionset li.odd, .permissioncheckboxsetfield_readonly .optionset li.even { margin-left: 16px; }
 .permissioncheckboxsetfield_readonly .optionset li.help { width: 384px; }

@@ -97,7 +97,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		if(!SecurityToken::inst()->checkRequest($request)) {
 			return $this->httpError(400);
 		}
-		
+
 		// Find the action handler
 		$action = $request->param('BatchAction');
 		$actionHandler = $this->actionByName($action);

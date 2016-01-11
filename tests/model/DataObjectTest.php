@@ -1107,7 +1107,7 @@ class DataObjectTest extends SapphireTest {
 
 	public function testValidateModelDefinitionsFailsWithArray() {
 		Config::nest();
-		
+
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
@@ -1124,7 +1124,7 @@ class DataObjectTest extends SapphireTest {
 
 	public function testValidateModelDefinitionsFailsWithIntKey() {
 		Config::nest();
-		
+
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
@@ -1141,7 +1141,7 @@ class DataObjectTest extends SapphireTest {
 
 	public function testValidateModelDefinitionsFailsWithIntValue() {
 		Config::nest();
-		
+
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
@@ -1161,7 +1161,7 @@ class DataObjectTest extends SapphireTest {
 	 */
 	public function testValidateModelDefinitionsPassesWithExtraFields() {
 		Config::nest();
-		
+
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
@@ -1808,7 +1808,7 @@ class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 	private static $many_many = array(
 		'FormerPlayers' => 'DataObjectTest_Player'
 	);
-	
+
 	private static $many_many_extraFields = array(
 		'FormerPlayers' => array(
 			'Position' => 'Varchar(100)'

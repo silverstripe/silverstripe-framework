@@ -391,7 +391,7 @@ class Upload_Validator {
 	 * @return int Filesize in bytes
 	 */
 	public function getAllowedMaxFileSize($ext = null) {
-		
+
 		// Check if there is any defined instance max file sizes
 		if (empty($this->allowedMaxFileSize)) {
 			// Set default max file sizes if there isn't
@@ -405,18 +405,18 @@ class Upload_Validator {
 				$this->setAllowedMaxFileSize(min($maxUpload, $maxPost));
 			}
 		}
-		
+
 		$ext = strtolower($ext);
 		if ($ext) {
 			if (isset($this->allowedMaxFileSize[$ext])) {
 				return $this->allowedMaxFileSize[$ext];
 			}
-			
+
 			$category = File::get_app_category($ext);
 			if ($category && isset($this->allowedMaxFileSize['[' . $category . ']'])) {
 				return $this->allowedMaxFileSize['[' . $category . ']'];
 			}
-			
+
 			return false;
 		} else {
 			return (isset($this->allowedMaxFileSize['*'])) ? $this->allowedMaxFileSize['*'] : false;
@@ -441,17 +441,17 @@ class Upload_Validator {
 			$rules = array_change_key_case($rules, CASE_LOWER);
 			$finalRules = array();
 			$tmpSize = 0;
-			
+
 			foreach ($rules as $rule => $value) {
 				if (is_numeric($value)) {
 					$tmpSize = $value;
 				} else {
 					$tmpSize = File::ini2bytes($value);
 				}
-			
+
 				$finalRules[$rule] = (int)$tmpSize;
 			}
-			
+
 			$this->allowedMaxFileSize = $finalRules;
 		} elseif(is_string($rules)) {
 			$this->allowedMaxFileSize['*'] = File::ini2bytes($rules);

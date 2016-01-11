@@ -122,7 +122,7 @@ class CompositeField extends FormField {
 	public function getLegend() {
 		return $this->legend;
 	}
-	
+
 	/**
 	 * @deprecated
 	 */

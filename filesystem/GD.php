@@ -249,7 +249,7 @@ class GDBackend extends Object implements Image_Backend {
 	 */
 	public function resize($width, $height) {
 		if(!$this->gd) return;
-		
+
 		if($width < 0 || $height < 0) throw new InvalidArgumentException("Image resizing dimensions cannot be negative");
 		if(!$width && !$height) throw new InvalidArgumentException("No dimensions given when resizing image");
 		if(!$width) throw new InvalidArgumentException("Width not given when resizing image");

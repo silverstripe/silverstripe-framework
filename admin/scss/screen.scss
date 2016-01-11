@@ -1,9 +1,9 @@
 /**
  * This file is the central collection of included modules, links to custom SCSS files,
  * and any global SCSS variable definitions.
- * 
+ *
  * DO NOT ADD stylesheet rules to this file directly!
- * 
+ *
  * Note: By prefixing files with an underscore, they won't create individual CSS files.
  *
  * Notes:
@@ -23,8 +23,8 @@
 @import "compass/utilities/general";
 @import "compass/support";
 
-/*$experimental-support-for-svg variable comes from 
-imported compass/support file and enables svg gradients in IE9. 
+/*$experimental-support-for-svg variable comes from
+imported compass/support file and enables svg gradients in IE9.
 It was put here because there didn't seem to be a more logical place to put it.
 If more variables exist in the future, consider creating a variables file.*/
 

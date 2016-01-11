@@ -122,7 +122,7 @@ if(!defined('TRUSTED_PROXY')) {
  */
 if(!isset($_SERVER['HTTP_HOST'])) {
 	// HTTP_HOST, REQUEST_PORT, SCRIPT_NAME, and PHP_SELF
-	global $_FILE_TO_URL_MAPPING;	
+	global $_FILE_TO_URL_MAPPING;
 	if(isset($_FILE_TO_URL_MAPPING)) {
 		$fullPath = $testPath = realpath($_SERVER['SCRIPT_FILENAME']);
 		while($testPath && $testPath != '/' && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
@@ -180,7 +180,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	 * Fix HTTP_HOST from reverse proxies
 	 */
 	if (TRUSTED_PROXY && isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-		
+
 		// Get the first host, in case there's multiple separated through commas
 		$_SERVER['HTTP_HOST'] = strtok($_SERVER['HTTP_X_FORWARDED_HOST'], ',');
 	}

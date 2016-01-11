@@ -22,7 +22,7 @@ $sprites64-2x: sprite-map("sprites-64x64-2x/*.png", $spacing: 20px);
 
 @mixin icons($sprite) {
 	background: $sprite;
-	
+
 	&.icon-assetadmin {
 		@include sprite($sprite, "picture");
 	}
@@ -53,18 +53,18 @@ $sprites64-2x: sprite-map("sprites-64x64-2x/*.png", $spacing: 20px);
 	text-indent: -9999px;
 	border: none;
 	outline: none;
-	
-	&.icon-24 { 
+
+	&.icon-24 {
 		width: 24px;
 		height: 24px;
-	
+
 		@include icons($icon24);
 	}
-	
+
 	&.icon-16 {
 		width: 16px;
 		height: 16px;
-		
+
 		@include icons($icon16);
 	}
 }

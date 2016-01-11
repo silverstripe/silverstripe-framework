@@ -187,7 +187,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 					break;
 				}
 			}
-			
+
 			// if ADMIN has all privileges, then we need to push that code in
 			if($adminImpliesAll) {
 				$code[] = "ADMIN";

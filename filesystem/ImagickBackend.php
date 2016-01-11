@@ -115,12 +115,12 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 */
 	public function resize($width, $height) {
 		if(!$this->valid()) return;
-		
+
 		if($width < 0 || $height < 0) throw new InvalidArgumentException("Image resizing dimensions cannot be negative");
 		if(!$width && !$height) throw new InvalidArgumentException("No dimensions given when resizing image");
 		if(!$width) throw new InvalidArgumentException("Width not given when resizing image");
 		if(!$height) throw new InvalidArgumentException("Height not given when resizing image");
-		
+
 		//use whole numbers, ensuring that size is at least 1x1
 		$width = max(1, round($width));
 		$height = max(1, round($height));
@@ -131,7 +131,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		if ($width == $geometry["width"] && $height == $geometry["height"]) {
 			return $this;
 		}
-		
+
 		$new = clone $this;
 		$new->resizeImage($width, $height, self::FILTER_LANCZOS, 1);
 
@@ -202,7 +202,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		$w = $new->getImageWidth();
 		$h = $new->getImageHeight();
 		$new->extentImage($width,$height,($w-$width)/2,($h-$height)/2);
-		
+
 		return $new;
 	}
 
@@ -224,7 +224,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		if ($width == $geo["width"] && $height == $geo["height"]) {
 			return $this;
 		}
-		
+
 		$new = clone $this;
 		$new->setBackgroundColor(new ImagickPixel('transparent'));
 

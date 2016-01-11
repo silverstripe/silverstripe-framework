@@ -33,7 +33,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	 */
 	public function augmentColumns($gridField, &$columns) {
 		$baseColumns = array_keys($this->getDisplayFields($gridField));
-		
+
 		foreach($baseColumns as $col) {
 			$columns[] = $col;
 		}

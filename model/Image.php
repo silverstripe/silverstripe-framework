@@ -95,8 +95,8 @@ class Image extends File implements Flushable {
 
 	/**
 	 * Retrieve the original filename from the path of a transformed image.
-	 * Any other filenames pass through unchanged. 
-	 * 
+	 * Any other filenames pass through unchanged.
+	 *
 	 * @param string $path
 	 * @return string
 	 */
@@ -884,7 +884,7 @@ class Image extends File implements Flushable {
 		// (if chained, they contain the transformations in the correct order)
 		foreach($cachedFiles as $cf_path) {
 			preg_match_all($pattern['GeneratorPattern'], $cf_path, $matches, PREG_SET_ORDER);
-			
+
 			$generatorArray = array();
 			foreach ($matches as $singleMatch) {
 				$generatorArray[] = array(

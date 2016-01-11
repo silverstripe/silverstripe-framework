@@ -495,14 +495,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		return $backlink;
 	}
-	
+
 	/**
 	 * Get the list of extra data from the $record as saved into it by
 	 * {@see Form::saveInto()}
-	 * 
+	 *
 	 * Handles detection of falsey values explicitly saved into the
 	 * DataObject by formfields
-	 * 
+	 *
 	 * @param DataObject $record
 	 * @param SS_List $list
 	 * @return array List of data to write to the relation
@@ -512,7 +512,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		if(!($list instanceof ManyManyList)) {
 			return null;
 		}
-		
+
 		$data = array();
 		foreach($list->getExtraFields() as $field => $dbSpec) {
 			$savedField = "ManyMany[{$field}]";
@@ -565,8 +565,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		// TODO Save this item into the given relationship
 
-		$link = '<a href="' . $this->Link('edit') . '">"' 
-			. htmlspecialchars($this->record->Title, ENT_QUOTES) 
+		$link = '<a href="' . $this->Link('edit') . '">"'
+			. htmlspecialchars($this->record->Title, ENT_QUOTES)
 			. '"</a>';
 		$message = _t(
 			'GridFieldDetailForm.Saved',

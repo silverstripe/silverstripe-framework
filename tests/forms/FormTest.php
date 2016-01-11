@@ -19,7 +19,7 @@ class FormTest extends FunctionalTest {
 		Config::inst()->update('Director', 'rules', array(
 			'FormTest_Controller' => 'FormTest_Controller'
 		));
-		
+
 		// Suppress themes
 		Config::inst()->remove('SSViewer', 'theme');
 	}
@@ -191,8 +191,8 @@ class FormTest extends FunctionalTest {
 		);
 		$form->loadDataFrom(array(
 			'Players' => array(
-				14, 
-				18, 
+				14,
+				18,
 				22
 			),
 		));
@@ -352,7 +352,7 @@ class FormTest extends FunctionalTest {
 	public function testDisableSecurityTokenAcceptsSubmissionWithoutToken() {
 		SecurityToken::enable();
 		$expectedToken = SecurityToken::inst()->getValue();
-		
+
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
 		// can't use submitForm() as it'll automatically insert SecurityID into the POST data
 		$response = $this->post(
@@ -650,7 +650,7 @@ class FormTest extends FunctionalTest {
         $formData = $form->getData();
         $this->assertEmpty($formData['ExtraFieldCheckbox']);
     }
-	
+
 	protected function getStubForm() {
 		return new Form(
 			new FormTest_Controller(),

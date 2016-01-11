@@ -61,7 +61,7 @@ class CMSMemberLoginForm extends LoginForm {
 				)
 			)
 		);
-		
+
 		parent::__construct($controller, $name, $fields, $actions);
 	}
 

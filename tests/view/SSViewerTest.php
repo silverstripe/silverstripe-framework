@@ -76,7 +76,7 @@ class SSViewerTest extends SapphireTest {
 		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
 		$this->assertExpectedStrings($result, $expected);
 	}
-	
+
 	public function testIncludeTruthyness() {
 		$data = new ArrayData(array(
 			'Title' => 'TruthyTest',
@@ -91,7 +91,7 @@ class SSViewerTest extends SapphireTest {
 			))
 		));
 		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
-		
+
 		// We should not end up with empty values appearing as empty
 		$expected = array(
 			'Item 1 _ Item 1 - First-ODD top:Item 1',
@@ -134,7 +134,7 @@ class SSViewerTest extends SapphireTest {
 	public function render($templateString, $data = null, $cacheTemplate = false) {
 		$t = SSViewer::fromString($templateString, $cacheTemplate);
 		if(!$data) $data = new SSViewerTestFixture();
-		return $t->process($data);
+		return trim(''.$t->process($data));
 	}
 
 	public function testRequirements() {
@@ -151,7 +151,7 @@ class SSViewerTest extends SapphireTest {
 		<% require css($cssFile) %>");
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
 	}
-	
+
 	public function testRequirementsCombine(){
 		$oldBackend = Requirements::backend();
 		$testBackend = new Requirements_Backend();
@@ -162,7 +162,7 @@ class SSViewerTest extends SapphireTest {
 		$jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
 		Requirements::combine_files('testRequirementsCombine.js', array($jsFile));
 		require_once('thirdparty/jsmin/jsmin.php');
-		
+
 		// first make sure that our test js file causes an exception to be thrown
 		try{
 			$content = JSMin::minify($content);
@@ -185,7 +185,7 @@ class SSViewerTest extends SapphireTest {
 			Requirements::set_backend($oldBackend);
 			$this->fail('Requirements::process_combined_files did not catch exception caused by minifying bad js file: '.$e);
 		}
-		
+
 		// and make sure the combined content matches the input content, i.e. no loss of functionality
 		if(!file_exists($combinedTestFilePath)){
 			Requirements::set_backend($oldBackend);
@@ -197,7 +197,7 @@ class SSViewerTest extends SapphireTest {
 		// reset
 		Requirements::set_backend($oldBackend);
 	}
-	
+
 
 
 	public function testComments() {
@@ -1095,10 +1095,10 @@ after')
 
 		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
 			$template = new SSViewer(array('Page'));
-			$self->assertEquals('Foo', $template->process(new ArrayData(array())));
+			$self->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
 
 			$template = new SSViewer(array('Shortcodes', 'Page'));
-			$self->assertEquals('[file_link]', $template->process(new ArrayData(array())));
+			$self->assertEquals("[file_link]\n\n", $template->process(new ArrayData(array())));
 		});
 	}
 
@@ -1166,7 +1166,7 @@ after')
 	}
 
 	public function testRewriteHashlinks() {
-		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links'); 
+		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links');
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', true);
 
 		$_SERVER['HTTP_HOST'] = 'www.mysite.com';
@@ -1258,7 +1258,7 @@ EOC;
 			$result,
 			'SSTemplateParser should only rewrite anchor hrefs'
 		);
-		
+
 		unlink($tmplFile);
 
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig);

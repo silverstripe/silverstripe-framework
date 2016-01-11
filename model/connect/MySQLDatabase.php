@@ -12,7 +12,7 @@ class MySQLDatabase extends SS_Database {
 
 	/**
 	 * Default connection charset (may be overridden in $databaseConfig)
-	 * 
+	 *
 	 * @config
 	 * @var String
 	 */

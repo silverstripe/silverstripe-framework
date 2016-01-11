@@ -12,7 +12,7 @@ class TestSession {
 	 * @var Session
 	 */
 	private $session;
-	
+
 	/**
 	 * @var Cookie_Backend
 	 */

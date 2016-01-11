@@ -3,7 +3,7 @@
 /**
  * Mailer objects are responsible for actually sending emails.
  * The default Mailer class will use PHP's mail() function.
- * 
+ *
  * @package framework
  * @subpackage email
  */
@@ -130,7 +130,7 @@ class Mailer extends Object {
 
 	/**
 	 * Send a plain-text email.
-	 *  
+	 *
 	 * @param string $to Email recipient
 	 * @param string $from Email from
 	 * @param string $subject Subject text
@@ -179,7 +179,7 @@ class Mailer extends Object {
 
 	/**
 	 * Send an email of an arbitrary format
-	 * 
+	 *
 	 * @param string $to To
 	 * @param string $from From
 	 * @param string $subject Subject
@@ -199,7 +199,7 @@ class Mailer extends Object {
 		if($attachedFiles) {
 			list($fullBody, $headers) = $this->encodeAttachments($attachedFiles, $headers, $fullBody);
 		}
-		
+
 		// Get bounce email
 		$bounceAddress = $this->getBounceEmail() ?: $from;
 		if(preg_match('/^([^<>]*)<([^<>]+)> *$/', $bounceAddress, $parts)) $bounceAddress = $parts[2];
@@ -214,7 +214,7 @@ class Mailer extends Object {
 
 	/**
 	 * Send the actual email
-	 * 
+	 *
 	 * @param string $to
 	 * @param string $subjectEncoded
 	 * @param string $fullBody
@@ -228,11 +228,11 @@ class Mailer extends Object {
 		if(!$result) {
 			$result = mail($to, $subjectEncoded, $fullBody, $headersEncoded);
 		}
-		
+
 		if($result) {
 			return array($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress);
 		}
-			
+
 		return false;
 	}
 
@@ -271,7 +271,7 @@ class Mailer extends Object {
 	 */
 	protected function preparePlainSubmessage($plainContent, $htmlContent) {
 		$plainEncoding = $this->getMessageEncoding();
-		
+
 		// Generate plain text version if not explicitly given
 		if(!$plainContent) $plainContent = Convert::xml2raw($htmlContent);
 
@@ -304,7 +304,7 @@ class Mailer extends Object {
 				"\n</BODY>\n" .
 				"</HTML>";
 		}
-		
+
 		// Make the HTML part
 		$headers["Content-Type"] = "text/html; charset=utf-8";
 		$headers["Content-Transfer-Encoding"] = $this->getMessageEncoding();
@@ -366,36 +366,36 @@ class Mailer extends Object {
 
 	/**
 	 * Encode the contents of a file for emailing, including headers
-	 * 
+	 *
 	 * $file can be an array, in which case it expects these members:
 	 *   'filename'        - the filename of the file
 	 *   'contents'        - the raw binary contents of the file as a string
 	 *  and can optionally include these members:
 	 *   'mimetype'        - the mimetype of the file (calculated from filename if missing)
 	 *   'contentLocation' - the 'Content-Location' header value for the file
-	 *   
+	 *
 	 * $file can also be a string, in which case it is assumed to be the filename
-	 * 
+	 *
 	 * h5. contentLocation
-	 * 
-	 * Content Location is one of the two methods allowed for embedding images into an html email. 
+	 *
+	 * Content Location is one of the two methods allowed for embedding images into an html email.
 	 * It's also the simplest, and best supported.
-	 * 
+	 *
 	 * Assume we have an email with this in the body:
-	 * 
+	 *
 	 *   <img src="http://example.com/image.gif" />
-	 * 
-	 * To display the image, an email viewer would have to download the image from the web every time 
-	 * it is displayed. Due to privacy issues, most viewers will not display any images unless 
+	 *
+	 * To display the image, an email viewer would have to download the image from the web every time
+	 * it is displayed. Due to privacy issues, most viewers will not display any images unless
 	 * the user clicks 'Show images in this email'. Not optimal.
-	 * 
-	 * However, we can also include a copy of this image as an attached file in the email. 
-	 * By giving it a contentLocation of "http://example.com/image.gif" most email viewers 
+	 *
+	 * However, we can also include a copy of this image as an attached file in the email.
+	 * By giving it a contentLocation of "http://example.com/image.gif" most email viewers
 	 * will use this attached copy instead of downloading it. Better,
 	 * most viewers will show it without a 'Show images in this email' conformation.
-	 * 
+	 *
 	 * Here is an example of passing this information through Email.php:
-	 * 
+	 *
 	 *   $email = new Email();
 	 *   $email->attachments[] = array(
 	 *     'filename' => BASE_PATH . "/themes/mytheme/images/header.gif",
@@ -409,13 +409,13 @@ class Mailer extends Object {
 			user_error("encodeFileForEmail: not passed a filename and/or data", E_USER_WARNING);
 			return;
 		}
-		
+
 		if (is_string($file)) {
 			$file = array('filename' => $file);
 			$fh = fopen($file['filename'], "rb");
 			if ($fh) {
 				$file['contents'] = "";
-				while(!feof($fh)) $file['contents'] .= fread($fh, 10000);	
+				while(!feof($fh)) $file['contents'] .= fread($fh, 10000);
 				fclose($fh);
 			}
 		}
@@ -427,7 +427,7 @@ class Mailer extends Object {
 		$mimeType = !empty($file['mimetype']) ? $file['mimetype'] : HTTP::get_mime_type($file['filename']);
 		if(!$mimeType) $mimeType = "application/unknown";
 		if (empty($disposition)) $disposition = isset($file['contentLocation']) ? 'inline' : 'attachment';
-		
+
 		// Encode for emailing
 		if (substr($mimeType, 0, 4) != 'text') {
 			$encoding = "base64";
@@ -435,16 +435,16 @@ class Mailer extends Object {
 		} else {
 			// This mime type is needed, otherwise some clients will show it as an inline attachment
 			$mimeType = 'application/octet-stream';
-			$encoding = "quoted-printable";		
+			$encoding = "quoted-printable";
 			$file['contents'] = quoted_printable_encode($file['contents']);
 		}
 
 		$headers =	"Content-type: $mimeType;\n\tname=\"$base\"\n".
 					"Content-Transfer-Encoding: $encoding\n".
 					"Content-Disposition: $disposition;\n\tfilename=\"$base\"\n";
-		
+
 		if ( isset($file['contentLocation']) ) $headers .= 'Content-Location: ' . $file['contentLocation'] . "\n" ;
-		
+
 		$headers .= $extraHeaders . "\n";
 
 		// Return completed packet
@@ -480,7 +480,7 @@ class Mailer extends Object {
 			$emailAddress = str_replace('@', '', substr($emailAddress, 0, $openBracket))
 				. substr($emailAddress, $openBracket);
 		}
-		
+
 		return $emailAddress;
 	}
 
@@ -508,7 +508,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$plainContent = false) {
 
 	Deprecation::notice('4.0', 'Use Email->sendHTML() instead');
-	
+
 	$mailer = Injector::inst()->create('Mailer');
 	return $mailer->sendHTML($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false);
 }
@@ -559,7 +559,7 @@ function wrapImagesInline_rewriter($url) {
 
 	$mailer = Injector::inst()->create('Mailer');
 	return $mailer->wrapImagesInline_rewriter($url);
-	
+
 }
 
 /**
@@ -583,7 +583,7 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 	Deprecation::notice('4.0', 'Please add files through Email->attachFile()');
 
 	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->encodeFileForEmail($file, $destFileName, $disposition, $extraHeaders);	
+	return $mailer->encodeFileForEmail($file, $destFileName, $disposition, $extraHeaders);
 }
 
 /**
@@ -595,7 +595,7 @@ function QuotedPrintable_encode($quotprint) {
 	Deprecation::notice('4.0', 'No longer available, handled internally');
 
 	$mailer = Injector::inst()->create('Mailer');
-	return $mailer->QuotedPrintable_encode($quotprint);	
+	return $mailer->QuotedPrintable_encode($quotprint);
 }
 
 /**

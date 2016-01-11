@@ -54,7 +54,7 @@
 		}
 		.ss-uploadfield-item-info {
 			margin-left: 95px;
-			
+
 			.ss-uploadfield-item-name {
 				display: block;
 				line-height: 13px;
@@ -79,22 +79,22 @@
 					padding: 0 0 0 5px;
 					text-align:right;
 					max-width: 75%;
-					
+
 					&.ui-state-error-text {
 						color: $color-button-destructive;
 						font-weight: bold;
 						width:150px; //Allocates the status message enough room to be useful. Will wrap if it is longer
 					}
-					
+
 					&.ui-state-warning-text {
 						color: darken($color-warning, 10%);
 					}
-					
+
 					&.ui-state-success-text {
 						color: $color-button-constructive;
 					}
 				}
-			}			
+			}
 		}
 
 		//Upload/Validation error
@@ -138,9 +138,9 @@
 					.ss-uploadfield-item-cancel {
 						position: relative;
 						top: auto;
-					}			
+					}
 				}
-			}			
+			}
 		}
 	}
 	.ss-ui-button {
@@ -158,14 +158,14 @@
 		padding: 0;
 		overflow: auto;
 		position: relative;
-		
+
 		.ss-uploadfield-item,
 		.ss-uploadfield-item.ui-state-error {
 			border: 0;
 			border-bottom: 1px solid lighten($color-medium-separator, 20%);
 			background: none;
 			color: $color-text;
-			
+
 			&:last-child {
 				border-bottom: 0;
 			}
@@ -183,7 +183,7 @@
 			width: auto;
 			margin: 11px 0 0;
 			height: 15px;
-			
+
 			div {
 				@include border-radius(25px);
 				height: 13px;
@@ -202,12 +202,12 @@
 			width: 0%;
 			background: #60b3dd url(../images/progressbar_blue.gif) repeat-x left center;
 		}
-		.ss-uploadfield-item-cancel, 
+		.ss-uploadfield-item-cancel,
 		.ss-uploadfield-item-start {
 			position: absolute;
 			top: 10px;
 			right: 0;
-			
+
 			button {
 				display: block;
 				overflow: hidden;
@@ -221,13 +221,13 @@
 				@include single-box-shadow(none);
 				position: relative;
 				// background: sprite($sprites16, cross-circle) no-repeat;
-				
+
 				span {
 					position: absolute;
 					left: 0;
 					top: 0;
 					margin: 0;
-				  
+
 					&.ui-button-text {
 						display: none;
 					}
@@ -245,7 +245,7 @@
 			height: 0;
 			overflow: hidden;
 			clear: both;
-			
+
 			&.loading {
 				width: 100%;
 				height: 22px;
@@ -265,7 +265,7 @@
 				border-top: 1px solid $color-light-separator;
 				width: 100%;
 			}
-		}		
+		}
 	}
 	.ss-uploadfield-addfile {
 		&.borderTop {

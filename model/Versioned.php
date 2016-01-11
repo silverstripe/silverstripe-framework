@@ -495,12 +495,12 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 						foreach($versionedTables as $child) {
 							if($table === $child) break; // only need subclasses
-							
+
 							// Select all orphaned version records
 							$orphanedQuery = SQLSelect::create()
 								->selectField("\"{$table}_versions\".\"ID\"")
 								->setFrom("\"{$table}_versions\"");
-								
+
 							// If we have a parent table limit orphaned records
 							// to only those that exist in this
 							if(DB::get_schema()->hasTable("{$child}_versions")) {
@@ -576,7 +576,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	protected function augmentWriteVersioned(&$manipulation, $table, $recordID) {
 		$baseDataClass = ClassInfo::baseDataClass($table);
-		
+
 		// Set up a new entry in (table)_versions
 		$newManipulation = array(
 			"command" => "insert",
@@ -657,7 +657,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				unset($manipulation[$table]);
 				continue;
 			}
-			
+
 			// Get ID field
 			$id = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];
 			if(!$id) user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);

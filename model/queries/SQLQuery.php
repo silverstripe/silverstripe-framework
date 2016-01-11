@@ -15,7 +15,7 @@ class SQLQuery extends SQLSelect {
 
 	/**
 	 * If this is true, this statement will delete rather than select.
-	 * 
+	 *
 	 * @deprecated since version 4.0
 	 * @var boolean
 	 */
@@ -50,10 +50,10 @@ class SQLQuery extends SQLSelect {
 	public function sql(&$parameters = array()) {
 		return $this->toAppropriateExpression()->sql($parameters);
 	}
-	
+
 	/**
 	 * Get helper class for flattening parameterised conditions
-	 * 
+	 *
 	 * @return SQLQuery_ParameterInjector
 	 */
 	protected function getParameterInjector() {
@@ -62,7 +62,7 @@ class SQLQuery extends SQLSelect {
 
 	/**
 	 * Return a list of SQL where conditions (flattened as a list of strings)
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getWhere() {
@@ -72,7 +72,7 @@ class SQLQuery extends SQLSelect {
 			'Use ->toAppropriateExpression()->getWhere() instead'
 		);
 		$conditions = parent::getWhere();
-		
+
 		// This is where any benefits of parameterised queries die
 		return $this
 			->getParameterInjector()
@@ -80,9 +80,9 @@ class SQLQuery extends SQLSelect {
 	}
 
 	/**
-	 * Convert this SQLQuery to a SQLExpression based on its 
+	 * Convert this SQLQuery to a SQLExpression based on its
 	 * internal $delete state (Normally SQLSelect or SQLDelete)
-	 * 
+	 *
 	 * @return SQLExpression
 	 */
 	public function toAppropriateExpression() {
@@ -118,11 +118,11 @@ class SQLQuery extends SQLSelect {
 
 /**
  * Provides conversion of parameterised SQL to flattened SQL strings
- * 
+ *
  * @deprecated since version 4.0
  */
 class SQLQuery_ParameterInjector {
-	
+
 	public function __construct() {
 		Deprecation::notice('4.0', "Use SQLSelect / SQLDelete instead of SQLQuery");
 	}
@@ -130,7 +130,7 @@ class SQLQuery_ParameterInjector {
 	/**
 	 * Given a list of parameterised conditions, return a flattened
 	 * list of condition strings
-	 * 
+	 *
 	 * @param array $conditions
 	 * @return array
 	 */
@@ -154,7 +154,7 @@ class SQLQuery_ParameterInjector {
 
 	/**
 	 * Merge parameters into a SQL prepared condition
-	 * 
+	 *
 	 * @param string $sql
 	 * @param array $parameters
 	 * @return string
@@ -180,7 +180,7 @@ class SQLQuery_ParameterInjector {
 				$joined .= '?';
 				continue;
 			}
-			
+
 			// Encode and insert next parameter
 			$next = array_shift($parameters);
 			if(is_array($next) && isset($next['value'])) {
@@ -194,9 +194,9 @@ class SQLQuery_ParameterInjector {
 	/**
 	 * Determines if the SQL fragment either breaks into or out of a string literal
 	 * by counting single quotes
-	 * 
+	 *
 	 * Handles double-quote escaped quotes as well as slash escaped quotes
-	 * 
+	 *
 	 * @param string $input The SQL fragment
 	 * @return boolean True if the string breaks into or out of a string literal
 	 */

@@ -297,7 +297,7 @@ class LeftAndMainTest_Object extends DataObject implements TestOnly {
 	);
 
 	private static $default_sort = '"Sort"';
-	
+
 	private static $extensions = array(
 		'Hierarchy'
 	);

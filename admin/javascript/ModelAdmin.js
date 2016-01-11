@@ -11,10 +11,10 @@
 				this.trigger('beforeSubmit');
 			}
 		});
-	
+
 		/**
 		 * Class: .importSpec
-		 * 
+		 *
 		 * Toggle import specifications
 		 */
 		$('.importSpec').entwine({
@@ -24,7 +24,7 @@
 					$('#' + $(this).attr('href').replace(/.*#/,'')).slideToggle();
 					return false;
 				});
-				
+
 				this._super();
 			},
 			onunmatch: function() {
