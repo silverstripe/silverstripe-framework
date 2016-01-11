@@ -308,23 +308,18 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
 
-		// Using uncompressed files as they'll be processed by JSMin in the Requirements class.
-		// Not as effective as other compressors or pre-compressed+finetuned files,
-		// but overall the unified minification into a single file brings more performance benefits
-		// than a couple of saved bytes (after gzip) in individual files.
-		// We also re-compress already compressed files through JSMin as this causes weird runtime bugs.
-		Requirements::combine_files(
-			'lib.js',
-			array(
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-lib.js', [
+			'provides' => [
 				THIRDPARTY_DIR . '/jquery/jquery.js',
-				FRAMEWORK_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/lib.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
 				THIRDPARTY_DIR . '/json-js/json2.js',
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
 				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
 				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
 				THIRDPARTY_DIR . '/jquery-form/jquery.form.js',
+				THIRDPARTY_DIR . '/jquery-ondemand/jquery.ondemand.js',
+				THIRDPARTY_DIR . '/jquery-changetracker/lib/jquery.changetracker.js',
+				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
@@ -332,51 +327,48 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
-				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
-				FRAMEWORK_DIR . '/javascript/i18n.js',
-				FRAMEWORK_DIR . '/javascript/TreeDropdownField.js',
-				FRAMEWORK_DIR . '/javascript/DateField.js',
-				FRAMEWORK_DIR . '/javascript/HtmlEditorField.js',
-				FRAMEWORK_DIR . '/javascript/TabSet.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js',
-				FRAMEWORK_DIR . '/javascript/GridField.js',
-			)
-		);
+				FRAMEWORK_DIR . '/javascript/dist/TreeDropdownField.js',
+				FRAMEWORK_DIR . '/javascript/dist/DateField.js',
+				FRAMEWORK_DIR . '/javascript/dist/HtmlEditorField.js',
+				FRAMEWORK_DIR . '/javascript/dist/TabSet.js',
+				FRAMEWORK_DIR . '/javascript/dist/GridField.js',
+				FRAMEWORK_DIR . '/javascript/dist/i18n.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/sspath.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/ssui.core.js',
+			]
+		]);
 
-		if (Director::isDev()) Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/leaktools.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-leftandmain.js', [
+			'provides' => [
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Layout.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.ActionTabSet.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Panel.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Tree.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Content.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.EditForm.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Menu.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Preview.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.BatchActions.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.FieldHelp.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.FieldDescriptionToggle.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.TreeDropdownField.js'
+			]
+		]);
 
-		$leftAndMainIncludes = array_unique(array_merge(
-			array(
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.ActionTabSet.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldDescriptionToggle.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.TreeDropdownField.js',
-			),
-			Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
-			Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
-		));
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true);
+		Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true);
 
-		if($this->config()->session_keepalive_ping) {
-			$leftAndMainIncludes[] = FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js';
+		if ($this->config()->session_keepalive_ping) {
+			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Ping.js');
 		}
 
-		Requirements::combine_files('leftandmain.js', $leftAndMainIncludes);
-
-		// TODO Confuses jQuery.ondemand through document.write()
 		if (Director::isDev()) {
+			// TODO Confuses jQuery.ondemand through document.write()
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
+			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/leaktools.js');
 		}
 
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
@@ -1765,7 +1757,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 	/**
 	 * Register the given javascript file as required in the CMS.
-	 * Filenames should be relative to the base, eg, FRAMEWORK_DIR . '/javascript/loader.js'
+	 * Filenames should be relative to the base, eg, FRAMEWORK_DIR . '/javascript/dist/loader.js'
 	 *
 	 * @deprecated since version 4.0
 	 */

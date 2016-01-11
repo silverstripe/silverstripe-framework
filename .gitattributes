@@ -1,1 +1,3 @@
-docs/ export-ignore
+admin/javascript/src/ export-ignore
+docs/                 export-ignore
+javascript/src/       export ignore

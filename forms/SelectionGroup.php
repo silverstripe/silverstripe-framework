@@ -111,7 +111,7 @@ class SelectionGroup extends CompositeField {
 
 	public function FieldHolder($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR .'/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR   . '/javascript/SelectionGroup.js');
+		Requirements::javascript(FRAMEWORK_DIR   . '/javascript/dist/SelectionGroup.js');
 		Requirements::css(FRAMEWORK_DIR . '/css/SelectionGroup.css');
 
 		$obj = $properties ? $this->customise($properties) : $this;

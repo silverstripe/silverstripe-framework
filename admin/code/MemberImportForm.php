@@ -63,7 +63,7 @@ class MemberImportForm extends Form {
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/MemberImportForm.js');
 
 		$this->addExtraClass('cms');
 		$this->addExtraClass('import-form');

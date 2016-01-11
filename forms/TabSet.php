@@ -76,7 +76,7 @@ class TabSet extends CompositeField {
 
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TabSet.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/dist/TabSet.js');
 
 		$obj = $properties ? $this->customise($properties) : $this;
 

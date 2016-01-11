@@ -110,7 +110,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
 		}
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/ModelAdmin.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/ModelAdmin.js');
 	}
 
 	public function Link($action = null) {

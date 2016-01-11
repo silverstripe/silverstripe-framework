@@ -1,0 +1,13 @@
+require('../../src/LeftAndMain.Layout.js');
+require('../../src/LeftAndMain.js');
+require('../../src/LeftAndMain.ActionTabSet.js');
+require('../../src/LeftAndMain.Panel.js');
+require('../../src/LeftAndMain.Tree.js');
+require('../../src/LeftAndMain.Content.js');
+require('../../src/LeftAndMain.EditForm.js');
+require('../../src/LeftAndMain.Menu.js');
+require('../../src/LeftAndMain.Preview.js');
+require('../../src/LeftAndMain.BatchActions.js');
+require('../../src/LeftAndMain.FieldHelp.js');
+require('../../src/LeftAndMain.FieldDescriptionToggle.js');
+require('../../src/LeftAndMain.TreeDropdownField.js');

@@ -6,7 +6,7 @@
 			var rulelists = store[event] || (store[event] = {});
 			var rulelist = rulelists[name] || (rulelists[name] = $.entwine.RuleList());
 
-			rule = rulelist.addRule(selector, event);
+			var rule = rulelist.addRule(selector, event);
 			rule.handler = name;
 
 			this.bind_proxy(selector, name, capture);

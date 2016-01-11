@@ -6,6 +6,13 @@
  * All rights reserved.
  */
 /*global jQuery jLayout*/
+
+// Customised
+// Defining global alias because Browserify adds 'use strict'
+// which throws a runtime error if globals are undefined and not declared.
+var jQuery = window.jQuery,
+	jLayout = window.jLayout;
+
 if (jQuery && jLayout) {
 	(function ($) {
 		/**
