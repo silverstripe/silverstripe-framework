@@ -595,7 +595,8 @@ body.cms { overflow: hidden; }
 .ui-tabs .ui-tabs-nav { float: right; margin: 16px 0 -1px 0; padding: 0 16px 0 0; border-bottom: 0; }
 .ui-tabs .ui-tabs-nav ~ .ui-tabs-panel { clear: both; }
 .ui-tabs .ui-tabs-nav li { top: 0; float: left; margin-top: 0; }
-.ui-tabs .ui-tabs-nav li a { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; float: none; font-weight: normal; color: #4f5861; line-height: 32px; padding: 0 12px 0; }
+.ui-tabs .ui-tabs-nav li:active { outline: none; }
+.ui-tabs .ui-tabs-nav li a { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; outline: none; float: none; font-weight: normal; color: #4f5861; line-height: 32px; padding: 0 12px 0; }
 .ui-tabs .ui-tabs-nav li:last-child { margin-right: 0; }
 .ui-tabs .ui-tabs-nav .ui-state-default { border: 0; background: transparent; }
 .ui-tabs .ui-tabs-nav .ui-state-default a { line-height: 28px; padding-top: 12px; padding-bottom: 8px; color: #66727d; }
