@@ -22,6 +22,14 @@ class PDOConnector extends DBConnector
     private static $emulate_prepare = false;
 
     /**
+     * Should ATTR_STRINGIFY_FETCHES flag be used to make all fetched values strings?
+     *
+     * @config
+     * @var boolean
+     */
+    private static $stringify_fetches = false;
+
+    /**
      * The PDO connection instance
      *
      * @var PDO
@@ -101,6 +109,16 @@ class PDOConnector extends DBConnector
         return Config::inst()->get('SilverStripe\ORM\Connect\PDOConnector', 'emulate_prepare');
     }
 
+    /**
+     * Should we stringify fetches from the DB (ie: convert all values to strings)
+     *
+     * @return boolean
+     */
+    public static function is_stringify_fetches()
+    {
+        return (bool)Config::inst()->get('SilverStripe\ORM\Connect\PDOConnector', 'stringify_fetches');
+    }
+
     public function connect($parameters, $selectDB = false)
     {
         $this->flushStatements();
@@ -173,6 +191,9 @@ class PDOConnector extends DBConnector
         );
         if (self::is_emulate_prepare()) {
             $options[PDO::ATTR_EMULATE_PREPARES] = true;
+        }
+        if (self::is_stringify_fetches()) {
+            $options[PDO::ATTR_STRINGIFY_FETCHES] = true;
         }
 
         // May throw a PDOException if fails

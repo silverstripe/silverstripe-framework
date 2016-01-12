@@ -7,6 +7,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\PDOConnector;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\Dev\SapphireTest;
+use PDO;
 
 class PDODatabaseTest extends SapphireTest
 {
@@ -116,5 +117,43 @@ class PDODatabaseTest extends SapphireTest
         $result = $query->execute();
         $this->assertInstanceOf(PDOQuery::class, $result);
         $this->assertEquals(1, DB::affected_rows());
+    }
+
+    public function testTypeRetained()
+    {
+        if (!(DB::get_connector() instanceof PDOConnector)) {
+            $this->markTestSkipped('This test requires the current DB connector is PDO');
+        }
+
+        $reflectionProperty = new \ReflectionProperty(PDOConnector::class, 'pdoConnection');
+        $reflectionProperty->setAccessible(true);
+        $connection = $reflectionProperty->getValue(DB::get_connector());
+
+        //store the current value so we can reset it back at the end
+        $origStringify = $connection->getAttribute(PDO::ATTR_STRINGIFY_FETCHES);
+        $connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
+
+
+        $result = DB::get_connector()->query(
+            'SELECT "ID", "Title" FROM "MySQLDatabaseTest_Data" LIMIT 1'
+        );
+
+        $row = $result->next();
+
+        $this->assertInternalType("int", $row['ID']);
+        $this->assertInternalType("string", $row['Title']);
+
+        $connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+
+        $result = DB::get_connector()->query(
+            'SELECT "ID", "Title" FROM "MySQLDatabaseTest_Data" LIMIT 1'
+        );
+
+        $row = $result->next();
+
+        $this->assertInternalType("string", $row['ID']);
+        $this->assertInternalType("string", $row['Title']);
+
+        $connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, $origStringify);
     }
 }
