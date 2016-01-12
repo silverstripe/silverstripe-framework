@@ -716,7 +716,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						// http://www.w3.org/TR/1999/REC-html401-19991224/struct/links.html#h-12.2
 
 						if(ed) {
-							var raw = ed.getContent().match(/\s(name|id)="([^"]+?)"|\s(name|id)='([^']+?)'/gim);
+							var raw = ed.getContent()
+								.match(/\s+(name|id)\s*=\s*(["'])([^\2\s>]*?)\2|\s+(name|id)\s*=\s*([^"']+)[\s +>]/gim);
 							if (raw && raw.length) {
 								for(var i = 0; i < raw.length; i++) {
 									var indexStart = (raw[i].indexOf('id=') == -1) ? 7 : 5;

@@ -116,6 +116,43 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		);
 	}
 
+	public function testGetAnchors() {
+		if (!class_exists('Page')) {
+			$this->markTestSkipped();
+		}
+		$html = '<div name="foo"></div>
+<div name=\'bar\'></div>
+<div id="baz"></div>
+<div id=\'bam\'></div>
+<div id = "baz"></div>
+<div id = ""></div>
+<div id="some\'id"></div>
+<div id=bar></div>';
+		$expected = array(
+			'foo',
+			'bar',
+			'baz',
+			'bam',
+			"some'id",
+			'bar',
+		);
+		$page = new Page();
+		$page->Title = 'Test';
+		$page->Content = $html;
+		$page->write();
+		$this->useDraftSite(true);
+
+		$controller = new Controller();
+		$controller->setRequest(new SS_HTTPRequest('GET', '/', array(
+			'PageID' => $page->ID,
+		)));
+		$controller->init();
+
+		$toolBar = new HtmlEditorField_Toolbar($controller, 'test');
+
+		$this->assertEquals(json_encode($expected), $toolBar->getanchors());
+	}
+
 	public function testHtmlEditorFieldFileLocal() {
 		$file = new HtmlEditorField_File('http://domain.com/folder/my_image.jpg?foo=bar');
 		$this->assertEquals('http://domain.com/folder/my_image.jpg?foo=bar', $file->URL);
