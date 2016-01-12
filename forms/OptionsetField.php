@@ -108,7 +108,6 @@ class OptionsetField extends DropdownField {
 		unset($attributes['name']);
 		unset($attributes['required']);
 		unset($attributes['role']);
-		unset($attributes['aria-required']);
 		
 		return $attributes;
 	}
