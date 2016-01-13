@@ -262,6 +262,38 @@ Helpful hint: You can always edit your last commit message by using:
 
 	$ git commit --amend
 
+## Working with client-side dependencies
+
+From time to time client-side dependencies like jQuery need to be upgraded, added, or removed. We have some tools for dealing with that. Note this only applies to core SilverStripe dependencies, you're free to to manage dependencies in your project codebase however you like.
+
+### Node.js
+
+The [Node.js](https://nodejs.org) JavaScript runtime is the foundation of our client-side build tool chain. If you want to do things like upgrade, add, or remove libraries, you'll need Node installed on your dev environment. Our build tooling supports the v4.2.x (LTS) version of Node.
+
+### npm
+
+[npm](https://www.npmjs.com/) is the package manager we use for JavaScript libraries. It comes bundled with Node.js so should already have it installed if you have Node.
+
+The configuration for an npm package goes in `package.json`. You'll see one in the root directory of `framework`. As well as being used for defining dependencies and basic package information, the `package.json` file has some handy scripts.
+
+```
+$ npm run build
+```
+
+This script copies JavaScript files from the `node_modules` directory into the `thirdparty` directory. The `node_modules` directory is not part of source control, so you'll need to run this command if you have upgraded, or added a module.
+
+```
+$ npm run sanity
+```
+
+This script makes sure files in `thirdparty` match files copied from `node_modules`. You should never commit custom changes to a library file. This script will catch them if you do :smile:
+
+Of course to run these scripts, you'll need to get the dependencies, so run a `npm install` from the root directory to get started.
+
+### Gulp
+
+[Gulp](http://gulpjs.com/) is the build system which gets invoked when you run npm scripts in SilverStripe. All npm scripts have a corresponding Gulp task which you can find in `gulpfile.js`.
+
 ## Some gotchas
 
 Be careful not to commit any of your configuration files, logs, or throwaway test files to your GitHub repo. These files can contain information you wouldn't want publicly viewable and they will make it impossible to merge your contributions into the main development trunk.
