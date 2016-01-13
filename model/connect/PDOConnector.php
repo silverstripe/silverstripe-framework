@@ -144,11 +144,9 @@ class PDOConnector extends DBConnector {
 
 		// Connection commands to be run on every re-connection
 		$options = array(
-			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+			PDO::ATTR_EMULATE_PREPARES => self::is_emulate_prepare(),
 		);
-		if(self::is_emulate_prepare()) {
-			$options[PDO::ATTR_EMULATE_PREPARES] = true;
-		}
 
 		// May throw a PDOException if fails
 		$this->pdoConnection = new PDO(
