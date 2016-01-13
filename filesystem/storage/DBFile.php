@@ -144,9 +144,10 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 	 * @return string
 	 */
 	public function getBasename() {
-		if($this->exists()) {
-			return basename($this->getSourceURL());
+		if(!$this->exists()) {
+			return null;
 		}
+		return basename($this->getSourceURL());
 	}
 
 	/**
@@ -155,9 +156,10 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 	 * @return string
 	 */
 	public function getExtension() {
-		if($this->exists()) {
-			return pathinfo($this->Filename, PATHINFO_EXTENSION);
+		if(!$this->exists()) {
+			return null;
 		}
+		return pathinfo($this->Filename, PATHINFO_EXTENSION);
 	}
 
 	/**
@@ -174,11 +176,11 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		return $this->getBasename();
 	}
 
-	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $conflictResolution = null) {
+	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array()) {
 		$this->assertFilenameValid($filename ?: $path);
 		$result = $this
 			->getStore()
-			->setFromLocalFile($path, $filename, $hash, $variant, $conflictResolution);
+			->setFromLocalFile($path, $filename, $hash, $variant, $config);
 		// Update from result
 		if($result) {
 			$this->setValue($result);
@@ -186,11 +188,11 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		return $result;
 	}
 
-	public function setFromStream($stream, $filename, $hash = null, $variant = null, $conflictResolution = null) {
+	public function setFromStream($stream, $filename, $hash = null, $variant = null, $config = array()) {
 		$this->assertFilenameValid($filename);
 		$result = $this
 			->getStore()
-			->setFromStream($stream, $filename, $hash, $variant, $conflictResolution);
+			->setFromStream($stream, $filename, $hash, $variant, $config);
 		// Update from result
 		if($result) {
 			$this->setValue($result);
@@ -198,11 +200,11 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		return $result;
 	}
 
-	public function setFromString($data, $filename, $hash = null, $variant = null, $conflictResolution = null) {
+	public function setFromString($data, $filename, $hash = null, $variant = null, $config = array()) {
 		$this->assertFilenameValid($filename);
 		$result = $this
 			->getStore()
-			->setFromString($data, $filename, $hash, $variant, $conflictResolution);
+			->setFromString($data, $filename, $hash, $variant, $config);
 		// Update from result
 		if($result) {
 			$this->setValue($result);
@@ -228,11 +230,11 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 			->getAsString($this->Filename, $this->Hash, $this->Variant);
 	}
 
-	public function getURL() {
+	public function getURL($grant = true) {
 		if(!$this->exists()) {
 			return null;
 		}
-		$url = $this->getSourceURL();
+		$url = $this->getSourceURL($grant);
 		$this->updateURL($url);
 		$this->extend('updateURL', $url);
 		return $url;
@@ -242,18 +244,19 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 	 * Get URL, but without resampling.
 	 * Note that this will return the url even if the file does not exist.
 	 *
+	 * @param bool $grant Ensures that the url for any protected assets is granted for the current user.
 	 * @return string
 	 */
-	public function getSourceURL() {
+	public function getSourceURL($grant = true) {
 		return $this
 			->getStore()
-			->getAsURL($this->Filename, $this->Hash, $this->Variant);
+			->getAsURL($this->Filename, $this->Hash, $this->Variant, $grant);
 	}
 
 	/**
 	 * Get the absolute URL to this resource
 	 *
-	 * @return type
+	 * @return string
 	 */
 	public function getAbsoluteURL() {
 		if(!$this->exists()) {
@@ -281,13 +284,23 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 	}
 	
 	public function getValue() {
-		if($this->exists()) {
-			return array(
-				'Filename' => $this->Filename,
-				'Hash' => $this->Hash,
-				'Variant' => $this->Variant
-			);
+		if(!$this->exists()) {
+			return null;
 		}
+		return array(
+			'Filename' => $this->Filename,
+			'Hash' => $this->Hash,
+			'Variant' => $this->Variant
+		);
+	}
+
+	public function getVisibility() {
+		if(empty($this->Filename)) {
+			return null;
+		}
+		return $this
+			->getStore()
+			->getVisibility($this->Filename, $this->Hash);
 	}
 
 	public function exists() {
@@ -329,6 +342,7 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		if(isset($metadata['size'])) {
 			return $metadata['size'];
 		}
+		return 0;
 	}
 
 	/**
@@ -469,5 +483,54 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 			return \File::format_size($size);
 		}
 		return false;
+	}
+
+	public function deleteFile() {
+		if(!$this->Filename) {
+			return false;
+		}
+
+		return $this
+			->getStore()
+			->delete($this->Filename, $this->Hash);
+	}
+
+	public function publishFile() {
+		if($this->Filename) {
+			$this
+				->getStore()
+				->publish($this->Filename, $this->Hash);
+		}
+	}
+
+	public function protectFile() {
+		if($this->Filename) {
+			$this
+				->getStore()
+				->protect($this->Filename, $this->Hash);
+		}
+	}
+
+	public function grantFile() {
+		if($this->Filename) {
+			$this
+				->getStore()
+				->grant($this->Filename, $this->Hash);
+		}
+	}
+
+	public function revokeFile() {
+		if($this->Filename) {
+			$this
+				->getStore()
+				->revoke($this->Filename, $this->Hash);
+		}
+	}
+
+	public function canViewFile() {
+		return $this->Filename
+			&& $this
+				->getStore()
+				->canView($this->Filename, $this->Hash);
 	}
 }

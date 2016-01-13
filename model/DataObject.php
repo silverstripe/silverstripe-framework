@@ -196,6 +196,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	);
 
 	/**
+	 * Core dataobject extensions
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $extensions = array(
+		'AssetControl' => '\\SilverStripe\\Filesystem\\AssetControlExtension'
+	);
+
+	/**
 	 * Non-static relationship cache, indexed by component name.
 	 */
 	protected $components;

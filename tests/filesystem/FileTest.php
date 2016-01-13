@@ -352,15 +352,15 @@ class FileTest extends SapphireTest {
 		$this->assertEquals("93132.3 GB", File::format_size(100000000000000));
 	}
 
-	public function testDeleteDatabaseOnly() {
+	public function testDeleteFile() {
 		$file = $this->objFromFixture('File', 'asdf');
 		$fileID = $file->ID;
 		$filePath = AssetStoreTest_SpyStore::getLocalPath($file);
-
 		$file->delete();
 
-		$this->assertFileExists($filePath);
-		$this->assertFalse(DataObject::get_by_id('File', $fileID));
+		// File is deleted
+		$this->assertFileNotExists($filePath);
+		$this->assertEmpty(DataObject::get_by_id('File', $fileID));
 	}
 
 	public function testRenameFolder() {

@@ -430,29 +430,10 @@ standard PHP way. See [casting](/topics/datamodel#casting).
 
 ## Filesystem
 
-### Don't allow script-execution in /assets
+### Don't script-execution in /assets
 
-As all uploaded files are stored by default on the /assets-directory, you should disallow script-execution for this
-folder. This is just an additional security-measure to making sure you avoid directory-traversal, check for filesize and
-disallow certain filetypes.
-
-Example configuration for Apache2:
-
-	<VirtualHost *:80>
-		<LocationMatch assets/>
-			php_flag engine off
-			Options -ExecCGI -Includes -Indexes
-		</LocationMatch>
-	</VirtualHost>
-
-
-If you are using shared hosting or in a situation where you cannot alter your Vhost definitions, you can use a .htaccess
-file in the assets directory.  This requires PHP to be loaded as an Apache module (not CGI or FastCGI).
-
-**/assets/.htaccess**
-
-	php_flag engine off
-	Options -ExecCGI -Includes -Indexes 
+Please refer to the article on [file security](/developer_guides/files/file_security)
+for instructions on how to secure the assets folder against malicious script execution.
 
 ### Don't allow access to YAML files
 

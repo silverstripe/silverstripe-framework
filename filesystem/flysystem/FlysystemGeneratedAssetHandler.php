@@ -46,6 +46,7 @@ class FlysystemGeneratedAssetHandler implements GeneratedAssetHandler {
 		if($result) {
 			return $this
 				->getFilesystem()
+				->getAdapter()
 				->getPublicUrl($filename);
 		}
 	}

@@ -239,9 +239,10 @@ class Folder extends File {
 	/**
 	 * Folders do not have public URLs
 	 *
-	 * @return null
+	 * @param bool $grant
+	 * @return null|string
 	 */
-	public function getURL() {
+	public function getURL($grant = true) {
 		return null;
 	}
 

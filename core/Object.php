@@ -406,21 +406,20 @@ abstract class Object {
 		//BC support
 		if(func_num_args() > 1){
 			$class = $classOrExtension;
-			$requiredExtension = $requiredExtension;
-		}
-		else {
+		} else {
 			$class = get_called_class();
 			$requiredExtension = $classOrExtension;
 		}
 
-		$requiredExtension = strtolower($requiredExtension);
-		$extensions = Config::inst()->get($class, 'extensions');
-
-		if($extensions) foreach($extensions as $extension) {
-			$left = strtolower(Extension::get_classname_without_arguments($extension));
-			$right = strtolower(Extension::get_classname_without_arguments($requiredExtension));
-			if($left == $right) return true;
-			if (!$strict && is_subclass_of($left, $right)) return true;
+		$requiredExtension = Extension::get_classname_without_arguments($requiredExtension);
+		$extensions = self::get_extensions($class);
+		foreach($extensions as $extension) {
+			if(strcasecmp($extension, $requiredExtension) === 0) {
+				return true;
+			}
+			if (!$strict && is_subclass_of($extension, $requiredExtension)) {
+				return true;
+			}
 		}
 
 		return false;
@@ -550,6 +549,12 @@ abstract class Object {
 	 */
 	public static function get_extensions($class, $includeArgumentString = false) {
 		$extensions = Config::inst()->get($class, 'extensions');
+		if(empty($extensions)) {
+			return array();
+		}
+
+		// Clean nullified named extensions
+		$extensions = array_filter(array_values($extensions));
 
 		if($includeArgumentString) {
 			return $extensions;

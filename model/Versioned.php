@@ -805,10 +805,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * Move a database record from one stage to the other.
 	 *
-	 * @param fromStage Place to copy from.  Can be either a stage name or a version number.
-	 * @param toStage Place to copy to.  Must be a stage name.
-	 * @param createNewVersion Set this to true to create a new version number.  By default, the existing version
-	 *                         number will be copied over.
+	 * @param string $fromStage Place to copy from.  Can be either a stage name or a version number.
+	 * @param string $toStage Place to copy to.  Must be a stage name.
+	 * @param bool $createNewVersion Set this to true to create a new version number.
+	 * By default, the existing version number will be copied over.
 	 */
 	public function publish($fromStage, $toStage, $createNewVersion = false) {
 		$this->owner->extend('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);

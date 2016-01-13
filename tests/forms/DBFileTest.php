@@ -1,4 +1,5 @@
 <?php
+use SilverStripe\Filesystem\Storage\AssetStore;
 
 /**
  * Description of DBFileTest
@@ -63,6 +64,28 @@ class DBFileTest extends SapphireTest {
 		$obj->MyFile->setFromString('puppies', 'subdir/puppy-document.txt');
 	}
 
+	public function testPermission() {
+		$obj = new DBFileTest_Object();
+
+		// Test from image
+		$fish = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$this->assertFileExists($fish);
+		$obj->MyFile->setFromLocalFile($fish, 'private/awesome-fish.jpg', null, null, array(
+			'visibility' => AssetStore::VISIBILITY_PROTECTED
+		));
+
+		// Test various file permissions work on DBFile
+		$this->assertFalse($obj->MyFile->canViewFile());
+		$obj->MyFile->getURL();
+		$this->assertTrue($obj->MyFile->canViewFile());
+		$obj->MyFile->revokeFile();
+		$this->assertFalse($obj->MyFile->canViewFile());
+		$obj->MyFile->getURL(false);
+		$this->assertFalse($obj->MyFile->canViewFile());
+		$obj->MyFile->grantFile();
+		$this->assertTrue($obj->MyFile->canViewFile());
+	}
+
 }
 
 /**
@@ -74,14 +97,18 @@ class DBFileTest_Object extends DataObject implements TestOnly {
 	);
 }
 
-
+/**
+ * @property DBFile $AnotherFile
+ */
 class DBFileTest_Subclass extends DBFileTest_Object implements TestOnly {
 	private static $db = array(
 		"AnotherFile" => "DBFile"
 	);
 }
 
-
+/**
+ * @property DBFile $MyFile
+ */
 class DBFileTest_ImageOnly extends DataObject implements TestOnly {
 	private static $db = array(
 		"MyFile" => "DBFile('image/supported')"

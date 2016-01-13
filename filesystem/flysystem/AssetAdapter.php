@@ -2,17 +2,23 @@
 
 namespace SilverStripe\Filesystem\Flysystem;
 
-use Controller;
-use Director;
 use League\Flysystem\Adapter\Local;
 
 /**
- * Adaptor for local filesystem based on assets directory
+ * Adapter for local filesystem based on assets directory
  *
  * @package framework
  * @subpackage filesystem
  */
 class AssetAdapter extends Local {
+
+	/**
+	 * Server specific configuration necessary to block http traffic to a local folder
+	 *
+	 * @config
+	 * @var array Mapping of server configurations to configuration files necessary
+	 */
+	private static $server_configuration = array();
 
 	/**
 	 * Config compatible permissions configuration
@@ -33,39 +39,101 @@ class AssetAdapter extends Local {
 
 	public function __construct($root = null, $writeFlags = LOCK_EX, $linkHandling = self::DISALLOW_LINKS) {
 		// Get root path
-		if (!$root) {
-			// Empty root will set the path to assets
-			$root = ASSETS_PATH;
-		} elseif(strpos($root, './') === 0) {
-			// Substitute leading ./ with BASE_PATH
-			$root = BASE_PATH . substr($root, 1);
-		} elseif(strpos($root, '../') === 0) {
-			// Substitute leading ./ with parent of BASE_PATH, in case storage is outside of the webroot.
-			$root = dirname(BASE_PATH) . substr($root, 2);
-		}
+		$root = $this->findRoot($root);
 
 		// Override permissions with config
 		$permissions = \Config::inst()->get(get_class($this), 'file_permissions');
-
 		parent::__construct($root, $writeFlags, $linkHandling, $permissions);
+
+		// Configure server
+		$this->configureServer();
 	}
 
 	/**
-	 * Provide downloadable url
+	 * Determine the root folder absolute system path
 	 *
-	 * @param string $path
-	 * @return string|null
+	 * @param string $root
+	 * @return string
 	 */
-	public function getPublicUrl($path) {
-		$rootPath = realpath(BASE_PATH);
-		$filesPath = realpath($this->pathPrefix);
-
-		if(stripos($filesPath, $rootPath) === 0) {
-			$dir = substr($filesPath, strlen($rootPath));
-			return Controller::join_links(Director::baseURL(), $dir, $path);
+	protected function findRoot($root) {
+		// Empty root will set the path to assets
+		if (!$root) {
+			throw new \InvalidArgumentException("Missing argument for root path");
 		}
 
-		// File outside of webroot can't be used
-		return null;
+		// Substitute leading ./ with BASE_PATH
+		if(strpos($root, './') === 0) {
+			return BASE_PATH . substr($root, 1);
+		}
+
+		// Substitute leading ./ with parent of BASE_PATH, in case storage is outside of the webroot.
+		if(strpos($root, '../') === 0) {
+			return dirname(BASE_PATH) . substr($root, 2);
+		}
+
+		return $root;
 	}
+
+	/**
+	 * Force flush and regeneration of server files
+	 */
+	public function flush() {
+		$this->configureServer(true);
+	}
+
+	/**
+	 * Configure server files for this store
+	 *
+	 * @param bool $forceOverwrite Force regeneration even if files already exist
+	 */
+	protected function configureServer($forceOverwrite = false) {
+		// Get server type
+		$type = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '*';
+		list($type) = explode('/', strtolower($type));
+
+		// Determine configurations to write
+		$rules = \Config::inst()->get(get_class($this), 'server_configuration', \Config::FIRST_SET);
+		if(empty($rules[$type])) {
+			return;
+		}
+		$configurations = $rules[$type];
+
+		// Apply each configuration
+		$config = new \League\Flysystem\Config();
+		$config->set('visibility', 'private');
+		foreach($configurations as $file => $template) {
+			if ($forceOverwrite || !$this->has($file)) {
+				// Evaluate file
+				$content = $this->renderTemplate($template);
+				$success = $this->write($file, $content, $config);
+				if(!$success) {
+					throw new \Exception("Error writing server configuration file \"{$file}\"");
+				}
+			}
+		}
+	}
+
+	/**
+	 * Render server configuration file from a template file
+	 *
+	 * @param string $template
+	 * @return \HTMLText Rendered results
+	 */
+	protected function renderTemplate($template) {
+		// Build allowed extensions
+		$allowedExtensions = new \ArrayList();
+		foreach(\File::config()->allowed_extensions as $extension) {
+			if($extension) {
+				$allowedExtensions->push(new \ArrayData(array(
+					'Extension' => preg_quote($extension)
+				)));
+			}
+		}
+
+		$viewer = new \SSViewer(array($template));
+		return (string)$viewer->process(new \ArrayData(array(
+			'AllowedExtensions' => $allowedExtensions
+		)));
+	}
+
 }
