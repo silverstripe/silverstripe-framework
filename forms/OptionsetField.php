@@ -102,4 +102,13 @@ class OptionsetField extends DropdownField {
 	public function ExtraOptions() {
 		return new ArrayList();
 	}
+	
+	public function getAttributes() {
+		$attributes = parent::getAttributes();
+		unset($attributes['name']);
+		unset($attributes['required']);
+		unset($attributes['role']);
+		
+		return $attributes;
+	}
 }
