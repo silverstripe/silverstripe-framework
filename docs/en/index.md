@@ -11,7 +11,7 @@ Please read our [guide to contributing documentation](misc/contributing#writing-
 
 ###  Getting support
 
-[Forum](http://www.silverstripe.org/forums/) | [IRC channel](http://silverstripe.org/irc) | [End user docs](http://userhelp.silverstripe.com) | [Core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
+[Forum](http://www.silverstripe.org/forums/) | [IRC channel](https://irc.silverstripe.org) | [End user docs](http://userhelp.silverstripe.com) | [Core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
 
 
 ### Level 1: Building your first SilverStripe website
