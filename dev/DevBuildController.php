@@ -16,15 +16,16 @@ class DevBuildController extends Controller {
 			$da = DatabaseAdmin::create();
 			return $da->handleRequest($request, $this->model);
 		} else {
-			if(Director::isDev() || Permission::check("ADMIN")) {
-				$renderer = DebugView::create();
-				$renderer->writeHeader();
-				$renderer->writeInfo("Environment Builder", Director::absoluteBaseURL());
-				echo "<div class=\"build\">";
-			}
+			$renderer = DebugView::create();
+			$renderer->writeHeader();
+			$renderer->writeInfo("Environment Builder", Director::absoluteBaseURL());
+			echo "<div class=\"build\">";
 
 			$da = DatabaseAdmin::create();
 			return $da->handleRequest($request, $this->model);
+
+			echo "</div>";
+			$renderer->writeFooter();
 		}
 	}
 
