@@ -27,8 +27,8 @@ config option:
 
 ## User access control
 
-Access for files is granted on a per-session basis, rather than on a per-member basis, via a
-whitelist action. This means that access to any protected asset must be made prior to the user
+Access for files is granted on a per-session basis, rather than on a per-member basis, via
+whitelisting accessed assets. This means that access to any protected asset must be made prior to the user
 actually attempting to download that asset. This is normally done in the PHP request that generated
 the response containing the link to that file.
 

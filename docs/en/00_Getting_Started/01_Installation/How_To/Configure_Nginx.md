@@ -37,6 +37,9 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 		error_page 500 /assets/error-500.html;
 	
 		location ^~ /assets/ {
+			location ~ /\. {
+				deny all;
+			}
 			sendfile on;
 			try_files $uri /framework/main.php?url=$uri&$query_string;
 		}

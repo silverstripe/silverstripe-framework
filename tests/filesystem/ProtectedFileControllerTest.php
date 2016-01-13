@@ -75,7 +75,7 @@ class ProtectedFileControllerTest extends FunctionalTest {
 	/**
 	 * Test that certain requests are denied
 	 */
-	public function testRequestDenied() {
+	public function testInvalidRequest() {
 		$result = $this->get('assets/.protected/file.jpg');
 		$this->assertResponseEquals(400, null, $result);
 	}

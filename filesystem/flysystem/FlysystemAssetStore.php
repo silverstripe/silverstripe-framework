@@ -5,12 +5,13 @@ namespace SilverStripe\Filesystem\Flysystem;
 use Config;
 use Generator;
 use Injector;
-use League\Flysystem\Directory;
 use Session;
 use Flushable;
 use InvalidArgumentException;
+use League\Flysystem\Directory;
 use League\Flysystem\Exception;
 use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemInterface;
 use League\Flysystem\Util;
 use SilverStripe\Filesystem\Storage\AssetNameGenerator;
 use SilverStripe\Filesystem\Storage\AssetStore;
@@ -60,6 +61,24 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * @var bool
 	 */
 	private static $keep_empty_dirs = false;
+
+	/**
+	 * Set HTTP error code for requests to secure denied assets.
+	 * Note that this defaults to 404 to prevent information disclosure
+	 * of secure files
+	 *
+	 * @config
+	 * @var int
+	 */
+	private static $denied_response_code = 404;
+
+	/**
+	 * Set HTTP error code to use for missing secure assets
+	 *
+	 * @config
+	 * @var int
+	 */
+	private static $missing_response_code = 404;
 
 	/**
 	 * Custom headers to add to all custom file responses
@@ -401,7 +420,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		// Since permissions are applied to the non-variant only,
 		// map back to the original file before checking
 		$originalID = $this->removeVariant($fileID);
-		$granted = Session::get('AssetStore_Grants') ?: array();
+		$granted = Session::get(self::GRANTS_SESSION) ?: array();
 		return !empty($granted[$originalID]);
 	}
 
@@ -758,7 +777,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		// Check if file exists
 		$filesystem = $this->getFilesystemFor($asset);
 		if(!$filesystem) {
-			return $this->createInvalidResponse();
+			return $this->createMissingResponse();
 		}
 
 		// Block directory access
@@ -777,11 +796,11 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 
 	/**
 	 * Generate an {@see SS_HTTPResponse} for the given file from the source filesystem
-	 * @param Filesystem $flysystem
+	 * @param FilesystemInterface $flysystem
 	 * @param string $fileID
 	 * @return SS_HTTPResponse
 	 */
-	protected function createResponseFor(Filesystem $flysystem, $fileID) {
+	protected function createResponseFor(FilesystemInterface $flysystem, $fileID) {
 		// Build response body
 		// @todo: gzip / buffer response?
 		$body = $flysystem->read($fileID);
@@ -798,22 +817,33 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	}
 
 	/**
-	 * Generate a 403 response for the given file
+	 * Generate a response for requests to a denied protected file
 	 *
 	 * @return SS_HTTPResponse
 	 */
 	protected function createDeniedResponse() {
-		$response = new SS_HTTPResponse(null, 403);
-		return $response;
+		$code = (int)Config::inst()->get(get_class($this), 'denied_response_code');
+		return $this->createErrorResponse($code);
 	}
 
 	/**
-	 * Generate 404 response for missing file requests
+	 * Generate a response for missing file requests
 	 *
 	 * @return SS_HTTPResponse
 	 */
-	protected function createInvalidResponse() {
-		$response = new SS_HTTPResponse('', 404);
+	protected function createMissingResponse() {
+		$code = (int)Config::inst()->get(get_class($this), 'missing_response_code');
+		return $this->createErrorResponse($code);
+	}
+
+	/**
+	 * Create a response with the given error code
+	 *
+	 * @param int $code
+	 * @return SS_HTTPResponse
+	 */
+	protected function createErrorResponse($code) {
+		$response = new SS_HTTPResponse('', $code);
 
 		// Show message in dev
 		if(!\Director::isLive()) {

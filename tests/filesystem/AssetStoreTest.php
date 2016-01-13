@@ -512,6 +512,14 @@ class AssetStoreTest extends SapphireTest {
 class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 
 	/**
+	 * Enable disclosure of secure assets
+	 *
+	 * @config
+	 * @var int
+	 */
+	private static $denied_response_code = 403;
+
+	/**
 	 * Set to true|false to override all isSeekableStream calls
 	 *
 	 * @var null|bool
