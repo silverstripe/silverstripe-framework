@@ -635,7 +635,6 @@ Here's an example of hooking the 'PageLoaded' and 'BeforeSave' methods:
 	});
 
 
-See ['onload' javascript in the CMS](/reference/leftandmain#onload-javascript)
 
 
 ### Break the rules!

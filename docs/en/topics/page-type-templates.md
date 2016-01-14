@@ -75,7 +75,7 @@ meaning that draft content edited in the CMS can be different from published con
 shown to your website visitors. In templates, you don't need to worry about this distinction.
 The `$Content` variable contain the published content by default,
 and only preview draft content if explicitly requested (e.g. by the "preview" feature in the CMS)
-(see the ["versioning" topic](topics/versioning) for more details).
+(see the ["versioning" topic](/topics/versioning) for more details).
 
 ### Menu Loops
 

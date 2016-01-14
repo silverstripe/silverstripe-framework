@@ -119,7 +119,7 @@ pass arguments to the include, which are available on the scope top within the i
 	<% end_with %>
 
 You can also perform includes using the Requirements Class via the template controls. See the section on
-[Includes in Templates](requirements#including_inside_template_files) for more details and examples.
+[Includes in Templates](/reference/requirements#including_inside_template_files) for more details and examples.
 
 	:::ss
 	<% require themedCSS(LeftNavMenu) %>
@@ -127,7 +127,7 @@ You can also perform includes using the Requirements Class via the template cont
 ### Including CSS and JavaScript files (a.k.a "Requirements")
 
 See [CSS](/topics/css) and [Javascript](/topics/javascript) topics for individual including of files and
-[requirements](reference/requirements) for good examples of including both Javascript and CSS files.
+[requirements](/reference/requirements) for good examples of including both Javascript and CSS files.
 
 ## Conditional Logic
 
@@ -700,8 +700,6 @@ width independently.
 *  Break down your templates into groups of includes.  Site integrators would then have the power to override individual
 includes, rather than entire templates.
 
-For more information about templates go to the [Advanced Templates](/reference/advanced-templates) page.
-
 ## Related
 
  * [Built in page controls](/reference/built-in-page-controls)
@@ -710,7 +708,7 @@ For more information about templates go to the [Advanced Templates](/reference/a
  * [Themes](/topics/themes)
  * [Widgets](/topics/widgets)
  * [Images](/reference/image)
- * [Tutorial 1: Building a basic site](/tutorials/1-building-a-basic-site)
- * [Tutorial 2: Extending a basic site](/tutorials/2-extending-a-basic-site)
+ * [Building a basic site](/tutorials/building-a-basic-site)
+ * [Extending a basic site](/tutorials/extending-a-basic-site)
  * [Developing Themes](/topics/theme-development)
  * [Templates: formal syntax description](/reference/templates-formal-syntax)

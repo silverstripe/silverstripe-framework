@@ -49,7 +49,7 @@ it to the community through the [forums](http://silverstripe.org/forums), [core 
 
 ## Reporting Security Issues
 
-Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). See our "[Release Process](release-process)" documentation for more info, and read our guide on [how to write secure code](/topics/security).
+Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). See our "[Release Process](/misc/release-process)" documentation for more info, and read our guide on [how to write secure code](/topics/security).
 
 ## Sharing your Opinion
 

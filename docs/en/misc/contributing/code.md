@@ -6,7 +6,7 @@ The SilverStripe core modules (`framework` and `cms`), as well as some of the mo
 git version control. SilverStripe hosts its modules on [github.com/silverstripe](http://github.com/silverstripe) and [github.com/silverstripe-labs](http://github.com/silverstripe-labs).  After [installing git](http://help.github.com/git-installation-redirect) and creating a [free github.com account](https://github.com/signup/free), you can "fork" a module,
 which creates a copy that you can commit to (see github's [guide to "forking"](http://help.github.com/forking/)).
 
-For other modules, our [module list on silverstripe.org](http://silverstripe.org/modules) lists the repository locations, typically using a version control system like "git" or "[subversion](subversion)". 
+For other modules, our [module list on silverstripe.org](http://silverstripe.org/modules) lists the repository locations, typically using a version control system like "git" or "subversion". 
 
 <div class="hint" markdown="1">
 Note: By supplying code to the SilverStripe core team in patches, tickets and pull requests, you agree to assign copyright of that code to SilverStripe Limited, on the condition that SilverStripe Limited releases that code under the BSD license.
@@ -92,7 +92,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 
 ## Check List
 
-*  Adhere to our [coding conventions](coding-conventions)
+*  Adhere to our [coding conventions](/misc/coding-conventions)
 *  If your patch is extensive, discuss it first on the [silverstripe-dev google group](https://groups.google.com/group/silverstripe-dev) (ideally before doing any serious coding)
 *  When working on existing tickets, assign them to you and provide status updates through ticket comments
 *  Check your patches against the latest "trunk" or "master", as well as the latest release. 

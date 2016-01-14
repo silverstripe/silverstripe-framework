@@ -162,7 +162,7 @@ They provide a list/detail interface within a single record edited in your Model
 `canView()`, `canEdit()`, `canDelete()`, and `canCreate`.
 
 In terms of access control to the interface itself, every `ModelAdmin` subclass
-creates its own "[permission code](/reference/permissions)", which can be assigned
+creates its own "[permission code](/reference/permission)", which can be assigned
 to groups through the `admin/security` management interface. To further limit
 permission, either override checks in `ModelAdmin->init()`, or define
 more permission codes through the `ModelAdmin::$required_permission_codes` static.
@@ -234,7 +234,7 @@ For an introduction how to customize the CMS templates, see our [CMS Architectur
 ## Related
 
 * [GridField](../reference/grid-field): The UI component powering ModelAdmin
-* [Tutorial 5: Dataobject Relationship Management](../tutorials/5-dataobject-relationship-management)
+* [Dataobject Relationship Management](/tutorials/dataobject-relationship-management)
 *  `[api:SearchContext]`
 * [genericviews Module](http://silverstripe.org/generic-views-module)
 * [Presentation about ModelAdmin at SupperHappyDevHouse Wellington](http://www.slideshare.net/chillu/modeladmin-in-silverstripe-23)

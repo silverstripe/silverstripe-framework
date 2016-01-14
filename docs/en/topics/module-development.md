@@ -47,11 +47,11 @@ adherence to conventions, writing documentation, and releasing updates. See [con
 
 **How To:**
 
-*  [Add a link to your module in the main SilverStripe Admin Menu](/reference/leftandmain)
+*  [Add a link to your module in the main SilverStripe Admin Menu](/reference/modeladmin)
 
 **Useful Links:**
 
 *  [Modules](modules)
-*  [Module Release Process](module-release-process)
+*  [Module Release Process](/misc/module-release-process)
 *  [Debugging methods](/topics/debugging)
 *  [URL Variable Tools](/reference/urlvariabletools) - Lists a number of page options, rendering tools or special URL variables that you can use to debug your SilverStripe applications

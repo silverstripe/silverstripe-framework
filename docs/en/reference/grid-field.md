@@ -7,7 +7,7 @@ It's built in a way that provides developers with an extensible way to display t
 table and minimise the amount of code that needs to be written.
 
 In order to quickly get data-focused UIs up and running,
-you might also be interested in the [/reference/modeladmin](ModelAdmin) class
+you might also be interested in the [ModelAdmin](/reference/modeladmin) class
 which is driven largely by the `GridField` class explained here.
 
 ## Overview
@@ -263,4 +263,4 @@ A GridFieldComponent sets and gets data from the GridState.
 ## Related
 
  * [ModelAdmin: A UI driven by GridField](/reference/modeladmin)
- * [Tutorial 5: Dataobject Relationship Management](/tutorials/5-dataobject-relationship-management)
+ * [Dataobject Relationship Management](/tutorials/dataobject-relationship-management)

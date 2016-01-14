@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Part of the [SilverStripe Testing Guide](testing-guide).
+Part of the [SilverStripe Testing Guide](/topics/testing).
 
 ## I can't run my new test class
 
