@@ -44,7 +44,7 @@ available for opensource projects, including wiki and bugtracker functionality
 your modules page on silverstripe.org
 * Be involved in our community 
     * Subscripe to our developer mailing list and be available to answer questions on the forum. 
-    * Attend [irc:our weekly core discussions on IRC](irc/our weekly core discussions on IRC) as regularly as you can.
+    * Attend [irc:our weekly core discussions on IRC](https://irc.silverstripe.org) as regularly as you can.
 * Create an **issue tracker** so your users can file bugs and feature requests (see ["Feedback and Bugtracking"](module-release-process#feedback-and-bugtracking) below)
 * Create a **roadmap** and **milestones** outlining future release planning
 
