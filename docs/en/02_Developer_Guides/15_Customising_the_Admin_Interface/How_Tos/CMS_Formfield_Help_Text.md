@@ -27,4 +27,4 @@ more complex fields like `GridField`, `UploadField`
 or `DropdownField` with the chosen.js behaviour applied.
 
 Note: For more advanced help text we recommend using
-[Custom form field templates](../form_templates);
+[Custom form field templates](/developer_guides/forms/form_templates);

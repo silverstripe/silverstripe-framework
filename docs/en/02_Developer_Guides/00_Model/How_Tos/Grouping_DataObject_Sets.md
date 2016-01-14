@@ -2,7 +2,7 @@
 
 The [api:SS_List] class is designed to return a flat list of records.
 These lists can get quite long, and hard to present on a single list.
-[Pagination](/templates/how_tos/pagination) is one way to solve this problem,
+[Pagination](/developer_guides/templates/how_tos/pagination) is one way to solve this problem,
 by splitting up the list into multiple pages.
 
 In this howto, we present an alternative to pagination: 
@@ -144,5 +144,5 @@ The final step is the render this into the template using the [api:GroupedList->
 
 ## Related
 
- * [Howto: "Pagination"](/templates/how_tos/pagination)
+ * [Howto: "Pagination"](/developer_guides/templates/how_tos/pagination)
  

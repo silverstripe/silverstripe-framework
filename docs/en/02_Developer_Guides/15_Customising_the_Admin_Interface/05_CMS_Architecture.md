@@ -13,7 +13,7 @@ feel familiar to you. This is just a quick run down to get you started
 with some special conventions.
 
 For a more practical-oriented approach to CMS customizations, refer to the
-[Howto: Extend the CMS Interface](how_tos/extend_cms_interface) which builds
+[Howto: Extend the CMS Interface](/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface) which builds
 
 
 ## Markup and Style Conventions
@@ -89,7 +89,7 @@ The various panels and UI components within them are loosely coupled to the layo
 attribute. The layout is triggered on the top element and cascades into children, with a `redraw` method defined on
 each panel and UI component that needs to update itself as a result of layouting.
 
-Refer to [Layout reference](cms_layout) for further information.
+Refer to [Layout reference](/developer_guides/customising_the_admin_interface/cms_layout) for further information.
 
 ## Forms
 
@@ -148,7 +148,7 @@ correctly configured form.
 [jQuery.entwine](https://github.com/hafriedlander/jquery.entwine) is a thirdparty library
 which allows us to attach behaviour to DOM elements in a flexible and structured mannger.
 It replaces the `behaviour.js` library used in previous versions of the CMS interface.
-See [JavaScript Development](javascript_development) for more information on how to use it.
+See [JavaScript Development](/developer_guides/customising_the_admin_interface/javascript_development) for more information on how to use it.
 In the CMS interface, all entwine rules should be placed in the "ss" entwine namespace.
 If you want to call methods defined within these rules outside of entwine logic,
 you have to use this namespace, e.g. `$('.cms-menu').entwine('ss').collapse()`.
@@ -380,7 +380,7 @@ To avoid repetition, we've written some helpers for various use cases:
 
  * Load into a PJAX panel: `<a href="..." class="cms-panel-link" data-pjax-target="Content">`
  * Load URL as an iframe into a popup/dialog: `<a href="..." class="ss-ui-dialog-link">`
- * GridField click to redirect to external link: `<a href="..." class="cms-panel-link action external-link">
+ * GridField click to redirect to external link: `<a href="..." class="cms-panel-link action external-link">`
 
 ## Buttons
 
@@ -433,7 +433,7 @@ The CMS tree for viewing hierarchical structures (mostly pages) is powered
 by the [jstree](http://jstree.com) library. It is configured through
 `framework/admin/javascript/LeftAndMain.Tree.js`, as well as some
 HTML5 metadata generated on its container (see the `data-hints` attribute).
-For more information, see the [Howto: Customize the CMS tree](../how_tos/customize_cms_tree).
+For more information, see the [Howto: Customise the CMS tree](/developer_guides/customising_the_admin_interface/how_tos/customise_cms_tree).
 
 Note that a similar tree logic is also used for the
 form fields to select one or more entries from those hierarchies
@@ -441,7 +441,7 @@ form fields to select one or more entries from those hierarchies
 
 ## Tabs
 
-We're using [jQuery UI tabs](http://jqueryui.com/), but in a customized fashion.
+We're using [jQuery UI tabs](http://jqueryui.com/), but in a customised fashion.
 HTML with tabs can be created either directly through HTML templates in the CMS,
 or indirectly through a `[api:TabSet]` form field. Since tabsets are useable
 outside of the CMS as well, the baseline application of tabs happens via
@@ -538,8 +538,8 @@ through the `PjaxResponseNegotiator` class (see above).
 
 ## Related
 
- * [Howto: Extend the CMS Interface](how_tos/extend_cms_interface)
- * [Howto: Customize the CMS tree](how_tos/customize_cms_tree)
+ * [Howto: Extend the CMS Interface](/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface)
+ * [Howto: Customise the CMS tree](/developer_guides/customising_the_admin_interface/how_tos/customise_cms_tree)
  * [ModelAdmin API](api:ModelAdmin)
- * [Reference: Layout](cms_layout)
+ * [Reference: Layout](/developer_guides/customising_the_admin_interface/cms_layout)
  * [Rich Text Editing](/developer_guides/forms/field_types/htmleditorfield)

@@ -16,7 +16,7 @@ Allows upload of images through limiting file extensions with `setAllowedExtensi
 
 ### Inserting images into the WYSIWYG editor
 
-See [Topics: Rich Text Editing](/topics/rich-text-editing).
+See [Rich Text Editing](/developer_guides/forms/field_types/htmleditorfield).
 
 ### Resizing Images in PHP
 
