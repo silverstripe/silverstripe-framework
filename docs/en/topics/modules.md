@@ -90,4 +90,4 @@ Exit the editor and then run
 **Useful Links:**
 
 *  [Module Development](/topics/module-development)
-*  [Module Release Process](/topics/module-release-process)
+*  [Module Release Process](/misc/module-release-process)

@@ -50,7 +50,7 @@ IIS 7.x comes with Windows. However, it needs to be installed. Follow these step
 
 **NOTE**: These instructions are slightly different for Windows Vista and Windows 7. Instead of a Server Manager popup, you'll just get a list of features to enable. Do the same as above except click the **Internet Information Services** checkbox when the Windows Features popup appears and then expand this node and select **CGI** under World Wide Web Services > Application Development Features.
 
-Once the installation is finished, browse to http://localhost in your browser. If an image pops up, then IIS has been installed correctly.
+Once the installation is finished, browse to `http://localhost` in your browser. If an image pops up, then IIS has been installed correctly.
 
 ## IIS URL Rewrite Module
 
