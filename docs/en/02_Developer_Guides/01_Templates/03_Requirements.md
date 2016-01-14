@@ -66,6 +66,21 @@ JavaScript in a separate file and instead load, via search and replace, several 
 
 In this example, `editor.template.js` is expected to contain a replaceable variable expressed as `$EditorCSS`.
 
+If you are using front-end script combination mechanisms, you can optionally declare
+that your included files provide these scripts. This will ensure that subsequent
+Requirement calls that rely on those included scripts will not double include those
+files.
+
+
+    :::php
+    Requirements::javascript('mysite/js/dist/bundle.js', ['provides' => [
+        'mysite/js/jquery.js'
+        'mysite/js/src/main.js',
+        'mysite/js/src/functions.js'
+    ]]);
+    Requirements::javascript('mysite/js/jquery.js'); // Will will skip this file
+
+
 ### Custom Inline CSS or Javascript
 
 You can also quote custom script directly. This may seem a bit ugly, but is useful when you need to transfer some kind
