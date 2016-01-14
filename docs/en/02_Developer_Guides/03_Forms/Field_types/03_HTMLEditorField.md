@@ -7,7 +7,7 @@ Editing and formatting content is the bread and butter of every content manageme
 has a tight integration with our preferred editor library, [TinyMCE](http://tinymce.com).
 
 On top of the base functionality, we use our own insertion dialogs to ensure you can effectively select and upload 
-files. In addition to the markup managed by TinyMCE, we use [shortcodes](../../extending/shortcodes) to store 
+files. In addition to the markup managed by TinyMCE, we use [shortcodes](/developer_guides/extending/shortcodes) to store 
 information about inserted images or media elements.
 
 The framework comes with a `[api:HTMLEditorField]` form field class which encapsulates most of the required
@@ -170,7 +170,7 @@ The `[api:HtmlEditorField]` API also handles inserting images and media files in
 used both for referencing files on the webserver filesystem (through the `[api:File]` and `[api:Image]` APIs), as well 
 as hotlinking files from the web. 
 
-We use [shortcodes](../../configuration/shortcodes) to store information about inserted images or media elements. The 
+We use [shortcodes](/developer_guides/extending/shortcodes) to store information about inserted images or media elements. The 
 [api:ShortcodeParser] API post-processes the HTML content on rendering, and replaces the shortcodes accordingly. It also 
 takes care of care of placing the shortcode replacements relative to its surrounding markup (e.g. left/right alignment).
 

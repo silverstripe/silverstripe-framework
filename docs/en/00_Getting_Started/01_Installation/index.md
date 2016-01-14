@@ -20,5 +20,5 @@ If the above steps don't work for any reason have a read of the [Common Problems
 <div class="notice" markdown="1">
 SilverStripe ships with default rewriting rules specific to your web server. Apart from
 routing requests to the framework, they also prevent access to sensitive files in the webroot,
-for example YAML configuration files. Please refer to the [security](/topics/security) documentation for details.
+for example YAML configuration files. Please refer to the [secure coding](/developer_guides/security/secure_coding/#filesystem) documentation for details.
 </div>

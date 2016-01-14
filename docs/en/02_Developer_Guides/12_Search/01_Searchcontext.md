@@ -11,7 +11,7 @@ The default output of a [api:SearchContext] is either a [api:SQLQuery] object fo
 [api:DataObject] instance.
 
 <div class="notice" markdown="1">
-[api:SearchContext] is mainly used by [ModelAdmin](../customising_the_admin_interface/modeladmin).
+[api:SearchContext] is mainly used by [ModelAdmin](/developer_guides/customising_the_admin_interface/modeladmin).
 </div>
 
 ## Usage
@@ -110,8 +110,8 @@ the `$fields` constructor parameter.
 
 ## Related Documentation
 
-* [ModelAdmin](../customising_the_cms/modeladmin)
-* [Tutorial: Site Search](/tutorials/site_search)
+* [ModelAdmin](/developer_guides/customising_the_admin_interface/modeladmin)
+* [Site Search](/tutorials/site_search)
 
 ## API Documentation
 

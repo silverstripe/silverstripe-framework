@@ -40,7 +40,7 @@ Never update a website on the live server without trying it on a development cop
 
 How easy will it be to update my project? It's a fair question, and sometimes a difficult one to answer. 
 
-*  "Micro" releases (x.y.z) are explicitly backwards compatible, "minor" and "major" releases can deprecate features and change APIs (see our [/misc/release-process](release process) for details)
+*  "Micro" releases (x.y.z) are explicitly backwards compatible, "minor" and "major" releases can deprecate features and change APIs (see our [release process](/contributing/release_process) for details)
 *  If you've made custom branches of SilverStripe core, or any thirdparty module, it's going to be harder to upgrade.
 *  The more custom features you have, the harder it will be to upgrade.  You will have to re-test all of those features, and adapt to API changes in core.
 *  Customizations of a well defined type - such as custom page types or custom blog widgets - are going to be easier to upgrade than customisations that modify deep system internals like rewriting SQL queries.

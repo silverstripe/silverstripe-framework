@@ -149,7 +149,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 [API documentation](http://api.silverstripe.org/3.1/) for good examples.
 * Check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
-* When working with the CMS, please read the ["CMS Architecture Guide"](cms_architecture) first
+* When working with the CMS, please read the ["CMS Architecture Guide"](/developer_guides/customising_the_admin_interface/cms_architecture) first
 
 ## Commit Messages
 
