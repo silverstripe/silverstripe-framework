@@ -32,7 +32,7 @@ removing the "Admin" bit at the end.
  
 In order to localize the menu title in different languages, use the `<classname>.MENUTITLE`
 entity name, which is automatically created when running the i18n text collection.
-For more information on language and translations, please refer to the [i18n](../reference/ii8n) docs.
+For more information on language and translations, please refer to the [i18n](/topics/1i8n) docs.
 	
 ## Related
 

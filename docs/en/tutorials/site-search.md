@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a short tutorial demonstrating how to add search functionality to a SilverStripe site. It is recommended that you have completed the earlier tutorials  ([Building a basic site](1-building-a-basic-site), [Extending a basic site](2-extending-a-basic-site), [Forms](3-forms)), especially the tutorial on forms, before attempting this tutorial. While this tutorial will add search functionality to the site built in the previous tutorials, it should be straight  forward to follow this tutorial on any site of your own. 
+This is a short tutorial demonstrating how to add search functionality to a SilverStripe site. It is recommended that you have completed the earlier tutorials  ([Building a basic site](building-a-basic-site), [Extending a basic site](extending-a-basic-site), [Forms](forms)), especially the tutorial on forms, before attempting this tutorial. While this tutorial will add search functionality to the site built in the previous tutorials, it should be straight  forward to follow this tutorial on any site of your own. 
 
 ## What are we working towards?
 
@@ -155,4 +155,4 @@ Then finally add ?flush=1 to the URL and you should see the new template.
 
 This tutorial has demonstrated how easy it is to have full text searching on your site. To add search to a SilverStripe site add a search form, a results page, and you're done!
 
-[Next Tutorial >>](5-dataobject-relationship-management)
+[Next Tutorial >>](dataobject-relationship-management)

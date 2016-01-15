@@ -238,4 +238,3 @@ trunk.
 * [Documentation Guide](contributing/documentation)
 * [Contributing to SilverStripe](contributing)
 * [Submit your Module](http://silverstripe.org/modules/manage/add)
-* [subversion](subversion)

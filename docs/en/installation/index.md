@@ -11,13 +11,13 @@ SilverStripe is a web application. This means that you will need to have a webse
 
 ## Getting the code
 
-The best way to get SilverStripe is with [Composer](composer). Composer is a package management tool for PHP that
+The best way to get SilverStripe is with [Composer](/installation/composer). Composer is a package management tool for PHP that
 lets you install and upgrade SilverStripe and its modules.  Although installing Composer is one extra step, it will give you much more flexibility than just downloading the file from silverstripe.org.
 
 Other ways to get SilverStripe:
 
  * If you just want to get the code as quickly as possible, you can [download SilverStripe from our website](http://silverstripe.org/download).
- * If you already have an installed version of SilverStripe, and you haven't used Composer to get it, please see our [upgrading](upgrading) guide.  Note that [Composer](composer) provides its own tools for upgrading.
+ * If you already have an installed version of SilverStripe, and you haven't used Composer to get it, please see our [upgrading](upgrading) guide.  Note that [Composer](/installatin/composer) provides its own tools for upgrading.
 
 ## Setting up a server
 
@@ -53,5 +53,5 @@ If you run into trouble, see [common-problems](common-problems) or post to the
 
 ## Related
 
- * [Module installation](../topics/modules)
+ * [Module installation](/topics/modules)
  * [Suggested web hosts](http://doc.silverstripe.org/old/suggested-web-hosts)

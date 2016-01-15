@@ -106,7 +106,7 @@ If the items are all displayed on a single page you may simply hard code the lin
 point to a particular page.
 
 Take an example, we want to create an RSS feed of all the Students, a DataObject we 
-defined in the [fifth tutorial](/tutorials/5-dataobject-relationship-management).
+defined in the [fifth tutorial](/tutorials/dataobject-relationship-management).
 
 	:::php
 	<?php 

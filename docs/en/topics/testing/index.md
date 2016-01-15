@@ -25,7 +25,7 @@ To get started now, follow the installation instructions below, and check
 
 Unit tests are not included in the normal SilverStripe downloads,
 you are expected to work with local git repositories 
-([installation instructions](/topics/installation/composer)).
+([installation instructions](/installation/composer)).
 
 Once you've got the project up and running,
 check out the additional requirements to run unit tests:

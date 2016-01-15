@@ -451,4 +451,4 @@ which are licensed under BSD (see [license](http://framework.zend.com/license)).
 ## Related
 
  * [Topics: CSS](/topics/css)
- * [Reference: CMS Architecture](/reference/cms-archirecture)
+ * [Reference: CMS Architecture](/reference/cms-architecture)
