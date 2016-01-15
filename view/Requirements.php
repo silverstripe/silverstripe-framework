@@ -110,9 +110,11 @@ class Requirements implements Flushable {
 	 * Register the given JavaScript file as required.
 	 *
 	 * @param string $file Relative to docroot
+	 * @param array $options List of options. Available options include:
+	 * - 'provides' : List of scripts files included in this file
 	 */
-	public static function javascript($file) {
-		self::backend()->javascript($file);
+	public static function javascript($file, $options = array()) {
+		self::backend()->javascript($file, $options);
 	}
 
 	/**
@@ -498,6 +500,14 @@ class Requirements_Backend
 	protected $javascript = array();
 
 	/**
+	 * Map of included scripts to array of contained files.
+	 * To be used alongside front-end combination mechanisms.
+	 *
+	 * @var array Map of providing filepath => array(provided filepaths)
+	 */
+	protected $providedJavascript = array();
+
+	/**
 	 * Paths to all required CSS files relative to the docroot.
 	 *
 	 * @var array
@@ -784,9 +794,16 @@ class Requirements_Backend
 	 * Register the given JavaScript file as required.
 	 *
 	 * @param string $file Relative to docroot
+	 * @param array $options List of options. Available options include:
+	 * - 'provides' : List of scripts files included in this file
 	 */
-	public function javascript($file) {
+	public function javascript($file, $options = array()) {
 		$this->javascript[$file] = true;
+
+		// Record scripts included in this file
+		if(isset($options['provides'])) {
+			$this->providedJavascript[$file] = array_values($options['provides']);
+		}
 	}
 
 	/**
@@ -799,12 +816,57 @@ class Requirements_Backend
 	}
 
 	/**
+	 * Gets all scripts that are already provided by prior scripts.
+	 * This follows these rules:
+	 *  - Files will not be considered provided if they are separately
+	 *    included prior to the providing file.
+	 *  - Providing files can be blocked, and don't provide anything
+	 *  - Provided files can't be blocked (you need to block the provider)
+	 *  - If a combined file includes files that are provided by prior
+	 *    scripts, then these should be excluded from the combined file.
+	 *  - If a combined file includes files that are provided by later
+	 *    scripts, then these files should be included in the combined
+	 *    file, but we can't block the later script either (possible double
+	 *    up of file).
+	 *
+	 * @return array Array of provided files (map of $path => $path)
+	 */
+	public function getProvidedScripts() {
+		$providedScripts = array();
+		$includedScripts = array();
+		foreach($this->javascript as $script => $flag) {
+			// Ignore scripts that are explicitly blocked
+			if(isset($this->blocked[$script])) {
+				continue;
+			}
+			// At this point, the file is included.
+			// This might also be combined at this point, potentially.
+			$includedScripts[$script] = true;
+
+			// Record any files this provides, EXCEPT those already included by now
+			if(isset($this->providedJavascript[$script])) {
+				foreach($this->providedJavascript[$script] as $provided) {
+					if(!isset($includedScripts[$provided])) {
+						$providedScripts[$provided] = $provided;
+					}
+				}
+			}
+		}
+		return $providedScripts;
+	}
+
+	/**
 	 * Returns an array of required JavaScript, excluding blocked
+	 * and duplicates of provided files.
 	 *
 	 * @return array
 	 */
 	public function getJavascript() {
-		return array_keys(array_diff_key($this->javascript, $this->blocked));
+		return array_keys(array_diff_key(
+			$this->javascript,
+			$this->getBlocked(),
+			$this->getProvidedScripts()
+		));
 	}
 
 	/**
@@ -1044,90 +1106,90 @@ class Requirements_Backend
 	 * @return string HTML content augmented with the requirements tags
 	 */
 	public function includeInHTML($templateFile, $content) {
-		if(
-			(strpos($content, '</head>') !== false || strpos($content, '</head ') !== false)
-			&& ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags)
-		) {
-			$requirements = '';
-			$jsRequirements = '';
+		// Skip if content isn't injectable, or there is nothing to inject
+		$tagsAvailable = preg_match('#</head\b#', $content);
+		$hasFiles = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags;
+		if(!$tagsAvailable || !$hasFiles) {
+			return $content;
+		}
+		$requirements = '';
+		$jsRequirements = '';
 
-			// Combine files - updates $this->javascript and $this->css
-			$this->processCombinedFiles();
+		// Combine files - updates $this->javascript and $this->css
+		$this->processCombinedFiles();
 
-			foreach($this->getJavascript() as $file) {
-				$path = Convert::raw2xml($this->pathForFile($file));
-				if($path) {
-					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
-				}
-			}
-
-			// Add all inline JavaScript *after* including external files they might rely on
-			foreach($this->getCustomScripts() as $script) {
-				$jsRequirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-				$jsRequirements .= "$script\n";
-				$jsRequirements .= "\n//]]>\n</script>\n";
-			}
-
-			foreach($this->getCSS() as $file => $params) {
-				$path = Convert::raw2xml($this->pathForFile($file));
-				if($path) {
-					$media = (isset($params['media']) && !empty($params['media']))
-						? " media=\"{$params['media']}\"" : "";
-					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
-				}
-			}
-
-			foreach($this->getCustomCSS() as $css) {
-				$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
-			}
-
-			foreach($this->getCustomHeadTags() as $customHeadTag) {
-				$requirements .= "$customHeadTag\n";
-			}
-
-			if ($this->getForceJSToBottom()) {
-				// Remove all newlines from code to preserve layout
-				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
-
-				// Forcefully put the scripts at the bottom of the body instead of before the first
-				// script tag.
-				$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
-
-				// Put CSS at the bottom of the head
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
-			} elseif($this->getWriteJavascriptToBody()) {
-				// Remove all newlines from code to preserve layout
-				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
-
-				// If your template already has script tags in the body, then we try to put our script
-				// tags just before those. Otherwise, we put it at the bottom.
-				$p2 = stripos($content, '<body');
-				$p1 = stripos($content, '<script', $p2);
-
-				$commentTags = array();
-				$canWriteToBody = ($p1 !== false)
-					&&
-					// Check that the script tag is not inside a html comment tag
-					!(
-						preg_match('/.*(?|(<!--)|(-->))/U', $content, $commentTags, 0, $p1)
-						&&
-						$commentTags[1] == '-->'
-					);
-
-				if($canWriteToBody) {
-					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
-				} else {
-					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
-				}
-
-				// Put CSS at the bottom of the head
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
-			} else {
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
-				$content = preg_replace("/(<\/head>)/i", $jsRequirements . "\\1", $content);
+		foreach($this->getJavascript() as $file) {
+			$path = Convert::raw2xml($this->pathForFile($file));
+			if($path) {
+				$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
 			}
 		}
 
+		// Add all inline JavaScript *after* including external files they might rely on
+		foreach($this->getCustomScripts() as $script) {
+			$jsRequirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
+			$jsRequirements .= "$script\n";
+			$jsRequirements .= "\n//]]>\n</script>\n";
+		}
+
+		foreach($this->getCSS() as $file => $params) {
+			$path = Convert::raw2xml($this->pathForFile($file));
+			if($path) {
+				$media = (isset($params['media']) && !empty($params['media']))
+					? " media=\"{$params['media']}\"" : "";
+				$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
+			}
+		}
+
+		foreach($this->getCustomCSS() as $css) {
+			$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
+		}
+
+		foreach($this->getCustomHeadTags() as $customHeadTag) {
+			$requirements .= "$customHeadTag\n";
+		}
+
+		if ($this->getForceJSToBottom()) {
+			// Remove all newlines from code to preserve layout
+			$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
+
+			// Forcefully put the scripts at the bottom of the body instead of before the first
+			// script tag.
+			$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
+
+			// Put CSS at the bottom of the head
+			$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
+		} elseif($this->getWriteJavascriptToBody()) {
+			// Remove all newlines from code to preserve layout
+			$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
+
+			// If your template already has script tags in the body, then we try to put our script
+			// tags just before those. Otherwise, we put it at the bottom.
+			$p2 = stripos($content, '<body');
+			$p1 = stripos($content, '<script', $p2);
+
+			$commentTags = array();
+			$canWriteToBody = ($p1 !== false)
+				&&
+				// Check that the script tag is not inside a html comment tag
+				!(
+					preg_match('/.*(?|(<!--)|(-->))/U', $content, $commentTags, 0, $p1)
+					&&
+					$commentTags[1] == '-->'
+				);
+
+			if($canWriteToBody) {
+				$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
+			} else {
+				$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
+			}
+
+			// Put CSS at the bottom of the head
+			$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
+		} else {
+			$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
+			$content = preg_replace("/(<\/head>)/i", $jsRequirements . "\\1", $content);
+		}
 		return $content;
 	}
 
@@ -1426,6 +1488,9 @@ class Requirements_Backend
 			return;
 		}
 
+		// Before scripts are modified, detect files that are provided by preceding ones
+		$providedScripts = $this->getProvidedScripts();
+
 		// Process each combined files
 		foreach($this->getAllCombinedFiles() as $combinedFile => $combinedItem) {
 			$fileList = $combinedItem['files'];
@@ -1435,7 +1500,13 @@ class Requirements_Backend
 			// Generate this file, unless blocked
 			$combinedURL = null;
 			if(!isset($this->blocked[$combinedFile])) {
-				$combinedURL = $this->getCombinedFileURL($combinedFile, $fileList, $type);
+				// Filter files for blocked / provided
+				$filteredFileList = array_diff(
+					$fileList,
+					$this->getBlocked(),
+					$providedScripts
+				);
+				$combinedURL = $this->getCombinedFileURL($combinedFile, $filteredFileList, $type);
 			}
 
 			// Replace all existing files, injecting the combined file at the position of the first item
@@ -1483,11 +1554,13 @@ class Requirements_Backend
 	 * @param string $combinedFile Filename for this combined file
 	 * @param array $fileList List of files to combine
 	 * @param string $type Either 'js' or 'css'
-	 * @return string URL to this resource
+	 * @return string|null URL to this resource, if there are files to combine
 	 */
 	protected function getCombinedFileURL($combinedFile, $fileList, $type) {
-		// Filter blocked files
-		$fileList = array_diff($fileList, $this->getBlocked());
+		// Skip empty lists
+		if(empty($fileList)) {
+			return null;
+		}
 
 		// Generate path (Filename)
 		$hashQuerystring = Config::inst()->get(static::class, 'combine_hash_querystring');
