@@ -7,7 +7,7 @@ It is also a bit harder to install additional PHP modules required by SilverStri
 [MAMP](http://www.mamp.info/en/) is a simple way to get a complete webserver
 environment going on your OSX machine, without removing or altering any system-level configuration.
 
-Check out the [MAC OSX with Homebrew](/getting_started/installation/other_installation_options/Mac_OSX_Homebrew)
+Check out the [MAC OSX with Homebrew](/getting_started/installation/other_installation_options/mac_osx_homebrew)
 for an alternative, more configurable installation process.
 
 ## Requirements
