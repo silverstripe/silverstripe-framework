@@ -18,4 +18,4 @@ located in `themes/<mytheme>/templates/Page.ss`.
      	<% end_loop %> 
     </ul>
 
-More details on creating a menu are explained as part of ["Tutorial 1: Building a basic site"](/tutorials/1-building-a-basic-site), as well as ["Page type templates" topic](/topics/page-type-templates).
+More details on creating a menu are explained as part of ["Building a basic site"](/tutorials/building-a-basic-site), as well as ["Page type templates" topic](/topics/page-type-templates).

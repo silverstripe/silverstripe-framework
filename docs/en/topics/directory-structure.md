@@ -22,7 +22,7 @@ existing modules or the directories lists in "Core Structure".
  | ---------           | -----------                                                         | 
  | `<mysite>/`           | This directory contains all of your code that defines your website. | 
  | `<mysite>/code`       | PHP code for model and controller (subdirectories are optional)     | 
- | `<mysite>/templates`  | HTML [templates](templates) with *.ss-extension                     | 
+ | `<mysite>/templates`  | HTML [templates](/reference/templates) with *.ss-extension                     | 
  | `<mysite>/css `       | CSS files                                                           | 
  | `<mysite>/images `    | Images used in the HTML templates                                   | 
  | `<mysite>/javascript` | Javascript and other script files 

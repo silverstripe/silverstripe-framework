@@ -53,7 +53,7 @@ To work this out, you should add lines of this form to your [_ss_environment.php
 
 
 What the line says is that any Folder under /Users/sminnee/Sites/ can be accessed in a web browser from
-http://localhost.  For example, /Users/sminnee/Sites/mysite will be available at http://localhost/mysite.
+`http://localhost`.  For example, /Users/sminnee/Sites/mysite will be available at `http://localhost/mysite`.
 
 You can add multiple file to url mapping definitions.  The most specific mapping will be used. For example:
 
@@ -63,8 +63,8 @@ You can add multiple file to url mapping definitions.  The most specific mapping
 	$_FILE_TO_URL_MAPPING['/Users/sminnee/Sites/mysite'] = 'http://mysite.localhost';
 
 
-Using this example, /Users/sminnee/Sites/mysite/ would be accessed at http://mysite.localhost/, and
-/Users/sminnee/Sites/othersite/ would be accessed at http://localhost/othersite/
+Using this example, /Users/sminnee/Sites/mysite/ would be accessed at `http://mysite.localhost/`, and
+/Users/sminnee/Sites/othersite/ would be accessed at `http://localhost/othersite/`
 
 ## Usage
 

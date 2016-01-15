@@ -54,8 +54,8 @@ Append the option and corresponding value to your URL in your browser's address 
 
 ## Security Redirects
 
-You can set an URL to redirect back to after a [Security](/topics/security) action.  See the section on [URL
-Redirections](security#redirect_back_to_another_page_after_login) for more information and examples.
+You can set an URL to redirect back to after a [Security](/topics/security) action.  See the section on
+[URL Redirections](/topics/controller/#redirection) for more information and examples.
 
  | URL Variable | | Values | | Description                                                          | 
  | ------------ | | ------ | | -----------                                                          | 

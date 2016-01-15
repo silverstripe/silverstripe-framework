@@ -104,5 +104,5 @@ and comes with the same caveats.
 
 ## Related
 
-* [Modules Development](/topics/module-developement)
+* [Modules Development](/topics/module-development)
 * [Module Release Process](/misc/module-release-process)

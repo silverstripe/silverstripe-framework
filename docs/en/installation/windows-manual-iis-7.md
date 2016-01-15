@@ -51,7 +51,7 @@ IIS 7.x comes with Windows. However, it needs to be installed. Follow these step
 
 **NOTE**: These instructions are slightly different for Windows Vista and Windows 7. Instead of a Server Manager popup, you'll just get a list of features to enable. Do the same as above except click the **Internet Information Services** checkbox when the Windows Features popup appears and then expand this node and select **CGI** under World Wide Web Services > Application Development Features.
 
-Once the installation is finished, browse to http://localhost in your browser. If an image pops up, then IIS has been installed correctly.
+Once the installation is finished, browse to `http://localhost` in your browser. If an image pops up, then IIS has been installed correctly.
 
 ## IIS URL Rewrite Module
 
@@ -191,7 +191,7 @@ After gettng the code installed, make sure you set the folder permissions proper
 
 ## Start SilverStripe installer
 
-Open a browser and point it to http://localhost/ss
+Open a browser and point it to `http://localhost/ss`
 
 If an installation screen shows up, congratulations! We're very close now.
 
@@ -260,7 +260,7 @@ To find out who the current user is, try echoing the result of get_current_user(
 
 **Q: When I try to access my SilverStripe site for the first time, I get a 404 error**
 
-**A:** Try accessing dev/build?username=admin&password=password at the end of the URL you requested. For example, http://localhost/ss/dev/build?username=admin&password=password. This will ensure the database is built properly
+**A:** Try accessing dev/build?username=admin&password=password at the end of the URL you requested. For example, `http://localhost/ss/dev/build?username=admin&password=password`. This will ensure the database is built properly
 
 **Q: How do I make IIS expose errors instead of giving a generic 500 or 404 page?**
 
@@ -268,7 +268,7 @@ To find out who the current user is, try echoing the result of get_current_user(
 
 Also, make sure that display_errors, display_startup_errors and html_errors in are set to On in php.ini.
 
-**Q: I get a 500 server error when trying to access the SilverStripe site. e.g. http://localhost/ss**
+**Q: I get a 500 server error when trying to access the SilverStripe site. e.g. `http://localhost/ss`**
 
 **A:** One of the reasons why this could be happening is the web.config file inside the ss directory has XML that is not well formed. Make sure there are NO spaces before the starting <?xml> tag, and make sure that everything is tabbed out correctly.
 

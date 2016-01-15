@@ -116,7 +116,7 @@ You should see some output showing the PHP version. If you get something else, o
   - Open **inetmgr.exe**
   - Right click **Web Sites** and go to **New** > **Web Site**
   - Fill in all appropriate details. If you enter **(All Unassigned)** for the IP address field, make sure the port is something other than **80**, as this will conflict with "Default Web Site" in IIS. When asked for path, enter **C:\Inetpub\wwwroot\silverstripe**
-  - Browse to **http://localhost:8888** or to the IP address you just assigned in your browser.
+  - Browse to **`http://localhost:8888`** or to the IP address you just assigned in your browser.
 
 An installation screen should appear. There may be some permission problems, which you should be able to correct by assigning the **Users** group write permissions by right clicking files / folders in Windows Explorer and going to **Properties** then the **Security** tab.
 

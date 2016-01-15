@@ -11,7 +11,7 @@ A fully implemented form in SilverStripe includes a couple of classes that indiv
  * Form - Holds sets of fields, actions and validators.
  * FormField  - Fields that recieves data or displays them, e.g input fields.
  * FormActions - Often submit buttons that executes actions.
- * Validators - Validates the whole form, see [Form validation](form-validation.md) topic for more information.
+ * Validators - Validates the whole form, see [Form validation](/topics/form-validation) topic for more information.
 
 Depending on your needs you can customize and override any of the above classes, however the defaults are often 
 sufficient.
@@ -56,7 +56,7 @@ these are handled separately through `Form->httpSubmission()`.
 You can control access on form actions either by conditionally removing 
 a `FormAction` from the form construction,
 or by defining `$allowed_actions` in your own `Form` class
-(more information in the ["controllers" topic](/topics/controllers)).
+(more information in the ["controllers" topic](/topics/controller)).
 	
 **Page.ss**
 

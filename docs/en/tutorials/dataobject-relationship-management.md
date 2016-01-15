@@ -2,7 +2,7 @@
 
 ## Overview
 
-This tutorial explores the relationship and management of [DataObjects](/topics/datamodel#relations). It builds on the [second tutorial](2-extending-a-basic-site) where we learnt how to define
+This tutorial explores the relationship and management of [DataObjects](/topics/datamodel#relations). It builds on the [second tutorial](extending-a-basic-site) where we learnt how to define
 additional fields on our models, and attach images to them.
 
 ## What are we working towards?

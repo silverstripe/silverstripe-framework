@@ -37,7 +37,7 @@ by adding, removing or configuring fields.
 	  }
 	}
 
-There's various [form field types](/references/form-field-types), for editing text, dates,
+There's various [form field types](/reference/form-field-types), for editing text, dates,
 restricting input to numbers, and much more.
 
 ## Scaffolding Form Fields
