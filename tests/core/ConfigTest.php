@@ -267,77 +267,72 @@ class ConfigTest extends SapphireTest {
 	}
 
 	public function testCacheCleaning() {
-		$cache = new ConfigTest_Config_MemCache();
+		$cache = new Config_MemCache();
+		$cacheProp = new ReflectionProperty('Config_MemCache', 'cache');
+		$cacheProp->setAccessible(true);
+
+		$tagProp = new ReflectionProperty('Config_MemCache', 'tags');
+		$tagProp->setAccessible(true);
 
 		for ($i = 0; $i < 1000; $i++) $cache->set($i, $i);
-		$this->assertEquals(1000, count($cache->cache));
-
+		$this->assertEquals(1000, count($cacheProp->getValue($cache)));
 		$cache->clean();
-		$this->assertEquals(0, count($cache->cache), 'Clean clears all items');
+		$this->assertEquals(0, count($cacheProp->getValue($cache)), 'Clean clears all items');
 		$this->assertFalse($cache->get(1), 'Clean clears all items');
-
 		$cache->set(1, 1, array('Foo'));
-		$this->assertEquals(1, count($cache->cache));
-		$this->assertEquals(1, count($cache->tags));
-
+		$this->assertEquals(1, count($cacheProp->getValue($cache)));
+		$this->assertEquals(1, count($tagProp->getValue($cache)));
 		$cache->clean('Foo');
-		$this->assertEquals(0, count($cache->tags), 'Clean items with matching tag');
+		$this->assertEquals(0, count($tagProp->getValue($cache)), 'Clean items with matching tag');
 		$this->assertFalse($cache->get(1), 'Clean items with matching tag');
-
 		$cache->set(1, 1, array('Foo', 'Bar'));
-		$this->assertEquals(2, count($cache->tags));
-		$this->assertEquals(1, count($cache->cache));
-
+		$this->assertEquals(2, count($tagProp->getValue($cache)));
+		$this->assertEquals(1, count($cacheProp->getValue($cache)));
 		$cache->clean('Bar');
-		$this->assertEquals(1, count($cache->tags));
-		$this->assertEquals(0, count($cache->cache), 'Clean items with any single matching tag');
+		$this->assertEquals(1, count($tagProp->getValue($cache)));
+		$this->assertEquals(0, count($cacheProp->getValue($cache)), 'Clean items with any single matching tag');
 		$this->assertFalse($cache->get(1), 'Clean items with any single matching tag');
 	}
 
 	public function testLRUDiscarding() {
-		$cache = new ConfigTest_Config_LRU();
+		$indexing = new ReflectionProperty('Config_LRU', 'indexing');
+		$indexing->setAccessible(true);
+
+		$cache = new Config_LRU();
 		for ($i = 0; $i < Config_LRU::SIZE*2; $i++) $cache->set($i, $i);
 		$this->assertEquals(
-			Config_LRU::SIZE, count($cache->indexing),
+			Config_LRU::SIZE, count($indexing->getValue($cache)),
 			'Homogenous usage gives exact discarding'
 		);
-		$cache = new ConfigTest_Config_LRU();
+		$cache = new Config_LRU();
 		for ($i = 0; $i < Config_LRU::SIZE; $i++) $cache->set($i, $i);
 		for ($i = 0; $i < Config_LRU::SIZE; $i++) $cache->set(-1, -1);
 		$this->assertLessThan(
-			Config_LRU::SIZE, count($cache->indexing),
+			Config_LRU::SIZE, count($indexing->getValue($cache)),
 			'Heterogenous usage gives sufficient discarding'
 		);
 	}
 
 	public function testLRUCleaning() {
-		$cache = new ConfigTest_Config_LRU();
+		$indexing = new ReflectionProperty('Config_LRU', 'indexing');
+		$indexing->setAccessible(true);
+
+		$cache = new Config_LRU();
 		for ($i = 0; $i < Config_LRU::SIZE; $i++) $cache->set($i, $i);
-		$this->assertEquals(Config_LRU::SIZE, count($cache->indexing));
+		$this->assertEquals(Config_LRU::SIZE, count($indexing->getValue($cache)));
 		$cache->clean();
-		$this->assertEquals(0, count($cache->indexing), 'Clean clears all items');
+		$this->assertEquals(0, count($indexing->getValue($cache)), 'Clean clears all items');
 		$this->assertFalse($cache->get(1), 'Clean clears all items');
 		$cache->set(1, 1, array('Foo'));
-		$this->assertEquals(1, count($cache->indexing));
+		$this->assertEquals(1, count($indexing->getValue($cache)));
 		$cache->clean('Foo');
-		$this->assertEquals(0, count($cache->indexing), 'Clean items with matching tag');
+		$this->assertEquals(0, count($indexing->getValue($cache)), 'Clean items with matching tag');
 		$this->assertFalse($cache->get(1), 'Clean items with matching tag');
 		$cache->set(1, 1, array('Foo', 'Bar'));
-		$this->assertEquals(1, count($cache->indexing));
+		$this->assertEquals(1, count($indexing->getValue($cache)));
 		$cache->clean('Bar');
-		$this->assertEquals(0, count($cache->indexing), 'Clean items with any single matching tag');
+		$this->assertEquals(0, count($indexing->getValue($cache)), 'Clean items with any single matching tag');
 		$this->assertFalse($cache->get(1), 'Clean items with any single matching tag');
 	}
 }
 
-class ConfigTest_Config_LRU extends Config_LRU implements TestOnly {
-	public $cache;
-	public $indexing;
-}
-
-class ConfigTest_Config_MemCache extends Config_MemCache implements TestOnly {
-
-	public $cache;
-	public $tags;
-
-}

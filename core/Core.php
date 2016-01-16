@@ -61,6 +61,8 @@ gc_enable();
 
 // Include the files needed the initial manifest building, as well as any files
 // that are needed for the boostrap process on every request.
+require_once 'core/ConfigCacheInterface.php';
+require_once 'core/Flushable.php';
 require_once 'cache/Cache.php';
 require_once 'core/Object.php';
 require_once 'core/ClassInfo.php';

@@ -250,9 +250,22 @@ class Config {
 	}
 
 	/**
-	 * @var array
+	 * @var Config_MemCache
 	 */
 	protected $cache;
+
+	/**
+	 * @var Config_PersistentCache
+	 */
+	protected $persistentCache;
+
+	/**
+	 * An array of cache keys to ignore in persistent cache. These are added when a config
+	 * is dynamically updated. For example, this can happen on update or remove.
+	 *
+	 * @var array
+	 */
+	protected $disabledPersistentCacheKeys = array();
 
 	/**
 	 * Each copy of the Config object need's it's own cache, so changes don't
@@ -260,10 +273,30 @@ class Config {
 	 */
 	public function __construct() {
 		$this->cache = new Config_MemCache();
+
+		// If SS_PERSISTENTCONFIGCACHE is defined, then this will overrite the default.
+		$persistentCache = defined('SS_PERSISTENTCONFIGCACHE') ? SS_PERSISTENTCONFIGCACHE : false;
+		if(class_exists($persistentCache) && is_a($persistentCache, 'ConfigCacheInterface', true)) {
+			$this->persistentCache = new $persistentCache();
+		} else {
+			// We're too early in the startup to use config to determined 
+			// dev/live mode. We check for environment type constant.
+			$mode = defined('SS_ENVIRONMENT_TYPE') ? SS_ENVIRONMENT_TYPE : false;
+			if(!$mode || strtolower($mode) != 'dev') {
+				// If in live or test mode, use peristent cache which has performance improvements for the front-end
+				// but slows down the development process by required flush for private static changes.
+				$this->persistentCache = new Config_PersistentCache();
+			} else {
+				// If in dev mode, we can use memcache. Its slower on the front-end, but allows for faster development
+				// by not requiring a flush for each private static change.
+				$this->persistentCache = new Config_Memcache();
+			}
+		}
 	}
 
 	public function __clone() {
 		$this->cache = clone $this->cache;
+		$this->persistentCache = clone $this->persistentCache;
 	}
 
 	/**
@@ -290,6 +323,28 @@ class Config {
 	 * @var array
 	 */
 	protected $staticManifests = array();
+
+	/**
+	 * Disable a persistent cache key.
+	 *
+	 * @param string $class
+	 * @param string $name
+	 */
+	protected function disablePersistentCache($class, $name) {
+		$this->disabledPersistentCacheKeys[$class . '.' . $name] = true;
+	}
+
+	/**
+	 * Checks if a perisistent cache key has been disabled.
+	 *
+	 * @param string $class
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
+	protected function isPersistentCacheDisabled($class, $name) {
+		return array_key_exists($class . '.' . $name, $this->disabledPersistentCacheKeys);
+	}
 
 	/**
 	 * @param SS_ConfigStaticManifest
@@ -473,6 +528,7 @@ class Config {
 	public function extraConfigSourcesChanged($class) {
 		unset($this->extraConfigSources[$class]);
 		$this->cache->clean("__{$class}");
+		$this->persistentCache->clean("__{$class}");
 	}
 
 	protected function getUncached($class, $name, $sourceOptions, &$result, $suppress, &$tags) {
@@ -585,10 +641,22 @@ class Config {
 		// Have we got a cached value? Use it if so
 		$key = $class.$name.$sourceOptions;
 
-		if (($result = $this->cache->get($key)) === false) {
-			$tags = array();
-			$result = null;
-			$this->getUncached($class, $name, $sourceOptions, $result, $suppress, $tags);
+		list($cacheHit, $result) = $this->cache->checkAndGet($key);
+		if($cacheHit) {
+			return $result;
+		} else if (!$this->isPersistentCacheDisabled($class, $name)) {
+			list($cacheHit, $result) = $this->persistentCache->checkAndGet($key);
+			if($cacheHit) {
+				return $result;
+			}
+		}
+
+		$tags = array();
+		$result = null;
+		$this->getUncached($class, $name, $sourceOptions, $result, $suppress, $tags);
+		if(!$this->isPersistentCacheDisabled($class, $name)) {
+			$this->persistentCache->set($key, $result, $tags);
+		} else {
 			$this->cache->set($key, $result, $tags);
 		}
 
@@ -625,6 +693,8 @@ class Config {
 		}
 
 		$this->cache->clean("__{$class}__{$name}");
+		$this->persistentCache->clean("__{$class}__{$name}");
+		$this->disablePersistentCache($class, $name);
 	}
 
 	/**
@@ -683,6 +753,8 @@ class Config {
 		$this->suppresses[0][$class][$name][] = $suppress;
 
 		$this->cache->clean("__{$class}__{$name}");
+		$this->persistentCache->clean("__{$class}__{$name}");
+		$this->disablePersistentCache($class, $name);
 	}
 
 }
@@ -769,17 +841,37 @@ class Config_LRU {
 		return $this->miss ? ($this->hit / $this->miss) : 0;
 	}
 
+	/**
+	 * Return a cached value in the case of a hit, false otherwise.
+	 * For a more robust cache checking, use {@link checkAndGet()}
+	 *
+	 * @param  string $key The cache key
+	 * @return variant     Cached value, if hit. False otherwise
+	 */
 	public function get($key) {
+		list($hit, $result) = $this->checkAndGet($key);
+		return $hit ? $result : false;
+	}
+
+	/**
+	 * Checks for a cache hit and looks up the value by returning multiple values.
+	 * Distinguishes a cached 'false' value from a cache miss.
+	 *
+	 * @param  string $key The cache key
+	 * @return array  First element boolean, isHit. Second element the actual result.
+	 */
+	public function checkAndGet($key) {
 		if (isset($this->indexing[$key])) {
 			$this->hit++;
 
 			$res = $this->cache[$this->indexing[$key]];
 			$res->c = ++$this->c;
-			return $res->value;
-		}
+			return array(true, $res->value);
 
-		$this->miss++;
-		return false;
+		} else {
+			$this->miss++;
+			return array(false, null);
+		}
 	}
 
 	public function clean($tag = null) {
@@ -802,11 +894,18 @@ class Config_LRU {
  * @package framework
  * @subpackage core
  */
-class Config_MemCache {
+class Config_MemCache implements ConfigCacheInterface {
+
+	/**
+	 * Cache for config that is updated during runtime..
+	 *
+	 * @var array
+	 */
 	protected $cache;
 
-	protected $i = 0;
-	protected $c = 0;
+	protected $hit = 0;
+	protected $miss = 0;
+
 	protected $tags = array();
 
 	public function __construct() {
@@ -824,21 +923,28 @@ class Config_MemCache {
 		$this->cache[$key] = array($val, $tags);
 	}
 
-	private $hit = 0;
-	private $miss = 0;
-
 	public function stats() {
 		return $this->miss ? ($this->hit / $this->miss) : 0;
 	}
 
 	public function get($key) {
+		list($hit, $result) = $this->checkAndGet($key);
+		return $hit ? $result : false;
+		return false;
+	}
+
+	/**
+	 * Checks for a cache hit and returns the value as a multi-value return
+	 * @return array First element boolean, isHit. Second element the actual result.
+	 */
+	public function checkAndGet($key) {
 		if(isset($this->cache[$key])) {
 			++$this->hit;
-			return $this->cache[$key][0];
+			return array(true, $this->cache[$key][0]);
+		} else {
+			++$this->miss;
+			return array(false, null);
 		}
-
-		++$this->miss;
-		return false;
 	}
 
 	public function clean($tag = null) {
@@ -846,11 +952,13 @@ class Config_MemCache {
 			if(isset($this->tags[$tag])) {
 				foreach($this->tags[$tag] as $k => $dud) {
 					// Remove the key from everywhere else it is tagged
-					$ts = $this->cache[$k][1];
-					foreach($ts as $t) {
-						unset($this->tags[$t][$k]);
+					if(isset($this->cache[$k])) {
+						$ts = $this->cache[$k][1];
+						foreach($ts as $t) {
+							unset($this->tags[$t][$k]);
+						}
+						unset($this->cache[$k]);
 					}
-					unset($this->cache[$k]);
 				}
 				unset($this->tags[$tag]);
 			}
@@ -858,6 +966,49 @@ class Config_MemCache {
 			$this->cache = array();
 			$this->tags = array();
 		}
+	}
+}
+
+class Config_PersistentCache extends Config_MemCache implements Flushable {
+
+	/**
+	 * @var Zend_Cache_Backend
+	 */
+	protected $backend;
+
+	public static function flush() {
+		// Just passing true as the first parameter is enough to flush the cache
+		new Config_PersistentCache(true);
+	}
+
+	/**
+	 * @param bool $flush - whether to flush the cache or not
+	 */
+	public function __construct($flush = false) {
+		parent::__construct();
+		$this->backend = SS_Cache::factory(
+			'SS_Configuration_' . __CLASS__,
+			'Core', 
+			array(
+				'automatic_serialization' => true,
+				'lifetime' => null
+			)
+		);
+
+		// Flush if required.
+		if($flush) {
+			$this->backend->save(array(), '_all');
+		}
+		
+		$this->cache = $this->backend->load('_all');
+		if(!$this->cache) {
+			$this->cache = array();
+		}
+	}
+
+	public function set($key, $value, $tags = array()) {
+		parent::set($key, $value, $tags);
+		$this->backend->save($this->cache, '_all');
 	}
 }
 
