@@ -91,4 +91,4 @@ See [typography](/reference/typography) for more information.
 ## Related ##
 
  * [javascript](javascript)
- * ["Compass" module](http://silverstripe.org/compass-module/): Allows writing CSS in SASS/LESS syntax, with better code management through mixins, includes and variables
+ * ["Compass" module] `http://silverstripe.org/compass-module/`: Allows writing CSS in SASS/LESS syntax, with better code management through mixins, includes and variables

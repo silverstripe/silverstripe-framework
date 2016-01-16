@@ -15,7 +15,7 @@ See our [high level overview on silverstripe.org](http://silverstripe.org/contri
 
 If you have discovered a bug in SilverStripe, we'd be glad to hear about it -
 well written bug reports can be half of the solution already!
-Our bugtracker is located on [open.silverstripe.org](http://open.silverstripe.org/) (create a [new ticket](http://open.silverstripe.org/newticket)).
+Our bugtracker is located on [open.silverstripe.org] `http://open.silverstripe.org/` (create a [new ticket] `http://open.silverstripe.org/newticket`).
 
 ## Submiting Bugfixes and Enhancements
 
@@ -24,7 +24,7 @@ We're not perfect, and need your help - for example in the form of patches for o
 ### Setup your project for contributions
 
 In contrast to running a SilverStripe website, you can't use the standard download archive for this purpose.
-Our [module list on silverstripe.org](http://silverstripe.org/modules) lists the repository locations alongside
+Our [module list on silverstripe.org] `http://silverstripe.org/modules` lists the repository locations alongside
 the archive downloads, typically using a version control system like "git" or "[subversion](subversion)". 
 
 General guidelines:
@@ -41,7 +41,7 @@ step.
 *  It's better to submit multiple patches with separate bits of functionality than a big patch containing lots of
 changes
 *  Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
-[API documentation](http://api.silverstripe.org/trunk) for good examples.
+[API documentation] `http://api.silverstripe.org/trunk` for good examples.
 * Also check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * We will attribute the change to you whereever possible (git does this automatically for pull requests)
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
@@ -75,10 +75,10 @@ package your changes as a "patch" file. Please read the [official Subversion boo
 
 Please don't submit patch files for modules on git, as they cause us more work.
 
-To submit a patch, [register](http://open.silverstripe.com/register) or [login](http://open.silverstripe.org/login) on open.silverstripe.org, and attach the patch to an appropriate ticket. 
+To submit a patch, [register] `http://open.silverstripe.com/register` or [login] `http://open.silverstripe.org/login` on `open.silverstripe.org`, and attach the patch to an appropriate ticket. 
 Please include in the comment the revision number that the patch is applicable for and a brief outline of what you fixed and how. 
 
-[Submit a patch (requires account on open.silverstripe.org)](http://open.silverstripe.com/newticket?field_type=patch&field_owner=ischommer&attachment=1)
+[Submit a patch (requires account on `open.silverstripe.org`)] `http://open.silverstripe.com/newticket?field_type=patch&field_owner=ischommer&attachment=1`
 
 You can create a patch file through the svn diff-command on the command-line. 
 More info in the [svn redbook](http://svnbook.red-bean.com/en/1.1/ch03s05.html#svn-ch-3-sect-5.3.2). 
@@ -94,7 +94,7 @@ Some gotchas when using subversion and the patch format:
 *  Create patches relative to the working copy (*sapphire/main.php* instead of */Users/myuser/sapphire/main.php*)
 *  Remember the shortcomingsof *svn diff*: Please document moved files and created/deleted directories separately
 
-The "[Patches: Core](http://open.silverstripe.com/report/101)" and "[Patches: Modules](http://open.silverstripe.com/report/102)" reports will let you see where all the patches are at.
+The "[Patches: Core] `http://open.silverstripe.com/report/101`" and "[Patches: Modules] `http://open.silverstripe.com/report/102`" reports will let you see where all the patches are at.
 
 ### Commit Messages
 
@@ -114,7 +114,7 @@ Some examples:
 Further guidelines:
 
 * Each commit should form a logical unit - if you fix two unrelated bugs, commit each one separately
-* If you are fixing a ticket from our [bugtracker](http://open.silverstripe.com), please append `(fixes #<ticketnumber>)`
+* If you are fixing a ticket from our [bugtracker] `http://open.silverstripe.com`, please append `(fixes #<ticketnumber>)`
 * If your change is related to another changeset, reference it with `r<revisionnumber>`. 
 * Please mention the changed classes and methods in your comment - the message should be understandable on its own without browsing any sourcecode
 
@@ -136,7 +136,7 @@ you agree that is can be used in distributions and derivative works of SilverStr
 ## Reporting Security Issues
 
 Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). Please don't file security
-issues in our [bugtracker](http://open.silverstripe.org). In the event of a confirmed vulnerability in SilverStripe
+issues in our [bugtracker] `http://open.silverstripe.org`. In the event of a confirmed vulnerability in SilverStripe
 core, we will take the following actions:
 
 *  Acknowledge to the reporter that we’ve received the report and that a fix is forthcoming. We’ll give a rough
@@ -167,7 +167,7 @@ Note: Smaller edits can be performed in the github.com web interface on your for
 every page view should have an "edit this file" button.
 
 The [doc.silverstripe.org](http://doc.silverstripe.org) website itself is powered by a
-SilverStripe project that uses the ["sapphiredocs" module](https://github.com/silverstripe/silverstripe-sapphiredocs)
+SilverStripe project that uses the ["sapphiredocs" module] `https://github.com/silverstripe/silverstripe-sapphiredocs`
 to convert Markdown formatted files into searchable HTML pages with index lists.
 
 ### Repositories
@@ -275,7 +275,7 @@ on placing HTML blocks inside Markdown.
 Documentation is kept alongside the source code, typically in a module subdirectory like `sapphire/docs/en/`.
 Each language has its own subfolder, which can duplicate parts or the whole body of documentation.
 German documentation would for example live in `sapphire/docs/de/`.
-The [sapphiredocs](https://github.com/silverstripe/silverstripe-sapphiredocs) module that drives
+The [sapphiredocs] `https://github.com/silverstripe/silverstripe-sapphiredocs` module that drives
 [doc.silverstripe.org](http://doc.silverstripe.org) automatically resolves these subfolders into a language dropdown.
 
 ### Further reading
@@ -288,10 +288,10 @@ The [sapphiredocs](https://github.com/silverstripe/silverstripe-sapphiredocs) mo
 
 The content for UI elements (button labels, field titles) and instruction texts shown in the CMS and
 elsewhere is stored in the PHP code for a module (see [i18n](/topics/i18n)). All content can be extracted as a "language file"
-which is then uploaded to [translate.silverstripe.org](http://translate.silverstripe.org). This website provides
+which is then uploaded to [translate.silverstripe.org] `http://translate.silverstripe.org`. This website provides
 an online editor for translators (like you!). Every now and then, translations will be merged back into
 the codebase from there, and released alongside other PHP code.
 
 SilverStripe is already translated in over 60 languages, and we're relying on native speakers
-to keep these up to date, and of course add new languages. Please [register](http://translate.silverstripe.org/apply)
+to keep these up to date, and of course add new languages. Please [register] `http://translate.silverstripe.org/apply`
 a free translator account to get started, even if you just feel like fixing up a few sentences.

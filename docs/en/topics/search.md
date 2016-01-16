@@ -16,7 +16,7 @@ A working implementation of searchable DataObjects can be seen in the `[api:Mode
 
 SilverStripe does not have a built-in method to search through file content (e.g. in PDF or DOC format).
 You can either extract any textual file content into the `[File](api:File)->Content` property, or use a
-dedicated search service like the [sphinx module](http://silverstripe.org/sphinx-module).
+dedicated search service like the [sphinx module] `http://silverstripe.org/sphinx-module`.
 
 ## Related
 
@@ -24,6 +24,6 @@ dedicated search service like the [sphinx module](http://silverstripe.org/sphinx
 *  `[api:RestfulServer]`
 *  [Tutorial: Site Search](/tutorials/site-search)
 *  [SearchContext](/reference/searchcontext)
-*  [genericviews module](http://silverstripe.org/generic-views-module)
-*  [sphinx module](http://silverstripe.org/sphinx-module)
-*  [lucene module](http://silverstripe.org/lucene-module)
+*  [genericviews module] `http://silverstripe.org/generic-views-module`
+*  [sphinx module] `http://silverstripe.org/sphinx-module`
+*  [lucene module] `http://silverstripe.org/lucene-module`

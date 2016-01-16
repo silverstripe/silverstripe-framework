@@ -474,7 +474,7 @@ things.
 
 ## Books on SilverStripe 
 
-*  [Official book on SilverStripe in English](http://www.silverstripe.org/silverstripe-book).
-*  [Official book on SilverStripe in German](http://www.silverstripe.org/das-silverstripe-buch).
+*  [Official book on SilverStripe in English] `http://www.silverstripe.org/silverstripe-book`.
+*  [Official book on SilverStripe in German] `http://www.silverstripe.org/das-silverstripe-buch`.
 
 ![](_images/silverstripe-cms-book-front-cover-design-june2009preview.jpg)

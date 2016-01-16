@@ -12,5 +12,5 @@ sections.
 
 ## Feedback
 
-If you have a topic you would like covered in the misc section please ask for it on our [Bug Tracker](http://open.silverstripe.org)
+If you have a topic you would like covered in the misc section please ask for it on our [Bug Tracker] `http://open.silverstripe.org`
  

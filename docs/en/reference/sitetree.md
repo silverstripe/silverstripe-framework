@@ -233,7 +233,7 @@ as-is, and instead make another method, such as ChildProducts(), to get the data
 
 ### Dynamic Grouping
 
-Something that has been talked about [here](http://www.silverstripe.com/site-builders-forum/flat/15416#post15940) is the
+Something that has been talked about [here] `http://www.silverstripe.com/site-builders-forum/flat/15416#post15940` is the
 concept of "dynamic grouping".  In essence, it means adding navigational tree nodes to the tree that don't correspond to
 a database record.
 

@@ -256,7 +256,7 @@ or as flat files through tickets or emails).
 
 ## Manual installation of other modules ##
 
-Modules listed on [silverstripe.org/modules](http://silverstripe.org/modules) can be hosted
+Modules listed on [silverstripe.org/modules] `http://silverstripe.org/modules` can be hosted
 in any version control system (typically subversion or git). Please read the module
 page for source code locations and installation instructions. The general process of
 [module installation](/topics/modules) is documented as well.

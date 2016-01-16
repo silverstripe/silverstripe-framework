@@ -23,7 +23,7 @@ Our web-based [PHP installer](/installation) can check if you meet the requireme
   * MySQL 5.0+
   * PostgreSQL 8.3+ (requires ["postgresql" module](http://silverstripe.org/postgresql-module))
   * SQL Server 2008. (requires ["mssql" module](http://silverstripe.org/microsoft-sql-server-database/))
-  * Support for [Oracle](http://www.silverstripe.org/oracle-database-module/) and [SQLite](http://silverstripe.org/sqlite-database/) is not commercially supported, but is under development by our open source community.
+  * Support for [Oracle] `http://www.silverstripe.org/oracle-database-module/` and [SQLite](http://silverstripe.org/sqlite-database/) is not commercially supported, but is under development by our open source community.
  * One of the following web server products: 
   * Apache 1.3+ with mod_rewrite and "AllowOverride All" set
   * IIS 5.x+ (Version 7.5+ and URL Rewrite Module recommended)

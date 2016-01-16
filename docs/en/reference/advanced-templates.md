@@ -357,7 +357,7 @@ However, if you want, you can call `obj()` and `val()` yourself.
 Fragment links are links with a "#" in them.  A frequent use-case is to use fragment links to point to different
 sections of the current page.  For example, we might have this in our template.
 
-For, example, we might have this on http://www.example.com/my-long-page/
+For, example, we might have this on `http://www.example.com/my-long-page/`
 
 	:::ss
 	<ul>
@@ -367,8 +367,8 @@ For, example, we might have this on http://www.example.com/my-long-page/
 
 
 So far, so obvious.  However, things get tricky because of we have set our `<base>` tag to point to the root of your
-site.  So, when you click the first link you will be sent to http://www.example.com/#section1 instead of
-http://www.example.com/my-long-page/#section1
+site.  So, when you click the first link you will be sent to `http://www.example.com/#section1` instead of
+`http://www.example.com/my-long-page/#section1`
 
 In order to prevent this situation, the SSViewer template renderer will automatically rewrite any fragment link that
 doesn't specify a URL before the fragment, prefixing the URL of the current page.  For our example above, the following

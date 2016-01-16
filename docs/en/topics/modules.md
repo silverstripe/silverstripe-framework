@@ -33,8 +33,8 @@ instead make it easier for developers to build other applications.
 
 ## Finding Modules
 
-*  [Official module list on silverstripe.org](http://silverstripe.org/modules)
-*  [Subversion repository on open.silverstripe.org](http://open.silverstripe.org/browser/modules)
+*  [Official module list on silverstripe.org] `http://silverstripe.org/modules`
+*  [Subversion repository on open.silverstripe.org] `http://open.silverstripe.org/browser/modules`
     
 
 ## Installation
@@ -49,7 +49,7 @@ guidelines.
 
 ### Download
 
-To install a module you need to download the tar.gz file from the [modules page](http://www.silverstripe.org/modules) and extract this tar.gz to the root folder mentioned
+To install a module you need to download the tar.gz file from the [modules page] `http://www.silverstripe.org/modules` and extract this tar.gz to the root folder mentioned
 above.
 
 Note some times the folders extracted from the tar.gz contain the version number or some other folders. You need to make

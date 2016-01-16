@@ -58,7 +58,7 @@ controller object and then call `[api:Controller::run()]`.
 
 **See:** The API documentation of `[api:Director]` for information about how Director parses URLs and hands control over to a controller object.
 
-In general, the URL is build up as follows: page/action/ID/otherID - e.g. http://www.mysite.com/mypage/addToCart/12. 
+In general, the URL is build up as follows: page/action/ID/otherID - e.g. `http://www.mysite.com/mypage/addToCart/12`. 
 This will add an object with ID 12 to the cart.
 
 When you create a function, you can access the ID like this:

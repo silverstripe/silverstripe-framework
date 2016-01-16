@@ -121,7 +121,7 @@ Put this in mysite/_config.php.  This will create static content in a "cache/" s
 **sitedir** with the a subdirectory that you would like to serve the site from (for example, in your dev environment).
 
 [View .htaccess
-example](http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncsingleserver)
+example] `http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncsingleserver`
 
 *  **New for 2.4:** In 2.4, we use a simple PHP script, static-main.php, to control cache lookup.  This make the
 .htaccess update simpler.
@@ -238,7 +238,7 @@ It will serve requests from the cache, statically, if the cache file exists.  Re
 subdirectory that you would like to serve the site from (for example, in your dev environment).
 
 [View .htaccess
-example](http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncmultiservers)
+example] `http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncmultiservers`
 
 ## Cache Control 
 
@@ -257,7 +257,7 @@ To enable cache control, specify "php" instead of "html" in the RsyncMultiHostPu
 And use this slightly different .htaccess file. Make sure that index.php can be used as a directory index!
 
 [View .htaccess
-example](http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncwithphp)
+example] `http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncwithphp`
 
 ## Deployment
 
