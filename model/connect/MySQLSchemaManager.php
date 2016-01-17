@@ -412,7 +412,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 			$decs = strpos($precision, ',') !== false
 					? (int) substr($precision, strpos($precision, ',') + 1)
 					: 0;
-			$defaultValue = ' default ' . number_format($values['default'], $decs, '.', '');
+			$defaultValue = 'default \'' . number_format($values['default'], $decs, '.', '') . '\'';
 		}
 
 		return "decimal($precision) not null $defaultValue";
@@ -431,6 +431,11 @@ class MySQLSchemaManager extends DBSchemaManager {
 		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set
 		// utf8 collate utf8_general_ci default '{$this->default}'");
 		$valuesString = implode(",", Convert::raw2sql($values['enums'], true));
+
+		if (isset($values['default']) && preg_match('/^[0-9]+$/', $values['default'])) {
+			// Default shouldn't be quoted if only digits
+			return "enum($valuesString) character set utf8 collate utf8_general_ci default " . $values['default'];
+		}
 		return "enum($valuesString) character set utf8 collate utf8_general_ci" . $this->defaultClause($values);
 	}
 
