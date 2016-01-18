@@ -148,6 +148,7 @@ class PDOConnector extends DBConnector {
 		$options = array(
 			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
 			PDO::ATTR_EMULATE_PREPARES => self::is_emulate_prepare(),
+			PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => self::is_emulate_prepare(),
 		);
 
 		// May throw a PDOException if fails
