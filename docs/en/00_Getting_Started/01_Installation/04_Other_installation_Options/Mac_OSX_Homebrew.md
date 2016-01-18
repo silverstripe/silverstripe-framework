@@ -115,4 +115,4 @@ Finally, we're ready to install SilverStripe through composer:
 After finishing, the installation wizard should be available at `http://localhost/silverstripe`.
 The Homebrew MariaDB default database credentials are user `root` and password `root`.
 
-We have a separate in-depth tutorial for [Composer Installation and Usage](getting_started/composer).
+We have a separate in-depth tutorial for [Composer Installation and Usage](/getting_started/composer).

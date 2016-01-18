@@ -7,7 +7,7 @@ Check out our operating system specific guides for [Linux](linux_unix),
 ## Installation Steps
 
 *  Make sure the webserver has MySQL and PHP support (check our [server requirements](../server_requirements)).
-*  Either [download the installer package](http://silverstripe.org/download), or [install through Composer](../composer).
+*  Either [download the installer package](http://silverstripe.org/download), or [install through Composer](/getting_started/composer).
 *  If using with the installer download, extract it into your webroot.
 *  Visit your domain or IP address in your web browser.
 *  You will be presented with an installation wizard asking for database and login credentials.
