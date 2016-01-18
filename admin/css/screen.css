@@ -252,7 +252,7 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field.nolabel .middleColumn { margin-left: 0; }
 .field.nolabel .description { margin-left: 0; }
 .field.checkbox label.right { margin: 4px 0 0 0; display: inline; font-style: normal; color: #4f5861; clear: none; }
-.field label.left { float: left; display: block; width: 176px; padding: 8px 8px 8px 0; line-height: 16px; font-weight: bold; }
+.field label.left { float: left; display: block; width: 176px; padding: 8px 8px 8px 0; line-height: 16px; }
 .field label.right { cursor: pointer; clear: both; color: #7f8b97; display: block; font-style: italic; margin: 4px 0 0 184px; }
 .field .middleColumn { margin-left: 184px; }
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
@@ -390,7 +390,7 @@ input.radio { margin-left: 0; }
 .optionset li label { display: inline; cursor: pointer; padding-left: 8px; }
 .optionset.field { padding-top: 0; }
 
-/** ---------------------------------------------------- HTML Text  ---------------------------------------------------- */
+/** ---------------------------------------------------- HTML Text ---------------------------------------------------- */
 .htmleditor label { display: block; float: none; padding-bottom: 10px; }
 .htmleditor .middleColumn { margin-left: 0px; clear: left; }
 .htmleditor .description { margin-left: 0px; }
@@ -401,23 +401,23 @@ input.radio { margin-left: 0; }
 .action-hidden { display: none; }
 
 /***************************************************************
-* On/Off Switch. 
+* On/Off Switch.
 * Supports switching between up to 5 values (used for Draft/Published)
 * Example html set-up:
-*	<fieldset class="switch-states size_2"> 			
-*		<div class="switch">				
+*	<fieldset class="switch-states size_2">
+*		<div class="switch">
 *			<input id="Draft" class="first" name="view" type="radio" checked>
-*			<label for="Draft">Draft</label>	
+*			<label for="Draft">Draft</label>
 *			<input id="Published" class="last" name="view" type="radio">
-*			<label for="Published">Published</label>						
-*			<span class="slide-button"></span>	
-*		</div>			
+*			<label for="Published">Published</label>
+*			<span class="slide-button"></span>
+*		</div>
 *	</fieldset>
 ****************************************************************/
-fieldset.switch-states { margin-right: 8px; 	/*	
+fieldset.switch-states { margin-right: 8px; 	/*
 		Produce css for up to 5 states.
 
-		Note: with a little adjustment the switch can take more than 5 items, 
+		Note: with a little adjustment the switch can take more than 5 items,
 		but a dropdown would probably be more appropriate
 	*/ }
 fieldset.switch-states .switch { border: 2px solid #d3d6da; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; -webkit-animation: bugfix infinite 1s; background: #dee0e3; display: block; height: 24px; position: relative; width: 100%; z-index: 5; }
