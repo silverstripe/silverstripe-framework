@@ -8,7 +8,7 @@ itself.
 
 This lack of a configuration-GUI is on purpose, as we'd like to keep developer-level options where they belong (into
 code), without cluttering up the interface. See this core forum discussion ["The role of the
-CMS"](http://www.silverstripe.com/core-team-discussion/flat/2723) for further reasoning.
+CMS"] `http://www.silverstripe.com/core-team-discussion/flat/2723` for further reasoning.
 
 In addition to these principle, some settings are 
  * Author-level configuration like interface language or date/time formats can be performed in the CMS "My Profile" section (`admin/myprofile`). 

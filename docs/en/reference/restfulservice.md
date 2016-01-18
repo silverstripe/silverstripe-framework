@@ -7,8 +7,8 @@
 returned from the web service. Further it supports caching of the response, and you can customize the cache interval. 
 
 To gain the functionality you can either create a new `[api:RestfulService]` object or create a class extending the
-RestfulService (see [flickrservice](http://silverstripe.org/flickr-module/) and
-[youtubeservice](http://silverstripe.org/youtube-gallery-module/) modules).
+RestfulService (see [flickrservice] `http://silverstripe.org/flickr-module` and
+[youtubeservice] `http://silverstripe.org/youtube-gallery-module/` modules).
 
 
 ## Examples

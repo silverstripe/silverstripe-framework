@@ -50,8 +50,8 @@ See [controller](/topics/controller) for examples and explanations on how the ru
 
 SilverStripe comes with certain rewrite rules (e.g. for *admin/assets*).
 
-*  [sapphire/_config.php](http://open.silverstripe.org/browser/modules/sapphire/trunk/_config.php)
-*  [cms/_config.php](http://open.silverstripe.org/browser/modules/cms/trunk/_config.php)
+*  [sapphire/_config.php] `http://open.silverstripe.org/browser/modules/sapphire/trunk/_config.php`
+*  [cms/_config.php] `http://open.silverstripe.org/browser/modules/cms/trunk/_config.php`
 
 
 ## Links

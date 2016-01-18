@@ -10,8 +10,8 @@ core.
 
 Append the option and corresponding value to your URL in your browser's address bar.  You may find the [Firefox UrlParams extension](https://addons.mozilla.org/en-US/firefox/addon/1290) useful in order to debug a POST requests (Like Forms).
 
-    http://yoursite.com/page?option_name=value
-    http://yoursite.com/page?option_1=value&option_2=value
+    `http://yoursite.com/page?option_name=value`
+    `http://yoursite.com/page?option_1=value&option_2=value`
 
 ## Templates
 
@@ -79,9 +79,9 @@ Redirections](reference/director/#redirection) for more information and examples
 
  | Site URL                                         | | Action                                                            | 
  | --------                                         | | ------                                                            | 
- | http://yoursite.com**/dev/build**                | | Rebuild the entire database and manifest, see below for additional URL Variables                                      | 
- | http://yoursite.com**/admin/publishall/**        | | Publish all pages on the site                                     | 
- | http://yoursite.com**/anypage/images/flush**     | | Creates new images for the page by deleting the resized ones and going back to the original to create new resized one | 
+ | `http://yoursite.com`**/dev/build**                | | Rebuild the entire database and manifest, see below for additional URL Variables                                      | 
+ | `http://yoursite.com`**/admin/publishall/**        | | Publish all pages on the site                                     | 
+ | `http://yoursite.com`**/anypage/images/flush**     | | Creates new images for the page by deleting the resized ones and going back to the original to create new resized one | 
 
 ###  /dev/build
 

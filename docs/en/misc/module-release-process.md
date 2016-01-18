@@ -7,7 +7,7 @@ If you do, we would love to host your module and have you become an official mod
 Please read our ["Contributing to SilverStripe"](http://silverstripe.org/contributing-to-silverstripe/) overview.
 
 Once you have created a module, login at [silverstripe.org](http://silverstripe.org) and 
-[submit your module](http://silverstripe.org/modules/manage/add)
+[submit your module](http://addons.silverstripe.org/)
 
 It's very important to us that users of SilverStripe can come to expect a level of quality from the core product and any 
 modules running on it. In order to provide this, we require certain things from module maintainers.
@@ -32,7 +32,7 @@ Each line of code you write should be version controlled, in version control sys
 available for opensource projects, including wiki and bugtracker functionality 
 (e.g. [Google Code for Subversion](http://code.google.com) or [Github for Git](http://github.com)).
 
-* Add your module to [silverstripe.org/modules](http://silverstripe.org/modules) (and keep the version compatibility information current)
+* Add your module to [silverstripe.org/modules] `http://silverstripe.org/modules` (and keep the version compatibility information current)
 * Follow our [coding-conventions](coding-conventions)
 * Write unit tests and functional tests covering code bundled with the module - see [testing-guide](/topics/testing)
 * Ensure your code is [localizable](/topics/i18n) and [translatable](/topics/translation)
@@ -52,7 +52,7 @@ your modules page on silverstripe.org
 
 Both Google Code and github.com provide their own bugtracker - we encourage you to use any built-in tools that come with
 your version control hoster. Most Silverstripe-maintained modules have their bugtracker on 
-[open.silverstripe.org](http://open.silverstripe.org).
+[open.silverstripe.org] `http://open.silverstripe.org`.
 
 Providing bugtracking is a major form of communicating with your users in an efficient way, and will provide a good overview
 of outstanding work and the stability of your code to an interested user.
@@ -111,7 +111,7 @@ that you can link from the `README.md` file. Example:
 			tutorial.md
 			howto-search-mymodule.md
 
-The ["sapphiredocs" module](http://open.silverstripe.org/browser/modules/sapphiredocs/trunk) can be used
+The ["sapphiredocs" module] `http://open.silverstripe.org/browser/modules/sapphiredocs/trunk` can be used
 to list and render content inside a `docs/` folder (although it is not required, Markdown is designed
 to be readable in plain text as well).
 
@@ -120,8 +120,8 @@ to be readable in plain text as well).
 In return for all your hard work in putting a high-quality module on the site, the SilverStripe project has the following 
 options to support you:
 
-*  Use of [trac](http://open.silverstripe.org) to keep your bugs and feature requests organised
-*  Advertising of your module on the http://silverstripe.org/modules/ modules page once it has reached a beta stage and shown
+*  Use of [trac] `http://open.silverstripe.org` to keep your bugs and feature requests organised
+*  Advertising of your module on the http://addons.silverstripe.org/add-ons modules page once it has reached a beta stage and shown
 to meet our requirements above.
 *  We might showcase your module on our blog and/or newsletter, when it's first released and/or when a major version with
 significant new features is released. We'll work with you to publicise it on other blogs too (it helps if you deliver 
@@ -189,7 +189,7 @@ export to a tar.gz.
 
 *  See [Producing OSS: "Announcing Releases"](http://producingoss.com/en/testing-and-releasing.html#release-announcement)
 *  Update your [documentation](module-release-process#documentation) in the sourcecode, wiki and README
-*  Add your release to the [silverstripe.org/modules](http://silverstripe.org/modules) listing
+*  Add your release to the [silverstripe.org/modules] `http://silverstripe.org/modules` listing
 *  Announce the release on [silverstripe-announce](http://groups.google.com/group/silverstripe-announce).  Include a
 [changelog](module-release-process#changelogs), the download link and instructions for filing bug reports.
 *  If this release is a major release, our [marketing guys](http://silverstripe.com/contact/) will strive to announce it
@@ -238,5 +238,5 @@ trunk.
 * [Module Development](/topics/module-development)
 * [Documentation Guide](contributing#writing-documentation)
 * [Contributing to SilverStripe](http://silverstripe.org/contributing-to-silverstripe/)
-* [Submit your Module](http://silverstripe.org/modules/manage/add)
+* [Submit your Module] `http://silverstripe.org/modules/manage/add`
 * [subversion](subversion)

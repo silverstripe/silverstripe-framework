@@ -13,4 +13,4 @@ the language and functions which are used in the guides.
 
 ## Feedback
 
-If you have a topic you would like covered in these how to's please ask for it on our [Bug Tracker](http://open.silverstripe.org)
+If you have a topic you would like covered in these how to's please ask for it on our [Bug Tracker] `http://open.silverstripe.org`

@@ -349,7 +349,7 @@ Example:
 
 ### Enabling the _t() function in templates 
 
-If you're looking to use [the _t() function](http://doc.silverstripe.com/doku.php?id=i18n#the_t_function) in template
+If you're looking to use [the _t() function] `http://doc.silverstripe.com/doku.php?id=i18n#the_t_function` in template
 files, you'll need to [set the i18n locale](/topics/translation#setting_the_i18n_locale) first. 
 
 (The reasoning is as follows: Translatable doesn't set the i18n locale. Historically these were two separate systems,
@@ -404,8 +404,8 @@ This should e.g. enable you to use `$Locale.Nice` in template code.
 
 ## Related
 
-*  [translate.silverstripe.org](http://translate.silverstripe.org): Starting point for community-driven translation of the Silverstripe UI
+*  [translate.silverstripe.org] `http://translate.silverstripe.org`: Starting point for community-driven translation of the Silverstripe UI
 *  [i18n](i18n): Developer-level documentation of Silverstripe's i18n capabilities
 *  `[api:Translatable]`: DataObject-interface powering the website-content translations
-*  ["Translatable ModelAdmin" module](http://silverstripe.org/translatablemodeladmin-module/): An extension which allows
+*  ["Translatable ModelAdmin" module] `http://silverstripe.org/translatablemodeladmin-module/`: An extension which allows
 translations of `[api:DataObject]`s inside `[api:ModelAdmin]`

@@ -123,7 +123,7 @@ Main advantages over simpler jQuery plugins are:
 *  Constructor/Destructor hooks
 *  Focus management and mouse interaction
 
-See the [official developer guide](http://jqueryui.com/docs/Developer_Guide) and other
+See the [official developer guide] `http://jqueryui.com/docs/Developer_Guide` and other
 [tutorials](http://bililite.com/blog/understanding-jquery-ui-widgets-a-tutorial/) to get started.
 
 Example: Highlighter
@@ -503,12 +503,12 @@ Documentation in JavaScript usually resembles the JavaDoc standard, although the
 flexibility of the language it can be hard to generate automated documentation, particularly with the predominant usage
 of closure constructs in jQuery and jQuery.entwine.
 
-To generate documentation for SilverStripe code, use [JSDoc toolkit](http://code.google.com/p/jsdoc-toolkit/) (see
-[reference of supported tags](http://code.google.com/p/jsdoc-toolkit/wiki/TagReference)). For more class-oriented
-JavaScript, take a look at the [jsdoc cookbook](http://code.google.com/p/jsdoc-toolkit/wiki/CookBook). The `@lends`
+To generate documentation for SilverStripe code, use [JSDoc toolkit] `http://code.google.com/p/jsdoc-toolkit/` (see
+[reference of supported tags] `http://code.google.com/p/jsdoc-toolkit/wiki/TagReference`). For more class-oriented
+JavaScript, take a look at the [jsdoc cookbook] `http://code.google.com/p/jsdoc-toolkit/wiki/CookBook`. The `@lends`
 and `@borrows` properties are particularly useful for documenting jQuery-style code.
 
-JSDoc-toolkit is a command line utility, see [usage](http://code.google.com/p/jsdoc-toolkit/wiki/CommandlineOptions).
+JSDoc-toolkit is a command line utility, see [usage] `http://code.google.com/p/jsdoc-toolkit/wiki/CommandlineOptions`.
 
 Example: jQuery.entwine
 
@@ -566,7 +566,7 @@ Example: jQuery.entwine
 It is important to verify that your code actually does what it says, and the best way to ensure this are **automated
 tests**. For jQuery, we use two different tools with different uses: **unit testing** with
 [QUnit](http://docs.jquery.com/QUnit) (also used by the jQuery team for the core libraries), and **behaviour driven
-testing** with [JSpec](http://visionmedia.github.com/jspec/). There are overlaps between the two solutions, if in doubt
+testing** with [JSpec] `http://visionmedia.github.com/jspec/`. There are overlaps between the two solutions, if in doubt
 start with JSpec, as it provides a much more powerful testing framework.
 
 Example: QUnit test (from [jquery.com](http://docs.jquery.com/QUnit#Using_QUnit)):
@@ -579,7 +579,7 @@ Example: QUnit test (from [jquery.com](http://docs.jquery.com/QUnit#Using_QUnit)
 	});
 
 
-Example: JSpec Shopping cart test (from [visionmedia.github.com](http://visionmedia.github.com/jspec/))
+Example: JSpec Shopping cart test (from [visionmedia.github.com] `http://visionmedia.github.com/jspec/`)
 
 	describe 'ShoppingCart'
 	  before_each 
@@ -646,4 +646,4 @@ afraid to experiment with using other approaches.
 * [css](css)
 * [Unobtrusive Javascript](http://www.onlinetools.org/articles/unobtrusivejavascript/chapter1.html)
 * [Quirksmode: In-depth Javascript Resources](http://www.quirksmode.org/resources.html)
-* [behaviour.js documentation](http://open.silverstripe.org/browser/modules/sapphire/branches/2.4/thirdparty/behaviour/README.md)
+* [behaviour.js documentation] `http://open.silverstripe.org/browser/modules/sapphire/branches/2.4/thirdparty/behaviour/README.md`
