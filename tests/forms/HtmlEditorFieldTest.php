@@ -133,8 +133,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 			'bar',
 			'baz',
 			'bam',
-			"some'id",
-			'bar',
+			"some&#039;id",
 		);
 		$page = new Page();
 		$page->Title = 'Test';
@@ -142,15 +141,15 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$page->write();
 		$this->useDraftSite(true);
 
-		$controller = new Controller();
-		$controller->setRequest(new SS_HTTPRequest('GET', '/', array(
+		$request = new SS_HTTPRequest('GET', '/', array(
 			'PageID' => $page->ID,
-		)));
-		$controller->init();
+		));
 
-		$toolBar = new HtmlEditorField_Toolbar($controller, 'test');
+		$toolBar = new HtmlEditorField_Toolbar(new Controller(), 'test');
+		$toolBar->setRequest($request);
 
-		$this->assertEquals(json_encode($expected), $toolBar->getanchors());
+		$results = json_decode($toolBar->getanchors(), true);
+		$this->assertEquals($expected, $results);
 	}
 
 	public function testHtmlEditorFieldFileLocal() {
