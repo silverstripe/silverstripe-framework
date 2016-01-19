@@ -63,6 +63,17 @@ including form and page comment information. None of this is vital but `clear_al
 	:::php
 	Session::clear_all();
 
+## Secure Session Cookie
+
+In certain circumstances, you may want to use a different `session_name` cookie when using the `https` protocol for security purposes. To do this, you may set the `cookie_secure` parameter to `true` on your `config.yml`
+
+	:::yml
+	Session:
+	  cookie_secure: true
+
+This uses the session_name `SECSESSID` for `https` connections instead of the default `PHPSESSID`. Doing so adds an extra layer of security to your session cookie since you no longer share `http` and `https` sessions.
+
+
 ## API Documentation
 
 * [api:Session]

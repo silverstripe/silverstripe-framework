@@ -138,7 +138,7 @@
 				this[this.getPanel().is(':visible') ? 'closePanel' : 'openPanel']();
 			},
 			setTitle: function(title) {
-				title = title || this.data('title') || strings.fieldTitle;
+				title = title || this.data('empty-title') || strings.fieldTitle;
 				
 				this.find('.treedropdownfield-title').html(title);
 				this.data('title', title); // separate view from storage (important for search cancellation)

@@ -232,7 +232,7 @@ If you want to run the text collector for just one module you can use the 'modul
 `http://localhost/dev/tasks/i18nTextCollectorTask/?module=cms`
 
 <div class="hint" markdown='1'>
-You'll need to install PHPUnit to run the text collector (see [testing-guide](/topics/testing)).
+You'll need to install PHPUnit to run the text collector (see [testing-guide](/developer_guides/testing)).
 </div>
 
 ## Module Priority
