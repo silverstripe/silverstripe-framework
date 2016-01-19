@@ -1,6 +1,6 @@
 # How to add a custom action to a GridField row
 
-In a [GridField](../field_types/gridfield) instance each table row can have a
+In a [GridField](/developer_guides/forms/field_types/gridfield) instance each table row can have a
 number of actions located the end of the row such as edit or delete actions.
 Each action is represented as a instance of a specific class
 (e.g [api:GridFieldEditButton]) which has been added to the `GridFieldConfig`
@@ -79,7 +79,7 @@ below:
 
 While we're working on the code, to add this new action to the `GridField`, add
 a new instance of the class to the [api:GridFieldConfig] object. The `GridField`
-[Reference](../field_types/gridfield) documentation has more information about
+[Reference](/developer_guides/forms/field_types/gridfield) documentation has more information about
 manipulating the `GridFieldConfig` instance if required.
 
 	:::php
@@ -93,7 +93,7 @@ manipulating the `GridFieldConfig` instance if required.
 	$gridField->getConfig()->addComponent(new GridFieldCustomAction());
 	
 For documentation on adding a Component to a `GridField` created by `ModelAdmin` 
-please view the [ModelAdmin Reference](/reference/modeladmin#gridfield-customization) section `GridField Customization`
+please view the [GridField Customization](/developer_guides/forms/how_tos/create_a_gridfield_actionprovider) section.
 
 Now let's go back and dive through the `GridFieldCustomAction` class in more
 detail.

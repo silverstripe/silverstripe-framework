@@ -163,6 +163,10 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 			$memberID = (is_object($member)) ? $member->ID : $member;
 		}
 
+		if (!$memberID) {
+			return false;
+		}
+
 		// Turn the code into an array as we may need to add other permsissions to the set we check
 		if(!is_array($code)) $code = array($code);
 

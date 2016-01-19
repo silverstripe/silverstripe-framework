@@ -6,7 +6,7 @@ OSX comes bundled with PHP, but you're stuck with the version and modules it shi
 If you run projects on different PHP versions, or care about additional PHP module support
 and other dependencies such as MariaDB, we recommend an installation through [Homebrew](http://brew.sh/).
 
-Check out the [MAC OSX with MAMP](../Mac_OSX) for an alternative installation process
+Check out the [MAC OSX with MAMP](/getting_started/installation/mac_osx) for an alternative installation process
 which packages up the whole environment into a convenient application.
 
 ## Requirements
@@ -115,4 +115,4 @@ Finally, we're ready to install SilverStripe through composer:
 After finishing, the installation wizard should be available at `http://localhost/silverstripe`.
 The Homebrew MariaDB default database credentials are user `root` and password `root`.
 
-We have a separate in-depth tutorial for [Composer Installation and Usage](composer).
+We have a separate in-depth tutorial for [Composer Installation and Usage](/getting_started/composer).

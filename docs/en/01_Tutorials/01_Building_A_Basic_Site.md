@@ -51,7 +51,7 @@ When designing your site you should only need to modify the *mysite*, *themes* a
 
 ![](../_images/tutorial1_cms-basic.jpg)
 
-The CMS is the area in which you can manage your site content. You can access the cms at http://localhost/your_site_name/admin (or http://yourdomain.com/admin if you are using your own domain name). You
+The CMS is the area in which you can manage your site content. You can access the cms at `http://localhost/your_site_name/admin` (or `http://yourdomain.com/admin` if you are using your own domain name). You
 will be presented with a login screen. Login using the details you provided at installation. After logging in you
 should see the CMS interface with a list of the pages currently on your website (the site tree). Here you can add, delete and reorganize pages. If you need to delete, publish, or unpublish a page, first check "multi-selection" at the top. You will then be able to perform actions on any checked files using the "Actions" dropdown. Clicking on a page will open it in the page editing interface pictured below (we've entered some test content).
 
@@ -85,7 +85,7 @@ The page type specifies the templates used to render the page, the fields that a
 **SilverStripe's friendly URLs**
 
 While you are on the draft or live SilverStripe site, you may notice the URLs point to files that don't exist, e.g.
-http://localhost/contact or http://yourdomainname.com/about-us etc. SilverStripe uses the URL field on the Meta-Data tab of the Edit Page -> Content section to look up the appropriate
+`http://localhost/contact` or `http://yourdomainname.com/about-us` etc. SilverStripe uses the URL field on the Meta-Data tab of the Edit Page -> Content section to look up the appropriate
 page in the database.
 
 Note that if you have sub-pages, changing the Top level URL field for a page will affect the URL for all sub-pages. For example, if we changed the URL field "/about-us/" to "/about-silverstripe/" then the sub-pages URLs would now be "/about-silverstripe/URL-of-subpage/" rather than "/about-us/URL-of-subpage/".
@@ -151,7 +151,7 @@ or placed between SilverStripe template tags:
 **Flushing the cache**
 
 Whenever we edit a template file, we need to append *?flush=1* onto the end of the URL, e.g.
-http://localhost/your_site_name/?flush=1. SilverStripe stores template files in a cache for quicker load times. Whenever there are
+`http://localhost/your_site_name/?flush=1`. SilverStripe stores template files in a cache for quicker load times. Whenever there are
 changes to the template, we must flush the cache in order for the changes to take effect.
 
 ##  The Navigation System
@@ -348,7 +348,7 @@ Create a new file *HomePage.php* in *mysite/code*. Copy the following code into 
 
 
 Every page type also has a database table corresponding to it. Every time we modify the database, we need to rebuild it.
-We can do this by going to [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build) (replace *localhost/your_site_name* with your own domain name if applicable). 
+We can do this by going to `http://localhost/your_site_name/dev/build`. 
 
 It may take a moment, so be patient. This adds tables and fields needed by your site, and modifies any structures that have changed. It
 does this non-destructively - it will never delete your data.

@@ -17,7 +17,7 @@ GridField can only be used with `$list` data sets that are of the type `SS_List`
 
 <div class="notice" markdown="1">
 [api:GridField] powers the automated data UI of [api:ModelAdmin]. For more information about `ModelAdmin` see the 
-[Customizing the CMS](../../customizing_the_cms) guide.
+[Customizing the CMS](/developer_guides/customising_the_admin_interface) guide.
 </div>
 
 Each `GridField` is built from a number of components grouped into the [api:GridFieldConfig]. Without any components, 
