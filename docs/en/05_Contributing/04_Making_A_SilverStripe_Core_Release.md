@@ -35,6 +35,7 @@ As a core contributor it is necessary to have installed the following set of too
   - `pip install transifex-client`
 * [AWS CLI tools](https://aws.amazon.com/cli/):
   - `pip install awscli`
+* The `tar` and `zip` commands
 * A good _ss_environment.php setup in your localhost webroot.
 
 Example `_ss_environment.php`:
@@ -72,6 +73,7 @@ the [core committers](core_committers), who will assist with setting up your cre
 * Admin permissions on [transifex](https://www.transifex.com/silverstripe/).
 * AWS write permissions on the `silverstripe-ssorg-releases` s3 bucket.
 * Permission on [silverstripe release announcement](https://groups.google.com/forum/#!forum/silverstripe-announce).
+* Moderator permissions in the #silverstripe [IRC channel]((http://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/))
 
 ### First time setup: Security releases
 
@@ -90,7 +92,7 @@ When doing a security release, typically one or more (or sometimes all) of the b
 steps will need to be performed manually. As such, this guide should not be followed
 exactly the same for these.
 
-Standard practice is to produce an RC for any patched modules on the security 
+Standard practice is to produce a pre-release for any patched modules on the security 
 forks for cms and framework (see [silverstripe-security](https://github.com/silverstripe-security)).
 
 <div class="warning" markdown="1">
@@ -116,27 +118,49 @@ Producing a security fix follows this general process:
 * Push the current upstream target branches (e.g. 3.2) to the corresponding security fork
   to a new branch named for the target release (e.g. 3.2.4). Security fixes should be 
   applied to this branch only. Once a fix (or fixes) have been applied to this branch, then
-  an RC tag can be applied, and a private release can then be developed in order
-  to test this RC.
-* Once RC testing is completed and the release is ready for stabilisation, then these fixes
-  can then be pushed to the upstream module fork, and the release completed and published
-  as per normal.
+  a tag can be applied, and a private release can then be developed in order
+  to test this release.
+* Once release testing is completed and the release is ready for stabilisation, then these fixes
+  can then be pushed to the upstream module fork, and the release completed as per normal.
+  Make sure to publish any draft security pages at the same time as the release is published (same day).
+* After the final release has been published, close related JIRA issues 
+  at [open source security jira](https://silverstripe.atlassian.net/secure/RapidBoard.jspa?rapidView=198&view=detail)
+
+<div class="warning" markdown="1">
+Note: It's not considered acceptable to disclose any security vulnerability until a fix exists in
+a public stable, not an RC or dev-branch. Security warnings that do not require a stable release
+can be published as soon as a workaround or usable resolution exists.
+</div>
 
 ## Standard release process
 
-The release process, at a high level, involves creating an RC, publishing it, and 
-reviewing the need for either another RC or a final stable tag within a short period
+The release process, at a high level, involves creating a release, publishing it, and 
+reviewing the need for either another pre-release or a final stable tag within a short period
 (normally within 3-5 business days).
 
-During the RC cycle a temporary RC branch is created, and should only receive
-absolutely critical fixes during the RC cycle. Any changes to this branch should
-result in the requirement for a new RC, thus a higher level of scrutiny is typically
+During the pre-release cycle a temporary branch is created, and should only receive
+absolutely critical fixes during the cycle. Any changes to this branch should
+result in the requirement for a new release, thus a higher level of scrutiny is typically
 placed on any pull request to these branches.
 
-When creating a new RC or stable, the following process is broken down into two
+When creating a new pre-release or stable, the following process is broken down into two
 main sets of commands:
 
 ### Stage 1: Release preparation:
+
+If you are managing a release, it's best to first make sure that SilverStripe marketing
+are aware of any impending release. This is so that they can ensure that a relevant blog
+post will appear on [www.silverstripe.org/blog](http://www.silverstripe.org/blog/), and
+cross-posted to other relevant channels such as Twitter and Facebook.
+Sending an email to [marketing@silverstripe.com](mailto:marketing@silverstripe.com)
+with an overview of the release and a rough release timeline.
+
+Check all tickets ([framework](https://github.com/silverstripe/silverstripe-framework/milestones), 
+[cms](https://github.com/silverstripe/silverstripe-cms/milestones), 
+[installer](https://github.com/silverstripe/silverstripe-installer/milestones)) assigned to that milestone are 
+either closed or reassigned to another milestone.
+
+Merge up from other older supported release branches (e.g. merge `3.1`->`3.2`, `3.2`->`3.3`, `3.3`->`3`, `3`->`master`).
 
 This is the part of the release that prepares and tests everything locally, but
 doe not make any upstream changes (so it's safe to run without worrying about
@@ -154,7 +178,7 @@ This command has the following parameters:
   newest 3.2.x version). You can normally leave this out for patch releases,
   and the code will normally be able to guess the right version, but you may
   as well declare it every time.
-* `--branch-auto` Will automatically create a new RC branch (e.g. 3.2.4) if
+* `--branch-auto` Will automatically create a new temporary release branch (e.g. 3.2.4) if
   one does not exist.
 
 This can take between 5-15 minutes, and will invoke the following steps,
@@ -166,10 +190,10 @@ and needs to be manually advanced):
   will look at the available versions and branch-aliases of silverstripe/installer
   to determine the best version to install from. E.g. installing 4.0.0 will
   know to install dev-master, and installing 3.3.0 will install from 3.x-dev.
-  If installing RC versions for stabilisation, it will use the correct RC
-  branch.
+  If installing pre-release versions for stabilisation, it will use the correct
+  temporary release branch.
 * `release:branch` If release:create installed from a non-rc branch, it will
-  create the new RC branch (via `--branch-auto`). You can also customise this branch
+  create the new temporary release branch (via `--branch-auto`). You can also customise this branch
   with `--branch=<branchname>`, but it's best to use the standard.
 * `release:translate` All upstream transifex strings will be pulled into the
   local master strings, and then the [api:i18nTextCollector] task will be invoked
@@ -193,9 +217,22 @@ Once the release task has completed, it may be ideal to manually test the site o
 by running it locally (e.g. `http://localhost/release-3.3.4`) to do some smoke-testing
 and make sure that there are no obvious issues missed.
 
+Since `cow` will only run the unit test suite, you'll need to check
+the build status of Behat end-to-end tests manually on travis-ci.org
+for the various modules (e.g. [framework](https://travis-ci.org/silverstripe/silverstripe-framework))
+and [cms](https://travis-ci.org/silverstripe/silverstripe-cms)).
+
 It's also ideal to eyeball the git changes generated by the release tool, making sure
-that no translation strings were unintentionally lost, or that the changelog
+that no translation strings were unintentionally lost, no malicious changes were
+introduced in the (community contributed) translations, and that the changelog
 was generated correctly.
+
+In particular, double check that all necessary information is included in the release notes,
+including:
+
+* Upgrading notes
+* Security fixes included
+* Major changes
 
 Once this has been done, then the release is ready to be published live.
 
@@ -214,7 +251,7 @@ As with the `cow release` command, this step is broken down into the following
 subtasks which are invoked in sequence:
 
 * `release:tag` Each module will have the appropriate tag applied (except the theme).
-* `release:push` The RC branches and all tags are pushed up to origin on github.
+* `release:push` The temporary release branches and all tags are pushed up to origin on github.
 * `release:archive` This will generate a new tar.gz and zip archive, each for
   cms and framework-only installations. These will be copied to the root folder
   of the release directory, although the actual build will be created in temporary
@@ -231,11 +268,11 @@ Once all of these commands have completed there are a couple of final tasks left
 aren't strictly able to be automated:
 
 * If this is a stable release, it will be necessary to perform a post-release merge
-  on open source. This normally will require you to merge the RC branch into the
+  on open source. This normally will require you to merge the temporary release branch into the
   source branch (e.g. merge 3.2.4 into 3.2), or sometimes create new branches if
   releasing a new minor version, and bumping up the branch-alias in composer.json.
   E.g. branching 3.3 from 3, and aliasing 3 as 3.4.x-dev. You can then delete
-  the temporary RC branches. This will need to be done before updating the 
+  the temporary release branches. This will need to be done before updating the 
   release documentation in stage 3.
 * Merging up the changes in this release to newer branches, following the 
   SemVer pattern (e.g. 3.2.4 > 3.2 > 3.3 > 3 > master). The more often this is
@@ -251,6 +288,25 @@ aren't strictly able to be automated:
 * Make sure that the [releases page](https://github.com/silverstripe/silverstripe-installer/releases)
   on github shows the new tag.
 
+*Updating non-patch versions*
+
+If releasing a new major or minor version it may be necessary to update various SilverStripe portals. Normally a new
+minor version will require a new branch option to be made available on each site menu. These sites include:
+
+* [docs.silverstripe.org](https://docs.silverstripe.org): Update on [github](https://github.com/silverstripe/doc.silverstripe.org)
+  and deployed internally.
+* [api.silverstripe.org](https://api.silverstripe.org): Update on [github](https://github.com/silverstripe/api.silverstripe.org)
+  and deployed internally.
+* [userhelp.silverstripe.org](https://userhelp.silverstripe.org/en/3.2): Update on
+  [github](https://github.com/silverstripe/userhelp.silverstripe.org) and deployed internally.
+  The content for this site is pulled from [silverstripe-userhelp-content](https://github.com/silverstripe/silverstripe-userhelp-content)
+* [demo.silverstripe.org](http://demo.silverstripe.org/): Update on
+  [github](https://github.com/silverstripe/demo.silverstripe.org/) and deployed internally.
+
+It's also a good idea to check that `Deprecation::notification_version('4.0.0');` in framework/_config.php points to
+the right major version. This should match the major version of the current release. E.g. all versions of 4.x
+should be set to `4.0.0`.
+
 ### Stage 3: Let the world know
 
 Once a release has been published there are a few places where user documentation
@@ -258,7 +314,7 @@ will need to be regularly updated.
 
 * Make sure that the [download page](http://www.silverstripe.org/download) on
   silverstripe.org has the release available. If it's a stable, it will appear
-  at the top of the page. If an RC pre-release, it will be available under the 
+  at the top of the page. If it's a pre-release, it will be available under the 
   [development builds](http://www.silverstripe.org/download#download-releases)
   section. If it's not available, you might need to check that the release was
   properly uploaded to aws s3, or that you aren't viewing a cached version of
@@ -277,7 +333,7 @@ will need to be regularly updated.
 * Create a release announcement forum sticky on the
   [releases and announcements](http://www.silverstripe.org/community/forums/releases-and-announcements/)
   forum category. Make this a global read-only sticky, and un-sticky any older release.
-* Update the IRC topic to include the new release version.
+* Update the #silverstripe [IRC](http://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/) topic to include the new release version.
 
 ### Stage 4: Web platform installer release
 

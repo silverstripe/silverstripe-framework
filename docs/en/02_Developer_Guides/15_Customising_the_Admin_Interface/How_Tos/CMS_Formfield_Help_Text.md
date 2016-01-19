@@ -49,4 +49,4 @@ by setting an additional `RightTitle`.
 		->setRightTitle('<a class="cms-description-trigger">My custom icon</a>');
 
 Note: For more advanced help text we recommend using
-[Custom form field templates](../form_templates);
+[Custom form field templates](/developer_guides/forms/form_templates);

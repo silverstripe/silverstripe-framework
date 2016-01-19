@@ -1,5 +1,5 @@
 /*
- * jsTree 1.0-rc3
+ * jsTree (custom version for SilverStripe: 1.0-rc3 + minor bugfixes)
  * http://jstree.com/
  *
  * Copyright (c) 2010 Ivan Bozhanov (vakata.com)
@@ -2442,7 +2442,7 @@
 							0);
 						}
 					}, this))
-				.delegate("a", "mouseup.jstree", $.proxy(function (e) { 
+				.delegate("a, #jstree-marker-line", "mouseup.jstree", $.proxy(function (e) {
 						if($.vakata.dnd.is_drag && $.vakata.dnd.user_data.jstree) {
 							this.dnd_finish(e);
 						}
@@ -2524,7 +2524,7 @@
 								$.vakata.dnd.helper.children("ins").attr("class","jstree-invalid");
 							}
 						}, this))
-					.delegate(s.drop_target, "mouseup.jstree-" + this.get_index(), $.proxy(function (e) {
+					.delegate(s.drop_target + ", #jstree-marker-line", "mouseup.jstree-" + this.get_index(), $.proxy(function (e) {
 							if(this.data.dnd.active && $.vakata.dnd.helper.children("ins").hasClass("jstree-ok")) {
 								this._get_settings().dnd.drop_finish.call(this, { "o" : o, "r" : $(e.target), "e" : e });
 							}

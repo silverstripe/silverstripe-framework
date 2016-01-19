@@ -297,8 +297,8 @@ body.cms {
 	display: none;
 	width: 100%;
 	margin: 0 0 0 -16px;
-	padding: 16px;
-	background-color: #dddfe1;
+	padding: 12px 16px;
+	border-bottom: 1px solid $color-light-separator;
 
 	.cms-search-form {
 		margin-bottom: 0;
@@ -501,9 +501,14 @@ body.cms {
 			top: 0;
 			float: left;
 			margin-top: 0;
-
+			
+			&:active {
+				outline: none;
+			}
+		
 			a {
 				@include inline-block;
+				outline: none;
 				float: none;
 				font-weight: normal;
 				color: $color-text;
