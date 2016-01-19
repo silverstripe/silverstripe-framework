@@ -603,7 +603,7 @@ body.cms { overflow: hidden; }
 .ui-tabs .ui-tabs-nav .ui-state-default a { line-height: 28px; padding-top: 12px; padding-bottom: 8px; color: #66727d; }
 .ui-tabs .ui-tabs-nav .ui-state-default a:hover { color: #4f5861; }
 .ui-tabs .ui-tabs-nav .ui-state-active { padding-bottom: 1px; background-color: transparent; cursor: text; }
-.ui-tabs .ui-tabs-nav .ui-state-active a { border-bottom: 4px solid #66727d; padding-left: 0; padding-right: 0; margin: 0 12px 0; color: #4f5861; }
+.ui-tabs .ui-tabs-nav .ui-state-active a { border-bottom: 3px solid #66727d; padding-left: 0; padding-right: 0; margin: 0 12px 0; color: #4f5861; }
 .ui-tabs .ui-tabs-nav.ui-state-active { border-color: #808080; }
 .ui-tabs .ui-tabs-nav li.cms-tabset-icon.ui-corner-top { text-indent: -9999em; }
 .ui-tabs .ui-tabs-nav li.cms-tabset-icon.ui-corner-top a { display: block; padding-left: 40px; padding-right: 0; margin: 0; }
