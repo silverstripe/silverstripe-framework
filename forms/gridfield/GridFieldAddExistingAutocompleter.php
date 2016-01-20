@@ -214,6 +214,17 @@ class GridFieldAddExistingAutocompleter
 			->sort(strtok($searchFields[0], ':'), 'ASC')
 			->limit($this->getResultsLimit());
 
+		$belongs_to = Config::inst()->get($dataClass, 'belongs_to');
+		if( !empty($belongs_to) ) {
+			foreach ($searchFields as $searchField) {
+				if( $relation = strtok($searchField,'.') ) {
+					if (in_array($relation, $belongs_to)) {
+						$results = $results->leftJoin($relation, "{$relation}.{$dataClass}ID={$dataClass}.ID");
+					}
+				}
+			}
+		}
+
 		$json = array();
 		$originalSourceFileComments = Config::inst()->get('SSViewer', 'source_file_comments');
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
