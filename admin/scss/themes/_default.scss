@@ -11,7 +11,7 @@ $color-base: #b0bec7 !default;
 $color-widget-bg: lighten($color-base, 20%) !default;
 
 /* Keep as solid colours transparent borders wont work in ie */
-$color-darker-bg: #E6EAED !default;
+$color-darker-bg: #edf2f5 !default;
 $color-dark-bg: #142136 !default;
 $color-dark-separator: #19435c !default;
 $color-medium-separator: #808080 !default;
@@ -53,7 +53,7 @@ $color-button-generic-border: #d0d3d5 !default;
 $color-button-highlight: #e6e6e6 !default;
 $color-button-highlight-border: #708284 !default;
 
-$color-button-constructive: #1F9433 !default; 
+$color-button-constructive: #1F9433 !default;
 $color-button-constructive-border: #1F9433 !default;
 
 $color-button-destructive: #f00 !default;
@@ -72,18 +72,18 @@ $color-cms-batchactions-menu-selected-background: #fffcdc !default;
 /** -----------------------------------------------
  * Textures
  * ----------------------------------------------- */
-$tab-panel-texture-color: #ECEFF1 !default;
+$tab-panel-texture-color: #f5f7f8 !default;
 $tab-panel-texture-background: $tab-panel-texture-color url(../images/textures/bg_cms_main_content.png) repeat top left !default;
 
 /** -----------------------------------------------
- * Typography. 
+ * Typography.
  * ------------------------------------------------ */
 $font-family: Arial, sans-serif !default;
 $font-base-size: 12px !default;
 
 /** -----------------------------------------------
  * Grid Units (px)
- * 
+ *
  * We have a vertical rhythm that the grid is based off
  * both x (=horizontal) and y (=vertical). All internal padding and
  * margins are scaled to this and accounting for paragraphs
