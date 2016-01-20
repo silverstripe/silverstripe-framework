@@ -639,6 +639,8 @@ class VersionedTest extends SapphireTest {
 		$this->assertArrayNotHasKey('readingMode', $session2->inst_changedData());
 
 		// Test choose_site_stage
+		unset($_GET['stage']);
+		unset($_GET['archiveDate']);
 		Session::set('readingMode', 'Stage.Stage');
 		Versioned::choose_site_stage();
 		$this->assertEquals('Stage.Stage', Versioned::get_reading_mode());
@@ -662,8 +664,8 @@ class VersionedTest extends SapphireTest {
 	/**
 	 * Ensures that the latest version of a record is the expected value
 	 *
-	 * @param type $record
-	 * @param type $version
+	 * @param DataObject $record
+	 * @param int $version
 	 */
 	protected function assertRecordHasLatestVersion($record, $version) {
 		foreach(ClassInfo::ancestry(get_class($record), true) as $table) {
