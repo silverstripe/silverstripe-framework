@@ -4,7 +4,7 @@
 /* Only for use as shadows as they wont work in older browsers */
 /*$color-optional: #a1d2eb !default; */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
-/** ----------------------------------------------- Typography.  ------------------------------------------------ */
+/** ----------------------------------------------- Typography. ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 .cms .ss-ui-button { background-color: #e6e6e6; }
@@ -198,7 +198,7 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 
 .ss-ui-button.ss-gridfield-button-filter { border: none !important; }
 
-/** DEPRECATED: .cms-content-tools will be removed in 4.0 Use .cms-content-filters instead.  Fix for model admin filter styling  */
+/** DEPRECATED: .cms-content-tools will be removed in 4.0 Use .cms-content-filters instead.  Fix for model admin filter styling */
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form { overflow: hidden; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form input { width: 160px; }
 
