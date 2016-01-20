@@ -9,11 +9,11 @@
 			float: none;
 			width: auto;
 			clear: both;
-		}	
+		}
 	}
 }
 
-/* For user permissions the readonly checkboxes are set as display none and are replaced with a <span> that has a 
+/* For user permissions the readonly checkboxes are set as display none and are replaced with a <span> that has a
 green tick icon as a background this is created using compass generated classes and hardcoded in the php */
 
 .permissioncheckboxsetfield_readonly {
@@ -40,7 +40,7 @@ green tick icon as a background this is created using compass generated classes 
 	}
 }
 
-.cms .cms-content .SecurityAdmin { //datagrid overflow on Security Admin	
+.cms .cms-content .SecurityAdmin { //datagrid overflow on Security Admin
 	.cms-content-fields {
 		overflow-y:auto;
 		.aligned-right-label { //align the label with the parent group field in add new group

@@ -2,6 +2,13 @@
 
 class SSViewerTest extends SapphireTest {
 
+	/**
+	 * Backup of $_SERVER global
+	 *
+	 * @var array
+	 */
+	protected $oldServer = array();
+
 	protected $extraDataObjects = array(
 		'SSViewerTest_Object',
 	);
@@ -11,9 +18,11 @@ class SSViewerTest extends SapphireTest {
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
 		Config::inst()->update('SSViewer_FromString', 'cache_template', false);
 		AssetStoreTest_SpyStore::activate('SSViewerTest');
+		$this->oldServer = $_SERVER;
 	}
 
 	public function tearDown() {
+		$_SERVER = $this->oldServer;
 		AssetStoreTest_SpyStore::reset();
 		parent::tearDown();
 	}
@@ -69,7 +78,7 @@ class SSViewerTest extends SapphireTest {
 		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
 		$this->assertExpectedStrings($result, $expected);
 	}
-	
+
 	public function testIncludeTruthyness() {
 		$data = new ArrayData(array(
 			'Title' => 'TruthyTest',
@@ -84,7 +93,7 @@ class SSViewerTest extends SapphireTest {
 			))
 		));
 		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
-		
+
 		// We should not end up with empty values appearing as empty
 		$expected = array(
 			'Item 1 _ Item 1 - First-ODD top:Item 1',
@@ -127,7 +136,7 @@ class SSViewerTest extends SapphireTest {
 	public function render($templateString, $data = null, $cacheTemplate = false) {
 		$t = SSViewer::fromString($templateString, $cacheTemplate);
 		if(!$data) $data = new SSViewerTestFixture();
-		return $t->process($data);
+		return trim(''.$t->process($data));
 	}
 
 	public function testRequirements() {
@@ -153,7 +162,7 @@ class SSViewerTest extends SapphireTest {
 		$jsFile = FRAMEWORK_DIR . '/tests/view/themes/javascript/bad.js';
 		$jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
 		$testBackend->combineFiles('testRequirementsCombine.js', array($jsFile));
-		
+
 		// first make sure that our test js file causes an exception to be thrown
 		try{
 			require_once('thirdparty/jsmin/jsmin.php');
@@ -167,7 +176,7 @@ class SSViewerTest extends SapphireTest {
 		$testBackend->processCombinedFiles();
 		$js = $testBackend->getJavascript();
 		$combinedTestFilePath = BASE_PATH . reset($js);
-		$this->assertContains('_combinedfiles/testRequirementsCombine-7c20750.js', $combinedTestFilePath);
+		$this->assertContains('_combinedfiles/testRequirementsCombine-4c0e97a.js', $combinedTestFilePath);
 
 		// and make sure the combined content matches the input content, i.e. no loss of functionality
 		if(!file_exists($combinedTestFilePath)) {
@@ -176,7 +185,7 @@ class SSViewerTest extends SapphireTest {
 		$combinedTestFileContents = file_get_contents($combinedTestFilePath);
 		$this->assertContains($jsFileContents, $combinedTestFileContents);
 	}
-	
+
 
 
 	public function testComments() {
@@ -1074,10 +1083,10 @@ after')
 
 		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
 			$template = new SSViewer(array('Page'));
-			$self->assertEquals('Foo', $template->process(new ArrayData(array())));
+			$self->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
 
 			$template = new SSViewer(array('Shortcodes', 'Page'));
-			$self->assertEquals('[file_link]', $template->process(new ArrayData(array())));
+			$self->assertEquals("[file_link]\n\n", $template->process(new ArrayData(array())));
 		});
 	}
 
@@ -1145,13 +1154,16 @@ after')
 	}
 
 	public function testRewriteHashlinks() {
-		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links'); 
+		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links');
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', true);
 
-		$_SERVER['REQUEST_URI'] = 'http://path/to/file?foo"onclick="alert(\'xss\')""';
+		$_SERVER['HTTP_HOST'] = 'www.mysite.com';
+		$_SERVER['REQUEST_URI'] = '//file.com?foo"onclick="alert(\'xss\')""';
 
 		// Emulate SSViewer::process()
-		$base = Convert::raw2att($_SERVER['REQUEST_URI']);
+		// Note that leading double slashes have been rewritten to prevent these being mis-interepreted
+		// as protocol-less absolute urls
+		$base = Convert::raw2att('/file.com?foo"onclick="alert(\'xss\')""');
 
 		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinks_' . sha1(rand()) . '.ss';
 
@@ -1219,10 +1231,11 @@ after')
 		$obj = new ViewableData();
 		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
 		$result = $tmpl->process($obj);
-		$this->assertContains(
-			'<a class="inserted" href="<?php echo Convert::raw2att(',
-			$result
-		);
+
+		$code = <<<'EOC'
+<a class="inserted" href="<?php echo Convert::raw2att(preg_replace("/^(\/)+/", "/", $_SERVER['REQUEST_URI'])); ?>#anchor">InsertedLink</a>
+EOC;
+		$this->assertContains($code, $result);
 		// TODO Fix inline links in PHP mode
 		// $this->assertContains(
 		// 	'<a class="inline" href="<?php echo str_replace(',
@@ -1233,7 +1246,7 @@ after')
 			$result,
 			'SSTemplateParser should only rewrite anchor hrefs'
 		);
-		
+
 		unlink($tmplFile);
 
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig);

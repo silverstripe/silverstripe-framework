@@ -71,7 +71,7 @@
 				left = insets.left,
 				right = size.width - insets.right;
 
-			var menuWidth = spec.menu.width(), 
+			var menuWidth = spec.menu.width(),
 				contentWidth = 0,
 				previewWidth = 0;
 

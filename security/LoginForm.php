@@ -28,7 +28,7 @@ abstract class LoginForm extends Form {
 
 	/**
 	 * Get the authenticator instance
-	 * 
+	 *
 	 * @return Authenticator Returns the authenticator instance for this login form.
 	 */
 	public function getAuthenticator() {

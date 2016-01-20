@@ -118,7 +118,8 @@ class FieldGroup extends CompositeField {
 	 * @return string
 	 */
 	public function Message() {
-		$fs = $this->FieldList();
+		$fs = array();
+		$this->collateDataFields($fs);
 
 		foreach($fs as $subfield) {
 			if($m = $subfield->Message()) $message[] = rtrim($m, ".");
@@ -131,7 +132,8 @@ class FieldGroup extends CompositeField {
 	 * @return string
 	 */
 	public function MessageType() {
-		$fs = $this->FieldList();
+		$fs = array();
+		$this->collateDataFields($fs);
 
 		foreach($fs as $subfield) {
 			if($m = $subfield->MessageType()) $MessageType[] = $m;

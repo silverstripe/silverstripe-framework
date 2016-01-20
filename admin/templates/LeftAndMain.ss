@@ -10,7 +10,7 @@
 	data-member-tempid="$CurrentMember.TempIDHash.ATT"
 >
 	<% include CMSLoadingScreen %>
-	
+
 	<div class="cms-container center" data-layout-type="custom">
 		$Menu
 		$Content
@@ -27,7 +27,7 @@
 			<div class="cms-content-controls cms-preview-controls south"></div>
 		</div>
 	</div>
-	
+
 	$EditorToolbar
 </body>
 </html>

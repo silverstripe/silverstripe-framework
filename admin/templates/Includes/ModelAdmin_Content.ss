@@ -34,5 +34,5 @@
 			$EditForm
 		</div>
 	</div>
-	
+
 </div>

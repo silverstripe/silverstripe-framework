@@ -82,15 +82,15 @@ class ConfigTest_TestNest extends Object implements TestOnly {
 }
 
 class ConfigTest extends SapphireTest {
-	
+
 	protected $depSettings = null;
-	
+
 	public function setUp() {
 		parent::setUp();
 		$this->depSettings = Deprecation::dump_settings();
 		Deprecation::set_enabled(false);
 	}
-	
+
 	public function tearDown() {
 		Deprecation::restore_settings($this->depSettings);
 		parent::tearDown();

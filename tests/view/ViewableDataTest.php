@@ -20,7 +20,8 @@ class ViewableDataTest extends SapphireTest {
 
 	public function testFailoverRequiresCasting() {
 		$caster = new ViewableDataTest_Castable();
-		$container = new ViewableDataTest_Container($caster);
+		$container = new ViewableDataTest_Container();
+		$container->setFailover($caster);
 
 		$this->assertTrue($container->obj('alwaysCasted') instanceof ViewableDataTest_RequiresCasting);
 		$this->assertTrue($caster->obj('alwaysCasted', null, false) instanceof ViewableDataTest_RequiresCasting);
@@ -175,6 +176,19 @@ class ViewableDataTest extends SapphireTest {
 		$this->assertEquals('BBB', $objNotCached->obj('Test', null, true, true));
 	}
 
+	public function testSetFailover() {
+		$failover = new ViewableData();
+		$container = new ViewableDataTest_Container();
+		$container->setFailover($failover);
+
+		$this->assertSame($failover, $container->getFailover(), 'getFailover() returned a different object');
+		$this->assertFalse($container->hasMethod('testMethod'), 'testMethod() is already defined when it shouldn’t be');
+
+		// Ensure that defined methods detected from the failover aren't cached when setting a new failover
+		$container->setFailover(new ViewableDataTest_Failover);
+		$this->assertTrue($container->hasMethod('testMethod'));
+	}
+
 }
 
 /**#@+
@@ -252,10 +266,6 @@ class ViewableData_Caster extends ViewableData {
 
 class ViewableDataTest_Container extends ViewableData {
 
-	public function __construct($failover) {
-		$this->failover = $failover;
-		parent::__construct();
-	}
 }
 
 class ViewableDataTest_CastingClass extends ViewableData {
@@ -285,4 +295,6 @@ class ViewableDataTest_NotCached extends ViewableData {
 	}
 }
 
-/**#@-*/
+class ViewableDataTest_Failover extends ViewableData {
+	public function testMethod() {}
+}

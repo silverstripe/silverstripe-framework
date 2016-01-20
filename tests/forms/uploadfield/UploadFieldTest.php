@@ -230,7 +230,7 @@ class UploadFieldTest extends FunctionalTest {
 		$response = json_decode($response->getBody(), true);
 		$this->assertTrue(array_key_exists('error', $response[0]));
 		$this->assertContains('Extension is not allowed', $response[0]['error']);
-		
+
 	}
 
 	/**

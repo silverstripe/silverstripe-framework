@@ -3,11 +3,11 @@ if(typeof(ss) == 'undefined') ss = {};
 /*
  * Lightweight clientside i18n implementation.
  * Caution: Only available after DOM loaded because we need to detect the language
- * 
+ *
  * For non-i18n stub implementation, see framework/javascript/i18nx.js
- * 
+ *
  * Based on jQuery i18n plugin: 1.0.0  Feb-10-2008
- * 
+ *
  * Dual licensed under the MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
@@ -16,22 +16,22 @@ if(typeof(ss) == 'undefined') ss = {};
  * http://markos.gaivo.net/blog/?p=100
  */
 ss.i18n = {
-	
+
 	currentLocale: null,
-	
+
 	defaultLocale: 'en_US',
-	
+
 	lang: {},
 
 	inited: false,
-	
+
 	init: function() {
 		if(this.inited) return;
 
 		this.currentLocale = this.detectLocale();
 		this.inited = true;
 	},
-	
+
 	/**
 	 * set_locale()
 	 * Set locale in long format, e.g. "de_AT" for Austrian German.
@@ -40,7 +40,7 @@ ss.i18n = {
 	setLocale: function(locale) {
 		this.currentLocale = locale;
 	},
-	
+
 	/**
 	 * getLocale()
 	 * Get locale in long format. Falls back to i18n.defaut_locale.
@@ -49,11 +49,11 @@ ss.i18n = {
 	getLocale: function() {
 		return (this.currentLocale) ? this.currentLocale : this.defaultLocale;
 	},
-	
+
 	/**
 	 * _()
-	 * The actual translation function. Looks the given string up in the 
-	 * dictionary and returns the translation if one exists. If a translation 
+	 * The actual translation function. Looks the given string up in the
+	 * dictionary and returns the translation if one exists. If a translation
 	 * is not found, returns the original word
 	 *
 	 * @param string entity A "long" locale format, e.g. "de_DE" (Required)
@@ -68,7 +68,7 @@ ss.i18n = {
 
 			var langName = this.getLocale().replace(/_[\w]+/i, '');
 			var defaultlangName = this.defaultLocale.replace(/_[\w]+/i, '');
-			
+
 			if (this.lang && this.lang[this.getLocale()] && this.lang[this.getLocale()][entity]) {
 				return this.lang[this.getLocale()][entity];
 			} else if (this.lang && this.lang[langName] && this.lang[langName][entity]) {
@@ -76,19 +76,19 @@ ss.i18n = {
 			} else if (this.lang && this.lang[this.defaultLocale] && this.lang[this.defaultLocale][entity]) {
 				return this.lang[this.defaultLocale][entity];
 			} else if (this.lang && this.lang[defaultlangName] && this.lang[defaultlangName][entity]) {
-				return this.lang[defaultlangName][entity]; 
+				return this.lang[defaultlangName][entity];
 			} else if(fallbackString) {
 				return fallbackString;
 			} else {
 				return '';
 			}
 		},
-		
+
 		/**
 		 * Add entities to a dictionary. If a dictionary doesn't
 		 * exist for this locale, its automatically created.
 		 * Existing entities are overwritten.
-		 * 
+		 *
 		 * @param string locale
 		 * @param Object dict
 		 */
@@ -98,16 +98,16 @@ ss.i18n = {
 				this.lang[locale][entity] = dict[entity];
 			}
 		},
-		
+
 		/**
 		 * Get dictionary for a specific locale.
-		 * 
+		 *
 		 * @param string locale
 		 */
 		getDictionary: function(locale) {
 			return this.lang[locale];
 		},
-	
+
 	/**
 	 * stripStr()
 	 *
@@ -118,7 +118,7 @@ ss.i18n = {
 		stripStr: function(str) {
 			return str.replace(/^\s*/, "").replace(/\s*$/, "");
 		},
-	
+
 	/**
 	 * stripStrML()
 	 *
@@ -132,7 +132,7 @@ ss.i18n = {
 			var parts = str.split('\n');
 			for (var i=0; i<parts.length; i++)
 				parts[i] = stripStr(parts[i]);
-	
+
 			// Don't join with empty strings, because it "concats" words
 			// And strip again
 			return stripStr(parts.join(" "));
@@ -141,7 +141,7 @@ ss.i18n = {
 		/**
 		 * Substitutes %s with parameters
 	 	 * given in list. %%s is used to escape %s.
-	 	 * 
+	 	 *
 		 * @param string S : The string to perform the substitutions on.
 		 * @return string The new string with substitutions made
 		 */
@@ -167,8 +167,8 @@ ss.i18n = {
 		},
 
 		/**
-		 * Substitutes variables with a list of injections. 
-	 	 * 
+		 * Substitutes variables with a list of injections.
+	 	 *
 		 * @param string S : The string to perform the substitutions on.
 		 * @param object map : An object with the substitions map e.g. {var: value}
 		 * @return string The new string with substitutions made
@@ -183,13 +183,13 @@ ss.i18n = {
 
 			return result;
 		},
-		
+
 		/**
 		 * Detect document language settings by looking at <meta> tags.
 		 * If no match is found, returns this.defaultLocale.
-		 * 
+		 *
 		 * @todo get by <html lang=''> - needs modification of SSViewer
-		 * 
+		 *
 		 * @return string Locale in mixed lowercase/uppercase format suitable
 		 * for usage in ss.i18n.lang arrays (e.g. 'en_US').
 		 */
@@ -198,8 +198,8 @@ ss.i18n = {
 			var detectedLocale;
 
 			// get by container tag
-			rawLocale = jQuery('body').attr('lang');
-		
+			rawLocale = jQuery('html').attr('lang') || jQuery('body').attr('lang');
+
 			// get by meta
 			if(!rawLocale) {
 				var metas = document.getElementsByTagName('meta');
@@ -209,10 +209,10 @@ ss.i18n = {
 					}
 				}
 			}
-			
+
 			// fallback to default locale
 			if(!rawLocale) rawLocale = this.defaultLocale;
-			
+
 			var rawLocaleParts = rawLocale.match(/([^-|_]*)[-|_](.*)/);
 			// get locale (e.g. 'en_US') from common name (e.g. 'en')
 			// by looking at ss.i18n.lang tables
@@ -226,10 +226,10 @@ ss.i18n = {
 			} else if(rawLocaleParts) {
 				detectedLocale = rawLocaleParts[1].toLowerCase() + '_' + rawLocaleParts[2].toUpperCase();
 			}
-			
+
 			return detectedLocale;
 		},
-		
+
 		/**
 		 * Attach an event listener to the given object.
 		 * Modeled after behaviour.js, but externalized

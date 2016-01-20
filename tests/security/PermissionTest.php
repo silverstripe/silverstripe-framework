@@ -47,7 +47,7 @@ class PermissionTest extends SapphireTest {
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 	}
-	
+
 	public function testPermissionAreInheritedFromOneRole() {
 		$member = $this->objFromFixture('Member', 'author');
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
@@ -123,5 +123,15 @@ class PermissionTest extends SapphireTest {
 
 		Config::inst()->remove('Permission', 'hidden_permissions');
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
+	}
+
+	public function testEmptyMemberFails() {
+		$member = new Member();
+		$this->assertFalse($member->exists());
+
+		$this->logInWithPermission('ADMIN');
+
+		$this->assertFalse(Permission::checkMember($member, 'ADMIN'));
+		$this->assertFalse(Permission::checkMember($member, 'CMS_ACCESS_LeftAndMain'));
 	}
 }

@@ -17,8 +17,8 @@ a img { border: none; }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary { display: block; }
 
-/*$experimental-support-for-svg variable comes from 
-imported compass/support file and enables svg gradients in IE9. 
+/*$experimental-support-for-svg variable comes from
+imported compass/support file and enables svg gradients in IE9.
 It was put here because there didn't seem to be a more logical place to put it.
 If more variables exist in the future, consider creating a variables file.*/
 /** ----------------------------- Theme ------------------------------ */
@@ -206,24 +206,8 @@ Used in side panels and action tabs
 
 .font-icon-resize:before { content: "L"; }
 
-.font-icon-silverstripe:before { content: "M"; }
-
-.font-icon-pencil:before { content: "m"; }
-
-.font-icon-trash:before { content: "g"; }
-
-.font-icon-edit:before { content: "N"; }
-
-.font-icon-tick:before { content: "O"; }
-
-.font-icon-folder-add:before { content: "S"; }
-
-.font-icon-thumbnails:before { content: "W"; }
-
-.font-icon-link:before { content: "2"; }
-
 /** File: typography.scss  Contains the basic typography related styles for the admin interface. */
-body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif; color: #66727d; }
+body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif; color: #4f5861; }
 
 .cms h2, .cms h3, .cms h4, .cms h5 { font-weight: bold; margin: 16px 0 16px 0; line-height: 16px; }
 .cms h2 { font-size: 18px; line-height: 24px; }
@@ -235,7 +219,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .cms code { font-family: 'Bitstream Vera Sans Mono','Courier', monospace; }
 
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule should contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
-.ui-widget-content, .ui-widget { color: #66727d; font-size: 12px; font-family: Arial, sans-serif; border: 0; }
+.ui-widget-content, .ui-widget { color: #4f5861; font-size: 12px; font-family: Arial, sans-serif; border: 0; }
 
 .ui-widget-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; border-bottom: 2px solid #8399a7; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2RkZTNlNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzkyYTViMiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dde3e7), color-stop(100%, #92a5b2)); background-image: -moz-linear-gradient(#dde3e7, #92a5b2); background-image: -webkit-linear-gradient(#dde3e7, #92a5b2); background-image: linear-gradient(#dde3e7, #92a5b2); border-bottom: 3px solid #5c7382; padding: 8px; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; }
 .ui-widget-header .ui-dialog-title { padding: 6px 10px; text-shadow: #ced7dc 1px 1px 0; }
@@ -246,7 +230,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 
 .ui-state-hover { cursor: pointer; }
 
-.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { color: #66727d; font-size: 12px; font-family: Arial, sans-serif; }
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { color: #4f5861; font-size: 12px; font-family: Arial, sans-serif; }
 
 .ui-accordion .ui-accordion-header { border-color: #d0d3d5; margin-bottom: 0; }
 .ui-accordion .ui-accordion-content { border: 1px solid #d0d3d5; border-top: none; }
@@ -267,20 +251,20 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.nolabel .middleColumn { margin-left: 0; }
 .field.nolabel .description { margin-left: 0; }
-.field.checkbox label.right { margin: 4px 0 0 0; display: inline; font-style: normal; color: #66727d; clear: none; }
-.field label.left { float: left; display: block; width: 176px; padding: 8px 8px 8px 0; line-height: 16px; font-weight: bold; text-shadow: 1px 1px 0 white; }
-.field label.right { cursor: pointer; clear: both; color: #9ba5ae; display: block; font-style: italic; margin: 4px 0 0 184px; }
+.field.checkbox label.right { margin: 4px 0 0 0; display: inline; font-style: normal; color: #4f5861; clear: none; }
+.field label.left { float: left; display: block; width: 176px; padding: 8px 8px 8px 0; line-height: 16px; font-weight: bold; }
+.field label.right { cursor: pointer; clear: both; color: #7f8b97; display: block; font-style: italic; margin: 4px 0 0 184px; }
 .field .middleColumn { margin-left: 184px; }
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
 .field .fieldgroup .fieldgroup-field.last { /* This is used on page/settings/visibility */ padding-bottom: 8px; /* replicates li item spacing */ }
-.field .description { clear: both; color: #9ba5ae; display: block; font-style: italic; line-height: 16px; margin: 4px 0 0 184px; }
+.field .description { clear: both; color: #626e79; display: block; font-style: italic; line-height: 16px; margin: 4px 0 0 184px; }
 .field.checkbox .description, .field.ss-gridfield .description { margin-left: 0; }
 .field input.text, .field textarea, .field select, .field .TreeDropdownField { margin-left: 10px; width: 100%; max-width: 512px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 .field input.text.description, .field textarea.description, .field select.description, .field .TreeDropdownField.description { margin: 0; }
 .field input.text .description, .field textarea .description, .field select .description, .field .TreeDropdownField .description { max-width: 512px; }
 .field input.text, .field textarea, .field .TreeDropdownField { background: #fff; border: 1px solid #b3b3b3; padding: 7px 7px; line-height: 16px; margin: 0; outline: none; -moz-transition: 0.2s box-shadow ease-in; -webkit-transition: 0.2s box-shadow ease-in; -o-transition: 0.2s box-shadow ease-in; transition: 0.2s box-shadow ease-in; -moz-transition: 0.2s border ease-in; -webkit-transition: 0.2s border ease-in; -o-transition: 0.2s border ease-in; transition: 0.2s border ease-in; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2VhZWFlYSIvPjxzdG9wIG9mZnNldD0iMTAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g'); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #eaeaea), color-stop(10%, #ffffff)); background-image: -moz-linear-gradient(#eaeaea, #ffffff 10%); background-image: -webkit-linear-gradient(#eaeaea, #ffffff 10%); background-image: linear-gradient(#eaeaea, #ffffff 10%); }
 .field input.text:focus, .field textarea:focus, .field .TreeDropdownField:focus { border: 1px solid #9a9a9a; border-top-color: #808080; -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset; -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset; }
-.field input[disabled], .field input.disabled, .field textarea[disabled], .field textarea.disabled, .field select[disabled], .field select.disabled { color: #9ba5ae; background: #efefef; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2JjYmNiYyIvPjxzdG9wIG9mZnNldD0iMTAlIiBzdG9wLWNvbG9yPSIjZWZlZmVmIi8+PHN0b3Agb2Zmc2V0PSI5MCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNiY2JjYmMiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #bcbcbc), color-stop(10%, #efefef), color-stop(90%, #ffffff), color-stop(100%, #bcbcbc)); background-image: -moz-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: -webkit-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); border: 1px solid #b3b3b3; }
+.field input[disabled], .field input.disabled, .field textarea[disabled], .field textarea.disabled, .field select[disabled], .field select.disabled { color: #7f8b97; background: #efefef; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2JjYmNiYyIvPjxzdG9wIG9mZnNldD0iMTAlIiBzdG9wLWNvbG9yPSIjZWZlZmVmIi8+PHN0b3Agb2Zmc2V0PSI5MCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNiY2JjYmMiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #bcbcbc), color-stop(10%, #efefef), color-stop(90%, #ffffff), color-stop(100%, #bcbcbc)); background-image: -moz-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: -webkit-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); border: 1px solid #b3b3b3; }
 .field#Action { box-shadow: none; }
 .field.cms-description-toggle > .middleColumn { display: inline-block; vertical-align: middle; margin-left: 0; width: 36%; min-width: 300px; }
 .field.cms-description-toggle .right { display: inline-block; vertical-align: middle; height: 15px; margin: 0 0 0 7px; }
@@ -354,18 +338,14 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-button.ss-ui-action-minor:hover { text-decoration: none; color: #1f1f1f; }
 .cms .ss-ui-button.ss-ui-action-minor:focus, .cms .ss-ui-button.ss-ui-action-minor:active { text-decoration: none; color: #525252; }
 .cms .ss-ui-button.ss-ui-button-loading { opacity: 0.8; }
-.cms .ss-ui-button[class*="font-icon-"], .cms .ss-ui-button[class^="font-icon-"], .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] { padding: 5px 8px; margin-bottom: 12px; vertical-align: middle; box-shadow: none; border: 0; background: none; text-shadow: none; text-decoration: none; font-weight: normal; color: #66727d; }
+.cms .ss-ui-button[class*="font-icon-"], .cms .ss-ui-button[class^="font-icon-"], .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] { padding: 5px 8px; margin-bottom: 12px; vertical-align: middle; box-shadow: none; border: 0; background: none; text-shadow: none; text-decoration: none; font-weight: normal; color: #4f5861; }
 .cms .ss-ui-button[class*="font-icon-"]:hover, .cms .ss-ui-button[class^="font-icon-"]:hover, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:hover { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background: #dee3e8; color: #4f5861; border: 0; }
 .cms .ss-ui-button[class*="font-icon-"]:focus, .cms .ss-ui-button[class^="font-icon-"]:focus, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background: #dee3e8; color: #4f5861; border: 0; }
 .cms .ss-ui-button[class*="font-icon-"]:before, .cms .ss-ui-button[class^="font-icon-"]:before, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:before { font-size: 16px; margin-right: 5px; margin-top: 0; vertical-align: middle; }
 .cms .ss-ui-button[class*="font-icon-"].ui-state-focus, .cms .ss-ui-button[class^="font-icon-"].ui-state-focus, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].ui-state-focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms .ss-ui-button[class*="font-icon-"].active, .cms .ss-ui-button[class*="font-icon-"]:active, .cms .ss-ui-button[class^="font-icon-"].active, .cms .ss-ui-button[class^="font-icon-"]:active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:active { -moz-box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; -webkit-box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; background: #dee3e8; color: #4f5861; border: 0; }
-.cms .ss-ui-button[class*="font-icon-"].font-icon-search, .cms .ss-ui-button[class^="font-icon-"].font-icon-search, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].font-icon-search { padding: 4px 5px; margin-right: 6px; }
-.cms .ss-ui-button[class*="font-icon-"].font-icon-search::before, .cms .ss-ui-button[class^="font-icon-"].font-icon-search::before, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].font-icon-search::before { font-size: 20px; }
 .cms .ss-ui-button[class*="font-icon-"] .ui-button-text, .cms .ss-ui-button[class^="font-icon-"] .ui-button-text, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] .ui-button-text { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; padding: 0; }
 .cms .ss-ui-button[class*="font-icon-"] .ui-icon, .cms .ss-ui-button[class^="font-icon-"] .ui-icon, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] .ui-icon { display: none; }
-.cms .ss-ui-button[class*="font-icon-"].no-text:hover, .cms .ss-ui-button[class*="font-icon-"].no-text:active, .cms .ss-ui-button[class*="font-icon-"].no-text:focus, .cms .ss-ui-button[class*="font-icon-"].no-text.active, .cms .ss-ui-button[class^="font-icon-"].no-text:hover, .cms .ss-ui-button[class^="font-icon-"].no-text:active, .cms .ss-ui-button[class^="font-icon-"].no-text:focus, .cms .ss-ui-button[class^="font-icon-"].no-text.active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text:hover, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text:active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text:focus, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text.active { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background: none; color: #4f5861; }
-.cms .ss-ui-button[class*="font-icon-"].no-text::before, .cms .ss-ui-button[class^="font-icon-"].no-text::before, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text::before { margin: 0; }
 .cms .ss-ui-buttonset .ui-button { margin-left: -1px; }
 .cms .ss-ui-buttonset { margin-left: 1px; }
 .cms .ss-ui-loading-icon { background: url(../../images/network-save.gif) no-repeat; display: block; width: 16px; height: 16px; }
@@ -421,23 +401,23 @@ input.radio { margin-left: 0; }
 .action-hidden { display: none; }
 
 /***************************************************************
-* On/Off Switch. 
+* On/Off Switch.
 * Supports switching between up to 5 values (used for Draft/Published)
 * Example html set-up:
-*	<fieldset class="switch-states size_2"> 			
-*		<div class="switch">				
+*	<fieldset class="switch-states size_2">
+*		<div class="switch">
 *			<input id="Draft" class="first" name="view" type="radio" checked>
-*			<label for="Draft">Draft</label>	
+*			<label for="Draft">Draft</label>
 *			<input id="Published" class="last" name="view" type="radio">
-*			<label for="Published">Published</label>						
-*			<span class="slide-button"></span>	
-*		</div>			
+*			<label for="Published">Published</label>
+*			<span class="slide-button"></span>
+*		</div>
 *	</fieldset>
 ****************************************************************/
-fieldset.switch-states { margin-right: 8px; 	/*	
+fieldset.switch-states { margin-right: 8px; 	/*
 		Produce css for up to 5 states.
 
-		Note: with a little adjustment the switch can take more than 5 items, 
+		Note: with a little adjustment the switch can take more than 5 items,
 		but a dropdown would probably be more appropriate
 	*/ }
 fieldset.switch-states .switch { border: 2px solid #d3d6da; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; -webkit-animation: bugfix infinite 1s; background: #dee0e3; display: block; height: 24px; position: relative; width: 100%; z-index: 5; }
@@ -495,7 +475,7 @@ fieldset.switch-states.size_5 input:checked:nth-of-type(5) ~ .slide-button { lef
 .cms-content-filters .importSpec { margin-bottom: 8px; padding-left: 16px; }
 .cms-content-filters .description { margin-left: 0; }
 .cms-content-filters .middleColumn { width: 100%; margin-left: 0; max-width: 100%; }
-.cms-content-filters .Actions { margin: 8px 0 16px; }
+.cms-content-filters .Actions { margin: 8px 0; }
 @media screen and (max-width: 767px) { .cms-content-filters fieldset .field, .cms-content-filters fieldset .fieldgroup { width: 100%; max-width: 100%; } }
 .cms-panel .cms-content-filters .field, .cms-panel .cms-content-filters .fieldgroup { width: 100%; margin-bottom: 16px; }
 .cms-panel .cms-content-filters .fieldgroup-field h4 { padding-top: 0; }
@@ -503,15 +483,15 @@ fieldset.switch-states.size_5 input:checked:nth-of-type(5) ~ .slide-button { lef
 .cms-panel .cms-content-filters .Actions { margin-bottom: 0; }
 
 /**
-* This file defines most styles of the CMS: Colors, fonts, backgrounds, 
+* This file defines most styles of the CMS: Colors, fonts, backgrounds,
 * alignments, dimensions.
-* 
-* Use SCSS variable definitions in screen.css to avoid repeating styles 
-* like background colours or padding dimensions. See themes/_default.scss 
+*
+* Use SCSS variable definitions in screen.css to avoid repeating styles
+* like background colours or padding dimensions. See themes/_default.scss
 * to get started.
-* 
-* To avoid this file getting too large and complicated, it is encouraged to 
-* create new SCSS files for larger components like the CMS menu or tree 
+*
+* To avoid this file getting too large and complicated, it is encouraged to
+* create new SCSS files for larger components like the CMS menu or tree
 * (see _tree.scss and _menu.scss).
 */
 /** ---------------------------------------------------- Core Styles. ---------------------------------------------------- */
@@ -528,7 +508,7 @@ body.cms { overflow: hidden; }
 .hide, .cms-helper-hide-actions .Actions { display: none; }
 
 /** -------------------------------------------- Panels Styles -------------------------------------------- */
-.cms-container { height: 100%; background: #ECEFF1; }
+.cms-container { height: 100%; /*background: $tab-panel-texture-background;*/ background: #ECEFF1; }
 
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form, .cms-preview, .cms-preview iframe, .cms-preview-controls { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; }
 
@@ -561,7 +541,8 @@ body.cms { overflow: hidden; }
 .has-panel .section-label { vertical-align: middle; font-size: 1.2em; font-weight: normal; }
 .has-panel .breadcrumbs-wrapper { float: left; padding-top: 7px; padding-left: 20px; }
 .has-panel .cms-content-header-tabs { margin-top: 8px; }
-.has-panel .view-controls { float: right; margin-top: 1px; }
+.has-panel .view-controls { float: right; margin-top: 4px; }
+.has-panel .view-controls .icon-button-group .icon-button { padding: 6px 8px; height: 14px; }
 .has-panel .cms-content-tools .cms-panel-content { padding-top: 0; overflow-x: hidden; }
 
 #page-title-heading { line-height: 1.2em; }
@@ -572,36 +553,37 @@ body.cms { overflow: hidden; }
 .breadcrumbs-wrapper .sep + .crumb.last { padding-top: 0; padding-bottom: 0; }
 
 /** ------------------------------------------------------------------ Filters available in the top bar. This is a togglable element that displays a form used for filtering content. ----------------------------------------------------------------- */
-.cms-content-filters { display: none; width: 100%; margin: 0 0 0 -16px; padding: 16px; background-color: #dddfe1; }
+.cms-content-filters { display: none; width: 100%; margin: 0 0 0 -16px; padding: 12px 16px; border-bottom: 1px solid #D2D5D8; }
 .cms-content-filters .cms-search-form { margin-bottom: 0; }
 
 .cms-tabset-nav-primary { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; vertical-align: middle; }
 
 /** ------------------------------------------------------------------ Buttons that use font icons. There are !important rules here because we need to override some Tab styling. It's tidier to have some !important rules here than have the Tab styles littered with load of context specific rules for icon-buttons. Icon buttons styles should always take presedence over Tab styles. Tabs should be refactored to use weaker selectors. ----------------------------------------------------------------- */
-.cms a.icon-button, .cms .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .cms a.icon-button, .cms button.ss-ui-button.icon-button { vertical-align: middle; margin: 0 2px 0 0; padding: 5px; padding-right: 8px; font-size: 14px; letter-spacing: -3px; text-indent: 0; text-shadow: none; line-height: 1em; color: #66727d; background-color: transparent; background-image: none; border: 0; }
+.cms a.icon-button, .cms .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .cms a.icon-button, .cms button.ss-ui-button.icon-button { vertical-align: middle; margin: 0 2px 0 0; padding: 5px 8px; font-size: 14px; text-indent: 0; text-shadow: none; line-height: 1em; color: #4f5861; background-color: transparent; background-image: none; border: 0; }
 .cms a.icon-button:hover, .cms .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .cms a.icon-button:hover, .cms a.icon-button:active, .cms .ui-tabs .ui-tabs-nav li a.icon-button:active, .ui-tabs .ui-tabs-nav li .cms a.icon-button:active, .cms a.icon-button:focus, .cms .ui-tabs .ui-tabs-nav li a.icon-button:focus, .ui-tabs .ui-tabs-nav li .cms a.icon-button:focus, .cms button.ss-ui-button.icon-button:hover, .cms button.ss-ui-button.icon-button:active, .cms button.ss-ui-button.icon-button:focus { border: 0; box-shadow: none; background-image: none; text-decoration: none; }
 .cms a.icon-button:hover, .cms .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .cms a.icon-button:hover, .cms button.ss-ui-button.icon-button:hover { background-color: #d4dbe1; }
 .cms a.icon-button.active, .cms .ui-tabs .ui-tabs-nav li a.active.icon-button, .ui-tabs .ui-tabs-nav li .cms a.active.icon-button, .cms a.icon-button:active, .cms .ui-tabs .ui-tabs-nav li a.icon-button:active, .ui-tabs .ui-tabs-nav li .cms a.icon-button:active, .cms button.ss-ui-button.icon-button.active, .cms button.ss-ui-button.icon-button:active { background-color: #d4dbe1; box-shadow: inset 0 0 3px rgba(191, 194, 196, 0.9); }
+.cms a.icon-button.font-icon-search, .cms .ui-tabs .ui-tabs-nav li a.font-icon-search.icon-button, .ui-tabs .ui-tabs-nav li .cms a.font-icon-search.icon-button, .cms button.ss-ui-button.icon-button.font-icon-search { padding: 5px 6px; }
+.cms a.icon-button.font-icon-search:before, .cms button.ss-ui-button.icon-button.font-icon-search:before { font-size: 18px; margin-left: 1px; margin-right: 0; }
 .cms a.icon-button .ui-button-text, .cms .ui-tabs .ui-tabs-nav li a.icon-button .ui-button-text, .ui-tabs .ui-tabs-nav li .cms a.icon-button .ui-button-text, .cms button.ss-ui-button.icon-button .ui-button-text { display: none; }
 .ModelAdmin .cms a.icon-button, .ModelAdmin .cms .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .ModelAdmin .cms a.icon-button, .ModelAdmin .cms button.ss-ui-button.icon-button { margin-top: -11px; }
 
-.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link, .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link { padding: 6px 8px; line-height: 1em; background-color: transparent; background-image: none; border: 0; }
+.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link, .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link { padding: 5px 8px 6px; line-height: 1em; background-color: transparent; background-image: none; border: 0; }
 .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link:before, .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link:before { vertical-align: middle; }
 
-.icon-button-group { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; margin-top: 1px; vertical-align: middle; border: 1px solid #CDCCD0; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
-.icon-button-group a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button, .icon-button-group button.ss-ui-button.icon-button { margin-right: 0; line-height: 13px; -moz-border-radius: 0 0 0 0; -webkit-border-radius: 0; border-radius: 0 0 0 0; }
-.icon-button-group a.icon-button:first-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:first-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:first-child, .icon-button-group button.ss-ui-button.icon-button:first-child { -moz-border-radius: 3px 0 0 3px; -webkit-border-radius: 3px; border-radius: 3px 0 0 3px; }
-.icon-button-group a.icon-button:last-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:last-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:last-child, .icon-button-group button.ss-ui-button.icon-button:last-child { -moz-border-radius: 0 3px 3px 0; -webkit-border-radius: 0; border-radius: 0 3px 3px 0; }
+.icon-button-group { display: inline-block; vertical-align: middle; border: 1px solid #CDCCD0; border-radius: 4px; }
+.icon-button-group a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button, .icon-button-group button.ss-ui-button.icon-button { margin-right: 0; line-height: 13px; border-radius: 0; }
+.icon-button-group a.icon-button:first-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:first-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:first-child, .icon-button-group button.ss-ui-button.icon-button:first-child { border-radius: 3px 0 0 3px; }
+.icon-button-group a.icon-button:last-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:last-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:last-child, .icon-button-group button.ss-ui-button.icon-button:last-child { border-radius: 0 3px 3px 0; }
 .icon-button-group a.icon-button:hover, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:hover, .icon-button-group button.ss-ui-button.icon-button:hover { background: #ECEFF1; }
 .icon-button-group a.icon-button.active:hover, .icon-button-group button.ss-ui-button.icon-button.active:hover { background: #d4dbe1; }
 .icon-button-group a.icon-button + a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button + a.icon-button, .icon-button-group a.icon-button + button.ss-ui-button.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button + button.ss-ui-button.icon-button, .icon-button-group button.ss-ui-button.icon-button + a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li button.ss-ui-button.icon-button + a.icon-button, .icon-button-group button.ss-ui-button.icon-button + button.ss-ui-button.icon-button { border-left: 1px solid #CDCCD0; }
-.icon-button-group a.icon-button.font-icon-thumbnails::before, .icon-button-group button.ss-ui-button.icon-button.font-icon-thumbnails::before { margin-left: -2px; }
-.icon-button-group .ui-tabs.ui-tabs-nav { border-left: 0 !important; margin-top: -2px !important; padding-right: 0 !important; overflow: hidden; }
-.icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default { background-color: transparent; background-image: none; border-left: 0; border-right: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+.icon-button-group .ui-tabs.ui-tabs-nav { border-left: 0 !important; padding-right: 0 !important; margin-bottom: 0; overflow: hidden; }
+.icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default { background-color: transparent; background-image: none; margin: 0; padding: 0; border-left: 0; border-right: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default + .cms-tabset-icon.ui-state-default { border-left: 1px solid #CDCCD0; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default:hover { background: #ECEFF1; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default.ui-state-active:hover { background: #d4dbe1; }
-.icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-active { background-color: #d4dbe1; }
+.icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-active { background-color: #d4dbe1; box-shadow: inset 0 0 3px rgba(191, 194, 196, 0.9); }
 .cms-content-header-tabs .icon-button-group { overflow: hidden; }
 
 /** -------------------------------------------- Tabs -------------------------------------------- */
@@ -613,13 +595,14 @@ body.cms { overflow: hidden; }
 .ui-tabs .ui-tabs-nav { float: right; margin: 16px 0 -1px 0; padding: 0 16px 0 0; border-bottom: 0; }
 .ui-tabs .ui-tabs-nav ~ .ui-tabs-panel { clear: both; }
 .ui-tabs .ui-tabs-nav li { top: 0; float: left; margin-top: 0; }
-.ui-tabs .ui-tabs-nav li a { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; float: none; font-weight: normal; color: #66727d; line-height: 32px; padding: 0 12px 0; }
+.ui-tabs .ui-tabs-nav li:active { outline: none; }
+.ui-tabs .ui-tabs-nav li a { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; outline: none; float: none; font-weight: normal; color: #4f5861; line-height: 32px; padding: 0 12px 0; }
 .ui-tabs .ui-tabs-nav li:last-child { margin-right: 0; }
 .ui-tabs .ui-tabs-nav .ui-state-default { border: 0; background: transparent; }
-.ui-tabs .ui-tabs-nav .ui-state-default a { line-height: 28px; padding-top: 12px; padding-bottom: 8px; color: #7f8c97; }
-.ui-tabs .ui-tabs-nav .ui-state-default a:hover { color: #66727d; }
+.ui-tabs .ui-tabs-nav .ui-state-default a { line-height: 28px; padding-top: 12px; padding-bottom: 8px; color: #66727d; }
+.ui-tabs .ui-tabs-nav .ui-state-default a:hover { color: #4f5861; }
 .ui-tabs .ui-tabs-nav .ui-state-active { padding-bottom: 1px; background-color: transparent; cursor: text; }
-.ui-tabs .ui-tabs-nav .ui-state-active a { border-bottom: 4px solid #66727d; padding-left: 0; padding-right: 0; margin: 0 12px 0; color: #66727d; }
+.ui-tabs .ui-tabs-nav .ui-state-active a { border-bottom: 4px solid #66727d; padding-left: 0; padding-right: 0; margin: 0 12px 0; color: #4f5861; }
 .ui-tabs .ui-tabs-nav.ui-state-active { border-color: #808080; }
 .ui-tabs .ui-tabs-nav li.cms-tabset-icon.ui-corner-top { text-indent: -9999em; }
 .ui-tabs .ui-tabs-nav li.cms-tabset-icon.ui-corner-top a { display: block; padding-left: 40px; padding-right: 0; margin: 0; }
@@ -647,7 +630,8 @@ body.cms { overflow: hidden; }
 .ui-tabs.cms-tabset-primary .ui-tabs-nav .ui-state-active, .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary .ui-state-active, .ui-tabs .cms-content-header-tabs .ui-tabs-nav .ui-state-active { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background: transparent; border-top: none; border: none; z-index: 2; }
 .ui-tabs.cms-tabset-primary .ui-tabs-nav .ui-state-active a, .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary .ui-state-active a, .ui-tabs .cms-content-header-tabs .ui-tabs-nav .ui-state-active a { border-bottom: 4px solid #66727d; padding: 0; margin: 0 12px 0; }
 
-.cms-content-header-tabs { float: right; margin-top: 12px; }
+.cms-content-header-tabs { float: right; margin-top: 8px; }
+.cms-content-header-tabs.icon-button-group-tabs { margin-top: 12px; margin-bottom: 13px; }
 .cms-content-header-tabs .icon-button-group { margin-right: 16px; }
 
 .cms-content-fields .ui-tabs-nav { float: none; padding: 0; border-bottom: 1px solid #d0d3d5; margin: 0 16px 0; }
@@ -855,7 +839,7 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 
 /** ------------------------------------------------------------------
 * Dialog
-* 
+*
 * Contained in a jQuery UI dialog ('.ui-dialog'), with either inline
 * markup (for the "insert" dialogs), or an iframe (for member profile).
 * ----------------------------------------------------------------- */
@@ -865,43 +849,38 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 
 .cms .ui-dialog .ss-ui-dialog.ui-dialog-content { padding-top: 0px; }
 
-.ui-dialog { background: #ECEFF1; background-clip: content-box; border: 1px solid #666 !important; -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; overflow: visible; padding: 0; -moz-box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); }
+.ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4; background-clip: content-box; border: 1px solid #666 !important; -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; overflow: visible; padding: 0; -moz-box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); }
 .ui-dialog .ui-dialog-titlebar.ui-widget-header { font-size: 14px; padding: 0; border: none; background-color: transparent; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; }
 .ui-dialog .ui-dialog-titlebar.ui-widget-header .ui-dialog-title { position: absolute; }
 .ui-dialog .ui-dialog-content { -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; overflow: auto; }
 .ui-dialog .ui-dialog-content.loading { background-image: url(../images/spinner.gif); background-position: 50% 50%; background-repeat: no-repeat; }
-.ui-dialog .cms-dialog-content { background: #ECEFF1; padding-bottom: 8px; padding-top: 0px; }
+.ui-dialog .cms-dialog-content { background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4; padding-bottom: 8px; padding-top: 0px; }
 .ui-dialog .cms-dialog-content .Actions { overflow: auto; margin: 8px 0; padding-bottom: 8px; float: right; }
 .ui-dialog .cms-dialog-content .ui-tabs { position: static; }
 .ui-dialog .cms-dialog-content .ui-tabs .ui-tabs-nav { position: absolute; top: 9px; right: 40px; }
 .ui-dialog .cms-dialog-content .ui-tabs .ui-tabs-panel { border: 0; }
 .ui-dialog .cms-dialog-content .clear { clear: both; }
 .ui-dialog.loading { background-image: url(../images/spinner.gif); background-position: 50% 50%; background-repeat: no-repeat; }
-.ui-dialog .ui-dialog-buttonpane { margin: 0; background: #E6EAED; border-top: 1px solid #D2D5D8; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
 
-body.cms-dialog { overflow: auto; background: #ECEFF1; position: relative; }
+body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4; position: relative; }
 
 /** -------------------------------------------- "Insert X" forms -------------------------------------------- */
 .htmleditorfield-dialog.ui-dialog-content { padding: 0; position: relative; }
-.htmleditorfield-dialog .htmleditorfield-from-web { text-align: center; margin-bottom: 8px; }
-.htmleditorfield-dialog .htmleditorfield-from-web.CompositeField { overflow: hidden; *zoom: 1; }
-.htmleditorfield-dialog .htmleditorfield-from-web .url-description { text-align: left; margin-bottom: 12px; }
-.htmleditorfield-dialog .htmleditorfield-from-web div.remoteurl { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 80%; width: calc(100% - 80px); position: relative; display: inline-block; padding: 0; margin: 0; }
-.htmleditorfield-dialog .htmleditorfield-from-web div.remoteurl label { position: absolute; left: 8px; top: 0; font-weight: normal; color: #888; width: 35px; padding-right: 0; z-index: 1; }
-.htmleditorfield-dialog .htmleditorfield-from-web div.remoteurl .middleColumn { margin-left: 0; max-width: none; }
-.htmleditorfield-dialog .htmleditorfield-from-web div.remoteurl input.remoteurl { padding-left: 44px; max-width: none; }
-.htmleditorfield-dialog .htmleditorfield-from-web button.add-url { display: inline-block; float: none; margin: 2px 0 0; vertical-align: top; }
-.htmleditorfield-dialog .htmleditorfield-from-web button.add-url:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url:active { opacity: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web .CompositeField { overflow: hidden; *zoom: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 55%; max-width: 512px; float: left; position: relative; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL label { position: absolute; left: 8px; top: 13px; font-weight: normal; color: #888; width: 35px; padding-right: 0; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL .middleColumn { margin-left: 0; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL input.remoteurl { padding-left: 40px; max-width: 350px; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url { margin-top: 20px; overflow: hidden; *zoom: 1; border: none; background: none; opacity: 0.8; cursor: hand; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url .btn-icon-addMedia { width: 20px; height: 20px; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url .ui-button-text { margin-left: 10px; padding-top: 10px; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url:active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; opacity: 1; }
 .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:active { opacity: 0.35; filter: Alpha(Opacity=35); }
-.htmleditorfield-dialog .htmleditorfield-from-web.loading button.add-url::before { content: ''; background: url(../images/throbber.gif) no-repeat center center; padding: 8px; }
+.htmleditorfield-dialog .htmleditorfield-from-web .loading button.add-url .ui-icon { background-image: url(../images/throbber.gif); background-position: 50% 50%; background-repeat: no-repeat; }
 .htmleditorfield-dialog .cms-content-header { padding: 0; width: 100%; height: 53px; }
-.htmleditorfield-dialog .cms-content-header h3 { padding: 12px 0 12px 16px; margin: 0; line-height: 28px; display: inline-block; font-weight: normal; }
-.htmleditorfield-dialog .cms-content-header h3.insert .back-button { margin: 0; padding: 0; cursor: pointer; }
-.htmleditorfield-dialog .cms-content-header h3.insert .back-button::before { margin-right: 4px; font-size: 18px; vertical-align: text-bottom; }
-.htmleditorfield-dialog .ss-insert-media, .htmleditorfield-dialog .ss-insert-link { padding: 12px 16px; }
-.htmleditorfield-dialog .ss-insert-media .ui-tabs-panel, .htmleditorfield-dialog .ss-insert-link .ui-tabs-panel { padding: 0; }
-.htmleditorfield-dialog .Actions { padding: 8px 16px; }
-.htmleditorfield-dialog .Actions .ui-tabs-panel { padding: 0; }
+.htmleditorfield-dialog .cms-content-header h3 { padding: 12px 16px; margin: 0; line-height: 28px; }
+.htmleditorfield-dialog .ss-insert-media, .htmleditorfield-dialog .Actions, .htmleditorfield-dialog .ss-insert-link { padding: 8px 16px; }
+.htmleditorfield-dialog .ss-insert-media .ui-tabs-panel, .htmleditorfield-dialog .Actions .ui-tabs-panel, .htmleditorfield-dialog .ss-insert-link .ui-tabs-panel { padding: 0; }
 .htmleditorfield-dialog .details .file-url { display: block; width: 300px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; }
 .htmleditorfield-dialog .details .cms-file-info .field { border: none; -moz-box-shadow: 0 0 0 transparent; -webkit-box-shadow: 0 0 0 transparent; box-shadow: 0 0 0 transparent; }
 .htmleditorfield-dialog .details .field { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
@@ -912,14 +891,10 @@ body.cms-dialog { overflow: auto; background: #ECEFF1; position: relative; }
 .htmleditorfield-linkform .ss-uploadfield .middleColumn { width: auto; }
 
 .htmleditorfield-mediaform .ss-gridfield .gridfield-button-delete { display: none; }
-.htmleditorfield-mediaform .htmleditorfield-from-web.ss-uploadfield .middleColumn, .htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .middleColumn { width: auto; background: none; border: none; min-width: 0; }
-.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield h4 { float: left; margin-top: 4px; margin-bottom: 0; }
-.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .middleColumn { min-width: 0; clear: none; }
-.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .field.treedropdown { border-bottom: 0; padding: 0; position: absolute; margin: 0; top: 12px; left: 160px; width: auto; min-width: 200px; }
-.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .treedropdownfield-title { width: auto; padding: 5px 2px 5px 4px; max-width: 200px; font-size: 14px; font-weight: bold; }
-.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .treedropdownfield-toggle-panel-link { padding: 5px 4px 5px 0; }
-.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .treedropdownfield-toggle-panel-link a { background: url(../images/sitetree_ss_default_icons.png); background-position: -18px -4px; height: 14px; opacity: .8; }
-.htmleditorfield-mediaform .htmleditorfield-from-cms.ss-uploadfield .TreeDropdownField { background: 0; box-shadow: none; border: 0; }
+.htmleditorfield-mediaform .htmleditorfield-from-web .ss-uploadfield .middleColumn, .htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { width: auto; background: none; border: none; margin-top: 13px; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield h4 { float: left; margin-top: 4px; margin-bottom: 0; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { margin-top: 16px; margin-left: 184px; min-width: 0; clear: none; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .field.treedropdown { border-bottom: 0; padding: 0; }
 .htmleditorfield-mediaform .ss-assetuploadfield .ss-uploadfield-editandorganize .ss-uploadfield-files .ss-uploadfield-item-info { background-color: #9e9e9e; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzllOWU5ZSIvPjxzdG9wIG9mZnNldD0iOCUiIHN0b3AtY29sb3I9IiM5ZDlkOWQiLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzg3ODc4NyIvPjxzdG9wIG9mZnNldD0iNTQlIiBzdG9wLWNvbG9yPSIjODY4Njg2Ii8+PHN0b3Agb2Zmc2V0PSI5NiUiIHN0b3AtY29sb3I9IiM2YjZiNmIiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM2YzZjNmMiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #9e9e9e), color-stop(8%, #9d9d9d), color-stop(50%, #878787), color-stop(54%, #868686), color-stop(96%, #6b6b6b), color-stop(100%, #6c6c6c)); background-image: -moz-linear-gradient(top, #9e9e9e 0%, #9d9d9d 8%, #878787 50%, #868686 54%, #6b6b6b 96%, #6c6c6c 100%); background-image: -webkit-linear-gradient(top, #9e9e9e 0%, #9d9d9d 8%, #878787 50%, #868686 54%, #6b6b6b 96%, #6c6c6c 100%); background-image: linear-gradient(to bottom, #9e9e9e 0%, #9d9d9d 8%, #878787 50%, #868686 54%, #6b6b6b 96%, #6c6c6c 100%); }
 
 /** -------------------------------------------- Search forms (used in AssetAdmin, ModelAdmin, etc) -------------------------------------------- */
@@ -992,7 +967,7 @@ form.import-form label.left { width: 250px; }
 .cms .jstree li > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree li > .jstree-icon { cursor: pointer; }
 .cms .jstree ins, .TreeDropdownField .treedropdownfield-panel .jstree ins { display: inline-block; text-decoration: none; width: 18px; height: 18px; margin: 0 0 0 0; padding: 0; float: left; }
 .cms .jstree a, .TreeDropdownField .treedropdownfield-panel .jstree a { display: inline-block; line-height: 16px; height: 16px; color: black; white-space: nowrap; text-decoration: none; padding: 1px 2px; margin: 0; border: 1px solid #fff; }
-.cms .jstree a:focus, .cms .jstree a:active, .cms .jstree a:hover, .TreeDropdownField .treedropdownfield-panel .jstree a:focus, .TreeDropdownField .treedropdownfield-panel .jstree a:active, .TreeDropdownField .treedropdownfield-panel .jstree a:hover { text-decoration: none; cursor: pointer; text-shadow: 1px 1px 1px white; }
+.cms .jstree a:focus, .cms .jstree a:active, .cms .jstree a:hover, .TreeDropdownField .treedropdownfield-panel .jstree a:focus, .TreeDropdownField .treedropdownfield-panel .jstree a:active, .TreeDropdownField .treedropdownfield-panel .jstree a:hover { text-decoration: none; cursor: pointer; }
 .cms .jstree a ins, .TreeDropdownField .treedropdownfield-panel .jstree a ins { height: 16px; width: 12px; }
 .cms .jstree a ins.jstree-checkbox, .TreeDropdownField .treedropdownfield-panel .jstree a ins.jstree-checkbox { width: 16px; position: relative; }
 .cms .jstree a ins.jstree-checkbox:before, .TreeDropdownField .treedropdownfield-panel .jstree a ins.jstree-checkbox:before { content: ''; display: block; position: absolute; z-index: 1; left: -3px; top: -3px; height: 22px; width: 25px; }
@@ -1019,7 +994,7 @@ form.import-form label.left { width: 250px; }
 .cms .jstree-themeroller a, .TreeDropdownField .treedropdownfield-panel .jstree-themeroller a { padding: 0 2px; }
 .cms .jstree-themeroller .ui-icon, .TreeDropdownField .treedropdownfield-panel .jstree-themeroller .ui-icon { overflow: visible; }
 .cms .jstree-themeroller .jstree-no-icon, .TreeDropdownField .treedropdownfield-panel .jstree-themeroller .jstree-no-icon { display: none; }
-.cms #jstree-marker, .TreeDropdownField .treedropdownfield-panel #jstree-marker { padding: 0; margin: 0; overflow: hidden; position: absolute; top: -30px; background-repeat: no-repeat; display: none; line-height: 10px; font-size: 12px; height: 12px; width: 8px; z-index: 10001; background-color: transparent; text-shadow: 1px 1px 1px white; color: black; }
+.cms #jstree-marker, .TreeDropdownField .treedropdownfield-panel #jstree-marker { padding: 0; margin: 0; overflow: hidden; position: absolute; top: -30px; background-repeat: no-repeat; display: none; line-height: 10px; font-size: 12px; height: 12px; width: 8px; z-index: 10001; background-color: transparent; color: black; }
 .cms #jstree-marker-line, .TreeDropdownField .treedropdownfield-panel #jstree-marker-line { padding: 0; margin: 0; overflow: hidden; position: absolute; top: -30px; background-repeat: no-repeat; display: none; line-height: 0%; font-size: 1px; height: 1px; width: 100px; z-index: 10000; background-color: #456c43; cursor: pointer; border: 1px solid #eeeeee; border-left: 0; -moz-box-shadow: 0px 0px 2px #666; -webkit-box-shadow: 0px 0px 2px #666; box-shadow: 0px 0px 2px #666; -moz-border-radius: 1px; border-radius: 1px; -webkit-border-radius: 1px; }
 .cms #vakata-contextmenu, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu { display: block; visibility: hidden; left: 0; top: -200px; position: absolute; margin: 0; padding: 0; min-width: 180px; background: #FFF; border: 1px solid silver; z-index: 10000; *width: 180px; -moz-box-shadow: 0 0 10px #CCC; -webkit-box-shadow: 0 0 10px #CCC; box-shadow: 0 0 10px #CCC; }
 .cms #vakata-contextmenu::before, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu::before { content: ""; display: block; /* reduce the damage in FF3.0 */ position: absolute; top: -10px; left: 24px; width: 0; border-width: 0 6px 10px 6px; border-color: #FFF transparent; border-style: solid; z-index: 10000; }
@@ -1062,7 +1037,7 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree li.readonly, .cms-tree.jstree li.readonly { color: #aaa; padding-left: 18px; }
 .tree-holder.jstree li.readonly a, .tree-holder.jstree li.readonly a:link, .cms-tree.jstree li.readonly a, .cms-tree.jstree li.readonly a:link { margin: 0; padding: 0; }
 .tree-holder.jstree li.readonly .jstree-icon, .cms-tree.jstree li.readonly .jstree-icon { display: none; }
-.tree-holder.jstree a, .tree-holder.jstree a:link, .cms-tree.jstree a, .cms-tree.jstree a:link { color: #0073C1; padding: 3px 6px 3px 3px; border: none; display: inline-block; margin-right: 5px; }
+.tree-holder.jstree a, .tree-holder.jstree a:link, .cms-tree.jstree a, .cms-tree.jstree a:link { color: #0073C1; padding: 3px 6px 3px 6px; border: none; display: inline-block; margin-right: 5px; }
 .tree-holder.jstree ins, .cms-tree.jstree ins { background-color: transparent; background-image: url(../images/sitetree_ss_default_icons.png); }
 .tree-holder.jstree span.badge, .cms-tree.jstree span.badge { clear: both; text-transform: uppercase; text-shadow: none; display: inline-block; position: relative; padding: 3px 3px 1px; font-size: 0.75em; line-height: 1em; margin-left: 3px; margin-top: -1px; -moz-border-radius: 2px / 2px; -webkit-border-radius: 2px 2px; border-radius: 2px / 2px; }
 .tree-holder.jstree span.comment-count, .cms-tree.jstree span.comment-count { clear: both; position: relative; text-transform: uppercase; display: inline-block; overflow: visible; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 3px; margin-right: 6px; -moz-border-radius: 2px / 2px; -webkit-border-radius: 2px 2px; border-radius: 2px / 2px; color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
@@ -1074,9 +1049,9 @@ form.import-form label.left { width: 250px; }
 .tree-holder.filtered-list, .cms-tree.filtered-list { margin-top: 8px; }
 .tree-holder.filtered-list li:not(.filtered-item) > a, .cms-tree.filtered-list li:not(.filtered-item) > a { color: #aaa; }
 
-.cms-tree.jstree .jstree-no-checkboxes li a { padding-left: 12px; }
-.cms-tree.jstree .jstree-no-checkboxes li .jstree-hovered, .cms-tree.jstree .jstree-no-checkboxes li .jstree-clicked, .cms-tree.jstree .jstree-no-checkboxes li a:focus { padding-left: 0; }
-.cms-tree.jstree .jstree-no-checkboxes li .jstree-hovered .jstree-icon, .cms-tree.jstree .jstree-no-checkboxes li .jstree-clicked .jstree-icon, .cms-tree.jstree .jstree-no-checkboxes li a:focus .jstree-icon { display: block; }
+.cms-tree.jstree.draggable .jstree-no-checkboxes li a { padding-left: 12px; }
+.cms-tree.jstree.draggable .jstree-no-checkboxes li .jstree-hovered, .cms-tree.jstree.draggable .jstree-no-checkboxes li .jstree-clicked, .cms-tree.jstree.draggable .jstree-no-checkboxes li a:focus { padding-left: 0; }
+.cms-tree.jstree.draggable .jstree-no-checkboxes li .jstree-hovered .jstree-icon, .cms-tree.jstree.draggable .jstree-no-checkboxes li .jstree-clicked .jstree-icon, .cms-tree.jstree.draggable .jstree-no-checkboxes li a:focus .jstree-icon { display: block; }
 
 .jstree-default a .jstree-icon, .jstree-default-rtl a .jstree-icon, .jstree-classic a .jstree-icon, .jstree-apple a .jstree-icon { background-position: -60px -19px; }
 
@@ -1195,7 +1170,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu .sticky-status-indicator { display: none; position: absolute; top: -22px; left: 2px; font-size: 9px; color: #555d60; text-transform: uppercase; background-color: #b0bec7; }
 
 .cms-menu-list li { /* Style applied to the menu flyout only when the collapsed setting */ }
-.cms-menu-list li a { display: block; line-height: 16px; min-height: 16px; font-size: 12px; text-shadow: #bfcad2 1px 1px 0; color: #1f1f1f; padding: 11px 5px 11px 8px; background-color: #b0bec7; cursor: pointer; position: relative; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2IwYmVjNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzkyYTViMiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #92a5b2)); background-image: -moz-linear-gradient(#b0bec7, #92a5b2); background-image: -webkit-linear-gradient(#b0bec7, #92a5b2); background-image: linear-gradient(#b0bec7, #92a5b2); border-top: 1px solid #c2cdd4; border-bottom: 1px solid #748d9d; }
+.cms-menu-list li a { display: block; line-height: 16px; min-height: 16px; font-size: 12px; color: #1f1f1f; padding: 11px 5px 11px 8px; background-color: #b0bec7; cursor: pointer; position: relative; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2IwYmVjNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzkyYTViMiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #92a5b2)); background-image: -moz-linear-gradient(#b0bec7, #92a5b2); background-image: -webkit-linear-gradient(#b0bec7, #92a5b2); background-image: linear-gradient(#b0bec7, #92a5b2); border-top: 1px solid #c2cdd4; border-bottom: 1px solid #748d9d; }
 .cms-menu-list li a:hover { text-decoration: none; background-color: #b6c3cb; border-bottom: 1px solid #8399a7; color: #2c2c2c; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2JmY2FkMiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2IwYmVjNyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #bfcad2), color-stop(100%, #b0bec7)); background-image: -moz-linear-gradient(#bfcad2, #b0bec7); background-image: -webkit-linear-gradient(#bfcad2, #b0bec7); background-image: linear-gradient(#bfcad2, #b0bec7); }
 .cms-menu-list li a:focus, .cms-menu-list li a:active { border-top: 1px solid #a1b2bc; text-decoration: none; background-color: #a1b2bc; color: #393939; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzkyYTViMiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ExYjJiYyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #92a5b2), color-stop(100%, #a1b2bc)); background-image: -moz-linear-gradient(#92a5b2, #a1b2bc); background-image: -webkit-linear-gradient(#92a5b2, #a1b2bc); background-image: linear-gradient(#92a5b2, #a1b2bc); }
 .cms-menu-list li a .icon { display: block; position: absolute; top: 50%; margin-left: 4px; margin-top: -8px; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70); opacity: 0.7; }
@@ -1204,7 +1179,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list li a .toggle-children .toggle-children-icon { display: inline-block; width: 8px; height: 8px; background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -798px no-repeat; vertical-align: middle; }
 .cms-menu-list li a .toggle-children.opened .toggle-children-icon { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -814px no-repeat; }
 .cms-menu-list li ul li a { border-top: 1px solid #b6c3cb; }
-.cms-menu-list li.current a { color: white; text-shadow: #1e5270 0 -1px 0; border-top: 1px solid #55a4d2; border-bottom: 1px solid #236184; background-color: #338DC1; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzMzOGRjMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzI4NzA5OSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background-image: -moz-linear-gradient(#338dc1, #287099); background-image: -webkit-linear-gradient(#338dc1, #287099); background-image: linear-gradient(#338dc1, #287099); }
+.cms-menu-list li.current a { color: white; border-top: 1px solid #55a4d2; border-bottom: 1px solid #236184; background-color: #338DC1; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzMzOGRjMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzI4NzA5OSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background-image: -moz-linear-gradient(#338dc1, #287099); background-image: -webkit-linear-gradient(#338dc1, #287099); background-image: linear-gradient(#338dc1, #287099); }
 .cms-menu-list li.current a .toggle-children .toggle-children-icon { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -830px no-repeat; }
 .cms-menu-list li.current a .toggle-children.opened .toggle-children-icon { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -846px no-repeat; }
 .cms-menu-list li.current ul { border-top: none; display: block; }
@@ -1259,8 +1234,8 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul .disabled-tooltip::before { content: 'Screen size too small'; text-align: center; background: #555; color: white; padding: 4px 0; position: absolute; top: -24px; left: -1px; right: -1px; border-radius: 3px 3px 0 0; display: none; z-index: 2; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul .disabled-tooltip::after { content: ''; position: absolute; width: 10px; height: 10px; -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -webkit-transform: rotate(45deg); transform: rotate(45deg); display: none; background: #555; left: 47%; top: -6px; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul .disabled-tooltip:hover::after, .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul .disabled-tooltip:hover::before { display: block; }
-.cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected { background: #e6eaed; color: #66727d; }
-.cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected.highlighted, .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected:hover, .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected:focus { background: #e6eaed; color: #66727d; }
+.cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected { background: #e6eaed; color: #4f5861; }
+.cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected.highlighted, .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected:hover, .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected:focus { background: #e6eaed; color: #4f5861; }
 .cms-content-controls .preview-selector.split-disabled .chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns { color: #aaa; pointer-events: none; }
 .cms-content-controls .preview-selector.split-disabled .chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns.highlighted, .cms-content-controls .preview-selector.split-disabled .chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns:hover, .cms-content-controls .preview-selector.split-disabled .chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns:focus { color: #aaa; background: #fff; cursor: default; }
 .cms-content-controls .preview-selector.split-disabled .chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns::before { color: #aaa; }
@@ -1297,22 +1272,22 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 /********************************************
 * Defines the styles for .ss-ui-action-tabset:
 * * Site tree action tabs (to perform actions on the site tree)
-* * Actions menu (Edit page actions) 
+* * Actions menu (Edit page actions)
 *
 * Reliant on TabSet.js to apply and remove some classes.
 *
-* Note: This is a special use case of tabs, so the default tab 
-* styling should not apply 
+* Note: This is a special use case of tabs, so the default tab
+* styling should not apply
 *
 **********************************************/
 .cms .ss-ui-action-tabset { float: left; position: relative; /*
-	Styles for the tab-nav of the site tree implementation 
-	of ss-ui-action-tabset 
+	Styles for the tab-nav of the site tree implementation
+	of ss-ui-action-tabset
 */ /* position a checkbox & icon within a tab */ /* Styles for the cms-actions in tree view, to use more limited space.
-Title hidden in tree view, until hover/active state added. Active is applied 
-to the first tab within the template, so there should always be one title 
+Title hidden in tree view, until hover/active state added. Active is applied
+to the first tab within the template, so there should always be one title
 visible. Added and removed with js in TabSet.js  */ /****************************************************************
-	Styles for the actions-menu implementation 
+	Styles for the actions-menu implementation
 	of ss-ui-action-tabset
 ****************************************************************/ }
 .cms .ss-ui-action-tabset.multi { /* Style the tab panels */ }
@@ -1325,7 +1300,7 @@ visible. Added and removed with js in TabSet.js  */ /***************************
 .cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li.ui-state-active a:active, .cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li.ui-state-active a span:active { outline: none; box-shadow: none; -webkit-box-shadow: none; }
 .cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li.first { -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; border-left: none; }
 .cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li.last { -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; -moz-border-radius-bottomright: 3px; -webkit-border-bottom-right-radius: 3px; border-bottom-right-radius: 3px; border-right: none; }
-.cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li a.tab-nav-link { color: #66727d; display: inline-block; font-weight: bold; line-height: 16px; padding: 5px 10px; }
+.cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li a.tab-nav-link { color: #4f5861; display: inline-block; font-weight: bold; line-height: 16px; padding: 5px 10px; }
 .cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li a.tab-nav-link .ui-no-icon { display: inline-block; float: left; height: 16px; padding: 0 2px; width: 16px; }
 .cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li a.tab-nav-link .title { display: inline-block; line-height: 18px; }
 .cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li a.tab-nav-link.view-mode-batchactions-wrapper .title { margin-left: 22px; }
@@ -1336,8 +1311,8 @@ visible. Added and removed with js in TabSet.js  */ /***************************
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .ui-widget-content { background: none; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field { /*  Fields are more compressed in some areas compared to the main content editing window so the below alters the internal spacing of the fields so we can move that spacing to between the form fields rather than padding */ border-bottom: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field label { float: none; width: auto; font-size: 12px; padding: 0 8px 4px 0; }
-.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field label.extra-details { overflow: hidden; margin-top: 10px; display: block; color: #c5cbd0; font-style: italic; font-weight: normal; font-size: 1em; float: left; text-shadow: none; }
-.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field label.extra-details.fill:before { color: #fff; content: '?'; font-size: 12px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; padding-left: 3px; padding-right: 3px; display: block; float: left; text-shadow: none; -moz-border-radius: 50px; -webkit-border-radius: 50px; border-radius: 50px; background-color: #e2e4e7; width: 15px; height: 15px; margin-right: 5px; margin-bottom: 5px; }
+.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field label.extra-details { overflow: hidden; margin-top: 10px; display: block; color: #a9b1b9; font-style: italic; font-weight: normal; font-size: 1em; float: left; text-shadow: none; }
+.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field label.extra-details.fill:before { color: #fff; content: '?'; font-size: 12px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; padding-left: 3px; padding-right: 3px; display: block; float: left; text-shadow: none; -moz-border-radius: 50px; -webkit-border-radius: 50px; border-radius: 50px; background-color: #c5cbd0; width: 15px; height: 15px; margin-right: 5px; margin-bottom: 5px; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field .middleColumn { margin: 0; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field input.text, .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field select, .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field textarea { padding: 5px; font-size: 11px; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .field.checkbox { padding: 0 8px 0; }
@@ -1393,8 +1368,8 @@ visible. Added and removed with js in TabSet.js  */ /***************************
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .ui-widget-content { background: none; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field { /*  Fields are more compressed in some areas compared to the main content editing window so the below alters the internal spacing of the fields so we can move that spacing to between the form fields rather than padding */ border-bottom: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field label { float: none; width: auto; font-size: 12px; padding: 0 8px 4px 0; }
-.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field label.extra-details { overflow: hidden; margin-top: 10px; display: block; color: #c5cbd0; font-style: italic; font-weight: normal; font-size: 1em; float: left; text-shadow: none; }
-.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field label.extra-details.fill:before { color: #fff; content: '?'; font-size: 12px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; padding-left: 3px; padding-right: 3px; display: block; float: left; text-shadow: none; -moz-border-radius: 50px; -webkit-border-radius: 50px; border-radius: 50px; background-color: #e2e4e7; width: 15px; height: 15px; margin-right: 5px; margin-bottom: 5px; }
+.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field label.extra-details { overflow: hidden; margin-top: 10px; display: block; color: #a9b1b9; font-style: italic; font-weight: normal; font-size: 1em; float: left; text-shadow: none; }
+.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field label.extra-details.fill:before { color: #fff; content: '?'; font-size: 12px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; padding-left: 3px; padding-right: 3px; display: block; float: left; text-shadow: none; -moz-border-radius: 50px; -webkit-border-radius: 50px; border-radius: 50px; background-color: #c5cbd0; width: 15px; height: 15px; margin-right: 5px; margin-bottom: 5px; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field .middleColumn { margin: 0; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field input.text, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field select, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field textarea { padding: 5px; font-size: 11px; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .field.checkbox { padding: 0 8px 0; }
@@ -1425,13 +1400,12 @@ visible. Added and removed with js in TabSet.js  */ /***************************
 .ModelAdmin .cms-content-fields .cms-edit-form { overflow-y: auto; overflow-x: hidden; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form .resetformaction { margin-right: 0px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm { overflow: hidden; }
-.ModelAdmin .cms-content-fields .cms-content-filters { padding-top: 16px; }
 
 .permissioncheckboxset h5, .permissioncheckboxsetfield_readonly h5 { margin: 0; }
 .permissioncheckboxset .optionset, .permissioncheckboxsetfield_readonly .optionset { overflow: auto; }
 .permissioncheckboxset .optionset li, .permissioncheckboxsetfield_readonly .optionset li { float: none; width: auto; clear: both; }
 
-/* For user permissions the readonly checkboxes are set as display none and are replaced with a <span> that has a 
+/* For user permissions the readonly checkboxes are set as display none and are replaced with a <span> that has a
 green tick icon as a background this is created using compass generated classes and hardcoded in the php */
 .permissioncheckboxsetfield_readonly .optionset li.odd, .permissioncheckboxsetfield_readonly .optionset li.even { margin-left: 16px; }
 .permissioncheckboxsetfield_readonly .optionset li.help { width: 384px; }

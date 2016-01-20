@@ -14,7 +14,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		// case insensitive search against keyword 'sub' for folders
 		$request = new SS_HTTPRequest('GET','url',array('search'=>'sub'));
 		$tree = $field->tree($request);
-		
+
 		$folder1 = $this->objFromFixture('Folder','folder1');
 		$folder1Subfolder1 = $this->objFromFixture('Folder','folder1-subfolder1');
 
@@ -22,8 +22,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$cssPath = 'ul.tree li#selector-TestTree-'.$folder1->ID.' li#selector-TestTree-'.$folder1Subfolder1->ID.' a span.item';
 		$firstResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
-			(string)$firstResult[0], 
-			$folder1Subfolder1->Name, 
+			(string)$firstResult[0],
+			$folder1Subfolder1->Name,
 			$folder1Subfolder1->Name.' is found, nested under '.$folder1->Name
 		);
 
@@ -31,8 +31,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$cssPath = 'ul.tree li#selector-TestTree-'.$subfolder->ID.' a span.item';
 		$secondResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
-			(string)$secondResult[0], 
-			$subfolder->Name, 
+			(string)$secondResult[0],
+			$subfolder->Name,
 			$subfolder->Name.' is found at root level'
 		);
 
@@ -41,8 +41,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$cssPath = 'ul.tree li#selector-TestTree-'.$folder2->ID.' a span.item';
 		$noResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
-			$noResult, 
-			array(), 
+			$noResult,
+			array(),
 			$folder2.' is not found'
 		);
 
@@ -58,8 +58,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$cssPath = 'ul.tree li#selector-TestTree-'.$folder1->ID.' li#selector-TestTree-'.$folder1Subfolder1->ID.' a span.item';
 		$firstResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
-			(string)$firstResult[0], 
-			$folder1Subfolder1->Name, 
+			(string)$firstResult[0],
+			$folder1Subfolder1->Name,
 			$folder1Subfolder1->Name.' is found, nested under '.$folder1->Name
 		);
 
@@ -69,13 +69,13 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$cssPath = 'ul.tree li#selector-TestTree-'.$subfolder->ID.' li#selector-TestTree-'.$file1->ID.' a';
 		$firstResult = $parser->getBySelector($cssPath);
 		$this->assertGreaterThan(
-			0, 
-			count($firstResult), 
+			0,
+			count($firstResult),
 			$file1->Name.' with ID '.$file1->ID.' is in search results'
 		);
 		$this->assertEquals(
-			(string)$firstResult[0], 
-			$file1->Name, 
+			(string)$firstResult[0],
+			$file1->Name,
 			$file1->Name.' is found nested under '.$subfolder->Name
 		);
 
@@ -83,12 +83,12 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$secondResult = $parser->getBySelector($cssPath);
 		$this->assertGreaterThan(
 			0,
-			count($secondResult), 
+			count($secondResult),
 			$file2->Name.' with ID '.$file2->ID.' is in search results'
 		);
 		$this->assertEquals(
-			(string)$secondResult[0], 
-			$file2->Name, 
+			(string)$secondResult[0],
+			$file2->Name,
 			$file2->Name.' is found nested under '.$subfolder->Name
 		);
 
@@ -97,11 +97,11 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$cssPath = 'ul.tree li#selector-TestTree-'.$file3->ID;
 		$noResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
-			$noResult, 
-			array(), 
+			$noResult,
+			array(),
 			$file3->Name.' is not found'
 		);
 	}
 
 }
-	
+

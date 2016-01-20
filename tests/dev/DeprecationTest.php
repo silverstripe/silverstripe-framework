@@ -16,7 +16,7 @@ class DeprecationTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
-		
+
 		self::$originalVersionInfo = Deprecation::dump_settings();
 		Deprecation::$notice_level = E_USER_NOTICE;
 		Deprecation::set_enabled(true);

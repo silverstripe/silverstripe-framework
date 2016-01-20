@@ -274,8 +274,8 @@ class Date extends DBField {
 
 	/**
 	 * Gets the time difference, but always returns it in a certain format
-	 * 
-	 * @param string $format The format, could be one of these: 
+	 *
+	 * @param string $format The format, could be one of these:
 	 * 'seconds', 'minutes', 'hours', 'days', 'months', 'years'.
 	 * @return string The resulting formatted period
 	 */
@@ -284,28 +284,28 @@ class Date extends DBField {
 
 		$time = SS_Datetime::now()->Format('U');
 		$ago = abs($time - strtotime($this->value));
-			
+
 		switch($format) {
 			case "seconds":
 				$span = $ago;
 				return ($span != 1) ? "{$span} "._t("Date.SECS", "secs") : "{$span} "._t("Date.SEC", "sec");
-				
+
 			case "minutes":
 				$span = round($ago/60);
 				return ($span != 1) ? "{$span} "._t("Date.MINS", "mins") : "{$span} "._t("Date.MIN", "min");
-				
+
 			case "hours":
 				$span = round($ago/3600);
 				return ($span != 1) ? "{$span} "._t("Date.HOURS", "hours") : "{$span} "._t("Date.HOUR", "hour");
-				
+
 			case "days":
 				$span = round($ago/86400);
 				return ($span != 1) ? "{$span} "._t("Date.DAYS", "days") : "{$span} "._t("Date.DAY", "day");
-				
+
 			case "months":
 				$span = round($ago/86400/30);
 				return ($span != 1) ? "{$span} "._t("Date.MONTHS", "months") : "{$span} "._t("Date.MONTH", "month");
-				
+
 			case "years":
 				$span = round($ago/86400/365);
 				return ($span != 1) ? "{$span} "._t("Date.YEARS", "years") : "{$span} "._t("Date.YEAR", "year");

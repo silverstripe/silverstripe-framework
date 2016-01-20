@@ -5,7 +5,7 @@
 
 <body>
 	<h1>SilverStripe Application Information</h1>
-	
+
 	<dl>
 		<dt>SilverStripe version:</dt> <dd>$Version</dd>
 		<dt>Environment type:</dt> <dd>$EnvironmentType</dd>

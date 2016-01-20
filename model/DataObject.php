@@ -778,7 +778,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $name;
 		} else {
 			$name = $this->singular_name();
-			if(substr($name,-1) == 'y') $name = substr($name,0,-1) . 'ie';
+			//if the penultimate character is not a vowel, replace "y" with "ies"
+			if (preg_match('/[^aeiou]y$/i', $name)) {
+				$name = substr($name,0,-1) . 'ie';
+			}
 			return ucfirst($name . 's');
 		}
 	}
@@ -1077,7 +1080,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Public accessor for {@see DataObject::validate()}
-	 * 
+	 *
 	 * @return ValidationResult
 	 */
 	public function doValidate() {
@@ -1604,7 +1607,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		if($filter !== null || $sort !== null || $limit !== null) {
-			Deprecation::notice('4.0', 'The $filter, $sort and $limit parameters for DataObject::getComponents() 
+			Deprecation::notice('4.0', 'The $filter, $sort and $limit parameters for DataObject::getComponents()
 				have been deprecated. Please manipluate the returned list directly.', Deprecation::SCOPE_GLOBAL);
 		}
 
@@ -1684,7 +1687,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$remoteClass = $this->hasManyComponent($component, false);
 		} else {
 			$remoteClass = $this->belongsToComponent($component, false);
-		}		
+		}
 
 		if(empty($remoteClass)) {
 			throw new Exception("Unknown $type component '$component' on class '$this->class'");
@@ -1759,8 +1762,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			= $this->manyManyComponent($componentName);
 
 		if($filter !== null || $sort !== null || $join !== null || $limit !== null) {
-			Deprecation::notice('4.0', 'The $filter, $sort, $join and $limit parameters for 
-				DataObject::getManyManyComponents() have been deprecated. 
+			Deprecation::notice('4.0', 'The $filter, $sort, $join and $limit parameters for
+				DataObject::getManyManyComponents() have been deprecated.
 				Please manipluate the returned list directly.', Deprecation::SCOPE_GLOBAL);
 		}
 
@@ -1775,9 +1778,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$extraFields = $this->manyManyExtraFieldsForComponent($componentName) ?: array();
 		$result = ManyManyList::create($componentClass, $table, $componentField, $parentField, $extraFields);
-		
+
 		if($this->model) $result->setDataModel($this->model);
-		
+
 		$this->extend('updateManyManyComponents', $result);
 
 		// If this is called on a singleton, then we return an 'orphaned relation' that can have the
@@ -2043,7 +2046,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($component) {
 			Deprecation::notice(
 				'4.0',
-				'Please use DataObject::manyManyExtraFieldsForComponent() instead of passing a component name 
+				'Please use DataObject::manyManyExtraFieldsForComponent() instead of passing a component name
 					to manyManyExtraFields()',
 				Deprecation::SCOPE_GLOBAL
 			);
@@ -2077,7 +2080,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 
 			// If we've not already found the relation name from dot notation, we need to find a relation that points
-			// back to this class. As there's no dot-notation, there can only be one relation pointing to this class, 
+			// back to this class. As there's no dot-notation, there can only be one relation pointing to this class,
 			// so it's safe to assume that it's the correct one
 			if(!$relationName) {
 				$candidateManyManys = (array)Config::inst()->get($candidate, 'many_many', Config::UNINHERITED);
@@ -3506,7 +3509,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				// Format: array('MyFieldName' => array(
 				//   'filter => 'ExactMatchFilter',
 				//   'field' => 'NumericField', // optional
-				//   'title' => 'My Title', // optiona.
+				//   'title' => 'My Title', // optional
 				// ))
 				$rewrite[$identifer] = array_merge(
 					array('filter' => $this->relObject($identifer)->stat('default_search_filter_class')),
@@ -3573,10 +3576,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					'db'        => (array)Config::inst()->get($ancestorClass, 'db', Config::UNINHERITED)
 				);
 				if($includerelations){
-					$types['has_one'] = (array)singleton($ancestorClass)->uninherited('has_one', true);
-					$types['has_many'] = (array)singleton($ancestorClass)->uninherited('has_many', true);
-					$types['many_many'] = (array)singleton($ancestorClass)->uninherited('many_many', true);
-					$types['belongs_many_many'] = (array)singleton($ancestorClass)->uninherited('belongs_many_many', true);
+					$types['has_one'] = (array)Config::inst()->get($ancestorClass, 'has_one', Config::UNINHERITED);
+					$types['has_many'] = (array)Config::inst()->get($ancestorClass, 'has_many', Config::UNINHERITED);
+					$types['many_many'] = (array)Config::inst()->get($ancestorClass, 'many_many', Config::UNINHERITED);
+					$types['belongs_many_many'] = (array)Config::inst()->get($ancestorClass, 'belongs_many_many', Config::UNINHERITED);
 				}
 				foreach($types as $type => $attrs) {
 					foreach($attrs as $name => $spec) {

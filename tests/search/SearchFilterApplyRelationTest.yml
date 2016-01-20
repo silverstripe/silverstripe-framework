@@ -11,7 +11,7 @@ SearchFilterApplyRelationTest_HasManyGrantChild:
         Title: I am has_many object3
     grant_child4:
         Title: I am has_many object4
-        
+
 SearchFilterApplyRelationTest_ManyManyGrantChild:
     grant_child1:
         Title: I am many_many object1

@@ -101,21 +101,21 @@ class GridFieldExportButtonTest extends SapphireTest {
 			$button->generateExportFileData($this->gridField)
 		);
 	}
-	
+
 	public function testArrayListInput() {
 		$button = new GridFieldExportButton();
 		$this->gridField->getConfig()->addComponent(new GridFieldPaginator());
-		
+
 		//Create an ArrayList 1 greater the Paginator's default 15 rows
 		$arrayList = new ArrayList();
 		for ($i = 1; $i <= 16; $i++) {
-			$dataobject = new DataObject( 
+			$dataobject = new DataObject(
 				array ( 'ID' => $i )
 			);
 			$arrayList->add($dataobject);
 		}
 		$this->gridField->setList($arrayList);
-		
+
 		$this->assertEquals(
 			"ID\n".
 			"1\n".

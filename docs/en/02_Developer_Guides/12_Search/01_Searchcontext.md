@@ -11,7 +11,7 @@ The default output of a [api:SearchContext] is either a [api:SQLSelect] object f
 [api:DataObject] instance.
 
 <div class="notice" markdown="1">
-[api:SearchContext] is mainly used by [ModelAdmin](../customising_the_admin_interface/modeladmin).
+[api:SearchContext] is mainly used by [ModelAdmin](/developer_guides/customising_the_admin_interface/modeladmin).
 </div>
 
 ## Usage
@@ -209,8 +209,8 @@ See `[api:SearchFilter]` API Documentation
 
 ## Related Documentation
 
-* [ModelAdmin](../customising_the_cms/modeladmin)
-* [Tutorial: Site Search](/tutorials/site_search)
+* [ModelAdmin](/developer_guides/customising_the_admin_interface/modeladmin)
+* [Site Search](/tutorials/site_search)
 
 ## API Documentation
 

@@ -4,7 +4,7 @@
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Sie haben {num} Seite(n) ausgewählt.\n\nWollen Sie diese wirklich veröffentlichen?",
     "CMSMAIN.BATCH_DELETE_PROMPT": "Sie haben {num} Seite(n) ausgewählt.\n\nWollen Sie diese wirklich löschen?",
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Sie haben {num} Seite(n) ausgewählt.\n\nWollen Sie diese wirklich archivieren?\n\nDiese Seiten und alle Unterseiten davon werden von der veröffentlichen Seite gelöscht und in das Archiv verschoben.",
-    "CMSMAIN.BATCH_RESTORE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to restore to stage?\n\nChildren of archived pages will be restored to the root level, unless those pages are also being restored.",
+    "CMSMAIN.BATCH_RESTORE_PROMPT": "Sie haben {num} Seite(n) ausgewählt.\\n\\nWollen Sie diese wirklich wiederherstellen?\\n\\nUnterseiten von archivierten Seiten werden auf der Root-Ebene wiederhergestellt, es sei denn, diese Seiten werden ebenfalls wiederhergestellt.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Sie haben {num} Seite(n) ausgewählt.\n\nWollen Sie diese wirklich von der veröfffentlichten Seite löschen?",
     "LeftAndMain.CONFIRMUNSAVED": "Sind Sie sicher, dass Sie die Seite verlassen möchten?\n\nWARNUNG: Ihre Änderungen werden nicht gespeichert.\n\nDrücken Sie \"OK\" um fortzufahren, oder \"Abbrechen\" um auf dieser Seite zu bleiben.",
     "LeftAndMain.CONFIRMUNSAVEDSHORT": "WARNUNG: Ihre Änderungen wurden nicht gespeichert.",

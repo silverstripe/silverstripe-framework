@@ -40,6 +40,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader {
 		if(isset($record['Groups']) && $record['Groups']) {
 			$groupCodes = explode(',', $record['Groups']);
 			foreach($groupCodes as $groupCode) {
+				$groupCode = Convert::raw2url($groupCode);
 				if(!isset($_cache_groupByCode[$groupCode])) {
 					$group = Group::get()->filter('Code', $groupCode)->first();
 					if(!$group) {
@@ -49,8 +50,8 @@ class MemberCsvBulkLoader extends CsvBulkLoader {
 						$group->write();
 					}
 					$member->Groups()->add($group);
+					$_cache_groupByCode[$groupCode] = $group;
 				}
-				$_cache_groupByCode[$groupCode] = $group;
 			}
 		}
 

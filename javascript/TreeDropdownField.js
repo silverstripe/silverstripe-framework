@@ -9,7 +9,7 @@
 			// Entwine's 'fromWindow::onresize' does not trigger on IE8. Use synthetic event.
 			var cb = function() {$('.TreeDropdownField').closePanel();};
 
-			// Workaround to avoid IE8 infinite loops when elements are resized as a result of this event 
+			// Workaround to avoid IE8 infinite loops when elements are resized as a result of this event
 			if($.browser.msie && parseInt($.browser.version, 10) < 9) {
 				var newWindowWidth = $(window).width(), newWindowHeight = $(window).height();
 				if(newWindowWidth != windowWidth || newWindowHeight != windowHeight) {
@@ -21,7 +21,7 @@
 				cb();
 			}
 		});
-		
+
 		var strings = {
 			'openlink': ss.i18n._t('TreeDropdownField.OpenLink'),
 			'fieldTitle': '(' + ss.i18n._t('TreeDropdownField.FieldTitle') + ')',
@@ -53,11 +53,11 @@
 					'<div class="treedropdownfield-toggle-panel-link"><a href="#" class="ui-icon ui-icon-triangle-1-s"></a></div>' +
 					'<div class="treedropdownfield-panel"><div class="tree-holder"></div></div>'
 				);
-			
+
 				var linkTitle = strings.openLink;
 				if(linkTitle) this.find("treedropdownfield-toggle-panel-link a").attr('title', linkTitle);
 				if(this.data('title')) this.setTitle(this.data('title'));
-				
+
 				this.getPanel().hide();
 				this._super();
 			},
@@ -70,22 +70,22 @@
 
 				// Listen for clicks outside of the field to auto-close it
 				$('body').bind('click', _clickTestFn);
-				
+
 				var panel = this.getPanel(), tree = this.find('.tree-holder');
 
 				panel.css('width', this.width());
-				
+
 				panel.show();
-				
+
 				// swap the down arrow with an up arrow
 				var toggle = this.find(".treedropdownfield-toggle-panel-link");
 				toggle.addClass('treedropdownfield-open-tree');
 				this.addClass("treedropdownfield-open-tree");
-				
+
 				toggle.find("a")
 					.removeClass('ui-icon-triangle-1-s')
 					.addClass('ui-icon-triangle-1-n');
-				
+
 				if(tree.is(':empty') && !panel.hasClass('loading')) {
 					this.loadTree(null, this._riseUp);
 				} else {
@@ -107,7 +107,7 @@
 					endOfWindow = ($(window).height() + $(document).scrollTop()) - toggle.innerHeight();
 					elPos = toggle.offset().top;
 					elHeight = dropdown.innerHeight();
-					
+
 					// If the dropdown is too close to the bottom of the page, position it above the 'trigger'
 					if (elPos + elHeight > endOfWindow && elPos - elHeight > 0) {
 						container.addClass('treedropdownfield-with-rise');
@@ -125,11 +125,11 @@
 				var toggle = this.find(".treedropdownfield-toggle-panel-link");
 				toggle.removeClass('treedropdownfield-open-tree');
 				this.removeClass('treedropdownfield-open-tree treedropdownfield-with-rise');
-								
+
 				toggle.find("a")
 					.removeClass('ui-icon-triangle-1-n')
 					.addClass('ui-icon-triangle-1-s');
-					
+
 
 				this.getPanel().hide();
 				this.trigger('panelhide');
@@ -138,8 +138,8 @@
 				this[this.getPanel().is(':visible') ? 'closePanel' : 'openPanel']();
 			},
 			setTitle: function(title) {
-				title = title || this.data('title') || strings.fieldTitle;
-				
+				title = title || this.data('empty-title') || strings.fieldTitle;
+
 				this.find('.treedropdownfield-title').html(title);
 				this.data('title', title); // separate view from storage (important for search cancellation)
 			},
@@ -204,7 +204,7 @@
 						treeHolder
 							.jstree('destroy')
 							.bind('loaded.jstree', function(e, data) {
-								var val = self.getValue(), selectNode = treeHolder.find('*[data-id="' + val + '"]'), 
+								var val = self.getValue(), selectNode = treeHolder.find('*[data-id="' + val + '"]'),
 									currentNode = data.inst.get_selected();
 								if(val && selectNode != currentNode) data.inst.select_node(selectNode);
 								firstLoad = false;
@@ -224,7 +224,7 @@
 									self.setTitle(data.inst.get_text(node));
 									self.setValue(id);
 								}
-								
+
 								// Avoid auto-closing panel on first load
 								if(!firstLoad) self.closePanel();
 								firstLoad=false;
@@ -291,19 +291,19 @@
 			 * If the field is contained in a form, submit all form parameters by default.
 			 * This is useful to keep state like locale values which are typically
 			 * encoded in hidden fields through the form.
-			 * 
+			 *
 			 * @return {object}
 			 */
 			getRequestParams: function() {
 				return {};
 			}
 		});
-		
+
 		$('.TreeDropdownField .tree-holder li').entwine({
 			/**
 			 * Overload to return more data. The same data should be set on initial
 			 * value through PHP as well (see TreeDropdownField->Field()).
-			 * 
+			 *
 			 * @return {object}
 			 */
 			getMetaData: function() {
@@ -312,27 +312,27 @@
 				return {ClassName: klass};
 			}
 		});
-		
+
 		$('.TreeDropdownField *').entwine({
 			getField: function() {
 				return this.parents('.TreeDropdownField:first');
 			}
 		});
-		
+
 		$('.TreeDropdownField').entwine({
 			onclick: function(e) {
 				this.togglePanel();
-					
+
 				return false;
 			}
 		});
-	
+
 		$('.TreeDropdownField .treedropdownfield-panel').entwine({
 			onclick: function(e) {
 				return false;
 			}
 		});
-		
+
 		$('.TreeDropdownField.searchable').entwine({
 			onadd: function() {
 				this._super();
@@ -350,7 +350,7 @@
 				this.loadTree();
 			}
 		});
-		
+
 		$('.TreeDropdownField.searchable input.search').entwine({
 			onkeydown: function(e) {
 				var field = this.getField();
@@ -364,7 +364,7 @@
 				}
 			}
 		});
-		
+
 		$('.TreeDropdownField.multiple').entwine({
 			getTreeConfig: function() {
 				var cfg = this._super();

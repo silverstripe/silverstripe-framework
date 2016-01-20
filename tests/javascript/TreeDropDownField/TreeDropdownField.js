@@ -1,20 +1,20 @@
 (function($) {
 	describe("TreeDropdownField", function() {
-		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;		
+		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 		$.entwine.synchronous_mode();
-		
+
 		var fixtures = {
-			'tree': '<ul>' + 
-			'	<li data-id="1">' + 
-			'		<a href="#">Root node 1</a>' + 
-			'		<ul>' + 
-			'			<li data-id="2"><a href="#">Child node 1</a></li>' + 
-			'			<li data-id="3"><a href="#">Child node 2</a></li>' + 
-			'		</ul>' + 
-			'	</li>' + 
-			'	<li data-id="4"><a href="#">Root node 2</a></li>' + 
-			'	<li data-id="5"><a href="#">Root node 3</a></li>' + 
-			'	<li data-id="6"><a href="#">Root node 4</a></li>' + 
+			'tree': '<ul>' +
+			'	<li data-id="1">' +
+			'		<a href="#">Root node 1</a>' +
+			'		<ul>' +
+			'			<li data-id="2"><a href="#">Child node 1</a></li>' +
+			'			<li data-id="3"><a href="#">Child node 2</a></li>' +
+			'		</ul>' +
+			'	</li>' +
+			'	<li data-id="4"><a href="#">Root node 2</a></li>' +
+			'	<li data-id="5"><a href="#">Root node 3</a></li>' +
+			'	<li data-id="6"><a href="#">Root node 4</a></li>' +
 			'</ul>',
 			'treesearch': '<ul>' +
 			'	<li data-id="1">' +
@@ -25,7 +25,7 @@
 			'	</li>' +
 			'</ul>'
 		}
-		
+
 		// helpers
 		var loadTree = function(container, html) {
 			if(!html) html = fixtures.tree;
@@ -39,7 +39,7 @@
 			// loaded doesnt trigger automatically in test mode
 			container.find('.tree-holder').jstree('loaded');
 		}
-		
+
 		describe('when field is basic', function() {
 
 			beforeEach(function() {
@@ -54,7 +54,7 @@
 			afterEach(function() {
 				$('#testfield').remove();
 			});
-			
+
 			it('displays the default title', function() {
 				expect($('#testfield').entwine('ss').getTitle()).toEqual('Selected');
 			});
@@ -102,11 +102,11 @@
 					expect(f.entwine('ss').getTitle()).toEqual('Child node 1');
 				});
 			});
-			
+
 		});
 
 		describe('when field is searchable', function() {
-			
+
 			beforeEach(function() {
 				// load fixture
 				$('body').append(
@@ -119,7 +119,7 @@
 			afterEach(function() {
 				$('#testfield').remove();
 			});
-			
+
 			it('only shows search results', function() {
 				var f = $('#testfield'), panel = f.entwine('ss').getPanel();
 				f.entwine('ss').search('Child node 1');
@@ -129,16 +129,16 @@
 					contentType: 'text/html',
 					responseText: fixtures.treesearch
 				});
-		
+
 				expect(panel.text().match('Child node 1')).toBeTruthy();
 				expect(panel.text().match('Root node 2')).not.toBeTruthy();
 			});
-			
+
 			// TODO Key events: Enter/ESC
 		});
-		
+
 		describe('when field allows multiple selections', function() {
-			
+
 			beforeEach(function() {
 				// load fixture (check one child node, one root node)
 				$('body').append(
@@ -151,9 +151,9 @@
 			afterEach(function() {
 				$('#testfield').remove();
 			});
-			
+
 			describe('when more than one item is selected', function() {
-				
+
 				it('doesnt close the panel', function() {
 					var f = $('#testfield'), panel = f.entwine('ss').getPanel();
 					loadTree(f);
@@ -161,7 +161,7 @@
 					panel.find('li[data-id=2]').click();
 					expect(panel).toBeVisible();
 				});
-				
+
 				it('selects the tree nodes based on initial values', function() {
 					var f = $('#testfield'), panel = f.entwine('ss').getPanel();
 					loadTree(f);
@@ -173,7 +173,7 @@
 					var f = $('#testfield'), panel = f.entwine('ss').getPanel();
 					loadTree(f);
 					f.entwine('ss').openPanel();
-					
+
 					// TODO loaded.jstree event works with timeouts, so we have to wait before inspection
 					waits(200);
 					runs(function() {
@@ -185,13 +185,13 @@
 						panel.find('li[data-id=4] a').click();
 						expect(f.entwine('ss').getValue()).toEqual(['5','6']);
 					});
-					
+
 				});
-				
+
 				it('it sets the selected titles', function() {
 					var f = $('#testfield'), panel = f.entwine('ss').getPanel();
 					var xhr = loadTree(f);
-					
+
 					// TODO loaded.jstree event works with timeouts, so we have to wait before inspection
 					waits(200);
 					runs(function() {
@@ -199,20 +199,20 @@
 						expect(f.entwine('ss').getTitle()).toEqual('Root node 2, Root node 3, Root node 4');
 					});
 				});
-				
+
 			});
-			
+
 		});
-		
+
 		describe('when field is contained in a form', function() {
-			
+
 			beforeEach(function() {
 				$('#myform .TreeDropdownField').entwine('ss', {
 					getRequestParams: function() {
 						return this.parents('form:first').serializeArray();
 					}
 				});
-				
+
 				// load fixture
 				$('body').append(
 					'<form id="myform" url="/myform">' +
@@ -223,11 +223,11 @@
 					'</form>'
 				);
 			});
-		
+
 			afterEach(function() {
 				$('#testfield').remove();
 			});
-			
+
 			it('sends all form values with ajax requests', function() {
 				var f = $('#testfield'), panel = f.entwine('ss').getPanel();
 				loadTree(f);

@@ -1093,6 +1093,15 @@ class DataListTest extends SapphireTest {
 	}
 
 	/**
+	 * Test exact match filter with empty array items
+	 */
+	public function testEmptyFilter() {
+		$this->setExpectedException("InvalidArgumentException", 'Cannot filter "DataObjectTest_TeamComment"."Name" against an empty set');
+		$list = DataObjectTest_TeamComment::get();
+		$list->exclude('Name', array());
+	}
+
+	/**
 	 * $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
 	 */
 	public function testMultipleExcludeWithMultipleThatCheersEitherTeam() {

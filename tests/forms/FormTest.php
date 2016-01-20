@@ -19,7 +19,7 @@ class FormTest extends FunctionalTest {
 		Config::inst()->update('Director', 'rules', array(
 			'FormTest_Controller' => 'FormTest_Controller'
 		));
-		
+
 		// Suppress themes
 		Config::inst()->remove('SSViewer', 'theme');
 	}
@@ -179,6 +179,34 @@ class FormTest extends FunctionalTest {
 		);
 	}
 
+	public function testLookupFieldDisabledSaving() {
+		$object = new DataObjectTest_Team();
+		$form = new Form(
+			new Controller(),
+			'Form',
+			new FieldList(
+				new LookupField('Players', 'Players')
+			),
+			new FieldList()
+		);
+		$form->loadDataFrom(array(
+			'Players' => array(
+				14,
+				18,
+				22
+			),
+		));
+		$form->saveInto($object);
+		$playersIds = $object->Players()->getIDList();
+
+		$this->assertTrue($form->validate());
+		$this->assertEquals(
+			$playersIds,
+			array(),
+			'saveInto() should not save into the DataObject for the LookupField'
+		);
+	}
+
 	public function testLoadDataFromIgnoreFalseish() {
 		$form = new Form(
 			new Controller(),
@@ -279,6 +307,7 @@ class FormTest extends FunctionalTest {
 			'FormTest_Controller/Form',
 			array(
 				'Email' => 'invalid',
+				'Number' => '<a href="http://mysite.com">link</a>' // XSS attempt
 				// leaving out "Required" field
 			)
 		);
@@ -296,6 +325,17 @@ class FormTest extends FunctionalTest {
 				'"Some Required Field" is required'
 			),
 			'Required fields show a notification on field when left blank'
+		);
+
+		$this->assertContains(
+			'&#039;&lt;a href=&quot;http://mysite.com&quot;&gt;link&lt;/a&gt;&#039; is not a number, only numbers can be accepted for this field',
+			$response->getBody(),
+			"Validation messages are safely XML encoded"
+		);
+		$this->assertNotContains(
+			'<a href="http://mysite.com">link</a>',
+			$response->getBody(),
+			"Unsafe content is not emitted directly inside the response body"
 		);
 	}
 
@@ -353,7 +393,7 @@ class FormTest extends FunctionalTest {
 	public function testDisableSecurityTokenAcceptsSubmissionWithoutToken() {
 		SecurityToken::enable();
 		$expectedToken = SecurityToken::inst()->getValue();
-		
+
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
 		// can't use submitForm() as it'll automatically insert SecurityID into the POST data
 		$response = $this->post(
@@ -651,7 +691,7 @@ class FormTest extends FunctionalTest {
         $formData = $form->getData();
         $this->assertEmpty($formData['ExtraFieldCheckbox']);
     }
-	
+
 	protected function getStubForm() {
 		return new Form(
 			new FormTest_Controller(),
@@ -729,7 +769,8 @@ class FormTest_Controller extends Controller implements TestOnly {
 			new FieldList(
 				new EmailField('Email'),
 				new TextField('SomeRequiredField'),
-				new CheckboxSetField('Boxes', null, array('1'=>'one','2'=>'two'))
+				new CheckboxSetField('Boxes', null, array('1'=>'one','2'=>'two')),
+				new NumericField('Number')
 			),
 			new FieldList(
 				new FormAction('doSubmit'),

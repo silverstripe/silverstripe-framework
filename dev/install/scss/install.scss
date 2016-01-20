@@ -21,7 +21,7 @@ $gradientBottom:	#7F9198;
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$topColor), color-stop(100%,$bottomColor)); /* Chrome,Safari4+ */
 	background: -webkit-linear-gradient(top, $topColor 0%,$bottomColor 100%); /* Chrome10+,Safari5.1+ */
 	background: -o-linear-gradient(top, $topColor 0%,$bottomColor 100%); /* Opera11.10+ */
-	background: -ms-linear-gradient(top, $topColor 0%,$bottomColor 100%); /* IE10+ */     
+	background: -ms-linear-gradient(top, $topColor 0%,$bottomColor 100%); /* IE10+ */
 	background: linear-gradient(top, $topColor 0%,$bottomColor 100%); /* W3C */
 	.lt-ie9 &{
 		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$topColor}', endColorstr='#{$bottomColor}',GradientType=0 ); /* IE6-9 */
@@ -82,7 +82,7 @@ body {
 	margin: 0 auto 18px;
 	/* background: url(../../../admin/images/textures/bg_cms_main_content.png) repeat scroll left top #F0F3F4; */
 	background-color: #f4f4f4;
-	
+
 	/* Typography */
 	p {
 		font-size: 13px;
@@ -150,7 +150,7 @@ body {
 	.left {
 		float: left;
 	}
-	
+
 	/* Messages */
 	.message {
 		padding: 2px 18px;
@@ -175,7 +175,7 @@ body {
 			margin-left: 18px;
 			margin-top: -9px;
 			li {
-			
+
 			}
 		}
 	}
@@ -190,7 +190,7 @@ body {
 			margin-top: 17px;
 		}
 	}
-	
+
 	.typography {
 		// General tables
 		table {
@@ -230,12 +230,12 @@ body {
 			      background-color: #f6f6f6;
 			    }
 			}
-			tfoot { 
+			tfoot {
 				font-style: italic;
 				color: #888;
 			}
 		}
-	
+
 		// Forms
 		input, textarea, select {
 			width: 420px;
@@ -249,7 +249,7 @@ body {
 		    font-size: 13px;
 		    @include roundedCorners(3px,3px,3px,3px);
 		}
-		
+
 		// Focus states
 		input,
 		textarea {
@@ -271,7 +271,7 @@ body {
 			outline: 1px dotted #666; // Select elements don't get box-shadow styles, so instead we do outline
 		}
 		// End Focus states
-		
+
 		select {
 			height: 26px;
 		}
@@ -285,7 +285,7 @@ body {
 			width: auto;
 			float: none;
 			padding-top: 0;
-			margin: 0 0 5px 0;	
+			margin: 0 0 5px 0;
 			text-align: left;
 			display: block;
 		}
@@ -360,7 +360,7 @@ body {
 			}
 		}
 	}
-	
+
 	/* Custom styles */
 	#Container {
 		margin-bottom: 40px;

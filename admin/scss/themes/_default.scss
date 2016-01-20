@@ -37,7 +37,7 @@ $color-menu-background: #c6d7df !default;
 $color-menu-border: #8c99a1 !default;
 $color-panel-background: #c6d7df !default;
 
-$color-text: #66727d !default;
+$color-text: #4f5861 !default;
 $color-text-light: white !default;
 $color-text-light-link: white !default;
 $color-text-disabled: #aaa !default;
@@ -53,7 +53,7 @@ $color-button-generic-border: #d0d3d5 !default;
 $color-button-highlight: #e6e6e6 !default;
 $color-button-highlight-border: #708284 !default;
 
-$color-button-constructive: #1F9433 !default; 
+$color-button-constructive: #1F9433 !default;
 $color-button-constructive-border: #1F9433 !default;
 
 $color-button-destructive: #f00 !default;
@@ -76,14 +76,14 @@ $tab-panel-texture-color: #ECEFF1 !default;
 $tab-panel-texture-background: $tab-panel-texture-color url(../images/textures/bg_cms_main_content.png) repeat top left !default;
 
 /** -----------------------------------------------
- * Typography. 
+ * Typography.
  * ------------------------------------------------ */
 $font-family: Arial, sans-serif !default;
 $font-base-size: 12px !default;
 
 /** -----------------------------------------------
  * Grid Units (px)
- * 
+ *
  * We have a vertical rhythm that the grid is based off
  * both x (=horizontal) and y (=vertical). All internal padding and
  * margins are scaled to this and accounting for paragraphs

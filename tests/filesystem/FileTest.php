@@ -328,7 +328,7 @@ class FileTest extends SapphireTest {
 
 		$file = $this->objFromFixture('Image', 'gifupper');
 		$this->assertEquals("GIF image - good for diagrams", $file->FileType);
-	
+
 		/* Only a few file types are given special descriptions; the rest are unknown */
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals("unknown", $file->FileType);

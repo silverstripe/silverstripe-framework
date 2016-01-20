@@ -145,7 +145,7 @@ class DataDifferencer extends ViewableData {
 					} else {
 						$fromTitle = '';
 					}
-					
+
 				}
 				if(isset($relObjFrom) && $relObjFrom instanceof Image) {
 					// TODO Use CMSThumbnail (see above)

@@ -43,12 +43,12 @@ class Deprecation {
 	protected static $version;
 
 	/**
-	 * Override whether deprecation is enabled. If null, then fallback to 
+	 * Override whether deprecation is enabled. If null, then fallback to
 	 * SS_DEPRECATION_ENABLED, and then true if not defined.
-	 * 
+	 *
 	 * Deprecation is only available on dev.
-	 * 
-	 * Must be configured outside of the config API, as deprecation API 
+	 *
+	 * Must be configured outside of the config API, as deprecation API
 	 * must be available before this to avoid infinite loops.
 	 *
 	 * @var boolean|null
@@ -129,10 +129,10 @@ class Deprecation {
 			return $called['function'];
 		}
 	}
-	
+
 	/**
 	 * Determine if deprecation notices should be displayed
-	 * 
+	 *
 	 * @return bool
 	 */
 	public static function get_enabled() {
@@ -151,7 +151,7 @@ class Deprecation {
 
 	/**
 	 * Toggle on or off deprecation notices. Will be ignored in live.
-	 * 
+	 *
 	 * @param bool $enabled
 	 */
 	public static function set_enabled($enabled) {
@@ -219,7 +219,7 @@ class Deprecation {
 
 	/**
 	 * Method for when testing. Dump all the current version settings to a variable for later passing to restore
-	 * 
+	 *
 	 * @return array Opaque array that should only be used to pass to {@see Deprecation::restore_settings()}
 	 */
 	public static function dump_settings() {
@@ -233,7 +233,7 @@ class Deprecation {
 
 	/**
 	 * Method for when testing. Restore all the current version settings from a variable
-	 * 
+	 *
 	 * @param $settings array An array as returned by {@see Deprecation::dump_settings()}
 	 */
 	public static function restore_settings($settings) {

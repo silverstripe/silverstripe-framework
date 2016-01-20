@@ -326,6 +326,8 @@ it:
     DropdownBatchActionsDefault: Azioni
     HELP: Aiuto
     PERMAGAIN: 'Sei stato disconnesso dal CMS. Se desideri autenticarti nuovamente, inserisci qui sotto nome utente e password.'
+    PERMALREADY: 'Siamo spiacenti, ma non puoi accedere a questa sezione del CMS. Se desideri autenticarti come qualcun altro, fallo qui sotto.'
+    PERMDEFAULT: 'Devi essere autenticato per accedere all''area amministrativa; Per favore inserisci le tue credenziali qui sotto'
     PreviewButton: Anteprima
     REORGANISATIONSUCCESSFUL: 'Albero del sito riorganizzato con successo.'
     SAVEDUP: Salvato.

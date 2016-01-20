@@ -43,7 +43,7 @@ In order to localize the menu title in different languages, use the
 the i18n text collection.
 
 For more information on language and translations, please refer to the
-[i18n](../../ii8n) docs.
+[i18n](/developer_guides/i18n) docs.
 
 ## Adding an external link to the menu
 
@@ -85,7 +85,7 @@ button configuration.
 
 To have the link appear, make sure you add the extension to the `LeftAndMain`
 class. For more information about configuring extensions see the
-[extensions reference](../extending/extensions).
+[extensions reference](/developer_guides/extending/extensions).
 
 	:::php
 	LeftAndMain::add_extension('CustomLeftAndMain')

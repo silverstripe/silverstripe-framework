@@ -80,6 +80,24 @@ class LookupField extends DropdownField {
 	}
 
 	/**
+	 * Ignore validation as the field is readonly
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate($validator) {
+		return true;
+	}
+
+	/**
+	 * Stubbed so invalid data doesn't save into the DB
+	 *
+	 * @param DataObjectInterface $record DataObject to save data into
+	 */
+	public function saveInto(DataObjectInterface $record) {
+	}
+
+	/**
 	 * @return LookupField
 	 */
 	public function performReadonlyTransformation() {

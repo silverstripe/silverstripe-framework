@@ -6,7 +6,7 @@
 @import "../admin/scss/_mixins";
 @import "_elementMixins";
 
-.ss-uploadfield-view-allowed-extensions {	
+.ss-uploadfield-view-allowed-extensions {
 	margin-top: -42px;
 	float: right;
 	
@@ -24,7 +24,7 @@
 		box-shadow: 0 0 3px $color-separator;
 	    background: $tab-panel-texture-color;
 		transition: all .3s linear;
-		
+
 		h4 {
 			margin: 0 0 6px;
 			padding-right: 20px;
@@ -121,7 +121,7 @@ body.cms.ss-uploadfield-edit-iframe {
 		.ss-uploadfield-item-edit-all {
 			float: right;
 			margin: -8px 0 0;
-			padding: 0;
+			padding:0;
 			background: none;
 			border: 0;
 			@include box-shadow(none);
@@ -336,17 +336,17 @@ body.cms.ss-uploadfield-edit-iframe {
 			overflow: hidden;
 			font-weight: normal;
 			
-			.ss-insert-media & {
+			.ss-insert-media &{
 				margin: 0 12px 0 0;
-			}
+		}
 
 			&::before {
 				font-size: 23px;
 				margin-right: 6px;
+				}
 			}
-		}	
-	}
-}
+				}
+			}
 
 .ss-uploadfield-dropzone {
 	&::after {
@@ -358,14 +358,14 @@ body.cms.ss-uploadfield-edit-iframe {
 		background: rgba(236, 239, 241, .9) url('../admin/images/drag_drop_opt.svg') center center no-repeat;
 		background-size: 312px 325px;
 		z-index: 100;
-	}
+					}
 
 	&.active.hover {
 		&::after {
 			content: '';
-		}
+			}
+		}		
 	}
-}
 
 /** ----------------------------------------------------
  * "@2x" media query

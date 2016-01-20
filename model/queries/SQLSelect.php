@@ -8,7 +8,7 @@
  * @subpackage model
  */
 class SQLSelect extends SQLConditionalExpression {
-	
+
 	/**
 	 * An array of SELECT fields, keyed by an optional alias.
 	 *

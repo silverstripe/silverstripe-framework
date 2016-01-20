@@ -151,6 +151,14 @@ class TabSet extends CompositeField {
 	}
 
 	/**
+	 * Add a new child field to the beginning of the set.
+	 */
+	public function unshift(FormField $field) {
+		parent::unshift($field);
+		$field->setTabSet($this);
+	}
+
+	/**
 	 * Inserts a field before a particular field in a FieldList.
 	 *
 	 * @param string $insertBefore Name of the field to insert before

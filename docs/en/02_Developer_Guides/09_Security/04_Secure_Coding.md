@@ -3,7 +3,7 @@
 ## Introduction
 
 This page details notes on how to ensure that we develop secure SilverStripe applications. 
-See our "[Release Process](/misc/release-process#security-releases) on how to report security issues.
+See our "[Release Process](/contributing/release_process#security-releases) on how to report security issues.
 
 ## SQL Injection
 
@@ -186,7 +186,7 @@ XSS attack against an admin to perform any administrative action.
 If you can't trust your editors, SilverStripe must be configured to filter the content so that any javascript is
 stripped out
 
-To enable filtering, set the HtmlEditorField::$sanitise_server_side [configuration](/topics/configuration) property to
+To enable filtering, set the HtmlEditorField::$sanitise_server_side [configuration](/developer_guides/configuration/configuration) property to
 true, e.g.
 
 	HtmlEditorField::config()->sanitise_server_side = true
@@ -209,12 +209,12 @@ The `SiteTree.ExtraMeta` property uses this to limit allowed input.
 It is not currently possible to allow editors to provide javascript content and yet still protect other users
 from any malicious code within that javascript.
 
-We recommend configuring [shortcodes](/reference/shortcodes) that can be used by editors in place of using javascript directly.
+We recommend configuring [shortcodes](/developer_guides/extending/shortcodes) that can be used by editors in place of using javascript directly.
 
 ### Escaping model properties
 
 `[api:SSViewer]` (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
-object-properties by [casting](/topics/datamodel#casting) its string value into a `[api:DBField]` object.
+object-properties by [casting](/developer_guides/model/data_types_and_casting) its string value into a `[api:DBField]` object.
 
 PHP:
 
@@ -241,7 +241,7 @@ outputting through SSViewer.
 
 ### Overriding default escaping in templates
 
-You can force escaping on a casted value/object by using an [escape type](/topics/datamodel) method in your template, e.g.
+You can force escaping on a casted value/object by using an [escape type](/developer_guides/model/data_types_and_casting) method in your template, e.g.
 "XML" or "ATT". 
 
 Template (see above):
@@ -323,7 +323,7 @@ Template:
 
 Whenever you insert a variable into an HTML attribute within a template, use $VarName.ATT, no not $VarName.
 
-You can also use the built-in casting in PHP by using the *obj()* wrapper, see [datamodel](/topics/datamodel)  .
+You can also use the built-in casting in PHP by using the *obj()* wrapper, see [datamodel](/developer_guides/model/data_types_and_casting).
 
 ### Escaping URLs
 
@@ -423,7 +423,7 @@ cast types can be found here:
 *  `(object)` - cast to object
 
 Note that there is also a 'SilverStripe' way of casting fields on a class, this is a different type of casting to the
-standard PHP way. See [casting](/topics/datamodel#casting).
+standard PHP way. See [casting](/developer_guides/model/data_types_and_casting).
 
 
 

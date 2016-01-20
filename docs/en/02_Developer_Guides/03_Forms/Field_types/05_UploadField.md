@@ -96,7 +96,7 @@ the `UploadField` will detect the relation based on its $name property value:
 	:::php
 	class GalleryImageExtension extends DataExtension {
 		private static $belongs_many_many = array(
-			'Galleries' => 'GalleryPage
+			'Galleries' => 'GalleryPage'
 		);
 	}
 
@@ -142,7 +142,8 @@ If the folder doesn't exist, it will be created.
 		'Root.Upload',	
 		$uploadField = new UploadField(
 			$name = 'GalleryImages',
-			$title = 'Please upload one or more images'		)	
+			$title = 'Please upload one or more images'
+		)	
 	);
 	$uploadField->setFolderName('customfolder');
 

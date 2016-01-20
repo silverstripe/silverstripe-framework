@@ -839,7 +839,16 @@ class FormField extends RequestHandler {
 
 		$this->extend('onBeforeRender', $this);
 
-		return $context->renderWith($this->getTemplates());
+		$result = $context->renderWith($this->getTemplates());
+
+		// Trim whitespace from the result, so that trailing newlines are supressed. Works for strings and HTMLText values
+		if(is_string($result)) {
+			$result = trim($result);
+		} else if($result instanceof DBField) {
+			$result->setValue(trim($result->getValue()));
+		}
+
+		return $result;
 	}
 
 	/**

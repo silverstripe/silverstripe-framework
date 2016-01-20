@@ -10,7 +10,7 @@
 			 * (Number) Interval in which /Security/ping will be checked for a valid login session.
 			 */
 			PingIntervalSeconds: 5*60,
-			
+
 			onadd: function() {
 				this._setupPinging();
 				this._super();

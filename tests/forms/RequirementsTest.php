@@ -123,7 +123,7 @@ class RequirementsTest extends SapphireTest {
 		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupCombinedRequirements($backend);
 
-		$combinedFileName = '/_combinedfiles/RequirementsTest_bc-51622b5.js';
+		$combinedFileName = '/_combinedfiles/RequirementsTest_bc-2a55d56.js';
 		$combinedFilePath = AssetStoreTest_SpyStore::base_path() . $combinedFileName;
 
 		$html = $backend->includeInHTML(false, self::$html_template);
@@ -254,7 +254,7 @@ class RequirementsTest extends SapphireTest {
 
 		$html = $backend->includeInHTML(false, self::$html_template);
 		$this->assertRegExp(
-			'/href=".*\/style\-2b3e4c9\.css/',
+			'/href=".*\/style\-bcd90f5\.css/',
 			$html,
 			'Stylesheets have been combined.'
 		);
@@ -265,7 +265,7 @@ class RequirementsTest extends SapphireTest {
 		/** @var Requirements_Backend $backend */
 		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupCombinedRequirements($backend);
-		$combinedFileName = '/_combinedfiles/RequirementsTest_bc-51622b5.js';
+		$combinedFileName = '/_combinedfiles/RequirementsTest_bc-2a55d56.js';
 		$combinedFilePath = AssetStoreTest_SpyStore::base_path() . $combinedFileName;
 
 		/* BLOCKED COMBINED FILES ARE NOT INCLUDED */
@@ -284,7 +284,7 @@ class RequirementsTest extends SapphireTest {
 		/* BLOCKED UNCOMBINED FILES ARE NOT INCLUDED */
 		$this->setupCombinedRequirements($backend);
 		$backend->block($basePath .'/RequirementsTest_b.js');
-		$combinedFileName2 = '/_combinedfiles/RequirementsTest_bc-fc7468e.js'; // SHA1 without file c included
+		$combinedFileName2 = '/_combinedfiles/RequirementsTest_bc-3748f67.js'; // SHA1 without file c included
 		$combinedFilePath2 = AssetStoreTest_SpyStore::base_path() . $combinedFileName2;
 		clearstatcache(); // needed to get accurate file_exists() results
 		$html = $backend->includeInHTML(false, self::$html_template);

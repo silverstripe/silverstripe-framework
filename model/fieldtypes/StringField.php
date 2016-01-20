@@ -130,10 +130,10 @@ abstract class StringField extends DBField {
 		}
 		return $value;
 	}
-    
+
 	/**
 	 * Limit this field's content by a number of characters and truncate
-	 * the field to the closest complete word. All HTML tags are stripped 
+	 * the field to the closest complete word. All HTML tags are stripped
 	 * from the field.
 	 *
 	 * @param int $limit Number of characters to limit by
@@ -219,7 +219,7 @@ abstract class StringField extends DBField {
 	public function UpperCase() {
 		return mb_strtoupper($this->value);
 	}
-	
+
 	/**
 	 * Return the value of the field stripped of html tags.
 	 *

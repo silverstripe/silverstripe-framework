@@ -1,7 +1,7 @@
 <?php
 
 class FulltextFilterTest extends SapphireTest {
-	
+
 	protected $extraDataObjects = array(
 		'FulltextFilterTest_DataObject'
 	);
@@ -113,7 +113,7 @@ class FulltextFilterTest_DataObject extends DataObject implements TestOnly {
 		'OtherSearchFields' => 'fulltext ("ColumnC", "ColumnD")',
 		'SingleIndex' => 'fulltext ("ColumnE")'
 	);
-	
+
 	private static $create_table_options = array(
 		"MySQLDatabase" => "ENGINE=MyISAM",
 	);

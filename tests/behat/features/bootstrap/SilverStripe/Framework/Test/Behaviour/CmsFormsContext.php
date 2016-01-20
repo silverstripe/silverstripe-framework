@@ -11,7 +11,7 @@ use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode,
 	Behat\MinkExtension\Context\MinkContext as MinkContext;
-	
+
 use Symfony\Component\DomCrawler\Crawler;
 
 // PHPUnit

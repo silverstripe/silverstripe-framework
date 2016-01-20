@@ -13,6 +13,5 @@
     "ModelAdmin.REALLYDELETE": "Do you really want to delete?",
     "ModelAdmin.DELETED": "Deleted",
     "ModelAdmin.VALIDATIONERROR": "Validation Error",
-    "LeftAndMain.PAGEWASDELETED": "This page was deleted.  To edit a page, select it from the left.",
-    "LeftAndMain.DISABLESPLITVIEW": "Screen too small to show site preview in split mode"
+    "LeftAndMain.PAGEWASDELETED": "This page was deleted.  To edit a page, select it from the left."
 }

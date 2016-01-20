@@ -142,7 +142,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		Director::test('/?flush=1');
 		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 2)), '2');
 	}
-	
+
 	public function testVersionedCache() {
 
 		$origStage = Versioned::current_stage();

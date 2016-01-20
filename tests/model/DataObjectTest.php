@@ -26,6 +26,9 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Staff',
 		'DataObjectTest_CEO',
 		'DataObjectTest_Fan',
+		'DataObjectTest_Play',
+		'DataObjectTest_Ploy',
+		'DataObjectTest_Bogey',
 	);
 
 	public function testDb() {
@@ -1359,7 +1362,10 @@ class DataObjectTest extends SapphireTest {
 		$assertions = array(
 			'DataObjectTest_Player'       => 'Data Object Test Players',
 			'DataObjectTest_Team'         => 'Data Object Test Teams',
-			'DataObjectTest_Fixture'      => 'Data Object Test Fixtures'
+			'DataObjectTest_Fixture'      => 'Data Object Test Fixtures',
+			'DataObjectTest_Play'         => 'Data Object Test Plays',
+			'DataObjectTest_Bogey'        => 'Data Object Test Bogeys',
+			'DataObjectTest_Ploy'         => 'Data Object Test Ploys',
 		);
 
 		foreach($assertions as $class => $expectedPluralName) {
@@ -1958,6 +1964,10 @@ class DataObjectTest_ExtendedTeamComment extends DataObjectTest_TeamComment {
 		'Comment' => 'HTMLText'
 	);
 }
+
+class DataObjectTest_Play extends DataObject implements TestOnly {}
+class DataObjectTest_Ploy extends DataObject implements TestOnly {}
+class DataObjectTest_Bogey extends DataObject implements TestOnly {}
 
 DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');
 

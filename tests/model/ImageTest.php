@@ -53,7 +53,7 @@ class ImageTest extends SapphireTest {
 		$image = $this->objFromFixture('Image', 'imageWithTitle');
 		$expected = '<img src="/assets/ImageTest/folder/444065542b/test-image.png" alt="This is a image Title" />';
 		$actual = trim($image->getTag());
-		
+
 		$this->assertEquals($expected, $actual);
 	}
 
@@ -87,7 +87,7 @@ class ImageTest extends SapphireTest {
 		$this->assertNotNull($imageFirst);
 		$expected = 200;
 		$actual = $imageFirst->getWidth();
-		
+
 		$this->assertEquals($expected, $actual);
 
 		$imageSecond = $imageFirst->ScaleHeight(100);
@@ -156,16 +156,16 @@ class ImageTest extends SapphireTest {
 		$imageHQR = $imageHQ->Resampled();
 		$imageLQ = $this->objFromFixture('Image', 'lowQualityJPEG');
 		$imageLQR = $imageLQ->Resampled();
-		
+
 		// Test resampled file is served when force_resample = true
 		Config::inst()->update('DBFile', 'force_resample', true);
 		$this->assertLessThan($imageHQ->getAbsoluteSize(), $imageHQR->getAbsoluteSize(), 'Resampled image is smaller than original');
 		$this->assertEquals($imageHQ->getURL(), $imageHQR->getSourceURL(), 'Path to a resampled image was returned by getURL()');
-		
+
 		// Test original file is served when force_resample = true but original file is low quality
 		$this->assertGreaterThanOrEqual($imageLQ->getAbsoluteSize(), $imageLQR->getAbsoluteSize(), 'Resampled image is larger or same size as original');
 		$this->assertNotEquals($imageLQ->getURL(), $imageLQR->getSourceURL(), 'Path to the original image file was returned by getURL()');
-		
+
 		// Test original file is served when force_resample = false
 		Config::inst()->update('DBFile', 'force_resample', false);
 		$this->assertNotEquals($imageHQ->getURL(), $imageHQR->getSourceURL(), 'Path to the original image file was returned by getURL()');
@@ -196,7 +196,7 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($fitMaxDn->isSize(100, 100));
 		$fitMaxUp = $image->FitMax(500, 400);
 		$this->assertTrue($fitMaxUp->isSize(300, 300));
-
+		
 		//Test ScaleMax
 		$scaleMaxWDn = $image->ScaleMaxWidth(200);
 		$this->assertTrue($scaleMaxWDn->isSize(200, 200));
@@ -212,7 +212,7 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($cropMaxDn->isSize(200, 100));
 		$cropMaxUp = $image->FillMax(400, 200);
 		$this->assertTrue($cropMaxUp->isSize(300, 150));
-
+		
 		// Test Clip
 		$clipWDn = $image->CropWidth(200);
 		$this->assertTrue($clipWDn->isSize(200, 300));

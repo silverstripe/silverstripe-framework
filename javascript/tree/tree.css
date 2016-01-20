@@ -80,7 +80,7 @@ ul.tree a {
 	line-height: 16px;
 	background: url(images/page-file.png) no-repeat 0 50%;
 	background-position: 0 50% !important;
-	text-decoration: none;	
+	text-decoration: none;
 	outline: none;
 	font-size: 11px;
 }
@@ -93,7 +93,7 @@ ul.tree a {
 
 ul.tree span.a.spanClosed a, ul.tree span.a.Folder a {
 	background-image: url(images/page-closedfolder.png);
-}	
+}
 ul.tree span.a.children a {
 	background-image: url(images/page-openfolder.png);
 }
@@ -152,7 +152,7 @@ html > body ul.tree div.droppable {
 
 ul.tree div.droppable.dragOver {
 	background: url(images/insertBetween.gif) no-repeat 50% 0;
-}	
+}
 
 ul.tree a.dragOver, ul.tree li.dragOver a, ul.tree li.dragOver li.dragOver a {
 	border: 3px solid #0074C6;
@@ -170,7 +170,7 @@ ul.tree span.a.current {
 	font-weight: bold;
 	background-color: #EEEEFF !important;
 	border-top: 1px #CCCCFF solid;
-	border-bottom: 1px #CCCCFF solid;	
+	border-bottom: 1px #CCCCFF solid;
 	/* these push the highlight out to the left of the window */
 	margin-left: -100px;
 	padding-left: 100px;
@@ -205,7 +205,7 @@ ul.tree.multiselect span.a.selected span.b span.c a {
 }
 
 /* Span-B: Plus/Minus icon */
-ul.tree.multiselect li.selected span.a.children span.b, 
+ul.tree.multiselect li.selected span.a.children span.b,
 ul.tree.multiselect li.selected span.a.unexpanded span.b {
 	background-image: none;
 	cursor: default;

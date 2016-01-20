@@ -80,7 +80,7 @@ class Filesystem extends Object {
 				return false;
 			}
 		}
-		// if we are still here, the folder is empty. 
+		// if we are still here, the folder is empty.
 		rmdir($folder);
 		return true;
 	}
