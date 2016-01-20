@@ -38,6 +38,6 @@ click it -> Add to Archive (again) -> Then use the archive format GZIP.
 
 ## Links
 
- * [Themes Listing on silverstripe.org](http://silverstripe.org/themes)
- * [Themes Forum on silverstripe.org](http://www.silverstripe.org/themes-2/)
+ * [Themes Listing on silverstripe.org](http://addons.silverstripe.org/add-ons?type=theme)
+ * [Themes Forum on silverstripe.org](http://www.silverstripe.org/community/forums/themes-2/) 
  * [Themes repository on github.com](http://github.com/silverstripe-themes)
