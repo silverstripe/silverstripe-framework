@@ -95,6 +95,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private static $api_access = false;
 
 	/**
+	 * Allows specification of a default value for the ClassName field.
+	 * Configure this value only in subclasses of DataObject.
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $default_classname = null;
+
+	/**
 	 * True if this DataObject has been destroyed.
 	 * @var boolean
 	 */
