@@ -10,6 +10,10 @@
 $color-base: #b0bec7 !default;
 $color-widget-bg: lighten($color-base, 20%) !default;
 
+//offical silverstripe brand color
+$color-brand-bg: #005a93 !default;
+$color-brand: #43c7f4 !default;
+
 /* Keep as solid colours transparent borders wont work in ie */
 $color-darker-bg: #E6EAED !default;
 $color-dark-bg: #142136 !default;
@@ -37,7 +41,7 @@ $color-menu-background: #c6d7df !default;
 $color-menu-border: #8c99a1 !default;
 $color-panel-background: #c6d7df !default;
 
-$color-text: #4f5861 !default;
+$color-text: #66727d !default;
 $color-text-light: white !default;
 $color-text-light-link: white !default;
 $color-text-disabled: #aaa !default;
