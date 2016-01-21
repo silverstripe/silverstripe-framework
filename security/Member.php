@@ -1176,8 +1176,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * If no $groups is passed, all members will be returned
 	 *
 	 * @param mixed $groups - takes a SS_List, an array or a single Group.ID
-	 * @return SQLMap Returns an SQLMap that returns all Member data.
-	 * @see map()
+	 * @return SS_Map Returns an SS_Map that returns all Member data.
 	 */
 	public static function map_in_groups($groups = null) {
 		$groupIDList = array();

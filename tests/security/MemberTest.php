@@ -709,7 +709,7 @@ class MemberTest extends FunctionalTest {
 	 */
 	public function testMap_in_groupsReturnsAll() {
 		$members = Member::map_in_groups();
-		$this->assertEquals(13, count($members), 'There are 12 members in the mock plus a fake admin');
+		$this->assertEquals(13, $members->count(), 'There are 12 members in the mock plus a fake admin');
 	}
 
 	/**
@@ -717,7 +717,7 @@ class MemberTest extends FunctionalTest {
 	 */
 	public function testMap_in_groupsReturnsAdmins() {
 		$adminID = $this->objFromFixture('Group', 'admingroup')->ID;
-		$members = Member::map_in_groups($adminID);
+		$members = Member::map_in_groups($adminID)->toArray();
 
 		$admin = $this->objFromFixture('Member', 'admin');
 		$otherAdmin = $this->objFromFixture('Member', 'other-admin');
