@@ -16,6 +16,37 @@ class DropdownFieldTest extends SapphireTest {
 		);
 	}
 
+	/**
+	 * Test different data sources
+	 */
+	public function testSources() {
+		// Array
+		$items = array('a' => 'Apple', 'b' => 'Banana', 'c' => 'Cranberry');
+		$field = new DropdownField('Field', null, $items);
+		$this->assertEquals($items, $field->getSource());
+
+		// SS_List
+		$list = new ArrayList(array(
+			new ArrayData(array(
+				'ID' => 'a',
+				'Title' => 'Apple'
+			)),
+			new ArrayData(array(
+				'ID' => 'b',
+				'Title' => 'Banana'
+			)),
+			new ArrayData(array(
+				'ID' => 'c',
+				'Title' => 'Cranberry'
+			))
+		));
+		$field2 = new DropdownField('Field', null, $list);
+		$this->assertEquals($items, $field2->getSource());
+
+		$field3 = new DropdownField('Field', null, $list->map());
+		$this->assertEquals($items, $field3->getSource());
+	}
+
 	public function testReadonlyField() {
 		$field = new DropdownField('FeelingOk', 'Are you feeling ok?', array(0 => 'No', 1 => 'Yes'));
 		$field->setEmptyString('(Select one)');

@@ -649,7 +649,6 @@ class FormField extends RequestHandler {
 	 */
 	public function setValue($value) {
 		$this->value = $value;
-
 		return $this;
 	}
 

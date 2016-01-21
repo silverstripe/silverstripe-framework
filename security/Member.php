@@ -1342,7 +1342,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				asort($groupsMap);
 				$fields->addFieldToTab('Root.Main',
 					ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())
-						->setMultiple(true)
 						->setSource($groupsMap)
 						->setAttribute(
 							'data-placeholder',

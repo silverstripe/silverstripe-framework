@@ -59,7 +59,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
 			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
-		$xmlArr = $parser->getBySelector('#Form_Form_TimeFormat_h_mm_ss_a');
+		$xmlArr = $parser->getBySelector('#Form_Form_TimeFormat_h:mm:ss_a');
 		$this->assertEquals('checked', (string) $xmlArr[0]['checked']);
 	}
 
@@ -81,8 +81,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
 			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
-		$xmlInputArr = $parser->getBySelector('.valCustom input');
-		$xmlPreview = $parser->getBySelector('.preview');
+		$xmlInputArr = $parser->getBySelector('.valcustom input');
 		$this->assertEquals('checked', (string) $xmlInputArr[0]['checked']);
 		$this->assertEquals('dd MM yy', (string) $xmlInputArr[1]['value']);
 	}
@@ -91,9 +90,15 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		$field = new MemberDatetimeOptionsetField('DateFormat', 'DateFormat');
 		$validator = new RequiredFields();
 		$this->assertTrue($field->validate($validator));
-		$_POST['DateFormat_custom'] = 'dd MM yyyy';
+		$field->setValue(array(
+			'Options' => '__custom__',
+			'Custom' => 'dd MM yyyy'
+		));
 		$this->assertTrue($field->validate($validator));
-		$_POST['DateFormat_custom'] = 'sdfdsfdfd1244';
+		$field->setValue(array(
+			'Options' => '__custom__',
+			'Custom' => 'sdfdsfdfd1244'
+		));
 		$this->assertFalse($field->validate($validator));
 	}
 
