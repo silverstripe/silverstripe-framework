@@ -27,6 +27,11 @@ The extension is automatically applied to `SiteTree` class. For more information
 [Extending](../extending) and the [Configuration](../configuration) documentation.
 </div>
 
+<div class="warning" markdown="1">
+Versioning only works if you are adding the extension to the base class. That is, the first subclass
+of `DataObject`. Adding this extension to children of the base class will have unpredictable behaviour.
+</div>
+
 ## Database Structure
 
 Depending on how many stages you configured, two or more new tables will be created for your records. In the above, this
