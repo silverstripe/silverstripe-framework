@@ -329,7 +329,7 @@ en:
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
+    DropdownBatchActionsDefault: 'Choose an action...'
     HELP: Help
     PAGETYPE: 'Page type'
     PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
