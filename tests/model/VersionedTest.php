@@ -154,13 +154,13 @@ class VersionedTest extends SapphireTest {
 			"\"VersionedTest_DataObject\".\"ID\" ASC");
 		// Check that page 3 has gone
 		$this->assertNotNull($remainingPages);
-		$this->assertEquals(array("Page 1", "Page 2"), $remainingPages->column('Title'));
+		$this->assertEquals(array("Page 1", "Page 2", "Subclass Page 1"), $remainingPages->column('Title'));
 
 		// Get all including deleted
 		$allPages = Versioned::get_including_deleted("VersionedTest_DataObject", "\"ParentID\" = 0",
 			"\"VersionedTest_DataObject\".\"ID\" ASC");
 		// Check that page 3 is still there
-		$this->assertEquals(array("Page 1", "Page 2", "Page 3"), $allPages->column('Title'));
+		$this->assertEquals(array("Page 1", "Page 2", "Page 3", "Subclass Page 1"), $allPages->column('Title'));
 
 		// Check that the returned pages have the correct IDs
 		$this->assertEquals($allPageIDs, $allPages->column('ID'));
@@ -169,7 +169,7 @@ class VersionedTest extends SapphireTest {
 		Versioned::reading_stage("Live");
 		$allPages = Versioned::get_including_deleted("VersionedTest_DataObject", "\"ParentID\" = 0",
 			"\"VersionedTest_DataObject\".\"ID\" ASC");
-		$this->assertEquals(array("Page 1", "Page 2", "Page 3"), $allPages->column('Title'));
+		$this->assertEquals(array("Page 1", "Page 2", "Page 3", "Subclass Page 1"), $allPages->column('Title'));
 
 		// Check that the returned pages still have the correct IDs
 		$this->assertEquals($allPageIDs, $allPages->column('ID'));
@@ -208,7 +208,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testRollbackTo() {
-		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
+		$page1 = $this->objFromFixture('VersionedTest_AnotherSubclass', 'subclass1');
 		$page1->Content = 'orig';
 		$page1->write();
 		$page1->publish('Stage', 'Live');
@@ -225,6 +225,17 @@ class VersionedTest extends SapphireTest {
 
 		$this->assertTrue($page1->Version > $changedVersion, 'Create a new higher version number');
 		$this->assertEquals('orig', $page1->Content, 'Copies the content from the old version');
+
+		// check db entries
+		$version = DB::prepared_query("SELECT MAX(\"Version\") FROM \"VersionedTest_DataObject_versions\" WHERE \"RecordID\" = ?",
+			array($page1->ID)
+		)->value();
+		$this->assertEquals($page1->Version, $version, 'Correct entry in VersionedTest_DataObject_versions');
+
+		$version = DB::prepared_query("SELECT MAX(\"Version\") FROM \"VersionedTest_AnotherSubclass_versions\" WHERE \"RecordID\" = ?",
+			array($page1->ID)
+		)->value();
+		$this->assertEquals($page1->Version, $version, 'Correct entry in VersionedTest_AnotherSubclass_versions');
 	}
 
 	public function testDeleteFromStage() {
@@ -318,6 +329,7 @@ class VersionedTest extends SapphireTest {
 		$noversion    = new DataObject();
 		$versioned    = new VersionedTest_DataObject();
 		$versionedSub = new VersionedTest_Subclass();
+		$versionedAno = new VersionedTest_AnotherSubclass();
 		$versionField = new VersionedTest_UnversionedWithField();
 
 		$this->assertFalse(
@@ -329,8 +341,14 @@ class VersionedTest extends SapphireTest {
 			'The versioned ext adds an Int version field.'
 		);
 		$this->assertEquals(
-			'Int', $versionedSub->hasOwnTableDatabaseField('Version'),
-			'Sub-classes of a versioned model have a Version field.'
+			null,
+			$versionedSub->hasOwnTableDatabaseField('Version'),
+			'Sub-classes of a versioned model don\'t have a Version field.'
+		);
+		$this->assertEquals(
+			null,
+			$versionedAno->hasOwnTableDatabaseField('Version'),
+			'Sub-classes of a versioned model don\'t have a Version field.'
 		);
 		$this->assertEquals(
 			'Varchar', $versionField->hasOwnTableDatabaseField('Version'),
@@ -817,10 +835,6 @@ class VersionedTest_RelatedWithoutVersion extends DataObject implements TestOnly
 class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnly {
 	private static $db = array(
 		"ExtraField" => "Varchar",
-	);
-
-	private static $extensions = array(
-		"Versioned('Stage', 'Live')"
 	);
 }
 
