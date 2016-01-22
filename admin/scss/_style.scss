@@ -134,6 +134,10 @@ body.cms {
 			display: inline-block; // align back button and breadcrumbs
 		}
 
+		.breadcrumbs-wrapper {
+			vertical-align: middle;
+		}
+
 		.section-icon {
 			opacity: 0.2;
 			margin-right: 4px;
@@ -142,6 +146,17 @@ body.cms {
 
 		.cms_backlink {
 			vertical-align: middle;
+
+			.ss-ui-button {
+				margin-bottom: $grid-x; // Matches the margin on .cms-content-header h2
+				margin-left: (- $grid-x); // Half of the padding on .cms-content-header
+				line-height: 22px;
+
+				&:before {
+					margin-right: 0;
+					font-size: 22px;
+				}
+			}
 		}
 	}
 	
