@@ -11,7 +11,7 @@ $color-base: #b0bec7 !default;
 $color-widget-bg: lighten($color-base, 20%) !default;
 
 /* Keep as solid colours transparent borders wont work in ie */
-$color-darker-bg: #edf2f5 !default;
+$color-darker-bg: #f0f2f4 !default;
 $color-dark-bg: #142136 !default;
 $color-dark-separator: #19435c !default;
 $color-medium-separator: #808080 !default;
@@ -72,7 +72,7 @@ $color-cms-batchactions-menu-selected-background: #fffcdc !default;
 /** -----------------------------------------------
  * Textures
  * ----------------------------------------------- */
-$tab-panel-texture-color: #f5f7f8 !default;
+$tab-panel-texture-color: #f6f7f8 !default;
 $tab-panel-texture-background: $tab-panel-texture-color url(../images/textures/bg_cms_main_content.png) repeat top left !default;
 
 /** -----------------------------------------------
