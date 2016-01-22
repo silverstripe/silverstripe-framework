@@ -508,11 +508,11 @@ body.cms { overflow: hidden; }
 .hide, .cms-helper-hide-actions .Actions { display: none; }
 
 /** -------------------------------------------- Panels Styles -------------------------------------------- */
-.cms-container { height: 100%; /*background: $tab-panel-texture-background;*/ background: #f5f7f8; }
+.cms-container { height: 100%; /*background: $tab-panel-texture-background;*/ background: #f6f7f8; }
 
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form, .cms-preview, .cms-preview iframe, .cms-preview-controls { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; }
 
-.cms-content-header { padding-left: 16px; z-index: 60; min-height: 52px; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; background-position: left bottom; background-color: #edf2f5; }
+.cms-content-header { padding-left: 16px; z-index: 60; min-height: 52px; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; background-position: left bottom; background-color: #f0f2f4; }
 .cms-content-header a { color: #0071c4; }
 .cms-content-header .backlink span.btn-icon-back { height: 16px; }
 .cms-content-header h2 { font-size: 14px; font-weight: bold; margin: 0; margin-bottom: 8px; }
@@ -576,13 +576,13 @@ body.cms { overflow: hidden; }
 .icon-button-group a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button, .icon-button-group button.ss-ui-button.icon-button { margin-right: 0; line-height: 13px; border-radius: 0; }
 .icon-button-group a.icon-button:first-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:first-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:first-child, .icon-button-group button.ss-ui-button.icon-button:first-child { border-radius: 3px 0 0 3px; }
 .icon-button-group a.icon-button:last-child, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:last-child, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:last-child, .icon-button-group button.ss-ui-button.icon-button:last-child { border-radius: 0 3px 3px 0; }
-.icon-button-group a.icon-button:hover, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:hover, .icon-button-group button.ss-ui-button.icon-button:hover { background: #f5f7f8; }
+.icon-button-group a.icon-button:hover, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .icon-button-group a.icon-button:hover, .icon-button-group button.ss-ui-button.icon-button:hover { background: #f6f7f8; }
 .icon-button-group a.icon-button.active:hover, .icon-button-group button.ss-ui-button.icon-button.active:hover { background: #d4dbe1; }
 .icon-button-group a.icon-button + a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button + a.icon-button, .icon-button-group a.icon-button + button.ss-ui-button.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li a.icon-button + button.ss-ui-button.icon-button, .icon-button-group button.ss-ui-button.icon-button + a.icon-button, .icon-button-group .ui-tabs .ui-tabs-nav li button.ss-ui-button.icon-button + a.icon-button, .icon-button-group button.ss-ui-button.icon-button + button.ss-ui-button.icon-button { border-left: 1px solid #CDCCD0; }
 .icon-button-group .ui-tabs.ui-tabs-nav { border-left: 0 !important; padding-right: 0 !important; margin-bottom: 0; overflow: hidden; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default { background-color: transparent; background-image: none; margin: 0; padding: 0; border-left: 0; border-right: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default + .cms-tabset-icon.ui-state-default { border-left: 1px solid #CDCCD0; }
-.icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default:hover { background: #f5f7f8; }
+.icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default:hover { background: #f6f7f8; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-default.ui-state-active:hover { background: #d4dbe1; }
 .icon-button-group .ui-tabs.ui-tabs-nav .cms-tabset-icon.ui-state-active { background-color: #d4dbe1; box-shadow: inset 0 0 3px rgba(191, 194, 196, 0.9); }
 .cms-content-header-tabs .icon-button-group { overflow: hidden; }
@@ -652,7 +652,7 @@ body.cms { overflow: hidden; }
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 50%; margin-left: -21.5px; top: 80%; }
 
 /** -------------------------------------------- Actions -------------------------------------------- */
-.cms-content-actions, .cms-preview-controls { margin: 0; padding: 12px 16px; z-index: 999; border-top: 1px solid #D2D5D8; height: 28px; background-color: #f5f7f8; }
+.cms-content-actions, .cms-preview-controls { margin: 0; padding: 12px 16px; z-index: 999; border-top: 1px solid #D2D5D8; height: 28px; background-color: #f6f7f8; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
 .message { display: block; clear: both; margin: 0 0 8px; padding: 10px 12px; font-weight: normal; border: 1px #ccc solid; background: #fff; background: rgba(255, 255, 255, 0.5); text-shadow: none; -moz-border-radius: 3px 3px 3px 3px; -webkit-border-radius: 3px; border-radius: 3px 3px 3px 3px; }
@@ -717,7 +717,7 @@ body.cms { overflow: hidden; }
 .cms-content-toolbar .tool-action { display: none; }
 
 /** DEPRECATED: .cms-content-tools will be removed in 4.0 Use .cms-content-filters instead.  Content Tools is the sidebar on the left of the main content panel */
-.cms-content-tools { background: #f5f7f8; width: 288px; overflow-y: auto; overflow-x: hidden; z-index: 70; border-right: 1px solid #C1C7CC; float: left; position: relative; }
+.cms-content-tools { background: #f6f7f8; width: 288px; overflow-y: auto; overflow-x: hidden; z-index: 70; border-right: 1px solid #C1C7CC; float: left; position: relative; }
 .cms-content-tools.filter { padding: 0 !important; }
 .cms-content-tools .cms-panel-header { clear: both; margin: 10px 0 7px; padding-bottom: 2px; line-height: 24px; border-bottom: 1px solid #D2D5D8; }
 .cms-content-tools .cms-panel-content { width: 272px; padding: 0 12px 0 16px; overflow: auto; height: 100%; }
@@ -797,8 +797,8 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .memberdatetimeoptionset .description { font-style: normal; }
 .memberdatetimeoptionset .toggle { font-size: 11px; }
 
-.cms .cms-content { border-right: 1px solid #BBB; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; background: #f5f7f8; width: 800px; z-index: 40; }
-.cms .cms-content-fields { overflow-y: auto; overflow-x: auto; background: #f5f7f8; width: 100%; }
+.cms .cms-content { border-right: 1px solid #BBB; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; background: #f6f7f8; width: 800px; z-index: 40; }
+.cms .cms-content-fields { overflow-y: auto; overflow-x: auto; background: #f6f7f8; width: 100%; }
 .cms .cms-content-fields #Root_Main .confirmedpassword { border-bottom: none; box-shadow: none; }
 .cms .cms-content-fields #Root_Main .customFormat { max-width: 80px; }
 .cms .cms-content-fields #Root_Main .cms-help-toggle { text-indent: -9999em; display: inline-block; width: 20px; background: url(../images/question.png) no-repeat 0px 0px; }
@@ -1246,7 +1246,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-content-controls .cms-preview-states.dropdown .chzn-container { max-width: 150px; }
 
 /* Styling for the preview screen sizes */
-.cms-preview { background-color: #f5f7f8; height: 100%; width: 100%; }
+.cms-preview { background-color: #f6f7f8; height: 100%; width: 100%; }
 .cms-preview .cms-preview-overlay { width: 100%; height: 100%; }
 .cms-preview .preview-note { color: #CDD7DC; display: block; font-size: 22px; font-weight: bold; height: 82px; margin-top: -50px; margin-left: -150px; /* half of width */ position: absolute; text-align: center; text-shadow: 0 1px 0 #fff; top: 50%; left: 50%; width: 300px; }
 .cms-preview .preview-note span { background: url('../images/sprites-64x64-s45180e3c4f.png') 0 0 no-repeat; display: block; height: 41px; margin: 0 auto 20px; width: 50px; }
@@ -1254,7 +1254,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-preview .preview-scroll .preview-device-outer { height: 100%; width: 100%; }
 .cms-preview .preview-scroll .preview-device-outer .preview-device-inner { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; width: 100%; height: 100%; background-color: #FFF; }
 .cms-preview .preview-scroll .preview-device-outer .preview-device-inner iframe { height: 100%; overflow-y: auto; width: 100%; }
-.cms-preview.mobile .preview-scroll, .cms-preview.mobileLandscape .preview-scroll, .cms-preview.tablet .preview-scroll, .cms-preview.tabletLandscape .preview-scroll, .cms-preview.desktop .preview-scroll { background-color: #f5f7f8; /* cover website preview icon */ }
+.cms-preview.mobile .preview-scroll, .cms-preview.mobileLandscape .preview-scroll, .cms-preview.tablet .preview-scroll, .cms-preview.tabletLandscape .preview-scroll, .cms-preview.desktop .preview-scroll { background-color: #f6f7f8; /* cover website preview icon */ }
 .cms-preview.mobile .preview-scroll .preview-device-outer, .cms-preview.mobileLandscape .preview-scroll .preview-device-outer, .cms-preview.tablet .preview-scroll .preview-device-outer, .cms-preview.tabletLandscape .preview-scroll .preview-device-outer, .cms-preview.desktop .preview-scroll .preview-device-outer { -moz-border-radius: 7px; -webkit-border-radius: 7px; border-radius: 7px; background: #d5dde2; border: 1px solid transparent; border-left: 1px solid #cfd9de; padding: 0 16px 16px; }
 .cms-preview.mobile .preview-scroll .preview-device-outer .preview-device-inner, .cms-preview.mobileLandscape .preview-scroll .preview-device-outer .preview-device-inner, .cms-preview.tablet .preview-scroll .preview-device-outer .preview-device-inner, .cms-preview.tabletLandscape .preview-scroll .preview-device-outer .preview-device-inner, .cms-preview.desktop .preview-scroll .preview-device-outer .preview-device-inner { border-top: 2px solid #e1e7ea; border-right: 1px solid transparent; border-bottom: 1px solid #e1e7ea; border-left: 1px solid #c3cfd6; }
 .cms-preview.mobile .preview-scroll .preview-device-outer { -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); transform: rotate(0deg); -moz-transition: all 0.3s ease-in 1s; -o-transition: all 0.3s ease-in 1s; -webkit-transition: all 0.3s ease-in; -webkit-transition-delay: 1s; transition: all 0.3s ease-in 1s; margin: 20px auto 20px; overflow: hidden; padding-top: 16px; }
@@ -1361,7 +1361,7 @@ visible. Added and removed with js in TabSet.js  */ /***************************
 .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li a:hover:after { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 0 no-repeat; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li.ui-state-active a:after { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -78px no-repeat; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li.ui-state-active a:hover:after { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -52px no-repeat; }
-.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel { overflow: hidden; *zoom: 1; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; /* Restyle for smaller area*/ clear: both; display: block; background-color: #f5f7f8; border: 1px solid #ccc; border-bottom: 1px solid #f5f7f8; margin: 0; margin-top: 2px; max-width: 250px; padding: 8px 0 2px; position: absolute; z-index: 1; min-width: 190px; }
+.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel { overflow: hidden; *zoom: 1; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; /* Restyle for smaller area*/ clear: both; display: block; background-color: #f6f7f8; border: 1px solid #ccc; border-bottom: 1px solid #f6f7f8; margin: 0; margin-top: 2px; max-width: 250px; padding: 8px 0 2px; position: absolute; z-index: 1; min-width: 190px; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel h3, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel h4, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel h5 { font-weight: bold; line-height: 16px; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel h3 { font-size: 13px; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel h4 { font-size: 12px; margin: 5px 0; }
@@ -1392,7 +1392,7 @@ visible. Added and removed with js in TabSet.js  */ /***************************
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .cms-sitetree-information { border-bottom: 1px solid #e8e9eb; margin-bottom: 8px; padding: 0 20px 0 0; margin-right: 10px; margin-left: 10px; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .cms-sitetree-information p.meta-info { color: #999; font-size: 11px; line-height: 16px; margin-bottom: 8px; white-space: nowrap; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button { width: 100%; }
-.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button:hover, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button:focus, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button:active { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background-color: #e9edf0; outline: none; }
+.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button:hover, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button:focus, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button:active { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background-color: #ebedef; outline: none; }
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .last .ui-tabs-panel.ss-ui-action-tab { left: auto; right: -1px; }
 .cms .cms-content-actions .Actions { overflow: visible; }
 
