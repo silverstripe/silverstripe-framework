@@ -95,5 +95,11 @@ class URLSegmentFilterTest extends SapphireTest {
 		$filter = new URLSegmentFilter();
 		$this->assertEquals('url-has-trailing-dashes', $filter->filter('url-has-trailing-dashes--'));
 	}
+	
+	public function testRemovesBadCharactersWithMultibyteAllowed() {
+		$filter = new URLSegmentFilter();
+		$filter->setAllowMultibyte(true);
+		$this->assertEquals('url-with-bad-characters', $filter->filter('url?-with/-bad#-characters='));
+	}
 
 }
