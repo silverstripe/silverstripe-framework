@@ -253,13 +253,12 @@ class Requirements implements Flushable {
 	 * requirements. Needs to receive a valid HTML/XHTML template in the $content parameter,
 	 * including a head and body tag.
 	 *
-	 * @param string $templateFile No longer used, only retained for compatibility
-	 * @param string $content      HTML content that has already been parsed from the $templateFile
+	 * @param string $content      HTML content that has already been parsed from the templateFile
 	 *                             through {@link SSViewer}
 	 * @return string HTML content augmented with the requirements tags
 	 */
-	public static function includeInHTML($templateFile, $content) {
-		return self::backend()->includeInHTML($templateFile, $content);
+	public static function includeInHTML($content) {
+		return self::backend()->includeInHTML($content);
 	}
 
 	/**
@@ -1100,12 +1099,11 @@ class Requirements_Backend
 	 * requirements. Needs to receive a valid HTML/XHTML template in the $content parameter,
 	 * including a head and body tag.
 	 *
-	 * @param string $templateFile No longer used, only retained for compatibility
-	 * @param string $content      HTML content that has already been parsed from the $templateFile
+	 * @param string $content      HTML content that has already been parsed from the templateFile
 	 *                             through {@link SSViewer}
 	 * @return string HTML content augmented with the requirements tags
 	 */
-	public function includeInHTML($templateFile, $content) {
+	public function includeInHTML($content) {
 		// Skip if content isn't injectable, or there is nothing to inject
 		$tagsAvailable = preg_match('#</head\b#', $content);
 		$hasFiles = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags;
