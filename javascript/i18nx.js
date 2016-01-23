@@ -10,7 +10,7 @@ ss.i18n = {
 		currentLocale: 'en_US',
 
 		defaultLocale: 'en_US',
-	
+
 		_t: function (entity, fallbackString, priority, context) {
 			return fallbackString;
 		},
@@ -46,7 +46,7 @@ ss.i18n = {
 
 			return result;
 		},
-		
+
 		// stub methods
 		addDictionary: function() {},
 		getDictionary: function() {}

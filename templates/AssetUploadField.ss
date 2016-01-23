@@ -5,15 +5,15 @@
 			<%t AssetUploadField.TOUPLOAD 'Upload files' %>
 			<input id="$id" name="$getName" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString" type="file"<% if $multiple %> multiple="multiple"<% end_if %> title="<%t AssetUploadField.FROMCOMPUTER 'Choose files from your computer' %>" />
 		</label>
-		<span><%t AssetUploadField.UPLOADSUBTEXTPAGE 'Drag & drop files anywhere on this page' %></span>
 	</div>
 
 	<span class="ss-uploadfield-view-allowed-extensions"> 
 		<span class="description">
 
-			<a href="#" class="font-icon-info-circled toggle"><%t AssetAdmin.SHOWALLOWEDEXTS 'Show allowed extensions' %></a>
+			<a class="font-icon-info-circled toggle"><%t AssetAdmin.SHOWALLOWEDEXTS 'Show allowed extensions' %></a>
 			<div class="toggle-content">
-				<h4>Allowed file upload extensions</h4>
+				<a class="font-icon-cancel toggle"><%t AssetAdmin.HIDEALLOWEDEXTS 'Hide allowed extensions' %></a>
+				<h4><%t AssetAdmin.ALLOWEDEXTS 'Allowed file upload extensions' %></h4>
 				<p>$Extensions</p>
 			</div>
 		</span>	
@@ -22,7 +22,7 @@
 
 <div class="ss-uploadfield-editandorganize">
 	<div class="ss-uploadfield-item-actions edit-all">
-		<button class="ss-uploadfield-item-edit-all ss-ui-button ui-corner-all" title="<%t AssetUploadField.EDITINFO 'Edit files' %>" style="display:none;">
+		<button type="button" class="ss-uploadfield-item-edit-all ss-ui-button ui-corner-all" title="<%t AssetUploadField.EDITINFO 'Edit files' %>" style="display:none;">
 			<%t AssetUploadField.EDITALL 'Edit all' %>
 				<span class="toggle-details-icon"></span>
 		</button>

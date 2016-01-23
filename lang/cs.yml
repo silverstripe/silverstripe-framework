@@ -77,6 +77,8 @@ cs:
     PASSWORDEXPIRED: '<p>Vaše heslo expirovalo. <a target="_top" href="{link}">Prosím zvolte nové heslo.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Náhled webu'
+  CMSPagesController_Tools_ss:
+    FILTER: Filtr
   CMSProfileController:
     MENUTITLE: 'Můj profil'
   CMSSecurity:
@@ -105,6 +107,7 @@ cs:
     MAXIMUM: 'Hesla musí být nanejvýš {max} znaků dlouhé.'
     SHOWONCLICKTITLE: 'Změnit heslo'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Musíte se přihlásit se svým CMS heslem, aby jste mohli prohlížet koncept nebo archivovaný obsah. <a href="%s">Klikněte sem pro návrat na zveřejněný web.</a>'
     NOTLOGGEDIN: 'Nepřihlášen'
   CreditCardField:
     FIRST: první
@@ -292,8 +295,8 @@ cs:
     FROMWEB: 'Z webu'
     FindInFolder: 'Hledat ve složce'
     IMAGEALT: 'Alternativní text (alt)'
-    IMAGEALTTEXT: 'Alternativní text (alt) - ukáže se, když obrázek nemúže být zobrazen'
-    IMAGEALTTEXTDESC: 'Zobrazeno na obrazovce, anebo když obrázek nemůže být zobrazen'
+    IMAGEALTTEXT: 'Alternativní text (alt) - bude zobrazen, pokud obrázek nemúže být zobrazen'
+    IMAGEALTTEXTDESC: 'Zobrazeno na obrazovce, když obrázek nemůže být zobrazen'
     IMAGEDIMENSIONS: Rozměry
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
@@ -328,11 +331,11 @@ cs:
     DELETED: Smazáno.
     DropdownBatchActionsDefault: Akcie
     HELP: Nápověda
-    PAGETYPE: 'Typ stránky:'
+    PAGETYPE: 'Typ stránky'
     PERMAGAIN: 'Byli jste odhlášeni z CMS. Pokud se chcete znovu přihlásit, zadejte níže své uživatelské jméno a heslo.'
     PERMALREADY: 'Omlouvám se, ale nemůžete vstoupit do této části CMS. Pokud se chcete přihlásit jako někdo jiný, udělejte tak níže.'
-    PERMDEFAULT: 'Musíte být přihlášen/a k přístup do oblasti administrace, zadejte vaše přihlošovací údaje dole, prosím.'
-    PLEASESAVE: 'Uložte stránku, prosím. Tato stránka nemůže být aktualizována, protože ještě nebyla uložena.'
+    PERMDEFAULT: 'Musíte být přihlášen/a k přístup do oblasti administrace, níže zadejte vaše přihlašovací údaje, prosím.'
+    PLEASESAVE: 'Prosím uložte stránku: Tato stránka nemohla být aktualizována, protože ještě nebyla uložena.'
     PreviewButton: Náhled
     REORGANISATIONSUCCESSFUL: 'Strom webu reorganizován úspěšně.'
     SAVEDUP: Uloženo.

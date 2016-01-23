@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\Filesystem\Storage\AssetContainer;
+use SilverStripe\Filesystem\Storage\AssetNameGenerator;
+use SilverStripe\Filesystem\Storage\AssetStore;
+
 /**
  * Manages uploads via HTML forms processed by PHP,
  * uploads to Silverstripe's default upload directory,
@@ -27,9 +32,9 @@ class Upload extends Controller {
 	);
 
 	/**
-	 * A File object
+	 * A dataobject (typically {@see File}) which implements {@see AssetContainer}
 	 *
-	 * @var File
+	 * @var AssetContainer
 	 */
 	protected $file;
 
@@ -108,126 +113,178 @@ class Upload extends Controller {
 		$this->validator = $validator;
 	}
 
+
+	/**
+	 * Get an asset renamer for the given filename.
+	 *
+	 * @param string $filename Path name
+	 * @return AssetNameGenerator
+	 */
+	protected function getNameGenerator($filename){
+		return Injector::inst()->createWithArgs('AssetNameGenerator', array($filename));
+	}
+
+	/**
+	 * 
+	 * @return AssetStore
+	 */
+	protected function getAssetStore() {
+		return Injector::inst()->get('AssetStore');
+	}
+
+	/**
+	 * Save an file passed from a form post into the AssetStore directly
+	 *
+	 * @param $tmpFile array Indexed array that PHP generated for every file it uploads.
+	 * @param $folderPath string Folder path relative to /assets
+	 * @return array|false Either the tuple array, or false if the file could not be saved
+	 */
+	public function load($tmpFile, $folderPath = false) {
+		// Validate filename
+		$filename = $this->getValidFilename($tmpFile, $folderPath);
+		if(!$filename) {
+			return false;
+		}
+
+		// Save file into backend
+		$result = $this->storeTempFile($tmpFile, $filename, $this->getAssetStore());
+
+		//to allow extensions to e.g. create a version after an upload
+		$this->extend('onAfterLoad', $result);
+		return $result;
+	}
+
 	/**
 	 * Save an file passed from a form post into this object.
 	 * File names are filtered through {@link FileNameFilter}, see class documentation
 	 * on how to influence this behaviour.
 	 *
-	 * @param $tmpFile array Indexed array that PHP generated for every file it uploads.
-	 * @param $folderPath string Folder path relative to /assets
-	 * @return Boolean|string Either success or error-message.
+	 * @param array $tmpFile
+	 * @param AssetContainer $file
+	 * @return bool True if the file was successfully saved into this record
 	 */
-	public function load($tmpFile, $folderPath = false) {
-		$this->clearErrors();
+	public function loadIntoFile($tmpFile, $file = null, $folderPath = false) {
+		$this->file = $file;
 
-		if(!$folderPath) $folderPath = $this->config()->uploads_folder;
-
-		if(!is_array($tmpFile)) {
-			user_error("Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype",
-				E_USER_ERROR);
-		}
-
-		if(!$tmpFile['size']) {
-			$this->errors[] = _t('File.NOFILESIZE', 'Filesize is zero bytes.');
+		// Validate filename
+		$filename = $this->getValidFilename($tmpFile, $folderPath);
+		if(!$filename) {
 			return false;
 		}
+		$filename = $this->resolveExistingFile($filename);
 
-		$valid = $this->validate($tmpFile);
-		if(!$valid) return false;
-
-		// @TODO This puts a HUGE limitation on files especially when lots
-		// have been uploaded.
-		$base = Director::baseFolder();
-		$parentFolder = Folder::find_or_make($folderPath);
-
-		// Generate default filename
-		$nameFilter = FileNameFilter::create();
-		$file = $nameFilter->filter($tmpFile['name']);
-		$fileName = basename($file);
-
-		$relativeFolderPath = $parentFolder
-				? $parentFolder->getRelativePath()
-				: ASSETS_DIR . '/';
-		$relativeFilePath = $relativeFolderPath . $fileName;
-
-		// Create a new file record (or try to retrieve an existing one)
-		if(!$this->file) {
-			$fileClass = File::get_class_for_file_extension(pathinfo($tmpFile['name'], PATHINFO_EXTENSION));
-			$this->file = new $fileClass();
-		}
-		if(!$this->file->ID && $this->replaceFile) {
-			$fileClass = $this->file->class;
-			$file = File::get()
-				->filter(array(
-					'ClassName' => $fileClass,
-					'Name' => $fileName,
-					'ParentID' => $parentFolder ? $parentFolder->ID : 0
-				))->First();
-			if($file) {
-				$this->file = $file;
-			}
-		}
-
-		// if filename already exists, version the filename (e.g. test.gif to test-v2.gif, test-v2.gif to test-v3.gif)
-		if(!$this->replaceFile) {
-			$fileSuffixArray = explode('.', $fileName);
-			$fileTitle = array_shift($fileSuffixArray);
-			$fileSuffix = !empty($fileSuffixArray)
-					? '.' . implode('.', $fileSuffixArray)
-					: null;
-
-			// make sure files retain valid extensions
-			$oldFilePath = $relativeFilePath;
-			$relativeFilePath = $relativeFolderPath . $fileTitle . $fileSuffix;
-			if($oldFilePath !== $relativeFilePath) {
-				user_error("Couldn't fix $relativeFilePath", E_USER_ERROR);
-			}
-			while(file_exists("$base/$relativeFilePath")) {
-				$i = isset($i) ? ($i+1) : 2;
-				$oldFilePath = $relativeFilePath;
-
-				$prefix = $this->config()->version_prefix;
-				$pattern = '/' . preg_quote($prefix) . '([0-9]+$)/';
-				if(preg_match($pattern, $fileTitle, $matches)) {
-					$fileTitle = preg_replace($pattern, $prefix . ($matches[1] + 1), $fileTitle);
-				} else {
-					$fileTitle .= $prefix . $i;
-				}
-				$relativeFilePath = $relativeFolderPath . $fileTitle . $fileSuffix;
-
-				if($oldFilePath == $relativeFilePath && $i > 2) {
-					user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
-				}
-			}
-		} else {
-			//reset the ownerID to the current member when replacing files
-			$this->file->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
-		}
-
-		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "$base/$relativeFilePath")) {
-			$this->file->ParentID = $parentFolder ? $parentFolder->ID : 0;
-			// This is to prevent it from trying to rename the file
-			$this->file->Name = basename($relativeFilePath);
+		// Save changes to underlying record (if it's a DataObject)
+		$this->storeTempFile($tmpFile, $filename, $this->file);
+		if($this->file instanceof DataObject) {
 			$this->file->write();
-			$this->file->onAfterUpload();
-			$this->extend('onAfterLoad', $this->file);   //to allow extensions to e.g. create a version after an upload
-			return true;
-		} else {
-			$this->errors[] = _t('File.NOFILESIZE', 'Filesize is zero bytes.');
-			return false;
 		}
+
+		//to allow extensions to e.g. create a version after an upload
+		$this->file->extend('onAfterUpload');
+		$this->extend('onAfterLoadIntoFile', $this->file);
+		return true;
 	}
 
 	/**
-	 * Load temporary PHP-upload into File-object.
+	 * Assign this temporary file into the given destination
 	 *
 	 * @param array $tmpFile
-	 * @param File $file
-	 * @return Boolean
+	 * @param string $filename
+	 * @param AssetContainer|AssetStore $container
+	 * @return array
 	 */
-	public function loadIntoFile($tmpFile, $file, $folderPath = false) {
-		$this->file = $file;
-		return $this->load($tmpFile, $folderPath);
+	protected function storeTempFile($tmpFile, $filename, $container) {
+		// Save file into backend
+		$conflictResolution = $this->replaceFile
+			? AssetStore::CONFLICT_OVERWRITE
+			: AssetStore::CONFLICT_RENAME;
+		$config = array('conflict' => $conflictResolution);
+		return $container->setFromLocalFile($tmpFile['tmp_name'], $filename, null, null, $config);
+	}
+
+	/**
+	 * Given a temporary file and upload path, validate the file and determine the
+	 * value of the 'Filename' tuple that should be used to store this asset.
+	 *
+	 * @param array $tmpFile
+	 * @param string $folderPath
+	 * @return string|false Value of filename tuple, or false if invalid
+	 */
+	protected function getValidFilename($tmpFile, $folderPath = false) {
+		if(!is_array($tmpFile)) {
+			throw new InvalidArgumentException(
+				"Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype"
+			);
+		}
+
+		// Validate
+		$this->clearErrors();
+		$valid = $this->validate($tmpFile);
+		if(!$valid) {
+			return false;
+		}
+
+		// Clean filename
+		if(!$folderPath) {
+			$folderPath = $this->config()->uploads_folder;
+		}
+		$nameFilter = FileNameFilter::create();
+		$file = $nameFilter->filter($tmpFile['name']);
+		$filename = basename($file);
+		if($folderPath) {
+			$filename = File::join_paths($folderPath, $filename);
+		}
+		return $filename;
+	}
+
+	/**
+	 * Given a file and filename, ensure that file renaming / replacing rules are satisfied
+	 *
+	 * If replacing, this method may replace $this->file with an existing record to overwrite.
+	 * If renaming, a new value for $filename may be returned
+	 *
+	 * @param string $filename
+	 * @return string $filename A filename safe to write to
+	 */
+	protected function resolveExistingFile($filename) {
+		// Create a new file record (or try to retrieve an existing one)
+		if(!$this->file) {
+			$fileClass = File::get_class_for_file_extension(
+				File::get_file_extension($filename)
+			);
+			$this->file = $fileClass::create();
+		}
+
+		// Skip this step if not writing File dataobjects
+		if(! ($this->file instanceof File) ) {
+			return $filename;
+		}
+
+		// Check there is if existing file
+		$existing = File::find($filename);
+
+		// If replacing (or no file exists) confirm this filename is safe
+		if($this->replaceFile || !$existing) {
+			// If replacing files, make sure to update the OwnerID
+			if(!$this->file->ID && $this->replaceFile && $existing) {
+				$this->file = $existing;
+				$this->file->OwnerID = Member::currentUserID();
+			}
+			// Filename won't change if replacing
+			return $filename;
+		}
+
+		// if filename already exists, version the filename (e.g. test.gif to test-v2.gif, test-v2.gif to test-v3.gif)
+		$renamer = $this->getNameGenerator($filename);
+		foreach($renamer as $newName) {
+			if(!File::find($newName)) {
+				return $newName;
+			}
+		}
+
+		// Fail
+		$tries = $renamer->getMaxTries();
+		throw new Exception("Could not rename {$filename} with {$tries} tries");
 	}
 
 	/**
@@ -268,7 +325,7 @@ class Upload extends Controller {
 	 * Get file-object, either generated from {load()},
 	 * or manually set.
 	 *
-	 * @return File
+	 * @return AssetContainer
 	 */
 	public function getFile() {
 		return $this->file;
@@ -277,9 +334,9 @@ class Upload extends Controller {
 	/**
 	 * Set a file-object (similiar to {loadIntoFile()})
 	 *
-	 * @param File $file
+	 * @param AssetContainer $file
 	 */
-	public function setFile($file) {
+	public function setFile(AssetContainer $file) {
 		$this->file = $file;
 	}
 
@@ -391,7 +448,7 @@ class Upload_Validator {
 	 * @return int Filesize in bytes
 	 */
 	public function getAllowedMaxFileSize($ext = null) {
-		
+
 		// Check if there is any defined instance max file sizes
 		if (empty($this->allowedMaxFileSize)) {
 			// Set default max file sizes if there isn't
@@ -405,18 +462,18 @@ class Upload_Validator {
 				$this->setAllowedMaxFileSize(min($maxUpload, $maxPost));
 			}
 		}
-		
+
 		$ext = strtolower($ext);
 		if ($ext) {
 			if (isset($this->allowedMaxFileSize[$ext])) {
 				return $this->allowedMaxFileSize[$ext];
 			}
-			
+
 			$category = File::get_app_category($ext);
 			if ($category && isset($this->allowedMaxFileSize['[' . $category . ']'])) {
 				return $this->allowedMaxFileSize['[' . $category . ']'];
 			}
-			
+
 			return false;
 		} else {
 			return (isset($this->allowedMaxFileSize['*'])) ? $this->allowedMaxFileSize['*'] : false;
@@ -441,17 +498,17 @@ class Upload_Validator {
 			$rules = array_change_key_case($rules, CASE_LOWER);
 			$finalRules = array();
 			$tmpSize = 0;
-			
+
 			foreach ($rules as $rule => $value) {
 				if (is_numeric($value)) {
 					$tmpSize = $value;
 				} else {
 					$tmpSize = File::ini2bytes($value);
 				}
-			
+
 				$finalRules[$rule] = (int)$tmpSize;
 			}
-			
+
 			$this->allowedMaxFileSize = $finalRules;
 		} elseif(is_string($rules)) {
 			$this->allowedMaxFileSize['*'] = File::ini2bytes($rules);
@@ -525,11 +582,19 @@ class Upload_Validator {
 	 */
 	public function validate() {
 		// we don't validate for empty upload fields yet
-		if(!isset($this->tmpFile['name']) || empty($this->tmpFile['name'])) return true;
+		if(empty($this->tmpFile['name']) || empty($this->tmpFile['tmp_name'])) {
+			return true;
+		}
 
 		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
 		if(isset($this->tmpFile['tmp_name']) && !is_uploaded_file($this->tmpFile['tmp_name']) && !$isRunningTests) {
 			$this->errors[] = _t('File.NOVALIDUPLOAD', 'File is not a valid upload');
+			return false;
+		}
+		
+		// Check file isn't empty
+		if(empty($this->tmpFile['size']) || !filesize($this->tmpFile['tmp_name'])) {
+			$this->errors[] = _t('File.NOFILESIZE', 'Filesize is zero bytes.');
 			return false;
 		}
 

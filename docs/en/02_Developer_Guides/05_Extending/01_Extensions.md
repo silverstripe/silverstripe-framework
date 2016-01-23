@@ -168,8 +168,9 @@ extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 		);
 
 		public function updateCMSFields(FieldList $fields) {
-	  		$fields->push(new TextField('Position'));
-	  		$fields->push(new UploadField('Image', 'Profile Image'));
+			$fields->push(new TextField('Position'));
+			$fields->push($upload = new UploadField('Image', 'Profile Image'));
+			$upload->setAllowedFileCategories('image/supported');
 		}
 	}
 

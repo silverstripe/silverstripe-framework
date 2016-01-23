@@ -123,8 +123,16 @@ class CompositeField extends FormField {
 		return $this->legend;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function extraClasses() {
-		$classes = array('field', 'CompositeField', parent::extraClasses());
+		Deprecation::notice('4.0', 'Use extraClass() instead');
+		return $this->extraClass();
+	}
+
+	public function extraClass() {
+		$classes = array('field', 'CompositeField', parent::extraClass());
 		if($this->columnCount) $classes[] = 'multicolumn';
 
 		return implode(' ', $classes);
@@ -214,6 +222,15 @@ class CompositeField extends FormField {
 	}
 
 	/**
+	 * Add a new child field to the beginning of the set.
+	 *
+	 * @param FormField
+	 */
+	public function unshift(FormField $field) {
+		$this->children->unshift($field);
+	}
+
+	/**
 	 * @uses FieldList->insertBefore()
 	 */
 	public function insertBefore($insertBefore, $field) {
@@ -222,6 +239,9 @@ class CompositeField extends FormField {
 		return $ret;
 	}
 
+	/**
+	 * @uses FieldList->insertAfter()
+	 */
 	public function insertAfter($insertAfter, $field) {
 		$ret = $this->children->insertAfter($insertAfter, $field);
 		$this->sequentialSet = null;

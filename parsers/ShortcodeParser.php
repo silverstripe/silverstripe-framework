@@ -72,9 +72,15 @@ class ShortcodeParser extends Object {
 	 *
 	 * @param string $shortcode The shortcode tag to map to the callback - normally in lowercase_underscore format.
 	 * @param callback $callback The callback to replace the shortcode with.
+	 * @return $this
 	 */
 	public function register($shortcode, $callback) {
-		if(is_callable($callback)) $this->shortcodes[$shortcode] = $callback;
+		if(is_callable($callback)) {
+			$this->shortcodes[$shortcode] = $callback;
+		} else {
+			throw new InvalidArgumentException("Callback is not callable");
+		}
+		return $this;
 	}
 
 	/**

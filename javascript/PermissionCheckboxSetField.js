@@ -1,7 +1,7 @@
 (function($) {
-	
+
 	$.entwine('ss', function($){
-		
+
 		/**
 		 * Automatically check and disable all checkboxes if ADMIN permissions are selected.
 		 * As they're disabled, any changes won't be submitted (which is intended behaviour),
@@ -38,10 +38,10 @@
 				}
 			}
 		});
-		
+
 		/**
 		 * Automatically check all "CMS section" checkboxes when "Access to all CMS interfaces" is ticked.
-		 * 
+		 *
 		 * @todo This should really be abstracted into a declarative dependency system
 		 * instead of custom logic.
 		 */

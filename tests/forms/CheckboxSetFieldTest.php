@@ -49,6 +49,39 @@ class CheckboxSetFieldTest extends SapphireTest {
 		);
 	}
 
+
+
+	/**
+	 * Test different data sources
+	 */
+	public function testSources() {
+		// Array
+		$items = array('a' => 'Apple', 'b' => 'Banana', 'c' => 'Cranberry');
+		$field = new CheckboxSetField('Field', null, $items);
+		$this->assertEquals($items, $field->getSource());
+
+		// SS_List
+		$list = new ArrayList(array(
+			new ArrayData(array(
+				'ID' => 'a',
+				'Title' => 'Apple'
+			)),
+			new ArrayData(array(
+				'ID' => 'b',
+				'Title' => 'Banana'
+			)),
+			new ArrayData(array(
+				'ID' => 'c',
+				'Title' => 'Cranberry'
+			))
+		));
+		$field2 = new CheckboxSetField('Field', null, $list);
+		$this->assertEquals($items, $field2->getSource());
+
+		$field3 = new CheckboxSetField('Field', null, $list->map());
+		$this->assertEquals($items, $field3->getSource());
+	}
+
 	public function testSaveWithNothingSelected() {
 		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
 
@@ -73,11 +106,11 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
 		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
 
-		/* Create a CheckboxSetField with 2 items selected.  Note that the array is in the format (key) => (selected) */
+		/* Create a CheckboxSetField with 2 items selected.  Note that the array is a list of values */
 		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
 		$field->setValue(array(
-			$tag1->ID => true,
-			$tag2->ID => true
+			$tag1->ID,
+			$tag2->ID
 		));
 
 		/* Saving should work */
@@ -115,12 +148,14 @@ class CheckboxSetFieldTest extends SapphireTest {
 			new FieldList()
 		);
 		$form->loadDataFrom($articleWithTags);
+		$value = $field->Value();
+		sort($value);
 		$this->assertEquals(
 			array(
-				$tag1->ID => $tag1->ID,
-				$tag2->ID => $tag2->ID
+				$tag1->ID,
+				$tag2->ID
 			),
-			$field->Value(),
+			$value,
 			'CheckboxSetField loads data from a manymany relationship in an object through Form->loadDataFrom()'
 		);
 	}
@@ -141,33 +176,36 @@ class CheckboxSetFieldTest extends SapphireTest {
 			$article->ID
 		))->value();
 
-		$this->assertEquals('Test,Another', $dbValue);
+		// JSON encoded values
+		$this->assertEquals('["Test","Another"]', $dbValue);
 	}
 
 	public function testValidationWithArray() {
-		//test with array input
+		// Test with array input
 		$field = CheckboxSetField::create('Test', 'Testing', array(
 			"One" => "One",
 			"Two" => "Two",
 			"Three" => "Three"
 		));
 		$validator = new RequiredFields();
-		$field->setValue(array("One" => "One", "Two" => "Two"));
+		$field->setValue(array("One", "Two"));
 		$this->assertTrue(
 			$field->validate($validator),
 			'Field validates values within source array'
 		);
-		//non valid value should fail
+		
+		// Non valid value should fail
 		$field->setValue(array("Four" => "Four"));
 		$this->assertFalse(
 			$field->validate($validator),
 			'Field does not validate values outside of source array'
 		);
-		//non valid value included with valid options should succeed
-		$field->setValue(array("One" => "One", "Two" => "Two", "Four" => "Four"));
-		$this->assertTrue(
+		
+		// Non valid value, even if included with valid options, should fail
+		$field->setValue(array("One", "Two", "Four"));
+		$this->assertFalse(
 			$field->validate($validator),
-			'Field validates when presented with mixed valid and invalid values'
+			'Field does not validate when presented with mixed valid and invalid values'
 		);
 	}
 
@@ -200,9 +238,9 @@ class CheckboxSetFieldTest extends SapphireTest {
 			$tag2->ID => $tag2->ID,
 			$tag3->ID => $tag3->ID
 		));
-		$this->assertTrue(
+		$this->assertFalse(
 			$field->validate($validator),
-			'Validates when presented with mixed valid and invalid values'
+			'Field does not validate when presented with mixed valid and invalid values'
 		);
 	}
 

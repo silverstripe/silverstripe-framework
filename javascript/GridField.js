@@ -22,7 +22,7 @@
 				if(window.location.search) {
 					ajaxOpts.data = window.location.search.replace(/^\?/, '') + '&' + $.param(ajaxOpts.data);
 				}
-				
+
 				// For browsers which do not support history.pushState like IE9, ss framework uses hash to track
 				// the current location for PJAX, so for them we pass the query string stored in the hash instead
 				if(!window.history || !window.history.pushState){
@@ -55,7 +55,7 @@
 								content = '<span class="non-sortable"></span>';
 								self.addClass('show-filter').find('.filter-header').show();
 							} else {
-								content = '<button name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
+								content = '<button type="button" name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
 								self.removeClass('show-filter').find('.filter-header').hide();
 							}
 
@@ -142,7 +142,7 @@
 					e.preventDefault();
 					return;
 				}
-				
+
 				if(this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))){
 					filterState='hidden';
 				}
@@ -180,7 +180,7 @@
 			}
 		});
 
-		// Covers both tabular delete button, and the button on the detail form 
+		// Covers both tabular delete button, and the button on the detail form
 		$('.ss-gridfield .col-buttons .action.gridfield-button-delete, .cms-edit-form .Actions button.action.action-delete').entwine({
 			onclick: function(e){
 				if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
@@ -191,7 +191,7 @@
 				}
 			}
 		});
-		
+
 		$('.ss-gridfield .action.gridfield-button-print').entwine({
 			UUID: null,
 			onmatch: function() {
@@ -229,7 +229,7 @@
 				return false;
 			}
 		});
-		
+
 		$('.ss-gridfield-print-iframe').entwine({
 			onmatch: function(){
 				this._super();
@@ -244,7 +244,7 @@
 				this._super();
 			}
 		});
-		
+
 		/**
 		 * Prevents actions from causing an ajax reload of the field.
 		 *
@@ -253,7 +253,7 @@
 		 */
 		$('.ss-gridfield .action.no-ajax').entwine({
 			onclick: function(e){
-				var self = this, btn = this.closest(':button'), grid = this.getGridField(), 
+				var self = this, btn = this.closest(':button'), grid = this.getGridField(),
 					form = this.closest('form'), data = form.find(':input.gridstate').serialize();
 
 				// Add current button
@@ -315,7 +315,7 @@
 				if (this.data('selectable')) this.selectable('destroy');
 			}
 		});
-		
+
 		/**
 		 * Catch submission event in filter input fields, and submit the correct button
 		 * rather than the whole form.
@@ -324,7 +324,7 @@
 			onmatch: function() {
 				var filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter'),
 					resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
-				
+
 				if(this.val()) {
 					filterbtn.addClass('filtered');
 					resetbtn.addClass('filtered');
@@ -343,11 +343,11 @@
 
 				if(e.keyCode == '13') {
 					var btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');
-					var filterState='show'; //filterstate should equal current state.				
+					var filterState='show'; //filterstate should equal current state.
 					if(this.hasClass('ss-gridfield-button-close')||!(this.closest('.ss-gridfield').hasClass('show-filter'))){
 						filterState='hidden';
 					}
-					
+
 					this.getGridField().reload({data: [{name: btns.attr('name'), value: btns.val(), filter: filterState}]});
 					return false;
 				}else{
@@ -369,7 +369,7 @@
 							},
 							type: "GET",
 							url: $(searchField).data('searchUrl'),
-							data: encodeURIComponent(searchField.attr('name'))+'='+encodeURIComponent(searchField.val()), 
+							data: encodeURIComponent(searchField.attr('name'))+'='+encodeURIComponent(searchField.val()),
 							success: function(data) {
 								response(JSON.parse(data));
 							},

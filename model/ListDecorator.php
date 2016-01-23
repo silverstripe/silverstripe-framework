@@ -81,7 +81,7 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 	}
 
 	public function TotalItems() {
-		return $this->list->TotalItems();
+		return $this->list->Count();
 	}
 
 	public function Count() {

@@ -197,6 +197,16 @@ class ClassInfoTest extends SapphireTest {
 		$this->assertNull(
 			ClassInfo::table_for_object_field(null, null)
 		);
+
+		// Test fixed fields
+		$this->assertEquals(
+			'ClassInfoTest_BaseDataClass',
+			ClassInfo::table_for_object_field('ClassInfoTest_HasFields', 'ID')
+		);
+		$this->assertEquals(
+			'ClassInfoTest_BaseDataClass',
+			ClassInfo::table_for_object_field('ClassInfoTest_NoFields', 'Created')
+		);
 	}
 }
 

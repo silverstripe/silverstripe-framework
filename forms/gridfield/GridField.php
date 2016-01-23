@@ -105,7 +105,12 @@ class GridField extends FormField {
 
 		$this->setConfig($config);
 
-		$this->config->addComponent(new GridState_Component());
+		$state = $this->config->getComponentByType('GridState_Component');
+
+		if (!$state) {
+			$this->config->addComponent(new GridState_Component());
+		}
+
 		$this->state = new GridState($this);
 
 		$this->addExtraClass('ss-gridfield');
@@ -149,7 +154,7 @@ class GridField extends FormField {
 			return $this->modelClassName;
 		}
 
-		if($this->list && method_exists($this->list, 'dataClass')) {
+		if($this->list && $this->list->hasMethod('dataClass')) {
 			$class = $this->list->dataClass();
 
 			if($class) {

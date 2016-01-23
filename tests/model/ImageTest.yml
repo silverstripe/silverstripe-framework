@@ -1,26 +1,38 @@
 Folder:
-    folder1:
-        Filename: assets/ImageTest/
+  folder1:
+    Name: folder
 Image:
-    imageWithTitle:
-        Title: This is a image Title
-        Filename: assets/ImageTest/test_image.png
-        Parent: =>Folder.folder1
-    imageWithoutTitle:
-        Filename: assets/ImageTest/test_image.png
-        Parent: =>Folder.folder1
-    imageWithoutTitleContainingDots: 
-        Filename: assets/ImageTest/test.image.with.dots.png
-        Parent: =>Folder.folder1
-    imageWithMetacharacters:
-        Title: This is a/an image Title
-        Filename: assets/ImageTest/test_image.png
-        Parent: =>Folder.folder1
-    lowQualityJPEG:
-        Title: This is a low quality JPEG
-        Filename: assets/ImageTest/test_image_low-quality.jpg
-        Parent: =>Folder.folder1
-    highQualityJPEG:
-        Title: This is a high quality JPEG
-        Filename: assets/ImageTest/test_image_high-quality.jpg
-        Parent: =>Folder.folder1
+  imageWithTitle:
+    Title: This is a image Title
+    FileFilename: folder/test-image.png
+    FileHash: 444065542b5dd5187166d8e1cd684e0d724c5a97
+    Parent: =>Folder.folder1
+    Name: test-image.png
+  imageWithoutTitle:
+    FileFilename: folder/test-image.png
+    FileHash: 444065542b5dd5187166d8e1cd684e0d724c5a97
+    Parent: =>Folder.folder1
+    Name: test-image.png
+  imageWithoutTitleContainingDots: 
+    FileFilename: folder/test.image.with.dots.png
+    FileHash: 46affab7043cfd9f1ded919dd24affd08e926eca
+    Parent: =>Folder.folder1
+    Name: test.image.with.dots.png
+  imageWithMetacharacters:
+    Title: This is a/an image Title
+    FileFilename: folder/test-image.png
+    FileHash: 444065542b5dd5187166d8e1cd684e0d724c5a97
+    Parent: =>Folder.folder1
+    Name: test-image.png
+  lowQualityJPEG:
+    Title: This is a low quality JPEG
+    FileFilename: folder/test-image-low-quality.jpg
+    FileHash: 33be1b95cba0358fe54e8b13532162d52f97421c
+    Parent: =>Folder.folder1
+    Name: test-image-low-quality.jpg
+  highQualityJPEG:
+    Title: This is a high quality JPEG
+    FileFilename: folder/test-image-high-quality.jpg
+    FileHash: a870de278b475cb75f5d9f451439b2d378e13af1
+    Parent: =>Folder.folder1
+    Name: test-image-high-quality.jpg

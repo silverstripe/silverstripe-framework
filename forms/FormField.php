@@ -649,7 +649,6 @@ class FormField extends RequestHandler {
 	 */
 	public function setValue($value) {
 		$this->value = $value;
-
 		return $this;
 	}
 
@@ -839,7 +838,16 @@ class FormField extends RequestHandler {
 
 		$this->extend('onBeforeRender', $this);
 
-		return $context->renderWith($this->getTemplates());
+		$result = $context->renderWith($this->getTemplates());
+
+		// Trim whitespace from the result, so that trailing newlines are supressed. Works for strings and HTMLText values
+		if(is_string($result)) {
+			$result = trim($result);
+		} else if($result instanceof DBField) {
+			$result->setValue(trim($result->getValue()));
+		}
+
+		return $result;
 	}
 
 	/**
@@ -1258,6 +1266,26 @@ class FormField extends RequestHandler {
 		$field->dontEscape = $this->dontEscape;
 
 		return $field;
+	}
+
+	/**
+	 * Determine if escaping of this field should be disabled
+	 *
+	 * @param bool $dontEscape
+	 * @return $this
+	 */
+	public function setDontEscape($dontEscape) {
+		$this->dontEscape = $dontEscape;
+		return $this;
+	}
+
+	/**
+	 * Determine if escaping is disabled
+	 *
+	 * @return bool
+	 */
+	public function getDontEscape() {
+		return $this->dontEscape;
 	}
 
 }

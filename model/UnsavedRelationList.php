@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\Relation;
+
 /**
  * An {@link ArrayList} that represents an unsaved relation.
  *
@@ -16,7 +18,7 @@
  * @package framework
  * @subpackage model
  */
-class UnsavedRelationList extends ArrayList {
+class UnsavedRelationList extends ArrayList implements Relation {
 
 	/**
 	 * The DataObject class name that this relation is on
@@ -152,21 +154,6 @@ class UnsavedRelationList extends ArrayList {
 	}
 
 	/**
-	 * Returns true if the given column can be used to filter the records.
-	 */
-	public function canFilterBy($by) {
-		return false;
-	}
-
-
-	/**
-	 * Returns true if the given column can be used to sort the records.
-	 */
-	public function canSortBy($by) {
-		return false;
-	}
-
-	/**
      * Remove all items from this relation.
      */
 	public function removeAll() {
@@ -177,7 +164,7 @@ class UnsavedRelationList extends ArrayList {
 	/**
 	 * Remove the items from this list with the given IDs
 	 *
-	 * @param array $idList
+	 * @param array $items
 	 */
 	public function removeMany($items) {
 		$this->items = array_diff($this->items, $items);
@@ -283,160 +270,4 @@ class UnsavedRelationList extends ArrayList {
 	public function dbObject($fieldName) {
 		return singleton($this->dataClass)->dbObject($fieldName);
 	}
-
-	/**#@+
-	 * Prevents calling DataList methods that rely on the objects being saved
-	 */
-	public function addFilter() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function alterDataQuery() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function avg() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function byIDs() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function byID($id) {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function dataQuery() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function exclude() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function filter() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function getRange($offset, $length) {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function getRelationName() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function innerJoin() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function insertFirst() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function join() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function leftJoin() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function limit($length, $offset = 0) {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function map($keyField = 'ID', $titleField = 'Title') {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function max() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function merge($with) {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function min() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function newObject() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function offsetExists($offset) {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function offsetGet($offset) {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function offsetSet($offset, $value) {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function offsetUnset($offset) {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function pop() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function relation() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function removeByFilter() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function removeByID() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function reverse() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function setDataModel() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function setDataQuery() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function setQueriedColumns() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function shift() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function sql() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function subtract() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function sum() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function unshift($item) {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-
-	public function where() {
-		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
-	}
-	/**#@-*/
 }

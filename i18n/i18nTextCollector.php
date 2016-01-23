@@ -1,4 +1,7 @@
 <?php
+
+use Symfony\Component\Yaml\Dumper;
+
 /**
  * SilverStripe-variant of the "gettext" tool:
  * Parses the string content of all PHP-files and SilverStripe templates
@@ -773,10 +776,6 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 	}
 
 	public function getYaml($entities, $locale) {
-		// Use the Zend copy of this script to prevent class conflicts when RailsYaml is included
-		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib'
-			. '/sfYamlDumper.php';
-
 		// Unflatten array
 		$entitiesNested = array();
 		foreach($entities as $entity => $spec) {
@@ -793,12 +792,10 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 		}
 
 		// Write YAML
-		$oldVersion = sfYaml::getSpecVersion();
-		sfYaml::setSpecVersion('1.1');
-		$yamlHandler = new sfYaml();
+		$dumper = new Dumper();
+		$dumper->setIndentation(2);
 		// TODO Dumper can't handle YAML comments, so the context information is currently discarded
-		$result = $yamlHandler->dump(array($locale => $entitiesNested), 99);
-		sfYaml::setSpecVersion($oldVersion);
+		$result = $dumper->dump(array($locale => $entitiesNested), 99);
 		return $result;
 	}
 }

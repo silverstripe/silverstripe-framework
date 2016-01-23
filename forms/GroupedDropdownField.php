@@ -36,18 +36,13 @@
  *
  * <b>Disabling individual items</b>
  *
+ * Unlike the source, disabled items are specified in the same way as
+ * normal DropdownFields, using a single value list. Don't pass in grouped
+ * values here.
+ *
  * <code>
- * $groupedDrDownField->setDisabledItems(
- *    array(
- *       "numbers" => array(
- *       		"1" => "1",
- *       		"3" => "3"
- *    		),
- *       "letters" => array(
- *       		"3" => "C"
- *    		)
- *    )
- * )
+ * // Disables first and third option in each group
+ * $groupedDrDownField->setDisabledItems(array("1", "3"))
  * </code>
  *
  * @package forms
@@ -55,80 +50,47 @@
  */
 class GroupedDropdownField extends DropdownField {
 
-	public function Field($properties = array()) {
-		$options = '';
-		foreach($this->getSource() as $value => $title) {
-			if(is_array($title)) {
-				$options .= "<optgroup label=\"$value\">";
-				foreach($title as $value2 => $title2) {
-					$disabled = '';
-					if( array_key_exists($value, $this->disabledItems)
-							&& is_array($this->disabledItems[$value])
-							&& in_array($value2, $this->disabledItems[$value]) ){
-						$disabled = 'disabled="disabled"';
-					}
-					$selected = $value2 == $this->value ? " selected=\"selected\"" : "";
-					$options .= "<option$selected value=\"$value2\" $disabled>$title2</option>";
-				}
-				$options .= "</optgroup>";
-			} else { // Fall back to the standard dropdown field
-				$disabled = '';
-				if( in_array($value, $this->disabledItems) ){
-					$disabled = 'disabled="disabled"';
-				}
-				$selected = $value == $this->value ? " selected=\"selected\"" : "";
-				$options .= "<option$selected value=\"$value\" $disabled>$title</option>";
-			}
+	/**
+	 * Build a potentially nested fieldgroup
+	 *
+	 * @param mixed $valueOrGroup Value of item, or title of group
+	 * @param string|array $titleOrOptions Title of item, or options in grouip
+	 * @return ArrayData Data for this item
+	 */
+	protected function getFieldOption($valueOrGroup, $titleOrOptions) {
+		// Return flat option
+		if(!is_array($titleOrOptions)) {
+			return parent::getFieldOption($valueOrGroup, $titleOrOptions);
 		}
 
-		return FormField::create_tag('select', $this->getAttributes(), $options);
+		// Build children from options list
+		$options = new ArrayList();
+		foreach($titleOrOptions as $childValue => $childTitle) {
+			$options->push($this->getFieldOption($childValue, $childTitle));
+		}
+
+		return new ArrayData(array(
+			'Title' => $valueOrGroup,
+			'Options' => $options
+		));
 	}
 
 	public function Type() {
 		return 'groupeddropdown dropdown';
 	}
 
-	/**
-	 * Validate this field
-	 *
-	 * @param Validator $validator
-	 * @return bool
-	 */
-	public function validate($validator) {
-		$valid = false;
-		$source = $this->getSourceAsArray();
-		$disabled = $this->getDisabledItems();
-
-		if ($this->value) {
-			foreach ($source as $value => $title) {
-				if (is_array($title) && array_key_exists($this->value, $title)) {
-					// Check that the set value is not in the list of disabled items
-					if (!isset($disabled[$value]) || !in_array($this->value, $disabled[$value])) {
-						$valid = true;
-					}
-				// Check that the value matches and is not disabled
-				} elseif($this->value == $value && !in_array($this->value, $disabled)) {
-					$valid = true;
-				}
+	public function getSourceValues() {
+		// Flatten values
+		$values = array();
+		$source = $this->getSource();
+		array_walk_recursive(
+			$source,
+			// Function to extract value from array key
+			function($title, $value) use (&$values) {
+				$values[] = $value;
 			}
-		} elseif ($this->getHasEmptyDefault()) {
-			$valid = true;
-		}
-
-		if (!$valid) {
-			$validator->validationError(
-				$this->name,
-				_t(
-					'DropdownField.SOURCE_VALIDATION',
-					"Please select a value within the list provided. {value} is not a valid option",
-					array('value' => $this->value)
-				),
-				"validation"
-			);
-			return false;
-		}
-
-		return true;
+		);
+		return $values;
 	}
 
 }

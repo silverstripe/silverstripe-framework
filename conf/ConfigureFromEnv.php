@@ -144,7 +144,7 @@ if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
 if(defined('SS_ERROR_LOG')) {
 	$logger = Injector::inst()->get('Logger');
 	if($logger instanceof Logger) {
-		$logger->pushHandler(new StreamHandler(BASE_PATH . '/' . SS_ERROR_LOG, Logger::WARN));
+		$logger->pushHandler(new StreamHandler(BASE_PATH . '/' . SS_ERROR_LOG, Logger::WARNING));
 	} else {
 		user_error("SS_ERROR_LOG setting only works with Monolog, you are using another logger", E_USER_WARNING);
 	}

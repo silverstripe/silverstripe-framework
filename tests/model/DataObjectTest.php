@@ -26,6 +26,9 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Staff',
 		'DataObjectTest_CEO',
 		'DataObjectTest_Fan',
+		'DataObjectTest_Play',
+		'DataObjectTest_Ploy',
+		'DataObjectTest_Bogey',
 	);
 
 	public function testDb() {
@@ -830,11 +833,12 @@ class DataObjectTest extends SapphireTest {
 				'DatabaseField',
 				'ExtendedDatabaseField',
 				'CaptainID',
+				'FounderID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
 			),
-			array_keys($teamInstance->db()),
-			'db() contains all fields defined on instance: base, extended and foreign keys'
+			array_keys($teamInstance->inheritedDatabaseFields()),
+			'inheritedDatabaseFields() contains all fields defined on instance: base, extended and foreign keys'
 		);
 
 		$this->assertEquals(
@@ -847,11 +851,12 @@ class DataObjectTest extends SapphireTest {
 				'DatabaseField',
 				'ExtendedDatabaseField',
 				'CaptainID',
+				'FounderID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
 			),
-			array_keys(DataObjectTest_Team::database_fields()),
-			'database_fields() contains only fields defined on instance, including base, extended and foreign keys'
+			array_keys(DataObject::database_fields('DataObjectTest_Team', false)),
+			'databaseFields() contains only fields defined on instance, including base, extended and foreign keys'
 		);
 
 		$this->assertEquals(
@@ -864,6 +869,7 @@ class DataObjectTest extends SapphireTest {
 				'DatabaseField',
 				'ExtendedDatabaseField',
 				'CaptainID',
+				'FounderID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID',
 				'SubclassDatabaseField',
@@ -1356,7 +1362,10 @@ class DataObjectTest extends SapphireTest {
 		$assertions = array(
 			'DataObjectTest_Player'       => 'Data Object Test Players',
 			'DataObjectTest_Team'         => 'Data Object Test Teams',
-			'DataObjectTest_Fixture'      => 'Data Object Test Fixtures'
+			'DataObjectTest_Fixture'      => 'Data Object Test Fixtures',
+			'DataObjectTest_Play'         => 'Data Object Test Plays',
+			'DataObjectTest_Bogey'        => 'Data Object Test Bogeys',
+			'DataObjectTest_Ploy'         => 'Data Object Test Ploys',
 		);
 
 		foreach($assertions as $class => $expectedPluralName) {
@@ -1706,7 +1715,9 @@ class DataObjectTest_Player extends Member implements TestOnly {
 	);
 
 	private static $has_many = array(
-		'Fans' => 'DataObjectTest_Fan.Favourite' // Polymorphic - Player fans
+		'Fans' => 'DataObjectTest_Fan.Favourite', // Polymorphic - Player fans
+		'CaptainTeams' => 'DataObjectTest_Team.Captain',
+		'FoundingTeams' => 'DataObjectTest_Team.Founder'
 	);
 
 	private static $belongs_to = array (
@@ -1728,6 +1739,7 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 
 	private static $has_one = array(
 		"Captain" => 'DataObjectTest_Player',
+		"Founder" => 'DataObjectTest_Player',
 		'HasOneRelationship' => 'DataObjectTest_Player',
 	);
 
@@ -1952,6 +1964,10 @@ class DataObjectTest_ExtendedTeamComment extends DataObjectTest_TeamComment {
 		'Comment' => 'HTMLText'
 	);
 }
+
+class DataObjectTest_Play extends DataObject implements TestOnly {}
+class DataObjectTest_Ploy extends DataObject implements TestOnly {}
+class DataObjectTest_Bogey extends DataObject implements TestOnly {}
 
 DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');
 

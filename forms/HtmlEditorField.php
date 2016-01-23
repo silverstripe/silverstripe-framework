@@ -9,16 +9,12 @@
 class HtmlEditorField extends TextareaField {
 
 	/**
+	 * Use TinyMCE's GZIP compressor
+	 *
 	 * @config
-	 * @var Boolean Use TinyMCE's GZIP compressor
+	 * @var bool
 	 */
 	private static $use_gzip = true;
-
-	/**
-	 * @config
-	 * @var Integer Default insertion width for Images and Media
-	 */
-	private static $insert_width = 600;
 
 	/**
 	 * @config
@@ -26,6 +22,11 @@ class HtmlEditorField extends TextareaField {
 	 */
 	private static $sanitise_server_side = false;
 
+	/**
+	 * Number of rows
+	 *
+	 * @var int
+	 */
 	protected $rows = 30;
 
 	/**
@@ -73,38 +74,14 @@ class HtmlEditorField extends TextareaField {
 			);
 		}
 
-		$htmlValue = Injector::inst()->create('HTMLValue', $this->value);
+		// Resample images
+		$value = Image::regenerate_html_links($this->value);
+		$htmlValue = Injector::inst()->create('HTMLValue', $value);
 
 		// Sanitise if requested
 		if($this->config()->sanitise_server_side) {
 			$santiser = Injector::inst()->create('HtmlEditorSanitiser', HtmlEditorConfig::get_active());
 			$santiser->sanitise($htmlValue);
-		}
-
-		// Resample images and add default attributes
-		if($images = $htmlValue->getElementsByTagName('img')) foreach($images as $img) {
-			// strip any ?r=n data from the src attribute
-			$img->setAttribute('src', preg_replace('/([^\?]*)\?r=[0-9]+$/i', '$1', $img->getAttribute('src')));
-
-			// Resample the images if the width & height have changed.
-			if($image = File::find(urldecode(Director::makeRelative($img->getAttribute('src'))))){
-				$width  = (int)$img->getAttribute('width');
-				$height = (int)$img->getAttribute('height');
-
-				if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
-					//Make sure that the resized image actually returns an image:
-					$resized=$image->ResizedImage($width, $height);
-					if($resized) $img->setAttribute('src', $resized->getRelativePath());
-				}
-			}
-
-			// Add default empty title & alt attributes.
-			if(!$img->getAttribute('alt')) $img->setAttribute('alt', '');
-			if(!$img->getAttribute('title')) $img->setAttribute('title', '');
-
-			// Use this extension point to manipulate images inserted using TinyMCE, e.g. add a CSS class, change default title
-			// $image is the image, $img is the DOM model
-			$this->extend('processImage', $image, $img);
 		}
 
 		// optionally manipulate the HTML after a TinyMCE edit and prior to a save
@@ -322,9 +299,6 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			'Created' => 'SS_Datetime->Nice'
 		));
 
-		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span>'
-			. '<strong class="title">%s</strong></span>';
-
 		$fromCMS = new CompositeField(
 			$select = TreeDropdownField::create('ParentID', "", 'Folder')
 				->addExtraClass('noborder')
@@ -336,10 +310,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$select->addExtraClass('content-select');
 
 
+		$URLDescription = _t('HtmlEditorField.URLDESCRIPTION', 'Insert videos and images from the web into your page simply by entering the URL of the file. Make sure you have the rights or permissions before sharing media directly from the web.<br /><br />Please note that files are not added to the file store of the CMS but embeds the file from its original location, if for some reason the file is no longer available in its original location it will no longer be viewable on this page.');
 		$fromWeb = new CompositeField(
+			$description = new LiteralField('URLDescription', '<div class="url-description">' . $URLDescription . '</div>'),
 			$remoteURL = new TextField('RemoteURL', 'http://'),
 			new LiteralField('addURLImage',
-				'<button class="action ui-action-constructive ui-button field font-icon-plus add-url">' .
+				'<button type="button" class="action ui-action-constructive ui-button field font-icon-plus add-url">' .
 				_t('HtmlEditorField.BUTTONADDURL', 'Add url').'</button>')
 		);
 
@@ -354,11 +330,22 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->removeExtraClass('ss-uploadfield');
 		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
 		$computerUploadField->setFolderName(Config::inst()->get('Upload', 'uploads_folder'));
+		
+		$defaultPanel = new CompositeField(
+			$computerUploadField,
+			$fromCMS
+		);
+		
+		$fromWebPanel = new CompositeField(
+			$fromWeb
+		);
+		
+		$defaultPanel->addExtraClass('htmleditorfield-default-panel');
+		$fromWebPanel->addExtraClass('htmleditorfield-web-panel');
 
 		$allFields = new CompositeField(
-			$computerUploadField,
-			$fromWeb,
-			$fromCMS,
+			$defaultPanel,
+			$fromWebPanel,
 			$editComposite = new CompositeField(
 				new LiteralField('contentEdit', '<div class="content-edit ss-uploadfield-files files"></div>')
 			)
@@ -407,29 +394,27 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 	/**
 	 * View of a single file, either on the filesystem or on the web.
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @return string
 	 */
 	public function viewfile($request) {
-
 		// TODO Would be cleaner to consistently pass URL for both local and remote files,
 		// but GridField doesn't allow for this kind of metadata customization at the moment.
+		$file = null;
 		if($url = $request->getVar('FileURL')) {
-			if(Director::is_absolute_url($url) && !Director::is_site_url($url)) {
-				$file = new File(array(
-					'Title' => basename($url),
-					'Filename' => $url
-				));
-			} else {
-				$url = Director::makeRelative($request->getVar('FileURL'));
-				$url = Image::strip_resampled_prefix($url);
-				$file = File::get()->filter('Filename', $url)->first();
-				if(!$file) $file = new File(array(
-					'Title' => basename($url),
-					'Filename' => $url
-				));
-			}
+			// URLS should be used for remote resources (not local assets)
+			$url = Director::absoluteURL($url);
 		} elseif($id = $request->getVar('ID')) {
+			// Use local dataobject
 			$file = DataObject::get_by_id('File', $id);
-			$url = $file->RelativeLink();
+			if(!$file) {
+				throw new InvalidArgumentException("File could not be found");
+			}
+			$url = $file->getURL();
+			if(!$url) {
+				return $this->httpError(404, 'File not found');
+			}
 		} else {
 			throw new LogicException('Need either "ID" or "FileURL" parameter to identify the file');
 		}
@@ -437,17 +422,30 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		// Instanciate file wrapper and get fields based on its type
 		// Check if appCategory is an image and exists on the local system, otherwise use oEmbed to refference a
 		// remote image
-		if($file && $file->appCategory() == 'image' && Director::is_site_url($url)) {
-			$fileWrapper = new HtmlEditorField_Image($url, $file);
-		} elseif(!Director::is_site_url($url)) {
-			$fileWrapper = new HtmlEditorField_Embed($url, $file);
-		} else {
-			$fileWrapper = new HtmlEditorField_File($url, $file);
+		$fileCategory = File::get_app_category(File::get_file_extension($url));
+		switch($fileCategory) {
+			case 'image':
+			case 'image/supported':
+				$fileWrapper = new HtmlEditorField_Image($url, $file);
+				break;
+			case 'flash':
+				$fileWrapper = new HtmlEditorField_Flash($url, $file);
+				break;
+			default:
+				// Only remote files can be linked via o-embed
+				// {@see HtmlEditorField_Toolbar::getAllowedExtensions())
+				if($file) {
+					throw new InvalidArgumentException(
+						"Oembed is only compatible with remote files"
+					);
+				}
+				// Other files should fallback to oembed
+				$fileWrapper = new HtmlEditorField_Embed($url, $file);
+				break;
 		}
 
+		// Render fields and return
 		$fields = $this->getFieldsForFile($url, $fileWrapper);
-		$this->extend('updateFieldsForFile', $fields, $url, $fileWrapper);
-
 		return $fileWrapper->customise(array(
 			'Fields' => $fields,
 		))->renderWith($this->templateViewFile);
@@ -474,8 +472,14 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			}
 
 			// Similar to the regex found in HtmlEditorField.js / getAnchors method.
-			if (preg_match_all("/name=\"([^\"]+?)\"|name='([^']+?)'/im", $page->Content, $matches)) {
-				$anchors = $matches[1];
+			if (preg_match_all(
+				"/\\s+(name|id)\\s*=\\s*([\"'])([^\\2\\s>]*?)\\2|\\s+(name|id)\\s*=\\s*([^\"']+)[\\s +>]/im",
+				$page->Content,
+				$matches
+			)) {
+				$anchors = array_values(array_unique(array_filter(
+					array_merge($matches[3], $matches[5]))
+				));
 			}
 
 		} else {
@@ -493,243 +497,33 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * for manipulating the instance of the file as inserted into the HTML content,
 	 * not the "master record" in the database - hence there's no form or saving logic.
 	 *
-	 * @param String Relative or absolute URL to file
+	 * @param string $url Abolute URL to asset
+	 * @param HtmlEditorField_File $file Asset wrapper
 	 * @return FieldList
 	 */
-	protected function getFieldsForFile($url, $file) {
+	protected function getFieldsForFile($url, HtmlEditorField_File $file) {
 		$fields = $this->extend('getFieldsForFile', $url, $file);
 		if(!$fields) {
-			if($file instanceof HtmlEditorField_Embed) {
-				$fields = $this->getFieldsForOembed($url, $file);
-			} elseif($file->Extension == 'swf') {
-				$fields = $this->getFieldsForFlash($url, $file);
-			} else {
-				$fields = $this->getFieldsForImage($url, $file);
-			}
-			$fields->push(new HiddenField('URL', false, $url));
+			$fields = $file->getFields();
+			$file->extend('updateFields', $fields);
 		}
-
 		$this->extend('updateFieldsForFile', $fields, $url, $file);
-
 		return $fields;
 	}
 
-	/**
-	 * @return FieldList
-	 */
-	protected function getFieldsForOembed($url, $file) {
-		if(isset($file->Oembed->thumbnail_url)) {
-			$thumbnailURL = Convert::raw2att($file->Oembed->thumbnail_url);
-		} elseif($file->Type == 'photo') {
-			$thumbnailURL = Convert::raw2att($file->Oembed->url);
-		} else {
-			$thumbnailURL = FRAMEWORK_DIR . '/images/default_media.png';
-		}
-
-		$fileName = Convert::raw2att($file->Name);
-
-		$fields = new FieldList(
-			$filePreview = CompositeField::create(
-				CompositeField::create(
-					new LiteralField(
-						"ImageFull",
-						"<img id='thumbnailImage' class='thumbnail-preview' "
-							. "src='{$thumbnailURL}?r=" . rand(1,100000) . "' alt='$fileName' />\n"
-					)
-				)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
-				CompositeField::create(
-					CompositeField::create(
-						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':', $file->Type),
-						$urlField = ReadonlyField::create(
-							'ClickableURL',
-							_t('AssetTableField.URL','URL'),
-							sprintf(
-								'<a href="%s" target="_blank" class="file">%s</a>',
-								Convert::raw2att($url),
-								Convert::raw2att($url)
-							)
-						)->addExtraClass('text-wrap')
-					)
-				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
-			)->setName("FilePreview")->addExtraClass('cms-file-info'),
-			new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
-			DropdownField::create(
-				'CSSClass',
-				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
-				array(
-					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
-					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
-				)
-			)->addExtraClass('last')
-		);
-
-		if($file->Width != null){
-			$fields->push(
-				FieldGroup::create(
-					_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-					TextField::create(
-						'Width',
-						_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'),
-						$file->InsertWidth
-					)->setMaxLength(5),
-					TextField::create(
-						'Height',
-						_t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
-						$file->InsertHeight
-					)->setMaxLength(5)
-				)->addExtraClass('dimensions last')
-			);
-		}
-		$urlField->dontEscape = true;
-
-		if($file->Type == 'photo') {
-			$fields->insertBefore('CaptionText', new TextField(
-				'AltText',
-				_t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image can\'t be displayed'),
-				$file->Title,
-				80
-			));
-			$fields->insertBefore('CaptionText', new TextField(
-				'Title',
-				_t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')
-			));
-		}
-
-		$this->extend('updateFieldsForOembed', $fields, $url, $file);
-
-		return $fields;
-	}
 
 	/**
-	 * @return FieldList
-	 */
-	protected function getFieldsForFlash($url, $file) {
-		$fields = new FieldList(
-			FieldGroup::create(
-				_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-				TextField::create(
-					'Width',
-					_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'),
-					$file->Width
-				)->setMaxLength(5),
-				TextField::create(
-					'Height',
-					" x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
-					$file->Height
-				)->setMaxLength(5)
-			)->addExtraClass('dimensions')
-		);
-
-		$this->extend('updateFieldsForFlash', $fields, $url, $file);
-
-		return $fields;
-	}
-
-	/**
-	 * @return FieldList
-	 */
-	protected function getFieldsForImage($url, $file) {
-		if($file->File instanceof Image) {
-			$formattedImage = $file->File->generateFormattedImage('ScaleWidth',
-				Config::inst()->get('Image', 'asset_preview_width'));
-			$thumbnailURL = Convert::raw2att($formattedImage ? $formattedImage->URL : $url);
-		} else {
-			$thumbnailURL = Convert::raw2att($url);
-		}
-
-		$fileName = Convert::raw2att($file->Name);
-
-		$fields = new FieldList(
-			CompositeField::create(
-				CompositeField::create(
-					LiteralField::create(
-						"ImageFull",
-						"<img id='thumbnailImage' class='thumbnail-preview' "
-							. "src='{$thumbnailURL}?r=" . rand(1,100000) . "' alt='$fileName' />\n"
-					)
-				)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
-				CompositeField::create(
-					CompositeField::create(
-						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type'), $file->FileType),
-						new ReadonlyField("Size", _t('AssetTableField.SIZE','File size'), $file->getSize()),
-						$urlField = new ReadonlyField(
-							'ClickableURL',
-							_t('AssetTableField.URL','URL'),
-							sprintf(
-								'<a href="%s" title="%s" target="_blank" class="file-url">%s</a>',
-								Convert::raw2att($file->Link()),
-								Convert::raw2att($file->Link()),
-								Convert::raw2att($file->RelativeLink())
-							)
-						),
-						new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded'),
-							$file->Created),
-						new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed'),
-							$file->LastEdited)
-					)
-				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
-			)->setName("FilePreview")->addExtraClass('cms-file-info'),
-
-			TextField::create(
-				'AltText',
-				_t('HtmlEditorField.IMAGEALT', 'Alternative text (alt)'),
-				$file->Title,
-				80
-			)->setDescription(
-				_t('HtmlEditorField.IMAGEALTTEXTDESC', 'Shown to screen readers or if image can\'t be displayed')),
-
-			TextField::create(
-				'Title',
-				_t('HtmlEditorField.IMAGETITLETEXT', 'Title text (tooltip)')
-			)->setDescription(
-				_t('HtmlEditorField.IMAGETITLETEXTDESC', 'For additional information about the image')),
-
-			new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
-			DropdownField::create(
-				'CSSClass',
-				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
-				array(
-					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
-					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
-				)
-			)->addExtraClass('last')
-		);
-
-		if($file->Width != null){
-			$fields->push(
-				FieldGroup::create(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-					TextField::create(
-						'Width',
-						_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'),
-						$file->InsertWidth
-					)->setMaxLength(5),
-					TextField::create(
-						'Height',
-						" x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
-						$file->InsertHeight
-					)->setMaxLength(5)
-				)->addExtraClass('dimensions last')
-			);
-		}
-		$urlField->dontEscape = true;
-
-		$this->extend('updateFieldsForImage', $fields, $url, $file);
-
-		return $fields;
-	}
-
-	/**
-	 * @param Int
+	 * Gets files filtered by a given parent with the allowed extensions
+	 *
+	 * @param int $parentID
 	 * @return DataList
 	 */
 	protected function getFiles($parentID = null) {
 		$exts = $this->getAllowedExtensions();
-		$dotExts = array_map(function($ext) { return ".{$ext}"; }, $exts);
-		$files = File::get()->filter('Filename:EndsWith', $dotExts);
+		$dotExts = array_map(function($ext) { 
+			return ".{$ext}";
+		}, $exts);
+		$files = File::get()->filter('Name:EndsWith', $dotExts);
 
 		// Limit by folder (if required)
 		if($parentID) {
@@ -743,7 +537,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Array All extensions which can be handled by the different views.
 	 */
 	protected function getAllowedExtensions() {
-		$exts = array('jpg', 'gif', 'png', 'swf','jpeg');
+		$exts = array('jpg', 'gif', 'png', 'swf', 'jpeg');
 		$this->extend('updateAllowedExtensions', $exts);
 		return $exts;
 	}
@@ -759,74 +553,355 @@ class HtmlEditorField_Toolbar extends RequestHandler {
  * @package forms
  * @subpackage fields-formattedinput
  */
-class HtmlEditorField_File extends ViewableData {
+abstract class HtmlEditorField_File extends ViewableData {
+
+	/**
+	 * Default insertion width for Images and Media
+	 *
+	 * @config
+	 * @var int
+	 */
+	private static $insert_width = 600;
+
+	/**
+	 * Default insert height for images and media
+	 *
+	 * @config
+	 * @var int
+	 */
+	private static $insert_height = 360;
+
+	/**
+	 * Max width for insert-media preview.
+	 *
+	 * Matches CSS rule for .cms-file-info-preview
+	 *
+	 * @var int
+	 */
+	private static $media_preview_width = 176;
+
+	/**
+	 * Max height for insert-media preview.
+	 *
+	 * Matches CSS rule for .cms-file-info-preview
+	 *
+	 * @var int
+	 */
+	private static $media_preview_height = 128;
 
 	private static $casting = array(
 		'URL' => 'Varchar',
 		'Name' => 'Varchar'
 	);
 
-	/** @var String */
+	/**
+	 * Absolute URL to asset
+	 *
+	 * @var string
+	 */
 	protected $url;
 
-	/** @var File */
+	/**
+	 * File dataobject (if available)
+	 *
+	 * @var File
+	 */
 	protected $file;
 
 	/**
-	 * @param String
-	 * @param File
+	 * @param string $url
+	 * @param File $file
 	 */
-	public function __construct($url, $file = null) {
+	public function __construct($url, File $file = null) {
 		$this->url = $url;
 		$this->file = $file;
 		$this->failover = $file;
-
 		parent::__construct();
 	}
 
 	/**
-	 * @return File Might not be set (for remote files)
+	 * @return FieldList
+	 */
+	public function getFields() {
+		$fields = new FieldList(
+			CompositeField::create(
+				CompositeField::create(LiteralField::create("ImageFull", $this->getPreview()))
+					->setName("FilePreviewImage")
+					->addExtraClass('cms-file-info-preview'),
+				CompositeField::create($this->getDetailFields())
+					->setName("FilePreviewData")
+					->addExtraClass('cms-file-info-data')
+			)
+				->setName("FilePreview")
+				->addExtraClass('cms-file-info'),
+			TextField::create('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
+			DropdownField::create(
+				'CSSClass',
+				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
+				array(
+					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
+					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
+				)
+			),
+			FieldGroup::create(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+				TextField::create(
+					'Width',
+					_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'),
+					$this->getInsertWidth()
+				)->setMaxLength(5),
+				TextField::create(
+					'Height',
+					" x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
+					$this->getInsertHeight()
+				)->setMaxLength(5)
+			)->addExtraClass('dimensions last'),
+			HiddenField::create('URL', false, $this->getURL()),
+			HiddenField::create('FileID', false, $this->getFileID())
+		);
+		return $fields;
+	}
+
+	/**
+	 * Get list of fields for previewing this records details
+	 *
+	 * @return FieldList
+	 */
+	protected function getDetailFields() {
+		$fields = new FieldList(
+			ReadonlyField::create("FileType", _t('AssetTableField.TYPE','File type'), $this->getFileType()),
+			ReadonlyField::create(
+				'ClickableURL', _t('AssetTableField.URL','URL'), $this->getExternalLink()
+			)->setDontEscape(true)
+		);
+		// Get file size
+		if($this->getSize()) {
+			$fields->insertAfter(
+				'FileType',
+				ReadonlyField::create("Size", _t('AssetTableField.SIZE','File size'), $this->getSize())
+			);
+		}
+		// Get modified details of local record
+		if($this->getFile()) {
+			$fields->push(new DateField_Disabled(
+				"Created",
+				_t('AssetTableField.CREATED', 'First uploaded'),
+				$this->getFile()->Created
+			));
+			$fields->push(new DateField_Disabled(
+				"LastEdited",
+				_t('AssetTableField.LASTEDIT','Last changed'),
+				$this->getFile()->LastEdited
+			));
+		}
+		return $fields;
+		
+	}
+
+	/**
+	 * Get file DataObject
+	 *
+	 * Might not be set (for remote files)
+	 *
+	 * @return File
 	 */
 	public function getFile() {
 		return $this->file;
 	}
 
+	/**
+	 * Get file ID
+	 * 
+	 * @return int
+	 */
+	public function getFileID() {
+		if($file = $this->getFile()) {
+			return $file->ID;
+		}
+	}
+
+	/**
+	 * Get absolute URL
+	 *
+	 * @return string
+	 */
 	public function getURL() {
 		return $this->url;
 	}
 
+	/**
+	 * Get basename
+	 *
+	 * @return string
+	 */
 	public function getName() {
-		return ($this->file) ? $this->file->Name : preg_replace('/\?.*/', '', basename($this->url));
+		return $this->file
+			? $this->file->Name
+			: preg_replace('/\?.*/', '', basename($this->url));
 	}
 
 	/**
-	 * @return String HTML
+	 * Get descriptive file type
+	 *
+	 * @return string
+	 */
+	public function getFileType() {
+		return File::get_file_type($this->getName());
+	}
+
+	/**
+	 * Get file size (if known) as string
+	 *
+	 * @return string|false String value, or false if doesn't exist
+	 */
+	public function getSize() {
+		if($this->file) {
+			return $this->file->getSize();
+		}
+		return false;
+	}
+
+	/**
+	 * HTML content for preview
+	 *
+	 * @return string HTML
 	 */
 	public function getPreview() {
 		$preview = $this->extend('getPreview');
-		if($preview) return $preview;
+		if($preview) {
+			return $preview;
+		}
+		
+		// Generate tag from preview
+		$thumbnailURL = Convert::raw2att(
+			Controller::join_links($this->getPreviewURL(), "?r=" . rand(1,100000))
+		);
+		$fileName = Convert::raw2att($this->Name);
+		return sprintf(
+			"<img id='thumbnailImage' class='thumbnail-preview'  src='%s' alt='%s' />\n",
+			$thumbnailURL,
+			$fileName
+		);
+	}
 
+	/**
+	 * HTML Content for external link
+	 *
+	 * @return string
+	 */
+	public function getExternalLink() {
+		$title = $this->file
+			? $this->file->getTitle()
+			: $this->getName();
+		return sprintf(
+			'<a href="%1$s" title="%2$s" target="_blank" rel="external" class="file-url">%1$s</a>',
+			Convert::raw2att($this->url),
+			Convert::raw2att($title)
+		);
+	}
+
+	/**
+	 * Generate thumbnail url
+	 *
+	 * @return string
+	 */
+	public function getPreviewURL() {
+		// Get preview from file
 		if($this->file) {
-			return $this->file->CMSThumbnail();
-		} else {
-			// Hack to use the framework's built-in thumbnail support without creating a local file representation
-			$tmpFile = new File(array('Name' => $this->Name, 'Filename' => $this->Name));
-			return $tmpFile->CMSThumbnail();
+			return $this->getFilePreviewURL();
+		}
+
+		// Generate default icon html
+		return File::get_icon_for_extension($this->getExtension());
+	}
+
+	/**
+	 * Generate thumbnail URL from file dataobject (if available)
+	 *
+	 * @return string
+	 */
+	protected function getFilePreviewURL() {
+		// Get preview from file
+		if($this->file) {
+			$width = $this->config()->media_preview_width;
+			$height = $this->config()->media_preview_height;
+			return $this->file->ThumbnailURL($width, $height);
 		}
 	}
 
+	/**
+	 * Get file extension
+	 *
+	 * @return string
+	 */
 	public function getExtension() {
-		return strtolower(($this->file) ? $this->file->Extension : pathinfo($this->Name, PATHINFO_EXTENSION));
+		$extension = File::get_file_extension($this->getName());
+		return strtolower($extension);
 	}
 
+	/**
+	 * Category name
+	 *
+	 * @return string
+	 */
 	public function appCategory() {
 		if($this->file) {
 			return $this->file->appCategory();
 		} else {
-			// Hack to use the framework's built-in thumbnail support without creating a local file representation
-			$tmpFile = new File(array('Name' => $this->Name, 'Filename' => $this->Name));
-			return $tmpFile->appCategory();
+			return File::get_app_category($this->getExtension());
 		}
+	}
+
+	/**
+	 * Get height of this item
+	 */
+	public function getHeight() {
+		if($this->file) {
+			$height = $this->file->getHeight();
+			if($height) {
+				return $height;
+			}
+		}
+		return $this->config()->insert_height;
+	}
+
+	/**
+	 * Get width of this item
+	 *
+	 * @return type
+	 */
+	public function getWidth() {
+		if($this->file) {
+			$width = $this->file->getWidth();
+			if($width) {
+				return $width;
+			}
+		}
+		return $this->config()->insert_width;
+	}
+
+	/**
+	 * Provide an initial width for inserted media, restricted based on $embed_width
+	 *
+	 * @return int
+	 */
+	public function getInsertWidth() {
+		$width = $this->getWidth();
+		$maxWidth = $this->config()->insert_width;
+		return ($width <= $maxWidth) ? $width : $maxWidth;
+	}
+
+	/**
+	 * Provide an initial height for inserted media, scaled proportionally to the initial width
+	 *
+	 * @return int
+	 */
+	public function getInsertHeight() {
+		$width = $this->getWidth();
+		$height = $this->getHeight();
+		$maxWidth = $this->config()->insert_width;
+		return ($width <= $maxWidth) ? $height : round($height*($maxWidth/$width));
 	}
 
 }
@@ -845,9 +920,14 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 		'Info' => 'Varchar'
 	);
 
+	/**
+	 * Oembed result
+	 *
+	 * @var Oembed_Result
+	 */
 	protected $oembed;
 
-	public function __construct($url, $file = null) {
+	public function __construct($url, File $file = null) {
 		parent::__construct($url, $file);
 		$this->oembed = Oembed::get_oembed_from_url($url);
 		if(!$this->oembed) {
@@ -866,41 +946,59 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 		}
 	}
 
+	/**
+	 * Get file-edit fields for this filed
+	 *
+	 * @return FieldList
+	 */
+	public function getFields() {
+		$fields = parent::getFields();
+		if($this->Type === 'photo') {
+			$fields->insertBefore('CaptionText', new TextField(
+				'AltText',
+				_t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image can\'t be displayed'),
+				$this->Title,
+				80
+			));
+			$fields->insertBefore('CaptionText', new TextField(
+				'Title',
+				_t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')
+			));
+		}
+		return $fields;
+	}
+
+	/**
+	 * Get width of this oembed
+	 *
+	 * @return int
+	 */
 	public function getWidth() {
 		return $this->oembed->Width ?: 100;
 	}
 
+	/**
+	 * Get height of this oembed
+	 *
+	 * @return int
+	 */
 	public function getHeight() {
 		return $this->oembed->Height ?: 100;
 	}
 
-	/**
-	 * Provide an initial width for inserted media, restricted based on $embed_width
-	 *
-	 * @return int
-	 */
-	public function getInsertWidth() {
-		$width = $this->getWidth();
-		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
-		return ($width <= $maxWidth) ? $width : $maxWidth;
-	}
-
-	/**
-	 * Provide an initial height for inserted media, scaled proportionally to the initial width
-	 *
-	 * @return int
-	 */
-	public function getInsertHeight() {
-		$width = $this->getWidth();
-		$height = $this->getHeight();
-		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
-		return ($width <= $maxWidth) ? $height : round($height*($maxWidth/$width));
-	}
-
-	public function getPreview() {
-		if(isset($this->oembed->thumbnail_url)) {
-			return sprintf('<img src="%s" />', Convert::raw2att($this->oembed->thumbnail_url));
+	public function getPreviewURL() {
+		// Use thumbnail url
+		if(!empty($this->oembed->thumbnail_url)) {
+			return $this->oembed->thumbnail_url;
 		}
+
+		// Use direct image type
+		if($this->getType() == 'photo' && !empty($this->Oembed->url)) {
+			return $this->Oembed->url;
+		}
+
+		// Default media
+		return FRAMEWORK_DIR . '/images/default_media.png';
 	}
 
 	public function getName() {
@@ -911,10 +1009,23 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 		}
 	}
 
+	/**
+	 * Get OEmbed type
+	 *
+	 * @return string
+	 */
 	public function getType() {
 		return $this->oembed->type;
 	}
 
+	public function getFileType() {
+		return $this->getType()
+			?: parent::getFileType();
+	}
+
+	/**
+	 * @return Oembed_Result
+	 */
 	public function getOembed() {
 		return $this->oembed;
 	}
@@ -923,6 +1034,11 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 		return 'embed';
 	}
 
+	/**
+	 * Info for this oembed
+	 *
+	 * @return string
+	 */
 	public function getInfo() {
 		return $this->oembed->info;
 	}
@@ -936,14 +1052,37 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
  */
 class HtmlEditorField_Image extends HtmlEditorField_File {
 
+	/**
+	 * @var int
+	 */
 	protected $width;
 
+	/**
+	 * @var int
+	 */
 	protected $height;
 
-	public function __construct($url, $file = null) {
+	/**
+	 * File size details
+	 *
+	 * @var string
+	 */
+	protected $size;
+
+	public function __construct($url, File $file = null) {
 		parent::__construct($url, $file);
 
-		// Get dimensions for remote file
+		if($file) {
+			return;
+		}
+
+		// Get size of remote file
+		$size = @filesize($url);
+		if($size) {
+			$this->size = $size;
+		}
+
+		// Get dimensions of remote file
 		$info = @getimagesize($url);
 		if($info) {
 			$this->width = $info[0];
@@ -951,12 +1090,117 @@ class HtmlEditorField_Image extends HtmlEditorField_File {
 		}
 	}
 
+	public function getFields() {
+		$fields = parent::getFields();
+
+		// Alt text
+		$fields->insertBefore(
+			'CaptionText',
+			TextField::create(
+				'AltText',
+				_t('HtmlEditorField.IMAGEALT', 'Alternative text (alt)'),
+				$this->Title,
+				80
+			)->setDescription(
+				_t('HtmlEditorField.IMAGEALTTEXTDESC', 'Shown to screen readers or if image can\'t be displayed')
+			)
+		);
+
+		// Tooltip
+		$fields->insertAfter(
+			'AltText',
+			TextField::create(
+				'Title',
+				_t('HtmlEditorField.IMAGETITLETEXT', 'Title text (tooltip)')
+			)->setDescription(
+				_t('HtmlEditorField.IMAGETITLETEXTDESC', 'For additional information about the image')
+			)
+		);
+
+		return $fields;
+	}
+
+	protected function getDetailFields() {
+		$fields = parent::getDetailFields();
+		$width = $this->getOriginalWidth();
+		$height = $this->getOriginalHeight();
+
+		// Show dimensions of original
+		if($width && $height) {
+			$fields->insertAfter(
+				'ClickableURL',
+				ReadonlyField::create(
+					"OriginalWidth",
+					_t('AssetTableField.WIDTH','Width'),
+					$width
+				)
+			);
+			$fields->insertAfter(
+				'OriginalWidth',
+				ReadonlyField::create(
+					"OriginalHeight",
+					_t('AssetTableField.HEIGHT','Height'),
+					$height
+				)
+			);
+		}
+		return $fields;
+	}
+
+	/**
+	 * Get width of original, if known
+	 *
+	 * @return int
+	 */
+	public function getOriginalWidth() {
+		if($this->width) {
+			return $this->width;
+		}
+		if($this->file) {
+			$width = $this->file->getWidth();
+			if($width) {
+				return $width;
+			}
+		}
+	}
+
+	/**
+	 * Get height of original, if known
+	 *
+	 * @return int
+	 */
+	public function getOriginalHeight() {
+		if($this->height) {
+			return $this->height;
+		}
+
+		if($this->file) {
+			$height = $this->file->getHeight();
+			if($height) {
+				return $height;
+			}
+		}
+	}
+
 	public function getWidth() {
-		return ($this->file) ? $this->file->Width : $this->width;
+		if($this->width) {
+			return $this->width;
+		}
+		return parent::getWidth();
 	}
 
 	public function getHeight() {
-		return ($this->file) ? $this->file->Height : $this->height;
+		if($this->height) {
+			return $this->height;
+		}
+		return parent::getHeight();
+	}
+
+	public function getSize() {
+		if($this->size) {
+			return File::format_size($this->size);
+		}
+		parent::getSize();
 	}
 
 	/**
@@ -966,8 +1210,10 @@ class HtmlEditorField_Image extends HtmlEditorField_File {
 	 */
 	public function getInsertWidth() {
 		$width = $this->getWidth();
-		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
-		return ($width <= $maxWidth) ? $width : $maxWidth;
+		$maxWidth = $this->config()->insert_width;
+		return $width <= $maxWidth
+			? $width
+			: $maxWidth;
 	}
 
 	/**
@@ -978,12 +1224,29 @@ class HtmlEditorField_Image extends HtmlEditorField_File {
 	public function getInsertHeight() {
 		$width = $this->getWidth();
 		$height = $this->getHeight();
-		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
+		$maxWidth = $this->config()->insert_width;
 		return ($width <= $maxWidth) ? $height : round($height*($maxWidth/$width));
 	}
 
-	public function getPreview() {
-		return ($this->file) ? $this->file->CMSThumbnail() : sprintf('<img src="%s" />', Convert::raw2att($this->url));
-	}
+	public function getPreviewURL() {
+		// Get preview from file
+		if($this->file) {
+			return $this->getFilePreviewURL();
+		}
 
+		// Embed image directly
+		return $this->url;
+	}
+}
+
+/**
+ * Generate flash file embed
+ */
+class HtmlEditorField_Flash extends HtmlEditorField_File {
+
+	public function getFields() {
+		$fields = parent::getFields();
+		$fields->removeByName('CaptionText', true);
+		return $fields;
+	}
 }

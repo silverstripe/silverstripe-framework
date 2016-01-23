@@ -111,6 +111,9 @@ class ExactMatchFilter extends SearchFilter {
 		// Check values for null
 		$field = $this->getDbName();
 		$values = $this->getValue();
+		if(empty($values)) {
+			throw new \InvalidArgumentException("Cannot filter {$field} against an empty set");
+		}
 		$hasNull = in_array(null, $values, true);
 		if($hasNull) {
 			$values = array_filter($values, function($value) {

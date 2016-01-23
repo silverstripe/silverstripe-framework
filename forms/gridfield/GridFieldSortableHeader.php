@@ -114,8 +114,8 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 					} elseif(method_exists($tmpItem, 'hasMethod') && $tmpItem->hasMethod($methodName)) {
 						// The part is a relation name, so get the object/list from it
 						$tmpItem = $tmpItem->$methodName();
-					} elseif($tmpItem instanceof DataObject && $tmpItem->hasField($methodName)) {
-						// Else, if we've found a field at the end of the chain, we can sort on it.
+					} elseif($tmpItem instanceof DataObject && $tmpItem->hasDatabaseField($methodName)) {
+						// Else, if we've found a database field at the end of the chain, we can sort on it.
 						// If a method is applied further to this field (E.g. 'Cost.Currency') then don't try to sort.
 						$allowSort = $idx === sizeof($parts) - 1;
 						break;
@@ -150,7 +150,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 						&& $gridField->getConfig()->getComponentByType('GridFieldFilterHeader')){
 
 					$field = new LiteralField($fieldName,
-						'<button name="showFilter" class="ss-gridfield-button-filter trigger"></button>');
+						'<button type="button" name="showFilter" class="ss-gridfield-button-filter trigger"></button>');
 				} else {
 					$field = new LiteralField($fieldName, '<span class="non-sortable">' . $title . '</span>');
 				}
@@ -192,7 +192,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	}
 
 	/**
-	 * Returns the manipulated (sorted) DataList. Field names will simply add an 
+	 * Returns the manipulated (sorted) DataList. Field names will simply add an
 	 * 'ORDER BY' clause, relation names will add appropriate joins to the
 	 * {@link DataQuery} first.
 	 *
@@ -208,53 +208,6 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			return $dataList;
 		}
 
-		$column = $state->SortColumn;
-
-		// if we have a relation column with dot notation
-		if(strpos($column, '.') !== false) {
-			$lastAlias = $dataList->dataClass();
-			$tmpItem = singleton($lastAlias);
-			$parts = explode('.', $state->SortColumn);
-
-			for($idx = 0; $idx < sizeof($parts); $idx++) {
-				$methodName = $parts[$idx];
-
-				// If we're not on the last item, we're looking at a relation
-				if($idx !== sizeof($parts) - 1) {
-					// Traverse to the relational list
-					$tmpItem = $tmpItem->$methodName();
-
-					$joinClass = ClassInfo::table_for_object_field(
-						$lastAlias, 
-						$methodName . "ID"
-					);
-
-					// if the field isn't in the object tree then it is likely
-					// been aliased. In that event, assume what the user has
-					// provided is the correct value
-					if(!$joinClass) $joinClass = $lastAlias;
-
-					$dataList = $dataList->leftJoin(
-						$tmpItem->class,
-						'"' . $methodName . '"."ID" = "' . $joinClass . '"."' . $methodName . 'ID"',
-						$methodName
-					);
-
-					// Store the last 'alias' name as it'll be used for the next
-					// join, or the 'sort' column
-					$lastAlias = $methodName;
-				} else {
-					// Change relation.relation.fieldname to alias.fieldname
-					$column = $lastAlias . '.' . $methodName;
-				}
-			}
-		}
-
-		// We need to manually create our ORDER BY "Foo"."Bar" string for relations,
-		// as ->sort() won't do it by itself. Blame PostgreSQL for making this necessary
-		$pieces = explode('.', $column);
-		$column = '"' . implode('"."', $pieces) . '"';
-
-		return $dataList->sort($column, $state->SortDirection('asc'));
+		return $dataList->sort($state->SortColumn, $state->SortDirection('asc'));
 	}
 }

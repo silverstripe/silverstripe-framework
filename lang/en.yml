@@ -1,5 +1,7 @@
 en:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed file upload extensions'
+    HIDEALLOWEDEXTS: 'Hide allowed extensions'
     NEWFOLDER: NewFolder
     SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
@@ -7,12 +9,14 @@ en:
     DIM: Dimensions
     FILENAME: Filename
     FOLDER: Folder
+    HEIGHT: Height
     LASTEDIT: 'Last changed'
     OWNER: Owner
     SIZE: 'File size'
     TITLE: Title
     TYPE: 'File type'
     URL: URL
+    WIDTH: Width
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -23,8 +27,10 @@ en:
     FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
+    INSERTURL: 'Insert from URL'
+    REMOVEINFO: 'Remove this file from this field'
     TOTAL: Total
-    TOUPLOAD: 'Upload'
+    TOUPLOAD: 'Upload files'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -77,6 +83,8 @@ en:
     PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Website preview'
+  CMSPagesController_Tools_ss:
+    FILTER: Filter
   CMSProfileController:
     MENUTITLE: 'My Profile'
   CMSSecurity:
@@ -105,6 +113,7 @@ en:
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'You must log in with your CMS password in order to view the draft or archived content. <a href="%s">Click here to go back to the published site.</a>'
     NOTLOGGEDIN: 'Not logged in'
   CreditCardField:
     FIRST: first
@@ -144,7 +153,7 @@ en:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Choose)
-    CHOOSESEARCH: '(Choose or Search)'
+    CHOOSESEARCH: '(choose folder)'
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   EmailField:
     VALIDATION: 'Please enter an email address'
@@ -292,8 +301,8 @@ en:
     FROMWEB: 'From the web'
     FindInFolder: 'Find in Folder'
     IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXT: 'Alternative text (alt) - shown if image can''t be displayed'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can''t be displayed'
     IMAGEDIMENSIONS: Dimensions
     IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
@@ -313,6 +322,7 @@ en:
     PAGE: Page
     SUBJECT: 'Email subject'
     URL: URL
+    URLDESCRIPTION: 'Insert videos and images from the web into your page simply by entering the URL of the file. Make sure you have the rights or permissions before sharing media directly from the web.<br /><br />Please note that files are not added to the file store of the CMS but embeds the file from its original location, if for some reason the file is no longer available in its original location it will no longer be viewable on this page.'
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update media'
   Image:
@@ -328,11 +338,11 @@ en:
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
     HELP: Help
-    PAGETYPE: 'Page type: '
+    PAGETYPE: 'Page type'
     PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below.'
     PERMDEFAULT: 'You must be logged in to access the administration area; please enter your credentials below.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PLEASESAVE: 'Please Save Page: This page could not be updated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.

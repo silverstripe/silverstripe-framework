@@ -51,7 +51,7 @@ When designing your site you should only need to modify the *mysite*, *themes* a
 
 ![](../_images/tutorial1_cms-basic.jpg)
 
-The CMS is the area in which you can manage your site content. You can access the cms at http://localhost/your_site_name/admin (or http://yourdomain.com/admin if you are using your own domain name). You
+The CMS is the area in which you can manage your site content. You can access the cms at `http://localhost/your_site_name/admin` (or `http://yourdomain.com/admin` if you are using your own domain name). You
 will be presented with a login screen. Login using the details you provided at installation. After logging in you
 should see the CMS interface with a list of the pages currently on your website (the site tree). Here you can add, delete and reorganize pages. If you need to delete, publish, or unpublish a page, first check "multi-selection" at the top. You will then be able to perform actions on any checked files using the "Actions" dropdown. Clicking on a page will open it in the page editing interface pictured below (we've entered some test content).
 
@@ -85,7 +85,7 @@ The page type specifies the templates used to render the page, the fields that a
 **SilverStripe's friendly URLs**
 
 While you are on the draft or live SilverStripe site, you may notice the URLs point to files that don't exist, e.g.
-http://localhost/contact or http://yourdomainname.com/about-us etc. SilverStripe uses the URL field on the Meta-Data tab of the Edit Page -> Content section to look up the appropriate
+`http://localhost/contact` or `http://yourdomainname.com/about-us` etc. SilverStripe uses the URL field on the Meta-Data tab of the Edit Page -> Content section to look up the appropriate
 page in the database.
 
 Note that if you have sub-pages, changing the Top level URL field for a page will affect the URL for all sub-pages. For example, if we changed the URL field "/about-us/" to "/about-silverstripe/" then the sub-pages URLs would now be "/about-silverstripe/URL-of-subpage/" rather than "/about-us/URL-of-subpage/".
@@ -151,7 +151,7 @@ or placed between SilverStripe template tags:
 **Flushing the cache**
 
 Whenever we edit a template file, we need to append *?flush=1* onto the end of the URL, e.g.
-http://localhost/your_site_name/?flush=1. SilverStripe stores template files in a cache for quicker load times. Whenever there are
+`http://localhost/your_site_name/?flush=1`. SilverStripe stores template files in a cache for quicker load times. Whenever there are
 changes to the template, we must flush the cache in order for the changes to take effect.
 
 ##  The Navigation System
@@ -166,7 +166,7 @@ The Menu for our site is created using a **loop**. Loops allow us to iterate ove
 	<% loop $Menu(1) %>
 
 returns a set of first level menu items. We can then use the template variable
-*$MenuTitle* to show the title of the page we are linking to, *$Link* for the URL of the page and *$LinkingMode* to help style our menu with CSS (explained in more detail shortly).
+*$MenuTitle* to show the title of the page we are linking to, *$Link* for the URL of the page, and `$isSection` and `$isCurrent` to help style our menu with CSS (explained in more detail shortly).
 
 > *$Title* refers to **Page Name** in the CMS, whereas *$MenuTitle* refers to (the often shorter) **Navigation label**
 
@@ -174,7 +174,7 @@ returns a set of first level menu items. We can then use the template variable
 	:::ss
 	<ul>
 		<% loop $Menu(1) %>	  
-			<li class="$LinkingMode">
+			<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 				<a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
 			</li>
 		<% end_loop %>
@@ -191,16 +191,12 @@ This creates the navigation at the top of the page:
 
 ### Highlighting the current page
 
-A useful feature is highlighting the current page the user is looking at. We can do this with the template variable: `$LinkingMode`. It returns one of three values:
+A useful feature is highlighting the current page the user is looking at. We can do this by using the `is` methods `$isSection` and `$isCurrent`.
 
-*  *current* - This page is being visited
-*  *link* - This page is not currently being visited
-*  *section* - A page under this page is being visited
-
-For example, if you were here: "Home > Company > Staff > Bob Smith", you may want to highlight 'Company' to say you are in that section. If you add $LinkingMode to your navigation elements as a class, ie:
+For example, if you were here: "Home > Company > Staff > Bob Smith", you may want to highlight 'Company' to say you are in that section.
 
 	:::ss
-	<li class="$LinkingMode">
+	<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 	 	<a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
 	</li>
 
@@ -231,7 +227,7 @@ Adding a second level menu is very similar to adding the first level menu. Open 
 	:::ss
 	<ul>
 	  <% loop $Menu(2) %>
-	    <li class="$LinkingMode">
+	    <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 		    <a href="$Link" title="Go to the $Title.XML page">
 		    	<span class="arrow">→</span>
 		    	<span class="text">$MenuTitle.XML</span>
@@ -243,7 +239,7 @@ Adding a second level menu is very similar to adding the first level menu. Open 
 This should look very familiar. It is the same idea as our first menu, except the loop block now uses *Menu(2)* instead of *Menu(1)*. 
 As we can see here, the *Menu* control takes a single
 argument - the level of the menu we want to get. Our css file will style this linked list into the second level menu,
-using our usual *$LinkingMode* technique to highlight the current page.
+using our usual `is` technique to highlight the current page.
 
 To make sure the menu is not displayed on every page, for example, those that *don't* have any nested pages. We use an **if block**. 
 Look again in the *Sidebar.ss* file and you will see that the menu is surrounded with an **if block**
@@ -254,7 +250,7 @@ like this:
 		...
 			<ul>
 				<% loop $Menu(2) %>
-				<li class="$LinkingMode">
+				<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 					<a href="$Link" title="Go to the $Title.XML page">
 						<span class="arrow">→</span>
 						<span class="text">$MenuTitle.XML</span>
@@ -301,12 +297,12 @@ The following example runs an if statement and a loop on *Children*, checking to
 	:::ss
 	<ul>
 	  <% loop $Menu(1) %>
-	    <li class="$LinkingMode">
+	    <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 	      <a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
 	      <% if $Children %>
 		      <ul>
 		        <% loop $Children %>
-		          <li class="$LinkingMode">
+		          <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 		          	<a href="$Link" title="Go to the $Title.XML page">
 		          		<span class="arrow">→</span>
 		          		<span class="text">$MenuTitle.XML</span>
@@ -348,7 +344,7 @@ Create a new file *HomePage.php* in *mysite/code*. Copy the following code into 
 
 
 Every page type also has a database table corresponding to it. Every time we modify the database, we need to rebuild it.
-We can do this by going to [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build) (replace *localhost/your_site_name* with your own domain name if applicable). 
+We can do this by going to `http://localhost/your_site_name/dev/build`. 
 
 It may take a moment, so be patient. This adds tables and fields needed by your site, and modifies any structures that have changed. It
 does this non-destructively - it will never delete your data.

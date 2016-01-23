@@ -7,7 +7,7 @@ Editing and formatting content is the bread and butter of every content manageme
 has a tight integration with our preferred editor library, [TinyMCE](http://tinymce.com).
 
 On top of the base functionality, we use our own insertion dialogs to ensure you can effectively select and upload 
-files. In addition to the markup managed by TinyMCE, we use [shortcodes](../../extending/shortcodes) to store 
+files. In addition to the markup managed by TinyMCE, we use [shortcodes](/developer_guides/extending/shortcodes) to store 
 information about inserted images or media elements.
 
 The framework comes with a `[api:HTMLEditorField]` form field class which encapsulates most of the required
@@ -197,7 +197,7 @@ The `[api:HtmlEditorField]` API also handles inserting images and media files in
 used both for referencing files on the webserver filesystem (through the `[api:File]` and `[api:Image]` APIs), as well 
 as hotlinking files from the web. 
 
-We use [shortcodes](../../configuration/shortcodes) to store information about inserted images or media elements. The 
+We use [shortcodes](/developer_guides/extending/shortcodes) to store information about inserted images or media elements. The 
 [api:ShortcodeParser] API post-processes the HTML content on rendering, and replaces the shortcodes accordingly. It also 
 takes care of care of placing the shortcode replacements relative to its surrounding markup (e.g. left/right alignment).
 
@@ -217,6 +217,18 @@ To refresh a oEmbed cache, append `?flush=1` to a URL.
 </div>
 
 To disable oEmbed usage, set the `Oembed.enabled` configuration property to "false".
+
+## Limiting oembed URLs
+
+HtmlEditorField can have whitelists set on both the scheme (default http & https) and domains allowed when
+inserting files for use with oembed.
+
+This is performed through the config variables `HtmlEditorField_Toolbar::$fileurl_scheme_whitelist` and
+`HtmlEditorField_Toolbar::$fileurl_domain_whitelist`.
+
+Setting these configuration variables to empty arrays will disable the whitelist. Setting them to an array of
+lower case strings will require the scheme or domain respectively to exactly match one of those strings (no
+wildcards are currently supported).
 
 ### Doctypes
 

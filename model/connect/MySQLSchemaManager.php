@@ -125,9 +125,16 @@ class MySQLSchemaManager extends DBSchemaManager {
 	}
 
 	public function checkAndRepairTable($tableName) {
+		// Flag to ensure we only send the warning about PDO + native mode once
+		static $pdo_warning_sent = false;
+
 		// If running PDO and not in emulated mode, check table will fail
 		if($this->database->getConnector() instanceof PDOConnector && !PDOConnector::is_emulate_prepare()) {
-			$this->alterationMessage('CHECK TABLE command disabled for PDO in native mode', 'notice');
+			if (!$pdo_warning_sent) {
+				$this->alterationMessage('CHECK TABLE command disabled for PDO in native mode', 'notice');
+				$pdo_warning_sent = true;
+			}
+
 			return true;
 		}
 
@@ -400,15 +407,17 @@ class MySQLSchemaManager extends DBSchemaManager {
 			$precision = $values['precision'];
 		}
 
-		$defaultValue = '';
+		// Fix format of default value to match precision
 		if (isset($values['default']) && is_numeric($values['default'])) {
 			$decs = strpos($precision, ',') !== false
 					? (int) substr($precision, strpos($precision, ',') + 1)
 					: 0;
-			$defaultValue = ' default ' . number_format($values['default'], $decs, '.', '');
+			$values['default'] = number_format($values['default'], $decs, '.', '');
+		} else {
+			unset($values['default']);
 		}
 
-		return "decimal($precision) not null $defaultValue";
+		return "decimal($precision) not null" . $this->defaultClause($values);
 	}
 
 	/**

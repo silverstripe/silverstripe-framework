@@ -27,8 +27,8 @@ We'll also install SQL Server 2008 R2, and support for connecting to it in PHP.
 
   * Internet Information Services (IIS) 7.x
   * SQL Server 2008 R2
-  * PHP 5.4 (PHP 5.3.2+ also works, but we'll install with the latest PHP stable)
-  * SilverStripe 3
+  * PHP 5.5 or newer
+  * SilverStripe 4
   * [Microsoft URL Rewrite Module 2.0](http://www.iis.net/download/URLRewrite)
   * [IIS 7 Administration Pack](http://www.iis.net/download/AdministrationPack) (ONLY required for Windows Vista or Server 2008)
   * [PHP Manager](http://phpmanager.codeplex.com/releases/view/69115)
@@ -51,7 +51,7 @@ IIS 7.x comes with Windows. However, it needs to be installed. Follow these step
 
 **NOTE**: These instructions are slightly different for Windows Vista and Windows 7. Instead of a Server Manager popup, you'll just get a list of features to enable. Do the same as above except click the **Internet Information Services** checkbox when the Windows Features popup appears and then expand this node and select **CGI** under World Wide Web Services > Application Development Features.
 
-Once the installation is finished, browse to http://localhost in your browser. If an image pops up, then IIS has been installed correctly.
+Once the installation is finished, browse to `http://localhost` in your browser. If an image pops up, then IIS has been installed correctly.
 
 ## IIS URL Rewrite Module
 
@@ -94,7 +94,7 @@ Installing SQL Server should be relatively straightforward. Keep a note of the p
 ### Install PHP
 
  * Install PHP Manager from http://phpmanager.codeplex.com/releases/view/69115 (choose x86 or x64 depending on your Windows architecture)
- * Download the latest stable PHP 5.4 (VC9, x86) zip from http://windows.php.net/download
+ * Download the latest stable PHP 5.5 (VC9, x86) zip from http://windows.php.net/download
  * Extract zip contents to **C:\php**
  * Open PHP Manager in IIS and register **C:\php\php-cgi.exe** to enable PHP for IIS
 
@@ -113,7 +113,7 @@ This is the PHP extension allowing it to connect to SQL Server databases.
 
 This is an op-code cacher which speeds up PHP execution on Windows.
 
- * Download the latest wincache (for PHP 5.4, x86) from http://www.iis.net/download/wincacheforphp
+ * Download the latest wincache (for PHP 5.5, x86) from http://www.iis.net/download/wincacheforphp
  * Extract zip contents to a temporary location, such as C:\wincache
  * Copy php_wincache.dll to C:\php\ext
  * Open PHP Manager and go to **Eanble or disable an extension**
@@ -191,7 +191,7 @@ After gettng the code installed, make sure you set the folder permissions proper
 
 ## Start SilverStripe installer
 
-Open a browser and point it to http://localhost/ss
+Open a browser and point it to `http://localhost/ss`
 
 If an installation screen shows up, congratulations! We're very close now.
 
@@ -260,7 +260,7 @@ To find out who the current user is, try echoing the result of get_current_user(
 
 **Q: When I try to access my SilverStripe site for the first time, I get a 404 error**
 
-**A:** Try accessing dev/build?username=admin&password=password at the end of the URL you requested. For example, http://localhost/ss/dev/build?username=admin&password=password. This will ensure the database is built properly
+**A:** Try accessing dev/build?username=admin&password=password at the end of the URL you requested. For example, `http://localhost/ss/dev/build?username=admin&password=password`. This will ensure the database is built properly
 
 **Q: How do I make IIS expose errors instead of giving a generic 500 or 404 page?**
 
@@ -268,7 +268,7 @@ To find out who the current user is, try echoing the result of get_current_user(
 
 Also, make sure that display_errors, display_startup_errors and html_errors in are set to On in php.ini.
 
-**Q: I get a 500 server error when trying to access the SilverStripe site. e.g. http://localhost/ss**
+**Q: I get a 500 server error when trying to access the SilverStripe site. e.g. `http://localhost/ss`**
 
 **A:** One of the reasons why this could be happening is the web.config file inside the ss directory has XML that is not well formed. Make sure there are NO spaces before the starting <?xml> tag, and make sure that everything is tabbed out correctly.
 
@@ -291,7 +291,6 @@ If this still doesn't help, enable Failed Request Tracing in IIS. You could also
 **A:** A non-thread safe of PHP is recommended for use with IIS. Thread safety checks are not required, and you'll get a performance boost by not using a thread safe version. If possible, use a version compiled in VC9 instead of VC6. VC9 versions require you to have the [Microsoft 2008 C++ Runtime (x86)](http://www.microsoft.com/downloads/details.aspx?FamilyID=9B2DA534-3E03-4391-8A4D-074B9F2BC1BF) or the [Microsoft 2008 C++ Runtime (x64)](http://www.microsoft.com/downloads/details.aspx?familyid=bd2a6171-e2d6-4230-b809-9a8d7548c1b6&displaylang=en) installed
 
 You should also ensure you are using the latest version of the [Microsoft Drivers for PHP for SQL Server](http://www.microsoft.com/downloads/en/details.aspx?FamilyID=80E44913-24B4-4113-8807-CAAE6CF2CA05&displaylang=en) driver.
-If possible, you should also use PHP 5.4 which provides performance improvements over 5.2 and 5.3.
 
 Try increasing the IIS **MaxInstances** in IIS Manager > FastCGI from 4 to a higher value. For quad core CPUs, a higher value such as **32** should prove to provide a performance enhancement.
 

@@ -2,7 +2,7 @@
 	$('.ss-assetuploadfield').entwine({
 		onmatch: function() {
 			this._super();
-			
+
 			// Hide the "second step" part until we're actually uploading
 			this.find('.ss-uploadfield-editandorganize').hide();
 		},
@@ -16,17 +16,14 @@
 			this.find('.ss-uploadfield-editandorganize').show();
 		}
 	});
-	$('.ss-uploadfield-view-allowed-extensions').entwine({
-		onmatch: function() {
-			this.find('.description .toggle-content').hide();
-			this._super();
-		}
-	});
 
 	$('.ss-uploadfield-view-allowed-extensions .toggle').entwine({
 		onclick: function(e) {
-			jQuery(this).closest('.description').find('.toggle-content').toggle();
-			return false;
+			var allowedExt = this.closest('.ss-uploadfield-view-allowed-extensions'),
+				minHeightVal = this.closest('.ui-tabs-panel').height() + 20;
+			
+			allowedExt.toggleClass('active');
+			allowedExt.find('.toggle-content').css('minHeight', minHeightVal);
 		}
 	});
 }(jQuery));

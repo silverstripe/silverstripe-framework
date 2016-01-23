@@ -140,7 +140,7 @@ This package will maintain your [.gitignore](http://git-scm.com/docs/gitignore) 
 
 Include the package in your project by running this command
 
-    composer require gdmedia/ss-auto-git-ignore
+    composer require gdmedia/ss-auto-git-ignore --dev
 
 Edit your composer.json and insert 
 
@@ -161,12 +161,12 @@ Full example of composer.json with the SSAutoGitIgnore installed and enabled
 			"php": ">=5.3.2",
 			"silverstripe/cms": "3.0.*",
 			"silverstripe/framework": "3.0.*",
-			"silverstripe-themes/simple": "*",
-			"gdmedia/ss-auto-git-ignore": "*"
+			"silverstripe-themes/simple": "*"
 		},
 		"require-dev": {
 			"silverstripe/compass": "*",
-			"silverstripe/docsviewer": "*"
+			"silverstripe/docsviewer": "*",
+			"gdmedia/ss-auto-git-ignore": "*"
 		},
 		"scripts": {
 			"post-update-cmd": "GDM\\SSAutoGitIgnore\\UpdateScript::Go"

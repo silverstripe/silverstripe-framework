@@ -14,7 +14,7 @@
 			$EditImageForm
 			<% end_if %>
 		</div>
-		
+
 		<% if $Image.ID %>
 		<div class="mainblock" >
 			$Image.CMSThumbnail
@@ -23,7 +23,7 @@
 			<% end_if %>
 		</div>
 		<% end_if %>
-		
+
 	</body>
 
 </html>

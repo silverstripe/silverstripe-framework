@@ -114,7 +114,10 @@ class TabSet extends CompositeField {
 	}
 
 	/**
-	 * Returns the named tab
+	 * Returns a named field.
+	 *
+	 * @param string $name Name of the field you want to find. Allows for dot notation.
+	 * @return FormField|null
 	 */
 	public function fieldByName($name) {
 		if(strpos($name,'.') !== false)	list($name, $remainder) = explode('.',$name,2);
@@ -135,6 +138,8 @@ class TabSet extends CompositeField {
 				}
 			}
 		}
+
+		return null;
 	}
 
 	/**
@@ -146,24 +151,34 @@ class TabSet extends CompositeField {
 	}
 
 	/**
+	 * Add a new child field to the beginning of the set.
+	 */
+	public function unshift(FormField $field) {
+		parent::unshift($field);
+		$field->setTabSet($this);
+	}
+
+	/**
 	 * Inserts a field before a particular field in a FieldList.
 	 *
-	 * @param FormField $item The form field to insert
-	 * @param string $name Name of the field to insert before
+	 * @param string $insertBefore Name of the field to insert before
+	 * @param FormField $field The form field to insert
+	 * @return	FormField|null
 	 */
 	public function insertBefore($insertBefore, $field) {
-		parent::insertBefore($insertBefore, $field);
 		if($field instanceof Tab) $field->setTabSet($this);
-		$this->sequentialSet = null;
+		return parent::insertBefore($insertBefore, $field);
 	}
 
+	/**
+	 * Inserts a field after a particular field in a FieldList.
+	 *
+	 * @param string $insertAfter Name of the field to insert after
+	 * @param FormField $field The form field to insert
+	 * @return FormField|null
+	 */
 	public function insertAfter($insertAfter, $field) {
-		parent::insertAfter($insertAfter, $field);
 		if($field instanceof Tab) $field->setTabSet($this);
-		$this->sequentialSet = null;
-	}
-
-	public function removeByName( $tabName, $dataFieldOnly = false ) {
-		parent::removeByName( $tabName, $dataFieldOnly );
+		return parent::insertAfter($insertAfter, $field);
 	}
 }

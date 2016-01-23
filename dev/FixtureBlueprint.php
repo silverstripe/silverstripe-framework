@@ -70,8 +70,10 @@ class FixtureBlueprint {
 	public function createObject($identifier, $data = null, $fixtures = null) {
 		// We have to disable validation while we import the fixtures, as the order in
 		// which they are imported doesnt guarantee valid relations until after the import is complete.
-		$validationenabled = Config::inst()->get('DataObject', 'validation_enabled');
+		// Also disable filesystem manipulations
+		Config::nest();
 		Config::inst()->update('DataObject', 'validation_enabled', false);
+		Config::inst()->update('File', 'update_filesystem', false);
 
 		$this->invokeCallbacks('beforeCreate', array($identifier, &$data, &$fixtures));
 
@@ -193,12 +195,11 @@ class FixtureBlueprint {
 				$this->overrideField($obj, 'LastEdited', $data['LastEdited'], $fixtures);
 			}
 		} catch(Exception $e) {
-			Config::inst()->update('DataObject', 'validation_enabled', $validationenabled);
+			Config::unnest();
 			throw $e;
 		}
 
-		Config::inst()->update('DataObject', 'validation_enabled', $validationenabled);
-
+		Config::unnest();
 		$this->invokeCallbacks('afterCreate', array($obj, $identifier, &$data, &$fixtures));
 
 		return $obj;

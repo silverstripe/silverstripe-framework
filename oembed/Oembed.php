@@ -21,7 +21,7 @@
  * @subpackage oembed
  */
 
-class Oembed {
+class Oembed implements ShortcodeHandler {
 
 	public static function is_enabled() {
 		return Config::inst()->get('Oembed', 'enabled');
@@ -179,23 +179,35 @@ class Oembed {
 		return false;
 	}
 
-	public static function handle_shortcode($arguments, $url, $parser, $shortcode) {
+	public static function get_shortcodes() {
+		return 'embed';
+	}
+
+	public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array()) {
 		if(isset($arguments['type'])) {
 			$type = $arguments['type'];
 			unset($arguments['type']);
 		} else {
 			$type = false;
 		}
-		$oembed = self::get_oembed_from_url($url, $type, $arguments);
+		$oembed = self::get_oembed_from_url($content, $type, $arguments);
 		if($oembed && $oembed->exists()) {
 			return $oembed->forTemplate();
 		} else {
-			return '<a href="' . $url . '">' . $url . '</a>';
+			return '<a href="' . $content . '">' . $content . '</a>';
 		}
 	}
 }
 
 /**
+ * @property string $Type Oembed type
+ * @property string $Title Title
+ * @property string $URL URL to asset
+ * @property string $Provider_URL Url for provider
+ * @property int $Width
+ * @property int $Height
+ * @property string $Info Descriptive text for this oembed
+ * 
  * @package framework
  * @subpackage oembed
  */

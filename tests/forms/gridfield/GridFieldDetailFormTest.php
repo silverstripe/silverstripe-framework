@@ -153,6 +153,38 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertDOSContains(array(array('Surname' => 'Baggins')), $group->People());
 	}
 
+	public function testEditFormWithManyMany() {
+		$this->logInWithPermission('ADMIN');
+
+		// Edit the first person
+		$response = $this->get('GridFieldDetailFormTest_CategoryController');
+		// Find the link to add a new favourite group
+		$parser = new CSSContentParser($response->getBody());
+		$addLink = $parser->getBySelector('#Form_Form_testgroupsfield .new-link');
+		$addLink = (string) $addLink[0]['href'];
+
+		// Add a new favourite group
+		$response = $this->get($addLink);
+		$parser = new CSSContentParser($response->getBody());
+		$addform = $parser->getBySelector('#Form_ItemEditForm');
+		$addformurl = (string) $addform[0]['action'];
+
+		$response = $this->post(
+			$addformurl,
+			array(
+				'Name' => 'My Favourite Group',
+				'ajax' => 1,
+				'action_doSave' => 1
+			)
+		);
+		$this->assertFalse($response->isError());
+
+		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
+		$favouriteGroup = $person->FavouriteGroups()->first();
+
+		$this->assertInstanceOf('GridFieldDetailFormTest_PeopleGroup', $favouriteGroup);
+	}
+
 	public function testEditFormWithManyManyExtraData() {
 		$this->logInWithPermission('ADMIN');
 
@@ -197,7 +229,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 			),
 			$person->Categories()->getExtraData('', $category->ID)
 		);
-		
+
 		// Test update of value with falsey value
 		$response = $this->post(
 			$editformurl,
@@ -341,7 +373,8 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 	);
 
 	private static $many_many = array(
-		'Categories' => 'GridFieldDetailFormTest_Category'
+		'Categories' => 'GridFieldDetailFormTest_Category',
+		'FavouriteGroups' => 'GridFieldDetailFormTest_PeopleGroup'
 	);
 
 	private static $many_many_extraFields = array(
@@ -359,6 +392,12 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 		$fields->replaceField('Categories',
 			GridField::create('Categories', 'Categories',
 				$this->Categories(),
+				GridFieldConfig_RelationEditor::create()
+			)
+		);
+		$fields->replaceField('FavouriteGroups',
+			GridField::create('FavouriteGroups', 'Favourite Groups',
+				$this->FavouriteGroups(),
 				GridFieldConfig_RelationEditor::create()
 			)
 		);
@@ -383,6 +422,10 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 	);
 
 	private static $has_many = array(
+		'People' => 'GridFieldDetailFormTest_Person'
+	);
+
+	private static $belongs_many_many = array(
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
 
@@ -499,13 +542,22 @@ class GridFieldDetailFormTest_CategoryController extends Controller implements T
 			new CheckboxField('ManyMany[IsPublished]'),
 			new TextField('ManyMany[PublishedBy]'))
 		);
-		$field = new GridField('testfield', 'testfield', $person->Categories());
-		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
+		$categoriesField = new GridField('testfield', 'testfield', $person->Categories());
+		$categoriesField->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$gridFieldForm->setFields($detailFields);
-		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
-		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
-		$field->getConfig()->addComponent(new GridFieldEditButton());
-		return new Form($this, 'Form', new FieldList($field), new FieldList());
+		$categoriesField->getConfig()->addComponent(new GridFieldToolbarHeader());
+		$categoriesField->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
+		$categoriesField->getConfig()->addComponent(new GridFieldEditButton());
+
+		$favGroupsField = new GridField('testgroupsfield', 'testgroupsfield', $person->FavouriteGroups());
+		$favGroupsField->getConfig()->addComponent(new GridFieldDetailForm($this, 'Form'));
+		$favGroupsField->getConfig()->addComponent(new GridFieldToolbarHeader());
+		$favGroupsField->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
+		$favGroupsField->getConfig()->addComponent(new GridFieldEditButton());
+
+		$fields = new FieldList($categoriesField, $favGroupsField);
+
+		return new Form($this, 'Form', $fields, new FieldList());
 	}
 }
 

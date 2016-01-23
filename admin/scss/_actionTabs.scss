@@ -1,26 +1,26 @@
 /********************************************
 * Defines the styles for .ss-ui-action-tabset:
 * * Site tree action tabs (to perform actions on the site tree)
-* * Actions menu (Edit page actions) 
+* * Actions menu (Edit page actions)
 *
 * Reliant on TabSet.js to apply and remove some classes.
 *
-* Note: This is a special use case of tabs, so the default tab 
-* styling should not apply 
+* Note: This is a special use case of tabs, so the default tab
+* styling should not apply
 *
 **********************************************/
 
 
 $border: 1px solid darken(#D9D9D9, 15%);
 
-.cms {	
+.cms {
 	.ss-ui-action-tabset{
 		float:left;
 		position:relative;
 
 		/*
-			Styles for the tab-nav of the site tree implementation 
-			of ss-ui-action-tabset 
+			Styles for the tab-nav of the site tree implementation
+			of ss-ui-action-tabset
 		*/
 		&.multi{
 			ul.ui-tabs-nav{
@@ -54,7 +54,7 @@ $border: 1px solid darken(#D9D9D9, 15%);
 						@include border-bottom-left-radius(0px);
 						@include border-bottom-right-radius(0px);
 						background:#f8f8f8;
-						border-bottom:none !important; //jquery-ui style has important on it						
+						border-bottom:none !important; //jquery-ui style has important on it
 						a {
 							@include border-bottom-left-radius(0px);
 							@include border-bottom-right-radius(0px);
@@ -123,7 +123,7 @@ $border: 1px solid darken(#D9D9D9, 15%);
 				}
 				.tab-nav-link, .ss-ui-button {
 					font-size: 12px;
-				}	
+				}
 
 				#Form_AddForm_PageType ul {
 					padding: 0;
@@ -135,7 +135,7 @@ $border: 1px solid darken(#D9D9D9, 15%);
 			}
 		}
 		// Classes applied by javascript
-		&.tabset-open {	
+		&.tabset-open {
 			ul.ui-tabs-nav,
 			ul.ui-tabs-nav li.first {
 				@include border-bottom-left-radius(0);
@@ -147,7 +147,7 @@ $border: 1px solid darken(#D9D9D9, 15%);
 			}
 		}
 		/* position a checkbox & icon within a tab */
-		.batch-check, .ui-icon { 
+		.batch-check, .ui-icon {
 			display: inline-block;
 			float:left;
 			margin-left: -2px;
@@ -158,10 +158,10 @@ $border: 1px solid darken(#D9D9D9, 15%);
 			position: absolute;
 		}
 
-		
+
 		/* Styles for the cms-actions in tree view, to use more limited space.
-		Title hidden in tree view, until hover/active state added. Active is applied 
-		to the first tab within the template, so there should always be one title 
+		Title hidden in tree view, until hover/active state added. Active is applied
+		to the first tab within the template, so there should always be one title
 		visible. Added and removed with js in TabSet.js  */
 		.cms-tree-view-sidebar{
 			min-width: 176px; /* for when the scrollbar is present & find dropdown open */
@@ -183,8 +183,8 @@ $border: 1px solid darken(#D9D9D9, 15%);
 					}
 				}
 				&.tabset-open, &.tabset-open-last {
-					ul.ui-tabs-nav, 
-					ul.ui-tabs-nav li.first, 
+					ul.ui-tabs-nav,
+					ul.ui-tabs-nav li.first,
 					ul.ui-tabs-nav li.last {
 						@include border-bottom-right-radius(0);
 						@include border-bottom-left-radius(0);
@@ -208,12 +208,12 @@ $border: 1px solid darken(#D9D9D9, 15%);
 		}
 
 		/****************************************************************
-			Styles for the actions-menu implementation 
+			Styles for the actions-menu implementation
 			of ss-ui-action-tabset
 		****************************************************************/
-		&.action-menus.ss-tabset { 
+		&.action-menus.ss-tabset {
 			margin-top: 2px;
-			
+
 			//Style the tabs naivgation
 			ul.ui-tabs-nav{
 				margin: 0;
@@ -237,7 +237,7 @@ $border: 1px solid darken(#D9D9D9, 15%);
 						padding:0 25px 0 10px;
 						border-bottom: 0;
 						margin: 0;
-						
+
 						&:hover, &:active{
 							@include box-shadow(none);
 							outline:none;

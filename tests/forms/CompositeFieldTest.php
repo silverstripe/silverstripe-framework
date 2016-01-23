@@ -44,6 +44,24 @@ class CompositeFieldTest extends SapphireTest {
 		$this->assertStringEndsWith('/fieldset>', trim($fieldset->FieldHolder()));
 	}
 
+	public function testPushAndUnshift() {
+		$composite = new CompositeField(
+			new TextField('Middle')
+		);
+
+		$composite->push(new TextField('End'));
+		/* There are now 2 fields in the set */
+		$this->assertEquals(2, $composite->getChildren()->Count());
+		/* The most recently added field is at the end of the set */
+		$this->assertEquals('End', $composite->getChildren()->Last()->getName());
+
+		$composite->unshift(new TextField('Beginning'));
+		/* There are now 3 fields in the set */
+		$this->assertEquals(3, $composite->getChildren()->Count());
+		/* The most recently added field is at the beginning of the set */
+		$this->assertEquals('Beginning', $composite->getChildren()->First()->getName());
+	}
+
 	public function testLegend() {
 		$composite = new CompositeField(
 			new TextField('A'),

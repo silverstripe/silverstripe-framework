@@ -131,6 +131,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	protected static $versionableExtensions = array('Translatable' => 'lang');
 
 	/**
+	 * Permissions necessary to view records outside of the live stage (e.g. archive / draft stage).
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $non_live_permissions = array('CMS_ACCESS_LeftAndMain', 'CMS_ACCESS_CMSMain', 'VIEW_DRAFT_CONTENT');
+
+	/**
 	 * Reset static configuration variables to their default values.
 	 */
 	public static function reset() {
@@ -492,12 +500,12 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 						foreach($versionedTables as $child) {
 							if($table === $child) break; // only need subclasses
-							
+
 							// Select all orphaned version records
 							$orphanedQuery = SQLSelect::create()
 								->selectField("\"{$table}_versions\".\"ID\"")
 								->setFrom("\"{$table}_versions\"");
-								
+
 							// If we have a parent table limit orphaned records
 							// to only those that exist in this
 							if(DB::get_schema()->hasTable("{$child}_versions")) {
@@ -573,7 +581,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	protected function augmentWriteVersioned(&$manipulation, $table, $recordID) {
 		$baseDataClass = ClassInfo::baseDataClass($table);
-		
+
 		// Set up a new entry in (table)_versions
 		$newManipulation = array(
 			"command" => "insert",
@@ -654,7 +662,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				unset($manipulation[$table]);
 				continue;
 			}
-			
+
 			// Get ID field
 			$id = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];
 			if(!$id) user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
@@ -734,6 +742,91 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
+	 * Extend permissions to include additional security for objects that are not published to live.
+	 *
+	 * @param Member $member
+	 * @return bool|null
+	 */
+	public function canView($member = null) {
+		// Invoke default version-gnostic canView
+		if ($this->owner->canViewVersioned($member) === false) {
+			return false;
+		}
+	}
+
+	/**
+	 * Determine if there are any additional restrictions on this object for the given reading version.
+	 *
+	 * Override this in a subclass to customise any additional effect that Versioned applies to canView.
+	 *
+	 * This is expected to be called by canView, and thus is only responsible for denying access if
+	 * the default canView would otherwise ALLOW access. Thus it should not be called in isolation
+	 * as an authoritative permission check.
+	 *
+	 * This has the following extension points:
+	 *  - canViewDraft is invoked if Mode = stage and Stage = stage
+	 *  - canViewArchived is invoked if Mode = archive
+	 *
+	 * @param Member $member
+	 * @return bool False is returned if the current viewing mode denies visibility
+	 */
+	public function canViewVersioned($member = null) {
+		// Bypass when live stage
+		$mode = $this->owner->getSourceQueryParam("Versioned.mode");
+		$stage = $this->owner->getSourceQueryParam("Versioned.stage");
+		if ($mode === 'stage' && $stage === static::get_live_stage()) {
+			return true;
+		}
+
+		// Bypass if site is unsecured
+		if (Session::get('unsecuredDraftSite')) {
+			return true;
+		}
+
+		// If we weren't definitely loaded from live, and we can't view non-live content, we need to
+		// check to make sure this version is the live version and so can be viewed
+		$latestVersion = Versioned::get_versionnumber_by_stage($this->owner->class, 'Live', $this->owner->ID);
+		if ($latestVersion == $this->owner->Version) {
+			// Even if this is loaded from a non-live stage, this is the live version
+			return true;
+		}
+
+		// Extend versioned behaviour
+		$extended = $this->owner->extendedCan('canViewNonLive', $member);
+		if($extended !== null) {
+			return (bool)$extended;
+		}
+
+		// Fall back to default permission check
+		$permissions = Config::inst()->get($this->owner->class, 'non_live_permissions', Config::FIRST_SET);
+		$check = Permission::checkMember($member, $permissions);
+		return (bool)$check;
+	}
+
+	/**
+	 * Determines canView permissions for the latest version of this object on a specific stage.
+	 * Usually the stage is read from {@link Versioned::current_stage()}.
+	 *
+	 * This method should be invoked by user code to check if a record is visible in the given stage.
+	 *
+	 * This method should not be called via ->extend('canViewStage'), but rather should be
+	 * overridden in the extended class.
+	 *
+	 * @param string $stage
+	 * @param Member $member
+	 * @return bool
+	 */
+	public function canViewStage($stage = 'Live', $member = null) {
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::reading_stage($stage);
+
+		$versionFromStage = DataObject::get($this->owner->class)->byID($this->owner->ID);
+
+		Versioned::set_reading_mode($oldMode);
+		return $versionFromStage ? $versionFromStage->canView($member) : false;
+	}
+
+	/**
 	 * Determine if a table is supporting the Versioned extensions (e.g.
 	 * $table_versions does exists).
 	 *
@@ -805,10 +898,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * Move a database record from one stage to the other.
 	 *
-	 * @param fromStage Place to copy from.  Can be either a stage name or a version number.
-	 * @param toStage Place to copy to.  Must be a stage name.
-	 * @param createNewVersion Set this to true to create a new version number.  By default, the existing version
-	 *                         number will be copied over.
+	 * @param string $fromStage Place to copy from.  Can be either a stage name or a version number.
+	 * @param string $toStage Place to copy to.  Must be a stage name.
+	 * @param bool $createNewVersion Set this to true to create a new version number.
+	 * By default, the existing version number will be copied over.
 	 */
 	public function publish($fromStage, $toStage, $createNewVersion = false) {
 		$this->owner->extend('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
@@ -997,6 +1090,26 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 
 	/**
+	 * Determine if the current user is able to set the given site stage / archive
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @return bool
+	 */
+	public static function can_choose_site_stage($request) {
+		// Request is allowed if stage isn't being modified
+		if((!$request->getVar('stage') || $request->getVar('stage') === static::get_live_stage())
+			&& !$request->getVar('archiveDate')
+		) {
+			return true;
+		}
+
+		// Check permissions with member ID in session.
+		$member = Member::currentUser();
+		$permissions = Config::inst()->get(get_called_class(), 'non_live_permissions');
+		return $member && Permission::checkMember($member, $permissions);
+	}
+
+	/**
 	 * Choose the stage the site is currently on.
 	 *
 	 * If $_GET['stage'] is set, then it will use that stage, and store it in
@@ -1007,14 +1120,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * If neither of these are set, it checks the session, otherwise the stage
 	 * is set to 'Live'.
-	 *
-	 * @param Session $session Optional session within which to store the resulting stage
 	 */
-	public static function choose_site_stage($session = null) {
+	public static function choose_site_stage() {
 		// Check any pre-existing session mode
-		$preexistingMode = $session
-			? $session->inst_get('readingMode')
-			: Session::get('readingMode');
+		$preexistingMode = Session::get('readingMode');
 
 		// Determine the reading mode
 		if(isset($_GET['stage'])) {
@@ -1036,11 +1145,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if(($preexistingMode && $preexistingMode !== $mode)
 			|| (!$preexistingMode && $mode !== self::DEFAULT_MODE)
 		) {
-			if($session) {
-				$session->inst_set('readingMode', $mode);
-			} else {
-				Session::set('readingMode', $mode);
-			}
+			Session::set('readingMode', $mode);
 		}
 
 		if(!headers_sent() && !Director::is_cli()) {

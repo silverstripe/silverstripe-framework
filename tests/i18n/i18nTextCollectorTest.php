@@ -4,25 +4,25 @@
  * @subpackage tests
  */
 class i18nTextCollectorTest extends SapphireTest {
-	
+
 	/**
 	 * @var string $tmpBasePath Used to write language files.
 	 * We don't want to store them inside framework (or in any web-accessible place)
 	 * in case something goes wrong with the file parsing.
 	 */
 	protected $alternateBaseSavePath;
-	
+
 	/**
 	 * @var string $alternateBasePath Fake webroot with a single module
 	 * /i18ntestmodule which contains some files with _t() calls.
 	 */
 	protected $alternateBasePath;
-	
+
 	protected $manifest;
-	
+
 	public function setUp() {
 		parent::setUp();
-		
+
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
 		Filesystem::makeFolder($this->alternateBaseSavePath);
@@ -32,12 +32,12 @@ class i18nTextCollectorTest extends SapphireTest {
 		$this->manifest = new SS_ClassManifest(
 			$this->alternateBasePath, false, true, false
 		);
-		
+
 		$manifest = new SS_TemplateManifest($this->alternateBasePath, null, false, true);
 		$manifest->regenerate(false);
 		SS_TemplateLoader::instance()->pushManifest($manifest);
 	}
-	
+
 	public function tearDown() {
 		SS_TemplateLoader::instance()->popManifest();
 		parent::tearDown();
@@ -58,7 +58,7 @@ _t(
 
 _t(
 'Test.CONCATENATED2',
-"Line \"4\" and " . 
+"Line \"4\" and " .
 "Line 5");
 PHP;
 		$this->assertEquals(
@@ -120,7 +120,7 @@ SS;
 				'Test.DOUBLEQUOTE' => array("Double Quote and Spaces")
 			)
 		);
-		
+
 		$html = <<<SS
 <% _t("Test.NOSEMICOLON","No Semicolon") %>
 SS;
@@ -166,7 +166,7 @@ SS;
 <% _t(
 	'Test.PRIOANDCOMMENT',
 	" Prio and Value with 'Single Quotes'",
-	
+
 	"Comment with 'Single Quotes'"
 ) %>
 SS;
@@ -181,7 +181,7 @@ SS;
 
 	public function testCollectFromCodeSimple() {
 		$c = new i18nTextCollector();
-			
+
 		$php = <<<PHP
 _t('Test.SINGLEQUOTE','Single Quote');
 PHP;
@@ -191,7 +191,7 @@ PHP;
 				'Test.SINGLEQUOTE' => array('Single Quote')
 			)
 		);
-		
+
 		$php = <<<PHP
 _t(  "Test.DOUBLEQUOTE", "Double Quote and Spaces"   );
 PHP;
@@ -202,7 +202,7 @@ PHP;
 			)
 		);
 	}
-	
+
 	public function testCollectFromCodeAdvanced() {
 		$c = new i18nTextCollector();
 
@@ -218,12 +218,12 @@ PHP;
 				'Test.NEWLINES' => array("New Lines")
 			)
 		);
-		
+
 		$php = <<<PHP
 _t(
 	'Test.PRIOANDCOMMENT',
 	' Value with "Double Quotes"',
-	
+
 	'Comment with "Double Quotes"'
 );
 PHP;
@@ -233,12 +233,12 @@ PHP;
 				'Test.PRIOANDCOMMENT' => array(' Value with "Double Quotes"','Comment with "Double Quotes"')
 			)
 		);
-		
+
 		$php = <<<PHP
 _t(
 	'Test.PRIOANDCOMMENT',
 	" Value with 'Single Quotes'",
-	
+
 	"Comment with 'Single Quotes'"
 );
 PHP;
@@ -248,7 +248,7 @@ PHP;
 				'Test.PRIOANDCOMMENT' => array(" Value with 'Single Quotes'","Comment with 'Single Quotes'")
 			)
 		);
-		
+
 		$php = <<<PHP
 _t(
 	'Test.PRIOANDCOMMENT',
@@ -261,7 +261,7 @@ PHP;
 				'Test.PRIOANDCOMMENT' => array("Value with 'Escaped Single Quotes'")
 			)
 		);
-	
+
 		$php = <<<PHP
 _t(
 	'Test.PRIOANDCOMMENT',
@@ -275,8 +275,8 @@ PHP;
 			)
 		);
 	}
-	
-	
+
+
 	public function testNewlinesInEntityValues() {
 		$c = new i18nTextCollector();
 
@@ -364,24 +364,24 @@ PHP;
 	 */
 	public function testPhpWriterLangArrayCodeForEntity() {
 		$c = new i18nTextCollector_Writer_Php();
-		
+
 		$this->assertEquals(
 			$c->langArrayCodeForEntitySpec('Test.SIMPLE', array('Simple Value'), 'en_US'),
 			"\$lang['en_US']['Test']['SIMPLE'] = 'Simple Value';" . PHP_EOL
 		);
-		
+
 		$this->assertEquals(
 			// single quotes should be properly escaped by the parser already
 			$c->langArrayCodeForEntitySpec('Test.ESCAPEDSINGLEQUOTES',
 				array("Value with 'Escaped Single Quotes'"), 'en_US'),
 			"\$lang['en_US']['Test']['ESCAPEDSINGLEQUOTES'] = 'Value with \'Escaped Single Quotes\'';" . PHP_EOL
 		);
-		
+
 		$this->assertEquals(
 			$c->langArrayCodeForEntitySpec('Test.DOUBLEQUOTES', array('Value with "Double Quotes"'), 'en_US'),
 			"\$lang['en_US']['Test']['DOUBLEQUOTES'] = 'Value with \"Double Quotes\"';" . PHP_EOL
 		);
-		
+
 		$php = <<<PHP
 \$lang['en_US']['Test']['PRIOANDCOMMENT'] = array (
   0 => 'Value with \'Single Quotes\'',
@@ -394,7 +394,7 @@ PHP;
 				array("Value with 'Single Quotes'","Comment with 'Single Quotes'"), 'en_US'),
 			$php
 		);
-		
+
 		$php = <<<PHP
 \$lang['en_US']['Test']['PRIOANDCOMMENT'] = array (
   0 => 'Value with "Double Quotes"',
@@ -434,10 +434,10 @@ de:
 YAML;
 		$this->assertEquals($yaml, Convert::nl2os($writer->getYaml($entities, 'de')));
 	}
-	
+
 	public function testCollectFromIncludedTemplates() {
 		$c = new i18nTextCollector();
-		
+
 		$templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
 		$html = file_get_contents($templateFilePath);
 		$matches = $c->collectFromTemplate($html, 'mymodule', 'RandomNamespace');
@@ -462,23 +462,23 @@ YAML;
 			$matches['i18nTestModule.SPRINTFNAMESPACE'],
 			array('My replacement: %s')
 		);
-		
+
 		// Includes should not automatically inject translations into parent templates
 		$this->assertArrayNotHasKey('i18nTestModule.WITHNAMESPACE', $matches);
 		$this->assertArrayNotHasKey('i18nTestModuleInclude.ss.NONAMESPACE', $matches);
 		$this->assertArrayNotHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE', $matches);
 		$this->assertArrayNotHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE', $matches);
 	}
-	
+
 	public function testCollectFromThemesTemplates() {
 		$c = new i18nTextCollector();
 		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
-		
+
 		// Collect from layout
 		$layoutFilePath = $this->alternateBasePath . '/themes/testtheme1/templates/Layout/i18nTestTheme1.ss';
 		$layoutHTML = file_get_contents($layoutFilePath);
 		$layoutMatches = $c->collectFromTemplate($layoutHTML, 'themes/testtheme1', 'i18nTestTheme1.ss');
-		
+
 		// all entities from i18nTestTheme1.ss
 		$this->assertEquals(
 			array(
@@ -493,12 +493,12 @@ YAML;
 			),
 			$layoutMatches
 		);
-		
+
 		// Collect from include
 		$includeFilePath = $this->alternateBasePath . '/themes/testtheme1/templates/Includes/i18nTestTheme1Include.ss';
 		$includeHTML = file_get_contents($includeFilePath);
 		$includeMatches = $c->collectFromTemplate($includeHTML, 'themes/testtheme1', 'i18nTestTheme1Include.ss');
-		
+
 		// all entities from i18nTestTheme1Include.ss
 		$this->assertEquals(
 			array(
@@ -518,14 +518,14 @@ YAML;
 	public function testCollectMergesWithExisting() {
 		$defaultlocal = i18n::default_locale();
 		$local = i18n::get_locale();
-		i18n::set_locale('en_US'); 
+		i18n::set_locale('en_US');
 		i18n::set_default_locale('en_US');
 
 		$c = new i18nTextCollector();
 		$c->setWriter(new i18nTextCollector_Writer_Php());
 		$c->basePath = $this->alternateBasePath;
 		$c->baseSavePath = $this->alternateBaseSavePath;
-		
+
 		$entitiesByModule = $c->collect(null, true /* merge */);
 		$this->assertArrayHasKey(
 			'i18nTestModule.ENTITY',
@@ -538,7 +538,7 @@ YAML;
 			'Adds new entities'
 		);
 	}
-	
+
 	public function testCollectFromFilesystemAndWriteMasterTables() {
 		$defaultlocal = i18n::default_locale();
 		$local = i18n::get_locale();
@@ -549,16 +549,16 @@ YAML;
 		$c->setWriter(new i18nTextCollector_Writer_Php());
 		$c->basePath = $this->alternateBasePath;
 		$c->baseSavePath = $this->alternateBaseSavePath;
-		
+
 		$c->run();
-		
+
 		// i18ntestmodule
 		$moduleLangFile = "{$this->alternateBaseSavePath}/i18ntestmodule/lang/" . $c->getDefaultLocale() . '.php';
 		$this->assertTrue(
 			file_exists($moduleLangFile),
 			'Master language file can be written to modules /lang folder'
 		);
-		
+
 		$moduleLangFileContent = file_get_contents($moduleLangFile);
 		$this->assertContains(
 			"\$lang['en']['i18nTestModule']['ADDITION'] = 'Addition';",
@@ -587,7 +587,7 @@ YAML;
 			"\$lang['en']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'Include Entity without Namespace';",
 			$moduleLangFileContent
 		);
-		
+
 		// i18nothermodule
 		$otherModuleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.php';
 		$this->assertTrue(
@@ -603,7 +603,7 @@ YAML;
 			"\$lang['en']['i18nOtherModule']['MAINTEMPLATE'] = 'Main Template Other Module';",
 			$otherModuleLangFileContent
 		);
-		
+
 		// testtheme1
 		$theme1LangFile = "{$this->alternateBaseSavePath}/themes/testtheme1/lang/" . $c->getDefaultLocale() . '.php';
 		$this->assertTrue(
@@ -631,7 +631,7 @@ YAML;
 			"\$lang['en']['i18nTestTheme1.ss']['SPRINTFNONAMESPACE'] = 'Theme1 My replacement no namespace: %s';",
 			$theme1LangFileContent
 		);
-		
+
 		$this->assertContains(
 			"\$lang['en']['i18nTestTheme1Include']['SPRINTFINCLUDENAMESPACE'] = 'Theme1 My include replacement: %s';",
 			$theme1LangFileContent
@@ -649,7 +649,7 @@ YAML;
 				. " 'Theme1 My include replacement no namespace: %s';",
 			$theme1LangFileContent
 		);
-		
+
 		// testtheme2
 		$theme2LangFile = "{$this->alternateBaseSavePath}/themes/testtheme2/lang/" . $c->getDefaultLocale() . '.php';
 		$this->assertTrue(
@@ -665,7 +665,7 @@ YAML;
 		i18n::set_locale($local);  //set the locale to the US locale expected in the asserts
 		i18n::set_default_locale($defaultlocal);
 	}
-	
+
 	public function testCollectFromEntityProvidersInCustomObject() {
 		$c = new i18nTextCollector();
 
@@ -683,13 +683,13 @@ YAML;
 			$matches['i18nTextCollectorTestMyObject.SINGULARNAME'][0]
 		);
 	}
-	
+
 	/**
 	 * Test that duplicate keys are resolved to the appropriate modules
 	 */
 	public function testResolveDuplicates() {
 		$collector = new i18nTextCollectorTest_Collector();
-		
+
 		// Dummy data as collected
 		$data1 = array(
 			'framework' => array(
@@ -712,10 +712,10 @@ YAML;
 				'DataObject.STREETNAME' => array('Shortland Street')
 			)
 		);
-		
+
 		$resolved = $collector->resolveDuplicateConflicts_Test($data1);
 		$this->assertEquals($expected, $resolved);
-		
+
 		// Test getConflicts
 		$data2 = array(
 			'module1' => array(
@@ -737,7 +737,7 @@ YAML;
 			array('DataObject.THREE', 'DataObject.TWO'),
 			$conflictsA
 		);
-		
+
 		// Removing module3 should remove a conflict
 		unset($data2['module3']);
 		$conflictsB = $collector->getConflicts_Test($data2);
@@ -746,7 +746,7 @@ YAML;
 			$conflictsB
 		);
 	}
-	
+
 	/**
 	 * Test ability for textcollector to detect modules
 	 */
@@ -764,7 +764,7 @@ YAML;
 			$modules
 		);
 	}
-	
+
 	/**
 	 * Test that text collector can detect module file lists properly
 	 */
@@ -772,7 +772,7 @@ YAML;
 		$collector = new i18nTextCollectorTest_Collector();
 		$collector->basePath = $this->alternateBasePath;
 		$collector->baseSavePath = $this->alternateBaseSavePath;
-		
+
 		// Non-standard modules can't be safely filtered, so just index everything
 		$nonStandardFiles = $collector->getFileListForModule_Test('i18nnonstandardmodule');
 		$nonStandardRoot = $this->alternateBasePath . '/i18nnonstandardmodule';
@@ -793,7 +793,7 @@ YAML;
 		$this->assertArrayHasKey("{$testRoot}/templates/Includes/i18nTestModuleInclude.ss", $testFiles);
 		$this->assertArrayHasKey("{$testRoot}/templates/Layout/i18nTestModule.ss", $testFiles);
 		$this->assertArrayHasKey("{$testRoot}/templates/i18nTestModule.ss", $testFiles);
-		
+
 		// Standard modules with code in odd places should only have code in those directories detected
 		$otherFiles = $collector->getFileListForModule_Test('i18nothermodule');
 		$otherRoot = $this->alternateBasePath . '/i18nothermodule';
@@ -802,7 +802,7 @@ YAML;
 		$this->assertArrayHasKey("{$otherRoot}/code/i18nOtherModule.php", $otherFiles);
 		$this->assertArrayHasKey("{$otherRoot}/code/i18nTestModuleDecorator.php", $otherFiles);
 		$this->assertArrayHasKey("{$otherRoot}/templates/i18nOtherModule.ss", $otherFiles);
-		
+
 		// Themes should detect all ss files only
 		$theme1Files = $collector->getFileListForModule_Test('themes/testtheme1');
 		$theme1Root = $this->alternateBasePath . '/themes/testtheme1/templates';
@@ -811,7 +811,7 @@ YAML;
 		$this->assertArrayHasKey("{$theme1Root}/Includes/i18nTestTheme1Include.ss", $theme1Files);
 		$this->assertArrayHasKey("{$theme1Root}/Layout/i18nTestTheme1.ss", $theme1Files);
 		$this->assertArrayHasKey("{$theme1Root}/i18nTestTheme1Main.ss", $theme1Files);
-		
+
 		// Only 1 file here
 		$theme2Files = $collector->getFileListForModule_Test('themes/testtheme2');
 		$this->assertEquals(1, count($theme2Files));

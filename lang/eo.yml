@@ -77,6 +77,8 @@ eo:
     PASSWORDEXPIRED: '<p>Via pasvorto finiĝis. <a target="_top" href="{link}">Bonvolu elekti novan.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Antaŭvido de retejo'
+  CMSPagesController_Tools_ss:
+    FILTER: Filtrilo
   CMSProfileController:
     MENUTITLE: 'Mia agordaro'
   CMSSecurity:
@@ -105,6 +107,7 @@ eo:
     MAXIMUM: 'Pasvorto devas esti ne pli ol {min} signojn longa.'
     SHOWONCLICKTITLE: 'Ŝangi Pasvorton'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Vi devas ensaluti per via CMS-pasvorto por vidi la projektan aŭ enarkivigitan enhavon.  <a href="%s">Alklaku ĉi tie por reiri al la publika retejo.</a>'
     NOTLOGGEDIN: 'Ne ensalutis'
   CreditCardField:
     FIRST: unuan
@@ -260,6 +263,7 @@ eo:
     many_many_Members: Membroj
   GroupImportForm:
     Help1: '<p>Importi unu aŭ pliaj grupojn en formato <em>CSV</em> (perkome disigitaj valoroj values). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
+    Help2: '<div class="advanced"><h4>Speciala uzado </h4><ul><li>Eblaj kolumnoj: <em>%s</em></li><li>Ekzistantaj grupoj kongruiĝas laŭ la valoro de ilia unika <em>Kodo</em>, kaj ĝisdatiĝas per eventualaj valoroj el la importita dosiero</li><li>Eblas krei grupajn hierarĥiojn per la kolumno <em>ParentCode</em>.</li><li>Eblas agordi permeskodojn per la kolumno <em>PermissionCode</em>. Ekzistantaj permeskodoj ne vakiĝas.</li></ul></div>'
     ResultCreated: 'Kreiĝis {count} grupoj'
     ResultDeleted: 'Forigis %d grupojn'
     ResultUpdated: 'Aktualigis %d grupojn'
@@ -291,6 +295,8 @@ eo:
     FROMWEB: 'El la TTT'
     FindInFolder: 'Serĉi en dosierujo'
     IMAGEALT: 'Alternativa teksto (alt)'
+    IMAGEALTTEXT: 'Alternativa teksto (alt) - vidigi ĝin se ne eblas vidigi bildon'
+    IMAGEALTTEXTDESC: 'Vidigita al ekranlegiloj aŭ se ne eblas vidii bildon'
     IMAGEDIMENSIONS: Dimensioj
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Titola teksto (ŝpruchelpilo) - por plua informo pri la bildo'
@@ -325,16 +331,23 @@ eo:
     DELETED: Forigita.
     DropdownBatchActionsDefault: Agoj
     HELP: Helpo
+    PAGETYPE: 'Tipo de paĝo:'
     PERMAGAIN: 'Vin adiaŭis la CMS. Se vi volas denove saluti, enigu salutnomon kaj pasvorton malsupre.'
+    PERMALREADY: 'Bedaŭrinde vi ne povas aliri tiun parton de la CMS. Se vi volas ensaluti kiel aliulo, faru tion sube.'
+    PERMDEFAULT: 'Necesas ensaluti por aliri la administran zonon; bonvolu enigi viajn akreditaĵoj sube.'
+    PLEASESAVE: 'Bonvolu konservi paĝon: Ne eblis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ ne estas konservita.'
     PreviewButton: Antaŭvido
     REORGANISATIONSUCCESSFUL: 'Sukcese reorganizis la retejan arbon.'
     SAVEDUP: Konservita.
     ShowAsList: 'vidigi kiel liston'
     TooManyPages: 'Tro da paĝoj'
     ValidationError: 'Validiga eraro'
+    VersionUnknown: nekonata
   LeftAndMain_Menu_ss:
     Hello: Saluton
     LOGOUT: 'Elsaluti'
+  ListboxField:
+    SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. %s ne estas valida agordo'
   LoginAttempt:
     Email: 'Retadreso'
     IP: 'IP-Adreso'
@@ -410,6 +423,7 @@ eo:
     Toggle: 'Vidigi aranĝa helpo'
   MemberImportForm:
     Help1: '<p>Importi membrojn en <em>CSV-formato</em> (diskomaj valoroj ). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
+    Help2: '<div class="advanced"><h4>Speciala uzado </h4><ul><li>Eblaj kolumnoj: <em>%s</em></li><li>Ekzistantaj uzantoj kongruiĝas laŭ la valoro de sia unika atributo <em>Code</em>, kaj ĝisdatiĝas per eventualaj novaj valoroj el la importita dosiero. </li><li>Eblas agordi grupojn per la kolumno <em>Groups</em>. Grupoj estas identigeblaj per sia atributo <em>Code</em>, plurobla grupo estu apartigitaj per komo. Ekzistantaj grupaj membrecoj ne vakiĝas.</li></ul></div>'
     ResultCreated: 'Krei {count} membrojn'
     ResultDeleted: 'Forigis %d membrojn'
     ResultNone: 'Neniu ŝanĝo'
@@ -539,6 +553,8 @@ eo:
     Print: Presi
   TableListField_PageControls_ss:
     OF: de
+  TextField:
+    VALIDATEMAXLENGTH: 'La longo de la valoro por {name} devas ne superi {maxLength} signojn'
   TimeField:
     VALIDATEFORMAT: 'Bonvole enigu validan horan formaton ({format})'
   ToggleField:

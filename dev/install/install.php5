@@ -4,7 +4,7 @@
  ************************************************************************************
  **                                                                                **
  **  If you can read this text in your browser then you don't have PHP installed.  **
- **  Please install PHP 5.3.3 or higher, preferably PHP 5.3.4+.                    **
+ **  Please install PHP 5.5.0 or higher.                                           **
  **                                                                                **
  ************************************************************************************
  ************************************************************************************/
@@ -382,7 +382,7 @@ class InstallRequirements {
 		$isIIS = $this->isIIS();
 		$webserver = $this->findWebserver();
 
-		$this->requirePHPVersion('5.3.4', '5.3.3', array(
+		$this->requirePHPVersion('5.5.0', '5.5.0', array(
 			"PHP Configuration",
 			"PHP5 installed",
 			null,
@@ -1555,7 +1555,7 @@ ErrorDocument 500 /assets/error-500.html
 	RewriteRule ^vendor(/|$) - [F,L,NC]
 	RewriteRule silverstripe-cache(/|$) - [F,L,NC]
 	RewriteRule composer\.(json|lock) - [F,L,NC]
-	
+
 	# Process through SilverStripe if no file with the requested name exists.
 	# Pass through the original path as a query parameter, and retain the existing parameters.
 	RewriteCond %{REQUEST_URI} ^(.*)$

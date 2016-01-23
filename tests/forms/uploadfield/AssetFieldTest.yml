@@ -1,0 +1,17 @@
+Folder:
+  folder1:
+    Name: MyAssets
+
+File:
+  file1:
+    Title: File1
+    FileFilename: MyAssets/file1.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: file1.txt
+    Parent: =>Folder.folder1
+    
+AssetFieldTest_Object:
+  object1:
+    Title: 'Object1'
+    FileFilename: MyFiles/subfolder1/file-subfolder.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c

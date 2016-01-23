@@ -9,7 +9,7 @@
  * @package forms
  * @subpackage fields-basic
  */
-class LookupField extends DropdownField {
+class LookupField extends MultiSelectField {
 
 	/**
 	 * @var boolean $readonly
@@ -24,36 +24,20 @@ class LookupField extends DropdownField {
 	 * @return string
 	 */
 	public function Field($properties = array()) {
-		$source = $this->getSource();
+		$source = ArrayLib::flatten($this->getSource());
+		$values = $this->getValueArray();
 
-		// Normalize value to array to simplify further processing
-		if(is_array($this->value) || is_object($this->value)) {
-			$values = $this->value;
-		} else {
-			$values = array(trim($this->value));
-		}
-
+		// Get selected values
 		$mapped = array();
-
-		if($source instanceof SQLMap) {
-			foreach($values as $value) {
-				$mapped[] = $source->getItem($value);
+		foreach($values as $value) {
+			if(isset($source[$value])) {
+				$mapped[] = $source[$value];
 			}
-		} else if($source instanceof ArrayAccess || is_array($source)) {
-			$source = ArrayLib::flatten($source);
-
-			foreach($values as $value) {
-				if(isset($source[$value])) {
-					$mapped[] = $source[$value];
-				}
-			}
-		} else {
-			$mapped = array();
 		}
 
 		// Don't check if string arguments are matching against the source,
 		// as they might be generated HTML diff views instead of the actual values
-		if($this->value && !is_array($this->value) && !$mapped) {
+		if($this->value && is_string($this->value) && empty($mapped)) {
 			$mapped = array(trim($this->value));
 			$values = array();
 		}
@@ -80,12 +64,33 @@ class LookupField extends DropdownField {
 	}
 
 	/**
+	 * Ignore validation as the field is readonly
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate($validator) {
+		return true;
+	}
+
+	/**
+	 * Stubbed so invalid data doesn't save into the DB
+	 *
+	 * @param DataObjectInterface $record DataObject to save data into
+	 */
+	public function saveInto(DataObjectInterface $record) {
+	}
+
+	/**
 	 * @return LookupField
 	 */
 	public function performReadonlyTransformation() {
 		$clone = clone $this;
-
 		return $clone;
+	}
+
+	public function getHasEmptyDefault() {
+		return false;
 	}
 
 	/**

@@ -1,6 +1,10 @@
 <?php
-if(!class_exists('PHPUnit_Framework_TestResult', false)) require_once 'PHPUnit/Framework/TestResult.php';
-if(!class_exists('PHPUnit_Framework_TestListener', false)) require_once 'PHPUnit/Framework/TestListener.php';
+if(!class_exists('PHPUnit_Framework_TestResult', false)) {
+	require_once 'PHPUnit/Framework/TestResult.php';
+}
+if(!class_exists('PHPUnit_Framework_TestListener', false)) {
+	require_once 'PHPUnit/Framework/TestListener.php';
+}
 
 /**#@+
  * @var int
@@ -45,40 +49,54 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * @var array
 	 */
 	protected $suiteResults;
+
 	/**
 	 * Holds data of current suite that is been run
 	 * @var array
 	 */
 	protected $currentSuite;
+
 	/**
 	 * Holds data of current test that is been run
 	 * @var array
 	 */
 	protected $currentTest;
+
 	/**
 	 * Whether PEAR Benchmark_Timer is available for timing
 	 * @var boolean
 	 */
 	protected $hasTimer;
+
 	/**
 	 * Holds the PEAR Benchmark_Timer object
-	 * @var obj Benchmark_Timer
+	 *
+	 * @var Benchmark_Timer
 	 */
 	protected $timer;
 
+	/**
+	 * @var int
+	 */
 	protected $startTestTime;
 
 	/**
 	 * An array of all the test speeds
+	 *
+	 * @var array
 	 */
 	protected $testSpeeds = array();
 
 	/**
+	 * Errors not belonging to a test or suite
+	 *
+	 * @var array
+	 */
+	protected $currentSession = array();
+
+	/**
 	 * Constructor, checks to see availability of PEAR Benchmark_Timer and
 	 * sets up basic properties
-	 *
-	 * @access public
-	 * @return void
 	 */
 	public function __construct() {
 		@include_once 'Benchmark/Timer.php';
@@ -93,6 +111,13 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 			'suites'      => array(),         // array of suites run
 			'hasTimer'    => $this->hasTimer, // availability of PEAR Benchmark_Timer
 			'totalTests'  => 0                // total number of tests run
+		);
+
+		$this->currentSession = array(
+			'errors'     => 0,       // number of tests with errors (including setup errors)
+			'failures'   => 0,       // number of tests which failed
+			'incomplete' => 0,       // number of tests that were not completed correctly
+			'error'      => array(), // Any error encountered outside of suites
 		);
 	}
 
@@ -110,54 +135,47 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * Sets up the container for result details of the current test suite when
 	 * each suite is first run
 	 *
-	 * @access public
-	 * @param obj PHPUnit2_Framework_TestSuite, the suite that is been run
-	 * @return void
+	 * @param PHPUnit_Framework_TestSuite $suite the suite that is been run
 	 */
-	public function startTestSuite( PHPUnit_Framework_TestSuite $suite) {
-		if(strlen($suite->getName())) {
-			$this->endCurrentTestSuite();
+	public function startTestSuite(PHPUnit_Framework_TestSuite $suite) {
+		$this->endCurrentTestSuite();
 		$this->currentSuite = array(
 			'suite'      => $suite,  // the test suite
 			'tests'      => array(), // the tests in the suite
 			'errors'     => 0,       // number of tests with errors (including setup errors)
 			'failures'   => 0,       // number of tests which failed
 			'incomplete' => 0,       // number of tests that were not completed correctly
-				'error'		 => null);	 // Any error encountered during setup of the test suite
-	}
+			'error'		 => null,	 // Any error encountered during setup of the test suite
+		);
 	}
 
 	/**
 	 * Sets up the container for result details of the current test when each
 	 * test is first run
 	 *
-	 * @access public
-	 * @param obj PHPUnit_Framework_Test, the test that is being run
-	 * @return void
+	 * @param PHPUnit_Framework_Test $test the test that is being run
 	 */
 	public function startTest(PHPUnit_Framework_Test $test) {
-		$this->startTestTime = microtime(true);
+		$this->endCurrentTest();
 
-		if($test instanceof PHPUnit_Framework_TestCase) {
-			$this->endCurrentTest();
-			$this->currentTest = array(
-				// the name of the test (without the suite name)
-				'name'        => preg_replace('(\(.*\))', '', $test->toString()),
-				// execution time of the test
-				'timeElapsed' => 0,
-				// status of the test execution
-				'status'      => TEST_SUCCESS,
-				// user message of test result
-				'message'     => '',
-				// original caught exception thrown by test upon failure/error
-				'exception'   => NULL,
-				// Stacktrace used for exception handling
-				'trace'		  => NULL,
-				// a unique ID for this test (used for identification purposes in results)
-				'uid'         => md5(microtime())
-			);
-			if($this->hasTimer) $this->timer->start();
-		}
+		$this->startTestTime = microtime(true);
+		$this->currentTest = array(
+			// the name of the test (without the suite name)
+			'name'        => $this->descriptiveTestName($test),
+			// execution time of the test
+			'timeElapsed' => 0,
+			// status of the test execution
+			'status'      => TEST_SUCCESS,
+			// user message of test result
+			'message'     => '',
+			// original caught exception thrown by test upon failure/error
+			'exception'   => NULL,
+			// Stacktrace used for exception handling
+			'trace'		  => NULL,
+			// a unique ID for this test (used for identification purposes in results)
+			'uid'         => md5(microtime())
+		);
+		if($this->hasTimer) $this->timer->start();
 	}
 
 	/**
@@ -170,7 +188,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 */
 	protected function addStatus($status, $message, $exception, $trace) {
 		// Build status body to be saved
-		$status = array(
+		$statusResult = array(
 			'status' => $status,
 			'message' => $message,
 			'exception' => $exception,
@@ -179,9 +197,11 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 
 		// Log either to current test or suite record
 		if($this->currentTest) {
-			$this->currentTest = array_merge($this->currentTest, $status);
+			$this->currentTest = array_merge($this->currentTest, $statusResult);
+		} elseif($this->currentSuite) {
+			$this->currentSuite['error'] = $statusResult;
 		} else {
-			$this->currentSuite['error'] = $status;
+			$this->currentSession['error'][] = $statusResult;
 		}
 	}
 
@@ -189,13 +209,16 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * Adds the failure detail to the current test and increases the failure
 	 * count for the current suite
 	 *
-	 * @access public
-	 * @param obj PHPUnit_Framework_Test, current test that is being run
-	 * @param obj PHPUnit_Framework_AssertationFailedError, PHPUnit error
-	 * @return void
+	 * @param PHPUnit_Framework_Test $test current test that is being run
+	 * @param PHPUnit_Framework_AssertionFailedError $e PHPUnit error
+	 * @param int $time
 	 */
 	public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time) {
-		$this->currentSuite['failures']++;
+		if($this->currentSuite) {
+			$this->currentSuite['failures']++;
+		} else {
+			$this->currentSession['failures']++;
+		}
 		$this->addStatus(TEST_FAILURE, $e->toString(), $this->getTestException($test, $e), $e->getTrace());
 	}
 
@@ -203,13 +226,16 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * Adds the error detail to the current test and increases the error
 	 * count for the current suite
 	 *
-	 * @access public
-	 * @param obj PHPUnit_Framework_Test, current test that is being run
-	 * @param obj PHPUnit_Framework_AssertationFailedError, PHPUnit error
-	 * @return void
+	 * @param PHPUnit_Framework_Test $test current test that is being run
+	 * @param Exception $e PHPUnit error
+	 * @param int $time
 	 */
 	public function addError(PHPUnit_Framework_Test $test, Exception $e, $time) {
-		$this->currentSuite['errors']++;
+		if($this->currentSuite) {
+			$this->currentSuite['errors']++;
+		} else {
+			$this->currentSession['errors']++;
+		}
 		$this->addStatus(TEST_ERROR, $e->getMessage(), $this->getTestException($test, $e), $e->getTrace());
 	}
 
@@ -217,21 +243,24 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * Adds the test incomplete detail to the current test and increases the incomplete
 	 * count for the current suite
 	 *
-	 * @access public
-	 * @param obj PHPUnit_Framework_Test, current test that is being run
-	 * @param obj PHPUnit_Framework_AssertationFailedError, PHPUnit error
-	 * @return void
+	 * @param PHPUnit_Framework_Test $test current test that is being run
+	 * @param Exception $e PHPUnit error
 	 */
 	public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time) {
-		$this->currentSuite['incomplete']++;
-		$this->addStatus(TEST_INCOMPLETE, $e->toString(), $this->getTestException($test, $e), $e->getTrace());
+		if($this->currentSuite) {
+			$this->currentSuite['incomplete']++;
+		} else {
+			$this->currentSession['incomplete']++;
+		}
+		$this->addStatus(TEST_INCOMPLETE, $e->getMessage(), $this->getTestException($test, $e), $e->getTrace());
 	}
 
 	/**
 	 * Not used
 	 *
 	 * @param PHPUnit_Framework_Test $test
-	 * @param unknown_type $time
+	 * @param Exception $e
+	 * @param int $time
 	 */
 	public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time) {
 		// not implemented
@@ -261,9 +290,8 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * Upon completion of a test, records the execution time (if available) and adds the test to
 	 * the tests performed in the current suite.
 	 *
-	 * @access public
-	 * @param obj PHPUnit_Framework_Test, current test that is being run
-	 * @return void
+	 * @param PHPUnit_Framework_Test $test Current test that is being run
+	 * @param int $time
 	 */
 	public function endTest( PHPUnit_Framework_Test $test, $time) {
 		$this->endCurrentTest();
@@ -290,9 +318,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	/**
 	 * Upon completion of a test suite adds the suite to the suties performed
 	 *
-	 * @access public
-	 * @param obj PHPUnit_Framework_TestSuite, current suite that is being run
-	 * @return void
+	 * @param PHPUnit_Framework_TestSuite $suite current suite that is being run
 	 */
 	public function endTestSuite( PHPUnit_Framework_TestSuite $suite) {
 		if(strlen($suite->getName())) {
@@ -313,28 +339,32 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	}
 
 	/**
-	 * Trys to get the original exception thrown by the test on failure/error
+	 * Tries to get the original exception thrown by the test on failure/error
 	 * to enable us to give a bit more detail about the failure/error
 	 *
-	 * @access private
-	 * @param obj PHPUnit_Framework_Test, current test that is being run
-	 * @param obj PHPUnit_Framework_AssertationFailedError, PHPUnit error
+	 * @param PHPUnit_Framework_Test $test current test that is being run
+	 * @param Exception $e PHPUnit error
 	 * @return array
 	 */
 	private function getTestException(PHPUnit_Framework_Test $test, Exception $e) {
 		// get the name of the testFile from the test
-		$testName = preg_replace('/(.*)\((.*[^)])\)/', '\\2', $test->toString());
+		$testName = $this->descriptiveTestName($test);
 		$trace = $e->getTrace();
 		// loop through the exception trace to find the original exception
 		for($i = 0; $i < count($trace); $i++) {
 
 			if(array_key_exists('file', $trace[$i])) {
-				if(stristr($trace[$i]['file'], $testName.'.php') != false) return $trace[$i];
+				if(stristr($trace[$i]['file'], $testName.'.php') != false) {
+					return $trace[$i];
+				}
 			}
 			if(array_key_exists('file:protected', $trace[$i])) {
-				if(stristr($trace[$i]['file:protected'], $testName.'.php') != false) return $trace[$i];
+				if(stristr($trace[$i]['file:protected'], $testName.'.php') != false) {
+					return $trace[$i];
+				}
 			}
 		}
+		return array();
 	}
 
 	/**
@@ -364,6 +394,21 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 		// A suite may not end correctly if there was an error during setUp
 		$this->endCurrentTestSuite();
 
+		// Write session errors
+		if($this->currentSession['error']) {
+			$errorCount += $this->currentSession['errors'];
+			$failCount += $this->currentSession['failures'];
+			$incompleteCount += $this->currentSession['incomplete'];
+			foreach($this->currentSession['error'] as $error) {
+				$this->writeResultError(
+					'Session',
+					$error['message'],
+					$error['trace']
+				);
+			}
+		}
+
+		// Write suite errors
 		foreach($this->suiteResults['suites'] as $suite) {
 
 			// Report suite error. In the case of fatal non-success messages
@@ -408,6 +453,24 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 
 	protected function testNameToPhrase($name) {
 		return ucfirst(preg_replace("/([a-z])([A-Z])/", "$1 $2", $name));
+	}
+
+	/**
+	 * Get name for this test
+	 *
+	 * @param PHPUnit_Framework_Test $test
+	 * @return string
+	 */
+	protected function descriptiveTestName(PHPUnit_Framework_Test $test) {
+		if ($test instanceof PHPUnit_Framework_TestCase) {
+			$name = $test->toString();
+		} elseif(method_exists($test, 'getName')) {
+			$name = $test->getName();
+		} else {
+			$name = get_class($test);
+		}
+		// the name of the test (without the suite name)
+		return preg_replace('(\(.*\))', '', $name);
 	}
 }
 

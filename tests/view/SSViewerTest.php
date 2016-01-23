@@ -2,6 +2,13 @@
 
 class SSViewerTest extends SapphireTest {
 
+	/**
+	 * Backup of $_SERVER global
+	 *
+	 * @var array
+	 */
+	protected $oldServer = array();
+
 	protected $extraDataObjects = array(
 		'SSViewerTest_Object',
 	);
@@ -10,6 +17,14 @@ class SSViewerTest extends SapphireTest {
 		parent::setUp();
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
 		Config::inst()->update('SSViewer_FromString', 'cache_template', false);
+		AssetStoreTest_SpyStore::activate('SSViewerTest');
+		$this->oldServer = $_SERVER;
+	}
+
+	public function tearDown() {
+		$_SERVER = $this->oldServer;
+		AssetStoreTest_SpyStore::reset();
+		parent::tearDown();
 	}
 
 	/**
@@ -63,7 +78,7 @@ class SSViewerTest extends SapphireTest {
 		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
 		$this->assertExpectedStrings($result, $expected);
 	}
-	
+
 	public function testIncludeTruthyness() {
 		$data = new ArrayData(array(
 			'Title' => 'TruthyTest',
@@ -78,7 +93,7 @@ class SSViewerTest extends SapphireTest {
 			))
 		));
 		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
-		
+
 		// We should not end up with empty values appearing as empty
 		$expected = array(
 			'Item 1 _ Item 1 - First-ODD top:Item 1',
@@ -121,7 +136,7 @@ class SSViewerTest extends SapphireTest {
 	public function render($templateString, $data = null, $cacheTemplate = false) {
 		$t = SSViewer::fromString($templateString, $cacheTemplate);
 		if(!$data) $data = new SSViewerTestFixture();
-		return $t->process($data);
+		return trim(''.$t->process($data));
 	}
 
 	public function testRequirements() {
@@ -138,53 +153,39 @@ class SSViewerTest extends SapphireTest {
 		<% require css($cssFile) %>");
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
 	}
-	
+
 	public function testRequirementsCombine(){
-		$oldBackend = Requirements::backend();
-		$testBackend = new Requirements_Backend();
-		Requirements::set_backend($testBackend);
-		$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
+		$testBackend = Injector::inst()->create('Requirements_Backend');
+		$testBackend->setSuffixRequirements(false);
+		//$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
 
 		$jsFile = FRAMEWORK_DIR . '/tests/view/themes/javascript/bad.js';
 		$jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
-		Requirements::combine_files('testRequirementsCombine.js', array($jsFile));
-		require_once('thirdparty/jsmin/jsmin.php');
-		
+		$testBackend->combineFiles('testRequirementsCombine.js', array($jsFile));
+
 		// first make sure that our test js file causes an exception to be thrown
 		try{
+			require_once('thirdparty/jsmin/jsmin.php');
 			$content = JSMin::minify($content);
-			Requirements::set_backend($oldBackend);
 			$this->fail('JSMin did not throw exception on minify bad file: ');
-		}catch(Exception $e){
+		} catch(Exception $e) {
 			// exception thrown... good
 		}
 
-		// secondly, make sure that requirements combine throws the correct warning, and only that warning
-		@unlink($combinedTestFilePath);
-		try{
-			Requirements::process_combined_files();
-		}catch(PHPUnit_Framework_Error_Warning $e){
-			if(strstr($e->getMessage(), 'Failed to minify') === false){
-				Requirements::set_backend($oldBackend);
-				$this->fail('Requirements::process_combined_files raised a warning, which is good, but this is not the expected warning ("Failed to minify..."): '.$e);
-			}
-		}catch(Exception $e){
-			Requirements::set_backend($oldBackend);
-			$this->fail('Requirements::process_combined_files did not catch exception caused by minifying bad js file: '.$e);
-		}
-		
+		// secondly, make sure that requirements is generated, even though minification failed
+		$testBackend->processCombinedFiles();
+		$js = $testBackend->getJavascript();
+		$combinedTestFilePath = BASE_PATH . reset($js);
+		$this->assertContains('_combinedfiles/testRequirementsCombine-4c0e97a.js', $combinedTestFilePath);
+
 		// and make sure the combined content matches the input content, i.e. no loss of functionality
-		if(!file_exists($combinedTestFilePath)){
-			Requirements::set_backend($oldBackend);
+		if(!file_exists($combinedTestFilePath)) {
 			$this->fail('No combined file was created at expected path: '.$combinedTestFilePath);
 		}
 		$combinedTestFileContents = file_get_contents($combinedTestFilePath);
 		$this->assertContains($jsFileContents, $combinedTestFileContents);
-
-		// reset
-		Requirements::set_backend($oldBackend);
 	}
-	
+
 
 
 	public function testComments() {
@@ -1082,10 +1083,10 @@ after')
 
 		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
 			$template = new SSViewer(array('Page'));
-			$self->assertEquals('Foo', $template->process(new ArrayData(array())));
+			$self->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
 
 			$template = new SSViewer(array('Shortcodes', 'Page'));
-			$self->assertEquals('[file_link]', $template->process(new ArrayData(array())));
+			$self->assertEquals("[file_link]\n\n", $template->process(new ArrayData(array())));
 		});
 	}
 
@@ -1153,13 +1154,16 @@ after')
 	}
 
 	public function testRewriteHashlinks() {
-		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links'); 
+		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links');
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', true);
 
-		$_SERVER['REQUEST_URI'] = 'http://path/to/file?foo"onclick="alert(\'xss\')""';
+		$_SERVER['HTTP_HOST'] = 'www.mysite.com';
+		$_SERVER['REQUEST_URI'] = '//file.com?foo"onclick="alert(\'xss\')""';
 
 		// Emulate SSViewer::process()
-		$base = Convert::raw2att($_SERVER['REQUEST_URI']);
+		// Note that leading double slashes have been rewritten to prevent these being mis-interepreted
+		// as protocol-less absolute urls
+		$base = Convert::raw2att('/file.com?foo"onclick="alert(\'xss\')""');
 
 		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinks_' . sha1(rand()) . '.ss';
 
@@ -1227,10 +1231,11 @@ after')
 		$obj = new ViewableData();
 		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
 		$result = $tmpl->process($obj);
-		$this->assertContains(
-			'<a class="inserted" href="<?php echo Convert::raw2att(',
-			$result
-		);
+
+		$code = <<<'EOC'
+<a class="inserted" href="<?php echo Convert::raw2att(preg_replace("/^(\/)+/", "/", $_SERVER['REQUEST_URI'])); ?>#anchor">InsertedLink</a>
+EOC;
+		$this->assertContains($code, $result);
 		// TODO Fix inline links in PHP mode
 		// $this->assertContains(
 		// 	'<a class="inline" href="<?php echo str_replace(',
@@ -1241,7 +1246,7 @@ after')
 			$result,
 			'SSTemplateParser should only rewrite anchor hrefs'
 		);
-		
+
 		unlink($tmplFile);
 
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig);
@@ -1356,9 +1361,9 @@ after')
 		$template = new SSViewer(array('SSViewerTestProcess'));
 		$basePath = dirname($this->getCurrentRelativePath()) . '/forms';
 
-		$backend = new Requirements_Backend;
-		$backend->set_combined_files_enabled(false);
-		$backend->combine_files(
+		$backend = Injector::inst()->create('Requirements_Backend');
+		$backend->setCombinedFilesEnabled(false);
+		$backend->combineFiles(
 			'RequirementsTest_ab.css',
 			array(
 				$basePath . '/RequirementsTest_a.css',

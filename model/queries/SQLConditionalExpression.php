@@ -251,7 +251,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 				execute this query'
 			);
 		}
-		
+
 		// Sort the joins
 		$parameters = array();
 		$joins = $this->getOrderedJoins($this->from);

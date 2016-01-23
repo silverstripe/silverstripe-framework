@@ -128,10 +128,11 @@ abstract class CompositeDBField extends DBField {
 	 * If $record is assigned to a dataobject, this field becomes a loose wrapper over
 	 * the records on that object instead.
 	 *
-	 * @param type $value
-	 * @param DataObject $record
-	 * @param type $markChanged
-	 * @return type
+	 * {@see ViewableData::obj}
+	 *
+	 * @param mixed $value
+	 * @param mixed $record Parent object to this field, which could be a DataObject, record array, or other
+	 * @param bool $markChanged
 	 */
 	public function setValue($value, $record = null, $markChanged = true) {
 		$this->isChanged = $markChanged;
@@ -155,7 +156,7 @@ abstract class CompositeDBField extends DBField {
 
 			// Load from $record
 			$key = $this->getName() . $field;
-			if(isset($record[$key])) {
+			if(is_array($record) && isset($record[$key])) {
 				$this->setField($field, $record[$key]);
 			}
 		}

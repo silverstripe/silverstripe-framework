@@ -54,7 +54,7 @@ class BasicAuth {
                  * Enable HTTP Basic authentication workaround for PHP running in CGI mode with Apache
                  * Depending on server configuration the auth header may be in HTTP_AUTHORIZATION or
                  * REDIRECT_HTTP_AUTHORIZATION
-                 * 
+                 *
                  * The follow rewrite rule must be in the sites .htaccess file to enable this workaround
                  * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
                  */

@@ -15,14 +15,14 @@
 @import "../admin/scss/_mixins";
 @import "_elementMixins";
 
-//$experimental-support-for-svg variable comes from 
-//imported compass/support file and enables svg gradients in IE9. 
-//This is needed for the background gradients to work as desired with 
-//multiple images. 
-$experimental-support-for-svg: true; 
+//$experimental-support-for-svg variable comes from
+//imported compass/support file and enables svg gradients in IE9.
+//This is needed for the background gradients to work as desired with
+//multiple images.
+$experimental-support-for-svg: true;
 
 
-$gf_colour_gradient_dark: darken($color-base, 8%); 
+$gf_colour_gradient_dark: darken($color-base, 8%);
 $gf_colour_header_border: $gf_colour_gradient_dark;
 $gf_colour_subheader: saturate(lighten($color-base, 15%),5%);
 $gf_colour_border: rgba(0,0,0,.1);
@@ -83,7 +83,7 @@ $gf_grid_x:	16px;
 	 		float:right;
 			& > * {
 				float: right;
-				margin-left:$gf_grid_x/2;			
+				margin-left:$gf_grid_x/2;
 			}
 
 			.pagination-records-number {
@@ -94,7 +94,7 @@ $gf_grid_x:	16px;
 				font-weight: normal;
 			}
 		}
-		.left { 
+		.left {
 			float:left;
 			& > * {
 				margin-right:$gf_grid_x/2;
@@ -102,19 +102,11 @@ $gf_grid_x:	16px;
 			}
 		}
 	}
-	
+
 	.ss-gridfield {
-		.grid-levelup {
-			text-indent: -9999em;
-			a.list-parent-link{
-				background: transparent url(../images/gridfield-level-up.png) no-repeat 0 0;
-				display:block;
-			}
-			margin-bottom: 6px;
-		}
 		.add-existing-autocompleter {
 			span {
-				float: left;		
+				float: left;
 				@include inline-block(top);
 			}
 			input.relation-search {
@@ -138,16 +130,16 @@ $gf_grid_x:	16px;
 		}
 		}
 	table.ss-gridfield-table {
-		display: table; 
-		@include box-shadow-none;		
+		display: table;
+		@include box-shadow-none;
 		padding: 0;
-		border-collapse: separate;	
-		border-bottom: 0 none;				
+		border-collapse: separate;
+		border-bottom: 0 none;
 		width: 100%;
 		overflow: hidden;
 
 		thead {
-			color: darken($color-base, 50%);	
+			color: darken($color-base, 50%);
 			background: transparent;
 			tr.filter-header {
 				.fieldgroup {
@@ -164,9 +156,9 @@ $gf_grid_x:	16px;
 				th:last-child {
 					@include border-top-right-radius($gf_border_radius);
 				}
-			} 
+			}
 		}
-		
+
 		tbody {
 			background: #FFF;
 			tr {
@@ -180,7 +172,7 @@ $gf_grid_x:	16px;
 				word-wrap:break-word;
 				// Give browser some hints on which cols take priority:
 				// The last column (buttons) should always shrink to fit.
-				// Overwritten for IE7, which doesnt support this.			
+				// Overwritten for IE7, which doesnt support this.
 				&.col-buttons {
 					width: 1px;
 					padding:0 $gf_grid_x/2;
@@ -214,31 +206,31 @@ $gf_grid_x:	16px;
 						margin-top:  -1px;
 						@include border-radius(2px, 2px);
 					}
-					
+
 					span.badge.status-modified {
 						color:  #7E7470;
 						border: 1px solid #C9B800;
 						background-color: #FFF0BC;
 					}
-					
+
 					span.badge.status-addedtodraft {
 						color:  #7E7470;
 						border: 1px solid #C9B800;
 						background-color: #FFF0BC;
 					}
-					
+
 					span.badge.status-deletedonlive {
 						color:  #636363;
 						border: 1px solid #E49393;
 						background-color: #F2DADB;
 					}
-					
+
 					span.badge.status-removedfromdraft {
 						color:  #636363;
 						border: 1px solid #E49393;
 						background-color: #F2DADB;
 					}
-					
+
 					span.badge.status-workflow-approval {
 						color:  #56660C;
 						border: 1px solid #7C8816;
@@ -296,11 +288,11 @@ $gf_grid_x:	16px;
 				}
 			}
 		}
-		
-		tr {	
+
+		tr {
 			&.title {
 				th {
-					position: relative;					
+					position: relative;
 					background: $gf_colour_gradient_dark;
 					border-bottom: 1px solid darken($gf_colour_gradient_dark,5%);
 					padding: 5px;
@@ -314,19 +306,19 @@ $gf_grid_x:	16px;
 						margin: 1px 8px 0;
 						display:inline-block;
 						float:left;
-					}					
+					}
 				}
-			}	
-			&.sortable-header {		
-				background: $gf_colour_subheader;					
+			}
+			&.sortable-header {
+				background: $gf_colour_subheader;
 				th{
 					padding: 0; // Should be padding: 0 1em; like td
 					font-weight: normal;
 					.ss-ui-button {
 						font-weight: normal;
 					}
-				}			
-			}			
+				}
+			}
 			&:hover {
 				background: #FFFAD6;
 			}
@@ -354,15 +346,15 @@ $gf_grid_x:	16px;
 					background: #FFFAD6;
 				}
 			}
-			
+
 			th {
 				font-weight: bold;
 				font-size: $gf_grid_y;
 				color: #FFF;
 				padding: 5px;
 				border-right: 1px solid $gf_colour_border;
-				
-				div { 
+
+				div {
 					&.fieldgroup,&.fieldgroup-field {
 						width: 100%;
 						position:relative;
@@ -407,8 +399,8 @@ $gf_grid_x:	16px;
 				&.extra {
 					position:relative;
 					background:darken($color-dark-grey, 10%);
-					background: rgba(#000, 0.7);		
-					padding: 5px;	
+					background: rgba(#000, 0.7);
+					padding: 5px;
 					border-top:	$gf_colour_text_shadow;
 
 					input {
@@ -418,10 +410,10 @@ $gf_grid_x:	16px;
 					button.ss-ui-button {
 						padding: .3em;
 						line-height: 1;
-						@include box-shadow-none; 
+						@include box-shadow-none;
 						position: relative;
-						border-bottom-width: 0;	
-						@include border-radius(2px, 2px);			
+						border-bottom-width: 0;
+						@include border-radius(2px, 2px);
 					}
 
 					select {
@@ -436,21 +428,21 @@ $gf_grid_x:	16px;
 				}
 
 
-				
+
 				button {
 					&#action_gridfield_relationadd:hover {
 						color: #444 !important; /* Not sure why IE think it needs this */
 					}
 					&:hover {
-						color: #ccc !important; /* Not sure why IE think it needs this */ 
+						color: #ccc !important; /* Not sure why IE think it needs this */
 					}
 					&.ss-gridfield-sort:hover {
 						color: #fff !important;
-						@include box-shadow-none; 
+						@include box-shadow-none;
 					}
 					&.ss-gridfield-sort {
 						background: transparent url(../images/arrows.png) no-repeat right 6px;
-						border:none;	
+						border:none;
 						width:100%;
 						text-align: left;
 						padding: 2px 8px 2px 0; // Doesn't need to be so big now that filter has moved
@@ -476,26 +468,26 @@ $gf_grid_x:	16px;
 							@include background(
 								$bgImage -15px 4px,
 								linear-gradient(
-									$color-menu-button, 
+									$color-menu-button,
 									darken($color-menu-button, 10%)
 								)
-							);	
-							width: 26px;					
-							border-top: 1px solid lighten($color-menu-button, 5%);	
+							);
+							width: 26px;
+							border-top: 1px solid lighten($color-menu-button, 5%);
 
-							&.hover-alike:active, &:active,	&.hover-alike, &:hover {							
+							&.hover-alike:active, &:active,	&.hover-alike, &:hover {
 								@include background (
 								$bgImage -15px 4px,
 								linear-gradient(
 									lighten($color-menu-button, 10%),
-									$color-menu-button								
-								));		
-							} 	
+									$color-menu-button
+								));
+							}
 
-							&.trigger{	//The magnifying glass before filter is opened						
-								margin-left: $gf_grid_y; 							
-								border:none;						
-								@include background ($bgImage -17px 6px);	
+							&.trigger{	//The magnifying glass before filter is opened
+								margin-left: $gf_grid_y;
+								border:none;
+								@include background ($bgImage -17px 6px);
 								padding-right: 46px;
 								margin: 0 $gf_grid_y/2;
 
@@ -505,68 +497,68 @@ $gf_grid_x:	16px;
 									width:10px;
 									left:30px;
 									top:40%;
-									background:	url(../admin/images/btn_arrow_down_grey.png) no-repeat 0px 0px;																
+									background:	url(../admin/images/btn_arrow_down_grey.png) no-repeat 0px 0px;
 								}
 								&:hover{
-									@include background ($bgImage -17px -38px);	
+									@include background ($bgImage -17px -38px);
 									@include box-shadow-none;
 									span{//dropdown arrow
 										opacity:0.9;
-										
+
 									}
 								}
-							}			
+							}
 						}
 						&.ss-gridfield-button-close{
 							$bgImage: url(../images/icons/filter-icons.png) no-repeat;
-							@include background ($bgImage 8px -17px);	
-							@include gridFieldButtons;		
-							width:25px; 
+							@include background ($bgImage 8px -17px);
+							@include gridFieldButtons;
+							width:25px;
 							opacity:0.8;
-							margin-right:-5px; //For IE					
+							margin-right:-5px; //For IE
 							&.hover-alike:active, &:active, &.hover-alike, &:hover {
 								opacity:1;
 								@include background (
 									$bgImage 8px -17px,
 									linear-gradient(
 										rgba(#fff,0.1),
-										rgba(#fff,0.1)								
-									)									
+										rgba(#fff,0.1)
+									)
 								);
-							} 					
+							}
 
 						}
 						&.ss-gridfield-button-reset{
-							@include gridFieldButtons;						
+							@include gridFieldButtons;
 							position:absolute;
 							top: -21px;
 							right: -1px;
-							width:20px; 
-							height:20px;				
-							display:none;		
-						
+							width:20px;
+							height:20px;
+							display:none;
+
 							&.filtered{
 								display:block;
-								
+
 								background: url(../admin/images/btn-icon/cross.png) no-repeat 0px 0px;
 								opacity:0.5;
 								&:hover{
 									opacity:0.8;
-								}			
+								}
 								&:active {
-									opacity:1;								
+									opacity:1;
 								}
 							}
-						}	
-					}	
+						}
+					}
 				}
 
 				input {
 					&.ss-gridfield-sort {
 						height:25px;
 						padding: 4px;
-						// Placeholder styling done with an each loop because when a browser 
-						// doesn’t understand a selector, it invalidates the entire line of selectors. 
+						// Placeholder styling done with an each loop because when a browser
+						// doesn’t understand a selector, it invalidates the entire line of selectors.
 						// This avoids that, and keeps the scss tidy
 						$browserPlaceholder: "::-webkit-input-placeholder", ":-moz-placeholder", ":-ms-input-placeholder",	":placeholder";
 						border: 1px solid #313232;
@@ -576,8 +568,8 @@ $gf_grid_x:	16px;
 								font-style:italic;
 								color: lighten($color-dark-grey,30%);
 							}
-						} 						  
-										
+						}
+
 						&:focus {
 							@include box-shadow-none;
 						}
@@ -599,7 +591,7 @@ $gf_grid_x:	16px;
 					@include border-bottom-radius($gf_border_radius);
 					@include background-image(linear-gradient($color-base, $gf_colour_gradient_dark));
 					padding: $gf_grid_x/4 $gf_grid_y;
-					
+
 					.datagrid-footer-message {
 					    text-align: center;
 						padding-top: 6px;
@@ -616,7 +608,7 @@ $gf_grid_x:	16px;
 							@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 							input {
 								width:35px; //exact width so that a four digit number can be entered
-								height:18px;  
+								height:18px;
 								margin-bottom:-6px; //moves input field up to be aligned with the pagination buttons
 								padding:0px;
 								border: 1px solid darken($gf_colour_gradient_dark, 5%);
@@ -624,7 +616,7 @@ $gf_grid_x:	16px;
 							}
 						}
 						z-index:5;
-						button{							
+						button{
 							@include box-shadow-none;
 							border:none;
 							width:10px;
@@ -659,7 +651,7 @@ $gf_grid_x:	16px;
 					}
 				}
 			}
-			
+
 			&.last td {
 				border-bottom: 0 none;
 			}
@@ -670,13 +662,13 @@ $gf_grid_x:	16px;
 		td:last-child{
 			border-right: 1px solid $gf_colour_border;
 		}
-		
+
 		// Thumbnails e.g. in File admin, UploadField and HtmlEditorField file selection
 		td.col-StripThumbnail {
 			padding: 2px 4px;
 			width: 32px;
 			height: 32px;
-	
+
 			img {
 				width: 32px;
 				height: 32px;

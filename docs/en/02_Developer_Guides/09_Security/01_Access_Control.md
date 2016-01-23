@@ -6,7 +6,7 @@ site you have to figure this stuff out, and it's not entirely obvious.
 ## Ways to restrict access
 
 There are a number of ways to restrict access in SilverStripe.  In the security tab in the CMS you can create groups
-that have access to certain parts.  The options can be found on the [permissions](/reference/permission) documentation. 
+that have access to certain parts.  The options can be found on the [permissions](/developer_guides/security/permissions) documentation. 
 
 Once you have groups, you can set access for each page for a particular group.  This can be:
 * anyone;

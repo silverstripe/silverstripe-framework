@@ -355,7 +355,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * quirky problems (such as using the Windmill 0.3.6 proxy).
 	 */
 	public static function session_regenerate_id() {
-		if(!self::$session_regenerate_id) return;
+		if(!self::config()->session_regenerate_id) return;
 
 		// This can be called via CLI during testing.
 		if(Director::is_cli()) return;
@@ -1342,7 +1342,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				asort($groupsMap);
 				$fields->addFieldToTab('Root.Main',
 					ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())
-						->setMultiple(true)
 						->setSource($groupsMap)
 						->setAttribute(
 							'data-placeholder',

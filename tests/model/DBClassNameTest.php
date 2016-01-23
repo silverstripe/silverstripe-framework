@@ -63,29 +63,41 @@ class DBClassNameTest extends SapphireTest {
 		// Explicit DataObject
 		$field1 = new DBClassName('MyClass', 'DataObject');
 		$this->assertEquals('DataObject', $field1->getBaseClass());
+		$this->assertNotEquals('DataObject', $field1->getDefault());
 
 		// Explicit base class
 		$field2 = new DBClassName('MyClass', 'DBClassNameTest_Object');
 		$this->assertEquals('DBClassNameTest_Object', $field2->getBaseClass());
+		$this->assertEquals('DBClassNameTest_Object', $field2->getDefault());
 
 		// Explicit subclass
 		$field3 = new DBClassName('MyClass');
 		$field3->setValue(null, new DBClassNameTest_ObjectSubClass());
 		$this->assertEquals('DBClassNameTest_Object', $field3->getBaseClass());
+		$this->assertEquals('DBClassNameTest_Object', $field3->getDefault());
 
 		// Implicit table
 		$field4 = new DBClassName('MyClass');
 		$field4->setTable('DBClassNameTest_ObjectSubClass_versions');
 		$this->assertEquals('DBClassNameTest_Object', $field4->getBaseClass());
+		$this->assertEquals('DBClassNameTest_Object', $field4->getDefault());
 
 		// Missing
 		$field5 = new DBClassName('MyClass');
 		$this->assertEquals('DataObject', $field5->getBaseClass());
+		$this->assertNotEquals('DataObject', $field5->getDefault());
 
 		// Invalid class
 		$field6 = new DBClassName('MyClass');
 		$field6->setTable('InvalidTable');
 		$this->assertEquals('DataObject', $field6->getBaseClass());
+		$this->assertNotEquals('DataObject', $field6->getDefault());
+
+		// Custom default_classname
+		$field7 = new DBClassName('MyClass');
+		$field7->setTable('DBClassNameTest_CustomDefault');
+		$this->assertEquals('DBClassNameTest_CustomDefault', $field7->getBaseClass());
+		$this->assertEquals('DBClassNameTest_CustomDefaultSubclass', $field7->getDefault());
 	}
 }
 
@@ -117,5 +129,20 @@ class DBClassNameTest_ObjectSubSubClass extends DBClassNameTest_ObjectSubclass {
 class DBClassNameTest_OtherClass extends DataObject implements TestOnly {
 	private static $db = array(
 		'Title' => 'Varchar'
+	);
+}
+
+class DBClassNameTest_CustomDefault extends DataObject implements TestOnly {
+
+	private static $default_classname = 'DBClassNameTest_CustomDefaultSubclass';
+
+	private static $db = array(
+		'Title' => 'Varchar'
+	);
+}
+
+class DBClassNameTest_CustomDefaultSubclass extends DBClassNameTest_CustomDefault implements TestOnly {
+	private static $db = array(
+		'Content' => 'HTMLText'
 	);
 }

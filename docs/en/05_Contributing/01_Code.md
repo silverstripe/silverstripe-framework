@@ -1,7 +1,7 @@
 title: Contributing Code
 summary: Fix bugs and add new features to help make SilverStripe better.
 
-# Contributing Code - Submiting Bugfixes and Enhancements
+# Contributing Code - Submitting Bugfixes and Enhancements
 
 SilverStripe will never be finished, and we need your help to keep making it better.  If you're a developer a great way to get involved is to contribute patches to our modules and core codebase, fixing bugs or adding features.
 
@@ -149,8 +149,9 @@ After you have edited the file, GitHub will offer to create a pull request for y
 * Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
 [API documentation](http://api.silverstripe.org/3.1/) for good examples.
 * Check and update documentation on [docs.silverstripe.org](http://docs.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
+* When introducing something "noteworthy" (new feature, API change), [update the release changelog](/changelogs) for the next release this commit will be included in.
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
-* When working with the CMS, please read the ["CMS Architecture Guide"](/developer_guides/customising_the_admin_interface/cms_architecture/) first
+* When working with the CMS, please read the ["CMS Architecture Guide"](/developer_guides/customising_the_admin_interface/cms_architecture) first
 
 ## Commit Messages
 
@@ -261,6 +262,38 @@ Important: If you've already pushed commits to GitHub, and then squash them loca
 Helpful hint: You can always edit your last commit message by using:
 
 	$ git commit --amend
+
+## Working with client-side dependencies
+
+From time to time client-side dependencies like jQuery need to be upgraded, added, or removed. We have some tools for dealing with that. Note this only applies to core SilverStripe dependencies, you're free to to manage dependencies in your project codebase however you like.
+
+### Node.js
+
+The [Node.js](https://nodejs.org) JavaScript runtime is the foundation of our client-side build tool chain. If you want to do things like upgrade, add, or remove libraries, you'll need Node installed on your dev environment. Our build tooling supports the v4.2.x (LTS) version of Node.
+
+### npm
+
+[npm](https://www.npmjs.com/) is the package manager we use for JavaScript libraries. It comes bundled with Node.js so should already have it installed if you have Node.
+
+The configuration for an npm package goes in `package.json`. You'll see one in the root directory of `framework`. As well as being used for defining dependencies and basic package information, the `package.json` file has some handy scripts.
+
+```
+$ npm run build
+```
+
+This script copies JavaScript files from the `node_modules` directory into the `thirdparty` directory. The `node_modules` directory is not part of source control, so you'll need to run this command if you have upgraded, or added a module.
+
+```
+$ npm run sanity
+```
+
+This script makes sure files in `thirdparty` match files copied from `node_modules`. You should never commit custom changes to a library file. This script will catch them if you do :smile:
+
+Of course to run these scripts, you'll need to get the dependencies, so run a `npm install` from the root directory to get started.
+
+### Gulp
+
+[Gulp](http://gulpjs.com/) is the build system which gets invoked when you run npm scripts in SilverStripe. All npm scripts have a corresponding Gulp task which you can find in `gulpfile.js`.
 
 ## Some gotchas
 

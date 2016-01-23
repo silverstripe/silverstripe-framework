@@ -11,15 +11,15 @@ top level menu with a nested second level using the `Menu` loop and a `Children`
 	<ul>
 		<% loop $Menu(1) %>
 			<li>
-				<a href="$Link" title="Go to the $Title page" class="$LinkingMode">
+				<a href="$Link" title="Go to the $Title page" class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 					$MenuTitle
 				</a>
 
-				<% if $LinkOrSection == section %>
+				<% if $isSection %>
 					<% if $Children %>
 						<ul class="secondary">
 							<% loop $Children %>
-								<li class="$LinkingMode"><a href="$Link">$MenuTitle</a></li>
+								<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>"><a href="$Link">$MenuTitle</a></li>
 							<% end_loop %>
 						</ul>
 					<% end_if %>

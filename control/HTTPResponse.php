@@ -271,9 +271,10 @@ EOT
 			// an error, and the response doesn't have any body yet that might contain
 			// a more specific error description.
 			if(Director::isLive() && $this->isError() && !$this->body) {
-				$formatter = Injector::get('FriendlyErrorFormatter');
-				$formatter->setStatusCode($this->statusCode);
-				echo $formatter->format(array());
+				$formatter = Injector::inst()->get('FriendlyErrorFormatter');
+				echo $formatter->format(array(
+					'code' => $this->statusCode
+				));
 
 			} else {
 				echo $this->body;

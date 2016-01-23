@@ -32,26 +32,29 @@ class ForeignKey extends Int {
 		}
 		$relationName = substr($this->name,0,-2);
 		$hasOneClass = $this->object->hasOneComponent($relationName);
-
-		if($hasOneClass && singleton($hasOneClass) instanceof Image) {
+		if(empty($hasOneClass)) {
+			return null;
+		}
+		$hasOneSingleton = singleton($hasOneClass);
+		if($hasOneSingleton instanceof File) {
 			$field = new UploadField($relationName, $title);
-			$field->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
-		} elseif($hasOneClass && singleton($hasOneClass) instanceof File) {
-			$field = new UploadField($relationName, $title);
-		} else {
-			$titleField = (singleton($hasOneClass)->hasField('Title')) ? "Title" : "Name";
-			$list = DataList::create($hasOneClass);
-			// Don't scaffold a dropdown for large tables, as making the list concrete
-			// might exceed the available PHP memory in creating too many DataObject instances
-			if($list->count() < 100) {
-				$field = new DropdownField($this->name, $title, $list->map('ID', $titleField));
-				$field->setEmptyString(' ');
-			} else {
-				$field = new NumericField($this->name, $title);
+			if($hasOneSingleton instanceof Image) {
+				$field->setAllowedFileCategories('image/supported');
 			}
-
+			return $field;
 		}
 
+		// Build selector / numeric field
+		$titleField = $hasOneSingleton->hasField('Title') ? "Title" : "Name";
+		$list = DataList::create($hasOneClass);
+		// Don't scaffold a dropdown for large tables, as making the list concrete
+		// might exceed the available PHP memory in creating too many DataObject instances
+		if($list->count() < 100) {
+			$field = new DropdownField($this->name, $title, $list->map('ID', $titleField));
+			$field->setEmptyString(' ');
+		} else {
+			$field = new NumericField($this->name, $title);
+		}
 		return $field;
 	}
 

@@ -38,7 +38,7 @@ class SS_TemplateManifest {
 
 		$this->cache = new $cacheClass('templatemanifest'.($includeTests ? '_tests' : ''));
 		$this->cacheKey = $this->getCacheKey($includeTests);
-		
+
 		if ($forceRegen) {
 			$this->regenerate();
 		}

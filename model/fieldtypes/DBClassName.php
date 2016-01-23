@@ -194,6 +194,13 @@ class DBClassName extends Enum {
 		if($default) {
 			return $default;
 		}
+
+		// Allow classes to set default class
+		$baseClass = $this->getBaseClass();
+		$defaultClass = Config::inst()->get($baseClass, 'default_classname');
+		if($defaultClass &&  class_exists($defaultClass)) {
+			return $defaultClass;
+		}
 		
 		// Fallback to first option
 		$enum = $this->getEnum();

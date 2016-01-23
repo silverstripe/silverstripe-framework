@@ -400,6 +400,11 @@ class DataListTest extends SapphireTest {
 		// byID() returns a DataObject, rather than a DataList
 		$this->assertInstanceOf('DataObjectTest_Team', $team);
 		$this->assertEquals('Team 2', $team->Title);
+
+		// Assert that filtering on ID searches by the base table, not the child table field
+		$query = DataObjectTest_SubTeam::get()->filter('ID', 4)->sql($parameters);
+		$this->assertContains('WHERE ("DataObjectTest_Team"."ID" = ?)', $query);
+		$this->assertNotContains('WHERE ("DataObjectTest_SubTeam"."ID" = ?)', $query);
 	}
 
 	/**
@@ -515,6 +520,26 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Bob');
 		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
 	}
+
+	public function testSortWithCompositeSyntax() {
+		// Phil commented on team with founder surname "Aaron"
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->sort('Team.Founder.Surname', 'asc');
+		$this->assertEquals('Phil', $list->first()->Name);
+		$list = $list->sort('Team.Founder.Surname', 'desc');
+		$this->assertEquals('Phil', $list->last()->Name);
+	}
+
+	public function testSortInvalidParameters() {
+		$this->setExpectedException(
+			'InvalidArgumentException',
+			'Fans is not a linear relation on model DataObjectTest_Player'
+		);
+		$list = DataObjectTest_Team::get();
+		$list = $list->sort('Founder.Fans.Surname'); // Can't sort on has_many
+	}
+
+
 
 	/**
 	 * $list->filter('Name', 'bob'); // only bob in the list
@@ -1065,6 +1090,15 @@ class DataListTest extends SapphireTest {
 		$sql = $list->sql($parameters);
 		$this->assertSQLContains('WHERE (("DataObjectTest_TeamComment"."Name" >= ?))', $sql);
 		$this->assertEquals(array('Bob'), $parameters);
+	}
+
+	/**
+	 * Test exact match filter with empty array items
+	 */
+	public function testEmptyFilter() {
+		$this->setExpectedException("InvalidArgumentException", 'Cannot filter "DataObjectTest_TeamComment"."Name" against an empty set');
+		$list = DataObjectTest_TeamComment::get();
+		$list->exclude('Name', array());
 	}
 
 	/**

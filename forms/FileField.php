@@ -108,18 +108,23 @@ class FileField extends FormField {
 		}
 
 		$fileClass = File::get_class_for_file_extension(
-			pathinfo($_FILES[$this->name]['name'], PATHINFO_EXTENSION)
+			File::get_file_extension($_FILES[$this->name]['name'], PATHINFO_EXTENSION)
 		);
 
 		if($this->relationAutoSetting) {
 			// assume that the file is connected via a has-one
-			$hasOnes = $record->hasOne($this->name);
-			// try to create a file matching the relation
-			$file = (is_string($hasOnes)) ? Object::create($hasOnes) : new $fileClass();
+			$objectClass = $record->hasOne($this->name);
+			if($objectClass === 'File' || empty($objectClass)) {
+				// Create object of the appropriate file class
+				$file = Object::create($fileClass);
+			} else {
+				// try to create a file matching the relation
+				$file = Object::create($objectClass);
+			}
 		} else if($record instanceof File) {
 			$file = $record;
 		} else {
-			$file = new $fileClass();
+			$file = Object::create($fileClass);
 		}
 
 		$this->upload->loadIntoFile($_FILES[$this->name], $file, $this->getFolderName());
@@ -129,7 +134,7 @@ class FileField extends FormField {
 		}
 
 		if($this->relationAutoSetting) {
-			if(!$hasOnes) {
+			if(!$objectClass) {
 				return false;
 			}
 
@@ -148,7 +153,7 @@ class FileField extends FormField {
 	/**
 	 * Get custom validator for this field
 	 *
-	 * @param Upload_Validator $validator
+	 * @return Upload_Validator
 	 */
 	public function getValidator() {
 		return $this->upload->getValidator();
@@ -158,7 +163,7 @@ class FileField extends FormField {
 	 * Set custom validator for this field
 	 *
 	 * @param Upload_Validator $validator
-	 * @return FileField Self reference
+	 * @return $this Self reference
 	 */
 	public function setValidator($validator) {
 		$this->upload->setValidator($validator);
@@ -239,7 +244,7 @@ class FileField extends FormField {
 
 	/**
 	 * Limit allowed file extensions by specifying categories of file types.
-	 * These may be 'image', 'audio', 'mov', 'zip', 'flash', or 'doc'
+	 * These may be 'image', 'image/supported', 'audio', 'video', 'archive', 'flash', or 'document'
 	 * See {@link File::$allowed_extensions} for details of allowed extensions
 	 * for each of these categories
 	 *
@@ -248,23 +253,7 @@ class FileField extends FormField {
 	 * @return $this
 	 */
 	public function setAllowedFileCategories($category) {
-		$extensions = array();
-		$knownCategories = File::config()->app_categories;
-
-		// Parse arguments
-		$categories = func_get_args();
-		if(func_num_args() === 1 && is_array(reset($categories))) {
-			$categories = reset($categories);
-		}
-
-		// Merge all categories into list of extensions
-		foreach(array_filter($categories) as $category) {
-			if(isset($knownCategories[$category])) {
-				$extensions = array_merge($extensions, $knownCategories[$category]);
-			} else {
-				user_error("Unknown file category: $category", E_USER_ERROR);
-			}
-		}
+		$extensions = File::get_category_extensions(func_get_args());
 		return $this->setAllowedExtensions($extensions);
 	}
 

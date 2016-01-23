@@ -30,9 +30,9 @@ class ValidationResult extends Object {
 
 	/**
 	 * Record an error against this validation result,
-	 * @param $message The validation error message
-	 * @param $code An optional error code string, that can be accessed with {@link $this->codeList()}.
-	 * @return ValidationResult this
+	 * @param string $message The validation error message
+	 * @param int $code An optional error code string, that can be accessed with {@link $this->codeList()}.
+	 * @return $this
 	 */
 	public function error($message, $code = null) {
 		$this->isValid = false;

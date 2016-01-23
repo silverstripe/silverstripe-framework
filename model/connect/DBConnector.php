@@ -16,7 +16,7 @@ abstract class DBConnector {
 	 * @var array
 	 */
 	private static $write_operations = array('insert', 'update', 'delete', 'replace');
-	
+
 	/**
 	 * List of operations to treat as DDL
 	 *
@@ -57,10 +57,10 @@ abstract class DBConnector {
 			user_error($msg, $errorLevel);
 		}
 	}
-	
+
 	/**
 	 * Determine if this SQL statement is a destructive operation (write or ddl)
-	 * 
+	 *
 	 * @param string $sql
 	 * @return bool
 	 */
@@ -71,10 +71,10 @@ abstract class DBConnector {
 		);
 		return $this->isQueryType($sql, $operations);
 	}
-	
+
 	/**
 	 * Determine if this SQL statement is a DDL operation
-	 * 
+	 *
 	 * @param string $sql
 	 * @return bool
 	 */
@@ -82,11 +82,11 @@ abstract class DBConnector {
 		$operations = Config::inst()->get(get_class($this), 'ddl_operations');
 		return $this->isQueryType($sql, $operations);
 	}
-	
+
 	/**
 	 * Determine if this SQL statement is a write operation
 	 * (alters content but not structure)
-	 * 
+	 *
 	 * @param string $sql
 	 * @return bool
 	 */
@@ -94,10 +94,10 @@ abstract class DBConnector {
 		$operations = Config::inst()->get(get_class($this), 'write_operations');
 		return $this->isQueryType($sql, $operations);
 	}
-	
+
 	/**
 	 * Determine if a query is of the given type
-	 * 
+	 *
 	 * @param string $sql Raw SQL
 	 * @param string|array $type Type or list of types (first word in the query). Must be lowercase
 	 */

@@ -33,7 +33,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 	}
 
 	protected $oldHost = null;
-	
+
 	public function setUp() {
 		parent::setUp();
 		$this->oldHost = $_SERVER['HTTP_HOST'];
@@ -62,7 +62,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$withoutParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_noparam');
 		$nullToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_nulltoken');
 		$emptyToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_emptytoken');
-		
+
 		// Check parameter
 		$this->assertTrue($withoutToken->parameterProvided());
 		$this->assertTrue($emptyParameter->parameterProvided());  // even if empty, it's still provided
@@ -70,7 +70,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$this->assertFalse($withoutParameter->parameterProvided());
 		$this->assertTrue($nullToken->parameterProvided());
 		$this->assertTrue($emptyToken->parameterProvided());
-		
+
 		// Check token
 		$this->assertFalse($withoutToken->tokenProvided());
 		$this->assertFalse($emptyParameter->tokenProvided());
@@ -78,7 +78,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$this->assertFalse($withoutParameter->tokenProvided());
 		$this->assertFalse($nullToken->tokenProvided());
 		$this->assertFalse($emptyToken->tokenProvided());
-		
+
 		// Check if reload is required
 		$this->assertTrue($withoutToken->reloadRequired());
 		$this->assertTrue($emptyParameter->reloadRequired());
@@ -86,7 +86,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$this->assertFalse($withoutParameter->reloadRequired());
 		$this->assertTrue($nullToken->reloadRequired());
 		$this->assertTrue($emptyToken->reloadRequired());
-		
+
 		// Check suppression
 		$this->assertTrue(isset($_GET['parameterconfirmationtokentest_notoken']));
 		$withoutToken->suppress();

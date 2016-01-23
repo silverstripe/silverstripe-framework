@@ -10,7 +10,7 @@
 	border:none;
 	display:block;
 	text-indent:-9999em;
-	width:30px; 
+	width:30px;
 	height:25px; //match the height of the input field
 }
 
@@ -24,7 +24,7 @@
 		@include text-shadow(none);
 		color: $color-text-light;
 		float: right;
-		
+
 		&.ss-uploadfield-item-delete {
 			// TODO tmp hack until we have permissions and can disable delete
 			display: none;
@@ -50,8 +50,8 @@
 }
 
 //**
-//	Mixin creates a transparent button with a dropdown arrow, 
-//	as is used for files in the files up-load area. The arrows 
+//	Mixin creates a transparent button with a dropdown arrow,
+//	as is used for files in the files up-load area. The arrows
 //	themselves are added in the _style file
 //**/
 @mixin ss-uploadfield-editButton{
@@ -66,7 +66,7 @@
 			opacity:1;
 			span.toggle-details{
 				opacity:1;
-			}	
+			}
 		}
 		span.toggle-details{
 			opacity:0.9;

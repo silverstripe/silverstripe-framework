@@ -229,20 +229,10 @@ class Form extends RequestHandler {
 	 * @param FieldList $fields All of the fields in the form - a {@link FieldList} of {@link FormField} objects.
 	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldLis} of
 	 *                           {@link FormAction} objects
-	 * @param Validator $validator Override the default validator instance (Default: {@link RequiredFields})
+	 * @param Validator|null $validator Override the default validator instance (Default: {@link RequiredFields})
 	 */
-	public function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null) {
+	public function __construct($controller, $name, FieldList $fields, FieldList $actions, Validator $validator = null) {
 		parent::__construct();
-
-		if(!$fields instanceof FieldList) {
-			throw new InvalidArgumentException('$fields must be a valid FieldList instance');
-		}
-		if(!$actions instanceof FieldList) {
-			throw new InvalidArgumentException('$actions must be a valid FieldList instance');
-		}
-		if($validator && !$validator instanceof Validator) {
-			throw new InvalidArgumentException('$validator must be a Validator instance');
-		}
 
 		$fields->setForm($this);
 		$actions->setForm($this);
@@ -894,7 +884,7 @@ class Form extends RequestHandler {
 	/**
 	 * Set the target of this form to any value - useful for opening the form contents in a new window or refreshing
 	 * another frame
-	 * 
+	 *
 	 * @param string|FormTemplateHelper
 	 */
 	public function setTemplateHelper($helper) {
@@ -1329,6 +1319,18 @@ class Form extends RequestHandler {
 			if($errors){
 				// Load errors into session and post back
 				$data = $this->getData();
+
+				// Encode validation messages as XML before saving into session state
+				// As per Form::addErrorMessage()
+				$errors = array_map(function($error) {
+					// Encode message as XML by default
+					if($error['message'] instanceof DBField) {
+						$error['message'] = $error['message']->forTemplate();;
+					} else {
+						$error['message'] = Convert::raw2xml($error['message']);
+					}
+					return $error;
+				}, $errors);
 
 				Session::set("FormInfo.{$this->FormName()}.errors", $errors);
 				Session::set("FormInfo.{$this->FormName()}.data", $data);

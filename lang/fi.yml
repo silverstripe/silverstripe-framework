@@ -64,7 +64,7 @@ fi:
     YESANSWER: 'Kyllä'
   CMSLoadingScreen_ss:
     LOADING: Ladataan...
-    REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaSkriptit päällä.'
+    REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaScript päällä.'
   CMSMain:
     ACCESS: 'Pääsy ''{title}'' -osioon'
     ACCESSALLINTERFACES: 'Pääsy kaikkiin CMS-osioihin'
@@ -76,7 +76,9 @@ fi:
     BUTTONLOGOUT: 'Kirjaudu ulos'
     PASSWORDEXPIRED: '<p>Salasanasi on vanhentunut. <a target="_top" href="{link}">Valitse uusi.</a></p>'
   CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Nettisivun esikatselu'
+    PREVIEW: 'Sivuston esikatselu'
+  CMSPagesController_Tools_ss:
+    FILTER: Suodata
   CMSProfileController:
     MENUTITLE: 'Profiilini'
   CMSSecurity:
@@ -102,7 +104,7 @@ fi:
   ConfirmedPasswordField:
     ATLEAST: 'Salasanan on oltava vähintään {min} merkkiä pitkä.'
     BETWEEN: 'Salasanan on oltava väh. {min} ja enintään {max} merkkiä pitkä.'
-    MAXIMUM: 'Salasanan voi olla enintään {max} merkkiä pitkä.'
+    MAXIMUM: 'Salasana voi olla enintään {max} merkkiä pitkä.'
     SHOWONCLICKTITLE: 'Vaihda salasana'
   ContentController:
     NOTLOGGEDIN: 'Ei kirjautuneena'
@@ -137,7 +139,7 @@ fi:
     TODAY: tänään
     VALIDDATEFORMAT2: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
     VALIDDATEMAXDATE: 'Päivämäärän on oltava vanhempi tai sovittava asetettuun maksimiin ({date})'
-    VALIDDATEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava vähintään asetettuun minimiin ({date})'
+    VALIDDATEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava asetettuun minimiin ({date})'
   DatetimeField:
     NOTSET: 'Ei asetettu'
   Director:
@@ -151,36 +153,36 @@ fi:
   Enum:
     ANY: Yhtään
   File:
-    AviType: 'AVI videotiedosto'
+    AviType: 'AVI-videotiedosto'
     Content: Sisältö
-    CssType: 'CSS tiedosto'
-    DmgType: 'Apple levykuva'
+    CssType: 'CSS-tiedosto'
+    DmgType: 'Apple-levykuva'
     DocType: 'Word-tiedosto'
     Filename: Tiedostonimi
-    GifType: 'GIF kuva - hyvä kaaviolle'
+    GifType: 'GIF-kuva - hyvä kaavioille'
     GzType: 'GZIP pakattu tiedosto'
     HtlType: 'HTML-tiedosto'
     HtmlType: 'HTML-tiedosto'
     INVALIDEXTENSION: 'Tiedostopääte ei ole sallittu (sallitut muodot: {extensions})'
     INVALIDEXTENSIONSHORT: 'Tiedostopääte ei ole sallittu'
-    IcoType: 'Icon kuva'
-    JpgType: 'JPEG kuva - hyvä valokuville'
+    IcoType: 'Icon-kuva'
+    JpgType: 'JPEG-kuva - hyvä valokuville'
     JsType: 'Javascript-tiedosto'
-    Mp3Type: 'MP3 äänitiedosto'
-    MpgType: 'MPEG videotiedosto'
+    Mp3Type: 'MP3-äänitiedosto'
+    MpgType: 'MPEG-videotiedosto'
     NOFILESIZE: 'Tiedostokoko on nolla tavua.'
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot
-    PdfType: 'Adobe Acrobat PDF -tiedosto'
-    PngType: 'PNG kuva - hyvä yleinen muoto'
+    PdfType: 'Adobe Acrobat PDF-tiedosto'
+    PngType: 'PNG-kuva - hyvä yleinen muoto'
     SINGULARNAME: Tiedosto
     TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
     TOOLARGESHORT: 'Sallittu tiedostokoko ylitetty {size}'
-    TiffType: 'Tiff-kuva'
+    TiffType: 'TIFF-kuva'
     Title: Otsikko
-    WavType: 'WAV äänitiedosto'
-    XlsType: 'Excel tiedosto'
+    WavType: 'WAV-äänitiedosto'
+    XlsType: 'Excel-taulukko'
     ZipType: 'ZIP-pakattu tiedosto'
   Filesystem:
     SYNCRESULTS: 'Synkronointi valmis:  {createdcount} kohdetta luotu, {deletedcount} kohdetta poistettu'
@@ -247,12 +249,12 @@ fi:
     DefaultGroupTitleAdministrators: Järjestelmänvalvojat
     DefaultGroupTitleContentAuthors: 'Sisällöntuottajat'
     Description: Kuvaus
-    GroupReminder: 'Valitessasi isäntäryhmän, roolit periytyvät tähän ryhmään'
-    HierarchyPermsError: 'Isäntä ryhmään ei voitu asettaa "%s" annettuja oikeuksia (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
+    GroupReminder: 'Valitessasi isäntäryhmän roolit periytyvät tähän ryhmään'
+    HierarchyPermsError: 'Isäntäryhmään ei voitu asettaa "%s" annettuja oikeuksia (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     Locked: 'Lukittu?'
     NoRoles: 'Rooleja ei löytynyt'
     PLURALNAME: Ryhmät
-    Parent: 'Yliryhmä'
+    Parent: 'Isäntäryhmä'
     RolesAddEditLink: 'Lisää/muokkaa rooleja'
     SINGULARNAME: Ryhmä
     Sort: 'Järjestys'
@@ -260,6 +262,7 @@ fi:
     many_many_Members: Jäsenet
   GroupImportForm:
     Help1: '<p>Tuo yksi tai useampi ryhmä <em>CSV</em>-muotoisena (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
+    Help2: '<div class="advanced"><h4>Edistynyt käyttö</h4><ul><li>Sallitut palstat: <em>%s</em></li><li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li><li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li></ul></div>'
     ResultCreated: 'Luotiin {count} ryhmä(ä)'
     ResultDeleted: 'Poistettu %d ryhmää'
     ResultUpdated: 'Päivitetty %d ryhmää'
@@ -281,7 +284,7 @@ fi:
     CSSCLASSCENTER: 'Keskellä omillaan.'
     CSSCLASSLEFT: 'Vasemmalla, tekstin ympäröimänä.'
     CSSCLASSLEFTALONE: 'Vasemmalla, yksinään.'
-    CSSCLASSRIGHT: 'Oikealla, tesktin ympätöimänä.'
+    CSSCLASSRIGHT: 'Oikealla, tekstin ympäröimänä.'
     DETAILS: Tiedot
     EMAIL: 'Sähköpostiosoite'
     FILE: Tiedosto
@@ -291,6 +294,8 @@ fi:
     FROMWEB: 'Webistä'
     FindInFolder: 'Etsi kansiosta'
     IMAGEALT: 'Vaihtoehtoinen teksti (alt)'
+    IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
+    IMAGEALTTEXTDESC: 'Näytetään ruudunlukuohjelmille tai jos kuvaa ei voi näyttää'
     IMAGEDIMENSIONS: Mitat
     IMAGEHEIGHTPX: Korkeus
     IMAGETITLE: 'Otsikko (tooltip) - kuvan lisätietoja varten'
@@ -302,15 +307,15 @@ fi:
     LINKANCHOR: 'Ankkuroi tähän sivuun'
     LINKDESCR: 'Linkin kuvaus'
     LINKEMAIL: 'Sähköpostiosoite'
-    LINKEXTERNAL: 'Toinen verkkosivusto'
+    LINKEXTERNAL: 'Toinen verkkosivusto (ulkoinen linkki)'
     LINKFILE: 'Lataa tiedosto'
-    LINKINTERNAL: 'Sivu sivustolla'
+    LINKINTERNAL: 'Sivu sivustolla (sisäinen linkki)'
     LINKOPENNEWWIN: 'Avataanko linkki uudessa ikkunassa?'
     LINKTO: 'Linkki'
     PAGE: Sivu
     SUBJECT: 'Sähköpostin aihe'
     URL: URL-osoite
-    URLNOTANOEMBEDRESOURCE: 'URL-osoitetteesta ''{url}'' ei voitu liittää mediaa'
+    URLNOTANOEMBEDRESOURCE: 'URL-osoitteesta ''{url}'' ei voitu liittää mediaa'
     UpdateMEDIA: 'Päivitä media'
   Image:
     PLURALNAME: Tiedostot
@@ -319,22 +324,29 @@ fi:
     PLURALNAME: Tiedostot
     SINGULARNAME: Tiedosto
   Image_iframe_ss:
-    TITLE: 'Kuvansiirto IFrame-kehys'
+    TITLE: 'Kuvansiirto iframe-kehys'
   LeftAndMain:
     CANT_REORGANISE: 'Sinulla ei ole oikeuksia mennä ylemmän tason sivuille. Muutoksiasi ei tallennettu.'
     DELETED: Poistettu.
     DropdownBatchActionsDefault: Toimenpiteet
     HELP: Ohje
+    PAGETYPE: 'Sivutyyppi'
     PERMAGAIN: 'Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla.'
+    PERMALREADY: 'Pahoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alta.'
+    PERMDEFAULT: 'Sinun tulee olla kirjautuneena ylläpito-osioon; syötä tunnuksesi kenttiin.'
+    PLEASESAVE: 'Tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu. Tallenna sivu.'
     PreviewButton: Esikatselu
-    REORGANISATIONSUCCESSFUL: 'Hakemistopuu järjestettiin uudelleen onnistuneesti.'
+    REORGANISATIONSUCCESSFUL: 'Hakemistopuu uudelleenjärjestettiin onnistuneesti.'
     SAVEDUP: Tallennettu.
     ShowAsList: 'näytä listana'
     TooManyPages: 'Liian monta sivua'
     ValidationError: 'Virhe vahvistuksessa'
+    VersionUnknown: tuntematon
   LeftAndMain_Menu_ss:
     Hello: Hei
     LOGOUT: 'Kirjaudu ulos'
+  ListboxField:
+    SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. %s ei kelpaa'
   LoginAttempt:
     Email: 'Sähköpostiosoite'
     IP: 'IP-osoite'
@@ -410,6 +422,7 @@ fi:
     Toggle: 'Näytä muotoiluohjeet'
   MemberImportForm:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
+    Help2: '<div class="advanced"><h4>Edistynyt käyttö</h4><ul><li>Sallitut palstat: <em>%s</em></li><li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li><li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li></ul></div>'
     ResultCreated: 'Luotiin {count} käyttäjä(ä)'
     ResultDeleted: 'Poistettu %d jäsentä'
     ResultNone: 'Ei muutoksia'
@@ -468,31 +481,31 @@ fi:
     FromRole: 'periytyivät roolista "{title}"'
     FromRoleOnGroup: 'periytynyt roolista "%s" ryhmässä "%s"'
   PermissionRole:
-    OnlyAdminCanApply: 'Vain järjestelmänvalvoja on oikeudet aseta'
+    OnlyAdminCanApply: 'Vain järjestelmänvalvojalla on oikeudet asettaa'
     PLURALNAME: Roolit
     SINGULARNAME: Rooli
     Title: Roolin nimi
   PermissionRoleCode:
     PLURALNAME: 'Käyttöoikeuden roolin koodit'
     PermsError: 'Ei voida asettaa koodia "%s" annetuilla oikeuksilla (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
-    SINGULARNAME: 'Käyttöoikeiden roolin koodi'
+    SINGULARNAME: 'Käyttöoikeuden roolin koodi'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
     UserPermissionsIntro: 'Määriteltäessä käyttäjälle ryhmä, hänen käyttöoikeutensa mukautuvat ryhmälle tehtyjen asetusten mukaisesti. Katso tarkemmat ryhmäkohtaiset käyttöoikeusasetukset Ryhmät-välilehdeltä.'
   PhoneNumberField:
     VALIDATION: 'Kirjoita pätevä puhelinnumero'
   Security:
-    ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua niillä sisään.'
+    ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua sillä sisään.'
     BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'
-    CHANGEPASSWORDBELOW: 'Voit vaihtaa salasanaasi alla.'
+    CHANGEPASSWORDBELOW: 'Voit vaihtaa salasanasi alla.'
     CHANGEPASSWORDHEADER: 'Vaihda salasanasi'
     ENTERNEWPASSWORD: 'Syötä uusi salasanasi'
-    ERRORPASSWORDPERMISSION: 'Sinun täytyy olla kirjautuneena sisään, jotta voit vaihtaa salasanasi.'
+    ERRORPASSWORDPERMISSION: 'Sinun täytyy olla kirjautuneena sisään jotta voit vaihtaa salasanasi.'
     LOGGEDOUT: 'Kirjauduit ulos. Jos haluat kirjautua sisään, syötä tietosi alle.'
     LOGIN: 'Kirjaudu sisään'
-    LOSTPASSWORDHEADER: 'Unohtunut Salasana'
-    NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle ja annamme sinulle oikeat oikeudet.'
-    NOTERESETLINKINVALID: '<p>Salasanan nollauslinkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href="{link1}">napsauttamalla tästä</a> tai vaihtaa salasanasi <a href="{link2}">kirjautumisen jälkeen</a>.</p>'
+    LOSTPASSWORDHEADER: 'Unohtunut salasana'
+    NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle niin pääset eteenpäin.'
+    NOTERESETLINKINVALID: '<p>Salasanan palautuslinkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href="{link1}">napsauttamalla tästä</a> tai vaihtaa salasanasi <a href="{link2}">kirjautumisen jälkeen</a>.</p>'
     NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
     PASSWORDSENTHEADER: 'Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'''
     PASSWORDSENTTEXT: 'Kiitos! Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'', joka on liitettynä tähän käyttäjätiliin.'
@@ -500,7 +513,7 @@ fi:
     ACCESS_HELP: 'Oikeuttaa käyttäjien katselun, lisäämisen ja muokkaamisen, kuten myös käyttöoikeuksien ja roolien määrittämisen heille.'
     APPLY_ROLES: 'Aseta roolit ryhmille'
     APPLY_ROLES_HELP: 'Mahdollisuus muokata ryhmän roolinimityksiä. Vaatii "Pääsy turvallisuusosioon" -oikeuden.'
-    EDITPERMISSIONS: 'Muokkaa jokaisen ryhmän oikeuksia ja IP-osotteita.'
+    EDITPERMISSIONS: 'Muokkaa ryhmien oikeuksia'
     EDITPERMISSIONS_HELP: 'Mahdollisuus muokata ryhmän käyttöoikeuksia ja IP-osoitteita. Vaatii "Pääsy turvallisuusosioon" -oikeuden.'
     GROUPNAME: 'Ryhmän nimi'
     IMPORTGROUPS: 'Tuo ryhmiä'
@@ -539,6 +552,8 @@ fi:
     Print: Tulosta
   TableListField_PageControls_ss:
     OF: /
+  TextField:
+    VALIDATEMAXLENGTH: '{name}-arvo ei voi ylittää {maxLength} merkin määrää.'
   TimeField:
     VALIDATEFORMAT: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
   ToggleField:
@@ -549,9 +564,9 @@ fi:
     ATTACHFILES: 'Liitä tiedostoja'
     AttachFile: 'Liitä tiedosto(ja)'
     CHOOSEANOTHERFILE: 'Valitse toinen tiedosto'
-    CHOOSEANOTHERINFO: 'Korvaa tämä tiedosto toisella palvelimen tiedostoissa olevalla'
+    CHOOSEANOTHERINFO: 'Korvaa tämä tiedosto toisella palvelimella olevalla tiedostolla'
     DELETE: 'Poista tiedostoista'
-    DELETEINFO: 'Poista tiedosto pysyvästi'
+    DELETEINFO: 'Poista tiedosto pysyvästi palvelimelta'
     DOEDIT: Tallenna
     DROPFILE: 'Pudota tiedosto'
     DROPFILES: 'pudota tiedostot'
@@ -564,11 +579,11 @@ fi:
     FROMFILES: 'Tiedostoista'
     HOTLINKINFO: 'Info: Kuvalle tulee suora linkki. Varmista sivun omistajalta, että sinulla on oikeus suoraan linkitykseen.'
     MAXNUMBEROFFILES: 'Suurin sallittu määrä ({count}) tiedostoja ylitetty.'
-    MAXNUMBEROFFILESONE: 'Vain yhden tiedoston siirto mahdollista'
+    MAXNUMBEROFFILESONE: 'Vain yhden tiedoston siirto on mahdollista'
     MAXNUMBEROFFILESSHORT: 'Voidaan siirtää vain {count} tiedostoa'
     OVERWRITEWARNING: 'Samanniminen tiedosto on jo palvelimella'
     REMOVE: Poista
-    REMOVEINFO: 'Poista tiedosto, mutta säilytä se tiedostovarastossa'
+    REMOVEINFO: 'Poista tiedosto, mutta säilytä se palvelimella'
     STARTALL: 'Aloita kaikki'
     Saved: Tallennettu
     UPLOADSINTO: 'tallentuu polkuun: /{path}'

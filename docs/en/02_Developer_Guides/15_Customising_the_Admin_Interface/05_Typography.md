@@ -7,7 +7,7 @@ SilverStripe lets you customize the style of content in the CMS. This is done by
 `editor.css` in either your theme or in your `mysite` folder. This is set through
 
 	:::php
-	HtmlEditorConfig::get('cms')->setOption('ContentCSS', project() . '/css/editor.css');
+	HtmlEditorConfig::get('cms')->setOption('content_css', project() . '/css/editor.css');
 
 Will load the `mysite/css/editor.css` file.
 

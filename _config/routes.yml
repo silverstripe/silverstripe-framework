@@ -15,6 +15,7 @@ After:
 Director:
   rules:
     'Security//$Action/$ID/$OtherID': 'Security'
+    'CMSSecurity//$Action/$ID/$OtherID': 'CMSSecurity'
     'dev': 'DevelopmentAdmin'
     'interactive': 'SapphireREPL'
     'InstallerTest//$Action/$ID/$OtherID': 'InstallerTest'

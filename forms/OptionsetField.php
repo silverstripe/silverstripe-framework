@@ -50,35 +50,69 @@
  * @package forms
  * @subpackage fields-basic
  */
-class OptionsetField extends DropdownField {
+class OptionsetField extends SingleSelectField {
 
 	/**
-	 * @var Array
+	 * Build a field option for template rendering
+	 *
+	 * @param mixed $value Value of the option
+	 * @param string $title Title of the option
+	 * @param boolean $odd True if this should be striped odd. Otherwise it should be striped even
+	 * @return ArrayData Field option
 	 */
-	protected $disabledItems = array();
+	protected function getFieldOption($value, $title, $odd) {
+		return new ArrayData(array(
+			'ID' => $this->getOptionID($value),
+			'Class' => $this->getOptionClass($value, $odd),
+			'Name' => $this->getOptionName(),
+			'Value' => $value,
+			'Title' => $title,
+			'isChecked' => $this->isSelectedValue($value, $this->Value()),
+			'isDisabled' => $this->isDisabledValue($value)
+		));
+		}
+
+	/**
+	 * Generate an ID property for a single option
+	 *
+	 * @param string $value
+	 * @return string
+	 */
+	protected function getOptionID($value) {
+		return $this->ID() . '_' . Convert::raw2htmlid($value);
+	}
+
+	/**
+	 * Get the "name" property for each item in the list
+	 *
+	 * @return string
+	 */
+	protected function getOptionName() {
+		return $this->getName();
+	}
+
+	/**
+	 * Get extra classes for each item in the list
+	 *
+	 * @param string $value Value of this item
+	 * @param bool $odd If this item is odd numbered in the list
+	 * @return string
+	 */
+	protected function getOptionClass($value, $odd) {
+		$oddClass = $odd ? 'odd' : 'even';
+		$valueClass = ' val' . Convert::raw2htmlid($value);
+		return $oddClass . $valueClass;
+	}
+
 
 	public function Field($properties = array()) {
-		$source = $this->getSource();
-		$odd = 0;
 		$options = array();
-
-		if($source) {
-			foreach($source as $value => $title) {
-				$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $value);
-				$odd = ($odd + 1) % 2;
-				$extraClass = $odd ? 'odd' : 'even';
-				$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
-
-				$options[] = new ArrayData(array(
-					'ID' => $itemID,
-					'Class' => $extraClass,
-					'Name' => $this->name,
-					'Value' => $value,
-					'Title' => $title,
-					'isChecked' => $value == $this->value,
-					'isDisabled' => $this->disabled || in_array($value, $this->disabledItems),
-				));
-			}
+		$odd = false;
+		
+		// Add all options striped
+		foreach($this->getSourceEmpty() as $value => $title) {
+			$odd = !$odd;
+			$options[] = $this->getFieldOption($value, $title, $odd);
 		}
 
 		$properties = array_merge($properties, array(
@@ -90,34 +124,23 @@ class OptionsetField extends DropdownField {
 		);
 	}
 
-	public function performReadonlyTransformation() {
-		// Source and values are DataObject sets.
-		$field = $this->castedCopy('LookupField');
-		$field->setSource($this->getSource());
-		$field->setReadonly(true);
-
-		return $field;
-	}
-
 	/**
-	 * Mark certain elements as disabled,
-	 * regardless of the {@link setDisabled()} settings.
-	 *
-	 * @param array $items Collection of array keys, as defined in the $source array
+	 * {@inheritdoc}
 	 */
-	public function setDisabledItems($items) {
-		$this->disabledItems = $items;
-		return $this;
+	public function validate($validator) {
+		if (!$this->Value()) {
+			return true;
+		}
+
+		return parent::validate($validator);
 	}
 
-	/**
-	 * @return Array
-	 */
-	public function getDisabledItems() {
-		return $this->disabledItems;
-	}
+	public function getAttributes() {
+		$attributes = parent::getAttributes();
+		unset($attributes['name']);
+		unset($attributes['required']);
+		unset($attributes['role']);
 
-	public function ExtraOptions() {
-		return new ArrayList();
+		return $attributes;
 	}
 }

@@ -4,7 +4,7 @@
 /* Only for use as shadows as they wont work in older browsers */
 /*$color-optional: #a1d2eb !default; */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
-/** ----------------------------------------------- Typography.  ------------------------------------------------ */
+/** ----------------------------------------------- Typography. ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 .cms .ss-ui-button { background-color: #e6e6e6; }
@@ -134,7 +134,7 @@ html { overflow: hidden; }
 
 .cms-menu-list li { list-style-type: none; width: 100%; float: left; margin: 0px; padding: 0px; }
 
-/* Site tree 
+/* Site tree
 ------------------------- */
 .cms-tree-view-modes div { float: left; }
 .cms-tree-view-modes span { float: left; padding-top: 5px; }
@@ -167,7 +167,7 @@ select { padding: 10px 0; height: 30px; }
 
 .jstree li a .ui-icon { text-indent: 0px !important; }
 
-/* Gridfield 
+/* Gridfield
 ------------------------- */
 .cms table.ss-gridfield-table tbody td { width: auto; }
 .cms table.ss-gridfield-table tr th.extra span input { height: 23px; }
@@ -198,7 +198,7 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 
 .ss-ui-button.ss-gridfield-button-filter { border: none !important; }
 
-/** DEPRECATED: .cms-content-tools will be removed in 4.0 Use .cms-content-filters instead.  Fix for model admin filter styling  */
+/** DEPRECATED: .cms-content-tools will be removed in 4.0 Use .cms-content-filters instead.  Fix for model admin filter styling */
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form { overflow: hidden; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form input { width: 160px; }
 

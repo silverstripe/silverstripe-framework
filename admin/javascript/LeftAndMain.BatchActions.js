@@ -3,21 +3,21 @@
  */
 (function($) {
 	$.entwine('ss.tree', function($){
-	
+
 		/**
 		 * Class: #Form_BatchActionsForm
-		 * 
+		 *
 		 * Batch actions which take a bunch of selected pages,
 		 * usually from the CMS tree implementation, and perform serverside
 		 * callbacks on the whole set. We make the tree selectable when the jQuery.UI tab
 		 * enclosing this form is opened.
-		 * 
+		 *
 		 * Events:
 		 *  register - Called before an action is added.
 		 *  unregister - Called before an action is removed.
 		 */
 		$('#Form_BatchActionsForm').entwine({
-	
+
 			/**
 			 * Variable: Actions
 			 * (Array) Stores all actions that can be performed on the collected IDs as
@@ -38,7 +38,7 @@
 					this.serializeFromTree();
 				}
 			},
-			
+
 			/**
 			 * @func registerDefault
 			 * @desc Register default bulk confirmation dialogs
@@ -171,8 +171,8 @@
 					ids = this.getIDs(),
 					allIds = [],
 					viewMode = $('.cms-content-batchactions-button'),
-					selectedAction = this.find(':input[name=Action]').val();
-			
+					actionUrl = this.find(':input[name=Action]').val();
+
 				// Default to refreshing the entire tree
 				if(rootNode == null) rootNode = st;
 
@@ -181,7 +181,7 @@
 				}
 
 				// If no action is selected, enable all nodes
-				if(!selectedAction || selectedAction == -1 || !viewMode.hasClass('active')) {
+				if(!actionUrl || actionUrl == -1 || !viewMode.hasClass('active')) {
 					$(rootNode).find('li').each(function() {
 						$(this).setEnabled(true);
 					});
@@ -193,10 +193,14 @@
 					allIds.push($(this).data('id'));
 					$(this).addClass('treeloading').setEnabled(false);
 				});
-				
+
 				// Post to the server to ask which pages can have this batch action applied
-				var applicablePagesURL = selectedAction + '/applicablepages/?csvIDs=' + allIds.join(',');
-				jQuery.getJSON(applicablePagesURL, function(applicableIDs) {
+				// Retain existing query parameters in URL before appending path
+				var actionUrlParts = $.path.parseUrl(actionUrl);
+				var applicablePagesUrl = actionUrlParts.hrefNoSearch + '/applicablepages/';
+				applicablePagesUrl = $.path.addSearchParams(applicablePagesUrl, actionUrlParts.search);
+				applicablePagesUrl = $.path.addSearchParams(applicablePagesUrl, {csvIDs: allIds.join(',')});
+				jQuery.getJSON(applicablePagesUrl, function(applicableIDs) {
 					// Set a CSS class on each tree node indicating which can be batch-actioned and which can't
 					jQuery(rootNode).find('li').each(function() {
 						$(this).removeClass('treeloading');
@@ -210,24 +214,24 @@
 							$(this).prop('selected', false);
 						}
 					});
-					
+
 					self.serializeFromTree();
 				});
 			},
-			
+
 			/**
 			 * @func serializeFromTree
 			 * @return {boolean}
 			 */
 			serializeFromTree: function() {
 				var tree = this.getTree(), ids = tree.getSelectedIDs();
-				
+
 				// write IDs to the hidden field
 				this.setIDs(ids);
-				
+
 				return true;
 			},
-			
+
 			/**
 			 * @func setIDS
 			 * @param {array} ids
@@ -235,7 +239,7 @@
 			setIDs: function(ids) {
 				this.find(':input[name=csvIDs]').val(ids ? ids.join(',') : null);
 			},
-			
+
 			/**
 			 * @func getIDS
 			 * @return {array}
@@ -250,35 +254,35 @@
 
 			onsubmit: function(e) {
 				var self = this, ids = this.getIDs(), tree = this.getTree(), actions = this.getActions();
-				
+
 				// if no nodes are selected, return with an error
 				if(!ids || !ids.length) {
 					alert(ss.i18n._t('CMSMAIN.SELECTONEPAGE', 'Please select at least one page'));
 					e.preventDefault();
 					return false;
 				}
-				
+
 				// apply callback, which might modify the IDs
 				var type = this.find(':input[name=Action]').val();
 				if(actions[type]) {
 					ids = this.getActions()[type].apply(this, [ids]);
 				}
-				
+
 				// Discontinue processing if there are no further items
 				if(!ids || !ids.length) {
 					e.preventDefault();
 					return false;
 				}
-			
+
 				// write (possibly modified) IDs back into to the hidden field
 				this.setIDs(ids);
-				
+
 				// Reset failure states
 				tree.find('li').removeClass('failed');
-			
+
 				var button = this.find(':submit:first');
 				button.addClass('loading');
-			
+
 				jQuery.ajax({
 					// don't use original form url
 					url: type,
@@ -294,14 +298,14 @@
 
 						// Reset action
 						self.find(':input[name=Action]').val('').change();
-					
+
 						// status message (decode into UTF-8, HTTP headers don't allow multibyte)
 						var msg = xmlhttp.getResponseHeader('X-Status');
 						if(msg) statusMessage(decodeURIComponent(msg), (status == 'success') ? 'good' : 'bad');
 					},
 					success: function(data, status) {
 						var id, node;
-						
+
 						if(data.modified) {
 							var modifiedNodes = [];
 							for(id in data.modified) {
@@ -326,12 +330,12 @@
 					},
 					dataType: 'json'
 				});
-			
+
 				// Never process this action; Only invoke via ajax
 				e.preventDefault();
 				return false;
 			}
-		
+
 		});
 
 		$('.cms-content-batchactions-button').entwine({
@@ -359,7 +363,7 @@
 					tree.removeClass('multiple');
 					tree.addClass('draggable');
 				}
-				
+
 				$('#Form_BatchActionsForm').refreshSelected();
 			}
 		});
@@ -377,7 +381,7 @@
 				} else {
 					btn.removeAttr('disabled').button('refresh');
 				}
-				
+
 				// Refresh selected / enabled nodes
 				$('#Form_BatchActionsForm').refreshSelected();
 
@@ -388,5 +392,5 @@
 			}
 		});
 	});
-	
+
 })(jQuery);

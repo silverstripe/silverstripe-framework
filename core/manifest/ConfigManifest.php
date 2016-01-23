@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\Yaml\Parser;
 
 /**
  * A utility class which builds a manifest of configuration items
@@ -249,11 +250,8 @@ class SS_ConfigManifest {
 
 		// Keep track of all the modules we've seen
 		$this->addModule(dirname(dirname($pathname)));
-
-		// Use the Zend copy of this script to prevent class conflicts when RailsYaml is included
-		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib/'
-			. 'sfYamlParser.php';
-		$parser = new sfYamlParser();
+		
+		$parser = new Parser();
 
 		// The base header
 		$base = array(

@@ -103,10 +103,10 @@ class MySQLiConnector extends DBConnector {
 	public function getVersion() {
 		return $this->dbConn->server_info;
 	}
-	
+
 	/**
 	 * Invoked before any query is executed
-	 * 
+	 *
 	 * @param string $sql
 	 */
 	protected function beforeQuery($sql) {
@@ -232,7 +232,7 @@ class MySQLiConnector extends DBConnector {
 			// Safely execute the statement
 			$statement->execute();
 		}
-		
+
 		if (!$success || $statement->error) {
 			$values = $this->parameterValues($parameters);
 			$this->databaseError($this->getLastError(), $errorLevel, $sql, $values);

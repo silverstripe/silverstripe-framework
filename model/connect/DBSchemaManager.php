@@ -632,7 +632,6 @@ abstract class DBSchemaManager {
 		} else if ($fieldValue != $specValue) {
 			// If enums/sets are being modified, then we need to fix existing data in the table.
 			// Update any records where the enum is set to a legacy value to be set to the default.
-			// One hard-coded exception is SiteTree - the default for this is Page.
 			foreach (array('enum', 'set') as $enumtype) {
 				if (preg_match("/^$enumtype/i", $specValue)) {
 					$newStr = preg_replace("/(^$enumtype\s*\(')|('$\).*)/i", "", $spec_orig);
@@ -650,7 +649,6 @@ abstract class DBSchemaManager {
 					if (count($holder)) {
 						$default = explode('default ', $spec_orig);
 						$default = $default[1];
-						if ($default == "'SiteTree'") $default = "'Page'";
 						$query = "UPDATE \"$table\" SET $field=$default WHERE $field IN (";
 						for ($i = 0; $i + 1 < count($holder); $i++) {
 							$query .= "'{$holder[$i]}', ";

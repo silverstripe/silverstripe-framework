@@ -3,7 +3,7 @@
 ## Introduction
 
 This page details notes on how to ensure that we develop secure SilverStripe applications. 
-See our "[Release Process](/misc/release-process#security-releases) on how to report security issues.
+See our "[Release Process](/contributing/release_process#security-releases) on how to report security issues.
 
 ## SQL Injection
 
@@ -33,7 +33,7 @@ Example:
 	$records = DataObject::get_by_id('MyClass', 3);
 	$records = DataObject::get_one('MyClass', array('"ID" = ?' => 3));
 	$records = MyClass::get()->byID(3);
-	$records = SQLQuery::create()->addWhere(array('"ID"' => 3))->execute();
+	$records = SQLSelect::create()->addWhere(array('"ID"' => 3))->execute();
 
 Parameterised updates and inserts are also supported, but the syntax is a little different
 
@@ -98,7 +98,7 @@ As a rule of thumb, whenever you're creating SQL queries (or just chunks of SQL)
 but there may be cases where you need to take care of escaping yourself. See [coding-conventions](/getting_started/coding-conventions)
 and [datamodel](/developer_guides/model) for ways to parameterise, cast, and convert your data.
 
-*  `SQLQuery`
+*  `SQLSelect`
 *  `DB::query()`
 *  `DB::prepared_query()`
 *  `Director::urlParams()`
@@ -186,7 +186,7 @@ XSS attack against an admin to perform any administrative action.
 If you can't trust your editors, SilverStripe must be configured to filter the content so that any javascript is
 stripped out
 
-To enable filtering, set the HtmlEditorField::$sanitise_server_side [configuration](/topics/configuration) property to
+To enable filtering, set the HtmlEditorField::$sanitise_server_side [configuration](/developer_guides/configuration/configuration) property to
 true, e.g.
 
 	HtmlEditorField::config()->sanitise_server_side = true
@@ -209,12 +209,12 @@ The `SiteTree.ExtraMeta` property uses this to limit allowed input.
 It is not currently possible to allow editors to provide javascript content and yet still protect other users
 from any malicious code within that javascript.
 
-We recommend configuring [shortcodes](/reference/shortcodes) that can be used by editors in place of using javascript directly.
+We recommend configuring [shortcodes](/developer_guides/extending/shortcodes) that can be used by editors in place of using javascript directly.
 
 ### Escaping model properties
 
 `[api:SSViewer]` (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
-object-properties by [casting](/topics/datamodel#casting) its string value into a `[api:DBField]` object.
+object-properties by [casting](/developer_guides/model/data_types_and_casting) its string value into a `[api:DBField]` object.
 
 PHP:
 
@@ -241,7 +241,7 @@ outputting through SSViewer.
 
 ### Overriding default escaping in templates
 
-You can force escaping on a casted value/object by using an [escape type](/topics/datamodel) method in your template, e.g.
+You can force escaping on a casted value/object by using an [escape type](/developer_guides/model/data_types_and_casting) method in your template, e.g.
 "XML" or "ATT". 
 
 Template (see above):
@@ -323,7 +323,7 @@ Template:
 
 Whenever you insert a variable into an HTML attribute within a template, use $VarName.ATT, no not $VarName.
 
-You can also use the built-in casting in PHP by using the *obj()* wrapper, see [datamodel](/topics/datamodel)  .
+You can also use the built-in casting in PHP by using the *obj()* wrapper, see [datamodel](/developer_guides/model/data_types_and_casting).
 
 ### Escaping URLs
 
@@ -423,36 +423,17 @@ cast types can be found here:
 *  `(object)` - cast to object
 
 Note that there is also a 'SilverStripe' way of casting fields on a class, this is a different type of casting to the
-standard PHP way. See [casting](/topics/datamodel#casting).
+standard PHP way. See [casting](/developer_guides/model/data_types_and_casting).
 
 
 
 
 ## Filesystem
 
-### Don't allow script-execution in /assets
+### Don't script-execution in /assets
 
-As all uploaded files are stored by default on the /assets-directory, you should disallow script-execution for this
-folder. This is just an additional security-measure to making sure you avoid directory-traversal, check for filesize and
-disallow certain filetypes.
-
-Example configuration for Apache2:
-
-	<VirtualHost *:80>
-		<LocationMatch assets/>
-			php_flag engine off
-			Options -ExecCGI -Includes -Indexes
-		</LocationMatch>
-	</VirtualHost>
-
-
-If you are using shared hosting or in a situation where you cannot alter your Vhost definitions, you can use a .htaccess
-file in the assets directory.  This requires PHP to be loaded as an Apache module (not CGI or FastCGI).
-
-**/assets/.htaccess**
-
-	php_flag engine off
-	Options -ExecCGI -Includes -Indexes 
+Please refer to the article on [file security](/developer_guides/files/file_security)
+for instructions on how to secure the assets folder against malicious script execution.
 
 ### Don't allow access to YAML files
 
