@@ -16,7 +16,7 @@ The first thing to do is include the appropriate JavaScript and CSS files:
 
 	<code html>
 	<link rel="stylesheet" type="text/css" media="all" href="tree.css" />
-	<script type="text/javascript" src="tree.js"></script> 	 	 	
+	<script type="application/javascript" src="tree.js"></script>
 	</code>
 
 Then, create the HTML for you tree. This is basically a nested set of bullet pointed links. The "tree" class at the top is what the script will look for. Note that you can make a tree node closed to begin with by adding `class="closed"`.

@@ -1121,13 +1121,13 @@ class Requirements_Backend
 		foreach($this->getJavascript() as $file) {
 			$path = Convert::raw2xml($this->pathForFile($file));
 				if($path) {
-					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
+					$jsRequirements .= "<script type=\"application/javascript\" src=\"$path\"></script>\n";
 				}
 			}
 
 			// Add all inline JavaScript *after* including external files they might rely on
 		foreach($this->getCustomScripts() as $script) {
-					$jsRequirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
+					$jsRequirements .= "<script type=\"application/javascript\">\n//<![CDATA[\n";
 					$jsRequirements .= "$script\n";
 					$jsRequirements .= "\n//]]>\n</script>\n";
 				}

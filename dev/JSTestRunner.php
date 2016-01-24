@@ -12,9 +12,9 @@
  * 		<title>jQuery - Validation Test Suite</title>
  * 		<link rel="Stylesheet" media="screen"
  * 			href="thirdparty/jquery-validate/test/qunit/qunit.css" />
- * 		<script type="text/javascript"
+ * 		<script type="application/javascript"
  * 			src="thirdparty/jquery-validate/lib/jquery.js"></script>
- * 		<script type="text/javascript"
+ * 		<script type="application/javascript"
  * 			src="thirdparty/jquery-validate/test/qunit/qunit.js"></script>
  * 		<script>
  * 			$(document).ready(function(){

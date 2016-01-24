@@ -457,7 +457,7 @@ class RequirementsTest extends SapphireTest {
 		$backend->javascript($src);
 		$html = $backend->includeInHTML(false, $template);
 		$this->assertEquals('<html><head></head><body><!--<script>alert("commented out");</script>-->'
-			. '<h1>more content</h1><script type="text/javascript" src="' . $urlSrc . '"></script></body></html>', $html);
+			. '<h1>more content</h1><script type="application/javascript" src="' . $urlSrc . '"></script></body></html>', $html);
 	}
 
 	public function testForceJsToBottom() {
@@ -470,12 +470,12 @@ class RequirementsTest extends SapphireTest {
 		$template = '<html><head></head><body><header>My header</header><p>Body<script></script></p></body></html>';
 
 		// The expected outputs
-		$JsInHead = "<html><head><script type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\">"
+		$JsInHead = "<html><head><script type=\"application/javascript\" src=\"http://www.mydomain.com/test.js\">"
 			. "</script>\n</head><body><header>My header</header><p>Body<script></script></p></body></html>";
-		$JsInBody = "<html><head></head><body><header>My header</header><p>Body<script type=\"text/javascript\""
+		$JsInBody = "<html><head></head><body><header>My header</header><p>Body<script type=\"application/javascript\""
 			. " src=\"http://www.mydomain.com/test.js\"></script><script></script></p></body></html>";
 		$JsAtEnd  = "<html><head></head><body><header>My header</header><p>Body<script></script></p><script "
-			. "type=\"text/javascript\" src=\"http://www.mydomain.com/test.js\"></script></body></html>";
+			. "type=\"application/javascript\" src=\"http://www.mydomain.com/test.js\"></script></body></html>";
 
 
 		// Test if the script is before the head tag, not before the body.
