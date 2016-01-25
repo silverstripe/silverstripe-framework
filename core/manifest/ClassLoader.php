@@ -101,7 +101,8 @@ class SS_ClassLoader {
 	 * @return bool
 	 */
 	public function classExists($class) {
-		return class_exists($class, false) || interface_exists($class, false) || $this->getItemPath($class);
+		Deprecation::notice('4.0', 'Use ClassInfo::exists.');
+		return ClassInfo::exists($class);
 	}
 
 }
