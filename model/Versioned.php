@@ -660,25 +660,30 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 			// Get ID field
 			$id = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];
-			if(!$id) user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
+			if(!$id) {
+				user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
+			}
 
 			if($this->migratingVersion) {
 				$manipulation[$table]['fields']['Version'] = $this->migratingVersion;
 			}
 
-			// If we haven't got a version #, then we're creating a new version.
-			// Otherwise, we're just copying a version to another table
-			if(empty($manipulation[$table]['fields']['Version'])) {
+			$version = isset($manipulation[$table]['fields']['Version'])
+				? $manipulation[$table]['fields']['Version']
+				: null;
+			if($version < 0 || $this->_nextWriteWithoutVersion) {
+				// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
+				unset($manipulation[$table]['fields']['Version']);
+			} elseif(empty($version)) {
+				// If we haven't got a version #, then we're creating a new version.
+				// Otherwise, we're just copying a version to another table
 				$this->augmentWriteVersioned($manipulation, $table, $id);
 			}
 
-			// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
-			if($manipulation[$table]['fields']['Version'] < 0 || $this->_nextWriteWithoutVersion) {
+			// For base classes of versioned data objects
+			if(!$this->hasVersionField($table)) {
 				unset($manipulation[$table]['fields']['Version']);
 			}
-
-			// For base classes of versioned data objects
-			if(!$this->hasVersionField($table)) unset($manipulation[$table]['fields']['Version']);
 
 			// Grab a version number - it should be the same across all tables.
 			if(isset($manipulation[$table]['fields']['Version'])) {

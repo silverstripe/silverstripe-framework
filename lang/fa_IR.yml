@@ -24,7 +24,6 @@ fa_IR:
     FROMCOMPUTER: 'انتخاب فایل‌ها از کامپیوتر شما'
     FROMCOMPUTERINFO: 'بارگذاری از کامپیوتر شما'
     TOTAL: مجموع
-    TOUPLOAD: 'انتخاب فایل‌ها جهت بارگذاری'
     UPLOADINPROGRESS: 'لطفاً صبر کنید... بارگذاری در جریان است'
     UPLOADOR: یا
   BBCodeParser:
@@ -124,7 +123,6 @@ fa_IR:
     INVALID_REQUEST: 'درخواست نامعتبر'
   DropdownField:
     CHOOSE: (گزینش)
-    CHOOSESEARCH: '(گزینش یا جستجو)'
   EmailField:
     VALIDATION: 'لطفاً یک نشانی ایمیل وارد نمایید'
   Enum:

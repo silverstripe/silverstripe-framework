@@ -1,5 +1,7 @@
 sk:
   AssetAdmin:
+    ALLOWEDEXTS: 'Povolené extenzie nahatia súboru'
+    HIDEALLOWEDEXTS: 'Skryť povolené extenzie'
     NEWFOLDER: Nový priečinok
     SHOWALLOWEDEXTS: 'Ukázať povolené extenzie'
   AssetTableField:
@@ -7,12 +9,14 @@ sk:
     DIM: Rozmery
     FILENAME: Názov
     FOLDER: Adresár
+    HEIGHT: Výška
     LASTEDIT: 'Posledne zmenené'
     OWNER: Vlastník
     SIZE: 'Veľkosť'
     TITLE: Titulok
     TYPE: 'Typ'
     URL: URL
+    WIDTH: Šírka
   AssetUploadField:
     ChooseFiles: 'Vyberte súbory'
     DRAGFILESHERE: 'Tiahni súbory tu'
@@ -23,8 +27,10 @@ sk:
     FILES: Súbory
     FROMCOMPUTER: 'Vyberte súbory z vášho počítača'
     FROMCOMPUTERINFO: 'Nahrat z vášho počítača'
+    INSERTURL: 'Vložiť z URL'
+    REMOVEINFO: 'Odstrániť tento soubor z tohto poľa'
     TOTAL: Súhrn
-    TOUPLOAD: 'Vyberte súbory pre nahratie...'
+    TOUPLOAD: 'Nahrať súbory'
     UPLOADINPROGRESS: 'Čakajte prosím… prebieha nahrávanie'
     UPLOADOR: ALEBO
   BBCodeParser:
@@ -147,7 +153,7 @@ sk:
     INVALID_REQUEST: 'Neplatná požiadavka'
   DropdownField:
     CHOOSE: (Vyberte si)
-    CHOOSESEARCH: '(Vybrať alebo vyhľadať)'
+    CHOOSESEARCH: '(vyberte priečinok)'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v zozname. {value} nie je platná voľba'
   EmailField:
     VALIDATION: 'Prosím zadajte email adresu'
@@ -303,7 +309,7 @@ sk:
     IMAGETITLETEXT: 'Text titulky (tooltip)'
     IMAGETITLETEXTDESC: 'Pre doplňujúce informácie o obrázku'
     IMAGEWIDTHPX: Šírka
-    INSERTMEDIA: 'Vložiť média'
+    INSERTMEDIA: 'Vložiť média zo'
     LINK: 'Vložiť/upraviť odkaz na zvýraznený text'
     LINKANCHOR: 'Odkaz na tejto stranke'
     LINKDESCR: 'Popis odkazu'
@@ -316,6 +322,7 @@ sk:
     PAGE: Stránku
     SUBJECT: 'Predmet emailu'
     URL: URL
+    URLDESCRIPTION: 'Vložiť videá a obrázky z webu do Vašej stránky, jednoduchým zadaním URL súboru. Uistite sa, že máte príslušné práva pred zdielaním médií z webu.<br /><br />Prosím, uvedomte si, že súbory nie sú pridané do úložiska CMS, ale súbor je vstavaný z jeho pôvodného umiestenia, ak z nejakých dôvodov súbor nie je dostupný v jeho pôvodnom umiestení, nebude zobraziteľný na tejo stránke.'
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
     UpdateMEDIA: 'Aktualizovať média'
   Image:

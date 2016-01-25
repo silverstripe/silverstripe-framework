@@ -4,7 +4,7 @@
 /* Only for use as shadows as they wont work in older browsers */
 /*$color-optional: #a1d2eb !default; */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
-/** ----------------------------------------------- Typography.  ------------------------------------------------ */
+/** ----------------------------------------------- Typography. ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 .cms .ss-ui-button { background-color: #e6e6e6; }
@@ -71,7 +71,7 @@ fieldset.switch-states .switch input.state-name { margin-left: -20px; }
 .cms-content-actions .ss-ui-buttonset button { margin-right: 0; }
 
 .tree-holder.filtered-list li > a, .tree-holder.filtered-list li > a:link, .cms-tree.filtered-list li > a, .cms-tree.filtered-list li > a:link { color: #aaa; }
-.tree-holder.filtered-list li.filtered-item > a, .tree-holder.filtered-list li.filtered-item > a:link, .cms-tree.filtered-list li.filtered-item > a, .cms-tree.filtered-list li.filtered-item > a:link { color: #0073C1; }
+.tree-holder.filtered-list li.filtered-item > a, .tree-holder.filtered-list li.filtered-item > a:link, .cms-tree.filtered-list li.filtered-item > a, .cms-tree.filtered-list li.filtered-item > a:link { color: #0071c4; }
 .tree-holder.filtered-list li.disabled > a, .tree-holder.filtered-list li.disabled > a:link, .tree-holder.filtered-list li.edit-disabled > a, .tree-holder.filtered-list li.edit-disabled > a:link, .cms-tree.filtered-list li.disabled > a, .cms-tree.filtered-list li.disabled > a:link, .cms-tree.filtered-list li.edit-disabled > a, .cms-tree.filtered-list li.edit-disabled > a:link { color: #aaa; background: transparent none; cursor: default; }
 
 /*# sourceMappingURL=ie8.css.map */

@@ -24,7 +24,6 @@ eo:
     FROMCOMPUTER: 'Elekti dosierojn el via komputilo'
     FROMCOMPUTERINFO: 'Alŝuti el via komputilo'
     TOTAL: Totalo
-    TOUPLOAD: 'Elekti dosierojn alŝutotajn...'
     UPLOADINPROGRESS: 'Bonvolu atendi...alŝuto daŭras'
     UPLOADOR: AŬ
   BBCodeParser:
@@ -77,6 +76,8 @@ eo:
     PASSWORDEXPIRED: '<p>Via pasvorto finiĝis. <a target="_top" href="{link}">Bonvolu elekti novan.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Antaŭvido de retejo'
+  CMSPagesController_Tools_ss:
+    FILTER: Filtrilo
   CMSProfileController:
     MENUTITLE: 'Mia agordaro'
   CMSSecurity:
@@ -105,6 +106,7 @@ eo:
     MAXIMUM: 'Pasvorto devas esti ne pli ol {min} signojn longa.'
     SHOWONCLICKTITLE: 'Ŝangi Pasvorton'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Vi devas ensaluti per via CMS-pasvorto por vidi la projektan aŭ enarkivigitan enhavon.  <a href="%s">Alklaku ĉi tie por reiri al la publika retejo.</a>'
     NOTLOGGEDIN: 'Ne ensalutis'
   CreditCardField:
     FIRST: unuan
@@ -144,7 +146,6 @@ eo:
     INVALID_REQUEST: 'Malvalida peto'
   DropdownField:
     CHOOSE: (Elekti)
-    CHOOSESEARCH: '(Elekti aŭ serĉi)'
     SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'
   EmailField:
     VALIDATION: 'Bonvolu enigi readreson'
@@ -300,7 +301,6 @@ eo:
     IMAGETITLETEXT: 'Teksto de titolo (ŝpruchelpilo)'
     IMAGETITLETEXTDESC: 'Por plua informo pri la bildo'
     IMAGEWIDTHPX: Larĝo
-    INSERTMEDIA: 'Enmeti memorilon'
     LINK: 'Ligilo'
     LINKANCHOR: 'Ankri al ĉi tiu paĝo'
     LINKDESCR: 'Ligila priskribo'
@@ -314,7 +314,6 @@ eo:
     SUBJECT: 'Temo de retpoŝto'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ne estas konvertebla al memorilo.'
-    UpdateMEDIA: 'Ĝisdatigi memorilon'
   Image:
     PLURALNAME: Dosieroj
     SINGULARNAME: Dosiero
