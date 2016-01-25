@@ -22,7 +22,6 @@ af:
     FROMCOMPUTER: 'Kies lêers van jou rekenaar af'
     FROMCOMPUTERINFO: 'Laai op van jou rekenaar af'
     TOTAL: Totaal
-    TOUPLOAD: 'Kies lêers om op te laai...'
     UPLOADINPROGRESS: 'Wag asseblief... ons is besig om op te laai'
     UPLOADOR: OF
   BBCodeParser:
@@ -207,7 +206,6 @@ af:
     IMAGETITLETEXT: 'Titel teks (leidraad)'
     IMAGETITLETEXTDESC: 'Vir meer inligting oor die prentjie'
     IMAGEWIDTHPX: Wydte
-    INSERTMEDIA: 'Voeg Media In'
     LINK: 'Sit skakel in'
     LINKANCHOR: 'Anker op hierdie bladsy'
     LINKDESCR: 'Skakel beskrywing'
@@ -218,7 +216,6 @@ af:
     LINKOPENNEWWIN: 'Wil jy die skakel in ''n nuwe venster oop maak?'
     LINKTO: 'Koppel aan'
     PAGE: Bladsy
-    UpdateMEDIA: 'Verander Media'
   Image:
     PLURALNAME: Lêers
     SINGULARNAME: Lêer

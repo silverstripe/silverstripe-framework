@@ -1,5 +1,7 @@
 lt:
   AssetAdmin:
+    ALLOWEDEXTS: 'Leidžiamų įkelti bylų plėtiniai'
+    HIDEALLOWEDEXTS: 'Slėpti leidžiamus bylų plėtinius'
     NEWFOLDER: Naujas kalalogas
     SHOWALLOWEDEXTS: 'Rodyti leidžiamus bylų plėtinius'
   AssetTableField:
@@ -7,12 +9,14 @@ lt:
     DIM: Išmatavimai
     FILENAME: Bylos pavadinimas
     FOLDER: Katalogas
+    HEIGHT: Aukštis
     LASTEDIT: 'Redaguota'
     OWNER: Vartotojas
     SIZE: 'Bylos dydis'
     TITLE: Pavadinimas
     TYPE: 'Bylos tipas'
     URL: URL adresas
+    WIDTH: Plotis
   AssetUploadField:
     ChooseFiles: 'Pasirinkite bylas'
     DRAGFILESHERE: 'Vilkite bylas čia'
@@ -23,6 +27,8 @@ lt:
     FILES: Bylos
     FROMCOMPUTER: 'Pasirinkite bylas iš jūsų kompiuterio'
     FROMCOMPUTERINFO: 'Įkelti iš jūsų kompiuterio'
+    INSERTURL: 'Įkelti iš nuorodos'
+    REMOVEINFO: 'Pašalinti šią bylą iš šio lauko'
     TOTAL: Viso
     TOUPLOAD: 'Pasirinkite bylas įkėlimui...'
     UPLOADINPROGRESS: 'Prašome palaukti... vyksta įkėlimas'
@@ -147,7 +153,7 @@ lt:
     INVALID_REQUEST: 'Klaidinga užklausa'
   DropdownField:
     CHOOSE: (Pasirinkti)
-    CHOOSESEARCH: '(Pasirinkti arba Ieškoti)'
+    CHOOSESEARCH: '(pasirinkti katalogą)'
     SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
   EmailField:
     VALIDATION: 'Prašome suvesti el. pašto adresą'
@@ -303,7 +309,7 @@ lt:
     IMAGETITLETEXT: 'Pavadinimo tekstas (tooltip)'
     IMAGETITLETEXTDESC: 'Papildomai informacijai apie paveikslėlį'
     IMAGEWIDTHPX: Plotis
-    INSERTMEDIA: 'Įterpti Media'
+    INSERTMEDIA: 'Įterpti media iš'
     LINK: 'Nuoroda'
     LINKANCHOR: 'Nuoroda šiame puslapyje'
     LINKDESCR: 'Nuorodos aprašymas'
@@ -316,6 +322,7 @@ lt:
     PAGE: Puslapis
     SUBJECT: 'El. laiško tema'
     URL: URL adresas
+    URLDESCRIPTION: 'Įkelkite video ir paveikslėlius iš interneto į jūsų puslapį tiesiog įvesdami bylos nuorodą. Būtinai pasitikrinkite ar turite leidimą panaudoti norimas bylas.<br /><br />Atminkite, kad pridėtos bylos nesaugomos TVS, bet rodomos tiesiai iš išorinio šaltinio. Jeigu šios bylos bus pašalintos iš ten, jūsų svetainėje jie nebebus rodomi.'
     URLNOTANOEMBEDRESOURCE: 'Nepavyko URL nuorodos ''{url}'' panaudoti media turiniui.'
     UpdateMEDIA: 'Atnaujinti media'
   Image:

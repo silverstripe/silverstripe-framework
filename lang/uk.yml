@@ -21,7 +21,6 @@ uk:
     FROMCOMPUTER: 'Виберіть файли з вашого комп’ютера'
     FROMCOMPUTERINFO: 'Завантажте з вашого комп’ютера'
     TOTAL: Підсумок
-    TOUPLOAD: 'Виберіть файли для завантаження...'
     UPLOADINPROGRESS: 'Зачекайте, будь ласка, виконується завантаження'
     UPLOADOR: АБО
   BBCodeParser:
