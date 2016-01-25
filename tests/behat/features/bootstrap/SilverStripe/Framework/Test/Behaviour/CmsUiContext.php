@@ -2,20 +2,15 @@
 
 namespace SilverStripe\Framework\Test\Behaviour;
 
-use Behat\Behat\Context\ClosuredContextInterface,
-	Behat\Behat\Context\TranslatedContextInterface,
-	Behat\Behat\Context\BehatContext,
-	Behat\Behat\Context\Step,
-	Behat\Behat\Exception\PendingException,
-	Behat\Mink\Exception\ElementNotFoundException,
-	Behat\Gherkin\Node\PyStringNode,
-	Behat\Gherkin\Node\TableNode,
-	Behat\Mink\Element\NodeElement;
-
-
-// PHPUnit
-require_once 'PHPUnit/Autoload.php';
-require_once 'PHPUnit/Framework/Assert/Functions.php';
+use Behat\Behat\Context\ClosuredContextInterface;
+use Behat\Behat\Context\TranslatedContextInterface;
+use Behat\Behat\Context\BehatContext;
+use Behat\Behat\Context\Step;
+use Behat\Behat\Exception\PendingException;
+use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Element\NodeElement;
 
 /**
  * CmsUiContext
