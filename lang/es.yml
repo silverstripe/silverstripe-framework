@@ -24,7 +24,6 @@ es:
     FROMCOMPUTER: 'Seleccione los archivos desde su ordenador'
     FROMCOMPUTERINFO: 'Subir archivos desde tu ordenador'
     TOTAL: Total
-    TOUPLOAD: 'Seleccione los archivos a subir...'
     UPLOADINPROGRESS: 'Por favor espere .... carga en curso'
     UPLOADOR: O
   BBCodeParser:
@@ -144,7 +143,6 @@ es:
     INVALID_REQUEST: 'Solicitud no válida'
   DropdownField:
     CHOOSE: (Elegir)
-    CHOOSESEARCH: '(Seleccionar o Buscar)'
     SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
   EmailField:
     VALIDATION: 'Introduzca una dirección de correo electrónico'
@@ -298,7 +296,6 @@ es:
     IMAGETITLETEXT: 'Texto del título (tooltip)'
     IMAGETITLETEXTDESC: 'Para obtener información adicional acerca de la imagen'
     IMAGEWIDTHPX: Ancho
-    INSERTMEDIA: 'Insertar Media'
     LINK: 'Insertar/editar enlace para el texto resaltado'
     LINKANCHOR: 'Ancla en esta página'
     LINKDESCR: 'Descripción del Enlace'
@@ -312,7 +309,6 @@ es:
     SUBJECT: 'Asunto del Email'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ''no se puede convertir en un recurso multimedia.'
-    UpdateMEDIA: 'Actualizar Media'
   Image:
     PLURALNAME: Archivos
     SINGULARNAME: Archivo
