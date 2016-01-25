@@ -2,17 +2,11 @@
 
 namespace SilverStripe\Framework\Test\Behaviour;
 
-use SilverStripe\BehatExtension\Context\SilverStripeContext,
-	SilverStripe\BehatExtension\Context\BasicContext,
-	SilverStripe\BehatExtension\Context\LoginContext,
-	SilverStripe\BehatExtension\Context\FixtureContext,
-	SilverStripe\BehatExtension\Context\EmailContext,
-	SilverStripe\Framework\Test\Behaviour\CmsFormsContext,
-	SilverStripe\Framework\Test\Behaviour\CmsUiContext;
-
-// PHPUnit
-require_once 'PHPUnit/Autoload.php';
-require_once 'PHPUnit/Framework/Assert/Functions.php';
+use SilverStripe\BehatExtension\Context\SilverStripeContext;
+use SilverStripe\BehatExtension\Context\BasicContext;
+use SilverStripe\BehatExtension\Context\LoginContext;
+use SilverStripe\BehatExtension\Context\FixtureContext;
+use SilverStripe\BehatExtension\Context\EmailContext;
 
 /**
  * Features context

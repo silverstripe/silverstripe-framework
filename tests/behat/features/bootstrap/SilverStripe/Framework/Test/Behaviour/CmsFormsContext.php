@@ -2,21 +2,16 @@
 
 namespace SilverStripe\Framework\Test\Behaviour;
 
-use Behat\Behat\Context\ClosuredContextInterface,
-	Behat\Behat\Context\TranslatedContextInterface,
-	Behat\Behat\Context\BehatContext,
-	Behat\Behat\Context\Step,
-	Behat\Behat\Exception\PendingException,
-	Behat\Mink\Exception\ElementHtmlException,
-	Behat\Gherkin\Node\PyStringNode,
-	Behat\Gherkin\Node\TableNode,
-	Behat\MinkExtension\Context\MinkContext as MinkContext;
-
+use Behat\Behat\Context\ClosuredContextInterface;
+use Behat\Behat\Context\TranslatedContextInterface;
+use Behat\Behat\Context\BehatContext;
+use Behat\Behat\Context\Step;
+use Behat\Behat\Exception\PendingException;
+use Behat\Mink\Exception\ElementHtmlException;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+use Behat\MinkExtension\Context\MinkContext as MinkContext;
 use Symfony\Component\DomCrawler\Crawler;
-
-// PHPUnit
-require_once 'PHPUnit/Autoload.php';
-require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 /**
  * CmsFormsContext
