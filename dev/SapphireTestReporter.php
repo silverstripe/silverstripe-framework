@@ -1,9 +1,5 @@
 <?php
 
-if(!interface_exists('PHPUnit_Framework_TestListener')) {
-	return;
-}
-
 /**#@+
  * @var int
  */
