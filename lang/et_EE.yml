@@ -24,7 +24,6 @@ et_EE:
     FROMCOMPUTER: 'Valige fail arvutist'
     FROMCOMPUTERINFO: 'Laadige üles arvutist'
     TOTAL: Kokku
-    TOUPLOAD: 'Valige üleslaadimiseks failid...'
     UPLOADINPROGRESS: 'Oodake... Üleslaadimine on pooleli'
     UPLOADOR: VÕI
   BBCodeParser:
@@ -255,7 +254,6 @@ et_EE:
     IMAGETITLETEXT: 'Pealkirja tekst (kohtspikker)'
     IMAGETITLETEXTDESC: 'Lisateabe saamiseks kujutise kohta'
     IMAGEWIDTHPX: Kõrgus
-    INSERTMEDIA: 'Sisesta meedium'
     LINK: 'Link'
     LINKANCHOR: 'Link sellele lehele'
     LINKDESCR: 'Lingi kirjeldus'
@@ -268,7 +266,6 @@ et_EE:
     PAGE: Leht
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL-i ''{url}'' ei saanud muuta meediumiressursiks.'
-    UpdateMEDIA: 'Uuenda meediumi'
   Image:
     PLURALNAME: Failid
     SINGULARNAME: Fail

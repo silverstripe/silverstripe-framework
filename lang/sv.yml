@@ -24,7 +24,6 @@ sv:
     FROMCOMPUTER: 'Välj filer från din dator'
     FROMCOMPUTERINFO: 'Ladda upp från din dator'
     TOTAL: Totalt
-    TOUPLOAD: 'Välj fil att ladda upp...'
     UPLOADINPROGRESS: 'Var god dröj... uppladdning pågår'
     UPLOADOR: ELLER
   BBCodeParser:
@@ -147,7 +146,6 @@ sv:
     INVALID_REQUEST: 'Ogiltig förfrågan'
   DropdownField:
     CHOOSE: (Välj)
-    CHOOSESEARCH: '(Välj eller sök)'
     SOURCE_VALIDATION: 'Vänligen välj att värde i listan. {value} är inget giltigt val'
   EmailField:
     VALIDATION: 'Var snäll och ange en epostadress'
@@ -317,7 +315,6 @@ sv:
     IMAGETITLETEXT: 'Titel text (tooltip)'
     IMAGETITLETEXTDESC: 'För ytterligare information om bilden'
     IMAGEWIDTHPX: Bredd
-    INSERTMEDIA: 'Infoga media'
     LINK: 'Infoga länk'
     LINKANCHOR: 'Ankare på den här sidan'
     LINKDESCR: 'Länk-beskrivning'
@@ -331,7 +328,6 @@ sv:
     SUBJECT: 'Ämne'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URLen ''{url}'' gick inte  att omvandla till ett media.'
-    UpdateMEDIA: 'Uppdatera media'
   Image:
     PLURALNAME: Filer
     SINGULARNAME: Fil

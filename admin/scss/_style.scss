@@ -348,11 +348,21 @@ body.cms {
 		&.active,
 		&:active {
 			background-color: #d4dbe1;
-			box-shadow: inset 0 0 3px rgba(191, 194, 196, .9);
 		}
 
 		&.font-icon-search {
 			padding: 5px 6px;
+			color:lighten($color-text, 10%);
+
+			&.active,
+			&:active,
+			&:focus,
+			&:hover {
+				background: none;
+				box-shadow: none;
+				color: darken($color-text, 10%);
+			}
+
 
 			&:before {
 				font-size: 18px;
@@ -423,7 +433,7 @@ body.cms {
 			&::before {
 				margin-left: -2px;
 			}
-		}
+	}
 	}
 
 	// Context specific overrides for Tabs.
@@ -553,7 +563,7 @@ body.cms {
 			cursor: text;
 
 			a {
-				border-bottom: 4px solid #66727d;
+				border-bottom: 3px solid #66727d;
 				padding-left: 0;
 				padding-right: 0;
 				margin: 0 12px 0;
@@ -770,10 +780,6 @@ body.cms {
 	padding: $grid-y*1.5 $grid-x*2;
 	z-index: 999;
 	border-top: 1px solid $color-light-separator;
-	@include box-shadow(
-		1px 0 0 $tab-panel-texture-color,
-		$box-shadow-shine 0 1px 0px inset,
-		$color-shadow-light 0 0 1px);
 	height: 28px;
 	background-color: $tab-panel-texture-color;
 }
@@ -1069,7 +1075,6 @@ body.cms {
 	overflow-x: hidden;
 	z-index: 70;
 	border-right: 1px solid $color-separator;
-	@include box-shadow($box-shadow-shine -1px 0 0 inset, 0 0 1px $color-shadow-light);
 	float: left;
 	position: relative;
 
@@ -1082,8 +1087,7 @@ body.cms {
 		margin: 10px 0 $grid-y - 1;
 		padding-bottom: 2px;
 		line-height: $grid-y * 3;
-
-		@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
+		border-bottom: 1px solid $color-light-separator;
 	}
 
 	.cms-panel-content {
@@ -1526,10 +1530,8 @@ form.member-profile-form {
 .cms-panel {
 	overflow: hidden;
 	.cms-panel-toggle {
-		@include box-shadow(0 0 1px $box-shadow-shine);
 		&.south {
 			border-top: 1px solid darken($color-light-separator, 15%);
-			@include box-shadow(lighten($color-base, 4%) 0 1px 0px inset);
 			position: absolute;
 			bottom: 0;
 			width:100%;
@@ -1562,7 +1564,6 @@ form.member-profile-form {
 	&.cms-content-tools .cms-panel-toggle {
 		&.south {
 			border-top: 1px solid $color-light-separator;
-			@include box-shadow($box-shadow-shine 0 1px 0px inset);
 		}
 	}
 	&.collapsed {
@@ -1777,7 +1778,7 @@ form.member-profile-form {
 		border-top: 1px solid $color-light-separator;
 		border-bottom-left-radius: 8px;
 		border-bottom-right-radius: 8px;
-	}
+}
 }
 
 body.cms-dialog {
@@ -1870,7 +1871,7 @@ body.cms-dialog {
 		width:100%;
 		height: 53px;
 
-		h3 {
+		h3{
 			padding: $grid-y*1.5 0 $grid-y*1.5 $grid-x*2;
 			margin: 0;
 			line-height: 28px;
@@ -1888,11 +1889,11 @@ body.cms-dialog {
 						font-size: 18px;
 						vertical-align: text-bottom;
 					}
-				}
-			}
 		}
 	}
-	
+		}
+	}
+
 	.ss-insert-media, .ss-insert-link {
 		padding: $grid-y*1.5 $grid-x*2;
 		
@@ -2010,8 +2011,8 @@ body.cms-dialog {
 					background-position: -18px -4px;
 					height: 14px;
 					opacity: .8;
-				}
-			}
+		}
+	}
 
 			.TreeDropdownField {
 				background: 0;
@@ -2253,7 +2254,3 @@ form.import-form {
 .cms .cms-navigator > .cms-preview-toggle-link{
 	display:none;
 }
-
-
-
-

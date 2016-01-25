@@ -17,9 +17,16 @@ VersionedTest_DataObject:
   page3b:
     Parent: =>VersionedTest_DataObject.page3
     Title: Page 3b
+
 VersionedTest_PublicStage:
   public1:
     Title: 'Some page'
+
 VersionedTest_PublicViaExtension:
   public2:
     Title: 'Another page'
+
+VersionedTest_AnotherSubclass:
+  subclass1:
+    Title: 'Subclass Page 1'
+    AnotherField: 'Bob'

@@ -196,7 +196,6 @@ bg:
     IMAGETITLETEXT: 'Описание (tooltip)'
     IMAGETITLETEXTDESC: 'Допълнителна информация към изображението'
     IMAGEWIDTHPX: Широчина
-    INSERTMEDIA: 'Вмъкване на медиа'
     LINK: 'Връзка'
     LINKANCHOR: 'Котва на тази страница'
     LINKDESCR: 'Описание на препратка'
@@ -208,7 +207,6 @@ bg:
     LINKTO: 'Препратка към'
     PAGE: Страница
     URLNOTANOEMBEDRESOURCE: 'URL адресът ''{url}'' не може да бъде превърнат в медиен ресурс.'
-    UpdateMEDIA: 'Актуализация на медиа'
   Image_iframe_ss:
     TITLE: 'Iframe за качване на изображение'
   LeftAndMain:

@@ -125,8 +125,8 @@ If you're familiar with it, here's the short version of what you need to know. O
 * **Squash your commits, so that each commit addresses a single issue.** After you rebase your work on top of the upstream master, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Description of the issue here (fixes #100)" We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
 
 * **Choose the correct branch**: Assume the current release is 3.0.3, and 3.1.0 is in beta state.
-Most pull requests should go against the `3.1.x-dev` *pre-release branch*, only critical bugfixes
-against the `3.0.x-dev` *release branch*. If you're changing an API or introducing a major feature,
+Most pull requests should go against the `3.1` *pre-release branch*, only critical bugfixes
+against the `3.0` *release branch*. If you're changing an API or introducing a major feature,
 the pull request should go against `master` (read more about our [release process](release_process)). Branches are periodically merged "upwards" (3.0 into 3.1, 3.1 into master).
 
 ### Editing files directly on GitHub.com

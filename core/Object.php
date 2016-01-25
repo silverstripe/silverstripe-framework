@@ -923,7 +923,7 @@ abstract class Object {
 
 		if(!empty($this->beforeExtendCallbacks[$method])) {
 			foreach(array_reverse($this->beforeExtendCallbacks[$method]) as $callback) {
-				$value = call_user_func($callback, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
+				$value = call_user_func_array($callback, array(&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7));
 				if($value !== null) $values[] = $value;
 			}
 			$this->beforeExtendCallbacks[$method] = array();
@@ -940,7 +940,7 @@ abstract class Object {
 
 		if(!empty($this->afterExtendCallbacks[$method])) {
 			foreach(array_reverse($this->afterExtendCallbacks[$method]) as $callback) {
-				$value = call_user_func($callback, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
+				$value = call_user_func_array($callback, array(&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7));
 				if($value !== null) $values[] = $value;
 			}
 			$this->afterExtendCallbacks[$method] = array();

@@ -452,6 +452,9 @@
 					// No state available at all.
 					this.setCurrentStateName(null);
 				}
+				
+				// Mark url as a preview url so it can get special treatment
+				url += ((url.indexOf('?') === -1) ? '?' : '&') + 'CMSPreview=1';
 
 				// If this preview panel isn't visible at the moment, delay loading the URL until it (maybe) is later
 				if (this.is('.column-hidden')) {

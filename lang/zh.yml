@@ -24,7 +24,6 @@ zh:
     FROMCOMPUTER: '从您的电脑选择文件'
     FROMCOMPUTERINFO: '从您的电脑上传'
     TOTAL: 合计
-    TOUPLOAD: '选择要上传的文件……'
     UPLOADINPROGRESS: '请稍候……上传正在进行中'
     UPLOADOR: 或
   BBCodeParser:
@@ -144,7 +143,6 @@ zh:
     INVALID_REQUEST: '无效请求'
   DropdownField:
     CHOOSE: （选择）
-    CHOOSESEARCH: '（选择或搜索）'
     SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
   EmailField:
     VALIDATION: '请输入一个电子邮件地址'
@@ -296,7 +294,6 @@ zh:
     IMAGETITLETEXT: '标题文字（工具提示）'
     IMAGETITLETEXTDESC: '要获取关于该图像的更多信息'
     IMAGEWIDTHPX: 宽度
-    INSERTMEDIA: '插入媒体'
     LINK: '插入链接'
     LINKANCHOR: '固定于此页面'
     LINKDESCR: '链接描述'
@@ -310,7 +307,6 @@ zh:
     SUBJECT: '电子邮件标题'
     URL: 网址
     URLNOTANOEMBEDRESOURCE: '''{url}'' 该网址无法转换成媒体来源。'
-    UpdateMEDIA: '更新媒体'
   Image:
     PLURALNAME: 文件
     SINGULARNAME: 文件

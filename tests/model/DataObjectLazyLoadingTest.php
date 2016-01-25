@@ -13,6 +13,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 
 	// These are all defined in DataObjectTest.php and VersionedTest.php
 	protected $extraDataObjects = array(
+		// From DataObjectTest
 		'DataObjectTest_Team',
 		'DataObjectTest_Fixture',
 		'DataObjectTest_SubTeam',
@@ -31,8 +32,10 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		'DataObjectTest_Staff',
 		'DataObjectTest_CEO',
 		'DataObjectTest_Fan',
-		'VersionedLazy_DataObject',
-		'VersionedLazySub_DataObject',
+		'DataObjectTest_Play',
+		'DataObjectTest_Ploy',
+		'DataObjectTest_Bogey',
+		// From VersionedTest
 		'VersionedTest_DataObject',
 		'VersionedTest_Subclass',
 		'VersionedTest_AnotherSubclass',
@@ -41,6 +44,9 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		'VersionedTest_WithIndexes',
 		'VersionedTest_PublicStage',
 		'VersionedTest_PublicViaExtension',
+		// From DataObjectLazyLoadingTest
+		'VersionedLazy_DataObject',
+		'VersionedLazySub_DataObject',
 	);
 
 	public function testQueriedColumnsID() {

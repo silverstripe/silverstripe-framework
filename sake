@@ -60,9 +60,9 @@ fi
 ## Installation to /usr/bin
 
 if [ "$1" = "installsake" ]; then
-	echo "Installing sake to /usr/bin..."
-	rm -rf /usr/bin/sake
-	cp $0 /usr/bin
+	echo "Installing sake to /usr/local/bin..."
+	rm -rf /usr/local/bin/sake
+	cp $0 /usr/local/bin
 	exit 0
 fi
 

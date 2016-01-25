@@ -24,7 +24,6 @@ de:
     FROMCOMPUTER: 'Dateien auf Ihrem Computer auswählen'
     FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
     TOTAL: Insgesamt
-    TOUPLOAD: 'Dateien für den Upload wählen...'
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
     UPLOADOR: oder
   BBCodeParser:
@@ -147,7 +146,6 @@ de:
     INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
     CHOOSE: (Auswahl)
-    CHOOSESEARCH: '(Auswählen oder Suchen)'
     SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
   EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'
@@ -303,7 +301,6 @@ de:
     IMAGETITLETEXT: 'Titeltext (Tooltip)'
     IMAGETITLETEXTDESC: 'Weiterführende Informationen über das Bild'
     IMAGEWIDTHPX: Breite (px)
-    INSERTMEDIA: 'Medienobjekt einfügen'
     LINK: 'Verweis einfügen'
     LINKANCHOR: 'Anker auf dieser Seite'
     LINKDESCR: 'Beschreibung des Verweises'
@@ -317,7 +314,6 @@ de:
     SUBJECT: 'E-Mail-Betreff'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
-    UpdateMEDIA: 'Medienobjekt aktualisieren'
   Image:
     PLURALNAME: Dateien
     SINGULARNAME: Datei
