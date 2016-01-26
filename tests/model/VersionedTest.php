@@ -102,6 +102,22 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals($count, $count2);
 	}
 
+	/**
+	 * Test that publishing from invalid stage will throw exception
+	 */
+	public function testInvalidPublish() {
+		$obj = new VersionedTest_Subclass();
+		$obj->ExtraField = 'Foo'; // ensure that child version table gets written
+		$obj->write();
+		$this->setExpectedException(
+			'InvalidArgumentException',
+			"Can't find VersionedTest_DataObject#{$obj->ID} in stage Live"
+		);
+
+		// Fail publishing from live to stage
+		$obj->publish('Live', 'Stage');
+	}
+
 	public function testDuplicate() {
 		$obj1 = new VersionedTest_Subclass();
 		$obj1->ExtraField = 'Foo';

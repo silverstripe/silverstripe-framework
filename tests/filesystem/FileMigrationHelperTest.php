@@ -60,6 +60,7 @@ class FileMigrationHelperTest extends SapphireTest {
 			$this->assertEmpty($file->File->getFilename(), "File {$file->Name} has no DBFile filename");
 			$this->assertEmpty($file->File->getHash(), "File {$file->Name} has no hash");
 			$this->assertFalse($file->exists(), "File with name {$file->Name} does not yet exist");
+			$this->assertFalse($file->isPublished(), "File is not published yet");
 		}
 
 		// Do migration
@@ -77,6 +78,7 @@ class FileMigrationHelperTest extends SapphireTest {
 				"File with name {$filename} has the correct hash"
 			);
 			$this->assertTrue($file->exists(), "File with name {$filename} exists");
+			$this->assertTrue($file->isPublished(), "File is published after migration");
 		}
 	}
 

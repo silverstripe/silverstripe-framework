@@ -2,6 +2,8 @@
 /**
  * An extension that adds additional functionality to a {@link DataObject}.
  *
+ * @property DataObject $owner
+ *
  * @package framework
  * @subpackage model
  */

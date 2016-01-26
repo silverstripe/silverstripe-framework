@@ -17,7 +17,7 @@ use SilverStripe\Filesystem\Storage\AssetStore;
  * @package framework
  * @subpackage filesystem
  */
-class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandler {
+class DBFile extends CompositeDBField implements AssetContainer {
 
 	use ImageManipulation;
 
@@ -310,14 +310,6 @@ class DBFile extends CompositeDBField implements AssetContainer, ShortcodeHandle
 		return $this
 			->getStore()
 			->exists($this->Filename, $this->Hash, $this->Variant);
-	}
-
-	public static function get_shortcodes() {
-		return 'dbfile_link';
-	}
-
-	public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array()) {
-		// @todo
 	}
 	
 	public function getFilename() {

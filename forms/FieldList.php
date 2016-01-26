@@ -313,6 +313,9 @@ class FieldList extends ArrayList {
 	 * You can use dot syntax to get fields from child composite fields
 	 *
 	 * @todo Implement similarly to dataFieldByName() to support nested sets - or merge with dataFields()
+	 *
+	 * @param string $name
+	 * @return FormField
 	 */
 	public function fieldByName($name) {
 		$name = $this->rewriteTabPath($name);

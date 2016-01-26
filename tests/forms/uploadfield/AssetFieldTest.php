@@ -15,6 +15,9 @@ class AssetFieldTest extends FunctionalTest {
 	public function setUp() {
 		parent::setUp();
 
+		$this->logInWithPermission('ADMIN');
+		Versioned::reading_stage('Stage');
+
 		// Set backend root to /AssetFieldTest
 		AssetStoreTest_SpyStore::activate('AssetFieldTest');
 		$create = function($path) {
@@ -57,7 +60,7 @@ class AssetFieldTest extends FunctionalTest {
 		$this->assertEquals('315ae4c3d44412baa0c81515b6fb35829a337a5a', $responseJSON[0]['hash']);
 		$this->assertEmpty($responseJSON[0]['variant']);
 		$this->assertFileExists(
-			BASE_PATH . '/assets/AssetFieldTest/MyDocuments/315ae4c3d4/testUploadBasic.txt'
+			BASE_PATH . '/assets/AssetFieldTest/.protected/MyDocuments/315ae4c3d4/testUploadBasic.txt'
 		);
 	}
 
@@ -79,7 +82,7 @@ class AssetFieldTest extends FunctionalTest {
 		$responseJSON = json_decode($response->getBody(), true);
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(
-			BASE_PATH . '/assets/AssetFieldTest/MyFiles/315ae4c3d4/testUploadHasOneRelation.txt'
+			BASE_PATH . '/assets/AssetFieldTest/.protected/MyFiles/315ae4c3d4/testUploadHasOneRelation.txt'
 		);
 
 		// Secondly, ensure that simply uploading an object does not save the file against the relation
@@ -148,8 +151,7 @@ class AssetFieldTest extends FunctionalTest {
 		$this->assertFalse($record->File->exists());
 
 		// Check file object itself exists
-		// @todo - When assets are removed from a DBFile reference, these files should be archived
-		$this->assertFileExists($filePath, 'File is only detached, not deleted from filesystem');
+		$this->assertFileNotExists($filePath, 'File is deleted once detached');
 	}
 
 	/**
@@ -248,6 +250,7 @@ class AssetFieldTest extends FunctionalTest {
 	}
 
 	public function testCanUploadWithPermissionCode() {
+		Session::clear("loggedInAs");
 		$field = AssetField::create('MyField');
 
 		$field->setCanUpload(true);

@@ -10,6 +10,7 @@ class UploadTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
+		Versioned::reading_stage('Stage');
 		AssetStoreTest_SpyStore::activate('UploadTest');
 	}
 
@@ -48,7 +49,7 @@ class UploadTest extends SapphireTest {
 			$file1->getFilename()
 		);
 		$this->assertEquals(
-			BASE_PATH . '/assets/UploadTest/Uploads/315ae4c3d4/UploadTest-testUpload.txt',
+			BASE_PATH . '/assets/UploadTest/.protected/Uploads/315ae4c3d4/UploadTest-testUpload.txt',
 			AssetStoreTest_SpyStore::getLocalPath($file1)
 		);
 		$this->assertFileExists(
@@ -66,7 +67,7 @@ class UploadTest extends SapphireTest {
 			$file2->getFilename()
 		);
 		$this->assertEquals(
-			BASE_PATH . '/assets/UploadTest/UploadTest-testUpload/315ae4c3d4/UploadTest-testUpload.txt',
+			BASE_PATH . '/assets/UploadTest/.protected/UploadTest-testUpload/315ae4c3d4/UploadTest-testUpload.txt',
 			AssetStoreTest_SpyStore::getLocalPath($file2)
 		);
 		$this->assertFileExists(

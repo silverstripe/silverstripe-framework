@@ -6,6 +6,13 @@
 interface ShortcodeHandler {
 
 	/**
+	 * Gets the list of shortcodes provided by this handler
+	 *
+	 * @return mixed
+	 */
+	public static function get_shortcodes();
+
+	/**
 	 * Generate content with a shortcode value
 	 * 
 	 * @param array $arguments Arguments passed to the parser

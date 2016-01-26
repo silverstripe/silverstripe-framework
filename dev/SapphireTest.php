@@ -169,11 +169,20 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 	protected $model;
 
+	/**
+	 * State of Versioned before this test is run
+	 *
+	 * @var string
+	 */
+	protected $originalReadingMode = null;
+
 	public function setUp() {
 
 		//nest config and injector for each test so they are effectively sandboxed per test
 		Config::nest();
 		Injector::nest();
+
+		$this->originalReadingMode = \Versioned::get_reading_mode();
 
 		// We cannot run the tests on this abstract class.
 		if(get_class($this) == "SapphireTest") $this->skipTest = true;
@@ -525,6 +534,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$controller->response->setStatusCode(200);
 			$controller->response->removeHeader('Location');
 		}
+
+		\Versioned::set_reading_mode($this->originalReadingMode);
+
 		//unnest injector / config now that tests are over
 		Injector::unnest();
 		Config::unnest();

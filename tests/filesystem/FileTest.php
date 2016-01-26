@@ -1,6 +1,7 @@
 <?php
 
 use Filesystem as SS_Filesystem;
+use SilverStripe\Filesystem\Storage\AssetStore;
 
 /**
  * Tests for the File class
@@ -13,6 +14,8 @@ class FileTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
+		$this->logInWithPermission('ADMIN');
+		Versioned::reading_stage('Stage');
 
 		// Set backend root to /ImageTest
 		AssetStoreTest_SpyStore::activate('FileTest');
@@ -232,40 +235,92 @@ class FileTest extends SapphireTest {
 
 	public function testSetNameChangesFilesystemOnWrite() {
 		$file = $this->objFromFixture('File', 'asdf');
-		$oldPath = AssetStoreTest_SpyStore::getLocalPath($file);
-		$newPath = str_replace('FileTest.txt', 'renamed.txt', $oldPath);
+		$this->logInWithPermission('ADMIN');
+		$file->doPublish();
+		$oldTuple = $file->File->getValue();
+
+		// Rename
+		$file->Name = 'renamed.txt';
+		$newTuple = $oldTuple;
+		$newTuple['Filename'] = $file->getFilename();
 
 		// Before write()
-		$file->Name = 'renamed.txt';
-		$this->assertFileExists($oldPath, 'Old path is still present');
-		$this->assertFileNotExists($newPath, 'New path is updated in memory, not written before write() is called');
-		$file->write();
+		$this->assertTrue(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old path is still present'
+		);
+		$this->assertFalse(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is updated in memory, not written before write() is called'
+		);
 
 		// After write()
-		$this->assertFileExists($oldPath, 'Old path is left after write()');
-		$this->assertFileExists($newPath, 'New path is created after write()');
+		$file->write();
+		$this->assertTrue(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old path exists after draft change'
+		);
+		$this->assertTrue(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is created after write()'
+		);
+
+		// After publish
+		$file->doPublish();
+		$this->assertFalse(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old file is finally removed after publishing new file'
+		);
+		$this->assertTrue(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is created after write()'
+		);
 	}
 
 	public function testSetParentIDChangesFilesystemOnWrite() {
 		$file = $this->objFromFixture('File', 'asdf');
+		$this->logInWithPermission('ADMIN');
+		$file->doPublish();
 		$subfolder = $this->objFromFixture('Folder', 'subfolder');
-		$oldPath = AssetStoreTest_SpyStore::getLocalPath($file);
-		$newPath = str_replace('assets/FileTest/', 'assets/FileTest/FileTest-subfolder/', $oldPath);
+		$oldTuple = $file->File->getValue();
 
 		// set ParentID
 		$file->ParentID = $subfolder->ID;
+		$newTuple = $oldTuple;
+		$newTuple['Filename'] = $file->getFilename();
 
 		// Before write()
-		$this->assertFileExists($oldPath, 'Old path is still present');
-		$this->assertFileNotExists($newPath, 'New path is updated in memory, not written before write() is called');
-		$this->assertEquals($oldPath, AssetStoreTest_SpyStore::getLocalPath($file), 'URL is not updated until write is called');
-
+		$this->assertTrue(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old path is still present'
+		);
+		$this->assertFalse(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is updated in memory, not written before write() is called'
+		);
 		$file->write();
 
 		// After write()
-		$this->assertFileExists($oldPath, 'Old path is left after write()');
-		$this->assertFileExists($newPath, 'New path is created after write()');
-		$this->assertEquals($newPath, AssetStoreTest_SpyStore::getLocalPath($file), 'URL is updated after write is called');
+		$file->write();
+		$this->assertTrue(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old path exists after draft change'
+		);
+		$this->assertTrue(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is created after write()'
+		);
+
+		// After publish
+		$file->doPublish();
+		$this->assertFalse(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old file is finally removed after publishing new file'
+		);
+		$this->assertTrue(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is created after write()'
+		);
 	}
 
 	/**
@@ -354,13 +409,29 @@ class FileTest extends SapphireTest {
 
 	public function testDeleteFile() {
 		$file = $this->objFromFixture('File', 'asdf');
-		$fileID = $file->ID;
-		$filePath = AssetStoreTest_SpyStore::getLocalPath($file);
-		$file->delete();
+		$this->logInWithPermission('ADMIN');
+		$file->doPublish();
+		$tuple = $file->File->getValue();
 
-		// File is deleted
-		$this->assertFileNotExists($filePath);
-		$this->assertEmpty(DataObject::get_by_id('File', $fileID));
+		// Before delete
+		$this->assertTrue(
+			$this->getAssetStore()->exists($tuple['Filename'], $tuple['Hash']),
+			'File is still present'
+		);
+
+		// after unpublish
+		$file->doUnpublish();
+		$this->assertTrue(
+			$this->getAssetStore()->exists($tuple['Filename'], $tuple['Hash']),
+			'File is still present after unpublish'
+		);
+
+		// after delete
+		$file->delete();
+		$this->assertFalse(
+			$this->getAssetStore()->exists($tuple['Filename'], $tuple['Hash']),
+			'File is deleted after unpublish and delete'
+		);
 	}
 
 	public function testRenameFolder() {
@@ -460,6 +531,13 @@ class FileTest extends SapphireTest {
 		$this->assertEquals('name/file.jpg', File::join_paths('name/', '/', 'file.jpg'));
 		$this->assertEquals('file.jpg', File::join_paths('/', '/', 'file.jpg'));
 		$this->assertEquals('', File::join_paths('/', '/'));
+	}
+
+	/**
+	 * @return AssetStore
+	 */
+	protected function getAssetStore() {
+		return Injector::inst()->get('AssetStore');
 	}
 
 }

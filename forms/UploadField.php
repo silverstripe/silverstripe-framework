@@ -1142,6 +1142,12 @@ class UploadField extends FileField {
 		// Search for relations that can hold the uploaded files, but don't fallback
 		// to default if there is no automatic relation
 		if ($relationClass = $this->getRelationAutosetClass(null)) {
+			// Allow File to be subclassed
+			if($relationClass === 'File' && isset($tmpFile['name'])) {
+				$relationClass = File::get_class_for_file_extension(
+					File::get_file_extension($tmpFile['name'])
+				);
+			}
 			// Create new object explicitly. Otherwise rely on Upload::load to choose the class.
 			$fileObject = Object::create($relationClass);
 			if(! ($fileObject instanceof DataObject) || !($fileObject instanceof AssetContainer)) {

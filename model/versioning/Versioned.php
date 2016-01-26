@@ -1,5 +1,7 @@
 <?php
 
+// namespace SilverStripe\Framework\Model\Versioning
+
 /**
  * The Versioned extension allows your DataObjects to have several versions,
  * allowing you to rollback changes and view history. An example of this is
@@ -739,11 +741,114 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * If a write was skipped, then we need to ensure that we don't leave a
 	 * migrateVersion() value lying around for the next write.
-	 *
-	 *
 	 */
 	public function onAfterSkippedWrite() {
 		$this->migrateVersion(null);
+	}
+
+	/**
+	 * This function should return true if the current user can publish this record.
+	 * It can be overloaded to customise the security model for an application.
+	 *
+	 * Denies permission if any of the following conditions is true:
+	 * - canPublish() on any extension returns false
+	 * - canEdit() returns false
+	 *
+	 * @param Member $member
+	 * @return bool True if the current user can publish this record.
+	 */
+	public function canPublish($member = null) {
+		// Skip if invoked by extendedCan()
+		if(func_num_args() > 4) {
+			return null;
+		}
+
+		if(!$member) {
+			$member = Member::currentUser();
+		}
+
+		if(Permission::checkMember($member, "ADMIN")) {
+			return true;
+		}
+
+		// Standard mechanism for accepting permission changes from extensions
+		$extended = $this->owner->extendedCan('canPublish', $member);
+		if($extended !== null) {
+			return $extended;
+		}
+
+		// Default to relying on edit permission
+		return $this->owner->canEdit($member);
+	}
+
+	/**
+	 * Check if the current user can delete this record from live
+	 *
+	 * @param null $member
+	 * @return mixed
+	 */
+	public function canUnpublish($member = null) {
+		// Skip if invoked by extendedCan()
+		if(func_num_args() > 4) {
+			return null;
+		}
+
+		if(!$member) {
+			$member = Member::currentUser();
+		}
+
+		if(Permission::checkMember($member, "ADMIN")) {
+			return true;
+		}
+
+		// Standard mechanism for accepting permission changes from extensions
+		$extended = $this->owner->extendedCan('canUnpublish', $member);
+		if($extended !== null) {
+			return $extended;
+		}
+
+		// Default to relying on canPublish
+		return $this->owner->canPublish($member);
+	}
+
+	/**
+	 * Check if the current user is allowed to archive this record.
+	 * If extended, ensure that both canDelete and canUnpublish are extended also
+	 *
+	 * @param Member $member
+	 * @return bool
+	 */
+	public function canArchive($member = null) {
+		// Skip if invoked by extendedCan()
+		if(func_num_args() > 4) {
+			return null;
+		}
+
+		if(!$member) {
+            $member = Member::currentUser();
+        }
+
+		if(Permission::checkMember($member, "ADMIN")) {
+			return true;
+		}
+
+		// Standard mechanism for accepting permission changes from extensions
+		$extended = $this->owner->extendedCan('canArchive', $member);
+		if($extended !== null) {
+            return $extended;
+        }
+
+		// Check if this record can be deleted from stage
+        if(!$this->owner->canDelete($member)) {
+            return false;
+        }
+
+        // Check if we can delete from live
+        if(!$this->owner->canUnpublish($member)) {
+            return false;
+        }
+
+		return true;
 	}
 
 	/**
@@ -785,6 +890,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		// Bypass if site is unsecured
 		if (Session::get('unsecuredDraftSite')) {
+			return true;
+		}
+
+		// Bypass if record doesn't have a live stage
+		if(!in_array(static::get_live_stage(), $this->getVersionedStages())) {
 			return true;
 		}
 
@@ -901,6 +1011,77 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
+	 * Provides a simple doPublish action for Versioned dataobjects
+	 *
+	 * @return bool True if publish was successful
+	 */
+	public function doPublish() {
+		$owner = $this->owner;
+		$owner->invokeWithExtensions('onBeforePublish');
+		$owner->write();
+		$owner->publish("Stage", "Live");
+		$owner->invokeWithExtensions('onAfterPublish');
+		return true;
+	}
+
+
+
+	/**
+	 * Removes the record from both live and stage
+	 *
+	 * @return bool Success
+	 */
+	public function doArchive() {
+		$owner = $this->owner;
+		$owner->invokeWithExtensions('onBeforeArchive', $this);
+
+		if($owner->doUnpublish()) {
+			$owner->delete();
+			$owner->invokeWithExtensions('onAfterArchive', $this);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Removes this record from the live site
+	 *
+	 * @return bool Flag whether the unpublish was successful
+	 *
+	 * @uses SiteTreeExtension->onBeforeUnpublish()
+	 * @uses SiteTreeExtension->onAfterUnpublish()
+	 */
+	public function doUnpublish() {
+		$owner = $this->owner;
+		if(!$owner->isInDB()) {
+			return false;
+		}
+
+		$owner->invokeWithExtensions('onBeforeUnpublish');
+
+		$origStage = self::current_stage();
+		self::reading_stage(self::get_live_stage());
+
+		// This way our ID won't be unset
+		$clone = clone $owner;
+		$clone->delete();
+
+		self::reading_stage($origStage);
+
+		// If we're on the draft site, then we can update the status.
+		// Otherwise, these lines will resurrect an inappropriate record
+		if(self::current_stage() != self::get_live_stage() && $this->isOnDraft()) {
+			$owner->write();
+		}
+
+		$owner->invokeWithExtensions('onAfterUnpublish');
+
+		return true;
+	}
+
+	/**
 	 * Move a database record from one stage to the other.
 	 *
 	 * @param string $fromStage Place to copy from.  Can be either a stage name or a version number.
@@ -909,50 +1090,55 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * By default, the existing version number will be copied over.
 	 */
 	public function publish($fromStage, $toStage, $createNewVersion = false) {
-		$this->owner->extend('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
+		$owner = $this->owner;
+		$owner->extend('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
 
-		$baseClass = $this->owner->class;
+		$baseClass = $owner->class;
 		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
 		$extTable = $this->extendWithSuffix($baseClass);
 
 		if(is_numeric($fromStage)) {
-			$from = Versioned::get_version($baseClass, $this->owner->ID, $fromStage);
+			$from = Versioned::get_version($baseClass, $owner->ID, $fromStage);
 		} else {
-			$this->owner->flushCache();
-			$from = Versioned::get_one_by_stage($baseClass, $fromStage, "\"{$baseClass}\".\"ID\"={$this->owner->ID}");
+			$owner->flushCache();
+			$from = Versioned::get_one_by_stage($baseClass, $fromStage, "\"{$baseClass}\".\"ID\"={$owner->ID}");
+		}
+		if(!$from) {
+			throw new InvalidArgumentException("Can't find {$baseClass}#{$owner->ID} in stage {$fromStage}");
 		}
 
 		$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
-		if($from) {
-			$from->forceChange();
-			if($createNewVersion) {
-				$latest = self::get_latest_version($baseClass, $this->owner->ID);
-				$this->owner->Version = $latest->Version + 1;
-			} else {
-				$from->migrateVersion($from->Version);
-			}
-
-			// Mark this version as having been published at some stage
-			DB::prepared_query("UPDATE \"{$extTable}_versions\"
-				SET \"WasPublished\" = ?, \"PublisherID\" = ?
-				WHERE \"RecordID\" = ? AND \"Version\" = ?",
-				array(1, $publisherID, $from->ID, $from->Version)
-			);
-
-			$oldMode = Versioned::get_reading_mode();
-			Versioned::reading_stage($toStage);
-
-			$conn = DB::get_conn();
-			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, true);
-			$from->write();
-			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, false);
-
-			$from->destroy();
-
-			Versioned::set_reading_mode($oldMode);
+		$from->forceChange();
+		if($createNewVersion) {
+			$latest = self::get_latest_version($baseClass, $owner->ID);
+			$owner->Version = $latest->Version + 1;
 		} else {
-			user_error("Can't find {$this->owner->URLSegment}/{$this->owner->ID} in stage $fromStage", E_USER_WARNING);
+			$from->migrateVersion($from->Version);
 		}
+
+		// Mark this version as having been published at some stage
+		DB::prepared_query("UPDATE \"{$extTable}_versions\"
+			SET \"WasPublished\" = ?, \"PublisherID\" = ?
+			WHERE \"RecordID\" = ? AND \"Version\" = ?",
+			array(1, $publisherID, $from->ID, $from->Version)
+		);
+
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::reading_stage($toStage);
+
+		$conn = DB::get_conn();
+		if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, true);
+		// Migrate stage prior to write
+		$from->setSourceQueryParam('Versioned.mode', 'stage');
+		$from->setSourceQueryParam('Versioned.stage', $toStage);
+		$from->write();
+		if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, false);
+
+		$from->destroy();
+
+		Versioned::set_reading_mode($oldMode);
+
+		$owner->extend('onAfterVersionedPublish', $fromStage, $toStage, $createNewVersion);
 	}
 
 	/**
@@ -1274,7 +1460,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			return self::$cache_versionnumber[$baseClass][$stage][$id];
 		}
 
-		// get version as performance-optimized SQL query (gets called for each page in the sitetree)
+		// get version as performance-optimized SQL query (gets called for each record in the sitetree)
 		$version = DB::prepared_query(
 			"SELECT \"Version\" FROM \"$stageTable\" WHERE \"ID\" = ?",
 			array($id)
@@ -1299,7 +1485,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * Pre-populate the cache for Versioned::get_versionnumber_by_stage() for
 	 * a list of record IDs, for more efficient database querying.  If $idList
-	 * is null, then every page will be pre-cached.
+	 * is null, then every record will be pre-cached.
 	 *
 	 * @param string $class
 	 * @param string $stage
@@ -1391,22 +1577,21 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Roll the draft version of this page to match the published page.
+	 * Roll the draft version of this record to match the published record.
 	 * Caution: Doesn't overwrite the object properties with the rolled back version.
 	 *
 	 * @param int $version Either the string 'Live' or a version number
 	 */
 	public function doRollbackTo($version) {
-		$this->owner->extend('onBeforeRollback', $version);
+		$owner = $this->owner;
+		$owner->extend('onBeforeRollback', $version);
 		$this->publish($version, "Stage", true);
-
-		$this->owner->writeWithoutVersion();
-
-		$this->owner->extend('onAfterRollback', $version);
+		$owner->writeWithoutVersion();
+		$owner->extend('onAfterRollback', $version);
 	}
 
 	/**
-	 * Return the latest version of the given page.
+	 * Return the latest version of the given record.
 	 *
 	 * @return DataObject
 	 */
@@ -1430,14 +1615,55 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return boolean
 	 */
 	public function isLatestVersion() {
-		$version = self::get_latest_version($this->owner->class, $this->owner->ID);
+		if(!$this->owner->isInDB()) {
+			return false;
+		}
 
+		$version = self::get_latest_version($this->owner->class, $this->owner->ID);
 		return ($version->Version == $this->owner->Version);
 	}
 
 	/**
+	 * Check if this record exists on live
+	 *
+	 * @return bool
+	 */
+	public function isPublished() {
+		if(!$this->owner->isInDB()) {
+			return false;
+		}
+
+		$table = ClassInfo::baseDataClass($this->owner->class) . '_' . self::get_live_stage();
+		$result = DB::prepared_query(
+			"SELECT COUNT(*) FROM \"{$table}\" WHERE \"{$table}\".\"ID\" = ?",
+			array($this->owner->ID)
+		);
+		return (bool)$result->value();
+	}
+
+	/**
+	 * Check if this record exists on the draft stage
+	 *
+	 * @return bool
+	 */
+	public function isOnDraft() {
+		if(!$this->owner->isInDB()) {
+			return false;
+		}
+
+		$table = ClassInfo::baseDataClass($this->owner->class);
+		$result = DB::prepared_query(
+			"SELECT COUNT(*) FROM \"{$table}\" WHERE \"{$table}\".\"ID\" = ?",
+			array($this->owner->ID)
+		);
+		return (bool)$result->value();
+	}
+
+
+
+	/**
 	 * Return the equivalent of a DataList::create() call, querying the latest
-	 * version of each page stored in the (class)_versions tables.
+	 * version of each record stored in the (class)_versions tables.
 	 *
 	 * In particular, this will query deleted records as well as active ones.
 	 *
@@ -1498,7 +1724,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param array $labels
 	 */
 	public function updateFieldLabels(&$labels) {
-		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', 'Past Versions of this page');
+		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', 'Past Versions of this record');
 	}
 
 	/**
