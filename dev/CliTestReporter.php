@@ -1,4 +1,9 @@
 <?php
+
+if(!class_exists('SapphireTestReporter')) {
+	return;
+}
+
 /**
  * Test reporter optimised for CLI (ie, plain-text) output
  *
