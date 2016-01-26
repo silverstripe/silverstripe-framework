@@ -36,8 +36,8 @@ class CMSSecurity extends Security {
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/lib.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/CMSSecurity.js'
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/sspath.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/dist/CMSSecurity.js'
 			)
 		);
 	}

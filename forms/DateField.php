@@ -581,7 +581,7 @@ class DateField_View_JQuery extends Object {
 				Requirements::javascript($this->jqueryLocaleFile);
 			}
 
-			Requirements::javascript(FRAMEWORK_DIR . "/javascript/DateField.js");
+			Requirements::javascript(FRAMEWORK_DIR . "/javascript/dist/DateField.js");
 		}
 
 		return $html;

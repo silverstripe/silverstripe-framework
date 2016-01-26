@@ -147,10 +147,12 @@ class SSViewerTest extends SapphireTest {
 		$requirements->expects($this->once())->method('javascript')->with($jsFile);
 		$requirements->expects($this->once())->method('css')->with($cssFile);
 
+		$origReq = Requirements::backend();
 		Requirements::set_backend($requirements);
-
 		$template = $this->render("<% require javascript($jsFile) %>
 		<% require css($cssFile) %>");
+		Requirements::set_backend($origReq);
+
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
 	}
 

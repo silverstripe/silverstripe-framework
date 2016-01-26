@@ -13,12 +13,16 @@
 
   SelectParser = (function() {
 
-    SelectParser.name = 'SelectParser';
+    // Origional - You can't assign to functions like this in strict mode.
+    //SelectParser.name = 'SelectParser';
 
     function SelectParser() {
       this.options_index = 0;
       this.parsed = [];
     }
+
+    // SilverStripe custom
+    SelectParser.prototype.name = 'SelectParser';
 
     SelectParser.prototype.add_node = function(child) {
       if (child.nodeName.toUpperCase() === "OPTGROUP") {
@@ -94,7 +98,11 @@
 
   this.SelectParser = SelectParser;
 
-}).call(this);
+// Origional - 'this' !== 'window' in browserify
+//}).call(this);
+
+// SilverStripe custom
+}).call(window);
 
 /*
 Chosen source: generate output using 'cake build'
@@ -109,7 +117,8 @@ Copyright (c) 2011 by Harvest
 
   AbstractChosen = (function() {
 
-    AbstractChosen.name = 'AbstractChosen';
+    // Origional - You can't assign to functions like this in strict mode.
+    //AbstractChosen.name = 'AbstractChosen';
 
     function AbstractChosen(form_field, options) {
       this.form_field = form_field;
@@ -122,6 +131,9 @@ Copyright (c) 2011 by Harvest
       this.register_observers();
       this.finish_setup();
     }
+
+    // SilverStripe custom
+    AbstractChosen.prototype.name = 'AbstractChosen';
 
     AbstractChosen.prototype.set_default_values = function() {
       var _this = this;
@@ -296,7 +308,11 @@ Copyright (c) 2011 by Harvest
 
   root.AbstractChosen = AbstractChosen;
 
-}).call(this);
+// Origional - 'this' !== 'window' in browserify
+//}).call(this);
+
+// SilverStripe custom
+}).call(window);
 
 /*
 Chosen source: generate output using 'cake build'
@@ -332,11 +348,15 @@ Copyright (c) 2011 by Harvest
 
     __extends(Chosen, _super);
 
-    Chosen.name = 'Chosen';
+    // Origional - You can't assign to functions like this in strict mode.
+    //Chosen.name = 'Chosen';
 
     function Chosen() {
       return Chosen.__super__.constructor.apply(this, arguments);
     }
+
+    // SilverStripe custom
+    Chosen.prototype.name = 'Chosen';
 
     Chosen.prototype.setup = function() {
       this.form_field_jq = $(this.form_field);
@@ -1121,4 +1141,8 @@ Copyright (c) 2011 by Harvest
 
   root.get_side_border_padding = get_side_border_padding;
 
-}).call(this);
+// Origional - 'this' !== 'window' in browserify
+//}).call(this);
+
+// SilverStripe custom
+}).call(window);

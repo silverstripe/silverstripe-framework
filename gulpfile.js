@@ -1,43 +1,65 @@
 var gulp = require('gulp'),
+    babel = require('gulp-babel'),
     diff = require('gulp-diff'),
+    notify = require('gulp-notify'),
+    uglify = require('gulp-uglify');
+    gulpUtil = require('gulp-util'),
+    browserify = require('browserify'),
+    babelify = require('babelify'),
+    watchify = require('watchify'),
+    source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer'),
     path = require('path'),
+    glob = require('glob'),
+    eventStream = require('event-stream'),
     semver = require('semver'),
     packageJson = require('./package.json');
 
-var paths = {
-    modules: './node_modules/',
-    frameworkThirdparty: './thirdparty/',
-    adminThirdparty: './admin/thirdparty/'
+var PATHS = {
+    MODULES: './node_modules',
+    ADMIN_THIRDPARTY: './admin/thirdparty',
+    ADMIN_JAVASCRIPT_SRC: './admin/javascript/src',
+    ADMIN_JAVASCRIPT_DIST: './admin/javascript/dist',
+    FRAMEWORK_THIRDPARTY: './thirdparty',
+    FRAMEWORK_JAVASCRIPT_SRC: './javascript/src',
+    FRAMEWORK_JAVASCRIPT_DIST: './javascript/dist'
+};
+
+var browserifyOptions = {
+    cache: {},
+    packageCache: {},
+    poll: true,
+    plugin: [watchify]
 };
 
 var blueimpFileUploadConfig = {
-    src: paths.modules + 'blueimp-file-upload/',
-    dest: paths.frameworkThirdparty + 'jquery-fileupload/',
+    src: PATHS.MODULES + '/blueimp-file-upload',
+    dest: PATHS.FRAMEWORK_THIRDPARTY + '/jquery-fileupload',
     files: [
-        'cors/jquery.postmessage-transport.js',
-        'cors/jquery.xdr-transport.js',
-        'jquery.fileupload-ui.js',
-        'jquery.fileupload.js',
-        'jquery.iframe-transport.js'
+        '/cors/jquery.postmessage-transport.js',
+        '/cors/jquery.xdr-transport.js',
+        '/jquery.fileupload-ui.js',
+        '/jquery.fileupload.js',
+        '/jquery.iframe-transport.js'
     ]
 };
 
 var blueimpLoadImageConfig = {
-    src: paths.modules + 'blueimp-load-image/',
-    dest: paths.frameworkThirdparty + 'javascript-loadimage/',
-    files: ['load-image.js']
+    src: PATHS.MODULES + '/blueimp-load-image',
+    dest: PATHS.FRAMEWORK_THIRDPARTY + '/javascript-loadimage',
+    files: ['/load-image.js']
 };
 
 var blueimpTmplConfig = {
-    src: paths.modules + 'blueimp-tmpl/',
-    dest: paths.frameworkThirdparty + 'javascript-templates/',
-    files: ['tmpl.js']
+    src: PATHS.MODULES + '/blueimp-tmpl',
+    dest: PATHS.FRAMEWORK_THIRDPARTY + '/javascript-templates',
+    files: ['/tmpl.js']
 };
 
 var jquerySizesConfig = {
-    src: paths.modules + 'jquery-sizes/',
-    dest: paths.adminThirdparty + 'jsizes/',
-    files: ['lib/jquery.sizes.js']
+    src: PATHS.MODULES + '/jquery-sizes',
+    dest: PATHS.ADMIN_THIRDPARTY + '/jsizes',
+    files: ['/lib/jquery.sizes.js']
 };
 
 /**
@@ -79,17 +101,92 @@ function diffFiles(libConfig) {
     });
 }
 
+/**
+ * Transforms the passed JavaScript files to UMD modules.
+ *
+ * @param array files - The files to transform.
+ * @param string dest - The output directory.
+ * @return object
+ */
+function transformToUmd(files, dest) {
+    return eventStream.merge(files.map(function (file) {
+        return gulp.src(file)
+            .pipe(babel({
+                presets: ['es2015'],
+                moduleId: 'ss.' + path.parse(file).name,
+                plugins: ['transform-es2015-modules-umd']
+            }))
+            .on('error', notify.onError({
+                message: 'Error: <%= error.message %>',
+            }))
+            .pipe(gulp.dest(dest));
+    }));
+}
+
 // Make sure the version of Node being used is valid.
 if (!semver.satisfies(process.versions.node, packageJson.engines.node)) {
     console.error('Invalid Node.js version. You need to be using ' + packageJson.engines.node + '. If you want to manage multiple Node.js versions try https://github.com/creationix/nvm');
     process.exit(1);
 }
 
-gulp.task('build', function () {
-    copyFiles(blueimpFileUploadConfig);
-    copyFiles(blueimpLoadImageConfig);
-    copyFiles(blueimpTmplConfig);
-    copyFiles(jquerySizesConfig);
+if (process.env.npm_config_development) {
+    browserifyOptions.debug = true;
+}
+
+gulp.task('build', ['umd', 'umd-watch', 'bundle']);
+
+gulp.task('bundle', ['bundle-lib', 'bundle-leftandmain']);
+
+gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
+    var stream = browserify(Object.assign({}, browserifyOptions, {
+            entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/leftandmain.js'
+        }))
+        .transform(babelify.configure({
+            presets: ['es2015'],
+            ignore: /(thirdparty)/
+        }))
+        .on('log', function (msg) { gulpUtil.log('Finished bundle-leftandmain.js ' + msg); })
+        .on('update', bundleLeftAndMain)
+        .external('jQuery')
+        .external('i18n')
+        .bundle()
+        .on('error', notify.onError({
+            message: 'Error: <%= error.message %>',
+        }))
+        .pipe(source('bundle-leftandmain.js'))
+        .pipe(buffer());
+
+    if (typeof process.env.npm_config_development === 'undefined') {
+        stream.pipe(uglify());
+    }
+
+    return stream.pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
+});
+
+gulp.task('bundle-lib', function bundleLib() {
+    var stream = browserify(Object.assign({}, browserifyOptions, {
+            entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/lib.js'
+        }))
+        .transform(babelify.configure({
+            presets: ['es2015'],
+            ignore: /(thirdparty)/
+        }))
+        .on('log', function (msg) { gulpUtil.log('Finished bundle-lib.js ' + msg); })
+        .on('update', bundleLib)
+        .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/jQuery.js', { expose: 'jQuery' })
+        .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/i18n.js', { expose: 'i18n' })
+        .bundle()
+        .on('error', notify.onError({
+            message: 'Error: <%= error.message %>',
+        }))
+        .pipe(source('bundle-lib.js'))
+        .pipe(buffer());
+
+    if (typeof process.env.npm_config_development === 'undefined') {
+        stream.pipe(uglify());
+    }
+
+    return stream.pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
 
 gulp.task('sanity', function () {
@@ -97,4 +194,28 @@ gulp.task('sanity', function () {
     diffFiles(blueimpLoadImageConfig);
     diffFiles(blueimpTmplConfig);
     diffFiles(jquerySizesConfig);
+});
+
+gulp.task('thirdparty', function () {
+    copyFiles(blueimpFileUploadConfig);
+    copyFiles(blueimpLoadImageConfig);
+    copyFiles(blueimpTmplConfig);
+    copyFiles(jquerySizesConfig);
+});
+
+gulp.task('umd', ['umd-admin', 'umd-framework']);
+
+gulp.task('umd-admin', function () {
+    var files = glob.sync(PATHS.ADMIN_JAVASCRIPT_SRC + '/*.js', { ignore: PATHS.ADMIN_JAVASCRIPT_SRC + '/LeftAndMain.!(Ping).js' });
+
+    return transformToUmd(files, PATHS.ADMIN_JAVASCRIPT_DIST);
+});
+
+gulp.task('umd-framework', function () {
+    return transformToUmd(glob.sync(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/*.js'), PATHS.FRAMEWORK_JAVASCRIPT_DIST);
+});
+
+gulp.task('umd-watch', function () {
+    gulp.watch(PATHS.ADMIN_JAVASCRIPT_SRC + '/*.js', ['umd-admin']);
+    gulp.watch(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/*.js', ['umd-framework']);
 });

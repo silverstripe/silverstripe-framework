@@ -1248,7 +1248,7 @@ class Requirements_Backend
 			// Include i18n.js even if no languages are found.  The fact that
 			// add_i18n_javascript() was called indicates that the methods in
 			// here are needed.
-			if(!$langOnly) $files[] = FRAMEWORK_DIR . '/javascript/i18n.js';
+			if(!$langOnly) $files[] = FRAMEWORK_DIR . '/javascript/dist/i18n.js';
 
 			if(substr($langDir,-1) != '/') $langDir .= '/';
 
@@ -1268,7 +1268,7 @@ class Requirements_Backend
 		} else {
 			// Stub i18n implementation for when i18n is disabled.
 			if(!$langOnly) {
-				$files[] = FRAMEWORK_DIR . '/javascript/i18nx.js';
+				$files[] = FRAMEWORK_DIR . '/javascript/dist/i18nx.js';
 			}
 		}
 
@@ -1311,7 +1311,7 @@ class Requirements_Backend
 			}
 			return "{$prefix}{$fileOrUrl}{$mtimesuffix}{$suffix}";
 		} else {
-			return false;
+			throw new InvalidArgumentException("File {$fileOrUrl} does not exist");
 		}
 	}
 

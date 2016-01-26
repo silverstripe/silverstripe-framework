@@ -174,8 +174,8 @@ Due to the procedural and selector-driven style of UI programming in jQuery.entw
 it can be difficult to find the piece of code responsible for a certain behaviour.
 Therefore it is important to adhere to file naming conventions.
 E.g. a feature only applicable to `ModelAdmin` should be placed in
-`framework/admin/javascript/ModelAdmin.js`, while something modifying all forms (including ModelAdmin forms)
-would be better suited in `framework/admin/javascript/LeftAndMain.EditForm.js`.
+`framework/admin/javascript/src/ModelAdmin.js`, while something modifying all forms (including ModelAdmin forms)
+would be better suited in `framework/admin/javascript/src/LeftAndMain.EditForm.js`.
 Selectors used in these files should mirrow the "scope" set by its filename,
 so don't place a rule applying to all form buttons inside `ModelAdmin.js`.
 
@@ -431,7 +431,7 @@ Note: You can see any additional HTTP headers through the web developer tools in
 
 The CMS tree for viewing hierarchical structures (mostly pages) is powered
 by the [jstree](http://jstree.com) library. It is configured through
-`framework/admin/javascript/LeftAndMain.Tree.js`, as well as some
+`framework/admin/javascript/src/LeftAndMain.Tree.js`, as well as some
 HTML5 metadata generated on its container (see the `data-hints` attribute).
 For more information, see the [Howto: Customise the CMS tree](/developer_guides/customising_the_admin_interface/how_tos/customise_cms_tree).
 

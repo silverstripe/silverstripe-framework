@@ -31,7 +31,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function init() {
 		parent::init();
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/SecurityAdmin.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/SecurityAdmin.js');
 	}
 
 	/**
@@ -202,10 +202,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::clear();
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
-
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/MemberImportForm.js');
 		return $this->renderWith('BlankPage', array(
 			'Form' => $this->MemberImportForm()->forTemplate(),
 			'Content' => ' '
@@ -234,10 +232,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::clear();
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
-
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/MemberImportForm.js');
 		return $this->renderWith('BlankPage', array(
 			'Content' => ' ',
 			'Form' => $this->GroupImportForm()->forTemplate()

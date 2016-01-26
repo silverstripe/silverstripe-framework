@@ -73,7 +73,7 @@ class Group extends DataObject {
 	 * @return FieldList
 	 */
 	public function getCMSFields() {
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/PermissionCheckboxSetField.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/dist/PermissionCheckboxSetField.js');
 
 		$fields = new FieldList(
 			new TabSet("Root",
