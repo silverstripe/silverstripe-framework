@@ -16,6 +16,7 @@ class PolymorphicHasManyListTest extends SapphireTest {
 	protected static $fixture_file = 'DataObjectTest.yml';
 
 	protected $extraDataObjects = array(
+		// From DataObjectTest
 		'DataObjectTest_Team',
 		'DataObjectTest_Fixture',
 		'DataObjectTest_SubTeam',
@@ -34,6 +35,9 @@ class PolymorphicHasManyListTest extends SapphireTest {
 		'DataObjectTest_Staff',
 		'DataObjectTest_CEO',
 		'DataObjectTest_Fan',
+		'DataObjectTest_Play',
+		'DataObjectTest_Ploy',
+		'DataObjectTest_Bogey',
 	);
 
 	public function testRelationshipEmptyOnNewRecords() {

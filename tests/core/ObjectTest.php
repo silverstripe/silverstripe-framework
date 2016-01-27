@@ -118,36 +118,11 @@ class ObjectTest extends SapphireTest {
 	public function testCreateWithArgs() {
 		$createdObj = ObjectTest_CreateTest::create('arg1', 'arg2', array(), null, 'arg5');
 		$this->assertEquals($createdObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
-
-		$strongObj = Object::strong_create('ObjectTest_CreateTest', 'arg1', 'arg2', array(), null, 'arg5');
-		$this->assertEquals($strongObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
 	}
 
 	public function testCreateLateStaticBinding() {
 		$createdObj = ObjectTest_CreateTest::create('arg1', 'arg2', array(), null, 'arg5');
 		$this->assertEquals($createdObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
-	}
-
-	/**
-	 * Tests that {@link Object::useCustomClass()} correnctly replaces normal and strong objects
-	 */
-	public function testUseCustomClass() {
-		$obj1 = ObjectTest_CreateTest::create();
-		$this->assertTrue($obj1 instanceof ObjectTest_CreateTest);
-
-		Object::useCustomClass('ObjectTest_CreateTest', 'ObjectTest_CreateTest2');
-		$obj2 = ObjectTest_CreateTest::create();
-		$this->assertTrue($obj2 instanceof ObjectTest_CreateTest2);
-
-		$obj2_2 = Object::strong_create('ObjectTest_CreateTest');
-		$this->assertTrue($obj2_2 instanceof ObjectTest_CreateTest);
-
-		Object::useCustomClass('ObjectTest_CreateTest', 'ObjectTest_CreateTest3', true);
-		$obj3 = ObjectTest_CreateTest::create();
-		$this->assertTrue($obj3 instanceof ObjectTest_CreateTest3);
-
-		$obj3_2 = Object::strong_create('ObjectTest_CreateTest');
-		$this->assertTrue($obj3_2 instanceof ObjectTest_CreateTest3);
 	}
 
 	/**

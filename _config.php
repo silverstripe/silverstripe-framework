@@ -18,15 +18,6 @@
  */
 
 /**
- * PHP 5.2 introduced a conflict with the Datetime field type, which was renamed to SSDatetime. This was later renamed
- * to SS_Datetime to be consistent with other namespaced classes.
- *
- * Overload both of these to support legacy code.
- */
-Object::useCustomClass('SSDatetime', 'SS_Datetime', true);
-Object::useCustomClass('Datetime',   'SS_Datetime', true);
-
-/**
  * The root directory of TinyMCE
  */
 define('MCE_ROOT', FRAMEWORK_DIR . '/thirdparty/tinymce/');

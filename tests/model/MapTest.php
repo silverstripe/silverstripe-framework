@@ -10,6 +10,7 @@ class SS_MapTest extends SapphireTest {
 	protected static $fixture_file = 'DataObjectTest.yml';
 
 	protected $extraDataObjects = array(
+		// From DataObjectTest
 		'DataObjectTest_Team',
 		'DataObjectTest_Fixture',
 		'DataObjectTest_SubTeam',
@@ -18,7 +19,19 @@ class SS_MapTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment'
+		'DataObjectTest_TeamComment',
+		'DataObjectTest_EquipmentCompany',
+		'DataObjectTest_SubEquipmentCompany',
+		'DataObjectTest\NamespacedClass',
+		'DataObjectTest\RelationClass',
+		'DataObjectTest_ExtendedTeamComment',
+		'DataObjectTest_Company',
+		'DataObjectTest_Staff',
+		'DataObjectTest_CEO',
+		'DataObjectTest_Fan',
+		'DataObjectTest_Play',
+		'DataObjectTest_Ploy',
+		'DataObjectTest_Bogey',
 	);
 
 

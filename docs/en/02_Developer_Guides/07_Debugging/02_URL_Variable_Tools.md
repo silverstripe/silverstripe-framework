@@ -33,7 +33,6 @@ Append the option and corresponding value to your URL in your browser's address 
 
  | URL Variable    | | Values | | Description                                                                               | 
  | ------------    | | ------ | | -----------                                                                               | 
- | debugmethods    | | 1      | | Shows all methods available when an object is constructed (useful when extending classes or using object extensions) | 
  | debugfailover   | | 1      | | Shows failover methods from classes extended                                              | 
 
 ## Database
