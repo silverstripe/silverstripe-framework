@@ -253,5 +253,11 @@ class HTTPRequestTest extends SapphireTest {
 		$req = new SS_HTTPRequest('GET', '/home?test=1');
 		$this->assertEquals('home?test=1', $req->getURL(true));
 		$this->assertEquals('home', $req->getURL());
+
+		$req = new SS_HTTPRequest('GET', 'somefile.gif');
+		$this->assertEquals('gif', $req->getExtension());
+
+		$req = new SS_HTTPRequest('GET', '.passwd');
+		$this->assertEquals(null, $req->getExtension());
 	}
 }
