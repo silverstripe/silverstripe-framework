@@ -2077,7 +2077,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$candidateManyManys = (array)Config::inst()->get($candidate, 'many_many', Config::UNINHERITED);
 
 				foreach($candidateManyManys as $relation => $relatedClass) {
-					if($relatedClass === $this->class) {
+					if (is_a($this, $relatedClass)) {
 						$relationName = $relation;
 					}
 				}

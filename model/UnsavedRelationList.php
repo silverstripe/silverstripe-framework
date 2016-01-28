@@ -206,8 +206,10 @@ class UnsavedRelationList extends ArrayList {
 
 	/**
 	 * Returns an array with both the keys and values set to the IDs of the records in this list.
+	 * Does not respect sort order. Use ->column("ID") to get an ID list with the current sort.
+	 * Does not return the IDs for unsaved DataObjects.
 	 *
-	 * Does not return the IDs for unsaved DataObjects
+	 * @return array
 	 */
 	public function getIDList() {
 		// Get a list of IDs of our current items - if it's not a number then object then assume it's a DO.

@@ -52,7 +52,7 @@ The simplest way to use [api:CsvBulkLoader] is through a [api:ModelAdmin] interf
 	      'Player'
 	   );
 	   private static $model_importers = array(
-	      'Player' => 'PlayerCsvBulkLoader',
+	      'Player' => 'CsvBulkLoader',
 	   );
 	   private static $url_segment = 'players';
 	}

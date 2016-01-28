@@ -916,7 +916,9 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 	/**
 	 * Returns an array with both the keys and values set to the IDs of the records in this list.
+	 * Does not respect sort order. Use ->column("ID") to get an ID list with the current sort.
 	 *
+	 * @return array
 	 */
 	public function getIDList() {
 		$ids = $this->column("ID");
