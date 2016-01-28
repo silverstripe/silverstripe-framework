@@ -1,0 +1,6 @@
+ManyManyListTest_IndirectPrimary:
+  manymany_extra_primary:
+    Title: 'primary'
+ManyManyListTest_SecondarySub:
+  manymany_extra_secondary:
+    Title: 'secondary'
