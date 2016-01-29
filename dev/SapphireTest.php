@@ -55,7 +55,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $originalNestedURLsState;
 	protected $originalMemoryLimit;
 
-	protected $mailer;
+	public static function mailer() {
+		return Injector::inst()->get('Mailer');
+	}
 
 	/**
 	 * Pointer to the manifest that isn't a test manifest
@@ -223,9 +225,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 
 		// Set up email
-		$this->originalMailer = Email::mailer();
-		$this->mailer = new TestMailer();
-		Injector::inst()->registerService($this->mailer, 'Mailer');
+		Injector::inst()->registerService(new TestMailer(), 'Mailer');
 		Config::inst()->remove('Email', 'send_all_emails_to');
 
 		// Todo: this could be a special test model
@@ -496,10 +496,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Preserve memory settings
 		ini_set('memory_limit', ($this->originalMemoryLimit) ? $this->originalMemoryLimit : -1);
 
-		// Restore email configuration
-		$this->originalMailer = null;
-		$this->mailer = null;
-
 		// Restore password validation
 		if($this->originalMemberPasswordValidator) {
 			Member::set_password_validator($this->originalMemberPasswordValidator);
@@ -558,7 +554,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Clear the log of emails sent
 	 */
 	public function clearEmails() {
-		return $this->mailer->clearEmails();
+		return static::mailer()->clearEmails();
 	}
 
 	/**
@@ -572,7 +568,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *               'customHeaders', 'htmlContent', 'inlineImages'
 	 */
 	public function findEmail($to, $from = null, $subject = null, $content = null) {
-		return $this->mailer->findEmail($to, $from, $subject, $content);
+		return static::mailer()->findEmail($to, $from, $subject, $content);
 	}
 
 	/**
