@@ -1441,15 +1441,6 @@ green tick icon as a background this is created using compass generated classes 
   .ui-dialog.loading { background-image: url(../images/spinner@2x.gif); background-size: 43px 43px; }
   /* Default CMS logo */
   .cms-logo a { background-image: url("../images/logo_small@2x.png"); background-size: 22px 22px; }
-  /* Logout button */
-  .cms-login-status .logout-link { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 -184px; background-size: 30px auto; }
-  .cms-content-controls .icon-auto:before { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 -274px; background-size: 30px auto; }
-  .cms-content-controls .icon-desktop:before { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 -301px; background-size: 30px auto; }
-  .cms-content-controls .icon-tablet:before { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 -436px; background-size: 30px auto; }
-  .cms-content-controls .icon-mobile:before { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 -355px; background-size: 30px auto; }
-  .cms-content-controls .icon-split:before { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 -409px; background-size: 30px auto; }
-  .cms-content-controls .icon-edit:before { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 -328px; background-size: 30px auto; }
-  .cms-content-controls .icon-preview:before { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 -382px; background-size: 30px auto; }
   .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li a:after { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 -26px; background-size: 30px auto; }
   .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li a:hover:after { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 0; background-size: 30px auto; }
   .cms .ss-ui-action-tabset.action-menus.ss-tabset ul.ui-tabs-nav li.ui-state-active a:after { background-image: url('../images/sprites-32x32-2x-s6ccfbe50f9.png'); background-position: 0 -78px; background-size: 30px auto; }
