@@ -2,8 +2,11 @@ var gulp = require('gulp'),
     babel = require('gulp-babel'),
     diff = require('gulp-diff'),
     notify = require('gulp-notify'),
-    uglify = require('gulp-uglify');
+    postcss = require('gulp-postcss'),
+    sass = require('gulp-sass'),
+    uglify = require('gulp-uglify'),
     gulpUtil = require('gulp-util'),
+    autoprefixer = require('autoprefixer'),
     browserify = require('browserify'),
     babelify = require('babelify'),
     watchify = require('watchify'),
@@ -14,6 +17,8 @@ var gulp = require('gulp'),
     eventStream = require('event-stream'),
     semver = require('semver'),
     packageJson = require('./package.json');
+
+var isDev = typeof process.env.npm_config_development !== 'undefined';
 
 var PATHS = {
     MODULES: './node_modules',
@@ -31,6 +36,19 @@ var browserifyOptions = {
     poll: true,
     plugin: [watchify]
 };
+
+// Used for autoprefixing Bootstrap css classes (same as Bootstrap Aplha.2 defaults)
+var supportedBrowsers = [
+    'Chrome >= 35',
+    'Firefox >= 31',
+    'Edge >= 12',
+    'Explorer >= 9',
+    'iOS >= 8',
+    'Safari >= 8',
+    'Android 2.3',
+    'Android >= 4',
+    'Opera >= 12'
+];
 
 var blueimpFileUploadConfig = {
     src: PATHS.MODULES + '/blueimp-file-upload',
@@ -129,7 +147,7 @@ if (!semver.satisfies(process.versions.node, packageJson.engines.node)) {
     process.exit(1);
 }
 
-if (process.env.npm_config_development) {
+if (isDev) {
     browserifyOptions.debug = true;
 }
 
@@ -156,7 +174,7 @@ gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
         .pipe(source('bundle-leftandmain.js'))
         .pipe(buffer());
 
-    if (typeof process.env.npm_config_development === 'undefined') {
+    if (!isDev) {
         stream.pipe(uglify());
     }
 
@@ -182,7 +200,7 @@ gulp.task('bundle-lib', function bundleLib() {
         .pipe(source('bundle-lib.js'))
         .pipe(buffer());
 
-    if (typeof process.env.npm_config_development === 'undefined') {
+    if (!isDev) {
         stream.pipe(uglify());
     }
 
@@ -196,7 +214,16 @@ gulp.task('sanity', function () {
     diffFiles(jquerySizesConfig);
 });
 
-gulp.task('thirdparty', function () {
+gulp.task('bootstrap-css', function () {
+    var outputStyle = isDev ? 'expanded' : 'compressed';
+
+    return gulp.src(PATHS.MODULES + '/bootstrap/scss/**/*.scss')
+        .pipe(sass({ outputStyle: outputStyle }).on('error', sass.logError))
+        .pipe(postcss([autoprefixer({ browsers: supportedBrowsers })]))
+        .pipe(gulp.dest(PATHS.ADMIN_THIRDPARTY));
+});
+
+gulp.task('thirdparty', ['bootstrap-css'], function () {
     copyFiles(blueimpFileUploadConfig);
     copyFiles(blueimpLoadImageConfig);
     copyFiles(blueimpTmplConfig);
