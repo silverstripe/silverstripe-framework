@@ -2,7 +2,7 @@
   "name": "silverstripe-framework",
   "version": "4.0.0",
   "npm-shrinkwrap-version": "5.4.1",
-  "node-version": "v4.2.4",
+  "node-version": "v4.2.3",
   "dependencies": {
     "autoprefixer": {
       "version": "6.3.3",
@@ -4051,6 +4051,10 @@
           "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.0.1.tgz"
         }
       }
+    },
+    "deep-freeze": {
+      "version": "0.0.1",
+      "resolved": "https://registry.npmjs.org/deep-freeze/-/deep-freeze-0.0.1.tgz"
     },
     "event-stream": {
       "version": "3.3.2",
@@ -8234,9 +8238,19 @@
         }
       }
     },
+    "page.js": {
+      "version": "4.13.3",
+      "resolved": "https://registry.npmjs.org/page.js/-/page.js-4.13.3.tgz",
+      "dependencies": {
+        "path-to-regexp": {
+          "version": "0.1.7",
+          "resolved": "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.7.tgz"
+        }
+      }
+    },
     "react": {
-      "version": "0.14.6",
-      "resolved": "https://registry.npmjs.org/react/-/react-0.14.6.tgz",
+      "version": "0.14.7",
+      "resolved": "https://registry.npmjs.org/react/-/react-0.14.7.tgz",
       "dependencies": {
         "envify": {
           "version": "3.4.0",
@@ -8312,13 +8326,17 @@
         }
       }
     },
+    "react-addons-css-transition-group": {
+      "version": "0.14.7",
+      "resolved": "https://registry.npmjs.org/react-addons-css-transition-group/-/react-addons-css-transition-group-0.14.7.tgz"
+    },
     "react-addons-test-utils": {
-      "version": "0.14.6",
-      "resolved": "https://registry.npmjs.org/react-addons-test-utils/-/react-addons-test-utils-0.14.6.tgz"
+      "version": "0.14.7",
+      "resolved": "https://registry.npmjs.org/react-addons-test-utils/-/react-addons-test-utils-0.14.7.tgz"
     },
     "react-dom": {
-      "version": "0.14.6",
-      "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-0.14.6.tgz"
+      "version": "0.14.7",
+      "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-0.14.7.tgz"
     },
     "react-redux": {
       "version": "4.0.6",
@@ -8591,36 +8609,6 @@
         "sprity-css": {
           "version": "1.0.2",
           "resolved": "https://registry.npmjs.org/sprity-css/-/sprity-css-1.0.2.tgz"
-        },
-        "sprity-lwip": {
-          "version": "1.0.6",
-          "resolved": "https://registry.npmjs.org/sprity-lwip/-/sprity-lwip-1.0.6.tgz",
-          "dependencies": {
-            "lwip": {
-              "version": "0.0.8",
-              "resolved": "https://registry.npmjs.org/lwip/-/lwip-0.0.8.tgz",
-              "dependencies": {
-                "async": {
-                  "version": "0.9.2",
-                  "resolved": "https://registry.npmjs.org/async/-/async-0.9.2.tgz"
-                },
-                "decree": {
-                  "version": "0.0.6",
-                  "resolved": "https://registry.npmjs.org/decree/-/decree-0.0.6.tgz",
-                  "dependencies": {
-                    "lodash-node": {
-                      "version": "2.4.1",
-                      "resolved": "https://registry.npmjs.org/lodash-node/-/lodash-node-2.4.1.tgz"
-                    }
-                  }
-                },
-                "nan": {
-                  "version": "2.0.9",
-                  "resolved": "https://registry.npmjs.org/nan/-/nan-2.0.9.tgz"
-                }
-              }
-            }
-          }
         },
         "ternary-stream": {
           "version": "1.2.3",

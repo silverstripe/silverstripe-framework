@@ -417,9 +417,9 @@ gulp.task('bundle-better-field', function () {
 
 When Browserify bundles `./src/better-field.js` (the entry file) it will ignore all require statement that refer to 'jQuery' as assume it will be available via another bundle at runtime.
 
-To transform and bundle core JavaScript `npm run build`. This will also watch for changes to source files and re-build automatically.
+To transform and bundle core JavaScript `npm run build`.
 
-For debugging you can generate a 'development' bundle which includes source maps with `npm run build --development`. Note this is for local development only and shouldn't be pushed up with a pull request.
+For debugging you can generate a 'development' bundle which includes source maps and automatically watches for changes with `npm run build --development`. Note this is for local development only and shouldn't be pushed up with a pull request.
 
 ## Some gotchas
 

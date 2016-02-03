@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
     babel = require('gulp-babel'),
     diff = require('gulp-diff'),
+    gulpif = require('gulp-if'),
     notify = require('gulp-notify'),
     postcss = require('gulp-postcss'),
     sass = require('gulp-sass'),
@@ -23,6 +24,8 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps');
 
 var isDev = typeof process.env.npm_config_development !== 'undefined';
+
+process.env.NODE_ENV = isDev ? 'development' : 'production';
 
 var PATHS = {
     MODULES: './node_modules',
@@ -181,6 +184,8 @@ gulp.task('build', ['umd', 'bundle']);
 gulp.task('bundle', ['bundle-lib', 'bundle-leftandmain', 'bundle-react']);
 
 gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
+    var bundleFileName = 'bundle-leftandmain.js';
+
     return browserify(Object.assign({}, browserifyOptions, {
             entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/leftandmain.js'
         }))
@@ -191,16 +196,19 @@ gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
         }))
         .external('jQuery')
         .external('i18n')
+        .external('router')
         .bundle()
         .on('update', bundleLeftAndMain)
-        .on('error', notify.onError({ message: 'Error: <%= error.message %>' }))
-        .pipe(source('bundle-leftandmain.js'))
+        .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
+        .pipe(source(bundleFileName))
         .pipe(buffer())
         .pipe(gulpif(!isDev, uglify()))
         .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
 
 gulp.task('bundle-lib', function bundleLib() {
+    var bundleFileName = 'bundle-lib.js';
+
     return browserify(Object.assign({}, browserifyOptions, {
             entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/lib.js'
         }))
@@ -211,17 +219,25 @@ gulp.task('bundle-lib', function bundleLib() {
         }))
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/jQuery.js', { expose: 'jQuery' })
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/i18n.js', { expose: 'i18n' })
+        .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/router.js', { expose: 'router' })
         .bundle()
         .on('update', bundleLib)
-        .on('error', notify.onError({ message: 'Error: <%= error.message %>' }))
-        .pipe(source('bundle-lib.js'))
+        .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
+        .pipe(source(bundleFileName))
         .pipe(buffer())
         .pipe(gulpif(!isDev, uglify()))
         .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
 
 gulp.task('bundle-react', function bundleReact() {
+    var bundleFileName = 'bundle-react.js';
+
     return browserify(Object.assign({}, browserifyOptions))
+        .transform(babelify.configure({
+            presets: ['es2015'],
+            ignore: /(node_modules)/
+        }))
+        .require('deep-freeze', { expose: 'deep-freeze' })
         .require('react-addons-test-utils', { expose: 'react-addons-test-utils' })
         .require('react', { expose: 'react' })
         .require('react-dom', { expose: 'react-dom' })
@@ -229,11 +245,12 @@ gulp.task('bundle-react', function bundleReact() {
         .require('react-redux', { expose: 'react-redux' })
         .require('redux-thunk', { expose: 'redux-thunk' })
         .require('isomorphic-fetch', { expose: 'isomorphic-fetch' })
-        .require(PATHS.ADMIN_JAVASCRIPT_DIST + '/SilverStripeComponent', { expose: 'silverstripe-component' })
+        .require('react-addons-css-transition-group', { expose: 'react-addons-css-transition-group' })
+        .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/SilverStripeComponent', { expose: 'silverstripe-component' })
         .bundle()
         .on('update', bundleReact)
-        .on('error', notify.onError({ message: 'Error: <%= error.message %>' }))
-        .pipe(source('bundle-react.js'))
+        .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
+        .pipe(source(bundleFileName))
         .pipe(buffer())
         .pipe(gulpif(!isDev, uglify()))
         .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));

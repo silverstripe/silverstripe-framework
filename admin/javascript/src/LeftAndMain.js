@@ -2,12 +2,27 @@
  * File: LeftAndMain.js
  */
 import $ from 'jQuery';
+import router from 'router';
 
 $.noConflict();
 
 window.ss = window.ss || {};
+window.ss.router = router;
 
 var windowWidth, windowHeight;
+
+/**
+ * Extracts the pathname from a URL.
+ *
+ * @param string url
+ * @return string
+ */
+function getUrlPath(url) {
+	var anchor = document.createElement('a');
+	anchor.href = url;
+
+	return anchor.pathname
+}
 
 /**
  * @func debounce
@@ -59,7 +74,60 @@ $(window).bind('resize.leftandmain', function(e) {
 
 // setup jquery.entwine
 $.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
+
 $.entwine('ss', function($) {
+
+	/**
+	 * Client routing.
+	 */
+	function handleLoadPanel(ctx, next) {
+		// If the page isn't ready or the request hasn't come from 'loadPanel'
+		// then don't PJAX load the panel. Note: __forceReferer is set by 'loadPanel' only.
+		if (document.readyState !== 'complete' || typeof ctx.state.__forceReferer === 'undefined') {
+			return next();
+		}
+
+		// Load the panel and call the next route.
+		// The next route is call after the panel is in the DOM so that
+		// any routes defined in the panel are available.
+		$('.cms-container')
+			.handleStateChange(null, ctx.state)
+			.done(() => {
+				next();
+			});
+	}
+
+	let basePath = getUrlPath($('base')[0].href);
+
+	// Avoid adding a double slash if the base path is '/'
+	if (basePath[basePath.length - 1] === '/') {
+		basePath += 'admin';
+	} else {
+		basePath = '/admin';
+	}
+
+	router.base(basePath);
+
+	router('*', (ctx, next) => {
+		// Break routing and do a full page reload when going to the assets section.
+		const assetsRoute = new router.Route('/assets/*');
+
+		if (assetsRoute.match(router.current, {}) && typeof ctx.state.__forceReferer !== 'undefined') {
+			window.location.href = ctx.pathname;
+			return;
+		}
+
+		next();
+	});
+
+	// There's currently no way to get a list of routes dynamically.
+	// We're hardcoding these until a configuration manager is implemented.
+	router('/pages/*', handleLoadPanel);
+	router('/reports/*', handleLoadPanel);
+	router('/security/*', handleLoadPanel);
+	router('/settings/*', handleLoadPanel);
+
+	router.start();
 
 	/*
 	 * Handle messages sent via nested iframes
@@ -153,42 +221,29 @@ $.entwine('ss', function($) {
 	// global ajax handlers
 	$(document).ajaxComplete(function(e, xhr, settings) {
 		// Simulates a redirect on an ajax response.
-		if(window.History.enabled) {
-			var url = xhr.getResponseHeader('X-ControllerURL'),
-				// TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
-				origUrl = History.getPageUrl().replace(/\/$/, ''),
-				destUrl = settings.url,
-				opts;
-
-			// Only redirect if controller url differs to the requested or current one
-			if(url !== null &&
-				(!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))
-			) {
-				opts = {
-					// Ensure that redirections are followed through by history API by handing it a unique ID
-					id: (new Date()).getTime() + String(Math.random()).replace(/\D/g,''),
-					pjax: xhr.getResponseHeader('X-Pjax')
-						? xhr.getResponseHeader('X-Pjax')
-						: settings.headers['X-Pjax']
-				};
-				window.History.pushState(opts, '', url);
-			}
-		}
-
-		// Handle custom status message headers
-		var msg = (xhr.getResponseHeader('X-Status')) ? xhr.getResponseHeader('X-Status') : xhr.statusText,
-			reathenticate = xhr.getResponseHeader('X-Reauthenticate'),
+		var url = xhr.getResponseHeader('X-ControllerURL'),
+			origUrl = window.history.state.path.replace(/\/$/, ''), // TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
+			destUrl = settings.url,
+			msg = xhr.getResponseHeader('X-Status') !== null ? xhr.getResponseHeader('X-Status') : xhr.statusText, // Handle custom status message headers
 			msgType = (xhr.status < 200 || xhr.status > 399) ? 'bad' : 'good',
 			ignoredMessages = ['OK'];
 
+		// Only redirect if controller url differs to the requested or current one
+		if (url !== null && (!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))) {
+			router.show(url, {
+				id: (new Date()).getTime() + String(Math.random()).replace(/\D/g,''), // Ensure that redirections are followed through by history API by handing it a unique ID
+				pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']
+			});
+		}
+
 		// Enable reauthenticate dialog if requested
-		if(reathenticate) {
+		if (xhr.getResponseHeader('X-Reauthenticate')) {
 			$('.cms-container').showLoginDialog();
 			return;
 		}
 
 		// Show message (but ignore aborted requests)
-		if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages)) {
+		if (xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages)) {
 			// Decode into UTF-8, HTTP headers don't allow multibyte
 			statusMessage(decodeURIComponent(msg), msgType);
 		}
@@ -260,8 +315,8 @@ $.entwine('ss', function($) {
 		},
 
 		fromWindow: {
-			onstatechange: function(e){
-				this.handleStateChange(e); 
+			onstatechange: function(event, historyState){
+				this.handleStateChange(event, historyState); 
 			}
 		},
 
@@ -392,52 +447,33 @@ $.entwine('ss', function($) {
 		},
 
 		/**
-		 * Proxy around History.pushState() which handles non-HTML5 fallbacks,
-		 * as well as global change tracking. Change tracking needs to be synchronous rather than event/callback
-		 * based because the user needs to be able to abort the action completely.
-		 *
-		 * See handleStateChange() for more details.
-		 *
-		 * Parameters:
-		 *  - {String} url
-		 *  - {String} title New window title
-		 *  - {Object} data Any additional data passed through to History.pushState()
-		 *  - {boolean} forceReload Forces the replacement of the current history state, even if the URL is the same, i.e. allows reloading.
+		 * @param string url
+		 * @param string title - New window title.
+		 * @param object data - Any additional data passed through to `window.history.state`.
+		 * @param boolean forceReload - Forces the replacement of the current history state, even if the URL is the same, i.e. allows reloading.
 		 */
-		loadPanel: function(url, title, data, forceReload, forceReferer) {
-			if(!data) data = {};
-			if(!title) title = "";
-			if (!forceReferer) forceReferer = History.getState().url;
-
+		loadPanel: function (url, title = '', data = {}, forceReload, forceReferer = window.history.state.path) {
 			// Check for unsaved changes
-			if(!this.checkCanNavigate(data.pjax ? data.pjax.split(',') : ['Content'])) {
+			if (!this.checkCanNavigate(data.pjax ? data.pjax.split(',') : ['Content'])) {
 				return;
 			}
 
-			// Save tab selections so we can restore them later
 			this.saveTabState();
 
-			if(window.History.enabled) {
-				$.extend(data, {__forceReferer: forceReferer});
-				// Active menu item is set based on X-Controller ajax header,
-				// which matches one class on the menu
-				if(forceReload) {
-					// Add a parameter to make sure the page gets reloaded even if the URL is the same.
-					$.extend(data, {__forceReload: Math.random()});
-					window.History.replaceState(data, title, url);
-				} else {
-					window.History.pushState(data, title, url);
-				}
-			} else {
-				window.location = $.path.makeUrlAbsolute(url, $('base').attr('href'));
+			data.__forceReferer = forceReferer;
+
+			if (forceReload) {
+				data.__forceReload = Math.random(); // Make sure the page reloads even if the URL is the same.
 			}
+
+			router.show(url, data);
 		},
 
 		/**
 		 * Nice wrapper for reloading current history state.
 		 */
 		reloadCurrentPanel: function() {
-			this.loadPanel(window.History.getState().url, null, null, true);
+			this.loadPanel(window.history.state.path, null, null, true);
 		},
 
 		/**
@@ -486,7 +522,7 @@ $.entwine('ss', function($) {
 			// Also rewrites anchors to their page counterparts, which is important
 			// as automatic browser ajax response redirects seem to discard the hash/fragment.
 			// TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
-			formData.push({name: 'BackURL', value:History.getPageUrl().replace(/\/$/, '')});
+			formData.push({ name: 'BackURL', value: window.history.state.path.replace(/\/$/, '') });
 
 			// Save tab selections so we can restore them later
 			this.saveTabState();
@@ -528,93 +564,84 @@ $.entwine('ss', function($) {
 		PauseState: false,
 
 		/**
-		 * Handles ajax loading of new panels through the window.History object.
-		 * To trigger loading, pass a new URL to window.History.pushState().
-		 * Use loadPanel() as a pushState() wrapper as it provides some additional functionality
+		 * Handles ajax loading of new panels through the window.history object.
+		 * To trigger loading, pass a new URL to router.show().
+		 * Use loadPanel() as a router.show() wrapper as it provides some additional functionality
 		 * like global changetracking and user aborts.
 		 *
 		 * Due to the nature of history management, no callbacks are allowed.
 		 * Use the 'beforestatechange' and 'afterstatechange' events instead,
 		 * or overwrite the beforeLoad() and afterLoad() methods on the
 		 * DOM element you're loading the new content into.
-		 * Although you can pass data into pushState(), it shouldn't contain
+		 * Although you can pass data into router.show(url, data), it shouldn't contain
 		 * DOM elements or callback closures.
 		 *
 		 * The passed URL should allow reconstructing important interface state
 		 * without additional parameters, in the following use cases:
-		 * - Explicit loading through History.pushState()
+		 * - Explicit loading through router.show()
 		 * - Implicit loading through browser navigation event triggered by the user (forward or back)
 		 * - Full window refresh without ajax
 		 * For example, a ModelAdmin search event should contain the search terms
 		 * as URL parameters, and the result display should automatically appear
 		 * if the URL is loaded without ajax.
 		 */
-		handleStateChange: function() {
-			if(this.getPauseState()) {
+		handleStateChange: function (event, historyState = window.history.state) {
+			if (this.getPauseState()) {
 				return;
 			}
-			
-			// Don't allow parallel loading to avoid edge cases
-			if(this.getStateChangeXHR()) this.getStateChangeXHR().abort();
 
-			var self = this, h = window.History, state = h.getState(),
-				fragments = state.data.pjax || 'Content', headers = {},
+			// Don't allow parallel loading to avoid edge cases
+			if (this.getStateChangeXHR()) {
+				this.getStateChangeXHR().abort();
+			}
+
+			var self = this,
+				fragments = historyState.pjax || 'Content',
+				headers = {},
 				fragmentsArr = fragments.split(','),
 				contentEls = this._findFragments(fragmentsArr);
 
-			// For legacy IE versions (IE7 and IE8), reload without ajax
-			// as a crude way to fix memory leaks through whole window refreshes.
 			this.setStateChangeCount(this.getStateChangeCount() + 1);
-			var isLegacyIE = ($.browser.msie && parseInt($.browser.version, 10) < 9);
-			if(isLegacyIE && this.getStateChangeCount() > 20) {
-				document.location.href = state.url;
-				return;
-			}
 
-			if(!this.checkCanNavigate()) {
-				// If history is emulated (ie8 or below) disable attempting to restore
-				if(h.emulated.pushState) {
-					return;
-				}
-				
+			if (!this.checkCanNavigate()) {
 				var lastState = this.getLastState();
-				
+
 				// Suppress panel loading while resetting state
 				this.setPauseState(true);
-				
+
 				// Restore best last state
-				if(lastState) {
-					h.pushState(lastState.id, lastState.title, lastState.url);
+				if (lastState !== null) {
+					router.show(lastState.url);
 				} else {
-					h.back();
+					router.back();
 				}
+
 				this.setPauseState(false);
-				
+
 				// Abort loading of this panel
 				return;
 			}
-			this.setLastState(state);
+
+			this.setLastState(historyState);
 
 			// If any of the requested Pjax fragments don't exist in the current view,
 			// fetch the "Content" view instead, which is the "outermost" fragment
 			// that can be reloaded without reloading the whole window.
-			if(contentEls.length < fragmentsArr.length) {
+			if (contentEls.length < fragmentsArr.length) {
 				fragments = 'Content', fragmentsArr = ['Content'];
 				contentEls = this._findFragments(fragmentsArr);
 			}
 
-			this.trigger('beforestatechange', {state: state, element: contentEls});
+			this.trigger('beforestatechange', { state: historyState, element: contentEls });
 
 			// Set Pjax headers, which can declare a preference for the returned view.
 			// The actually returned view isn't always decided upon when the request
 			// is fired, so the server might decide to change it based on its own logic.
 			headers['X-Pjax'] = fragments;
 
-			// Set 'fake' referer - we call pushState() before making the AJAX request, so we have to
-			// set our own referer here
-			if (typeof state.data.__forceReferer !== 'undefined') {
+			if (typeof historyState.__forceReferer !== 'undefined') {
 				// Ensure query string is properly encoded if present
-				var url = state.data.__forceReferer;
+				let url = historyState.__forceReferer;
 
 				try {
 					// Prevent double-encoding by attempting to decode
@@ -628,21 +655,24 @@ $.entwine('ss', function($) {
 			}
 
 			contentEls.addClass('loading');
-			var xhr = $.ajax({
+
+			let promise = $.ajax({
 				headers: headers,
-				url: state.url,
-				complete: function() {
-					self.setStateChangeXHR(null);
-					// Remove loading indication from old content els (regardless of which are replaced)
-					contentEls.removeClass('loading');
-				},
-				success: function(data, status, xhr) {
-					var els = self.handleAjaxResponse(data, status, xhr, state);
-					self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: els, state: state});
-				}
+				url: historyState.path
+			})
+			.done((data, status, xhr) => {
+				var els = self.handleAjaxResponse(data, status, xhr, historyState);
+				self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: els, state: historyState});
+			})
+			.always(() => {
+				self.setStateChangeXHR(null);
+				// Remove loading indication from old content els (regardless of which are replaced)
+				contentEls.removeClass('loading');
 			});
 
-			this.setStateChangeXHR(xhr);
+			this.setStateChangeXHR(promise);
+
+			return promise;
 		},
 
 		/**
@@ -828,7 +858,7 @@ $.entwine('ss', function($) {
 			}
 
 			this.redraw();
-			this.restoreTabState((state && typeof state.data.tabState !== 'undefined') ? state.data.tabState : null);
+			this.restoreTabState((state && typeof state.tabState !== 'undefined') ? state.tabState : null);
 
 			return newContentEls;
 		},
@@ -974,7 +1004,7 @@ $.entwine('ss', function($) {
 		},
 
 		_tabStateUrl: function() {
-			return History.getState().url
+			return window.history.state.path
 				.replace(/\?.*/, '')
 				.replace(/#.*/, '')
 				.replace($('base').attr('href'), '');
@@ -1433,12 +1463,6 @@ $.entwine('ss', function($) {
 					return false;
 				},
 				activate: function(e, ui) {
-					// Accessibility: Simulate click to trigger panel load when tab is focused
-					// by a keyboard navigation event rather than a click
-					if(ui.newTab) {
-						ui.newTab.find('.cms-panel-link').click();
-					}
-
 					// Usability: Hide actions for "readonly" tabs (which don't contain any editable fields)
 					var actions = $(this).closest('form').find('.Actions');
 					if($(ui.newTab).closest('li').hasClass('readonly')) {

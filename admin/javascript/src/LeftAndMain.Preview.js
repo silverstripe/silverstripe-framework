@@ -521,8 +521,7 @@ $.entwine('ss.preview', function($){
 			if(id && contentPanel.find(':input[name=ID]').val() != id) {
 				// Ignore behaviour without history support (as we need ajax loading 
 				// for the new form to load in the background)
-				if(window.History.enabled) 
-					$('.cms-container').entwine('.ss').loadPanel(editLink);
+				$('.cms-container').entwine('.ss').loadPanel(editLink);
 			}
 		},
 

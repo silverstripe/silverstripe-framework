@@ -40,12 +40,6 @@
 					ajaxOpts.data = window.location.search.replace(/^\?/, '') + '&' + $.param(ajaxOpts.data);
 				}
 
-				if (!window.history || !window.history.pushState) {
-					if (window.location.hash && window.location.hash.indexOf('?') != -1) {
-						ajaxOpts.data = window.location.hash.substring(window.location.hash.indexOf('?') + 1) + '&' + $.param(ajaxOpts.data);
-					}
-				}
-
 				form.addClass('loading');
 
 				$.ajax($.extend({}, {

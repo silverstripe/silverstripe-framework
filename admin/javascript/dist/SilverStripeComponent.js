@@ -78,10 +78,32 @@
 	var SilverStripeComponent = function (_Component) {
 		_inherits(SilverStripeComponent, _Component);
 
-		function SilverStripeComponent() {
+		function SilverStripeComponent(props) {
 			_classCallCheck(this, SilverStripeComponent);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(SilverStripeComponent).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SilverStripeComponent).call(this, props));
+
+			if (typeof _this.props.route !== 'undefined') {
+				_this._render = _this.render;
+
+				_this.render = function () {
+					var component = null;
+
+					if (_this.isComponentRoute()) {
+						component = _this._render();
+					}
+
+					return component;
+				};
+
+				window.ss.router(_this.props.route, function (ctx, next) {
+					_this.handleEnterRoute(ctx, next);
+				});
+				window.ss.router.exit(_this.props.route, function (ctx, next) {
+					_this.handleExitRoute(ctx, next);
+				});
+			}
+			return _this;
 		}
 
 		_createClass(SilverStripeComponent, [{
@@ -103,6 +125,29 @@
 				for (var cmsEvent in this.cmsEvents) {
 					(0, _jQuery2.default)(document).off(cmsEvent);
 				}
+			}
+		}, {
+			key: 'handleEnterRoute',
+			value: function handleEnterRoute(ctx, next) {
+				next();
+			}
+		}, {
+			key: 'handleExitRoute',
+			value: function handleExitRoute(ctx, next) {
+				next();
+			}
+		}, {
+			key: 'isComponentRoute',
+			value: function isComponentRoute() {
+				var params = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+				if (typeof this.props.route === 'undefined') {
+					return true;
+				}
+
+				var route = new window.ss.router.Route(this.props.route);
+
+				return route.match(window.ss.router.current, params);
 			}
 		}, {
 			key: 'emitCmsEvent',
