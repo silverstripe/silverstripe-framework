@@ -638,6 +638,20 @@ form.small .field, .field.small {
 			.ui-icon {
 				display: none;
 			}
+			
+			&.no-text {
+				padding: 5px 6px;
+				color: lighten($color-text, 10%);
+				
+				&.active,
+				&:active,
+				&:focus,
+				&:hover {
+					background: none;
+					box-shadow: none;
+					color: darken($color-text, 10%);
+				}
+			}
 		}
 	}
 

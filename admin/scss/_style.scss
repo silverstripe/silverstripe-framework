@@ -352,19 +352,6 @@ body.cms {
 		}
 		
 		&.font-icon-search {
-			padding: 5px 6px;
-			color:lighten($color-text, 10%);
-			
-			&.active,
-			&:active,
-			&:focus,
-			&:hover {
-				background: none;
-				box-shadow: none;
-				color: darken($color-text, 10%);
-			}
-
-
 			&:before {
 				font-size: 18px;
 				margin-left: 1px;

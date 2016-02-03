@@ -206,6 +206,14 @@ Used in side panels and action tabs
 
 .font-icon-resize:before { content: "L"; }
 
+.font-icon-left-open-big:before { content: "\35"; }
+
+.font-icon-down-open-big:before { content: "\36"; }
+
+.font-icon-up-open-big:before { content: "\37"; }
+
+.font-icon-right-open-big:before { content: "\38"; }
+
 /** File: typography.scss  Contains the basic typography related styles for the admin interface. */
 body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif; color: #4f5861; }
 
@@ -346,6 +354,8 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-button[class*="font-icon-"].active, .cms .ss-ui-button[class*="font-icon-"]:active, .cms .ss-ui-button[class^="font-icon-"].active, .cms .ss-ui-button[class^="font-icon-"]:active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"]:active { -moz-box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; -webkit-box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; box-shadow: 0 0 3px rgba(191, 194, 196, 0.9) inset; background: #dee3e8; color: #4f5861; border: 0; }
 .cms .ss-ui-button[class*="font-icon-"] .ui-button-text, .cms .ss-ui-button[class^="font-icon-"] .ui-button-text, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] .ui-button-text { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; padding: 0; }
 .cms .ss-ui-button[class*="font-icon-"] .ui-icon, .cms .ss-ui-button[class^="font-icon-"] .ui-icon, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"] .ui-icon { display: none; }
+.cms .ss-ui-button[class*="font-icon-"].no-text, .cms .ss-ui-button[class^="font-icon-"].no-text, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text { padding: 5px 6px; color: #66727d; }
+.cms .ss-ui-button[class*="font-icon-"].no-text.active, .cms .ss-ui-button[class*="font-icon-"].no-text:active, .cms .ss-ui-button[class*="font-icon-"].no-text:focus, .cms .ss-ui-button[class*="font-icon-"].no-text:hover, .cms .ss-ui-button[class^="font-icon-"].no-text.active, .cms .ss-ui-button[class^="font-icon-"].no-text:active, .cms .ss-ui-button[class^="font-icon-"].no-text:focus, .cms .ss-ui-button[class^="font-icon-"].no-text:hover, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text.active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text:active, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text:focus, .cms .ss-ui-button.ss-ui-button-constructive[class*="font-icon-"].no-text:hover { background: none; box-shadow: none; color: #383f45; }
 .cms .ss-ui-buttonset .ui-button { margin-left: -1px; }
 .cms .ss-ui-buttonset { margin-left: 1px; }
 .cms .ss-ui-loading-icon { background: url(../../images/network-save.gif) no-repeat; display: block; width: 16px; height: 16px; }
@@ -563,8 +573,6 @@ body.cms { overflow: hidden; }
 .cms a.icon-button:hover, .cms .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .cms a.icon-button:hover, .cms a.icon-button:active, .cms .ui-tabs .ui-tabs-nav li a.icon-button:active, .ui-tabs .ui-tabs-nav li .cms a.icon-button:active, .cms a.icon-button:focus, .cms .ui-tabs .ui-tabs-nav li a.icon-button:focus, .ui-tabs .ui-tabs-nav li .cms a.icon-button:focus, .cms button.ss-ui-button.icon-button:hover, .cms button.ss-ui-button.icon-button:active, .cms button.ss-ui-button.icon-button:focus { border: 0; box-shadow: none; background-image: none; text-decoration: none; }
 .cms a.icon-button:hover, .cms .ui-tabs .ui-tabs-nav li a.icon-button:hover, .ui-tabs .ui-tabs-nav li .cms a.icon-button:hover, .cms button.ss-ui-button.icon-button:hover { background-color: #d4dbe1; }
 .cms a.icon-button.active, .cms .ui-tabs .ui-tabs-nav li a.active.icon-button, .ui-tabs .ui-tabs-nav li .cms a.active.icon-button, .cms a.icon-button:active, .cms .ui-tabs .ui-tabs-nav li a.icon-button:active, .ui-tabs .ui-tabs-nav li .cms a.icon-button:active, .cms button.ss-ui-button.icon-button.active, .cms button.ss-ui-button.icon-button:active { background-color: #d4dbe1; }
-.cms a.icon-button.font-icon-search, .cms .ui-tabs .ui-tabs-nav li a.font-icon-search.icon-button, .ui-tabs .ui-tabs-nav li .cms a.font-icon-search.icon-button, .cms button.ss-ui-button.icon-button.font-icon-search { padding: 5px 6px; color: #66727d; }
-.cms a.icon-button.font-icon-search.active, .cms a.icon-button.font-icon-search:active, .cms a.icon-button.font-icon-search:focus, .cms a.icon-button.font-icon-search:hover, .cms button.ss-ui-button.icon-button.font-icon-search.active, .cms button.ss-ui-button.icon-button.font-icon-search:active, .cms button.ss-ui-button.icon-button.font-icon-search:focus, .cms button.ss-ui-button.icon-button.font-icon-search:hover { background: none; box-shadow: none; color: #383f45; }
 .cms a.icon-button.font-icon-search:before, .cms button.ss-ui-button.icon-button.font-icon-search:before { font-size: 18px; margin-left: 1px; margin-right: 0; }
 .cms a.icon-button .ui-button-text, .cms .ui-tabs .ui-tabs-nav li a.icon-button .ui-button-text, .ui-tabs .ui-tabs-nav li .cms a.icon-button .ui-button-text, .cms button.ss-ui-button.icon-button .ui-button-text { display: none; }
 .ModelAdmin .cms a.icon-button, .ModelAdmin .cms .ui-tabs .ui-tabs-nav li a.icon-button, .ui-tabs .ui-tabs-nav li .ModelAdmin .cms a.icon-button, .ModelAdmin .cms button.ss-ui-button.icon-button { margin-top: -11px; }
