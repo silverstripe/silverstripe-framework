@@ -200,7 +200,6 @@ th:
   Image_iframe_ss:
     TITLE: 'หน้าต่าง iframe สำหรับอัพโหลดรูปภาพ'
   LeftAndMain:
-    DropdownBatchActionsDefault: การกระทำ
     HELP: ช่วยเหลือ
     PERMAGAIN: 'คุณได้ออกจากระบบของ CMS แล้ว หากคุณต้องการเข้าสู่ระบบอีกครั้ง กรุณากรอกชื่อผู้ใช้งานและรหัสผ่านของคุณด้านล่าง'
   LeftAndMain_Menu_ss:

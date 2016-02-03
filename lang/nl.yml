@@ -293,7 +293,6 @@ nl:
   LeftAndMain:
     CANT_REORGANISE: 'U hebt geen rechten om de pagina''s op het Top niveau aan te passen. Uw aanpassing is niet opgeslagen. '
     DELETED: Verwijderd.
-    DropdownBatchActionsDefault: Acties
     HELP: Help
     PERMAGAIN: 'U bent uitgelogd uit het CMS.  Als u weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hieronder in.'
     PreviewButton: Voorbeeld

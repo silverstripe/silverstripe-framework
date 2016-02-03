@@ -261,21 +261,7 @@ sv:
     many_many_Members: Medlemmar
   GroupImportForm:
     Help1: '<p>Importera en eller flera grupper i <em>CSV</em>- format (komma-separerade värden). <small><a href="#" class ="toggle-advanced">Visa avancerade val</a></small></p>'
-    Help2: '<div class="advanced">
-
-      <h4>Avancerat </h4>
-
-      <ul>
-
-      <li>Tillåtna kolumner: <em>%s</em></li>
-
-      <li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>
-
-      <li>Gruppnivåer kan skapas genom att använda <em>huvudkod</em> kolumnen.</il><il>Behörighetskoder kan tilldelas av <em>BehörighetsKod</em> kolomnen. Befintliga behörighetskoder raderas inte.</li>
-
-      </ul>
-
-      </div>'
+    Help2: '<div class="advanced"><h4>Avancerat</h4><ul><li>Tillåtna kolumner: <em>%s</em></li><li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li><li>Gruppnivåer kan skapas genom att använda <em>huvudkod</em> kolumnen.</il><il>Behörighetskoder kan tilldelas av <em>BehörighetsKod</em> kolomnen. Befintliga behörighetskoder raderas inte.</li></ul></div>'
     ResultCreated: 'Skapade {count} grupper'
     ResultDeleted: 'Raderade %d grupper'
     ResultUpdated: 'Uppdaterade %d grupper'
@@ -339,7 +325,6 @@ sv:
   LeftAndMain:
     CANT_REORGANISE: 'Du har inte tillstånd att ändra sidor på toppnivå. Dina ändringar har inte sparats.'
     DELETED: Raderad
-    DropdownBatchActionsDefault: Åtgärder
     HELP: Hjälp
     PAGETYPE: 'Sidtyp'
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
@@ -433,21 +418,7 @@ sv:
     Toggle: 'Visa fomateringshjälp'
   MemberImportForm:
     Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small><a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
-    Help2: '<div class="advanced">
-
-      <h4>Avancerat </h4>
-
-      <ul>
-
-      <li>Tillåtna kolumner: <em>%s</em></li>
-
-      <li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>
-
-      <li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Kod</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li>
-
-      </ul>
-
-      </div>'
+    Help2: '<div class="advanced"><h4>Avancerat</h4><ul><li>Tillåtna kolumner: <em>%s</em></li><li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li><li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Kod</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li></ul></div>'
     ResultCreated: 'Skapade {count} medlemmar'
     ResultDeleted: 'Raderade %d medlemmar'
     ResultNone: 'Inga ändringar'

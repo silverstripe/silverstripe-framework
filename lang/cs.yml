@@ -30,7 +30,7 @@ cs:
     INSERTURL: 'Vložit z URL'
     REMOVEINFO: 'Odstranit tento soubor z tohoto pole'
     TOTAL: Celkem
-    TOUPLOAD: 'Nahrát soubory'
+    TOUPLOAD: 'Vyberte soubory k nahrání...'
     UPLOADINPROGRESS: 'Prosím čekejte... probíhá nahrávání'
     UPLOADOR: NEBO
   BBCodeParser:
@@ -153,7 +153,7 @@ cs:
     INVALID_REQUEST: 'Neplatný požadavek'
   DropdownField:
     CHOOSE: (Vyberte)
-    CHOOSESEARCH: '(vyberte složku)'
+    CHOOSESEARCH: '(Vybrat nebo vyhledat)'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v seznamu. {value} není platná volba'
   EmailField:
     VALIDATION: 'Prosím zadejte e-mailovou adresu'
@@ -309,7 +309,7 @@ cs:
     IMAGETITLETEXT: 'Titulek textu (tooltip)'
     IMAGETITLETEXTDESC: 'Pro další informace o obrázku'
     IMAGEWIDTHPX: Šířka
-    INSERTMEDIA: 'Vložit média z'
+    INSERTMEDIA: 'Vložit média'
     LINK: 'Vložit nebo upravit odkaz'
     LINKANCHOR: 'Záložka (kotva) na stránce'
     LINKDESCR: 'Popis odkazu'
@@ -336,7 +336,7 @@ cs:
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnění měnit stránky nejvyšší úrovně. Vaše změna nebyla uložena.'
     DELETED: Smazáno.
-    DropdownBatchActionsDefault: Akcie
+    DropdownBatchActionsDefault: 'Vyberte akci...'
     HELP: Nápověda
     PAGETYPE: 'Typ stránky'
     PERMAGAIN: 'Byli jste odhlášeni z CMS. Pokud se chcete znovu přihlásit, zadejte níže své uživatelské jméno a heslo.'

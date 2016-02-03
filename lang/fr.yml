@@ -291,7 +291,6 @@ fr:
   LeftAndMain:
     CANT_REORGANISE: 'Vous n’avez pas l’autorisation de modifier les pages de premier niveau. Vos modifications n’ont pas été enregistrées.'
     DELETED: Supprimé.
-    DropdownBatchActionsDefault: Actions
     HELP: Aide
     PERMAGAIN: 'Vous avez été déconnecté du CMS. Si vous voulez vous reconnecter, entrez un nom d''utilisateur et un mot de passe ci-dessous.'
     PreviewButton: Aperçu

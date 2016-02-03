@@ -292,7 +292,6 @@ nb:
   LeftAndMain:
     CANT_REORGANISE: 'Du har ikke tilgang til å endre toppnivåsider. Endringen din ble ikke lagret.'
     DELETED: Slettet.
-    DropdownBatchActionsDefault: Handlinger
     HELP: Hjelp
     PERMAGAIN: 'Du har blitt logget ut av publiseringssystemet. Hvis du vil logge deg på igjen, skriv inn brukernavn og passord under.'
     PreviewButton: Forhåndsvisning

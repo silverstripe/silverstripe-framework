@@ -30,7 +30,7 @@ sk:
     INSERTURL: 'Vložiť z URL'
     REMOVEINFO: 'Odstrániť tento soubor z tohto poľa'
     TOTAL: Súhrn
-    TOUPLOAD: 'Nahrať súbory'
+    TOUPLOAD: 'Vyberte súbory pre nahratie'
     UPLOADINPROGRESS: 'Čakajte prosím… prebieha nahrávanie'
     UPLOADOR: ALEBO
   BBCodeParser:
@@ -153,7 +153,7 @@ sk:
     INVALID_REQUEST: 'Neplatná požiadavka'
   DropdownField:
     CHOOSE: (Vyberte si)
-    CHOOSESEARCH: '(vyberte priečinok)'
+    CHOOSESEARCH: '(Vybrať alebo vyhľadať)'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v zozname. {value} nie je platná voľba'
   EmailField:
     VALIDATION: 'Prosím zadajte email adresu'
@@ -309,7 +309,7 @@ sk:
     IMAGETITLETEXT: 'Text titulky (tooltip)'
     IMAGETITLETEXTDESC: 'Pre doplňujúce informácie o obrázku'
     IMAGEWIDTHPX: Šírka
-    INSERTMEDIA: 'Vložiť média zo'
+    INSERTMEDIA: 'Vložiť média'
     LINK: 'Vložiť/upraviť odkaz na zvýraznený text'
     LINKANCHOR: 'Odkaz na tejto stranke'
     LINKDESCR: 'Popis odkazu'
@@ -336,7 +336,7 @@ sk:
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnenie meniť stránky najvyššej úrovne. Vaša zmena nebola uložená.'
     DELETED: Zmazané.
-    DropdownBatchActionsDefault: Akcie
+    DropdownBatchActionsDefault: 'Vybrať akciu...'
     HELP: Pomoc
     PAGETYPE: 'Typ stránky'
     PERMAGAIN: 'Boli ste odhlásený'

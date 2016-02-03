@@ -320,7 +320,6 @@ es:
   LeftAndMain:
     CANT_REORGANISE: 'Usted no tiene permiso para modificar las páginas de nivel superior. Su modificación no se ha guardado.'
     DELETED: Borrado
-    DropdownBatchActionsDefault: Acciones
     HELP: Ayuda
     PERMAGAIN: 'Ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña a continuación.'
     PERMALREADY: 'Lamentablemente no puede acceder a esta parte del CMS. Si quiere entrar como alguien distinto, hágalo a continuación'

@@ -225,7 +225,6 @@ af:
   LeftAndMain:
     CANT_REORGANISE: 'Jy het nie toestemming om Top vlak bladsye te verander nie. Jou verandering is nie gestoor nie.'
     DELETED: Was verwyder
-    DropdownBatchActionsDefault: Aksies
     PERMAGAIN: 'Jy is uit die IBS uitgeteken. As jy weer wil inteken, moet jy ''n gebruikersnaam en wagwoord onder in tik'
     PreviewButton: Beskou
     REORGANISATIONSUCCESSFUL: 'Die ''site tree'' is suksesvol geheorganiseer'
