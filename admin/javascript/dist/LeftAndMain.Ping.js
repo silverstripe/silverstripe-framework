@@ -22,13 +22,15 @@
 	}
 
 	_jQuery2.default.entwine('ss.ping', function ($) {
+
 		$('.cms-container').entwine({
 			PingIntervalSeconds: 5 * 60,
+
 			onadd: function onadd() {
 				this._setupPinging();
-
 				this._super();
 			},
+
 			_setupPinging: function _setupPinging() {
 				var onSessionLost = function onSessionLost(xmlhttp, status) {
 					if (xmlhttp.status > 400 || xmlhttp.responseText == 0) {

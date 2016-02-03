@@ -36,7 +36,7 @@ $border: 1px solid darken(#D9D9D9, 15%);
 					-webkit-box-shadow: none;
 				}
 				li{
-					background-image: linear-gradient(top, #f8f8f8, #D9D9D9);
+					background-image: linear-gradient(to bottom, #f8f8f8, #D9D9D9);
 					border-radius: 0;
 					background: #eaeaea;
 					border: none;
@@ -249,19 +249,17 @@ $border: 1px solid darken(#D9D9D9, 15%);
 						/* Arrow */
 						&:after {
 							@extend .icon-sprites-32x32;
-							@include sprite($sprites-32x32-arrow_down_lighter);
+							@include sprite($sprites-32x32-arrow_down_lighter, inline-block);
 
 							border-bottom: 0;
 							content: "";
-							display: inline-block;
 							height: 16px;
 							margin-left: 6px;
 							width: 16px;
 						}
 						&:hover:after {
 							@extend .icon-sprites-32x32;
-							@include sprite($sprites-32x32-arrow_down_darker);
-							display: inline-block;
+							@include sprite($sprites-32x32-arrow_down_darker, inline-block);
 						}
 					}
 					/* Make arrow point in up when nav open */

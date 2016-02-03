@@ -124,7 +124,9 @@
 				}
 
 				var regx = new RegExp('(.?)(%s)', 'g');
+
 				var i = 0;
+
 				return s.replace(regx, function (match, subMatch1, subMatch2, offset, string) {
 					if (subMatch1 === '%') {
 						return match;
@@ -137,6 +139,7 @@
 			key: 'inject',
 			value: function inject(s, map) {
 				var regx = new RegExp('\{([A-Za-z0-9_]*)\}', 'g');
+
 				return s.replace(regx, function (match, key, offset, string) {
 					return map[key] ? map[key] : match;
 				});
@@ -146,6 +149,7 @@
 			value: function detectLocale() {
 				var rawLocale;
 				var detectedLocale;
+
 				rawLocale = jQuery('body').attr('lang');
 
 				if (!rawLocale) {
@@ -198,5 +202,6 @@
 
 	window.ss = typeof window.ss !== 'undefined' ? window.ss : {};
 	window.ss.i18n = window.i18n = _i18n;
+
 	exports.default = _i18n;
 });

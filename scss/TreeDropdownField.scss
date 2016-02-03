@@ -35,7 +35,7 @@ div.TreeDropdownField {
 		background:url($bgImage) no-repeat 100% -22px; //For browers that only support 1 background
 		background: 
 			url($bgImage) no-repeat 100% -22px,
-			linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+			linear-gradient(to bottom, #eeeeee 1%, #ffffff 15%);
 		box-sizing: border-box;
 		position:relative;
 		z-index:1100; //Needed to work within modales in chrome
