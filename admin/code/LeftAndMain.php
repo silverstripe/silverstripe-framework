@@ -446,7 +446,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		Config::inst()->update('SSViewer', 'theme_enabled', false);
 
 		//set the reading mode for the admin to stage
-		Versioned::set_reading_mode('Stage');
+		Versioned::reading_stage('Stage');
 	}
 
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
