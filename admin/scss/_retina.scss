@@ -83,37 +83,6 @@
 		}
 	}
 
-	/* Logout button */
-	.cms-login-status {
-		.logout-link {
-			@include retina-sprite($sprites32-2x, logout);
-		}
-	}
-
-	.cms-content-controls {
-		.icon-auto:before {
-			@include retina-sprite($sprites32-2x, preview_auto);	
-		}
-		.icon-desktop:before {
-			@include retina-sprite($sprites32-2x, preview_desktop);
-		}
-		.icon-tablet:before {
-			@include retina-sprite($sprites32-2x, preview_tablet);
-		}
-		.icon-mobile:before {
-			@include retina-sprite($sprites32-2x, preview_mobile);
-		}
-		.icon-split:before {
-			@include retina-sprite($sprites32-2x, preview_split);
-		}
-		.icon-edit:before {
-			@include retina-sprite($sprites32-2x, preview_edit);
-		}
-		.icon-preview:before {
-			@include retina-sprite($sprites32-2x, preview_preview);
-		}
-	}
-
 	.cms {	
 		.ss-ui-action-tabset {
 			&.action-menus.ss-tabset {				
