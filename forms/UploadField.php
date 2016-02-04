@@ -1498,6 +1498,9 @@ class UploadField_SelectHandler extends RequestHandler {
 	 */
 	protected $folderName;
 
+	// Set pagnation quantity for file list field 
+	private static $page_size = 11; 
+
 	private static $url_handlers = array(
 		'$Action!' => '$Action',
 		'' => 'index',
@@ -1580,7 +1583,10 @@ class UploadField_SelectHandler extends RequestHandler {
 		$colsComponent->setFieldCasting(array(
 			'Created' => 'SS_Datetime->Nice'
 		));
-		$config->addComponent(new GridFieldPaginator(11));
+
+ 		// Set configurable pagination for file list field  
+        $pageSize = Config::inst()->get(get_class($this), 'page_size');  
+        $config->addComponent(new GridFieldPaginator($pageSize));  
 
 		// If relation is to be autoset, we need to make sure we only list compatible objects.
 		$baseClass = $this->parent->getRelationAutosetClass();
