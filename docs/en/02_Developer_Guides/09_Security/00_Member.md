@@ -127,6 +127,13 @@ things, you should add appropriate `[api:Permission::checkMember()]` calls to th
 	  }
 	}
 
+## Saved User Logins ##
+
+Logins can be "remembered" across multiple devices when user checks the "Remember Me" box. By default, a new login token
+will be created and associated with the device used during authentication. When user logs out, all previously saved tokens
+for all devices will be revoked, unless `[api:RememberLoginHash::$logout_across_devices] is set to false. For extra security,
+single tokens can be enforced by setting `[api:RememberLoginHash::$force_single_token] to true.
+
 
 ## API Documentation
 
