@@ -1596,6 +1596,9 @@ class UploadField_SelectHandler extends RequestHandler {
 	 * @param $folderID The ID of the folder to display.
 	 * @return FormField
 	 */
+	// Set pagnation quantity for file list field
+	private static $page_size = 8;
+	
 	protected function getListField($folderID) {
 		// Generate the folder selection field.
 		$folderField = new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder');
@@ -1611,7 +1614,10 @@ class UploadField_SelectHandler extends RequestHandler {
 			'Name' => 'Name',
 			'Title' => 'Title'
 		));
-		$config->addComponent(new GridFieldPaginator(8));
+		// Set configurable pagination for file list field
+        $pageSize = Config::inst()->get(get_class($this), 'page_size');
+        $config->addComponent(new GridFieldPaginator($pageSize));
+
 
 		// If relation is to be autoset, we need to make sure we only list compatible objects.
 		$baseClass = $this->parent->getRelationAutosetClass();
