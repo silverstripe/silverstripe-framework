@@ -482,6 +482,8 @@ fieldset.switch-states.size_5 input:checked:nth-of-type(5) ~ .slide-button { lef
 .cms-content-filters .field .chzn-container { width: 100% !important; max-width: 100%; }
 .cms-content-filters .field input.text { max-width: 100%; }
 .cms-content-filters .field.checkbox { display: block; }
+.cms-content-filters .field.datetime > label.left { float: none; }
+.cms-content-filters .field.datetime input.fieldgroup-field { width: 96%; padding: 7px; }
 .cms-content-filters .importSpec { margin-bottom: 8px; padding-left: 16px; }
 .cms-content-filters .description { margin-left: 0; }
 .cms-content-filters .middleColumn { width: 100%; margin-left: 0; max-width: 100%; }

@@ -1081,6 +1081,17 @@ fieldset.switch-states{
 		&.checkbox {
 			display: block;
 		}
+
+		&.datetime {
+			> label.left {
+				float: none;
+			}
+
+			input.fieldgroup-field {
+				width: 96%;
+				padding: 7px;
+			}
+		}
 	}
 
 	.importSpec {
