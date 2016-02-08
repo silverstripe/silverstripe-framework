@@ -135,7 +135,7 @@ if (process.env.npm_config_development) {
 
 gulp.task('build', ['umd', 'umd-watch', 'bundle']);
 
-gulp.task('bundle', ['bundle-lib', 'bundle-leftandmain']);
+gulp.task('bundle', ['bundle-lib', 'bundle-leftandmain', 'bundle-react']);
 
 gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
     var stream = browserify(Object.assign({}, browserifyOptions, {
@@ -180,6 +180,32 @@ gulp.task('bundle-lib', function bundleLib() {
             message: 'Error: <%= error.message %>',
         }))
         .pipe(source('bundle-lib.js'))
+        .pipe(buffer());
+
+    if (typeof process.env.npm_config_development === 'undefined') {
+        stream.pipe(uglify());
+    }
+
+    return stream.pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
+});
+
+gulp.task('bundle-react', function bundleReact() {
+    var stream = browserify(Object.assign({}, browserifyOptions))
+        .on('log', function (msg) { gulpUtil.log('Finished bundle-react.js ' + msg); })
+        .on('update', bundleReact)
+        .require('react-addons-test-utils', { expose: 'react-addons-test-utils' })
+        .require('react', { expose: 'react' })
+        .require('react-dom', { expose: 'react-dom' })
+        .require('redux', { expose: 'redux' })
+        .require('react-redux', { expose: 'react-redux' })
+        .require('redux-thunk', { expose: 'redux-thunk' })
+        .require('isomorphic-fetch', { expose: 'isomorphic-fetch' })
+        .require(PATHS.ADMIN_JAVASCRIPT_DIST + '/SilverStripeComponent', { expose: 'silverstripe-component' })
+        .bundle()
+        .on('error', notify.onError({
+            message: 'Error: <%= error.message %>',
+        }))
+        .pipe(source('bundle-react.js'))
         .pipe(buffer());
 
     if (typeof process.env.npm_config_development === 'undefined') {
