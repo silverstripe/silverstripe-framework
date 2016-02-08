@@ -57,7 +57,7 @@ The mechanism by which the `_ss_environment.php` files work is quite simple.  He
 
 *  At the beginning of SilverStripe's execution, the `_ss_environment.php` file is searched for, and if it is found, it's
 included.  SilverStripe looks in all the parent folders of framework up to the server root (using the REAL location of
-the dir - see PHP realpath()):
+the dir - see PHP realpath() - AND the path used for execution):
 *  The `_ss_environment.php` file sets a number of "define()".
 *  "conf/ConfigureFromEnv.php" is included from within your `mysite/_config.php`.  This file has a number of regular
 configuration commands that use those defines as their arguments.  If you are curious, open up
@@ -100,6 +100,37 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 	// This is used by sake to know which directory points to which URL
 	global $_FILE_TO_URL_MAPPING;
 	$_FILE_TO_URL_MAPPING['/var/www'] = 'http://simon.geek.nz';
+
+## Defining the environment file location
+
+If there is no `SS_ENVIRONMENT_FILE` constant defined, SilverStripe will search up the directory tree looking for a file.
+
+However, sometimes this default behaviour is not desired as can be the case when running through CLI or on hosting providers
+where you can't access outside the webroot (and you want a seperate config for live/dev).
+
+There are two ways to define the `SS_ENVIRONMENT_PATH` and prevent the default behaviour:
+
+#### 1. Define an environment variable
+
+This can be done in the .htaccess:
+
+```
+SetEnv SS_ENVIRONMENT_FILE "/path/to/_ss_environment.php"
+```
+
+Or via CLI with the server
+
+```bash
+export SS_ENVIRONMENT_FILE="/path/to/_ss_environment.php"
+```
+
+Note: this environment variable will need to be set for the user that executes your PHP files
+
+#### 2. Pass an argument to sake (CLI for SilverStripe)
+
+```shell
+framework/sake home --environment-file=/path/to/_ss_environment.php
+```
 
 ## Available Constants
 
