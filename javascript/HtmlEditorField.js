@@ -626,7 +626,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 					case 'file':
 						href = '[file_link,id=' + this.find('.ss-uploadfield .ss-uploadfield-item').attr('data-fileid') + ']';
-						target = '_blank';
 						break;
 
 					case 'email':

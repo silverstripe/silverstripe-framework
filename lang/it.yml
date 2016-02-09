@@ -319,7 +319,6 @@ it:
   LeftAndMain:
     CANT_REORGANISE: 'Non hai i permessi per modificare le pagine di primo livello. Le modifiche non sono state salvate.'
     DELETED: Eliminato.
-    DropdownBatchActionsDefault: Azioni
     HELP: Aiuto
     PERMAGAIN: 'Sei stato disconnesso dal CMS. Se desideri autenticarti nuovamente, inserisci qui sotto nome utente e password.'
     PERMALREADY: 'Siamo spiacenti, ma non puoi accedere a questa sezione del CMS. Se desideri autenticarti come qualcun altro, fallo qui sotto.'

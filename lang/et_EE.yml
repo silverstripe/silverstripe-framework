@@ -277,7 +277,6 @@ et_EE:
   LeftAndMain:
     CANT_REORGANISE: 'Teil ei ole õigusi kõrgema taseme lehtede muutmiseks. Teie muudatust ei salvestatud.'
     DELETED: Kustutatud.
-    DropdownBatchActionsDefault: Tegevused
     HELP: Spikker
     PERMAGAIN: 'Oled Sisuhaldusest välja logitud. Kui soovite uuesti sisse logida sisestage kasutajanimi ja parool.'
     PreviewButton: Eelvaade

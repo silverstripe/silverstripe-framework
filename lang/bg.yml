@@ -212,7 +212,6 @@ bg:
   LeftAndMain:
     CANT_REORGANISE: 'Нямаш права да променяш страници от най-горно ниво. Твоите промени не бяха записани.'
     DELETED: Изтрит
-    DropdownBatchActionsDefault: Действия
     HELP: Помощ
     PERMAGAIN: 'Вие излязохте от CMS. Ако искате да влезете отново, моля, въведете потребителско име и парола.'
     PreviewButton: Преглед

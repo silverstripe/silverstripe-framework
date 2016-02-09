@@ -292,7 +292,6 @@ pl:
   LeftAndMain:
     CANT_REORGANISE: 'Nie masz uprawnień by zmieniać strony na najwyższym poziomie. Twoje zmiany nie zostały zapisane.'
     DELETED: Usunięto.
-    DropdownBatchActionsDefault: Akcje
     HELP: Pomoc
     PERMAGAIN: 'Zostałeś wylogowany z CMSa. Jeśli chcesz zalogować się ponownie, wpisz login i hasło poniżej.'
     PreviewButton: Podgląd
