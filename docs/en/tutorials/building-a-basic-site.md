@@ -116,7 +116,7 @@ quickly between the CMS and the draft and published version of your page.
 **Flushing the cache**
 
 Whenever we edit a template file, we need to append *?flush=1* onto the end of the URL, e.g.
-http://localhost/home/?flush=1. SilverStripe stores template files in a cache for quicker load times. Whenever there are
+`http://localhost/home/?flush=1`. SilverStripe stores template files in a cache for quicker load times. Whenever there are
 changes to the template, we must flush the cache in order for the changes to take effect.
 
 ## Inserting the page title
@@ -332,7 +332,7 @@ Create a new file *HomePage.php* in *mysite/code*. Copy the following code into 
 
 
 Every page type also has a database table corresponding to it. Every time we modify the database, we need to rebuild it.
-We can do this by going to [http://localhost/dev/build?flush=1](http://localhost/dev/build?flush=1). It may take a
+We can do this by going to `http://localhost/dev/build?flush=1`. It may take a
 moment, so be patient. This add tables and fields needed by your site, and modifies any structures that have changed. It
 does this non-destructively - it will never delete your data.
 

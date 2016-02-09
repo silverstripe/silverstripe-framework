@@ -78,8 +78,8 @@ See [form](/topics/forms) and [tutorial:extending-a-basic-site](/tutorials/exten
 
 ### removeFieldFromTab()
 
-Overloading `getCMSFields()` you can call `removeFieldFromTab()` on a `[api:FieldSet]` object. For example, if you don't
-want the MenuTitle field to show on your page, which is inherited from `[api:SiteTree]`.
+Overloading [api:SiteTree::getCMSFields()] you can call `removeFieldFromTab()` on a [api:FieldSet] object. For example, if you don't
+want the MenuTitle field to show on your page, which is inherited from [api:SiteTree].
 
 	:::php
 	class StaffPage extends Page {

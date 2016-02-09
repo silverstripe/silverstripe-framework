@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This class represents a set of `[api:DataObject]`s, such as the results of a query. It is the base for all
+This class represents a set of [api:DataObject]'s, such as the results of a query. It is the base for all
 [datamodel](/topics/datamodel)-related querying. It implements the [Iterator
 interface](http://php.net/manual/en/language.oop5.iterations.php) introduced in PHP5.
 
-Relations (`has_many`/`many_many`) are described in `[api:ComponentSet]`, a subclass of `[api:DataObjectSet]`.
+Relations (`has_many`/`many_many`) are described in [api:ComponentSet], a subclass of [api:DataObjectSet].
 
 ## Usage
 
@@ -37,7 +37,7 @@ Relations (`has_many`/`many_many`) are described in `[api:ComponentSet]`, a subc
 
 ### Grouping
 
-You can group a set by a specific column. Consider using `[api:SQLQuery]` with a *GROUP BY* statement for enhanced
+You can group a set by a specific column. Consider using [api:SQLQuery] with a *GROUP BY* statement for enhanced
 performance.
 
 	:::php
@@ -56,7 +56,7 @@ This works on the object itself, so do NOT do something like this:
 	:::php
 	$sortedSet = $mySet->sort('Lastname'); //ascending
 
-## Merge with other `[api:DataObjectSet]`s
+## Merge with other [api:DataObjectSet]s
 
 	:::php
 	$myFirstSet->merge($mySecondSet);
@@ -65,7 +65,7 @@ This works on the object itself, so do NOT do something like this:
 
 ### Mapping for Dropdowns
 
-When using `[api:DropdownField]` and its numerous subclasses to select a value from a set, you can easily map
+When using [api:DropdownField] and its numerous subclasses to select a value from a set, you can easily map
 the records to a compatible array:
 
 	:::php
@@ -88,11 +88,11 @@ It is good practice to check for empty sets before doing any iteration.
 
 ### Paging
 
-`[api:DataObject]`s have native support for dealing with **pagination**.
+[api:DataObject]s have native support for dealing with **pagination**.
 See *setPageLimits*, *setPageLength*, etc.
 
 FIXME Complete pagination documentation
 
 
 ## API Documentation
-`[api:DataObjectSet]`
+[api:DataObjectSet]

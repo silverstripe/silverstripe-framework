@@ -231,7 +231,7 @@ This returns the value inputted in the CMS, if it's set or what is in the $title
 
 To implement a form inside a widget, you need to implement a custom controller for your widget to return this form. Make
 sure that your controller follows the usual naming conventions, and it will be automatically picked up by the
-`[api:WidgetArea]` rendering in your *Page.ss* template.
+[api:WidgetArea] rendering in your *Page.ss* template.
 
 **mysite/code/MyWidget.php**
 
@@ -276,7 +276,7 @@ To output this form, modify your widget template.
 	$MyFormName
 
 <div class="notice" markdown='1'>
-**Note:** The necessary controller actions are only present in subclasses of `[api:Page_Controller]`. To use
+**Note:** The necessary controller actions are only present in subclasses of [api:Page_Controller]. To use
 widget forms in other controller subclasses, have a look at *ContentController->handleWidget()* and
 *ContentController::$url_handlers*.
 </div>

@@ -2,14 +2,14 @@
 
 ## Introduction
 
-Extensions (also referred to as decorators) allow for adding additional functionality to a `[api:DataObject]`.
+Extensions (also referred to as decorators) allow for adding additional functionality to a [api:DataObject].
 
 In some cases, it can be easier to completely replace the used class throughout the core with your custom
-implementation. Have a look at `[api:Object->useCustomClass()]`.
+implementation. Have a look at [api:Object::useCustomClass()].
 
 ## Usage
 
-Your Decorator will nee to be a subclass of `[api:DataObjectDecorator]` or the `[api:Extension]` class.
+Your Decorator will nee to be a subclass of [api:DataObjectDecorator] or the [api:Extension] class.
 
 	:::php
 	<?php
@@ -27,7 +27,7 @@ class you want to extend.
 ### Adding a decorator to a built-in class
 
 Sometimes you will want to add decorators to classes that you didn't make.  For example, you might want to add the
-`[api:ForumRole]` decorator to the `[api:Member]` object.
+[api:ForumRole] decorator to the [api:Member] object.
 
 
 	:::php
@@ -98,7 +98,7 @@ The $fields parameter is passed by reference, as it is an object.
 ### Custom database generation
 
 Some decorators are designed to transparently add more sophisticated data-collection capabilities to your data object.
-For example, `[api:Versioned]` adds version tracking and staging to any data object that it is applied to.  To do this,
+For example, [api:Versioned] adds version tracking and staging to any data object that it is applied to.  To do this,
 you need to be able to create additional database tables and fields to keep your state stored in.
 
 To do this, define an **augmentDatabase()** method on your decorator.  This will be called when db/build is visited.
@@ -110,7 +110,7 @@ care of creating, modifying, or leaving tables as required, based on your desire
 ### Custom write queries
 
 If you have customised the generated database, then you probably want to change the way that writes happen.  This is
-used by `[api:Versioned]` to get an entry written in ClassName_versions whenever an insert/update happens.
+used by [api:Versioned] to get an entry written in ClassName_versions whenever an insert/update happens.
 
 To do this, define the **augmentWrite(&$manipulation)** method.  This method is passed a manipulation array representing
 the write about to happen, and is able to amend this as desired, since it is passed by reference. 
@@ -121,21 +121,21 @@ The other queries that you will want to customise are the selection queries, cal
 Versioned object has code to redirect every request to ClassName_live, if you are browsing the live site.
 
 To do this, define the **augmentSQL(SQLQuery &$query)** method.  Again, the $query object is passed by reference and can
-be modified as needed by your method.  Instead of a manipulation array, we have a `[api:SQLQuery]` object.
+be modified as needed by your method.  Instead of a manipulation array, we have a [api:SQLQuery] object.
 
 ### Additional methods
 
-The other thing you may want to do with a decorator is provide a method that can be called on the `[api:DataObject]` that is
-being decorated.  For instance, you may add a publish() method to every `[api:DataObject]` that is decorated with `[api:Versioned]`.
+The other thing you may want to do with a decorator is provide a method that can be called on the [api:DataObject] that is
+being decorated.  For instance, you may add a publish() method to every [api:DataObject] that is decorated with [api:Versioned].
 
 This is as simple as defining a method called publish() on your decorator.  Bear in mind, however, that instead of
 $this, you should be referring to $this->owner.
 
-*  $this = The `[api:DataObjectDecorator]` object.
-*  $this->owner = The related `[api:DataObject]` object.
+*  $this = The [api:DataObjectDecorator] object.
+*  $this->owner = The related [api:DataObject] object.
 
-If you want to add your own internal properties, you can add this to the `[api:DataObjectDecorator]`, and these will be referred
-to as `$this->propertyName`.  Every `[api:DataObject]` has an associated `[api:DataObjectDecorator]` instance for each class that it is
+If you want to add your own internal properties, you can add this to the [api:DataObjectDecorator], and these will be referred
+to as `$this->propertyName`.  Every [api:DataObject] has an associated [api:DataObjectDecorator] instance for each class that it is
 decorated by.
 
 	:::php
@@ -169,4 +169,5 @@ decorated by.
 
 
 ## API Documentation
-`[api:DataObjectDecorator]`
+
+[api:DataObjectDecorator]

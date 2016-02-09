@@ -8,12 +8,12 @@ A single database record & abstract class for the data-access-model.
 
 *  [datamodel](/topics/datamodel): The basic pricinples
 *  [data-types](/topics/data-types): Casting and special property-parsing
-*  `[api:DataObject]`: A "container" for DataObjects
+*  [api:DataObject]: A "container" for DataObjects
 
 ## Basics
 
-The call to `DataObject->getCMSFields()` is the centerpiece of every data administration interface in SilverStripe,
-which returns a `[api:FieldSet]`''.
+The call to [api:DataObject::getCMSFields()] is the centerpiece of every data administration interface in SilverStripe,
+which returns a [api:FieldSet].
 
 	:::php
 	class MyPage extends Page {
@@ -27,7 +27,7 @@ which returns a `[api:FieldSet]`''.
 
 ## Scaffolding Formfields
 
-These calls retrieve a `[api:FieldSet]` for the area where you intend to work with the scaffolded form.
+These calls retrieve a [api:FieldSet] for the area where you intend to work with the scaffolded form.
 
 ### For the CMS
 
@@ -39,8 +39,8 @@ These calls retrieve a `[api:FieldSet]` for the area where you intend to work wi
 
 ### For the Frontend
 
-Used for simple frontend forms without relation editing or `[api:TabSet] behaviour. Uses `scaffoldFormFields()` by
-default. To customize, either overload this method in your subclass, or decorate it by `DataObjectDecorator->updateFormFields()`.
+Used for simple frontend forms without relation editing or [api:TabSet] behaviour. Uses `scaffoldFormFields()` by
+default. To customize, either overload this method in your subclass, or decorate it by [api:DataObjectDecorator::updateFormFields()].
 
 * Requirements: SilverStripe 2.3.*
 
@@ -53,7 +53,7 @@ default. To customize, either overload this method in your subclass, or decorate
  * Requirements: SilverStripe 2.3.*
 
 This section covers how to enhance the default scaffolded form fields from above.  It is particularly useful when used
-in conjunction with the `[api:ModelAdmin]` in the CMS to make relevant data administration interfaces.
+in conjunction with the [api:ModelAdmin] in the CMS to make relevant data administration interfaces.
 
 
 ### Searchable Fields
@@ -80,8 +80,8 @@ Example: Simple Definition
 	}
 
 
-Searchable fields will be appear in the search interface with a default form field (usually a `[api:TextField]`) and a default
-search filter assigned (usually an `[api:ExactMatchFilter]`). To override these defaults, you can specify additional information
+Searchable fields will be appear in the search interface with a default form field (usually a [api:TextField]) and a default
+search filter assigned (usually an [api:ExactMatchFilter]). To override these defaults, you can specify additional information
 on `$searchable_fields`:
 
 	:::php
@@ -93,7 +93,7 @@ on `$searchable_fields`:
 	}
 
 
-If you assign a single string value, you can set it to be either a `[api:FormField]` or `[api:SearchFilter]`. To specify both, you can
+If you assign a single string value, you can set it to be either a [api:FormField] or [api:SearchFilter]. To specify both, you can
 assign an array:
 
 	:::php
@@ -142,8 +142,8 @@ To include relations (''$has_one'', `$has_many` and `$many_many`) in your search
 
 * Requirements: SilverStripe 2.3.*
 
-Summary fields can be used to show a quick overview of the data for a specific `[api:DataObject]` record. Most common use is
-their display as table columns, e.g. in the search results of a `[api:ModelAdmin]` CMS interface.
+Summary fields can be used to show a quick overview of the data for a specific [api:DataObject] record. Most common use is
+their display as table columns, e.g. in the search results of a [api:ModelAdmin] CMS interface.
 
 Example: Getting predefined summary fields
 
@@ -191,4 +191,4 @@ To include relations in your summaries, you can use a dot-notation.
 
 ## API Documentation
 
-`[api:DataObject]`
+[api:DataObject]

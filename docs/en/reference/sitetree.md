@@ -144,7 +144,7 @@ it is a good starting point, for choosing your customisation.
 
 ### Automatic Child Selection
 
-By default, `[api:SiteTree]` class to build a tree using the ParentID field.  However, sometimes, you want to change
+By default, [api:SiteTree] class to build a tree using the ParentID field.  However, sometimes, you want to change
 this default behaviour.
 
 For example, in our e-commerce module, we use a many-to-many join, Product::Parents, to let you put Products in multiple
@@ -154,7 +154,7 @@ groups.  Here's how to implement such a change:
 store parents.
 
 *  **Define stageChildren method:** This method should return the children of the current page, for the current version.
- If you use DataObject::get, the `[api:Versioned]` class will rewrite your query to access the live site when
+ If you use DataObject::get, the [api:Versioned] class will rewrite your query to access the live site when
 appropriate.
 
 *  **Define liveChildren method:** The method should return the children of the current page, for the live site.
@@ -206,7 +206,7 @@ Example:
 
 ### Multiple parents in the tree
 
-The `[api:LeftAndMain]` tree supports multiple parents.  We overload CMSTreeClasses and make it include "manyparents" in
+The [api:LeftAndMain] tree supports multiple parents.  We overload CMSTreeClasses and make it include "manyparents" in
 the class list.
 
 	:::php
@@ -295,4 +295,4 @@ and the specific group.
 Clean up this documentation
 
 ## API Documentation
-`[api:Sitetree]`
+[api:Sitetree]

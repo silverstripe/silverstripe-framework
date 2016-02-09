@@ -49,12 +49,12 @@ where url is the relative link to the page (eg 'admin/categories'). You can chan
 
 ## Overloading EditForm
 
-You may need to overload EditForm if your class does not use the `[api:Versioned]` extension.
+You may need to overload EditForm if your class does not use the [api:Versioned] extension.
 
 ## Overloading SiteTreeAsUL
 
 The tree hints can sometimes cause problems when reorganising the tree, and the CMSMain::SiteTreeAsUL function uses
-`[api:SiteTree]` explicitly. Use:
+[api:SiteTree] explicitly. Use:
 
 	:::php
 	public function SiteTreeAsUL() {

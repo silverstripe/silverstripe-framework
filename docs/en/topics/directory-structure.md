@@ -55,7 +55,7 @@ Example Forum:
 
 ## PHP Include Paths
 
-Due to the way `[api:ManifestBuilder]` recursively detects php-files and includes them through PHP5's
+Due to the way [api:ManifestBuilder] recursively detects php-files and includes them through PHP5's
 *__autoload()*-feature, you don't need to worry about include paths. Feel free to structure your php-code into
 subdirectories inside the *code*-directory.
 

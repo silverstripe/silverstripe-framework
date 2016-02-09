@@ -8,7 +8,7 @@ hardcoding any references in the `<head>`-tag of your template, as it enables a 
 
 ## Including inside PHP Code
 It is common practice to include most Requirements either in the *init()*-method of your [controller](/topics/controller), or
-as close to rendering as possible (e.g. in `[api:FormField]`
+as close to rendering as possible (e.g. in [api:FormField]
 
 	:::php
 	Requirements::javascript("cms/javascript/LeftAndMain.js");
@@ -133,15 +133,15 @@ In your controller's init() function, add:
 
 ## CMS Requirements
 
-The SilverStripe core includes a lot of Requirements by itself. Most of these are collated in `[api:LeftAndMain]` first.
+The SilverStripe core includes a lot of Requirements by itself. Most of these are collated in [api:LeftAndMain] first.
 
 ## Motivation
 
-Every page requested is made up of a number of parts, and many of those parts require their own CSS or JavaScript.  
+Every page requested is made up of a number of parts, and many of those parts require their own CSS or JavaScript.
 Rather than force the developer to put all of those requests into the template, or the header function, you can
 reference required files anywhere in your application.
 
-This lets you create very modular units of PHP+JavaScript+CSS, which a powerful concept but must be managed carefully.  
+This lets you create very modular units of PHP+JavaScript+CSS, which a powerful concept but must be managed carefully.
 
 ## Managing Generic CSS styling
 
@@ -189,4 +189,4 @@ slightly different JS/CSS requirements, the whole lot will be refetched.
 nature of an ajax-request. Needs some more research
 
 ## API Documentation
-`[api:Requirements]`
+[api:Requirements]

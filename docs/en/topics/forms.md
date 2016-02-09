@@ -14,9 +14,9 @@ constructor takes the following arguments:
 *  `$name`: This must be the name of the method on that controller that is called to return the form.  The first two
 fields allow the form object to be re-created after submission.  **It's vital that they are properly set - if you ever
 have problems with form action handler not working, check that these values are correct.**
-*  `$fields`: A `[api:FieldSet]`s that make up the editable portion of the form.
-*  `$actions`: A `[api:FieldSet]`s that make up the control portion of the form - the buttons at the bottom.
-*  `$validator`: An optional `[api:Validator]` for more information.
+*  `$fields`: A [api:FieldSet] that makes up the editable portion of the form.
+*  `$actions`: A [api:FieldSet] that makes up the control portion of the form - the buttons at the bottom.
+*  `$validator`: An optional [api:Validator] for more information.
 
 Example: 
 
@@ -60,16 +60,16 @@ The real difference, however, is that you can then define your controller method
 
 ## Form Field Types
 		
-There are many classes extending `[api:FormField]`. Some examples:
+There are many classes extending [api:FormField]. Some examples:
 		
-*  `[api:TextField]`
-*  `[api:EmailField]`
-*  `[api:NumericField]`
-*  `[api:DateField]`
-*  `[api:CheckboxField]`
-*  `[api:DropdownField]`
-*  `[api:OptionsetField]`
-*  `[api:CheckboxSetField]`
+*  [api:TextField]
+*  [api:EmailField]
+*  [api:NumericField]
+*  [api:DateField]
+*  [api:CheckboxField]
+*  [api:DropdownField]
+*  [api:OptionsetField]
+*  [api:CheckboxSetField]
 
 Full overview at [form-field-types](/reference/form-field-types)
 
@@ -195,7 +195,7 @@ First of all, you need to create your form on it's own class, that way you can d
 	
 	}
 	
-`forTemplate()` tells the `[api:Form]` class to render with a template of return value of `$this->class`, which in this case
+`forTemplate()` tells the [api:Form] class to render with a template of return value of `$this->class`, which in this case
 is *MyForm*, the name of the class. If the template doesn't exist, then it falls back to using Form.ss.
 
 *MyForm.ss* should then be placed into your *templates/Includes* directory for your project. Here is an example of
@@ -235,7 +235,7 @@ this case `TextField->Field()` or `EmailField->Field()` which returns an `<input
 for the type of field. Pass in the name of the field as the first parameter, as done above, to render it into the 
 template.
 
-To find more methods, have a look at the `[api:Form]` class, as there is a lot of different methods of customising the form
+To find more methods, have a look at the [api:Form] class, as there is a lot of different methods of customising the form
 templates, for example, you could use `<% control Fields %>` instead of specifying each field manually, as we've done
 above.
 
@@ -274,9 +274,9 @@ Adds a new text field called FavouriteColour next to the Content field in the CM
 ## Related
 
 *  [form-field-types](/reference/form-field-types)
-*  `[api:FormField]` class
+*  [api:FormField]
 *  [multiform module](http://silverstripe.org/multi-form-module)
 
 ##  API Documentation
 
-`[api:Form]`
+[api:Form]

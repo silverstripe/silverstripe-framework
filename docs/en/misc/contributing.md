@@ -41,7 +41,7 @@ step.
 *  It's better to submit multiple patches with separate bits of functionality than a big patch containing lots of
 changes
 *  Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
-[API documentation] `http://api.silverstripe.org/trunk` for good examples.
+   [API documentation](http://api.silverstripe.org) for examples and [SS Markdown](/misc/ss-markdown).
 * Also check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * We will attribute the change to you whereever possible (git does this automatically for pull requests)
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
@@ -200,7 +200,7 @@ Contributing documentation is the same process as providing any other patch
   should fit elsewhere. *Example: ModelAdmin*
 * **Misc**: "Meta" documentation like coding conventions that doesn't directly relate to a feature or API. 
 
-See [What to write (jacobian.org)](http://jacobian.org/writing/great-documentation/what-to-write/) for an excellent
+See [What to write (jacobian.org)](http://jacobian.org/writing/what-to-write/) for an excellent
 introduction to the different types of documentation, and [Producing OSS: "Documentation"](http://producingoss.com/en/getting-started.html#documentation)
 for good rules of thumb for documenting opensource software.
 
@@ -280,7 +280,7 @@ The [sapphiredocs] `https://github.com/silverstripe/silverstripe-sapphiredocs` m
 
 ### Further reading
 
-* [Writing great documentation (jacobian.org)](http://jacobian.org/writing/great-documentation/)
+* [Writing great documentation (jacobian.org)](https://jacobian.org/writing/great-documentation/)
 * [How tech writing sucks: Five Sins](http://www.slash7.com/articles/2006/11/15/tech-writing-the-five-sins)
 * [What is good documentation?](http://www.techscribe.co.uk/techw/whatis.htm)
 

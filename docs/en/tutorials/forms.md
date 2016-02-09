@@ -80,13 +80,13 @@ Let's step through this code.
 
 First we create our form fields.
 
-We do this by creating a `[api:FieldSet]` and passing our fields as arguments. The first field is a new
-`[api:TextField]` with the name 'Name'.
+We do this by creating a [api:FieldSet] and passing our fields as arguments. The first field is a new
+[api:TextField] with the name 'Name'.
 
 There is a second argument when creating a field which specifies the text on the label of the field. If no second
 argument is passed, as in this case, it is assumed the label is the same as the name of the field.
 
-The second field we create is an `[api:OptionsetField]`. This is a dropdown, and takes a third argument - an
+The second field we create is an [api:OptionsetField]. This is a dropdown, and takes a third argument - an
 array mapping the values to the options listed in the dropdown.
 
 	:::php
@@ -102,14 +102,14 @@ button.
 
 Here we create a 'Submit' button which calls the 'doBrowserPoll' method, which we will create later.
 
-All the form actions (in this case only one) are collected into a `[api:FieldSet]` object the same way we did with
+All the form actions (in this case only one) are collected into a [api:FieldSet] object the same way we did with
 the fields.
 
 	:::php
 	return new Form($this, 'BrowserPollForm', $fields, $actions);
 
 
-Finally we create the `[api:Form]` object and return it.
+Finally we create the [api:Form] object and return it.
 
 The first argument is the controller that contains the form, in most cases '$this'. The second is the name of the method
 that returns the form, which is 'BrowserPollForm' in our case. The third and fourth arguments are the
@@ -179,11 +179,11 @@ Great! We now have a browser poll form, but it doesn't actually do anything. In 
 implement the 'doBrowserPoll' method that we told it about.
 
 First, we need some way of saving the poll submissions to the database, so we can retrieve the results later. We can do
-this by creating a new object that extends from `[api:DataObject]`.
+this by creating a new object that extends from [api:DataObject].
 
 If you recall, in tutorial two we said that all objects that inherit from DataObject and that add fields are stored in
-the database. Also recall that all pages extend DataObject indirectly through `[api:SiteTree]`. Here instead of
-extending SiteTree (or `[api:Page]`) to create a page type, we extend DataObject directly.
+the database. Also recall that all pages extend DataObject indirectly through [api:SiteTree]. Here instead of
+extending SiteTree (or Page) to create a page type, we extend DataObject directly.
 
 *mysite/code/BrowserPollSubmission.php*
 
@@ -197,7 +197,7 @@ extending SiteTree (or `[api:Page]`) to create a page type, we extend DataObject
 	}
 
 
-If we then rebuild the database ([http://localhost/db/build?flush=1](http://localhost/db/build?flush=1)), we will see
+If we then rebuild the database (`http://localhost/db/build?flush=1`), we will see
 that the *BrowserPollSubmission* table is created. Now we just need to define 'doBrowserPoll' on *HomePage_Controller*.
 
 *mysite/code/HomePage.php*
@@ -215,7 +215,7 @@ that the *BrowserPollSubmission* table is created. Now we just need to define 'd
 
 
 A function that processes a form submission takes two arguments - the first is the data in the form, the second is the
-`[api:Form]` object.
+[api:Form] object.
 
 In our function we create a new *BrowserPollSubmission* object. Since the name of our form fields and the name of the
 database fields are the same we can save the form directly into the data object.
@@ -262,7 +262,7 @@ Now that we have a working form, we need some way of showing the results.
 The first thing to do is make it so a user can only vote once per session. If the user hasn't voted, show the form,
 otherwise show the results.
 
-We can do this using a session variable. The `[api:Session]` class handles all session variables in SilverStripe.
+We can do this using a session variable. The [api:Session] class handles all session variables in SilverStripe.
 First modify the 'doBrowserPoll' to set the session variable 'BrowserPollVoted' when a user votes.
 
 *mysite/code/HomePage.php*
@@ -311,10 +311,10 @@ We now need some way of getting the data from the database into the template.
 
 In the second tutorial we got the latest news articles for the home page by using the 'DataObject::get' function. We
 can't use the 'DataObject::get' function here directly as we wish to count the total number of votes for each browser.
-By looking at the documentation for 'DataObject::get', we can see that it returns a `[api:DataObjectSet]`
+By looking at the documentation for 'DataObject::get', we can see that it returns a [api:DataObjectSet]
 object. In fact, all data that can be iterated over in a template with a page control is contained in a DataObjectSet.
 
-A `[api:DataObjectSet]` is a set of not just DataObjects, but of ViewableData, which the majority of
+A [api:DataObjectSet] is a set of not just DataObjects, but of ViewableData, which the majority of
 SilverStripe's classes (including DataObject) inherit from. We can create a DataObjectSet, fill it with our data, and
 then create our graph using a page control in the template. Create the function 'BrowserPollResults' on the
 *HomePage_Controller* class.
@@ -370,7 +370,7 @@ We get the total number of submissions, which is needed to calculate the percent
 Now we create an empty DataObjectSet to hold our data and then iterate over the 'Browser' submissions field. The 'groupBy' 
 method of DataObjectSet splits our DataObjectSet by the 'Browser' field passed to it. The percentage of submissions for each 
 browser is calculated using the size of the DataObjectSet. It puts these new DataObjectSets into an array indexed 
-by the value of the field. The `[api:ArrayData]` class wraps an array into a ViewableData object, so we finally create a new 
+by the value of the field. The [api:ArrayData] class wraps an array into a ViewableData object, so we finally create a new 
 ArrayData object, which we can add to our *$doSet* DataObjectSet of results.
 
 	:::php

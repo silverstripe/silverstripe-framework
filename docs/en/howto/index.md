@@ -11,6 +11,3 @@ the language and functions which are used in the guides.
 * [Grouping DataObjectSets](grouping-dataobjectsets). Group results in a [api:DataObjectSet] to create sub sections.
 * [PHPUnit Configuration](phpunit-configuration). How to setup your testing environment with PHPUnit
 
-## Feedback
-
-If you have a topic you would like covered in these how to's please ask for it on our [Bug Tracker] `http://open.silverstripe.org`

@@ -4,7 +4,7 @@
 Ever wonder when you use `$Title` and `<% Control Children %>` what else you can call in the templates?. This page is
 here to help with a guide on what template controls you can call.
 
-**Note for advanced users:** These built-in page controls are defined in the `[api:SiteTree]` classes, which are the
+**Note for advanced users:** These built-in page controls are defined in the [api:SiteTree] classes, which are the
 'root' data-object and controller classes for all the sites.  So if you're dealing with something that isn't a sub-class
 of one of these, our handy reference to 'built-in page controls' won't be so relevant.
 
@@ -220,18 +220,18 @@ These controls detect the visitor's previous experience with the site:
 
 #### $Now.Nice, $Now.Year
 
-$Now returns the current date.  You can call any of the methods from the `[api:Date]` class on
+$Now returns the current date.  You can call any of the methods from the [api:Date] class on
 it. 
 
 #### $Created.Nice, $Created.Ago
 
 $Created returns the time the page was created, $Created.Ago returns how long ago the page was created. You can also
-call any of methods of the `[api:Date]` class on it.
+call any of methods of the [api:Date] class on it.
 
 #### $LastEdited.Nice, $LastEdited.Ago
 
 $LastEdited returns the time the page was modified, $LastEdited.Ago returns how long ago the page was modified.You can also
-call any of methods of the `[api:Date]` class on it.
+call any of methods of the [api:Date] class on it.
 
 ### DataObjectSet Options
 

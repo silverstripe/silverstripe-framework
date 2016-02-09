@@ -130,9 +130,9 @@ permission checks.
 
 ## URL Handling
 
-In the above example the URLs were configured using the `[api:Director]` rules in the **_config.php** file. 
+In the above example the URLs were configured using the [api:Director] rules in the **_config.php** file. 
 Alternatively you can specify these in your Controller class via the **$url_handlers** static array (which gets
-processed by the `[api:RequestHandler]`).  
+processed by the [api:RequestHandler]).
 
 This is useful when you want to subvert the fixed action mapping of `fastfood/order/*` to the function **order**.  In
 the case below we also want any orders coming through `/fastfood/drivethrough/` to use the same order function.
@@ -150,7 +150,7 @@ the case below we also want any orders coming through `/fastfood/drivethrough/` 
 
 ## URL Patterns
 
-The `[api:RequestHandler]` class will parse all rules you specify against the following patterns.
+The [api:RequestHandler] class will parse all rules you specify against the following patterns.
 
 **A rule must always start with alphabetical ([A-Za-z]) characters or a $Variable declaration**
 
@@ -181,10 +181,10 @@ You can use the `debug_request=1` switch from the [urlvariabletools](/reference/
 
 ## API Documentation
 
-`[api:Controller]`
+[api:Controller]
 
 ## Links
 
-*  `[api:Director]` class
+*  [api:Director] class
 *  [execution-pipeline](/reference/execution-pipeline)
 *  [URL Handling in Controllers](http://maetl.net/silverstripe-url-handling) by maetl

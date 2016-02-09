@@ -5,7 +5,7 @@
 Many sites get too much traffic to justify dynamically sending every request.  Caching is needed. Static Publishing
 will generate static versions of your content (HTML) that can be served without ever hitting PHP or the Database.
 
-See `[api:StaticExporter]` for a less flexible, but easier way of building a local static cache from all of
+See [api:StaticExporter] for a less flexible, but easier way of building a local static cache from all of
 your pages.
 
 See [Partial-Caching](partial-caching) for a much more flexible way of building in caching without statically delivering 
@@ -262,7 +262,7 @@ example] `http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpubl
 ## Deployment
 
 Once you've set up your rewrite rules and defined which pages need caching, you can build the static HTML files. This is
-done by the `[api:RebuildStaticCacheTask]`
+done by the [api:RebuildStaticCacheTask]
 
 Execution via URL
 
@@ -281,8 +281,8 @@ the cache.
 
 ## Related
 
-*  `[api:StaticExporter]`
+*  [api:StaticExporter]
 *  [Partial-Caching](partial-caching)
 
 ## API Documentation
-*  `[api:StaticPublisher]`
+*  [api:StaticPublisher]
