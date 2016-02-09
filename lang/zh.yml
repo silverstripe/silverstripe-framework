@@ -318,7 +318,6 @@ zh:
   LeftAndMain:
     CANT_REORGANISE: '您没有权限更改顶层页面。您的更改没有保存。'
     DELETED: 已删除。
-    DropdownBatchActionsDefault: 动作
     HELP: 帮助
     PERMAGAIN: '您已经退出 CMS。如果您想再次登录，请在下面输入用户名和密码。'
     PERMALREADY: '抱歉，您不能访问这一部分的后台管理。如果您想以不同的身份登录，请在下面进行操作。'

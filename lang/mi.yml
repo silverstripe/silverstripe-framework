@@ -291,7 +291,6 @@ mi:
   LeftAndMain:
     CANT_REORGANISE: 'Kāore tō mana whakakē i ngā whārangi taumata Matua. Kāore tō huringa i tiakina.'
     DELETED: I mukua
-    DropdownBatchActionsDefault: Ngā Mahi
     HELP: Āwhina
     PERMAGAIN: 'Kua takiputaina atu koe i te CMS. Ki te pīrangi koe ki te takiuru atu anō, tāurutia tētahi ingoa kaiwhakamahi me te kupuhipa i raro.'
     PreviewButton: Arokite

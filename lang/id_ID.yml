@@ -319,7 +319,6 @@ id_ID:
   LeftAndMain:
     CANT_REORGANISE: 'Anda tidak diijinkan mengubah laman Tingkat Atas. Pengubahan Anda tidak tersimpan.'
     DELETED: Terhapus.
-    DropdownBatchActionsDefault: Tindakan
     HELP: Bantuan
     PERMAGAIN: 'Anda telah keluar dari situs. Jika ingin kembali masuk, isikan nama pengguna dan kata kunci di bawah ini.'
     PreviewButton: Pratinjau

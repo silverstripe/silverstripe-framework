@@ -290,7 +290,6 @@ ar:
   LeftAndMain:
     CANT_REORGANISE: 'ليس لديك تصريح لتغيير صفحات المستوى الأعلى. لم يتم حفظ التغيير.'
     DELETED: تم الحذف.
-    DropdownBatchActionsDefault: أفعال
     HELP: مساعدة
     PERMAGAIN: 'تم خروجك من النظام بنجاح. للدخول مرة أخرى أدحل البريد الإلكتروني و الرقم السري بالأسفل'
     PreviewButton: استعراض
