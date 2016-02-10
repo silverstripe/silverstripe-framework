@@ -383,13 +383,14 @@ en:
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    KEEPMESIGNEDIN: 'Keep me signed in'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
     NoPassword: 'There is no password on this member.'
     PASSWORD: Password
     PASSWORDEXPIRED: 'Your password has expired. Please choose a new one.'
     PLURALNAME: Members
-    REMEMBERME: 'Remember me next time?'
+    REMEMBERME: 'Remember me next time? (for %d days on this device)'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'

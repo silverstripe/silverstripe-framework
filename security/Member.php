@@ -9,7 +9,6 @@
  * @property string $Surname
  * @property string $Email
  * @property string $Password
- * @property string $RememberLoginToken
  * @property string $TempIDHash
  * @property string $TempIDExpired
  * @property string $AutoLoginHash
@@ -32,7 +31,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'TempIDHash' => 'Varchar(160)', // Temporary id used for cms re-authentication
 		'TempIDExpired' => 'SS_Datetime', // Expiry of temp login
 		'Password' => 'Varchar(160)',
-		'RememberLoginToken' => 'Varchar(160)', // Note: this currently holds a hash, not a token.
 		'AutoLoginHash' => 'Varchar(160)', // Used to auto-login the user on password reset
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
@@ -59,6 +57,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	private static $has_many = array(
 		'LoggedPasswords' => 'MemberPassword',
+		'RememberLoginHashes' => 'RememberLoginHash'
 	);
 
 	private static $many_many = array();
@@ -109,7 +108,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @var array
 	 */
 	private static $hidden_fields = array(
-		'RememberLoginToken',
 		'AutoLoginHash',
 		'AutoLoginExpired',
 		'PasswordEncryption',
@@ -447,16 +445,22 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// This lets apache rules detect whether the user has logged in
 		if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0);
 
+		// Cleans up any potential previous hash for this member on this device
+		if ($alcDevice = Cookie::get('alc_device')) {
+			RememberLoginHash::get()->filter('DeviceID', $alcDevice)->removeAll();
+		}
 		if($remember) {
-			// Store the hash and give the client the cookie with the token.
-			$generator = new RandomGenerator();
-			$token = $generator->randomToken('sha1');
-			$hash = $this->encryptWithUserSettings($token);
-			$this->RememberLoginToken = $hash;
-			Cookie::set('alc_enc', $this->ID . ':' . $token, 90, null, null, null, true);
-		} else {
-			$this->RememberLoginToken = null;
+			$rememberLoginHash = RememberLoginHash::generate($this);
+			$tokenExpiryDays = Config::inst()->get('RememberLoginHash', 'token_expiry_days');
+			$deviceExpiryDays = Config::inst()->get('RememberLoginHash', 'device_expiry_days');
+			Cookie::set('alc_enc', $this->ID . ':' . $rememberLoginHash->getToken(), 
+				$tokenExpiryDays, null, null, null, true);
+			Cookie::set('alc_device', $rememberLoginHash->DeviceID, $deviceExpiryDays, null, null, null, true);
+		} else {			
+			Cookie::set('alc_enc', null);
+			Cookie::set('alc_device', null);
 			Cookie::force_expiry('alc_enc');
+			Cookie::force_expiry('alc_device');
 		}
 
 		// Clear the incorrect log-in count
@@ -515,7 +519,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public static function autoLogin() {
 		// Don't bother trying this multiple times
-		self::$_already_tried_to_auto_log_in = true;
+		if (!class_exists('SapphireTest') || !SapphireTest::is_running_test()) {
+			self::$_already_tried_to_auto_log_in = true;
+		}
 
 		if(strpos(Cookie::get('alc_enc'), ':') === false
 			|| Session::get("loggedInAs")
@@ -524,36 +530,56 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			return;
 		}
 
-		list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
+		if(strpos(Cookie::get('alc_enc'), ':') && Cookie::get('alc_device') && !Session::get("loggedInAs")) {
+			list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
+			$deviceID = Cookie::get('alc_device');
 
-		$member = DataObject::get_by_id("Member", $uid);
+			$member = Member::get()->byId($uid);
 
-		// check if autologin token matches
-		if($member) {
-			$hash = $member->encryptWithUserSettings($token);
-			if(!$member->RememberLoginToken || $member->RememberLoginToken !== $hash) {
-				$member = null;
+			$rememberLoginHash = null;
+
+			// check if autologin token matches
+			if($member) {
+				$hash = $member->encryptWithUserSettings($token);
+				$rememberLoginHash = RememberLoginHash::get()
+					->filter(array(
+						'MemberID' => $member->ID,
+						'DeviceID' => $deviceID,
+						'Hash' => $hash
+					))->First();
+				if(!$rememberLoginHash) {
+					$member = null;
+				} else {
+					// Check for expired token
+					$expiryDate = new DateTime($rememberLoginHash->ExpiryDate);
+					$now = SS_Datetime::now();
+					$now = new DateTime($now->Rfc2822());
+					if ($now > $expiryDate) {
+						$member = null;
+					}
+				}
 			}
-		}
 
-		if($member) {
-			self::session_regenerate_id();
-			Session::set("loggedInAs", $member->ID);
-			// This lets apache rules detect whether the user has logged in
-			if(Member::config()->login_marker_cookie) {
-				Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
+			if($member) {
+				self::session_regenerate_id();
+				Session::set("loggedInAs", $member->ID);
+				// This lets apache rules detect whether the user has logged in
+				if(Member::config()->login_marker_cookie) {
+					Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
+				}
+
+				if ($rememberLoginHash) {
+					$rememberLoginHash->renew();
+					$tokenExpiryDays = Config::inst()->get('RememberLoginHash', 'token_expiry_days');
+					Cookie::set('alc_enc', $member->ID . ':' . $rememberLoginHash->getToken(), 
+						$tokenExpiryDays, null, null, false, true);
+				}
+
+				$member->write();
+
+				// Audit logging hook
+				$member->extend('memberAutoLoggedIn');
 			}
-
-			$generator = new RandomGenerator();
-			$token = $generator->randomToken('sha1');
-			$hash = $member->encryptWithUserSettings($token);
-			$member->RememberLoginToken = $hash;
-			Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
-
-			$member->write();
-
-			// Audit logging hook
-			$member->extend('memberAutoLoggedIn');
 		}
 	}
 
@@ -570,8 +596,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		$this->extend('memberLoggedOut');
 
-		$this->RememberLoginToken = null;
+		// Clears any potential previous hashes for this member
+		RememberLoginHash::clear($this, Cookie::get('alc_device'));
+
+		Cookie::set('alc_enc', null); // // Clear the Remember Me cookie
 		Cookie::force_expiry('alc_enc');
+		Cookie::set('alc_device', null);
+		Cookie::force_expiry('alc_device');
 
 		// Switch back to live in order to avoid infinite loops when
 		// redirecting to the login screen (if this login screen is versioned)
@@ -1331,6 +1362,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 			// Members shouldn't be able to directly view/edit logged passwords
 			$fields->removeByName('LoggedPasswords');
+
+			$fields->removeByName('RememberLoginHashes');
 
 			if(Permission::check('EDIT_PERMISSIONS')) {
 				$groupsMap = array();
