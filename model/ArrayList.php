@@ -548,7 +548,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			));
 		}
 
-		$output = self::create();
+		$output = static::create();
 
 		foreach($this as $item) {
 			if(call_user_func($callback, $item, $this)) $output->push($item);
