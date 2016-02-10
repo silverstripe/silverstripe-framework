@@ -21,16 +21,16 @@ BBCode can be enabled in comments by adding the following to _config.php
 
 ## Supported Tags
 
-- [b]Bold[/b]
-- [i]Italics[/i]
-- [u]Underlined[/u]
-- [s]Struck-out[/s]
-- [color=blue]blue text[/color]
-- [align=right]right aligned[/align]
-- [code]Code block[/code]
-- [email]you@yoursite.com[/email]
-- [email=you@yoursite.com]Email[/email]
-- [ulist][*]unordered item 1[/ulist]
-- [img]http://www.website.com/image.jpg[/img]
-- [url]http://www.website.com/[/url]
-- [url=http://www.website.com/]Website[/url]
+- `[b]Bold[/b]`
+- `[i]Italics[/i]`
+- `[u]Underlined[/u]`
+- `[s]Struck-out[/s]`
+- `[color=blue]blue text[/color]`
+- `[align=right]right aligned[/align]`
+- `[code]Code block[/code]`
+- `[email]you@yoursite.com[/email]`
+- `[email=you@yoursite.com]Email[/email]`
+- `[ulist][*]unordered item 1[/ulist]`
+- `[img]http://www.website.com/image.jpg[/img]`
+- `[url]http://www.website.com/[/url]`
+- `[url=http://www.website.com/]Website[/url]`

@@ -22,7 +22,7 @@ You can use whatever codes you like, but for the sanity of developers and users,
 
 ## PermissionProvider
 
-`[api:PermissionProvider]` is an interface which lets you define a method *providePermissions()*. This method should return a
+[api:PermissionProvider] is an interface which lets you define a method *providePermissions()*. This method should return a
 map of permission code names with a human readable explanation of its purpose (see
 [permissions:codes](/reference/permission)).
 
@@ -71,4 +71,4 @@ information on request objects.
 
 
 ## API Documentation
-`[api:Permission]`
+[api:Permission]

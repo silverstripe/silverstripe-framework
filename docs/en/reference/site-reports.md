@@ -90,4 +90,4 @@ file and add class's as you need them inside that for each report.
 *  More examples.
 
 ## API Documentation
-`[api:ReportAdmin]`
+[api:ReportAdmin]

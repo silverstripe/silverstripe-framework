@@ -182,19 +182,19 @@ Removing a component:
 	:::php
 	$config->removeComponentsByType('GridFieldToolbarHeader');
 
-For more information, see the [API for GridFieldConfig](http://api.silverstripe.org/3.0/framework/GridFieldConfig.html).
+For more information, see [api:GridFieldConfig].
 
 Here is a list of components for generic use:
 
- - `[api:GridFieldToolbarHeader]`
- - `[api:GridFieldSortableHeader]`
- - `[api:GridFieldFilterHeader]`
- - `[api:GridFieldDataColumns]`
- - `[api:GridFieldDeleteAction]`
- - `[api:GridFieldViewButton]`
- - `[api:GridFieldEditButton]`
- - `[api:GridFieldPaginator]`
- - `[api:GridFieldDetailForm]`
+ - [api:GridFieldToolbarHeader]
+ - [api:GridFieldSortableHeader]
+ - [api:GridFieldFilterHeader]
+ - [api:GridFieldDataColumns]
+ - [api:GridFieldDeleteAction]
+ - [api:GridFieldViewButton]
+ - [api:GridFieldEditButton]
+ - [api:GridFieldPaginator]
+ - [api:GridFieldDetailForm]
 
 ## Creating a custom GridFieldComponent
 

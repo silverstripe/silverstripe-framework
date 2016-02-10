@@ -2,11 +2,11 @@
 
 ## Defining a Custom Icon ##
 
-Every time you add a new extension of the `api:LeftAndMain` class to the CMS, SilverStripe will automatically create a new menu-item for it, with a default title and icon.
+Every time you add a new extension of the [api:LeftAndMain] class to the CMS, SilverStripe will automatically create a new menu-item for it, with a default title and icon.
 We can easily change that behaviour by using the static `$menu_title` and `$menu_icon` statics to
 provide a custom title and icon.
 
-The most popular extension of LeftAndMain is the `api:ModelAdmin` class, so we'll use that for an example. 
+The most popular extension of LeftAndMain is the [api:ModelAdmin] class, so we'll use that for an example. 
 We'll take the `ProductAdmin` class used in the [ModelAdmin reference](../reference/modeladmin#setup).
 
 First we'll need a custom icon. For this purpose SilverStripe uses 16x16 black-and-transparent PNG graphics.
@@ -32,7 +32,7 @@ removing the "Admin" bit at the end.
  
 In order to localize the menu title in different languages, use the `<classname>.MENUTITLE`
 entity name, which is automatically created when running the i18n text collection.
-For more information on language and translations, please refer to the [i18n](/topics/1i8n) docs.
+For more information on language and translations, please refer to the [i18n](/topics/i18n) docs.
 	
 ## Related
 

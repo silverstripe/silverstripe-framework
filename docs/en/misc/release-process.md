@@ -9,7 +9,7 @@ The current maintainer responsible for planning and performing releases is Ingo 
 
 ## Release Planning
 
-Our most up-to-date release plans are typically in the ["framework" milestone](https://github.com/silverstripe/silverstripe-framework/issues/milestones) and ["cms" milestone](https://github.com/silverstripe/silverstripe-cms/issues/milestones).
+Our most up-to-date release plans are typically in the ["framework" milestones](https://github.com/silverstripe/silverstripe-framework/milestones) and ["cms" milestones](https://github.com/silverstripe/silverstripe-cms/milestones).
 New features and API changes are typically discussed on the [core
 mailinglist](http://groups.google.com/group/silverstripe-dev). They are prioritized by the core team as tickets on 
 github.com. 
@@ -94,7 +94,7 @@ so we strive for giving ample warning on any upcoming changes through a "depreca
 How to deprecate an API:
 
 *  Add a `@deprecated` item to the docblock tag, with a `{@link <class>}` item pointing to the new API to use.
-*  Update the deprecated code to throw a `[api:Deprecation::notice()]` error.
+*  Update the deprecated code to throw a [api:Deprecation::notice()] error.
 *  Both the docblock and error message should contain the **target version** where the functionality is removed.
    So if you're committing the change to a 3.1 pre-release version, the target version will either be 3.2 or 4.0,
    depending on how disruptive the change is.

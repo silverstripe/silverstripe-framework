@@ -2,7 +2,7 @@
 
 From time to time, things will go wrong.  Here's a few things to try when you're confused.
 
-See ["8 Common SilverStripe Errors Explain (and solved!) (leftandmain.com)"](http://www.leftandmain.com/silverstripe-tips/2010/09/08/8-common-silverstripe-errors-explained-and-solved/)
+See `["8 Common SilverStripe Errors Explain (and solved!) (leftandmain.com)"](http://www.leftandmain.com/silverstripe-tips/2010/09/08/8-common-silverstripe-errors-explained-and-solved/)`
 for more common problems.
 
 ## The output shows only "Website Error"
@@ -49,7 +49,7 @@ to a lot of development problems.  Here are some specifics situations:
 
 ## A SQL query fails with "Column not found" or "Table not found"
 
-Whenever you change the model definitions in PHP (e.g. when adding a property to the [$db](api:DataObject::$db) array,
+Whenever you change the model definitions in PHP (e.g. when adding a property to the [api:DataObject::$db] array,
 creating a new page type), SilverStripe will need to update the database. Visiting `http://<my-domain>/dev/build` in
 your browser runs a script that will check the database schema and update it as necessary.  Putting `?flush=1` on the
 end makes sure that nothing that's linked to the old database structure will be carried over.  If things aren't saving,
@@ -69,7 +69,7 @@ every page on the site, if that's easier.
 
 ## I can see unparsed PHP output in my browser
 
-Please make sure all code inside `*.php` files is wrapped in classes. Due to the way `[api:ManifestBuilder]`
+Please make sure all code inside `*.php` files is wrapped in classes. Due to the way [api:ManifestBuilder]
 includes all files with this extension, any **procedural code will be executed on every call**. The most common error here
 is putting a test.php/phpinfo.php file in the document root. See [datamodel](/topics/datamodel) and [controllers](/topics/controller)
 for ways how to structure your code.

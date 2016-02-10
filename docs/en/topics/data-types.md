@@ -1,26 +1,26 @@
 # Data Types and Casting
 
 Properties on any SilverStripe object can be type casted automatically,
-by transforming its scalar value into an instance of the `[api:DBField]` class,
+by transforming its scalar value into an instance of the [api:DBField] class,
 providing additional helpers. For example, a string can be cast as
-a `[api:Text]` type, which has a `FirstSentence()` method to retrieve the first
+a [api:Text] type, which has a `FirstSentence()` method to retrieve the first
 sentence in a longer piece of text.
 
 ## Available Types
 
-*  `[api:Boolean]`: A boolean field.
-*  `[api:Currency]`: A number with 2 decimal points of precision, designed to store currency values.
-*  `[api:Date]`: A date field
-*  `[api:Decimal]`: A decimal number.
-*  `[api:Enum]`: An enumeration of a set of strings
-*  `[api:HTMLText]`: A variable-length string of up to 2 megabytes, designed to store HTML
-*  `[api:HTMLVarchar]`: A variable-length string of up to 255 characters, designed to store HTML
-*  `[api:Int]`: An integer field.
-*  `[api:Percentage]`: A decimal number between 0 and 1 that represents a percentage.
-*  `[api:SS_Datetime]`: A date / time field
-*  `[api:Text]`: A variable-length string of up to 2 megabytes, designed to store raw text
-*  `[api:Time]`: A time field
-*  `[api:Varchar]`: A variable-length string of up to 255 characters, designed to store raw text
+*  [api:Boolean]: A boolean field.
+*  [api:Currency]: A number with 2 decimal points of precision, designed to store currency values.
+*  [api:Date]: A date field
+*  [api:Decimal]: A decimal number.
+*  [api:Enum]: An enumeration of a set of strings
+*  [api:HTMLText]: A variable-length string of up to 2 megabytes, designed to store HTML
+*  [api:HTMLVarchar]: A variable-length string of up to 255 characters, designed to store HTML
+*  [api:Int]: An integer field.
+*  [api:Percentage]: A decimal number between 0 and 1 that represents a percentage.
+*  [api:SS_Datetime]: A date / time field
+*  [api:Text]: A variable-length string of up to 2 megabytes, designed to store raw text
+*  [api:Time]: A time field
+*  [api:Varchar]: A variable-length string of up to 255 characters, designed to store raw text
 
 ## Casting arbitrary values
 
@@ -31,7 +31,7 @@ from one value to another, e.g. to round a number.
 	DBField::create_field('Double', 1.23456)->Round(2); // results in 1.23
 
 Of course that's much more verbose than the equivalent PHP call.
-The power of `[api:DBField]` comes with its more sophisticated helpers,
+The power of [api:DBField] comes with its more sophisticated helpers,
 like showing the time difference to the current date:
 
 	:::php
@@ -39,7 +39,7 @@ like showing the time difference to the current date:
 
 ## Casting ViewableData
 
-Most objects in SilverStripe extend from `[api:ViewableData]`,
+Most objects in SilverStripe extend from [api:ViewableData],
 which means they know how to present themselves in a view context.
 Through a `$casting` array, arbitrary properties and getters can be casted:
 
@@ -60,8 +60,8 @@ Through a `$casting` array, arbitrary properties and getters can be casted:
 
 ## Casting DataObject
 
-The `[api:DataObject]` class uses `DBField` to describe the types of its
-properties which are persisted in database columns, through the `[$db](api:DataObject::$db)` property.
+The [api:DataObject] class uses `DBField` to describe the types of its
+properties which are persisted in database columns, through the [api:DataObject::$db] property.
 In addition to type information, the `DBField` class also knows how to
 define itself as a database column. See the ["datamodel" topic](/topics/datamodel#casting) for more details.
 
@@ -83,8 +83,8 @@ Example: Flagging an object of type `MyObject` (see above) if it's date is in th
 
 ## Casting HTML Text
 
-The database field types `[api:HTMLVarchar]` and `[api:Varchar]` are exactly the same in the database.  However, the 
-templating engine knows to escape the `[api:Varchar]` field and not the `[api:HTMLVarchar]` field.  So, it's important you
+The database field types [api:HTMLVarchar] and [api:Varchar] are exactly the same in the database.  However, the 
+templating engine knows to escape the [api:Varchar] field and not the [api:HTMLVarchar] field.  So, it's important you
 use the right field if you don't want to be putting $FieldType.XML everywhere.
 
 If you're going to put HTML content into the field, please use the field type with the HTML prefix.  Otherwise, you're

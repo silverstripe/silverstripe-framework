@@ -51,7 +51,7 @@ a search form, as well as get the searched results. Every DataObject can have it
 based on the fields which should be searchable. The class makes a guess at how those fields
 should be searched, e.g. showing a checkbox for any boolean fields in your `$db` definition.
 
-To remove, add or modify searchable fields, define a new `[$searchable_fields](api:DataObject::$searchable_fields)`
+To remove, add or modify searchable fields, define a new [api:DataObject::$searchable_fields]
 static on your model class (see `[SearchContext](/reference/searchcontext)` docs for details). 
 
 	:::php
@@ -65,14 +65,14 @@ static on your model class (see `[SearchContext](/reference/searchcontext)` docs
 	}
 
 For a more sophisticated customization, for example configuring the form fields
-for the search form, override `[api:DataObject->getCustomSearchContext()]` on your model class.
+for the search form, override [api:DataObject::getCustomSearchContext()] on your model class.
 
 ## Result Columns
 
 The results are shown in a tabular listing, powered by the `[GridField](/reference/grid-field)`,
-more specifically the `[api:GridFieldDataColumns]` component.
-It looks for a `[api:DataObject::$summary_fields]` static on your model class,
-where you can add or remove columns. To change the title, use `[api:DataObject::$field_labels]`.
+more specifically the [api:GridFieldDataColumns] component.
+It looks for a [api:DataObject::$summary_fields] static on your model class,
+where you can add or remove columns. To change the title, use [api:DataObject::$field_labels].
 
 	:::php
 	class Product extends DataObject {
@@ -89,10 +89,10 @@ where you can add or remove columns. To change the title, use `[api:DataObject::
 
 ## Results Customization
 
-The results are retrieved from `[api:SearchContext->getResults()]`,
+The results are retrieved from [api:SearchContext::getResults()],
 based on the parameters passed through the search form.
 If no search parameters are given, the results will show every record.
-Results are a `[api:DataList]` instance, so can be customized by additional
+Results are a [api:DataList] instance, so can be customized by additional
 SQL filters, joins, etc (see [datamodel](/topics/datamodel) for more info).
 
 For example, we might want to exclude all products without prices in our sample `MyAdmin` implementation.
@@ -133,7 +133,7 @@ For example, we might want to have a checkbox which limits search results to exp
 		}
 	}
 
-To alter how the results are displayed (via `[api:GridField]`), you can also overload the `getEditForm()` method. For example, to add a new component.
+To alter how the results are displayed (via [api:GridField]), you can also overload the `getEditForm()` method. For example, to add a new component.
 
 	:::php
 	class MyAdmin extends ModelAdmin {
@@ -148,12 +148,12 @@ To alter how the results are displayed (via `[api:GridField]`), you can also ove
 
 ## Managing Relationships
 
-Has-one relationships are simply implemented as a `[api:DropdownField]` by default.
+Has-one relationships are simply implemented as a [api:DropdownField] by default.
 Consider replacing it with a more powerful interface in case you have many records
-(through customizing `[api:DataObject->getCMSFields]`).
+(through customizing [api:DataObject::getCMSFields]).
 
-Has-many and many-many relationships are usually handled via the `[GridField](/reference/grid-field)` class,
-more specifically the `[api:GridFieldAddExistingAutocompleter]` and `[api:GridFieldRelationDelete]` components.
+Has-many and many-many relationships are usually handled via the [GridField](/reference/grid-field) class,
+more specifically the [api:GridFieldAddExistingAutocompleter] and [api:GridFieldRelationDelete] components.
 They provide a list/detail interface within a single record edited in your ModelAdmin.
 
 ## Permissions
@@ -169,19 +169,19 @@ more permission codes through the `ModelAdmin::$required_permission_codes` stati
 
 ## Data Import
 
-The `ModelAdmin` class provides import of CSV files through the `[api:CsvBulkLoader]` API.
+The `ModelAdmin` class provides import of CSV files through the [api:CsvBulkLoader] API.
 which has support for column mapping, updating existing records,
 and identifying relationships - so its a powerful tool to get your data into a SilverStripe database.
 
 By default, each model management interface allows uploading a CSV file
 with all columns autodetected. To override with a more specific importer implementation,
-use the `[api:ModelAdmin::$model_importers] static.
+use the [api:ModelAdmin::$model_importers] static.
 
 ## Data Export
 
 Export is also available, although at the moment only to the CSV format,
 through a button at the end of a results list. You can also export search results.
-It is handled through the `[api:GridFieldExportButton]` component.
+It is handled through the [api:GridFieldExportButton] component.
 
 To customize the exported columns, create a new method called `getExportFields` in your `ModelAdmin`:
 
@@ -203,7 +203,7 @@ Dot syntax support allows you to select a field on a related `has_one` object.
 
 Sometimes you'll work with ModelAdmins from other modules, e.g. the product management
 of an ecommerce module. To customize this, you can always subclass. But there's
-also another tool at your disposal: The `[api:Extension]` API.
+also another tool at your disposal: The [api:Extension] API.
 
 	:::php
 	class MyAdminExtension extends Extension {
@@ -235,8 +235,8 @@ For an introduction how to customize the CMS templates, see our [CMS Architectur
 
 * [GridField](../reference/grid-field): The UI component powering ModelAdmin
 * [Dataobject Relationship Management](/tutorials/dataobject-relationship-management)
-*  `[api:SearchContext]`
-* [genericviews Module](http://silverstripe.org/generic-views-module)
+* [api:SearchContext]
+* `[genericviews Module](http://silverstripe.org/generic-views-module)`
 * [Presentation about ModelAdmin at SupperHappyDevHouse Wellington](http://www.slideshare.net/chillu/modeladmin-in-silverstripe-23)
 * [Reference: CMS Architecture](../reference/cms-architecture)
 * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)

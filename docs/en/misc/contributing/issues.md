@@ -10,14 +10,14 @@ well written bug reports can be half of the solution already!
  * [Framework Bugtracker](https://github.com/silverstripe/silverstripe-framework/issues)
  * [CMS Bugtracker](https://github.com/silverstripe/silverstripe-cms/issues)
  * [Documentation Bugtracker](https://github.com/silverstripe/silverstripe-framework/issues)
- * Search on [http://silverstripe.org/modules](http://silverstripe.org/modules) for module-specific bugtrackers
+ * Search on `[http://silverstripe.org/modules](http://silverstripe.org/modules)` for module-specific bugtrackers
 
 Before submitting a bug:
 
- * Ask for assistance on the [forums](http://silverstripe.org/forums), [core mailinglist](http://groups.google.com/group/silverstripe-dev) or on [IRC](http://silverstripe.org/irc) if you're unsure if its really a bug.
+ * Ask for assistance on the [forums](http://silverstripe.org/forums), [core mailinglist](http://groups.google.com/group/silverstripe-dev) or on `[IRC](http://silverstripe.org/irc)` if you're unsure if its really a bug.
  * Search for similar, existing tickets
  * Is this a security issue? Please follow our separate reporting guidelines below.
- * Is this a issue with the core framework or cms? Modules have their own issue trackers (see [silverstripe.org/modules](http://www.silverstripe.org/modules))
+ * Is this a issue with the core framework or cms? Modules have their own issue trackers (see `[silverstripe.org/modules](http://www.silverstripe.org/modules)`)
  * Try to reproduce your issue on a [clean installation](http://doc.silverstripe.org/framework/en/installation/composer#using-development-versions), maybe the bug has already been fixed on an unreleased branch?
  * The bugtracker is not the place to discuss enhancements, please use the forums or mailinglist.
    Only log enhancement tickets if they gather a large interest in the community
@@ -45,7 +45,7 @@ can be expected to be closed as soon as they're reviewed.
 </div>
 
 In order to gain interest and feedback in your feature, we encourage you to present
-it to the community through the [forums](http://silverstripe.org/forums), [core mailinglist](http://groups.google.com/group/silverstripe-dev) or on [IRC](http://silverstripe.org/irc).
+it to the community through the [forums](http://silverstripe.org/forums), [core mailinglist](http://groups.google.com/group/silverstripe-dev) or on `[IRC](http://silverstripe.org/irc)`.
 
 ## Reporting Security Issues
 

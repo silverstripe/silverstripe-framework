@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The `[api:Injector]` class is the central manager of inter-class dependencies
+The [api:Injector] class is the central manager of inter-class dependencies
 in the SilverStripe Framework. In its simplest form it can be considered as
 a replacement for Object::create and singleton() calls, but also offers 
 developers the ability to declare the dependencies a class type has, or

@@ -28,4 +28,4 @@ Instructions are available for [installing PHP on IIS 6](http://learn.iis.net/pa
 
 On Windows XP, you need to disable **Check that file exists**. See [installation-on-windows-pi](windows-pi) for more information.
 
-Matthew Poole has expanded on these instructions [with a tutorial](http://cubiksoundz.blogspot.com/2008/12/tech-note-installing-silverstripe-cms.html).
+[See also](http://www.silverstripe.org/community/forums/installing-silverstripe/show/8305)

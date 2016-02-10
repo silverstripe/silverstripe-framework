@@ -51,12 +51,12 @@ You can link to API documentation from within the markup by pseudo-links.
 These are automatically resolved to the right URL on `http://api.silverstripe.org`.
 API links are automatically wrapped in `<code>` blocks by the formatter.
 
- * Link to class: `[api:DataObject]`
- * Link to static method: `[api:DataObject::has_one()]`
- * Link to instance method: `[api:DataObject->write()]`
- * Link to static property: `[api:DataObject::$searchable_fields]`
- * Link to instance property: `[api:DataObject->changedFields]`
- * Custom titles: `[my title](api:DataObject)`
+ * Link to class: [api:DataObject]
+ * Link to static method: [api:DataObject::has_one()]
+ * Link to instance method: [api:DataObject->write()]
+ * Link to static property: [api:DataObject::$searchable_fields]
+ * Link to instance property: [api:DataObject->changedFields]
+ * Custom titles: [my title](api:DataObject)
 
 There's some gotchas:
 

@@ -36,7 +36,7 @@ might consist of more than one *URLSegment*).
 
 ### Versioning
 	
-The `SiteTree` class automatically has an extension applied to it: `[Versioned](api:Versioned)`.
+The `SiteTree` class automatically has an extension applied to it: [api:Versioned].
 This provides the basis for the CMS to operate on different stages,
 and allow authors to save their changes without publishing them to
 website visitors straight away.
@@ -67,7 +67,7 @@ Stage operations:
  * `$page->doRestoreToStage()`: Restore the content in the active copy of this SiteTree page to the stage site.
 	
 
-Hierarchy operations (defined on `[api:Hierarchy]`:
+Hierarchy operations (defined on [api:Hierarchy]):
 
  * `$page->liveChildren()`: Return results only from live table
  * `$page->stageChildren()`: Return results from the stage table

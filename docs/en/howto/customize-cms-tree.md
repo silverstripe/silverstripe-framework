@@ -7,10 +7,10 @@ by the [jstree](http://jstree.com) library. It is configured through
 `sapphire/admin/javascript/LeftAndMain.Tree.js`, as well as some
 HTML5 metadata generated on its container (see the `data-hints` attribute).
 
-The tree is rendered through `[api:LeftAndMain->getSiteTreeFor()]`,
+The tree is rendered through [api:LeftAndMain::getSiteTreeFor()],
 which recursively collects all nodes based on various filtering criteria.
-The node strictly just has to implement the `[api:Hierarchy]` extension,
-but in the CMS usually is a `[api:SiteTree]` object.
+The node strictly just has to implement the [api:Hierarchy] extension,
+but in the CMS usually is a [api:SiteTree] object.
 
 ## Add status lozenges to tree nodes ##
 
@@ -43,13 +43,13 @@ code like this:
 By applying the proper style sheet, the snippet html above could produce the look of:
 ![Page Node Screenshot](../_images/tree_node.png "Page Node")
 
-SiteTree is a `[api:DataObject]` which is versioned by `[api:Versioned]` extension. 
+SiteTree is a [api:DataObject] which is versioned by [api:Versioned] extension. 
 Each node can optionally have publication status flags, e.g. "Removed from draft".
 Each flag has a unique identifier, which is also used as a CSS class for easier styling.
 
 Developers can easily add a new flag, delete or alter an existing flag on how it is looked
 or changing the flag label. The customization of these lozenges could be done either through
-inherited subclass or `[api:DataExtension]`. It is just really about how we change the return
+inherited subclass or [api:DataExtension]. It is just really about how we change the return
 value of function `SiteTree->getTreeTitle()` by two easily extendable methods
 `SiteTree->getStatusClass()` and `SiteTree->getStatusFlags()`.
 
@@ -74,7 +74,7 @@ __Example: using a subclass__
 		}
 	}
 
-The above subclass of `[api:SiteTree]` will add a new flag for indicating its
+The above subclass of [api:SiteTree] will add a new flag for indicating its
 __'Scheduled To Publish'__ status. The look of the page node will be changed
 from ![Normal Page Node](../_images/page_node_normal.png) to ![Scheduled Page Node](../_images/page_node_scheduled.png). The getStatusFlags has an `updateStatusFlags()`
 extension point, so the flags can be modified through `DataExtension` rather than

@@ -3,7 +3,7 @@
 ## Overview
 
 Often you need to test your functionality with some existing data, so called "fixtures".
-The `[api:SapphireTest]` class already prepares an empty database for you,
+The [api:SapphireTest] class already prepares an empty database for you,
 and you have various ways to define those fixtures.
 
 ## YAML Fixtures
@@ -95,7 +95,7 @@ set of test instances every time.
 ### Why Factories?
 
 Manually defined fixture provide full flexibility, but very little in terms of structure and convention.
-Alternatively, you can use the `[api:FixtureFactory]` class, which allows you
+Alternatively, you can use the [api:FixtureFactory] class, which allows you
 to set default values, callbacks on object creation, and dynamic/lazy value setting.
 By the way, the `SapphireTest` YAML fixtures rely on internally on this class as well.
 

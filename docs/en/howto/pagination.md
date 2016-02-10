@@ -1,12 +1,12 @@
 # Paginating A List
 
-Adding pagination to a `[api:SS_List]` is quite simple. All
-you need to do is wrap the object in a `[api:PaginatedList]` decorator, which takes
+Adding pagination to a [api:SS_List] is quite simple. All
+you need to do is wrap the object in a [api:PaginatedList] decorator, which takes
 care of fetching a sub-set of the total list and presenting it to the template.
 
 In order to create a paginated list, you can create a method on your controller
 that first creates a `SS_List` that will return all pages, and then wraps it
-in a `[api:PaginatedList]` object. The `PaginatedList` object is also passed the
+in a [api:PaginatedList] object. The `PaginatedList` object is also passed the
 HTTP request object so it can read the current page information from the
 "?start=" GET var.
 
@@ -29,7 +29,7 @@ a sub-collection of the list.
 
 Now all that remains is to render this list into a template, along with pagination
 controls. There are two ways to generate pagination controls:
-`[api:PaginatedList->Pages()]` and `[api:PaginatedList->PaginationSummary()]`. In
+[api:PaginatedList::Pages()] and [api:PaginatedList::PaginationSummary()]. In
 this example we will use `PaginationSummary()`.
 
 The first step is to simply list the objects in the template:
@@ -72,9 +72,9 @@ controls in the form `[1] ... [3] [4] [[5]] [6] [7] ... [10]`.
 
 In some situations where you are generating the list yourself, the underlying
 list will already contain only the items that you wish to display on the current
-page. In this situation the automatic limiting done by `[api:PaginatedList]`
+page. In this situation the automatic limiting done by [api:PaginatedList]
 will break the pagination. You can disable automatic limiting using the
-`[api:PaginatedList->setLimitItems()]` method when using custom lists.
+[api:PaginatedList::setLimitItems()] method when using custom lists.
 
 ## Related
 

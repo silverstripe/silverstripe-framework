@@ -29,11 +29,11 @@ final page. Lets look at each one individually:
 
 ### Model
 
-All content on our site is stored in a database. Each class that is a child of the `[api:DataObject]` class will have its own table in our database. 
+All content on our site is stored in a database. Each class that is a child of the [api:DataObject] class will have its own table in our database. 
 
 Every object of such a class will correspond to a row in that table -
 this is our "data object", the **"model"** of Model-View-Controller. A page type has a data object that represents all the data for our page. Rather than inheriting 
-directly from `[api:DataObject]`, it inherits from `[api:SiteTree]`.  We generally create a "Page" data object, and subclass this for all other page types. This allows us to define behavior that is consistent across all pages in our site.
+directly from [api:DataObject], it inherits from [api:SiteTree].  We generally create a "Page" data object, and subclass this for all other page types. This allows us to define behavior that is consistent across all pages in our site.
 
 ### View
 
@@ -42,7 +42,7 @@ presentation of our website.
 
 ### Controller
 
-Each page type also has a **"controller"**. The controller contains all the code used to manipulate our data before it is rendered. For example, suppose we were making an auction site, and we only wanted to display the auctions closing in the next ten minutes. We would implement this logic in the controller. The controller for a page should inherit from `[api:ContentController]`. Just as we create a "Page" data object and subclass it for the rest of the site, we also create a "Page_Controller" that is subclassed.
+Each page type also has a **"controller"**. The controller contains all the code used to manipulate our data before it is rendered. For example, suppose we were making an auction site, and we only wanted to display the auctions closing in the next ten minutes. We would implement this logic in the controller. The controller for a page should inherit from [api:ContentController]. Just as we create a "Page" data object and subclass it for the rest of the site, we also create a "Page_Controller" that is subclassed.
 
 
 Creating a new page type requires creating each of these three elements. We will then have full control over presentation, the database, and editable CMS fields. 
@@ -88,7 +88,7 @@ Let's create the *ArticleHolder* page type.
 Here we have done something interesting: the *$allowed_children* field. This is one of a number of static fields we can define to change the properties of a page type. The *$allowed_children* field is an array of page types that are allowed
 to be children of the page in the site tree. As we only want **news articles** in the news section, we only want pages of the type *ArticlePage* as children. We can enforce this in the CMS by setting the *$allowed_children* field within this class.
 
-We will be introduced to other fields like this as we progress; there is a full list in the documentation for `[api:SiteTree]`.
+We will be introduced to other fields like this as we progress; there is a full list in the documentation for [api:SiteTree].
 
 Now that we have created our page types, we need to let SilverStripe rebuild the database: [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build). SilverStripe should detect that there are two new page types, and add them to the list of page types in the database.
 
@@ -155,7 +155,7 @@ Let's walk through this method.
 
 
 Firstly, we get the fields from the parent class; we want to add fields, not replace them. The *$fields* variable
-returned is a `[api:FieldList]` object.
+returned is a [api:FieldList] object.
 
 	:::php
 	$fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
@@ -163,15 +163,17 @@ returned is a `[api:FieldList]` object.
 
 
 We can then add our new fields with *addFieldToTab*. The first argument is the tab on which we want to add the field to:
-"Root.Main" is the tab which the content editor is on. The second argument is the field to add; this is not a database field, but a `[api:FormField]` - see the documentation for more details. 
+"Root.Main" is the tab which the content editor is on. The second argument is the field to add; this is not a database field, but a [api:FormField] - see the documentation for more details. 
 
 <div class="hint" markdown="1">
 Note: By default, the CMS only has one tab. Creating new tabs is much like adding to existing tabs. For instance: `$fields->addFieldToTab('Root.NewTab', new TextField('Author'));`
 would create a new tab called "New Tab", and a single "Author" textfield inside.
 </div>
 
-We have added two fields: A simple `[api:TextField]` and a `[api:DateField]`.   
-There are many more fields available in the default installation, listed in ["form field types"](/reference/form-field-types).
+We have added two fields: A simple [api:TextField] and a
+[api:DateField]. There are many more fields available in the default
+installation, listed in
+["form field types"](/reference/form-field-types).
 
 	:::php
 	return $fields;
@@ -223,7 +225,7 @@ By enabling *showCalendar* you show a calendar overlay when clicking on the fiel
 	:::php
 	$dateField->setConfig('dateformat', 'dd/MM/YYYY');
 
-*dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.  See the `[api:DateField]` documentation for more configuration options.
+*dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.  See the [api:DateField] documentation for more configuration options.
 
 	:::php
 	$fields->addFieldToTab('Root.Main', new TextField('Author','Author Name'), 'Content');
@@ -260,13 +262,13 @@ First, the template for displaying a single article:
 
 Most of the code is just like the regular Page.ss, we include an informational div with the date and the author of the Article.
 
-To access the new fields, we use *$Date* and *$Author*. In fact, all template variables and page controls come from either the data object or the controller for the page being displayed. The *$Title* variable comes from the *Title* field of the `[api:SiteTree]` class. *$Date* and *$Author* come from the *ArticlePage* table through your custom Page. *$Content* comes from the *SiteTree* table through the same data object. The data for your page is
+To access the new fields, we use *$Date* and *$Author*. In fact, all template variables and page controls come from either the data object or the controller for the page being displayed. The *$Title* variable comes from the *Title* field of the [api:SiteTree] class. *$Date* and *$Author* come from the *ArticlePage* table through your custom Page. *$Content* comes from the *SiteTree* table through the same data object. The data for your page is
 spread across several tables in the database matched by id - e.g. *Content* is in the *SiteTree* table, and *Date* and
 *Author* are in the *ArticlePage* table. SilverStripe matches this data, and collates it into a single data object.
 
 ![](_images/tutorial2_data-collation.jpg)
 
-Rather than using *$Date* directly, we use *$Date.Nice*. If we look in the `[api:Date]` documentation, we can see
+Rather than using *$Date* directly, we use *$Date.Nice*. If we look in the [api:Date] documentation, we can see
 that the *Nice* function returns the date in *dd/mm/yyyy* format, rather than the *yyyy-mm-dd* format stored in the
 database.
 
@@ -296,7 +298,7 @@ We'll now create a template for the article holder. We want our news section to 
 	</div>
 
 
-Here we use the page control *Children*. As the name suggests, this control allows you to iterate over the children of a page. In this case, the children are our news articles. The *$Link* variable will give the address of the article which we can use to create a link, and the *FirstParagraph* function of the `[api:HTMLText]` field gives us a nice summary of the article. The function strips all tags from the paragraph extracted.
+Here we use the page control *Children*. As the name suggests, this control allows you to iterate over the children of a page. In this case, the children are our news articles. The *$Link* variable will give the address of the article which we can use to create a link, and the *FirstParagraph* function of the [api:HTMLText] field gives us a nice summary of the article. The function strips all tags from the paragraph extracted.
 
 ![](_images/tutorial2_articleholder.jpg)
 
@@ -385,7 +387,7 @@ The controller for a page is only created when page is actually visited, while t
 
 ## Creating a RSS feed
 
-An RSS feed is something that no news section should be without. SilverStripe makes it easy to create RSS feeds by providing an `[api:RSSFeed]` class to do all the hard work for us. Create the following function in the
+An RSS feed is something that no news section should be without. SilverStripe makes it easy to create RSS feeds by providing an [api:RSSFeed] class to do all the hard work for us. Create the following function in the
 *ArticleHolder_Controller*:
 
 	:::php
@@ -397,7 +399,7 @@ An RSS feed is something that no news section should be without. SilverStripe ma
 
 This function creates an RSS feed of all the news articles, and outputs it to the browser. If we go to [http://localhost/your_site_name/news/rss](http://localhost/your_site_name/news/rss) we should see our RSS feed. When there is more to a URL after a page's base URL, "rss" in this case, SilverStripe will call the function with that name on the controller if it exists.
 
-Depending on your browser, you should see something like the picture below. If your browser doesn't support RSS, you will most likely see the XML output instead. For more on RSS, see `[api:RSSFeed]`
+Depending on your browser, you should see something like the picture below. If your browser doesn't support RSS, you will most likely see the XML output instead. For more on RSS, see [api:RSSFeed]
 
 ![](_images/tutorial2_rss-feed.jpg)
 
@@ -463,7 +465,7 @@ Nothing here should be new. The *StaffPage* page type is more interesting though
 
 Instead of adding our *Image* as a field in *$db*, we have used the *$has_one* array. This is because an *Image* is not a simple database field like all the fields we have seen so far, but has its own database table. By using the *$has_one* array, we create a relationship between the *StaffPage* table and the *Image* table by storing the id of the respective *Image* in the *StaffPage* table.
 
-We then add an `[api:UploadField]` in the *getCMSFields* function to the tab "Root.Images". Since this tab doesn't exist,
+We then add an [api:UploadField] in the *getCMSFields* function to the tab "Root.Images". Since this tab doesn't exist,
 the *addFieldToTab* function will create it for us. The *UploadField* allows us to select an image or upload a new one in
 the CMS.
 
@@ -477,7 +479,7 @@ a new *StaffHolder* called "Staff", and create some *StaffPage*s in it.
 
 ### Creating the staff section templates
 
-The staff section templates aren't too difficult to create, thanks to the utility methods provided by the `[api:Image]` class.
+The staff section templates aren't too difficult to create, thanks to the utility methods provided by the [api:Image] class.
 
 **themes/simple/templates/Layout/StaffHolder.ss**
 
@@ -501,7 +503,7 @@ The staff section templates aren't too difficult to create, thanks to the utilit
 	</div>
 
 
-This template is very similar to the *ArticleHolder* template. The *SetWidth* method of the `[api:Image]` class
+This template is very similar to the *ArticleHolder* template. The *SetWidth* method of the [api:Image] class
 will resize the image before sending it to the browser. The resized image is cached, so the server doesn't have to
 resize the image every time the page is viewed.
 

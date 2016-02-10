@@ -6,7 +6,7 @@ The SilverStripe core modules (`framework` and `cms`), as well as some of the mo
 git version control. SilverStripe hosts its modules on [github.com/silverstripe](http://github.com/silverstripe) and [github.com/silverstripe-labs](http://github.com/silverstripe-labs).  After [installing git](http://help.github.com/git-installation-redirect) and creating a [free github.com account](https://github.com/signup/free), you can "fork" a module,
 which creates a copy that you can commit to (see github's [guide to "forking"](http://help.github.com/forking/)).
 
-For other modules, our [module list on silverstripe.org](http://silverstripe.org/modules) lists the repository locations, typically using a version control system like "git" or "subversion". 
+For other modules, our `[module list on silverstripe.org](http://silverstripe.org/modules)` lists the repository locations, typically using a version control system like "git" or "subversion". 
 
 <div class="hint" markdown="1">
 Note: By supplying code to the SilverStripe core team in patches, tickets and pull requests, you agree to assign copyright of that code to SilverStripe Limited, on the condition that SilverStripe Limited releases that code under the BSD license.
@@ -104,7 +104,7 @@ step.
 *  It's better to submit multiple patches with separate bits of functionality than a big patch containing lots of
 changes
 *  Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
-[API documentation](http://api.silverstripe.org/trunk) for good examples.
+[API documentation](http://api.silverstripe.org) for good examples.
 * Also check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * We will attribute the change to you whereever possible (git does this automatically for pull requests)
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
@@ -117,7 +117,7 @@ Most importantly: Keep the first line short, and add more detail below.
 This ensures commits are easy to browse, and look nice on github.com
 (more info about [proper git commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)).
 
-As we automatically generate [changelogs](http://doc.silverstripe.org/sapphire/en/trunk/changelogs/) from them, we need a way to categorize and filter. 
+As we automatically generate `[changelogs](http://doc.silverstripe.org/sapphire/en/trunk/changelogs/)` from them, we need a way to categorize and filter. 
 Please prefix **noteworthy** commit messages with one of the following tags: 
 
 * `NEW`: New feature or major enhancement (both for users and developers)
@@ -133,7 +133,7 @@ Same goes for version control plumbing like merges, file renames or reverts.
 Further guidelines:
 
 * Each commit should form a logical unit - if you fix two unrelated bugs, commit each one separately
-* If you are fixing a ticket from our [bugtracker](http://open.silverstripe.com), please append `(fixes #<ticketnumber>)`
+* If you are fixing a ticket from our `[bugtracker](http://open.silverstripe.com)`, please append `(fixes #<ticketnumber>)`
 * If your change is related to another commit, reference it with its abbreviated commit hash. 
 * Mention important changed classes and methods in the commit summary.
 

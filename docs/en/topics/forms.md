@@ -73,7 +73,7 @@ or by defining `$allowed_actions` in your own `Form` class
 You'll notice that we've used a new notation for creating form fields, using `create()` instead of the `new` operator. 
 These are functionally equivalent, but allows PHP to chain operations like `setTitle()` without assigning the field 
 instance to a temporary variable. For in-depth information on the create syntax, see the [Injector](/reference/injector) 
-documentation or the API documentation for `[api:Object]`::create().
+documentation or the API documentation for [api:Object::create()].
 </div>
 
 ## The Form
@@ -90,9 +90,9 @@ constructor takes the following arguments:
 *  `$name`: This must be the name of the method on that controller that is called to return the form.  The first two
 fields allow the form object to be re-created after submission.  **It's vital that they are properly set - if you ever
 have problems with form action handler not working, check that these values are correct.**
-*  `$fields`: A `[api:FieldList]` containing `[api:FormField]` instances make up fields in the form.
-*  `$actions`: A `[api:FieldList]` containing the `[api:FormAction]` objects - the buttons at the bottom.
-*  `$validator`: An optional `[api:Validator]` for validation of the form.
+*  `$fields`: A [api:FieldList] containing [api:FormField] instances make up fields in the form.
+*  `$actions`: A [api:FieldList] containing the [api:FormAction] objects - the buttons at the bottom.
+*  `$validator`: An optional [api:Validator] for validation of the form.
 
 Example: 
 
@@ -174,7 +174,7 @@ data.
 
 ## The FormField classes
 
-There are many classes extending `[api:FormField]`. There is a full overview at 
+There are many classes extending [api:FormField]. There is a full overview at 
 [form field types](/reference/form-field-types).
 
 
@@ -256,7 +256,7 @@ First of all, you need to create your form on it's own class, that way you can d
 		}
 	}
 	
-`MyForm->forTemplate()` tells the `[api:Form]` class to render with a template of return value of `$this->class`, which in this case
+`MyForm->forTemplate()` tells the [api:Form] class to render with a template of return value of `$this->class`, which in this case
 is *MyForm*. If the template doesn't exist, then it falls back to using Form.ss.
 
 *MyForm.ss* should then be placed into your *templates/Includes* directory for your project. Here is an example of
@@ -296,7 +296,7 @@ in this case `EmailField->Field()` or `PasswordField->Field()` which returns an 
 for the type of field. Pass in the name of the field as the first parameter, as done above, to render it into the 
 template.
 
-To find more methods, have a look at the `[api:Form]` class and `[api:FieldList]` class as there is a lot of different 
+To find more methods, have a look at the [api:Form] class and [api:FieldList] class as there is a lot of different 
 methods of customising the form templates. An example is that you could use `<% loop $Fields %>` instead of specifying 
 each field manually, as we've done above.
 
@@ -314,10 +314,10 @@ Will be rendered as:
 	:::html
 	<input type="text" name="MyText" class="text largeText" id="MyForm_MyCustomForm_MyText" data-validation-regex="[\d]*">
 
-Each form field is rendered into a form via the `[FormField->FieldHolder()](api:FormField)` method, which includes 
+Each form field is rendered into a form via the [api:FormField::FieldHolder()] method, which includes 
 a container `<div>` as well as a `<label>` element (if applicable).
 
-You can also render each field without these structural elements through the `[FormField->Field()](api:FormField)` 
+You can also render each field without these structural elements through the [api:FormField::Field()]
 method. In order to influence the form rendering, overloading these two methods is a good start.
 
 In addition, most form fields are rendered through SilverStripe templates, e.g. `TextareaField` is rendered via 
@@ -371,7 +371,7 @@ Adds a new text field called FavouriteColour next to the Content field in the CM
 
 ##  API Documentation
 
-* `[api:Form]`
-* `[api:FormField]`
-* `[api:FieldList]`
-* `[api:FormAction]`
+* [api:Form]
+* [api:FormField]
+* [api:FieldList]
+* [api:FormAction]

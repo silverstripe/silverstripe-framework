@@ -84,4 +84,4 @@ You can download your work right from Transifex in order to speed up the process
  * [i18n](/topics/i18n): Developer-level documentation of Silverstripe's i18n capabilities
  * [contributing/translation](contributing/translation): Information for translators looking to contribute translations of the SilverStripe UI.
  * [translatable](https://github.com/silverstripe/silverstripe-translatable): DataObject-interface powering the website-content translations
- * ["Translatable ModelAdmin" module](http://silverstripe.org/translatablemodeladmin-module/): An extension which allows translations of DataObjects inside ModelAdmin
+ * ["Translatable ModelAdmin" module](https://github.com/silverstripe-labs/silverstripe-translatablemodeladmin): An extension which allows translations of DataObjects inside ModelAdmin
