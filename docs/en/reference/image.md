@@ -2,14 +2,14 @@
 
 ## Introduction
 
-Represents an image object through the `[api:Image]` class, inheriting all base functionality from the `[api:File]` class with extra functionality including resizing.
+Represents an image object through the [api:Image] class, inheriting all base functionality from the [api:File] class with extra functionality including resizing.
 
 ## Usage
 
 ### Managing images through form fields
 
-Images can be uploaded like any other file, through `[api:FileField]`.
-More advanced usage is possible through `[api:UploadField]`,
+Images can be uploaded like any other file, through [api:FileField].
+More advanced usage is possible through [api:UploadField],
 which provides thumbnails, a detail view of the image properties,
 and management of relationships to other DataObject instances.
 Allows upload of images through limiting file extensions with `setAllowedExtensions()`.
@@ -107,8 +107,8 @@ For output of an image tag with the image automatically resized to 80px width, y
 
 ### Form Upload
 
-For usage on a website form, see `[api:FileField]`.
-If you want to upload images within the CMS, see `[api:UploadField]`.
+For usage on a website form, see [api:FileField].
+If you want to upload images within the CMS, see [api:UploadField].
 
 ### Clearing Thumbnail Cache
 
@@ -122,4 +122,4 @@ image cache.
 	http://www.mysite.com/images/flush
 
 ## API Documentation
-`[api:Image]`
+[api:Image]

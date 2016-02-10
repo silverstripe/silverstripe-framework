@@ -6,10 +6,10 @@ but doesn't come with any built-in JavaScript validation
 
 ## Required Fields
 
-Validators are implemented as an argument to the `[api:Form]` constructor,
-and are subclasses of the abstract `[api:Validator]` base class.
+Validators are implemented as an argument to the [api:Form] constructor,
+and are subclasses of the abstract [api:Validator] base class.
 The only implementation which comes with SilverStripe is
-the `[api:RequiredFields]` class, which ensures fields are filled out
+the [api:RequiredFields] class, which ensures fields are filled out
 when the form is submitted.
 
 	:::php
@@ -32,7 +32,7 @@ when the form is submitted.
 ## Form Field Validation
 
 Form fields are responsible for validating the data they process,
-through the `[api:FormField->validate()] method. There are many fields
+through the [api:FormField::validate()] method. There are many fields
 for different purposes (see ["form field types"](/reference/form-field-types) for a full list).
 
 ## Adding your own validation messages
@@ -128,7 +128,7 @@ but are just a starting point for custom validation with JavaScript.
 ## Model Validation
 
 An alternative (or additional) approach to validation is to place it directly
-on the model. SilverStripe provides a `[api:DataObject->validate()]` method for this purpose.
+on the model. SilverStripe provides a [api:DataObject::validate()] method for this purpose.
 Refer to the ["datamodel" topic](/topics/datamodel#validation-and-constraints) for more information.
 
 ## Subclassing Validator
@@ -141,4 +141,4 @@ errors.
 
 ## Related
 
- * Model Validation with [api:DataObject->validate()]
+ * Model Validation with [api:DataObject::validate()]

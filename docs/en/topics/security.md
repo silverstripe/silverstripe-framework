@@ -3,7 +3,7 @@
 ## Introduction
 
 This page details notes on how to ensure that we develop secure SilverStripe applications. 
-See our "[Release Process](/misc/release-process#security-releases) on how to report security issues.
+See our [Release Process](/misc/release-process#security-releases) on how to report security issues.
 
 ## SQL Injection
 
@@ -15,10 +15,10 @@ See [http://shiflett.org/articles/sql-injection](http://shiflett.org/articles/sq
 ### Automatic escaping
 
 SilverStripe automatically escapes data in SQL statements wherever possible,
-through database-specific methods (see `[api:Database->addslashes()]`).
-For `[api:MySQLDatabase]`, this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
+through database-specific methods (see [api:MySQLDatabase::addslashes()]).
+For [api:MySQLDatabase], this will be [mysql_real_escape_string()](http://php.net/manual/en/function.mysql-real-escape-string.php).
 
-*  Most `[api:DataList]` accessors (see escaping note in method documentation)
+*  Most [api:DataList] accessors (see escaping note in method documentation)
 *  DataObject::get_by_id()
 *  DataObject::update()
 *  DataObject::castedUpdate()
@@ -129,8 +129,8 @@ for in-depth information about "Cross-Site-Scripting".
 
 ### Escaping model properties
 
-`[api:SSViewer]` (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
-object-properties by [casting](/topics/datamodel#casting) its string value into a `[api:DBField]` object.
+[api:SSViewer] (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
+object-properties by [casting](/topics/datamodel#casting) its string value into a [api:DBField] object.
 
 PHP:
 
@@ -213,7 +213,7 @@ presentation from business logic.
 When using *customise()* or *renderWith()* calls in your controller, or otherwise forcing a custom context for your
 template, you'll need to take care of casting and escaping yourself in PHP. 
 
-The `[api:Convert]` class has utilities for this, mainly *Convert::raw2xml()* and *Convert::raw2att()* (which is
+The [api:Convert] class has utilities for this, mainly *Convert::raw2xml()* and *Convert::raw2att()* (which is
 also used by *XML* and *ATT* in template code).
 
 PHP:

@@ -116,4 +116,4 @@ The [newsletter module](http://silverstripe.org/newsletter-module) provides a UI
 
 ## API Documentation
 
-`[api:Email]`
+[api:Email]

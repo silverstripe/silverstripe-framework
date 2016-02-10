@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The `[api:DataObject]` class represents a single row in a database table,
+The [api:DataObject] class represents a single row in a database table,
 following the ["Active Record"](http://en.wikipedia.org/wiki/Active_record_pattern) design pattern.
 
 ## Defining Properties
@@ -19,7 +19,7 @@ is explained in the ["datamodel" topic](/topics/datamodel).
 
 In addition to defining how data is persisted, the class can also
 help with editing it by providing form fields through `DataObject->getCMSFields()`.
-The resulting `[api:FieldList]` is the centrepiece of many data administration interfaces in SilverStripe.
+The resulting [api:FieldList] is the centrepiece of many data administration interfaces in SilverStripe.
 Many customizations of the SilverStripe CMS interface start here,
 by adding, removing or configuring fields.
 
@@ -44,7 +44,7 @@ restricting input to numbers, and much more.
 
 The ORM already has a lot of information about the data represented by a `DataObject`
 through its `$db` property, so why not use it to create form fields as well?
-If you call the parent implementation, the class will use `[api:FormScaffolder]`
+If you call the parent implementation, the class will use [api:FormScaffolder]
 to provide reasonable defaults based on the property type (e.g. a checkbox field for booleans).
 You can then further customize those fields as required.
 
@@ -62,7 +62,7 @@ The `[ModelAdmin](/reference/modeladmin)` class uses this approach to provide
 data management interfaces with very little custom coding.
 
 You can also alter the fields of built-in and module `DataObject` classes through
-your own `[DataExtension](/reference/dataextension)`, and a call to `[api:DataExtension->updateCMSFields()]`.
+your own `[DataExtension](/reference/dataextension)`, and a call to [api:DataExtension::updateCMSFields()].
 
 ### Searchable Fields
 
@@ -86,8 +86,8 @@ Example: Simple Definition
 	}
 
 
-Searchable fields will be appear in the search interface with a default form field (usually a `[api:TextField]`) and a default
-search filter assigned (usually an `[api:ExactMatchFilter]`). To override these defaults, you can specify additional information
+Searchable fields will be appear in the search interface with a default form field (usually a [api:TextField]) and a default
+search filter assigned (usually an [api:ExactMatchFilter]). To override these defaults, you can specify additional information
 on `$searchable_fields`:
 
 	:::php
@@ -99,7 +99,7 @@ on `$searchable_fields`:
 	}
 
 
-If you assign a single string value, you can set it to be either a `[api:FormField]` or `[api:SearchFilter]`. To specify both, you can
+If you assign a single string value, you can set it to be either a [api:FormField] or [api:SearchFilter]. To specify both, you can
 assign an array:
 
 	:::php
@@ -146,8 +146,8 @@ To include relations (''$has_one'', `$has_many` and `$many_many`) in your search
 
 ### Summary Fields
 
-Summary fields can be used to show a quick overview of the data for a specific `[api:DataObject]` record. Most common use is
-their display as table columns, e.g. in the search results of a `[api:ModelAdmin]` CMS interface.
+Summary fields can be used to show a quick overview of the data for a specific [api:DataObject] record. Most common use is
+their display as table columns, e.g. in the search results of a [api:ModelAdmin] CMS interface.
 
 Example: Getting predefined summary fields
 
@@ -195,4 +195,4 @@ To include relations in your summaries, you can use a dot-notation.
 
 ## API Documentation
 
-`[api:DataObject]`
+[api:DataObject]

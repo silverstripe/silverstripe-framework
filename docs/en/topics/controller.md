@@ -5,7 +5,7 @@ actions and url handling of aspects of your SilverStripe site.
 
 ## Usage
 
-The following example is for a simple `[api:Controller]` class. If you're using
+The following example is for a simple [api:Controller] class. If you're using
 the cms module and looking at Page_Controller instances you won't need to setup
 your own routes since the cms module handles these routes.
 
@@ -140,10 +140,10 @@ permission checks.
 
 ## URL Handling
 
-In the above example the URLs were configured using the `[api:Director]` rules 
+In the above example the URLs were configured using the [api:Director] rules 
 in the **routes.yml** file. Alternatively you can specify these in your 
 Controller class via the **$url_handlers** static array (which gets processed 
-by the `[api:RequestHandler]`).  
+by the [api:RequestHandler]). 
 
 This is useful when you want to subvert the fixed action mapping of `fastfood/order/*` 
 to the function **order**. In the case below we also want any orders coming 
@@ -160,7 +160,7 @@ through `/fastfood/drivethrough/` to use the same order function.
 
 ## URL Patterns
 
-The `[api:RequestHandler]` class will parse all rules you specify against the 
+The [api:RequestHandler] class will parse all rules you specify against the 
 following patterns.
 
 **A rule must always start with alphabetical ([A-Za-z]) characters or a $Variable 
@@ -195,7 +195,7 @@ You can use the `debug_request=1` switch from the [urlvariabletools](/reference/
 
 Controllers facilitate HTTP redirection.
 
-Note: These methods have been formerly located on the `[api:Director]` class.
+Note: These methods have been formerly located on the [api:Director] class.
 
 *  `redirect("action-name")`: If there's no slash in the URL passed to redirect, then it is assumed that you want to go to a different action on the current controller.
 *  `redirect("relative/url")`: If there is a slash in the URL, it's taken to be a normal URL.  Relative URLs
@@ -208,10 +208,10 @@ either `301` for permanent redirects, or `302` for temporary redirects (default)
 
 ## API Documentation
 
-`[api:Controller]`
+[api:Controller]
 
 ## Links
 
-*  `[api:Director]` class
+*  [api:Director] class
 *  [execution-pipeline](/reference/execution-pipeline)
 *  [URL Handling in Controllers](http://maetl.net/silverstripe-url-handling) by maetl

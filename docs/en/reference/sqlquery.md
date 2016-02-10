@@ -69,7 +69,7 @@ how to sanitize user input before using it in SQL queries.
 	  echo $row['BirthYear'];
 	}
 
-The result is an array lightly wrapped in a database-specific subclass of `[api:Query]`. 
+The result is an array lightly wrapped in a database-specific subclass of [api:Query]. 
 This class implements the *Iterator*-interface, and provides convenience-methods for accessing the data.
 
 ### DELETE
@@ -139,5 +139,5 @@ An alternative approach would be a custom getter in the object definition.
 ## Related
 
 *  [datamodel](/topics/datamodel)
-*  `[api:DataObject]`
+*  [api:DataObject]
 *  [database-structure](database-structure)

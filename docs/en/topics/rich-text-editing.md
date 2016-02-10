@@ -9,8 +9,8 @@ you can effectively select and upload files.
 
 ## Usage
 
-The framework comes with a `[api:HTMLEditorField]` form field class which encapsulates most of the required functionality.
-It is usually added through the `[api:DataObject->getCMSFields()]` method:
+The framework comes with a [api:HTMLEditorField] form field class which encapsulates most of the required functionality.
+It is usually added through the [api:DataObject::getCMSFields()] method:
 
 	:::php
 	class MyObject extends DataObject {
@@ -24,10 +24,10 @@ It is usually added through the `[api:DataObject->getCMSFields()]` method:
 ## Configuration
 
 To keep the JavaScript editor configuration manageable and extensible,
-we've wrapped it in a PHP class called `[api:HtmlEditorConfig]`.
+we've wrapped it in a PHP class called [api:HtmlEditorConfig].
 The class comes with its own defaults, which are extended through the `_config.php`
 files in the framework (and the `cms` module in case you've got that installed).
-There can be multiple configs, which should always be created / accessed using `[api:HtmlEditorConfig::get]. 
+There can be multiple configs, which should always be created / accessed using [api:HtmlEditorConfig::get()]. 
 You can then set  the currently active config using `set_active()`. 
 By default, a config named 'cms' is used in any field created throughout the CMS interface.
 
@@ -45,9 +45,9 @@ Example: Remove some buttons for more advanced formatting
 
 ## Image and Media Insertion
 
-The `[api:HtmlEditorField]` API also handles inserting images and media 
+The [api:HtmlEditorField] API also handles inserting images and media 
 files into the managed HTML content. It can be used both for referencing
-files on the webserver filesystem (through the `[api:File]` and `[api:Image]` APIs),
+files on the webserver filesystem (through the [api:File] and [api:Image] APIs),
 as well as hotlinking files from the web.
 
 ## oEmbed: Embedding media through external services
@@ -57,7 +57,7 @@ around the web, allowing easy representation of files just by referencing a webs
 For example, a content author can insert a playable youtube video just by knowing
 its URL, as opposed to dealing with manual HTML code.
 
-oEmbed powers the "Insert from web" feature available through `[api:HtmlEditorField]`.
+oEmbed powers the "Insert from web" feature available through [api:HtmlEditorField].
 Internally, it makes HTTP queries to a list of external services
 if it finds a matching URL. These services are described in the `Oembed.providers` configuration.
 Since these requests are performed on page rendering, they typically have a long cache time (multiple days). To refresh a cache, append `?flush=1` to a URL.
@@ -91,22 +91,22 @@ Adding functionality is a bit more advanced, you'll most likely
 need to add some fields to the PHP forms, as well as write some
 JavaScript to ensure the values from those fields make it into the content
 elements (and back out in case an existing element gets edited).
-There's lots of extension points in the `[api:HtmlEditorField_Toolbar]` class
+There's lots of extension points in the [api:HtmlEditorField_Toolbar] class
 to get you started.
 
 ### Security groups with their own editor configuration
 
 Different groups of authors can be assigned their own config,
 e.g. a more restricted rule set for content reviewers (see the "Security" )
-The config is available on each user record through `[api:Member->getHtmlEditorConfigForCMS()]`.
-The group assignment is done through the "Security" interface for each `[api:Group]` record.
+The config is available on each user record through [api:Member::getHtmlEditorConfigForCMS()].
+The group assignment is done through the "Security" interface for each [api:Group] record.
 Note: The dropdown is only available if more than one config exists.
 
 ### Using the editor outside of the CMS
 
 Each interface can have multiple fields of this type, each with their own toolbar to set formatting
 and insert HTML elements. They do share one common set of dialogs for inserting links and other media though,
-encapsulated in the `[api:HtmlEditorField_Toolbar]` class.
+encapsulated in the [api:HtmlEditorField_Toolbar] class.
 In the CMS, those dialogs are automatically instanciated, but in your own interfaces outside
 of the CMS you have to take care of instanciation yourself:
 
@@ -141,7 +141,7 @@ WYSIWYG editors are complex beasts, so replacing it completely is a difficult ta
 The framework provides a wrapper implementation for the basic required functionality,
 mainly around selecting and inserting content into the editor view.
 Have a look in `HtmlEditorField.js` and the `ss.editorWrapper` object to get you started
-on your own editor wrapper. Note that the `[api:HtmlEditorConfig]` is currently hardwired to support TinyMCE,
+on your own editor wrapper. Note that the [api:HtmlEditorConfig] is currently hardwired to support TinyMCE,
 so its up to you to either convert existing configuration as applicable,
 or start your own configuration.
 

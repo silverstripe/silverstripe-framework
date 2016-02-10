@@ -36,11 +36,11 @@ warnings.
 An HTTP 500 error will be sent when there has been a fatal error on either a test or production site.  You can make this
 friendlier - much like the 404 page, the error content can be edited within the CMS.
 
-*  Create a page of type `[api:ErrorPage]`
+*  Create a page of type [api:ErrorPage]
 *  Set the error code to 500
 *  Publish the page.
 
-**HOW IT WORKS: **The publication script for `[api:ErrorPage]` will write the full HTML content, including the template styling,
+**HOW IT WORKS: **The publication script for [api:ErrorPage] will write the full HTML content, including the template styling,
 to assets/error-500.html.  The fatal error handler looks for the presence of this file, and if it exists, dumps the
 content.  This means that database access isn't required to provide a 500 error page.
 

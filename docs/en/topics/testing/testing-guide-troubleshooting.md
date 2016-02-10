@@ -50,7 +50,7 @@ When called through a web browser, it prompts for a fixture file
 which it creates a new database for, and sets it as the current database
 in this browser session until you call `dev/tests/endsession`.
 
-For more advanced users, you can also have a look in the `[api:YamlFixture]`
+For more advanced users, you can also have a look in the [api:YamlFixture]
 class to see what's going on behind the scenes.
 
 ## My database server is cluttered with `tmpdb...` databases

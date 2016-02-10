@@ -111,7 +111,7 @@ You should see some output showing the PHP version. If you get something else, o
 
 ## Install SilverStripe
 
-  - [Download SilverStripe](http://silverstripe.org/downloads)
+  - [Download SilverStripe](https://www.silverstripe.org/download)
   - Extract the download contents to **C:\Inetpub\wwwroot\silverstripe**
   - Open **inetmgr.exe**
   - Right click **Web Sites** and go to **New** > **Web Site**

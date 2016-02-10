@@ -297,11 +297,11 @@ do not have to define a static for a property to be valid.
 
 ## Configuration as a module marker
 
-Configuration files also have a secondary sub-role. Modules are identified by the `[api:ManifestBuilder]` by the
+Configuration files also have a secondary sub-role. Modules are identified by the [api:ManifestBuilder] by the
 presence of a _config directory (or a _config.php file) as a top level item in the module directory.
 
 Although your module may choose not to set any configuration, it must still have a _config directory to be recognised
-as a module by the `[api:ManifestBuilder]`, which is required for features such as autoloading of classes and template
+as a module by the [api:ManifestBuilder], which is required for features such as autoloading of classes and template
 detection to work.
 
 ## _config.php
@@ -359,12 +359,12 @@ Some constants are user-defineable within *_ss_environment.php*.
 SilverStripe framework does not provide a method to set configuration via a web panel.
 
 This lack of a configuration-GUI is on purpose, as we'd like to keep developer-level options where they belong (into
-code), without cluttering up the interface. See this core forum discussion ["The role of the
-CMS"](http://www.silverstripe.org/archive/show/532) for further reasoning.
+code), without cluttering up the interface. See this core forum discussion
+`["The role of the CMS"](http://www.silverstripe.org/archive/show/532)` for further reasoning.
 
 In addition to these principles, some settings are: 
  - Author-level configuration like interface language or date/time formats can be performed in the CMS "My Profile" section (`admin/myprofile`)
- - Group-related configuration like `[api:HTMLEditorField]` settings can be found in the "Security" section (`admin/security`)
+ - Group-related configuration like [api:HTMLEditorField] settings can be found in the "Security" section (`admin/security`)
  - Site-wide settings like page titles can be set (and extended) on the root tree element in the CMS "Content" section (through the [siteconfig](/reference/siteconfig) API)
 
 ## _ss_environment.php
@@ -374,8 +374,8 @@ See [environment-management](/topics/environment-management).
 
 ## User-level: Member-object
 
-All user-related preferences are stored as a property of the `[api:Member]`-class (and as a database-column in the
-*Member*-table). You can "mix in" your custom preferences by using `[api:DataObject]` for details.
+All user-related preferences are stored as a property of the [api:Member]-class (and as a database-column in the
+*Member*-table). You can "mix in" your custom preferences by using [api:DataObject] for details.
 
 ## Permissions
 
@@ -396,7 +396,7 @@ through the [commandline](../topics/commandline), where configuration defaults f
 SilverStripe can request more resources through `increase_memory_limit_to()` and `increase_time_limit_to()`.
 If you are concerned about resource usage on a dedicated server (without restrictions imposed through shared hosting providers), you can set a hard limit to these increases through
 `set_increase_memory_limit_max()` and `set_increase_time_limit_max()`.
-These values will just be used for specific scripts (e.g. `[api:Filesystem::sync()]`),
+These values will just be used for specific scripts (e.g. [api:Filesystem::sync()]),
 to raise the limits for all executed scripts please use `ini_set('memory_limit', <value>)`
 and `ini_set('max_execution_time', <value>)` in your own `_config.php`.
 

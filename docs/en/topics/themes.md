@@ -6,7 +6,7 @@ Themes can be used to kick start your SilverStripe projects, and generally make 
 
 ## Downloading
 
-Head to the [ Themes ](http://www.silverstripe.org/themes) area of the website to check out the wide range of themes
+Head to the `[ Themes ](http://www.silverstripe.org/themes)` area of the website to check out the wide range of themes
 the community has built. Each theme has a page with links you can use to preview and download it. The theme is provided
 as a .tar.gz file.
 

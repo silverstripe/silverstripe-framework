@@ -12,7 +12,7 @@ These versions of Windows will **NOT** work with this guide:
   * Windows Server 2003
   * Windows XP
 
-**IMPORTANT**: Windows Server 2003 users should [follow this guide](http://doc.silverstripe.org/installation-on-windows-server-2003-iis-6) to installing SilverStripe.
+**IMPORTANT**: Windows Server 2003 users should [follow this link](https://www.silverstripe.org/blog/installing-on-windows-now-easier-thanks-to-microsoft-web-platform-installer/) to instal SilverStripe.
 
 The goal is to get a good working web server platform so that one or more SilverStripe projects can be easily deployed onto the server using SVN/GIT.
 

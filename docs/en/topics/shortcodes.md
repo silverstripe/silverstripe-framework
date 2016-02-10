@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `[api:ShortcodeParser]` API is simple parser that allows you to map specifically
+The [api:ShortcodeParser] API is simple parser that allows you to map specifically
 formatted content to a callback to transform them into something else.
 You might know this concept from forum software which don't allow you to insert
 direct HTML, instead resorting to a custom syntax. 
@@ -21,15 +21,15 @@ Here's some syntax variations:
 
 ## Usage
 
-In its most basic form, you can invoke the `[api:ShortcodeParser]` directly:
+In its most basic form, you can invoke the [api:ShortcodeParser] directly:
 
 	:::php
 	ShortcodeParser::get_active()->parse($myvalue);
 
 In addition, shortcodes are automatically parsed on any database field which is declared
-as `[api:HTMLValue]` or `[api:HTMLText]`, when rendered into a template.
+as [api:HTMLValue] or [api:HTMLText], when rendered into a template.
 This means you can use shortcodes on common fields like `SiteTree.Content`,
-and any other `[api:DataObject::$db]` definitions of these types.
+and any other [api:DataObject::$db] definitions of these types.
 
 In order to allow shortcodes in your own template placeholders,
 ensure they're casted correctly:

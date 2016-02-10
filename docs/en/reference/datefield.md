@@ -105,7 +105,7 @@ and/or monthnames are used. After saving, the correct format will be displayed.
 If you find the jQuery locale file for your chosen locale is missing, the 
 following section will explain how to create one. If you wish to contribute 
 your file to the SilverStripe core, please check out the guide on
-['contributing code'](http://doc.silverstripe.org/framework/en/trunk/misc/contributing/code).
+[contributing code](https://docs.silverstripe.org/en/3.0/misc/contributing/code/).
 
 ### 1. Get the Sourcefile
 

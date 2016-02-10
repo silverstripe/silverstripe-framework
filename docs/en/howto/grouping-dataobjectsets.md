@@ -6,8 +6,8 @@ These lists can get quite long, and hard to present on a single list.
 by splitting up the list into multiple pages.
 
 In this howto, we present an alternative to pagination: 
-Grouping a list by various criteria, through the `[api:GroupedList]` class.
-This class is a `[api:SS_ListDecorator]`, which means it wraps around a list,
+Grouping a list by various criteria, through the [api:GroupedList] class.
+This class is a [api:SS_ListDecorator], which means it wraps around a list,
 adding new functionality. 
 
 It provides a `groupBy()` method, which takes a field name, and breaks up the managed list 
@@ -88,7 +88,7 @@ In this case, the `getTitleFirstLetter()` method defined earlier is used to brea
 Grouping a set by month is a very similar process. 
 The only difference would be to sort the records by month name, and
 then create a method on the DataObject that returns the month name, 
-and pass that to the [api:GroupedList->GroupedBy()] call.
+and pass that to the [api:GroupedList::GroupedBy()] call.
 
 We're reusing our example `Module` object,
 but grouping by its built-in `Created` property instead,
@@ -128,7 +128,7 @@ sorted by month name from January to December. This can be accomplshed by sortin
 	
 	}
 
-The final step is the render this into the template using the [api:GroupedList->GroupedBy()] method.
+The final step is the render this into the template using the [api:GroupedList::GroupedBy()] method.
 
 	:::ss
 	// Modules list grouped by the Month Posted

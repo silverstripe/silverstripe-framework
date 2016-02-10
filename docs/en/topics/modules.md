@@ -6,7 +6,7 @@ A module is, quite simply, a collection of classes, templates, and other resourc
 directory.  In a default SilverStripe download, even resources in 'framework' and 'mysite' are treated in exactly the
 same as every other module.
 
-SilverStripe's `[api:ManifestBuilder]` will find any class, css or template files anywhere under the site's main
+SilverStripe's [api:ManifestBuilder] will find any class, css or template files anywhere under the site's main
 directory.  The _config.php file in the module directory can be used to define director rules, calls to
 Object::useCustomClass(), and the like.  So, by unpacking a module into site's main directory and viewing the site with
 ?flush=1 on the end of the URL, all the module's new behaviour will be incorporated to your site:
@@ -17,7 +17,7 @@ Object::useCustomClass(), and the like.  So, by unpacking a module into site's m
 it.
 *  You can provide additional director rules to define your own controller for particular URLs.
 
-For more information on creating modules, see [module-development](/topics/module-development).
+For more information on creating modules, see `[module-development](/topics/module-development)`.
 
 ## Types of Modules
 
@@ -33,7 +33,7 @@ instead make it easier for developers to build other applications.
 
 ## Finding Modules
 
-* [Official module list on silverstripe.org](http://silverstripe.org/modules)
+* `[Official module list on silverstripe.org](http://silverstripe.org/modules)`
 * [Packagist.org "silverstripe" tag](https://packagist.org/search/?tags=silverstripe)
 * [Github.com "silverstripe" search](https://github.com/search?q=silverstripe&ref=commandbar)
 
@@ -77,7 +77,7 @@ which is required for its operation. In this case, we recommend upgrading to a n
 ### From an Archive Download
 
 Alternatively, you can download the archive file from the 
-[modules page](http://www.silverstripe.org/modules) 
+`[modules page](http://www.silverstripe.org/modules)`
 and extract it to the root folder mentioned above.
 Github also provides archive downloads which are generated automatically for every tag/version.
 

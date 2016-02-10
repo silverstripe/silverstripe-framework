@@ -4,14 +4,14 @@ Please read our [guide to contributing documentation](misc/contributing/document
 
 ### Overview
 
- * [Getting started](http://silverstripe.org/getting-started/) | [Feature Overview](http://silverstripe.org/introduction/) | [Demo](http://demo.silverstripe.org/)
- * [Download and Installation](installation/) | [Upgrading](/installation/upgrading) | [Requirements](/installation/server-requirements) | [Changelog](/changelogs) | [Roadmap](http://www.silverstripe.org/roadmap/)  
- * [API documentation](http://api.silverstripe.org/current) | [Official english book](http://www.silverstripe.org/silverstripe-book) | [Official german book](http://www.silverstripe.org/das-silverstripe-buch)  
+ * [Getting started](http://silverstripe.org/getting-started/) | `[Feature Overview](http://silverstripe.org/introduction/)` | [Demo](http://demo.silverstripe.org/)
+ * [Download and Installation](installation/) | [Upgrading](/installation/upgrading) | [Requirements](/installation/server-requirements) | [Changelog](/changelogs) | `[Roadmap](http://www.silverstripe.org/roadmap/)`
+ * [API documentation](http://api.silverstripe.org/current) | `[Official english book](http://www.silverstripe.org/silverstripe-book)` | `[Official german book](http://www.silverstripe.org/das-silverstripe-buch)`
 
 
 ###  Getting support
 
-[Forum](http://www.silverstripe.org/forums/) | [IRC channel](http://silverstripe.org/irc) | [End user docs](http://userhelp.silverstripe.com) | [Core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
+[Forum](http://www.silverstripe.org/forums/) | `[IRC channel](http://silverstripe.org/irc)` | [End user docs](http://userhelp.silverstripe.com) | [Core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
 
 
 ### Level 1: Building your first SilverStripe website

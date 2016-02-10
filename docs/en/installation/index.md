@@ -17,7 +17,7 @@ lets you install and upgrade SilverStripe and its modules.  Although installing 
 Other ways to get SilverStripe:
 
  * If you just want to get the code as quickly as possible, you can [download SilverStripe from our website](http://silverstripe.org/download).
- * If you already have an installed version of SilverStripe, and you haven't used Composer to get it, please see our [upgrading](upgrading) guide.  Note that [Composer](/installatin/composer) provides its own tools for upgrading.
+ * If you already have an installed version of SilverStripe, and you haven't used Composer to get it, please see our [upgrading](upgrading) guide.  Note that [Composer](/installation/composer) provides its own tools for upgrading.
 
 ## Setting up a server
 
@@ -54,4 +54,4 @@ If you run into trouble, see [common-problems](common-problems) or post to the
 ## Related
 
  * [Module installation](/topics/modules)
- * [Suggested web hosts](http://doc.silverstripe.org/old/suggested-web-hosts)
+ * [Suggested web hosts](http://www.silverstripe.org/community/forums/archive/show/393)

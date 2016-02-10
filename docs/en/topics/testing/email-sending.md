@@ -15,7 +15,7 @@ send emails in your SilverStripe application.  Here is a simple example of how y
 	$e->send();
 
 
-Normally, the send() method would send an email using PHP's mail() function.  However, if you are running a `[api:SapphireTest]`
+Normally, the send() method would send an email using PHP's mail() function.  However, if you are running a [api:SapphireTest]
 test, then it holds off actually sending the email, and instead lets you assert that an email was sent using this method.
 
 	:::php

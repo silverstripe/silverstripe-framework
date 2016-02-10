@@ -32,7 +32,7 @@ use devmode on a public server very very carefully
 Test mode is designed for staging environments or other private collaboration sites before deploying a site live. You do
 not need to use test mode if you do not have a staging environment or a place for testing which is on a public server)
 
-In this mode error messages are hidden from the user and it includes `[api:BasicAuth]` integration if you want to password
+In this mode error messages are hidden from the user and it includes [api:BasicAuth] integration if you want to password
 protect the site.
 
 To set your site to test mode set this in your `mysite/_config.php` file
@@ -142,6 +142,6 @@ development effort itself as "test-driven development".
 
 #### Profiling
 
-Silverstripe includes a profiling suite called [Profiler](http://www.adepteo.net/profiler/manual.html) from Carl Taylor
+Silverstripe includes a profiling suite called `[Profiler](http://www.adepteo.net/profiler/manual.html)` from Carl Taylor
 at Adepteo.  You can use this withing your installation during development to find bottlenecks and more. You can enable
 the profiler by adding `?debug_profile=1` to your URL.

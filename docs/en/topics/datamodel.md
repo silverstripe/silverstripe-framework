@@ -7,12 +7,12 @@ following connections:
 *  Each database-row maps to a PHP object
 *  Each database-column maps to a property on a PHP object
  
-All data tables in SilverStripe are defined as subclasses of `[api:DataObject]`. Inheritance is supported in the data
+All data tables in SilverStripe are defined as subclasses of [api:DataObject]. Inheritance is supported in the data
 model: seperate tables will be linked together, the data spread across these tables. The mapping and saving/loading
 logic is handled by SilverStripe, you don't need to worry about writing SQL most of the time. 
 
 Most of the ORM customizations are possible through [PHP5 Object
-Overloading](http://www.onlamp.com/pub/a/php/2005/06/16/overloading.html) handled in the `[api:Object]`-class.
+Overloading](http://www.onlamp.com/pub/a/php/2005/06/16/overloading.html) handled in the [api:Object]-class.
 
 See [database-structure](/reference/database-structure) for in-depth information on the database-schema,
 and the ["sql queries" topic](/reference/sqlquery) in case you need to drop down to the bare metal.
@@ -210,7 +210,7 @@ The where clauses showcased in the previous two sections (filter and exclude) sp
 matches by default. However, there are a number of suffixes that you can put on field names to change this 
 behaviour `":StartsWith"`, `":EndsWith"`, `":PartialMatch"`, `":GreaterThan"`, `":LessThan"`, `":Negation"`.
 
-Each of these suffixes is represented in the ORM as a subclass of `[api:SearchFilter]`. Developers can define
+Each of these suffixes is represented in the ORM as a subclass of [api:SearchFilter]. Developers can define
 their own SearchFilters if needing to extend the ORM filter and exclude behaviours.
 
 The following is a query which will return everyone whose first name doesn't start with S, who has logged in 
@@ -289,7 +289,7 @@ For example:
 	
 Passing a *$join* statement to DataObject::get will filter results further by the JOINs performed against the foreign
 table. **It will NOT return the additionally joined data.**  The returned *$records* will always be a
-`[api:DataObject]`.
+[api:DataObject].
 
 ## Properties
 
@@ -417,7 +417,7 @@ on the "Player"-table.
 	  );
 	}
 
-SilverStripe's `[api:SiteTree]` base-class for content-pages uses a 1-to-1 relationship to link to its
+SilverStripe's [api:SiteTree] base-class for content-pages uses a 1-to-1 relationship to link to its
 parent element in the tree:
 
 	:::php
@@ -514,7 +514,7 @@ accessors available on both ends.
 ### Adding relations
 
 Adding new items to a relations works the same, regardless if you're editing a *has_many*- or a *many_many*. 
-They are encapsulated by `[api:HasManyList]` and `[api:ManyManyList]`, both of which provide very similar APIs, 
+They are encapsulated by [api:HasManyList] and [api:ManyManyList], both of which provide very similar APIs, 
 e.g. an `add()` and `remove()` method.
 
 	:::php
@@ -535,7 +535,7 @@ e.g. an `add()` and `remove()` method.
 You can use the flexible datamodel to get a filtered result-list without writing any SQL. For example, this snippet 
 gets you the "Players"-relation on a team, but only containing active players.
 
-See `[api:DataObject::$has_many]` for more info on the described relations.
+See [api:DataObject::$has_many] for more info on the described relations.
 
 	:::php
 	class Team extends DataObject {
@@ -559,19 +559,19 @@ through [form validation](/topics/form-validation).
 While this is a useful approach, it can lead to data inconsistencies if the
 record is modified outside of the controller and form context.
 Most validation constraints are actually data constraints which belong on the model.
-SilverStripe provides the `[api:DataObject->validate()]` method for this purpose.
+SilverStripe provides the [api:DataObject::validate()] method for this purpose.
 
 By default, there is no validation - objects are always valid!  
 However, you can overload this method in your
 DataObject sub-classes to specify custom validation, 
-or use the hook through `[api:DataExtension]`.
+or use the hook through [api:DataExtension].
 
-Invalid objects won't be able to be written - a [api:ValidationException]` 
+Invalid objects won't be able to be written - a [api:ValidationException] 
 will be thrown and no write will occur.
 It is expected that you call validate() in your own application to test that an object 
 is valid before attempting a write, and respond appropriately if it isn't.
 
-The return value of `validate()` is a `[api:ValidationResult]` object.
+The return value of `validate()` is a [api:ValidationResult] object.
 You can append your own errors in there.
 
 Example: Validate postcodes based on the selected country
@@ -615,7 +615,7 @@ This functionality is provided by the `SS_Map` class, which can be used to build
 	$map = new SS_Map($members, 'ID', 'FirstName');
 
 Note: You can also retrieve a single property from all contained records
-through [SS_List->column()](api:SS_List#_column).
+through [api:SS_List::column()].
 
 ## Data Handling
 
@@ -737,8 +737,8 @@ See the ["sql queries" topic](/reference/sqlquery) for custom *INSERT*, *UPDATE*
 
 ## Extending DataObjects
 
-You can add properties and methods to existing `[api:DataObjects]`s like `[api:Member]` (a core class) without 
-hacking core code or subclassing. See `[api:DataExtension]` for a general description, and `[api:Hierarchy]` for 
+You can add properties and methods to existing [api:DataObjects]s like [api:Member] (a core class) without 
+hacking core code or subclassing. See [api:DataExtension] for a general description, and [api:Hierarchy] for 
 the most popular examples.
 
 ## FAQ
@@ -746,7 +746,7 @@ the most popular examples.
 ### What's the difference between DataObject::get() and a relation-getter?
 
 You can work with both in pretty much the same way, but relationship-getters return a special type of collection: 
-A `[api:HasManyList]` or a `[api:ManyManyList]` with relation-specific functionality.
+A [api:HasManyList] or a [api:ManyManyList] with relation-specific functionality.
 
 	:::php
 	$myTeams = $myPlayer->Team(); // returns HasManyList

@@ -72,8 +72,8 @@ Note: To modify fields in the "Settings" tab, you need to use `updateSettingsFie
 
 ### removeFieldFromTab()
 
-Overloading `getCMSFields()` you can call `removeFieldFromTab()` on a `[api:FieldList]` object. For example, if you don't
-want the MenuTitle field to show on your page, which is inherited from `[api:SiteTree]`.
+Overloading `getCMSFields()` you can call `removeFieldFromTab()` on a [api:FieldList] object. For example, if you don't
+want the MenuTitle field to show on your page, which is inherited from [api:SiteTree].
 
 	:::php
 	class StaffPage extends Page {

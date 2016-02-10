@@ -2,25 +2,25 @@
 
 ## Introduction
 
-Generating RSS/Atom-feeds is a matter of rendering a `[api:SS_List]` through 
-the `[api:RSSFeed]` class.
+Generating RSS/Atom-feeds is a matter of rendering a [api:SS_List] through 
+the [api:RSSFeed] class.
 
-The `[api:RSSFeed]` class doesn't limit you to generating article based feeds, 
+The [api:RSSFeed] class doesn't limit you to generating article based feeds, 
 it is just as easy to create a feed of your current staff members, comments or 
-any other custom `[api:DataObject]` subclasses you have defined. The only 
+any other custom [api:DataObject] subclasses you have defined. The only 
 logical limitation here is that every item in the RSS-feed should be accessible 
 through a URL on your website, so its advisable to just create feeds from sub 
-classes of `[api:SiteTree]`. 
+classes of [api:SiteTree]. 
 
-If you wish to generate an RSS feed for `[api:DataObject]` instances, ensure they 
-define an AbsoluteLink() method.
+If you wish to generate an RSS feed for [api:DataObject] instances, ensure they 
+define an `AbsoluteLink()` method.
 
 ## Usage
 
 	:::php
 	RSSFeed::linkToFeed($link, $title)
 
-This line should go in your `[api:Controller]` subclass in the action you want 
+This line should go in your [api:Controller] subclass in the action you want 
 to include the HTML link. 
 
 	:::php
@@ -34,7 +34,7 @@ to include the HTML link.
 		$authorField
 	);
 
-Creates a new `[api:RSSFeed]` instance to be returned. The arguments notify 
+Creates a new [api:RSSFeed] instance to be returned. The arguments notify 
 SilverStripe what values to include in the feed.
 
 ## Examples
@@ -73,7 +73,7 @@ SilverStripe what values to include in the feed.
 
 ### Showing the 10 most recently updated pages
 
-You can use `[api:RSSFeed]` to easily create a feed showing your latest Page 
+You can use [api:RSSFeed] to easily create a feed showing your latest Page 
 updates. Update mysite/code/Page.php to something like this:
 
 	:::php
@@ -99,7 +99,7 @@ updates. Update mysite/code/Page.php to something like this:
 ### Rendering DataObjects in a RSSFeed
 
 DataObjects can be rendered in the feed as well, however, since they aren't explicitly 
-`[api:SiteTree]` subclasses we need to include a function `AbsoluteLink` to allow the
+[api:SiteTree] subclasses we need to include a function `AbsoluteLink` to allow the
 RSS feed to link through to the item. 
 
 If the items are all displayed on a single page you may simply hard code the link to
@@ -162,7 +162,7 @@ unique template (write your own XML in themes/yourtheme/templates/Students.ss)
 
 ## External Sources
 
-`[api:RSSFeed]` only creates feeds from your own data. We've included the [SimplePie](http://simplepie.org) RSS-parser for
+[api:RSSFeed] only creates feeds from your own data. We've included the [SimplePie](http://simplepie.org) RSS-parser for
 accessing feeds from external sources.
 
 
@@ -172,4 +172,4 @@ accessing feeds from external sources.
 
 ## API Documentation
 
-* `[api:RSSFeed]`
+* [api:RSSFeed]

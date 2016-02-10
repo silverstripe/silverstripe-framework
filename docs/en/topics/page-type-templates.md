@@ -155,12 +155,12 @@ If "Menu Title" is left blank by the CMS author, it'll just default to "Title".
 	$LinkingMode
 
 Each menu item we loop over knows its location on the website, so can generate a link to it.
-This happens through the `[api:SiteTree->Link()]` method behind the scenes.
+This happens through the [api:SiteTree::Link()] method behind the scenes.
 We're not using the direct database property `SiteTree.URLSegment` here
 because pages can be nested, so the link needs to be generated on the fly.
 In the template syntax, there's no distinction between a method and a property though.
 The link is relative by default (see `<% base_tag %>`),
-you can get an absolute one including the domain through [$AbsoluteLink](api:SiteTree->AbsoluteLink())`.
+you can get an absolute one including the domain through [api:SiteTree::AbsoluteLink()].
 
 In addition, each menu item gets some context information relative
 to the page you're currently viewing, contained in the `$LinkingMode` placeholder.
@@ -206,7 +206,7 @@ folder to customize its output. Here's the default template:
 	<% end_if %>
 
 For more customization options like limiting the amount of breadcrumbs,
-take a look at `[api:SiteTree->Breadcrumbs()]`.
+take a look at [api:SiteTree::Breadcrumbs()].
 
 ### SiteConfig: Global settings
 
@@ -279,7 +279,7 @@ you can use any public API on those classes, and [extend](/reference/dataextensi
 with your own. To get an overview on what's available to you,
 we recommend that you dive into the API docs for the following classes:
 
- * `[api:ContentController]`: The main controller responsible for handling pages
- * `[api:Controller]`: Generic controller (not specific to pages)
- * `[api:DataObject]`: Underlying model class for page objects
- * `[api:ViewableData]`: Underlying object class for pretty much anything displayable
+ * [api:ContentController]: The main controller responsible for handling pages
+ * [api:Controller]: Generic controller (not specific to pages)
+ * [api:DataObject]: Underlying model class for page objects
+ * [api:ViewableData]: Underlying object class for pretty much anything displayable

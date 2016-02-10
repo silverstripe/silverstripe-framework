@@ -51,10 +51,10 @@ All requests go through `main.`php, which sets up the environment and then hands
 
 ## Director and URL patterns
 
-main.php relies on `[api:Director]` to work out which controller should handle this request.  `[api:Director]` will instantiate that
-controller object and then call `[api:Controller::run()]`.
+main.php relies on [api:Director] to work out which controller should handle this request.  [api:Director] will instantiate that
+controller object and then call [api:Controller::run()].
 
-In general, the URL is build up as follows: `page/action/ID/otherID` - e.g. http://www.mysite.com/mypage/addToCart/12. 
+In general, the URL is build up as follows: `page/action/ID/otherID` - e.g. `http://www.mysite.com/mypage/addToCart/12`. 
 This will add an object with ID 12 to the cart.
 
 When you create a function, you can access the ID like this:
@@ -69,9 +69,9 @@ When you create a function, you can access the ID like this:
 
 ## Controllers and actions
 
-`[api:Controller]`s are the building blocks of your application.
+[api:Controller]s are the building blocks of your application.
 
-**See:** The API documentation for `[api:Controller]`
+**See:** The API documentation for [api:Controller]
 
 You can access the following controller-method with /team/signup
 

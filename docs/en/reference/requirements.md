@@ -8,7 +8,7 @@ hardcoding any references in the `<head>`-tag of your template, as it enables a 
 
 ## Including inside PHP Code
 It is common practice to include most Requirements either in the *init()*-method of your [controller](/topics/controller), or
-as close to rendering as possible (e.g. in `[api:FormField]`
+as close to rendering as possible (e.g. in [api:FormField])
 
 	:::php
 	Requirements::javascript("cms/javascript/LeftAndMain.js");
@@ -125,4 +125,4 @@ In your controller's init() function, add:
 	Requirements::set_write_js_to_body(false);
 
 ## API Documentation
-`[api:Requirements]`
+[api:Requirements]

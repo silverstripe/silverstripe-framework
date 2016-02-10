@@ -6,20 +6,20 @@
 	This field is deprecated in favour of the new [GridField](/reference/grid-field) API.
 </div>
 
-Shows a group of DataObjects as a (readonly) tabular list (similiar to `[api:TableListField]`.)
+Shows a group of DataObjects as a (readonly) tabular list (similiar to [api:TableListField].)
 
 You can specify limits and filters for the resultset by customizing query-settings (mostly the ID-field on the other
 side of a one-to-many-relationship).
 
-See `[api:TableListField]` for more documentation on the base-class
+See [api:TableListField] for more documentation on the base-class
 
 ## Source Input
 
-See `[api:TableListField]`.
+See [api:TableListField].
 
 ## Setting Parent/Child-Relations
 
-`[api:ComplexTableField]` tries to determine the parent-relation automatically by looking at the $has_one property on the listed
+[api:ComplexTableField] tries to determine the parent-relation automatically by looking at the $has_one property on the listed
 child, or the record loaded into the surrounding form (see getParentClass() and getParentIdName()). You can force a
 specific parent relation:
 
@@ -69,7 +69,7 @@ If you don't want several functions to appear (e.g. no add-link), there's severa
 *  Use `ComplexTableField->setPermissions(array("show","edit"))` to limit the functionality without touching the template
 (more secure). Possible values are "show","edit", "delete" and "add".  
 
-*  Subclass `[api:ComplexTableField]` and override the rendering-mechanism
+*  Subclass [api:ComplexTableField] and override the rendering-mechanism
 *  Use `ComplexTableField->setTemplate()` and `ComplexTableField->setTemplatePopup()` to provide custom templates
 
 ### Customising fields and Requirements in the popup
@@ -77,7 +77,7 @@ If you don't want several functions to appear (e.g. no add-link), there's severa
 There are several ways to customise the fields in the popup. Often you would want to display more information in the
 popup as there is more real-estate for you to play with. 
 
-`[api:ComplexTableField]` gives you several options to do this. You can either
+[api:ComplexTableField] gives you several options to do this. You can either
 
 *  Pass a FieldList in the constructor.
 *  Pass a String in the constructor. 
@@ -87,7 +87,7 @@ The second will call the String as a method on the source class (Which should re
 Popup. 
 
 You can also customise Javascript which is loaded for the Lightbox. As Requirements::clear() is called when the popup is
-instantiated, `[api:ComplexTableField]` will look for a function to gather any specific requirements that you might need on your
+instantiated, [api:ComplexTableField] will look for a function to gather any specific requirements that you might need on your
 source class. (e.g. Inline Javascript or styling).
 
 For this, create a function called "getRequirementsForPopup". 
@@ -120,7 +120,7 @@ You'll have to do something like this in your form:
 
 You have to hack in an ID on the form, as the CMS forms have this, and front end forms usually do not.
 
-It's not a perfect solution, but it works relatively well to get a simple `[api:ComplexTableField]` up and running on the front
+It's not a perfect solution, but it works relatively well to get a simple [api:ComplexTableField] up and running on the front
 end.
 
 To come: Make it a lot more flexible so tables can be easily used on the front end. It also needs to be flexible enough

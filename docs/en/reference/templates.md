@@ -240,8 +240,8 @@ current position in the list and iteration:
 
 ### Altering the list
 
-`<% loop %>` statements iterate over a `[api:DataList]` instance. As the
-template has access to the list object, templates can call `[api:DataList]`
+`<% loop %>` statements iterate over a [api:DataList] instance. As the
+template has access to the list object, templates can call [api:DataList]
 functions. For instance, see the following examples:
 
 Providing a custom sort.
@@ -417,7 +417,7 @@ returns the number of items in the $Children collection.
 ## Pagination
 
 Lists can be paginated, and looped over to generate pagination. For this to 
-work,  the list needs to be wrapped in a `[api:PaginatedList]`. The process is 
+work,  the list needs to be wrapped in a [api:PaginatedList]. The process is 
 explained in detail on the ["pagination" howto](/howto/pagination).
 
 The list is split up in multiple "pages", each . Note that "page" is this context
@@ -441,7 +441,7 @@ By default, values are escaped as `XML`, which is equivalent to `HTML` for this 
 There's some exceptions to this rule, see the ["security" topic](/topics/security).
 
 In case you want to explicitly allow unescaped HTML input,
-the property can be cast as `[api:HTMLText]`.
+the property can be cast as [api:HTMLText].
 The following example takes the `Content` field in a `SiteTree` class,
 which is of this type. It forces the content into an explicitly escaped format.
 
@@ -449,7 +449,7 @@ which is of this type. It forces the content into an explicitly escaped format.
 	$Content.XML // transforms e.g. "<em>alert</em>" to "&lt;em&gt;alert&lt;/em&gt;"
 
 Apart from value formatting, there's many methods to transform them as well,
-For example, the built in `$Now` placeholder is an instance of `[api:Date]`,
+For example, the built in `$Now` placeholder is an instance of [api:Date],
 and returns the current date in a standard system format. 
 Since its an object, you can use the helper methods to return other formats:
 
@@ -528,8 +528,8 @@ Will give you the ability to call `$MyCustomValue` from anywhere in your templat
 	I've got one thing to say to you: <i>$MyCustomValue</i>	
 	// output "I've got one thing to say to you: <i>Hi, this is my site</i>" 
 
-Your function could return a single value as above or it could be a subclass of `[api:ArrayData]` for example a
-`[api:DataObject]` with many values then each of these could be accessible via a control loop
+Your function could return a single value as above or it could be a subclass of [api:ArrayData] for example a
+[api:DataObject] with many values then each of these could be accessible via a control loop
 
 	:::php
 	// ...
@@ -591,9 +591,9 @@ This is all very well and good, but how do the templates actually get called?
 
 Templates do nothing on their own.  Rather, they are used to render *a particular object*.  All of the `<% if %>`, `<%control %>`, 
 and variable codes are methods or parameters that are called *on that object*.  All that is necessary is
-that the object is an instance of `[api:ViewableData]` (or one of its subclasses).
+that the object is an instance of [api:ViewableData] (or one of its subclasses).
 
-The key is `[api:ViewableData::renderWith()]`.  This method is passed a For example, within the controller's default action,
+The key is [api:ViewableData::renderWith()].  This method is passed a For example, within the controller's default action,
 there is an instruction of the following sort:
 
 	:::php
@@ -603,7 +603,7 @@ there is an instruction of the following sort:
 Here's what this line does:
 
 *  First `renderWith()` constructs a new object: `$template = new SSViewer("TemplateName");`
-*  `[api:SSViewer]` will take the content of `TemplateName.ss`, and turn it into PHP code.
+*  [api:SSViewer] will take the content of `TemplateName.ss`, and turn it into PHP code.
 *  Then `renderWith()` passes the controller to `$template->process($controller);`
 *  `SSViewer::process()` will execute the PHP code generated from `TemplateName.ss` and return the results.
 
@@ -613,7 +613,7 @@ Here's what this line does:
 available template name.
 
 Below is an example of how to implement renderWith.  In the example below the page is rendered using the myAjaxTemplate
-if the page is called by an ajax function (using `[api:Director::is_ajax()]`).  Note that the index function is called by
+if the page is called by an ajax function (using [api:Director::is_ajax()]).  Note that the index function is called by
 default if it exists and there is no action in the url parameters.
 
 	:::php
@@ -639,7 +639,7 @@ default if it exists and there is no action in the url parameters.
 Fragment links are links with a "#" in them.  A frequent use-case is to use fragment links to point to different
 sections of the current page.  For example, we might have this in our template.
 
-For, example, we might have this on http://www.example.com/my-long-page/
+For, example, we might have this on `http://www.example.com/my-long-page/`
 
 	:::ss
 	<ul>
@@ -649,8 +649,8 @@ For, example, we might have this on http://www.example.com/my-long-page/
 
 
 So far, so obvious.  However, things get tricky because of we have set our `<base>` tag to point to the root of your
-site.  So, when you click the first link you will be sent to http://www.example.com/#section1 instead of
-http://www.example.com/my-long-page/#section1
+site.  So, when you click the first link you will be sent to `http://www.example.com/#section1` instead of
+`http://www.example.com/my-long-page/#section1`
 
 In order to prevent this situation, the SSViewer template renderer will automatically rewrite any fragment link that
 doesn't specify a URL before the fragment, prefixing the URL of the current page.  For our example above, the following
@@ -678,9 +678,9 @@ you can use any public API on those classes, and [extend](/reference/dataextensi
 with your own. To get an overview on what's available to you,
 we recommend that you dive into the API docs for the following classes:
 
- * `[api:Controller]`: Generic controller class
- * `[api:DataObject]`: Generic model class
- * `[api:ViewableData]`: Underlying object class for pretty much anything displayable
+ * [api:Controller]: Generic controller class
+ * [api:DataObject]: Generic model class
+ * [api:ViewableData]: Underlying object class for pretty much anything displayable
 
 ## Designing reusable templates
 
@@ -702,7 +702,7 @@ includes, rather than entire templates.
 
 ## Related
 
- * [Built in page controls](/reference/built-in-page-controls)
+ * `[Built in page controls](/reference/built-in-page-controls)`
  * [Page Type Templates](/topics/page-type-templates)
  * [Typography](/reference/typography)
  * [Themes](/topics/themes)
