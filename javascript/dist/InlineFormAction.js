@@ -1,3 +1,5 @@
+'use strict';
+
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
 		define('ss.InlineFormAction', [], factory);
@@ -11,8 +13,6 @@
 		global.ssInlineFormAction = mod.exports;
 	}
 })(this, function () {
-	'use strict';
-
 	Behaviour.register({
 		'div.inlineformaction input#$ID': {
 			onclick: function onclick() {

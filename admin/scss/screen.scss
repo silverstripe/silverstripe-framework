@@ -10,25 +10,14 @@
  * --------------------------------------------------------------
  * Z-indexes:
  *		* Menu bar on the right should always be on top. This is in the 80 range
- *		* Top navingation bar must always sit over the content. This is in the 60 range
+ *		* Top navigation bar must always sit over the content. This is in the 60 range
  *		* Footer must sit over the content as well so this in the 40 range
  */
 
 /** -----------------------------
- * Core Compass Libraries
+ * CSS reset
  * ------------------------------ */
-@import "compass/reset";
-@import "compass/css3";
-@import "compass/utilities/sprites/sprite-img";
-@import "compass/utilities/general";
-@import "compass/support";
-
-/*$experimental-support-for-svg variable comes from
-imported compass/support file and enables svg gradients in IE9.
-It was put here because there didn't seem to be a more logical place to put it.
-If more variables exist in the future, consider creating a variables file.*/
-
-$experimental-support-for-svg: true;
+@import "reset.scss";
 
 /** -----------------------------
  * Theme
@@ -43,6 +32,7 @@ $experimental-support-for-svg: true;
 /** -----------------------------
  * Sprite images
  * ----------------------------- */
+@import "spritey.scss";
 @import "sprites.scss";
 
 /** -----------------------------

@@ -91,8 +91,8 @@
 	z-index: 80;
 	background: $color-base;
 	width: ($grid-x * 20);
+	box-shadow: $color-shadow-blacker 0 0 3px;
 
-	@include box-shadow($color-shadow-blacker 0 0 3px);
 	a {
 		text-decoration: none;
 	}
@@ -176,7 +176,7 @@
 		border: 0;
 
 		&:hover {
-			@include box-shadow(0 0 0);
+			box-shadow: 0 0 0;
 		}
 
 		&.active {
@@ -220,11 +220,7 @@
 			background-color: $color-base;
 			cursor: pointer;
 			position: relative;
-
-			@include background-image(linear-gradient(
-				$color-base,
-				darken($color-base, 10%)
-			));
+			background-image: linear-gradient($color-base, darken($color-base, 10%));
 
 			border-top: 1px solid lighten($color-base, 6%);
 			border-bottom: 1px solid darken($color-base, 20%);
@@ -234,11 +230,7 @@
 				background-color: lighten($color-base, 2%);
 				border-bottom: 1px solid darken($color-base, 15%);
 				color: lighten($color-text-dark, 5%);
-
-				@include background-image(linear-gradient(
-					lighten($color-base, 5%),
-					$color-base
-				));
+				background-image: linear-gradient(lighten($color-base, 5%), $color-base);
 			}
 			&:focus,
 			&:active {
@@ -246,11 +238,7 @@
 				text-decoration: none;
 				background-color: darken($color-base, 5%);
 				color: lighten($color-text-dark, 10%);
-
-				@include background-image(linear-gradient(
-					darken($color-base, 10%),
-					darken($color-base, 5%)
-				));
+				background-image: linear-gradient(darken($color-base, 10%), darken($color-base, 5%));
 			}
 
 			.icon {
@@ -260,7 +248,7 @@
 				margin-left: $grid-x / 2;
 				margin-top: -8px;
 
-				@include opacity(0.7);
+				opacity: 0.7;
 			}
 
 			.text {
@@ -276,16 +264,23 @@
 				cursor: pointer;
 
 				.toggle-children-icon {
+					@extend .icon-sprites-32x32;
+					@include sprite($sprites-32x32-menu-arrow-deselected-down);
+
 					display: inline-block;
 					width: 8px;
 					height: 8px;
-					background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
 					vertical-align: middle;
 				}
 
 				&.opened {
 					.toggle-children-icon {
-						background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;
+						@extend .icon-sprites-32x32;
+						@include sprite($sprites-32x32-menu-arrow-deselected-up);
+						
+						display: inline-block;
+						width: 8px;
+						height: 8px;
 					}
 				}
 			}
@@ -301,19 +296,18 @@
 				border-top: 1px solid lighten($color-menu-button, 10%);
 				border-bottom: 1px solid darken($color-menu-button, 15%);
 				background-color: $color-menu-button;
-				@include background-image(linear-gradient(
-					$color-menu-button,
-					darken($color-menu-button, 10%)
-				));
+				background-image: linear-gradient($color-menu-button, darken($color-menu-button, 10%));
 
 				.toggle-children {
 					.toggle-children-icon {
-						background: sprite($sprites32, menu-arrow-down) no-repeat;
+						@extend .icon-sprites-32x32;
+						@include sprite($sprites-32x32-menu-arrow-down);
 					}
 
 					&.opened {
 						.toggle-children-icon {
-							background: sprite($sprites32, menu-arrow-up) no-repeat;
+							@extend .icon-sprites-32x32;
+							@include sprite($sprites-32x32-menu-arrow-up);
 						}
 					}
 				}

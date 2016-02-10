@@ -62,16 +62,6 @@ $gradientBottom:	#7F9198;
 	box-shadow: inset $horizontal $vertical $blur $spread $color;
 }
 
-// Transitions
-@mixin transition($transition) {
-  -webkit-transition: $transition;
-     -moz-transition: $transition;
-      -ms-transition: $transition;
-       -o-transition: $transition;
-          transition: $transition;
-}
-
-
 body {
 	font-family: Arial, san-serif;
 	font-size: 13px;
@@ -253,8 +243,7 @@ body {
 		// Focus states
 		input,
 		textarea {
-			$transition: border linear .2s, box-shadow linear .2s;
-  			@include transition($transition);
+			transition: border linear .2s, box-shadow linear .2s;
 			@include box-shadow(inset 0 1px 3px rgba(0,0,0,.1));
 		}
 		input:focus,

@@ -2,6 +2,7 @@ var gulp = require('gulp'),
     babel = require('gulp-babel'),
     diff = require('gulp-diff'),
     notify = require('gulp-notify'),
+    sass = require('gulp-sass'),
     uglify = require('gulp-uglify');
     gulpUtil = require('gulp-util'),
     browserify = require('browserify'),
@@ -13,17 +14,29 @@ var gulp = require('gulp'),
     glob = require('glob'),
     eventStream = require('event-stream'),
     semver = require('semver'),
-    packageJson = require('./package.json');
+    packageJson = require('./package.json'),
+    sprity = require('sprity'),
+    gulpif = require('gulp-if'),
+    sourcemaps = require('gulp-sourcemaps');
+    
+var isDev = typeof process.env.npm_config_development !== 'undefined';
 
 var PATHS = {
     MODULES: './node_modules',
+    ADMIN: './admin',
+    ADMIN_IMAGES: './admin/images',
     ADMIN_THIRDPARTY: './admin/thirdparty',
     ADMIN_JAVASCRIPT_SRC: './admin/javascript/src',
     ADMIN_JAVASCRIPT_DIST: './admin/javascript/dist',
+    FRAMEWORK: './',
     FRAMEWORK_THIRDPARTY: './thirdparty',
+    FRAMEWORK_DEV_INSTALL: './dev/install',
     FRAMEWORK_JAVASCRIPT_SRC: './javascript/src',
     FRAMEWORK_JAVASCRIPT_DIST: './javascript/dist'
 };
+
+// Folders which contain both scss and css folders to be compiled
+var rootCompileFolders = [PATHS.FRAMEWORK, PATHS.ADMIN, PATHS.FRAMEWORK_DEV_INSTALL]
 
 var browserifyOptions = {
     cache: {},
@@ -129,7 +142,7 @@ if (!semver.satisfies(process.versions.node, packageJson.engines.node)) {
     process.exit(1);
 }
 
-if (process.env.npm_config_development) {
+if (isDev) {
     browserifyOptions.debug = true;
 }
 
@@ -156,7 +169,7 @@ gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
         .pipe(source('bundle-leftandmain.js'))
         .pipe(buffer());
 
-    if (typeof process.env.npm_config_development === 'undefined') {
+    if (!isDev) {
         stream.pipe(uglify());
     }
 
@@ -182,7 +195,7 @@ gulp.task('bundle-lib', function bundleLib() {
         .pipe(source('bundle-lib.js'))
         .pipe(buffer());
 
-    if (typeof process.env.npm_config_development === 'undefined') {
+    if (!isDev) {
         stream.pipe(uglify());
     }
 
@@ -245,3 +258,48 @@ gulp.task('umd-watch', function () {
     gulp.watch(PATHS.ADMIN_JAVASCRIPT_SRC + '/*.js', ['umd-admin']);
     gulp.watch(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/*.js', ['umd-framework']);
 });
+
+/*
+ * Takes individual images and compiles them together into sprites
+ */
+gulp.task('sprites', function () {
+    return sprity.src({
+        src: PATHS.ADMIN_IMAGES + '/sprites/src/**/*.{png,jpg}',
+        cssPath: '../images/sprites/dist',
+        style: './_spritey.scss',
+        processor: 'sass',
+        split: true,
+        margin: 0
+    })
+    .pipe(gulpif('*.png', gulp.dest(PATHS.ADMIN_IMAGES + '/sprites/dist'), gulp.dest(PATHS.ADMIN_SCSS)))
+});
+
+/*
+ * Compiles scss into css
+ * Watches for changes if --development flag is given
+ */
+gulp.task('css', function () {
+    var outputStyle = isDev ? 'expanded' : 'compressed';
+
+    var tasks = rootCompileFolders.map(function(folder) {
+        return gulp.src(folder + '/scss/**/*.scss')
+            .pipe(sourcemaps.init())
+            .pipe(sass({ outputStyle: outputStyle })
+                .on('error', notify.onError({
+                    message: 'Error: <%= error.message %>'
+                }))
+            )
+            .pipe(sourcemaps.write())
+            .pipe(gulp.dest(folder + '/css'))
+    });
+
+    if (isDev) {
+        rootCompileFolders.forEach(function (folder) {
+            gulp.watch(folder + 'scss/**/*.scss', ['css']);
+        });
+    }
+
+    return tasks;
+});
+
+
