@@ -5,12 +5,11 @@
  * @subpackage admin
  */
 
-@mixin retina-sprite($sprite, $icon) {
-	// We need to calculate this manually, as Compass sprites don't deal with retina images
-	$ypos: round(nth(sprite-position($sprite, $icon), 2) / 2);
-	background-image: sprite-url($sprite);
-	background-position: 0 $ypos;
-	background-size: ceil(image-width(sprite-path($sprite)) / 2) auto;
+@mixin retina-sprite($sprite) {
+	@include sprite($sprite);
+	background-position: round(nth($sprite, 1)/2) round(nth($sprite, 2)/2);
+	width: round(nth($sprite, 3)/2);
+	height: round(nth($sprite, 4)/2);
 }
 
 @mixin icons-retina($sprite) {
@@ -55,6 +54,26 @@
 	only screen and (                min-resolution: 192dpi),
 	only screen and (                min-resolution: 2dppx) {
 
+	.retina-sprites-64x64-2x {
+		background-image: url('../images/sprites/dist/sprite-sprites-64x64-2x.png');
+		background-size: 40px auto;
+	}
+
+	.retina-sprites-32x32-2x {
+		background-image: url('../images/sprites/dist/sprite-sprites-32x32-2x.png');
+		background-size: 30px auto;
+	}
+
+	.retina-menu-icons-24x24-2x {
+		background-image: url('../images/sprites/dist/sprite-menu-icons-24x24-2x.png');
+		background-size: 16px auto;
+	}
+
+	.retina-menu-icons-16x16-2x {
+		background-image: url('../images/sprites/dist/sprite-menu-icons-16x16-2x.png');
+		background-size: 16px auto;
+	}
+
 	/* Loading spinner */
 	.cms-content-loading-spinner {
 		background-image: url(../images/spinner@2x.gif);
@@ -83,34 +102,34 @@
 		}
 	}
 
-	/* Logout button */
-	.cms-login-status {
-		.logout-link {
-			@include retina-sprite($sprites32-2x, logout);
-		}
-	}
-
 	.cms-content-controls {
 		.icon-auto:before {
-			@include retina-sprite($sprites32-2x, preview_auto);
+			@extend .retina-sprites-32x32-2x;
+			@include retina-sprite($sprites-32x32-2x-preview_auto);
 		}
 		.icon-desktop:before {
-			@include retina-sprite($sprites32-2x, preview_desktop);
+			@extend .retina-sprites-32x32-2x;
+			@include retina-sprite($sprites-32x32-2x-preview_desktop);
 		}
 		.icon-tablet:before {
-			@include retina-sprite($sprites32-2x, preview_tablet);
+			@extend .retina-sprites-32x32-2x;
+			@include retina-sprite($sprites-32x32-2x-preview_tablet);
 		}
 		.icon-mobile:before {
-			@include retina-sprite($sprites32-2x, preview_mobile);
+			@extend .retina-sprites-32x32-2x;
+			@include retina-sprite($sprites-32x32-2x-preview_mobile);
 		}
 		.icon-split:before {
-			@include retina-sprite($sprites32-2x, preview_split);
+			@extend .retina-sprites-32x32-2x;
+			@include retina-sprite($sprites-32x32-2x-preview_split);
 		}
 		.icon-edit:before {
-			@include retina-sprite($sprites32-2x, preview_edit);
+			@extend .retina-sprites-32x32-2x;
+			@include retina-sprite($sprites-32x32-2x-preview_edit);
 		}
 		.icon-preview:before {
-			@include retina-sprite($sprites32-2x, preview_preview);
+			@extend .retina-sprites-32x32-2x;
+			@include retina-sprite($sprites-32x32-2x-preview_preview);
 		}
 	}
 
@@ -121,21 +140,29 @@
 					li {
 						a {
 							&:after {
-								@include retina-sprite($sprites32-2x, arrow_down_lighter);
+								@extend .retina-sprites-32x32-2x;
+								@include retina-sprite($sprites-32x32-2x-arrow_down_lighter);
+								display: inline-block;
 							}
 
 							&:hover:after {
-								@include retina-sprite($sprites32-2x, arrow_down_darker);
+								@extend .retina-sprites-32x32-2x;
+								@include retina-sprite($sprites-32x32-2x-arrow_down_darker);
+								display: inline-block;
 							}
 						}
 
 						&.ui-state-active a {
 							&:after {
-								@include retina-sprite($sprites32-2x, arrow_up_lighter);
+								@extend .retina-sprites-32x32-2x;
+								@include retina-sprite($sprites-32x32-2x-arrow_up_lighter);
+								display: inline-block;
 							}
 
 							&:hover:after {
-								@include retina-sprite($sprites32-2x, arrow_up_darker);
+								@extend .retina-sprites-32x32-2x;
+								@include retina-sprite($sprites-32x32-2x-arrow_up_darker);
+								display: inline-block;
 							}
 						}
 					}
@@ -150,12 +177,14 @@
 			a {
 				.toggle-children {
 					.toggle-children-icon {
-						@include retina-sprite($sprites32-2x, menu-arrow-deselected-down);
+						@extend .retina-sprites-32x32-2x;
+						@include retina-sprite($sprites-32x32-2x-menu-arrow-deselected-down);
 					}
 
 					&.opened {
 						.toggle-children-icon {
-							@include retina-sprite($sprites32-2x, menu-arrow-deselected-up);
+							@extend .retina-sprites-32x32-2x;
+							@include retina-sprite($sprites-32x32-2x-menu-arrow-deselected-up);
 						}
 					}
 				}
@@ -165,12 +194,14 @@
 				a {
 					.toggle-children {
 						.toggle-children-icon {
-							@include retina-sprite($sprites32-2x, menu-arrow-down);
+							@extend .retina-sprites-32x32-2x;
+							@include retina-sprite($sprites-32x32-2x-menu-arrow-down);
 						}
 
 						&.opened {
 							.toggle-children-icon {
-								@include retina-sprite($sprites32-2x, menu-arrow-up);
+								@extend .retina-sprites-32x32-2x;
+								@include retina-sprite($sprites-32x32-2x-menu-arrow-up);
 							}
 						}
 					}
@@ -193,38 +224,103 @@
 	.ui-widget-header {
 		a.ui-state-hover {
 			.ui-icon-closethick {
-				@include retina-sprite($sprites32-2x, dialog-close-over);
+				@extend .retina-sprites-32x32-2x;
+				@include retina-sprite($sprites-32x32-2x-dialog-close-over);
 			}
 		}
 
 		.ui-icon-closethick {
-			@include retina-sprite($sprites32-2x, dialog-close);
-		}
-	}
-
-	/* Tab icons */
-	.ui-tabs {
-		.ui-tabs-nav {
-			li.cms-tabset-icon {
-				&.list a { @include retina-sprite($sprites64-2x, tab-list); }
-				&.tree a { @include retina-sprite($sprites64-2x, tab-tree); }
-				&.edit a { @include retina-sprite($sprites64-2x, tab-edit); }
-
-				&.list.ui-state-active a { @include retina-sprite($sprites64-2x, tab-list-hover); }
-				&.tree.ui-state-active a { @include retina-sprite($sprites64-2x, tab-tree-hover); }
-				&.edit.ui-state-active a { @include retina-sprite($sprites64-2x, tab-edit-hover); }
-			}
+			@extend .retina-sprites-32x32-2x;
+			@include retina-sprite($sprites-32x32-2x-dialog-close);
 		}
 	}
 
 	/* Menu icon classes */
+	// .icon {
+	// 	&.icon-24 {
+	// 		@include icons-retina($icon24-2x);
+	// 	}
+	// 
+	// 	&.icon-16 {
+	// 		@include icons-retina($icon16-2x);
+	// 	}
+	// }
+	
 	.icon {
 		&.icon-24 {
-			@include icons-retina($icon24-2x);
+	        @extend .retina-menu-icons-24x24-2x;
+
+	        &.icon-assetadmin {
+	    		@include retina-sprite($menu-icons-24x24-2x-picture);
+				display: inline-block;
+	    	}
+	    	&.icon-cmsmain {
+	    		@include retina-sprite($menu-icons-24x24-2x-pencil);
+				display: inline-block;
+	    	}
+	    	&.icon-cmspagescontroller {
+	    		@include retina-sprite($menu-icons-24x24-2x-network);
+				display: inline-block;
+	    	}
+	    	&.icon-cmssettingscontroller {
+	    		@include retina-sprite($menu-icons-24x24-2x-gears);
+				display: inline-block;
+	    	}
+	    	&.icon-securityadmin {
+	    		@include retina-sprite($menu-icons-24x24-2x-community);
+				display: inline-block;
+	    	}
+	    	&.icon-reportadmin {
+	    		@include retina-sprite($menu-icons-24x24-2x-pie-chart);
+				display: inline-block;
+	    	}
+	    	&.icon-commentadmin {
+	    		@include retina-sprite($menu-icons-24x24-2x-blog);
+				display: inline-block;
+	    	}
+	    	&.icon-help {
+	    		@include retina-sprite($menu-icons-24x24-2x-information);
+				display: inline-block;
+	    	}
 		}
 
 		&.icon-16 {
-			@include icons-retina($icon16-2x);
+			width: 16px;
+			height: 16px;
+	        @extend .retina-menu-icons-16x16-2x;
+
+	        &.icon-assetadmin {
+	    		@include retina-sprite($menu-icons-16x16-2x-picture);
+				display: inline-block;
+	    	}
+	    	&.icon-cmsmain {
+	    		@include retina-sprite($menu-icons-16x16-2x-pencil);
+				display: inline-block;
+	    	}
+	    	&.icon-cmspagescontroller {
+	    		@include retina-sprite($menu-icons-16x16-2x-network);
+				display: inline-block;
+	    	}
+	    	&.icon-cmssettingscontroller {
+	    		@include retina-sprite($menu-icons-16x16-2x-gears);
+				display: inline-block;
+	    	}
+	    	&.icon-securityadmin {
+	    		@include retina-sprite($menu-icons-16x16-2x-community);
+				display: inline-block;
+	    	}
+	    	&.icon-reportadmin {
+	    		@include retina-sprite($menu-icons-16x16-2x-pie-chart);
+				display: inline-block;
+	    	}
+	    	&.icon-commentadmin {
+	    		@include retina-sprite($menu-icons-16x16-2x-blog);
+				display: inline-block;
+	    	}
+	    	&.icon-help {
+	    		@include retina-sprite($menu-icons-16x16-2x-information);
+				display: inline-block;
+	    	}
 		}
 	}
 

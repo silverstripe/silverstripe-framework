@@ -253,7 +253,8 @@
 		background: #FFF;
 		border: 1px solid silver;
 		z-index: 10000; *width:180px;
-		@include box-shadow(0 0 10px #CCC);
+		box-shadow: 0 0 10px #CCC;
+
 		&::before {
 			content:"";
 			display:block; /* reduce the damage in FF3.0 */
@@ -305,7 +306,7 @@
 				&:hover {
 					padding: 1px 10px;
 					background: #3875d7;
-					@include background-image(linear-gradient(top, #3875d7 20%, #2a62bc 90%));
+					background-image: linear-gradient(top, #3875d7 20%, #2a62bc 90%);
 					color: #FFF;
 					border: none;
 				}
@@ -324,7 +325,7 @@
 			&.vakata-hover > a {
 				padding: 1px 10px;
 				background: #3875d7;
-				@include background-image(linear-gradient(top, #3875d7 20%, #2a62bc 90%));
+				background-image: linear-gradient(top, #3875d7 20%, #2a62bc 90%);
 				color: #FFF;
 				border: none;
 			}
@@ -347,7 +348,7 @@
 			left: 100%;
 			background: #FFF;
 			border: 1px solid silver;
-			@include box-shadow(0 0 10px #CCC);
+			box-shadow: 0 0 10px #CCC;
 			&.col-2{
 				width:180px * 2; // 2x the size of the original ul
 				li {
@@ -500,8 +501,8 @@
 			font-size: 0.75em;
 			line-height: 1em;
 			margin-left: 3px;
-			margin-top:  -1px;
-			@include border-radius(2px, 2px);
+			margin-top: -1px;
+			border-radius: 2px, 2px;
 		}
 
 		/* comment speech bubble - ccs3 only - source: http://nicolasgallagher.com/pure-css-speech-bubbles/demo/ */
@@ -516,7 +517,7 @@
 			line-height: 1em;
 			margin-left: 3px;
 			margin-right: 6px;
-			@include border-radius(2px, 2px);
+			border-radius: 2px, 2px;
 			color:  #7E7470;
 			border: 1px solid #C9B800;
 			background-color: #FFF0BC;
@@ -631,7 +632,7 @@
 		padding: 7px 9px 6px 5px;
 		margin: 0;
 		max-width: 40%;
-		@include transition(max-width .75s linear);
+		transition: max-width .75s linear;
 	}
 	span.badge:hover {
 		max-width: 150px;
@@ -690,10 +691,10 @@ a .jstree-pageicon {
 	// Dots
 	.cms-tree.jstree .status-#{$label} > a .jstree-pageicon:before  {
 		background-color:$dotColor;
-		@include box-shadow(0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px $textColor);
+		box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px $textColor;
 	}
 	#cms-content-tools-CMSMain .cms-tree.jstree span.badge.status-#{$label}  {
-		@include box-shadow(0px 0px 6px 2px $bgColor);
+		box-shadow: 0px 0px 6px 2px $bgColor;
 	}
 }
 @include tree-status-icon('addedtodraft', #ff7f22, #F46B00, #fff7f2);

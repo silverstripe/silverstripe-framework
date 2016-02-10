@@ -26,12 +26,15 @@ aspects like form fields. We're explaining this philosophy in more detail
 on our [blog](http://www.silverstripe.org/the-3-0-ui-a-better-framework-for-your-ideas/)).
 
 All CSS in the CMS UI is written in the [SCSS language extensions](http://sass-lang.com/)
-and the [Compass framework](http://compass-style.org/), which helps
+and compiled with [gulp-sass](https://www.npmjs.com/package/gulp-sass), which helps
 us maintain expressive and concise style declarations. The files are located in `framework/admin/scss`
 (and if you have the `cms` module installed, in `cms/scss`), and are compiled to a `css` folder on the
-same directory path. Changes to the SCSS files can be automatically converted by installing
-the ["compass" module](https://github.com/silverstripe-labs/silverstripe-compass) for SilverStripe,
-although [installing the compass framework](http://compass-style.org/install/) directly works as well.
+same directory path. Changes to the SCSS files can be automatically converted by first checking that you
+have the required dev-dependencies installed, you can do this by running `npm install` from the
+root folder. now you can compile the css files by running `npm run compile`, although if you are 
+actively developing, running `npm run compile --development` will compile the expanded css and recompile
+the css whenever an .scss file is changed. Just be sure to run `npm run compile` to compile the minified
+css before submitting a pull request.
 Each file describes its purpose at the top of the declarations. Note that you can write
 plain CSS without SCSS for your custom CMS interfaces as well, we just mandate SCSS for core usage.
 
@@ -387,11 +390,10 @@ To avoid repetition, we've written some helpers for various use cases:
 SilverStripe automatically applies a [jQuery UI button style](http://jqueryui.com/demos/button/)
 to all elements with the class `.ss-ui-button`. We've extended the jQuery UI widget a bit
 to support defining icons via HTML5 data attributes (see `ssui.core.js`).
-These icon identifiers relate to icon files in `framework/admin/images/btn-icons`,
-and are sprited into a single file through SCSS and the Compass framework
-(see [tutorial](http://compass-style.org/help/tutorials/spriting/)).
-Compass also creates the correct CSS classes to show those sprites via background images
-(see `framework/admin/scss/_sprites.scss`).
+These icon identifiers relate to icon files in `framework/admin/images/sprites/src/btn-icons`,
+and are sprited into a single file through SCSS and [sprity](https://www.npmjs.com/package/sprity)
+(sprites are compiled with `npm run compile`). There are classes set up to show the correct sprite via
+background images (see `framework/admin/scss/_sprites.scss`).
 
 Input: `<a href="..." class="ss-ui-button" data-icon="add" />Button text</a>`
 

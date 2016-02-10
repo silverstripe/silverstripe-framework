@@ -24,7 +24,7 @@ $border: 1px solid darken(#D9D9D9, 15%);
 		*/
 		&.multi{
 			ul.ui-tabs-nav{
-				@include border-radius(3px);
+				border-radius: 3px;
 				@include clearfix;
 				border:$border;
 				float:left;
@@ -36,8 +36,8 @@ $border: 1px solid darken(#D9D9D9, 15%);
 					-webkit-box-shadow: none;
 				}
 				li{
-					@include background-image(linear-gradient(top, #f8f8f8, #D9D9D9));
-					@include border-radius(0);
+					background-image: linear-gradient(top, #f8f8f8, #D9D9D9);
+					border-radius: 0;
 					background: #eaeaea;
 					border: none;
 					border-right:1px solid #eee;
@@ -51,13 +51,13 @@ $border: 1px solid darken(#D9D9D9, 15%);
 						-webkit-box-shadow: none;
 					}
 					&.ui-state-active{
-						@include border-bottom-left-radius(0px);
-						@include border-bottom-right-radius(0px);
+						border-bottom-left-radius: 0;
+						border-bottom-right-radius: 0;
 						background:#f8f8f8;
 						border-bottom:none !important; //jquery-ui style has important on it
 						a {
-							@include border-bottom-left-radius(0px);
-							@include border-bottom-right-radius(0px);
+							border-bottom-left-radius: 0;
+							border-bottom-right-radius: 0;
 							&:active, span:active{
 								outline:none;
 								box-shadow:none;
@@ -66,13 +66,13 @@ $border: 1px solid darken(#D9D9D9, 15%);
 						}
 					}
 					&.first{
-						@include border-top-left-radius(3px);
-						@include border-bottom-left-radius(3px);
+						border-top-left-radius: 3px;
+						border-bottom-left-radius: 3px;
 						border-left:none;
 					}
 					&.last{
-						@include border-top-right-radius(3px);
-						@include border-bottom-right-radius(3px);
+						border-top-right-radius: 3px;
+						border-bottom-right-radius: 3px;
 						border-right:none;
 					}
 					a.tab-nav-link{
@@ -138,12 +138,12 @@ $border: 1px solid darken(#D9D9D9, 15%);
 		&.tabset-open {
 			ul.ui-tabs-nav,
 			ul.ui-tabs-nav li.first {
-				@include border-bottom-left-radius(0);
+				border-bottom-left-radius: 0;
 			}
 		}
 		&.tabset-open-last {
 			ul.ui-tabs-nav li.last {
-				@include border-bottom-right-radius(0);
+				border-bottom-right-radius: 0;
 			}
 		}
 		/* position a checkbox & icon within a tab */
@@ -170,13 +170,13 @@ $border: 1px solid darken(#D9D9D9, 15%);
 					>li{
 						width: auto;
 						a.tab-nav-link{
-							@include box-sizing(border-box);
-							@include duration(0.5s);
+							box-sizing: border-box;
+							transition-duration: .5s;
 							overflow:hidden;
 							padding-right:0;
 							width:30px;
 							&.active{
-								@include duration(0.5s);
+								transition-duration: .5s;
 								width:110px;
 							}
 						}
@@ -186,8 +186,8 @@ $border: 1px solid darken(#D9D9D9, 15%);
 					ul.ui-tabs-nav,
 					ul.ui-tabs-nav li.first,
 					ul.ui-tabs-nav li.last {
-						@include border-bottom-right-radius(0);
-						@include border-bottom-left-radius(0);
+						border-bottom-right-radius: 0;
+						border-bottom-left-radius: 0;
 					}
 				}
 			}
@@ -225,11 +225,11 @@ $border: 1px solid darken(#D9D9D9, 15%);
 					display: inline;
 					padding: 0;
 					&:hover, &:active{
-						@include box-shadow(none);
+						box-shadow: none;
 						outline:none;
 					}
 					a{
-						@include text-shadow(#fff 0 1px 1px);
+						text-shadow: #fff 0 1px 1px;
 						color: $color-text-blue-link;
 						font-size: 13px;
 						font-weight: normal;
@@ -239,16 +239,18 @@ $border: 1px solid darken(#D9D9D9, 15%);
 						margin: 0;
 
 						&:hover, &:active{
-							@include box-shadow(none);
+							box-shadow: none;
 							outline:none;
 						}
 						&:hover{
-							@include text-shadow(#fff 0 10px 10px);
+							text-shadow: #fff 0 10px 10px;
 							color: darken($color-text-blue-link,8%);
 						}
 						/* Arrow */
 						&:after {
-							background: sprite($sprites32, arrow_down_lighter) no-repeat;
+							@extend .icon-sprites-32x32;
+							@include sprite($sprites-32x32-arrow_down_lighter);
+
 							border-bottom: 0;
 							content: "";
 							display: inline-block;
@@ -257,16 +259,20 @@ $border: 1px solid darken(#D9D9D9, 15%);
 							width: 16px;
 						}
 						&:hover:after {
-							background: sprite($sprites32, arrow_down_darker) no-repeat;
+							@extend .icon-sprites-32x32;
+							@include sprite($sprites-32x32-arrow_down_darker);
+							display: inline-block;
 						}
 					}
 					/* Make arrow point in up when nav open */
 					&.ui-state-active a {
 						&:after {
-							background: sprite($sprites32, arrow_up_lighter) no-repeat;
+							@extend .icon-sprites-32x32;
+							@include sprite($sprites-32x32-arrow_down_lighter);
 						}
 						&:hover:after {
-							background: sprite($sprites32, arrow_up_darker) no-repeat;
+							@extend .icon-sprites-32x32;
+							@include sprite($sprites-32x32-arrow_down_darker);
 						}
 					}
 				}
@@ -274,8 +280,8 @@ $border: 1px solid darken(#D9D9D9, 15%);
 			/* Style the panel for actions-menu */
 			.ui-tabs-panel{
 				@include clearfix;
-				@include border-top-radius(3px);
-				@include border-bottom-radius(0);
+				border-top-radius: 3px;
+				border-bottom-radius: 0;
 				@include tightSpacing;
 				@extend .button-no-style;
 				clear:both;
@@ -309,7 +315,7 @@ $border: 1px solid darken(#D9D9D9, 15%);
 				button.ss-ui-button{
 					width: 100%;
 					&:hover, &:focus, &:active{
-						@include box-shadow(none);
+						box-shadow: none;
 						background-color: darken($tab-panel-texture-color,4%);
 						outline:none;
 					}

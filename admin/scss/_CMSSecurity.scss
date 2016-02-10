@@ -16,7 +16,7 @@
 
 		.field {
 			border: 0 none;
-			@include box-shadow(none);
+			box-shadow: none;
 			margin: 0;
 			padding: 0;
 
