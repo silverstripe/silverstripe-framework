@@ -36,6 +36,7 @@
 	font-size: $font-base-size;
 	transition: padding .2s;
 	min-height: 52px;
+	transition: padding .2s;
 
 	.version {
 		display: none;
@@ -289,8 +290,23 @@
 
 			&:hover {
 				text-decoration: none;
-				background: lighten($base-menu, 2%);
-				color: darken($color-text-default, 5%);
+				background-color: $base-menu;
+				color: darken($color-text-dark, 5%);
+			}
+
+			&:focus,
+			&:active {
+				background-color: $base-menu;
+				text-decoration: none;
+			}
+
+			.icon {
+				display: block;
+				position: absolute;
+				top: 50%;
+				margin-left: $grid-x / 2;
+				margin-top: -8px;
+				opacity: 0.7;
 			}
 
 			.text {
@@ -312,11 +328,18 @@
 			opacity: 0.7;
 		}
 
-		ul .icon {
-			display: none !important;
-		}
-
 		&.current { //need to apply current stlye to flyout also (at least line height)
+
+			&>a {
+				background-color: $base-menu;
+
+				.toggle-children {
+					.toggle-children-icon {
+						@extend .icon-sprites-32x32;
+						@include sprite($sprites-32x32-menu-arrow-down);
+					}
+				}
+			}
 
 			a {
 				background-color: $base-menu;
@@ -403,7 +426,7 @@
 					background: $base-menu-bg;
 					box-shadow: none;
 					padding: 10px 0;
-					height: 20px;
+					height: 40px;
 					line-height: 18px;
 
 					&:hover,
@@ -449,6 +472,7 @@
 							margin-left: -60px;
 							margin-right: 0px;
 							box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+
 							span.text {
 								margin-left: -10px;
 							}
