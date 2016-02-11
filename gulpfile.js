@@ -2,8 +2,11 @@ var gulp = require('gulp'),
     babel = require('gulp-babel'),
     diff = require('gulp-diff'),
     notify = require('gulp-notify'),
-    uglify = require('gulp-uglify');
+    postcss = require('gulp-postcss'),
+    sass = require('gulp-sass'),
+    uglify = require('gulp-uglify'),
     gulpUtil = require('gulp-util'),
+    autoprefixer = require('autoprefixer'),
     browserify = require('browserify'),
     babelify = require('babelify'),
     watchify = require('watchify'),
@@ -13,14 +16,26 @@ var gulp = require('gulp'),
     glob = require('glob'),
     eventStream = require('event-stream'),
     semver = require('semver'),
-    packageJson = require('./package.json');
+    packageJson = require('./package.json'),
+    sprity = require('sprity'),
+    gulpif = require('gulp-if'),
+    sourcemaps = require('gulp-sourcemaps');
+
+var isDev = typeof process.env.npm_config_development !== 'undefined';
 
 var PATHS = {
     MODULES: './node_modules',
+    ADMIN_IMAGES: './admin/images',
+    ADMIN_SCSS: './admin/scss',
+    ADMIN_CSS: './admin/css',
     ADMIN_THIRDPARTY: './admin/thirdparty',
     ADMIN_JAVASCRIPT_SRC: './admin/javascript/src',
     ADMIN_JAVASCRIPT_DIST: './admin/javascript/dist',
     FRAMEWORK_THIRDPARTY: './thirdparty',
+    FRAMEWORK_CSS: './css',
+    FRAMEWORK_SCSS: './scss',
+    FRAMEWORK_DEV_INSTALL_SCSS: './dev/install/scss',
+    FRAMEWORK_DEV_INSTALL_CSS: './dev/install/css',
     FRAMEWORK_JAVASCRIPT_SRC: './javascript/src',
     FRAMEWORK_JAVASCRIPT_DIST: './javascript/dist'
 };
@@ -31,6 +46,19 @@ var browserifyOptions = {
     poll: true,
     plugin: [watchify]
 };
+
+// Used for autoprefixing Bootstrap css classes (same as Bootstrap Aplha.2 defaults)
+var supportedBrowsers = [
+    'Chrome >= 35',
+    'Firefox >= 31',
+    'Edge >= 12',
+    'Explorer >= 9',
+    'iOS >= 8',
+    'Safari >= 8',
+    'Android 2.3',
+    'Android >= 4',
+    'Opera >= 12'
+];
 
 var blueimpFileUploadConfig = {
     src: PATHS.MODULES + '/blueimp-file-upload',
@@ -129,7 +157,7 @@ if (!semver.satisfies(process.versions.node, packageJson.engines.node)) {
     process.exit(1);
 }
 
-if (process.env.npm_config_development) {
+if (isDev) {
     browserifyOptions.debug = true;
 }
 
@@ -156,7 +184,7 @@ gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
         .pipe(source('bundle-leftandmain.js'))
         .pipe(buffer());
 
-    if (typeof process.env.npm_config_development === 'undefined') {
+    if (!isDev) {
         stream.pipe(uglify());
     }
 
@@ -182,7 +210,7 @@ gulp.task('bundle-lib', function bundleLib() {
         .pipe(source('bundle-lib.js'))
         .pipe(buffer());
 
-    if (typeof process.env.npm_config_development === 'undefined') {
+    if (!isDev) {
         stream.pipe(uglify());
     }
 
@@ -196,7 +224,20 @@ gulp.task('sanity', function () {
     diffFiles(jquerySizesConfig);
 });
 
-gulp.task('thirdparty', function () {
+gulp.task('bootstrap-css', function () {
+    var outputStyle = isDev ? 'expanded' : 'compressed';
+
+    return gulp.src(PATHS.ADMIN_SCSS + '/bootstrap/**/*.scss')
+        .pipe(sass({ outputStyle: outputStyle })
+            .on('error', notify.onError({
+                message: 'Error: <%= error.message %>'
+            }))
+        )
+        .pipe(postcss([autoprefixer({ browsers: supportedBrowsers })]))
+        .pipe(gulp.dest(PATHS.ADMIN_THIRDPARTY + '/bootstrap'));
+});
+
+gulp.task('thirdparty', ['bootstrap-css'], function () {
     copyFiles(blueimpFileUploadConfig);
     copyFiles(blueimpLoadImageConfig);
     copyFiles(blueimpTmplConfig);
@@ -219,3 +260,76 @@ gulp.task('umd-watch', function () {
     gulp.watch(PATHS.ADMIN_JAVASCRIPT_SRC + '/*.js', ['umd-admin']);
     gulp.watch(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/*.js', ['umd-framework']);
 });
+
+
+/*
+ * Sprite and scss/css compilation
+ */
+ 
+gulp.task('compile', ['sprites', 'compile-admin:css', 'compile:css', 'compile-dev-install:css'], function () {
+    if (isDev) {
+        gulp.watch(PATHS.FRAMEWORK_SCSS + '/**/*.scss', ['compile:css']);
+        gulp.watch(PATHS.ADMIN_SCSS + '/**/*.scss', ['compile-admin:css']);
+        gulp.watch(PATHS.FRAMEWORK_DEV_INSTALL_SCSS + '/**/*.scss', ['compile-dev-install:css']);
+        gulp.watch(PATHS.ADMIN_IMAGES + '/**/*.{png,jpg}', ['sprites']);
+    }
+})
+
+gulp.task('sprites', function () {
+    return sprity.src({
+        src: PATHS.ADMIN_IMAGES + '/sprites/src/**/*.{png,jpg}',
+        cssPath: '../images/sprites/dist',
+        style: './_spritey.scss',
+        processor: 'sass',
+        split: true,
+        margin: 0
+    })
+    .pipe(gulpif('*.png', gulp.dest(PATHS.ADMIN_IMAGES + '/sprites/dist'), gulp.dest(PATHS.ADMIN_SCSS)))
+});
+
+gulp.task('compile-admin:css', function () {
+    var outputStyle = isDev ? 'expanded' : 'compressed';
+    
+    return gulp.src(PATHS.ADMIN_SCSS + '/**/*.scss')
+        .pipe(sourcemaps.init())
+        .pipe(sass({ outputStyle: outputStyle })
+            .on('error', notify.onError({
+                message: 'Error: <%= error.message %>'
+            }))
+        )
+        .pipe(postcss([autoprefixer({ browsers: supportedBrowsers })]))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(PATHS.ADMIN_CSS))
+});
+
+gulp.task('compile:css', function () {
+    var outputStyle = isDev ? 'expanded' : 'compressed';
+    
+    return gulp.src(PATHS.FRAMEWORK_SCSS + '/**/*.scss')
+        .pipe(sourcemaps.init())
+        .pipe(sass({ outputStyle: outputStyle })
+            .on('error', notify.onError({
+                message: 'Error: <%= error.message %>'
+            }))
+        )
+        .pipe(postcss([autoprefixer({ browsers: supportedBrowsers })]))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(PATHS.FRAMEWORK_CSS))
+});
+
+gulp.task('compile-dev-install:css', function () {
+    var outputStyle = isDev ? 'expanded' : 'compressed';
+    
+    return gulp.src(PATHS.FRAMEWORK_DEV_INSTALL_SCSS + '/**/*.scss')
+        .pipe(sourcemaps.init())
+        .pipe(sass({ outputStyle: outputStyle })
+            .on('error', notify.onError({
+                message: 'Error: <%= error.message %>'
+            }))
+        )
+        .pipe(postcss([autoprefixer({ browsers: supportedBrowsers })]))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(PATHS.FRAMEWORK_DEV_INSTALL_CSS))
+});
+
+

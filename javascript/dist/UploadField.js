@@ -1,3 +1,5 @@
+'use strict';
+
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
 		define('ss.UploadField', ['./jQuery', './i18n'], factory);
@@ -11,8 +13,6 @@
 		global.ssUploadField = mod.exports;
 	}
 })(this, function (_jQuery, _i18n) {
-	'use strict';
-
 	var _jQuery2 = _interopRequireDefault(_jQuery);
 
 	var _i18n2 = _interopRequireDefault(_i18n);

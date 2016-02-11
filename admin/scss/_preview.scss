@@ -31,7 +31,7 @@
 		float:right;
 		border-bottom:none;
 		position:relative;
-		@include box-shadow(none);
+		box-shadow: none;
 		margin: 2px 0 0 4px;
 		padding: 0;
 		height: 28px;
@@ -44,8 +44,8 @@
 			filter: none;	/* remove ie background */
 			background: none;
 			border: none;
-			@include box-shadow(none);
-			@include border-radius(3px);
+			box-shadow: none;
+			border-radius: 3px;
 
 			&::before {
 				font-size: 18px;
@@ -55,10 +55,10 @@
 
 			&:hover, &.chzn-single-with-drop  {
 				background-color: darken($color-widget-bg,6%);
-				@include box-shadow(0 0 3px rgba(0, 0, 0, 0.05) inset, 0 1px 0 $box-shadow-shine);
+				box-shadow: 0 0 3px rgba(0, 0, 0, 0.05) inset, 0 1px 0 $box-shadow-shine;
 			}
 			&.chzn-single-with-drop {
-				@include border-radius(0 0 3px 3px);
+				border-radius: 0 0 3px 3px;
 			}
 			div {
 				display: none;
@@ -72,8 +72,8 @@
 		}
 
 		.chzn-drop{
-			@include border-radius(3px 3px 0 3px);
-			@include box-shadow(0 0 3px rgba(0, 0, 0, 0.1));
+			border-radius: 3px 3px 0 3px;
+			box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 			.chzn-results {
 				width: 135px;
 				.result-selected {
@@ -126,11 +126,11 @@
 								text-decoration: none;
 							}
 							&.first {
-								@include border-radius(3px 3px 0 0);
+								border-radius: 3px 3px 0 0;
 							}
 							&.last {
 								border-bottom: none;
-								@include border-radius(0 0 0 3px);
+								border-radius: 0 0 0 3px;
 							}
 							&.restricted { /* disable option (eg.split mode for smaller screen sizes) */
 								color: #CCC;
@@ -184,7 +184,7 @@
 								position: absolute;
 								width: 10px;
 								height: 10px;
-								@include rotate(45deg);
+								transform: rotate(45deg);
 								display: none;
 								background: #555;
 								left: 47%;
@@ -272,8 +272,11 @@
 		top: 50%;
 		left: 50%;
 		width: 300px;
+
 		span {
-			background: sprite($sprites64, preview) no-repeat;
+			@extend .icon-sprites-64x64;
+			@include sprite($sprites-64x64-preview);
+
 			display: block;
 			height: 41px;
 			margin: 0 auto 20px;
@@ -289,7 +292,7 @@
 			height: 100%;
 			width: 100%;
 			.preview-device-inner {
-				@include box-sizing('border-box');
+				box-sizing: border-box;
 				width: 100%;
 				height:100%;
 				background-color: #FFF;
@@ -305,7 +308,7 @@
 		.preview-scroll {
 			background-color: $tab-panel-texture-color; /* cover website preview icon */
 			.preview-device-outer {
-				@include border-radius(7px);
+				border-radius: 7px;
 				background: lighten(#D2DBE0, 1%);
 				border: 1px solid transparent;
 				border-left:1px solid darken(#D2DBE0, 1%);
@@ -322,25 +325,25 @@
 
 	&.mobile {
 		.preview-scroll .preview-device-outer {
-			@include rotate(0deg);
-			@include transition(all 0.3s ease-in 1s);
+			transform: rotate(0deg);
+			transition: all .3s ease-in 1s;
 			margin: 20px auto 20px;
 			overflow:hidden;
 			padding-top: 16px;
 			.preview-device-inner {
-				@include rotate(0deg);
-				@include transition(all 0.3s ease-out 1s);
+				transform: rotate(0deg);
+				transition: all .3s ease-out 1s;
 			}
 			&.rotate {
-				@include rotate(-90deg);
-				@include transition(all 0.3s ease-in 1s);
+				transform: rotate(-90deg);
+				transition: all .3s ease-in 1s;
 				height: 583px;
 				margin: 0px auto 0px;
 				width: 320px;
 				.preview-device-inner {
-					@include apply-origin(160px 160px, false);
-					@include rotate(90deg);
-					@include transition(all 0.3s ease-out 1s);
+					transform-origin: 160px 160px;
+					transform: rotate(90deg);
+					transition: all .3s ease-out 1s;
 					height: 320px;
 					width: 583px;
 				}
@@ -348,29 +351,29 @@
 		}
 	}
 	&.mobileLandscape .preview-scroll .preview-device-outer {
-		@include transition(all 0.3s ease-out 1s);
+		transition: all .3s ease-out 1s;
 		margin: 12% auto;
 		padding-top: 16px;
 		.preview-device-inner {
-			@include transition(all 0.3s ease-out 1s);
+			transition: all .3s ease-out 1s;
 		}
 	}
 	&.tablet .preview-scroll .preview-device-outer {
-		@include transition(all 0.3s ease-out 1s);
+		transition: all .3s ease-out 1s;
 		margin: 0 auto;
 		.preview-device-inner {
-			@include transition(all 0.3s ease-out 1s);
+			transition: all .3s ease-out 1s;
 		}
 	}
 	&.tabletLandscape .preview-scroll .preview-device-outer {
-		@include transition(all 0.3s ease-out 1s);
+		transition: all .3s ease-out 1s;
 		margin: 0 auto;
 		.preview-device-inner {
-			@include transition(all 0.3s ease-out 1s);
+			transition: all .3s ease-out 1s;
 		}
 	}
 	&.desktop .preview-scroll .preview-device-outer {
-		@include transition(all 0.3s ease-out 1s);
+		transition: all .3s ease-out 1s;
 		margin: 0 auto;
 	}
 }

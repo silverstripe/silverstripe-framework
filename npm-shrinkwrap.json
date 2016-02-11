@@ -39,6 +39,11 @@
       "from": "blueimp-tmpl@1.0.2",
       "resolved": "https://registry.npmjs.org/blueimp-tmpl/-/blueimp-tmpl-1.0.2.tgz"
     },
+    "bootstrap": {
+      "version": "4.0.0-alpha.2",
+      "from": "https://registry.npmjs.org/bootstrap/-/bootstrap-4.0.0-alpha.2.tgz",
+      "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-4.0.0-alpha.2.tgz"
+    },
     "jquery-sizes": {
       "version": "0.33.0",
       "from": "jquery-sizes@0.33.0",

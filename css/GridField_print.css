@@ -1,9 +1,3 @@
-h3 { font-family: Arial, sans-serif; }
+h3{font-family:Arial, sans-serif}table{border-collapse:collapse;font-family:Arial, sans-serif;color:#333;font-size:12pt}table th{border-bottom:2px solid #333;padding:5px 10px;font-weight:bold;text-align:left}table th:first-child{padding-left:0px}table td{border-top:1px solid #aaa;border-bottom:1px solid #aaa;text-align:left;padding:5px 10px}table td:first-child{padding-left:0px}
 
-table { border-collapse: collapse; font-family: Arial, sans-serif; color: #333; font-size: 12pt; }
-table th { border-bottom: 2px solid #333; padding: 5px 10px; font-weight: bold; text-align: left; }
-table th:first-child { padding-left: 0px; }
-table td { border-top: 1px solid #aaa; border-bottom: 1px solid #aaa; text-align: left; padding: 5px 10px; }
-table td:first-child { padding-left: 0px; }
-
-/*# sourceMappingURL=GridField_print.css.map */
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkdyaWRGaWVsZF9wcmludC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLEdBQ0MsNkJBQStCLENBQy9CLE1BRUEseUJBQ0EsOEJBQ0EsV0FDQSxjQUFnQixDQUpqQixTQVNFLDZCQUNBLGlCQUNBLGlCQUNBLGVBQWlCLENBWm5CLHFCQWNHLGdCQUFrQixDQWRyQixTQW1CRSwwQkFDQSw2QkFDQSxnQkFDQSxnQkFBa0IsQ0F0QnBCLHFCQXdCRyxnQkFBa0IsQ0FDbEIiLCJmaWxlIjoiR3JpZEZpZWxkX3ByaW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbImgzIHtcblx0Zm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmO1xufVxudGFibGUge1xuXHRib3JkZXItY29sbGFwc2U6IGNvbGxhcHNlO1xuXHRmb250LWZhbWlseTogQXJpYWwsIHNhbnMtc2VyaWY7XG5cdGNvbG9yOiAjMzMzO1xuXHRmb250LXNpemU6IDEycHQ7XG5cdHRye1xuXG5cdH1cblx0dGh7XG5cdFx0Ym9yZGVyLWJvdHRvbTogMnB4IHNvbGlkICMzMzM7XG5cdFx0cGFkZGluZzogNXB4IDEwcHg7XG5cdFx0Zm9udC13ZWlnaHQ6IGJvbGQ7XG5cdFx0dGV4dC1hbGlnbjogbGVmdDtcblx0XHQmOmZpcnN0LWNoaWxke1xuXHRcdFx0cGFkZGluZy1sZWZ0OiAwcHg7XG5cdFx0fVxuXG5cdH1cblx0dGR7XG5cdFx0Ym9yZGVyLXRvcDogMXB4IHNvbGlkICNhYWE7XG5cdFx0Ym9yZGVyLWJvdHRvbTogMXB4IHNvbGlkICNhYWE7XG5cdFx0dGV4dC1hbGlnbjogbGVmdDtcblx0XHRwYWRkaW5nOiA1cHggMTBweDtcblx0XHQmOmZpcnN0LWNoaWxke1xuXHRcdFx0cGFkZGluZy1sZWZ0OiAwcHg7XG5cdFx0fVxuXHR9XG59XG4iXSwic291cmNlUm9vdCI6Ii9zb3VyY2UvIn0= */

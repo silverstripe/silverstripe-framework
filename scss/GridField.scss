@@ -6,21 +6,9 @@
  * @todo Add radial gradient to default delete button state
  * @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins?
  */
-
-@import "compass/css3";
-@import "compass/css3/images";
-@import "compass/css3/text-shadow";
-@import "compass/css3/border-radius";
 @import "../admin/scss/themes/default";
 @import "../admin/scss/_mixins";
 @import "_elementMixins";
-
-//$experimental-support-for-svg variable comes from
-//imported compass/support file and enables svg gradients in IE9.
-//This is needed for the background gradients to work as desired with
-//multiple images.
-$experimental-support-for-svg: true;
-
 
 $gf_colour_gradient_dark: darken($color-base, 8%);
 $gf_colour_header_border: $gf_colour_gradient_dark;
@@ -90,7 +78,7 @@ $gf_grid_x:	16px;
 				font-size: 1.0em;
 				padding: 6px 3px 6px 0;
 				color: $color-text-light;
-				@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+				text-shadow: 0 -1px 0 $gf_colour_text_shadow;
 				font-weight: normal;
 			}
 		}
@@ -107,7 +95,8 @@ $gf_grid_x:	16px;
 		.add-existing-autocompleter {
 			span {
 				float: left;
-				@include inline-block(top);
+				display: inline-block;
+				vertical-align: top;
 			}
 			input.relation-search {
 				width: 270px; height: 32px;
@@ -126,7 +115,7 @@ $gf_grid_x:	16px;
 		.grid-csv-button, .grid-print-button {
 			margin-bottom: 0;
 			font-size: $font-base-size;
-			@include inline-block();
+			display: inline-block;
 		}
 		}
 	table.ss-gridfield-table {
@@ -151,10 +140,10 @@ $gf_grid_x:	16px;
 			}
 			tr:first-child { //sets 7px border-radius on the top row in the thead - accounts for edgecase where there is no title row.
 				th:first-child {
-					@include border-top-left-radius($gf_border_radius);
+					border-top-left-radius: $gf_border_radius;
 				}
 				th:last-child {
-					@include border-top-right-radius($gf_border_radius);
+					border-top-right-radius: $gf_border_radius;
 				}
 			}
 		}
@@ -204,7 +193,7 @@ $gf_grid_x:	16px;
 						margin-left: 10px;
 						margin-right: 6px;
 						margin-top:  -1px;
-						@include border-radius(2px, 2px);
+						border-radius: 2px, 2px;
 					}
 
 					span.badge.status-modified {
@@ -270,10 +259,10 @@ $gf_grid_x:	16px;
 					vertical-align: middle;
 				}
 				a.view-link {
-					background: url(../admin/images/btn-icon/magnifier.png) no-repeat 0 1px;
+					background: url(../admin/images/sprites/src/btn-icon/magnifier.png) no-repeat 0 1px;
 				}
 				a.edit-link {
-					background: url(../admin/images/btn-icon/document--pencil.png) no-repeat 2px 0px;
+					background: url(../admin/images/sprites/src/btn-icon/document--pencil.png) no-repeat 2px 0px;
 				}
 			}
 		}
@@ -297,8 +286,8 @@ $gf_grid_x:	16px;
 					border-bottom: 1px solid darken($gf_colour_gradient_dark,5%);
 					padding: 5px;
 					min-height: 40px; //this is to accomodate the add new button.
-					@include background-image(linear-gradient($color-base, $gf_colour_gradient_dark));
-					@include single-text-shadow($gf_colour_text_shadow_dark, 0px, -1px, 0);
+					background-image: linear-gradient($color-base, $gf_colour_gradient_dark);
+					text-shadow: 0px -1px 0 $gf_colour_text_shadow_dark;
 				h2{
 						padding: 0px;
 						font-size: $gf_grid_y*1.4;
@@ -381,7 +370,7 @@ $gf_grid_x:	16px;
 					background: $gf_colour_gradient_dark;
 					border-bottom: 1px solid $gf_colour_border;
 					span{
-						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+						text-shadow: 0 -1px 0 $gf_colour_text_shadow;
 						padding-left: $gf_grid_x/2;
 						padding-right: $gf_grid_x/2;
 						@include hide-text-overflow; // Add ellipses to overflowing text
@@ -413,7 +402,7 @@ $gf_grid_x:	16px;
 						@include box-shadow-none;
 						position: relative;
 						border-bottom-width: 0;
-						@include border-radius(2px, 2px);
+						border-radius: 2px, 2px;
 					}
 
 					select {
@@ -421,10 +410,10 @@ $gf_grid_x:	16px;
 					}
 				}
 				&.first {
-					@include border-top-left-radius($gf_border_radius);
+					border-top-left-radius: $gf_border_radius;
 				}
 				&.last {
-					@include border-top-right-radius($gf_border_radius);
+					border-top-right-radius: $gf_border_radius;
 				}
 
 
@@ -446,9 +435,9 @@ $gf_grid_x:	16px;
 						width:100%;
 						text-align: left;
 						padding: 2px 8px 2px 0; // Doesn't need to be so big now that filter has moved
-						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+						text-shadow: 0 -1px 0 $gf_colour_text_shadow;
 						color: #fff;
-						@include border-radius(0);
+						border-radius: 0;
 						&:hover {
 							background-position: right -34px;
 						}
@@ -465,29 +454,28 @@ $gf_grid_x:	16px;
 							$bgImage: url(../images/icons/filter-icons.png) no-repeat;
 							background-color:lighten($color-menu-button,10%);
 							@include gridFieldButtons;
-							@include background(
+							background: 
 								$bgImage -15px 4px,
 								linear-gradient(
 									$color-menu-button,
 									darken($color-menu-button, 10%)
-								)
-							);
+								);
 							width: 26px;
 							border-top: 1px solid lighten($color-menu-button, 5%);
 
 							&.hover-alike:active, &:active,	&.hover-alike, &:hover {
-								@include background (
-								$bgImage -15px 4px,
-								linear-gradient(
-									lighten($color-menu-button, 10%),
-									$color-menu-button
-								));
+								background: 
+									$bgImage -15px 4px,
+									linear-gradient(
+										lighten($color-menu-button, 10%),
+										$color-menu-button
+									);
 							}
 
 							&.trigger{	//The magnifying glass before filter is opened
 								margin-left: $gf_grid_y;
 								border:none;
-								@include background ($bgImage -17px 6px);
+								background: $bgImage -17px 6px;
 								padding-right: 46px;
 								margin: 0 $gf_grid_y/2;
 
@@ -500,7 +488,7 @@ $gf_grid_x:	16px;
 									background:	url(../admin/images/btn_arrow_down_grey.png) no-repeat 0px 0px;
 								}
 								&:hover{
-									@include background ($bgImage -17px -38px);
+									background: $bgImage -17px -38px;
 									@include box-shadow-none;
 									span{//dropdown arrow
 										opacity:0.9;
@@ -511,20 +499,19 @@ $gf_grid_x:	16px;
 						}
 						&.ss-gridfield-button-close{
 							$bgImage: url(../images/icons/filter-icons.png) no-repeat;
-							@include background ($bgImage 8px -17px);
+							background: $bgImage 8px -17px;
 							@include gridFieldButtons;
 							width:25px;
 							opacity:0.8;
 							margin-right:-5px; //For IE
 							&.hover-alike:active, &:active, &.hover-alike, &:hover {
 								opacity:1;
-								@include background (
+								background: 
 									$bgImage 8px -17px,
 									linear-gradient(
 										rgba(#fff,0.1),
 										rgba(#fff,0.1)
-									)
-								);
+									);
 							}
 
 						}
@@ -539,8 +526,7 @@ $gf_grid_x:	16px;
 
 							&.filtered{
 								display:block;
-
-								background: url(../admin/images/btn-icon/cross.png) no-repeat 0px 0px;
+								background: url(../admin/images/sprites/src/btn-icon/cross.png) no-repeat 0px 0px;
 								opacity:0.5;
 								&:hover{
 									opacity:0.8;
@@ -588,8 +574,8 @@ $gf_grid_x:	16px;
 				padding: $gf_grid_x/2 $gf_grid_x/2;
 				color: $gf_colour_font;
 				&.bottom-all {
-					@include border-bottom-radius($gf_border_radius);
-					@include background-image(linear-gradient($color-base, $gf_colour_gradient_dark));
+					border-bottom-radius: $gf_border_radius;
+					background-image: linear-gradient($color-base, $gf_colour_gradient_dark);
 					padding: $gf_grid_x/4 $gf_grid_y;
 
 					.datagrid-footer-message {
@@ -605,7 +591,7 @@ $gf_grid_x:	16px;
 						.pagination-page-number {
 							color:$color-text-light;
 							text-align: center;
-							@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+							text-shadow: 0 -1px 0 $gf_colour_text_shadow;
 							input {
 								width:35px; //exact width so that a four digit number can be entered
 								height:18px;
@@ -627,16 +613,16 @@ $gf_grid_x:	16px;
 								text-indent:-9999em;
 							}
 							&.ss-gridfield-previouspage {
-								@include background (url(../images/icons/pagination-arrows.png) no-repeat -23px 8px);
+								background: url(../images/icons/pagination-arrows.png) no-repeat -23px 8px;
 							}
 							&.ss-gridfield-nextpage {
-								@include background (url(../images/icons/pagination-arrows.png) no-repeat -47px 8px);
+								background: url(../images/icons/pagination-arrows.png) no-repeat -47px 8px;
 							}
 							&.ss-gridfield-firstpage {
-								@include background (url(../images/icons/pagination-arrows.png) no-repeat 0px 8px);
+								background: url(../images/icons/pagination-arrows.png) no-repeat 0px 8px;
 							}
 							&.ss-gridfield-lastpage {
-								@include background (url(../images/icons/pagination-arrows.png) no-repeat -73px 8px);
+								background: url(../images/icons/pagination-arrows.png) no-repeat -73px 8px;
 							}
 							&.ssui-button-disabled{
 								z-index:-1;
@@ -647,7 +633,7 @@ $gf_grid_x:	16px;
 						float:right;
 						padding:6px 0;
 						color:$color-text-light;
-						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+						text-shadow: 0 -1px 0 $gf_colour_text_shadow;
 					}
 				}
 			}

@@ -12,7 +12,8 @@
   "scripts": {
     "build": "gulp build",
     "sanity": "gulp sanity",
-    "thirdparty": "gulp thirdparty"
+    "thirdparty": "gulp thirdparty",
+    "compile": "gulp compile"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   },
   "homepage": "https://github.com/silverstripe/silverstripe-framework#readme",
   "devDependencies": {
+    "autoprefixer": "^6.3.1",
     "babel-core": "^6.4.0",
     "babel-plugin-transform-es2015-modules-umd": "^6.4.0",
     "babel-preset-es2015": "^6.3.13",
@@ -39,10 +41,16 @@
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
     "gulp-diff": "^1.0.0",
+    "gulp-if": "^2.0.0",
     "gulp-notify": "^2.2.0",
+    "gulp-postcss": "^6.0.1",
+    "gulp-sass": "^2.1.1",
+    "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.7",
     "semver": "^5.1.0",
+    "sprity": "^1.0.8",
+    "sprity-sass": "^1.0.4",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
@@ -51,6 +59,7 @@
     "blueimp-file-upload": "^6.0.3",
     "blueimp-load-image": "^1.1.3",
     "blueimp-tmpl": "^1.0.2",
+    "bootstrap": "^4.0.0-alpha.2",
     "jquery-sizes": "^0.33.0"
   }
 }
