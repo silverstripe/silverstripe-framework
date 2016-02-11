@@ -170,12 +170,12 @@ body.cms.ss-uploadfield-edit-iframe {
 			line-height: 30px;
 			overflow: hidden;
 			background-color: #5db4df;
-			background-image: linear-gradient(top,  #5db4df 0%,#5db1dd 8%,#439bcb 50%,#3f99cd 54%,#207db6 96%,#1e7cba 100%);
+			background-image: linear-gradient(to bottom,  #5db4df 0%,#5db1dd 8%,#439bcb 50%,#3f99cd 54%,#207db6 96%,#1e7cba 100%);
 		}
 		.ui-state-error .ss-uploadfield-item-info {
 			background-color: #c11f1d;
 			padding-right:130px;
-			background-image: linear-gradient(top,  #c11f1d 0%,#bf1d1b 4%,#b71b1c 8%,#b61e1d 15%,#b11d1d 27%,#ab1d1c 31%,#a51b1b 42%,#9f1b19 46%,#9f1b19 50%,#991c1a 54%,#971a18 58%,#911b1b 62%,#911b1b 65%,#7e1816 88%,#771919 92%,#731817 100%);
+			background-image: linear-gradient(to bottom,  #c11f1d 0%,#bf1d1b 4%,#b71b1c 8%,#b61e1d 15%,#b11d1d 27%,#ab1d1c 31%,#a51b1b 42%,#9f1b19 46%,#9f1b19 50%,#991c1a 54%,#971a18 58%,#911b1b 62%,#911b1b 65%,#7e1816 88%,#771919 92%,#731817 100%);
 			
 			.ss-uploadfield-item-name {
 				width:100%;				
@@ -191,7 +191,7 @@ body.cms.ss-uploadfield-edit-iframe {
 		.ui-state-warning .ss-uploadfield-item-info {
 			background-color: $color-warning;
 			background-image: linear-gradient(
-				top,
+				to bottom,
 				desaturate(lighten($color-warning, 10%), 20%)  0%,
 				desaturate(lighten($color-warning, 5%), 20%)  8%,
 				desaturate($color-warning, 20%)  50%,
@@ -272,7 +272,7 @@ body.cms.ss-uploadfield-edit-iframe {
 			}
 			.ss-uploadfield-item-progressbar {
 				background-color: #92a6b3;
-				background-image: linear-gradient(top, #92a6b3 0%,#90aab8 11%,#96b1bf 22%,#9eb4c1 33%,#a7bac7 44%,#c1d5dc 100%);
+				background-image: linear-gradient(to bottom, #92a6b3 0%,#90aab8 11%,#96b1bf 22%,#9eb4c1 33%,#a7bac7 44%,#c1d5dc 100%);
 			}
 			.ss-uploadfield-item-progressbarvalue {
 				width: 0;

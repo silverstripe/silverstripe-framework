@@ -306,7 +306,7 @@
 				&:hover {
 					padding: 1px 10px;
 					background: #3875d7;
-					background-image: linear-gradient(top, #3875d7 20%, #2a62bc 90%);
+					background-image: linear-gradient(to bottom, #3875d7 20%, #2a62bc 90%);
 					color: #FFF;
 					border: none;
 				}
@@ -325,7 +325,7 @@
 			&.vakata-hover > a {
 				padding: 1px 10px;
 				background: #3875d7;
-				background-image: linear-gradient(top, #3875d7 20%, #2a62bc 90%);
+				background-image: linear-gradient(to bottom, #3875d7 20%, #2a62bc 90%);
 				color: #FFF;
 				border: none;
 			}
