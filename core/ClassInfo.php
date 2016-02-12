@@ -20,10 +20,13 @@ class ClassInfo {
 	}
 
 	/**
-	 * @todo Improve documentation
+	 * Returns true if a class or interface name exists.
+	 *
+	 * @param  string $class
+	 * @return bool
 	 */
 	public static function exists($class) {
-		return SS_ClassLoader::instance()->classExists($class);
+		return class_exists($class, false) || interface_exists($class, false) || SS_ClassLoader::instance()->getItemPath($class);
 	}
 
 	/**

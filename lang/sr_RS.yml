@@ -292,7 +292,6 @@ sr_RS:
   LeftAndMain:
     CANT_REORGANISE: 'Немате право да мењате странице вршног нивоа. Ваше измене нису сачуване.'
     DELETED: Избрисано
-    DropdownBatchActionsDefault: Акције
     HELP: Помоћ
     PERMAGAIN: 'Одјављени сте са CMS-а. Уколико желите да се поново пријавите, унесите корисничко име и лозинку.'
     PreviewButton: Претходни преглед

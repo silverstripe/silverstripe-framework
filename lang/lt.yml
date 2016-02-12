@@ -30,7 +30,7 @@ lt:
     INSERTURL: 'Įkelti iš nuorodos'
     REMOVEINFO: 'Pašalinti šią bylą iš šio lauko'
     TOTAL: Viso
-    TOUPLOAD: 'Pasirinkite bylas įkėlimui...'
+    TOUPLOAD: 'Pasirinkite norimas bylas...'
     UPLOADINPROGRESS: 'Prašome palaukti... vyksta įkėlimas'
     UPLOADOR: ARBA
   BBCodeParser:
@@ -153,7 +153,7 @@ lt:
     INVALID_REQUEST: 'Klaidinga užklausa'
   DropdownField:
     CHOOSE: (Pasirinkti)
-    CHOOSESEARCH: '(pasirinkti katalogą)'
+    CHOOSESEARCH: '(Pasirinkti arba Ieškoti)'
     SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
   EmailField:
     VALIDATION: 'Prašome suvesti el. pašto adresą'
@@ -309,7 +309,7 @@ lt:
     IMAGETITLETEXT: 'Pavadinimo tekstas (tooltip)'
     IMAGETITLETEXTDESC: 'Papildomai informacijai apie paveikslėlį'
     IMAGEWIDTHPX: Plotis
-    INSERTMEDIA: 'Įterpti media iš'
+    INSERTMEDIA: 'Įterpti Media'
     LINK: 'Nuoroda'
     LINKANCHOR: 'Nuoroda šiame puslapyje'
     LINKDESCR: 'Nuorodos aprašymas'
@@ -336,7 +336,7 @@ lt:
   LeftAndMain:
     CANT_REORGANISE: 'Jūs neturite leidimo keisti aukščiausio lygio puslapių. Jūsų pakeitimai neišsaugoti.'
     DELETED: Ištrinta.
-    DropdownBatchActionsDefault: Veiksmai
+    DropdownBatchActionsDefault: 'Pasirinkite veiksmą...'
     HELP: Pagalba
     PAGETYPE: 'Puslapio tipas'
     PERMAGAIN: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'

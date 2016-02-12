@@ -280,7 +280,6 @@ sl:
   LeftAndMain:
     CANT_REORGANISE: 'Nimate dovoljenja za menjavo strani v zgornjem nivoju. Sprememba ni shranjena.'
     DELETED: Izbrisano.
-    DropdownBatchActionsDefault: Dejanja
     HELP: Pomoč
     PERMAGAIN: 'Odjavili ste se iz CMS-vmesnika. Če se želite ponovno prijaviti, vpišite uporabniško ime in geslo.'
     PreviewButton: Predogled

@@ -292,7 +292,6 @@ sr_RS@latin:
   LeftAndMain:
     CANT_REORGANISE: 'Nemate pravo da menjate stranice vršnog nivoa. Vaše izmene nisu sačuvane.'
     DELETED: Izbrisano
-    DropdownBatchActionsDefault: Akcije
     HELP: Pomoć
     PERMAGAIN: 'Odjavljeni ste sa CMS-a. Ukoliko želite da se ponovo prijavite, unesite korisničko ime i lozinku.'
     PreviewButton: Prethodni pregled
