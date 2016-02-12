@@ -1,5 +1,3 @@
-'use strict';
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 (function (global, factory) {
@@ -15,6 +13,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		global.ssSilverStripeComponent = mod.exports;
 	}
 })(this, function (exports, _react, _jQuery) {
+	'use strict';
+
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
@@ -107,8 +107,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				}
 			}
 		}, {
-			key: '_emitCmsEvent',
-			value: function _emitCmsEvent(componentEvent, data) {
+			key: 'emitCmsEvent',
+			value: function emitCmsEvent(componentEvent, data) {
 				(0, _jQuery2.default)(document).trigger(componentEvent, data);
 			}
 		}]);

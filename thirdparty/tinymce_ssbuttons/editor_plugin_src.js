@@ -1,15 +1,6 @@
 (function() {
 
-	// TinyMCE will stop loading if it encounters non-existent external script file
-	// when included through tiny_mce_gzip.php. Only load the external lang package if it is available.
-	var availableLangs = ['en', 'de'];
-	if(jQuery.inArray(tinymce.settings.language, availableLangs) != -1) {
-		tinymce.PluginManager.requireLangPack("ssbuttons");
-	}
-
-	var each = tinymce.each;
-
-	tinymce.create('tinymce.plugins.SSButtons', {
+	var ssbuttons = {
 		/**
 		 * Returns information about the plugin as a name/value array.
 		 * The current keys are longname, author, authorurl, infourl and version.
@@ -27,38 +18,55 @@
 			};
 		},
 
-		init : function(ed, url) {
-			ed.addButton('sslink', {title : ed.getLang('tinymce_ssbuttons.insertlink'), cmd : 'sslink', 'class' : 'mce_link'}); 
-			ed.addButton('ssmedia', {title : ed.getLang('tinymce_ssbuttons.insertmedia'), cmd : 'ssmedia', 'class' : 'mce_image'}); 
+		init : function(ed) {
+			ed.addButton('sslink', {
+				icon : 'link',
+				title : 'Insert Link',
+				cmd : 'sslink'
+			});
+			ed.addMenuItem('sslink', {
+				icon : 'link',
+				text : 'Insert Link',
+				cmd : 'sslink'
+			});
+			ed.addButton('ssmedia', {
+				icon : 'image',
+				title : 'Insert Media',
+				cmd : 'ssmedia'
+			});
+			ed.addMenuItem('ssmedia', {
+				icon : 'image',
+				text : 'Insert Media',
+				cmd : 'ssmedia'
+			});
+			
 
 			ed.addCommand('sslink', function(ed) {
+				// See HtmlEditorField.js
 				jQuery('#' + this.id).entwine('ss').openLinkDialog();
 			});
 
 			ed.addCommand('ssmedia', function(ed) {
+				// See HtmlEditorField.js
 				jQuery('#' + this.id).entwine('ss').openMediaDialog();
 			});
 
 			// Replace the mceAdvLink and mceLink commands with the sslink command, and
 			// the mceAdvImage and mceImage commands with the ssmedia command
-			ed.onBeforeExecCommand.add(function(ed, cmd, ui, val, a){
+			ed.on('BeforeExecCommand', function(e){
+				cmd = e.command;
+				ui = e.ui;
+				val = e.value;
 				if (cmd == 'mceAdvLink' || cmd == 'mceLink'){
-					ed.execCommand('sslink', ui, val, a);
-					a.terminate = true;
-				}
-				else if (cmd == 'mceAdvImage' || cmd == 'mceImage'){
-					ed.execCommand('ssmedia', ui, val, a);
-					a.terminate = true;
+					e.preventDefault();
+					ed.execCommand('sslink', ui, val);
+				} else if (cmd == 'mceAdvImage' || cmd == 'mceImage'){
+					e.preventDefault();
+					ed.execCommand('ssmedia', ui, val);
 				}
 			});
 
-			// Disable link button when no link is selected
-			ed.onNodeChange.add(function(ed, cm, n, co) {
-				cm.setDisabled('sslink', co && n.nodeName != 'A');
-				cm.setActive('sslink', n.nodeName == 'A' && !n.name);
-			});
-
-			ed.onSaveContent.add(function(ed, o) {
+			ed.on('SaveContent', function(o) {
 				var content = jQuery(o.content);
 				content.find('.ss-htmleditorfield-file.embed').each(function() {
 					var el = jQuery(this);
@@ -83,7 +91,7 @@
 			});
 
 			var shortTagRegex = /(.?)\[embed(.*?)\](.+?)\[\/\s*embed\s*\](.?)/gi;
-			ed.onBeforeSetContent.add(function(ed, o) {
+			ed.on('BeforeSetContent', function(o) {
 				var matches = null, content = o.content;
 				var prefix, suffix, attributes, attributeString, url;
 				var attrs, attr;
@@ -130,8 +138,10 @@
 				o.content = content;
 			});
 		}
-	});
+	};
 
 	// Adds the plugin class to the list of available TinyMCE plugins
-	tinymce.PluginManager.add("ssbuttons", tinymce.plugins.SSButtons);
+	tinymce.PluginManager.add("ssbuttons", function(editor) {
+		ssbuttons.init(editor);
+	});
 })();

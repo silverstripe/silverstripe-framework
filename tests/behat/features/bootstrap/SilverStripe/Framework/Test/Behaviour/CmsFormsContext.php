@@ -203,7 +203,7 @@ class CmsFormsContext extends BehatContext {
 // TODO <IE9 support
 // TODO Allow text matches across nodes
 var editor = jQuery('#$inputFieldId').entwine('ss').getEditor(),
-	doc = editor.getDOM().doc,
+	doc = editor.getInstance().getDoc(),
 	sel = editor.getInstance().selection,
 	rng = document.createRange(),
 	matched = false;
@@ -265,5 +265,22 @@ JS;
 			assertNotNull($matchedEl);
 		}
 	}
+
+	/**
+     * Click on the element with the provided CSS Selector
+     *
+     * @When /^I press the "([^"]*)" HTML field button$/
+     */
+    public function iClickOnTheHtmlFieldButton($button)
+    {
+		$xpath = "//*[@aria-label='".$button."']";
+        $session = $this->getSession();
+        $element = $session->getPage()->find('xpath', $xpath);
+        if (null === $element) {
+            throw new \InvalidArgumentException(sprintf('Could not find element with xpath %s', $xpath));
+        }
+
+        $element->click();
+    }
 
 }

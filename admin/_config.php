@@ -1,13 +1,13 @@
 <?php
+
 // Default CMS HTMLEditorConfig
 HtmlEditorConfig::get('cms')->setOptions(array(
 	'friendly_name' => 'Default CMS',
 	'priority' => '50',
 
 	'body_class' => 'typography',
-	'document_base_url' => isset($_SERVER['HTTP_HOST']) ? Director::absoluteBaseURL() : null,
 
-	'cleanup_callback' => "sapphiremce_cleanup",
+	'contextmenu' => "sslink ssmedia inserttable | cell row column deletetable",
 
 	'use_native_selects' => false,
 	'valid_elements' => "@[id|class|style|title],a[id|rel|rev|dir|tabindex|accesskey|type|name|href|target|title"
@@ -28,19 +28,11 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 		. "object[width|height|data|type],param[name|value],map[class|name|id],area[shape|coords|href|target|alt]"
 ));
 
-HtmlEditorConfig::get('cms')->disablePlugins('contextmenu');
-
-HtmlEditorConfig::get('cms')->enablePlugins('media', 'fullscreen', 'inlinepopups');
-HtmlEditorConfig::get('cms')->enablePlugins(array(
-	'ssbuttons' => sprintf('../../../%s/tinymce_ssbuttons/editor_plugin_src.js', THIRDPARTY_DIR)
-));
-HtmlEditorConfig::get('cms')->enablePlugins('advimagescale');
-
-HtmlEditorConfig::get('cms')->insertButtonsBefore('formatselect', 'styleselect');
-HtmlEditorConfig::get('cms')->addButtonsToLine(2,
-	'ssmedia', 'ssflash', 'sslink', 'unlink', 'anchor', 'separator','code', 'fullscreen', 'separator');
-
-HtmlEditorConfig::get('cms')->removeButtons('tablecontrols');
-HtmlEditorConfig::get('cms')->addButtonsToLine(3, 'tablecontrols');
+HtmlEditorConfig::get('cms')
+	->enablePlugins(array(
+		'contextmenu' => null,
+		'image' => null,
+		'ssbuttons' => THIRDPARTY_DIR . '/tinymce_ssbuttons/editor_plugin_src.js'
+	));
 
 CMSMenu::remove_menu_item('CMSProfileController');

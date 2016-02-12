@@ -65,6 +65,7 @@
     "react-dom": "^0.14.6",
     "react-redux": "^4.0.6",
     "redux": "^3.0.5",
-    "redux-thunk": "^1.0.3"
+    "redux-thunk": "^1.0.3",
+    "tinymce": "^4.3.3"
   }
 }
