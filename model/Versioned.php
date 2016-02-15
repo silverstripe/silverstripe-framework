@@ -1283,7 +1283,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function doRollbackTo($version) {
 		$this->owner->extend('onBeforeRollback', $version);
-		$this->publish($version, "Stage", true);
+		$this->publish($version, "Stage");
 
 		$this->owner->writeWithoutVersion();
 
