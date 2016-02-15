@@ -165,7 +165,7 @@ E.g.
 
 	:::php
 	<?php
-	$update = SQLUpdate::create('"SiteTree"')->where(array('ID' => 3));
+	$update = SQLUpdate::create('"SiteTree"')->addWhere(array('ID' => 3));
 
 	// assigning a list of items
 	$update->addAssignments(array(
