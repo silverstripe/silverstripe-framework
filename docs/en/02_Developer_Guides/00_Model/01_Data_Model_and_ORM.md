@@ -492,7 +492,7 @@ You can specify a join with the `innerJoin` and `leftJoin` methods.  Both of the
 	
 <div class="alert" markdown="1">
 Passing a *$join* statement to will filter results further by the JOINs performed against the foreign table. It will 
-**not** return the additionally joined data.
+**not** return the additionally joined data. This can be done by adding: $datalist = $datalist->dataQuery()->selectFromTable("Rel", array("Field1", "Field2"));
 </div>
 
 ### Default Values
