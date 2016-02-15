@@ -122,7 +122,7 @@ When ready, hit **Install SilverStripe**.
 
 SilverStripe should now be installed and you should have a basic site with three pages.
 
-However, URLs will not look "nice", like this: http://localhost/index.php/about-us. In order to fix this problem, we need to install a third-party URL rewriting tool, as IIS 6 does not support this natively.
+However, URLs will not look "nice", like this: `http://localhost/index.php/about-us`. In order to fix this problem, we need to install a third-party URL rewriting tool, as IIS 6 does not support this natively.
 
 Proceed to **Install IIRF** below to enable nice URLs.
 

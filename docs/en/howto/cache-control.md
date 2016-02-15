@@ -15,11 +15,11 @@ Default setting:
 
 Overriding these defaults
 
-  * `[api:HTTP::set_cache_age()]` can be used to set the max-age component of the cache-control line, in seconds.  
+  * [api:HTTP::set_cache_age()] can be used to set the max-age component of the cache-control line, in seconds.  
 Set it to 0 to disable caching; the "no-cache" clause in `Cache-Control` and `Pragma` will be included.
-  * `[api:HTTP::register_modification_date()]` can be used to set the modification date to something more recent than the default.
+  * [api:HTTP::register_modification_date()] can be used to set the modification date to something more recent than the default.
 
 How it works:
 
-  * `[api:DataObject::__construct()]` calls `[api:HTTP::register_modification_date()]` whenever a record comes from the database
-  * `Controller::run()` calls `[api:HTTP::add_cache_headers()]` before outputting the page
+  * [api:DataObject::__construct()] calls [api:HTTP::register_modification_date()] whenever a record comes from the database
+  * [api:Controller::run()] calls [api:HTTP::add_cache_headers()] before outputting the page

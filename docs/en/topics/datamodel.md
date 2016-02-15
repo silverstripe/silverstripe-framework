@@ -7,13 +7,13 @@ following connections:
 *  Each database-row maps to a php-object
 *  Each database-column maps to a property on a php-object
  
-All data tables in SilverStripe are defined as subclasses of `[api:DataObject]`. Inheritance is supported in the data
+All data tables in SilverStripe are defined as subclasses of [api:DataObject]. Inheritance is supported in the data
 model: seperate tables will be linked together, the data spread across these tables. The mapping and saving/loading
 logic is handled by sapphire, you don't need to worry about writing SQL most of the time. 
 
 The advanced object-relational layer in SilverStripe is one of the main reasons for requiring PHP5. Most of its
 customizations are possible through [PHP5 Object
-Overloading](http://www.onlamp.com/pub/a/php/2005/06/16/overloading.html) handled in the `[api:Object]`-class.
+Overloading](http://www.onlamp.com/pub/a/php/2005/06/16/overloading.html) handled in the [api:Object]-class.
 
 See [database-structure](/reference/database-structure) for in-depth information on the database-schema.
 
@@ -29,7 +29,7 @@ Note: You need to be logged in as an administrator to perform this command.
 ## Querying Data
 
 There are static methods available for querying data. They automatically compile the necessary SQL to query the database
-so they are very helpful. In case you need to fall back to plain-jane SQL, have a look at `[api:SQLQuery]`.
+so they are very helpful. In case you need to fall back to plain-jane SQL, have a look at [api:SQLQuery].
 
 	:::php
 	$records = DataObject::get($obj, $filter, $sort, $join, $limit);
@@ -46,7 +46,7 @@ so they are very helpful. In case you need to fall back to plain-jane SQL, have 
 
 Passing a *$join* statement to DataObject::get will filter results further by the JOINs performed against the foreign
 table. **It will NOT return the additionally joined data.**  The returned *$records* will always be a
-`[api:DataObject]`.
+[api:DataObject].
 
 When using *$join* statements be sure the string is in the proper format for the respective database engine. In MySQL
 the use of back-ticks may be necessary when referring Table Names and potentially Columns. (see [MySQL
@@ -188,7 +188,7 @@ on the "Player"-table.
 	  );
 	}
 
-SilverStripe's `[api:SiteTree]` base-class for content-pages uses a 1-to-1 relationship to link to its
+SilverStripe's [api:SiteTree] base-class for content-pages uses a 1-to-1 relationship to link to its
 parent element in the tree:
 
 	:::php
@@ -285,7 +285,7 @@ accessors available on both ends.
 ### Adding relations
 
 Inside sapphire it doesn't matter if you're editing a *has_many*- or a *many_many*-relationship. You need to get a
-`[api:ComponentSet]`.
+[api:ComponentSet].
 
 	:::php
 	class Team extends DataObject {
@@ -315,7 +315,7 @@ Inside sapphire it doesn't matter if you're editing a *has_many*- or a *many_man
 ### Custom Relation Getters
 
 You can use the flexible datamodel to get a filtered result-list without writing any SQL. For example, this snippet gets
-you the "Players"-relation on a team, but only containing active players. (See `[api:DataObject::$has_many]` for more info on
+you the "Players"-relation on a team, but only containing active players. (See [api:DataObject::$has_many] for more info on
 the described relations).
 
 	:::php
@@ -448,16 +448,16 @@ See [forms](/topics/forms).
 
 ### Saving data with custom SQL
 
-See `[api:SQLQuery]` for custom *INSERT*, *UPDATE*, *DELETE* queries.
+See [api:SQLQuery] for custom *INSERT*, *UPDATE*, *DELETE* queries.
 
 
 
 
 ## Decorating DataObjects
 
-You can add properties and methods to existing `[api:DataObjects]`s like `[api:Member]` (a core class) without hacking core
+You can add properties and methods to an existing [api:DataObjects] like [api:Member] (a core class) without hacking core
 code or subclassing.
-Please see `[api:DataObjectDecorator]` for a general description, and `[api:Hierarchy]` for our most
+Please see [api:DataObjectDecorator] for a general description, and [api:Hierarchy] for our most
 popular examples.
 
 
@@ -466,7 +466,7 @@ popular examples.
 
 ### Whats the difference between DataObject::get() and a relation-getter?
 You can work with both in pretty much the same way, but relationship-getters return a special type of collection: 
-A `[api:ComponentSet]` with relation-specific functionality.
+A [api:ComponentSet] with relation-specific functionality.
 
 	:::php
 	$myTeam = DataObject::get_by_id('Team',$myPlayer->TeamID); // returns DataObject

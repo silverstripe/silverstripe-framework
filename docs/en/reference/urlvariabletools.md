@@ -29,7 +29,7 @@ Append the option and corresponding value to your URL in your browser's address 
  | isDev         | | 1      | | Put the site into [development mode](/topics/debugging), enabling debugging messages to the browser on a live server.  For security, you'll be asked to log in with an administrator log-in | 
  | isTest        | | 1      | | Put the site into [test mode](/topics/debugging), enabling debugging messages to the admin email and generic errors to the browser on a live server                                         | 
  | debug         | | 1      | | Show a collection of debugging information about the director / controller operation        |
- | debug_request | | 1      | | Show all steps of the request from initial `[api:HTTPRequest]` to `[api:Controller]` to Template Rendering  | 
+ | debug_request | | 1      | | Show all steps of the request from initial [api:HTTPRequest] to [api:Controller] to Template Rendering  | 
 
 ## Classes and Objects
 

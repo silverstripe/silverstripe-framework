@@ -18,7 +18,7 @@
 After you've installed SilverStripe on XP using WebPI. You'll need to make a configuration change to get it working.
 
 Specifically, you need to configure XP not to check that a script file exists before executing the script.  This is
-necessary for URLs of the form http://localhost/silverstripe/index.php/about-us/ to work.
+necessary for URLs of the form `http://localhost/silverstripe/index.php/about-us/` to work.
 
 *  Open IIS Administrator
 *  Expand the local computer tree node

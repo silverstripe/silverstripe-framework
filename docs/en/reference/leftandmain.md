@@ -2,7 +2,7 @@
 
 ## Introduction
 
-LeftAndMain is the base class of all the admin area controllers.  
+LeftAndMain is the base class of all the admin area controllers.
 
 ## Best Practices
 
@@ -10,11 +10,11 @@ LeftAndMain is the base class of all the admin area controllers.
 
 Please use LeftAndMain::ForceReload to reload the whole form-area after an Ajax-Request. If you just need to refresh
 parts of the form, please use javascript-replacement in the response of the original Ajax-Request. Consider using
-`[api:Form]` for  compiling Ajax-Responses and automatic detection of Ajax/Non-Ajax-Calls.
+[api:Form] for  compiling Ajax-Responses and automatic detection of Ajax/Non-Ajax-Calls.
 
 ### Custom Access Checking
 
-You can customize access control in `[api:LeftAndMain]`.
+You can customize access control in [api:LeftAndMain].
 
 	:::php
 	// mysite/_config.php
@@ -144,7 +144,7 @@ For example:
 	static $menu_priority = 60;
 
 
-See also `[api:CMSMenu]`
+See also [api:CMSMenu]
 
 ### Translatable Menu Titles
 
@@ -181,10 +181,10 @@ See [Javascript in the CMS](/topics/javascript#javascript-cms)
 
 ## Related
 
-*  `[api:CMSMain]`
-*  `[api:AssetAdmin]`
-*  `[api:SecurityAdmin]`
-*  `[api:ModelAdmin]` 
+*  [api:CMSMain]
+*  [api:AssetAdmin]
+*  [api:SecurityAdmin]
+*  [api:ModelAdmin] 
 
 ## TODO
 

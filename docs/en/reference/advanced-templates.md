@@ -75,10 +75,10 @@ In this example, `$A` and `$B` refer to `$obj->Property()->A()` and `$obj->Prope
 	<% end_control %>
 
 
-If the method/field returned is an iterator such as a `[api:DataObject]`, then the control block will be repeated for
+If the method/field returned is an iterator such as a [api:DataObject], then the control block will be repeated for
 each element of that iterator.  This is the cornerstone of all menu and list generation in SilverStripe.  
 
-In this example, `Menu(1)` returns a `[api:DataObjectSet]` listing each top level main menu item (for more info on `Menu(1)`:
+In this example, `Menu(1)` returns a [api:DataObjectSet] listing each top level main menu item (for more info on `Menu(1)`:
 [Making a Navigation System](/tutorials/building-a-basic-site#Making-a-Navigation-System)).  The `<a>`
 tag is repeated once for each main menu item, and the `$Link` and `$Title` values for each menu item is substituted in.
 
@@ -165,7 +165,7 @@ for adding notes for other developers but for things you don't want published in
 
 ### Formatting Template Values
 
-The following example takes the Title field of our object, casts it to a `[api:Varchar]` object, and then calls
+The following example takes the Title field of our object, casts it to a [api:Varchar] object, and then calls
 the `$XML` object on that Varchar object.
 
 	:::ss
@@ -241,8 +241,8 @@ Will give you the ability to call `$MyCustomValue` from anywhere in your templat
 	// output "I've got one thing to say to you: <i>Hi, this is my site</i>" 
 
 
-Your function could return a single value as above or it could be a subclass of `[api:ArrayData]` for example a
-`[api:DataObject]` with many values then each of these could be accessible via a control loop
+Your function could return a single value as above or it could be a subclass of [api:ArrayData] for example a
+[api:DataObject] with many values then each of these could be accessible via a control loop
 
 	:::php
 	..
@@ -298,9 +298,9 @@ This is all very well and good, but how do the templates actually get called?
 
 Templates do nothing on their own.  Rather, they are used to render *a particular object*.  All of the `<% if %>`, `<%control %>`, 
 and variable codes are methods or parameters that are called *on that object*.  All that is necessary is
-that the object is an instance of `[api:ViewableData]` (or one of its subclasses).
+that the object is an instance of [api:ViewableData] (or one of its subclasses).
 
-The key is `[api:ViewableData::renderWith()]`.  This method is passed a For example, within the controller's default action,
+The key is [api:ViewableData::renderWith()].  This method is passed a For example, within the controller's default action,
 there is an instruction of the following sort:
 
 	:::php
@@ -310,7 +310,7 @@ there is an instruction of the following sort:
 Here's what this line does:
 
 *  First `renderWith()` constructs a new object: `$template = new SSViewer("TemplateName");`
-*  `[api:SSViewer]` will take the content of `TemplateName.ss`, and turn it into PHP code.
+*  [api:SSViewer] will take the content of `TemplateName.ss`, and turn it into PHP code.
 *  Then `renderWith()` passes the controller to `$template->process($controller);`
 *  `SSViewer::process()` will execute the PHP code generated from `TemplateName.ss` and return the results.
 
@@ -320,7 +320,7 @@ Here's what this line does:
 available template name.
 
 Below is an example of how to implement renderWith.  In the example below the page is rendered using the myAjaxTemplate
-if the page is called by an ajax function (using `[api:Director::is_ajax()]`).  Note that the index function is called by
+if the page is called by an ajax function (using [api:Director::is_ajax()]).  Note that the index function is called by
 default if it exists and there is no action in the url parameters.
 
 	:::php

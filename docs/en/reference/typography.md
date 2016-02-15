@@ -88,7 +88,7 @@ OtherContent:
 ### Removing the typography class
 
 Sometimes, it's not enough to add a class, you also want to remove the typography class.  You can use the
-`[api:HTMLEditorField]` method setCSSClass.
+[api:HTMLEditorField] method setCSSClass.
 
 This example sets another CSS class typographybis:
 

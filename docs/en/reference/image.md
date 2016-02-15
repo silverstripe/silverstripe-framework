@@ -2,15 +2,15 @@
 
 ## Introduction
 
-Represents an image object, inheriting all base functionality from the [file](api:file) class with extra functionality
+Represents an image object, inheriting all base functionality from the [api:File] class with extra functionality
 including resizing.
 
 ## Usage
 
 ### Form Fields
 
-*  `[api:Image]`. Designed to provide a complex image uploader for the CMS.
-*  `[api:SimpleImageField]`. A Simple Image Upload Form
+*  [api:Image]. Designed to provide a complex image uploader for the CMS.
+*  [api:SimpleImageField]. A Simple Image Upload Form
 
 ### Resizing Images in PHP
 
@@ -102,9 +102,9 @@ For output of an image tag with the image automatically resized to 80px width, y
 
 ### Form Upload
 
-For usage on a website form, see `[api:SimpleImageField]`.
+For usage on a website form, see [api:SimpleImageField].
 
-If you want to upload images within the CMS, see `[api:ImageField]`.
+If you want to upload images within the CMS, see [api:ImageField].
 
 ### Clearing Thumbnail Cache
 
@@ -120,4 +120,4 @@ image cache.
 
 ## API Documentation
 
-`[api:Image]`
+[api:Image]

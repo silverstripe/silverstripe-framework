@@ -3,7 +3,7 @@
 This topic covers setting up your Mac as a Web Server and installing SilverStripe. 
 
 While OSX Comes bundled with PHP and Apache (Thanks Apple!) Its not quite ideal for SilverStripe so for setting up a
-webserver on OSX we suggest using [MAMP](http://www.mamp.info/en/index.php) or using [MacPorts](http://www.macports.org/) 
+webserver on OSX we suggest using [MAMP](https://www.mamp.info/en) or using [MacPorts](http://www.macports.org/) 
 to manage your packages.
 
 If you want to use the default OSX PHP version then you will need to recompile your own versions of PHP with GD. Providing instructions

@@ -172,7 +172,7 @@ Next we need to create the *results* function.
 First we populate an array with the data we wish to pass to the template - the search results, query and title of the
 page. The final line is a little more complicated.
 
-When we call a function by its url (eg http://localhost/home/results), SilverStripe will look for a template with the
+When we call a function by its url (eg `http://localhost/home/results`), SilverStripe will look for a template with the
 name `PageType_function.ss`. As we are implementing the *results* function on the *Page* page type, we create our
 results page template as *Page_results.ss*. Unfortunately this doesn't work when we are using page types that are
 children of the *Page* page type. For example, if someone used the search on the homepage, it would be rendered with
@@ -193,7 +193,7 @@ function, and then attempt to render it with *Page_results.ss*, falling back to 
 ## Creating the template
 
 Lastly we need to create the template for the search page. This template uses all the same techniques used in previous
-tutorials. It also uses a number of pagination variables, which are provided by the `[api:DataObjectSet]`
+tutorials. It also uses a number of pagination variables, which are provided by the [api:DataObjectSet]
 class.
 
 *themes/tutorial/templates/Layout/Page_results.ss*

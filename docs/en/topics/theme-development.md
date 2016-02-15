@@ -245,7 +245,7 @@ Note: This only applies for CSS and template files. PHP files **do not** get ove
 
 ### Requirements
 
-The `[api:Requirements::themedCSS()]` function will
+The [api:Requirements::themedCSS()] function will
 do the search specified above. This avoids the need to type a full path to the css file, and also provides better
 ambiguity for themes.
 
