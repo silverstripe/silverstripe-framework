@@ -492,8 +492,18 @@ You can specify a join with the `innerJoin` and `leftJoin` methods.  Both of the
 	
 <div class="alert" markdown="1">
 Passing a *$join* statement to will filter results further by the JOINs performed against the foreign table. It will 
-**not** return the additionally joined data.
-</div>
+**not** return the additionally joined data. Below is an example on how to include fields from a join table.
+ </div>	
+ 		 
+To include data from joined tables, you can use the following code:
+
+	:::php
+	$members = Member::get()
+		->innerJoin("JoinTable", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
+
+	$newQuery = members->dataQuery()->selectFromTable("JoinTable", array("A_Field_From_JoinTable"));
+	$members = $members->setDataQuery($newQuery);
+
 
 ### Default Values
 
