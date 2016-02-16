@@ -2733,6 +2733,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Since database_fields omits 'ID'
 		if($field == "ID") return "Int";
 
+        // Add fields from Versioned extension
+        if($field == 'Version' && singleton($class)->hasExtension('Versioned')) {
+            return 'Int';
+        }
+
 		$fieldMap = self::database_fields($class, false);
 
 		// Remove string-based "constructor-arguments" from the DBField definition
