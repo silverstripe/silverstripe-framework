@@ -179,10 +179,13 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	/**
 	 * Fix HTTP_HOST from reverse proxies
 	 */
-	if (TRUSTED_PROXY && isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-		
+	$trustedProxyHeader = (defined('SS_TRUSTED_PROXY_HOST_HEADER'))
+		? SS_TRUSTED_PROXY_HOST_HEADER
+		: 'HTTP_X_FORWARDED_HOST';
+
+	if (TRUSTED_PROXY && !empty($_SERVER[$trustedProxyHeader])) {
 		// Get the first host, in case there's multiple separated through commas
-		$_SERVER['HTTP_HOST'] = strtok($_SERVER['HTTP_X_FORWARDED_HOST'], ',');
+		$_SERVER['HTTP_HOST'] = strtok($_SERVER[SS_TRUSTED_PROXY_HOST_HEADER], ',');
 	}
 }
 
