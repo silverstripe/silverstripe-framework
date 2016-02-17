@@ -40,7 +40,7 @@ These calls retrieve a [api:FieldSet] for the area where you intend to work with
 ### For the Frontend
 
 Used for simple frontend forms without relation editing or [api:TabSet] behaviour. Uses `scaffoldFormFields()` by
-default. To customize, either overload this method in your subclass, or decorate it by [api:DataObjectDecorator::updateFormFields()].
+default. To customize, either overload this method in your subclass, or decorate it by [api:DataObjectDecorator::updateFrontEndFields()].
 
 * Requirements: SilverStripe 2.3.*
 
