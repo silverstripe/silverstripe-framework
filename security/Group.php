@@ -436,22 +436,30 @@ class Group extends DataObject {
 	/**
 	 * Checks for permission-code CMS_ACCESS_SecurityAdmin.
 	 * 
-	 * @param $member Member
+	 * @param Member $member
 	 * @return boolean
 	 */
 	public function canView($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-		
-		// extended access checks
+		if(!$member) {
+			$member = Member::currentUser();
+		}
+
 		$results = $this->extend('canView', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
-		
-		// user needs access to CMS_ACCESS_SecurityAdmin
-		if(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin")) return true;
-		
-		return false;
+		if($results && is_array($results) && !min($results)) {
+			return false;
+		}
+
+		if(!$member) {
+			return false;
+		}
+
+		return true;
 	}
-	
+
+	/**
+	 * @param Member $member
+	 * @return bool
+	 */
 	public function canDelete($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		

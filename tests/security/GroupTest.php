@@ -6,7 +6,18 @@
 class GroupTest extends FunctionalTest {
 
 	protected static $fixture_file = 'GroupTest.yml';
-	
+
+	public function testMemberCanViewFalseByDefault() {
+		$group = new Group();
+		$this->assertFalse($group->canView(), 'Groups are by default not viewable.');
+	}
+
+	public function testMemberCanViewTrueByLoggedInUsers() {
+		$this->logInAs($this->idFromFixture('GroupTest_Member', 'parentgroupuser'));
+		$group = new Group();
+		$this->assertTrue($group->canView(), 'Groups should be viewable by logged in users.');
+	}
+
 	public function testGroupCodeDefaultsToTitle() {
 		$g1 = new Group();
 		$g1->Title = "My Title";
