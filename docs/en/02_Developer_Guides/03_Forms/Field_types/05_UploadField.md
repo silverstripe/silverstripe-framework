@@ -297,7 +297,7 @@ Certain default values for the above can be configured using the YAML config sys
 
 The above settings can also be set on a per-instance basis by using `setConfig` with the appropriate key.
 
-You can also configure the underlying `[api:Upload]` class, by using the YAML config system.
+You can also configure the underlying [api:Upload] class, by using the YAML config system.
 
 ```yaml
 	Upload:

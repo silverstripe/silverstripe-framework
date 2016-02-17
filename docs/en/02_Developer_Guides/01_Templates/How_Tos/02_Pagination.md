@@ -25,8 +25,8 @@ Note that the concept of "pages" used in pagination does not necessarily mean th
 it's just a term to describe a sub-collection of the list.
 </div>
 
-There are two ways to generate pagination controls: [api:PaginatedList->Pages] and 
-[api:PaginatedList->PaginationSummary]. In this example we will use `PaginationSummary()`.
+There are two ways to generate pagination controls: [api:PaginatedList::Pages()] and 
+[api:PaginatedList::PaginationSummary()]. In this example we will use `PaginationSummary()`.
 
 The first step is to simply list the objects in the template:
 
@@ -72,7 +72,7 @@ If there is more than one page, this block will render a set of pagination contr
 
 In some situations where you are generating the list yourself, the underlying list will already contain only the items 
 that you wish to display on the current page. In this situation the automatic limiting done by [api:PaginatedList]
-will break the pagination. You can disable automatic limiting using the [api:PaginatedList->setLimitItems] method 
+will break the pagination. You can disable automatic limiting using the [api:PaginatedList::setLimitItems()] method 
 when using custom lists.
 
 	:::php

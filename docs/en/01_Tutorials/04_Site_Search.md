@@ -92,7 +92,7 @@ function, and then attempt to render it with *Page_results.ss*, falling back to 
 ## Creating the template
 
 Lastly we need the template for the search page. This template uses all the same techniques used in previous
-tutorials. It also uses a number of pagination variables, which are provided by the `[api:PaginatedList]`
+tutorials. It also uses a number of pagination variables, which are provided by the [api:PaginatedList]
 class.
 
 *themes/simple/templates/Layout/Page_results.ss*

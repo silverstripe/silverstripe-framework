@@ -36,7 +36,7 @@ on a public server very carefully.
 
 Test mode is designed for staging environments or other private collaboration sites before deploying a site live.
 
-In this mode error messages are hidden from the user and SilverStripe includes `[api:BasicAuth]` integration if you 
+In this mode error messages are hidden from the user and SilverStripe includes [api:BasicAuth] integration if you 
 want to password protect the site. You can enable that but adding this to your `mysite/_config/app.yml` file:
 
 	:::yml

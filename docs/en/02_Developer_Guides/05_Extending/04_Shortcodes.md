@@ -33,7 +33,7 @@ Here's some syntax variations:
 
 Shortcodes are automatically parsed on any database field which is declared as [api:HTMLValue] or [api:HTMLText], 
 when rendered into a template. This means you can use shortcodes on common fields like `SiteTree.Content`, and any 
-other `[api:DataObject::$db]` definitions of these types.
+other [api:DataObject::$db] definitions of these types.
 
 Other fields can be manually parsed with shortcodes through the `parse` method.
 

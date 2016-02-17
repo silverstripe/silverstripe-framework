@@ -41,8 +41,8 @@ default site search, have a look at those extensions and modify as required.
 
 ### Fulltext Filter
 
-SilverStripe provides a `[api:FulltextFiler]` which you can use to perform custom fulltext searches on
-`[api:DataList]`'s.
+SilverStripe provides a [api:FulltextFilter] which you can use to perform custom fulltext searches on
+[api:DataList]s.
 
 Example DataObject:
 
