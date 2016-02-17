@@ -29,5 +29,5 @@ clause in `Cache-Control` and `Pragma` will be included.
 	:::php
 	HTTP::register_modification_date('2014-10-10');
 
-Used to set the modification date to something more recent than the default. [api:DataObject::__construct] calls 
-[api:HTTP::register_modification_date(] whenever a record comes from the database ensuring the newest date is present.
+Used to set the modification date to something more recent than the default. [api:DataObject::__construct()] calls 
+[api:HTTP::register_modification_date()] whenever a record comes from the database ensuring the newest date is present.

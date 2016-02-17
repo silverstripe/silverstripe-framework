@@ -4,14 +4,14 @@
 
 The framework uses caches to store infrequently changing values.
 By default, the storage mechanism is simply the filesystem, although
-other cache backends can be configured. All caches use the `[api:SS_Cache]` API.
+other cache backends can be configured. All caches use the [api:SS_Cache] API.
 
 The most common caches are manifests of various resources: 
 
- * PHP class locations (`[api:SS_ClassManifest]`)
- * Template file locations and compiled templates (`[api:SS_TemplateManifest]`)
- * Configuration settings from YAML files (`[api:SS_ConfigManifest]`)
- * Language files (`[api:i18n]`)
+ * PHP class locations ([api:SS_ClassManifest])
+ * Template file locations and compiled templates ([api:SS_TemplateManifest])
+ * Configuration settings from YAML files ([api:SS_ConfigManifest])
+ * Language files ([api:i18n])
 
 Flushing the various manifests is performed through a GET
 parameter (`flush=1`). Since this action requires more server resources than normal requests,
@@ -23,7 +23,7 @@ executing the action is limited to the following cases when performed via a web 
 
 ## The Cache API
 
-The `[api:SS_Cache]` class provides a bunch of static functions wrapping the Zend_Cache system 
+The [api:SS_Cache] class provides a bunch of static functions wrapping the Zend_Cache system 
 in something a little more easy to use with the SilverStripe config system.
 
 A `Zend_Cache` has both a frontend (determines how to get the value to cache, 

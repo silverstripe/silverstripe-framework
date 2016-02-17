@@ -95,7 +95,7 @@ You can also fetch one parameter at a time.
 
 ## URL Patterns
 
-The `[api:RequestHandler]` class will parse all rules you specify against the following patterns. The most specific rule
+The [api:RequestHandler] class will parse all rules you specify against the following patterns. The most specific rule
 will be the one followed for the response.
 
 <div class="alert">

@@ -37,7 +37,7 @@ If you submit a new feature or an API change, we strongly recommend that your pa
 ## Repositories
 
 *  End-user help: [userhelp.silverstripe.org](http://github.com/silverstripe/userhelp.silverstripe.org)
-*  Developer guides: [docs.silverstripe.org](http://github.com/silverstripe/docs.silverstripe.org)
+*  Developer guides: [docs.silverstripe.org](http://github.com/silverstripe/doc.silverstripe.org)
 *  Developer API documentation: [api.silverstripe.org](http://github.com/silverstripe/api.silverstripe.org)
 
 ## Source control
