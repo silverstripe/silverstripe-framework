@@ -24,7 +24,6 @@ nl:
     FROMCOMPUTER: 'Selecteer bestanden op uw computer'
     FROMCOMPUTERINFO: 'Uploaden vanaf uw computer'
     TOTAL: Totaal
-    TOUPLOAD: 'Selecteer bestanden...'
     UPLOADINPROGRESS: 'Een ogenblik geduld... upload wordt uitgevoerd'
     UPLOADOR: OF
   BBCodeParser:
@@ -123,7 +122,6 @@ nl:
     INVALID_REQUEST: 'Fout bij verwerken'
   DropdownField:
     CHOOSE: (Kies)
-    CHOOSESEARCH: '(Kies of zoek)'
   EmailField:
     VALIDATION: 'Gelieve een e-mailadres in te voeren.'
   Enum:
@@ -272,7 +270,6 @@ nl:
     IMAGETITLETEXT: 'Tooltip (title)'
     IMAGETITLETEXTDESC: 'Toon extra informatie over de afbeelding'
     IMAGEWIDTHPX: Breedte
-    INSERTMEDIA: 'Media invoegen'
     LINK: 'Link invoegen'
     LINKANCHOR: 'Anker op deze pagina'
     LINKDESCR: 'Linkomschrijving'
@@ -285,7 +282,6 @@ nl:
     PAGE: Pagina
     URL: URL
     URLNOTANOEMBEDRESOURCE: '{url} kon niet worden omgezet in een media-bron.'
-    UpdateMEDIA: 'Media bijwerken'
   Image:
     PLURALNAME: Bestanden
     SINGULARNAME: Bestand
@@ -297,7 +293,6 @@ nl:
   LeftAndMain:
     CANT_REORGANISE: 'U hebt geen rechten om de pagina''s op het Top niveau aan te passen. Uw aanpassing is niet opgeslagen. '
     DELETED: Verwijderd.
-    DropdownBatchActionsDefault: Acties
     HELP: Help
     PERMAGAIN: 'U bent uitgelogd uit het CMS.  Als u weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hieronder in.'
     PreviewButton: Voorbeeld

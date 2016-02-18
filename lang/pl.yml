@@ -24,7 +24,6 @@ pl:
     FROMCOMPUTER: 'Wybierz pliki z komputera'
     FROMCOMPUTERINFO: 'Załaduj z twojego komputera'
     TOTAL: Razem
-    TOUPLOAD: 'Wybierz pliki do załadowania...'
     UPLOADINPROGRESS: 'Pliki są przesyłane... proszę czekać'
     UPLOADOR: LUB
   BBCodeParser:
@@ -123,7 +122,6 @@ pl:
     INVALID_REQUEST: 'Nieprawidłowe żądanie'
   DropdownField:
     CHOOSE: (wybierz)
-    CHOOSESEARCH: '(Wybierz lub szukaj)'
   EmailField:
     VALIDATION: 'Proszę podaj adres e-mail'
   Enum:
@@ -271,7 +269,6 @@ pl:
     IMAGETITLETEXT: 'Tytuł (wyskakujący dymek)'
     IMAGETITLETEXTDESC: 'Po dodatkowe informacje o obrazku'
     IMAGEWIDTHPX: Szerokość (px)
-    INSERTMEDIA: 'Wstaw Media'
     LINK: 'Wstaw/edytuj link z podświetlonego tekstu '
     LINKANCHOR: 'Odnośnik na tej stronie'
     LINKDESCR: 'Opis linku'
@@ -284,7 +281,6 @@ pl:
     PAGE: Strona
     URL: Adres URL
     URLNOTANOEMBEDRESOURCE: 'Adres URL ''{url}'' nie mógł zostać przekształcony w zasób medialny'
-    UpdateMEDIA: 'Zaktualizuj Media'
   Image:
     PLURALNAME: Pliki
     SINGULARNAME: Plik
@@ -296,7 +292,6 @@ pl:
   LeftAndMain:
     CANT_REORGANISE: 'Nie masz uprawnień by zmieniać strony na najwyższym poziomie. Twoje zmiany nie zostały zapisane.'
     DELETED: Usunięto.
-    DropdownBatchActionsDefault: Akcje
     HELP: Pomoc
     PERMAGAIN: 'Zostałeś wylogowany z CMSa. Jeśli chcesz zalogować się ponownie, wpisz login i hasło poniżej.'
     PreviewButton: Podgląd

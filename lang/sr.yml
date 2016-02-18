@@ -24,7 +24,6 @@ sr:
     FROMCOMPUTER: 'Изаберите датотеке са Вашег рачунара'
     FROMCOMPUTERINFO: 'Постави са Вашег рачунара'
     TOTAL: Укупно
-    TOUPLOAD: 'Изаберите датотеке за постављање...'
     UPLOADINPROGRESS: 'Молимо Вас да сачекате... Постављање је у току'
     UPLOADOR: ИЛИ
   BBCodeParser:
@@ -123,7 +122,6 @@ sr:
     INVALID_REQUEST: 'Погрешан захтев'
   DropdownField:
     CHOOSE: (изаберите)
-    CHOOSESEARCH: '(Изабери или Пронађи)'
   EmailField:
     VALIDATION: 'Унесите адресу е-поште'
   Enum:
@@ -271,7 +269,6 @@ sr:
     IMAGETITLETEXT: 'Текст наслова (tooltip)'
     IMAGETITLETEXTDESC: 'За додатне информације о слици'
     IMAGEWIDTHPX: Ширина
-    INSERTMEDIA: 'Уметни медијски ресурс'
     LINK: 'Линк'
     LINKANCHOR: 'Сидро на овој страни'
     LINKDESCR: 'Опис линка'
@@ -284,7 +281,6 @@ sr:
     PAGE: Страница
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' не може бити претворен у медијски ресурс.'
-    UpdateMEDIA: 'Ажурирај медијски ресурс'
   Image:
     PLURALNAME: Датотеке
     SINGULARNAME: Датотека
@@ -296,7 +292,6 @@ sr:
   LeftAndMain:
     CANT_REORGANISE: 'Немате право да мењате странице вршног нивоа. Ваше измене нису сачуване.'
     DELETED: Избрисано
-    DropdownBatchActionsDefault: Акције
     HELP: Помоћ
     PERMAGAIN: 'Одјављени сте са CMS-а. Уколико желите да се поново пријавите, унесите корисничко име и лозинку.'
     PreviewButton: Претходни преглед

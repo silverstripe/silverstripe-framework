@@ -142,7 +142,6 @@ pt:
   Image_iframe_ss:
     TITLE: 'Iframe de envio de Imagem'
   LeftAndMain:
-    DropdownBatchActionsDefault: Ações
     HELP: Ajuda
     PERMAGAIN: 'Saiu do CMS. Se se deseja autenticar novamente insira as suas credenciais abaixo.'
   LoginAttempt:

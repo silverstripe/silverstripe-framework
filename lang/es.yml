@@ -1,5 +1,7 @@
 es:
   AssetAdmin:
+    ALLOWEDEXTS: 'Extensiones permitidas para subir archivos'
+    HIDEALLOWEDEXTS: 'Ocultar extensiones permitidas'
     NEWFOLDER: NuevaCarpeta
     SHOWALLOWEDEXTS: 'Mostrar extensiones permitidas'
   AssetTableField:
@@ -7,12 +9,14 @@ es:
     DIM: Dimensiones
     FILENAME: Nombre del archivo
     FOLDER: Carpeta
+    HEIGHT: Alto
     LASTEDIT: 'Modificado por última vez'
     OWNER: Propietario
     SIZE: 'Tamaño'
     TITLE: Título
     TYPE: 'Tipo de archivo'
     URL: URL
+    WIDTH: Ancho
   AssetUploadField:
     ChooseFiles: 'Seleccione los archivos'
     DRAGFILESHERE: 'Arrastre los archivos aqui'
@@ -23,8 +27,10 @@ es:
     FILES: Archivos
     FROMCOMPUTER: 'Seleccione los archivos desde su ordenador'
     FROMCOMPUTERINFO: 'Subir archivos desde tu ordenador'
+    INSERTURL: 'Insertar desde URL'
+    REMOVEINFO: 'Remover este archivo '
     TOTAL: Total
-    TOUPLOAD: 'Seleccione los archivos a subir...'
+    TOUPLOAD: 'Seleccionar archivos para subir'
     UPLOADINPROGRESS: 'Por favor espere .... carga en curso'
     UPLOADOR: O
   BBCodeParser:
@@ -77,6 +83,8 @@ es:
     PASSWORDEXPIRED: '<p>Su contraseña expiró. <a target="_top" href="{link}">Por favor, elija una nueva.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Previsualización'
+  CMSPagesController_Tools_ss:
+    FILTER: Filtrar
   CMSProfileController:
     MENUTITLE: 'Mi Perfil'
   CMSSecurity:
@@ -105,6 +113,7 @@ es:
     MAXIMUM: 'Las contraseñas deben tener como máximo {max} caracteres de longitud.'
     SHOWONCLICKTITLE: 'Cambiar contraseña'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Debes iniciar sesión con tu contraseña del CMS para ver el borrador o el contenido archivado. <a href="%s">click aquí para regresar al sitio publicado.</a>'
     NOTLOGGEDIN: 'No estás conectado'
   CreditCardField:
     FIRST: primero
@@ -144,7 +153,7 @@ es:
     INVALID_REQUEST: 'Solicitud no válida'
   DropdownField:
     CHOOSE: (Elegir)
-    CHOOSESEARCH: '(Seleccionar o Buscar)'
+    CHOOSESEARCH: 'Seleccionar o Buscar'
     SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
   EmailField:
     VALIDATION: 'Introduzca una dirección de correo electrónico'
@@ -311,6 +320,7 @@ es:
     PAGE: Página
     SUBJECT: 'Asunto del Email'
     URL: URL
+    URLDESCRIPTION: 'Insertar videos e imágenes de la web en tu sitio es tan simple como ingresar la URL del archivo. Asegúrate de que tienes los derechos o permisos antes de compartir directamente desde la web.<br/><br/>Por favor nota que los archivos que no son cargados al almacén de archivos del CMS, sino que vinculados directamente de la ubicación original, si por alguna razón el archivo ya no está disponible en la ubicación original, no será posible mostrarlo en este sitio.'
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ''no se puede convertir en un recurso multimedia.'
     UpdateMEDIA: 'Actualizar Media'
   Image:
@@ -324,7 +334,6 @@ es:
   LeftAndMain:
     CANT_REORGANISE: 'Usted no tiene permiso para modificar las páginas de nivel superior. Su modificación no se ha guardado.'
     DELETED: Borrado
-    DropdownBatchActionsDefault: Acciones
     HELP: Ayuda
     PERMAGAIN: 'Ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña a continuación.'
     PERMALREADY: 'Lamentablemente no puede acceder a esta parte del CMS. Si quiere entrar como alguien distinto, hágalo a continuación'

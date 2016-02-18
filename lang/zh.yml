@@ -24,7 +24,6 @@ zh:
     FROMCOMPUTER: '从您的电脑选择文件'
     FROMCOMPUTERINFO: '从您的电脑上传'
     TOTAL: 合计
-    TOUPLOAD: '选择要上传的文件……'
     UPLOADINPROGRESS: '请稍候……上传正在进行中'
     UPLOADOR: 或
   BBCodeParser:
@@ -144,7 +143,6 @@ zh:
     INVALID_REQUEST: '无效请求'
   DropdownField:
     CHOOSE: （选择）
-    CHOOSESEARCH: '（选择或搜索）'
     SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
   EmailField:
     VALIDATION: '请输入一个电子邮件地址'
@@ -296,7 +294,6 @@ zh:
     IMAGETITLETEXT: '标题文字（工具提示）'
     IMAGETITLETEXTDESC: '要获取关于该图像的更多信息'
     IMAGEWIDTHPX: 宽度
-    INSERTMEDIA: '插入媒体'
     LINK: '插入链接'
     LINKANCHOR: '固定于此页面'
     LINKDESCR: '链接描述'
@@ -310,7 +307,6 @@ zh:
     SUBJECT: '电子邮件标题'
     URL: 网址
     URLNOTANOEMBEDRESOURCE: '''{url}'' 该网址无法转换成媒体来源。'
-    UpdateMEDIA: '更新媒体'
   Image:
     PLURALNAME: 文件
     SINGULARNAME: 文件
@@ -322,7 +318,6 @@ zh:
   LeftAndMain:
     CANT_REORGANISE: '您没有权限更改顶层页面。您的更改没有保存。'
     DELETED: 已删除。
-    DropdownBatchActionsDefault: 动作
     HELP: 帮助
     PERMAGAIN: '您已经退出 CMS。如果您想再次登录，请在下面输入用户名和密码。'
     PERMALREADY: '抱歉，您不能访问这一部分的后台管理。如果您想以不同的身份登录，请在下面进行操作。'

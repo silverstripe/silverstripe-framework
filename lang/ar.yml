@@ -24,7 +24,6 @@ ar:
     FROMCOMPUTER: 'اختر ملفات من جهاز الكمبيوتر الخاص بك'
     FROMCOMPUTERINFO: 'حمل من جهاز الكمبيوتر الخاص بك'
     TOTAL: الكلي
-    TOUPLOAD: 'قم باختيار ملفات لتحميلها'
     UPLOADINPROGRESS: 'يرجى الانتظار ...جار التحميل'
     UPLOADOR: أو
   BBCodeParser:
@@ -121,7 +120,6 @@ ar:
     INVALID_REQUEST: 'طلب غير صحيح'
   DropdownField:
     CHOOSE: (اختر)
-    CHOOSESEARCH: '(اختار أو ابحث)'
   EmailField:
     VALIDATION: 'يرجى إدخال عنوان بريد إلكتروني'
   Enum:
@@ -269,7 +267,6 @@ ar:
     IMAGETITLETEXT: 'عنوان النص (أداة التلميح)'
     IMAGETITLETEXTDESC: 'للمزيد من المعلومات حول الصورة'
     IMAGEWIDTHPX: العرض
-    INSERTMEDIA: 'قم بإدراج وسائط'
     LINK: 'رابط'
     LINKANCHOR: 'ربط على هذه الصفحة'
     LINKDESCR: 'وصف الرابط'
@@ -282,7 +279,6 @@ ar:
     PAGE: صفحة
     URL: رابط
     URLNOTANOEMBEDRESOURCE: 'عنوان الموقع لا يمكن أن يتحول إلى مصدر وسائط. ''{URL}'''
-    UpdateMEDIA: 'تحديث الوسائط'
   Image:
     PLURALNAME: الملفات
     SINGULARNAME: الملف
@@ -294,7 +290,6 @@ ar:
   LeftAndMain:
     CANT_REORGANISE: 'ليس لديك تصريح لتغيير صفحات المستوى الأعلى. لم يتم حفظ التغيير.'
     DELETED: تم الحذف.
-    DropdownBatchActionsDefault: أفعال
     HELP: مساعدة
     PERMAGAIN: 'تم خروجك من النظام بنجاح. للدخول مرة أخرى أدحل البريد الإلكتروني و الرقم السري بالأسفل'
     PreviewButton: استعراض

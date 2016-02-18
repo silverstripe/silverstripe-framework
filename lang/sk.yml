@@ -1,5 +1,7 @@
 sk:
   AssetAdmin:
+    ALLOWEDEXTS: 'Povolené extenzie nahatia súboru'
+    HIDEALLOWEDEXTS: 'Skryť povolené extenzie'
     NEWFOLDER: Nový priečinok
     SHOWALLOWEDEXTS: 'Ukázať povolené extenzie'
   AssetTableField:
@@ -7,12 +9,14 @@ sk:
     DIM: Rozmery
     FILENAME: Názov
     FOLDER: Adresár
+    HEIGHT: Výška
     LASTEDIT: 'Posledne zmenené'
     OWNER: Vlastník
     SIZE: 'Veľkosť'
     TITLE: Titulok
     TYPE: 'Typ'
     URL: URL
+    WIDTH: Šírka
   AssetUploadField:
     ChooseFiles: 'Vyberte súbory'
     DRAGFILESHERE: 'Tiahni súbory tu'
@@ -23,8 +27,10 @@ sk:
     FILES: Súbory
     FROMCOMPUTER: 'Vyberte súbory z vášho počítača'
     FROMCOMPUTERINFO: 'Nahrat z vášho počítača'
+    INSERTURL: 'Vložiť z URL'
+    REMOVEINFO: 'Odstrániť tento soubor z tohto poľa'
     TOTAL: Súhrn
-    TOUPLOAD: 'Vyberte súbory pre nahratie...'
+    TOUPLOAD: 'Vyberte súbory pre nahratie'
     UPLOADINPROGRESS: 'Čakajte prosím… prebieha nahrávanie'
     UPLOADOR: ALEBO
   BBCodeParser:
@@ -77,6 +83,8 @@ sk:
     PASSWORDEXPIRED: '<p>Vaše heslo bolo expirované. <a target="_top" href="{link}">Prosím zvoľte nové heslo.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Náhľad webu'
+  CMSPagesController_Tools_ss:
+    FILTER: Filter
   CMSProfileController:
     MENUTITLE: 'Môj profil'
   CMSSecurity:
@@ -105,6 +113,7 @@ sk:
     MAXIMUM: 'Heslá musia byť najviac {max} znakov dlhé.'
     SHOWONCLICKTITLE: 'Zmeniť heslo'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Musíte sa prihlásiť so svojím CMS heslom pre zobrazenie návrhu alebo archivovaného obsahu. <a href="%s">Kliknite tu pre návrat na publikovaný web .</a>'
     NOTLOGGEDIN: 'Neprihlásený'
   CreditCardField:
     FIRST: prvý
@@ -194,7 +203,7 @@ sk:
     TEXT3: pre
   Form:
     CSRF_EXPIRED_MESSAGE: 'Čas Vášho sedenia vypršal. Prosím znova odošlite formulár.'
-    CSRF_FAILED_MESSAGE: 'Vyzerá to, že to musí být technický problem. Kliknite prosím na tlačítko späť, obnovte váš prehliadač, a skúste opäť.'
+    CSRF_FAILED_MESSAGE: 'Zdá sa, že nastal technický problém. Kliknite prosím na tlačítko späť, obnovte váš prehliadač, a skúste to opäť.'
     FIELDISREQUIRED: '{name} je požadované'
     SubmitBtnLabel: Choď
     VALIDATIONCREDITNUMBER: 'Uistite sa, že ste zadali číslo {number} kreditnej karty správne'
@@ -259,8 +268,8 @@ sk:
     has_many_Permissions: Právomoci
     many_many_Members: Členovia
   GroupImportForm:
-    Help1: 'Importovať jednu alebo viac skupín v CSV formáte (čiarkov oddelené hodnoty). Zobraziť pokročilé použitie'
-    Help2: '<div class="advanced"> <h4>Pokročilé použitie</h4> <ul> <li>Povolené stĺpce: <em>%s</em></li> <li>Existujúce skupiny sú porovnávané s ich unikátnou <em>Code</em>; hodnotou, a aktualizované s novými hodnotami z importovaného súbory&lt;/li> <li>Skupina hierarchií môže byť tvorená použitím <em>ParentCode</em>; stĺpce.&lt;/li> <li>Kódy oprávnení môžu byť priradené <em>PermissionCode</em>; stĺpcom. Existujúce oprávnenia nie sú smazáné.</li> </ul> </div>'
+    Help1: '<p>Importovať jednu alebo viac skupín v <em>CSV</em> formáte (čiarkou oddelené hodnoty). <small><a href="#" class="toggle-advanced">Zobraziť pokročilé použitie</a></small></p>'
+    Help2: '<div class=''advanced''>\n<h4>Pokročilé použitie</h4>\n<ul>\n<li>Povolené stĺpce: <em>%s</em></li>\n<li>Existujúce skupiny sú porovnávané ich unikátnou vlastnosťou <em>Code</em>, a aktualizované s novými hodnotami z\nimportovaného súboru.</li>\n<li>Hierarchia skupín môže byť tvorená použitím stĺpca <em>ParentCode</em>.</li>\n<li>Kódy oprávnení môžu byť priradené stĺpcom <em>PermissionCode</em>. Existujúce oprávnenia nie sú zmazané.</li>\n</ul>\n</div>'
     ResultCreated: 'Vytvorených {count} skupín'
     ResultDeleted: 'Zmazané %d skupiny'
     ResultUpdated: 'Aktualizované %d skupiny'
@@ -311,6 +320,7 @@ sk:
     PAGE: Stránku
     SUBJECT: 'Predmet emailu'
     URL: URL
+    URLDESCRIPTION: 'Vložiť videá a obrázky z webu do Vašej stránky, jednoduchým zadaním URL súboru. Uistite sa, že máte príslušné práva pred zdielaním médií z webu.<br /><br />Prosím, uvedomte si, že súbory nie sú pridané do úložiska CMS, ale súbor je vstavaný z jeho pôvodného umiestenia, ak z nejakých dôvodov súbor nie je dostupný v jeho pôvodnom umiestení, nebude zobraziteľný na tejo stránke.'
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
     UpdateMEDIA: 'Aktualizovať média'
   Image:
@@ -324,10 +334,9 @@ sk:
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnenie meniť stránky najvyššej úrovne. Vaša zmena nebola uložená.'
     DELETED: Zmazané.
-    DropdownBatchActionsDefault: Akcie
     HELP: Pomoc
     PERMAGAIN: 'Boli ste odhlásený'
-    PERMALREADY: 'Je mi ľúto, ale nemáte prístup k tejto časti CMS. Ak sa chcete prihlásiť ako niekto iný, urobte tak nižšie'
+    PERMALREADY: 'Je nám ľúto, ale k tejto časti CMS nemáte prístup . Ak sa chcete prihlásiť ako niekto iný, urobte tak nižšie.'
     PERMDEFAULT: 'Musíte byť prihlásený/á k prístupu do oblasti administrácie, zadajte vaše prihlasovacie údaje dole, prosím.'
     PreviewButton: Náhľad
     REORGANISATIONSUCCESSFUL: 'Strom webu bol reorganizovaný úspešne.'
@@ -365,8 +374,8 @@ sk:
     ERRORLOCKEDOUT2: 'Váš účet bol dočasne zablokovaný, kvôli množstvu neúspešných pokusov o prihlásenie. Prosím skúste to znova za {count} minút.'
     ERRORNEWPASSWORD: 'Zadali ste rozdielne nové heslo, skúste to znovu'
     ERRORPASSWORDNOTMATCH: 'Vaše súčasné heslo nie je správne, prosím skúste to znovu'
-    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajúí byť nesprávne. Prosím skúste opäť.'
-    FIRSTNAME: 'Krstné meno'
+    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
+    FIRSTNAME: 'Meno'
     INTERFACELANG: 'Jazyk rozhrania'
     INVALIDNEWPASSWORD: 'Nemohli sme pripustiť, že heslo: {password}'
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
@@ -382,11 +391,11 @@ sk:
     SURNAME: Priezvisko
     TIMEFORMAT: 'Formát času'
     VALIDATIONMEMBEREXISTS: 'Člen s takýmto e-mailom už existuje'
-    ValidationIdentifierFailed: 'Nemôžte prepísať existujúceho člena #{id} s identickým identifikátorm ({name} = {value}))'
+    ValidationIdentifierFailed: 'Nemôžte prepísať existujúceho člena #{id} s identickým identifikátorm ({name} = {value})'
     WELCOMEBACK: 'Vitajte späť, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'
     belongs_many_many_Groups: Skupiny
-    db_LastVisited: 'Dátum poslednej navštevy'
+    db_LastVisited: 'Dátum poslednej návštevy'
     db_Locale: 'Lokalizácia rozhrania'
     db_LockedOutUntil: 'Zamknutý až do'
     db_NumVisit: 'Počet návštev'
@@ -415,8 +424,8 @@ sk:
     TWODIGITYEAR: 'Dvojčíslie roka'
     Toggle: 'Ukázať nápovedu formátovania'
   MemberImportForm:
-    Help1: 'Importovať členov v <em>CSV formáte</em> (čiarkov oddelené hodnoty). Zobraziť pokročile použitie'
-    Help2: '<div class="advanced"> <h4>Pokročilé použitie</h4> <ul> <li>Povolené stĺpce: <em>%s</em></li> <li>Existujúci užívatelia sú porovnávaní ich unikátnou vlastnosťou <em>Code</em>, a aktualizovaní s novými hodnotami z importovaného súboru.</li> <li>Skupiny môžu byťt priradené stĺpcom <em>Groups</em>. Skupiny sú identifikované ich vlastnosťou <em>Code</em>, viacero skupín môže byť oddelené čiarkou. Existujúce členstvá skupiny nie sú smazané.</li> </ul> </div>'
+    Help1: '<p>Importovať členov v <em>CSV formáte</em> (čiarkou oddelené hodnoty). <small><a href="#" class="toggle-advanced">Zobraziť pokročile použitie</a></small></p>'
+    Help2: '<div class="advanced">\n<h4>Pokročilé použitie</h4>\n<ul>\n<li>Povolené stĺpce: <em>%s</em></li>\n<li>Existujúci užívatelia sú porovnávaní ich unikátnou vlastnosťou <em>Code</em>, a aktualizovaní s novými hodnotami z\nimportovaného súboru.</li>\n<li>Skupiny môžu byť priradené stĺpcom <em>Groups</em>. Skupiny sú identifikované ich vlastnosťou <em>Code</em>,\nviacero skupín môže byť oddelené čiarkou. Existujúce členstvá skupiny nie sú zmazané.</li>\n</ul>\n</div>'
     ResultCreated: 'Vytvorených {count} členov'
     ResultDeleted: 'Zmazaných %d členov'
     ResultNone: 'Žiadne zmeny'
@@ -454,7 +463,7 @@ sk:
   NullableField:
     IsNullLabel: 'Je Null'
   NumericField:
-    VALIDATION: '''{value}'' nie je číslo, iba čísla môžu byť akceptované pre toto pole'
+    VALIDATION: 'Zadaná hodnota ''{value}'' nie je číslo. Iba čísla môžu byť akceptované pre toto pole!'
   Pagination:
     Page: Stránka
     View: Zobraziť
@@ -520,10 +529,10 @@ sk:
     ROLES: Úlohy
     ROLESDESCRIPTION: 'Úlohy sú logické zoskupenia právomocí a môžu byť pridelené k skupinám.<br />Sú zdedené z nadradených skupín, ak je to požadované.'
     TABROLES: Úlohy
-    Users: Bezpečnosť
+    Users: Používatelia
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Importovať'
-    FileFieldLabel: 'CSV súbor <small>(Povoléné koncovki súborov: *.csv)</small>'
+    FileFieldLabel: 'CSV súbor <small>(Povolené koncovky súborov: *.csv)</small>'
   SilverStripeNavigator:
     Auto: Auto
     ChangeViewMode: 'Zmeniť nód zobrazenia'

@@ -24,7 +24,6 @@ nb:
     FROMCOMPUTER: 'Velg filer fra din pc'
     FROMCOMPUTERINFO: 'Last opp fra din pc'
     TOTAL: Total
-    TOUPLOAD: 'Velg filer til opplasting ...'
     UPLOADINPROGRESS: 'Vennligst vent... opplasting pågår'
     UPLOADOR: ELLER
   BBCodeParser:
@@ -123,7 +122,6 @@ nb:
     INVALID_REQUEST: 'Ugyldig forespørsel'
   DropdownField:
     CHOOSE: (Velg)
-    CHOOSESEARCH: '(Velg eller søk)'
   EmailField:
     VALIDATION: 'Vennligst skriv inn en epostadresse'
   Enum:
@@ -271,7 +269,6 @@ nb:
     IMAGETITLETEXT: 'Titteltekst (tooltip)'
     IMAGETITLETEXTDESC: 'For tilleggsinformasjon om bilde'
     IMAGEWIDTHPX: Bredde
-    INSERTMEDIA: 'Sett inn media'
     LINK: 'Sett inn/rediger lenke i fremhevet tekst'
     LINKANCHOR: 'Lenke på denne siden'
     LINKDESCR: 'Lenkebeskrivelse'
@@ -284,7 +281,6 @@ nb:
     PAGE: Side
     URL: Nettadresse
     URLNOTANOEMBEDRESOURCE: 'Nettadressen ''{url}'' kunne ikke bli omgjort til en medieressurs.'
-    UpdateMEDIA: 'Oppdater media'
   Image:
     PLURALNAME: Filer
     SINGULARNAME: Fil
@@ -296,7 +292,6 @@ nb:
   LeftAndMain:
     CANT_REORGANISE: 'Du har ikke tilgang til å endre toppnivåsider. Endringen din ble ikke lagret.'
     DELETED: Slettet.
-    DropdownBatchActionsDefault: Handlinger
     HELP: Hjelp
     PERMAGAIN: 'Du har blitt logget ut av publiseringssystemet. Hvis du vil logge deg på igjen, skriv inn brukernavn og passord under.'
     PreviewButton: Forhåndsvisning

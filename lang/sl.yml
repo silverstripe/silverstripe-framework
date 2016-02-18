@@ -23,7 +23,6 @@ sl:
     FROMCOMPUTER: 'Izberite datoteke z vašega računalnika'
     FROMCOMPUTERINFO: 'Prenesite z vašega računalnika'
     TOTAL: Vse
-    TOUPLOAD: 'Izberite datoteke za prenos'
     UPLOADINPROGRESS: 'Prosimo, počakajte ... prenos poteka.'
     UPLOADOR: ALI
   BBCodeParser:
@@ -120,7 +119,6 @@ sl:
     INVALID_REQUEST: 'Napačna zahteva'
   DropdownField:
     CHOOSE: (Izberi)
-    CHOOSESEARCH: '(Izberi ali išči)'
   EmailField:
     VALIDATION: 'Prosim, vpišite e-naslov.'
   Enum:
@@ -260,7 +258,6 @@ sl:
     IMAGETITLETEXT: 'Naslov (tooltip)'
     IMAGETITLETEXTDESC: 'Za dodatne informacije o sliki'
     IMAGEWIDTHPX: Širina
-    INSERTMEDIA: 'Vstavi multimedijsko datoteko'
     LINK: 'Povezava'
     LINKANCHOR: 'Sidro na tej strani'
     LINKDESCR: 'Opis povezave'
@@ -272,7 +269,6 @@ sl:
     LINKTO: 'Poveži na'
     PAGE: Stran
     URL: URL
-    UpdateMEDIA: 'Posodobi multimedijsko datoteko'
   Image:
     PLURALNAME: Datoteke
     SINGULARNAME: Datoteka
@@ -284,7 +280,6 @@ sl:
   LeftAndMain:
     CANT_REORGANISE: 'Nimate dovoljenja za menjavo strani v zgornjem nivoju. Sprememba ni shranjena.'
     DELETED: Izbrisano.
-    DropdownBatchActionsDefault: Dejanja
     HELP: Pomoč
     PERMAGAIN: 'Odjavili ste se iz CMS-vmesnika. Če se želite ponovno prijaviti, vpišite uporabniško ime in geslo.'
     PreviewButton: Predogled

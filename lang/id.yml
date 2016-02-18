@@ -24,7 +24,6 @@ id:
     FROMCOMPUTER: 'Pilih berkas dari komputer Anda'
     FROMCOMPUTERINFO: 'Unggah dari komputer Anda'
     TOTAL: Total
-    TOUPLOAD: 'Pilih berkas untuk diunggah...'
     UPLOADINPROGRESS: 'Mohon tunggu... sedang mengunggah'
     UPLOADOR: ATAU
   BBCodeParser:
@@ -144,7 +143,6 @@ id:
     INVALID_REQUEST: 'Permintaan tidak valid'
   DropdownField:
     CHOOSE: (Pilih)
-    CHOOSESEARCH: '(Pilih atau Cari)'
     SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
   EmailField:
     VALIDATION: 'Mohon isikan alamat email'
@@ -297,7 +295,6 @@ id:
     IMAGETITLETEXT: 'Teks gambar (tooltip)'
     IMAGETITLETEXTDESC: 'Untuk informasi tambahan tentang gambar'
     IMAGEWIDTHPX: Lebar
-    INSERTMEDIA: 'Sisipkan Media'
     LINK: 'Sisipkan Tautan'
     LINKANCHOR: 'Jangkar pada laman ini'
     LINKDESCR: 'Deskripsi tautan'
@@ -311,7 +308,6 @@ id:
     SUBJECT: 'Subyek email'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' tidak dapat dijadikan sumber daya media.'
-    UpdateMEDIA: 'Perbarui Media'
   Image:
     PLURALNAME: Berkas
     SINGULARNAME: Berkas
@@ -323,7 +319,6 @@ id:
   LeftAndMain:
     CANT_REORGANISE: 'Anda tidak diijinkan mengubah laman Tingkat Atas. Pengubahan Anda tidak tersimpan.'
     DELETED: Terhapus.
-    DropdownBatchActionsDefault: Tindakan
     HELP: Bantuan
     PERMAGAIN: 'Anda telah keluar dari situs. Jika ingin kembali masuk, isikan nama pengguna dan kata kunci di bawah ini.'
     PreviewButton: Pratinjau

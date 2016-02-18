@@ -196,7 +196,6 @@ bg:
     IMAGETITLETEXT: 'Описание (tooltip)'
     IMAGETITLETEXTDESC: 'Допълнителна информация към изображението'
     IMAGEWIDTHPX: Широчина
-    INSERTMEDIA: 'Вмъкване на медиа'
     LINK: 'Връзка'
     LINKANCHOR: 'Котва на тази страница'
     LINKDESCR: 'Описание на препратка'
@@ -208,13 +207,11 @@ bg:
     LINKTO: 'Препратка към'
     PAGE: Страница
     URLNOTANOEMBEDRESOURCE: 'URL адресът ''{url}'' не може да бъде превърнат в медиен ресурс.'
-    UpdateMEDIA: 'Актуализация на медиа'
   Image_iframe_ss:
     TITLE: 'Iframe за качване на изображение'
   LeftAndMain:
     CANT_REORGANISE: 'Нямаш права да променяш страници от най-горно ниво. Твоите промени не бяха записани.'
     DELETED: Изтрит
-    DropdownBatchActionsDefault: Действия
     HELP: Помощ
     PERMAGAIN: 'Вие излязохте от CMS. Ако искате да влезете отново, моля, въведете потребителско име и парола.'
     PreviewButton: Преглед
