@@ -120,6 +120,17 @@ $sprites-64x64-2x-tab-list-hover: -0px -160px 80px 80px;
 $sprites-64x64-2x-tab-list: -0px -240px 80px 80px;
 $sprites-64x64-2x-tab-tree-hover: -0px -320px 80px 80px;
 $sprites-64x64-2x-tab-tree: -0px -400px 80px 80px;
+$menu-icons-16x16-2x-home: -0px -0px 32px 32px;
+$menu-icons-16x16-2x-blog: -0px -32px 32px 32px;
+$menu-icons-16x16-2x-db: -0px -64px 32px 32px;
+$menu-icons-16x16-2x-document: -0px -96px 32px 32px;
+$menu-icons-16x16-2x-gears: -0px -128px 32px 32px;
+$menu-icons-16x16-2x-community: -0px -160px 32px 32px;
+$menu-icons-16x16-2x-information: -0px -192px 32px 32px;
+$menu-icons-16x16-2x-network: -0px -224px 32px 32px;
+$menu-icons-16x16-2x-pencil: -0px -256px 32px 32px;
+$menu-icons-16x16-2x-picture: -0px -288px 32px 32px;
+$menu-icons-16x16-2x-pie-chart: -0px -320px 32px 32px;
 $menu-icons-16x16-home: -0px -0px 16px 16px;
 $menu-icons-16x16-blog: -0px -16px 16px 16px;
 $menu-icons-16x16-db: -0px -32px 16px 16px;
@@ -203,6 +214,9 @@ $menu-icons-24x24-2x-pie-chart: -0px -480px 48px 48px;
 }
 .icon-sprites-64x64-2x {
   background-image: url('../images/sprites/dist/sprite-sprites-64x64-2x.png');
+}
+.icon-menu-icons-16x16-2x {
+  background-image: url('../images/sprites/dist/sprite-menu-icons-16x16-2x.png');
 }
 .icon-menu-icons-16x16 {
   background-image: url('../images/sprites/dist/sprite-menu-icons-16x16.png');

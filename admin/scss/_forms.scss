@@ -428,7 +428,7 @@ form.small .field, .field.small {
 	}
 
 	.Actions {
-		min-height: 30px;
+		min-height: 46px;
 		overflow: auto;
 		padding: $grid-x $grid-y * 1.5;
 	}
@@ -649,6 +649,7 @@ form.small .field, .field.small {
 
 	.ss-ui-buttonset {
 		margin: 0 $grid-x 0 0;
+		padding: 0;
 	}
 
 	.ss-ui-loading-icon {
@@ -861,9 +862,9 @@ fieldset.switch-states{
 		border: 2px solid lighten(#2d3035,65%);
 		border-radius: 3px;
 		-webkit-animation: bugfix infinite 1s; //Bugfix for older Webkit, including mobile Webkit.
-		background:lighten(#2d3035,69%);
+		background:lighten(#2d3035,69%); 
 		display: block;
-		height: 24px;
+		height: 28px;
 		position: relative;
 		width:100%;
 		z-index:5;

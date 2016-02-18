@@ -46,7 +46,6 @@
 		a {
 			display: inline-block;
 			line-height: 16px;
-			height: 16px;
 			color: black;
 			white-space: nowrap;
 			text-decoration: none;
@@ -226,7 +225,7 @@
 		display: none;
 		line-height: 0%;
 		font-size: 1px;
-		height: 1px;
+		height: 3px;
 		width: 100px;
 		z-index: 10000;
 		background-color: #456c43;
@@ -665,8 +664,8 @@ a .jstree-pageicon {
 %tree-status-icon-before {
 	content:"";
 	display: block;
-	width:6px;
-	height: 6px;
+	width: 8px;
+	height: 8px;
 	position: absolute;
 	bottom: 0;
 	right: 0;
