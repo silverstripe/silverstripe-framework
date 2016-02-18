@@ -91,7 +91,6 @@ body.cms {
 }
 
 .cms-content-header {
-	padding-left: $grid-x * 2;
 	z-index: 60;
 	min-height: 52px;
 	background: {
@@ -125,6 +124,7 @@ body.cms {
 	.cms-content-header-info {
 		float:left;
 		padding-top: $grid-y - 1;
+		padding-left: $grid-x * 2;
 
 		& * {
 			display: inline-block; // align back button and breadcrumbs
@@ -169,14 +169,17 @@ body.cms {
 
 // We have a faux three column layout when displaying Page content in the CMS.
 .has-panel {
-	.cms-content-header.north {
-		padding-left: $grid-x*2;
+	.cms-tree-view-sidebar,
+	.cms-versions-form {
+		padding: 0 $grid-x*1.5 $grid-y*1.5 $grid-x*2;
+	}
 
+	.cms-content-header.north {
 		&.collapsed {
 			.cms-content-header-info {
-				width: 24px;
+				width: 40px;
 				text-align: right;
-				padding-left: 12px;
+				padding-left: 8px;
 				padding-right: 8px;
 			}
 
@@ -196,16 +199,15 @@ body.cms {
 		top: 0;
 		left: 0;
 		bottom: 1px;
-		width: $grid-x * 34;
-		margin-left: -$grid-x*.5;
+		width: 300px;
 		padding-bottom: $grid-y;
 		padding-left: $grid-x * 2;
 		padding-right: $grid-x*2;
-		border-right: 1px solid $color-separator;
+		box-shadow: 1px 0 0 0 $color-separator;
 	}
 
 	.cms-content-header-nav {
-		margin-left: 280px;
+		margin-left: 300px;
 	}
 
 	.section-heading {
@@ -226,7 +228,7 @@ body.cms {
 	.breadcrumbs-wrapper {
 		float: left;
 		padding-top: $grid-y - 1;
-		padding-left: $grid-x*2.5;
+		padding-left: $grid-x*1.5;
 	}
 
 	.cms-content-header-tabs {
@@ -240,7 +242,7 @@ body.cms {
 		.icon-button-group {
 			.icon-button {
 				padding: 6px 8px;
-				height: 14px;
+				height: 26px;
 			}
 		}
 	}
@@ -249,6 +251,10 @@ body.cms {
 		.cms-panel-content {
 			padding-top: 0;
 			overflow-x: hidden;
+		}
+		
+		.cms-panel-toggle.south {
+			box-shadow: 0 -1px 0 0 $color-light-separator;
 		}
 	}
 }
@@ -292,7 +298,6 @@ body.cms {
 .cms-content-filters {
 	display: none;
 	width: 100%;
-	margin: 0 0 0 -16px;
 	padding: 12px 16px;
 	border-bottom: 1px solid $color-light-separator;
 
@@ -762,11 +767,14 @@ body.cms {
 
 .cms-content-actions, .cms-preview-controls {
 	margin: 0;
-	padding: $grid-y*1.5 $grid-x*2;
 	z-index: 999;
-	border-top: 1px solid $color-light-separator;
-	height: 28px;
+	box-shadow: 0 -1px 0 0 $color-light-separator;
 	background-color: $tab-panel-texture-color;
+	
+	&.south .Actions {
+		height: 52px;
+		padding: $grid-y*1.5 $grid-x*2;
+	}
 }
 
 
@@ -1058,7 +1066,8 @@ body.cms {
 	overflow-y: auto;
 	overflow-x: hidden;
 	z-index: 70;
-	border-right: 1px solid $color-separator;
+	box-shadow: 1px 0 0 0 $color-separator;
+	z-index: 1000;
 	float: left;
 	position: relative;
 
@@ -1075,8 +1084,7 @@ body.cms {
 	}
 
 	.cms-panel-content {
-		width: $grid-x * 34;
-		padding: 0 $grid-x*1.5 0 $grid-x*2;
+		width: 300px;
 		overflow: auto;
 		height:100%;
 
@@ -1539,16 +1547,6 @@ form.member-profile-form {
 		}
 	}
 
-	/**
-	 * DEPRECATED:
-	 * .cms-content-tools will be removed in 4.0
-	 * Use .cms-content-filters instead.
-	 */
-	&.cms-content-tools .cms-panel-toggle {
-		&.south {
-			border-top: 1px solid $color-light-separator;
-		}
-	}
 	&.collapsed {
 		cursor: pointer;
 		.cms-panel-header *,
@@ -1594,7 +1592,7 @@ form.member-profile-form {
 		h2, h3 {
 			border-bottom: 0;
 			margin-left: $grid-y;
-			transform-origin: bottom, right;
+			transform-origin: bottom right;
 			transform: rotate(270deg);
 		}
 
@@ -1612,12 +1610,14 @@ form.member-profile-form {
 
 .cms {
 	.cms-panel-padded {
-		padding: 0 $grid-x*2 $grid-y*1.5;
-
 		&.ReportAdmin {
 			> fieldset {
-				padding-top: 12px;
+				padding: 12px 16px;
 			}
+		}
+		
+		.cms-content-view {
+			padding: 0 $grid-x*2 $grid-y*1.5;
 		}
 	}
 }
