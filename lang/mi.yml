@@ -24,7 +24,6 @@ mi:
     FROMCOMPUTER: 'Kōwhiri kōnae mai i tō rorohiko'
     FROMCOMPUTERINFO: 'Tukuatu  i tō rorohiko'
     TOTAL: Tapeke
-    TOUPLOAD: 'Kōwhiria ngā kōnae hei tukuatu...'
     UPLOADINPROGRESS: 'Taihoa...he tukuatu kei te haere'
     UPLOADOR: TĒNEI RĀNEI
   BBCodeParser:
@@ -269,7 +268,6 @@ mi:
     IMAGETITLETEXT: 'Tuhinga taitara (ākiutauta) '
     IMAGETITLETEXTDESC: 'Mō ētahi atu mōhiohio mō te atahanga'
     IMAGEWIDTHPX: Whānui
-    INSERTMEDIA: 'Kōkuhu Pāpāho'
     LINK: 'Kōkuhu hono'
     LINKANCHOR: 'He punga kei tēnei whārangi'
     LINKDESCR: 'Whakaahuatanga hono'
@@ -282,7 +280,6 @@ mi:
     PAGE: Whārangi
     URL: PRO
     URLNOTANOEMBEDRESOURCE: 'Kāore e taea te huri i te PRO ''{url}'' hei rawa pāpāho.'
-    UpdateMEDIA: 'Whakahōu Pāpāho'
   Image:
     PLURALNAME: Ngā Kōnae
     SINGULARNAME: Kōnae
@@ -294,7 +291,6 @@ mi:
   LeftAndMain:
     CANT_REORGANISE: 'Kāore tō mana whakakē i ngā whārangi taumata Matua. Kāore tō huringa i tiakina.'
     DELETED: I mukua
-    DropdownBatchActionsDefault: Ngā Mahi
     HELP: Āwhina
     PERMAGAIN: 'Kua takiputaina atu koe i te CMS. Ki te pīrangi koe ki te takiuru atu anō, tāurutia tētahi ingoa kaiwhakamahi me te kupuhipa i raro.'
     PreviewButton: Arokite

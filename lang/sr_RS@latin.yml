@@ -24,7 +24,6 @@ sr_RS@latin:
     FROMCOMPUTER: 'Izaberite datoteke sa Vašeg računara'
     FROMCOMPUTERINFO: 'Postavi sa Vašeg računara'
     TOTAL: Ukupno
-    TOUPLOAD: 'Izaberite datoteke za postavljanje...'
     UPLOADINPROGRESS: 'Molimo Vas da sačekate... Postavljanje je u toku'
     UPLOADOR: ILI
   BBCodeParser:
@@ -123,7 +122,6 @@ sr_RS@latin:
     INVALID_REQUEST: 'Pogrešan zahtev'
   DropdownField:
     CHOOSE: (izaberite)
-    CHOOSESEARCH: '(Izaberi ili Pronađi)'
   EmailField:
     VALIDATION: 'Unesite adresu e-pošte'
   Enum:
@@ -271,7 +269,6 @@ sr_RS@latin:
     IMAGETITLETEXT: 'Tekst naslova (tooltip)'
     IMAGETITLETEXTDESC: 'Za dodatne informacije o slici'
     IMAGEWIDTHPX: Širina
-    INSERTMEDIA: 'Umetni medijski resurs'
     LINK: 'Link'
     LINKANCHOR: 'Sidro na ovoj strani'
     LINKDESCR: 'Opis linka'
@@ -284,7 +281,6 @@ sr_RS@latin:
     PAGE: Stranica
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' ne može biti pretvoren u medijski resurs.'
-    UpdateMEDIA: 'Ažuriraj medijski resurs'
   Image:
     PLURALNAME: Datoteke
     SINGULARNAME: Datoteka
@@ -296,7 +292,6 @@ sr_RS@latin:
   LeftAndMain:
     CANT_REORGANISE: 'Nemate pravo da menjate stranice vršnog nivoa. Vaše izmene nisu sačuvane.'
     DELETED: Izbrisano
-    DropdownBatchActionsDefault: Akcije
     HELP: Pomoć
     PERMAGAIN: 'Odjavljeni ste sa CMS-a. Ukoliko želite da se ponovo prijavite, unesite korisničko ime i lozinku.'
     PreviewButton: Prethodni pregled

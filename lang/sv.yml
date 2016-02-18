@@ -24,7 +24,6 @@ sv:
     FROMCOMPUTER: 'Välj filer från din dator'
     FROMCOMPUTERINFO: 'Ladda upp från din dator'
     TOTAL: Totalt
-    TOUPLOAD: 'Välj fil att ladda upp...'
     UPLOADINPROGRESS: 'Var god dröj... uppladdning pågår'
     UPLOADOR: ELLER
   BBCodeParser:
@@ -77,11 +76,14 @@ sv:
     PASSWORDEXPIRED: '<p>Ditt lösenard har gått ut. <a target="_top" href="{link}">Vänligen ange ett nytt.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Förhandsgranska sida'
+  CMSPagesController_Tools_ss:
+    FILTER: Filtrera
   CMSProfileController:
     MENUTITLE: 'Min Profil'
   CMSSecurity:
     INVALIDUSER: '<p>Ogiltig användare. <a target="_top" href="{link}">Vänligen ange dina inloggnings-uppgifter igen</a> för att fortsätta.</p>'
     LoginMessage: '<p>Om du har osparade ändringar kan du fortsätta där du slutade genom att logga in igen nedan.</p>'
+    SUCCESS: Framgång
     SUCCESSCONTENT: '<p>Inloggningen lyckades. <a target="_top" href="{link}">Klicka här</a> om du inte skickas vidare automatiskt.</p>'
     TimedOutTitleAnonymous: 'Din session har upphört.'
     TimedOutTitleMember: 'Hej {name}!<br />Din session har upphört.'
@@ -104,6 +106,7 @@ sv:
     MAXIMUM: 'Lösenord får som längst vara {max} tecken långa.'
     SHOWONCLICKTITLE: 'Ändra lösenord'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Du måste logga med ditt CMS-lösenord för att kunna se utkast och arkiverat material. <a href="%s">Klicka här för att gå tillbaks till den publicerade sajten.</a>'
     NOTLOGGEDIN: 'Inte inloggad'
   CreditCardField:
     FIRST: första
@@ -143,7 +146,6 @@ sv:
     INVALID_REQUEST: 'Ogiltig förfrågan'
   DropdownField:
     CHOOSE: (Välj)
-    CHOOSESEARCH: '(Välj eller sök)'
     SOURCE_VALIDATION: 'Vänligen välj att värde i listan. {value} är inget giltigt val'
   EmailField:
     VALIDATION: 'Var snäll och ange en epostadress'
@@ -259,6 +261,7 @@ sv:
     many_many_Members: Medlemmar
   GroupImportForm:
     Help1: '<p>Importera en eller flera grupper i <em>CSV</em>- format (komma-separerade värden). <small><a href="#" class ="toggle-advanced">Visa avancerade val</a></small></p>'
+    Help2: '<div class="advanced"><h4>Avancerat</h4><ul><li>Tillåtna kolumner: <em>%s</em></li><li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li><li>Gruppnivåer kan skapas genom att använda <em>huvudkod</em> kolumnen.</il><il>Behörighetskoder kan tilldelas av <em>BehörighetsKod</em> kolomnen. Befintliga behörighetskoder raderas inte.</li></ul></div>'
     ResultCreated: 'Skapade {count} grupper'
     ResultDeleted: 'Raderade %d grupper'
     ResultUpdated: 'Uppdaterade %d grupper'
@@ -296,7 +299,6 @@ sv:
     IMAGETITLETEXT: 'Titel text (tooltip)'
     IMAGETITLETEXTDESC: 'För ytterligare information om bilden'
     IMAGEWIDTHPX: Bredd
-    INSERTMEDIA: 'Infoga media'
     LINK: 'Infoga länk'
     LINKANCHOR: 'Ankare på den här sidan'
     LINKDESCR: 'Länk-beskrivning'
@@ -310,7 +312,6 @@ sv:
     SUBJECT: 'Ämne'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URLen ''{url}'' gick inte  att omvandla till ett media.'
-    UpdateMEDIA: 'Uppdatera media'
   Image:
     PLURALNAME: Filer
     SINGULARNAME: Fil
@@ -322,9 +323,10 @@ sv:
   LeftAndMain:
     CANT_REORGANISE: 'Du har inte tillstånd att ändra sidor på toppnivå. Dina ändringar har inte sparats.'
     DELETED: Raderad
-    DropdownBatchActionsDefault: Åtgärder
     HELP: Hjälp
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
+    PERMALREADY: 'Tyvärr så har du inte åtkomst till den delen av CMSet. Om du vill logga in med en annan användare kan du göra det nedan'
+    PERMDEFAULT: 'Du måste vara inloggad för att få åtkomst till administrativa delarna; var vänlig att logga in med dina användaruppgifter nedan.'
     PreviewButton: Förhandsgranska
     REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
     SAVEDUP: Sparad.
@@ -335,6 +337,8 @@ sv:
   LeftAndMain_Menu_ss:
     Hello: Hej
     LOGOUT: 'Logga ut'
+  ListboxField:
+    SOURCE_VALIDATION: 'Vänligen välj att värde i listan. %s är inget giltigt val'
   LoginAttempt:
     Email: 'E-postadress'
     IP: 'IP-adress'
@@ -410,6 +414,7 @@ sv:
     Toggle: 'Visa fomateringshjälp'
   MemberImportForm:
     Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small><a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
+    Help2: '<div class="advanced"><h4>Avancerat</h4><ul><li>Tillåtna kolumner: <em>%s</em></li><li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li><li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Kod</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li></ul></div>'
     ResultCreated: 'Skapade {count} medlemmar'
     ResultDeleted: 'Raderade %d medlemmar'
     ResultNone: 'Inga ändringar'
@@ -473,6 +478,7 @@ sv:
     SINGULARNAME: Roll
     Title: Rollnamn
   PermissionRoleCode:
+    PLURALNAME: 'Kod för rollrättigheter'
     PermsError: 'Koden "%s" kan inte ges privilegierad tillgång (adminrättigheter krävs)'
     SINGULARNAME: 'Kodför rollrättigheter'
   Permissions:
@@ -538,6 +544,8 @@ sv:
     Print: Skriv ut
   TableListField_PageControls_ss:
     OF: av
+  TextField:
+    VALIDATEMAXLENGTH: 'Värdet för {name} får inte överstiga {MaxLength} tecken'
   TimeField:
     VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
   ToggleField:

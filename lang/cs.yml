@@ -1,5 +1,7 @@
 cs:
   AssetAdmin:
+    ALLOWEDEXTS: 'Povolené extenze nahraní souboru'
+    HIDEALLOWEDEXTS: 'Skrýt povolené extenze'
     NEWFOLDER: Nová složka
     SHOWALLOWEDEXTS: 'Ukázat povolené extenze'
   AssetTableField:
@@ -7,12 +9,14 @@ cs:
     DIM: Rozměry
     FILENAME: Název souboru
     FOLDER: Složka
+    HEIGHT: Výška
     LASTEDIT: 'Naposledy změněno'
     OWNER: Vlastník
     SIZE: 'Velikost'
     TITLE: Titulek
     TYPE: 'Typ'
     URL: URL
+    WIDTH: Šířka
   AssetUploadField:
     ChooseFiles: 'Vyberte soubory'
     DRAGFILESHERE: 'Táhni soubory sem'
@@ -23,6 +27,8 @@ cs:
     FILES: Soubory
     FROMCOMPUTER: 'Vyberte soubory z vašeho počítače'
     FROMCOMPUTERINFO: 'Nahrát z vašeho počítače'
+    INSERTURL: 'Vložit z URL'
+    REMOVEINFO: 'Odstranit tento soubor z tohoto pole'
     TOTAL: Celkem
     TOUPLOAD: 'Vyberte soubory k nahrání...'
     UPLOADINPROGRESS: 'Prosím čekejte... probíhá nahrávání'
@@ -77,6 +83,8 @@ cs:
     PASSWORDEXPIRED: '<p>Vaše heslo expirovalo. <a target="_top" href="{link}">Prosím zvolte nové heslo.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Náhled webu'
+  CMSPagesController_Tools_ss:
+    FILTER: Filtr
   CMSProfileController:
     MENUTITLE: 'Můj profil'
   CMSSecurity:
@@ -105,6 +113,7 @@ cs:
     MAXIMUM: 'Hesla musí být nanejvýš {max} znaků dlouhé.'
     SHOWONCLICKTITLE: 'Změnit heslo'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Musíte se přihlásit se svým CMS heslem, aby jste mohli prohlížet koncept nebo archivovaný obsah. <a href="%s">Klikněte sem pro návrat na zveřejněný web.</a>'
     NOTLOGGEDIN: 'Nepřihlášen'
   CreditCardField:
     FIRST: první
@@ -311,6 +320,7 @@ cs:
     PAGE: Stránku
     SUBJECT: 'Předmět emailu'
     URL: URL
+    URLDESCRIPTION: 'Vložit videa a obrázky z webu do Vaší stránky, prostým zadáním URL souboru. Ujistěte se, že máte patřičná práva před zdílením médií z webu.<br /><br />Prosím, uvědomte si, že soubory nejsou přidány do úložiště CMS, ale soubor je vestavěn z jeho původního umístění, když z nějakých důvodú soubor není dostupný v jeho původním umístění, nebude zobrazitelný na této stránce.'
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemůže být vloženo do zdroje médií.'
     UpdateMEDIA: 'Aktualizovat média'
   Image:
@@ -324,11 +334,10 @@ cs:
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnění měnit stránky nejvyšší úrovně. Vaše změna nebyla uložena.'
     DELETED: Smazáno.
-    DropdownBatchActionsDefault: Akcie
     HELP: Nápověda
     PERMAGAIN: 'Byli jste odhlášeni z CMS. Pokud se chcete znovu přihlásit, zadejte níže své uživatelské jméno a heslo.'
     PERMALREADY: 'Omlouvám se, ale nemůžete vstoupit do této části CMS. Pokud se chcete přihlásit jako někdo jiný, udělejte tak níže.'
-    PERMDEFAULT: 'Musíte být přihlášen/a k přístup do oblasti administrace, zadejte vaše přihlošovací údaje dole, prosím.'
+    PERMDEFAULT: 'Musíte být přihlášen/a k přístup do oblasti administrace, níže zadejte vaše přihlašovací údaje, prosím.'
     PreviewButton: Náhled
     REORGANISATIONSUCCESSFUL: 'Strom webu reorganizován úspěšně.'
     SAVEDUP: Uloženo.

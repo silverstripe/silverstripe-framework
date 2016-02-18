@@ -1,5 +1,7 @@
 en:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed file upload extensions'
+    HIDEALLOWEDEXTS: 'Hide allowed extensions'
     NEWFOLDER: NewFolder
     SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
@@ -7,12 +9,14 @@ en:
     DIM: Dimensions
     FILENAME: Filename
     FOLDER: Folder
+    HEIGHT: Height
     LASTEDIT: 'Last changed'
     OWNER: Owner
     SIZE: 'File size'
     TITLE: Title
     TYPE: 'File type'
     URL: URL
+    WIDTH: Width
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -23,6 +27,8 @@ en:
     FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
+    INSERTURL: 'Insert from URL'
+    REMOVEINFO: 'Remove this file from this field'
     TOTAL: Total
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
@@ -77,6 +83,8 @@ en:
     PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Website preview'
+  CMSPagesController_Tools_ss:
+    FILTER: Filter
   CMSProfileController:
     MENUTITLE: 'My Profile'
   CMSSecurity:
@@ -105,6 +113,7 @@ en:
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'You must log in with your CMS password in order to view the draft or archived content. <a href="%s">Click here to go back to the published site.</a>'
     NOTLOGGEDIN: 'Not logged in'
   CreditCardField:
     FIRST: first
@@ -313,6 +322,7 @@ en:
     PAGE: Page
     SUBJECT: 'Email subject'
     URL: URL
+    URLDESCRIPTION: 'Insert videos and images from the web into your page simply by entering the URL of the file. Make sure you have the rights or permissions before sharing media directly from the web.<br /><br />Please note that files are not added to the file store of the CMS but embeds the file from its original location, if for some reason the file is no longer available in its original location it will no longer be viewable on this page.'
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:

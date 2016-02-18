@@ -10,7 +10,6 @@ ro:
     FROMCOMPUTER: 'Alegeți fișierele din calculator'
     FROMCOMPUTERINFO: 'Încărcați din calculator'
     TOTAL: Total
-    TOUPLOAD: 'Alegeți fișierele de încărcat...'
     UPLOADINPROGRESS: 'Vă rugăm să așteptați ... transfer în curs'
     UPLOADOR: SAU
   BBCodeParser:

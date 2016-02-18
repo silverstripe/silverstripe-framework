@@ -24,7 +24,6 @@ ja:
     FROMCOMPUTER: 'お使いのコンピュータからファイルを選択してください'
     FROMCOMPUTERINFO: 'コンピュータからアップロード'
     TOTAL: 合計
-    TOUPLOAD: 'アップロードするファイルを選択する'
     UPLOADINPROGRESS: 'しばらくお待ちください...アップロードは進行中です'
     UPLOADOR: もしくは
   BBCodeParser:
@@ -267,7 +266,6 @@ ja:
     IMAGETITLETEXT: 'タイトルテキスト(ツールチップ)'
     IMAGETITLETEXTDESC: '画像に関する追加情報'
     IMAGEWIDTHPX: 幅
-    INSERTMEDIA: 'メディアを追加'
     LINK: 'ハイライトテキストへのリンクの挿入/削除'
     LINKANCHOR: 'このページにアンカーを置く'
     LINKDESCR: 'リンクの説明'
@@ -280,7 +278,6 @@ ja:
     PAGE: ページ
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL''{url}''はメディアリソースとして扱うことができませんでした。'
-    UpdateMEDIA: 'メディアを更新'
   Image:
     PLURALNAME: ファイル
     SINGULARNAME: ファイル
@@ -292,7 +289,6 @@ ja:
   LeftAndMain:
     CANT_REORGANISE: '最上層のページを変更する権限がありません。あなたの変更は保存されませんでした。'
     DELETED: 削除しました。
-    DropdownBatchActionsDefault: アクション
     HELP: ヘルプ
     PERMAGAIN: 'ログアウトしました。再度ログインする場合は下にユーザー名とパスワードを入力してください。'
     PreviewButton: プレビュー

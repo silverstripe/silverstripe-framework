@@ -23,7 +23,6 @@ hr:
     FROMCOMPUTER: 'Odaberite datoteke sa svog računala'
     FROMCOMPUTERINFO: 'Uploadajte sa svog računala'
     TOTAL: Ukupno
-    TOUPLOAD: 'Odaberite datoteke za upload...'
     UPLOADINPROGRESS: 'Molim pričekajte... upload u tijeku'
     UPLOADOR: ILI
   BBCodeParser:

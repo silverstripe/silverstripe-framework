@@ -181,7 +181,6 @@ es_MX:
   Image_iframe_ss:
     TITLE: 'Subiendo Imagen Iframe'
   LeftAndMain:
-    DropdownBatchActionsDefault: Acciones
     HELP: Ayuda
     PERMAGAIN: 'Usted ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña.'
   LoginAttempt:

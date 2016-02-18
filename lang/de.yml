@@ -1,5 +1,7 @@
 de:
   AssetAdmin:
+    ALLOWEDEXTS: 'Erlaubte Dateiendungen'
+    HIDEALLOWEDEXTS: 'Verberge erlaubte Dateiendungen'
     NEWFOLDER: Neuer Ordner
     SHOWALLOWEDEXTS: 'Erlaubte Dateitypen anzeigen'
   AssetTableField:
@@ -7,12 +9,14 @@ de:
     DIM: Dimensionen
     FILENAME: Dateiname
     FOLDER: Ordner
+    HEIGHT: Höhe
     LASTEDIT: 'Letzte Änderung'
     OWNER: Eigentümer
     SIZE: 'Größe'
     TITLE: Titel
     TYPE: 'Typ'
     URL: URL
+    WIDTH: Breite
   AssetUploadField:
     ChooseFiles: 'Dateien auswählen'
     DRAGFILESHERE: 'Dateien hier ablegen'
@@ -23,8 +27,9 @@ de:
     FILES: Dateien
     FROMCOMPUTER: 'Dateien auf Ihrem Computer auswählen'
     FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
+    REMOVEINFO: 'Entferne diese Datei aus dem Feld'
     TOTAL: Insgesamt
-    TOUPLOAD: 'Dateien für den Upload wählen...'
+    TOUPLOAD: 'Dateien für den Upload auswählen...'
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
     UPLOADOR: oder
   BBCodeParser:
@@ -77,6 +82,8 @@ de:
     PASSWORDEXPIRED: '<p>Ihr Passwort ist abgelaufen. <a target="_top" href="{link}">Bitte wählen Sie ein neues Passwort.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Vorschau der Webseite'
+  CMSPagesController_Tools_ss:
+    FILTER: Filter
   CMSProfileController:
     MENUTITLE: 'Mein Profil'
   CMSSecurity:
@@ -105,6 +112,7 @@ de:
     MAXIMUM: 'Passwörter dürfen maximal {max} Zeichen lang sein.'
     SHOWONCLICKTITLE: 'Passwort ändern'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Sie müssen sich mit dem CMS-Passwort anmelden, um unveröffentlichte oder archivierte Seiten sehen zu können. <a href="%s">Zur veröffentlichten Seite.</a>'
     NOTLOGGEDIN: 'Nicht eingeloggt'
   CreditCardField:
     FIRST: erste
@@ -144,7 +152,7 @@ de:
     INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
     CHOOSE: (Auswahl)
-    CHOOSESEARCH: '(Auswählen oder Suchen)'
+    CHOOSESEARCH: '(Auswahl und Suche)'
     SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
   EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'
@@ -292,14 +300,12 @@ de:
     FROMWEB: 'Aus dem Web'
     FindInFolder: 'In Ordner suchen'
     IMAGEALT: 'Alternativtext (alt)'
-    IMAGEALTTEXT: 'Alternativtext (alt) - erscheint, falls das Bild nicht angezeigt werden kann.'
     IMAGEDIMENSIONS: Dimensionen
     IMAGEHEIGHTPX: Höhe (px)
     IMAGETITLE: 'Titeltext (Tooltip) - für zusätzliche Informationen über das Bild'
     IMAGETITLETEXT: 'Titeltext (Tooltip)'
     IMAGETITLETEXTDESC: 'Weiterführende Informationen über das Bild'
     IMAGEWIDTHPX: Breite (px)
-    INSERTMEDIA: 'Medienobjekt einfügen'
     LINK: 'Verweis einfügen'
     LINKANCHOR: 'Anker auf dieser Seite'
     LINKDESCR: 'Beschreibung des Verweises'
@@ -313,7 +319,6 @@ de:
     SUBJECT: 'E-Mail-Betreff'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
-    UpdateMEDIA: 'Medienobjekt aktualisieren'
   Image:
     PLURALNAME: Dateien
     SINGULARNAME: Datei
@@ -325,13 +330,10 @@ de:
   LeftAndMain:
     CANT_REORGANISE: 'Sie besitzen nicht die benötigten Zugriffsrechte um Seiten der höchsten Ebene zu bearbeiten. Ihre Änderungen wurden nicht gespeichert.'
     DELETED: Gelöscht.
-    DropdownBatchActionsDefault: Aktionen
     HELP: Hilfe
-    PAGETYPE: 'Seitentyp:'
     PERMAGAIN: 'Sie wurden aus dem System ausgeloggt. Falls Sie sich wieder einloggen möchten, geben Sie bitte Benutzernamen und Passwort im untenstehenden Formular an.'
     PERMALREADY: 'Leider dürfen Sie diesen Teil des CMS nicht aufrufen. Wenn Sie sich als jemand anderes einloggen wollen, benutzen Sie bitte das nachstehende Formular.'
     PERMDEFAULT: 'Sie müssen angemeldet sein, um auf diesen Bereich zugreifen zu können. Bitte geben Sie Ihre Zugangsdaten ein.'
-    PLEASESAVE: 'Diese Seite konnte nicht aktualisiert werden weil sie noch nicht gespeichert wurde - bitte speichern.'
     PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: 'Der Seitenbaum wurde erfolgreich sortiert.'
     SAVEDUP: Gespeichert.

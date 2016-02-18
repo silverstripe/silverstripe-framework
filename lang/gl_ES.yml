@@ -156,7 +156,6 @@ gl_ES:
   Image_iframe_ss:
     TITLE: 'Iframe subindo imaxe'
   LeftAndMain:
-    DropdownBatchActionsDefault: Accións
     HELP: Axuda
     PERMAGAIN: 'Non tes unha sesión válida no CMS. Se queres volver entrar, insire o nome de usuario e contrasinal a continuación.'
   LoginAttempt:
