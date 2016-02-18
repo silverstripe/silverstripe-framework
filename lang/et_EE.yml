@@ -1,6 +1,7 @@
 et_EE:
   AssetAdmin:
     NEWFOLDER: Uus kaust
+    SHOWALLOWEDEXTS: 'Näita lubatud laiendeid'
   AssetTableField:
     CREATED: 'Esmakordselt üles laaditud'
     DIM: Mõõtmed
@@ -11,6 +12,7 @@ et_EE:
     SIZE: 'Failisuurus'
     TITLE: Pealkiri
     TYPE: 'Failitüüp'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Valige failid'
     DRAGFILESHERE: 'Lohistage failid siia'
@@ -22,7 +24,6 @@ et_EE:
     FROMCOMPUTER: 'Valige fail arvutist'
     FROMCOMPUTERINFO: 'Laadige üles arvutist'
     TOTAL: Kokku
-    TOUPLOAD: 'Valige üleslaadimiseks failid...'
     UPLOADINPROGRESS: 'Oodake... Üleslaadimine on pooleli'
     UPLOADOR: VÕI
   BBCodeParser:
@@ -50,12 +51,16 @@ et_EE:
     UNORDERED: 'Järjestamata nimekiri'
     UNORDEREDDESCRIPTION: 'Järjestamata nimekiri'
     UNORDEREDEXAMPLE1: 'Järjestamata asi 1'
+  BackLink_Button_ss:
+    Back: Tagasi
   BasicAuth:
     ENTERINFO: 'Palun sisesta kasutajanimi ja parool.'
     ERRORNOTADMIN: 'Antud kasutaja ei ole administraator.'
     ERRORNOTREC: 'See kasutajanimi / parool ei ole tunnustatud'
   Boolean:
     ANY: Kõik
+    NOANSWER: 'Ei'
+    YESANSWER: 'Jah'
   CMSLoadingScreen_ss:
     LOADING: Laadimine...
     REQUIREJS: 'Sisuhaldussüsteem nõuab, et JavaScript oleks lubatud.'
@@ -72,6 +77,9 @@ et_EE:
     EMAIL: E-post
     HELLO: Tere
     PASSWORD: Parool
+  CheckboxField:
+    NOANSWER: 'Ei'
+    YESANSWER: 'Jah'
   ConfirmedPasswordField:
     ATLEAST: 'Parool peab olema vähemalt {min} märki pikk.'
     BETWEEN: 'Parooli pikkus peab olema vahemikus {min}–{max} märki.'
@@ -246,7 +254,6 @@ et_EE:
     IMAGETITLETEXT: 'Pealkirja tekst (kohtspikker)'
     IMAGETITLETEXTDESC: 'Lisateabe saamiseks kujutise kohta'
     IMAGEWIDTHPX: Kõrgus
-    INSERTMEDIA: 'Sisesta meedium'
     LINK: 'Link'
     LINKANCHOR: 'Link sellele lehele'
     LINKDESCR: 'Lingi kirjeldus'
@@ -259,7 +266,6 @@ et_EE:
     PAGE: Leht
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL-i ''{url}'' ei saanud muuta meediumiressursiks.'
-    UpdateMEDIA: 'Uuenda meediumi'
   Image:
     PLURALNAME: Failid
     SINGULARNAME: Fail
@@ -271,7 +277,6 @@ et_EE:
   LeftAndMain:
     CANT_REORGANISE: 'Teil ei ole õigusi kõrgema taseme lehtede muutmiseks. Teie muudatust ei salvestatud.'
     DELETED: Kustutatud.
-    DropdownBatchActionsDefault: Tegevused
     HELP: Spikker
     PERMAGAIN: 'Oled Sisuhaldusest välja logitud. Kui soovite uuesti sisse logida sisestage kasutajanimi ja parool.'
     PreviewButton: Eelvaade

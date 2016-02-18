@@ -24,7 +24,6 @@ ru:
     FROMCOMPUTER: 'Выберите файлы с диска вашего компьютера'
     FROMCOMPUTERINFO: 'Загрузить с диска вашего компьютера'
     TOTAL: Всего
-    TOUPLOAD: 'Выберите файлы для загрузки...'
     UPLOADINPROGRESS: 'Идет загрузка... Пожалуйста, подождите'
     UPLOADOR: ИЛИ
   BBCodeParser:
@@ -123,7 +122,6 @@ ru:
     INVALID_REQUEST: 'Неверный запрос'
   DropdownField:
     CHOOSE: (Выберите)
-    CHOOSESEARCH: '(Выбрать или найти)'
   EmailField:
     VALIDATION: 'Пожалуйста, задайте адрес email.'
   Enum:
@@ -271,7 +269,6 @@ ru:
     IMAGETITLETEXT: 'Текст (всплывающая подсказка)'
     IMAGETITLETEXTDESC: 'Для дополнительных сведений об изображении'
     IMAGEWIDTHPX: Ширина
-    INSERTMEDIA: 'Вставить медиафайл'
     LINK: 'Ссылка'
     LINKANCHOR: 'Якорь на этой странице'
     LINKDESCR: 'Описание ссылки'
@@ -284,7 +281,6 @@ ru:
     PAGE: Страница
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'Не удалось преобразовать ссылку ''{url}'' в медиа-ресурс.'
-    UpdateMEDIA: 'Обновить медиафайл'
   Image:
     PLURALNAME: Файлы
     SINGULARNAME: Файл
@@ -296,7 +292,6 @@ ru:
   LeftAndMain:
     CANT_REORGANISE: 'У вас нет права редактировать страницы верхнего уровня. Изменения не были сохранены.'
     DELETED: Удалено.
-    DropdownBatchActionsDefault: Действия
     HELP: Помощь
     PERMAGAIN: 'Вы вышли из Системы Управления Сайтом. Если Вы хотите войти снова, введите внизу имя пользователя и пароль.'
     PreviewButton: Просмотр

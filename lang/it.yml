@@ -24,7 +24,6 @@ it:
     FROMCOMPUTER: 'Scegli file dal tuo computer'
     FROMCOMPUTERINFO: 'Carica dal tuo conputer'
     TOTAL: Totale
-    TOUPLOAD: 'Scegli i file da caricare...'
     UPLOADINPROGRESS: 'Attendere prego... caricamento in corso'
     UPLOADOR: O
   BBCodeParser:
@@ -144,7 +143,6 @@ it:
     INVALID_REQUEST: 'Richiesta non valida'
   DropdownField:
     CHOOSE: (Scegli)
-    CHOOSESEARCH: '(Scegliere o Cercare)'
     SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
   EmailField:
     VALIDATION: 'Inserisci un indirizzo e-mail'
@@ -297,7 +295,6 @@ it:
     IMAGETITLETEXT: 'Titolo (tooltip)'
     IMAGETITLETEXTDESC: 'Per informazioni addizionali sull''immagine'
     IMAGEWIDTHPX: Larghezza
-    INSERTMEDIA: 'Inserisci Media'
     LINK: 'Inserisci Link'
     LINKANCHOR: 'Ancora su questa pagina'
     LINKDESCR: 'Descrizione del link'
@@ -311,7 +308,6 @@ it:
     SUBJECT: 'Oggetto email'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
-    UpdateMEDIA: 'Aggiorna Media'
   Image:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -323,7 +319,6 @@ it:
   LeftAndMain:
     CANT_REORGANISE: 'Non hai i permessi per modificare le pagine di primo livello. Le modifiche non sono state salvate.'
     DELETED: Eliminato.
-    DropdownBatchActionsDefault: Azioni
     HELP: Aiuto
     PERMAGAIN: 'Sei stato disconnesso dal CMS. Se desideri autenticarti nuovamente, inserisci qui sotto nome utente e password.'
     PERMALREADY: 'Siamo spiacenti, ma non puoi accedere a questa sezione del CMS. Se desideri autenticarti come qualcun altro, fallo qui sotto.'

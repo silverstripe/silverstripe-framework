@@ -22,7 +22,6 @@ th:
     FROMCOMPUTER: 'เลือกไฟล์จากคอมพิวเตอร์ของคุณ'
     FROMCOMPUTERINFO: 'อัพโหลดจากเครื่องคอมพิวเตอร์ของคุณ'
     TOTAL: รวมทั้งหมด
-    TOUPLOAD: 'เลือกไฟล์ที่ต้องการอัพโหลด...'
     UPLOADOR: หรือ
   BBCodeParser:
     BOLD: 'ข้อความตัวหนา'
@@ -183,7 +182,6 @@ th:
     IMAGEHEIGHTPX: ส่วนสูง
     IMAGETITLETEXT: 'ข้อความหัวเรื่อง (tooltip)'
     IMAGEWIDTHPX: ความกว้าง
-    INSERTMEDIA: 'แทรกมีเดีย'
     LINK: 'ลิงก์'
     LINKDESCR: 'คำอธิบายลิงค์'
     LINKEMAIL: 'ที่อยู่อีเมล'
@@ -193,7 +191,6 @@ th:
     LINKOPENNEWWIN: 'เปิดลิงค์ในหน้าต่างใหม่'
     LINKTO: 'ลิงค์ไปที่'
     PAGE: หน้าเว็บ
-    UpdateMEDIA: 'อัพเดทมีเดีย'
   Image:
     PLURALNAME: ไฟล์
     SINGULARNAME: ไฟล์
@@ -203,7 +200,6 @@ th:
   Image_iframe_ss:
     TITLE: 'หน้าต่าง iframe สำหรับอัพโหลดรูปภาพ'
   LeftAndMain:
-    DropdownBatchActionsDefault: การกระทำ
     HELP: ช่วยเหลือ
     PERMAGAIN: 'คุณได้ออกจากระบบของ CMS แล้ว หากคุณต้องการเข้าสู่ระบบอีกครั้ง กรุณากรอกชื่อผู้ใช้งานและรหัสผ่านของคุณด้านล่าง'
   LeftAndMain_Menu_ss:
