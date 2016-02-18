@@ -22,7 +22,6 @@ af:
     FROMCOMPUTER: 'Kies lêers van jou rekenaar af'
     FROMCOMPUTERINFO: 'Laai op van jou rekenaar af'
     TOTAL: Totaal
-    TOUPLOAD: 'Kies lêers om op te laai...'
     UPLOADINPROGRESS: 'Wag asseblief... ons is besig om op te laai'
     UPLOADOR: OF
   BBCodeParser:
@@ -207,7 +206,6 @@ af:
     IMAGETITLETEXT: 'Titel teks (leidraad)'
     IMAGETITLETEXTDESC: 'Vir meer inligting oor die prentjie'
     IMAGEWIDTHPX: Wydte
-    INSERTMEDIA: 'Voeg Media In'
     LINK: 'Sit skakel in'
     LINKANCHOR: 'Anker op hierdie bladsy'
     LINKDESCR: 'Skakel beskrywing'
@@ -218,7 +216,6 @@ af:
     LINKOPENNEWWIN: 'Wil jy die skakel in ''n nuwe venster oop maak?'
     LINKTO: 'Koppel aan'
     PAGE: Bladsy
-    UpdateMEDIA: 'Verander Media'
   Image:
     PLURALNAME: Lêers
     SINGULARNAME: Lêer
@@ -228,7 +225,6 @@ af:
   LeftAndMain:
     CANT_REORGANISE: 'Jy het nie toestemming om Top vlak bladsye te verander nie. Jou verandering is nie gestoor nie.'
     DELETED: Was verwyder
-    DropdownBatchActionsDefault: Aksies
     PERMAGAIN: 'Jy is uit die IBS uitgeteken. As jy weer wil inteken, moet jy ''n gebruikersnaam en wagwoord onder in tik'
     PreviewButton: Beskou
     REORGANISATIONSUCCESSFUL: 'Die ''site tree'' is suksesvol geheorganiseer'

@@ -24,7 +24,6 @@ fr:
     FROMCOMPUTER: 'Choisissez des fichiers de votre ordinateur'
     FROMCOMPUTERINFO: 'Télécharger depuis votre ordinateur'
     TOTAL: Total
-    TOUPLOAD: 'Choisissez les fichiers à télécharger…'
     UPLOADINPROGRESS: 'Patientez s''il vous plaît… téléchargement en cours '
     UPLOADOR: OU
   BBCodeParser:
@@ -269,7 +268,6 @@ fr:
     IMAGETITLETEXT: 'Texte du titre (info-bulle)'
     IMAGETITLETEXTDESC: 'Autres informations à propos de l’image'
     IMAGEWIDTHPX: Largeur
-    INSERTMEDIA: 'Insérer un support audiovisuel'
     LINK: 'Lien'
     LINKANCHOR: 'Ancre sur cette page'
     LINKDESCR: 'Description du lien'
@@ -282,7 +280,6 @@ fr:
     PAGE: Page
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'L’URL {url} n’a pas pu être utilisée comme ressource média.'
-    UpdateMEDIA: 'Mettre à jour le support audiovisuel'
   Image:
     PLURALNAME: Fichiers
     SINGULARNAME: Fichier
@@ -294,7 +291,6 @@ fr:
   LeftAndMain:
     CANT_REORGANISE: 'Vous n’avez pas l’autorisation de modifier les pages de premier niveau. Vos modifications n’ont pas été enregistrées.'
     DELETED: Supprimé.
-    DropdownBatchActionsDefault: Actions
     HELP: Aide
     PERMAGAIN: 'Vous avez été déconnecté du CMS. Si vous voulez vous reconnecter, entrez un nom d''utilisateur et un mot de passe ci-dessous.'
     PreviewButton: Aperçu

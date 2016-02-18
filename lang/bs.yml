@@ -39,12 +39,18 @@ bs:
     ENTERINFO: 'Molimo, unesite korisničko ime i šifru.'
     ERRORNOTADMIN: 'Ovaj korisnik nije administrator.'
     ERRORNOTREC: 'Korisničko ime / šifra nije prepoznata'
+  Boolean:
+    NOANSWER: 'Ne'
+    YESANSWER: 'Da'
   CMSMain:
     SAVE: Snimi
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
     CHANGEPASSWORDTEXT2: 'Možete koristiti slijedeće podatke za prijavu:'
     HELLO: Pozdrav
+  CheckboxField:
+    NOANSWER: 'Ne'
+    YESANSWER: 'Da'
   CreditCardField:
     FIRST: prvo
     FOURTH: četvrto
@@ -65,12 +71,15 @@ bs:
     TEXT2: 'link za ponovno podešavanje šifre'
     TEXT3: za
   Form:
+    SubmitBtnLabel: Idi
     VALIDATIONNOTUNIQUE: 'Unesena vrijednost nije jedinstvena'
     VALIDATIONPASSWORDSDONTMATCH: 'Šifre se ne slažu'
     VALIDATIONPASSWORDSNOTEMPTY: 'Polja za unos šifre ne smiju ostati prazna'
     VALIDATOR: Provjera ispravnosti
   FormField:
     NONE: ništa
+  GridFieldDetailForm:
+    Create: Kreiraj
   HtmlEditorField:
     ANCHORVALUE: Sidro
     BUTTONINSERTLINK: 'Ubaci link'
