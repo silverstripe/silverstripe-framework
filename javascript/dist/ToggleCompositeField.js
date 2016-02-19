@@ -34,12 +34,13 @@
 			},
 			onremove: function onremove() {
 				if (this.data('accordion')) this.accordion('destroy');
-
 				this._super();
 			},
+
 			getTabSet: function getTabSet() {
 				return this.closest(".ss-tabset");
 			},
+
 			fromTabSet: {
 				ontabsshow: function ontabsshow() {
 					this.accordion("resize");
