@@ -383,8 +383,6 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$form->disableSecurityToken();
 		$form->loadDataFrom($this);
 		$form->addExtraClass('htmleditorfield-form htmleditorfield-mediaform cms-dialog-content');
-		// TODO Re-enable once we remove $.metadata dependency which currently breaks the JS due to $.ui.widget
-		// $form->setAttribute('data-urlViewfile', $this->controller->Link($this->name));
 
 		// Allow other people to extend the fields being added to the imageform
 		$this->extend('updateMediaForm', $form);
