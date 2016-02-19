@@ -1792,7 +1792,7 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 
 		// Field types
 		'DateField' => 'Date',
-		'DatetimeField' => 'Datetime',
+		'DatetimeField' => 'SS_Datetime',
 
 		'MyFieldWithDefault' => 'Varchar',
 		'MyFieldWithAltDefault' => 'Varchar'

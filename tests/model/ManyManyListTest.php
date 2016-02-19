@@ -9,6 +9,7 @@ class ManyManyListTest extends SapphireTest {
 	protected static $fixture_file = 'DataObjectTest.yml';
 
 	protected $extraDataObjects = array(
+		// From DataObjectTest
 		'DataObjectTest_Team',
 		'DataObjectTest_Fixture',
 		'DataObjectTest_SubTeam',
@@ -27,6 +28,10 @@ class ManyManyListTest extends SapphireTest {
 		'DataObjectTest_Staff',
 		'DataObjectTest_CEO',
 		'DataObjectTest_Fan',
+		'DataObjectTest_Play',
+		'DataObjectTest_Ploy',
+		'DataObjectTest_Bogey',
+		// From ManyManyListTest
 		'ManyManyListTest_ExtraFields'
 	);
 
