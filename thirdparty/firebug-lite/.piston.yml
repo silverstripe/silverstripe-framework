@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  piston:remote-revision: 3859
-  piston:uuid: e969d3be-0e28-0410-a27f-dd5c76401a8b
-lock: false
-repository_url: http://fbug.googlecode.com/svn/branches/firebug1.2/lite/
-repository_class: Piston::Svn::Repository
