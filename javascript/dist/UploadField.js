@@ -417,10 +417,11 @@
 				}
 
 				if (iframe.attr('src') == 'about:blank') {
+					var disabled = this.siblings();
+
 					iframe.attr('src', iframe.data('src'));
 
 					iframe.parent().addClass('loading');
-					disabled = this.siblings();
 					disabled.addClass('ui-state-disabled');
 					disabled.attr('disabled', 'disabled');
 
