@@ -24,7 +24,7 @@ The i18n class is enabled by default.
 
 ### Setting the locale
 
-To set the locale you just need to call `[api:i18n::set_locale()]` passing, as a parameter, the name of the locale that 
+To set the locale you just need to call [api:i18n::set_locale()] passing, as a parameter, the name of the locale that 
 you want to set.
 
 	:::php
@@ -39,7 +39,7 @@ for a complete listing of available locales.
 
 ### Getting the locale
 
-As you set the locale you can also get the current value, just by calling `[api:i18n::get_locale()]`.
+As you set the locale you can also get the current value, just by calling [api:i18n::get_locale()].
 
 ### Declaring the content language in HTML		{#declaring_the_content_language_in_html}
 

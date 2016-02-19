@@ -37,4 +37,4 @@ You may also notice the 'Sync files' button (highlighted below). This button all
 
 ## Upload
 
-Files can be managed through a `FileField` or an `UploadField`. The `[api:FileField]` class provides a simple HTML input with a type of "file", whereas an `[api:UploadField]` provides a much more feature-rich field (including AJAX-based uploads, previews, relationship management and file data management). See [`Reference - UploadField`](/developer_guides/forms/field_types/uploadfield) for more information about how to use the `UploadField` class.
+Files can be managed through a `FileField` or an `UploadField`. The [api:FileField] class provides a simple HTML input with a type of "file", whereas an [api:UploadField] provides a much more feature-rich field (including AJAX-based uploads, previews, relationship management and file data management). See [`Reference - UploadField`](/developer_guides/forms/field_types/uploadfield) for more information about how to use the `UploadField` class.

@@ -69,4 +69,4 @@ provide the users a place to configure settings then the `SiteConfig` panel is t
 
 ## API Documentation
 
-* `[api:SiteConfig]`
+* [api:SiteConfig]

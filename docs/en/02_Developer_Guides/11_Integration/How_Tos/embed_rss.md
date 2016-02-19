@@ -2,7 +2,7 @@ title: Embed an RSS Feed
 
 # Embed an RSS Feed
 
-`[api:RestfulService]` can be used to easily embed an RSS feed from a site. In this How to we'll embed the latest 
+[api:RestfulService] can be used to easily embed an RSS feed from a site. In this How to we'll embed the latest 
 weather information from the Yahoo Weather API.
 
 First, we write the code to query the API feed.
@@ -54,4 +54,4 @@ single field `Description`.
 ## Related
 
 * [RestfulService Documentation](../restfulservice)
-* `[api:RestfulService]`
+* [api:RestfulService]

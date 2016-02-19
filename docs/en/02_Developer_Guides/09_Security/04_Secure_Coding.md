@@ -15,10 +15,10 @@ See [http://shiflett.org/articles/sql-injection](http://shiflett.org/articles/sq
 ### Automatic escaping
 
 SilverStripe automatically escapes data in SQL statements wherever possible,
-through database-specific methods (see `[api:Database->addslashes()]`).
-For `[api:MySQLDatabase]`, this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
+through database-specific methods (see [api:Database::addslashes()]).
+For [api:MySQLDatabase], this will be [mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string).
 
-*  Most `[api:DataList]` accessors (see escaping note in method documentation)
+*  Most [api:DataList] accessors (see escaping note in method documentation)
 *  DataObject::get_by_id()
 *  DataObject::update()
 *  DataObject::castedUpdate()
@@ -164,8 +164,8 @@ We recommend configuring [shortcodes](/developer_guides/extending/shortcodes) th
 
 ### Escaping model properties
 
-`[api:SSViewer]` (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
-object-properties by [casting](/developer_guides/model/data_types_and_casting) its string value into a `[api:DBField]` object.
+[api:SSViewer] (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
+object-properties by [casting](/developer_guides/model/data_types_and_casting) its string value into a [api:DBField] object.
 
 PHP:
 
@@ -248,7 +248,7 @@ presentation from business logic.
 When using *customise()* or *renderWith()* calls in your controller, or otherwise forcing a custom context for your
 template, you'll need to take care of casting and escaping yourself in PHP. 
 
-The `[api:Convert]` class has utilities for this, mainly *Convert::raw2xml()* and *Convert::raw2att()* (which is
+The [api:Convert] class has utilities for this, mainly *Convert::raw2xml()* and *Convert::raw2att()* (which is
 also used by *XML* and *ATT* in template code).
 
 PHP:
@@ -323,14 +323,14 @@ SilverStripe has built-in countermeasures against [CSRF](http://shiflett.org/art
 will automatically contain a `SecurityID` parameter which is generated as a secure hash on the server, connected to the
 currently active session of the user. If this form is submitted without this parameter, or if the parameter doesn't
 match the hash stored in the users session, the request is discarded.
-You can disable this behaviour through `[api:Form->disableSecurityToken()]`.
+You can disable this behaviour through [api:Form::disableSecurityToken()].
 
 It is also recommended to limit form submissions to the intended HTTP verb (mostly `GET` or `POST`)
-through `[api:Form->setStrictFormMethodCheck()]`. 
+through [api:Form::setStrictFormMethodCheck()]. 
 
 Sometimes you need to handle state-changing HTTP submissions which aren't handled through
 SilverStripe's form system. In this case, you can also check the current HTTP request
-for a valid token through `[api:SecurityToken::checkRequest()]`.
+for a valid token through [api:SecurityToken::checkRequest()].
 
 ## Casting user input
 

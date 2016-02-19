@@ -20,7 +20,7 @@ community. There are also several other websites with SilverStripe documentation
 * The [API Documentation](http://api.silverstripe.org/) contains technical reference and class information. 
 * The [User Help](http://userhelp.silverstripe.com) website contains documentation related to working within the CMS. 
 
-New features, API changes and the development [roadmap](http://www.silverstripe.org/roadmap/) for the product are 
+New features, API changes and the development [roadmap](http://www.silverstripe.org/software/roadmap/) for the product are 
 discussed on the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev) along with 
 [UserVoice](http://silverstripe.uservoice.com/forums/251266-new-features).
 

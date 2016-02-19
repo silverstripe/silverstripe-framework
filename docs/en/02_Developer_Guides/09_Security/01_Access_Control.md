@@ -35,7 +35,7 @@ privileges from its parent group.
 
 ## Permission checking is at class level
 
-SilverStripe provides a security mechanism via the *Permission::check* method (see `[api:LeftAndMain]` for examples on how
+SilverStripe provides a security mechanism via the *Permission::check* method (see [api:LeftAndMain] for examples on how
 the admin screens work).
 
 (next step -- go from *Permission::checkMember*...)
@@ -48,14 +48,14 @@ works.
 
 ### Loading the admin page: looking at security
 
-If you go to [your site]/admin *Director.php* maps the 'admin' URL request through a `[api:Director]` rule to the
-`[api:CMSMain]` controller (see `[api:CMSMain]`, with no arguments). 
+If you go to [your site]/admin *Director.php* maps the 'admin' URL request through a [api:Director] rule to the
+[api:CMSMain] controller (see [api:CMSMain], with no arguments). 
 
-*CMSMain.init()* calls its parent which, of all things is called `[api:LeftAndMain]`. It's in `[api:LeftAndMain]` that the
+*CMSMain.init()* calls its parent which, of all things is called [api:LeftAndMain]. It's in [api:LeftAndMain] that the
 important security checks are made by calling *Permission::check*. 
 
-`[api:Security::permissionFailure]` is the next utility function you can use to redirect to the login form. 
+[api:Security::permissionFailure()] is the next utility function you can use to redirect to the login form. 
 
 ### Customizing Access Checks in CMS Classes
 
-see `[api:LeftAndMain]`
+see [api:LeftAndMain]

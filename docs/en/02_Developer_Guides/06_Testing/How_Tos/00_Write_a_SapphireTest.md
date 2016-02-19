@@ -60,7 +60,7 @@ The test database is rebuilt every time one of these methods is run.
 
 Inside our test method is the `objFromFixture` method that will generate an object for us based on data from our fixture
 file. To identify to the object, we provide a class name and an identifier. The identifier is specified in the YAML file
-but not saved in the database anywhere, `objFromFixture` looks the `[api:DataObject]` up in memory rather than using the
+but not saved in the database anywhere, `objFromFixture` looks the [api:DataObject] up in memory rather than using the
 database. This means that you can use it to test the functions responsible for looking up content in the database.
 
 The final part of our test is an assertion command, `assertEquals`. An assertion command allows us to test for something

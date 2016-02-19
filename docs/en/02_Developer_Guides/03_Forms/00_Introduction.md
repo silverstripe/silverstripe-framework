@@ -87,7 +87,7 @@ controller action. To grant it access through URLs, we add it to the `$allowed_a
 
 <div class="notice" markdown="1">
 Form actions (`doSayHello`), on the other hand, should _not_ be included in `$allowed_actions`; these are handled 
-separately through [api:Form::httpSubmission].
+separately through [api:Form::httpSubmission()].
 </div>
 
 

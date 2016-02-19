@@ -98,7 +98,7 @@ this purpose.
 There's some exceptions to this rule, see the ["security" guide](../security).
 </div>
 
-In case you want to explicitly allow un-escaped HTML input, the property can be cast as `[api:HTMLText]`. The following 
+In case you want to explicitly allow un-escaped HTML input, the property can be cast as [api:HTMLText]. The following 
 example takes the `Content` field in a `SiteTree` class, which is of this type. It forces the content into an explicitly 
 escaped format.
 

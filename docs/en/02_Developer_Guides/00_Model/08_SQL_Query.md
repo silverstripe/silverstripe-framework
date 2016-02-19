@@ -55,7 +55,7 @@ the ORM creates.
 		echo $row['BirthYear'];
 	}
 
-The `$result` is an array lightly wrapped in a database-specific subclass of `[api:Query]`. This class implements the 
+The `$result` is an array lightly wrapped in a database-specific subclass of [api:Query]. This class implements the 
 *Iterator*-interface, and provides convenience-methods for accessing the data.
 
 ### Delete
