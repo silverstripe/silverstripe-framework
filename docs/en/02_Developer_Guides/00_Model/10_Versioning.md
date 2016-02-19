@@ -10,7 +10,7 @@ It is most commonly applied to pages in the CMS (the `SiteTree` class). Draft co
 from published content shown to your website visitors. 
 
 Versioning in SilverStripe is handled through the [api:Versioned] class. As a [api:DataExtension] it is possible to 
-be applied to any `[api:DataObject]` subclass. The extension class will automatically update read and write operations
+be applied to any [api:DataObject]` subclass. The extension class will automatically update read and write operations
 done via the ORM via the `augmentSQL` database hook.
 
 Adding Versioned to your `DataObject` subclass works the same as any other extension. It accepts two or more arguments 
@@ -82,7 +82,7 @@ The record is retrieved as a `DataObject`, but saving back modifications via `wr
 rather than modifying the existing one.
 </div>
 
-In order to get a list of all versions for a specific record, we need to generate specialized `[api:Versioned_Version]` 
+In order to get a list of all versions for a specific record, we need to generate specialized [api:Versioned_Version] 
 objects, which expose the same database information as a `DataObject`, but also include information about when and how 
 a record was published.
 	
@@ -95,9 +95,9 @@ a record was published.
 
 The usual call to `DataObject->write()` will write to whatever stage is currently active, as defined by the 
 `Versioned::current_stage()` global setting. Each call will automatically create a new version in the 
-`<class>_versions` table. To avoid this, use `[writeWithoutVersion()](api:Versioned->writeWithoutVersion())` instead.
+`<class>_versions` table. To avoid this, use [writeWithoutVersion()](api:Versioned::writeWithoutVersion()) instead.
 
-To move a saved version from one stage to another, call `[writeToStage(<stage>)](api:Versioned->writeToStage())` on the 
+To move a saved version from one stage to another, call [writeToStage(<stage>)](api:Versioned::writeToStage()) on the 
 object. The process of moving a version to a different stage is also called "publishing", so we've created a shortcut 
 for this: `publish(<from-stage>, <to-stage>)`.
 
@@ -132,7 +132,7 @@ is initialized. But it can also be set and reset temporarily to force a specific
 ### Custom SQL
 
 We generally discourage writing `Versioned` queries from scratch, due to the complexities involved through joining 
-multiple tables across an inherited table scheme (see `[api:Versioned->augmentSQL()]`). If possible, try to stick to 
+multiple tables across an inherited table scheme (see [api:Versioned::augmentSQL()]). If possible, try to stick to 
 smaller modifications of the generated `DataList` objects.
 
 Example: Get the first 10 live records, filtered by creation date:

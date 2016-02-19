@@ -6,7 +6,7 @@ summary: Populate test databases with fake seed data.
 To test functionality correctly, we must use consistent data. If we are testing our code with the same data each 
 time, we can trust our tests to yield reliable results and to identify when the logic changes. Each test run in 
 SilverStripe starts with a fresh database containing no records. `Fixtures` provide a way to describe the initial data
-to load into the database. The `[api:SapphireTest]` class takes care of populating a test database with data from 
+to load into the database. The [api:SapphireTest] class takes care of populating a test database with data from 
 fixtures - all we have to do is define them.
 
 Fixtures are defined in `YAML`. `YAML` is a markup language which is deliberately simple and easy to read, so it is 
@@ -192,7 +192,7 @@ To provide the value for the `many_many_extraField` use the YAML list syntax.
 
 While manually defined fixtures provide full flexibility, they offer very little in terms of structure and convention. 
 
-Alternatively, you can use the `[api:FixtureFactory]` class, which allows you to set default values, callbacks on object 
+Alternatively, you can use the [api:FixtureFactory] class, which allows you to set default values, callbacks on object 
 creation, and dynamic/lazy value setting.
 
 <div class="hint" markdown='1'>

@@ -73,7 +73,7 @@ the [core committers](core_committers), who will assist with setting up your cre
 * Admin permissions on [transifex](https://www.transifex.com/silverstripe/).
 * AWS write permissions on the `silverstripe-ssorg-releases` s3 bucket.
 * Permission on [silverstripe release announcement](https://groups.google.com/forum/#!forum/silverstripe-announce).
-* Moderator permissions in the #silverstripe [IRC channel]((http://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/))
+* Moderator permissions in the #silverstripe [IRC channel](http://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/)
 
 ### First time setup: Security releases
 
@@ -333,7 +333,7 @@ will need to be regularly updated.
 * Create a release announcement forum sticky on the
   [releases and announcements](http://www.silverstripe.org/community/forums/releases-and-announcements/)
   forum category. Make this a global read-only sticky, and un-sticky any older release.
-* Update the #silverstripe [IRC](http://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/) topic to include the new release version.
+* Update the #silverstripe [IRC](https://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/) topic to include the new release version.
 
 ### Stage 4: Web platform installer release
 
@@ -342,8 +342,9 @@ The web platform installer is available [on the web app gallery](http://www.micr
 In order to update this you will need a Microsoft live account, and have it authorised
 by SilverStripe staff in order to publish these releases.
 
+
 To update this release there is an additional download tool at 
-[https://code.platform.silverstripe.com/silverstripe/webpi](https://code.platform.silverstripe.com/silverstripe/webpi)
+`[https://code.platform.silverstripe.com/silverstripe/webpi](https://code.platform.silverstripe.com/silverstripe/webpi)`
 which will guide you through the process of generating a new zip release.
 
     ./make-package 3.2.4 3.2.4
@@ -363,6 +364,7 @@ to submit a new version, including:
 * [Release Process](release_process)
 * [Translation Process](translation_process)
 * [Core committers](core_committers)
+* [WebPI Installer](https://docs.silverstripe.org/en/getting_started/installation/other_installation_options/windows_platform_installer/)
 
 If at any time a release runs into an unsolveable problem contact the
 core committers on the [discussion group](https://groups.google.com/forum/#!forum/silverstripe-committers)

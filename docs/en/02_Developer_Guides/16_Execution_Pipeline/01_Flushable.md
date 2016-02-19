@@ -6,17 +6,17 @@ summary: Allows a class to define it's own flush functionality.
 ## Introduction
 
 Allows a class to define it's own flush functionality, which is triggered when `flush=1` is requested in the URL.
-`[api:FlushRequestFilter]` is run before a request is made, calling `flush()` statically on all
-implementors of `[api:Flushable]`.
+[api:FlushRequestFilter] is run before a request is made, calling `flush()` statically on all
+implementors of [api:Flushable].
 
 ## Usage
 
-To use this API, you need to make your class implement `[api:Flushable]`, and define a `flush()` static function,
+To use this API, you need to make your class implement [api:Flushable], and define a `flush()` static function,
 this defines the actions that need to be executed on a flush request.
 
 ### Using with SS_Cache
 
-This example uses `[api:SS_Cache]` in some custom code, and the same cache is cleaned on flush:
+This example uses [api:SS_Cache] in some custom code, and the same cache is cleaned on flush:
 
 	:::php
 	<?php

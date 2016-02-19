@@ -2,14 +2,14 @@ summary: Learn how to crop and resize images in templates and PHP code
 
 # Image
 
-Represents an image object through the `[api:Image]` class, inheriting all base functionality from the `[api:File]` class with extra functionality including resizing.
+Represents an image object through the [api:Image] class, inheriting all base functionality from the [api:File] class with extra functionality including resizing.
 
 ## Usage
 
 ### Managing images through form fields
 
-Images can be uploaded like any other file, through `[api:FileField]`.
-More advanced usage is possible through `[api:UploadField]`,
+Images can be uploaded like any other file, through [api:FileField].
+More advanced usage is possible through [api:UploadField],
 which provides thumbnails, a detail view of the image properties,
 and management of relationships to other DataObject instances.
 Allows upload of images through limiting file extensions with `setAllowedExtensions()`.
@@ -70,7 +70,7 @@ The image manipulation functions can be used in your code with the same names, e
 
 Some of the MetaData functions need to be prefixed with 'get', example `getHeight()`, `getOrientation()` etc.
 
-Please refer to the `[api:Image]` API documentation for specific functions.
+Please refer to the [api:Image] API documentation for specific functions.
 
 ### Creating custom image functions
 
@@ -117,8 +117,8 @@ You can also create your own functions by extending the image class, for example
 
 ### Form Upload
 
-For usage on a website form, see `[api:FileField]`.
-If you want to upload images within the CMS, see `[api:UploadField]`.
+For usage on a website form, see [api:FileField].
+If you want to upload images within the CMS, see [api:UploadField].
 
 ### Image Quality
 
@@ -160,4 +160,4 @@ disappeared, you can try manually flushing the image cache.
 	http://localhost/dev/tasks/FlushGeneratedImagesTask
 
 ## API Documentation
-`[api:Image]`
+[api:Image]

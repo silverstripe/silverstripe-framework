@@ -403,7 +403,7 @@ You can add your own forms by implementing new form instances (see the [Forms tu
 
 ## API Documentation
 
- * `[api:ContentController]`: The main controller responsible for handling pages.
- * `[api:Controller]`: Generic controller (not specific to pages.)
- * `[api:DataObject]`: Underlying model class for page objects.
- * `[api:ViewableData]`: Underlying object class for pretty much anything displayable.
+ * [api:ContentCCController]: The main controller responsible for handling pages.
+ * [api:Controller]: Generic controller (not specific to pages.)
+ * [api:DataObject]: Underlying model class for page objects.
+ * [api:ViewableData]: Underlying object class for pretty much anything displayable.

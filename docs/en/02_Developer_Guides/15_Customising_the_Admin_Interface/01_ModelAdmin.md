@@ -124,7 +124,7 @@ searched results. Every [api:DataObject] can have its own context, based on the 
 class makes a guess at how those fields should be searched, e.g. showing a checkbox for any boolean fields in your
 `$db` definition.
 
-To remove, add or modify searchable fields, define a new `[api:DataObject::$searchable_fields]` static on your model
+To remove, add or modify searchable fields, define a new [api:DataObject::$searchable_fields] static on your model
 class (see [SearchContext](../search/searchcontext) docs for details).
 
 **mysite/code/Product.php**
@@ -167,7 +167,7 @@ model class, where you can add or remove columns. To change the title, use [api:
 	   );
 	}
 
-The results list are retrieved from [api:SearchContext->getResults], based on the parameters passed through the search
+The results list are retrieved from [api:SearchContext::getResults()], based on the parameters passed through the search
 form. If no search parameters are given, the results will show every record. Results are a [api:DataList] instance, so
 can be customized by additional SQL filters, joins.
 
@@ -225,7 +225,7 @@ checkbox which limits search results to expensive products (over $100).
 		}
 	}
 
-To alter how the results are displayed (via `[api:GridField]`), you can also overload the `getEditForm()` method. For
+To alter how the results are displayed (via [api:GridField]), you can also overload the `getEditForm()` method. For
 example, to add a new component.
 
 **mysite/code/MyAdmin.php**

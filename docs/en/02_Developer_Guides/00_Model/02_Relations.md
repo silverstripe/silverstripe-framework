@@ -295,7 +295,7 @@ and `remove()` method.
 You can use the ORM to get a filtered result list without writing any SQL. For example, this snippet gets you the 
 "Players"-relation on a team, but only containing active players.
 
-See `[api:DataObject::$has_many]` for more info on the described relations.
+See [api:DataObject::$has_many] for more info on the described relations.
 
 	:::php
 	<?php

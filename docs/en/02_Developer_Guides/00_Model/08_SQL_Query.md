@@ -82,7 +82,7 @@ E.g.
 	  echo $row['BirthYear'];
 	}
 
-The result of `SQLSelect::execute()` is an array lightly wrapped in a database-specific subclass of `[api:SS_Query]`. 
+The result of `SQLSelect::execute()` is an array lightly wrapped in a database-specific subclass of [api:SS_Query]. 
 This class implements the *Iterator*-interface, and provides convenience-methods for accessing the data.
 
 ### DELETE
