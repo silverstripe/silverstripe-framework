@@ -289,6 +289,18 @@ $ npm run sanity
 
 This script makes sure files in `thirdparty` match files copied from `node_modules`. You should never commit custom changes to a library file. This script will catch them if you do :smile:
 
+```
+$ npm run css
+```
+
+This script will compile all of the .scss files into minified .css files. ProTip: run with the `--development` flag to compile non-minified css and watch for every time a .scss file is changed.
+
+```
+$ npm run sprites
+```
+
+This script generates sprites from the individual image files in `admin/images/sprites/src`.
+
 Of course to run these scripts, you'll need to get the dependencies, so run a `npm install` from the root directory to get started.
 
 ### Gulp

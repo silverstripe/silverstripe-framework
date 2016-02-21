@@ -10,9 +10,6 @@
  * create new SCSS files for larger components like the CMS menu or tree 
  * (see _tree.scss and _menu.scss).
  */
-@import "compass";
-@import "compass/css3";
-@import "compass/utilities";
 
 /** ----------------------------------------------------
  * Core Styles.
@@ -90,7 +87,7 @@ body.cms {
 .cms-preview iframe,
 .cms-preview-controls
  {
-	@include inline-block;
+	display: inline-block;
 }
 
 .cms-content-header {
@@ -181,7 +178,7 @@ body.cms {
 }
 
 .cms-content-header-top {
-	@include inline-block;
+	display: inline-block;
 	width: 100%;
 }
 
@@ -320,7 +317,7 @@ body.cms {
 }
 
 .cms-tabset-nav-primary {
-	@include inline-block;
+	display: inline-block;
 	vertical-align: middle;
 }
 
@@ -398,7 +395,7 @@ body.cms {
 }
 
 .icon-button-group {
-	@include inline-block;
+	display: inline-block;
 	margin-top: 1px;
 	vertical-align: middle;
 	border: 1px solid #CDCCD0;
@@ -452,7 +449,7 @@ body.cms {
 			padding: 0;
 			border-left: 0;
 			border-right: 0;
-			@include box-shadow(none);
+			box-shadow: none;
 
 			+ .cms-tabset-icon.ui-state-default {
 				border-left: 1px solid #CDCCD0;
@@ -524,7 +521,7 @@ body.cms {
 			}
 		
 			a {
-				@include inline-block;
+				display: inline-block;
 				outline: none;
 				float: none;
 				font-weight: normal;
@@ -586,18 +583,6 @@ body.cms {
 				padding-right: 0;
 				margin: 0;
 			}
-
-			&.list a {background: sprite($sprites64, tab-list) no-repeat;}
-			&.tree a {background: sprite($sprites64, tab-tree) no-repeat;}
-			&.gallery a {background: sprite($sprites64, tab-gallery) no-repeat;}
-			&.edit a {background: sprite($sprites64, tab-edit) no-repeat;}
-			&.search a {background: sprite($sprites64, tab-search) no-repeat;}
-
-			&.list.ui-state-active a {background: sprite($sprites64, tab-list-hover) no-repeat;}
-			&.tree.ui-state-active a {background: sprite($sprites64, tab-tree-hover) no-repeat;}
-			&.gallery.ui-state-active a {background: sprite($sprites64, tab-gallery-hover) no-repeat;}
-			&.edit.ui-state-active a {background: sprite($sprites64, tab-edit-hover) no-repeat;}
-			&.search.ui-state-active a {background: sprite($sprites64, tab-search-hover) no-repeat;}
 		}
 	}
 
@@ -653,8 +638,8 @@ body.cms {
 	}
 		
 	.ui-state-active {
-		@include box-shadow(none);
-		background: transparent;	
+		box-shadow: none;
+		background: transparent;
 		border-top: none;
 		border: none;
 		z-index:2;
@@ -757,7 +742,7 @@ body.cms {
 			color: #dc7f00;
 			border: none;
 			background: none;
-			@include border-radius(5px);
+			border-radius: 5px;
 			display: inline-block;
 			zoom: 1;
       		*display: inline;
@@ -801,7 +786,7 @@ body.cms {
 	background: #fff;									// for browsers that don't understand rgba
 	background: rgba(#fff,0.5);
 	text-shadow: none;
-	@include border-radius(3px 3px 3px 3px);
+	border-radius: 3px;
 
 	&.notice {		
 		background-color: lighten($color-notice,22%);	// Blue
@@ -839,9 +824,9 @@ body.cms {
 
 
 .notice-item {
-	@include border-radius(3px);
-	font-family: inherit; 
-	font-size: inherit; 
+	border-radius: 3px;
+	font-family: inherit;
+	font-size: inherit;
 	padding: 6px 24px 8px 10px;
 	word-wrap: break-word;
 	min-height: 60px;
@@ -949,8 +934,8 @@ body.cms {
 		.title {
 			padding-top:5px; //aligns label with point of arrow
 			font-weight:bold; //to match pagetype label
-			@include text-shadow(1px 1px 0 $color-text-shadow);
-		}		
+			text-shadow: 1px 1px 0 $color-text-shadow;
+		}
 	}
 	ul.SelectionGroup {
 		padding-left:28px;
@@ -986,8 +971,7 @@ body.cms {
 
 			&.disabled {
 				color: $color-text-disabled;
-				
-				@include opacity(0.5);
+				opacity: 0.5;
 
 				&:hover {
 					background: none;
@@ -1104,10 +1088,8 @@ body.cms {
 	}
 	
 	.cms-content-header {
-		background-color: darken($color-widget-bg, 40%);	
-		@include background-image(
-			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 40%))
-		);
+		background-color: darken($color-widget-bg, 40%);
+		background-image: linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 40%));
 
 		h2 {
 			text-shadow: darken($color-widget-bg, 50%) -1px -1px 0;
@@ -1201,10 +1183,10 @@ body.cms {
 				color: $color-text-light;
 
 				td.first-column {
-					@include border-radius(6px 0 0 6px);
+					border-radius: 6px 0 0 6px;
 				}
 				td.last-column {
-					@include border-radius(0 6px 6px 0);
+					border-radius: 0 6px 6px 0;
 				}
 			}
 		}
@@ -1259,12 +1241,12 @@ body.cms {
  * CMS Batch actions
  */
 .cms-content-batchactions-button {
-	@include inline-block;
+	display: inline-block;
 	padding: 4px 6px;
 	vertical-align: middle;
-	@include background-image(linear-gradient(top, #fff, #D9D9D9));
+	background-image: linear-gradient(top, #fff, #D9D9D9);
 	border: 1px solid #aaa;
-	@include border-radius(4px);
+	border-radius: 4px;
 }
 
 .cms-content-batchactions {
@@ -1280,7 +1262,7 @@ body.cms {
 		margin-bottom: 8px;
 		margin-right:-1px;
 		background-color: #D9D9D9;
-		@include background-image(linear-gradient(top, #fff, #D9D9D9));
+		background-image: linear-gradient(top, #fff, #D9D9D9);
 		border-top-left-radius: 4px;
 		border-bottom-left-radius: 4px;
 
@@ -1300,7 +1282,7 @@ body.cms {
 	}
 }
 .cms-content-batchactions-dropdown {
-	@include inline-block;
+	display: inline-block;
 
 	// Context specific rules for when batch actions are in the SiteTree panel.
 	.cms-content-tools & {
@@ -1308,7 +1290,7 @@ body.cms {
 	}
 
 	fieldset { // The dropdown element wrapper
-		@include inline-block;
+		display: inline-block;
 		width: 200px;
 
 		.view-mode-batchactions-label {
@@ -1333,7 +1315,7 @@ body.cms {
 	}
 
 	.Actions {
-		@include inline-block;
+		display: inline-block;
 
 		// Context specific rules for when batch actions are in the SiteTree panel.
 		.cms-content-tools & {
@@ -1461,7 +1443,7 @@ form.member-profile-form {
 .cms {
 	.cms-content {
 		border-right: 1px solid #BBB;
-		@include border-radius(0);
+		border-radius: 0;
 		background: $tab-panel-texture-color;
 		width: 800px;
 		z-index: 40;
@@ -1593,8 +1575,8 @@ form.member-profile-form {
 			h2, h3 {
 				border-bottom: 0;
 				margin-left: $grid-y;
-				@include transform-origin(bottom, right);
-				@include rotate(270deg);
+				transform-origin: bottom, right;
+				transform: rotate(270deg);
 			}
 			.cms-panel-header {
 			width: 600px;
@@ -1613,8 +1595,8 @@ form.member-profile-form {
 		h2, h3 {
 			border-bottom: 0;
 			margin-left: $grid-y;
-			@include transform-origin(bottom, right);
-			@include rotate(270deg);
+			transform-origin: bottom, right;
+			transform: rotate(270deg);
 		}
 		.cms-panel-header {
 			width: 600px;
@@ -1699,29 +1681,26 @@ form.member-profile-form {
 	background: $tab-panel-texture-color;
 	background-clip: content-box;
 	border: 1px solid #666 !important;
-	@include border-radius($grid-y);
+	border-radius: $grid-y;
 	overflow: visible;
 	padding: 0;
-	@include box-shadow(0px 0px 30px 10px rgba(0,0,0,.3));
- 
+	box-shadow: 0px 0px 30px 10px rgba(0,0,0,.3);
+
   	// Titlebar for pop-up dialog.
 	.ui-dialog-titlebar.ui-widget-header {
 	  	font-size: $font-base-size+2;
 		padding: 0;
 		border:none;
-		background: {
-			color:transparent;
-			image:url(../images/textures/cms_content_header.png);
-			repeat:repeat;	
-		}
-		@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
+		background: transparent url(../images/textures/cms_content_header.png) repeat;
+		box-shadow: $color-shadow-dark 0 0 ($grid-x / 2) inset;
+
 		.ui-dialog-title {
 			position:absolute;
 		}
 	}
 
 	.ui-dialog-content {
-		@include border-radius($grid-y);
+		border-radius: $grid-y;
 		overflow: auto; // TODO Replace with proper $.layout grid
 
 		&.loading {
@@ -1920,15 +1899,15 @@ body.cms-dialog {
 		.cms-file-info{
 			.field{
 				border:none;
-				@include box-shadow(0 0 0 rgba(0, 0, 0, 0));
+				box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 			}
 		}
 		.field{
 			border-bottom: 1px solid $color-shadow-light;
-    		@include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
-    		&.last{				
+    		box-shadow: 0 1px 0 lighten($color-shadow-light, 95%);
+    		&.last{
 				border-bottom:none;
-				@include box-shadow(0 0 0 rgba(0, 0, 0, 0));
+				box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 				margin-bottom:0;
 			}	
 		}
@@ -2028,7 +2007,7 @@ body.cms-dialog {
 		.ss-uploadfield-files {
 			.ss-uploadfield-item-info {
 				background-color: grayscale(#5db4df);
-				@include background-image(linear-gradient(top,  grayscale(#5db4df) 0%, grayscale(#5db1dd) 8%, grayscale(#439bcb) 50%, grayscale(#3f99cd) 54%, grayscale(#207db6) 96%, grayscale(#1e7cba) 100%));
+				background-image: linear-gradient(top,  grayscale(#5db4df) 0%, grayscale(#5db1dd) 8%, grayscale(#439bcb) 50%, grayscale(#3f99cd) 54%, grayscale(#207db6) 96%, grayscale(#1e7cba) 100%);
 			}
 		}
 	}
@@ -2061,8 +2040,8 @@ body.cms-dialog {
 		height: 26px - 2*4px; // minus padding
 		font-size: $font-base-size+2;
 		font-weight: bold;
-		@include border-top-left-radius(3px);
-		@include border-bottom-left-radius(3px);
+		border-top-left-radius: 3px;
+		border-bottom-left-radius: 3px;
 		background-color: #667980; // hardcoding colour since its tied to the sprite
 		padding: 4px 3px 4px 6px;
 		text-align: center;
@@ -2071,9 +2050,10 @@ body.cms-dialog {
 	}
 
 	.arrow {
+		@extend .icon-sprites-32x32;
+		@include sprite($sprites-32x32-numeric-label);
 		height: 26px;
 		width: 10px;
-		background: sprite($sprites32, numeric-label) no-repeat;
 		margin-right: 4px;
 	}
 
@@ -2093,8 +2073,8 @@ body.cms-dialog {
 	// Emulate .field bottom border styling without applying .field class,
 	// as it messes up the nested .field element styling (blocklevel labels)
 	border-bottom: 1px solid $color-shadow-light;
-  	@include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
-  	margin-bottom: $grid-x;
+	box-shadow: 0 1px 0 lighten($color-shadow-light, 95%);
+	margin-bottom: $grid-x;
 
 	// Preview might not always be available
 	.cms-file-info-preview {
@@ -2231,20 +2211,29 @@ form.import-form {
 }
 	
 .toggle-details-icon {
-	background: sprite($sprites32, menu-arrow-down) no-repeat;
-	.ss-uploadfield-item-edit-all &{
-		background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
+	@extend .icon-sprites-32x32;
+	@include sprite($sprites-32x32-menu-arrow-down);
+	
+	.ss-uploadfield-item-edit-all & {
+		@extend .icon-sprites-32x32;
+		@include sprite($sprites-32x32-menu-arrow-deselected-down);
+
 		display:inline-block;
 		width:8px;
 		height:8px;
 		padding-left:5px;		
 	}
 
-	&.opened {					
-		background: sprite($sprites32, menu-arrow-up) no-repeat;	
+	&.opened {
+		@extend .icon-sprites-32x32;
+		@include sprite($sprites-32x32-menu-arrow-up);
+
 		.ss-uploadfield-item-edit-all &{
-			background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;			
-		}		
+			@extend .icon-sprites-32x32;
+			@include sprite($sprites-32x32-menu-arrow-deselected-up);
+			
+			display:inline-block;
+		}
 	}
 }
 

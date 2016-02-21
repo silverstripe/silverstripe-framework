@@ -1,5 +1,3 @@
-.datetime .middleColumn .middleColumn { margin: 0; padding: 0; clear: none; float: left; }
+.datetime .middleColumn .middleColumn{margin:0;padding:0;clear:none;float:left}.datetime .middleColumn .field{margin:0;border-bottom:none;box-shadow:none}
 
-.datetime .middleColumn .field { margin: 0; border-bottom: none; box-shadow: none; }
-
-/*# sourceMappingURL=DatetimeField.css.map */
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiRGF0ZXRpbWVGaWVsZC5jc3MiLCJzb3VyY2VzIjpbIkRhdGV0aW1lRmllbGQuc2NzcyJdLCJzb3VyY2VzQ29udGVudCI6WyIuZGF0ZXRpbWUgLm1pZGRsZUNvbHVtbiAubWlkZGxlQ29sdW1uIHtcblx0bWFyZ2luOiAwO1xuXHRwYWRkaW5nOiAwO1xuXHRjbGVhcjogbm9uZTtcblx0ZmxvYXQ6IGxlZnQ7XG59XG4uZGF0ZXRpbWUgLm1pZGRsZUNvbHVtbiAuZmllbGQge1xuXHRtYXJnaW46IDA7XG5cdGJvcmRlci1ib3R0b206IG5vbmU7XG5cdGJveC1zaGFkb3c6IG5vbmU7XG59XG4iXSwibWFwcGluZ3MiOiJBQUFBLFNBQVMsQ0FBQyxhQUFhLENBQUMsYUFBYSxBQUFDLENBQ3JDLE1BQU0sQ0FBRSxDQUFFLENBQ1YsT0FBTyxDQUFFLENBQUUsQ0FDWCxLQUFLLENBQUUsSUFBSyxDQUNaLEtBQUssQ0FBRSxJQUFLLENBQ1osQUFDRCxTQUFTLENBQUMsYUFBYSxDQUFDLE1BQU0sQUFBQyxDQUM5QixNQUFNLENBQUUsQ0FBRSxDQUNWLGFBQWEsQ0FBRSxJQUFLLENBQ3BCLFVBQVUsQ0FBRSxJQUFLLENBQ2pCIiwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiL3NvdXJjZS8ifQ== */

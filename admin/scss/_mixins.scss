@@ -15,9 +15,6 @@
 @mixin hide-text-overflow {
 	overflow: hidden;
 	white-space: nowrap;
-
-	// could optionally use the compass mixin but that
-	// would require a 3rd party plugin
 	text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
 }
@@ -100,23 +97,6 @@
     box-shadow: $shadow $outerColor;
 }
 
-
-@mixin transition($properties: margin 0.3s ease-in 0s){
-   	-moz-transition: $properties;
-	-webkit-transition: $properties;
-	-o-transition: $properties;
-	transition: $properties;
-}
-
-@mixin duration($time, $webkit:true){
-  @if($webkit){
-    -webkit-transition-duration: $time;
-  }
-  -moz-transition-duration: $time;
-  -o-transition-duration: $time;
-  transition-duration: $time;
-}
-
 //** ----------------------------------------------------
 // * Show label and field content in their own lines,
 // * to maximize the available horizontal space.
@@ -167,7 +147,7 @@ Used in side panels and action tabs
 		 * the form fields rather than padding
 		 */
 		border-bottom:none;
-		@include box-shadow(none);
+		box-shadow: none;
 		label {
 			float: none;
 			width: auto;
@@ -182,19 +162,19 @@ Used in side panels and action tabs
 				font-weight:normal;
 				font-size:1em;
 				float:left;
-				@include text-shadow(none);
+				text-shadow: none;
 				&.fill{
 					&:before{
 						color:#fff;
 						content: '?';
 						font-size:12px;
-						@include box-sizing('border-box');
+						box-sizing: border-box;
 						padding-left:3px;
 						padding-right:3px;
 						display:block;
 						float:left;
-						@include text-shadow(none);
-						@include border-radius(50px);
+						text-shadow: none;
+						border-radius: 50px;
 						background-color:lighten($color-text, 45%);
 						width:15px;
 						height:15px;
@@ -251,7 +231,7 @@ Used in side panels and action tabs
 		padding:0;
 		height:auto;
 		border:none;
-		@include box-shadow(none);
+		box-shadow: none;
 	}
 	.cms-edit-form{
 		width:100%;
@@ -291,4 +271,21 @@ Used in side panels and action tabs
 		overflow:visible;
 		border-bottom:none;
 	}
+}
+
+//** ----------------------------------------------------
+// * Compass replacement mixins.
+// *
+// * Mixins that were built-in with compass
+// * ----------------------------------------------------- */
+
+@mixin legacy-pie-clearfix {
+	&:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    clear: both;
+    overflow: hidden;
+    visibility: hidden;
+  }
 }

@@ -1,3 +1,5 @@
+'use strict';
+
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define('ss.jQuery', ['exports'], factory);
@@ -11,8 +13,6 @@
     global.ssJQuery = mod.exports;
   }
 })(this, function (exports) {
-  'use strict';
-
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
