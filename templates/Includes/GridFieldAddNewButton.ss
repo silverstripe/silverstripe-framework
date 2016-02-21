@@ -1,3 +1,3 @@
-<a href="$NewLink" class="action action-detail ss-ui-action-constructive ss-ui-button ui-button ui-widget ui-state-default ui-corner-all new new-link" data-icon="add">
-$ButtonName
+<a class="ss-ui-button add-new-button tool-button font-icon-plus ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="$NewLink" role="button" aria-disabled="false">
+	$ButtonName
 </a>
