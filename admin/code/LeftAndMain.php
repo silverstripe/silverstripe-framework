@@ -5,6 +5,8 @@
  * @subpackage admin
  */
 
+use SilverStripe\Forms\Schema\FormSchema;
+
 /**
  * LeftAndMain is the parent class of all the two-pane views in the CMS.
  * If you are wanting to add more areas to the CMS, you can do it by subclassing LeftAndMain.
@@ -84,7 +86,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * @var array
 	 */
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'save',
 		'savetreenode',
@@ -97,7 +99,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'AddForm',
 		'batchactions',
 		'BatchActionsForm',
-	);
+		'schema',
+	];
+
+	private static $dependencies = [
+		'schema' => '%$FormSchema'
+	];
 
 	/**
 	 * @config
@@ -168,6 +175,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @var PjaxResponseNegotiator
 	 */
 	protected $responseNegotiator;
+
+	/**
+	 * Gets a JSON schema representing the current edit form.
+	 *
+	 * @return SS_HTTPResponse
+	 */
+	public function schema() {
+		return $this->schema->getSchema($this->getEditForm());
+	}
 
 	/**
 	 * @param Member $member
