@@ -31,7 +31,7 @@ class VersionedTest extends SapphireTest {
 			'VersionedTest_WithIndexes_Live' =>
 				array('value' => false, 'message' => 'Unique indexes are no longer unique in _Live table'),
 		);
-	
+
 		// Test each table's performance
 		foreach ($tableExpectations as $tableName => $expectation) {
 			$indexes = DB::get_schema()->indexList($tableName);
@@ -196,15 +196,37 @@ class VersionedTest extends SapphireTest {
 		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
 		$page1->Content = 'orig';
 		$page1->write();
-		$oldVersion = $page1->Version;
+		$firstVersion = $page1->Version;
 		$page1->publish('Stage', 'Live', false);
-		$this->assertEquals($oldVersion, $page1->Version, 'publish() with $createNewVersion=FALSE');
+		$this->assertEquals(
+			$firstVersion,
+			$page1->Version,
+			'publish() with $createNewVersion=FALSE does not create a new version'
+		);
 
 		$page1->Content = 'changed';
 		$page1->write();
-		$oldVersion = $page1->Version;
+		$secondVersion = $page1->Version;
+		$this->assertTrue($firstVersion < $secondVersion, 'write creates new version');
+
 		$page1->publish('Stage', 'Live', true);
-		$this->assertTrue($oldVersion < $page1->Version, 'publish() with $createNewVersion=TRUE');
+		$thirdVersion = Versioned::get_latest_version('VersionedTest_DataObject', $page1->ID)->Version;
+		$liveVersion = Versioned::get_versionnumber_by_stage('VersionedTest_DataObject', 'Live', $page1->ID);
+		$stageVersion = Versioned::get_versionnumber_by_stage('VersionedTest_DataObject', 'Stage', $page1->ID);
+		$this->assertTrue(
+			$secondVersion < $thirdVersion,
+			'publish() with $createNewVersion=TRUE creates a new version'
+		);
+		$this->assertEquals(
+			$liveVersion,
+			$thirdVersion,
+			'publish() with $createNewVersion=TRUE publishes to live'
+		);
+		$this->assertEquals(
+			$stageVersion,
+			$secondVersion,
+			'publish() with $createNewVersion=TRUE does not affect stage'
+		);
 	}
 
 	public function testRollbackTo() {
@@ -220,10 +242,11 @@ class VersionedTest extends SapphireTest {
 		$changedVersion = $page1->Version;
 
 		$page1->doRollbackTo($origVersion);
-		$page1 = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage',
-			sprintf('"VersionedTest_DataObject"."ID" = %d', $page1->ID));
+		$page1 = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', array(
+			'"VersionedTest_DataObject"."ID" = ?' => $page1->ID
+		));
 
-		$this->assertTrue($page1->Version > $changedVersion, 'Create a new higher version number');
+		$this->assertTrue($page1->Version == $changedVersion + 1, 'Create a new higher version number');
 		$this->assertEquals('orig', $page1->Content, 'Copies the content from the old version');
 
 		// check db entries
