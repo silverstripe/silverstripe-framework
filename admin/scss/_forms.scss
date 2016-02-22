@@ -36,10 +36,11 @@ form.nostyle {
 	@include legacy-pie-clearfix();
 
 	&.nolabel {
-		.middleColumn {
+		> .middleColumn {
 			margin-left: 0;
 		}
-		.description {
+
+		> .description {
 			margin-left: 0;
 		}
 	}

@@ -277,7 +277,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		// Set the members html editor config
 		if(Member::currentUser()) {
-			HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
+			HtmlEditorConfig::set_active_identifier(Member::currentUser()->getHtmlEditorConfigForCMS());
 		}
 
 		// Set default values in the config if missing.  These things can't be defined in the config
@@ -358,8 +358,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			]
 		]);
 
-		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true);
-		Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true);
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', false, true);
+		Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', false, true);
 
 		if ($this->config()->session_keepalive_ping) {
 			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Ping.js');
@@ -1700,13 +1700,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		foreach($this->MainMenu() as $menuItem) {
 			if($menuItem->LinkingMode != 'link') return $menuItem->Title;
 		}
-	}
-
-	/**
-	 * Return the base directory of the tiny_mce codebase
-	 */
-	public function MceRoot() {
-		return MCE_ROOT;
 	}
 
 	/**

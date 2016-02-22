@@ -1,5 +1,3 @@
-'use strict';
-
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
 		define('ss.SecurityAdmin', ['jQuery'], factory);
@@ -13,6 +11,8 @@
 		global.ssSecurityAdmin = mod.exports;
 	}
 })(this, function (_jQuery) {
+	'use strict';
+
 	var _jQuery2 = _interopRequireDefault(_jQuery);
 
 	function _interopRequireDefault(obj) {

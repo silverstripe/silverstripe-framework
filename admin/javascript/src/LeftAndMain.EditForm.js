@@ -8,14 +8,16 @@ import i18n from 'i18n';
 window.onbeforeunload = function(e) {
 	var form = $('.cms-edit-form');
 	form.trigger('beforesubmitform');
-	if(form.is('.changed')) return i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
+	if(form.is('.changed') && ! form.is('.discardchanges')) {
+		return i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
+	}
 };
 
 $.entwine('ss', function($){
 
 	/**
 	 * Class: .cms-edit-form
-	 * 
+	 *
 	 * Base edit form, provides ajaxified saving
 	 * and reloading itself through the ajax return values.
 	 * Takes care of resizing tabsets within the layout container.
@@ -26,20 +28,20 @@ $.entwine('ss', function($){
 	 *
 	 * @name ss.Form_EditForm
 	 * @require jquery.changetracker
-	 * 
+	 *
 	 * Events:
 	 *  ajaxsubmit - Form is about to be submitted through ajax
 	 *  validate - Contains validation result
 	 *  load - Form is about to be loaded through ajax
 	 */
-	$('.cms-edit-form').entwine(/** @lends ss.Form_EditForm */{	
+	$('.cms-edit-form').entwine(/** @lends ss.Form_EditForm */{
 		/**
 		 * Variable: PlaceholderHtml
 		 * (String_ HTML text to show when no form content is chosen.
 		 * Will show inside the <form> tag.
 		 */
 		PlaceholderHtml: '',
-	
+
 		/**
 		 * Variable: ChangeTrackerOptions
 		 * (Object)
@@ -47,7 +49,7 @@ $.entwine('ss', function($){
 		ChangeTrackerOptions: {
 			ignoreFieldSelector: '.no-change-track, .ss-upload :input, .cms-navigator :input'
 		},
-	
+
 		/**
 		 * Constructor: onmatch
 		 */
@@ -62,13 +64,13 @@ $.entwine('ss', function($){
 			// See the following page for demo and explanation of the Firefox bug:
 			//  http://www.ryancramer.com/journal/entries/radio_buttons_firefox/
 			this.attr("autocomplete", "off");
-		
+
 			this._setupChangeTracker();
 
 			// Catch navigation events before they reach handleStateChange(),
 			// in order to avoid changing the menu state if the action is cancelled by the user
 			// $('.cms-menu')
-			
+
 			// Optionally get the form attributes from embedded fields, see Form->formHtmlContent()
 			for(var overrideAttr in {'action':true,'method':true,'enctype':true,'name':true}) {
 				var el = this.find(':input[name='+ '_form_' + overrideAttr + ']');
@@ -81,10 +83,10 @@ $.entwine('ss', function($){
 			// TODO
 			// // Rewrite # links
 			// html = html.replace(/(<a[^>]+href *= *")#/g, '$1' + window.location.href.replace(/#.*$/,'') + '#');
-			// 
+			//
 			// // Rewrite iframe links (for IE)
 			// html = html.replace(/(<iframe[^>]*src=")([^"]+)("[^>]*>)/g, '$1' + $('base').attr('href') + '$2$3');
-			
+
 			// Show validation errors if necessary
 			if(this.hasClass('validationerror')) {
 				// Ensure the first validation error is visible
@@ -107,7 +109,7 @@ $.entwine('ss', function($){
 		},
 		redraw: function() {
 			if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
-			
+
 			// Force initialization of tabsets to avoid layout glitches
 			this.add(this.find('.cms-tabset')).redrawTabs();
 			this.find('.cms-content-header').redraw();
@@ -121,37 +123,39 @@ $.entwine('ss', function($){
 			// full <form> tag by any ajax updates they won't automatically reapply
 			this.changetracker(this.getChangeTrackerOptions());
 		},
-	
+
 		/**
 		 * Function: confirmUnsavedChanges
-		 * 
+		 *
 		 * Checks the jquery.changetracker plugin status for this form,
 		 * and asks the user for confirmation via a browser dialog if changes are detected.
 		 * Doesn't cancel any unload or form removal events, you'll need to implement this based on the return
 		 * value of this message.
-		 * 
+		 *
 		 * If changes are confirmed for discard, the 'changed' flag is reset.
-		 * 
+		 *
 		 * Returns:
-		 *  (Boolean) FALSE if the user wants to abort with changes present, TRUE if no changes are detected 
+		 *  (Boolean) FALSE if the user wants to abort with changes present, TRUE if no changes are detected
 		 *  or the user wants to discard them.
 		 */
 		confirmUnsavedChanges: function() {
 			this.trigger('beforesubmitform');
-			if(!this.is('.changed')) {
+			if(!this.is('.changed') || this.is('.discardchanges')) {
 				return true;
 			}
 			var confirmed = confirm(i18n._t('LeftAndMain.CONFIRMUNSAVED'));
 			if(confirmed) {
-				// confirm discard changes
-				this.removeClass('changed');
+				// Ensures that once a form is confirmed, subsequent
+				// changes to the underlying form don't trigger
+				// additional change confirmation requests
+				this.addClass('discardchanges');
 			}
 			return confirmed;
 		},
 
 		/**
 		 * Function: onsubmit
-		 * 
+		 *
 		 * Suppress submission unless it is handled through ajaxSubmit().
 		 */
 		onsubmit: function(e, button) {
@@ -168,13 +172,13 @@ $.entwine('ss', function($){
 
 		/**
 		 * Function: validate
-		 * 
+		 *
 		 * Hook in (optional) validation routines.
 		 * Currently clientside validation is not supported out of the box in the CMS.
-		 * 
+		 *
 		 * Todo:
 		 *  Placeholder implementation
-		 * 
+		 *
 		 * Returns:
 		 *  {boolean}
 		 */
@@ -211,7 +215,7 @@ $.entwine('ss', function($){
 			}
 		},
 		/*
-		 * Track focus on treedropdownfields. 
+		 * Track focus on treedropdownfields.
 		 */
 		'from .cms-edit-form .treedropdown *': {
 			onfocusin: function(e){
@@ -241,12 +245,12 @@ $.entwine('ss', function($){
 		 */
 		saveFieldFocus: function(selected){
 			if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage === null) return;
-			
+
 			var id = $(this).attr('id'),
 				focusElements = [];
 
 			focusElements.push({
-				id:id, 
+				id:id,
 				selected:selected
 			});
 
@@ -255,7 +259,7 @@ $.entwine('ss', function($){
 					window.sessionStorage.setItem(id, JSON.stringify(focusElements));
 				} catch(err) {
 					if (err.code === DOMException.QUOTA_EXCEEDED_ERR && window.sessionStorage.length === 0) {
-						// If this fails we ignore the error as the only issue is that it 
+						// If this fails we ignore the error as the only issue is that it
 						// does not remember the focus state.
 						// This is a Safari bug which happens when private browsing is enabled.
 						return;
@@ -273,7 +277,7 @@ $.entwine('ss', function($){
 		 */
 		restoreFieldFocus: function(){
 			if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage === null) return;
-		
+
 			var self = this,
 				hasSessionStorage = (typeof(window.sessionStorage)!=="undefined" && window.sessionStorage),
 				sessionData = hasSessionStorage ? window.sessionStorage.getItem(this.attr('id')) : null,
@@ -331,9 +335,9 @@ $.entwine('ss', function($){
 				if(scrollY > $(window).height() / 2){
 					self.find('.cms-content-fields').scrollTop(scrollY);
 				}
-			
+
 			} else {
-				// If session storage is not supported or there is nothing stored yet, focus on the first input 
+				// If session storage is not supported or there is nothing stored yet, focus on the first input
 				this.focusFirstInput();
 			}
 		},
@@ -350,7 +354,7 @@ $.entwine('ss', function($){
 
 	/**
 	 * Class: .cms-edit-form .Actions :submit
-	 * 
+	 *
 	 * All buttons in the right CMS form go through here by default.
 	 * We need this onclick overloading because we can't get to the
 	 * clicked button from a form.onsubmit event.
@@ -360,7 +364,7 @@ $.entwine('ss', function($){
 		 * Function: onclick
 		 */
 		onclick: function(e) {
-			// Confirmation on delete. 
+			// Confirmation on delete.
 			if(
 				this.hasClass('gridfield-button-delete')
 				&& !confirm(i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))

@@ -17,11 +17,6 @@
  * @subpackage core
  */
 
-/**
- * The root directory of TinyMCE
- */
-define('MCE_ROOT', FRAMEWORK_DIR . '/thirdparty/tinymce/');
-
 ShortcodeParser::get('default')
 	->register('file_link', array('File', 'handle_shortcode'))
 	->register('embed', array('Oembed', 'handle_shortcode'));

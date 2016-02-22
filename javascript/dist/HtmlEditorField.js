@@ -1,5 +1,3 @@
-'use strict';
-
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
 		define('ss.HtmlEditorField', ['./jQuery', './i18n'], factory);
@@ -13,6 +11,8 @@
 		global.ssHtmlEditorField = mod.exports;
 	}
 })(this, function (_jQuery, _i18n) {
+	'use strict';
+
 	var _jQuery2 = _interopRequireDefault(_jQuery);
 
 	var _i18n2 = _interopRequireDefault(_i18n);
@@ -27,70 +27,49 @@
 	ss.editorWrappers = {};
 
 	ss.editorWrappers.tinyMCE = function () {
-		var instance;
+		var editorID;
 		return {
-			init: function init(config) {
-				if (!ss.editorWrappers.tinyMCE.initialized) {
-					tinyMCE.init(config);
-					ss.editorWrappers.tinyMCE.initialized = true;
-				}
+			init: function init(ID) {
+				editorID = ID;
+				this.create();
+			},
+			destroy: function destroy() {
+				tinymce.EditorManager.execCommand('mceRemoveEditor', false, editorID);
 			},
 			getInstance: function getInstance() {
-				return this.instance;
+				return tinymce.EditorManager.get(editorID);
 			},
 			onopen: function onopen() {},
 			onclose: function onclose() {},
+			getConfig: function getConfig() {
+				var selector = "#" + editorID,
+				    config = (0, _jQuery2.default)(selector).data('config'),
+				    self = this;
+				config.selector = selector;
+
+				config.setup = function (ed) {
+					ed.on('change', function () {
+						self.save();
+					});
+				};
+
+				return config;
+			},
 			save: function save() {
-				tinyMCE.triggerSave();
+				var instance = this.getInstance();
+				instance.save();
+				(0, _jQuery2.default)(instance.getElement()).trigger("change");
 			},
-			create: function create(domID, config) {
-				this.instance = new tinymce.Editor(domID, config);
-				this.instance.onInit.add(function (ed) {
-					if (!ss.editorWrappers.tinyMCE.patched) {
-						var originalDestroy = tinymce.themes.AdvancedTheme.prototype.destroy;
+			create: function create() {
+				var config = this.getConfig();
 
-						tinymce.themes.AdvancedTheme.prototype.destroy = function () {
-							originalDestroy.apply(this, arguments);
+				if (typeof config.baseURL !== 'undefined') {
+					tinymce.EditorManager.baseURL = config.baseURL;
+				}
 
-							if (this.statusKeyboardNavigation) {
-								this.statusKeyboardNavigation.destroy();
-								this.statusKeyboardNavigation = null;
-							}
-						};
-
-						ss.editorWrappers.tinyMCE.patched = true;
-					}
-
-					jQuery(ed.getElement()).trigger('editorinit');
-
-					if (ed.settings.update_interval) {
-						var interval;
-						jQuery(ed.getBody()).on('focus', function () {
-							interval = setInterval(function () {
-								var element = jQuery(ed.getElement());
-
-								if (ed.isDirty()) {
-									element.val(ed.getContent({
-										format: 'raw',
-										no_events: 1
-									}));
-								}
-							}, ed.settings.update_interval);
-						});
-						jQuery(ed.getBody()).on('blur', function () {
-							clearInterval(interval);
-						});
-					}
-				});
-				this.instance.onChange.add(function (ed, l) {
-					ed.save();
-					jQuery(ed.getElement()).trigger('change');
-				});
-				this.instance.render();
+				tinymce.init(config);
 			},
-			repaint: function repaint() {
-				tinyMCE.execCommand("mceRepaint");
-			},
+			repaint: function repaint() {},
 			isDirty: function isDirty() {
 				return this.getInstance().isDirty();
 			},
@@ -98,7 +77,7 @@
 				return this.getInstance().getContent();
 			},
 			getDOM: function getDOM() {
-				return this.getInstance().dom;
+				return this.getInstance().getElement();
 			},
 			getContainer: function getContainer() {
 				return this.getInstance().getContainer();
@@ -110,10 +89,10 @@
 				this.getInstance().selection.select(node);
 			},
 			setContent: function setContent(html, opts) {
-				this.getInstance().execCommand('mceSetContent', false, html, opts);
+				this.getInstance().setContent(html, opts);
 			},
 			insertContent: function insertContent(html, opts) {
-				this.getInstance().execCommand('mceInsertContent', false, html, opts);
+				this.getInstance().insertContent(html, opts);
 			},
 			replaceContent: function replaceContent(html, opts) {
 				this.getInstance().execCommand('mceReplaceContent', false, html, opts);
@@ -125,7 +104,8 @@
 				this.getInstance().execCommand('unlink', false);
 			},
 			cleanLink: function cleanLink(href, node) {
-				var cb = tinyMCE.settings['urlconverter_callback'];
+				var settings = this.getConfig,
+				    cb = settings['urlconverter_callback'];
 				if (cb) href = eval(cb + "(href, node, true);");
 
 				if (href.match(new RegExp('^' + tinyMCE.settings['document_base_url'] + '(.*)$'))) {
@@ -160,90 +140,21 @@
 				var edClass = this.data('editor') || 'default',
 				    ed = ss.editorWrappers[edClass]();
 				this.setEditor(ed);
-				if (typeof ssTinyMceConfig != 'undefined') this.redraw();
+				ed.init(this.attr('id'));
 
 				this._super();
 			},
 			onremove: function onremove() {
-				var ed = tinyMCE.get(this.attr('id'));
-
-				if (ed) {
-					try {
-						ed.remove();
-					} catch (ex) {}
-
-					try {
-						ed.destroy();
-					} catch (ex) {}
-
-					this.next('.mceEditor').remove();
-					$.each(jQuery.cache, function () {
-						var source = this.handle && this.handle.elem;
-						if (!source) return;
-						var parent = source;
-
-						try {
-							while (parent && parent.nodeType == 1) {
-								parent = parent.parentNode;
-							}
-						} catch (err) {}
-
-						if (!parent) $(source).unbind().remove();
-					});
-				}
-
-				this._super();
-			},
-			getContainingForm: function getContainingForm() {
-				return this.closest('form');
-			},
-			fromWindow: {
-				onload: function onload() {
-					this.redraw();
-				}
-			},
-			redraw: function redraw() {
-				var config = ssTinyMceConfig[this.data('config')],
-				    self = this,
-				    ed = this.getEditor();
-				ed.init(config);
-				ed.create(this.attr('id'), config);
+				this.getEditor().destroy();
 
 				this._super();
 			},
 			'from .cms-edit-form': {
-				onbeforesubmitform: function onbeforesubmitform(e) {
+				onbeforesubmitform: function onbeforesubmitform() {
 					this.getEditor().save();
 
 					this._super();
 				}
-			},
-			oneditorinit: function oneditorinit() {
-				var redrawObj = $(this.getEditor().getInstance().getContainer());
-				setTimeout(function () {
-					redrawObj.show();
-				}, 10);
-			},
-			'from .cms-container': {
-				onbeforestatechange: function onbeforestatechange() {
-					this.css('visibility', 'hidden');
-					var ed = this.getEditor(),
-					    container = ed && ed.getInstance() ? ed.getContainer() : null;
-					if (container && container.length) container.remove();
-				}
-			},
-			isChanged: function isChanged() {
-				var ed = this.getEditor();
-				return ed && ed.getInstance() && ed.isDirty();
-			},
-			resetChanged: function resetChanged() {
-				var ed = this.getEditor();
-				if (typeof tinyMCE == 'undefined') return;
-				var inst = tinyMCE.getInstanceById(this.attr('id'));
-				if (inst) inst.startContent = tinymce.trim(inst.getContent({
-					format: 'raw',
-					no_events: 1
-				}));
 			},
 			openLinkDialog: function openLinkDialog() {
 				this.openDialog('link');
@@ -262,22 +173,25 @@
 
 				if (dialog.length) {
 					dialog.getForm().setElement(this);
+					dialog.html('');
+					dialog.addClass('loading');
 					dialog.open();
 				} else {
 					dialog = $('<div class="htmleditorfield-dialog htmleditorfield-' + type + 'dialog loading">');
 					$('body').append(dialog);
-					$.ajax({
-						url: url,
-						complete: function complete() {
-							dialog.removeClass('loading');
-						},
-						success: function success(html) {
-							dialog.html(html);
-							dialog.getForm().setElement(self);
-							dialog.trigger('ssdialogopen');
-						}
-					});
 				}
+
+				$.ajax({
+					url: url,
+					complete: function complete() {
+						dialog.removeClass('loading');
+					},
+					success: function success(html) {
+						dialog.html(html);
+						dialog.getForm().setElement(self);
+						dialog.trigger('ssdialogopen');
+					}
+				});
 			}
 		});
 		$('.htmleditorfield-dialog').entwine({
@@ -344,7 +258,6 @@
 			fromDialog: {
 				onssdialogopen: function onssdialogopen() {
 					var ed = this.getEditor();
-					ed.onopen();
 					this.setSelection(ed.getSelectedNode());
 					this.setBookmark(ed.createBookmark());
 					ed.blur();
@@ -354,7 +267,6 @@
 				},
 				onssdialogclose: function onssdialogclose() {
 					var ed = this.getEditor();
-					ed.onclose();
 					ed.moveToBookmark(this.getBookmark());
 					this.setSelection(null);
 					this.setBookmark(null);
@@ -720,7 +632,6 @@
 					this.find('.ss-htmleditorfield-file').each(function () {
 						$(this).insertHTML(ed);
 					});
-					ed.repaint();
 				});
 				this.getDialog().close();
 				return false;
@@ -1195,28 +1106,4 @@
 			}
 		});
 	});
-
-	window.sapphiremce_cleanup = function sapphiremce_cleanup(type, value) {
-		if (type == 'get_from_editor') {
-			value = value.replace(/<[a-z0-9]+:imagedata[^>]+src="?([^> "]+)"?[^>]*>/ig, "<img src=\"$1\">");
-			value = value.replace(new RegExp('<(!--)([^>]*)(--)>', 'g'), "");
-			value = value.replace(/([ \f\r\t\n\'\"])class=mso[a-z0-9]+[^ >]+/ig, "$1");
-			value = value.replace(/([ \f\r\t\n\'\"]class=")mso[a-z0-9]+[^ ">]+ /ig, "$1");
-			value = value.replace(/([ \f\r\t\n\'\"])class="mso[a-z0-9]+[^">]+"/ig, "$1");
-			value = value.replace(/([ \f\r\t\n\'\"])on[a-z]+=[^ >]+/ig, "$1");
-			value = value.replace(/ >/ig, ">");
-			value = value.replace(/<(\/[A-Za-z0-9]+)[ \f\r\t\n]+[^>]*>/ig, "<$1>");
-		}
-
-		if (type == 'get_from_editor_dom') {
-			jQuery(value).find('img').each(function () {
-				this.onresizestart = null;
-				this.onresizeend = null;
-				this.removeAttribute('onresizestart');
-				this.removeAttribute('onresizeend');
-			});
-		}
-
-		return value;
-	};
 });

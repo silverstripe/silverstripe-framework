@@ -9,6 +9,7 @@ class TextareaFieldTest extends SapphireTest {
 		$inputText = "These are some unicodes: äöü";
 		$field = new TextareaField("Test", "Test");
 		$field->setValue($inputText);
+		$this->assertEquals('These are some unicodes: &auml;&ouml;&uuml;', $field->ValueEntities());
 		$this->assertContains('These are some unicodes: &auml;&ouml;&uuml;', $field->Field());
 	}
 

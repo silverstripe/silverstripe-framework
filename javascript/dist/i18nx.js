@@ -1,5 +1,3 @@
-'use strict';
-
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
 		define('ss.i18nx', ['exports'], factory);
@@ -13,6 +11,8 @@
 		global.ssI18nx = mod.exports;
 	}
 })(this, function (exports) {
+	'use strict';
+
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
