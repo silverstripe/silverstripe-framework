@@ -2,9 +2,11 @@ var gulp = require('gulp'),
     babel = require('gulp-babel'),
     diff = require('gulp-diff'),
     notify = require('gulp-notify'),
+    postcss = require('gulp-postcss'),
     sass = require('gulp-sass'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify'),
     gulpUtil = require('gulp-util'),
+    autoprefixer = require('autoprefixer'),
     browserify = require('browserify'),
     babelify = require('babelify'),
     watchify = require('watchify'),
@@ -25,10 +27,11 @@ var PATHS = {
     MODULES: './node_modules',
     ADMIN: './admin',
     ADMIN_IMAGES: './admin/images',
+    ADMIN_SCSS: './admin/scss',
     ADMIN_THIRDPARTY: './admin/thirdparty',
     ADMIN_JAVASCRIPT_SRC: './admin/javascript/src',
     ADMIN_JAVASCRIPT_DIST: './admin/javascript/dist',
-    FRAMEWORK: './',
+    FRAMEWORK: '.',
     FRAMEWORK_THIRDPARTY: './thirdparty',
     FRAMEWORK_DEV_INSTALL: './dev/install',
     FRAMEWORK_JAVASCRIPT_SRC: './javascript/src',
@@ -44,6 +47,19 @@ var browserifyOptions = {
     poll: true,
     plugin: [watchify]
 };
+
+// Used for autoprefixing css properties (same as Bootstrap Aplha.2 defaults)
+var supportedBrowsers = [
+    'Chrome >= 35',
+    'Firefox >= 31',
+    'Edge >= 12',
+    'Explorer >= 9',
+    'iOS >= 8',
+    'Safari >= 8',
+    'Android 2.3',
+    'Android >= 4',
+    'Opera >= 12'
+];
 
 var blueimpFileUploadConfig = {
     src: PATHS.MODULES + '/blueimp-file-upload',
@@ -139,7 +155,8 @@ function transformToUmd(files, dest) {
             .pipe(babel({
                 presets: ['es2015'],
                 moduleId: 'ss.' + path.parse(file).name,
-                plugins: ['transform-es2015-modules-umd']
+                plugins: ['transform-es2015-modules-umd'],
+                comments: false
             }))
             .on('error', notify.onError({
                 message: 'Error: <%= error.message %>',
@@ -168,7 +185,8 @@ gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
         }))
         .transform(babelify.configure({
             presets: ['es2015'],
-            ignore: /(thirdparty)/
+            ignore: /(thirdparty)/,
+            comments: false
         }))
         .on('log', function (msg) { gulpUtil.log('Finished bundle-leftandmain.js ' + msg); })
         .on('update', bundleLeftAndMain)
@@ -194,7 +212,8 @@ gulp.task('bundle-lib', function bundleLib() {
         }))
         .transform(babelify.configure({
             presets: ['es2015'],
-            ignore: /(thirdparty)/
+            ignore: /(thirdparty)/,
+            comments: false
         }))
         .on('log', function (msg) { gulpUtil.log('Finished bundle-lib.js ' + msg); })
         .on('update', bundleLib)
@@ -288,11 +307,19 @@ gulp.task('sprites', function () {
     .pipe(gulpif('*.png', gulp.dest(PATHS.ADMIN_IMAGES + '/sprites/dist'), gulp.dest(PATHS.ADMIN_SCSS)))
 });
 
+gulp.task('css', ['compile:css'], function () {
+    if (isDev) {
+        rootCompileFolders.forEach(function (folder) {
+            gulp.watch(folder + '/scss/**/*.scss', ['compile:css']);
+        });
+    }
+})
+
 /*
  * Compiles scss into css
  * Watches for changes if --development flag is given
  */
-gulp.task('css', function () {
+gulp.task('compile:css', function () {
     var outputStyle = isDev ? 'expanded' : 'compressed';
 
     var tasks = rootCompileFolders.map(function(folder) {
@@ -303,17 +330,10 @@ gulp.task('css', function () {
                     message: 'Error: <%= error.message %>'
                 }))
             )
+            .pipe(postcss([autoprefixer({ browsers: supportedBrowsers })]))
             .pipe(sourcemaps.write())
             .pipe(gulp.dest(folder + '/css'))
     });
 
-    if (isDev) {
-        rootCompileFolders.forEach(function (folder) {
-            gulp.watch(folder + 'scss/**/*.scss', ['css']);
-        });
-    }
-
     return tasks;
 });
-
-

@@ -32,6 +32,7 @@
 				this._super();
 			}
 		});
+
 		$('.import-form a.toggle-advanced').entwine({
 			onclick: function onclick(e) {
 				this.parents('form:eq(0)').find('.advanced').toggle();

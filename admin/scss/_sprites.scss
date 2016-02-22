@@ -69,36 +69,28 @@
         @extend .icon-menu-icons-24x24;
 
         &.icon-assetadmin {
-    		@include sprite($menu-icons-24x24-picture);
-			display: inline-block;
+    		@include sprite($menu-icons-24x24-picture, inline-block);
     	}
     	&.icon-cmsmain {
-    		@include sprite($menu-icons-24x24-pencil);
-			display: inline-block;
+    		@include sprite($menu-icons-24x24-pencil, inline-block);
     	}
     	&.icon-cmspagescontroller {
-    		@include sprite($menu-icons-24x24-network);
-			display: inline-block;
+    		@include sprite($menu-icons-24x24-network, inline-block);
     	}
     	&.icon-cmssettingscontroller {
-    		@include sprite($menu-icons-24x24-gears);
-			display: inline-block;
+    		@include sprite($menu-icons-24x24-gears, inline-block);
     	}
     	&.icon-securityadmin {
-    		@include sprite($menu-icons-24x24-community);
-			display: inline-block;
+    		@include sprite($menu-icons-24x24-community, inline-block);
     	}
     	&.icon-reportadmin {
-    		@include sprite($menu-icons-24x24-pie-chart);
-			display: inline-block;
+    		@include sprite($menu-icons-24x24-pie-chart, inline-block);
     	}
     	&.icon-commentadmin {
-    		@include sprite($menu-icons-24x24-blog);
-			display: inline-block;
+    		@include sprite($menu-icons-24x24-blog, inline-block);
     	}
     	&.icon-help {
-    		@include sprite($menu-icons-24x24-information);
-			display: inline-block;
+    		@include sprite($menu-icons-24x24-information, inline-block);
     	}
 	}
 
@@ -108,36 +100,28 @@
         @extend .icon-menu-icons-16x16;
 
         &.icon-assetadmin {
-    		@include sprite($menu-icons-16x16-picture);
-			display: inline-block;
+    		@include sprite($menu-icons-16x16-picture, inline-block);
     	}
     	&.icon-cmsmain {
-    		@include sprite($menu-icons-16x16-pencil);
-			display: inline-block;
+    		@include sprite($menu-icons-16x16-pencil, inline-block);
     	}
     	&.icon-cmspagescontroller {
-    		@include sprite($menu-icons-16x16-network);
-			display: inline-block;
+    		@include sprite($menu-icons-16x16-network, inline-block);
     	}
     	&.icon-cmssettingscontroller {
-    		@include sprite($menu-icons-16x16-gears);
-			display: inline-block;
+    		@include sprite($menu-icons-16x16-gears, inline-block);
     	}
     	&.icon-securityadmin {
-    		@include sprite($menu-icons-16x16-community);
-			display: inline-block;
+    		@include sprite($menu-icons-16x16-community, inline-block);
     	}
     	&.icon-reportadmin {
-    		@include sprite($menu-icons-16x16-pie-chart);
-			display: inline-block;
+    		@include sprite($menu-icons-16x16-pie-chart, inline-block);
     	}
     	&.icon-commentadmin {
-    		@include sprite($menu-icons-16x16-blog);
-			display: inline-block;
+    		@include sprite($menu-icons-16x16-blog, inline-block);
     	}
     	&.icon-help {
-    		@include sprite($menu-icons-16x16-information);
-			display: inline-block;
+    		@include sprite($menu-icons-16x16-information, inline-block);
     	}
 	}
 }

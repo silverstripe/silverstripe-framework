@@ -265,9 +265,8 @@
 
 				.toggle-children-icon {
 					@extend .icon-sprites-32x32;
-					@include sprite($sprites-32x32-menu-arrow-deselected-down);
+					@include sprite($sprites-32x32-menu-arrow-deselected-down, inline-block);
 
-					display: inline-block;
 					width: 8px;
 					height: 8px;
 					vertical-align: middle;
@@ -276,9 +275,8 @@
 				&.opened {
 					.toggle-children-icon {
 						@extend .icon-sprites-32x32;
-						@include sprite($sprites-32x32-menu-arrow-deselected-up);
+						@include sprite($sprites-32x32-menu-arrow-deselected-up, inline-block);
 						
-						display: inline-block;
 						width: 8px;
 						height: 8px;
 					}

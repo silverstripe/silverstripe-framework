@@ -277,7 +277,6 @@
 			@extend .icon-sprites-64x64;
 			@include sprite($sprites-64x64-preview);
 
-			display: block;
 			height: 41px;
 			margin: 0 auto 20px;
 			width: 50px;
