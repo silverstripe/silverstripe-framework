@@ -210,7 +210,7 @@ class Upload extends Controller {
 			$this->file->Name = basename($relativeFilePath);
 			$this->file->write();
 			$this->file->onAfterUpload();
-			$this->extend('onAfterLoad', $this->file);   //to allow extensions to e.g. create a version after an upload
+			$this->extend('onAfterLoad', $this->file, $tmpFile);   //to allow extensions to e.g. create a version after an upload
 			return true;
 		} else {
 			$this->errors[] = _t('File.NOFILESIZE', 'Filesize is zero bytes.');
