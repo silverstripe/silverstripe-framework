@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  commit: 1987c0421be543c2b62dfd74149bcfced91d5d7b
-  branch: master
-lock: false
-repository_class: Piston::Git::Repository
-repository_url: https://github.com/brandonaaron/livequery.git
