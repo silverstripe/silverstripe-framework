@@ -5,8 +5,6 @@
  * allowing you to rollback changes and view history. An example of this is
  * the pages used in the CMS.
  *
- * @property int $Version
- *
  * @package framework
  * @subpackage model
  */
@@ -124,6 +122,23 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * 		'Extension1' => 'suffix1',
 	 * 		'Extension2' => array('suffix2', 'suffix3'),
 	 * 	);
+	 *
+	 * This can also be manipulated by updating the current loaded config
+	 *
+	 * SiteTree:
+	 *   versionableExtensions:
+	 *     - Extension1:
+	 *       - suffix1
+	 *       - suffix2
+	 *     - Extension2:
+	 *       - suffix1
+	 *       - suffix2
+	 *
+	 * or programaticall:
+	 *
+	 *  Config::inst()->update($this->owner->class, 'versionableExtensions',
+	 *  array('Extension1' => 'suffix1', 'Extension2' => array('suffix2', 'suffix3')));
+	 *
 	 *
 	 * Make sure your extension has a static $enabled-property that determines if it is
 	 * processed by Versioned.
@@ -381,13 +396,18 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		// Build a list of suffixes whose tables need versioning
 		$allSuffixes = array();
-		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
-			if ($this->owner->hasExtension($versionableExtension)) {
-				$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
-				foreach ((array)$suffixes as $suffix) {
-					$allSuffixes[$suffix] = $versionableExtension;
+		$versionableExtensions = $this->owner->config()->versionableExtensions;
+		if(count($versionableExtensions)){
+
+			foreach ($versionableExtensions as $versionableExtension => $suffixes) {
+				if ($this->owner->hasExtension($versionableExtension)) {
+					$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
+					foreach ((array)$suffixes as $suffix) {
+						$allSuffixes[$suffix] = $versionableExtension;
+					}
 				}
 			}
+
 		}
 
 		// Add the default table with an empty suffix to the list (table name = class name)
@@ -608,17 +628,15 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 		$nextVersion = $nextVersion ?: 1;
 
+		// Add the version number to this data
+		$manipulation[$table]['fields']['Version'] = $nextVersion;
+		$newManipulation['fields']['Version'] = $nextVersion;
+
+		// Write AuthorID for baseclass
 		if($table === $baseDataClass) {
-			// Write AuthorID for baseclass
 			$userID = (Member::currentUser()) ? Member::currentUser()->ID : 0;
 			$newManipulation['fields']['AuthorID'] = $userID;
-
-			// Update main table version if not previously known
-			$manipulation[$table]['fields']['Version'] = $nextVersion;
 		}
-
-		// Update _versions table manipulation
-		$newManipulation['fields']['Version'] = $nextVersion;
 		$manipulation["{$table}_versions"] = $newManipulation;
 	}
 
@@ -645,19 +663,6 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 
 	public function augmentWrite(&$manipulation) {
-		// get Version number from base data table on write
-		$version = null;
-		$baseDataClass = ClassInfo::baseDataClass($this->owner->class);
-		if(isset($manipulation[$baseDataClass]['fields'])) {
-			if ($this->migratingVersion) {
-				$manipulation[$baseDataClass]['fields']['Version'] = $this->migratingVersion;
-			}
-			if (isset($manipulation[$baseDataClass]['fields']['Version'])) {
-				$version = $manipulation[$baseDataClass]['fields']['Version'];
-			}
-		}
-
-		// Update all tables
 		$tables = array_keys($manipulation);
 		foreach($tables as $table) {
 
@@ -668,26 +673,26 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			}
 
 			// Get ID field
-			$id = $manipulation[$table]['id']
-				? $manipulation[$table]['id']
-				: $manipulation[$table]['fields']['ID'];
-			if(!$id) {
-				user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
+			$id = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];
+			if(!$id) user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
+
+			if($this->migratingVersion) {
+				$manipulation[$table]['fields']['Version'] = $this->migratingVersion;
 			}
 
-			if($version < 0 || $this->_nextWriteWithoutVersion) {
-				// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
-				unset($manipulation[$table]['fields']['Version']);
-			} elseif(empty($version)) {
-				// If we haven't got a version #, then we're creating a new version.
-				// Otherwise, we're just copying a version to another table
+			// If we haven't got a version #, then we're creating a new version.
+			// Otherwise, we're just copying a version to another table
+			if(empty($manipulation[$table]['fields']['Version'])) {
 				$this->augmentWriteVersioned($manipulation, $table, $id);
 			}
 
-			// Remove "Version" column from subclasses of baseDataClass
-			if(!$this->hasVersionField($table)) {
+			// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
+			if($manipulation[$table]['fields']['Version'] < 0 || $this->_nextWriteWithoutVersion) {
 				unset($manipulation[$table]['fields']['Version']);
 			}
+
+			// For base classes of versioned data objects
+			if(!$this->hasVersionField($table)) unset($manipulation[$table]['fields']['Version']);
 
 			// Grab a version number - it should be the same across all tables.
 			if(isset($manipulation[$table]['fields']['Version'])) {
@@ -783,16 +788,21 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public function extendWithSuffix($table) {
-		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
-			if ($this->owner->hasExtension($versionableExtension)) {
-				$ext = $this->owner->getExtensionInstance($versionableExtension);
-				$ext->setOwner($this->owner);
-				$table = $ext->extendWithSuffix($table);
-				$ext->clearOwner();
+		$versionableExtensions = $this->owner->config()->versionableExtensions;
+
+		if(count($versionableExtensions)){
+			foreach ($versionableExtensions as $versionableExtension => $suffixes) {
+				if ($this->owner->hasExtension($versionableExtension)) {
+					$ext = $this->owner->getExtensionInstance($versionableExtension);
+					$ext->setOwner($this->owner);
+					$table = $ext->extendWithSuffix($table);
+					$ext->clearOwner();
+				}
 			}
 		}
 
 		return $table;
+
 	}
 
 	/**
@@ -817,64 +827,56 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * Move a database record from one stage to the other.
 	 *
-	 * @param int|string $fromStage Place to copy from.  Can be either a stage name or a version number.
-	 * @param string $toStage Place to copy to.  Must be a stage name.
-	 * @param bool $createNewVersion Set this to true to create a new version number.
-	 *  By default, the existing version number will be copied over.
+	 * @param fromStage Place to copy from.  Can be either a stage name or a version number.
+	 * @param toStage Place to copy to.  Must be a stage name.
+	 * @param createNewVersion Set this to true to create a new version number.  By default, the existing version
+	 *                         number will be copied over.
 	 */
 	public function publish($fromStage, $toStage, $createNewVersion = false) {
 		$this->owner->extend('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
 
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$baseClass = $this->owner->class;
+		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
 		$extTable = $this->extendWithSuffix($baseClass);
 
-		/** @var Versioned|DataObject $from */
 		if(is_numeric($fromStage)) {
 			$from = Versioned::get_version($baseClass, $this->owner->ID, $fromStage);
 		} else {
 			$this->owner->flushCache();
-			$from = Versioned::get_one_by_stage($baseClass, $fromStage, array(
-				"\"{$baseClass}\".\"ID\" = ?" => $this->owner->ID
-			));
-		}
-		if(!$from) {
-			user_error("Can't find {$this->owner->class}/{$this->owner->ID} in stage {$fromStage}", E_USER_WARNING);
-			return;
+			$from = Versioned::get_one_by_stage($baseClass, $fromStage, "\"{$baseClass}\".\"ID\"={$this->owner->ID}");
 		}
 
-		// Set version of new record
-		$from->forceChange();
-		if($createNewVersion) {
-			// Clear version to be automatically created on write
-			$from->Version = null;
-		} else {
-			$from->migrateVersion($from->Version);
+		$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
+		if($from) {
+			$from->forceChange();
+			if($createNewVersion) {
+				$latest = self::get_latest_version($baseClass, $this->owner->ID);
+				$this->owner->Version = $latest->Version + 1;
+			} else {
+				$from->migrateVersion($from->Version);
+			}
 
 			// Mark this version as having been published at some stage
-			$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
 			DB::prepared_query("UPDATE \"{$extTable}_versions\"
 				SET \"WasPublished\" = ?, \"PublisherID\" = ?
 				WHERE \"RecordID\" = ? AND \"Version\" = ?",
 				array(1, $publisherID, $from->ID, $from->Version)
 			);
-		}
 
-		// Change to new stage, write, and revert state
-		$oldMode = Versioned::get_reading_mode();
-		Versioned::reading_stage($toStage);
+			$oldMode = Versioned::get_reading_mode();
+			Versioned::reading_stage($toStage);
 
-		$conn = DB::get_conn();
-		if(method_exists($conn, 'allowPrimaryKeyEditing')) {
-			$conn->allowPrimaryKeyEditing($baseClass, true);
+			$conn = DB::get_conn();
+			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, true);
 			$from->write();
-			$conn->allowPrimaryKeyEditing($baseClass, false);
+			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, false);
+
+			$from->destroy();
+
+			Versioned::set_reading_mode($oldMode);
 		} else {
-			$from->write();
+			user_error("Can't find {$this->owner->URLSegment}/{$this->owner->ID} in stage $fromStage", E_USER_WARNING);
 		}
-
-		$from->destroy();
-
-		Versioned::set_reading_mode($oldMode);
 	}
 
 	/**
@@ -1274,6 +1276,12 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public function deleteFromStage($stage) {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::reading_stage($stage);
+		if (class_exists('DataChangeTrackService')) {
+			$msg = print_r(debug_backtrace(2), true);
+			$this->owner->CallStack = $msg;
+			singleton('DataChangeTrackService')->track($this->owner, 'deleteFromStage');
+		}
+
 		$clone = clone $this->owner;
 		$result = $clone->delete();
 		Versioned::set_reading_mode($oldMode);
