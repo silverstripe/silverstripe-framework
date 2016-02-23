@@ -29,6 +29,8 @@
  * }
  * </code>
  *
+ * @todo remove MySQL specific code from subclasses
+ *
  * @package framework
  * @subpackage model
  */
