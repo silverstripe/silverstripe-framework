@@ -120,6 +120,7 @@
 			fromContainingPanel: {
 				ontoggle: function(e){
 					this.toggleClass('collapsed', $(e.target).hasClass('collapsed'));
+					$(window).resize(); //Trigger jLayout
 				}
 			},
 
