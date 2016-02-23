@@ -104,6 +104,8 @@ $gf_grid_x:	16px;
 	}
 	
 	.ss-gridfield {
+		overflow-x: hidden;
+
 		.grid-levelup {
 			text-indent: -9999em;
 			a.list-parent-link{
@@ -144,7 +146,6 @@ $gf_grid_x:	16px;
 		border-collapse: separate;	
 		border-bottom: 0 none;				
 		width: 100%;
-		overflow: hidden;
 
 		thead {
 			color: darken($color-base, 50%);	
