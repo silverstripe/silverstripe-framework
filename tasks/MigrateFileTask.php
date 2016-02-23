@@ -17,6 +17,8 @@ class MigrateFileTask extends BuildTask {
 		$migrated = FileMigrationHelper::singleton()->run();
 		if($migrated) {
 			DB::alteration_message("{$migrated} File DataObjects upgraded", "changed");
+		} else {
+			DB::alteration_message("No File DataObjects need upgrading", "notice");
 		}
 	}
 

@@ -14,8 +14,16 @@ class UploadFieldTest extends FunctionalTest {
 		'File' => array('UploadFieldTest_FileExtension')
 	);
 
+	protected $oldReadingMode = null;
+
 	public function setUp() {
 		parent::setUp();
+
+		$this->loginWithPermission('ADMIN');
+
+		// Save versioned state
+		$this->oldReadingMode = Versioned::get_reading_mode();
+		Versioned::reading_stage('Stage');
 
 		// Set backend root to /UploadFieldTest
 		AssetStoreTest_SpyStore::activate('UploadFieldTest');
@@ -39,6 +47,9 @@ class UploadFieldTest extends FunctionalTest {
 
 	public function tearDown() {
 		AssetStoreTest_SpyStore::reset();
+		if($this->oldReadingMode) {
+			Versioned::set_reading_mode($this->oldReadingMode);
+		}
 		parent::tearDown();
 	}
 
@@ -46,14 +57,13 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test that files can be uploaded against an object with no relation
 	 */
 	public function testUploadNoRelation() {
-		$this->loginWithPermission('ADMIN');
-
 		$tmpFileName = 'testUploadBasic.txt';
 		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
 		$this->assertFalse($response->isError());
 		$uploadedFile = DataObject::get_one('File', array(
 			'"File"."Name"' => $tmpFileName
 		));
+
 		$this->assertFileExists(AssetStoreTest_SpyStore::getLocalPath($uploadedFile));
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 	}
@@ -62,8 +72,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test that an object can be uploaded against an object with a has_one relation
 	 */
 	public function testUploadHasOneRelation() {
-		$this->loginWithPermission('ADMIN');
-
 		// Unset existing has_one relation before re-uploading
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$record->HasOneFileID = null;
@@ -95,8 +103,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Tests that has_one relations work with subclasses of File
 	 */
 	public function testUploadHasOneRelationWithExtendedFile() {
-		$this->loginWithPermission('ADMIN');
-
 		// Unset existing has_one relation before re-uploading
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$record->HasOneExtendedFileID = null;
@@ -129,8 +135,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test that has_many relations work with files
 	 */
 	public function testUploadHasManyRelation() {
-		$this->loginWithPermission('ADMIN');
-
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 
 		// Test that uploaded files can be posted to a has_many relation
@@ -159,8 +163,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test that many_many relationships work with files
 	 */
 	public function testUploadManyManyRelation() {
-		$this->loginWithPermission('ADMIN');
-
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$relationCount = $record->ManyManyFiles()->Count();
 
@@ -195,8 +197,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * in this controller method.
 	 */
 	public function testAllowedExtensions() {
-		$this->loginWithPermission('ADMIN');
-
 		// Test invalid file
 		// Relies on Upload_Validator failing to allow this extension
 		$invalidFile = 'invalid.php';
@@ -237,8 +237,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test that has_one relations do not support multiple files
 	 */
 	public function testAllowedMaxFileNumberWithHasOne() {
-		$this->loginWithPermission('ADMIN');
-
 		// Get references for each file to upload
 		$file1 = $this->objFromFixture('File', 'file1');
 		$file2 = $this->objFromFixture('File', 'file2');
@@ -272,8 +270,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test that max number of items on has_many is validated
 	 */
 	public function testAllowedMaxFileNumberWithHasMany() {
-		$this->loginWithPermission('ADMIN');
-
 		// The 'HasManyFilesMaxTwo' field has a maximum of two files able to be attached to it.
 		// We want to add files to it until we attempt to add the third. We expect that the first
 		// two should work and the third will fail.
@@ -407,8 +403,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test that files can be deleted from has_one
 	 */
 	public function testDeleteFromHasOne() {
-		$this->loginWithPermission('ADMIN');
-
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file1 = $this->objFromFixture('File', 'file1');
 
@@ -431,8 +425,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test that files can be deleted from has_many
 	 */
 	public function testDeleteFromHasMany() {
-		$this->loginWithPermission('ADMIN');
-
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file2 = $this->objFromFixture('File', 'file2');
 		$file3 = $this->objFromFixture('File', 'file3');
@@ -457,8 +449,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test that files can be deleted from many_many and the filesystem
 	 */
 	public function testDeleteFromManyMany() {
-		$this->loginWithPermission('ADMIN');
-
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file4 = $this->objFromFixture('File', 'file4');
 		$file5 = $this->objFromFixture('File', 'file5');
@@ -496,8 +486,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test control output html
 	 */
 	public function testView() {
-		$this->loginWithPermission('ADMIN');
-
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file4 = $this->objFromFixture('File', 'file4');
 		$file5 = $this->objFromFixture('File', 'file5');
@@ -523,8 +511,6 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	public function testEdit() {
-		$memberID = $this->loginWithPermission('ADMIN');
-
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file4 = $this->objFromFixture('File', 'file4');
 		$fileNoEdit = $this->objFromFixture('File', 'file-noedit');
@@ -630,8 +616,6 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	public function testReadonly() {
-		$this->loginWithPermission('ADMIN');
-
 		$response = $this->get('UploadFieldTest_Controller');
 		$this->assertFalse($response->isError());
 
@@ -655,8 +639,6 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	public function testDisabled() {
-		$this->loginWithPermission('ADMIN');
-
 		$response = $this->get('UploadFieldTest_Controller');
 		$this->assertFalse($response->isError());
 
@@ -677,7 +659,6 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	public function testCanUpload() {
-		$this->loginWithPermission('ADMIN');
 		$response = $this->get('UploadFieldTest_Controller');
 		$this->assertFalse($response->isError());
 
@@ -697,6 +678,7 @@ class UploadFieldTest extends FunctionalTest {
 
 	public function testCanUploadWithPermissionCode() {
 		$field = UploadField::create('MyField');
+		Session::clear("loggedInAs");
 
 		$field->setCanUpload(true);
 		$this->assertTrue($field->canUpload());
@@ -714,7 +696,6 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	public function testCanAttachExisting() {
-		$this->loginWithPermission('ADMIN');
 		$response = $this->get('UploadFieldTest_Controller');
 		$this->assertFalse($response->isError());
 
@@ -740,8 +721,6 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	public function testSelect() {
-		$this->loginWithPermission('ADMIN');
-
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file4 = $this->objFromFixture('File', 'file4');
 		$fileSubfolder = $this->objFromFixture('File', 'file-subfolder');
@@ -758,8 +737,6 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	public function testSelectWithDisplayFolderName() {
-		$this->loginWithPermission('ADMIN');
-
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file4 = $this->objFromFixture('File', 'file4');
 		$fileSubfolder = $this->objFromFixture('File', 'file-subfolder');
@@ -779,8 +756,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Test that UploadField:overwriteWarning cannot overwrite Upload:replaceFile
 	 */
 	public function testConfigOverwriteWarningCannotRelaceFiles() {
-		$this->loginWithPermission('ADMIN');
-
 		Upload::config()->replaceFile = false;
 		UploadField::config()->defaultConfig = array_merge(
 			UploadField::config()->defaultConfig, array('overwriteWarning' => true)
@@ -815,8 +790,6 @@ class UploadFieldTest extends FunctionalTest {
 	 * Tests that UploadField::fileexist works
 	 */
 	public function testFileExists() {
-		$this->loginWithPermission('ADMIN');
-
 		// Check that fileexist works on subfolders
 		$nonFile = uniqid().'.txt';
 		$responseEmpty = $this->mockFileExists('NoRelationField', $nonFile);
@@ -834,7 +807,7 @@ class UploadFieldTest extends FunctionalTest {
 		$tmpFileName = 'testUploadBasic.txt';
 		$response = $this->mockFileUpload('RootFolderTest', $tmpFileName);
 		$this->assertFalse($response->isError());
-		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/315ae4c3d4/$tmpFileName");
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/.protected/315ae4c3d4/$tmpFileName");
 		$responseExists = $this->mockFileExists('RootFolderTest', $tmpFileName);
 		$responseExistsData = json_decode($responseExists->getBody());
 		$this->assertFalse($responseExists->isError());
@@ -843,7 +816,7 @@ class UploadFieldTest extends FunctionalTest {
 		// Check that uploaded files can be detected
 		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
 		$this->assertFalse($response->isError());
-		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/UploadedFiles/315ae4c3d4/$tmpFileName");
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/.protected/UploadedFiles/315ae4c3d4/$tmpFileName");
 		$responseExists = $this->mockFileExists('NoRelationField', $tmpFileName);
 		$responseExistsData = json_decode($responseExists->getBody());
 		$this->assertFalse($responseExists->isError());
@@ -855,7 +828,7 @@ class UploadFieldTest extends FunctionalTest {
 		$tmpFileNameExpected = 'test-Upload-Bad.txt';
 		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
 		$this->assertFalse($response->isError());
-		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/UploadedFiles/315ae4c3d4/$tmpFileNameExpected");
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/.protected/UploadedFiles/315ae4c3d4/$tmpFileNameExpected");
 		// With original file
 		$responseExists = $this->mockFileExists('NoRelationField', $tmpFileName);
 		$responseExistsData = json_decode($responseExists->getBody());
@@ -869,7 +842,6 @@ class UploadFieldTest extends FunctionalTest {
 
 		// Test that attempts to navigate outside of the directory return false
 		$responseExists = $this->mockFileExists('NoRelationField', "../../../../var/private/$tmpFileName");
-		$responseExistsData = json_decode($responseExists->getBody());
 		$this->assertTrue($responseExists->isError());
 		$this->assertContains('File is not a valid upload', $responseExists->getBody());
 	}
@@ -922,6 +894,7 @@ class UploadFieldTest extends FunctionalTest {
 
 		$form = new UploadFieldTestForm();
 		$form->loadDataFrom($data, true);
+
 		if($form->validate()) {
 			$record = $form->getRecord();
 			$form->saveInto($record);
@@ -994,6 +967,35 @@ class UploadFieldTest extends FunctionalTest {
 			"UploadFieldTest_Controller/Form/field/{$fileField}/item/{$fileID}/delete",
 			array()
 		);
+	}
+
+	public function get($url, $session = null, $headers = null, $cookies = null) {
+		// Inject stage=Stage into the URL, to force working on draft
+		$url = $this->addStageToUrl($url);
+		return parent::get($url, $session, $headers, $cookies);
+	}
+
+	public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
+		// Inject stage=Stage into the URL, to force working on draft
+		$url = $this->addStageToUrl($url);
+		return parent::post($url, $data, $headers, $session, $body, $cookies);
+	}
+
+	/**
+	 * Adds ?stage=Stage to url
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	protected function addStageToUrl($url) {
+		if(stripos($url, 'stage=Stage') === false) {
+			if(stripos($url, '?') === false) {
+				$url .= '?stage=Stage';
+			} else {
+				$url .= '&stage=Stage';
+			}
+		}
+		return $url;
 	}
 
 }

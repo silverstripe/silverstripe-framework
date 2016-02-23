@@ -15,6 +15,9 @@ class FolderTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 
+		$this->logInWithPermission('ADMIN');
+		Versioned::reading_stage('Stage');
+
 		// Set backend root to /FolderTest
 		AssetStoreTest_SpyStore::activate('FolderTest');
 
@@ -123,7 +126,7 @@ class FolderTest extends SapphireTest {
 
 		// File should be located in new folder
 		$this->assertEquals(
-			ASSETS_PATH . '/FolderTest/FileTest-folder2/FileTest-folder1/55b443b601/File1.txt',
+			ASSETS_PATH . '/FolderTest/.protected/FileTest-folder2/FileTest-folder1/55b443b601/File1.txt',
 			AssetStoreTest_SpyStore::getLocalPath($file1)
 		);
 	}
@@ -153,7 +156,7 @@ class FolderTest extends SapphireTest {
 
 		// File should be located in new folder
 		$this->assertEquals(
-			ASSETS_PATH . '/FolderTest/FileTest-folder1-changed/55b443b601/File1.txt',
+			ASSETS_PATH . '/FolderTest/.protected/FileTest-folder1-changed/55b443b601/File1.txt',
 			AssetStoreTest_SpyStore::getLocalPath($file1)
 		);
 	}

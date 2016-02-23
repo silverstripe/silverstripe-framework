@@ -1,4 +1,5 @@
 <?php
+use SilverStripe\Framework\Core\Extensible;
 
 /**
  * Provides view and edit forms at GridField-specific URLs.
@@ -18,8 +19,10 @@
  */
 class GridFieldDetailForm implements GridField_URLHandler {
 
+	use Extensible;
+
 	/**
-	 * @var String
+	 * @var string
 	 */
 	protected $template = 'GridFieldDetailForm';
 
@@ -40,12 +43,12 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	protected $fields;
 
 	/**
-	 * @var String
+	 * @var string
 	 */
 	protected $itemRequestClass;
 
 	/**
-	 * @var function With two parameters: $form and $component
+	 * @var callable With two parameters: $form and $component
 	 */
 	protected $itemEditFormCallback;
 
@@ -68,6 +71,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 */
 	public function __construct($name = 'DetailForm') {
 		$this->name = $name;
+		$this->constructExtensions();
 	}
 
 	/**
@@ -88,10 +92,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 			$record = Object::create($gridField->getModelClass());
 		}
 
-		$class = $this->getItemRequestClass();
-
-		$handler = Object::create($class, $gridField, $this, $record, $requestHandler, $this->name);
-		$handler->setTemplate($this->template);
+		$handler = $this->getItemRequestHandler($gridField, $record, $requestHandler);
 
 		// if no validator has been set on the GridField and the record has a
 		// CMS validator, use that.
@@ -100,6 +101,26 @@ class GridFieldDetailForm implements GridField_URLHandler {
 		}
 
 		return $handler->handleRequest($request, DataModel::inst());
+	}
+
+	/**
+	 * Build a request handler for the given record
+	 *
+	 * @param GridField $gridField
+	 * @param DataObject $record
+	 * @param Controller $requestHandler
+	 * @return GridFieldDetailForm_ItemRequest
+	 */
+	protected function getItemRequestHandler($gridField, $record, $requestHandler) {
+		$class = $this->getItemRequestClass();
+		$this->extend('updateItemRequestClass', $class, $gridField, $record, $requestHandler);
+		$handler = \Injector::inst()->createWithArgs(
+			$class,
+			array($gridField, $this, $record, $requestHandler, $this->name)
+		);
+		$handler->setTemplate($this->template);
+		$this->extend('updateItemRequestHandler', $handler);
+		return $handler;
 	}
 
 	/**
@@ -351,41 +372,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			return $controller->httpError(403);
 		}
 
-		$actions = new FieldList();
-		if($this->record->ID !== 0) {
-			if($canEdit) {
-				$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
-					->setUseButtonTag(true)
-					->addExtraClass('ss-ui-action-constructive')
-					->setAttribute('data-icon', 'accept'));
-			}
-
-			if($canDelete) {
-				$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
-					->setUseButtonTag(true)
-					->addExtraClass('ss-ui-action-destructive action-delete'));
-			}
-
-		}else{ // adding new record
-			//Change the Save label to 'Create'
-			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
-				->setUseButtonTag(true)
-				->addExtraClass('ss-ui-action-constructive')
-				->setAttribute('data-icon', 'add'));
-
-			// Add a Cancel link which is a button-like link and link back to one level up.
-			$curmbs = $this->Breadcrumbs();
-			if($curmbs && $curmbs->count()>=2){
-				$one_level_up = $curmbs->offsetGet($curmbs->count()-2);
-				$text = sprintf(
-					"<a class=\"%s\" href=\"%s\">%s</a>",
-					"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all", // CSS classes
-					$one_level_up->Link, // url
-					_t('GridFieldDetailForm.CancelBtn', 'Cancel') // label
-				);
-				$actions->push(new LiteralField('cancelbutton', $text));
-			}
-		}
+		// Build actions
+		$actions = $this->getFormActions();
 
 		$fields = $this->component->getFields();
 		if(!$fields) $fields = $this->record->getCMSFields();
@@ -463,6 +451,53 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	}
 
 	/**
+	 * Build the set of form field actions for this DataObject
+	 *
+	 * @return FieldList
+	 */
+	protected function getFormActions() {
+		$canEdit = $this->record->canEdit();
+		$canDelete = $this->record->canDelete();
+		$actions = new FieldList();
+		if($this->record->ID !== 0) {
+			if($canEdit) {
+				$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
+					->setUseButtonTag(true)
+					->addExtraClass('ss-ui-action-constructive')
+					->setAttribute('data-icon', 'accept'));
+			}
+
+			if($canDelete) {
+				$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
+					->setUseButtonTag(true)
+					->addExtraClass('ss-ui-action-destructive action-delete'));
+			}
+
+		} else { // adding new record
+			//Change the Save label to 'Create'
+			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
+				->setUseButtonTag(true)
+				->addExtraClass('ss-ui-action-constructive')
+				->setAttribute('data-icon', 'add'));
+
+			// Add a Cancel link which is a button-like link and link back to one level up.
+			$crumbs = $this->Breadcrumbs();
+			if($crumbs && $crumbs->count() >= 2){
+				$oneLevelUp = $crumbs->offsetGet($crumbs->count() - 2);
+				$text = sprintf(
+					"<a class=\"%s\" href=\"%s\">%s</a>",
+					"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all", // CSS classes
+					$oneLevelUp->Link, // url
+					_t('GridFieldDetailForm.CancelBtn', 'Cancel') // label
+				);
+				$actions->push(new LiteralField('cancelbutton', $text));
+			}
+		}
+		$this->extend('updateFormActions', $actions);
+		return $actions;
+	}
+
+	/**
 	 * Traverse the nested RequestHandlers until we reach something that's not GridFieldDetailForm_ItemRequest.
 	 * This allows us to access the Controller responsible for invoking the top-level GridField.
 	 * This should be equivalent to getting the controller off the top of the controller stack via Controller::curr(),
@@ -525,46 +560,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	}
 
 	public function doSave($data, $form) {
-		$new_record = $this->record->ID == 0;
-		$controller = $this->getToplevelController();
-		$list = $this->gridField->getList();
+		$isNewRecord = $this->record->ID == 0;
 
-		if(!$this->record->canEdit()) {
-			return $controller->httpError(403);
+		// Check permission
+		if (!$this->record->canEdit()) {
+			return $this->httpError(403);
 		}
 
-		if (isset($data['ClassName']) && $data['ClassName'] != $this->record->ClassName) {
-			$newClassName = $data['ClassName'];
-			// The records originally saved attribute was overwritten by $form->saveInto($record) before.
-			// This is necessary for newClassInstance() to work as expected, and trigger change detection
-			// on the ClassName attribute
-			$this->record->setClassName($this->record->ClassName);
-			// Replace $record with a new instance
-			$this->record = $this->record->newClassInstance($newClassName);
-		}
-
+		// Save from form data
 		try {
-			$form->saveInto($this->record);
-			$this->record->write();
-			$extraData = $this->getExtraSavedData($this->record, $list);
-			$list->add($this->record, $extraData);
-		} catch(ValidationException $e) {
-			$form->sessionMessage($e->getResult()->message(), 'bad', false);
-			$responseNegotiator = new PjaxResponseNegotiator(array(
-				'CurrentForm' => function() use(&$form) {
-					return $form->forTemplate();
-				},
-				'default' => function() use(&$controller) {
-					return $controller->redirectBack();
-				}
-			));
-			if($controller->getRequest()->isAjax()){
-				$controller->getRequest()->addHeader('X-Pjax', 'CurrentForm');
-			}
-			return $responseNegotiator->respond($controller->getRequest());
+			$this->saveFormIntoRecord($data, $form);
+		} catch (ValidationException $e) {
+			return $this->generateValidationResponse($form, $e);
 		}
-
-		// TODO Save this item into the given relationship
 
 		$link = '<a href="' . $this->Link('edit') . '">"'
 			. htmlspecialchars($this->record->Title, ENT_QUOTES)
@@ -580,7 +588,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$form->sessionMessage($message, 'good', false);
 
-		if($new_record) {
+		// Redirect after save
+		return $this->redirectAfterSave($isNewRecord);
+	}
+
+	/**
+	 * Response object for this request after a successful save
+	 *
+	 * @param bool $isNewRecord True if this record was just created
+	 * @return SS_HTTPResponse|HTMLText
+	 */
+	protected function redirectAfterSave($isNewRecord) {
+		$controller = $this->getToplevelController();
+		if($isNewRecord) {
 			return $controller->redirect($this->Link());
 		} elseif($this->gridField->getList()->byId($this->record->ID)) {
 			// Return new view, as we can't do a "virtual redirect" via the CMS Ajax
@@ -595,6 +615,69 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			return $controller->redirect($noActionURL, 302);
 		}
 	}
+
+	public function httpError($errorCode, $errorMessage = null) {
+		$controller = $this->getToplevelController();
+		return $controller->httpError($errorCode, $errorMessage);
+	}
+
+	/**
+	 * Loads the given form data into the underlying dataobject and relation
+	 *
+	 * @param array $data
+	 * @param Form $form
+	 * @throws ValidationException On error
+	 * @return DataObject Saved record
+	 */
+	protected function saveFormIntoRecord($data, $form) {
+		$list = $this->gridField->getList();
+
+		// Check object matches the correct classname
+		if (isset($data['ClassName']) && $data['ClassName'] != $this->record->ClassName) {
+			$newClassName = $data['ClassName'];
+			// The records originally saved attribute was overwritten by $form->saveInto($record) before.
+			// This is necessary for newClassInstance() to work as expected, and trigger change detection
+			// on the ClassName attribute
+			$this->record->setClassName($this->record->ClassName);
+			// Replace $record with a new instance
+			$this->record = $this->record->newClassInstance($newClassName);
+		}
+
+		// Save form and any extra saved data into this dataobject
+		$form->saveInto($this->record);
+		$this->record->write();
+		$extraData = $this->getExtraSavedData($this->record, $list);
+		$list->add($this->record, $extraData);
+
+		return $this->record;
+	}
+
+	/**
+	 * Generate a response object for a form validation error
+	 *
+	 * @param Form $form The source form
+	 * @param ValidationException $e The validation error message
+	 * @return SS_HTTPResponse
+	 * @throws SS_HTTPResponse_Exception
+	 */
+	protected function generateValidationResponse($form, $e) {
+		$controller = $this->getToplevelController();
+
+		$form->sessionMessage($e->getResult()->message(), 'bad', false);
+		$responseNegotiator = new PjaxResponseNegotiator(array(
+			'CurrentForm' => function() use(&$form) {
+				return $form->forTemplate();
+			},
+			'default' => function() use(&$controller) {
+				return $controller->redirectBack();
+			}
+		));
+		if($controller->getRequest()->isAjax()){
+			$controller->getRequest()->addHeader('X-Pjax', 'CurrentForm');
+		}
+		return $responseNegotiator->respond($controller->getRequest());
+	}
+
 
 	public function doDelete($data, $form) {
 		$title = $this->record->Title;

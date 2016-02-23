@@ -460,6 +460,7 @@ class RequestHandler extends ViewableData {
 	 * @param int $errorCode
 	 * @param string $errorMessage Plaintext error message
 	 * @uses SS_HTTPResponse_Exception
+	 * @throws SS_HTTPResponse_Exception
 	 */
 	public function httpError($errorCode, $errorMessage = null) {
 

@@ -1,0 +1,6 @@
+---
+Name: versioning
+---
+GridFieldDetailForm:
+  extensions:
+    - VersionedGridFieldDetailForm

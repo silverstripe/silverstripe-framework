@@ -34,6 +34,8 @@ class FileMigrationHelper extends Object {
 
 		// Loop over all files
 		$count = 0;
+		$originalState = \Versioned::get_reading_mode();
+		\Versioned::reading_stage('Stage');
 		$filenameMap = $this->getFilenameArray();
 		foreach($this->getFileQuery() as $file) {
 			// Get the name of the file to import
@@ -43,6 +45,7 @@ class FileMigrationHelper extends Object {
 				$count++;
 			}
 		}
+		\Versioned::set_reading_mode($originalState);
 		return $count;
 	}
 
@@ -73,8 +76,9 @@ class FileMigrationHelper extends Object {
 			$this->setFilename($result['Filename']);
 		}
 
-		// Save
+		// Save and publish
 		$file->write();
+		$file->doPublish();
 		return true;
 	}
 

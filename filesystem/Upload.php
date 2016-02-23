@@ -69,6 +69,13 @@ class Upload extends Controller {
 	protected $errors = array();
 
 	/**
+	 * Default visibility to assign uploaded files
+	 *
+	 * @var string
+	 */
+	protected $defaultVisibility = AssetStore::VISIBILITY_PROTECTED;
+
+	/**
 	 * A foldername relative to /assets,
 	 * where all uploaded files are stored by default.
 	 *
@@ -198,7 +205,10 @@ class Upload extends Controller {
 		$conflictResolution = $this->replaceFile
 			? AssetStore::CONFLICT_OVERWRITE
 			: AssetStore::CONFLICT_RENAME;
-		$config = array('conflict' => $conflictResolution);
+		$config = array(
+			'conflict' => $conflictResolution,
+			'visibility' => $this->getDefaultVisibility()
+		);
 		return $container->setFromLocalFile($tmpFile['tmp_name'], $filename, null, null, $config);
 	}
 
@@ -210,7 +220,7 @@ class Upload extends Controller {
 	 * @param string $folderPath
 	 * @return string|false Value of filename tuple, or false if invalid
 	 */
-	protected function getValidFilename($tmpFile, $folderPath = false) {
+	protected function getValidFilename($tmpFile, $folderPath = null) {
 		if(!is_array($tmpFile)) {
 			throw new InvalidArgumentException(
 				"Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype"
@@ -245,6 +255,7 @@ class Upload extends Controller {
 	 *
 	 * @param string $filename
 	 * @return string $filename A filename safe to write to
+	 * @throws Exception
 	 */
 	protected function resolveExistingFile($filename) {
 		// Create a new file record (or try to retrieve an existing one)
@@ -252,7 +263,7 @@ class Upload extends Controller {
 			$fileClass = File::get_class_for_file_extension(
 				File::get_file_extension($filename)
 			);
-			$this->file = $fileClass::create();
+			$this->file = Object::create($fileClass);
 		}
 
 		// Skip this step if not writing File dataobjects
@@ -288,14 +299,14 @@ class Upload extends Controller {
 	}
 
 	/**
-	 * @return Boolean
+	 * @param bool $replace
 	 */
-	public function setReplaceFile($bool) {
-		$this->replaceFile = $bool;
+	public function setReplaceFile($replace) {
+		$this->replaceFile = $replace;
 	}
 
 	/**
-	 * @return Boolean
+	 * @return bool
 	 */
 	public function getReplaceFile() {
 		return $this->replaceFile;
@@ -366,6 +377,28 @@ class Upload extends Controller {
 	 */
 	public function getErrors() {
 		return $this->errors;
+	}
+
+	/**
+	 * Get default visibility for uploaded files. {@see AssetStore}
+	 * One of the values of AssetStore::VISIBILITY_* constants
+	 *
+	 * @return string
+	 */
+	public function getDefaultVisibility() {
+		return $this->defaultVisibility;
+	}
+
+	/**
+	 * Assign default visibility for uploaded files. {@see AssetStore}
+	 * One of the values of AssetStore::VISIBILITY_* constants
+	 *
+	 * @param string $visibility
+	 * @return $this
+	 */
+	public function setDefaultVisibility($visibility) {
+		$this->defaultVisibility = $visibility;
+		return $this;
 	}
 
 }
@@ -497,7 +530,6 @@ class Upload_Validator {
 			// make sure all extensions are lowercase
 			$rules = array_change_key_case($rules, CASE_LOWER);
 			$finalRules = array();
-			$tmpSize = 0;
 
 			foreach ($rules as $rule => $value) {
 				if (is_numeric($value)) {
@@ -534,7 +566,9 @@ class Upload_Validator {
 	 * @param array $rules List of extensions
 	 */
 	public function setAllowedExtensions($rules) {
-		if(!is_array($rules)) return false;
+		if(!is_array($rules)) {
+			return;
+		}
 
 		// make sure all rules are lowercase
 		foreach($rules as &$rule) $rule = strtolower($rule);

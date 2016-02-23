@@ -61,16 +61,27 @@ use SilverStripe\Filesystem\Storage\AssetStore;
  *
  * @method File Parent() Returns parent File
  * @method Member Owner() Returns Member object of file owner.
+ *
+ * @mixin Hierarchy
+ * @mixin Versioned
  */
 class File extends DataObject implements ShortcodeHandler, AssetContainer {
 
 	use ImageManipulation;
 
-	private static $default_sort ="\"Name\"";
+	private static $default_sort = "\"Name\"";
 
-	private static $singular_name ="File";
+	private static $singular_name = "File";
 
-	private static $plural_name ="Files";
+	private static $plural_name = "Files";
+
+	/**
+	 * Permissions necessary to view files outside of the live stage (e.g. archive / draft stage).
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $non_live_permissions = array('CMS_ACCESS_LeftAndMain', 'CMS_ACCESS_AssetAdmin', 'VIEW_DRAFT_CONTENT');
 
 	private static $db = array(
 		"Name" =>"Varchar(255)",
@@ -81,8 +92,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	);
 
 	private static $has_one = array(
-		"Parent" =>"File",
-		"Owner" =>"Member"
+		"Parent" => "File",
+		"Owner" => "Member"
 	);
 	
 	private static $defaults = array(
@@ -91,6 +102,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 
 	private static $extensions = array(
 		"Hierarchy",
+		"Versioned"
 	);
 
 	private static $casting = array(
@@ -202,18 +214,30 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	 * @return string Result of the handled shortcode
 	 */
 	public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array()) {
-		if(!isset($arguments['id']) || !is_numeric($arguments['id'])) return;
+		if(!isset($arguments['id']) || !is_numeric($arguments['id'])) {
+			return null;
+		}
 
+		/** @var File|SiteTree $record */
 		$record = DataObject::get_by_id('File', $arguments['id']);
 
+		// Check record for common errors
+		$errorCode = null;
 		if (!$record) {
-			if(class_exists('ErrorPage')) {
-				$record = ErrorPage::get()->filter("ErrorCode", 404)->first();
+			$errorCode = 404;
+		} elseif(!$record->canView()) {
+			$errorCode = 403;
+		}
+		if($errorCode) {
+			$result = static::singleton()->invokeWithExtensions('getErrorRecordFor', $errorCode);
+			$result = array_filter($result);
+			if($result) {
+				$record = reset($result);
 			}
+		}
 
-			if (!$record) {
-				return; // There were no suitable matches at all.
-			}
+		if (!$record) {
+			return null; // There were no suitable matches at all.
 		}
 
 		// build the HTML tag
@@ -305,10 +329,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	}
 
 	/**
-	 * @todo Enforce on filesystem URL level via mod_rewrite
-	 *
 	 * @param Member $member
-	 * @return boolean
+	 * @return bool
 	 */
 	public function canView($member = null) {
 		if(!$member) {
@@ -401,7 +423,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 					ReadonlyField::create(
 						'ClickableURL',
 						_t('AssetTableField.URL','URL'),
-						sprintf('<a href="%s" target="_blank">%s</a>', $this->Link(), $this->RelativeLink())
+						sprintf('<a href="%s" target="_blank">%s</a>', $this->Link(), $this->Link())
 					)
 						->setDontEscape(true),
 					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':'),
@@ -505,8 +527,6 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	 * Make sure the file has a name
 	 */
 	protected function onBeforeWrite() {
-		parent::onBeforeWrite();
-
 		// Set default owner
 		if(!$this->isInDB() && !$this->OwnerID) {
 			$this->OwnerID = Member::currentUserID();
@@ -519,6 +539,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 
 		// Propegate changes to the AssetStore and update the DBFile field
 		$this->updateFilesystem();
+
+		parent::onBeforeWrite();
 	}
 
 	/**
@@ -560,12 +582,6 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 			$this->setFilename($pathAfter);
 		}
 		return true;
-	}
-
-	protected function onAfterWrite() {
-		parent::onAfterWrite();
-		// Update any database references
-		$this->updateLinks();
 	}
 
 	/**
@@ -643,15 +659,6 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	}
 
 	/**
-	 * Trigger update of all links to this file
-	 *
-	 * If CMS Module is installed, {@see SiteTreeFileExtension::updateLinks}
-	 */
-	protected function updateLinks() {
-		$this->extend('updateLinks');
-	}
-
-	/**
 	 * Gets the URL of this file
 	 *
 	 * @return string
@@ -705,6 +712,19 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		}
 		
 		return $this->Name;
+	}
+
+	/**
+	 * Ensure that parent folders are published before this one is published
+	 *
+	 * @todo Solve this via triggered publishing / ownership in the future
+	 */
+	public function onBeforePublish() {
+		// Relies on Parent() returning the stage record
+		$parent = $this->Parent();
+		if($parent && $parent->exists()) {
+			$parent->doPublish();
+		}
 	}
 
 	/**

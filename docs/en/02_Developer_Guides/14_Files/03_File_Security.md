@@ -278,23 +278,27 @@ You can customise this with the below config:
 ### Configuring: Archive behaviour
 
 By default, the default extension `AssetControlExtension` will control the disposal of assets
-attached to objects when those objects are deleted. For example, unpublished versioned objects
-will automatically have their attached assets moved to the protected store. The deletion of 
-draft or unversioned objects will have those assets permanantly deleted (along with all variants).
+attached to objects when those objects are archived. For example, unpublished versioned objects
+will automatically have their attached assets moved to the protected store. The archive of 
+draft or (or deletion of unversioned objects) will have those assets permanantly deleted
+(along with all variants).
 
-In some cases, it may be preferable to have any deleted assets archived for versioned dataobjects,
-rather than deleted. This uses more disk storage, but will allow the full recovery of archived
+Note that regardless of this setting, the database record will still be archived in the
+version history for all Versioned DataObjects.
+
+In some cases, it may be preferable to have any assets retained for archived versioned dataobjects,
+instead of deleting them. This uses more disk storage, but will allow the full recovery of archived
 records and files.
 
-This can be applied to DataObjects on a case by case basis by setting the `archive_assets`
+This can be applied to DataObjects on a case by case basis by setting the `keep_archived_assets`
 config to true on that class. Note that this feature only works with dataobjects with
 the `Versioned` extension.
 
 
     :::php
     class MyVersiondObject extends DataObject {
-        /** Enable archiving */
-        private static $archive_assets = true;
+        /** Ensure assets are archived along with the DataObject */
+        private static $keep_archived_assets = true;
         /** Versioned */
         private static $extensions = array('Versioned');
     }
