@@ -112,6 +112,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		'PublisherID' => true,
 	);
 
+
 	/**
 	 * An array of DataObject extensions that may require versioning for extra tables
 	 * The array value is a set of suffixes to form these table names, assuming a preceding '_'.
@@ -122,6 +123,23 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * 		'Extension1' => 'suffix1',
 	 * 		'Extension2' => array('suffix2', 'suffix3'),
 	 * 	);
+	 *
+	 * This can also be manipulated by updating the current loaded config
+	 *
+	 * SiteTree:
+	 *   versionableExtensions:
+	 *     - Extension1:
+	 *       - suffix1
+	 *       - suffix2
+	 *     - Extension2:
+	 *       - suffix1
+	 *       - suffix2
+	 *
+	 * or programatically:
+	 *
+	 *  Config::inst()->update($this->owner->class, 'versionableExtensions',
+	 *  array('Extension1' => 'suffix1', 'Extension2' => array('suffix2', 'suffix3')));
+	 *
 	 *
 	 * Make sure your extension has a static $enabled-property that determines if it is
 	 * processed by Versioned.
@@ -387,13 +405,18 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		// Build a list of suffixes whose tables need versioning
 		$allSuffixes = array();
-		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
-			if ($this->owner->hasExtension($versionableExtension)) {
-				$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
-				foreach ((array)$suffixes as $suffix) {
-					$allSuffixes[$suffix] = $versionableExtension;
+		$versionableExtensions = $this->owner->config()->versionableExtensions;
+		if(count($versionableExtensions)){
+
+			foreach ($versionableExtensions as $versionableExtension => $suffixes) {
+				if ($this->owner->hasExtension($versionableExtension)) {
+					$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
+					foreach ((array)$suffixes as $suffix) {
+						$allSuffixes[$suffix] = $versionableExtension;
+					}
 				}
 			}
+
 		}
 
 		// Add the default table with an empty suffix to the list (table name = class name)
@@ -864,12 +887,16 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public function extendWithSuffix($table) {
-		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
-			if ($this->owner->hasExtension($versionableExtension)) {
-				$ext = $this->owner->getExtensionInstance($versionableExtension);
-				$ext->setOwner($this->owner);
-				$table = $ext->extendWithSuffix($table);
-				$ext->clearOwner();
+		$versionableExtensions = $this->owner->config()->versionableExtensions;
+
+		if(count($versionableExtensions)){
+			foreach ($versionableExtensions as $versionableExtension => $suffixes) {
+				if ($this->owner->hasExtension($versionableExtension)) {
+					$ext = $this->owner->getExtensionInstance($versionableExtension);
+					$ext->setOwner($this->owner);
+					$table = $ext->extendWithSuffix($table);
+					$ext->clearOwner();
+				}
 			}
 		}
 
