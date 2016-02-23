@@ -4,6 +4,7 @@
  * @subpackage formatters
  */
 class JSONDataFormatter extends DataFormatter {
+
 	/**
 	 * @config
 	 * @todo pass this from the API to the data formatter somehow
@@ -29,23 +30,23 @@ class JSONDataFormatter extends DataFormatter {
 	/**
 	 * Generate a JSON representation of the given {@link DataObject}.
 	 *
-	 * @param DataObject $obj	The object
-	 * @param Array $fields		If supplied, only fields in the list will be returned
-	 * @param $relations		Not used
+	 * @param DataObjectInterface $obj The object
+	 * @param array $fields If supplied, only fields in the list will be returned
+	 * @param array $relations Not used
 	 * @return String JSON
 	 */
 	public function convertDataObject(DataObjectInterface $obj, $fields = null, $relations = null) {
-		return Convert::array2json($this->convertDataObjectToJSONObject($obj, $fields, $relations));
+		return Convert::raw2json($this->convertDataObjectToJSONObject($obj, $fields, $relations));
 	}
 
 	/**
 	 * Internal function to do the conversion of a single data object. It builds an empty object and dynamically
 	 * adds the properties it needs to it. If it's done as a nested array, json_encode or equivalent won't use
 	 * JSON object notation { ... }.
-	 * @param DataObjectInterface $obj
-	 * @param  $fields
-	 * @param  $relations
-	 * @return EmptyJSONObject
+	 * @param DataObjectInterface|DataObject $obj
+	 * @param array $fields
+	 * @param array $relations
+	 * @return stdClass
 	 */
 	public function convertDataObjectToJSONObject(DataObjectInterface $obj, $fields = null, $relations = null) {
 		$className = $obj->class;
@@ -132,6 +133,7 @@ class JSONDataFormatter extends DataFormatter {
 	 * Generate a JSON representation of the given {@link SS_List}.
 	 *
 	 * @param SS_List $set
+	 * @param array $fields
 	 * @return String XML
 	 */
 	public function convertDataObjectSet(SS_List $set, $fields = null) {
@@ -146,7 +148,7 @@ class JSONDataFormatter extends DataFormatter {
 			"items" => $items
 		));
 
-		return Convert::array2json($serobj);
+		return Convert::raw2json($serobj);
 	}
 
 	public function convertStringToArray($strData) {

@@ -97,11 +97,13 @@ abstract class DataFormatter extends Object {
 		}
 		arsort($sortedClasses);
 		foreach($sortedClasses as $className => $priority) {
+			/** @var DataFormatter $formatter */
 			$formatter = new $className();
 			if(in_array($extension, $formatter->supportedExtensions())) {
 				return $formatter;
 			}
 		}
+		return null;
 	}
 
 	/**
@@ -133,11 +135,13 @@ abstract class DataFormatter extends Object {
 		}
 		arsort($sortedClasses);
 		foreach($sortedClasses as $className => $priority) {
+			/** @var DataFormatter $formatter */
 			$formatter = new $className();
 			if(in_array($mimeType, $formatter->supportedMimeTypes())) {
 				return $formatter;
 			}
 		}
+		return null;
 	}
 
 	/**
@@ -237,7 +241,7 @@ abstract class DataFormatter extends Object {
 	 * @todo Allow for custom getters on the processed object (currently filtered through inheritedDatabaseFields)
 	 * @todo Field level permission checks
 	 *
-	 * @param DataObject $obj
+	 * @param DataObjectInterface|DataObject $obj
 	 * @return array
 	 */
 	protected function getFieldsForObj($obj) {
@@ -253,7 +257,7 @@ abstract class DataFormatter extends Object {
 			}
 		} else {
 			// by default, all database fields are selected
-			$dbFields = $obj->inheritedDatabaseFields();
+			$dbFields = $obj->db();
 		}
 
 		if(is_array($this->customAddFields)) {
@@ -266,7 +270,7 @@ abstract class DataFormatter extends Object {
 		}
 
 		// add default required fields
-		$dbFields = array_merge($dbFields, array('ID'=>'Int'));
+		$dbFields = array_merge($dbFields, array('ID' => 'Int'));
 
 		if(is_array($this->removeFields)) {
 			$dbFields = array_diff_key($dbFields, array_combine($this->removeFields,$this->removeFields));
@@ -277,27 +281,37 @@ abstract class DataFormatter extends Object {
 
 	/**
 	 * Return an array of the extensions that this data formatter supports
+	 *
+	 * @return array
 	 */
 	abstract public function supportedExtensions();
 
+	/**
+	 * Get supported mime types
+	 *
+	 * @return array
+	 */
 	abstract public function supportedMimeTypes();
 
-
 	/**
-	 * Convert a single data object to this format.  Return a string.
+	 * Convert a single data object to this format.
+	 *
+	 * @param DataObjectInterface $do
+	 * @return string
 	 */
 	abstract public function convertDataObject(DataObjectInterface $do);
 
 	/**
-	 * Convert a data object set to this format.  Return a string.
+	 * Convert a data object set to this format.
+	 *
+	 * @param SS_List $set
+	 * @return string
 	 */
 	abstract public function convertDataObjectSet(SS_List $set);
 
 	/**
 	 * @param string $strData HTTP Payload as string
+	 * @return array
 	 */
-	public function convertStringToArray($strData) {
-		user_error('DataFormatter::convertStringToArray not implemented on subclass', E_USER_ERROR);
-	}
-
+	abstract public function convertStringToArray($strData);
 }
