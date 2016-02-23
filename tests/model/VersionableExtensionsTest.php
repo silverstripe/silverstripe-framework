@@ -42,7 +42,8 @@ class VersionableExtensionsTest extends SapphireTest
 
 	public function testTablesAreCreated()
 	{
-		$tables = DB::tableList();
+		$tables = DB::table_list();
+
 		$check = array(
 			'versionableextensionstest_dataobject_test1_live', 'versionableextensionstest_dataobject_test2_live', 'versionableextensionstest_dataobject_test3_live',
 			'versionableextensionstest_dataobject_test1_versions', 'versionableextensionstest_dataobject_test2_versions', 'versionableextensionstest_dataobject_test3_versions'
@@ -50,7 +51,8 @@ class VersionableExtensionsTest extends SapphireTest
 
 		// Check that the right tables exist
 		foreach ($check as $tableName) {
-			$this->assertContains($tableName, array_values($tables), 'Contains table: '.$tableName);
+
+			$this->assertContains($tableName, array_keys($tables), 'Contains table: '.$tableName);
 		}
 
 	}
