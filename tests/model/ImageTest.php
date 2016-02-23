@@ -15,13 +15,11 @@ class ImageTest extends SapphireTest {
 	protected static $fixture_file = 'ImageTest.yml';
 
 	public function setUp() {
-		if(get_class($this) == "ImageTest") {
-			$this->skipTest = true;
-		}
-
 		parent::setUp();
 
-		if($this->skipTest) {
+		// Execute specific subclass
+		if(get_class($this) == "ImageTest") {
+			$this->markTestSkipped(sprintf('Skipping %s ', get_class($this)));
 			return;
 		}
 
