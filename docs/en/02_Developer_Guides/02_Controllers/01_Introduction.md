@@ -159,7 +159,7 @@ Each controller should define a `Link()` method. This should be used to avoid ha
 	}
 
 <div class="info" markdown="1">
-The [api:Controller::join_links] is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.
+The [api:Controller::join_links()] is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.
 </div>
 
 ## Related Documentation

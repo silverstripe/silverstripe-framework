@@ -349,7 +349,7 @@ attributes, or the jQuery.metadata plugin). For returning status messages, pleas
 
 Only return evaluated JavaScript snippets if unavoidable. Most of the time you can just pass data around, and let the
 clientside react to changes appropriately without telling it directly through JavaScript in AJAX responses. Don't use
-the `[api:Form]` SilverStripe class, which is built solely around
+the [api:Form] SilverStripe class, which is built solely around
 this inflexible concept.
 
 Example: Autocomplete input field loading page matches through AJAX
@@ -420,7 +420,7 @@ JavaScript:
 
 Although they are the minority of cases, there are times when a simple HTML fragment isn't enough.  For example, if you
 have server side code that needs to trigger the update of a couple of elements in the CMS left-hand tree, it would be
-inefficient to send back the HTML of entire tree. SilverStripe can serialize to and from JSON (see the `[api:Convert]` class), and jQuery deals very well with it through
+inefficient to send back the HTML of entire tree. SilverStripe can serialize to and from JSON (see the [api:Convert] class), and jQuery deals very well with it through
 [jQuery.getJSON()](http://docs.jquery.com/Ajax/jQuery.getJSON#urldatacallback), as long as the HTTP content-type is
 properly set.
 

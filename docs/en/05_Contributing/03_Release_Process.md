@@ -51,7 +51,7 @@ so we strive for giving ample warning on any upcoming changes through a "depreca
 How to deprecate an API:
 
 *  Add a `@deprecated` item to the docblock tag, with a `{@link <class>}` item pointing to the new API to use.
-*  Update the deprecated code to throw a `[api:Deprecation::notice()]` error.
+*  Update the deprecated code to throw a [api:Deprecation::notice()] error.
 *  Both the docblock and error message should contain the **target version** where the functionality is removed.
    So, if you're committing the change to a *3.1* minor release, the target version will be *4.0*. 
 *  Deprecations should not be committed to patch releases

@@ -461,7 +461,7 @@ Occasionally, the system described above won't let you do exactly what you need 
 methods that manipulate the SQL query at a lower level.  When using these, please ensure that all table and field names 
 are escaped with double quotes, otherwise some DB backends (e.g. PostgreSQL) won't work.
 
-Under the hood, query generation is handled by the `[api:DataQuery]` class. This class does provide more direct access 
+Under the hood, query generation is handled by the [api:DataQuery] class. This class does provide more direct access 
 to certain SQL features that `DataList` abstracts away from you.
 
 In general, we advise against using these methods unless it's absolutely necessary. If the ORM doesn't do quite what 
@@ -573,7 +573,7 @@ sub-classes of the base class (including the base class itself).
 example above, NewsSection didn't have its own data, so an extra table would be redundant.
 
 *  In all the tables, ID is the primary key.  A matching ID number is used for all parts of a particular record: 
-record #2 in Page refers to the same object as record #2 in `[api:SiteTree]`.
+record #2 in Page refers to the same object as record #2 in [api:SiteTree].
 
 To retrieve a news article, SilverStripe joins the [api:SiteTree], [api:Page] and NewsPage tables by their ID fields. 
 

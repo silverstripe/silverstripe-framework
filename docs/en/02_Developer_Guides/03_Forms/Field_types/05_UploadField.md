@@ -321,7 +321,7 @@ The `Upload_Validator` class has configuration options for setting the `default_
 You can specify the file extension or the app category (as specified in the `File` class) in square brackets. It supports setting the file size in bytes or using the syntax supported by `File::ini2bytes()`.
 
 
-You can also configure the underlying `[api:Upload]` class, by using the YAML config system.
+You can also configure the underlying [api:Upload] class, by using the YAML config system.
 
 ```yaml
 	Upload:

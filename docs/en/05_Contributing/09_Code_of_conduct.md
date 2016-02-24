@@ -57,4 +57,4 @@ https://www.djangoproject.com/conduct/
 
 http://web.archive.org/web/20141109123859/http://speakup.io/coc.html
 
-http://www.crnhq.org/pages.php?pID=10
+http://www.crnhq.org/files/66138/files/Handouts%20and%20Posters/ResolveTheConflictGuideposter.pdf

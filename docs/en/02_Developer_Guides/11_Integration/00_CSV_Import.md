@@ -26,7 +26,7 @@ Feature overview:
 
 You can use the CsvBulkLoader without subclassing or other customizations, if the column names
 in your CSV file match `$db` properties in your dataobject. E.g. a simple import for the
-`[api:Member]` class could have this data in a file:
+[api:Member] class could have this data in a file:
 
 	FirstName,LastName,Email
 	Donald,Duck,donald@disney.com
@@ -38,7 +38,7 @@ The loader would be triggered through the `load()` method:
 	$loader = new CsvBulkLoader('Member');
 	$result = $loader->load('<my-file-path>');
 
-By the way, you can import `[api:Member]` and `[api:Group]` data through `http://localhost/admin/security`
+By the way, you can import [api:Member] and [api:Group] data through `http://localhost/admin/security`
 interface out of the box.
 
 ## Import through ModelAdmin
@@ -52,7 +52,7 @@ The simplest way to use [api:CsvBulkLoader] is through a [api:ModelAdmin] interf
 	      'Player'
 	   );
 	   private static $model_importers = array(
-	      'Player' => 'PlayerCsvBulkLoader',
+	      'Player' => 'CsvBulkLoader',
 	   );
 	   private static $url_segment = 'players';
 	}

@@ -3,15 +3,15 @@ summary: Output records from your database as an RSS Feed.
 
 # RSS Feed
 
-Generating RSS / Atom-feeds is a matter of rendering a `[api:SS_List]` instance through the `[api:RSSFeed]` class.
+Generating RSS / Atom-feeds is a matter of rendering a [api:SS_List] instance through the [api:RSSFeed] class.
 
-The `[api:RSSFeed]` class doesn't limit you to generating article based feeds, it is just as easy to create a feed of 
-your current staff members, comments or any other custom `[api:DataObject]` subclasses you have defined. The only
+The [api:RSSFeed] class doesn't limit you to generating article based feeds, it is just as easy to create a feed of 
+your current staff members, comments or any other custom [api:DataObject] subclasses you have defined. The only
 logical limitation here is that every item in the RSS-feed should be accessible through a URL on your website, so it's 
-advisable to just create feeds from subclasses of `[api:SiteTree]`.
+advisable to just create feeds from subclasses of [api:SiteTree].
 
 <div class="warning" markdown="1">
-If you wish to generate an RSS feed that contains a `[api:DataObject]`, ensure you define a `AbsoluteLink` method on
+If you wish to generate an RSS feed that contains a [api:DataObject], ensure you define a `AbsoluteLink` method on
 the object.
 </div>
 
@@ -47,7 +47,7 @@ will normally go in your `Controllers` `init` method.
 
 ### Showing the 10 most recently updated pages
 
-You can use `[api:RSSFeed]` to easily create a feed showing your latest Page updates. The following example adds a page
+You can use [api:RSSFeed] to easily create a feed showing your latest Page updates. The following example adds a page
 `/home/rss/` which displays an XML file the latest updated pages.
 
 **mysite/code/Page.php**
@@ -87,7 +87,7 @@ You can use `[api:RSSFeed]` to easily create a feed showing your latest Page upd
 
 ### Rendering DataObjects in a RSSFeed
 
-DataObjects can be rendered in the feed as well, however, since they aren't explicitly `[api:SiteTree]` subclasses we 
+DataObjects can be rendered in the feed as well, however, since they aren't explicitly [api:SiteTree] subclasses we 
 need to include a function `AbsoluteLink` to allow the RSS feed to link through to the item.
 
 <div class="info">
@@ -193,4 +193,4 @@ As we've added a new template (PlayersRss.ss) make sure you clear your SilverStr
 
 ## API Documentation
 
-* `[api:RSSFeed]`
+* [api:RSSFeed]
