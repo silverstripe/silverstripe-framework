@@ -301,8 +301,6 @@ lt:
     FROMWEB: 'Iš interneto'
     FindInFolder: 'Rasti kataloge'
     IMAGEALT: 'Alternatyvus tekstas (alt)'
-    IMAGEALTTEXT: 'Alternatyvus tekstas (alt) - rodomas, jeigu nepavyko parodyti paveikslėlio'
-    IMAGEALTTEXTDESC: 'Rodomas, jeigu nepavyko parodyti paveikslėlio'
     IMAGEDIMENSIONS: Matmenys
     IMAGEHEIGHTPX: Aukštis
     IMAGETITLE: 'Pavadinimo tekstas (tooltip) - papildomai informacijai apie paveikslėlį'
@@ -336,13 +334,11 @@ lt:
   LeftAndMain:
     CANT_REORGANISE: 'Jūs neturite leidimo keisti aukščiausio lygio puslapių. Jūsų pakeitimai neišsaugoti.'
     DELETED: Ištrinta.
-    DropdownBatchActionsDefault: 'Pasirinkite veiksmą...'
+    DropdownBatchActionsDefault: Veiksmai
     HELP: Pagalba
-    PAGETYPE: 'Puslapio tipas'
     PERMAGAIN: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'
     PERMALREADY: 'Deja, bet Jūs negalite patekti į šią TVS dalį. Jeigu norite prisijungti kitu vartotoju, tai atlikite žemiau.'
     PERMDEFAULT: 'Jūs turite būti prisijungę, norėdami pasiekti administravimo zoną; prašome suvesti prisijungimo duomenis į žemiau esančius laukelius.'
-    PLEASESAVE: 'Prašome išsaugoti puslapį: Šis puslapis negali būti atnaujintas, nes jis dar nėra išsaugotas.'
     PreviewButton: Peržiūra
     REORGANISATIONSUCCESSFUL: 'Puslapių medis pertvarkytas sėkmingai.'
     SAVEDUP: Išsaugota.
