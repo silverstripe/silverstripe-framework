@@ -115,7 +115,7 @@ class Group extends DataObject {
 			$config->getComponentByType('GridFieldAddExistingAutocompleter')
 				->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
 			$config->getComponentByType('GridFieldDetailForm')
-				->setValidator(new Member_Validator())
+				->setValidator(Member_Validator::create())
 				->setItemEditFormCallback(function($form, $component) use($group) {
 					$record = $form->getRecord();
 					$groupsField = $form->Fields()->dataFieldByName('DirectGroups');
