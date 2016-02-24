@@ -678,7 +678,7 @@ class MemberTest extends FunctionalTest {
 		$newAdminGroup = new Group(array('Title' => 'newadmin'));
 		$newAdminGroup->write();
 		Permission::grant($newAdminGroup->ID, 'ADMIN');
-		
+
 		// Test staff member can't be added to admin groups
 		$this->assertFalse($staffMember->inGroup($newAdminGroup));
 		$staffMember->Groups()->setByIDList(array($newAdminGroup->ID));
@@ -842,7 +842,135 @@ class MemberTest extends FunctionalTest {
 		}
 	}
 
-	public function testCustomMemberValidator() {
+	public function testMemberValidator()
+	{
+		// clear custom requirements for this test
+		Config::inst()->update('Member_Validator', 'customRequired', null);
+		$memberA = $this->objFromFixture('Member', 'admin');
+		$memberB = $this->objFromFixture('Member', 'test');
+
+		// create a blank form
+		$form = new MemberTest_ValidatorForm();
+
+		$validator = new Member_Validator();
+		$validator->setForm($form);
+
+		// Simulate creation of a new member via form, but use an existing member identifier
+		$fail = $validator->php(array(
+			'FirstName' => 'Test',
+			'Email' => $memberA->Email
+		));
+
+		$this->assertFalse(
+			$fail,
+			'Member_Validator must fail when trying to create new Member with existing Email.'
+		);
+
+		// populate the form with values from another member
+		$form->loadDataFrom($memberB);
+
+		// Assign the validator to an existing member
+		// (this is basically the same as passing the member ID with the form data)
+		$validator->setForMember($memberB);
+
+		// Simulate update of a member via form and use an existing member Email
+		$fail = $validator->php(array(
+			'FirstName' => 'Test',
+			'Email' => $memberA->Email
+		));
+
+		// Simulate update to a new Email address
+		$pass1 = $validator->php(array(
+			'FirstName' => 'Test',
+			'Email' => 'membervalidatortest@testing.com'
+		));
+
+		// Pass in the same Email address that the member already has. Ensure that case is valid
+		$pass2 = $validator->php(array(
+			'FirstName' => 'Test',
+			'Surname' => 'User',
+			'Email' => $memberB->Email
+		));
+
+		$this->assertFalse(
+			$fail,
+			'Member_Validator must fail when trying to update existing member with existing Email.'
+		);
+
+		$this->assertTrue(
+			$pass1,
+			'Member_Validator must pass when Email is updated to a value that\'s not in use.'
+		);
+
+		$this->assertTrue(
+			$pass2,
+			'Member_Validator must pass when Member updates his own Email to the already existing value.'
+		);
+	}
+
+	public function testMemberValidatorWithExtensions()
+	{
+		// clear custom requirements for this test
+		Config::inst()->update('Member_Validator', 'customRequired', null);
+
+		// create a blank form
+		$form = new MemberTest_ValidatorForm();
+
+		// Test extensions
+		Member_Validator::add_extension('MemberTest_MemberValidator_SurnameMustMatchFirstNameExtension');
+		$validator = new Member_Validator();
+		$validator->setForm($form);
+
+		// This test should fail, since the extension enforces FirstName == Surname
+		$fail = $validator->php(array(
+			'FirstName' => 'Test',
+			'Surname' => 'User',
+			'Email' => 'test-member-validator-extension@testing.com'
+		));
+
+		$pass = $validator->php(array(
+			'FirstName' => 'Test',
+			'Surname' => 'Test',
+			'Email' => 'test-member-validator-extension@testing.com'
+		));
+
+		$this->assertFalse(
+			$fail,
+			'Member_Validator must fail because of added extension.'
+		);
+
+		$this->assertTrue(
+			$pass,
+			'Member_Validator must succeed, since it meets all requirements.'
+		);
+
+		// Add another extension that always fails. This ensures that all extensions are considered in the validation
+		Member_Validator::add_extension('MemberTest_MemberValidator_AlwaysFailsExtension');
+		$validator = new Member_Validator();
+		$validator->setForm($form);
+
+		// Even though the data is valid, This test should still fail, since one extension always returns false
+		$fail = $validator->php(array(
+			'FirstName' => 'Test',
+			'Surname' => 'Test',
+			'Email' => 'test-member-validator-extension@testing.com'
+		));
+
+		$this->assertFalse(
+			$fail,
+			'Member_Validator must fail because of added extensions.'
+		);
+
+		// Remove added extensions
+		Member_Validator::remove_extension('MemberTest_MemberValidator_AlwaysFailsExtension');
+		Member_Validator::remove_extension('MemberTest_MemberValidator_SurnameMustMatchFirstNameExtension');
+	}
+
+	public function testCustomMemberValidator()
+	{
+		// clear custom requirements for this test
+		Config::inst()->update('Member_Validator', 'customRequired', null);
+
 		$member = $this->objFromFixture('Member', 'admin');
 
 		$form = new MemberTest_ValidatorForm();
@@ -861,7 +989,7 @@ class MemberTest extends FunctionalTest {
 			'Surname' => ''
 		));
 
-		$this->assertTrue($pass, 'Validator requires on FirstName and Email');
+		$this->assertTrue($pass, 'Validator requires a FirstName and Email');
 		$this->assertFalse($fail, 'Missing FirstName');
 
 		$ext = new MemberTest_ValidatorExtension();
@@ -916,6 +1044,30 @@ class MemberTest_ValidatorExtension extends DataExtension implements TestOnly {
 	public function updateValidator(&$validator) {
 		$validator->addRequiredField('Surname');
 		$validator->removeRequiredField('FirstName');
+	}
+}
+
+/**
+ * Extension that adds additional validation criteria
+ * @package framework
+ * @subpackage tests
+ */
+class MemberTest_MemberValidator_SurnameMustMatchFirstNameExtension extends DataExtension implements TestOnly
+{
+	public function updatePHP($data, $form) {
+		return $data['FirstName'] == $data['Surname'];
+	}
+}
+
+/**
+ * Extension that adds additional validation criteria
+ * @package framework
+ * @subpackage tests
+ */
+class MemberTest_MemberValidator_AlwaysFailsExtension extends DataExtension implements TestOnly
+{
+	public function updatePHP($data, $form) {
+		return false;
 	}
 }
 
