@@ -130,4 +130,4 @@ files back into the JS files SilverStripe can actually read. This requires an in
  * [i18n](/developer_guides/i18n/): Developer-level documentation of Silverstripe's i18n capabilities
  * [Contributing Translations](/contributing/translations): Information for translators looking to contribute translations of the SilverStripe UI.
  * [translatable](https://github.com/silverstripe/silverstripe-translatable): DataObject-interface powering the website-content translations
- * ["Translatable ModelAdmin" module](http://silverstripe.org/translatablemodeladmin-module/): An extension which allows translations of DataObjects inside ModelAdmin
+ * `["Translatable ModelAdmin" module](http://silverstripe.org/translatablemodeladmin-module/)`: An extension which allows translations of DataObjects inside ModelAdmin

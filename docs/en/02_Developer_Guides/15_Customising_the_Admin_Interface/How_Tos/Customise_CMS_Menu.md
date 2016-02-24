@@ -2,10 +2,10 @@
 
 ## Adding an administration panel
 
-Every time you add a new extension of the `[api:LeftAndMain]` class to the CMS,
-SilverStripe will automatically create a new `[api:CMSMenuItem]` for it
+Every time you add a new extension of the [api:LeftAndMain] class to the CMS,
+SilverStripe will automatically create a new [api:CMSMenuItem] for it
 
-The most popular extension of LeftAndMain is a `[api:ModelAdmin]` class, so
+The most popular extension of LeftAndMain is a [api:ModelAdmin] class, so
 for a more detailed introduction to creating new `ModelAdmin` interfaces, read
 the [ModelAdmin reference](../modeladmin).
 
@@ -51,7 +51,7 @@ On top of your administration windows, the menu can also have external links
 (e.g. to external reference). In this example, we're going to add a link to
 Google to the menu.
 
-First, we need to define a `[api:LeftAndMainExtension]` which will contain our
+First, we need to define a [api:LeftAndMainExtension] which will contain our
 button configuration.
 
 	:::php

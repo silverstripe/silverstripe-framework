@@ -161,7 +161,7 @@ Most importantly: Keep the first line short, and add more detail below.
 This ensures commits are easy to browse, and look nice on github.com
 (more info about [proper git commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)).
 
-As we automatically generate [changelogs](http://doc.silverstripe.org/sapphire/en/trunk/changelogs/) from them, we need a way to categorize and filter. 
+As we automatically generate [changelogs](http://localhost/SpiritLevel/SS/doc.silverstripe.org/en/changelogs/) from them, we need a way to categorize and filter. 
 Please prefix **noteworthy** commit messages with one of the following tags: 
 
 * `NEW` New feature or major enhancement (both for users and developers)

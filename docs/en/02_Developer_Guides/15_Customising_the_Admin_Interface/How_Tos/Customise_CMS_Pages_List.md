@@ -10,8 +10,8 @@ as well as sort and filter them in a way that would be hard to achieve in a tree
 But sometimes the default behaviour isn't powerful enough, and you want a more
 specific list view for certain page types, for example to sort the list by
 a different criteria, or add more columns to filter on. The resulting
-form is mainly based around a `[GridField](/reference/grid-field)` instance,
-which in turn includes all children in a `[DataList](/topics/datamodel)`.
+form is mainly based around a [GridField](/reference/grid-field) instance,
+which in turn includes all children in a [DataList](/topics/datamodel).
 You can use these two classes as a starting point for your customizations.
 
 Here's a brief example on how to add sorting and a new column for a

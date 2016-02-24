@@ -74,11 +74,11 @@ Let's step through this code.
 ```
 
 First we create our form fields. 
-We do this by creating a `[api:FieldList]` and passing our fields as arguments. 
-The first field is a `[api:TextField]` with the name 'Name'.
+We do this by creating a [api:FieldList] and passing our fields as arguments. 
+The first field is a [api:TextField] with the name 'Name'.
 There is a second argument when creating a field which specifies the text on the label of the field. If no second
 argument is passed, as in this case, it is assumed the label is the same as the name of the field.
-The second field we create is an `[api:OptionsetField]`. This is a dropdown, and takes a third argument - an
+The second field we create is an [api:OptionsetField]. This is a dropdown, and takes a third argument - an
 array mapping the values to the options listed in the dropdown.
 
 	```php
@@ -90,14 +90,14 @@ array mapping the values to the options listed in the dropdown.
 After creating the fields, we create the form actions. Form actions appear as buttons at the bottom of the form. 
 The first argument is the name of the function to call when the button is pressed, and the second is the label of the button.
 Here we create a 'Submit' button which calls the 'doBrowserPoll' method, which we will create later.
-All the form actions (in this case only one) are collected into a `[api:FieldList]` object the same way we did with
+All the form actions (in this case only one) are collected into a [api:FieldList] object the same way we did with
 the fields.
 
 ```php
 	return new Form($this, 'BrowserPollForm', $fields, $actions);
 ```
 
-Finally we create the `[api:Form]` object and return it.
+Finally we create the [api:Form] object and return it.
 The first argument is the controller that contains the form, in most cases '$this'. The second is the name of the method
 that returns the form, which is 'BrowserPollForm' in our case. The third and fourth arguments are the
 FieldLists containing the fields and form actions respectively.
@@ -178,8 +178,8 @@ All going according to plan, if you visit [http://localhost/your_site_name/home/
 
 Great! We now have a browser poll form, but it doesn't actually do anything. In order to make the form work, we have to implement the 'doBrowserPoll()' method that we told it about.
 
-First, we need some way of saving the poll submissions to the database, so we can retrieve the results later. We can do this by creating a new object that extends from `[api:DataObject]`.
-If you recall, in the [second tutorial](/tutorials/extending_a_basic_site) we said that all objects that inherit from DataObject and have their own fields are stored in tables the database. Also recall that all pages extend DataObject indirectly through `[api:SiteTree]`. Here instead of extending SiteTree (or `[api:Page]`) to create a page type, we will extend `[api:DataObject]` directly:
+First, we need some way of saving the poll submissions to the database, so we can retrieve the results later. We can do this by creating a new object that extends from [api:DataObject].
+If you recall, in the [second tutorial](/tutorials/extending_a_basic_site) we said that all objects that inherit from DataObject and have their own fields are stored in tables the database. Also recall that all pages extend DataObject indirectly through [api:SiteTree]. Here instead of extending SiteTree (or [api:Page]) to create a page type, we will extend [api:DataObject] directly:
 
 **mysite/code/BrowserPollSubmission.php**
 
@@ -208,7 +208,7 @@ If we then rebuild the database ([http://localhost/your_site_name/dev/build](htt
 	}
 ```
 
-A function that processes a form submission takes two arguments - the first is the data in the form, the second is the `[api:Form]` object.
+A function that processes a form submission takes two arguments - the first is the data in the form, the second is the [api:Form] object.
 In our function we create a new *BrowserPollSubmission* object. Since the name of our form fields, and the name of the database fields, are the same we can save the form directly into the data object.
 We call the 'write' method to write our data to the database, and '$this->redirectBack()' will redirect the user back to the home page.
 
@@ -240,7 +240,7 @@ If we then open the homepage and attempt to submit the form without filling in t
 Now that we have a working form, we need some way of showing the results.
 The first thing to do is make it so a user can only vote once per session. If the user hasn't voted, show the form, otherwise show the results.
 
-We can do this using a session variable. The `[api:Session]` class handles all session variables in SilverStripe. First modify the 'doBrowserPoll' to set the session variable 'BrowserPollVoted' when a user votes.
+We can do this using a session variable. The [api:Session] class handles all session variables in SilverStripe. First modify the 'doBrowserPoll' to set the session variable 'BrowserPollVoted' when a user votes.
 
 **mysite/code/HomePage.php**
 
@@ -279,7 +279,7 @@ Although the form is not shown, you'll still see the 'Browser Poll' heading. We'
 
 Now that we're collecting data, it would be nice to show the results on the website as well. We could simply output every vote, but that's boring. Let's group the results by browser, through the SilverStripe data model.
 
-In the [second tutorial](/tutorials/extending_a_basic_site), we got a collection of news articles for the home page by using the 'ArticleHolder::get()' function, which returns a `[api:DataList]`. We can get all submissions in the same fashion, through `BrowserPollSubmission::get()`. This list will be the starting point for our result aggregation.
+In the [second tutorial](/tutorials/extending_a_basic_site), we got a collection of news articles for the home page by using the 'ArticleHolder::get()' function, which returns a [api:DataList]. We can get all submissions in the same fashion, through `BrowserPollSubmission::get()`. This list will be the starting point for our result aggregation.
 
 Create the function 'BrowserPollResults' on the *HomePage_Controller* class.
 
@@ -306,7 +306,7 @@ This code introduces a few new concepts, so let's step through it.
 	```php
 	$submissions = new GroupedList(BrowserPollSubmission::get());
 ```
-First we get all of the `BrowserPollSubmission` records from the database. This returns the submissions as a `[api:DataList]`.Then we wrap it inside a `[api:GroupedList]`, which adds the ability to group those records. The resulting object will behave just like the original `DataList`, though (with the addition of a `groupBy()` method). 
+First we get all of the `BrowserPollSubmission` records from the database. This returns the submissions as a [api:DataList]. Then we wrap it inside a [api:GroupedList], which adds the ability to group those records. The resulting object will behave just like the original `DataList`, though (with the addition of a `groupBy()` method). 
 
 ```php
 	$total = $submissions->Count();
@@ -324,9 +324,9 @@ We get the total number of submissions, which is needed to calculate the percent
 	}
 ```
 
-Now we create an empty `[api:ArrayList]` to hold the data we'll pass to the template. Its similar to `[api:DataList]`, but can hold arbitrary objects rather than just DataObject` instances. Then we iterate over the 'Browser' submissions field. 
+Now we create an empty [api:ArrayList] to hold the data we'll pass to the template. Its similar to [api:DataList], but can hold arbitrary objects rather than just DataObject` instances. Then we iterate over the 'Browser' submissions field. 
 
-The `groupBy()` method splits our list by the 'Browser' field passed to it, creating new lists with submissions just for a specific browser. Each of those lists is keyed by the browser name. The aggregated result is then contained in an `[api:ArrayData]` object, which behaves much like a standard PHP array, but allows us to use it in SilverStripe templates.
+The `groupBy()` method splits our list by the 'Browser' field passed to it, creating new lists with submissions just for a specific browser. Each of those lists is keyed by the browser name. The aggregated result is then contained in an [api:ArrayData] object, which behaves much like a standard PHP array, but allows us to use it in SilverStripe templates.
 
 
 The final step is to create the template to display our data. Change the 'BrowserPoll' div to the below.

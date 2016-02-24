@@ -46,7 +46,7 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 
 ## Accessing and Setting Configuration Properties
 
-This can be done by calling the static method `[api:Config::inst]`, like so:
+This can be done by calling the static method [api:Config::inst()], like so:
 
 	:::php
 	$config = Config::inst()->get('MyClass');

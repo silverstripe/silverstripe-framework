@@ -55,7 +55,7 @@ should have the appropriate permissions to create new databases on your server, 
 
 ## Writing Tests
 
-Tests are written by creating subclasses of `[api:SapphireTest]`.  You should put tests for your site in the
+Tests are written by creating subclasses of [api:SapphireTest].  You should put tests for your site in the
 `mysite/tests` directory.  If you are writing tests for a module, put them in the `(modulename)/tests` directory.
 
 Generally speaking, there should be one test class for each application class.  The name of the test class should be the
@@ -100,7 +100,7 @@ All command-line arguments are documented on
 ### Via the "sake" Wrapper on Command Line
 
 The [sake](/developer_guides/cli/) executable that comes with SilverStripe can trigger a customized
-`[api:TestRunner]` class that handles the PHPUnit configuration and output formatting.
+[api:TestRunner] class that handles the PHPUnit configuration and output formatting.
 While the custom test runner a handy tool, its also more limited than using `phpunit` directly,
 particularly around formatting test output.
 

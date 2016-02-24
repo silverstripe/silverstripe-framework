@@ -96,7 +96,7 @@ environments. If for some reason you don't have access to the command line, you 
 
 ### Via the CLI
 
-The [sake](../cli) executable that comes with SilverStripe can trigger a customized `[api:TestRunner]` class that 
+The [sake](../cli) executable that comes with SilverStripe can trigger a customized [api:TestRunner] class that 
 handles the PHPUnit configuration and output formatting. While the custom test runner a handy tool, it's also more 
 limited than using `phpunit` directly, particularly around formatting test output.
 
@@ -133,7 +133,7 @@ Unless executing a coverage report there is no need to have xDebug enabled.
     sudo php5enmod xdebug
     
 ### Use SQLite In Memory
-SQLIte can be configured to fun in memory as opposed to disk and this makes testing an order of magnitude faster.  To effect this change add the following to mysite/_config.php - this enables an optional flag to switch between MySQL and SQLite.  Note also that the package silverstripe/sqlite3 will need installed, version will vary depending on which version of SilverStripe is being tested.
+SQLIte can be configured to run in memory as opposed to disk and this makes testing an order of magnitude faster.  To effect this change add the following to mysite/_config.php - this enables an optional flag to switch between MySQL and SQLite.  Note also that the package silverstripe/sqlite3 will need installed, version will vary depending on which version of SilverStripe is being tested.
 
     :::php
     if(Director::isDev()) {

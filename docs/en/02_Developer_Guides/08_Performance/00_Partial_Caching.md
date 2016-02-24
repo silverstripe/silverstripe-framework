@@ -35,7 +35,7 @@ Here are some more complex examples:
 	<% end_cached %>
 
 An additional global key is incorporated in the cache lookup. The default value for this is 
-`$CurrentReadingMode, $CurrentUser.ID`. This ensures that the current `[api:Versioned]` state and user ID are used. 
+`$CurrentReadingMode, $CurrentUser.ID`. This ensures that the current [api:Versioned] state and user ID are used. 
 This may be configured by changing the config value of `SSViewer.global_key`. It is also necessary to flush the 
 template caching when modifying this config, as this key is cached within the template itself.
 

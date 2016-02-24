@@ -888,10 +888,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					action = "update";
 				}
 
-				if(href.match(/^mailto:(.*)$/)) {
+				if(href.match(/^mailto:([^?]*)(\?subject=(.*))?$/)) {
 					return {
 						LinkType: 'email',
 						email: RegExp.$1,
+						Subject: decodeURIComponent(RegExp.$3),
 						Description: title
 					};
 				} else if(href.match(/^(assets\/.*)$/) || href.match(/^\[file_link\s*(?:\s*|%20|,)?id=([0-9]+)\]?(#.*)?$/)) {

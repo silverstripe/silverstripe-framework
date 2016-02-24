@@ -5,7 +5,7 @@ summary: Validate form data through the server side validation API.
 
 SilverStripe provides server-side form validation out of the box through the [api:Validator] class and its' child class
 [api:RequiredFields]. A single `Validator` instance is set on each `Form`. Validators are implemented as an argument to 
-the `[api:Form]` constructor or through the function `setValidator`.
+the [api:Form] constructor or through the function `setValidator`.
 
 	:::php
 	<?php
@@ -50,7 +50,7 @@ In this example we will be required to input a value for `Name` and a valid emai
 
 <div class="info" markdown="1">
 Each individual [api:FormField] instance is responsible for validating the submitted content through the 
-[api:FormField::validate] method. By default, this just checks the value exists. Fields like `EmailField` override 
+[api:FormField::validate()] method. By default, this just checks the value exists. Fields like `EmailField` override 
 `validate` to check for a specific format.
 </div>
 
@@ -192,7 +192,7 @@ classes added to each input. For Parsley we can structure the form like.
 ## Model Validation
 
 An alternative (or additional) approach to validation is to place it directly on the database model. SilverStripe 
-provides a `[api:DataObject->validate]` method to validate data at the model level. See 
+provides a [api:DataObject::validate()] method to validate data at the model level. See 
 [Data Model Validation](../model/validation). 
 
 ### Validation in the CMS

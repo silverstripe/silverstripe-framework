@@ -5,6 +5,8 @@
  * allowing you to rollback changes and view history. An example of this is
  * the pages used in the CMS.
  *
+ * @property int $Version
+ *
  * @package framework
  * @subpackage model
  */
@@ -637,15 +639,17 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 		$nextVersion = $nextVersion ?: 1;
 
-		// Add the version number to this data
-		$manipulation[$table]['fields']['Version'] = $nextVersion;
-		$newManipulation['fields']['Version'] = $nextVersion;
-
-		// Write AuthorID for baseclass
 		if($table === $baseDataClass) {
+			// Write AuthorID for baseclass
 			$userID = (Member::currentUser()) ? Member::currentUser()->ID : 0;
 			$newManipulation['fields']['AuthorID'] = $userID;
+
+			// Update main table version if not previously known
+			$manipulation[$table]['fields']['Version'] = $nextVersion;
 		}
+
+		// Update _versions table manipulation
+		$newManipulation['fields']['Version'] = $nextVersion;
 		$manipulation["{$table}_versions"] = $newManipulation;
 	}
 
@@ -672,6 +676,19 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 
 	public function augmentWrite(&$manipulation) {
+		// get Version number from base data table on write
+		$version = null;
+		$baseDataClass = ClassInfo::baseDataClass($this->owner->class);
+		if(isset($manipulation[$baseDataClass]['fields'])) {
+			if ($this->migratingVersion) {
+				$manipulation[$baseDataClass]['fields']['Version'] = $this->migratingVersion;
+			}
+			if (isset($manipulation[$baseDataClass]['fields']['Version'])) {
+				$version = $manipulation[$baseDataClass]['fields']['Version'];
+			}
+		}
+
+		// Update all tables
 		$tables = array_keys($manipulation);
 		foreach($tables as $table) {
 
@@ -682,18 +699,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			}
 
 			// Get ID field
-			$id = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];
+			$id = $manipulation[$table]['id']
+				? $manipulation[$table]['id']
+				: $manipulation[$table]['fields']['ID'];
 			if(!$id) {
 				user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
 			}
 
-			if($this->migratingVersion) {
-				$manipulation[$table]['fields']['Version'] = $this->migratingVersion;
-			}
-
-			$version = isset($manipulation[$table]['fields']['Version'])
-				? $manipulation[$table]['fields']['Version']
-				: null;
 			if($version < 0 || $this->_nextWriteWithoutVersion) {
 				// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
 				unset($manipulation[$table]['fields']['Version']);
@@ -703,7 +715,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				$this->augmentWriteVersioned($manipulation, $table, $id);
 			}
 
-			// For base classes of versioned data objects
+			// Remove "Version" column from subclasses of baseDataClass
 			if(!$this->hasVersionField($table)) {
 				unset($manipulation[$table]['fields']['Version']);
 			}
@@ -925,56 +937,64 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * Move a database record from one stage to the other.
 	 *
-	 * @param fromStage Place to copy from.  Can be either a stage name or a version number.
-	 * @param toStage Place to copy to.  Must be a stage name.
-	 * @param createNewVersion Set this to true to create a new version number.  By default, the existing version
-	 *                         number will be copied over.
+	 * @param int|string $fromStage Place to copy from.  Can be either a stage name or a version number.
+	 * @param string $toStage Place to copy to.  Must be a stage name.
+	 * @param bool $createNewVersion Set this to true to create a new version number.
+	 *  By default, the existing version number will be copied over.
 	 */
 	public function publish($fromStage, $toStage, $createNewVersion = false) {
 		$this->owner->extend('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
 
-		$baseClass = $this->owner->class;
-		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
+		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		$extTable = $this->extendWithSuffix($baseClass);
 
+		/** @var Versioned|DataObject $from */
 		if(is_numeric($fromStage)) {
 			$from = Versioned::get_version($baseClass, $this->owner->ID, $fromStage);
 		} else {
 			$this->owner->flushCache();
-			$from = Versioned::get_one_by_stage($baseClass, $fromStage, "\"{$baseClass}\".\"ID\"={$this->owner->ID}");
+			$from = Versioned::get_one_by_stage($baseClass, $fromStage, array(
+				"\"{$baseClass}\".\"ID\" = ?" => $this->owner->ID
+			));
+		}
+		if(!$from) {
+			user_error("Can't find {$this->owner->class}/{$this->owner->ID} in stage {$fromStage}", E_USER_WARNING);
+			return;
 		}
 
-		$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
-		if($from) {
-			$from->forceChange();
-			if($createNewVersion) {
-				$latest = self::get_latest_version($baseClass, $this->owner->ID);
-				$this->owner->Version = $latest->Version + 1;
-			} else {
-				$from->migrateVersion($from->Version);
-			}
+		// Set version of new record
+		$from->forceChange();
+		if($createNewVersion) {
+			// Clear version to be automatically created on write
+			$from->Version = null;
+		} else {
+			$from->migrateVersion($from->Version);
 
 			// Mark this version as having been published at some stage
+			$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
 			DB::prepared_query("UPDATE \"{$extTable}_versions\"
 				SET \"WasPublished\" = ?, \"PublisherID\" = ?
 				WHERE \"RecordID\" = ? AND \"Version\" = ?",
 				array(1, $publisherID, $from->ID, $from->Version)
 			);
-
-			$oldMode = Versioned::get_reading_mode();
-			Versioned::reading_stage($toStage);
-
-			$conn = DB::get_conn();
-			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, true);
-			$from->write();
-			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, false);
-
-			$from->destroy();
-
-			Versioned::set_reading_mode($oldMode);
-		} else {
-			user_error("Can't find {$this->owner->URLSegment}/{$this->owner->ID} in stage $fromStage", E_USER_WARNING);
 		}
+
+		// Change to new stage, write, and revert state
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::reading_stage($toStage);
+
+		$conn = DB::get_conn();
+		if(method_exists($conn, 'allowPrimaryKeyEditing')) {
+			$conn->allowPrimaryKeyEditing($baseClass, true);
+			$from->write();
+			$conn->allowPrimaryKeyEditing($baseClass, false);
+		} else {
+			$from->write();
+		}
+
+		$from->destroy();
+
+		Versioned::set_reading_mode($oldMode);
 	}
 
 	/**
