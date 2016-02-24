@@ -502,7 +502,11 @@ server IPs using the SS_TRUSTED_PROXY_IPS define in your _ss_environment.php.
 
 	:::php
 	define('SS_TRUSTED_PROXY_IPS', '127.0.0.1,192.168.0.1');
+	define('SS_TRUSTED_PROXY_HOST_HEADER', 'HTTP_X_FORWARDED_HOST');
+	define('SS_TRUSTED_PROXY_IP_HEADER', 'HTTP_X_FORWARDED_FOR');
+	define('SS_TRUSTED_PROXY_PROTOCOL_HEADER', 'HTTP_X_FORWARDED_PROTOCOL');
 
+At the same time, you'll also need to define which headers you trust from these proxy IPs. Since there are multiple ways through which proxies can pass through HTTP information on the original hostname, IP and protocol, these values need to be adjusted for your specific proxy. The header names match their equivalent `$_SERVER` values.
 
 If there is no proxy server, 'none' can be used to distrust all clients.
 If only trusted servers will make requests then you can use '*' to trust all clients.
@@ -524,7 +528,6 @@ following in your .htaccess to ensure this behaviour is activated.
 In a future release this behaviour will be changed to be on by default, and this environment
 variable will be no longer necessary, thus it will be necessary to always set
 SS_TRUSTED_PROXY_IPS if using a proxy.
-
 
 ##  Related
 

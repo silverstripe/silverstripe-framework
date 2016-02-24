@@ -318,9 +318,7 @@ fa_IR:
     TITLE: 'آی‌فریم آپلود عکس'
   LeftAndMain:
     DELETED: حذف شده
-    DropdownBatchActionsDefault: 'انتخاب یک عملیات...'
     HELP: کمک
-    PAGETYPE: 'نوع صفحه'
     PERMAGAIN: 'شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید'
     PreviewButton: پیش‌نمایش
     SAVEDUP: ذخیره شده

@@ -160,35 +160,31 @@ class ParameterConfirmationToken {
 
 		// Are we http or https? Replicates Director::is_https() without its dependencies/
 		$proto = 'http';
-		if(
-			TRUSTED_PROXY
-			&& isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
-			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'
-		) { 
-			// Convention for (non-standard) proxy signaling a HTTPS forward,
-			// see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
-			$proto = 'https';
-		} else if(
-			TRUSTED_PROXY
-			&& isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
-			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https'
-		) { 
-			// Less conventional proxy header
-			$proto = 'https';
-		} else if(
-			isset($_SERVER['HTTP_FRONT_END_HTTPS'])
-			&& strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) == 'on'
-		) { 
-			// Microsoft proxy convention: https://support.microsoft.com/?kbID=307347
+		// See https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+		// See https://support.microsoft.com/?kbID=307347
+		$headerOverride = false;
+		if(TRUSTED_PROXY) {
+			$headers = (defined('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(SS_TRUSTED_PROXY_PROTOCOL_HEADER) : null;
+			if(!$headers) {
+				// Backwards compatible defaults
+				$headers = array('HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS');
+			}
+			foreach($headers as $header) {
+				$headerCompareVal = ($header === 'HTTP_FRONT_END_HTTPS' ? 'on' : 'https');
+				if(!empty($_SERVER[$header]) && strtolower($_SERVER[$header]) == $headerCompareVal) {
+					$headerOverride = true;
+					break;
+				}
+			}
+		}
+
+		if($headerOverride) {
 			$proto = 'https';
 		} else if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
 			$proto = 'https';
 		} else if(isset($_SERVER['SSL'])) {
 			$proto = 'https';
 		}
-
-		if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) $proto = 'https';
-		if(isset($_SERVER['SSL'])) $proto = 'https';
 
 		$parts = array_filter(array(
 			// What's our host

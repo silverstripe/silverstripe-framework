@@ -293,8 +293,6 @@ sv:
     FROMWEB: 'Från webben'
     FindInFolder: 'Hitta i mapp'
     IMAGEALT: 'Alternativ text (alt)'
-    IMAGEALTTEXT: 'Alternativ text (alt) - visas om bilden inte kan visas'
-    IMAGEALTTEXTDESC: 'Visas för skärmläsare eller om bilden inte kan visas'
     IMAGEDIMENSIONS: Dimensioner
     IMAGEHEIGHTPX: Höjd
     IMAGETITLE: 'Titel text (tooltip) - för ytterligare information om bilden'
@@ -326,11 +324,9 @@ sv:
     CANT_REORGANISE: 'Du har inte tillstånd att ändra sidor på toppnivå. Dina ändringar har inte sparats.'
     DELETED: Raderad
     HELP: Hjälp
-    PAGETYPE: 'Sidtyp'
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
     PERMALREADY: 'Tyvärr så har du inte åtkomst till den delen av CMSet. Om du vill logga in med en annan användare kan du göra det nedan'
     PERMDEFAULT: 'Du måste vara inloggad för att få åtkomst till administrativa delarna; var vänlig att logga in med dina användaruppgifter nedan.'
-    PLEASESAVE: 'Var god spara sidan. Den kan inte uppdateras för att den har inte sparats ännu.'
     PreviewButton: Förhandsgranska
     REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
     SAVEDUP: Sparad.
