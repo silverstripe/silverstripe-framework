@@ -507,28 +507,28 @@ class Director implements TemplateGlobalProvider {
 	 */
 	public static function is_https() {
 		$return = false;
+
+		// See https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+		// See https://support.microsoft.com/?kbID=307347
+		$headerOverride = false;
+		if(TRUSTED_PROXY) {
+			$headers = (defined('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(SS_TRUSTED_PROXY_PROTOCOL_HEADER) : null;
+			if(!$headers) {
+				// Backwards compatible defaults
+				$headers = array('HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS');
+			}
+			foreach($headers as $header) {
+				$headerCompareVal = ($header === 'HTTP_FRONT_END_HTTPS' ? 'on' : 'https');
+				if(!empty($_SERVER[$header]) && strtolower($_SERVER[$header]) == $headerCompareVal) {
+					$headerOverride = true;
+					break;
+				}
+			}
+		}
+
 		if ($protocol = Config::inst()->get('Director', 'alternate_protocol')) {
 			$return = ($protocol == 'https');
-		} else if(
-			TRUSTED_PROXY
-			&& isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
-			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'
-		) {
-			// Convention for (non-standard) proxy signaling a HTTPS forward,
-			// see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
-			$return = true;
-		} else if(
-			TRUSTED_PROXY
-			&& isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
-			&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https'
-		) {
-			// Less conventional proxy header
-			$return = true;
-		} else if(
-			isset($_SERVER['HTTP_FRONT_END_HTTPS'])
-			&& strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) == 'on'
-		) {
-			// Microsoft proxy convention: https://support.microsoft.com/?kbID=307347
+		} else if($headerOverride) {
 			$return = true;
 		} else if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
 			$return = true;

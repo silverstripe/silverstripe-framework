@@ -42,15 +42,54 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		$this->assertEquals(3, count($deleteButtons), 'Delete buttons should show when logged in.');
 	}
 
+	public function testActionsRequireCSRF() {
+		$this->logInWithPermission('ADMIN');
+		$this->setExpectedException(
+			'SS_HTTPResponse_Exception',
+			_t("Form.CSRF_FAILED_MESSAGE",
+				"There seems to have been a technical problem. Please click the back button, ".
+				"refresh your browser, and try again."
+			),
+			400
+		);
+		$stateID = 'testGridStateActionField';
+		$request = new SS_HTTPRequest(
+			'POST',
+			'url',
+			array(),
+			array(
+				'action_gridFieldAlterAction?StateID='.$stateID,
+				'SecurityID' => null,
+			)
+		);
+		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
+	}
+
 	public function testDeleteActionWithoutCorrectPermission() {
 		if(Member::currentUser()) { Member::currentUser()->logOut(); }
 		$this->setExpectedException('ValidationException');
 
 		$stateID = 'testGridStateActionField';
-		Session::set($stateID, array('grid'=>'', 'actionName'=>'deleterecord',
-			'args'=>array('RecordID'=>$this->idFromFixture('GridFieldAction_Delete_Team', 'team1'))));
-		$request = new SS_HTTPRequest('POST', 'url', array(),
-			array('action_gridFieldAlterAction?StateID='.$stateID=>true));
+		Session::set(
+			$stateID,
+			array(
+				'grid' => '',
+				'actionName' => 'deleterecord',
+				'args' => array(
+					'RecordID' => $this->idFromFixture('GridFieldAction_Delete_Team', 'team1')
+				)
+			)
+		);
+		$token = SecurityToken::inst();
+		$request = new SS_HTTPRequest(
+			'POST',
+			'url',
+			array(),
+			array(
+				'action_gridFieldAlterAction?StateID='.$stateID => true,
+				$token->getName() => $token->getValue(),
+			)
+		);
 		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
 		$this->assertEquals(3, $this->list->count(),
 			'User should\'t be able to delete records without correct permissions.');
@@ -59,10 +98,26 @@ class GridFieldDeleteActionTest extends SapphireTest {
 	public function testDeleteActionWithAdminPermission() {
 		$this->logInWithPermission('ADMIN');
 		$stateID = 'testGridStateActionField';
-		Session::set($stateID, array('grid'=>'', 'actionName'=>'deleterecord',
-			'args'=>array('RecordID'=>$this->idFromFixture('GridFieldAction_Delete_Team', 'team1'))));
-		$request = new SS_HTTPRequest('POST', 'url', array(),
-			array('action_gridFieldAlterAction?StateID='.$stateID=>true));
+		Session::set(
+			$stateID,
+			array(
+				'grid'=>'',
+				'actionName'=>'deleterecord',
+				'args' => array(
+					'RecordID' => $this->idFromFixture('GridFieldAction_Delete_Team', 'team1')
+				)
+			)
+		);
+		$token = SecurityToken::inst();
+		$request = new SS_HTTPRequest(
+			'POST',
+			'url',
+			array(),
+			array(
+				'action_gridFieldAlterAction?StateID='.$stateID=>true,
+				$token->getName() => $token->getValue(),
+			)
+		);
 		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
 		$this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
 	}
@@ -76,11 +131,26 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		$form = new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
 
 		$stateID = 'testGridStateActionField';
-		Session::set($stateID, array('grid'=>'', 'actionName'=>'deleterecord',
-			'args'=>array('RecordID'=>$this->idFromFixture('GridFieldAction_Delete_Team', 'team1'))));
-		$request = new SS_HTTPRequest('POST', 'url', array(),
-			array('action_gridFieldAlterAction?StateID='.$stateID=>true));
-
+		Session::set(
+			$stateID,
+			array(
+				'grid'=>'',
+				'actionName'=>'deleterecord',
+				'args' => array(
+					'RecordID' => $this->idFromFixture('GridFieldAction_Delete_Team', 'team1')
+				)
+			)
+		);
+		$token = SecurityToken::inst();
+		$request = new SS_HTTPRequest(
+			'POST',
+			'url',
+			array(),
+			array(
+				'action_gridFieldAlterAction?StateID='.$stateID=>true,
+				$token->getName() => $token->getValue(),
+			)
+		);
 		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
 		$this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
 
