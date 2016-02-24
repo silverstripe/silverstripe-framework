@@ -336,7 +336,7 @@ lt:
   LeftAndMain:
     CANT_REORGANISE: 'Jūs neturite leidimo keisti aukščiausio lygio puslapių. Jūsų pakeitimai neišsaugoti.'
     DELETED: Ištrinta.
-    DropdownBatchActionsDefault: 'Pasirinkite veiksmą...'
+    DropdownBatchActionsDefault: Veiksmai
     HELP: Pagalba
     PAGETYPE: 'Puslapio tipas'
     PERMAGAIN: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'
