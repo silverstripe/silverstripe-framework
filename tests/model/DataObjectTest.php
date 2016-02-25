@@ -837,7 +837,7 @@ class DataObjectTest extends SapphireTest {
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
 			),
-			array_keys($teamInstance->inheritedDatabaseFields()),
+			array_keys($teamInstance->db()),
 			'inheritedDatabaseFields() contains all fields defined on instance: base, extended and foreign keys'
 		);
 
