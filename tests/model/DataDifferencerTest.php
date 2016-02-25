@@ -19,6 +19,8 @@ class DataDifferencerTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 
+		Versioned::reading_stage('Stage');
+
 		// Set backend root to /DataDifferencerTest
 		AssetStoreTest_SpyStore::activate('DataDifferencerTest');
 
@@ -39,11 +41,13 @@ class DataDifferencerTest extends SapphireTest {
 
 	public function testArrayValues() {
 		$obj1 = $this->objFromFixture('DataDifferencerTest_Object', 'obj1');
+		$beforeVersion = $obj1->Version;
 		// create a new version
 		$obj1->Choices = 'a';
 		$obj1->write();
-		$obj1v1 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version-1);
-		$obj1v2 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version);
+		$afterVersion = $obj1->Version;
+		$obj1v1 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $beforeVersion);
+		$obj1v2 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $afterVersion);
 		$differ = new DataDifferencer($obj1v1, $obj1v2);
 		$obj1Diff = $differ->diffedData();
 		// TODO Using getter would split up field again, bug only caused by simulating
@@ -52,6 +56,7 @@ class DataDifferencerTest extends SapphireTest {
 	}
 
 	public function testHasOnes() {
+		/** @var DataDifferencerTest_Object $obj1 */
 		$obj1 = $this->objFromFixture('DataDifferencerTest_Object', 'obj1');
 		$image1 = $this->objFromFixture('Image', 'image1');
 		$image2 = $this->objFromFixture('Image', 'image2');
@@ -59,14 +64,19 @@ class DataDifferencerTest extends SapphireTest {
 		$relobj2 = $this->objFromFixture('DataDifferencerTest_HasOneRelationObject', 'relobj2');
 
 		// create a new version
+		$beforeVersion = $obj1->Version;
 		$obj1->ImageID = $image2->ID;
 		$obj1->HasOneRelationID = $relobj2->ID;
 		$obj1->write();
-		$obj1v1 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version-1);
-		$obj1v2 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version);
+		$afterVersion = $obj1->Version;
+		$this->assertNotEquals($beforeVersion, $afterVersion);
+		/** @var DataDifferencerTest_Object $obj1v1 */
+		$obj1v1 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $beforeVersion);
+		/** @var DataDifferencerTest_Object $obj1v2 */
+		$obj1v2 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $afterVersion);
 		$differ = new DataDifferencer($obj1v1, $obj1v2);
 		$obj1Diff = $differ->diffedData();
-		
+
 		$this->assertContains($image1->Name, $obj1Diff->getField('Image'));
 		$this->assertContains($image2->Name, $obj1Diff->getField('Image'));
 		$this->assertContains(
@@ -76,6 +86,11 @@ class DataDifferencerTest extends SapphireTest {
 	}
 }
 
+/**
+ * @property string $Choices
+ * @method Image Image()
+ * @method DataDifferencerTest_HasOneRelationObject HasOneRelation()
+ */
 class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
 	private static $extensions = array('Versioned("Stage", "Live")');

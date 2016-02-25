@@ -146,14 +146,6 @@ class ManyManyList extends RelationList {
 		return $dataObject;
 	}
 
-	/**
-	 * Return a filter expression for when getting the contents of the
-	 * relationship for some foreign ID
-	 *
-	 * @param int $id
-	 *
-	 * @return string
-	 */
 	protected function foreignIDFilter($id = null) {
 		if ($id === null) {
 			$id = $this->getForeignID();

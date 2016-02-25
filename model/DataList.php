@@ -158,7 +158,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param string|array $keyOrArray Either the single key to set, or an array of key value pairs to set
 	 * @param mixed $val If $keyOrArray is not an array, this is the value to set
-	 * @return DataList
+	 * @return static
 	 */
 	public function setDataQueryParam($keyOrArray, $val = null) {
 		$clone = clone $this;
@@ -179,7 +179,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Returns the SQL query that will be used to get this DataList's records.  Good for debugging. :-)
 	 *
 	 * @param array $parameters Out variable for parameters required for this query
-	 * @param string The resulting SQL query (may be paramaterised)
+	 * @return string The resulting SQL query (may be paramaterised)
 	 */
 	public function sql(&$parameters = array()) {
 		return $this->dataQuery->query()->sql($parameters);
@@ -737,7 +737,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataObject
 	 */
 	protected function createDataObject($row) {
-		$defaultClass = $this->dataClass;
+		$class = $this->dataClass;
 
 		// Failover from RecordClassName to ClassName
 		if(empty($row['RecordClassName'])) {
@@ -746,15 +746,24 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 		// Instantiate the class mentioned in RecordClassName only if it exists, otherwise default to $this->dataClass
 		if(class_exists($row['RecordClassName'])) {
-			$item = Injector::inst()->create($row['RecordClassName'], $row, false, $this->model);
-		} else {
-			$item = Injector::inst()->create($defaultClass, $row, false, $this->model);
+			$class = $row['RecordClassName'];
 		}
+		$item = Injector::inst()->create($class, $row, false, $this->model);
 
 		//set query params on the DataObject to tell the lazy loading mechanism the context the object creation context
-		$item->setSourceQueryParams($this->dataQuery()->getQueryParams());
+		$item->setSourceQueryParams($this->getQueryParams());
 
 		return $item;
+	}
+
+	/**
+	 * Get query parameters for this list.
+	 * These values will be assigned as query parameters to newly created objects from this list.
+	 *
+	 * @return array
+	 */
+	public function getQueryParams() {
+		return $this->dataQuery()->getQueryParams();
 	}
 
 	/**

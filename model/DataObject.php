@@ -225,42 +225,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected $unsavedRelations;
 
 	/**
-	 * Returns when validation on DataObjects is enabled.
-	 *
-	 * @deprecated 3.2 Use the "DataObject.validation_enabled" config setting instead
-	 * @return bool
-	 */
-	public static function get_validation_enabled() {
-		Deprecation::notice('3.2', 'Use the "DataObject.validation_enabled" config setting instead');
-		return Config::inst()->get('DataObject', 'validation_enabled');
-	}
-
-	/**
-	 * Set whether DataObjects should be validated before they are written.
-	 *
-	 * Caution: Validation can contain safeguards against invalid/malicious data,
-	 * and check permission levels (e.g. on {@link Group}). Therefore it is recommended
-	 * to only disable validation for very specific use cases.
-	 *
-	 * @param $enable bool
-	 * @see DataObject::validate()
-	 * @deprecated 3.2 Use the "DataObject.validation_enabled" config setting instead
-	 */
-	public static function set_validation_enabled($enable) {
-		Deprecation::notice('3.2', 'Use the "DataObject.validation_enabled" config setting instead');
-		Config::inst()->update('DataObject', 'validation_enabled', (bool)$enable);
-	}
-
-	/**
-	 * Clear all cached classname specs. It's necessary to clear all cached subclassed names
-	 * for any classes if a new class manifest is generated.
-	 */
-	public static function clear_classname_spec_cache() {
-		Deprecation::notice('4.0', 'Call DBClassName::clear_classname_cache() instead');
-		DBClassName::clear_classname_cache();
-	}
-
-	/**
 	 * Return the complete map of fields to specification on this object, including fixed_fields.
 	 * "ID" will be included on every table.
 	 *
@@ -279,11 +243,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Refresh cache
 		self::cache_database_fields($class);
-		
+
 		// Return cached values
 		return self::$_cache_database_fields[$class];
 	}
-	
+
 	/**
 	 * Cache all database and composite fields for the given class.
 	 * Will do nothing if already cached
@@ -309,7 +273,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} else {
 			$dbFields['ID'] = $fixedFields['ID'];
 		}
-		
+
 		// Check each DB value as either a field or composite field
 		$db = Config::inst()->get($class, 'db', Config::UNINHERITED) ?: array();
 		foreach($db as $fieldName => $fieldSpec) {
@@ -366,7 +330,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(empty($class)) {
 			$class = get_called_class();
 		}
-		
+
 		// Get all fields
 		$fields = self::database_fields($class);
 
@@ -530,8 +494,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Create a duplicate of this node.
 	 * Note: now also duplicates relations.
 	 *
-	 * @param $doWrite Perform a write() operation before returning the object.  If this is true, it will create the
-	 *                 duplicate in the database.
+	 * @param bool $doWrite Perform a write() operation before returning the object.
+	 * If this is true, it will create the duplicate in the database.
 	 * @return DataObject A duplicate of this node. The exact type will be the type of this node.
 	 */
 	public function duplicate($doWrite = true) {
@@ -554,8 +518,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * The destinationObject must be written to the database already and have an ID. Writing is performed
 	 * automatically when adding the new relations.
 	 *
-	 * @param $sourceObject the source object to duplicate from
-	 * @param $destinationObject the destination object to populate with the duplicated relations
+	 * @param DataObject $sourceObject the source object to duplicate from
+	 * @param DataObject $destinationObject the destination object to populate with the duplicated relations
 	 * @return DataObject with the new many_many relations copied in
 	 */
 	protected function duplicateManyManyRelations($sourceObject, $destinationObject) {
@@ -1529,8 +1493,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * non-polymorphic relations, or for polymorphic relations with a class set.
 	 *
 	 * @param string $componentName Name of the component
-	 *
 	 * @return DataObject The component object. It's exact type will be that of the component.
+	 * @throws Exception
 	 */
 	public function getComponent($componentName) {
 		if(isset($this->components[$componentName])) {
@@ -1548,28 +1512,38 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 
 			if($joinID) {
-				$component = DataObject::get_by_id($class, $joinID);
+				// Ensure that the selected object originates from the same stage, subsite, etc
+				$component = DataObject::get($class)
+					->filter('ID', $joinID)
+					->setDataQueryParam($this->getInheritableQueryParams())
+					->first();
 			}
 
 			if(empty($component)) {
 				$component = $this->model->$class->newObject();
 			}
 		} elseif($class = $this->belongsToComponent($componentName)) {
-
 			$joinField = $this->getRemoteJoinField($componentName, 'belongs_to', $polymorphic);
-			$joinID    = $this->ID;
+			$joinID = $this->ID;
 
 			if($joinID) {
-
-				$filter = $polymorphic
-					? array(
+				// Prepare filter for appropriate join type
+				if($polymorphic) {
+					$filter = array(
 						"{$joinField}ID" => $joinID,
 						"{$joinField}Class" => $this->class
-					)
-					: array(
+					);
+				} else {
+					$filter = array(
 						$joinField => $joinID
 					);
-				$component = DataObject::get($class)->filter($filter)->first();
+				}
+
+				// Ensure that the selected object originates from the same stage, subsite, etc
+				$component = DataObject::get($class)
+					->filter($filter)
+					->setDataQueryParam($this->getInheritableQueryParams())
+					->first();
 			}
 
 			if(empty($component)) {
@@ -1582,7 +1556,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 			}
 		} else {
-			throw new Exception("DataObject->getComponent(): Could not find component '$componentName'.");
+			throw new InvalidArgumentException(
+				"DataObject->getComponent(): Could not find component '$componentName'."
+			);
 		}
 
 		$this->components[$componentName] = $component;
@@ -1593,31 +1569,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Returns a one-to-many relation as a HasManyList
 	 *
 	 * @param string $componentName Name of the component
-	 * @param string|null $filter Deprecated. A filter to be inserted into the WHERE clause
-	 * @param string|null|array $sort Deprecated. A sort expression to be inserted into the ORDER BY clause. If omitted,
-	 *                                the static field $default_sort on the component class will be used.
-	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
-	 * @param string|null|array $limit Deprecated. A limit expression to be inserted into the LIMIT clause
-	 *
 	 * @return HasManyList The components of the one-to-many relationship.
 	 */
-	public function getComponents($componentName, $filter = null, $sort = null, $join = null, $limit = null) {
+	public function getComponents($componentName) {
 		$result = null;
 
-		if(!$componentClass = $this->hasManyComponent($componentName)) {
-			user_error("DataObject::getComponents(): Unknown 1-to-many component '$componentName'"
-				. " on class '$this->class'", E_USER_ERROR);
-		}
-
-		if($join) {
-			throw new \InvalidArgumentException(
-				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
-			);
-		}
-
-		if($filter !== null || $sort !== null || $limit !== null) {
-			Deprecation::notice('4.0', 'The $filter, $sort and $limit parameters for DataObject::getComponents()
-				have been deprecated. Please manipluate the returned list directly.', Deprecation::SCOPE_GLOBAL);
+		$componentClass = $this->hasManyComponent($componentName);
+		if(!$componentClass) {
+			throw new InvalidArgumentException(sprintf(
+				"DataObject::getComponents(): Unknown 1-to-many component '%s' on class '%s'",
+				$componentName,
+				$this->class
+			));
 		}
 
 		// If we haven't been written yet, we can't save these relations, so use a list that handles this case
@@ -1631,19 +1594,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Determine type and nature of foreign relation
 		$joinField = $this->getRemoteJoinField($componentName, 'has_many', $polymorphic);
+		/** @var HasManyList $result */
 		if($polymorphic) {
 			$result = PolymorphicHasManyList::create($componentClass, $joinField, $this->class);
 		} else {
 			$result = HasManyList::create($componentClass, $joinField);
 		}
 
-		if($this->model) $result->setDataModel($this->model);
+		if($this->model) {
+			$result->setDataModel($this->model);
+		}
 
 		return $result
-			->forForeignID($this->ID)
-			->where($filter)
-			->limit($limit)
-			->sort($sort);
+			->setDataQueryParam($this->getInheritableQueryParams())
+			->forForeignID($this->ID);
 	}
 
 	/**
@@ -1689,6 +1653,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $type the join type - either 'has_many' or 'belongs_to'
 	 * @param boolean $polymorphic Flag set to true if the remote join field is polymorphic.
 	 * @return string
+	 * @throws Exception
 	 */
 	public function getRemoteJoinField($component, $type = 'has_many', &$polymorphic = false) {
 		// Extract relation from current object
@@ -1763,18 +1728,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Returns a many-to-many component, as a ManyManyList.
 	 * @param string $componentName Name of the many-many component
 	 * @return ManyManyList The set of components
-	 *
-	 * @todo Implement query-params
 	 */
-	public function getManyManyComponents($componentName, $filter = null, $sort = null, $join = null, $limit = null) {
-		list($parentClass, $componentClass, $parentField, $componentField, $table)
-			= $this->manyManyComponent($componentName);
-
-		if($filter !== null || $sort !== null || $join !== null || $limit !== null) {
-			Deprecation::notice('4.0', 'The $filter, $sort, $join and $limit parameters for
-				DataObject::getManyManyComponents() have been deprecated.
-				Please manipluate the returned list directly.', Deprecation::SCOPE_GLOBAL);
+	public function getManyManyComponents($componentName) {
+		$manyManyComponent = $this->manyManyComponent($componentName);
+		if(!$manyManyComponent) {
+			throw new InvalidArgumentException(sprintf(
+				"DataObject::getComponents(): Unknown many-to-many component '%s' on class '%s'",
+				$componentName,
+				$this->class
+			));
 		}
+
+		list($parentClass, $componentClass, $parentField, $componentField, $table) = $manyManyComponent;
 
 		// If we haven't been written yet, we can't save these relations, so use a list that handles this case
 		if(!$this->ID) {
@@ -1786,54 +1751,29 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		$extraFields = $this->manyManyExtraFieldsForComponent($componentName) ?: array();
+		/** @var ManyManyList $result */
 		$result = ManyManyList::create($componentClass, $table, $componentField, $parentField, $extraFields);
-
-		if($this->model) $result->setDataModel($this->model);
+		if($this->model) {
+			$result->setDataModel($this->model);
+		}
 
 		$this->extend('updateManyManyComponents', $result);
 
 		// If this is called on a singleton, then we return an 'orphaned relation' that can have the
 		// foreignID set elsewhere.
 		return $result
-			->forForeignID($this->ID)
-			->where($filter)
-			->sort($sort)
-			->limit($limit);
-	}
-
-	/**
-	 * @deprecated 4.0 Method has been replaced by hasOne() and hasOneComponent()
-	 * @param string $component
-	 * @return array|null
-	 */
-	public function has_one($component = null) {
-		if($component) {
-			Deprecation::notice('4.0', 'Please use hasOneComponent() instead');
-			return $this->hasOneComponent($component);
-		}
-
-		Deprecation::notice('4.0', 'Please use hasOne() instead');
-		return $this->hasOne();
+			->setDataQueryParam($this->getInheritableQueryParams())
+			->forForeignID($this->ID);
 	}
 
 	/**
 	 * Return the class of a one-to-one component.  If $component is null, return all of the one-to-one components and
 	 * their classes. If the selected has_one is a polymorphic field then 'DataObject' will be returned for the type.
 	 *
-	 * @param string $component Deprecated - Name of component
 	 * @return string|array The class of the one-to-one component, or an array of all one-to-one components and
 	 * 							their classes.
 	 */
-	public function hasOne($component = null) {
-		if($component) {
-			Deprecation::notice(
-				'4.0',
-				'Please use DataObject::hasOneComponent() instead of passing a component name to hasOne()',
-				Deprecation::SCOPE_GLOBAL
-			);
-			return $this->hasOneComponent($component);
-		}
-
+	public function hasOne() {
 		return (array)Config::inst()->get($this->class, 'has_one', Config::INHERITED);
 	}
 
@@ -1851,22 +1791,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				return $hasOnes[$component];
 			}
 		}
-	}
-
-	/**
-	 * @deprecated 4.0 Method has been replaced by belongsTo() and belongsToComponent()
-	 * @param string $component
-	 * @param bool $classOnly
-	 * @return array|null
-	 */
-	public function belongs_to($component = null, $classOnly = true) {
-		if($component) {
-			Deprecation::notice('4.0', 'Please use belongsToComponent() instead');
-			return $this->belongsToComponent($component, $classOnly);
-		}
-
-		Deprecation::notice('4.0', 'Please use belongsTo() instead');
-		return $this->belongsTo(null, $classOnly);
 	}
 
 	/**
@@ -1965,22 +1889,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 4.0 Method has been replaced by hasMany() and hasManyComponent()
-	 * @param string $component
-	 * @param bool $classOnly
-	 * @return array|null
-	 */
-	public function has_many($component = null, $classOnly = true) {
-		if($component) {
-			Deprecation::notice('4.0', 'Please use hasManyComponent() instead');
-			return $this->hasManyComponent($component, $classOnly);
-		}
-
-		Deprecation::notice('4.0', 'Please use hasMany() instead');
-		return $this->hasMany(null, $classOnly);
-	}
-
-	/**
 	 * Gets the class of a one-to-many relationship. If no $component is specified then an array of all the one-to-many
 	 * relationships and their classes will be returned.
 	 *
@@ -2027,41 +1935,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 4.0 Method has been replaced by manyManyExtraFields() and
-	 *                 manyManyExtraFieldsForComponent()
-	 * @param string $component
-	 * @return array
-	 */
-	public function many_many_extraFields($component = null) {
-		if($component) {
-			Deprecation::notice('4.0', 'Please use manyManyExtraFieldsForComponent() instead');
-			return $this->manyManyExtraFieldsForComponent($component);
-		}
-
-		Deprecation::notice('4.0', 'Please use manyManyExtraFields() instead');
-		return $this->manyManyExtraFields();
-	}
-
-	/**
 	 * Return the many-to-many extra fields specification.
 	 *
 	 * If you don't specify a component name, it returns all
 	 * extra fields for all components available.
 	 *
-	 * @param string $component Deprecated - Name of component
 	 * @return array|null
 	 */
-	public function manyManyExtraFields($component = null) {
-		if($component) {
-			Deprecation::notice(
-				'4.0',
-				'Please use DataObject::manyManyExtraFieldsForComponent() instead of passing a component name
-					to manyManyExtraFields()',
-				Deprecation::SCOPE_GLOBAL
-			);
-			return $this->manyManyExtraFieldsForComponent($component);
-		}
-
+	public function manyManyExtraFields() {
 		return Config::inst()->get($this->class, 'many_many_extraFields', Config::INHERITED);
 	}
 
@@ -2112,42 +1993,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 4.0 Method has been renamed to manyMany()
-	 * @param string $component
-	 * @return array|null
-	 */
-	public function many_many($component = null) {
-		if($component) {
-			Deprecation::notice('4.0', 'Please use manyManyComponent() instead');
-			return $this->manyManyComponent($component);
-		}
-
-		Deprecation::notice('4.0', 'Please use manyMany() instead');
-		return $this->manyMany();
-	}
-
-	/**
 	 * Return information about a many-to-many component.
 	 * The return value is an array of (parentclass, childclass).  If $component is null, then all many-many
 	 * components are returned.
 	 *
 	 * @see DataObject::manyManyComponent()
-	 * @param string $component Deprecated - Name of component
 	 * @return array|null An array of (parentclass, childclass), or an array of all many-many components
 	 */
-	public function manyMany($component = null) {
-		if($component) {
-			Deprecation::notice(
-				'4.0',
-				'Please use DataObject::manyManyComponent() instead of passing a component name to manyMany()',
-				Deprecation::SCOPE_GLOBAL
-			);
-			return $this->manyManyComponent($component);
-		}
-
+	public function manyMany() {
 		$manyManys = (array)Config::inst()->get($this->class, 'many_many', Config::INHERITED);
 		$belongsManyManys = (array)Config::inst()->get($this->class, 'belongs_many_many', Config::INHERITED);
-
 		$items = array_merge($manyManys, $belongsManyManys);
 		return $items;
 	}
@@ -3286,6 +3141,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * Get list of parameters that should be inherited to relations on this object
+	 *
+	 * @return array
+	 */
+	public function getInheritableQueryParams() {
+		$params = $this->getSourceQueryParams();
+		$this->extend('updateInheritableQueryParams', $params);
+		return $params;
+	}
+
+	/**
 	 * @see $sourceQueryParams
 	 * @param array
 	 */
@@ -3455,14 +3321,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Let any extentions make their own database default data
 		$this->extend('requireDefaultRecords', $dummy);
-	}
-
-	/**
-	 * @deprecated since version 4.0
-	 */
-	public function inheritedDatabaseFields() {
-		Deprecation::notice('4.0', 'Use db() instead');
-		return $this->db();
 	}
 
 	/**
@@ -3730,7 +3588,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Use a casting object for a field. This is a map from
 	 * field name to class name of the casting object.
-	 * 
+	 *
 	 * @var array
 	 */
 	private static $casting = array(
