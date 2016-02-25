@@ -253,11 +253,17 @@
 		 */
 		$('.ss-gridfield .action.no-ajax').entwine({
 			onclick: function(e){
-				var self = this, btn = this.closest(':button'), grid = this.getGridField(), 
-					form = this.closest('form'), data = form.find(':input.gridstate').serialize();
+				var self = this, btn = this.closest(':button'), grid = this.getGridField(),
+					form = this.closest('form'), data = form.find(':input.gridstate').serialize(),
+					csrf = form.find('input[name="SecurityID"]').val();
 
 				// Add current button
 				data += "&" + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
+
+				// Add csrf
+				if(csrf) {
+					data += "&SecurityID=" + encodeURIComponent(csrf);
+				}
 
 				// Include any GET parameters from the current URL, as the view
 				// state might depend on it. For example, a list pre-filtered
