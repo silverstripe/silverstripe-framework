@@ -1,3 +1,5 @@
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
 		define('ss.SilverStripeComponent', ['exports', 'react', '../../../javascript/src/jQuery'], factory);
@@ -56,7 +58,7 @@
 			throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
 		}
 
-		return call && (typeof call === "object" || typeof call === "function") ? call : self;
+		return call && ((typeof call === 'undefined' ? 'undefined' : _typeof(call)) === "object" || typeof call === "function") ? call : self;
 	}
 
 	function _inherits(subClass, superClass) {
@@ -117,6 +119,5 @@
 	SilverStripeComponent.propTypes = {
 		'cmsEvents': _react2.default.PropTypes.object
 	};
-
 	exports.default = SilverStripeComponent;
 });

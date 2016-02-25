@@ -82,7 +82,7 @@ E.g.
 		echo $row['BirthYear'];
 	}
 
-The result of `SQLSelect::execute()` is an array lightly wrapped in a database-specific subclass of `[api:SS_Query]`. 
+The result of `SQLSelect::execute()` is an array lightly wrapped in a database-specific subclass of [api:SS_Query]. 
 This class implements the *Iterator*-interface, and provides convenience-methods for accessing the data.
 
 ### DELETE
@@ -165,7 +165,7 @@ E.g.
 
 	:::php
 	<?php
-	$update = SQLUpdate::create('"SiteTree"')->where(array('ID' => 3));
+	$update = SQLUpdate::create('"SiteTree"')->addWhere(array('ID' => 3));
 
 	// assigning a list of items
 	$update->addAssignments(array(

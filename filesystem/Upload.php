@@ -132,7 +132,7 @@ class Upload extends Controller {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return AssetStore
 	 */
 	protected function getAssetStore() {
@@ -157,7 +157,7 @@ class Upload extends Controller {
 		$result = $this->storeTempFile($tmpFile, $filename, $this->getAssetStore());
 
 		//to allow extensions to e.g. create a version after an upload
-		$this->extend('onAfterLoad', $result);
+		$this->extend('onAfterLoad', $result, $tmpFile);
 		return $result;
 	}
 
@@ -625,7 +625,7 @@ class Upload_Validator {
 			$this->errors[] = _t('File.NOVALIDUPLOAD', 'File is not a valid upload');
 			return false;
 		}
-		
+
 		// Check file isn't empty
 		if(empty($this->tmpFile['size']) || !filesize($this->tmpFile['tmp_name'])) {
 			$this->errors[] = _t('File.NOFILESIZE', 'Filesize is zero bytes.');

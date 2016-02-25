@@ -122,15 +122,15 @@ Other than files stored exclusively via DBFile, files can also exist as subclass
 
 Each record has the following database fields:
 
-| Field name     | Description																																			|
-| ----------     | -----------																																			|
-| `ClassName`    | The class name of the file (e.g. File, Image or Folder).																								|
-| `Name`         | The 'basename' of the file, or the folder name. For example 'my-image.jpg', or 'images' for a folder.												|
-| `Title`        | The optional, human-readable title of the file for display only (doesn't apply to folders).															|
+| Field name     | Description                                                                                                                                          |
+| ----------     | -----------                                                                                                                                          |
+| `ClassName`    | The class name of the file (e.g. File, Image or Folder).                                                                                             |
+| `Name`         | The 'basename' of the file, or the folder name. For example 'my-image.jpg', or 'images' for a folder.                                                |
+| `Title`        | The optional, human-readable title of the file for display only (doesn't apply to folders).                                                          |
 | `File`         | The `[api:DBFile]` field (see above) which stores the underlying asset content.																		|
-| `ShowInSearch` | Whether the file should be shown in search results, defaults to '1'. See ["Tutorial 4 - Site Search"](/tutorials/site_search) for enabling search.	|
+| `ShowInSearch` | Whether the file should be shown in search results, defaults to '1'. See ["Tutorial 4 - Site Search"](/tutorials/site_search) for enabling search. |
 | `ParentID`     | The ID of the parent Folder that this File/Folder is in. A ParentID of '0' indicates that this is a top level record.								|
-| `OwnerID`      | The ID of the Member that 'owns' the File/Folder (not related to filesystem permissions).															|
+| `OwnerID`      | The ID of the Member that 'owns' the File/Folder (not related to filesystem permissions).                                                            |
 
 
 ## Management through the "Files" section of the CMS
@@ -155,7 +155,7 @@ You may also notice the 'Sync files' button (highlighted below). This button all
 
 Files can be managed through forms in three ways:
 
- * `[api:FileField]`: provides a simple HTML input with a type of "file".
+ * [api:FileField]: provides a simple HTML input with a type of "file".
  * [UploadField](/developer_guides/forms/field_types/uploadfield): more feature-rich field (
     including AJAX-based uploads, previews, relationship management and file data management).
  * [AssetField](/developer_guides/forms/field_types/assetfield): Similar to UploadField,

@@ -85,7 +85,7 @@ should have the appropriate permissions to create new databases on your server, 
 
 ## Writing Tests
 
-Tests are written by creating subclasses of `[api:SapphireTest]`.  You should put tests for your site in the
+Tests are written by creating subclasses of [api:SapphireTest].  You should put tests for your site in the
 `mysite/tests` directory.  If you are writing tests for a module, put them in the `(modulename)/tests` directory.
 
 Generally speaking, there should be one test class for each application class.  The name of the test class should be the

@@ -16,7 +16,7 @@ Some of the goals of dependency injection are:
 * Improve testability of code
 * Promoting abstraction of logic
 
-The following sums up the simplest usage of the `Injector` it creates a new object of type `ClassName` through `create`
+The following sums up the simplest usage of the `Injector` it creates a new object of type `MyClassName` through `create`
 
 	:::php
 	$object = Injector::inst()->create('MyClassName');
@@ -57,7 +57,7 @@ object instance as the first call.
 
 ## Dependencies
 
-The `Injector` API can be used to define the types of `$dependancies` that an object requires.
+The `Injector` API can be used to define the types of `$dependencies` that an object requires.
 
 	:::php 
 	<?php
@@ -88,7 +88,7 @@ When creating a new instance of `MyController` the dependencies on that class wi
 	echo (is_string($object->textProperty));
 	// returns true;
 
-The [Configuration YAML](../configuration) does the hard work of configuring those `$dependancies` for us.
+The [Configuration YAML](../configuration) does the hard work of configuring those `$dependencies` for us.
 
 **mysite/_config/app.yml**
 	

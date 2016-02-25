@@ -110,7 +110,7 @@ DB::connect($databaseConfig);
 $url = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;
 if(!$url) {
 	echo 'Please specify an argument to cli-script.php/sake. For more information, visit'
-		. ' http://docs.silverstripe.org/en/developer_guides/cli';
+		. ' http://docs.silverstripe.org/en/developer_guides/cli' . "\n";
 	die();
 }
 

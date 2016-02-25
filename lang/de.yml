@@ -1,5 +1,7 @@
 de:
   AssetAdmin:
+    ALLOWEDEXTS: 'Erlaubte Dateiendungen'
+    HIDEALLOWEDEXTS: 'Verberge erlaubte Dateiendungen'
     NEWFOLDER: Neuer Ordner
     SHOWALLOWEDEXTS: 'Erlaubte Dateitypen anzeigen'
   AssetTableField:
@@ -7,12 +9,14 @@ de:
     DIM: Dimensionen
     FILENAME: Dateiname
     FOLDER: Ordner
+    HEIGHT: Höhe
     LASTEDIT: 'Letzte Änderung'
     OWNER: Eigentümer
     SIZE: 'Größe'
     TITLE: Titel
     TYPE: 'Typ'
     URL: URL
+    WIDTH: Breite
   AssetUploadField:
     ChooseFiles: 'Dateien auswählen'
     DRAGFILESHERE: 'Dateien hier ablegen'
@@ -23,7 +27,9 @@ de:
     FILES: Dateien
     FROMCOMPUTER: 'Dateien auf Ihrem Computer auswählen'
     FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
+    REMOVEINFO: 'Entferne diese Datei aus dem Feld'
     TOTAL: Insgesamt
+    TOUPLOAD: 'Dateien für den Upload auswählen...'
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
     UPLOADOR: oder
   BBCodeParser:
@@ -146,6 +152,7 @@ de:
     INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
     CHOOSE: (Auswahl)
+    CHOOSESEARCH: '(Auswahl und Suche)'
     SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
   EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'
@@ -293,8 +300,6 @@ de:
     FROMWEB: 'Aus dem Web'
     FindInFolder: 'In Ordner suchen'
     IMAGEALT: 'Alternativtext (alt)'
-    IMAGEALTTEXT: 'Alternativer Text (alt) - angezeigt, wenn das Bild nicht dargestellt werden kann'
-    IMAGEALTTEXTDESC: 'Wird von Screenreadern vorgelesen oder angezeigt, falls das Bild nicht dargestellt werden kann'
     IMAGEDIMENSIONS: Dimensionen
     IMAGEHEIGHTPX: Höhe (px)
     IMAGETITLE: 'Titeltext (Tooltip) - für zusätzliche Informationen über das Bild'
@@ -326,11 +331,9 @@ de:
     CANT_REORGANISE: 'Sie besitzen nicht die benötigten Zugriffsrechte um Seiten der höchsten Ebene zu bearbeiten. Ihre Änderungen wurden nicht gespeichert.'
     DELETED: Gelöscht.
     HELP: Hilfe
-    PAGETYPE: 'Seitentyp'
     PERMAGAIN: 'Sie wurden aus dem System ausgeloggt. Falls Sie sich wieder einloggen möchten, geben Sie bitte Benutzernamen und Passwort im untenstehenden Formular an.'
     PERMALREADY: 'Leider dürfen Sie diesen Teil des CMS nicht aufrufen. Wenn Sie sich als jemand anderes einloggen wollen, benutzen Sie bitte das nachstehende Formular.'
     PERMDEFAULT: 'Sie müssen angemeldet sein, um auf diesen Bereich zugreifen zu können. Bitte geben Sie Ihre Zugangsdaten ein.'
-    PLEASESAVE: 'Diese Seite konnte nicht aktualisiert werden weil sie noch nicht gespeichert wurde - bitte speichern.'
     PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: 'Der Seitenbaum wurde erfolgreich sortiert.'
     SAVEDUP: Gespeichert.

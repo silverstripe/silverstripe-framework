@@ -24,7 +24,7 @@ The i18n class is enabled by default.
 
 ### Setting the locale
 
-To set the locale you just need to call `[api:i18n::set_locale()]` passing, as a parameter, the name of the locale that 
+To set the locale you just need to call [api:i18n::set_locale()] passing, as a parameter, the name of the locale that 
 you want to set.
 
 	:::php
@@ -39,7 +39,7 @@ for a complete listing of available locales.
 
 ### Getting the locale
 
-As you set the locale you can also get the current value, just by calling `[api:i18n::get_locale()]`.
+As you set the locale you can also get the current value, just by calling [api:i18n::get_locale()].
 
 ### Declaring the content language in HTML		{#declaring_the_content_language_in_html}
 
@@ -72,9 +72,9 @@ to write your own logic for any frontend output.
 	Config::inst()->update('i18n', 'date_format', 'dd.MM.YYYY');
 	Config::inst()->update('i18n', 'time_format', 'HH:mm');
 
-Most localization routines in SilverStripe use the [Zend_Date API](http://framework.zend.com/manual/en/zend.date.html).
+Most localization routines in SilverStripe use the [Zend_Date API](http://framework.zend.com/manual/1.12/en/zend.date.overview.html).
 This means all formats are defined in
-[ISO date format](http://framework.zend.com/manual/en/zend.date.constants.html#zend.date.constants.selfdefinedformats),
+[ISO date format](http://framework.zend.com/manual/1.12/en/zend.date.constants.html),
 not PHP's built-in [date()](http://nz.php.net/manual/en/function.date.php).
 
 ### Language Names
@@ -272,7 +272,7 @@ There are a few special cases:
 ## Language definitions
 
 Each module can have one language table per locale, stored by convention in the `lang/` subfolder.
-The translation is powered by [Zend_Translate](http://framework.zend.com/manual/en/zend.translate.html),
+The translation is powered by [Zend_Translate](http://framework.zend.com/manual/current/en/modules/zend.i18n.translating.html),
 which supports different translation adapters, dealing with different storage formats.
 
 By default, SilverStripe 3.x uses a YAML format (through the [Zend_Translate_RailsYAML adapter](https://github.com/chillu/zend_translate_railsyaml)).
@@ -411,4 +411,4 @@ The `ss.i18n` object contain a couple functions to help and replace dynamic vari
  * [Help to translate](../../contributing/translations) - Instructions for online collaboration to translate core
  * [Help to translate](../../contributing/translation_process) - Instructions for adding translation to your own modules
  * [http://www.i18nguy.com/](http://www.i18nguy.com/)
- * [balbus.tk i18n notes](http://www.balbus.tk/internationalize)
+ * [balbus.tk i18n notes](http://www.balbuss.com/internationalize/)

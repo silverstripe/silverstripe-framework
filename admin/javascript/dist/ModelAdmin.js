@@ -27,7 +27,6 @@
 				this.trigger('beforeSubmit');
 			}
 		});
-
 		$('.importSpec').entwine({
 			onmatch: function onmatch() {
 				this.find('div.details').hide();

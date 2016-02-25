@@ -16,8 +16,6 @@
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-
   var jQuery = typeof window.jQuery !== 'undefined' ? window.jQuery : null;
-
   exports.default = jQuery;
 });

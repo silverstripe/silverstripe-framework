@@ -233,7 +233,7 @@ database.
 
 The `GridFieldDetailForm` component drives the record viewing and editing form. It takes its' fields from 
 `DataObject->getCMSFields()` method but can be customized to accept different fields via the 
-[api:GridFieldDetailForm->setFields] method.
+[api:GridFieldDetailForm::setFields()] method.
 
 	:::php
 	$form = $gridField->getConfig()->getComponentByType('GridFieldDetailForm');
@@ -351,7 +351,7 @@ processed placeholders as opposed to native template syntax.
 </div>
 
 Now you can add other components into this area by returning them as an array from your 
-[api:GridFieldComponent->getHTMLFragments()] implementation:
+[api:GridFieldComponent::getHTMLFragments()] implementation:
 
 	:::php
 	<?php

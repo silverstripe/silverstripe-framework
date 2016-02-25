@@ -129,7 +129,7 @@ class SS_HTTPRequest implements ArrayAccess {
 
 		// Normalize URL if its relative (strictly speaking), or has leading slashes
 		if(Director::is_relative_url($url) || preg_match('/^\//', $url)) {
-			$this->url = preg_replace(array('/\/+/', '/^\//', '/\/$/'),array('/', '', ''), $this->url);
+			$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
 		}
 		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
 			$this->url = $matches[1];
@@ -440,7 +440,7 @@ class SS_HTTPRequest implements ArrayAccess {
 		// Check for the '//' marker that represents the "shifting point"
 		$doubleSlashPoint = strpos($pattern, '//');
 		if($doubleSlashPoint !== false) {
-			$shiftCount = substr_count(substr($pattern, 0, $doubleSlashPoint), '/') + 1;
+			$shiftCount = substr_count(substr($pattern,0,$doubleSlashPoint), '/') + 1;
 			$pattern = str_replace('//', '/', $pattern);
 			$patternParts = explode('/', $pattern);
 
@@ -462,10 +462,10 @@ class SS_HTTPRequest implements ArrayAccess {
 				// A variable ending in ! is required
 				if(substr($part,-1) == '!') {
 					$varRequired = true;
-					$varName = substr($part, 1, -1);
+					$varName = substr($part,1,-1);
 				} else {
 					$varRequired = false;
-					$varName = substr($part, 1);
+					$varName = substr($part,1);
 				}
 
 				// Fail if a required variable isn't populated
@@ -655,20 +655,28 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return string
 	 */
 	public function getIP() {
-		$ip = false;
-		if (TRUSTED_PROXY && !empty($_SERVER['HTTP_CLIENT_IP'])) {
-			//check ip from share internet
-			$ip = $_SERVER['HTTP_CLIENT_IP'];
-		} elseif (TRUSTED_PROXY && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			//to check ip is pass from proxy
-			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		$headerOverrideIP = null;
+		if(TRUSTED_PROXY) {
+			$headers = (defined('SS_TRUSTED_PROXY_IP_HEADER')) ? array(SS_TRUSTED_PROXY_IP_HEADER) : null;
+			if(!$headers) {
+				// Backwards compatible defaults
+				$headers = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR');
+			}
+			foreach($headers as $header) {
+				if(!empty($_SERVER[$header])) {
+					$headerOverrideIP = $_SERVER[$header];
+					break;
+				}
+			}
 		}
-		if ((!$ip || !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE))
-			&& !empty($_SERVER['REMOTE_ADDR'])) {
-			//if no other forwarding ip is found, invalid, or internal ip address
-			$ip = $_SERVER['REMOTE_ADDR'];
+
+		if ($headerOverrideIP && filter_var($headerOverrideIP, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+			return $headerOverrideIP;
+		} elseif(isset($_SERVER['REMOTE_ADDR'])) {
+			return $_SERVER['REMOTE_ADDR'];
+		} else {
+			return null;
 		}
-		return $ip;
 	}
 
 	/**
@@ -681,7 +689,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	public function getAcceptMimetypes($includeQuality = false) {
 		$mimetypes = array();
-		$mimetypesWithQuality = explode(', ', $this->getHeader('Accept'));
+		$mimetypesWithQuality = explode(',',$this->getHeader('Accept'));
 		foreach($mimetypesWithQuality as $mimetypeWithQuality) {
 			$mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality);
 		}
@@ -713,7 +721,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	public static function detect_method($origMethod, $postVars) {
 		if(isset($postVars['_method'])) {
-			if(!in_array(strtoupper($postVars['_method']), array('GET', 'POST', 'PUT', 'DELETE', 'HEAD'))) {
+			if(!in_array(strtoupper($postVars['_method']), array('GET','POST','PUT','DELETE','HEAD'))) {
 				user_error('Director::direct(): Invalid "_method" parameter', E_USER_ERROR);
 			}
 			return strtoupper($postVars['_method']);

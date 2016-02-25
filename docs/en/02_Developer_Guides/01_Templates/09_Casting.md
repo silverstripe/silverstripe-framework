@@ -8,7 +8,7 @@ All objects that are being rendered in a template should be a [api:ViewableData]
 [scope](syntax#scope).
 
 For instance, if we provide a [api:HtmlText] instance to the template we can call the `FirstParagraph` method. This will 
-output the result of the [api:HtmlText::FirstParagraph] method to the template.
+output the result of the [api:HtmlText::FirstParagraph()] method to the template.
 
 **mysite/code/Page.ss**
 
@@ -98,7 +98,7 @@ this purpose.
 There's some exceptions to this rule, see the ["security" guide](../security).
 </div>
 
-In case you want to explicitly allow un-escaped HTML input, the property can be cast as `[api:HTMLText]`. The following 
+In case you want to explicitly allow un-escaped HTML input, the property can be cast as [api:HTMLText]. The following 
 example takes the `Content` field in a `SiteTree` class, which is of this type. It forces the content into an explicitly 
 escaped format.
 

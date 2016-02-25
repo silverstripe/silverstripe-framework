@@ -204,7 +204,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 
 ## Available SearchFilters
 
-See `[api:SearchFilter]` API Documentation
+See [api:SearchFilter] API Documentation
 
 
 ## Related Documentation

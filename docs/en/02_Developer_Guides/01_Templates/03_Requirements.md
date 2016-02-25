@@ -23,7 +23,7 @@ Requiring assets from the template is restricted compared to the PHP API.
 ## PHP Requirements API
 
 It is common practice to include most Requirements either in the *init()*-method of your [controller](../controllers/), or
-as close to rendering as possible (e.g. in `[api:FormField]`.
+as close to rendering as possible (e.g. in [api:FormField]).
 
 	:::php
 	<?php

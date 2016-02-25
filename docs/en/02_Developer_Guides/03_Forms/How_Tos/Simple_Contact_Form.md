@@ -34,14 +34,14 @@ There's quite a bit in this function, so we'll step through one piece at a time.
 		new TextareaField('Message')
 	);
 
-First we create all the fields we want in the contact form, and put them inside a FieldList. You can find a list of form fields available on the `[api:FormField]` page.   
+First we create all the fields we want in the contact form, and put them inside a FieldList. You can find a list of form fields available on the [api:FormField] page.
 
 	:::php
 	$actions = FieldList(
 		new FormAction('submit', 'Submit')
 	);
 
-We then create a `[api:FieldList]` of the form actions, or the buttons that submit the form. Here we add a single form action, with the name 'submit', and the label 'Submit'. We'll use the name of the form action later.
+We then create a [api:FieldList] of the form actions, or the buttons that submit the form. Here we add a single form action, with the name 'submit', and the label 'Submit'. We'll use the name of the form action later.
 
 	:::php
 	return new Form($this, 'Form', $fields, $actions);
@@ -104,7 +104,7 @@ The final thing we do is return a 'thank you for your feedback' message to the u
 
 All forms have some basic validation built in – email fields will only let the user enter email addresses, number fields will only accept numbers, and so on. Sometimes you need more complicated validation, so you can define your own validation by extending the Validator class.
 
-The framework comes with a predefined validator called `[api:RequiredFields]`, which performs the common task of making sure particular fields are filled out. Below is the code to add validation to a contact form:
+The framework comes with a predefined validator called [api:RequiredFields], which performs the common task of making sure particular fields are filled out. Below is the code to add validation to a contact form:
 
 	:::php
 	public function Form() { 

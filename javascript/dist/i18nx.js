@@ -66,9 +66,7 @@
 				}
 
 				var regx = new RegExp('(.?)(%s)', 'g');
-
 				var i = 0;
-
 				return s.replace(regx, function (match, subMatch1, subMatch2, offset, string) {
 					if (subMatch1 === '%') {
 						return match;
@@ -81,7 +79,6 @@
 			key: 'inject',
 			value: function inject(s, map) {
 				var regx = new RegExp('\{([A-Za-z0-9_]*)\}', 'g');
-
 				return s.replace(regx, function (match, key, offset, string) {
 					return map[key] ? map[key] : match;
 				});

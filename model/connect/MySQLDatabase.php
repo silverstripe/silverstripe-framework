@@ -31,6 +31,13 @@ class MySQLDatabase extends SS_Database {
 			$parameters['charset'] = $charset;
 		}
 
+		// Set collation
+		if( empty($parameters['collation'])
+			&& ($collation = Config::inst()->get('MySQLDatabase', 'connection_collation'))
+		) {
+			$parameters['collation'] = $collation;
+		}
+
 		// Notify connector of parameters
 		$this->connector->connect($parameters);
 
@@ -151,18 +158,20 @@ class MySQLDatabase extends SS_Database {
 			$baseClasses[$class] = '"' . $class . '"';
 		}
 
+		$charset = Config::inst()->get('MySQLDatabase', 'charset');
+
 		// Make column selection lists
 		$select = array(
 			'SiteTree' => array(
 				"ClassName", "$baseClasses[SiteTree].\"ID\"", "ParentID",
 				"Title", "MenuTitle", "URLSegment", "Content",
 				"LastEdited", "Created",
-				"Name" => "_utf8''",
+				"Name" => "_{$charset}''",
 				"Relevance" => $relevance['SiteTree'], "CanViewType"
 			),
 			'File' => array(
-				"ClassName", "$baseClasses[File].\"ID\"", "ParentID" => "_utf8''",
-				"Title", "MenuTitle" => "_utf8''", "URLSegment" => "_utf8''", "Content" => "_utf8''",
+				"ClassName", "$baseClasses[File].\"ID\"", "ParentID" => "_{$charset}''",
+				"Title", "MenuTitle" => "_{$charset}''", "URLSegment" => "_{$charset}''", "Content",
 				"LastEdited", "Created",
 				"Name",
 				"Relevance" => $relevance['File'], "CanViewType" => "NULL"

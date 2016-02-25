@@ -122,7 +122,7 @@ field description as an example.
 	$dateField->setAttribute('placeholder', $dateField->getConfig('dateformat'));
 
 <div class="notice" markdown="1">
-Fields scaffolded through [api:DataObject::scaffoldCMSFields] automatically have a description attached to them.
+Fields scaffolded through [api:DataObject::scaffoldCMSFields()] automatically have a description attached to them.
 </div>
 
 ## API Documentation

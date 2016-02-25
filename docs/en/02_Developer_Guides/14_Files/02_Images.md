@@ -2,16 +2,16 @@ summary: Learn how to crop and resize images in templates and PHP code
 
 # Image
 
-Image files can be stored either through the `[api:Image]` dataobject, or though `[api:DBFile]` fields.
+Image files can be stored either through the `[api:Image]` dataobject, or though [api:DBFile] fields.
 In either case, the same image resizing and manipulation functionality is available though the common
-`[api:ImageManipulation]` trait.
+[api:ImageManipulation] trait.
 
 ## Usage
 
 ### Managing images through form fields
 
-Images can be uploaded like any other file, through `[api:FileField]`.
-More advanced usage is possible through `[api:UploadField]`,
+Images can be uploaded like any other file, through [api:FileField].
+More advanced usage is possible through [api:UploadField],
 which provides thumbnails, a detail view of the image properties,
 and management of relationships to other DataObject instances.
 Allows upload of images through limiting file extensions with `setAllowedExtensions()`.
@@ -40,7 +40,7 @@ Here are some examples, assuming the `$Image` object has dimensions of 200x100px
 	$Image.ScaleMaxHeight(150) // Returns a 200x100px image (like ScaleHeight but prevents up-sampling)
 	$Image.Fit(300,300) // Returns an image that fits within a 300x300px boundary, resulting in a 300x150px image (up-sampled)
 	$Image.FitMax(300,300) // Returns a 200x100px image (like Fit but prevents up-sampling)
-
+	
 	// Warning: This method can distort images that are not the correct aspect ratio
 	$Image.ResizedImage(200, 300) // Forces dimensions of this image to the given values.
 	
@@ -75,7 +75,7 @@ The image manipulation functions can be used in your code with the same names, e
 
 Some of the MetaData functions need to be prefixed with 'get', example `getHeight()`, `getOrientation()` etc.
 
-Please refer to the `[api:ImageManipulation]` API documentation for specific functions.
+Please refer to the [api:ImageManipulation] API documentation for specific functions.
 
 ### Creating custom image functions
 
@@ -95,7 +95,7 @@ You can also create your own functions by decorating the `Image` class.
 		public function PerfectSquare()	{
 			$variant = $this->owner->variantName(__FUNCTION__);
 			return $this->owner->manipulateImage($variant, function(Image_Backend $backend) {
-				return $backend->croppedResize(100,100);
+			return $backend->croppedResize(100,100);
 			});
 		}
 		
@@ -104,16 +104,16 @@ You can also create your own functions by decorating the `Image` class.
 			$mime = $this->owner->getMimeType();
 			$content = $this->owner->getAsString();
 			$image = "data://{$mime};base64," . base64_encode($content);
-			$d = new ArrayList();
+			$d=new ArrayList();	
 			$exif = exif_read_data($image, 0, true);
 			foreach ($exif as $key => $section) {
-				$a = new ArrayList();	
+				$a=new ArrayList();	
 				foreach ($section as $name => $val) {
 					$a->push(new ArrayData(array(
 						"Title"=>$name,
 						"Content"=>$val
 					)));
-				}
+			}
 				$d->push(new ArrayData(array(
 					"Title"=>strtolower($key),
 					"Content"=>$a
@@ -133,8 +133,8 @@ You can also create your own functions by decorating the `Image` class.
 
 ### Form Upload
 
-For usage on a website form, see `[api:FileField]`.
-If you want to upload images within the CMS, see `[api:UploadField]`.
+For usage on a website form, see [api:FileField].
+If you want to upload images within the CMS, see [api:UploadField].
 
 ### Image Quality
 
@@ -170,7 +170,7 @@ crash so a good size for website images is around 2000px on the longest edge.
 
 ## API Documentation
 
- * `[api:File]`
- * `[api:Image]`
- * `[api:DBFile]`
- * `[api:ImageManipulation]`
+ * [api:File]
+ * [api:Image]
+ * [api:DBFile]
+ * [api:ImageManipulation]

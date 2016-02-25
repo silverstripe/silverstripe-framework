@@ -160,7 +160,7 @@ It's empty by default, but you can add new students as required,
 or relate them to the project by typing in the box above the table.
 
 In our case, we want to manage those records, edit their details, and add new ones. 
-To accomplish this, we have added a specific `[api:GridFieldConfig]`.
+To accomplish this, we have added a specific [api:GridFieldConfig].
 While we could've built the config from scratch, there's several
 preconfigured instances. The `GridFieldConfig_RecordEditor` default configures
 the field to edit records, rather than just viewing them.
@@ -427,4 +427,4 @@ we suggest some excercises to make the solution more flexible:
    and avoid any duplication between the two subclasses.
  * Render mentor details in their own template
  * Change the `GridField` to list only five records per page (the default is 20).
-   This configuration is stored in the `[api:GridFieldPaginator]` component
+   This configuration is stored in the [api:GridFieldPaginator] component

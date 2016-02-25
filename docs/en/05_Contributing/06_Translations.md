@@ -59,7 +59,7 @@ Currently translated entities are not directly factored into code (for security 
 you can't see them straight away. 
 
 It is strongly encouraged that you check your translation this way, as its a good way to double check your translation 
-works in the right context. Please use our [daily-builds](http://www.silverstripe.org/daily-builds/) for your local 
+works in the right context. Please use our `[daily-builds](http://www.silverstripe.org/daily-builds/)` for your local 
 installation, to ensure you're looking at the most up to date interface. See "Download Translations" above to find out 
 how to retrieve the latest translation files.
 
@@ -135,7 +135,7 @@ This also applies for any modules staying compatible with SilverStripe 2.x.
 ## Contact
 
 Translators have their own [mailinglist](https://groups.google.com/forum/#!forum/silverstripe-translators), but you can 
-also reach a core member on [IRC](http://silverstripe.org/irc). The transifex.com interface has a built-in discussion 
+also reach a core member on [IRC](https://irc.silverstripe.org). The transifex.com interface has a built-in discussion 
 board if you have specific comments on a translation.
 
 ## Related
@@ -143,4 +143,4 @@ board if you have specific comments on a translation.
  * [i18n](/developer_guides/i18n): Developer-level documentation of Silverstripe's i18n capabilities
  * [Translation Process](translation_process): Information about managing translations for the core team and/or module maintainers.
  * [translatable](https://github.com/silverstripe/silverstripe-translatable): DataObject-interface powering the website-content translations
- * ["Translatable ModelAdmin" module](http://silverstripe.org/translatablemodeladmin-module/): An extension which allows translations of DataObjects inside ModelAdmin
+ * `["Translatable ModelAdmin" module](http://silverstripe.org/translatablemodeladmin-module/)`: An extension which allows translations of DataObjects inside ModelAdmin

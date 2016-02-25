@@ -29,16 +29,12 @@
 			},
 			showingAlternate: false
 		},
-
 		toggleAlternate: function toggleAlternate() {
 			if (this._trigger('ontogglealternate') === false) return;
-
 			if (!this.options.alternate.icon && !this.options.alternate.text) return;
-
 			this.options.showingAlternate = !this.options.showingAlternate;
 			this.refresh();
 		},
-
 		_refreshAlternate: function _refreshAlternate() {
 			this._trigger('beforerefreshalternate');
 
@@ -58,13 +54,10 @@
 
 			this._trigger('afterrefreshalternate');
 		},
-
 		_resetButton: function _resetButton() {
 			var iconPrimary = this.element.data('icon-primary'),
 			    iconSecondary = this.element.data('icon-secondary');
-
 			if (!iconPrimary) iconPrimary = this.element.data('icon');
-
 			if (iconPrimary) this.options.icons.primary = 'btn-icon-' + iconPrimary;
 			if (iconSecondary) this.options.icons.secondary = 'btn-icon-' + iconSecondary;
 
@@ -73,9 +66,11 @@
 			if (!this.options.alternate.text) {
 				this.options.alternate.text = this.element.data('text-alternate');
 			}
+
 			if (!this.options.alternate.icon) {
 				this.options.alternate.icon = this.element.data('icon-alternate');
 			}
+
 			if (!this.options.showingAlternate) {
 				this.options.showingAlternate = this.element.hasClass('ss-ui-alternate');
 			}
@@ -83,19 +78,18 @@
 			if (this.options.alternate.icon) {
 				this.buttonElement.append("<span class='ui-button-icon-alternate ui-button-icon-primary ui-icon btn-icon-" + this.options.alternate.icon + "'></span>");
 			}
+
 			if (this.options.alternate.text) {
 				this.buttonElement.append("<span class='ui-button-text-alternate ui-button-text'>" + this.options.alternate.text + "</span>");
 			}
 
 			this._refreshAlternate();
 		},
-
 		refresh: function refresh() {
 			_jQuery2.default.ui.button.prototype.refresh.call(this);
 
 			this._refreshAlternate();
 		},
-
 		destroy: function destroy() {
 			this.element.find('.ui-button-text-alternate').remove();
 			this.element.find('.ui-button-icon-alternate').remove();
@@ -109,7 +103,6 @@
 			iframeUrl: '',
 			reloadOnOpen: true,
 			dialogExtraClass: '',
-
 			modal: true,
 			bgiframe: true,
 			autoOpen: false,
@@ -126,19 +119,17 @@
 			_jQuery2.default.ui.dialog.prototype._create.call(this);
 
 			var self = this;
-
 			var iframe = (0, _jQuery2.default)('<iframe marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"></iframe>');
 			iframe.bind('load', function (e) {
 				if ((0, _jQuery2.default)(this).attr('src') == 'about:blank') return;
-
 				iframe.addClass('loaded').show();
+
 				self._resizeIframe();
+
 				self.uiDialog.removeClass('loading');
 			}).hide();
-
 			if (this.options.dialogExtraClass) this.uiDialog.addClass(this.options.dialogExtraClass);
 			this.element.append(iframe);
-
 			if (this.options.iframeUrl) this.element.css('overflow', 'hidden');
 		},
 		open: function open() {
@@ -167,9 +158,12 @@
 			var opts = {},
 			    newWidth,
 			    newHeight,
-			    iframe = this.element.children('iframe');;
+			    iframe = this.element.children('iframe');
+			;
+
 			if (this.options.widthRatio) {
 				newWidth = (0, _jQuery2.default)(window).width() * this.options.widthRatio;
+
 				if (this.options.minWidth && newWidth < this.options.minWidth) {
 					opts.width = this.options.minWidth;
 				} else if (this.options.maxWidth && newWidth > this.options.maxWidth) {
@@ -178,8 +172,10 @@
 					opts.width = newWidth;
 				}
 			}
+
 			if (this.options.heightRatio) {
 				newHeight = (0, _jQuery2.default)(window).height() * this.options.heightRatio;
+
 				if (this.options.minHeight && newHeight < this.options.minHeight) {
 					opts.height = this.options.minHeight;
 				} else if (this.options.maxHeight && newHeight > this.options.maxHeight) {
@@ -205,15 +201,13 @@
 	_jQuery2.default.widget("ssui.titlebar", {
 		_create: function _create() {
 			this.originalTitle = this.element.attr('title');
-
 			var self = this;
 			var options = this.options;
-
 			var title = options.title || this.originalTitle || '&nbsp;';
+
 			var titleId = _jQuery2.default.ui.dialog.getTitleId(this.element);
 
 			this.element.parent().addClass('ui-dialog');
-
 			var uiDialogTitlebar = this.element.addClass('ui-dialog-titlebar ' + 'ui-widget-header ' + 'ui-corner-all ' + 'ui-helper-clearfix');
 
 			if (options.closeButton) {
@@ -228,18 +222,14 @@
 				}).mousedown(function (ev) {
 					ev.stopPropagation();
 				}).appendTo(uiDialogTitlebar);
-
 				var uiDialogTitlebarCloseText = (this.uiDialogTitlebarCloseText = (0, _jQuery2.default)('<span/>')).addClass('ui-icon ' + 'ui-icon-closethick').text(options.closeText).appendTo(uiDialogTitlebarClose);
 			}
 
 			var uiDialogTitle = (0, _jQuery2.default)('<span/>').addClass('ui-dialog-title').attr('id', titleId).html(title).prependTo(uiDialogTitlebar);
-
 			uiDialogTitlebar.find("*").add(uiDialogTitlebar).disableSelection();
 		},
-
 		destroy: function destroy() {
 			this.element.unbind('.dialog').removeData('dialog').removeClass('ui-dialog-content ui-widget-content').hide().appendTo('body');
-
 			this.originalTitle && this.element.attr('title', this.originalTitle);
 		}
 	});
@@ -251,9 +241,7 @@
 			closeButton: false,
 			closeText: 'close'
 		},
-
 		uuid: 0,
-
 		getTitleId: function getTitleId($el) {
 			return 'ui-dialog-title-' + ($el.attr('id') || ++this.uuid);
 		}

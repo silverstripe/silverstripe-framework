@@ -125,7 +125,6 @@ $gf_grid_x:	16px;
 		border-collapse: separate;
 		border-bottom: 0 none;
 		width: 100%;
-		overflow: hidden;
 
 		thead {
 			color: darken($color-base, 50%);
@@ -459,16 +458,16 @@ $gf_grid_x:	16px;
 								linear-gradient(
 									$color-menu-button,
 									darken($color-menu-button, 10%)
-								);
+							);
 							width: 26px;
 							border-top: 1px solid lighten($color-menu-button, 5%);
 
 							&.hover-alike:active, &:active,	&.hover-alike, &:hover {
 								background: 
-									$bgImage -15px 4px,
-									linear-gradient(
-										lighten($color-menu-button, 10%),
-										$color-menu-button
+								$bgImage -15px 4px,
+								linear-gradient(
+									lighten($color-menu-button, 10%),
+									$color-menu-button
 									);
 							}
 
@@ -511,7 +510,7 @@ $gf_grid_x:	16px;
 									linear-gradient(
 										rgba(#fff,0.1),
 										rgba(#fff,0.1)
-									);
+								);
 							}
 
 						}

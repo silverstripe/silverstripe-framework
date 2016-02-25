@@ -15,7 +15,7 @@ class Enum extends StringField {
 	 * @var array
 	 */
 	protected $enum = array();
-			
+
 	/**
 	 * Default value
 	 *
@@ -74,11 +74,14 @@ class Enum extends StringField {
 	 * @return void
 	 */
 	public function requireField() {
+		$charset = Config::inst()->get('MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('MySQLDatabase', 'collation');
+
 		$parts = array(
 			'datatype' => 'enum',
 			'enums' => $this->getEnum(),
-			'character set' => 'utf8',
-			'collate' => 'utf8_general_ci',
+			'character set' => $charset,
+			'collate' => $collation,
 			'default' => $this->getDefault(),
 			'table' => $this->getTable(),
 			'arrayValue' => $this->arrayValue
