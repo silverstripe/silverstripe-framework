@@ -48,7 +48,7 @@ trait Extensible {
 	private static $unextendable_classes = array('Object', 'ViewableData', 'RequestHandler');
 
 	/**
-	 * @var array all current extension instances.
+	 * @var Extension[] all current extension instances.
 	 */
 	protected $extension_instances = array();
 
@@ -56,7 +56,9 @@ trait Extensible {
 	 * List of callbacks to call prior to extensions having extend called on them,
 	 * each grouped by methodName.
 	 *
-	 * @var array[callable]
+	 * Top level array is method names, each of which is an array of callbacks for that name.
+	 *
+	 * @var callable[][]
 	 */
 	protected $beforeExtendCallbacks = array();
 
@@ -64,7 +66,9 @@ trait Extensible {
 	 * List of callbacks to call after extensions having extend called on them,
 	 * each grouped by methodName.
 	 *
-	 * @var array[callable]
+	 * Top level array is method names, each of which is an array of callbacks for that name.
+	 *
+	 * @var callable[][]
 	 */
 	protected $afterExtendCallbacks = array();
 
@@ -364,13 +368,24 @@ trait Extensible {
 	 * all results into an array
 	 *
 	 * @param string $method the method name to call
-	 * @param mixed $argument a single argument to pass
-	 * @return mixed
-	 * @todo integrate inheritance rules
+	 * @param mixed $a1
+	 * @param mixed $a2
+	 * @param mixed $a3
+	 * @param mixed $a4
+	 * @param mixed $a5
+	 * @param mixed $a6
+	 * @param mixed $a7
+	 * @return array List of results with nulls filtered out
 	 */
-	public function invokeWithExtensions($method, $argument = null) {
-		$result = method_exists($this, $method) ? array($this->$method($argument)) : array();
-		$extras = $this->extend($method, $argument);
+	public function invokeWithExtensions($method, &$a1=null, &$a2=null, &$a3=null, &$a4=null, &$a5=null, &$a6=null, &$a7=null) {
+		$result = array();
+		if(method_exists($this, $method)) {
+			$thisResult = $this->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+			if($thisResult !== null) {
+				$result[] = $thisResult;
+			}
+		}
+		$extras = $this->extend($method, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
 		return $extras ? array_merge($result, $extras) : $result;
 	}
@@ -387,7 +402,13 @@ trait Extensible {
 	 * The extension methods are defined during {@link __construct()} in {@link defineMethods()}.
 	 *
 	 * @param string $method the name of the method to call on each extension
-	 * @param mixed $a1,... up to 7 arguments to be passed to the method
+	 * @param mixed $a1
+	 * @param mixed $a2
+	 * @param mixed $a3
+	 * @param mixed $a4
+	 * @param mixed $a5
+	 * @param mixed $a6
+	 * @param mixed $a7
 	 * @return array
 	 */
 	public function extend($method, &$a1=null, &$a2=null, &$a3=null, &$a4=null, &$a5=null, &$a6=null, &$a7=null) {
