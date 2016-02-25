@@ -171,7 +171,7 @@ class MySQLDatabase extends SS_Database {
 			),
 			'File' => array(
 				"ClassName", "$baseClasses[File].\"ID\"", "ParentID" => "_{$charset}''",
-				"Title", "MenuTitle" => "_{$charset}''", "URLSegment" => "_{$charset}''", "Content",
+				"Title", "MenuTitle" => "_{$charset}''", "URLSegment" => "_{$charset}''", "Content" => "_{$charset}''",
 				"LastEdited", "Created",
 				"Name",
 				"Relevance" => $relevance['File'], "CanViewType" => "NULL"

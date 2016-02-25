@@ -136,8 +136,7 @@ $.widget('blueimpUIX.fileupload', $.blueimpUI.fileupload, {
 		// Validate each file
 		$.each(files, function (index, file) {
 			self._adjustMaxNumberOfFiles(-1);
-			error = self._validate([file]);
-			valid = error && valid;
+			valid = self._validate([file]) && valid;
 		});
 		data.isAdjusted = true;
 		data.files.valid = data.isValidated = valid;
