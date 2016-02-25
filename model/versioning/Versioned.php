@@ -1167,12 +1167,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::reading_stage($toStage);
 
+		// Migrate stage prior to write
+		$from->setSourceQueryParam('Versioned.mode', 'stage');
+		$from->setSourceQueryParam('Versioned.stage', $toStage);
+
+		$conn = DB::get_conn();
 		if(method_exists($conn, 'allowPrimaryKeyEditing')) {
-			$conn = DB::get_conn();
 			$conn->allowPrimaryKeyEditing($baseClass, true);
-			// Migrate stage prior to write
-			$from->setSourceQueryParam('Versioned.mode', 'stage');
-			$from->setSourceQueryParam('Versioned.stage', $toStage);
 			$from->write();
 			$conn->allowPrimaryKeyEditing($baseClass, false);
 		} else {

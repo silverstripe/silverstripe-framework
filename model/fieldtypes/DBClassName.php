@@ -122,10 +122,10 @@ class DBClassName extends Enum {
 			return $class;
 		}
 		// If there is no class for this table, strip table modifiers (_Live / _versions) off the end
-		if(preg_match('/^(?<class>.+)(_[^_]+)$/i', $this->getTable(), $matches)) {
+		if(preg_match('/^(?<class>.+)(_[^_]+)$/i', $table, $matches)) {
 			return $this->getClassNameFromTable($matches['class']);
 		}
-		
+
 		return null;
 	}
 
@@ -162,12 +162,12 @@ class DBClassName extends Enum {
 		if(empty(self::$classname_cache[$table])) {
 			self::$classname_cache[$table] = array();
 		}
-		
+
 		// Check existing cache
 		if(!empty(self::$classname_cache[$table][$name])) {
 			return self::$classname_cache[$table][$name];
 		}
-		
+
 		// Get all class names
 		$classNames = $this->getEnum();
 		if(DB::get_schema()->hasField($table, $name)) {
@@ -201,7 +201,7 @@ class DBClassName extends Enum {
 		if($defaultClass &&  class_exists($defaultClass)) {
 			return $defaultClass;
 		}
-		
+
 		// Fallback to first option
 		$enum = $this->getEnum();
 		return reset($enum);
