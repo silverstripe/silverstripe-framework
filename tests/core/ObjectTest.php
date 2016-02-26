@@ -353,11 +353,18 @@ class ObjectTest extends SapphireTest {
 		$this->assertEquals($object->extend('extendableMethod', $argument), array('ExtendTest2(modified)'));
 		$this->assertEquals($argument, 'modified');
 
-		$this->assertEquals($object->invokeWithExtensions('extendableMethod'), array('ExtendTest()', 'ExtendTest2()'));
-		$this->assertEquals (
-			$object->invokeWithExtensions('extendableMethod', 'test'),
-			array('ExtendTest(test)', 'ExtendTest2(modified)')
+		$this->assertEquals(
+			array('ExtendTest()', 'ExtendTest2()'),
+			$object->invokeWithExtensions('extendableMethod')
 		);
+		$arg1 = 'test';
+		$arg2 = 'bob';
+		$this->assertEquals (
+			array('ExtendTest(test,bob)', 'ExtendTest2(modified,objectmodified)'),
+			$object->invokeWithExtensions('extendableMethod', $arg1, $arg2)
+		);
+		$this->assertEquals('modified', $arg1);
+		$this->assertEquals('objectmodified', $arg2);
 
 		$object2 = new ObjectTest_Extending();
 		$first = 1;
@@ -566,7 +573,11 @@ class ObjectTest_CacheTest extends Object {
 
 class ObjectTest_ExtendTest extends Object {
 	private static $extensions = array('ObjectTest_ExtendTest1', 'ObjectTest_ExtendTest2');
-	public function extendableMethod($argument = null) { return "ExtendTest($argument)"; }
+	public function extendableMethod(&$argument = null, &$argument2 = null) {
+		$args = implode(',', array_filter(func_get_args()));
+		if($argument2) $argument2 = 'objectmodified';
+		return "ExtendTest($args)";
+	}
 }
 
 class ObjectTest_ExtendTest1 extends Extension {
@@ -577,7 +588,10 @@ class ObjectTest_ExtendTest1 extends Extension {
 }
 
 class ObjectTest_ExtendTest2 extends Extension {
-	public function extendableMethod($argument = null) { return "ExtendTest2($argument)"; }
+	public function extendableMethod($argument = null) {
+		$args = implode(',', array_filter(func_get_args()));
+		return "ExtendTest2($args)";
+	}
 }
 
 class ObjectTest_ExtendTest3 extends Extension {

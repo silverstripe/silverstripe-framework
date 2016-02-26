@@ -395,8 +395,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Get the ID of an object from the fixture.
 	 *
-	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
-	 * @param $identifier The identifier string, as provided in your fixture file
+	 * @param string $className The data class, as specified in your fixture file.  Parent classes won't work
+	 * @param string $identifier The identifier string, as provided in your fixture file
 	 * @return int
 	 */
 	protected function idFromFixture($className, $identifier) {
@@ -652,10 +652,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Assert that the given {@link SS_List} includes only DataObjects matching the given
 	 * key-value pairs.  Each match must correspond to 1 distinct record.
 	 *
-	 * @param $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
-	 * either pass a single pattern or an array of patterns.
-	 * @param $dataObjectSet The {@link SS_List} to test.
-	 *
 	 * Example
 	 * --------
 	 * Check that *only* the entries Sam Minnee and Ingo Schommer exist in $members.  Order doesn't
@@ -664,9 +660,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *        array('FirstName' =>'Sam', 'Surname' => 'Minnee'),
 	 *        array('FirstName' => 'Ingo', 'Surname' => 'Schommer'),
 	 *      ), $members);
+	 *
+	 * @param mixed $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
+	 * either pass a single pattern or an array of patterns.
+	 * @param mixed $dataObjectSet The {@link SS_List} to test.
 	 */
 	public function assertDOSEquals($matches, $dataObjectSet) {
-		if(!$dataObjectSet) return false;
+		if(!$dataObjectSet) return;
 
 		$extracted = array();
 		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
@@ -704,13 +704,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Assert that the every record in the given {@link SS_List} matches the given key-value
 	 * pairs.
 	 *
-	 * @param $match The pattern to match.  The pattern is a map of key-value pairs.
-	 * @param $dataObjectSet The {@link SS_List} to test.
-	 *
 	 * Example
 	 * --------
 	 * Check that every entry in $members has a Status of 'Active':
 	 *     $this->assertDOSAllMatch(array('Status' => 'Active'), $members);
+	 *
+	 * @param mixed $match The pattern to match.  The pattern is a map of key-value pairs.
+	 * @param mixed $dataObjectSet The {@link SS_List} to test.
 	 */
 	public function assertDOSAllMatch($match, $dataObjectSet) {
 		$extracted = array();
