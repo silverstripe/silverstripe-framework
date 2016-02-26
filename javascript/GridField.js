@@ -22,7 +22,7 @@
 				if(window.location.search) {
 					ajaxOpts.data = window.location.search.replace(/^\?/, '') + '&' + $.param(ajaxOpts.data);
 				}
-				
+
 				// For browsers which do not support history.pushState like IE9, ss framework uses hash to track
 				// the current location for PJAX, so for them we pass the query string stored in the hash instead
 				if(!window.history || !window.history.pushState){
@@ -142,14 +142,46 @@
 					e.preventDefault();
 					return;
 				}
-				
+
 				if(this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))){
 					filterState='hidden';
 				}
 
 				this.getGridField().reload({data: [{name: this.attr('name'), value: this.val(), filter: filterState}]});
 				e.preventDefault();
+			},
+			/**
+			 * Get the url this action should submit to
+			 */
+			actionurl: function() {
+				var btn = this.closest(':button'), grid = this.getGridField(),
+					form = this.closest('form'), data = form.find(':input.gridstate').serialize(),
+					csrf = form.find('input[name="SecurityID"]').val();
+
+				// Add current button
+				data += "&" + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
+
+				// Add csrf
+				if(csrf) {
+					data += "&SecurityID=" + encodeURIComponent(csrf);
+				}
+
+				// Include any GET parameters from the current URL, as the view
+				// state might depend on it. For example, a list pre-filtered
+				// through external search criteria might be passed to GridField.
+				if(window.location.search) {
+					data = window.location.search.replace(/^\?/, '') + '&' + data;
+				}
+
+				// decide whether we should use ? or & to connect the URL
+				var connector = grid.data('url').indexOf('?') == -1 ? '?' : '&';
+
+				return $.path.makeUrlAbsolute(
+					grid.data('url') + connector + data,
+					$('base').attr('href')
+				);
 			}
+
 		});
 
 		/**
@@ -180,7 +212,7 @@
 			}
 		});
 
-		// Covers both tabular delete button, and the button on the detail form 
+		// Covers both tabular delete button, and the button on the detail form
 		$('.ss-gridfield .col-buttons .action.gridfield-button-delete, .cms-edit-form .Actions button.action.action-delete').entwine({
 			onclick: function(e){
 				if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
@@ -191,7 +223,7 @@
 				}
 			}
 		});
-		
+
 		$('.ss-gridfield .action.gridfield-button-print').entwine({
 			UUID: null,
 			onmatch: function() {
@@ -202,34 +234,13 @@
 				this._super();
 			},
 			onclick: function(e){
-				var btn = this.closest(':button'), grid = this.getGridField(),
-					form = this.closest('form'), data = form.find(':input.gridstate').serialize();;
-
-				// Add current button
-				data += "&" + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
-
-				// Include any GET parameters from the current URL, as the view
-				// state might depend on it.
-				// For example, a list prefiltered through external search criteria
-				// might be passed to GridField.
-				if(window.location.search) {
-					data = window.location.search.replace(/^\?/, '') + '&' + data;
-				}
-
-				// decide whether we should use ? or & to connect the URL
-				var connector = grid.data('url').indexOf('?') == -1 ? '?' : '&';
-
-				var url = $.path.makeUrlAbsolute(
-					grid.data('url') + connector + data,
-					$('base').attr('href')
-				);
-
-				var newWindow = window.open(url);
-
+				var url = this.actionurl();
+				window.open(url);
+				e.preventDefault();
 				return false;
 			}
 		});
-		
+
 		$('.ss-gridfield-print-iframe').entwine({
 			onmatch: function(){
 				this._super();
@@ -244,7 +255,7 @@
 				this._super();
 			}
 		});
-		
+
 		/**
 		 * Prevents actions from causing an ajax reload of the field.
 		 *
@@ -253,27 +264,8 @@
 		 */
 		$('.ss-gridfield .action.no-ajax').entwine({
 			onclick: function(e){
-				var self = this, btn = this.closest(':button'), grid = this.getGridField(), 
-					form = this.closest('form'), data = form.find(':input.gridstate').serialize();
-
-				// Add current button
-				data += "&" + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
-
-				// Include any GET parameters from the current URL, as the view
-				// state might depend on it. For example, a list pre-filtered
-				// through external search criteria might be passed to GridField.
-				if(window.location.search) {
-					data = window.location.search.replace(/^\?/, '') + '&' + data;
-				}
-
-				// decide whether we should use ? or & to connect the URL
-				var connector = grid.data('url').indexOf('?') == -1 ? '?' : '&';
-
-				window.location.href = $.path.makeUrlAbsolute(
-					grid.data('url') + connector + data,
-					$('base').attr('href')
-				);
-
+				window.location.href = this.actionurl();
+				e.preventDefault();
 				return false;
 			}
 		});
@@ -315,7 +307,7 @@
 				if (this.data('selectable')) this.selectable('destroy');
 			}
 		});
-		
+
 		/**
 		 * Catch submission event in filter input fields, and submit the correct button
 		 * rather than the whole form.
@@ -324,7 +316,7 @@
 			onmatch: function() {
 				var filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter'),
 					resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
-				
+
 				if(this.val()) {
 					filterbtn.addClass('filtered');
 					resetbtn.addClass('filtered');
@@ -343,11 +335,11 @@
 
 				if(e.keyCode == '13') {
 					var btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');
-					var filterState='show'; //filterstate should equal current state.				
+					var filterState='show'; //filterstate should equal current state.
 					if(this.hasClass('ss-gridfield-button-close')||!(this.closest('.ss-gridfield').hasClass('show-filter'))){
 						filterState='hidden';
 					}
-					
+
 					this.getGridField().reload({data: [{name: btns.attr('name'), value: btns.val(), filter: filterState}]});
 					return false;
 				}else{
@@ -369,7 +361,7 @@
 							},
 							type: "GET",
 							url: $(searchField).data('searchUrl'),
-							data: encodeURIComponent(searchField.attr('name'))+'='+encodeURIComponent(searchField.val()), 
+							data: encodeURIComponent(searchField.attr('name'))+'='+encodeURIComponent(searchField.val()),
 							success: function(data) {
 								response( $.map(JSON.parse(data), function( name, id ) {
 									return { label: name, value: name, id: id };
