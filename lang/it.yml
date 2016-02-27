@@ -1,5 +1,6 @@
 it:
   AssetAdmin:
+    HIDEALLOWEDEXTS: 'Nascondi estensioni permesse'
     NEWFOLDER: NuovaCartella
     SHOWALLOWEDEXTS: 'Mostra le estensioni consentite'
   AssetTableField:
@@ -7,12 +8,14 @@ it:
     DIM: Dimensioni
     FILENAME: Nome del file
     FOLDER: Cartella
+    HEIGHT: Altezza
     LASTEDIT: 'Ultima modifica'
     OWNER: Proprietario
     SIZE: 'Dimensione'
     TITLE: Titolo
     TYPE: 'Tipo di file'
     URL: URL
+    WIDTH: Larghezza
   AssetUploadField:
     ChooseFiles: 'Scegli file'
     DRAGFILESHERE: 'Trascina file qui'
@@ -23,7 +26,10 @@ it:
     FILES: Files
     FROMCOMPUTER: 'Scegli file dal tuo computer'
     FROMCOMPUTERINFO: 'Carica dal tuo conputer'
+    INSERTURL: 'Inserisci da URL'
+    REMOVEINFO: 'Rimuovi questo file da questo campo'
     TOTAL: Totale
+    TOUPLOAD: 'Scegli file da caricare...'
     UPLOADINPROGRESS: 'Attendere prego... caricamento in corso'
     UPLOADOR: O
   BBCodeParser:
@@ -76,6 +82,8 @@ it:
     PASSWORDEXPIRED: '<p>La tua password è scaduta. <a target="_top" href="{link}">Per favore selezionarne una nuova.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Preview del sito'
+  CMSPagesController_Tools_ss:
+    FILTER: Filtro
   CMSProfileController:
     MENUTITLE: 'Il mio Profilo'
   CMSSecurity:
@@ -104,6 +112,7 @@ it:
     MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
     SHOWONCLICKTITLE: 'Cambia password'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Devi loggarti con la tua password per vedere la bozza o il contenuto archiviato. <a href="%s">Premi qui per tornare indietro al sito pubblicato.</a>'
     NOTLOGGEDIN: 'Non autenticato'
   CreditCardField:
     FIRST: primo
@@ -143,6 +152,7 @@ it:
     INVALID_REQUEST: 'Richiesta non valida'
   DropdownField:
     CHOOSE: (Scegli)
+    CHOOSESEARCH: '(Scegli o Cerca)'
     SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
   EmailField:
     VALIDATION: 'Inserisci un indirizzo e-mail'
@@ -295,6 +305,7 @@ it:
     IMAGETITLETEXT: 'Titolo (tooltip)'
     IMAGETITLETEXTDESC: 'Per informazioni addizionali sull''immagine'
     IMAGEWIDTHPX: Larghezza
+    INSERTMEDIA: 'Inserisci Media'
     LINK: 'Inserisci Link'
     LINKANCHOR: 'Ancora su questa pagina'
     LINKDESCR: 'Descrizione del link'
@@ -307,7 +318,11 @@ it:
     PAGE: Pagina
     SUBJECT: 'Oggetto email'
     URL: URL
+    URLDESCRIPTION: 'Inserisci video e immagini dal Web nella tua pagina semplicemente inserendo l''URL del file.
+
+      Si sicuro di avere i diritti o i permessi prima di condividere media direttamente dal Web.<br /><br />NB : i file non sono aggiunti allo storage file del CMS, ma incorpora il file dalla sua location principale, se per un qualsiasi motivo il file non e'' più raggiungibile nella sua location principale, non sara'' più visibile su questa pagina.'
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
+    UpdateMEDIA: 'Aggiorna Media'
   Image:
     PLURALNAME: Files
     SINGULARNAME: File
