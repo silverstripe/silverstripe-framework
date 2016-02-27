@@ -334,7 +334,6 @@ sk:
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnenie meniť stránky najvyššej úrovne. Vaša zmena nebola uložená.'
     DELETED: Zmazané.
-    DropdownBatchActionsDefault: Akcie
     HELP: Pomoc
     PERMAGAIN: 'Boli ste odhlásený'
     PERMALREADY: 'Je nám ľúto, ale k tejto časti CMS nemáte prístup . Ak sa chcete prihlásiť ako niekto iný, urobte tak nižšie.'
