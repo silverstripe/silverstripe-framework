@@ -185,7 +185,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 
 	if (TRUSTED_PROXY && !empty($_SERVER[$trustedProxyHeader])) {
 		// Get the first host, in case there's multiple separated through commas
-		$_SERVER['HTTP_HOST'] = strtok($_SERVER[SS_TRUSTED_PROXY_HOST_HEADER], ',');
+		$_SERVER['HTTP_HOST'] = strtok($_SERVER[$trustedProxyHeader], ',');
 	}
 }
 
