@@ -48,6 +48,29 @@ class ArrayLibTest extends SapphireTest {
 		);
 	}
 
+	public function testArrayMapRecursive() {
+		$array = array(
+			'a ',
+			array('  b', 'c'),
+		);
+		$strtoupper = array(
+			'A ',
+			array('  B', 'C'),
+		);
+		$trim = array(
+			'a',
+			array('b', 'c'),
+		);
+		$this->assertEquals(
+			$strtoupper,
+			ArrayLib::array_map_recursive('strtoupper', $array)
+		);
+		$this->assertEquals(
+			$trim,
+			ArrayLib::array_map_recursive('trim', $array)
+		);
+	}
+
 	public function testArrayMergeRecursive() {
 		$first = array(
 			'first' => 'a',

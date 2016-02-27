@@ -164,6 +164,23 @@ class ArrayLib {
 	}
 
 	/**
+	 * Similar to array_map, but recurses when arrays are encountered.
+	 *
+	 * Actually only one array argument is supported.
+	 *
+	 * @param $f callback to apply
+	 * @param $array array
+	 * @return array
+	 */
+	public static function array_map_recursive($f, $array) {
+		$applyOrRecurse = function($v) use($f) {
+			return is_array($v) ? ArrayLib::array_map_recursive($f, $v) : call_user_func($f, $v);
+		};
+
+		return array_map($applyOrRecurse, $array);
+	}
+
+	/**
 	 * Recursively merges two or more arrays.
 	 *
 	 * Behaves similar to array_merge_recursive(), however it only merges
