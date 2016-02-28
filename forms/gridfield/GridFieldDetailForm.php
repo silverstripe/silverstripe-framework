@@ -385,20 +385,22 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 				$actions->push(new LiteralField('cancelbutton', $text));
 			}
 		}
+		
+		// If we are creating a new record in a has-many list, then
+		// pre-populate the record's foreign key.
+		if($list instanceof HasManyList && !$this->record->isInDB()) {
+			$key = $list->getForeignKey();
+			$id = $list->getForeignID();
+			$this->record->$key = $id;
+		}
 
 		$fields = $this->component->getFields();
 		if(!$fields) $fields = $this->record->getCMSFields();
 
 		// If we are creating a new record in a has-many list, then
-		// pre-populate the record's foreign key. Also disable the form field as
-		// it has no effect.
+		// Disable the form field as it has no effect.
 		if($list instanceof HasManyList) {
 			$key = $list->getForeignKey();
-			$id = $list->getForeignID();
-
-			if(!$this->record->isInDB()) {
-				$this->record->$key = $id;
-			}
 
 			if($field = $fields->dataFieldByName($key)) {
 				$fields->makeFieldReadonly($field);
