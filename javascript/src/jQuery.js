@@ -3,6 +3,6 @@
  * like other modules. Once jQuery is updated and managed
  * by npm we can get rid of this wrapper.
  */
-var jQuery = typeof window.jQuery !== 'undefined' ? window.jQuery : null;
+var jQuery = typeof window.jQuery !== 'undefined' ? window.jQuery : null
 
-export default jQuery;
+export default jQuery

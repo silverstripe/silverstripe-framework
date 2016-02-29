@@ -27,8 +27,8 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
  		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 4.0.x-dev
 
-2. Edit the `composer.json`. Remove any `@stable` markers from the core modules in there. 
-   Add your fork URLs, in this example a fork of the `cms` module on the `sminnee` github account 
+2. Edit the `composer.json`. Remove any `@stable` markers from the core modules in there.
+   Add your fork URLs, in this example a fork of the `cms` module on the `sminnee` github account
    (replace with your own fork URL). Run a `composer update` afterwards.
 
 		"repositories": [
@@ -61,7 +61,7 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 		git fetch upstream
 		git rebase -i upstream/3.2
 
-7. Push release candidate branch to GitHub 
+7. Push release candidate branch to GitHub
 
 		git push origin ###-description
 
@@ -112,7 +112,7 @@ The current GitHub labels are grouped into 5 sections:
 
 ### Quickfire Do's and Don't's
 
-If you aren't familiar with git and GitHub, try reading the ["GitHub bootcamp documentation"](http://help.github.com/). 
+If you aren't familiar with git and GitHub, try reading the ["GitHub bootcamp documentation"](http://help.github.com/).
 We also found the [free online git book](http://git-scm.com/book/) and the [git crash course](http://gitref.org/) useful.
 If you're familiar with it, here's the short version of what you need to know. Once you fork and download the code:
 
@@ -146,7 +146,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 * Describe specifics on how to test the effects of the patch
 * It's better to submit multiple patches with separate bits of functionality than a big patch containing lots of changes
 * Only submit a pull request for work you expect to be ready to merge. Work in progress is best discussed in an issue, or on your own repository fork.
-* Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
+* Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our
 [API documentation](http://api.silverstripe.org/3.1/) for good examples.
 * Check and update documentation on [docs.silverstripe.org](http://docs.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * When introducing something "noteworthy" (new feature, API change), [update the release changelog](/changelogs) for the next release this commit will be included in.
@@ -155,13 +155,13 @@ After you have edited the file, GitHub will offer to create a pull request for y
 
 ## Commit Messages
 
-We try to maintain a consistent record of descriptive commit messages. 
+We try to maintain a consistent record of descriptive commit messages.
 Most importantly: Keep the first line short, and add more detail below.
 This ensures commits are easy to browse, and look nice on github.com
 (more info about [proper git commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)).
 
-As we automatically generate [changelogs](http://localhost/SpiritLevel/SS/doc.silverstripe.org/en/changelogs/) from them, we need a way to categorize and filter. 
-Please prefix **noteworthy** commit messages with one of the following tags: 
+As we automatically generate [changelogs](http://localhost/SpiritLevel/SS/doc.silverstripe.org/en/changelogs/) from them, we need a way to categorize and filter.
+Please prefix **noteworthy** commit messages with one of the following tags:
 
 * `NEW` New feature or major enhancement (both for users and developers)
 * `API` Addition of a new API, or modification/removal/deprecation of an existing API. Includes any change developers should be aware of when upgrading.
@@ -178,7 +178,7 @@ Further guidelines:
 * If you are fixing a issue from our bugtracker ([cms](http://github.com/silverstripe/silverstripe-framework) and [framework](http://github.com/silverstripe/silverstripe-framework)), please append `(fixes #<ticketnumber>)`
 * When fixing issues across repos (e.g. a commit to `framework` fixes an issue raised in the `cms` bugtracker),
   use `(fixes silverstripe/silverstripe-cms#<issue-number>)` ([details](https://github.com/blog/1439-closing-issues-across-repositories))
-* If your change is related to another commit, reference it with its abbreviated commit hash. 
+* If your change is related to another commit, reference it with its abbreviated commit hash.
 * Mention important changed classes and methods in the commit summary.
 
 Example: Bad commit message
@@ -188,9 +188,9 @@ Example: Bad commit message
 
 Example: Good commit message
 
-	BUG Formatting through prepValueForDB() 
+	BUG Formatting through prepValueForDB()
 
-	Added prepValueForDB() which is called on DBField->writeToManipulation() 
+	Added prepValueForDB() which is called on DBField->writeToManipulation()
 	to ensure formatting of value before insertion to DB on a per-DBField type basis (fixes #1234).
 	Added documentation for DBField->writeToManipulation() (related to a4bd42fd).
 
@@ -202,10 +202,10 @@ Before you start working on a new feature or bugfix, create a new branch dedicat
 
 	$ git checkout -b 100-dataobject-get-one
 
-Edit and test the files on your development environment. When you've got something the way you want and established that it works, commit the changes to your branch on your local git repo. 
+Edit and test the files on your development environment. When you've got something the way you want and established that it works, commit the changes to your branch on your local git repo.
 
 	$ git add <filename>
-	$ git commit -m 'Some kind of descriptive message (fixes #100)' 
+	$ git commit -m 'Some kind of descriptive message (fixes #100)'
 
 You'll need to use git add for each file that you created or modified. There are ways to add multiple files, but I highly recommend a more deliberate approach unless you know what you're doing.
 
@@ -234,9 +234,9 @@ Note that the example doesn't keep your own master branch up to date.  If you wa
 	$ git checkout 100-dataobject-get-one
 	$ git rebase master
 
-You may need to resolve conflicts that occur when a file on the development trunk and one of your files have both been changed. Edit each file to resolve the differences, then commit the fixes to your development server repo and test. Each file will need to be "added" before running a "commit." 
+You may need to resolve conflicts that occur when a file on the development trunk and one of your files have both been changed. Edit each file to resolve the differences, then commit the fixes to your development server repo and test. Each file will need to be "added" before running a "commit."
 
-Conflicts are clearly marked in the code files. Make sure to take time in determining what version of the conflict you want to keep and what you want to discard. 
+Conflicts are clearly marked in the code files. Make sure to take time in determining what version of the conflict you want to keep and what you want to discard.
 
 	$ git add <filename>
 	$ git rebase --continue
@@ -319,7 +319,10 @@ Of course to run these scripts, you'll need to get the dependencies, so run a `n
 
 ## Working with core JavaScript
 
-Core JavaScript is managed by the same build tool chain as [client-side dependencies](#working-with-client-side-dependencies). Source file are located `javascript/src` directories, these are the files you should edit. Source files are input for the build tooling, which outputs distributions files, located in `javascript/dist` directories.
+Core JavaScript is managed by the same build tool chain as [client-side dependencies](#working-with-client-side-dependencies).
+We use [JavaScript Standard Style](https://github.com/feross/standard) for coding conventions.
+
+Source file are located `javascript/src` directories, these are the files you should edit. Source files are input for the build tooling, which outputs distributions files, located in `javascript/dist` directories.
 
 There are two parts of the build tooling which are important to understand when working with core JavaScript files.
 
@@ -421,11 +424,11 @@ Be careful not to commit any of your configuration files, logs, or throwaway tes
 
 Most of these special files are listed in the `.gitignore` file and won't be included in any commit, but you should carefully review the files you have modified and added before staging them and committing them to your repo. The git status command will display detailed information about any new files, modifications and staged.
 
-	$ git status 
+	$ git status
 
 One thing you do not want to do is to issue a git commit with the -a option. This automatically stages and commits every modified file that's not expressly defined in .gitignore, including your crawler logs.
 
-	$ git commit -a 
+	$ git commit -a
 
 Sometimes, you might correct an issue which was reported in a different repo. In these cases, don't simply refer to the issue number as GitHub will infer that as correcting an issue in the current repo. In these cases, use the full GitHub path to reference the issue.
 
