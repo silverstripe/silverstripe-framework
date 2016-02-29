@@ -54,7 +54,7 @@ If you go to [your site]/admin *Director.php* maps the 'admin' URL request throu
 *CMSMain.init()* calls its parent which, of all things is called [api:LeftAndMain]. It's in [api:LeftAndMain] that the
 important security checks are made by calling *Permission::check*. 
 
-[api:Security::permissionFailure] is the next utility function you can use to redirect to the login form. 
+[api:Security::permissionFailure()] is the next utility function you can use to redirect to the login form. 
 
 ### Customizing Access Checks in CMS Classes
 

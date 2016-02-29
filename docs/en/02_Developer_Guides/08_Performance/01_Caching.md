@@ -125,7 +125,7 @@ To use this backend, you need a memcached daemon and the memcache PECL extension
 				'timeout' => 5,
 				'retry_interval' => 15, 
 				'status' => true, 
-				'failure_callback' => ''
+				'failure_callback' => null
 			)
 		)
 	);
