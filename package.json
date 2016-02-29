@@ -14,6 +14,7 @@
     "sanity": "gulp sanity",
     "thirdparty": "gulp thirdparty",
     "css": "gulp css",
+    "test": "standard",
     "sprites": "gulp sprites",
     "lock": "npm-shrinkwrap --dev"
   },
@@ -58,6 +59,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "babel-eslint": "^5.0.0",
     "blueimp-file-upload": "^6.0.3",
     "blueimp-load-image": "^1.1.3",
     "blueimp-tmpl": "^1.0.2",
@@ -71,6 +73,20 @@
     "react-redux": "^4.0.6",
     "redux": "^3.0.5",
     "redux-thunk": "^1.0.3",
+    "standard": "^6.0.7",
     "tinymce": "^4.3.3"
+  },
+  "standard": {
+    "ignore": [
+      "**/thirdparty/**",
+      "**/dist/**",
+      "**/lang/**",
+      "**/bundles/**",
+      "/admin/javascript/src/LeftAndMain.Layout.js",
+      "/admin/javascript/src/sspath.js",
+      "/admin/javascript/src/ssui.core.js",
+      "**/tests/**",
+      "/dev/install/install.js"
+    ]
   }
 }
