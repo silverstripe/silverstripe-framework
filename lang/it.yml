@@ -299,7 +299,6 @@ it:
     FROMWEB: 'Dal web'
     FindInFolder: 'Trova nella Cartella'
     IMAGEALT: 'Testo alternativo (alt)'
-    IMAGEALTTEXT: 'Testo alternativo (alt) - visualizzato nel caso l''immagine non puo'' essere visualizzata'
     IMAGEDIMENSIONS: Dimensioni
     IMAGEHEIGHTPX: Altezza
     IMAGETITLE: 'Titolo (tooltip) - per informazioni aggiuntive sull''immagine.'
@@ -335,13 +334,10 @@ it:
   LeftAndMain:
     CANT_REORGANISE: 'Non hai i permessi per modificare le pagine di primo livello. Le modifiche non sono state salvate.'
     DELETED: Eliminato.
-    DropdownBatchActionsDefault: 'Scegli un azione...'
     HELP: Aiuto
-    PAGETYPE: 'Tipo di pagina'
     PERMAGAIN: 'Sei stato disconnesso dal CMS. Se desideri autenticarti nuovamente, inserisci qui sotto nome utente e password.'
     PERMALREADY: 'Siamo spiacenti, ma non puoi accedere a questa sezione del CMS. Se desideri autenticarti come qualcun altro, fallo qui sotto.'
     PERMDEFAULT: 'Devi essere autenticato per accedere all''area amministrativa; Per favore inserisci le tue credenziali qui sotto'
-    PLEASESAVE: 'Per favore Salva Pagina: Questa pagina potrebbe non essere aggiornata in quanto non e'' ancora stata salvata.'
     PreviewButton: Anteprima
     REORGANISATIONSUCCESSFUL: 'Albero del sito riorganizzato con successo.'
     SAVEDUP: Salvato.
