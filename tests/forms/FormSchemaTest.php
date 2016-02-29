@@ -7,7 +7,7 @@ class FormSchemaTest extends SapphireTest {
 	public function testGetSchema() {
 		$form = new Form(new Controller(), 'TestForm', new FieldList(), new FieldList());
 		$formSchema = new FormSchema();
-		$expectedJSON = json_encode([
+		$expected = [
 			'name' => 'TestForm',
 			'id' => null,
 			'action' => null,
@@ -43,20 +43,24 @@ class FormSchemaTest extends SapphireTest {
 				],
 			],
 			'actions' => []
-		]);
+		];
 
 		$schema = $formSchema->getSchema($form);
-
-		$this->assertJsonStringEqualsJsonString($expectedJSON, $schema);
+		$this->assertInternalType('array', $schema);
+		$this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($schema));
 	}
 
 	public function testGetState() {
 		$form = new Form(new Controller(), 'TestForm', new FieldList(), new FieldList());
 		$formSchema = new FormSchema();
-		$expectedJSON = json_encode(['state' => []]);
+		$expected = [
+			'id' => 'TestForm',
+			'fields' => [],
+			'messages' => []
+		];
 
 		$state = $formSchema->getState($form);
-
-		$this->assertJsonStringEqualsJsonString($expectedJSON, $state);
+		$this->assertInternalType('array', $state);
+		$this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($state));
 	}
 }

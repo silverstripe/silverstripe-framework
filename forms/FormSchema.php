@@ -11,7 +11,7 @@ class FormSchema {
 	 * Gets the schema for this form as a nested array.
 	 *
 	 * @param Form $form
-	 * @return string
+	 * @return array
 	 */
 	public function getSchema(Form $form) {
 		$request = $form->controller()->getRequest();
@@ -39,18 +39,22 @@ class FormSchema {
 			}
 		}
 
-		return Convert::raw2json($schema);
+		return $schema;
 	}
 
 	/**
 	 * Gets the current state of this form as a nested array.
 	 *
 	 * @param From $form
-	 * @return string
+	 * @return array
 	 */
 	public function getState(Form $form) {
-		$state = ['state' => []];
+		$state = [
+			'id' => $form->getName(),
+			'fields' => [],
+			'messages' => []
+		];
 
-		return Convert::raw2json($state);
+		return $state;
 	}
 }

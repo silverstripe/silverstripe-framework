@@ -182,7 +182,43 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return SS_HTTPResponse
 	 */
 	public function schema() {
-		return $this->schema->getSchema($this->getEditForm());
+		$req = $this->getRequest();
+		$res = $this->getResponse();
+		$schemaParts = [];
+
+		// Valid values for the "X-Formschema-Request" header are "schema" and "state".
+		// If either of these values are set they will be stored in the $schemaParst array
+		// and used to construct the response body.
+		if ($schemaHeader = $req->getHeader('X-Formschema-Request')) {
+			$schemaParts = array_filter(explode(',', $schemaHeader), function($value) {
+				$validHeaderValues = ['schema', 'state'];
+				return in_array(trim($value), $validHeaderValues);
+			});
+		}
+
+		// Make sure it's an AJAX GET request with a valid "X-Formschema-Request" header value.
+		if (!$req->isAjax() || !$req->isGET() || !count($schemaParts)) {
+			throw new SS_HTTPResponse_Exception(
+				'Invalid request. Check you\'ve set a "X-Formschema-Request" header with "schema" or "state" values.',
+				400
+			);
+		}
+
+		$form = $this->getEditForm();
+		$responseBody = ['id' => $form->getName()];
+
+		if (in_array('schema', $schemaParts)) {
+			$responseBody['schema'] = $this->schema->getSchema($form);
+		}
+
+		if (in_array('state', $schemaParts)) {
+			$responseBody['state'] = $this->schema->getState($form);
+		}
+
+		$res->addHeader('Content-Type', 'application/json');
+		$res->setBody(Convert::raw2json($responseBody));
+
+		return $res;
 	}
 
 	/**
