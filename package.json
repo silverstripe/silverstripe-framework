@@ -14,7 +14,8 @@
     "sanity": "gulp sanity",
     "thirdparty": "gulp thirdparty",
     "css": "gulp css",
-    "sprites": "gulp sprites"
+    "sprites": "gulp sprites",
+    "lock": "npm-shrinkwrap --dev"
   },
   "repository": {
     "type": "git",
@@ -44,9 +45,9 @@
     "gulp-diff": "^1.0.0",
     "gulp-if": "^2.0.0",
     "gulp-notify": "^2.2.0",
+    "gulp-postcss": "^6.0.1",
     "gulp-sass": "^2.1.1",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-postcss": "^6.0.1",
     "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.7",
     "semver": "^5.1.0",
@@ -63,6 +64,7 @@
     "bootstrap": "^4.0.0-alpha.2",
     "isomorphic-fetch": "^2.2.1",
     "jquery-sizes": "^0.33.0",
+    "npm-shrinkwrap": "^5.4.1",
     "react": "^0.14.6",
     "react-addons-test-utils": "^0.14.6",
     "react-dom": "^0.14.6",
