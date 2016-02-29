@@ -153,6 +153,7 @@ fi:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
   DropdownField:
     CHOOSE: (Valitse)
+    CHOOSESEARCH: '(Valitse tai Hae)'
     SOURCE_VALIDATION: 'Valitse arvo pudotusvalikosta. {value} ei kelpaa'
   EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'
@@ -308,6 +309,7 @@ fi:
     IMAGETITLETEXT: 'Otsikkoteksti (tooltip)'
     IMAGETITLETEXTDESC: 'Kuvan lisätiedot'
     IMAGEWIDTHPX: Leveys
+    INSERTMEDIA: 'Liitä media'
     LINK: 'Lisää/muokkaa linkki(ä) valittuun tekstiin'
     LINKANCHOR: 'Ankkuroi tähän sivuun'
     LINKDESCR: 'Linkin kuvaus'
@@ -322,6 +324,7 @@ fi:
     URL: URL-osoite
     URLDESCRIPTION: 'Liittääksesi videoita tai kuvia verkosta, lisää tiedoston täydellinen verkko-osoite.<br /><br />Huomioithan, että mikäli alkuperäinen tiedosto häviää alkuperäisestä osoitteesta, tiedosto ei näy enää tällä sivulla.'
     URLNOTANOEMBEDRESOURCE: 'URL-osoitteesta ''{url}'' ei voitu liittää mediaa'
+    UpdateMEDIA: 'Päivitä media'
   Image:
     PLURALNAME: Tiedostot
     SINGULARNAME: Tiedosto
