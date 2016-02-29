@@ -939,13 +939,13 @@ abstract class Object {
 	 * all results into an array
 	 *
 	 * @param string $method the method name to call
-	 * @param mixed $argument a single argument to pass
+	 * @param mixed $a1,... up to 7 arguments to be passed to the method
 	 * @return mixed
 	 * @todo integrate inheritance rules
 	 */
-	public function invokeWithExtensions($method, $argument = null) {
-		$result = method_exists($this, $method) ? array($this->$method($argument)) : array();
-		$extras = $this->extend($method, $argument);
+	public function invokeWithExtensions($method, &$a1=null, &$a2=null, &$a3=null, &$a4=null, &$a5=null, &$a6=null, &$a7=null) {
+		$result = method_exists($this, $method) ? array($this->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7)) : array();
+		$extras = $this->extend($method, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
 		return $extras ? array_merge($result, $extras) : $result;
 	}
