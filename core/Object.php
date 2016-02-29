@@ -943,7 +943,7 @@ abstract class Object {
 	 * @return mixed
 	 * @todo integrate inheritance rules
 	 */
-	public function invokeWithExtensions($method, &$a1=null, &$a2=null, &$a3=null, &$a4=null, &$a5=null, &$a6=null, &$a7=null) {
+	public function invokeWithExtensions($method, $a1=null, $a2=null, $a3=null, $a4=null, $a5=null, $a6=null, $a7=null) {
 		$result = method_exists($this, $method) ? array($this->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7)) : array();
 		$extras = $this->extend($method, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
