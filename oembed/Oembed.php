@@ -117,11 +117,11 @@ class Oembed {
 
 		if(preg_match_all($pcreOmbed, $body, $matches, PREG_SET_ORDER)) {
 			$match = $matches[0];
-			if(!empty($match[1])) {
-				return html_entity_decode($match[1]);
-			}
 			if(!empty($match[2])) {
 				return html_entity_decode($match[2]);
+			}
+			if(!empty($match[1])) {
+				return html_entity_decode($match[1]);
 			}
 		}
 		return false;
@@ -297,6 +297,11 @@ class Oembed_Result extends ViewableData {
 		// Convert all keys to lowercase
 		$data = array_change_key_case($data, CASE_LOWER);
 
+		if( isset($data['provider_name']) && $data['provider_name'] == "Facebook" ) {
+			$id = preg_replace("/.*\/(\d+?)\/?($|\?.*)/", "$1", $data["url"]);
+			$data['thumbnail_url'] = "https://graph.facebook.com/{$id}/picture";
+		}
+	
 		// Purge everything if the type does not match.
 		if($this->type && $this->type != $data['type']) {
 			$data = array();
