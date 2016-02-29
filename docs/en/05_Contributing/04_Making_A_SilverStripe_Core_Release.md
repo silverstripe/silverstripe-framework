@@ -74,6 +74,8 @@ the [core committers](core_committers), who will assist with setting up your cre
 * AWS write permissions on the `silverstripe-ssorg-releases` s3 bucket.
 * Permission on [silverstripe release announcement](https://groups.google.com/forum/#!forum/silverstripe-announce).
 * Moderator permissions in the #silverstripe [IRC channel](http://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/)
+* Administrator account on [docs.silverstripe.org](https://docs.silverstripe.org) and
+  [userhelp.silverstripe.org](https://userhelp.silverstripe.org).
 
 ### First time setup: Security releases
 
@@ -293,20 +295,42 @@ aren't strictly able to be automated:
 If releasing a new major or minor version it may be necessary to update various SilverStripe portals. Normally a new
 minor version will require a new branch option to be made available on each site menu. These sites include:
 
-* [docs.silverstripe.org](https://docs.silverstripe.org): Update on [github](https://github.com/silverstripe/doc.silverstripe.org)
-  and deployed internally.
+* [docs.silverstripe.org](https://docs.silverstripe.org):
+  * New branches (minor releases) require a code update. Changes are made to
+    [github](https://github.com/silverstripe/doc.silverstripe.org) and deployed via
+    [SilverStripe Platform](https://platform.silverstripe.com/naut/project/SS-Developer-Docs/environment/Production/)
+  * Updates to markdown only can be made via the [build tasks](https://docs.silverstripe.org/dev/tasks).
+    See below for more details.
+* [userhelp.silverstripe.org](https://userhelp.silverstripe.org/en/3.2):
+  * Updated similarly to docs.silverstripe.org: Code changes are made to
+    [github](https://github.com/silverstripe/userhelp.silverstripe.org) and deployed via
+    [SilverStripe Platform](https://platform.silverstripe.com/naut/project/SS-User-Docs/environment/Production/).
+  * The content for this site is pulled from [silverstripe-userhelp-content](https://github.com/silverstripe/silverstripe-userhelp-content)
+  * Updates to markdown made via the [build tasks](https://userhelp.silverstripe.org/dev/tasks).
+    See below for more details.
+* [demo.silverstripe.org](http://demo.silverstripe.org/): Update code on
+  [github](https://github.com/silverstripe/demo.silverstripe.org/)
+  and deployed via [SilverStripe Platform](https://platform.silverstripe.com/naut/project/ss3demo/environment/live).
 * [api.silverstripe.org](https://api.silverstripe.org): Update on [github](https://github.com/silverstripe/api.silverstripe.org)
-  and deployed internally.
-* [userhelp.silverstripe.org](https://userhelp.silverstripe.org/en/3.2): Update on
-  [github](https://github.com/silverstripe/userhelp.silverstripe.org) and deployed internally.
-  The content for this site is pulled from [silverstripe-userhelp-content](https://github.com/silverstripe/silverstripe-userhelp-content)
-* [demo.silverstripe.org](http://demo.silverstripe.org/): Update on
-  [github](https://github.com/silverstripe/demo.silverstripe.org/) and deployed internally.
+  and deployed via [SilverStripe Platform](https://platform.silverstripe.com/naut/project/api/environment/live). Currently
+  the only way to rebuild the api docs is via SSH in and running the apigen task.
 
 It's also a good idea to check that `Deprecation::notification_version('4.0.0');` in framework/_config.php points to
 the right major version. This should match the major version of the current release. E.g. all versions of 4.x
 should be set to `4.0.0`.
 
+*Updating markdown files*
+
+When updating markdown on sites such as userhelp.silverstripe.org or docs.silverstripe.org, the process is similar:
+
+* Run `RefreshMarkdownTask` to pull down new markdown files.
+* Then `RebuildLuceneDocsIndex` to update search indexes.
+
+Running either of these tasks may time out when requested, but will continue to run in the background. Normally
+only the search index rebuild takes a long period of time.
+
+Note that markdown is automatically updated daily, and this should only be done if an immediate refresh is necessary.
+    
 ### Stage 3: Let the world know
 
 Once a release has been published there are a few places where user documentation
