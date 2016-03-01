@@ -1232,82 +1232,99 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 		return $labels;
 	}
-	
+
 	/**
 	 * Users can view their own record.
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions.
 	 * This is likely to be customized for social sites etc. with a looser permission model.
 	 */
 	public function canView($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-		
-		// extended access checks
-		$results = $this->extend('canView', $member);
-		if($results && is_array($results)) {
-			if(!min($results)) return false;
-			else return true;
+		//get member and check for extensions
+		if(!($member instanceof Member)) {
+			$member = Member::currentUser();
 		}
-		
-		// members can usually edit their own record
+		if(!$member) return false;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
+
+		// members can usually view their own record
 		if($member && $this->ID == $member->ID) return true;
-		
+
+		//standard check
 		if(
 			Permission::checkMember($member, 'ADMIN')
 			|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')
 		) {
 			return true;
 		}
-		
 		return false;
 	}
-	
+
 	/**
 	 * Users can edit their own record.
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
 	 */
 	public function canEdit($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-		
-		// extended access checks
-		$results = $this->extend('canEdit', $member);
-		if($results && is_array($results)) {
-			if(!min($results)) return false;
-			else return true;
+		//get member and check for extensions
+		if(!($member instanceof Member)) {
+			$member = Member::currentUser();
 		}
-		
-		// No member found
-		if(!($member && $member->exists())) return false;
-		
-		// If the requesting member is not an admin, but has access to manage members,
-		// he still can't edit other members with ADMIN permission.
-		// This is a bit weak, strictly speaking he shouldn't be allowed to
-		// perform any action that could change the password on a member
-		// with "higher" permissions than himself, but thats hard to determine.		
+		if(!$member) return false;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
+		// HACK: we should not allow for an non-Admin to edit an Admin
 		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) return false;
 
-		return $this->canView($member);
+		// members can usually edit their own record
+		if($member && $this->ID == $member->ID) return true;
+
+		//standard check
+		if(
+			Permission::checkMember($member, 'ADMIN')
+			|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')
+		) {
+			return true;
+		}
+		return false;
 	}
-	
+
 	/**
 	 * Users can edit their own record.
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
 	 */
 	public function canDelete($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-		
-		// extended access checks
-		$results = $this->extend('canDelete', $member);
-		if($results && is_array($results)) {
-			if(!min($results)) return false;
-			else return true;
+		//get member and check for extensions
+		if(!($member instanceof Member)) {
+			$member = Member::currentUser();
 		}
-		
-		// No member found
-		if(!($member && $member->exists())) return false;
-		
-		return $this->canEdit($member);
-	}
+		if(!$member) return false;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 
+		// HACK: we should not allow for an non-Admin to delete an Admin
+		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) return false;
+
+		// Members are not allowed to remove themselves,
+		// since it would create inconsistencies in the admin UIs.
+		if($this->ID && $member->ID == $this->ID) return false;			
+
+		//standard check
+		if(
+			$member && (
+				Permission::checkMember($member, 'ADMIN')
+				|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')			
+			)
+		) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Validate this member object.
