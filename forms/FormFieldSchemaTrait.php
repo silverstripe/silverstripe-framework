@@ -5,6 +5,29 @@ namespace SilverStripe\Forms\Schema;
 trait FormFieldSchemaTrait {
 
 	/**
+	 * The type of front-end component to render the FormField as.
+	 *
+	 * @var string
+	 */
+	protected $schemaComponent;
+
+	/**
+	 * Structured schema data representing the FormField.
+	 * Used to render the FormField as a ReactJS Component on the front-end.
+	 *
+	 * @var array
+	 */
+	protected $schemaData = [];
+
+	/**
+	 * Structured schema state representing the FormField's current data and validation.
+	 * Used to render the FormField as a ReactJS Component on the front-end.
+	 *
+	 * @var array
+	 */
+	protected $schemaState = [];
+
+	/**
 	 * Sets the component type the FormField will be rendered as on the front-end.
 	 *
 	 * @param string $componentType
@@ -58,7 +81,7 @@ trait FormFieldSchemaTrait {
 	 *
 	 * @return array
 	 */
-	function getSchemaDataDefaults() {
+	public function getSchemaDataDefaults() {
 		return [
 			'type' => $this->class,
 			'component' => $this->getSchemaComponent(),
@@ -75,6 +98,65 @@ trait FormFieldSchemaTrait {
 			'disabled' => $this->isDisabled(),
 			'customValidationMessage' => $this->getCustomValidationMessage(),
 			'attributes' => [],
+			'data' => [],
+		];
+	}
+
+	/**
+	 * Sets the schema data used for rendering the field on the front-end.
+	 * Merges the passed array with the current `$schemaData` or {@link getSchemaDataDefaults()}.
+	 * Any passed keys that are not defined in {@link getSchemaDataDefaults()} are ignored.
+	 * If you want to pass around ad hoc data use the `data` array e.g. pass `['data' => ['myCustomKey' => 'yolo']]`.
+	 *
+	 * @param array $schemaData - The data to be merged with $this->schemaData.
+	 * @return FormField
+	 *
+	 * @todo Add deep merging of arrays like `data` and `attributes`.
+	 */
+	public function setSchemaState($schemaState = []) {
+		$current = $this->getSchemaState();
+
+		$this->schemaState = array_merge($current, array_intersect_key($schemaState, $current));
+		return $this;
+	}
+
+	/**
+	 * Gets the schema state used to render the FormField on the front-end.
+	 *
+	 * @return array
+	 */
+	public function getSchemaState() {
+		return array_merge($this->getSchemaStateDefaults(), $this->schemaState);
+	}
+
+	/**
+	 * Gets the defaults for $schemaState.
+	 * The keys defined here are immutable, meaning undefined keys passed to {@link setSchemaState()} are ignored.
+	 * Instead the `data` array should be used to pass around ad hoc data.
+	 * Includes validation data if the field is associated to a {@link Form},
+	 * and {@link Form->validate()} has been called.
+	 *
+	 * @return array
+	 */
+	public function getSchemaStateDefaults() {
+		$field = $this;
+		$form = $this->getForm();
+		$validator = $form ? $form->getValidator() : null;
+		$errors = $validator ? (array)$validator->getErrors() : [];
+		$messages = array_filter(array_map(function($error) use ($field) {
+			if($error['fieldName'] === $field->getName()) {
+				return [
+					'value' => $error['message'],
+					'type' => $error['messageType']
+				];
+			}
+		}, $errors));
+
+		return [
+			'id' => $this->ID(),
+			'value' => $this->Value(),
+			'valid' => (count($messages) === 0),
+			'messages' => (array)$messages,
 			'data' => [],
 		];
 	}

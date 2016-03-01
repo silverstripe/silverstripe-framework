@@ -55,7 +55,83 @@ class FormSchemaTest extends SapphireTest {
 		$formSchema = new FormSchema();
 		$expected = [
 			'id' => 'TestForm',
-			'fields' => [],
+			'fields' => [
+				[
+					'id' => 'Form_TestForm_SecurityID',
+					'value' => $form->getSecurityToken()->getValue(),
+					'messages' => [],
+					'valid' => true,
+					'data' => []
+				]
+			],
+			'messages' => []
+		];
+
+		$state = $formSchema->getState($form);
+		$this->assertInternalType('array', $state);
+		$this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($state));
+	}
+
+	public function testGetStateWithFormMessages() {
+		$fields = new FieldList();
+		$actions = new FieldList();
+		$form = new Form(new Controller(), 'TestForm', $fields, $actions);
+		$form->sessionMessage('All saved', 'good');
+		$formSchema = new FormSchema();
+		$expected = [
+			'id' => 'TestForm',
+			'fields' => [
+				[
+					'id' => 'Form_TestForm_SecurityID',
+					'value' => $form->getSecurityToken()->getValue(),
+					'messages' => [],
+					'valid' => true,
+					'data' => []
+				]
+			],
+			'messages' => [
+				[
+					'value' => 'All saved',
+					'type' => 'good'
+				]
+			]
+		];
+
+		$state = $formSchema->getState($form);
+		$this->assertInternalType('array', $state);
+		$this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($state));
+	}
+
+	public function testGetStateWithFieldValidationErrors() {
+		$fields = new FieldList(new TextField('Title'));
+		$actions = new FieldList();
+		$validator = new RequiredFields('Title');
+		$form = new Form(new Controller(), 'TestForm', $fields, $actions, $validator);
+		$form->loadDataFrom([
+			'Title' => 'My Title'
+		]);
+		$validator->validationError('Title', 'Title is invalid', 'error');
+		$formSchema = new FormSchema();
+		$expected = [
+			'id' => 'TestForm',
+			'fields' => [
+				[
+					'id' => 'Form_TestForm_Title',
+					'value' => 'My Title',
+					'messages' => [
+						['value' => 'Title is invalid', 'type' => 'error']
+					],
+					'valid' => false,
+					'data' => []
+				],
+				[
+					'id' => 'Form_TestForm_SecurityID',
+					'value' => $form->getSecurityToken()->getValue(),
+					'messages' => [],
+					'valid' => true,
+					'data' => []
+				]
+			],
 			'messages' => []
 		];
 

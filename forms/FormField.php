@@ -167,21 +167,6 @@ class FormField extends RequestHandler {
 	protected $attributes = [];
 
 	/**
-	 * The type of front-end component to render the FormField as.
-	 *
-	 * @var string
-	 */
-	protected $schemaComponent;
-
-	/**
-	 * Structured schema data representing the FormField.
-	 * Used to render the FormField as a ReactJS Component on the front-end.
-	 *
-	 * @var array
-	 */
-	protected $schemaData = [];
-
-	/**
 	 * Takes a field name and converts camelcase to spaced words. Also resolves combined field
 	 * names with dot syntax to spaced words.
 	 *

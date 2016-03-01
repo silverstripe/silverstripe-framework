@@ -278,6 +278,37 @@ class FormFieldTest extends SapphireTest {
 		$schema = $field->getSchemaData();
 		$this->assertEquals(array_key_exists('myCustomKey', $schema), false);
 	}
+
+	public function testGetSchemaState() {
+		$field = new FormField('MyField');
+		$field->setValue('My value');
+		$schema = $field->getSchemaState();
+		$this->assertEquals('My value', $schema['value']);
+	}
+
+	public function testSetSchemaState() {
+		$field = new FormField('MyField');
+
+		// Make sure the user can update values.
+		$field = $field->setSchemaState(['value' => 'My custom value']);
+		$schema = $field->getSchemaState();
+		$this->assertEquals($schema['value'], 'My custom value');
+
+		// Make user the user can't define custom keys on the schema.
+		$field = $field->setSchemaState(['myCustomKey' => 'yolo']);
+		$schema = $field->getSchemaState();
+		$this->assertEquals(array_key_exists('myCustomKey', $schema), false);
+	}
+
+	public function testGetSchemaStateWithFormValidation() {
+		$field = new FormField('MyField');
+		$validator = new RequiredFields('MyField');
+		$form = new Form(new Controller(), 'TestForm', new FieldList($field), new FieldList(), $validator);
+		$validator->validationError('MyField', 'Something is wrong', 'error');
+		$schema = $field->getSchemaState();
+		$this->assertEquals(count($schema['messages']), 1);
+		$this->assertEquals('Something is wrong', $schema['messages'][0]['value']);
+	}
 }
 
 /**

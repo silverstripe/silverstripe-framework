@@ -45,7 +45,7 @@ class FormSchema {
 	/**
 	 * Gets the current state of this form as a nested array.
 	 *
-	 * @param From $form
+	 * @param Form $form
 	 * @return array
 	 */
 	public function getState(Form $form) {
@@ -54,6 +54,17 @@ class FormSchema {
 			'fields' => [],
 			'messages' => []
 		];
+
+		foreach ($form->Fields()->dataFields() as $field) {
+			$state['fields'][] = $field->getSchemaState();
+		}
+
+		if($form->Message()) {
+			$state['messages'][] = [
+				'value' => $form->Message(),
+				'type' => $form->MessageType(),
+			];
+		}
 
 		return $state;
 	}
