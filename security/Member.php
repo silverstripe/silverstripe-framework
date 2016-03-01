@@ -1470,7 +1470,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * This is likely to be customized for social sites etc. with a looser permission model.
 	 */
 	public function canView($member = null) {
-		if(!($member instanceof Member) {
+		if(!($member instanceof Member)) {
 			$member = Member::currentUser();
 		}		
 		$extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1496,7 +1496,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
 	 */
 	public function canEdit($member = null) {
-		if(!($member instanceof Member) {
+		if(!($member instanceof Member)) {
 			$member = Member::currentUser();
 		}	
 		$extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1525,7 +1525,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
 	 */
 	public function canDelete($member = null) {
-		if(!($member instanceof Member) {
+		if(!($member instanceof Member)) {
 			$member = Member::currentUser();
 		}
 		$extended = $this->extendedCan(__FUNCTION__, $member);
