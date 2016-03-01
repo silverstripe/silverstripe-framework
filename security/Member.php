@@ -1316,10 +1316,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		//standard check
 		if(
-			$member && (
-				Permission::checkMember($member, 'ADMIN')
-				|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')			
-			)
+			Permission::checkMember($member, 'ADMIN')
+			|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')			
 		) {
 			return true;
 		}
