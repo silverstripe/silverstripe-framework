@@ -13,6 +13,8 @@ use SilverStripe\Forms\Schema\FormSchema;
  *
  * This is essentially an abstract class which should be subclassed.
  * See {@link CMSMain} for a good example.
+ *
+ * @property FormSchema $schema
  */
 class LeftAndMain extends Controller implements PermissionProvider {
 
@@ -197,7 +199,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		// Make sure it's an AJAX GET request with a valid "X-Formschema-Request" header value.
-		if (!$req->isAjax() || !$req->isGET() || !count($schemaParts)) {
+		if (!$req->isGET() || !count($schemaParts)) {
 			throw new SS_HTTPResponse_Exception(
 				'Invalid request. Check you\'ve set a "X-Formschema-Request" header with "schema" or "state" values.',
 				400
@@ -1312,14 +1314,27 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$actionsFlattened = $actions->dataFields();
 			if($actionsFlattened) foreach($actionsFlattened as $action) $action->setUseButtonTag(true);
 
-			$form = CMSForm::create(
+			$negotiator = $this->getResponseNegotiator();
+			$form = Form::create(
 				$this, "EditForm", $fields, $actions
 			)->setHTMLID('Form_EditForm');
-			$form->setResponseNegotiator($this->getResponseNegotiator());
 			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm');
+			$form->setValidationResponseCallback(function() use ($negotiator, $form) {
+				$request = $this->getRequest();
+				if($request->isAjax() && $negotiator) {
+					$form->setupFormErrors();
+					$result = $form->forTemplate();
+
+					return $negotiator->respond($request, array(
+						'CurrentForm' => function() use($result) {
+							return $result;
+						}
+					));
+				}
+			});
 
 			// Announce the capability so the frontend can decide whether to allow preview or not.
 			if(in_array('CMSPreviewable', class_implements($record))) {
@@ -1368,7 +1383,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return Form
 	 */
 	public function EmptyForm() {
-		$form = CMSForm::create(
+		$form = Form::create(
 			$this,
 			"EditForm",
 			new FieldList(
@@ -1387,7 +1402,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			),
 			new FieldList()
 		)->setHTMLID('Form_EditForm');
-		$form->setResponseNegotiator($this->getResponseNegotiator());
 		$form->unsetValidator();
 		$form->addExtraClass('cms-edit-form');
 		$form->addExtraClass('root-form');
