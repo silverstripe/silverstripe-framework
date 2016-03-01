@@ -5,6 +5,7 @@ namespace SilverStripe\Filesystem\Flysystem;
 use Config;
 use Generator;
 use Injector;
+use LogicException;
 use Session;
 use Flushable;
 use InvalidArgumentException;
@@ -98,7 +99,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 */
 	public function setPublicFilesystem(Filesystem $filesystem) {
 		if(!$filesystem->getAdapter() instanceof PublicAdapter) {
-			throw new \InvalidArgumentException("Configured adapter must implement PublicAdapter");
+			throw new InvalidArgumentException("Configured adapter must implement PublicAdapter");
 		}
 		$this->publicFilesystem = $filesystem;
 		return $this;
@@ -108,8 +109,12 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * Get the currently assigned flysystem backend
 	 *
 	 * @return Filesystem
+	 * @throws LogicException
 	 */
 	public function getPublicFilesystem() {
+		if(!$this->publicFilesystem) {
+			throw new LogicException("Filesystem misconfiguration error");
+		}
 		return $this->publicFilesystem;
 	}
 
@@ -121,7 +126,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 */
 	public function setProtectedFilesystem(Filesystem $filesystem) {
 		if(!$filesystem->getAdapter() instanceof ProtectedAdapter) {
-			throw new \InvalidArgumentException("Configured adapter must implement ProtectedAdapter");
+			throw new InvalidArgumentException("Configured adapter must implement ProtectedAdapter");
 		}
 		$this->protectedFilesystem = $filesystem;
 		return $this;
@@ -133,6 +138,9 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * @return Filesystem
 	 */
 	public function getProtectedFilesystem() {
+		if(!$this->protectedFilesystem) {
+			throw new Exception("Filesystem misconfiguration error");
+		}
 		return $this->protectedFilesystem;
 	}
 
@@ -491,7 +499,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		} else {
 			$conflictResolution = $config['conflict'];
 		}
-		
+
 		// Validate parameters
 		if($variant && $conflictResolution === AssetStore::CONFLICT_RENAME) {
 			// As variants must follow predictable naming rules, they should not be dynamically renamed
@@ -532,7 +540,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 
 			// in case conflict resolution renamed the file, return the renamed
 			$filename = $this->getOriginalFilename($resolvedID);
-			
+
 		} elseif(empty($variant)) {
 			// If deferring to the existing file, return the sha of the existing file,
 			// unless we are writing a variant (which has the same hash value as its original file)
@@ -562,7 +570,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		if(!$legacy || $variant) {
 			return AssetStore::CONFLICT_OVERWRITE;
 		}
-		
+
 		// Legacy behaviour is to rename
 		return AssetStore::CONFLICT_RENAME;
 	}
@@ -602,7 +610,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 
 	/**
 	 * Determine the path that should be written to, given the conflict resolution scheme
-	 * 
+	 *
 	 * @param string $conflictResolution
 	 * @param string $fileID
 	 * @return string|false Safe filename to write to. If false, then don't write, and use existing file.
@@ -624,7 +632,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 		switch($conflictResolution) {
 			// Throw tantrum
 			case static::CONFLICT_EXCEPTION: {
-				throw new \InvalidArgumentException("File already exists at path {$fileID}");
+				throw new InvalidArgumentException("File already exists at path {$fileID}");
 			}
 
 			// Rename
@@ -635,7 +643,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 					}
 				}
 
-				throw new \InvalidArgumentException("File could not be renamed with path {$fileID}");
+				throw new InvalidArgumentException("File could not be renamed with path {$fileID}");
 			}
 
 			// Use existing file
