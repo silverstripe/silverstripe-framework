@@ -991,7 +991,9 @@ class Image extends File implements Flushable {
 	}
 
 	protected function onBeforeDelete() {
-		$backend = Injector::inst()->create(self::get_backend());
+		$backend = Injector::inst()->createWithArgs(self::config()->backend, array(
+			Director::baseFolder()."/" . $this->Filename		
+		));
 		$backend->onBeforeDelete($this);
 
 		$this->deleteFormattedImages();
