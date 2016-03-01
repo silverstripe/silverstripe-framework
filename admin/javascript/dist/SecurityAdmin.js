@@ -23,10 +23,10 @@
 
 	var refreshAfterImport = function refreshAfterImport(e) {
 		var existingFormMessage = (0, _jQuery2.default)((0, _jQuery2.default)(this).contents()).find('.message');
-
 		if (existingFormMessage && existingFormMessage.html()) {
 			var memberTableField = (0, _jQuery2.default)(window.parent.document).find('#Form_EditForm_Members').get(0);
 			if (memberTableField) memberTableField.refresh();
+
 			var tree = (0, _jQuery2.default)(window.parent.document).find('.cms-tree').get(0);
 			if (tree) tree.reload();
 		}
@@ -50,9 +50,11 @@
 			onunmatch: function onunmatch() {
 				this._super();
 			},
+
 			onclick: function onclick(e) {
 				this.toggleCheckboxes();
 			},
+
 			toggleCheckboxes: function toggleCheckboxes() {
 				var self = this,
 				    checkboxes = this.parents('.field:eq(0)').find('.checkbox').not(this);

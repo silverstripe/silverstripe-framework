@@ -63,7 +63,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	function _inherits(subClass, superClass) {
 		if (typeof superClass !== "function" && superClass !== null) {
-			throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+			throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
 		}
 
 		subClass.prototype = Object.create(superClass && superClass.prototype, {
@@ -119,5 +119,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	SilverStripeComponent.propTypes = {
 		'cmsEvents': _react2.default.PropTypes.object
 	};
+
 	exports.default = SilverStripeComponent;
 });

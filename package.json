@@ -63,6 +63,7 @@
     "bootstrap": "^4.0.0-alpha.2",
     "isomorphic-fetch": "^2.2.1",
     "jquery-sizes": "^0.33.0",
+    "json-js": "^1.1.2",
     "react": "^0.14.6",
     "react-addons-test-utils": "^0.14.6",
     "react-dom": "^0.14.6",

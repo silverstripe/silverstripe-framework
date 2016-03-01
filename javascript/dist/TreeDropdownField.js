@@ -33,7 +33,6 @@
 			if ($.browser.msie && parseInt($.browser.version, 10) < 9) {
 				var newWindowWidth = $(window).width(),
 				    newWindowHeight = $(window).height();
-
 				if (newWindowWidth != windowWidth || newWindowHeight != windowHeight) {
 					windowWidth = newWindowWidth;
 					windowHeight = newWindowHeight;
@@ -43,6 +42,7 @@
 				cb();
 			}
 		});
+
 		var strings = {
 			'openlink': _i18n2.default._t('TreeDropdownField.OpenLink'),
 			'fieldTitle': '(' + _i18n2.default._t('TreeDropdownField.FieldTitle') + ')',
@@ -55,13 +55,15 @@
 
 		$('.TreeDropdownField').entwine({
 			CurrentXhr: null,
+
 			onadd: function onadd() {
 				this.append('<span class="treedropdownfield-title"></span>' + '<div class="treedropdownfield-toggle-panel-link"><a href="#" class="ui-icon ui-icon-triangle-1-s"></a></div>' + '<div class="treedropdownfield-panel"><div class="tree-holder"></div></div>');
+
 				var linkTitle = strings.openLink;
 				if (linkTitle) this.find("treedropdownfield-toggle-panel-link a").attr('title', linkTitle);
 				if (this.data('title')) this.setTitle(this.data('title'));
-				this.getPanel().hide();
 
+				this.getPanel().hide();
 				this._super();
 			},
 			getPanel: function getPanel() {
@@ -69,14 +71,20 @@
 			},
 			openPanel: function openPanel() {
 				$('.TreeDropdownField').closePanel();
+
 				$('body').bind('click', _clickTestFn);
+
 				var panel = this.getPanel(),
 				    tree = this.find('.tree-holder');
+
 				panel.css('width', this.width());
+
 				panel.show();
+
 				var toggle = this.find(".treedropdownfield-toggle-panel-link");
 				toggle.addClass('treedropdownfield-open-tree');
 				this.addClass("treedropdownfield-open-tree");
+
 				toggle.find("a").removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-n');
 
 				if (tree.is(':empty') && !panel.hasClass('loading')) {
@@ -108,17 +116,17 @@
 						container.removeClass('treedropdownfield-with-rise');
 					}
 				}
-
-				dropdown.css({
-					"top": offsetTop + "px"
-				});
+				dropdown.css({ "top": offsetTop + "px" });
 			},
 			closePanel: function closePanel() {
 				jQuery('body').unbind('click', _clickTestFn);
+
 				var toggle = this.find(".treedropdownfield-toggle-panel-link");
 				toggle.removeClass('treedropdownfield-open-tree');
 				this.removeClass('treedropdownfield-open-tree treedropdownfield-with-rise');
+
 				toggle.find("a").removeClass('ui-icon-triangle-1-n').addClass('ui-icon-triangle-1-s');
+
 				this.getPanel().hide();
 				this.trigger('panelhide');
 			},
@@ -127,21 +135,22 @@
 			},
 			setTitle: function setTitle(title) {
 				title = title || this.data('title') || strings.fieldTitle;
+
 				this.find('.treedropdownfield-title').html(title);
 				this.data('title', title);
 			},
 			getTitle: function getTitle() {
 				return this.find('.treedropdownfield-title').text();
 			},
+
 			updateTitle: function updateTitle() {
 				var self = this,
 				    tree = self.find('.tree-holder'),
 				    val = this.getValue();
-
 				var updateFn = function updateFn() {
 					var val = self.getValue();
-
 					if (val) {
+
 						var node = tree.find('*[data-id="' + val + '"]'),
 						    title = node.children('a').find("span.jstree_pageicon") ? node.children('a').find("span.item").html() : null;
 						if (!title) title = node.length > 0 ? tree.jstree('get_text', node[0]) : null;
@@ -150,7 +159,6 @@
 							self.setTitle(title);
 							self.data('title', title);
 						}
-
 						if (node) tree.jstree('select_node', node);
 					} else {
 						self.setTitle(self.data('empty-title'));
@@ -158,14 +166,10 @@
 					}
 				};
 
-				if (!tree.is(':empty') || !val) updateFn();else this.loadTree({
-					forceValue: val
-				}, updateFn);
+				if (!tree.is(':empty') || !val) updateFn();else this.loadTree({ forceValue: val }, updateFn);
 			},
 			setValue: function setValue(val) {
-				this.data('metadata', $.extend(this.data('metadata'), {
-					id: val
-				}));
+				this.data('metadata', $.extend(this.data('metadata'), { id: val }));
 				this.find(':input:hidden').val(val).trigger('valueupdated').trigger('change');
 			},
 			getValue: function getValue() {
@@ -177,6 +181,7 @@
 				    treeHolder = $(panel).find('.tree-holder'),
 				    params = params ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams(),
 				    xhr;
+
 				if (this.getCurrentXhr()) this.getCurrentXhr().abort();
 				panel.addClass('loading');
 				xhr = $.ajax({
@@ -198,16 +203,13 @@
 						}).jstree(self.getTreeConfig()).bind('select_node.jstree', function (e, data) {
 							var node = data.rslt.obj,
 							    id = $(node).data('id');
-
 							if (!firstLoad && self.getValue() == id) {
 								self.data('metadata', null);
 								self.setTitle(null);
 								self.setValue(null);
 								data.inst.deselect_node(node);
 							} else {
-								self.data('metadata', $.extend({
-									id: id
-								}, $(node).getMetaData()));
+								self.data('metadata', $.extend({ id: id }, $(node).getMetaData()));
 								self.setTitle(data.inst.get_text(node));
 								self.setValue(id);
 							}
@@ -215,6 +217,7 @@
 							if (!firstLoad) self.closePanel();
 							firstLoad = false;
 						});
+
 						self.setCurrentXhr(null);
 					}
 				});
@@ -225,6 +228,7 @@
 				return {
 					'core': {
 						'html_titles': true,
+
 						'animation': 0
 					},
 					'html_data': {
@@ -237,9 +241,7 @@
 							'data': function data(node) {
 								var query = $.query.load(self.data('urlTree')).keys;
 								var params = self.getRequestParams();
-								params = $.extend({}, query, params, {
-									ajax: 1
-								});
+								params = $.extend({}, query, params, { ajax: 1 });
 								return params;
 							}
 						}
@@ -272,58 +274,59 @@
 					'plugins': ['html_data', 'ui', 'themes', 'types']
 				};
 			},
+
 			getRequestParams: function getRequestParams() {
 				return {};
 			}
 		});
+
 		$('.TreeDropdownField .tree-holder li').entwine({
 			getMetaData: function getMetaData() {
 				var matches = this.attr('class').match(/class-([^\s]*)/i);
 				var klass = matches ? matches[1] : '';
-				return {
-					ClassName: klass
-				};
+				return { ClassName: klass };
 			}
 		});
+
 		$('.TreeDropdownField *').entwine({
 			getField: function getField() {
 				return this.parents('.TreeDropdownField:first');
 			}
 		});
+
 		$('.TreeDropdownField').entwine({
 			onclick: function onclick(e) {
 				this.togglePanel();
+
 				return false;
 			}
 		});
+
 		$('.TreeDropdownField .treedropdownfield-panel').entwine({
 			onclick: function onclick(e) {
 				return false;
 			}
 		});
+
 		$('.TreeDropdownField.searchable').entwine({
 			onadd: function onadd() {
 				this._super();
-
 				var title = _i18n2.default._t('TreeDropdownField.ENTERTOSEARCH');
-
 				this.find('.treedropdownfield-panel').prepend($('<input type="text" class="search treedropdownfield-search" data-skip-autofocus="true" placeholder="' + title + '" value="" />'));
 			},
 			search: function search(str, callback) {
 				this.openPanel();
-				this.loadTree({
-					search: str
-				}, callback);
+				this.loadTree({ search: str }, callback);
 			},
 			cancelSearch: function cancelSearch() {
 				this.closePanel();
 				this.loadTree();
 			}
 		});
+
 		$('.TreeDropdownField.searchable input.search').entwine({
 			onkeydown: function onkeydown(e) {
 				var field = this.getField();
-
 				if (e.keyCode == 13) {
 					field.search(this.val());
 					return false;
@@ -332,14 +335,11 @@
 				}
 			}
 		});
+
 		$('.TreeDropdownField.multiple').entwine({
 			getTreeConfig: function getTreeConfig() {
 				var cfg = this._super();
-
-				cfg.checkbox = {
-					override_ui: true,
-					two_state: true
-				};
+				cfg.checkbox = { override_ui: true, two_state: true };
 				cfg.plugins.push('checkbox');
 				cfg.ui.select_limit = -1;
 				return cfg;
@@ -350,6 +350,7 @@
 				    treeHolder = $(panel).find('.tree-holder');
 				var params = params ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams(),
 				    xhr;
+
 				if (this.getCurrentXhr()) this.getCurrentXhr().abort();
 				panel.addClass('loading');
 				xhr = $.ajax({
@@ -377,10 +378,7 @@
 								return data.inst.get_text(el);
 							}));
 							self.data('metadata', $.map(nodes, function (el, i) {
-								return {
-									id: $(el).data('id'),
-									metadata: $(el).getMetaData()
-								};
+								return { id: $(el).data('id'), metadata: $(el).getMetaData() };
 							}));
 						});
 					}
@@ -389,7 +387,6 @@
 			},
 			getValue: function getValue() {
 				var val = this._super();
-
 				return val.split(/ *, */);
 			},
 			setValue: function setValue(val) {
@@ -400,17 +397,16 @@
 			},
 			updateTitle: function updateTitle() {}
 		});
+
 		$('.TreeDropdownField input[type=hidden]').entwine({
 			onadd: function onadd() {
 				this._super();
-
 				this.bind('change.TreeDropdownField', function () {
 					$(this).getField().updateTitle();
 				});
 			},
 			onremove: function onremove() {
 				this._super();
-
 				this.unbind('.TreeDropdownField');
 			}
 		});
