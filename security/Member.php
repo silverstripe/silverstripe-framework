@@ -1470,18 +1470,22 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * This is likely to be customized for social sites etc. with a looser permission model.
 	 */
 	public function canView($member = null) {
-		//get member and check for extensions
+		//get member
 		if(!($member instanceof Member)) {
 			$member = Member::currentUser();
 		}
-		if(!$member) return false;
+		//check for extensions, we do this first as they can overrule everything
 		$extended = $this->extendedCan(__FUNCTION__, $member);
 		if($extended !== null) {
 			return $extended;
 		}
+		
+		//need to be logged in and/or
+		//most checks below rely on $member being a Member
+		if(!$member) return false;		
 
 		// members can usually view their own record
-		if($member && $this->ID == $member->ID) return true;
+		if($this->ID == $member->ID) return true;
 
 		//standard check
 		if(
@@ -1498,15 +1502,20 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
 	 */
 	public function canEdit($member = null) {
-		//get member and check for extensions
+		//get member
 		if(!($member instanceof Member)) {
 			$member = Member::currentUser();
 		}
-		if(!$member) return false;
+		//check for extensions, we do this first as they can overrule everything
 		$extended = $this->extendedCan(__FUNCTION__, $member);
 		if($extended !== null) {
 			return $extended;
 		}
+		
+		//need to be logged in and/or
+		//most checks below rely on $member being a Member
+		if(!$member) return false;		
+		
 		// HACK: we should not allow for an non-Admin to edit an Admin
 		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) return false;
 
@@ -1528,15 +1537,19 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
 	 */
 	public function canDelete($member = null) {
-		//get member and check for extensions
+		//get member
 		if(!($member instanceof Member)) {
 			$member = Member::currentUser();
 		}
-		if(!$member) return false;
+		//check for extensions, we do this first as they can overrule everything
 		$extended = $this->extendedCan(__FUNCTION__, $member);
 		if($extended !== null) {
 			return $extended;
 		}
+		
+		//need to be logged in and/or
+		//most checks below rely on $member being a Member
+		if(!$member) return false;		
 
 		// HACK: we should not allow for an non-Admin to delete an Admin
 		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) return false;
