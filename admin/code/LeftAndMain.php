@@ -181,46 +181,75 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * Gets a JSON schema representing the current edit form.
 	 *
+	 * WARNING: Experimental API.
+	 *
 	 * @return SS_HTTPResponse
 	 */
-	public function schema() {
-		$req = $this->getRequest();
-		$res = $this->getResponse();
+	public function schema($request) {
+		$response = $this->getResponse();
+		$formName = $request->param('ID');
+
+		if(!$this->hasMethod("get{$formName}")) {
+			throw new SS_HTTPResponse_Exception(
+				'Form not found',
+				400
+			);
+		}
+
+		if(!$this->hasAction($formName)) {
+			throw new SS_HTTPResponse_Exception(
+				'Form not accessible',
+				401
+			);
+		}
+
+		$form = $this->{"get{$formName}"}();
+		$response->addHeader('Content-Type', 'application/json');
+		$response->setBody(Convert::raw2json($this->getSchemaForForm($form)));
+
+		return $response;
+	}
+
+	/**
+	 * Returns a representation of the provided {@link Form} as structured data,
+	 * based on the request data.
+	 *
+	 * @param Form $form
+	 * @return array
+	 */
+	protected function getSchemaForForm(Form $form) {
+		$request = $this->getRequest();
 		$schemaParts = [];
+		$return = null;
 
 		// Valid values for the "X-Formschema-Request" header are "schema" and "state".
 		// If either of these values are set they will be stored in the $schemaParst array
 		// and used to construct the response body.
-		if ($schemaHeader = $req->getHeader('X-Formschema-Request')) {
+		if ($schemaHeader = $request->getHeader('X-Formschema-Request')) {
 			$schemaParts = array_filter(explode(',', $schemaHeader), function($value) {
 				$validHeaderValues = ['schema', 'state'];
 				return in_array(trim($value), $validHeaderValues);
 			});
 		}
 
-		// Make sure it's an AJAX GET request with a valid "X-Formschema-Request" header value.
-		if (!$req->isGET() || !count($schemaParts)) {
+		if (!count($schemaParts)) {
 			throw new SS_HTTPResponse_Exception(
 				'Invalid request. Check you\'ve set a "X-Formschema-Request" header with "schema" or "state" values.',
 				400
 			);
 		}
 
-		$form = $this->getEditForm();
-		$responseBody = ['id' => $form->getName()];
+		$return = ['id' => $form->getName()];
 
 		if (in_array('schema', $schemaParts)) {
-			$responseBody['schema'] = $this->schema->getSchema($form);
+			$return['schema'] = $this->schema->getSchema($form);
 		}
 
 		if (in_array('state', $schemaParts)) {
-			$responseBody['state'] = $this->schema->getState($form);
+			$return['state'] = $this->schema->getState($form);
 		}
 
-		$res->addHeader('Content-Type', 'application/json');
-		$res->setBody(Convert::raw2json($responseBody));
-
-		return $res;
+		return $return;
 	}
 
 	/**
@@ -1067,6 +1096,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Save  handler
 	 */
 	public function save($data, $form) {
+		$request = $this->getRequest();
 		$className = $this->stat('tree_class');
 
 		// Existing or new record?
@@ -1087,7 +1117,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->setCurrentPageID($record->ID);
 
 		$this->getResponse()->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
-		return $this->getResponseNegotiator()->respond($this->getRequest());
+
+		if($request->getHeader('X-Formschema-Request')) {
+			$data = $this->getSchemaForForm($form);
+			$response = new SS_HTTPResponse(Convert::raw2json($data));
+			$response->addHeader('Content-Type', 'application/json');
+		} else {
+			$response = $this->getResponseNegotiator()->respond($request);
+		}
+
+		return $response;
 	}
 
 	public function delete($data, $form) {

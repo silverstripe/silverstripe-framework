@@ -5,6 +5,14 @@ namespace SilverStripe\Forms\Schema;
 use Convert;
 use Form;
 
+/**
+ * Class FormSchema
+ * @package SilverStripe\Forms\Schema
+ *
+ * Represents a {@link Form} as structured data which allows a frontend library to render it.
+ * Includes information about the form as well as its fields.
+ * Can create a "schema" (structure only) as well as "state" (data only).
+ */
 class FormSchema {
 
 	/**

@@ -2,6 +2,17 @@
 
 namespace SilverStripe\Forms\Schema;
 
+/**
+ * Class FormFieldSchemaTrait
+ * @package SilverStripe\Forms\Schema
+ *
+ * Allows {@link FormField} to be represented as structured data,
+ * including both structure (name, id, attributes, etc.) and state (field value).
+ * Can be used by {@link FormSchema} to represent a form in JSON,
+ * to be consumed by a front-end application.
+ *
+ * WARNING: Experimental API.
+ */
 trait FormFieldSchemaTrait {
 
 	/**
