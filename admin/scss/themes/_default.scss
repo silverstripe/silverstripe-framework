@@ -10,6 +10,18 @@
 $color-base: #b0bec7 !default;
 $color-widget-bg: lighten($color-base, 20%) !default;
 
+// Menu theme colours
+$color-theme-base: 	#d8e4eb !default;
+
+$color-theme-bg: 	lighten($color-theme-base, 5%);
+$color-theme-icons: darken($color-theme-base, 26%);
+$color-theme-active: $color-theme-base;
+
+// CMS 4 menu
+$base-menu: #d8e4eb;
+$base-menu-bg: lighten($base-menu,5%);
+$base-menu-icon: darken($base-menu, 26%);
+
 //offical silverstripe brand color
 $color-brand-bg: #005a93 !default;
 $color-brand: #43c7f4 !default;
@@ -41,6 +53,7 @@ $color-menu-background: #c6d7df !default;
 $color-menu-border: #8c99a1 !default;
 $color-panel-background: #c6d7df !default;
 
+$color-text-default: #4f5861 !default; /* new in SilverStripe 4 */
 $color-text: #66727d !default;
 $color-text-light: white !default;
 $color-text-light-link: white !default;

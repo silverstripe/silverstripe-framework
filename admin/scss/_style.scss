@@ -130,10 +130,6 @@ body.cms {
 			display: inline-block; // align back button and breadcrumbs
 		}
 
-		.breadcrumbs-wrapper {
-			vertical-align: middle;
-		}
-
 		.section-icon {
 			opacity: 0.2;
 			margin-right: 4px;
@@ -142,18 +138,7 @@ body.cms {
 
 		.cms_backlink {
 			vertical-align: middle;
-
-			.ss-ui-button {
-				margin-bottom: $grid-x; // Matches the margin on .cms-content-header h2
-				margin-left: (- $grid-x); // Half of the padding on .cms-content-header
-				line-height: 22px;
-
-				&:before {
-					margin-right: 0;
-					font-size: 22px;
-				}
 		}
-	}
 	}
 
 	// Reset to default styles
@@ -363,6 +348,19 @@ body.cms {
 		}
 
 		&.font-icon-search {
+			padding: 5px 6px;
+			color:lighten($color-text, 10%);
+
+			&.active,
+			&:active,
+			&:focus,
+			&:hover {
+				background: none;
+				box-shadow: none;
+				color: darken($color-text, 10%);
+			}
+
+
 			&:before {
 				font-size: 18px;
 				margin-left: 1px;
@@ -431,7 +429,7 @@ body.cms {
 		&.font-icon-thumbnails {
 			&::before {
 				margin-left: -2px;
-	}
+			}
 	}
 	}
 
@@ -1512,23 +1510,24 @@ form.member-profile-form {
  * -------------------------------------------- */
 
 .cms-panel {
-	overflow: hidden;
+
 	.cms-panel-toggle {
 		&.south {
-			border-top: 1px solid darken($color-light-separator, 15%);
+			box-shadow: inset #C1C7CC -1px 1px 0;
 			position: absolute;
 			bottom: 0;
-			width:100%;
+			width: 100%;
 		}
+
 		a {
 			display: block;
 			text-align: right;
-			padding: $grid-y/2 0;
+			padding: $grid-y * 2 0;
 			width: 100%;
 			text-decoration: none;
 			span {
 				display: inline-block;
-				margin: 0 5px;
+				margin: 0 8px;
 				color: #555d60;
 				font-size: 16px;
 			}
@@ -1579,11 +1578,11 @@ form.member-profile-form {
 				transform: rotate(270deg);
 			}
 			.cms-panel-header {
-			width: 600px;
-			position:relative;
-			top:24px;
-			right:577px;
-			text-align:right;
+				width: 600px;
+				position: relative;
+				top: 24px;
+				right: 577px;
+				text-align: right;
 			}
 		}
 	}
@@ -1598,37 +1597,15 @@ form.member-profile-form {
 			transform-origin: bottom, right;
 			transform: rotate(270deg);
 		}
+
 		.cms-panel-header {
 			width: 600px;
-			position:relative;
-			right:577px;
-			text-align:right;
-			border-bottom:none;
-			box-shadow:none;
-		}
-	}
-
-	.child-flyout-indicator {
-		width:0;
-		height:0;
-		border-right:3px dashed $color-text-dark;
-		border-top:3px solid transparent;
-		border-left:3px solid transparent;
-		border-bottom:3px dashed $color-text-dark;
-		position: absolute;
-		right: 1px;
-		margin-top: -8px;
-		display: none;  /* To be shown by javascript, see LeftAndMain.Panel.js */
-	}
-	.collapsed-flyout {
-		display: block !important;
-		left: 41px;
-		margin-top: -40px;
-		position: fixed;
-		width: 191px;
-
-		li a span {
-		   display: block !important;
+			position: relative;
+			right: 574px;
+			text-align: right;
+			border-bottom: none;
+			box-shadow: none;
+			margin-top: -5px;
 		}
 	}
 }
@@ -1693,7 +1670,7 @@ form.member-profile-form {
 		border:none;
 		background: transparent url(../images/textures/cms_content_header.png) repeat;
 		box-shadow: $color-shadow-dark 0 0 ($grid-x / 2) inset;
-
+		
 		.ui-dialog-title {
 			position:absolute;
 		}
@@ -2050,11 +2027,11 @@ body.cms-dialog {
 	}
 
 	.arrow {
-		@extend .icon-sprites-32x32;
-		@include sprite($sprites-32x32-numeric-label, inline-block);
 		height: 26px;
 		width: 10px;
 		margin-right: 4px;
+		@extend .icon-sprites-32x32;
+		@include sprite($sprites-32x32-numeric-label);
 	}
 
 	.title {
@@ -2213,11 +2190,12 @@ form.import-form {
 .toggle-details-icon {
 	@extend .icon-sprites-32x32;
 	@include sprite($sprites-32x32-menu-arrow-down);
-
+	
 	.ss-uploadfield-item-edit-all & {
 		@extend .icon-sprites-32x32;
-		@include sprite($sprites-32x32-menu-arrow-deselected-down, inline-block);
+		@include sprite($sprites-32x32-menu-arrow-deselected-down);
 
+		display:inline-block;
 		width:8px;
 		height:8px;
 		padding-left:5px;
@@ -2229,7 +2207,9 @@ form.import-form {
 
 		.ss-uploadfield-item-edit-all &{
 			@extend .icon-sprites-32x32;
-			@include sprite($sprites-32x32-menu-arrow-deselected-up, inline-block);
+			@include sprite($sprites-32x32-menu-arrow-deselected-up);
+			
+			display:inline-block;
 		}
 	}
 }
