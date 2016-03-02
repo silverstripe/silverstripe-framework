@@ -22,7 +22,7 @@ abstract class RelationList extends DataList implements Relation {
 		// Remove `Foreign.` query parameters for created objects,
 		// as this would interfere with relations on those objects.
 		foreach(array_keys($params) as $key) {
-			if(stripos($key, 'Foreign.') !== 0) {
+			if(stripos($key, 'Foreign.') === 0) {
 				unset($params[$key]);
 			}
 		}

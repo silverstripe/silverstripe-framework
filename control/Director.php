@@ -268,7 +268,7 @@ class Director implements TemplateGlobalProvider {
 
 		// These are needed so that calling Director::test() does not muck with whoever is calling it.
 		// Really, it's some inappropriate coupling and should be resolved by making less use of statics.
-		$oldStage = Versioned::current_stage();
+		$oldStage = Versioned::get_stage();
 		$getVars = array();
 
 		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
@@ -308,7 +308,7 @@ class Director implements TemplateGlobalProvider {
 
 			// These are needed so that calling Director::test() does not muck with whoever is calling it.
 			// Really, it's some inappropriate coupling and should be resolved by making less use of statics
-			Versioned::reading_stage($oldStage);
+			Versioned::set_stage($oldStage);
 
 			Injector::unnest(); // Restore old CookieJar, etc
 			Config::unnest();

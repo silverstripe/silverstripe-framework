@@ -99,10 +99,10 @@ class AssetControlExtension extends \DataExtension
 	protected function getRecordState($record) {
 		if($this->isVersioned()) {
 			// Check stage this record belongs to
-			$stage = $record->getSourceQueryParam('Versioned.stage') ?: Versioned::current_stage();
+			$stage = $record->getSourceQueryParam('Versioned.stage') ?: Versioned::get_stage();
 
 			// Non-live stages are automatically non-public
-			if($stage !== Versioned::get_live_stage()) {
+			if($stage !== Versioned::LIVE) {
 				return AssetManipulationList::STATE_PROTECTED;
 			}
 		}
@@ -159,7 +159,7 @@ class AssetControlExtension extends \DataExtension
 		$stages = $this->owner->getVersionedStages(); // {@see Versioned::getVersionedStages}
 		foreach ($stages as $stage) {
 			// Skip current stage; These should be handled explicitly
-			if($stage === Versioned::current_stage()) {
+			if($stage === Versioned::get_stage()) {
 				continue;
 			}
 

@@ -551,7 +551,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	 * This method will update the File {@see DBFile} field value on success, so it must be called
 	 * before writing to the database
 	 *
-	 * @param bool True if changed
+	 * @return bool True if changed
 	 */
 	public function updateFilesystem() {
 		if(!$this->config()->update_filesystem) {
@@ -563,24 +563,22 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 			return false;
 		}
 
+		// Avoid moving files on live; Rely on this being done on stage prior to publish.
+		if(Versioned::get_stage() !== Versioned::DRAFT) {
+			return false;
+		}
+
 		// Check path updated record will point to
 		// If no changes necessary, skip
 		$pathBefore = $this->File->getFilename();
-		$pathAfter = $this->getFilename();
+		$pathAfter = $this->generateFilename();
 		if($pathAfter === $pathBefore) {
 			return false;
 		}
 
 		// Copy record to new location via stream
 		$stream = $this->File->getStream();
-		$result = $this->File->setFromStream($stream, $pathAfter);
-
-		// If the backend chose a new name, update the local record
-		if($result['Filename'] !== $pathAfter) {
-			// Correct saved folder to selected filename
-			$pathAfter = $result['Filename'];
-			$this->setFilename($pathAfter);
-		}
+		$this->File->setFromStream($stream, $pathAfter);
 		return true;
 	}
 
@@ -588,8 +586,10 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	 * Collate selected descendants of this page.
 	 * $condition will be evaluated on each descendant, and if it is succeeds, that item will be added
 	 * to the $collator array.
-	 * @param condition The PHP condition to be evaluated.  The page will be called $item
-	 * @param collator An array, passed by reference, to collect all of the matching descendants.
+	 *
+	 * @param string $condition The PHP condition to be evaluated.  The page will be called $item
+	 * @param array $collator An array, passed by reference, to collect all of the matching descendants.
+	 * @return true|null
 	 */
 	public function collateDescendants($condition, &$collator) {
 		if($children = $this->Children()) {
@@ -610,7 +610,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 	 *
 	 * Does not change the filesystem itself, please use {@link write()} for this.
 	 *
-	 * @param String $name
+	 * @param string $name
+	 * @return $this
 	 */
 	public function setName($name) {
 		$oldName = $this->Name;
@@ -655,7 +656,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 			$this->Title = str_replace(array('-','_'),' ', preg_replace('/\.[^.]+$/', '', $name));
 		}
 
-		return $name;
+		return $this;
 	}
 
 	/**
@@ -704,13 +705,18 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		return Director::absoluteBaseURL()."admin/assets/removefile/".$this->ID;
 	}
 
-	public function getFilename() {
+	/**
+	 * Get expected value of Filename tuple value. Will be used to trigger
+	 * a file move on draft stage.
+	 *
+	 * @return string
+	 */
+	public function generateFilename() {
 		// Check if this file is nested within a folder
 		$parent = $this->Parent();
 		if($parent && $parent->exists()) {
 			return $this->join_paths($parent->getFilename(), $this->Name);
 		}
-
 		return $this->Name;
 	}
 
@@ -1025,6 +1031,10 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 
 	public function getIsImage() {
 		return false;
+	}
+
+	public function getFilename() {
+		return $this->File->Filename;
 	}
 
 	public function getHash() {

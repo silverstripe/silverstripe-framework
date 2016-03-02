@@ -408,7 +408,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 			$obj1ID
 		));
 
-		Versioned::reading_stage('Live');
+		Versioned::set_stage(Versioned::LIVE);
 		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
 		$this->assertEquals(
 			'live-value',

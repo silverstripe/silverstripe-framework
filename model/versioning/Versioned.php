@@ -14,28 +14,41 @@
  * @subpackage model
  */
 class Versioned extends DataExtension implements TemplateGlobalProvider {
-	/**
-	 * An array of possible stages.
-	 * @var array
-	 */
-	protected $stages;
 
 	/**
-	 * The 'default' stage.
+	 * Versioning mode for this object.
+	 * Note: Not related to the current versioning mode in the state / session
+	 * Will be one of 'StagedVersioned' or 'Versioned';
+	 *
 	 * @var string
 	 */
-	protected $defaultStage;
-
-	/**
-	 * The 'live' stage.
-	 * @var string
-	 */
-	protected $liveStage;
+	protected $mode;
 
 	/**
 	 * The default reading mode
 	 */
 	const DEFAULT_MODE = 'Stage.Live';
+
+	/**
+	 * Constructor arg to specify that staging is active on this record.
+	 * 'Staging' implies that 'Versioning' is also enabled.
+	 */
+	const STAGEDVERSIONED = 'StagedVersioned';
+
+	/**
+	 * Constructor arg to specify that versioning only is active on this record.
+	 */
+	const VERSIONED = 'Versioned';
+
+	/**
+	 * The Public stage.
+	 */
+	const LIVE = 'Live';
+
+	/**
+	 * The draft (default) stage
+	 */
+	const DRAFT = 'Stage';
 
 	/**
 	 * A version that a DataObject should be when it is 'migrating',
@@ -53,6 +66,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	protected static $cache_versionnumber;
 
 	/**
+	 * Current reading mode
+	 *
 	 * @var string
 	 */
 	protected static $reading_mode = null;
@@ -92,6 +107,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * Used to enable or disable the prepopulation of the version number cache.
 	 * Defaults to true.
 	 *
+	 * @config
 	 * @var boolean
 	 */
 	private static $prepopulate_versionnumber_cache = true;
@@ -99,6 +115,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * Keep track of the archive tables that have been created.
 	 *
+	 * @config
 	 * @var array
 	 */
 	private static $archive_tables = array();
@@ -149,9 +166,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * Make sure your extension has a static $enabled-property that determines if it is
 	 * processed by Versioned.
 	 *
+	 * @config
 	 * @var array
 	 */
-	protected static $versionableExtensions = array('Translatable' => 'lang');
+	private static $versionableExtensions = array('Translatable' => 'lang');
 
 	/**
 	 * Permissions necessary to view records outside of the live stage (e.g. archive / draft stage).
@@ -194,27 +212,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public static function reset() {
 		self::$reading_mode = '';
-
 		Session::clear('readingMode');
-	}
-
-	/**
-	 * Construct a new Versioned object.
-	 *
-	 * @var array $stages The different stages the versioned object can be.
-	 * The first stage is considered the 'default' stage, the last stage is
-	 * considered the 'live' stage.
-	 */
-	public function __construct($stages = array('Stage','Live')) {
-		parent::__construct();
-
-		if(!is_array($stages)) {
-			$stages = func_get_args();
-		}
-
-		$this->stages = $stages;
-		$this->defaultStage = reset($stages);
-		$this->liveStage = array_pop($stages);
 	}
 
 	/**
@@ -230,23 +228,118 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if($parts[0] == 'Archive') {
 			$dataQuery->setQueryParam('Versioned.mode', 'archive');
 			$dataQuery->setQueryParam('Versioned.date', $parts[1]);
-		} else if($parts[0] == 'Stage' && in_array($parts[1], $this->stages)) {
+		} else if($parts[0] == 'Stage' && $this->hasStages()) {
 			$dataQuery->setQueryParam('Versioned.mode', 'stage');
 			$dataQuery->setQueryParam('Versioned.stage', $parts[1]);
 		}
 	}
 
+	/**
+	 * Construct a new Versioned object.
+	 *
+	 * @var string $mode One of "StagedVersioned" or "Versioned".
+	 */
+	public function __construct($mode = self::STAGEDVERSIONED) {
+		parent::__construct();
+
+		// Handle deprecated behaviour
+		if($mode === 'Stage' && func_num_args() === 1) {
+			Deprecation::notice("5.0", "Versioned now takes a mode as a single parameter");
+			$mode = static::VERSIONED;
+		} elseif(is_array($mode) || func_num_args() > 1) {
+			Deprecation::notice("5.0", "Versioned now takes a mode as a single parameter");
+			$mode = func_num_args() > 1 || count($mode) > 1
+				? static::STAGEDVERSIONED
+				: static::VERSIONED;
+		}
+
+		if(!in_array($mode, array(static::STAGEDVERSIONED, static::VERSIONED))) {
+			throw new InvalidArgumentException("Invalid mode: {$mode}");
+		}
+
+		$this->mode = $mode;
+	}
+
+	/**
+	 * Cache of version to modified dates for this objects
+	 *
+	 * @var array
+	 */
+	protected $versionModifiedCache = array();
+
+	/**
+	 * Get modified date for the given version
+	 *
+	 * @param int $version
+	 * @return string
+	 */
+	protected function getLastEditedForVersion($version) {
+		// Cache key
+		$baseTable = ClassInfo::baseDataClass($this->owner);
+		$id = $this->owner->ID;
+		$key = "{$baseTable}#{$id}/{$version}";
+
+		// Check cache
+		if(isset($this->versionModifiedCache[$key])) {
+			return $this->versionModifiedCache[$key];
+		}
+
+		// Build query
+		$table = "\"{$baseTable}_versions\"";
+		$query = SQLSelect::create('"LastEdited"', $table)
+			->addWhere([
+				"{$table}.\"RecordID\"" => $id,
+				"{$table}.\"Version\"" => $version
+			]);
+		$date = $query->execute()->value();
+		if($date) {
+			$this->versionModifiedCache[$key] = $date;
+		}
+		return $date;
+	}
+
 
 	public function updateInheritableQueryParams(&$params) {
-		// Versioned.mode === all_versions doesn't inherit very well, so default to stage
-		if(isset($params['Versioned.mode']) && $params['Versioned.mode'] === 'all_versions') {
-			$params['Versioned.mode'] = 'stage';
-			$params['Versioned.stage'] = $this->defaultStage;
+		// Skip if versioned isn't set
+		if(!isset($params['Versioned.mode'])) {
+			return;
+		}
+
+		// Adjust query based on original selection criterea
+		$owner = $this->owner;
+		switch($params['Versioned.mode']) {
+			case 'all_versions': {
+				// Versioned.mode === all_versions doesn't inherit very well, so default to stage
+				$params['Versioned.mode'] = 'stage';
+				$params['Versioned.stage'] = static::DRAFT;
+				break;
+			}
+			case 'version': {
+				// If we selected this object from a specific version, we need
+				// to find the date this version was published, and ensure
+				// inherited queries select from that date.
+				$version = $params['Versioned.version'];
+				$date = $this->getLastEditedForVersion($version);
+
+				// Filter related objects at the same date as this version
+				unset($params['Versioned.version']);
+				if($date) {
+					$params['Versioned.mode'] = 'archive';
+					$params['Versioned.date'] = $date;
+				} else {
+					// Fallback to default
+					$params['Versioned.mode'] = 'stage';
+					$params['Versioned.stage'] = static::DRAFT;
+				}
+				break;
+			}
 		}
 	}
 
 	/**
 	 * Augment the the SQLSelect that is created by the DataQuery
+	 *
+	 * See {@see augmentLazyLoadFields} for lazy-loading applied prior to this.
 	 *
 	 * @param SQLSelect $query
 	 * @param DataQuery $dataQuery
@@ -259,62 +352,32 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		$baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
 
-		switch($dataQuery->getQueryParam('Versioned.mode')) {
-		// Reading a specific data from the archive
-		case 'archive':
-			$date = $dataQuery->getQueryParam('Versioned.date');
+		$versionedMode = $dataQuery->getQueryParam('Versioned.mode');
+		switch($versionedMode) {
+		// Reading a specific stage (Stage or Live)
+		case 'stage':
+			// Check if we need to rewrite this table
+			$stage = $dataQuery->getQueryParam('Versioned.stage');
+			if(!$this->hasStages() || $stage === static::DRAFT) {
+				break;
+			}
+			// Rewrite all tables to select from the live version
 			foreach($query->getFrom() as $table => $dummy) {
 				if(!$this->isTableVersioned($table)) {
 					continue;
 				}
-
-				$query->renameTable($table, $table . '_versions');
-				$query->replaceText("\"{$table}_versions\".\"ID\"", "\"{$table}_versions\".\"RecordID\"");
-				$query->replaceText("`{$table}_versions`.`ID`", "`{$table}_versions`.`RecordID`");
-
-				// Add all <basetable>_versions columns
-				foreach(Config::inst()->get('Versioned', 'db_for_versions_table') as $name => $type) {
-					$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
-				}
-				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
-
-				if($table != $baseTable) {
-					$query->addWhere("\"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
-				}
-			}
-			// Link to the version archived on that date
-			$query->addWhere(array(
-				"\"{$baseTable}_versions\".\"Version\" IN
-				(SELECT LatestVersion FROM
-					(SELECT
-						\"{$baseTable}_versions\".\"RecordID\",
-						MAX(\"{$baseTable}_versions\".\"Version\") AS LatestVersion
-						FROM \"{$baseTable}_versions\"
-						WHERE \"{$baseTable}_versions\".\"LastEdited\" <= ?
-						GROUP BY \"{$baseTable}_versions\".\"RecordID\"
-					) AS \"{$baseTable}_versions_latest\"
-					WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
-				)" => $date
-			));
-			break;
-
-		// Reading a specific stage (Stage or Live)
-		case 'stage':
-			$stage = $dataQuery->getQueryParam('Versioned.stage');
-			if($stage && ($stage != $this->defaultStage)) {
-				foreach($query->getFrom() as $table => $dummy) {
-					if(!$this->isTableVersioned($table)) {
-						continue;
-					}
-					$query->renameTable($table, $table . '_' . $stage);
-				}
+				$stageTable = $this->stageTable($table, $stage);
+				$query->renameTable($table, $stageTable);
 			}
 			break;
 
 		// Reading a specific stage, but only return items that aren't in any other stage
 		case 'stage_unique':
-			$stage = $dataQuery->getQueryParam('Versioned.stage');
+			if(!$this->hasStages()) {
+				break;
+			}
 
+			$stage = $dataQuery->getQueryParam('Versioned.stage');
 			// Recurse to do the default stage behavior (must be first, we rely on stage renaming happening before
 			// below)
 			$dataQuery->setQueryParam('Versioned.mode', 'stage');
@@ -323,11 +386,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 			// Now exclude any ID from any other stage. Note that we double rename to avoid the regular stage rename
 			// renaming all subquery references to be Versioned.stage
-			foreach($this->stages as $excluding) {
-				if ($excluding == $stage) continue;
+			foreach([static::DRAFT, static::LIVE] as $excluding) {
+				if ($excluding == $stage) {
+					continue;
+				}
 
 				$tempName = 'ExclusionarySource_'.$excluding;
-				$excludingTable = $baseTable . ($excluding && $excluding != $this->defaultStage ? "_$excluding" : '');
+				$excludingTable = $baseTable . ($excluding && $excluding != static::DRAFT ? "_$excluding" : '');
 
 				$query->addWhere('"'.$baseTable.'"."ID" NOT IN (SELECT "ID" FROM "'.$tempName.'")');
 				$query->renameTable($tempName, $excludingTable);
@@ -335,8 +400,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			break;
 
 		// Return all version instances
+		case 'archive':
 		case 'all_versions':
 		case 'latest_versions':
+		case 'version':
 			foreach($query->getFrom() as $alias => $join) {
 				if(!$this->isTableVersioned($alias)) {
 					continue;
@@ -368,24 +435,62 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				"count(DISTINCT \"{$baseTable}_versions\".\"ID\")"
 			);
 
-			// latest_version has one more step
-			// Return latest version instances, regardless of whether they are on a particular stage
-			// This provides "show all, including deleted" functonality
-			if($dataQuery->getQueryParam('Versioned.mode') == 'latest_versions') {
-				$query->addWhere(
-					"\"{$baseTable}_versions\".\"Version\" IN
-					(SELECT LatestVersion FROM
-						(SELECT
-							\"{$baseTable}_versions\".\"RecordID\",
-							MAX(\"{$baseTable}_versions\".\"Version\") AS LatestVersion
-							FROM \"{$baseTable}_versions\"
-							GROUP BY \"{$baseTable}_versions\".\"RecordID\"
-						) AS \"{$baseTable}_versions_latest\"
-						WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
-					)");
-			} else {
-				// If all versions are requested, ensure that records are sorted by this field
-				$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
+			// Add additional versioning filters
+			switch($versionedMode) {
+				case 'archive': {
+					$date = $dataQuery->getQueryParam('Versioned.date');
+					if(!$date) {
+						throw new InvalidArgumentException("Invalid archive date");
+					}
+					// Link to the version archived on that date
+					$query->addWhere([
+						"\"{$baseTable}_versions\".\"Version\" IN
+						(SELECT LatestVersion FROM
+							(SELECT
+								\"{$baseTable}_versions\".\"RecordID\",
+								MAX(\"{$baseTable}_versions\".\"Version\") AS LatestVersion
+								FROM \"{$baseTable}_versions\"
+								WHERE \"{$baseTable}_versions\".\"LastEdited\" <= ?
+								GROUP BY \"{$baseTable}_versions\".\"RecordID\"
+							) AS \"{$baseTable}_versions_latest\"
+							WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
+						)" => $date
+					]);
+					break;
+				}
+				case 'latest_versions': {
+					// Return latest version instances, regardless of whether they are on a particular stage
+					// This provides "show all, including deleted" functonality
+					$query->addWhere(
+						"\"{$baseTable}_versions\".\"Version\" IN
+						(SELECT LatestVersion FROM
+							(SELECT
+								\"{$baseTable}_versions\".\"RecordID\",
+								MAX(\"{$baseTable}_versions\".\"Version\") AS LatestVersion
+								FROM \"{$baseTable}_versions\"
+								GROUP BY \"{$baseTable}_versions\".\"RecordID\"
+							) AS \"{$baseTable}_versions_latest\"
+							WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
+						)"
+					);
+					break;
+				}
+				case 'version': {
+					// If selecting a specific version, filter it here
+					$version = $dataQuery->getQueryParam('Versioned.version');
+					if(!$version) {
+						throw new InvalidArgumentException("Invalid version");
+					}
+					$query->addWhere([
+						"\"{$baseTable}_versions\".\"Version\"" => $version
+					]);
+					break;
+				}
+				default: {
+					// If all versions are requested, ensure that records are sorted by this field
+					$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
+					break;
+				}
 			}
 			break;
 		default:
@@ -422,18 +527,18 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		// metadata set on the query object. This prevents regular queries from
 		// accidentally querying the *_versions tables.
 		$versionedMode = $dataObject->getSourceQueryParam('Versioned.mode');
-		$dataClass = $dataQuery->dataClass();
-		$modesToAllowVersioning = array('all_versions', 'latest_versions', 'archive');
+		$dataClass = ClassInfo::baseDataClass($dataQuery->dataClass());
+		$modesToAllowVersioning = array('all_versions', 'latest_versions', 'archive', 'version');
 		if(
 			!empty($dataObject->Version) &&
 			(!empty($versionedMode) && in_array($versionedMode,$modesToAllowVersioning))
 		) {
-			$dataQuery->where("\"$dataClass\".\"RecordID\" = " . $dataObject->ID);
-			$dataQuery->where("\"$dataClass\".\"Version\" = " . $dataObject->Version);
+			// This will ensure that augmentSQL will select only the same version as the owner,
+			// regardless of how this object was initially selected
+			$dataQuery->where([
+				"\"$dataClass\".\"Version\"" => $dataObject->Version
+			]);
 			$dataQuery->setQueryParam('Versioned.mode', 'all_versions');
-		} else {
-			// Same behaviour as in DataObject->loadLazyFields
-			$dataQuery->where("\"$dataClass\".\"ID\" = {$dataObject->ID}")->limit(1);
 		}
 	}
 
@@ -446,32 +551,33 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public static function on_db_reset() {
 		// Drop all temporary tables
 		$db = DB::get_conn();
-		foreach(self::$archive_tables as $tableName) {
+		foreach(static::$archive_tables as $tableName) {
 			if(method_exists($db, 'dropTable')) $db->dropTable($tableName);
 			else $db->query("DROP TABLE \"$tableName\"");
 		}
 
 		// Remove references to them
-		self::$archive_tables = array();
+		static::$archive_tables = array();
 	}
 
 	public function augmentDatabase() {
-		$classTable = $this->owner->class;
+		$owner = $this->owner;
+		$classTable = $owner->class;
 
-		$isRootClass = ($this->owner->class == ClassInfo::baseDataClass($this->owner->class));
+		$isRootClass = ($owner->class == ClassInfo::baseDataClass($owner->class));
 
 		// Build a list of suffixes whose tables need versioning
 		$allSuffixes = array();
-		$versionableExtensions = $this->owner->config()->versionableExtensions;
+		$versionableExtensions = $owner->config()->versionableExtensions;
 		if(count($versionableExtensions)){
 			foreach ($versionableExtensions as $versionableExtension => $suffixes) {
-			if ($this->owner->hasExtension($versionableExtension)) {
-				$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
-				foreach ((array)$suffixes as $suffix) {
-					$allSuffixes[$suffix] = $versionableExtension;
+				if ($owner->hasExtension($versionableExtension)) {
+					$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
+					foreach ((array)$suffixes as $suffix) {
+						$allSuffixes[$suffix] = $versionableExtension;
+					}
 				}
 			}
-		}
 		}
 
 		// Add the default table with an empty suffix to the list (table name = class name)
@@ -484,14 +590,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			if ($suffix) $table = "{$classTable}_$suffix";
 			else $table = $classTable;
 
-			$fields = DataObject::database_fields($this->owner->class);
+			$fields = DataObject::database_fields($owner->class);
 			unset($fields['ID']);
 			if($fields) {
-				$options = Config::inst()->get($this->owner->class, 'create_table_options', Config::FIRST_SET);
-				$indexes = $this->owner->databaseIndexes();
-				if ($suffix && ($ext = $this->owner->getExtensionInstance($allSuffixes[$suffix]))) {
+				$options = Config::inst()->get($owner->class, 'create_table_options', Config::FIRST_SET);
+				$indexes = $owner->databaseIndexes();
+				if ($suffix && ($ext = $owner->getExtensionInstance($allSuffixes[$suffix]))) {
 					if (!$ext->isVersionedTable($table)) continue;
-					$ext->setOwner($this->owner);
+					$ext->setOwner($owner);
 					$fields = $ext->fieldsInExtraTables($suffix);
 					$ext->clearOwner();
 					$indexes = $fields['indexes'];
@@ -499,24 +605,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				}
 
 				// Create tables for other stages
-				foreach($this->stages as $stage) {
+				if($this->hasStages()) {
 					// Extra tables for _Live, etc.
 					// Change unique indexes to 'index'.  Versioned tables may run into unique indexing difficulties
 					// otherwise.
+					$liveTable = $this->stageTable($table, static::LIVE);
 					$indexes = $this->uniqueToIndex($indexes);
-					if($stage != $this->defaultStage) {
-						DB::require_table("{$table}_$stage", $fields, $indexes, false, $options);
-					}
-
-					// Version fields on each root table (including Stage)
-					/*
-					if($isRootClass) {
-						$stageTable = ($stage == $this->defaultStage) ? $table : "{$table}_$stage";
-						$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>(int)0);
-						$values=Array('type'=>'int', 'parts'=>$parts);
-						DB::requireField($stageTable, 'Version', $values);
-					}
-					*/
+					DB::require_table($liveTable, $fields, $indexes, false, $options);
 				}
 
 				if($isRootClass) {
@@ -611,8 +706,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				DB::require_table("{$table}_versions", $versionFields, $versionIndexes, true, $options);
 			} else {
 				DB::dont_require_table("{$table}_versions");
-				foreach($this->stages as $stage) {
-					if($stage != $this->defaultStage) DB::dont_require_table("{$table}_$stage");
+				if($this->hasStages()) {
+					$liveTable = $this->stageTable($table, static::LIVE);
+					DB::dont_require_table($liveTable);
 				}
 			}
 		}
@@ -695,7 +791,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$nextVersion = $nextVersion ?: 1;
 
 		if($table === $baseDataClass) {
-		// Write AuthorID for baseclass
+			// Write AuthorID for baseclass
 			$userID = (Member::currentUser()) ? Member::currentUser()->ID : 0;
 			$newManipulation['fields']['AuthorID'] = $userID;
 
@@ -724,7 +820,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			);
 		}
 
-		$newTable = $table . '_' . Versioned::current_stage();
+		$newTable = $this->stageTable($table, Versioned::get_stage());
 		$manipulation[$newTable] = $manipulation[$table];
 		unset($manipulation[$table]);
 	}
@@ -733,7 +829,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public function augmentWrite(&$manipulation) {
 		// get Version number from base data table on write
 		$version = null;
-		$baseDataClass = ClassInfo::baseDataClass($this->owner->class);
+		$owner = $this->owner;
+		$baseDataClass = ClassInfo::baseDataClass($owner->class);
 		if(isset($manipulation[$baseDataClass]['fields'])) {
 			if ($this->migratingVersion) {
 				$manipulation[$baseDataClass]['fields']['Version'] = $this->migratingVersion;
@@ -781,11 +878,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			}
 
 			// If we're editing Live, then use (table)_Live instead of (table)
-			if(
-				Versioned::current_stage()
-				&& Versioned::current_stage() != $this->defaultStage
-				&& in_array(Versioned::current_stage(), $this->stages)
-			) {
+			if($this->hasStages() && static::get_stage() === static::LIVE) {
 				$this->augmentWriteStaged($manipulation, $table, $id);
 			}
 		}
@@ -798,7 +891,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		// Add the new version # back into the data object, for accessing
 		// after this write
 		if(isset($thisVersion)) {
-			$this->owner->Version = str_replace("'","", $thisVersion);
+			$owner->Version = str_replace("'","", $thisVersion);
 		}
 	}
 
@@ -872,25 +965,26 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		// Skip search for unsaved records
-		if(!$this->owner->isInDB()) {
+		$owner = $this->owner;
+		if(!$owner->isInDB()) {
 			return $list;
 		}
 
-		$relationships = $this->owner->config()->{$source};
+		$relationships = $owner->config()->{$source};
 		foreach($relationships as $relationship) {
 			// Warn if invalid config
-			if(!$this->owner->hasMethod($relationship)) {
+			if(!$owner->hasMethod($relationship)) {
 				trigger_error(sprintf(
 					"Invalid %s config value \"%s\" on object on class \"%s\"",
 					$source,
 					$relationship,
-					$this->owner->class
+					$owner->class
 				), E_USER_WARNING);
 				continue;
 			}
 
 			// Inspect value of this relationship
-			$items = $this->owner->{$relationship}();
+			$items = $owner->{$relationship}();
 			if(!$items) {
 				continue;
 			}
@@ -944,13 +1038,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		// Standard mechanism for accepting permission changes from extensions
-		$extended = $this->owner->extendedCan('canPublish', $member);
+		$owner = $this->owner;
+		$extended = $owner->extendedCan('canPublish', $member);
 		if($extended !== null) {
 			return $extended;
 		}
 
 		// Default to relying on edit permission
-		return $this->owner->canEdit($member);
+		return $owner->canEdit($member);
 	}
 
 	/**
@@ -974,13 +1069,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		// Standard mechanism for accepting permission changes from extensions
-		$extended = $this->owner->extendedCan('canUnpublish', $member);
+		$owner = $this->owner;
+		$extended = $owner->extendedCan('canUnpublish', $member);
 		if($extended !== null) {
 			return $extended;
 		}
 
 		// Default to relying on canPublish
-		return $this->owner->canPublish($member);
+		return $owner->canPublish($member);
 	}
 
 	/**
@@ -1005,22 +1101,60 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		// Standard mechanism for accepting permission changes from extensions
-		$extended = $this->owner->extendedCan('canArchive', $member);
+		$owner = $this->owner;
+		$extended = $owner->extendedCan('canArchive', $member);
 		if($extended !== null) {
             return $extended;
         }
 
 		// Check if this record can be deleted from stage
-        if(!$this->owner->canDelete($member)) {
+        if(!$owner->canDelete($member)) {
             return false;
         }
 
         // Check if we can delete from live
-        if(!$this->owner->canUnpublish($member)) {
+        if(!$owner->canUnpublish($member)) {
             return false;
         }
 
 		return true;
+	}
+
+	/**
+	 * Check if the user can revert this record to live
+	 *
+	 * @param Member $member
+	 * @return bool
+	 */
+	public function canRevertToLive($member = null) {
+		$owner = $this->owner;
+
+		// Skip if invoked by extendedCan()
+		if(func_num_args() > 4) {
+			return null;
+		}
+
+		// Can't revert if not on live
+		if(!$owner->isPublished()) {
+			return false;
+		}
+
+		if(!$member) {
+            $member = Member::currentUser();
+        }
+
+		if(Permission::checkMember($member, "ADMIN")) {
+			return true;
+		}
+
+		// Standard mechanism for accepting permission changes from extensions
+		$extended = $owner->extendedCan('canRevertToLive', $member);
+		if($extended !== null) {
+            return $extended;
+        }
+
+		// Default to canEdit
+		return $owner->canEdit($member);
 	}
 
 	/**
@@ -1054,9 +1188,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function canViewVersioned($member = null) {
 		// Bypass when live stage
-		$mode = $this->owner->getSourceQueryParam("Versioned.mode");
-		$stage = $this->owner->getSourceQueryParam("Versioned.stage");
-		if ($mode === 'stage' && $stage === static::get_live_stage()) {
+		$owner = $this->owner;
+		$mode = $owner->getSourceQueryParam("Versioned.mode");
+		$stage = $owner->getSourceQueryParam("Versioned.stage");
+		if ($mode === 'stage' && $stage === static::LIVE) {
 			return true;
 		}
 
@@ -1066,26 +1201,26 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		// Bypass if record doesn't have a live stage
-		if(!in_array(static::get_live_stage(), $this->getVersionedStages())) {
+		if(!$this->hasStages()) {
 			return true;
 		}
 
 		// If we weren't definitely loaded from live, and we can't view non-live content, we need to
 		// check to make sure this version is the live version and so can be viewed
-		$latestVersion = Versioned::get_versionnumber_by_stage($this->owner->class, 'Live', $this->owner->ID);
-		if ($latestVersion == $this->owner->Version) {
+		$latestVersion = Versioned::get_versionnumber_by_stage($owner->class, static::LIVE, $owner->ID);
+		if ($latestVersion == $owner->Version) {
 			// Even if this is loaded from a non-live stage, this is the live version
 			return true;
 		}
 
 		// Extend versioned behaviour
-		$extended = $this->owner->extendedCan('canViewNonLive', $member);
+		$extended = $owner->extendedCan('canViewNonLive', $member);
 		if($extended !== null) {
 			return (bool)$extended;
 		}
 
 		// Fall back to default permission check
-		$permissions = Config::inst()->get($this->owner->class, 'non_live_permissions', Config::FIRST_SET);
+		$permissions = Config::inst()->get($owner->class, 'non_live_permissions', Config::FIRST_SET);
 		$check = Permission::checkMember($member, $permissions);
 		return (bool)$check;
 	}
@@ -1105,9 +1240,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function canViewStage($stage = 'Live', $member = null) {
 		$oldMode = Versioned::get_reading_mode();
-		Versioned::reading_stage($stage);
+		Versioned::set_stage($stage);
 
-		$versionFromStage = DataObject::get($this->owner->class)->byID($this->owner->ID);
+		$owner = $this->owner;
+		$versionFromStage = DataObject::get($owner->class)->byID($owner->ID);
 
 		Versioned::set_reading_mode($oldMode);
 		return $versionFromStage ? $versionFromStage->canView($member) : false;
@@ -1134,15 +1270,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return boolean Returns false if the field isn't in the table, true otherwise
 	 */
 	public function hasVersionField($table) {
-		$rPos = strrpos($table,'_');
-
-		if(($rPos !== false) && in_array(substr($table,$rPos), $this->stages)) {
-			$tableWithoutStage = substr($table,0,$rPos);
-		} else {
-			$tableWithoutStage = $table;
+		// Strip "_Live" from end of table
+		$live = static::LIVE;
+		if($this->hasStages() && preg_match("/^(?<table>.*)_{$live}$/", $table, $matches)) {
+			$table = $matches['table'];
 		}
 
-		return ('DataObject' == get_parent_class($tableWithoutStage));
+		// Base table has version field
+		return $table === ClassInfo::baseDataClass($table);
 	}
 
 	/**
@@ -1175,15 +1310,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function latestPublished() {
 		// Get the root data object class - this will have the version field
-		$table1 = $this->owner->class;
-		while( ($p = get_parent_class($table1)) != "DataObject") $table1 = $p;
-
-		$table2 = $table1 . "_$this->liveStage";
+		$owner = $this->owner;
+		$table1 = ClassInfo::baseDataClass($owner);
+		$table2 = $this->stageTable($table1, static::LIVE);
 
 		return DB::prepared_query("SELECT \"$table1\".\"Version\" = \"$table2\".\"Version\" FROM \"$table1\"
 			 INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\"
 			 WHERE \"$table1\".\"ID\" = ?",
-			array($this->owner->ID)
+			array($owner->ID)
 		)->value();
 	}
 
@@ -1194,14 +1328,102 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function doPublish() {
 		$owner = $this->owner;
+		if(!$owner->canPublish()) {
+			return false;
+		}
+
 		$owner->invokeWithExtensions('onBeforePublish');
 		$owner->write();
-		$owner->publish("Stage", "Live");
+		$owner->publish(static::DRAFT, static::LIVE);
 		$owner->invokeWithExtensions('onAfterPublish');
 		return true;
 	}
 
+	/**
+	 * Trigger publishing of owned objects
+	 */
+	public function onAfterPublish() {
+		$owner = $this->owner;
 
+		// Publish owned objects
+		foreach ($owner->findOwned(false) as $object) {
+			/** @var Versioned|DataObject $object */
+			$object->doPublish();
+		}
+
+		// Unlink any objects disowned as a result of this action
+		// I.e. objects which aren't owned anymore by this record, but are by the old live record
+		$owner->unlinkDisownedObjects(Versioned::DRAFT, Versioned::LIVE);
+	}
+
+	/**
+	 * Set foreign keys of has_many objects to 0 where those objects were
+	 * disowned as a result of a partial publish / unpublish.
+	 * I.e. this object and its owned objects were recently written to $targetStage,
+	 * but deleted objects were not.
+	 *
+	 * Note that this operation does not create any new Versions
+	 *
+	 * @param string $sourceStage Objects in this stage will not be unlinked.
+	 * @param string $targetStage Objects which exist in this stage but not $sourceStage
+	 * will be unlinked.
+	 */
+	public function unlinkDisownedObjects($sourceStage, $targetStage) {
+		$owner = $this->owner;
+
+		// after publishing, objects which used to be owned need to be
+		// dis-connected from this object (set ForeignKeyID = 0)
+		$owns = $owner->config()->owns;
+		$hasMany = $owner->config()->has_many;
+		if(empty($owns) || empty($hasMany)) {
+			return;
+		}
+
+		$ownedHasMany = array_intersect($owns, array_keys($hasMany));
+		foreach($ownedHasMany as $relationship) {
+			// Find metadata on relationship
+			$joinClass = $owner->hasManyComponent($relationship);
+			$joinField = $owner->getRemoteJoinField($relationship, 'has_many', $polymorphic);
+			$idField = $polymorphic ? "{$joinField}ID" : $joinField;
+			$joinTable = ClassInfo::table_for_object_field($joinClass, $idField);
+
+			// Generate update query which will unlink disowned objects
+			$targetTable = $this->stageTable($joinTable, $targetStage);
+			$disowned = new SQLUpdate("\"{$targetTable}\"");
+			$disowned->assign("\"{$idField}\"", 0);
+			$disowned->addWhere(array(
+				"\"{$targetTable}\".\"{$idField}\"" => $owner->ID
+			));
+
+			// Build exclusion list (items to owned objects we need to keep)
+			$sourceTable = $this->stageTable($joinTable, $sourceStage);
+			$owned = new SQLSelect("\"{$sourceTable}\".\"ID\"", "\"{$sourceTable}\"");
+			$owned->addWhere(array(
+				"\"{$sourceTable}\".\"{$idField}\"" => $owner->ID
+			));
+
+			// Apply class condition if querying on polymorphic has_one
+			if($polymorphic) {
+				$disowned->assign("\"{$joinField}Class\"", null);
+				$disowned->addWhere(array(
+					"\"{$targetTable}\".\"{$joinField}Class\"" => get_class($owner)
+				));
+				$owned->addWhere(array(
+					"\"{$sourceTable}\".\"{$joinField}Class\"" => get_class($owner)
+				));
+			}
+
+			// Merge queries and perform unlink
+			$ownedSQL = $owned->sql($ownedParams);
+			$disowned->addWhere(array(
+				"\"{$targetTable}\".\"ID\" NOT IN ({$ownedSQL})" => $ownedParams
+			));
+
+			$owner->extend('updateDisownershipQuery', $disowned, $sourceStage, $targetStage, $relationship);
+
+			$disowned->execute();
+		}
+	}
 
 	/**
 	 * Removes the record from both live and stage
@@ -1210,52 +1432,103 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function doArchive() {
 		$owner = $this->owner;
-		$owner->invokeWithExtensions('onBeforeArchive', $this);
-
-		if($owner->doUnpublish()) {
-			$owner->delete();
-			$owner->invokeWithExtensions('onAfterArchive', $this);
-
-			return true;
+		if(!$owner->canArchive()) {
+			return false;
 		}
 
-		return false;
+		$owner->invokeWithExtensions('onBeforeArchive', $this);
+		$owner->doUnpublish();
+		$owner->delete();
+		$owner->invokeWithExtensions('onAfterArchive', $this);
+
+		return true;
 	}
 
 	/**
 	 * Removes this record from the live site
 	 *
 	 * @return bool Flag whether the unpublish was successful
-	 *
-	 * @uses SiteTreeExtension->onBeforeUnpublish()
-	 * @uses SiteTreeExtension->onAfterUnpublish()
 	 */
 	public function doUnpublish() {
 		$owner = $this->owner;
+		if(!$owner->canUnpublish()) {
+			return false;
+		}
+
+		// Skip if this record isn't saved
 		if(!$owner->isInDB()) {
+			return false;
+		}
+
+		// Skip if this record isn't on live
+		if(!$owner->isPublished()) {
 			return false;
 		}
 
 		$owner->invokeWithExtensions('onBeforeUnpublish');
 
-		$origStage = self::current_stage();
-		self::reading_stage(self::get_live_stage());
+		$origStage = static::get_stage();
+		static::set_stage(static::LIVE);
 
 		// This way our ID won't be unset
 		$clone = clone $owner;
 		$clone->delete();
 
-		self::reading_stage($origStage);
-
-		// If we're on the draft site, then we can update the status.
-		// Otherwise, these lines will resurrect an inappropriate record
-		if(self::current_stage() != self::get_live_stage() && $this->isOnDraft()) {
-			$owner->write();
-		}
+		static::set_stage($origStage);
 
 		$owner->invokeWithExtensions('onAfterUnpublish');
-
 		return true;
+	}
+
+	/**
+	 * Trigger unpublish of owning objects
+	 */
+	public function onAfterUnpublish() {
+		$owner = $this->owner;
+
+		// Any objects which owned (and thus relied on the unpublished object) are now unpublished automatically.
+		foreach ($owner->findOwners(false) as $object) {
+			/** @var Versioned|DataObject $object */
+			$object->doUnpublish();
+		}
+	}
+
+
+	/**
+	 * Revert the draft changes: replace the draft content with the content on live
+	 *
+	 * @return bool True if the revert was successful
+	 */
+	public function doRevertToLive() {
+		$owner = $this->owner;
+		if(!$owner->canRevertToLive()) {
+			return false;
+		}
+
+		$owner->invokeWithExtensions('onBeforeRevertToLive');
+		$owner->publish("Live", "Stage", false);
+		$owner->invokeWithExtensions('onAfterRevertToLive');
+		return true;
+	}
+
+	/**
+	 * Trigger revert of all owned objects to stage
+	 */
+	public function onAfterRevertToLive() {
+		$owner = $this->owner;
+		/** @var Versioned|DataObject $liveOwner */
+		$liveOwner = static::get_by_stage(get_class($owner), static::LIVE)
+			->byID($owner->ID);
+
+		// Revert any owned objects from the live stage only
+		foreach ($liveOwner->findOwned(false) as $object) {
+			/** @var Versioned|DataObject $object */
+			$object->doRevertToLive();
+		}
+
+		// Unlink any objects disowned as a result of this action
+		// I.e. objects which aren't owned anymore by this record, but are by the old draft record
+		$owner->unlinkDisownedObjects(Versioned::LIVE, Versioned::DRAFT);
 	}
 
 	/**
@@ -1276,7 +1549,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if(is_numeric($fromStage)) {
 			$from = Versioned::get_version($baseClass, $owner->ID, $fromStage);
 		} else {
-			$this->owner->flushCache();
+			$owner->flushCache();
 			$from = Versioned::get_one_by_stage($baseClass, $fromStage, array(
 				"\"{$baseClass}\".\"ID\" = ?" => $owner->ID
 			));
@@ -1292,19 +1565,19 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		} else {
 			$from->migrateVersion($from->Version);
 
-		// Mark this version as having been published at some stage
+			// Mark this version as having been published at some stage
 			$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
 			$extTable = $this->extendWithSuffix($baseClass);
-		DB::prepared_query("UPDATE \"{$extTable}_versions\"
-			SET \"WasPublished\" = ?, \"PublisherID\" = ?
-			WHERE \"RecordID\" = ? AND \"Version\" = ?",
-			array(1, $publisherID, $from->ID, $from->Version)
-		);
+			DB::prepared_query("UPDATE \"{$extTable}_versions\"
+				SET \"WasPublished\" = ?, \"PublisherID\" = ?
+				WHERE \"RecordID\" = ? AND \"Version\" = ?",
+				array(1, $publisherID, $from->ID, $from->Version)
+			);
 		}
 
 		// Change to new stage, write, and revert state
 		$oldMode = Versioned::get_reading_mode();
-		Versioned::reading_stage($toStage);
+		Versioned::set_stage($toStage);
 
 		// Migrate stage prior to write
 		$from->setSourceQueryParam('Versioned.mode', 'stage');
@@ -1342,12 +1615,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * @param string $stage1 The first stage to check.
 	 * @param string $stage2
+	 * @return bool
 	 */
 	public function stagesDiffer($stage1, $stage2) {
 		$table1 = $this->baseTable($stage1);
 		$table2 = $this->baseTable($stage2);
 
-		if(!is_numeric($this->owner->ID)) {
+		$owner = $this->owner;
+		if(!is_numeric($owner->ID)) {
 			return true;
 		}
 
@@ -1359,7 +1634,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			"SELECT CASE WHEN \"$table1\".\"Version\"=\"$table2\".\"Version\" THEN 1 ELSE 0 END
 			 FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\"
 			 AND \"$table1\".\"ID\" = ?",
-			array($this->owner->ID)
+			array($owner->ID)
 		)->value();
 
 		return !$stagesAreEqual;
@@ -1371,6 +1646,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param string $limit
 	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @param string $having
+	 * @return ArrayList
 	 */
 	public function Versions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		return $this->allVersions($filter, $sort, $limit, $join, $having);
@@ -1388,11 +1664,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		// Make sure the table names are not postfixed (e.g. _Live)
-		$oldMode = self::get_reading_mode();
-		self::reading_stage('Stage');
+		$oldMode = static::get_reading_mode();
+		static::set_stage('Stage');
 
-		$list = DataObject::get(get_class($this->owner), $filter, $sort, $join, $limit);
-		if($having) $having = $list->having($having);
+		$owner = $this->owner;
+		$list = DataObject::get(get_class($owner), $filter, $sort, $join, $limit);
+		if($having) {
+			$list->having($having);
+		}
 
 		$query = $list->dataQuery()->query();
 
@@ -1414,7 +1693,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		$query->addWhere(array(
-			"\"{$baseTable}_versions\".\"RecordID\" = ?" => $this->owner->ID
+			"\"{$baseTable}_versions\".\"RecordID\" = ?" => $owner->ID
 		));
 		$query->setOrderBy(($sort) ? $sort
 			: "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC");
@@ -1439,8 +1718,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return DataObject
 	 */
 	public function compareVersions($from, $to) {
-		$fromRecord = Versioned::get_version($this->owner->class, $this->owner->ID, $from);
-		$toRecord = Versioned::get_version($this->owner->class, $this->owner->ID, $to);
+		$owner = $this->owner;
+		$fromRecord = Versioned::get_version($owner->class, $owner->ID, $from);
+		$toRecord = Versioned::get_version($owner->class, $owner->ID, $to);
 
 		$diff = new DataDifferencer($fromRecord, $toRecord);
 
@@ -1454,14 +1734,24 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public function baseTable($stage = null) {
-		$tableClasses = ClassInfo::dataClassesFor($this->owner->class);
-		$baseClass = array_shift($tableClasses);
+		$baseClass = ClassInfo::baseDataClass($this->owner);
+		return $this->stageTable($baseClass, $stage);
+	}
 
-		if(!$stage || $stage == $this->defaultStage) {
-			return $baseClass;
+	/**
+	 * Given a class and stage determine the table name.
+	 *
+	 * Note: Stages this asset does not exist in will default to the draft table.
+	 *
+	 * @param string $class
+	 * @param string $stage
+	 * @return string Table name
+	 */
+	public function stageTable($class, $stage) {
+		if($this->hasStages() && $stage === static::LIVE) {
+			return "{$class}_{$stage}";
 		}
-
-		return $baseClass . "_$stage";
+		return $class;
 	}
 
 	//-----------------------------------------------------------------------------------------------//
@@ -1475,7 +1765,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public static function can_choose_site_stage($request) {
 		// Request is allowed if stage isn't being modified
-		if((!$request->getVar('stage') || $request->getVar('stage') === static::get_live_stage())
+		if((!$request->getVar('stage') || $request->getVar('stage') === static::LIVE)
 			&& !$request->getVar('archiveDate')
 		) {
 			return true;
@@ -1506,14 +1796,16 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		// Determine the reading mode
 		if(isset($_GET['stage'])) {
 			$stage = ucfirst(strtolower($_GET['stage']));
-			if(!in_array($stage, array('Stage', 'Live'))) $stage = 'Live';
+			if(!in_array($stage, array(static::DRAFT, static::LIVE))) {
+				$stage = static::LIVE;
+			}
 			$mode = 'Stage.' . $stage;
 		} elseif (isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
 			$mode = 'Archive.' . $_GET['archiveDate'];
 		} elseif($preexistingMode) {
 			$mode = $preexistingMode;
 		} else {
-			$mode = self::DEFAULT_MODE;
+			$mode = static::DEFAULT_MODE;
 		}
 
 		// Save reading mode
@@ -1521,13 +1813,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		// Try not to store the mode in the session if not needed
 		if(($preexistingMode && $preexistingMode !== $mode)
-			|| (!$preexistingMode && $mode !== self::DEFAULT_MODE)
+			|| (!$preexistingMode && $mode !== static::DEFAULT_MODE)
 		) {
 			Session::set('readingMode', $mode);
 		}
 
 		if(!headers_sent() && !Director::is_cli()) {
-			if(Versioned::current_stage() == 'Live') {
+			if(Versioned::get_stage() == 'Live') {
 				// clear the cookie if it's set
 				if(Cookie::get('bypassStaticCache')) {
 					Cookie::force_expiry('bypassStaticCache', null, null, false, true /* httponly */);
@@ -1547,7 +1839,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param string $mode
 	 */
 	public static function set_reading_mode($mode) {
-		Versioned::$reading_mode = $mode;
+		self::$reading_mode = $mode;
 	}
 
 	/**
@@ -1556,16 +1848,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public static function get_reading_mode() {
-		return Versioned::$reading_mode;
-	}
-
-	/**
-	 * Get the name of the 'live' stage.
-	 *
-	 * @return string
-	 */
-	public static function get_live_stage() {
-		return "Live";
+		return self::$reading_mode;
 	}
 
 	/**
@@ -1573,7 +1856,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * @return string
 	 */
-	public static function current_stage() {
+	public static function get_stage() {
 		$parts = explode('.', Versioned::get_reading_mode());
 
 		if($parts[0] == 'Stage') {
@@ -1588,7 +1871,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public static function current_archived_date() {
 		$parts = explode('.', Versioned::get_reading_mode());
-		if($parts[0] == 'Archive') return $parts[1];
+		if($parts[0] == 'Archive') {
+			return $parts[1];
+		}
 	}
 
 	/**
@@ -1596,8 +1881,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * @param string $stage New reading stage.
 	 */
-	public static function reading_stage($stage) {
-		Versioned::set_reading_mode('Stage.' . $stage);
+	public static function set_stage($stage) {
+		static::set_reading_mode('Stage.' . $stage);
 	}
 
 	/**
@@ -1623,7 +1908,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public static function get_one_by_stage($class, $stage, $filter = '', $cache = true, $sort = '') {
 		// TODO: No identity cache operating
-		$items = self::get_by_stage($class, $stage, $filter, $sort, null, 1);
+		$items = static::get_by_stage($class, $stage, $filter, $sort, null, 1);
 
 		return $items->First();
 	}
@@ -1736,14 +2021,15 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function deleteFromStage($stage) {
 		$oldMode = Versioned::get_reading_mode();
-		Versioned::reading_stage($stage);
-		$clone = clone $this->owner;
+		Versioned::set_stage($stage);
+		$owner = $this->owner;
+		$clone = clone $owner;
 		$clone->delete();
 		Versioned::set_reading_mode($oldMode);
 
 		// Fix the version number cache (in case you go delete from stage and then check ExistsOnLive)
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		self::$cache_versionnumber[$baseClass][$stage][$this->owner->ID] = null;
+		$baseClass = ClassInfo::baseDataClass($owner->class);
+		self::$cache_versionnumber[$baseClass][$stage][$owner->ID] = null;
 	}
 
 	/**
@@ -1755,10 +2041,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function writeToStage($stage, $forceInsert = false) {
 		$oldMode = Versioned::get_reading_mode();
-		Versioned::reading_stage($stage);
+		Versioned::set_stage($stage);
 
-		$this->owner->forceChange();
-		$result = $this->owner->write(false, $forceInsert);
+		$owner = $this->owner;
+		$owner->forceChange();
+		$result = $owner->write(false, $forceInsert);
 		Versioned::set_reading_mode($oldMode);
 
 		return $result;
@@ -1768,14 +2055,29 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * Roll the draft version of this record to match the published record.
 	 * Caution: Doesn't overwrite the object properties with the rolled back version.
 	 *
-	 * @param int $version Either the string 'Live' or a version number
+	 * {@see doRevertToLive()} to reollback to live
+	 *
+	 * @param int $version Version number
 	 */
 	public function doRollbackTo($version) {
 		$owner = $this->owner;
 		$owner->extend('onBeforeRollback', $version);
-		$this->publish($version, "Stage", true);
+		$owner->publish($version, "Stage", true);
 		$owner->writeWithoutVersion();
 		$owner->extend('onAfterRollback', $version);
+	}
+
+	public function onAfterRollback($version) {
+		// Find record at this version
+		$baseClass = ClassInfo::baseDataClass($this->owner);
+		$recordVersion = static::get_version($baseClass, $this->owner->ID, $version);
+
+		// Note that unlike other publishing actions, rollback is NOT recursive;
+		// The owner collects all objects and writes them back using writeToStage();
+		foreach ($recordVersion->findOwned() as $object) {
+			/** @var Versioned|DataObject $object */
+			$object->writeToStage(static::DRAFT);
+		}
 	}
 
 	/**
@@ -1788,10 +2090,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public static function get_latest_version($class, $id) {
 		$baseClass = ClassInfo::baseDataClass($class);
 		$list = DataList::create($baseClass)
-			->where(array("\"$baseClass\".\"RecordID\"" => $id))
 			->setDataQueryParam("Versioned.mode", "latest_versions");
 
-		return $list->First();
+		return $list->byID($id);
 	}
 
 	/**
@@ -1805,12 +2106,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return boolean
 	 */
 	public function isLatestVersion() {
-		if(!$this->owner->isInDB()) {
+		$owner = $this->owner;
+		if(!$owner->isInDB()) {
 			return false;
 		}
 
-		$version = self::get_latest_version($this->owner->class, $this->owner->ID);
-		return ($version->Version == $this->owner->Version);
+		$version = static::get_latest_version($owner->class, $owner->ID);
+		return ($version->Version == $owner->Version);
 	}
 
 	/**
@@ -1819,14 +2121,21 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return bool
 	 */
 	public function isPublished() {
-		if(!$this->owner->isInDB()) {
+		$owner = $this->owner;
+		if(!$owner->isInDB()) {
 			return false;
 		}
 
-		$table = ClassInfo::baseDataClass($this->owner->class) . '_' . self::get_live_stage();
+		// Non-staged objects are considered "published" if saved
+		if(!$this->hasStages()) {
+			return true;
+		}
+
+		$baseClass = ClassInfo::baseDataClass($owner->class);
+		$table = $this->stageTable($baseClass, static::LIVE);
 		$result = DB::prepared_query(
 			"SELECT COUNT(*) FROM \"{$table}\" WHERE \"{$table}\".\"ID\" = ?",
-			array($this->owner->ID)
+			array($owner->ID)
 		);
 		return (bool)$result->value();
 	}
@@ -1837,14 +2146,15 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return bool
 	 */
 	public function isOnDraft() {
-		if(!$this->owner->isInDB()) {
+		$owner = $this->owner;
+		if(!$owner->isInDB()) {
 			return false;
 		}
 
-		$table = ClassInfo::baseDataClass($this->owner->class);
+		$table = ClassInfo::baseDataClass($owner->class);
 		$result = DB::prepared_query(
 			"SELECT COUNT(*) FROM \"{$table}\" WHERE \"{$table}\".\"ID\" = ?",
-			array($this->owner->ID)
+			array($owner->ID)
 		);
 		return (bool)$result->value();
 	}
@@ -1887,13 +2197,12 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public static function get_version($class, $id, $version) {
 		$baseClass = ClassInfo::baseDataClass($class);
 		$list = DataList::create($baseClass)
-			->where(array(
-				"\"{$baseClass}\".\"RecordID\"" => $id,
-				"\"{$baseClass}\".\"Version\"" => $version
-			))
-			->setDataQueryParam("Versioned.mode", 'all_versions');
+			->setDataQueryParam([
+				"Versioned.mode" => 'version',
+				"Versioned.version" => $version
+			]);
 
-		return $list->First();
+		return $list->byID($id);
 	}
 
 	/**
@@ -1948,7 +2257,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public function cacheKeyComponent() {
-		return 'versionedmode-'.self::get_reading_mode();
+		return 'versionedmode-'.static::get_reading_mode();
 	}
 
 	/**
@@ -1957,20 +2266,26 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return array
 	 */
 	public function getVersionedStages() {
-		return $this->stages;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getDefaultStage() {
-		return $this->defaultStage;
+		if($this->hasStages()) {
+			return [static::DRAFT, static::LIVE];
+		} else {
+			return [static::DRAFT];
+		}
 	}
 
 	public static function get_template_global_variables() {
 		return array(
 			'CurrentReadingMode' => 'get_reading_mode'
 		);
+	}
+
+	/**
+	 * Check if this object has stages
+	 *
+	 * @return bool True if this object is staged
+	 */
+	public function hasStages() {
+		return $this->mode === static::STAGEDVERSIONED;
 	}
 }
 
@@ -2086,9 +2401,9 @@ class Versioned_Version extends ViewableData {
 		if(!$component) {
 			return null;
 		}
-			if ($component->hasMethod($fieldName)) {
-				return $component->$fieldName();
-			}
-			return $component->$fieldName;
+		if ($component->hasMethod($fieldName)) {
+			return $component->$fieldName();
 		}
+		return $component->$fieldName;
 	}
+}

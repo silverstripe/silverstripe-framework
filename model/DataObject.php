@@ -398,9 +398,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * field values.  Normally this contructor is only used by the internal systems that get objects from the database.
 	 * @param boolean $isSingleton This this to true if this is a singleton() object, a stub for calling methods.
 	 *                             Singletons don't have their defaults set.
+	 * @param DataModel $model
+	 * @param array $queryParams List of DataQuery params necessary to lazy load, or load related objects.
 	 */
-	public function __construct($record = null, $isSingleton = false, $model = null) {
+	public function __construct($record = null, $isSingleton = false, $model = null, $queryParams = array()) {
 		parent::__construct();
+
+		// Set query params on the DataObject to tell the lazy loading mechanism the context the object creation context
+		$this->setSourceQueryParams($queryParams);
 
 		// Set the fields data.
 		if(!$record) {
@@ -2313,8 +2318,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Loads all the stub fields that an initial lazy load didn't load fully.
 	 *
-	 * @param tableClass Base table to load the values from. Others are joined as required.
-	 *                   Not specifying a tableClass will load all lazy fields from all tables.
+	 * @param string $tableClass Base table to load the values from. Others are joined as required.
+	 * Not specifying a tableClass will load all lazy fields from all tables.
 	 */
 	protected function loadLazyFields($tableClass = null) {
 		if (!$tableClass) {
@@ -2334,17 +2339,22 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Reset query parameter context to that of this DataObject
 		if($params = $this->getSourceQueryParams()) {
-			foreach($params as $key => $value) $dataQuery->setQueryParam($key, $value);
+			foreach($params as $key => $value) {
+				$dataQuery->setQueryParam($key, $value);
+			}
 		}
 
 		// TableField sets the record ID to "new" on new row data, so don't try doing anything in that case
-		if(!is_numeric($this->record['ID'])) return false;
+		if(!is_numeric($this->record['ID'])) {
+			return;
+		}
 
 		// Limit query to the current record, unless it has the Versioned extension,
 		// in which case it requires special handling through augmentLoadLazyFields()
-		if(!$this->hasExtension('Versioned')) {
-			$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
-		}
+		$baseTable = ClassInfo::baseDataClass($this);
+		$dataQuery->where([
+			"\"{$baseTable}\".\"ID\"" => $this->record['ID']
+		])->limit(1);
 
 		$columns = array();
 

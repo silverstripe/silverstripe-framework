@@ -26,6 +26,20 @@ VersionedOwnershipTest_Subclass:
     Title: 'Subclass 2'
     Related: =>VersionedOwnershipTest_Related.related2_published
 
+VersionedOwnershipTest_RelatedMany:
+  relatedmany1_published:
+    Title: 'Related Many 1'
+    Page: =>VersionedOwnershipTest_Subclass.subclass1_published
+  relatedmany2_published:
+    Title: 'Related Many 2'
+    Page: =>VersionedOwnershipTest_Subclass.subclass1_published
+  relatedmany3:
+    Title: 'Related Many 3'
+    Page: =>VersionedOwnershipTest_Subclass.subclass1_published
+  relatedmany4_published:
+    Title: 'Related Many 4'
+    Page: =>VersionedOwnershipTest_Subclass.subclass2_published
+
 VersionedOwnershipTest_Object:
   object1:
     Title: 'Object 1'

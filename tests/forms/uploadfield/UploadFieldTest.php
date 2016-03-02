@@ -23,7 +23,7 @@ class UploadFieldTest extends FunctionalTest {
 
 		// Save versioned state
 		$this->oldReadingMode = Versioned::get_reading_mode();
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 
 		// Set backend root to /UploadFieldTest
 		AssetStoreTest_SpyStore::activate('UploadFieldTest');

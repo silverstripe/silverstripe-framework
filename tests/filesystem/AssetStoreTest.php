@@ -602,6 +602,7 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 	 * Helper method to get local filesystem path for this file
 	 *
 	 * @param AssetContainer $asset
+	 * @return string
 	 */
 	public static function getLocalPath(AssetContainer $asset) {
 		if($asset instanceof Folder) {
@@ -621,7 +622,6 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 		/** @var Local $adapter */
 		$adapter = $filesystem->getAdapter();
 		return $adapter->applyPathPrefix($fileID);
-
 	}
 
 	public function cleanFilename($filename) {

@@ -177,6 +177,7 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	 * Caution: This sets a fixed date that doesn't increment with time.
 	 *
 	 * @param SS_Datetime|string $datetime Either in object format, or as a SS_Datetime compatible string.
+	 * @throws Exception
 	 */
 	public static function set_mock_now($datetime) {
 		if($datetime instanceof SS_Datetime) {

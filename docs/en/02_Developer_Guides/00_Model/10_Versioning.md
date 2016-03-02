@@ -13,14 +13,32 @@ Versioning in SilverStripe is handled through the [api:Versioned] class. As a [a
 be applied to any [api:DataObject] subclass. The extension class will automatically update read and write operations
 done via the ORM via the `augmentSQL` database hook.
 
-Adding Versioned to your `DataObject` subclass works the same as any other extension. It accepts two or more arguments 
-denoting the different "stages", which map to different database tables. 
+Adding Versioned to your `DataObject` subclass works the same as any other extension. It has one of two behaviours,
+which can be applied via the constructor argument.
 
-**mysite/_config/app.yml**
-	:::yml
-	MyRecord:
-	  extensions:
-	    - Versioned("Stage","Live")
+By default, adding the `Versioned extension will create a "Stage" and "Live" stage on your model, and will
+also track versioned history.
+
+
+	:::php
+	class MyStagedModel extends DataObject {
+		private staic $extensions = [
+			"Versioned"
+		];
+	}
+
+
+Alternatively, staging can be disabled, so that only versioned changes are tracked for your model. This
+can be specified by setting the constructor argument to "Versioned"
+
+
+	:::php
+	class VersionedModel extends DataObject {
+		private staic $extensions = [
+			"Versioned('Versioned')"
+		];
+	}
+
 
 <div class="notice" markdown="1">
 The extension is automatically applied to `SiteTree` class. For more information on extensions see 
@@ -34,8 +52,9 @@ of `DataObject`. Adding this extension to children of the base class will have u
 
 ## Database Structure
 
-Depending on how many stages you configured, two or more new tables will be created for your records. In the above, this
-will create a new `MyRecord_Live` table once you've rebuilt the database.
+Depending on whether staging is enabled, one or more new tables will be created for your records. `<class>_versions`
+is always created to track historic versions for your model. If staging is enabled this will also create a new
+`<class>_Live` table once you've rebuilt the database.
 
 <div class="notice" markdown="1">
 Note that the "Stage" naming has a special meaning here, it will leave the original table name unchanged, rather than 
@@ -143,6 +162,9 @@ and has_one/has_many, however it relies on a pre-existing relationship to functi
 
 For instance, in order to specify this dependency, you must apply `owns` and `owned_by` config
 on a relationship.
+
+When pages of type `MyPage` are published, any owned images and banners will be automatically published,
+without requiring any custom code.
 
 
 	:::php

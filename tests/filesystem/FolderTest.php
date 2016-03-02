@@ -16,7 +16,7 @@ class FolderTest extends SapphireTest {
 		parent::setUp();
 
 		$this->logInWithPermission('ADMIN');
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 
 		// Set backend root to /FolderTest
 		AssetStoreTest_SpyStore::activate('FolderTest');
@@ -110,25 +110,44 @@ class FolderTest extends SapphireTest {
 		Folder::find_or_make($folder1->Filename);
 		$folder2 = $this->objFromFixture('Folder', 'folder2');
 
+		// Publish file1
+		$file1 = DataObject::get_by_id('File', $this->idFromFixture('File', 'file1-folder1'), false);
+		$file1->doPublish();
+
 		// set ParentID. This should cause updateFilesystem to be called on all children
 		$folder1->ParentID = $folder2->ID;
 		$folder1->write();
 
 		// Check if the file in the folder moved along
-		$file1 = DataObject::get_by_id('File', $this->idFromFixture('File', 'file1-folder1'), false);
-		$this->assertFileExists(AssetStoreTest_SpyStore::getLocalPath($file1));
+		$file1Draft = Versioned::get_by_stage('File', Versioned::DRAFT)->byID($file1->ID);
+		$this->assertFileExists(AssetStoreTest_SpyStore::getLocalPath($file1Draft));
 
 		$this->assertEquals(
 			'FileTest-folder2/FileTest-folder1/File1.txt',
-			$file1->Filename,
+			$file1Draft->Filename,
 			'The file DataObject has updated path'
 		);
 
 		// File should be located in new folder
 		$this->assertEquals(
 			ASSETS_PATH . '/FolderTest/.protected/FileTest-folder2/FileTest-folder1/55b443b601/File1.txt',
-			AssetStoreTest_SpyStore::getLocalPath($file1)
+			AssetStoreTest_SpyStore::getLocalPath($file1Draft)
 		);
+
+		// Published (live) version remains in the old location
+		$file1Live = Versioned::get_by_stage('File', Versioned::LIVE)->byID($file1->ID);
+		$this->assertEquals(
+			ASSETS_PATH . '/FolderTest/FileTest-folder1/55b443b601/File1.txt',
+			AssetStoreTest_SpyStore::getLocalPath($file1Live)
+		);
+
+		// Publishing the draft to live should move the new file to the public store
+		$file1Draft->doPublish();
+		$this->assertEquals(
+			ASSETS_PATH . '/FolderTest/FileTest-folder2/FileTest-folder1/55b443b601/File1.txt',
+			AssetStoreTest_SpyStore::getLocalPath($file1Draft)
+		);
+
 	}
 
 	/**

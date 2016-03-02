@@ -21,6 +21,7 @@ class FileMigrationHelperTest extends SapphireTest {
 	 * @return string
 	 */
 	protected function getBasePath() {
+		// Note that the actual filesystem base is the 'assets' subdirectory within this
 		return ASSETS_PATH . '/FileMigrationHelperTest';
 	}
 
@@ -36,7 +37,7 @@ class FileMigrationHelperTest extends SapphireTest {
 		// Ensure that each file has a local record file in this new assets base
 		$from = FRAMEWORK_PATH . '/tests/model/testimages/test-image-low-quality.jpg';
 		foreach(File::get()->exclude('ClassName', 'Folder') as $file) {
-			$dest = $this->getBasePath() . '/assets/' . $file->getFilename();
+			$dest = AssetStoreTest_SpyStore::base_path() . '/' . $file->generateFilename();
 			SS_Filesystem::makeFolder(dirname($dest));
 			copy($from, $dest);
 		}
@@ -55,7 +56,7 @@ class FileMigrationHelperTest extends SapphireTest {
 	public function testMigration() {
 		// Prior to migration, check that each file has empty Filename / Hash properties
 		foreach(File::get()->exclude('ClassName', 'Folder') as $file) {
-			$filename = $file->getFilename();
+			$filename = $file->generateFilename();
 			$this->assertNotEmpty($filename, "File {$file->Name} has a filename");
 			$this->assertEmpty($file->File->getFilename(), "File {$file->Name} has no DBFile filename");
 			$this->assertEmpty($file->File->getHash(), "File {$file->Name} has no hash");
@@ -70,20 +71,25 @@ class FileMigrationHelperTest extends SapphireTest {
 
 		// Test that each file exists
 		foreach(File::get()->exclude('ClassName', 'Folder') as $file) {
+			$expectedFilename = $file->generateFilename();
 			$filename = $file->File->getFilename();
+			$this->assertTrue($file->exists(), "File with name {$filename} exists");
 			$this->assertNotEmpty($filename, "File {$file->Name} has a Filename");
+			$this->assertEquals($expectedFilename, $filename, "File {$file->Name} has retained its Filename value");
 			$this->assertEquals(
 				'33be1b95cba0358fe54e8b13532162d52f97421c',
 				$file->File->getHash(),
 				"File with name {$filename} has the correct hash"
 			);
-			$this->assertTrue($file->exists(), "File with name {$filename} exists");
 			$this->assertTrue($file->isPublished(), "File is published after migration");
 		}
 	}
 
 }
 
+/**
+ * @property File $owner
+ */
 class FileMigrationHelperTest_Extension extends DataExtension implements TestOnly {
 	/**
 	 * Ensure that File dataobject has the legacy "Filename" field
@@ -94,6 +100,6 @@ class FileMigrationHelperTest_Extension extends DataExtension implements TestOnl
 
 	public function onBeforeWrite() {
 		// Ensure underlying filename field is written to the database
-		$this->owner->setField('Filename', 'assets/' . $this->owner->getFilename());
+		$this->owner->setField('Filename', 'assets/' . $this->owner->generateFilename());
 	}
 }

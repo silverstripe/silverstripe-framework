@@ -61,7 +61,7 @@ class SQLSelect extends SQLConditionalExpression {
 	/**
 	 * Construct a new SQLSelect.
 	 *
-	 * @param array $select An array of SELECT fields.
+	 * @param array|string $select An array of SELECT fields.
 	 * @param array|string $from An array of FROM clauses. The first one should be just the table name.
 	 * Each should be ANSI quoted.
 	 * @param array $where An array of WHERE clauses.
