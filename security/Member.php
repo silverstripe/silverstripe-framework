@@ -1480,12 +1480,15 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			return $extended;
 		}
 		
-		//need to be logged in and/or
-		//most checks below rely on $member being a Member
-		if(!$member) return false;		
+		//need to be logged in and/or most checks below rely on $member being a Member
+		if(!$member) {
+			return false;		
+		}
 
 		// members can usually view their own record
-		if($this->ID == $member->ID) return true;
+		if($this->ID == $member->ID) {
+			return true;
+		}
 
 		//standard check
 		if(
@@ -1494,6 +1497,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		) {
 			return true;
 		}
+		//default answer is NO
 		return false;
 	}
 
@@ -1512,15 +1516,20 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			return $extended;
 		}
 		
-		//need to be logged in and/or
-		//most checks below rely on $member being a Member
-		if(!$member) return false;		
+		//need to be logged in and/or most checks below rely on $member being a Member
+		if(!$member) {
+			return false;		
+		}
 		
 		// HACK: we should not allow for an non-Admin to edit an Admin
-		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) return false;
+		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) {
+			return false;
+		}
 
 		// members can usually edit their own record
-		if($member && $this->ID == $member->ID) return true;
+		if($member && $this->ID == $member->ID) {
+			return true;
+		}
 
 		//standard check
 		if(
@@ -1529,6 +1538,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		) {
 			return true;
 		}
+		//default answer is NO
 		return false;
 	}
 
@@ -1537,7 +1547,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
 	 */
 	public function canDelete($member = null) {
-		//get member
 		if(!($member instanceof Member)) {
 			$member = Member::currentUser();
 		}
@@ -1547,16 +1556,21 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			return $extended;
 		}
 		
-		//need to be logged in and/or
-		//most checks below rely on $member being a Member
-		if(!$member) return false;		
+		//need to be logged in and/or most checks below rely on $member being a Member
+		if(!$member) {
+			return false;		
+		}
 
 		// HACK: we should not allow for an non-Admin to delete an Admin
-		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) return false;
+		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) {
+			return false;
+		}
 
 		// Members are not allowed to remove themselves,
 		// since it would create inconsistencies in the admin UIs.
-		if($this->ID && $member->ID == $this->ID) return false;			
+		if($this->ID && $member->ID == $this->ID) {
+			return false;			
+		}
 
 		//standard check
 		if(
@@ -1565,6 +1579,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		) {
 			return true;
 		}
+		//default answer is NO
 		return false;
 	}
 
