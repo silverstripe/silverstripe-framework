@@ -146,7 +146,7 @@ class i18n {
 				return match; 
 			}
 
-			return subMatch1 + params[i += 1];
+			return subMatch1 + params[i++];
 		});
 	}
 
