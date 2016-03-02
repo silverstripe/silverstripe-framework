@@ -1491,14 +1491,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 
 		//standard check
-		if(
-			Permission::checkMember($member, 'ADMIN')
-			|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')
-		) {
-			return true;
-		}
-		//default answer is NO
-		return false;
+		return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
 	}
 
 	/**
@@ -1532,14 +1525,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 
 		//standard check
-		if(
-			Permission::checkMember($member, 'ADMIN')
-			|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')
-		) {
-			return true;
-		}
-		//default answer is NO
-		return false;
+		return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
 	}
 
 	/**
@@ -1573,14 +1559,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 
 		//standard check
-		if(
-			Permission::checkMember($member, 'ADMIN')
-			|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')			
-		) {
-			return true;
-		}
-		//default answer is NO
-		return false;
+		return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
 	}
 
 
