@@ -1520,7 +1520,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 
 		// members can usually edit their own record
-		if($member && $this->ID == $member->ID) {
+		if($this->ID == $member->ID) {
 			return true;
 		}
 
@@ -1547,9 +1547,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			return false;		
 		}
 
-		// HACK: we should not allow for an non-Admin to delete an Admin
-		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) {
-			return false;
+		// HACK: if you want to delete a member, you have to be a member yourself.
+		// this is a hack because what this could should do is to stop a user
+		// deleting a member who has more privileges (e.g. a non-Admin deleting an Admin)
+		if(Permission::checkMember($this, 'ADMIN')) {
+			return Permission::checkMember($member, 'ADMIN');
 		}
 
 		// Members are not allowed to remove themselves,
