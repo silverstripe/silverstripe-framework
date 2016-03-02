@@ -1547,18 +1547,21 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			return false;		
 		}
 
-		// HACK: if you want to delete a member, you have to be a member yourself.
-		// this is a hack because what this could should do is to stop a user
-		// deleting a member who has more privileges (e.g. a non-Admin deleting an Admin)
-		if(Permission::checkMember($this, 'ADMIN')) {
-			return Permission::checkMember($member, 'ADMIN');
-		}
-
 		// Members are not allowed to remove themselves,
 		// since it would create inconsistencies in the admin UIs.
 		if($this->ID && $member->ID == $this->ID) {
 			return false;			
 		}
+		
+		// HACK: if you want to delete a member, you have to be a member yourself.
+		// this is a hack because what this should do is to stop a user
+		// deleting a member who has more privileges (e.g. a non-Admin deleting an Admin)
+		if(Permission::checkMember($this, 'ADMIN')) {
+			if( ! Permission::checkMember($member, 'ADMIN')) {
+				return false;				
+			}
+		}
+
 
 		//standard check
 		return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
