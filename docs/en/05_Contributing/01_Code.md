@@ -301,6 +301,16 @@ $ npm run sprites
 
 This script generates sprites from the individual image files in `admin/images/sprites/src`.
 
+```
+$ npm run lock
+```
+
+Generates a "shrinkwrap" file containing all npm package versions and writes it to `npm-shrinkwrap.json`.
+Run this command whenever a new package is added to `package.json`, or when updating packages.
+Commit the resulting `npm-shrinkwrap.json`. This uses
+a third party [npm-shrinkwrap](https://github.com/uber/npm-shrinkwrap) library
+since the built-in `npm shrinkwrap` (without a dash) has proven unreliable.
+
 Of course to run these scripts, you'll need to get the dependencies, so run a `npm install` from the root directory to get started.
 
 ### Gulp

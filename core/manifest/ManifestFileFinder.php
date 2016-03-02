@@ -22,7 +22,8 @@ class ManifestFileFinder extends SS_FileFinder {
 	protected static $default_options = array(
 		'include_themes' => false,
 		'ignore_tests'   => true,
-		'min_depth'      => 1
+		'min_depth'      => 1,
+		'ignore_dirs'    => array('node_modules')
 	);
 
 	public function acceptDir($basename, $pathname, $depth) {
