@@ -1464,32 +1464,35 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		return $labels;
 	}
 
+
 	/**
 	 * Users can view their own record.
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions.
 	 * This is likely to be customized for social sites etc. with a looser permission model.
 	 */
 	public function canView($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-
-		// extended access checks
-		$results = $this->extend('canView', $member);
-		if($results && is_array($results)) {
-			if(!min($results)) return false;
-			else return true;
+		//get member
+		if(!($member instanceof Member)) {
+			$member = Member::currentUser();
+		}
+		//check for extensions, we do this first as they can overrule everything
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
+		
+		//need to be logged in and/or most checks below rely on $member being a Member
+		if(!$member) {
+			return false;		
 		}
 
-		// members can usually edit their own record
-		if($member && $this->ID == $member->ID) return true;
-
-		if(
-			Permission::checkMember($member, 'ADMIN')
-			|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')
-		) {
+		// members can usually view their own record
+		if($this->ID == $member->ID) {
 			return true;
 		}
 
-		return false;
+		//standard check
+		return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
 	}
 
 	/**
@@ -1497,26 +1500,33 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
 	 */
 	public function canEdit($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-
-		// extended access checks
-		$results = $this->extend('canEdit', $member);
-		if($results && is_array($results)) {
-			if(!min($results)) return false;
-			else return true;
+		//get member
+		if(!($member instanceof Member)) {
+			$member = Member::currentUser();
+		}
+		//check for extensions, we do this first as they can overrule everything
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
+		
+		//need to be logged in and/or most checks below rely on $member being a Member
+		if(!$member) {
+			return false;		
+		}
+		
+		// HACK: we should not allow for an non-Admin to edit an Admin
+		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) {
+			return false;
 		}
 
-		// No member found
-		if(!($member && $member->exists())) return false;
+		// members can usually edit their own record
+		if($this->ID == $member->ID) {
+			return true;
+		}
 
-		// If the requesting member is not an admin, but has access to manage members,
-		// they still can't edit other members with ADMIN permission.
-		// This is a bit weak, strictly speaking they shouldn't be allowed to
-		// perform any action that could change the password on a member
-		// with "higher" permissions than himself, but thats hard to determine.
-		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) return false;
-
-		return $this->canView($member);
+		//standard check
+		return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
 	}
 
 	/**
@@ -1524,25 +1534,38 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
 	 */
 	public function canDelete($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-
-		// extended access checks
-		$results = $this->extend('canDelete', $member);
-		if($results && is_array($results)) {
-			if(!min($results)) return false;
-			else return true;
+		if(!($member instanceof Member)) {
+			$member = Member::currentUser();
 		}
-
-		// No member found
-		if(!($member && $member->exists())) return false;
+		//check for extensions, we do this first as they can overrule everything
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
+		
+		//need to be logged in and/or most checks below rely on $member being a Member
+		if(!$member) {
+			return false;		
+		}
 
 		// Members are not allowed to remove themselves,
 		// since it would create inconsistencies in the admin UIs.
-		if($this->ID && $member->ID == $this->ID) return false;
+		if($this->ID && $member->ID == $this->ID) {
+			return false;			
+		}
+		
+		// HACK: if you want to delete a member, you have to be a member yourself.
+		// this is a hack because what this should do is to stop a user
+		// deleting a member who has more privileges (e.g. a non-Admin deleting an Admin)
+		if(Permission::checkMember($this, 'ADMIN')) {
+			if( ! Permission::checkMember($member, 'ADMIN')) {
+				return false;				
+			}
+		}
 
-		return $this->canEdit($member);
+		//standard check
+		return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
 	}
-
 
 	/**
 	 * Validate this member object.
