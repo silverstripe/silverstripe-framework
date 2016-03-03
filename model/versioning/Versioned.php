@@ -8,6 +8,7 @@
  * the pages used in the CMS.
  *
  * @property int $Version
+ * @property DataObject|Versioned $owner
  *
  * @package framework
  * @subpackage model
@@ -161,6 +162,34 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	private static $non_live_permissions = array('CMS_ACCESS_LeftAndMain', 'CMS_ACCESS_CMSMain', 'VIEW_DRAFT_CONTENT');
 
 	/**
+	 * List of relationships on this object that are "owned" by this object.
+	 * Owership in the context of versioned objects is a relationship where
+	 * the publishing of owning objects requires the publishing of owned objects.
+	 *
+	 * E.g. A page owns a set of banners, as in order for the page to be published, all
+	 * banners on this page must also be published for it to be visible.
+	 *
+	 * Typically any object and its owned objects should be visible in the same edit view.
+	 * E.g. a page and {@see GridField} of banners.
+	 *
+	 * Page hierarchy is typically not considered an ownership relationship.
+	 *
+	 * Ownership is recursive; If A owns B and B owns C then A owns C.
+	 *
+	 * @config
+	 * @var array List of has_many or many_many relationships owned by this object.
+	 */
+	private static $owns = array();
+
+	/**
+	 * Opposing relationship to owns config; Represents the objects which
+	 * own the current object.
+	 *
+	 * @var array
+	 */
+	private static $owned_by = array();
+
+	/**
 	 * Reset static configuration variables to their default values.
 	 */
 	public static function reset() {
@@ -201,14 +230,19 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if($parts[0] == 'Archive') {
 			$dataQuery->setQueryParam('Versioned.mode', 'archive');
 			$dataQuery->setQueryParam('Versioned.date', $parts[1]);
-
-		} else if($parts[0] == 'Stage' && $parts[1] != $this->defaultStage
-				&& array_search($parts[1],$this->stages) !== false) {
-
+		} else if($parts[0] == 'Stage' && in_array($parts[1], $this->stages)) {
 			$dataQuery->setQueryParam('Versioned.mode', 'stage');
 			$dataQuery->setQueryParam('Versioned.stage', $parts[1]);
 		}
+	}
 
+
+	public function updateInheritableQueryParams(&$params) {
+		// Versioned.mode === all_versions doesn't inherit very well, so default to stage
+		if(isset($params['Versioned.mode']) && $params['Versioned.mode'] === 'all_versions') {
+			$params['Versioned.mode'] = 'stage';
+			$params['Versioned.stage'] = $this->defaultStage;
+		}
 	}
 
 	/**
@@ -309,8 +343,12 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		case 'latest_versions':
 			foreach($query->getFrom() as $alias => $join) {
 				if($alias != $baseTable) {
-					$query->setJoinFilter($alias, "\"$alias\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\""
-						. " AND \"$alias\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
+					// Make sure join includes version as well
+					$query->setJoinFilter(
+						$alias,
+						"\"{$alias}_versions\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\""
+						. " AND \"{$alias}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\""
+					);
 				}
 				$query->renameTable($alias, $alias . '_versions');
 			}
@@ -320,33 +358,30 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 			}
 
-			// Alias the record ID as the row ID
-			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
+			// Alias the record ID as the row ID, and ensure ID filters are aliased correctly
+			$query->selectField("\"{$baseTable}_versions\".\"RecordID\"", "ID");
+			$query->replaceText("\"{$baseTable}_versions\".\"ID\"", "\"{$baseTable}_versions\".\"RecordID\"");
 
-			// Ensure that any sort order referring to this ID is correctly aliased
-			$orders = $query->getOrderBy();
-			foreach($orders as $order => $dir) {
-				if($order === "\"$baseTable\".\"ID\"") {
-					unset($orders[$order]);
-					$orders["\"{$baseTable}_versions\".\"RecordID\""] = $dir;
-				}
-			}
-			$query->setOrderBy($orders);
+			// However, if doing count, undo rewrite of "ID" column
+			$query->replaceText(
+				"count(DISTINCT \"{$baseTable}_versions\".\"RecordID\")",
+				"count(DISTINCT \"{$baseTable}_versions\".\"ID\")"
+			);
 
 			// latest_version has one more step
 			// Return latest version instances, regardless of whether they are on a particular stage
 			// This provides "show all, including deleted" functonality
 			if($dataQuery->getQueryParam('Versioned.mode') == 'latest_versions') {
 				$query->addWhere(
-					"\"{$alias}_versions\".\"Version\" IN
+					"\"{$baseTable}_versions\".\"Version\" IN
 					(SELECT LatestVersion FROM
 						(SELECT
-							\"{$alias}_versions\".\"RecordID\",
-							MAX(\"{$alias}_versions\".\"Version\") AS LatestVersion
-							FROM \"{$alias}_versions\"
-							GROUP BY \"{$alias}_versions\".\"RecordID\"
-						) AS \"{$alias}_versions_latest\"
-						WHERE \"{$alias}_versions_latest\".\"RecordID\" = \"{$alias}_versions\".\"RecordID\"
+							\"{$baseTable}_versions\".\"RecordID\",
+							MAX(\"{$baseTable}_versions\".\"Version\") AS LatestVersion
+							FROM \"{$baseTable}_versions\"
+							GROUP BY \"{$baseTable}_versions\".\"RecordID\"
+						) AS \"{$baseTable}_versions_latest\"
+						WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
 					)");
 			} else {
 				// If all versions are requested, ensure that records are sorted by this field
@@ -415,13 +450,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$versionableExtensions = $this->owner->config()->versionableExtensions;
 		if(count($versionableExtensions)){
 			foreach ($versionableExtensions as $versionableExtension => $suffixes) {
-				if ($this->owner->hasExtension($versionableExtension)) {
-					$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
-					foreach ((array)$suffixes as $suffix) {
-						$allSuffixes[$suffix] = $versionableExtension;
-					}
+			if ($this->owner->hasExtension($versionableExtension)) {
+				$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
+				foreach ((array)$suffixes as $suffix) {
+					$allSuffixes[$suffix] = $versionableExtension;
 				}
 			}
+		}
 		}
 
 		// Add the default table with an empty suffix to the list (table name = class name)
@@ -780,6 +815,95 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
+	 * Find all objects owned by the current object.
+	 * Note that objects will only be searched in the same stage as the given record.
+	 *
+	 * @param bool $recursive True if recursive
+	 * @param ArrayList $list Optional list to add items to
+	 * @return ArrayList list of objects
+	 */
+	public function findOwned($recursive = true, $list = null)
+	{
+		// Find objects in these relationships
+		return $this->findRelatedObjects('owns', $recursive, $list);
+	}
+
+	/**
+	 * Find objects which own this object.
+	 * Note that objects will only be searched in the same stage as the given record.
+	 *
+	 * @param bool $recursive True if recursive
+	 * @param ArrayList $list Optional list to add items to
+	 * @return ArrayList list of objects
+	 */
+	public function findOwners($recursive = true, $list = null)
+	{
+		// Find objects in these relationships
+		return $this->findRelatedObjects('owned_by', $recursive, $list);
+	}
+
+	/**
+	 * Find objects in the given relationships, merging them into the given list
+	 *
+	 * @param array $source Config property to extract relationships from
+	 * @param bool $recursive True if recursive
+	 * @param ArrayList $list Optional list to add items to
+	 * @return ArrayList The list
+	 */
+	public function findRelatedObjects($source, $recursive = true, $list = null)
+	{
+		if (!$list) {
+			$list = new ArrayList();
+		}
+
+		// Skip search for unsaved records
+		if(!$this->owner->isInDB()) {
+			return $list;
+		}
+
+		$relationships = $this->owner->config()->{$source};
+		foreach($relationships as $relationship) {
+			// Warn if invalid config
+			if(!$this->owner->hasMethod($relationship)) {
+				trigger_error(sprintf(
+					"Invalid %s config value \"%s\" on object on class \"%s\"",
+					$source,
+					$relationship,
+					$this->owner->class
+				), E_USER_WARNING);
+				continue;
+			}
+
+			// Inspect value of this relationship
+			$items = $this->owner->{$relationship}();
+			if(!$items) {
+				continue;
+			}
+			if($items instanceof DataObject) {
+				$items = array($items);
+			}
+
+			/** @var Versioned|DataObject $item */
+			foreach($items as $item) {
+				// Identify item
+				$itemKey = $item->class . '/' . $item->ID;
+
+				// Skip unsaved, unversioned, or already checked objects
+				if(!$item->isInDB() || !$item->has_extension('Versioned') || isset($list[$itemKey])) {
+					continue;
+				}
+
+				// Save record
+				$list[$itemKey] = $item;
+				if($recursive) {
+					$item->findRelatedObjects($source, true, $list);
+				};
+			}
+		}
+		return $list;
+	}
+
+	/**
 	 * This function should return true if the current user can publish this record.
 	 * It can be overloaded to customise the security model for an application.
 	 *
@@ -1020,10 +1144,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				if ($owner->hasExtension($versionableExtension)) {
 					$ext = $owner->getExtensionInstance($versionableExtension);
 					$ext->setOwner($owner);
-					$table = $ext->extendWithSuffix($table);
-					$ext->clearOwner();
-				}
+				$table = $ext->extendWithSuffix($table);
+				$ext->clearOwner();
 			}
+		}
 		}
 
 		return $table;
@@ -1129,7 +1253,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function publish($fromStage, $toStage, $createNewVersion = false) {
 		$owner = $this->owner;
-		$owner->extend('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
+		$owner->invokeWithExtensions('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
 
 		$baseClass = ClassInfo::baseDataClass($owner->class);
 
@@ -1153,14 +1277,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		} else {
 			$from->migrateVersion($from->Version);
 
-			// Mark this version as having been published at some stage
+		// Mark this version as having been published at some stage
 			$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
 			$extTable = $this->extendWithSuffix($baseClass);
-			DB::prepared_query("UPDATE \"{$extTable}_versions\"
-				SET \"WasPublished\" = ?, \"PublisherID\" = ?
-				WHERE \"RecordID\" = ? AND \"Version\" = ?",
-				array(1, $publisherID, $from->ID, $from->Version)
-			);
+		DB::prepared_query("UPDATE \"{$extTable}_versions\"
+			SET \"WasPublished\" = ?, \"PublisherID\" = ?
+			WHERE \"RecordID\" = ? AND \"Version\" = ?",
+			array(1, $publisherID, $from->ID, $from->Version)
+		);
 		}
 
 		// Change to new stage, write, and revert state
@@ -1184,7 +1308,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		Versioned::set_reading_mode($oldMode);
 
-		$owner->extend('onAfterVersionedPublish', $fromStage, $toStage, $createNewVersion);
+		$owner->invokeWithExtensions('onAfterVersionedPublish', $fromStage, $toStage, $createNewVersion);
 	}
 
 	/**
@@ -1245,6 +1369,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param  string $limit
 	 * @param  string $join   Deprecated, use leftJoin($table, $joinClause) instead
 	 * @param  string $having
+	 * @return ArrayList
 	 */
 	public function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		// Make sure the table names are not postfixed (e.g. _Live)
@@ -1310,6 +1435,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * Return the base table - the class that directly extends DataObject.
 	 *
+	 * @param string $stage
 	 * @return string
 	 */
 	public function baseTable($stage = null) {
@@ -1476,7 +1602,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param string $stage The name of the stage.
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param boolean $cache Use caching.
-	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
+	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.
 	 *
 	 * @return DataObject
 	 */
@@ -1578,9 +1704,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * @return DataList A modified DataList designated to the specified stage
 	 */
-	public static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '',
-			$containerClass = 'DataList') {
-
+	public static function get_by_stage(
+		$class, $stage, $filter = '', $sort = '', $join = '', $limit = null, $containerClass = 'DataList'
+	) {
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
 		return $result->setDataQueryParam(array(
 			'Versioned.mode' => 'stage',
@@ -1589,27 +1715,28 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * @param string $stage
+	 * Delete this record from the given stage
 	 *
-	 * @return int
+	 * @param string $stage
 	 */
 	public function deleteFromStage($stage) {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::reading_stage($stage);
 		$clone = clone $this->owner;
-		$result = $clone->delete();
+		$clone->delete();
 		Versioned::set_reading_mode($oldMode);
 
 		// Fix the version number cache (in case you go delete from stage and then check ExistsOnLive)
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		self::$cache_versionnumber[$baseClass][$stage][$this->owner->ID] = null;
-
-		return $result;
 	}
 
 	/**
+	 * Write the given record to the draft stage
+	 *
 	 * @param string $stage
 	 * @param boolean $forceInsert
+	 * @return int The ID of the record
 	 */
 	public function writeToStage($stage, $forceInsert = false) {
 		$oldMode = Versioned::get_reading_mode();
@@ -1639,12 +1766,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * Return the latest version of the given record.
 	 *
+	 * @param string $class
+	 * @param int $id
 	 * @return DataObject
 	 */
 	public static function get_latest_version($class, $id) {
 		$baseClass = ClassInfo::baseDataClass($class);
 		$list = DataList::create($baseClass)
-			->where("\"$baseClass\".\"RecordID\" = $id")
+			->where(array("\"$baseClass\".\"RecordID\"" => $id))
 			->setDataQueryParam("Versioned.mode", "latest_versions");
 
 		return $list->First();
@@ -1716,6 +1845,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param string $class
 	 * @param string $filter
 	 * @param string $sort
+	 * @return DataList
 	 */
 	public static function get_including_deleted($class, $filter = "", $sort = "") {
 		$list = DataList::create($class)
@@ -1742,8 +1872,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public static function get_version($class, $id, $version) {
 		$baseClass = ClassInfo::baseDataClass($class);
 		$list = DataList::create($baseClass)
-			->where("\"$baseClass\".\"RecordID\" = $id")
-			->where("\"$baseClass\".\"Version\" = " . (int)$version)
+			->where(array(
+				"\"{$baseClass}\".\"RecordID\"" => $id,
+				"\"{$baseClass}\".\"Version\"" => $version
+			))
 			->setDataQueryParam("Versioned.mode", 'all_versions');
 
 		return $list->First();
@@ -1758,9 +1890,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return DataList
 	 */
 	public static function get_all_versions($class, $id) {
-		$baseClass = ClassInfo::baseDataClass($class);
 		$list = DataList::create($class)
-			->where("\"$baseClass\".\"RecordID\" = $id")
+			->filter('ID', $id)
 			->setDataQueryParam('Versioned.mode', 'all_versions');
 
 		return $list;
@@ -1847,6 +1978,11 @@ class Versioned_Version extends ViewableData {
 	 */
 	protected $object;
 
+	/**
+	 * Create a new version from a database row
+	 *
+	 * @param array $record
+	 */
 	public function __construct($record) {
 		$this->record = $record;
 		$record['ID'] = $record['RecordID'];
@@ -1859,6 +1995,8 @@ class Versioned_Version extends ViewableData {
 	}
 
 	/**
+	 * Either 'published' if published, or 'internal' if not.
+	 *
 	 * @return string
 	 */
 	public function PublishedClass() {
@@ -1866,6 +2004,8 @@ class Versioned_Version extends ViewableData {
 	}
 
 	/**
+	 * Author of this DataObject
+	 *
 	 * @return Member
 	 */
 	public function Author() {
@@ -1873,6 +2013,8 @@ class Versioned_Version extends ViewableData {
 	}
 
 	/**
+	 * Member object of the person who last published this record
+	 *
 	 * @return Member
 	 */
 	public function Publisher() {
@@ -1884,6 +2026,8 @@ class Versioned_Version extends ViewableData {
 	}
 
 	/**
+	 * True if this record is published via publish() method
+	 *
 	 * @return boolean
 	 */
 	public function Published() {
@@ -1891,36 +2035,45 @@ class Versioned_Version extends ViewableData {
 	}
 
 	/**
-	 * Copied from DataObject to allow access via dot notation.
+	 * Traverses to a field referenced by relationships between data objects, returning the value
+	 * The path to the related field is specified with dot separated syntax (eg: Parent.Child.Child.FieldName)
+	 *
+	 * @param $fieldName string
+	 * @return string | null - will return null on a missing value
 	 */
 	public function relField($fieldName) {
 		$component = $this;
 
+		// We're dealing with relations here so we traverse the dot syntax
 		if(strpos($fieldName, '.') !== false) {
-			$parts = explode('.', $fieldName);
-			$fieldName = array_pop($parts);
-
-			// Traverse dot syntax
-			foreach($parts as $relation) {
-				if($component instanceof SS_List) {
-					if(method_exists($component,$relation)) {
+			$relations = explode('.', $fieldName);
+			$fieldName = array_pop($relations);
+			foreach($relations as $relation) {
+				// Inspect $component for element $relation
+				if($component->hasMethod($relation)) {
+					// Check nested method
 						$component = $component->$relation();
-					} else {
+				} elseif($component instanceof SS_List) {
+					// Select adjacent relation from DataList
 						$component = $component->relation($relation);
-					}
+				} elseif($component instanceof DataObject
+					&& ($dbObject = $component->dbObject($relation))
+				) {
+					// Select db object
+					$component = $dbObject;
 				} else {
-					$component = $component->$relation();
+					user_error("$relation is not a relation/field on ".get_class($component), E_USER_ERROR);
 				}
 			}
 		}
 
-		// Unlike has-one's, these "relations" can return false
-		if($component) {
+		// Bail if the component is null
+		if(!$component) {
+			return null;
+		}
 			if ($component->hasMethod($fieldName)) {
 				return $component->$fieldName();
 			}
-
 			return $component->$fieldName;
 		}
 	}
-}

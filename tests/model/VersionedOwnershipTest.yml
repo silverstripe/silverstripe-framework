@@ -1,0 +1,31 @@
+VersionedOwnershipTest_Attachment:
+  attachment1:
+    Title: 'Attachment 1'
+  attachment2:
+    Title: 'Attachment 2'
+  attachment3_published:
+    Title: 'Attachment 3'
+  attachment4_published:
+    Title: 'Attachment 4'
+  attachment5_published:
+    Title: 'Attachment 5'
+
+VersionedOwnershipTest_Related:
+  related1:
+    Title: 'Related 1'
+    Attachments: =>VersionedOwnershipTest_Attachment.attachment1,=>VersionedOwnershipTest_Attachment.attachment2,=>VersionedOwnershipTest_Attachment.attachment5_published
+  related2_published:
+    Title: 'Related 2'
+    Attachments: =>VersionedOwnershipTest_Attachment.attachment3_published,=>VersionedOwnershipTest_Attachment.attachment4_published,=>VersionedOwnershipTest_Attachment.attachment5_published
+
+VersionedOwnershipTest_Subclass:
+  subclass1_published:
+    Title: 'Subclass 1'
+    Related: =>VersionedOwnershipTest_Related.related1
+  subclass2_published:
+    Title: 'Subclass 2'
+    Related: =>VersionedOwnershipTest_Related.related2_published
+
+VersionedOwnershipTest_Object:
+  object1:
+    Title: 'Object 1'

@@ -129,6 +129,68 @@ is initialized. But it can also be set and reset temporarily to force a specific
 	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
 	Versioned::set_reading_mode($origMode); // reset current mode
 
+### File ownership
+
+Typically when publishing versioned dataobjects, it is necessary to ensure that some linked components
+are published along with it. Unless this is done, site front-end content can appear incorrectly published.
+
+For instance, a page which has a list of rotating banners will require that those banners are published
+whenever that page is.
+
+The solution to this problem is the ownership API, which declares a two-way relationship between
+objects along database relations. This relationship is similar to many_many/belongs_many_many
+and has_one/has_many, however it relies on a pre-existing relationship to function.
+
+For instance, in order to specify this dependency, you must apply `owns` and `owned_by` config
+on a relationship.
+
+
+	:::php
+	class MyPage extends Page {
+		private static $has_many = array(
+			'Banners' => 'Banner'
+		);
+		private static $owns = array(
+			'Banners'
+		);
+	}
+	
+	class Banner extends Page {
+		private static $extensions = array(
+			'Versioned'
+		);
+		private static $has_one = array(
+			'Parent' => 'MyPage',
+			'Image' => 'Image',
+		);
+		private static $owned_by = array(
+			'Parent'
+		);
+		private static $owns = array(
+			'Image'
+		);
+	}
+	
+	class BannerImageExtension extends DataExtension {
+		private static $has_many = array(
+			'Banners' => 'Banner'
+		);
+		private static $owned_by = array(
+			'Banners'
+		);
+	}
+
+With the config:
+
+	:::yaml
+	Image:
+	  extensions:
+	    - BannerImageExtension
+
+
+Note that it's important to define both `owns` and `owned_by` components of the relationship,
+similar to how you would apply `has_one` and `has_many`, or `many_many` and `belongs_many_many`.
+
 ### Custom SQL
 
 We generally discourage writing `Versioned` queries from scratch, due to the complexities involved through joining 
