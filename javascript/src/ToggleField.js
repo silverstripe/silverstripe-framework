@@ -1,13 +1,13 @@
-import $ from './jQuery';
+import $ from './jQuery'
 
-var field = $('div.toggleField');
+var field = $('div.toggleField')
 
-if(field.hasClass('startClosed')) {
-	field.find('div.contentMore').hide();
-	field.find('div.contentLess').show();
+if (field.hasClass('startClosed')) {
+  field.find('div.contentMore').hide()
+  field.find('div.contentLess').show()
 }
 
-$('div.toggleField .triggerLess, div.toggleField .triggerMore').click(function() {
-	field.find('div.contentMore').toggle();
-	field.find('div.contentLess').toggle();
-});
+$('div.toggleField .triggerLess, div.toggleField .triggerMore').click(function () {
+  field.find('div.contentMore').toggle()
+  field.find('div.contentLess').toggle()
+})
