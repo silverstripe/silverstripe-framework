@@ -192,6 +192,20 @@ to the translator.
 The preferred template syntax has changed somewhat since [version 2.x](http://doc.silverstripe.org/framework/en/2.4/topics/i18n#usage-2).
 </div>
 
+To enable translation in `.ss` template files you need to add the following code to your `Page_controller` in the `init()` function:
+
+	:::php
+	public function init() {
+		parent::init();
+		// You can include any CSS or JS required by your project here.
+		// See: http://doc.silverstripe.org/framework/en/reference/requirements
+		
+		// set locale to current locale of page to make it available in templates
+		if($this->dataRecord->hasExtension('Translatable')) {
+			i18n::set_locale($this->dataRecord->Locale);
+		}
+	}
+
 In `.ss` template files, instead of `_t(params)` the syntax `<%t params %>` is used. The syntax for passing parameters to the function is quite different to
 the PHP version of the function.
 
