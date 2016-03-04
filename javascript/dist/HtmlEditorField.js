@@ -24,27 +24,35 @@
 	}
 
 	var ss = typeof window.ss !== 'undefined' ? window.ss : {};
-	ss.editorWrappers = {};
 
+	ss.editorWrappers = {};
 	ss.editorWrappers.tinyMCE = function () {
 		var editorID;
+
 		return {
 			init: function init(ID) {
 				editorID = ID;
+
 				this.create();
 			},
+
 			destroy: function destroy() {
 				tinymce.EditorManager.execCommand('mceRemoveEditor', false, editorID);
 			},
+
 			getInstance: function getInstance() {
 				return tinymce.EditorManager.get(editorID);
 			},
+
 			onopen: function onopen() {},
+
 			onclose: function onclose() {},
+
 			getConfig: function getConfig() {
 				var selector = "#" + editorID,
 				    config = (0, _jQuery2.default)(selector).data('config'),
 				    self = this;
+
 				config.selector = selector;
 
 				config.setup = function (ed) {
@@ -52,57 +60,71 @@
 						self.save();
 					});
 				};
-
 				return config;
 			},
+
 			save: function save() {
 				var instance = this.getInstance();
 				instance.save();
+
 				(0, _jQuery2.default)(instance.getElement()).trigger("change");
 			},
+
 			create: function create() {
 				var config = this.getConfig();
 
 				if (typeof config.baseURL !== 'undefined') {
 					tinymce.EditorManager.baseURL = config.baseURL;
 				}
-
 				tinymce.init(config);
 			},
+
 			repaint: function repaint() {},
+
 			isDirty: function isDirty() {
 				return this.getInstance().isDirty();
 			},
+
 			getContent: function getContent() {
 				return this.getInstance().getContent();
 			},
+
 			getDOM: function getDOM() {
 				return this.getInstance().getElement();
 			},
+
 			getContainer: function getContainer() {
 				return this.getInstance().getContainer();
 			},
+
 			getSelectedNode: function getSelectedNode() {
 				return this.getInstance().selection.getNode();
 			},
+
 			selectNode: function selectNode(node) {
 				this.getInstance().selection.select(node);
 			},
+
 			setContent: function setContent(html, opts) {
 				this.getInstance().setContent(html, opts);
 			},
+
 			insertContent: function insertContent(html, opts) {
 				this.getInstance().insertContent(html, opts);
 			},
+
 			replaceContent: function replaceContent(html, opts) {
 				this.getInstance().execCommand('mceReplaceContent', false, html, opts);
 			},
+
 			insertLink: function insertLink(attrs, opts) {
 				this.getInstance().execCommand("mceInsertLink", false, attrs, opts);
 			},
+
 			removeLink: function removeLink() {
 				this.getInstance().execCommand('unlink', false);
 			},
+
 			cleanLink: function cleanLink(href, node) {
 				var settings = this.getConfig,
 				    cb = settings['urlconverter_callback'];
@@ -113,18 +135,23 @@
 				}
 
 				if (href.match(/^javascript:\s*mctmp/)) href = '';
+
 				return href;
 			},
+
 			createBookmark: function createBookmark() {
 				return this.getInstance().selection.getBookmark();
 			},
+
 			moveToBookmark: function moveToBookmark(bookmark) {
 				this.getInstance().selection.moveToBookmark(bookmark);
 				this.getInstance().focus();
 			},
+
 			blur: function blur() {
 				this.getInstance().selection.collapse();
 			},
+
 			addUndo: function addUndo() {
 				this.getInstance().undoManager.add();
 			}
@@ -135,33 +162,39 @@
 
 	_jQuery2.default.entwine('ss', function ($) {
 		$('textarea.htmleditor').entwine({
+
 			Editor: null,
+
 			onadd: function onadd() {
 				var edClass = this.data('editor') || 'default',
 				    ed = ss.editorWrappers[edClass]();
 				this.setEditor(ed);
+
 				ed.init(this.attr('id'));
 
 				this._super();
 			},
+
 			onremove: function onremove() {
 				this.getEditor().destroy();
-
 				this._super();
 			},
+
 			'from .cms-edit-form': {
 				onbeforesubmitform: function onbeforesubmitform() {
 					this.getEditor().save();
-
 					this._super();
 				}
 			},
+
 			openLinkDialog: function openLinkDialog() {
 				this.openDialog('link');
 			},
+
 			openMediaDialog: function openMediaDialog() {
 				this.openDialog('media');
 			},
+
 			openDialog: function openDialog(type) {
 				var capitalize = function capitalize(text) {
 					return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
@@ -194,6 +227,7 @@
 				});
 			}
 		});
+
 		$('.htmleditorfield-dialog').entwine({
 			onadd: function onadd() {
 				if (!this.is('.ui-dialog-content')) {
@@ -214,6 +248,7 @@
 
 				this._super();
 			},
+
 			getForm: function getForm() {
 				return this.find('form');
 			},
@@ -232,13 +267,18 @@
 				}, 500);
 			}
 		});
+
 		$('form.htmleditorfield-form').entwine({
 			Selection: null,
+
 			Bookmark: null,
+
 			Element: null,
+
 			setSelection: function setSelection(node) {
 				return this._super($(node));
 			},
+
 			onadd: function onadd() {
 				var titleEl = this.find(':header:first');
 				this.getDialog().attr('title', titleEl.text());
@@ -252,44 +292,61 @@
 
 				this._super();
 			},
+
 			getDialog: function getDialog() {
 				return this.closest('.htmleditorfield-dialog');
 			},
+
 			fromDialog: {
 				onssdialogopen: function onssdialogopen() {
 					var ed = this.getEditor();
+
 					this.setSelection(ed.getSelectedNode());
 					this.setBookmark(ed.createBookmark());
+
 					ed.blur();
+
 					this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:enabled').eq(0).focus();
+
 					this.redraw();
 					this.updateFromEditor();
 				},
+
 				onssdialogclose: function onssdialogclose() {
 					var ed = this.getEditor();
+
 					ed.moveToBookmark(this.getBookmark());
+
 					this.setSelection(null);
 					this.setBookmark(null);
+
 					this.resetFields();
 				}
 			},
+
 			getEditor: function getEditor() {
 				return this.getElement().getEditor();
 			},
+
 			modifySelection: function modifySelection(callback) {
 				var ed = this.getEditor();
+
 				ed.moveToBookmark(this.getBookmark());
 				callback.call(this, ed);
+
 				this.setSelection(ed.getSelectedNode());
 				this.setBookmark(ed.createBookmark());
+
 				ed.blur();
 			},
+
 			updateFromEditor: function updateFromEditor() {},
 			redraw: function redraw() {},
 			resetFields: function resetFields() {
 				this.find('.tree-holder').empty();
 			}
 		});
+
 		$('form.htmleditorfield-linkform').entwine({
 			onsubmit: function onsubmit(e) {
 				this.insertLink();
@@ -305,8 +362,11 @@
 				this._super();
 
 				var linkType = this.find(':input[name=LinkType]:checked').val();
+
 				this.addAnchorSelector();
+
 				this.resetFileField();
+
 				this.find('div.content .field').hide();
 				this.find('.field[id$="LinkType"]').show();
 				this.find('.field[id$="' + linkType + '_Holder"]').show();
@@ -324,9 +384,9 @@
 				if (linkType == 'anchor') {
 					this.find('.field[id$="AnchorSelector_Holder"]').show();
 				}
-
 				this.find('.field[id$="Description_Holder"]').show();
 			},
+
 			getLinkAttributes: function getLinkAttributes() {
 				var href,
 				    target = null,
@@ -357,16 +417,15 @@
 
 					case 'email':
 						href = 'mailto:' + this.find(':input[name=email]').val();
-
 						if (subject) {
 							href += '?subject=' + encodeURIComponent(subject);
 						}
-
 						target = null;
 						break;
 
 					default:
 						href = this.find(':input[name=external]').val();
+
 						if (href.indexOf('://') == -1) href = 'http://' + href;
 						break;
 				}
@@ -386,32 +445,36 @@
 				this.modifySelection(function (ed) {
 					ed.removeLink();
 				});
+
 				this.resetFileField();
 				this.close();
 			},
+
 			resetFileField: function resetFileField() {
 				var fileField = this.find('.ss-uploadfield[id$="file_Holder"]'),
 				    fileUpload = fileField.data('fileupload'),
 				    currentItem = fileField.find('.ss-uploadfield-item[data-fileid]');
 
 				if (currentItem.length) {
-					fileUpload._trigger('destroy', null, {
-						context: currentItem
-					});
-
+					fileUpload._trigger('destroy', null, { context: currentItem });
 					fileField.find('.ss-uploadfield-addfile').removeClass('borderTop');
 				}
 			},
+
 			addAnchorSelector: function addAnchorSelector() {
 				if (this.find(':input[name=AnchorSelector]').length) return;
+
 				var self = this;
 				var anchorSelector = $('<select id="Form_EditorToolbarLinkForm_AnchorSelector" name="AnchorSelector"></select>');
 				this.find(':input[name=Anchor]').parent().append(anchorSelector);
+
 				this.updateAnchorSelector();
+
 				anchorSelector.change(function (e) {
 					self.find(':input[name="Anchor"]').val($(this).val());
 				});
 			},
+
 			getAnchors: function getAnchors() {
 				var linkType = this.find(':input[name=LinkType]:checked').val();
 				var dfdAnchors = $.Deferred();
@@ -421,9 +484,9 @@
 						var collectedAnchors = [];
 						var ed = this.getEditor();
 
+
 						if (ed) {
 							var raw = ed.getContent().match(/\s+(name|id)\s*=\s*(["'])([^\2\s>]*?)\2|\s+(name|id)\s*=\s*([^"']+)[\s +>]/gim);
-
 							if (raw && raw.length) {
 								for (var i = 0; i < raw.length; i++) {
 									var indexStart = raw[i].indexOf('id=') == -1 ? 7 : 5;
@@ -440,9 +503,7 @@
 
 						if (pageId) {
 							$.ajax({
-								url: $.path.addSearchParams(this.attr('action').replace('LinkForm', 'getanchors'), {
-									'PageID': parseInt(pageId)
-								}),
+								url: $.path.addSearchParams(this.attr('action').replace('LinkForm', 'getanchors'), { 'PageID': parseInt(pageId) }),
 								success: function success(body, status, xhr) {
 									dfdAnchors.resolve($.parseJSON(body));
 								},
@@ -453,7 +514,6 @@
 						} else {
 							dfdAnchors.resolve([]);
 						}
-
 						break;
 
 					default:
@@ -463,12 +523,15 @@
 
 				return dfdAnchors.promise();
 			},
+
 			updateAnchorSelector: function updateAnchorSelector() {
 				var self = this;
 				var selector = this.find(':input[name=AnchorSelector]');
 				var dfdAnchors = this.getAnchors();
+
 				selector.empty();
 				selector.append($('<option value="" selected="1">' + _i18n2.default._t('HtmlEditorField.LOOKINGFORANCHORS', 'Looking for anchors...') + '</option>'));
+
 				dfdAnchors.done(function (anchors) {
 					selector.empty();
 					selector.append($('<option value="" selected="1">' + _i18n2.default._t('HtmlEditorField.SelectAnchor') + '</option>'));
@@ -482,8 +545,10 @@
 					selector.empty();
 					selector.append($('<option value="" selected="1">' + message + '</option>'));
 				});
+
 				if ($.browser.msie) selector.hide().show();
 			},
+
 			updateFromEditor: function updateFromEditor() {
 				var htmlTagPattern = /<\S[^><]*>/g,
 				    fieldName,
@@ -493,6 +558,7 @@
 					for (fieldName in data) {
 						var el = this.find(':input[name=' + fieldName + ']'),
 						    selected = data[fieldName];
+
 						if (typeof selected == 'string') selected = selected.replace(htmlTagPattern, '');
 
 						if (el.is(':checkbox')) {
@@ -501,6 +567,7 @@
 							el.val([selected]).change();
 						} else if (fieldName == 'file') {
 							el = this.find(':input[name="' + fieldName + '[Uploads][]"]');
+
 							el = el.parents('.ss-uploadfield');
 
 							(function attach(el, selected) {
@@ -518,6 +585,7 @@
 					}
 				}
 			},
+
 			getCurrentLink: function getCurrentLink() {
 				var selectedEl = this.getSelection(),
 				    href = "",
@@ -525,19 +593,19 @@
 				    title = "",
 				    action = "insert",
 				    style_class = "";
-				var linkDataSource = null;
 
+				var linkDataSource = null;
 				if (selectedEl.length) {
 					if (selectedEl.is('a')) {
 						linkDataSource = selectedEl;
 					} else {
-						linkDataSource = selectedEl = selectedEl.parents('a:first');
-					}
+							linkDataSource = selectedEl = selectedEl.parents('a:first');
+						}
 				}
-
 				if (linkDataSource && linkDataSource.length) this.modifySelection(function (ed) {
 					ed.selectNode(linkDataSource[0]);
 				});
+
 				if (!linkDataSource.attr('href')) linkDataSource = null;
 
 				if (linkDataSource) {
@@ -589,39 +657,38 @@
 				}
 			}
 		});
+
 		$('form.htmleditorfield-linkform input[name=LinkType]').entwine({
 			onclick: function onclick(e) {
 				this.parents('form:first').redraw();
-
 				this._super();
 			},
 			onchange: function onchange() {
 				this.parents('form:first').redraw();
-				var linkType = this.parent().find(':checked').val();
 
+				var linkType = this.parent().find(':checked').val();
 				if (linkType === 'anchor' || linkType === 'internal') {
 					this.parents('form.htmleditorfield-linkform').updateAnchorSelector();
 				}
-
 				this._super();
 			}
 		});
+
 		$('form.htmleditorfield-linkform input[name=internal]').entwine({
 			onvalueupdated: function onvalueupdated() {
 				this.parents('form.htmleditorfield-linkform').updateAnchorSelector();
-
 				this._super();
 			}
 		});
+
 		$('form.htmleditorfield-linkform :submit[name=action_remove]').entwine({
 			onclick: function onclick(e) {
 				this.parents('form:first').removeLink();
-
 				this._super();
-
 				return false;
 			}
 		});
+
 		$('form.htmleditorfield-mediaform').entwine({
 			toggleCloseButton: function toggleCloseButton() {
 				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
@@ -633,6 +700,7 @@
 						$(this).insertHTML(ed);
 					});
 				});
+
 				this.getDialog().close();
 				return false;
 			},
@@ -647,7 +715,6 @@
 						self.redraw();
 					});
 				}
-
 				this.redraw();
 			},
 			redraw: function redraw(updateExisting) {
@@ -658,16 +725,21 @@
 				    editingSelected = node.is('img'),
 				    insertingURL = this.hasClass('insertingURL'),
 				    header = this.find('.header-edit');
+
 				header[hasItems ? 'show' : 'hide']();
+
 				this.closest('ui-dialog').find('ui-dialog-buttonpane .media-insert').button(hasItems ? 'enable' : 'disable').toggleClass('ui-state-disabled', !hasItems);
+
 				this.find('.htmleditorfield-default-panel')[editingSelected || insertingURL ? 'hide' : 'show']();
 				this.find('.htmleditorfield-web-panel')[editingSelected || !insertingURL ? 'hide' : 'show']();
+
 				var mediaFormHeading = this.find('.htmleditorfield-mediaform-heading.insert');
 
 				if (editingSelected) {
 					mediaFormHeading.hide();
 				} else if (insertingURL) {
 					mediaFormHeading.show().text(_i18n2.default._t("HtmlEditorField.INSERTURL")).prepend('<button class="back-button font-icon-left-open no-text" title="' + _i18n2.default._t("HtmlEditorField.BACK") + '"></button>');
+
 					this.find('.htmleditorfield-web-panel input.remoteurl').focus();
 				} else {
 					mediaFormHeading.show().text(_i18n2.default._t("HtmlEditorField.INSERTFROM")).find('.back-button').remove();
@@ -696,14 +768,13 @@
 			},
 			showFileView: function showFileView(idOrUrl) {
 				var self = this,
-				    params = Number(idOrUrl) == idOrUrl ? {
-					ID: idOrUrl
-				} : {
-					FileURL: idOrUrl
-				};
+				    params = Number(idOrUrl) == idOrUrl ? { ID: idOrUrl } : { FileURL: idOrUrl };
+
 				var item = $('<div class="ss-htmleditorfield-file loading" />');
 				this.find('.content-edit').prepend(item);
+
 				var dfr = $.Deferred();
+
 				$.ajax({
 					url: $.path.addSearchParams(this.attr('action').replace(/MediaForm/, 'viewfile'), params),
 					success: function success(html, status, xhr) {
@@ -717,23 +788,29 @@
 						dfr.reject();
 					}
 				});
+
 				return dfr.promise();
 			}
 		});
+
 		$('form.htmleditorfield-mediaform div.ss-upload .upload-url').entwine({
 			onclick: function onclick() {
 				var form = this.closest('form');
+
 				form.addClass('insertingURL');
 				form.redraw();
 			}
 		});
+
 		$('form.htmleditorfield-mediaform .htmleditorfield-mediaform-heading .back-button').entwine({
 			onclick: function onclick() {
 				var form = this.closest('form');
+
 				form.removeClass('insertingURL');
 				form.redraw();
 			}
 		});
+
 		$('form.htmleditorfield-mediaform .ss-gridfield-items').entwine({
 			onselectableselected: function onselectableselected(e, ui) {
 				var form = this.closest('form'),
@@ -741,6 +818,7 @@
 				if (!item.is('.ss-gridfield-item')) return;
 				form.closest('form').showFileView(item.data('id'));
 				form.redraw();
+
 				form.parent().trigger('scroll');
 			},
 			onselectableunselected: function onselectableunselected(e, ui) {
@@ -751,55 +829,68 @@
 				form.redraw();
 			}
 		});
+
 		$('form.htmleditorfield-form.htmleditorfield-mediaform div.ss-assetuploadfield').entwine({
 			onfileuploadstop: function onfileuploadstop(e) {
 				var form = this.closest('form');
+
 				var editFieldIDs = [];
 				form.find('div.content-edit').find('div.ss-htmleditorfield-file').each(function () {
 					editFieldIDs.push($(this).data('id'));
 				});
+
 				var uploadedFiles = $('.ss-uploadfield-files', this).children('.ss-uploadfield-item');
 				uploadedFiles.each(function () {
 					var uploadedID = $(this).data('fileid');
-
 					if (uploadedID && $.inArray(uploadedID, editFieldIDs) == -1) {
 						$(this).remove();
 						form.showFileView(uploadedID);
 					}
 				});
+
 				form.parent().trigger('scroll');
+
 				form.redraw();
 			}
+
 		});
+
 		$('form.htmleditorfield-form.htmleditorfield-mediaform input.remoteurl').entwine({
 			onadd: function onadd() {
 				this._super();
-
 				this.validate();
 			},
+
 			onkeyup: function onkeyup() {
 				this.validate();
 			},
+
 			onchange: function onchange() {
 				this.validate();
 			},
+
 			getAddButton: function getAddButton() {
 				return this.closest('.CompositeField').find('button.add-url');
 			},
+
 			validate: function validate() {
 				var val = this.val(),
 				    orig = val;
+
 				val = $.trim(val);
 				val = val.replace(/^https?:\/\//i, '');
 				if (orig !== val) this.val(val);
+
 				this.getAddButton().button(!!val ? 'enable' : 'disable');
 				return !!val;
 			}
 		});
+
 		$('form.htmleditorfield-form.htmleditorfield-mediaform .add-url').entwine({
 			getURLField: function getURLField() {
 				return this.closest('.CompositeField').find('input.remoteurl');
 			},
+
 			onclick: function onclick(e) {
 				var urlField = this.getURLField(),
 				    container = this.closest('.CompositeField'),
@@ -809,6 +900,7 @@
 					container.addClass('loading');
 					form.showFileView('http://' + urlField.val()).done(function () {
 						container.removeClass('loading');
+
 						form.parent().trigger('scroll');
 					});
 					form.redraw();
@@ -817,18 +909,22 @@
 				return false;
 			}
 		});
+
 		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file').entwine({
 			getAttributes: function getAttributes() {},
+
 			getExtraData: function getExtraData() {},
+
 			getHTML: function getHTML() {
-				return $('<div>').append($('<a/>').attr({
-					href: this.data('url')
-				}).text(this.find('.name').text())).html();
+				return $('<div>').append($('<a/>').attr({ href: this.data('url') }).text(this.find('.name').text())).html();
 			},
+
 			insertHTML: function insertHTML(ed) {
 				ed.replaceContent(this.getHTML());
 			},
+
 			updateFromNode: function updateFromNode(node) {},
+
 			updateDimensions: function updateDimensions(constrainBy, maxW, maxH) {
 				var widthEl = this.find(':input[name=Width]'),
 				    heightEl = this.find(':input[name=Height]'),
@@ -857,6 +953,7 @@
 				}
 			}
 		});
+
 		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file.image').entwine({
 			getAttributes: function getAttributes() {
 				var width = this.find(':input[name=Width]').val(),
@@ -877,16 +974,21 @@
 				};
 			},
 			getHTML: function getHTML() {},
+
 			insertHTML: function insertHTML(ed) {
 				var form = this.closest('form');
 				var node = form.getSelection();
 				if (!ed) ed = form.getEditor();
+
 				var attrs = this.getAttributes(),
 				    extraData = this.getExtraData();
+
 				var replacee = node && node.is('img') ? node : null;
 				if (replacee && replacee.parent().is('.captionImage')) replacee = replacee.parent();
+
 				var img = node && node.is('img') ? node : $('<img />');
 				img.attr(attrs);
+
 				var container = img.parent('.captionImage'),
 				    caption = container.find('.caption');
 
@@ -903,8 +1005,8 @@
 
 					caption.attr('class', 'caption ' + attrs['class']).text(extraData.CaptionText);
 				} else {
-					container = caption = null;
-				}
+						container = caption = null;
+					}
 
 				var replacer = container ? container : img;
 
@@ -918,9 +1020,7 @@
 
 				if (!replacee) {
 					ed.repaint();
-					ed.insertContent($('<div />').append(replacer).html(), {
-						skip_undo: 1
-					});
+					ed.insertContent($('<div />').append(replacer).html(), { skip_undo: 1 });
 				}
 
 				ed.addUndo();
@@ -936,6 +1036,7 @@
 				this.find(':input[name=FileID]').val(node.data('fileid'));
 			}
 		});
+
 		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file.flash').entwine({
 			getAttributes: function getAttributes() {
 				var width = this.find(':input[name=Width]').val(),
@@ -949,21 +1050,20 @@
 			},
 			getHTML: function getHTML() {
 				var attrs = this.getAttributes();
+
 				var el = tinyMCE.activeEditor.plugins.media.dataToImg({
 					'type': 'flash',
 					'width': attrs.width,
 					'height': attrs.height,
-					'params': {
-						'src': attrs.src
-					},
-					'video': {
-						'sources': []
-					}
+					'params': { 'src': attrs.src },
+					'video': { 'sources': [] }
 				});
+
 				return $('<div />').append(el).html();
 			},
 			updateFromNode: function updateFromNode(node) {}
 		});
+
 		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file.embed').entwine({
 			getAttributes: function getAttributes() {
 				var width = this.find(':input[name=Width]').val(),
@@ -995,6 +1095,7 @@
 				    attrs = this.getAttributes(),
 				    extraData = this.getExtraData(),
 				    imgEl = $('<img />').attr(attrs).addClass('ss-htmleditorfield-file embed');
+
 				$.each(extraData, function (key, value) {
 					imgEl.attr('data-' + key, value);
 				});
@@ -1004,7 +1105,6 @@
 				} else {
 					el = imgEl;
 				}
-
 				return $('<div />').append(el).html();
 			},
 			updateFromNode: function updateFromNode(node) {
@@ -1017,6 +1117,7 @@
 				this.find(':input[name=FileID]').val(node.data('fileid'));
 			}
 		});
+
 		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file .dimensions :input').entwine({
 			OrigVal: null,
 			onmatch: function onmatch() {
@@ -1031,6 +1132,7 @@
 				this.closest('.ss-htmleditorfield-file').updateDimensions(this.attr('name'));
 			}
 		});
+
 		$('form.htmleditorfield-mediaform .ss-uploadfield-item .ss-uploadfield-item-cancel').entwine({
 			onclick: function onclick(e) {
 				var form = this.closest('form'),
@@ -1041,10 +1143,12 @@
 				e.preventDefault();
 			}
 		});
+
 		$('div.ss-assetuploadfield .ss-uploadfield-item-edit, div.ss-assetuploadfield .ss-uploadfield-item-name').entwine({
 			getEditForm: function getEditForm() {
 				return this.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform');
 			},
+
 			fromEditForm: {
 				onchange: function onchange(e) {
 					var form = $(e.target);
@@ -1052,19 +1156,24 @@
 					form.addClass('edited');
 				}
 			},
+
 			onclick: function onclick(e) {
 				var editForm = this.getEditForm();
 
 				if (this.closest('.ss-uploadfield-item').hasClass('ss-htmleditorfield-file')) {
 					editForm.parent('ss-uploadfield-item').removeClass('ui-state-warning');
+
 					editForm.toggleEditForm();
+
 					e.preventDefault();
+
 					return false;
 				}
 
 				this._super(e);
 			}
 		});
+
 		$('div.ss-assetuploadfield .ss-uploadfield-item-editform').entwine({
 			toggleEditForm: function toggleEditForm(bool) {
 				var itemInfo = this.prev('.ss-uploadfield-item-info'),
@@ -1079,7 +1188,6 @@
 				} else {
 					this.height(0);
 					itemInfo.find('.toggle-details-icon').removeClass('opened');
-
 					if (!this.hasClass('edited')) {
 						text = _i18n2.default._t('UploadField.NOCHANGES', 'No Changes');
 						status.addClass('ui-state-success-text');
@@ -1089,10 +1197,10 @@
 						status.addClass('ui-state-success-text');
 					}
 				}
-
 				status.attr('title', text).text(text);
 			}
 		});
+
 		$('form.htmleditorfield-mediaform .field[id$="ParentID_Holder"] .TreeDropdownField').entwine({
 			onadd: function onadd() {
 				this._super();

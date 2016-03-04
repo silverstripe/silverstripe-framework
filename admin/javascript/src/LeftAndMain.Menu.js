@@ -1,17 +1,17 @@
 import $ from 'jQuery';
 
 $.entwine('ss', function($){
-
+		
 	/**
-	 * Vertical CMS menu with two levels, built from a nested unordered list.
+	 * Vertical CMS menu with two levels, built from a nested unordered list. 
 	 * The (optional) second level is collapsible, hiding its children.
 	 * The whole menu (including second levels) is collapsible as well,
 	 * exposing only a preview for every menu item in order to save space.
 	 * In this "preview/collapsed" mode, the secondary menu hovers over the menu item,
 	 * rather than expanding it.
-	 *
+	 * 
 	 * Example:
-	 *
+	 * 
 	 * <ul class="cms-menu-list">
 	 *  <li><a href="#">Item 1</a></li>
 	 *  <li class="current opened">
@@ -22,7 +22,7 @@ $.entwine('ss', function($){
 	 *    </ul>
 	 *  </li>
 	 * </ul>
-	 *
+	 * 
 	 * Custom Events:
 	 * - 'select': Fires when a menu item is selected (on any level).
 	 */
@@ -204,16 +204,19 @@ $.entwine('ss', function($){
 		fromContainingPanel: {
 			ontoggle: function(e){
 				this.toggleClass('collapsed', $(e.target).hasClass('collapsed'));
-				$(window).resize(); //Trigger jLayout
+
+				// Trigger synthetic resize event. Avoid native window.resize event
+				// since it causes other behaviour which should be reserved for actual window dimension changes.
+				$('.cms-container').trigger('windowresize');
 			}
 		},
 
 		updateItems: function() {
 			// Hide "edit page" commands unless the section is activated
 			var editPageItem = this.find('#Menu-CMSMain');
-
+			
 			editPageItem[editPageItem.is('.current') ? 'show' : 'hide']();
-
+			
 			// Update the menu links to reflect the page ID if the page has changed the URL.
 			var currentID = $('.cms-content input[name=ID]').val();
 			if(currentID) {
@@ -240,14 +243,14 @@ $.entwine('ss', function($){
 	});
 	//slight delay to prevent flyout closing from "sloppy mouse movement"
 	$('.cms-menu-list li').hoverIntent(function(){$(this).toggleFlyout(true);},function(){$(this).toggleFlyout(false);});
-
+	
 	$('.cms-menu-list .toggle').entwine({
 		onclick: function(e) {
 			this.getMenuItem().toggle();
 			e.preventDefault();
 		}
 	});
-
+	
 	$('.cms-menu-list li').entwine({
 		onmatch: function() {
 			if(this.find('ul').length) {
@@ -288,13 +291,13 @@ $.entwine('ss', function($){
 				parentSiblings.removeClass('current').close();
 				parentSiblings.find('li').removeClass('current').close();
 			}
-
+			
 			this.getMenu().updateItems();
 
 			this.trigger('select');
 		}
 	});
-
+	
 	$('.cms-menu-list *').entwine({
 		getMenu: function() {
 			return this.parents('.cms-menu-list:first');
@@ -306,7 +309,7 @@ $.entwine('ss', function($){
 			return this.parents('li:first');
 		}
 	});
-
+	
 	/**
 	 * Both primary and secondary nav.
 	 */
@@ -317,26 +320,26 @@ $.entwine('ss', function($){
 			var isExternal = $.path.isExternal(this.attr('href'));
 			if(e.which > 1 || isExternal) return;
 
-			// if the developer has this to open in a new window, handle
+			// if the developer has this to open in a new window, handle 
 			// that
 			if(this.attr('target') == "_blank") {
 				return;
 			}
-
+			
 			e.preventDefault();
 
 			var item = this.getMenuItem();
 
 			var url = this.attr('href');
 			if(!isExternal) url = $('base').attr('href') + url;
-
+			
 			var children = item.find('li');
 			if(children.length) {
 				children.first().find('a').click();
 			} else {
 				// Load URL, but give the loading logic an opportunity to veto the action
 				// (e.g. because of unsaved changes)
-				if(!$('.cms-container').loadPanel(url)) return false;
+				if(!$('.cms-container').loadPanel(url)) return false;	
 			}
 
 			item.select();
@@ -354,7 +357,7 @@ $.entwine('ss', function($){
 	$('.cms .profile-link').entwine({
 		onclick: function() {
 			$('.cms-container').loadPanel(this.attr('href'));
-			$('.cms-menu-list li').removeClass('current').close();
+			$('.cms-menu-list li').removeClass('current').close(); 
 			return false;
 		}
 	});

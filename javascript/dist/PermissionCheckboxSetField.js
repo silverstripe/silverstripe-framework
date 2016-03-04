@@ -52,6 +52,7 @@
 				}
 			}
 		});
+
 		$('.permissioncheckboxset .valCMS_ACCESS_LeftAndMain input').entwine({
 			getCheckboxesExceptThisOne: function getCheckboxesExceptThisOne() {
 				return $(this).parents('.field:eq(0)').find('li').filter(function (i) {
@@ -72,7 +73,6 @@
 			},
 			toggleCheckboxes: function toggleCheckboxes() {
 				var checkboxes = this.getCheckboxesExceptThisOne();
-
 				if ($(this).is(':checked')) {
 					checkboxes.each(function () {
 						$(this).data('PermissionCheckboxSetField.oldChecked', $(this).is(':checked'));

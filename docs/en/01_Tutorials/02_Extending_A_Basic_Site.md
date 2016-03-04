@@ -177,7 +177,7 @@ Note: By default, the CMS only has one tab. Creating new tabs is much like addin
 would create a new tab called "New Tab", and a single "Author" textfield inside.
 </div>
 
-We have added two fields: A simple [api:TextField]` and a [api:DateField].
+We have added two fields: A simple [api:TextField] and a [api:DateField]. 
 There are many more fields available in the default installation, listed in ["form field types"](/developer_guides/forms/field_types/common_subclasses).
 
 	:::php

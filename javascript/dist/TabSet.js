@@ -24,8 +24,10 @@
 	_jQuery2.default.entwine('ss', function ($) {
 		$('.ss-tabset').entwine({
 			IgnoreTabState: false,
+
 			onadd: function onadd() {
 				var hash = window.location.hash;
+
 				this.redrawTabs();
 
 				if (hash !== '') {
@@ -34,17 +36,20 @@
 
 				this._super();
 			},
+
 			onremove: function onremove() {
 				if (this.data('tabs')) this.tabs('destroy');
-
 				this._super();
 			},
+
 			redrawTabs: function redrawTabs() {
 				this.rewriteHashlinks();
 				this.tabs();
 			},
+
 			openTabFromURL: function openTabFromURL(hash) {
 				var $trigger;
+
 				$.each(this.find('.cms-panel-link'), function () {
 					if (this.href.indexOf(hash) !== -1 && $(hash).length === 1) {
 						$trigger = $(this);
@@ -60,9 +65,11 @@
 					$trigger.click();
 				});
 			},
+
 			rewriteHashlinks: function rewriteHashlinks() {
 				$(this).find('ul a').each(function () {
 					if (!$(this).attr('href')) return;
+
 					var matches = $(this).attr('href').match(/#.*/);
 					if (!matches) return;
 					$(this).attr('href', document.location.href.replace(/#.*/, '') + matches[0]);

@@ -22,13 +22,14 @@
 	}
 
 	_jQuery2.default.entwine('ss', function ($) {
+
 		$('.memberdatetimeoptionset').entwine({
 			onmatch: function onmatch() {
 				this.find('.description .toggle-content').hide();
-
 				this._super();
 			}
 		});
+
 		$('.memberdatetimeoptionset .toggle').entwine({
 			onclick: function onclick(e) {
 				jQuery(this).closest('.description').find('.toggle-content').toggle();

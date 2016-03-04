@@ -37,10 +37,12 @@
 			this.find('.ss-uploadfield-editandorganize').show();
 		}
 	});
+
 	(0, _jQuery2.default)('.ss-uploadfield-view-allowed-extensions .toggle').entwine({
 		onclick: function onclick(e) {
 			var allowedExt = this.closest('.ss-uploadfield-view-allowed-extensions'),
 			    minHeightVal = this.closest('.ui-tabs-panel').height() + 20;
+
 			allowedExt.toggleClass('active');
 			allowedExt.find('.toggle-content').css('minHeight', minHeightVal);
 		}
