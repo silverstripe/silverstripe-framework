@@ -246,7 +246,7 @@ class SS_HTTPResponse {
 <meta http-equiv="refresh" content="1; url={$urlATT}" />
 <script type="text/javascript">setTimeout(function(){
 	window.location.href = "{$urlJS}";
-}, 50);</script>";
+}, 50);</script>
 EOT
 			;
 		} else {
