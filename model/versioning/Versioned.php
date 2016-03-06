@@ -264,7 +264,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		case 'archive':
 			$date = $dataQuery->getQueryParam('Versioned.date');
 			foreach($query->getFrom() as $table => $dummy) {
-				if(!DB::get_schema()->hasTable($table . '_versions')) {
+				if(!$this->isTableVersioned($table)) {
 					continue;
 				}
 
@@ -303,14 +303,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			$stage = $dataQuery->getQueryParam('Versioned.stage');
 			if($stage && ($stage != $this->defaultStage)) {
 				foreach($query->getFrom() as $table => $dummy) {
-					// Only rewrite table names that are actually part of the subclass tree
-					// This helps prevent rewriting of other tables that get joined in, in
-					// particular, many_many tables
-					if(class_exists($table) && ($table == $this->owner->class
-							|| is_subclass_of($table, $this->owner->class)
-							|| is_subclass_of($this->owner->class, $table))) {
-						$query->renameTable($table, $table . '_' . $stage);
+					if(!$this->isTableVersioned($table)) {
+						continue;
 					}
+					$query->renameTable($table, $table . '_' . $stage);
 				}
 			}
 			break;
@@ -342,6 +338,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		case 'all_versions':
 		case 'latest_versions':
 			foreach($query->getFrom() as $alias => $join) {
+				if(!$this->isTableVersioned($alias)) {
+					continue;
+				}
+
 				if($alias != $baseTable) {
 					// Make sure join includes version as well
 					$query->setJoinFilter(
@@ -392,6 +392,21 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			throw new InvalidArgumentException("Bad value for query parameter Versioned.mode: "
 				. $dataQuery->getQueryParam('Versioned.mode'));
 		}
+	}
+
+	/**
+	 * Determine if the given versioned table is a part of the sub-tree of the current dataobject
+	 * This helps prevent rewriting of other tables that get joined in, in particular, many_many tables
+	 *
+	 * @param string $table
+	 * @return bool True if this table should be versioned
+	 */
+	protected function isTableVersioned($table) {
+		if(!class_exists($table)) {
+			return false;
+		}
+		$baseClass = ClassInfo::baseDataClass($this->owner);
+		return is_a($table, $baseClass, true);
 	}
 
 	/**
