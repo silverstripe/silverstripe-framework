@@ -8,7 +8,7 @@ use League\Flysystem\Filesystem;
 
 /**
  * Simple Flysystem implementation of GeneratedAssetHandler for storing generated content
- * 
+ *
  * @package framework
  * @subpackage filesystem
  */
@@ -38,6 +38,9 @@ class FlysystemGeneratedAssetHandler implements GeneratedAssetHandler {
 	 * @return Filesystem
 	 */
 	public function getFilesystem() {
+		if(!$this->assetStore) {
+			throw new Exception("Filesystem misconfiguration error");
+		}
 		return $this->assetStore;
 	}
 
