@@ -375,6 +375,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		// Build actions
 		$actions = $this->getFormActions();
 
+		// If we are creating a new record in a has-many list, then
+		// pre-populate the record's foreign key.
+		if($list instanceof HasManyList && !$this->record->isInDB()) {
+			$key = $list->getForeignKey();
+			$id = $list->getForeignID();
+			$this->record->$key = $id;
+		}
+
 		$fields = $this->component->getFields();
 		if(!$fields) $fields = $this->record->getCMSFields();
 
