@@ -1293,7 +1293,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				// The clientside (mainly LeftAndMain*.js) rely on ajax responses
 				// which can be evaluated as javascript, hence we need
 				// to override any global changes to the validation handler.
-				$form->setValidator($validator);
+				if($validator != NULL){
+					$form->setValidator($validator);
+				}
 			} else {
 				$form->unsetValidator();
 			}
