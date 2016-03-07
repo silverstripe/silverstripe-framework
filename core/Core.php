@@ -154,7 +154,9 @@ function singleton($className) {
 	if(!isset($className)) user_error("singleton() Called without a class", E_USER_ERROR);
 	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true),
 		E_USER_ERROR);
-	return Injector::inst()->get($className);
+	return ($className == 'Object' || is_subclass_of($className, 'Object'))
+		? $className::singleton()
+		: Injector::inst()->get($className);
 }
 
 function project() {
