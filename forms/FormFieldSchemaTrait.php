@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Forms\Schema;
 
+use Exception;
+
 /**
  * Class FormFieldSchemaTrait
  * @package SilverStripe\Forms\Schema
@@ -14,6 +16,34 @@ namespace SilverStripe\Forms\Schema;
  * WARNING: Experimental API.
  */
 trait FormFieldSchemaTrait {
+
+	/**
+	 * The data type backing the field. Represents the type of value the
+	 * form expects to receive via a postback.
+	 *
+	 * The values allowed in this list include:
+	 *
+	 *   - String: Single line text
+	 *   - Hidden: Hidden field which is posted back without modification
+	 *   - Text: Multi line text
+	 *   - HTML: Rich html text
+	 *   - Integer: Whole number value
+	 *   - Decimal: Decimal value
+	 *   - MultiSelect: Select many from source
+	 *   - SingleSelect: Select one from source
+	 *   - Date: Date only
+	 *   - DateTime: Date and time
+	 *   - Time: Time only
+	 *   - Boolean: Yes or no
+	 *   - Custom: Custom type declared by the front-end component. For fields with this type,
+	 *     the component property is mandatory, and will determine the posted value for this field.
+	 *   - Structural: Represents a field that is NOT posted back. This may contain other fields,
+	 *     or simply be a block of stand-alone content. As with 'Custom',
+	 *     the component property is mandatory if this is assigned.
+	 *
+	 * @var string
+	 */
+	protected $schemaDataType;
 
 	/**
 	 * The type of front-end component to render the FormField as.
@@ -85,6 +115,14 @@ trait FormFieldSchemaTrait {
 		return array_merge($this->getSchemaDataDefaults(), $this->schemaData);
 	}
 
+	public function getSchemaDataType() {
+		if ($this->schemaDataType == null) {
+			throw new Exception('You need to set a schemaDataType on ' . $this->getName() . ' field');
+		}
+
+		return $this->schemaDataType;
+	}
+
 	/**
 	 * Gets the defaults for $schemaData.
 	 * The keys defined here are immutable, meaning undefined keys passed to {@link setSchemaData()} are ignored.
@@ -94,7 +132,7 @@ trait FormFieldSchemaTrait {
 	 */
 	public function getSchemaDataDefaults() {
 		return [
-			'type' => $this->class,
+			'type' => $this->getSchemaDataType(),
 			'component' => $this->getSchemaComponent(),
 			'id' => $this->ID,
 			'holder_id' => null,
