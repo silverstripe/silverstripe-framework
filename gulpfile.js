@@ -6,6 +6,7 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     uglify = require('gulp-uglify'),
     gulpUtil = require('gulp-util'),
+    uglify = require('gulp-uglify'),
     autoprefixer = require('autoprefixer'),
     browserify = require('browserify'),
     babelify = require('babelify'),
@@ -44,8 +45,7 @@ var rootCompileFolders = [PATHS.FRAMEWORK, PATHS.ADMIN, PATHS.FRAMEWORK_DEV_INST
 var browserifyOptions = {
     cache: {},
     packageCache: {},
-    poll: true,
-    plugin: [watchify]
+    poll: true
 };
 
 // Used for autoprefixing css properties (same as Bootstrap Aplha.2 defaults)
@@ -173,14 +173,15 @@ if (!semver.satisfies(process.versions.node, packageJson.engines.node)) {
 
 if (isDev) {
     browserifyOptions.debug = true;
+    browserifyOptions.plugin = [watchify];
 }
 
-gulp.task('build', ['umd', 'umd-watch', 'bundle']);
+gulp.task('build', ['umd', 'bundle']);
 
 gulp.task('bundle', ['bundle-lib', 'bundle-leftandmain', 'bundle-react']);
 
 gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
-    var stream = browserify(Object.assign({}, browserifyOptions, {
+    return browserify(Object.assign({}, browserifyOptions, {
             entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/leftandmain.js'
         }))
         .transform(babelify.configure({
@@ -188,26 +189,19 @@ gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
             ignore: /(thirdparty)/,
             comments: false
         }))
-        .on('log', function (msg) { gulpUtil.log('Finished bundle-leftandmain.js ' + msg); })
-        .on('update', bundleLeftAndMain)
         .external('jQuery')
         .external('i18n')
         .bundle()
-        .on('error', notify.onError({
-            message: 'Error: <%= error.message %>',
-        }))
+        .on('update', bundleLeftAndMain)
+        .on('error', notify.onError({ message: 'Error: <%= error.message %>' }))
         .pipe(source('bundle-leftandmain.js'))
-        .pipe(buffer());
-
-    if (!isDev) {
-        stream.pipe(uglify());
-    }
-
-    return stream.pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
+        .pipe(buffer())
+        .pipe(gulpif(!isDev, uglify()))
+        .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
 
 gulp.task('bundle-lib', function bundleLib() {
-    var stream = browserify(Object.assign({}, browserifyOptions, {
+    return browserify(Object.assign({}, browserifyOptions, {
             entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/lib.js'
         }))
         .transform(babelify.configure({
@@ -215,28 +209,19 @@ gulp.task('bundle-lib', function bundleLib() {
             ignore: /(thirdparty)/,
             comments: false
         }))
-        .on('log', function (msg) { gulpUtil.log('Finished bundle-lib.js ' + msg); })
-        .on('update', bundleLib)
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/jQuery.js', { expose: 'jQuery' })
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/i18n.js', { expose: 'i18n' })
         .bundle()
-        .on('error', notify.onError({
-            message: 'Error: <%= error.message %>',
-        }))
+        .on('update', bundleLib)
+        .on('error', notify.onError({ message: 'Error: <%= error.message %>' }))
         .pipe(source('bundle-lib.js'))
-        .pipe(buffer());
-
-    if (!isDev) {
-        stream.pipe(uglify());
-    }
-
-    return stream.pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
+        .pipe(buffer())
+        .pipe(gulpif(!isDev, uglify()))
+        .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
 
 gulp.task('bundle-react', function bundleReact() {
-    var stream = browserify(Object.assign({}, browserifyOptions))
-        .on('log', function (msg) { gulpUtil.log('Finished bundle-react.js ' + msg); })
-        .on('update', bundleReact)
+    return browserify(Object.assign({}, browserifyOptions))
         .require('react-addons-test-utils', { expose: 'react-addons-test-utils' })
         .require('react', { expose: 'react' })
         .require('react-dom', { expose: 'react-dom' })
@@ -246,17 +231,12 @@ gulp.task('bundle-react', function bundleReact() {
         .require('isomorphic-fetch', { expose: 'isomorphic-fetch' })
         .require(PATHS.ADMIN_JAVASCRIPT_DIST + '/SilverStripeComponent', { expose: 'silverstripe-component' })
         .bundle()
-        .on('error', notify.onError({
-            message: 'Error: <%= error.message %>',
-        }))
+        .on('update', bundleReact)
+        .on('error', notify.onError({ message: 'Error: <%= error.message %>' }))
         .pipe(source('bundle-react.js'))
-        .pipe(buffer());
-
-    if (typeof process.env.npm_config_development === 'undefined') {
-        stream.pipe(uglify());
-    }
-
-    return stream.pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
+        .pipe(buffer())
+        .pipe(gulpif(!isDev, uglify()))
+        .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
 
 gulp.task('sanity', function () {
@@ -275,7 +255,12 @@ gulp.task('thirdparty', function () {
     copyFiles(tinymceConfig);
 });
 
-gulp.task('umd', ['umd-admin', 'umd-framework']);
+gulp.task('umd', ['umd-admin', 'umd-framework'], function () {
+    if (isDev) {
+        gulp.watch(PATHS.ADMIN_JAVASCRIPT_SRC + '/*.js', ['umd-admin']);
+        gulp.watch(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/*.js', ['umd-framework']);
+    }
+});
 
 gulp.task('umd-admin', function () {
     var files = glob.sync(PATHS.ADMIN_JAVASCRIPT_SRC + '/*.js', { ignore: PATHS.ADMIN_JAVASCRIPT_SRC + '/LeftAndMain.!(Ping).js' });
@@ -285,11 +270,6 @@ gulp.task('umd-admin', function () {
 
 gulp.task('umd-framework', function () {
     return transformToUmd(glob.sync(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/*.js'), PATHS.FRAMEWORK_JAVASCRIPT_DIST);
-});
-
-gulp.task('umd-watch', function () {
-    gulp.watch(PATHS.ADMIN_JAVASCRIPT_SRC + '/*.js', ['umd-admin']);
-    gulp.watch(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/*.js', ['umd-framework']);
 });
 
 /*
