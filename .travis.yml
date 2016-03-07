@@ -29,7 +29,7 @@ matrix:
       env: DB=MYSQL BEHAT_TEST=1
 
 before_script:
- - printf "\n" | pecl install imagick
+ - if ! [ $(phpenv version-name) = "5.3" ]; then printf "\n" | pecl install imagick; fi
  - composer self-update || true
  - phpenv rehash
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
