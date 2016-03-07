@@ -1,23 +1,19 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define('ss.jQuery', ['exports'], factory);
+    define('ss.jQuery', ['module'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports);
+    factory(module);
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports);
+    factory(mod);
     global.ssJQuery = mod.exports;
   }
-})(this, function (exports) {
+})(this, function (module) {
   'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
 
   var jQuery = typeof window.jQuery !== 'undefined' ? window.jQuery : null;
 
-  exports.default = jQuery;
+  module.exports = jQuery;
 });
