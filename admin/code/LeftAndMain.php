@@ -5,12 +5,16 @@
  * @subpackage admin
  */
 
+use SilverStripe\Forms\Schema\FormSchema;
+
 /**
  * LeftAndMain is the parent class of all the two-pane views in the CMS.
  * If you are wanting to add more areas to the CMS, you can do it by subclassing LeftAndMain.
  *
  * This is essentially an abstract class which should be subclassed.
  * See {@link CMSMain} for a good example.
+ *
+ * @property FormSchema $schema
  */
 class LeftAndMain extends Controller implements PermissionProvider {
 
@@ -84,7 +88,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * @var array
 	 */
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'save',
 		'savetreenode',
@@ -97,7 +101,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'AddForm',
 		'batchactions',
 		'BatchActionsForm',
-	);
+		'schema',
+	];
+
+	private static $dependencies = [
+		'schema' => '%$FormSchema'
+	];
 
 	/**
 	 * @config
@@ -168,6 +177,80 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @var PjaxResponseNegotiator
 	 */
 	protected $responseNegotiator;
+
+	/**
+	 * Gets a JSON schema representing the current edit form.
+	 *
+	 * WARNING: Experimental API.
+	 *
+	 * @return SS_HTTPResponse
+	 */
+	public function schema($request) {
+		$response = $this->getResponse();
+		$formName = $request->param('ID');
+
+		if(!$this->hasMethod("get{$formName}")) {
+			throw new SS_HTTPResponse_Exception(
+				'Form not found',
+				400
+			);
+		}
+
+		if(!$this->hasAction($formName)) {
+			throw new SS_HTTPResponse_Exception(
+				'Form not accessible',
+				401
+			);
+		}
+
+		$form = $this->{"get{$formName}"}();
+		$response->addHeader('Content-Type', 'application/json');
+		$response->setBody(Convert::raw2json($this->getSchemaForForm($form)));
+
+		return $response;
+	}
+
+	/**
+	 * Returns a representation of the provided {@link Form} as structured data,
+	 * based on the request data.
+	 *
+	 * @param Form $form
+	 * @return array
+	 */
+	protected function getSchemaForForm(Form $form) {
+		$request = $this->getRequest();
+		$schemaParts = [];
+		$return = null;
+
+		// Valid values for the "X-Formschema-Request" header are "schema" and "state".
+		// If either of these values are set they will be stored in the $schemaParst array
+		// and used to construct the response body.
+		if ($schemaHeader = $request->getHeader('X-Formschema-Request')) {
+			$schemaParts = array_filter(explode(',', $schemaHeader), function($value) {
+				$validHeaderValues = ['schema', 'state'];
+				return in_array(trim($value), $validHeaderValues);
+			});
+		}
+
+		if (!count($schemaParts)) {
+			throw new SS_HTTPResponse_Exception(
+				'Invalid request. Check you\'ve set a "X-Formschema-Request" header with "schema" or "state" values.',
+				400
+			);
+		}
+
+		$return = ['id' => $form->getName()];
+
+		if (in_array('schema', $schemaParts)) {
+			$return['schema'] = $this->schema->getSchema($form);
+		}
+
+		if (in_array('state', $schemaParts)) {
+			$return['state'] = $this->schema->getState($form);
+		}
+
+		return $return;
+	}
 
 	/**
 	 * @param Member $member
@@ -1013,6 +1096,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Save  handler
 	 */
 	public function save($data, $form) {
+		$request = $this->getRequest();
 		$className = $this->stat('tree_class');
 
 		// Existing or new record?
@@ -1033,7 +1117,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->setCurrentPageID($record->ID);
 
 		$this->getResponse()->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
-		return $this->getResponseNegotiator()->respond($this->getRequest());
+
+		if($request->getHeader('X-Formschema-Request')) {
+			$data = $this->getSchemaForForm($form);
+			$response = new SS_HTTPResponse(Convert::raw2json($data));
+			$response->addHeader('Content-Type', 'application/json');
+		} else {
+			$response = $this->getResponseNegotiator()->respond($request);
+		}
+
+		return $response;
 	}
 
 	public function delete($data, $form) {
@@ -1260,14 +1353,27 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$actionsFlattened = $actions->dataFields();
 			if($actionsFlattened) foreach($actionsFlattened as $action) $action->setUseButtonTag(true);
 
-			$form = CMSForm::create(
+			$negotiator = $this->getResponseNegotiator();
+			$form = Form::create(
 				$this, "EditForm", $fields, $actions
 			)->setHTMLID('Form_EditForm');
-			$form->setResponseNegotiator($this->getResponseNegotiator());
 			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm');
+			$form->setValidationResponseCallback(function() use ($negotiator, $form) {
+				$request = $this->getRequest();
+				if($request->isAjax() && $negotiator) {
+					$form->setupFormErrors();
+					$result = $form->forTemplate();
+
+					return $negotiator->respond($request, array(
+						'CurrentForm' => function() use($result) {
+							return $result;
+						}
+					));
+				}
+			});
 
 			// Announce the capability so the frontend can decide whether to allow preview or not.
 			if(in_array('CMSPreviewable', class_implements($record))) {
@@ -1318,7 +1424,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return Form
 	 */
 	public function EmptyForm() {
-		$form = CMSForm::create(
+		$form = Form::create(
 			$this,
 			"EditForm",
 			new FieldList(
@@ -1337,7 +1443,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			),
 			new FieldList()
 		)->setHTMLID('Form_EditForm');
-		$form->setResponseNegotiator($this->getResponseNegotiator());
 		$form->unsetValidator();
 		$form->addExtraClass('cms-edit-form');
 		$form->addExtraClass('root-form');

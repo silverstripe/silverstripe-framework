@@ -138,13 +138,12 @@ abstract class ModelAdmin extends LeftAndMain {
 			$listField->getConfig()->getComponentByType('GridFieldDetailForm')->setValidator($detailValidator);
 		}
 
-		$form = CMSForm::create(
+		$form = Form::create(
 			$this,
 			'EditForm',
 			new FieldList($listField),
 			new FieldList()
 		)->setHTMLID('Form_EditForm');
-		$form->setResponseNegotiator($this->getResponseNegotiator());
 		$form->addExtraClass('cms-edit-form cms-panel-padded center');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		$editFormAction = Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'EditForm');

@@ -25,6 +25,8 @@
  */
 class FormField extends RequestHandler {
 
+	use SilverStripe\Forms\Schema\FormFieldSchemaTrait;
+
 	/**
 	 * @var Form
 	 */
@@ -80,7 +82,7 @@ class FormField extends RequestHandler {
 	 * @config
 	 * @var array $default_classes The default classes to apply to the FormField
 	 */
-	private static $default_classes = array();
+	private static $default_classes = [];
 
 
 	/**
@@ -162,7 +164,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @var array
 	 */
-	protected $attributes = array();
+	protected $attributes = [];
 
 	/**
 	 * Takes a field name and converts camelcase to spaced words. Also resolves combined field

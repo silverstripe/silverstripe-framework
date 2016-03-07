@@ -177,13 +177,12 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 		$actions = new FieldList();
 
-		$form = CMSForm::create(
+		$form = Form::create(
 			$this,
 			'EditForm',
 			$fields,
 			$actions
 		)->setHTMLID('Form_EditForm');
-		$form->setResponseNegotiator($this->getResponseNegotiator());
 		$form->addExtraClass('cms-edit-form');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		// Tab nav in CMS is rendered through separate template

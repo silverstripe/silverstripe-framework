@@ -80,6 +80,11 @@ class Form extends RequestHandler {
 	protected $validator;
 
 	/**
+	 * @var callable {@see setValidationResponseCallback()}
+	 */
+	protected $validationResponseCallback;
+
+	/**
 	 * @var string
 	 */
 	protected $formMethod = "POST";
@@ -480,15 +485,44 @@ class Form extends RequestHandler {
 	}
 
 	/**
+	 * @return callable
+	 */
+	public function getValidationResponseCallback() {
+		return $this->validationResponseCallback;
+	}
+
+	/**
+	 * Overrules validation error behaviour in {@link httpSubmission()}
+	 * when validation has failed. Useful for optional handling of a certain accepted content type.
+	 *
+	 * The callback can opt out of handling specific responses by returning NULL,
+	 * in which case the default form behaviour will kick in.
+	 *
+	 * @param $callback
+	 * @return self
+	 */
+	public function setValidationResponseCallback($callback) {
+		$this->validationResponseCallback = $callback;
+
+		return $this;
+	}
+
+	/**
 	 * Returns the appropriate response up the controller chain
 	 * if {@link validate()} fails (which is checked prior to executing any form actions).
 	 * By default, returns different views for ajax/non-ajax request, and
 	 * handles 'application/json' requests with a JSON object containing the error messages.
-	 * Behaviour can be influenced by setting {@link $redirectToFormOnValidationError}.
+	 * Behaviour can be influenced by setting {@link $redirectToFormOnValidationError},
+	 * and can be overruled by setting {@link $validationResponseCallback}.
 	 *
 	 * @return SS_HTTPResponse|string
 	 */
 	protected function getValidationErrorResponse() {
+		$callback = $this->getValidationResponseCallback();
+		if($callback && $callbackResponse = $callback()) {
+			return $callbackResponse;
+		}
+
 		$request = $this->getRequest();
 		if($request->isAjax()) {
 				// Special case for legacy Validator.js implementation
