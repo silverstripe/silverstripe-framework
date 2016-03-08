@@ -330,6 +330,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 */
 	protected function truncateDirectory($dirname, Filesystem $filesystem) {
 		if ($dirname
+			&& ltrim(dirname($dirname), '.')
 			&& ! Config::inst()->get(get_class($this), 'keep_empty_dirs')
 			&& ! $filesystem->listContents($dirname)
 		) {
@@ -346,7 +347,8 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * @return Generator
 	 */
 	protected function findVariants($fileID, Filesystem $filesystem) {
-		foreach($filesystem->listContents(dirname($fileID)) as $next) {
+		$dirname = ltrim(dirname($fileID), '.');
+		foreach($filesystem->listContents($dirname) as $next) {
 			if($next['type'] !== 'file') {
 				continue;
 			}
