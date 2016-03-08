@@ -273,6 +273,27 @@ gulp.task('thirdparty', function () {
     copyFiles(blueimpTmplConfig);
     copyFiles(jquerySizesConfig);
     copyFiles(tinymceConfig);
+
+    // TODO Remove once all TinyMCE plugins are bundled
+    var stream = browserify(Object.assign({}, browserifyOptions, {
+            entries: PATHS.FRAMEWORK_THIRDPARTY + '/tinymce_ssbuttons/plugin.js'
+        }))
+        .transform(babelify.configure({
+            presets: ['es2015'],
+            comments: false
+        }))
+        .bundle()
+        .on('error', notify.onError({
+            message: 'Error: <%= error.message %>',
+        }))
+        .pipe(source('plugin.min.js'))
+        .pipe(buffer());
+
+    if (!isDev) {
+        stream.pipe(uglify());
+    }
+
+    return stream.pipe(gulp.dest(PATHS.FRAMEWORK_THIRDPARTY + '/tinymce_ssbuttons/'));
 });
 
 gulp.task('umd', ['umd-admin', 'umd-framework']);

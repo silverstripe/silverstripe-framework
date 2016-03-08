@@ -90,11 +90,8 @@ class HtmlEditorField extends TextareaField {
 			);
 		}
 
-		// Resample images
-		$value = Image::regenerate_html_links($this->value);
-		$htmlValue = Injector::inst()->create('HTMLValue', $value);
-
 		// Sanitise if requested
+		$htmlValue = Injector::inst()->create('HTMLValue', $this->Value());
 		if($this->config()->sanitise_server_side) {
 			$santiser = Injector::inst()->create('HtmlEditorSanitiser', HtmlEditorConfig::get_active());
 			$santiser->sanitise($htmlValue);
@@ -105,6 +102,12 @@ class HtmlEditorField extends TextareaField {
 
 		// Store into record
 		$record->{$this->name} = $htmlValue->getContent();
+	}
+
+	public function setValue($value) {
+		// Regenerate links prior to preview, so that the editor can see them.
+		$value = Image::regenerate_html_links($value);
+		return parent::setValue($value);
 	}
 
 	/**
