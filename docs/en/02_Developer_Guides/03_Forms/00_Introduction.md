@@ -126,13 +126,17 @@ A field can be appended to the [api:FieldList].
 	$fields = $form->Fields();
 
 	// add a field
-	$fields->push(new TextField(..));
+	$fields->push(TextField::create(..));
 
 	// insert a field before another one
-	$fields->insertBefore(new TextField(..), 'Email');
+	$fields->insertBefore(TextField::create(..), 'Email');
 
 	// insert a field after another one
-	$fields->insertAfter(new TextField(..), 'Name');
+	$fields->insertAfter(TextField::create(..), 'Name');
+	
+	// insert a tab before the main content tab (used to position tabs in the CMS)
+	$fields->insertBefore(Tab::create(...), 'Main');
+	// Note: you need to create and position the new tab prior to adding fields via addFieldToTab()
 
 Fields can be fetched after they have been added in.
 	
