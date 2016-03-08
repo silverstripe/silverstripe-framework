@@ -78,7 +78,7 @@ class FolderTest extends SapphireTest {
 			AssetStoreTest_SpyStore::getLocalPath($folder),
 			'Empty folder does not have a filesystem record automatically'
 		);
-		
+
 		$parentFolder = DataObject::get_one('Folder', array(
 			'"File"."Name"' => 'parent'
 		));
@@ -117,7 +117,7 @@ class FolderTest extends SapphireTest {
 		// Check if the file in the folder moved along
 		$file1 = DataObject::get_by_id('File', $this->idFromFixture('File', 'file1-folder1'), false);
 		$this->assertFileExists(AssetStoreTest_SpyStore::getLocalPath($file1));
-		
+
 		$this->assertEquals(
 			'FileTest-folder2/FileTest-folder1/File1.txt',
 			$file1->Filename,

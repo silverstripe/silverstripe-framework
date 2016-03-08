@@ -60,10 +60,10 @@ abstract class MultiSelectField extends SelectField {
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * Load the value from the dataobject into this field
-	 * 
+	 *
 	 * @param DataObjectInterface $record
 	 */
 	public function loadFrom(DataObjectInterface $record) {
@@ -117,10 +117,10 @@ abstract class MultiSelectField extends SelectField {
 		}
 
 	}
-	
+
 	/**
 	 * Encode a list of values into a string, or null if empty (to simplify empty checks)
-	 * 
+	 *
 	 * @param array $value
 	 * @return string|null
 	 */
@@ -129,10 +129,10 @@ abstract class MultiSelectField extends SelectField {
 			? json_encode(array_values($value))
 			: null;
 	}
-	
+
 	/**
 	 * Extract a string value into an array of values
-	 * 
+	 *
 	 * @param string $value
 	 * @return array
 	 */
@@ -141,7 +141,7 @@ abstract class MultiSelectField extends SelectField {
 		if(empty($value)) {
 			return array();
 		}
-		
+
 		// If json deserialisation fails, then fallover to legacy format
 		$result = json_decode($value, true);
 		if($result !== false) {
@@ -150,7 +150,7 @@ abstract class MultiSelectField extends SelectField {
 
 		throw new \InvalidArgumentException("Invalid string encoded value for multi select field");
 	}
-	
+
 	/**
 	 * Validate this field
 	 *
@@ -177,7 +177,7 @@ abstract class MultiSelectField extends SelectField {
 		if(empty($invalidValues)) {
 			return true;
 		}
-		
+
 		// List invalid items
 		$validator->validationError(
 			$this->getName(),

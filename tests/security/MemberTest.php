@@ -813,9 +813,9 @@ class MemberTest extends FunctionalTest {
 		$firstHash->write();
 
 		$response = $this->get(
-			'Security/login', 
-			$this->session(), 
-			null, 
+			'Security/login',
+			$this->session(),
+			null,
 			array(
 				'alc_enc' => $m1->ID.':'.$token,
 				'alc_device' => $firstHash->DeviceID
@@ -830,11 +830,11 @@ class MemberTest extends FunctionalTest {
 
 		$this->session()->inst_set('loggedInAs', null);
 
-		// A wrong token or a wrong device ID should not let us autologin 
+		// A wrong token or a wrong device ID should not let us autologin
 		$response = $this->get(
-			'Security/login', 
-			$this->session(), 
-			null, 
+			'Security/login',
+			$this->session(),
+			null,
 			array(
 				'alc_enc' => $m1->ID.':'.str_rot13($token),
 				'alc_device' => $firstHash->DeviceID
@@ -843,9 +843,9 @@ class MemberTest extends FunctionalTest {
 		$this->assertNotContains($message, $response->getBody());
 
 		$response = $this->get(
-			'Security/login', 
-			$this->session(), 
-			null, 
+			'Security/login',
+			$this->session(),
+			null,
 			array(
 				'alc_enc' => $m1->ID.':'.$token,
 				'alc_device' => str_rot13($firstHash->DeviceID)
@@ -853,10 +853,10 @@ class MemberTest extends FunctionalTest {
 		);
 		$this->assertNotContains($message, $response->getBody());
 
-		// Re-logging (ie 'alc_enc' has expired), and not checking the "Remember Me" option 
+		// Re-logging (ie 'alc_enc' has expired), and not checking the "Remember Me" option
 		// should remove all previous hashes for this device
 		$response = $this->post(
-			'Security/LoginForm', 
+			'Security/LoginForm',
 			array(
 				'Email' => $m1->Email,
 				'Password' => '1nitialPassword',
@@ -865,7 +865,7 @@ class MemberTest extends FunctionalTest {
 			),
 			null,
 			$this->session(),
-			null, 
+			null,
 			array(
 				'alc_device' => $firstHash->DeviceID
 			)
@@ -890,9 +890,9 @@ class MemberTest extends FunctionalTest {
 		SS_DateTime::set_mock_now('1999-12-31 23:59:59');
 
 		$response = $this->get(
-			'Security/login', 
-			$this->session(), 
-			null, 
+			'Security/login',
+			$this->session(),
+			null,
 			array(
 				'alc_enc' => $m1->ID.':'.$token,
 				'alc_device' => $firstHash->DeviceID
@@ -916,9 +916,9 @@ class MemberTest extends FunctionalTest {
 		SS_DateTime::set_mock_now('2000-01-01 00:00:01');
 
 		$response = $this->get(
-			'Security/login', 
-			$this->session(), 
-			null, 
+			'Security/login',
+			$this->session(),
+			null,
 			array(
 				'alc_enc' => $m1->ID.':'.$token,
 				'alc_device' => $firstHash->DeviceID
@@ -960,9 +960,9 @@ class MemberTest extends FunctionalTest {
 
 		// Accessing the login page should show the user's name straight away
 		$response = $this->get(
-			'Security/login', 
-			$this->session(), 
-			null, 
+			'Security/login',
+			$this->session(),
+			null,
 			array(
 				'alc_enc' => $m1->ID.':'.$firstToken,
 				'alc_device' => $firstHash->DeviceID
@@ -979,9 +979,9 @@ class MemberTest extends FunctionalTest {
 
 		// Accessing the login page from the second device
 		$response = $this->get(
-			'Security/login', 
-			$this->session(), 
-			null, 
+			'Security/login',
+			$this->session(),
+			null,
 			array(
 				'alc_enc' => $m1->ID.':'.$secondToken,
 				'alc_device' => $secondHash->DeviceID
@@ -994,16 +994,16 @@ class MemberTest extends FunctionalTest {
 		// Logging out from the second device - only one device being logged out
 		Config::inst()->update('RememberLoginHash', 'logout_across_devices', false);
 		$response = $this->get(
-			'Security/logout', 
-			$this->session(), 
-			null, 
+			'Security/logout',
+			$this->session(),
+			null,
 			array(
 				'alc_enc' => $m1->ID.':'.$secondToken,
 				'alc_device' => $secondHash->DeviceID
 			)
 		);
 		$this->assertEquals(
-			RememberLoginHash::get()->filter(array('MemberID'=>$m1->ID, 'DeviceID'=>$firstHash->DeviceID))->Count(), 
+			RememberLoginHash::get()->filter(array('MemberID'=>$m1->ID, 'DeviceID'=>$firstHash->DeviceID))->Count(),
 			1
 		);
 
@@ -1012,7 +1012,7 @@ class MemberTest extends FunctionalTest {
 		$m1->login(true);
 		$response = $this->get('Security/logout', $this->session());
 		$this->assertEquals(
-			RememberLoginHash::get()->filter('MemberID', $m1->ID)->Count(), 
+			RememberLoginHash::get()->filter('MemberID', $m1->ID)->Count(),
 			0
 		);
 

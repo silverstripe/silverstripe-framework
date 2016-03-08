@@ -7,7 +7,7 @@
  * @subpackage filesystem
  */
 class Image extends File {
-	public function __construct($record = null, $isSingleton = false, $model = null) {	
+	public function __construct($record = null, $isSingleton = false, $model = null) {
 		parent::__construct($record, $isSingleton, $model);
 		$this->File->setAllowedCategories('image/supported');
 	}

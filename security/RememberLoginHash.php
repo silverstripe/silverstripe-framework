@@ -4,7 +4,7 @@
  * feature when logging in.
  * By default, logging out will discard all existing tokens for this user
  * The device ID is a temporary ID associated with the device when the user logged in
- * and chose to get the login state remembered on this device. When logging out, the ID 
+ * and chose to get the login state remembered on this device. When logging out, the ID
  * is discarded as well.
  *
  * @package framework
@@ -90,9 +90,9 @@ class RememberLoginHash extends DataObject {
 	}
 
 	/**
-	 * Creates a new random token and hashes it using the 
+	 * Creates a new random token and hashes it using the
 	 * member information
-	 * @param Member The logged in user 
+	 * @param Member The logged in user
 	 * @return string The hash to be stored in the database
 	 */
 	public function getNewHash(Member $member){
@@ -104,21 +104,21 @@ class RememberLoginHash extends DataObject {
 	/**
 	 * Generates a new login hash associated with a device
 	 * The device is assigned a globally unique device ID
-	 * The returned login hash stores the hashed token in the 
+	 * The returned login hash stores the hashed token in the
 	 * database, for this device and this member
-	 * @param Member The logged in user 
+	 * @param Member The logged in user
 	 * @return RememberLoginHash The generated login hash
 	 */
 	public static function generate(Member $member) {
 		if(!$member->exists()) { return; }
 		if (Config::inst()->get('RememberLoginHash', 'force_single_token') == true) {
 			$rememberLoginHash = RememberLoginHash::get()->filter('MemberID', $member->ID)->removeAll();
-		} 
+		}
 		$rememberLoginHash = RememberLoginHash::create();
 		do {
 			$deviceID = $rememberLoginHash->getNewDeviceID();
 		} while (RememberLoginHash::get()->filter('DeviceID', $deviceID)->Count());
-		
+
 		$rememberLoginHash->DeviceID = $deviceID;
 		$rememberLoginHash->Hash = $rememberLoginHash->getNewHash($member);
 		$rememberLoginHash->MemberID = $member->ID;
@@ -155,10 +155,10 @@ class RememberLoginHash extends DataObject {
 		$filter = array('MemberID'=>$member->ID);
 		if ((Config::inst()->get('RememberLoginHash', 'logout_across_devices') == false) && $alcDevice) {
 			$filter['DeviceID'] = $alcDevice;
-		}		
+		}
 		RememberLoginHash::get()
 			->filter($filter)
 			->removeAll();
 	}
-	
+
 }

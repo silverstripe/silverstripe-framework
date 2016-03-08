@@ -282,7 +282,7 @@ class DBFile extends CompositeDBField implements AssetContainer {
 			->getStore()
 			->getMimeType($this->Filename, $this->Hash, $this->Variant);
 	}
-	
+
 	public function getValue() {
 		if(!$this->exists()) {
 			return null;
@@ -311,7 +311,7 @@ class DBFile extends CompositeDBField implements AssetContainer {
 			->getStore()
 			->exists($this->Filename, $this->Hash, $this->Variant);
 	}
-	
+
 	public function getFilename() {
 		return $this->getField('Filename');
 	}
@@ -397,7 +397,7 @@ class DBFile extends CompositeDBField implements AssetContainer {
 		if($allowed) {
 			return in_array($extension, $allowed);
 		}
-		
+
 		// If no extensions are configured, fallback to global list
 		$globalList = File::config()->allowed_extensions;
 		if(in_array($extension, $globalList)) {
@@ -459,7 +459,7 @@ class DBFile extends CompositeDBField implements AssetContainer {
 		if($field === 'Filename' && $value) {
 			$this->assertFilenameValid($value);
 		}
-		
+
 		return parent::setField($field, $value, $markChanged);
 	}
 

@@ -118,7 +118,7 @@ class AssetField extends FileField {
 		 * @var string
 		 */
 		'uploadTemplateName' => 'ss-uploadfield-uploadtemplate',
-		
+
 		/**
 		 * javascript template used to display already uploaded files
 		 *
@@ -238,7 +238,7 @@ class AssetField extends FileField {
 		$this->record = $record;
 		return $this;
 	}
-	
+
 	/**
 	 * Get the record to use as "Parent" for uploaded Files (eg a Page with a has_one to File) If none is set, it will
 	 * use Form->getRecord().
@@ -290,7 +290,7 @@ class AssetField extends FileField {
 		// Set value using parent
 		return parent::setValue($value, $record);
 	}
-	
+
 	public function Value() {
 		// Re-override FileField Value to use data value
 		return $this->dataValue();
@@ -565,7 +565,7 @@ class AssetField extends FileField {
 
 		// Revalidate each file against nested validator
 		$this->getUpload()->clearErrors();
-		
+
 		// Generate $_FILES style file attribute array for upload validator
 		$store = $this->getAssetStore();
 		$mime = $store->getMimeType($value['Filename'], $value['Hash'], $value['Variant']);
@@ -599,7 +599,7 @@ class AssetField extends FileField {
 	protected function extractUploadedFileData($postVars) {
 		// Note: Format of posted file parameters in php is a feature of using
 		// <input name='{$Name}[Upload]' /> for multiple file uploads
-		
+
 		// Skip empty file
 		if(empty($postVars['tmp_name'])) {
 			return null;
@@ -712,7 +712,7 @@ class AssetField extends FileField {
 		// Get form details
 		$name = $this->getName();
 		$postVars = $request->postVar($name);
-		
+
 		// Extract uploaded files from Form data
 		$uploadedFile = $this->extractUploadedFileData($postVars);
 		if(!$uploadedFile) {

@@ -33,7 +33,7 @@ abstract class CompositeDBField extends DBField {
 
 	/**
 	 * Either the parent dataobject link, or a record of saved values for each field
-	 * 
+	 *
 	 * @var array|DataObject
 	 */
 	protected $record = array();
@@ -61,7 +61,7 @@ abstract class CompositeDBField extends DBField {
 	 */
 	public function addToQuery(&$query) {
 		parent::addToQuery($query);
-		
+
 		foreach($this->compositeDatabaseFields() as $field => $spec) {
 			$table = $this->getTable();
 			$key = $this->getName() . $field;
@@ -76,7 +76,7 @@ abstract class CompositeDBField extends DBField {
 	/**
 	 * Return array in the format of {@link $composite_db}.
 	 * Used by {@link DataObject->hasOwnDatabaseField()}.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function compositeDatabaseFields() {
@@ -136,7 +136,7 @@ abstract class CompositeDBField extends DBField {
 	 */
 	public function setValue($value, $record = null, $markChanged = true) {
 		$this->isChanged = $markChanged;
-		
+
 		// When given a dataobject, bind this field to that
 		if($record instanceof DataObject) {
 			$this->bindTo($record);
@@ -264,7 +264,7 @@ abstract class CompositeDBField extends DBField {
 			return $fields[$field];
 		}
 
-		
+
 		parent::castingHelper($field);
 	}
 

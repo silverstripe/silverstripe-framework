@@ -56,13 +56,13 @@ class CheckboxSetField extends MultiSelectField {
 
 	/**
 	 * Gets the list of options to render in this formfield
-	 * 
+	 *
 	 * @return ArrayList
 	 */
 	public function getOptions() {
 		$selectedValues = $this->getValueArray();
 		$defaultItems = $this->getDefaultItems();
-		
+
 		// Generate list of options to display
 		$odd = 0;
 		$formID = $this->ID();
@@ -72,7 +72,7 @@ class CheckboxSetField extends MultiSelectField {
 			$odd = ($odd + 1) % 2;
 			$extraClass = $odd ? 'odd' : 'even';
 			$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $itemValue);
-			
+
 			$itemChecked = in_array($itemValue, $selectedValues) || in_array($itemValue, $defaultItems);
 			$itemDisabled = $this->isDisabled() || in_array($itemValue, $defaultItems);
 

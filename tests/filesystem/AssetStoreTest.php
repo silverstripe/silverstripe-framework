@@ -627,7 +627,7 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 	public function cleanFilename($filename) {
 		return parent::cleanFilename($filename);
 	}
-	
+
 	public function getFileID($filename, $hash, $variant = null) {
 		return parent::getFileID($filename, $hash, $variant);
 	}

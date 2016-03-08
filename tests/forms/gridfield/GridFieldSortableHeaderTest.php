@@ -148,7 +148,7 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 			array('Melbourne', 'Wellington', 'Auckland', 'Cologne'),
 			$relationListAdesc->column('City')
 		);
-		
+
 		// Test subclasses of tables
 		$state->SortColumn = 'CheerleadersMom.Hat.Colour';
 		$state->SortDirection = 'asc';

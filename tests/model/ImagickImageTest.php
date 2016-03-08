@@ -7,7 +7,7 @@ class ImagickImageTest extends ImageTest {
 			$this->markTestSkipped("The Imagick extension is not available.");
 			return;
 		}
-		
+
 		Config::inst()->update('Injector', 'Image_Backend', 'ImagickBackend');
 	}
 }

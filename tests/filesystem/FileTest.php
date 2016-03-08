@@ -19,7 +19,7 @@ class FileTest extends SapphireTest {
 
 		// Set backend root to /ImageTest
 		AssetStoreTest_SpyStore::activate('FileTest');
-		
+
 		// Create a test folders for each of the fixture references
 		$folderIDs = $this->allFixtureIDs('Folder');
 		foreach($folderIDs as $folderID) {
@@ -522,7 +522,7 @@ class FileTest extends SapphireTest {
 		$this->objFromFixture('Member', 'admin')->logIn();
 		$this->assertTrue($file->canEdit(), "Admins can edit files");
 	}
-		
+
 
 	public function testJoinPaths() {
 		$this->assertEquals('name/file.jpg', File::join_paths('/name', 'file.jpg'));

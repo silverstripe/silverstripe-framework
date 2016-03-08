@@ -27,7 +27,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 */
 	public function __construct(AssetContainer $assetContainer = null) {
 		parent::__construct();
-		
+
 		if($assetContainer) {
 			$this->loadFromContainer($assetContainer);
 		}
@@ -154,7 +154,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		if(!$this->valid()) {
 			return null;
 		}
-		
+
 		$new = $this->resizeRatio($width, $height);
 		$new->setImageBackgroundColor("#".$backgroundColor);
 		$w = $new->getImageWidth();

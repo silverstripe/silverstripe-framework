@@ -87,7 +87,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 	public function Type() {
 		return 'optionset memberdatetimeoptionset';
 	}
-	
+
 	/**
 	 * @todo Put this text into a template?
 	 */

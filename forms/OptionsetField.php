@@ -108,7 +108,7 @@ class OptionsetField extends SingleSelectField {
 	public function Field($properties = array()) {
 		$options = array();
 		$odd = false;
-		
+
 		// Add all options striped
 		foreach($this->getSourceEmpty() as $value => $title) {
 			$odd = !$odd;

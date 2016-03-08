@@ -119,7 +119,7 @@ trait ImageManipulation {
 	 * @return bool
 	 */
 	abstract public function getIsImage();
-	
+
 	/**
 	 * @config
 	 * @var bool Force all images to resample in all cases
@@ -131,7 +131,7 @@ trait ImageManipulation {
 	 * @var int The width of an image thumbnail in a strip.
 	 */
 	private static $strip_thumbnail_width = 50;
-	
+
 	/**
 	 * @config
 	 * @var int The height of an image thumbnail in a strip.
@@ -577,7 +577,7 @@ trait ImageManipulation {
 		if(!$this->getIsImage()) {
 			return null;
 		}
-		
+
 		$content = $this->getString();
 		if(!$content) {
 			return null;
@@ -597,7 +597,7 @@ trait ImageManipulation {
 		if(is_numeric($dim)) {
 			return $size[$dim];
 		}
-		
+
 		return "$size[0]x$size[1]";
 	}
 
