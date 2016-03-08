@@ -13,14 +13,14 @@ class SQLSelectTest extends SapphireTest {
 		'SQLSelectTestBase',
 		'SQLSelectTestChild'
 	);
-	
+
 	protected $oldDeprecation = null;
-	
+
 	public function setUp() {
 		parent::setUp();
 		$this->oldDeprecation = Deprecation::dump_settings();
 	}
-	
+
 	public function tearDown() {
 		Deprecation::restore_settings($this->oldDeprecation);
 		parent::tearDown();

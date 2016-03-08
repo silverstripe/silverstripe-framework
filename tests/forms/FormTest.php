@@ -269,7 +269,7 @@ class FormTest extends FunctionalTest {
 				'Email' => 'test@test.com'
 			)
 		);
-			
+
 		// Firstly, assert that required fields still work when not using an exempt action
 		$this->assertPartialMatchBySelector(
 			'#Form_Form_SomeRequiredField_Holder .required',
@@ -299,7 +299,7 @@ class FormTest extends FunctionalTest {
 			'Form->sessionMessage() shows up after reloading the form'
 		);
 	}
-	
+
 	public function testSessionValidationMessage() {
 		$this->get('FormTest_Controller');
 

@@ -453,10 +453,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$rememberLoginHash = RememberLoginHash::generate($this);
 			$tokenExpiryDays = Config::inst()->get('RememberLoginHash', 'token_expiry_days');
 			$deviceExpiryDays = Config::inst()->get('RememberLoginHash', 'device_expiry_days');
-			Cookie::set('alc_enc', $this->ID . ':' . $rememberLoginHash->getToken(), 
+			Cookie::set('alc_enc', $this->ID . ':' . $rememberLoginHash->getToken(),
 				$tokenExpiryDays, null, null, null, true);
 			Cookie::set('alc_device', $rememberLoginHash->DeviceID, $deviceExpiryDays, null, null, null, true);
-		} else {			
+		} else {
 			Cookie::set('alc_enc', null);
 			Cookie::set('alc_device', null);
 			Cookie::force_expiry('alc_enc');
@@ -571,7 +571,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				if ($rememberLoginHash) {
 					$rememberLoginHash->renew();
 					$tokenExpiryDays = Config::inst()->get('RememberLoginHash', 'token_expiry_days');
-					Cookie::set('alc_enc', $member->ID . ':' . $rememberLoginHash->getToken(), 
+					Cookie::set('alc_enc', $member->ID . ':' . $rememberLoginHash->getToken(),
 						$tokenExpiryDays, null, null, false, true);
 				}
 
@@ -1483,7 +1483,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
         //need to be logged in and/or most checks below rely on $member being a Member
         if(!$member) {
-            return false;       
+            return false;
         }
         // members can usually view their own record
         if($this->ID == $member->ID) {
@@ -1509,7 +1509,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
         //need to be logged in and/or most checks below rely on $member being a Member
         if(!$member) {
-            return false;       
+            return false;
         }
 
         // HACK: we should not allow for an non-Admin to edit an Admin
@@ -1539,12 +1539,12 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
         //need to be logged in and/or most checks below rely on $member being a Member
         if(!$member) {
-            return false;       
+            return false;
         }
         // Members are not allowed to remove themselves,
         // since it would create inconsistencies in the admin UIs.
         if($this->ID && $member->ID == $this->ID) {
-            return false;           
+            return false;
         }
 
         // HACK: if you want to delete a member, you have to be a member yourself.
@@ -1552,7 +1552,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
         // deleting a member who has more privileges (e.g. a non-Admin deleting an Admin)
         if(Permission::checkMember($this, 'ADMIN')) {
             if( ! Permission::checkMember($member, 'ADMIN')) {
-                return false;               
+                return false;
             }
         }
         //standard check

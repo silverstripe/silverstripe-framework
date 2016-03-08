@@ -94,7 +94,7 @@ class Folder extends File {
 	 * Override setting the Title of Folders to that Name and Title are always in sync.
 	 * Note that this is not appropriate for files, because someone might want to create a human-readable name
 	 * of a file that is different from its name on disk. But folders should always match their name on disk.
-	 * 
+	 *
 	 * @param string $title
 	 * @return $this
 	 */

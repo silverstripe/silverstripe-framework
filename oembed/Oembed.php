@@ -207,7 +207,7 @@ class Oembed implements ShortcodeHandler {
  * @property int $Width
  * @property int $Height
  * @property string $Info Descriptive text for this oembed
- * 
+ *
  * @package framework
  * @subpackage oembed
  */

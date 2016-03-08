@@ -250,7 +250,7 @@ class SS_ConfigManifest {
 
 		// Keep track of all the modules we've seen
 		$this->addModule(dirname(dirname($pathname)));
-		
+
 		$parser = new Parser();
 
 		// The base header

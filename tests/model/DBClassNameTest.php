@@ -1,7 +1,7 @@
 <?php
 
 class DBClassNameTest extends SapphireTest {
-	
+
 	protected $extraDataObjects = array(
 		'DBClassNameTest_Object',
 		'DBClassNameTest_ObjectSubClass',

@@ -367,7 +367,7 @@ class AssetFieldTest_Form extends Form implements TestOnly {
 		if(empty($controller)) {
 			$controller = new AssetFieldTest_Controller();
 		}
-		
+
 		$fields = new FieldList(
 			AssetField::create('File')
 				->setFolderName('MyFiles'),

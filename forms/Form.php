@@ -695,7 +695,7 @@ class Form extends RequestHandler {
 
 	/**
 	 * Set actions that are exempt from validation
-	 * 
+	 *
 	 * @param array
 	 */
 	public function setValidationExemptActions($actions) {
@@ -705,7 +705,7 @@ class Form extends RequestHandler {
 
 	/**
 	 * Get a list of actions that are exempt from validation
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getValidationExemptActions() {

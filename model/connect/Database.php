@@ -179,7 +179,7 @@ abstract class SS_Database {
 				$message .= "\nparams: \"" . implode('", "', $parameters) . '"';
 			}
 			Debug::message("\n{$message}\n{$endtime}s\n", false);
-			
+
 			return $result;
 		} else {
 			return $callback($sql);

@@ -144,7 +144,7 @@ class GDBackend extends Object implements Image_Backend, Flushable {
 			$this->markFailed($filename, $hash, $variant);
 			return;
 		}
-		
+
 		imagealphablending($image, false);
 		imagesavealpha($image, true); // save alphablending setting (important)
 		$this->setImageResource($image);

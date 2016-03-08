@@ -2,7 +2,7 @@
 
 /**
  * Base class for development tools.
- * 
+ *
  * Configured in framework/_config/dev.yml, with the config key registeredControllers being
  * used to generate the list of links for /dev.
  *
@@ -21,9 +21,9 @@ class DevelopmentAdmin extends Controller {
 		'generatesecuretoken' => 'generatesecuretoken',
 		'$Action' => 'runRegisteredController',
 	);
-	
-	private static $allowed_actions = array( 
-		'index', 
+
+	private static $allowed_actions = array(
+		'index',
 		'buildDefaults',
 		'runRegisteredController',
 		'generatesecuretoken',
@@ -110,17 +110,17 @@ class DevelopmentAdmin extends Controller {
 
 	public function runRegisteredController(SS_HTTPRequest $request){
 		$controllerClass = null;
-		
+
 		$baseUrlPart = $request->param('Action');
 		$reg = Config::inst()->get(__CLASS__, 'registered_controllers');
 		if(isset($reg[$baseUrlPart])){
 			$controllerClass = $reg[$baseUrlPart]['controller'];
 		}
-		
+
 		if($controllerClass && class_exists($controllerClass)){
 			return $controllerClass::create();
 		}
-		
+
 		$msg = 'Error: no controller registered in '.__CLASS__.' for: '.$request->param('Action');
 		if(Director::is_cli()){
 			// in CLI we cant use httpError because of a bug with stuff being in the output already, see DevAdminControllerTest
@@ -130,9 +130,9 @@ class DevelopmentAdmin extends Controller {
 		}
 	}
 
-	
-	
-	
+
+
+
 	/*
 	 * Internal methods
 	 */
@@ -142,7 +142,7 @@ class DevelopmentAdmin extends Controller {
 	 */
 	protected static function get_links(){
 		$links = array();
-		
+
 		$reg = Config::inst()->get(__CLASS__, 'registered_controllers');
 		foreach($reg as $registeredController){
 			foreach($registeredController['links'] as $url => $desc){
@@ -154,18 +154,18 @@ class DevelopmentAdmin extends Controller {
 
 	protected function getRegisteredController($baseUrlPart){
 		$reg = Config::inst()->get(__CLASS__, 'registered_controllers');
-		
+
 		if(isset($reg[$baseUrlPart])){
 			$controllerClass = $reg[$baseUrlPart]['controller'];
 			return $controllerClass;
 		}
-		
+
 		return null;
 	}
-	
-	
-	
-	
+
+
+
+
 	/*
 	 * Unregistered (hidden) actions
 	 */

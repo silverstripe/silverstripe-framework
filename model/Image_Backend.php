@@ -64,7 +64,7 @@ interface Image_Backend {
 
 	/**
 	 * Write the backend to a local path
-	 * 
+	 *
 	 * @param string $path
 	 */
 	public function writeTo($path);

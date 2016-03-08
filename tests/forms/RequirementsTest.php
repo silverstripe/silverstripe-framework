@@ -83,7 +83,7 @@ class RequirementsTest extends SapphireTest {
 	protected function setupCombinedRequirements($backend) {
 		$basePath = $this->getCurrentRelativePath();
 		$this->setupRequirements($backend);
-		
+
 		// require files normally (e.g. called from a FormField instance)
 		$backend->javascript($basePath . '/RequirementsTest_a.js');
 		$backend->javascript($basePath . '/RequirementsTest_b.js');

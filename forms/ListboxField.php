@@ -57,7 +57,7 @@ class ListboxField extends MultiSelectField {
 
 	/**
 	 * Returns a <select> tag containing all the appropriate <option> tags
-	 * 
+	 *
 	 * @param array $properties
 	 * @return string
 	 */
@@ -69,10 +69,10 @@ class ListboxField extends MultiSelectField {
 			->customise($properties)
 			->renderWith($this->getTemplates());
 	}
-	
+
 	/**
 	 * Gets the list of options to render in this formfield
-	 * 
+	 *
 	 * @return ArrayList
 	 */
 	public function getOptions() {
@@ -119,7 +119,7 @@ class ListboxField extends MultiSelectField {
 
 	/**
 	 * Sets the size of this dropdown in rows.
-	 * 
+	 *
 	 * @param int $size The height in rows (e.g. 3)
 	 * @return $this Self reference
 	 */

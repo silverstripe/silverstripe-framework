@@ -877,7 +877,7 @@ class UploadField extends FileField {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param AssetContainer $file
 	 * @return string URL to thumbnail
 	 */
@@ -919,7 +919,7 @@ class UploadField extends FileField {
 		if($this->isReadonly()) {
 			$this->addExtraClass('readonly');
 		}
-		
+
 		return parent::extraClass();
 	}
 
@@ -998,7 +998,7 @@ class UploadField extends FileField {
 			$config['errorMessages']['overwriteWarning'] =
 				_t('UploadField.OVERWRITEWARNING', 'File with the same name already exists');
 		}
-		
+
 		$mergedConfig = array_merge($config, $this->ufConfig);
 		return $this->customise(array(
 			'configString' => str_replace('"', "&quot;", Convert::raw2json($mergedConfig)),
@@ -1534,7 +1534,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	 * @config
 	 * @var int
 	 */
-	private static $page_size = 11; 
+	private static $page_size = 11;
 
 	private static $url_handlers = array(
 		'$Action!' => '$Action',
@@ -1619,7 +1619,7 @@ class UploadField_SelectHandler extends RequestHandler {
 			'Created' => 'SS_Datetime->Nice'
 		));
 
- 		// Set configurable pagination for file list field  
+ 		// Set configurable pagination for file list field
 		$pageSize = Config::inst()->get(get_class($this), 'page_size');
 		$config->addComponent(new GridFieldPaginator($pageSize));
 

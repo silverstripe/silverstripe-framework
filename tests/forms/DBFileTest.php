@@ -12,7 +12,7 @@ class DBFileTest extends SapphireTest {
 		'DBFileTest_Object',
 		'DBFileTest_Subclass'
 	);
-	
+
 	protected $usesDatabase = true;
 
 	public function setUp() {
@@ -53,7 +53,7 @@ class DBFileTest extends SapphireTest {
 
 	public function testValidation() {
 		$obj = new DBFileTest_ImageOnly();
-		
+
 		// Test from image
 		$fish = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
 		$this->assertFileExists($fish);

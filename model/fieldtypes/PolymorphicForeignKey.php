@@ -66,7 +66,7 @@ class PolymorphicForeignKey extends CompositeDBField {
 				'Class' => $value->class
 			);
 		}
-		
+
 		parent::setValue($value, $record, $markChanged);
 	}
 

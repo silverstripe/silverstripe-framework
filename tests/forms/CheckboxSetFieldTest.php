@@ -193,14 +193,14 @@ class CheckboxSetFieldTest extends SapphireTest {
 			$field->validate($validator),
 			'Field validates values within source array'
 		);
-		
+
 		// Non valid value should fail
 		$field->setValue(array("Four" => "Four"));
 		$this->assertFalse(
 			$field->validate($validator),
 			'Field does not validate values outside of source array'
 		);
-		
+
 		// Non valid value, even if included with valid options, should fail
 		$field->setValue(array("One", "Two", "Four"));
 		$this->assertFalse(

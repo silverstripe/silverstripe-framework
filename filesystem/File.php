@@ -95,7 +95,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		"Parent" => "File",
 		"Owner" => "Member"
 	);
-	
+
 	private static $defaults = array(
 		"ShowInSearch" => 1,
 	);
@@ -205,7 +205,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 
 	/**
 	 * Replace"[file_link id=n]" shortcode with an anchor tag or link to the file.
-	 * 
+	 *
 	 * @param array $arguments Arguments passed to the parser
 	 * @param string $content Raw shortcode
 	 * @param ShortcodeParser $parser Parser
@@ -491,7 +491,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 
 		// Check configured categories
 		$appCategories = self::config()->app_categories;
-		
+
 		// Merge all categories into list of extensions
 		$extensions = array();
 		foreach(array_filter($categories) as $category) {
@@ -710,7 +710,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		if($parent && $parent->exists()) {
 			return $this->join_paths($parent->getFilename(), $this->Name);
 		}
-		
+
 		return $this->Name;
 	}
 
@@ -743,7 +743,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		if($parent && $parent->exists()) {
 			$folder = $parent->Filename;
 		}
-		
+
 		// Detect change in foldername
 		$newFolder = ltrim(dirname(trim($filename, '/')), '.');
 		if($folder !== $newFolder) {
@@ -894,7 +894,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		}
 		return round($size/(1024*1024*1024)*10)/10 . ' GB';
 	}
-	
+
 	/**
 	 * Convert a php.ini value (eg: 512M) to bytes
 	 *
@@ -917,7 +917,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 
 	/**
 	 * Return file size in bytes.
-	 * 
+	 *
 	 * @return int
 	 */
 	public function getAbsoluteSize(){
@@ -995,7 +995,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 
 	public function setFromLocalFile($path, $filename = null, $hash = null, $variant = null, $config = array()) {
 		$result = $this->File->setFromLocalFile($path, $filename, $hash, $variant, $config);
-		
+
 		// Update File record to name of the uploaded asset
 		if($result) {
 			$this->setFilename($result['Filename']);

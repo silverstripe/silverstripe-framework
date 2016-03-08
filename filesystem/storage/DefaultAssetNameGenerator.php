@@ -120,7 +120,7 @@ class DefaultAssetNameGenerator implements AssetNameGenerator {
 
 	public function current() {
 		$version = $this->version;
-		
+
 		// Initially suggest original name
 		if($version === $this->first) {
 			return $this->filename;

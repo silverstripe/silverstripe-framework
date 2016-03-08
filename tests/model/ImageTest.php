@@ -47,7 +47,7 @@ class ImageTest extends SapphireTest {
 
 	public function testGetTagWithTitle() {
 		Config::inst()->update('DBFile', 'force_resample', false);
-		
+
 		$image = $this->objFromFixture('Image', 'imageWithTitle');
 		$expected = '<img src="/assets/ImageTest/folder/444065542b/test-image.png" alt="This is a image Title" />';
 		$actual = trim($image->getTag());
@@ -57,7 +57,7 @@ class ImageTest extends SapphireTest {
 
 	public function testGetTagWithoutTitle() {
 		Config::inst()->update('DBFile', 'force_resample', false);
-		
+
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$expected = '<img src="/assets/ImageTest/folder/444065542b/test-image.png" alt="test image" />';
 		$actual = trim($image->getTag());
@@ -67,7 +67,7 @@ class ImageTest extends SapphireTest {
 
 	public function testGetTagWithoutTitleContainingDots() {
 		Config::inst()->update('DBFile', 'force_resample', false);
-		
+
 		$image = $this->objFromFixture('Image', 'imageWithoutTitleContainingDots');
 		$expected = '<img src="/assets/ImageTest/folder/46affab704/test.image.with.dots.png" alt="test.image.with.dots" />';
 		$actual = trim($image->getTag());
@@ -146,7 +146,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	/**
-	 * Tests that a URL to a resampled image is provided when force_resample is 
+	 * Tests that a URL to a resampled image is provided when force_resample is
 	 * set to true, if the resampled file is smaller than the original.
 	 */
 	public function testForceResample() {
@@ -194,7 +194,7 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($fitMaxDn->isSize(100, 100));
 		$fitMaxUp = $image->FitMax(500, 400);
 		$this->assertTrue($fitMaxUp->isSize(300, 300));
-		
+
 		//Test ScaleMax
 		$scaleMaxWDn = $image->ScaleMaxWidth(200);
 		$this->assertTrue($scaleMaxWDn->isSize(200, 200));
@@ -210,7 +210,7 @@ class ImageTest extends SapphireTest {
 		$this->assertTrue($cropMaxDn->isSize(200, 100));
 		$cropMaxUp = $image->FillMax(400, 200);
 		$this->assertTrue($cropMaxUp->isSize(300, 150));
-		
+
 		// Test Clip
 		$clipWDn = $image->CropWidth(200);
 		$this->assertTrue($clipWDn->isSize(200, 300));
@@ -241,7 +241,7 @@ class ImageTest extends SapphireTest {
 	}
 
 	/**
-	 * Test that propertes from the source Image are inherited by resampled images 
+	 * Test that propertes from the source Image are inherited by resampled images
 	 */
 	public function testPropertyInheritance() {
 		$testString = 'This is a test';

@@ -342,16 +342,16 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->removeExtraClass('ss-uploadfield');
 		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
 		$computerUploadField->setFolderName(Config::inst()->get('Upload', 'uploads_folder'));
-		
+
 		$defaultPanel = new CompositeField(
 			$computerUploadField,
 			$fromCMS
 		);
-		
+
 		$fromWebPanel = new CompositeField(
 			$fromWeb
 		);
-		
+
 		$defaultPanel->addExtraClass('htmleditorfield-default-panel');
 		$fromWebPanel->addExtraClass('htmleditorfield-web-panel');
 
@@ -530,7 +530,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 */
 	protected function getFiles($parentID = null) {
 		$exts = $this->getAllowedExtensions();
-		$dotExts = array_map(function($ext) { 
+		$dotExts = array_map(function($ext) {
 			return ".{$ext}";
 		}, $exts);
 		$files = File::get()->filter('Name:EndsWith', $dotExts);
@@ -706,7 +706,7 @@ abstract class HtmlEditorField_File extends ViewableData {
 			));
 		}
 		return $fields;
-		
+
 	}
 
 	/**
@@ -722,7 +722,7 @@ abstract class HtmlEditorField_File extends ViewableData {
 
 	/**
 	 * Get file ID
-	 * 
+	 *
 	 * @return int
 	 */
 	public function getFileID() {
@@ -782,7 +782,7 @@ abstract class HtmlEditorField_File extends ViewableData {
 		if($preview) {
 			return $preview;
 		}
-		
+
 		// Generate tag from preview
 		$thumbnailURL = Convert::raw2att(
 			Controller::join_links($this->getPreviewURL(), "?r=" . rand(1,100000))

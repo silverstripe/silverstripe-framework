@@ -14,7 +14,7 @@ interface ShortcodeHandler {
 
 	/**
 	 * Generate content with a shortcode value
-	 * 
+	 *
 	 * @param array $arguments Arguments passed to the parser
 	 * @param string $content Raw shortcode
 	 * @param ShortcodeParser $parser Parser

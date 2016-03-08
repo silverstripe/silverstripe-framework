@@ -747,7 +747,7 @@ class DataQuery {
 		if(!$foreignClass || $foreignClass === 'DataObject') {
 			throw new InvalidArgumentException("Could not find a has_many relationship {$localField} on {$localClass}");
 		}
-		
+
 		// Skip if already joined
 		if($this->query->isJoinedTo($foreignClass)) {
 			return;
@@ -769,7 +769,7 @@ class DataQuery {
 				"\"$foreignClass\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\""
 			);
 		}
-		
+
 		/**
 		 * add join clause to the component's ancestry classes so that the search filter could search on
 		 * its ancestor fields.
@@ -864,7 +864,7 @@ class DataQuery {
 		$query->setSelect(array());
 		$query->selectField($fieldExpression, $field);
 		$this->ensureSelectContainsOrderbyColumns($query, $originalSelect);
-		
+
 		return $query->execute()->column($field);
 	}
 
