@@ -30,6 +30,7 @@ matrix:
 
 before_script:
  - if ! [ $(phpenv version-name) = "5.3" ]; then printf "\n" | pecl install imagick; fi
+ - if [ $(phpenv version-name) = "5.3" ]; then printf "\n" | pecl install imagick-3.3.0; fi
  - composer self-update || true
  - phpenv rehash
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
