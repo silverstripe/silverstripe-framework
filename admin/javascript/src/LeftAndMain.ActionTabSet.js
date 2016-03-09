@@ -31,7 +31,9 @@ $.entwine('ss', function($) {
 			// because the panel is still open when the ajax edit form reloads.
 			var frame = $('.cms-container').find('iframe');
 			frame.each(function(index, iframe){
-				$(iframe).contents().off('click.ss-ui-action-tabset');
+				try {
+					$(iframe).contents().off('click.ss-ui-action-tabset');
+				} catch (e) {}
 			});
 			$(document).off('click.ss-ui-action-tabset');
 
