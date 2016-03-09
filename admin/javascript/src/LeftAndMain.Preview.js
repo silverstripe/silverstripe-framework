@@ -501,8 +501,16 @@ $.entwine('ss.preview', function($){
 		_loadCurrentPage: function() {
 			if (!this.getIsPreviewEnabled()) return;
 
-			var doc = this.find('iframe')[0].contentDocument,
-				containerEl = $('.cms-container');
+            var doc,
+                containerEl = $('.cms-container');
+            try {
+                doc = this.find('iframe')[0].contentDocument;
+            } catch (e) {
+                // iframe can't be accessed - might be secure?
+            }
+            if (!doc) {
+                return;
+            }
 
 			// Load this page in the admin interface if appropriate
 			var id = $(doc).find('meta[name=x-page-id]').attr('content'); 
@@ -521,14 +529,20 @@ $.entwine('ss.preview', function($){
 		 * Prepare the iframe content for preview.
 		 */
 		_adjustIframeForPreview: function() {
-			var iframe = this.find('iframe')[0];
-			if(iframe){
-				var doc = iframe.contentDocument;
-			}else{
-				return;
-			}
-	
-			if(!doc) return;
+            var iframe = this.find('iframe')[0],
+                doc;
+            if(!iframe){
+                return;
+            }
+
+            try {
+                doc = iframe.contentDocument;
+            } catch (e) {
+                // iframe can't be accessed - might be secure?
+            }
+            if(!doc) {
+                return;
+            }
 
 			// Open external links in new window to avoid "escaping" the internal page context in the preview
 			// iframe, which is important to stay in for the CMS logic.
