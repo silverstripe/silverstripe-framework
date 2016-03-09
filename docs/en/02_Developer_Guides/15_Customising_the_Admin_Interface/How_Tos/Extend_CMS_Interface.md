@@ -190,13 +190,41 @@ We can also easily create new drop-up menus by defining new tabs within the
 Empty tabs will be automatically removed from the `FieldList` to prevent clutter.
 </div>
 
-New actions will need associated controller handlers to work. You can use a
-`LeftAndMainExtension` to provide one. Refer to [Controller documentation](../../controllers)
-for instructions on setting up handlers.
-
 To make the actions more user-friendly you can also use alternating buttons as
 detailed in the [CMS Alternating Button](cms_alternating_button)
 how-to.
+
+### Implementing handlers
+
+Your newly created buttons need handlers to bind to before they will do anything.
+To implement these handlers, you will need to create a `LeftAndMainExtension` and add
+applicable controller actions to it:
+
+	:::php
+	class CustomActionsExtension extends LeftAndMainExtension {
+		
+		static $allowed_actions = array(
+        	'sampleAction'
+    	);
+    	
+    	public function sampleAction()
+    	{
+    		// Create the web
+    	}
+    	
+    }
+    
+The extension then needs to be registered:
+
+	:::yaml
+	LeftAndMain:
+		extensions:
+			- CustomActionsExtension
+			
+You can now use these handlers with your buttons:
+
+	:::php
+	$fields->push(FormAction::create('sampleAction', 'Perform Sample Action'));
 
 ## Summary
 
