@@ -581,7 +581,8 @@ $.entwine('ss', function($) {
 					break;
 
 				case 'file':
-					href = '[file_link,id=' + this.find('.ss-uploadfield .ss-uploadfield-item').attr('data-fileid') + ']';
+                    var fileid = this.find('.ss-uploadfield .ss-uploadfield-item').attr('data-fileid');
+                    href = fileid ? '[file_link,id=' + fileid + ']' : '';
 					break;
 
 				case 'email':
