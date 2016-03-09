@@ -844,7 +844,14 @@ $.entwine('ss', function($) {
 				action = "update";
 			}
 
-			if(href.match(/^mailto:(.*)$/)) {
+            if(href.match(/^mailto:(.*)\?subject=(.*)$/)) {
+                return {
+                    LinkType: 'email',
+                    email: RegExp.$1,
+                    Subject: decodeURIComponent(RegExp.$2),
+                    Description: title
+                };
+            } else if(href.match(/^mailto:(.*)$/)) {
 				return {
 					LinkType: 'email',
 					email: RegExp.$1,
