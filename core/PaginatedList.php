@@ -229,9 +229,19 @@ class PaginatedList extends SS_ListDecorator {
 		}
 
 		for ($i = $start; $i < $end; $i++) {
+
+			// Remove the query sting for the first page link
+			// /?start=0 returns the same page as /
+			$link = HTTP::setGetVar($this->getPaginationGetVar(), $i * $this->getPageLength());
+
+			if($i === 0) {
+				$parts = explode("?", $link);
+				$link = $parts[0];
+			}
+
 			$result->push(new ArrayData(array(
 				'PageNum'     => $i + 1,
-				'Link'        => HTTP::setGetVar($this->getPaginationGetVar(), $i * $this->getPageLength()),
+				'Link'        => $link,
 				'CurrentBool' => $this->CurrentPage() == ($i + 1)
 			)));
 		}
@@ -430,7 +440,16 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function PrevLink() {
 		if ($this->NotFirstPage()) {
-			return HTTP::setGetVar($this->getPaginationGetVar(), $this->getPageStart() - $this->getPageLength());
+
+			$start = $this->getPageStart() - $this->getPageLength();
+
+			$link = HTTP::setGetVar($this->getPaginationGetVar(), $start);
+
+			if($start === 0) {
+				$parts = explode("?", $link);
+				$link = $parts[0];
+			}
+			return $link;
 		}
 	}
 

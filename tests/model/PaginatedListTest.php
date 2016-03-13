@@ -325,7 +325,8 @@ class PaginatedListTest extends SapphireTest {
 
 		$this->assertNull($list->PrevLink());
 		$list->setCurrentPage(2);
-		$this->assertContains('start=0', $list->PrevLink());
+		$this->assertNotNull($list->PrevLink());
+		$this->assertNotContains('start=0', $list->PrevLink());
 		$list->setCurrentPage(3);
 		$this->assertContains('start=10', $list->PrevLink());
 		$list->setCurrentPage(5);
