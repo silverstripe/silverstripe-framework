@@ -287,7 +287,7 @@ class RequestHandler extends ViewableData {
 
 		$actionRes = $this->$action($request);
 
-		$res = $this->extend('afterCallActionHandler', $request, $action);
+		$res = $this->extend('afterCallActionHandler', $request, $action, $actionRes);
 		if ($res) return reset($res);
 
 		return $actionRes;

@@ -197,8 +197,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * @return HTMLText|SS_HTTPResponse
 	 */
 	protected function handleAction($request, $action) {
-		$this->extend('beforeCallActionHandler', $request, $action);
-
 		foreach($request->latestParams() as $k => $v) {
 			if($v || !isset($this->urlParams[$k])) $this->urlParams[$k] = $v;
 		}
@@ -215,9 +213,22 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			} else {
 				return $result;
 			}
-		} else {
-			return $this->getViewer($action)->process($this);
 		}
+
+		// Fall back to index action with before/after handlers
+		$beforeResult = $this->extend('beforeCallActionHandler', $request, $action);
+		if ($beforeResult) {
+			return reset($beforeResult);
+		}
+
+		$result = $this->getViewer($action)->process($this);
+
+		$afterResult = $this->extend('afterCallActionHandler', $request, $action, $result);
+		if($afterResult) {
+			return reset($afterResult);
+		}
+
+		return $result;
 	}
 
 	/**
