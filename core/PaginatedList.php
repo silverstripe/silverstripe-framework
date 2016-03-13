@@ -235,8 +235,7 @@ class PaginatedList extends SS_ListDecorator {
 			$link = HTTP::setGetVar($this->getPaginationGetVar(), $i * $this->getPageLength());
 
 			if($i === 0) {
-				$parts = explode("?", $link);
-				$link = $parts[0];
+				$link = $this->removeFirstPagePaginationParam($link);
 			}
 
 			$result->push(new ArrayData(array(
@@ -446,8 +445,7 @@ class PaginatedList extends SS_ListDecorator {
 			$link = HTTP::setGetVar($this->getPaginationGetVar(), $start);
 
 			if($start === 0) {
-				$parts = explode("?", $link);
-				$link = $parts[0];
+				$link = $this->removeFirstPagePaginationParam($link);
 			}
 			return $link;
 		}
@@ -476,4 +474,30 @@ class PaginatedList extends SS_ListDecorator {
 		return $this->request;
 	}
 
+	/**
+	 * Remove the first page pagination get var to stop duplicate page issues
+	 * / and /?start=0 return the same page
+	 *
+	 * @param  string $link
+	 * @return string
+	 */
+	private function removeFirstPagePaginationParam($link)
+	{
+		// get the path and query string
+		$parts = explode("?", $link);
+
+		$path = $parts[0];
+		$qs = $parts[1];
+
+		// remove the pagination get var
+		$qs = str_replace($this->getPaginationGetVar()."=0", "", $qs);
+
+		// remove extra & if there is one
+		$qs = implode("&amp;", array_filter(explode("&amp;", $qs)));
+
+		// append the query string to the path if there are any remaining vars
+		$link = $path . ($qs !== "" ? "?" . $qs : "");
+
+		return $link;
+	}
 }
