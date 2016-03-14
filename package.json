@@ -7,10 +7,11 @@
     "test": "tests"
   },
   "engines": {
-    "node": "~4.2.0"
+    "node": "^4.2.0"
   },
   "scripts": {
     "build": "gulp build",
+    "bundle": "gulp bundle",
     "sanity": "gulp sanity",
     "thirdparty": "gulp thirdparty",
     "css": "gulp css",

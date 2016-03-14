@@ -278,34 +278,40 @@ The [Node.js](https://nodejs.org) JavaScript runtime is the foundation of our cl
 The configuration for an npm package goes in `package.json`. You'll see one in the root directory of `framework`. As well as being used for defining dependencies and basic package information, the `package.json` file has some handy scripts.
 
 ```
+$ npm run bundle
+```
+
+`bundle` generates the lib and leftandmain JavaScript bundles.
+
+```
 $ npm run thirdparty
 ```
 
-This script copies JavaScript files from the `node_modules` directory into the `thirdparty` directory. The `node_modules` directory is not part of source control, so you'll need to run this command if you have upgraded, or added a module.
+`thirdparty` copies JavaScript files from the `node_modules` directory into the `thirdparty` directory. The `node_modules` directory is not part of source control, so you'll need to run this command if you have upgraded, or added a module.
 
 ```
 $ npm run sanity
 ```
 
-This script makes sure files in `thirdparty` match files copied from `node_modules`. You should never commit custom changes to a library file. This script will catch them if you do :smile:
+`sanity` makes sure files in `thirdparty` match files copied from `node_modules`. You should never commit custom changes to a library file. This script will catch them if you do :smile:
 
 ```
 $ npm run css
 ```
 
-This script will compile all of the .scss files into minified .css files. ProTip: run with the `--development` flag to compile non-minified css and watch for every time a .scss file is changed.
+`css` will compile all of the .scss files into minified .css files. ProTip: run with the `--development` flag to compile non-minified css and watch for every time a .scss file is changed.
 
 ```
 $ npm run sprites
 ```
 
-This script generates sprites from the individual image files in `admin/images/sprites/src`.
+`sprites` generates sprites from the individual image files in `admin/images/sprites/src`.
 
 ```
 $ npm run lock
 ```
 
-Generates a "shrinkwrap" file containing all npm package versions and writes it to `npm-shrinkwrap.json`.
+`lock` generates a "shrinkwrap" file containing all npm package versions and writes it to `npm-shrinkwrap.json`.
 Run this command whenever a new package is added to `package.json`, or when updating packages.
 Commit the resulting `npm-shrinkwrap.json`. This uses
 a third party [npm-shrinkwrap](https://github.com/uber/npm-shrinkwrap) library
