@@ -1,7 +1,7 @@
 ## Subversion
 
-Subversion [website](http://subversion.tigris.org) is a **version control system**.
-You can browse our Subversion "code repository" [here](http://open.silverstripe.com/browser), however we now use GIT to 
+Subversion [website](http://subversion.apache.org/) is a **version control system**.
+You can browse our Subversion "code repository" [here] `http://open.silverstripe.com/browser`, however we now use GIT to 
 manage our modules (see [Contributing](contributing)).
 
 This page only describes SilverStripe-specific information on how to handle subversion. For a general introduction,
@@ -10,7 +10,7 @@ please read the [Official Subversion Book](http://svnbook.red-bean.com/) (availa
 Start with the ["Basic Usage" chapter](http://svnbook.red-bean.com/en/1.5/svn.tour.html).
 
 ### Clients
-Make sure you have an updated [subversion client](http://subversion.tigris.org/links.html#clients) installed.
+Make sure you have an updated [subversion client](http://subversion.apache.org/) installed.
 Subversion 1.5 or higher is required for features such as relative externals and merge tracking.
 
 ### Checkout / Download
@@ -106,10 +106,10 @@ Here is a step-by-step guide on how to work with SVN on your own site.  It overs
 introduction. NOTE: you will need SSH and SVN installed and available on your server.
 
 *  Install LAMP / WAMP and an SVN application (Tortoise SVN on Windows)
-*  Buy an SVN repository: http://www.SVNrepository.com/  OR set one up on your own server or look at freeby alternatives.
+*  Buy an SVN repository: http://www.svnrepository.com/  OR set one up on your own server or look at freeby alternatives.
 *  Go to your SVN repository server and create a new repository - I would recommend to name it after the site you are about to setup, e.g. myfirstsite.com.
 *  Create / go to web folder on local LAMP/WAMP
-*  SVN "checkout" your empty repository (e.g. http://sunny.SVNrepository.com/SVN/myaccountname/myfirstsite.com).
+*  SVN "checkout" your empty repository (e.g. `http://sunny.SVNrepository.com/SVN/myaccountname/myfirstsite.com`).
 *  SVN "propedit" SVN:externals, add the following SVN property to the root directory:
 
 SVN:externals (also add your own general modules here, etc... etc... this should be a long list):

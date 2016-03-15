@@ -9,13 +9,13 @@ The current maintainer responsible for planning and performing releases is Ingo 
 
 ## Release Planning
 
-Our most up-to-date release plans are typically in the [roadmap](http://open.silverstripe.com/roadmap).
+Our most up-to-date release plans are typically in the [roadmap] `http://open.silverstripe.com/roadmap`.
 New features and API changes are typically discussed on the [core
 mailinglist](http://groups.google.com/group/silverstripe-dev). They are prioritized by the core team as tickets on 
-[open.silverstripe.org](http://open.silverstripe.com/). 
+[open.silverstripe.org] `http://open.silverstripe.com/`. 
 
 Release dates are usually not published prior to the release, but you can get a good idea of the release status by
-reviewing the [release milestone](http://open.silverstripe.com/roadmap) on open.silverstripe.org. Releases will be
+reviewing the [release milestone] `http://open.silverstripe.com/roadmap` on `open.silverstripe.org`. Releases will be
 announced on the [release announcements mailing list](http://groups.google.com/group/silverstripe-announce).
 
 Releases of the *cms* and *sapphire* modules are coupled at the moment, they follow the same numbering scheme. Module
@@ -97,7 +97,7 @@ How to deprecate an API:
 *  Update the deprecated code to throw an `E_USER_NOTICE` error, with a message starting with the string 'DEPRECATED:'.  
 In time, we may use that string to identify deprecation errors, so please ensure that you add this string to the notice level error.
 *  Make sure that the old deprecated function works by calling the new function - don't have duplicated code!
-*  Mark in which release the function was deprecated (find out next release in the [roadmap](http://open.silverstripe.com/roadmap)), so we can determine when to finally remove it.
+*  Mark in which release the function was deprecated (find out next release in the [roadmap] `http://open.silverstripe.com/roadmap`), so we can determine when to finally remove it.
 Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::is_dev()`:
 
 	:::php

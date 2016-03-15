@@ -8,11 +8,11 @@ itself.
 
 This lack of a configuration-GUI is on purpose, as we'd like to keep developer-level options where they belong (into
 code), without cluttering up the interface. See this core forum discussion ["The role of the
-CMS"](http://www.silverstripe.com/core-team-discussion/flat/2723) for further reasoning.
+CMS"] `http://www.silverstripe.com/core-team-discussion/flat/2723` for further reasoning.
 
 In addition to these principle, some settings are 
  * Author-level configuration like interface language or date/time formats can be performed in the CMS "My Profile" section (`admin/myprofile`). 
- * Group-related configuration like `[api:HTMLEditorField]` settings can be found in the "Security" section (`admin/security`).
+ * Group-related configuration like [api:HTMLEditorField] settings can be found in the "Security" section (`admin/security`).
  * Site-wide settings like page titles can be set (and extended) on the root tree element in the CMS "Content" section (through the [siteconfig](/reference/siteconfig) API).
 
 ## _ss_environment.php
@@ -21,7 +21,7 @@ See [environment-management](/topics/environment-management).
 
 ## mysite/_config.php
 
-This file is detected in each folder by `[api:ManifestBuilder]`. This way, every toplevel-folder (=module)
+This file is detected in each folder by [api:ManifestBuilder]. This way, every toplevel-folder (=module)
 can have independent configuration-rules.
 
 
@@ -66,8 +66,8 @@ Some constants are user-defineable within *_ss_environment.php*.
 
 ## User-level: Member-object
 
-All user-related preferences are stored as a property of the `[api:Member]`-class (and as a database-column in the
-*Member*-table). You can "mix in" your custom preferences by using `[api:DataObject]` for details.
+All user-related preferences are stored as a property of the [api:Member]-class (and as a database-column in the
+*Member*-table). You can "mix in" your custom preferences by using [api:DataObject] for details.
 
 ## Permissions
 

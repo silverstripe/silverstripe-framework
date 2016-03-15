@@ -16,9 +16,9 @@ See [http://shiflett.org/articles/sql-injection](http://shiflett.org/articles/sq
 
 ### Automatic escaping
 
-SilverStripe automatically escapes data in `[api:DataObject::write()]` wherever possible,
-through database-specific methods (see `[api:Database->addslashes()]`).
-For `[api:MySQLDatabase]`, this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
+SilverStripe automatically escapes data in [api:DataObject::write()] wherever possible,
+through database-specific methods (see [api:MySQLDatabase::addslashes()]).
+For [api:MySQLDatabase], this will be [mysql_real_escape_string()](http://php.net/manual/en/function.mysql-real-escape-string.php).
 Data is escaped when saving back to the database, not when writing to object-properties.
 
 *  DataObject::get_by_id()
@@ -119,8 +119,8 @@ for in-depth information about "Cross-Site-Scripting".
 
 ### Escaping model properties
 
-`[api:SSViewer]` (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
-object-properties by [casting](/topics/datamodel#casting) its string value into a `[api:DBField]` object.
+[api:SSViewer] (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
+object-properties by [casting](/topics/datamodel#casting) its string value into a [api:DBField] object.
 
 PHP:
 
@@ -203,7 +203,7 @@ presentation from business logic.
 When using *customise()* or *renderWith()* calls in your controller, or otherwise forcing a custom context for your
 template, you'll need to take care of casting and escaping yourself in PHP. 
 
-The `[api:Convert]` class has utilities for this, mainly *Convert::raw2xml()* and *Convert::raw2att()* (which is
+The [api:Convert] class has utilities for this, mainly [api:Convert::raw2xml()] and [api:Convert::raw2att()] (which are
 also used by *XML* and *ATT* in template code).
 
 PHP:
@@ -260,7 +260,7 @@ Template:
 Some rules of thumb:
 
 *  Don't concatenate URLs in a template.  It only works in extremely simple cases that usually contain bugs.
-*  Use *Controller::join_links()* to concatenate URLs.  It deals with query strings and other such edge cases.
+*  Use [api:Controller::join_links()] to concatenate URLs.  It deals with query strings and other such edge cases.
 
 
 ## Cross-Site Request Forgery (CSRF)
@@ -283,7 +283,7 @@ See
 
 ## Casting user input
 
-When working with `$_GET`, `$_POST` or `Director::urlParams` variables, and you know your variable has to be of a
+When working with `$_GET`, `$_POST` or [api:Director::urlParams()] variables, and you know your variable has to be of a
 certain type, like an integer, then it's essential to cast it as one. *Why?* To be sure that any processing of your
 given variable is done safely, with the assumption that it's an integer.
 

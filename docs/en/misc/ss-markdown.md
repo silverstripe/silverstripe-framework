@@ -17,9 +17,9 @@ and HTML output should still be readable with our custom markup unparsed.
 While most of the Markdown syntax is parseable by all common implementations,
 the special syntax is relying on a custom SilverStripe project that powers `http://doc.silverstripe.org`.
 
-The website a standard SilverStripe installation with the [sapphiredocs](https://github.com/silverstripe/silverstripe-sapphiredocs/)
-module installed (see module [README](https://github.com/silverstripe/silverstripe-sapphiredocs/blob/master/README.md) and
-[documentation](https://github.com/silverstripe/silverstripe-sapphiredocs/tree/master/docs/en)).
+The website a standard SilverStripe installation with the [sapphiredocs] `https://github.com/silverstripe/silverstripe-sapphiredocs/`
+module installed (see module [README] `https://github.com/silverstripe/silverstripe-sapphiredocs/blob/master/README.md` and
+[documentation] `https://github.com/silverstripe/silverstripe-sapphiredocs/tree/master/docs/en`).
 
 ## Syntax
 

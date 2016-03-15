@@ -2,18 +2,18 @@
 
 ## Introduction
 
-Manages searching of properties on one or more `[api:DataObject]` types, based on a given set of input parameters.
-`[api:SearchContext]` is intentionally decoupled from any controller-logic,
+Manages searching of properties on one or more [api:DataObject] types, based on a given set of input parameters.
+[api:SearchContext] is intentionally decoupled from any controller-logic,
 it just receives a set of search parameters and an object class it acts on.
 
-The default output of a `[api:SearchContext]` is either a `[api:SQLQuery]` object for further refinement, or a
-`[api:DataObject]` instance.
+The default output of a [api:SearchContext] is either a [api:SQLQuery] object for further refinement, or a
+[api:DataObject] instance.
 
 In case you need multiple contexts, consider namespacing your request parameters by using `FieldSet->namespace()` on
 the $fields constructor parameter.
 
-`[api:SearchContext]` is mainly used by `[api:ModelAdmin]`, our generic data administration interface. Another
-implementation can be found in generic frontend search forms through the [genericviews](http://silverstripe.org/generic-views-module) module.
+[api:SearchContext] is mainly used by [api:ModelAdmin], our generic data administration interface. Another
+implementation can be found in generic frontend search forms through the [genericviews] `http://silverstripe.org/generic-views-module` module.
 
 ## Requirements
 
@@ -29,7 +29,7 @@ Getting results
 
 ### Defining fields on your DataObject
 
-See `[api:DataObject::$searchable_fields]`.
+See [api:DataObject::$searchable_fields].
 
 ### Customizing fields and filters
 
@@ -127,7 +127,7 @@ The change is in **$results = $this->getResults($data);**, because you are using
 Another thing you cant forget is to check the name of the singleton you are using in your project. the example uses
 **MyDataObject**, you need to change it for the one you are using
 
-For more information on how to paginate your results within the template, see [Tutorial: Site Search](/tutorials/4-site-search).
+For more information on how to paginate your results within the template, see [Tutorial: Site Search](/tutorials/site-search).
 
 
 ### The Pagination Template
@@ -180,13 +180,13 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 
 ## Available SearchFilters
 
-See `[api:SearchFilter]` API Documentation
+See [api:SearchFilter] API Documentation
 
 ## API Documentation
-`[api:SearchContext]`
+[api:SearchContext]
 
 ## Related
 
-*  `[api:ModelAdmin]`
-*  `[api:RestfulServer]`
-*  [Tutorial: Site Search](/tutorials/4-site-search)
+*  [api:ModelAdmin]
+*  [api:RestfulServer]
+*  [Tutorial: Site Search](/tutorials/site-search)

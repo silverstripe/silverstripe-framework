@@ -8,7 +8,7 @@ See "[Testing](/topics/testing)" for an overview on how to create unit tests.
 Short answer: Both are valid ways.
 
 The `sake` executable that comes with SilverStripe can trigger a customized
-"[api:TestRunner]" class that handles the PHPUnit configuration and output formatting.
+[api:TestRunner] class that handles the PHPUnit configuration and output formatting.
 It's tyically invoked to run all tests through `sake dev/tests/all`,
 a single test with `sake dev/tests/MyTestClass`, or tests for a module with `sake dev/tests/module/mymodulename`.
 While the custom test runner a handy tool, its also more limited than using `phpunit` directly,

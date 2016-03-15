@@ -6,14 +6,14 @@ A module is, quite simply, a collection of classes, templates, and other resourc
 directory.  In a default SilverStripe download, even resources in 'sapphire' and 'mysite' are treated in exactly the
 same as every other module.
 
-Sapphire's `[api:ManifestBuilder]` will find any class, css or template files anywhere under the site's main
+Sapphire's [api:ManifestBuilder] will find any class, css or template files anywhere under the site's main
 directory.  The _config.php file in the module directory can be used to define director rules, calls to
 Object::useCustomClass(), and the like.  So, by unpacking a module into site's main directory and viewing the site with
 ?flush=1 on the end of the URL, all the module's new behaviour will be incorporated to your site:
 
 *  You can create subclasses of base classes such as SiteTree to extend behaviour.
-*  You can use Object::useCustomClass() to replace a built in class with a class of your own.
-*  You can use [a decorator](api:DataObjectDecorator) to extend or alter the behaviour of a built-in class without replacing
+*  You can use [api:Object::useCustomClass()] to replace a built in class with a class of your own.
+*  You can use [api:DataObjectDecorator] to extend or alter the behaviour of a built-in class without replacing
 it.
 *  You can provide additional director rules to define your own controller for particular URLs.
 
@@ -33,8 +33,8 @@ instead make it easier for developers to build other applications.
 
 ## Finding Modules
 
-*  [Official module list on silverstripe.org](http://silverstripe.org/modules)
-*  [Subversion repository on open.silverstripe.org](http://open.silverstripe.org/browser/modules)
+*  [Official module list on silverstripe.org] `http://silverstripe.org/modules`
+*  [Subversion repository on open.silverstripe.org] `http://open.silverstripe.org/browser/modules`
     
 
 ## Installation
@@ -49,7 +49,7 @@ guidelines.
 
 ### Download
 
-To install a module you need to download the tar.gz file from the [modules page](http://www.silverstripe.org/modules) and extract this tar.gz to the root folder mentioned
+To install a module you need to download the tar.gz file from the [modules page] `http://www.silverstripe.org/modules` and extract this tar.gz to the root folder mentioned
 above.
 
 Note some times the folders extracted from the tar.gz contain the version number or some other folders. You need to make
@@ -89,5 +89,5 @@ Exit the editor and then run
 
 **Useful Links:**
 
-*  [Modules](module-developement)
-*  [Module Release Process](module-release-process)
+*  [Module Development](/topics/module-development)
+*  [Module Release Process](/misc/module-release-process)

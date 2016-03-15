@@ -4,19 +4,22 @@ Please read our [guide to contributing documentation](misc/contributing#writing-
 
 ### Overview
 
- * [Getting started](http://silverstripe.org/getting-started/) | [Feature Overview](http://silverstripe.org/introduction/) | [Demo](http://demo.silverstripe.org/)
- * [Download and Installation](installation/) | [Upgrading](/installation/upgrading) | [Requirements](/installation/server-requirements) | [Changelog](http://open.silverstripe.org/wiki/ChangeLog) | [Roadmap](http://open.silverstripe.com/roadmap)  
- * [API documentation](http://api.silverstripe.org/current) | [Official english book](http://www.silverstripe.org/silverstripe-book) | [Official german book](http://www.silverstripe.org/das-silverstripe-buch)  
+ * [Getting started](http://silverstripe.org/getting-started/) |
+   [CMS Overview](http://www.silverstripe.org/software/cms/) |
+   [Framework Overview](http://www.silverstripe.org/software/framework/) |
+   [Demo](http://demo.silverstripe.org/) 
+ * [Download and Installation](installation/) | [Upgrading](/installation/upgrading) | [Requirements](/installation/server-requirements) | [Changelogs](changelogs) 
+ * [API documentation](http://api.silverstripe.org/current) | [Books](http://www.silverstripe.org/learn/resources/books)
 
 
 ###  Getting support
 
-[Forum](http://www.silverstripe.org/forums/) | [IRC channel](http://silverstripe.org/irc) | [End user docs](http://userhelp.silverstripe.com) | [Core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
+[Forum](http://www.silverstripe.org/forums/) | [IRC channel](https://irc.silverstripe.org) | [End user docs](http://userhelp.silverstripe.com) | [Core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
 
 
 ### Level 1: Building your first SilverStripe website
 
- * [Introduction to PHP5 (zend.com)](http://devzone.zend.com/node/view/id/627)
+ * [Introduction to PHP (codeacademy.com)](https://www.codecademy.com/learn/php)
  *  [Tutorials](tutorials)
    * [Building a basic site](tutorials/building-a-basic-site)
    * [Extending a basic site](tutorials/extending-a-basic-site)
@@ -58,6 +61,3 @@ Please read our [guide to contributing documentation](misc/contributing#writing-
 * [Contributing](http://www.silverstripe.org/contributing-to-silverstripe/)
 * [Coding Conventions](misc/coding-conventions)
 
-<div class="hint" markdown="1">
-Looking for the old DokuWiki installation? See [doc.silverstripe.org/old](http://doc.silverstripe.org/old).
-</div>

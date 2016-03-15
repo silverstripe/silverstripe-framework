@@ -2,7 +2,7 @@
 
 ## Introduction
 
-[Tutorial 1](/tutorials/1-building-a-basic-site#templates) shows you how to create page templates. This guide will help
+The first [Tutorial](/tutorials/building-a-basic-site#templates) shows you how to create page templates. This guide will help
 you create your own SilverStripe website theme.
 
 Developing your own theme in SilverStripe is a piece of cake thanks to a very straight forward and clean templating
@@ -40,7 +40,7 @@ Layout template.
 ### HTML Templates
 
 Once you have created your folders you need to start to fill it out with a couple 'Core' files. First and most
-importantly is we need a HTML template for our design. Read the [Tutorial 1](/tutorials/1-building-a-basic-site#templates)
+importantly is we need a HTML template for our design. Read the [Tutorial 1](/tutorials/building-a-basic-site#templates)
 and the HTML pages for more in-depth discussion about the HTML templates and how they work. At the very least
 we need a Page.ss file (note the .ss extenstion - Don't worry its just HTML and any text editor will still read it). So
 go ahead and create 2 Page.ss files. One in templates, the other in Layout.
@@ -111,7 +111,7 @@ All you have to do now is tell your site to use your new theme - This is defined
 Go to yoursite.com/?flush=1 and check it out. You should be using your new theme! Not really that awesome or amazing is
 it? Next we need to add some CSS Magic!
 
-See [Templates](/reference/themes) for more information about templates.
+See [Templates](/topics/templates) for more information about templates.
 
 
 ### CSS Files
@@ -218,12 +218,12 @@ Maybe even a nice link saying Website Powered by SilverStripe to show your suppo
 A bunch of resources feel free to use to make your template awesome
 
 *  [http://kuler.adobe.com](http://kuler.adobe.com) - Kuler is a great color scheming tool
-*  [http://blog.html.it/layoutgala/](http://blog.html.it/layoutgala/) - 40 super cool CSS layouts for you to use
+*  `[http://blog.html.it/layoutgala/]` `http://blog.html.it/layoutgala/` - 40 super cool CSS layouts for you to use
 *  [http://designmeltdown.com](http://designmeltdown.com) - Great gallery of websites. Browse through and get inspired. 
 *  [http://validator.w3.org/](http://validator.w3.org/) - Your template must pass 'or get near' validation. 
 *  [http://famfamfam.com/lab/icons/](http://famfamfam.com/lab/icons/) - free, beautiful icons.
-*  [http://cssremix.com](http://cssremix.com) - Another CSS site gallery for inspiration. 
-*  [http://www.maxdesign.com.au/presentation/process/](http://www.maxdesign.com.au/presentation/process/) - a good process for creating a design
+*  `[http://cssremix.com]` `http://cssremix.com` - Another CSS site gallery for inspiration. 
+*  `[http://www.maxdesign.com.au/presentation/process/]` `http://www.maxdesign.com.au/presentation/process/` - a good process for creating a design
 
 ## Reference
 
@@ -245,7 +245,7 @@ Note: This only applies for CSS and template files. PHP files **do not** get ove
 
 ### Requirements
 
-The `[api:Requirements::themedCSS()]` function will
+The [api:Requirements::themedCSS()] function will
 do the search specified above. This avoids the need to type a full path to the css file, and also provides better
 ambiguity for themes.
 

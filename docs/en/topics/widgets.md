@@ -2,8 +2,8 @@
 
 ## Introduction
 
-[Widgets](http://silverstripe.org/widgets) are small pieces of functionality such as showing the latest Comments or Flickr Photos. They normally display on
-the sidebar of your website. To check out a what a [Widget](http://silverstripe.org/widgets) can do watch the
+[Widgets] `http://silverstripe.org/widgets` are small pieces of functionality such as showing the latest Comments or Flickr Photos. They normally display on
+the sidebar of your website. To check out a what a [Widget] `http://silverstripe.org/widgets` can do watch the
 [Widget video](http://silverstripe.com/assets/screencasts/SilverStripe-Blog-DragDrop-Widgets.swf) and try out the
 [demo site](http://demo.silverstripe.org/)
 
@@ -12,9 +12,9 @@ the sidebar of your website. To check out a what a [Widget](http://silverstripe.
 
 ### Downloading and Contributing Widgets
 
-*  To download widgets visit [Widgets section](http://silverstripe.org/widgets)
+*  To download widgets visit [Widgets section] `http://silverstripe.org/widgets`
 *  Upload widgets you want to share to
-[http://silverstripe.org/widgets/manage/add](http://silverstripe.org/widgets/manage/add). Make sure you read the
+`[http://silverstripe.org/widgets/manage/add]` `http://silverstripe.org/widgets/manage/add`. Make sure you read the
 packaging instructions at the bottom of the page about how to make your widget package.
 
 
@@ -231,7 +231,7 @@ This returns the value inputted in the CMS, if it's set or what is in the $title
 
 To implement a form inside a widget, you need to implement a custom controller for your widget to return this form. Make
 sure that your controller follows the usual naming conventions, and it will be automatically picked up by the
-`[api:WidgetArea]` rendering in your *Page.ss* template.
+[api:WidgetArea] rendering in your *Page.ss* template.
 
 **mysite/code/MyWidget.php**
 
@@ -276,12 +276,12 @@ To output this form, modify your widget template.
 	$MyFormName
 
 <div class="notice" markdown='1'>
-**Note:** The necessary controller actions are only present in subclasses of `[api:Page_Controller]`. To use
+**Note:** The necessary controller actions are only present in subclasses of [api:Page_Controller]. To use
 widget forms in other controller subclasses, have a look at *ContentController->handleWidget()* and
 *ContentController::$url_handlers*.
 </div>
 
-See an [alternative recipe for SilverStripe 2.3 or earlier](http://doc.silverstripe.org/old/recipes/widget-forms-2.3).
+See an [alternative recipe for SilverStripe 2.3 or earlier] `http://doc.silverstripe.org/old/recipes/widget-forms-2.3`.
 
 ## But what if I have widgets on my blog currently??
 
@@ -322,7 +322,7 @@ For a widget to be put in our official widget database they must follow this con
 
 You should have a folder called widget_YourName in the top level (the one with sapphire, cms..) with all your files. See
 the example below. Your widget **MUST** have at least 1 Template file, 1 PHP file, the README File
-[(Example)](http://open.silverstripe.com/browser/modules/widgets/twitter/trunk/README)and an _config.php file for
+[(Example)] `http://open.silverstripe.com/browser/modules/widgets/twitter/trunk/README` and an _config.php file for
 configuration. If you dont need any config options for the widget to work then you still need an _config.php by you can
 make it blank
 
@@ -352,5 +352,5 @@ This way, the CMS remains an application designed for content authors, and not d
      * Ensure when you "unzip" the compressed file it has everything the "widgets_YourName" folder with everything inside
 it.
 *  If made official, it will be given these locations at silverstripe.com:
-    * SVN location: http://svn.silverstripe.com/open/modules/widgets/flickr/trunk
-    * Official download: http://www.silverstripe.com/assets/downloads/widgets/widgets_flickr-0.1.1.tar.gz
+    * SVN location: `http://svn.silverstripe.com/open/modules/widgets/flickr/trunk`
+    * Official download: `http://www.silverstripe.com/assets/downloads/widgets/widgets_flickr-0.1.1.tar.gz`

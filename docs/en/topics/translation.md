@@ -7,7 +7,7 @@ This page introduces developers to using the CMS for creating content in multipl
 Please see [i18n](/topics/i18n) for a internationalization, globalization and localization support of built-in datatypes as well
 as translating templates and PHP code.
 
-Translations can be enabled for all subclasses of `[api:DataObject]`, so it can easily be implemented into existing code
+Translations can be enabled for all subclasses of [api:DataObject], so it can easily be implemented into existing code
 with minimal interference.
 
 Warning: If you're upgrading from a SilverStripe version prior to 2.3.2, please migrate your datamodel before using the
@@ -60,7 +60,7 @@ Enabling Translatable through *Object::add_extension()* in your *mysite/_config.
 	}
 
 
-Make sure to rebuild the database through /dev/build after enabling `[api:Translatable]`.
+Make sure to rebuild the database through /dev/build after enabling [api:Translatable].
 Use the correct set_default_locale() before building the database
 for the first time, as this locale will be written on all new records.
 
@@ -101,7 +101,7 @@ Getting a translation for an existing instance:
 
 
 Getting translations through Translatable::set_reading_locale().
-This is *not* a recommended approach, but sometimes unavoidable (e.g. for `[api:Versioned]` methods).
+This is *not* a recommended approach, but sometimes unavoidable (e.g. for [api:Versioned] methods).
 
 	:::php
 	$origLocale = Translatable::get_reading_locale();
@@ -120,7 +120,7 @@ Creating a translation:
 
 ### Usage for SiteTree
 
-`[api:Translatable]` can be used for subclasses of SiteTree as well. 
+[api:Translatable] can be used for subclasses of SiteTree as well. 
 If a child page translation is requested without the parent
 page already having a translation in this language, the extension
 will recursively create translations up the tree.
@@ -129,7 +129,7 @@ languages by auto-appending the language code at the end.
 You'll need to ensure that the appropriate "reading language" is set
 before showing links to other pages on a website through $_GET['locale'].
 Pages in different languages can have different publication states
-through the `[api:Versioned]` extension.
+through the [api:Versioned] extension.
 
 Note: You can't get Children() for a parent page in a different language
 through set_reading_locale(). Get the translated parent first.
@@ -148,11 +148,11 @@ through set_reading_locale(). Get the translated parent first.
 
 ### Translating custom properties
 
-Keep in mind that the `[api:Translatable]` extension currently doesn't support the exclusion of properties from being
+Keep in mind that the [api:Translatable] extension currently doesn't support the exclusion of properties from being
 translated - all custom properties will automatically be fetched from their translated record on the database. This means
 you don't have to explicitly mark any custom properties as being translatable.
 
-The `[api:Translatable]` decorator applies only to the getCMSFields() method on DataObject or SiteTree, not to any fields 
+The [api:Translatable] decorator applies only to the getCMSFields() method on DataObject or SiteTree, not to any fields 
 added in overloaded getCMSFields() implementations. See Translatable->updateCMSFields() for details. By default, custom 
 fields in the CMS won't show an original readonly value on a translated record, although they will save correctly. You can
 attach this behaviour to custom fields by using Translatable_Transformation as shown below.
@@ -349,16 +349,16 @@ Example:
 
 ### Enabling the _t() function in templates 
 
-If you're looking to use [the _t() function](http://doc.silverstripe.com/doku.php?id=i18n#the_t_function) in template
+If you're looking to use [the _t() function] `http://doc.silverstripe.com/doku.php?id=i18n#the_t_function` in template
 files, you'll need to [set the i18n locale](/topics/translation#setting_the_i18n_locale) first. 
 
 (The reasoning is as follows: Translatable doesn't set the i18n locale. Historically these were two separate systems,
 but they're reasonably interchangeable for a front-end website. The distinction is mainly valid for the CMS, because you
-want the CMS to be in English (`[api:i18n]`), but edit pages in different languages (`[api:Translatable]`).)
+want the CMS to be in English ([api:i18n]), but edit pages in different languages ([api:Translatable]).)
 
 ### Migrating from 2.1 datamodel
 
-The datamodel of `[api:Translatable]` changed significantly between its original release in SilverStripe 2.1 and SilverStripe
+The datamodel of [api:Translatable] changed significantly between its original release in SilverStripe 2.1 and SilverStripe
 2.3.2. See our [discussion on the
 mailinglist](http://groups.google.com/group/silverstripe-dev/browse_thread/thread/91e26e1f78d3c1b4/bd276dd5bbc56283?lnk=gst&q=translatable#bd276dd5bbc56283).
 
@@ -370,13 +370,13 @@ To migrate a database that was built with SilverStripe 2.1.x or 2.2.x, follow th
 *  Run `http://mysite.com/dev/build`
 *  Run `http://mysite.com/dev/tasks/MigrateTranslatableTask`
 
-Please see the `[api:MigrateTranslatableTask]` for
+Please see the [api:MigrateTranslatableTask] for
 limitations of this migration task - not all your data will be preserved.
 
 
 ### Setting the i18n locale
 
-You can set the `[api:i18n]` locale value which is used to format dates, currencies and other regionally different values to
+You can set the [api:i18n] locale value which is used to format dates, currencies and other regionally different values to
 the same as your current page locale. 
 
 	:::php
@@ -393,7 +393,7 @@ the same as your current page locale.
 
 ### Adding a new locale
 
-The `[api:i18n]` logic has lookup tables for common locales in i18n::$common_locales, which is a subset of i18n::$all_locales.
+The [api:i18n] logic has lookup tables for common locales in i18n::$common_locales, which is a subset of i18n::$all_locales.
 If your locale is not present here, you can simply add it through `mysite/_config.php`:
 
 	:::php
@@ -404,8 +404,8 @@ This should e.g. enable you to use `$Locale.Nice` in template code.
 
 ## Related
 
-*  [translate.silverstripe.org](http://translate.silverstripe.org): Starting point for community-driven translation of the Silverstripe UI
+*  [translate.silverstripe.org] `http://translate.silverstripe.org`: Starting point for community-driven translation of the Silverstripe UI
 *  [i18n](i18n): Developer-level documentation of Silverstripe's i18n capabilities
-*  `[api:Translatable]`: DataObject-interface powering the website-content translations
-*  ["Translatable ModelAdmin" module](http://silverstripe.org/translatablemodeladmin-module/): An extension which allows
-translations of `[api:DataObject]`s inside `[api:ModelAdmin]`
+*  [api:Translatable]: DataObject-interface powering the website-content translations
+*  ["Translatable ModelAdmin" module] `http://silverstripe.org/translatablemodeladmin-module/`: An extension which allows
+translations of a [api:DataObject] inside [api:ModelAdmin]

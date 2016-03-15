@@ -10,8 +10,8 @@ core.
 
 Append the option and corresponding value to your URL in your browser's address bar.  You may find the [Firefox UrlParams extension](https://addons.mozilla.org/en-US/firefox/addon/1290) useful in order to debug a POST requests (Like Forms).
 
-    http://yoursite.com/page?option_name=value
-    http://yoursite.com/page?option_1=value&option_2=value
+    `http://yoursite.com/page?option_name=value`
+    `http://yoursite.com/page?option_1=value&option_2=value`
 
 ## Templates
 
@@ -29,7 +29,7 @@ Append the option and corresponding value to your URL in your browser's address 
  | isDev         | | 1      | | Put the site into [development mode](/topics/debugging), enabling debugging messages to the browser on a live server.  For security, you'll be asked to log in with an administrator log-in | 
  | isTest        | | 1      | | Put the site into [test mode](/topics/debugging), enabling debugging messages to the admin email and generic errors to the browser on a live server                                         | 
  | debug         | | 1      | | Show a collection of debugging information about the director / controller operation        |
- | debug_request | | 1      | | Show all steps of the request from initial `[api:HTTPRequest]` to `[api:Controller]` to Template Rendering  | 
+ | debug_request | | 1      | | Show all steps of the request from initial [api:HTTPRequest] to [api:Controller] to Template Rendering  | 
 
 ## Classes and Objects
 
@@ -69,7 +69,7 @@ Append the option and corresponding value to your URL in your browser's address 
 ## Security Redirects
 
 You can set an URL to redirect back to after a [Security](/topics/security) action.  See the section on [URL
-Redirections](security#redirect_back_to_another_page_after_login) for more information and examples.
+Redirections](reference/director/#redirection) for more information and examples.
 
  | URL Variable | | Values | | Description                                                          | 
  | ------------ | | ------ | | -----------                                                          | 
@@ -79,9 +79,9 @@ Redirections](security#redirect_back_to_another_page_after_login) for more infor
 
  | Site URL                                         | | Action                                                            | 
  | --------                                         | | ------                                                            | 
- | http://yoursite.com**/dev/build**                | | Rebuild the entire database and manifest, see below for additional URL Variables                                      | 
- | http://yoursite.com**/admin/publishall/**        | | Publish all pages on the site                                     | 
- | http://yoursite.com**/anypage/images/flush**     | | Creates new images for the page by deleting the resized ones and going back to the original to create new resized one | 
+ | `http://yoursite.com`**/dev/build**                | | Rebuild the entire database and manifest, see below for additional URL Variables                                      | 
+ | `http://yoursite.com`**/admin/publishall/**        | | Publish all pages on the site                                     | 
+ | `http://yoursite.com`**/anypage/images/flush**     | | Creates new images for the page by deleting the resized ones and going back to the original to create new resized one | 
 
 ###  /dev/build
 

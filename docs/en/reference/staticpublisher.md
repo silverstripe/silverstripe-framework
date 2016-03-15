@@ -5,7 +5,7 @@
 Many sites get too much traffic to justify dynamically sending every request.  Caching is needed. Static Publishing
 will generate static versions of your content (HTML) that can be served without ever hitting PHP or the Database.
 
-See `[api:StaticExporter]` for a less flexible, but easier way of building a local static cache from all of
+See [api:StaticExporter] for a less flexible, but easier way of building a local static cache from all of
 your pages.
 
 See [Partial-Caching](partial-caching) for a much more flexible way of building in caching without statically delivering 
@@ -121,7 +121,7 @@ Put this in mysite/_config.php.  This will create static content in a "cache/" s
 **sitedir** with the a subdirectory that you would like to serve the site from (for example, in your dev environment).
 
 [View .htaccess
-example](http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncsingleserver)
+example] `http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncsingleserver`
 
 *  **New for 2.4:** In 2.4, we use a simple PHP script, static-main.php, to control cache lookup.  This make the
 .htaccess update simpler.
@@ -238,7 +238,7 @@ It will serve requests from the cache, statically, if the cache file exists.  Re
 subdirectory that you would like to serve the site from (for example, in your dev environment).
 
 [View .htaccess
-example](http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncmultiservers)
+example] `http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncmultiservers`
 
 ## Cache Control 
 
@@ -257,12 +257,12 @@ To enable cache control, specify "php" instead of "html" in the RsyncMultiHostPu
 And use this slightly different .htaccess file. Make sure that index.php can be used as a directory index!
 
 [View .htaccess
-example](http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncwithphp)
+example] `http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncwithphp`
 
 ## Deployment
 
 Once you've set up your rewrite rules and defined which pages need caching, you can build the static HTML files. This is
-done by the `[api:RebuildStaticCacheTask]`
+done by the [api:RebuildStaticCacheTask]
 
 Execution via URL
 
@@ -281,8 +281,8 @@ the cache.
 
 ## Related
 
-*  `[api:StaticExporter]`
+*  [api:StaticExporter]
 *  [Partial-Caching](partial-caching)
 
 ## API Documentation
-*  `[api:StaticPublisher]`
+*  [api:StaticPublisher]

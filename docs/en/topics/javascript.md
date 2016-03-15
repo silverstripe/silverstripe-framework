@@ -9,9 +9,9 @@ practices can be applied to other libraries as well.
 
 ## File Inclusion
 
-SilverStripe-driven code should use the `[api:Requirements]` class to manage clientside dependencies like CSS and JavaScript
+SilverStripe-driven code should use the [api:Requirements] class to manage clientside dependencies like CSS and JavaScript
 files, rather than including `<script>` and `<link>` tags in your templates. This has the advantage that a registry
-of requirements can be built up from different places outside of the main controller, for example included `[api:FormField]`
+of requirements can be built up from different places outside of the main controller, for example included [api:FormField]
 instances.
 
 See [requirements](/reference/requirements) documentation.
@@ -123,7 +123,7 @@ Main advantages over simpler jQuery plugins are:
 *  Constructor/Destructor hooks
 *  Focus management and mouse interaction
 
-See the [official developer guide](http://jqueryui.com/docs/Developer_Guide) and other
+See the [official developer guide] `http://jqueryui.com/docs/Developer_Guide` and other
 [tutorials](http://bililite.com/blog/understanding-jquery-ui-widgets-a-tutorial/) to get started.
 
 Example: Highlighter
@@ -366,7 +366,7 @@ attributes, or the jQuery.metadata plugin). For returning status messages, pleas
 
 Only return evaluated JavaScript snippets if unavoidable. Most of the time you can just pass data around, and let the
 clientside react to changes appropriately without telling it directly through JavaScript in AJAX responses. Don't use
-the `[api:Form]` SilverStripe class, which is built solely around
+the [api:Form] SilverStripe class, which is built solely around
 this inflexible concept.
 
 Example: Autocomplete input field loading page matches through AJAX
@@ -438,7 +438,7 @@ JavaScript:
 
 Although they are the minority of cases, there are times when a simple HTML fragment isn't enough.  For example, if you
 have server side code that needs to trigger the update of a couple of elements in the CMS left-hand tree, it would be
-inefficient to send back the HTML of entire tree. SilverStripe can serialize to and from JSON (see the `[api:Convert]` class), and jQuery deals very well with it through
+inefficient to send back the HTML of entire tree. SilverStripe can serialize to and from JSON (see the [api:Convert] class), and jQuery deals very well with it through
 [jQuery.getJSON()](http://docs.jquery.com/Ajax/jQuery.getJSON#urldatacallback), as long as the HTTP content-type is
 properly set.
 
@@ -503,12 +503,12 @@ Documentation in JavaScript usually resembles the JavaDoc standard, although the
 flexibility of the language it can be hard to generate automated documentation, particularly with the predominant usage
 of closure constructs in jQuery and jQuery.entwine.
 
-To generate documentation for SilverStripe code, use [JSDoc toolkit](http://code.google.com/p/jsdoc-toolkit/) (see
-[reference of supported tags](http://code.google.com/p/jsdoc-toolkit/wiki/TagReference)). For more class-oriented
-JavaScript, take a look at the [jsdoc cookbook](http://code.google.com/p/jsdoc-toolkit/wiki/CookBook). The `@lends`
+To generate documentation for SilverStripe code, use [JSDoc toolkit] `http://code.google.com/p/jsdoc-toolkit/` (see
+[reference of supported tags] `http://code.google.com/p/jsdoc-toolkit/wiki/TagReference`). For more class-oriented
+JavaScript, take a look at the [jsdoc cookbook] `http://code.google.com/p/jsdoc-toolkit/wiki/CookBook`. The `@lends`
 and `@borrows` properties are particularly useful for documenting jQuery-style code.
 
-JSDoc-toolkit is a command line utility, see [usage](http://code.google.com/p/jsdoc-toolkit/wiki/CommandlineOptions).
+JSDoc-toolkit is a command line utility, see [usage] `http://code.google.com/p/jsdoc-toolkit/wiki/CommandlineOptions`.
 
 Example: jQuery.entwine
 
@@ -566,7 +566,7 @@ Example: jQuery.entwine
 It is important to verify that your code actually does what it says, and the best way to ensure this are **automated
 tests**. For jQuery, we use two different tools with different uses: **unit testing** with
 [QUnit](http://docs.jquery.com/QUnit) (also used by the jQuery team for the core libraries), and **behaviour driven
-testing** with [JSpec](http://visionmedia.github.com/jspec/). There are overlaps between the two solutions, if in doubt
+testing** with [JSpec] `http://visionmedia.github.com/jspec/`. There are overlaps between the two solutions, if in doubt
 start with JSpec, as it provides a much more powerful testing framework.
 
 Example: QUnit test (from [jquery.com](http://docs.jquery.com/QUnit#Using_QUnit)):
@@ -579,7 +579,7 @@ Example: QUnit test (from [jquery.com](http://docs.jquery.com/QUnit#Using_QUnit)
 	});
 
 
-Example: JSpec Shopping cart test (from [visionmedia.github.com](http://visionmedia.github.com/jspec/))
+Example: JSpec Shopping cart test (from [visionmedia.github.com] `http://visionmedia.github.com/jspec/`)
 
 	describe 'ShoppingCart'
 	  before_each 
@@ -646,4 +646,4 @@ afraid to experiment with using other approaches.
 * [css](css)
 * [Unobtrusive Javascript](http://www.onlinetools.org/articles/unobtrusivejavascript/chapter1.html)
 * [Quirksmode: In-depth Javascript Resources](http://www.quirksmode.org/resources.html)
-* [behaviour.js documentation](http://open.silverstripe.org/browser/modules/sapphire/branches/2.4/thirdparty/behaviour/README.md)
+* [behaviour.js documentation] `http://open.silverstripe.org/browser/modules/sapphire/branches/2.4/thirdparty/behaviour/README.md`

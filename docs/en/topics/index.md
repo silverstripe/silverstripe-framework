@@ -33,4 +33,4 @@ It is where most documentation should live, and is the natural "second step" aft
 
 ## Feedback
 
-If you have a topic you would like covered in these section please ask for it on our [Bug Tracker](http://open.silverstripe.org)
+If you have a topic you would like covered in these section please ask for it on our [Bug Tracker] `http://open.silverstripe.org`

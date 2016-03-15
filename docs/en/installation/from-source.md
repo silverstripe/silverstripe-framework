@@ -39,7 +39,7 @@ These options aren't very clear cut, you can mix-and-match approaches to suit yo
 ### Requirements ###
 
  * A **git client** to check out the core repositories, see ["Getting started with Git and Github"](http://help.github.com/).
- * A  **webserver+database environment** to run SilverStripe (see [server requirements](/misc/server-requirements)).
+ * A  **webserver+database environment** to run SilverStripe (see [server requirements](server-requirements)).
  * The **php commandline utility** (to run scripts in the `tools/` folder)
  * (optional) **Piston** ([website](http://piston.rubyforge.org)): A thirdparty tool to manage files from an external repository. It is our recommended way to start your own project, and still provide an easy way to update from our repository. You will need Ruby and the ["Rubygems"](http://rubygems.org/) package manager to install it: `gem install piston`
 Note for Windows users: The installation process assumes a Linux/Unix/OSX system.
@@ -256,7 +256,7 @@ or as flat files through tickets or emails).
 
 ## Manual installation of other modules ##
 
-Modules listed on [silverstripe.org/modules](http://silverstripe.org/modules) can be hosted
+Modules listed on [silverstripe.org/modules] `http://silverstripe.org/modules` can be hosted
 in any version control system (typically subversion or git). Please read the module
 page for source code locations and installation instructions. The general process of
 [module installation](/topics/modules) is documented as well.

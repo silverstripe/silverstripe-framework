@@ -1,4 +1,4 @@
-# Tutorial 1 - Building a Basic Site
+# Building a Basic Site
 
 ## Overview
 
@@ -46,7 +46,7 @@ When designing your site you should only need to modify the *mysite*, *themes* a
 
 ##  Using the CMS
 
-The CMS is the area in which you can manage your site content. You can access the cms at http://localhost/admin. You
+The CMS is the area in which you can manage your site content. You can access the cms at `http://localhost/admin`. You
 will be presented with a login screen. You can login with the details you provided at installation. After logging in you
 should be greeted with the CMS, pictured below (we've entered some test content).
 
@@ -76,7 +76,7 @@ behavior. We will explain page types in more depth as we progress; for now, make
 **SilverStripe's virtual URLs**
 
 While you are on the draft or live SilverStripe site, you may notice the URLs point to files that don't exist, e.g.
-http://localhost/contact. SilverStripe uses the URL field on the Meta-Data tab of the editor to look up the appropriate
+`http://localhost/contact`. SilverStripe uses the URL field on the Meta-Data tab of the editor to look up the appropriate
 page in the database.
 
 ![](_images/url.jpg)
@@ -116,7 +116,7 @@ quickly between the CMS and the draft and published version of your page.
 **Flushing the cache**
 
 Whenever we edit a template file, we need to append *?flush=1* onto the end of the URL, e.g.
-http://localhost/home/?flush=1. SilverStripe stores template files in a cache for quicker load times. Whenever there are
+`http://localhost/home/?flush=1`. SilverStripe stores template files in a cache for quicker load times. Whenever there are
 changes to the template, we must flush the cache in order for the changes to take effect.
 
 ## Inserting the page title
@@ -332,7 +332,7 @@ Create a new file *HomePage.php* in *mysite/code*. Copy the following code into 
 
 
 Every page type also has a database table corresponding to it. Every time we modify the database, we need to rebuild it.
-We can do this by going to [http://localhost/dev/build?flush=1](http://localhost/dev/build?flush=1). It may take a
+We can do this by going to `http://localhost/dev/build?flush=1`. It may take a
 moment, so be patient. This add tables and fields needed by your site, and modifies any structures that have changed. It
 does this non-destructively - it will never delete your data.
 
@@ -466,15 +466,15 @@ to build a basic but fully functional site. You have also been briefly introduce
 correspond to templates and subtemplates. By using these templates, you have seen how to customize the site content
 according to the page type of the page you are displaying.
 
-In the next tutorial, [Extending a Basic Site](2-extending-a-basic-site), we will explore page types on a
+In the next tutorial, [Extending a Basic Site](extending-a-basic-site), we will explore page types on a
 deeper level, and see how you can customize your own page types to extend SilverStripe to do much more interesting
 things.
 
-[Next Tutorial >>](2-extending-a-basic-site)
+[Next Tutorial >>](extending-a-basic-site)
 
 ## Books on SilverStripe 
 
-*  [Official book on SilverStripe in English](http://www.silverstripe.org/silverstripe-book).
-*  [Official book on SilverStripe in German](http://www.silverstripe.org/das-silverstripe-buch).
+*  [Official book on SilverStripe in English] `http://www.silverstripe.org/silverstripe-book`.
+*  [Official book on SilverStripe in German] `http://www.silverstripe.org/das-silverstripe-buch`.
 
 ![](_images/silverstripe-cms-book-front-cover-design-june2009preview.jpg)
