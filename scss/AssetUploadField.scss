@@ -128,11 +128,11 @@ body.cms.ss-uploadfield-edit-iframe {
 			width: 40px;
 			overflow: hidden;
 			z-index: 1;
-			.no-preview{
-				display:block;
-				height:100%;
-				width:100%;
-				background:url('../images/icons/document.png') 2px 0px no-repeat;
+			// Prevent icons touching edge
+			img[src$="_32.png"] {
+			    width: auto;
+			    height: 26px;
+			    margin: 2px 0 0 2px;
 			}
 		}
 		.ss-uploadfield-item-info {
