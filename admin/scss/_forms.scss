@@ -324,7 +324,7 @@ form.small .field, .field.small {
 	}
 
 	.chzn-container-single .chzn-single  {
-		height: 30px;
+		height: 32px;
 		line-height: 30px; /* not relative, as then we'd had to redo most of chzn */
 		font-size: $font-base-size;
 		background-image: linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef);
@@ -428,7 +428,7 @@ form.small .field, .field.small {
 	}
 
 	.Actions {
-		min-height: 46px;
+		min-height: 30px;
 		overflow: auto;
 		padding: $grid-x $grid-y * 1.5;
 	}
