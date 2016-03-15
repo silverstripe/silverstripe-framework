@@ -48,6 +48,7 @@ ShortcodeParser::get('default')->register('sitetree_link', array('SiteTree', 'li
  */
 Object::useCustomClass('SSDatetime', 'SS_Datetime', true);
 Object::useCustomClass('Datetime',   'SS_Datetime', true);
+Object::useCustomClass('Transliterator', 'SS_Transliterator', true);
 
 
 /**
