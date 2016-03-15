@@ -1156,6 +1156,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			onclick: function(e) {
 				var urlField = this.getURLField(), container = this.closest('.CompositeField'), form = this.closest('form');
+				var val = urlField.val();
 
 				if (urlField.validate()) {
 					container.addClass('loading');
