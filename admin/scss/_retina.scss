@@ -16,6 +16,9 @@
 	background-image: sprite-url($sprite);
 	background-size: ceil(image-width(sprite-path($sprite)) / 2) auto;
 
+	&.icon-campaignadmin {
+		background-position: 0 round(nth(sprite-position($sprite, "collection"), 2) / 2);
+	}
 	&.icon-assetadmin {
 		background-position: 0 round(nth(sprite-position($sprite, "picture"), 2) / 2);
 	}
@@ -289,7 +292,11 @@
 			height: 16px;
 	        @extend .retina-menu-icons-16x16-2x;
 
-	        &.icon-assetadmin {
+			&.icon-campaignadmin {
+	    		@include retina-sprite($menu-icons-16x16-2x-collection);
+				display: inline-block;
+	    	}
+			&.icon-assetadmin {
 	    		@include retina-sprite($menu-icons-16x16-2x-picture);
 				display: inline-block;
 	    	}
