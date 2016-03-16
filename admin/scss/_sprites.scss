@@ -68,6 +68,9 @@
 		height: 24px;
         @extend .icon-menu-icons-24x24;
 
+		&.icon-campaignadmin {
+			@include sprite($menu-icons-24x24-collection, inline-block);
+		}
         &.icon-assetadmin {
     		@include sprite($menu-icons-24x24-picture, inline-block);
     	}
@@ -99,6 +102,9 @@
 		height: 16px;
         @extend .icon-menu-icons-16x16;
 
+		&.icon-campaignadmin {
+			@include sprite($menu-icons-16x16-collection, inline-block);
+		}
         &.icon-assetadmin {
     		@include sprite($menu-icons-16x16-picture, inline-block);
     	}

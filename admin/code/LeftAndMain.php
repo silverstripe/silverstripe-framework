@@ -481,6 +481,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
 			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/leaktools.js');
 		}
+
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/boot.js');
 		
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/bootstrap/bootstrap.css');
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
