@@ -11,3 +11,5 @@ require('../legacy/LeftAndMain.BatchActions.js');
 require('../legacy/LeftAndMain.FieldHelp.js');
 require('../legacy/LeftAndMain.FieldDescriptionToggle.js');
 require('../legacy/LeftAndMain.TreeDropdownField.js');
+require('../legacy/AddToCampaignForm.js');
+

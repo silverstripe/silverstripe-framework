@@ -2043,6 +2043,110 @@ body.cms-dialog {
 }
 
 /** --------------------------------------------
+ * Add to campaign dialog
+ * -------------------------------------------- */
+
+.add-to-campaign__dialog {
+	padding: 0;
+	overflow: hidden;
+
+	.add-to-campaign__header {
+		@extend .cms-content-header;
+
+		padding: 12px 16px;
+		width: 100%;
+		height: 52px;
+		margin: 0;
+		border: 0;
+
+		h3 {
+			margin: 0;
+			line-height: 28px;
+		}
+	}
+
+	.add-to-campaign__content {
+		padding: 12px 16px;
+		margin: 0;
+		border: 0;
+	}
+
+	.add-to-campaign__action {
+		@extend .ss-ui-action-constructive;
+	}
+
+	.Actions {
+		padding: 0 16px;
+	}
+
+	.chosen-results > li {
+		padding: $spacer-y/1.5 $spacer-x;
+	}
+
+	.disabled-result {
+		font-style: italic;
+
+		&::after {
+			font-style: normal;
+			content: 'Already contains item';
+			color: $color-text-blue-link;
+			margin-left: $spacer-x;
+			float: right;
+		}
+	}
+
+	@keyframes add-to-campaign--slideup {
+		from {
+			bottom: -100%
+		}
+		to {
+			bottom: 0
+		}
+	}
+
+	.add-to-campaign__response {
+		position: absolute;
+		bottom: 0;
+		height: 100%;
+		left: 0;
+		width: 100%;
+		animation:add-to-campaign--slideup 2s 1;
+		background: white;
+
+		display: table;
+
+		span {
+			display: table-cell;
+			text-align: center;
+			vertical-align: middle;
+			padding-bottom: $spacer-y;
+
+			&::before {
+				font-size: 48px; line-height: 40px;
+				display: block;
+				padding-bottom: $spacer-y;
+			}
+		}
+	}
+
+	.add-to-campaign__response--good {
+		span::before {
+			content: "☺";
+			color: $brand-success;
+		}
+	}
+
+	.add-to-campaign__response--error {
+		span::before {
+			/* This is a sad face emoticon. Some fonts don't carry it. @todo: replace or test in all browsers */
+			content: "☹";
+			color: $brand-danger;
+		}
+	}
+}
+
+
+/** --------------------------------------------
  * Search forms (used in AssetAdmin, ModelAdmin, etc)
  * -------------------------------------------- */
 .cms-search-form {
