@@ -15,7 +15,7 @@ class FileTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 		$this->logInWithPermission('ADMIN');
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 
 		// Set backend root to /ImageTest
 		AssetStoreTest_SpyStore::activate('FileTest');
@@ -242,7 +242,7 @@ class FileTest extends SapphireTest {
 		// Rename
 		$file->Name = 'renamed.txt';
 		$newTuple = $oldTuple;
-		$newTuple['Filename'] = $file->getFilename();
+		$newTuple['Filename'] = $file->generateFilename();
 
 		// Before write()
 		$this->assertTrue(
@@ -287,7 +287,7 @@ class FileTest extends SapphireTest {
 		// set ParentID
 		$file->ParentID = $subfolder->ID;
 		$newTuple = $oldTuple;
-		$newTuple['Filename'] = $file->getFilename();
+		$newTuple['Filename'] = $file->generateFilename();
 
 		// Before write()
 		$this->assertTrue(

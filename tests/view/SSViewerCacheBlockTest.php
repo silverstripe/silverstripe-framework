@@ -145,11 +145,11 @@ class SSViewerCacheBlockTest extends SapphireTest {
 
 	public function testVersionedCache() {
 
-		$origStage = Versioned::current_stage();
+		$origStage = Versioned::get_stage();
 
 		// Run without caching in stage to prove data is uncached
 		$this->_reset(false);
-		Versioned::reading_stage("Stage");
+		Versioned::set_stage(Versioned::DRAFT);
 		$data = new SSViewerCacheBlockTest_VersionedModel();
 		$data->setEntropy('default');
 		$this->assertEquals(
@@ -165,7 +165,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 
 		// Run without caching in live to prove data is uncached
 		$this->_reset(false);
-		Versioned::reading_stage("Live");
+		Versioned::set_stage(Versioned::LIVE);
 		$data = new SSViewerCacheBlockTest_VersionedModel();
 		$data->setEntropy('default');
 		$this->assertEquals(
@@ -183,7 +183,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		// changing the versioned reading mode doesn't cache between modes, but it does
 		// within them
 		$this->_reset(true);
-		Versioned::reading_stage("Stage");
+		Versioned::set_stage(Versioned::DRAFT);
 		$data = new SSViewerCacheBlockTest_VersionedModel();
 		$data->setEntropy('default');
 		$this->assertEquals(
@@ -197,7 +197,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 			$this->_runtemplate('<% cached %>$Inspect<% end_cached %>', $data)
 		);
 
-		Versioned::reading_stage('Live');
+		Versioned::set_stage(Versioned::LIVE);
 		$data = new SSViewerCacheBlockTest_VersionedModel();
 		$data->setEntropy('first');
 		$this->assertEquals(
@@ -211,7 +211,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 			$this->_runtemplate('<% cached %>$Inspect<% end_cached %>', $data)
 		);
 
-		Versioned::reading_stage($origStage);
+		Versioned::set_stage($origStage);
 	}
 
 	/**

@@ -15,7 +15,7 @@ class AssetControlExtensionTest extends SapphireTest {
 		parent::setUp();
 
 		// Set backend and base url
-		\Versioned::reading_stage('Stage');
+		\Versioned::set_stage(Versioned::DRAFT);
 		AssetStoreTest_SpyStore::activate('AssetControlExtensionTest');
 		$this->logInWithPermission('ADMIN');
 
@@ -46,7 +46,7 @@ class AssetControlExtensionTest extends SapphireTest {
 	}
 
 	public function testFileDelete() {
-		\Versioned::reading_stage('Stage');
+		\Versioned::set_stage(Versioned::DRAFT);
 
 		/** @var AssetControlExtensionTest_VersionedObject $object1 */
 		$object1 = AssetControlExtensionTest_VersionedObject::get()
@@ -120,7 +120,7 @@ class AssetControlExtensionTest extends SapphireTest {
 	 * Test files being replaced
 	 */
 	public function testReplaceFile() {
-		\Versioned::reading_stage('Stage');
+		\Versioned::set_stage(Versioned::DRAFT);
 
 		/** @var AssetControlExtensionTest_VersionedObject $object1 */
 		$object1 = AssetControlExtensionTest_VersionedObject::get()

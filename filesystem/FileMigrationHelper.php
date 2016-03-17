@@ -34,8 +34,8 @@ class FileMigrationHelper extends Object {
 
 		// Loop over all files
 		$count = 0;
-		$originalState = \Versioned::get_reading_mode();
-		\Versioned::reading_stage('Stage');
+		$originalState = Versioned::get_reading_mode();
+		Versioned::set_stage(Versioned::DRAFT);
 		$filenameMap = $this->getFilenameArray();
 		foreach($this->getFileQuery() as $file) {
 			// Get the name of the file to import
@@ -45,7 +45,7 @@ class FileMigrationHelper extends Object {
 				$count++;
 			}
 		}
-		\Versioned::set_reading_mode($originalState);
+		Versioned::set_reading_mode($originalState);
 		return $count;
 	}
 
@@ -54,7 +54,7 @@ class FileMigrationHelper extends Object {
 	 *
 	 * @param string $base Absolute base path (parent of assets folder)
 	 * @param File $file
-	 * @param type $legacyFilename
+	 * @param string $legacyFilename
 	 * @return bool True if this file is imported successfully
 	 */
 	protected function migrateFile($base, File $file, $legacyFilename) {
@@ -64,8 +64,9 @@ class FileMigrationHelper extends Object {
 			return false;
 		}
 
+
 		// Copy local file into this filesystem
-		$filename = $file->getFilename();
+		$filename = $file->generateFilename();
 		$result = $file->setFromLocalFile(
 			$path, $filename, null, null,
 			array('conflict' => AssetStore::CONFLICT_OVERWRITE)
@@ -73,7 +74,7 @@ class FileMigrationHelper extends Object {
 
 		// Move file if the APL changes filename value
 		if($result['Filename'] !== $filename) {
-			$this->setFilename($result['Filename']);
+			$file->setFilename($result['Filename']);
 		}
 
 		// Save and publish

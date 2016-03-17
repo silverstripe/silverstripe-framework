@@ -19,7 +19,7 @@ class DataDifferencerTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 
 		// Set backend root to /DataDifferencerTest
 		AssetStoreTest_SpyStore::activate('DataDifferencerTest');

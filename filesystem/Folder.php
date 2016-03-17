@@ -233,7 +233,7 @@ class Folder extends File {
 	}
 
 	public function getFilename() {
-		return parent::getFilename() . '/';
+		return parent::generateFilename() . '/';
 	}
 
 	/**
@@ -258,9 +258,22 @@ class Folder extends File {
 	public function onAfterWrite() {
 		parent::onAfterWrite();
 
-		// Ensure that children loading $this->Parent() load the refreshed record
-		$this->flushCache();
+		// No publishing UX for folders, so just cascade changes live
+		if(Versioned::get_stage() === Versioned::DRAFT) {
+			$this->publish(Versioned::DRAFT, Versioned::LIVE);
+		}
+
+		// Update draft version of all child records
 		$this->updateChildFilesystem();
+	}
+
+	public function onAfterDelete() {
+		parent::onAfterDelete();
+
+		// Cascade deletions to live
+		if(Versioned::get_stage() === Versioned::DRAFT) {
+			$this->deleteFromStage(Versioned::LIVE);
+		}
 	}
 
 	public function updateFilesystem() {
@@ -278,8 +291,14 @@ class Folder extends File {
 	 * Update filesystem of all children
 	 */
 	public function updateChildFilesystem() {
+		// Don't synchronise on live (rely on publishing instead)
+		if(Versioned::get_stage() === Versioned::LIVE) {
+			return;
+		}
+
+		$this->flushCache();
 		// Writing this record should trigger a write (and potential updateFilesystem) on each child
-		foreach($this->AllChildren() as $child) {
+		foreach ($this->AllChildren() as $child) {
 			$child->write();
 		}
 	}

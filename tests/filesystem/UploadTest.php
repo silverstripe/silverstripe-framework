@@ -10,7 +10,7 @@ class UploadTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 		AssetStoreTest_SpyStore::activate('UploadTest');
 	}
 

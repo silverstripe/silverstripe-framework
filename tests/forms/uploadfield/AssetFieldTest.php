@@ -16,7 +16,7 @@ class AssetFieldTest extends FunctionalTest {
 		parent::setUp();
 
 		$this->logInWithPermission('ADMIN');
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 
 		// Set backend root to /AssetFieldTest
 		AssetStoreTest_SpyStore::activate('AssetFieldTest');

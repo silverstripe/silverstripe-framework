@@ -184,7 +184,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals($allPageIDs, $allPages->column('ID'));
 
 		// Check that this still works if we switch to reading the other stage
-		Versioned::reading_stage("Live");
+		Versioned::set_stage(Versioned::LIVE);
 		$allPages = Versioned::get_including_deleted("VersionedTest_DataObject", "\"ParentID\" = 0",
 			"\"VersionedTest_DataObject\".\"ID\" ASC");
 		$this->assertEquals(array("Page 1", "Page 2", "Page 3", "Subclass Page 1"), $allPages->column('Title'));
@@ -312,9 +312,9 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testWritingNewToStage() {
-		$origStage = Versioned::current_stage();
+		$origStage = Versioned::get_stage();
 
-		Versioned::reading_stage("Stage");
+		Versioned::set_stage(Versioned::DRAFT);
 		$page = new VersionedTest_DataObject();
 		$page->Title = "testWritingNewToStage";
 		$page->URLSegment = "testWritingNewToStage";
@@ -331,7 +331,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals(1, $stage->count());
 		$this->assertEquals($stage->First()->Title, 'testWritingNewToStage');
 
-		Versioned::reading_stage($origStage);
+		Versioned::set_stage($origStage);
 	}
 
 	/**
@@ -341,9 +341,9 @@ class VersionedTest extends SapphireTest {
 	 * the VersionedTest_DataObject record though.
 	 */
 	public function testWritingNewToLive() {
-		$origStage = Versioned::current_stage();
+		$origStage = Versioned::get_stage();
 
-		Versioned::reading_stage("Live");
+		Versioned::set_stage(Versioned::LIVE);
 		$page = new VersionedTest_DataObject();
 		$page->Title = "testWritingNewToLive";
 		$page->URLSegment = "testWritingNewToLive";
@@ -360,7 +360,7 @@ class VersionedTest extends SapphireTest {
 		));
 		$this->assertEquals(0, $stage->count());
 
-		Versioned::reading_stage($origStage);
+		Versioned::set_stage($origStage);
 	}
 
 	/**
@@ -401,12 +401,108 @@ class VersionedTest extends SapphireTest {
 	 * Test that SQLSelect::queriedTables() applies the version-suffixes properly.
 	 */
 	public function testQueriedTables() {
-		Versioned::reading_stage('Live');
+		Versioned::set_stage(Versioned::LIVE);
 
 		$this->assertEquals(array(
 			'VersionedTest_DataObject_Live',
 			'VersionedTest_Subclass_Live',
 		), DataObject::get('VersionedTest_Subclass')->dataQuery()->query()->queriedTables());
+	}
+
+	/**
+	 * Virtual "sleep" that doesn't actually slow execution, only advances SS_DateTime::now()
+	 *
+	 * @param int $minutes
+	 */
+	protected function sleep($minutes) {
+		$now = SS_Datetime::now();
+		$date = DateTime::createFromFormat('Y-m-d H:i:s', $now->getValue());
+		$date->modify("+{$minutes} minutes");
+		SS_Datetime::set_mock_now($date->format('Y-m-d H:i:s'));
+	}
+
+	/**
+	 * Tests records selected by specific version
+	 */
+	public function testGetVersion() {
+		// Create a few initial versions to ensure this version
+		// doesn't clash with child versions
+		$this->sleep(1);
+		/** @var VersionedTest_DataObject $page2 */
+		$page2 = $this->objFromFixture('VersionedTest_DataObject', 'page2');
+		$page2->Title = 'dummy1';
+		$page2->write();
+		$this->sleep(1);
+		$page2->Title = 'dummy2';
+		$page2->write();
+		$this->sleep(1);
+		$page2->Title = 'Page 2 - v1';
+		$page2->write();
+		$version1Date = $page2->LastEdited;
+		$version1 = $page2->Version;
+
+		// Create another version where this object and some
+		// child records have been modified
+		$this->sleep(1);
+		/** @var VersionedTest_DataObject $page2a */
+		$page2a = $this->objFromFixture('VersionedTest_DataObject', 'page2a');
+		$page2a->Title = 'Page 2a - v2';
+		$page2a->write();
+		$this->sleep(1);
+		$page2->Title = 'Page 2 - v2';
+		$page2->write();
+		$version2Date = $page2->LastEdited;
+		$version2 = $page2->Version;
+		$this->assertGreaterThan($version1, $version2);
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Page 2a - v2'],
+				['Title' => 'Page 2b'],
+			],
+			$page2->Children()
+		);
+
+		// test selecting v1
+		/** @var VersionedTest_DataObject $page2v1 */
+		$page2v1 = Versioned::get_version('VersionedTest_DataObject', $page2->ID, $version1);
+		$this->assertEquals('Page 2 - v1', $page2v1->Title);
+
+		// When selecting v1, related records should by filtered by
+		// the modified date of that version
+		$archiveParms = [
+			'Versioned.mode' => 'archive',
+			'Versioned.date' => $version1Date
+		];
+		$this->assertEquals($archiveParms, $page2v1->getInheritableQueryParams());
+		$this->assertArraySubset($archiveParms, $page2v1->Children()->getQueryParams());
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Page 2a'],
+				['Title' => 'Page 2b'],
+			],
+			$page2v1->Children()
+		);
+
+		// When selecting v2, we get the same as on stage
+		/** @var VersionedTest_DataObject $page2v2 */
+		$page2v2 = Versioned::get_version('VersionedTest_DataObject', $page2->ID, $version2);
+		$this->assertEquals('Page 2 - v2', $page2v2->Title);
+
+		// When selecting v2, related records should by filtered by
+		// the modified date of that version
+		$archiveParms = [
+			'Versioned.mode' => 'archive',
+			'Versioned.date' => $version2Date
+		];
+		$this->assertEquals($archiveParms, $page2v2->getInheritableQueryParams());
+		$this->assertArraySubset($archiveParms, $page2v2->Children()->getQueryParams());
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Page 2a - v2'],
+				['Title' => 'Page 2b'],
+			],
+			$page2v2->Children()
+		);
 	}
 
 	public function testGetVersionWhenClassnameChanged() {
@@ -593,7 +689,7 @@ class VersionedTest extends SapphireTest {
 			'Does not contain separate table with _Stage suffix'
 		);
 
-		Versioned::reading_stage("Stage");
+		Versioned::set_stage(Versioned::DRAFT);
 		$obj = new VersionedTest_SingleStage(array('Name' => 'MyObj'));
 		$obj->write();
 		$this->assertNotNull(
@@ -601,7 +697,7 @@ class VersionedTest extends SapphireTest {
 			'Writes to and reads from default stage if its set explicitly'
 		);
 
-		Versioned::reading_stage("Live");
+		Versioned::set_stage(Versioned::LIVE);
 		$obj = new VersionedTest_SingleStage(array('Name' => 'MyObj'));
 		$obj->write();
 		$this->assertNotNull(
@@ -617,14 +713,14 @@ class VersionedTest extends SapphireTest {
 		$originalMode = Versioned::get_reading_mode();
 
 		// Generate staging record and retrieve it from stage in live mode
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 		$obj = new VersionedTest_Subclass();
 		$obj->Name = 'bob';
 		$obj->ExtraField = 'Field Value';
 		$obj->write();
 		$objID = $obj->ID;
 		$filter = sprintf('"VersionedTest_DataObject"."ID" = \'%d\'', Convert::raw2sql($objID));
-		Versioned::reading_stage('Live');
+		Versioned::set_stage(Versioned::LIVE);
 
 		// Check fields are unloaded prior to access
 		$objLazy = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', $filter, false);
@@ -831,7 +927,7 @@ class VersionedTest extends SapphireTest {
 
 		// Test that all (and only) public pages are viewable in stage mode
 		Session::clear("loggedInAs");
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 		$public1 = Versioned::get_one_by_stage('VersionedTest_PublicStage', 'Stage', array('"ID"' => $public1ID));
 		$public2 = Versioned::get_one_by_stage('VersionedTest_PublicViaExtension', 'Stage', array('"ID"' => $public2ID));
 		$private = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', array('"ID"' => $privateID));
@@ -841,7 +937,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertFalse($private->canView());
 
 		// Adjusting the current stage should not allow objects loaded in stage to be viewable
-		Versioned::reading_stage('Live');
+		Versioned::set_stage(Versioned::LIVE);
 		$this->assertTrue($public1->canView());
 		$this->assertTrue($public2->canView());
 		$this->assertFalse($private->canView());
@@ -853,31 +949,30 @@ class VersionedTest extends SapphireTest {
 		$this->assertTrue($privateLive->canView());
 
 		// But if the private version becomes different to the live version, it's once again disallowed
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 		$private->Title = 'Secret Title';
 		$private->write();
 		$this->assertFalse($private->canView());
 		$this->assertTrue($privateLive->canView());
 
 		// And likewise, viewing a live page (when mode is draft) should be ok
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 		$this->assertFalse($private->canView());
 		$this->assertTrue($privateLive->canView());
 
 		// Logging in as admin should allow all permissions
 		$this->logInWithPermission('ADMIN');
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 		$this->assertTrue($public1->canView());
 		$this->assertTrue($public2->canView());
 		$this->assertTrue($private->canView());
 	}
 
-
 	public function testCanViewStage() {
 		$public = $this->objFromFixture('VersionedTest_PublicStage', 'public1');
 		$private = $this->objFromFixture('VersionedTest_DataObject', 'page1');
 		Session::clear("loggedInAs");
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 
 		// Test that all (and only) public pages are viewable in stage mode
 		// Unpublished records are not viewable in live regardless of permissions
@@ -909,6 +1004,10 @@ class VersionedTest extends SapphireTest {
 
 
 /**
+ * @method VersionedTest_DataObject Parent()
+ * @method HasManyList Children()
+ * @method ManyManyList Related()
+ *
  * @package framework
  * @subpackage tests
  */
@@ -916,19 +1015,23 @@ class VersionedTest_DataObject extends DataObject implements TestOnly {
 	private static $db = array(
 		"Name" => "Varchar",
 		'Title' => 'Varchar',
-		'Content' => 'HTMLText'
+		'Content' => 'HTMLText',
 	);
 
 	private static $extensions = array(
-		"Versioned('Stage', 'Live')"
+		"Versioned('Stage', 'Live')",
 	);
 
 	private static $has_one = array(
-		'Parent' => 'VersionedTest_DataObject'
+		'Parent' => 'VersionedTest_DataObject',
+	);
+
+	private static $has_many = array(
+		'Children' => 'VersionedTest_DataObject',
 	);
 
 	private static $many_many = array(
-		'Related' => 'VersionedTest_RelatedWithoutVersion'
+		'Related' => 'VersionedTest_RelatedWithoutVersion',
 	);
 
 
@@ -948,7 +1051,7 @@ class VersionedTest_WithIndexes extends DataObject implements TestOnly {
 		'UniqS' => 'Int',
 	);
 	private static $extensions = array(
-		"Versioned('Stage', 'Live')"
+		"Versioned"
 	);
 	private static $indexes = array(
 		'UniqS_idx' => 'unique ("UniqS")',
@@ -1007,7 +1110,7 @@ class VersionedTest_SingleStage extends DataObject implements TestOnly {
 	);
 
 	private static $extensions = array(
-		'Versioned("Stage")'
+		'Versioned("Versioned")'
 	);
 }
 
@@ -1020,7 +1123,7 @@ class VersionedTest_PublicStage extends DataObject implements TestOnly {
 	);
 
 	private static $extensions = array(
-		"Versioned('Stage', 'Live')"
+		"Versioned"
 	);
 
 	public function canView($member = null) {
@@ -1055,7 +1158,7 @@ class VersionedTest_PublicViaExtension extends DataObject implements TestOnly {
 	);
 
 	private static $extensions = array(
-		"Versioned('Stage', 'Live')",
+		"Versioned",
 		"VersionedTest_PublicExtension"
 	);
 }

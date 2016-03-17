@@ -748,10 +748,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		if(class_exists($row['RecordClassName'])) {
 			$class = $row['RecordClassName'];
 		}
-		$item = Injector::inst()->create($class, $row, false, $this->model);
 
-		//set query params on the DataObject to tell the lazy loading mechanism the context the object creation context
-		$item->setSourceQueryParams($this->getQueryParams());
+		$item = Injector::inst()->create($class, $row, false, $this->model, $this->getQueryParams());
 
 		return $item;
 	}
