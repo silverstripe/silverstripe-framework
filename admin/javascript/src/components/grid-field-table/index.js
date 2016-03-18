@@ -1,16 +1,14 @@
 import React from 'react';
 import SilverStripeComponent from 'silverstripe-component';
 
-class GridFieldComponent extends SilverStripeComponent {
+class GridFieldTableComponent extends SilverStripeComponent {
 
     render() {
         return (
-            <table className='grid-field-component [ table ]'>
+            <ul className='grid-field-table-component [ list-group ]'>
                 {this.generateHeader()}
-                <tbody>
-                    {this.generateRows()}
-                </tbody>
-            </table>
+                {this.generateRows()}
+            </ul>
         );
     }
 
@@ -56,10 +54,10 @@ class GridFieldComponent extends SilverStripeComponent {
 
 }
 
-GridFieldComponent.propTypes = {
+GridFieldTableComponent.propTypes = {
     data: React.PropTypes.object,
     header: React.PropTypes.object,
     rows: React.PropTypes.array
 };
 
-export default GridFieldComponent;
+export default GridFieldTableComponent;

@@ -6,9 +6,7 @@ class GridFieldHeaderComponent extends SilverStripeComponent {
 
     render() {
         return (
-            <thead className='grid-field-header-component'>
-                <GridFieldRowComponent>{this.props.children}</GridFieldRowComponent>
-            </thead>
+            <GridFieldRowComponent>{this.props.children}</GridFieldRowComponent>
         );
     }
 

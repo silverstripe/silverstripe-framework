@@ -1,0 +1,12 @@
+.grid-field-header-cell-component {
+    text-transform: uppercase;
+    display: flex;
+    flex-flow: row nowrap;
+    flex-grow: 1;
+    flex-basis: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    padding: $grid-y*2 $grid-x*2;
+    line-height: 20px;
+}

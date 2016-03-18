@@ -5,7 +5,7 @@ class GridFieldRowComponent extends SilverStripeComponent {
 
     render() {
         return (
-            <tr className='grid-field-row-component'>{this.props.children}</tr>
+            <li className='grid-field-row-component [ list-group-item ]'>{this.props.children}</li>
         );
     }
 
