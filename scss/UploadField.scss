@@ -41,6 +41,13 @@
 			font-weight: bold;
 			float: left;
 			overflow: hidden;
+			background: #f0f2f4;
+			span {
+				height: 60px;
+				width: 80px;
+				display: table-cell;
+				vertical-align: middle;
+			}
 			&.ss-uploadfield-dropzone {
 				@include box-shadow($color-medium-separator 0 0 4px 0 inset);
 				border: 2px dashed $color-medium-separator;
@@ -49,7 +56,13 @@
 				margin-right: 15px;
 			}
 			img {
+				display: block;
+				margin: 0 auto;
 				background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAJElEQVQYV2O8dOnSfwYkoKenx4jMZ6SDAmT7QGx0K1EcRBsFAJfOHd3Le79RAAAAAElFTkSuQmCC) repeat;
+				// No checker background for icons
+				&[src$="_32.png"] {
+					background: transparent;
+				}
 			}
 		}
 		.ss-uploadfield-item-info {

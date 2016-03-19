@@ -468,6 +468,15 @@ class File extends DataObject {
 		return self::get_app_category($this->getExtension());
 	}
 
+	/**
+	 * Return image markup for use as a thumbnail in a strip
+	 *
+	 * @return HTMLVarchar
+	 */
+	public function StripThumbnail() {
+		return DBField::create_field('HTMLVarchar', '<img src="'.$this->Icon().'"/>');
+	}
+
 	public function CMSThumbnail() {
 		return '<img src="' . $this->Icon() . '" />';
 	}
@@ -481,15 +490,15 @@ class File extends DataObject {
 	 */
 	public function Icon() {
 		$ext = strtolower($this->getExtension());
-		if(!Director::fileExists(FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.gif")) {
+		if(!Director::fileExists(FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.png")) {
 			$ext = $this->appCategory();
 		}
 
-		if(!Director::fileExists(FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.gif")) {
+		if(!Director::fileExists(FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.png")) {
 			$ext = "generic";
 		}
 
-		return FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.gif";
+		return FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.png";
 	}
 
 	/**
