@@ -32,7 +32,7 @@ class FulltextSearchable extends DataExtension {
 	 * It can be used to limit the searched classes, but not to add your own classes.
 	 * For this purpose, please use {@link Object::add_extension()} directly:
 	 * <code>
-	 * MyObject::add_extension("FulltextSearchable('MySearchableField,'MyOtherField')");
+	 * MyObject::add_extension("FulltextSearchable('MySearchableField,MyOtherField')");
 	 * </code>
 	 *
 	 * Caution: This is a wrapper method that should only be used in _config.php,
