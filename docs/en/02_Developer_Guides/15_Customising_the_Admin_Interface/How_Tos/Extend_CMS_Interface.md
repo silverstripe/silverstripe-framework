@@ -203,7 +203,7 @@ applicable controller actions to it:
 	:::php
 	class CustomActionsExtension extends LeftAndMainExtension {
 		
-		static $allowed_actions = array(
+		private static $allowed_actions = array(
         	'sampleAction'
     	);
     	
