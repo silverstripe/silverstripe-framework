@@ -32,7 +32,7 @@ HtmlEditorConfig::get('cms')
 	->enablePlugins(array(
 		'contextmenu' => null,
 		'image' => null,
-		'ssbuttons' => THIRDPARTY_DIR . '/tinymce_ssbuttons/editor_plugin_src.js'
+		'ssbuttons' => THIRDPARTY_DIR . '/tinymce_ssbuttons/plugin.min.js'
 	));
 
 CMSMenu::remove_menu_item('CMSProfileController');

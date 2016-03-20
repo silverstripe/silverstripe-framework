@@ -710,7 +710,8 @@
 				    node = this.getSelection();
 
 				if (node.is('img')) {
-					this.showFileView(node.data('url') || node.attr('src')).done(function (filefield) {
+					var idOrUrl = node.data('id') || node.data('url') || node.attr('src');
+					this.showFileView(idOrUrl).done(function (filefield) {
 						filefield.updateFromNode(node);
 						self.toggleCloseButton();
 						self.redraw();
@@ -966,7 +967,7 @@
 					'height': height ? parseInt(height, 10) : null,
 					'title': this.find(':input[name=Title]').val(),
 					'class': this.find(':input[name=CSSClass]').val(),
-					'data-fileid': this.find(':input[name=FileID]').val()
+					'data-id': this.find(':input[name=FileID]').val()
 				};
 			},
 			getExtraData: function getExtraData() {
@@ -1034,7 +1035,7 @@
 				this.find(':input[name=Width]').val(node.width());
 				this.find(':input[name=Height]').val(node.height());
 				this.find(':input[name=CaptionText]').val(node.siblings('.caption:first').text());
-				this.find(':input[name=FileID]').val(node.data('fileid'));
+				this.find(':input[name=FileID]').val(node.data('id'));
 			}
 		});
 

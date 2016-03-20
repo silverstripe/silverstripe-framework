@@ -213,6 +213,13 @@ With the config:
 Note that it's important to define both `owns` and `owned_by` components of the relationship,
 similar to how you would apply `has_one` and `has_many`, or `many_many` and `belongs_many_many`.
 
+If you are using `[api:HTMLText]` or `[api:HTMLVarchar]` fields in your `DataObject::$db` definitions,
+it's likely that your authors can insert images into those fields via the CMS interface.
+These images are usually considered to be owned by the `DataObject`, and should be published alongside it.
+The ownership relationship is tracked through an `[image]` [shortcode](/developer-guides/extending/shortcodes),
+which is automatically transformed into an `<img>` tag at render time. In addition to storing the image path,
+the shortcode references the database identifier of the `Image` object.
+
 ### Custom SQL
 
 We generally discourage writing `Versioned` queries from scratch, due to the complexities involved through joining 

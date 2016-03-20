@@ -18,7 +18,13 @@ Allows upload of images through limiting file extensions with `setAllowedExtensi
 
 ### Inserting images into the WYSIWYG editor
 
-See [Topics: Rich Text Editing](/topics/rich-text-editing).
+Images can be inserted into `[api:HTMLValue]` database fields
+through the built-in WYSIWYG editor. In order to retain a relationship
+to the underlying `[api:Image]` records, images are saved as [shortcodes](/developer-guides/extending/shortcodes).
+The shortcode (`[image id="<id>" alt="My text" ...]`) will be converted
+into an `<img>` tag on your website automatically.
+
+See [HTMLEditorField](/forms/field-types/htmleditorfield).
 
 ### Manipulating images in Templates
 

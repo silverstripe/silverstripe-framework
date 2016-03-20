@@ -262,7 +262,9 @@ class ShortcodeParser extends Object {
 					preg_match_all(static::attrrx(), $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
 
 					foreach ($attrmatches as $attr) {
-						list($whole, $name, $value) = array_values(array_filter($attr));
+						list($whole, $name, $value) = array_values(array_filter($attr, function($attrPart) {
+							return $attrPart !== '';
+						}));
 						$attrs[$name] = $value;
 				}
 				}

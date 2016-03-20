@@ -252,4 +252,54 @@ class ImageTest extends SapphireTest {
 		$resampled2 = $resampled->ScaleWidth(5);
 		$this->assertEquals($resampled2->TestProperty, $testString);
 	}
+
+	public function testShortcodeHandlerFallsBackToFileProperties() {
+		$image = $this->objFromFixture('Image', 'imageWithTitle');
+		$parser = new ShortcodeParser();
+		$parser->register('image', array('Image', 'handle_shortcode'));
+
+		$this->assertEquals(
+			sprintf(
+				'<img src="%s" alt="%s">',
+				$image->Link(),
+				$image->Title
+			),
+			$parser->parse(sprintf('[image id=%d]', $image->ID))
+		);
+	}
+
+	public function testShortcodeHandlerUsesShortcodeProperties() {
+		$image = $this->objFromFixture('Image', 'imageWithTitle');
+		$parser = new ShortcodeParser();
+		$parser->register('image', array('Image', 'handle_shortcode'));
+
+		$this->assertEquals(
+			sprintf(
+				'<img src="%s" alt="Alt content" title="Title content">',
+				$image->Link()
+			),
+			$parser->parse(sprintf(
+				'[image id="%d" alt="Alt content" title="Title content"]',
+				$image->ID
+			))
+		);
+	}
+
+	public function testShortcodeHandlerAddsDefaultAttributes() {
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$parser = new ShortcodeParser();
+		$parser->register('image', array('Image', 'handle_shortcode'));
+
+		$this->assertEquals(
+			sprintf(
+				'<img src="%s" alt="%s">',
+				$image->Link(),
+				$image->Title
+			),
+			$parser->parse(sprintf(
+				'[image id="%d"]',
+				$image->ID
+			))
+		);
+	}
 }
