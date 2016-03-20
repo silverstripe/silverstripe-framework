@@ -1,13 +1,13 @@
  /**
- * This file defines most styles of the CMS: Colors, fonts, backgrounds, 
+ * This file defines most styles of the CMS: Colors, fonts, backgrounds,
  * alignments, dimensions.
- * 
- * Use SCSS variable definitions in screen.css to avoid repeating styles 
- * like background colours or padding dimensions. See themes/_default.scss 
+ *
+ * Use SCSS variable definitions in screen.css to avoid repeating styles
+ * like background colours or padding dimensions. See themes/_default.scss
  * to get started.
- * 
- * To avoid this file getting too large and complicated, it is encouraged to 
- * create new SCSS files for larger components like the CMS menu or tree 
+ *
+ * To avoid this file getting too large and complicated, it is encouraged to
+ * create new SCSS files for larger components like the CMS menu or tree
  * (see _tree.scss and _menu.scss).
  */
 @import "compass";
@@ -33,18 +33,18 @@ body.cms {
 	a {
 		color: $color-text-blue-link;
 		text-decoration: none;
-	
+
 		&:hover,
 		&:focus {
 			text-decoration: underline;
 		}
 	}
-	
+
 	body .ui-widget {
 		font-family: $font-family;
 		font-size: $font-base-size;
 	}
-	
+
 	strong {
 		font-weight: bold;
 	}
@@ -108,7 +108,7 @@ body.cms {
 	a {
 		color: $color-text-blue-link;
 	}
-	
+
 	.backlink {
 		span.btn-icon-back {
 			height:16px;
@@ -159,7 +159,7 @@ body.cms {
 			}
 		}
 	}
-	
+
 	// Reset to default styles
 	.ss-ui-button {
 		line-height: $grid-x*3;
@@ -255,7 +255,7 @@ body.cms {
 	.view-controls {
 		float: right;
 		margin-top: 4px;
-		
+
 		.icon-button-group {
 			.icon-button {
 				padding: 6px 8px;
@@ -365,7 +365,7 @@ body.cms {
 		&:active {
 			background-color: #d4dbe1;
 		}
-		
+
 		&.font-icon-search {
 			&:before {
 				font-size: 18px;
@@ -385,7 +385,7 @@ body.cms {
 }
 
 // Context specific overrides for Tabs.
-.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link, 
+.ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link,
 .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link {
 	padding: 5px 8px 6px;
 	line-height: 1em;
@@ -466,7 +466,7 @@ body.cms {
 			box-shadow: inset 0 0 3px rgba(191, 194, 196, .9);
 		}
 	}
-	
+
 	.cms-content-header-tabs & {
 		overflow: hidden;
 	}
@@ -508,16 +508,16 @@ body.cms {
 		~ .ui-tabs-panel {
 			clear: both;
 		}
-		
+
 		li {
 			top: 0;
 			float: left;
 			margin-top: 0;
-			
+
 			&:active {
 				outline: none;
 			}
-		
+
 			a {
 				@include inline-block;
 				outline: none;
@@ -538,6 +538,14 @@ body.cms {
 			}
 		}
 
+		//jquery UI override
+		li.ui-tabs-active,
+		li.ui-state-default,
+		li.ui-state-active {
+			margin-bottom: -1px;
+			padding-bottom: 0;
+		}
+
 		.ui-state-default {
 			border: 0;
 			background: transparent;
@@ -545,8 +553,9 @@ body.cms {
 			a {
 				line-height: 28px;
 				padding-top: 12px;
-				padding-bottom: 8px;
+				padding-bottom: 5px;
 				color: lighten($color-text, 10%);
+				border-bottom: 3px solid transparent;
 
 				&:hover {
 					color: $color-text;
@@ -555,19 +564,18 @@ body.cms {
 		}
 
 		.ui-state-active {
-			padding-bottom: 1px;
 			background-color: transparent;
 			cursor: text;
 
 			a {
-				border-bottom: 3px solid #66727d;
+				border-color: #66727d;
 				padding-left: 0;
 				padding-right: 0;
 				margin: 0 12px 0;
 				color: $color-text;
 			}
 		}
-		
+
 		&.ui-state-active {
 			border-color: $color-medium-separator;
 		}
@@ -619,8 +627,8 @@ body.cms {
  * Primary styles which sit on top of screen, with different tab colors.
  * TODO Only use one "primary" selector and fix HTMLEditorField TabSet addExtraClass()
  */
-.ui-tabs.cms-tabset-primary .ui-tabs-nav, 
-.ui-tabs .ui-tabs-nav.cms-tabset-nav-primary, 
+.ui-tabs.cms-tabset-primary .ui-tabs-nav,
+.ui-tabs .ui-tabs-nav.cms-tabset-nav-primary,
 .ui-tabs .cms-content-header-tabs .ui-tabs-nav {
 	margin-top: 0;
 	float: none; // parent container is already right floated
@@ -643,13 +651,13 @@ body.cms {
 
 	.ui-state-default {
 		background: none;
-		border-top: none;			
+		border-top: none;
 		border: none;
 	}
-		
+
 	.ui-state-active {
 		@include box-shadow(none);
-		background: transparent;	
+		background: transparent;
 		border-top: none;
 		border: none;
 		z-index:2;
@@ -665,7 +673,7 @@ body.cms {
 .cms-content-header-tabs {
 	float: right;
 	margin-top: 8px;
-	
+
 	&.icon-button-group-tabs {
 		margin-top: 12px;
 		margin-bottom: 13px;
@@ -683,12 +691,8 @@ body.cms {
 	margin: 0 16px 0;
 
 	li {
-		margin-bottom: -1px;
-
-		&.first a {
-			margin-left: 0;
-			padding-left: 0;
-		}
+		// Align tab content with gutter (supports multiple rows of tabs)
+		margin: 0 $grid-x*1.5 -1px $grid-x*-1.5;
 	}
 }
 
@@ -744,7 +748,7 @@ body.cms {
 		position: absolute;
 		bottom: 80px;
 		z-index: 100001;
-		
+
 		span.notice {
 			width: 300px;
 			font-size: 14px;
@@ -758,7 +762,7 @@ body.cms {
       		*display: inline;
 		}
 	}
-	
+
 	.loading-animation {
 		display: none;
 		position: absolute;
@@ -791,16 +795,16 @@ body.cms {
 	clear: both;
 	margin: 0 0 $grid-y;
 	padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
-	font-weight: normal;	
+	font-weight: normal;
 	border: 1px #ccc solid;
 	background: #fff;									// for browsers that don't understand rgba
 	background: rgba(#fff,0.5);
 	text-shadow: none;
 	@include border-radius(3px 3px 3px 3px);
 
-	&.notice {		
+	&.notice {
 		background-color: lighten($color-notice,22%);	// Blue
-		border-color: $color-notice;	
+		border-color: $color-notice;
 	}
 	&.warning {											// Yellow
 		background-color: lighten($color-warning,47%);
@@ -809,12 +813,12 @@ body.cms {
 	&.error, &.bad, &.required, &.validation {			// Red
 		background-color: lighten($color-error,24%);
 		border-color: $color-error;
-	}	
+	}
 	&.good {											// Green
 		background-color: lighten($color-good,40%);
 		border-color: $color-good;
 	}
-	
+
 	p {
 		margin: 0;
 	}
@@ -828,15 +832,15 @@ body.cms {
 	.ui-tabs-panel {
 		.message {
 			margin: $grid-x*2 0; // gets padding from tab panel
-		}	
+		}
 	}
 }
 
 
 .notice-item {
 	@include border-radius(3px);
-	font-family: inherit; 
-	font-size: inherit; 
+	font-family: inherit;
+	font-size: inherit;
 	padding: 6px 24px 8px 10px;
 	word-wrap: break-word;
 	min-height: 60px;
@@ -880,7 +884,7 @@ body.cms {
 	font-weight: normal;
 	width: 12px;
 	height: 16px;
-	color: #555; 
+	color: #555;
 	font-size: 16px;
 	overflow: hidden;
 	top: 4px;
@@ -938,14 +942,14 @@ body.cms {
 	.step-label {
 		opacity:0.9;
 		.flyout {
-			height:17px; //centres number within the grey arrow 
+			height:17px; //centres number within the grey arrow
 			padding-top:5px;
 		}
 		.title {
 			padding-top:5px; //aligns label with point of arrow
 			font-weight:bold; //to match pagetype label
 			@include text-shadow(1px 1px 0 $color-text-shadow);
-		}		
+		}
 	}
 	ul.SelectionGroup {
 		padding-left:28px;
@@ -955,7 +959,7 @@ body.cms {
 	.parent-mode {
 		padding: $grid-x;
 		overflow: auto;
-	}	
+	}
 }
 
 #PageType {
@@ -974,14 +978,14 @@ body.cms {
 			&:last-child {
 				border-bottom: none;
 			}
-					
+
 			&:hover, &.selected {
 				background-color: $color-highlight-opacity;
 			}
 
 			&.disabled {
 				color: $color-text-disabled;
-				
+
 				@include opacity(0.5);
 
 				&:hover {
@@ -997,22 +1001,22 @@ body.cms {
 				padding-left: 0;
 				padding-bottom: 0;
 			}
-			
+
 			input, label, .page-icon, .title {
 				float: left;
 				line-height: 1.3em;
 			}
-			
+
 			.page-icon {
 				margin: 0 4px;
 			}
-			
+
 			.title {
 				width: 120px;
 				font-weight: bold;
 				padding-right: 10px;
 			}
-			
+
 			.description {
 				font-style: italic;
 				// Undo some generic styles from tooltips
@@ -1021,8 +1025,8 @@ body.cms {
 				margin: 0;
 			}
 		}
-	}	
-}	
+	}
+}
 
 /** --------------------------------------------
  * Content toolbar
@@ -1036,7 +1040,7 @@ body.cms {
 	@include legacy-pie-clearfix();
 	border-bottom: 0;
 	box-shadow: none;
-	
+
 	.cms-tree-view-modes {
 		float:right;
 		padding-top:$grid-y - 3;
@@ -1068,7 +1072,7 @@ body.cms {
 .cms-content-tools {
 	background: $tab-panel-texture-color;
 	width: $grid-x * 36;
-	overflow-y: auto;	
+	overflow-y: auto;
 	overflow-x: hidden;
 	z-index: 70;
 	border-right: 1px solid $color-separator;
@@ -1078,7 +1082,7 @@ body.cms {
 	&.filter{
 		padding:0 !important;
 	}
-	
+
 	.cms-panel-header {
 		clear: both;
 		margin: 10px 0 $grid-y - 1;
@@ -1086,7 +1090,7 @@ body.cms {
 		line-height: $grid-y * 3;
 		border-bottom: 1px solid $color-light-separator;
 	}
-	
+
 	.cms-panel-content {
 		width: $grid-x * 34;
 		padding: 0 $grid-x*1.5 0 $grid-x*2;
@@ -1097,9 +1101,9 @@ body.cms {
 			margin-right:5px; //accounts for the scrollbar in the filter - keeps the actions on one line instead of wrapping onto two.
 		}
 	}
-	
+
 	.cms-content-header {
-		background-color: darken($color-widget-bg, 40%);	
+		background-color: darken($color-widget-bg, 40%);
 		@include background-image(
 			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 40%))
 		);
@@ -1124,13 +1128,13 @@ body.cms {
 		font-size: $font-base-size;
 		margin:5px 0;
 	}
-	
+
 	.ui-widget-content {
 		background: none;
 	}
-	
+
 	.field {
-		/* 
+		/*
 		 * Fields are more compressed in the sidebar compared to the
 		 * main content editing window so the below alters the internal
 		 * spacing of the fields so we can move that spacing to between
@@ -1142,23 +1146,23 @@ body.cms {
 			font-size: $font-base-size;
 			padding: 0 $grid-x 4px 0;
 		}
-		
+
 		.middleColumn {
 			margin: 0;
 		}
-		
+
 		input.text,
 		select,
 		textarea {
 			padding: 5px;
 			font-size: 11px;
 		}
-		
+
 		&.checkbox {
 			padding: 0 0 8px;
-			
-			input { 
-				margin: 2px 0; 
+
+			input {
+				margin: 2px 0;
 			}
 		}
 
@@ -1170,14 +1174,14 @@ body.cms {
 	.fieldgroup {
 		.fieldgroup-field {
 			padding: 0;
-			
+
 			.field {
 				margin: 0;
 				padding: 0;
 			}
 		}
 	}
-	
+
 	table {
 		margin: 8px -4px;
 		thead {
@@ -1189,7 +1193,7 @@ body.cms {
 				padding: 4px;
 			}
 		}
-		
+
 		tr {
 			&.active {
 				background-color: $color-menu-button;
@@ -1203,14 +1207,14 @@ body.cms {
 				}
 			}
 		}
-		
+
 		td {
 			padding: 4px;
 			line-height: 16px;
 			vertical-align: top;
 		}
 	}
-	
+
 	td {
 		border-bottom: 1px solid darken($color-widget-bg, 10%);
 		padding: $grid-y - 1 2px;
@@ -1243,14 +1247,14 @@ body.cms {
 	background: #D4E2EC;
 	text-shadow: none;
 	border: 0;
-	
+
 	> strong,
 	> a {
 		font-size: 14px;
 	}
 }
 
-/** 
+/**
  * CMS Batch actions
  */
 .cms-content-batchactions-button {
@@ -1376,7 +1380,7 @@ form.member-profile-form {
 			text-indent: -9999em;
 			display: inline-block;
 			width: 20px;
-			background:url(../images/question.png) no-repeat 0px 0px; 
+			background:url(../images/question.png) no-repeat 0px 0px;
 		}
 	}
 
@@ -1387,14 +1391,14 @@ form.member-profile-form {
 	#CsvFile .middleColumn {
 		background: none !important;
 	}
-	
+
 	.advanced h4 {
 		margin-bottom: .5em;
 	}
 	.Actions {
 		text-align: left;
 		border: 0;
-	}	
+	}
 	input.customFormat {
 		width: $grid-x * 10;
 		border: 1px solid #ccc !important;
@@ -1439,7 +1443,7 @@ form.member-profile-form {
 			li {
 				float: none;
 				width: auto;
-			}	
+			}
 		}
 	}
 }
@@ -1461,13 +1465,13 @@ form.member-profile-form {
 		width: 800px;
 		z-index: 40;
 	}
-	
+
 	.cms-content-fields {
-		// always show a y scroll bar as popups like TreeDropdowns 
+		// always show a y scroll bar as popups like TreeDropdowns
 		// can trigger longer pages and the extra scroll bar doesn't fire our sizing bar
 		overflow-y: auto;
 		overflow-x: auto;
-		background: $tab-panel-texture-color;	
+		background: $tab-panel-texture-color;
 		width: 100%;
 		#Root_Main {
 			.confirmedpassword {
@@ -1488,19 +1492,19 @@ form.member-profile-form {
 			ul.optionset li {
 				float:none;
 			}
-		}			
+		}
 				}
 	form.member-profile-form {
 		#Root .ui-tabs-nav {
 			display: none;
 			}
-		
+
 		#Root_Main, #Root_Permissions {
 			border: none;
 			}
 		}
 	}
-		
+
 /** --------------------------------------------
  * "Settings" Form
  * -------------------------------------------- */
@@ -1533,7 +1537,7 @@ form.member-profile-form {
 			bottom: 0;
 			width:100%;
 		}
-		a { 
+		a {
 			display: block;
 			text-align: right;
 			padding: $grid-y/2 0;
@@ -1545,7 +1549,7 @@ form.member-profile-form {
 				color: #555d60;
 				font-size: 16px;
 			}
-			
+
 			&.toggle-expand {
 				width: 40px; // will set the collapsed width
 				display: none;
@@ -1565,7 +1569,7 @@ form.member-profile-form {
 	}
 	&.collapsed {
 		cursor: pointer;
-		.cms-panel-header *, 
+		.cms-panel-header *,
 		.cms-panel-content,
 		.cms-panel-toggle a.toggle-collapse{
 			display:none;
@@ -1665,12 +1669,12 @@ form.member-profile-form {
 }
 /** ------------------------------------------------------------------
 * Dialog
-* 
+*
 * Contained in a jQuery UI dialog ('.ui-dialog'), with either inline
 * markup (for the "insert" dialogs), or an iframe (for member profile).
 * ----------------------------------------------------------------- */
 
-// overlay for switching between CMS panes 
+// overlay for switching between CMS panes
 .cms .ui-widget-overlay-light {
 	background: #aaaaaa url(../../thirdparty/jquery-ui-themes/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
 	opacity: 0.3;
@@ -1698,7 +1702,7 @@ form.member-profile-form {
 	overflow: visible;
 	padding: 0;
 	@include box-shadow(0px 0px 30px 10px rgba(0,0,0,.3));
- 
+
   	// Titlebar for pop-up dialog.
 	.ui-dialog-titlebar.ui-widget-header {
 	  	font-size: $font-base-size+2;
@@ -1707,7 +1711,7 @@ form.member-profile-form {
 		background: {
 			color:transparent;
 			image:url(../images/textures/cms_content_header.png);
-			repeat:repeat;	
+			repeat:repeat;
 		}
 		@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
 		.ui-dialog-title {
@@ -1760,7 +1764,7 @@ form.member-profile-form {
 		.clear {
 			clear: both;
 		}
-		
+
 	}
 
 	&.loading {
@@ -1801,9 +1805,9 @@ body.cms-dialog {
 				position: absolute;
 				left: 8px;
 				top: 13px;
-				font-weight: normal; 
+				font-weight: normal;
 				color: #888;
-				width: 35px; 
+				width: 35px;
 				padding-right: 0;
 			}
 
@@ -1883,11 +1887,11 @@ body.cms-dialog {
 		.field{
 			border-bottom: 1px solid $color-shadow-light;
     		@include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
-    		&.last{				
+    		&.last{
 				border-bottom:none;
 				@include box-shadow(0 0 0 rgba(0, 0, 0, 0));
 				margin-bottom:0;
-			}	
+			}
 		}
 	}
 
@@ -2006,7 +2010,7 @@ body.cms-dialog {
 	.title {
 		height: 26px - 2*4px; // minus padding
 		padding: 4px;
-	}	
+	}
 }
 
 
@@ -2068,7 +2072,7 @@ form.small {
 	.cms-file-info-data {
 		// Ensure it fits beside the image preview, increased size for long url
 		max-width: 550px;
-		
+
 
 		// Reduced label widths to fit everything in smaller space
 		.field {
@@ -2155,7 +2159,7 @@ form.import-form {
 .ss-uploadfield-item-edit-all .ui-button-text{
 	padding-right:0;
 }
-	
+
 .toggle-details-icon {
 	background: sprite($sprites32, menu-arrow-down) no-repeat;
 	.ss-uploadfield-item-edit-all &{
@@ -2163,22 +2167,22 @@ form.import-form {
 		display:inline-block;
 		width:8px;
 		height:8px;
-		padding-left:5px;		
+		padding-left:5px;
 	}
 
-	&.opened {					
-		background: sprite($sprites32, menu-arrow-up) no-repeat;	
+	&.opened {
+		background: sprite($sprites32, menu-arrow-up) no-repeat;
 		.ss-uploadfield-item-edit-all &{
-			background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;			
-		}		
+			background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;
+		}
 	}
 }
 
 /** --------------------------------------------
- * Hide preview toggle link by default. May be shown 
+ * Hide preview toggle link by default. May be shown
  in IE7 stylesheet and forced to show with js if needed
  * -------------------------------------------- */
-.cms .Actions > .cms-preview-toggle-link, 
+.cms .Actions > .cms-preview-toggle-link,
 .cms .cms-navigator > .cms-preview-toggle-link{
 	display:none;
 }
