@@ -4,7 +4,6 @@
  * Contains the basic typography related styles for the admin interface.
  */
 body, html {
-	font-size: $font-base-size;
 	line-height: $grid-y * 2;
 	font-family: $font-family;
 	color: $color-text;
@@ -18,20 +17,7 @@ body, html {
 	}
 
 	h2 {
-		font-size: $font-base-size + 6;
 		line-height: $grid-y * 3;
-	}
-
-	h3 {
-		font-size: $font-base-size + 4;
-	}
-
-	h4 {
-		font-size: $font-base-size + 2;
-	}
-
-	h5 {
-		font-size: $font-base-size;
 	}
 
 	p {

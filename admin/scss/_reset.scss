@@ -69,8 +69,6 @@
 
 // Reset the font and vertical alignment.
 @mixin reset-font {
-  font: inherit;
-  font-size: 100%;
   vertical-align: baseline; }
 
 // Resets the outline when focus.

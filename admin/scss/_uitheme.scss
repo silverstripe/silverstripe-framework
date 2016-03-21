@@ -12,7 +12,7 @@
 .ui-widget-content,
 .ui-widget {
 	color: $color-text;
-	font-size: $font-base-size;
+	font-size: 1em;
 	font-family: $font-family;
 	border: 0;
 }
@@ -31,8 +31,6 @@
 		padding: 6px 10px;
 		text-shadow: lighten($color-base, 10%) 1px 1px 0;
 	}
-
-
 
 	& a.ui-dialog-titlebar-close {
 		position:  absolute;
@@ -63,15 +61,6 @@
 
 .ui-state-hover {
 	cursor: pointer;
-}
-
-.ui-widget input,
-.ui-widget select,
-.ui-widget textarea,
-.ui-widget button {
-	color: $color-text;
-	font-size: $font-base-size;
-	font-family: $font-family;
 }
 
 .ui-accordion {
