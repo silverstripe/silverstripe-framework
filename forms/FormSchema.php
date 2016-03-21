@@ -41,10 +41,9 @@ class FormSchema {
 			$schema['actions'][] = $action->getSchemaData();
 		}
 
-		foreach ($form->Fields() as $fieldList) {
-			foreach ($fieldList->getForm()->fields()->dataFields() as $field) {
-				$schema['fields'][] = $field->getSchemaData();
-			}
+		// TODO Implemented nested fields and use Fields() instead
+		foreach ($form->Fields()->dataFields() as $field) {
+			$schema['fields'][] = $field->getSchemaData();
 		}
 
 		return $schema;
