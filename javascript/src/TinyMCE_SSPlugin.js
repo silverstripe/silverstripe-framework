@@ -91,7 +91,6 @@
 				content.find('img').each(function() {
 					var el = jQuery(this);
 					var attrs = {
-						// TODO Don't store 'src' since its more volatile than 'id'.
 						// Requires server-side preprocessing of HTML+shortcodes in HTMLValue
 						src: el.attr('src'),
 						id: el.data('id'),
@@ -121,15 +120,13 @@
 				var content = o.content;
 				var attrFromStrFn = (str) => {
 					return str
-						// Remove quotation marks and trim.
-						.replace(/['"]/g, '')
-						.replace(/(^\s+|\s+$)/g, '')
-						// Extract the attrs and values into a key-value array,
-						// or key-key if no value is set.
-						.split(/\s+/)
+						// Split on all attributes, quoted or not
+						.match(/([^\s\/'"=,]+)\s*=\s*(('([^']+)')|("([^"]+)")|([^\s,\]]+))/g)
 						.reduce((coll, val) => {
-							var pair = val.split('=');
-							coll[pair[0]] = (pair.length == 1) ? pair[0] : pair[1];
+							var match = val.match(/^([^\s\/'"=,]+)\s*=\s*(?:(?:'([^']+)')|(?:"([^"]+)")|(?:[^\s,\]]+))$/),
+								key = match[1],
+								value = match[2] || match[3] || match[4]; // single, double, or unquoted match
+							coll[key] = value;
 							return coll;
 						}, {});
 				};
@@ -166,8 +163,6 @@
 						'title': attrs['title'],
 						'data-id': attrs['id']
 					});
-
-					Object.keys(attrs).forEach((key) => el.attr('data-' + key, attrs[key]));
 					content = content.replace(matches[0], (jQuery('<div/>').append(el).html()));
 				}
 
