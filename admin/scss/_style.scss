@@ -37,11 +37,6 @@ body.cms {
 		}
 	}
 
-	body .ui-widget {
-		font-family: $font-family;
-		font-size: $font-base-size;
-	}
-
 	strong {
 		font-weight: bold;
 	}
@@ -111,7 +106,7 @@ body.cms {
 	}
 
 	h2 {
-		font-size: $font-base-size + 2;
+		font-size: $font-size-h4;
 		font-weight: bold;
 		margin: 0;
 		margin-bottom: $grid-x;
@@ -1112,11 +1107,11 @@ body.cms {
 		line-height: $grid-y * 2;
 	}
 	h3 {
-		font-size: $font-base-size + 1;
+		font-size: $font-size-h5;
 	}
 
 	h4 {
-		font-size: $font-base-size;
+		font-size: $font-size-h5;
 		margin:5px 0;
 	}
 
@@ -1134,7 +1129,7 @@ body.cms {
 		label {
 			float: none;
 			width: auto;
-			font-size: $font-base-size;
+			font-size: $font-size-root;
 			padding: 0 $grid-x 4px 0;
 		}
 
@@ -1444,7 +1439,7 @@ form.member-profile-form {
 		font-style: normal;
 	}
 	.toggle {
-		font-size: $font-base-size - 1;
+		font-size: $font-size-sm;
 	}
 }
 
@@ -1667,7 +1662,7 @@ form.member-profile-form {
 
   	// Titlebar for pop-up dialog.
 	.ui-dialog-titlebar.ui-widget-header {
-	  	font-size: $font-base-size+2;
+	  	font-size: $font-size-root +1;
 		padding: 0;
 		border:none;
 		background: transparent url(../images/textures/cms_content_header.png) repeat;
@@ -2017,7 +2012,7 @@ body.cms-dialog {
 
 	.flyout {
 		height: 26px - 2*4px; // minus padding
-		font-size: $font-base-size+2;
+		font-size: $font-size-root +1;
 		font-weight: bold;
 		border-top-left-radius: 3px;
 		border-bottom-left-radius: 3px;

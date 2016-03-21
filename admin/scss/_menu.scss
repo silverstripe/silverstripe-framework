@@ -33,7 +33,6 @@
 	padding: $grid-y*1.5 8px;
 	position: relative;
 	vertical-align: middle;
-	font-size: $font-base-size;
 	transition: padding .2s;
 	min-height: 52px;
 	transition: padding .2s;
@@ -55,7 +54,6 @@
 
 	span {
 		font-weight: bold;
-		font-size: $font-base-size;
 		line-height: 16px;
 		padding: 6px 0;
 		margin-left: 32px;
@@ -65,7 +63,7 @@
 .cms-login-status {
 	padding: $grid-y*1.5 8px;
 	line-height: 16px;
-	font-size: $font-base-size - 1;
+	font-size: $font-size-sm;
 	min-height: 28px;
 	transition: padding .2s;
 
@@ -278,7 +276,6 @@
 			display: block;
 			line-height: $grid-y * 2;
 			min-height: 50px;
-			font-size: $font-base-size;
 			color: $color-text-default;
 			padding: (2 * $grid-y + 1) 5px (2 * $grid-y + 1) 8px;
 			background-color: $base-menu-bg;

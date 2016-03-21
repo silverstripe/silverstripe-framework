@@ -1,0 +1,123 @@
+// General buttons
+.btn {
+	height: 32px;
+	margin-right: 1rem;
+	position: relative;
+}
+
+// Button icons
+.btn[class*="font-icon-"]::before {
+	font-size: 16px;
+	position: relative;
+	top: 3px;
+	margin-right: 6px;
+	line-height: 13px;
+}
+
+.no-text[class*="font-icon-"]::before {
+	margin-right: 0;
+}
+
+.btn-group {
+	margin-right: 1rem;
+
+	.btn {
+		margin-right: 0;
+	}
+
+	.btn-success {
+		border-left: 1px solid darken($btn-success-bg, 6%);
+
+		&:first-child {
+			border-left: none;
+		}
+	}
+}
+
+// SVG loading icon
+.btn__loading-icon {
+	float: left;
+	margin: 0 4px 0 0;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	top: $btn-padding-y;
+	transform: translate(-50%);
+
+	svg {
+		width: 24px;
+		height: 20px;
+
+		circle {
+			width: 4px;
+			height: 5px;
+			animation: loading-icon 1.2s infinite ease-in-out both;
+			fill: $gray;
+			transform-origin: 50% 50%;
+		}
+		
+		circle:nth-child(1) {
+			animation-delay: -.32s;
+		}
+		
+		circle:nth-child(2) {
+			animation-delay: -.16s;
+		}
+	}
+}
+
+.btn--loading {
+	> span,
+	&::before {
+		visibility: hidden;
+	}
+}
+
+@keyframes loading-icon {
+	0%, 80%, 100% { transform: scale(0); }
+	40% { transform: scale(1); }
+}
+
+// Specific button types
+.btn-link {
+	&:hover,
+	&:focus {
+		text-decoration: none;
+	}
+}
+
+.btn-secondary {
+	border-color: transparent;
+
+	&:hover,
+	&:active,
+	&:focus {
+		background-color: $gray-lighter;
+	}
+}
+
+.btn-success-outline {
+	border-color: lighten($brand-success,10%);
+
+	&:hover,
+	&:active,
+	&:focus {
+		color: $brand-success;
+		background-image: none;
+		background-color: transparent;
+		border-color: lighten($brand-success,10%);
+	}
+
+	svg circle {
+		fill: $brand-success;
+	}
+}
+
+.btn-success {
+	border-bottom-color: $btn-success-shadow;
+
+	svg circle {
+		fill: #fff;
+	}
+}
+

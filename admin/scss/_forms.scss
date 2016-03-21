@@ -326,7 +326,7 @@ form.small .field, .field.small {
 	.chzn-container-single .chzn-single  {
 		height: 30px;
 		line-height: 30px; /* not relative, as then we'd had to redo most of chzn */
-		font-size: $font-base-size;
+		font-size: $font-size-root;
 		background-image: linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef);
 
 		&:hover, &:focus, &:active {
@@ -524,7 +524,7 @@ form.small .field, .field.small {
 
 		&.ss-ui-button-small {
 			.ui-button-text {
-				font-size: $font-base-size - 2;
+				font-size: $font-size-sm;
 			}
 		}
 
