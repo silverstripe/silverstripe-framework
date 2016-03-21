@@ -743,7 +743,9 @@ class File extends DataObject {
 		if($this->ParentID) {
 			// Don't use the cache, the parent has just been changed
 			$p = DataObject::get_by_id('Folder', $this->ParentID, false);
-			if($p && $p->exists()) return $p->getRelativePath() . $this->getField("Name");
+			if($p && $p->isInDB()) {
+				return $p->getRelativePath() . $this->getField("Name");
+			}
 			else return ASSETS_DIR . "/" . $this->getField("Name");
 		} else if($this->getField("Name")) {
 			return ASSETS_DIR . "/" . $this->getField("Name");
