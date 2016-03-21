@@ -38,6 +38,8 @@
  */
 class CheckboxSetField extends MultiSelectField {
 
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_MULTISELECT;
+
 	/**
 	 * @todo Explain different source data that can be used with this field,
 	 * e.g. SQLMap, ArrayList or an array.

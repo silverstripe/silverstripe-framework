@@ -29,6 +29,48 @@
  */
 class FormField extends RequestHandler {
 
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_STRING = 'String';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_HIDDEN = 'Hidden';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_TEXT = 'Text';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_HTML = 'HTML';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_INTEGER = 'Integer';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_DECIMAL = 'Decimal';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_MULTISELECT = 'MultiSelect';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_SINGLESELECT = 'SingleSelect';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_DATE = 'Date';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_DATETIME = 'DateTime';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_TIME = 'Time';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_BOOLEAN = 'Boolean';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_CUSTOM = 'Custom';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_STRUCTURAL = 'Structural';
+
 	/**
 	 * @var Form
 	 */
@@ -170,7 +212,7 @@ class FormField extends RequestHandler {
 
 	/**
 	 * The data type backing the field. Represents the type of value the
-	 * form expects to receive via a postback.
+	 * form expects to receive via a postback. Should be set in subclasses.
 	 *
 	 * The values allowed in this list include:
 	 *
@@ -191,6 +233,8 @@ class FormField extends RequestHandler {
 	 *   - Structural: Represents a field that is NOT posted back. This may contain other fields,
 	 *     or simply be a block of stand-alone content. As with 'Custom',
 	 *     the component property is mandatory if this is assigned.
+	 *
+	 * Each value has an equivalent constant, e.g. {@link self::SCHEMA_DATA_TYPE_STRING}.
 	 *
 	 * @var string
 	 */

@@ -112,4 +112,3 @@ class CurrencyField_Disabled extends CurrencyField{
 			. " name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
 }
-
