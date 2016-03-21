@@ -60,6 +60,8 @@ require_once 'Zend/Date.php';
  */
 class DateField extends TextField {
 
+	protected $schemaDataType = 'Date';
+
 	/**
 	 * @config
 	 * @var array
@@ -677,4 +679,3 @@ class DateField_View_JQuery extends Object {
 		return preg_replace($patterns, $replacements, $format);
 	}
 }
-

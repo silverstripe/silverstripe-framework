@@ -7,6 +7,8 @@
  */
 class CheckboxField extends FormField {
 
+	protected $schemaDataType = 'SingleSelect';
+
 	public function setValue($value) {
 		$this->value = ($value) ? 1 : 0;
 		return $this;

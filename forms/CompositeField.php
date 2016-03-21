@@ -43,6 +43,8 @@ class CompositeField extends FormField {
 	 */
 	protected $legend;
 
+	protected $schemaDataType = 'Structural';
+
 	public function __construct($children = null) {
 		if($children instanceof FieldList) {
 			$this->children = $children;
@@ -394,4 +396,3 @@ class CompositeField extends FormField {
 	}
 
 }
-

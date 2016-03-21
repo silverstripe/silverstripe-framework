@@ -7,6 +7,9 @@
  * @subpackage fields-dataless
  */
 class HiddenField extends FormField {
+
+	protected $schemaDataType = 'Hidden';
+	
 	/**
 	 * @param array $properties
 	 *

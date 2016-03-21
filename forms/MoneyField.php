@@ -15,6 +15,8 @@ use SilverStripe\Model\FieldType\DBMoney;
  */
 class MoneyField extends FormField {
 
+	protected $schemaDataType = 'Text';
+
 	/**
 	 * @var string $_locale
 	 */

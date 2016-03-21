@@ -75,6 +75,8 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	public $children;
 
+	protected $schemaDataType = 'Structural';
+
 	/**
 	 * @param string $name
 	 * @param string $title

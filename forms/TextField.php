@@ -12,6 +12,8 @@ class TextField extends FormField {
 	 */
 	protected $maxLength;
 
+	protected $schemaDataType = 'Text';
+
 	/**
 	 * Returns an input field.
 	 *

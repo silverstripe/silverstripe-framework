@@ -23,6 +23,8 @@ abstract class SingleSelectField extends SelectField {
 	 */
 	protected $emptyString = '';
 
+	protected $schemaDataType = 'SingleSelect';
+
 	/**
 	 * @param boolean $bool
 	 * @return self Self reference
