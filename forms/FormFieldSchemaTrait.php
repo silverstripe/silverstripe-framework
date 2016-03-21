@@ -132,11 +132,11 @@ trait FormFieldSchemaTrait {
 	 */
 	public function getSchemaDataDefaults() {
 		return [
+			'name' => $this->getName(),
+			'id' => $this->ID(),
 			'type' => $this->getSchemaDataType(),
 			'component' => $this->getSchemaComponent(),
-			'id' => $this->ID,
 			'holder_id' => null,
-			'name' => $this->getName(),
 			'title' => $this->Title(),
 			'source' => null,
 			'extraClass' => $this->ExtraClass(),
