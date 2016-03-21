@@ -30,3 +30,7 @@ VersionedTest_AnotherSubclass:
   subclass1:
     Title: 'Subclass Page 1'
     AnotherField: 'Bob'
+
+VersionedTest_SingleStage:
+  single:
+    Title: 'Singlestage Title'
