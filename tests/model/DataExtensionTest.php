@@ -166,6 +166,13 @@ class DataExtensionTest extends SapphireTest {
 		$this->assertEquals("hello world", $do->testMethodApplied());
 	}
 
+	public function testExtensionAllMethodNamesHasOwner() {
+		/** @var DataExtensionTest_MyObject $do */
+		$do = DataExtensionTest_MyObject::create();
+
+		$this->assertTrue($do->hasMethod('getTestValueWithDataExtensionTest_MyObject'));
+	}
+
 	public function testPageFieldGeneration() {
 		$page = new DataExtensionTest_CMSFieldsBase();
 		$fields = $page->getCMSFields();
@@ -365,10 +372,23 @@ class DataExtensionTest_Faves extends DataExtension implements TestOnly {
 
 }
 
-class DataExtensionTest_AppliedToDO extends DataExtension implements TestOnly {
+class DataExtensionTest_AppliedToDO extends DataExtension implements TestOnly
+{
 
-	public function testMethodApplied() {
+	public function testMethodApplied()
+	{
 		return "hello world";
+	}
+
+}
+
+class DataExtensionTest_AllMethodNames extends DataExtension implements TestOnly
+{
+	public function allMethodNames()
+	{
+		return array(
+			strtolower('getTestValueWith'.$this->owner->ClassName)
+		);
 	}
 
 }
@@ -376,6 +396,7 @@ class DataExtensionTest_AppliedToDO extends DataExtension implements TestOnly {
 DataExtensionTest_MyObject::add_extension('DataExtensionTest_Ext1');
 DataExtensionTest_MyObject::add_extension('DataExtensionTest_Ext2');
 DataExtensionTest_MyObject::add_extension('DataExtensionTest_Faves');
+DataExtensionTest_MyObject::add_extension('DataExtensionTest_AllMethodNames');
 
 /**
  * Base class for CMS fields

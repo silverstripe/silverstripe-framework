@@ -816,7 +816,9 @@ abstract class Object {
 		}
 
 		if(method_exists($extension, 'allMethodNames')) {
+			if ($extension instanceof Extension) $extension->setOwner($this);
 			$methods = $extension->allMethodNames(true);
+			if ($extension instanceof Extension) $extension->clearOwner();
 
 		} else {
 			if(!isset(self::$built_in_methods[$extension->class])) {
