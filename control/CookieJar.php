@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\FieldType\DBDatetime;
+
 /**
  * A default backend for the setting and getting of cookies
  *
@@ -76,7 +78,7 @@ class CookieJar implements Cookie_Backend {
 		//expiry === 0 is a special case where we set a cookie for the current user session
 		if ($expiry !== 0) {
 			//don't do the maths if we are clearing
-			$expiry = $clear ? -1 : SS_Datetime::now()->Format('U') + (86400 * $expiry);
+			$expiry = $clear ? -1 : DBDatetime::now()->Format('U') + (86400 * $expiry);
 		}
 		//set the path up
 		$path = $path ? $path : Director::baseURL();

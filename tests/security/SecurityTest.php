@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBDatetime;
+use SilverStripe\Model\FieldType\DBClassName;
+
 /**
  * Test the security class, including log-in form, change password form, etc
  *
@@ -361,7 +365,7 @@ class SecurityTest extends FunctionalTest {
 	public function testChangePasswordFromLostPassword() {
 		$admin = $this->objFromFixture('Member', 'test');
 		$admin->FailedLoginCount = 99;
-		$admin->LockedOutUntil = SS_Datetime::now()->Format('Y-m-d H:i:s');
+		$admin->LockedOutUntil = DBDatetime::now()->Format('Y-m-d H:i:s');
 		$admin->write();
 
 		$this->assertNull($admin->AutoLoginHash, 'Hash is empty before lost password');

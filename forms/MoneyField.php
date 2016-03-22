@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+use SilverStripe\Model\FieldType\DBMoney;
+
 /**
  * A form field that can save into a {@link Money} database field.
  * See {@link CurrencyField} for a similiar implementation
@@ -83,7 +87,7 @@ class MoneyField extends FormField {
 		if(is_array($val)) {
 			$this->fieldCurrency->setValue($val['Currency']);
 			$this->fieldAmount->setValue($val['Amount']);
-		} elseif($val instanceof Money) {
+		} elseif($val instanceof DBMoney) {
 			$this->fieldCurrency->setValue($val->getCurrency());
 			$this->fieldAmount->setValue($val->getAmount());
 		}

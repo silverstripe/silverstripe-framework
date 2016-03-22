@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * Utility class to render views of the differences between two data objects (or two versions of the
  * same data object).

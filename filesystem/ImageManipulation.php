@@ -4,8 +4,8 @@ namespace SilverStripe\Filesystem;
 
 use Config;
 use Convert;
-use DBField;
-use DBFile;
+use SilverStripe\Model\FieldType\DBField;
+use SilverStripe\Filesystem\Storage\DBFile;
 use HTMLText;
 use Image_Backend;
 use Injector;

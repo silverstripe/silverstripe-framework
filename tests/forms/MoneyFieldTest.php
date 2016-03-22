@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBMoney;
+
 /**
  * @package framework
  * @subpackage tests
@@ -13,7 +16,7 @@ class MoneyFieldTest extends SapphireTest {
 	public function testSaveInto() {
 		$o = new MoneyFieldTest_Object();
 
-		$m = new Money();
+		$m = new DBMoney();
 		$m->setAmount(123456.78);
 		$m->setCurrency('EUR');
 		$f = new MoneyField('MyMoney', 'MyMoney', $m);
@@ -28,7 +31,7 @@ class MoneyFieldTest extends SapphireTest {
 
 		$f = new MoneyField('MyMoney', 'MyMoney');
 
-		$m = new Money();
+		$m = new DBMoney();
 		$m->setAmount(123456.78);
 		$m->setCurrency('EUR');
 		$f->setValue($m);

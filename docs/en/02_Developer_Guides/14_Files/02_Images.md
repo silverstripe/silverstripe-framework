@@ -133,7 +133,7 @@ You can also create your own functions by decorating the `Image` class.
 	Image:
 	  extensions:
 	    - MyImage
-	DBFile:
+	SilverStripe\Filesystem\Storage\DBFile:
 	  extensions:
 	    - MyImage
 
@@ -166,7 +166,7 @@ mysite/config/config.yml file:
 	File:
 	  force_resample: true
 	# DBFile can be configured independently
-	DBFile:
+	SilverStripe\Filesystem\Storage\DBFile:
 	  force_resample: true
 
 If you are intending to resample images with SilverStripe it is good practice

@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * @package framework
  * @subpackage tests

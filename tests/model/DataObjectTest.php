@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * @package framework
  * @subpackage tests
@@ -332,7 +335,7 @@ class DataObjectTest extends SapphireTest {
 		// check behaviour of dbObject with polymorphic relations
 		$favouriteDBObject = $fan1->dbObject('Favourite');
 		$favouriteValue = $favouriteDBObject->getValue();
-		$this->assertInstanceOf('PolymorphicForeignKey', $favouriteDBObject);
+		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBPolymorphicForeignKey', $favouriteDBObject);
 		$this->assertEquals($favourite->ID, $favouriteValue->ID);
 		$this->assertEquals($favourite->ClassName, $favouriteValue->ClassName);
 	}
@@ -1667,16 +1670,16 @@ class DataObjectTest extends SapphireTest {
 		$captain = $this->objFromFixture('DataObjectTest_Player', 'captain1');
 
 		// Test traversal of a single has_one
-		$this->assertInstanceOf("Varchar", $captain->relObject('FavouriteTeam.Title'));
+		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBVarchar', $captain->relObject('FavouriteTeam.Title'));
 		$this->assertEquals("Team 1", $captain->relObject('FavouriteTeam.Title')->getValue());
 
 		// Test direct field access
-		$this->assertInstanceOf("Boolean", $captain->relObject('IsRetired'));
+		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBBoolean', $captain->relObject('IsRetired'));
 		$this->assertEquals(1, $captain->relObject('IsRetired')->getValue());
 
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
 		// Test that we can traverse more than once, and that arbitrary methods are okay
-		$this->assertInstanceOf("Varchar", $player->relObject('Teams.First.Title'));
+		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBVarchar', $player->relObject('Teams.First.Title'));
 		$this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
 	}
 

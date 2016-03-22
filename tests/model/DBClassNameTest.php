@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\FieldType\DBClassName;
+
 class DBClassNameTest extends SapphireTest {
 
 	protected $extraDataObjects = array(

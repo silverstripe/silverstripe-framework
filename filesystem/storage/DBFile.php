@@ -1,11 +1,20 @@
 <?php
 
+namespace SilverStripe\Filesystem\Storage;
+
 use SilverStripe\Filesystem\ImageManipulation;
 use SilverStripe\Filesystem\Storage\AssetContainer;
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Model\FieldType\DBComposite;
 
-// Un-comment once https://github.com/silverstripe/silverstripe-framework/pull/4551/ is merged
-// namespace SilverStripe\Filesystem\Storage;
+use Injector;
+use AssetField;
+use File;
+use Director;
+use Permission;
+use ShortcodeHandler;
+use ValidationResult;
+use ValidationException;
 
 /**
  * Represents a file reference stored in a database
@@ -17,7 +26,7 @@ use SilverStripe\Filesystem\Storage\AssetStore;
  * @package framework
  * @subpackage filesystem
  */
-class DBFile extends CompositeDBField implements AssetContainer {
+class DBFile extends DBComposite implements AssetContainer {
 
 	use ImageManipulation;
 

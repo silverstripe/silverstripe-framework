@@ -10,6 +10,7 @@ use SilverStripe\Filesystem\Flysystem\PublicAssetAdapter;
 use SilverStripe\Filesystem\Storage\AssetContainer;
 use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler;
+use SilverStripe\Filesystem\Storage\DBFile;
 
 class AssetStoreTest extends SapphireTest {
 

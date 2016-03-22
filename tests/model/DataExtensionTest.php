@@ -152,7 +152,7 @@ class DataExtensionTest extends SapphireTest {
 	public function testDbObjectOnExtendedFields() {
 		$member = $this->objFromFixture('DataExtensionTest_Member', 'member1');
 		$this->assertNotNull($member->dbObject('Website'));
-		$this->assertInstanceOf('Varchar', $member->dbObject('Website'));
+		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBVarchar', $member->dbObject('Website'));
 	}
 
 	public function testExtensionCanBeAppliedToDataObject() {

@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\FieldType\DBDatetime;
+
 /**
  * @package framework
  * @subpackage tests
@@ -196,11 +198,11 @@ class VersionedTest extends SapphireTest {
 	public function testVersionedFieldsAdded() {
 		$obj = new VersionedTest_DataObject();
 		// Check that the Version column is added as a full-fledged column
-		$this->assertInstanceOf('Int', $obj->dbObject('Version'));
+		$this->assertInstanceOf('SilverStripe\\Model\\FieldType\\DBInt', $obj->dbObject('Version'));
 
 		$obj2 = new VersionedTest_Subclass();
 		// Check that the Version column is added as a full-fledged column
-		$this->assertInstanceOf('Int', $obj2->dbObject('Version'));
+		$this->assertInstanceOf('SilverStripe\\Model\\FieldType\\DBInt', $obj2->dbObject('Version'));
 	}
 
 	public function testVersionedFieldsNotInCMS() {
@@ -532,7 +534,7 @@ class VersionedTest extends SapphireTest {
 	public function testArchiveVersion() {
 
 		// In 2005 this file was created
-		SS_Datetime::set_mock_now('2005-01-01 00:00:00');
+		DBDatetime::set_mock_now('2005-01-01 00:00:00');
 		$testPage = new VersionedTest_Subclass();
 		$testPage->Title = 'Archived page';
 		$testPage->Content = 'This is the content from 2005';
@@ -540,19 +542,19 @@ class VersionedTest extends SapphireTest {
 		$testPage->write();
 
 		// In 2007 we updated it
-		SS_Datetime::set_mock_now('2007-01-01 00:00:00');
+		DBDatetime::set_mock_now('2007-01-01 00:00:00');
 		$testPage->Content = "It's 2007 already!";
 		$testPage->ExtraField = '2007';
 		$testPage->write();
 
 		// In 2009 we updated it again
-		SS_Datetime::set_mock_now('2009-01-01 00:00:00');
+		DBDatetime::set_mock_now('2009-01-01 00:00:00');
 		$testPage->Content = "I'm enjoying 2009";
 		$testPage->ExtraField = '2009';
 		$testPage->write();
 
 		// End mock, back to the present day:)
-		SS_Datetime::clear_mock_now();
+		DBDatetime::clear_mock_now();
 
 		// Test 1 - 2006 Content
 		singleton('VersionedTest_Subclass')->flushCache(true);
@@ -583,7 +585,7 @@ class VersionedTest extends SapphireTest {
 	public function testAllVersions()
 	{
 		// In 2005 this file was created
-		SS_Datetime::set_mock_now('2005-01-01 00:00:00');
+		DBDatetime::set_mock_now('2005-01-01 00:00:00');
 		$testPage = new VersionedTest_Subclass();
 		$testPage->Title = 'Archived page';
 		$testPage->Content = 'This is the content from 2005';
@@ -591,7 +593,7 @@ class VersionedTest extends SapphireTest {
 		$testPage->write();
 
 		// In 2007 we updated it
-		SS_Datetime::set_mock_now('2007-01-01 00:00:00');
+		DBDatetime::set_mock_now('2007-01-01 00:00:00');
 		$testPage->Content = "It's 2007 already!";
 		$testPage->ExtraField = '2007';
 		$testPage->write();
@@ -612,13 +614,13 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals($extraFields, array('2005', '2007'), 'Version fields returned');
 
 		// In 2009 we updated it again
-		SS_Datetime::set_mock_now('2009-01-01 00:00:00');
+		DBDatetime::set_mock_now('2009-01-01 00:00:00');
 		$testPage->Content = "I'm enjoying 2009";
 		$testPage->ExtraField = '2009';
 		$testPage->write();
 
 		// End mock, back to the present day:)
-		SS_Datetime::clear_mock_now();
+		DBDatetime::clear_mock_now();
 
 		$versions = Versioned::get_all_versions('VersionedTest_Subclass', $testPage->ID);
 		$content = array();
@@ -637,7 +639,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testArchiveRelatedDataWithoutVersioned() {
-		SS_Datetime::set_mock_now('2009-01-01 00:00:00');
+		DBDatetime::set_mock_now('2009-01-01 00:00:00');
 
 		$relatedData = new VersionedTest_RelatedWithoutVersion();
 		$relatedData->Name = 'Related Data';
@@ -649,7 +651,7 @@ class VersionedTest extends SapphireTest {
 		$testData->Related()->add($relatedData);
 		$id = $testData->write();
 
-		SS_Datetime::set_mock_now('2010-01-01 00:00:00');
+		DBDatetime::set_mock_now('2010-01-01 00:00:00');
 		$testData->Content = 'After Content';
 		$testData->write();
 

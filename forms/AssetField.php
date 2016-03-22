@@ -2,6 +2,7 @@
 
 use SilverStripe\Filesystem\Storage\AssetContainer;
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Filesystem\Storage\DBFile;
 
 /**
  * Field for uploading into a DBFile instance.

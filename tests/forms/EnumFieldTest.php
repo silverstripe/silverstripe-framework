@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBEnum;
+
 /**
  * @package framework
  * @subpackage tests
@@ -8,7 +11,7 @@ class EnumFieldTest extends SapphireTest {
 		$values = array (
 				'Key' => 'Value'
 		);
-		$enumField = new Enum('testField', $values);
+		$enumField = new DBEnum('testField', $values);
 
 		$searchField = $enumField->scaffoldSearchField();
 
@@ -18,7 +21,7 @@ class EnumFieldTest extends SapphireTest {
 	}
 
 	public function testEnumParsing() {
-		$enum = new Enum('testField', "
+		$enum = new DBEnum('testField', "
 			Item1,
 			Item2,
 			Item 3,
