@@ -2,6 +2,7 @@ import reducerRegister from 'reducer-register';
 import $ from 'jQuery';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import CampaignAdmin from '../sections/campaign-admin/controller';
 import campaignsReducer from '../state/campaigns/reducer';
 
@@ -12,7 +13,11 @@ $.entwine('ss', function ($) {
 
     $('.cms-content.CampaignAdmin').entwine({
         onadd: function () {
-            ReactDOM.render(<CampaignAdmin />, this[0]);
+            ReactDOM.render(
+                <Provider store={window.store}>
+                    <CampaignAdmin sectionConfigKey='CampaignAdmin' />
+                </Provider>
+            , this[0]);
         },
 
         onremove: function () {

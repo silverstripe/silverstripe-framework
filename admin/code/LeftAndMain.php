@@ -180,6 +180,50 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	protected $responseNegotiator;
 
 	/**
+	 * Gets the combined configuration of all LeafAndMain subclasses required by the client app.
+	 *
+	 * @return array
+	 *
+	 * WARNING: Experimental API
+	 */
+	public function getCombinedClientConfig() {
+		$combinedClientConfig = ['sections' => []];
+		$cmsClassNames = CMSMenu::get_cms_classes();
+
+		// Ordered by url_priority because the routing rules
+		// need to be registered in priority order on the client.
+		usort($cmsClassNames, function ($a, $b) {
+			$priorityA = Config::inst()->get($a, 'url_priority');
+			$priorityB = Config::inst()->get($b, 'url_priority');
+
+			if ($a == $b) {
+				return 0;
+			}
+
+			return ($priorityA < $priorityB) ? -1 : 1;
+		});
+
+		foreach ($cmsClassNames as $className) {
+			$combinedClientConfig['sections'][$className] =  Injector::inst()->get($className)->getClientConfig();
+		}
+
+		return Convert::raw2json($combinedClientConfig);
+	}
+
+	/**
+	 * Returns configuration required by the client app.
+	 *
+	 * @return array
+	 *
+	 * WARNING: Experimental API
+	 */
+	public function getClientConfig() {
+		return [
+			'route' => Config::inst()->get($this->class, 'url_segment')
+		];
+	}
+
+	/**
 	 * Gets a JSON schema representing the current edit form.
 	 *
 	 * WARNING: Experimental API.
@@ -386,6 +430,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
+
+		Requirements::customScript("
+			window.ss = window.ss || {};
+			window.ss.config = " . $this->getCombinedClientConfig() . ";
+		");
 
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-lib.js', [
 			'provides' => [

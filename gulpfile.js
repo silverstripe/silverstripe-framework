@@ -260,6 +260,7 @@ gulp.task('bundle-boot', function bundleBoot() {
             ignore: /(node_modules)/
         }))
         .external('reducer-register')
+        .external('jQuery')
         .bundle()
         .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
         .pipe(source(bundleFileName))
