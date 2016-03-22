@@ -35,8 +35,12 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/campaign-admin.js');
 	}
 
-	public function getEditForm($id = null, $fields = null) {
-		return '';
+	public function getClientConfig() {
+		return array_merge(parent::getClientConfig(), [
+			'forms' => [
+				'editForm' => $this->schema->getSchema($this->getEditForm())
+			]
+		]);
 	}
 
 	/**
