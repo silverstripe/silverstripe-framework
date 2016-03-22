@@ -318,6 +318,12 @@ class DataObjectTest extends SapphireTest {
 		// There will be a method called $obj->relname() that returns the object itself
 		$this->assertEquals($team1ID, $captain1->FavouriteTeam()->ID);
 
+		// Test that getNonReciprocalComponent can find has_one from the has_many end
+		$this->assertEquals(
+			$team1ID,
+			$captain1->inferReciprocalComponent('DataObjectTest_Team', 'PlayerFans')->ID
+		);
+
 		// Check entity with polymorphic has-one
 		$fan1 = $this->objFromFixture("DataObjectTest_Fan", "fan1");
 		$this->assertTrue((bool)$fan1->hasValue('Favourite'));
@@ -408,10 +414,19 @@ class DataObjectTest extends SapphireTest {
 		// Test getComponents() gets the ComponentSet of the other side of the relation
 		$this->assertTrue($team1->Comments()->Count() == 2);
 
+		$team1Comments = [
+			['Comment' => 'This is a team comment by Joe'],
+			['Comment' => 'This is a team comment by Bob'],
+		];
+
 		// Test the IDs on the DataObjects are set correctly
-		foreach($team1->Comments() as $comment) {
-			$this->assertEquals($team1->ID, $comment->TeamID);
-		}
+		$this->assertDOSEquals($team1Comments, $team1->Comments());
+
+		// Test that has_many can be infered from the has_one via getNonReciprocalComponent
+		$this->assertDOSEquals(
+			$team1Comments,
+			$team1->inferReciprocalComponent('DataObjectTest_TeamComment', 'Team')
+		);
 
 		// Test that we can add and remove items that already exist in the database
 		$newComment = new DataObjectTest_TeamComment();
@@ -1220,6 +1235,7 @@ class DataObjectTest extends SapphireTest {
 
 	public function testMultipleManyManyWithSameClass() {
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$company2 = $this->objFromFixture('DataObjectTest_EquipmentCompany', 'equipmentcompany2');
 		$sponsors = $team->Sponsors();
 		$equipmentSuppliers = $team->EquipmentSuppliers();
 
@@ -1240,6 +1256,25 @@ class DataObjectTest extends SapphireTest {
 		$teamWithoutSponsor = $this->objFromFixture('DataObjectTest_Team', 'team3');
 		$this->assertInstanceOf('ManyManyList', $teamWithoutSponsor->Sponsors());
 		$this->assertEquals(0, $teamWithoutSponsor->Sponsors()->count());
+
+		// Test that belongs_many_many can be infered from with getNonReciprocalComponent
+		$this->assertDOSEquals(
+			[
+				['Name' => 'Company corp'],
+				['Name' => 'Team co.'],
+			],
+			$team->inferReciprocalComponent('DataObjectTest_EquipmentCompany', 'SponsoredTeams')
+		);
+
+		// Test that many_many can be infered from getNonReciprocalComponent
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Team 1'],
+				['Title' => 'Team 2'],
+				['Title' => 'Subteam 1'],
+			],
+			$company2->inferReciprocalComponent('DataObjectTest_Team', 'Sponsors')
+		);
 
 		// Check many_many_extraFields still works
 		$equipmentCompany = $this->objFromFixture('DataObjectTest_EquipmentCompany', 'equipmentcompany1');
@@ -1269,6 +1304,7 @@ class DataObjectTest extends SapphireTest {
 		$subTeam->Sponsors()->add($subEquipmentCompany, array('SponsorFee' => 1200));
 		$this->assertEquals(1200, $subTeam->Sponsors()->byID($subEquipmentCompany->ID)->SponsorFee,
 			'Data from inherited many_many_extraFields was not stored/extracted correctly');
+
 	}
 
 	public function testManyManyExtraFields() {
@@ -1537,6 +1573,7 @@ class DataObjectTest extends SapphireTest {
 		$company = new DataObjectTest_Company();
 		$ceo     = new DataObjectTest_CEO();
 
+		$company->Name = 'New Company';
 		$company->write();
 		$ceo->write();
 
@@ -1545,6 +1582,19 @@ class DataObjectTest extends SapphireTest {
 		$company->write();
 
 		$this->assertEquals($company->ID, $ceo->Company()->ID, 'belongs_to returns the right results.');
+
+		// Test belongs_to can be infered via getNonReciprocalComponent
+		// Note: Will be returned as has_many since the belongs_to is ignored.
+		$this->assertDOSEquals(
+			[['Name' => 'New Company']],
+			$ceo->inferReciprocalComponent('DataObjectTest_Company', 'CEO')
+		);
+
+		// Test has_one to a belongs_to can be infered via getNonReciprocalComponent
+		$this->assertEquals(
+			$ceo->ID,
+			$company->inferReciprocalComponent('DataObjectTest_CEO', 'Company')->ID
+		);
 
 		// Test automatic creation of class where no assigment exists
 		$ceo = new DataObjectTest_CEO();
@@ -1749,7 +1799,8 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 	private static $has_many = array(
 		'SubTeams' => 'DataObjectTest_SubTeam',
 		'Comments' => 'DataObjectTest_TeamComment',
-		'Fans' => 'DataObjectTest_Fan.Favourite' // Polymorphic - Team fans
+		'Fans' => 'DataObjectTest_Fan.Favourite', // Polymorphic - Team fans
+		'PlayerFans' => 'DataObjectTest_Player.FavouriteTeam'
 	);
 
 	private static $many_many = array(

@@ -148,7 +148,7 @@ is initialized. But it can also be set and reset temporarily to force a specific
 	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
 	Versioned::set_reading_mode($origMode); // reset current mode
 
-### File ownership
+### DataObject ownership
 
 Typically when publishing versioned dataobjects, it is necessary to ensure that some linked components
 are published along with it. Unless this is done, site front-end content can appear incorrectly published.
@@ -160,8 +160,8 @@ The solution to this problem is the ownership API, which declares a two-way rela
 objects along database relations. This relationship is similar to many_many/belongs_many_many
 and has_one/has_many, however it relies on a pre-existing relationship to function.
 
-For instance, in order to specify this dependency, you must apply `owns` and `owned_by` config
-on a relationship.
+For instance, in order to specify this dependency, you must apply `owns` on the owner to point to any
+owned relationships.
 
 When pages of type `MyPage` are published, any owned images and banners will be automatically published,
 without requiring any custom code.
@@ -185,33 +185,52 @@ without requiring any custom code.
 			'Parent' => 'MyPage',
 			'Image' => 'Image',
 		);
-		private static $owned_by = array(
-			'Parent'
-		);
 		private static $owns = array(
 			'Image'
 		);
 	}
-	
-	class BannerImageExtension extends DataExtension {
-		private static $has_many = array(
-			'Banners' => 'Banner'
+
+
+Note that ownership cannot be used with polymorphic relations. E.g. has_one to non-type specific `DataObject`. 
+
+#### DataObject ownership with custom relations
+
+In some cases you might need to apply ownership where there is no underlying db relation, such as
+those calculated at runtime based on business logic. In cases where you are not backing ownership
+with standard relations (has_one, has_many, etc) it is necessary to declare ownership on both
+sides of the relation.
+
+This can be done by creating methods on both sides of your relation (e.g. parent and child class)
+that can be used to traverse between each, and then by ensuring you configure both
+`owns` config (on the parent) and `owned_by` (on the child).
+
+E.g.
+
+	:::php
+	class MyParent extends DataObject {
+		private static $extensions = array(
+			'Versioned'
+		);
+		private static $owns = array(
+			'ChildObjects'
+		);
+		public function ChildObjects() {
+			return MyChild::get();
+		}
+	}
+	class MyChild extends DataObject {
+		private static $extensions = array(
+			'Versioned'
 		);
 		private static $owned_by = array(
-			'Banners'
+			'Parent'
 		);
+		public function Parent() {
+			return MyParent::get()->first();
+		}
 	}
 
-With the config:
-
-	:::yaml
-	Image:
-	  extensions:
-	    - BannerImageExtension
-
-
-Note that it's important to define both `owns` and `owned_by` components of the relationship,
-similar to how you would apply `has_one` and `has_many`, or `many_many` and `belongs_many_many`.
+#### DataObject Ownership in HTML Content
 
 If you are using `[api:HTMLText]` or `[api:HTMLVarchar]` fields in your `DataObject::$db` definitions,
 it's likely that your authors can insert images into those fields via the CMS interface.

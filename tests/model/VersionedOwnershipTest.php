@@ -11,12 +11,15 @@ class VersionedOwnershipTest extends SapphireTest {
 		'VersionedOwnershipTest_Related',
 		'VersionedOwnershipTest_Attachment',
 		'VersionedOwnershipTest_RelatedMany',
+		'VersionedOwnershipTest_Page',
+		'VersionedOwnershipTest_Banner',
+		'VersionedOwnershipTest_Image',
+		'VersionedOwnershipTest_CustomRelation',
 	);
 
 	protected static $fixture_file = 'VersionedOwnershipTest.yml';
 
-	public function setUp()
-	{
+	public function setUp() {
 		parent::setUp();
 
 		Versioned::set_stage(Versioned::DRAFT);
@@ -27,7 +30,7 @@ class VersionedOwnershipTest extends SapphireTest {
 				if(stripos($name, '_published') !== false) {
 					/** @var Versioned|DataObject $object */
 					$object = DataObject::get($class)->byID($id);
-					$object->publish('Stage', 'Live');
+					$object->publish(Versioned::DRAFT, Versioned::LIVE);
 				}
 			}
 		}
@@ -504,6 +507,80 @@ class VersionedOwnershipTest extends SapphireTest {
 		);
 	}
 
+	/**
+	 * Test that you can find owners without owned_by being defined explicitly
+	 */
+	public function testInferedOwners() {
+		// Make sure findOwned() works
+		/** @var VersionedOwnershipTest_Page $page1 */
+		$page1 = $this->objFromFixture('VersionedOwnershipTest_Page', 'page1_published');
+		/** @var VersionedOwnershipTest_Page $page2 */
+		$page2 = $this->objFromFixture('VersionedOwnershipTest_Page', 'page2_published');
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Banner 1'],
+				['Title' => 'Image 1'],
+				['Title' => 'Custom 1'],
+			],
+			$page1->findOwned()
+		);
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Banner 2'],
+				['Title' => 'Banner 3'],
+				['Title' => 'Image 1'],
+				['Title' => 'Image 2'],
+				['Title' => 'Custom 2'],
+			],
+			$page2->findOwned()
+		);
+
+		// Check that findOwners works
+		/** @var VersionedOwnershipTest_Image $image1 */
+		$image1 = $this->objFromFixture('VersionedOwnershipTest_Image', 'image1_published');
+		/** @var VersionedOwnershipTest_Image $image2 */
+		$image2 = $this->objFromFixture('VersionedOwnershipTest_Image', 'image2_published');
+
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Banner 1'],
+				['Title' => 'Banner 2'],
+				['Title' => 'Page 1'],
+				['Title' => 'Page 2'],
+			],
+			$image1->findOwners()
+		);
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Banner 1'],
+				['Title' => 'Banner 2'],
+			],
+			$image1->findOwners(false)
+		);
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Banner 3'],
+				['Title' => 'Page 2'],
+			],
+			$image2->findOwners()
+		);
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Banner 3'],
+			],
+			$image2->findOwners(false)
+		);
+
+		// Test custom relation can findOwners()
+		/** @var VersionedOwnershipTest_CustomRelation $custom1 */
+		$custom1 = $this->objFromFixture('VersionedOwnershipTest_CustomRelation', 'custom1_published');
+		$this->assertDOSEquals(
+			[['Title' => 'Page 1']],
+			$custom1->findOwners()
+		);
+
+	}
+
 }
 
 /**
@@ -620,5 +697,109 @@ class VersionedOwnershipTest_Attachment extends DataObject implements TestOnly {
 
 	private static $owned_by = array(
 		'AttachedTo'
+	);
+}
+
+/**
+ * Page which owns a lits of banners
+ *
+ * @mixin Versioned
+ */
+class VersionedOwnershipTest_Page extends DataObject implements TestOnly {
+	private static $extensions = array(
+		'Versioned',
+	);
+
+	private static $db = array(
+		'Title' => 'Varchar(255)',
+	);
+
+	private static $many_many = array(
+		'Banners' => 'VersionedOwnershipTest_Banner',
+	);
+
+	private static $owns = array(
+		'Banners',
+		'Custom'
+	);
+
+	/**
+	 * All custom objects with the same number. E.g. 'Page 1' owns 'Custom 1'
+	 *
+	 * @return DataList
+	 */
+	public function Custom() {
+		$title = str_replace('Page', 'Custom', $this->Title);
+		return VersionedOwnershipTest_CustomRelation::get()
+			->filter('Title', $title);
+	}
+}
+
+/**
+ * Banner which doesn't declare its belongs_many_many, but owns an Image
+ *
+ * @mixin Versioned
+ */
+class VersionedOwnershipTest_Banner extends DataObject implements TestOnly {
+	private static $extensions = array(
+		'Versioned',
+	);
+
+	private static $db = array(
+		'Title' => 'Varchar(255)',
+	);
+
+	private static $has_one = array(
+		'Image' => 'VersionedOwnershipTest_Image',
+	);
+
+	private static $owns = array(
+		'Image',
+	);
+}
+
+
+/**
+ * Object which is owned via a custom PHP method rather than DB relation
+ *
+ * @mixin Versioned
+ */
+class VersionedOwnershipTest_CustomRelation extends DataObject implements TestOnly {
+	private static $extensions = array(
+		'Versioned',
+	);
+
+	private static $db = array(
+		'Title' => 'Varchar(255)',
+	);
+
+	private static $owned_by = array(
+		'Pages'
+	);
+
+	/**
+	 * All pages with the same number. E.g. 'Page 1' owns 'Custom 1'
+	 *
+	 * @return DataList
+	 */
+	public function Pages() {
+		$title = str_replace('Custom', 'Page', $this->Title);
+		return VersionedOwnershipTest_Page::get()->filter('Title', $title);
+	}
+
+}
+
+/**
+ * Simple versioned dataobject
+ *
+ * @mixin Versioned
+ */
+class VersionedOwnershipTest_Image extends DataObject implements TestOnly {
+	private static $extensions = array(
+		'Versioned',
+	);
+
+	private static $db = array(
+		'Title' => 'Varchar(255)',
 	);
 }
