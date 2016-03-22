@@ -670,29 +670,36 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param mixed $dataObjectSet The {@link SS_List} to test.
 	 */
 	public function assertDOSEquals($matches, $dataObjectSet) {
-		if(!$dataObjectSet) return;
-
+		// Extract dataobjects
 		$extracted = array();
-		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
-
-		foreach($matches as $match) {
-			$matched = false;
-			foreach($extracted as $i => $item) {
-				if($this->dataObjectArrayMatch($item, $match)) {
-					// Remove it from $extracted so that we don't get duplicate mapping.
-					unset($extracted[$i]);
-					$matched = true;
-					break;
-				}
+		if($dataObjectSet) {
+			foreach ($dataObjectSet as $item) {
+				/** @var DataObject $item */
+				$extracted[] = $item->toMap();
 			}
+		}
 
-			// We couldn't find a match - assertion failed
-			$this->assertTrue(
-				$matched,
-				"Failed asserting that the SS_List contains an item matching "
-				. var_export($match, true) . "\n\nIn the following SS_List:\n"
-				. $this->DOSSummaryForMatch($dataObjectSet, $match)
-			);
+		// Check all matches
+		if($matches) {
+			foreach ($matches as $match) {
+				$matched = false;
+				foreach ($extracted as $i => $item) {
+					if ($this->dataObjectArrayMatch($item, $match)) {
+						// Remove it from $extracted so that we don't get duplicate mapping.
+						unset($extracted[$i]);
+						$matched = true;
+						break;
+					}
+				}
+
+				// We couldn't find a match - assertion failed
+				$this->assertTrue(
+					$matched,
+					"Failed asserting that the SS_List contains an item matching "
+					. var_export($match, true) . "\n\nIn the following SS_List:\n"
+					. $this->DOSSummaryForMatch($dataObjectSet, $match)
+				);
+			}
 		}
 
 		// If we have leftovers than the DOS has extra data that shouldn't be there
@@ -975,22 +982,41 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Create a member and group with the given permission code, and log in with it.
 	 * Returns the member ID.
+	 *
+	 * @param string|array $permCode Either a permission, or list of permissions
+	 * @return int Member ID
 	 */
 	public function logInWithPermission($permCode = "ADMIN") {
-		if(!isset($this->cache_generatedMembers[$permCode])) {
-			$group = Injector::inst()->create('Group');
+		if(is_array($permCode)) {
+			$permArray = $permCode;
+			$permCode = implode('.', $permCode);
+		} else {
+			$permArray = array($permCode);
+		}
+
+		// Check cached member
+		if(isset($this->cache_generatedMembers[$permCode])) {
+			$member = $this->cache_generatedMembers[$permCode];
+		} else {
+			// Generate group with these permissions
+			$group = Group::create();
 			$group->Title = "$permCode group";
 			$group->write();
 
-			$permission = Injector::inst()->create('Permission');
-			$permission->Code = $permCode;
-			$permission->write();
-			$group->Permissions()->add($permission);
+			// Create each individual permission
+			foreach($permArray as $permArrayItem) {
+				$permission = Permission::create();
+				$permission->Code = $permArrayItem;
+				$permission->write();
+				$group->Permissions()->add($permission);
+			}
 
 			$member = DataObject::get_one('Member', array(
 				'"Member"."Email"' => "$permCode@example.org"
 			));
-			if(!$member) $member = Injector::inst()->create('Member');
+			if (!$member) {
+				$member = Member::create();
+			}
 
 			$member->FirstName = $permCode;
 			$member->Surname = "User";
@@ -1000,9 +1026,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 			$this->cache_generatedMembers[$permCode] = $member;
 		}
-
-		$this->cache_generatedMembers[$permCode]->logIn();
-		return $this->cache_generatedMembers[$permCode]->ID;
+		$member->logIn();
+		return $member->ID;
 	}
 
 	/**
