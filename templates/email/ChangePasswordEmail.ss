@@ -6,6 +6,9 @@
 </p>
 
 <p>
-	<%t ChangePasswordEmail_ss.EMAIL 'Email' %>: $Email<br />
-	<%t ChangePasswordEmail_ss.PASSWORD 'Password' %>: $CleartextPassword
+	<%t ChangePasswordEmail_ss.EMAIL 'Email' %>: $Email
+	<% if $CleartextPassword %>
+		<br />
+		<%t ChangePasswordEmail_ss.PASSWORD 'Password' %>: $CleartextPassword
+	<% end_if %>
 </p>
