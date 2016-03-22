@@ -13,6 +13,8 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		'readCampaign',
 		'updateCampaign',
 		'deleteCampaign',
+		'schema',
+		'DetailEditForm'
 	];
 
 	private static $menu_priority = 11;
@@ -20,6 +22,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 	private static $menu_title = 'Campaigns';
 
 	private static $url_handlers = [
+		'GET items' => 'readCampaigns',
 		'POST item/$ID' => 'createCampaign',
 		'GET item/$ID' => 'readCampaign',
 		'PUT item/$ID' => 'updateCampaign',
@@ -36,11 +39,116 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 	}
 
 	public function getClientConfig() {
+		// TODO Hardcoding schema until we can get GridField to generate a schema dynamically
+		$json = <<<JSON
+{
+	"id": "EditForm",
+	"schema": {
+		"name": "EditForm",
+		"id": "EditForm",
+		"action": "schema",
+		"method": "GET",
+		"schema_url": "admin\/campaigns\/schema\/EditForm",
+		"attributes": {
+			"id": "Form_EditForm",
+			"action": "admin\/campaigns\/EditForm",
+			"method": "POST",
+			"enctype": "multipart\/form-data",
+			"target": null,
+			"class": "cms-edit-form CampaignAdmin LeftAndMain"
+		},
+		"data": [],
+		"fields": [{
+			"name": "ID",
+			"id": "Form_EditForm_ID",
+			"type": "Hidden",
+			"component": null,
+			"holder_id": null,
+			"title": false,
+			"source": null,
+			"extraClass": "hidden nolabel",
+			"description": null,
+			"rightTitle": null,
+			"leftTitle": null,
+			"readOnly": false,
+			"disabled": false,
+			"customValidationMessage": "",
+			"attributes": [],
+			"data": []
+		}, {
+			"name": "ChangeSets",
+			"id": "Form_EditForm_ChangeSets",
+			"type": "Custom",
+			"component": "GridField",
+			"holder_id": null,
+			"title": "Campaigns",
+			"source": null,
+			"extraClass": null,
+			"description": null,
+			"rightTitle": null,
+			"leftTitle": null,
+			"readOnly": false,
+			"disabled": false,
+			"customValidationMessage": "",
+			"attributes": [],
+			"data": {
+				'collectionReadUrl': {
+					'url': 'admin\/campaigns\/items',
+					'method': 'GET'
+				},
+				'itemReadUrl': {
+					'url': 'admin\/campaigns\/item\/:id',
+					'method': 'GET'
+				},
+				'itemUpdateUrl': {
+					'url': 'admin\/campaigns\/item\/:id',
+					'method': 'PUT'
+				},
+				'itemCreateUrl': {
+					'url': 'admin\/campaigns\/item\/:id',
+					'method': 'POST'
+				},
+				'itemDeleteUrl': {
+					'url': 'admin\/campaigns\/item\/:id',
+					'method': 'DELETE'
+				},
+				'editFormSchemaUrl': 'admin\/campaigns\/schema\/DetailEditForm'
+			}
+		}, {
+			"name": "SecurityID",
+			"id": "Form_EditForm_SecurityID",
+			"type": "Hidden",
+			"component": null,
+			"holder_id": null,
+			"title": "Security ID",
+			"source": null,
+			"extraClass": "hidden",
+			"description": null,
+			"rightTitle": null,
+			"leftTitle": null,
+			"readOnly": false,
+			"disabled": false,
+			"customValidationMessage": "",
+			"attributes": [],
+			"data": []
+		}],
+		"actions": []
+	}
+}
+JSON;
+
 		return array_merge(parent::getClientConfig(), [
 			'forms' => [
-				'editForm' => $this->schema->getSchema($this->getEditForm())
+				'editForm' => [
+					// TODO Use schemaUrl instead
+					'schema' => json_decode($json)
+				]
 			]
 		]);
+	}
+
+	public function getEditForm($id = null, $fields = null) {
+		return '';
 	}
 
 	/**
@@ -54,6 +162,21 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		$response = new SS_HTTPResponse();
 		$response->addHeader('Content-Type', 'application/json');
 		$response->setBody(Convert::raw2json(['campaign' => 'create']));
+
+		return $response;
+	}
+
+	/**
+	 * REST endpoint to get a list of campaigns.
+	 *
+	 * @param SS_HTTPRequest $request
+	 *
+	 * @return SS_HTTPResponse
+	 */
+	public function readCampaigns(SS_HTTPRequest $request) {
+		$response = new SS_HTTPResponse();
+		$response->addHeader('Content-Type', 'application/json');
+		$response->setBody(Convert::raw2json(['campaigns' => 'read']));
 
 		return $response;
 	}
@@ -101,6 +224,25 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		$response->setBody(Convert::raw2json(['campaign' => 'delete']));
 
 		return $response;
+	}
+
+	/**
+	 * @todo Use GridFieldDetailForm once it can handle structured data and form schemas
+	 *
+	 * @return Form
+	 */
+	public function getDetailEditForm() {
+		return Form::create(
+			$this,
+			'DetailEditForm',
+			FieldList::create(
+				TextField::create('Name'),
+				TextAreaField::create('Description')
+			),
+			FieldList::create(
+				FormAction::create('save', 'Save')
+			)
+		);
 	}
 
 }
