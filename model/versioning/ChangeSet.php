@@ -6,6 +6,7 @@
  * The ChangeSet model tracks several VersionedAndStaged objects for later publication as a single
  * atomic action
  *
+ * @method HasManyList Changes()
  * @package framework
  * @subpackage model
  */
@@ -18,7 +19,7 @@ class ChangeSet extends DataObject {
 	const STATE_REVERTED = 'reverted';
 
 	/** A changeset which is published and closed */
-	const STATE_ADDED = 'published';
+	const STATE_PUBLISHED = 'published';
 
 	private static $db = array(
 		'Name'  => 'Varchar',
@@ -32,6 +33,17 @@ class ChangeSet extends DataObject {
 	private static $has_one = array(
 		'Owner' => 'Member'
 	);
+
+	/**
+	 * Default permission to require for publishers.
+	 * Publishers must either be able to use the campaign admin, or have all admin access.
+	 *
+	 * Also used as default permission for ChangeSetItem default permission.
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $required_permission = array('CMS_ACCESS_CampaignAdmin', 'CMS_ACCESS_LeftAndMain');
 
 	/** Publish this changeset, then closes it. */
 	public function publish() {
@@ -170,22 +182,91 @@ class ChangeSet extends DataObject {
 		return empty($implicit);
 	}
 
-	/** Standard permission mechanisms */
 	public function canView($member = null) {
+		return $this->can(__FUNCTION__, $member);
 	}
 
 	public function canEdit($member = null) {
+		return $this->can(__FUNCTION__, $member);
 	}
 
 	public function canCreate($member = null, $context = array()) {
+		return $this->can(__FUNCTION__, $member, $context);
 	}
 
 	public function canDelete($member = null) {
+		return $this->can(__FUNCTION__, $member);
 	}
 
+	/**
+	 * Check if this item is allowed to be published
+	 *
+	 * @param Member $member
+	 * @return bool
+	 */
 	public function canPublish($member = null) {
+		// Logical check on state
+		if($this->State !== static::STATE_OPEN) {
+			return false;
+		}
+
+		// All changes must be publishable
+		foreach($this->Changes() as $change) {
+			/** @var ChangeSetItem $change */
+			if(!$change->canPublish($member)) {
+				return false;
+			}
+		}
+
+		// Default permission
+		return $this->can(__FUNCTION__, $member);
 	}
 
+	/**
+	 * Check if this changeset (if published) can be reverted
+	 *
+	 * @param Member $member
+	 * @return bool
+	 */
 	public function canRevert($member = null) {
+		// Logical check on state
+		if($this->State !== static::STATE_PUBLISHED) {
+			return false;
+		}
+
+		// All changes must be publishable
+		foreach($this->Changes() as $change) {
+			/** @var ChangeSetItem $change */
+			if(!$change->canRevert($member)) {
+				return false;
+			}
+		}
+
+		// Default permission
+		return $this->can(__FUNCTION__, $member);
+	}
+
+	/**
+	 * Default permissions for this changeset
+	 *
+	 * @param string $perm
+	 * @param Member $member
+	 * @param array $context
+	 * @return bool
+	 */
+	public function can($perm, $member = null, $context = array()) {
+		if(!$member) {
+			$member = Member::currentUser();
+		}
+
+		// Allow extensions to bypass default permissions, but only if
+		// each change can be individually published.
+		$extended = $this->extendedCan($perm, $member, $context);
+		if($extended !== null) {
+			return $extended;
+		}
+
+		// Default permissions
+		return (bool)Permission::checkMember($member, $this->config()->required_permission);
 	}
 }
