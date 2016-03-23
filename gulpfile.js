@@ -1,26 +1,25 @@
-var gulp = require('gulp'),
-    babel = require('gulp-babel'),
-    diff = require('gulp-diff'),
-    gulpif = require('gulp-if'),
-    notify = require('gulp-notify'),
-    postcss = require('gulp-postcss'),
-    sass = require('gulp-sass'),
-    uglify = require('gulp-uglify'),
-    gulpUtil = require('gulp-util'),
-    uglify = require('gulp-uglify'),
+var packageJson =  require('./package.json'),
     autoprefixer = require('autoprefixer'),
-    browserify = require('browserify'),
-    babelify = require('babelify'),
-    source = require('vinyl-source-stream'),
-    buffer = require('vinyl-buffer'),
-    path = require('path'),
-    glob = require('glob'),
-    eventStream = require('event-stream'),
-    semver = require('semver'),
-    packageJson = require('./package.json'),
-    sprity = require('sprity'),
-    gulpif = require('gulp-if'),
-    sourcemaps = require('gulp-sourcemaps');
+    babelify =     require('babelify'),
+    browserify =   require('browserify'),
+    eventStream =  require('event-stream'),
+    glob =         require('glob'),
+    gulp =         require('gulp'),
+    babel =        require('gulp-babel'),
+    diff =         require('gulp-diff'),
+    gulpif =       require('gulp-if'),
+    notify =       require('gulp-notify'),
+    postcss =      require('gulp-postcss'),
+    sass =         require('gulp-sass'),
+    sourcemaps =   require('gulp-sourcemaps'),
+    uglify =       require('gulp-uglify'),
+    gulpUtil =     require('gulp-util'),
+    path =         require('path'),
+    source =       require('vinyl-source-stream'),
+    buffer =       require('vinyl-buffer'),
+    semver =       require('semver'),
+    sprity =       require('sprity'),
+    watchify =     require('watchify');
 
 var isDev = typeof process.env.npm_config_development !== 'undefined';
 
@@ -44,7 +43,13 @@ var PATHS = {
 // Folders which contain both scss and css folders to be compiled
 var rootCompileFolders = [PATHS.FRAMEWORK, PATHS.ADMIN, PATHS.FRAMEWORK_DEV_INSTALL]
 
-var browserifyOptions = {};
+var browserifyOptions = { debug: true };
+
+var babelifyOptions = {
+    presets: ['es2015', 'react'],
+    ignore: /(node_modules|thirdparty)/,
+    comments: false
+};
 
 // Used for autoprefixing css properties (same as Bootstrap Aplha.2 defaults)
 var supportedBrowsers = [
@@ -170,51 +175,25 @@ if (!semver.satisfies(process.versions.node, packageJson.engines.node)) {
 }
 
 if (isDev) {
-    browserifyOptions.debug = true;
+    browserifyOptions.cache = {};
+    browserifyOptions.packageCache = {};
+    browserifyOptions.plugin = [watchify];
 }
 
-gulp.task('build', ['umd', 'bundle'], function () {
-    if (isDev) {
-        gulp.watch([
-            PATHS.ADMIN_JAVASCRIPT_SRC + '/**/*.js',
-            PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/**/*.js',
-        ], ['build']);
-    }
-});
+gulp.task('build', ['umd', 'bundle']);
 
-gulp.task('bundle', ['bundle-lib', 'bundle-leftandmain', 'bundle-boot', 'bundle-react', 'bundle-campaign-admin']);
-
-gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
-    var bundleFileName = 'bundle-leftandmain.js';
-
-    return browserify(Object.assign({}, browserifyOptions, { entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/leftandmain.js' }))
-        .transform(babelify.configure({
-            presets: ['es2015'],
-            ignore: /(thirdparty)/,
-            comments: false
-        }))
-        .external('jQuery')
-        .external('i18n')
-        .external('router')
-        .bundle()
-        .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
-        .pipe(source(bundleFileName))
-        .pipe(buffer())
-        .pipe(gulpif(!isDev, uglify()))
-        .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
-});
+gulp.task('bundle', ['bundle-lib', 'bundle-legacy', 'bundle-framework']);
 
 gulp.task('bundle-lib', function bundleLib() {
     var bundleFileName = 'bundle-lib.js';
 
     return browserify(Object.assign({}, browserifyOptions, { entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/lib.js' }))
-        .transform(babelify.configure({
-            presets: ['es2015'],
-            ignore: /(thirdparty)/,
-            comments: false
-        }))
+        .on('update', bundleLib)
+        .on('log', function (msg) { gulpUtil.log('Finished', 'bundled ' + bundleFileName + ' ' + msg) })
+        .transform('babelify', babelifyOptions)
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/action',                   { expose: 'action-button' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/config',                              { expose: 'config' })
+        .require('deep-freeze',                                                       { expose: 'deep-freeze' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form',                     { expose: 'form' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form-action',              { expose: 'form-action' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form-builder',             { expose: 'form-builder' })
@@ -224,93 +203,84 @@ gulp.task('bundle-lib', function bundleLib() {
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/grid-field-header-cell',   { expose: 'grid-field-header-cell' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/grid-field-row',           { expose: 'grid-field-row' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/grid-field-table',         { expose: 'grid-field-table' })
+        .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/hidden-field',             { expose: 'hidden-field' })
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/i18n.js',                         { expose: 'i18n' })
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/jQuery.js',                       { expose: 'jQuery' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/north-header',             { expose: 'north-header' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/north-header-breadcrumbs', { expose: 'north-header-breadcrumbs' })
+        .require('react',                                                             { expose: 'react' })
+        .require('react-addons-css-transition-group',                                 { expose: 'react-addons-css-transition-group' })
+        .require('react-addons-test-utils',                                           { expose: 'react-addons-test-utils' })
+        .require('react-dom',                                                         { expose: 'react-dom' })
+        .require('react-redux',                                                       { expose: 'react-redux' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/reducer-register.js',                 { expose: 'reducer-register' })
+        .require('redux',                                                             { expose: 'redux' })
+        .require('redux-thunk',                                                       { expose: 'redux-thunk' })
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/router.js',                       { expose: 'router' })
+        .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/SilverStripeComponent',               { expose: 'silverstripe-component' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/text-field',               { expose: 'text-field' })
         .bundle()
         .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
         .pipe(source(bundleFileName))
         .pipe(buffer())
+        .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(gulpif(!isDev, uglify()))
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
 
-gulp.task('bundle-react', function bundleReact() {
-    var bundleFileName = 'bundle-react.js';
 
-    return browserify(Object.assign({}, browserifyOptions))
-        .transform(babelify.configure({
-            presets: ['es2015'],
-            ignore: /(node_modules)/
-        }))
-        .require('deep-freeze',                                         { expose: 'deep-freeze' })
-        .require('react',                                               { expose: 'react' })
-        .require('react-addons-css-transition-group',                   { expose: 'react-addons-css-transition-group' })
-        .require('react-addons-test-utils',                             { expose: 'react-addons-test-utils' })
-        .require('react-dom',                                           { expose: 'react-dom' })
-        .require('react-redux',                                         { expose: 'react-redux' })
-        .require('redux',                                               { expose: 'redux' })
-        .require('redux-thunk',                                         { expose: 'redux-thunk' })
-        .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/SilverStripeComponent', { expose: 'silverstripe-component' })
+gulp.task('bundle-legacy', function bundleLeftAndMain() {
+    var bundleFileName = 'bundle-legacy.js';
+
+    return browserify(Object.assign({}, browserifyOptions, { entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/legacy.js' }))
+        .on('update', bundleLeftAndMain)
+        .on('log', function (msg) { gulpUtil.log('Finished', 'bundled ' + bundleFileName + ' ' + msg) })
+        .transform('babelify', babelifyOptions)
+        .external('jQuery')
+        .external('i18n')
+        .external('router')
         .bundle()
         .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
         .pipe(source(bundleFileName))
         .pipe(buffer())
+        .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(gulpif(!isDev, uglify()))
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
 
-gulp.task('bundle-boot', function bundleBoot() {
-    var bundleFileName = 'boot.js';
+gulp.task('bundle-framework', function bundleBoot() {
+    var bundleFileName = 'bundle-framework.js';
 
     return browserify(Object.assign({}, browserifyOptions, { entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/boot/index.js' }))
-        .transform(babelify.configure({
-            presets: ['es2015'],
-            ignore: /(node_modules)/
-        }))
-        .external('reducer-register')
-        .external('jQuery')
-        .bundle()
-        .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
-        .pipe(source(bundleFileName))
-        .pipe(buffer())
-        .pipe(gulpif(!isDev, uglify()))
-        .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
-});
-
-gulp.task('bundle-campaign-admin', function bundleCampaignAdmin() {
-    var bundleFileName = 'campaign-admin.js';
-
-    return browserify(Object.assign({}, browserifyOptions, { entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/boot/campaign-admin.js' }))
-        .transform(babelify.configure({
-            presets: ['es2015', 'react'],
-            ignore: /(node_modules)/
-        }))
+        .on('update', bundleBoot)
+        .on('log', function (msg) { gulpUtil.log('Finished', 'bundled ' + bundleFileName + ' ' + msg) })
+        .transform('babelify', babelifyOptions)
         .external('action-button')
         .external('config')
         .external('deep-freeze')
         .external('grid-field')
         .external('i18n')
         .external('jQuery')
+        .external('jQuery')
         .external('north-header')
         .external('page.js')
-        .external('react')
         .external('react-addons-test-utils')
         .external('react-dom')
         .external('react-redux')
+        .external('react')
         .external('reducer-register')
-        .external('redux')
         .external('redux-thunk')
+        .external('redux')
         .external('silverstripe-component')
         .bundle()
         .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
         .pipe(source(bundleFileName))
         .pipe(buffer())
+        .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(gulpif(!isDev, uglify()))
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
 
@@ -367,7 +337,7 @@ gulp.task('css', ['compile:css'], function () {
         rootCompileFolders.forEach(function (folder) {
             gulp.watch(folder + '/scss/**/*.scss', ['compile:css']);
         });
-        
+
         // Watch the .scss files in react components
         gulp.watch('./admin/javascript/src/**/*.scss', ['compile:css']);
     }
