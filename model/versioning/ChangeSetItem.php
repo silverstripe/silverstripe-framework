@@ -78,6 +78,20 @@ class ChangeSetItem extends DataObject {
 		}
 	}
 
+	private function getObjectInStage($stage) {
+		return Versioned::get_one_by_stage($this->ObjectClass, Versioned::LIVE, sprintf('"ID" = %d', $this->ObjectID));
+	}
+
+	function findReferenced() {
+		if ($this->getChangeType() == ChangeSetItem::CHANGE_DELETED) {
+			return $this->getObjectInStage(Versioned::DRAFT)->findOwners(false);
+		} else {
+			return $this->getObjectInStage(Versioned::LIVE)->findOwned()->filterByCallback(function ($object) {
+				return $object->stagesDiffer(Versioned::DRAFT, Versioned::LIVE);
+			});
+		}
+	}
+
 	/** Publish this item, then close it. */
 	public function publish() {
 		user_error('Not implemented', E_USER_ERROR);

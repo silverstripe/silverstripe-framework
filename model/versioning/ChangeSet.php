@@ -96,16 +96,9 @@ class ChangeSet extends DataObject {
 		foreach ($this->Changes()->filter(['Added' => ChangeSetItem::EXPLICITLY]) as $item) {
 			$explicit[$item->ObjectID . '.' . $item->ObjectClass] = true;
 
-			if ($item->Type() == ChangeSetItem::CHANGE_DELETED) {
-				$toadd = $item->findOwners(false);
-			} else {
-				$toadd = $item->findOwned()->filterByCallback(function ($object) {
-					return $object->stagesDiffer(Versioned::DRAFT, Versioned::LIVE);
-				});
-			}
 
-			foreach ($toadd as $add) {
-				$referenced[$add->ID . '.' . $add->ClassName] = ['ObjectID' => $add->ID, 'ObjectClass' => $add->ClassName];
+			foreach ($item->findReferenced() as $referee) {
+				$referenced[$referee->ID . '.' . $referee->ClassName] = ['ObjectID' => $referee->ID, 'ObjectClass' => $referee->ClassName];
 			}
 		}
 
@@ -163,7 +156,7 @@ class ChangeSet extends DataObject {
 	}
 
 	/** Verify that any objects in this changeset include all owned changes */
-	public function validate() {
+	public function isSynced() {
 		$implicit = $this->calculateImplicit();
 
 		// Check the existing implicit ChangeSetItems for this ChangeSet
