@@ -463,13 +463,20 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 */
 	public function redirect($url, $code=302) {
 		if(!$this->response) $this->response = new SS_HTTPResponse();
-		
-		if($this->response->getHeader('Location') && $this->response->getHeader('Location') != $url) {
-			user_error("Already directed to " . $this->response->getHeader('Location')
-				. "; now trying to direct to $url", E_USER_WARNING);
-			return;
-		}
 
+		$location = $this->response->getHeader('Location');
+		if($location){
+			
+			if(substr($location, 0, 1) == "/"){
+				$location = substr($location,1); 
+			}
+			if($location != $url) {
+				user_error("Already directed to " . $this->response->getHeader('Location')
+					. "; now trying to direct to $url", E_USER_WARNING);
+				return;
+			}
+		}
+		
 		// Attach site-root to relative links, if they have a slash in them
 		if($url=="" || $url[0]=='?' || (substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false)) {
 			$url = Director::baseURL() . $url;
