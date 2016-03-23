@@ -944,11 +944,111 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param ArrayList $list Optional list to add items to
 	 * @return ArrayList list of objects
 	 */
-	public function findOwners($recursive = true, $list = null)
-	{
-		// Find objects in these relationships
-		return $this->findRelatedObjects('owned_by', $recursive, $list);
+	public function findOwners($recursive = true, $list = null) {
+		if (!$list) {
+			$list = new ArrayList();
+		}
+
+		// Build reverse lookup for ownership
+		// @todo - Cache this more intelligently
+		$rules = $this->lookupReverseOwners();
+
+		// Hand off to recursive method
+		return $this->findOwnersRecursive($recursive, $list, $rules);
 	}
+
+	/**
+	 * Find objects which own this object.
+	 * Note that objects will only be searched in the same stage as the given record.
+	 *
+	 * @param bool $recursive True if recursive
+	 * @param ArrayList $list List to add items to
+	 * @param array $lookup List of reverse lookup rules for owned objects
+	 * @return ArrayList list of objects
+	 */
+	public function findOwnersRecursive($recursive, $list, $lookup) {
+		// First pass: find objects that are explicitly owned_by (e.g. custom relationships)
+		$owners = $this->findRelatedObjects('owned_by', false);
+
+		// Second pass: Find owners via reverse lookup list
+		foreach($lookup as $ownedClass => $classLookups) {
+			// Skip owners of other objects
+			if(!is_a($this->owner, $ownedClass)) {
+				continue;
+			}
+			foreach($classLookups as $classLookup) {
+				// Merge new owners into this object's owners
+				$ownerClass = $classLookup['class'];
+				$ownerRelation = $classLookup['relation'];
+				$result = $this->owner->inferReciprocalComponent($ownerClass, $ownerRelation);
+				$this->mergeRelatedObjects($owners, $result);
+			}
+		}
+
+		// Merge all objects into the main list
+		$newItems = $this->mergeRelatedObjects($list, $owners);
+
+		// If recursing, iterate over all newly added items
+		if($recursive) {
+			foreach($newItems as $item) {
+				/** @var Versioned|DataObject $item */
+				$item->findOwnersRecursive(true, $list, $lookup);
+			}
+		}
+
+		return $list;
+	}
+
+	/**
+	 * Find a list of classes, each of which with a list of methods to invoke
+	 * to lookup owners.
+	 *
+	 * @return array
+	 */
+	protected function lookupReverseOwners() {
+		// Find all classes with 'owns' config
+		$lookup = array();
+		foreach(ClassInfo::subclassesFor(DataObject::class) as $class) {
+			// Ensure this class is versioned
+			if(!Object::has_extension($class, Versioned::class)) {
+				continue;
+			}
+
+			// Check owned objects for this class
+			$owns = Config::inst()->get($class, 'owns', Config::UNINHERITED);
+			if(empty($owns)) {
+				continue;
+			}
+
+			/** @var DataObject $instance */
+			$instance = $class::singleton();
+			foreach($owns as $owned) {
+				// Find owned class
+				$ownedClass = $instance->getRelationClass($owned);
+				// Skip custom methods that don't have db relationsm
+				if(!$ownedClass) {
+					continue;
+				}
+				if($ownedClass === 'DataObject') {
+					throw new LogicException(sprintf(
+						"Relation %s on class %s cannot be owned as it is polymorphic",
+						$owned, $class
+					));
+				}
+
+				// Add lookup for owned class
+				if(!isset($lookup[$ownedClass])) {
+					$lookup[$ownedClass] = array();
+				}
+				$lookup[$ownedClass][] = [
+					'class' => $class,
+					'relation' => $owned
+				];
+			}
+		}
+		return $lookup;
+	}
+
 
 	/**
 	 * Find objects in the given relationships, merging them into the given list
@@ -985,31 +1085,53 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 			// Inspect value of this relationship
 			$items = $owner->{$relationship}();
-			if(!$items) {
-				continue;
-			}
-			if($items instanceof DataObject) {
-				$items = array($items);
-			}
 
-			/** @var Versioned|DataObject $item */
-			foreach($items as $item) {
-				// Identify item
-				$itemKey = $item->class . '/' . $item->ID;
+			// Merge any new item
+			$newItems = $this->mergeRelatedObjects($list, $items);
 
-				// Skip unsaved, unversioned, or already checked objects
-				if(!$item->isInDB() || !$item->has_extension('Versioned') || isset($list[$itemKey])) {
-					continue;
-				}
-
-				// Save record
-				$list[$itemKey] = $item;
-				if($recursive) {
+			// Recurse if necessary
+			if($recursive) {
+				foreach($newItems as $item) {
+					/** @var Versioned|DataObject $item */
 					$item->findRelatedObjects($source, true, $list);
-				};
+				}
 			}
 		}
 		return $list;
+	}
+
+	/**
+	 * Helper method to merge owned/owning items into a list.
+	 * Items already present in the list will be skipped.
+	 *
+	 * @param ArrayList $list Items to merge into
+	 * @param mixed $items List of new items to merge
+	 * @return ArrayList List of all newly added items that did not already exist in $list
+	 */
+	protected function mergeRelatedObjects($list, $items) {
+		$added = new ArrayList();
+		if(!$items) {
+			return $added;
+		}
+		if($items instanceof DataObject) {
+			$items = array($items);
+		}
+
+		/** @var Versioned|DataObject $item */
+		foreach($items as $item) {
+			// Identify item
+			$itemKey = $item->class . '/' . $item->ID;
+
+			// Skip unsaved, unversioned, or already checked objects
+			if(!$item->isInDB() || !$item->has_extension('Versioned') || isset($list[$itemKey])) {
+				continue;
+			}
+
+			// Save record
+			$list[$itemKey] = $item;
+			$added[$itemKey] = $item;
+		}
+		return $added;
 	}
 
 	/**
@@ -2070,6 +2192,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public function onAfterRollback($version) {
 		// Find record at this version
 		$baseClass = ClassInfo::baseDataClass($this->owner);
+		/** @var Versioned|DataObject $recordVersion */
 		$recordVersion = static::get_version($baseClass, $this->owner->ID, $version);
 
 		// Note that unlike other publishing actions, rollback is NOT recursive;

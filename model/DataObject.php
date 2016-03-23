@@ -1626,7 +1626,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Find the foreign class of a relation on this DataObject, regardless of the relation type.
 	 *
-	 * @param $relationName Relation name.
+	 * @param string $relationName Relation name.
 	 * @return string Class name, or null if not found.
 	 */
 	public function getRelationClass($relationName) {
@@ -1652,6 +1652,137 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		return null;
+	}
+
+	/**
+	 * Given a relation name, determine the relation type
+	 *
+	 * @param string $component Name of component
+	 * @return string has_one, has_many, many_many, belongs_many_many or belongs_to
+	 */
+	public function getRelationType($component) {
+		$types = array('has_one', 'has_many', 'many_many', 'belongs_many_many', 'belongs_to');
+		foreach($types as $type) {
+			$relations = Config::inst()->get($this->class, $type);
+			if($relations && isset($relations[$component])) {
+				return $type;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Given a relation declared on a remote class, generate a substitute component for the opposite
+	 * side of the relation.
+	 *
+	 * Notes on behaviour:
+	 *  - This can still be used on components that are defined on both sides, but do not need to be.
+	 *  - All has_ones on remote class will be treated as local has_many, even if they are belongs_to
+	 *  - Cannot be used on polymorphic relationships
+	 *  - Cannot be used on unsaved objects.
+	 *
+	 * @param string $remoteClass
+	 * @param string $remoteRelation
+	 * @return DataList|DataObject The component, either as a list or single object
+	 * @throws BadMethodCallException
+	 * @throws InvalidArgumentException
+	 */
+	public function inferReciprocalComponent($remoteClass, $remoteRelation) {
+		/** @var DataObject $remote */
+		$remote = $remoteClass::singleton();
+		$class = $remote->getRelationClass($remoteRelation);
+
+		// Validate arguments
+		if(!$this->isInDB()) {
+			throw new BadMethodCallException(__METHOD__ . " cannot be called on unsaved objects");
+		}
+		if(empty($class)) {
+			throw new InvalidArgumentException(sprintf(
+				"%s invoked with invalid relation %s.%s",
+				__METHOD__,
+				$remoteClass,
+				$remoteRelation
+			));
+		}
+		if($class === 'DataObject') {
+			throw new InvalidArgumentException(sprintf(
+				"%s cannot generate opposite component of relation %s.%s as it is polymorphic. " .
+				"This method does not support polymorphic relationships",
+				__METHOD__,
+				$remoteClass,
+				$remoteRelation
+			));
+		}
+		if(!is_a($this, $class, true)) {
+			throw new InvalidArgumentException(sprintf(
+				"Relation %s on %s does not refer to objects of type %s",
+				$remoteRelation, $remoteClass, get_class($this)
+			));
+		}
+
+		// Check the relation type to mock
+		$relationType = $remote->getRelationType($remoteRelation);
+		switch($relationType) {
+			case 'has_one': {
+				// Mock has_many
+				$joinField = "{$remoteRelation}ID";
+				$componentClass = ClassInfo::table_for_object_field($remoteClass, $joinField);
+				$result = HasManyList::create($componentClass, $joinField);
+				if ($this->model) {
+					$result->setDataModel($this->model);
+				}
+				return $result
+					->setDataQueryParam($this->getInheritableQueryParams())
+					->forForeignID($this->ID);
+			}
+			case 'belongs_to':
+			case 'has_many': {
+				// These relations must have a has_one on the other end, so find it
+				$joinField = $remote->getRemoteJoinField($remoteRelation, $relationType, $polymorphic);
+				if ($polymorphic) {
+					throw new InvalidArgumentException(sprintf(
+						"%s cannot generate opposite component of relation %s.%s, as the other end appears" .
+						"to be a has_one polymorphic. This method does not support polymorphic relationships",
+						__METHOD__,
+						$remoteClass,
+						$remoteRelation
+					));
+				}
+				$joinID = $this->getField($joinField);
+				if (empty($joinID)) {
+					return null;
+				}
+				// Get object by joined ID
+				return DataObject::get($remoteClass)
+					->filter('ID', $joinID)
+					->setDataQueryParam($this->getInheritableQueryParams())
+					->first();
+			}
+			case 'many_many':
+			case 'belongs_many_many': {
+				// Get components and extra fields from parent
+				list($componentClass, $parentClass, $componentField, $parentField, $table)
+					= $remote->manyManyComponent($remoteRelation);
+				$extraFields = $remote->manyManyExtraFieldsForComponent($remoteRelation) ?: array();
+
+				// Reverse parent and component fields and create an inverse ManyManyList
+				/** @var ManyManyList $result */
+				$result = ManyManyList::create($componentClass, $table, $componentField, $parentField, $extraFields);
+				if($this->model) {
+					$result->setDataModel($this->model);
+				}
+				$this->extend('updateManyManyComponents', $result);
+
+				// If this is called on a singleton, then we return an 'orphaned relation' that can have the
+				// foreignID set elsewhere.
+				return $result
+					->setDataQueryParam($this->getInheritableQueryParams())
+					->forForeignID($this->ID);
+			}
+			default: {
+				return null;
+			}
+		}
 	}
 
 	/**

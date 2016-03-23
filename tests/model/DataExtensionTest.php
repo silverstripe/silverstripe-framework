@@ -220,6 +220,39 @@ class DataExtensionTest extends SapphireTest {
 		$this->assertNotEmpty($fields->dataFieldByName('ChildField'));
 		$this->assertNotEmpty($fields->dataFieldByName('GrandchildField'));
 	}
+
+	/**
+	 * Test setOwner behaviour
+	 */
+	public function testSetOwner() {
+		$extension = new DataExtensionTest_Ext1();
+		$obj1 = $this->objFromFixture('DataExtensionTest_RelatedObject', 'obj1');
+		$obj2 = $this->objFromFixture('DataExtensionTest_RelatedObject', 'obj1');
+
+		$extension->setOwner(null);
+		$this->assertNull($extension->getOwner());
+
+		// Set original owner
+		$extension->setOwner($obj1);
+		$this->assertEquals($obj1, $extension->getOwner());
+
+		// Set nested owner
+		$extension->setOwner($obj2);
+		$this->assertEquals($obj2, $extension->getOwner());
+
+		// Clear nested owner
+		$extension->clearOwner();
+		$this->assertEquals($obj1, $extension->getOwner());
+
+		// Clear original owner
+		$extension->clearOwner();
+		$this->assertNull($extension->getOwner());
+
+		// Another clearOwner should error
+		$this->setExpectedException("BadMethodCallException", "clearOwner() called more than setOwner()");
+		$extension->clearOwner();
+	}
+
 }
 
 class DataExtensionTest_Member extends DataObject implements TestOnly {
