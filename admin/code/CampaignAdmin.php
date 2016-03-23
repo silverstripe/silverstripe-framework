@@ -92,27 +92,27 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 			"customValidationMessage": "",
 			"attributes": [],
 			"data": {
-				'collectionReadUrl': {
-					'url': 'admin\/campaigns\/items',
-					'method': 'GET'
+				"collectionReadUrl": {
+					"url": "admin\/campaigns\/items",
+					"method": "GET"
 				},
-				'itemReadUrl': {
-					'url': 'admin\/campaigns\/item\/:id',
-					'method': 'GET'
+				"itemReadUrl": {
+					"url": "admin\/campaigns\/item\/:id",
+					"method": "GET"
 				},
-				'itemUpdateUrl': {
-					'url': 'admin\/campaigns\/item\/:id',
-					'method': 'PUT'
+				"itemUpdateUrl": {
+					"url": "admin\/campaigns\/item\/:id",
+					"method": "PUT"
 				},
-				'itemCreateUrl': {
-					'url': 'admin\/campaigns\/item\/:id',
-					'method': 'POST'
+				"itemCreateUrl": {
+					"url": "admin\/campaigns\/item\/:id",
+					"method": "POST"
 				},
-				'itemDeleteUrl': {
-					'url': 'admin\/campaigns\/item\/:id',
-					'method': 'DELETE'
+				"itemDeleteUrl": {
+					"url": "admin\/campaigns\/item\/:id",
+					"method": "DELETE"
 				},
-				'editFormSchemaUrl': 'admin\/campaigns\/schema\/DetailEditForm'
+				"editFormSchemaUrl": "admin\/campaigns\/schema\/DetailEditForm"
 			}
 		}, {
 			"name": "SecurityID",

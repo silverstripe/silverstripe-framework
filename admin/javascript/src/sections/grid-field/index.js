@@ -1,5 +1,5 @@
 import React from 'react';
-import SilverStripeComponent from 'silverstripe-component';
+import SilverStripeComponent from '../../SilverStripeComponent';
 import GridFieldTable from '../../components/grid-field-table';
 import GridFieldHeader from '../../components/grid-field-header';
 import GridFieldHeaderCell from '../../components/grid-field-header-cell';

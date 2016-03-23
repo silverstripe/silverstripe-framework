@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SilverStripeComponent from 'silverstripe-component';
+import SilverStripeComponent from '../../SilverStripeComponent';
 
 class ActionComponent extends SilverStripeComponent {
     constructor(props) {

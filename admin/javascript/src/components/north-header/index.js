@@ -1,6 +1,6 @@
 import React from 'react';
 import NorthHeaderBreadcrumbsComponent from '../north-header-breadcrumbs';
-import SilverStripeComponent from 'silverstripe-component';
+import SilverStripeComponent from '../../SilverStripeComponent';
 
 class NorthHeaderComponent extends SilverStripeComponent {
 

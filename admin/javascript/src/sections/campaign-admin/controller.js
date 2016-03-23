@@ -1,16 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SilverStripeComponent from 'silverstripe-component';
-import NorthHeader from '../../components/north-header';
-import GridField from '../grid-field';
-import GridFieldHeader from '../../components/grid-field-header';
-import GridFieldHeaderCell from '../../components/grid-field-header-cell';
-import GridFieldRow from '../../components/grid-field-row';
-import GridFieldCell from '../../components/grid-field-cell';
-import Action from '../../components/action';
+import ActionButton from 'action-button';
 import i18n from 'i18n';
+import NorthHeader from 'north-header';
+import GridField from 'grid-field';
 
 class CampaignAdminContainer extends SilverStripeComponent {
+
     constructor(props) {
         super(props);
 
@@ -21,11 +18,13 @@ class CampaignAdminContainer extends SilverStripeComponent {
         return (
             <div>
                 <NorthHeader />
-                <Action 
+
+                <ActionButton
                     text={i18n._t('Campaigns.ADDCAMPAIGN')} 
                     type={'secondary'} 
                     icon={'plus-circled'} 
                     handleClick={this.addCampaign} />
+
                 <GridField />
             </div>
         );
@@ -34,6 +33,7 @@ class CampaignAdminContainer extends SilverStripeComponent {
     addCampaign() {
         //Add campaign
     }
+
 }
 
 CampaignAdminContainer.propTypes = {
