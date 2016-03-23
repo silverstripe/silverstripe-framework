@@ -1,7 +1,7 @@
 import ACTION_TYPES from './action-types';
 
 /**
- * Sets the schema being used to generate the curent layout.
+ * Sets the schema being used to generate the current form layout.
  *
  * @param string schema - JSON schema for the layout.
  */

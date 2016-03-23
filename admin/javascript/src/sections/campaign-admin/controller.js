@@ -5,6 +5,7 @@ import ActionButton from 'action-button';
 import i18n from 'i18n';
 import NorthHeader from 'north-header';
 import GridField from 'grid-field';
+import FormBuilder from '../../components/form-builder';
 
 class CampaignAdminContainer extends SilverStripeComponent {
 
@@ -15,17 +16,17 @@ class CampaignAdminContainer extends SilverStripeComponent {
     }
 
     render() {
+        const schemaUrl = this.props.config.forms.editForm.schemaUrl;
+
         return (
             <div>
                 <NorthHeader />
-
                 <ActionButton
-                    text={i18n._t('Campaigns.ADDCAMPAIGN')} 
-                    type={'secondary'} 
-                    icon={'plus-circled'} 
+                    text={i18n._t('Campaigns.ADDCAMPAIGN')}
+                    type={'secondary'}
+                    icon={'plus-circled'}
                     handleClick={this.addCampaign} />
-
-                <GridField />
+                <FormBuilder schemaUrl={schemaUrl} />
             </div>
         );
     }

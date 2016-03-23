@@ -6,9 +6,11 @@ import reducerRegister from 'reducer-register';
 
 import * as configActions from '../state/config/actions';
 import ConfigReducer from '../state/config/reducer';
+import SchemaReducer from '../state/schema/reducer';
 
 function appBoot() {
     reducerRegister.add('config', ConfigReducer);
+    reducerRegister.add('schemas', SchemaReducer);
 
     const initialState = {};
     const rootReducer = combineReducers(reducerRegister.getAll());

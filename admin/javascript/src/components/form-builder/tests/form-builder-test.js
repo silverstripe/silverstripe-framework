@@ -15,7 +15,7 @@ describe('FormBuilderComponent', () => {
                     getState: () => {}
                 },
                 actions: {},
-                formSchemaUrl: 'admin/assets/schema/1',
+                schemaUrl: 'admin/assets/schema/1',
                 schema: { forms: [{ schema: { id: '1', schema_url: 'admin/assets/schema/1' } }] }
             };
 

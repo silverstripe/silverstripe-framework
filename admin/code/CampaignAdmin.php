@@ -39,6 +39,17 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 	}
 
 	public function getClientConfig() {
+		return array_merge(parent::getClientConfig(), [
+			'forms' => [
+				// TODO Use schemaUrl instead
+				'editForm' => [
+					'schemaUrl' => $this->Link('schema/EditForm')
+				]
+			]
+		]);
+	}
+
+	public function schema($request) {
 		// TODO Hardcoding schema until we can get GridField to generate a schema dynamically
 		$json = <<<JSON
 {
@@ -137,18 +148,15 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 }
 JSON;
 
-		return array_merge(parent::getClientConfig(), [
-			'forms' => [
-				'editForm' => [
-					// TODO Use schemaUrl instead
-					'schema' => json_decode($json)
-				]
-			]
-		]);
-	}
-
-	public function getEditForm($id = null, $fields = null) {
-		return '';
+		$formName = $request->param('ID');
+		if($formName == 'EditForm') {
+			$response = $this->getResponse();
+			$response->addHeader('Content-Type', 'application/json');
+			$response->setBody($json);
+			return $response;
+		} else {
+			return parent::schema($request);
+		}
 	}
 
 	/**
