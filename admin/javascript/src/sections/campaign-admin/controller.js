@@ -5,6 +5,7 @@ import ActionButton from 'action-button';
 import i18n from 'i18n';
 import NorthHeader from 'north-header';
 import GridField from 'grid-field';
+import Config from 'config';
 
 class CampaignAdminContainer extends SilverStripeComponent {
 
@@ -15,6 +16,8 @@ class CampaignAdminContainer extends SilverStripeComponent {
     }
 
     render() {
+        const sectionConfig = Config.getSection(this.props.sectionConfigKey);
+
         return (
             <div>
                 <NorthHeader />

@@ -214,6 +214,7 @@ gulp.task('bundle-lib', function bundleLib() {
             comments: false
         }))
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/action',                   { expose: 'action-button' })
+        .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/config',                              { expose: 'config' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form',                     { expose: 'form' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form-action',              { expose: 'form-action' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form-builder',             { expose: 'form-builder' })
@@ -290,6 +291,7 @@ gulp.task('bundle-campaign-admin', function bundleCampaignAdmin() {
             ignore: /(node_modules)/
         }))
         .external('action-button')
+        .external('config')
         .external('deep-freeze')
         .external('grid-field')
         .external('i18n')
