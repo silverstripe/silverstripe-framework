@@ -91,6 +91,8 @@
 
 	&:hover,
 	&:active,
+	&:active:focus,
+	&:active:hover,
 	&:focus {
 		background-color: $gray-lighter;
 	}
