@@ -92,18 +92,17 @@ class ActionComponent extends SilverStripeComponent {
      * @returns null
      */
     handleClick(event) {
-        if (typeof this.props.handleClick === 'function' && this.props.disabled !== true) {
-            this.props.handleClick(event);
-        }
-
-        return null;
+        this.props.handleClick(event);
     }
 }
 
 ActionComponent.propTypes = {
+    handleClick: React.PropTypes.func.isRequired,
     type: React.PropTypes.string,
     icon: React.PropTypes.string,
-    text: React.PropTypes.string
+    text: React.PropTypes.string,
+    loading: React.PropTypes.bool,
+    disabled: React.PropTypes.bool
 };
 
 export default ActionComponent;

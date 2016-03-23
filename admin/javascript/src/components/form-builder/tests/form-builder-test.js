@@ -21,11 +21,6 @@ describe('FormBuilderComponent', () => {
 
             formBuilder = new FormBuilderComponent(props);
         });
-
-        it('should return the form schema for the FormBuilder', () => {
-            const form = formBuilder.getFormSchema();
-            expect(form.schema.id).toBe('1');
-        });
     });
 
 });

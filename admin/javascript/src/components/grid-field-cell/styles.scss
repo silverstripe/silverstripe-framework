@@ -8,4 +8,18 @@
     word-break: break-word;
     padding: $grid-y*2 $grid-x*2;
     line-height: 20px;
+
+    &:first-child {
+        padding-left: $grid-x*2.5;
+    }
+    
+    &:last-child {
+        padding-right: $grid-x*2.5;
+    }
+    
+    @for $i from 1 through 10 {
+        &.cell-width-#{$i} {
+            flex-grow: $i;
+        }
+    }
 }

@@ -6,7 +6,11 @@ This component is used to display a button which is linked to an action.
 
 ### handleClick (function)
 
-The handler for when a button is clicked, is passed the click event as the only argument.
+The handler for when a button is clicked
+
+#### Arguments
+
+ * event - the click event
 
 ### text (string)
 
