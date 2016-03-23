@@ -489,6 +489,42 @@ abstract class SS_Database {
 	 */
 	abstract public function supportsTransactions();
 
+	/**
+	 * Invoke $callback within a transaction
+	 *
+	 * @param callable $callback Callback to run
+	 * @param callable $errorCallback Optional callback to run after rolling back transaction.
+	 * @param bool|string $transactionMode Optional transaction mode to use
+	 * @param bool $errorIfTransactionsUnsupported If true, this method will fail if transactions are unsupported.
+	 * Otherwise, the $callback will potentially be invoked outside of a transaction.
+	 * @throws Exception
+	 */
+	public function withTransaction(
+		$callback, $errorCallback = null, $transactionMode = false, $errorIfTransactionsUnsupported = false
+	) {
+		$supported = $this->supportsTransactions();
+		if(!$supported && $errorIfTransactionsUnsupported) {
+			throw new BadMethodCallException("Transactions not supported by this database.");
+		}
+		if($supported) {
+			$this->transactionStart($transactionMode);
+		}
+		try {
+			call_user_func($callback);
+		} catch (Exception $ex) {
+			if($supported) {
+				$this->transactionRollback();
+			}
+			if($errorCallback) {
+				call_user_func($errorCallback);
+			}
+			throw $ex;
+		}
+		if($supported) {
+			$this->transactionEnd();
+		}
+	}
+
 	/*
 	 * Determines if the current database connection supports a given list of extensions
 	 *
