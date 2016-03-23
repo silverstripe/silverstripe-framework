@@ -53,9 +53,35 @@ class ChangeSet extends DataObject {
 	 */
 	private static $required_permission = array('CMS_ACCESS_CampaignAdmin', 'CMS_ACCESS_LeftAndMain');
 
-	/** Publish this changeset, then closes it. */
+	/**
+	 * Publish this changeset, then closes it.
+	 *
+	 * @return bool True if changes were published, false if permission not allowed
+	 * @throws Exception
+	 */
 	public function publish() {
-		user_error('Not implemented', E_USER_ERROR);
+		if(!$this->canPublish()) {
+			return false;
+		}
+
+		// Logical checks prior to publish
+		if(!$this->checkChanges()) {
+			throw new ValidationException(
+				"ChangeSet does not include all necessary changes and cannot be published."
+			);
+		}
+		if($this->Status !== static::STATE_OPEN) {
+			throw new BadMethodCallException(
+				"ChangeSet can't be published if it has been already published or reverted."
+			);
+		}
+
+		foreach($this->Changes() as $change) {
+			/** @var ChangeSetItem $change */
+			$change->publish();
+		}
+
+		return true;
 	}
 
 	/** Revert all changes made to this changeset, then closes it. **/

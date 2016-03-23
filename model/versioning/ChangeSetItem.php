@@ -92,9 +92,11 @@ class ChangeSetItem extends DataObject {
 		}
 	}
 
-	/** Publish this item, then close it. */
+	/**
+	 * Publish this item, then close it.
+	 */
 	public function publish() {
-		user_error('Not implemented', E_USER_ERROR);
+
 	}
 
 	/** Reverts this item, then close it. **/
