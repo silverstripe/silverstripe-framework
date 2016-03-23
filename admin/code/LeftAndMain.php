@@ -231,13 +231,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$validHeaderValues = ['schema', 'state'];
 				return in_array(trim($value), $validHeaderValues);
 			});
-		}
-
-		if (!count($schemaParts)) {
-			throw new SS_HTTPResponse_Exception(
-				'Invalid request. Check you\'ve set a "X-Formschema-Request" header with "schema" or "state" values.',
-				400
-			);
+		} else {
+			$schemaParts = ['schema'];
 		}
 
 		$return = ['id' => $form->getName()];
