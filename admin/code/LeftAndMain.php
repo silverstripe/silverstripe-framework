@@ -451,7 +451,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			]
 		]);
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-leftandmain.js', [
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-legacy.js', [
 			'provides' => [
 				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Layout.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.js',
@@ -482,7 +482,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/leaktools.js');
 		}
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/boot.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-framework.js');
 		
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/bootstrap/bootstrap.css');
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');

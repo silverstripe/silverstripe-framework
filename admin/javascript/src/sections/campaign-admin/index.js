@@ -3,8 +3,8 @@ import $ from 'jQuery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import CampaignAdmin from '../sections/campaign-admin/controller';
-import campaignsReducer from '../state/campaigns/reducer';
+import CampaignAdmin from './controller';
+import campaignsReducer from '../../state/campaigns/reducer';
 
 // TODO: Move this to the controller.
 reducerRegister.add('campaigns', campaignsReducer);

@@ -8,6 +8,9 @@ import * as configActions from '../state/config/actions';
 import ConfigReducer from '../state/config/reducer';
 import SchemaReducer from '../state/schema/reducer';
 
+// Sections
+import CampaignAdmin from '../sections/campaign-admin';
+
 function appBoot() {
     reducerRegister.add('config', ConfigReducer);
     reducerRegister.add('schemas', SchemaReducer);
