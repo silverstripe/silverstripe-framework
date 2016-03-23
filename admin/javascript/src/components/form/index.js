@@ -43,10 +43,10 @@ class FormComponent extends SilverStripeComponent {
 }
 
 FormComponent.propTypes = {
-    actions: React.PropTypes.array.isRequired,
+    actions: React.PropTypes.array,
     attributes: React.PropTypes.shape({
         action: React.PropTypes.string.isRequired,
-        className: React.PropTypes.string.isRequired,
+        'class': React.PropTypes.string.isRequired,
         enctype: React.PropTypes.string.isRequired,
         id: React.PropTypes.string.isRequired,
         method: React.PropTypes.string.isRequired

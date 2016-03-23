@@ -6,6 +6,8 @@ import * as schemaActions from '../../state/schema/actions';
 import SilverStripeComponent from '../../SilverStripeComponent';
 import FormComponent from '../form';
 import TextField from '../text-field';
+import HiddenField from '../hidden-field';
+import GridField from '../../sections/grid-field';
 
 // Using this to map field types to components until we implement dependency injection.
 var fakeInjector = {
@@ -14,7 +16,9 @@ var fakeInjector = {
      * Components registered with the fake DI container.
      */
     components: {
-        'TextField': TextField
+        'TextField': TextField,
+        'GridField': GridField,
+        'HiddenField': HiddenField
     },
 
     /**
@@ -42,7 +46,7 @@ var fakeInjector = {
             case 'String':
                 return this.components.TextField;
             case 'Hidden':
-                return this.components.TextField;
+                return this.components.HiddenField;
             case 'Text':
                 // Textarea field (not implemented)
                 return null;
@@ -73,6 +77,8 @@ var fakeInjector = {
             case 'Boolean':
                 // Checkbox field (not implemented)
                 return null;
+            case 'Custom':
+                return this.components.GridField;
             default:
                 return null;
         }
@@ -117,7 +123,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
         this.formSchemaPromise = $.ajax({
             method: 'GET',
             headers: { 'X-FormSchema-Request': headerValues.join() },
-            url: this.props.formSchemaUrl
+            url: this.props.schemaUrl
         }).done((data, status, xhr) => {
             this.isFetching = false;
             this.props.actions.setSchema(data);
@@ -126,17 +132,6 @@ export class FormBuilderComponent extends SilverStripeComponent {
         this.isFetching = true;
 
         return this.formSchemaPromise;
-    }
-
-    /**
-     * Gets form schema for the FormBuilder.
-     * 
-     * @return object|undefined
-     */
-    getFormSchema() {
-        return this.props.schema.forms.find(function (form) {
-            return form.schema.schema_url === this.props.formSchemaUrl;
-        }.bind(this));
     }
 
     /**
@@ -189,19 +184,19 @@ export class FormBuilderComponent extends SilverStripeComponent {
     }
 
     render() {
+        const schema = this.props.schemas[this.props.schemaUrl];
+
         // If the response from fetching the initial data
         // hasn't come back yet, don't render anything.
-        if (this.props.schema.forms.length === 0) {
+        if (!schema) {
             return null;
         }
 
-        const schema = this.getFormSchema().schema;
-
         const formProps = {
-            actions: schema.actions,
-            attributes: schema.attributes,
-            data: schema.data,
-            fields: schema.fields,
+            actions: schema.schema.actions,
+            attributes: schema.schema.attributes,
+            data: schema.schema.data,
+            fields: schema.schema.fields,
             mapFieldsToComponents: this.mapFieldsToComponents
         };
 
@@ -211,13 +206,13 @@ export class FormBuilderComponent extends SilverStripeComponent {
 
 FormBuilderComponent.propTypes = {
     actions: React.PropTypes.object.isRequired,
-    formSchemaUrl: React.PropTypes.string.isRequired,
-    schema: React.PropTypes.object.isRequired
+    schemaUrl: React.PropTypes.string.isRequired,
+    schemas: React.PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
     return {
-        schema: state.schema
+        schemas: state.schemas
     }
 }
 
