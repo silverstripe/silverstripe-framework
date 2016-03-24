@@ -21,7 +21,7 @@ class ChangeSetItem extends DataObject {
 	const CHANGE_CREATED = 'created';
 
 	/** Represents an object which hasn't been changed directly, but owns a modified many_many relationship. */
-	const CHANGE_MANYMANY = 'manymany';
+	//const CHANGE_MANYMANY = 'manymany';
 
 	/**
 	 * Represents that an object has not yet been changed, but
@@ -109,9 +109,46 @@ class ChangeSetItem extends DataObject {
 
 	/**
 	 * Publish this item, then close it.
+	 *
+	 * Note: Unlike Versioned::doPublish() and Versioned::doUnpublish, this action is not recursive.
 	 */
 	public function publish() {
+		// Logical checks prior to publish
+		if(!$this->canPublish()) {
+			throw new Exception("The current member does not have permission to publish this ChangeSetItem.");
+		}
+		if($this->VersionBefore || $this->VersionAfter) {
+			throw new BadMethodCallException("This ChangeSetItem has already been published");
+		}
 
+		// Record state changed
+		$this->VersionAfter = Versioned::get_versionnumber_by_stage(
+			$this->ObjectClass, Versioned::DRAFT, $this->ObjectID, false
+		);
+		$this->VersionBefore = Versioned::get_versionnumber_by_stage(
+			$this->ObjectClass, Versioned::LIVE, $this->ObjectID, false
+		);
+
+		switch($this->getChangeType()) {
+			case static::CHANGE_NONE: {
+				break;
+			}
+			case static::CHANGE_DELETED: {
+				// Non-recursive delete
+				$object = $this->getObjectInStage(Versioned::LIVE);
+				$object->deleteFromStage(Versioned::LIVE);
+				break;
+			}
+			case static::CHANGE_MODIFIED:
+			case static::CHANGE_CREATED: {
+				// Non-recursive publish
+				$object = $this->getObjectInStage(Versioned::DRAFT);
+				$object->publish(Versioned::DRAFT, Versioned::LIVE);
+				break;
+			}
+		}
+
+		$this->write();
 	}
 
 	/** Reverts this item, then close it. **/

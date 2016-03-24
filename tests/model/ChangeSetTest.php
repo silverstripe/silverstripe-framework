@@ -345,4 +345,86 @@ class ChangeSetTest extends SapphireTest {
 		$this->assertTrue($changeSet->canView());
 	}
 
+	public function testPublish() {
+		$this->publishAllFixtures();
+
+		$base = $this->objFromFixture('ChangeSetTest_Base', 'base');
+		$baseID = $base->ID;
+		$baseBefore = $base->Version;
+		$end1 = $this->objFromFixture('ChangeSetTest_End', 'end1');
+		$end1ID = $end1->ID;
+		$end1Before = $end1->Version;
+
+		// Create a new changest
+		$changeset = new ChangeSet();
+		$changeset->write();
+		$changeset->addObject($base);
+		$changeset->addObject($end1);
+
+		// Make a lot of changes
+		// - ChangeSetTest_Base.base modified
+		// - ChangeSetTest_End.end1 deleted
+		// - new ChangeSetTest_Mid added
+		$base->Foo = 343;
+		$base->write();
+		$baseAfter = $base->Version;
+		$midNew = new ChangeSetTest_Mid();
+		$midNew->Bar = 39;
+		$midNew->write();
+		$midNewID = $midNew->ID;
+		$midNewAfter = $midNew->Version;
+		$end1->delete();
+
+		$changeset->addObject($midNew);
+
+		// Publish
+		$this->logInWithPermission('ADMIN');
+		$this->assertTrue($changeset->canPublish());
+		$this->assertTrue($changeset->isSynced());
+		$changeset->publish();
+		$this->assertEquals(ChangeSet::STATE_PUBLISHED, $changeset->State);
+
+		// Check each item has the correct before/after version applied
+		$baseChange = $changeset->Changes()->filter([
+			'ObjectClass' => 'ChangeSetTest_Base',
+			'ObjectID' => $baseID,
+		])->first();
+		$this->assertEquals((int)$baseBefore, (int)$baseChange->VersionBefore);
+		$this->assertEquals((int)$baseAfter, (int)$baseChange->VersionAfter);
+		$this->assertEquals((int)$baseChange->VersionBefore + 1, (int)$baseChange->VersionAfter);
+		$this->assertEquals(
+			(int)$baseChange->VersionAfter,
+			(int)Versioned::get_versionnumber_by_stage('ChangeSetTest_Base', Versioned::LIVE, $baseID)
+		);
+
+		$end1Change = $changeset->Changes()->filter([
+			'ObjectClass' => 'ChangeSetTest_End',
+			'ObjectID' => $end1ID,
+		])->first();
+		$this->assertEquals((int)$end1Before, (int)$end1Change->VersionBefore);
+		$this->assertEquals(0, (int)$end1Change->VersionAfter);
+		$this->assertEquals(
+			0,
+			(int)Versioned::get_versionnumber_by_stage('ChangeSetTest_End', Versioned::LIVE, $end1ID)
+		);
+
+		$midNewChange = $changeset->Changes()->filter([
+			'ObjectClass' => 'ChangeSetTest_Mid',
+			'ObjectID' => $midNewID,
+		])->first();
+		$this->assertEquals(0, (int)$midNewChange->VersionBefore);
+		$this->assertEquals((int)$midNewAfter, (int)$midNewChange->VersionAfter);
+		$this->assertEquals(
+			(int)$midNewAfter,
+			(int)Versioned::get_versionnumber_by_stage('ChangeSetTest_Mid', Versioned::LIVE, $midNewID)
+		);
+
+		// Test trying to re-publish is blocked
+		$this->setExpectedException(
+			'BadMethodCallException',
+			"ChangeSet can't be published if it has been already published or reverted."
+		);
+		$changeset->publish();
+	}
+
 }
