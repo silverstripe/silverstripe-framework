@@ -583,7 +583,7 @@ class GridField extends FormField {
 			$classes[] = 'odd';
 		}
 		
-		$this->owner->extend('getRowClasses', $classes, $total, $index, $record);
+		$this->extend('updateNewRowClasses', $classes, $total, $index, $record);
 
 		return $classes;
 	}
