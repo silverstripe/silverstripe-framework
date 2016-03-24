@@ -1,58 +1,106 @@
 <?php
 
-class ChangeSetTest_Base extends DataObject {
+/**
+ * Provides a set of targettable permissions for tested models
+ *
+ * @mixin Versioned
+ * @mixin DataObject
+ */
+trait ChangeSetTest_Permissions {
+	public function canEdit($member = null) {
+		return $this->can(__FUNCTION__, $member);
+	}
+
+	public function canDelete($member = null) {
+		return $this->can(__FUNCTION__, $member);
+	}
+
+	public function canCreate($member = null, $context = array()) {
+		return $this->can(__FUNCTION__, $member, $context);
+	}
+
+	public function canPublish($member = null, $context = array()) {
+		return $this->can(__FUNCTION__, $member, $context);
+	}
+
+	public function canUnpublish($member = null, $context = array()) {
+		return $this->can(__FUNCTION__, $member, $context);
+	}
+
+	public function can($perm, $member = null, $context = array()) {
+		$perms = [
+			"PERM_{$perm}",
+			'CAN_ALL',
+		];
+		return Permission::checkMember($member, $perms);
+	}
+}
+
+/**
+ * @mixin Versioned
+ */
+class ChangeSetTest_Base extends DataObject implements TestOnly {
+	use ChangeSetTest_Permissions;
+
 	private static $db = [
-		'Foo' => 'Int'
+		'Foo' => 'Int',
 	];
 
 	private static $has_many = [
-		'Mids' => 'ChangeSetTest_Mid'
+		'Mids' => 'ChangeSetTest_Mid',
 	];
 
 	private static $owns = [
-		'Mids'
+		'Mids',
 	];
 
 	private static $extensions = [
-		"Versioned"
+		"Versioned",
 	];
-
-	function canEdit($member = null) { return true; }
 }
 
-class ChangeSetTest_Mid extends DataObject {
+/**
+ * @mixin Versioned
+ */
+class ChangeSetTest_Mid extends DataObject implements TestOnly {
+	use ChangeSetTest_Permissions;
+
 	private static $db = [
-		'Bar' => 'Int'
+		'Bar' => 'Int',
 	];
 
 	private static $has_one = [
 		'Base' => 'ChangeSetTest_Base',
-		'End' => 'ChangeSetTest_End'
+		'End' => 'ChangeSetTest_End',
 	];
 
 	private static $owns = [
-		'End'
+		'End',
 	];
 
 	private static $extensions = [
-		"Versioned"
+		"Versioned",
 	];
-
-	function canEdit($member = null) { return true; }
 }
 
-class ChangeSetTest_End extends DataObject {
+/**
+ * @mixin Versioned
+ */
+class ChangeSetTest_End extends DataObject implements TestOnly {
+	use ChangeSetTest_Permissions;
+
 	private static $db = [
-		'Baz' => 'Int'
+		'Baz' => 'Int',
 	];
 
 	private static $extensions = [
-		"Versioned"
+		"Versioned",
 	];
-
-	function canEdit($member = null) { return true; }
 }
 
+/**
+ * Test {@see ChangeSet} and {@see ChangeSetItem} models
+ */
 class ChangeSetTest extends SapphireTest {
 
 	protected static $fixture_file = 'ChangeSetTest.yml';
@@ -60,9 +108,12 @@ class ChangeSetTest extends SapphireTest {
 	protected $extraDataObjects = [
 		'ChangeSetTest_Base',
 		'ChangeSetTest_Mid',
-		'ChangeSetTest_End'
+		'ChangeSetTest_End',
 	];
 
+	/**
+	 * Automatically publish all objects
+	 */
 	protected function publishAllFixtures() {
 		foreach($this->fixtureFactory->getFixtures() as $class => $fixtures) {
 			foreach ($fixtures as $handle => $id) {
@@ -71,6 +122,12 @@ class ChangeSetTest extends SapphireTest {
 		}
 	}
 
+	/**
+	 * Check that the changeset includes the given items
+	 *
+	 * @param ChangeSet $cs
+	 * @param array $match Array of object fixture keys with change type values
+	 */
 	protected function assertChangeSetLooksLike($cs, $match) {
 		$items = $cs->Changes()->toArray();
 
@@ -101,7 +158,11 @@ class ChangeSetTest extends SapphireTest {
 		}
 	}
 
-	function testRepeatedSyncIsNOP() {
+	public function testRepeatedSyncIsNOP() {
+		$this->logInWithPermission([
+			'CMS_ACCESS_CampaignAdmin',
+			'PERM_ALL'
+		]);
 		$this->publishAllFixtures();
 
 		$cs = new ChangeSet();
@@ -121,7 +182,11 @@ class ChangeSetTest extends SapphireTest {
 		]);
 	}
 
-	function testSync() {
+	public function testSync() {
+		$this->logInWithPermission([
+			'CMS_ACCESS_CampaignAdmin',
+			'PERM_ALL'
+		]);
 		$this->publishAllFixtures();
 
 		$cs = new ChangeSet();
@@ -149,8 +214,15 @@ class ChangeSetTest extends SapphireTest {
 
 	}
 
+	/**
+	 * Test that sync includes implicit items
+	 */
+	public function testIsSynced() {
+		$this->logInWithPermission([
+			'CMS_ACCESS_CampaignAdmin',
+			'PERM_ALL'
+		]);
 
-	function testIsSynced() {
 		$this->publishAllFixtures();
 
 		$cs = new ChangeSet();
@@ -180,26 +252,16 @@ class ChangeSetTest extends SapphireTest {
 	}
 
 
-}
-/**
- * Test {@see ChangeSet} and {@see ChangeSetItem} models
- */
-class ChangeSetTest extends SapphireTest {
-
-	protected static $fixture_file = 'ChangeSetTest.yml';
-
-	protected $extraDataObjects = [
-		'ChangeSetTest_Object',
-		'ChangeSetTest_Owner',
-		'ChangeSetTest_Owned',
-	];
-
 	public function testCanPublish() {
-		Session::clear("loggedInAs");
+		// Create changeset containing all items (unpublished)
+		$changeSet = new ChangeSet();
+		$base = $this->objFromFixture('ChangeSetTest_Base', 'base');
+		$changeSet->addObject($base);
+		$changeSet->sync();
+		$this->assertEquals(5, $changeSet->Changes()->count());
 
 		// Test un-authenticated user cannot publish
-		/** @var ChangeSet $changeSet */
-		$changeSet = $this->objFromFixture('ChangeSet', 'set1');
+		Session::clear("loggedInAs");
 		$this->assertFalse($changeSet->canPublish());
 
 		// User with only one of the necessary permissions cannot publish
@@ -221,8 +283,14 @@ class ChangeSetTest extends SapphireTest {
 	}
 
 	public function testCanEdit() {
-		/** @var ChangeSet $changeSet */
-		$changeSet = $this->objFromFixture('ChangeSet', 'set1');
+		// Create changeset containing all items (unpublished)
+		$changeSet = new ChangeSet();
+		$base = $this->objFromFixture('ChangeSetTest_Base', 'base');
+		$changeSet->addObject($base);
+		$changeSet->sync();
+		$this->assertEquals(5, $changeSet->Changes()->count());
+
+		// Check canEdit
 		Session::clear("loggedInAs");
 		$this->assertFalse($changeSet->canEdit());
 		$this->logInWithPermission('SomeWrongPermission');
@@ -232,19 +300,24 @@ class ChangeSetTest extends SapphireTest {
 	}
 
 	public function testCanCreate() {
-		/** @var ChangeSet $changeSet */
-		$changeSet = ChangeSet::singleton();
+		// Check canCreate
 		Session::clear("loggedInAs");
-		$this->assertFalse($changeSet->canCreate());
+		$this->assertFalse(ChangeSet::singleton()->canCreate());
 		$this->logInWithPermission('SomeWrongPermission');
-		$this->assertFalse($changeSet->canCreate());
+		$this->assertFalse(ChangeSet::singleton()->canCreate());
 		$this->logInWithPermission('CMS_ACCESS_CampaignAdmin');
-		$this->assertTrue($changeSet->canCreate());
+		$this->assertTrue(ChangeSet::singleton()->canCreate());
 	}
 
 	public function testCanDelete() {
-		/** @var ChangeSet $changeSet */
-		$changeSet = $this->objFromFixture('ChangeSet', 'set1');
+		// Create changeset containing all items (unpublished)
+		$changeSet = new ChangeSet();
+		$base = $this->objFromFixture('ChangeSetTest_Base', 'base');
+		$changeSet->addObject($base);
+		$changeSet->sync();
+		$this->assertEquals(5, $changeSet->Changes()->count());
+
+		// Check canDelete
 		Session::clear("loggedInAs");
 		$this->assertFalse($changeSet->canDelete());
 		$this->logInWithPermission('SomeWrongPermission');
@@ -254,8 +327,14 @@ class ChangeSetTest extends SapphireTest {
 	}
 
 	public function testCanView() {
-		/** @var ChangeSet $changeSet */
-		$changeSet = $this->objFromFixture('ChangeSet', 'set1');
+		// Create changeset containing all items (unpublished)
+		$changeSet = new ChangeSet();
+		$base = $this->objFromFixture('ChangeSetTest_Base', 'base');
+		$changeSet->addObject($base);
+		$changeSet->sync();
+		$this->assertEquals(5, $changeSet->Changes()->count());
+
+		// Check canView
 		Session::clear("loggedInAs");
 		$this->assertFalse($changeSet->canView());
 		$this->logInWithPermission('SomeWrongPermission');
@@ -264,104 +343,4 @@ class ChangeSetTest extends SapphireTest {
 		$this->assertTrue($changeSet->canView());
 	}
 
-	/**
-	 * Test that adding owners also includes owned
-	 */
-	public function testOwnedAddImplicitly() {
-		// @todo
-		$this->markTestSkipped("Won't work until ChangeSetItem::findOwners/findOwned is implemented");
-		return;
-
-		/** @var ChangeSet $set2 */
-		$set2 = $this->objFromFixture('ChangeSet', 'set2');
-		$owner1 = $this->objFromFixture('ChangeSetTest_Owner', 'owner1');
-
-		// Test that adding new owner adds all owned automatically
-		$set2->addObject($owner1);
-		$objectIDs = $set2->Changes()->column('ObjectID');
-		$expected = [
-			$this->idFromFixture('ChangeSetTest_Owner', 'owner1'),
-			$this->idFromFixture('ChangeSetTest_Owned', 'owned1a'),
-			$this->idFromFixture('ChangeSetTest_Owned', 'owned1b'),
-		];
-		sort($objectIDs);
-		sort($expected);
-		$this->assertEquals($expected, $objectIDs);
-
-		// Test that owned items are added implicitly
-		$objectIDs = $set2->Changes()->filter('Added', ChangeSetItem::IMPLICITLY)->column('ObjectID');
-		$expected = [
-			$this->idFromFixture('ChangeSetTest_Owned', 'owned1a'),
-			$this->idFromFixture('ChangeSetTest_Owned', 'owned1b'),
-		];
-		sort($objectIDs);
-		sort($expected);
-		$this->assertEquals($expected, $objectIDs);
-
-		// Test that the owner is the only added implicit item
-		$objectIDs = $set2->Changes()->filter('Added', ChangeSetItem::EXPLICITLY)->column('ObjectID');
-		$expected = [
-			$this->idFromFixture('ChangeSetTest_Owner', 'owner1')
-		];
-		$this->assertEquals($expected, $objectIDs);
-	}
-}
-
-/**
- * Object with specific permissions
- *
- * @mixin Versioned
- */
-class ChangeSetTest_Object extends DataObject implements TestOnly {
-
-	protected static $db = [
-		'Title' => 'Varchar(255)'
-	];
-
-	private static $extensions = [
-		'Versioned'
-	];
-
-	public function canEdit($member = null) {
-		return $this->can(__FUNCTION__, $member);
-	}
-
-	public function canDelete($member = null) {
-		return $this->can(__FUNCTION__, $member);
-	}
-
-	public function canCreate($member = null, $context = array()) {
-		return $this->can(__FUNCTION__, $member, $context);
-	}
-
-	public function canPublish($member = null, $context = array()) {
-		return $this->can(__FUNCTION__, $member, $context);
-	}
-
-	public function canUnpublish($member = null, $context = array()) {
-		return $this->can(__FUNCTION__, $member, $context);
-	}
-
-	public function can($perm, $member = null, $context = array()) {
-		$perms = [
-			"PERM_{$perm}",
-			'CAN_ALL',
-		];
-		return Permission::checkMember($member, $perms);
-	}
-
-}
-
-class ChangeSetTest_Owner extends ChangeSetTest_Object implements TestOnly {
-	private static $has_many = [
-		'Children' => 'ChangeSetTest_Owned',
-	];
-	private static $owns = ['Children'];
-}
-
-class ChangeSetTest_Owned extends ChangeSetTest_Object implements TestOnly {
-	private static $has_one = [
-		'Parent' => 'ChangeSetTest_Owner'
-	];
-	private static $owned_by = ['Parent'];
 }
