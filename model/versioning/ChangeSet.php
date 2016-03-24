@@ -96,17 +96,24 @@ class ChangeSet extends DataObject {
 	 * @param DataObject $object
 	 */
 	public function addObject(DataObject $object) {
+		if(!$this->isInDB()) {
+			throw new BadMethodCallException("ChangeSet must be saved before adding items");
+		}
+
 		$references = [
 			'ObjectID'    => $object->ID,
-			'ObjectClass' => $object->ClassName,
-			'ChangeSetID' => $this->ID
+			'ObjectClass' => $object->ClassName
 		];
 
-		$item = ChangeSetItem::get()->filter($references)->first();
-		if (!$item) $item = new ChangeSetItem($references);
+		// Get existing item in case already added
+		$item = $this->Changes()->filter($references)->first();
+		if (!$item) {
+			$item = new ChangeSetItem($references);
+		}
 
 		$item->Added = ChangeSetItem::EXPLICITLY;
 		$item->write();
+		$this->Changes()->add($item);
 
 		$this->sync();
 	}

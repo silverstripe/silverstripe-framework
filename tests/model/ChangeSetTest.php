@@ -115,6 +115,7 @@ class ChangeSetTest extends SapphireTest {
 	 * Automatically publish all objects
 	 */
 	protected function publishAllFixtures() {
+		$this->logInWithPermission('ADMIN');
 		foreach($this->fixtureFactory->getFixtures() as $class => $fixtures) {
 			foreach ($fixtures as $handle => $id) {
 				$this->objFromFixture($class, $handle)->doPublish();
@@ -150,7 +151,7 @@ class ChangeSetTest extends SapphireTest {
 
 		if (count($items)) {
 			$extra = [];
-			foreach ($items as $item) $extra[] = ['Class' => $item->ObjectClass, 'ID' => $item->ObjectID, 'Added' => $item->Added];
+			foreach ($items as $item) $extra[] = ['Class' => $item->ObjectClass, 'ID' => $item->ObjectID, 'Added' => $item->Added, 'ChangeType' => $item->getChangeType()];
 			throw new PHPUnit_Framework_ExpectationFailedException(
 				'Change set included items that weren\'t expected',
 				new \SebastianBergmann\Comparator\ComparisonFailure(array(), $extra, '', print_r($extra, true))
@@ -159,10 +160,6 @@ class ChangeSetTest extends SapphireTest {
 	}
 
 	public function testRepeatedSyncIsNOP() {
-		$this->logInWithPermission([
-			'CMS_ACCESS_CampaignAdmin',
-			'PERM_ALL'
-		]);
 		$this->publishAllFixtures();
 
 		$cs = new ChangeSet();
@@ -183,10 +180,6 @@ class ChangeSetTest extends SapphireTest {
 	}
 
 	public function testSync() {
-		$this->logInWithPermission([
-			'CMS_ACCESS_CampaignAdmin',
-			'PERM_ALL'
-		]);
 		$this->publishAllFixtures();
 
 		$cs = new ChangeSet();
@@ -218,11 +211,6 @@ class ChangeSetTest extends SapphireTest {
 	 * Test that sync includes implicit items
 	 */
 	public function testIsSynced() {
-		$this->logInWithPermission([
-			'CMS_ACCESS_CampaignAdmin',
-			'PERM_ALL'
-		]);
-
 		$this->publishAllFixtures();
 
 		$cs = new ChangeSet();
@@ -254,7 +242,9 @@ class ChangeSetTest extends SapphireTest {
 
 	public function testCanPublish() {
 		// Create changeset containing all items (unpublished)
+		$this->logInWithPermission('ADMIN');
 		$changeSet = new ChangeSet();
+		$changeSet->write();
 		$base = $this->objFromFixture('ChangeSetTest_Base', 'base');
 		$changeSet->addObject($base);
 		$changeSet->sync();
@@ -284,7 +274,9 @@ class ChangeSetTest extends SapphireTest {
 
 	public function testCanEdit() {
 		// Create changeset containing all items (unpublished)
+		$this->logInWithPermission('ADMIN');
 		$changeSet = new ChangeSet();
+		$changeSet->write();
 		$base = $this->objFromFixture('ChangeSetTest_Base', 'base');
 		$changeSet->addObject($base);
 		$changeSet->sync();
@@ -311,7 +303,9 @@ class ChangeSetTest extends SapphireTest {
 
 	public function testCanDelete() {
 		// Create changeset containing all items (unpublished)
+		$this->logInWithPermission('ADMIN');
 		$changeSet = new ChangeSet();
+		$changeSet->write();
 		$base = $this->objFromFixture('ChangeSetTest_Base', 'base');
 		$changeSet->addObject($base);
 		$changeSet->sync();
@@ -328,7 +322,9 @@ class ChangeSetTest extends SapphireTest {
 
 	public function testCanView() {
 		// Create changeset containing all items (unpublished)
+		$this->logInWithPermission('ADMIN');
 		$changeSet = new ChangeSet();
+		$changeSet->write();
 		$base = $this->objFromFixture('ChangeSetTest_Base', 'base');
 		$changeSet->addObject($base);
 		$changeSet->sync();

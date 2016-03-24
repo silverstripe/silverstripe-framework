@@ -78,16 +78,30 @@ class ChangeSetItem extends DataObject {
 		}
 	}
 
+	/**
+	 * Find version of this object in the given stage
+	 *
+	 * @param string $stage
+	 * @return Versioned|DataObject
+	 */
 	private function getObjectInStage($stage) {
-		return Versioned::get_one_by_stage($this->ObjectClass, Versioned::LIVE, sprintf('"ID" = %d', $this->ObjectID));
+		return Versioned::get_by_stage($this->ObjectClass, $stage)->byID($this->ObjectID);
 	}
 
-	function findReferenced() {
-		if ($this->getChangeType() == ChangeSetItem::CHANGE_DELETED) {
-			return $this->getObjectInStage(Versioned::DRAFT)->findOwners(false);
+	/**
+	 * Get all implicit objects for this change
+	 *
+	 * @return SS_List
+	 */
+	public function findReferenced() {
+		if($this->getChangeType() === ChangeSetItem::CHANGE_DELETED) {
+			// If deleted from stage, need to look at live record
+			return $this->getObjectInStage(Versioned::LIVE)->findOwners(false);
 		} else {
-			return $this->getObjectInStage(Versioned::LIVE)->findOwned()->filterByCallback(function ($object) {
-				return $object->stagesDiffer(Versioned::DRAFT, Versioned::LIVE);
+			// If changed on stage, look at owned objects there
+			return $this->getObjectInStage(Versioned::DRAFT)->findOwned()->filterByCallback(function ($owned) {
+				/** @var Versioned|DataObject $owned */
+				return $owned->stagesDiffer(Versioned::DRAFT, Versioned::LIVE);
 			});
 		}
 	}
