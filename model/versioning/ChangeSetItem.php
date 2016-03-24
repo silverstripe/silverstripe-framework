@@ -33,6 +33,7 @@ class ChangeSetItem extends DataObject {
 		'VersionBefore' => 'Int',
 		'VersionAfter'  => 'Int',
 		'Added'         => "Enum('explicitly, implicitly', 'implicitly')",
+		'ReferencedBy'  => 'Varchar(255)'
 	);
 
 	private static $has_one = array(

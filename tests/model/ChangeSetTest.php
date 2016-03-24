@@ -205,6 +205,12 @@ class ChangeSetTest extends SapphireTest {
 			'ChangeSetTest_End.end1' => ChangeSetItem::IMPLICITLY
 		]);
 
+		$endItem = $cs->Changes()->filter('ObjectClass', 'ChangeSetTest_End')->first();
+
+		$this->assertEquals(
+			'ChangeSetTest_Base.'.$base->ID,
+			$endItem->ReferencedBy
+		);
 	}
 
 	/**

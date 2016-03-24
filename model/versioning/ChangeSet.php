@@ -107,13 +107,15 @@ class ChangeSet extends DataObject {
 
 		// Get existing item in case already added
 		$item = $this->Changes()->filter($references)->first();
+
 		if (!$item) {
 			$item = new ChangeSetItem($references);
+			$this->Changes()->add($item);
 		}
 
 		$item->Added = ChangeSetItem::EXPLICITLY;
+		$item->ReferencedBy = '';
 		$item->write();
-		$this->Changes()->add($item);
 
 		$this->sync();
 	}
@@ -125,7 +127,11 @@ class ChangeSet extends DataObject {
 	 * @param DataObject $object
 	 */
 	public function removeObject(DataObject $object) {
-		$item = ChangeSetItem::get()->filter(['ObjectID' => $object->ID, 'ObjectClass' => $object->ClassName, 'ChangeSetID' => $this->ID])->first();
+		$item = ChangeSetItem::get()->filter([
+				'ObjectID' => $object->ID,
+				'ObjectClass' => $object->ClassName,
+				'ChangeSetID' => $this->ID
+			])->first();
 
 		if ($item) {
 			// TODO: Handle case of implicit added item being removed.
@@ -136,6 +142,11 @@ class ChangeSet extends DataObject {
 		$this->sync();
 	}
 
+	protected function implicitKey($item) {
+		if ($item instanceof ChangeSetItem) return $item->ObjectClass.'.'.$item->ObjectID;
+		return $item->ClassName.'.'.$item->ID;
+	}
+
 	protected function calculateImplicit() {
 		/** @var string[][] $explicit List of all items that have been explicitly added to this ChangeSet */
 		$explicit = array();
@@ -143,12 +154,22 @@ class ChangeSet extends DataObject {
 		/** @var string[][] $referenced List of all items that are "referenced" by items in $explicit */
 		$referenced = array();
 
-		foreach ($this->Changes()->filter(['Added' => ChangeSetItem::EXPLICITLY]) as $item) {
-			$explicit[$item->ObjectID . '.' . $item->ObjectClass] = true;
+		/** @var string[][] $references List of which explicit items reference each thing in referenced */
+		$references = array();
 
+		foreach ($this->Changes()->filter(['Added' => ChangeSetItem::EXPLICITLY]) as $item) {
+			$explicitKey = $this->implicitKey($item);
+			$explicit[$explicitKey] = true;
 
 			foreach ($item->findReferenced() as $referee) {
-				$referenced[$referee->ID . '.' . $referee->ClassName] = ['ObjectID' => $referee->ID, 'ObjectClass' => $referee->ClassName];
+				$key = $this->implicitKey($referee);
+
+				$referenced[$key] = [
+					'ObjectID' => $referee->ID,
+					'ObjectClass' => $referee->ClassName
+				];
+
+				$references[$key][] = $explicitKey;
 			}
 		}
 
@@ -157,6 +178,12 @@ class ChangeSet extends DataObject {
 
 		/** @var string[][] $implicit Anything that is in $all, but not in $explicit, is an implicit inclusion */
 		$implicit = array_diff_key($all, $explicit);
+
+		foreach($implicit as $key => $object) {
+			$referencedBy = $references[$key];
+			sort($referencedBy);
+			$implicit[$key]['ReferencedBy'] = implode(',', $referencedBy);
+		}
 
 		return $implicit;
 	}
@@ -182,12 +209,18 @@ class ChangeSet extends DataObject {
 		// Adjust the existing implicit ChangeSetItems for this ChangeSet
 
 		foreach ($this->Changes()->filter(['Added' => ChangeSetItem::IMPLICITLY]) as $item) {
-			$objectKey = $item->ObjectID . '.' . $item->ObjectClass;
+			$objectKey = $this->implicitKey($item);
 
 			// If a ChangeSetItem exists, but isn't in $implicit, it's no longer required, so delete it
-			if (!array_key_exists($objectKey, $implicit)) $item->delete();
-			// Otherwise it is required, so remove from $implicit
-			else unset($implicit[$objectKey]);
+			if (!array_key_exists($objectKey, $implicit)) {
+				$item->delete();
+			}
+			// Otherwise it is required, so update ReferencedBy and remove from $implicit
+			else {
+				$item->ReferencedBy = $implicit[$objectKey]['ReferencedBy'];
+				$item->write();
+				unset($implicit[$objectKey]);
+			}
 		}
 
 		// Now $implicit is all those items that are implicitly included, but don't currently have a ChangeSetItem.
@@ -212,7 +245,7 @@ class ChangeSet extends DataObject {
 		// Check the existing implicit ChangeSetItems for this ChangeSet
 
 		foreach ($this->Changes()->filter(['Added' => ChangeSetItem::IMPLICITLY]) as $item) {
-			$objectKey = $item->ObjectID . '.' . $item->ObjectClass;
+			$objectKey = $this->implicitKey($item);
 
 			// If a ChangeSetItem exists, but isn't in $implicit -> validation failure
 			if (!array_key_exists($objectKey, $implicit)) return false;
@@ -221,7 +254,6 @@ class ChangeSet extends DataObject {
 		}
 
 		// If there's anything left in $implicit -> validation failure
-
 		return empty($implicit);
 	}
 
