@@ -128,7 +128,7 @@ class Upload extends Controller {
 		}
 
 		if(!$tmpFile['size']) {
-			$this->errors[] = _t('File.NOFILESIZE', 'Filesize is zero bytes.');
+			$this->errors[] = _t('File.NOFILESIZE', 'File size is zero bytes.');
 			return false;
 		}
 
@@ -213,7 +213,7 @@ class Upload extends Controller {
 			$this->extend('onAfterLoad', $this->file, $tmpFile);   //to allow extensions to e.g. create a version after an upload
 			return true;
 		} else {
-			$this->errors[] = _t('File.NOFILESIZE', 'Filesize is zero bytes.');
+			$this->errors[] = _t('File.NOFILESIZE', 'File size is zero bytes.');
 			return false;
 		}
 	}
@@ -540,8 +540,8 @@ class Upload_Validator {
 			$arg = File::format_size($this->getAllowedMaxFileSize($ext));
 			$this->errors[] = _t(
 				'File.TOOLARGE',
-				'Filesize is too large, maximum {size} allowed',
-				'Argument 1: Filesize (e.g. 1MB)',
+				'File size is too large, maximum {size} allowed',
+				'Argument 1: File size (e.g. 1MB)',
 				array('size' => $arg)
 			);
 			return false;
