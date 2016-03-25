@@ -1,0 +1,97 @@
+.grid-field-action-component {
+    background: none;
+    border: 0;
+    color: $gray-dark;
+    float: left;
+    padding: 0 8px;
+    height: 52px;
+
+    &:hover {
+        color: darken($gray-dark, 10%);
+    }
+
+    &::before {
+        font-size: 20px;
+    }
+
+    &:last-of-type {
+        margin-right: 12px;
+    }
+}
+
+.grid-field-cell-component {
+    display: flex;
+    flex-flow: row nowrap;
+    flex-grow: 1;
+    flex-basis: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    padding: $grid-y*2 $grid-x*2;
+    line-height: 20px;
+
+    &:first-child {
+        padding-left: $grid-x*2.5;
+    }
+
+    &:last-child {
+        padding-right: $grid-x*2.5;
+    }
+
+    @for $i from 1 through 10 {
+        &.cell-width-#{$i} {
+            flex-grow: $i;
+        }
+    }
+}
+
+.grid-field-header-cell-component {
+    text-transform: uppercase;
+    font-size: $font-size-root - 1;
+    display: flex;
+    flex-flow: row nowrap;
+    flex-grow: 1;
+    flex-basis: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    padding: $grid-y*2 $grid-x*2;
+    line-height: 20px;
+
+    &:first-child {
+        padding-left: $grid-x*2.5;
+    }
+
+    &:last-child {
+        padding-right: $grid-x*2.5;
+    }
+
+    @for $i from 1 through 10 {
+        &.cell-width-#{$i} {
+            flex-grow: $i;
+        }
+    }
+}
+
+.grid-field-table-component {
+    li.grid-field-row-component {
+        display: flex;
+        flex-flow: row nowrap;
+        width: 100%;
+        border: 0;
+        box-shadow: inset 0 -1px 0 0 $gray-lighter;
+        margin: 0;
+        padding: 0;
+
+        // Header row
+        &:first-child {
+            background: none;
+        }
+    }
+}
+
+.grid-field-table-component {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+}

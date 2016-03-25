@@ -1,8 +1,9 @@
 jest.dontMock('../index');
+jest.dontMock('../table');
 
 const React = require('react'),
     ReactTestUtils = require('react-addons-test-utils'),
-    GridFieldTableComponent = require('../index.js').default;
+    GridFieldTableComponent = require('../table.js').default;
 
 describe('GridFieldTableComponent', () => {
     var props;
@@ -33,11 +34,11 @@ describe('GridFieldTableComponent', () => {
             gridfield = ReactTestUtils.renderIntoDocument(
                 <GridFieldTableComponent {...props} />
             );
-            
+
             expect(gridfield.generateHeader()).toBe(null);
         });
     });
-    
+
     describe('generateRows()', function () {
         var gridfield;
 
@@ -59,7 +60,7 @@ describe('GridFieldTableComponent', () => {
             gridfield = ReactTestUtils.renderIntoDocument(
                 <GridFieldTableComponent {...props} />
             );
-            
+
             expect(gridfield.generateRows()).toBe(null);
         });
     });

@@ -7,7 +7,7 @@ import SilverStripeComponent from '../../SilverStripeComponent';
 import FormComponent from '../form';
 import TextField from '../text-field';
 import HiddenField from '../hidden-field';
-import GridField from '../../sections/grid-field';
+import GridField from '../../components/grid-field';
 
 // Using this to map field types to components until we implement dependency injection.
 var fakeInjector = {
