@@ -1,17 +1,17 @@
 import React from 'react';
 import SilverStripeComponent from '../../SilverStripeComponent';
-import GridFieldTable from '../../components/grid-field-table';
-import GridFieldHeader from '../../components/grid-field-header';
-import GridFieldHeaderCell from '../../components/grid-field-header-cell';
-import GridFieldRow from '../../components/grid-field-row';
-import GridFieldCell from '../../components/grid-field-cell';
-import GridFieldAction from '../../components/grid-field-action';
+import GridFieldTable from './table';
+import GridFieldHeader from './header';
+import GridFieldHeaderCell from './header-cell';
+import GridFieldRow from './row';
+import GridFieldCell from './cell';
+import GridFieldAction from './action';
 
 class GridField extends SilverStripeComponent {
 
     constructor(props) {
         super(props);
-        
+
         this.deleteCampaign = this.deleteCampaign.bind(this);
         this.editCampaign = this.editCampaign.bind(this);
 
