@@ -22,8 +22,8 @@ class GridFieldTest extends SapphireTest {
 	/**
 	 * @covers GridField::__construct
 	 * @covers GridField::getConfig
-	 * @covers GridField::setComponents
-	 * @covers GridField::getDefaultConfig
+	 * @covers GridFieldConfig_Base::__construct
+	 * @covers GridFieldConfig::addComponent
 	 */
 	public function testGridFieldDefaultConfig() {
 		$obj = new GridField('testfield', 'testfield');
@@ -45,8 +45,8 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::__construct
-	 * @covers GridField::setComponents
+	 * @covers GridFieldConfig::__construct
+	 * @covers GridFieldConfig::addComponent
 	 */
 	public function testGridFieldSetCustomConfig() {
 
