@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import $ from 'jQuery';
-import * as schemaActions from '../../state/schema/actions';
-import SilverStripeComponent from '../../SilverStripeComponent';
-import FormComponent from '../form';
-import TextField from '../text-field';
-import HiddenField from '../hidden-field';
-import GridField from '../../components/grid-field';
+import * as schemaActions from 'state/schema/actions';
+import SilverStripeComponent from 'silverstripe-component.js';
+import FormComponent from 'components/form';
+import TextField from 'components/text-field';
+import HiddenField from 'components/hidden-field';
+import GridField from 'components/grid-field';
 
 // Using this to map field types to components until we implement dependency injection.
 var fakeInjector = {
