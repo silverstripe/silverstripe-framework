@@ -74,6 +74,8 @@ class TextField extends FormField {
 	 * @return string
 	 */
 	public function InternallyLabelledField() {
+		Deprecation::notice('4.0', 'Please use ->setValue() instead');
+		
 		if(!$this->value) {
 			$this->value = $this->Title();
 		}
