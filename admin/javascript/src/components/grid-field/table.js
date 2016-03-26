@@ -1,5 +1,5 @@
 import React from 'react';
-import SilverStripeComponent from '../../SilverStripeComponent';
+import SilverStripeComponent from 'silverstripe-component.js';
 
 class GridFieldTableComponent extends SilverStripeComponent {
 

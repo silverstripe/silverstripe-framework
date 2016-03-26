@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SilverStripeComponent from '../../SilverStripeComponent';
+import SilverStripeComponent from 'silverstripe-component.js';
 
 class ActionComponent extends SilverStripeComponent {
     constructor(props) {
@@ -8,7 +8,7 @@ class ActionComponent extends SilverStripeComponent {
 
         this.handleClick = this.handleClick.bind(this);
     }
-    
+
     render() {
         return (
             <button className={this.getButtonClasses()} onClick={this.handleClick}>
@@ -44,7 +44,7 @@ class ActionComponent extends SilverStripeComponent {
             buttonClasses += ' btn-secondary';
         } else if (this.props.type === 'complete') {
             buttonClasses += ' btn-success-outline';
-        } 
+        }
 
         // Add icon class
         if (typeof this.props.icon !== 'undefined') {
@@ -73,7 +73,7 @@ class ActionComponent extends SilverStripeComponent {
         if (this.props.loading) {
             return (
                 <div className="btn__loading-icon" >
-                    <svg viewBox="0 0 44 12"> 
+                    <svg viewBox="0 0 44 12">
                         <circle cx="6" cy="6" r="6" />
                         <circle cx="22" cy="6" r="6" />
                         <circle cx="38" cy="6" r="6" />

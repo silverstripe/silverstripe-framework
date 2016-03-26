@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SilverStripeComponent from 'silverstripe-component';
-import ActionButton from 'action-button';
+import ActionButton from 'components/action-button';
 import i18n from 'i18n';
-import NorthHeader from 'north-header';
-import GridField from 'grid-field';
-import FormBuilder from '../../components/form-builder';
+import NorthHeader from 'components/north-header';
+import FormBuilder from 'components/form-builder';
 
 class CampaignAdminContainer extends SilverStripeComponent {
 
