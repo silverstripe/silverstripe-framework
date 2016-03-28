@@ -1,8 +1,0 @@
---- 
-lock: false
-handler: 
-  branch: dev
-  commit: cadfb004818b7ed833beadef70f88b66866c4c32
-repository_url: git://github.com/browserstate/history.js.git
-repository_class: Piston::Git::Repository
-format: 1

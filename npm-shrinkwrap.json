@@ -8234,6 +8234,16 @@
         }
       }
     },
+    "page.js": {
+      "version": "4.13.3",
+      "resolved": "https://registry.npmjs.org/page.js/-/page.js-4.13.3.tgz",
+      "dependencies": {
+        "path-to-regexp": {
+          "version": "0.1.7",
+          "resolved": "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.7.tgz"
+        }
+      }
+    },
     "react": {
       "version": "0.14.6",
       "resolved": "https://registry.npmjs.org/react/-/react-0.14.6.tgz",

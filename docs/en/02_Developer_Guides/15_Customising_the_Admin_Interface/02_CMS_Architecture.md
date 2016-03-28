@@ -207,8 +207,8 @@ so as a developer just declare your dependencies through the [api:Requirements] 
 ## Ajax Loading and Browser History
 
 SilverStripe uses the HTML5 browser history to modify the URL without a complete window refresh,
-and load its UI via Ajax by hooking into browser navigation events (through the
-[history.js](https://github.com/balupton/History.js/) wrapper library).
+and load its UI via Ajax by hooking into browser navigation events (through the [Page.js](https://github.com/visionmedia/page.js) wrapper `javascript/src/router`).
+
 This technique has an impact on how any Ajax load needs to happen:
 In order to support browser history (and change the URL state),
 a CMS developer needs to fire a navigation event rather than invoking the Ajax call directly.
