@@ -202,43 +202,37 @@ class ChangeSet extends DataObject {
 	 */
 	public function sync() {
 		// Start a transaction (if we can)
+		DB::get_conn()->withTransaction(function() {
 
-		if (DB::get_conn()->supportsTransactions()) DB::get_conn()->transactionStart();
+			// Get the implicitly included items for this ChangeSet
+			$implicit = $this->calculateImplicit();
 
-		// Get the implicitly included items for this ChangeSet
+			// Adjust the existing implicit ChangeSetItems for this ChangeSet
+			foreach ($this->Changes()->filter(['Added' => ChangeSetItem::IMPLICITLY]) as $item) {
+				$objectKey = $this->implicitKey($item);
 
-		$implicit = $this->calculateImplicit();
-
-		// Adjust the existing implicit ChangeSetItems for this ChangeSet
-
-		foreach ($this->Changes()->filter(['Added' => ChangeSetItem::IMPLICITLY]) as $item) {
-			$objectKey = $this->implicitKey($item);
-
-			// If a ChangeSetItem exists, but isn't in $implicit, it's no longer required, so delete it
-			if (!array_key_exists($objectKey, $implicit)) {
-				$item->delete();
+				// If a ChangeSetItem exists, but isn't in $implicit, it's no longer required, so delete it
+				if (!array_key_exists($objectKey, $implicit)) {
+					$item->delete();
+				}
+				// Otherwise it is required, so update ReferencedBy and remove from $implicit
+				else {
+					$item->ReferencedBy = $implicit[$objectKey]['ReferencedBy'];
+					$item->write();
+					unset($implicit[$objectKey]);
+				}
 			}
-			// Otherwise it is required, so update ReferencedBy and remove from $implicit
-			else {
-				$item->ReferencedBy = $implicit[$objectKey]['ReferencedBy'];
+
+			// Now $implicit is all those items that are implicitly included, but don't currently have a ChangeSetItem.
+			// So create new ChangeSetItems to match
+
+			foreach ($implicit as $key => $props) {
+				$item = new ChangeSetItem($props);
+				$item->Added = ChangeSetItem::IMPLICITLY;
+				$item->ChangeSetID = $this->ID;
 				$item->write();
-				unset($implicit[$objectKey]);
 			}
-		}
-
-		// Now $implicit is all those items that are implicitly included, but don't currently have a ChangeSetItem.
-		// So create new ChangeSetItems to match
-
-		foreach ($implicit as $key => $props) {
-			$item = new ChangeSetItem($props);
-			$item->Added = ChangeSetItem::IMPLICITLY;
-			$item->ChangeSetID = $this->ID;
-			$item->write();
-		}
-
-		// Finally, commit the transaction
-
-		if (DB::get_conn()->supportsTransactions()) DB::get_conn()->transactionEnd();
+		});
 	}
 
 	/** Verify that any objects in this changeset include all owned changes */
