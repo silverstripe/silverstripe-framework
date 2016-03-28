@@ -272,4 +272,11 @@ class UnsavedRelationList extends ArrayList implements Relation {
 	public function dbObject($fieldName) {
 		return singleton($this->dataClass)->dbObject($fieldName);
 	}
+
+	protected function extractValue($item, $key) {
+		if(is_numeric($item)) {
+			$item = DataObject::get_by_id($this->dataClass, $item);
+		}
+		return parent::extractValue($item, $key);
+	}
 }
