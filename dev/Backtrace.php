@@ -16,6 +16,7 @@ class SS_Backtrace {
 		'mysql_connect',
 		'mssql_connect',
 		'pg_connect',
+		array('PDO', '__construct'),
 		array('mysqli', 'mysqli'),
 		array('mysqli', 'select_db'),
 		array('DB', 'connect'),
