@@ -5,7 +5,6 @@
 /**
  * A single line in a changeset
  *
- * @property string $ReferencedBy
  * @property string $Added
  * @property string $ObjectClass
  * @property int $ObjectID

@@ -9,8 +9,8 @@
 class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 
 	private static $allowed_actions = [
-		'item',
-		'items',
+		'set',
+		'sets',
 		'schema',
 		'DetailEditForm',
 		'readCampaigns',
@@ -25,11 +25,11 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 	private static $menu_title = 'Campaigns';
 
 	private static $url_handlers = [
-		'GET items' => 'readCampaigns',
-		'POST item/$ID' => 'createCampaign',
-		'GET item/$ID' => 'readCampaign',
-		'PUT item/$ID' => 'updateCampaign',
-		'DELETE item/$ID' => 'deleteCampaign',
+		'GET sets' => 'readCampaigns',
+		'POST set/$ID' => 'createCampaign',
+		'GET set/$ID' => 'readCampaign',
+		'PUT set/$ID' => 'updateCampaign',
+		'DELETE set/$ID' => 'deleteCampaign',
 	];
 
 	private static $url_segment = 'campaigns';
@@ -101,23 +101,23 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 			"data": {
 				"recordType": "ChangeSet",
 				"collectionReadEndpoint": {
-					"url": "admin\/campaigns\/items",
+					"url": "admin\/campaigns\/sets",
 					"method": "GET"
 				},
 				"itemReadEndpoint": {
-					"url": "admin\/campaigns\/item\/:id",
+					"url": "admin\/campaigns\/set\/:id",
 					"method": "GET"
 				},
 				"itemUpdateEndpoint": {
-					"url": "admin\/campaigns\/item\/:id",
+					"url": "admin\/campaigns\/set\/:id",
 					"method": "PUT"
 				},
 				"itemCreateEndpoint": {
-					"url": "admin\/campaigns\/item\/:id",
+					"url": "admin\/campaigns\/set\/:id",
 					"method": "POST"
 				},
 				"itemDeleteEndpoint": {
-					"url": "admin\/campaigns\/item\/:id",
+					"url": "admin\/campaigns\/set\/:id",
 					"method": "DELETE"
 				},
 				"editFormSchemaEndpoint": "admin\/campaigns\/schema\/DetailEditForm",
@@ -187,7 +187,7 @@ JSON;
 		$response = new SS_HTTPResponse();
 		$response->addHeader('Content-Type', 'application/json');
 		$hal = $this->getListResource();
-		$response->setBody($hal->asJson(true));
+		$response->setBody(Convert::array2json($hal));
 		return $response;
 		}
 
@@ -220,24 +220,24 @@ JSON;
 	/**
 	 * Build item resource from a changeset
 	 *
-	 * @param ChangeSet $changeset
+	 * @param ChangeSet $changeSet
 	 * @return array
 	 */
-	protected function getChangeSetResource(ChangeSet $changeset) {
+	protected function getChangeSetResource(ChangeSet $changeSet) {
 		$hal = [
 			'_links' => [
 				'self' => [
-					'href' => $this->ItemLink($changeset->ID)
+					'href' => $this->SetLink($changeSet->ID)
 				]
 			],
-			'ID' => $changeset->ID,
-			'Name' => $changeset->Name,
-			'Created' => $changeset->Created,
-			'LastEdited' => $changeset->LastEdited,
-			'State' => $changeset->State,
+			'ID' => $changeSet->ID,
+			'Name' => $changeSet->Name,
+			'Created' => $changeSet->Created,
+			'LastEdited' => $changeSet->LastEdited,
+			'State' => $changeSet->State,
 			'_embedded' => ['ChangeSetItems' => []]
 		];
-		foreach($changeset->Changes() as $changeSetItem) {
+		foreach($changeSet->Changes() as $changeSetItem) {
 			/** @var ChangesetItem $changeSetItem */
 			$resource = $this->getChangeSetItemResource($changeSetItem);
 			$hal['_embedded']['ChangeSetItems'][] = $resource;
@@ -253,6 +253,11 @@ JSON;
 	 */
 	protected function getChangeSetItemResource(ChangeSetItem $changeSetItem) {
 		$hal = [
+			'_links' => [
+				'self' => [
+					'href' => $this->ItemLink($changeSetItem->ID)
+				]
+			],
 			'ID' => $changeSetItem->ID,
 			'Created' => $changeSetItem->Created,
 			'LastEdited' => $changeSetItem->LastEdited,
@@ -263,7 +268,16 @@ JSON;
 		// Depending on whether the object was added implicitly or explicitly, set
 		// other related objects.
 		if($changeSetItem->Added === ChangeSetItem::IMPLICITLY) {
-
+			$referencedItems = $changeSetItem->ReferencedBy();
+			$referencedBy = [];
+			foreach($referencedItems as $referencedItem) {
+				$referencedBy[] = [
+					'href' => $this->SetLink($referencedItem->ID)
+				];
+			}
+			if($referencedBy) {
+				$hal['_links']['referenced_by'] = $referencedBy;
+			}
 		}
 
 		return $hal;
@@ -344,7 +358,20 @@ JSON;
 	}
 
 	/**
-	 * Gets user-visible url to edit a specific changeset
+	 * Gets user-visible url to edit a specific {@see ChangeSet}
+	 *
+	 * @param $itemID
+	 * @return string
+	 */
+	public function SetLink($itemID) {
+		return Controller::join_links(
+			$this->Link('set'),
+			$itemID
+		);
+	}
+
+	/**
+	 * Gets user-visible url to edit a specific {@see ChangeSetItem}
 	 *
 	 * @param int $itemID
 	 * @return string
