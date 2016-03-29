@@ -46,6 +46,8 @@ class ChangeSet extends DataObject {
 		'Owner' => 'Member',
 	);
 
+	private static $default_sort = '""Name" ASC';
+
 	/**
 	 * Default permission to require for publishers.
 	 * Publishers must either be able to use the campaign admin, or have all admin access.
@@ -330,5 +332,15 @@ class ChangeSet extends DataObject {
 
 		// Default permissions
 		return (bool)Permission::checkMember($member, $this->config()->required_permission);
+	}
+
+	public function getCMSFields() {
+		$fields = new FieldList();
+		$fields->merge([
+			TextField::create('Name'),
+			ReadonlyField::create('State')
+		]);
+		$this->extend('updateCMSFields', $fields);
+		return $fields;
 	}
 }
