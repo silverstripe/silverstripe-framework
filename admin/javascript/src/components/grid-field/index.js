@@ -1,4 +1,6 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import SilverStripeComponent from 'silverstripe-component.js';
 import GridFieldTable from './table';
 import GridFieldHeader from './header';
@@ -6,55 +8,43 @@ import GridFieldHeaderCell from './header-cell';
 import GridFieldRow from './row';
 import GridFieldCell from './cell';
 import GridFieldAction from './action';
+import * as actions from 'state/records/actions';
 
+/**
+ * The component acts as a container for a grid field,
+ * with smarts around data retrieval from external sources.
+ *
+ * @todo Convert to higher order component which hooks up form schema data to an API backend as a grid data source
+ * @todo Replace "dumb" inner components with third party library (e.g. https://griddlegriddle.github.io)
+ */
 class GridField extends SilverStripeComponent {
 
     constructor(props) {
         super(props);
 
-        this.deleteCampaign = this.deleteCampaign.bind(this);
-        this.editCampaign = this.editCampaign.bind(this);
+        this.deleteRecord = this.deleteRecord.bind(this);
+        this.editRecord = this.editRecord.bind(this);
+    }
 
-        // TODO: This will be an AJAX call and it's response stored in state.
-        this.mockData = {
-            campaigns: [
-                {
-                    title: 'SilverStripe 4.0 release',
-                    description: 'All the stuff related to the 4.0 announcement',
-                    changes: 20
-                },
-                {
-                    title: 'March release',
-                    description: 'march release stuff',
-                    changes: 2
-                },
-                {
-                    title: 'About us',
-                    description: 'The team',
-                    changes: 1345
-                }
-            ]
-        };
+    componentDidMount() {
+        super.componentDidMount();
+
+        let data = this.props.data;
+
+        this.props.actions.fetchRecords(data.recordType, data.collectionReadEndpoint.method, data.collectionReadEndpoint.url);
     }
 
     render() {
-        const columns = [
-            {
-                name: 'title'
-            },
-            {
-                name: 'changes',
-                width: 2
-            },
-            {
-                name: 'description',
-                width: 6
-            }
-        ];
+        const records = this.props.records;
+        if(!records) {
+            return <div></div>;
+        }
+
+        const columns = this.props.data.columns;
 
         const actions = [
-            <GridFieldAction icon={'cog'} handleClick={this.editCampaign} />,
-            <GridFieldAction icon={'cancel'} handleClick={this.deleteCampaign} />
+            <GridFieldAction icon={'cog'} handleClick={this.editRecord} />,
+            <GridFieldAction icon={'cancel'} handleClick={this.deleteRecord} />
         ];
 
         // Placeholder to align the headers correctly with the content
@@ -63,9 +53,11 @@ class GridField extends SilverStripeComponent {
         const headerCells = columns.map((column, i) => <GridFieldHeaderCell key={i} width={column.width}>{column.name}</GridFieldHeaderCell>);
         const header = <GridFieldHeader>{headerCells.concat(actionPlaceholder)}</GridFieldHeader>;
 
-        const rows = this.mockData.campaigns.map((campaign, i) => {
+        const rows = records.map((record, i) => {
             var cells = columns.map((column, i) => {
-                return <GridFieldCell key={i} width={column.width}>{campaign[column.name]}</GridFieldCell>
+                // Get value by dot notation
+                var val = column.field.split('.').reduce((a, b) => a[b], record)
+                return <GridFieldCell key={i} width={column.width}>{val}</GridFieldCell>
             });
 
             var rowActions = actions.map((action, j) => {
@@ -82,14 +74,35 @@ class GridField extends SilverStripeComponent {
         );
     }
 
-    deleteCampaign(event) {
-        // delete campaign
+    deleteRecord(event) {
+        // delete record
     }
 
-    editCampaign(event) {
-        // edit campaign
+    editRecord(event) {
+        // edit record
     }
 
 }
 
-export default GridField;
+GridField.propTypes = {
+    data: React.PropTypes.shape({
+        recordType: React.PropTypes.string.isRequired,
+        headerColumns: React.PropTypes.array,
+        collectionReadEndpoint: React.PropTypes.object
+    })
+};
+
+function mapStateToProps(state, ownProps) {
+    let recordType = ownProps.data ? ownProps.data.recordType : null;
+    return {
+        records: (state.records && recordType) ? state.records[recordType] : []
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GridField);

@@ -1,16 +1,36 @@
-import $ from 'jQuery';
+import fetch from 'isomorphic-fetch';
+import es6promise from 'es6-promise';
+es6promise.polyfill();
+
+/**
+ * @see https://github.com/github/fetch#handling-http-error-statuses
+ */
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response
+  } else {
+    var error = new Error(response.statusText)
+    error.response = response
+    throw error
+  }
+}
 
 class SilverStripeBackend {
+
+    constructor() {
+        // Allow mocking
+        this.fetch = fetch;
+    }
 
     /**
      * Makes a network request using the GET HTTP verb.
      *
      * @param string url - Endpoint URL.
-     *
-     * @return object - jqXHR. See http://api.jquery.com/Types/#jqXHR
+     * @return object - Promise
      */
     get(url) {
-        return $.ajax({ type: 'GET', url });
+        return this.fetch(url, { method: 'get', credentials: 'same-origin' })
+            .then(checkStatus);
     }
 
     /**
@@ -18,11 +38,11 @@ class SilverStripeBackend {
      *
      * @param string url - Endpoint URL.
      * @param object data - Data to send with the request.
-     *
-     * @return object - jqXHR. See http://api.jquery.com/Types/#jqXHR
+     * @return object - Promise
      */
     post(url, data) {
-        return $.ajax({ type: 'POST', url, data });
+        return this.fetch(url, { method: 'post', credentials: 'same-origin', body: data })
+            .then(checkStatus);
     }
 
     /**
@@ -30,11 +50,11 @@ class SilverStripeBackend {
      *
      * @param string url - Endpoint URL.
      * @param object data - Data to send with the request.
-     *
-     * @return object - jqXHR. See http://api.jquery.com/Types/#jqXHR
+     * @return object - Promise
      */
     put(url, data) {
-        return $.ajax({ type: 'PUT', url, data });
+        return this.fetch(url, { method: 'put', credentials: 'same-origin', body: data })
+            .then(checkStatus);
     }
 
     /**
@@ -42,11 +62,11 @@ class SilverStripeBackend {
      *
      * @param string url - Endpoint URL.
      * @param object data - Data to send with the request.
-     *
-     * @return object - jqXHR. See http://api.jquery.com/Types/#jqXHR
+     * @return object - Promise
      */
     delete(url, data) {
-        return $.ajax({ type: 'DELETE', url, data });
+        return this.fetch(url, { method: 'delete', credentials: 'same-origin', body: data })
+            .then(checkStatus);
     }
 
 }

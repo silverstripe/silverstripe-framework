@@ -8,6 +8,10 @@ import FormComponent from 'components/form';
 import TextField from 'components/text-field';
 import HiddenField from 'components/hidden-field';
 import GridField from 'components/grid-field';
+import fetch from 'isomorphic-fetch';
+
+import es6promise from 'es6-promise';
+es6promise.polyfill();
 
 // Using this to map field types to components until we implement dependency injection.
 var fakeInjector = {
@@ -120,14 +124,17 @@ export class FormBuilderComponent extends SilverStripeComponent {
             headerValues.push('state');
         }
 
-        this.formSchemaPromise = $.ajax({
-            method: 'GET',
+        this.formSchemaPromise = fetch(this.props.schemaUrl, {
             headers: { 'X-FormSchema-Request': headerValues.join() },
-            url: this.props.schemaUrl
-        }).done((data, status, xhr) => {
-            this.isFetching = false;
-            this.props.actions.setSchema(data);
-        });
+            credentials: 'same-origin'
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                this.isFetching = false;
+                this.props.actions.setSchema(json);
+            });
 
         this.isFetching = true;
 
