@@ -11,7 +11,7 @@ use SilverStripe\Model\FieldType\DBString;
 class DBStringTest extends SapphireTest {
 
 	/**
-	 * @covers DBString->forTemplate()
+	 * @covers SilverStripe\Model\FieldType\DBField::forTemplate()
 	 */
 	public function testForTemplate() {
 		$this->assertEquals(
@@ -21,7 +21,7 @@ class DBStringTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers DBString->LowerCase()
+	 * @covers SilverStripe\Model\FieldType\DBString::LowerCase()
 	 */
 	public function testLowerCase() {
 		$this->assertEquals(
@@ -31,7 +31,7 @@ class DBStringTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers DBString->UpperCase()
+	 * @covers SilverStripe\Model\FieldType\DBString::UpperCase()
 	 */
 	public function testUpperCase() {
 		$this->assertEquals(
