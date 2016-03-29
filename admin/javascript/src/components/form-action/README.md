@@ -4,14 +4,42 @@ Used for form actions. For example a submit button.
 
 ## Props
 
-### className
+### handleClick (function - required)
 
-CSS class names to use on the button. Defaults to `btn btn-primary`
+The handler for when a button is clicked
 
-### label (required)
+#### Arguments
+
+ * event - the click event
+
+### label (string)
 
 The text to display on the button.
 
-### type
+### type (string)
 
 Used for the button's `type` attribute. Defaults to `button`
+
+### style (string)
+
+The style of button to be shown, adds a class `btn-{style}` to the button. Defaults to `secondary`.
+
+Recommended values are:
+ * 'danger'
+ * 'success'
+ * 'primary'
+ * 'link'
+ * 'secondary'
+ * 'success-outline'
+
+### icon (string)
+
+The icon to be used on the button, adds `font-icon-{icon}` class to the button. See available icons [here](../../../../fonts/incon-reference.html).
+
+### loading (boolean)
+
+If true, replaces the text/icon with a loading icon.
+
+### disabled (boolean)
+
+If true, gives the button a visually disabled state and disables click events.

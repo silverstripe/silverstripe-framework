@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SilverStripeComponent from 'silverstripe-component';
-import ActionButton from 'components/action-button';
+import FormAction from 'components/form-action';
 import i18n from 'i18n';
 import NorthHeader from 'components/north-header';
 import FormBuilder from 'components/form-builder';
@@ -20,9 +20,8 @@ class CampaignAdminContainer extends SilverStripeComponent {
         return (
             <div>
                 <NorthHeader />
-                <ActionButton
-                    text={i18n._t('Campaigns.ADDCAMPAIGN')}
-                    type={'secondary'}
+                <FormAction
+                    label={i18n._t('Campaigns.ADDCAMPAIGN')}
                     icon={'plus-circled'}
                     handleClick={this.addCampaign} />
                 <FormBuilder schemaUrl={schemaUrl} />
@@ -38,11 +37,9 @@ class CampaignAdminContainer extends SilverStripeComponent {
 
 CampaignAdminContainer.propTypes = {
     config: React.PropTypes.shape({
-        data: React.PropTypes.shape({
-            forms: React.PropTypes.shape({
-                editForm: React.PropTypes.shape({
-                    schemaUrl: React.PropTypes.string
-                })
+        forms: React.PropTypes.shape({
+            editForm: React.PropTypes.shape({
+                schemaUrl: React.PropTypes.string
             })
         })
     }),
