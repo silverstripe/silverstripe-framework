@@ -192,7 +192,6 @@ gulp.task('bundle-lib', function bundleLib() {
         .on('update', bundleLib)
         .on('log', function (msg) { gulpUtil.log('Finished', 'bundled ' + bundleFileName + ' ' + msg) })
         .transform('babelify', babelifyOptions)
-        .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/action',                   { expose: 'components/action-button' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form',                     { expose: 'components/form' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form-action',              { expose: 'components/form-action' })
         .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form-builder',             { expose: 'components/form-builder' })
