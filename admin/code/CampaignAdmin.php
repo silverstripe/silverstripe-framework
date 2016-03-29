@@ -9,8 +9,8 @@
 class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 
 	private static $allowed_actions = [
-		'item',
-		'items',
+		'set',
+		'sets',
 		'schema',
 		'DetailEditForm',
 		'readCampaigns',
@@ -25,11 +25,11 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 	private static $menu_title = 'Campaigns';
 
 	private static $url_handlers = [
-		'GET items' => 'readCampaigns',
-		'POST item/$ID' => 'createCampaign',
-		'GET item/$ID' => 'readCampaign',
-		'PUT item/$ID' => 'updateCampaign',
-		'DELETE item/$ID' => 'deleteCampaign',
+		'GET sets' => 'readCampaigns',
+		'POST set/$ID' => 'createCampaign',
+		'GET set/$ID' => 'readCampaign',
+		'PUT set/$ID' => 'updateCampaign',
+		'DELETE set/$ID' => 'deleteCampaign',
 	];
 
 	private static $url_segment = 'campaigns';
@@ -101,23 +101,23 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 			"data": {
 				"recordType": "ChangeSet",
 				"collectionReadEndpoint": {
-					"url": "admin\/campaigns\/items",
+					"url": "admin\/campaigns\/sets",
 					"method": "GET"
 				},
 				"itemReadEndpoint": {
-					"url": "admin\/campaigns\/item\/:id",
+					"url": "admin\/campaigns\/set\/:id",
 					"method": "GET"
 				},
 				"itemUpdateEndpoint": {
-					"url": "admin\/campaigns\/item\/:id",
+					"url": "admin\/campaigns\/set\/:id",
 					"method": "PUT"
 				},
 				"itemCreateEndpoint": {
-					"url": "admin\/campaigns\/item\/:id",
+					"url": "admin\/campaigns\/set\/:id",
 					"method": "POST"
 				},
 				"itemDeleteEndpoint": {
-					"url": "admin\/campaigns\/item\/:id",
+					"url": "admin\/campaigns\/set\/:id",
 					"method": "DELETE"
 				},
 				"editFormSchemaEndpoint": "admin\/campaigns\/schema\/DetailEditForm",
@@ -186,185 +186,115 @@ JSON;
 	public function readCampaigns(SS_HTTPRequest $request) {
 		$response = new SS_HTTPResponse();
 		$response->addHeader('Content-Type', 'application/json');
-		$json = <<<JSON
-{
-	"_links": {
-		"self": {
-			"href": "/api/ChangeSet/"
-		}
-	},
-	"count": 3,
-	"total": 3,
-	"_embedded": {
-		"ChangeSets": [
-			{
-				"_links": {
-					"self": {
-						"href": "/api/ChangeSet/show/1"
-					}
-				},
-				"ID": 1,
-				"Created": "2016-01-01 00:00:00",
-				"LastEdited": "2016-01-01 00:00:00",
-				"Name": "March 2016 release",
-				"Description": "All the stuff related to the 4.0 announcement",
-				"State": "open",
-				"_embedded": {
-					"ChangeSetItems": [
-						{
-							"_links": {
-								"self": {
-									"href": "/api/ChangeSetItem/show/1"
-								},
-								"owns": [
-									{"href": "/api/ChangeSetItem/show/3"},
-									{"href": "/api/ChangeSetItem/show/4"}
-								]
-							},
-							"ID": 1,
-							"Created": "2016-01-01 00:00:00",
-							"LastEdited": "2016-01-01 00:00:00",
-							"VersionBefore": 1,
-							"VersionAfter": 2,
-							"State": "open",
-							"_embedded": {
-								"Object": [
-									{
-										"_links": {
-											"self": {
-												"href": "/api/SiteTree/show/1"
-											}
-										},
-										"ID": 1,
-										"ChangeSetCategory": "Page",
-										"Title": "Home",
-										"StatusFlags": ["addedtodraft"]
-									}
-								]
-							}
-						},
-						{
-							"_links": {
-								"self": {
-									"href": "/api/ChangeSetItem/show/2"
-								},
-								"owns": [
-									{"href": "/api/ChangeSetItem/show/4"}
-								]
-							},
-							"ID": 2,
-							"Created": "2016-01-01 00:00:00",
-							"LastEdited": "2016-01-01 00:00:00",
-							"VersionBefore": 1,
-							"VersionAfter": 2,
-							"State": "open",
-							"_embedded": {
-								"Object": [
-									{
-										"_links": {
-											"self": {
-												"href": "/api/SiteTree/show/2"
-											}
-										},
-										"ID": 2,
-										"ChangeSetCategory": "Page",
-										"Title": "Features",
-										"StatusFlags": ["modified"]
-									}
-								]
-							}
-						},
-						{
-							"_links": {
-								"self": {
-									"href": "/api/ChangeSetItem/show/3"
-								},
-								"ownedby": [
-									{"href": "/api/ChangeSetItem/show/1"}
-								]
-							},
-							"ID": 3,
-							"Created": "2016-01-01 00:00:00",
-							"LastEdited": "2016-01-01 00:00:00",
-							"VersionBefore": 1,
-							"VersionAfter": 2,
-							"State": "open",
-							"_embedded": {
-								"Object": [
-									{
-										"_links": {
-											"self": {
-												"href": "/api/File/show/1"
-											}
-										},
-										"ID": 1,
-										"ChangeSetCategory": "File",
-										"Title": "A picture of George",
-										"PreviewThumbnailURL": "/george.jpg",
-										"StatusFlags": ["modified"]
-									}
-								]
-							}
-						},
-						{
-							"_links": {
-								"self": {
-									"href": "/api/ChangeSetItem/show/4"
-								},
-								"ownedby": [
-									{"href": "/api/ChangeSetItem/show/1"},
-									{"href": "/api/ChangeSetItem/show/2"}
-								]
-							},
-							"ID": 4,
-							"Created": "2016-01-01 00:00:00",
-							"LastEdited": "2016-01-01 00:00:00",
-							"VersionBefore": 1,
-							"VersionAfter": 2,
-							"State": "open",
-							"_embedded": {
-								"Object": [
-									{
-										"_links": {
-											"self": {
-												"href": "/api/File/show/2"
-											}
-										},
-										"ID": 2,
-										"ChangeSetCategory": "File",
-										"Title": "Out team",
-										"PreviewThumbnailURL": "/team.jpg",
-										"StatusFlags": ["modified"]
-									}
-								]
-							}
-						}
-					]
-				}
-			},
-			{
-				"_links": {
-					"self": {
-						"href": "/api/ChangeSet/show/2"
-					}
-				},
-				"ID": 2,
-				"Created": "2016-02-01 00:00:00",
-				"LastEdited": "2016-02-01 00:00:00",
-				"Name": "Shop products",
-				"State": "open",
-				"_embedded": {
-					"ChangeSetItems": []
-				}
-			}
-		]
-	}
-}
-JSON;
-		$response->setBody($json);
-
+		$hal = $this->getListResource();
+		$response->setBody(Convert::array2json($hal));
 		return $response;
+		}
+
+	/**
+	 * Get list contained as a hal wrapper
+	 *
+	 * @return array
+	 */
+	protected function getListResource() {
+		$items = $this->getListItems();
+		$count = $items->count();
+		$hal = [
+			'count' => $count,
+			'total' => $count,
+			'_links' => [
+				'self' => [
+					'href' => $this->Link('items')
+				]
+			],
+			'_embedded' => ['ChangeSets' => []]
+		];
+		foreach($items as $item) {
+			/** @var ChangeSet $item */
+			$resource = $this->getChangeSetResource($item);
+			$hal['_embedded']['ChangeSets'][] = $resource;
+		}
+		return $hal;
 	}
+
+	/**
+	 * Build item resource from a changeset
+	 *
+	 * @param ChangeSet $changeSet
+	 * @return array
+	 */
+	protected function getChangeSetResource(ChangeSet $changeSet) {
+		$hal = [
+			'_links' => [
+				'self' => [
+					'href' => $this->SetLink($changeSet->ID)
+				]
+			],
+			'ID' => $changeSet->ID,
+			'Name' => $changeSet->Name,
+			'Created' => $changeSet->Created,
+			'LastEdited' => $changeSet->LastEdited,
+			'State' => $changeSet->State,
+			'_embedded' => ['ChangeSetItems' => []]
+		];
+		foreach($changeSet->Changes() as $changeSetItem) {
+			/** @var ChangesetItem $changeSetItem */
+			$resource = $this->getChangeSetItemResource($changeSetItem);
+			$hal['_embedded']['ChangeSetItems'][] = $resource;
+		}
+		return $hal;
+	}
+
+	/**
+	 * Build item resource from a changesetitem
+	 *
+	 * @param ChangeSetItem $changeSetItem
+	 * @return array
+	 */
+	protected function getChangeSetItemResource(ChangeSetItem $changeSetItem) {
+		$hal = [
+			'_links' => [
+				'self' => [
+					'href' => $this->ItemLink($changeSetItem->ID)
+				]
+			],
+			'ID' => $changeSetItem->ID,
+			'Created' => $changeSetItem->Created,
+			'LastEdited' => $changeSetItem->LastEdited,
+			'Title' => $changeSetItem->getTitle(),
+			'ChangeType' => $changeSetItem->getChangeType(),
+			'Added' => $changeSetItem->Added,
+		];
+		// Depending on whether the object was added implicitly or explicitly, set
+		// other related objects.
+		if($changeSetItem->Added === ChangeSetItem::IMPLICITLY) {
+			$referencedItems = $changeSetItem->ReferencedBy();
+			$referencedBy = [];
+			foreach($referencedItems as $referencedItem) {
+				$referencedBy[] = [
+					'href' => $this->SetLink($referencedItem->ID)
+				];
+			}
+			if($referencedBy) {
+				$hal['_links']['referenced_by'] = $referencedBy;
+			}
+		}
+
+		return $hal;
+	}
+
+
+
+	/**
+	 * Gets viewable list of campaigns
+	 *
+	 * @return SS_List
+	 */
+	protected function getListItems() {
+		return ChangeSet::get()
+			->filter('State', ChangeSet::STATE_OPEN);
+	}
+
 
 	/**
 	 * REST endpoint to get a campaign.
@@ -420,14 +350,44 @@ JSON;
 		return Form::create(
 			$this,
 			'DetailEditForm',
-			FieldList::create(
-				TextField::create('Name'),
-				TextAreaField::create('Description')
-			),
+			ChangeSet::singleton()->getCMSFields(),
 			FieldList::create(
 				FormAction::create('save', 'Save')
 			)
 		);
+	}
+
+	/**
+	 * Gets user-visible url to edit a specific {@see ChangeSet}
+	 *
+	 * @param $itemID
+	 * @return string
+	 */
+	public function SetLink($itemID) {
+		return Controller::join_links(
+			$this->Link('set'),
+			$itemID
+		);
+	}
+
+	/**
+	 * Gets user-visible url to edit a specific {@see ChangeSetItem}
+	 *
+	 * @param int $itemID
+	 * @return string
+	 */
+	public function ItemLink($itemID) {
+		return Controller::join_links(
+			$this->Link('item'),
+			$itemID
+		);
+	}
+
+	/**
+	 *
+	 */
+	public function FindReferencedChanges() {
+
 	}
 
 }

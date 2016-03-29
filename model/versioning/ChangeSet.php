@@ -328,4 +328,14 @@ class ChangeSet extends DataObject {
 		// Default permissions
 		return (bool)Permission::checkMember($member, $this->config()->required_permission);
 	}
+
+	public function getCMSFields() {
+		$fields = new FieldList();
+		$fields->merge([
+			TextField::create('Name'),
+			ReadonlyField::create('State')
+		]);
+		$this->extend('updateCMSFields', $fields);
+		return $fields;
+	}
 }
