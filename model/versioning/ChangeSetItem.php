@@ -9,6 +9,8 @@
  * @property string $Added
  * @property string $ObjectClass
  * @property int $ObjectID
+ * @method ManyManyList ReferencedBy() List of explicit items that require this change
+ * @method ManyManyList References() List of implicit items required by this change
  * @method ChangeSet ChangeSet()
  */
 class ChangeSetItem extends DataObject implements CMSPreviewable {
@@ -38,13 +40,20 @@ class ChangeSetItem extends DataObject implements CMSPreviewable {
 	private static $db = array(
 		'VersionBefore' => 'Int',
 		'VersionAfter'  => 'Int',
-		'Added'         => "Enum('explicitly, implicitly', 'implicitly')",
-		'ReferencedBy'  => 'Varchar(255)'
+		'Added'         => "Enum('explicitly, implicitly', 'implicitly')"
 	);
 
 	private static $has_one = array(
 		'ChangeSet' => 'ChangeSet',
 		'Object'      => 'DataObject',
+	);
+
+	private static $many_many = array(
+		'ReferencedBy' => 'ChangeSetItem'
+	);
+
+	private static $belongs_many_many = array(
+		'References' => 'ChangeSetItem.ReferencedBy'
 	);
 
 	private static $indexes = array(
@@ -304,38 +313,6 @@ class ChangeSetItem extends DataObject implements CMSPreviewable {
 
 	public function CMSEditLink() {
 		return CampaignAdmin::singleton()->ItemLink($this->ChangeSetID);
-	}
-
-	/**
-	 * If this object is implicitly added, returns the list of
-	 * changes for objects that reference this.
-	 *
-	 * @return SS_List|null
-	 */
-	public function getReferencedItems() {
-		// Skip objects not implicitly added
-		if(!$this->isInDB()
-			|| $this->Added !== static::IMPLICITLY
-			|| empty($this->ReferencedBy)
-		) {
-			return null;
-		}
-
-		$items = new ArrayList();
-		$objectReferences = explode(',', $this->ReferencedBy);
-		foreach($objectReferences as $objectReference) {
-			list($objectClass, $objectID) = explode('.', $objectReference);
-			// Find explicit change matching this object reference
-			$item = $this->ChangeSet()->Changes()->filter([
-				'ObjectClass' => $objectClass,
-				'ObjectID' => $objectID,
-				'Added' => static::EXPLICITLY,
-			])->first();
-			if($item) {
-				$items->push($item);
-			}
-		}
-		return $items;
 	}
 
 }

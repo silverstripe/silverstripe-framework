@@ -670,29 +670,36 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param mixed $dataObjectSet The {@link SS_List} to test.
 	 */
 	public function assertDOSEquals($matches, $dataObjectSet) {
-		if(!$dataObjectSet) return;
-
+		// Extract dataobjects
 		$extracted = array();
-		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
-
-		foreach($matches as $match) {
-			$matched = false;
-			foreach($extracted as $i => $item) {
-				if($this->dataObjectArrayMatch($item, $match)) {
-					// Remove it from $extracted so that we don't get duplicate mapping.
-					unset($extracted[$i]);
-					$matched = true;
-					break;
-				}
+		if($dataObjectSet) {
+			foreach ($dataObjectSet as $item) {
+				/** @var DataObject $item */
+				$extracted[] = $item->toMap();
 			}
+		}
 
-			// We couldn't find a match - assertion failed
-			$this->assertTrue(
-				$matched,
-				"Failed asserting that the SS_List contains an item matching "
-				. var_export($match, true) . "\n\nIn the following SS_List:\n"
-				. $this->DOSSummaryForMatch($dataObjectSet, $match)
-			);
+		// Check all matches
+		if($matches) {
+			foreach ($matches as $match) {
+				$matched = false;
+				foreach ($extracted as $i => $item) {
+					if ($this->dataObjectArrayMatch($item, $match)) {
+						// Remove it from $extracted so that we don't get duplicate mapping.
+						unset($extracted[$i]);
+						$matched = true;
+						break;
+					}
+				}
+
+				// We couldn't find a match - assertion failed
+				$this->assertTrue(
+					$matched,
+					"Failed asserting that the SS_List contains an item matching "
+					. var_export($match, true) . "\n\nIn the following SS_List:\n"
+					. $this->DOSSummaryForMatch($dataObjectSet, $match)
+				);
+			}
 		}
 
 		// If we have leftovers than the DOS has extra data that shouldn't be there

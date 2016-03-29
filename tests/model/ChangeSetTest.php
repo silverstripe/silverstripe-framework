@@ -208,8 +208,8 @@ class ChangeSetTest extends SapphireTest {
 		$endItem = $cs->Changes()->filter('ObjectClass', 'ChangeSetTest_End')->first();
 
 		$this->assertEquals(
-			'ChangeSetTest_Base.'.$base->ID,
-			$endItem->ReferencedBy
+			[$base->ID],
+			$endItem->ReferencedBy()->column("ID")
 		);
 
 		$this->assertDOSEquals([
@@ -219,7 +219,7 @@ class ChangeSetTest extends SapphireTest {
 				'ObjectID' => $base->ID,
 				'ChangeSetID' => $cs->ID
 			]
-		], $endItem->getReferencedItems());
+		], $endItem->ReferencedBy());
 	}
 
 	/**
@@ -284,7 +284,7 @@ class ChangeSetTest extends SapphireTest {
 	}
 
 	public function testCanRevert() {
-		$this->markTestSkipped("Requires ChangeSet::publish to be implemented first");
+		$this->markTestSkipped("Requires ChangeSet::revert to be implemented first");
 	}
 
 	public function testCanEdit() {

@@ -80,18 +80,15 @@ class ChangeSet extends DataObject {
 			throw new Exception("The current member does not have permission to publish this ChangeSet.");
 		}
 
-		foreach($this->Changes() as $change) {
-			/** @var ChangeSetItem $change */
-			$change->publish();
-		}
+		DB::get_conn()->withTransaction(function(){
+			foreach($this->Changes() as $change) {
+				/** @var ChangeSetItem $change */
+				$change->publish();
+			}
 
-		$this->State = static::STATE_PUBLISHED;
-		$this->write();
-	}
-
-	/** Revert all changes made to this changeset, then closes it. **/
-	public function revert() {
-		user_error('Not implemented', E_USER_ERROR);
+			$this->State = static::STATE_PUBLISHED;
+			$this->write();
+		});
 	}
 
 	/**
@@ -118,9 +115,11 @@ class ChangeSet extends DataObject {
 			$this->Changes()->add($item);
 		}
 
+		$item->ReferencedBy()->removeAll();
+
 		$item->Added = ChangeSetItem::EXPLICITLY;
-		$item->ReferencedBy = '';
 		$item->write();
+
 
 		$this->sync();
 	}
@@ -174,7 +173,7 @@ class ChangeSet extends DataObject {
 					'ObjectClass' => $referee->ClassName
 				];
 
-				$references[$key][] = $explicitKey;
+				$references[$key][] = $item->ID;
 			}
 		}
 
@@ -185,9 +184,7 @@ class ChangeSet extends DataObject {
 		$implicit = array_diff_key($all, $explicit);
 
 		foreach($implicit as $key => $object) {
-			$referencedBy = $references[$key];
-			sort($referencedBy);
-			$implicit[$key]['ReferencedBy'] = implode(',', $referencedBy);
+			$implicit[$key]['ReferencedBy'] = $references[$key];
 		}
 
 		return $implicit;
@@ -219,8 +216,7 @@ class ChangeSet extends DataObject {
 				}
 				// Otherwise it is required, so update ReferencedBy and remove from $implicit
 				else {
-					$item->ReferencedBy = $implicit[$objectKey]['ReferencedBy'];
-					$item->write();
+					$item->ReferencedBy()->setByIDList($implicit[$objectKey]['ReferencedBy']);
 					unset($implicit[$objectKey]);
 				}
 			}
@@ -232,6 +228,7 @@ class ChangeSet extends DataObject {
 				$item = new ChangeSetItem($props);
 				$item->Added = ChangeSetItem::IMPLICITLY;
 				$item->ChangeSetID = $this->ID;
+				$item->ReferencedBy()->setByIDList($props['ReferencedBy']);
 				$item->write();
 			}
 		});
@@ -332,15 +329,5 @@ class ChangeSet extends DataObject {
 
 		// Default permissions
 		return (bool)Permission::checkMember($member, $this->config()->required_permission);
-	}
-
-	public function getCMSFields() {
-		$fields = new FieldList();
-		$fields->merge([
-			TextField::create('Name'),
-			ReadonlyField::create('State')
-		]);
-		$this->extend('updateCMSFields', $fields);
-		return $fields;
 	}
 }
