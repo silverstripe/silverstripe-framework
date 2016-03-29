@@ -1,23 +1,23 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define('ss.silverstripe-backend', ['exports', 'jQuery'], factory);
+        define('ss.silverstripe-backend', ['exports', 'isomorphic-fetch'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('jQuery'));
+        factory(exports, require('isomorphic-fetch'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.jQuery);
+        factory(mod.exports, global.isomorphicFetch);
         global.ssSilverstripeBackend = mod.exports;
     }
-})(this, function (exports, _jQuery) {
+})(this, function (exports, _isomorphicFetch) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
 
-    var _jQuery2 = _interopRequireDefault(_jQuery);
+    var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
     function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : {
@@ -57,22 +57,22 @@
         _createClass(SilverStripeBackend, [{
             key: 'get',
             value: function get(url) {
-                return _jQuery2.default.ajax({ type: 'GET', url: url });
+                return (0, _isomorphicFetch2.default)(url, { method: 'get', credentials: 'same-origin' });
             }
         }, {
             key: 'post',
             value: function post(url, data) {
-                return _jQuery2.default.ajax({ type: 'POST', url: url, data: data });
+                return (0, _isomorphicFetch2.default)(url, { method: 'post', credentials: 'same-origin', body: data });
             }
         }, {
             key: 'put',
             value: function put(url, data) {
-                return _jQuery2.default.ajax({ type: 'PUT', url: url, data: data });
+                return (0, _isomorphicFetch2.default)(url, { method: 'put', credentials: 'same-origin', body: data });
             }
         }, {
             key: 'delete',
             value: function _delete(url, data) {
-                return _jQuery2.default.ajax({ type: 'DELETE', url: url, data: data });
+                return (0, _isomorphicFetch2.default)(url, { method: 'delete', credentials: 'same-origin', body: data });
             }
         }]);
 

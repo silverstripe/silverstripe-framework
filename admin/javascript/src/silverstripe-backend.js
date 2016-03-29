@@ -1,4 +1,4 @@
-import $ from 'jQuery';
+import fetch from 'isomorphic-fetch';
 
 class SilverStripeBackend {
 
@@ -6,11 +6,10 @@ class SilverStripeBackend {
      * Makes a network request using the GET HTTP verb.
      *
      * @param string url - Endpoint URL.
-     *
-     * @return object - jqXHR. See http://api.jquery.com/Types/#jqXHR
+     * @return object - Promise
      */
     get(url) {
-        return $.ajax({ type: 'GET', url });
+        return fetch(url, { method: 'get', credentials: 'same-origin' });
     }
 
     /**
@@ -18,11 +17,10 @@ class SilverStripeBackend {
      *
      * @param string url - Endpoint URL.
      * @param object data - Data to send with the request.
-     *
-     * @return object - jqXHR. See http://api.jquery.com/Types/#jqXHR
+     * @return object - Promise
      */
     post(url, data) {
-        return $.ajax({ type: 'POST', url, data });
+        return fetch(url, { method: 'post', credentials: 'same-origin', body: data });
     }
 
     /**
@@ -30,11 +28,10 @@ class SilverStripeBackend {
      *
      * @param string url - Endpoint URL.
      * @param object data - Data to send with the request.
-     *
-     * @return object - jqXHR. See http://api.jquery.com/Types/#jqXHR
+     * @return object - Promise
      */
     put(url, data) {
-        return $.ajax({ type: 'PUT', url, data });
+        return fetch(url, { method: 'put', credentials: 'same-origin', body: data });
     }
 
     /**
@@ -42,11 +39,10 @@ class SilverStripeBackend {
      *
      * @param string url - Endpoint URL.
      * @param object data - Data to send with the request.
-     *
-     * @return object - jqXHR. See http://api.jquery.com/Types/#jqXHR
+     * @return object - Promise
      */
     delete(url, data) {
-        return $.ajax({ type: 'DELETE', url, data });
+        return fetch(url, { method: 'delete', credentials: 'same-origin', body: data });
     }
 
 }
