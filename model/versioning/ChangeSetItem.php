@@ -4,6 +4,12 @@
 
 /**
  * A single line in a changeset
+ *
+ * @property string $ReferencedBy
+ * @property string $Added
+ * @property string $ObjectClass
+ * @property int $ObjectID
+ * @method ChangeSet ChangeSet()
  */
 class ChangeSetItem extends DataObject {
 
@@ -261,6 +267,38 @@ class ChangeSetItem extends DataObject {
 
 		// Default permissions
 		return (bool)Permission::checkMember($member, ChangeSet::config()->required_permission);
+	}
+
+	/**
+	 * If this object is implicitly added, returns the list of
+	 * changes for objects that reference this.
+	 *
+	 * @return SS_List|null
+	 */
+	public function getReferencedItems() {
+		// Skip objects not implicitly added
+		if(!$this->isInDB()
+			|| $this->Added !== static::IMPLICITLY
+			|| empty($this->ReferencedBy)
+		) {
+			return null;
+		}
+
+		$items = new ArrayList();
+		$objectReferences = explode(',', $this->ReferencedBy);
+		foreach($objectReferences as $objectReference) {
+			list($objectClass, $objectID) = explode('.', $objectReference);
+			// Find explicit change matching this object reference
+			$item = $this->ChangeSet()->Changes()->filter([
+				'ObjectClass' => $objectClass,
+				'ObjectID' => $objectID,
+				'Added' => static::EXPLICITLY,
+			])->first();
+			if($item) {
+				$items->push($item);
+			}
+		}
+		return $items;
 	}
 
 }

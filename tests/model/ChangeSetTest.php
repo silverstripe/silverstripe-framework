@@ -211,6 +211,15 @@ class ChangeSetTest extends SapphireTest {
 			'ChangeSetTest_Base.'.$base->ID,
 			$endItem->ReferencedBy
 		);
+
+		$this->assertDOSEquals([
+			[
+				'Added' => ChangeSetItem::EXPLICITLY,
+				'ObjectClass' => 'ChangeSetTest_Base',
+				'ObjectID' => $base->ID,
+				'ChangeSetID' => $cs->ID
+			]
+		], $endItem->getReferencedItems());
 	}
 
 	/**
