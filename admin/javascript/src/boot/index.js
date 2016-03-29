@@ -7,6 +7,7 @@ import reducerRegister from 'reducer-register';
 import * as configActions from 'state/config/actions';
 import ConfigReducer from 'state/config/reducer';
 import SchemaReducer from 'state/schema/reducer';
+import RecordsReducer from 'state/records/reducer';
 
 // Sections
 import CampaignAdmin from 'sections/campaign-admin';
@@ -14,6 +15,7 @@ import CampaignAdmin from 'sections/campaign-admin';
 function appBoot() {
     reducerRegister.add('config', ConfigReducer);
     reducerRegister.add('schemas', SchemaReducer);
+	reducerRegister.add('records', RecordsReducer);
 
     const initialState = {};
     const rootReducer = combineReducers(reducerRegister.getAll());

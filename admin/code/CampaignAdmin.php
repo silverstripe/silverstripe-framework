@@ -9,12 +9,15 @@
 class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 
 	private static $allowed_actions = [
+		'item',
+		'items',
+		'schema',
+		'DetailEditForm',
+		'readCampaigns',
 		'createCampaign',
 		'readCampaign',
 		'updateCampaign',
 		'deleteCampaign',
-		'schema',
-		'DetailEditForm'
 	];
 
 	private static $menu_priority = 11;
@@ -96,27 +99,33 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 			"customValidationMessage": "",
 			"attributes": [],
 			"data": {
-				"collectionReadUrl": {
+				"recordType": "ChangeSet",
+				"collectionReadEndpoint": {
 					"url": "admin\/campaigns\/items",
 					"method": "GET"
 				},
-				"itemReadUrl": {
+				"itemReadEndpoint": {
 					"url": "admin\/campaigns\/item\/:id",
 					"method": "GET"
 				},
-				"itemUpdateUrl": {
+				"itemUpdateEndpoint": {
 					"url": "admin\/campaigns\/item\/:id",
 					"method": "PUT"
 				},
-				"itemCreateUrl": {
+				"itemCreateEndpoint": {
 					"url": "admin\/campaigns\/item\/:id",
 					"method": "POST"
 				},
-				"itemDeleteUrl": {
+				"itemDeleteEndpoint": {
 					"url": "admin\/campaigns\/item\/:id",
 					"method": "DELETE"
 				},
-				"editFormSchemaUrl": "admin\/campaigns\/schema\/DetailEditForm"
+				"editFormSchemaEndpoint": "admin\/campaigns\/schema\/DetailEditForm",
+				"columns": [
+					{"name": "Title", "field": "Name"},
+					{"name": "Changes", "field": "_embedded.ChangeSetItems.length"},
+					{"name": "Description", "field": "Description"}
+				]
 			}
 		}, {
 			"name": "SecurityID",
@@ -177,7 +186,182 @@ JSON;
 	public function readCampaigns(SS_HTTPRequest $request) {
 		$response = new SS_HTTPResponse();
 		$response->addHeader('Content-Type', 'application/json');
-		$response->setBody(Convert::raw2json(['campaigns' => 'read']));
+		$json = <<<JSON
+{
+	"_links": {
+		"self": {
+			"href": "/api/ChangeSet/"
+		}
+	},
+	"count": 3,
+	"total": 3,
+	"_embedded": {
+		"ChangeSets": [
+			{
+				"_links": {
+					"self": {
+						"href": "/api/ChangeSet/show/1"
+					}
+				},
+				"ID": 1,
+				"Created": "2016-01-01 00:00:00",
+				"LastEdited": "2016-01-01 00:00:00",
+				"Name": "March 2016 release",
+				"Description": "All the stuff related to the 4.0 announcement",
+				"State": "open",
+				"_embedded": {
+					"ChangeSetItems": [
+						{
+							"_links": {
+								"self": {
+									"href": "/api/ChangeSetItem/show/1"
+								},
+								"owns": [
+									{"href": "/api/ChangeSetItem/show/3"},
+									{"href": "/api/ChangeSetItem/show/4"}
+								]
+							},
+							"ID": 1,
+							"Created": "2016-01-01 00:00:00",
+							"LastEdited": "2016-01-01 00:00:00",
+							"VersionBefore": 1,
+							"VersionAfter": 2,
+							"State": "open",
+							"_embedded": {
+								"Object": [
+									{
+										"_links": {
+											"self": {
+												"href": "/api/SiteTree/show/1"
+											}
+										},
+										"ID": 1,
+										"ChangeSetCategory": "Page",
+										"Title": "Home",
+										"StatusFlags": ["addedtodraft"]
+									}
+								]
+							}
+						},
+						{
+							"_links": {
+								"self": {
+									"href": "/api/ChangeSetItem/show/2"
+								},
+								"owns": [
+									{"href": "/api/ChangeSetItem/show/4"}
+								]
+							},
+							"ID": 2,
+							"Created": "2016-01-01 00:00:00",
+							"LastEdited": "2016-01-01 00:00:00",
+							"VersionBefore": 1,
+							"VersionAfter": 2,
+							"State": "open",
+							"_embedded": {
+								"Object": [
+									{
+										"_links": {
+											"self": {
+												"href": "/api/SiteTree/show/2"
+											}
+										},
+										"ID": 2,
+										"ChangeSetCategory": "Page",
+										"Title": "Features",
+										"StatusFlags": ["modified"]
+									}
+								]
+							}
+						},
+						{
+							"_links": {
+								"self": {
+									"href": "/api/ChangeSetItem/show/3"
+								},
+								"ownedby": [
+									{"href": "/api/ChangeSetItem/show/1"}
+								]
+							},
+							"ID": 3,
+							"Created": "2016-01-01 00:00:00",
+							"LastEdited": "2016-01-01 00:00:00",
+							"VersionBefore": 1,
+							"VersionAfter": 2,
+							"State": "open",
+							"_embedded": {
+								"Object": [
+									{
+										"_links": {
+											"self": {
+												"href": "/api/File/show/1"
+											}
+										},
+										"ID": 1,
+										"ChangeSetCategory": "File",
+										"Title": "A picture of George",
+										"PreviewThumbnailURL": "/george.jpg",
+										"StatusFlags": ["modified"]
+									}
+								]
+							}
+						},
+						{
+							"_links": {
+								"self": {
+									"href": "/api/ChangeSetItem/show/4"
+								},
+								"ownedby": [
+									{"href": "/api/ChangeSetItem/show/1"},
+									{"href": "/api/ChangeSetItem/show/2"}
+								]
+							},
+							"ID": 4,
+							"Created": "2016-01-01 00:00:00",
+							"LastEdited": "2016-01-01 00:00:00",
+							"VersionBefore": 1,
+							"VersionAfter": 2,
+							"State": "open",
+							"_embedded": {
+								"Object": [
+									{
+										"_links": {
+											"self": {
+												"href": "/api/File/show/2"
+											}
+										},
+										"ID": 2,
+										"ChangeSetCategory": "File",
+										"Title": "Out team",
+										"PreviewThumbnailURL": "/team.jpg",
+										"StatusFlags": ["modified"]
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"_links": {
+					"self": {
+						"href": "/api/ChangeSet/show/2"
+					}
+				},
+				"ID": 2,
+				"Created": "2016-02-01 00:00:00",
+				"LastEdited": "2016-02-01 00:00:00",
+				"Name": "Shop products",
+				"State": "open",
+				"_embedded": {
+					"ChangeSetItems": []
+				}
+			}
+		]
+	}
+}
+JSON;
+		$response->setBody($json);
 
 		return $response;
 	}
@@ -192,7 +376,7 @@ JSON;
 	public function readCampaign(SS_HTTPRequest $request) {
 		$response = new SS_HTTPResponse();
 		$response->addHeader('Content-Type', 'application/json');
-		$response->setBody(Convert::raw2json(['campaign' => 'read']));
+		$response->setBody('');
 
 		return $response;
 	}
