@@ -5,6 +5,9 @@ const initialState = {
 };
 
 function recordsReducer(state = initialState, action) {
+    let records;
+    let recordType;
+
     switch (action.type) {
 
         case ACTION_TYPES.CREATE_RECORD:
@@ -29,9 +32,24 @@ function recordsReducer(state = initialState, action) {
             return state;
 
         case ACTION_TYPES.FETCH_RECORDS_SUCCESS:
-            let recordType = action.payload.recordType;
+            recordType = action.payload.recordType;
             // TODO Automatic pluralisation from recordType
-            let records = action.payload.data._embedded[recordType + 's'];
+            records = action.payload.data._embedded[recordType + 's'];
+            return deepFreeze(Object.assign({}, state, {
+                [recordType]: records
+            }));
+
+        case ACTION_TYPES.DELETE_RECORD_REQUEST:
+            return state;
+
+        case ACTION_TYPES.DELETE_RECORD_FAILURE:
+            return state;
+
+        case ACTION_TYPES.DELETE_RECORD_SUCCESS:
+            recordType = action.payload.recordType;
+            records = state[recordType]
+                .filter(record => record.ID != action.payload.id)
+
             return deepFreeze(Object.assign({}, state, {
                 [recordType]: records
             }));

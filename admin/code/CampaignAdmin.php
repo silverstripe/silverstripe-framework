@@ -334,11 +334,26 @@ JSON;
 	 * @return SS_HTTPResponse
 	 */
 	public function deleteCampaign(SS_HTTPRequest $request) {
-		$response = new SS_HTTPResponse();
-		$response->addHeader('Content-Type', 'application/json');
-		$response->setBody(Convert::raw2json(['campaign' => 'delete']));
+		$id = $request->param('ID');
+		if (!$id || !is_numeric($id)) {
+            return (new SS_HTTPResponse(json_encode(['status' => 'error']), 400))
+                ->addHeader('Content-Type', 'application/json');
+        }
 
-		return $response;
+		$record = ChangeSet::get()->byID($id);
+		if(!$record) {
+			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 404))
+                ->addHeader('Content-Type', 'application/json');
+		}
+
+		if(!$record->canDelete()) {
+			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 401))
+                ->addHeader('Content-Type', 'application/json');
+		}
+
+		$record->delete();
+
+		return (new SS_HTTPResponse('', 204));
 	}
 
 	/**
