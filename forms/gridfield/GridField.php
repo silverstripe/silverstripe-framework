@@ -592,6 +592,7 @@ class GridField extends FormField {
 	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
+		$this->extend('onBeforeRender', $this);
 		return $this->FieldHolder($properties);
 	}
 
