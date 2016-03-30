@@ -151,12 +151,17 @@
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
 		$(document).ajaxComplete(function (e, xhr, settings) {
-			var url = xhr.getResponseHeader('X-ControllerURL'),
-			    origUrl = window.history.state.path.replace(/\/$/, ''),
+			var origUrl,
+			    url = xhr.getResponseHeader('X-ControllerURL'),
 			    destUrl = settings.url,
 			    msg = xhr.getResponseHeader('X-Status') !== null ? xhr.getResponseHeader('X-Status') : xhr.statusText,
 			    msgType = xhr.status < 200 || xhr.status > 399 ? 'bad' : 'good',
 			    ignoredMessages = ['OK'];
+			if (window.history.state) {
+				origUrl = window.history.state.path;
+			} else {
+				origUrl = document.URL;
+			}
 
 			if (url !== null && (!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))) {
 				_router2.default.show(url, {

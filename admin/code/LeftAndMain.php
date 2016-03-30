@@ -188,20 +188,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function getCombinedClientConfig() {
 		$combinedClientConfig = ['sections' => []];
-		$cmsClassNames = CMSMenu::get_cms_classes();
-
-		// Ordered by url_priority because the routing rules
-		// need to be registered in priority order on the client.
-		usort($cmsClassNames, function ($a, $b) {
-			$priorityA = Config::inst()->get($a, 'url_priority');
-			$priorityB = Config::inst()->get($b, 'url_priority');
-
-			if ($a == $b) {
-				return 0;
-			}
-
-			return ($priorityA < $priorityB) ? -1 : 1;
-		});
+		$cmsClassNames = CMSMenu::get_cms_classes('LeftAndMain', true, CMSMenu::URL_PRIORITY);
 
 		foreach ($cmsClassNames as $className) {
 			$combinedClientConfig['sections'][$className] =  Injector::inst()->get($className)->getClientConfig();

@@ -170,12 +170,17 @@ $.entwine('ss', function($) {
 	// global ajax handlers
 	$(document).ajaxComplete(function(e, xhr, settings) {
 		// Simulates a redirect on an ajax response.
-		var url = xhr.getResponseHeader('X-ControllerURL'),
-			origUrl = window.history.state.path.replace(/\/$/, ''), // TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
+		var origUrl,
+			url = xhr.getResponseHeader('X-ControllerURL'),
 			destUrl = settings.url,
 			msg = xhr.getResponseHeader('X-Status') !== null ? xhr.getResponseHeader('X-Status') : xhr.statusText, // Handle custom status message headers
 			msgType = (xhr.status < 200 || xhr.status > 399) ? 'bad' : 'good',
 			ignoredMessages = ['OK'];
+		if(window.history.state) {
+			origUrl = window.history.state.path;
+		} else {
+			origUrl = document.URL;
+		}
 
 		// Only redirect if controller url differs to the requested or current one
 		if (url !== null && (!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))) {
@@ -292,7 +297,7 @@ $.entwine('ss', function($) {
 
 		fromWindow: {
 			onstatechange: function(event, historyState){
-				this.handleStateChange(event, historyState); 
+				this.handleStateChange(event, historyState);
 			}
 		},
 
@@ -396,7 +401,7 @@ $.entwine('ss', function($) {
 
 		/**
 		 * Confirm whether the current user can navigate away from this page
-		 * 
+		 *
 		 * @param {array} selectors Optional list of selectors
 		 * @returns {boolean} True if the navigation can proceed
 		 */
@@ -533,7 +538,7 @@ $.entwine('ss', function($) {
 		 * Last html5 history state
 		 */
 		LastState: null,
-		
+
 		/**
 		 * Flag to pause handleStateChange
 		 */
