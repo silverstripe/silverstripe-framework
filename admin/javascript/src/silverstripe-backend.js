@@ -15,6 +15,11 @@ function checkStatus(response) {
 
 class SilverStripeBackend {
 
+    constructor() {
+        // Allow mocking
+        this.fetch = fetch;
+    }
+
     /**
      * Makes a network request using the GET HTTP verb.
      *
@@ -22,7 +27,7 @@ class SilverStripeBackend {
      * @return object - Promise
      */
     get(url) {
-        return fetch(url, { method: 'get', credentials: 'same-origin' })
+        return this.fetch(url, { method: 'get', credentials: 'same-origin' })
             .then(checkStatus);
     }
 
@@ -34,7 +39,7 @@ class SilverStripeBackend {
      * @return object - Promise
      */
     post(url, data) {
-        return fetch(url, { method: 'post', credentials: 'same-origin', body: data })
+        return this.fetch(url, { method: 'post', credentials: 'same-origin', body: data })
             .then(checkStatus);
     }
 
@@ -46,7 +51,7 @@ class SilverStripeBackend {
      * @return object - Promise
      */
     put(url, data) {
-        return fetch(url, { method: 'put', credentials: 'same-origin', body: data })
+        return this.fetch(url, { method: 'put', credentials: 'same-origin', body: data })
             .then(checkStatus);
     }
 
@@ -58,7 +63,7 @@ class SilverStripeBackend {
      * @return object - Promise
      */
     delete(url, data) {
-        return fetch(url, { method: 'delete', credentials: 'same-origin', body: data })
+        return this.fetch(url, { method: 'delete', credentials: 'same-origin', body: data })
             .then(checkStatus);
     }
 
