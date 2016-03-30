@@ -50,6 +50,8 @@ class TimeField extends TextField {
 	 */
 	protected $valueObj = null;
 
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TIME;
+
 	public function __construct($name, $title = null, $value = ""){
 		if(!$this->locale) {
 			$this->locale = i18n::get_locale();

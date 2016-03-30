@@ -23,6 +23,8 @@ abstract class SingleSelectField extends SelectField {
 	 */
 	protected $emptyString = '';
 
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_SINGLESELECT;
+
 	/**
 	 * @param boolean $bool
 	 * @return self Self reference

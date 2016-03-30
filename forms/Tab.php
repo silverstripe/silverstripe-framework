@@ -82,4 +82,3 @@ class Tab extends CompositeField {
 		);
 	}
 }
-

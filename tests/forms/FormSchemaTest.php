@@ -24,11 +24,11 @@ class FormSchemaTest extends SapphireTest {
 			'data' => [],
 			'fields' => [
 				[
-					'type' => "HiddenField",
-					'component' => null,
-					'id' => null,
-					'holder_id' => null,
+					'id' => 'Form_TestForm_SecurityID',
 					'name' => 'SecurityID',
+					'type' => "Hidden",
+					'component' => null,
+					'holder_id' => null,
 					'title' => 'Security ID',
 					'source' => null,
 					'extraClass' => 'hidden',

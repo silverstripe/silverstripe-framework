@@ -15,6 +15,8 @@ abstract class MultiSelectField extends SelectField {
 	 */
 	protected $defaultItems = array();
 
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_MULTISELECT;
+
 	/**
 	 * Extracts the value of this field, normalised as an array.
 	 * Scalar values will return a single length array, even if empty

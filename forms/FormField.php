@@ -20,12 +20,56 @@
  * For example, data might be saved to the filesystem instead of the data record, or saved to a
  * component of the data record instead of the data record itself.
  *
+ * A form field can be represented as structured data through {@link FormSchema},
+ * including both structure (name, id, attributes, etc.) and state (field value).
+ * Can be used by for JSON data which is consumed by a front-end application.
+ *
  * @package forms
  * @subpackage core
  */
 class FormField extends RequestHandler {
 
-	use SilverStripe\Forms\Schema\FormFieldSchemaTrait;
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_STRING = 'String';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_HIDDEN = 'Hidden';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_TEXT = 'Text';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_HTML = 'HTML';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_INTEGER = 'Integer';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_DECIMAL = 'Decimal';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_MULTISELECT = 'MultiSelect';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_SINGLESELECT = 'SingleSelect';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_DATE = 'Date';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_DATETIME = 'DateTime';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_TIME = 'Time';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_BOOLEAN = 'Boolean';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_CUSTOM = 'Custom';
+
+	/** @see $schemaDataType */
+	const SCHEMA_DATA_TYPE_STRUCTURAL = 'Structural';
 
 	/**
 	 * @var Form
@@ -165,6 +209,59 @@ class FormField extends RequestHandler {
 	 * @var array
 	 */
 	protected $attributes = [];
+
+	/**
+	 * The data type backing the field. Represents the type of value the
+	 * form expects to receive via a postback. Should be set in subclasses.
+	 *
+	 * The values allowed in this list include:
+	 *
+	 *   - String: Single line text
+	 *   - Hidden: Hidden field which is posted back without modification
+	 *   - Text: Multi line text
+	 *   - HTML: Rich html text
+	 *   - Integer: Whole number value
+	 *   - Decimal: Decimal value
+	 *   - MultiSelect: Select many from source
+	 *   - SingleSelect: Select one from source
+	 *   - Date: Date only
+	 *   - DateTime: Date and time
+	 *   - Time: Time only
+	 *   - Boolean: Yes or no
+	 *   - Custom: Custom type declared by the front-end component. For fields with this type,
+	 *     the component property is mandatory, and will determine the posted value for this field.
+	 *   - Structural: Represents a field that is NOT posted back. This may contain other fields,
+	 *     or simply be a block of stand-alone content. As with 'Custom',
+	 *     the component property is mandatory if this is assigned.
+	 *
+	 * Each value has an equivalent constant, e.g. {@link self::SCHEMA_DATA_TYPE_STRING}.
+	 *
+	 * @var string
+	 */
+	 protected $schemaDataType;
+
+	/**
+	 * The type of front-end component to render the FormField as.
+	 *
+	 * @var string
+	 */
+	protected $schemaComponent;
+
+	/**
+	 * Structured schema data representing the FormField.
+	 * Used to render the FormField as a ReactJS Component on the front-end.
+	 *
+	 * @var array
+	 */
+	protected $schemaData = [];
+
+	/**
+	 * Structured schema state representing the FormField's current data and validation.
+	 * Used to render the FormField as a ReactJS Component on the front-end.
+	 *
+	 * @var array
+	 */
+	protected $schemaState = [];
 
 	/**
 	 * Takes a field name and converts camelcase to spaced words. Also resolves combined field
@@ -1288,6 +1385,149 @@ class FormField extends RequestHandler {
 	 */
 	public function getDontEscape() {
 		return $this->dontEscape;
+	}
+
+	/**
+	 * Sets the component type the FormField will be rendered as on the front-end.
+	 *
+	 * @param string $componentType
+	 * @return FormField
+	 */
+	public function setSchemaComponent($componentType) {
+		$this->schemaComponent = $componentType;
+		return $this;
+	}
+
+	/**
+	 * Gets the type of front-end component the FormField will be rendered as.
+	 *
+	 * @return string
+	 */
+	public function getSchemaComponent() {
+		return $this->schemaComponent;
+	}
+
+	/**
+	 * Sets the schema data used for rendering the field on the front-end.
+	 * Merges the passed array with the current `$schemaData` or {@link getSchemaDataDefaults()}.
+	 * Any passed keys that are not defined in {@link getSchemaDataDefaults()} are ignored.
+	 * If you want to pass around ad hoc data use the `data` array e.g. pass `['data' => ['myCustomKey' => 'yolo']]`.
+	 *
+	 * @param array $schemaData - The data to be merged with $this->schemaData.
+	 * @return FormField
+	 *
+	 * @todo Add deep merging of arrays like `data` and `attributes`.
+	 */
+	public function setSchemaData($schemaData = []) {
+		$current = $this->getSchemaData();
+
+		$this->schemaData = array_merge($current, array_intersect_key($schemaData, $current));
+		return $this;
+	}
+
+	/**
+	 * Gets the schema data used to render the FormField on the front-end.
+	 *
+	 * @return array
+	 */
+	public function getSchemaData() {
+		return array_merge($this->getSchemaDataDefaults(), $this->schemaData);
+	}
+
+	/**
+	 * @todo Throw exception if value is missing, once a form field schema is mandatory across the CMS
+	 *
+	 * @return string
+	 */
+	public function getSchemaDataType() {
+		return $this->schemaDataType;
+	}
+
+	/**
+	 * Gets the defaults for $schemaData.
+	 * The keys defined here are immutable, meaning undefined keys passed to {@link setSchemaData()} are ignored.
+	 * Instead the `data` array should be used to pass around ad hoc data.
+	 *
+	 * @return array
+	 */
+	public function getSchemaDataDefaults() {
+		return [
+			'name' => $this->getName(),
+			'id' => $this->ID(),
+			'type' => $this->getSchemaDataType(),
+			'component' => $this->getSchemaComponent(),
+			'holder_id' => null,
+			'title' => $this->Title(),
+			'source' => null,
+			'extraClass' => $this->ExtraClass(),
+			'description' => $this->getDescription(),
+			'rightTitle' => $this->RightTitle(),
+			'leftTitle' => $this->LeftTitle(),
+			'readOnly' => $this->isReadOnly(),
+			'disabled' => $this->isDisabled(),
+			'customValidationMessage' => $this->getCustomValidationMessage(),
+			'attributes' => [],
+			'data' => [],
+		];
+	}
+
+	/**
+	 * Sets the schema data used for rendering the field on the front-end.
+	 * Merges the passed array with the current `$schemaData` or {@link getSchemaDataDefaults()}.
+	 * Any passed keys that are not defined in {@link getSchemaDataDefaults()} are ignored.
+	 * If you want to pass around ad hoc data use the `data` array e.g. pass `['data' => ['myCustomKey' => 'yolo']]`.
+	 *
+	 * @param array $schemaData - The data to be merged with $this->schemaData.
+	 * @return FormField
+	 *
+	 * @todo Add deep merging of arrays like `data` and `attributes`.
+	 */
+	public function setSchemaState($schemaState = []) {
+		$current = $this->getSchemaState();
+
+		$this->schemaState = array_merge($current, array_intersect_key($schemaState, $current));
+		return $this;
+	}
+
+	/**
+	 * Gets the schema state used to render the FormField on the front-end.
+	 *
+	 * @return array
+	 */
+	public function getSchemaState() {
+		return array_merge($this->getSchemaStateDefaults(), $this->schemaState);
+	}
+
+	/**
+	 * Gets the defaults for $schemaState.
+	 * The keys defined here are immutable, meaning undefined keys passed to {@link setSchemaState()} are ignored.
+	 * Instead the `data` array should be used to pass around ad hoc data.
+	 * Includes validation data if the field is associated to a {@link Form},
+	 * and {@link Form->validate()} has been called.
+	 *
+	 * @return array
+	 */
+	public function getSchemaStateDefaults() {
+		$field = $this;
+		$form = $this->getForm();
+		$validator = $form ? $form->getValidator() : null;
+		$errors = $validator ? (array)$validator->getErrors() : [];
+		$messages = array_filter(array_map(function($error) use ($field) {
+			if($error['fieldName'] === $field->getName()) {
+				return [
+					'value' => $error['message'],
+					'type' => $error['messageType']
+				];
+			}
+		}, $errors));
+
+		return [
+			'id' => $this->ID(),
+			'value' => $this->Value(),
+			'valid' => (count($messages) === 0),
+			'messages' => (array)$messages,
+			'data' => [],
+		];
 	}
 
 }

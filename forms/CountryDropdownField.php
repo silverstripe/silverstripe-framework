@@ -28,6 +28,8 @@ class CountryDropdownField extends DropdownField {
 
 	protected $extraClasses = array('dropdown');
 
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_SINGLESELECT;
+
 	/**
 	 * Get the locale of the Member, or if we're not logged in or don't have a locale, use the default one
 	 * @return string

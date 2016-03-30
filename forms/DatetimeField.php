@@ -44,6 +44,8 @@ class DatetimeField extends FormField {
 	 */
 	protected $timeField = null;
 
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DATETIME;
+
 	/**
 	 * @config
 	 * @var array
