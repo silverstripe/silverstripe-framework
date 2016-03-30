@@ -17,7 +17,8 @@
     "sprites": "gulp sprites",
     "test": "NODE_PATH=\"./javascript/src:./admin/javascript/src\" jest",
     "coverage": "NODE_PATH=\"./javascript/src:./admin/javascript/src\" jest --coverage",
-    "thirdparty": "gulp thirdparty"
+    "thirdparty": "gulp thirdparty",
+    "lint": "eslint javascript/src & eslint admin/javascript/src"
   },
   "repository": {
     "type": "git",
@@ -60,6 +61,9 @@
     "babel-preset-react": "^6.5.0",
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
+    "eslint": "^2.5.3",
+    "eslint-config-airbnb": "^6.2.0",
+    "eslint-plugin-react": "^4.2.3",
     "event-stream": "^3.3.2",
     "glob": "^6.0.4",
     "gulp": "^3.9.0",

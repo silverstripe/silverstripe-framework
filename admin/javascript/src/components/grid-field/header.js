@@ -4,11 +4,11 @@ import GridFieldRowComponent from './row';
 
 class GridFieldHeaderComponent extends SilverStripeComponent {
 
-    render() {
-        return (
-            <GridFieldRowComponent>{this.props.children}</GridFieldRowComponent>
-        );
-    }
+  render() {
+    return (
+      <GridFieldRowComponent>{this.props.children}</GridFieldRowComponent>
+    );
+  }
 
 }
 

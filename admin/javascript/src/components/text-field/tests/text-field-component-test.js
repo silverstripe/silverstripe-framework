@@ -8,30 +8,30 @@ import TextFieldComponent from '../';
 
 describe('TextFieldComponent', function() {
 
-    var props;
+  var props;
+
+  beforeEach(function () {
+    props = {
+      label: '',
+      name: '',
+      value: '',
+      onChange: jest.genMockFunction()
+    };
+  });
+
+  describe('handleChange()', function () {
+    var textField;
 
     beforeEach(function () {
-        props = {
-            label: '',
-            name: '',
-            value: '',
-            onChange: jest.genMockFunction()
-        };
+      textField = ReactTestUtils.renderIntoDocument(
+        <TextFieldComponent {...props} />
+      );
     });
 
-    describe('handleChange()', function () {
-        var textField;
+    it('should call the onChange function on props', function () {
+      textField.handleChange();
 
-        beforeEach(function () {
-            textField = ReactTestUtils.renderIntoDocument(
-                <TextFieldComponent {...props} />
-            );
-        });
-
-        it('should call the onChange function on props', function () {
-            textField.handleChange();
-
-            expect(textField.props.onChange.mock.calls.length).toBe(1);
-        });
+      expect(textField.props.onChange.mock.calls.length).toBe(1);
     });
+  });
 });

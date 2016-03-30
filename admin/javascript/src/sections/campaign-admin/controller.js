@@ -8,48 +8,49 @@ import FormBuilder from 'components/form-builder/index';
 
 class CampaignAdminContainer extends SilverStripeComponent {
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.addCampaign = this.addCampaign.bind(this);
-    }
+    this.addCampaign = this.addCampaign.bind(this);
+  }
 
-    render() {
-        const schemaUrl = this.props.config.forms.editForm.schemaUrl;
+  render() {
+    const schemaUrl = this.props.config.forms.editForm.schemaUrl;
 
-        return (
-            <div>
-                <NorthHeader />
-                <FormAction
-                    label={i18n._t('Campaigns.ADDCAMPAIGN')}
-                    icon={'plus-circled'}
-                    handleClick={this.addCampaign} />
-                <FormBuilder schemaUrl={schemaUrl} />
-            </div>
-        );
-    }
+    return (
+      <div>
+        <NorthHeader />
+        <FormAction
+          label={i18n._t('Campaigns.ADDCAMPAIGN')}
+          icon={'plus-circled'}
+          handleClick={this.addCampaign}
+        />
+        <FormBuilder schemaUrl={schemaUrl} />
+      </div>
+    );
+  }
 
-    addCampaign() {
-        //Add campaign
-    }
+  addCampaign() {
+    // Add campaign
+  }
 
 }
 
 CampaignAdminContainer.propTypes = {
-    config: React.PropTypes.shape({
-        forms: React.PropTypes.shape({
-            editForm: React.PropTypes.shape({
-                schemaUrl: React.PropTypes.string
-            })
-        })
+  config: React.PropTypes.shape({
+    forms: React.PropTypes.shape({
+      editForm: React.PropTypes.shape({
+        schemaUrl: React.PropTypes.string,
+      }),
     }),
-    sectionConfigKey: React.PropTypes.string.isRequired
+  }),
+  sectionConfigKey: React.PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {
-    return {
-        config: state.config.sections[ownProps.sectionConfigKey]
-    }
+  return {
+    config: state.config.sections[ownProps.sectionConfigKey],
+  };
 }
 
 export default connect(mapStateToProps)(CampaignAdminContainer);

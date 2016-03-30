@@ -1,0 +1,37 @@
+# Ignore dist files
+javascript/dist/
+
+# Ignore legacy files
+javascript/src/AssetUploadField.js
+javascript/src/ConfirmedPasswordField.js
+javascript/src/DateField.js
+javascript/src/GridField.js
+javascript/src/HtmlEditorField.js
+javascript/src/InlineFormAction.js
+javascript/src/PermissionCheckboxSetField.js
+javascript/src/SelectionGroup.js
+javascript/src/TabSet.js
+javascript/src/TinyMCE_SSPlugin.js
+javascript/src/ToggleCompositeField.js
+javascript/src/ToggleField.js
+javascript/src/TreeDropdownField.js
+javascript/src/UploadField.js
+javascript/src/UploadField_downloadtemplate.js
+javascript/src/UploadField_select.js
+javascript/src/UploadField_uploadtemplate.js
+javascript/src/i18n.js
+javascript/src/i18nx.js
+javascript/src/jQuery.js
+admin/javascript/src/LeftAndMain.js
+admin/javascript/src/LeftAndMain.*.js
+admin/javascript/src/CMSSecurity.js
+admin/javascript/src/MemberDatetimeOptionsetField.js
+admin/javascript/src/MemberImportForm.js
+admin/javascript/src/ModelAdmin.js
+admin/javascript/src/SecurityAdmin.js
+admin/javascript/src/leaktools.js
+admin/javascript/src/sspath.js
+admin/javascript/src/ssui.core.js
+
+# Ignore tests
+admin/javascript/**/tests/

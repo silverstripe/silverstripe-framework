@@ -1,5 +1,4 @@
 import ACTION_TYPES from './action-types';
-import fetch from 'isomorphic-fetch';
 import backend from 'silverstripe-backend.js';
 
 /**
@@ -14,8 +13,8 @@ import backend from 'silverstripe-backend.js';
  * @return string
  */
 function populate(str, params) {
-    let names = ['id'];
-    return names.reduce((str, name) => str.replace(`:${name}`, params[name]), str);
+  const names = ['id'];
+  return names.reduce((acc, name) => acc.replace(`:${name}`, params[name]), str);
 }
 
 /**
@@ -26,19 +25,27 @@ function populate(str, params) {
  * @param string url API endpoint
  */
 export function fetchRecords(recordType, method, url) {
-    let payload = {recordType: recordType};
-    url = populate(url, payload);
-    return (dispatch, getState) => {
-		dispatch ({type: ACTION_TYPES.FETCH_RECORDS_REQUEST, payload: payload});
-        return backend[method.toLowerCase()](url)
-			.then(response => response.json())
-			.then(json => {
-                dispatch({type: ACTION_TYPES.FETCH_RECORDS_SUCCESS, payload: {recordType: recordType, data: json}})
-            })
-			.catch((err) => {
-				dispatch({type: ACTION_TYPES.FETCH_RECORDS_FAILURE, payload: {error: err, recordType: recordType}})
-			});
-    }
+  const payload = { recordType };
+  return (dispatch) => {
+    dispatch({
+      type: ACTION_TYPES.FETCH_RECORDS_REQUEST,
+      payload,
+    });
+    return backend[method.toLowerCase()](populate(url, payload))
+    .then(response => response.json())
+    .then(json => {
+      dispatch({
+        type: ACTION_TYPES.FETCH_RECORDS_SUCCESS,
+        payload: { recordType, data: json },
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: ACTION_TYPES.FETCH_RECORDS_FAILURE,
+        payload: { error: err, recordType },
+      });
+    });
+  };
 }
 
 /**
@@ -50,16 +57,24 @@ export function fetchRecords(recordType, method, url) {
  * @param string url API endpoint
  */
 export function deleteRecord(recordType, id, method, url) {
-    let payload = {recordType: recordType, id: id};
-    url = populate(url, payload);
-    return (dispatch, getState) => {
-		dispatch ({type: ACTION_TYPES.DELETE_RECORD_REQUEST, payload: payload});
-        return backend[method.toLowerCase()](url)
-			.then(json => {
-                dispatch({type: ACTION_TYPES.DELETE_RECORD_SUCCESS, payload: {recordType: recordType, id: id}})
-            })
-			.catch((err) => {
-				dispatch({type: ACTION_TYPES.DELETE_RECORD_FAILURE, payload: {error: err, recordType: recordType, id: id}})
-			});
-    }
+  const payload = { recordType, id };
+  return (dispatch) => {
+    dispatch({
+      type: ACTION_TYPES.DELETE_RECORD_REQUEST,
+      payload,
+    });
+    return backend[method.toLowerCase()](populate(url, payload))
+      .then(() => {
+        dispatch({
+          type: ACTION_TYPES.DELETE_RECORD_SUCCESS,
+          payload: { recordType, id },
+        });
+      })
+      .catch((err) => {
+        dispatch({
+          type: ACTION_TYPES.DELETE_RECORD_FAILURE,
+          payload: { error: err, recordType, id },
+        });
+      });
+  };
 }

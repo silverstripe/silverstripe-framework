@@ -35,24 +35,24 @@ var $window = $( window ),
 		// URL as well as some other commonly used sub-parts. When used with RegExp.exec()
 		// or String.match, it parses the URL into a results array that looks like this:
 		//
-		//     [0]: http://jblas:password@mycompany.com:8080/mail/inbox?msg=1234&type=unread#msg-content
-		//     [1]: http://jblas:password@mycompany.com:8080/mail/inbox?msg=1234&type=unread
-		//     [2]: http://jblas:password@mycompany.com:8080/mail/inbox
-		//     [3]: http://jblas:password@mycompany.com:8080
-		//     [4]: http:
-		//     [5]: //
-		//     [6]: jblas:password@mycompany.com:8080
-		//     [7]: jblas:password
-		//     [8]: jblas
-		//     [9]: password
-		//    [10]: mycompany.com:8080
-		//    [11]: mycompany.com
-		//    [12]: 8080
-		//    [13]: /mail/inbox
-		//    [14]: /mail/
-		//    [15]: inbox
-		//    [16]: ?msg=1234&type=unread
-		//    [17]: #msg-content
+		//   [0]: http://jblas:password@mycompany.com:8080/mail/inbox?msg=1234&type=unread#msg-content
+		//   [1]: http://jblas:password@mycompany.com:8080/mail/inbox?msg=1234&type=unread
+		//   [2]: http://jblas:password@mycompany.com:8080/mail/inbox
+		//   [3]: http://jblas:password@mycompany.com:8080
+		//   [4]: http:
+		//   [5]: //
+		//   [6]: jblas:password@mycompany.com:8080
+		//   [7]: jblas:password
+		//   [8]: jblas
+		//   [9]: password
+		//  [10]: mycompany.com:8080
+		//  [11]: mycompany.com
+		//  [12]: 8080
+		//  [13]: /mail/inbox
+		//  [14]: /mail/
+		//  [15]: inbox
+		//  [16]: ?msg=1234&type=unread
+		//  [17]: #msg-content
 		//
 		urlParseRE: /^(((([^:\/#\?]+:)?(?:(\/\/)((?:(([^:@\/#\?]+)(?:\:([^:@\/#\?]+))?)@)?(([^:\/#\?\]\[]+|\[[^\/\]@#?]+\])(?:\:([0-9]+))?))?)?)?((\/?(?:[^\/\?#]+\/+)*)([^\?#]*)))?(\?[^#]+)?)(#.*)?/,
 
@@ -72,23 +72,23 @@ var $window = $( window ),
 				// like all other browsers do, so we normalize everything so its consistent
 				// no matter what browser we're running on.
 				return {
-					href:         matches[  0 ] || "",
+					href:     matches[  0 ] || "",
 					hrefNoHash:   matches[  1 ] || "",
 					hrefNoSearch: matches[  2 ] || "",
-					domain:       matches[  3 ] || "",
-					protocol:     matches[  4 ] || "",
+					domain:     matches[  3 ] || "",
+					protocol:   matches[  4 ] || "",
 					doubleSlash:  matches[  5 ] || "",
-					authority:    matches[  6 ] || "",
-					username:     matches[  8 ] || "",
-					password:     matches[  9 ] || "",
-					host:         matches[ 10 ] || "",
-					hostname:     matches[ 11 ] || "",
-					port:         matches[ 12 ] || "",
-					pathname:     matches[ 13 ] || "",
-					directory:    matches[ 14 ] || "",
-					filename:     matches[ 15 ] || "",
-					search:       matches[ 16 ] || "",
-					hash:         matches[ 17 ] || ""
+					authority:  matches[  6 ] || "",
+					username:   matches[  8 ] || "",
+					password:   matches[  9 ] || "",
+					host:     matches[ 10 ] || "",
+					hostname:   matches[ 11 ] || "",
+					port:     matches[ 12 ] || "",
+					pathname:   matches[ 13 ] || "",
+					directory:  matches[ 14 ] || "",
+					filename:   matches[ 15 ] || "",
+					search:     matches[ 16 ] || "",
+					hash:     matches[ 17 ] || ""
 				};
 		},
 

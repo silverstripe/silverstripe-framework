@@ -85,7 +85,7 @@ $.widget('blueimpUIX.fileupload', $.blueimpUI.fileupload, {
 							e.preventDefault(); // Avoid a form submit
 							return false;
 						});
-					} else {    //regular file upload
+					} else {  //regular file upload
 						return $.blueimpUI.fileupload.prototype._onSend.call(that, e, data);
 					}
 				}

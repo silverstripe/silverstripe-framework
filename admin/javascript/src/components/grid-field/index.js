@@ -14,107 +14,118 @@ import * as actions from 'state/records/actions';
  * The component acts as a container for a grid field,
  * with smarts around data retrieval from external sources.
  *
- * @todo Convert to higher order component which hooks up form schema data to an API backend as a grid data source
+ * @todo Convert to higher order component which hooks up form
+ * schema data to an API backend as a grid data source
  * @todo Replace "dumb" inner components with third party library (e.g. https://griddlegriddle.github.io)
  */
 class GridField extends SilverStripeComponent {
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.deleteRecord = this.deleteRecord.bind(this);
-        this.editRecord = this.editRecord.bind(this);
+    this.deleteRecord = this.deleteRecord.bind(this);
+    this.editRecord = this.editRecord.bind(this);
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+
+    const data = this.props.data;
+
+    this.props.actions.fetchRecords(
+      data.recordType,
+      data.collectionReadEndpoint.method,
+      data.collectionReadEndpoint.url
+    );
+  }
+
+  render() {
+    const records = this.props.records;
+    if (!records) {
+      return <div></div>;
     }
 
-    componentDidMount() {
-        super.componentDidMount();
+    const columns = this.props.data.columns;
 
-        let data = this.props.data;
+    // Placeholder to align the headers correctly with the content
+    const actionPlaceholder = <span key={'actionPlaceholder'} />;
+    const headerCells = columns.map((column, i) =>
+      <GridFieldHeaderCell key={i}>{column.name}</GridFieldHeaderCell>
+    );
+    const header = <GridFieldHeader>{headerCells.concat(actionPlaceholder)}</GridFieldHeader>;
 
-        this.props.actions.fetchRecords(data.recordType, data.collectionReadEndpoint.method, data.collectionReadEndpoint.url);
-    }
+    const rows = records.map((record, i) => {
+      const cells = columns.map((column, j) => {
+        // Get value by dot notation
+        const val = column.field.split('.').reduce((a, b) => a[b], record);
+        return <GridFieldCell key={j} width={column.width}>{val}</GridFieldCell>;
+      });
 
-    render() {
-        const records = this.props.records;
-        if(!records) {
-            return <div></div>;
-        }
+      const rowActions = (
+        <GridFieldCell key={`${i}-actions`}>
+          <GridFieldAction
+            icon={'cog'}
+            handleClick={this.editRecord}
+            key={`action-${i}-edit`}
+            record={record}
+          />,
+          <GridFieldAction
+            icon={'cancel'}
+            handleClick={this.deleteRecord}
+            key={`action-${i}-delete`}
+            record={record}
+          />,
+        </GridFieldCell>
+      );
 
-        const columns = this.props.data.columns;
+      return <GridFieldRow key={i}>{cells.concat(rowActions)}</GridFieldRow>;
+    });
 
-        // Placeholder to align the headers correctly with the content
-        const actionPlaceholder = <GridFieldCell key={'actionPlaceholder'} />;
-        const headerCells = columns.map((column, i) => <GridFieldHeaderCell key={i} >{column.name}</GridFieldHeaderCell>);
-        const header = <GridFieldHeader>{headerCells.concat(actionPlaceholder)}</GridFieldHeader>;
+    return (
+      <GridFieldTable header={header} rows={rows} />
+    );
+  }
 
-        const rows = records.map((record, i) => {
-            var cells = columns.map((column, i) => {
-                // Get value by dot notation
-                var val = column.field.split('.').reduce((a, b) => a[b], record)
-                return <GridFieldCell key={i}>{val}</GridFieldCell>
-            });
+  /**
+   * @param number int
+   * @param event
+   */
+  deleteRecord(event, id) {
+    event.preventDefault();
+    this.props.actions.deleteRecord(
+      this.props.data.recordType,
+      id,
+      this.props.data.itemDeleteEndpoint.method,
+      this.props.data.itemDeleteEndpoint.url
+    );
+  }
 
-            var rowActions = <GridFieldCell key={i + '-actions'}>
-                <GridFieldAction
-                    icon={'cog'}
-                    handleClick={this.editRecord.bind(this, record.ID)}
-                    key={"action-" + i + "-edit"}
-                />
-                <GridFieldAction
-                    icon={'cancel'}
-                    handleClick={this.deleteRecord.bind(this, record.ID)}
-                    key={"action-" + i + "-delete"}
-                />
-            </GridFieldCell>;
-
-            return <GridFieldRow key={i}>{cells.concat(rowActions)}</GridFieldRow>;
-        });
-
-        return (
-            <GridFieldTable header={header} rows={rows}></GridFieldTable>
-        );
-    }
-
-    /**
-     * @param number int
-     * @param event
-     */
-    deleteRecord(id, event) {
-        event.preventDefault();
-        this.props.actions.deleteRecord(
-            this.props.data.recordType,
-            id,
-            this.props.data.itemDeleteEndpoint.method,
-            this.props.data.itemDeleteEndpoint.url
-        );
-    }
-
-    editRecord(id, event) {
-        event.preventDefault();
-        // TODO
-    }
+  editRecord(event) {
+    event.preventDefault();
+    // TODO
+  }
 
 }
 
 GridField.propTypes = {
-    data: React.PropTypes.shape({
-        recordType: React.PropTypes.string.isRequired,
-        headerColumns: React.PropTypes.array,
-        collectionReadEndpoint: React.PropTypes.object
-    })
+  data: React.PropTypes.shape({
+    recordType: React.PropTypes.string.isRequired,
+    headerColumns: React.PropTypes.array,
+    collectionReadEndpoint: React.PropTypes.object,
+  }),
 };
 
 function mapStateToProps(state, ownProps) {
-    let recordType = ownProps.data ? ownProps.data.recordType : null;
-    return {
-        records: (state.records && recordType) ? state.records[recordType] : []
-    }
+  const recordType = ownProps.data ? ownProps.data.recordType : null;
+  return {
+    records: (state.records && recordType) ? state.records[recordType] : [],
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-    return {
-        actions: bindActionCreators(actions, dispatch)
-    }
+  return {
+    actions: bindActionCreators(actions, dispatch),
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GridField);
