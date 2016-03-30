@@ -144,7 +144,7 @@ Then in our controller, we add a new action which returns a the XML list of `Pla
 ### Customizing the RSS Feed template
 
 The default template used for XML view is `framework/templates/RSSFeed.ss`. This template displays titles and links to 
-the object. To customize the XML produced use `setTemplate`.
+the object. To customise the XML produced use `setTemplate`.
 
 Say from that last example we want to include the Players Team in the XML feed we might create the following XML file.
 

@@ -200,7 +200,7 @@ how-to.
 
 ## Summary
 
-In a few lines of code, we've customized the look and feel of the CMS.
+In a few lines of code, we've customised the look and feel of the CMS.
 
 While this example is only scratching the surface, it includes most building
 blocks and concepts for more complex extensions as well.

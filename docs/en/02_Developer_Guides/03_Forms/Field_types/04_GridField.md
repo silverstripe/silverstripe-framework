@@ -232,7 +232,7 @@ database.
 ## GridFieldDetailForm
 
 The `GridFieldDetailForm` component drives the record viewing and editing form. It takes its' fields from 
-`DataObject->getCMSFields()` method but can be customized to accept different fields via the 
+`DataObject->getCMSFields()` method but can be customised to accept different fields via the 
 [api:GridFieldDetailForm::setFields()] method.
 
 	:::php

@@ -156,7 +156,7 @@ passing data through, escaping should happen at the end of the chain.
 	  }
 	}
 
-This might not be applicable in all cases - especially if you are building an API thats likely to be customized. If
+This might not be applicable in all cases - especially if you are building an API thats likely to be customised. If
 you're passing unescaped data, make sure to be explicit about it by writing *phpdoc*-documentation and *prefixing* your
 variables ($RAW_data instead of $data).
 

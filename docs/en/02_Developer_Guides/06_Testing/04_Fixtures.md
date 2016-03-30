@@ -231,7 +231,7 @@ After we've created this object in the factory, `getId` is used to retrieve it b
 
 ### Default Properties
 
-Blueprints can be overwritten in order to customize their behavior. For example, if a Fixture does not provide a Team
+Blueprints can be overwritten in order to customise their behavior. For example, if a Fixture does not provide a Team
 name, we can set the default to be `Unknown Team`.
 
 	:::php
