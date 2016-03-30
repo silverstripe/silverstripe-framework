@@ -196,35 +196,9 @@ class ViewableData extends Object implements IteratorAggregate {
 			}
 		}
 		
-		foreach($this->allMethodNames() as $method) {
-			if($method[0] == '_' && $method[1] != '_') {
-				$this->createMethod(
-					substr($method, 1),
-					"return \$obj->deprecatedCachedCall('$method', \$args, '" . substr($method, 1) . "');"
-				);
-			}
-		}
-		
 		parent::defineMethods();
 	}
 
-	/**
-	 * Method to facilitate deprecation of underscore-prefixed methods automatically being cached.
-	 * 
-	 * @param string $field
-	 * @param array $arguments
-	 * @param string $identifier an optional custom cache identifier
-	 * @return unknown
-	 */
-	public function deprecatedCachedCall($method, $args = null, $identifier = null) {
-		Deprecation::notice(
-			'4.0',
-			'You are calling an underscore-prefixed method (e.g. _mymethod()) without the underscore. This behaviour,
-				and the caching logic behind it, has been deprecated.',
-			Deprecation::SCOPE_GLOBAL
-		);
-		return $this->cachedCall($method, $args, $identifier);
-	}
 	/**
 	 * Merge some arbitrary data in with this object. This method returns a {@link ViewableData_Customised} instance
 	 * with references to both this and the new custom data.
