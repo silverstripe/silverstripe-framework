@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import $ from 'jQuery';
 import * as schemaActions from 'state/schema/actions';
-import SilverStripeComponent from 'silverstripe-component.js';
-import FormComponent from 'components/form';
-import TextField from 'components/text-field';
-import HiddenField from 'components/hidden-field';
-import GridField from 'components/grid-field';
+import SilverStripeComponent from 'silverstripe-component';
+import FormComponent from 'components/form/index';
+import TextField from 'components/text-field/index';
+import HiddenField from 'components/hidden-field/index';
+import GridField from 'components/grid-field/index';
 import fetch from 'isomorphic-fetch';
 
 import es6promise from 'es6-promise';

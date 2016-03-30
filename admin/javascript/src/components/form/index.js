@@ -1,6 +1,6 @@
 import React from 'react';
-import SilverStripeComponent from 'silverstripe-component.js';
-import FormActionComponent from 'components/form-action';
+import SilverStripeComponent from 'silverstripe-component';
+import FormActionComponent from 'components/form-action/index';
 
 class FormComponent extends SilverStripeComponent {
 

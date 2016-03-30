@@ -10,7 +10,7 @@ import SchemaReducer from 'state/schema/reducer';
 import RecordsReducer from 'state/records/reducer';
 
 // Sections
-import CampaignAdmin from 'sections/campaign-admin';
+import CampaignAdmin from 'sections/campaign-admin/index';
 
 function appBoot() {
     reducerRegister.add('config', ConfigReducer);

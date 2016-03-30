@@ -1,4 +1,4 @@
-jest.unmock('silverstripe-component.js');
+jest.unmock('silverstripe-component');
 jest.unmock('../');
 
 import { FormBuilderComponent } from '../';
