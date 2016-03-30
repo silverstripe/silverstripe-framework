@@ -1,5 +1,18 @@
 import fetch from 'isomorphic-fetch';
 
+/**
+ * @see https://github.com/github/fetch#handling-http-error-statuses
+ */
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response
+  } else {
+    var error = new Error(response.statusText)
+    error.response = response
+    throw error
+  }
+}
+
 class SilverStripeBackend {
 
     /**
@@ -9,7 +22,8 @@ class SilverStripeBackend {
      * @return object - Promise
      */
     get(url) {
-        return fetch(url, { method: 'get', credentials: 'same-origin' });
+        return fetch(url, { method: 'get', credentials: 'same-origin' })
+            .then(checkStatus);
     }
 
     /**
@@ -20,7 +34,8 @@ class SilverStripeBackend {
      * @return object - Promise
      */
     post(url, data) {
-        return fetch(url, { method: 'post', credentials: 'same-origin', body: data });
+        return fetch(url, { method: 'post', credentials: 'same-origin', body: data })
+            .then(checkStatus);
     }
 
     /**
@@ -31,7 +46,8 @@ class SilverStripeBackend {
      * @return object - Promise
      */
     put(url, data) {
-        return fetch(url, { method: 'put', credentials: 'same-origin', body: data });
+        return fetch(url, { method: 'put', credentials: 'same-origin', body: data })
+            .then(checkStatus);
     }
 
     /**
@@ -42,7 +58,8 @@ class SilverStripeBackend {
      * @return object - Promise
      */
     delete(url, data) {
-        return fetch(url, { method: 'delete', credentials: 'same-origin', body: data });
+        return fetch(url, { method: 'delete', credentials: 'same-origin', body: data })
+            .then(checkStatus);
     }
 
 }
