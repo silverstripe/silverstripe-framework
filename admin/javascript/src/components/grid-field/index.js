@@ -42,15 +42,13 @@ class GridField extends SilverStripeComponent {
 
         const columns = this.props.data.columns;
 
-        const actions = [
-            <GridFieldAction icon={'cog'} handleClick={this.editRecord} />,
-            <GridFieldAction icon={'cancel'} handleClick={this.deleteRecord} />
-        ];
+        // TODO Replace with display: table based system
+        const cellWidth = 5;
+        const actionCellWidth = 2 * 36 + 12;
 
         // Placeholder to align the headers correctly with the content
-        const actionPlaceholder = <span key={'actionPlaceholder'} style={{width: actions.length * 36 + 12}} />;
-
-        const headerCells = columns.map((column, i) => <GridFieldHeaderCell key={i} width={column.width}>{column.name}</GridFieldHeaderCell>);
+        const actionPlaceholder = <span key={'actionPlaceholder'} style={{width: actionCellWidth}} />;
+        const headerCells = columns.map((column, i) => <GridFieldHeaderCell key={i} width={cellWidth}>{column.name}</GridFieldHeaderCell>);
         const header = <GridFieldHeader>{headerCells.concat(actionPlaceholder)}</GridFieldHeader>;
 
         const rows = records.map((record, i) => {
@@ -60,11 +58,18 @@ class GridField extends SilverStripeComponent {
                 return <GridFieldCell key={i} width={column.width}>{val}</GridFieldCell>
             });
 
-            var rowActions = actions.map((action, j) => {
-                return Object.assign({}, action, {
-                    key: `action-${i}-${j}`
-                });
-            })
+            var rowActions = [
+                <GridFieldAction
+                    icon={'cog'}
+                    handleClick={this.editRecord.bind(this, record.ID)}
+                    key={"action-" + i + "-edit"}
+                />,
+                <GridFieldAction
+                    icon={'cancel'}
+                    handleClick={this.deleteRecord.bind(this, record.ID)}
+                    key={"action-" + i + "-delete"}
+                />
+            ];
 
             return <GridFieldRow key={i}>{cells.concat(rowActions)}</GridFieldRow>;
         });
@@ -74,12 +79,23 @@ class GridField extends SilverStripeComponent {
         );
     }
 
-    deleteRecord(event) {
-        // delete record
+    /**
+     * @param number int
+     * @param event
+     */
+    deleteRecord(id, event) {
+        event.preventDefault();
+        this.props.actions.deleteRecord(
+            this.props.data.recordType,
+            id,
+            this.props.data.itemDeleteEndpoint.method,
+            this.props.data.itemDeleteEndpoint.url
+        );
     }
 
     editRecord(event) {
-        // edit record
+        event.preventDefault();
+        // TODO
     }
 
 }
