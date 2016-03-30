@@ -266,11 +266,11 @@ $border: 1px solid darken(#D9D9D9, 15%);
 					&.ui-state-active a {
 						&:after {
 							@extend .icon-sprites-32x32;
-							@include sprite($sprites-32x32-arrow_down_lighter);
+							@include sprite($sprites-32x32-arrow_up_lighter, inline-block);
 						}
 						&:hover:after {
 							@extend .icon-sprites-32x32;
-							@include sprite($sprites-32x32-arrow_down_darker);
+							@include sprite($sprites-32x32-arrow_up_darker, inline-block);
 						}
 					}
 				}

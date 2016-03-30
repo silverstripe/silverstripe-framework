@@ -5,9 +5,7 @@
 	/* Styling the background, controls sit on */
 	&.cms-preview-controls {
 		z-index: 1;
-		background: $color-widget-bg;
-		height: 30px; /* should be set in js Layout to match page actions */
-		padding: $grid-y*1.5 $grid-y*1.5;
+		background: $tab-panel-texture-color;
 	}
 
 	/* Styling for icons in controls */
@@ -24,6 +22,8 @@
 
 	.cms-navigator{
 		width: 100%;
+		padding: $grid-y*1.5 $grid-y*1.5;
+		height: 52px; /* should be set in js Layout to match page actions */
 	}
 
 	/* Preview selectors. Overrides default chosen styles and applies its own */
@@ -37,9 +37,9 @@
 		height: 28px;
 
 		a.chzn-single {
-			width: 16px;
+			width: 28px;
 			padding: 6px;
-			height: 16px;
+			height: 28px;
 			margin: -2px 0 0;
 			filter: none;	/* remove ie background */
 			background: none;
@@ -290,6 +290,7 @@
 		.preview-device-outer {
 			height: 100%;
 			width: 100%;
+			overflow: hidden;
 			.preview-device-inner {
 				box-sizing: border-box;
 				width: 100%;
@@ -311,7 +312,8 @@
 				background: lighten(#D2DBE0, 1%);
 				border: 1px solid transparent;
 				border-left:1px solid darken(#D2DBE0, 1%);
-				padding: 0 16px 16px;
+				padding: 16px;
+				box-sizing: content-box;
 				.preview-device-inner {
 					border-top:2px solid lighten(#D2DBE0,5%);
 					border-right: 1px solid transparent;
