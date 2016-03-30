@@ -1,5 +1,5 @@
 import React from 'react';
-import SilverStripeComponent from 'silverstripe-component.js';
+import SilverStripeComponent from 'silverstripe-component';
 
 class HiddenFieldComponent extends SilverStripeComponent {
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SilverStripeComponent from 'silverstripe-component';
-import FormAction from 'components/form-action';
+import FormAction from 'components/form-action/index';
 import i18n from 'i18n';
-import NorthHeader from 'components/north-header';
-import FormBuilder from 'components/form-builder';
+import NorthHeader from 'components/north-header/index';
+import FormBuilder from 'components/form-builder/index';
 
 class CampaignAdminContainer extends SilverStripeComponent {
 

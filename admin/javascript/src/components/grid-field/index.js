@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import SilverStripeComponent from 'silverstripe-component.js';
+import SilverStripeComponent from 'silverstripe-component';
 import GridFieldTable from './table';
 import GridFieldHeader from './header';
 import GridFieldHeaderCell from './header-cell';
