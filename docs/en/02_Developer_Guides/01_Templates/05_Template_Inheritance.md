@@ -5,7 +5,7 @@ summary: Override and extend module and core markup templates from your applicat
 
 Bundled within SilverStripe are default templates for any markup the framework outputs for things like Form templates,
 Emails or RSS Feeds. These templates are provided to make getting your site up and running quick with sensible defaults 
-but it's easy to replace and customize SilverStripe (and add-on's) by providing custom templates in your own 
+but it's easy to replace and customise SilverStripe (and add-on's) by providing custom templates in your own 
 `mysite/templates` folder or in your `themes/your_theme/templates` folder.
 
 Take for instance the `GenericEmail` template in SilverStripe. This is the HTML default template that any email created 

@@ -1,6 +1,6 @@
 ## Extending existing ModelAdmin
 
-Sometimes you'll work with ModelAdmins from other modules. To customize these interfaces, you can always subclass. But there's
+Sometimes you'll work with ModelAdmins from other modules. To customise these interfaces, you can always subclass. But there's
 also another tool at your disposal: The [api:Extension] API.
 
 	:::php

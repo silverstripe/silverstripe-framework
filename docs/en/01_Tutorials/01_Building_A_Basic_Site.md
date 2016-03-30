@@ -371,7 +371,7 @@ It always tries to use the most specific template in an inheritance chain.
 
 ### Creating a new template
 
-To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*. If we flush the cache (*?flush=1*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
+To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*. If we flush the cache (*?flush=1*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customise the *HomePage* template. 
 
 First, we don't need the breadcrumbs and the secondary menu for the homepage. Let's remove them:
 	:::ss
@@ -405,7 +405,7 @@ then descend into the *themes/simple/templates/Layout* folder, and will use *Pag
 
 ## Summary
 
-So far we have taken a look at the different areas and functionality within the pages area of the CMS. We have learnt about template variables, controls and if statements and used these to build a basic, but fully functional, website. We have also briefly covered page types, and looked at how they correspond to templates and sub-templates. Using this knowledge, we have customized our website's homepage design.
+So far we have taken a look at the different areas and functionality within the pages area of the CMS. We have learnt about template variables, controls and if statements and used these to build a basic, but fully functional, website. We have also briefly covered page types, and looked at how they correspond to templates and sub-templates. Using this knowledge, we have customised our website's homepage design.
 
 In the next tutorial, [Extending a Basic Site](/tutorials/extending_a_basic_site), we will explore page types on a deeper level, and look at customising our own page types to extend the functionality of SilverStripe.
 

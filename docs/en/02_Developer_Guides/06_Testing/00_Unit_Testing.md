@@ -96,7 +96,7 @@ environments. If for some reason you don't have access to the command line, you 
 
 ### Via the CLI
 
-The [sake](../cli) executable that comes with SilverStripe can trigger a customized [api:TestRunner] class that 
+The [sake](../cli) executable that comes with SilverStripe can trigger a customised [api:TestRunner] class that 
 handles the PHPUnit configuration and output formatting. While the custom test runner a handy tool, it's also more 
 limited than using `phpunit` directly, particularly around formatting test output.
 
@@ -176,7 +176,7 @@ databases on your machine. To get rid of them is a call to `http://yoursite.com/
 ## Custom PHPUnit Configuration
 
 The `phpunit` executable can be configured by command line arguments or through an XML file. SilverStripe comes with a 
-default `phpunit.xml.dist` that you can use as a starting point. Copy the file into `phpunit.xml` and customize to your 
+default `phpunit.xml.dist` that you can use as a starting point. Copy the file into `phpunit.xml` and customise to your 
 needs.
 
 **phpunit.xml**

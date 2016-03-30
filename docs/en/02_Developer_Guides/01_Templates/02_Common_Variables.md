@@ -380,7 +380,7 @@ By default, it uses the template defined in `cms/templates/BreadcrumbsTemplate.s
 	<% end_if %>
 
 <div class="info" markdown="1">
-To customize the markup that the `$Breadcrumbs` generates, copy `cms/templates/BreadcrumbsTemplate.ss` to 
+To customise the markup that the `$Breadcrumbs` generates, copy `cms/templates/BreadcrumbsTemplate.ss` to 
 `mysite/templates/BreadcrumbsTemplate.ss`, modify the newly copied template and flush your SilverStripe cache.
 </div>
 
