@@ -5,4 +5,4 @@
  */
 var jQuery = typeof window.jQuery !== 'undefined' ? window.jQuery : null;
 
-export default jQuery;
+module.exports = jQuery;
