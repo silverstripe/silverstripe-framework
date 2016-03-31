@@ -37,9 +37,8 @@ class ManifestFileFinder extends SS_FileFinder {
 			return false;
 		}
 
-		// If we're not in testing mode, then skip over the tests directory in
-		// the module root.
-		if ($this->getOption('ignore_tests') && $depth == 2 && $basename == self::TESTS_DIR) {
+		// If we're not in testing mode, then skip over any tests directories.
+		if ($this->getOption('ignore_tests') && $basename == self::TESTS_DIR) {
 			return false;
 		}
 
