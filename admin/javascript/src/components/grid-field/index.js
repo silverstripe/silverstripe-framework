@@ -42,34 +42,30 @@ class GridField extends SilverStripeComponent {
 
         const columns = this.props.data.columns;
 
-        // TODO Replace with display: table based system
-        const cellWidth = 5;
-        const actionCellWidth = 2 * 36 + 12;
-
         // Placeholder to align the headers correctly with the content
-        const actionPlaceholder = <span key={'actionPlaceholder'} style={{width: actionCellWidth}} />;
-        const headerCells = columns.map((column, i) => <GridFieldHeaderCell key={i} width={cellWidth}>{column.name}</GridFieldHeaderCell>);
+        const actionPlaceholder = <GridFieldCell key={'actionPlaceholder'} />;
+        const headerCells = columns.map((column, i) => <GridFieldHeaderCell key={i} >{column.name}</GridFieldHeaderCell>);
         const header = <GridFieldHeader>{headerCells.concat(actionPlaceholder)}</GridFieldHeader>;
 
         const rows = records.map((record, i) => {
             var cells = columns.map((column, i) => {
                 // Get value by dot notation
                 var val = column.field.split('.').reduce((a, b) => a[b], record)
-                return <GridFieldCell key={i} width={column.width}>{val}</GridFieldCell>
+                return <GridFieldCell key={i}>{val}</GridFieldCell>
             });
 
-            var rowActions = [
+            var rowActions = <GridFieldCell key={i + '-actions'}>
                 <GridFieldAction
                     icon={'cog'}
                     handleClick={this.editRecord.bind(this, record.ID)}
                     key={"action-" + i + "-edit"}
-                />,
+                />
                 <GridFieldAction
                     icon={'cancel'}
                     handleClick={this.deleteRecord.bind(this, record.ID)}
                     key={"action-" + i + "-delete"}
                 />
-            ];
+            </GridFieldCell>;
 
             return <GridFieldRow key={i}>{cells.concat(rowActions)}</GridFieldRow>;
         });
@@ -93,7 +89,7 @@ class GridField extends SilverStripeComponent {
         );
     }
 
-    editRecord(event) {
+    editRecord(id, event) {
         event.preventDefault();
         // TODO
     }
