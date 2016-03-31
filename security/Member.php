@@ -522,7 +522,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public static function autoLogin() {
 		// Don't bother trying this multiple times
-		if (!class_exists('SapphireTest') || !SapphireTest::is_running_test()) {
+		if (!class_exists('SapphireTest', false) || !SapphireTest::is_running_test()) {
 			self::$_already_tried_to_auto_log_in = true;
 		}
 
