@@ -701,12 +701,57 @@ class Hierarchy extends DataExtension {
 	}
 	
 	/**
-	 * Get the next node in the tree of the type. If there is no instance of the className descended from this node,
+	 * Get the previous node in the tree of the type. If there is no instance of the className descended from this node,
 	 * then search the parents.
-	 * 
-	 * @todo Write!
+	 *
+	 * @param string $className Class name of the node to find.
+	 * @param string|int $root ID/ClassName of the node to limit the search to
+	 * @param DataObject afterNode Used for recursive calls to this function
+	 * @return DataObject
 	 */
-	public function naturalPrev( $className, $afterNode = null ) {
+	public function naturalPrev( $className = null, $root = 0, $afterNode = null ) {
+		// If this node is not the node we are searching from, then we can possibly return this
+		// node as a solution
+		if($afterNode && $afterNode->ID != $this->owner->ID) {
+			if(!$className || ($className && $this->owner->class == $className)) {
+				return $this->owner;
+			}
+		}
+			
+		$prevNode = null;
+		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		
+		$children = $baseClass::get()
+			->filter('ParentID', (int)$this->owner->ID)
+			->sort('Sort', 'DESC');
+		if ($afterNode) {
+			$children = $children->filter('Sort:LessThan', $afterNode->Sort);
+		}
+		
+		// Try all the siblings of this node after the given node
+		/*if( $siblings = DataObject::get( ClassInfo::baseDataClass($this->owner->class), 
+		"\"ParentID\"={$this->owner->ParentID}" . ( $afterNode ) ? "\"Sort\" 
+		> {$afterNode->Sort}" : "" , '\"Sort\" ASC' ) ) $searchNodes->merge( $siblings );*/
+		
+		if($children) {
+			foreach($children as $node) {
+				if($prevNode = $node->naturalPrev($className, $node->ID, $this->owner)) {
+					break;
+				}
+			}
+			
+			if($prevNode) {
+				return $prevNode;
+			}
+		}
+		
+		// if this is not an instance of the root class or has the root id, search the parent
+		if(!(is_numeric($root) && $root == $this->owner->ID || $root == $this->owner->class)
+				&& ($parent = $this->owner->Parent())) {
+			
+			return $parent->naturalPrev( $className, $root, $this->owner );
+		}
+		
 		return null;
 	}
 
