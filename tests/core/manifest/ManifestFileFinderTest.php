@@ -43,7 +43,8 @@ class ManifestFileFinderTest extends SapphireTest {
 
 		$this->assertFinderFinds($finder, array(
 			'module/module.txt',
-			'module/tests/tests.txt'
+			'module/tests/tests.txt',
+			'module/code/tests/tests2.txt'
 		));
 	}
 
