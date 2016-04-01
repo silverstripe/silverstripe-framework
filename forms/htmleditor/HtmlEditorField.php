@@ -9,6 +9,14 @@
 class HtmlEditorField extends TextareaField {
 
 	/**
+	 * Use TinyMCE's GZIP compressor
+	 *
+	 * @config
+	 * @var bool
+	 */
+	private static $use_gzip = true;
+
+	/**
 	 * Should we check the valid_elements (& extended_valid_elements) rules from HtmlEditorConfig server side?
 	 *
 	 * @config
