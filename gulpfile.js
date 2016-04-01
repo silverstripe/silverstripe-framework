@@ -91,18 +91,6 @@ var jquerySizesConfig = {
     files: ['/lib/jquery.sizes.js']
 };
 
-var tinymceConfig = {
-    src: PATHS.MODULES + '/tinymce',
-    dest: PATHS.FRAMEWORK_THIRDPARTY + '/tinymce',
-    files: [
-        '/tinymce.min.js', // Exclude unminified file to keep repository size down
-        '/jquery.tinymce.min.js',
-        '/themes/**',
-        '/skins/**',
-        '/plugins/**'
-    ]
-};
-
 /**
  * Copies files from a source directory to a destination directory.
  *
@@ -248,7 +236,6 @@ gulp.task('sanity', function () {
     diffFiles(blueimpLoadImageConfig);
     diffFiles(blueimpTmplConfig);
     diffFiles(jquerySizesConfig);
-    diffFiles(tinymceConfig);
 });
 
 gulp.task('thirdparty', function () {
