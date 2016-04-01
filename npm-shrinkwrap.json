@@ -7602,6 +7602,10 @@
         }
       }
     },
+    "json-js": {
+      "version": "1.1.2",
+      "resolved": "https://registry.npmjs.org/json-js/-/json-js-1.1.2.tgz"
+    },
     "npm-shrinkwrap": {
       "version": "5.4.1",
       "resolved": "https://registry.npmjs.org/npm-shrinkwrap/-/npm-shrinkwrap-5.4.1.tgz",

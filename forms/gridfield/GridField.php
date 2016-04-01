@@ -294,7 +294,6 @@ class GridField extends FormField {
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/dist/i18n.js');
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
