@@ -387,8 +387,8 @@ $.entwine('ss', function($){
 	 */
 	$('.cms-edit-form .Actions input.action[type=submit].ss-ui-action-cancel, .cms-edit-form .Actions button.action.ss-ui-action-cancel').entwine({
 		onclick: function(e) {
-			if (History.getStateByIndex(1)) {
-				History.back();
+			if (window.history.length > 1) {
+				window.history.back();
 			} else {
 				this.parents('form').trigger('submit', [this]);
 			}

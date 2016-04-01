@@ -1,19 +1,23 @@
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
-		define('ss.LeftAndMain', ['jQuery'], factory);
+		define('ss.LeftAndMain', ['jQuery', 'router', 'config'], factory);
 	} else if (typeof exports !== "undefined") {
-		factory(require('jQuery'));
+		factory(require('jQuery'), require('router'), require('config'));
 	} else {
 		var mod = {
 			exports: {}
 		};
-		factory(global.jQuery);
+		factory(global.jQuery, global.router, global.config);
 		global.ssLeftAndMain = mod.exports;
 	}
-})(this, function (_jQuery) {
+})(this, function (_jQuery, _router, _config) {
 	'use strict';
 
 	var _jQuery2 = _interopRequireDefault(_jQuery);
+
+	var _router2 = _interopRequireDefault(_router);
+
+	var _config2 = _interopRequireDefault(_config);
 
 	function _interopRequireDefault(obj) {
 		return obj && obj.__esModule ? obj : {
@@ -27,11 +31,12 @@
 		return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
 	};
 
+	var windowWidth, windowHeight;
+
 	_jQuery2.default.noConflict();
 
 	window.ss = window.ss || {};
-
-	var windowWidth, windowHeight;
+	window.ss.router = _router2.default;
 
 	window.ss.debounce = function (func, wait, immediate) {
 		var timeout, context, args;
@@ -56,6 +61,13 @@
 		};
 	};
 
+	function getUrlPath(url) {
+		var anchor = document.createElement('a');
+		anchor.href = url;
+
+		return anchor.pathname;
+	}
+
 	(0, _jQuery2.default)(window).bind('resize.leftandmain', function (e) {
 		var cb = function cb() {
 			(0, _jQuery2.default)('.cms-container').trigger('windowresize');
@@ -75,6 +87,7 @@
 	});
 
 	_jQuery2.default.entwine.warningLevel = _jQuery2.default.entwine.WARN_LEVEL_BESTPRACTISE;
+
 	_jQuery2.default.entwine('ss', function ($) {
 		$(window).on("message", function (e) {
 			var target,
@@ -138,27 +151,26 @@
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
 		$(document).ajaxComplete(function (e, xhr, settings) {
-			if (window.History.enabled) {
-				var url = xhr.getResponseHeader('X-ControllerURL'),
-				    origUrl = History.getPageUrl().replace(/\/$/, ''),
-				    destUrl = settings.url,
-				    opts;
-
-				if (url !== null && (!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))) {
-					opts = {
-						id: new Date().getTime() + String(Math.random()).replace(/\D/g, ''),
-						pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']
-					};
-					window.History.pushState(opts, '', url);
-				}
-			}
-
-			var msg = xhr.getResponseHeader('X-Status') ? xhr.getResponseHeader('X-Status') : xhr.statusText,
-			    reathenticate = xhr.getResponseHeader('X-Reauthenticate'),
+			var origUrl,
+			    url = xhr.getResponseHeader('X-ControllerURL'),
+			    destUrl = settings.url,
+			    msg = xhr.getResponseHeader('X-Status') !== null ? xhr.getResponseHeader('X-Status') : xhr.statusText,
 			    msgType = xhr.status < 200 || xhr.status > 399 ? 'bad' : 'good',
 			    ignoredMessages = ['OK'];
+			if (window.history.state) {
+				origUrl = window.history.state.path;
+			} else {
+				origUrl = document.URL;
+			}
 
-			if (reathenticate) {
+			if (url !== null && (!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))) {
+				_router2.default.show(url, {
+					id: new Date().getTime() + String(Math.random()).replace(/\D/g, ''),
+					pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']
+				});
+			}
+
+			if (xhr.getResponseHeader('X-Reauthenticate')) {
 				$('.cms-container').showLoginDialog();
 				return;
 			}
@@ -184,7 +196,28 @@
 			},
 
 			onadd: function onadd() {
-				var self = this;
+				var self = this,
+				    basePath = getUrlPath($('base')[0].href);
+
+				if (basePath[basePath.length - 1] === '/') {
+					basePath += 'admin';
+				} else {
+					basePath = '/admin';
+				}
+
+				_router2.default.base(basePath);
+
+				_config2.default.getTopLevelRoutes().forEach(function (route) {
+					(0, _router2.default)('/' + route + '/*', function (ctx, next) {
+						if (document.readyState !== 'complete' || typeof ctx.state.__forceReferer === 'undefined') {
+							return next();
+						}
+
+						self.handleStateChange(null, ctx.state).done(next);
+					});
+				});
+
+				_router2.default.start();
 
 				if ($.browser.msie && parseInt($.browser.version, 10) < 8) {
 					$('.ss-loading-screen').append('<p class="ss-loading-incompat-warning"><span class="notice">' + 'Your browser is not compatible with the CMS interface. Please use Internet Explorer 8+, Google Chrome or Mozilla Firefox.' + '</span></p>').css('z-index', $('.ss-loading-screen').css('z-index') + 1);
@@ -204,8 +237,8 @@
 			},
 
 			fromWindow: {
-				onstatechange: function onstatechange(e) {
-					this.handleStateChange(e);
+				onstatechange: function onstatechange(event, historyState) {
+					this.handleStateChange(event, historyState);
 				}
 			},
 
@@ -306,10 +339,11 @@
 				return safe;
 			},
 
-			loadPanel: function loadPanel(url, title, data, forceReload, forceReferer) {
-				if (!data) data = {};
-				if (!title) title = "";
-				if (!forceReferer) forceReferer = History.getState().url;
+			loadPanel: function loadPanel(url) {
+				var title = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
+				var data = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+				var forceReload = arguments[3];
+				var forceReferer = arguments.length <= 4 || arguments[4] === undefined ? window.history.state.path : arguments[4];
 
 				if (!this.checkCanNavigate(data.pjax ? data.pjax.split(',') : ['Content'])) {
 					return;
@@ -317,22 +351,17 @@
 
 				this.saveTabState();
 
-				if (window.History.enabled) {
-					$.extend(data, { __forceReferer: forceReferer });
+				data.__forceReferer = forceReferer;
 
-					if (forceReload) {
-						$.extend(data, { __forceReload: Math.random() });
-						window.History.replaceState(data, title, url);
-					} else {
-						window.History.pushState(data, title, url);
-					}
-				} else {
-					window.location = $.path.makeUrlAbsolute(url, $('base').attr('href'));
+				if (forceReload) {
+					data.__forceReload = Math.random();
 				}
+
+				_router2.default.show(url, data);
 			},
 
 			reloadCurrentPanel: function reloadCurrentPanel() {
-				this.loadPanel(window.History.getState().url, null, null, true);
+				this.loadPanel(window.history.state.path, null, null, true);
 			},
 
 			submitForm: function submitForm(form, button, callback, ajaxOptions) {
@@ -360,7 +389,7 @@
 
 				formData.push({ name: $(button).attr('name'), value: '1' });
 
-				formData.push({ name: 'BackURL', value: History.getPageUrl().replace(/\/$/, '') });
+				formData.push({ name: 'BackURL', value: window.history.state.path.replace(/\/$/, '') });
 
 				this.saveTabState();
 
@@ -390,59 +419,54 @@
 
 			PauseState: false,
 
-			handleStateChange: function handleStateChange() {
+			handleStateChange: function handleStateChange(event) {
+				var historyState = arguments.length <= 1 || arguments[1] === undefined ? window.history.state : arguments[1];
+
 				if (this.getPauseState()) {
 					return;
 				}
 
-				if (this.getStateChangeXHR()) this.getStateChangeXHR().abort();
+				if (this.getStateChangeXHR()) {
+					this.getStateChangeXHR().abort();
+				}
 
 				var self = this,
-				    h = window.History,
-				    state = h.getState(),
-				    fragments = state.data.pjax || 'Content',
+				    fragments = historyState.pjax || 'Content',
 				    headers = {},
 				    fragmentsArr = fragments.split(','),
 				    contentEls = this._findFragments(fragmentsArr);
 
 				this.setStateChangeCount(this.getStateChangeCount() + 1);
-				var isLegacyIE = $.browser.msie && parseInt($.browser.version, 10) < 9;
-				if (isLegacyIE && this.getStateChangeCount() > 20) {
-					document.location.href = state.url;
-					return;
-				}
 
 				if (!this.checkCanNavigate()) {
-					if (h.emulated.pushState) {
-						return;
-					}
-
 					var lastState = this.getLastState();
 
 					this.setPauseState(true);
 
-					if (lastState) {
-						h.pushState(lastState.id, lastState.title, lastState.url);
+					if (lastState !== null) {
+						_router2.default.show(lastState.url);
 					} else {
-						h.back();
+						_router2.default.back();
 					}
+
 					this.setPauseState(false);
 
 					return;
 				}
-				this.setLastState(state);
+
+				this.setLastState(historyState);
 
 				if (contentEls.length < fragmentsArr.length) {
 					fragments = 'Content', fragmentsArr = ['Content'];
 					contentEls = this._findFragments(fragmentsArr);
 				}
 
-				this.trigger('beforestatechange', { state: state, element: contentEls });
+				this.trigger('beforestatechange', { state: historyState, element: contentEls });
 
 				headers['X-Pjax'] = fragments;
 
-				if (typeof state.data.__forceReferer !== 'undefined') {
-					var url = state.data.__forceReferer;
+				if (typeof historyState.__forceReferer !== 'undefined') {
+					var url = historyState.__forceReferer;
 
 					try {
 						url = decodeURI(url);
@@ -452,21 +476,22 @@
 				}
 
 				contentEls.addClass('loading');
-				var xhr = $.ajax({
-					headers: headers,
-					url: state.url,
-					complete: function complete() {
-						self.setStateChangeXHR(null);
 
-						contentEls.removeClass('loading');
-					},
-					success: function success(data, status, xhr) {
-						var els = self.handleAjaxResponse(data, status, xhr, state);
-						self.trigger('afterstatechange', { data: data, status: status, xhr: xhr, element: els, state: state });
-					}
+				var promise = $.ajax({
+					headers: headers,
+					url: historyState.path
+				}).done(function (data, status, xhr) {
+					var els = self.handleAjaxResponse(data, status, xhr, historyState);
+					self.trigger('afterstatechange', { data: data, status: status, xhr: xhr, element: els, state: historyState });
+				}).always(function () {
+					self.setStateChangeXHR(null);
+
+					contentEls.removeClass('loading');
 				});
 
-				this.setStateChangeXHR(xhr);
+				this.setStateChangeXHR(promise);
+
+				return promise;
 			},
 
 			loadFragment: function loadFragment(url, pjaxFragments) {
@@ -594,7 +619,7 @@
 				}
 
 				this.redraw();
-				this.restoreTabState(state && typeof state.data.tabState !== 'undefined' ? state.data.tabState : null);
+				this.restoreTabState(state && typeof state.tabState !== 'undefined' ? state.tabState : null);
 
 				return newContentEls;
 			},
@@ -703,7 +728,7 @@
 			},
 
 			_tabStateUrl: function _tabStateUrl() {
-				return History.getState().url.replace(/\?.*/, '').replace(/#.*/, '').replace($('base').attr('href'), '');
+				return window.history.state.path.replace(/\?.*/, '').replace(/#.*/, '').replace($('base').attr('href'), '');
 			},
 
 			showLoginDialog: function showLoginDialog() {
@@ -1071,10 +1096,6 @@
 						return false;
 					},
 					activate: function activate(e, ui) {
-						if (ui.newTab) {
-							ui.newTab.find('.cms-panel-link').click();
-						}
-
 						var actions = $(this).closest('form').find('.Actions');
 						if ($(ui.newTab).closest('li').hasClass('readonly')) {
 							actions.fadeOut();

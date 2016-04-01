@@ -180,6 +180,37 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	protected $responseNegotiator;
 
 	/**
+	 * Gets the combined configuration of all LeafAndMain subclasses required by the client app.
+	 *
+	 * @return array
+	 *
+	 * WARNING: Experimental API
+	 */
+	public function getCombinedClientConfig() {
+		$combinedClientConfig = ['sections' => []];
+		$cmsClassNames = CMSMenu::get_cms_classes('LeftAndMain', true, CMSMenu::URL_PRIORITY);
+
+		foreach ($cmsClassNames as $className) {
+			$combinedClientConfig['sections'][$className] =  Injector::inst()->get($className)->getClientConfig();
+		}
+
+		return Convert::raw2json($combinedClientConfig);
+	}
+
+	/**
+	 * Returns configuration required by the client app.
+	 *
+	 * @return array
+	 *
+	 * WARNING: Experimental API
+	 */
+	public function getClientConfig() {
+		return [
+			'route' => Config::inst()->get($this->class, 'url_segment')
+		];
+	}
+
+	/**
 	 * Gets a JSON schema representing the current edit form.
 	 *
 	 * WARNING: Experimental API.
@@ -387,6 +418,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
 
+		Requirements::customScript("
+			window.ss = window.ss || {};
+			window.ss.config = " . $this->getCombinedClientConfig() . ";
+		");
+
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-lib.js', [
 			'provides' => [
 				THIRDPARTY_DIR . '/jquery/jquery.js',
@@ -403,9 +439,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
 				FRAMEWORK_DIR . '/javascript/dist/TreeDropdownField.js',

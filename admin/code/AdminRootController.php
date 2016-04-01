@@ -39,23 +39,17 @@ class AdminRootController extends Controller {
 		if (self::$_rules === null) {
 			self::$_rules = array();
 
-			// Build an array of class => url_priority k/v pairs
-			$classes = array();
-			foreach (CMSMenu::get_cms_classes() as $class) {
-				$classes[$class] = Config::inst()->get($class, 'url_priority', Config::FIRST_SET);
-			}
-
-			// Sort them so highest priority item is first
-			arsort($classes, SORT_NUMERIC);
-
 			// Map over the array calling add_rule_for_controller on each
-			array_map(array(__CLASS__, 'add_rule_for_controller'), array_keys($classes));
+			$classes = CMSMenu::get_cms_classes(null, true, CMSMenu::URL_PRIORITY);
+			array_map(array(__CLASS__, 'add_rule_for_controller'), $classes);
 		}
 		return self::$_rules;
 	}
 
 	/**
 	 * Add the appropriate k/v pair to self::$rules for the given controller.
+	 *
+	 * @param string $controllerClass Name of class
 	 */
 	protected static function add_rule_for_controller($controllerClass) {
 		$urlSegment = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);

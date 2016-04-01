@@ -66,6 +66,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jquery-sizes": "^0.33.0",
     "npm-shrinkwrap": "^5.4.1",
+    "page.js": "^4.13.3",
     "react": "^0.14.6",
     "react-addons-test-utils": "^0.14.6",
     "react-dom": "^0.14.6",
