@@ -409,20 +409,51 @@ class TinyMCEConfig extends HtmlEditorConfig {
 				);
 			}
 		}
-        return $editor;
-    }
+		return $editor;
+	}
 
-    public function init() {
+	/**
+	 * Generate gzipped TinyMCE configuration including plugins and languages.
+	 * This ends up "pre-loading" TinyMCE bundled with the required plugins
+	 * so that multiple HTTP requests on the client don't need to be made.
+	 */
+	public function requireJS() {
+		require_once THIRDPARTY_PATH . '/tinymce/tiny_mce_gzip.php';
+
+		$useGzip = Config::inst()->get('HtmlEditorField', 'use_gzip');
+		$languages = array();
+
+		foreach(self::$configs as $configID => $config) {
+			$languages[] = $config->getOption('language');
+		}
+
+		// tinyMCE JS requirement
+		if($useGzip) {
+			$tag = TinyMCE_Compressor::renderTag(array(
+				'url' => THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
+				'plugins' => implode(',', array_keys($this->getPlugins())),
+				'themes' => $this->getTheme(),
+				'languages' => implode(',', array_filter($languages))
+			), true);
+			preg_match('/src="([^"]*)"/', $tag, $matches);
+
+			Requirements::javascript(html_entity_decode($matches[1]));
+		} else {
+			Requirements::javascript(THIRDPARTY_DIR . '/tinymce/tinymce.min.js');
+		}
+	}
+
+	public function init() {
 		// These should be 'provides' by bundle-dist.js
-        Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/jquery/jquery.js");
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/jquery/jquery.js");
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/ssui.core.js');
 
-		Requirements::javascript(THIRDPARTY_DIR . '/tinymce/jquery.tinymce.min.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/tinymce/tinymce.min.js');
+		// include TinyMCE Javascript
+		$this->requireJS();
 		Requirements::javascript(FRAMEWORK_DIR ."/javascript/dist/HtmlEditorField.js");
 
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-    }
+	}
 }
