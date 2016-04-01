@@ -16,6 +16,10 @@ The handler for when a button is clicked
 
 The text to display on the button.
 
+### id (string)
+
+The html id attribute.
+
 ### type (string)
 
 Used for the button's `type` attribute. Defaults to `button`
@@ -43,3 +47,7 @@ If true, replaces the text/icon with a loading icon.
 ### disabled (boolean)
 
 If true, gives the button a visually disabled state and disables click events.
+
+### extraClass (string)
+
+Add extra custom classes

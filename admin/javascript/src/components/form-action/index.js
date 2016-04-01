@@ -9,8 +9,18 @@ class FormActionComponent extends SilverStripeComponent {
   }
 
   render() {
+    const props = {
+      type: this.props.type,
+      className: this.getButtonClasses(),
+      disabled: this.props.disabled,
+    };
+
+    if (typeof this.props.id !== 'undefined') {
+      props.id = this.props.id;
+    }
+
     return (
-      <button type={this.props.type} className={this.getButtonClasses()} onClick={this.handleClick}>
+      <button {...props}>
         {this.getLoadingIcon()}
         {this.props.label}
       </button>
@@ -23,32 +33,36 @@ class FormActionComponent extends SilverStripeComponent {
    * @returns string
    */
   getButtonClasses() {
-    let buttonClasses = 'btn';
+    const buttonClasses = ['btn'];
 
     // Add 'type' class
-    buttonClasses += ` btn-${this.props.style}`;
+    buttonClasses.push(`btn-${this.props.style}`);
 
     // If there is no text
     if (typeof this.props.label === 'undefined') {
-      buttonClasses += ' no-text';
+      buttonClasses.push('no-text');
     }
 
     // Add icon class
     if (typeof this.props.icon !== 'undefined') {
-      buttonClasses += ` font-icon-${this.props.icon}`;
+      buttonClasses.push(`font-icon-${this.props.icon}`);
     }
 
     // Add loading class
     if (this.props.loading === true) {
-      buttonClasses += ' btn--loading';
+      buttonClasses.push('btn--loading');
     }
 
     // Add disabled class
     if (this.props.disabled === true) {
-      buttonClasses += ' disabled';
+      buttonClasses.push('disabled');
     }
 
-    return buttonClasses;
+    if (typeof this.props.extraClass !== 'undefined') {
+      buttonClasses.push(this.props.extraClass);
+    }
+
+    return buttonClasses.join(' ');
   }
 
   /**
@@ -85,6 +99,7 @@ class FormActionComponent extends SilverStripeComponent {
 }
 
 FormActionComponent.propTypes = {
+  id: React.PropTypes.string,
   handleClick: React.PropTypes.func.isRequired,
   label: React.PropTypes.string,
   type: React.PropTypes.string,
@@ -92,11 +107,13 @@ FormActionComponent.propTypes = {
   icon: React.PropTypes.string,
   disabled: React.PropTypes.bool,
   style: React.PropTypes.string,
+  extraClass: React.PropTypes.string,
 };
 
 FormActionComponent.defaultProps = {
   type: 'button',
   style: 'secondary',
+  disabled: false,
 };
 
 export default FormActionComponent;
