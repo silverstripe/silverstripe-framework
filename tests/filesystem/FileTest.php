@@ -50,7 +50,7 @@ class FileTest extends SapphireTest {
 				'ErrorCode' => 404
 			));
 			$page->write();
-			$page->publish('Stage', 'Live');
+			$page->copyVersionToStage('Stage', 'Live');
 		}
 	}
 
@@ -234,9 +234,10 @@ class FileTest extends SapphireTest {
 	}
 
 	public function testSetNameChangesFilesystemOnWrite() {
+		/** @var File $file */
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->logInWithPermission('ADMIN');
-		$file->doPublish();
+		$file->publishRecursive();
 		$oldTuple = $file->File->getValue();
 
 		// Rename
@@ -266,7 +267,7 @@ class FileTest extends SapphireTest {
 		);
 
 		// After publish
-		$file->doPublish();
+		$file->publishRecursive();
 		$this->assertFalse(
 			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
 			'Old file is finally removed after publishing new file'
@@ -280,7 +281,7 @@ class FileTest extends SapphireTest {
 	public function testSetParentIDChangesFilesystemOnWrite() {
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->logInWithPermission('ADMIN');
-		$file->doPublish();
+		$file->publishRecursive();
 		$subfolder = $this->objFromFixture('Folder', 'subfolder');
 		$oldTuple = $file->File->getValue();
 
@@ -312,7 +313,7 @@ class FileTest extends SapphireTest {
 		);
 
 		// After publish
-		$file->doPublish();
+		$file->publishSingle();
 		$this->assertFalse(
 			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
 			'Old file is finally removed after publishing new file'
@@ -408,9 +409,10 @@ class FileTest extends SapphireTest {
 	}
 
 	public function testDeleteFile() {
+		/** @var File $file */
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->logInWithPermission('ADMIN');
-		$file->doPublish();
+		$file->publishSingle();
 		$tuple = $file->File->getValue();
 
 		// Before delete

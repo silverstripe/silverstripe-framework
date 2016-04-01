@@ -114,7 +114,8 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest {
 	 * @return SS_HTTPResponse
      */
     public function doPublish($data, $form) {
-        $record = $this->getRecord();
+		/** @var Versioned|DataObject $record */
+		$record = $this->getRecord();
         $isNewRecord = $record->ID == 0;
 
 		// Check permission
@@ -126,7 +127,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest {
 		try {
             // Initial save and reload
 			$record = $this->saveFormIntoRecord($data, $form);
-            $record->doPublish();
+            $record->publishRecursive();
 
 		} catch(ValidationException $e) {
 			return $this->generateValidationResponse($form, $e);

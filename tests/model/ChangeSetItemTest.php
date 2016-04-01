@@ -36,7 +36,7 @@ class ChangeSetItemTest extends SapphireTest {
 			'New objects that aren\'t yet published should return created'
 		);
 
-		$object->doPublish();
+		$object->publishRecursive();
 
 		$this->assertEquals(
 			ChangeSetItem::CHANGE_NONE, $item->ChangeType,
@@ -51,7 +51,7 @@ class ChangeSetItemTest extends SapphireTest {
 			'Object that have unpublished changes written to draft should show as modified'
 		);
 
-		$object->doPublish();
+		$object->publishRecursive();
 
 		$this->assertEquals(
 			ChangeSetItem::CHANGE_NONE, $item->ChangeType,

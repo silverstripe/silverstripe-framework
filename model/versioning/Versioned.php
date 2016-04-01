@@ -1444,11 +1444,43 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Provides a simple doPublish action for Versioned dataobjects
+	 * @deprecated 4.0..5.0
+	 */
+	public function doPublish() {
+		Deprecation::notice('5.0', 'Use publishRecursive instead');
+		return $this->owner->publishRecursive();
+	}
+
+	/**
+	 * Publish this object and all owned objects to Live
+	 *
+	 * @return bool
+	 */
+	public function publishRecursive() {
+		$owner = $this->owner;
+		if(!$owner->publishSingle()) {
+			return false;
+		}
+
+		// Publish owned objects
+		foreach ($owner->findOwned(false) as $object) {
+			/** @var Versioned|DataObject $object */
+			$object->publishRecursive();
+		}
+
+		// Unlink any objects disowned as a result of this action
+		// I.e. objects which aren't owned anymore by this record, but are by the old live record
+		$owner->unlinkDisownedObjects(Versioned::DRAFT, Versioned::LIVE);
+
+		return true;
+	}
+
+	/**
+	 * Publishes this object to Live, but doesn't publish owned objects.
 	 *
 	 * @return bool True if publish was successful
 	 */
-	public function doPublish() {
+	public function publishSingle() {
 		$owner = $this->owner;
 		if(!$owner->canPublish()) {
 			return false;
@@ -1456,26 +1488,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		$owner->invokeWithExtensions('onBeforePublish');
 		$owner->write();
-		$owner->publish(static::DRAFT, static::LIVE);
+		$owner->copyVersionToStage(static::DRAFT, static::LIVE);
 		$owner->invokeWithExtensions('onAfterPublish');
 		return true;
-	}
-
-	/**
-	 * Trigger publishing of owned objects
-	 */
-	public function onAfterPublish() {
-		$owner = $this->owner;
-
-		// Publish owned objects
-		foreach ($owner->findOwned(false) as $object) {
-			/** @var Versioned|DataObject $object */
-			$object->doPublish();
-		}
-
-		// Unlink any objects disowned as a result of this action
-		// I.e. objects which aren't owned anymore by this record, but are by the old live record
-		$owner->unlinkDisownedObjects(Versioned::DRAFT, Versioned::LIVE);
 	}
 
 	/**
@@ -1628,7 +1643,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		$owner->invokeWithExtensions('onBeforeRevertToLive');
-		$owner->publish("Live", "Stage", false);
+		$owner->copyVersionToStage(static::LIVE, static::DRAFT, false);
 		$owner->invokeWithExtensions('onAfterRevertToLive');
 		return true;
 	}
@@ -1654,6 +1669,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
+	 * @deprecated 4.0..5.0
+	 */
+	public function publish($fromStage, $toStage, $createNewVersion = false) {
+		Deprecation::notice('5.0', 'Use copyVersionToStage instead');
+		$this->owner->copyVersionToStage($fromStage, $toStage, $createNewVersion);
+	}
+
+	/**
 	 * Move a database record from one stage to the other.
 	 *
 	 * @param int|string $fromStage Place to copy from.  Can be either a stage name or a version number.
@@ -1661,7 +1684,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param bool $createNewVersion Set this to true to create a new version number.
 	 * By default, the existing version number will be copied over.
 	 */
-	public function publish($fromStage, $toStage, $createNewVersion = false) {
+	public function copyVersionToStage($fromStage, $toStage, $createNewVersion = false) {
 		$owner = $this->owner;
 		$owner->invokeWithExtensions('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
 
@@ -1787,7 +1810,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		// Make sure the table names are not postfixed (e.g. _Live)
 		$oldMode = static::get_reading_mode();
-		static::set_stage('Stage');
+		static::set_stage(static::DRAFT);
 
 		$owner = $this->owner;
 		$list = DataObject::get(get_class($owner), $filter, $sort, $join, $limit);
@@ -2047,7 +2070,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public static function get_versionnumber_by_stage($class, $stage, $id, $cache = true) {
 		$baseClass = ClassInfo::baseDataClass($class);
-		$stageTable = ($stage == 'Stage') ? $baseClass : "{$baseClass}_{$stage}";
+		$stageTable = ($stage == static::DRAFT) ? $baseClass : "{$baseClass}_{$stage}";
 
 		// cached call
 		if($cache && isset(self::$cache_versionnumber[$baseClass][$stage][$id])) {
@@ -2104,7 +2127,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		$baseClass = ClassInfo::baseDataClass($class);
-		$stageTable = ($stage == 'Stage') ? $baseClass : "{$baseClass}_{$stage}";
+		$stageTable = ($stage == static::DRAFT) ? $baseClass : "{$baseClass}_{$stage}";
 
 		$versions = DB::prepared_query("SELECT \"ID\", \"Version\" FROM \"$stageTable\" $filter", $parameters)->map();
 
@@ -2184,7 +2207,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public function doRollbackTo($version) {
 		$owner = $this->owner;
 		$owner->extend('onBeforeRollback', $version);
-		$owner->publish($version, "Stage", true);
+		$owner->copyVersionToStage($version, static::DRAFT, true);
 		$owner->writeWithoutVersion();
 		$owner->extend('onAfterRollback', $version);
 	}

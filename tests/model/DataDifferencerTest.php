@@ -93,7 +93,9 @@ class DataDifferencerTest extends SapphireTest {
  */
 class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
-	private static $extensions = array('Versioned("Stage", "Live")');
+	private static $extensions = array(
+		'Versioned'
+	);
 
 	private static $db = array(
 		'Choices' => "Varchar",

@@ -30,7 +30,7 @@ class VersionedOwnershipTest extends SapphireTest {
 				if(stripos($name, '_published') !== false) {
 					/** @var Versioned|DataObject $object */
 					$object = DataObject::get($class)->byID($id);
-					$object->publish(Versioned::DRAFT, Versioned::LIVE);
+					$object->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 				}
 			}
 		}
@@ -277,7 +277,7 @@ class VersionedOwnershipTest extends SapphireTest {
 		$this->assertDOSEquals($oldLiveBanners, $parentLive->Banners());
 
 		// On publishing of owner, all children should now be updated
-		$parent->doPublish();
+		$parent->publishRecursive();
 
 		// Now check each object has the correct state
 		$parentDraft = Versioned::get_by_stage('VersionedOwnershipTest_Subclass', Versioned::DRAFT)
@@ -325,7 +325,7 @@ class VersionedOwnershipTest extends SapphireTest {
 
 		// Second test: multi-level unpublish should recursively cascade down all owning objects
 		// Publish related2 again
-		$subclass2->doPublish();
+		$subclass2->publishRecursive();
 		$this->assertTrue($subclass2->isPublished());
 		$this->assertTrue($related2->isPublished());
 		$this->assertTrue($attachment3->isPublished());

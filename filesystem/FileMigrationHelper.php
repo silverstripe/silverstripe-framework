@@ -79,7 +79,7 @@ class FileMigrationHelper extends Object {
 
 		// Save and publish
 		$file->write();
-		$file->doPublish();
+		$file->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 		return true;
 	}
 

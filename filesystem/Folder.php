@@ -260,7 +260,7 @@ class Folder extends File {
 
 		// No publishing UX for folders, so just cascade changes live
 		if(Versioned::get_stage() === Versioned::DRAFT) {
-			$this->publish(Versioned::DRAFT, Versioned::LIVE);
+			$this->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 		}
 
 		// Update draft version of all child records

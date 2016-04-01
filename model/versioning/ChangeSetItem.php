@@ -158,7 +158,7 @@ class ChangeSetItem extends DataObject {
 			case static::CHANGE_CREATED: {
 				// Non-recursive publish
 				$object = $this->getObjectInStage(Versioned::DRAFT);
-				$object->publish(Versioned::DRAFT, Versioned::LIVE);
+				$object->publishSingle();
 				break;
 			}
 		}

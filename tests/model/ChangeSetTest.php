@@ -118,7 +118,9 @@ class ChangeSetTest extends SapphireTest {
 		$this->logInWithPermission('ADMIN');
 		foreach($this->fixtureFactory->getFixtures() as $class => $fixtures) {
 			foreach ($fixtures as $handle => $id) {
-				$this->objFromFixture($class, $handle)->doPublish();
+				/** @var Versioned|DataObject $object */
+				$object = $this->objFromFixture($class, $handle);
+				$object->publishSingle();
 			}
 		}
 	}

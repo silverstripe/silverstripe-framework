@@ -111,14 +111,16 @@ class FolderTest extends SapphireTest {
 		$folder2 = $this->objFromFixture('Folder', 'folder2');
 
 		// Publish file1
+		/** @var File $file1 */
 		$file1 = DataObject::get_by_id('File', $this->idFromFixture('File', 'file1-folder1'), false);
-		$file1->doPublish();
+		$file1->publishRecursive();
 
 		// set ParentID. This should cause updateFilesystem to be called on all children
 		$folder1->ParentID = $folder2->ID;
 		$folder1->write();
 
 		// Check if the file in the folder moved along
+		/** @var File $file1Draft */
 		$file1Draft = Versioned::get_by_stage('File', Versioned::DRAFT)->byID($file1->ID);
 		$this->assertFileExists(AssetStoreTest_SpyStore::getLocalPath($file1Draft));
 
@@ -135,6 +137,7 @@ class FolderTest extends SapphireTest {
 		);
 
 		// Published (live) version remains in the old location
+		/** @var File $file1Live */
 		$file1Live = Versioned::get_by_stage('File', Versioned::LIVE)->byID($file1->ID);
 		$this->assertEquals(
 			ASSETS_PATH . '/FolderTest/FileTest-folder1/55b443b601/File1.txt',
@@ -142,7 +145,7 @@ class FolderTest extends SapphireTest {
 		);
 
 		// Publishing the draft to live should move the new file to the public store
-		$file1Draft->doPublish();
+		$file1Draft->publishRecursive();
 		$this->assertEquals(
 			ASSETS_PATH . '/FolderTest/FileTest-folder2/FileTest-folder1/55b443b601/File1.txt',
 			AssetStoreTest_SpyStore::getLocalPath($file1Draft)
