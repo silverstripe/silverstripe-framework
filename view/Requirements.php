@@ -174,6 +174,23 @@ class Requirements implements Flushable {
 	public static function themedCSS($name, $module = null, $media = null) {
 		return self::backend()->themedCSS($name, $module, $media);
 	}
+	
+	/**
+	 * Registers the given themeable javascript as required.
+	 *
+	 * A javascript file in the current theme path name 'themename/javascript/$name.js' is first searched for,
+	 * and it that doesn't exist and the module parameter is set then a javascript file with that name in
+	 * the module is used.
+	 *
+	 * @param string $name   The name of the file - eg '/javascript/File.js' would have the name 'File'
+	 * @param string $module The module to fall back to if the javascript file does not exist in the
+	 *                       current theme.
+	 * @param string $type  Comma-separated list of types to use in the script tag
+	 *                       (e.g. 'text/javascript,text/ecmascript')
+	 */
+	public static function themedScript($name, $module = null, $type = null) {
+		return self::backend()->themedScript($name, $module, $type);
+	}
 
 	/**
 	 * Clear either a single or all requirements
@@ -1328,6 +1345,38 @@ class Requirements_Backend {
 			$this->css($theme . $css, $media);
 		} elseif($module) {
 			$this->css($module . $css, $media);
+		}
+	}
+
+	/**
+	 * Registers the given themeable javascript as required.
+	 *
+	 * A javascript file in the current theme path name 'themename/javascript/$name.js' is first searched for,
+	 * and it that doesn't exist and the module parameter is set then a javascript file with that name in
+	 * the module is used.
+	 *
+	 * @param string $name   The name of the file - eg '/js/File.js' would have the name 'File'
+	 * @param string $module The module to fall back to if the javascript file does not exist in the
+	 *                       current theme.
+	 * @param string $type  Comma-separated list of types to use in the script tag
+	 *                       (e.g. 'text/javascript,text/ecmascript')
+	 */
+	public function themedScript($name, $module = null, $type = null) {
+		$theme = SSViewer::get_theme_folder();
+		$project = project();
+		$absbase = BASE_PATH . DIRECTORY_SEPARATOR;
+		$abstheme = $absbase . $theme;
+		$absproject = $absbase . $project;
+		$js = "/javascript/$name.js";
+
+		if(file_exists($absproject . $js)) {
+			$this->javascript($project . $js);
+		} elseif($module && file_exists($abstheme . '_' . $module.$js)) {
+			$this->javascript($theme . '_' . $module . $js);
+		} elseif(file_exists($abstheme . $js)) {
+			$this->javascript($theme . $js);
+		} elseif($module) {
+			$this->javascript($module . $js);
 		}
 	}
 
