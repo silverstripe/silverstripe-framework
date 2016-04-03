@@ -427,7 +427,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			'provides' => [
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
-				THIRDPARTY_DIR . '/json-js/json2.js',
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
 				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
 				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',

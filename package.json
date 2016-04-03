@@ -65,6 +65,7 @@
     "bootstrap": "^4.0.0-alpha.2",
     "isomorphic-fetch": "^2.2.1",
     "jquery-sizes": "^0.33.0",
+    "json-js": "^1.1.2",
     "npm-shrinkwrap": "^5.4.1",
     "page.js": "^4.13.3",
     "react": "^0.14.6",
