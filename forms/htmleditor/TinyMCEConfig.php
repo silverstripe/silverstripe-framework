@@ -34,6 +34,7 @@ class TinyMCEConfig extends HtmlEditorConfig {
 		'remove_script_host' => true,
 		'convert_urls' => false, // Prevent site-root images being rewritten to base relative
 		'menubar' => false,
+		'language' => 'en',
     );
 
 	/**
@@ -196,6 +197,24 @@ class TinyMCEConfig extends HtmlEditorConfig {
 	 */
 	public function getPlugins() {
 		return $this->plugins;
+	}
+
+	/**
+	 * Get list of plugins without custom locations, which is the set of
+	 * plugins which can be loaded via the standard plugin path, and could
+	 * potentially be minified
+	 *
+	 * @return array
+	 */
+	public function getInternalPlugins() {
+		// Return only plugins with no custom url
+		$plugins = [];
+		foreach($this->getPlugins() as $name => $url) {
+			if(empty($url)) {
+				$plugins[] = $name;
+			}
+		}
+		return $plugins;
 	}
 
     /**
@@ -416,31 +435,26 @@ class TinyMCEConfig extends HtmlEditorConfig {
 	 * Generate gzipped TinyMCE configuration including plugins and languages.
 	 * This ends up "pre-loading" TinyMCE bundled with the required plugins
 	 * so that multiple HTTP requests on the client don't need to be made.
+	 *
+	 * @return string
 	 */
-	public function requireJS() {
-		require_once THIRDPARTY_PATH . '/tinymce/tiny_mce_gzip.php';
-
+	public function getScriptURL() {
+		// If gzip is disabled just return core script url
 		$useGzip = Config::inst()->get('HtmlEditorField', 'use_gzip');
-		$languages = array();
-
-		foreach(self::$configs as $configID => $config) {
-			$languages[] = $config->getOption('language');
+		if(!$useGzip) {
+			return THIRDPARTY_DIR . '/tinymce/tinymce.min.js';
 		}
 
 		// tinyMCE JS requirement
-		if($useGzip) {
-			$tag = TinyMCE_Compressor::renderTag(array(
-				'url' => THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
-				'plugins' => implode(',', array_keys($this->getPlugins())),
-				'themes' => $this->getTheme(),
-				'languages' => implode(',', array_filter($languages))
-			), true);
-			preg_match('/src="([^"]*)"/', $tag, $matches);
-
-			Requirements::javascript(html_entity_decode($matches[1]));
-		} else {
-			Requirements::javascript(THIRDPARTY_DIR . '/tinymce/tinymce.min.js');
-		}
+		require_once THIRDPARTY_PATH . '/tinymce/tiny_mce_gzip.php';
+		$tag = TinyMCE_Compressor::renderTag(array(
+			'url' => THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
+			'plugins' => implode(',', $this->getInternalPlugins()),
+			'themes' => $this->getTheme(),
+			'languages' => $this->getOption('language')
+		), true);
+		preg_match('/src="([^"]*)"/', $tag, $matches);
+		return html_entity_decode($matches[1]);
 	}
 
 	public function init() {
@@ -451,7 +465,7 @@ class TinyMCEConfig extends HtmlEditorConfig {
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/ssui.core.js');
 
 		// include TinyMCE Javascript
-		$this->requireJS();
+		Requirements::javascript($this->getScriptURL());
 		Requirements::javascript(FRAMEWORK_DIR ."/javascript/dist/HtmlEditorField.js");
 
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');

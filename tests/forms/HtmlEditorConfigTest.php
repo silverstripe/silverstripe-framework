@@ -28,11 +28,15 @@ class HtmlEditorConfigTest extends SapphireTest {
 	public function testEnablePluginsByArrayWithPaths() {
 		Config::inst()->update('Director', 'alternate_base_url', 'http://mysite.com/subdir');
 		$c = new TinyMCEConfig();
+		$c->setTheme('modern');
+		$c->setOption('language', 'es');
+		$c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss');
 		$c->enablePlugins(array(
 			'plugin1' => 'mypath/plugin1.js',
 			'plugin2' => '/anotherbase/mypath/plugin2.js',
 			'plugin3' => 'https://www.google.com/plugin.js',
 			'plugin4' => null,
+			'plugin5' => null,
 		));
 		$attributes = $c->getAttributes();
 		$config = Convert::json2array($attributes['data-config']);
@@ -65,6 +69,23 @@ class HtmlEditorConfigTest extends SapphireTest {
 		$this->assertEquals(
 			'http://mysite.com/subdir/framework/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
 			$plugins['plugin4']
+		);
+
+		// Check that internal plugins are extractable separately
+		$this->assertEquals(['plugin4', 'plugin5'], $c->getInternalPlugins());
+
+		// Test plugins included via gzip compresser
+		Config::inst()->update('HtmlEditorField', 'use_gzip', true);
+		$this->assertEquals(
+			'framework/thirdparty/tinymce/tiny_mce_gzip.php?js=1&plugins=plugin4,plugin5&themes=modern&languages=es&diskcache=true&src=true',
+			$c->getScriptURL()
+		);
+
+		// If gzip is disabled only the core plugin is loaded
+		Config::inst()->remove('HtmlEditorField', 'use_gzip');
+		$this->assertEquals(
+			'framework/thirdparty/tinymce/tinymce.min.js',
+			$c->getScriptURL()
 		);
 	}
 
