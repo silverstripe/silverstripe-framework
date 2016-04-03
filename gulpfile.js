@@ -91,6 +91,18 @@ var jquerySizesConfig = {
     files: ['/lib/jquery.sizes.js']
 };
 
+var tinymceConfig = {
+    src: PATHS.MODULES + '/tinymce',
+    dest: PATHS.FRAMEWORK_THIRDPARTY + '/tinymce',
+    files: [
+        '/tinymce.min.js', // Exclude unminified file to keep repository size down
+        '/jquery.tinymce.min.js',
+        '/themes/**',
+        '/skins/**',
+        '/plugins/**'
+    ]
+};
+
 /**
  * Copies files from a source directory to a destination directory.
  *
@@ -177,10 +189,8 @@ gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
             ignore: /(thirdparty)/,
             comments: false
         }))
-        .external('config')
         .external('jQuery')
         .external('i18n')
-        .external('router')
         .bundle()
         .on('update', bundleLeftAndMain)
         .on('error', notify.onError({ message: 'Error: <%= error.message %>' }))
@@ -199,10 +209,8 @@ gulp.task('bundle-lib', function bundleLib() {
             ignore: /(thirdparty)/,
             comments: false
         }))
-        .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/config.js',     { expose: 'config' })
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/jQuery.js', { expose: 'jQuery' })
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/i18n.js', { expose: 'i18n' })
-        .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/router.js', { expose: 'router' })
         .bundle()
         .on('update', bundleLib)
         .on('error', notify.onError({ message: 'Error: <%= error.message %>' }))
@@ -236,6 +244,7 @@ gulp.task('sanity', function () {
     diffFiles(blueimpLoadImageConfig);
     diffFiles(blueimpTmplConfig);
     diffFiles(jquerySizesConfig);
+    diffFiles(tinymceConfig);
 });
 
 gulp.task('thirdparty', function () {
@@ -283,7 +292,7 @@ gulp.task('css', ['compile:css'], function () {
         rootCompileFolders.forEach(function (folder) {
             gulp.watch(folder + '/scss/**/*.scss', ['compile:css']);
         });
-        
+
         // Watch the .scss files in react components
         gulp.watch('./admin/javascript/src/**/*.scss', ['compile:css']);
     }
