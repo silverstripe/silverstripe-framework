@@ -189,8 +189,10 @@ gulp.task('bundle-leftandmain', function bundleLeftAndMain() {
             ignore: /(thirdparty)/,
             comments: false
         }))
+        .external('config')
         .external('jQuery')
         .external('i18n')
+        .external('router')
         .bundle()
         .on('update', bundleLeftAndMain)
         .on('error', notify.onError({ message: 'Error: <%= error.message %>' }))
@@ -209,8 +211,10 @@ gulp.task('bundle-lib', function bundleLib() {
             ignore: /(thirdparty)/,
             comments: false
         }))
+        .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/config.js',     { expose: 'config' })
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/jQuery.js', { expose: 'jQuery' })
         .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/i18n.js', { expose: 'i18n' })
+        .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/router.js', { expose: 'router' })
         .bundle()
         .on('update', bundleLib)
         .on('error', notify.onError({ message: 'Error: <%= error.message %>' }))
