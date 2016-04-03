@@ -94,6 +94,7 @@ if (isset($_GET['url']) && php_sapi_name() !== 'cli-server') {
 
 	// Lighttpd and PHP 5.4's built-in webserver use this
 } else {
+	// Get raw URL -- still needs to be decoded below (after parsing out query string).
 	$url = $_SERVER['REQUEST_URI'];
 
 	// Querystring args need to be explicitly parsed
@@ -101,6 +102,9 @@ if (isset($_GET['url']) && php_sapi_name() !== 'cli-server') {
 		list($url, $query) = explode('?',$url,2);
 		$parseQuery($query);
 	}
+
+	// Decode URL now that it has been separated from query string.
+	$url = urldecode($url);
 
 	// Pass back to the webserver for files that exist
 	if(php_sapi_name() === 'cli-server' && file_exists(BASE_PATH . $url) && is_file(BASE_PATH . $url)) {
