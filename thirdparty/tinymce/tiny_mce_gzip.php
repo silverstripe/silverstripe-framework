@@ -9,6 +9,11 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
+$frameworkPath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
+$basePath = rtrim(dirname($frameworkPath), DIRECTORY_SEPARATOR);
+
+require_once $frameworkPath . '/core/Constants.php';
+
 // Handle incoming request if it's a script call
 if (TinyMCE_Compressor::getParam("js")) {
 	// Default settings
@@ -21,6 +26,9 @@ if (TinyMCE_Compressor::getParam("js")) {
 	 *  "files"     => "somescript,anotherscript",
 	 *  "expires"   => "1m",
 	 */
+		// CUSTOM SilverStripe
+		'cache_dir' => TEMP_FOLDER
+		// CUSTOM END
 	));
 
 	// Handle request, compress and stream to client
@@ -49,7 +57,9 @@ class TinyMCE_Compressor {
 		"plugins"    => "",
 		"themes"     => "",
 		"languages"  => "",
-		"disk_cache" => false,
+		// CUSTOM SilverStripe
+		"disk_cache" => true,
+		// END CUSTOM
 		"expires"    => "30d",
 		"cache_dir"  => "",
 		"compress"   => true,
@@ -179,7 +189,9 @@ class TinyMCE_Compressor {
 		}
 
 		// Generate hash for all files
-		$hash = md5(implode('', $allFiles));
+		// CUSTOM SilverStripe Webroot-specific caches
+		$hash = md5(implode('', $allFiles) . $_SERVER['SCRIPT_NAME']);
+		// CUSTOM END
 
 		// Check if it supports gzip
 		$zlibOn = ini_get('zlib.output_compression') || (ini_set('zlib.output_compression', 0) === false);
