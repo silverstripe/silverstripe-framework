@@ -222,6 +222,7 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/reducer-register.js', { expose: 'reducer-register' })
     .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/router.js', { expose: 'router' })
     .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/silverstripe-component', { expose: 'silverstripe-component' })
+    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/silverstripe-backend', { expose: 'silverstripe-backend' })
     .bundle()
     .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
     .pipe(source(bundleFileName))
