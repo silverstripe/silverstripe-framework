@@ -680,8 +680,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$items = $this->popupController->Breadcrumbs($unlinked);
 		if($this->record && $this->record->ID) {
+			$title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
 			$items->push(new ArrayData(array(
-				'Title' => $this->record->Title,
+				'Title' => $title,
 				'Link' => $this->Link()
 			)));
 		} else {
