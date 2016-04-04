@@ -3,52 +3,39 @@
  *
  * Contains the basic typography related styles for the admin interface.
  */
-body, html {
-	line-height: $grid-y * 2;
-	font-family: $font-family;
-	color: $color-text;
-}
+
+
 
 .cms {
-	h2, h3, h4, h5 {
-		font-weight: bold;
-		margin: $grid-y * 2 0 $grid-y * 2 0;
-		line-height: $grid-y * 2;
-	}
-
-	h2 {
-		line-height: $grid-y * 3;
-	}
-
-	p {
-		line-height: $grid-y * 2;
-		margin-bottom: $grid-y * 2;
-	}
-	em {
-		font-style: italic;
-	}
 	code {
 		font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
 	}
-
-	pre {
-
-	}
-
-	table {
-
-		thead {
-
-		}
-	}
-
-	ol {
-
-	}
-
-	ul {
-
-	}
-
 }
 
+// Used for long sentences where you would like to truncate them with an ellipsis (requires a set width)
+.truncate { 
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+// Used for breaking text so it doesn't run horizontally, useful for breaking URLs
+.break-string {
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+}
+
+// Standard table styles
+.table {
+	margin-top: 20px;
+	margin-bottom: $spacer-y * 2;
+	border-top: 0;
+
+	thead th {
+		font-size: 12px;
+		text-transform: uppercase;
+		font-weight: normal;
+		border-bottom: 1px solid #bbb;
+		border-top: 0;
+	}
+}

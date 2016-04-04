@@ -33,7 +33,7 @@
 	height: 100%;
 }
 
-// Preview panel 
+// Preview panel
 .pages-preview {
 	display: block;
 	position: relative;
@@ -48,12 +48,18 @@
 	}
 }
 
-//.cms-south-actions {
-//  height: $navbar-total-height;
-//  position: absolute;
-//  bottom: 0;
-//  width: 100%;
-//  border-top: 1px solid #ddd;
-//  background-color: #f6f7f8;
-//  padding: 8px 15px;
-//}
+.cms-south-actions {
+    height: $navbar-total-height;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid $border-color;
+    background-color: $body-bg;
+    padding: $spacer-y*.625 $spacer-x;
+
+	.btn-toolbar {
+		// TODO Remove '.cms .btn-toolbar' override
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+}
