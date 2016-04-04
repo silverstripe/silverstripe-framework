@@ -865,7 +865,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			&& $this->record['Password']
 			&& $this->config()->notify_password_change
 		) {
-			$e = Member_ChangePasswordEmail::create();
+			/** @var Email $e */
+			$e = Email::create();
+			$e->setSubject(_t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'));
+			$e->setTemplate('ChangePasswordEmail');
 			$e->populateTemplate($this);
 			$e->setTo($this->Email);
 			$e->send();
@@ -1759,46 +1762,6 @@ class Member_GroupSet extends ManyManyList {
 		if($id) {
 			return DataObject::get_by_id('Member', $id);
 		}
-	}
-}
-
-/**
- * Class used as template to send an email saying that the password has been
- * changed.
- *
- * @package framework
- * @subpackage security
- */
-class Member_ChangePasswordEmail extends Email {
-
-	protected $from = '';   // setting a blank from address uses the site's default administrator email
-	protected $subject = '';
-	protected $ss_template = 'ChangePasswordEmail';
-
-	public function __construct() {
-		parent::__construct();
-
-		$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject');
-	}
-}
-
-
-
-/**
- * Class used as template to send the forgot password email
- *
- * @package framework
- * @subpackage security
- */
-class Member_ForgotPasswordEmail extends Email {
-	protected $from = '';  // setting a blank from address uses the site's default administrator email
-	protected $subject = '';
-	protected $ss_template = 'ForgotPasswordEmail';
-
-	public function __construct() {
-		parent::__construct();
-
-		$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject');
 	}
 }
 

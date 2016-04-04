@@ -305,13 +305,13 @@ class SecurityTest extends FunctionalTest {
 	 */
 	public function testExpiredPassword() {
 		/* BAD PASSWORDS ARE LOCKED OUT */
-		$badResponse = $this->doTestLoginForm('sam@silverstripe.com' , 'badpassword');
+		$badResponse = $this->doTestLoginForm('dummy@silverstripe.tld' , 'badpassword');
 		$this->assertEquals(302, $badResponse->getStatusCode());
 		$this->assertRegExp('/Security\/login/', $badResponse->getHeader('Location'));
 		$this->assertNull($this->session()->inst_get('loggedInAs'));
 
 		/* UNEXPIRED PASSWORD GO THROUGH WITHOUT A HITCH */
-		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
+		$goodResponse = $this->doTestLoginForm('dummy@silverstripe.tld' , '1nitialPassword');
 		$this->assertEquals(302, $goodResponse->getStatusCode());
 		$this->assertEquals(
 			Controller::join_links(Director::absoluteBaseURL(), 'test/link'),
@@ -340,7 +340,7 @@ class SecurityTest extends FunctionalTest {
 	}
 
 	public function testChangePasswordForLoggedInUsers() {
-		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
+		$goodResponse = $this->doTestLoginForm('dummy@silverstripe.tld' , '1nitialPassword');
 
 		// Change the password
 		$this->get('Security/changepassword?BackURL=test/back');
@@ -353,7 +353,7 @@ class SecurityTest extends FunctionalTest {
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
 
 		// Check if we can login with the new password
-		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , 'changedPassword');
+		$goodResponse = $this->doTestLoginForm('dummy@silverstripe.tld' , 'changedPassword');
 		$this->assertEquals(302, $goodResponse->getStatusCode());
 		$this->assertEquals(
 			Controller::join_links(Director::absoluteBaseURL(), 'test/link'),
@@ -372,9 +372,9 @@ class SecurityTest extends FunctionalTest {
 
 		// Request new password by email
 		$response = $this->get('Security/lostpassword');
-		$response = $this->post('Security/LostPasswordForm', array('Email' => 'sam@silverstripe.com'));
+		$response = $this->post('Security/LostPasswordForm', array('Email' => 'dummy@silverstripe.tld'));
 
-		$this->assertEmailSent('sam@silverstripe.com');
+		$this->assertEmailSent('dummy@silverstripe.tld');
 
 		// Load password link from email
 		$admin = DataObject::get_by_id('Member', $admin->ID);
@@ -394,7 +394,7 @@ class SecurityTest extends FunctionalTest {
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
 
 		// Check if we can login with the new password
-		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , 'changedPassword');
+		$goodResponse = $this->doTestLoginForm('dummy@silverstripe.tld' , 'changedPassword');
 		$this->assertEquals(302, $goodResponse->getStatusCode());
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
 
@@ -412,7 +412,7 @@ class SecurityTest extends FunctionalTest {
 
 		// Login with a wrong password for more than the defined threshold
 		for($i = 1; $i <= Member::config()->lock_out_after_incorrect_logins+1; $i++) {
-			$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
+			$this->doTestLoginForm('dummy@silverstripe.tld' , 'incorrectpassword');
 			$member = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'test'));
 
 			if($i < Member::config()->lock_out_after_incorrect_logins) {
@@ -442,7 +442,7 @@ class SecurityTest extends FunctionalTest {
 			}
 		}
 
-		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
+		$this->doTestLoginForm('dummy@silverstripe.tld' , '1nitialPassword');
 		$this->assertNull(
 			$this->session()->inst_get('loggedInAs'),
 			'The user can\'t log in after being locked out, even with the right password'
@@ -452,7 +452,7 @@ class SecurityTest extends FunctionalTest {
 		$member = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'test'));
 		$member->LockedOutUntil = date('Y-m-d H:i:s', time() - 30);
 		$member->write();
-		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
+		$this->doTestLoginForm('dummy@silverstripe.tld' , '1nitialPassword');
 		$this->assertEquals(
 			$this->session()->inst_get('loggedInAs'),
 			$member->ID,
@@ -464,7 +464,7 @@ class SecurityTest extends FunctionalTest {
 
 		// Login again with wrong password, but less attempts than threshold
 		for($i = 1; $i < Member::config()->lock_out_after_incorrect_logins; $i++) {
-			$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
+			$this->doTestLoginForm('dummy@silverstripe.tld' , 'incorrectpassword');
 		}
 		$this->assertNull($this->session()->inst_get('loggedInAs'));
 		$this->assertContains(
@@ -473,7 +473,7 @@ class SecurityTest extends FunctionalTest {
 			'The user can retry with a wrong password after the lockout expires'
 		);
 
-		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
+		$this->doTestLoginForm('dummy@silverstripe.tld' , '1nitialPassword');
 		$this->assertEquals(
 			$this->session()->inst_get('loggedInAs'),
 			$member->ID,
@@ -488,8 +488,8 @@ class SecurityTest extends FunctionalTest {
 
 		// ATTEMPTING LOG-IN TWICE WITH ONE ACCOUNT AND TWICE WITH ANOTHER SHOULDN'T LOCK ANYBODY OUT
 
-		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
-		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
+		$this->doTestLoginForm('dummy@silverstripe.tld' , 'incorrectpassword');
+		$this->doTestLoginForm('dummy@silverstripe.tld' , 'incorrectpassword');
 
 		$this->doTestLoginForm('noexpiry@silverstripe.com' , 'incorrectpassword');
 		$this->doTestLoginForm('noexpiry@silverstripe.com' , 'incorrectpassword');
@@ -503,7 +503,7 @@ class SecurityTest extends FunctionalTest {
 		// BUT, DOING AN ADDITIONAL LOG-IN WITH EITHER OF THEM WILL LOCK OUT, SINCE THAT IS THE 3RD FAILURE IN
 		// THIS SESSION
 
-		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
+		$this->doTestLoginForm('dummy@silverstripe.tld' , 'incorrectpassword');
 		$member1 = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'test'));
 		$this->assertNotNull($member1->LockedOutUntil);
 
@@ -516,16 +516,16 @@ class SecurityTest extends FunctionalTest {
 		Security::config()->login_recording = true;
 
 		/* UNSUCCESSFUL ATTEMPTS WITH WRONG PASSWORD FOR EXISTING USER ARE LOGGED */
-		$this->doTestLoginForm('sam@silverstripe.com', 'wrongpassword');
+		$this->doTestLoginForm('dummy@silverstripe.tld', 'wrongpassword');
 		$attempt = DataObject::get_one('LoginAttempt', array(
-			'"LoginAttempt"."Email"' => 'sam@silverstripe.com'
+			'"LoginAttempt"."Email"' => 'dummy@silverstripe.tld'
 		));
 		$this->assertTrue(is_object($attempt));
 		$member = DataObject::get_one('Member', array(
-			'"Member"."Email"' => 'sam@silverstripe.com'
+			'"Member"."Email"' => 'dummy@silverstripe.tld'
 		));
 		$this->assertEquals($attempt->Status, 'Failure');
-		$this->assertEquals($attempt->Email, 'sam@silverstripe.com');
+		$this->assertEquals($attempt->Email, 'dummy@silverstripe.tld');
 		$this->assertEquals($attempt->MemberID, $member->ID);
 
 		/* UNSUCCESSFUL ATTEMPTS WITH NONEXISTING USER ARE LOGGED */
@@ -545,16 +545,16 @@ class SecurityTest extends FunctionalTest {
 		Security::config()->login_recording = true;
 
 		/* SUCCESSFUL ATTEMPTS ARE LOGGED */
-		$this->doTestLoginForm('sam@silverstripe.com', '1nitialPassword');
+		$this->doTestLoginForm('dummy@silverstripe.tld', '1nitialPassword');
 		$attempt = DataObject::get_one('LoginAttempt', array(
-			'"LoginAttempt"."Email"' => 'sam@silverstripe.com'
+			'"LoginAttempt"."Email"' => 'dummy@silverstripe.tld'
 		));
 		$member = DataObject::get_one('Member', array(
-			'"Member"."Email"' => 'sam@silverstripe.com'
+			'"Member"."Email"' => 'dummy@silverstripe.tld'
 		));
 		$this->assertTrue(is_object($attempt));
 		$this->assertEquals($attempt->Status, 'Success');
-		$this->assertEquals($attempt->Email, 'sam@silverstripe.com');
+		$this->assertEquals($attempt->Email, 'dummy@silverstripe.tld');
 		$this->assertEquals($attempt->MemberID, $member->ID);
 	}
 

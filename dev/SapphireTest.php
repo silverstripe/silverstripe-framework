@@ -192,7 +192,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		self::$is_running_test = true;
 
 		// i18n needs to be set to the defaults or tests fail
-		i18n::set_locale(i18n::default_locale());
+		i18n::set_locale(Config::inst()->get('i18n', 'default_locale'));
 		i18n::config()->date_format = null;
 		i18n::config()->time_format = null;
 
@@ -222,12 +222,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$fixtureFile = static::get_fixture_file();
 
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
-
-		// Set up email
-		$this->originalMailer = Email::mailer();
-		$this->mailer = new TestMailer();
-		Injector::inst()->registerService($this->mailer, 'Mailer');
-		Config::inst()->remove('Email', 'send_all_emails_to');
 
 		// Todo: this could be a special test model
 		$this->model = DataModel::inst();
@@ -289,6 +283,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// Clear requirements
 		Requirements::clear();
+
+		// Set up email
+		$this->originalMailer = Email::mailer();
+		$this->mailer = new TestMailer();
+		Injector::inst()->registerService($this->mailer, 'Mailer');
+		Config::inst()->remove('Email', 'send_all_emails_to');
 	}
 
 	/**
