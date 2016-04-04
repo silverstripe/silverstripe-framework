@@ -226,7 +226,7 @@ gulp.task('bundle-lib', function bundleLib() {
     .pipe(source(bundleFileName))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(gulpif(!isDev, uglify()))
+    .pipe(uglify())
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
@@ -248,7 +248,7 @@ gulp.task('bundle-legacy', function bundleLeftAndMain() {
     .pipe(source(bundleFileName))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(gulpif(!isDev, uglify()))
+    .pipe(uglify())
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
@@ -282,7 +282,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .pipe(source(bundleFileName))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(gulpif(!isDev, uglify()))
+    .pipe(uglify())
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
