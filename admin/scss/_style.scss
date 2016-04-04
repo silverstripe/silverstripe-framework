@@ -172,8 +172,8 @@ body.cms {
 	.cms-content-header.north {
 		&.collapsed {
 			.cms-content-header-info {
-				width: 40px;
-				text-align: right;
+				width: 60px;
+				text-align: center;
 				padding-left: 8px;
 				padding-right: 8px;
 			}
@@ -184,7 +184,7 @@ body.cms {
 			}
 
 			.cms-content-header-nav {
-				margin-left: 40px;
+				margin-left: 61px;
 			}
 		}
 	}
@@ -223,7 +223,7 @@ body.cms {
 	.breadcrumbs-wrapper {
 		float: left;
 		padding-top: $grid-y - 1;
-		padding-left: $grid-x*1.5;
+		padding-left: $grid-x*2;
 	}
 
 	.cms-content-header-tabs {
@@ -246,10 +246,6 @@ body.cms {
 		.cms-panel-content {
 			padding-top: 0;
 			overflow-x: hidden;
-		}
-
-		.cms-panel-toggle.south {
-			box-shadow: inset 0 1px 0 0 $color-light-separator;
 		}
 	}
 }
@@ -600,6 +596,35 @@ body.cms {
 
 	&.ss-tabset-tabshidden .ui-tabs-panel {
 		border-top: none;
+	}
+}
+
+/**
+ * SilverStripe 4 tabs.
+ * Tab styles built on top of Bootstrap 4 tab functionality
+ */
+
+.nav-tabs {
+	margin-bottom: 20px;
+
+	.nav-item {
+
+	}
+
+	.nav-link {
+		margin-right: 4px;
+		color: $body-color-light;
+
+		&:hover {
+			text-decoration: none;
+			background: transparent;
+		}
+
+		&.active,
+		&.active:hover {
+			border-bottom: 2px solid $body-color;
+			color: $body-color;
+		}
 	}
 }
 
@@ -1316,14 +1341,14 @@ body.cms {
 
 	.Actions {
 		display: inline-block;
+		padding: 0;
+		margin-left: -4px;
+		min-height: auto;
 
 		// Context specific rules for when batch actions are in the SiteTree panel.
 		.cms-content-tools & {
 			width: 16%;
 		}
-
-		padding: 0;
-		margin-left: -4px;
 	}
 
 	.action {
@@ -1515,16 +1540,17 @@ form.member-profile-form {
 
 	.cms-panel-toggle {
 		&.south {
-			box-shadow: inset #C1C7CC -1px 1px 0;
+			box-shadow: inset $color-light-separator 0 1px 0; // #C1C7CC
 			position: absolute;
 			bottom: 0;
 			width: 100%;
+			min-height: 53px;
 		}
 
 		a {
 			display: block;
 			text-align: right;
-			padding: $grid-y * 2 0;
+			padding: 13px 0;
 			width: 100%;
 			text-decoration: none;
 			line-height: 20px;
@@ -1538,7 +1564,7 @@ form.member-profile-form {
 			}
 
 			&.toggle-expand {
-				width: 40px; // will set the collapsed width
+				width: 60px; // will set the collapsed width
 				display: none;
 			}
 		}
@@ -1563,7 +1589,7 @@ form.member-profile-form {
 
 	&#cms-content-tools-CMSPageEditController {
 		.cms-panel-content-collapsed {
-			width: 40px;
+			width: 60px;
 			display: none; // Avoids FOUC
 
 			h2, h3 {
@@ -1583,14 +1609,14 @@ form.member-profile-form {
 	}
 
 	.cms-panel-content-collapsed {
-		width: 40px;
+		width: 60px;
 		display: none; // Avoids FOUC
 		height: calc(100% - 52px);
 		overflow: hidden;
 
 		h2, h3 {
 			border-bottom: 0;
-			margin-left: $grid-y;
+			margin-left: 18px;
 			transform-origin: bottom right;
 			transform: rotate(270deg);
 		}

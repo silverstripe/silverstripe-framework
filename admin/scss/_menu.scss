@@ -93,6 +93,8 @@
 	
 	.cms-menu-list {
 		margin: $grid-y * 1.5 0 0 0;
+		list-style-type: none;
+		padding-left: 0;
 	}
 
 	a {
@@ -106,7 +108,8 @@
 		position: relative !important;
 		top:auto !important;
 		left:auto !important;
-		box-shadow: inset #C1C7CC -1px 0 0
+		box-shadow: inset #C1C7CC -1px 0 0;
+		min-height: calc(100% - 104px);
 	}
 
 	&.collapsed {
@@ -169,14 +172,14 @@
 	}
 
 	.cms-panel-toggle {
-		height: 52px;
+		height: 53px;
 
 		a,
 		a.toggle-expand {
 			float: right;
 			width: 50%;
-			padding-top: 16px;
-			padding-bottom: 16px;
+			padding-top: 13px;
+			padding-bottom: 13px;
 		}
 	}
 
