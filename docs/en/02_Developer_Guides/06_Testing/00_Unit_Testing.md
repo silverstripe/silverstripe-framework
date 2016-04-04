@@ -112,7 +112,7 @@ end of each test.
 			for($i=0; $i<100; $i++) {
 				$page = new Page(array('Title' => "Page $i"));
 				$page->write();
-				$page->publish('Stage', 'Live');
+				$page->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 			}
 
 			// set custom configuration for the test.

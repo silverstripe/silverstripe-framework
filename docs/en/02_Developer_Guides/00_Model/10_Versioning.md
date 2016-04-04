@@ -117,8 +117,14 @@ The usual call to `DataObject->write()` will write to whatever stage is currentl
 `<class>_versions` table. To avoid this, use [api:Versioned::writeWithoutVersion()] instead.
 
 To move a saved version from one stage to another, call [writeToStage(<stage>)](api:Versioned->writeToStage()) on the 
-object. The process of moving a version to a different stage is also called "publishing", so we've created a shortcut 
-for this: `publish(<from-stage>, <to-stage>)`.
+object. The process of moving a version to a different stage is also called "publishing". This can be
+done via one of several ways:
+
+ * `copyVersionToStage` which will allow you to specify a source (which could be either a version
+   number, or a stage), as well as a destination stage.
+ * `publishSingle` Publishes this record to live from the draft.
+ * `publishRecursive` Publishes this record, and any dependant objects this record may refer to.
+   See "DataObject ownership" for reference on dependant objects.
 
 	:::php
 	$record = Versioned::get_by_stage('MyRecord', 'Stage')->byID(99);
@@ -127,7 +133,7 @@ for this: `publish(<from-stage>, <to-stage>)`.
 	// and write a row to `MyRecord_versions`.
 	$record->write(); 
 	// will copy the saved record information to the `MyRecord_Live` table
-	$record->publish('Stage', 'Live');
+	$record->publishRecursive();
 
 Similarly, an "unpublish" operation does the reverse, and removes a record from a specific stage.
 

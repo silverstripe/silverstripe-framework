@@ -757,7 +757,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer {
 		// Relies on Parent() returning the stage record
 		$parent = $this->Parent();
 		if($parent && $parent->exists()) {
-			$parent->doPublish();
+			$parent->publishRecursive();
 		}
 	}
 

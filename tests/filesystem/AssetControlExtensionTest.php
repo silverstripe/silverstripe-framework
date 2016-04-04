@@ -26,7 +26,7 @@ class AssetControlExtensionTest extends SapphireTest {
 		$object1->Header->setFromLocalFile($fish1, 'Header/MyObjectHeader.jpg');
 		$object1->Download->setFromString('file content', 'Documents/File.txt');
 		$object1->write();
-		$object1->doPublish();
+		$object1->publishSingle();
 
 		$object2 = new AssetControlExtensionTest_Object();
 		$object2->Title = 'Unversioned';
@@ -37,7 +37,7 @@ class AssetControlExtensionTest extends SapphireTest {
 		$object3->Title = 'Archived';
 		$object3->Header->setFromLocalFile($fish1, 'Archived/MyObjectHeader.jpg');
 		$object3->write();
-		$object3->doPublish();
+		$object3->publishSingle();
 	}
 
 	public function tearDown() {
@@ -170,8 +170,8 @@ class AssetControlExtensionTest extends SapphireTest {
 		$this->assertEquals(AssetStore::VISIBILITY_PROTECTED, $object3->Header->getVisibility());
 
 		// Publish changes to versioned records
-		$object1->doPublish();
-		$object3->doPublish();
+		$object1->publishSingle();
+		$object3->publishSingle();
 
 		// After publishing, old object1 is deleted, but since object3 has archiving enabled,
 		// the orphaned file is intentionally left in the protected store
