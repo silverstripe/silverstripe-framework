@@ -1448,17 +1448,6 @@ PHP
 			);
 		}
 
-		// Syncing filesystem (so /assets/Uploads is available instantly, see ticket #2266)
-		// show a warning if there was a problem doing so
-		try {
-			$this->statusMessage('Creating initial filesystem assets...');
-			Filesystem::sync();
-		} catch(Exception $e) {
-			$this->statusMessage(
-				sprintf('Warning: Creating initial filesystem assets failed (error: %s)', $e->getMessage())
-			);
-		}
-
 		$_SESSION['username'] = $config['admin']['username'];
 		$_SESSION['password'] = $config['admin']['password'];
 
