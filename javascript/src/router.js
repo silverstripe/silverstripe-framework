@@ -14,8 +14,12 @@ function show(pageShow) {
         // 'http://foo.com/admin/pages', '/pages', and 'pages'.
         var el = document.createElement('a');
         el.href = path;
+		path = el.pathname;
+		if(el.search) {
+			path += el.search;
+		}
 
-        return pageShow(el.pathname, state, dispatch, push);
+        return pageShow(path, state, dispatch, push);
     }
 }
 

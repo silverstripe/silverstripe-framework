@@ -178,12 +178,12 @@ var $window = $( window ),
 		// TODO Handle repeating elements (e.g. arr[]=one&arr[]=two)
 		// 2013-12-06 ischommer: Added to allow merge with existing keys
 		convertSearchToArray: function(search) {
-			var params = {}, 
-				search = search.replace( /^\?/, '' ),
-				parts = search ? search.split( '&' ) : [], i, tmp;
+			var parts, i, tmp, params = {};
+			search = search.replace( /^\?/, '' );
+			parts = search ? search.split( '&' ) : [];
 			for(i=0; i < parts.length; i++) {
 				tmp = parts[i].split( '=' );
-				params[tmp[0]] = tmp[1];
+				params[decodeURIComponent(tmp[0])] = decodeURIComponent(tmp[1]);
 			}
 			return params;
 		},
