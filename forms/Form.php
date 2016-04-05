@@ -874,7 +874,7 @@ class Form extends RequestHandler {
 	/**
 	 * Set the target of this form to any value - useful for opening the form contents in a new window or refreshing
 	 * another frame
-	 *
+	 * 
 	 * @param string|FormTemplateHelper
 	 */
 	public function setTemplateHelper($helper) {
