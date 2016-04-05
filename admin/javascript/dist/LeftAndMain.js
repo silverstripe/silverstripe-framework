@@ -1012,7 +1012,7 @@
 				url = this.attr('action');
 
 				if (nonEmptyInputs.length) {
-					url = $.path.addSearchParams(url, nonEmptyInputs.serialize());
+					url = $.path.addSearchParams(url, nonEmptyInputs.serialize().replace('+', '%20'));
 				}
 
 				var container = this.closest('.cms-container');

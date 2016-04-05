@@ -1339,7 +1339,12 @@ $.entwine('ss', function($) {
 			url = this.attr('action');
 
 			if(nonEmptyInputs.length) {
-				url = $.path.addSearchParams(url, nonEmptyInputs.serialize());
+				url = $.path.addSearchParams(
+					url,
+					// Undo jQuery's non-standard serialisation
+					// See https://github.com/jquery/jquery/blob/1.7.2/src/ajax.js#L797
+					nonEmptyInputs.serialize().replace('+', '%20')
+				);
 			}
 
 			var container = this.closest('.cms-container');
