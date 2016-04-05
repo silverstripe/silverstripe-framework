@@ -506,6 +506,7 @@ class Form extends RequestHandler {
 					// Send validation errors back as JSON with a flag at the start
 					$response = new SS_HTTPResponse(Convert::array2json($this->validator->getErrors()));
 					$response->addHeader('Content-Type', 'application/json');
+					$response->setStatusCode(400);
 				} else {
 					$this->setupFormErrors();
 					// Send the newly rendered form tag as HTML
