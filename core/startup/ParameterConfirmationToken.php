@@ -164,7 +164,7 @@ class ParameterConfirmationToken {
 		// Are we http or https? Replicates Director::is_https() without its dependencies/
 		$proto = 'http';
 		// See https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
-		// See https://support.microsoft.com/?kbID=307347
+		// See https://support.microsoft.com/en-us/kb/307347
 		$headerOverride = false;
 		if(TRUSTED_PROXY) {
 			$headers = (defined('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(SS_TRUSTED_PROXY_PROTOCOL_HEADER) : null;
