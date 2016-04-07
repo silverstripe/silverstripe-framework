@@ -240,6 +240,10 @@ JSON;
 			'_embedded' => ['ChangeSetItems' => []]
 		];
 		foreach($changeSet->Changes() as $changeSetItem) {
+			if(!$changeSetItem) {
+				continue;
+			}
+
 			/** @var ChangesetItem $changeSetItem */
 			$resource = $this->getChangeSetItemResource($changeSetItem);
 			$hal['_embedded']['ChangeSetItems'][] = $resource;
@@ -294,7 +298,10 @@ JSON;
 	 */
 	protected function getListItems() {
 		return ChangeSet::get()
-			->filter('State', ChangeSet::STATE_OPEN);
+			->filter('State', ChangeSet::STATE_OPEN)
+			->filterByCallback(function($item) {
+				return ($item->canView());
+			});
 	}
 
 
