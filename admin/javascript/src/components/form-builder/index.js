@@ -94,8 +94,10 @@ export class FormBuilderComponent extends SilverStripeComponent {
     super(props);
 
     this.formSchemaPromise = null;
-    this.isFetching = false;
+    this.state = { isFetching: false };
+  }
 
+  componentDidMount() {
     this.fetch();
   }
 
@@ -111,7 +113,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
   fetch(schema = true, state = false) {
     const headerValues = [];
 
-    if (this.isFetching === true) {
+    if (this.state.isFetching === true) {
       return this.formSchemaPromise;
     }
 
@@ -129,11 +131,11 @@ export class FormBuilderComponent extends SilverStripeComponent {
     })
       .then(response => response.json())
       .then(json => {
-        this.isFetching = false;
+        this.setState({ isFetching: false });
         this.props.actions.setSchema(json);
       });
 
-    this.isFetching = true;
+    this.setState({ isFetching: true });
 
     return this.formSchemaPromise;
   }
