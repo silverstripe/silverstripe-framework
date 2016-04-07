@@ -145,15 +145,15 @@ class Director implements TemplateGlobalProvider {
 	public static function direct($url, DataModel $model) {
 		// Validate $_FILES array before merging it with $_POST
 		foreach($_FILES as $k => $v) {
-			if(is_array($v['tmp_name'])) {
+			if (is_array($v['tmp_name'])) {
 				$v = ArrayLib::array_values_recursive($v['tmp_name']);
 				foreach($v as $tmpFile) {
-					if($tmpFile && !is_uploaded_file($tmpFile)) {
+					if ($tmpFile && !is_uploaded_file($tmpFile)) {
 						user_error("File upload '$k' doesn't appear to be a valid upload", E_USER_ERROR);
 					}
 				}
 			} else {
-				if($v['tmp_name'] && !is_uploaded_file($v['tmp_name'])) {
+				if ($v['tmp_name'] && !is_uploaded_file($v['tmp_name'])) {
 					user_error("File upload '$k' doesn't appear to be a valid upload", E_USER_ERROR);
 				}
 			}
@@ -178,7 +178,7 @@ class Director implements TemplateGlobalProvider {
 		$session = Injector::inst()->create('Session', isset($_SESSION) ? $_SESSION : array());
 
 		// Only resume a session if its not started already, and a session identifier exists
-		if(!isset($_SESSION) && Session::request_contains_session_id()) {
+		if (!isset($_SESSION) && Session::request_contains_session_id()) {
 			$session->inst_start();
 		}
 
@@ -195,10 +195,10 @@ class Director implements TemplateGlobalProvider {
 		$session->inst_save();
 
 		// Return code for a redirection request
-		if(is_string($result) && substr($result,0,9) == 'redirect:') {
+		if (is_string($result) && substr($result, 0, 9) == 'redirect:') {
 			$url = substr($result, 9);
 
-			if(Director::is_cli()) {
+			if (Director::is_cli()) {
 				// on cli, follow SilverStripe redirects automatically
 				return Director::direct(
 					str_replace(Director::absoluteBaseURL(), '', $url),
@@ -214,8 +214,8 @@ class Director implements TemplateGlobalProvider {
 				}
 			}
 		// Handle a controller
-		} else if($result) {
-			if($result instanceof SS_HTTPResponse) {
+		} elseif ($result) {
+			if ($result instanceof SS_HTTPResponse) {
 				$response = $result;
 
 			} else {
@@ -271,9 +271,9 @@ class Director implements TemplateGlobalProvider {
 		$oldStage = Versioned::get_stage();
 		$getVars = array();
 
-		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
+		if (!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
 
-		if(!$session) $session = Injector::inst()->create('Session', array());
+		if (!$session) $session = Injector::inst()->create('Session', array());
 		$cookieJar = $cookies instanceof Cookie_Backend
 			? $cookies
 			: Injector::inst()->createWithArgs('Cookie_Backend', array($cookies ?: array()));
@@ -322,7 +322,7 @@ class Director implements TemplateGlobalProvider {
 		if (parse_url($url, PHP_URL_HOST)) {
 			$bits = parse_url($url);
 			// If a port is mentioned in the absolute URL, be sure to add that into the HTTP host
-			if(isset($bits['port'])) {
+			if (isset($bits['port'])) {
 				$_SERVER['HTTP_HOST'] = $bits['host'].':'.$bits['port'];
 			} else {
 				$_SERVER['HTTP_HOST'] = $bits['host'];
@@ -334,7 +334,7 @@ class Director implements TemplateGlobalProvider {
 		$url = self::makeRelative($url);
 
 		$urlWithQuerystring = $url;
-		if(strpos($url, '?') !== false) {
+		if (strpos($url, '?') !== false) {
 			list($url, $getVarsEncoded) = explode('?', $url, 2);
 			parse_str($getVarsEncoded, $getVars);
 		}
@@ -349,7 +349,11 @@ class Director implements TemplateGlobalProvider {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
 		$request = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
-		if($headers) foreach($headers as $k => $v) $request->addHeader($k, $v);
+		if ($headers) {
+			foreach($headers as $k => $v) {
+				$request->addHeader($k, $v);
+			}
+		}
 
 		// Pre-request filtering
 		// @see issue #2517
@@ -364,8 +368,8 @@ class Director implements TemplateGlobalProvider {
 		$result = Director::handleRequest($request, $session, $model);
 
 		// Ensure that the result is an SS_HTTPResponse object
-		if(is_string($result)) {
-			if(substr($result,0,9) == 'redirect:') {
+		if (is_string($result)) {
+			if (substr($result, 0, 9) == 'redirect:') {
 				$response = new SS_HTTPResponse();
 				$response->redirect(substr($result, 9));
 				$result = $response;
@@ -397,32 +401,32 @@ class Director implements TemplateGlobalProvider {
 	protected static function handleRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
 		$rules = Config::inst()->get('Director', 'rules');
 
-		if(isset($_REQUEST['debug'])) Debug::show($rules);
+		if (isset($_REQUEST['debug'])) Debug::show($rules);
 
 		foreach($rules as $pattern => $controllerOptions) {
-			if(is_string($controllerOptions)) {
-				if(substr($controllerOptions,0,2) == '->') {
-					$controllerOptions = array('Redirect' => substr($controllerOptions,2));
+			if (is_string($controllerOptions)) {
+				if (substr($controllerOptions, 0, 2) == '->') {
+					$controllerOptions = array('Redirect' => substr($controllerOptions, 2));
 				} else {
 					$controllerOptions = array('Controller' => $controllerOptions);
 				}
 			}
 
-			if(($arguments = $request->match($pattern, true)) !== false) {
+			if (($arguments = $request->match($pattern, true)) !== false) {
 				$request->setRouteParams($controllerOptions);
 				// controllerOptions provide some default arguments
 				$arguments = array_merge($controllerOptions, $arguments);
 
 				// Find the controller name
-				if(isset($arguments['Controller'])) $controller = $arguments['Controller'];
+				if (isset($arguments['Controller'])) $controller = $arguments['Controller'];
 
 				// Pop additional tokens from the tokenizer if necessary
-				if(isset($controllerOptions['_PopTokeniser'])) {
+				if (isset($controllerOptions['_PopTokeniser'])) {
 					$request->shift($controllerOptions['_PopTokeniser']);
 				}
 
 				// Handle redirection
-				if(isset($arguments['Redirect'])) {
+				if (isset($arguments['Redirect'])) {
 					return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
 
 				} else {
@@ -435,7 +439,7 @@ class Director implements TemplateGlobalProvider {
 					} catch(SS_HTTPResponse_Exception $responseException) {
 						$result = $responseException->getResponse();
 					}
-					if(!is_object($result) || $result instanceof SS_HTTPResponse) return $result;
+					if (!is_object($result) || $result instanceof SS_HTTPResponse) return $result;
 
 					user_error("Bad result from url " . $request->getURL() . " handled by " .
 						get_class($controllerObj)." controller: ".get_class($result), E_USER_WARNING);
@@ -488,31 +492,31 @@ class Director implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public static function absoluteURL($url, $relativeParent = self::BASE) {
-		if(is_bool($relativeParent)) {
+		if (is_bool($relativeParent)) {
 			// Deprecate old boolean second parameter
 			Deprecation::notice('5.0', 'Director::absoluteURL takes an explicit parent for relative url');
 			$relativeParent = $relativeParent ? self::BASE : self::REQUEST;
 		}
 
 		// Check if there is already a protocol given
-		if(preg_match('/^http(s?):\/\//', $url)) {
+		if (preg_match('/^http(s?):\/\//', $url)) {
 			return $url;
 		}
 
 		// Absolute urls without protocol are added
 		// E.g. //google.com -> http://google.com
-		if(strpos($url, '//') === 0) {
+		if (strpos($url, '//') === 0) {
 			return self::protocol() . substr($url, 2);
 		}
 
 		// Determine method for mapping the parent to this relative url
-		if($relativeParent === self::ROOT || self::is_root_relative_url($url)) {
+		if ($relativeParent === self::ROOT || self::is_root_relative_url($url)) {
 			// Root relative urls always should be evaluated relative to the root
 			$parent = self::protocolAndHost();
 
-		} elseif($relativeParent === self::REQUEST) {
+		} elseif ($relativeParent === self::REQUEST) {
 			// Request relative urls rely on the REQUEST_URI param (old default behaviour)
-			if(!isset($_SERVER['REQUEST_URI'])) {
+			if (!isset($_SERVER['REQUEST_URI'])) {
 				return false;
 			}
 			$parent = dirname($_SERVER['REQUEST_URI'] . 'x');
@@ -523,7 +527,7 @@ class Director implements TemplateGlobalProvider {
 		}
 
 		// Map empty urls to relative slash and join to base
-		if(empty($url) || $url === '.' || $url === './') {
+		if (empty($url) || $url === '.' || $url === './') {
 			$url = '/';
 		}
 		return Controller::join_links($parent, $url);
@@ -538,21 +542,25 @@ class Director implements TemplateGlobalProvider {
 	 */
 	public static function protocolAndHost() {
 		$alternate = Config::inst()->get('Director', 'alternate_base_url');
-		if($alternate) {
-			if(preg_match('/^(http[^:]*:\/\/[^\/]+)(\/|$)/', $alternate, $matches)) {
+		if ($alternate) {
+			if (preg_match('/^(http[^:]*:\/\/[^\/]+)(\/|$)/', $alternate, $matches)) {
 				return $matches[1];
 			}
 		}
 
-		if(isset($_SERVER['HTTP_HOST'])) {
+		if (isset($_SERVER['HTTP_HOST'])) {
 			return Director::protocol() . $_SERVER['HTTP_HOST'];
 		} else {
 			global $_FILE_TO_URL_MAPPING;
-			if(Director::is_cli() && isset($_FILE_TO_URL_MAPPING)) $errorSuggestion = '  You probably want to define '.
+			if (Director::is_cli() && isset($_FILE_TO_URL_MAPPING)) {
+				$errorSuggestion = '  You probably want to define ' .
 				'an entry in $_FILE_TO_URL_MAPPING that covers "' . Director::baseFolder() . '"';
-			else if(Director::is_cli()) $errorSuggestion = '  You probably want to define $_FILE_TO_URL_MAPPING in '.
+			} elseif (Director::is_cli()) {
+				$errorSuggestion = '  You probably want to define $_FILE_TO_URL_MAPPING in ' .
 				'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.com wiki';
-			else $errorSuggestion = "";
+			} else {
+				$errorSuggestion = "";
+			}
 
 			user_error("Director::protocolAndHost() lacks sufficient information - HTTP_HOST not set."
 				. $errorSuggestion, E_USER_WARNING);
@@ -576,20 +584,18 @@ class Director implements TemplateGlobalProvider {
 	 * @return bool
 	 */
 	public static function is_https() {
-		$return = false;
-
 		// See https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
-		// See https://support.microsoft.com/?kbID=307347
+		// See https://support.microsoft.com/en-us/kb/307347
 		$headerOverride = false;
-		if(TRUSTED_PROXY) {
+		if (TRUSTED_PROXY) {
 			$headers = (defined('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(SS_TRUSTED_PROXY_PROTOCOL_HEADER) : null;
-			if(!$headers) {
+			if (!$headers) {
 				// Backwards compatible defaults
 				$headers = array('HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS');
 			}
 			foreach($headers as $header) {
 				$headerCompareVal = ($header === 'HTTP_FRONT_END_HTTPS' ? 'on' : 'https');
-				if(!empty($_SERVER[$header]) && strtolower($_SERVER[$header]) == $headerCompareVal) {
+				if (!empty($_SERVER[$header]) && strtolower($_SERVER[$header]) == $headerCompareVal) {
 					$headerOverride = true;
 					break;
 				}
@@ -597,18 +603,16 @@ class Director implements TemplateGlobalProvider {
 		}
 
 		if ($protocol = Config::inst()->get('Director', 'alternate_protocol')) {
-			$return = ($protocol == 'https');
-		} else if($headerOverride) {
-			$return = true;
-		} else if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
-			$return = true;
-		} else if(isset($_SERVER['SSL'])) {
-			$return = true;
+			return ($protocol == 'https');
+		} elseif ($headerOverride) {
+			return true;
+		} elseif ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
+			return true;
+		} elseif (isset($_SERVER['SSL'])) {
+			return true;
 		} else {
-			$return = false;
+			return false;
 		}
-
-		return $return;
 	}
 
 	/**
@@ -620,18 +624,18 @@ class Director implements TemplateGlobalProvider {
 	public static function baseURL() {
 		$alternate = Config::inst()->get('Director', 'alternate_base_url');
 
-		if($alternate) {
+		if ($alternate) {
 			return $alternate;
 		} else {
 			$base = BASE_URL;
 
-			if($base == '/' || $base == '/.' || $base == '\\') {
+			if ($base == '/' || $base == '/.' || $base == '\\') {
 				$baseURL = '/';
 			} else {
 				$baseURL = $base . '/';
 			}
 
-			if(defined('BASE_SCRIPT_URL')) {
+			if (defined('BASE_SCRIPT_URL')) {
 				return $baseURL . BASE_SCRIPT_URL;
 			}
 
@@ -692,39 +696,37 @@ class Director implements TemplateGlobalProvider {
 		$baseDomain = substr($base1, strlen(self::protocol()));
 
 		// Only bother comparing the URL to the absolute version if $url looks like a URL.
-		if(preg_match('/^https?[^:]*:\/\//',$url,$matches)) {
+		if (preg_match('/^https?[^:]*:\/\//', $url, $matches)) {
 			$urlProtocol = $matches[0];
 			$urlWithoutProtocol = substr($url, strlen($urlProtocol));
 
 			// If we are already looking at baseURL, return '' (substr will return false)
-			if($url == $base1) {
+			if ($url == $base1) {
 				return '';
-			}
-			else if(substr($url,0,strlen($base1)) == $base1) {
-				return substr($url,strlen($base1));
-			}
-			else if(substr($base1,-1)=="/" && $url == substr($base1,0,-1)) {
-			// Convert http://www.mydomain.com/mysitedir to ''
+			} elseif (substr($url, 0, strlen($base1)) == $base1) {
+				return substr($url, strlen($base1));
+			} elseif (substr($base1, -1) == "/" && $url == substr($base1, 0, -1)) {
+				// Convert http://www.mydomain.com/mysitedir to ''
 				return "";
-		}
+			}
 
-			if(substr($urlWithoutProtocol,0,strlen($baseDomain)) == $baseDomain) {
-				return substr($urlWithoutProtocol,strlen($baseDomain));
+			if (substr($urlWithoutProtocol, 0, strlen($baseDomain)) == $baseDomain) {
+				return substr($urlWithoutProtocol, strlen($baseDomain));
 			}
 		}
 
 		// test for base folder, e.g. /var/www
 		$base2 = self::baseFolder();
-		if(substr($url,0,strlen($base2)) == $base2) return substr($url,strlen($base2));
+		if (substr($url, 0, strlen($base2)) == $base2) return substr($url, strlen($base2));
 
 		// Test for relative base url, e.g. mywebsite/ if the full URL is http://localhost/mywebsite/
 		$base3 = self::baseURL();
-		if(substr($url,0,strlen($base3)) == $base3) {
-			return substr($url,strlen($base3));
+		if (substr($url, 0, strlen($base3)) == $base3) {
+			return substr($url, strlen($base3));
 		}
 
 		// Test for relative base url, e.g mywebsite/ if the full url is localhost/myswebsite
-		if(substr($url,0,strlen($baseDomain)) == $baseDomain) {
+		if (substr($url, 0, strlen($baseDomain)) == $baseDomain) {
 			return substr($url, strlen($baseDomain));
 		}
 
@@ -740,8 +742,8 @@ class Director implements TemplateGlobalProvider {
 	 * @return bool
 	 */
 	public static function is_absolute($path) {
-		if(empty($path)) return false;
-		if($path[0] == '/' || $path[0] == '\\') return true;
+		if (empty($path)) return false;
+		if ($path[0] == '/' || $path[0] == '\\') return true;
 		return preg_match('/^[a-zA-Z]:[\\\\\/]/', $path) == 1;
 	}
 
@@ -773,10 +775,10 @@ class Director implements TemplateGlobalProvider {
 	 */
 	public static function is_absolute_url($url) {
 		// Strip off the query and fragment parts of the URL before checking
-		if(($queryPosition = strpos($url, '?')) !== false) {
+		if (($queryPosition = strpos($url, '?')) !== false) {
 			$url = substr($url, 0, $queryPosition-1);
 		}
-		if(($hashPosition = strpos($url, '#')) !== false) {
+		if (($hashPosition = strpos($url, '#')) !== false) {
 			$url = substr($url, 0, $hashPosition-1);
 		}
 		$colonPosition = strpos($url, ':');
@@ -823,7 +825,7 @@ class Director implements TemplateGlobalProvider {
 	public static function is_site_url($url) {
 		$urlHost = parse_url($url, PHP_URL_HOST);
 		$actualHost = parse_url(self::protocolAndHost(), PHP_URL_HOST);
-		if($urlHost && $actualHost && $urlHost == $actualHost) {
+		if ($urlHost && $actualHost && $urlHost == $actualHost) {
 			return true;
 		} else {
 			return self::is_relative_url($url);
@@ -841,7 +843,7 @@ class Director implements TemplateGlobalProvider {
 		$headers = array();
 
 		foreach($server as $key => $value) {
-			if(substr($key, 0, 5) == 'HTTP_') {
+			if (substr($key, 0, 5) == 'HTTP_') {
 				$key = substr($key, 5);
 				$key = strtolower(str_replace('_', ' ', $key));
 				$key = str_replace(' ', '-', ucwords($key));
@@ -849,8 +851,8 @@ class Director implements TemplateGlobalProvider {
 			}
 		}
 
-		if(isset($server['CONTENT_TYPE'])) $headers['Content-Type'] = $server['CONTENT_TYPE'];
-		if(isset($server['CONTENT_LENGTH'])) $headers['Content-Length'] = $server['CONTENT_LENGTH'];
+		if (isset($server['CONTENT_TYPE'])) $headers['Content-Type'] = $server['CONTENT_TYPE'];
+		if (isset($server['CONTENT_LENGTH'])) $headers['Content-Length'] = $server['CONTENT_LENGTH'];
 
 		return $headers;
 	}
@@ -875,7 +877,7 @@ class Director implements TemplateGlobalProvider {
 	 */
 	public static function fileExists($file) {
 		// replace any appended query-strings, e.g. /path/to/foo.php?bar=1 to /path/to/foo.php
-		$file = preg_replace('/([^\?]*)?.*/','$1',$file);
+		$file = preg_replace('/([^\?]*)?.*/', '$1', $file);
 		return file_exists(Director::getAbsFile($file));
 	}
 
@@ -901,7 +903,7 @@ class Director implements TemplateGlobalProvider {
 		$s = "";
 		$login = "";
 
-		if(isset($_SERVER['PHP_AUTH_USER'])) $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
+		if (isset($_SERVER['PHP_AUTH_USER'])) $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
 
 		return Director::protocol() . $login .  $_SERVER['HTTP_HOST'] . Director::baseURL();
 	}
@@ -927,19 +929,19 @@ class Director implements TemplateGlobalProvider {
 	 *
 	 * To use, call from _config.php. For example:
 	 * <code>
-	 * if(Director::isLive()) Director::forceSSL();
+	 * if (Director::isLive()) Director::forceSSL();
 	 * </code>
 	 *
 	 * If you don't want your entire site to be on SSL, you can pass an array of PCRE regular expression
 	 * patterns for matching relative URLs. For example:
 	 * <code>
-	 * if(Director::isLive()) Director::forceSSL(array('/^admin/', '/^Security/'));
+	 * if (Director::isLive()) Director::forceSSL(array('/^admin/', '/^Security/'));
 	 * </code>
 	 *
 	 * If you want certain parts of your site protected under a different domain, you can specify
 	 * the domain as an argument:
 	 * <code>
-	 * if(Director::isLive()) Director::forceSSL(array('/^admin/', '/^Security/'), 'secure.mysite.com');
+	 * if (Director::isLive()) Director::forceSSL(array('/^admin/', '/^Security/'), 'secure.mysite.com');
 	 * </code>
 	 *
 	 * Note that the session data will be lost when moving from HTTP to HTTPS. It is your responsibility
@@ -954,19 +956,19 @@ class Director implements TemplateGlobalProvider {
 	 * @return bool|string String of URL when unit tests running, boolean FALSE if patterns don't match request URI.
 	 */
 	public static function forceSSL($patterns = null, $secureDomain = null) {
-		if(!isset($_SERVER['REQUEST_URI'])) return false;
+		if (!isset($_SERVER['REQUEST_URI'])) return false;
 
 		$matched = false;
 
-		if($patterns) {
+		if ($patterns) {
 			// Calling from the command-line?
-			if(!isset($_SERVER['REQUEST_URI'])) return;
+			if (!isset($_SERVER['REQUEST_URI'])) return;
 
 			$relativeURL = self::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			// protect portions of the site based on the pattern
 			foreach($patterns as $pattern) {
-				if(preg_match($pattern, $relativeURL)) {
+				if (preg_match($pattern, $relativeURL)) {
 					$matched = true;
 					break;
 				}
@@ -976,10 +978,10 @@ class Director implements TemplateGlobalProvider {
 			$matched = true;
 		}
 
-		if($matched && !self::is_https()) {
+		if ($matched && !self::is_https()) {
 
 			// if an domain is specified, redirect to that instead of the current domain
-			if($secureDomain) {
+			if ($secureDomain) {
 				$url = 'https://' . $secureDomain . $_SERVER['REQUEST_URI'];
 			} else {
 				$url = $_SERVER['REQUEST_URI'];
@@ -988,7 +990,7 @@ class Director implements TemplateGlobalProvider {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($url));
 
 			// This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
-			if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) {
+			if (class_exists('SapphireTest', false) && SapphireTest::is_running_test()) {
 				return $destURL;
 			} else {
 				self::force_redirect($destURL);
@@ -1002,7 +1004,7 @@ class Director implements TemplateGlobalProvider {
 	 * Force a redirect to a domain starting with "www."
 	 */
 	public static function forceWWW() {
-		if(!Director::isDev() && !Director::isTest() && strpos($_SERVER['HTTP_HOST'], 'www') !== 0) {
+		if (!Director::isDev() && !Director::isTest() && strpos($_SERVER['HTTP_HOST'], 'www') !== 0) {
 			$destURL = str_replace(Director::protocol(), Director::protocol() . 'www.',
 				Director::absoluteURL($_SERVER['REQUEST_URI']));
 
@@ -1017,7 +1019,7 @@ class Director implements TemplateGlobalProvider {
 	 * @return bool
 	 */
 	public static function is_ajax() {
-		if(Controller::has_curr()) {
+		if (Controller::has_curr()) {
 			return Controller::curr()->getRequest()->isAjax();
 		} else {
 			return (
@@ -1074,7 +1076,7 @@ class Director implements TemplateGlobalProvider {
 	 * @param $et string
 	 */
 	public static function set_environment_type($et) {
-		if($et != 'dev' && $et != 'test' && $et != 'live') {
+		if ($et != 'dev' && $et != 'test' && $et != 'live') {
 			user_error("Director::set_environment_type passed '$et'.  It should be passed dev, test, or live",
 				E_USER_WARNING);
 		} else {
@@ -1090,11 +1092,11 @@ class Director implements TemplateGlobalProvider {
 	 * @return bool|string
 	 */
 	public static function get_environment_type() {
-		if(Director::isLive()) {
+		if (Director::isLive()) {
 			return 'live';
-		} elseif(Director::isTest()) {
+		} elseif (Director::isTest()) {
 			return 'test';
-		} elseif(Director::isDev()) {
+		} elseif (Director::isDev()) {
 			return 'dev';
 		} else {
 			return false;
@@ -1119,14 +1121,14 @@ class Director implements TemplateGlobalProvider {
 	 */
 	public static function isDev() {
 		// Check session
-		if($env = self::session_environment()) return $env === 'dev';
+		if ($env = self::session_environment()) return $env === 'dev';
 
 		// Check config
-		if(Config::inst()->get('Director', 'environment_type') === 'dev') return true;
+		if (Config::inst()->get('Director', 'environment_type') === 'dev') return true;
 
 		// Check if we are running on one of the test servers
 		$devServers = (array)Config::inst()->get('Director', 'dev_servers');
-		if(isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], $devServers))  {
+		if (isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], $devServers))  {
 			return true;
 		}
 
@@ -1141,17 +1143,17 @@ class Director implements TemplateGlobalProvider {
 	 */
 	public static function isTest() {
 		// In case of isDev and isTest both being set, dev has higher priority
-		if(self::isDev()) return false;
+		if (self::isDev()) return false;
 
 		// Check saved session
-		if($env = self::session_environment()) return $env === 'test';
+		if ($env = self::session_environment()) return $env === 'test';
 
 		// Check config
-		if(Config::inst()->get('Director', 'environment_type') === 'test') return true;
+		if (Config::inst()->get('Director', 'environment_type') === 'test') return true;
 
 		// Check if we are running on one of the test servers
 		$testServers = (array)Config::inst()->get('Director', 'test_servers');
-		if(isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], $testServers))  {
+		if (isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], $testServers))  {
 			return true;
 		}
 
@@ -1165,23 +1167,23 @@ class Director implements TemplateGlobalProvider {
 	 */
 	protected static function session_environment() {
 		// Set session from querystring
-		if(isset($_GET['isDev'])) {
-			if(isset($_SESSION)) {
+		if (isset($_GET['isDev'])) {
+			if (isset($_SESSION)) {
 				unset($_SESSION['isTest']); // In case we are changing from test mode
 				$_SESSION['isDev'] = $_GET['isDev'];
 			}
 			return 'dev';
-		} elseif(isset($_GET['isTest'])) {
-			if(isset($_SESSION)) {
+		} elseif (isset($_GET['isTest'])) {
+			if (isset($_SESSION)) {
 				unset($_SESSION['isDev']); // In case we are changing from dev mode
 				$_SESSION['isTest'] = $_GET['isTest'];
 			}
 			return 'test';
 		}
 		// Check session
-		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) {
+		if (isset($_SESSION['isDev']) && $_SESSION['isDev']) {
 			return 'dev';
-		} elseif(isset($_SESSION['isTest']) && $_SESSION['isTest']) {
+		} elseif (isset($_SESSION['isTest']) && $_SESSION['isTest']) {
 			return 'test';
 		} else {
 			return null;
