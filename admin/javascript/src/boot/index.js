@@ -26,7 +26,7 @@ function appBoot() {
   window.store = createStoreWithMiddleware(rootReducer, initialState);
 
   // Set the initial config state.
-  configActions.setConfig(window.ss.config)(window.store.dispatch);
+  window.store.dispatch(configActions.setConfig(window.ss.config));
 }
 
 // TODO: This should be using `window.onload` but isn't because

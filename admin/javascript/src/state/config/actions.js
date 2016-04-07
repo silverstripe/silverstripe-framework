@@ -6,9 +6,8 @@ import ACTION_TYPES from './action-types';
  * @param object config
  */
 export function setConfig(config) {
-  return (dispatch) =>
-    dispatch({
-      type: ACTION_TYPES.SET_CONFIG,
-      payload: { config },
-    });
+  return {
+    type: ACTION_TYPES.SET_CONFIG,
+    payload: { config },
+  };
 }
