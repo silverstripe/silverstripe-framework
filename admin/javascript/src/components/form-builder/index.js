@@ -50,36 +50,6 @@ const fakeInjector = {
         return this.components.TextField;
       case 'Hidden':
         return this.components.HiddenField;
-      case 'Text':
-        // Textarea field (not implemented)
-        return null;
-      case 'HTML':
-        // HTML editor field (not implemented)
-        return null;
-      case 'Integer':
-        // Numeric field (not implemented)
-        return null;
-      case 'Decimal':
-        // Numeric field (not implemented)
-        return null;
-      case 'MultiSelect':
-        // Radio field (not implemented)
-        return null;
-      case 'SingleSelect':
-        // Dropdown field (not implemented)
-        return null;
-      case 'Date':
-        // DateTime field (not implemented)
-        return null;
-      case 'DateTime':
-        // DateTime field (not implemented)
-        return null;
-      case 'Time':
-        // DateTime field (not implemented)
-        return null;
-      case 'Boolean':
-        // Checkbox field (not implemented)
-        return null;
       case 'Custom':
         return this.components.GridField;
       default:
