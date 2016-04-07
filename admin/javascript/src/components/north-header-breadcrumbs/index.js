@@ -20,21 +20,15 @@ class NorthHeaderBreadcrumbsComponent extends SilverStripeComponent {
       return null;
     }
 
-    const breadcrumbs = this.props.crumbs.map((crumb, index, crumbs) => {
-      let component;
-      // If its the last item in the array
-      if (index === crumbs.length - 1) {
-        component = <span key={index} className="crumb last">{crumb.text}</span>;
-      } else {
-        component = [
-          <a key={index} className="cms-panel-link crumb" href={crumb.href}>{crumb.text}</a>,
-          <span className="sep">/</span>,
-        ];
-      }
-      return component;
-    });
-
-    return breadcrumbs;
+    return [].concat(
+     this.props.crumbs.slice(0, -1).map((crumb, index) => [
+       <a key={index} className="cms-panel-link crumb" href={crumb.href}>{crumb.text}</a>,
+       <span className="sep">/</span>,
+     ]),
+       this.props.crumbs.slice(-1).map((crumb, index) => [
+         <span key={index} className="crumb last">{crumb.text}</span>,
+       ])
+    );
   }
 
 }
