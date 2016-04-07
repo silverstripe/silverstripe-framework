@@ -28,13 +28,14 @@
   function show(pageShow) {
     return function (path, state, dispatch, push) {
       var el = document.createElement('a');
+      var pathWithSearch = void 0;
       el.href = path;
-      path = el.pathname;
+      pathWithSearch = el.pathname;
       if (el.search) {
-        path += el.search;
+        pathWithSearch += el.search;
       }
 
-      return pageShow(path, state, dispatch, push);
+      return pageShow(pathWithSearch, state, dispatch, push);
     };
   }
 

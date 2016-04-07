@@ -1,6 +1,6 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define('ss.config', ['exports'], factory);
+    define('ss.reducer-register', ['exports'], factory);
   } else if (typeof exports !== "undefined") {
     factory(exports);
   } else {
@@ -8,7 +8,7 @@
       exports: {}
     };
     factory(mod.exports);
-    global.ssConfig = mod.exports;
+    global.ssReducerRegister = mod.exports;
   }
 })(this, function (exports) {
   'use strict';
@@ -41,37 +41,43 @@
     };
   }();
 
-  var Config = function () {
-    function Config() {
-      _classCallCheck(this, Config);
+  var register = {};
+
+  var ReducerRegister = function () {
+    function ReducerRegister() {
+      _classCallCheck(this, ReducerRegister);
     }
 
-    _createClass(Config, null, [{
-      key: 'getSection',
-      value: function getSection(key) {
-        return window.ss.config.sections[key];
+    _createClass(ReducerRegister, [{
+      key: 'add',
+      value: function add(key, reducer) {
+        if (typeof register[key] !== 'undefined') {
+          throw new Error('Reducer already exists at \'' + key + '\'');
+        }
+
+        register[key] = reducer;
       }
     }, {
-      key: 'getTopLevelRoutes',
-      value: function getTopLevelRoutes() {
-        var topLevelRoutes = [];
-
-        Object.keys(window.ss.config.sections).forEach(function (key) {
-          var route = window.ss.config.sections[key].route;
-          var isTopLevelRoute = route.indexOf('/') === -1;
-          var isUnique = topLevelRoutes.indexOf(route) === -1;
-
-          if (isTopLevelRoute && isUnique) {
-            topLevelRoutes.push(route);
-          }
-        });
-
-        return topLevelRoutes;
+      key: 'getAll',
+      value: function getAll() {
+        return register;
+      }
+    }, {
+      key: 'getByKey',
+      value: function getByKey(key) {
+        return register[key];
+      }
+    }, {
+      key: 'remove',
+      value: function remove(key) {
+        delete register[key];
       }
     }]);
 
-    return Config;
+    return ReducerRegister;
   }();
 
-  exports.default = Config;
+  var reducerRegister = new ReducerRegister();
+
+  exports.default = reducerRegister;
 });

@@ -174,10 +174,10 @@ $menu-icons-24x24-2x-pie-chart: -0px -480px 48px 48px;
   height: nth($sprite, 4);
 }
 @function sprite-width($sprite) {
-  @return nth($sprite, 3);
+   @return nth($sprite, 3);
 }
 @function sprite-height($sprite) {
-  @return nth($sprite, 4);
+   @return nth($sprite, 4);
 }
 @mixin sprite-position($sprite) {
   $sprite-offset-x: nth($sprite, 1);
@@ -185,37 +185,46 @@ $menu-icons-24x24-2x-pie-chart: -0px -480px 48px 48px;
   background-position: $sprite-offset-x $sprite-offset-y;
 }
 @mixin sprite($sprite, $display: block) {
-  @include sprite-position($sprite);
+   @include sprite-position($sprite);
   background-repeat: no-repeat;
   overflow: hidden;
   display: $display;
   @include sprite-width($sprite);
   @include sprite-height($sprite);
 }
+
 .icon-btn-icon {
   background-image: url('../images/sprites/dist/sprite-btn-icon.png');
 }
+
 .icon-sprites-32x32 {
   background-image: url('../images/sprites/dist/sprite-sprites-32x32.png');
 }
+
 .icon-sprites-32x32-2x {
   background-image: url('../images/sprites/dist/sprite-sprites-32x32-2x.png');
 }
+
 .icon-sprites-64x64 {
   background-image: url('../images/sprites/dist/sprite-sprites-64x64.png');
 }
+
 .icon-sprites-64x64-2x {
   background-image: url('../images/sprites/dist/sprite-sprites-64x64-2x.png');
 }
+
 .icon-menu-icons-16x16 {
   background-image: url('../images/sprites/dist/sprite-menu-icons-16x16.png');
 }
+
 .icon-menu-icons-16x16-2x {
   background-image: url('../images/sprites/dist/sprite-menu-icons-16x16-2x.png');
 }
+
 .icon-menu-icons-24x24 {
   background-image: url('../images/sprites/dist/sprite-menu-icons-24x24.png');
 }
+
 .icon-menu-icons-24x24-2x {
   background-image: url('../images/sprites/dist/sprite-menu-icons-24x24-2x.png');
 }
