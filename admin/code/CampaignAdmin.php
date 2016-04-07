@@ -173,6 +173,8 @@ JSON;
 		$response->addHeader('Content-Type', 'application/json');
 		$response->setBody(Convert::raw2json(['campaign' => 'create']));
 
+		// TODO Implement permission check and data creation
+
 		return $response;
 	}
 
@@ -308,6 +310,8 @@ JSON;
 		$response->addHeader('Content-Type', 'application/json');
 		$response->setBody('');
 
+		// TODO Implement data retrieval and serialisation
+
 		return $response;
 	}
 
@@ -322,6 +326,8 @@ JSON;
 		$response = new SS_HTTPResponse();
 		$response->addHeader('Content-Type', 'application/json');
 		$response->setBody(Convert::raw2json(['campaign' => 'update']));
+
+		// TODO Implement data update and permission checks
 
 		return $response;
 	}
