@@ -52,6 +52,11 @@
 @import "CMSSecurity.scss";
 
 /** -----------------------------
+ * Include React components' css
+ * ------------------------------ */
+@import "../javascript/src/styles/main.scss";
+
+/** -----------------------------
  * Retina graphics
  * ----------------------------- */
  @import "retina.scss";

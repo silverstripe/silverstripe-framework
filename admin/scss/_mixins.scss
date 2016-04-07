@@ -127,12 +127,12 @@ Used in side panels and action tabs
 		line-height: $grid-y * 2;
 	}
 	h3 {
-		font-size: $font-base-size + 1;
+		font-size: $font-size-root;
 	}
 
 	h4 {
-		font-size: $font-base-size;
-		margin:5px 0;
+		font-size: $font-size-root -1;
+		margin: 5px 0;
 	}
 
 	.ui-widget-content {

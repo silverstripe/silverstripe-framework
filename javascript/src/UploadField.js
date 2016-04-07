@@ -85,7 +85,7 @@ $.widget('blueimpUIX.fileupload', $.blueimpUI.fileupload, {
 							e.preventDefault(); // Avoid a form submit
 							return false;
 						});
-					} else {    //regular file upload
+					} else {  //regular file upload
 						return $.blueimpUI.fileupload.prototype._onSend.call(that, e, data);
 					}
 				}
@@ -430,13 +430,14 @@ $.entwine('ss', function($) {
 			}
 
 			if (iframe.attr('src') == 'about:blank') {
+				var disabled = this.siblings();
+
 				// Lazy-load the iframe on editform toggle
 				iframe.attr('src', iframe.data('src'));
 
 				// Add loading class, disable buttons while loading is in progress
 				// (_prepareIframe() handles re-enabling them when appropriate)
 				iframe.parent().addClass('loading');
-				disabled=this.siblings();
 				disabled.addClass('ui-state-disabled');
 				disabled.attr('disabled', 'disabled');
 

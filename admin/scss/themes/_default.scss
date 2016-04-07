@@ -4,6 +4,8 @@
  * and leave the actual styling to _style.scss and auxilliary files.
  */
 
+@import "../bootstrap/variables.scss";
+
 /** -----------------------------------------------
  * Colours
  * ------------------------------------------------ */
@@ -96,7 +98,6 @@ $tab-panel-texture-background: $tab-panel-texture-color url(../images/textures/b
  * Typography.
  * ------------------------------------------------ */
 $font-family: Arial, sans-serif !default;
-$font-base-size: 12px !default;
 
 /** -----------------------------------------------
  * Grid Units (px)

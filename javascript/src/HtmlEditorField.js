@@ -27,7 +27,7 @@ ss.editorWrappers.tinyMCE = (function() {
 		 * Initialise the editor
 		 *
 		 * @param {String} ID of parent textarea domID
-         */
+     */
 		init: function(ID) {
 			editorID = ID;
 
@@ -45,7 +45,7 @@ ss.editorWrappers.tinyMCE = (function() {
 		 * Get TinyMCE Editor instance
 		 *
 		 * @returns Editor
-         */
+     */
 		getInstance: function() {
 			return tinymce.EditorManager.get(editorID);
 		},
@@ -68,7 +68,7 @@ ss.editorWrappers.tinyMCE = (function() {
 		 * Get config for this data
 		 *
 		 * @returns array
-         */
+     */
 		getConfig: function() {
 			var selector = "#" + editorID,
 				config = $(selector).data('config'),
@@ -581,8 +581,8 @@ $.entwine('ss', function($) {
 					break;
 
 				case 'file':
-                    var fileid = this.find('.ss-uploadfield .ss-uploadfield-item').attr('data-fileid');
-                    href = fileid ? '[file_link,id=' + fileid + ']' : '';
+          var fileid = this.find('.ss-uploadfield .ss-uploadfield-item').attr('data-fileid');
+          href = fileid ? '[file_link,id=' + fileid + ']' : '';
 					break;
 
 				case 'email':

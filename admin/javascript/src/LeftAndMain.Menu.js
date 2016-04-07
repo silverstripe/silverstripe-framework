@@ -15,11 +15,11 @@ $.entwine('ss', function($){
 	 * <ul class="cms-menu-list">
 	 *  <li><a href="#">Item 1</a></li>
 	 *  <li class="current opened">
-	 *    <a href="#">Item 2</a>
-	 *    <ul>
-	 *      <li class="current opened"><a href="#">Item 2.1</a></li>
-	 *      <li><a href="#">Item 2.2</a></li>
-	 *    </ul>
+	 *  <a href="#">Item 2</a>
+	 *  <ul>
+	 *    <li class="current opened"><a href="#">Item 2.1</a></li>
+	 *    <li><a href="#">Item 2.2</a></li>
+	 *  </ul>
 	 *  </li>
 	 * </ul>
 	 * 
@@ -38,7 +38,7 @@ $.entwine('ss', function($){
 							$(this).addClass('collapse');
 						}
 					});
-				} else {    //collapse
+				} else {  //collapse
 					$(this).children('ul').each(function() {
 						$(this).addClass('collapsed-flyout');
 						$(this).hasClass('collapse');
@@ -59,7 +59,7 @@ $.entwine('ss', function($){
 
 				//hide all the flyout-indicator
 				$('.cms-menu-list').find('.child-flyout-indicator').hide();
-			} else {    //collapse
+			} else {  //collapse
 				//hide the flyout only if it is not the current section
 				$('.collapsed-flyout').find('li').each(function() {
 					//if (!$(this).hasClass('current'))
@@ -110,11 +110,11 @@ $.entwine('ss', function($){
 		 * @func getEvaluatedCollapsedState
 		 * @return {boolean} - Returns true if the menu should be collapsed, false if expanded.
 		 * @desc Evaluate whether the menu should be collapsed.
-		 *       The basic rule is "If the SiteTree (middle column) is present, collapse the menu, otherwise expand the menu".
-		 *       This reason behind this is to give the content area more real estate when the SiteTree is present.
-		 *       The user may wish to override this automatic behaviour and have the menu expanded or collapsed at all times.
-		 *       So unlike manually toggling the menu, the automatic behaviour never updates the menu's cookie value.
-		 *       Here we use the manually set state and the automatic behaviour to evaluate what the collapsed state should be.
+		 *     The basic rule is "If the SiteTree (middle column) is present, collapse the menu, otherwise expand the menu".
+		 *     This reason behind this is to give the content area more real estate when the SiteTree is present.
+		 *     The user may wish to override this automatic behaviour and have the menu expanded or collapsed at all times.
+		 *     So unlike manually toggling the menu, the automatic behaviour never updates the menu's cookie value.
+		 *     Here we use the manually set state and the automatic behaviour to evaluate what the collapsed state should be.
 		 */
 		getEvaluatedCollapsedState: function () {
 			var shouldCollapse,
@@ -269,7 +269,7 @@ $.entwine('ss', function($){
 					$('.collapsed-flyout').show();
 					fly.addClass('opened');
 					fly.children('ul').find('li').fadeIn('fast');
-				} else {    //collapse
+				} else {  //collapse
 					if(li) {
 						li.remove();
 					}

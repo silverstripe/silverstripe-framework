@@ -1,0 +1,74 @@
+.grid-field-action-component {
+    background: none;
+    border: 0;
+    color: $gray-dark;
+    padding: 0 8px;
+    height: 20px;
+    vertical-align: top;
+
+    &:hover {
+        color: darken($gray-dark, 10%);
+    }
+
+    &::before {
+        font-size: 20px;
+    }
+}
+
+.grid-field-cell-component {
+    display: table-cell;
+    padding: $grid-y*2 $grid-x*2;
+    line-height: 20px;
+
+    &:first-child {
+        padding-left: $grid-x*2.5;
+    }
+
+    &:last-child {
+        padding-right: $grid-x*2.5;
+    }
+
+    &[data-reactid$=actionPlaceholder] {
+        width: 1px;
+    }
+
+    &[data-reactid$=-actions] {
+        white-space: nowrap;
+    }
+}
+
+.grid-field-header-cell-component {
+    text-transform: uppercase;
+    font-size: $font-size-root - 1;
+    display: table-cell;
+    padding: $grid-y*2 $grid-x*2;
+    line-height: 20px;
+
+    &:first-child {
+        padding-left: $grid-x*2.5;
+    }
+
+    &:last-child {
+        padding-right: $grid-x*2.5;
+    }
+}
+
+.grid-field-table-component {
+    li.grid-field-row-component {
+        display: table-row;
+        border: 0;
+        box-shadow: inset 0 -1px 0 0 $gray-lighter;
+        margin: 0;
+        padding: 0;
+
+        // Header row
+        &:first-child {
+            background: none;
+        }
+    }
+}
+
+.grid-field-table-component {
+    display: table;
+    width: 100%;
+}

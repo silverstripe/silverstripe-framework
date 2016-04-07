@@ -5,3 +5,5 @@ javascript/src/       export ignore
 # Hide diffs
 admin/javascript/dist/ -diff
 javascript/dist/ -diff
+admin/javascript/css/* -diff
+javascript/css/* -diff
