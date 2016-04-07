@@ -234,6 +234,7 @@ JSON;
 			],
 			'ID' => $changeSet->ID,
 			'Name' => $changeSet->Name,
+			'Description' => $changeSet->getDescription(),
 			'Created' => $changeSet->Created,
 			'LastEdited' => $changeSet->LastEdited,
 			'State' => $changeSet->State,
@@ -258,6 +259,7 @@ JSON;
 	 * @return array
 	 */
 	protected function getChangeSetItemResource(ChangeSetItem $changeSetItem) {
+		$objectSingleton = DataObject::singleton($changeSetItem->ObjectClass);
 		$hal = [
 			'_links' => [
 				'self' => [
@@ -270,6 +272,10 @@ JSON;
 			'Title' => $changeSetItem->getTitle(),
 			'ChangeType' => $changeSetItem->getChangeType(),
 			'Added' => $changeSetItem->Added,
+			'ObjectClass' => $changeSetItem->ObjectClass,
+			'ObjectID' => $changeSetItem->ObjectID,
+			'ObjectSingular' => $objectSingleton->i18n_singular_name(),
+			'ObjectPlural' => $objectSingleton->i18n_plural_name(),
 		];
 		// Depending on whether the object was added implicitly or explicitly, set
 		// other related objects.

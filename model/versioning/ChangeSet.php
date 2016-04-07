@@ -338,4 +338,117 @@ class ChangeSet extends DataObject {
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
+
+	/**
+	 * Gets summary of items in changeset
+	 *
+	 * @return string
+	 */
+	public function getDescription() {
+		// Initialise list of items to count
+		$counted = [];
+		$countedOther = 0;
+		foreach($this->config()->important_classes as $type) {
+			if(class_exists($type)) {
+				$counted[$type] = 0;
+			}
+		}
+
+		// Check each change item
+		/** @var ChangeSetItem $change */
+		foreach($this->Changes() as $change) {
+			$found = false;
+			foreach($counted as $class => $num) {
+				if(is_a($change->ObjectClass, $class, true)) {
+					$counted[$class]++;
+					$found = true;
+					break;
+				}
+			}
+			if(!$found) {
+				$countedOther++;
+			}
+		}
+
+		// Describe set based on this output
+		$counted = array_filter($counted);
+
+		// Empty state
+		if(empty($counted) && empty($countedOther)) {
+			return '';
+		}
+
+		// Put all parts together
+		$parts = [];
+		foreach($counted as $class => $count) {
+			$parts[] = DataObject::singleton($class)->i18n_pluralise($count);
+		}
+
+		// Describe non-important items
+		if($countedOther) {
+			if ($counted) {
+				$parts[] = i18n::pluralise(
+					_t('ChangeSet.DESCRIPTION_OTHER_ITEM', 'other item'),
+					_t('ChangeSet.DESCRIPTION_OTHER_ITEMS', 'other items'),
+					$countedOther
+				);
+			} else {
+				$parts[] = i18n::pluralise(
+					_t('ChangeSet.DESCRIPTION_ITEM', 'item'),
+					_t('ChangeSet.DESCRIPTION_ITEMS', 'items'),
+					$countedOther
+				);
+			}
+		}
+
+		// Figure out how to join everything together
+		if(empty($parts)) {
+			return '';
+		}
+		if(count($parts) === 1) {
+			return $parts[0];
+		}
+
+		// Non-comma list
+		if(count($parts) === 2) {
+			return _t(
+				'ChangeSet.DESCRIPTION_AND',
+				'{first} and {second}',
+				[
+					'first' => $parts[0],
+					'second' => $parts[1],
+				]
+			);
+		}
+
+		// First item
+		$string = _t(
+			'ChangeSet.DESCRIPTION_LIST_FIRST',
+			'{item}',
+			['item' => $parts[0]]
+		);
+
+		// Middle items
+		for($i = 1; $i < count($parts) - 1; $i++) {
+			$string = _t(
+				'ChangeSet.DESCRIPTION_LIST_MID',
+				'{list}, {item}',
+				[
+					'list' => $string,
+					'item' => $parts[$i]
+				]
+			);
+		}
+
+		// Oxford comma
+		$string = _t(
+			'ChangeSet.DESCRIPTION_LIST_LAST',
+			'{list}, and {item}',
+			[
+				'list' => $string,
+				'item' => end($parts)
+			]
+		);
+		return $string;
+	}
 }
