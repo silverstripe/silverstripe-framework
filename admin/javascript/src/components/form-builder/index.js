@@ -8,6 +8,7 @@ import TextField from 'components/text-field/index';
 import HiddenField from 'components/hidden-field/index';
 import GridField from 'components/grid-field/index';
 import fetch from 'isomorphic-fetch';
+import deepFreeze from 'deep-freeze';
 
 import es6promise from 'es6-promise';
 es6promise.polyfill();
@@ -130,30 +131,9 @@ export class FormBuilderComponent extends SilverStripeComponent {
       }
 
       // Props which every form field receives.
-      const props = {
-        attributes: field.attributes,
-        data: field.data,
-        description: field.description,
-        extraClass: field.extraClass,
-        fields: field.children,
-        id: field.id,
-        name: field.name,
-      };
-
-      // Structural fields (like TabSets) are not posted back to
-      // the server and don't receive some props.
-      if (field.type !== 'Structural') {
-        props.rightTitle = field.rightTitle;
-        props.leftTitle = field.leftTitle;
-        props.readOnly = field.readOnly;
-        props.disabled = field.disabled;
-        props.customValidationMessage = field.customValidationMessage;
-      }
-
-      // Dropdown and Radio fields need some options...
-      if (field.type === 'MultiSelect' || field.type === 'SingleSelect') {
-        props.source = field.source;
-      }
+      // Leave it up to the schema and component to determine
+      // which props are required.
+      const props = deepFreeze(field);
 
       return <Component key={i} {...props} />;
     });
