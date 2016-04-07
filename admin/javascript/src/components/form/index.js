@@ -22,13 +22,7 @@ class FormComponent extends SilverStripeComponent {
     const actions = this.getFormActionComponents();
 
     return (
-      <form
-        id={attr.id}
-        className={attr.className}
-        encType={attr.enctype}
-        method={attr.method}
-        action={attr.action}
-      >
+      <form {...attr}>
         {fields &&
           <fieldset className="form-group">
             {fields}
