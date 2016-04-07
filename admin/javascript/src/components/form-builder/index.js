@@ -190,19 +190,19 @@ export class FormBuilderComponent extends SilverStripeComponent {
   }
 
   render() {
-    const schema = this.props.schemas[this.props.schemaUrl];
+    const formSchema = this.props.schemas[this.props.schemaUrl];
 
     // If the response from fetching the initial data
     // hasn't come back yet, don't render anything.
-    if (!schema) {
+    if (!formSchema) {
       return null;
     }
 
     const formProps = {
-      actions: schema.schema.actions,
-      attributes: schema.schema.attributes,
-      data: schema.schema.data,
-      fields: schema.schema.fields,
+      actions: formSchema.schema.actions,
+      attributes: formSchema.schema.attributes,
+      data: formSchema.schema.data,
+      fields: formSchema.schema.fields,
       mapFieldsToComponents: this.mapFieldsToComponents,
     };
 
