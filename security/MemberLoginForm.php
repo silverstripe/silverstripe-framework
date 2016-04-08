@@ -325,7 +325,10 @@ JS;
 		if($member) {
 			$token = $member->generateAutologinTokenAndStoreHash();
 
-			$e = Member_ForgotPasswordEmail::create();
+			/** @var Email $e */
+			$e = Email::create();
+			$e->setSubject(_t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject'));
+			$e->setTemplate('ForgotPasswordEmail');
 			$e->populateTemplate($member);
 			$e->populateTemplate(array(
 				'PasswordResetLink' => Security::getPasswordResetLink($member, $token)
