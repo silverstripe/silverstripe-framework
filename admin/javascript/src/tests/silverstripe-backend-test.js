@@ -16,7 +16,7 @@ var getFetchMock = function(data) {
 
 describe('SilverStripeBackend', () => {
 
-  beforeAll(() => {
+  beforeEach(() => {
     let fetchMock = getFetchMock();
     backend.fetch = fetchMock;
   });
@@ -50,10 +50,14 @@ describe('SilverStripeBackend', () => {
 
       backend.post('http://example.com', postData);
 
-      expect(backend.fetch).toBeCalledWith(
-        'http://example.com',
-        {method: 'post', body: postData, credentials: 'same-origin'}
-      );
+      expect(backend.fetch).toBeCalled();
+
+      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
+      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
+        method: 'post',
+        body: postData,
+        credentials: 'same-origin',
+      }));
     });
 
   });

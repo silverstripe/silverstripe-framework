@@ -82,7 +82,14 @@
     }, {
       key: 'post',
       value: function post(url, data) {
-        return this.fetch(url, { method: 'post', credentials: 'same-origin', body: data }).then(checkStatus);
+        return this.fetch(url, {
+          method: 'post',
+          headers: new Headers({
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }),
+          credentials: 'same-origin',
+          body: data
+        }).then(checkStatus);
       }
     }, {
       key: 'put',
