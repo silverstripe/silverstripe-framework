@@ -148,9 +148,18 @@ export class FormBuilderComponent extends SilverStripeComponent {
       return null;
     }
 
+    // Map form schema to React component attribute names,
+    // which requires renaming some of them (by unsetting the original keys)
+    const attributes = Object.assign({}, formSchema.schema.attributes, {
+      class: null,
+      className: formSchema.schema.attributes.class,
+      enctype: null,
+      encType: formSchema.schema.attributes.enctype,
+    });
+
     const formProps = {
       actions: formSchema.schema.actions,
-      attributes: formSchema.schema.attributes,
+      attributes,
       data: formSchema.schema.data,
       fields: formSchema.schema.fields,
       mapFieldsToComponents: this.mapFieldsToComponents,
