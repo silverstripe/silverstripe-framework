@@ -46,9 +46,9 @@ FormComponent.propTypes = {
   actions: React.PropTypes.array,
   attributes: React.PropTypes.shape({
     action: React.PropTypes.string.isRequired,
-    class: React.PropTypes.string.isRequired,
-    enctype: React.PropTypes.string.isRequired,
-    id: React.PropTypes.string.isRequired,
+    className: React.PropTypes.string,
+    encType: React.PropTypes.string,
+    id: React.PropTypes.string,
     method: React.PropTypes.string.isRequired,
   }),
   data: React.PropTypes.array,
