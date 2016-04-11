@@ -225,14 +225,12 @@
     }, {
       key: 'get',
       value: function get(url) {
-        var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-        var headers = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+        var headers = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
         return this.fetch(url, {
           method: 'get',
           credentials: 'same-origin',
-          headers: headers,
-          body: data
+          headers: headers
         }).then(checkStatus);
       }
     }, {

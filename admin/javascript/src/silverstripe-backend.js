@@ -314,12 +314,11 @@ class SilverStripeBackend {
    * @param Array headers
    * @return object - Promise
    */
-  get(url, data = {}, headers = {}) {
+  get(url, headers = {}) {
     return this.fetch(url, {
       method: 'get',
       credentials: 'same-origin',
       headers,
-      body: data,
     })
       .then(checkStatus);
   }
