@@ -6,6 +6,10 @@ ChangeSetTest_End:
     Baz: 1
   end2:
     Baz: 2
+ChangeSetTest_EndChild:
+  endchild1:
+    Baz: 3
+    Qux: 3
 ChangeSetTest_Mid:
   mid1:
     Bar: 1
