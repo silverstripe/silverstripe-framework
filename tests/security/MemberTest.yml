@@ -42,7 +42,7 @@ Member:
   test:
     FirstName: Test
     Surname: User
-    Email: sam@silverstripe.com
+    Email: testuser@example.com
     Password: 1nitialPassword
     PasswordExpiry: 2030-01-01
     Groups: =>Group.securityadminsgroup

@@ -222,12 +222,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 
-		// Set up email
-		$this->originalMailer = Email::mailer();
-		$this->mailer = new TestMailer();
-		Injector::inst()->registerService($this->mailer, 'Mailer');
-		Config::inst()->remove('Email', 'send_all_emails_to');
-
 		// Todo: this could be a special test model
 		$this->model = DataModel::inst();
 
@@ -288,6 +282,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// Clear requirements
 		Requirements::clear();
+
+		// Set up email
+		$this->originalMailer = Email::mailer();
+		$this->mailer = new TestMailer();
+		Injector::inst()->registerService($this->mailer, 'Mailer');
+		Config::inst()->remove('Email', 'send_all_emails_to');
 	}
 
 	/**
