@@ -69,21 +69,7 @@
 	}
 
 	(0, _jQuery2.default)(window).bind('resize.leftandmain', function (e) {
-		var cb = function cb() {
-			(0, _jQuery2.default)('.cms-container').trigger('windowresize');
-		};
-
-		if (_jQuery2.default.browser.msie && parseInt(_jQuery2.default.browser.version, 10) < 9) {
-			var newWindowWidth = (0, _jQuery2.default)(window).width(),
-			    newWindowHeight = (0, _jQuery2.default)(window).height();
-			if (newWindowWidth != windowWidth || newWindowHeight != windowHeight) {
-				windowWidth = newWindowWidth;
-				windowHeight = newWindowHeight;
-				cb();
-			}
-		} else {
-			cb();
-		}
+		(0, _jQuery2.default)('.cms-container').trigger('windowresize');
 	});
 
 	_jQuery2.default.entwine.warningLevel = _jQuery2.default.entwine.WARN_LEVEL_BESTPRACTISE;

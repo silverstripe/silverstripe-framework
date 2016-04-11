@@ -483,7 +483,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-framework.js');
-		
+
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/bootstrap/bootstrap.css');
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
@@ -492,18 +492,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
 		Requirements::css(FRAMEWORK_DIR . '/css/GridField.css');
-
-		// Browser-specific requirements
-		$ie = isset($_SERVER['HTTP_USER_AGENT']) ? strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') : false;
-		if($ie) {
-			$version = substr($_SERVER['HTTP_USER_AGENT'], $ie + 5, 3);
-
-			if($version == 7) {
-				Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie7.css');
-			} else if($version == 8) {
-				Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie8.css');
-			}
-		}
 
 		// Custom requirements
 		$extraJs = $this->stat('extra_requirements_javascript');

@@ -57,20 +57,7 @@ function getUrlPath(url) {
 }
 
 $(window).bind('resize.leftandmain', function(e) {
-	// Entwine's 'fromWindow::onresize' does not trigger on IE8. Use synthetic event.
-	var cb = function() {$('.cms-container').trigger('windowresize');};
-
-	// Workaround to avoid IE8 infinite loops when elements are resized as a result of this event
-	if($.browser.msie && parseInt($.browser.version, 10) < 9) {
-		var newWindowWidth = $(window).width(), newWindowHeight = $(window).height();
-		if(newWindowWidth != windowWidth || newWindowHeight != windowHeight) {
-			windowWidth = newWindowWidth;
-			windowHeight = newWindowHeight;
-			cb();
-		}
-	} else {
-		cb();
-	}
+	$('.cms-container').trigger('windowresize');
 });
 
 // setup jquery.entwine

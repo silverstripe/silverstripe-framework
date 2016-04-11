@@ -149,10 +149,6 @@ body {
 		p {
 			margin: 11px 0 13px;
 		}
-		.lt-ie8 & p {
-			/* margin-top: 7px; */
-			/* margin-bottom: 10px; */
-		}
 		&.warning {
 			background-color: $warningBg;
 			border: 1px $warningBorder solid;
@@ -495,14 +491,6 @@ body {
 		h3 {
 			margin-top: -10px;
 		}
-	}
-}
-
-
-// IE overides
-.lt-ie8 {
-	#database_credentials, #AdminAccount {
-		float: left;
 	}
 }
 
