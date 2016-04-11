@@ -18,7 +18,7 @@
     "test": "NODE_PATH=\"./javascript/src:./admin/javascript/src\" jest",
     "coverage": "NODE_PATH=\"./javascript/src:./admin/javascript/src\" jest --coverage",
     "thirdparty": "gulp thirdparty",
-    "lint": "eslint javascript/src & eslint admin/javascript/src"
+    "lint": "eslint gulpfile.js & eslint javascript/src & eslint admin/javascript/src"
   },
   "repository": {
     "type": "git",

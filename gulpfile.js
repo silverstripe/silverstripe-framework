@@ -70,44 +70,44 @@ const supportedBrowsers = [
 
 const blueimpFileUploadConfig = {
   src: `${PATHS.MODULES}/blueimp-file-upload`,
-  dest: PATHS.FRAMEWORK_THIRDPARTY + '/jquery-fileupload',
+  dest: `${PATHS.FRAMEWORK_THIRDPARTY}/jquery-fileupload`,
   files: [
     '/cors/jquery.postmessage-transport.js',
     '/cors/jquery.xdr-transport.js',
     '/jquery.fileupload-ui.js',
     '/jquery.fileupload.js',
-    '/jquery.iframe-transport.js'
-  ]
+    '/jquery.iframe-transport.js',
+  ],
 };
 
-var blueimpLoadImageConfig = {
-  src: PATHS.MODULES + '/blueimp-load-image',
-  dest: PATHS.FRAMEWORK_THIRDPARTY + '/javascript-loadimage',
-  files: ['/load-image.js']
+const blueimpLoadImageConfig = {
+  src: `${PATHS.MODULES}/blueimp-load-image`,
+  dest: `${PATHS.FRAMEWORK_THIRDPARTY}/javascript-loadimage`,
+  files: ['/load-image.js'],
 };
 
-var blueimpTmplConfig = {
-  src: PATHS.MODULES + '/blueimp-tmpl',
-  dest: PATHS.FRAMEWORK_THIRDPARTY + '/javascript-templates',
-  files: ['/tmpl.js']
+const blueimpTmplConfig = {
+  src: `${PATHS.MODULES}/blueimp-tmpl`,
+  dest: `${PATHS.FRAMEWORK_THIRDPARTY}/javascript-templates`,
+  files: ['/tmpl.js'],
 };
 
-var jquerySizesConfig = {
-  src: PATHS.MODULES + '/jquery-sizes',
-  dest: PATHS.ADMIN_THIRDPARTY + '/jsizes',
-  files: ['/lib/jquery.sizes.js']
+const jquerySizesConfig = {
+  src: `${PATHS.MODULES}/jquery-sizes`,
+  dest: `${PATHS.ADMIN_THIRDPARTY}/jsizes`,
+  files: ['/lib/jquery.sizes.js'],
 };
 
-var tinymceConfig = {
-  src: PATHS.MODULES + '/tinymce',
-  dest: PATHS.FRAMEWORK_THIRDPARTY + '/tinymce',
+const tinymceConfig = {
+  src: `${PATHS.MODULES}/tinymce`,
+  dest: `${PATHS.FRAMEWORK_THIRDPARTY}/tinymce`,
   files: [
     '/tinymce.min.js', // Exclude unminified file to keep repository size down
     '/jquery.tinymce.min.js',
     '/themes/**',
     '/skins/**',
-    '/plugins/**'
-  ]
+    '/plugins/**',
+  ],
 };
 
 /**
@@ -116,11 +116,12 @@ var tinymceConfig = {
  * @param object libConfig
  * @param string libConfig.src - The source directory
  * @param string libConfig.dest - The destination directory
- * @param array libConfig.files - The list of files to copy from the source to the destination directory
+ * @param array libConfig.files - The list of files to copy from the source to
+ *                                the destination directory
  */
 function copyFiles(libConfig) {
-  libConfig.files.forEach(function (file) {
-    var dir = path.parse(file).dir;
+  libConfig.files.forEach((file) => {
+    const dir = path.parse(file).dir;
 
     gulp.src(libConfig.src + file)
       .pipe(gulp.dest(libConfig.dest + dir));
@@ -133,17 +134,20 @@ function copyFiles(libConfig) {
  * @param object libConfig
  * @param string libConfig.src - The source directory
  * @param string libConfig.dest - The destination directory
- * @param array libConfig.files - The list of files to copy from the source to the destination directory
+ * @param array libConfig.files - The list of files to copy from the source
+ *                                to the destination directory
  */
 function diffFiles(libConfig) {
-  libConfig.files.forEach(function (file) {
-    var dir = path.parse(file).dir;
+  libConfig.files.forEach((file) => {
+    const dir = path.parse(file).dir;
 
     gulp.src(libConfig.src + file)
       .pipe(diff(libConfig.dest + dir))
       .pipe(diff.reporter({ fail: true, quiet: true }))
-      .on('error', function (error) {
-        console.error(new Error('Sanity check failed. \'' + libConfig.dest + file + '\' has been modified.'));
+      .on('error', () => {
+        console.error(new Error( // eslint-disable-line
+          `Sanity check failed. ${libConfig.dest}${file} has been modified.`
+        ));
         process.exit(1);
       });
   });
@@ -157,13 +161,13 @@ function diffFiles(libConfig) {
  * @return object
  */
 function transformToUmd(files, dest) {
-  return eventStream.merge(files.map(function (file) {
+  return eventStream.merge(files.map((file) => { // eslint-disable-line
     return gulp.src(file)
       .pipe(babel({
         presets: ['es2015'],
-        moduleId: 'ss.' + path.parse(file).name,
+        moduleId: `ss.${path.parse(file).name}`,
         plugins: ['transform-es2015-modules-umd'],
-        comments: false
+        comments: false,
       }))
       .on('error', notify.onError({
         message: 'Error: <%= error.message %>',
@@ -174,7 +178,10 @@ function transformToUmd(files, dest) {
 
 // Make sure the version of Node being used is valid.
 if (!semver.satisfies(process.versions.node, packageJson.engines.node)) {
-  console.error('Invalid Node.js version. You need to be using ' + packageJson.engines.node + '. If you want to manage multiple Node.js versions try https://github.com/creationix/nvm');
+  console.error( // eslint-disable-line
+    `Invalid Node.js version. You need to be using ${packageJson.engines.node}. ` +
+    'If you want to manage multiple Node.js versions try https://github.com/creationix/nvm'
+  );
   process.exit(1);
 }
 
@@ -189,42 +196,102 @@ gulp.task('build', ['umd', 'bundle']);
 gulp.task('bundle', ['bundle-lib', 'bundle-legacy', 'bundle-framework']);
 
 gulp.task('bundle-lib', function bundleLib() {
-  var bundleFileName = 'bundle-lib.js';
+  const bundleFileName = 'bundle-lib.js';
 
-  return browserify(Object.assign({}, browserifyOptions, { entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/lib.js' }))
+  return browserify(Object.assign({}, browserifyOptions,
+    { entries: `${PATHS.ADMIN_JAVASCRIPT_SRC}/bundles/lib.js` }
+  ))
     .on('update', bundleLib)
-    .on('log', function (msg) { gulpUtil.log('Finished', 'bundled ' + bundleFileName + ' ' + msg) })
+    .on('log', (msg) =>
+      gulpUtil.log('Finished', `bundled ${bundleFileName} ${msg}`)
+    )
     .transform('babelify', babelifyOptions)
-    .require('deep-freeze', { expose: 'deep-freeze' })
-    .require('react', { expose: 'react' })
-    .require('react-addons-css-transition-group', { expose: 'react-addons-css-transition-group' })
-    .require('react-addons-test-utils', { expose: 'react-addons-test-utils' })
-    .require('react-dom', { expose: 'react-dom' })
-    .require('react-redux', { expose: 'react-redux' })
-    .require('redux', { expose: 'redux' })
-    .require('redux-thunk', { expose: 'redux-thunk' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form/index', { expose: 'components/form/index' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form-action/index', { expose: 'components/form-action/index' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/form-builder/index', { expose: 'components/form-builder/index' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/grid-field/index', { expose: 'components/grid-field/index' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/grid-field/cell', { expose: 'components/grid-field/cell/index' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/grid-field/header', { expose: 'components/grid-field/header' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/grid-field/header-cell', { expose: 'components/grid-field/header-cell' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/grid-field/row', { expose: 'components/grid-field/row' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/grid-field/table', { expose: 'components/grid-field/table' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/hidden-field/index', { expose: 'components/hidden-field/index' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/text-field/index', { expose: 'components/text-field/index' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/north-header/index', { expose: 'components/north-header/index' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/components/north-header-breadcrumbs/index', { expose: 'components/north-header-breadcrumbs/index' })
-    .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/i18n.js', { expose: 'i18n' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/config.js', { expose: 'config' })
-    .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/jQuery.js', { expose: 'jQuery' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/reducer-register.js', { expose: 'reducer-register' })
-    .require(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/router.js', { expose: 'router' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/silverstripe-component', { expose: 'silverstripe-component' })
-    .require(PATHS.ADMIN_JAVASCRIPT_SRC + '/silverstripe-backend', { expose: 'silverstripe-backend' })
+    .require('deep-freeze',
+      { expose: 'deep-freeze' }
+    )
+    .require('react',
+      { expose: 'react' }
+    )
+    .require('react-addons-css-transition-group',
+      { expose: 'react-addons-css-transition-group' }
+    )
+    .require('react-addons-test-utils',
+      { expose: 'react-addons-test-utils' }
+    )
+    .require('react-dom',
+      { expose: 'react-dom' }
+    )
+    .require('react-redux',
+      { expose: 'react-redux' }
+    )
+    .require('redux',
+      { expose: 'redux' }
+    )
+    .require('redux-thunk',
+      { expose: 'redux-thunk' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/form/index`,
+      { expose: 'components/form/index' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/form-action/index`,
+      { expose: 'components/form-action/index' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/form-builder/index`,
+      { expose: 'components/form-builder/index' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/index`,
+      { expose: 'components/grid-field/index' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/cell`,
+      { expose: 'components/grid-field/cell/index' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/header`,
+      { expose: 'components/grid-field/header' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/header-cell`,
+      { expose: 'components/grid-field/header-cell' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/row`,
+      { expose: 'components/grid-field/row' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/table`,
+      { expose: 'components/grid-field/table' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/hidden-field/index`,
+      { expose: 'components/hidden-field/index' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/text-field/index`,
+      { expose: 'components/text-field/index' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/north-header/index`,
+      { expose: 'components/north-header/index' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/north-header-breadcrumbs/index`,
+      { expose: 'components/north-header-breadcrumbs/index' }
+    )
+    .require(`${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/i18n.js`,
+      { expose: 'i18n' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/config.js`,
+      { expose: 'config' }
+    )
+    .require(`${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/jQuery.js`,
+      { expose: 'jQuery' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/reducer-register.js`,
+      { expose: 'reducer-register' }
+    )
+    .require(`${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/router.js`,
+      { expose: 'router' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/silverstripe-component`,
+      { expose: 'silverstripe-component' }
+    )
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/silverstripe-backend`,
+      { expose: 'silverstripe-backend' }
+    )
     .bundle()
-    .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
+    .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))
     .pipe(source(bundleFileName))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
@@ -235,19 +302,23 @@ gulp.task('bundle-lib', function bundleLib() {
 
 
 gulp.task('bundle-legacy', function bundleLeftAndMain() {
-  var bundleFileName = 'bundle-legacy.js';
+  const bundleFileName = 'bundle-legacy.js';
 
-  return browserify(Object.assign({}, browserifyOptions, { entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/bundles/legacy.js' }))
+  return browserify(Object.assign({}, browserifyOptions,
+    { entries: `${PATHS.ADMIN_JAVASCRIPT_SRC}/bundles/legacy.js` }
+  ))
     .on('update', bundleLeftAndMain)
-    .on('log', function (msg) { gulpUtil.log('Finished', 'bundled ' + bundleFileName + ' ' + msg) })
+    .on('log', (msg) =>
+      gulpUtil.log('Finished', `bundled ${bundleFileName} ${msg}`)
+    )
     .transform('babelify', babelifyOptions)
     .external('config')
     .external('jQuery')
     .external('i18n')
     .external('router')
     .bundle()
-	.on('update', bundleLeftAndMain)
-    .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
+    .on('update', bundleLeftAndMain)
+    .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))
     .pipe(source(bundleFileName))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
@@ -257,15 +328,19 @@ gulp.task('bundle-legacy', function bundleLeftAndMain() {
 });
 
 gulp.task('bundle-framework', function bundleBoot() {
-  var bundleFileName = 'bundle-framework.js';
+  const bundleFileName = 'bundle-framework.js';
 
-  return browserify(Object.assign({}, browserifyOptions, { entries: PATHS.ADMIN_JAVASCRIPT_SRC + '/boot/index.js' }))
+  return browserify(Object.assign({}, browserifyOptions,
+    { entries: `${PATHS.ADMIN_JAVASCRIPT_SRC}/boot/index.js` }
+  ))
     .on('update', bundleBoot)
-    .on('log', function (msg) { gulpUtil.log('Finished', 'bundled ' + bundleFileName + ' ' + msg) })
+    .on('log', (msg) => {
+      gulpUtil.log('Finished', `bundled ${bundleFileName} ${msg}`);
+    })
     .transform('babelify', babelifyOptions)
     .external('components/action-button/index')
-	  .external('components/north-header/index')
-	  .external('components/form-builder/index')
+    .external('components/north-header/index')
+    .external('components/form-builder/index')
     .external('deep-freeze')
     .external('components/grid-field/index')
     .external('i18n')
@@ -280,8 +355,8 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('redux')
     .external('silverstripe-component')
     .bundle()
-	.on('update', bundleBoot)
-    .on('error', notify.onError({ message: bundleFileName + ': <%= error.message %>' }))
+    .on('update', bundleBoot)
+    .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))
     .pipe(source(bundleFileName))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
@@ -290,7 +365,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
 });
 
-gulp.task('sanity', function () {
+gulp.task('sanity', () => {
   diffFiles(blueimpFileUploadConfig);
   diffFiles(blueimpLoadImageConfig);
   diffFiles(blueimpTmplConfig);
@@ -298,7 +373,7 @@ gulp.task('sanity', function () {
   diffFiles(tinymceConfig);
 });
 
-gulp.task('thirdparty', function () {
+gulp.task('thirdparty', () => {
   copyFiles(blueimpFileUploadConfig);
   copyFiles(blueimpLoadImageConfig);
   copyFiles(blueimpTmplConfig);
@@ -306,67 +381,78 @@ gulp.task('thirdparty', function () {
   copyFiles(tinymceConfig);
 });
 
-gulp.task('umd', ['umd-admin', 'umd-framework'], function () {
+gulp.task('umd', ['umd-admin', 'umd-framework'], () => {
   if (isDev) {
-    gulp.watch(PATHS.ADMIN_JAVASCRIPT_SRC + '/*.js', ['umd-admin']);
-    gulp.watch(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/*.js', ['umd-framework']);
+    gulp.watch(`${PATHS.ADMIN_JAVASCRIPT_SRC}/*.js`, ['umd-admin']);
+    gulp.watch(`${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/*.js`, ['umd-framework']);
   }
 });
 
-gulp.task('umd-admin', function () {
-  var files = glob.sync(PATHS.ADMIN_JAVASCRIPT_SRC + '/*.js', { ignore: PATHS.ADMIN_JAVASCRIPT_SRC + '/LeftAndMain.!(Ping).js' });
+gulp.task('umd-admin', () => {
+  const files = glob.sync(
+    `${PATHS.ADMIN_JAVASCRIPT_SRC}/*.js`,
+    { ignore: `${PATHS.ADMIN_JAVASCRIPT_SRC}/LeftAndMain.!(Ping).js` }
+  );
 
   return transformToUmd(files, PATHS.ADMIN_JAVASCRIPT_DIST);
 });
 
-gulp.task('umd-framework', function () {
-  return transformToUmd(glob.sync(PATHS.FRAMEWORK_JAVASCRIPT_SRC + '/*.js'), PATHS.FRAMEWORK_JAVASCRIPT_DIST);
+gulp.task('umd-framework', () => { // eslint-disable-line
+  return transformToUmd(glob.sync(
+    `${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/*.js`),
+    PATHS.FRAMEWORK_JAVASCRIPT_DIST
+  );
 });
 
 /*
  * Takes individual images and compiles them together into sprites
  */
-gulp.task('sprites', function () {
+gulp.task('sprites', () => { // eslint-disable-line
   return sprity.src({
-    src: PATHS.ADMIN_IMAGES + '/sprites/src/**/*.{png,jpg}',
+    src: `${PATHS.ADMIN_IMAGES}/sprites/src/**/*.{png,jpg}`,
     cssPath: '../images/sprites/dist',
     style: './_spritey.scss',
     processor: 'sass',
     split: true,
-    margin: 0
+    margin: 0,
   })
-  .pipe(gulpif('*.png', gulp.dest(PATHS.ADMIN_IMAGES + '/sprites/dist'), gulp.dest(PATHS.ADMIN_SCSS)))
+  .pipe(
+    gulpif(
+      '*.png',
+      gulp.dest(`${PATHS.ADMIN_IMAGES}/sprites/dist`),
+      gulp.dest(PATHS.ADMIN_SCSS)
+    )
+  );
 });
 
-gulp.task('css', ['compile:css'], function () {
+gulp.task('css', ['compile:css'], () => {
   if (isDev) {
-    rootCompileFolders.forEach(function (folder) {
-      gulp.watch(folder + '/scss/**/*.scss', ['compile:css']);
+    rootCompileFolders.forEach((folder) => {
+      gulp.watch(`${folder}/scss/**/*.scss`, ['compile:css']);
     });
 
     // Watch the .scss files in react components
     gulp.watch('./admin/javascript/src/**/*.scss', ['compile:css']);
   }
-})
+});
 
 /*
  * Compiles scss into css
  * Watches for changes if --development flag is given
  */
-gulp.task('compile:css', function () {
-  var outputStyle = isDev ? 'expanded' : 'compressed';
-
-  var tasks = rootCompileFolders.map(function(folder) {
-    return gulp.src(folder + '/scss/**/*.scss')
+gulp.task('compile:css', () => {
+  const outputStyle = isDev ? 'expanded' : 'compressed';
+  const tasks = rootCompileFolders.map((folder) => { // eslint-disable-line
+    return gulp.src(`${folder}/scss/**/*.scss`)
       .pipe(sourcemaps.init())
-      .pipe(sass({ outputStyle: outputStyle })
+      .pipe(sass({ outputStyle })
         .on('error', notify.onError({
-          message: 'Error: <%= error.message %>'
+          message: 'Error: <%= error.message %>',
         }))
       )
       .pipe(postcss([autoprefixer({ browsers: supportedBrowsers })]))
       .pipe(sourcemaps.write())
-      .pipe(gulp.dest(folder + '/css'))
+      .pipe(gulp.dest(`${folder}/css`));
   });
 
   return tasks;
