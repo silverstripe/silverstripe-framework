@@ -788,14 +788,14 @@ body.cms {
 .cms-content-actions, .cms-preview-controls {
 	margin: 0;
 	z-index: 999;
-	box-shadow: inset 0 1px 0 0 $color-light-separator;
-	height: 52px;
-	max-height: 52px;
+	border-top: 1px solid $color-light-separator;
+	height: 53px;
+	max-height: 53px;
 	background-color: $tab-panel-texture-color;
 
 	&.south .Actions {
 		height: 52px;
-		padding: $grid-y*1.5 $grid-x*2;
+		padding: $grid-y+2 $grid-x*2;
 	}
 }
 
@@ -953,7 +953,7 @@ body.cms {
 	.step-label {
 		opacity:0.9;
 		.flyout {
-			height:17px; //centres number within the grey arrow
+			height: 26px; //centres number within the grey arrow
 			padding-top:5px;
 		}
 		.title {
@@ -1574,7 +1574,7 @@ form.member-profile-form {
 		a {
 			display: block;
 			text-align: right;
-			padding: 13px 0;
+			padding: 14px 0;
 			width: 100%;
 			text-decoration: none;
 			line-height: 20px;
@@ -2081,6 +2081,7 @@ body.cms-dialog {
 		margin-right: 4px;
 		@extend .icon-sprites-32x32;
 		@include sprite($sprites-32x32-numeric-label);
+		display: inline-block;
 	}
 
 	.title {
