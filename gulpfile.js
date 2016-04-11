@@ -234,6 +234,9 @@ gulp.task('bundle-lib', function bundleLib() {
     .require('redux-thunk',
       { expose: 'redux-thunk' }
     )
+    .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
+      { expose: 'bootstrap-collapse' }
+    )
     .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/form/index`,
       { expose: 'components/form/index' }
     )
@@ -368,6 +371,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('redux-thunk')
     .external('redux')
     .external('silverstripe-component')
+    .external('bootstrap-collapse')
     .bundle()
     .on('update', bundleBoot)
     .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))

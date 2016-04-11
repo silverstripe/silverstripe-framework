@@ -2,6 +2,9 @@
 
 // namespace SilverStripe\Framework\Model\Versioning
 
+use SilverStripe\Filesystem\Thumbnail;
+
+
 /**
  * A single line in a changeset
  *
@@ -12,7 +15,7 @@
  * @method ManyManyList References() List of implicit items required by this change
  * @method ChangeSet ChangeSet()
  */
-class ChangeSetItem extends DataObject {
+class ChangeSetItem extends DataObject implements Thumbnail {
 
 	const EXPLICITLY = 'explicitly';
 
@@ -62,6 +65,33 @@ class ChangeSetItem extends DataObject {
 		)
 	);
 
+	public function getTitle() {
+		// Get title of modified object
+		$object = $this->getObjectLatestVersion();
+		if($object) {
+			return $object->getTitle();
+		}
+		return $this->i18n_singular_name() . ' #' . $this->ID;
+	}
+
+
+
+	/**
+	 * Get a thumbnail for this object
+	 *
+	 * @param int $width Preferred width of the thumbnail
+	 * @param int $height Preferred height of the thumbnail
+	 * @return string URL to the thumbnail, if available
+	 */
+	public function ThumbnailURL($width, $height) {
+		$object = $this->getObjectLatestVersion();
+		if($object instanceof Thumbnail) {
+			return $object->ThumbnailURL($width, $height);
+		}
+		return null;
+	}
+
+
 	/**
 	 * Get the type of change: none, created, deleted, modified, manymany
 	 *
@@ -99,8 +129,17 @@ class ChangeSetItem extends DataObject {
 	 * @param string $stage
 	 * @return Versioned|DataObject
 	 */
-	private function getObjectInStage($stage) {
+	protected function getObjectInStage($stage) {
 		return Versioned::get_by_stage($this->ObjectClass, $stage)->byID($this->ObjectID);
+	}
+
+	/**
+	 * Find latest version of this object
+	 *
+	 * @return Versioned|DataObject
+	 */
+	protected function getObjectLatestVersion() {
+		return Versioned::get_latest_version($this->ObjectClass, $this->ObjectID);
 	}
 
 	/**
@@ -195,7 +234,7 @@ class ChangeSetItem extends DataObject {
 	public function canRevert($member) {
 		// Just get the best version as this object may not even exist on either stage anymore.
 		/** @var Versioned|DataObject $object */
-		$object = Versioned::get_latest_version($this->ObjectClass, $this->ObjectID);
+		$object = $this->getObjectLatestVersion();
 		if(!$object) {
 			return false;
 		}
@@ -276,5 +315,4 @@ class ChangeSetItem extends DataObject {
 		// Default permissions
 		return (bool)Permission::checkMember($member, ChangeSet::config()->required_permission);
 	}
-
 }

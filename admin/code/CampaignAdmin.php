@@ -27,21 +27,41 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 	private static $url_handlers = [
 		'GET sets' => 'readCampaigns',
 		'POST set/$ID' => 'createCampaign',
-		'GET set/$ID' => 'readCampaign',
+		'GET set/$ID/$Name' => 'readCampaign',
 		'PUT set/$ID' => 'updateCampaign',
 		'DELETE set/$ID' => 'deleteCampaign',
 	];
 
 	private static $url_segment = 'campaigns';
 
+	/**
+	 * Size of thumbnail width
+	 *
+	 * @config
+	 * @var int
+	 */
+	private static $thumbnail_width = 64;
+
+	/**
+	 * Size of thumbnail height
+	 *
+	 * @config
+	 * @var int
+	 */
+	private static $thumbnail_height = 64;
+
 	public function getClientConfig() {
+		$urlSegment = Config::inst()->get($this->class, 'url_segment');
+
 		return array_merge(parent::getClientConfig(), [
 			'forms' => [
 				// TODO Use schemaUrl instead
 				'editForm' => [
 					'schemaUrl' => $this->Link('schema/EditForm')
 				]
-			]
+			],
+			'campaignViewRoute' => $urlSegment . '/:type?/:id?/:view?',
+			'itemListViewEndpoint' => $this->Link('set/:id/show'),
 		]);
 	}
 
@@ -191,7 +211,7 @@ JSON;
 		$hal = $this->getListResource();
 		$response->setBody(Convert::array2json($hal));
 		return $response;
-		}
+	}
 
 	/**
 	 * Get list contained as a hal wrapper
@@ -259,7 +279,10 @@ JSON;
 	 * @return array
 	 */
 	protected function getChangeSetItemResource(ChangeSetItem $changeSetItem) {
-		$objectSingleton = DataObject::singleton($changeSetItem->ObjectClass);
+		$baseClass = ClassInfo::baseDataClass($changeSetItem->ObjectClass);
+		$baseSingleton = DataObject::singleton($baseClass);
+		$thumbnailWidth = (int)$this->config()->thumbnail_width;
+		$thumbnailHeight = (int)$this->config()->thumbnail_height;
 		$hal = [
 			'_links' => [
 				'self' => [
@@ -274,8 +297,10 @@ JSON;
 			'Added' => $changeSetItem->Added,
 			'ObjectClass' => $changeSetItem->ObjectClass,
 			'ObjectID' => $changeSetItem->ObjectID,
-			'ObjectSingular' => $objectSingleton->i18n_singular_name(),
-			'ObjectPlural' => $objectSingleton->i18n_plural_name(),
+			'BaseClass' => $baseClass,
+			'Singular' => $baseSingleton->i18n_singular_name(),
+			'Plural' => $baseSingleton->i18n_plural_name(),
+			'Thumbnail' => $changeSetItem->ThumbnailURL($thumbnailWidth, $thumbnailHeight),
 		];
 		// Depending on whether the object was added implicitly or explicitly, set
 		// other related objects.
@@ -320,12 +345,27 @@ JSON;
 	 */
 	public function readCampaign(SS_HTTPRequest $request) {
 		$response = new SS_HTTPResponse();
-		$response->addHeader('Content-Type', 'application/json');
-		$response->setBody('');
 
-		// TODO Implement data retrieval and serialisation
+		if ($request->getHeader('Accept') == 'text/json') {
+		$response->addHeader('Content-Type', 'application/json');
+			$changeSet = ChangeSet::get()->byId($request->param('ID'));
+
+			switch ($request->param('Name')) {
+				case "edit":
+					$response->setBody('{"message":"show the edit view"}');
+					break;
+				case "show":
+					$response->setBody(Convert::raw2json($this->getChangeSetResource($changeSet)));
+					break;
+				default:
+					$response->setBody('{"message":"404"}');
+			}
 
 		return $response;
+
+		} else {
+			return $this->index($request);
+		}
 	}
 
 	/**

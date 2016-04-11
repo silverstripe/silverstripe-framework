@@ -41,6 +41,8 @@ class GridField extends SilverStripeComponent {
 
   render() {
     const records = this.props.records;
+    const handleDrillDown = this.props.data.handleDrillDown;
+
     if (!records) {
       return <div></div>;
     }
@@ -55,10 +57,21 @@ class GridField extends SilverStripeComponent {
     const header = <GridFieldHeader>{headerCells.concat(actionPlaceholder)}</GridFieldHeader>;
 
     const rows = records.map((record, i) => {
+      // Build cells
       const cells = columns.map((column, j) => {
         // Get value by dot notation
         const val = column.field.split('.').reduce((a, b) => a[b], record);
-        return <GridFieldCell key={j} width={column.width}>{val}</GridFieldCell>;
+        const cellProps = {
+          handleDrillDown: handleDrillDown ? (event) => handleDrillDown(event, record) : null,
+          className: handleDrillDown ? 'grid-field-cell-component--drillable' : '',
+          key: j,
+          width: column.width,
+        };
+        return (
+          <GridFieldCell {...cellProps}>
+            {val}
+          </GridFieldCell>
+        );
       });
 
       const rowActions = (
@@ -78,7 +91,16 @@ class GridField extends SilverStripeComponent {
         </GridFieldCell>
       );
 
-      return <GridFieldRow key={i}>{cells.concat(rowActions)}</GridFieldRow>;
+      const rowProps = {
+        key: i,
+        className: handleDrillDown ? 'grid-field-row-component--drillable' : '',
+      };
+
+      return (
+        <GridFieldRow {...rowProps}>
+          {cells.concat(rowActions)}
+        </GridFieldRow>
+      );
     });
 
     return (
@@ -112,6 +134,7 @@ GridField.propTypes = {
     recordType: React.PropTypes.string.isRequired,
     headerColumns: React.PropTypes.array,
     collectionReadEndpoint: React.PropTypes.object,
+    handleDrillDown: React.PropTypes.func,
   }),
 };
 

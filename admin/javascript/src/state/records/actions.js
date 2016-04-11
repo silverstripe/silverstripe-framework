@@ -26,12 +26,13 @@ function populate(str, params) {
  */
 export function fetchRecords(recordType, method, url) {
   const payload = { recordType };
+  const headers = { Accept: 'text/json' };
   return (dispatch) => {
     dispatch({
       type: ACTION_TYPES.FETCH_RECORDS_REQUEST,
       payload,
     });
-    return backend[method.toLowerCase()](populate(url, payload))
+    return backend[method.toLowerCase()](populate(url, payload), {}, headers)
     .then(response => response.json())
     .then(json => {
       dispatch({
@@ -42,6 +43,39 @@ export function fetchRecords(recordType, method, url) {
     .catch((err) => {
       dispatch({
         type: ACTION_TYPES.FETCH_RECORDS_FAILURE,
+        payload: { error: err, recordType },
+      });
+    });
+  };
+}
+
+
+/**
+ * Fetches a single record
+ *
+ * @param string recordType Type of record (the "class name")
+ * @param string method HTTP method
+ * @param string url API endpoint
+ */
+export function fetchRecord(recordType, method, url) {
+  const payload = { recordType };
+  const headers = { Accept: 'text/json' };
+  return (dispatch) => {
+    dispatch({
+      type: ACTION_TYPES.FETCH_RECORD_REQUEST,
+      payload,
+    });
+    return backend[method.toLowerCase()](populate(url, payload), {}, headers)
+    .then(response => response.json())
+    .then(json => {
+      dispatch({
+        type: ACTION_TYPES.FETCH_RECORD_SUCCESS,
+        payload: { recordType, data: json },
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: ACTION_TYPES.FETCH_RECORD_FAILURE,
         payload: { error: err, recordType },
       });
     });

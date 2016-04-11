@@ -32,7 +32,7 @@ $gray-light:                #d3d9dd;
 $gray-lighter:              #e8e9ea;
 // $gray-lightest:             #f7f7f9;
 // 
-// $brand-primary:             #0275d8;
+$brand-primary:             #29abe2; //#0275d8;
 $brand-success:             #3fa142;
 // $brand-info:                #5bc0de;
 // $brand-warning:             #f0ad4e;
@@ -57,28 +57,28 @@ $brand-danger:              #D40404;
 // Control the default styling of most Bootstrap elements by modifying these
 // variables. Mostly focused on spacing.
 
-// $spacer:                     1rem;
-// $spacer-x:                   $spacer;
-// $spacer-y:                   $spacer;
-// $spacers: (
-//   0: (
-//     x:   0,
-//     y:   0
-//   ),
-//   1: (
-//     x:   $spacer-x,
-//     y:   $spacer-y
-//   ),
-//   2: (
-//     x:   ($spacer-x * 1.5),
-//     y:   ($spacer-y * 1.5)
-//   ),
-//   3: (
-//     x:   ($spacer-x * 3),
-//     y:   ($spacer-y * 3)
-//   )
-// );
-// $border-width:               1px;
+$spacer:                     1rem;
+$spacer-x:                   $spacer;
+$spacer-y:                   $spacer;
+$spacers: (
+  0: (
+    x:   0,
+    y:   0
+  ),
+  1: (
+    x:   $spacer-x,
+    y:   $spacer-y
+  ),
+  2: (
+    x:   ($spacer-x * 1.5),
+    y:   ($spacer-y * 1.5)
+  ),
+  3: (
+    x:   ($spacer-x * 3),
+    y:   ($spacer-y * 3)
+  )
+);
+$border-width:               1px;
 
 
 // Body
@@ -86,7 +86,7 @@ $brand-danger:              #D40404;
 // Settings for the `<body>` element.
 
 // $body-bg:                    #fff;
-// $body-color:                 $gray-dark;
+$body-color:                 $gray-dark;
 
 
 // Links
@@ -160,7 +160,7 @@ $font-size-h2:               18px; /* 2rem; */
 $font-size-h3:               16px; /* 1.75rem; */
 $font-size-h4:               14px; /* 1.5rem; */
 $font-size-h5:               13px; /* 1.25rem; */
-$font-size-h6:               1rem;
+$font-size-h6:               12px; /* 1rem; */
 
 // $display1-size:               6rem;
 // $display2-size:               5.5rem;
@@ -174,7 +174,7 @@ $font-size-h6:               1rem;
 
 $line-height:                1.538;
 
-// $headings-margin-bottom:     ($spacer / 2);
+$headings-margin-bottom:     $spacer;
 // $headings-font-family:       inherit;
 // $headings-font-weight:       500;
 // $headings-line-height:       1.1;
@@ -183,7 +183,7 @@ $line-height:                1.538;
 // $lead-font-size:             1.25rem;
 // $lead-font-weight:           300;
 // 
-// $text-muted:                  $gray-light;
+$text-muted:                  #7f8b97;
 // 
 // $abbr-border-color:           $gray-light;
 // 

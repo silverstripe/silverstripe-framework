@@ -1,8 +1,8 @@
 <?php
 
+use SilverStripe\Filesystem\Thumbnail;
 use SilverStripe\Filesystem\ImageManipulation;
 use SilverStripe\Filesystem\Storage\AssetContainer;
-use SilverStripe\Filesystem\Storage\AssetStore;
 
 /**
  * This class handles the representation of a file on the filesystem within the framework.
@@ -65,7 +65,7 @@ use SilverStripe\Filesystem\Storage\AssetStore;
  * @mixin Hierarchy
  * @mixin Versioned
  */
-class File extends DataObject implements ShortcodeHandler, AssetContainer {
+class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumbnail {
 
 	use ImageManipulation;
 

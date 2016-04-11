@@ -31,7 +31,7 @@ class ChangeSet extends DataObject {
 
 	private static $db = array(
 		'Name'  => 'Varchar',
-		'State' => "Enum('open,published,reverted')",
+		'State' => "Enum('open,published,reverted','open')",
 	);
 
 	private static $has_many = array(
@@ -44,6 +44,21 @@ class ChangeSet extends DataObject {
 
 	private static $has_one = array(
 		'Owner' => 'Member',
+	);
+
+	private static $casting = array(
+		'Description' => 'Text',
+	);
+
+	/**
+	 * List of classes to set apart in description
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $important_classes = array(
+		'SiteTree',
+		'File',
 	);
 
 	/**

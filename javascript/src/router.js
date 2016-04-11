@@ -24,6 +24,19 @@ function show(pageShow) {
   };
 }
 
+/**
+ * Checks if the passed route applies to the current location.
+ *
+ * @param string route - The route to check.
+ *
+ * @return boolean
+ */
+function routeAppliesToCurrentLocation(route) {
+  const r = new page.Route(route);
+  return r.match(page.current, {});
+}
+
 page.show = show(page.show);
+page.routeAppliesToCurrentLocation = routeAppliesToCurrentLocation;
 
 export default page;
