@@ -45,6 +45,7 @@
     "jquery-sizes": "^0.33.0",
     "json-js": "^1.1.2",
     "page.js": "^4.13.3",
+    "qs": "^6.1.0",
     "react": "^0.14.8",
     "react-addons-css-transition-group": "^0.14.8",
     "react-dom": "^0.14.8",
