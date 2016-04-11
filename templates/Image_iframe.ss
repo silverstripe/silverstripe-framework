@@ -3,7 +3,6 @@
 	<head>
 		<% base_tag %>
 		<title><%t Image_iframe_ss.TITLE 'Image Uploading Iframe' %></title>
-		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
 	</head>
 
 	<body>
