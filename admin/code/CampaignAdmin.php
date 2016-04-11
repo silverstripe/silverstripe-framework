@@ -18,6 +18,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		'readCampaign',
 		'updateCampaign',
 		'deleteCampaign',
+		'publishCampaign',
 	];
 
 	private static $menu_priority = 11;
@@ -28,6 +29,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		'GET sets' => 'readCampaigns',
 		'POST set/$ID' => 'createCampaign',
 		'GET set/$ID/$Name' => 'readCampaign',
+		'PUT set/$ID/publish' => 'publishCampaign',
 		'PUT set/$ID' => 'updateCampaign',
 		'DELETE set/$ID' => 'deleteCampaign',
 	];
@@ -62,6 +64,10 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 			],
 			'campaignViewRoute' => $urlSegment . '/:type?/:id?/:view?',
 			'itemListViewEndpoint' => $this->Link('set/:id/show'),
+			'publishEndpoint' => [
+				'url' => $this->Link('set/:id/publish'),
+				'method' => 'put'
+			]
 		]);
 	}
 
@@ -258,6 +264,8 @@ JSON;
 			'Created' => $changeSet->Created,
 			'LastEdited' => $changeSet->LastEdited,
 			'State' => $changeSet->State,
+			'canEdit' => $changeSet->canEdit(),
+			'canPublish' => $changeSet->canPublish(),
 			'_embedded' => ['ChangeSetItems' => []]
 		];
 		foreach($changeSet->Changes() as $changeSetItem) {
@@ -347,7 +355,7 @@ JSON;
 		$response = new SS_HTTPResponse();
 
 		if ($request->getHeader('Accept') == 'text/json') {
-		$response->addHeader('Content-Type', 'application/json');
+			$response->addHeader('Content-Type', 'application/json');
 			$changeSet = ChangeSet::get()->byId($request->param('ID'));
 
 			switch ($request->param('Name')) {
@@ -361,7 +369,7 @@ JSON;
 					$response->setBody('{"message":"404"}');
 			}
 
-		return $response;
+			return $response;
 
 		} else {
 			return $this->index($request);
@@ -395,24 +403,62 @@ JSON;
 	public function deleteCampaign(SS_HTTPRequest $request) {
 		$id = $request->param('ID');
 		if (!$id || !is_numeric($id)) {
-            return (new SS_HTTPResponse(json_encode(['status' => 'error']), 400))
-                ->addHeader('Content-Type', 'application/json');
-        }
+			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 400))
+				->addHeader('Content-Type', 'application/json');
+		}
 
 		$record = ChangeSet::get()->byID($id);
 		if(!$record) {
 			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 404))
-                ->addHeader('Content-Type', 'application/json');
+				->addHeader('Content-Type', 'application/json');
 		}
 
 		if(!$record->canDelete()) {
 			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 401))
-                ->addHeader('Content-Type', 'application/json');
+				->addHeader('Content-Type', 'application/json');
 		}
 
 		$record->delete();
 
 		return (new SS_HTTPResponse('', 204));
+	}
+
+	/**
+	 * REST endpoint to publish a {@link ChangeSet} and all of its items.
+	 *
+	 * @param SS_HTTPRequest $request
+	 *
+	 * @return SS_HTTPResponse
+	 */
+	public function publishCampaign(SS_HTTPRequest $request) {
+		$id = $request->param('ID');
+		if(!$id || !is_numeric($id)) {
+			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 400))
+				->addHeader('Content-Type', 'application/json');
+		}
+
+		$record = ChangeSet::get()->byID($id);
+		if(!$record) {
+			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 404))
+				->addHeader('Content-Type', 'application/json');
+		}
+
+		if(!$record->canPublish()) {
+			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 401))
+				->addHeader('Content-Type', 'application/json');
+		}
+
+		try {
+			$record->publish();
+		} catch(LogicException $e) {
+			return (new SS_HTTPResponse(json_encode(['status' => 'error', 'message' => $e->getMessage()]), 401))
+				->addHeader('Content-Type', 'application/json');
+		}
+
+		return (new SS_HTTPResponse(
+			Convert::raw2json($this->getChangeSetResource($record)),
+			200
+		))->addHeader('Content-Type', 'application/json');
 	}
 
 	/**

@@ -32,11 +32,15 @@ describe('SilverStripeBackend', () => {
 
     it('should send a GET request to an endpoint', () => {
       backend.get('http://example.com');
-      expect(backend.fetch).toBeCalled();
-      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
-      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
-        method: 'get'
-      }));
+
+      expect(backend.fetch).toBeCalledWith(
+        'http://example.com',
+        {
+          method: 'get',
+          credentials: 'same-origin',
+          headers: {},
+        }
+      );
     });
   });
 
@@ -51,12 +55,17 @@ describe('SilverStripeBackend', () => {
 
       backend.post('http://example.com', postData);
 
-      expect(backend.fetch).toBeCalled();
-      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
-      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
-        method: 'post',
-        body: postData
-      }));
+      expect(backend.fetch).toBeCalledWith(
+        'http://example.com',
+        {
+          method: 'post',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: postData,
+        }
+      );
     });
   });
 
@@ -71,12 +80,15 @@ describe('SilverStripeBackend', () => {
 
       backend.put('http://example.com', putData);
 
-      expect(backend.fetch).toBeCalled();
-      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
-      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
-        method: 'put',
-        body: putData
-      }));
+      expect(backend.fetch).toBeCalledWith(
+        'http://example.com',
+        {
+          method: 'put',
+          credentials: 'same-origin',
+          headers: {},
+          body: putData,
+        }
+      );
     });
   });
 
@@ -91,12 +103,15 @@ describe('SilverStripeBackend', () => {
 
       backend.delete('http://example.com', deleteData);
 
-      expect(backend.fetch).toBeCalled();
-      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
-      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
-        method: 'delete',
-        body: deleteData
-      }));
+      expect(backend.fetch).toBeCalledWith(
+        'http://example.com',
+        {
+          method: 'delete',
+          credentials: 'same-origin',
+          headers: {},
+          body: deleteData,
+        }
+      );
     });
   });
 
@@ -134,7 +149,7 @@ describe('SilverStripeBackend', () => {
       });
     });
 
-    pit('should pass a JSON payload', () => {
+    it('should pass a JSON payload', () => {
       const mock = getBackendMock({
         text: () => Promise.resolve('{"status":"ok","message":"happy"}'),
         headers: new Headers({
@@ -146,7 +161,7 @@ describe('SilverStripeBackend', () => {
         method: 'post',
         payloadFormat: 'json',
         responseFormat: 'json',
-  });
+      });
 
       const promise = endpoint({ id: 1, values: { a: 'aye', b: 'bee' } });
       expect(mock.post.mock.calls[0][0]).toEqual('http://example.org');

@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import backend from 'silverstripe-backend';
 import * as actions from 'state/campaign/actions';
 import SilverStripeComponent from 'silverstripe-component';
 import FormAction from 'components/form-action/index';
@@ -16,6 +17,13 @@ class CampaignAdminContainer extends SilverStripeComponent {
 
     this.addCampaign = this.addCampaign.bind(this);
     this.createFn = this.createFn.bind(this);
+    this.publishApi = backend.createEndpointFetcher({
+      url: this.props.config.publishEndpoint.url,
+      method: this.props.config.publishEndpoint.method,
+      payloadSchema: {
+        id: { urlReplacement: ':id', remove: true },
+      },
+    });
   }
 
   componentDidMount() {
@@ -73,6 +81,7 @@ class CampaignAdminContainer extends SilverStripeComponent {
     const props = {
       campaignId: this.props.campaignId,
       itemListViewEndpoint: this.props.config.itemListViewEndpoint,
+      publishApi: this.publishApi,
     };
 
     return (

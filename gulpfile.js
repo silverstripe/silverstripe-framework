@@ -459,13 +459,12 @@ gulp.task('css', ['compile:css'], () => {
  * Watches for changes if --development flag is given
  */
 gulp.task('compile:css', () => {
-  const outputStyle = isDev ? 'expanded' : 'compressed';
   const tasks = rootCompileFolders.map((folder) => { // eslint-disable-line
     return gulp.src(`${folder}/scss/**/*.scss`)
       .pipe(sourcemaps.init())
       .pipe(
         sass({
-          outputStyle,
+          outputStyle: 'compressed',
           importer: (url, prev, done) => {
             if (url.match(/^compass\//)) {
               done({ file: 'scss/_compasscompat.scss' });

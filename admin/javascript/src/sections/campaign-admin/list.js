@@ -1,24 +1,33 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as actions from 'state/records/actions';
+import * as recordActions from 'state/records/actions';
+import * as campaignActions from 'state/campaign/actions';
 import SilverStripeComponent from 'silverstripe-component';
 import Accordion from 'components/accordion/index';
 import AccordionGroup from 'components/accordion/group';
 import AccordionItem from 'components/accordion/item';
 import NorthHeader from 'components/north-header/index';
+import FormAction from 'components/form-action/index';
 import CampaignItem from './item';
 import CampaignPreview from './preview';
+import i18n from 'i18n';
 
 /**
  * Represents a campaign list view
  */
 class CampaignListContainer extends SilverStripeComponent {
 
+  constructor(props) {
+    super(props);
+
+    this.handlePublish = this.handlePublish.bind(this);
+  }
+
   componentDidMount() {
     const fetchURL = this.props.itemListViewEndpoint.replace(/:id/, this.props.campaignId);
     super.componentDidMount();
-    this.props.actions.fetchRecord('ChangeSet', 'get', fetchURL);
+    this.props.recordActions.fetchRecord('ChangeSet', 'get', fetchURL);
   }
 
   /**
@@ -79,12 +88,60 @@ class CampaignListContainer extends SilverStripeComponent {
               {accordionGroups}
             </Accordion>
           </div>
+          <div className="cms-south-actions">
+            {this.renderButtonToolbar()}
+          </div>
         </div>
         { previewUrl && <CampaignPreview previewUrl={previewUrl} /> }
       </div>
     );
   }
 
+  renderButtonToolbar() {
+    const items = this.getItems(this.props.campaignId);
+
+    let itemSummaryLabel;
+    if (items) {
+      itemSummaryLabel = i18n.sprintf(
+       (items.length === 1) ?
+         i18n._t('Campaigns.ITEM_SUMMARY_SINGULAR')
+         : i18n._t('Campaigns.ITEM_SUMMARY_PLURAL'),
+       items.length
+     );
+
+      let button;
+      if (this.props.record.State === 'open') {
+        button = (
+          <FormAction
+            label={i18n._t('Campaigns.PUBLISHCAMPAIGN')}
+            style={'success'}
+            handleClick={this.handlePublish}
+          />
+        );
+      } else if (this.props.record.State === 'published') {
+        // TODO Implement "revert" feature
+        button = (
+          <FormAction
+            label={i18n._t('Campaigns.PUBLISHCAMPAIGN')}
+            style={'success'}
+            disabled
+          />
+        );
+      }
+
+      return (
+        <div className="btn-toolbar">
+          {button}
+          <span className="text-muted">
+            <span className="label label-warning label--empty">&nbsp;</span>
+            &nbsp;{itemSummaryLabel}
+          </span>
+        </div>
+      );
+    }
+
+    return <div className="btn-toolbar"></div>;
+  }
 
   /**
    * Gets preview URL for itemid
@@ -101,16 +158,27 @@ class CampaignListContainer extends SilverStripeComponent {
   }
 
   /**
+   * @return {Array}
+   */
+  getItems() {
+    if (this.props.record && this.props.record._embedded) {
+      return this.props.record._embedded.ChangeSetItems;
+    }
+
+    return null;
+  }
+
+  /**
    * Group items for changeset display
    *
    * @return array
    */
   groupItemsForSet() {
     const groups = {};
-    if (!this.props.record || !this.props.record._embedded) {
+    const items = this.getItems();
+    if (!items) {
       return groups;
     }
-    const items = this.props.record._embedded.ChangeSetItems;
 
     // group by whatever
     items.forEach(item => {
@@ -132,7 +200,19 @@ class CampaignListContainer extends SilverStripeComponent {
     return groups;
   }
 
+  handlePublish(e) {
+    e.preventDefault();
+    this.props.campaignActions.publishCampaign(
+      this.props.publishApi,
+      this.props.campaignId
+    );
+  }
+
 }
+
+CampaignListContainer.propTypes = {
+  publishApi: React.PropTypes.func.isRequired,
+};
 
 function mapStateToProps(state, ownProps) {
   // Find record specific to this item
@@ -149,7 +229,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch),
+    recordActions: bindActionCreators(recordActions, dispatch),
+    campaignActions: bindActionCreators(campaignActions, dispatch),
   };
 }
 

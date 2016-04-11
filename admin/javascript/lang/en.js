@@ -19,6 +19,9 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
     "ModelAdmin.DELETED": "Deleted",
     "ModelAdmin.VALIDATIONERROR": "Validation Error",
     "LeftAndMain.PAGEWASDELETED": "This page was deleted.  To edit a page, select it from the left.",
-    "Campaigns.ADDCAMPAIGN": "Add campaign"
+    "Campaigns.ADDCAMPAIGN": "Add campaign",
+		"Campaigns.PUBLISHCAMPAIGN": "Publish campaign",
+		"Campaigns.ITEM_SUMMARY_SINGULAR": "%s item",
+		"Campaigns.ITEM_SUMMARY_PLURAL": "%s items",
 });
 }

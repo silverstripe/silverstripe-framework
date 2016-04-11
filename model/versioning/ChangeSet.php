@@ -90,7 +90,7 @@ class ChangeSet extends DataObject {
 			);
 		}
 		if(!$this->canPublish()) {
-			throw new Exception("The current member does not have permission to publish this ChangeSet.");
+			throw new LogicException("The current member does not have permission to publish this ChangeSet.");
 		}
 
 		DB::get_conn()->withTransaction(function(){

@@ -7,7 +7,7 @@ import i18n from 'i18n';
  */
 class CampaignItem extends SilverStripeComponent {
   render() {
-    let thumbnail = '';
+    let thumbnail = null;
     const badge = {};
     const item = this.props.item;
 
