@@ -38,6 +38,16 @@ $brand-success:             #3fa142;
 // $brand-warning:             #f0ad4e;
 $brand-danger:              #D40404;
 
+// Backgrounds
+$background-main: 				#f6f7f8;
+$background-north:				darken($background-main, 2);
+
+// Borders
+$border-color-light:		darken($background-main, 6);
+$border-color:				darken($background-main, 10);
+$border-color-dark:			darken($background-main, 14);
+
+
 
 // Options
 //
@@ -57,7 +67,7 @@ $brand-danger:              #D40404;
 // Control the default styling of most Bootstrap elements by modifying these
 // variables. Mostly focused on spacing.
 
-$spacer:                     1rem;
+$spacer:                     1.2308rem; // 16px
 $spacer-x:                   $spacer;
 $spacer-y:                   $spacer;
 $spacers: (
@@ -135,7 +145,7 @@ $body-color:                 $gray-dark;
 // Set the number of columns and specify the width of the gutters.
 
 // $grid-columns:               12;
-// $grid-gutter-width:          1.875rem; // 30px
+$grid-gutter-width:          2.4615rem; // now 32px, was 1.875rem; ~ 30px
 
 
 // Typography
@@ -152,8 +162,9 @@ $font-size-root:             13px;
 
 $font-size-base:             1rem;
 $font-size-lg:               1.23rem; /* 16px */
-$font-size-sm:               .846rem; /* 11px */
-$font-size-xs:               .769rem; /* 10px */
+$font-size-sm:               .923rem; /* 12px */
+$font-size-xs:               .846rem; /* 11px */
+$font-size-xxs:              .769rem; /* 10px */
 
 $font-size-h1:               2.5rem;
 $font-size-h2:               18px; /* 2rem; */
@@ -172,7 +183,8 @@ $font-size-h6:               12px; /* 1rem; */
 // $display3-weight:             300;
 // $display4-weight:             300;
 
-$line-height:                1.538;
+$line-height:                1.538;     /* relative to font-size */
+$line-height-base:           20px;      /* can be used with varying font-sizes, holds grid sizing */
 
 $headings-margin-bottom:     $spacer;
 // $headings-font-family:       inherit;
@@ -239,7 +251,7 @@ $text-muted:                  #7f8b97;
 //
 // For each of Bootstrap's buttons, define text, background and border color.
 
-$btn-padding-x:                  1.1rem;
+$btn-padding-x:                  .6154rem; // 8px
 $btn-padding-y:                  .3846rem;
 $btn-font-weight:                normal;
 
@@ -369,6 +381,9 @@ $btn-danger-border:              transparent;
 
 
 // Navbar
+
+$navbar-height:               52px;
+$navbar-total-height:        53px;
 
 // $navbar-border-radius:              $border-radius;
 // $navbar-padding-horizontal:         $spacer;
@@ -627,13 +642,13 @@ $btn-danger-border:              transparent;
 
 // Breadcrumbs
 
-// $breadcrumb-padding-vertical:   .75rem;
-// $breadcrumb-padding-horizontal: 1rem;
-// 
-// $breadcrumb-bg:                 $gray-lighter;
-// $breadcrumb-divider-color:      $gray-light;
-// $breadcrumb-active-color:       $gray-light;
-// $breadcrumb-divider:            "/";
+$breadcrumb-padding-vertical:   6px;
+$breadcrumb-padding-horizontal: 0;
+
+$breadcrumb-bg:                 transparent;
+$breadcrumb-divider-color:      $border-color-dark;
+$breadcrumb-active-color:       $body-color;
+$breadcrumb-divider:            "/";
 
 
 // Carousel

@@ -1,0 +1,53 @@
+// Accordion styles
+.accordion-group {
+	margin-top: $spacer-y;
+
+	&__title {
+		margin-bottom: 0;
+
+		a {
+			/* Todo: extend table header */
+			font-size: $font-size-sm; 
+			line-height: $line-height-base; 
+			font-weight: 400; 
+			text-transform: uppercase; 
+			padding: $spacer-x*.75 $spacer-y;
+			/* end table header */
+			
+			display: block;
+			margin-left: -$spacer-y;
+			margin-right: -$spacer-y;
+			text-decoration: none;
+			position: relative;
+			border-bottom: 1px solid #ddd;
+			color: $body-color;
+
+			&::before {
+				padding: $spacer-x*.75 $spacer-y;
+				position: absolute;
+				right: 0;
+				top: 0;
+				font-size: $font-size-lg;
+				line-height: $line-height-base;
+				color: lighten($body-color,30);
+				text-align: center;
+				content: "7";
+				font-family: silverstripe;
+			}
+
+			&.collapsed::before {
+				content: "6";
+			}
+
+			&:hover,
+			&:active,
+			&:focus {
+				text-decoration: none;
+
+				&::before {
+					color: $body-color;
+				}
+			}
+		}
+	}
+}

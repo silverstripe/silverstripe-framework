@@ -1,13 +1,13 @@
 .grid-field-action-component {
     background: none;
     border: 0;
-    color: $gray-dark;
-    padding: 0 8px;
+    color: $body-color;
+    padding: 0 $spacer-x/2;
     height: 20px;
     vertical-align: top;
 
     &:hover {
-        color: darken($gray-dark, 10%);
+        color: darken($body-color, 10%);
     }
 
     &::before {
@@ -17,15 +17,25 @@
 
 .grid-field-cell-component {
     display: table-cell;
-    padding: $grid-y*2 $grid-x*2;
+    padding: $spacer-y $spacer-x;
     line-height: 20px;
 
     &:first-child {
-        padding-left: $grid-x*2.5;
+        padding-left: #{$spacer-x + $spacer-x*.25};
     }
 
     &:last-child {
-        padding-right: $grid-x*2.5;
+        padding-right: #{$spacer-x + $spacer-x*.25};
+        width: 1px;
+
+        span { // TEMP, remove commas in js
+            display: none; 
+        }
+    }
+
+    &:nth-child(2) {
+        text-align: center;
+        width: 1px;
     }
 
     &[data-reactid$=actionPlaceholder] {
@@ -39,9 +49,9 @@
 
 .grid-field-header-cell-component {
     text-transform: uppercase;
-    font-size: $font-size-root - 1;
+    font-size: $font-size-sm;
     display: table-cell;
-    padding: $grid-y*2 $grid-x*2;
+    padding: $spacer-y $spacer-x;
     line-height: 20px;
 
     &:first-child {
@@ -50,20 +60,24 @@
 
     &:last-child {
         padding-right: $grid-x*2.5;
+        width: 1px !important;
     }
 }
 
 .grid-field-table-component {
+    border-collapse: collapse;
+
     li.grid-field-row-component {
         display: table-row;
         border: 0;
-        box-shadow: inset 0 -1px 0 0 $gray-lighter;
+        border-bottom: 1px solid $border-color;
         margin: 0;
         padding: 0;
 
         // Header row
         &:first-child {
             background: none;
+            border-bottom: 1px solid $border-color;
         }
 
 		// Drillable rows highlight on hover

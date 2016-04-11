@@ -87,8 +87,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 			"action": "admin\/campaigns\/EditForm",
 			"method": "POST",
 			"enctype": "multipart\/form-data",
-			"target": null,
-			"class": "cms-edit-form CampaignAdmin LeftAndMain"
+			"target": null
 		},
 		"data": [],
 		"fields": [{

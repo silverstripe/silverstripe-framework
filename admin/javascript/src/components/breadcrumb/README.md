@@ -9,7 +9,7 @@ The breadcrumbs for the current section of the CMS.
 An array of objects, each object should have a `text` and `href` key.
 
 ```
-import NorthHeaderBreadcrumbsComponent from 'north-header-breadcrumbs';
+import BreadcrumbComponent from 'breadcrumb';
 
 ...
 
@@ -29,7 +29,7 @@ getBreadcrumbs() {
 }
 
 render() {
-    return <NorthHeaderBreadcrumbsComponent crumbs={this.getBreadcrumbs()} />
+    return <BreadcrumbComponent crumbs={this.getBreadcrumbs()} />
 }
 
 ...

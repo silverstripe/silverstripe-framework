@@ -10,6 +10,7 @@ import AccordionItem from 'components/accordion/item';
 import NorthHeader from 'components/north-header/index';
 import FormAction from 'components/form-action/index';
 import CampaignItem from './item';
+import BreadcrumbComponent from 'components/breadcrumb/index';
 import CampaignPreview from './preview';
 import i18n from 'i18n';
 
@@ -83,7 +84,9 @@ class CampaignListContainer extends SilverStripeComponent {
     return (
       <div className={classNames}>
         <div className="cms-campaigns collapse in" aria-expanded="true">
-          <NorthHeader />
+          <NorthHeader>
+            <BreadcrumbComponent crumbs={this.props.breadcrumbs} multiline />
+          </NorthHeader>
           <div className="col-md-12 campaign-items">
             <Accordion>
               {accordionGroups}

@@ -61,13 +61,21 @@ class CampaignAdminContainer extends SilverStripeComponent {
     return (
       <div className="cms-middle no-preview">
         <div className="cms-campaigns collapse in" aria-expanded="true">
-          <NorthHeader />
-          <FormAction
-            label={i18n._t('Campaigns.ADDCAMPAIGN')}
-            icon={'plus-circled'}
-            handleClick={this.addCampaign}
-          />
-          <FormBuilder schemaUrl={schemaUrl} createFn={this.createFn} />
+          <NorthHeader>
+            <h2 className="text-truncate north-header__heading">Campaigns</h2>
+          </NorthHeader>
+          <div className="cms-middle__scrollable">
+            <div className="content-toolbar">
+              <div className="btn-toolbar">
+                <FormAction
+                  label={i18n._t('Campaigns.ADDCAMPAIGN')}
+                  icon={'plus'}
+                  handleClick={this.addCampaign}
+                />
+              </div>
+            </div>
+            <FormBuilder schemaUrl={schemaUrl} createFn={this.createFn} />
+          </div>
         </div>
       </div>
     );
@@ -83,6 +91,7 @@ class CampaignAdminContainer extends SilverStripeComponent {
       campaignId: this.props.campaignId,
       itemListViewEndpoint: this.props.sectionConfig.itemListViewEndpoint,
       publishApi: this.publishApi,
+      breadcrumbs: this.getBreadcrumbs(),
     };
 
     return (
@@ -127,6 +136,19 @@ class CampaignAdminContainer extends SilverStripeComponent {
     }
 
     return <Component key={props.name} {...props} />;
+  }
+
+  getBreadcrumbs() {
+    return [
+      {
+        text: 'Campaigns',
+        href: 'admin/campaigns',
+      },
+      {
+        text: 'March release',
+        href: 'admin/campaigns/show/1',
+      },
+    ];
   }
 
   /**

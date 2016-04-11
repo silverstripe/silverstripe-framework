@@ -1,0 +1,26 @@
+.breadcrumb {
+	font-size: $font-size-xs;
+	line-height: 16px;
+
+    > .active {
+    	float: none;
+    }
+
+    .breadcrumb__crumb--last {
+    	font-size: $font-size-xs;
+		margin: 0;
+		font-weight: normal;
+		display: inline;
+		line-height: 16px;
+    }
+}
+
+.breadcrumb--multiline {
+	margin-bottom: 0;
+
+	.breadcrumb__crumb--last {
+		font-size: $font-size-lg;
+		display: block;
+		line-height: 22px;
+	}
+}
