@@ -318,4 +318,31 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 		// Default permissions
 		return (bool)Permission::checkMember($member, ChangeSet::config()->required_permission);
 	}
+
+	/**
+	 * Get the ChangeSetItems that reference a passed DataObject
+	 *
+	 * @param DataObject $object
+	 * @return DataList
+	 */
+	public static function get_for_object($object) {
+		return ChangeSetItem::get()->filter([
+			'ObjectID' => $object->ID,
+			'ObjectClass' => ClassInfo::baseDataClass($object)
+		]);
+	}
+
+	/**
+	 * Get the ChangeSetItems that reference a passed DataObject
+	 *
+	 * @param int $objectID The ID of the object
+	 * @param string $objectClass The class of the object (or any parent class)
+	 * @return DataList
+	 */
+	public static function get_for_object_by_id($objectID, $objectClass) {
+		return ChangeSetItem::get()->filter([
+			'ObjectID' => $objectID,
+			'ObjectClass' => ClassInfo::baseDataClass($objectClass)
+		]);
+	}
 }

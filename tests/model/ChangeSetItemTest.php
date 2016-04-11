@@ -73,4 +73,25 @@ class ChangeSetItemTest extends SapphireTest {
 			'Objects that have been deleted and then unpublished should return no change'
 		);
 	}
+
+	function testGetForObject() {
+		$object = new ChangeSetItemTest_Versioned(['Foo' => 1]);
+		$object->write();
+
+		$item = new ChangeSetItem([
+			'ObjectID' => $object->ID,
+			'ObjectClass' => ClassInfo::baseDataClass($object)
+		]);
+		$item->write();
+
+		$this->assertEquals(
+			ChangeSetItemTest_Versioned::get()->byID($object->ID)->toMap(),
+			ChangeSetItem::get_for_object($object)->first()->Object()->toMap()
+		);
+
+		$this->assertEquals(
+			ChangeSetItemTest_Versioned::get()->byID($object->ID)->toMap(),
+			ChangeSetItem::get_for_object_by_id($object->ID, $object->ClassName)->first()->Object()->toMap()
+		);
+	}
 }
