@@ -589,6 +589,18 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		});
 	}
 
+	function fireSkinLoaded(editor) {
+		return function() {
+			if (editor.initialized) {
+				editor.fire('SkinLoaded');
+			} else {
+				editor.on('init', function() {
+					editor.fire('SkinLoaded');
+				});
+			}
+		};
+	}
+
 	/**
 	 * Renders the inline editor UI.
 	 *
@@ -709,9 +721,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		// Preload skin css
 		if (args.skinUiCss) {
-			tinymce.DOM.styleSheetLoader.load(args.skinUiCss, function() {
-				editor.fire('SkinLoaded');
-			});
+			tinymce.DOM.styleSheetLoader.load(args.skinUiCss, fireSkinLoaded(editor));
 		}
 
 		return {};
@@ -737,9 +747,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		}
 
 		if (args.skinUiCss) {
-			tinymce.DOM.styleSheetLoader.load(args.skinUiCss, function() {
-				editor.fire('SkinLoaded');
-			});
+			tinymce.DOM.styleSheetLoader.load(args.skinUiCss, fireSkinLoaded(editor));
 		}
 
 		// Basic UI layout
@@ -789,13 +797,13 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			]});
 		}
 
-		if (settings.readonly) {
-			panel.find('*').disabled(true);
-		}
-
 		editor.fire('BeforeRenderUI');
 		editor.on('SwitchMode', switchMode());
 		panel.renderBefore(args.targetNode).reflow();
+
+		if (settings.readonly) {
+			editor.setMode('readonly');
+		}
 
 		if (settings.width) {
 			tinymce.DOM.setStyle(panel.getEl(), 'width', settings.width);
