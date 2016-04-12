@@ -113,23 +113,17 @@ $.entwine('ss', function($) {
 	// with css applied and got a width value.
 	var applyChosen = function(el) {
 		if(el.is(':visible')) {
-			el.addClass('has-chzn').chosen({
+			el.addClass('has-chosen').chosen({
 				allow_single_deselect: true,
 				disable_search_threshold: 20,
 				display_disabled_options: true
 			});
-
-			var title = el.prop('title');
-
-			if(title) {
-				el.siblings('.chzn-container').prop('title', title);
-			}
 		} else {
 			setTimeout(function() {
 				// Make sure it's visible before applying the ui
 				el.show();
-				applyChosen(el); },
-			500);
+				applyChosen(el);
+			}, 500);
 		}
 	};
 
@@ -1262,10 +1256,9 @@ $.entwine('ss', function($) {
 	 * For the CMS we also need to tell the parent div that it has a select so
 	 * we can fix the height cropping.
 	 */
-
 	$('.cms .field.dropdown select, .cms .field select[multiple], .fieldholder-small select.dropdown').entwine({
 		onmatch: function() {
-			if(this.is('.no-chzn')) {
+			if(this.is('.no-chosen')) {
 				this._super();
 				return;
 			}
@@ -1274,8 +1267,8 @@ $.entwine('ss', function($) {
 			if(!this.data('placeholder')) this.data('placeholder', ' ');
 
 			// We could've gotten stale classes and DOM elements from deferred cache.
-			this.removeClass('has-chzn chzn-done');
-			this.siblings('.chzn-container').remove();
+			this.removeClass('has-chosen').chosen("destroy");
+			this.siblings('.chosen-container').remove();
 
 			// Apply Chosen
 			applyChosen(this);
@@ -1353,9 +1346,9 @@ $.entwine('ss', function($) {
 			var form = $(this).parents('form');
 
 			form.clearForm();
-			form.find(".dropdown select").prop('selectedIndex', 0).trigger("liszt:updated"); // Reset chosen.js
+			form.find(".dropdown select").prop('selectedIndex', 0).trigger("chosen:updated"); // Reset chosen.js
 			form.submit();
-			}
+		}
 	});
 
 	/**

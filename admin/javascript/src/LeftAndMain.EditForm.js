@@ -226,7 +226,7 @@ $.entwine('ss', function($){
 		/*
 		 * Track focus on chosen selects
 		 */
-		'from .cms-edit-form .dropdown .chzn-container a': {
+		'from .cms-edit-form .dropdown .chosen-container a': {
 			onfocusin: function(e){
 				var field = $(e.target).closest('.field.dropdown');
 				this.saveFieldFocus(field.attr('id'));

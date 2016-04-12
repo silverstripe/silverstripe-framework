@@ -612,7 +612,7 @@ $.entwine('ss.preview', function($){
 		changeVisibleMode: function(mode) {
 			this.find('select')
 				.val(mode)
-				.trigger('liszt:updated')
+				.trigger('chosen:updated')
 				._addIcon();
 		}
 	});
@@ -627,24 +627,6 @@ $.entwine('ss.preview', function($){
 
 			var targetStateName = $(this).val();
 			$('.cms-preview').changeMode(targetStateName);
-		}
-	});
-
-	
-	$('.preview-mode-selector .chzn-results li').entwine({
-		/**
-		 *  IE8 doesn't support programatic access to onchange event 
-		 *	so react on click
-		 */
-		onclick:function(e){
-			if ($.browser.msie) {
-				e.preventDefault();					
-				var index = this.index();
-				var targetStateName = this.closest('.preview-mode-selector').find('select option:eq('+index+')').val();					
-												
-				//var targetStateName = $(this).val();
-				$('.cms-preview').changeMode(targetStateName);
-			}
 		}
 	});
 	
@@ -699,7 +681,7 @@ $.entwine('ss.preview', function($){
 		changeVisibleSize: function(size) {				
 			this.find('select')
 				.val(size)
-				.trigger('liszt:updated')
+				.trigger('chosen:updated')
 				._addIcon();
 		}
 	});
@@ -723,23 +705,15 @@ $.entwine('ss.preview', function($){
 	 */
 
 	/*
-	*	Add a class to the chzn select trigger based on the currently 
+	*	Add a class to the chosen select trigger based on the currently
 	*	selected option. Update as this changes
 	*/
 	$('.preview-selector select.preview-dropdown').entwine({
-		'onliszt:showing_dropdown': function() {
-			this.siblings().find('.chzn-drop').addClass('open')._alignRight();
-		},
-
-		'onliszt:hiding_dropdown': function() {
-			this.siblings().find('.chzn-drop').removeClass('open')._removeRightAlign();
-		},
-
 		/**
 		 * Trigger additional initial icon update when the control is fully loaded.
 		 * Solves an IE8 timing issue.
 		 */
-		'onliszt:ready': function() {
+		'onchosen:ready': function() {
 			this._super();
 			this._addIcon();
 		},
@@ -748,7 +722,7 @@ $.entwine('ss.preview', function($){
 			var selected = this.find(':selected');				
 			var iconClass = selected.attr('data-icon');	
 							
-			var target = this.parent().find('.chzn-container a.chzn-single');
+			var target = this.parent().find('.chosen-container a.chosen-single');
 			var oldIcon = target.attr('data-icon');
 			if(typeof oldIcon !== 'undefined'){
 				target.removeClass(oldIcon);
@@ -760,60 +734,7 @@ $.entwine('ss.preview', function($){
 		}
 	});
 
-	$('.preview-selector .chzn-drop').entwine({
-		_alignRight: function(){
-			var that = this;
-			$(this).hide();
-			/* Delay so styles applied after chosen applies css	
-			   (the line after we find out the dropdown is open)
-			*/
-			setTimeout(function(){ 
-				$(that).css({left:'auto', right:0});
-				$(that).show();	
-			}, 100);							
-		},
-		_removeRightAlign:function(){
-			$(this).css({right:'auto'});
-		}
-
-	});
-
-	/* 
-	* Means of having extra styled data in chzn 'preview-selector' selects 
-	* When chzn ul is ready, grab data-description from original select. 
-	* If it exists, append to option and add description class to list item
-	*/
-	/*
-
-	Currently buggy (adds dexcription, then re-renders). This may need to 
-	be done inside chosen. Chosen recommends to do this stuff in the css, 
-	but that option is inaccessible and untranslatable 
-	(https://github.com/harvesthq/chosen/issues/399)
-
-	$('.preview-selector .chzn-drop ul').entwine({
-		onmatch: function() {
-			this.extraData();
-			this._super();
-		},
-		onunmatch: function() {
-			this._super();
-		},
-		extraData: function(){
-			var that = this;
-			var options = this.closest('.preview-selector').find('select option');	
-				
-			$.each(options, function(index, option){
-				var target = $(that).find("li:eq(" + index + ")");
-				var description = $(option).attr('data-description');
-				if(description != undefined && !$(target).hasClass('description')){
-					$(target).append('<span>' + description + '</span>');
-					$(target).addClass('description');						
-				}
-			});
-		}
-	}); */
-
-	$('.preview-mode-selector .chzn-drop li:last-child').entwine({
+	$('.preview-mode-selector .chosen-drop li:last-child').entwine({
 		onmatch: function () {
 			if ($('.preview-mode-selector').hasClass('split-disabled')) {
 				this.parent().append('<div class="disabled-tooltip"></div>');

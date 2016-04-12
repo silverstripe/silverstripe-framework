@@ -303,12 +303,12 @@ form.small .field, .field.small {
 		}
 	}
 
-	/* chzn override */
-	.chzn-container {
+	/* Chosen override */
+	.chosen-container {
 		max-width: 512px;
 		vertical-align: bottom;
 
-		.chzn-results {
+		.chosen-results {
 
 			li {
 				font-size: 11px;
@@ -317,15 +317,15 @@ form.small .field, .field.small {
 			}
 		}
 	}
-	.chzn-container-active {
-		.chzn-single {
+	.chosen-container-active {
+		.chosen-single {
 	  		border: 1px solid lighten($color-medium-separator, 10%);
 		}
 	}
 
-	.chzn-container-single .chzn-single  {
+	.chosen-container-single .chosen-single  {
 		height: 32px;
-		line-height: 30px; /* not relative, as then we'd had to redo most of chzn */
+		line-height: 30px; /* not relative, as then we'd had to redo most of chosen */
 		font-size: $font-size-root;
 		background-image: linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef);
 
@@ -341,7 +341,7 @@ form.small .field, .field.small {
 			}
 		}
 	}
-	.chzn-choices {
+	.chosen-choices {
 		border-radius: 3px;
 
 		.search-choice {
@@ -1054,7 +1054,7 @@ fieldset.switch-states{
 			display: inline-block;
 		}
 
-		.chzn-container {
+		.chosen-container {
 			width: 100% !important;
 			max-width: 100%;
 		}

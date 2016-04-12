@@ -388,7 +388,7 @@ $.entwine('ss.tree', function($){
 			$('#Form_BatchActionsForm').refreshSelected();
 
 			// TODO Should work by triggering change() along, but doesn't - entwine event bubbling?
-			this.trigger("liszt:updated");
+			this.trigger("chosen:updated");
 
 			this._super(e);
 		}

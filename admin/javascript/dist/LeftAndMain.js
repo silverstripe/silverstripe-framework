@@ -104,17 +104,11 @@
 
 		var applyChosen = function applyChosen(el) {
 			if (el.is(':visible')) {
-				el.addClass('has-chzn').chosen({
+				el.addClass('has-chosen').chosen({
 					allow_single_deselect: true,
 					disable_search_threshold: 20,
 					display_disabled_options: true
 				});
-
-				var title = el.prop('title');
-
-				if (title) {
-					el.siblings('.chzn-container').prop('title', title);
-				}
 			} else {
 				setTimeout(function () {
 					el.show();
@@ -952,15 +946,15 @@
 
 		$('.cms .field.dropdown select, .cms .field select[multiple], .fieldholder-small select.dropdown').entwine({
 			onmatch: function onmatch() {
-				if (this.is('.no-chzn')) {
+				if (this.is('.no-chosen')) {
 					this._super();
 					return;
 				}
 
 				if (!this.data('placeholder')) this.data('placeholder', ' ');
 
-				this.removeClass('has-chzn chzn-done');
-				this.siblings('.chzn-container').remove();
+				this.removeClass('has-chosen').chosen("destroy");
+				this.siblings('.chosen-container').remove();
 
 				applyChosen(this);
 
@@ -1017,7 +1011,7 @@
 				var form = $(this).parents('form');
 
 				form.clearForm();
-				form.find(".dropdown select").prop('selectedIndex', 0).trigger("liszt:updated");
+				form.find(".dropdown select").prop('selectedIndex', 0).trigger("chosen:updated");
 				form.submit();
 			}
 		});
