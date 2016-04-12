@@ -30,7 +30,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		'POST set/$ID/publish' => 'publishCampaign',
 		'POST set/$ID' => 'createCampaign',
 		'GET set/$ID/$Name' => 'readCampaign',
-		'PUT set/$ID' => 'updateCampaign',
+		'POST $ID' => 'updateCampaign',
 		'DELETE set/$ID' => 'deleteCampaign',
 	];
 
@@ -56,8 +56,11 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		return array_merge(parent::getClientConfig(), [
 			'forms' => [
 				// TODO Use schemaUrl instead
-				'editForm' => [
+				'EditForm' => [
 					'schemaUrl' => $this->Link('schema/EditForm')
+				],
+				'DetailEditForm' => [
+					'schemaUrl' => $this->Link('schema/DetailEditForm')
 				]
 			],
 			'campaignViewRoute' => $this->Link() . ':type?/:id?/:view?',
@@ -325,8 +328,6 @@ JSON;
 		return $hal;
 	}
 
-
-
 	/**
 	 * Gets viewable list of campaigns
 	 *
@@ -353,21 +354,14 @@ JSON;
 
 		if ($request->getHeader('Accept') == 'text/json') {
 			$response->addHeader('Content-Type', 'application/json');
-			$changeSet = ChangeSet::get()->byId($request->param('ID'));
-
-			switch ($request->param('Name')) {
-				case "edit":
-					$response->setBody('{"message":"show the edit view"}');
-					break;
-				case "show":
-					$response->setBody(Convert::raw2json($this->getChangeSetResource($changeSet)));
-					break;
-				default:
-					$response->setBody('{"message":"404"}');
+			if ($request->param('Name')) {
+				$changeSet = ChangeSet::get()->byId($request->param('ID'));
+				$response->setBody(Convert::raw2json($this->getChangeSetResource($changeSet)));
+			} else {
+				$response->setBody('{"message":"Resource not found"}');
 			}
 
 			return $response;
-
 		} else {
 			return $this->index($request);
 		}
@@ -381,6 +375,8 @@ JSON;
 	 * @return SS_HTTPResponse
 	 */
 	public function updateCampaign(SS_HTTPRequest $request) {
+		$id = $request->param('ID');
+
 		$response = new SS_HTTPResponse();
 		$response->addHeader('Content-Type', 'application/json');
 		$response->setBody(Convert::raw2json(['campaign' => 'update']));
@@ -469,11 +465,11 @@ JSON;
 	 *
 	 * @return Form
 	 */
-	public function getDetailEditForm() {
+	public function getDetailEditForm($id) {
 		return Form::create(
 			$this,
 			'DetailEditForm',
-			ChangeSet::singleton()->getCMSFields(),
+			ChangeSet::get()->byId($id)->getCMSFields(),
 			FieldList::create(
 				FormAction::create('save', 'Save')
 			)
