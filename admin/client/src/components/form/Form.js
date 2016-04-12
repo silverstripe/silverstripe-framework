@@ -1,28 +1,29 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
-import FormAction from 'components/FormAction/FormAction';
 
 class Form extends SilverStripeComponent {
 
-  /**
-   * Gets the components responsible for perfoming actions on the form.
-   * For example form submission.
-   *
-   * @return array|null
-   */
-  getFormAction() {
-    return this.props.actions.map((action) =>
-      <FormAction {...action} />
-    );
+  constructor(props) {
+    super(props);
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentWillUnmount() {
+    if (typeof this.props.componentWillUnmount === 'undefined') {
+      return;
+    }
+
+    this.props.componentWillUnmount(this.props.formId);
   }
 
   render() {
-    const attr = this.props.attributes;
+    const props = Object.assign({ onSubmit: this.handleSubmit }, this.props.attributes);
     const fields = this.props.mapFieldsToComponents(this.props.fields);
-    const actions = this.getFormAction();
+    const actions = this.props.mapActionsToComponents(this.props.actions);
 
     return (
-      <form {...attr}>
+      <form {...props}>
         {fields &&
           <fieldset className="form-group">
             {fields}
@@ -40,6 +41,14 @@ class Form extends SilverStripeComponent {
     );
   }
 
+  handleSubmit(event) {
+    if (typeof this.props.handleSubmit === 'undefined') {
+      return;
+    }
+
+    this.props.handleSubmit(event);
+  }
+
 }
 
 Form.propTypes = {
@@ -51,8 +60,12 @@ Form.propTypes = {
     id: React.PropTypes.string,
     method: React.PropTypes.string.isRequired,
   }),
+  componentWillUnmount: React.PropTypes.func,
   data: React.PropTypes.array,
   fields: React.PropTypes.array.isRequired,
+  formId: React.PropTypes.string.isRequired,
+  handleSubmit: React.PropTypes.func,
+  mapActionsToComponents: React.PropTypes.func.isRequired,
   mapFieldsToComponents: React.PropTypes.func.isRequired,
 };
 

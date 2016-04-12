@@ -9,9 +9,9 @@ class FormSchemaTest extends SapphireTest {
 		$formSchema = new FormSchema();
 		$expected = [
 			'name' => 'TestForm',
-			'id' => null,
-			'action' => null,
-			'method' => '',
+			'id' => 'Form_TestForm',
+			'action' => 'Controller/TestForm',
+			'method' => 'POST',
 			'schema_url' => '',
 			'attributes' => [
 				'id' => 'Form_TestForm',
@@ -54,7 +54,7 @@ class FormSchemaTest extends SapphireTest {
 		$form = new Form(new Controller(), 'TestForm', new FieldList(), new FieldList());
 		$formSchema = new FormSchema();
 		$expected = [
-			'id' => 'TestForm',
+			'id' => 'Form_TestForm',
 			'fields' => [
 				[
 					'id' => 'Form_TestForm_SecurityID',
@@ -79,7 +79,7 @@ class FormSchemaTest extends SapphireTest {
 		$form->sessionMessage('All saved', 'good');
 		$formSchema = new FormSchema();
 		$expected = [
-			'id' => 'TestForm',
+			'id' => 'Form_TestForm',
 			'fields' => [
 				[
 					'id' => 'Form_TestForm_SecurityID',
@@ -113,7 +113,7 @@ class FormSchemaTest extends SapphireTest {
 		$validator->validationError('Title', 'Title is invalid', 'error');
 		$formSchema = new FormSchema();
 		$expected = [
-			'id' => 'TestForm',
+			'id' => 'Form_TestForm',
 			'fields' => [
 				[
 					'id' => 'Form_TestForm_Title',
