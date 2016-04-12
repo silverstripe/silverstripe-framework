@@ -305,7 +305,7 @@ class SilverStripeBackend {
         ? [url, headers]
         : [url, encodedData, headers];
 
-      return this[refinedSpec.method](...args)
+      return this[refinedSpec.method.toLowerCase()](...args)
         .then(parseResponse);
     };
   }

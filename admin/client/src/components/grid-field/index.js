@@ -110,8 +110,8 @@ class GridField extends SilverStripeComponent {
   }
 
   /**
-   * @param number int
-   * @param event
+   * @param object event
+   * @param number id
    */
   deleteRecord(event, id) {
     event.preventDefault();
@@ -123,9 +123,19 @@ class GridField extends SilverStripeComponent {
     );
   }
 
-  editRecord(event) {
+  /**
+   * @param object event
+   * @param number id
+   */
+  editRecord(event, id) {
     event.preventDefault();
-    // TODO
+
+    if (typeof this.props.data === 'undefined' ||
+      typeof this.props.data.handleEditRecord === 'undefined') {
+      return;
+    }
+
+    this.props.data.handleEditRecord(event, id);
   }
 
 }
@@ -136,6 +146,7 @@ GridField.propTypes = {
     headerColumns: React.PropTypes.array,
     collectionReadEndpoint: React.PropTypes.object,
     handleDrillDown: React.PropTypes.func,
+    handleEditRecord: React.PropTypes.func,
   }),
 };
 

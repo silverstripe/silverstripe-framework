@@ -4,7 +4,7 @@ Generates an editable text field.
 
 ## Props
 
-### label
+### leftTitle
 
 The label text to display with the field.
 
@@ -16,7 +16,7 @@ Addition CSS classes to apply to the `<input>` element.
 
 Used for the field's `name` attribute.
 
-### onChange
+### handleFieldUpdate
 
 Handler function called when the field's value changes.
 

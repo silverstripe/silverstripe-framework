@@ -6,6 +6,7 @@ import reducerRegister from 'reducer-register';
 
 import * as configActions from 'state/config/actions';
 import ConfigReducer from 'state/config/reducer';
+import FormsReducer from 'state/forms/reducer';
 import SchemaReducer from 'state/schema/reducer';
 import RecordsReducer from 'state/records/reducer';
 import CampaignReducer from 'state/campaign/reducer';
@@ -16,6 +17,7 @@ import CampaignAdmin from 'sections/campaign-admin/index';
 
 function appBoot() {
   reducerRegister.add('config', ConfigReducer);
+  reducerRegister.add('forms', FormsReducer);
   reducerRegister.add('schemas', SchemaReducer);
   reducerRegister.add('records', RecordsReducer);
   reducerRegister.add('campaign', CampaignReducer);

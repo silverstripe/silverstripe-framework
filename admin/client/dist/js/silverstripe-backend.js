@@ -226,7 +226,7 @@
 
           var args = refinedSpec.method.toLowerCase() === 'get' ? [url, headers] : [url, encodedData, headers];
 
-          return _this[refinedSpec.method].apply(_this, args).then(parseResponse);
+          return _this[refinedSpec.method.toLowerCase()].apply(_this, args).then(parseResponse);
         };
       }
     }, {
