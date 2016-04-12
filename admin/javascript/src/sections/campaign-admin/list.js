@@ -115,6 +115,7 @@ class CampaignListContainer extends SilverStripeComponent {
           <FormAction
             label={i18n._t('Campaigns.PUBLISHCAMPAIGN')}
             style={'success'}
+            loading={this.props.campaign.isPublishing}
             handleClick={this.handlePublish}
           />
         );
@@ -212,6 +213,7 @@ class CampaignListContainer extends SilverStripeComponent {
 
 CampaignListContainer.propTypes = {
   publishApi: React.PropTypes.func.isRequired,
+  isPublishing: React.PropTypes.bool,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -222,6 +224,7 @@ function mapStateToProps(state, ownProps) {
   }
   return {
     record: record || [],
+    campaign: state.campaign,
   };
 }
 

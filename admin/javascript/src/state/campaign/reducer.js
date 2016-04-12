@@ -15,6 +15,17 @@ function campaignReducer(state = initialState, action) {
         view: action.payload.view,
       }));
 
+    case ACTION_TYPES.PUBLISH_CAMPAIGN_REQUEST:
+      return deepFreeze(Object.assign({}, state, {
+        isPublishing: true,
+      }));
+
+    case ACTION_TYPES.PUBLISH_CAMPAIGN_SUCCESS:
+    case ACTION_TYPES.PUBLISH_CAMPAIGN_FAILURE:
+      return deepFreeze(Object.assign({}, state, {
+        isPublishing: false,
+      }));
+
     default:
       return state;
 
