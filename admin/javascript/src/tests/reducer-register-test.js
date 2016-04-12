@@ -1,10 +1,12 @@
-jest.dontMock('../reducer-register');
+/* global jest, describe, beforeEach, it, expect */
 
-var reducerRegister = require('../reducer-register').default;
+jest.dontMock('../reducer-register.js');
+
+// FYI: Changing this to an import statements broke jest's automocking
+const reducerRegister = require('../reducer-register').default;
 
 describe('ReducerRegister', () => {
-
-  var reducer = () => null;
+  const reducer = () => null;
 
   it('should add a reducer to the register', () => {
     expect(reducerRegister.getAll().test).toBe(undefined);
@@ -40,5 +42,4 @@ describe('ReducerRegister', () => {
 
     reducerRegister.remove('test');
   });
-
 });

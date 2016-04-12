@@ -1,23 +1,27 @@
+/* global jest, describe, beforeEach, it, expect */
+
 jest.dontMock('../index');
 jest.dontMock('../table');
+jest.dontMock('react');
 
-const React = require('react'),
-  ReactTestUtils = require('react-addons-test-utils'),
-  GridFieldTableComponent = require('../table.js').default;
+// FYI: Changing these to import statements broke jest's automocking
+const React = require('react');
+const ReactTestUtils = require('react-addons-test-utils');
+const GridFieldTableComponent = require('../table.js').default;
 
 describe('GridFieldTableComponent', () => {
-  var props;
+  let props;
 
-  beforeEach(function () {
+  beforeEach(() => {
     props = {
-    }
+    };
   });
 
-  describe('generateHeader()', function () {
-    var gridfield;
+  describe('generateHeader()', () => {
+    let gridfield;
 
-    it('should return props.header if it is set', function () {
-      props.header = <div className='header'></div>;
+    it('should return props.header if it is set', () => {
+      props.header = <div className="header"></div>;
 
       gridfield = ReactTestUtils.renderIntoDocument(
         <GridFieldTableComponent {...props} />
@@ -26,11 +30,11 @@ describe('GridFieldTableComponent', () => {
       expect(gridfield.generateHeader().props.className).toBe('header');
     });
 
-    it('should generate and return a header from props.data if it is set', function () {
+    it('should generate and return a header from props.data if it is set', () => {
 
     });
 
-    it('should return null if props.header and props.data are both not set', function () {
+    it('should return null if props.header and props.data are both not set', () => {
       gridfield = ReactTestUtils.renderIntoDocument(
         <GridFieldTableComponent {...props} />
       );
@@ -39,10 +43,10 @@ describe('GridFieldTableComponent', () => {
     });
   });
 
-  describe('generateRows()', function () {
-    var gridfield;
+  describe('generateRows()', () => {
+    let gridfield;
 
-    it('should return props.rows if it is set', function () {
+    it('should return props.rows if it is set', () => {
       props.rows = ['row1'];
 
       gridfield = ReactTestUtils.renderIntoDocument(
@@ -52,11 +56,11 @@ describe('GridFieldTableComponent', () => {
       expect(gridfield.generateRows()[0]).toBe('row1');
     });
 
-    it('should generate and return rows from props.data if it is set', function () {
+    it('should generate and return rows from props.data if it is set', () => {
 
     });
 
-    it('should return null if props.rows and props.data are both not set', function () {
+    it('should return null if props.rows and props.data are both not set', () => {
       gridfield = ReactTestUtils.renderIntoDocument(
         <GridFieldTableComponent {...props} />
       );
