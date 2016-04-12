@@ -32,6 +32,3 @@ admin/javascript/src/SecurityAdmin.js
 admin/javascript/src/leaktools.js
 admin/javascript/src/sspath.js
 admin/javascript/src/ssui.core.js
-
-# Ignore tests
-admin/javascript/**/tests/

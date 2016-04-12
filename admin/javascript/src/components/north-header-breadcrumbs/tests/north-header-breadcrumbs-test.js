@@ -1,24 +1,27 @@
+/* global jest, describe, beforeEach, it, expect */
+
 jest.dontMock('../index');
 
-const React = require('react'),
-  ReactTestUtils = require('react-addons-test-utils'),
-  NorthHeaderBreadcrumbsComponent = require('../index').default;
+// FYI: Changing these to import statements broke jest's automocking
+const React = require('react');
+const ReactTestUtils = require('react-addons-test-utils');
+const NorthHeaderBreadcrumbsComponent = require('../index').default;
 
 describe('NorthHeaderBreadcrumbsComponent', () => {
-  var props;
+  let props;
 
   beforeEach(() => {
     props = {};
   });
 
   describe('getBreadcrumbs()', () => {
-    var northHeaderBreadcrumbs;
+    let northHeaderBreadcrumbs;
 
     it('should convert the props.crumbs array into jsx to be rendered', () => {
       props.crumbs = [
-        { text: 'breadcrumb1', href: 'href1'},
-        { text: 'breadcrumb2', href: 'href2'},
-        { text: 'breadcrumb3', href: 'href3'}
+        { text: 'breadcrumb1', href: 'href1' },
+        { text: 'breadcrumb2', href: 'href2' },
+        { text: 'breadcrumb3', href: 'href3' },
       ];
 
       northHeaderBreadcrumbs = ReactTestUtils.renderIntoDocument(
