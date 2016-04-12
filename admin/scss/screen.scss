@@ -20,6 +20,11 @@
 @import "reset.scss";
 
 /** -----------------------------
+ * Component base css
+ * ------------------------------ */
+@import "chosen.scss";
+
+/** -----------------------------
  * Theme
  * ------------------------------ */
 @import "themes/default.scss";

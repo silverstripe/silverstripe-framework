@@ -11,7 +11,6 @@ require('../../../thirdparty/jsizes/lib/jquery.sizes.js');
 require('../../../thirdparty/jlayout/lib/jlayout.border.js');
 require('../../../thirdparty/jlayout/lib/jquery.jlayout.js');
 require('../../../../thirdparty/jstree/jquery.jstree.js');
-require('../../../thirdparty/chosen/chosen/chosen.jquery.js');
 require('../../../thirdparty/jquery-hoverIntent/jquery.hoverIntent.js');
 require('../../../../thirdparty/jquery-changetracker/lib/jquery.changetracker.js');
 require('../../../../javascript/src/TreeDropdownField.js');

@@ -106,7 +106,8 @@
 			if (el.is(':visible')) {
 				el.addClass('has-chzn').chosen({
 					allow_single_deselect: true,
-					disable_search_threshold: 20
+					disable_search_threshold: 20,
+					display_disabled_options: true
 				});
 
 				var title = el.prop('title');
