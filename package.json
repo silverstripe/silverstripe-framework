@@ -18,7 +18,8 @@
     "test": "NODE_PATH=\"./javascript/src:./admin/javascript/src\" jest",
     "coverage": "NODE_PATH=\"./javascript/src:./admin/javascript/src\" jest --coverage",
     "thirdparty": "gulp thirdparty",
-    "lint": "eslint gulpfile.js & eslint javascript/src & eslint admin/javascript/src"
+    "lint": "eslint gulpfile.js & eslint javascript/src & eslint admin/javascript/src",
+    "add-git-hooks": "./node_modules/.bin/git-hooks --install; git config merge.ours.driver true"
   },
   "repository": {
     "type": "git",
@@ -70,6 +71,7 @@
     "eslint-config-airbnb": "^6.2.0",
     "eslint-plugin-react": "^4.2.3",
     "event-stream": "^3.3.2",
+    "git-hooks": "^1.0.2",
     "glob": "^6.0.4",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
