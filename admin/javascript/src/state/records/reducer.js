@@ -7,7 +7,6 @@ function recordsReducer(state = initialState, action) {
   let records;
   let recordType;
   let record;
-  let recordIndex;
 
   switch (action.type) {
 
@@ -29,7 +28,8 @@ function recordsReducer(state = initialState, action) {
     case ACTION_TYPES.FETCH_RECORDS_SUCCESS:
       recordType = action.payload.recordType;
       // TODO Automatic pluralisation from recordType
-      records = action.payload.data._embedded[`${recordType}s`];
+      records = action.payload.data._embedded[`${recordType}s`] || [];
+      records = records.reduce((prev, val) => Object.assign({}, prev, { [val.id]: val }), {});
       return deepFreeze(Object.assign({}, state, {
         [recordType]: records,
       }));
@@ -43,18 +43,9 @@ function recordsReducer(state = initialState, action) {
     case ACTION_TYPES.FETCH_RECORD_SUCCESS:
       recordType = action.payload.recordType;
       record = action.payload.data;
-      records = state[recordType] ? state[recordType] : [];
-
-      // Update or insert
-      recordIndex = records.findIndex((nextRecord) => (nextRecord.ID === record.ID));
-      if (recordIndex > -1) {
-        records[recordIndex] = record;
-      } else {
-        records.push(record);
-      }
 
       return deepFreeze(Object.assign({}, state, {
-        [recordType]: records,
+        [recordType]: Object.assign({}, state[recordType], { [record.ID]: record }),
       }));
 
     case ACTION_TYPES.DELETE_RECORD_REQUEST:
@@ -65,8 +56,14 @@ function recordsReducer(state = initialState, action) {
 
     case ACTION_TYPES.DELETE_RECORD_SUCCESS:
       recordType = action.payload.recordType;
-      records = state[recordType]
-        .filter(nextRecord => nextRecord.ID !== action.payload.id);
+      records = state[recordType];
+      records = Object.keys(records)
+        .reduce((result, key) => {
+          if (parseInt(key, 10) !== parseInt(action.payload.id, 10)) {
+            return Object.assign({}, result, { [key]: records[key] });
+          }
+          return result;
+        }, {});
 
       return deepFreeze(Object.assign({}, state, {
         [recordType]: records,

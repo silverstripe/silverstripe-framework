@@ -56,7 +56,8 @@ class GridField extends SilverStripeComponent {
     );
     const header = <GridFieldHeader>{headerCells.concat(actionPlaceholder)}</GridFieldHeader>;
 
-    const rows = records.map((record, i) => {
+    const rows = Object.keys(records).map((i) => {
+      const record = records[i];
       // Build cells
       const cells = columns.map((column, j) => {
         // Get value by dot notation
@@ -141,7 +142,7 @@ GridField.propTypes = {
 function mapStateToProps(state, ownProps) {
   const recordType = ownProps.data ? ownProps.data.recordType : null;
   return {
-    records: (state.records && recordType) ? state.records[recordType] : [],
+    records: (state.records && recordType) ? state.records[recordType] : {},
   };
 }
 

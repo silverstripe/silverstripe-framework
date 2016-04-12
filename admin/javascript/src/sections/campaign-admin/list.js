@@ -218,9 +218,7 @@ function mapStateToProps(state, ownProps) {
   // Find record specific to this item
   let record = null;
   if (state.records && state.records.ChangeSet && ownProps.campaignId) {
-    record = state.records.ChangeSet.find(
-      (nextRecord) => (nextRecord.ID === parseInt(ownProps.campaignId, 10))
-    );
+    record = state.records.ChangeSet[parseInt(ownProps.campaignId, 10)];
   }
   return {
     record: record || [],
