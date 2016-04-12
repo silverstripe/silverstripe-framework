@@ -13,6 +13,7 @@ class FormActionComponent extends SilverStripeComponent {
       type: this.props.type,
       className: this.getButtonClasses(),
       disabled: this.props.disabled,
+      onClick: this.handleClick,
     };
 
     if (typeof this.props.id !== 'undefined') {
@@ -100,7 +101,7 @@ class FormActionComponent extends SilverStripeComponent {
 
 FormActionComponent.propTypes = {
   id: React.PropTypes.string,
-  handleClick: React.PropTypes.func.isRequired,
+  handleClick: React.PropTypes.func,
   label: React.PropTypes.string,
   type: React.PropTypes.string,
   loading: React.PropTypes.bool,

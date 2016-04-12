@@ -358,6 +358,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('components/action-button/index')
     .external('components/north-header/index')
     .external('components/form-builder/index')
+    .external('components/form-action/index')
     .external('deep-freeze')
     .external('components/grid-field/index')
     .external('i18n')
