@@ -36,31 +36,74 @@ class SilverStripeBackend {
    * the handler callbacks attached Promise. Other consumers don't need to deal with payload
    * encoding, etc.
    *
+   * The intent is that your endpoint spec can keep track of the mechanics of interacting with the
+   * backend server, and your application code can just pass a JS object endpoint fetcher. This also
+   * simplifies mocking.
+   *
+   * # Endpoint Specification
+   *
    * An endpoint spec is a JS object with the following properties:
    *
    *   - url: A fully-qualified URL
    *   - method: 'get', 'post', 'put', or 'delete'
    *   - payloadFormat: the content-type of the request data.
    *   - responseFormat: the content-type of the response data. Decoding will be handled for you.
+   *   - payloadSchema: Definition for how the payload data passed into the created method
+   *     will be processed. See "Payload Schema"
    *
-   * There is a special payloadFormat value, 'querystring', that will appear url-encoded data to
-   * the request URL instead of encoding data in the request body. It's a useful format to use with
-   * get requests.
+   * # Payload Formats
    *
-   * Both payloadFormat and responseFormat can use the following shortcuts for their corresponding
-   * mime types:
+   * Both `payloadFormat` and `responseFormat` can use the following shortcuts for their
+   * corresponding mime types:
    *
    *   - urlencoded: application/x-www-form-url-encoded
    *   - json: application/json
    *
-   * For now, these are the only two mime types supported.
+   * Requests with `method: 'get'` will automatically be sent as `urlencoded`,
+   * with any `data` passed to the endpoint fetcher being added to the `url`
+   * as query parameters.
    *
-   * The intent is that your endpoint spec can keep track of the mechanics of interacting with the
-   * backend server, and your application code can just pass a JS object endpoint fetcher. This also
-   * simplifies mocking.
+   * # Payload Schema
+   *
+   * The `payloadSchema` argument can contain one or more keys found in the data payload,
+   * and defines how to transform the request parameters accordingly.
+   *
+   * ```json
+   * let endpoint = createEndpointFetcher({
+   *   url: 'http://example.org/:one/:two',
+   *   method: 'post',
+   *   payloadSchema: {
+   *    one: { urlReplacement: ':one', remove: true },
+   *    two: { urlReplacement: ':two' },
+   *    three: { querystring: true }
+   *   }
+   * });
+   * endpoint({one: 1, two: 2, three: 3});
+   * // Calls http://example.org/1/2?three=3 with a HTTP body of '{"two": 2}'
+   * ```
+   * **urlReplacement**
+   *
+   * Can be used to replace template placeholders in the 'url' endpoint spec.
+   * If using it alongside `remove: true`, the original key will be removed from the data payload.
+   *
+   * **querystring**
+   *
+   * Forces a specific key in the `data` payload to be added to the `url`
+   * as a query parameter. This only makes sense for HTTP POST/PUT/DELETE requests,
+   * since all `data` payload gets added to the URL automatically for GET requests.
+   *
+   * @param  {Object} endpointSpec
+   * @return {Function} A function taking one argument (a payload object),
+   *                    and returns a promise.
    */
   createEndpointFetcher(endpointSpec) {
-    // Encode a payload based on the given contentType
+    /**
+     * Encode a payload based on the given contentType
+     *
+     * @param  {string} contentType
+     * @param  {Object} data
+     * @return {string}
+     */
     function encode(contentType, data) {
       switch (contentType) {
         case 'application/x-www-form-url-encoded':
@@ -79,7 +122,13 @@ class SilverStripeBackend {
       }
     }
 
-    // Decode a payload based on the given contentType
+    /**
+     * Decode a payload based on the given contentType
+     *
+     * @param  {string} contentType
+     * @param  {string} text
+     * @return {Object}
+     */
     function decode(contentType, text) {
       switch (contentType) {
         case 'application/x-www-form-url-encoded':
@@ -98,17 +147,108 @@ class SilverStripeBackend {
       }
     }
 
-    // Add a querystring to a url
+    /**
+     * Add a querystring to a url
+     *
+     * @param {string} url
+     * @param {string} querystring
+     * @return {string}
+     */
     function addQuerystring(url, querystring) {
-      if (url.match(/\?/)) return `${url}&${querystring}`;
+      if (querystring === '') {
+        return url;
+      }
+
+      if (url.match(/\?/)) {
+        return `${url}&${querystring}`;
+      }
+
       return `${url}?${querystring}`;
     }
 
-    // Parse the response based on the content type returned
+    /**
+     * Parse the response based on the content type returned
+     *
+     * @param  {Promise} response
+     * @return {Promise}
+     */
     function parseResponse(response) {
       return response.text().then(
         body => decode(response.headers.get('Content-Type'), body)
       );
+    }
+
+    /**
+     * Apply the payload schema rules to the passed-in payload,
+     * returning the transformed payload.
+     *
+     * @param  {Object} payloadSchema
+     * @param  {Object} data
+     * @return {Object}
+     */
+    function applySchemaToData(payloadSchema, data) {
+      return Object.keys(data).reduce((prev, key) => {
+        const schema = payloadSchema[key];
+
+        // Remove key if schema requires it.
+        // Usually set because the specific payload key
+        // is used to populate a url placeholder instead.
+        if (schema && (schema.remove === true || schema.querystring === true)) {
+          return prev;
+        }
+
+        // TODO Support for nested keys
+        return Object.assign(prev, { [key]: data[key] });
+      }, {});
+    }
+
+    /**
+     * Applies URL templating and query parameter transformation based on the payloadSchema.
+     *
+     * @param  {Object} payloadSchema
+     * @param  {string} url
+     * @param  {Object} data
+     * @param  {Object} opts
+     * @return {string}               New URL
+     */
+    function applySchemaToUrl(payloadSchema, url, data, opts = { setFromData: false }) {
+      let newUrl = url;
+
+      // Set query parameters
+      const queryData = Object.keys(data).reduce((prev, key) => {
+        const schema = payloadSchema[key];
+        const includeThroughSetFromData = (
+          opts.setFromData === true
+          && !(schema && schema.remove === true)
+        );
+        const includeThroughSpec = (
+          schema
+          && schema.querystring === true
+          && schema.remove !== true
+        );
+        if (includeThroughSetFromData || includeThroughSpec) {
+          return Object.assign(prev, { [key]: data[key] });
+        }
+
+        return prev;
+      }, {});
+
+      newUrl = addQuerystring(
+        newUrl,
+        encode('application/x-www-form-url-encoded', queryData)
+      );
+
+      // Template placeholders
+      newUrl = Object.keys(payloadSchema).reduce((prev, key) => {
+        const replacement = payloadSchema[key].urlReplacement;
+        if (replacement) {
+          return prev.replace(replacement, data[key]);
+        }
+
+        return prev;
+      }, newUrl);
+
+      return newUrl;
     }
 
     // Parameter defaults
@@ -116,6 +256,7 @@ class SilverStripeBackend {
       method: 'get',
       payloadFormat: 'application/x-www-form-url-encoded',
       responseFormat: 'application/json',
+      payloadSchema: {},
     }, endpointSpec);
 
     // Substitute shorcut format values with their full mime types
@@ -129,31 +270,36 @@ class SilverStripeBackend {
       }
     );
 
-    // Different execution path for using querystring as the payload format
-    if (refinedSpec.payloadFormat === 'querystring') {
-      return (data) => {
-        const headers = {
-          Accept: refinedSpec.responseFormat,
-        };
-
-        const encodedData = encode('application/x-www-form-url-encoded', data);
-        const url = addQuerystring(endpointSpec.url, encodedData);
-
-        return this[refinedSpec.method](url, null, headers)
-          .then(parseResponse);
-      };
-    }
-
-    // Return the default fetcher function
     return (data) => {
       const headers = {
         Accept: refinedSpec.responseFormat,
         'Content-Type': refinedSpec.payloadFormat,
       };
 
-      const encodedData = encode(refinedSpec.payloadFormat, data);
+      // Replace url placeholders, and add query parameters
+      // from the payload based on the schema spec.
+      const url = applySchemaToUrl(
+        refinedSpec.payloadSchema,
+        refinedSpec.url,
+        data,
+        // Always add full payload data to GET requests.
+        // GET requests with a HTTP body are technically legal,
+        // but throw an error in the WHATWG fetch() implementation.
+        { setFromData: (refinedSpec.method === 'get') }
+      );
 
-      return this[refinedSpec.method](endpointSpec.url, encodedData, headers)
+      const encodedData = encode(
+        refinedSpec.payloadFormat,
+        // Filter raw data through the defined schema,
+        // potentially removing keys because they're
+        applySchemaToData(refinedSpec.payloadSchema, data)
+      );
+
+      const args = refinedSpec.method === 'get'
+        ? [url, headers]
+        : [url, encodedData, headers];
+
+      return this[refinedSpec.method](...args)
         .then(parseResponse);
     };
   }

@@ -29,6 +29,21 @@
     };
   }
 
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
       throw new TypeError("Cannot call a class as a function");
@@ -118,7 +133,14 @@
         }
 
         function addQuerystring(url, querystring) {
-          if (url.match(/\?/)) return url + '&' + querystring;
+          if (querystring === '') {
+            return url;
+          }
+
+          if (url.match(/\?/)) {
+            return url + '&' + querystring;
+          }
+
           return url + '?' + querystring;
         }
 
@@ -128,10 +150,53 @@
           });
         }
 
+        function applySchemaToData(payloadSchema, data) {
+          return Object.keys(data).reduce(function (prev, key) {
+            var schema = payloadSchema[key];
+
+            if (schema && (schema.remove === true || schema.querystring === true)) {
+              return prev;
+            }
+
+            return Object.assign(prev, _defineProperty({}, key, data[key]));
+          }, {});
+        }
+
+        function applySchemaToUrl(payloadSchema, url, data) {
+          var opts = arguments.length <= 3 || arguments[3] === undefined ? { setFromData: false } : arguments[3];
+
+          var newUrl = url;
+
+          var queryData = Object.keys(data).reduce(function (prev, key) {
+            var schema = payloadSchema[key];
+            var includeThroughSetFromData = opts.setFromData === true && !(schema && schema.remove === true);
+            var includeThroughSpec = schema && schema.querystring === true && schema.remove !== true;
+            if (includeThroughSetFromData || includeThroughSpec) {
+              return Object.assign(prev, _defineProperty({}, key, data[key]));
+            }
+
+            return prev;
+          }, {});
+
+          newUrl = addQuerystring(newUrl, encode('application/x-www-form-url-encoded', queryData));
+
+          newUrl = Object.keys(payloadSchema).reduce(function (prev, key) {
+            var replacement = payloadSchema[key].urlReplacement;
+            if (replacement) {
+              return prev.replace(replacement, data[key]);
+            }
+
+            return prev;
+          }, newUrl);
+
+          return newUrl;
+        }
+
         var refinedSpec = Object.assign({
           method: 'get',
           payloadFormat: 'application/x-www-form-url-encoded',
-          responseFormat: 'application/json'
+          responseFormat: 'application/json',
+          payloadSchema: {}
         }, endpointSpec);
 
         var formatShortcuts = {
@@ -142,28 +207,19 @@
           if (formatShortcuts[refinedSpec[key]]) refinedSpec[key] = formatShortcuts[refinedSpec[key]];
         });
 
-        if (refinedSpec.payloadFormat === 'querystring') {
-          return function (data) {
-            var headers = {
-              Accept: refinedSpec.responseFormat
-            };
-
-            var encodedData = encode('application/x-www-form-url-encoded', data);
-            var url = addQuerystring(endpointSpec.url, encodedData);
-
-            return _this[refinedSpec.method](url, null, headers).then(parseResponse);
-          };
-        }
-
         return function (data) {
           var headers = {
             Accept: refinedSpec.responseFormat,
             'Content-Type': refinedSpec.payloadFormat
           };
 
-          var encodedData = encode(refinedSpec.payloadFormat, data);
+          var url = applySchemaToUrl(refinedSpec.payloadSchema, refinedSpec.url, data, { setFromData: refinedSpec.method === 'get' });
 
-          return _this[refinedSpec.method](endpointSpec.url, encodedData, headers).then(parseResponse);
+          var encodedData = encode(refinedSpec.payloadFormat, applySchemaToData(refinedSpec.payloadSchema, data));
+
+          var args = refinedSpec.method === 'get' ? [url, headers] : [url, encodedData, headers];
+
+          return _this[refinedSpec.method].apply(_this, args).then(parseResponse);
         };
       }
     }, {
