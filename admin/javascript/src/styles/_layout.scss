@@ -1,9 +1,9 @@
-.cms-south-actions {
-  height: 53px;
+.cms-south-actions {  			// Todo: update variables
+  height: 53px;					// navbar-total-height
   position: absolute;
   bottom: 0;
   width: 100%;
-  border-top: 1px solid #ddd;
-  background-color: #f6f7f8;
-  padding: 8px 15px;
+  border-top: 1px solid #ddd;	// $border-color
+  background-color: #f6f7f8;	// $body-bg
+  padding: 10px 15px; 			// $spacer-y*.625 $spacer-x
 }

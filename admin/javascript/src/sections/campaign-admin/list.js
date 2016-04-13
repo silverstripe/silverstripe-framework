@@ -118,6 +118,7 @@ class CampaignListContainer extends SilverStripeComponent {
             style={'success'}
             loading={this.props.campaign.isPublishing}
             handleClick={this.handlePublish}
+            icon={'rocket'}
           />
         );
       } else if (this.props.record.State === 'published') {
@@ -125,7 +126,8 @@ class CampaignListContainer extends SilverStripeComponent {
         button = (
           <FormAction
             label={i18n._t('Campaigns.REVERTCAMPAIGN')}
-            style={'warning'}
+            style={'default'}
+            icon={'back-in-time'}
             disabled
           />
         );
