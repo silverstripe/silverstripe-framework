@@ -1,0 +1,1836 @@
+/*<?php
+// *************
+// Self-generating. Run with PHP on the command line to re-generate.
+// *************
+
+// Make sure we're being run in the CLI
+if (php_sapi_name() != 'cli') die;
+
+// Delete the initial /* characters, and print a friendly greeting
+echo "\010\010Generating self...";
+
+// The list of NOP mixins to generate
+$mixins = [
+	'align-items',
+	'animation-delay',
+	'animation-direction',
+	'animation-duration',
+	'animation-fill-mode',
+	'animation-iteration-count',
+	'animation-name',
+	'animation-play-state',
+	'animation-timing-function',
+	'animation',
+	'appearance',
+	'backface-visibility',
+	'background-image',
+	'background',
+	'border-image',
+	'calc',
+	'column-count',
+	'column-fill',
+	'column-gap',
+	'column-rule-color',
+	'column-rule-style',
+	'column-rule-width',
+	'column-rule',
+	'column-span',
+	'column-width',
+	'columns',
+	'display',
+	'filter',
+	'flex-direction',
+	'flex',
+	'font-feature-settings',
+	'hidpi',
+	'hyphens',
+	'image-rendering',
+	'justify-content',
+	'keyframes',
+	'linear-gradient',
+	'perspective',
+	'placeholder',
+	'radial-gradient',
+	'selection',
+	'text-decoration-color',
+	'text-decoration-line',
+	'text-decoration-style',
+	'text-decoration',
+	'transform-origin',
+	'transform-style',
+	'transform',
+	'transition-delay',
+	'transition-duration',
+	'transition-property',
+	'transition-timing-function',
+	'transition',
+	'user-select'
+];
+
+// Get this file as a prepend, stripping off the existing scss
+$output = file_get_contents(__FILE__);
+$output = preg_replace('{\*'.'/.*}', '*'.'/', $output);
+
+// Build up the mixins
+foreach ($mixins as $mixin) {
+  $output .= <<<END
+@mixin $mixin(\$args...) {
+	$mixin: \$args;
+}
+END;
+
+  $output .= "\n\n";
+}
+
+// Overwrite ourselves
+file_put_contents(__FILE__, $output);
+
+// Done
+echo "done\n";
+die;
+
+?>*/
+
+@mixin user-select($args...) {
+	user-select: $args;
+}
+
+@mixin box-sizing($args...) {
+	box-sizing: $args;
+}
+
+@mixin background($args...) {
+	background: $args;
+}
+
+@mixin background-image($args...) {
+	background-image: $args;
+}
+
+@mixin align-items($args...) {
+	align-items: $args;
+}
+
+@mixin animation-delay($args...) {
+	animation-delay: $args;
+}
+
+@mixin animation-direction($args...) {
+	animation-direction: $args;
+}
+
+@mixin animation-duration($args...) {
+	animation-duration: $args;
+}
+
+@mixin animation-fill-mode($args...) {
+	animation-fill-mode: $args;
+}
+
+@mixin animation-iteration-count($args...) {
+	animation-iteration-count: $args;
+}
+
+@mixin animation-name($args...) {
+	animation-name: $args;
+}
+
+@mixin animation-play-state($args...) {
+	animation-play-state: $args;
+}
+
+@mixin animation-timing-function($args...) {
+	animation-timing-function: $args;
+}
+
+@mixin animation($args...) {
+	animation: $args;
+}
+
+@mixin appearance($args...) {
+	appearance: $args;
+}
+
+@mixin backface-visibility($args...) {
+	backface-visibility: $args;
+}
+
+@mixin background-image($args...) {
+	background-image: $args;
+}
+
+@mixin background($args...) {
+	background: $args;
+}
+
+@mixin border-image($args...) {
+	border-image: $args;
+}
+
+@mixin calc($args...) {
+	calc: $args;
+}
+
+@mixin column-count($args...) {
+	column-count: $args;
+}
+
+@mixin column-fill($args...) {
+	column-fill: $args;
+}
+
+@mixin column-gap($args...) {
+	column-gap: $args;
+}
+
+@mixin column-rule-color($args...) {
+	column-rule-color: $args;
+}
+
+@mixin column-rule-style($args...) {
+	column-rule-style: $args;
+}
+
+@mixin column-rule-width($args...) {
+	column-rule-width: $args;
+}
+
+@mixin column-rule($args...) {
+	column-rule: $args;
+}
+
+@mixin column-span($args...) {
+	column-span: $args;
+}
+
+@mixin column-width($args...) {
+	column-width: $args;
+}
+
+@mixin columns($args...) {
+	columns: $args;
+}
+
+@mixin display($args...) {
+	display: $args;
+}
+
+@mixin filter($args...) {
+	filter: $args;
+}
+
+@mixin flex-direction($args...) {
+	flex-direction: $args;
+}
+
+@mixin flex($args...) {
+	flex: $args;
+}
+
+@mixin font-feature-settings($args...) {
+	font-feature-settings: $args;
+}
+
+@mixin hidpi($args...) {
+	hidpi: $args;
+}
+
+@mixin hyphens($args...) {
+	hyphens: $args;
+}
+
+@mixin image-rendering($args...) {
+	image-rendering: $args;
+}
+
+@mixin justify-content($args...) {
+	justify-content: $args;
+}
+
+@mixin keyframes($args...) {
+	keyframes: $args;
+}
+
+@mixin linear-gradient($args...) {
+	linear-gradient: $args;
+}
+
+@mixin perspective($args...) {
+	perspective: $args;
+}
+
+@mixin placeholder($args...) {
+	placeholder: $args;
+}
+
+@mixin radial-gradient($args...) {
+	radial-gradient: $args;
+}
+
+@mixin selection($args...) {
+	selection: $args;
+}
+
+@mixin text-decoration-color($args...) {
+	text-decoration-color: $args;
+}
+
+@mixin text-decoration-line($args...) {
+	text-decoration-line: $args;
+}
+
+@mixin text-decoration-style($args...) {
+	text-decoration-style: $args;
+}
+
+@mixin text-decoration($args...) {
+	text-decoration: $args;
+}
+
+@mixin transform-origin($args...) {
+	transform-origin: $args;
+}
+
+@mixin transform-style($args...) {
+	transform-style: $args;
+}
+
+@mixin transform($args...) {
+	transform: $args;
+}
+
+@mixin transition-delay($args...) {
+	transition-delay: $args;
+}
+
+@mixin transition-duration($args...) {
+	transition-duration: $args;
+}
+
+@mixin transition-property($args...) {
+	transition-property: $args;
+}
+
+@mixin transition-timing-function($args...) {
+	transition-timing-function: $args;
+}
+
+@mixin transition($args...) {
+	transition: $args;
+}
+
+@mixin user-select($args...) {
+	user-select: $args;
+}
+
+@mixin align-items($args...) {
+	align-items: $args;
+}
+
+@mixin animation-delay($args...) {
+	animation-delay: $args;
+}
+
+@mixin animation-direction($args...) {
+	animation-direction: $args;
+}
+
+@mixin animation-duration($args...) {
+	animation-duration: $args;
+}
+
+@mixin animation-fill-mode($args...) {
+	animation-fill-mode: $args;
+}
+
+@mixin animation-iteration-count($args...) {
+	animation-iteration-count: $args;
+}
+
+@mixin animation-name($args...) {
+	animation-name: $args;
+}
+
+@mixin animation-play-state($args...) {
+	animation-play-state: $args;
+}
+
+@mixin animation-timing-function($args...) {
+	animation-timing-function: $args;
+}
+
+@mixin animation($args...) {
+	animation: $args;
+}
+
+@mixin appearance($args...) {
+	appearance: $args;
+}
+
+@mixin backface-visibility($args...) {
+	backface-visibility: $args;
+}
+
+@mixin background-image($args...) {
+	background-image: $args;
+}
+
+@mixin background($args...) {
+	background: $args;
+}
+
+@mixin border-image($args...) {
+	border-image: $args;
+}
+
+@mixin calc($args...) {
+	calc: $args;
+}
+
+@mixin column-count($args...) {
+	column-count: $args;
+}
+
+@mixin column-fill($args...) {
+	column-fill: $args;
+}
+
+@mixin column-gap($args...) {
+	column-gap: $args;
+}
+
+@mixin column-rule-color($args...) {
+	column-rule-color: $args;
+}
+
+@mixin column-rule-style($args...) {
+	column-rule-style: $args;
+}
+
+@mixin column-rule-width($args...) {
+	column-rule-width: $args;
+}
+
+@mixin column-rule($args...) {
+	column-rule: $args;
+}
+
+@mixin column-span($args...) {
+	column-span: $args;
+}
+
+@mixin column-width($args...) {
+	column-width: $args;
+}
+
+@mixin columns($args...) {
+	columns: $args;
+}
+
+@mixin display($args...) {
+	display: $args;
+}
+
+@mixin filter($args...) {
+	filter: $args;
+}
+
+@mixin flex-direction($args...) {
+	flex-direction: $args;
+}
+
+@mixin flex($args...) {
+	flex: $args;
+}
+
+@mixin font-feature-settings($args...) {
+	font-feature-settings: $args;
+}
+
+@mixin hidpi($args...) {
+	hidpi: $args;
+}
+
+@mixin hyphens($args...) {
+	hyphens: $args;
+}
+
+@mixin image-rendering($args...) {
+	image-rendering: $args;
+}
+
+@mixin justify-content($args...) {
+	justify-content: $args;
+}
+
+@mixin keyframes($args...) {
+	keyframes: $args;
+}
+
+@mixin linear-gradient($args...) {
+	linear-gradient: $args;
+}
+
+@mixin perspective($args...) {
+	perspective: $args;
+}
+
+@mixin placeholder($args...) {
+	placeholder: $args;
+}
+
+@mixin radial-gradient($args...) {
+	radial-gradient: $args;
+}
+
+@mixin selection($args...) {
+	selection: $args;
+}
+
+@mixin text-decoration-color($args...) {
+	text-decoration-color: $args;
+}
+
+@mixin text-decoration-line($args...) {
+	text-decoration-line: $args;
+}
+
+@mixin text-decoration-style($args...) {
+	text-decoration-style: $args;
+}
+
+@mixin text-decoration($args...) {
+	text-decoration: $args;
+}
+
+@mixin transform-origin($args...) {
+	transform-origin: $args;
+}
+
+@mixin transform-style($args...) {
+	transform-style: $args;
+}
+
+@mixin transform($args...) {
+	transform: $args;
+}
+
+@mixin transition-delay($args...) {
+	transition-delay: $args;
+}
+
+@mixin transition-duration($args...) {
+	transition-duration: $args;
+}
+
+@mixin transition-property($args...) {
+	transition-property: $args;
+}
+
+@mixin transition-timing-function($args...) {
+	transition-timing-function: $args;
+}
+
+@mixin transition($args...) {
+	transition: $args;
+}
+
+@mixin user-select($args...) {
+	user-select: $args;
+}
+
+@mixin align-items($args...) {
+	align-items: $args;
+}
+
+@mixin animation-delay($args...) {
+	animation-delay: $args;
+}
+
+@mixin animation-direction($args...) {
+	animation-direction: $args;
+}
+
+@mixin animation-duration($args...) {
+	animation-duration: $args;
+}
+
+@mixin animation-fill-mode($args...) {
+	animation-fill-mode: $args;
+}
+
+@mixin animation-iteration-count($args...) {
+	animation-iteration-count: $args;
+}
+
+@mixin animation-name($args...) {
+	animation-name: $args;
+}
+
+@mixin animation-play-state($args...) {
+	animation-play-state: $args;
+}
+
+@mixin animation-timing-function($args...) {
+	animation-timing-function: $args;
+}
+
+@mixin animation($args...) {
+	animation: $args;
+}
+
+@mixin appearance($args...) {
+	appearance: $args;
+}
+
+@mixin backface-visibility($args...) {
+	backface-visibility: $args;
+}
+
+@mixin background-image($args...) {
+	background-image: $args;
+}
+
+@mixin background($args...) {
+	background: $args;
+}
+
+@mixin border-image($args...) {
+	border-image: $args;
+}
+
+@mixin calc($args...) {
+	calc: $args;
+}
+
+@mixin column-count($args...) {
+	column-count: $args;
+}
+
+@mixin column-fill($args...) {
+	column-fill: $args;
+}
+
+@mixin column-gap($args...) {
+	column-gap: $args;
+}
+
+@mixin column-rule-color($args...) {
+	column-rule-color: $args;
+}
+
+@mixin column-rule-style($args...) {
+	column-rule-style: $args;
+}
+
+@mixin column-rule-width($args...) {
+	column-rule-width: $args;
+}
+
+@mixin column-rule($args...) {
+	column-rule: $args;
+}
+
+@mixin column-span($args...) {
+	column-span: $args;
+}
+
+@mixin column-width($args...) {
+	column-width: $args;
+}
+
+@mixin columns($args...) {
+	columns: $args;
+}
+
+@mixin display($args...) {
+	display: $args;
+}
+
+@mixin filter($args...) {
+	filter: $args;
+}
+
+@mixin flex-direction($args...) {
+	flex-direction: $args;
+}
+
+@mixin flex($args...) {
+	flex: $args;
+}
+
+@mixin font-feature-settings($args...) {
+	font-feature-settings: $args;
+}
+
+@mixin hidpi($args...) {
+	hidpi: $args;
+}
+
+@mixin hyphens($args...) {
+	hyphens: $args;
+}
+
+@mixin image-rendering($args...) {
+	image-rendering: $args;
+}
+
+@mixin justify-content($args...) {
+	justify-content: $args;
+}
+
+@mixin keyframes($args...) {
+	keyframes: $args;
+}
+
+@mixin linear-gradient($args...) {
+	linear-gradient: $args;
+}
+
+@mixin perspective($args...) {
+	perspective: $args;
+}
+
+@mixin placeholder($args...) {
+	placeholder: $args;
+}
+
+@mixin radial-gradient($args...) {
+	radial-gradient: $args;
+}
+
+@mixin selection($args...) {
+	selection: $args;
+}
+
+@mixin text-decoration-color($args...) {
+	text-decoration-color: $args;
+}
+
+@mixin text-decoration-line($args...) {
+	text-decoration-line: $args;
+}
+
+@mixin text-decoration-style($args...) {
+	text-decoration-style: $args;
+}
+
+@mixin text-decoration($args...) {
+	text-decoration: $args;
+}
+
+@mixin transform-origin($args...) {
+	transform-origin: $args;
+}
+
+@mixin transform-style($args...) {
+	transform-style: $args;
+}
+
+@mixin transform($args...) {
+	transform: $args;
+}
+
+@mixin transition-delay($args...) {
+	transition-delay: $args;
+}
+
+@mixin transition-duration($args...) {
+	transition-duration: $args;
+}
+
+@mixin transition-property($args...) {
+	transition-property: $args;
+}
+
+@mixin transition-timing-function($args...) {
+	transition-timing-function: $args;
+}
+
+@mixin transition($args...) {
+	transition: $args;
+}
+
+@mixin user-select($args...) {
+	user-select: $args;
+}
+
+@mixin align-items($args...) {
+	align-items: $args;
+}
+
+@mixin animation-delay($args...) {
+	animation-delay: $args;
+}
+
+@mixin animation-direction($args...) {
+	animation-direction: $args;
+}
+
+@mixin animation-duration($args...) {
+	animation-duration: $args;
+}
+
+@mixin animation-fill-mode($args...) {
+	animation-fill-mode: $args;
+}
+
+@mixin animation-iteration-count($args...) {
+	animation-iteration-count: $args;
+}
+
+@mixin animation-name($args...) {
+	animation-name: $args;
+}
+
+@mixin animation-play-state($args...) {
+	animation-play-state: $args;
+}
+
+@mixin animation-timing-function($args...) {
+	animation-timing-function: $args;
+}
+
+@mixin animation($args...) {
+	animation: $args;
+}
+
+@mixin appearance($args...) {
+	appearance: $args;
+}
+
+@mixin backface-visibility($args...) {
+	backface-visibility: $args;
+}
+
+@mixin background-image($args...) {
+	background-image: $args;
+}
+
+@mixin background($args...) {
+	background: $args;
+}
+
+@mixin border-image($args...) {
+	border-image: $args;
+}
+
+@mixin calc($args...) {
+	calc: $args;
+}
+
+@mixin column-count($args...) {
+	column-count: $args;
+}
+
+@mixin column-fill($args...) {
+	column-fill: $args;
+}
+
+@mixin column-gap($args...) {
+	column-gap: $args;
+}
+
+@mixin column-rule-color($args...) {
+	column-rule-color: $args;
+}
+
+@mixin column-rule-style($args...) {
+	column-rule-style: $args;
+}
+
+@mixin column-rule-width($args...) {
+	column-rule-width: $args;
+}
+
+@mixin column-rule($args...) {
+	column-rule: $args;
+}
+
+@mixin column-span($args...) {
+	column-span: $args;
+}
+
+@mixin column-width($args...) {
+	column-width: $args;
+}
+
+@mixin columns($args...) {
+	columns: $args;
+}
+
+@mixin display($args...) {
+	display: $args;
+}
+
+@mixin filter($args...) {
+	filter: $args;
+}
+
+@mixin flex-direction($args...) {
+	flex-direction: $args;
+}
+
+@mixin flex($args...) {
+	flex: $args;
+}
+
+@mixin font-feature-settings($args...) {
+	font-feature-settings: $args;
+}
+
+@mixin hidpi($args...) {
+	hidpi: $args;
+}
+
+@mixin hyphens($args...) {
+	hyphens: $args;
+}
+
+@mixin image-rendering($args...) {
+	image-rendering: $args;
+}
+
+@mixin justify-content($args...) {
+	justify-content: $args;
+}
+
+@mixin keyframes($args...) {
+	keyframes: $args;
+}
+
+@mixin linear-gradient($args...) {
+	linear-gradient: $args;
+}
+
+@mixin perspective($args...) {
+	perspective: $args;
+}
+
+@mixin placeholder($args...) {
+	placeholder: $args;
+}
+
+@mixin radial-gradient($args...) {
+	radial-gradient: $args;
+}
+
+@mixin selection($args...) {
+	selection: $args;
+}
+
+@mixin text-decoration-color($args...) {
+	text-decoration-color: $args;
+}
+
+@mixin text-decoration-line($args...) {
+	text-decoration-line: $args;
+}
+
+@mixin text-decoration-style($args...) {
+	text-decoration-style: $args;
+}
+
+@mixin text-decoration($args...) {
+	text-decoration: $args;
+}
+
+@mixin transform-origin($args...) {
+	transform-origin: $args;
+}
+
+@mixin transform-style($args...) {
+	transform-style: $args;
+}
+
+@mixin transform($args...) {
+	transform: $args;
+}
+
+@mixin transition-delay($args...) {
+	transition-delay: $args;
+}
+
+@mixin transition-duration($args...) {
+	transition-duration: $args;
+}
+
+@mixin transition-property($args...) {
+	transition-property: $args;
+}
+
+@mixin transition-timing-function($args...) {
+	transition-timing-function: $args;
+}
+
+@mixin transition($args...) {
+	transition: $args;
+}
+
+@mixin user-select($args...) {
+	user-select: $args;
+}
+@mixin align-items($args...) {
+	align-items: $args;
+}
+
+@mixin animation-delay($args...) {
+	animation-delay: $args;
+}
+
+@mixin animation-direction($args...) {
+	animation-direction: $args;
+}
+
+@mixin animation-duration($args...) {
+	animation-duration: $args;
+}
+
+@mixin animation-fill-mode($args...) {
+	animation-fill-mode: $args;
+}
+
+@mixin animation-iteration-count($args...) {
+	animation-iteration-count: $args;
+}
+
+@mixin animation-name($args...) {
+	animation-name: $args;
+}
+
+@mixin animation-play-state($args...) {
+	animation-play-state: $args;
+}
+
+@mixin animation-timing-function($args...) {
+	animation-timing-function: $args;
+}
+
+@mixin animation($args...) {
+	animation: $args;
+}
+
+@mixin appearance($args...) {
+	appearance: $args;
+}
+
+@mixin backface-visibility($args...) {
+	backface-visibility: $args;
+}
+
+@mixin background-image($args...) {
+	background-image: $args;
+}
+
+@mixin background($args...) {
+	background: $args;
+}
+
+@mixin border-image($args...) {
+	border-image: $args;
+}
+
+@mixin calc($args...) {
+	calc: $args;
+}
+
+@mixin column-count($args...) {
+	column-count: $args;
+}
+
+@mixin column-fill($args...) {
+	column-fill: $args;
+}
+
+@mixin column-gap($args...) {
+	column-gap: $args;
+}
+
+@mixin column-rule-color($args...) {
+	column-rule-color: $args;
+}
+
+@mixin column-rule-style($args...) {
+	column-rule-style: $args;
+}
+
+@mixin column-rule-width($args...) {
+	column-rule-width: $args;
+}
+
+@mixin column-rule($args...) {
+	column-rule: $args;
+}
+
+@mixin column-span($args...) {
+	column-span: $args;
+}
+
+@mixin column-width($args...) {
+	column-width: $args;
+}
+
+@mixin columns($args...) {
+	columns: $args;
+}
+
+@mixin display($args...) {
+	display: $args;
+}
+
+@mixin filter($args...) {
+	filter: $args;
+}
+
+@mixin flex-direction($args...) {
+	flex-direction: $args;
+}
+
+@mixin flex($args...) {
+	flex: $args;
+}
+
+@mixin font-feature-settings($args...) {
+	font-feature-settings: $args;
+}
+
+@mixin hidpi($args...) {
+	hidpi: $args;
+}
+
+@mixin hyphens($args...) {
+	hyphens: $args;
+}
+
+@mixin image-rendering($args...) {
+	image-rendering: $args;
+}
+
+@mixin justify-content($args...) {
+	justify-content: $args;
+}
+
+@mixin keyframes($args...) {
+	keyframes: $args;
+}
+
+@mixin linear-gradient($args...) {
+	linear-gradient: $args;
+}
+
+@mixin perspective($args...) {
+	perspective: $args;
+}
+
+@mixin placeholder($args...) {
+	placeholder: $args;
+}
+
+@mixin radial-gradient($args...) {
+	radial-gradient: $args;
+}
+
+@mixin selection($args...) {
+	selection: $args;
+}
+
+@mixin text-decoration-color($args...) {
+	text-decoration-color: $args;
+}
+
+@mixin text-decoration-line($args...) {
+	text-decoration-line: $args;
+}
+
+@mixin text-decoration-style($args...) {
+	text-decoration-style: $args;
+}
+
+@mixin text-decoration($args...) {
+	text-decoration: $args;
+}
+
+@mixin transform-origin($args...) {
+	transform-origin: $args;
+}
+
+@mixin transform-style($args...) {
+	transform-style: $args;
+}
+
+@mixin transform($args...) {
+	transform: $args;
+}
+
+@mixin transition-delay($args...) {
+	transition-delay: $args;
+}
+
+@mixin transition-duration($args...) {
+	transition-duration: $args;
+}
+
+@mixin transition-property($args...) {
+	transition-property: $args;
+}
+
+@mixin transition-timing-function($args...) {
+	transition-timing-function: $args;
+}
+
+@mixin transition($args...) {
+	transition: $args;
+}
+
+@mixin user-select($args...) {
+	user-select: $args;
+}
+
+@mixin align-items($args...) {
+	align-items: $args;
+}
+
+@mixin animation-delay($args...) {
+	animation-delay: $args;
+}
+
+@mixin animation-direction($args...) {
+	animation-direction: $args;
+}
+
+@mixin animation-duration($args...) {
+	animation-duration: $args;
+}
+
+@mixin animation-fill-mode($args...) {
+	animation-fill-mode: $args;
+}
+
+@mixin animation-iteration-count($args...) {
+	animation-iteration-count: $args;
+}
+
+@mixin animation-name($args...) {
+	animation-name: $args;
+}
+
+@mixin animation-play-state($args...) {
+	animation-play-state: $args;
+}
+
+@mixin animation-timing-function($args...) {
+	animation-timing-function: $args;
+}
+
+@mixin animation($args...) {
+	animation: $args;
+}
+
+@mixin appearance($args...) {
+	appearance: $args;
+}
+
+@mixin backface-visibility($args...) {
+	backface-visibility: $args;
+}
+
+@mixin background-image($args...) {
+	background-image: $args;
+}
+
+@mixin background($args...) {
+	background: $args;
+}
+
+@mixin border-image($args...) {
+	border-image: $args;
+}
+
+@mixin calc($args...) {
+	calc: $args;
+}
+
+@mixin column-count($args...) {
+	column-count: $args;
+}
+
+@mixin column-fill($args...) {
+	column-fill: $args;
+}
+
+@mixin column-gap($args...) {
+	column-gap: $args;
+}
+
+@mixin column-rule-color($args...) {
+	column-rule-color: $args;
+}
+
+@mixin column-rule-style($args...) {
+	column-rule-style: $args;
+}
+
+@mixin column-rule-width($args...) {
+	column-rule-width: $args;
+}
+
+@mixin column-rule($args...) {
+	column-rule: $args;
+}
+
+@mixin column-span($args...) {
+	column-span: $args;
+}
+
+@mixin column-width($args...) {
+	column-width: $args;
+}
+
+@mixin columns($args...) {
+	columns: $args;
+}
+
+@mixin display($args...) {
+	display: $args;
+}
+
+@mixin filter($args...) {
+	filter: $args;
+}
+
+@mixin flex-direction($args...) {
+	flex-direction: $args;
+}
+
+@mixin flex($args...) {
+	flex: $args;
+}
+
+@mixin font-feature-settings($args...) {
+	font-feature-settings: $args;
+}
+
+@mixin hidpi($args...) {
+	hidpi: $args;
+}
+
+@mixin hyphens($args...) {
+	hyphens: $args;
+}
+
+@mixin image-rendering($args...) {
+	image-rendering: $args;
+}
+
+@mixin justify-content($args...) {
+	justify-content: $args;
+}
+
+@mixin keyframes($args...) {
+	keyframes: $args;
+}
+
+@mixin linear-gradient($args...) {
+	linear-gradient: $args;
+}
+
+@mixin perspective($args...) {
+	perspective: $args;
+}
+
+@mixin placeholder($args...) {
+	placeholder: $args;
+}
+
+@mixin radial-gradient($args...) {
+	radial-gradient: $args;
+}
+
+@mixin selection($args...) {
+	selection: $args;
+}
+
+@mixin text-decoration-color($args...) {
+	text-decoration-color: $args;
+}
+
+@mixin text-decoration-line($args...) {
+	text-decoration-line: $args;
+}
+
+@mixin text-decoration-style($args...) {
+	text-decoration-style: $args;
+}
+
+@mixin text-decoration($args...) {
+	text-decoration: $args;
+}
+
+@mixin transform-origin($args...) {
+	transform-origin: $args;
+}
+
+@mixin transform-style($args...) {
+	transform-style: $args;
+}
+
+@mixin transform($args...) {
+	transform: $args;
+}
+
+@mixin transition-delay($args...) {
+	transition-delay: $args;
+}
+
+@mixin transition-duration($args...) {
+	transition-duration: $args;
+}
+
+@mixin transition-property($args...) {
+	transition-property: $args;
+}
+
+@mixin transition-timing-function($args...) {
+	transition-timing-function: $args;
+}
+
+@mixin transition($args...) {
+	transition: $args;
+}
+
+@mixin user-select($args...) {
+	user-select: $args;
+}
+
+@mixin align-items($args...) {
+	align-items: $args;
+}
+
+@mixin animation-delay($args...) {
+	animation-delay: $args;
+}
+
+@mixin animation-direction($args...) {
+	animation-direction: $args;
+}
+
+@mixin animation-duration($args...) {
+	animation-duration: $args;
+}
+
+@mixin animation-fill-mode($args...) {
+	animation-fill-mode: $args;
+}
+
+@mixin animation-iteration-count($args...) {
+	animation-iteration-count: $args;
+}
+
+@mixin animation-name($args...) {
+	animation-name: $args;
+}
+
+@mixin animation-play-state($args...) {
+	animation-play-state: $args;
+}
+
+@mixin animation-timing-function($args...) {
+	animation-timing-function: $args;
+}
+
+@mixin animation($args...) {
+	animation: $args;
+}
+
+@mixin appearance($args...) {
+	appearance: $args;
+}
+
+@mixin backface-visibility($args...) {
+	backface-visibility: $args;
+}
+
+@mixin background-image($args...) {
+	background-image: $args;
+}
+
+@mixin background($args...) {
+	background: $args;
+}
+
+@mixin border-image($args...) {
+	border-image: $args;
+}
+
+@mixin calc($args...) {
+	calc: $args;
+}
+
+@mixin column-count($args...) {
+	column-count: $args;
+}
+
+@mixin column-fill($args...) {
+	column-fill: $args;
+}
+
+@mixin column-gap($args...) {
+	column-gap: $args;
+}
+
+@mixin column-rule-color($args...) {
+	column-rule-color: $args;
+}
+
+@mixin column-rule-style($args...) {
+	column-rule-style: $args;
+}
+
+@mixin column-rule-width($args...) {
+	column-rule-width: $args;
+}
+
+@mixin column-rule($args...) {
+	column-rule: $args;
+}
+
+@mixin column-span($args...) {
+	column-span: $args;
+}
+
+@mixin column-width($args...) {
+	column-width: $args;
+}
+
+@mixin columns($args...) {
+	columns: $args;
+}
+
+@mixin display($args...) {
+	display: $args;
+}
+
+@mixin filter($args...) {
+	filter: $args;
+}
+
+@mixin flex-direction($args...) {
+	flex-direction: $args;
+}
+
+@mixin flex($args...) {
+	flex: $args;
+}
+
+@mixin font-feature-settings($args...) {
+	font-feature-settings: $args;
+}
+
+@mixin hidpi($args...) {
+	hidpi: $args;
+}
+
+@mixin hyphens($args...) {
+	hyphens: $args;
+}
+
+@mixin image-rendering($args...) {
+	image-rendering: $args;
+}
+
+@mixin justify-content($args...) {
+	justify-content: $args;
+}
+
+@mixin keyframes($args...) {
+	keyframes: $args;
+}
+
+@mixin linear-gradient($args...) {
+	linear-gradient: $args;
+}
+
+@mixin perspective($args...) {
+	perspective: $args;
+}
+
+@mixin placeholder($args...) {
+	placeholder: $args;
+}
+
+@mixin radial-gradient($args...) {
+	radial-gradient: $args;
+}
+
+@mixin selection($args...) {
+	selection: $args;
+}
+
+@mixin text-decoration-color($args...) {
+	text-decoration-color: $args;
+}
+
+@mixin text-decoration-line($args...) {
+	text-decoration-line: $args;
+}
+
+@mixin text-decoration-style($args...) {
+	text-decoration-style: $args;
+}
+
+@mixin text-decoration($args...) {
+	text-decoration: $args;
+}
+
+@mixin transform-origin($args...) {
+	transform-origin: $args;
+}
+
+@mixin transform-style($args...) {
+	transform-style: $args;
+}
+
+@mixin transform($args...) {
+	transform: $args;
+}
+
+@mixin transition-delay($args...) {
+	transition-delay: $args;
+}
+
+@mixin transition-duration($args...) {
+	transition-duration: $args;
+}
+
+@mixin transition-property($args...) {
+	transition-property: $args;
+}
+
+@mixin transition-timing-function($args...) {
+	transition-timing-function: $args;
+}
+
+@mixin transition($args...) {
+	transition: $args;
+}
+
+@mixin user-select($args...) {
+	user-select: $args;
+}
+
+@mixin align-items($args...) {
+	align-items: $args;
+}
+
+@mixin animation-delay($args...) {
+	animation-delay: $args;
+}
+
+@mixin animation-direction($args...) {
+	animation-direction: $args;
+}
+
+@mixin animation-duration($args...) {
+	animation-duration: $args;
+}
+
+@mixin animation-fill-mode($args...) {
+	animation-fill-mode: $args;
+}
+
+@mixin animation-iteration-count($args...) {
+	animation-iteration-count: $args;
+}
+
+@mixin animation-name($args...) {
+	animation-name: $args;
+}
+
+@mixin animation-play-state($args...) {
+	animation-play-state: $args;
+}
+
+@mixin animation-timing-function($args...) {
+	animation-timing-function: $args;
+}
+
+@mixin animation($args...) {
+	animation: $args;
+}
+
+@mixin appearance($args...) {
+	appearance: $args;
+}
+
+@mixin backface-visibility($args...) {
+	backface-visibility: $args;
+}
+
+@mixin background-image($args...) {
+	background-image: $args;
+}
+
+@mixin background($args...) {
+	background: $args;
+}
+
+@mixin border-image($args...) {
+	border-image: $args;
+}
+
+@mixin calc($args...) {
+	calc: $args;
+}
+
+@mixin column-count($args...) {
+	column-count: $args;
+}
+
+@mixin column-fill($args...) {
+	column-fill: $args;
+}
+
+@mixin column-gap($args...) {
+	column-gap: $args;
+}
+
+@mixin column-rule-color($args...) {
+	column-rule-color: $args;
+}
+
+@mixin column-rule-style($args...) {
+	column-rule-style: $args;
+}
+
+@mixin column-rule-width($args...) {
+	column-rule-width: $args;
+}
+
+@mixin column-rule($args...) {
+	column-rule: $args;
+}
+
+@mixin column-span($args...) {
+	column-span: $args;
+}
+
+@mixin column-width($args...) {
+	column-width: $args;
+}
+
+@mixin columns($args...) {
+	columns: $args;
+}
+
+@mixin display($args...) {
+	display: $args;
+}
+
+@mixin filter($args...) {
+	filter: $args;
+}
+
+@mixin flex-direction($args...) {
+	flex-direction: $args;
+}
+
+@mixin flex($args...) {
+	flex: $args;
+}
+
+@mixin font-feature-settings($args...) {
+	font-feature-settings: $args;
+}
+
+@mixin hidpi($args...) {
+	hidpi: $args;
+}
+
+@mixin hyphens($args...) {
+	hyphens: $args;
+}
+
+@mixin image-rendering($args...) {
+	image-rendering: $args;
+}
+
+@mixin justify-content($args...) {
+	justify-content: $args;
+}
+
+@mixin keyframes($args...) {
+	keyframes: $args;
+}
+
+@mixin linear-gradient($args...) {
+	linear-gradient: $args;
+}
+
+@mixin perspective($args...) {
+	perspective: $args;
+}
+
+@mixin placeholder($args...) {
+	placeholder: $args;
+}
+
+@mixin radial-gradient($args...) {
+	radial-gradient: $args;
+}
+
+@mixin selection($args...) {
+	selection: $args;
+}
+
+@mixin text-decoration-color($args...) {
+	text-decoration-color: $args;
+}
+
+@mixin text-decoration-line($args...) {
+	text-decoration-line: $args;
+}
+
+@mixin text-decoration-style($args...) {
+	text-decoration-style: $args;
+}
+
+@mixin text-decoration($args...) {
+	text-decoration: $args;
+}
+
+@mixin transform-origin($args...) {
+	transform-origin: $args;
+}
+
+@mixin transform-style($args...) {
+	transform-style: $args;
+}
+
+@mixin transform($args...) {
+	transform: $args;
+}
+
+@mixin transition-delay($args...) {
+	transition-delay: $args;
+}
+
+@mixin transition-duration($args...) {
+	transition-duration: $args;
+}
+
+@mixin transition-property($args...) {
+	transition-property: $args;
+}
+
+@mixin transition-timing-function($args...) {
+	transition-timing-function: $args;
+}
+
+@mixin transition($args...) {
+	transition: $args;
+}
+
+@mixin user-select($args...) {
+	user-select: $args;
+}
+

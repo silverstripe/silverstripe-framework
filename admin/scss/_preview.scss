@@ -9,7 +9,7 @@
 	}
 
 	/* Styling for icons in controls */
-	.icon-view, .preview-selector.dropdown a.chzn-single {
+	.icon-view, .preview-selector.dropdown a.chosen-single {
 		white-space: nowrap;
 		&:before {
 			display:inline-block;
@@ -36,7 +36,11 @@
 		padding: 0;
 		height: 28px;
 
-		a.chzn-single {
+		.chosen-container {
+			width: auto !important; //over-ride chosen inline styles for preview selector
+		}
+
+		a.chosen-single {
 			width: 28px;
 			padding: 6px;
 			height: 28px;
@@ -53,11 +57,11 @@
 				margin-left: -1px;
 			}
 
-			&:hover, &.chzn-single-with-drop  {
+			&:hover, &.chosen-single-with-drop  {
 				background-color: darken($color-widget-bg,6%);
 				box-shadow: 0 0 3px rgba(0, 0, 0, 0.05) inset, 0 1px 0 $box-shadow-shine;
 			}
-			&.chzn-single-with-drop {
+			&.chosen-single-with-drop {
 				border-radius: 0 0 3px 3px;
 			}
 			div {
@@ -65,164 +69,153 @@
 			}
 		}
 
-		&.open .chzn-drop{
-			position:absolute;
-			left: auto !important; //over-ride chosen inline styles
-			right: 0;
+		// Rise up from bottom instead of down from top
+		.chosen-drop {
+			bottom: 32px !important;
+			top: auto !important;
 		}
 
-		.chzn-drop{
+		// Rise out from right, not from left (this needs to be done only when visible)
+		.chosen-with-drop .chosen-drop {
+			left: auto !important;
+			right: 0 !important;
+			width: auto !important;
+		}
+
+		.chosen-drop{
+			padding: 0;
+			margin-top: -5px;
+
+			border: 1px solid #aaa;
 			border-radius: 3px 3px 0 3px;
 			box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-			.chzn-results {
+
+			ul.chosen-results {
+				padding: 0;
+				margin: 0;
+				overflow: visible;
 				width: 135px;
-				.result-selected {
-					background: $color-widget-bg;
-				}
-			}
-		}
-		.chzn-container {
-			width: auto !important; //over-ride chosen inline styles for preview selector
 
-			&.chzn-with-rise {
-				.chzn-drop {
-					padding: 0;
-					border-bottom: 1px solid #aaa;
-					margin-top: -5px;
-					width: auto !important; //over-ride chosen inline width (doesn't take image into account)
+				li {
+					font-size: 12px;
+					line-height: 16px;
+					padding: 7px 16px 7px 6px;
+					color: $color-text-blue-link;
+					border-bottom: 1px solid #DDD;
+					background-color: #FFF;
 
-					.chzn-search {
-						display: none;
+					&:before {
+						margin-right: 2px;
+						font-size: 16px;
 					}
-
-					ul {
-						padding: 0;
-						margin: 0;
-						overflow: visible;
-
-						li{
-							font-size: 12px;
-							line-height: 16px;
-							padding: 7px 16px 7px 6px;
-							color: $color-text-blue-link;
-							border-bottom: 1px solid #DDD;
-							background-color: #FFF;
-
-							&:before{
-								margin-right: 2px;
-								font-size: 16px;
-							}
-							&.description {
-								padding-top: 5px;
-								padding-bottom: 5px;
-								&:before{
-									margin-top: 5px;
-								}
-							}
-							&.highlighted, &:hover, &:focus {
-								color: $color-text-blue-link;
-								filter: none;
-								background: lighten($color-widget-bg,2%);
-								text-decoration: none;
-							}
-							&.first {
-								border-radius: 3px 3px 0 0;
-							}
-							&.last {
-								border-bottom: none;
-								border-radius: 0 0 0 3px;
-							}
-							&.restricted { /* disable option (eg.split mode for smaller screen sizes) */
-								color: #CCC;
-								background-color: #EEE;
-								pointer-events: none;
-								/*text-decoration: line-through;*/
-								&:before {
-									opacity: 0.2;
-								}
-							}
-
-							/* Description styling */
-							span {
-								display:block;
-								color: lighten($color-text-dark, 30%);
-								font-size:0.85em;
-								line-height:1.1em;
-								padding-left:23px;
-							}
-							.icon-view {
-								margin-right: 4px;
-							}
-
-						}
-
-						.disabled-tooltip {
-							position: absolute;
-							top: 0;
-							left: 0;
-							right: 0;
-							height: 32px;
-							background: rgba(255,255,255,0); // Prevent clicking on browsers that do not support pointer-events: none;
-
-							&::before {
-								content: 'Screen size too small';
-								text-align: center;
-								background: #555;
-								color: white;
-								padding: 4px 0;
-								position: absolute;
-								top: -24px;
-								left: -1px;
-								right: -1px;
-								border-radius: 3px 3px 0 0;
-								display: none;
-								z-index: 2;
-							}
-
-							&::after {
-								content: '';
-								position: absolute;
-								width: 10px;
-								height: 10px;
-								transform: rotate(45deg);
-								display: none;
-								background: #555;
-								left: 47%;
-								top: -6px;
-							}
-
-							&:hover::after,
-							&:hover::before {
-								display: block;
-							}
+					&.description {
+						padding-top: 5px;
+						padding-bottom: 5px;
+						&:before {
+							margin-top: 5px;
 						}
 					}
+					&.highlighted, &:hover, &:focus {
+						color: $color-text-blue-link;
+						filter: none;
+						background: lighten($color-widget-bg, 2%);
+						text-decoration: none;
+					}
+					&.first {
+						border-radius: 3px 3px 0 0;
+					}
+					&.last {
+						border-bottom: none;
+						border-radius: 0 0 0 3px;
+					}
+					&.restricted { /* disable option (eg.split mode for smaller screen sizes) */
+						color: #CCC;
+						background-color: #EEE;
+						pointer-events: none;
+						/*text-decoration: line-through;*/
+						&:before {
+							opacity: 0.2;
+						}
+					}
+
+					/* Description styling */
+					span {
+						display: block;
+						color: lighten($color-text-dark, 30%);
+						font-size: 0.85em;
+						line-height: 1.1em;
+						padding-left: 23px;
+					}
+					.icon-view {
+						margin-right: 4px;
+					}
 				}
-			}
-		}
-		.chzn-drop ul.chzn-results li.result-selected {
-			background: darken($color-widget-bg, 2%);
-			color: $color-text;
-			&.highlighted, &:hover, &:focus {
-				background: darken($color-widget-bg, 2%);
-				color: $color-text;
+
+				li.result-selected {
+					background: darken($color-widget-bg, 2%);
+					color: $color-text;
+
+					&.highlighted, &:hover, &:focus {
+						background: darken($color-widget-bg, 4%);
+						color: $color-text;
+					}
+				}
 			}
 		}
 
 		&.split-disabled {
-			.chzn-container.chzn-with-rise .chzn-drop ul li.font-icon-columns {
-				color: $color-text-disabled;
-				pointer-events: none;
-
-				&.highlighted, &:hover, &:focus {
+			.chosen-drop ul.chosen-results li.font-icon-columns {
+				&, &.highlighted, &:hover, &:focus {
 					color: $color-text-disabled;
 					background: #fff;
+					pointer-events: none;
 					cursor: default;
 				}
 
 				&::before {
 					color: $color-text-disabled;
 				}
+			}
+		}
+
+		.disabled-tooltip {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 32px;
+			background: rgba(255, 255, 255, 0); // Prevent clicking on browsers that do not support pointer-events: none;
+
+			&::before {
+				content: 'Screen size too small';
+				text-align: center;
+				background: #555;
+				color: white;
+				padding: 4px 0;
+				position: absolute;
+				top: -24px;
+				left: -1px;
+				right: -1px;
+				border-radius: 3px 3px 0 0;
+				display: none;
+				z-index: 2;
+			}
+
+			&::after {
+				content: '';
+				position: absolute;
+				width: 10px;
+				height: 10px;
+				transform: rotate(45deg);
+				display: none;
+				background: #555;
+				left: 47%;
+				top: -6px;
+			}
+
+			&:hover::after,
+			&:hover::before {
+				display: block;
 			}
 		}
 	}
@@ -235,12 +228,12 @@
 
 		&.dropdown{
 			max-width:150px;
-			a.chzn-single{
+			a.chosen-single{
 				span{
 					margin:0;
 				}
 			}
-			.chzn-container{
+			.chosen-container{
 				max-width:150px;
 			}
 		}
