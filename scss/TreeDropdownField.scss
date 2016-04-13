@@ -30,10 +30,10 @@ div.TreeDropdownField {
 		@extend .treedropdownfield-title;
 
 		//Style search box to match chosen search
-		$bgImage: '../admin/thirdparty/chosen/chosen/chosen-sprite.png';
+		$bgImage: '../admin/images/chosen-sprite.png';
 
 		background:url($bgImage) no-repeat 100% -22px; //For browers that only support 1 background
-		background: 
+		background:
 			url($bgImage) no-repeat 100% -22px,
 			linear-gradient(to bottom, #eeeeee 1%, #ffffff 15%);
 		box-sizing: border-box;

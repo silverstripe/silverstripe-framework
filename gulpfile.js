@@ -5,7 +5,6 @@ const browserify = require('browserify');
 const eventStream = require('event-stream');
 const glob = require('glob');
 const gulp = require('gulp');
-const debug = require('gulp-debug');
 const coffee = require('gulp-coffee');
 const concat = require('gulp-concat');
 const merge = require('merge-stream');
@@ -203,7 +202,7 @@ gulp.task('bundle', ['bundle-lib', 'bundle-legacy', 'bundle-framework']);
 gulp.task('bundle-lib', function bundleLib() {
   const bundleFileName = 'bundle-lib.js';
 
-  var es6 = browserify(Object.assign({}, browserifyOptions,
+  const es6 = browserify(Object.assign({}, browserifyOptions,
     { entries: `${PATHS.ADMIN_JAVASCRIPT_SRC}/bundles/lib.js` }
   ))
     .on('update', bundleLib)
@@ -300,17 +299,17 @@ gulp.task('bundle-lib', function bundleLib() {
     .pipe(source(bundleFileName))
     .pipe(buffer());
 
-  var chosen = gulp.src([
-      'node_modules/chosen/coffee/lib/*.coffee',
-      'node_modules/chosen/coffee/chosen.jquery.coffee'
-    ])
+  const chosen = gulp.src([
+    `${PATHS.MODULES}/chosen/coffee/lib/*.coffee`,
+    `${PATHS.MODULES}/chosen/coffee/chosen.jquery.coffee`,
+  ])
     .pipe(concat('chosen.js'))
     .pipe(coffee());
 
   return merge(es6, chosen)
-    .pipe(order(['**/'+bundleFileName, '**/chosen.js']))
+    .pipe(order([`**/${bundleFileName}`, '**/chosen.js']))
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(concat(bundleFileName, {newLine: '\r\n;\r\n'}))
+    .pipe(concat(bundleFileName, { newLine: '\r\n;\r\n' }))
     .pipe(uglify())
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
@@ -463,14 +462,13 @@ gulp.task('compile:css', () => {
       .pipe(
         sass({
           outputStyle,
-          importer: function(url, prev, done){
+          importer: (url, prev, done) => {
             if (url.match(/^compass\//)) {
-              done({file: 'scss/_compasscompat.scss'})
-            }
-            else {
+              done({ file: 'scss/_compasscompat.scss' });
+            } else {
               done();
             }
-          }
+          },
         })
         .on('error', notify.onError({
           message: 'Error: <%= error.message %>',
