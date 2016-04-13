@@ -23,5 +23,6 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		"Campaigns.PUBLISHCAMPAIGN": "Publish campaign",
 		"Campaigns.ITEM_SUMMARY_SINGULAR": "%s item",
 		"Campaigns.ITEM_SUMMARY_PLURAL": "%s items",
+		"Campaigns.REVERTCAMPAIGN": "Revert",
 });
 }

@@ -38,6 +38,7 @@ class CampaignListContainer extends SilverStripeComponent {
   render() {
     const itemID = 1; // todo - hook up to "click" handler for changesetitems
     const campaignId = this.props.campaignId;
+    const campaign = this.props.record;
 
     // Trigger different layout when preview is enabled
     const previewUrl = this.previewURLForItem(itemID);
@@ -60,13 +61,13 @@ class CampaignListContainer extends SilverStripeComponent {
         // Add extra css class for published items
         let itemClassName = '';
 
-        if (item.ChangeType === 'none') {
+        if (item.ChangeType === 'none' || campaign.State === 'published') {
           itemClassName = 'list-group-item--published';
         }
 
         accordionItems.push(
           <AccordionItem key={item.ID} className={itemClassName}>
-            <CampaignItem item={item} />
+            <CampaignItem item={item} campaign={this.props.record} />
           </AccordionItem>
         );
       });
@@ -123,20 +124,24 @@ class CampaignListContainer extends SilverStripeComponent {
         // TODO Implement "revert" feature
         button = (
           <FormAction
-            label={i18n._t('Campaigns.PUBLISHCAMPAIGN')}
-            style={'success'}
+            label={i18n._t('Campaigns.REVERTCAMPAIGN')}
+            style={'warning'}
             disabled
           />
         );
       }
 
+      // TODO Fix indicator positioning
+      // const itemCountIndicator = (
+      //   <span className="text-muted">
+      //     <span className="label label-warning label--empty">&nbsp;</span>
+      //     &nbsp;{itemSummaryLabel}
+      //   </span>
+      // );
+
       return (
         <div className="btn-toolbar">
           {button}
-          <span className="text-muted">
-            <span className="label label-warning label--empty">&nbsp;</span>
-            &nbsp;{itemSummaryLabel}
-          </span>
         </div>
       );
     }
