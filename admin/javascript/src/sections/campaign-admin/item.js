@@ -1,5 +1,6 @@
 import React from 'react';
 import SilverStripeComponent from 'silverstripe-component';
+import i18n from 'i18n';
 
 /**
  * Describes an individual campaign item
@@ -7,23 +8,29 @@ import SilverStripeComponent from 'silverstripe-component';
 class CampaignItem extends SilverStripeComponent {
   render() {
     let thumbnail = '';
-    let badge = '';
+    const badge = {};
     const item = this.props.item;
+
+    // @todo customise these status messages for already-published changesets
 
     // change badge
     switch (item.ChangeType) {
       case 'created':
-        badge = <span className="label label-warning">Draft</span>;
+        badge.className = 'label label-warning';
+        badge.Title = i18n._t('CampaignItem.DRAFT', 'Draft');
         break;
       case 'modified':
-        badge = <span className="label label-warning">Modified</span>;
+        badge.className = 'label label-warning';
+        badge.Title = i18n._t('CampaignItem.MODIFIED', 'Modified');
         break;
       case 'deleted':
-        badge = <span className="label label-error">Removed</span>;
+        badge.className = 'label label-error';
+        badge.Title = i18n._t('CampaignItem.REMOVED', 'Removed');
         break;
       case 'none':
       default:
-        badge = <span className="label label-success item_visible-hovered">Already published</span>;
+        badge.className = 'label label-success item_visible-hovered';
+        badge.Title = i18n._t('CampaignItem.NO_CHANGES', 'No changes');
         break;
     }
 
@@ -41,7 +48,7 @@ class CampaignItem extends SilverStripeComponent {
         {thumbnail}
         <h4 className="list-group-item-heading">{item.Title}</h4>
         {links}
-        {badge}
+        <span className={badge.className}>{badge.Title}</span>
       </div>
     );
   }

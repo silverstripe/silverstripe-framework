@@ -80,6 +80,9 @@ class CampaignAdminContainer extends SilverStripeComponent {
     );
   }
 
+  /**
+   * @todo
+   */
   renderDetailEditView() {
     return <p>Edit</p>;
   }
