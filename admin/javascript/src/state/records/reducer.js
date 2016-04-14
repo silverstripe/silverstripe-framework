@@ -28,7 +28,7 @@ function recordsReducer(state = initialState, action) {
     case ACTION_TYPES.FETCH_RECORDS_SUCCESS:
       recordType = action.payload.recordType;
       // TODO Automatic pluralisation from recordType
-      records = action.payload.data._embedded[`${recordType}s`] || [];
+      records = action.payload.data._embedded[`${recordType}s`] || {};
       records = records.reduce((prev, val) => Object.assign({}, prev, { [val.id]: val }), {});
       return deepFreeze(Object.assign({}, state, {
         [recordType]: records,

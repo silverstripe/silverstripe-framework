@@ -99,56 +99,53 @@ class CampaignListContainer extends SilverStripeComponent {
   }
 
   renderButtonToolbar() {
-    const items = this.getItems(this.props.campaignId);
+    const items = this.getItems();
 
-    let itemSummaryLabel;
-    if (items) {
-      itemSummaryLabel = i18n.sprintf(
-       (items.length === 1) ?
-         i18n._t('Campaigns.ITEM_SUMMARY_SINGULAR')
-         : i18n._t('Campaigns.ITEM_SUMMARY_PLURAL'),
-       items.length
-     );
-
-      let button;
-      if (this.props.record.State === 'open') {
-        button = (
-          <FormAction
-            label={i18n._t('Campaigns.PUBLISHCAMPAIGN')}
-            style={'success'}
-            loading={this.props.campaign.isPublishing}
-            handleClick={this.handlePublish}
-            icon={'rocket'}
-          />
-        );
-      } else if (this.props.record.State === 'published') {
-        // TODO Implement "revert" feature
-        button = (
-          <FormAction
-            label={i18n._t('Campaigns.REVERTCAMPAIGN')}
-            style={'default'}
-            icon={'back-in-time'}
-            disabled
-          />
-        );
-      }
-
-      // TODO Fix indicator positioning
-      // const itemCountIndicator = (
-      //   <span className="text-muted">
-      //     <span className="label label-warning label--empty">&nbsp;</span>
-      //     &nbsp;{itemSummaryLabel}
-      //   </span>
-      // );
-
-      return (
-        <div className="btn-toolbar">
-          {button}
-        </div>
-      );
+    // let itemSummaryLabel;
+    if (!items) {
+      return <div className="btn-toolbar"></div>;
     }
 
-    return <div className="btn-toolbar"></div>;
+    // let itemSummaryLabel = i18n.sprintf(
+    //   items.length === 1
+    //     ? i18n._t('Campaigns.ITEM_SUMMARY_SINGULAR')
+    //     : i18n._t('Campaigns.ITEM_SUMMARY_PLURAL'),
+    //   items.length
+    // );
+
+    let actionProps = {};
+
+    if (this.props.record.State === 'open') {
+      actionProps = Object.assign(actionProps, {
+        label: i18n._t('Campaigns.PUBLISHCAMPAIGN'),
+        bootstrapButtonStyle: 'success',
+        loading: this.props.campaign.isPublishing,
+        handleClick: this.handlePublish,
+        icon: 'rocket',
+      });
+    } else if (this.props.record.State === 'published') {
+      // TODO Implement "revert" feature
+      actionProps = Object.assign(actionProps, {
+        label: i18n._t('Campaigns.REVERTCAMPAIGN'),
+        bootstrapButtonStyle: 'default',
+        icon: 'back-in-time',
+        disabled: true,
+      });
+    }
+
+    // TODO Fix indicator positioning
+    // const itemCountIndicator = (
+    //   <span className="text-muted">
+    //     <span className="label label-warning label--empty">&nbsp;</span>
+    //     &nbsp;{itemSummaryLabel}
+    //   </span>
+    // );
+
+    return (
+      <div className="btn-toolbar">
+        <FormAction {...actionProps} />
+      </div>
+    );
   }
 
   /**
@@ -219,8 +216,13 @@ class CampaignListContainer extends SilverStripeComponent {
 }
 
 CampaignListContainer.propTypes = {
+  campaign: React.PropTypes.shape({
+    isPublishing: React.PropTypes.bool.isRequired,
+  }),
+  campaignActions: React.PropTypes.object.isRequired,
   publishApi: React.PropTypes.func.isRequired,
-  isPublishing: React.PropTypes.bool,
+  record: React.PropTypes.object.isRequired,
+  recordActions: React.PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -230,7 +232,7 @@ function mapStateToProps(state, ownProps) {
     record = state.records.ChangeSet[parseInt(ownProps.campaignId, 10)];
   }
   return {
-    record: record || [],
+    record: record || {},
     campaign: state.campaign,
   };
 }

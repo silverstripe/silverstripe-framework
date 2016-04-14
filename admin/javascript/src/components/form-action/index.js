@@ -37,7 +37,7 @@ class FormActionComponent extends SilverStripeComponent {
     const buttonClasses = ['btn'];
 
     // Add 'type' class
-    buttonClasses.push(`btn-${this.props.style}`);
+    buttonClasses.push(`btn-${this.props.bootstrapButtonStyle}`);
 
     // If there is no text
     if (typeof this.props.label === 'undefined') {
@@ -91,9 +91,13 @@ class FormActionComponent extends SilverStripeComponent {
    * Event handler triggered when a user clicks the button.
    *
    * @param object event
-   * @returns null
+   * @return undefined
    */
   handleClick(event) {
+    if (typeof this.props.handleClick === 'undefined') {
+      return;
+    }
+
     this.props.handleClick(event);
   }
 
@@ -107,13 +111,13 @@ FormActionComponent.propTypes = {
   loading: React.PropTypes.bool,
   icon: React.PropTypes.string,
   disabled: React.PropTypes.bool,
-  style: React.PropTypes.string,
+  bootstrapButtonStyle: React.PropTypes.string,
   extraClass: React.PropTypes.string,
 };
 
 FormActionComponent.defaultProps = {
   type: 'button',
-  style: 'secondary',
+  bootstrapButtonStyle: 'secondary',
   disabled: false,
 };
 

@@ -24,7 +24,7 @@ The html id attribute.
 
 Used for the button's `type` attribute. Defaults to `button`
 
-### style (string)
+### bootstrapButtonStyle (string)
 
 The style of button to be shown, adds a class `btn-{style}` to the button. Defaults to `secondary`.
 

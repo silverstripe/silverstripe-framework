@@ -3,6 +3,7 @@ import ACTION_TYPES from './action-types';
 
 const initialState = {
   campaignId: null,
+  isPublishing: false,
   view: null,
 };
 

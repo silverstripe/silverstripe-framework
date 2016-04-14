@@ -285,7 +285,7 @@ class SilverStripeBackend {
         // Always add full payload data to GET requests.
         // GET requests with a HTTP body are technically legal,
         // but throw an error in the WHATWG fetch() implementation.
-        { setFromData: (refinedSpec.method === 'get') }
+        { setFromData: (refinedSpec.method.toLowerCase() === 'get') }
       );
 
       const encodedData = encode(
@@ -295,7 +295,7 @@ class SilverStripeBackend {
         applySchemaToData(refinedSpec.payloadSchema, data)
       );
 
-      const args = refinedSpec.method === 'get'
+      const args = refinedSpec.method.toLowerCase() === 'get'
         ? [url, headers]
         : [url, encodedData, headers];
 
