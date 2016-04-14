@@ -65,6 +65,17 @@
         &:first-child {
             background: none;
         }
+
+		// Drillable rows highlight on hover
+		&--drillable:hover {
+			color: #555;
+			text-decoration: none;
+			background-color: #f5f5f5;
+
+			.grid-field-cell-component--drillable {
+				cursor: pointer;
+			}
+		}
     }
 }
 

@@ -120,6 +120,18 @@ $sprites-64x64-2x-tab-list-hover: -0px -160px 80px 80px;
 $sprites-64x64-2x-tab-list: -0px -240px 80px 80px;
 $sprites-64x64-2x-tab-tree-hover: -0px -320px 80px 80px;
 $sprites-64x64-2x-tab-tree: -0px -400px 80px 80px;
+$menu-icons-24x24-home: -0px -0px 24px 24px;
+$menu-icons-24x24-blog: -0px -24px 24px 24px;
+$menu-icons-24x24-community: -0px -48px 24px 24px;
+$menu-icons-24x24-db: -0px -72px 24px 24px;
+$menu-icons-24x24-document: -0px -96px 24px 24px;
+$menu-icons-24x24-gears: -0px -120px 24px 24px;
+$menu-icons-24x24-collection: -0px -144px 24px 24px;
+$menu-icons-24x24-information: -0px -168px 24px 24px;
+$menu-icons-24x24-network: -0px -192px 24px 24px;
+$menu-icons-24x24-pencil: -0px -216px 24px 24px;
+$menu-icons-24x24-picture: -0px -240px 24px 24px;
+$menu-icons-24x24-pie-chart: -0px -264px 24px 24px;
 $menu-icons-16x16-home: -0px -0px 16px 16px;
 $menu-icons-16x16-blog: -0px -16px 16px 16px;
 $menu-icons-16x16-community: -0px -32px 16px 16px;
@@ -144,18 +156,6 @@ $menu-icons-16x16-2x-network: -0px -256px 32px 32px;
 $menu-icons-16x16-2x-pencil: -0px -288px 32px 32px;
 $menu-icons-16x16-2x-picture: -0px -320px 32px 32px;
 $menu-icons-16x16-2x-pie-chart: -0px -352px 32px 32px;
-$menu-icons-24x24-home: -0px -0px 24px 24px;
-$menu-icons-24x24-blog: -0px -24px 24px 24px;
-$menu-icons-24x24-community: -0px -48px 24px 24px;
-$menu-icons-24x24-db: -0px -72px 24px 24px;
-$menu-icons-24x24-document: -0px -96px 24px 24px;
-$menu-icons-24x24-gears: -0px -120px 24px 24px;
-$menu-icons-24x24-collection: -0px -144px 24px 24px;
-$menu-icons-24x24-information: -0px -168px 24px 24px;
-$menu-icons-24x24-network: -0px -192px 24px 24px;
-$menu-icons-24x24-pencil: -0px -216px 24px 24px;
-$menu-icons-24x24-picture: -0px -240px 24px 24px;
-$menu-icons-24x24-pie-chart: -0px -264px 24px 24px;
 $menu-icons-24x24-2x-home: -0px -0px 48px 48px;
 $menu-icons-24x24-2x-blog: -0px -48px 48px 48px;
 $menu-icons-24x24-2x-db: -0px -96px 48px 48px;
@@ -174,10 +174,10 @@ $menu-icons-24x24-2x-pie-chart: -0px -480px 48px 48px;
   height: nth($sprite, 4);
 }
 @function sprite-width($sprite) {
-   @return nth($sprite, 3);
+  @return nth($sprite, 3);
 }
 @function sprite-height($sprite) {
-   @return nth($sprite, 4);
+  @return nth($sprite, 4);
 }
 @mixin sprite-position($sprite) {
   $sprite-offset-x: nth($sprite, 1);
@@ -185,7 +185,7 @@ $menu-icons-24x24-2x-pie-chart: -0px -480px 48px 48px;
   background-position: $sprite-offset-x $sprite-offset-y;
 }
 @mixin sprite($sprite, $display: block) {
-   @include sprite-position($sprite);
+  @include sprite-position($sprite);
   background-repeat: no-repeat;
   overflow: hidden;
   display: $display;
@@ -213,6 +213,10 @@ $menu-icons-24x24-2x-pie-chart: -0px -480px 48px 48px;
   background-image: url('../images/sprites/dist/sprite-sprites-64x64-2x.png');
 }
 
+.icon-menu-icons-24x24 {
+  background-image: url('../images/sprites/dist/sprite-menu-icons-24x24.png');
+}
+
 .icon-menu-icons-16x16 {
   background-image: url('../images/sprites/dist/sprite-menu-icons-16x16.png');
 }
@@ -221,9 +225,6 @@ $menu-icons-24x24-2x-pie-chart: -0px -480px 48px 48px;
   background-image: url('../images/sprites/dist/sprite-menu-icons-16x16-2x.png');
 }
 
-.icon-menu-icons-24x24 {
-  background-image: url('../images/sprites/dist/sprite-menu-icons-24x24.png');
-}
 
 .icon-menu-icons-24x24-2x {
   background-image: url('../images/sprites/dist/sprite-menu-icons-24x24-2x.png');

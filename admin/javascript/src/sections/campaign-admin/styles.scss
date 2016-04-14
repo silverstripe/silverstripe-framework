@@ -1,3 +1,210 @@
 .CampaignAdmin {
-    overflow-y: auto;
+	overflow-y: auto;
+	display: block;
+
+	// Contains campaign form and preview layout
+	.cms-middle {
+		padding-left: 0;
+		height: 100%;
+		position: relative;
+		transition: padding .2s;
+
+		&.with-preview {
+			@media (min-width: 992px) { /* lg */
+				padding-left: 316px;
+				.cms-campaigns {
+					width: 316px;
+				}
+			}
+			@media (min-width: 1200px) { /* xl */
+				padding-left: 448px;
+				.cms-campaigns {
+					width: 448px;
+				}
+			}
+		}
+	}
+
+	/* CAMPAIGNS */
+	.cms-campaigns {
+		width: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		overflow: hidden;
+		background-color: #f6f7f8;
+		z-index: 2;
+		transition: width .2s;
+		padding-bottom: 53px;
+
+		.campaign-items {
+			height: calc(100% - 53px);
+			margin-bottom: 40px;
+			overflow: auto;
+
+			h4 {
+				font-weight: 400;
+				font-size: 14px;
+				margin: 2px 0 5px;
+			}
+
+			.list-group {
+				margin-left: -0.9375rem;
+				margin-right: -0.9375rem;
+
+				border-bottom: 1px solid #ddd;
+				margin-bottom: .75rem;
+
+				.list-group-item {
+					padding-left: 0.9375rem; /* would normally be set in variables as 20px */
+					padding-right: 0.9375rem;
+					min-height: 64px;
+					cursor: pointer;
+					text-decoration: none;
+
+					&:first-child {
+						border-top: none;
+					}
+
+					.item__thumbnail {
+						width: 64px;
+						height: 64px;
+						display: block;
+						background: #ccc;
+						float: left;
+						margin: -12px 12px 0 -12px;
+					}
+
+					.label {
+						text-transform: uppercase;
+						font-size: 10px;
+						font-weight: 400;
+						letter-spacing: .4px;
+					}
+
+					// On hover show all linked items
+					.list-group-item__linked {
+						color: $body-color;
+						float: right;
+					}
+				}
+			}
+		}
+	}
+
+	// Hover items
+	.list-group-item--published {
+	  opacity: .6;
+	}
+	.list-group-item--published:hover {
+	  opacity: 1;
+	}
+	.item_visible-hovered {
+	  opacity: 0;
+	  transition: opacity .2s ease-in-out;
+	}
+	a:hover .item_visible-hovered,
+	a.active.list-group-item--published,
+	a.active.list-group-item--published .item_visible-hovered {
+	  opacity: 1;
+	}
+
+	// Accordion styles
+	.accordion-group {
+		margin-top: 16px;
+
+		&__title {
+			margin-bottom: 0;
+
+			a {
+				font-size: 12px; /* extend table header */
+				font-weight: 400;
+				text-transform: uppercase;
+				padding: 1rem 0.9375rem;
+				display: block;
+				margin-left: -0.9375rem;
+				margin-right: -0.9375rem;
+				color: #555;
+				text-decoration: none;
+				position: relative;
+				border-bottom: 1px solid #ddd;
+
+
+				&::before {
+					content: "-";
+					width: 44px;
+					height: 44px;
+					padding: 10px 0.9375rem;
+					position: absolute;
+					right: 0;
+					top: 0;
+					font-size: 16px;
+					line-height: 20px;
+					text-align: center;
+				}
+
+				&.collapsed::before {
+					content: "+";
+				}
+			}
+		}
+	}
+
+// TO MOVE
+
+	/* Preview panel */
+	.pages-preview {
+		display: block;
+		position: relative;
+		background-color: #BBB;
+		border-left: 1px solid #dbdde0;
+		height: 100%;
+
+		iframe {
+			width: 100%;
+			height: calc(100% - 53px);
+			border: none;
+		}
+	}
+
+	///* btn toolbar */
+	//.cms-south-actions {
+	//  height: 53px;
+	//  position: absolute;
+	//  bottom: 0;
+	//  width: 100%;
+	//  border-top: 1px solid #ddd;
+	//  background-color: #f6f7f8;
+	//  padding: 8px 15px;
+	//}
+	//.btn-toolbar {
+	//
+	//}
+	//.btn-toolbar .btn {
+	//  font-size: 13px;
+	//  line-height: 20px;
+	//}
+	//
+
+	//
+	//.popover-content a {
+	//  display: inline-block;
+	//  width: 100%;
+	//}
+	//.icon-back {
+	//  display: inline-block;
+	//  margin-right: 12px;
+	//}
+	//.icon-back + h1 {
+	//  display: inline-block;
+	//}
+	//
+
+	//.btn .label_empty {
+	//  border-radius: 50%;
+	//  height: 10px;
+	//  width: 10px;
+	//  top: 1px;
+	//}
 }

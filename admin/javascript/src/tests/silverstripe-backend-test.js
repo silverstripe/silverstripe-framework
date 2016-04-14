@@ -32,10 +32,11 @@ describe('SilverStripeBackend', () => {
 
     it('should send a GET request to an endpoint', () => {
       backend.get('http://example.com');
-      expect(backend.fetch).toBeCalledWith(
-        'http://example.com',
-        { method: 'get', credentials: 'same-origin' }
-      );
+      expect(backend.fetch).toBeCalled();
+      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
+      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
+        method: 'get'
+      }));
     });
   });
 
@@ -51,12 +52,10 @@ describe('SilverStripeBackend', () => {
       backend.post('http://example.com', postData);
 
       expect(backend.fetch).toBeCalled();
-
       expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
       expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
         method: 'post',
-        body: postData,
-        credentials: 'same-origin',
+        body: postData
       }));
     });
   });
@@ -72,10 +71,12 @@ describe('SilverStripeBackend', () => {
 
       backend.put('http://example.com', putData);
 
-      expect(backend.fetch).toBeCalledWith(
-        'http://example.com',
-        { method: 'put', body: putData, credentials: 'same-origin' }
-      );
+      expect(backend.fetch).toBeCalled();
+      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
+      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
+        method: 'put',
+        body: putData
+      }));
     });
   });
 
@@ -90,10 +91,12 @@ describe('SilverStripeBackend', () => {
 
       backend.delete('http://example.com', deleteData);
 
-      expect(backend.fetch).toBeCalledWith(
-        'http://example.com',
-        { method: 'delete', body: deleteData, credentials: 'same-origin' }
-      );
+      expect(backend.fetch).toBeCalled();
+      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
+      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
+        method: 'delete',
+        body: deleteData
+      }));
     });
   });
 
@@ -143,7 +146,7 @@ describe('SilverStripeBackend', () => {
         method: 'post',
         payloadFormat: 'json',
         responseFormat: 'json',
-      });
+  });
 
       const promise = endpoint({ id: 1, values: { a: 'aye', b: 'bee' } });
       expect(mock.post.mock.calls[0][0]).toEqual('http://example.org');

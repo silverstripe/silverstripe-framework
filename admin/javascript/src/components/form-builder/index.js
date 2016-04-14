@@ -66,6 +66,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
 
     this.formSchemaPromise = null;
     this.state = { isFetching: false };
+    this.mapFieldsToComponents = this.mapFieldsToComponents.bind(this);
   }
 
   componentDidMount() {
@@ -102,11 +103,17 @@ export class FormBuilderComponent extends SilverStripeComponent {
     })
       .then(response => response.json())
       .then(json => {
+        // TODO See "Enable once <CampaignAdmin> ..." below
         this.setState({ isFetching: false });
         this.props.actions.setSchema(json);
       });
 
-    this.setState({ isFetching: true });
+    // TODO Enable once <CampaignAdmin> is initialised via page.js route callbacks
+    // At the moment, it's running an Entwine onadd() rule which ends up
+    // rendering the index view, and only then calling route.start() to
+    // match the detail view (admin/campaigns/set/:id/show).
+    // This causes the form builder to be unmounted during a fetch() call.
+    // this.setState({ isFetching: true });
 
     return this.formSchemaPromise;
   }
@@ -121,6 +128,8 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @return array
    */
   mapFieldsToComponents(fields) {
+    const createFn = this.props.createFn;
+
     return fields.map((field, i) => {
       const Component = field.component !== null
         ? fakeInjector.getComponentByName(field.component)
@@ -134,6 +143,12 @@ export class FormBuilderComponent extends SilverStripeComponent {
       // Leave it up to the schema and component to determine
       // which props are required.
       const props = deepFreeze(field);
+
+      // Provides container components a place to hook in
+      // and apply customisations to scaffolded components.
+      if (typeof createFn === 'function') {
+        return createFn(Component, props);
+      }
 
       return <Component key={i} {...props} />;
     });
@@ -171,6 +186,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
 
 FormBuilderComponent.propTypes = {
   actions: React.PropTypes.object.isRequired,
+  createFn: React.PropTypes.func,
   schemaUrl: React.PropTypes.string.isRequired,
   schemas: React.PropTypes.object.isRequired,
 };

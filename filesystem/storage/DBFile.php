@@ -2,9 +2,8 @@
 
 namespace SilverStripe\Filesystem\Storage;
 
+use SilverStripe\Filesystem\Thumbnail;
 use SilverStripe\Filesystem\ImageManipulation;
-use SilverStripe\Filesystem\Storage\AssetContainer;
-use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\Model\FieldType\DBComposite;
 
 use Injector;
@@ -12,7 +11,6 @@ use AssetField;
 use File;
 use Director;
 use Permission;
-use ShortcodeHandler;
 use ValidationResult;
 use ValidationException;
 
@@ -26,7 +24,7 @@ use ValidationException;
  * @package framework
  * @subpackage filesystem
  */
-class DBFile extends DBComposite implements AssetContainer {
+class DBFile extends DBComposite implements AssetContainer, Thumbnail {
 
 	use ImageManipulation;
 

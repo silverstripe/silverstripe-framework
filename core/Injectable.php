@@ -47,19 +47,13 @@ trait Injectable {
 	 * way to access instance methods which don't rely on instance
 	 * data (e.g. the custom SilverStripe static handling).
 	 *
-	 * @param string $className Optional classname (if called on Object directly)
+	 * @param string $class Optional classname to create, if the called class should not be used
 	 * @return static The singleton instance
 	 */
-	public static function singleton() {
-		$args = func_get_args();
-
-		// Singleton to create should be the calling class if not Object,
-		// otherwise the first parameter
-		$class = get_called_class();
-		if($class === 'Object') {
-			$class = array_shift($args);
+	public static function singleton($class = null) {
+		if(!$class) {
+			$class = get_called_class();
 		}
-
 		return Injector::inst()->get($class);
 	}
 }

@@ -39,7 +39,13 @@
     };
   }
 
+  function routeAppliesToCurrentLocation(route) {
+    var r = new _page2.default.Route(route);
+    return r.match(_page2.default.current, {});
+  }
+
   _page2.default.show = show(_page2.default.show);
+  _page2.default.routeAppliesToCurrentLocation = routeAppliesToCurrentLocation;
 
   exports.default = _page2.default;
 });
