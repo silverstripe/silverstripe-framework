@@ -99,6 +99,16 @@ class ChangeSetTest_End extends DataObject implements TestOnly {
 }
 
 /**
+ * @mixin Versioned
+ */
+class ChangeSetTest_EndChild extends ChangeSetTest_End implements TestOnly {
+
+	private static $db = [
+		'Qux' => 'Int',
+	];
+}
+
+/**
  * Test {@see ChangeSet} and {@see ChangeSetItem} models
  */
 class ChangeSetTest extends SapphireTest {
@@ -109,6 +119,7 @@ class ChangeSetTest extends SapphireTest {
 		'ChangeSetTest_Base',
 		'ChangeSetTest_Mid',
 		'ChangeSetTest_End',
+		'ChangeSetTest_EndChild',
 	];
 
 	/**
@@ -139,7 +150,7 @@ class ChangeSetTest extends SapphireTest {
 			$object = $this->objFromFixture($class, $identifier);
 
 			foreach($items as $i => $item) {
-				if ($item->ObjectClass == $object->ClassName && $item->ObjectID == $object->ID && $item->Added == $mode) {
+				if ($item->ObjectClass == ClassInfo::baseDataClass($object) && $item->ObjectID == $object->ID && $item->Added == $mode) {
 					unset($items[$i]);
 					continue 2;
 				}
@@ -159,6 +170,19 @@ class ChangeSetTest extends SapphireTest {
 				new \SebastianBergmann\Comparator\ComparisonFailure(array(), $extra, '', print_r($extra, true))
 			);
 		}
+	}
+	
+	public function testAddObject() {
+		$cs = new ChangeSet();
+		$cs->write();
+
+		$cs->addObject($this->objFromFixture('ChangeSetTest_End', 'end1'));
+		$cs->addObject($this->objFromFixture('ChangeSetTest_EndChild', 'endchild1'));
+
+		$this->assertChangeSetLooksLike($cs, [
+			'ChangeSetTest_End.end1' => ChangeSetItem::EXPLICITLY,
+			'ChangeSetTest_EndChild.endchild1' => ChangeSetItem::EXPLICITLY
+		]);
 	}
 
 	public function testRepeatedSyncIsNOP() {
@@ -207,10 +231,11 @@ class ChangeSetTest extends SapphireTest {
 			'ChangeSetTest_End.end1' => ChangeSetItem::IMPLICITLY
 		]);
 
-		$endItem = $cs->Changes()->filter('ObjectClass', 'ChangeSetTest_End')->first();
+		$baseItem = ChangeSetItem::get_for_object($base)->first();
+		$endItem = ChangeSetItem::get_for_object($end)->first();
 
 		$this->assertEquals(
-			[$base->ID],
+			[$baseItem->ID],
 			$endItem->ReferencedBy()->column("ID")
 		);
 
@@ -255,7 +280,6 @@ class ChangeSetTest extends SapphireTest {
 		]);
 		$this->assertTrue($cs->isSynced());
 	}
-
 
 	public function testCanPublish() {
 		// Create changeset containing all items (unpublished)

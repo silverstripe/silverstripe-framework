@@ -117,7 +117,7 @@ class ChangeSet extends DataObject {
 
 		$references = [
 			'ObjectID'    => $object->ID,
-			'ObjectClass' => $object->ClassName
+			'ObjectClass' => ClassInfo::baseDataClass($object)
 		];
 
 		// Get existing item in case already added
@@ -146,7 +146,7 @@ class ChangeSet extends DataObject {
 	public function removeObject(DataObject $object) {
 		$item = ChangeSetItem::get()->filter([
 				'ObjectID' => $object->ID,
-				'ObjectClass' => $object->ClassName,
+				'ObjectClass' => ClassInfo::baseDataClass($object),
 				'ChangeSetID' => $this->ID
 			])->first();
 
@@ -161,7 +161,7 @@ class ChangeSet extends DataObject {
 
 	protected function implicitKey($item) {
 		if ($item instanceof ChangeSetItem) return $item->ObjectClass.'.'.$item->ObjectID;
-		return $item->ClassName.'.'.$item->ID;
+		return ClassInfo::baseDataClass($item).'.'.$item->ID;
 	}
 
 	protected function calculateImplicit() {
@@ -183,7 +183,7 @@ class ChangeSet extends DataObject {
 
 				$referenced[$key] = [
 					'ObjectID' => $referee->ID,
-					'ObjectClass' => $referee->ClassName
+					'ObjectClass' => ClassInfo::baseDataClass($referee)
 				];
 
 				$references[$key][] = $item->ID;

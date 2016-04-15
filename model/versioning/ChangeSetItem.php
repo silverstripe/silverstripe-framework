@@ -9,8 +9,8 @@ use SilverStripe\Filesystem\Thumbnail;
  * A single line in a changeset
  *
  * @property string $Added
- * @property string $ObjectClass
- * @property int $ObjectID
+ * @property string $ObjectClass The _base_ data class for the referenced DataObject
+ * @property int $ObjectID The numeric ID for the referenced object
  * @method ManyManyList ReferencedBy() List of explicit items that require this change
  * @method ManyManyList References() List of implicit items required by this change
  * @method ChangeSet ChangeSet()
@@ -65,6 +65,12 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 		)
 	);
 
+	public function onBeforeWrite() {
+		// Make sure ObjectClass refers to the base data class in the case of old or wrong code
+		$this->ObjectClass = ClassInfo::baseDataClass($this->ObjectClass);
+		parent::onBeforeWrite();
+	}
+
 	public function getTitle() {
 		// Get title of modified object
 		$object = $this->getObjectLatestVersion();
@@ -73,8 +79,6 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 		}
 		return $this->i18n_singular_name() . ' #' . $this->ID;
 	}
-
-
 
 	/**
 	 * Get a thumbnail for this object
@@ -90,7 +94,6 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 		}
 		return null;
 	}
-
 
 	/**
 	 * Get the type of change: none, created, deleted, modified, manymany
@@ -314,5 +317,32 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 
 		// Default permissions
 		return (bool)Permission::checkMember($member, ChangeSet::config()->required_permission);
+	}
+
+	/**
+	 * Get the ChangeSetItems that reference a passed DataObject
+	 *
+	 * @param DataObject $object
+	 * @return DataList
+	 */
+	public static function get_for_object($object) {
+		return ChangeSetItem::get()->filter([
+			'ObjectID' => $object->ID,
+			'ObjectClass' => ClassInfo::baseDataClass($object)
+		]);
+	}
+
+	/**
+	 * Get the ChangeSetItems that reference a passed DataObject
+	 *
+	 * @param int $objectID The ID of the object
+	 * @param string $objectClass The class of the object (or any parent class)
+	 * @return DataList
+	 */
+	public static function get_for_object_by_id($objectID, $objectClass) {
+		return ChangeSetItem::get()->filter([
+			'ObjectID' => $objectID,
+			'ObjectClass' => ClassInfo::baseDataClass($objectClass)
+		]);
 	}
 }
