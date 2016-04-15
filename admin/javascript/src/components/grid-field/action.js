@@ -10,7 +10,7 @@ class GridFieldActionComponent extends SilverStripeComponent {
   render() {
     return (
       <button
-        className={`grid-field-action-component font-icon-${this.props.icon}`}
+        className={`grid-field__icon-action font-icon-${this.props.icon}`}
         onClick={this.handleClick}
       />
     );

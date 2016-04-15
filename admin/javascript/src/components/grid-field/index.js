@@ -50,7 +50,7 @@ class GridField extends SilverStripeComponent {
     const columns = this.props.data.columns;
 
     // Placeholder to align the headers correctly with the content
-    const actionPlaceholder = <span key={'actionPlaceholder'} />;
+    const actionPlaceholder = <th className={'grid-field__action-placeholder'} ></th>;
     const headerCells = columns.map((column, i) =>
       <GridFieldHeaderCell key={i}>{column.name}</GridFieldHeaderCell>
     );
@@ -64,7 +64,7 @@ class GridField extends SilverStripeComponent {
         const val = column.field.split('.').reduce((a, b) => a[b], record);
         const cellProps = {
           handleDrillDown: handleDrillDown ? (event) => handleDrillDown(event, record) : null,
-          className: handleDrillDown ? 'grid-field-cell-component--drillable' : '',
+          className: handleDrillDown ? 'grid-field__cell--drillable' : '',
           key: j,
           width: column.width,
         };
@@ -82,19 +82,19 @@ class GridField extends SilverStripeComponent {
             handleClick={this.editRecord}
             key={`action-${i}-edit`}
             record={record}
-          />,
+          />
           <GridFieldAction
             icon={'cancel'}
             handleClick={this.deleteRecord}
             key={`action-${i}-delete`}
             record={record}
-          />,
+          />
         </GridFieldCell>
       );
 
       const rowProps = {
         key: i,
-        className: handleDrillDown ? 'grid-field-row-component--drillable' : '',
+        className: handleDrillDown ? 'grid-field__row--drillable' : '',
       };
 
       return (

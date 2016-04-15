@@ -5,10 +5,12 @@ class GridFieldTableComponent extends SilverStripeComponent {
 
   render() {
     return (
-      <ul className="grid-field-table-component [ list-group ]">
-        {this.generateHeader()}
-        {this.generateRows()}
-      </ul>
+      <div className="container-fluid grid-field">
+        <table className="table table-hover grid-field__table">
+          <thead>{this.generateHeader()}</thead>
+          <tbody>{this.generateRows()}</tbody>
+        </table>
+      </div>
     );
   }
 
