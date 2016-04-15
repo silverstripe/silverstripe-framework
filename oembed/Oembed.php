@@ -101,27 +101,37 @@ class Oembed {
 	 * @param $url Human readable URL.
 	 * @returns string/bool Oembed URL, or false.
 	 */
-	protected static function autodiscover_from_url($url) {
+	protected static function autodiscover_from_url($url)
+	{
 		// Fetch the URL (cache for a week by default)
-		$service = new RestfulService($url, 60*60*24*7);
+		$service = new RestfulService($url, 60 * 60 * 24 * 7);
 		$body = $service->request();
-		if(!$body || $body->isError()) {
+		if (!$body || $body->isError()) {
 			return false;
 		}
 		$body = $body->getBody();
+		return static::autodiscover_from_body($body);
+	}
 
+	/**
+	 * Given a response body, determine if there is an autodiscover url
+	 *
+	 * @param string $body
+	 * @return bool|string
+	 */
+	public static function autodiscover_from_body($body) {
 		// Look within the body for an oembed link.
-		$pcreOmbed = '#<link[^>]+?(?:href=[\'"](.+?)[\'"][^>]+?)'
+		$pcreOmbed = '#<link[^>]+?(?:href=[\'"](?<first>[^\'"]+?)[\'"][^>]+?)'
 			. '?type=["\']application/json\+oembed["\']'
-			. '(?:[^>]+?href=[\'"](.+?)[\'"])?#';
+			. '(?:[^>]+?href=[\'"](?<second>[^\'"]+?)[\'"])?#';
 
 		if(preg_match_all($pcreOmbed, $body, $matches, PREG_SET_ORDER)) {
 			$match = $matches[0];
-			if(!empty($match[1])) {
-				return html_entity_decode($match[1]);
+			if(!empty($match['second'])) {
+				return html_entity_decode($match['second']);
 			}
-			if(!empty($match[2])) {
-				return html_entity_decode($match[2]);
+			if(!empty($match['first'])) {
+				return html_entity_decode($match['first']);
 			}
 		}
 		return false;
@@ -297,12 +307,38 @@ class Oembed_Result extends ViewableData {
 		// Convert all keys to lowercase
 		$data = array_change_key_case($data, CASE_LOWER);
 
+		// Check if we can guess thumbnail
+		if(empty($data['thumbnail_url']) && $thumbnail = $this->findThumbnail($data)) {
+			$data['thumbnail_url'] = $thumbnail;
+		}
+
 		// Purge everything if the type does not match.
 		if($this->type && $this->type != $data['type']) {
 			$data = array();
 		}
 
 		$this->data = $data;
+	}
+
+	/**
+	 * Find thumbnail if omitted from data
+	 *
+	 * @param array $data
+	 * @return string
+	 */
+	public function findThumbnail($data) {
+		if(!empty($data['thumbnail_url'])) {
+			return $data['thumbnail_url'];
+		}
+
+		// Hack in facebook graph thumbnail
+		if(!empty($data['provider_name']) && $data['provider_name'] === 'Facebook') {
+			$id = preg_replace("/.*\\/(\\d+?)\\/?($|\\?.*)/", "$1", $data["url"]);
+			return "https://graph.facebook.com/{$id}/picture";
+		}
+
+		// no thumbnail found
+		return null;
 	}
 
 	/**
