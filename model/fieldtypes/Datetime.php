@@ -24,7 +24,15 @@
  * @subpackage model
  */
 class SS_Datetime extends Date implements TemplateGlobalProvider {
-
+	
+	/**
+	 * @config
+	 * @see also Date::niceFormat
+	 * @see also Time::niceFormat
+	 */
+	private static $niceFormat = 'd/m/Y g:ia';
+	
+	
 	public function setValue($value, $record = null) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
 			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
@@ -54,18 +62,21 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Returns the date and time (in 12-hour format) using the format string 'd/m/Y g:ia' e.g. '31/01/2014 2:23pm'.
+	 * Returns the date and time in the format specified by the config value niceFormat, or 
+	 * 'd/m/Y g:ia' by default (e.g. '31/01/2014 2:23pm').
 	 * @return string Formatted date and time.
 	 */
 	public function Nice() {
-		if($this->value) return $this->Format('d/m/Y g:ia');
+		if($this->value) return $this->Format(Config::inst()->get(__CLASS__, 'niceFormat'));
 	}
 
 	/**
 	 * Returns the date and time (in 24-hour format) using the format string 'd/m/Y H:i' e.g. '28/02/2014 13:32'.
 	 * @return string Formatted date and time.
+	 * @deprecated 3.2 Use Nice() with config setting niceFormat instead
 	 */
 	public function Nice24() {
+		Deprecation::notice('3.2', 'Use Nice() with config setting '.__CLASS__.'::niceFormat instead');
 		if($this->value) return $this->Format('d/m/Y H:i');
 	}
 

@@ -15,7 +15,15 @@
  * @subpackage model
  */
 class Time extends DBField {
-
+	
+	/**
+	 * @config
+	 * @see also Date::niceFormat
+	 * @see also SS_DateTime::niceFormat
+	 */
+	private static $niceFormat = 'g:ia';
+	
+	
 	public function setValue($value, $record = null) {
 		if($value) {
 			if(preg_match( '/(\d{1,2})[:.](\d{2})([a|A|p|P|][m|M])/', $value, $match )) $this->TwelveHour( $match );
@@ -26,22 +34,25 @@ class Time extends DBField {
 	}
 
 	/**
-	 * Return a user friendly format for time
-	 * in a 12 hour format.
-	 *
-	 * @return string Time in 12 hour format
+	 * Returns the time in the format specified by the config value niceFormat, or 12 hour format by default 
+	 * e.g. "3:15pm"
+	 * 
+	 * @return string
 	 */
 	public function Nice() {
-		if($this->value) return date('g:ia', strtotime($this->value));
+		if($this->value) return $this->Format(Config::inst()->get(__CLASS__, 'niceFormat'));
+		
 	}
 
 	/**
 	 * Return a user friendly format for time
 	 * in a 24 hour format.
-	 *
+	 * 
 	 * @return string Time in 24 hour format
+	 * @deprecated 3.2 Use Nice() with config setting niceFormat instead
 	 */
 	public function Nice24() {
+		Deprecation::notice('3.2', 'Use Nice() with config setting '.__CLASS__.'::niceFormat instead');
 		if($this->value) return date('H:i', strtotime($this->value));
 	}
 
