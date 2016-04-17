@@ -371,6 +371,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('reducer-register')
     .external('redux-thunk')
     .external('redux')
+    .external('silverstripe-backend')
     .external('silverstripe-component')
     .external('bootstrap-collapse')
     .bundle()
