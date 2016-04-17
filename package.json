@@ -46,6 +46,7 @@
     "isomorphic-fetch": "https://registry.npmjs.org/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz",
     "jquery-sizes": "^0.33.0",
     "json-js": "^1.1.2",
+    "merge": "^1.2.0",
     "page.js": "^4.13.3",
     "qs": "^6.1.0",
     "react": "^0.14.8",

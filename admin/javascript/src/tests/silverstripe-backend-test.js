@@ -4,6 +4,7 @@
 jest.unmock('isomorphic-fetch');
 jest.unmock('../silverstripe-backend');
 jest.unmock('qs');
+jest.unmock('merge');
 
 import backend from '../silverstripe-backend';
 
@@ -191,10 +192,10 @@ describe('SilverStripeBackend', () => {
           two: { urlReplacement: ':two' },
         },
       });
-      const promise = endpoint({
+      endpoint({
         one: 1,
         two: 2,
-        three: 3
+        three: 3,
       });
       expect(mock.post.mock.calls[0][0]).toEqual('http://example.com/1/2/?foo=bar');
       expect(mock.post.mock.calls[0][1]).toEqual('two=2&three=3');
@@ -217,10 +218,10 @@ describe('SilverStripeBackend', () => {
           three: { querystring: true },
         },
       });
-      const promise = endpoint({
+      endpoint({
         one: 1,
         two: 2,
-        three: 3
+        three: 3,
       });
       expect(mock.post.mock.calls[0][0]).toEqual('http://example.com/1/2/?foo=bar&three=3');
       expect(mock.post.mock.calls[0][1]).toEqual('{"two":2}');
@@ -242,16 +243,43 @@ describe('SilverStripeBackend', () => {
           three: { querystring: true },
         },
       });
-      const promise = endpoint({
+      endpoint({
         one: 1,
         two: 2,
-        three: 3
+        three: 3,
       });
       expect(mock.get.mock.calls[0][0]).toEqual('http://example.com/1/2/?foo=bar&two=2&three=3');
       expect(mock.get.mock.calls[0][1]).toEqual({
         Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-url-encoded'
+        'Content-Type': 'application/x-www-form-url-encoded',
       });
+    });
+
+    it('should merge defaultData into data argument', () => {
+      const mock = getBackendMock({
+        text: () => Promise.resolve('{"status":"ok"}'),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        }),
+      });
+      const endpoint = mock.createEndpointFetcher({
+        url: 'http://example.com/',
+        method: 'post',
+        payloadFormat: 'json',
+        defaultData: { one: 1, two: 2, four: { fourOne: true } },
+      });
+      endpoint({
+        two: 'updated',
+        three: 3,
+        four: { fourTwo: true },
+      });
+      expect(mock.post.mock.calls[0][0]).toEqual('http://example.com/');
+      expect(mock.post.mock.calls[0][1]).toEqual(JSON.stringify({
+        one: 1,
+        two: 'updated',
+        four: { fourOne: true, fourTwo: true },
+        three: 3,
+      }));
     });
   });
 });

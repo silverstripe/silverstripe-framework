@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import es6promise from 'es6-promise';
 import qs from 'qs';
+import merge from 'merge';
 
 es6promise.polyfill();
 
@@ -50,6 +51,8 @@ class SilverStripeBackend {
    *   - responseFormat: the content-type of the response data. Decoding will be handled for you.
    *   - payloadSchema: Definition for how the payload data passed into the created method
    *     will be processed. See "Payload Schema"
+   *   - defaultData: Data to merge into the payload
+   *     (which is passed into the returned method when invoked)
    *
    * # Payload Formats
    *
@@ -257,6 +260,7 @@ class SilverStripeBackend {
       payloadFormat: 'application/x-www-form-url-encoded',
       responseFormat: 'application/json',
       payloadSchema: {},
+      defaultData: {},
     }, endpointSpec);
 
     // Substitute shorcut format values with their full mime types
@@ -270,18 +274,20 @@ class SilverStripeBackend {
       }
     );
 
-    return (data) => {
+    return (data = {}) => {
       const headers = {
         Accept: refinedSpec.responseFormat,
         'Content-Type': refinedSpec.payloadFormat,
       };
+
+      const mergedData = merge.recursive({}, refinedSpec.defaultData, data);
 
       // Replace url placeholders, and add query parameters
       // from the payload based on the schema spec.
       const url = applySchemaToUrl(
         refinedSpec.payloadSchema,
         refinedSpec.url,
-        data,
+        mergedData,
         // Always add full payload data to GET requests.
         // GET requests with a HTTP body are technically legal,
         // but throw an error in the WHATWG fetch() implementation.
@@ -292,7 +298,7 @@ class SilverStripeBackend {
         refinedSpec.payloadFormat,
         // Filter raw data through the defined schema,
         // potentially removing keys because they're
-        applySchemaToData(refinedSpec.payloadSchema, data)
+        applySchemaToData(refinedSpec.payloadSchema, mergedData)
       );
 
       const args = refinedSpec.method.toLowerCase() === 'get'

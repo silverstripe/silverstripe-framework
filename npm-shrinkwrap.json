@@ -12759,6 +12759,10 @@
       "version": "1.1.2",
       "resolved": "https://registry.npmjs.org/json-js/-/json-js-1.1.2.tgz"
     },
+    "merge": {
+      "version": "1.2.0",
+      "resolved": "https://registry.npmjs.org/merge/-/merge-1.2.0.tgz"
+    },
     "merge-stream": {
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/merge-stream/-/merge-stream-1.0.0.tgz",
