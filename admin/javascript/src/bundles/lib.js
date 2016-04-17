@@ -1,3 +1,4 @@
+require('babel-polyfill');
 require('../../../../thirdparty/jquery/jquery.js');
 require('../../../../thirdparty/jquery-ondemand/jquery.ondemand.js');
 require('../../src/sspath.js');
