@@ -146,7 +146,7 @@ describe('SilverStripeBackend', () => {
       expect(mock.get.mock.calls[0][0]).toEqual('http://example.org?id=1&values%5Ba%5D=aye&values%5Bb%5D=bee');
       expect(mock.get.mock.calls[0][1]).toEqual({
         Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-url-encoded',
+        'Content-Type': 'application/x-www-form-urlencoded',
       });
     });
 
@@ -251,7 +251,7 @@ describe('SilverStripeBackend', () => {
       expect(mock.get.mock.calls[0][0]).toEqual('http://example.com/1/2/?foo=bar&two=2&three=3');
       expect(mock.get.mock.calls[0][1]).toEqual({
         Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-url-encoded',
+        'Content-Type': 'application/x-www-form-urlencoded',
       });
     });
 

@@ -59,7 +59,7 @@ class SilverStripeBackend {
    * Both `payloadFormat` and `responseFormat` can use the following shortcuts for their
    * corresponding mime types:
    *
-   *   - urlencoded: application/x-www-form-url-encoded
+   *   - urlencoded: application/x-www-form-urlencoded
    *   - json: application/json
    *
    * Requests with `method: 'get'` will automatically be sent as `urlencoded`,
@@ -109,7 +109,7 @@ class SilverStripeBackend {
      */
     function encode(contentType, data) {
       switch (contentType) {
-        case 'application/x-www-form-url-encoded':
+        case 'application/x-www-form-urlencoded':
           return qs.stringify(data);
 
         case 'application/json':
@@ -134,7 +134,7 @@ class SilverStripeBackend {
      */
     function decode(contentType, text) {
       switch (contentType) {
-        case 'application/x-www-form-url-encoded':
+        case 'application/x-www-form-urlencoded':
           return qs.parse(text);
 
         case 'application/json':
@@ -238,7 +238,7 @@ class SilverStripeBackend {
 
       newUrl = addQuerystring(
         newUrl,
-        encode('application/x-www-form-url-encoded', queryData)
+        encode('application/x-www-form-urlencoded', queryData)
       );
 
       // Template placeholders
@@ -257,7 +257,7 @@ class SilverStripeBackend {
     // Parameter defaults
     const refinedSpec = Object.assign({
       method: 'get',
-      payloadFormat: 'application/x-www-form-url-encoded',
+      payloadFormat: 'application/x-www-form-urlencoded',
       responseFormat: 'application/json',
       payloadSchema: {},
       defaultData: {},
@@ -266,7 +266,7 @@ class SilverStripeBackend {
     // Substitute shorcut format values with their full mime types
     const formatShortcuts = {
       json: 'application/json',
-      urlencoded: 'application/x-www-form-url-encoded',
+      urlencoded: 'application/x-www-form-urlencoded',
     };
     ['payloadFormat', 'responseFormat'].forEach(
       (key) => {
