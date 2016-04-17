@@ -18,8 +18,9 @@ class CampaignAdminContainer extends SilverStripeComponent {
     this.addCampaign = this.addCampaign.bind(this);
     this.createFn = this.createFn.bind(this);
     this.publishApi = backend.createEndpointFetcher({
-      url: this.props.config.publishEndpoint.url,
-      method: this.props.config.publishEndpoint.method,
+      url: this.props.sectionConfig.publishEndpoint.url,
+      method: this.props.sectionConfig.publishEndpoint.method,
+      defaultData: { SecurityID: this.props.config.SecurityID },
       payloadSchema: {
         id: { urlReplacement: ':id', remove: true },
       },
@@ -27,7 +28,7 @@ class CampaignAdminContainer extends SilverStripeComponent {
   }
 
   componentDidMount() {
-    window.ss.router(`/${this.props.config.campaignViewRoute}`, (ctx) => {
+    window.ss.router(`/${this.props.sectionConfig.campaignViewRoute}`, (ctx) => {
       this.props.actions.showCampaignView(ctx.params.id, ctx.params.view);
     });
   }
@@ -55,7 +56,7 @@ class CampaignAdminContainer extends SilverStripeComponent {
    * @return object
    */
   renderIndexView() {
-    const schemaUrl = this.props.config.forms.editForm.schemaUrl;
+    const schemaUrl = this.props.sectionConfig.forms.editForm.schemaUrl;
 
     return (
       <div className="cms-middle no-preview">
@@ -80,7 +81,7 @@ class CampaignAdminContainer extends SilverStripeComponent {
   renderItemListView() {
     const props = {
       campaignId: this.props.campaignId,
-      itemListViewEndpoint: this.props.config.itemListViewEndpoint,
+      itemListViewEndpoint: this.props.sectionConfig.itemListViewEndpoint,
       publishApi: this.publishApi,
     };
 
@@ -105,7 +106,7 @@ class CampaignAdminContainer extends SilverStripeComponent {
    * @return object - Instanciated React component
    */
   createFn(Component, props) {
-    const campaignViewRoute = this.props.config.campaignViewRoute;
+    const campaignViewRoute = this.props.sectionConfig.campaignViewRoute;
 
     if (props.component === 'GridField') {
       const extendedProps = Object.assign({}, props, {
@@ -149,19 +150,23 @@ class CampaignAdminContainer extends SilverStripeComponent {
 }
 
 CampaignAdminContainer.propTypes = {
-  config: React.PropTypes.shape({
+  sectionConfig: React.PropTypes.shape({
     forms: React.PropTypes.shape({
       editForm: React.PropTypes.shape({
         schemaUrl: React.PropTypes.string,
       }),
     }),
   }),
+  config: React.PropTypes.shape({
+    SecurityID: React.PropTypes.string,
+  }),
   sectionConfigKey: React.PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {
   return {
-    config: state.config.sections[ownProps.sectionConfigKey],
+    config: state.config,
+    sectionConfig: state.config.sections[ownProps.sectionConfigKey],
     campaignId: state.campaign.campaignId,
     view: state.campaign.view,
   };

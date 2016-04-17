@@ -27,9 +27,9 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 
 	private static $url_handlers = [
 		'GET sets' => 'readCampaigns',
+		'POST set/$ID/publish' => 'publishCampaign',
 		'POST set/$ID' => 'createCampaign',
 		'GET set/$ID/$Name' => 'readCampaign',
-		'PUT set/$ID/publish' => 'publishCampaign',
 		'PUT set/$ID' => 'updateCampaign',
 		'DELETE set/$ID' => 'deleteCampaign',
 	];
@@ -66,7 +66,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 			'itemListViewEndpoint' => $this->Link('set/:id/show'),
 			'publishEndpoint' => [
 				'url' => $this->Link('set/:id/publish'),
-				'method' => 'put'
+				'method' => 'post'
 			]
 		]);
 	}
@@ -431,6 +431,12 @@ JSON;
 	 * @return SS_HTTPResponse
 	 */
 	public function publishCampaign(SS_HTTPRequest $request) {
+		// Protect against CSRF on destructive action
+		if(!SecurityToken::inst()->checkRequest($request)) {
+			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 400))
+				->addHeader('Content-Type', 'application/json');
+		}
+
 		$id = $request->param('ID');
 		if(!$id || !is_numeric($id)) {
 			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 400))
