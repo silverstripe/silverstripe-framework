@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define('ss.silverstripe-backend', ['exports', 'isomorphic-fetch', 'es6-promise', 'qs'], factory);
+    define('ss.silverstripe-backend', ['exports', 'isomorphic-fetch', 'es6-promise', 'qs', 'merge'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require('isomorphic-fetch'), require('es6-promise'), require('qs'));
+    factory(exports, require('isomorphic-fetch'), require('es6-promise'), require('qs'), require('merge'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.isomorphicFetch, global.es6Promise, global.qs);
+    factory(mod.exports, global.isomorphicFetch, global.es6Promise, global.qs, global.merge);
     global.ssSilverstripeBackend = mod.exports;
   }
-})(this, function (exports, _isomorphicFetch, _es6Promise, _qs) {
+})(this, function (exports, _isomorphicFetch, _es6Promise, _qs, _merge) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -22,6 +22,8 @@
   var _es6Promise2 = _interopRequireDefault(_es6Promise);
 
   var _qs2 = _interopRequireDefault(_qs);
+
+  var _merge2 = _interopRequireDefault(_merge);
 
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {
@@ -98,7 +100,7 @@
 
         function encode(contentType, data) {
           switch (contentType) {
-            case 'application/x-www-form-url-encoded':
+            case 'application/x-www-form-urlencoded':
               return _qs2.default.stringify(data);
 
             case 'application/json':
@@ -116,7 +118,7 @@
 
         function decode(contentType, text) {
           switch (contentType) {
-            case 'application/x-www-form-url-encoded':
+            case 'application/x-www-form-urlencoded':
               return _qs2.default.parse(text);
 
             case 'application/json':
@@ -178,7 +180,7 @@
             return prev;
           }, {});
 
-          newUrl = addQuerystring(newUrl, encode('application/x-www-form-url-encoded', queryData));
+          newUrl = addQuerystring(newUrl, encode('application/x-www-form-urlencoded', queryData));
 
           newUrl = Object.keys(payloadSchema).reduce(function (prev, key) {
             var replacement = payloadSchema[key].urlReplacement;
@@ -194,30 +196,35 @@
 
         var refinedSpec = Object.assign({
           method: 'get',
-          payloadFormat: 'application/x-www-form-url-encoded',
+          payloadFormat: 'application/x-www-form-urlencoded',
           responseFormat: 'application/json',
-          payloadSchema: {}
+          payloadSchema: {},
+          defaultData: {}
         }, endpointSpec);
 
         var formatShortcuts = {
           json: 'application/json',
-          urlencoded: 'application/x-www-form-url-encoded'
+          urlencoded: 'application/x-www-form-urlencoded'
         };
         ['payloadFormat', 'responseFormat'].forEach(function (key) {
           if (formatShortcuts[refinedSpec[key]]) refinedSpec[key] = formatShortcuts[refinedSpec[key]];
         });
 
-        return function (data) {
+        return function () {
+          var data = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
           var headers = {
             Accept: refinedSpec.responseFormat,
             'Content-Type': refinedSpec.payloadFormat
           };
 
-          var url = applySchemaToUrl(refinedSpec.payloadSchema, refinedSpec.url, data, { setFromData: refinedSpec.method === 'get' });
+          var mergedData = _merge2.default.recursive({}, refinedSpec.defaultData, data);
 
-          var encodedData = encode(refinedSpec.payloadFormat, applySchemaToData(refinedSpec.payloadSchema, data));
+          var url = applySchemaToUrl(refinedSpec.payloadSchema, refinedSpec.url, mergedData, { setFromData: refinedSpec.method.toLowerCase() === 'get' });
 
-          var args = refinedSpec.method === 'get' ? [url, headers] : [url, encodedData, headers];
+          var encodedData = encode(refinedSpec.payloadFormat, applySchemaToData(refinedSpec.payloadSchema, mergedData));
+
+          var args = refinedSpec.method.toLowerCase() === 'get' ? [url, headers] : [url, encodedData, headers];
 
           return _this[refinedSpec.method].apply(_this, args).then(parseResponse);
         };
