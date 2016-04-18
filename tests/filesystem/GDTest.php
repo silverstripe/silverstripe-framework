@@ -91,8 +91,8 @@ class GDTest extends SapphireTest {
 		}
 
 		// check various sample points
-		$this->assertColourEquals(96, $samples[0]['red'], $tolerance);
-		$this->assertColourEquals(91, $samples[2]['red'], $tolerance);
+		$this->assertColourEquals(76, $samples[0]['red'], $tolerance);
+		$this->assertColourEquals(149, $samples[2]['red'], $tolerance);
 		$this->assertColourEquals(0, $samples[8]['red'], $tolerance);
 		$this->assertColourEquals(127, $samples[9]['red'], $tolerance);
 

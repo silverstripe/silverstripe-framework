@@ -486,14 +486,16 @@ class GDBackend extends Object implements Image_Backend {
 	}
 
 	/**
-	 * Make the image greyscale
-	 * $rv = red value, defaults to 38
-	 * $gv = green value, defaults to 36
-	 * $bv = blue value, defaults to 26
-	 * Based (more or less entirely, with changes for readability) on code from
-	 * http://www.teckis.com/scriptix/thumbnails/teck.html
+	 * Make the image greyscale.
+	 * Default color weights are based on standard BT.601 (those used in PAL, NTSC and many software packages, also see
+	 * https://en.wikipedia.org/wiki/Grayscale#Luma_coding_in_video_systems )
+	 *
+	 * $R = red weight, defaults to 299
+	 * $G = green weight, defaults to 587
+	 * $B = blue weight, defaults to 114
+	 * $brightness = brightness in percentage, defaults to 100
 	 */
-	public function greyscale($rv=38, $gv=36, $bv=26) {
+	public function greyscale($R=299, $G=587, $B=114, $brightness=100) {
 		$width = $this->width;
 		$height = $this->height;
 		$newGD = imagecreatetruecolor($this->width, $this->height);
@@ -502,15 +504,18 @@ class GDBackend extends Object implements Image_Backend {
 		imagealphablending($newGD, false);
 		imagesavealpha($newGD, true);
 
-		$rt = $rv + $bv + $gv;
-		$rr = ($rv == 0) ? 0 : 1/($rt/$rv);
-		$br = ($bv == 0) ? 0 : 1/($rt/$bv);
-		$gr = ($gv == 0) ? 0 : 1/($rt/$gv);
+		$rt = $R + $G + $B;
+		// if $rt is 0, bad parameters are provided, so result will be a black image
+		$rr = $rt ? $R/$rt : 0;
+		$gr = $rt ? $G/$rt : 0;
+		$br = $rt ? $B/$rt : 0;
+		// iterate over all pixels and make them grey
 		for($dy = 0; $dy < $height; $dy++) {
 			for($dx = 0; $dx < $width; $dx++) {
 				$pxrgb = imagecolorat($this->gd, $dx, $dy);
 				$heightgb = ImageColorsforIndex($this->gd, $pxrgb);
 				$newcol = ($rr*$heightgb['red']) + ($br*$heightgb['blue']) + ($gr*$heightgb['green']);
+				$newcol = min(255, $newcol*$brightness/100);
 				$setcol = ImageColorAllocateAlpha($newGD, $newcol, $newcol, $newcol, $heightgb['alpha']);
 				imagesetpixel($newGD, $dx, $dy, $setcol);
 			}
