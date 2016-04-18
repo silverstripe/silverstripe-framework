@@ -1469,6 +1469,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @param int $id
 	 */
 	public function setCurrentPageID($id) {
+		$id = (int)$id;
 		Session::set($this->sessionNamespace() . ".currentPage", $id);
 	}
 
