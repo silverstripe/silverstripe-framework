@@ -195,7 +195,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		// Get "global" CSRF token for use in JavaScript
-		$token = new SecurityToken();
+		$token = SecurityToken::inst();
 		$combinedClientConfig[$token->getName()] = $token->getValue();
 
 		return Convert::raw2json($combinedClientConfig);
