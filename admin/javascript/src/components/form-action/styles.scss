@@ -116,7 +116,7 @@
 }
 
 .btn-success {
-	border-bottom-color: $btn-success-shadow;
+	box-shadow: 0 1px 0 $btn-success-shadow;
 
 	svg circle {
 		fill: #fff;
