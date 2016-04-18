@@ -4,6 +4,7 @@
 jest.unmock('isomorphic-fetch');
 jest.unmock('../silverstripe-backend');
 jest.unmock('qs');
+jest.unmock('merge');
 
 import backend from '../silverstripe-backend';
 
@@ -32,11 +33,15 @@ describe('SilverStripeBackend', () => {
 
     it('should send a GET request to an endpoint', () => {
       backend.get('http://example.com');
-      expect(backend.fetch).toBeCalled();
-      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
-      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
-        method: 'get'
-      }));
+
+      expect(backend.fetch).toBeCalledWith(
+        'http://example.com',
+        {
+          method: 'get',
+          credentials: 'same-origin',
+          headers: {},
+        }
+      );
     });
   });
 
@@ -51,12 +56,17 @@ describe('SilverStripeBackend', () => {
 
       backend.post('http://example.com', postData);
 
-      expect(backend.fetch).toBeCalled();
-      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
-      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
-        method: 'post',
-        body: postData
-      }));
+      expect(backend.fetch).toBeCalledWith(
+        'http://example.com',
+        {
+          method: 'post',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: postData,
+        }
+      );
     });
   });
 
@@ -71,12 +81,15 @@ describe('SilverStripeBackend', () => {
 
       backend.put('http://example.com', putData);
 
-      expect(backend.fetch).toBeCalled();
-      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
-      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
-        method: 'put',
-        body: putData
-      }));
+      expect(backend.fetch).toBeCalledWith(
+        'http://example.com',
+        {
+          method: 'put',
+          credentials: 'same-origin',
+          headers: {},
+          body: putData,
+        }
+      );
     });
   });
 
@@ -91,12 +104,15 @@ describe('SilverStripeBackend', () => {
 
       backend.delete('http://example.com', deleteData);
 
-      expect(backend.fetch).toBeCalled();
-      expect(backend.fetch.mock.calls[0][0]).toEqual('http://example.com');
-      expect(backend.fetch.mock.calls[0][1]).toEqual(jasmine.objectContaining({
-        method: 'delete',
-        body: deleteData
-      }));
+      expect(backend.fetch).toBeCalledWith(
+        'http://example.com',
+        {
+          method: 'delete',
+          credentials: 'same-origin',
+          headers: {},
+          body: deleteData,
+        }
+      );
     });
   });
 
@@ -130,11 +146,11 @@ describe('SilverStripeBackend', () => {
       expect(mock.get.mock.calls[0][0]).toEqual('http://example.org?id=1&values%5Ba%5D=aye&values%5Bb%5D=bee');
       expect(mock.get.mock.calls[0][1]).toEqual({
         Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-url-encoded',
+        'Content-Type': 'application/x-www-form-urlencoded',
       });
     });
 
-    pit('should pass a JSON payload', () => {
+    it('should pass a JSON payload', () => {
       const mock = getBackendMock({
         text: () => Promise.resolve('{"status":"ok","message":"happy"}'),
         headers: new Headers({
@@ -146,7 +162,7 @@ describe('SilverStripeBackend', () => {
         method: 'post',
         payloadFormat: 'json',
         responseFormat: 'json',
-  });
+      });
 
       const promise = endpoint({ id: 1, values: { a: 'aye', b: 'bee' } });
       expect(mock.post.mock.calls[0][0]).toEqual('http://example.org');
@@ -176,10 +192,10 @@ describe('SilverStripeBackend', () => {
           two: { urlReplacement: ':two' },
         },
       });
-      const promise = endpoint({
+      endpoint({
         one: 1,
         two: 2,
-        three: 3
+        three: 3,
       });
       expect(mock.post.mock.calls[0][0]).toEqual('http://example.com/1/2/?foo=bar');
       expect(mock.post.mock.calls[0][1]).toEqual('two=2&three=3');
@@ -202,10 +218,10 @@ describe('SilverStripeBackend', () => {
           three: { querystring: true },
         },
       });
-      const promise = endpoint({
+      endpoint({
         one: 1,
         two: 2,
-        three: 3
+        three: 3,
       });
       expect(mock.post.mock.calls[0][0]).toEqual('http://example.com/1/2/?foo=bar&three=3');
       expect(mock.post.mock.calls[0][1]).toEqual('{"two":2}');
@@ -227,16 +243,43 @@ describe('SilverStripeBackend', () => {
           three: { querystring: true },
         },
       });
-      const promise = endpoint({
+      endpoint({
         one: 1,
         two: 2,
-        three: 3
+        three: 3,
       });
       expect(mock.get.mock.calls[0][0]).toEqual('http://example.com/1/2/?foo=bar&two=2&three=3');
       expect(mock.get.mock.calls[0][1]).toEqual({
         Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-url-encoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
       });
+    });
+
+    it('should merge defaultData into data argument', () => {
+      const mock = getBackendMock({
+        text: () => Promise.resolve('{"status":"ok"}'),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        }),
+      });
+      const endpoint = mock.createEndpointFetcher({
+        url: 'http://example.com/',
+        method: 'post',
+        payloadFormat: 'json',
+        defaultData: { one: 1, two: 2, four: { fourOne: true } },
+      });
+      endpoint({
+        two: 'updated',
+        three: 3,
+        four: { fourTwo: true },
+      });
+      expect(mock.post.mock.calls[0][0]).toEqual('http://example.com/');
+      expect(mock.post.mock.calls[0][1]).toEqual(JSON.stringify({
+        one: 1,
+        two: 'updated',
+        four: { fourOne: true, fourTwo: true },
+        three: 3,
+      }));
     });
   });
 });

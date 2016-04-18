@@ -358,6 +358,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('components/action-button/index')
     .external('components/north-header/index')
     .external('components/form-builder/index')
+    .external('components/form-action/index')
     .external('deep-freeze')
     .external('components/grid-field/index')
     .external('i18n')
@@ -370,6 +371,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('reducer-register')
     .external('redux-thunk')
     .external('redux')
+    .external('silverstripe-backend')
     .external('silverstripe-component')
     .external('bootstrap-collapse')
     .bundle()
@@ -459,13 +461,12 @@ gulp.task('css', ['compile:css'], () => {
  * Watches for changes if --development flag is given
  */
 gulp.task('compile:css', () => {
-  const outputStyle = isDev ? 'expanded' : 'compressed';
   const tasks = rootCompileFolders.map((folder) => { // eslint-disable-line
     return gulp.src(`${folder}/scss/**/*.scss`)
       .pipe(sourcemaps.init())
       .pipe(
         sass({
-          outputStyle,
+          outputStyle: 'compressed',
           importer: (url, prev, done) => {
             if (url.match(/^compass\//)) {
               done({ file: 'scss/_compasscompat.scss' });

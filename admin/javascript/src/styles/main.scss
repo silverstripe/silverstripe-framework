@@ -1,13 +1,13 @@
-/** -----------------------------
- * Sections
- * ------------------------------ */
-@import "../sections/campaign-admin/styles";
-
-/** -----------------------------
- * components
- * ------------------------------ */
+// Components
 @import "../components/grid-field/styles";
 @import "../components/north-header/styles";
 @import "../components/north-header-breadcrumbs/styles";
 @import "../components/form-action/styles";
 @import "../components/hidden-field/styles";
+@import "../components/label/styles";
+
+// Structural
+@import "layout";
+
+// Sections
+@import "../sections/campaign-admin/styles";

@@ -3,6 +3,7 @@ import ACTION_TYPES from './action-types';
 
 const initialState = {
   campaignId: null,
+  isPublishing: false,
   view: null,
 };
 
@@ -13,6 +14,17 @@ function campaignReducer(state = initialState, action) {
       return deepFreeze(Object.assign({}, state, {
         campaignId: action.payload.campaignId,
         view: action.payload.view,
+      }));
+
+    case ACTION_TYPES.PUBLISH_CAMPAIGN_REQUEST:
+      return deepFreeze(Object.assign({}, state, {
+        isPublishing: true,
+      }));
+
+    case ACTION_TYPES.PUBLISH_CAMPAIGN_SUCCESS:
+    case ACTION_TYPES.PUBLISH_CAMPAIGN_FAILURE:
+      return deepFreeze(Object.assign({}, state, {
+        isPublishing: false,
       }));
 
     default:

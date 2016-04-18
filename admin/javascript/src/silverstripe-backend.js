@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import es6promise from 'es6-promise';
 import qs from 'qs';
+import merge from 'merge';
 
 es6promise.polyfill();
 
@@ -50,13 +51,15 @@ class SilverStripeBackend {
    *   - responseFormat: the content-type of the response data. Decoding will be handled for you.
    *   - payloadSchema: Definition for how the payload data passed into the created method
    *     will be processed. See "Payload Schema"
+   *   - defaultData: Data to merge into the payload
+   *     (which is passed into the returned method when invoked)
    *
    * # Payload Formats
    *
    * Both `payloadFormat` and `responseFormat` can use the following shortcuts for their
    * corresponding mime types:
    *
-   *   - urlencoded: application/x-www-form-url-encoded
+   *   - urlencoded: application/x-www-form-urlencoded
    *   - json: application/json
    *
    * Requests with `method: 'get'` will automatically be sent as `urlencoded`,
@@ -106,7 +109,7 @@ class SilverStripeBackend {
      */
     function encode(contentType, data) {
       switch (contentType) {
-        case 'application/x-www-form-url-encoded':
+        case 'application/x-www-form-urlencoded':
           return qs.stringify(data);
 
         case 'application/json':
@@ -131,7 +134,7 @@ class SilverStripeBackend {
      */
     function decode(contentType, text) {
       switch (contentType) {
-        case 'application/x-www-form-url-encoded':
+        case 'application/x-www-form-urlencoded':
           return qs.parse(text);
 
         case 'application/json':
@@ -235,7 +238,7 @@ class SilverStripeBackend {
 
       newUrl = addQuerystring(
         newUrl,
-        encode('application/x-www-form-url-encoded', queryData)
+        encode('application/x-www-form-urlencoded', queryData)
       );
 
       // Template placeholders
@@ -254,15 +257,16 @@ class SilverStripeBackend {
     // Parameter defaults
     const refinedSpec = Object.assign({
       method: 'get',
-      payloadFormat: 'application/x-www-form-url-encoded',
+      payloadFormat: 'application/x-www-form-urlencoded',
       responseFormat: 'application/json',
       payloadSchema: {},
+      defaultData: {},
     }, endpointSpec);
 
     // Substitute shorcut format values with their full mime types
     const formatShortcuts = {
       json: 'application/json',
-      urlencoded: 'application/x-www-form-url-encoded',
+      urlencoded: 'application/x-www-form-urlencoded',
     };
     ['payloadFormat', 'responseFormat'].forEach(
       (key) => {
@@ -270,32 +274,34 @@ class SilverStripeBackend {
       }
     );
 
-    return (data) => {
+    return (data = {}) => {
       const headers = {
         Accept: refinedSpec.responseFormat,
         'Content-Type': refinedSpec.payloadFormat,
       };
+
+      const mergedData = merge.recursive({}, refinedSpec.defaultData, data);
 
       // Replace url placeholders, and add query parameters
       // from the payload based on the schema spec.
       const url = applySchemaToUrl(
         refinedSpec.payloadSchema,
         refinedSpec.url,
-        data,
+        mergedData,
         // Always add full payload data to GET requests.
         // GET requests with a HTTP body are technically legal,
         // but throw an error in the WHATWG fetch() implementation.
-        { setFromData: (refinedSpec.method === 'get') }
+        { setFromData: (refinedSpec.method.toLowerCase() === 'get') }
       );
 
       const encodedData = encode(
         refinedSpec.payloadFormat,
         // Filter raw data through the defined schema,
         // potentially removing keys because they're
-        applySchemaToData(refinedSpec.payloadSchema, data)
+        applySchemaToData(refinedSpec.payloadSchema, mergedData)
       );
 
-      const args = refinedSpec.method === 'get'
+      const args = refinedSpec.method.toLowerCase() === 'get'
         ? [url, headers]
         : [url, encodedData, headers];
 

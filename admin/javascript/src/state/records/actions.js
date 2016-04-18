@@ -27,29 +27,32 @@ function populate(str, params) {
 export function fetchRecords(recordType, method, url) {
   const payload = { recordType };
   const headers = { Accept: 'text/json' };
+  const methodToLowerCase = method.toLowerCase();
+
   return (dispatch) => {
     dispatch({
       type: ACTION_TYPES.FETCH_RECORDS_REQUEST,
       payload,
     });
-    const args = method.toLowerCase() === 'get'
+
+    const args = methodToLowerCase === 'get'
       ? [populate(url, payload), headers]
       : [populate(url, payload), {}, headers];
 
-    return backend[method.toLowerCase()](...args)
-    .then(response => response.json())
-    .then(json => {
-      dispatch({
-        type: ACTION_TYPES.FETCH_RECORDS_SUCCESS,
-        payload: { recordType, data: json },
+    return backend[methodToLowerCase](...args)
+      .then(response => response.json())
+      .then(json => {
+        dispatch({
+          type: ACTION_TYPES.FETCH_RECORDS_SUCCESS,
+          payload: { recordType, data: json },
+        });
+      })
+      .catch((err) => {
+        dispatch({
+          type: ACTION_TYPES.FETCH_RECORDS_FAILURE,
+          payload: { error: err, recordType },
+        });
       });
-    })
-    .catch((err) => {
-      dispatch({
-        type: ACTION_TYPES.FETCH_RECORDS_FAILURE,
-        payload: { error: err, recordType },
-      });
-    });
   };
 }
 
@@ -64,29 +67,32 @@ export function fetchRecords(recordType, method, url) {
 export function fetchRecord(recordType, method, url) {
   const payload = { recordType };
   const headers = { Accept: 'text/json' };
+  const methodToLowerCase = method.toLowerCase();
+
   return (dispatch) => {
     dispatch({
       type: ACTION_TYPES.FETCH_RECORD_REQUEST,
       payload,
     });
-    const args = method.toLowerCase() === 'get'
+
+    const args = methodToLowerCase === 'get'
       ? [populate(url, payload), headers]
       : [populate(url, payload), {}, headers];
 
-    return backend[method.toLowerCase()](...args)
-    .then(response => response.json())
-    .then(json => {
-      dispatch({
-        type: ACTION_TYPES.FETCH_RECORD_SUCCESS,
-        payload: { recordType, data: json },
+    return backend[methodToLowerCase](...args)
+      .then(response => response.json())
+      .then(json => {
+        dispatch({
+          type: ACTION_TYPES.FETCH_RECORD_SUCCESS,
+          payload: { recordType, data: json },
+        });
+      })
+      .catch((err) => {
+        dispatch({
+          type: ACTION_TYPES.FETCH_RECORD_FAILURE,
+          payload: { error: err, recordType },
+        });
       });
-    })
-    .catch((err) => {
-      dispatch({
-        type: ACTION_TYPES.FETCH_RECORD_FAILURE,
-        payload: { error: err, recordType },
-      });
-    });
   };
 }
 

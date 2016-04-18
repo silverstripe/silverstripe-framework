@@ -1,24 +1,33 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as actions from 'state/records/actions';
+import * as recordActions from 'state/records/actions';
+import * as campaignActions from 'state/campaign/actions';
 import SilverStripeComponent from 'silverstripe-component';
 import Accordion from 'components/accordion/index';
 import AccordionGroup from 'components/accordion/group';
 import AccordionItem from 'components/accordion/item';
 import NorthHeader from 'components/north-header/index';
+import FormAction from 'components/form-action/index';
 import CampaignItem from './item';
 import CampaignPreview from './preview';
+import i18n from 'i18n';
 
 /**
  * Represents a campaign list view
  */
 class CampaignListContainer extends SilverStripeComponent {
 
+  constructor(props) {
+    super(props);
+
+    this.handlePublish = this.handlePublish.bind(this);
+  }
+
   componentDidMount() {
     const fetchURL = this.props.itemListViewEndpoint.replace(/:id/, this.props.campaignId);
     super.componentDidMount();
-    this.props.actions.fetchRecord('ChangeSet', 'get', fetchURL);
+    this.props.recordActions.fetchRecord('ChangeSet', 'get', fetchURL);
   }
 
   /**
@@ -29,6 +38,7 @@ class CampaignListContainer extends SilverStripeComponent {
   render() {
     const itemID = 1; // todo - hook up to "click" handler for changesetitems
     const campaignId = this.props.campaignId;
+    const campaign = this.props.record;
 
     // Trigger different layout when preview is enabled
     const previewUrl = this.previewURLForItem(itemID);
@@ -51,13 +61,13 @@ class CampaignListContainer extends SilverStripeComponent {
         // Add extra css class for published items
         let itemClassName = '';
 
-        if (item.ChangeType === 'none') {
+        if (item.ChangeType === 'none' || campaign.State === 'published') {
           itemClassName = 'list-group-item--published';
         }
 
         accordionItems.push(
           <AccordionItem key={item.ID} className={itemClassName}>
-            <CampaignItem item={item} />
+            <CampaignItem item={item} campaign={this.props.record} />
           </AccordionItem>
         );
       });
@@ -79,12 +89,64 @@ class CampaignListContainer extends SilverStripeComponent {
               {accordionGroups}
             </Accordion>
           </div>
+          <div className="cms-south-actions">
+            {this.renderButtonToolbar()}
+          </div>
         </div>
         { previewUrl && <CampaignPreview previewUrl={previewUrl} /> }
       </div>
     );
   }
 
+  renderButtonToolbar() {
+    const items = this.getItems();
+
+    // let itemSummaryLabel;
+    if (!items) {
+      return <div className="btn-toolbar"></div>;
+    }
+
+    // let itemSummaryLabel = i18n.sprintf(
+    //   items.length === 1
+    //     ? i18n._t('Campaigns.ITEM_SUMMARY_SINGULAR')
+    //     : i18n._t('Campaigns.ITEM_SUMMARY_PLURAL'),
+    //   items.length
+    // );
+
+    let actionProps = {};
+
+    if (this.props.record.State === 'open') {
+      actionProps = Object.assign(actionProps, {
+        label: i18n._t('Campaigns.PUBLISHCAMPAIGN'),
+        bootstrapButtonStyle: 'success',
+        loading: this.props.campaign.isPublishing,
+        handleClick: this.handlePublish,
+        icon: 'rocket',
+      });
+    } else if (this.props.record.State === 'published') {
+      // TODO Implement "revert" feature
+      actionProps = Object.assign(actionProps, {
+        label: i18n._t('Campaigns.REVERTCAMPAIGN'),
+        bootstrapButtonStyle: 'default',
+        icon: 'back-in-time',
+        disabled: true,
+      });
+    }
+
+    // TODO Fix indicator positioning
+    // const itemCountIndicator = (
+    //   <span className="text-muted">
+    //     <span className="label label-warning label--empty">&nbsp;</span>
+    //     &nbsp;{itemSummaryLabel}
+    //   </span>
+    // );
+
+    return (
+      <div className="btn-toolbar">
+        <FormAction {...actionProps} />
+      </div>
+    );
+  }
 
   /**
    * Gets preview URL for itemid
@@ -101,16 +163,27 @@ class CampaignListContainer extends SilverStripeComponent {
   }
 
   /**
+   * @return {Array}
+   */
+  getItems() {
+    if (this.props.record && this.props.record._embedded) {
+      return this.props.record._embedded.ChangeSetItems;
+    }
+
+    return null;
+  }
+
+  /**
    * Group items for changeset display
    *
    * @return array
    */
   groupItemsForSet() {
     const groups = {};
-    if (!this.props.record || !this.props.record._embedded) {
+    const items = this.getItems();
+    if (!items) {
       return groups;
     }
-    const items = this.props.record._embedded.ChangeSetItems;
 
     // group by whatever
     items.forEach(item => {
@@ -132,24 +205,42 @@ class CampaignListContainer extends SilverStripeComponent {
     return groups;
   }
 
+  handlePublish(e) {
+    e.preventDefault();
+    this.props.campaignActions.publishCampaign(
+      this.props.publishApi,
+      this.props.campaignId
+    );
+  }
+
 }
+
+CampaignListContainer.propTypes = {
+  campaign: React.PropTypes.shape({
+    isPublishing: React.PropTypes.bool.isRequired,
+  }),
+  campaignActions: React.PropTypes.object.isRequired,
+  publishApi: React.PropTypes.func.isRequired,
+  record: React.PropTypes.object.isRequired,
+  recordActions: React.PropTypes.object.isRequired,
+};
 
 function mapStateToProps(state, ownProps) {
   // Find record specific to this item
   let record = null;
   if (state.records && state.records.ChangeSet && ownProps.campaignId) {
-    record = state.records.ChangeSet.find(
-      (nextRecord) => (nextRecord.ID === parseInt(ownProps.campaignId, 10))
-    );
+    record = state.records.ChangeSet[parseInt(ownProps.campaignId, 10)];
   }
   return {
-    record: record || [],
+    record: record || {},
+    campaign: state.campaign,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch),
+    recordActions: bindActionCreators(recordActions, dispatch),
+    campaignActions: bindActionCreators(campaignActions, dispatch),
   };
 }
 

@@ -1,4 +1,5 @@
 import ACTION_TYPES from './action-types';
+import RECORD_ACTION_TYPES from 'state/records/action-types';
 
 /**
  * Show specified campaign set
@@ -13,3 +14,36 @@ export function showCampaignView(campaignId, view) {
   };
 }
 
+/**
+ * Publish a campaign and all its items
+ *
+ * @param {Function} publishApi See silverstripe-backend.js
+ * @param {number} campaignId
+ * @return {Object}
+ */
+export function publishCampaign(publishApi, campaignId) {
+  return (dispatch) => {
+    dispatch({
+      type: ACTION_TYPES.PUBLISH_CAMPAIGN_REQUEST,
+      payload: { campaignId },
+    });
+
+    publishApi({ id: campaignId })
+      .then((data) => {
+        dispatch({
+          type: ACTION_TYPES.PUBLISH_CAMPAIGN_SUCCESS,
+          payload: { campaignId },
+        });
+        dispatch({
+          type: RECORD_ACTION_TYPES.FETCH_RECORD_SUCCESS,
+          payload: { recordType: 'ChangeSet', data },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: ACTION_TYPES.PUBLISH_CAMPAIGN_FAILURE,
+          payload: { error },
+        });
+      });
+  };
+}
