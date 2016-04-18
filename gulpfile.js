@@ -273,8 +273,8 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/north-header/index`,
       { expose: 'components/north-header/index' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/north-header-breadcrumbs/index`,
-      { expose: 'components/north-header-breadcrumbs/index' }
+    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/breadcrumb/index`,
+      { expose: 'components/breadcrumb/index' }
     )
     .require(`${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/i18n.js`,
       { expose: 'i18n' }
@@ -296,6 +296,9 @@ gulp.task('bundle-lib', function bundleLib() {
     )
     .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/silverstripe-backend`,
       { expose: 'silverstripe-backend' }
+    )
+    .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
+      { expose: 'bootstrap-collapse' }
     )
     .bundle()
     .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))

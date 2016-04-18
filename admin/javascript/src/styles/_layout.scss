@@ -1,9 +1,59 @@
-.cms-south-actions {  			// Todo: update variables
-  height: 53px;					// navbar-total-height
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  border-top: 1px solid #ddd;	// $border-color
-  background-color: #f6f7f8;	// $body-bg
-  padding: 10px 15px; 			// $spacer-y*.625 $spacer-x
+.content-toolbar {
+	max-height: $navbar-height;
+    display: block;
+    padding: 10px 0 10px 12px;
+    margin-bottom: $spacer-y/2;
 }
+
+.cms-middle {
+	padding-left: 0;
+	height: 100%;
+	position: relative;
+	transition: padding .2s;
+
+	&.with-preview {
+		@media (min-width: 992px) { /* lg */
+			padding-left: 316px;
+			.cms-campaigns {
+				width: 316px;
+			}
+		}
+		@media (min-width: 1200px) { /* xl */
+			padding-left: 448px;
+			.cms-campaigns {
+				width: 448px;
+			}
+		}
+	}
+}
+
+.cms-middle__scrollable {
+	overflow-y: auto;
+	display: block;
+	height: 100%;
+}
+
+// Preview panel 
+.pages-preview {
+	display: block;
+	position: relative;
+	background-color: #BBB;
+	border-left: 1px solid #dbdde0;
+	height: 100%;
+
+	iframe {
+		width: 100%;
+		height: calc(100% - #{$navbar-total-height});
+		border: none;
+	}
+}
+
+//.cms-south-actions {
+//  height: $navbar-total-height;
+//  position: absolute;
+//  bottom: 0;
+//  width: 100%;
+//  border-top: 1px solid #ddd;
+//  background-color: #f6f7f8;
+//  padding: 8px 15px;
+//}

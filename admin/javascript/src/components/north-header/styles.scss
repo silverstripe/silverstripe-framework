@@ -1,4 +1,27 @@
-.north-header-component {
-    @extend .cms-content-header;
+.north-header {
+    border-bottom: 1px solid $border-color-dark;
+    background-color: $background-north;
     width: 100%;
+    height: $navbar-total-height;
+    z-index: 60;
+}
+
+// Typically to hold breadcrumbs and back button
+.north-header__navigation {
+    float: left;
+    padding: 0 $spacer-y;
+    max-width: 70%;
+    max-height: $navbar-height;
+}
+
+.north-header__heading {
+    font-size: $font-size-lg;
+    font-weight: normal;
+    line-height: 20px;
+    width: 100%;
+}
+
+// To hold things like search icon and view toggle
+.north-header__actions {
+
 }
