@@ -3,25 +3,43 @@
  * See https://github.com/visionmedia/page.js
  */
 import page from 'page.js';
+import url from 'url';
+
+/**
+ * Add leading slash to base-relative urls, as required by Page.js
+ *
+ * If a url is unable to be resolved (because it has the wrong base url) then
+ * it will be returned as an absolute url to break out of routing to do
+ * a hard redirect.
+ *
+ * @param {string} path
+ * @return {string} Normalised path
+ */
+function resolveURLToBase(path) {
+  // Resolve path to base
+  const absoluteBase = this.getAbsoluteBase();
+  const absolutePath = url.resolve(absoluteBase, path);
+
+  // Validate that this url belongs to this base; If not, normalise
+  // to absolute url to force routing to do a page redirect.
+  if (absolutePath.indexOf(absoluteBase) !== 0) {
+    return absolutePath;
+  }
+
+  // Remove base url from absolute path, save for trailing `/` which Page.js requires
+  return absolutePath.substring(absoluteBase.length - 1);
+}
 
 /**
  * Wrapper for `page.show()` with SilverStripe specific behaviour.
+ *
+ * @param {page} originalPage
+ * @return {function} Replacement function for show
  */
 function show(pageShow) {
-  return (path, state, dispatch, push) => {
-    // Normalise `path` so that pattern matching is more robust.
-    // For example if your route is '/pages' it should match when `path` is
-    // 'http://foo.com/admin/pages', '/pages', and 'pages'.
-    const el = document.createElement('a');
-    let pathWithSearch;
-    el.href = path;
-    pathWithSearch = el.pathname;
-    if (el.search) {
-      pathWithSearch += el.search;
-    }
-
-    return pageShow(pathWithSearch, state, dispatch, push);
-  };
+  return (path, state, dispatch, push) => (
+    pageShow(page.resolveURLToBase(path), state, dispatch, push)
+  );
 }
 
 /**
@@ -36,6 +54,21 @@ function routeAppliesToCurrentLocation(route) {
   return r.match(page.current, {});
 }
 
+/**
+ * Find base url if available
+ *
+ * @returns {string}
+ */
+function getAbsoluteBase() {
+  const baseTags = window.document.getElementsByTagName('base');
+  if (baseTags && baseTags[0]) {
+    return baseTags[0].href;
+  }
+  return null;
+}
+
+page.getAbsoluteBase = getAbsoluteBase.bind(page);
+page.resolveURLToBase = resolveURLToBase.bind(page);
 page.show = show(page.show);
 page.routeAppliesToCurrentLocation = routeAppliesToCurrentLocation;
 

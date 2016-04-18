@@ -227,21 +227,16 @@ $.entwine('ss', function($) {
 			var self = this,
 				basePath = getUrlPath($('base')[0].href);
 
-			// Avoid adding a double slash if the base path is '/'
-			if (basePath[basePath.length - 1] === '/') {
-				basePath += 'admin';
-			} else {
-				basePath = '/admin';
-			}
-
+			// Remove trailing / from base
+			basePath = basePath.replace(/\/$/, '');
 			router.base(basePath);
 
 			// Register all top level routes.
 			Config.getTopLevelRoutes().forEach((route) => {
-				router(`/${route}/*`, (ctx, next) => {
-					// If the page isn't ready or the request hasn't come from 'loadPanel'
-					// then don't PJAX load the panel. Note: __forceReferer is set by 'loadPanel' only.
-					if (document.readyState !== 'complete' || typeof ctx.state.__forceReferer === 'undefined') {
+				router(`/${route}*`, (ctx, next) => {
+
+					// If the page isn't ready.
+					if (document.readyState !== 'complete') {
 						return next();
 					}
 

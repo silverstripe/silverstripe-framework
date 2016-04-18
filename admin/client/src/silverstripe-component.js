@@ -7,36 +7,6 @@ import $ from '../../../client/src/jQuery';
 
 class SilverStripeComponent extends Component {
 
-  constructor(props) {
-    super(props);
-
-    // Setup component routing.
-    if (typeof this.props.route !== 'undefined') {
-      // The component's render method gets switched based on the current path.
-      // If the current path matches the component's route, the component is displayed.
-      // Otherwise the component's render method returns null, resulting in
-      // the component not rendering.
-      this._render = this.render;
-
-      this.render = () => {
-        let component = null;
-
-        if (this.isComponentRoute()) {
-          component = this._render();
-        }
-
-        return component;
-      };
-
-      window.ss.router(this.props.route, (ctx, next) => {
-        this.handleEnterRoute(ctx, next);
-      });
-      window.ss.router.exit(this.props.route, (ctx, next) => {
-        this.handleExitRoute(ctx, next);
-      });
-    }
-  }
-
   componentDidMount() {
     if (typeof this.props.cmsEvents === 'undefined') {
       return;
@@ -64,30 +34,6 @@ class SilverStripeComponent extends Component {
     }
   }
 
-  handleEnterRoute(ctx, next) {
-    next();
-  }
-
-  handleExitRoute(ctx, next) {
-    next();
-  }
-
-  /**
-   * Checks if the component should be rended on the current path.
-   *
-   * @param object [params] - If a params object is passed in it's
-   * mutated by page.js to contains route parans like ':id'.
-   */
-  isComponentRoute(params = {}) {
-    if (typeof this.props.route === 'undefined') {
-      return true;
-    }
-
-    const route = new window.ss.router.Route(this.props.route);
-
-    return route.match(window.ss.router.current, params);
-  }
-
   /**
    * Notifies legacy-land something has changed within our component.
    *
@@ -102,7 +48,6 @@ class SilverStripeComponent extends Component {
 
 SilverStripeComponent.propTypes = {
   cmsEvents: React.PropTypes.object,
-  route: React.PropTypes.string,
 };
 
 export default SilverStripeComponent;

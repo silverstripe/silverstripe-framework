@@ -58,10 +58,17 @@
 
         Object.keys(window.ss.config.sections).forEach(function (key) {
           var route = window.ss.config.sections[key].route;
-          var isTopLevelRoute = route.indexOf('/') === -1;
-          var isUnique = topLevelRoutes.indexOf(route) === -1;
 
-          if (isTopLevelRoute && isUnique) {
+          var topLevelMatch = route.match(/^admin\/[^\/]+(\/?)$/);
+          if (!topLevelMatch) {
+            return;
+          }
+          if (!topLevelMatch[1]) {
+            route += '/';
+          }
+
+          var isUnique = topLevelRoutes.indexOf(route) === -1;
+          if (isUnique) {
             topLevelRoutes.push(route);
           }
         });

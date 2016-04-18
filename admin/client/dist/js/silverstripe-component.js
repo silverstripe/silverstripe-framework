@@ -78,32 +78,10 @@
   var SilverStripeComponent = function (_Component) {
     _inherits(SilverStripeComponent, _Component);
 
-    function SilverStripeComponent(props) {
+    function SilverStripeComponent() {
       _classCallCheck(this, SilverStripeComponent);
 
-      var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SilverStripeComponent).call(this, props));
-
-      if (typeof _this.props.route !== 'undefined') {
-        _this._render = _this.render;
-
-        _this.render = function () {
-          var component = null;
-
-          if (_this.isComponentRoute()) {
-            component = _this._render();
-          }
-
-          return component;
-        };
-
-        window.ss.router(_this.props.route, function (ctx, next) {
-          _this.handleEnterRoute(ctx, next);
-        });
-        window.ss.router.exit(_this.props.route, function (ctx, next) {
-          _this.handleExitRoute(ctx, next);
-        });
-      }
-      return _this;
+      return _possibleConstructorReturn(this, Object.getPrototypeOf(SilverStripeComponent).apply(this, arguments));
     }
 
     _createClass(SilverStripeComponent, [{
@@ -131,29 +109,6 @@
         }
       }
     }, {
-      key: 'handleEnterRoute',
-      value: function handleEnterRoute(ctx, next) {
-        next();
-      }
-    }, {
-      key: 'handleExitRoute',
-      value: function handleExitRoute(ctx, next) {
-        next();
-      }
-    }, {
-      key: 'isComponentRoute',
-      value: function isComponentRoute() {
-        var params = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-        if (typeof this.props.route === 'undefined') {
-          return true;
-        }
-
-        var route = new window.ss.router.Route(this.props.route);
-
-        return route.match(window.ss.router.current, params);
-      }
-    }, {
       key: 'emitCmsEvent',
       value: function emitCmsEvent(componentEvent, data) {
         (0, _jQuery2.default)(document).trigger(componentEvent, data);
@@ -164,8 +119,7 @@
   }(_react.Component);
 
   SilverStripeComponent.propTypes = {
-    cmsEvents: _react2.default.PropTypes.object,
-    route: _react2.default.PropTypes.string
+    cmsEvents: _react2.default.PropTypes.object
   };
 
   exports.default = SilverStripeComponent;

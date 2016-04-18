@@ -26,11 +26,20 @@ class Config {
     const topLevelRoutes = [];
 
     Object.keys(window.ss.config.sections).forEach((key) => {
-      const route = window.ss.config.sections[key].route;
-      const isTopLevelRoute = route.indexOf('/') === -1;
-      const isUnique = topLevelRoutes.indexOf(route) === -1;
+      let route = window.ss.config.sections[key].route;
 
-      if (isTopLevelRoute && isUnique) {
+      // Check if this is a top level route, which ideally hasa trailing slash
+      const topLevelMatch = route.match(/^admin\/[^\/]+(\/?)$/);
+      if (!topLevelMatch) {
+        return;
+      }
+      if (!topLevelMatch[1]) {
+        route += '/';
+      }
+
+      // Check uniqueness and save
+      const isUnique = topLevelRoutes.indexOf(route) === -1;
+      if (isUnique) {
         topLevelRoutes.push(route);
       }
     });

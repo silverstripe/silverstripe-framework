@@ -28,8 +28,32 @@ class CampaignAdminContainer extends SilverStripeComponent {
   }
 
   componentDidMount() {
-    window.ss.router(`/${this.props.sectionConfig.campaignViewRoute}`, (ctx) => {
-      this.props.actions.showCampaignView(ctx.params.id, ctx.params.view);
+    super.componentDidMount();
+    // While a component is mounted it will intercept all routes and handle internally
+    let captureRoute = true;
+    const route = window.ss.router.resolveURLToBase(this.props.sectionConfig.campaignViewRoute);
+
+    // Capture routing within this section
+    window.ss.router(route, (ctx, next) => {
+      if (captureRoute) {
+        // If this component is mounted, then handle all page changes via
+        // state / redux
+        this.props.actions.showCampaignView(ctx.params.id, ctx.params.view);
+      } else {
+        // If component is not mounted, we need to allow root routes to load
+        // this section in via ajax
+        next();
+      }
+    });
+
+    // When leaving this section to go to another top level section then
+    // disable route capturing.
+    window.ss.router.exit(route, (ctx, next) => {
+      const applies = window.ss.router.routeAppliesToCurrentLocation(route);
+      if (!applies) {
+        captureRoute = false;
+  }
+      next();
     });
   }
 
@@ -67,16 +91,16 @@ class CampaignAdminContainer extends SilverStripeComponent {
           <div className="cms-middle__scrollable">
             <div className="content-toolbar">
               <div className="btn-toolbar">
-                <FormAction
-                  label={i18n._t('Campaigns.ADDCAMPAIGN')}
+          <FormAction
+            label={i18n._t('Campaigns.ADDCAMPAIGN')}
                   icon={'plus'}
-                  handleClick={this.addCampaign}
-                />
+            handleClick={this.addCampaign}
+          />
               </div>
             </div>
-            <FormBuilder schemaUrl={schemaUrl} createFn={this.createFn} />
-          </div>
+          <FormBuilder schemaUrl={schemaUrl} createFn={this.createFn} />
         </div>
+      </div>
       </div>
     );
   }
