@@ -33,7 +33,7 @@ class RequirementsTest extends SapphireTest {
 		$backend->css('https://www.mysecuredomain.com/test.css');
 		$backend->css('//scheme-relative.example.com/test.css');
 
-		$html = $backend->includeInHTML(false, self::$html_template);
+		$html = $backend->includeInHTML(self::$html_template);
 
 		$this->assertTrue(
 			(strpos($html, 'http://www.mydomain.com/test.js') !== false),
@@ -126,7 +126,7 @@ class RequirementsTest extends SapphireTest {
 		$combinedFileName = '/_combinedfiles/RequirementsTest_bc-2a55d56.js';
 		$combinedFilePath = AssetStoreTest_SpyStore::base_path() . $combinedFileName;
 
-		$html = $backend->includeInHTML(false, self::$html_template);
+		$html = $backend->includeInHTML(self::$html_template);
 
 		/* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
 		$this->assertRegExp(
@@ -171,7 +171,7 @@ class RequirementsTest extends SapphireTest {
 		/** @var Requirements_Backend $backend */
 		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupCombinedNonrequiredRequirements($backend);
-		$html = $backend->includeInHTML(false, self::$html_template);
+		$html = $backend->includeInHTML(self::$html_template);
 
 		/* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
 		$this->assertRegExp(
@@ -220,7 +220,7 @@ class RequirementsTest extends SapphireTest {
 			'print'
 		);
 
-		$html = $backend->includeInHTML(false, self::$html_template);
+		$html = $backend->includeInHTML(self::$html_template);
 
 		$this->assertRegExp(
 			'/href=".*\/print\-94e723d\.css/',
@@ -252,7 +252,7 @@ class RequirementsTest extends SapphireTest {
 			)
 		);
 
-		$html = $backend->includeInHTML(false, self::$html_template);
+		$html = $backend->includeInHTML(self::$html_template);
 		$this->assertRegExp(
 			'/href=".*\/style\-bcd90f5\.css/',
 			$html,
@@ -272,7 +272,7 @@ class RequirementsTest extends SapphireTest {
 		$backend->block('RequirementsTest_bc.js');
 
 		clearstatcache(); // needed to get accurate file_exists() results
-		$html = $backend->includeInHTML(false, self::$html_template);
+		$html = $backend->includeInHTML(self::$html_template);
 		$this->assertFileNotExists($combinedFilePath);
 		$this->assertNotRegExp(
 			'/src=".*\/RequirementsTest_bc\.js/',
@@ -287,7 +287,7 @@ class RequirementsTest extends SapphireTest {
 		$combinedFileName2 = '/_combinedfiles/RequirementsTest_bc-3748f67.js'; // SHA1 without file c included
 		$combinedFilePath2 = AssetStoreTest_SpyStore::base_path() . $combinedFileName2;
 		clearstatcache(); // needed to get accurate file_exists() results
-		$html = $backend->includeInHTML(false, self::$html_template);
+		$html = $backend->includeInHTML(self::$html_template);
 		$this->assertFileExists($combinedFilePath2);
 		$this->assertTrue(
 			strpos(file_get_contents($combinedFilePath2), "alert('b')") === false,
@@ -326,7 +326,7 @@ class RequirementsTest extends SapphireTest {
 
 		$backend->javascript($basePath . '/RequirementsTest_a.js?test=1&test=2&test=3');
 		$backend->css($basePath . '/RequirementsTest_a.css?test=1&test=2&test=3');
-		$html = $backend->includeInHTML(false, self::$html_template);
+		$html = $backend->includeInHTML(self::$html_template);
 
 		/* Javascript has correct path */
 		$this->assertRegExp(
@@ -424,11 +424,11 @@ class RequirementsTest extends SapphireTest {
 		$template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
 
 		$backend->setWriteJavascriptToBody(false);
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertContains('<head><script', $html);
 
 		$backend->setWriteJavascriptToBody(true);
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertNotContains('<head><script', $html);
 		$this->assertContains('</script></body>', $html);
 	}
@@ -439,7 +439,7 @@ class RequirementsTest extends SapphireTest {
 		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 		$backend->javascript($this->getCurrentRelativePath() . '/RequirementsTest_a.js');
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		//wiping out commented-out html
 		$html = preg_replace('/<!--(.*)-->/Uis', '', $html);
 		$this->assertContains("RequirementsTest_a.js", $html);
@@ -455,7 +455,7 @@ class RequirementsTest extends SapphireTest {
 		$src = $this->getCurrentRelativePath() . '/RequirementsTest_a.js';
 		$urlSrc = ControllerTest_ContainerController::join_links(Director::baseURL(), $src);
 		$backend->javascript($src);
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertEquals('<html><head></head><body><!--<script>alert("commented out");</script>-->'
 			. '<h1>more content</h1><script type="application/javascript" src="' . $urlSrc . '"></script></body></html>', $html);
 	}
@@ -465,24 +465,32 @@ class RequirementsTest extends SapphireTest {
 		$backend = Injector::inst()->create('Requirements_Backend');
 		$this->setupRequirements($backend);
 		$backend->javascript('http://www.mydomain.com/test.js');
+		$backend->customScript(
+<<<'EOS'
+var globalvar = {
+	pattern: '\\$custom\\1'
+};
+EOS
+		);
 
 		// Test matching with HTML5 <header> tags as well
 		$template = '<html><head></head><body><header>My header</header><p>Body<script></script></p></body></html>';
 
 		// The expected outputs
-		$JsInHead = "<html><head><script type=\"application/javascript\" src=\"http://www.mydomain.com/test.js\">"
-			. "</script>\n</head><body><header>My header</header><p>Body<script></script></p></body></html>";
-		$JsInBody = "<html><head></head><body><header>My header</header><p>Body<script type=\"application/javascript\""
-			. " src=\"http://www.mydomain.com/test.js\"></script><script></script></p></body></html>";
-		$JsAtEnd  = "<html><head></head><body><header>My header</header><p>Body<script></script></p><script "
-			. "type=\"application/javascript\" src=\"http://www.mydomain.com/test.js\"></script></body></html>";
+		$expectedScripts = "<script type=\"application/javascript\" src=\"http://www.mydomain.com/test.js\">"
+			. "</script><script type=\"application/javascript\">//<![CDATA[\n"
+			. "var globalvar = {\n\tpattern: '\\\\\$custom\\\\1'\n};\n"
+			. "//]]></script>";
+		$JsInHead = "<html><head>$expectedScripts</head><body><header>My header</header><p>Body<script></script></p></body></html>";
+		$JsInBody = "<html><head></head><body><header>My header</header><p>Body$expectedScripts<script></script></p></body></html>";
+		$JsAtEnd  = "<html><head></head><body><header>My header</header><p>Body<script></script></p>$expectedScripts</body></html>";
 
 
 		// Test if the script is before the head tag, not before the body.
 		// Expected: $JsInHead
 		$backend->setWriteJavascriptToBody(false);
 		$backend->setForceJSToBottom(false);
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertNotEquals($JsInBody, $html);
 		$this->assertNotEquals($JsAtEnd, $html);
 		$this->assertEquals($JsInHead, $html);
@@ -491,7 +499,7 @@ class RequirementsTest extends SapphireTest {
 		// Expected: $JsInBody
 		$backend->setWriteJavascriptToBody(true);
 		$backend->setForceJSToBottom(false);
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertNotEquals($JsAtEnd, $html);
 		$this->assertEquals($JsInBody, $html);
 
@@ -499,7 +507,7 @@ class RequirementsTest extends SapphireTest {
 		// Expected: $JsAtEnd
 		$backend->setWriteJavascriptToBody(false);
 		$backend->setForceJSToBottom(true);
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertNotEquals($JsInHead, $html);
 		$this->assertNotEquals($JsInBody, $html);
 		$this->assertEquals($JsAtEnd, $html);
@@ -508,7 +516,7 @@ class RequirementsTest extends SapphireTest {
 		// Expected: $JsAtEnd
 		$backend->setWriteJavascriptToBody(true);
 		$backend->setForceJSToBottom(true);
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertNotEquals($JsInHead, $html);
 		$this->assertNotEquals($JsInBody, $html);
 		$this->assertEquals($JsAtEnd, $html);
@@ -528,14 +536,14 @@ class RequirementsTest extends SapphireTest {
 		$backend->css($basePath .'/RequirementsTest_b.css?foo=bar&bla=blubb');
 
 		$backend->setSuffixRequirements(true);
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertRegexp('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
 		$this->assertRegexp('/RequirementsTest_b\.js\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
 		$this->assertRegexp('/RequirementsTest_a\.css\?m=[\d]*"/', $html);
 		$this->assertRegexp('/RequirementsTest_b\.css\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
 
 		$backend->setSuffixRequirements(false);
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertNotContains('RequirementsTest_a.js=', $html);
 		$this->assertNotRegexp('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
 		$this->assertNotRegexp('/RequirementsTest_b\.js\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
@@ -567,7 +575,7 @@ class RequirementsTest extends SapphireTest {
 		$this->assertEquals([
 			$basePath . '/RequirementsTest_c.js' => $basePath . '/RequirementsTest_c.js'
 		], $backend->getProvidedScripts());
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertRegExp('/src=".*\/RequirementsTest_a\.js/', $html);
 		$this->assertRegExp('/src=".*\/RequirementsTest_b\.js/', $html);
 		$this->assertNotRegExp('/src=".*\/RequirementsTest_c\.js/', $html);
@@ -586,7 +594,7 @@ class RequirementsTest extends SapphireTest {
 		$this->assertEquals([
 			$basePath . '/RequirementsTest_c.js' => $basePath . '/RequirementsTest_c.js'
 		], $backend->getProvidedScripts());
-		$html = $backend->includeInHTML(false, $template);
+		$html = $backend->includeInHTML($template);
 		$this->assertRegExp('/src=".*\/combined_a/', $html);
 		$this->assertRegExp('/src=".*\/RequirementsTest_b\.js/', $html);
 		$this->assertNotRegExp('/src=".*\/combined_c/', $html);
